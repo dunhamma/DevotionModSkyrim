@@ -17,8 +17,14 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const DEFAULT_SPEC = path.join(PROJECT_ROOT, "references", "authoring", "PDV_FormalOffer_RecordWave.spec.json");
 const DEFAULT_SOURCE = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source/PDV__ManagerQuest.psc";
+const DEFAULT_SOURCE_DIR = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source";
 const DEFAULT_ESP = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Devotion.esp";
 const AUTHOR_PROJECT = path.join(PROJECT_ROOT, "tools", "pdv-phase20-race-author", "PdvPhase20RaceAuthor.csproj");
+
+// Curse-driven severance must remain recoverable and must not masquerade as the
+// player's one-time "Refuse" choice. Add a function here only with a cited design
+// note explaining why that exact curse handler is allowed to clear active patronage.
+const RECOVERABLE_CURSE_SEVER_ALLOWLIST = new Set([]);
 
 const EXPECTED_OFFER_BUTTONS = ["Accept", "Not yet", "Refuse"];
 
@@ -104,6 +110,8 @@ function main(argv) {
     verifySourceContract(sourceText, sourcePath, pass, fail);
   }
 
+  verifyCurseCommitmentBoundaries(path.resolve(args.sourceDir || DEFAULT_SOURCE_DIR), pass, fail, warn);
+
   if (!args.sourceOnly && spec) {
     verifyEspReadback(specPath, espPath, pass, fail, warn);
   }
@@ -137,6 +145,7 @@ function parseArgs(argv) {
     sourceOnly: false,
     spec: null,
     source: null,
+    sourceDir: null,
     esp: null
   };
 
@@ -154,6 +163,10 @@ function parseArgs(argv) {
       args.source = requireNext(argv, ++index, "--source");
     } else if (arg.startsWith("--source=")) {
       args.source = arg.slice("--source=".length);
+    } else if (arg === "--source-dir") {
+      args.sourceDir = requireNext(argv, ++index, "--source-dir");
+    } else if (arg.startsWith("--source-dir=")) {
+      args.sourceDir = arg.slice("--source-dir=".length);
     } else if (arg === "--esp") {
       args.esp = requireNext(argv, ++index, "--esp");
     } else if (arg.startsWith("--esp=")) {
@@ -182,7 +195,7 @@ function usage(exitCode, errorMessage = null) {
   }
   console.log([
     "Usage:",
-    "  node .\\tools\\pdv_formal_offer_check.mjs [--json] [--source-only] [--spec <path>] [--source <path>] [--esp <path>]",
+    "  node .\\tools\\pdv_formal_offer_check.mjs [--json] [--source-only] [--spec <path>] [--source <path>] [--source-dir <path>] [--esp <path>]",
     "",
     "Notes:",
     "  - Read-only.",
@@ -286,7 +299,7 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
     "Int choice = offerMessage.Show()",
     "if choice == 0",
     "DebugAcceptPendingCommitment()",
-    "DispatchDiegeticCue(\"offer\", deity.DeityName, \"accept\", deity, \"reverent\")",
+    "DispatchDiegeticCue(\"offer\", pendingDeity.DeityName, \"accept\", pendingDeity, \"revelation\")",
     "elseIf choice == 1",
     "DebugDeclinePendingCommitment()",
     "elseIf choice == 2",
@@ -301,6 +314,9 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
     "return IsNordOfferEligibleDeity(deity) || IsImperialOfferEligibleDeity(deity) || IsDunmerOfferEligibleDeity(deity) || IsAltmerOfferEligibleDeity(deity) || IsRedguardOfferEligibleDeity(deity)",
     "Bool Function IsImperialTalosOfferAllowed()",
     "PDV_ConcordatStandingTrack.GetValue() <= 50",
+    "Bool Function ShouldSuppressImperialTalosTierSurface(PDV_DeityBase deity)",
+    "Tier reach surface suppressed for Imperial Talos while Concordat blocks offers.",
+    "ApplyConcordatPressure ignored for non-Imperial origin.",
     "Function DispatchDiegeticCue(String eventClass, String surfaceKey, String direction, PDV_DeityBase deity, String toneOverride = \"\")"
   ];
 
@@ -377,6 +393,76 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
       fail("Quiet-emergence source cue", `Manager is missing: ${snippet}`, sourcePath);
     }
   }
+}
+
+function verifyCurseCommitmentBoundaries(sourceDir, pass, fail, warn) {
+  if (!fs.existsSync(sourceDir)) {
+    fail("Curse commitment boundary", "Live source directory is missing.", sourceDir);
+    return;
+  }
+
+  const pscFiles = fs
+    .readdirSync(sourceDir)
+    .filter((name) => name.toLowerCase().endsWith(".psc"));
+  let handlerCount = 0;
+  let refusedWrites = 0;
+  let patronTeardowns = 0;
+
+  for (const fileName of pscFiles) {
+    const filePath = path.join(sourceDir, fileName);
+    const sourceText = readText(filePath);
+    for (const block of extractFunctionBlocks(sourceText)) {
+      if (!isCurseTransitionHandler(block.name)) {
+        continue;
+      }
+
+      handlerCount += 1;
+      const label = `${fileName}::${block.name}`;
+      if (block.body.includes("\"PDV.Commitment.Refused\"")) {
+        refusedWrites += 1;
+        fail("Curse commitment boundary", `${label} writes PDV.Commitment.Refused; curse loss must not become a permanent refusal.`, filePath);
+      }
+
+      if (block.body.includes("SetActiveDeity(None)")) {
+        if (RECOVERABLE_CURSE_SEVER_ALLOWLIST.has(label)) {
+          warn("Curse recoverable sever allowlist", `${label} tears down the active deity under an explicit allowlist entry.`, filePath);
+        } else {
+          patronTeardowns += 1;
+          fail("Curse commitment boundary", `${label} calls SetActiveDeity(None); add an explicit recoverable-sever design entry before allowing curse-driven patron teardown.`, filePath);
+        }
+      }
+    }
+  }
+
+  if (handlerCount === 0) {
+    fail("Curse commitment boundary", "No curse transition handlers were found to audit.", sourceDir);
+    return;
+  }
+
+  if (refusedWrites === 0) {
+    pass("Curse commitment boundary", `Audited ${handlerCount} curse transition handler(s); none write PDV.Commitment.Refused.`, sourceDir);
+  }
+  if (patronTeardowns === 0) {
+    pass("Curse commitment boundary", `Audited ${handlerCount} curse transition handler(s); none call SetActiveDeity(None) outside the recoverable-sever allowlist.`, sourceDir);
+  }
+}
+
+function extractFunctionBlocks(sourceText) {
+  const blocks = [];
+  const pattern = /(?:[A-Za-z_][\w]*\s+)?Function\s+(\w+)\b[\s\S]*?\nEndFunction\b/gi;
+  let match;
+  while ((match = pattern.exec(sourceText))) {
+    blocks.push({ name: match[1], body: match[0] });
+  }
+  return blocks;
+}
+
+function isCurseTransitionHandler(functionName) {
+  return functionName === "HandleCurseTransition"
+    || functionName === "HandleCurseStateTransition"
+    || functionName === "HandleCurseStateRefresh"
+    || functionName === "ApplyCurseRaceHandlers"
+    || /^Apply[A-Za-z]+CurseHandlers$/.test(functionName);
 }
 
 function extractFunctionBody(sourceText, functionName) {

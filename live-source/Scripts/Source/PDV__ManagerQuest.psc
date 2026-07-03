@@ -2165,11 +2165,23 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
         titleText = GetPanelQuasiPatronName(originRace)
         symbolName = GetPanelQuasiPatronSymbol(originRace)
         tierLabelOverride = GetPanelQuasiPatronTierLabel(originRace)
+        Int broadTier = GetBroadLaneTierForOrigin(originRace)
+        if broadTier > TIER_NONE
+            titleText = GetBroadLaneDisplayName(originRace)
+            symbolName = GetBroadLaneSymbol(originRace)
+            tierValue = broadTier
+            tierLabelOverride = GetBroadLaneStandingLabel(originRace, broadTier)
+            piety = GetBroadLaneServiceCount(originRace) as Float
+        endIf
         if PDV_GLO_ActivePiety
-            piety = PDV_GLO_ActivePiety.GetValue()
+            if broadTier <= TIER_NONE
+                piety = PDV_GLO_ActivePiety.GetValue()
+            endIf
         endIf
         if PDV_GLO_ActiveTier
-            tierValue = PDV_GLO_ActiveTier.GetValueInt()
+            if broadTier <= TIER_NONE
+                tierValue = PDV_GLO_ActiveTier.GetValueInt()
+            endIf
         endIf
     endIf
 
@@ -2192,8 +2204,15 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
     j = j + ",\"summary\":\"" + JsonSafeString(GetSurveyDevotionText()) + "\""
     j = j + ",\"tier\":" + tierValue
     j = j + ",\"tierLabel\":\"" + JsonSafeString(tierLabel) + "\""
-    j = j + ",\"nextText\":\"" + JsonSafeString(GetPanelNextThresholdText(panelCommitment, piety)) + "\""
+    String nextText = GetPanelNextThresholdText(panelCommitment, piety)
+    if panelCommitment == None && GetBroadLaneTierForOrigin(originRace) > TIER_NONE
+        nextText = GetBroadLaneNextThresholdText(originRace)
+    endIf
+    j = j + ",\"nextText\":\"" + JsonSafeString(nextText) + "\""
     j = j + ",\"piety\":" + piety
+    if panelCommitment == None && GetBroadLaneTierForOrigin(originRace) > TIER_NONE
+        j = j + ",\"pietyLabel\":\"" + JsonSafeString("" + GetBroadLaneServiceCount(originRace) + " broad acts") + "\""
+    endIf
     j = j + ",\"pietyToday\":" + pietyToday
     j = j + ",\"todayMood\":\"" + JsonSafeString(GetPanelTodayMood(pietyToday)) + "\""
     j = j + ",\"driftLabel\":\"" + JsonSafeString(GetPanelDriftLabel()) + "\""
@@ -2382,6 +2401,9 @@ String Function GetPanelInstrumentKind(Int originRace, Bool hasActiveDeity)
     if hasActiveDeity
         return "piety"
     endIf
+    if GetBroadLaneTierForOrigin(originRace) > TIER_NONE
+        return "broad"
+    endIf
     if originRace == ORIGIN_KHAJIIT
         return "lunar"
     elseIf originRace == ORIGIN_ARGONIAN
@@ -2416,6 +2438,9 @@ String Function GetPanelInstrumentState(Int originRace, String kindText, String 
 EndFunction
 
 String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Float piety)
+    if kindText == "broad"
+        return "{\"acts\":" + GetBroadLaneServiceCount(originRace) + "}"
+    endIf
     if kindText == "lunar"
         Int phase = GetKhajiitMoonPhaseFromGameDay(Utility.GetCurrentGameTime())
         if PDV_KhajiitLunarSubstrate && PDV_KhajiitLunarSubstrate.GetLastObservedPhase() > 0
@@ -4372,6 +4397,7 @@ Function AwardArgonianSacredWater(Int siteFormId)
     PDV_ArgonianHistSubstrate.SetHistRelation(PDV_ArgonianHistSubstrate.GetHistRelation() + 1.0, "sacred_water")
     Debug.MessageBox("The water remembers. For one slow breath you stand in the marsh again, and the root speaks your name.")
     SendPrismaSubstrateToast("ArgonianHist", "water", "A water that remembers.", "hist", GetArgonianHistPostureLabel())
+    AppendBookOfDaysEntry("A water that remembers.", Utility.GetCurrentGameTime() as Int, "substrate.act", "hist", False)
 
     if seenCount >= PDV_FLST_ArgonianSacredWaters.GetSize()
         StorageUtil.SetIntValue(None, "PDV.ArgWaters.Milestone", 1)
@@ -4476,8 +4502,9 @@ Function HandleArgonianSapVision()
     Trace(2, "Sleeping Tree Sap vision fired.")
 EndFunction
 
-; DEBUG seeder for beta testing the substrate-gated Argonian features. Call from
-; console: cqf PDV__ManagerQuest DebugSeedArgonian <hist> <people> <void>
+; DEBUG seeder for beta testing the substrate-gated Argonian features. Use the
+; MCM debug page or the SetPQV poll harness declared at the top of this script;
+; do not route tester instructions through cqf.
 ;   e.g. 90 90 0   -> Hist signature + People Champion rewards; adaptation rite
 ;        50 20 80  -> Void fully active + Void focus (void > people) for Shadowscale
 ; Any positive void seeds the 3 Sithis signals so IsVoidFullyActive() is true.
@@ -6274,6 +6301,7 @@ Function RecordOrcLifeModeSignal(Int modeValue, Float multiplier, String reason)
 
     if PDV_OrcLifeModeTrack.GetCurrentState() == modeValue
         SendPrismaSubstrateToast(GetOrcLifeModeSubstrateToken(modeValue), "act", "The code was marked.", "malacath", GetOrcLifeModeLabel())
+        AppendBookOfDaysEntry("The code was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
         RequestPanelRefresh()
         return
     endIf
@@ -6907,6 +6935,7 @@ Function RecordRedguardSectSignal(Int sectValue, Float multiplier, String reason
     if PDV_RedguardSectTrack.GetCurrentState() == sectValue
         MaybeShowRedguardChampionEntry(sectValue)
         SendPrismaSubstrateToast("sect", "act", "The Yokudan path was marked.", "sect", GetRedguardSectLabel())
+        AppendBookOfDaysEntry("The Yokudan path was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "sect", False)
         RequestPanelRefresh()
         return
     endIf
@@ -8061,11 +8090,15 @@ Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
         ; previously got nothing here; now each god's milestone is marked. NotifyTierUp's
         ; per-(deity,tier) guard prevents duplicate notices; the band in surfaceKey scopes
         ; the journal guard so Seeker/Devoted/Champion each log once, Champion pinned.
-        if surfaceTierUp && newTier > oldTier && NotifyTierUp(deity, newTier)
-            StorageUtil.SetFormValue(None, "PDV.BookOfDays.LastTierDeity", deityForm)
-            StorageUtil.SetIntValue(None, "PDV.BookOfDays.LastTierValue", newTier)
-            SendPrismaEventToast("tier", deity, "", GetPublicTierBand(newTier), "")
-            SurfaceTransition("tier", deity.DeityName + " " + GetTierStandingLabel(newTier), "reach", deity.DeityIndex, "", false, newTier >= TIER_CHAMPION)
+        if surfaceTierUp && newTier > oldTier
+            if ShouldSuppressImperialTalosTierSurface(deity)
+                Trace(2, "Tier reach surface suppressed for Imperial Talos while Concordat blocks offers.")
+            elseIf NotifyTierUp(deity, newTier)
+                StorageUtil.SetFormValue(None, "PDV.BookOfDays.LastTierDeity", deityForm)
+                StorageUtil.SetIntValue(None, "PDV.BookOfDays.LastTierValue", newTier)
+                SendPrismaEventToast("tier", deity, "", GetPublicTierBand(newTier), "")
+                SurfaceTransition("tier", deity.DeityName + " " + GetTierStandingLabel(newTier), "reach", deity.DeityIndex, "", false, newTier >= TIER_CHAMPION)
+            endIf
         endIf
 
         RequestPanelRefresh()
@@ -9115,9 +9148,32 @@ Function RunDawnBookOfDays()
     Int today = Utility.GetCurrentGameTime() as Int
     PruneBookOfDays()
     EmitBookOfDaysStateChange(today)
+    EmitBookOfDaysBroadLaneTierChange(today)
     if _dawnHadActivity
         AppendBookOfDaysEntry(BuildBookOfDaysDigestLine(), today, "dawn.digest", "journal", False)
     endIf
+EndFunction
+
+Function EmitBookOfDaysBroadLaneTierChange(Int today)
+    Int originRace = GetPlayerOriginRaceIndex()
+    Int broadTier = GetBroadLaneTierForOrigin(originRace)
+    if broadTier <= TIER_NONE
+        return
+    endIf
+
+    Int tier = TIER_SEEKER
+    while tier <= broadTier && tier <= TIER_DEVOTED
+        String guard = "PDV.BookOfDays.BroadLaneTierShown." + originRace + "." + tier
+        if StorageUtil.GetIntValue(None, guard) != 1
+            StorageUtil.SetIntValue(None, guard, 1)
+            AppendBookOfDaysEntry(BuildBroadLaneTierReachJournalLine(originRace, tier), today, "tier.reach", GetBroadLaneSymbol(originRace), False, tier)
+        endIf
+        tier += 1
+    endWhile
+EndFunction
+
+String Function BuildBroadLaneTierReachJournalLine(Int originRace, Int tier)
+    return "Your " + GetBroadLaneDisplayName(originRace) + " has reached " + GetBroadLaneStandingLabel(originRace, tier) + "."
 EndFunction
 
 ; Snapshot-diff of the player's per-race mode label. GetPlayerMcmModeLine already
@@ -9148,11 +9204,19 @@ String Function BuildModeChangeLine(String modeLabel)
     elseIf originRace == ORIGIN_ALTMER
         return "The old line records a turn in your discipline: " + modeLabel + "."
     elseIf originRace == ORIGIN_IMPERIAL
-        return "The civic road turns under the old oaths: " + modeLabel + "."
+        return BuildImperialConcordatBookLine(modeLabel)
     elseIf originRace == ORIGIN_BRETON
         return "The old mixed inheritance turns under your chosen road: " + modeLabel + "."
     endIf
     return "Your path turns. You walk now as: " + modeLabel + "."
+EndFunction
+
+String Function BuildImperialConcordatBookLine(String modeLabel)
+    if modeLabel == "Concordat Enforcer"
+        return "Under the White-Gold Concordat, you are a Concordat Enforcer."
+    endIf
+
+    return "Under the White-Gold Concordat, you are " + modeLabel + "."
 EndFunction
 
 ; Named-acts dawn digest: names the gods fed today (captured in RunDawnConsolidateScratch
@@ -9889,7 +9953,7 @@ EndFunction
 ; per-signal-type humanization; this covers the common act families.)
 String Function HumanizeDriverReason(String raw)
     if raw == ""
-        return "an act of devotion"
+        return "An act of devotion"
     endIf
     if StringContainsToken(raw, "po3_book") || StringContainsToken(raw, "book")
         return "reading sacred words"
@@ -9904,7 +9968,7 @@ String Function HumanizeDriverReason(String raw)
     elseIf StringContainsToken(raw, "curated") || StringContainsToken(raw, "rite")
         return "a devotional rite"
     endIf
-    return "an act of devotion"
+    return "An act of devotion"
 EndFunction
 
 String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
@@ -9918,7 +9982,7 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
         elseIf signalType == PDV_Talos.SIGNAL_DEFIANCE_MILESTONE
             return "defiance of the Talos ban"
         elseIf signalType == PDV_Talos.SIGNAL_ANCESTOR_SPINE
-            return "honoring the old Nord line"
+            return "public civic service"
         endIf
     elseIf PDV_AuriEl && deity == PDV_AuriEl
         if signalType == PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT
@@ -11859,16 +11923,24 @@ Bool Function IsBroadFloorEligible()
         return False
     endIf
     Int origin = GetPlayerOriginRaceIndex()
-    if origin != ORIGIN_IMPERIAL && origin != ORIGIN_BRETON && origin != ORIGIN_ORC && origin != ORIGIN_ALTMER && origin != ORIGIN_NORD
+    if !HasBroadLanePresentation(origin)
         return False
     endIf
-    return GetBroadFloorServiceCount(origin) >= 3
+    return GetBroadLaneServiceCount(origin) >= 3
 EndFunction
 
 ; Accumulated broad-worship service count for the origin's broad lane -- the same accumulator
 ; the Faithful/T2 reward gates on at >= 6. Altmer sums its two favor counters; Nord uses the
 ; Old Ways broad-state counter that already drives the broad-T2 lane.
 Int Function GetBroadFloorServiceCount(Int origin)
+    return GetBroadLaneServiceCount(origin)
+EndFunction
+
+Bool Function HasBroadLanePresentation(Int origin)
+    return origin == ORIGIN_IMPERIAL || origin == ORIGIN_BRETON || origin == ORIGIN_ORC || origin == ORIGIN_ALTMER || origin == ORIGIN_NORD || origin == ORIGIN_BOSMER || origin == ORIGIN_DUNMER || origin == ORIGIN_REDGUARD
+EndFunction
+
+Int Function GetBroadLaneServiceCount(Int origin)
     if origin == ORIGIN_IMPERIAL
         return StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount")
     elseIf origin == ORIGIN_BRETON
@@ -11878,9 +11950,93 @@ Int Function GetBroadFloorServiceCount(Int origin)
     elseIf origin == ORIGIN_ALTMER
         return StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count") + StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count")
     elseIf origin == ORIGIN_NORD
+        if GetNordPantheonBaselineState() != NORD_BASELINE_OLD_WAYS
+            return 0
+        endIf
         return StorageUtil.GetIntValue(None, "PDV.Nord.OldWaysContextCount")
+    elseIf origin == ORIGIN_BOSMER
+        return GetBosmerFavorSignalCount()
+    elseIf origin == ORIGIN_DUNMER
+        return StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount")
+    elseIf origin == ORIGIN_REDGUARD
+        return StorageUtil.GetIntValue(None, "PDV.Redguard.AncestorSpineSourceCount")
     endIf
     return 0
+EndFunction
+
+Int Function GetBroadLaneTierForOrigin(Int origin)
+    if GetPatronState() != PATRON_STATE_BROAD || !HasBroadLanePresentation(origin)
+        return TIER_NONE
+    endIf
+
+    Int count = GetBroadLaneServiceCount(origin)
+    if count >= 6
+        return TIER_DEVOTED
+    elseIf count >= 3
+        return TIER_SEEKER
+    endIf
+    return TIER_NONE
+EndFunction
+
+String Function GetBroadLaneDisplayName(Int origin)
+    if origin == ORIGIN_IMPERIAL
+        return "Civic Faith"
+    elseIf origin == ORIGIN_ALTMER
+        return "Orthodox Faith"
+    elseIf origin == ORIGIN_BOSMER
+        return "Y'ffre's Broad Faith"
+    elseIf origin == ORIGIN_BRETON
+        return "Breton Tradition"
+    elseIf origin == ORIGIN_DUNMER
+        return "Reclamation Communion"
+    elseIf origin == ORIGIN_NORD
+        return "Old Ways"
+    elseIf origin == ORIGIN_ORC
+        return "Malacath's Code"
+    elseIf origin == ORIGIN_REDGUARD
+        return "Ancestor Spine"
+    endIf
+    return "Broad Faith"
+EndFunction
+
+String Function GetBroadLaneSymbol(Int origin)
+    if origin == ORIGIN_IMPERIAL
+        return "akatosh"
+    elseIf origin == ORIGIN_ALTMER
+        return "auri-el"
+    elseIf origin == ORIGIN_BOSMER
+        return "yffre"
+    elseIf origin == ORIGIN_BRETON
+        return "journal"
+    elseIf origin == ORIGIN_DUNMER
+        return "ancestor"
+    elseIf origin == ORIGIN_NORD
+        return "kyne"
+    elseIf origin == ORIGIN_ORC
+        return "malacath"
+    elseIf origin == ORIGIN_REDGUARD
+        return "tu-whacca"
+    endIf
+    return "journal"
+EndFunction
+
+String Function GetBroadLaneStandingLabel(Int origin, Int tier)
+    if tier >= TIER_DEVOTED
+        return "Faithful"
+    elseIf tier >= TIER_SEEKER
+        return "Observant"
+    endIf
+    return "Distant"
+EndFunction
+
+String Function GetBroadLaneNextThresholdText(Int origin)
+    Int count = GetBroadLaneServiceCount(origin)
+    if count < 3
+        return "Observant at 3 broad acts"
+    elseIf count < 6
+        return "Faithful at 6 broad acts"
+    endIf
+    return "Broad lane cap reached"
 EndFunction
 
 Spell Function GetFirstTierRaceRewardSpellForOrigin()
@@ -12702,6 +12858,10 @@ EndFunction
 Function ApplyConcordatPressure(Int adjustment, String reason)
     if !PDV_ConcordatStandingTrack
         Trace(1, "ApplyConcordatPressure skipped: track missing.")
+        return
+    endIf
+    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
+        Trace(2, "ApplyConcordatPressure ignored for non-Imperial origin.")
         return
     endIf
 
@@ -13576,6 +13736,18 @@ Bool Function IsImperialTalosOfferAllowed()
     return PDV_ConcordatStandingTrack.GetValue() <= 50
 EndFunction
 
+Bool Function ShouldSuppressImperialTalosTierSurface(PDV_DeityBase deity)
+    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
+        return False
+    endIf
+
+    if deity != PDV_Talos
+        return False
+    endIf
+
+    return !IsImperialTalosOfferAllowed()
+EndFunction
+
 Bool Function IsRedguardOfferEligibleDeity(PDV_DeityBase deity)
     if !deity
         return False
@@ -13984,6 +14156,10 @@ Function SendPrismaSubstrateProgress(String substrate, Int tierBefore, Int tierA
         SendPrismaSubstrateToast(substrate, "thin", context, symbolName, stateLabel)
     elseIf multiplier > 0.0
         SendPrismaSubstrateToast(substrate, "act", context, symbolName, stateLabel)
+    endIf
+
+    if multiplier > 0.0 && context != "" && tierAfter >= tierBefore
+        AppendBookOfDaysEntry(context, Utility.GetCurrentGameTime() as Int, "substrate.act", symbolName, False)
     endIf
 EndFunction
 
@@ -16384,9 +16560,19 @@ String Function BuildBookOfDaysInstrumentJson(Int originRace)
         championThreshold = journalCommitment.ThresholdChampion
         tierValue = GetTier(journalCommitment)
         pietyValue = GetPiety(journalCommitment)
+    else
+        Int broadTier = GetBroadLaneTierForOrigin(originRace)
+        if broadTier > TIER_NONE
+            tierValue = broadTier
+            pietyValue = GetBroadLaneServiceCount(originRace) as Float
+        endIf
     endIf
 
-    return GetPanelInstrumentJson(originRace, journalCommitment != None, tierValue, GetCurrentStandingLabel(), pietyValue, championThreshold)
+    String tierLabel = GetCurrentStandingLabel()
+    if journalCommitment == None && GetBroadLaneTierForOrigin(originRace) > TIER_NONE
+        tierLabel = GetBroadLaneStandingLabel(originRace, GetBroadLaneTierForOrigin(originRace))
+    endIf
+    return GetPanelInstrumentJson(originRace, journalCommitment != None, tierValue, tierLabel, pietyValue, championThreshold)
 EndFunction
 
 ; Build the Book of Days journal JSON payload.
@@ -16504,7 +16690,7 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
 EndFunction
 
 Function RepairBookOfDaysJournalText()
-    Int repairVersion = 1
+    Int repairVersion = 2
     if StorageUtil.GetIntValue(None, "PDV.BookOfDays.TextRepairVersion") >= repairVersion
         return
     endIf
@@ -16522,9 +16708,24 @@ Function RepairBookOfDaysJournalText()
         i += 1
     endWhile
 
+    Int titleCount = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Titles")
+    i = 0
+    while i < titleCount
+        String oldTitle = StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Titles", i)
+        String newTitle = oldTitle
+        if oldTitle == "an act of devotion"
+            newTitle = "An act of devotion"
+        endIf
+        if newTitle != oldTitle
+            StorageUtil.StringListSet(None, "PDV.Diegetic.Journal.Titles", i, newTitle)
+            repaired += 1
+        endIf
+        i += 1
+    endWhile
+
     StorageUtil.SetIntValue(None, "PDV.BookOfDays.TextRepairVersion", repairVersion)
     if repaired > 0 && GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Book of Days deity display text repaired: " + repaired)
+        Debug.Trace("[PDV] Book of Days display text repaired: " + repaired)
     endIf
 EndFunction
 
@@ -16795,6 +16996,9 @@ String Function JournalToneToValence(String toneKey)
     if toneKey == "substrate.act"
         return "good"
     endIf
+    if toneKey == "favor.act"
+        return "good"
+    endIf
     if toneKey == "curse.onset"
         return "warning"
     endIf
@@ -16809,6 +17013,12 @@ String Function JournalToneToValence(String toneKey)
     endIf
     if toneKey == "offer.refuse"
         return "warning"
+    endIf
+    if toneKey == "reorientation"
+        return "neutral"
+    endIf
+    if toneKey == "dawn.digest"
+        return "neutral"
     endIf
     return "neutral"
 EndFunction
@@ -17958,8 +18168,14 @@ String Function GetCurrentStandingLabel()
         tierValue = standingPact.GetStoredTier()
     elseIf _activeDeity
         tierValue = GetTier(_activeDeity)
+    elseIf GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex()) > TIER_NONE
+        tierValue = GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex())
     elseIf PDV_GLO_ActiveTier
         tierValue = PDV_GLO_ActiveTier.GetValueInt()
+    endIf
+
+    if !_activeDeity && !standingPact && GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex()) > TIER_NONE
+        return GetBroadLaneStandingLabel(GetPlayerOriginRaceIndex(), tierValue)
     endIf
 
     if tierValue >= TIER_CHAMPION
@@ -17983,6 +18199,8 @@ String Function GetCurrentStandingBand()
         tierValue = standingPact.GetStoredTier()
     elseIf _activeDeity
         tierValue = GetTier(_activeDeity)
+    elseIf GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex()) > TIER_NONE
+        tierValue = GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex())
     elseIf PDV_GLO_ActiveTier
         tierValue = PDV_GLO_ActiveTier.GetValueInt()
     endIf
@@ -18661,13 +18879,9 @@ String Function GetImperialSurveyText()
     String concordat = GetImperialConcordatLabel()
     String text = ""
     if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity
-        text = GetPublicDeityDisplayName(_activeDeity) + " holds your focus among the Nine. Standing: " + band + ". On the Talos question you stand " + concordat + "."
+        text = GetPublicDeityDisplayName(_activeDeity) + " holds your focus among the Nine. Standing: " + band + ". " + BuildImperialConcordatSurveySentence(concordat)
     else
-        text = "You worship the Nine Divines broadly, civic and public. Standing: " + band + ". On the Talos question you stand " + concordat + "."
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount") > 0
-        text = text + " Your service to the public order has been felt as worship."
+        text = "You worship the Nine Divines broadly, and your standing is " + band + ". " + BuildImperialConcordatSurveySentence(concordat)
     endIf
     if StorageUtil.GetIntValue(None, "PDV.Imperial.PrivateTalosPressureCount") > 0
         text = text + " You have kept Talos at hidden shrines, away from watching eyes."
@@ -18699,10 +18913,32 @@ EndFunction
 
 String Function GetImperialConcordatLabel()
     if PDV_ConcordatStandingTrack
-        return PDV_ConcordatStandingTrack.GetStateLabel()
+        return FormatImperialConcordatLabel(PDV_ConcordatStandingTrack.GetStateLabel())
     endIf
 
     return "Uncommitted"
+EndFunction
+
+String Function FormatImperialConcordatLabel(String label)
+    if label == "OpenDefiant"
+        return "Openly Defiant"
+    elseIf label == "PrivateDefiant"
+        return "Privately Defiant"
+    elseIf label == "PublicCompliant"
+        return "Publicly Compliant"
+    elseIf label == "ConcordatEnforcer"
+        return "Concordat Enforcer"
+    endIf
+
+    return label
+EndFunction
+
+String Function BuildImperialConcordatSurveySentence(String concordatLabel)
+    if concordatLabel == "Concordat Enforcer"
+        return "Under the Concordat, you are a Concordat Enforcer."
+    endIf
+
+    return "Under the Concordat, you are " + concordatLabel + "."
 EndFunction
 
 String Function GetImperialCivicLayerLabel()

@@ -1307,7 +1307,7 @@
 
       const agg = {};
       asArray(god.drivers).filter(Boolean).forEach((driver) => {
-        const reason = text(driver.reason, "an act of devotion");
+        const reason = text(driver.reason, "An act of devotion");
         if (!agg[reason]) agg[reason] = { reason, count: 0, net: 0 };
         agg[reason].count += numberOrZero(driver.count) || 1;
         agg[reason].net += numberOrZero(driver.net);
@@ -1729,7 +1729,7 @@
     const agg = {};
     const order = [];
     asArray(drivers).filter(Boolean).forEach((driver) => {
-      const reason = text(driver.reason, "an act of devotion");
+      const reason = text(driver.reason, "An act of devotion");
       if (!agg[reason]) { agg[reason] = { reason, count: 0, net: 0 }; order.push(reason); }
       agg[reason].count += numberOrZero(driver.count) || 1;
       agg[reason].net += numberOrZero(driver.net);
@@ -2052,7 +2052,7 @@
     nodes.patronNote.textContent = text(state.patronNote, "Choose a path through play, prayer, and consequence.");
     nodes.tierLabel.textContent = text(state.tierLabel, tierName(state.tier));
     nodes.pietyBar.style.width = `${pietyPercent}%`;
-    nodes.pietyText.textContent = `${piety} piety`;
+    nodes.pietyText.textContent = text(state.pietyLabel, `${piety} piety`);
     nodes.nextText.textContent = text(state.nextText, nextThresholdText(piety));
     nodes.todayDelta.textContent = signedText(state.pietyToday);
     nodes.todayMood.textContent = text(state.todayMood, fallbackState.todayMood);

@@ -20,7 +20,7 @@ function read(filePath) {
 }
 
 function functionBlock(source, functionName) {
-  const pattern = new RegExp(`(?:Bool\\s+)?Function\\s+${functionName}\\b[\\s\\S]*?EndFunction`, "i");
+  const pattern = new RegExp(`(?:[A-Za-z_][\\w]*\\s+)?Function\\s+${functionName}\\b[\\s\\S]*?EndFunction`, "i");
   const match = source.match(pattern);
   return match ? match[0] : "";
 }
@@ -48,11 +48,286 @@ function countMatches(source, pattern) {
   return matches ? matches.length : 0;
 }
 
+function lineNumberAt(source, index) {
+  return source.slice(0, index).split(/\r?\n/).length;
+}
+
+function extractFunctionBlocks(source) {
+  const blocks = [];
+  const pattern = /(?:[A-Za-z_][\w]*\s+)?Function\s+(\w+)\b[\s\S]*?\nEndFunction\b/gi;
+  let match;
+  while ((match = pattern.exec(source))) {
+    blocks.push({
+      name: match[1],
+      body: match[0],
+      start: match.index,
+      end: match.index + match[0].length,
+    });
+  }
+  return blocks;
+}
+
+function enclosingFunctionName(blocks, index) {
+  const block = blocks.find((item) => item.start <= index && index <= item.end);
+  return block ? block.name : "";
+}
+
+function extractCalls(source, functionName) {
+  const calls = [];
+  const needle = `${functionName}(`;
+  let index = 0;
+  while ((index = source.indexOf(needle, index)) >= 0) {
+    const prefix = source.slice(Math.max(0, index - 40), index);
+    if (/\bFunction\s+$/.test(prefix)) {
+      index += needle.length;
+      continue;
+    }
+    let cursor = index + needle.length;
+    let depth = 1;
+    let inString = false;
+    while (cursor < source.length && depth > 0) {
+      const char = source[cursor];
+      if (char === '"') {
+        inString = !inString;
+      } else if (!inString && char === "(") {
+        depth += 1;
+      } else if (!inString && char === ")") {
+        depth -= 1;
+      }
+      cursor += 1;
+    }
+    const text = source.slice(index, cursor);
+    const argText = text.slice(needle.length, -1);
+    calls.push({
+      text,
+      args: splitArguments(argText),
+      index,
+      line: lineNumberAt(source, index),
+    });
+    index = cursor;
+  }
+  return calls;
+}
+
+function splitArguments(argText) {
+  const args = [];
+  let current = "";
+  let depth = 0;
+  let inString = false;
+  for (let i = 0; i < argText.length; i += 1) {
+    const char = argText[i];
+    if (char === '"') {
+      inString = !inString;
+      current += char;
+    } else if (!inString && char === "(") {
+      depth += 1;
+      current += char;
+    } else if (!inString && char === ")") {
+      depth -= 1;
+      current += char;
+    } else if (!inString && depth === 0 && char === ",") {
+      args.push(current.trim());
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+  if (current.trim() !== "") {
+    args.push(current.trim());
+  }
+  return args;
+}
+
+function stringLiteralValue(arg) {
+  const trimmed = (arg || "").trim();
+  if (trimmed.length >= 2 && trimmed.startsWith('"') && trimmed.endsWith('"')) {
+    return trimmed.slice(1, -1);
+  }
+  return null;
+}
+
+function journalToneBranches(manager, functionName) {
+  const block = functionBlock(manager, functionName);
+  const tones = new Set();
+  const pattern = /toneKey\s*==\s*"([^"]+)"/g;
+  let match;
+  while ((match = pattern.exec(block))) {
+    tones.add(match[1]);
+  }
+  return tones;
+}
+
+function transitionTone(eventClass, direction) {
+  if (eventClass === "reorientation") {
+    return "reorientation";
+  }
+  if (eventClass === "digest") {
+    return "dawn.digest";
+  }
+  return `${eventClass}.${direction}`;
+}
+
 function sameStringSet(actual, expected) {
   if (actual.length !== expected.length) {
     return false;
   }
   return actual.every((value, index) => value === expected[index]);
+}
+
+function verifyJournalToneContract(manager, managerPath) {
+  const titleTones = journalToneBranches(manager, "JournalToneToTitle");
+  const valenceTones = journalToneBranches(manager, "JournalToneToValence");
+  const usedTones = new Set();
+
+  for (const call of extractCalls(manager, "AppendBookOfDaysEntry")) {
+    const tone = stringLiteralValue(call.args[2]);
+    if (tone) {
+      usedTones.add(tone);
+    }
+  }
+
+  for (const call of extractCalls(manager, "SurfaceTransition")) {
+    const eventClass = stringLiteralValue(call.args[0]);
+    const direction = stringLiteralValue(call.args[2]);
+    if (eventClass && direction) {
+      usedTones.add(transitionTone(eventClass, direction));
+    }
+  }
+
+  const missingTitle = [...usedTones].filter((tone) => !titleTones.has(tone)).sort();
+  const missingValence = [...usedTones].filter((tone) => !valenceTones.has(tone)).sort();
+  if (missingTitle.length > 0 || missingValence.length > 0) {
+    if (missingTitle.length > 0) {
+      fail(`Book of Days tone title coverage is missing: ${missingTitle.join(", ")}.`, managerPath);
+    }
+    if (missingValence.length > 0) {
+      fail(`Book of Days tone valence coverage is missing: ${missingValence.join(", ")}.`, managerPath);
+    }
+  } else {
+    pass(`Book of Days tone coverage supports all ${usedTones.size} literal journal tones used by append/transition producers.`, managerPath);
+  }
+}
+
+function verifySubstrateChronicleContract(manager, managerPath) {
+  const functionBlocks = extractFunctionBlocks(manager);
+  const directCalls = extractCalls(manager, "SendPrismaSubstrateToast")
+    .filter((call) => enclosingFunctionName(functionBlocks, call.index) !== "SendPrismaSubstrateProgress");
+  const reasonBearingPhases = new Set(["act", "water"]);
+  const pureFlavorPhases = new Set(["shadowscale", "dream"]);
+  let checked = 0;
+
+  for (const call of directCalls) {
+    const phase = stringLiteralValue(call.args[1]);
+    const functionName = enclosingFunctionName(functionBlocks, call.index);
+    const block = functionBlocks.find((item) => item.name === functionName)?.body || "";
+    if (reasonBearingPhases.has(phase)) {
+      checked += 1;
+      if (!block.includes("AppendBookOfDaysEntry(") || !block.includes('"substrate.act"')) {
+        fail(`Reason-bearing direct substrate toast at line ${call.line} (${functionName}, phase=${phase}) lacks a substrate.act Book of Days write.`, managerPath);
+      }
+    } else if (!pureFlavorPhases.has(phase)) {
+      fail(`Direct substrate toast at line ${call.line} (${functionName}) uses unclassified phase ${phase || "<dynamic>"}; classify it as reason-bearing or pure flavor.`, managerPath);
+    }
+  }
+
+  if (failures.length === 0 || checked > 0) {
+    pass(`Direct reason-bearing substrate toasts are paired with Book of Days writes (${checked} checked).`, managerPath);
+  }
+}
+
+function verifySessionCopyContracts(manager, managerPath) {
+  const forbiddenManagerPhrases = [
+    "You worship the Divines broadly through your civic service.",
+    "Your service to the public order has been felt as worship.",
+    "You worship the Nine Divines broadly, civic and public.",
+    "On the Talos question you stand ",
+  ];
+  for (const phrase of forbiddenManagerPhrases) {
+    if (manager.includes(phrase)) {
+      fail(`Player-facing Imperial copy still contains stale phrase/token: ${phrase}`, managerPath);
+    }
+  }
+
+  const acceptToast = functionBlock(manager, "BuildCommitmentOfferAcceptToastLine");
+  const refuseToast = functionBlock(manager, "BuildCommitmentOfferRefuseToastLine");
+  if (
+    !acceptToast.includes('return patron + " has named you their own."') ||
+    acceptToast.includes("broad faith narrows")
+  ) {
+    fail("Commitment accept toast must stay concise and start with the patron naming line.", managerPath);
+  } else {
+    pass("Commitment accept toast copy is centralized and concise.", managerPath);
+  }
+
+  if (!refuseToast.includes('return "You turned " + patron + " away."')) {
+    fail("Commitment refusal toast must stay concise; the permanent refusal explanation belongs in the authored response and journal surfaces.", managerPath);
+  } else {
+    pass("Commitment refusal toast copy is centralized and concise.", managerPath);
+  }
+}
+
+function verifyDaedricToastContracts(manager, managerPath) {
+  const milestoneBlock = functionBlock(manager, "ShowDaedricMilestonePresentation");
+  const residueBlock = functionBlock(manager, "DrainHircineResiduePrismaToasts");
+  const nordCurseBlock = functionBlock(manager, "ApplyCurseRaceHandlers");
+  if (!milestoneBlock.includes('SendPrismaDaedricToast(princeName, "boon", boonText, symbolName)')) {
+    fail("Daedric milestone presentation must emit the paired boon toast after the milestone toast.", managerPath);
+  } else {
+    pass("Daedric milestone presentation emits the paired boon toast.", managerPath);
+  }
+
+  if (
+    !residueBlock.includes('SendPrismaDaedricToast("Hircine", "residue", "The hunt\\\'s old mark still follows.", "hircine")') &&
+    !residueBlock.includes('SendPrismaDaedricToast("Hircine", "residue", "The hunt\'s old mark still follows.", "hircine")')
+  ) {
+    fail("Hircine residue onset must drain to a Prisma residue toast.", managerPath);
+  } else if (!residueBlock.includes('SendPrismaDaedricToast("Hircine", "residue", "The hunt\\\'s old mark fades.", "hircine")') && !residueBlock.includes('SendPrismaDaedricToast("Hircine", "residue", "The hunt\'s old mark fades.", "hircine")')) {
+    fail("Hircine residue clear must drain to a Prisma residue toast.", managerPath);
+  } else {
+    pass("Hircine residue onset and clear both drain to Prisma residue toasts.", managerPath);
+  }
+
+  if (
+    !nordCurseBlock.includes('AppendBookOfDaysEntry("The beast-blood took you and stirred Hircine. The Hunt is in you now."') ||
+    !nordCurseBlock.includes('"curse.onset"')
+  ) {
+    fail("Hircine werewolf curse entry must write a Book of Days curse-onset entry.", managerPath);
+  } else {
+    pass("Hircine werewolf curse entry writes a Book of Days curse-onset entry.", managerPath);
+  }
+}
+
+function verifyParityRegistryContracts(registryPath) {
+  if (!fs.existsSync(registryPath)) {
+    fail("Prisma parity registry is missing.", registryPath);
+    return;
+  }
+  const registry = read(registryPath);
+  const staleFragments = [
+    "Papyrus producer is absent",
+    "only Debug.Notification; NO AwardPiety, NO AppendBookOfDaysEntry, NO SendPrismaEventToast",
+    "GAP: no AppendBookOfDaysEntry and no RecordDaedricPathDriver at this site",
+    "BeginNordResidueRecovery sets StorageUtil keys with no Prisma emit",
+  ];
+  for (const fragment of staleFragments) {
+    if (registry.includes(fragment)) {
+      fail(`Prisma parity registry still contains stale resolved-gap wording: ${fragment}`, registryPath);
+    }
+  }
+
+  if (
+    !registry.includes('"daedric.boon","daedric","ALL","n/a","Y","N","N"') ||
+    !registry.includes('SendPrismaDaedricToast(princeName, ""boon"", boonText, symbolName)')
+  ) {
+    fail("Prisma parity registry must describe the live Daedric boon producer.", registryPath);
+  } else if (
+    !registry.includes('"rite.argonian.hist-adaptation","rite","Argonian","n/a","Y","Y","N"') ||
+    !registry.includes('ApplyArgonianAdaptation - playerRef.AddSpell + SendPrismaShiftToast + AppendBookOfDaysEntry')
+  ) {
+    fail("Prisma parity registry must describe the live Argonian adaptation toast/chronicle producer.", registryPath);
+  } else {
+    pass("Prisma parity registry matches the resolved Daedric boon/residue/Hircine/adaptation surfaces.", registryPath);
+  }
 }
 
 const failures = [];
@@ -264,6 +539,11 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     } else {
       pass("Accepted P2 book notices feed both Prisma toast and Book of Days chronicle.", managerPath);
     }
+
+    verifyJournalToneContract(manager, managerPath);
+    verifySubstrateChronicleContract(manager, managerPath);
+    verifySessionCopyContracts(manager, managerPath);
+    verifyDaedricToastContracts(manager, managerPath);
   }
 
   const bridgePath = path.join(DEVOTION_SOURCE, "PDV_PrismaBridge.psc");
@@ -566,7 +846,74 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   } else {
     pass("Book of Days cover line normalizes public race labels and renders only the race.", DEVOTION_PRISMA_VIEW);
   }
+
+  const managerPath = path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc");
+  const managerForBroadLane = fs.existsSync(managerPath) ? read(managerPath) : "";
+  if (
+    !managerForBroadLane.includes("Function EmitBookOfDaysBroadLaneTierChange(Int today)") ||
+    !managerForBroadLane.includes("BuildBroadLaneTierReachJournalLine(originRace, tier)") ||
+    !managerForBroadLane.includes("Function GetBroadLaneTierForOrigin(Int origin)") ||
+    !managerForBroadLane.includes("return \"Broad lane cap reached\"") ||
+    !app.includes("nodes.pietyText.textContent = text(state.pietyLabel, `${piety} piety`);")
+  ) {
+    fail("Broad-lane reward milestones must feed Book of Days and panel presentation without showing broad counters as deity piety.", managerPath);
+  } else {
+    pass("Broad-lane reward milestones feed Book of Days and panel presentation.", managerPath);
+  }
+
+  if (
+    !managerForBroadLane.includes("Function SendPrismaSubstrateProgress(String substrate, Int tierBefore, Int tierAfter, Float multiplier, String context, String symbolName, String stateLabel)") ||
+    !managerForBroadLane.includes('if multiplier > 0.0 && context != "" && tierAfter >= tierBefore') ||
+    !managerForBroadLane.includes('AppendBookOfDaysEntry(context, Utility.GetCurrentGameTime() as Int, "substrate.act", symbolName, False)') ||
+    !managerForBroadLane.includes('AppendBookOfDaysEntry("The code was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)') ||
+    !managerForBroadLane.includes('AppendBookOfDaysEntry("The Yokudan path was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "sect", False)') ||
+    !managerForBroadLane.includes('return "public civic service"')
+  ) {
+    fail("Reason-bearing substrate acts must feed both Prisma toast/ledger and the Book of Days chronicle.", managerPath);
+  } else {
+    pass("Reason-bearing substrate acts feed both Prisma toast/ledger and the Book of Days chronicle.", managerPath);
+  }
+
+  if (
+    !managerForBroadLane.includes('return "An act of devotion"') ||
+    managerForBroadLane.includes('return "an act of devotion"') ||
+    app.includes('"an act of devotion"')
+  ) {
+    fail("Book of Days and Prisma devotional-act fallback copy must keep sentence-case title capitalization.", managerPath);
+  } else {
+    pass("Book of Days and Prisma devotional-act fallback copy keep sentence-case title capitalization.", managerPath);
+  }
+
+  if (
+    !managerForBroadLane.includes("You worship the Nine Divines broadly, and your standing is ") ||
+    !managerForBroadLane.includes("BuildImperialConcordatSurveySentence(concordat)") ||
+    !managerForBroadLane.includes('return "Under the Concordat, you are " + concordatLabel + "."') ||
+    managerForBroadLane.includes("You worship the Divines broadly through your civic service.") ||
+    managerForBroadLane.includes("Your service to the public order has been felt as worship.") ||
+    managerForBroadLane.includes("You worship the Nine Divines broadly, civic and public.") ||
+    managerForBroadLane.includes("On the Talos question you stand ")
+  ) {
+    fail("Imperial broad Survey copy must use the compact broad-standing sentence and direct Concordat sentence.", managerPath);
+  } else {
+    pass("Imperial broad Survey copy uses the compact broad-standing and Concordat sentences.", managerPath);
+  }
+
+  if (
+    !managerForBroadLane.includes("return FormatImperialConcordatLabel(PDV_ConcordatStandingTrack.GetStateLabel())") ||
+    !managerForBroadLane.includes("String Function FormatImperialConcordatLabel(String label)") ||
+    !managerForBroadLane.includes('return "Publicly Compliant"') ||
+    !managerForBroadLane.includes('return "Privately Defiant"') ||
+    !managerForBroadLane.includes('return "Openly Defiant"') ||
+    !managerForBroadLane.includes('return "Concordat Enforcer"') ||
+    !managerForBroadLane.includes('return "Under the White-Gold Concordat, you are " + modeLabel + "."')
+  ) {
+    fail("Imperial Concordat display labels must be spaced for player-facing Survey, panel, and Book of Days surfaces.", managerPath);
+  } else {
+    pass("Imperial Concordat display labels are spaced for player-facing surfaces.", managerPath);
+  }
 }
+
+verifyParityRegistryContracts(path.join(REPO_ROOT, "references", "authoring", "PDV_PrismaParityRegistry.csv"));
 
 for (const item of passes) {
   console.log(`[PASS] ${item.message}${item.source ? ` [${item.source}]` : ""}`);

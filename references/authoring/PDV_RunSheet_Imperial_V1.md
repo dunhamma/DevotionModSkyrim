@@ -95,8 +95,9 @@ regardless of load order). Only the preflight changes:
 - **Record:** ___
 
 ### Slot 4c -- broad worship caps at Tier 2  [Tester] [R]+[M]
-- **Do:** MCM Debug -> stay on **broad** Nine Divines worship (no patron committed) and Force Piety upward.
-  Run Dawn through Seeker / Devoted.
+- **Do:** MCM Debug -> stay on **broad** Nine Divines worship (no patron committed), then use
+  **Seed broad lane (origin)** and **Run dawn pass**. This uses the Imperial civic-service counter, not
+  deity piety.
 - **See:** broad civic worship **tops out at Tier 2 (Devoted)** -- you do NOT reach Champion on the broad
   faith. The path to Champion is through the formal commitment offer (Slot 4a). No Champion tier-up toast / no
   pinned Champion Book of Days entry on broad worship alone.
@@ -134,7 +135,9 @@ regardless of load order). Only the preflight changes:
   shift the committed band past the lock-in grace), then **sleep to the next dawn**.
 - **See:** **NO immediate toast** on the band change (by design -- `reorientation.imperial.concordat` is
   dawn-timed, toast=N). At the **next dawn** the **Book of Days** records the standing change. (If you see a
-  band-change toast, that's a regression -> note it.)
+  band-change toast, that's a regression -> note it.) Natural dawn after the three-day lock-in is enough; you
+  do not need an extra debug dawn if the entry already appears. Expected line shape:
+  `Under the White-Gold Concordat, you are Publicly Compliant.`
 - **Record:** ___
 
 ### Slot 4g -- Talos offer gated on Concordat Standing  [Tester] [R]
@@ -146,11 +149,19 @@ regardless of load order). Only the preflight changes:
 - **Record:** ___
 
 ### Slot 4h -- civic substrate driver  [Tester] [R]
-- **Do (play normally where possible):** do a **civic-service** act / patron-civic favor act for Imperial,
-  then open the panel -> **Ledger**.
-- **See:** the civic-ancestor substrate act lands a **driver row in the Ledger** ("The old civic spine
-  steadies.", Talos token `imperial-civic`). The substrate is reason-bearing -- if the Ledger stays empty
-  after a substrate act, FAIL.
+- **Do (play normally where possible):** complete one of the wired Imperial civic quest-stage routes, then
+  open the panel -> **Ledger**. Controlled test-save options are:
+  `setstage MQ103 190` (Bleak Falls Barrow public service),
+  `setstage CW02A 200` (Imperial Jagged Crown public service),
+  `setstage MS08 200` (Saadia mercy),
+  `setstage MS08 201` (Alik'r lawful order),
+  `setstage MS13 100` or `setstage MS13 110` (Golden Claw honest work),
+  `setstage MS14 200` (Laid to Rest death duty), or
+  `setstage T02 200` (Book of Love patron-civic favor).
+- **See:** the civic-ancestor substrate act lands a **driver row in the Ledger** (`public civic service`) and a
+  **Chronicle entry** in the Book of Days ("Your public service steadies your devotion.", Talos token
+  `imperial-civic`). The substrate is reason-bearing -- if the Ledger or Chronicle stays empty after a
+  substrate act, FAIL.
 - **Record:** ___
 
 ### Slot 5 -- wrong-origin rejection  [Dev] [R]
@@ -181,7 +192,7 @@ regardless of load order). Only the preflight changes:
 ## Prisma surfaces (Imperial beats -- confirm each renders)
 | Beat | Toast | Book of Days | Ledger | How to trigger |
 |---|---|---|---|---|
-| tier Seeker/Devoted (broad caps at T2) | Y | Y | N | Force broad piety + Run Dawn |
+| tier Seeker/Devoted (broad caps at T2) | Y | Y | N | Seed broad lane (origin) + Run Dawn |
 | tier Champion (via offer only) | Y | Y (pinned) | N | accept a formal commitment offer |
 | offer.present | Y (the MESG popup) | N | N | MCM Debug present offer |
 | offer.accept | **Y** | **Y (pinned)** | N | Accept the offer |
@@ -232,8 +243,8 @@ regardless of load order). Only the preflight changes:
 | 4c broad caps T2 | no Champion on broad worship | | |
 | 4d Talos book | RouteImperialTalosPressure marker, no panel | | |
 | 4e Concordat track | raw value moves per emitter (judge raw, not band) | | |
-| 4f Concordat reorientation | next-dawn BoD, NO immediate toast | | |
-| 4g Talos offer gate | Talos offer hidden when Standing > 50 | | |
+| 4f Concordat reorientation | next-dawn BoD, NO immediate toast | PASS | Manual Book of Days screenshot plus backend commit marker: Uncommitted -> PublicCompliant. Copy patched to player-facing Publicly Compliant; restart required before rechecking text. |
+| 4g Talos offer gate | Talos offer hidden when Standing > 50 | PASS | Backend confirmed: at Concordat raw 60 / Publicly Compliant, commitment evaluation stayed pending 0 -> 0. Manual/backend allowed-side proof: Talos offer appeared at raw 40. Restarted polish pass confirmed Talos tier toast/diegetic suppression while Concordat blocks offers. |
 | 4h civic substrate | civic act lands a Ledger driver | | |
 | 5 wrong-origin | Nord origin: zero Imperial movement | | |
 | 6 generic silence | faction/attendance/bounty/lawfulness do not score | | |
