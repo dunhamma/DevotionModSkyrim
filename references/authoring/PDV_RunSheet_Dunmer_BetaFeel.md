@@ -91,13 +91,15 @@ Front-load this so a missing asset blocks nothing downstream.
   status; current contract target is **no required new custom mesh**.
 - **Seed:** none.
 - **Action / where to stand:** anywhere. Confirm the Dunmer ancestor hook is a
-  readable **inventory urn token** (`PDV_DunmerAncestralUrn`, fires
-  `RouteDunmerPortableShrinePrayer` on `OnRead`), not a placed worldspace mesh.
+  usable **MISC inventory urn** (`PDV_MISC_DunmerAncestralUrn`, Dark Elf urn
+  model, Miscellaneous section; fires `RouteDunmerPortableShrinePrayer` on
+  `OnEquipped` when used from the inventory), not a placed worldspace mesh.
   The portable-shrine design is exactly "carry the infrastructure in exile" --
-  no in-world ancestral tomb is required.
+  no in-world ancestral tomb is required. (2026-07-04 remediation: the old
+  model-less BOOK token crashed the book menu on read; migration removes it.
+  An "Ancestral Urn" under Books is the regression -> FAIL.)
 - **Watch:** that the prayer hook is reachable via the MCM `Dunmer ancestor
-  prayer` button and (optionally) the urn read, with no missing-mesh / red
-  placeholder.
+  prayer` button and the urn use, with no missing-mesh / red placeholder.
 - **PASS:** Dunmer uses portable token + MCM substrate buttons + (PENDING)
   the three DLC2 Solstheim altar spells re-pointed to `PDV_MGEF_DunmerShrineCure`.
   No new custom mesh is required by any Dunmer hook. Record "no new mesh" or
@@ -266,25 +268,22 @@ contact as deviation-price proof. Record this arm as DEFERRED, not FAIL.
 
 ### Slot 5 -- surveyStatusClarity  [MANUAL-ACCEPTANCE]
 
-- **Ledger expectation:** "Survey/MCM explains ancestor posture, active
-  Reclamation, diaspora burden, private shrine state, and Daedric deviation
-  cost."
+- **Ledger expectation:** "Survey/MCM explains active Reclamation focus, names
+  what the standing band refers to, and only adds curse posture when cursed."
 - **Seed:** use the state left by slot 4 (some ancestor practice, a chosen
   focus from the book reads). Optionally `Curse none` for a clean read.
 - **Action:** open Survey Devotion and the MCM Status page.
 - **Watch:** the text must explain, in fiction voice and without leaking route
   IDs or raw counters:
-  - ancestor posture (practice tier, curse posture if cursed),
-  - the active Reclamation focus (Azura / Boethiah / Mephala),
-  - diaspora / infrastructure-ceiling burden (exile, portable practice),
-  - declared ancestor-home (bed-of-choice) state -- see the Home-Prayer Pulse
-    note below; the old unconditional "private/home shrine" aura is being replaced,
-  - Daedric deviation cost (other Princes land as deviation, not a fourth
-    Reclamation).
+  - the active Reclamation focus (Azura / Boethiah / Mephala), or the broad
+    "three Good Daedra answer together" state,
+  - what the standing band refers to (for example, standing with the
+    Reclamations),
+  - curse posture only when cursed.
   Confirm the Survey "recent events" line lists the just-fired beat in fiction
   voice (e.g. "The Reclamations have answered a source you sought out.") with no
   route IDs or raw counters.
-- **PASS:** all five facets are legible, fiction-voiced, and counter-free.
+- **PASS:** the compact Survey is legible, fiction-voiced, and counter-free.
 
 ---
 
@@ -428,7 +427,7 @@ yet landed) / DEFERRED (no runnable step) / N/A.
 | 4c. immersiveHook -- curse silence | route/runtime | vampire 0x silence + 4 posture labels? | |
 | 4d. immersiveHook -- twilight / outdoor shrine | route/runtime (PENDING) | twilight marker + once-per-window? | |
 | 4e. immersiveHook -- deviation price | deferred | DEFERRED (no step) | |
-| 5. surveyStatusClarity | manual-acceptance | all 5 facets legible + counter-free? | |
+| 5. surveyStatusClarity | manual-acceptance | compact focus + named standing + curse posture, counter-free? | |
 | 6. stackSnapshot | manual-acceptance | snapshots A + B match, no generic leak? | |
 | 7. manualFeelNote | manual-acceptance | feel note recorded | |
 | 8. Prisma surfaces | manual-acceptance | toast/panel/Chronicle/Ledger safe and populated, including recovery? | |

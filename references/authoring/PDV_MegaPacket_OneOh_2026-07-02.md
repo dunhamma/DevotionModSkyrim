@@ -84,10 +84,11 @@ Also fill the sheet's own Record table and note logs for `PDV_V1_BetaReadinessGa
 ## B. Dunmer race sheet  [strict-gate blocker 2 of 2]
 
 Run `references/authoring/PDV_RunSheet_Dunmer_V1.md` in full (origin `5`). Slots 1-8. Key
-reminders -- the ancestral urn must STAY in inventory after reading; the ancestor act must land
-a **Ledger driver row** (the P0 regression); layer-label deepening is a NEXT-DAWN chronicle,
-not a toast; vampire = 0x prayer credit, werewolf = 0.5x, cure = full + scarred posture; broad
-three-Good-Daedra worship caps at Tier 2.
+reminders -- the ancestral urn is a usable **MISC item** (Miscellaneous section; 2026-07-04
+remediation replaced the crashing BOOK token; a book-type urn = regression FAIL) and must STAY
+in inventory after use; the ancestor act must land a **Ledger driver row** (the P0 regression);
+layer-label deepening is a NEXT-DAWN chronicle, not a toast; vampire = 0x prayer credit,
+werewolf = 0.5x, cure = full + scarred posture; broad three-Good-Daedra worship caps at Tier 2.
 
 Same ledger mapping as Imperial (slot 1 -> `assetStatus` ... slot 8 felt -> `manualFeelNote`;
 4a-4f -> `immersiveHookProof`; 7 neglect rides `immersiveHookProof` or the universal sheet).

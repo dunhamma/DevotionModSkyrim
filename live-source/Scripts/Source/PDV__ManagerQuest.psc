@@ -95,6 +95,7 @@ PDV_Substrate_AltmerAncestor Property PDV_AltmerAncestorSubstrate Auto
 PDV_Substrate_NordAncestor Property PDV_NordAncestorSubstrate Auto
 PDV_Substrate_DunmerAncestor Property PDV_DunmerAncestorSubstrate Auto
 Book Property PDV_BOOK_DunmerAncestralUrn Auto
+MiscObject Property PDV_MISC_DunmerAncestralUrn Auto
 PDV_Substrate_KhajiitLunar Property PDV_KhajiitLunarSubstrate Auto
 PDV_Substrate_ArgonianHist Property PDV_ArgonianHistSubstrate Auto
 Book Property PDV_BOOK_ArgonianHistSapToken Auto
@@ -17744,7 +17745,10 @@ Function EnsureSurveyDevotionPower()
 EndFunction
 
 Function EnsureDunmerAncestralUrn()
-    if GetPlayerOriginRaceIndex() != ORIGIN_DUNMER || !PDV_BOOK_DunmerAncestralUrn
+    ; V1: grant the usable MISC urn (PDV_MISC_DunmerAncestralUrn); clicking it in the inventory
+    ; fires OnEquipped and routes the ancestor prayer. The retired model-less BOOK token crashed
+    ; the book menu on read, so migration removes any copies before granting the MISC urn.
+    if GetPlayerOriginRaceIndex() != ORIGIN_DUNMER || !PDV_MISC_DunmerAncestralUrn
         return
     endIf
 
@@ -17753,8 +17757,16 @@ Function EnsureDunmerAncestralUrn()
         return
     endIf
 
-    if playerRef.GetItemCount(PDV_BOOK_DunmerAncestralUrn) <= 0
-        playerRef.AddItem(PDV_BOOK_DunmerAncestralUrn, 1, True)
+    if PDV_BOOK_DunmerAncestralUrn
+        int staleBookCount = playerRef.GetItemCount(PDV_BOOK_DunmerAncestralUrn)
+        if staleBookCount > 0
+            playerRef.RemoveItem(PDV_BOOK_DunmerAncestralUrn, staleBookCount, True)
+            Trace(2, "Dunmer ancestral urn book token retired.")
+        endIf
+    endIf
+
+    if playerRef.GetItemCount(PDV_MISC_DunmerAncestralUrn) <= 0
+        playerRef.AddItem(PDV_MISC_DunmerAncestralUrn, 1, True)
         Trace(2, "Dunmer ancestral urn granted.")
     endIf
 EndFunction

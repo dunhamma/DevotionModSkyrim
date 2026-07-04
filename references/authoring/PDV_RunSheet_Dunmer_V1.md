@@ -41,19 +41,24 @@ regardless of load order). Only the preflight changes:
 ## Tests
 
 ### Slot 1 -- new records present  [Dev] [M]
-- **Do:** Confirm (desk check / inventory) the **ancestral urn** exists as a reusable **BOOK token**
-  (`PDV_DunmerAncestralUrn`) and is in your inventory after race-confirm. It is the portable shrine -- you
-  carry the infrastructure in exile; reading it prays. No placed worldspace tomb / mesh is required.
-- **See:** the urn book is in inventory; no Dunmer hook needs a new mesh.
+- **Do:** Confirm (desk check / inventory) the **ancestral urn** exists as a usable **MISC item**
+  (`PDV_MISC_DunmerAncestralUrn`, Dark Elf urn model, **Miscellaneous** inventory section) and is in your
+  inventory after race-confirm. It is the portable shrine -- you carry the infrastructure in exile;
+  **using it from the inventory** prays. No placed worldspace tomb / mesh is required.
+  (2026-07-04 remediation: the old model-less BOOK token crashed the book menu on read and is auto-removed
+  by `EnsureDunmerAncestralUrn` migration. If an "Ancestral Urn" appears under **Books**, that is the
+  regression -> FAIL.)
+- **See:** the urn is in inventory under Miscellaneous with a visible urn model (vanilla
+  `DLC2DarkElfUrn01.nif`); no Dunmer hook needs a new custom mesh.
 - **Record:** ___
 
 ### Slot 2 -- Survey reads clean  [Tester] [M]
 - **Do:** MCM Debug -> `Dunmer ancestor prayer` x2-3 and Force Piety on a Good Daedra (Azura) to **85**. Then
   open **Survey Devotion** (in the panel / MCM status).
-- **See:** the Dunmer lines read like narration -- the **ancestor-layer** depth ("the ancestors answer
-  readily / steady / are beginning to answer / are quiet"), the **active Reclamation focus** (Azura /
-  Boethiah / Mephala, or "the three Good Daedra answer together" when broad), exile/portable burden, and a
-  **curse posture** line only when cursed. No raw numbers / route IDs / enum codes leaking.
+- **See:** the Dunmer Survey stays compact: the **active Reclamation focus** (Azura /
+  Boethiah / Mephala, or "the three Good Daedra answer together" when broad), a sentence that names what
+  the standing band refers to, and a **curse posture** line only when cursed. Ancestor-layer depth belongs
+  in the dawn Chronicle / Ledger evidence, not this modal. No raw numbers / route IDs / enum codes leaking.
 - **Record:** ___
 
 ### Slot 3 -- effect stack is clean  [Tester] [M] + [Dev] [R]
@@ -64,9 +69,11 @@ regardless of load order). Only the preflight changes:
 
 ### Slot 4a -- ancestral urn ash-prayer loop (the substrate + the Ledger fix)  [Tester] [R]+[M]
 - **Do:**
-  1. Open inventory, **read the ancestral urn** (this is the ash-prayer). Or MCM Debug -> `Dunmer ancestor prayer`.
+  1. Open inventory (Miscellaneous), **use the ancestral urn** (this is the ash-prayer). Or MCM Debug ->
+     `Dunmer ancestor prayer`. A brief pray idle may play after the menu closes (3rd person, weapons
+     sheathed only -- absence is not a FAIL).
   2. Open the Devotion panel -> **Ledger** page.
-  3. Read the urn **again the same day**.
+  3. Use the urn **again the same day**.
 - **See:** a **substrate toast** ("Ancestor prayer marked.") and the **ancestor-layer rises a tier** across
   2-3 prayers; the **urn stays in your inventory** (it is reusable). **Crucially**, the **Ledger now shows a
   driver row** for the ancestor act -- this used to be MISSING (the scaled-curated P0 fix). The 2nd same-day
@@ -76,7 +83,7 @@ regardless of load order). Only the preflight changes:
 
 ### Slot 4b -- ancestor-home bonus  [Tester] [R]+[M]
 - **Do:** sleep in a bed to declare that cell your ancestor-home (watch for the declaration notice), then
-  **read the urn AT that home** (or MCM Debug -> `Dunmer home bonus`). Pray with the urn ELSEWHERE for contrast.
+  **use the urn AT that home** (or MCM Debug -> `Dunmer home bonus`). Pray with the urn ELSEWHERE for contrast.
 - **See:** praying at the declared home fires the **bigger progress step** (a Ledger driver row) plus a timed
   **Health** restoration -- under Requiem watch the **HP bar actually move** (it is a flat Restore-Health, not
   a regen-rate buff). Praying anywhere else = base prayer only, no pulse.
@@ -126,7 +133,7 @@ regardless of load order). Only the preflight changes:
 ### Slot 6 -- generic acts stay silent  [Tester] [R]
 - **Do:** as a Dunmer, do ordinary things that are NOT the coded hooks: a generic vanilla Daedric shrine
   activation, a theft, a murder, walking through ash, tomb travel.
-- **See:** **none of these score** the ancestor layer or a Reclamation focus (only the urn read / MCM prayer /
+- **See:** **none of these score** the ancestor layer or a Reclamation focus (only the urn use / MCM prayer /
   approved book sources do). Other Princes land as priced **deviation**, never as a fourth Reclamation.
 - **Record:** ___
 
@@ -149,7 +156,7 @@ regardless of load order). Only the preflight changes:
 | Beat | Toast | Book of Days | Ledger | How to trigger |
 |---|---|---|---|---|
 | tier Seeker/Devoted/Champion | Y | Y (pinned Champion) | N | Force Good-Daedra piety + Run Dawn |
-| ancestor substrate act (urn read / MCM prayer / home bonus) | Y | N | **Y (driver)** | read urn / MCM prayer |
+| ancestor substrate act (urn use / MCM prayer / home bonus) | Y | N | **Y (driver)** | use urn / MCM prayer |
 | ancestor-layer deepening (quiet/beginning/steady/strong) | N | Y (next dawn) | N | raise practice a tier |
 | commitment-offer ACCEPT | **Y** | **Y (pinned)** | N | accept a pending offer |
 | commitment-offer REFUSE | **Y** | **Y (pinned)** | N | refuse a pending offer (terminal) |
@@ -159,7 +166,7 @@ regardless of load order). Only the preflight changes:
 ---
 
 ## Known gotchas
-- **The ancestral urn MUST stay in inventory.** It is a reusable BOOK token (portable shrine) -- if the count
+- **The ancestral urn MUST stay in inventory.** It is a reusable MISC token (portable shrine) -- if the count
   drops after reading, the grant is wrong -> FAIL.
 - **Substrate Ledger driver is the key regression.** The Dunmer ancestor act used to record NO Ledger driver
   (the scaled-curated P0 bug); it now should (`AwardDunmerAncestorSpinePulse` -> `AwardCuratedSignalScaled`).
@@ -174,7 +181,7 @@ regardless of load order). Only the preflight changes:
 - **Broad "ancestor + Reclamations" caps at Tier 2.** Worshipping all three Good Daedra broadly (no named
   focus) does not climb to Champion; only a named Reclamation focus does.
 - **`coc` skips location triggers** -- walk in via a load door / fast-travel for the home / outdoor-shrine
-  hooks. The urn read and MCM substrate buttons are not location-gated and work anywhere.
+  hooks. The urn use and MCM substrate buttons are not location-gated and work anywhere.
 - **MCM Debug pages, not `cqf`.** Buttons are `Dunmer ancestor prayer`, `Dunmer home bonus`; curse buttons are
   `Curse none`, `Curse werewolf`, `Curse vampire`.
 
@@ -183,8 +190,8 @@ regardless of load order). Only the preflight changes:
 ## Record results here
 | Slot | What it proves | Status | Note |
 |---|---|---|---|
-| 1 new records | ancestral urn book token in inventory | | |
-| 2 Survey | ancestor layer + focus + posture legible | | |
+| 1 new records | ancestral urn MISC item in Miscellaneous (NOT a book) | | |
+| 2 Survey | focus + named standing + curse posture legible; no ancestor-detail bloat | | |
 | 3 stack | ancestor + focus reward layer, no rogue aura | | |
 | 4a urn ash-prayer loop | prayer -> layer rise + urn kept; **Ledger driver row**; daily cap | | |
 | 4b ancestor-home bonus | home pulse: bigger step + HP-bar heal; elsewhere = base only | | |
