@@ -97,6 +97,7 @@ PDV_Substrate_DunmerAncestor Property PDV_DunmerAncestorSubstrate Auto
 Book Property PDV_BOOK_DunmerAncestralUrn Auto
 MiscObject Property PDV_MISC_DunmerAncestralUrn Auto
 Spell Property PDV_SPEL_Dunmer_AncestorWatch Auto
+Message Property PDV_MESG_DunmerMarkHome Auto
 PDV_Substrate_KhajiitLunar Property PDV_KhajiitLunarSubstrate Auto
 PDV_Substrate_ArgonianHist Property PDV_ArgonianHistSubstrate Auto
 Book Property PDV_BOOK_ArgonianHistSapToken Auto
@@ -5601,27 +5602,90 @@ Function DisarmDunmerAncestorWatch()
     endIf
 EndFunction
 
-; Auto-declare the first interior bed-cell you rest in as your Dunmer
-; ancestor-home (11a: immediate, no settle clock). In exile the rest-place is
-; where the ancestors gather. A player-chosen prompt + move-home is a post-V1
-; upgrade (needs a CK-authored MESG; houseCARL writes patches, not Devotion.esp).
+; Declare the player's Dunmer ancestor-home from sleep, keyed to the cell rather
+; than the bed reference. First homes ask immediately; moving to a new place
+; requires three consecutive sleeps in the same non-home cell so a one-night inn
+; stop does not steal the rite.
 Function HandleDunmerSleepEvents(Actor playerRef, String reason)
     if !PDV_DunmerAncestorSubstrate || !playerRef
-        return
-    endIf
-    if StorageUtil.GetIntValue(None, "PDV.DunHome.DeclaredFormID") != 0
-        if IsPlayerAtDunmerDeclaredHome(playerRef) && StorageUtil.GetIntValue(None, "PDV.Dunmer.DeviationPriceCount") > 0
-            HandleDunmerDeviationPrice("sleep_deviation_" + reason)
-        endIf
         return
     endIf
     Cell sleepCell = playerRef.GetParentCell()
     if !sleepCell || !sleepCell.IsInterior()
         return
     endIf
-    StorageUtil.SetIntValue(None, "PDV.DunHome.DeclaredFormID", sleepCell.GetFormID())
-    StorageUtil.SetIntValue(None, "PDV.DunHome.DeclaredDay", (Utility.GetCurrentGameTime() as Int) + 1)
-    SendPrismaToast("ancestor", "good", "Ancestor-space", "The ancestors gather where you sleep.")
+
+    Int sleepCellId = sleepCell.GetFormID()
+    Int today = Utility.GetCurrentGameTime() as Int
+    Int declaredId = StorageUtil.GetIntValue(None, "PDV.DunHome.DeclaredFormID")
+    if StorageUtil.GetIntValue(None, "PDV.DunHome.DeclaredFormID") != 0
+        if sleepCellId == declaredId && StorageUtil.GetIntValue(None, "PDV.Dunmer.DeviationPriceCount") > 0
+            HandleDunmerDeviationPrice("sleep_deviation_" + reason)
+        endIf
+        if sleepCellId == declaredId
+            StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateFormID", 0)
+            StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateCount", 0)
+            StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateDay", 0)
+            return
+        endIf
+    endIf
+
+    if !PDV_MESG_DunmerMarkHome
+        if declaredId == 0
+            SetDunmerHome(sleepCellId, today, reason)
+        endIf
+        return
+    endIf
+
+    Int declinedDay = StorageUtil.GetIntValue(None, "PDV.DunHome.DeclineDay")
+    if declinedDay > 0 && (today + 1 - declinedDay) < 3
+        return
+    endIf
+
+    Bool shouldPrompt = declaredId == 0
+    if declaredId != 0
+        Int candidateId = StorageUtil.GetIntValue(None, "PDV.DunHome.CandidateFormID")
+        Int candidateCount = StorageUtil.GetIntValue(None, "PDV.DunHome.CandidateCount")
+        if candidateId != sleepCellId
+            candidateCount = 1
+            StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateFormID", sleepCellId)
+        else
+            candidateCount += 1
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateCount", candidateCount)
+        StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateDay", today + 1)
+        shouldPrompt = candidateCount >= 3
+    endIf
+
+    if !shouldPrompt
+        return
+    endIf
+
+    Utility.Wait(0.5)
+    Int pressed = PDV_MESG_DunmerMarkHome.Show()
+    if pressed == 0
+        SetDunmerHome(sleepCellId, today, reason)
+    else
+        StorageUtil.SetIntValue(None, "PDV.DunHome.DeclineDay", today + 1)
+        StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateFormID", 0)
+        StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateCount", 0)
+        StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateDay", 0)
+    endIf
+EndFunction
+
+Function SetDunmerHome(Int sleepCellId, Int today, String reason)
+    if sleepCellId == 0
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.DunHome.DeclaredFormID", sleepCellId)
+    StorageUtil.SetIntValue(None, "PDV.DunHome.DeclaredDay", today + 1)
+    StorageUtil.SetIntValue(None, "PDV.DunHome.DeclineDay", 0)
+    StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateFormID", 0)
+    StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateCount", 0)
+    StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateDay", 0)
+    SendPrismaToast("ancestor", "good", "Ancestor-space", "The ancestors will know this place.")
+    Trace(2, "Dunmer ancestor-home declared: " + reason)
 EndFunction
 
 Bool Function IsPlayerAtDunmerDeclaredHome(Actor playerRef)
@@ -10180,6 +10244,144 @@ String Function HumanizeDriverReason(String raw)
         return "every tenth quest"
     elseIf StringContainsToken(raw, "meta_xarxes_record")
         return "every tenth quest"
+    elseIf StringContainsToken(raw, "talos-shrine-defiance")
+        return "defiant prayer at a Talos shrine"
+    elseIf StringContainsToken(raw, "talos_betrayal_major")
+        return "turning on Talos openly"
+    elseIf StringContainsToken(raw, "talos_betrayal_compliance")
+        return "bending to the Talos ban"
+    elseIf StringContainsToken(raw, "imperial-talos-pressure")
+        return "Concordat pressure over Talos"
+    elseIf StringContainsToken(raw, "concordat-compliance")
+        return "complying with the Concordat"
+    elseIf StringContainsToken(raw, "concordat-defiance")
+        return "defying the Concordat"
+    elseIf StringContainsToken(raw, "imperial-patron-civic-favor")
+        return "civic service (patron bonus)"
+    elseIf StringContainsToken(raw, "imperial-civic-service")
+        return "civic service"
+    elseIf StringContainsToken(raw, "nord-old-ways-state")
+        return "keeping the Old Ways"
+    elseIf StringContainsToken(raw, "nord-kyne-talos-context")
+        return "the Old Ways beside Talos"
+    elseIf StringContainsToken(raw, "nord-hircine-arkay-edge")
+        return "the hunt at Arkay's edge"
+    elseIf StringContainsToken(raw, "sleep-moon-observance")
+        return "sleeping under aligned moons"
+    elseIf StringContainsToken(raw, "khajiit-road-home")
+        return "returning by the road home"
+    elseIf StringContainsToken(raw, "khajiit-baandar-road-trick")
+        return "a trick on the road"
+    elseIf StringContainsToken(raw, "khajiit-rajhin-elegant-theft")
+        return "an artful theft"
+    elseIf StringContainsToken(raw, "khajiit-alkosh-dragon-order")
+        return "keeping dragon order"
+    elseIf StringContainsToken(raw, "hircine-hunt-rite")
+        return "a ritual hunt"
+    elseIf StringContainsToken(raw, "green-pact-violation")
+        return "breaking the Green Pact"
+    elseIf StringContainsToken(raw, "bosmer-old-contract-proper-hunt")
+        return "a proper hunt"
+    elseIf StringContainsToken(raw, "bosmer-old-contract-forest-kept")
+        return "keeping the forest"
+    elseIf StringContainsToken(raw, "bosmer-living-story-community")
+        return "sharing the living story"
+    elseIf StringContainsToken(raw, "bosmer-living-story-nature-site")
+        return "a tale at a wild place"
+    elseIf StringContainsToken(raw, "bosmer-living-story")
+        return "a Living Story deed"
+    elseIf StringContainsToken(raw, "bosmer-exchange-debt-settled")
+        return "settling a debt"
+    elseIf StringContainsToken(raw, "bosmer-exchange-proportionate-vengeance")
+        return "measured vengeance"
+    elseIf StringContainsToken(raw, "bosmer-exchange")
+        return "an Exchange deed"
+    elseIf StringContainsToken(raw, "bosmer-bandit-road-road-life")
+        return "living the road life"
+    elseIf StringContainsToken(raw, "bosmer-bandit-road-reversal")
+        return "a reversal on the road"
+    elseIf StringContainsToken(raw, "bosmer-bandit-road")
+        return "a Bandit Road deed"
+    elseIf StringContainsToken(raw, "bosmer-pact-positive")
+        return "keeping the Green Pact"
+    elseIf StringContainsToken(raw, "dunmer-portable-shrine")
+        return "prayer at your portable shrine"
+    elseIf StringContainsToken(raw, "dunmer-home-bonus")
+        return "devotions kept at home"
+    elseIf StringContainsToken(raw, "dunmer-reclamation-focus")
+        return "focus on the Reclamations"
+    elseIf StringContainsToken(raw, "dunmer-deviation-price")
+        return "straying from the Reclamations"
+    elseIf StringContainsToken(raw, "altmer-lorkhan-pressure")
+        return "leaning toward Lorkhan"
+    elseIf StringContainsToken(raw, "altmer-crisis-source")
+        return "feeding the crisis of faith"
+    elseIf StringContainsToken(raw, "altmer-dawn-steadiness")
+        return "steadiness at dawn"
+    elseIf StringContainsToken(raw, "altmer-orthodox-cost")
+        return "the cost of orthodoxy paid"
+    elseIf StringContainsToken(raw, "argonian-hist-maintenance")
+        return "tending the Hist bond"
+    elseIf StringContainsToken(raw, "argonian-people-support")
+        return "supporting the People"
+    elseIf StringContainsToken(raw, "argonian-void-signal")
+        return "a step toward the Void"
+    elseIf StringContainsToken(raw, "argonian-bed-of-choice")
+        return "rest in your chosen bed"
+    elseIf StringContainsToken(raw, "orc-stronghold-forge")
+        return "forge work in a stronghold"
+    elseIf StringContainsToken(raw, "orc-city-dignity")
+        return "dignity kept in city life"
+    elseIf StringContainsToken(raw, "orc-legion-service")
+        return "service with the Legion"
+    elseIf StringContainsToken(raw, "orc-self-made-community")
+        return "building a community"
+    elseIf StringContainsToken(raw, "orc-oath-break")
+        return "breaking an oath"
+    elseIf StringContainsToken(raw, "orc-four-holds-visit")
+        return "visiting the four holds"
+    elseIf StringContainsToken(raw, "redguard-crown-tomb-respect")
+        return "respect at a Crown tomb"
+    elseIf StringContainsToken(raw, "redguard-forebear-road")
+        return "walking the Forebear road"
+    elseIf StringContainsToken(raw, "redguard-ashabah-death-duty")
+        return "putting down the risen dead"
+    elseIf StringContainsToken(raw, "redguard-far-shores-token")
+        return "a Far Shores token earned"
+    elseIf StringContainsToken(raw, "breton-tradition-choice")
+        return "choosing a tradition"
+    elseIf StringContainsToken(raw, "breton-knightly-vow")
+        return "keeping a knightly vow"
+    elseIf StringContainsToken(raw, "breton-hidden-art-exposure")
+        return "a hidden art exposed"
+    elseIf StringContainsToken(raw, "breton-green-way-standing")
+        return "standing with the Green Way"
+    elseIf StringContainsToken(raw, "state-transition-confirm-rite")
+        return "a rite confirming your path"
+    elseIf StringContainsToken(raw, "daedric-prince-signal")
+        return "a deed the Prince claims"
+    elseIf StringContainsToken(raw, "daedric-generic-silence")
+        return "silence from the Princes"
+    elseIf StringContainsToken(raw, "shout-to-open-sky")
+        return "a shout to the open sky"
+    elseIf StringContainsToken(raw, "rest-under-open-sky")
+        return "resting under the open sky"
+    elseIf StringContainsToken(raw, "sleep-in-bed")
+        return "sleeping in a bed"
+    elseIf StringContainsToken(raw, "take-blessing")
+        return "taking a shrine blessing"
+    elseIf StringContainsToken(raw, "Trial of Iron")
+        return "taking up the Trial of Iron"
+    elseIf StringContainsToken(raw, "Remembering of Names")
+        return "taking up the Remembering of Names"
+    elseIf StringContainsToken(raw, "Discipline of Return")
+        return "setting a Discipline of Return"
+    elseIf StringContainsToken(raw, "cc_fishing")
+        return "fishing"
+    elseIf StringContainsToken(raw, "commitment_carryover")
+        return "devotion carried into commitment"
+    elseIf StringContainsToken(raw, "rivalry with")
+        return raw
     elseIf StringContainsToken(raw, "read-skill-book")
         return "reading a skill book"
     elseIf StringContainsToken(raw, "read-spell-tome")
@@ -10251,6 +10453,31 @@ String Function HumanizeDriverReason(String raw)
     elseIf StringContainsToken(raw, "curated") || StringContainsToken(raw, "rite")
         return "a devotional rite"
     endIf
+
+    ; Quest-matrix reasons arrive as "DeityName.tag_one,tag_two" (semantic act tags
+    ; from the reaction CSVs). Render the primary tag as plain trigger text
+    ; ("quest: forbidden knowledge") instead of the generic fallback. Meta lanes and
+    ; rivalry reasons matched above, so only cell tags reach this branch.
+    Int dotIndex = StringUtil.Find(raw, ".")
+    if dotIndex > 0 && dotIndex < StringUtil.GetLength(raw) - 1
+        String tagText = StringUtil.Substring(raw, dotIndex + 1)
+        String[] tagParts = StringUtil.Split(tagText, ",")
+        tagParts = StringUtil.Split(tagParts[0], ":")
+        String[] tagWords = StringUtil.Split(tagParts[0], "_")
+        String prettyTag = ""
+        Int wordIndex = 0
+        while wordIndex < tagWords.Length
+            if wordIndex > 0
+                prettyTag = prettyTag + " "
+            endIf
+            prettyTag = prettyTag + tagWords[wordIndex]
+            wordIndex += 1
+        endWhile
+        if prettyTag != ""
+            return "quest: " + prettyTag
+        endIf
+    endIf
+
     return "An act of devotion"
 EndFunction
 
@@ -10271,35 +10498,35 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
         if signalType == PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT
             return "dawn observance"
         elseIf signalType == PDV_AuriEl.SIGNAL_ORTHODOXY_AFFIRMATION
-            return "orthodox observance"
+            return "orthodox lore study"
         elseIf signalType == PDV_AuriEl.SIGNAL_ANCESTOR_SPINE
-            return "honoring the old line"
+            return "Altmer ancestor rites"
         endIf
     elseIf PDV_Yffre && deity == PDV_Yffre
         if signalType == PDV_Yffre.SIGNAL_PACT_POSITIVE
             return "keeping the Green Pact"
         elseIf signalType == PDV_Yffre.SIGNAL_LIVING_STORY
-            return "carrying the living story"
+            return "a Living Story deed"
         elseIf signalType == PDV_Yffre.SIGNAL_SHARED_PACT_MEMORY
-            return "remembering the pact"
+            return "a pact-true deed"
         endIf
     elseIf PDV_Zen && deity == PDV_Zen
         if signalType == PDV_Zen.SIGNAL_EXCHANGE
             return "fair exchange"
         elseIf signalType == PDV_Zen.SIGNAL_SHARED_PACT_MEMORY
-            return "remembering old debts"
+            return "a pact-true deed"
         endIf
     elseIf PDV_BaanDar && deity == PDV_BaanDar
         if signalType == PDV_BaanDar.SIGNAL_BANDIT_ROAD
-            return "walking the bandit road"
+            return "a Bandit Road deed"
         elseIf signalType == PDV_BaanDar.SIGNAL_ROAD_TRICK
             return "roadside cunning"
         elseIf signalType == PDV_BaanDar.SIGNAL_SHARED_PACT_MEMORY
-            return "remembering the road pact"
+            return "a pact-true deed"
         endIf
     elseIf PDV_Khenarthi && deity == PDV_Khenarthi
         if signalType == PDV_Khenarthi.SIGNAL_ROAD_HOME
-            return "honoring the road home"
+            return "returning by the road home"
         endIf
     elseIf PDV_Azura && deity == PDV_Azura
         if signalType == PDV_Azura.SIGNAL_MOON_OBSERVANCE
@@ -10307,7 +10534,7 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
         elseIf signalType == PDV_Azura.SIGNAL_THRESHOLD_RITE
             return "a threshold rite"
         elseIf signalType == PDV_Azura.SIGNAL_ANCESTOR_SPINE
-            return "twilight ancestor rites"
+            return "Dunmer ancestor rites"
         elseIf signalType == PDV_Azura.SIGNAL_DESECRATION
             return "desecration"
         endIf
@@ -10339,15 +10566,15 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
         if signalType == PDV_Malacath.SIGNAL_STRONGHOLD_FORGE
             return "stronghold forge work"
         elseIf signalType == PDV_Malacath.SIGNAL_CITY_DIGNITY
-            return "city dignity"
+            return "dignity kept in city life"
         elseIf signalType == PDV_Malacath.SIGNAL_LEGION_SERVICE
             return "Legion service"
         elseIf signalType == PDV_Malacath.SIGNAL_SELF_MADE_COMMUNITY
-            return "self-made community"
+            return "building a community"
         elseIf signalType == PDV_Malacath.SIGNAL_BROAD_CONDUCT
             return "keeping the code"
         elseIf signalType == PDV_Malacath.SIGNAL_ANCESTOR_SPINE
-            return "honoring Orc code"
+            return "rest at your declared hearth"
         elseIf signalType == PDV_Malacath.SIGNAL_CURSE_CODE_RUPTURE
             return "breaking the code by curse"
         elseIf signalType == PDV_Malacath.SIGNAL_BROKEN_FAITH_KIN
@@ -10367,11 +10594,11 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
         endIf
     elseIf PDV_Leki && deity == PDV_Leki
         if signalType == PDV_Leki.SIGNAL_SWORD_SINGING
-            return "sword form"
+            return "sword-singing"
         endIf
     elseIf PDV_HoonDing && deity == PDV_HoonDing
         if signalType == PDV_HoonDing.SIGNAL_MAKE_WAY
-            return "making way"
+            return "making way past a mighty foe"
         endIf
     elseIf PDV_Magnus && deity == PDV_Magnus
         if signalType == PDV_Magnus.SIGNAL_DISCIPLINED_STUDY
@@ -10379,7 +10606,7 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
         elseIf signalType == PDV_Magnus.SIGNAL_MAGIC_MILESTONE
             return "a magic milestone"
         elseIf signalType == PDV_Magnus.SIGNAL_ANCESTOR_SPINE
-            return "mixed-inheritance rites"
+            return "Breton ancestor rites"
         endIf
     elseIf PDV_Xarxes && deity == PDV_Xarxes
         if signalType == PDV_Xarxes.SIGNAL_LINEAGE_HONORED
@@ -10389,7 +10616,7 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
         if signalType == PDV_Boethiah.SIGNAL_RIGHTEOUS_STRUGGLE
             return "righteous struggle"
         elseIf signalType == PDV_Boethiah.SIGNAL_SHARED_PACT_MEMORY
-            return "Reclamation memory"
+            return "a deed for the Reclamations"
         elseIf signalType == PDV_Boethiah.SIGNAL_RECLAMATION_ABANDONED
             return "abandoning the Reclamations"
         endIf
@@ -10397,7 +10624,7 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
         if signalType == PDV_Mephala.SIGNAL_SECRET_KEPT
             return "a secret kept"
         elseIf signalType == PDV_Mephala.SIGNAL_SHARED_PACT_MEMORY
-            return "Reclamation memory"
+            return "a deed for the Reclamations"
         elseIf signalType == PDV_Mephala.SIGNAL_SECRET_BETRAYED
             return "a secret betrayed"
         elseIf signalType == PDV_Mephala.SIGNAL_RECLAMATION_ABANDONED
@@ -10407,7 +10634,7 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
         if signalType == PDV_Akatosh.SIGNAL_CIVIC_SERVICE
             return "civic service"
         elseIf signalType == PDV_Akatosh.SIGNAL_PATRON_CIVIC_FAVOR
-            return "patron civic favor"
+            return "civic service (patron bonus)"
         endIf
     elseIf PDV_Mara && deity == PDV_Mara
         if signalType == PDV_Mara.SIGNAL_MERCY
@@ -10415,7 +10642,7 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
         elseIf signalType == PDV_Mara.SIGNAL_CIVIC_SERVICE
             return "civic service"
         elseIf signalType == PDV_Mara.SIGNAL_PATRON_CIVIC_FAVOR
-            return "patron civic favor"
+            return "civic service (patron bonus)"
         endIf
     elseIf PDV_Arkay && deity == PDV_Arkay
         if signalType == PDV_Arkay.SIGNAL_DEATH_DUTY
@@ -10423,17 +10650,17 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
         elseIf signalType == PDV_Arkay.SIGNAL_CIVIC_SERVICE
             return "civic service"
         elseIf signalType == PDV_Arkay.SIGNAL_PATRON_CIVIC_FAVOR
-            return "patron civic favor"
+            return "civic service (patron bonus)"
         endIf
     elseIf PDV_Stendarr && deity == PDV_Stendarr
         if signalType == PDV_Stendarr.SIGNAL_MERCY
             return "mercy"
         elseIf signalType == PDV_Stendarr.SIGNAL_LAWFUL_ORDER
-            return "lawful order"
+            return "upholding law and order"
         elseIf signalType == PDV_Stendarr.SIGNAL_CIVIC_SERVICE
             return "civic service"
         elseIf signalType == PDV_Stendarr.SIGNAL_PATRON_CIVIC_FAVOR
-            return "patron civic favor"
+            return "civic service (patron bonus)"
         endIf
     elseIf PDV_Zenithar && deity == PDV_Zenithar
         if signalType == PDV_Zenithar.SIGNAL_HONEST_WORK
@@ -10441,27 +10668,27 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
         elseIf signalType == PDV_Zenithar.SIGNAL_CIVIC_SERVICE
             return "civic service"
         elseIf signalType == PDV_Zenithar.SIGNAL_PATRON_CIVIC_FAVOR
-            return "patron civic favor"
+            return "civic service (patron bonus)"
         endIf
     elseIf PDV_Julianos && deity == PDV_Julianos
         if signalType == PDV_Julianos.SIGNAL_LAWFUL_ORDER
-            return "lawful order"
+            return "upholding law and order"
         elseIf signalType == PDV_Julianos.SIGNAL_CIVIC_SERVICE
             return "civic service"
         elseIf signalType == PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR
-            return "patron civic favor"
+            return "civic service (patron bonus)"
         endIf
     elseIf PDV_Kynareth && deity == PDV_Kynareth
         if signalType == PDV_Kynareth.SIGNAL_OPEN_SKY
-            return "the open sky"
+            return "deeds under the open sky"
         elseIf signalType == PDV_Kynareth.SIGNAL_CIVIC_SERVICE
             return "civic service"
         elseIf signalType == PDV_Kynareth.SIGNAL_PATRON_CIVIC_FAVOR
-            return "patron civic favor"
+            return "civic service (patron bonus)"
         endIf
     elseIf PDV_Kyne && deity == PDV_Kyne
         if signalType == PDV_Kyne.SIGNAL_SKY_ROAD
-            return "the sky road"
+            return "walking the sky road"
         endIf
     elseIf PDV_Tsun && deity == PDV_Tsun
         if signalType == PDV_Tsun.SIGNAL_TRIAL_ENDURED
