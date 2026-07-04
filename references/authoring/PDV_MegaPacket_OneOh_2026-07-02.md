@@ -152,15 +152,18 @@ exactly.
 
 - combat by victim 300/301/302 (draugr/Dremora/dragon), 303/304 negatives
 - craft at stations 330-333; knowledge 340-345 (incl. word wall, `player.incPCS`, new location)
-- devotional sleep 313/314; transgression 360/**361 trespass (mandatory -- newest wiring)**/
-  362/364/365/368
+- devotional sleep 313/314; transgression 360/**361 trespass**/
+  **362 steal-item via AddToPlayer**/364/365/368. For `362`, steal an owned
+  loose item or owned container item, not a pickpocket; proof is
+  `RouteAction complete: event 362` or an advanced `PDV.Meta.LastTheftTime`
+  timestamp, with deity delta only if the current table scores it.
 - race-gate negative: flip `PDV_GLO_OriginRace`, same act scores 0 for non-native gods
 - attribution filter: environmental kill logs `skipped non-scoring attribution`
 - anti-farm: capped act stops at daily cap, 0.7^n decay; dawn bank moves PietyToday -> Piety
 - this run doubles as the fresh-save proof of the expanded likes/dislikes rows (v8/v3 bodies)
 
 Already confirmed 2026-06-10: 300/301/345 CSV-exact + race-gate + attribution. Remaining:
-craft / book / sleep / full transgression set incl. 361, plus Nord-origin spot-checks.
+craft / book / sleep / full transgression set incl. 361 and 362, plus Nord-origin spot-checks.
 
 ## F. Prince V2 path-deepening (per runbook section 6)
 

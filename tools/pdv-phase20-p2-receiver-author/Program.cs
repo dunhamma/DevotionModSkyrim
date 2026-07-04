@@ -45,7 +45,8 @@ string[] genericFaucetReceiverQuests =
     "PDV__SM_ChangeLocation",
     "PDV__SM_PickLock",
     "PDV__SM_Trespass",
-    "PDV__SM_AssaultActor"
+    "PDV__SM_AssaultActor",
+    "PDV__SM_AddToPlayer"
 ];
 
 var skyrimMaster = ModKey.FromNameAndExtension("Skyrim.esm");
@@ -58,6 +59,7 @@ GenericFaucetStoryManagerNode[] genericFaucetStoryManagerNodes =
     new("PDV__SM_ChangeLocationNode", "PDV__SM_ChangeLocation", new FormKey(skyrimMaster, 0x01320E), new FormKey(skyrimMaster, 0x0A39C6)),
     new("PDV__SM_PickLockNode", "PDV__SM_PickLock", new FormKey(skyrimMaster, 0x05BD7B), null),
     new("PDV__SM_AssaultActorNode", "PDV__SM_AssaultActor", new FormKey(skyrimMaster, 0x02C494), new FormKey(skyrimMaster, 0x0A39C0)),
+    new("PDV__SM_AddToPlayerNode", "PDV__SM_AddToPlayer", new FormKey(skyrimMaster, 0x02C439), null),
 ];
 
 Dictionary<string, FormKey> genericFaucetRouterPropertyTargets = new(StringComparer.OrdinalIgnoreCase)
@@ -1866,6 +1868,10 @@ static void EnsureGenericFaucetStoryManager(
         if (nodeSpec.PreviousSibling is { } previousSibling)
         {
             node.PreviousSibling = previousSibling.ToNullableLink<IAStoryManagerNodeGetter>();
+        }
+        else
+        {
+            node.PreviousSibling = FormKey.Null.ToNullableLink<IAStoryManagerNodeGetter>();
         }
         node.Flags = 0;
         node.QuestFlags = StoryManagerQuestNode.QuestFlag.SharesEvent;

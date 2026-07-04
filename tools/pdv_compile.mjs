@@ -61,6 +61,7 @@ const ACTIVE_SCRIPTS = [
   "PDV__SM_PickLock",
   "PDV__SM_Trespass",
   "PDV__SM_AssaultActor",
+  "PDV__SM_AddToPlayer",
   "PDV_SurveyDevotionEffect",
   "PDV_MCM",
   "PDV_Substrate_DunmerAncestor",

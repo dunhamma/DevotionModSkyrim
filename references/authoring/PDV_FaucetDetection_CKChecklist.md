@@ -1,8 +1,8 @@
 # PDV Day-to-Day Faucet Detection CK Checklist
 
 **Created:** 2026-06-09
-**Updated:** 2026-06-09
-**Status:** Papyrus source/PEX, ESP receiver QUST shells, generic faucet FormLists, router properties, player-alias properties, FormList content, and **all seven** Story Manager `Shares Event` nodes are readback-clean. **Trespass RESOLVED 2026-06-10:** `TrespassActorEvent` is a valid engine event type (`StoryManagerEventNode.Types`); vanilla `Skyrim.esm` simply never created a root of that type, so the framework plugin now owns one (`PDV__SM_TrespassEvent` SMEN, `0714B1`, parented at the SM root `00005B`, mirroring `AssaultActorEvent`) with `PDV__SM_TrespassNode` (`0714B2`) attached via Shares Event. `pdv_verify --strict-phase3` = FAIL=0 / TODO=0. **Faucet FormList content live 2026-06-10:** `--fill-generic-faucets` / `--check-generic-faucet-fill` populate and fail-closed check the vanilla skill-book, spell-tome, Daedric artifact, and raise-undead effect lists; live readback passes exact counts `90/93/8/19`.
+**Updated:** 2026-07-05
+**Status:** Papyrus source/PEX, ESP receiver QUST shells, generic faucet FormLists, router properties, player-alias properties, FormList content, and **all eight** Story Manager `Shares Event` nodes are readback-clean. **Trespass RESOLVED 2026-06-10:** `TrespassActorEvent` is a valid engine event type (`StoryManagerEventNode.Types`); vanilla `Skyrim.esm` simply never created a root of that type, so the framework plugin now owns one (`PDV__SM_TrespassEvent` SMEN, `0714B1`, parented at the SM root `00005B`, mirroring `AssaultActorEvent`) with `PDV__SM_TrespassNode` (`0714B2`) attached via Shares Event. **AddToPlayer RESOLVED 2026-07-05:** `PDV__SM_AddToPlayer` is a not-Start-Game-Enabled receiver quest with `PDV_Router` filled, and `PDV__SM_AddToPlayerNode` is a `SharesEvent` SMQN under vanilla `PlayerAddItem` root `02C439:Skyrim.esm`. `pdv_verify --strict-phase3` = FAIL=0 / TODO=0. **Faucet FormList content live 2026-06-10:** `--fill-generic-faucets` / `--check-generic-faucet-fill` populate and fail-closed check the vanilla skill-book, spell-tome, Daedric artifact, and raise-undead effect lists; live readback passes exact counts `90/93/8/19`.
 **Companion:** `PDV_DeityLikesDislikesMatrix.md`, `PDV_DeityLikesDislikes.csv`, `PDV_CodexHandoff_FaucetDetection_Full.md`
 
 The locked rule is **hybrid/no-duplicates**:
@@ -19,7 +19,7 @@ Implemented and compiled with 0 errors / 0 warnings:
 - `PDV_ActionRouter.psc`
   - hostile kill routing preserved for `1/2/300/301/302`
   - non-hostile direct-player kill branch added for `303 kill-animal-noncombat` and `304 murder-defenseless`
-  - Story Manager handlers added for craft item, new voice power, increase skill, change location, pick lock, trespass, and assault actor
+  - Story Manager handlers added for craft item, new voice power, increase skill, change location, pick lock, trespass, assault actor, and add-to-player theft
   - craft classification uses CK-bound bench keywords
   - book classification helper uses FormLists; this local Papyrus source has no compile-visible `Book.GetSpell()`
 - `PDV_PlayerEvents.psc`
@@ -35,6 +35,7 @@ Implemented and compiled with 0 errors / 0 warnings:
   - `PDV__SM_PickLock`
   - `PDV__SM_Trespass`
   - `PDV__SM_AssaultActor`
+  - `PDV__SM_AddToPlayer`
 
 ## 2. Router Property Wiring
 
@@ -115,9 +116,9 @@ The helper creates/checks each QUST as **not Start Game Enabled**, attaches its 
 | `PDV__SM_PickLock` | Pick Lock | `360` |
 | `PDV__SM_Trespass` | Trespass | `361` |
 | `PDV__SM_AssaultActor` | Assault Actor | `364` |
-| `PDV__SM_AddToPlayer` | Player Add Item | `362` (steal only) -- **QUST + SM node not yet authored** |
+| `PDV__SM_AddToPlayer` | Player Add Item | `362` (steal only) |
 
-Story Manager node readback status: six complete, one blocked/proof-gated. Automated by:
+Story Manager node readback status: complete. Automated by:
 
 ```powershell
 dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2ReceiverAuthor.csproj -- --author-generic-faucet-story-manager
@@ -132,15 +133,16 @@ Readback-clean nodes:
 - `PDV__SM_ChangeLocationNode` -> `PDV__SM_ChangeLocation`, parent `Skyrim.esm:01320E`, previous sibling `Skyrim.esm:0A39C6`
 - `PDV__SM_PickLockNode` -> `PDV__SM_PickLock`, parent `Skyrim.esm:05BD7B`, no previous sibling
 - `PDV__SM_AssaultActorNode` -> `PDV__SM_AssaultActor`, parent `Skyrim.esm:02C494`, previous sibling `Skyrim.esm:0A39C0`
+- `PDV__SM_AddToPlayerNode` -> `PDV__SM_AddToPlayer`, parent `Skyrim.esm:02C439`, no previous sibling
 
-`PDV__SM_Trespass` ??? DONE 2026-06-10:
+`PDV__SM_Trespass` -- DONE 2026-06-10:
 
 1. `TrespassActorEvent` confirmed a valid `StoryManagerEventNode.Types` enum value (Mutagen reflects the engine library), so the source-plugin SMEN root is safe to create.
 2. `tools/pdv-phase20-p2-receiver-author --author-generic-faucet-story-manager` now creates `PDV__SM_TrespassEvent` (SMEN, Type=`TrespassActorEvent`, Parent=`00005B:Skyrim.esm`) and attaches `PDV__SM_TrespassNode` (SMQN, Parent=`0714B1`, **Shares Event**, Quest=`PDV__SM_Trespass`).
-3. Player-identity filtering stays in the `PDV__SM_Trespass` fragment (matches the other six nodes ??? no node-level conditions), so the receiver routes `361` only for the player trespasser.
+3. Player-identity filtering stays in the `PDV__SM_Trespass` fragment (matches the other Story Manager nodes -- no node-level conditions), so the receiver routes `361` only for the player trespasser.
 4. Readback-clean: `0714B1` SMEN + `0714B2` SMQN in `Devotion.esp`; `pdv_verify --strict-phase3` FAIL=0. ESP backup under `Backups\trespass\` + the tool's `Backups\phase20-p2-receivers\`.
 
-`PDV__SM_AddToPlayer` ??? Papyrus layer DONE 2026-07-05, ESP wiring PENDING:
+`PDV__SM_AddToPlayer` -- PAPYRUS + ESP READBACK DONE 2026-07-05, RUNTIME PROOF PENDING:
 
 1. Purpose: dispatch `EVT_STEAL_ITEM` (362) so the Nocturnal "done her way" quest-meta-faucet
    lane (`PDV.Meta.LastTheftTime` stamp in `PDV_EventBus.RouteActionWithAttribution`) can be
@@ -154,18 +156,17 @@ Readback-clean nodes:
    (`WIPlayerAddItemPurchaseNode`), 3 = Pickpocket, 4 = Pickup, 5 = Container
    (`WIAddItem02` "Rummaging through trash"). Pickpocket (3) is deliberately NOT routed;
    it belongs to future `EVT_PICKPOCKET` (363) wiring.
-4. ESP work COMPLETE 2026-07-05 (houseCARL in-place: QUST 071615 Priority 60 + SMQN 071616 Parent=02C439 SharesEvent; readback clean, verify FAIL=0; in-game 362 proof pending in the day-to-day sweep). Original plan (mirror the PickLock pattern via
-   `pdv-phase20-p2-receiver-author`): create `PDV__SM_AddToPlayer` QUST (not SGE, script
-   attached, `PDV_Router` -> `PDV_ActionRouter`) and `PDV__SM_AddToPlayerNode` SMQN
-   (**Shares Event**, Quest=`PDV__SM_AddToPlayer`) parented under the vanilla
-   `PlayerAddItem` SMEN root `02C439:Skyrim.esm`. No node-level conditions ??? acquire-type
-   and player filtering stays in Papyrus, matching the other receivers.
+4. ESP readback is clean through `pdv-phase20-p2-receiver-author`: `PDV__SM_AddToPlayer`
+   is a non-SGE QUST with script `PDV__SM_AddToPlayer` and `PDV_Router` -> `PDV_ActionRouter`;
+   `PDV__SM_AddToPlayerNode` is a `SharesEvent` SMQN parented under vanilla `PlayerAddItem`
+   root `02C439:Skyrim.esm`, with no previous sibling. No node-level conditions: acquire-type
+   and player filtering stay in Papyrus, matching the other receivers.
 5. Runtime proof after wiring: steal any owned item, expect the
    `PDV.Meta.LastTheftTime` stamp (and `[PDV] EventBus ... event 362` traces at debug
    level 2 once any deity scores 362; today no deity ScoreAction references it, so the
    stamp is the observable).
 
-No SEQ refresh is expected because these quests must not be Start Game Enabled. **Runtime proof still pending** (in-game: trespass a marked cell, expect `[PDV] EventBus: <deity> event 361 delta <x>`).
+No SEQ refresh is expected because these quests must not be Start Game Enabled. **Runtime proof still pending** for AddToPlayer theft (in-game: steal an owned item, then confirm `PDV.Meta.LastTheftTime` or a debug route marker for event `362`).
 
 ## 5. Verification Boundary
 
@@ -174,13 +175,13 @@ Machine proof currently covers source/PEX freshness, source-token route contract
 Run:
 
 ```powershell
-node .\tools\pdv_compile.mjs --script PDV_ActionRouter --script PDV_PlayerEvents --script PDV_EventBus --script PDV__SM_CraftItem --script PDV__SM_NewVoicePower --script PDV__SM_IncreaseSkill --script PDV__SM_ChangeLocation --script PDV__SM_PickLock --script PDV__SM_Trespass --script PDV__SM_AssaultActor
+node .\tools\pdv_compile.mjs --script PDV_ActionRouter --script PDV_PlayerEvents --script PDV_EventBus --script PDV__SM_CraftItem --script PDV__SM_NewVoicePower --script PDV__SM_IncreaseSkill --script PDV__SM_ChangeLocation --script PDV__SM_PickLock --script PDV__SM_Trespass --script PDV__SM_AssaultActor --script PDV__SM_AddToPlayer
 node .\tools\pdv_verify.mjs --json
 node .\tools\pdv_quest_matrix_compile.mjs --check
 node .\tools\pdv_quest_matrix_selftest.mjs
 ```
 
-Default `pdv_verify --json` should show `FAIL=0`; as of this update it reports one TODO for Trespass because no local vanilla `TrespassActorEvent` SMEN root was found. `--strict-phase3` is the hard gate and should fail only that Trespass TODO until the root is proven/wired.
+Default `pdv_verify --json` should show `FAIL=0`. `--strict-phase3` is the hard gate for the generic faucet receiver and Story Manager readback surface.
 
 ## 6. Runtime Smoke
 
@@ -193,7 +194,7 @@ At DebugLevel 2, exercise:
 - smith, enchant, brew, cook -> `330-333`
 - skill/spell/lore book -> `340/341/342`
 - word wall, skill increase, new location -> `343/344/345`
-- owned lock, trespass, assault innocent -> `360/361/364`
+- owned lock, trespass, theft, assault innocent -> `360/361/362/364`
 - sleep outside vs inside -> `313/314`
 
 Expected positive marker:

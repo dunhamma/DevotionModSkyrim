@@ -288,6 +288,7 @@ const PHASE3_RECORDS = {
   PDV__SM_PickLock: "QUST",
   PDV__SM_Trespass: "QUST",
   PDV__SM_AssaultActor: "QUST",
+  PDV__SM_AddToPlayer: "QUST",
 };
 
 const PREFLIGHT_RECORDS = {
@@ -793,6 +794,7 @@ const STORY_MANAGER_RECEIVER_SCRIPTS = [
   "PDV__SM_PickLock",
   "PDV__SM_Trespass",
   "PDV__SM_AssaultActor",
+  "PDV__SM_AddToPlayer",
 ];
 
 const GENERIC_FAUCET_STORY_MANAGER_NODES = [
@@ -844,6 +846,13 @@ const GENERIC_FAUCET_STORY_MANAGER_NODES = [
     receiverQuest: "PDV__SM_AssaultActor",
     parent: "Skyrim.esm:02C494",
     previousSibling: "Skyrim.esm:0A39C0",
+  },
+  {
+    eventName: "Player Add Item",
+    nodeEdid: "PDV__SM_AddToPlayerNode",
+    receiverQuest: "PDV__SM_AddToPlayer",
+    parent: "Skyrim.esm:02C439",
+    previousSibling: null,
   },
 ];
 

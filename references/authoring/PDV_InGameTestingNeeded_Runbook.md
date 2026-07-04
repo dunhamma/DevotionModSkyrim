@@ -94,14 +94,14 @@ offer gating, civic-service Ledger/Book-of-Days surfacing, wrong-origin
 rejection, generic-source silence, and manual feel. Final-world placement
 remains separate. The remaining race blocker is Dunmer.
 
-2026-07-04 pause-sync note: the latest pushed Prisma/Book-of-Days build adds
-DA01 deviation-price Chronicle/toast surfacing and focused-panel origin-roster
-filtering. For Dunmer 4e, the post-fix runtime check must confirm
-`Reclamation strained` in Book of Days, a matching toast, and no off-race god
-rows in the focused Devotion panel. Static gates passed before pause
-(`pdv_prisma_ui_audit`, `pdv_book_of_days_audit`,
-`pdv_prisma_toast_fallback_audit`, and manager/MCM compile), but display proof
-remains manual/runtime pending.
+2026-07-05 Dunmer update: Dunmer 4e deviation-price, 4b home-toast display, 4c
+curse-posture display, Slot 5 Survey clarity, Slot 6 stack snapshot, Slot 7
+manual feel, Slot 8 Prisma surfaces, and Slot 1 asset status are
+tester-reported PASS. Papyrus.0.log confirmed the DA01 Black Star stage-110
+route, Boethiah penalty, and Snapshot B ancestor-layer silence under vampire.
+Follow-up implementation in progress: replace the old Dunmer first-bed
+auto-declare with a Dunmer-styled `Ancestral Hearth` confirmation and
+Argonian-style move-home cadence.
 
 ## Preflight Before Opening Skyrim
 
@@ -194,8 +194,8 @@ Daedric ledger state from `PDV_DaedricRuntimeEvidenceLedger.json`:
 Additional last-pass runtime sweeps before any broad beta-feel claim:
 
 - Day-to-day V1 faucet sweep: finish craft, book, sleep, transgression,
-  trespass `361`, events `1` and `2`, anti-farm, attribution filter, race gate,
-  and dawn bank checks.
+  trespass `361`, steal-item `362`, events `1` and `2`, anti-farm,
+  attribution filter, race gate, and dawn bank checks.
 - Prince V2 path-deepening sweep: prove deepen-not-initiate, open-path deepen
   markers, dual-face Azura behavior, anti-farm, and Hircine curse
   no-double-fire.
@@ -427,6 +427,12 @@ Required to record:
 - each event fires its EventBus marker with the CSV-exact delta
 - **Trespass `361`** specifically (newest wiring; enter an owned home uninvited and
   detected) -- confirm `event 361` fires
+- **Steal-item `362`** specifically (new AddToPlayer receiver wiring): steal an
+  owned loose item or owned container item, not a pickpocket. Confirm
+  `[PDV] EventBus: RouteAction complete: event 362` or the
+  `PDV.Meta.LastTheftTime` StorageUtil timestamp advances. A deity delta for
+  `362` is useful if present, but the route/stamp is the required proof because
+  the Nocturnal meta-faucet consumes the theft timestamp.
 - race-gate negative: a non-native god scores `0` for the same act
 - attribution filter: environmental/indirect kills log
   `skipped non-scoring attribution`
@@ -436,7 +442,8 @@ Required to record:
 **Progress 2026-06-10 (Imperial origin):** `300` (akatosh/Arkay/Stendarr +0.5),
 `301` (Stendarr +0.75), `345` (Kynareth +0.5) confirmed, all CSV-exact; race-gate
 and attribution filter confirmed. Remaining: craft / book / sleep / the full
-transgression set incl. `361`, plus `1`/`2` (set `PDV_GLO_OriginRace to 0`).
+transgression set incl. `361` and `362`, plus `1`/`2` (set
+`PDV_GLO_OriginRace to 0`).
 
 ### 6. Run The Prince V2 Path-Deepening Proof
 
