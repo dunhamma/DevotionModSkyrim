@@ -72,7 +72,7 @@
 | `tools/pdv_generate_daedric_contract.mjs` | Generates the all-Prince Daedric record contract and non-Hircine path scripts from the Daedric content manifest plus race/Prince matrix |
 | `tools/pdv-daedric-author` | Direct-framework helper that creates/checks all-Prince Daedric CAT-6 records, base/concrete path VMAD wiring, stigma globals, arrays, `PDV_FLST_DaedricPaths_All` membership, manager FormList wiring, QASmoke proof sender ACTI/REFR records, and all sixteen exact organic Daedric quest-stage source FormLists |
 | `tools/pdv-prince-faucet-author` | Direct-framework helper that creates/checks the six design-first Prince artifact faucet FormLists in `Devotion.esp`, with backups under `Backups\prince-faucets`; machine/readback proof only |
-| `tools/pdv_prisma_ui_audit.mjs` | Read-only Prisma UI policy audit; blocks gameplay scripts from opening focused/blocking Prisma UI without default-off/player-owned gating |
+| `tools/pdv_prisma_ui_audit.mjs` | Read-only Prisma UI policy audit; blocks gameplay scripts from opening focused/blocking Prisma UI without default-off/player-owned gating and fails stale Book-of-Days manager/MCM bytecode |
 | `tools/pdv_prisma_toast_fallback_audit.mjs` | Read-only Prisma-first toast fallback audit; fails raw player-facing top-left-only gameplay notices, checks stable toast helpers use shared fallback behavior, and hardens the P2 book route from `OnBookRead` through `ShowP2BookNotice` |
 | `tools/pdv-phase20-proof-placement-author` | Narrow direct-framework helper that creates/checks the current 34 QASmoke Phase 20 proof REFRs across Altmer, Argonian, Orc, Redguard, Khajiit, and Bosmer |
 | `tools/pdv-phase20-p2-receiver-author` | Narrow direct-framework helper that creates/checks the empty `PDV_FLST_P2_*` receiver FormList shells for all ten race immersive hooks, wires/checks those FormLists on the existing `PDV_PlayerEvents` alias script, fills/checks explicitly approved exact source entries from the receiver manifest, and checks Phase 2 Green Pact / capstone static authoring packets |
@@ -458,6 +458,13 @@ node .\tools\pdv_extract_vanilla_gameplay_refs.mjs
 node .\tools\pdv_skyrim_refs_bridge.mjs status
 node .\tools\pdv_skyrim_refs_bridge.mjs tables
 ```
+
+For Book-of-Days or Prisma payload work, treat `pdv_prisma_ui_audit.mjs` and
+`pdv_book_of_days_audit.mjs` as bytecode freshness gates, not just UI/source
+scans. They fail if the live manager/MCM PEX files are stale against the
+journal payload contract, including the repeated failure class where
+`PDV__ManagerQuest` was recompiled after a signature/open-close change but
+`PDV_MCM.pex` still contains the old hotkey call.
 
 For Daedric Prince CAT-6 work, regenerate `references\authoring\PDV_DaedricPrinceRecordContracts.json` with `tools\pdv_generate_daedric_contract.mjs` before authoring. `tools\pdv-daedric-author` then dry-runs, writes, and checks the direct-framework ESP packet for all sixteen Skyrim-present Princes, including per-Prince records, base/concrete `PDV_DaedricPathBase` VMAD wiring, stigma globals, arrays, `PDV_FLST_DaedricPaths_All` membership, manager FormList wiring, the QASmoke proof sender ACTI/REFR packet, and all sixteen exact organic quest-stage source FormLists. This is still a record/readback gate only; controlled in-game display proof and live-source proof are required before calling a Prince beta-display ready.
 
@@ -1035,6 +1042,26 @@ Check for invalid string escapes (`\n`, `\r`, `\t`), misplaced `{...}` docstring
 
 **Script behavior differs between saves:**
 Retest from a new game or main-menu `coc qasmoke` path. Skyrim save files can retain old script instances and property state after source changes.
+
+**Nexus "Mod Manager Download" clicks silently do nothing:**
+The Windows `nxm://` protocol handler (`HKCU:\Software\Classes\nxm\shell\open\command`) can point at a
+DELETED MO2 instance -- verified 2026-07-04 when it still pointed at the removed KoK modlist, so manager
+downloads vanished without any error. Fix from the target instance: open Anvil MO2 -> Settings -> Nexus ->
+"Associate with 'Download with Manager' links". Manual browser downloads land in `C:\Users\Admin\Downloads`
+and MO2-managed ones in `D:\Wabbajack\downloaded mods` (shared by the instances).
+
+**Reading a book/opening an item menu CTDs instantly:**
+Check the record has a real `Model` path. A Mutagen-authored BOOK with `Model = (absent)` crashes the book
+menu on read (the 2026-07-04 Dunmer urn CTD). `housecarl_read_record` shows the field; any NIF that exists
+in the VFS fixes it. Verify asset resolution with `housecarl_asset_status`.
+
+**Bundling third-party assets into the Devotion mod:**
+Precedent (2026-07-04, Remiros' Dunmer Urns HD): repath the MESH into a Devotion-owned folder
+(`Meshes\PDV\...`) so vanilla records are not silently replaced, keep the TEXTURES at the exact paths the
+NIF references internally (scan the NIF binary for `.dds` strings first; unique third-party filenames mean
+no vanilla collision and no NIF editing), record the permission basis in the mod-root `Credits.txt`, and add
+the new folders to the tester-bundle deployable set (it is no longer just the 108-file list -- `Meshes\`,
+`Textures\`, `Credits.txt` must ship).
 
 **Game CTDs while opening SkyUI MCM during PDV smoke tests:**
 Check the newest crash log under `C:\Users\Admin\Documents\My Games\Skyrim Special Edition\SKSE\`. If the stack repeats `ReShade64.dll` with `WS2_32.dll` and `webio.dll`, treat it as a native environment issue first rather than a PDV MCM logic failure. The confirmed PDV smoke-test workaround was to temporarily rename `D:\Wabbajack\modlists\Anvil\Stock Game\ReShade64.dll` out of the Stock Game root, retest, then restore it later for dedicated ReShade investigation.
