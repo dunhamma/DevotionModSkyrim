@@ -158,6 +158,12 @@ quests). Stance gates apply as usual, so foreign faces feel these at 0.4x.
 | meta.akatosh | Akatosh (18) | every 10th fulfillment (lifetime counter) -- "the wheel turns"; endurance through time | 2.0 | ~12 |
 | meta.xarxes | Xarxes (16) | same 10th-fulfillment counter -- "the record kept"; the scribe notes the deeds (Altmer face of the same wheel; stance gates keep one player from feeling both) | 2.0 | ~12 |
 | meta.khenarthi | Khenarthi (13) | fulfillment while OUTDOORS under the sky -- "the road honored" (alt: fulfillment in a different hold than the last one -- "the road between"; hold-walk detection is fiddlier, offered as V2) | 1.0 | ~20 |
+| meta.julianos | Julianos (15) | fulfillment of a MAGE-AID flagged quest (owner ruling 2026-07-05) -- same PDV_QuestClassFlags class as Azura, "wisdom served". His existing College cells make the yield rule below load-bearing for him | 1.0 | ~8 (mage-aid quests where he holds no cell) |
+
+**Yield rule (2026-07-05, applies to ALL meta-faucets):** if the deity already earned a matrix
+CELL award on this quest, the meta pass skips that deity for that quest -- meta-faucets are
+gap-fillers on top of the matrix, never double-credit. (One StorageUtil check per deity at the
+meta pass; the per-quest once-guard already exists.)
 
 Pacing: all six sit at/under the echo-tier envelope (max 30 vs the 34 threshold); each has its
 own knob. Ledger acceptance: each fires AwardPiety with a reason token so it lands as a Ledger
