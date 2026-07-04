@@ -1,49 +1,49 @@
 # Quest Cross-Gen Summary (GENERATED -- do not hand-edit)
 
-Outcomes crossed: 103 | Part B profiles: 46 | candidates: 589 | conflicts: 13
+Outcomes crossed: 119 | Part B profiles: 46 | candidates: 699 | conflicts: 13
 
 | deity | + | - | new quests | existing quests | total quests |
 |---|---|---|---|---|---|
-| Stendarr | 5 | 12 | 15 | 27 | 42 |
-| Shor | 7 | 10 | 17 | 23 | 40 |
-| Mehrunes Dagon | 32 | 4 | 32 | 4 | 36 |
-| Kyne | 21 | 9 | 27 | 9 | 36 |
-| Auri-El | 14 | 15 | 28 | 7 | 35 |
-| Boethiah | 18 | 0 | 18 | 17 | 35 |
-| Baan Dar | 21 | 8 | 29 | 5 | 34 |
-| Malacath | 17 | 9 | 25 | 9 | 34 |
-| Talos | 11 | 0 | 11 | 21 | 32 |
-| Leki | 12 | 15 | 25 | 7 | 32 |
-| Akatosh | 9 | 13 | 21 | 9 | 30 |
-| Tsun | 16 | 0 | 16 | 13 | 29 |
-| Mephala | 11 | 0 | 11 | 18 | 29 |
-| Mara | 7 | 8 | 14 | 14 | 28 |
-| Stuhn | 14 | 1 | 14 | 11 | 25 |
-| Molag Bal | 13 | 12 | 19 | 5 | 24 |
-| Rajhin | 6 | 8 | 14 | 10 | 24 |
-| HoonDing | 13 | 0 | 13 | 10 | 23 |
+| Stendarr | 8 | 12 | 18 | 27 | 45 |
+| Shor | 12 | 10 | 22 | 23 | 45 |
+| Malacath | 25 | 10 | 34 | 9 | 43 |
+| Auri-El | 21 | 15 | 35 | 7 | 42 |
+| Kyne | 27 | 9 | 33 | 9 | 42 |
+| Mehrunes Dagon | 33 | 7 | 36 | 4 | 40 |
+| Boethiah | 23 | 0 | 23 | 17 | 40 |
+| Baan Dar | 26 | 8 | 34 | 5 | 39 |
+| Talos | 16 | 0 | 16 | 21 | 37 |
+| Akatosh | 15 | 13 | 27 | 9 | 36 |
+| Tsun | 21 | 0 | 21 | 13 | 34 |
+| Leki | 13 | 15 | 26 | 7 | 33 |
+| Mephala | 13 | 0 | 13 | 18 | 31 |
+| Stuhn | 19 | 1 | 19 | 11 | 30 |
+| Mara | 8 | 8 | 15 | 14 | 29 |
+| HoonDing | 18 | 0 | 18 | 10 | 28 |
+| Trinimac | 24 | 1 | 23 | 2 | 25 |
+| Molag Bal | 13 | 13 | 20 | 5 | 25 |
+| Rajhin | 7 | 8 | 15 | 10 | 25 |
+| Azura | 16 | 2 | 17 | 7 | 24 |
+| Alkosh | 15 | 2 | 17 | 6 | 23 |
 | Khenarthi | 12 | 9 | 20 | 2 | 22 |
-| Trinimac | 20 | 1 | 19 | 2 | 21 |
-| Alkosh | 13 | 2 | 15 | 6 | 21 |
-| Azura | 13 | 2 | 14 | 7 | 21 |
-| Nocturnal | 8 | 0 | 7 | 13 | 20 |
-| Hircine | 12 | 2 | 14 | 6 | 20 |
-| Sithis | 9 | 0 | 9 | 10 | 19 |
+| Nocturnal | 9 | 0 | 8 | 13 | 21 |
+| Hircine | 13 | 2 | 15 | 6 | 21 |
+| Sithis | 10 | 0 | 10 | 10 | 20 |
 | Vaermina | 18 | 0 | 17 | 1 | 18 |
-| Xarxes | 3 | 2 | 5 | 11 | 16 |
-| Arkay | 3 | 0 | 3 | 11 | 14 |
+| Xarxes | 5 | 2 | 7 | 11 | 18 |
+| Z'en | 10 | 0 | 10 | 7 | 17 |
+| Dibella | 3 | 6 | 9 | 6 | 15 |
+| Julianos | 4 | 2 | 6 | 9 | 15 |
+| Arkay | 4 | 0 | 4 | 11 | 15 |
 | Kynareth | 6 | 2 | 7 | 6 | 13 |
-| Z'en | 6 | 0 | 6 | 7 | 13 |
-| Dibella | 0 | 6 | 6 | 6 | 12 |
-| Clavicus Vile | 11 | 0 | 11 | 1 | 12 |
+| Clavicus Vile | 12 | 0 | 12 | 1 | 13 |
+| Magnus | 3 | 2 | 5 | 8 | 13 |
+| Tu'whacca | 4 | 0 | 4 | 9 | 13 |
 | The Hist | 11 | 2 | 12 | 0 | 12 |
-| Julianos | 1 | 2 | 3 | 9 | 12 |
-| Tu'whacca | 3 | 0 | 3 | 9 | 12 |
-| Magnus | 1 | 2 | 3 | 8 | 11 |
-| Zenithar | 0 | 4 | 4 | 7 | 11 |
-| Meridia | 2 | 1 | 3 | 7 | 10 |
+| Hermaeus Mora | 11 | 0 | 11 | 1 | 12 |
+| Zenithar | 1 | 4 | 5 | 7 | 12 |
+| Meridia | 3 | 1 | 4 | 7 | 11 |
 | Y'ffre | 8 | 1 | 8 | 2 | 10 |
-| Hermaeus Mora | 9 | 0 | 9 | 1 | 10 |
-| Sheogorath | 3 | 2 | 4 | 3 | 7 |
+| Sheogorath | 3 | 3 | 5 | 3 | 8 |
 | Peryite | 3 | 2 | 5 | 1 | 6 |
 | Sanguine | 1 | 0 | 1 | 1 | 2 |

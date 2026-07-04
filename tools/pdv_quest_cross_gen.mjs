@@ -130,6 +130,9 @@ export function profileTagMatch(profileTags, outcomeTag) {
 
 function loadTranches() {
   const files = readdirSync(AUTHORING).filter(f => /^PDV_QuestReactionMatrix_Tranche\d/.test(f) && f.endsWith(".csv"));
+  // Phase-3 quest-outcome inventory: tagged outcomes for quests not yet in any tranche
+  // (no deity column -- pure outcome rows that only feed the cross product).
+  if (process.argv.includes("--inventory")) files.push("PDV_QuestOutcomeInventory.csv");
   const outcomes = new Map(); // key editor|stage|outcome-> {editorId, questName, stage, outcome, tags:Set}
   const existingPairs = new Set(); // deity|editor|stage
   for (const f of files) {

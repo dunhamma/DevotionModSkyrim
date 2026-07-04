@@ -84,3 +84,26 @@ source-fill evidence.
   location/property-state, or manual-only Altmer Tier 3 evidence.
 - Decide whether Raven Rock and Skaal rows belong in a future Solstheim
   community route rather than current Dunmer Reclamation/deviation routes.
+
+
+## 2026-07-04 Phase-3 tagging sweep (matrix expansion)
+
+Adjudicated during the 40-50-quests-per-deity expansion (5-agent tagging pass + main-loop
+spot-check + UESP verification agents). Quests below are EXCLUDED from the quest-reaction
+matrix; tagged survivors live in PDV_QuestOutcomeInventory.csv.
+
+- EXCL_TECHNICAL_CONTROLLER: DarkBrotherhoodadditionalNPCDialogue, DarkBrotherhoodSanctuaryConversation1,
+  DarkBrotherhoodSanctuaryConvSystem, DarkBrotherhoodSanctuaryDialogue, MQ102A, MQ102B, MQ201Party,
+  MQ302FillAliases, DA11Intro, DA11IntroScene, MG01Pointer (UESP-confirmed pure progression pointer),
+  TG00MaulHandler, TG00MiscHandler, TG04EECHandler, TG04Post, TG09Post, TG00SP
+- EXCL_DIALOGUE_SCENE_AMBIENT: CW00A, CW00B, TG02SP
+- EXCL_RADIANT_REPEATABLE: TG02B (radiant job hub), FreeformSkyHavenTempleB "Dragon Hunting"
+  (UESP-verified radiant/repeatable -- initially mis-tagged, corrected in spot-check)
+- EXCL_CONTAINER_TOO_BROAD: CW01AOutfitImperial
+- EXCL_OUTCOME_AMBIGUOUS: MQ102 (courier leg), MQ105Ustengrav (horn already stolen; empty-tomb tracker),
+  MQ203 (expository escort), MQ204 (traversal/dialogue), MQ205 (dispatch), BardsCollegeFlute (no stage
+  journal), FreeformSkyHavenTempleC (single-stage blessing grant), DB04 "Whispers in the Dark" (Listener
+  reveal has no morally-legible player act; eavesdrop row rejected in spot-check)
+- CUT CONTENT (unreachable in vanilla; UESP-verified): FreeformWinterholdCollegeA "Research Thief"
+  (quest item never placed; also note the real cut plot is the PLAYER stealing for Nirya),
+  FreeformWinterholdCollegeB "The Missing Apprentices" (no completion trigger; s200 is bookkeeping only)
