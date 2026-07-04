@@ -1438,6 +1438,14 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
         return
     endIf
 
+    ; Quest-meta-faucet theft stamp (PDV_QuestExpansion_Architecture.md, 2026-07-05):
+    ; Nocturnal's "done her way" lane compares this against the last watched-quest
+    ; fulfillment. Player-attributed theft-family acts only (the attribution guard
+    ; above already filtered); one StorageUtil write, no new events.
+    if eventType == 360 || eventType == 361 || eventType == 362
+        StorageUtil.SetFloatValue(None, "PDV.Meta.LastTheftTime", Utility.GetCurrentGameTime())
+    endIf
+
     Int i = 0
     Int count = PDV_FLST_AllDeities.GetSize()
     Int scoredCount = 0

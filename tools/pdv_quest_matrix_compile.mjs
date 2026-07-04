@@ -45,6 +45,15 @@ const VALUE_TABLE = {
   "value.echo.C": 3.0,
   "value.echo.S": 2.0,
   "value.echo.m": 1.0,
+  // quest-meta-faucet knobs (2026-07-05, PDV_QuestExpansion_Architecture.md): one-shot
+  // per-quest lanes evaluated at watched fulfillment; tune here, no Papyrus edits.
+  "value.meta.zen": 0.5,
+  "value.meta.nocturnalTheft": 1.5,
+  "value.meta.nocturnalNight": 1.0,
+  "value.meta.azura": 1.0,
+  "value.meta.julianos": 1.0,
+  "value.meta.wheel": 2.0,
+  "value.meta.khenarthi": 1.0,
   "stanceMult.NATIVE": 1.0,
   "stanceMult.FOREIGN": 0.4,
   "stanceMult.TOLERATED": 0.4,
@@ -228,6 +237,9 @@ function main() {
 
   const questKeySet = new Set();
   const questWatchSet = new Set();
+  // quest-meta-faucet support: keys grouped per quest for class/metaSkip emission
+  const keysByQuestDecimal = new Map();
+  const editorIdByDecimal = new Map();
   for (const row of matrixRows) {
     const editorId = row.editor_id?.trim();
     const stage = Number.parseInt(row.outcome_stage, 10);
@@ -272,6 +284,10 @@ function main() {
     out[`quest.${key}.intensities`].push(row.intensity.trim());
     out[`quest.${key}.magnitudes`].push(row.magnitude.trim());
     out[`quest.${key}.tags`].push(row.act_tags.trim());
+
+    if (!keysByQuestDecimal.has(resolved.decimal)) keysByQuestDecimal.set(resolved.decimal, new Set());
+    keysByQuestDecimal.get(resolved.decimal).add(key);
+    editorIdByDecimal.set(resolved.decimal, editorId);
   }
 
   for (const row of faucetRows) {
@@ -300,6 +316,44 @@ function main() {
     out[`quest.${questKey}.magnitudesCsv`] = out[`quest.${questKey}.magnitudes`].join("|");
     out[`quest.${questKey}.tagsCsv`] = out[`quest.${questKey}.tags`].join("|");
   }
+
+  // quest-meta-faucet emission (2026-07-05, PDV_QuestExpansion_Architecture.md):
+  // (a) class flags from the curated CSV as INTEGER keys (no runtime string parsing);
+  // (b) compile-time yield rule: metaSkip.<Deity>=1 on every key of a quest where that
+  //     meta deity already holds a cell (meta never double-credits a matrix cell).
+  const META_DEITIES = ["Z'en", "Nocturnal", "Azura", "Julianos", "Akatosh", "Xarxes", "Khenarthi"];
+  const CLASS_FLAGS_CSV = "references/authoring/PDV_QuestClassFlags.csv";
+  const classByEditor = new Map();
+  if (exists(CLASS_FLAGS_CSV)) {
+    for (const row of readCsv(CLASS_FLAGS_CSV)) {
+      const flags = (row.classes || "").split("|").map((s) => s.trim()).filter(Boolean);
+      if (row.editor_id && flags.length) classByEditor.set(row.editor_id.trim(), flags);
+    }
+  }
+  let classInts = 0;
+  let metaSkipInts = 0;
+  for (const [decimal, keys] of keysByQuestDecimal) {
+    const editorId = editorIdByDecimal.get(decimal);
+    const flags = classByEditor.get(editorId) ?? [];
+    const deitiesOnQuest = new Set();
+    for (const key of keys) {
+      for (const d of out[`quest.${key}.deities`]) deitiesOnQuest.add(d);
+    }
+    for (const key of keys) {
+      for (const flag of flags) {
+        out[`quest.${key}.class.${flag}`] = 1;
+        classInts += 1;
+      }
+      for (const deity of META_DEITIES) {
+        if (deitiesOnQuest.has(deity)) {
+          out[`quest.${key}.metaSkip.${deity}`] = 1;
+          metaSkipInts += 1;
+        }
+      }
+    }
+  }
+  out.metaClassInts = classInts;
+  out.metaSkipInts = metaSkipInts;
 
   for (const [key, forms] of Object.entries(FAUCET_FORM_LISTS)) {
     attachRuntimeFormList(out, key, forms);

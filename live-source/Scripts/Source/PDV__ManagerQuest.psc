@@ -1331,6 +1331,83 @@ Function ApplyQuestReaction(Quest sourceQuest, Int stageValue)
     if GetDebugLevel() >= 1
         Debug.Trace("[PDV] QuestReaction: " + reactionKey + " applied " + cellCount + " cells.")
     endIf
+
+    EvaluateQuestMetaFaucets(sourceQuest, reactionKey, cellPrefix, matrixFile)
+EndFunction
+
+Function EvaluateQuestMetaFaucets(Quest sourceQuest, String reactionKey, String cellPrefix, String matrixFile)
+    ; Quest-meta-faucets (PDV_QuestExpansion_Architecture.md, 2026-07-05): one-shot per-quest
+    ; lanes for thin-coverage deities, evaluated ONLY on watched-quest cell fires so the
+    ; game-wide unwatched stage spam never reaches this. Class and metaSkip flags are
+    ; compile-time INTEGER keys in the matrix JSON (no runtime string parsing); metaSkip
+    ; encodes the yield rule (a deity holding a matrix cell anywhere on this quest never
+    ; double-credits through a meta lane). The per-quest once-guard makes every lane finite
+    ; by construction; values live at value.meta.* in the core JSON (0 = lane off).
+    String[] keyParts = StringUtil.Split(reactionKey, "|")
+    if keyParts.Length < 1
+        return
+    endIf
+    String doneKey = "PDV.Meta.Done." + keyParts[0]
+    if StorageUtil.GetIntValue(None, doneKey) == 1
+        return
+    endIf
+    StorageUtil.SetIntValue(None, doneKey, 1)
+
+    Form questForm = sourceQuest as Form
+    Float nowTime = Utility.GetCurrentGameTime()
+    Float hourOfDay = (nowTime - ((nowTime as Int) as Float)) * 24.0
+
+    ; Z'en -- the wage taken (gold-rewarded quests only; compile-time class flag)
+    Bool goldQuest = JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.gold") == 1
+    if goldQuest && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Z'en") != 1
+        ApplyDeityReaction("Z'en", "+", "zen", "meta", "meta_zen_wage", False, questForm)
+    endIf
+
+    ; Julianos -- wisdom served (mage-aid quests)
+    Bool mageAidQuest = JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.mageAid") == 1
+    if mageAidQuest && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Julianos") != 1
+        ApplyDeityReaction("Julianos", "+", "julianos", "meta", "meta_julianos_wisdom", False, questForm)
+    endIf
+
+    ; Azura -- mage-aid quest OR sealed at the twilight threshold (dawn/dusk windows)
+    Bool twilightWindow = (hourOfDay >= 5.0 && hourOfDay < 7.0) || (hourOfDay >= 17.0 && hourOfDay < 19.0)
+    if (mageAidQuest || twilightWindow) && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Azura") != 1
+        ApplyDeityReaction("Azura", "+", "azura", "meta", "meta_azura_threshold", False, questForm)
+    endIf
+
+    ; Nocturnal -- theft since the previous fulfillment (tier 1), else done in her dark (tier 2)
+    if JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Nocturnal") != 1
+        Float lastTheft = StorageUtil.GetFloatValue(None, "PDV.Meta.LastTheftTime")
+        Float lastFulfill = StorageUtil.GetFloatValue(None, "PDV.Meta.LastFulfillTime")
+        if lastTheft > 0.0 && lastTheft > lastFulfill
+            ApplyDeityReaction("Nocturnal", "+", "nocturnalTheft", "meta", "meta_nocturnal_herway", False, questForm)
+        elseIf hourOfDay >= 20.0 || hourOfDay < 6.0
+            ApplyDeityReaction("Nocturnal", "+", "nocturnalNight", "meta", "meta_nocturnal_dark", False, questForm)
+        endIf
+    endIf
+
+    ; Khenarthi -- the road honored (fulfilled outdoors under the sky)
+    Actor metaPlayer = Game.GetPlayer()
+    if metaPlayer && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Khenarthi") != 1
+        Cell parentCell = metaPlayer.GetParentCell()
+        if parentCell && !parentCell.IsInterior()
+            ApplyDeityReaction("Khenarthi", "+", "khenarthi", "meta", "meta_khenarthi_road", False, questForm)
+        endIf
+    endIf
+
+    ; Akatosh + Xarxes -- the wheel turns / the record kept (ONE shared lifetime counter)
+    Int wheelCount = StorageUtil.AdjustIntValue(None, "PDV.Meta.QuestCount", 1)
+    if wheelCount > 0 && wheelCount % 10 == 0
+        if JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Akatosh") != 1
+            ApplyDeityReaction("Akatosh", "+", "wheel", "meta", "meta_akatosh_wheel", False, questForm)
+        endIf
+        if JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Xarxes") != 1
+            ApplyDeityReaction("Xarxes", "+", "wheel", "meta", "meta_xarxes_record", False, questForm)
+        endIf
+    endIf
+
+    StorageUtil.SetFloatValue(None, "PDV.Meta.LastFulfillTime", nowTime)
+    Trace(2, "Quest meta-faucets evaluated (" + reactionKey + ")")
 EndFunction
 
 Function ApplyQuestReactionFaucet(String faucetKey, Form sourceForm)

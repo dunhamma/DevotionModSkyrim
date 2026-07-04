@@ -6,7 +6,7 @@ GAP-REVIEW = authority is prose, identifier may be a proposed name (adjudicate, 
 fix the build or correct the contract row's check_hint). NEEDS-MANUAL = not machine-checkable.
 
 Verdicts: PASS=361 | NEEDS-MANUAL=293 | GAP-REVIEW=53 | FUTURE=59 | WAIVED=2
-Layers: source=live; esp=1741 EditorIDs; runtime=read-only from gate ledger.
+Layers: source=live; esp=1745 EditorIDs; runtime=read-only from gate ledger.
 
 ## GAP-REVIEW (53)
 
@@ -106,7 +106,7 @@ Layers: source=live; esp=1741 EditorIDs; runtime=read-only from gate ledger.
 | BC-0068 | signal_channel | Imperial | Broad Nine Divines | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Imperial.md -- Broad Nine Divines contextual favor table |
 | BC-0069 | signal_channel | Imperial | broad Nine Divines (civic) | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceSignalMatrix.csv - Imperial / Broad civic Divine field |
 | BC-0070 | signal_channel | Imperial | Concordat compliance (Talos penalty) | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceSignalMatrix.csv - Imperial / Concordat compliance lane |
-| BC-0072 | signal_channel | Imperial | Imperial civic piety faucet | Gate ledger verdict: Fail (runtime proof is the user's smoke lane). | PDV_ImperialRewardRecords.spec.json Section notes TARGET PACE; Section authoringPlan.verif |
+| BC-0072 | signal_channel | Imperial | Imperial civic piety faucet | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_ImperialRewardRecords.spec.json Section notes TARGET PACE; Section authoringPlan.verif |
 | BC-0073 | signal_channel | Imperial | Stendarr | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceSignalMatrix.csv - Imperial / Stendarr lane |
 | BC-0074 | signal_channel | Imperial | Talos (private defiance) | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceSignalMatrix.csv - Imperial / Talos defiance lane |
 | BC-0075 | signal_channel | Khajiit | Alkosh | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceSignalMatrix.csv - Khajiit / Alkosh focus |
@@ -206,7 +206,7 @@ Layers: source=live; esp=1741 EditorIDs; runtime=read-only from gate ledger.
 | BC-0353 | reward_tier | Imperial | Imperial Akatosh T3 -- Endurance of the Covenant | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Imperial section (DRAFT); LOCKED rules 1 and 2 |
 | BC-0354 | reward_tier | Imperial | Imperial Arkay T3 -- Ward of the Cycle | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Imperial/Nine Divines section (DRAFT) |
 | BC-0356 | reward_tier | Imperial | Imperial Mara T3 -- Compassion of the Mother | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Imperial/Nine Divines section (DRAFT) |
-| BC-0357 | reward_tier | Imperial | Imperial reward ceiling: broad + one focused; ConcordatStanding is pressure not buff | Gate ledger verdict: Fail (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Imperial, Reward ceiling |
+| BC-0357 | reward_tier | Imperial | Imperial reward ceiling: broad + one focused; ConcordatStanding is pressure not buff | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Imperial, Reward ceiling |
 | BC-0358 | reward_tier | Imperial | Imperial Stendarr T3 -- Bulwark of Mercy | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Imperial/Nine Divines section (DRAFT) |
 | BC-0359 | reward_tier | Imperial | Imperial Talos T3 -- Triumph of Faithful Defiance | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Imperial/Nine Divines section (DRAFT) |
 | BC-0360 | reward_tier | Imperial | Imperial Zenithar T3 -- Prosperity of Fair Dealing | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Imperial/Nine Divines section (DRAFT) |

@@ -199,6 +199,40 @@ Smoke rows: one theft-day fire, one night fire, one mage-aid fire, one twilight 
 10th-quest counter; `pdv_ledger_coverage_audit` picks up the new reason tokens automatically
 (verify UNTRACKED stays 0).
 
+## C-STATUS: BUILT + ADVERSARIALLY VERIFIED (2026-07-05)
+
+Matrix (832 cells / 90 watched quests) live in the core JSON; all 7 meta lanes implemented per
+`PDV_QuestExpansion_Architecture.md` (zero new scripts/records/registrations). Three refuter
+agents + main-loop closure:
+- Lane liveness: 7/7 LIVE. Every JSON key byte-exact emit-vs-read (incl. metaSkip.Z'en
+  apostrophe); values resolve through the float map; deity names all covered by the canonical
+  repair EXCEPT Nocturnal (Daedric path, CK-baked) -- closed via houseCARL readback:
+  PDV_DaedricPath_Nocturnal DeityName == "Nocturnal" exactly.
+- Deployment parity: 832/832 cells round-trip Full.csv <-> live JSON (both representations the
+  engine reads); class flags 15/15 rows emitted with zero silent no-ops; metaSkip recomputed
+  independently over the full 826-combination cross product, 0 violations; ARR channel zero
+  key overlap + core-first lookup order confirmed.
+- Unwired-declaration hunt: all new emit/read/storage-key/reason-token pairs CONFIRMED WIRED;
+  meta reasons reach the Ledger unfiltered.
+
+FOLLOW-UPS surfaced by verification (fold into the next passes, none block the build):
+1. **DEFECT (pre-existing): `EVT_STEAL_ITEM` (362) is declared but never dispatched** -- steal
+   acts have never fired the day-to-day steal likes (Mephala/Boethiah/Rajhin) and cannot stamp
+   the Nocturnal theft tier. Interim truth: the theft tier fires on lockpick (360) / trespass
+   (361), which are already "her way". Owner options for the fix: (a) SM Crime Gold receiver
+   (event-driven, thin-glue PDV pattern, but WITNESSED thefts only -- ironic for Nocturnal);
+   (b) player-alias OnItemAdded ownership check (catches unseen theft, adds a small hot-path
+   handler with early-outs -- the one deliberate exception to script-neutrality if chosen).
+2. Meta reason tokens render the generic fallback phrase in the Ledger (HumanizeDriverReason
+   has no meta_* arms) -- cosmetic copy pass: add the seven phrases ("the wage taken", "done
+   her way", ...).
+3. Hardening: Daedric-path DeityNames have no runtime repair net (unlike the 30 deities) --
+   consider extending EnsureCanonicalDeityDisplayNames to FLST_DaedricPaths_All.
+4. Tester note: stance multipliers apply to meta lanes (foreign faces feel 0.4x) -- do not
+   false-FAIL manual smoke on a non-native character.
+5. Design note (intended, documented): meta evaluates on the FIRST cell-bearing stage fire per
+   quest; class flags emit on all stages by construction so lanes cannot starve each other.
+
 ## Model summary (token efficiency)
 
 | Item | Executor | Why |
