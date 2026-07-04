@@ -33,7 +33,8 @@ regardless of load order). Only the preflight changes:
 - `Devotion - Living Deities Test` isn't in that list -- **skip the disable step**. Everything else (new
   save, `set PDV_GLO_OriginRace to 5`, DebugLevel, the MCM Debug pages) is the same.
 - **Authoria is the right place to judge reward FEEL.** Requiem zeroes regen-rate buffs, so the home-prayer
-  Health pulse must be proven *here* -- watch the HP bar actually move. The Good-Daedra (Azura / Boethiah /
+  ancestor watch must be proven *here* -- arm it, drop below the threshold, and confirm the near-death save
+  fires once. The Good-Daedra (Azura / Boethiah /
   Mephala) shrine + book reactions use the ARR variant under Requiem (same beats, different shrine records).
 
 ---
@@ -83,14 +84,20 @@ regardless of load order). Only the preflight changes:
 - **[Dev] log:** an ancestor-spine award marker in Papyrus.0.log.
 - **Record:** ___
 
-### Slot 4b -- ancestor-home bonus  [Tester] [R]+[M]
+### Slot 4b -- ancestor-home bonus: the ancestor watch  [Tester] [R]+[M]
 - **Do:** sleep in a bed to declare that cell your ancestor-home (watch for the declaration notice), then
-  **use the urn AT that home** (or MCM Debug -> `Dunmer home bonus`). Pray with the urn ELSEWHERE for contrast.
-- **See:** praying at the declared home fires the **bigger progress step** with the toast
-  *"Prayers within the home feel more meaningful."* (plus a Ledger driver row) and a timed **Health**
-  restoration -- under Requiem watch the **HP bar actually move** (it is a flat Restore-Health, not a
-  regen-rate buff). Praying anywhere else = base prayer only, no pulse. V1 uses the first interior bed-cell
-  you sleep in as the ancestor-home, including an inn room; there is no move-home prompt yet.
+  **use the urn AT that home** (or MCM Debug -> `Dunmer home bonus`). Open **Active Effects**. Then drop
+  below ~20% health (fall damage / let an enemy connect) while the watch is armed. Pray with the urn
+  ELSEWHERE for contrast.
+- **See:** the home prayer fires the **bigger progress step** with the toast *"Prayers within the home
+  feel more meaningful."* (plus a Ledger driver row) and **arms "The Ancestors Watch"** -- a visible
+  Active Effect. There is **NO instant heal** any more (2026-07-04 rework; an on-the-spot HP pulse is
+  the OLD behavior -> note it as a regression). At your next near-death moment that day (<= 20% health)
+  the watch fires ONCE: a full restore, the toast *"The ancestors pull you back from the brink."*, and a
+  Book of Days line. A second near-death the same day does NOT re-fire (daily guard). The watch is
+  removed at the next dawn; a fresh home prayer re-arms it. Praying anywhere else = base prayer only,
+  no watch. V1 uses the first interior bed-cell you sleep in as the ancestor-home, including an inn room;
+  there is no move-home prompt yet.
 - **Record:** ___
 
 ### Slot 4c -- ancestor-layer chronicle (the label deepening)  [Tester] [R]+[M]

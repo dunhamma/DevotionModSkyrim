@@ -96,6 +96,7 @@ PDV_Substrate_NordAncestor Property PDV_NordAncestorSubstrate Auto
 PDV_Substrate_DunmerAncestor Property PDV_DunmerAncestorSubstrate Auto
 Book Property PDV_BOOK_DunmerAncestralUrn Auto
 MiscObject Property PDV_MISC_DunmerAncestralUrn Auto
+Spell Property PDV_SPEL_Dunmer_AncestorWatch Auto
 PDV_Substrate_KhajiitLunar Property PDV_KhajiitLunarSubstrate Auto
 PDV_Substrate_ArgonianHist Property PDV_ArgonianHistSubstrate Auto
 Book Property PDV_BOOK_ArgonianHistSapToken Auto
@@ -5405,8 +5406,9 @@ Function HandleDunmerPortableShrinePrayer(String reason)
         NotifyDiegeticRoutineFavor("dunmer_portable_shrine")
         TryAwardDunmerTwilightWindowSignal(reason)
         AwardActiveDunmerReclamationMemorySignal()
-        ; Home-prayer bonus (11a): praying with the portable urn at your declared
-        ; ancestor-home fires the bigger home progress step + a flat Health pulse.
+        ; Home-prayer bonus (11a, reworked 2026-07-04): praying with the portable urn at
+        ; your declared ancestor-home fires the bigger home progress step + arms the
+        ; ancestor watch (once-per-day near-death save until dawn).
         ; HandleDunmerPlayerHomeBonus self-gates on curse posture.
         if IsPlayerAtDunmerDeclaredHome(Game.GetPlayer())
             HandleDunmerPlayerHomeBonus(reason + "_home")
@@ -5426,16 +5428,15 @@ Function HandleDunmerPlayerHomeBonus(String reason)
             AwardDunmerAncestorSpinePulse(multiplier, reason)
             Int tierAfter = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
             SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "Prayers within the home feel more meaningful.", "ancestor", GetDunmerAncestorLayerLabel())
-            ; Requiem-proof event-driven heal: a flat RestoreActorValue (NOT a
-            ; HealRateMult, which Requiem swallows). This is the hearth/home bonus
-            ; that replaced the old homeOrShrineOnly substrate regen (11a).
+            ; Ancestor watch (11a rework 2026-07-04): the home prayer no longer heals on
+            ; the spot; it arms a once-per-day near-death save that lasts until dawn (the
+            ; BaanDar-style low-health watcher, PDV_T3DailyLowHealthSaveEffect on the
+            ; PDV_SPEL_Dunmer_AncestorWatch ability). ProcessDawn disarms it, so each
+            ; day's protection must be re-earned with a fresh home prayer.
             Actor homePlayer = Game.GetPlayer()
-            if homePlayer
-                Float homeHeal = 15.0
-                if tierAfter >= 2
-                    homeHeal = 30.0
-                endIf
-                homePlayer.RestoreActorValue("Health", homeHeal)
+            if homePlayer && PDV_SPEL_Dunmer_AncestorWatch && !homePlayer.HasSpell(PDV_SPEL_Dunmer_AncestorWatch)
+                homePlayer.AddSpell(PDV_SPEL_Dunmer_AncestorWatch, False)
+                Trace(2, "Dunmer ancestor watch armed (" + reason + ")")
             endIf
         else
             Trace(2, "Dunmer home rite silenced by curse posture (" + reason + ")")
@@ -5444,6 +5445,21 @@ Function HandleDunmerPlayerHomeBonus(String reason)
         AwardActiveDunmerReclamationMemorySignal()
         RequestPanelRefresh()
         Trace(2, "Dunmer player-home bonus routed (" + reason + ")")
+    endIf
+EndFunction
+
+Function DisarmDunmerAncestorWatch()
+    ; The home-prayer ancestor watch lasts until dawn; remove it so each day's
+    ; near-death protection must be re-earned with a fresh home prayer. The watcher
+    ; script's own StorageUtil day-guard keeps the save once-per-day regardless.
+    if !PDV_SPEL_Dunmer_AncestorWatch
+        return
+    endIf
+
+    Actor playerRef = Game.GetPlayer()
+    if playerRef && playerRef.HasSpell(PDV_SPEL_Dunmer_AncestorWatch)
+        playerRef.RemoveSpell(PDV_SPEL_Dunmer_AncestorWatch)
+        Trace(2, "Dunmer ancestor watch released at dawn.")
     endIf
 EndFunction
 
@@ -9163,6 +9179,7 @@ Function ProcessDawn()
     RunDawnBookOfDays()
     SyncKhajiitPhaseBlessing()
     ProcessKhajiitAlkoshWordDrip()
+    DisarmDunmerAncestorWatch()
     RequestPanelRefresh()
 
     if GetDebugLevel() >= 1

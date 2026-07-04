@@ -125,8 +125,10 @@ Run `references/authoring/PDV_RequiemSmokeTest_Tracker.md` Track B. Magnitudes a
 record TUNED values as notes; do NOT re-run cumulative-rebalance tools (not idempotent).
 
 - **Sweep A (A1-A9):** each converted Fortify-Health reward is felt -- `player.getav Health`
-  before/after + HP bar. A7 Mara sleep-mercy (once/day 25/40), A8 Dunmer home-prayer pulse
-  (AT declared home only), A9 Orc Code Holds near-death restore.
+  before/after + HP bar. A7 Mara sleep-mercy (once/day 25/40), A8 Dunmer home-prayer ANCESTOR
+  WATCH (2026-07-04 rework: home prayer arms a visible once-per-day near-death full restore
+  that expires at dawn; NO instant heal -- an on-the-spot pulse is a regression), A9 Orc Code
+  Holds near-death restore.
 - **Sweep B1:** Redguard Tu'whacca event-heal (T2<T3, once/day), Namira heal-on-feed
   (tier-scaled, stops at cap), Ash'abah stigma (Survey label + marked-moment notice, NO piety
   drop), Breton Vigilant nod (WitchcraftExposure >= 50 Survey line).

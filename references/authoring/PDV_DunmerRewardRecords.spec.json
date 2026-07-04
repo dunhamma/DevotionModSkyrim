@@ -59,14 +59,14 @@
       {
         "slotProperty": "Substrate_Always",
         "spellEditorId": "PDV_Bless_Dunmer_Substrate_Always",
-        "displayName": "Ancestor Memory",
+        "displayName": "Dunmer Ancestor's Steadiness",
         "effects": [
           {
             "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_Always_Magic",
             "actorValue": "ResistMagic",
             "magnitude": 3,
             "homeOrShrineOnly": false,
-            "effectName": "Magic Resistance"
+            "effectName": "Ancestor's Magic Steadiness"
           }
         ],
         "playerFacingText": "The ancestors keep their hand on you across the diaspora. Magic Resistance +3%."
@@ -74,34 +74,34 @@
       {
         "slotProperty": "Substrate_Mid",
         "spellEditorId": "PDV_Bless_Dunmer_Substrate_Mid",
-        "displayName": "Ancestor Hearth",
+        "displayName": "Dunmer Ancestor's Regard",
         "effects": [
           {
             "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_Mid_Magic",
             "actorValue": "ResistMagic",
             "magnitude": 9,
             "homeOrShrineOnly": false,
-            "effectName": "Magic Resistance"
+            "effectName": "Ancestor's Magic Regard"
           }
         ],
         "playerFacingText": "The ancestors gather closer at hearth and ash. Magic Resistance +9%.",
-        "designNote": "homeOrShrineOnly MagickaRegen removed 2026-06-20; the home/hearth benefit is now the event-driven flat Health pulse at the declared ancestor-home (HandleDunmerPlayerHomeBonus, 11a)."
+        "designNote": "homeOrShrineOnly MagickaRegen removed 2026-06-20; home/hearth benefit reworked 2026-07-04: the declared-ancestor-home prayer arms the once-per-day near-death ancestor watch until dawn (PDV_SPEL_Dunmer_AncestorWatch, BaanDar-style PDV_T3DailyLowHealthSaveEffect; HandleDunmerPlayerHomeBonus arms, ProcessDawn disarms). The old instant flat Health pulse is retired."
       },
       {
         "slotProperty": "Substrate_High",
         "spellEditorId": "PDV_Bless_Dunmer_Substrate_High",
-        "displayName": "Ancestor Attunement",
+        "displayName": "Dunmer Ancestor's Honor",
         "effects": [
           {
             "magicEffectEditorId": "PDV_MGEF_Dunmer_Substrate_High_Magic",
             "actorValue": "ResistMagic",
             "magnitude": 20,
             "homeOrShrineOnly": false,
-            "effectName": "Magic Resistance"
+            "effectName": "Ancestor's Magic Honor"
           }
         ],
-        "playerFacingText": "The ancestors are deeply with you even far from the ash, and magic finds little purchase on you. Magic Resistance +20%. At your declared ancestor-home, prayer mends your blood.",
-        "designNote": "homeOrShrineOnly MagickaRegen + HealRegen removed 2026-06-20; the home/hearth benefit is now the event-driven flat Health pulse at the declared ancestor-home (HandleDunmerPlayerHomeBonus, 11a, Requiem-proof)."
+        "playerFacingText": "The ancestors are deeply with you even far from the ash. Magic Resistance +20%.",
+        "designNote": "homeOrShrineOnly MagickaRegen + HealRegen removed 2026-06-20; home/hearth benefit reworked 2026-07-04: home prayer arms the once-per-day near-death ancestor watch until dawn (PDV_SPEL_Dunmer_AncestorWatch). The old instant flat Health pulse is retired."
       }
     ],
     "substratePowerNote": "Mirrors the proven Khajiit and Argonian substrate triad shape and power level (Always low + Mid + High climbing). Themed to ancestors/ash: ResistMagic (always-on identity), MagickaRateMult and HealRateMult at home/shrine (the contextual climb). homeOrShrineOnly conditions are the Dunmer analogue of the Khajiit nightOnly / Argonian nearWaterOnly conditions; the always-on identity boon is unconditional, the contextual climb keys off home/private-shrine context. NO passive decay -- the layer never erodes from absence of tombs/House shrines."
@@ -194,12 +194,13 @@
           "effectName": "Magicka Regeneration"
         },
         {
-          "actorValue": "ResistMagic",
-          "magnitude": 5,
-          "effectName": "Magic Resistance"
+          "actorValue": "Destruction",
+          "magnitude": 10,
+          "effectName": "Destruction"
         }
       ],
-      "playerFacingText": "Azura's foresight wards your mind. Magicka Regeneration +10%, Magic Resistance +5%."
+      "playerFacingText": "Azura's foresight guides your destruction to its mark. Magicka Regeneration +10%, Destruction +10.",
+      "rebalanceNote": "2026-07-04 owner ruling: ResistMagic 5 -> Destruction 10; the substrate spine already carries the resist identity and the Azura stack was over-capping resist."
     },
     {
       "emphasis": "Azura",
@@ -216,12 +217,13 @@
           "effectName": "Magicka Regeneration"
         },
         {
-          "actorValue": "ResistMagic",
-          "magnitude": 15,
-          "effectName": "Magic Resistance"
+          "actorValue": "Destruction",
+          "magnitude": 25,
+          "effectName": "Destruction"
         }
       ],
-      "playerFacingText": "You see by the twilight Azura keeps. Magicka Regeneration +20%, Magic Resistance +15%.",
+      "playerFacingText": "You see by the twilight Azura keeps, and your destruction strikes true. Magicka Regeneration +20%, Destruction +25.",
+      "rebalanceNote": "2026-07-04 owner ruling: ResistMagic 15 -> Destruction 25 (cumulative-highest-only); see T2 note.",
       "recognition": "V1 Champion Survey text only (non-voiced); voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md"
     },
     {

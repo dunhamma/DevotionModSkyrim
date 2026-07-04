@@ -195,7 +195,7 @@ before/after and watch the HP bar.
 | A5 | Orc Malacath T2 Fortify Health | seed to tier → max Health rises | [M] | PENDING | |
 | A6 | Imperial Civic T1/T2 + Arkay T2/T3 Fortify Health | seed to tier → max Health rises (T1 was fully dead pre-conversion) | [M] | PENDING | |
 | A7 | Imperial Mara sleep-mercy (event) | sleep in a bed → HP bar restores once/day (Devoted 25 / Champion 40) | [M] | PENDING | |
-| A8 | Dunmer home-prayer pulse (event) | sleep in a bed (declare home → notice) → pray with urn AT home → HP bar moves; pray elsewhere → NO pulse | [M] | PENDING | |
+| A8 | Dunmer home-prayer ancestor watch (2026-07-04 rework) | sleep (declare home → notice) → pray with urn AT home → "The Ancestors Watch" in Active Effects, NO instant heal → drop <20% health → full restore + brink toast once/day; expires at dawn; elsewhere → no watch | [M] + [R] | PENDING | replaced the instant flat Restore-Health pulse |
 | A9 | Orc Code Holds health half (event) | trigger near-death → flat Health restore (paired with the existing stamina restore, Seeker 40 / Devoted 60) | [M] | PENDING | |
 | A10 | Beta-feel poles (existing run-sheets) | run `PDV_RunSheet_Dunmer/Imperial/Orc_BetaFeel.md` (Orc life-mode runtime) | mixed | PENDING | |
 

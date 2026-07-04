@@ -293,9 +293,16 @@ ordinary Daedric contact, or artifact possession alone as deviation-price proof.
 - **Expected behavior:** the active Reclamation receives the deviation penalty
   signal. Later declared-home sleep may renew the remembered deviation only
   after this first `PDV.Dunmer.DeviationPriceCount` exists.
+- **Expected display after the 2026-07-04 Prisma fix:** one warning toast and
+  one Chronicle entry titled `Reclamation strained`, with the line
+  `The ash-prayer thins; <active Reclamation> marks the wound.` The focused
+  Devotion panel may still score DA01 internally, but the visible Today ledger
+  must stay scoped to the Dunmer origin roster; Arkay, Meridia, Tu'whacca, or
+  other non-Dunmer rows should not appear from this Dunmer test.
 - **PASS:** DA01 Black Star stage 110 produces both route markers and the
-  deviation-price state/penalty behavior. Until this is observed in game, record
-  the arm as RUNTIME PENDING, not DEFERRED.
+  deviation-price state/penalty behavior, and the post-fix toast, Chronicle, and
+  origin-roster panel display are confirmed. Until this is observed in game,
+  record the arm as RUNTIME PENDING, not DEFERRED.
 
 ---
 
@@ -359,24 +366,28 @@ checks run:
   clock), with a Dunmer-flavored declaration notice. Any first interior bed-cell,
   including an inn room, can become the V1 ancestor-home; there is no move-home
   prompt yet.
-- **Home-prayer pulse:** praying with the portable urn AT your declared home
-  fires the bigger progress step (HomeBonusDelta 8 vs PrayerDelta 5) plus a timed
-  **Health** restoration -- authored as a flat Restore-Health (Value-Modifier on
-  Health + Recover, or a scripted RestoreActorValue HoT), NOT a
-  HealRate/HealRateMult rate buff, so it is FELT under Requiem. Praying anywhere
-  else = base prayer only.
+- **Home-prayer ancestor watch (2026-07-04 rework, BUILT):** praying with the
+  portable urn AT your declared home fires the bigger progress step
+  (HomeBonusDelta 8 vs PrayerDelta 5) and **arms "The Ancestors Watch"** -- a
+  visible ability that fires ONCE at your next near-death moment that day
+  (<= 20% health): full restore + brink toast + Book of Days line (the
+  BaanDar-style low-health save, PDV_T3DailyLowHealthSaveEffect, so it is FELT
+  under Requiem by construction). The old instant Health pulse is RETIRED --
+  an on-the-spot heal on home prayer is a regression. The watch expires at
+  dawn; a fresh home prayer re-arms it. Praying anywhere else = base prayer
+  only, no watch.
 - **Always-on substrate** keeps only Magic Resistance (+3/+9/+20%); the
   Magicka-Regen line is removed from its text.
 
 How to prove (route/runtime + manual-acceptance), under an ACTUAL Requiem list:
 1. Sleep in a bed -> confirm the declaration notice; that cell is now your home.
-2. Pray with the urn AT that home -> watch the HP bar actually move during the
-   pulse (the load-bearing Requiem check) and confirm the bigger progress step.
-3. Pray with the urn ELSEWHERE -> base prayer only, no pulse.
-4. Magnitudes (+6%/+15% by tier, duration) are PROVISIONAL pending Dunmer row review.
-
-Until this is built, record the home-bonus arm as DEFERRED (redesign queued), not
-FAIL, in slots 5/6.
+2. Pray with the urn AT that home -> "The Ancestors Watch" appears in Active
+   Effects and the bigger progress step lands. NO instant HP movement.
+3. Drop below ~20% health -> the watch fires once: the HP bar restores fully
+   (the load-bearing Requiem check) with the brink toast + Book of Days line.
+   A second near-death the same day stays silent (daily guard).
+4. Sleep to dawn -> the watch leaves Active Effects until the next home prayer.
+5. Pray with the urn ELSEWHERE -> base prayer only, no watch armed.
 
 ---
 
@@ -462,7 +473,7 @@ yet landed) / DEFERRED (no runnable step) / N/A.
 | 4b. immersiveHook -- ash-prayer / home rite | route/runtime | prayer + home bonus credit + Survey rise? | PASS 2026-07-04 tester-reported through home bonus; toast copy changed afterward and needs one display retest |
 | 4c. immersiveHook -- curse silence | route/runtime | vampire 0x silence + 4 posture labels? | PASS 2026-07-04 tester-reported; Survey copy changed afterward and needs one display retest |
 | 4d. immersiveHook -- twilight / outdoor shrine | route/runtime + display | twilight marker + once-per-window + Good Daedra toast? | PASS 2026-07-04 from Papyrus.0.log plus tester-reported Prisma toast after restart |
-| 4e. immersiveHook -- deviation price | route/runtime | DA01 Black Star stage 110 routes deviation price? | RUNTIME PENDING; static/readback wired for DA01 stage 110 only |
+| 4e. immersiveHook -- deviation price | route/runtime + display | DA01 Black Star stage 110 routes deviation price, writes `Reclamation strained`, and keeps panel origin-scoped? | RUNTIME PENDING for post-fix display; static/readback wired for DA01 stage 110 only |
 | 5. surveyStatusClarity | manual-acceptance | compact focus + named standing + curse posture, counter-free? | |
 | 6. stackSnapshot | manual-acceptance | snapshots A + B match, no generic leak? | |
 | 7. manualFeelNote | manual-acceptance | feel note recorded | |
