@@ -999,6 +999,7 @@ Function EnsureCanonicalDeityDisplayNames()
     repaired += RepairDeityRuntimeName(PDV_AuriEl, "Auri-El")
     repaired += RepairDeityRuntimeName(PDV_Magnus, "Magnus")
     repaired += RepairDeityRuntimeName(PDV_Xarxes, "Xarxes")
+    repaired += RepairDaedricPathRuntimeNames()
     if repaired > 0 && GetDebugLevel() >= 1
         Debug.Trace("[PDV] Canonical deity display names repaired: " + repaired)
     endIf
@@ -1010,6 +1011,66 @@ Int Function RepairDeityRuntimeName(PDV_DeityBase deity, String canonicalName)
     endIf
     deity.DeityName = canonicalName
     return 1
+EndFunction
+
+Int Function RepairDaedricPathRuntimeNames()
+    if !PDV_FLST_DaedricPaths_All
+        return 0
+    endIf
+    Int repaired = 0
+    Int pathCount = PDV_FLST_DaedricPaths_All.GetSize()
+    Int pathIndex = 0
+    while pathIndex < pathCount
+        PDV_DaedricPathBase namedPath = PDV_FLST_DaedricPaths_All.GetAt(pathIndex) as PDV_DaedricPathBase
+        if namedPath
+            String canonicalPathName = CanonicalDaedricPathName(namedPath)
+            if canonicalPathName != ""
+                repaired += RepairDeityRuntimeName(namedPath, canonicalPathName)
+            endIf
+        endIf
+        pathIndex += 1
+    endWhile
+    return repaired
+EndFunction
+
+; Path identity via concrete-script downcast: immune to DeityName drift (the thing
+; being repaired) and to FormList order drift. Canonical strings mirror
+; PDV_DaedricPrinceRecordContracts.json displayName values exactly.
+String Function CanonicalDaedricPathName(PDV_DaedricPathBase namedPath)
+    if namedPath as PDV_DaedricPath_Azura
+        return "Azura"
+    elseIf namedPath as PDV_DaedricPath_Boethiah
+        return "Boethiah"
+    elseIf namedPath as PDV_DaedricPath_Dagon
+        return "Mehrunes Dagon"
+    elseIf namedPath as PDV_DaedricPath_Hircine
+        return "Hircine"
+    elseIf namedPath as PDV_DaedricPath_Malacath
+        return "Malacath"
+    elseIf namedPath as PDV_DaedricPath_Mephala
+        return "Mephala"
+    elseIf namedPath as PDV_DaedricPath_Meridia
+        return "Meridia"
+    elseIf namedPath as PDV_DaedricPath_Molag
+        return "Molag Bal"
+    elseIf namedPath as PDV_DaedricPath_Mora
+        return "Hermaeus Mora"
+    elseIf namedPath as PDV_DaedricPath_Namira
+        return "Namira"
+    elseIf namedPath as PDV_DaedricPath_Nocturnal
+        return "Nocturnal"
+    elseIf namedPath as PDV_DaedricPath_Peryite
+        return "Peryite"
+    elseIf namedPath as PDV_DaedricPath_Sanguine
+        return "Sanguine"
+    elseIf namedPath as PDV_DaedricPath_Sheo
+        return "Sheogorath"
+    elseIf namedPath as PDV_DaedricPath_Vaermina
+        return "Vaermina"
+    elseIf namedPath as PDV_DaedricPath_Vile
+        return "Clavicus Vile"
+    endIf
+    return ""
 EndFunction
 
 Function EnsureBosmerRuntimeWiring()
@@ -10102,7 +10163,23 @@ String Function HumanizeDriverReason(String raw)
     if raw == ""
         return "An act of devotion"
     endIf
-    if StringContainsToken(raw, "read-skill-book")
+    if StringContainsToken(raw, "meta_zen_wage")
+        return "the wage taken"
+    elseIf StringContainsToken(raw, "meta_julianos_wisdom")
+        return "wisdom served"
+    elseIf StringContainsToken(raw, "meta_azura_threshold")
+        return "the threshold honored"
+    elseIf StringContainsToken(raw, "meta_nocturnal_herway")
+        return "done her way"
+    elseIf StringContainsToken(raw, "meta_nocturnal_dark")
+        return "done in her dark"
+    elseIf StringContainsToken(raw, "meta_khenarthi_road")
+        return "the road honored"
+    elseIf StringContainsToken(raw, "meta_akatosh_wheel")
+        return "the wheel turned"
+    elseIf StringContainsToken(raw, "meta_xarxes_record")
+        return "the record kept"
+    elseIf StringContainsToken(raw, "read-skill-book")
         return "reading instructive texts"
     elseIf StringContainsToken(raw, "read-spell-tome")
         return "studying spellcraft"
