@@ -10157,96 +10157,97 @@ Function RecordDeityDriver(PDV_DeityBase deity, String reason, Float delta)
     StorageUtil.IntListAdd(deityForm, "PDV.Driver.Days", Utility.GetCurrentGameTime() as Int, True)
 EndFunction
 
-; Map a raw routing/signal tag to a short player-facing driver phrase. (Backlog:
-; per-signal-type humanization; this covers the common act families.)
+; Map a raw routing/signal tag to a short player-facing driver phrase. Owner rule:
+; phrases plainly describe the trigger ("a quest paid in gold"), never flavor copy --
+; the deity card header supplies the mood; the row teaches the mechanics.
 String Function HumanizeDriverReason(String raw)
     if raw == ""
         return "An act of devotion"
     endIf
     if StringContainsToken(raw, "meta_zen_wage")
-        return "the wage taken"
+        return "a quest paid in gold"
     elseIf StringContainsToken(raw, "meta_julianos_wisdom")
-        return "wisdom served"
+        return "a mage-aid quest"
     elseIf StringContainsToken(raw, "meta_azura_threshold")
-        return "the threshold honored"
+        return "a quest at twilight or aiding mages"
     elseIf StringContainsToken(raw, "meta_nocturnal_herway")
-        return "done her way"
+        return "a quest done after stealing"
     elseIf StringContainsToken(raw, "meta_nocturnal_dark")
-        return "done in her dark"
+        return "a quest done at night"
     elseIf StringContainsToken(raw, "meta_khenarthi_road")
-        return "the road honored"
+        return "a quest finished outdoors"
     elseIf StringContainsToken(raw, "meta_akatosh_wheel")
-        return "the wheel turned"
+        return "every tenth quest"
     elseIf StringContainsToken(raw, "meta_xarxes_record")
-        return "the record kept"
+        return "every tenth quest"
     elseIf StringContainsToken(raw, "read-skill-book")
-        return "reading instructive texts"
+        return "reading a skill book"
     elseIf StringContainsToken(raw, "read-spell-tome")
-        return "studying spellcraft"
+        return "reading a spell tome"
     elseIf StringContainsToken(raw, "read-lore-book")
-        return "reading lore"
+        return "reading a lore book"
     elseIf StringContainsToken(raw, "po3_book") || StringContainsToken(raw, "book")
-        return "reading sacred words"
+        return "reading a book"
     elseIf StringContainsToken(raw, "increase-skill")
-        return "honing your skills"
+        return "a skill increase"
     elseIf StringContainsToken(raw, "discover-location")
-        return "discovering new roads"
+        return "discovering a location"
     elseIf StringContainsToken(raw, "learn-word-of-power")
         return "learning a Word of Power"
     elseIf StringContainsToken(raw, "shout") || StringContainsToken(raw, "voice")
-        return "the Voice"
+        return "using a shout"
     elseIf StringContainsToken(raw, "shrine") || StringContainsToken(raw, "prayer") || StringContainsToken(raw, "pray")
         return "prayer at a shrine"
     elseIf StringContainsToken(raw, "harvest-ingredient")
-        return "gathering nature's gifts"
+        return "harvesting ingredients"
     elseIf StringContainsToken(raw, "brew-potion")
         return "brewing potions"
     elseIf StringContainsToken(raw, "smith-item")
-        return "smithing work"
+        return "smithing an item"
     elseIf StringContainsToken(raw, "enchant-item")
-        return "enchanting work"
+        return "enchanting an item"
     elseIf StringContainsToken(raw, "cook-meal")
         return "cooking a meal"
     elseIf StringContainsToken(raw, "mine-or-chop")
-        return "honest labor"
+        return "mining or woodcutting"
     elseIf StringContainsToken(raw, "kill-daedra")
-        return "banishing Daedra"
+        return "killing Daedra"
     elseIf StringContainsToken(raw, "kill-undead")
-        return "destroying undead"
+        return "killing undead"
     elseIf StringContainsToken(raw, "kill-dragon")
-        return "slaying dragons"
+        return "killing a dragon"
     elseIf StringContainsToken(raw, "killed-hostile-beast")
-        return "facing hostile beasts"
+        return "killing hostile beasts"
     elseIf StringContainsToken(raw, "killed-hostile-humanoid")
-        return "victory in battle"
+        return "killing hostile people"
     elseIf StringContainsToken(raw, "kill-animal-noncombat")
         return "killing harmless animals"
     elseIf StringContainsToken(raw, "murder-defenseless")
-        return "murdering the helpless"
+        return "murdering the defenseless"
     elseIf StringContainsToken(raw, "assault-innocent")
-        return "violence against the innocent"
+        return "assaulting an innocent"
     elseIf StringContainsToken(raw, "kill") || StringContainsToken(raw, "combat") || StringContainsToken(raw, "hunt")
-        return "deeds in the field"
+        return "combat or hunting kills"
     elseIf StringContainsToken(raw, "heal-or-cure-npc")
-        return "healing those in need"
+        return "healing or curing someone"
     elseIf StringContainsToken(raw, "clear-bounty")
-        return "settling debts to the law"
+        return "paying off a bounty"
     elseIf StringContainsToken(raw, "pick-owned-lock")
-        return "picking owned locks"
+        return "picking an owned lock"
     elseIf StringContainsToken(raw, "trespass")
-        return "trespass"
+        return "trespassing"
     elseIf StringContainsToken(raw, "steal-item")
-        return "theft"
+        return "stealing an item"
     elseIf StringContainsToken(raw, "pickpocket")
         return "pickpocketing"
     elseIf StringContainsToken(raw, "raise-undead")
-        return "raising the dead"
+        return "raising undead"
     elseIf StringContainsToken(raw, "vampire-feed")
         return "feeding as a vampire"
     elseIf StringContainsToken(raw, "accept-daedric-artifact")
         return "accepting a Daedric artifact"
     elseIf StringContainsToken(raw, "quest")
-        return "a deed of consequence"
+        return "completing a quest"
     elseIf StringContainsToken(raw, "curated") || StringContainsToken(raw, "rite")
         return "a devotional rite"
     endIf
