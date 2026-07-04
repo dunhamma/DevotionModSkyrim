@@ -152,7 +152,7 @@ quests). Stance gates apply as usual, so foreign faces feel these at 0.4x.
 
 | id | Deity | Trigger at watched-quest fulfillment | Value | Est/playthrough (~60 completions) |
 |---|---|---|---|---|
-| meta.zen | Z'en (15) | ANY fulfillment -- the contract discharged, the wage earned. THE flagship case: any-completion is too broad for day-to-day but is exactly Z'en's domain over finite quests | 0.5 | ~30 |
+| meta.zen | Z'en (15) | fulfillment of a GOLD-REWARDED quest -- the contract discharged, the wage taken (owner refinement 2026-07-05). Detection is compile-time, not runtime: a curated per-quest goldReward flag (UESP reward data, one-shot tagging of the watched pool) emitted into the matrix JSON as quest.<key>.goldReward; no gold-delta sniffing. Unpaid favors correctly leave Z'en unmoved -- the negative space IS the theology | 0.5 | ~18 (about 60% of the pool pays gold) |
 | meta.nocturnal | Nocturnal (20) | fulfillment between 20:00-06:00 -- "done in her dark" | 1.0 | ~20 |
 | meta.azura | Azura (13+6) | fulfillment in the twilight windows (05-07 / 17-19) -- "sealed at the threshold"; reuses the shipped Dunmer twilight-window concept | 1.0 | ~10 |
 | meta.akatosh | Akatosh (18) | every 10th fulfillment (lifetime counter) -- "the wheel turns"; endurance through time | 2.0 | ~12 |
