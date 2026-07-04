@@ -82,6 +82,7 @@ Int Property EVT_INCREASE_SKILL = 344 AutoReadOnly
 Int Property EVT_DISCOVER_LOCATION = 345 AutoReadOnly
 Int Property EVT_PICK_OWNED_LOCK = 360 AutoReadOnly
 Int Property EVT_TRESPASS = 361 AutoReadOnly
+Int Property EVT_STEAL_ITEM = 362 AutoReadOnly
 Int Property EVT_ASSAULT_INNOCENT = 364 AutoReadOnly
 
 Int Property ATTR_DIRECT_PLAYER = 1 AutoReadOnly
@@ -279,6 +280,25 @@ Function HandleStoryTrespass(ObjectReference akVictim, ObjectReference akTrespas
     endIf
 
     RouteActionWithAttribution(EVT_TRESPASS, ATTR_DIRECT_PLAYER, akTrespasser as Form, akVictim as Form)
+EndFunction
+
+Function HandleStoryAddToPlayer(ObjectReference akOwner, ObjectReference akContainer, Location akLocation, Form akItemBase, Int aiAcquireType)
+    ; Story Manager "Player Add Item" fires for every acquisition mode; only the
+    ; steal acquire type (1, per the vanilla WIAddItem03 event-data guard) is a
+    ; theft act. Pickpocket arrives as type 3 and stays unrouted until
+    ; EVT_PICKPOCKET wiring lands.
+    if aiAcquireType != 1
+        Trace(3, "HandleStoryAddToPlayer skipped: acquire type " + aiAcquireType + " is not steal.")
+        return
+    endIf
+
+    Actor playerActor = GetPlayerActor()
+    if !playerActor
+        Trace(1, "HandleStoryAddToPlayer skipped: PlayerRef unavailable.")
+        return
+    endIf
+
+    RouteActionWithAttribution(EVT_STEAL_ITEM, ATTR_DIRECT_PLAYER, playerActor as Form, akItemBase)
 EndFunction
 
 Function HandleStoryAssaultActor(ObjectReference akVictim, ObjectReference akAttacker, Location akLocation, Int aiCrime)

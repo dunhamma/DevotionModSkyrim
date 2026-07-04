@@ -115,6 +115,7 @@ The helper creates/checks each QUST as **not Start Game Enabled**, attaches its 
 | `PDV__SM_PickLock` | Pick Lock | `360` |
 | `PDV__SM_Trespass` | Trespass | `361` |
 | `PDV__SM_AssaultActor` | Assault Actor | `364` |
+| `PDV__SM_AddToPlayer` | Player Add Item | `362` (steal only) -- **QUST + SM node not yet authored** |
 
 Story Manager node readback status: six complete, one blocked/proof-gated. Automated by:
 
@@ -138,6 +139,31 @@ Readback-clean nodes:
 2. `tools/pdv-phase20-p2-receiver-author --author-generic-faucet-story-manager` now creates `PDV__SM_TrespassEvent` (SMEN, Type=`TrespassActorEvent`, Parent=`00005B:Skyrim.esm`) and attaches `PDV__SM_TrespassNode` (SMQN, Parent=`0714B1`, **Shares Event**, Quest=`PDV__SM_Trespass`).
 3. Player-identity filtering stays in the `PDV__SM_Trespass` fragment (matches the other six nodes — no node-level conditions), so the receiver routes `361` only for the player trespasser.
 4. Readback-clean: `0714B1` SMEN + `0714B2` SMQN in `Devotion.esp`; `pdv_verify --strict-phase3` FAIL=0. ESP backup under `Backups\trespass\` + the tool's `Backups\phase20-p2-receivers\`.
+
+`PDV__SM_AddToPlayer` — Papyrus layer DONE 2026-07-05, ESP wiring PENDING:
+
+1. Purpose: dispatch `EVT_STEAL_ITEM` (362) so the Nocturnal "done her way" quest-meta-faucet
+   lane (`PDV.Meta.LastTheftTime` stamp in `PDV_EventBus.RouteActionWithAttribution`) can be
+   triggered by actual item theft, not only lockpick (360) / trespass (361).
+2. Papyrus shipped + compiled clean: `PDV__SM_AddToPlayer.psc` (thin receiver,
+   `OnStoryAddToPlayer`) -> `PDV_ActionRouter.HandleStoryAddToPlayer`, which routes
+   `RouteActionWithAttribution(EVT_STEAL_ITEM, ATTR_DIRECT_PLAYER, player, akItemBase)`
+   only when `aiAcquireType == 1`.
+3. Acquire-type ground truth (read from Skyrim.esm event-data guards): 1 = Steal
+   (`WIAddItem03` "Steal, Thugs hunt player" checks 1 OR 3), 2 = Buy
+   (`WIPlayerAddItemPurchaseNode`), 3 = Pickpocket, 4 = Pickup, 5 = Container
+   (`WIAddItem02` "Rummaging through trash"). Pickpocket (3) is deliberately NOT routed;
+   it belongs to future `EVT_PICKPOCKET` (363) wiring.
+4. Remaining ESP work (mirror the PickLock pattern via
+   `pdv-phase20-p2-receiver-author`): create `PDV__SM_AddToPlayer` QUST (not SGE, script
+   attached, `PDV_Router` -> `PDV_ActionRouter`) and `PDV__SM_AddToPlayerNode` SMQN
+   (**Shares Event**, Quest=`PDV__SM_AddToPlayer`) parented under the vanilla
+   `PlayerAddItem` SMEN root `02C439:Skyrim.esm`. No node-level conditions — acquire-type
+   and player filtering stays in Papyrus, matching the other receivers.
+5. Runtime proof after wiring: steal any owned item, expect the
+   `PDV.Meta.LastTheftTime` stamp (and `[PDV] EventBus ... event 362` traces at debug
+   level 2 once any deity scores 362; today no deity ScoreAction references it, so the
+   stamp is the observable).
 
 No SEQ refresh is expected because these quests must not be Start Game Enabled. **Runtime proof still pending** (in-game: trespass a marked cell, expect `[PDV] EventBus: <deity> event 361 delta <x>`).
 
