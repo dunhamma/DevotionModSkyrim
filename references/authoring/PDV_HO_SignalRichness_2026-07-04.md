@@ -137,6 +137,55 @@ feed BaanDar/Azurah/Alkosh together), khenarthi QR echoes (Kyne-adjacent weather
 All of it stays OFF the strict beta gate -- Dunmer manual evidence remains the only 1.0 blocker;
 this is content-depth work that can land during/after beta without touching gate proofs.
 
+## C. Quest-meta-faucets for thin/ceiling deities (proposed 2026-07-05, owner review pending)
+
+Owner insight: quests are FINITE and one-shot, so generic matching rules that would be
+farm-bait as day-to-day faucets are safe when keyed to QUEST FULFILLMENT. Mechanism: a single
+`EvaluateQuestMetaFaucets(sourceQuest, stage)` pass inside `ApplyQuestReaction` (the one site
+every watched quest-stage fire funnels through), with a per-quest once-guard in StorageUtil
+(finite by construction: 88 watched quests today, growing with the pool) and per-faucet value
+knobs `value.meta.<id>` in the compiled JSON (same zero-Papyrus tuning as the echo tier).
+"Completion" = first watched-stage fire of that quest (per-quest guard absorbs multi-stage
+quests). Stance gates apply as usual, so foreign faces feel these at 0.4x.
+
+### Recommended (honest theology + trivial detection)
+
+| id | Deity | Trigger at watched-quest fulfillment | Value | Est/playthrough (~60 completions) |
+|---|---|---|---|---|
+| meta.zen | Z'en (15) | ANY fulfillment -- the contract discharged, the wage earned. THE flagship case: any-completion is too broad for day-to-day but is exactly Z'en's domain over finite quests | 0.5 | ~30 |
+| meta.nocturnal | Nocturnal (20) | fulfillment between 20:00-06:00 -- "done in her dark" | 1.0 | ~20 |
+| meta.azura | Azura (13+6) | fulfillment in the twilight windows (05-07 / 17-19) -- "sealed at the threshold"; reuses the shipped Dunmer twilight-window concept | 1.0 | ~10 |
+| meta.akatosh | Akatosh (18) | every 10th fulfillment (lifetime counter) -- "the wheel turns"; endurance through time | 2.0 | ~12 |
+| meta.xarxes | Xarxes (16) | same 10th-fulfillment counter -- "the record kept"; the scribe notes the deeds (Altmer face of the same wheel; stance gates keep one player from feeling both) | 2.0 | ~12 |
+| meta.khenarthi | Khenarthi (13) | fulfillment while OUTDOORS under the sky -- "the road honored" (alt: fulfillment in a different hold than the last one -- "the road between"; hold-walk detection is fiddlier, offered as V2) | 1.0 | ~20 |
+
+Pacing: all six sit at/under the echo-tier envelope (max 30 vs the 34 threshold); each has its
+own knob. Ledger acceptance: each fires AwardPiety with a reason token so it lands as a Ledger
+driver row (owner rule: every data point in the Ledger).
+
+### Considered and NOT recommended
+
+- **Meridia daylight completions:** symmetric to Nocturnal but a third time-window faucet reads
+  as a gimmick pattern; her slay-undead cells + DA09 carry her identity.
+- **Rajhin "clean job" (no bounty since quest start):** needs quest-start state tracking we do
+  not have; his TG coverage (17) is on-theology already.
+- **HoonDing / Hircine:** their event lanes (make-way kills, breakthrough bosses, the hunt) are
+  already the right home; quest meta-faucets would double-route the same fantasy.
+- **Arkay / Tu'whacca:** rite-shaped domains; temple favor + day-to-day burial rows carry them.
+- **Julianos / Trinimac / Sheogorath / Alkosh / Auri-El:** no honest generic exists; ceilings
+  stand (Alkosh/Auri-El are near-25 anyway).
+- **Thin princes (Namira/Sanguine/Vaermina/Peryite/Clavicus/Mora) + Sithis:** deliberately
+  Part-D-faucet / DB-scoped; quest meta-faucets would blur the deviation/price design.
+- **Dibella:** one NORMAL matrix milestone instead -- a Bards College full-arc completion cell
+  (aesthetic_devotion milestone) if the owner wants her above 14; no meta-faucet.
+
+### Build shape (Codex manager lane, S-M)
+
+`ApplyQuestReaction` gains the meta pass (6 condition checks + per-quest guard + reason tokens);
+`pdv_quest_matrix_compile` VALUE_TABLE gains the 6 `value.meta.*` knobs; run-sheet/universal
+smoke rows for one time-window fire + the 10th-quest counter; `pdv_ledger_coverage_audit`
+picks up the new reason tokens automatically (verify UNTRACKED stays 0).
+
 ## Model summary (token efficiency)
 
 | Item | Executor | Why |
