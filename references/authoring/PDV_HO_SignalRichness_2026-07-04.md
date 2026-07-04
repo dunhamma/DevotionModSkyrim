@@ -153,8 +153,8 @@ quests). Stance gates apply as usual, so foreign faces feel these at 0.4x.
 | id | Deity | Trigger at watched-quest fulfillment | Value | Est/playthrough (~60 completions) |
 |---|---|---|---|---|
 | meta.zen | Z'en (15) | fulfillment of a GOLD-REWARDED quest -- the contract discharged, the wage taken (owner refinement 2026-07-05). Detection is compile-time, not runtime: a curated per-quest goldReward flag (UESP reward data, one-shot tagging of the watched pool) emitted into the matrix JSON as quest.<key>.goldReward; no gold-delta sniffing. Unpaid favors correctly leave Z'en unmoved -- the negative space IS the theology | 0.5 | ~18 (about 60% of the pool pays gold) |
-| meta.nocturnal | Nocturnal (20) | fulfillment between 20:00-06:00 -- "done in her dark" | 1.0 | ~20 |
-| meta.azura | Azura (13+6) | fulfillment in the twilight windows (05-07 / 17-19) -- "sealed at the threshold"; reuses the shipped Dunmer twilight-window concept | 1.0 | ~10 |
+| meta.nocturnal | Nocturnal (20) | TIERED (owner refinement 2026-07-05): fulfillment on a game-day that also saw a theft-family act (360/361/362 -- "the job done her way", needs a 3-line PDV.Meta.LastTheftDay stamp in the EventBus theft routes) fires at 1.5; else fulfillment between 20:00-06:00 ("done in her dark") at 1.0. One fire per quest, whichever lands first. True used-theft-to-complete causation is NOT engine-detectable; same-day correlation is the honest proxy | 1.5 / 1.0 | ~20-25 |
+| meta.azura | Azura (13+6) | fulfillment of a MAGE-AID flagged quest (owner refinement 2026-07-05: College of Winterhold line, Falion, court wizards, mage questgivers -- lore anchor: the Shrine of Azura was built by Winterhold mages) OR fulfillment in the twilight windows (05-07 / 17-19, "sealed at the threshold"). One fire per quest | 1.0 | ~20 |
 | meta.akatosh | Akatosh (18) | every 10th fulfillment (lifetime counter) -- "the wheel turns"; endurance through time | 2.0 | ~12 |
 | meta.xarxes | Xarxes (16) | same 10th-fulfillment counter -- "the record kept"; the scribe notes the deeds (Altmer face of the same wheel; stance gates keep one player from feeling both) | 2.0 | ~12 |
 | meta.khenarthi | Khenarthi (13) | fulfillment while OUTDOORS under the sky -- "the road honored" (alt: fulfillment in a different hold than the last one -- "the road between"; hold-walk detection is fiddlier, offered as V2) | 1.0 | ~20 |
@@ -181,10 +181,17 @@ driver row (owner rule: every data point in the Ledger).
 
 ### Build shape (Codex manager lane, S-M)
 
-`ApplyQuestReaction` gains the meta pass (6 condition checks + per-quest guard + reason tokens);
-`pdv_quest_matrix_compile` VALUE_TABLE gains the 6 `value.meta.*` knobs; run-sheet/universal
-smoke rows for one time-window fire + the 10th-quest counter; `pdv_ledger_coverage_audit`
-picks up the new reason tokens automatically (verify UNTRACKED stays 0).
+Generalized mechanism (2026-07-05): ONE curated class-flag CSV
+(`PDV_QuestClassFlags.csv`: editor_id, classes e.g. "gold|mageAid") consumed by
+`pdv_quest_matrix_compile` and emitted as `quest.<key>.classes` -- Z'en gold and Azura mage-aid
+both read it; future quest classes are a CSV row, not code. `ApplyQuestReaction` gains the meta
+pass (per-quest once-guard + class/time/counter checks + reason tokens); the EventBus theft
+routes gain the `PDV.Meta.LastTheftDay` stamp; VALUE_TABLE gains the `value.meta.*` knobs
+(nocturnal gets theft/night tiers). Curation pass: tag gold + mageAid over the 88 watched quests
+(one short Sonnet pass against UESP reward/questgiver data, main-loop spot-check).
+Smoke rows: one theft-day fire, one night fire, one mage-aid fire, one twilight fire, the
+10th-quest counter; `pdv_ledger_coverage_audit` picks up the new reason tokens automatically
+(verify UNTRACKED stays 0).
 
 ## Model summary (token efficiency)
 
