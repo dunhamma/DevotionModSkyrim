@@ -1,0 +1,14 @@
+editor_id,quest_name,outcome_stage,outcome,deity,approve_tag,approve_intensity,disapprove_tag,disapprove_intensity
+DA01,The Black Star,100,Cleanse Azura's Star (give to Aranea/Azura),Stendarr,destroy_reject_daedra:molagbal,S,serve_a_daedra:azura,S
+DA02,Boethiah's Calling,40,Sacrifice the trusting + defeat champion + don Ebony Mail,Kyne,prove_by_struggle,S,kill_the_helpless,m
+DA02,Boethiah's Calling,40,Sacrifice the trusting + defeat champion + don Ebony Mail,Shor,prove_by_struggle,S,murder_treacherous,S
+DA02,Boethiah's Calling,40,Sacrifice the trusting + defeat champion + don Ebony Mail,Auri-El,prove_by_struggle,m,serve_a_daedra:boethiah,S
+DA02,Boethiah's Calling,40,Sacrifice the trusting + defeat champion + don Ebony Mail,Baan Dar,deceit,C,kill_the_helpless,m
+DA02,Boethiah's Calling,40,Sacrifice the trusting + defeat champion + don Ebony Mail,Rajhin,deceit,S,kill_the_helpless,m
+DA02,Boethiah's Calling,40,Sacrifice the trusting + defeat champion + don Ebony Mail,Malacath,prove_by_struggle,m,deceit,m
+DA03,A Daedra's Best Friend,200,Reunite Barbas + Vile; Masque,Akatosh,keep_oath,S,serve_a_daedra:clavicus,m
+DA06,The Cursed Tribe,200,Defend Largashbur; prove worthier than Yamarz; lift the curse,Akatosh,keep_oath,S,serve_a_daedra:malacath,m
+DA06,The Cursed Tribe,200,Defend Largashbur; prove worthier than Yamarz; lift the curse,Auri-El,prove_by_struggle,m,serve_a_daedra:malacath,S
+DA06,The Cursed Tribe,200,Defend Largashbur; prove worthier than Yamarz; lift the curse,Mehrunes Dagon,kill_honorable_combat,m,keep_oath,m
+TG08A,Trinity Restored,57,Take the Nightingale Oath to Nocturnal,Akatosh,keep_oath,S,serve_a_daedra:nocturnal,m
+TG09,Darkness Returns,200,Return the Skeleton Key to the Ebonmere; become Nightingale Agent,Akatosh,keep_oath,S,serve_a_daedra:nocturnal,m
