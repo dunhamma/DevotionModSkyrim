@@ -17,21 +17,21 @@ asymmetrically credited for the SAME act (T03 Gildergreen precedent).
 | Alkosh | Khajiit | 6(0ms) | 0(0ms) | 0 | yes | yes | yes | OK |
 | Arkay | Imperial/Nord/Breton | 8(2ms) | 4(0ms) | 0 | yes | yes | - | OK |
 | Auri-El | Altmer | 6(0ms) | 1(0ms) | 0 | yes | yes | - | OK |
-| Azura | Khajiit/Dunmer | 1(1ms) | 1(1ms) | 0 | yes | yes | yes | OK — record baked as Azurah (Khajiit creator); matrix 'Azura' resolves via the Daedric path record instead |
+| Azura | Khajiit/Dunmer | 7(1ms) | 1(1ms) | 1 | yes | yes | yes | OK — record baked as Azurah (Khajiit creator); matrix 'Azura' resolves via the Daedric path record instead |
 | Baan Dar | Khajiit/Bosmer | 5(2ms) | 0(0ms) | 0 | yes | yes | yes | OK |
-| Boethiah | Dunmer | 17(5ms) | 0(0ms) | 0 | yes | yes | yes | OK |
+| Boethiah | Dunmer | 17(5ms) | 0(0ms) | 1 | yes | yes | yes | OK |
 | Dibella | Imperial/Nord | 3(0ms) | 4(0ms) | 4 | yes | yes | - | OK |
 | Hist | Argonian | 0(0ms) | 0(0ms) | 0 | yes | yes | yes | OK — substrate-by-design; record baked as 'The Hist' |
 | HoonDing | Redguard | 10(5ms) | 0(0ms) | 0 | yes | yes | - | OK |
 | Julianos | Imperial/Nord/Breton | 9(2ms) | 0(0ms) | 0 | yes | yes | - | OK |
 | Khenarthi | Khajiit | 2(0ms) | 0(0ms) | 0 | yes | yes | yes | OK |
 | Kynareth | Imperial/Nord/Breton | 6(1ms) | 1(0ms) | 0 | yes | yes | - | OK |
-| Kyne | Nord | 9(1ms) | 1(0ms) | 0 | yes | - | - | OK |
+| Kyne | Nord | 9(1ms) | 1(0ms) | 0 | yes | yes | - | OK |
 | Leki | Redguard | 4(0ms) | 3(0ms) | 0 | yes | yes | - | OK |
 | Magnus | Altmer | 8(2ms) | 0(0ms) | 0 | yes | yes | - | OK |
-| Malacath | Orc | 11(3ms) | 1(0ms) | 0 | yes | yes | yes | OK |
+| Malacath | Orc | 11(3ms) | 1(0ms) | 1 | yes | yes | yes | OK |
 | Mara | Imperial/Nord/Breton | 7(1ms) | 10(1ms) | 0 | yes | yes | - | OK |
-| Mephala | Dunmer | 20(6ms) | 0(0ms) | 0 | yes | yes | yes | OK |
+| Mephala | Dunmer | 20(6ms) | 0(0ms) | 1 | yes | yes | yes | OK |
 | Rajhin | Khajiit | 10(6ms) | 0(0ms) | 0 | yes | yes | yes | OK |
 | Shor | Nord | 18(7ms) | 7(0ms) | 0 | yes | yes | - | OK |
 | Sithis | Argonian | 10(6ms) | 0(0ms) | 0 | yes | yes | yes | OK |
@@ -188,6 +188,7 @@ Document-only cluster: no cells proposed.
 | Tu'whacca | record (PDV_FLST_AllDeities) |
 | Hircine | daedric path (PDV_FLST_DaedricPaths_All) |
 | Xarxes | record (PDV_FLST_AllDeities) |
+| Azura | daedric path (PDV_FLST_DaedricPaths_All) |
 | Nocturnal | daedric path (PDV_FLST_DaedricPaths_All) |
 | Akatosh | record (PDV_FLST_AllDeities) |
 | Alkosh | record (PDV_FLST_AllDeities) |
@@ -196,7 +197,6 @@ Document-only cluster: no cells proposed.
 | Stendarr | record (PDV_FLST_AllDeities) |
 | Kynareth | record (PDV_FLST_AllDeities) |
 | Kyne | record (PDV_FLST_AllDeities) |
-| Azura | daedric path (PDV_FLST_DaedricPaths_All) |
 | Mara | record (PDV_FLST_AllDeities) |
 | Mephala | record (PDV_FLST_AllDeities) |
 | Stuhn | record (PDV_FLST_AllDeities) |

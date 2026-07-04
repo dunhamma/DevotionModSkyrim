@@ -267,7 +267,7 @@ to most gods).
 ### Khajiit (focus deities; Azurah shared w/ Dunmer Azura record)
 
 **Azurah / Azura** — dawn & dusk, prophecy, the threshold, the moons.
-- approve: `disciplined_study`(m, *prophecy/fate*), `destroy_reject_daedra:molagbal`(S, *light vs domination*), `honor_the_dead`(m)
+- approve: `disciplined_study`(m, *prophecy/fate*), `destroy_reject_daedra:molagbal`(S, *light vs domination*), `honor_the_dead`(m), `cure_undeath`(m, *mercy to the cursed made whole; 2026-07-04 enrichment, mirrors her shipped heal-or-cure day-to-day like*), `slay_undead`(m, *the dawn drives back undeath; mirrors her shipped kill-undead like*)
 - disapprove: `desecrate_the_dead`(m), `serve_a_daedra:molagbal`(S)
 - anchor: Good Daedra / Mother of the Rose. (UESP: Azura)
 
