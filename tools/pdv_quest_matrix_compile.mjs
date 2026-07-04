@@ -186,6 +186,7 @@ const MANUAL_QUEST_FORMIDS = {
   DA06: "Skyrim.esm:03B681", // The Cursed Tribe (QE adds s210 ghost-variant)
   ccBGSSSE020_Quest: "ccbgssse020-graycowl.esl:00080F", // Gray Cowl of Nocturnal (CC)
   dunHunterQST: "Skyrim.esm:018601", // Kyne's Sacred Trials (Froki); s100 terminal blessing. Verified via houseCARL (USSEP-patched record).
+  MS05: "Skyrim.esm:053511", // Tending the Flames (Bards College); s300 induction. Absent from the readback extraction; verified via houseCARL 2026-07-05 (USSEP-patched record). Owner Dibella ruling.
   FreeformKolskeggrA: "Skyrim.esm:01FD72",
   MQ105U: "Skyrim.esm:0713DC",
   MS14: "Skyrim.esm:025F3E",

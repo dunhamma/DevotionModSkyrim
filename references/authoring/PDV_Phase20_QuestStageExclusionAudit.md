@@ -101,8 +101,7 @@ matrix; tagged survivors live in PDV_QuestOutcomeInventory.csv.
   (UESP-verified radiant/repeatable -- initially mis-tagged, corrected in spot-check)
 - EXCL_CONTAINER_TOO_BROAD: CW01AOutfitImperial
 - EXCL_OUTCOME_AMBIGUOUS: MQ102 (courier leg), MQ105Ustengrav (horn already stolen; empty-tomb tracker),
-  MQ203 (expository escort), MQ204 (traversal/dialogue), MQ205 (dispatch), BardsCollegeFlute (no stage
-  journal), FreeformSkyHavenTempleC (single-stage blessing grant), DB04 "Whispers in the Dark" (Listener
+  MQ203 (expository escort), MQ204 (traversal/dialogue), MQ205 (dispatch), x, FreeformSkyHavenTempleC (single-stage blessing grant), DB04 "Whispers in the Dark" (Listener
   reveal has no morally-legible player act; eavesdrop row rejected in spot-check)
 - CUT CONTENT (unreachable in vanilla; UESP-verified): FreeformWinterholdCollegeA "Research Thief"
   (quest item never placed; also note the real cut plot is the PLAYER stealing for Nirya),

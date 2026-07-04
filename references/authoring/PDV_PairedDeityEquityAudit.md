@@ -20,7 +20,7 @@ asymmetrically credited for the SAME act (T03 Gildergreen precedent).
 | Azura | Khajiit/Dunmer | 11(1ms) | 3(1ms) | 1 | yes | yes | yes | OK — record baked as Azurah (Khajiit creator); matrix 'Azura' resolves via the Daedric path record instead |
 | Baan Dar | Khajiit/Bosmer | 23(2ms) | 2(0ms) | 0 | yes | yes | yes | OK |
 | Boethiah | Dunmer | 31(5ms) | 0(0ms) | 1 | yes | yes | yes | OK |
-| Dibella | Imperial/Nord | 6(0ms) | 9(0ms) | 4 | yes | yes | - | OK |
+| Dibella | Imperial/Nord | 8(0ms) | 9(0ms) | 4 | yes | yes | - | OK |
 | Hist | Argonian | 0(0ms) | 0(0ms) | 0 | yes | yes | yes | OK — substrate-by-design; record baked as 'The Hist' |
 | HoonDing | Redguard | 18(5ms) | 0(0ms) | 0 | yes | yes | - | OK |
 | Julianos | Imperial/Nord/Breton | 13(2ms) | 2(0ms) | 0 | yes | yes | - | OK |
