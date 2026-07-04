@@ -120,7 +120,10 @@ Required Dunmer evidence slots remain:
   shrine route proof PASS from Papyrus.0.log and Prisma toast display PASS after
   restart; 4e deviation-price is no longer deferred: DA01 Black Star stage 110 is
   static/readback wired to `RouteDunmerDeviationPrice`, but still needs runtime
-  and manual proof. DA02/sacrifice is not part of 4e.)
+  and manual proof. After the post-fix pause build, 4e should also show the
+  `Reclamation strained` toast and Chronicle line, while the focused Devotion
+  panel stays Dunmer-roster scoped and does not expose off-race DA01 ledger rows.
+  DA02/sacrifice is not part of 4e.)
 - asset status
 - manual feel note
 
@@ -147,6 +150,9 @@ Do not claim beta-ready until the strict audit has no `FAIL` blockers.
 - Rerun Prisma audits after any Book of Days, toast, or panel payload change.
 - Recompile both `PDV__ManagerQuest` and `PDV_MCM` whenever the Book-of-Days
   payload function signature or open/close contract changes.
+- The 2026-07-04 pause build added DA01 deviation-price Book-of-Days/toast
+  surfacing and focused-panel origin-roster filtering across all races. This is
+  compile/static/audit clean only until the next Dunmer 4e in-game retest.
 - Current 2026-07-04 live Papyrus route log could not be used for Dunmer 4c
   number confirmation: the active profile has logging enabled, but only stale
   January `Papyrus.0.log` files were found. Treat 4c as tester manual/runtime

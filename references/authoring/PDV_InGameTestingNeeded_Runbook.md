@@ -94,6 +94,15 @@ offer gating, civic-service Ledger/Book-of-Days surfacing, wrong-origin
 rejection, generic-source silence, and manual feel. Final-world placement
 remains separate. The remaining race blocker is Dunmer.
 
+2026-07-04 pause-sync note: the latest pushed Prisma/Book-of-Days build adds
+DA01 deviation-price Chronicle/toast surfacing and focused-panel origin-roster
+filtering. For Dunmer 4e, the post-fix runtime check must confirm
+`Reclamation strained` in Book of Days, a matching toast, and no off-race god
+rows in the focused Devotion panel. Static gates passed before pause
+(`pdv_prisma_ui_audit`, `pdv_book_of_days_audit`,
+`pdv_prisma_toast_fallback_audit`, and manager/MCM compile), but display proof
+remains manual/runtime pending.
+
 ## Preflight Before Opening Skyrim
 
 Run from `C:\Users\Admin\Documents\Devotion Mod Project`:
