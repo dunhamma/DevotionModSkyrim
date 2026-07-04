@@ -60,9 +60,13 @@ pdv_prisma_ui_audit.mjs, runbook + Dunmer BetaFeel edits).
    - Tester notes: stance mult applies to meta lanes (foreign faces 0.4x -- do not false-FAIL);
      meta Ledger rows show a generic phrase until the copy pass (below).
 3. **Copy pass (small)**: 7 HumanizeDriverReason arms for meta_* reasons ("the wage taken",
-   "done her way", ...).
+   "done her way", ...). -- DONE 2026-07-05 (commit 954bde5b): 8 arms shipped (wheel lane has
+   two reasons, Akatosh + Xarxes); compile 0/0, deployed to MO2.
 4. **Hardening (small)**: extend EnsureCanonicalDeityDisplayNames to FLST_DaedricPaths_All
    (paths have no name-repair net; Nocturnal verified correct today but unprotected).
+   -- DONE 2026-07-05 (commit 954bde5b): RepairDaedricPathRuntimeNames sweeps the FormList;
+   identity via concrete-script downcast, canonical names mirror
+   PDV_DaedricPrinceRecordContracts.json displayName exactly.
 5. Then the 1.0 roadmap resumes: Experience Mode build (+ Redguard vampire earn-halt),
    ARR compat package, WS-3 branding. (ARR matrix json needs no regen for this expansion --
    verified zero key overlap + core-first lookup -- but recompile it with the extended tool
