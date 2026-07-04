@@ -48,8 +48,10 @@ regardless of load order). Only the preflight changes:
   (2026-07-04 remediation: the old model-less BOOK token crashed the book menu on read and is auto-removed
   by `EnsureDunmerAncestralUrn` migration. If an "Ancestral Urn" appears under **Books**, that is the
   regression -> FAIL.)
-- **See:** the urn is in inventory under Miscellaneous with a visible urn model (vanilla
-  `DLC2DarkElfUrn01.nif`); no Dunmer hook needs a new custom mesh.
+- **See:** the urn is in inventory under Miscellaneous with a visible HD urn model (Remiros'
+  Dunmer Urns HD assets BUNDLED with Devotion at `Meshes\PDV\Clutter\PDV_DunmerAncestralUrn.nif`
+  + `Textures\DLC02\Clutter\RemDunmerUrn01*.dds`, credited in `Credits.txt`; no standalone mod
+  required). No Dunmer hook needs a placed worldspace mesh.
 - **Record:** ___
 
 ### Slot 2 -- Survey reads clean  [Tester] [M]
