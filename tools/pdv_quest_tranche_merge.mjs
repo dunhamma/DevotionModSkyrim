@@ -7,6 +7,8 @@ const files = [
   "references/authoring/PDV_QuestReactionMatrix_Tranche4_ThinPantheon.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche5_AspectParity.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche6_CompatCore.csv",
+  "references/authoring/PDV_QuestReactionMatrix_Tranche7_CrossEcho.csv",
+  "references/authoring/PDV_QuestReactionMatrix_Tranche8_PoolExpansion.csv",
 ];
 let hdr = null;
 const body = [];

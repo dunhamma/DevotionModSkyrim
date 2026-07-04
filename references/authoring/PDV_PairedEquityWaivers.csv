@@ -33,6 +33,100 @@ trickster_thief,TG06,200,Baan Dar,Hard Answers museum break-in serves the Guild'
 trickster_thief,TG07,200,Baan Dar,The Pursuit continues Mercer's trail under Guild auspices; the justice-on-the-betrayer beat is TG08B (authored), not this setup stage; Rajhin already credited
 knowledge_scribe,MQ105,160,Magnus,the Voice/Thu'um is a separate tradition from magicka-based arcane study (pointedly NOT College magic); disciplined_study here is Kyne's gift and lore-scholarship (Julianos/Xarxes), not Magnus's arcane domain
 make_way_war,CW01B,1,HoonDing,HoonDing manifests only at impossible-odds make-way (weekly-cap designNote); routine faction enlistment at stage 1 is not that; his beat is MQ304 Sovngarde mist (authored)
-hunt_ethics,DA05,100,Kyne,DA05 s100 is Hircine's glory-hunt (kill Sinding, claim Savior's Hide, serve a Daedra) — the opposite of Kyne's respectful Sacred-Trials hunt; she is served by dunHunterQST and the s105 mercy branch instead
-hunt_ethics,DA05,100,Y'ffre,DA05 s100 serves a Daedra and claims his artifact — not the Green Pact hunt; Y'ffre's hunt approval is the respectful-trial reading (dunHunterQST, authored), not Hircine's bloodsport
+hunt_ethics,DA05,100,Kyne,DA05 s100 is Hircine's glory-hunt (kill Sinding, claim Savior's Hide, serve a Daedra) ??? the opposite of Kyne's respectful Sacred-Trials hunt; she is served by dunHunterQST and the s105 mercy branch instead
+hunt_ethics,DA05,100,Y'ffre,DA05 s100 serves a Daedra and claims his artifact ??? not the Green Pact hunt; Y'ffre's hunt approval is the respectful-trial reading (dunHunterQST, authored), not Hircine's bloodsport
 hunt_ethics,DA05,105,Y'ffre,sparing the hunted is mercy_spare/protect_the_weak (not in Y'ffre's profile); the hunt here is being REFUSED, so the_hunt does not apply to him; Kyne carries the mercy beat (authored)
+sky_storm_nature,C01,200,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [prove_by_struggle] on the + side; credit stays with Kyne
+sky_storm_nature,C02,200,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [prove_by_struggle] on the + side; credit stays with Kyne
+sky_storm_nature,C03,200,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_honorable_combat] on the + side; credit stays with Kyne
+sky_storm_nature,C04,200,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_honorable_combat] on the + side; credit stays with Kyne
+sky_storm_nature,C05,200,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_honorable_combat] on the + side; credit stays with Kyne
+sky_storm_nature,CW01A,1,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_honorable_combat] on the + side; credit stays with Kyne
+sky_storm_nature,CW01B,1,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_honorable_combat] on the + side; credit stays with Kyne
+sky_storm_nature,DA01,110,Kyne,profile asymmetry 2026-07-04: Kyne Part B carries none of [necromancy] on the - side; credit stays with Kynareth
+sky_storm_nature,DA06,200,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [prove_by_struggle] on the + side; credit stays with Kyne
+sky_storm_nature,DA10,200,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_the_helpless] on the - side; credit stays with Kyne
+sky_storm_nature,DA11,100,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_the_helpless] on the - side; credit stays with Kyne
+sky_storm_nature,DA14,10,Kyne,review-dropped 2026-07-04: defile_nature mismatch -- trashing a Dibella temple is temple desecration not wilderness/nature defilement
+sky_storm_nature,DA14,10,Y'ffre,review-dropped 2026-07-04: theology stretch -- trashing a Dibella temple in a drunken stupor is vandalism/chaos against a temple
+sky_storm_nature,DA14,30,Kyne,profile asymmetry 2026-07-04: Kyne Part B carries none of [heal_comfort] on the + side; credit stays with Kynareth
+sky_storm_nature,DA16,200,Kyne,review-dropped 2026-07-04: mercy_spare stretch -- mercy to a person (Erandur) not mercy to the hunted
+sky_storm_nature,DB01,200,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_the_helpless] on the - side; credit stays with Kyne
+sky_storm_nature,DB02,200,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_the_helpless] on the - side; credit stays with Kyne
+sky_storm_nature,DB03,30,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_the_helpless] on the - side; credit stays with Kyne
+sky_storm_nature,DB05,200,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_the_helpless] on the - side; credit stays with Kyne
+sky_storm_nature,DB09,200,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [defend_kin_home] on the + side; credit stays with Kyne
+sky_storm_nature,DB10,20,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_honorable_combat] on the + side; credit stays with Kyne
+sky_storm_nature,dunHunterQST,100,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [the_hunt prove_by_struggle] on the + side; credit stays with Kyne
+sky_storm_nature,MG03,55,Kyne,profile asymmetry 2026-07-04: Kyne Part B carries none of [protect_the_weak] on the + side; credit stays with Kynareth
+sky_storm_nature,MG05,200,Kyne,profile asymmetry 2026-07-04: Kyne Part B carries none of [protect_the_weak] on the + side; credit stays with Kynareth
+sky_storm_nature,MQ103,190,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_honorable_combat] on the + side; credit stays with Kyne
+sky_storm_nature,MQ105,160,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [prove_by_struggle] on the + side; credit stays with Kyne
+sky_storm_nature,MQ105U,60,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [prove_by_struggle] on the + side; credit stays with Kyne
+sky_storm_nature,MQ106,200,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_honorable_combat] on the + side; credit stays with Kyne
+sky_storm_nature,MQ201Malborn,100,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_honorable_combat] on the + side; credit stays with Kyne
+sky_storm_nature,MQ206,220,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_honorable_combat] on the + side; credit stays with Kyne
+sky_storm_nature,MQ301,240,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [mercy_spare] on the + side; credit stays with Kyne
+sky_storm_nature,MQ303,100/300,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [prove_by_struggle] on the + side; credit stays with Kyne
+sky_storm_nature,MQ304,200,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [prove_by_struggle] on the + side; credit stays with Kyne
+sky_storm_nature,MQ305,200,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_honorable_combat] on the + side; credit stays with Kyne
+sky_storm_nature,MS14,200,Kyne,profile asymmetry 2026-07-04: Kyne Part B carries none of [protect_the_weak] on the + side; credit stays with Kynareth
+sky_storm_nature,T01,200,Kyne,profile asymmetry 2026-07-04: Kyne Part B carries none of [protect_the_weak] on the + side; credit stays with Kynareth
+sky_storm_nature,t02,200,Kyne,profile asymmetry 2026-07-04: Kyne Part B carries none of [heal_comfort] on the + side; credit stays with Khenarthi
+sky_storm_nature,TG08B,50,Kynareth,profile asymmetry 2026-07-04: Kynareth Part B carries none of [kill_honorable_combat] on the + side; credit stays with Kyne
+time_dragon,BardsCollegeLute,20,Auri-El,review-dropped 2026-07-04: theology stretch -- recovering a stolen lute is too trivial for uphold_law_justice
+time_dragon,C03,200,Akatosh,profile asymmetry 2026-07-04: Akatosh Part B carries none of [kill_honorable_combat] on the + side; credit stays with Alkosh
+time_dragon,C03,200,Auri-El,profile asymmetry 2026-07-04: Auri-El Part B carries none of [kill_honorable_combat] on the + side; credit stays with Alkosh
+time_dragon,CW01A,160/200,Auri-El,profile asymmetry 2026-07-04: Auri-El Part B carries none of [serve_empire_order keep_oath] on the + side; credit stays with Akatosh
+time_dragon,CW01A,1,Akatosh,profile asymmetry 2026-07-04: Akatosh Part B carries none of [kill_honorable_combat] on the + side; credit stays with Alkosh
+time_dragon,CW01A,1,Auri-El,profile asymmetry 2026-07-04: Auri-El Part B carries none of [kill_honorable_combat] on the + side; credit stays with Alkosh
+time_dragon,CW01B,160/200,Auri-El,profile asymmetry 2026-07-04: Auri-El Part B carries none of [keep_oath] on the + side; credit stays with Akatosh
+time_dragon,CW01B,160/200,Alkosh,profile asymmetry 2026-07-04: Alkosh Part B carries none of [keep_oath] on the + side; credit stays with Akatosh
+time_dragon,CW01B,1,Akatosh,profile asymmetry 2026-07-04: Akatosh Part B carries none of [prove_by_struggle] on the + side; credit stays with Auri-El
+time_dragon,CW01B,1,Alkosh,review-dropped 2026-07-04: theology stretch -- killing an Ice Wraith to prove worthy of the Stormcloaks (a rebellion against Imperial/cosmic order) sits awkwardly for an order-and-Empire-adjacent god; also d
+time_dragon,CW02A,30/80,Auri-El,profile asymmetry 2026-07-04: Auri-El Part B carries none of [serve_empire_order] on the + side; credit stays with Akatosh
+time_dragon,CW03,50/210,Auri-El,profile asymmetry 2026-07-04: Auri-El Part B carries none of [serve_empire_order] on the + side; credit stays with Akatosh
+time_dragon,DA06,200,Akatosh,review-dropped 2026-07-04: conflict dropped -- Largashbur defense is Malacath-flavored heroism not an Akatosh covenant oath; theology stretch either direction
+time_dragon,DA15,200,Auri-El,review-dropped 2026-07-04: theology stretch -- serve_a_daedra tag on Sheogorath is thin next to the sharper sow_chaos_madness fit used for Magnus/Xarxes
+time_dragon,DB10,20,Akatosh,profile asymmetry 2026-07-04: Akatosh Part B carries none of [kill_honorable_combat] on the + side; credit stays with Alkosh
+time_dragon,DB10,20,Auri-El,profile asymmetry 2026-07-04: Auri-El Part B carries none of [kill_honorable_combat] on the + side; credit stays with Alkosh
+time_dragon,FreeformSkyhavenTempleA,50,Auri-El,profile asymmetry 2026-07-04: Auri-El Part B carries none of [keep_oath] on the + side; credit stays with Akatosh
+time_dragon,FreeformSkyhavenTempleA,50,Alkosh,profile asymmetry 2026-07-04: Alkosh Part B carries none of [keep_oath] on the + side; credit stays with Akatosh
+time_dragon,MQ103,190,Akatosh,profile asymmetry 2026-07-04: Akatosh Part B carries none of [kill_honorable_combat] on the + side; credit stays with Alkosh
+time_dragon,MQ103,190,Auri-El,profile asymmetry 2026-07-04: Auri-El Part B carries none of [kill_honorable_combat] on the + side; credit stays with Alkosh
+time_dragon,MQ104,160,Auri-El,profile asymmetry 2026-07-04: Auri-El Part B carries none of [kill_honorable_combat] on the + side; credit stays with Alkosh
+time_dragon,MQ106,200,Auri-El,profile asymmetry 2026-07-04: Auri-El Part B carries none of [kill_honorable_combat] on the + side; credit stays with Alkosh
+time_dragon,MQ201Malborn,100,Akatosh,profile asymmetry 2026-07-04: Akatosh Part B carries none of [kill_honorable_combat] on the + side; credit stays with Alkosh
+time_dragon,MQ201Malborn,100,Auri-El,profile asymmetry 2026-07-04: Auri-El Part B carries none of [kill_honorable_combat] on the + side; credit stays with Alkosh
+time_dragon,MQ303,100/300,Akatosh,profile asymmetry 2026-07-04: Akatosh Part B carries none of [prove_by_struggle] on the + side; credit stays with Auri-El
+time_dragon,TG08A,57,Auri-El,review-dropped 2026-07-04: theology stretch -- procedural mystic oath is not a genuine soul-corruption concern for Auri-El
+time_dragon,TG08A,57,Alkosh,profile asymmetry 2026-07-04: Alkosh Part B carries none of [keep_oath] on the + side; credit stays with Akatosh
+time_dragon,TG08B,50,Akatosh,profile asymmetry 2026-07-04: Akatosh Part B carries none of [kill_honorable_combat] on the + side; credit stays with Alkosh
+time_dragon,TG08B,50,Auri-El,profile asymmetry 2026-07-04: Auri-El Part B carries none of [kill_honorable_combat] on the + side; credit stays with Alkosh
+death_order,C06,65,Xarxes,profile asymmetry 2026-07-04: Xarxes Part B carries none of [cure_undeath] on the + side; credit stays with Arkay
+death_order,CW02A,72,Xarxes,profile asymmetry 2026-07-04: Xarxes Part B carries none of [slay_undead] on the + side; credit stays with Arkay
+death_order,CW02B,72,Xarxes,profile asymmetry 2026-07-04: Xarxes Part B carries none of [slay_undead] on the + side; credit stays with Arkay
+death_order,DA01,110,Xarxes,profile asymmetry 2026-07-04: Xarxes Part B carries none of [necromancy] on the - side; credit stays with Arkay
+death_order,DA09,500,Xarxes,profile asymmetry 2026-07-04: Xarxes Part B carries none of [slay_undead cure_undeath] on the + side; credit stays with Arkay
+death_order,DLC1SeranaCureSelfQuest,200,Xarxes,profile asymmetry 2026-07-04: Xarxes Part B carries none of [cure_undeath] on the + side; credit stays with Arkay
+death_order,MG07,30,Xarxes,profile asymmetry 2026-07-04: Xarxes Part B carries none of [slay_undead] on the + side; credit stays with Arkay
+death_order,MQ103,190,Xarxes,profile asymmetry 2026-07-04: Xarxes Part B carries none of [slay_undead] on the + side; credit stays with Arkay
+death_order,MQ304,200,Khenarthi,review-dropped 2026-07-04: double-credit -- honor_the_dead already carries C06 (funeral rites for the Harbinger) and DLC1VQSaint; Sovngarde admission is a redundant middle stage of the same Alduin arc alread
+death_order,MS14,200,Xarxes,profile asymmetry 2026-07-04: Xarxes Part B carries none of [slay_undead] on the + side; credit stays with Arkay
+labor_commerce,TG04,200,Z'en,profile asymmetry 2026-07-04: Z'en Part B carries none of [theft_burglary] on the - side; credit stays with Zenithar
+labor_commerce,TG07,200,Z'en,profile asymmetry 2026-07-04: Z'en Part B carries none of [theft_burglary] on the - side; credit stays with Zenithar
+trickster_thief,DB08,200,Nocturnal,review-dropped 2026-07-04: theology stretch - assassinating the Gourmet by poison/impersonation is deceit not theft_burglary; no actual burglary occurs
+trickster_thief,DB08,200,Rajhin,review-dropped 2026-07-04: double-credit -- Rajhin already carries theft_burglary at C-intensity from existing coverage (DB01Misc/TG-arc milestones); DB08's assassination framing is weaker theft_burglary fit
+trickster_thief,TG00,200,Baan Dar,review-dropped 2026-07-04: double-credit -- Baan Dar already has TG03/TG04/TG08B kept from existing coverage plus DB06 deceit kept here; framing Brand-Shei duplicates the deceit signal already well covered w
+trickster_thief,TG01,200,Baan Dar,review-dropped 2026-07-04: theology stretch -- extorting/strong-arming shopkeepers for Maven's cut is precisely the morally-mixed early-TG-serves-Maven material the standing design waiver excludes; not theft
+trickster_thief,TG02,200,Baan Dar,review-dropped 2026-07-04: theology stretch -- same standing waiver as TG01: burning Goldenglow's hives serves Maven's business interests
+trickster_thief,TG06,200,Baan Dar,review-dropped 2026-07-04: double-credit -- theft_burglary already carries DB08 kept here plus TG03/TG04/TG08B from existing coverage; Calcelmo burglary is a redundant additional TG beat
+trickster_thief,TG07,200,Baan Dar,review-dropped 2026-07-04: double-credit -- theft_burglary already well represented; Mercer's manor burglary is a redundant TG-arc beat
+knowledge_scribe,BardsCollegePoeticEdda,200,Magnus,review-dropped 2026-07-04: theology stretch -- bardic/literary recovery is not arcane scholarship
+knowledge_scribe,FreeformSkyHavenTempleD,100,Magnus,review-dropped 2026-07-04: theology stretch -- delivering a dragon bone/scale sample is a thin errand
+knowledge_scribe,FreeformSkyHavenTempleD,100,Xarxes,review-dropped 2026-07-04: theology stretch -- delivering a bone/scale sample is a thin errand
+knowledge_scribe,MQ105,160,Magnus,review-dropped 2026-07-04: theology stretch -- mastering the Thu'um/Voice is a distinct discipline from arcane magic
+make_way_war,DA02,40,Talos,review-dropped 2026-07-04: theology stretch: Boethiah's Calling is a treacherous Daedric sacrifice of a trusting companion
+make_way_war,TG05,60,Talos,review-dropped 2026-07-04: theology stretch: passively surviving an ambush during a Thieves Guild internal betrayal is not heroic struggle or defiance of tyranny; orthogonal to Talos's anchor
+hunt_ethics,DA05,100,Kyne,review-dropped 2026-07-04: the_hunt stretch -- this is Hircine's vengeful hunt not Kyne's respectful/sacred hunt
+hunt_ethics,DA05,100,Y'ffre,review-dropped 2026-07-04: theology stretch -- killing Sinding for Hircine (a rival hunt-god) violates the Pact's ethic of restraint; opposite branch s105 kept instead
