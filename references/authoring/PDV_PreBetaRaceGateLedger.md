@@ -286,17 +286,18 @@ Blocking follow-up: no Dunmer pass or reward expansion until overstack risk and 
 ```text
 Race: Imperial
 Lane type: P2 full end-state wiring with stack audit
-Verdict: Fail - runtime/manual proof deferred
+Verdict: Pass - manual/runtime packet 2026-07-04; final-world placement separate
 No-in-game status: Planning-Ready
 Expected build: civic Nine Divines broad worship with concrete service.
 Edge build: public/private Talos pressure under ConcordatStanding.
 Rejected hooks: faction membership, generic temple attendance, bounty payment alone, generic anti-Thalmor violence, cruelty framed as order.
-Survey/status result: source now has Imperial-specific Survey/MCM readout for civic faith, ConcordatStanding, Talos pressure tilt, repair gate, standing, and curse posture; needs runtime display proof and future civic favor explanation before pass.
+Packet evidence (2026-07-04): Imperial V1 slots 1-7 PASS. Asset/no-new-record surface confirmed; Survey wording accepted after civic/standing/Concordat copy polish; Active Effects stack showed patron/civic rewards without a standalone Concordat buff; formal offer accept/refuse and one-offer/terminal-refuse cadence passed; broad civic worship capped at Tier 2; Talos book pressure passed as Talos piety, not Concordat; Concordat raw-value emitters moved by expected amounts while band label lag stayed expected; Concordat reorientation wrote the next-dawn Book of Days line; Talos offer gate blocked at raw >50 and allowed at <=50; civic-service quest-stage route produced Ledger and Book of Days surfaces after typo fix; wrong-origin rejection used a non-Imperial, non-Nord origin; generic civic/Talos-proximity actions stayed silent; final feel read as concrete civic practice under public law.
+Survey/status result: PASS for the current Imperial packet. The final accepted Survey/Book wording keeps civic faith, standing, Talos posture, and Concordat state player-facing without raw route IDs.
 Reward ceiling: civic acts must remain concrete; ConcordatStanding modifies access or pressure, not a buff track.
-Stack snapshot: ConcordatStanding, public/private Talos state, primary patron, active civic favor, repair/rupture state, curse state, Daedric modifiers.
-Next automatable action: run the strict immersive-hook verifier, then wire civic service, public/private Talos pressure, and focused patron civic hook contracts.
-Deferred manual proof: civic Survey display, faction/attendance rejection, public/private Talos edge stack, immersive hook proof, and asset-status confirmation.
-Blocking follow-up: no Imperial pass or civic reward expansion until whitelisted civic acts and rejected faction/attendance tests are in the ledger.
+Stack snapshot: PASS for the current packet. Tester screenshots and follow-up checks showed the expected civic/patron stack, no rogue Concordat buff, broad Faithful/Tier-2 ceiling, and Talos offer suppression under high Concordat compliance.
+Next automatable action: keep Imperial in regression only unless a later source/record change touches Concordat, Talos offer gating, civic-service routing, or Book of Days/Ledger surfacing.
+Deferred manual proof: final-world placement remains separate from this pass.
+Blocking follow-up: none for the current Imperial beta-feel packet.
 ```
 
 ### Nord

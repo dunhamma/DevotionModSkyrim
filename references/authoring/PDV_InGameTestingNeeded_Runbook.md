@@ -1,8 +1,8 @@
 # PDV In-Game Testing Needed Runbook
 
 **Created:** 2026-06-10  
-**Status:** Active manual/runtime handoff after Breton, Orc, and Nord final-run closeout; strict audit now blocks on Imperial and Dunmer race evidence
-**Companions:** `PDV_RunSheet_*_BetaFeel.md`, `PDV_BetaTestPacket_*.md` (historical/source notes), `PDV_Phase20_ManualEvidenceLedger.json`, `PDV_DaedricInGameSmokePacket.md`, `PDV_DaedricRuntimeEvidenceLedger.json`, `PDV_SessionHandoff_2026-06-29_PreBetaRaceCloseout.md`, `PDV_SessionHandoff_HircineAuditFixes.md`, `PDV_SessionHandoff_BosmerRuntimeFixes.md`, `PDV_BetaFeelReleaseGate.md`, `PDV_FaucetDetection_CKChecklist.md`, `PDV_DeityLikesDislikes.csv`, `PDV_PrinceLikesDislikes_V2_Spec.md`
+**Status:** Active manual/runtime handoff after Imperial final-run closeout; strict audit now blocks on Dunmer race evidence
+**Companions:** `PDV_RunSheet_*_BetaFeel.md`, `PDV_BetaTestPacket_*.md` (historical/source notes), `PDV_Phase20_ManualEvidenceLedger.json`, `PDV_DaedricInGameSmokePacket.md`, `PDV_DaedricRuntimeEvidenceLedger.json`, `PDV_SessionHandoff_2026-07-04_ImperialCloseout.md`, `PDV_SessionHandoff_2026-06-29_PreBetaRaceCloseout.md`, `PDV_SessionHandoff_HircineAuditFixes.md`, `PDV_SessionHandoff_BosmerRuntimeFixes.md`, `PDV_BetaFeelReleaseGate.md`, `PDV_FaucetDetection_CKChecklist.md`, `PDV_DeityLikesDislikes.csv`, `PDV_PrinceLikesDislikes_V2_Spec.md`
 
 ## Purpose
 
@@ -86,6 +86,14 @@ run-sheet coverage. This remains manual/felt proof until the Universal Prisma,
 Daedric, Redguard, and Altmer sheets record the on-screen toast/Book-of-Days
 results.
 
+2026-07-04 handoff note: the Imperial V1 packet is now evidence-recorded for
+the current race beta-feel scope. Tester-confirmed passes cover assets, Survey
+copy, stack/Active Effects, formal offer accept/refuse/cadence, broad Tier-2
+cap, Talos book pressure, Concordat raw-value movement/reorientation, Talos
+offer gating, civic-service Ledger/Book-of-Days surfacing, wrong-origin
+rejection, generic-source silence, and manual feel. Final-world placement
+remains separate. The remaining race blocker is Dunmer.
+
 ## Preflight Before Opening Skyrim
 
 Run from `C:\Users\Admin\Documents\Devotion Mod Project`:
@@ -147,8 +155,8 @@ audit passes.
 
 ## Current Last-Pass Blocker Snapshot
 
-As of the 2026-06-30 strict audit rerun, the active race beta-feel blockers are
-manual/runtime evidence only for Imperial and Dunmer. Readback and verifier
+As of the 2026-07-04 Imperial closeout, the active race beta-feel blocker is
+manual/runtime evidence only for Dunmer. Readback and verifier
 gates are necessary preflight, but they do not close these rows.
 
 Race ledger blockers from `PDV_Phase20_ManualEvidenceLedger.json`:
@@ -161,7 +169,7 @@ Race ledger blockers from `PDV_Phase20_ManualEvidenceLedger.json`:
 | Bosmer | none for current beta packet; final-world placement remains separate |
 | Breton | none for current Hidden Art packet; optional `ExposureRupture` edge once an MCM band setter exists; Knight's Road/Green Way remain deferred V1 arms |
 | Dunmer | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
-| Imperial | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
+| Imperial | none for current beta packet; final-world placement remains separate |
 | Nord | none for current beta packet; final-world placement remains separate |
 | Orc | none for current organic life-mode packet; Code Holds, Witnessed tranche, oath-break, and final-world placement remain separate |
 | Redguard | none for current beta packet; final-world placement remains separate |

@@ -362,38 +362,45 @@
       }
     },
     "Imperial": {
-      "status": "pending",
-      "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
+      "status": "evidence-recorded",
+      "evidenceSummary": "Manual/runtime packet PASS 2026-07-04: Imperial V1 run sheet slots 1-7 passed in game. Asset/no-new-record surface confirmed; Survey wording accepted after civic/standing copy polish; active effects stack stayed patron/civic-owned with no Concordat buff; formal offer accept/refuse and terminal-refuse cadence passed; broad civic worship capped at Tier 2; Talos book pressure passed as Talos piety, not Concordat; Concordat raw-value emitters moved by expected amounts with band lag understood; Concordat reorientation wrote next-dawn Book of Days line; Talos offer gate blocked at raw >50 and allowed at <=50; civic-service quest-stage route produced Ledger/Book of Days surfaces after typo fix; wrong-origin rejection used a non-Imperial, non-Nord origin because Nord can validly receive Talos; generic civic/Talos-proximity actions stayed silent; final feel read as concrete civic practice under public law. Final-world placement remains separate.",
+      "raceVerdictBeforeEvidence": "Evidence recorded - current Imperial packet passed; final-world placement remains separate",
       "runtimeProofCommand": "node .\\tools\\pdv_phase20_runtime_check.mjs --track p2-books --strict-manager",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
-          "status": "pending",
-          "expected": "Non-Imperial origin cannot read Concordat/civic state as native."
+          "status": "evidence-recorded",
+          "expected": "Non-Imperial origin cannot read Concordat/civic state as native.",
+          "note": "2026-07-04 Imperial V1 Slot 5 PASS: tester swapped to a non-Imperial, non-Nord origin because Talos can validly hit Nord surfaces. Under the corrected negative origin, Talos book and Concordat defiance did not move Imperial Concordat/civic state, did not surface an Imperial offer, and did not produce Imperial markers."
         },
         "genericHookRejection": {
-          "status": "pending",
-          "expected": "Faction rank, shrine attendance, generic mercy, generic lawfulness, generic Talos proximity, and generic trade do not score by themselves."
+          "status": "evidence-recorded",
+          "expected": "Faction rank, shrine attendance, generic mercy, generic lawfulness, generic Talos proximity, and generic trade do not score by themselves.",
+          "note": "2026-07-04 Imperial V1 Slot 6 PASS: tester ran 3-5 ordinary civic/Talos-proximity style actions and Concordat raw value did not change. Generic faction/attendance/bounty/lawfulness/Talos proximity remained silent as required."
         },
         "surveyStatusClarity": {
-          "status": "pending",
-          "expected": "Survey/MCM explains public/private Talos pressure, civic duty, Nine Divines posture, and concrete act requirements."
+          "status": "evidence-recorded",
+          "expected": "Survey/MCM explains public/private Talos pressure, civic duty, Nine Divines posture, and concrete act requirements.",
+          "note": "2026-07-04 Imperial V1 Slot 2/4c/4f PASS: tester screenshots drove wording polish from the overlong civic-service sentence to the accepted concise standing/civic language. Survey displayed broad Nine Divines worship, Faithful standing, Uncommitted Talos posture, and civic inheritance without raw route IDs; Concordat Book of Days wording was corrected to 'Under the White-Gold Concordat, you are Publicly Compliant.'"
         },
         "stackSnapshot": {
-          "status": "pending",
-          "expected": "Expected lawful civic build and edge private Talos defiance build record ConcordatStanding, active god, public/private pressure, and suppressed faction-only rewards."
+          "status": "evidence-recorded",
+          "expected": "Expected lawful civic build and edge private Talos defiance build record ConcordatStanding, active god, public/private pressure, and suppressed faction-only rewards.",
+          "note": "2026-07-04 Imperial V1 Slot 3/4c/4g PASS: Active Effects screenshots confirmed civic/patron reward rows and no standalone ConcordatStanding buff. Broad civic worship reached Faithful/Tier 2 without Champion; accepted patron effects apply post-offer; Talos commitment surfaces are suppressed while Concordat raw is >50 and allowed again at <=50."
         },
         "manualFeelNote": {
-          "status": "pending",
-          "expected": "Imperial religion reads as concrete civic practice under public law, not generic faction or morality tracking."
+          "status": "evidence-recorded",
+          "expected": "Imperial religion reads as concrete civic practice under public law, not generic faction or morality tracking.",
+          "note": "2026-07-04 Imperial V1 Slot 7 PASS: tester accepted the final Imperial read after the full run. The packet read as concrete civic practice under public law with public/private Talos pressure, not generic faction membership, generic morality, or passive proximity tracking."
         },
         "immersiveHookProof": {
-          "status": "pending",
+          "status": "evidence-recorded",
           "expected": "Prove Imperial civic service, public/private Talos pressure, and focused patron civic immersive hooks outside QASmoke, with stack audit and faction/attendance rejection.",
-          "note": "2026-06-04: Accepted P2 book-route log proof recorded for public Talos pressure via strict manager checker. This is accepted-route proof only; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending."
+          "note": "2026-06-04: Accepted P2 book-route log proof recorded for public Talos pressure via strict manager checker. 2026-07-04 Imperial V1 Slots 4d/4e/4f/4h PASS: Talos book route passed in game as public Talos piety pressure; Concordat raw emitters moved as expected and reorientation wrote the next-dawn Book of Days line; setstage MQ103 190 successfully produced the civic-service toast and, after architecture hardening/typo fix, the expected Ledger driver plus Book of Days civic-service surface. Tester also confirmed 4h after the typo fix."
         },
         "assetStatus": {
-          "status": "pending",
-          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+          "status": "evidence-recorded",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation.",
+          "note": "2026-07-04 Imperial V1 Slot 1 PASS: tester confirmed no new custom mesh, visible proof object, or placed shrine is required for the current Imperial packet. Current proof uses vanilla Talos book, wired quest-stage civic-service receivers, MCM Concordat/debug controls, and existing Prisma/Book of Days/Active Effects surfaces."
         }
       }
     },

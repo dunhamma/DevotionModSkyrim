@@ -2232,12 +2232,14 @@ EndFunction
 
 ; --- Devotion dashboard payload (the analytical feedback tool, Today tab) ---
 ; Per-god rollup (state + recent drivers). Shows the tracked god first (active patron /
-; Khajiit emphasis), then any other deity the player has built piety with or is losing,
-; so a broad-pantheon player sees the whole spread. Player-pulled panel content only --
-; never an auto-push surface. Does NOT expose the likes/dislikes table.
+; Khajiit emphasis), then only gods in the player's origin roster with movement or
+; neglect. Cross-race quest reactions still score, but the panel stays culturally scoped.
+; Player-pulled panel content only -- never an auto-push surface. Does NOT expose the
+; likes/dislikes table.
 String Function GetDashboardJson()
     String gods = ""
     Int shown = 0
+    Int originRace = GetPlayerOriginRaceIndex()
 
     PDV_DeityBase tracked = _activeDeity
     if !tracked
@@ -2257,7 +2259,7 @@ String Function GetDashboardJson()
     endIf
 
     PDV_DaedricPathBase watchingPath = GetTopPrePactDaedricPath()
-    if watchingPath && watchingPath != tracked && shown < 8
+    if watchingPath && watchingPath != tracked
         gods = AppendDashboardGod(gods, watchingPath, "watching")
         shown += 1
     endIf
@@ -2265,9 +2267,9 @@ String Function GetDashboardJson()
     if PDV_FLST_AllDeities
         Int i = 0
         Int count = PDV_FLST_AllDeities.GetSize()
-        while i < count && shown < 8
+        while i < count
             PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
-            if deity && deity != tracked
+            if deity && deity != tracked && IsDashboardDeityInOriginRoster(deity, originRace)
                 Form deityForm = deity as Form
                 Float piety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
                 Float pietyToday = StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday")
@@ -2283,6 +2285,36 @@ String Function GetDashboardJson()
     String j = "{\"gods\":[" + gods + "]"
     j = j + ",\"systems\":[\"patron\",\"pantheon\",\"watching\",\"neglected\"]}"
     return j
+EndFunction
+
+Bool Function IsDashboardDeityInOriginRoster(PDV_DeityBase deity, Int originRace)
+    if !deity
+        return False
+    endIf
+
+    if originRace == ORIGIN_NORD
+        return deity == PDV_Kyne || deity == PDV_Kynareth || deity == PDV_Talos || deity == PDV_Shor || deity == PDV_Tsun || deity == PDV_Stuhn || deity == PDV_Mara || deity == PDV_Akatosh || deity == PDV_Arkay || deity == PDV_Stendarr || deity == PDV_Julianos || deity == PDV_Dibella || deity == PDV_Zenithar
+    elseIf originRace == ORIGIN_IMPERIAL
+        return deity == PDV_Kynareth || deity == PDV_Mara || deity == PDV_Akatosh || deity == PDV_Arkay || deity == PDV_Stendarr || deity == PDV_Julianos || deity == PDV_Dibella || deity == PDV_Zenithar
+    elseIf originRace == ORIGIN_BRETON
+        return deity == PDV_Kynareth || deity == PDV_Talos || deity == PDV_Mara || deity == PDV_Akatosh || deity == PDV_Arkay || deity == PDV_Stendarr || deity == PDV_Julianos || deity == PDV_Dibella || deity == PDV_Zenithar || deity == PDV_Magnus || deity == PDV_Yffre
+    elseIf originRace == ORIGIN_ALTMER
+        return deity == PDV_Mara || deity == PDV_Stendarr || deity == PDV_Magnus || deity == PDV_Yffre || deity == PDV_AuriEl || deity == PDV_Xarxes || deity == PDV_Trinimac
+    elseIf originRace == ORIGIN_BOSMER
+        return deity == PDV_Yffre || deity == PDV_AuriEl || deity == PDV_Xarxes || deity == PDV_BaanDar || deity == PDV_Zen
+    elseIf originRace == ORIGIN_DUNMER
+        return deity == PDV_Azura || deity == PDV_Boethiah || deity == PDV_Mephala
+    elseIf originRace == ORIGIN_KHAJIIT
+        return deity == PDV_Azura || deity == PDV_Boethiah || deity == PDV_Mephala || deity == PDV_BaanDar || deity == PDV_Rajhin || deity == PDV_Alkosh || deity == PDV_Khenarthi
+    elseIf originRace == ORIGIN_ARGONIAN
+        return deity == PDV_Hist || deity == PDV_Sithis
+    elseIf originRace == ORIGIN_ORC
+        return deity == PDV_Malacath
+    elseIf originRace == ORIGIN_REDGUARD
+        return deity == PDV_Tuwhacca || deity == PDV_Leki || deity == PDV_HoonDing
+    endIf
+
+    return False
 EndFunction
 
 String Function AppendDashboardGod(String acc, PDV_DeityBase deity, String system)
@@ -5393,7 +5425,7 @@ Function HandleDunmerPlayerHomeBonus(String reason)
             PDV_DunmerAncestorSubstrate.RecordPlayerHomeBonusScaled(multiplier, reason)
             AwardDunmerAncestorSpinePulse(multiplier, reason)
             Int tierAfter = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
-            SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "House memory answered.", "ancestor", GetDunmerAncestorLayerLabel())
+            SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "Prayers within the home feel more meaningful.", "ancestor", GetDunmerAncestorLayerLabel())
             ; Requiem-proof event-driven heal: a flat RestoreActorValue (NOT a
             ; HealRateMult, which Requiem swallows). This is the hearth/home bonus
             ; that replaced the old homeOrShrineOnly substrate regen (11a).
@@ -9220,14 +9252,14 @@ String Function BuildImperialConcordatBookLine(String modeLabel)
     return "Under the White-Gold Concordat, you are " + modeLabel + "."
 EndFunction
 
-; Named-acts dawn digest: names the gods fed today (captured in RunDawnConsolidateScratch
-; before piety-today is zeroed). Up to 3 named, then "among others"; falls back to a
-; flavored generic line when no positive gain was captured.
+; Named-acts dawn digest: names the gods and open Princes fed today (captured before
+; piety-today is zeroed). Up to 5 named, then "and others"; falls back to a flavored
+; generic line when activity happened but no positive gain was captured.
 String Function BuildBookOfDaysDigestLine()
     Int fedCount = StorageUtil.StringListCount(None, "PDV.BookOfDays.TodayFed")
     Int shown = fedCount
-    if shown > 3
-        shown = 3
+    if shown > 5
+        shown = 5
     endIf
 
     String names = ""
@@ -9236,19 +9268,25 @@ String Function BuildBookOfDaysDigestLine()
         String godName = StorageUtil.StringListGet(None, "PDV.BookOfDays.TodayFed", i)
         if i == 0
             names = godName
-        elseIf i == shown - 1
+        elseIf i == shown - 1 && shown == 2
             names = names + " and " + godName
+        elseIf i == shown - 1
+            names = names + ", and " + godName
         else
             names = names + ", " + godName
         endIf
         i += 1
     endWhile
-    if fedCount > 3
-        names = names + ", among others"
+    if fedCount > shown
+        if names != ""
+            names = names + ", and others"
+        else
+            names = "others"
+        endIf
     endIf
 
     if names != ""
-        return "The day's devotions were kept: " + names + " heard you, and settle with the dawn."
+        return "At dawn, your acts fed " + names + "."
     endIf
 
     Int originRace = GetPlayerOriginRaceIndex()
@@ -9258,6 +9296,13 @@ String Function BuildBookOfDaysDigestLine()
         return "The day's road was walked and noted; it settles beneath the moons at dawn."
     endIf
     return "The day's devotions were noted, and settle with the dawn."
+EndFunction
+
+Function RecordBookOfDaysFedName(String displayName)
+    if displayName == ""
+        return
+    endIf
+    StorageUtil.StringListAdd(None, "PDV.BookOfDays.TodayFed", displayName, False)
 EndFunction
 
 Function RunDawnAwardAltmerAuriElDawn()
@@ -9295,7 +9340,7 @@ Function RunDawnConsolidateScratch()
                 clampedToday = clampedToday * GetOrcLifeModeGainMultiplier(deity)
                 clampedToday = clampedToday * GetImperialCurseGainMultiplier(deity)
                 ; Record the gods fed today so the dawn digest can name them.
-                StorageUtil.StringListAdd(None, "PDV.BookOfDays.TodayFed", GetPublicDeityDisplayName(deity), False)
+                RecordBookOfDaysFedName(GetPublicDeityDisplayName(deity))
             endIf
             Float oldPiety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
             Float newPiety = ClampValue(oldPiety + clampedToday, 0.0, PIETY_MAX)
@@ -9332,7 +9377,14 @@ Function RunDawnConsolidateDaedricWeek()
     while i < count
         Form pathForm = PDV_FLST_DaedricPaths_All.GetAt(i)
         if pathForm
+            PDV_DaedricPathBase path = pathForm as PDV_DaedricPathBase
             Float dayNet = StorageUtil.GetFloatValue(pathForm, "PDV.PietyToday")
+            if path && dayNet > 0.0
+                RecordBookOfDaysFedName(path.DeityName)
+            endIf
+            if dayNet != 0.0
+                _dawnHadActivity = True
+            endIf
             PushWeekNet(pathForm, dayNet)
             StorageUtil.SetFloatValue(pathForm, "PDV.PietyToday", 0.0)
         endIf
@@ -9956,14 +10008,72 @@ String Function HumanizeDriverReason(String raw)
     if raw == ""
         return "An act of devotion"
     endIf
-    if StringContainsToken(raw, "po3_book") || StringContainsToken(raw, "book")
+    if StringContainsToken(raw, "read-skill-book")
+        return "reading instructive texts"
+    elseIf StringContainsToken(raw, "read-spell-tome")
+        return "studying spellcraft"
+    elseIf StringContainsToken(raw, "read-lore-book")
+        return "reading lore"
+    elseIf StringContainsToken(raw, "po3_book") || StringContainsToken(raw, "book")
         return "reading sacred words"
+    elseIf StringContainsToken(raw, "increase-skill")
+        return "honing your skills"
+    elseIf StringContainsToken(raw, "discover-location")
+        return "discovering new roads"
+    elseIf StringContainsToken(raw, "learn-word-of-power")
+        return "learning a Word of Power"
     elseIf StringContainsToken(raw, "shout") || StringContainsToken(raw, "voice")
         return "the Voice"
     elseIf StringContainsToken(raw, "shrine") || StringContainsToken(raw, "prayer") || StringContainsToken(raw, "pray")
         return "prayer at a shrine"
+    elseIf StringContainsToken(raw, "harvest-ingredient")
+        return "gathering nature's gifts"
+    elseIf StringContainsToken(raw, "brew-potion")
+        return "brewing potions"
+    elseIf StringContainsToken(raw, "smith-item")
+        return "smithing work"
+    elseIf StringContainsToken(raw, "enchant-item")
+        return "enchanting work"
+    elseIf StringContainsToken(raw, "cook-meal")
+        return "cooking a meal"
+    elseIf StringContainsToken(raw, "mine-or-chop")
+        return "honest labor"
+    elseIf StringContainsToken(raw, "kill-daedra")
+        return "banishing Daedra"
+    elseIf StringContainsToken(raw, "kill-undead")
+        return "destroying undead"
+    elseIf StringContainsToken(raw, "kill-dragon")
+        return "slaying dragons"
+    elseIf StringContainsToken(raw, "killed-hostile-beast")
+        return "facing hostile beasts"
+    elseIf StringContainsToken(raw, "killed-hostile-humanoid")
+        return "victory in battle"
+    elseIf StringContainsToken(raw, "kill-animal-noncombat")
+        return "killing harmless animals"
+    elseIf StringContainsToken(raw, "murder-defenseless")
+        return "murdering the helpless"
+    elseIf StringContainsToken(raw, "assault-innocent")
+        return "violence against the innocent"
     elseIf StringContainsToken(raw, "kill") || StringContainsToken(raw, "combat") || StringContainsToken(raw, "hunt")
         return "deeds in the field"
+    elseIf StringContainsToken(raw, "heal-or-cure-npc")
+        return "healing those in need"
+    elseIf StringContainsToken(raw, "clear-bounty")
+        return "settling debts to the law"
+    elseIf StringContainsToken(raw, "pick-owned-lock")
+        return "picking owned locks"
+    elseIf StringContainsToken(raw, "trespass")
+        return "trespass"
+    elseIf StringContainsToken(raw, "steal-item")
+        return "theft"
+    elseIf StringContainsToken(raw, "pickpocket")
+        return "pickpocketing"
+    elseIf StringContainsToken(raw, "raise-undead")
+        return "raising the dead"
+    elseIf StringContainsToken(raw, "vampire-feed")
+        return "feeding as a vampire"
+    elseIf StringContainsToken(raw, "accept-daedric-artifact")
+        return "accepting a Daedric artifact"
     elseIf StringContainsToken(raw, "quest")
         return "a deed of consequence"
     elseIf StringContainsToken(raw, "curated") || StringContainsToken(raw, "rite")
@@ -15687,7 +15797,26 @@ Function HandleDunmerDeviationPrice(String reason)
     StorageUtil.SetIntValue(None, "PDV.Dunmer.DeviationPriceCount", StorageUtil.GetIntValue(None, "PDV.Dunmer.DeviationPriceCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Dunmer.LastDeviationReason", reason)
     AwardDunmerDeviationPriceSignal(multiplier)
+    SurfaceDunmerDeviationPriceNotice()
     Trace(2, "Dunmer deviation price routed: " + reason)
+EndFunction
+
+Function SurfaceDunmerDeviationPriceNotice()
+    if !_activeDeity
+        return
+    endIf
+
+    Int today = Utility.GetCurrentGameTime() as Int
+    String activeName = GetPublicDeityDisplayName(_activeDeity)
+    String symbolName = GetPrismaSymbolForDeity(_activeDeity)
+    String line = "The ash-prayer thins; " + activeName + " marks the wound."
+    AppendBookOfDaysEntry(line, today, "creed.drop", symbolName, False, 2, "Reclamation strained")
+
+    String toastKey = "PDV.Toast.DunmerDeviationPrice.Day"
+    if StorageUtil.GetIntValue(None, toastKey, -1) != today
+        StorageUtil.SetIntValue(None, toastKey, today)
+        SendPrismaToast(symbolName, "warning", "Reclamation strained", line)
+    endIf
 EndFunction
 
 Bool Function TryAwardDunmerTwilightWindowSignal(String reason)
@@ -15723,7 +15852,11 @@ EndFunction
 ; The twilight-window award is the spec'd role for the outdoor shrine; TryAward already
 ; enforces Dunmer origin, the dawn/dusk window, and the once-per-window-per-day cap.
 Function HandleDunmerOutdoorGoodDaedraShrine(String reason)
-    TryAwardDunmerTwilightWindowSignal(reason)
+    if TryAwardDunmerTwilightWindowSignal(reason)
+        SendPrismaToast("journal", "good", "Good Daedra", "The Good Daedra hear the ash-prayer.")
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
+        SendPrismaToast("journal", "neutral", "Shrine quiet", "The shrine is quiet in this hour.")
+    endIf
 EndFunction
 
 Int Function GetDunmerTwilightWindow(Float gameTime)
@@ -16578,48 +16711,46 @@ EndFunction
 
 ; Build the Book of Days journal JSON payload.
 ; Entries are ordered oldest-first (index 0 = oldest, last index = newest).
-String Function BuildJournalPayloadJson(Int page = 0)
+String Function BuildJournalPayloadJson()
     RepairBookOfDaysJournalText()
     Int count = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines")
     Int titleCount = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Titles")
     Int magnitudeCount = StorageUtil.IntListCount(None, "PDV.Diegetic.Journal.Magnitudes")
     String entries = ""
-    if page != 1
-        Int i = 0
-        while i < count
-            String line = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Lines", i))
-            Int gameDay = StorageUtil.IntListGet(None, "PDV.Diegetic.Journal.Days", i)
-            String tone = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Tones", i))
-            String symbol = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Symbols", i))
-            String fictionDate = JsonSafeString(JournalDayToFictionDate(gameDay))
-            String entryTitle = ""
-            if i < titleCount
-                entryTitle = StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Titles", i)
-            endIf
-            if entryTitle == ""
-                entryTitle = JournalToneToTitle(tone)
-            endIf
-            entryTitle = JsonSafeString(entryTitle)
-            Int magnitude = GetJournalMagnitudeForTone(tone)
-            if i < magnitudeCount
-                magnitude = StorageUtil.IntListGet(None, "PDV.Diegetic.Journal.Magnitudes", i)
-            endIf
-            String valence = JournalToneToValence(tone)
-            String entry = "{\"date\":\"" + fictionDate + "\""
-            entry = entry + ",\"day\":" + gameDay
-            entry = entry + ",\"symbol\":\"" + symbol + "\""
-            entry = entry + ",\"tone\":\"" + tone + "\""
-            entry = entry + ",\"valence\":\"" + valence + "\""
-            entry = entry + ",\"magnitude\":" + magnitude
-            entry = entry + ",\"title\":\"" + entryTitle + "\""
-            entry = entry + ",\"text\":\"" + line + "\"}"
-            if i > 0
-                entries = entries + ","
-            endIf
-            entries = entries + entry
-            i += 1
-        endWhile
-    endIf
+    Int i = 0
+    while i < count
+        String line = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Lines", i))
+        Int gameDay = StorageUtil.IntListGet(None, "PDV.Diegetic.Journal.Days", i)
+        String tone = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Tones", i))
+        String symbol = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Symbols", i))
+        String fictionDate = JsonSafeString(JournalDayToFictionDate(gameDay))
+        String entryTitle = ""
+        if i < titleCount
+            entryTitle = StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Titles", i)
+        endIf
+        if entryTitle == ""
+            entryTitle = JournalToneToTitle(tone)
+        endIf
+        entryTitle = JsonSafeString(entryTitle)
+        Int magnitude = GetJournalMagnitudeForTone(tone)
+        if i < magnitudeCount
+            magnitude = StorageUtil.IntListGet(None, "PDV.Diegetic.Journal.Magnitudes", i)
+        endIf
+        String valence = JournalToneToValence(tone)
+        String entry = "{\"date\":\"" + fictionDate + "\""
+        entry = entry + ",\"day\":" + gameDay
+        entry = entry + ",\"symbol\":\"" + symbol + "\""
+        entry = entry + ",\"tone\":\"" + tone + "\""
+        entry = entry + ",\"valence\":\"" + valence + "\""
+        entry = entry + ",\"magnitude\":" + magnitude
+        entry = entry + ",\"title\":\"" + entryTitle + "\""
+        entry = entry + ",\"text\":\"" + line + "\"}"
+        if i > 0
+            entries = entries + ","
+        endIf
+        entries = entries + entry
+        i += 1
+    endWhile
     Int originRace = GetPlayerOriginRaceIndex()
     String pathInfo = BuildBookOfDaysPathInfo(originRace)
     String j = "{\"mode\":\"journal\",\"journal\":{"
@@ -16629,17 +16760,7 @@ String Function BuildJournalPayloadJson(Int page = 0)
     j = j + ",\"survey\":\"" + JsonSafeString(pathInfo) + "\""
     j = j + ",\"foot\":\"Press your Book of Days key again to close.\""
     j = j + ",\"instrument\":" + BuildBookOfDaysInstrumentJson(originRace)
-    ; page 0 = Chronicle (entries), page 1 = Ledger (the read-only "what feeds your gods"
-    ; dashboard). Keep each payload page-specific so player-owned Book opens do not
-    ; build dashboard JSON unless the ledger page is requested.
-    j = j + ",\"page\":" + page
-    if page == 1
-        j = j + ",\"entries\":[]"
-        j = j + ",\"dashboard\":" + GetDashboardJson()
-    else
-        j = j + ",\"entries\":[" + entries + "]"
-        j = j + ",\"dashboard\":{}"
-    endIf
+    j = j + ",\"entries\":[" + entries + "]"
     j = j + "}}"
     return j
 EndFunction
@@ -17025,7 +17146,7 @@ String Function JournalToneToValence(String toneKey)
 EndFunction
 
 ; Send the Book of Days journal to Prisma as a player-opened modal.
-Function SendPrismaJournalPayload(Bool playerRequested = false, Int page = 0)
+Function SendPrismaJournalPayload(Bool playerRequested = false)
     if !PDV_PrismaBridge.IsAvailable()
         return
     endIf
@@ -17034,7 +17155,7 @@ Function SendPrismaJournalPayload(Bool playerRequested = false, Int page = 0)
     if !AllowPrismaBlockingSurfaces && !playerRequested
         return
     endIf
-    PDV_PrismaBridge.SendOverlayJson(BuildJournalPayloadJson(page))
+    PDV_PrismaBridge.SendOverlayJson(BuildJournalPayloadJson())
 EndFunction
 
 ; Close the Book of Days overlay (hotkey toggle / second press). The journal view
@@ -17095,7 +17216,7 @@ EndFunction
 
 String Function GetNordMedallionEntriesJson()
     String entries = RosterMedallionEntry("kyne", "Kyne", "god", "kyne", PDV_Kyne, "Sky, storm, hunt, and warrior-spirit.")
-    entries = entries + "," + RosterMedallionEntry("kynareth", "Kynareth", "god", "kyne", PDV_Kynareth, "The Nine Divines sky road.")
+    entries = entries + "," + RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", PDV_Kynareth, "The Nine Divines sky road.")
     entries = entries + "," + RosterMedallionEntry("talos", "Talos", "god", "talos", PDV_Talos, "Open defiance and human apotheosis.")
     entries = entries + "," + RosterMedallionEntry("shor", "Shor", "god", "shor", PDV_Shor, "The old king and afterlife road.")
     entries = entries + "," + RosterMedallionEntry("tsun", "Tsun", "god", "tsun", PDV_Tsun, "Trial, honor, and the threshold.")
@@ -17111,7 +17232,7 @@ String Function GetNordMedallionEntriesJson()
 EndFunction
 
 String Function GetImperialMedallionEntriesJson()
-    String entries = RosterMedallionEntry("kynareth", "Kynareth", "god", "kyne", PDV_Kynareth, "Road, wind, and natural order.")
+    String entries = RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", PDV_Kynareth, "Road, wind, and natural order.")
     entries = entries + "," + RosterMedallionEntry("mara", "Mara", "god", "mara", PDV_Mara, "Love, family, and mercy.")
     entries = entries + "," + RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", PDV_Akatosh, "Time, covenant, and empire.")
     entries = entries + "," + RosterMedallionEntry("arkay", "Arkay", "god", "arkay", PDV_Arkay, "Life, death, and lawful burial.")
@@ -17123,7 +17244,7 @@ String Function GetImperialMedallionEntriesJson()
 EndFunction
 
 String Function GetBretonMedallionEntriesJson()
-    String entries = RosterMedallionEntry("kynareth", "Kynareth", "god", "kyne", PDV_Kynareth, "Sky, travel, and druidic memory.")
+    String entries = RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", PDV_Kynareth, "Sky, travel, and druidic memory.")
     entries = entries + "," + RosterMedallionEntry("talos", "Talos", "god", "talos", PDV_Talos, "Civic defiance and Septim inheritance.")
     entries = entries + "," + RosterMedallionEntry("mara", "Mara", "god", "mara", PDV_Mara, "Household, mercy, and love.")
     entries = entries + "," + RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", PDV_Akatosh, "Time, order, and covenant.")
@@ -17277,6 +17398,8 @@ EndFunction
 PDV_DeityBase Function GetMedallionDeityForOptionId(String optionId)
     if optionId == "kyne"
         return PDV_Kyne
+    elseIf optionId == "kynareth"
+        return PDV_Kynareth
     elseIf optionId == "talos"
         return PDV_Talos
     elseIf optionId == "auri-el"
@@ -17295,6 +17418,8 @@ EndFunction
 String Function GetMedallionOptionIdForDeity(PDV_DeityBase deity)
     if deity == PDV_Kyne
         return "kyne"
+    elseIf deity == PDV_Kynareth
+        return "kynareth"
     elseIf deity == PDV_Talos
         return "talos"
     elseIf deity == PDV_Yffre
@@ -17313,6 +17438,8 @@ EndFunction
 Bool Function IsMedallionOptionAvailableForOrigin(String optionId, Int originRace)
     if optionId == "kyne"
         return originRace == ORIGIN_NORD
+    elseIf optionId == "kynareth"
+        return originRace == ORIGIN_NORD || originRace == ORIGIN_IMPERIAL || originRace == ORIGIN_BRETON
     elseIf optionId == "talos"
         return originRace == ORIGIN_NORD || originRace == ORIGIN_BRETON
     elseIf optionId == "auri-el"
@@ -18795,50 +18922,22 @@ String Function GetDunmerSurveyText()
     Int reclamationFocus = StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocus", -1)
     String text = ""
     if reclamationFocus == 0
-        text = "Azura holds your focus; the ash-prayer carries beneath her. Standing: " + band + ". The thresholds are watched."
+        text = "Azura holds your focus; the ash-prayer carries beneath her. Your standing with Azura is " + band + "."
     elseIf reclamationFocus == 1
-        text = "Boethiah holds your focus; the ash-prayer carries beneath. Standing: " + band + ". The dead record your victories."
+        text = "Boethiah holds your focus; the ash-prayer carries beneath. Your standing with Boethiah is " + band + "."
     elseIf reclamationFocus == 2
-        text = "Mephala holds your focus; the ash-prayer carries beneath. Standing: " + band + ". The web holds you, and you hold it."
+        text = "Mephala holds your focus; the ash-prayer carries beneath. Your standing with Mephala is " + band + "."
     else
-        text = "The ash-prayer holds and the three Good Daedra answer together. Standing: " + band + ". No single Reclamation has your name yet."
-    endIf
-
-    if !PDV_DunmerAncestorSubstrate
-        return text + " The ash has not been set yet; the practice is waiting on your first prayer."
-    endIf
-
-    Int layerTier = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
-    if layerTier >= 3
-        text = text + " The ancestors answer readily; the ash-prayer is deep in you now."
-    elseIf layerTier == 2
-        text = text + " The ancestors answer without strain; the ash-prayer is steady."
-    elseIf layerTier == 1
-        text = text + " The ancestors are beginning to answer; the ash-prayer is taking hold."
-    else
-        text = text + " The ancestors are quiet; the ash-prayer has not yet found its weight."
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount") > 0
-        text = text + " You went seeking the Reclamations, and they answered where you looked."
-    endIf
-    if StorageUtil.GetIntValue(None, "PDV.Dunmer.DeviationPriceCount") > 0
-        text = text + " A bargain struck outside the ancestors sits against your name, unpaid."
-    endIf
-    if PDV_DunmerAncestorSubstrate.GetPrayerCount() > 0
-        text = text + " The portable shrine has been set and prayed over; the ash travels with you."
-    endIf
-    if PDV_DunmerAncestorSubstrate.GetHomeBonusCount() > 0
-        text = text + " Prayer kept within your own walls has gathered weight."
+        text = "The ash-prayer holds and the three Good Daedra answer together. Your standing with the Reclamations is " + band + ". No single Reclamation has your name yet."
     endIf
 
     Int posture = StorageUtil.GetIntValue(None, "PDV.Curse.Dunmer.Posture")
     if posture == 1
-        text = text + " Something in you pulls against the ancestors -- the beast, or an unclean rite -- and the ash-prayer carries thinly."
+        text = text + " Something in you pulls against the ancestors. The beast, or an unclean rite, makes the ash-prayer carry thinly."
     elseIf posture == 2
         text = text + " The ash-prayer meets no answer; the ancestors do not speak to the undead."
     elseIf posture == 3
-        text = text + " The ancestors answer again, but they remember the silence, and so do you."
+        text = text + " The ancestors answer again; your posture is restored, but scarred."
     endIf
 
     return text
@@ -19591,6 +19690,10 @@ EndFunction
 PDV_DeityBase Function GetKnownDeityByIndex(Int deityIndex)
     if PDV_Kyne && PDV_Kyne.DeityIndex == deityIndex
         return PDV_Kyne
+    endIf
+
+    if PDV_Kynareth && PDV_Kynareth.DeityIndex == deityIndex
+        return PDV_Kynareth
     endIf
 
     if PDV_Talos && PDV_Talos.DeityIndex == deityIndex

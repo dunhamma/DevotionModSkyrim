@@ -230,11 +230,17 @@ This is the key Dunmer runtime lever and the build-pass test-2 path.
 - **PASS:** prayer is silent under vampire (0x) AND the four posture labels are
   correct: active / `silent, the ancestors cannot reach you` /
   `strained, the beast pulls at the ancestors` / `restored, but scarred`.
+- **2026-07-04 note:** tester reported 4c passed. The werewolf Survey sentence
+  showed awkward double-dash punctuation and the restored branch did not surface
+  the literal `restored, but scarred` posture. Copy was changed afterward; the
+  behavior pass stands, but the revised Survey copy needs one display retest.
 
-**4d. Twilight window + outdoor Good-Daedra shrine [ROUTE/RUNTIME -- PENDING]**
+**4d. Twilight window + outdoor Good-Daedra shrine [ROUTE/RUNTIME -- PASS]**
 
-Source/readback-clean, runtime PENDING per the 2026-06-14 packet refresh. Run
-only if the build session has confirmed the emitter; do NOT FAIL it otherwise.
+Source/readback-clean. Route proof passed on 2026-07-04: Papyrus.0.log showed
+the dusk route marker for `dlc2_shrine_blessing_effect`. Player-facing display
+passed after restart: the shrine showed the vanilla prayer line and the Prisma
+Good Daedra toast.
 
 - **Seed (console):** `set gamehour to 7` (inside the 06:00-09:00 dawn window;
   dusk is 18:00-21:00). Origin 5 / debug 2.
@@ -245,24 +251,51 @@ only if the build session has confirmed the emitter; do NOT FAIL it otherwise.
   path: travel or **walk in via a load door / fast-travel** to the altar and
   activate it -- this is a location/story-adjacent hook, so **`coc` straight
   into the cell will NOT fire it**.
+- **See:** in-window prayer toasts *"The Good Daedra hear the ash-prayer."*
+  Out-of-window Dunmer prayer toasts *"The shrine is quiet in this hour."*
 - **Watch (log):**
 
   ```text
-  RouteDunmerOutdoorGoodDaedraShrine complete: dlc2_good_daedra_shrine
+  RouteDunmerOutdoorGoodDaedraShrine complete: dlc2_shrine_blessing_effect
   Dunmer Dawn twilight rite routed: ...
   ```
 
   A second activation in the same window/day logs `already recorded today`;
-  outside the window (`set gamehour to 12`) -> no line.
+  outside the window (`set gamehour to 12`) -> no twilight-route award line.
 - **PASS (when not PENDING):** twilight marker fires once-per-window; in-window
-  second prayer is silent; out-of-window is silent.
+  second prayer does not award again; out-of-window does not award.
+- **2026-07-04 route proof:** `Papyrus.0.log` line 125 showed
+  `Dunmer Dusk twilight rite routed: eventbus_dlc2_shrine_blessing_effect`; line
+  126 showed `RouteDunmerOutdoorGoodDaedraShrine complete:
+  dlc2_shrine_blessing_effect`. The toast fix was later retested after restart
+  and passed.
 
-**4e. Deviation-price hook [DEFERRED]**
+**4e. Deviation-price hook [ROUTE/RUNTIME -- RUNTIME PENDING]**
 
-The DA01/DA02 deviation-price lever is deferred pending exact approved
-quest-stage and sacrifice-outcome metadata (GAP ledger). **No runnable step.**
-Do not count generic crime, cruelty, twilight, magic, shrine visits, or Daedric
-contact as deviation-price proof. Record this arm as DEFERRED, not FAIL.
+DA01 Black Star branch is now static/readback wired for the Dunmer deviation
+price route. This is **DA01 stage 110 only**. DA02/sacrifice is not a
+deviation-price source; DA02 remains a separate Reclamation/Boethiah focus
+route. Do not count generic crime, cruelty, twilight, magic, shrine visits,
+ordinary Daedric contact, or artifact possession alone as deviation-price proof.
+
+- **Seed:** Dunmer origin 5 / debug 2. Use a save that can complete DA01 through
+  the Black Star branch. If using console for a route smoke, only do it on a
+  DA01 test save where the quest is already in a valid running state.
+- **Trigger:** complete DA01 through the Black Star branch so DA01 reaches stage
+  110.
+- **Watch (log):**
+
+  ```text
+  RouteDunmerDeviationPrice complete
+  Dunmer deviation price routed: eventbus_131_po3_queststage_dunmer_da01_black_star
+  ```
+
+- **Expected behavior:** the active Reclamation receives the deviation penalty
+  signal. Later declared-home sleep may renew the remembered deviation only
+  after this first `PDV.Dunmer.DeviationPriceCount` exists.
+- **PASS:** DA01 Black Star stage 110 produces both route markers and the
+  deviation-price state/penalty behavior. Until this is observed in game, record
+  the arm as RUNTIME PENDING, not DEFERRED.
 
 ---
 
@@ -323,7 +356,9 @@ checks run:
 
 - **Declared ancestor-home:** sleeping in a bed makes that cell your
   ancestor-space (cloned from the Argonian bed-of-choice; immediate, no settle
-  clock), with a Dunmer-flavored declaration notice.
+  clock), with a Dunmer-flavored declaration notice. Any first interior bed-cell,
+  including an inn room, can become the V1 ancestor-home; there is no move-home
+  prompt yet.
 - **Home-prayer pulse:** praying with the portable urn AT your declared home
   fires the bigger progress step (HomeBonusDelta 8 vs PrayerDelta 5) plus a timed
   **Health** restoration -- authored as a flat Restore-Health (Value-Modifier on
@@ -403,9 +438,10 @@ Prisma failures are UI failures unless the log marker, Survey state, or Active E
   killing blow (ATTR_DIRECT_PLAYER); an ally stealing the kill reads as a
   false-FAIL. (Not central to Dunmer, but relevant if a deviation arm ever
   lands.)
-- **PENDING vs DEFERRED, not FAIL.** Slot 4d (outdoor shrine, twilight) and
-  Layer-2 werewolf 0.75x are runtime-PENDING; slot 4e (deviation price) is
-  DEFERRED. Record them as such, not as FAIL.
+- **PENDING vs DEFERRED, not FAIL.** Slot 4d (outdoor shrine, twilight) is now
+  passed for route/display. Layer-2 werewolf 0.75x remains runtime-PENDING.
+  Slot 4e (deviation price) is DA01 Black Star stage-110 runtime-PENDING, not
+  deferred. Record pending arms as pending, not as FAIL.
 - **Not testable in V1:** Grey Quarter solidarity (the Windhelm Dunmer NPC
   whitelist) has no wired list -- no runnable step, omitted by design.
 
@@ -422,11 +458,11 @@ yet landed) / DEFERRED (no runnable step) / N/A.
 | 2. wrongOriginRejection | route/runtime | non-Dunmer origin moved native layer? (expect NO) | |
 | 3. genericHookRejection | route/runtime | generic act moved native layer? (expect NO) | |
 | Shared Daedric inn-sleep proof | route/runtime + manual | negative Prince inn-only sleep + positive 314 control | |
-| 4a. immersiveHook -- Reclamation focus | route/runtime | focus 0 + focus 1 markers present? | |
-| 4b. immersiveHook -- ash-prayer / home rite | route/runtime | prayer + home bonus credit + Survey rise? | |
-| 4c. immersiveHook -- curse silence | route/runtime | vampire 0x silence + 4 posture labels? | |
-| 4d. immersiveHook -- twilight / outdoor shrine | route/runtime (PENDING) | twilight marker + once-per-window? | |
-| 4e. immersiveHook -- deviation price | deferred | DEFERRED (no step) | |
+| 4a. immersiveHook -- Reclamation focus | route/runtime | focus 0 + focus 1 markers present? | PASS 2026-07-04 tester-reported |
+| 4b. immersiveHook -- ash-prayer / home rite | route/runtime | prayer + home bonus credit + Survey rise? | PASS 2026-07-04 tester-reported through home bonus; toast copy changed afterward and needs one display retest |
+| 4c. immersiveHook -- curse silence | route/runtime | vampire 0x silence + 4 posture labels? | PASS 2026-07-04 tester-reported; Survey copy changed afterward and needs one display retest |
+| 4d. immersiveHook -- twilight / outdoor shrine | route/runtime + display | twilight marker + once-per-window + Good Daedra toast? | PASS 2026-07-04 from Papyrus.0.log plus tester-reported Prisma toast after restart |
+| 4e. immersiveHook -- deviation price | route/runtime | DA01 Black Star stage 110 routes deviation price? | RUNTIME PENDING; static/readback wired for DA01 stage 110 only |
 | 5. surveyStatusClarity | manual-acceptance | compact focus + named standing + curse posture, counter-free? | |
 | 6. stackSnapshot | manual-acceptance | snapshots A + B match, no generic leak? | |
 | 7. manualFeelNote | manual-acceptance | feel note recorded | |

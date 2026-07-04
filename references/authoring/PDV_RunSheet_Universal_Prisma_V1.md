@@ -7,8 +7,8 @@ Run this **once per character**, alongside any race sheet. It proves the Prisma 
 the three spaces and the panel itself. Each test is **Do / See / Record**. Tags: **[Tester]** = play/click;
 **[Dev]** = needs console or a log check (owner).
 
-The three spaces: **Toast** = the pop-up that flashes top-of-screen; **Book of Days** = the modal journal
-(Chronicle page); **Ledger** = the modal "what feeds your gods" (per-god list of recent reasons).
+The three spaces: **Toast** = the pop-up that flashes top-of-screen; **Book of Days** = the Chronicle-only
+modal journal; **Ledger** = the focused Devotion panel's full data view (per-god list of recent reasons).
 
 ---
 
@@ -28,14 +28,18 @@ zeroes regen buffs, so flat heals must show the bar move here).
 
 ### U1 -- panel and Book of Days open, focus, and close  [Tester] [R]+[M]
 - **Do:** the **first** time this session, open the Devotion panel (hotkey/MCM). Try **ESC** and the in-panel
-  **X**. Re-open; switch **Chronicle <-> Ledger**; ESC again. Then open **Book of Days** and close it with
-  the **same Book of Days key**. Re-open with the key, close with the in-book close button, then press the key
+  **X**. Re-open the panel and check the Ledger data view there; ESC again. Then open **Book of Days** and close it with
+  the **same Book of Days key**. Confirm the Book shows Chronicle only. Re-open with the key, close with the in-book close button, then press the key
   again and confirm it **opens**. Re-open once more, close with **ESC**, then press the key again and confirm it
   **opens**.
 - **See:** each surface opens **already filled in and focused** (not a blank frozen screen), and **ESC always
   gives you control back**. The Book of Days has a visible close button. Closing by key, X, or ESC never leaves
   the key stuck in a stale "close" state; the next key press opens the book.
-- **Record:** ___
+- **Record:** 2026-07-04 Chronicle-only rollback sanity: tester reported checks 1 and 2 pass
+  after the rollback prompt. Interpreted scope: Book of Days shows Chronicle-only with no
+  embedded Ledger tabs, and the separate focused Devotion panel Ledger remains the full data
+  view. If a later run needs full U1 certification, still confirm the full key/X/ESC close
+  cycle on the target profile.
 
 ### U2 -- tier-ups (Seeker / Devoted / Champion)  [Tester] [R]+[M]
 - **Do:** MCM Debug -> Force Piety on your patron to **25**, **Run Dawn**. Do not open the Book yet. Close

@@ -9,9 +9,12 @@ const ROOT = path.resolve(TOOLS_DIR, "..");
 const REPO_VIEW = path.join(ROOT, "native", "DevotionPrismaBridge", "mod", "PrismaUI", "views", "Devotion");
 const LIVE_VIEW = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PrismaUI\\views\\Devotion";
 const SOURCE = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
+const COMPILED = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts";
 const MANAGER = path.join(SOURCE, "PDV__ManagerQuest.psc");
 const DIRECTOR = path.join(SOURCE, "PDV_DiegeticDirector.psc");
 const MCM = path.join(SOURCE, "PDV_MCM.psc");
+const MANAGER_PEX = path.join(COMPILED, "PDV__ManagerQuest.pex");
+const MCM_PEX = path.join(COMPILED, "PDV_MCM.pex");
 const NATIVE_MAIN = path.join(ROOT, "native", "DevotionPrismaBridge", "src", "main.cpp");
 
 const results = [];
@@ -54,6 +57,43 @@ function forbidText(filePath, needles, label) {
 function functionBlock(source, name) {
   const match = source.match(new RegExp(`(?:String\\s+)?Function\\s+${name}\\b[\\s\\S]*?EndFunction`, "i"));
   return match ? match[0] : "";
+}
+
+function timestamp(filePath) {
+  return fs.statSync(filePath).mtimeMs;
+}
+
+function formatTimestamp(filePath) {
+  return fs.statSync(filePath).mtime.toISOString();
+}
+
+function requirePexAtLeastAsFresh(pexPath, dependencyPath, label) {
+  if (!mustExist(pexPath) || !mustExist(dependencyPath)) return;
+  if (timestamp(pexPath) + 1000 >= timestamp(dependencyPath)) {
+    add("PASS", `${label} PEX is fresh against ${path.basename(dependencyPath)}.`, pexPath);
+  } else {
+    add(
+      "FAIL",
+      `${label} PEX is older than ${path.basename(dependencyPath)}; recompile before in-game Prisma testing (${path.basename(pexPath)} ${formatTimestamp(pexPath)} < ${path.basename(dependencyPath)} ${formatTimestamp(dependencyPath)}).`,
+      pexPath,
+    );
+  }
+}
+
+function verifyJournalBytecodeFreshness() {
+  requirePexAtLeastAsFresh(MANAGER_PEX, MANAGER, "Manager journal payload");
+  requirePexAtLeastAsFresh(MCM_PEX, MCM, "Book of Days hotkey");
+
+  if (!mustExist(MANAGER) || !mustExist(MCM) || !mustExist(MANAGER_PEX) || !mustExist(MCM_PEX)) return;
+  const manager = read(MANAGER);
+  const mcm = read(MCM);
+  if (
+    manager.includes("Function SendPrismaJournalPayload(Bool playerRequested") &&
+    mcm.includes("PDV_Manager.SendPrismaJournalPayload(")
+  ) {
+    requirePexAtLeastAsFresh(MCM_PEX, MANAGER, "Book of Days hotkey dependency");
+    requirePexAtLeastAsFresh(MCM_PEX, MANAGER_PEX, "Book of Days hotkey dependency");
+  }
 }
 
 const FORM_NAME_ALIASES = { PDV_Kyne: "Kyne", PDV_Talos: "Talos" };
@@ -114,7 +154,7 @@ requireText(path.join(REPO_VIEW, "index.html"), [
   "bod-standing-label",
   "bod-instrument",
   "bod-flourish",
-  "bod-ledgerhead",
+  "bod-chroniclehead",
 ], "repo index");
 
 requireText(path.join(REPO_VIEW, "styles.css"), [
@@ -125,7 +165,7 @@ requireText(path.join(REPO_VIEW, "styles.css"), [
   ".bod-scaler",
   ".bod",
   ".bod-emblem",
-  ".bod-ledgerhead",
+  ".bod-chroniclehead",
   ".bod-standing-label",
   ".bod-instrument",
   ".bod-leaf",
@@ -164,13 +204,19 @@ forbidText(path.join(REPO_VIEW, "app.js"), [
   "bod-sun-ray-fill",
   "bod-standing-diamond",
   "journal-rune-mark",
+  "bod-ledger",
 ], "repo app");
 
 forbidText(path.join(REPO_VIEW, "styles.css"), [
   ".bod-sun-ray-fill",
   ".bod-standing-diamond",
   ".journal-rune-mark",
+  ".bod-ledger",
 ], "repo styles");
+
+forbidText(path.join(REPO_VIEW, "index.html"), [
+  "bod-ledger",
+], "repo index");
 
 requireText(MANAGER, [
   "PDV.Diegetic.Journal.Magnitudes",
@@ -201,14 +247,17 @@ if (mustExist(MANAGER)) {
   const manager = read(MANAGER);
   const journalBuilder = functionBlock(manager, "BuildJournalPayloadJson");
   if (
-    !journalBuilder.includes("if page == 1") ||
-    !journalBuilder.includes('j = j + ",\\"entries\\":[]') ||
-    !journalBuilder.includes('j = j + ",\\"dashboard\\":" + GetDashboardJson()') ||
+    manager.includes("String Function BuildJournalPayloadJson(Int page") ||
+    !journalBuilder.includes('j = j + ",\\"entries\\":[" + entries + "]"') ||
+    journalBuilder.includes("if page == 1") ||
+    journalBuilder.includes('j = j + ",\\"entries\\":[]') ||
+    journalBuilder.includes('j = j + ",\\"dashboard\\":" + GetDashboardJson()') ||
+    journalBuilder.includes('j = j + ",\\"page\\":"') ||
     journalBuilder.includes("Both datasets ship every push")
   ) {
-    add("FAIL", "Book of Days payload builder must keep Chronicle and Ledger data page-specific.", MANAGER);
+    add("FAIL", "Book of Days payload builder must remain Chronicle-only and must not ship an embedded Ledger page.", MANAGER);
   } else {
-    add("PASS", "Book of Days payload builder keeps Chronicle and Ledger data page-specific.", MANAGER);
+    add("PASS", "Book of Days payload builder remains Chronicle-only with no embedded Ledger page.", MANAGER);
   }
 
   const staleChampionSurface = /SurfaceTransition\("tier",\s*deity\.DeityName\s*\+\s*" "\s*\+\s*GetPublicTierBand\(TIER_CHAMPION\)/.test(manager);
@@ -243,6 +292,8 @@ forbidText(MCM, [
   "PDV_Manager.SendPrismaJournalPayload(True, 1)",
   "You turn to the Ledger -- what feeds your gods.",
 ], "mcm source");
+
+verifyJournalBytecodeFreshness();
 
 forbidText(DIRECTOR, [
   'StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Lines"',

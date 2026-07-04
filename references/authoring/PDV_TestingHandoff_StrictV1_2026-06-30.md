@@ -4,9 +4,17 @@ Generated: 2026-06-30 AEST
 
 Target: strict v1.0 beta readiness, not a limited tester build with known open proof.
 
-Current verdict: do not open strict v1.0 beta yet. Static/readback gates are clean on
-the current Prisma-to-1.0 update, but strict beta remains blocked by Imperial and
-Dunmer manual/runtime evidence plus Requiem felt-penalty proof.
+Current verdict: do not open strict v1.0 beta yet. Static/readback gates are
+clean on the current Prisma-to-1.0 update. As of the 2026-07-04 Imperial
+closeout, the active race blocker is Dunmer manual/runtime evidence; Requiem
+felt-penalty proof and the broader last-pass sweeps remain separate strict-v1.0
+work.
+
+2026-07-04 update: use
+`PDV_SessionHandoff_2026-07-04_ImperialCloseout.md` as the current race-session
+entrypoint. Imperial is closed for the current race beta-feel packet unless a
+regression touches Concordat, Talos offer gating, civic-service route
+attribution, formal offers, Active Effects, or Book-of-Days/Ledger surfacing.
 
 ## Current Checked State
 
@@ -38,11 +46,39 @@ Results:
 | `pdv_requiem_penalty_audit` | PASS: `PASS=44` |
 | `pdv_daedric_beta_gate --json` | PASS: `PASS=16` |
 | `pdv_integrity_harness` | PASS, including signal E2E `39 GREEN / 0 RED` |
-| `pdv_beta_readiness_audit --strict --json` | NOT_BETA_READY: `FAIL=2`, Imperial:7 and Dunmer:7 manual evidence blockers |
+| `pdv_beta_readiness_audit --strict --json` | NOT_BETA_READY: `FAIL=2`, Dunmer:7 manual evidence blocker plus the release-claim boundary |
+
+## 2026-07-04 Kickoff Recheck
+
+These checks were rerun at kickoff after the Imperial closeout handoff was
+created:
+
+```powershell
+node .\tools\pdv_beta_readiness_audit.mjs --strict --json
+node .\tools\pdv_verify.mjs --json
+node .\tools\pdv_prisma_ui_audit.mjs
+node .\tools\pdv_compile.mjs --script PDV_ActionRouter --script PDV_EventBus --script PDV_EventTypes --script PDV__ManagerQuest
+node .\tools\pdv_ascii_guard.mjs --summary --ext .psc .\live-source\Scripts\Source\PDV_ActionRouter.psc
+```
+
+Results:
+
+- Strict beta audit remains `NOT_BETA_READY`: `PASS=29`, `INFO=3`,
+  `WARN=1`, `FAIL=2`; blockers are `Dunmer:7` and the release-claim boundary.
+- Prisma UI audit passes 74 checks.
+- `PDV_EventBus`, `PDV_EventTypes`, and `PDV__ManagerQuest` compile with
+  `0 error(s), 0 warning(s)`.
+- `PDV_ActionRouter` initially failed because `GetEventReason` called a
+  nonexistent `GetEventTypes()` helper. The source now uses the existing
+  `PDV_EventTypesService` property, compiles with `0 error(s), 0 warning(s)`,
+  and passes ASCII guard.
+- Post-compile verifier reports `FAIL=0`, `WARN=1`, `PASS=3510`, `INFO=66`.
+  The remaining warning is the known medallion glyph fallback.
 
 Important boundary: the new `neglect.recover` path is statically clean and
 compiled, but it is not runtime/manual proof. It must be tested through the
-Universal Prisma U6/U7 pass and carried into the Imperial/Dunmer Prisma slots.
+Universal Prisma U6/U7 pass and carried into the Dunmer Prisma slots. Imperial
+already passed for the current race packet and remains regression reference.
 
 ## Source Updates Just Checked
 
@@ -59,8 +95,9 @@ Universal Prisma U6/U7 pass and carried into the Imperial/Dunmer Prisma slots.
   stale modal state before showing the next surface.
 - `PDV_RunSheet_Universal_Prisma_V1.md` now has U6 neglect drop and U7 neglect
   recovery. The old readability synthesis is now U8.
-- `PDV_RunSheet_Imperial_BetaFeel.md` and `PDV_RunSheet_Dunmer_BetaFeel.md`
-  now require the shared recovery beat inside their Prisma surface evidence.
+- `PDV_RunSheet_Dunmer_BetaFeel.md` requires the shared recovery beat inside
+  its Prisma surface evidence. `PDV_RunSheet_Imperial_BetaFeel.md` already
+  passed for the current packet and remains regression reference only.
 - `PDV_InGameTestingNeeded_Runbook.md` now includes
   `node .\tools\pdv_prisma_to_oneoh_audit.mjs` in preflight and calls out the
   recovery sweep.
@@ -129,11 +166,12 @@ Expected:
 - Prisma-to-1.0 audit passes, including `neglect.recover`.
 - Requiem audit passes as backend/readback proof only.
 - Daedric beta gate remains `PASS=16`.
-- Strict beta audit may still fail only on Imperial/Dunmer manual evidence until
-  Steps 3 and 4 are recorded.
+- Strict beta audit may still fail on Dunmer manual evidence plus the release
+  claim boundary until Step 4 is recorded.
 
 Stop if: any new static/readback gate fails, Daedric drops below `PASS=16`, or
-strict beta reports blockers other than the known Imperial/Dunmer manual slots.
+strict beta reports blockers other than the known Dunmer manual slots and the
+release-claim boundary.
 
 ### 2. Universal Prisma V1 Smoke
 
@@ -164,9 +202,21 @@ Stop if: Book of Days is blank, ESC/X/hotkey close fails, gameplay events force
 open the full panel, neglect drop repeats every dawn, recovery is absent, or
 offer accept/refuse lacks either its toast or pinned Chronicle line.
 
-### 3. Imperial Beta-Feel Run Sheet
+### 3. Imperial Beta-Feel Run Sheet - Closed Current Packet
 
-Run `references/authoring/PDV_RunSheet_Imperial_BetaFeel.md`.
+Do not rerun `references/authoring/PDV_RunSheet_Imperial_BetaFeel.md` as an
+active blocker unless a regression touches Concordat, Talos offer gating,
+civic-service route attribution, formal offers, Active Effects, or
+Book-of-Days/Ledger surfacing.
+
+Current evidence lives in:
+
+- `references/authoring/PDV_RunSheet_Imperial_V1.md`
+- `references/authoring/PDV_Phase20_ManualEvidenceLedger.json`
+- `references/authoring/PDV_PreBetaRaceGateLedger.md`
+- `references/authoring/PDV_SessionHandoff_2026-07-04_ImperialCloseout.md`
+
+Historical/regression scope:
 
 Close all seven strict blockers for Imperial:
 
@@ -180,7 +230,7 @@ immersiveHookProof
 assetStatus
 ```
 
-Order inside the sheet:
+Order inside the sheet if this must be reopened:
 
 1. Seed a disposable Imperial test state and confirm MCM/debug setup.
 2. Prove accepted Imperial routes: public/private Talos pressure and civic Survey
@@ -293,7 +343,7 @@ Health, or Requiem is not actually active.
 
 ### 6. Day-To-Day Signal Sweep
 
-After Imperial/Dunmer and Requiem, run a cross-system smoke to catch broad script
+After Dunmer and Requiem, run a cross-system smoke to catch broad script
 rewrite regressions.
 
 Cover at least:
@@ -362,8 +412,8 @@ node .\tools\pdv_beta_readiness_audit.mjs --strict --json
 Acceptance:
 
 - `pdv_beta_readiness_audit --strict --json` has no `FAIL` blockers.
-- Imperial and Dunmer manual evidence slots are closed from actual runtime/manual
-  proof, not from static checks.
+- Dunmer manual evidence slots are closed from actual runtime/manual proof, not
+  from static checks, and Imperial remains closed on the 2026-07-04 evidence.
 - Book of Days audit still passes.
 - Prisma-to-1.0 audit still passes.
 - Requiem proof includes Active Effects, `player.getav Health`, HP-bar feel, and
@@ -392,5 +442,5 @@ Blocked now:
 
 - Strict v1.0 beta readiness.
 - Any claim that Requiem penalties are felt in-game.
-- Any claim that Imperial/Dunmer beta feel is complete.
+- Any claim that Dunmer beta feel or strict v1.0 beta readiness is complete.
 - Any final tester package claim based on the current pre-existing zip.

@@ -1447,7 +1447,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
         if deity
             Float delta = deity.ScoreAction(eventType, actorRef, targetRef)
             if delta != 0.0
-                PDV_Manager.AwardPiety(deity, delta)
+                PDV_Manager.AwardPiety(deity, delta, GetEventReason(eventType))
                 scoredCount += 1
 
                 if GetDebugLevel() >= 2
@@ -1465,6 +1465,18 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     PDV_Manager.RouteActionToOpenPaths(eventType, actorRef, targetRef)
 
     Trace(2, "RouteAction complete: event " + eventType + ", scored deities " + scoredCount)
+EndFunction
+
+String Function GetEventReason(Int eventType)
+    PDV_EventTypes eventTypes = GetEventTypes()
+    if eventTypes
+        String label = eventTypes.EventLabel(eventType)
+        if label != "" && label != "none"
+            return label
+        endIf
+    endIf
+
+    return "event-" + eventType
 EndFunction
 
 Bool Function CanScoreAttribution(Int attributionType)

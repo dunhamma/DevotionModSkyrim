@@ -267,6 +267,70 @@ String Function EventLabel(Int eventType)
         return "daedric-prince-signal"
     elseIf eventType == EVT_DAEDRIC_GENERIC_SILENCE
         return "daedric-generic-silence"
+    elseIf eventType == EVT_KILL_UNDEAD
+        return "kill-undead"
+    elseIf eventType == EVT_KILL_DAEDRA
+        return "kill-daedra"
+    elseIf eventType == EVT_KILL_DRAGON
+        return "kill-dragon"
+    elseIf eventType == EVT_KILL_ANIMAL_NONCOMBAT
+        return "kill-animal-noncombat"
+    elseIf eventType == EVT_MURDER_DEFENSELESS
+        return "murder-defenseless"
+    elseIf eventType == EVT_PRAY_AT_SHRINE
+        return "pray-at-shrine"
+    elseIf eventType == EVT_TAKE_BLESSING
+        return "take-blessing"
+    elseIf eventType == EVT_SHOUT_TO_OPEN_SKY
+        return "shout-to-open-sky"
+    elseIf eventType == EVT_REST_UNDER_OPEN_SKY
+        return "rest-under-open-sky"
+    elseIf eventType == EVT_SLEEP_IN_BED
+        return "sleep-in-bed"
+    elseIf eventType == EVT_SMITH_ITEM
+        return "smith-item"
+    elseIf eventType == EVT_ENCHANT_ITEM
+        return "enchant-item"
+    elseIf eventType == EVT_BREW_POTION
+        return "brew-potion"
+    elseIf eventType == EVT_COOK_MEAL
+        return "cook-meal"
+    elseIf eventType == EVT_HARVEST_INGREDIENT
+        return "harvest-ingredient"
+    elseIf eventType == EVT_MINE_OR_CHOP
+        return "mine-or-chop"
+    elseIf eventType == EVT_READ_SKILL_BOOK
+        return "read-skill-book"
+    elseIf eventType == EVT_READ_SPELL_TOME
+        return "read-spell-tome"
+    elseIf eventType == EVT_READ_LORE_BOOK
+        return "read-lore-book"
+    elseIf eventType == EVT_LEARN_WORD_OF_POWER
+        return "learn-word-of-power"
+    elseIf eventType == EVT_INCREASE_SKILL
+        return "increase-skill"
+    elseIf eventType == EVT_DISCOVER_LOCATION
+        return "discover-location"
+    elseIf eventType == EVT_HEAL_OR_CURE_NPC
+        return "heal-or-cure-npc"
+    elseIf eventType == EVT_CLEAR_BOUNTY
+        return "clear-bounty"
+    elseIf eventType == EVT_PICK_OWNED_LOCK
+        return "pick-owned-lock"
+    elseIf eventType == EVT_TRESPASS
+        return "trespass"
+    elseIf eventType == EVT_STEAL_ITEM
+        return "steal-item"
+    elseIf eventType == EVT_PICKPOCKET
+        return "pickpocket"
+    elseIf eventType == EVT_ASSAULT_INNOCENT
+        return "assault-innocent"
+    elseIf eventType == EVT_RAISE_UNDEAD
+        return "raise-undead"
+    elseIf eventType == EVT_VAMPIRE_FEED
+        return "vampire-feed"
+    elseIf eventType == EVT_ACCEPT_DAEDRIC_ARTIFACT
+        return "accept-daedric-artifact"
     endIf
 
     return "none"

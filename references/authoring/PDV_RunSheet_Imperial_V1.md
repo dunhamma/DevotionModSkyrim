@@ -165,8 +165,10 @@ regardless of load order). Only the preflight changes:
 - **Record:** ___
 
 ### Slot 5 -- wrong-origin rejection  [Dev] [R]
-- **Do:** console `set PDV_GLO_OriginRace to 0` (Nord), then read the Talos book (`player.additem 000ED04D 1`)
-  and try `Concordat defiance`. Reset with `set PDV_GLO_OriginRace to 1` after.
+- **Do:** console `set PDV_GLO_OriginRace to 7` (Argonian; use a non-Imperial, non-Nord negative origin),
+  then read the Talos book (`player.additem 000ED04D 1`) and try `Concordat defiance`. Reset with
+  `set PDV_GLO_OriginRace to 1` after. Do **not** use Nord as the wrong-origin negative: Talos can validly
+  hit Nord surfaces.
 - **See:** **nothing Imperial moves** -- Concordat `Raw value` does not move, no civic-faith Survey copy, no
   offer, no markers. A non-Imperial origin can't read Concordat / civic state as native.
 - **Record:** ___
@@ -235,21 +237,22 @@ regardless of load order). Only the preflight changes:
 ## Record results here
 | Slot | What it proves | Status | Note |
 |---|---|---|---|
-| 1 new records | no new mesh or placed proof object required for current V1 packet | | |
-| 2 Survey | civic faith + Talos tilt + Concordat + act reqs legible | | |
-| 3 stack | patron blessings only, no rogue Concordat buff | | |
-| 4a offer accept/refuse | toast + pinned BoD, non-empty; decline silent | | |
-| 4b offer cadence | one-offer-per-qualification; terminal refuse | | |
-| 4c broad caps T2 | no Champion on broad worship | | |
-| 4d Talos book | RouteImperialTalosPressure marker, no panel | | |
-| 4e Concordat track | raw value moves per emitter (judge raw, not band) | | |
+| 1 new records | no new mesh or placed proof object required for current V1 packet | PASS | Tester confirmed the slot-1 asset/proof-object check. Imperial V1 uses existing books, quest-stage receivers, MCM Concordat/debug controls, and Prisma/MCM surfaces. |
+| 2 Survey | civic faith + Talos tilt + Concordat + act reqs legible | PASS | Tester screenshots confirmed Survey readability after wording polish. Final accepted shape keeps civic faith, standing, Talos posture, and Concordat state player-facing without route IDs. |
+| 3 stack | patron blessings only, no rogue Concordat buff | PASS | Tester screenshots confirmed expected civic/patron reward stack and no separate ConcordatStanding buff. Later broad/focused stack checks also showed the active effects stack behaving as expected. |
+| 4a offer accept/refuse | toast + pinned BoD, non-empty; decline silent | PASS | Tester confirmed accept/refuse criteria. Follow-up polish removed preamble before `{patron} has named you their own`; active deity effects now grant for accepted patrons. |
+| 4b offer cadence | one-offer-per-qualification; terminal refuse | PASS | Tester confirmed accepted patron did not re-offer, refused deity did not re-offer, and a different qualifying deity still could offer. Refuse remains terminal by design. |
+| 4c broad caps T2 | no Champion on broad worship | PASS | Tester confirmed broad civic worship capped at Faithful/Tier 2 and did not produce a Champion broad-worship surface. Book of Days and Ledger broad-lane surfaces were patched and retested. |
+| 4d Talos book | RouteImperialTalosPressure marker, no panel | PASS | Tester confirmed the Talos book route passed in game. Backend path treats this as Talos piety pressure, not Concordat movement. |
+| 4e Concordat track | raw value moves per emitter (judge raw, not band) | PASS | Tester confirmed designated raw-value movement for the Concordat debug buttons. Band label lag remains expected due to lock-in grace. |
 | 4f Concordat reorientation | next-dawn BoD, NO immediate toast | PASS | Manual Book of Days screenshot plus backend commit marker: Uncommitted -> PublicCompliant. Copy patched to player-facing Publicly Compliant; restart required before rechecking text. |
 | 4g Talos offer gate | Talos offer hidden when Standing > 50 | PASS | Backend confirmed: at Concordat raw 60 / Publicly Compliant, commitment evaluation stayed pending 0 -> 0. Manual/backend allowed-side proof: Talos offer appeared at raw 40. Restarted polish pass confirmed Talos tier toast/diegetic suppression while Concordat blocks offers. |
-| 4h civic substrate | civic act lands a Ledger driver | | |
-| 5 wrong-origin | Nord origin: zero Imperial movement | | |
-| 6 generic silence | faction/attendance/bounty/lawfulness do not score | | |
-| 7 felt | reads as concrete civic practice under law | | |
+| 4h civic substrate | civic act lands a Ledger driver | PASS | Confirmed in-game after typo fix: wired Imperial civic route produced the expected Ledger driver / Book of Days civic-service surface. |
+| 5 wrong-origin | non-Imperial, non-Nord origin: zero Imperial movement | PASS | Tester confirmed after swapping off Nord, because Talos can validly hit Nord surfaces; Imperial Concordat/civic state stayed silent under the corrected negative origin. |
+| 6 generic silence | faction/attendance/bounty/lawfulness do not score | PASS | Tester confirmed 3-5 generic civic/Talos-proximity actions left Concordat raw unchanged and did not move the Imperial surfaces. |
+| 7 felt | reads as concrete civic practice under law | PASS | Tester confirmed the generic-silence/felt read based on the full Imperial playthrough. |
 
 Owner, after the run: capture the Papyrus + `DevotionPrismaBridge` logs and record into
-`PDV_V1_BetaReadinessGate.md`. Per ledger convention, do NOT mark Imperial `pass` until every row is filled
-and the required V1 rows above are proven. Imperial activator routes 110-113 are not part of the current V1 gate.
+`PDV_V1_BetaReadinessGate.md` if that gate is revived. Current 2026-07-04 result: all Imperial V1 rows above
+are tester-passed for the current packet; final-world placement remains separate. Imperial activator routes
+110-113 are not part of the current V1 gate.

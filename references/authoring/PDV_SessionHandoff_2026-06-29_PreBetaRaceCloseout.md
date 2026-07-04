@@ -1,11 +1,18 @@
 # PDV Session Handoff -- 2026-06-29 Pre-Beta Race Closeout
 
+**Superseded queue note (2026-07-04):** Imperial is now passed for the current
+race beta-feel packet. Use
+`PDV_SessionHandoff_2026-07-04_ImperialCloseout.md` for the current next-session
+entrypoint. This older handoff remains useful for the Breton/Orc/Nord closeout
+context and the pre-Imperial queue history.
+
 ## TL;DR
 
-Breton Hidden Art, Orc organic life-mode, and Nord current beta-feel packets are
-closed for the current race manual/runtime scope. The strict beta audit is still
-`NOT_BETA_READY`, but the remaining race blockers are now Imperial and Dunmer
-only.
+Breton Hidden Art, Orc organic life-mode, Nord, and now Imperial current
+beta-feel packets are closed for the current race manual/runtime scope. The
+strict beta audit is still `NOT_BETA_READY`, but the remaining race blocker is
+now Dunmer only. For the current next-session queue, use
+`PDV_SessionHandoff_2026-07-04_ImperialCloseout.md`.
 
 Do not reopen Breton/Orc/Nord current-packet evidence unless a new runtime
 regression appears. Their optional/deferred design arms remain separate from the
@@ -71,8 +78,9 @@ Expected current outcomes:
 - Prisma UI audit: PASS.
 - Legacy boon overlap audit: PASS.
 - Full verifier: FAIL=0, with one existing WARN for medallion glyph fallback.
-- Strict beta readiness audit: `NOT_BETA_READY`, FAIL=2, blockers are Imperial
-  and Dunmer race manual/runtime evidence plus the release-claim boundary.
+- Strict beta readiness audit: rerun required after the 2026-07-04 Imperial
+  ledger/doc-sync; expected current manual/runtime race blocker is Dunmer plus
+  the release-claim boundary until the audit confirms otherwise.
 
 ## Current Race State
 
@@ -82,8 +90,9 @@ Closed for current beta packet:
 
 Still required before race beta-feel claim:
 
-- Imperial: all seven required manual/runtime slots.
 - Dunmer: all seven required manual/runtime slots.
+- Imperial: closed for the current packet on 2026-07-04; final-world placement
+  remains separate.
 
 Final-world placement remains separate from these current race packets.
 
@@ -100,8 +109,7 @@ node .\tools\pdv_prisma_ui_audit.mjs
 
 Then run the remaining race sheets:
 
-1. Imperial: `references/authoring/PDV_RunSheet_Imperial_BetaFeel.md`
-2. Dunmer: `references/authoring/PDV_RunSheet_Dunmer_BetaFeel.md`
+1. Dunmer: `references/authoring/PDV_RunSheet_Dunmer_BetaFeel.md`
 
 For each race, keep proof buckets separate:
 
@@ -124,4 +132,3 @@ node .\tools\pdv_beta_readiness_audit.mjs --strict --json
 ```
 
 Do not claim beta-ready until the strict audit has no `FAIL` blockers.
-

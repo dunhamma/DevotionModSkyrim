@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * PDV Ledger Coverage Audit — enforces the owner rule "the in-game Ledger must
+ * PDV Ledger Coverage Audit - enforces the owner rule "the in-game Ledger must
  * monitor ALL data points."
  *
  * THE LEDGER. GetDashboardJson (~PDV__ManagerQuest.psc:1918) renders the player's
@@ -142,7 +142,8 @@ function main() {
   );
 
   const scaledCuratedDriverReason = hasReasonBearingScaledCuratedAward();
-  writeLedger({ tracked, untracked, lifecycle, substrate, caughtRealAdjustStored, scaledCuratedDriverReason });
+  const dashboardListsAllMovedGods = hasUncappedDashboardMovedGodList();
+  writeLedger({ tracked, untracked, lifecycle, substrate, caughtRealAdjustStored, scaledCuratedDriverReason, dashboardListsAllMovedGods });
 
   const summary = {
     status: untracked.length ? "FINDINGS" : "CLEAN",
@@ -156,12 +157,13 @@ function main() {
       ? "YES (AdjustStoredPiety bypass present in UNTRACKED -> pre-pact Princes invisible in Ledger)"
       : "NO (Daedric stored-piety path is tracked or no AdjustStoredPiety call sites were found)",
     scaledCuratedDriverReason: scaledCuratedDriverReason ? "YES" : "NO",
+    dashboardListsAllMovedGods: dashboardListsAllMovedGods ? "YES" : "NO",
     selfTest,
     ledger: "references/authoring/PDV_LedgerCoverageLedger.md",
   };
   console.log(JSON.stringify(summary, null, 2));
 
-  if (untracked.filter((u) => u.file !== "(selftest)").length > 0 || !scaledCuratedDriverReason) process.exitCode = 1;
+  if (untracked.filter((u) => u.file !== "(selftest)").length > 0 || !scaledCuratedDriverReason || !dashboardListsAllMovedGods) process.exitCode = 1;
 }
 
 // Map each line index -> enclosing Function/Event name.
@@ -217,7 +219,18 @@ function hasReasonBearingScaledCuratedAward() {
   return /AwardPiety\s*\(\s*deity\s*,\s*scaledDelta\s*,/.test(body);
 }
 
-function writeLedger({ tracked, untracked, lifecycle, substrate, caughtRealAdjustStored, scaledCuratedDriverReason }) {
+function hasUncappedDashboardMovedGodList() {
+  const path = `${SOURCE_DIR}/PDV__ManagerQuest.psc`;
+  if (!fs.existsSync(path)) return false;
+  const text = fs.readFileSync(path, "utf8");
+  const body = functionBody(text, "GetDashboardJson");
+  if (!body) return false;
+  return /PDV_FLST_AllDeities/.test(body) &&
+         /piety\s*>\s*0\.0\s*\|\|\s*pietyToday\s*!=\s*0\.0\s*\|\|\s*IsNeglectFlagActive/.test(body) &&
+         !/shown\s*<\s*\d+/.test(body);
+}
+
+function writeLedger({ tracked, untracked, lifecycle, substrate, caughtRealAdjustStored, scaledCuratedDriverReason, dashboardListsAllMovedGods }) {
   const md = [];
   md.push("# PDV Ledger Coverage Ledger");
   md.push("");
@@ -239,6 +252,7 @@ function writeLedger({ tracked, untracked, lifecycle, substrate, caughtRealAdjus
   md.push(`Daedric stored-piety driver hook present: ${hasDaedricStoredPietyDriverHook() ? "YES" : "NO"}`);
   md.push(`Historical AdjustStoredPiety bypass caught: ${caughtRealAdjustStored ? "YES" : "NO"}`);
   md.push(`Scaled curated AwardPiety call records a driver reason: ${scaledCuratedDriverReason ? "YES" : "NO"}`);
+  md.push(`Dashboard lists all moved or neglected gods without a presentation cap: ${dashboardListsAllMovedGods ? "YES" : "NO"}`);
   md.push("");
 
   md.push("## UNTRACKED (bypass the Ledger) -- FINDINGS");

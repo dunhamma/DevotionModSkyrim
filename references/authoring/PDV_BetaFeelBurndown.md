@@ -26,12 +26,12 @@ readiness evidence.
 
 ## Current Snapshot
 
-As of the 2026-06-30 AEST local recheck:
+As of the 2026-07-04 AEST Imperial closeout:
 
 | Area | Current state | Evidence |
 | --- | --- | --- |
 | Daedric Princes | **Pass** for current beta-display gate | `node .\tools\pdv_daedric_beta_gate.mjs` -> `PASS=16` |
-| Race beta-feel packets | **8 pass, 2 still fail/deferred** | `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` -> `NOT_BETA_READY`, `FAIL=2`; Dunmer and Imperial each still have seven pending manual/runtime slots |
+| Race beta-feel packets | **9 pass, 1 still fail/deferred** | `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` -> `NOT_BETA_READY`, `FAIL=2`; manual blocker is `Dunmer:7`, plus the release-claim boundary |
 | Default framework verifier | **Machine-clean with known warning** | `node .\tools\pdv_verify.mjs --json` -> `FAIL=0, WARN=1`; warning is medallion glyph fallback only |
 | Content verifier | **Clean** | `node .\tools\pdv_content_verify.mjs` -> `FAIL=0, WARN=0, PASS=1080, INFO=4` |
 | Khajiit focused P2 route | **Route-proof pass** | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race khajiit` -> PASS |
@@ -68,6 +68,7 @@ These items are no longer counted as open beta-feel blockers.
 | Altmer `PDV_RepTrack_ThalmorAlignment` first record bridge | Consolidated record-wave readback passes | Source routing for the six actions and manual/new-save behavior proof remain open |
 | Breton creed-loss spell records and persistent band routing | Breton reward-spec readback passes; handoff claims manager compile/readback | Breach-source quest routing, threshold notifications, recovery routes, and in-game Active Effects proof remain open |
 | Altmer/Imperial/Dunmer track emitters wired (2026-06-14) | Compile/readback clean | Altmer ThalmorAlignment now live (banned-texts -5, consort -25, Thalmor-kill -20); Imperial Stormcloak-defiance now lands -20 via the point table + Thalmor-Justiciar-kill -10; Dunmer DLC2 outdoor-shrine twilight prayer. ~6 no-clean-hook actions (arrest/report/help-escape/Thalmor-mission/Orc-oath-break/Redguard-Dawnguard-cure) documented as deferred in `PDV_NextBuildPass_RecordSpec.md` sec.10. **Route-proven 2026-06-14** (Papyrus log): Altmer banned-texts/consort/kill -> raw -75; Imperial defiance -20; Imperial Thalmor-kill -10 (open kill, after a rank-gate fix). Only the Dunmer DLC2 Solstheim shrine remains unobserved (needs Solstheim); full manual beta-feel separate |
+| Imperial current beta-feel packet | Manual/runtime packet evidence | Imperial V1 slots 1-7 passed in game on 2026-07-04: assets, Survey/status, stack, formal offer accept/refuse/cadence, broad Tier-2 cap, Talos book pressure, Concordat raw/reorientation, Talos offer gate, civic-service Ledger/Book-of-Days route, wrong-origin rejection, generic-source silence, and final feel. Final-world placement remains separate |
 
 ## Immediate Recheck Debt
 
@@ -84,7 +85,7 @@ These are small but high-priority because they keep the burndown honest.
 ### 1. Manual Race Evidence
 
 This is the long pole. The default machine gates are strong; the strict release
-claim is blocked by manual/runtime evidence for Dunmer and Imperial.
+claim is blocked by manual/runtime evidence for Dunmer.
 
 | Race | Current state | Remaining proof |
 | --- | --- | --- |
@@ -96,7 +97,7 @@ claim is blocked by manual/runtime evidence for Dunmer and Imperial.
 | Redguard | Pass | manual/runtime packet 2026-06-19 (8/8 dims); non-blocking follow-ups: vampire earn-halt (content), HoonDing/Leki day-to-day leak fix APPLIED 2026-06-19 (regen+compile+verifier clean; awaiting in-game reconfirm), Arkay shrine cosmetic; final-world placement separate |
 | Breton | Pass | No blocker for current packet; final-world placement separate |
 | Dunmer | Fail | Ancestor/Reclamation stack audit, rejected generic Daedric behavior, Survey display, immersive hook proof, asset status |
-| Imperial | Fail | Civic Survey display, faction/attendance rejection, public/private Talos stack, immersive hook proof, asset status |
+| Imperial | Pass | Current Imperial V1 packet passed 2026-07-04; final-world placement separate |
 | Nord | Pass | No blocker for current packet; final-world placement separate |
 
 ### 2. Build/Depth Work Still On The Feel Path
@@ -127,7 +128,7 @@ These should not be allowed to inflate the current beta-feel burn:
 
 ## Recommended Next Sequence
 
-1. Run Imperial, then Dunmer, recording manual/runtime evidence in
+1. Run Dunmer, recording manual/runtime evidence in
    `PDV_Phase20_ManualEvidenceLedger.json` and `PDV_PreBetaRaceGateLedger.md`.
 2. Prove the Requiem penalty feltness add-on under a Requiem load: Active
    Effects, `player.getav Health`, HP-bar/manual feel notes, and Imperial

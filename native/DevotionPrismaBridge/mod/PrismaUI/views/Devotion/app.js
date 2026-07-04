@@ -13,7 +13,6 @@
     baandar: "baan-dar",
     "baan dar": "baan-dar",
     "curse-werewolf": "hircine",
-    kynareth: "kyne",
     system: "journal",
   };
   const gallerySymbols = [
@@ -462,7 +461,7 @@
     slot.appendChild(caption);
   };
 
-  // Trend → fill family. gold = rising or holding at full; grey = waning.
+  // Trend -> fill family. gold = rising or holding at full; grey = waning.
   const isWaning = (inst = {}) => text(inst.trend, "").toLowerCase() === "down";
   const fillClass = (inst) => (isWaning(inst) ? "instrument-fade" : "instrument-fill");
   const fillSoftClass = (inst) => (isWaning(inst) ? "instrument-fade-soft" : "instrument-fill-soft");
@@ -1187,7 +1186,7 @@
       + `<path d="${rune}" fill="none" stroke="${tone}" stroke-width="2.7" stroke-linecap="square"/></svg>`;
   };
 
-  // 1–3 weight from an explicit field, else bucketed from the favour amount.
+  // 1-3 weight from an explicit field, else bucketed from the favour amount.
   const journalMagnitude = (entry) => {
     const explicit = entry.m !== undefined ? entry.m : entry.magnitude !== undefined ? entry.magnitude : entry.weight;
     if (explicit !== undefined && explicit !== null && explicit !== "") {
@@ -1270,77 +1269,6 @@
     if (nodes.journalModal && !nodes.journalModal.hidden) fitJournalBook();
   });
 
-  // Read-only Ledger page of the Book of Days ("what feeds your gods"). No filters/
-  // buttons -- the book is a non-focused overlay and cannot take in-view clicks; the
-  // interactive filtered dashboard is the separate focused-panel follow-up.
-  const JOURNAL_LEDGER_STATE = { gaining: "Gaining", steady: "Steady", starving: "Starving", neglected: "Needs attention" };
-  const JOURNAL_LEDGER_VALENCE = { gaining: "good", steady: "neutral", starving: "warning", neglected: "warning" };
-
-  const renderJournalLedger = (dashboard = {}) => {
-    const host = document.getElementById("pdv-journal-ledger-gods");
-    if (!host) return;
-    clear(host);
-    const gods = asArray(dashboard.gods).filter(Boolean);
-    if (!gods.length) {
-      appendEmpty(host, "No god has answered yet. Act and pray, and this page will fill.");
-      return;
-    }
-    gods.forEach((god) => {
-      const stateKey = text(god.state, "steady");
-      const valence = JOURNAL_LEDGER_VALENCE[stateKey] || "neutral";
-      const li = document.createElement("li");
-      li.className = `bod-feed v-${valence}`;
-
-      const head = document.createElement("div");
-      head.className = "bod-feed__head";
-      const sym = document.createElement("div");
-      sym.className = "bod-feed__symbol";
-      renderSymbol(sym, text(god.symbol, "journal"));
-      const name = document.createElement("strong");
-      name.className = "bod-feed__name";
-      name.textContent = displayName(god.god, text(god.god, "A god"));
-      const stateChip = document.createElement("span");
-      stateChip.className = "bod-feed__state";
-      stateChip.textContent = `${JOURNAL_LEDGER_STATE[stateKey] || "Steady"} (${signedText(god.pietyToday)} today)`;
-      head.append(sym, name, stateChip);
-      li.appendChild(head);
-
-      const agg = {};
-      asArray(god.drivers).filter(Boolean).forEach((driver) => {
-        const reason = text(driver.reason, "An act of devotion");
-        if (!agg[reason]) agg[reason] = { reason, count: 0, net: 0 };
-        agg[reason].count += numberOrZero(driver.count) || 1;
-        agg[reason].net += numberOrZero(driver.net);
-      });
-      const drivers = Object.keys(agg).map((key) => agg[key]);
-
-      const ul = document.createElement("ul");
-      ul.className = "bod-feed__drivers";
-      if (!drivers.length) {
-        const empty = document.createElement("li");
-        empty.className = "bod-feed__driver is-empty";
-        empty.textContent = (stateKey === "neglected" || stateKey === "starving")
-          ? "Nothing has fed this god lately."
-          : "Recent acts will show here.";
-        ul.appendChild(empty);
-      } else {
-        drivers.forEach((driver) => {
-          const row = document.createElement("li");
-          row.className = `bod-feed__driver ${driver.net >= 0 ? "is-gain" : "is-loss"}`;
-          const mark = document.createElement("span");
-          mark.className = "bod-feed__mark";
-          mark.textContent = driver.net >= 0 ? "+" : "−";
-          const label = document.createElement("span");
-          label.textContent = driver.count > 1 ? `${driver.reason} (x${driver.count})` : driver.reason;
-          row.append(mark, label);
-          ul.appendChild(row);
-        });
-      }
-      li.appendChild(ul);
-      host.appendChild(li);
-    });
-  };
-
   const renderJournal = (journal = {}) => {
     if (!nodes.journalModal) return;
     hideAllOverlays();
@@ -1382,14 +1310,8 @@
       });
     }
 
-    // Page toggle: 0 = Chronicle (entries), 1 = Ledger (read-only "what feeds your gods").
-    // The hotkey cycles the page; a non-focused overlay can't take an in-view click.
-    const page = numberOrZero(journal.page);
     const chronicleEl = document.getElementById("pdv-journal-chronicle");
-    const feedbackEl = document.getElementById("pdv-journal-feedback");
-    if (chronicleEl) chronicleEl.hidden = page === 1;
-    if (feedbackEl) feedbackEl.hidden = page !== 1;
-    if (page === 1) renderJournalLedger(journal.dashboard);
+    if (chronicleEl) chronicleEl.hidden = false;
 
     overlayController.open("journal");
     fitJournalBook();
@@ -2557,8 +2479,7 @@
   // Uses the exact manager payload contract (GetDashboardJson gods/drivers +
   // BuildJournalPayloadJson entries). PDVDemoLedger() -> the interactive sortable
   // panel (Today tab) with the new 6f rite drivers + a watching Prince + a
-  // neglected god. PDVDemoChronicle() -> the Book of Days (Chronicle entries +
-  // the read-only Ledger page; toggle the page in-view).
+  // neglected god. PDVDemoChronicle() -> the Book of Days Chronicle only.
   const demoTrackingGods = [
     { god: "Kyne", symbol: "kyne", system: "patron", state: "gaining", pietyToday: 6, piety: 72, tier: 2,
       week: [3, -1, 4, 0, 2, 1, 6],

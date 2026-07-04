@@ -3,9 +3,15 @@ import fs from "node:fs";
 import path from "node:path";
 
 const DEVOTION_SOURCE = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
+const DEVOTION_COMPILED = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts";
 const DEVOTION_PRISMA_VIEW = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PrismaUI\\views\\Devotion\\app.js";
+const DEVOTION_PRISMA_INDEX = path.join(path.dirname(DEVOTION_PRISMA_VIEW), "index.html");
 const REPO_ROOT = process.cwd();
 const NATIVE_BRIDGE_SOURCE = path.join(REPO_ROOT, "native", "DevotionPrismaBridge", "src", "main.cpp");
+const MANAGER_SOURCE = path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc");
+const MCM_SOURCE = path.join(DEVOTION_SOURCE, "PDV_MCM.psc");
+const MANAGER_PEX = path.join(DEVOTION_COMPILED, "PDV__ManagerQuest.pex");
+const MCM_PEX = path.join(DEVOTION_COMPILED, "PDV_MCM.pex");
 
 function fail(message, source = "") {
   failures.push({ message, source });
@@ -17,6 +23,56 @@ function pass(message, source = "") {
 
 function read(filePath) {
   return fs.readFileSync(filePath, "utf8");
+}
+
+function exists(filePath) {
+  return fs.existsSync(filePath);
+}
+
+function mtime(filePath) {
+  return fs.statSync(filePath).mtimeMs;
+}
+
+function isoMtime(filePath) {
+  return fs.statSync(filePath).mtime.toISOString();
+}
+
+function requirePexAtLeastAsFresh(pexPath, dependencyPath, label) {
+  if (!exists(pexPath)) {
+    fail(`${label} PEX is missing.`, pexPath);
+    return;
+  }
+  if (!exists(dependencyPath)) {
+    fail(`${label} dependency is missing.`, dependencyPath);
+    return;
+  }
+  if (mtime(pexPath) + 1000 >= mtime(dependencyPath)) {
+    pass(`${label} PEX is fresh against ${path.basename(dependencyPath)}.`, pexPath);
+  } else {
+    fail(
+      `${label} PEX is older than ${path.basename(dependencyPath)}; recompile before in-game Prisma testing (${path.basename(pexPath)} ${isoMtime(pexPath)} < ${path.basename(dependencyPath)} ${isoMtime(dependencyPath)}).`,
+      pexPath,
+    );
+  }
+}
+
+function verifyJournalBytecodeFreshness() {
+  requirePexAtLeastAsFresh(MANAGER_PEX, MANAGER_SOURCE, "Manager journal payload");
+  requirePexAtLeastAsFresh(MCM_PEX, MCM_SOURCE, "Book of Days hotkey");
+
+  if (!exists(MANAGER_SOURCE) || !exists(MCM_SOURCE) || !exists(MANAGER_PEX) || !exists(MCM_PEX)) {
+    return;
+  }
+
+  const manager = read(MANAGER_SOURCE);
+  const mcm = read(MCM_SOURCE);
+  if (
+    manager.includes("Function SendPrismaJournalPayload(Bool playerRequested") &&
+    mcm.includes("PDV_Manager.SendPrismaJournalPayload(")
+  ) {
+    requirePexAtLeastAsFresh(MCM_PEX, MANAGER_SOURCE, "Book of Days hotkey dependency");
+    requirePexAtLeastAsFresh(MCM_PEX, MANAGER_PEX, "Book of Days hotkey dependency");
+  }
 }
 
 function functionBlock(source, functionName) {
@@ -248,6 +304,42 @@ function verifySessionCopyContracts(manager, managerPath) {
     }
   }
 
+  const dunmerSurvey = functionBlock(manager, "GetDunmerSurveyText");
+  if (
+    dunmerSurvey.includes(" -- ") ||
+    !dunmerSurvey.includes("The beast, or an unclean rite, makes the ash-prayer carry thinly.") ||
+    !dunmerSurvey.includes("your posture is restored, but scarred")
+  ) {
+    fail("Dunmer Survey curse-posture copy must avoid dash punctuation and explicitly surface restored, but scarred recovery.", managerPath);
+  } else {
+    pass("Dunmer Survey curse-posture copy avoids dash punctuation and names restored, but scarred recovery.", managerPath);
+  }
+
+  const dunmerGoodDaedraShrine = functionBlock(manager, "HandleDunmerOutdoorGoodDaedraShrine");
+  if (
+    !dunmerGoodDaedraShrine.includes('SendPrismaToast("journal", "good", "Good Daedra", "The Good Daedra hear the ash-prayer.")') ||
+    !dunmerGoodDaedraShrine.includes('SendPrismaToast("journal", "neutral", "Shrine quiet", "The shrine is quiet in this hour.")') ||
+    dunmerGoodDaedraShrine.includes('Debug.Notification("The Good Daedra hear the ash-prayer.")') ||
+    dunmerGoodDaedraShrine.includes('Debug.Notification("The shrine is quiet in this hour.")')
+  ) {
+    fail("Dunmer outdoor Good Daedra shrine route must surface Prisma toasts for the in-window prayer and quiet-hour fallback.", managerPath);
+  } else {
+    pass("Dunmer outdoor Good Daedra shrine route has in-window and quiet-hour Prisma toasts.", managerPath);
+  }
+
+  const dunmerDeviationPrice = functionBlock(manager, "HandleDunmerDeviationPrice");
+  const dunmerDeviationNotice = functionBlock(manager, "SurfaceDunmerDeviationPriceNotice");
+  if (
+    !dunmerDeviationPrice.includes("SurfaceDunmerDeviationPriceNotice()") ||
+    !dunmerDeviationNotice.includes('AppendBookOfDaysEntry(line, today, "creed.drop", symbolName, False, 2, "Reclamation strained")') ||
+    !dunmerDeviationNotice.includes('SendPrismaToast(symbolName, "warning", "Reclamation strained", line)') ||
+    !dunmerDeviationNotice.includes('"The ash-prayer thins; "')
+  ) {
+    fail("Dunmer deviation-price route must feed the Book of Days Chronicle and a warning Prisma toast.", managerPath);
+  } else {
+    pass("Dunmer deviation-price route feeds the Book of Days Chronicle and warning Prisma toast.");
+  }
+
   const acceptToast = functionBlock(manager, "BuildCommitmentOfferAcceptToastLine");
   const refuseToast = functionBlock(manager, "BuildCommitmentOfferRefuseToastLine");
   if (
@@ -294,6 +386,166 @@ function verifyDaedricToastContracts(manager, managerPath) {
     fail("Hircine werewolf curse entry must write a Book of Days curse-onset entry.", managerPath);
   } else {
     pass("Hircine werewolf curse entry writes a Book of Days curse-onset entry.", managerPath);
+  }
+}
+
+function verifyKynarethMedallionContract(manager, app, managerPath, appPath) {
+  if (app.includes('kynareth: "kyne"')) {
+    fail("Prisma symbol aliases must not collapse Kynareth into Kyne.", appPath);
+  } else {
+    pass("Prisma keeps Kynareth and Kyne as distinct symbol tokens.", appPath);
+  }
+
+  const requiredManagerFragments = [
+    'RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", PDV_Kynareth',
+    'elseIf optionId == "kynareth"',
+    'return PDV_Kynareth',
+    'elseIf deity == PDV_Kynareth',
+    'return "kynareth"',
+    'elseIf optionId == "kynareth"',
+    'return originRace == ORIGIN_NORD || originRace == ORIGIN_IMPERIAL || originRace == ORIGIN_BRETON',
+    'if PDV_Kynareth && PDV_Kynareth.DeityIndex == deityIndex',
+  ];
+  const missing = requiredManagerFragments.filter((fragment) => !manager.includes(fragment));
+  if (missing.length > 0) {
+    fail(`Kynareth medallion/display contract is incomplete; missing ${missing.length} expected fragment(s).`, managerPath);
+  } else {
+    pass("Kynareth medallion/display contract is distinct from Kyne and restorable by deity index.", managerPath);
+  }
+}
+
+function verifyBookOfDaysChronicleActionContract({ manager, eventBus, actionRouter, eventTypes, app, index, managerPath, eventBusPath, actionRouterPath, eventTypesPath, appPath, indexPath }) {
+  const journalPayloadBlock = functionBlock(manager, "BuildJournalPayloadJson");
+  const dashboardBlock = functionBlock(manager, "GetDashboardJson");
+  const humanizerBlock = functionBlock(manager, "HumanizeDriverReason");
+  const dawnBookBlock = functionBlock(manager, "RunDawnBookOfDays");
+  const digestBlock = functionBlock(manager, "BuildBookOfDaysDigestLine");
+  const deityDawnBlock = functionBlock(manager, "RunDawnConsolidateScratch");
+  const princeDawnBlock = functionBlock(manager, "RunDawnConsolidateDaedricWeek");
+  const readSkillIndex = humanizerBlock.indexOf('StringContainsToken(raw, "read-skill-book")');
+  const broadBookIndex = humanizerBlock.indexOf('StringContainsToken(raw, "po3_book")');
+
+  if (
+    manager.includes("String Function BuildJournalPayloadJson(Int page") ||
+    !journalPayloadBlock.includes('j = j + ",\\"entries\\":[" + entries + "]"') ||
+    journalPayloadBlock.includes('"\\"entries\\":[]"' ) ||
+    journalPayloadBlock.includes('j = j + ",\\"page\\":"') ||
+    journalPayloadBlock.includes('j = j + ",\\"dashboard\\":" + GetDashboardJson()')
+  ) {
+    fail("Book of Days payload must remain Chronicle-only and carry entries on every open.", managerPath);
+  } else {
+    pass("Book of Days payload is Chronicle-only and carries entries on every open.", managerPath);
+  }
+
+  if (
+    !dashboardBlock ||
+    dashboardBlock.includes("shown < 8") ||
+    !dashboardBlock.includes("Int originRace = GetPlayerOriginRaceIndex()") ||
+    !dashboardBlock.includes("IsDashboardDeityInOriginRoster(deity, originRace)")
+  ) {
+    fail("Focused-panel Ledger must be uncapped but scoped to the player's origin roster.", managerPath);
+  } else {
+    pass("Focused-panel Ledger is uncapped within the player's origin roster.", managerPath);
+  }
+
+  const dashboardRosterBlock = functionBlock(manager, "IsDashboardDeityInOriginRoster");
+  if (
+    !dashboardRosterBlock.includes("originRace == ORIGIN_DUNMER") ||
+    !dashboardRosterBlock.includes("deity == PDV_Azura || deity == PDV_Boethiah || deity == PDV_Mephala") ||
+    !dashboardRosterBlock.includes("originRace == ORIGIN_KHAJIIT") ||
+    !dashboardRosterBlock.includes("deity == PDV_Azura || deity == PDV_Boethiah || deity == PDV_Mephala || deity == PDV_BaanDar")
+  ) {
+    fail("Focused-panel Ledger roster filter must preserve native Dunmer and Khajiit deity/Prince packets.", managerPath);
+  } else {
+    pass("Focused-panel Ledger roster filter preserves native race deity/Prince packets.", managerPath);
+  }
+
+  if (
+    readSkillIndex < 0 ||
+    broadBookIndex < 0 ||
+    readSkillIndex > broadBookIndex ||
+    !humanizerBlock.includes('return "reading instructive texts"') ||
+    !humanizerBlock.includes('return "honing your skills"') ||
+    !humanizerBlock.includes('return "discovering new roads"')
+  ) {
+    fail("Driver humanizer must prefer exact day-to-day event labels before broad fallback labels.", managerPath);
+  } else {
+    pass("Driver humanizer prefers exact day-to-day event labels before broad fallbacks.", managerPath);
+  }
+
+  const eventBusRoute = functionBlock(eventBus, "RouteActionWithAttribution");
+  const actionRouterRoute = functionBlock(actionRouter, "RouteActionWithAttribution");
+  if (
+    !eventBusRoute.includes("PDV_Manager.AwardPiety(deity, delta, GetEventReason(eventType))") ||
+    !functionBlock(eventBus, "GetEventReason").includes("eventTypes.EventLabel(eventType)")
+  ) {
+    fail("EventBus routed piety must pass event-label driver reasons into AwardPiety.", eventBusPath);
+  } else {
+    pass("EventBus routed piety passes event-label driver reasons into AwardPiety.", eventBusPath);
+  }
+
+  if (
+    !actionRouterRoute.includes("PDV_Manager.AwardPiety(deity, delta, GetEventReason(eventType))") ||
+    !functionBlock(actionRouter, "GetEventReason").includes("eventTypes.EventLabel(eventType)")
+  ) {
+    fail("ActionRouter fallback piety must pass event-label driver reasons into AwardPiety.", actionRouterPath);
+  } else {
+    pass("ActionRouter fallback piety passes event-label driver reasons into AwardPiety.", actionRouterPath);
+  }
+
+  const requiredLabels = [
+    'return "read-skill-book"',
+    'return "read-spell-tome"',
+    'return "read-lore-book"',
+    'return "increase-skill"',
+    'return "discover-location"',
+    'return "harvest-ingredient"',
+    'return "kill-daedra"',
+    'return "killed-hostile-beast"',
+    'return "accept-daedric-artifact"',
+  ];
+  const missingLabels = requiredLabels.filter((fragment) => !eventTypes.includes(fragment));
+  if (missingLabels.length > 0) {
+    fail(`EventTypes is missing ${missingLabels.length} representative day-to-day driver label(s).`, eventTypesPath);
+  } else {
+    pass("EventTypes exposes representative day-to-day driver labels.", eventTypesPath);
+  }
+
+  if (
+    index.includes('data-journal-page=') ||
+    index.includes('id="pdv-journal-tab-ledger"') ||
+    index.includes('id="pdv-journal-feedback"') ||
+    index.includes("bod-ledger") ||
+    index.includes("What Feeds Your Gods") ||
+    app.includes("const setJournalPage =") ||
+    app.includes("const bindJournalTabs =") ||
+    app.includes("renderJournalLedger(")
+  ) {
+    fail("Book of Days UI must remain Chronicle-only; Ledger belongs in the focused Devotion panel.", indexPath);
+  } else {
+    pass("Book of Days UI is Chronicle-only; no embedded Ledger/tab page is exposed.", indexPath);
+  }
+
+  if (
+    !dawnBookBlock.includes("AppendBookOfDaysEntry(BuildBookOfDaysDigestLine(), today, \"dawn.digest\", \"journal\", False)") ||
+    !digestBlock.includes('return "At dawn, your acts fed " + names + "."') ||
+    !digestBlock.includes("if shown > 5") ||
+    !manager.includes("Function RecordBookOfDaysFedName(String displayName)")
+  ) {
+    fail("Book of Days dawn digest must stay as one concise end-of-day fed-name entry.", managerPath);
+  } else {
+    pass("Book of Days dawn digest stays as one concise end-of-day fed-name entry.", managerPath);
+  }
+
+  if (
+    !deityDawnBlock.includes("RecordBookOfDaysFedName(GetPublicDeityDisplayName(deity))") ||
+    !princeDawnBlock.includes("PDV_DaedricPathBase path = pathForm as PDV_DaedricPathBase") ||
+    !princeDawnBlock.includes("RecordBookOfDaysFedName(path.DeityName)") ||
+    !princeDawnBlock.includes("_dawnHadActivity = True")
+  ) {
+    fail("Book of Days dawn digest must collect both deity and Prince positive daily movement before clearing PietyToday.", managerPath);
+  } else {
+    pass("Book of Days dawn digest collects both deity and Prince positive daily movement.", managerPath);
   }
 }
 
@@ -544,6 +796,43 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     verifySubstrateChronicleContract(manager, managerPath);
     verifySessionCopyContracts(manager, managerPath);
     verifyDaedricToastContracts(manager, managerPath);
+    const appPath = DEVOTION_PRISMA_VIEW;
+    const indexPath = DEVOTION_PRISMA_INDEX;
+    const eventBusPath = path.join(DEVOTION_SOURCE, "PDV_EventBus.psc");
+    const actionRouterPath = path.join(DEVOTION_SOURCE, "PDV_ActionRouter.psc");
+    const eventTypesPath = path.join(DEVOTION_SOURCE, "PDV_EventTypes.psc");
+    if (fs.existsSync(appPath)) {
+      verifyKynarethMedallionContract(manager, read(appPath), managerPath, appPath);
+    } else {
+      fail("Live Prisma app.js is missing for Kynareth symbol contract audit.", appPath);
+    }
+    if (
+      fs.existsSync(appPath) &&
+      fs.existsSync(indexPath) &&
+      fs.existsSync(eventBusPath) &&
+      fs.existsSync(actionRouterPath) &&
+      fs.existsSync(eventTypesPath)
+    ) {
+      verifyBookOfDaysChronicleActionContract({
+        manager,
+        eventBus: read(eventBusPath),
+        actionRouter: read(actionRouterPath),
+        eventTypes: read(eventTypesPath),
+        app: read(appPath),
+        index: read(indexPath),
+        managerPath,
+        eventBusPath,
+        actionRouterPath,
+        eventTypesPath,
+        appPath,
+        indexPath,
+      });
+    } else {
+      if (!fs.existsSync(indexPath)) fail("Live Prisma index.html is missing for Book of Days Chronicle audit.", indexPath);
+      if (!fs.existsSync(eventBusPath)) fail("Live EventBus source is missing for Book of Days Chronicle audit.", eventBusPath);
+      if (!fs.existsSync(actionRouterPath)) fail("Live ActionRouter source is missing for Book of Days Chronicle audit.", actionRouterPath);
+      if (!fs.existsSync(eventTypesPath)) fail("Live EventTypes source is missing for Book of Days Chronicle audit.", eventTypesPath);
+    }
   }
 
   const bridgePath = path.join(DEVOTION_SOURCE, "PDV_PrismaBridge.psc");
@@ -913,6 +1202,7 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   }
 }
 
+verifyJournalBytecodeFreshness();
 verifyParityRegistryContracts(path.join(REPO_ROOT, "references", "authoring", "PDV_PrismaParityRegistry.csv"));
 
 for (const item of passes) {

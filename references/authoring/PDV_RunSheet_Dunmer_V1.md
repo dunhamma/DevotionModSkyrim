@@ -86,9 +86,11 @@ regardless of load order). Only the preflight changes:
 ### Slot 4b -- ancestor-home bonus  [Tester] [R]+[M]
 - **Do:** sleep in a bed to declare that cell your ancestor-home (watch for the declaration notice), then
   **use the urn AT that home** (or MCM Debug -> `Dunmer home bonus`). Pray with the urn ELSEWHERE for contrast.
-- **See:** praying at the declared home fires the **bigger progress step** (a Ledger driver row) plus a timed
-  **Health** restoration -- under Requiem watch the **HP bar actually move** (it is a flat Restore-Health, not
-  a regen-rate buff). Praying anywhere else = base prayer only, no pulse.
+- **See:** praying at the declared home fires the **bigger progress step** with the toast
+  *"Prayers within the home feel more meaningful."* (plus a Ledger driver row) and a timed **Health**
+  restoration -- under Requiem watch the **HP bar actually move** (it is a flat Restore-Health, not a
+  regen-rate buff). Praying anywhere else = base prayer only, no pulse. V1 uses the first interior bed-cell
+  you sleep in as the ancestor-home, including an inn room; there is no move-home prompt yet.
 - **Record:** ___
 
 ### Slot 4c -- ancestor-layer chronicle (the label deepening)  [Tester] [R]+[M]
@@ -121,8 +123,9 @@ regardless of load order). Only the preflight changes:
   press `Dunmer ancestor prayer` again. Then **`Curse werewolf`**, pray again. Then **`Curse none`**.
 - **See:** under **vampire** the posture reads *"silent, the ancestors cannot reach you"* and the prayer does
   **NOT** raise the layer (Layer 1 = 0x -- the signature consequence). Under **werewolf** the posture reads
-  *"strained, the beast pulls at the ancestors"* and the prayer credits at **half** (still routes). After
-  `Curse none` the posture reads *"restored, but scarred"* and the prayer credits **fully** again.
+  *"strained, the beast pulls at the ancestors"* and the prayer credits at **half** (still routes). Survey
+  now renders this without dash punctuation. After `Curse none` the posture reads *"restored, but scarred"*
+  and the prayer credits **fully** again.
 - **Record:** ___
 
 ### Slot 5 -- wrong-origin rejection  [Dev] [R]
