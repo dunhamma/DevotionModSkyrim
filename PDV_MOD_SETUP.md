@@ -1063,6 +1063,16 @@ no vanilla collision and no NIF editing), record the permission basis in the mod
 the new folders to the tester-bundle deployable set (it is no longer just the 108-file list -- `Meshes\`,
 `Textures\`, `Credits.txt` must ship).
 
+**Inventory item renders as a tiny speck (or not at all) in the item-card preview:**
+The preview camera zooms to fit the MESH's BSTriShape bounding spheres, NOT the record's ObjectBounds.
+World-replacer meshes can ship absurd export bounds that never matter in-world -- Remiros' urn had
+RADIUS=4565 on a 74-unit-tall model, so the camera framed a sphere 60x the urn and drew a speck. Diagnose
+with `node .\tools\pdv_nif_inspect.mjs <nif>` (dumps blocks, scales, bound centers/radii + their byte
+offsets); fix with an in-place `writeFloatLE` at the reported bound offset, setting a radius that safely
+covers the geometry (corner distance from the bound center + margin -- too small causes world culling
+flicker). Always back up the `.nif` first; the record's OBND is still worth setting for engine grid/LOD
+purposes but does not drive the preview camera.
+
 **Game CTDs while opening SkyUI MCM during PDV smoke tests:**
 Check the newest crash log under `C:\Users\Admin\Documents\My Games\Skyrim Special Edition\SKSE\`. If the stack repeats `ReShade64.dll` with `WS2_32.dll` and `webio.dll`, treat it as a native environment issue first rather than a PDV MCM logic failure. The confirmed PDV smoke-test workaround was to temporarily rename `D:\Wabbajack\modlists\Anvil\Stock Game\ReShade64.dll` out of the Stock Game root, retest, then restore it later for dedicated ReShade investigation.
 
