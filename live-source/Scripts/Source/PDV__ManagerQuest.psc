@@ -1575,6 +1575,25 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
         return
     endIf
 
+    ; Reachability gate (2026-07-05): a FOREIGN/TOLERATED quest reaction for a god
+    ; outside the player's origin roster (and not a Daedric path) writes piety no
+    ; surface can ever read back -- the dashboard filters by
+    ; IsDashboardDeityInOriginRoster and the formal commitment offer path is
+    ; origin-gated, so the piety, driver ring, and signal-day writes are dead state.
+    ; Skip the award entirely; generic acts (ScoreFromTable), the dashboard, and
+    ; offers already hard-gate the same way. Daedric paths stay scored: a pre-pact
+    ; path with piety renders as "watching", so path piety has a live consumer.
+    ; Roster deities with a TOLERATED/FOREIGN stance (visible-but-foreign) keep
+    ; their reduced-rate award below.
+    if stance == "FOREIGN" || stance == "TOLERATED"
+        if !IsQuestReactionDeityReachable(deity)
+            if GetDebugLevel() >= 2
+                Debug.Trace("[PDV] QuestReaction skipped unreachable foreign deity: " + deityName + " " + sourceTag)
+            endIf
+            return
+        endIf
+    endIf
+
     Float multiplier = 1.0
     if stance == "FOREIGN"
         multiplier = JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.FOREIGN", 0.4)
@@ -1855,6 +1874,17 @@ EndFunction
 
 Float Function GetQuestReactionBaseValue(String magnitude, String intensity)
     return JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "value." + magnitude + "." + intensity, 0.0)
+EndFunction
+
+; A quest-reaction target is "reachable" when some surface can show its piety:
+; Daedric paths always (pre-pact paths render as "watching"; pacts as patron),
+; deity faces only when the player's origin roster lists them. Mirrors the
+; dashboard's IsDashboardDeityInOriginRoster filter so scoring and display agree.
+Bool Function IsQuestReactionDeityReachable(PDV_DeityBase deity)
+    if deity as PDV_DaedricPathBase
+        return True
+    endIf
+    return IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
 EndFunction
 
 Function ApplyQuestReactionPiety(PDV_DeityBase deity, Float amount, String reason)
