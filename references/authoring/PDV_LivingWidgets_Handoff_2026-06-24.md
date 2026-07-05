@@ -37,9 +37,9 @@ them living. Companion to memory [[living-beta-progress-charts]] (data model) an
 | projection-to-1.0 | estimate + ledgers | re-derive remaining-phase session estimates from harness state (soft numbers) |
 | spine-parity tracker | spine score tool | `node tools/pdv_spine_stack_score.mjs` → read `PDV_SpineStackScoreLedger.csv` |
 
-## Current snapshot (2026-06-25, regenerated)
-- Commits: **528** over **46** days (05-10→06-24); busiest day 36 (06-24); 6e + 6c landed.
-- Races proven (gate ledger): **8/10** (Dunmer/Imperial pending in-game).
+## Current snapshot (2026-07-05, regenerated)
+- Commits: **647** over **57** days (05-10→07-05); busiest single day 31 (06-01), 07-05 close behind at 27.
+- Races proven (gate ledger): **10/10** — Imperial closed 07-04, Dunmer closed 07-05. The long pole is down.
 - E2E wiring gate: **39 GREEN / 0 RED** (DONE). Integrity Harness: **built** (DONE).
 - Signal floor: **28/51 PASS**, **23 race-paths under floor** (all 16 Princes done).
 - Spine parity: **7/7 at parity (DONE)** — after the 6e retrofit all 10 races clear the 70% floor; lowest Bosmer 73.3%, highest Argonian 100% (Nord/Orc/Redguard lifted).
@@ -58,11 +58,11 @@ Refresh: extend `commits`/`labels` with new days; bump races line only when a NE
 race packet PASSES the gate ledger.
 
 ```js
-// data (46 days, 05-10→06-24):
-var commits=[4,0,0,10,1,8,15,5,6,8,6,18,0,1,4,6,5,2,13,12,31,26,12,11,4,27,18,23,13,8,11,19,10,21,13,12,22,4,5,0,4,21,29,8,16,24];
-var races=[];for(var i=0;i<46;i++){races.push(i<31?0:i<35?1:i<37?2:i<39?3:i<40?6:8);}
-var labels=[];var d=new Date(2026,4,10);for(var j=0;j<46;j++){labels.push((d.getMonth()+1)+'/'+d.getDate());d=new Date(d.getTime()+86400000);}
-// milestone annotation lines (index → label): 21 phase 20 gate, 34 9-race audit, 41 requiem conv., 44 signal-equity audit + harness
+// data (57 days, 05-10→07-05):
+var commits=[4,0,0,10,1,8,15,5,6,8,6,18,0,1,4,6,5,2,13,12,31,26,12,11,4,27,18,23,13,8,11,19,10,21,13,12,22,4,5,0,4,21,29,8,16,24,14,0,7,9,5,9,4,3,2,13,27];
+var races=[];for(var i=0;i<57;i++){races.push(i<31?0:i<35?1:i<37?2:i<39?3:i<40?6:i<55?8:i<56?9:10);}
+var labels=[];var d=new Date(2026,4,10);for(var j=0;j<57;j++){labels.push((d.getMonth()+1)+'/'+d.getDate());d=new Date(d.getTime()+86400000);}
+// milestone annotation lines (index → label): 21 phase 20 gate, 34 9-race audit, 41 requiem conv., 44 signal-equity audit + harness, 55 Imperial proven (9/10), 56 Dunmer proven (10/10)
 ```
 Build: type bar (commits, left axis `c` max ~33) + type line stepped (races, right
 axis `r` 0-10); pointRadius 4 only where races changes; annotation vertical dashed
@@ -74,17 +74,24 @@ races 8/10, today 24. (Full code pattern: see widget `devotion_build_arc_refresh
 ## Widget 2 — projection-to-1.0 (phased burnup) — RE-DERIVE, estimates
 Bars = est. sessions per REMAINING workstream; teal line = cumulative % of the
 remaining road; dashed 1F-freeze + 1.0 gates. DONE phases drop off. Current
-remaining (≈15.5 sessions, down from the ~28 baseline before today's build burn):
+remaining (≈8 sessions as of 2026-07-05, down from 15.5 on 06-25 and the ~28
+baseline — ~71% of the original road burned). Sequencing per the approved 1.0
+roadmap: megapacket → Experience Mode → ARR compat → branding.
 
 ```js
-var labels=['signal-floor ×23','race testing','requiem sweep','daedric + surfacing','experience mode'];
-var effort=[4,4,2,2.5,2];              // est sessions, SOFT — refresh from velocity
-var cum=[28,55,69,86,100];             // cumulative % of remaining road
-var fill=['#A32D2D','#378ADD','#1D9E75','#7F77DD','#888780']; // warm=build, cool=test, gray=build-dependent
-// 1F freeze annotation after 'requiem sweep' (x=2.5); 1.0 ready at end.
+var labels=['megapacket smoke','requiem felt sweep','experience mode','ARR compat','branding + packaging'];
+var effort=[2,1,2.5,1.5,1];            // est sessions, SOFT — refresh from velocity
+var cum=[25,38,69,88,100];             // cumulative % of remaining road
+var fill=['#378ADD','#378ADD','#A32D2D','#7F77DD','#888780']; // blue=in-game test, red=build, purple/gray=compat+packaging
+// 1F freeze annotation after 'requiem felt sweep' (x=1.5); 1.0 ready at end (x=4.5).
 ```
-Note: integrity harness / wiring tail / spine parity / **specced minuses (6c)** are DONE
-and removed. Signal-floor ×23 is now the only pure-build bar left; it shrinks first.
+Note (2026-07-05): signal-floor ×23, race testing (10/10 packets), and Daedric
+in-game proof (PASS=16) are DONE and removed. Megapacket smoke = Anvil sittings
+1-2 of `PDV_MegaPacket_OneOh_2026-07-02.md` (quest-expansion A-rows, day-to-day
+E-sweep, Prisma C, Prince V2 F); requiem felt sweep = Authoria sitting 3.
+Experience Mode is still design-locked-not-built (includes Redguard earn-halt).
+Rendered as `devotion_projection_to_oneoh_2026_07_05` with metric cards
+(sessions remaining ~8 / vs 06-25 15.5→8 / ~71% of baseline burned).
 
 ---
 

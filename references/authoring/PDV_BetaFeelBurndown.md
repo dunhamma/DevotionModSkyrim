@@ -26,7 +26,8 @@ readiness evidence.
 
 ## Current Snapshot
 
-As of the 2026-07-05 AEST Dunmer closeout:
+As of the 2026-07-05 AEST Dunmer closeout, plus the same-day post-closeout
+quest-expansion and reachability-gate work (see "Since Dunmer Closeout" below):
 
 | Area | Current state | Evidence |
 | --- | --- | --- |
@@ -48,6 +49,20 @@ As of the 2026-07-05 AEST Dunmer closeout:
 The earlier recheck debt for Redguard curse-state message bodies and Imperial
 Concordat track naming is closed. This does not promote any runtime/manual race
 packet: it only restores the machine/readback baseline.
+
+## Since Dunmer Closeout (2026-07-05)
+
+These landed after the snapshot table above was first written and are counted as
+machine/readback-clean, runtime-smoke-pending. They add depth to the beta build
+without reopening any closed race packet.
+
+| Item | Proof boundary | Notes |
+| --- | --- | --- |
+| Quest-matrix expansion (40-50 quests/deity) | Compile/readback clean; in-game smoke pending | 832 matrix cells / 118 keys / 90 watched quests live; 7 meta-faucet lanes wired; copy pass + Daedric path name-repair done (954bde5b) |
+| `EVT_STEAL_ITEM` (362) SM wiring | Compile/readback clean; route proof pending | Papyrus receiver + QUST 071615 + SMQN 071616 under SMEN 02C439; aiAcquireType 1/3/5 (Steal/Pickpocket/Container) |
+| Foreign-award reachability gate | Compile/readback clean; A1/A5 route proof pending | Off-roster `FOREIGN`/`TOLERATED` quest awards now skip entirely with a DebugLevel-2 skip trace (no piety, no Ledger row); reduced `0.4x` applies only to roster-listed tolerated/foreign + Daedric-path faces; dawn loop also skips zero-state non-roster deities |
+| Dunmer ancestral urn rebuild | In-game proven (Dunmer packet) | Rebuilt as usable MISC item (click-to-pray via OnEquipped), fixing the book-menu CTD; Remiros HD assets bundled self-contained |
+| Book of Days + Prisma hardening | Machine/readback clean; C1/C2 render check pending | Path/gauge rendering fix, cover presentation refresh, escape/hotkey close contract centralized, deity-text normalization |
 
 ## Burned Down
 
@@ -84,11 +99,16 @@ These are small but high-priority because they keep the burndown honest.
 
 ## Critical Path To Beta-Feel
 
-### 1. Manual Race Evidence
+### 1. Manual Race Evidence -- CLOSED as the long pole
 
-This was the long pole. The default machine gates are strong; after the Dunmer
-closeout, all ten current race packets have manual/runtime evidence recorded and
-the strict beta-readiness audit passes from the current ledgers.
+This was the long pole and it is now down. The default machine gates are strong;
+after the Dunmer closeout, all ten current race packets have manual/runtime
+evidence recorded and the strict beta-readiness audit passes from the current
+ledgers. The residual runtime long pole is now the **1.0 Mega Test Packet**
+(`PDV_MegaPacket_OneOh_2026-07-02.md`): four sittings covering quest-expansion
+smoke (Section A), day-to-day signal sweep (E), Prisma render checks (C), Prince
+V2 path-deepening (F), and the Requiem felt sweep (D, Authoria-only). None of
+these reopen a closed race packet unless they surface a regression.
 
 | Race | Current state | Remaining proof |
 | --- | --- | --- |
