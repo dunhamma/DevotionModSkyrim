@@ -50,6 +50,12 @@ node .\tools\pdv_beta_readiness_audit.mjs --strict --json
 node .\tools\pdv_verify.mjs --json
 ```
 
+> Update 2026-07-05: `PDV__ManagerQuest.psc` changed after this preflight -- the
+> foreign-award reachability gate and the quest-reaction surfacing rework (new row
+> A10). Both recompiled 0 errors / 0 warnings and live-source was re-synced to the
+> MO2 build copy (hash-identical). Rerun the three sanity commands above before
+> Sitting 1.
+
 ---
 
 ## Session plan (post-strict-gate residual queue)
@@ -96,7 +102,9 @@ save, then run every row in that block before flipping. Fire a matrix stage with
 `setstage <editorID> <stage>`; steal/outdoor/time rows need the described in-world action.
 Markers: cell fires log `[PDV] EventBus: <deity> event <id> delta <x>`; meta lanes land as a
 Ledger driver with the humanized reason (`meta_zen_wage`, `meta_julianos_*`, ... -- copy pass
-DONE 954bde5b) plus an `AwardPiety` line.
+DONE 954bde5b) plus an `AwardPiety` line. As of 2026-07-05 a base quest cell also flushes ONE
+aggregated top-left toast + ONE Book of Days beat per quest fire, on top of the per-god panel
+driver rows -- proof lives in A10; meta and behavioral faucets stay quiet-Ledger-only.
 
 ### A0. Run once (any origin -- fold into the Imperial block)
 - **Matrix reload count**: on load, confirm `832` cells / `118` keys / `90` watched quests.
@@ -161,6 +169,39 @@ signals). The lanes award the Nocturnal DEITY face, so the path must be active.
   `meta_nocturnal_theft` awards Nocturnal (`LastTheftTime > LastFulfillTime`).
 - **Night lane (tier 2)**: with no recent theft, fire a watched quest at a night hour
   (`set gamehour to 1`) -> `meta_nocturnal_night`.
+
+### A10. Quest-reaction surfacing -- one toast + one Book of Days per quest fire (reuse the A3/A4 saves)
+
+New 2026-07-05. A base quest-reaction cell now flushes a SINGLE aggregated top-left toast plus a
+SINGLE Book of Days beat per quest fire, however many deities the cell fans to. This sits on top of
+the per-god panel driver Ledger rows, which already worked. v1 emitted one toast PER god (6 per
+assassination stage); this proves the aggregation. The per-cell `AwardPiety` + `QuestReaction
+piety:` lines still appear once per landed god in the log -- the aggregation is only for the
+toast + Book of Days beat. `DebugLevel 2`.
+
+- **One toast, not N (multi-positive)**: on the A3 Dunmer save, `setstage MQ301 240` (deceit ->
+  Mephala + Boethiah both native +). Expect EXACTLY ONE toast, titled by the strongest reactor:
+  "{God} and 1 other mark your deed." NOT one toast per god.
+- **Book of Days lists every landed god**: open Book of Days -> a single new line
+  "{God} and {God} marked your deed." naming each god that landed piety on that fire. No blank line.
+- **Mixed fire "A deed weighed"**: on the A4 Khajiit save, fire a Dark Brotherhood assassination
+  contract stage (the 2026-07-05 log fired these: Mephala/Baan Dar/Rajhin native +, Clavicus Vile
+  tolerated 0.4x, **Sithis TABOO -**). Expect ONE toast "A deed weighed" reading
+  "{God} marks your deed; Sithis takes offense." and ONE Book of Days line
+  "...marked your deed; Sithis took offense." Tone/symbol follow the stronger side.
+- **Negative-only "A deed ill-received"**: a fire that only offends (all landed cells negative) ->
+  ONE warning toast "A deed ill-received" / "{God} takes offense at your deed." + matching Book of
+  Days line. (Sithis stigma folds in here -- v1 dropped it entirely via an early return.)
+- **No double toast for the active patron**: with an active patron who reacts positively to the
+  fire, confirm exactly ONE toast (the aggregated quest toast), never that plus the generic favor
+  pulse.
+- **Faucets stay quiet (negative)**: on the SAME fires, the meta lanes (`meta_*`) and any
+  behavioral faucet still land ONLY as Ledger driver rows + `AwardPiety` lines -- they must NOT add
+  their own toast or Book of Days line.
+- **Off-roster gods absent**: reachability-skipped gods contribute nothing to the toast "and N
+  others" count or the Book of Days list (they never landed piety).
+- **Panel driver rows intact**: the per-god Ledger "recent drivers" still show each god's own
+  reason/delta, unchanged.
 
 Tester notes:
 
