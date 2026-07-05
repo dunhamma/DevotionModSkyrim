@@ -1011,6 +1011,11 @@
     !Array.isArray(payload.journal)
   );
 
+  const titleCaseJournalSegment = (segment) => String(segment).split(/(\s+|-)/).map((part) => {
+    if (/^[a-z][a-z]+$/.test(part)) return `${part.charAt(0).toUpperCase()}${part.slice(1)}`;
+    return part;
+  }).join("");
+
   const normalizeJournalSurveyText = (value) => {
     const source = text(value, "");
     const raceNames = new Map([
@@ -1025,13 +1030,18 @@
       ["orc", "Orc"],
       ["redguard", "Redguard"],
     ]);
-    return source.replace(/^\s*([a-z]+)(?=\s*(?:\||$))/i, (match, race) => {
+    return source.replace(/^\s*([a-z]+)(?=\s*(?:\||-|$))/i, (match, race) => {
       const label = raceNames.get(String(race).toLowerCase());
       return label ? match.replace(race, label) : match;
     });
   };
 
-  const journalPathText = (value) => normalizeJournalSurveyText(value).replace(/\s*\|\s*/g, " - ").trim();
+  const journalPathText = (value) => normalizeJournalSurveyText(value)
+    .replace(/\s*\|\s*/g, " - ")
+    .split(/(\s+-\s+)/)
+    .map((part) => part.includes("-") ? part : titleCaseJournalSegment(part))
+    .join("")
+    .trim();
 
   const startupModeLabel = (mode) => {
     const normalized = text(mode, "").toLowerCase();
@@ -1234,34 +1244,25 @@
     slot.append(gauge);
   };
 
-  // Piety paths get the book-styled gauge; other paths keep their live instruments.
+  // The Book of Days always uses its book-styled standing gauge; cultural lane
+  // detail lives in the path line above, not in substrate-specific instruments.
   const renderJournalStanding = (instOverride) => {
     if (!nodes.journalInstrument) return;
     clear(nodes.journalInstrument);
     const fromOverride = instOverride && typeof instOverride === "object" ? instOverride : null;
     const fromState = state.instrument && typeof state.instrument === "object" ? state.instrument : null;
     const inst = fromOverride || fromState || pietyInstrumentFromState();
-    const kind = text(inst.kind, "piety").toLowerCase();
     const labelEl = document.querySelector("#pdv-journal-modal .bod-standing-label");
-    const pietyKind = kind === "piety" || !instrumentRenderers[kind];
     if (labelEl) {
       clear(labelEl);
-      labelEl.classList.toggle("is-tiered", pietyKind);
-      if (pietyKind) {
-        const tier = numberOrZero(inst.tier !== undefined ? inst.tier : state.tier);
-        labelEl.appendChild(document.createTextNode("Standing \u2014 "));
-        const em = document.createElement("em");
-        em.textContent = text(inst.tierLabel, tierName(tier));
-        labelEl.appendChild(em);
-      } else {
-        labelEl.textContent = "Standing";
-      }
+      labelEl.classList.add("is-tiered");
+      const tier = numberOrZero(inst.tier !== undefined ? inst.tier : state.tier);
+      labelEl.appendChild(document.createTextNode("Standing \u2014 "));
+      const em = document.createElement("em");
+      em.textContent = text(inst.tierLabel, tierName(tier));
+      labelEl.appendChild(em);
     }
-    if (pietyKind) {
-      renderJournalPietyGauge(nodes.journalInstrument, inst);
-    } else {
-      instrumentRenderers[kind](nodes.journalInstrument, inst);
-    }
+    renderJournalPietyGauge(nodes.journalInstrument, inst);
   };
 
   const journalEntryNode = (entry) => {

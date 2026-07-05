@@ -1180,13 +1180,25 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
 
   if (
     !app.includes("const normalizeJournalSurveyText = (value) =>") ||
-    !app.includes("const journalPathText = (value) => normalizeJournalSurveyText(value).replace(/\\s*\\|\\s*/g, \" - \").trim();") ||
+    !app.includes("const titleCaseJournalSegment = (segment) =>") ||
+    !app.includes("const journalPathText = (value) => normalizeJournalSurveyText(value)") ||
+    !app.includes("replace(/\\s*\\|\\s*/g, \" - \")") ||
     !app.includes('["nord", "Nord"]') ||
     !app.includes("const survey = journalPathText(journal.survey);")
   ) {
     fail("Book of Days cover line must normalize public race labels and render the concise path status.", DEVOTION_PRISMA_VIEW);
   } else {
     pass("Book of Days cover line normalizes public race labels and renders the concise path status.", DEVOTION_PRISMA_VIEW);
+  }
+
+  if (
+    !app.includes("The Book of Days always uses its book-styled standing gauge") ||
+    !app.includes("renderJournalPietyGauge(nodes.journalInstrument, inst);") ||
+    app.includes("instrumentRenderers[kind](nodes.journalInstrument, inst);")
+  ) {
+    fail("Book of Days standing must always render the book-styled diamond gauge, not substrate/path instruments.", DEVOTION_PRISMA_VIEW);
+  } else {
+    pass("Book of Days standing always renders the book-styled diamond gauge.", DEVOTION_PRISMA_VIEW);
   }
 
   const managerPath = path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc");
