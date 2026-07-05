@@ -2614,7 +2614,7 @@ String Function GetDashboardJson()
                 Form deityForm = deity as Form
                 Float piety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
                 Float pietyToday = StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday")
-                if piety > 0.0 || pietyToday != 0.0 || IsNeglectFlagActive(deity)
+                if piety > 0.0 || pietyToday != 0.0 || IsNeglectFlagActive(deity) || HasRecentPietyMovement(deityForm)
                     gods = AppendDashboardGod(gods, deity, "pantheon")
                     shown += 1
                 endIf
@@ -2712,6 +2712,37 @@ Function PushWeekNet(Form deityForm, Float dayNet)
         StorageUtil.FloatListRemoveAt(deityForm, "PDV.Week.Net", 0)
     endWhile
     StorageUtil.FloatListAdd(deityForm, "PDV.Week.Net", dayNet, True)
+EndFunction
+
+; The dashboard surfaces a roster god the moment it has ANY tracked point
+; movement -- gain OR loss -- not just positive standing, so a transgression
+; that floors piety to zero (e.g. a lone assault against a Divine) still shows
+; the player exactly what cost them. Detected from records that outlive the
+; dawn PietyToday reset: the persistent 7-day Week ring (fed the raw daily net
+; before the reset) plus the rolling driver log windowed to 7 days (catches a
+; day whose gains and losses netted to zero in the ring). Owner ruling
+; 2026-07-05: the panel must account for every negative and positive point set.
+Bool Function HasRecentPietyMovement(Form deityForm)
+    Int n = StorageUtil.FloatListCount(deityForm, "PDV.Week.Net")
+    Int i = 0
+    while i < n
+        if StorageUtil.FloatListGet(deityForm, "PDV.Week.Net", i) != 0.0
+            return True
+        endIf
+        i += 1
+    endWhile
+
+    Int today = Utility.GetCurrentGameTime() as Int
+    Int driverDays = StorageUtil.IntListCount(deityForm, "PDV.Driver.Days")
+    Int k = 0
+    while k < driverDays
+        if today - StorageUtil.IntListGet(deityForm, "PDV.Driver.Days", k) <= 7
+            return True
+        endIf
+        k += 1
+    endWhile
+
+    return False
 EndFunction
 
 ; week[] for the Weekly tab: stored daily nets (oldest->newest) plus the live,
