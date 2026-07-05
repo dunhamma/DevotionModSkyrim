@@ -104,15 +104,32 @@ runsheet (scratchpad) · memories `ledger-monitors-all-data-points`,
    faucets stay quiet-Ledger-only (anti-spam / meta once-guard).
 
 ### Wired (PDV__ManagerQuest.psc; live-source + MO2 build copy, compiled 0/0, verifier FAIL=0)
-- New `SurfaceQuestReaction(deity, amount, magnitude)` = top-left toast + Book of
-  Days beat (positive "A deed marked" / negative "A deed ill-received"; milestone
-  cells weigh BoD magnitude 2). Called from `ApplyDeityReaction` gated
-  `if !isFaucet && magnitude != "meta"`.
-- New `_suppressAwardFavorToast` flag muted around the quest award so the active
-  patron gets exactly one (the quest) toast, not a double.
-- New journal tone `favor.loss` (title + warning valence).
-- Full detail: this file's sibling notes above; and the change is self-documented
-  in-source with dated comments.
+v1 (per-cell toasts) proved spammy in the owner's first in-game run -- a Khajiit
+assassination stage landed 6 gods (Sithis-/Mephala/Boethiah/Baan Dar/Rajhin/
+Clavicus Vile) = 6 beats per stage, several stages per minute. All reactions were
+CORRECT per the Khajiit stance table (natives full rate, TOLERATED princes 0.4x,
+Sithis TABOO negative, Molag Bal curse-routed, off-roster humans skipped); only
+the surfacing altitude was wrong. NOT related to having no active patron.
+
+v2 (shipped): per-quest-fire aggregation.
+- Accumulator members (`_qrSurf*`) reset at top of `ApplyQuestReaction`, fed per
+  landed base cell via `AccumulateQuestReactionSurface` (gated `!isFaucet &&
+  magnitude != "meta"`), flushed after the cell loop by
+  `FlushQuestReactionSurface` = ONE toast + ONE Book of Days line per quest fire.
+- Toast names the strongest reactor ("Mephala and 3 others mark your deed."); the
+  BoD line lists every landed god ("Mephala, Boethiah, ... marked your deed;
+  Sithis took offense."). Mixed fires lead tone/symbol with the stronger side
+  ("A deed weighed").
+- TABOO/HOSTILE deity stigma (real negative piety, e.g. Sithis for Khajiit) now
+  folds into the aggregate as displeasure -- v1 missed it entirely (early return).
+  Daedric-path stigma stays quiet (stigma is not piety).
+- `_suppressAwardFavorToast` still mutes the generic active-patron favor toast
+  across quest awards (no double toast).
+- New journal tone `favor.loss` (title + warning valence); milestone cells weigh
+  BoD magnitude 2.
+- Known accepted edges: surfacing uses pre-gain-pipeline amounts; duplicate stage
+  events (seen once from a save reload) re-fire the beat -- owner ruled real
+  in-game duplicates can't happen, no once-guard added.
 
 ### Still open
 - **In-game route proof (the gate):** complete a watched quest stage for a roster
