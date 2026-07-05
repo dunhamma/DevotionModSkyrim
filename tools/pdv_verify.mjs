@@ -162,6 +162,12 @@ const PHASE20_P2_IMMERSIVE_RECEIVERS_MANIFEST = path.join(
   "authoring",
   "PDV_Phase20_P2ImmersiveReceivers.manifest.json",
 );
+const EXPERIENCE_MODE_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_ExperienceMode.manifest.json",
+);
 const PHASE20_REWARD_RECORD_CONTRACTS = path.join(
   PROJECT_ROOT,
   "references",
@@ -655,6 +661,7 @@ const COMPILED_SCRIPTS = {
   PDV__MainQuest: "required",
   PDV_Origin: "required",
   PDV__ManagerQuest: "required",
+  PDV_ModePreset: "required",
   PDV_DeityBase: "required",
   PDV_Deity_Kyne: "required",
   PDV_Deity_Talos: "required",
@@ -1018,6 +1025,7 @@ class Verifier {
     strictKhajiit = false,
     strictCommitment = false,
     strictNeglectDecay = false,
+    strictExperienceMode = false,
   } = {}) {
     this.strictPhase3 = strictPhase3;
     this.strictPreflight = strictPreflight;
@@ -1043,6 +1051,7 @@ class Verifier {
     this.strictKhajiit = strictKhajiit;
     this.strictCommitment = strictCommitment;
     this.strictNeglectDecay = strictNeglectDecay;
+    this.strictExperienceMode = strictExperienceMode;
     this.findings = [];
     this.recordsByEdid = new Map();
     this.recordsByFormid = new Map();
@@ -1303,6 +1312,14 @@ class Verifier {
     }
   }
 
+  experienceModeGap(check, detail, filePath = null) {
+    if (this.strictExperienceMode) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
   async run() {
     this.checkPaths();
     if (exists(PDV_ESP) && exists(MUTAGEN_BRIDGE)) {
@@ -1359,6 +1376,9 @@ class Verifier {
         || PHASE20_RACE_IMPLEMENTATION_MANIFESTS.some((manifestPath) => exists(manifestPath))
       ) {
         this.checkPhase20RaceImplementationCosting();
+      }
+      if (this.strictExperienceMode || exists(EXPERIENCE_MODE_MANIFEST) || this.recordsByEdid.has("PDV_ModePreset")) {
+        this.checkExperienceMode();
       }
       this.checkPreflightOverlayPatch();
     }
@@ -9293,6 +9313,81 @@ class Verifier {
     }
   }
 
+  checkExperienceMode() {
+    const gap = this.experienceModeGap.bind(this);
+
+    this.checkExperienceModeRecord("Experience Mode global", "PDV_GLO_Mode", "GLOB", gap);
+    this.checkExperienceModeRecord("Experience Mode quest", "PDV_ModePreset", "QUST", gap);
+
+    this.checkQuestScriptProperty("Experience Mode preset wiring", "PDV_ModePreset", "PDV_ModePreset", "PDV_Manager", "PDV__ManagerQuest", gap);
+    this.checkQuestScriptProperty("Experience Mode preset wiring", "PDV_ModePreset", "PDV_ModePreset", "PDV_GLO_Mode", "PDV_GLO_Mode", gap);
+    this.checkQuestScriptProperty("Experience Mode manager wiring", "PDV__ManagerQuest", "PDV__ManagerQuest", "PDV_ModePresetRef", "PDV_ModePreset", gap);
+    this.checkQuestScriptProperty("Experience Mode MCM wiring", "PDV_MCM", "PDV_MCM", "PDV_ModePresetRef", "PDV_ModePreset", gap);
+    this.checkQuestScriptProperty("Experience Mode ActionRouter wiring", "PDV_ActionRouter", "PDV_ActionRouter", "PDV_ModePresetRef", "PDV_ModePreset", gap);
+
+    this.checkSourceContains("Experience Mode source contract", "PDV_ModePreset", [
+      "Scriptname PDV_ModePreset extends Quest",
+      "StorageUtil.GetFloatValue(PDV_Manager as Form, \"PDV.Mode\")",
+      "Function GainMultiplier()",
+      "Function DailyCapScalar()",
+      "Function DecayScalar()",
+      "Function GraceScalar()",
+      "Function AllowCheapRepeatables()",
+      "Function CheapRepeatableWeight()",
+    ], gap);
+    this.checkSourceContains("Experience Mode manager source", "PDV__ManagerQuest", [
+      "PDV_ModePreset Property PDV_ModePresetRef Auto",
+      "PDV_ModePresetRef.GainMultiplier()",
+      "PDV_ModePresetRef.DailyCapScalar()",
+      "PDV_ModePresetRef.DecayScalar()",
+      "PDV_ModePresetRef.GraceScalar()",
+      "Function HandleWayfarerAkatoshLevel()",
+      "wayfarer_akatosh_level",
+    ], gap);
+    this.checkSourceContains("Experience Mode player alias source", "PDV_PlayerEvents", [
+      "PO3_Events_Alias.RegisterForLevelIncrease(Self)",
+      "Event OnLevelIncrease(Int aiLevel)",
+      "HandleWayfarerAkatoshLevel()",
+    ], gap);
+    this.checkSourceContains("Experience Mode MCM source", "PDV_MCM", [
+      "PDV_ModePreset Property PDV_ModePresetRef Auto",
+      "String Property PAGE_MODE = \"Experience Mode\" AutoReadOnly",
+      "Function BuildModePage()",
+      "AddTextOption(\"Path\", GetExperienceModeLabel(), OPTION_FLAG_DISABLED)",
+      "Function ToggleExperienceMode()",
+    ], gap);
+    this.checkSourceContains("Experience Mode router source", "PDV_ActionRouter", [
+      "PDV_ModePreset Property PDV_ModePresetRef Auto",
+    ], gap);
+  }
+
+  checkExperienceModeRecord(checkName, edid, expectedType, gapFn) {
+    const record = this.recordsByEdid.get(edid);
+    if (!record) {
+      gapFn(checkName, `${expectedType} record ${edid} is missing.`, PDV_ESP);
+      return;
+    }
+    if (record.type !== expectedType) {
+      gapFn(checkName, `${edid} has type ${record.type}, expected ${expectedType}.`, PDV_ESP);
+      return;
+    }
+    this.pass(checkName, `${edid} exists as ${expectedType}.`, PDV_ESP);
+  }
+
+  checkQuestScriptProperty(checkName, recordEdid, scriptName, propName, expectedEdid, gapFn) {
+    const detail = this.recordDetails.get(recordEdid);
+    if (!detail) {
+      gapFn(checkName, `${recordEdid} detail read is missing.`, PDV_ESP);
+      return;
+    }
+    const script = findScript(detail.fields || {}, scriptName);
+    if (!script) {
+      gapFn(checkName, `${recordEdid} is missing ${scriptName} VMAD script.`, PDV_ESP);
+      return;
+    }
+    this.checkObjectPropertyTarget(checkName, propertyMap(script), propName, expectedEdid, gapFn);
+  }
+
   checkSmallSignalTables() {
     const managerSource = path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc");
     if (!exists(managerSource)) {
@@ -10215,6 +10310,7 @@ function parseArgs(argv) {
     strictKhajiit: false,
     strictCommitment: false,
     strictNeglectDecay: false,
+    strictExperienceMode: false,
   };
 
   for (const arg of argv) {
@@ -10272,8 +10368,10 @@ function parseArgs(argv) {
       args.strictNeglectDecay = true;
       args.strictPhase16 = true;
       args.strictPhase17 = true;
+    } else if (arg === "--strict-experience-mode") {
+      args.strictExperienceMode = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-phase11] [--strict-phase12] [--strict-phase13] [--strict-phase14] [--strict-phase15] [--strict-phase16] [--strict-phase17] [--strict-phase18] [--strict-phase19] [--strict-phase20-roster] [--strict-phase20-altmer] [--strict-phase20-race-costing] [--strict-nord]");
+      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-experience-mode] [--strict-phase11] [--strict-phase12] [--strict-phase13] [--strict-phase14] [--strict-phase15] [--strict-phase16] [--strict-phase17] [--strict-phase18] [--strict-phase19] [--strict-phase20-roster] [--strict-phase20-altmer] [--strict-phase20-race-costing] [--strict-nord]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -10310,6 +10408,7 @@ const verifier = new Verifier({
   strictKhajiit: args.strictKhajiit,
   strictCommitment: args.strictCommitment,
   strictNeglectDecay: args.strictNeglectDecay,
+  strictExperienceMode: args.strictExperienceMode,
 });
 const findings = await verifier.run();
 const counts = verifier.counts();

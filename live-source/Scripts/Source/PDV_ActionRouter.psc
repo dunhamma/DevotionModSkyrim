@@ -25,6 +25,7 @@ Scriptname PDV_ActionRouter extends Quest
 PDV__ManagerQuest Property PDV_Manager Auto
 PDV_EventBus Property PDV_EventBusService Auto
 PDV_EventTypes Property PDV_EventTypesService Auto
+PDV_ModePreset Property PDV_ModePresetRef Auto
 FormList Property PDV_FLST_AllDeities Auto
 GlobalVariable Property PDV_GLO_DebugLevel Auto
 Actor Property PlayerRef Auto

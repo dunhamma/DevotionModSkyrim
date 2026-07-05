@@ -18,6 +18,7 @@ Scriptname PDV_MCM extends SKI_ConfigBase
 
 PDV__ManagerQuest Property PDV_Manager Auto
 PDV_EventBus Property PDV_EventBusService Auto
+PDV_ModePreset Property PDV_ModePresetRef Auto
 FormList Property PDV_FLST_AllDeities Auto
 FormList Property PDV_FLST_RepTracks_All Auto
 FormList Property PDV_FLST_StateTracks_All Auto
@@ -42,12 +43,14 @@ Float Property SIGNAL_TYPE_MAX = 999.0 AutoReadOnly
 
 String Property PAGE_PLAYER = "Player" AutoReadOnly
 String Property PAGE_COMPAT = "Compatibility" AutoReadOnly
+String Property PAGE_MODE = "Experience Mode" AutoReadOnly
 String Property PAGE_STATUS = "Status" AutoReadOnly
 String Property PAGE_DEBUG = "Debug: State & Rewards" AutoReadOnly
 String Property PAGE_DEBUG2 = "Debug: Daedric & Curse" AutoReadOnly
 
 Int _oidSurveyDevotion = -1
 Int _oidExportReport = -1
+Int _oidModeToggle = -1
 Int _oidDeveloperOptions = -1
 Int _oidSelectedDeity = -1
 Int _oidDebugPatronOverride = -1
@@ -199,6 +202,7 @@ EndFunction
 Function OnPageReset(String a_page)
     InitializePages()
     EnsureManagerBinding("page_reset_" + a_page)
+    _oidModeToggle = -1
 
     if a_page == "" || a_page == PAGE_PLAYER
         BuildPlayerPage()
@@ -207,6 +211,11 @@ Function OnPageReset(String a_page)
 
     if a_page == PAGE_COMPAT
         BuildCompatPage()
+        return
+    endIf
+
+    if a_page == PAGE_MODE
+        BuildModePage()
         return
     endIf
 
@@ -250,6 +259,8 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Let an installed survival mod's hardship gently modulate devotion. It never creates piety alone.")
     elseIf a_option == _oidCompatCC
         SetInfoText("Let supported AE and Creation Club content add small optional devotion signals. No CC plugin is required.")
+    elseIf a_option == _oidModeToggle
+        SetInfoText("Switches between the authored Pilgrim's Path and the gentler Wayfarer's Path for future devotion events.")
     elseIf a_option == _oidDeveloperOptions
         SetInfoText("Shows the development Status and Debug pages for testing.")
     elseIf a_option == _oidSelectedDeity
@@ -458,6 +469,11 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidDeveloperOptions
         ToggleDeveloperOptions()
         ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidModeToggle
+        ToggleExperienceMode()
         return
     endIf
 
@@ -1134,6 +1150,7 @@ Function BuildPlayerPage()
     if EnsureManagerBinding("player_page")
         AddTextOption("Summary", GetPlayerPageSummaryLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Startup", GetPlayerPageStartupLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Path", GetExperienceModeLabel(), OPTION_FLAG_DISABLED)
         AddTextOption("Mode", PDV_Manager.GetPlayerMcmModeLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Patron", PDV_Manager.GetPlayerMcmPatronLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Standing", PDV_Manager.GetPlayerMcmStandingLine(), OPTION_FLAG_DISABLED)
@@ -1243,6 +1260,87 @@ Function BuildCompatPage()
     AddTextOption("Detected", GetCompatCCReadout(), OPTION_FLAG_DISABLED)
 
     SetCursorFillMode(LEFT_TO_RIGHT)
+EndFunction
+
+Function BuildModePage()
+    EnsureManagerBinding("build_mode_page")
+    SetCursorFillMode(TOP_TO_BOTTOM)
+    SetCursorPosition(0)
+    AddHeaderOption("Devotional path", OPTION_FLAG_NONE)
+    if PDV_ModePresetRef
+        _oidModeToggle = AddTextOption("Current path", PDV_ModePresetRef.GetModeLabel(), OPTION_FLAG_NONE)
+    else
+        _oidModeToggle = -1
+        AddTextOption("Current path", "Unavailable", OPTION_FLAG_DISABLED)
+    endIf
+
+    SetCursorPosition(1)
+    AddHeaderOption("What changes", OPTION_FLAG_NONE)
+    AddTextOption("Piety gain rate", GetExperienceModeGainLabel(), OPTION_FLAG_DISABLED)
+    AddTextOption("Daily ceilings", GetExperienceModeCeilingLabel(), OPTION_FLAG_DISABLED)
+    AddTextOption("Neglect decay", GetExperienceModeDecayLabel(), OPTION_FLAG_DISABLED)
+    AddTextOption("Everyday work", GetExperienceModeCheapLabel(), OPTION_FLAG_DISABLED)
+
+    SetCursorFillMode(LEFT_TO_RIGHT)
+EndFunction
+
+String Function GetExperienceModeLabel()
+    if PDV_ModePresetRef
+        return PDV_ModePresetRef.GetModeLabel()
+    endIf
+    return "Pilgrim's Path"
+EndFunction
+
+String Function GetExperienceModeGainLabel()
+    if IsWayfarerPath()
+        return "Generous (1.25x)"
+    endIf
+    return "Strict (1.0x)"
+EndFunction
+
+String Function GetExperienceModeCeilingLabel()
+    if IsWayfarerPath()
+        return "Wider (1.5x)"
+    endIf
+    return "Authored (1.0x)"
+EndFunction
+
+String Function GetExperienceModeDecayLabel()
+    if IsWayfarerPath()
+        return "Gentler (0.5x)"
+    endIf
+    return "Full neglect"
+EndFunction
+
+String Function GetExperienceModeCheapLabel()
+    if IsWayfarerPath()
+        return "Akatosh level-up"
+    endIf
+    return "Rejected"
+EndFunction
+
+Bool Function IsWayfarerPath()
+    return PDV_ModePresetRef && PDV_ModePresetRef.GetMode() == 1
+EndFunction
+
+Function ToggleExperienceMode()
+    if !PDV_ModePresetRef
+        ShowMessage("Experience Mode is not wired yet.", False, "$OK", "")
+        return
+    endIf
+
+    Int current = PDV_ModePresetRef.GetMode()
+    Int nextMode = 1
+    String label = "Wayfarer's Path"
+    if current == 1
+        nextMode = 0
+        label = "Pilgrim's Path"
+    endIf
+
+    if ShowMessage("Walk the " + label + "?", True, "$Yes", "$No")
+        PDV_ModePresetRef.SetMode(nextMode)
+        ForcePageReset()
+    endIf
 EndFunction
 
 String Function OnOffLabel(Bool isOn)
@@ -1535,12 +1633,13 @@ EndFunction
 
 Function InitializePages()
     ModName = "Devotion"
-    String[] configuredPages = new String[5]
+    String[] configuredPages = new String[6]
     configuredPages[0] = PAGE_PLAYER
     configuredPages[1] = PAGE_COMPAT
-    configuredPages[2] = PAGE_STATUS
-    configuredPages[3] = PAGE_DEBUG
-    configuredPages[4] = PAGE_DEBUG2
+    configuredPages[2] = PAGE_MODE
+    configuredPages[3] = PAGE_STATUS
+    configuredPages[4] = PAGE_DEBUG
+    configuredPages[5] = PAGE_DEBUG2
     Pages = configuredPages
 EndFunction
 

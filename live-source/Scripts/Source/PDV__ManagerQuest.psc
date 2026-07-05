@@ -32,6 +32,7 @@ GlobalVariable Property PDV_GLO_DebugLevel Auto
 GlobalVariable Property PDV_GLO_OriginRace Auto
 GlobalVariable Property PDV_GLO_KhajiitFocusedEmphasis Auto
 GlobalVariable Property PDV_GLO_State_BretonDruidicFork Auto
+PDV_ModePreset Property PDV_ModePresetRef Auto
 
 FormList Property PDV_FLST_AllDeities Auto
 FormList Property PDV_FLST_DaedricPaths_All Auto
@@ -9807,7 +9808,11 @@ Function RunDawnConsolidateScratch()
 
             Float pietyToday = StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday")
             Float scaledToday = pietyToday * GAIN_RATE_SCALE
-            Float clampedToday = ClampValue(scaledToday, -PIETY_DAILY_MAX_DELTA, PIETY_DAILY_MAX_DELTA)
+            Float dailyCap = PIETY_DAILY_MAX_DELTA
+            if PDV_ModePresetRef
+                dailyCap = dailyCap * PDV_ModePresetRef.DailyCapScalar()
+            endIf
+            Float clampedToday = ClampValue(scaledToday, -dailyCap, dailyCap)
             if clampedToday > 0.0
                 clampedToday = clampedToday * GetOrcLifeModeGainMultiplier(deity)
                 clampedToday = clampedToday * GetImperialCurseGainMultiplier(deity)
@@ -10063,7 +10068,12 @@ Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)
         return
     endIf
 
-    if (nowTime - lastEventTime) < DECAY_GRACE_DAYS
+    Float decayGraceDays = DECAY_GRACE_DAYS
+    if PDV_ModePresetRef
+        decayGraceDays = decayGraceDays * PDV_ModePresetRef.GraceScalar()
+    endIf
+
+    if (nowTime - lastEventTime) < decayGraceDays
         return
     endIf
 
@@ -10082,7 +10092,11 @@ Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)
         multiplier = BROAD_WORSHIP_DECAY_MULTIPLIER
     endIf
 
-    Float newPiety = currentPiety - (DECAY_PER_DAY * multiplier * deity.GetEffectiveDecayMultiplier() * GetCurseGainMultiplier(deity) * GetDaedricStigmaGainMultiplier(deity))
+    Float decayScalar = 1.0
+    if PDV_ModePresetRef
+        decayScalar = PDV_ModePresetRef.DecayScalar()
+    endIf
+    Float newPiety = currentPiety - (DECAY_PER_DAY * multiplier * deity.GetEffectiveDecayMultiplier() * GetCurseGainMultiplier(deity) * GetDaedricStigmaGainMultiplier(deity) * decayScalar)
     Float floorValue = GetDecayFloorForDeity(deity, currentPiety)
     if newPiety < floorValue
         newPiety = floorValue
@@ -10497,6 +10511,8 @@ String Function HumanizeDriverReason(String raw)
         return "every tenth quest"
     elseIf StringContainsToken(raw, "meta_xarxes_record")
         return "every tenth quest"
+    elseIf StringContainsToken(raw, "wayfarer_akatosh_level")
+        return "leveling up under Wayfarer's Path"
     elseIf StringContainsToken(raw, "talos-shrine-defiance")
         return "defiant prayer at a Talos shrine"
     elseIf StringContainsToken(raw, "talos_betrayal_major")
@@ -10988,6 +11004,23 @@ String Function GetGodRollupState(PDV_DeityBase deity)
     return "steady"
 EndFunction
 
+Function HandleWayfarerAkatoshLevel()
+    if !PDV_ModePresetRef || !PDV_ModePresetRef.AllowCheapRepeatables()
+        return
+    endIf
+    if !PDV_Akatosh
+        return
+    endIf
+
+    Float baseAmount = 1.0
+    Float weight = PDV_ModePresetRef.CheapRepeatableWeight()
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.WayfarerAkatoshLevel")
+    Float amount = baseAmount * weight * multiplier
+    if amount > 0.0
+        AwardPietyInternal(PDV_Akatosh, amount, True, "wayfarer_akatosh_level")
+    endIf
+EndFunction
+
 Float Function RunGainPipeline(PDV_DeityBase deity, Float amount, Int stance)
     Float appliedAmount = amount
     if amount > 0.0
@@ -10996,6 +11029,9 @@ Float Function RunGainPipeline(PDV_DeityBase deity, Float amount, Int stance)
         appliedAmount = appliedAmount * GetDaedricStigmaGainMultiplierNoop(deity)
         appliedAmount = appliedAmount * GetSurvivalContextGainMultiplier(deity)
         appliedAmount = appliedAmount * GetKhajiitLunarAlignmentMultiplier(deity)
+        if PDV_ModePresetRef
+            appliedAmount = appliedAmount * PDV_ModePresetRef.GainMultiplier()
+        endIf
     endIf
 
     return appliedAmount

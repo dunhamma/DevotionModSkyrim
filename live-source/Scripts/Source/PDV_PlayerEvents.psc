@@ -104,12 +104,15 @@ Int Property EVT_HARVEST_INGREDIENT = 334 AutoReadOnly
 Int Property EVT_READ_SKILL_BOOK = 340 AutoReadOnly
 Int Property EVT_READ_SPELL_TOME = 341 AutoReadOnly
 Int Property EVT_READ_LORE_BOOK = 342 AutoReadOnly
+Int Property EVT_PICK_OWNED_LOCK = 360 AutoReadOnly
 Int Property EVT_RAISE_UNDEAD = 365 AutoReadOnly
 Int Property EVT_ACCEPT_DAEDRIC_ARTIFACT = 368 AutoReadOnly
 
 Bool PDV_LastSleepStartedOutside = false
 Bool PDV_LastSleptInInn = false
 Keyword PDV_KW_LocTypeInn
+ObjectReference PDV_LockpickMenuTargetRef = None
+Bool PDV_LockpickMenuTargetWasLocked = false
 
 ; Organic combat-session state. Session counters are script variables:
 ; combat-state, PO3 kill events, and the combat poll all land on this alias, so
@@ -458,12 +461,61 @@ Bool Function FormMatchesListOrKeyword(Form baseObject, FormList listRef, Keywor
     return false
 EndFunction
 
+Event OnLevelIncrease(Int aiLevel)
+    if PDV_EventBusService && PDV_EventBusService.PDV_Manager
+        PDV_EventBusService.PDV_Manager.HandleWayfarerAkatoshLevel()
+        Trace(2, "Level increase routed to Experience Mode handler at level " + aiLevel + ".")
+    else
+        Trace(1, "Level increase skipped: PDV_Manager not assigned.")
+    endIf
+EndEvent
+
+Event OnMenuOpen(String menuName)
+    if menuName == "Lockpicking Menu"
+        PDV_LockpickMenuTargetRef = Game.GetCurrentCrosshairRef()
+        PDV_LockpickMenuTargetWasLocked = PDV_LockpickMenuTargetRef && PDV_LockpickMenuTargetRef.IsLocked()
+    endIf
+EndEvent
+
 Event OnMenuClose(String menuName)
     if menuName == "RaceSex Menu"
         QueueOriginInitialization()
         Trace(2, "RaceSex menu closed; origin retry queued.")
+    elseIf menuName == "Lockpicking Menu"
+        ResolveLockpickMenuClose()
     endIf
 EndEvent
+
+Function ResolveLockpickMenuClose()
+    ObjectReference lockRef = PDV_LockpickMenuTargetRef
+    Bool wasLocked = PDV_LockpickMenuTargetWasLocked
+    PDV_LockpickMenuTargetRef = None
+    PDV_LockpickMenuTargetWasLocked = false
+
+    if !wasLocked || !lockRef || lockRef.IsLocked() || !IsOwnedLockReference(lockRef)
+        return
+    endIf
+
+    RouteGenericAction(EVT_PICK_OWNED_LOCK, GetActorRef() as Form, lockRef as Form)
+    Trace(2, "Owned lock picked through lockpicking menu fallback.")
+EndFunction
+
+Bool Function IsOwnedLockReference(ObjectReference targetRef)
+    if !targetRef
+        return false
+    endIf
+
+    if targetRef.GetActorOwner() || targetRef.GetFactionOwner()
+        return true
+    endIf
+
+    Cell parentCell = targetRef.GetParentCell()
+    if parentCell && (parentCell.GetActorOwner() || parentCell.GetFactionOwner())
+        return true
+    endIf
+
+    return false
+EndFunction
 
 ; --- Organic edge hooks: low-health combat sessions, Khajiit Alkosh dragon
 ; --- kills, Rajhin elegant theft. Receivers validate and route; the manager owns
@@ -725,7 +777,9 @@ EndEvent
 Function RegisterForPlayerEvents()
     RegisterForSleep()
     RegisterForMenu("RaceSex Menu")
+    RegisterForMenu("Lockpicking Menu")
     RegisterForShoutSignals()
+    RegisterForLevelSignals()
     RegisterForCivilWarSignals()
     RegisterForP2ImmersiveSignals()
 EndFunction
@@ -733,6 +787,11 @@ EndFunction
 Function RegisterForShoutSignals()
     PO3_Events_Alias.RegisterForShoutAttack(Self)
     Trace(2, "Shout hooks refreshed.")
+EndFunction
+
+Function RegisterForLevelSignals()
+    PO3_Events_Alias.RegisterForLevelIncrease(Self)
+    Trace(2, "Level-up hooks refreshed.")
 EndFunction
 
 Function RegisterForCivilWarSignals()
