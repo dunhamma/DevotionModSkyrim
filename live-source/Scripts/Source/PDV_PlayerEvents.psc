@@ -337,12 +337,43 @@ Event OnMagicEffectApplyEx(ObjectReference akCaster, MagicEffect akEffect, Form 
         return
     endIf
 
-    if HasListedForm(PDV_FLST_FaucetRaiseUndeadEffects, akEffect as Form)
-        RouteGenericAction(EVT_RAISE_UNDEAD, akCaster as Form, akEffect as Form)
-    endIf
-
+    ; NOTE: raise-undead is NOT detected here. PO3 MagicEffectApplyEx is TARGET-side (the
+    ; registered alias only hears effects applied TO it - that is why the payload carries
+    ; akCaster and no target), so reanimation, which lands on the corpse, never reaches the
+    ; player. PO3 OnActorReanimateStart also proved dead in game. Detection now lives in
+    ; OnSpellCast, a caster-side vanilla event - same reliable-direct-hook approach as the
+    ; spell-tome OnItemRemoved and lockpick-menu fixes.
     RouteQuestReactionMagicEffectFaucet(akEffect as Form)
 EndEvent
+
+Event OnSpellCast(Form akSpell)
+    ; Caster-side raise-undead detection. Fires on the PLAYER when the player casts a spell
+    ; (the alias forwards ObjectReference.OnSpellCast automatically - no PO3 registration).
+    ; Reuse the raise-undead effect FormList by matching the cast spell's own effects, so no
+    ; new SPELL FormList / ESP work is needed. Manager scores by event type + applies caps.
+    Spell castSpell = akSpell as Spell
+    if castSpell && SpellHasRaiseUndeadEffect(castSpell)
+        Trace(2, "Raise-undead cast detected: " + castSpell.GetName())
+        RouteGenericAction(EVT_RAISE_UNDEAD, GetActorRef() as Form, akSpell)
+    endIf
+EndEvent
+
+Bool Function SpellHasRaiseUndeadEffect(Spell castSpell)
+    if !castSpell || !PDV_FLST_FaucetRaiseUndeadEffects
+        return false
+    endIf
+
+    Int index = 0
+    Int count = castSpell.GetNumEffects()
+    while index < count
+        MagicEffect effectRef = castSpell.GetNthEffectMagicEffect(index)
+        if effectRef && HasListedForm(PDV_FLST_FaucetRaiseUndeadEffects, effectRef as Form)
+            return true
+        endIf
+        index += 1
+    endWhile
+    return false
+EndFunction
 
 Event OnHitEx(ObjectReference akAggressor, Form akSource, Projectile akProjectile, Bool abPowerAttack, Bool abSneakAttack, Bool abBashAttack, Bool abHitBlocked)
     Actor playerRef = GetActorRef()
@@ -774,7 +805,9 @@ Function RegisterForP2ImmersiveSignals()
     RegisterQuestStageList(PDV_FLST_Daedric_PeryiteLiveSources)
     RegisterQuestReactionMatrix()
     RegisterQuestReactionFaucetEvents()
-    RegisterGenericEffectList(PDV_FLST_FaucetRaiseUndeadEffects)
+    ; Raise-undead is detected in OnSpellCast (caster-side vanilla event, auto-forwarded to
+    ; the alias). No PO3 registration - both MagicEffectApplyEx (target-side) and
+    ; ActorReanimateStart proved dead in game for player-cast reanimation.
     Trace(2, "P2 immersive PO3 hooks refreshed.")
 EndFunction
 
