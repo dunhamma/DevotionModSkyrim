@@ -1,5 +1,28 @@
 # Codex Handoff -- Strip 4 orphaned Redguard VMAD props (2026-07-05)
 
+## Closeout (2026-07-05)
+
+Complete. The live `D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp`
+was edited in place, with a pre-write backup at
+`D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\orphan-vmad-cleanup\Devotion.esp.20260705-170936.bak`.
+
+Readback proof:
+- Before: `PDV__ManagerQuest` VMAD property count `419`; all four
+  `*_NeglectTexture` orphan properties present; live sibling
+  `PDV_Notif_Redguard_Sect_Crown_Entry` present.
+- After: property count `415`; all four orphan names absent; live sibling still
+  present.
+
+Verification:
+- Direct post-write readback passed on the live ESP.
+- `node .\tools\pdv_verify.mjs` saw the updated ESP and ended with
+  `FAIL=1, WARN=2`. The remaining failure is unrelated pre-existing Story
+  Manager debt: `PDV__SM_PickLockNode` parent is `Devotion.esp:071618`, expected
+  `Skyrim.esm:05BD7B`. Comparing the pre-cleanup backup to the current ESP
+  showed the same parent on both files.
+- The SEQ freshness warning is expected after this ESP-only VMAD cleanup; no SEQ
+  records were changed.
+
 ## Task
 Remove four dead `ScriptObjectProperty` entries from the `PDV__ManagerQuest`
 quest VMAD in `Devotion.esp`. They were dropped from the compiled

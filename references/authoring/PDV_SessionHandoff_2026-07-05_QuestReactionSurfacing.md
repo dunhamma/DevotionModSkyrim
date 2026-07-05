@@ -136,10 +136,8 @@ v2 (shipped): per-quest-fire aggregation.
   deity on a new save / `coc qasmoke`; confirm toast + BoD line + driver row, and
   single-toast for the active patron; test a negative cell for the ill-received
   path.
-- **Orphaned VMAD props (secondary):** CONFIRMED via houseCARL on Quest
-  `PDV__ManagerQuest [00C325]` VMAD, Properties indices 84-87 (the four
-  `PDV_Notif_Redguard_*_NeglectTexture`). No headless tool can strip them in place
-  (houseCARL + pdv_author write overrides only; pdv_author does not edit VMAD
-  arrays). Remove in xEdit: Devotion.esp -> Quest `PDV__ManagerQuest [00C325]` ->
-  VMAD -> Scripts -> `PDV__ManagerQuest` -> Properties -> Remove the 4 entries ->
-  save. (Or CK resave the quest to rebuild the property list from the .pex.)
+- **Orphaned VMAD props (secondary, closed 2026-07-05):** The four
+  `PDV_Notif_Redguard_*_NeglectTexture` properties were stripped from the live
+  `PDV__ManagerQuest [00C325]` VMAD in `Devotion.esp`. Readback now shows the
+  manager property count at `415` with all four orphan names absent; see
+  `PDV_Handoff_OrphanRedguardVMAD_Cleanup.md`.

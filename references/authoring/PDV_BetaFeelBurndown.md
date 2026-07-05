@@ -34,7 +34,7 @@ quest-expansion and reachability-gate work (see "Since Dunmer Closeout" below):
 | Daedric Princes | **Pass** for current beta-display gate | `node .\tools\pdv_daedric_beta_gate.mjs` -> `PASS=16` |
 | Strict beta-readiness audit | **Pass** | `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` -> `STRICT_GATE_PASS`, `PASS=31`, `WARN=1`, `INFO=2`, blockers `[]` |
 | Race beta-feel packets | **10 pass for current manual/runtime packets** | Dunmer manual slots were evidence-recorded 2026-07-05 after in-game closeout; strict audit now reads all ten race slots as recorded |
-| Default framework verifier | **Machine-clean with known warning** | `node .\tools\pdv_verify.mjs --json` -> `FAIL=0, WARN=1`; warning is medallion glyph fallback only |
+| Default framework verifier | **Blocked by known Story Manager parent mismatch** | `node .\tools\pdv_verify.mjs` after the Redguard VMAD cleanup -> `FAIL=1, WARN=2`; failure is `PDV__SM_PickLockNode` parent `Devotion.esp:071618`, expected `Skyrim.esm:05BD7B`, and comparison against the pre-cleanup ESP backup proves it was pre-existing. Warnings are medallion glyph fallback plus SEQ older than the ESP after the ESP-only cleanup. |
 | Content verifier | **Clean** | `node .\tools\pdv_content_verify.mjs` -> `FAIL=0, WARN=0, PASS=1080, INFO=4` |
 | Khajiit focused P2 route | **Route-proof pass** | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race khajiit` -> PASS |
 | Live manager compile | **Clean** | `node .\tools\pdv_compile.mjs --script PDV__ManagerQuest` -> `1 succeeded, 0 failed`; bundled verifier stayed `FAIL=0, WARN=2, TODO=0, PASS=3038, INFO=43` |
@@ -63,6 +63,7 @@ without reopening any closed race packet.
 | Foreign-award reachability gate | Compile/readback clean; A1/A5 route proof pending | Off-roster `FOREIGN`/`TOLERATED` quest awards now skip entirely with a DebugLevel-2 skip trace (no piety, no Ledger row); reduced `0.4x` applies only to roster-listed tolerated/foreign + Daedric-path faces; dawn loop also skips zero-state non-roster deities |
 | Dunmer ancestral urn rebuild | In-game proven (Dunmer packet) | Rebuilt as usable MISC item (click-to-pray via OnEquipped), fixing the book-menu CTD; Remiros HD assets bundled self-contained |
 | Book of Days + Prisma hardening | Machine/readback clean; C1/C2 render check pending | Path/gauge rendering fix, cover presentation refresh, escape/hotkey close contract centralized, deity-text normalization |
+| Redguard orphan VMAD property cleanup | Readback clean; runtime log check pending | Four stale `PDV_Notif_Redguard_*_NeglectTexture` properties stripped from `PDV__ManagerQuest [00C325]`; property count `419 -> 415`; backup `Backups\orphan-vmad-cleanup\Devotion.esp.20260705-170936.bak` |
 
 ## Burned Down
 
