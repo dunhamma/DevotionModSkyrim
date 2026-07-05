@@ -82,23 +82,86 @@ Run these on a disposable save after the quick sanity commands pass. They are ro
 manual-display proof for the 40-50 quests-per-deity expansion and meta-faucets, not a reason to
 reopen the race strict gate unless they expose a regression.
 
-- Matrix reload count: confirm `832` cells / `118` keys / `90` watched quests.
-- Five PROVISIONAL `setstage` probes: `DLC1SeranaCureSelfQuest 200`, `MQ301 240`, `MS05 300`,
-  `FreeformRiftenThane 200`, `FreeformSkyhavenTempleA 50`.
-- One fire per meta lane: Z'en gold wage, Julianos/Azura mage-aid, Azura twilight,
-  Nocturnal theft-window, Nocturnal night, Khenarthi outdoors, Akatosh/Xarxes 10th-quest wheel.
-- Yield negative: a Julianos College quest fires the CELL, not the meta lane.
-- Once-guard negative: re-fire the same eligible quest/lane and confirm it does not double-score.
-- `362` route proof: steal an owned loose item or owned container item, not a pickpocket. Confirm
-  `[PDV] EventBus: RouteAction complete: event 362` or the `PDV.Meta.LastTheftTime` timestamp
-  advances. A deity delta is useful only if the current table scores it.
+**Why grouped by origin.** Every probe quest scores several deities, but a delta only *lands*
+when the scored deity is native/active for the current origin -- and meta lanes apply the stance
+multiplier (a foreign face lands at `0.4x`). Testing each lane/probe under the origin whose
+native pantheon it feeds gives a clean full-value confirmation. Set the origin once per block:
+console `set PDV_GLO_OriginRace to <n>` + `set PDV_GLO_DebugLevel to 2` on a fresh disposable
+save, then run every row in that block before flipping. Fire a matrix stage with
+`setstage <editorID> <stage>`; steal/outdoor/time rows need the described in-world action.
+Markers: cell fires log `[PDV] EventBus: <deity> event <id> delta <x>`; meta lanes land as a
+Ledger driver with the humanized reason (`meta_zen_wage`, `meta_julianos_*`, ... -- copy pass
+DONE 954bde5b) plus an `AwardPiety` line.
+
+### A0. Run once (any origin -- fold into the Imperial block)
+- **Matrix reload count**: on load, confirm `832` cells / `118` keys / `90` watched quests.
+- **Yield negative** (needs Julianos native -> do under Imperial): `setstage MG01 200` (First
+  Lessons). Julianos scores from its CELL (`EventBus: Julianos event ... delta`); `meta_julianos`
+  must NOT also fire -- MG01 carries a Julianos cell so `metaSkip` suppresses the lane.
+- **Once-guard negative**: after any meta lane fires for a quest, `setstage` that same quest again
+  -> `PDV.Meta.Done.<qid>` suppresses; confirm no second award.
+
+### A1. Imperial (origin 1) -- Divines hub + mage-aid + wheel
+- **Julianos mage-aid lane**: `setstage MG05 200` (Containment; mageAid, no Julianos cell)
+  -> `meta_julianos` awards Julianos.
+- **Akatosh 10th-quest wheel**: advance 10 distinct watched quest stages; on the fire that takes
+  `PDV.Meta.QuestCount` to a multiple of 10 the wheel fires -> Akatosh awards (Xarxes `0` by
+  race-gate).
+- **Probes**: `DLC1SeranaCureSelfQuest 200` (Arkay echo), `MS05 300` (Dibella +C),
+  `FreeformSkyhavenTempleA 50` (Akatosh +S), `FreeformRiftenThane 200` (civic divines).
+
+### A2. Bosmer (origin 4) -- Z'en gold wage
+- **Gold-wage lane**: `setstage MS05 300` (Tending the Flames; gold class, no Z'en cell)
+  -> `meta_zen_wage` awards Z'en. (Dibella cell reads `0` for Bosmer; the Z'en award is the proof.)
+- **Z'en yield negative**: `setstage FreeformSkyhavenTempleA 50` -> Z'en scores from its ECHO cell,
+  `meta_zen_wage` suppressed (metaSkip).
+
+### A3. Dunmer (origin 5) -- Azura mage-aid/twilight + 362 steal
+- **Azura mage-aid lane**: `setstage MG05 200` -> `meta_azura` awards Azura (no Azura cell on MG05).
+- **Azura twilight lane**: `set gamehour to 5` (dawn) or a dusk hour, then fire any watched quest
+  with no Azura cell -> `meta_azura` (twilight arm).
+- **362 steal proof**: steal an owned loose item or owned container item (NOT a pickpocket)
+  -> Mephala/Boethiah steal-likes wake; `RouteAction complete: event 362` and
+  `PDV.Meta.LastTheftTime` advances.
+- **Probes**: `DLC1SeranaCureSelfQuest 200` (Azura +S -- the primary cell, strongest single probe),
+  `MQ301 240` (Mephala deceit echo).
+
+### A4. Khajiit (origin 6) -- Khenarthi outdoors + Rajhin steal
+- **Khenarthi outdoors lane**: standing OUTDOORS, `setstage` a watched quest with no Khenarthi cell
+  -> `meta_khenarthi` awards Khenarthi. Repeat the same fire INDOORS -> lane silent (negative).
+- **362 steal**: same steal action -> Rajhin steal-like wakes.
+- **Probe**: `MQ301 240` (Rajhin / Baan Dar deceit).
+
+### A5. Altmer (origin 3) -- Xarxes wheel (shared counter's second deity)
+- **10th-quest wheel**: advance 10 watched quest stages -> wheel fires -> Xarxes awards
+  (Akatosh `0` by race-gate). Proves both arms of the shared Akatosh/Xarxes counter.
+
+### A6. Nord (origin 0) -- mercy cluster (doubles as the Section E Nord spot-check)
+- **Probe**: `MQ301 240` -> Kyne / Stuhn / Stendarr / Mara `mercy_spare` cluster scores.
+
+### A7. Redguard (origin 9) -- Tu'whacca
+- **Probe**: `DLC1SeranaCureSelfQuest 200` -> Tu'whacca `cure_undeath` echo scores.
+
+### A8. Orc (origin 8) -- Malacath civic
+- **Probe**: `FreeformRiftenThane 200` -> Malacath civic/thane scores.
+
+### A9. Nocturnal path (any origin -- reuse the Dunmer or Imperial save)
+Open the Nocturnal path first (MCM -> Devotion -> Developer Options -> Daedric debug, 3 commitment
+signals). The lanes award the Nocturnal DEITY face, so the path must be active.
+- **Theft-window lane (tier 1)**: perform a 362 steal, then fire a watched quest ->
+  `meta_nocturnal_theft` awards Nocturnal (`LastTheftTime > LastFulfillTime`).
+- **Night lane (tier 2)**: with no recent theft, fire a watched quest at a night hour
+  (`set gamehour to 1`) -> `meta_nocturnal_night`.
 
 Tester notes:
 
-- Stance multipliers apply to meta lanes; foreign faces can land at `0.4x`, so do not false-fail
-  a reduced value if the origin/stance explains it.
+- Stance multipliers apply to meta lanes; a foreign face can land at `0.4x`. Each block above is
+  already under the lane's native origin, so a full-value award is expected -- a `0.4x` reading
+  there is a real finding, not a stance artifact.
 - The meta Ledger copy pass and Daedric-path name-repair hardening were marked DONE in the same
-  handoff; this sitting is for runtime smoke, not re-authoring those follow-ups.
+  handoff (954bde5b); this sitting is runtime smoke, not re-authoring those follow-ups.
+- The wheel counter increments on every meta-eligible watched fire, so other rows in a sitting also
+  advance `PDV.Meta.QuestCount` -- just watch for the `%10 == 0` fire rather than counting from zero.
 
 ## B. Closed race strict-gate packets  [do not retest without regression]
 

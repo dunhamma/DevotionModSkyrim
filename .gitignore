@@ -82,6 +82,8 @@ scratch/daedric-unify-review/
 scratch/restore-audit-20260620/
 scratch/book-of-days-proof/
 scratch/prisma-book-preview/
+scratch/incoming-devotion-prisma-*/
+scratch/live-prisma-before-*/
 
 # Untracked loose scratch files
 scratch/apply_ld_regen.mjs
