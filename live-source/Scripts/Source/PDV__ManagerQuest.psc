@@ -697,6 +697,22 @@ Float Property SHOUT_DUPLICATE_WINDOW_DAYS = 0.00001 AutoReadOnly
 String Property SHOUT_DUPLICATE_KEY = "PDV.ShoutAttack.LastTime" AutoReadOnly
 Int _shoutRefreshTicks = 0
 Bool _panelDirty = False
+Bool _suppressAwardFavorToast = False
+; Quest-reaction surface accumulator (2026-07-05): one quest fire = one toast +
+; one Book of Days beat, no matter how many deities its cells fan to. Reset at
+; the top of ApplyQuestReaction, filled per landed base cell, flushed after the
+; cell loop. Two interleaved quest fires could merge into one beat; harmless.
+String _qrSurfPosNamesCsv = ""
+String _qrSurfNegNamesCsv = ""
+Int _qrSurfPosCount = 0
+Int _qrSurfNegCount = 0
+Float _qrSurfBestPosAmount = 0.0
+Float _qrSurfBestNegAmount = 0.0
+String _qrSurfBestPosName = ""
+String _qrSurfBestNegName = ""
+String _qrSurfBestPosSymbol = ""
+String _qrSurfBestNegSymbol = ""
+Bool _qrSurfMilestone = False
 Bool _dawnHadActivity = False
 Bool Property AutoPushPrismaPanel = False Auto
 Bool Property AllowPrismaBlockingSurfaces = False Auto
@@ -1380,6 +1396,7 @@ Function ApplyQuestReaction(Quest sourceQuest, Int stageValue)
         return
     endIf
 
+    ResetQuestReactionSurface()
     Int i = 0
     while i < cellCount
         if i < valences.Length && i < intensities.Length && i < magnitudes.Length && i < sourceTags.Length
@@ -1387,6 +1404,7 @@ Function ApplyQuestReaction(Quest sourceQuest, Int stageValue)
         endIf
         i += 1
     endWhile
+    FlushQuestReactionSurface()
 
     StorageUtil.SetStringValue(None, "PDV.QuestReaction.LastKey", reactionKey)
     StorageUtil.SetIntValue(None, "PDV.QuestReaction.LastCellCount", cellCount)
@@ -1571,6 +1589,12 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
     if stance == "TABOO" || stance == "HOSTILE"
         if amount > 0.0
             ApplyQuestReactionStigma(deity, amount, sourceTag)
+            ; A taboo deity reaction is a real negative piety award (paths take
+            ; stigma instead, which is not piety) -- fold it into the quest-fire
+            ; surface as displeasure so the loss is not invisible.
+            if !isFaucet && magnitude != "meta" && !(deity as PDV_DaedricPathBase)
+                AccumulateQuestReactionSurface(deity, amount * -1.0, magnitude)
+            endIf
         endIf
         return
     endIf
@@ -1601,7 +1625,30 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
         multiplier = JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.TOLERATED", 0.4)
     endIf
 
-    ApplyQuestReactionPiety(deity, amount * multiplier, deityName + "." + sourceTag)
+    Float appliedReactionAmount = amount * multiplier
+    ; Milestone surfacing (below) owns the top-left toast for a landed base-cell
+    ; reaction, so mute AwardPiety's generic active-patron favor pulse across the
+    ; award to avoid a double toast. The panel driver ring is still fed inside
+    ; AwardPiety regardless.
+    _suppressAwardFavorToast = True
+    ApplyQuestReactionPiety(deity, appliedReactionAmount, deityName + "." + sourceTag)
+    _suppressAwardFavorToast = False
+
+    ; Milestone surfacing (2026-07-05): a base quest-reaction cell is a milestone-grade
+    ; beat, so a landed reaction feeds the per-quest surface accumulator; the quest
+    ; fire flushes ONE toast + ONE Book of Days beat for all its cells (owner ruling
+    ; after the first per-cell build toasted 6 gods per assassination stage). Excluded,
+    ; by design, from that loud surface:
+    ;   - behavioral faucets (isFaucet): cannibalism / forbidden-knowledge signals, not
+    ;     quests; they keep their daily/once caps and quiet-Ledger driver row.
+    ;   - meta faucets (magnitude "meta"): thin-coverage background lanes that can fire
+    ;     several at once per quest; surfacing them would burst. They already carry
+    ;     bespoke humanized driver-row copy.
+    ; The reachability gate above already dropped off-roster gods, so only gods the
+    ; player actually follows reach this surface.
+    if !isFaucet && magnitude != "meta"
+        AccumulateQuestReactionSurface(deity, appliedReactionAmount, magnitude)
+    endIf
 
     ; Bridge: a positive quest reaction for a Khajiit-focus deity also tilts which
     ; moon-path leads, so the matrix's existing Baan Dar / Rajhin / Alkosh /
@@ -1611,6 +1658,130 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
     if amount > 0.0 && IsKhajiitOrigin()
         BridgeKhajiitMatrixFocus(deityName, magnitude)
     endIf
+EndFunction
+
+; --- Quest-fire surface accumulator -------------------------------------------------
+; One quest fire = one toast + one Book of Days beat, however many deities its cells
+; fan to (an assassination cell lands 6+ gods; per-cell toasts proved spammy). The
+; panel driver ring keeps the per-god detail via AwardPiety. The toast names the
+; strongest reactor ("Mephala and 3 others mark your deed."); the Book of Days line
+; lists every landed god so the chronicle stays complete. A milestone-magnitude cell
+; weighs the Book entry one step heavier so it can headline.
+
+Function ResetQuestReactionSurface()
+    _qrSurfPosNamesCsv = ""
+    _qrSurfNegNamesCsv = ""
+    _qrSurfPosCount = 0
+    _qrSurfNegCount = 0
+    _qrSurfBestPosAmount = 0.0
+    _qrSurfBestNegAmount = 0.0
+    _qrSurfBestPosName = ""
+    _qrSurfBestNegName = ""
+    _qrSurfBestPosSymbol = ""
+    _qrSurfBestNegSymbol = ""
+    _qrSurfMilestone = False
+EndFunction
+
+Function AccumulateQuestReactionSurface(PDV_DeityBase deity, Float amount, String magnitude)
+    if !deity || amount == 0.0
+        return
+    endIf
+    String deityName = GetPublicDeityDisplayName(deity)
+    if magnitude == "milestone"
+        _qrSurfMilestone = True
+    endIf
+    if amount > 0.0
+        if _qrSurfPosNamesCsv != ""
+            _qrSurfPosNamesCsv = _qrSurfPosNamesCsv + "|"
+        endIf
+        _qrSurfPosNamesCsv = _qrSurfPosNamesCsv + deityName
+        _qrSurfPosCount += 1
+        if amount > _qrSurfBestPosAmount
+            _qrSurfBestPosAmount = amount
+            _qrSurfBestPosName = deityName
+            _qrSurfBestPosSymbol = GetPrismaSymbolForDeity(deity)
+        endIf
+    else
+        if _qrSurfNegNamesCsv != ""
+            _qrSurfNegNamesCsv = _qrSurfNegNamesCsv + "|"
+        endIf
+        _qrSurfNegNamesCsv = _qrSurfNegNamesCsv + deityName
+        _qrSurfNegCount += 1
+        if amount < _qrSurfBestNegAmount
+            _qrSurfBestNegAmount = amount
+            _qrSurfBestNegName = deityName
+            _qrSurfBestNegSymbol = GetPrismaSymbolForDeity(deity)
+        endIf
+    endIf
+EndFunction
+
+; "Kyne", "Kyne and Mara", "Kyne, Mara and Dibella" from a pipe-joined name list.
+String Function JoinQuestSurfaceNames(String namesCsv)
+    String[] names = StringUtil.Split(namesCsv, "|")
+    Int count = names.Length
+    if count <= 0
+        return ""
+    elseIf count == 1
+        return names[0]
+    endIf
+    String joined = names[0]
+    Int i = 1
+    while i < count
+        if i == count - 1
+            joined = joined + " and " + names[i]
+        else
+            joined = joined + ", " + names[i]
+        endIf
+        i += 1
+    endWhile
+    return joined
+EndFunction
+
+Function FlushQuestReactionSurface()
+    if _qrSurfPosCount == 0 && _qrSurfNegCount == 0
+        return
+    endIf
+
+    Int nowDay = Utility.GetCurrentGameTime() as Int
+    Int bodMagnitude = 1
+    if _qrSurfMilestone
+        bodMagnitude = 2
+    endIf
+
+    if _qrSurfNegCount == 0
+        String posMsg = _qrSurfBestPosName + " marks your deed."
+        if _qrSurfPosCount == 2
+            posMsg = _qrSurfBestPosName + " and 1 other mark your deed."
+        elseIf _qrSurfPosCount > 2
+            posMsg = _qrSurfBestPosName + " and " + (_qrSurfPosCount - 1) + " others mark your deed."
+        endIf
+        SendPrismaToast(_qrSurfBestPosSymbol, "good", "A deed marked", posMsg)
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrSurfPosNamesCsv) + " marked your deed.", nowDay, "favor.act", _qrSurfBestPosSymbol, False, bodMagnitude, "A deed marked")
+    elseIf _qrSurfPosCount == 0
+        String negMsg = _qrSurfBestNegName + " takes offense at your deed."
+        if _qrSurfNegCount == 2
+            negMsg = _qrSurfBestNegName + " and 1 other take offense at your deed."
+        elseIf _qrSurfNegCount > 2
+            negMsg = _qrSurfBestNegName + " and " + (_qrSurfNegCount - 1) + " others take offense at your deed."
+        endIf
+        SendPrismaToast(_qrSurfBestNegSymbol, "warning", "A deed ill-received", negMsg)
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrSurfNegNamesCsv) + " took offense at your deed.", nowDay, "favor.loss", _qrSurfBestNegSymbol, False, bodMagnitude, "A deed ill-received")
+    else
+        ; Mixed: lead with the stronger side for tone and symbol.
+        Bool positiveLeads = _qrSurfBestPosAmount >= (_qrSurfBestNegAmount * -1.0)
+        String mixedTone = "good"
+        String mixedSymbol = _qrSurfBestPosSymbol
+        String mixedBodTone = "favor.act"
+        if !positiveLeads
+            mixedTone = "warning"
+            mixedSymbol = _qrSurfBestNegSymbol
+            mixedBodTone = "favor.loss"
+        endIf
+        SendPrismaToast(mixedSymbol, mixedTone, "A deed weighed", _qrSurfBestPosName + " marks your deed; " + _qrSurfBestNegName + " takes offense.")
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrSurfPosNamesCsv) + " marked your deed; " + JoinQuestSurfaceNames(_qrSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, bodMagnitude, "A deed weighed")
+    endIf
+
+    ResetQuestReactionSurface()
 EndFunction
 
 ; Maps a quest-reaction deity name to its Khajiit focused-emphasis value, or
@@ -10244,7 +10415,7 @@ Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry
         Debug.Trace("[PDV] AwardPiety: " + deity.DeityName + " raw " + amount + ", applied " + appliedAmount + ", stance " + stance + ", today=" + StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday"))
     endIf
 
-    if appliedAmount > 0.0 && deity == _activeDeity
+    if appliedAmount > 0.0 && deity == _activeDeity && !_suppressAwardFavorToast
         SendPrismaEventToast("favor", deity, "", "", "")
     endIf
 
@@ -17637,6 +17808,9 @@ String Function JournalToneToTitle(String toneKey)
     if toneKey == "favor.act"
         return "Prayer answered"
     endIf
+    if toneKey == "favor.loss"
+        return "A deed ill-received"
+    endIf
     if toneKey == "reorientation"
         return "A turning"
     endIf
@@ -17673,6 +17847,9 @@ String Function JournalToneToValence(String toneKey)
     endIf
     if toneKey == "favor.act"
         return "good"
+    endIf
+    if toneKey == "favor.loss"
+        return "warning"
     endIf
     if toneKey == "curse.onset"
         return "warning"
