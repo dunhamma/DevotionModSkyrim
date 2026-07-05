@@ -1,7 +1,8 @@
 // pdv-nord-offer-author
-// Authors the 12 non-Kyne Nord commitment-offer MESG records into Devotion.esp
-// (B10). The show-logic + candidate->message mapping + button handling already
-// exist in the manager: GetFormalCommitmentOfferMessage maps all 12 deities,
+// Authors the non-Kyne Nord commitment-offer MESG records into Devotion.esp
+// (B10; 12 per-deity offers + the Old Ways Orkey variant of the Arkay offer).
+// The show-logic + candidate->message mapping + button handling already
+// exist in the manager: GetFormalCommitmentOfferMessage maps all the deities,
 // ShowFormalCommitmentOffer .Show() handles choice 0=Accept / 1=Not yet / 2=Refuse.
 // So this is pure MESG authoring (copy from race-sheets/PDV_RaceContent_Manifest.md
 // section 10.6) + VMAD forward-wiring of the 12 manager properties. Mirrors the
@@ -37,6 +38,11 @@ var offers = new[]
         "You have made a hearth where there was none and held families that were breaking. The warmth you gave can be a door that is always open to you. Let me hold that hearth with you now, or stay welcome among the many a while longer."),
     new OfferDef("PDV_Msg_Nord_Arkay_Offer", "Arkay's Covenant",
         "You have given the dead their rites when the living would not, and turned back what should not walk. The cycle holds because you hold it. Walk now as keeper of the covenant, or come to the door again when you are ready."),
+    // Old Ways variant of the Arkay offer: the Old Ways baseline knows Arkay by the
+    // older Nord name Orkey (owner directive 2026-07-05). Same deity, same rewards;
+    // GetNordFormalCommitmentOfferMessage picks this MESG when the baseline is Old Ways.
+    new OfferDef("PDV_Msg_Nord_Orkey_Offer", "Orkey Counts the Years",
+        "You have laid the dead down with their due and driven back what would not stay buried. I keep the count of every year, and I have kept yours well. Take the Old Knocker's mark now and hold the count with me, or let the door stand shut a while yet."),
     new OfferDef("PDV_Msg_Nord_Stendarr_Offer", "Stendarr Stays the Hand",
         "You have stayed the killing blow again and again, where wrath was the easy road. Mercy chosen so often becomes a wall no blade passes lightly. Take my mercy as your armor now, or hold the question open and be tested further."),
     new OfferDef("PDV_Msg_Nord_Zenithar_Offer", "Zenithar Names the Honest Hand",

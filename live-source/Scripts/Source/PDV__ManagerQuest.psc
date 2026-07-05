@@ -465,6 +465,7 @@ Message Property PDV_Msg_Nord_Stuhn_Offer Auto
 Message Property PDV_Msg_Nord_Akatosh_Offer Auto
 Message Property PDV_Msg_Nord_Mara_Offer Auto
 Message Property PDV_Msg_Nord_Arkay_Offer Auto
+Message Property PDV_Msg_Nord_Orkey_Offer Auto
 Message Property PDV_Msg_Nord_Stendarr_Offer Auto
 Message Property PDV_Msg_Nord_Zenithar_Offer Auto
 Message Property PDV_Msg_Nord_Julianos_Offer Auto
@@ -2665,7 +2666,7 @@ String Function AppendDashboardGod(String acc, PDV_DeityBase deity, String syste
     Float pietyToday = StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday")
     Int tier = StorageUtil.GetFloatValue(deityForm, "PDV.Tier") as Int
 
-    String entry = "{\"god\":\"" + JsonSafeString(deity.DeityName) + "\""
+    String entry = "{\"god\":\"" + JsonSafeString(GetPublicDeityDisplayName(deity)) + "\""
     entry = entry + ",\"symbol\":\"" + JsonSafeString(GetPrismaSymbolForDeity(deity)) + "\""
     entry = entry + ",\"system\":\"" + JsonSafeString(system) + "\""
     entry = entry + ",\"state\":\"" + JsonSafeString(GetGodRollupState(deity)) + "\""
@@ -12389,10 +12390,14 @@ Function SyncNordRewards(Actor playerRef)
     ; No Nord-specific Mara reward records exist, so reuse the Imperial Mara spells -- this IS
     ; the Nine Divines Mara reward (Restoration +5/+13/+23 + wake-mended), identical across lanes.
     SyncNordRewardFamily(playerRef, -1, PDV_Mara, PDV_Bless_Imperial_Mara_T1, PDV_Bless_Imperial_Mara_T2, PDV_Bless_Imperial_Mara_T3, "Mara")
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Arkay, PDV_Bless_Imperial_Arkay_T1, PDV_Bless_Imperial_Arkay_T2, PDV_Bless_Imperial_Arkay_T3, "Arkay")
+    ; Arkay is focusable in BOTH lanes (Old Ways names him Orkey; owner directive
+    ; 2026-07-05), like Mara -- baseline -1, same Imperial reward reuse either way.
+    SyncNordRewardFamily(playerRef, -1, PDV_Arkay, PDV_Bless_Imperial_Arkay_T1, PDV_Bless_Imperial_Arkay_T2, PDV_Bless_Imperial_Arkay_T3, "Arkay")
     SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Stendarr, PDV_Bless_Imperial_Stendarr_T1, PDV_Bless_Imperial_Stendarr_T2, PDV_Bless_Imperial_Stendarr_T3, "Stendarr")
     SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Zenithar, PDV_Bless_Imperial_Zenithar_T1, PDV_Bless_Imperial_Zenithar_T2, PDV_Bless_Imperial_Zenithar_T3, "Zenithar")
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Dibella, PDV_Bless_Imperial_Dibella_T1, PDV_Bless_Imperial_Dibella_T2, PDV_Bless_Imperial_Dibella_T3, "Dibella")
+    ; Dibella is focusable in BOTH lanes (owner directive 2026-07-05), like Mara --
+    ; baseline -1, same Imperial reward reuse either way.
+    SyncNordRewardFamily(playerRef, -1, PDV_Dibella, PDV_Bless_Imperial_Dibella_T1, PDV_Bless_Imperial_Dibella_T2, PDV_Bless_Imperial_Dibella_T3, "Dibella")
     SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Julianos, PDV_Bless_Imperial_Julianos_T1, PDV_Bless_Imperial_Julianos_T2, PDV_Bless_Imperial_Julianos_T3, "Julianos")
     SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Kynareth, PDV_Bless_Imperial_Kynareth_T1, PDV_Bless_Imperial_Kynareth_T2, PDV_Bless_Imperial_Kynareth_T3, "Kynareth")
 EndFunction
@@ -14286,6 +14291,9 @@ Message Function GetNordFormalCommitmentOfferMessage(PDV_DeityBase deity)
     elseIf deity == PDV_Mara
         return PDV_Msg_Nord_Mara_Offer
     elseIf deity == PDV_Arkay
+        if GetNordPantheonBaselineState() == NORD_BASELINE_OLD_WAYS
+            return PDV_Msg_Nord_Orkey_Offer
+        endIf
         return PDV_Msg_Nord_Arkay_Offer
     elseIf deity == PDV_Stendarr
         return PDV_Msg_Nord_Stendarr_Offer
@@ -14464,6 +14472,9 @@ EndFunction
 ; chosen pantheon baseline (plus Talos/Ysmir, always) is offer-eligible -- not only
 ; Kyne. Their T1/T2/T3 reward spells are authored; this opens the organic path to
 ; them. The eligibility/weight/signal-day machinery is already generic.
+; Old Ways also carries Arkay (surfaced under the Nord name Orkey) and Dibella
+; (owner directive 2026-07-05); display-name handling lives in
+; NormalizePublicDeityDisplayText, rewards reuse the Imperial spells (Mara pattern).
 Bool Function IsNordOfferEligibleDeity(PDV_DeityBase deity)
     if !deity
         return False
@@ -14479,7 +14490,7 @@ Bool Function IsNordOfferEligibleDeity(PDV_DeityBase deity)
 
     Int baselineState = GetNordPantheonBaselineState()
     if baselineState == NORD_BASELINE_OLD_WAYS
-        return deity == PDV_Kyne || deity == PDV_Shor || deity == PDV_Tsun || deity == PDV_Stuhn || deity == PDV_Mara
+        return deity == PDV_Kyne || deity == PDV_Shor || deity == PDV_Tsun || deity == PDV_Stuhn || deity == PDV_Mara || deity == PDV_Arkay || deity == PDV_Dibella
     elseIf baselineState == NORD_BASELINE_NINE_DIVINES
         return deity == PDV_Akatosh || deity == PDV_Mara || deity == PDV_Arkay || deity == PDV_Stendarr || deity == PDV_Zenithar || deity == PDV_Dibella || deity == PDV_Julianos || deity == PDV_Kynareth
     endIf
@@ -17649,11 +17660,26 @@ String Function GetPublicDeityDisplayName(PDV_DeityBase deity)
     return NormalizePublicDeityDisplayText(deity.DeityName)
 EndFunction
 
+; Nord Old Ways knows Arkay by the older name Orkey (owner directive 2026-07-05).
+; Display-only: DeityName stays "Arkay" for StorageUtil keys, symbol lookup, and
+; matrix matching; only text resolved through NormalizePublicDeityDisplayText shifts.
+Bool Function UsesNordOldWaysDeityNames()
+    if GetPlayerOriginRaceIndex() != ORIGIN_NORD
+        return False
+    endIf
+    return GetNordPantheonBaselineState() == NORD_BASELINE_OLD_WAYS
+EndFunction
+
 String Function NormalizePublicDeityDisplayText(String sourceText)
     String result = sourceText
     result = ReplaceText(result, "auri-el", "Auri-El")
     result = ReplaceText(result, "akatosh", "Akatosh")
-    result = ReplaceText(result, "arkay", "Arkay")
+    if UsesNordOldWaysDeityNames()
+        result = ReplaceText(result, "arkay", "Orkey")
+    else
+        result = ReplaceText(result, "arkay", "Arkay")
+    endIf
+    result = ReplaceText(result, "orkey", "Orkey")
     result = ReplaceText(result, "dibella", "Dibella")
     result = ReplaceText(result, "julianos", "Julianos")
     result = ReplaceText(result, "mara", "Mara")
@@ -18020,7 +18046,11 @@ String Function GetNordMedallionEntriesJson()
     entries = entries + "," + RosterMedallionEntry("stuhn", "Stuhn", "god", "stuhn", PDV_Stuhn, "Mercy in war and fair ransom.")
     entries = entries + "," + RosterMedallionEntry("mara", "Mara", "god", "mara", PDV_Mara, "Love, hearth, and compassion.")
     entries = entries + "," + RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", PDV_Akatosh, "Time, order, and dragon authority.")
-    entries = entries + "," + RosterMedallionEntry("arkay", "Arkay", "god", "arkay", PDV_Arkay, "Death, burial, and proper passage.")
+    String arkayRosterName = "Arkay"
+    if UsesNordOldWaysDeityNames()
+        arkayRosterName = "Orkey"
+    endIf
+    entries = entries + "," + RosterMedallionEntry("arkay", arkayRosterName, "god", "arkay", PDV_Arkay, "Death, burial, and proper passage.")
     entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", PDV_Stendarr, "Mercy, justice, and protection.")
     entries = entries + "," + RosterMedallionEntry("julianos", "Julianos", "god", "julianos", PDV_Julianos, "Law, learning, and craft of mind.")
     entries = entries + "," + RosterMedallionEntry("dibella", "Dibella", "god", "dibella", PDV_Dibella, "Beauty, art, and embodied grace.")
