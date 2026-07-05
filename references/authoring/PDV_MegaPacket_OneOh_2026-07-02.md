@@ -82,10 +82,13 @@ Run these on a disposable save after the quick sanity commands pass. They are ro
 manual-display proof for the 40-50 quests-per-deity expansion and meta-faucets, not a reason to
 reopen the race strict gate unless they expose a regression.
 
-**Why grouped by origin.** Every probe quest scores several deities, but a delta only *lands*
-when the scored deity is native/active for the current origin -- and meta lanes apply the stance
-multiplier (a foreign face lands at `0.4x`). Testing each lane/probe under the origin whose
-native pantheon it feeds gives a clean full-value confirmation. Set the origin once per block:
+**Why grouped by origin.** Unlike Section E's generic acts (hard race-gated to `0`), the quest
+path is NOT on/off: `ApplyDeityReaction` scores *every* deity on a quest cell -- and every meta
+lane -- scaled by the player race's STANCE toward that deity (`PDV__ManagerQuest.psc:1561-1585`):
+`NATIVE` = full `1.0x`, `FOREIGN`/`TOLERATED` = `0.4x` (the "foreign face rate"), `TABOO`/`HOSTILE`
+flips the positive into a negative stigma, `CURSE` routes to curse handling. So a foreign god still
+scores, just at `0.4x` -- testing each lane/probe under the origin whose native pantheon it feeds
+is what gives the clean *full-value* read. Set the origin once per block:
 console `set PDV_GLO_OriginRace to <n>` + `set PDV_GLO_DebugLevel to 2` on a fresh disposable
 save, then run every row in that block before flipping. Fire a matrix stage with
 `setstage <editorID> <stage>`; steal/outdoor/time rows need the described in-world action.
@@ -105,14 +108,15 @@ DONE 954bde5b) plus an `AwardPiety` line.
 - **Julianos mage-aid lane**: `setstage MG05 200` (Containment; mageAid, no Julianos cell)
   -> `meta_julianos` awards Julianos.
 - **Akatosh 10th-quest wheel**: advance 10 distinct watched quest stages; on the fire that takes
-  `PDV.Meta.QuestCount` to a multiple of 10 the wheel fires -> Akatosh awards (Xarxes `0` by
-  race-gate).
+  `PDV.Meta.QuestCount` to a multiple of 10 the wheel fires -> Akatosh awards full (Xarxes also
+  fires but at the `0.4x` foreign rate -- Imperial isn't Xarxes-native; prove Xarxes full under A5).
 - **Probes**: `DLC1SeranaCureSelfQuest 200` (Arkay echo), `MS05 300` (Dibella +C),
   `FreeformSkyhavenTempleA 50` (Akatosh +S), `FreeformRiftenThane 200` (civic divines).
 
 ### A2. Bosmer (origin 4) -- Z'en gold wage
 - **Gold-wage lane**: `setstage MS05 300` (Tending the Flames; gold class, no Z'en cell)
-  -> `meta_zen_wage` awards Z'en. (Dibella cell reads `0` for Bosmer; the Z'en award is the proof.)
+  -> `meta_zen_wage` awards Z'en at full value. (Dibella's cell still fires at the `0.4x` foreign
+  rate for Bosmer, not `0`; the full-value Z'en award is the proof the lane fired natively.)
 - **Z'en yield negative**: `setstage FreeformSkyhavenTempleA 50` -> Z'en scores from its ECHO cell,
   `meta_zen_wage` suppressed (metaSkip).
 
@@ -134,7 +138,8 @@ DONE 954bde5b) plus an `AwardPiety` line.
 
 ### A5. Altmer (origin 3) -- Xarxes wheel (shared counter's second deity)
 - **10th-quest wheel**: advance 10 watched quest stages -> wheel fires -> Xarxes awards
-  (Akatosh `0` by race-gate). Proves both arms of the shared Akatosh/Xarxes counter.
+  (Akatosh also fires but at the `0.4x` foreign rate for Altmer). Proves both arms of the shared
+  Akatosh/Xarxes counter, and that Xarxes reads full here vs `0.4x` under A1.
 
 ### A6. Nord (origin 0) -- mercy cluster (doubles as the Section E Nord spot-check)
 - **Probe**: `MQ301 240` -> Kyne / Stuhn / Stendarr / Mara `mercy_spare` cluster scores.
@@ -225,27 +230,61 @@ record TUNED values as notes; do NOT re-run cumulative-rebalance tools (not idem
 Evidence sink: Redguard + Daedric/Namira blocks of `PDV_Phase20_ManualEvidenceLedger.json`;
 route checker `node .\tools\pdv_phase20_runtime_check.mjs`.
 
-## E. Day-to-day signal sweep (Anvil -- broadest native coverage)
+## E. Day-to-day signal sweep -- grouped by origin race (Anvil)
 
 Per `PDV_InGameTestingNeeded_Runbook.md` section 5. DebugLevel 2 (3 for cap checks). Marker:
 `[PDV] EventBus: <deity> event <id> delta <x>` -- delta must match `PDV_DeityLikesDislikes.csv`
 exactly.
 
-- combat by victim 300/301/302 (draugr/Dremora/dragon), 303/304 negatives
-- craft at stations 330-333; knowledge 340-345 (incl. word wall, `player.incPCS`, new location)
-- devotional sleep 313/314; transgression 360/**361 trespass**/
-  **362 steal-item via AddToPlayer**/364/365/368. For `362`, steal an owned
-  loose item or owned container item, not a pickpocket; proof is
-  `RouteAction complete: event 362` or an advanced `PDV.Meta.LastTheftTime`
-  timestamp, with deity delta only if the current table scores it.
-- race-gate negative: flip `PDV_GLO_OriginRace`, same act scores 0 for non-native gods
-- attribution filter: environmental kill logs `skipped non-scoring attribution`
-- anti-farm: capped act stops at daily cap, 0.7^n decay; dawn bank moves PietyToday -> Piety
-- this run doubles as the fresh-save proof of the expanded likes/dislikes rows and the
-  now-runnable `362` route.
+**Why the grouping is different from Section A.** These are generic acts scored off the
+likes/dislikes table and hard **race-gated** -- an act only scores deities native to the current
+origin. But **Imperial's Nine Divines cover every 300-series event** (all combat/craft/knowledge/
+sleep events have a Divine liker; every transgression has a Divine *disliker*). So this is NOT one
+block per race -- it is one broad **Imperial** pass plus **two small flips** for what the Divines
+cannot score. Both flips reuse a Section A origin, so you never reroll: run E2 on the A6 Nord save,
+E3 on the A3 Dunmer save.
 
-Already confirmed 2026-06-10: 300/301/345 CSV-exact + race-gate + attribution. Remaining:
-craft / book / sleep / full transgression set incl. 361 and 362, plus Nord-origin spot-checks.
+### E1. Imperial (origin 1) -- primary pass (~22/24 events + all mechanics)
+Run the whole vocabulary here; every row lands on a Divine. Deltas must be CSV-exact.
+- combat by victim: draugr `300`, Dremora `301`, dragon `302` (Akatosh reads this as a **dislike**,
+  `-`), non-hostile animal / criminal victim `303`/`304`
+- craft (use the stations): smith `330`, enchant `331`, brew `332`, cook `333`
+- knowledge: skill book `340`, spell `341`, lore book `342`, word wall `343`, skill-up
+  (`player.incPCS <skill>`) `344`, new location `345`
+- devotional sleep: outside `313`, inside `314`
+- transgression (the Divines read these as **dislikes**): owned lock `360`, **`361` trespass**
+  (enter an owned home uninvited + detected), **`362` steal-item** (owned loose/container item, NOT
+  a pickpocket), assault innocent `364`, raise undead `365`, daedric artifact `368`
+- **`362` route proof**: `[PDV] EventBus: RouteAction complete: event 362` **or** an advanced
+  `PDV.Meta.LastTheftTime` stamp (the Nocturnal meta-faucet consumes it). Under Imperial you also
+  see the Divine **dislike** delta; the positive/like side is E3.
+- **mechanics (origin-neutral -- prove once, here):** attribution filter (an environmental/indirect
+  kill logs `skipped non-scoring attribution`); anti-farm at DebugLevel 3 (a capped act stops at its
+  daily cap, `0.7^n` decay); dawn bank (`PietyToday -> Piety` at ~06:00 moves standing/tier)
+- **race-gate negative:** after a native act scores (e.g. `330` -> Zenithar), `set PDV_GLO_OriginRace
+  to 3`, repeat the same act -> `0`, then flip back to `1`
+
+### E2. Nord (origin 0) -- the two Kyne combat lines the Divines can't score
+Events `1`/`2` are the only sweep rows with no Divine scorer. Run on the **A6 Nord save**.
+- kill-hostile-beast -> event `1`: Kyne **dislike** (`-3`, beast protection)
+- kill-hostile-humanoid -> event `2`: Kyne **like** (`+`)
+
+(doubles as the Nord-origin spot-check the runbook still owes)
+
+### E3. Dunmer (origin 5) -- the transgression LIKE side + the `362` like-delta
+The Imperial pass shows transgressions as dislikes; here the same events land as the **positive**
+rows (Mephala/Boethiah are native). Run on the **A3 Dunmer save**, right after the A3 `362` steal.
+- steal-item `362` -> Mephala/Boethiah **like** delta (the like-side E1 cannot show)
+- owned lock `360`, trespass `361`, assault `364`, daedric artifact `368` -> confirm the
+  `+` sentiment rows fire for Mephala / Boethiah / Azura
+- optional Khajiit (origin 6, A4 save) extends the trickster set to Rajhin / Baan Dar / Azurah
+
+This whole sweep doubles as the fresh-save proof of the expanded likes/dislikes rows and the
+now-runnable `362` route.
+
+Already confirmed 2026-06-10 (Imperial): `300`/`301`/`345` CSV-exact + race-gate + attribution --
+skip those in E1. Remaining: craft / book / sleep / the full transgression set incl. `361` and
+`362` (E1), Kyne `1`/`2` (E2), and the transgression like-side (E3).
 
 ## F. Prince V2 path-deepening (per runbook section 6)
 
