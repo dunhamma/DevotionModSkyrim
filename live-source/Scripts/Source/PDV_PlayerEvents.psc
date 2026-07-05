@@ -671,6 +671,26 @@ Event OnItemAdded(Form akBaseItem, Int aiItemCount, ObjectReference akItemRefere
     Trace(1, "Khajiit Rajhin elegant theft detected.")
 EndEvent
 
+Event OnItemRemoved(Form akBaseItem, Int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
+    ; Spell-tome learning ingress (Mega Packet Sitting 1 E1, 2026-07-05).
+    ; Reading a spell tome learns the spell and destroys the book, but that path
+    ; does NOT raise OnBookRead, so EVT_READ_SPELL_TOME (341) never fired through
+    ; RouteGenericBookRead. A learned tome is consumed with no persistent ref and
+    ; no destination: akItemReference == None (non-persistent, destroyed) AND
+    ; akDestContainer == None (not sold/stored/dropped). Selling sets a dest,
+    ; dropping sets akItemReference to the world ref, so both are excluded here.
+    if akItemReference || akDestContainer
+        return
+    endIf
+
+    if !HasListedForm(PDV_FLST_FaucetSpellTomes, akBaseItem)
+        return
+    endIf
+
+    RouteGenericAction(EVT_READ_SPELL_TOME, GetActorRef() as Form, akBaseItem)
+    Trace(1, "Spell tome learned: routed EVT_READ_SPELL_TOME.")
+EndEvent
+
 Function RegisterForPlayerEvents()
     RegisterForSleep()
     RegisterForMenu("RaceSex Menu")
