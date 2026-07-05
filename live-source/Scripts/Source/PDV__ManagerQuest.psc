@@ -17064,13 +17064,116 @@ String Function JournalDayToFictionDate(Int gameDay)
 EndFunction
 
 String Function BuildBookOfDaysPathInfo(Int originRace)
-    String pathInfo = GetOriginRaceLabel(originRace)
-    if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") == 1
-        pathInfo = pathInfo + " | " + GetPlayerMcmModeLine()
-    else
-        pathInfo = pathInfo + " | path not yet chosen"
+    return GetOriginRaceLabel(originRace) + " - " + GetBookOfDaysPathStatusLabel(originRace)
+EndFunction
+
+String Function GetBookOfDaysPathStatusLabel(Int originRace)
+    if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1
+        return "Path Not Yet Chosen"
     endIf
-    return pathInfo
+
+    PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
+    if activePact
+        return NormalizePublicDeityDisplayText(activePact.DeityName) + " Pact"
+    endIf
+
+    if _activeDeity && GetPatronState() == PATRON_STATE_ACTIVE
+        return GetPublicDeityDisplayName(_activeDeity) + " Focus"
+    endIf
+
+    if GetPatronState() == PATRON_STATE_BROAD
+        return GetBroadLaneDisplayName(originRace)
+    endIf
+
+    if originRace == ORIGIN_NORD
+        return GetNordDevotionModeLabel()
+    elseIf originRace == ORIGIN_ALTMER
+        return "Crisis " + GetBookOfDaysAltmerCrisisLabel()
+    elseIf originRace == ORIGIN_KHAJIIT
+        Int focusValue = GetKhajiitFocusedEmphasis()
+        if focusValue > KHAJIIT_FOCUS_NONE
+            return GetKhajiitFocusLabel(focusValue) + " Lunar Focus"
+        endIf
+        return "Lunar Lattice"
+    elseIf originRace == ORIGIN_BOSMER
+        return GetBosmerPathLabel()
+    elseIf originRace == ORIGIN_ARGONIAN
+        return "Hist " + GetArgonianHistPostureLabel()
+    elseIf originRace == ORIGIN_ORC
+        return GetOrcLifeModeLabel()
+    elseIf originRace == ORIGIN_REDGUARD
+        return GetRedguardSectLabel()
+    elseIf originRace == ORIGIN_IMPERIAL
+        return GetImperialConcordatLabel()
+    elseIf originRace == ORIGIN_BRETON
+        return GetBretonTraditionLabel()
+    elseIf originRace == ORIGIN_DUNMER
+        Int reclamationFocus = StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocus", -1)
+        if reclamationFocus >= 0
+            return GetDunmerReclamationFocusLabel(reclamationFocus) + " Reclamation Focus"
+        endIf
+        return "Ancestor Rites " + GetBookOfDaysDunmerAncestorLabel()
+    endIf
+
+    return "Path Unsettled"
+EndFunction
+
+String Function GetBookOfDaysAltmerCrisisLabel()
+    Int stateValue = GetAltmerCrisisState()
+    if stateValue == ALTMER_CRISIS_DISSONANT
+        return "Dissonant"
+    elseIf stateValue == ALTMER_CRISIS_QUESTIONING
+        return "Questioning"
+    elseIf stateValue == ALTMER_CRISIS_REASSERTING
+        return "Reasserting"
+    elseIf stateValue == ALTMER_CRISIS_SCARRED_RESOLVED
+        return "Scarred Resolved"
+    endIf
+
+    return "None"
+EndFunction
+
+String Function GetBookOfDaysDunmerAncestorLabel()
+    if !PDV_DunmerAncestorSubstrate
+        return "Unreadable"
+    endIf
+
+    Int tierValue = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
+    if tierValue >= 3
+        return "Strong"
+    elseIf tierValue == 2
+        return "Steady"
+    elseIf tierValue == 1
+        return "Beginning"
+    endIf
+
+    return "Quiet"
+EndFunction
+
+String Function BuildBookOfDaysSummary(Int originRace)
+    if originRace == ORIGIN_NORD
+        return "Old Gods, Divines, and chosen roads leave their marks here."
+    elseIf originRace == ORIGIN_IMPERIAL
+        return "Civic faith, Divines, and Concordat pressure leave their marks here."
+    elseIf originRace == ORIGIN_BRETON
+        return "Tradition, hidden practice, and old covenants leave their marks here."
+    elseIf originRace == ORIGIN_ALTMER
+        return "Auri-El, ancestry, and crisis of return leave their marks here."
+    elseIf originRace == ORIGIN_BOSMER
+        return "Green Pact, exchange, and story-path choices leave their marks here."
+    elseIf originRace == ORIGIN_DUNMER
+        return "Reclamations, ancestors, and ash-prayer duties leave their marks here."
+    elseIf originRace == ORIGIN_KHAJIIT
+        return "Moons, road-home ways, and chosen spirits leave their marks here."
+    elseIf originRace == ORIGIN_ARGONIAN
+        return "Hist memory, People, and the Void leave their marks here."
+    elseIf originRace == ORIGIN_ORC
+        return "Malacath, Code, and life-mode choices leave their marks here."
+    elseIf originRace == ORIGIN_REDGUARD
+        return "Yokudan duty, ancestors, and the Far Shores leave their marks here."
+    endIf
+
+    return "Faith, conduct, and consequence leave their marks here."
 EndFunction
 
 PDV_DeityBase Function ResolveBookOfDaysStandingDeity()
@@ -17164,7 +17267,7 @@ String Function BuildJournalPayloadJson()
     String j = "{\"mode\":\"journal\",\"journal\":{"
     j = j + "\"title\":\"Book of Days\""
     j = j + ",\"by\":\"" + JsonSafeString(GetJournalByline()) + "\""
-    j = j + ",\"summary\":\"A record of devotional acts since the path began.\""
+    j = j + ",\"summary\":\"" + JsonSafeString(BuildBookOfDaysSummary(originRace)) + "\""
     j = j + ",\"survey\":\"" + JsonSafeString(pathInfo) + "\""
     j = j + ",\"foot\":\"Press your Book of Days key again to close.\""
     j = j + ",\"instrument\":" + BuildBookOfDaysInstrumentJson(originRace)

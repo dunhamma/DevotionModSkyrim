@@ -1180,13 +1180,13 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
 
   if (
     !app.includes("const normalizeJournalSurveyText = (value) =>") ||
-    !app.includes("const journalRaceText = (value) => normalizeJournalSurveyText(value).split(\"|\")[0].trim();") ||
+    !app.includes("const journalPathText = (value) => normalizeJournalSurveyText(value).replace(/\\s*\\|\\s*/g, \" - \").trim();") ||
     !app.includes('["nord", "Nord"]') ||
-    !app.includes("const survey = journalRaceText(journal.survey);")
+    !app.includes("const survey = journalPathText(journal.survey);")
   ) {
-    fail("Book of Days cover line must normalize public race labels and render only the race.", DEVOTION_PRISMA_VIEW);
+    fail("Book of Days cover line must normalize public race labels and render the concise path status.", DEVOTION_PRISMA_VIEW);
   } else {
-    pass("Book of Days cover line normalizes public race labels and renders only the race.", DEVOTION_PRISMA_VIEW);
+    pass("Book of Days cover line normalizes public race labels and renders the concise path status.", DEVOTION_PRISMA_VIEW);
   }
 
   const managerPath = path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc");

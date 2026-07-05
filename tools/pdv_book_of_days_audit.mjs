@@ -227,6 +227,8 @@ requireText(MANAGER, [
   "PDV.Diegetic.Journal.Titles",
   "BuildJournalPayloadJson",
   "BuildBookOfDaysPathInfo",
+  "GetBookOfDaysPathStatusLabel",
+  "BuildBookOfDaysSummary",
   "ResolveBookOfDaysStandingDeity",
   "BuildBookOfDaysInstrumentJson",
   "\\\"by\\\"",
@@ -245,6 +247,11 @@ requireText(MANAGER, [
   "GetTierStandingLabel(newTier)",
   "GetTierStandingLabel(TIER_CHAMPION)",
   'PDV_DiegeticDirectorService && !(eventClass == "tier" && direction == "reach")',
+], "manager source");
+
+forbidText(MANAGER, [
+  "path not yet chosen",
+  'j = j + ",\\"summary\\":\\"A record of devotional acts since the path began.\\""',
 ], "manager source");
 
 if (mustExist(MANAGER)) {

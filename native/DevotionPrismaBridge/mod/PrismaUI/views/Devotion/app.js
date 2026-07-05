@@ -1031,7 +1031,7 @@
     });
   };
 
-  const journalRaceText = (value) => normalizeJournalSurveyText(value).split("|")[0].trim();
+  const journalPathText = (value) => normalizeJournalSurveyText(value).replace(/\s*\|\s*/g, " - ").trim();
 
   const startupModeLabel = (mode) => {
     const normalized = text(mode, "").toLowerCase();
@@ -1317,10 +1317,10 @@
 
     if (nodes.journalTitle) nodes.journalTitle.textContent = text(journal.title, "Book of Days");
     if (nodes.journalBy) nodes.journalBy.textContent = text(journal.by, journalByline());
-    if (nodes.journalSummary) nodes.journalSummary.textContent = text(journal.summary, "A record of devotional acts since the path began.");
+    if (nodes.journalSummary) nodes.journalSummary.textContent = text(journal.summary, "Faith, conduct, and consequence leave their marks here.");
     if (nodes.journalPath) {
-      // Race info point. Standing and commitment live in the meter and entries below.
-      const survey = journalRaceText(journal.survey);
+      // Concise path status. Standing detail lives in the meter and entries below.
+      const survey = journalPathText(journal.survey);
       nodes.journalPath.textContent = survey;
       nodes.journalPath.hidden = !survey;
     }
@@ -2556,7 +2556,8 @@
       mode: "journal",
       journal: {
         title: "Book of Days", page: 0,
-        summary: "A record of devotional acts since the path began.",
+        summary: "Old Gods, Divines, and chosen roads leave their marks here.",
+        survey: "Nord - Broad Old Ways",
         dashboard: { gods: demoTrackingGods },
         entries: [
           { date: "17th of Last Seed", title: "The Trial of Iron", text: "You took up a discipline in the Trial of Iron. The Code is held in iron.", symbol: "malacath", valence: "good", magnitude: 1 },
