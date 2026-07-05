@@ -3551,6 +3551,15 @@ Bool Function AwardShrinePrayerToDeityName(String deityName, String shrineLabel,
         return False
     endIf
 
+    ; Divine shrine prayers are ambient world clicks; only emit PDV piety/journal
+    ; movement when that deity belongs to the player's cultural roster.
+    if !IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
+        if GetDebugLevel() >= 2
+            Debug.Trace("[PDV] Shrine prayer skipped outside origin roster: " + deity.DeityName + " from " + shrineLabel + " source " + sourceId)
+        endIf
+        return False
+    endIf
+
     AwardPiety(deity, 2.0, "shrine_prayer_" + sourceId)
     if GetDebugLevel() >= 2
         Debug.Trace("[PDV] Shrine prayer awarded " + deity.DeityName + " from " + shrineLabel + " source " + sourceId)
@@ -10383,7 +10392,7 @@ String Function HumanizeDriverReason(String raw)
     elseIf StringContainsToken(raw, "rivalry with")
         return raw
     elseIf StringContainsToken(raw, "read-skill-book")
-        return "reading a skill book"
+        return "reading instructive texts"
     elseIf StringContainsToken(raw, "read-spell-tome")
         return "reading a spell tome"
     elseIf StringContainsToken(raw, "read-lore-book")
@@ -10391,9 +10400,9 @@ String Function HumanizeDriverReason(String raw)
     elseIf StringContainsToken(raw, "po3_book") || StringContainsToken(raw, "book")
         return "reading a book"
     elseIf StringContainsToken(raw, "increase-skill")
-        return "a skill increase"
+        return "honing your skills"
     elseIf StringContainsToken(raw, "discover-location")
-        return "discovering a location"
+        return "discovering new roads"
     elseIf StringContainsToken(raw, "learn-word-of-power")
         return "learning a Word of Power"
     elseIf StringContainsToken(raw, "shout") || StringContainsToken(raw, "voice")

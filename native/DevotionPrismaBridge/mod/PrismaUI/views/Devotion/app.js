@@ -1154,7 +1154,7 @@
     const outerArc = `M${cx - 30} ${cy} A30 30 0 0 1 ${cx + 30} ${cy}`;
     return `<svg viewBox="0 0 240 150" width="100%" height="100%" aria-hidden="true">`
       + `<defs><linearGradient id="pdv-bod-sun" x1="0" y1="0" x2="0" y2="1">`
-      + `<stop offset="0" stop-color="#ecc869"/><stop offset="0.55" stop-color="#cda33f"/><stop offset="1" stop-color="#a87f27"/></linearGradient></defs>`
+      + `<stop offset="0" stop-color="#f7df8b"/><stop offset="0.42" stop-color="#d6ab43"/><stop offset="1" stop-color="#a87f27"/></linearGradient></defs>`
       + `<g stroke="${ink}" stroke-width="2.2" stroke-linecap="round" opacity="0.9">${longRays}</g>`
       + `<g stroke="${ink}" stroke-width="1.4" stroke-linejoin="round">`
       + `<path d="${flames}" fill="url(#pdv-bod-sun)"/><path d="${straights}" fill="url(#pdv-bod-sun)"/><path d="${disc}" fill="url(#pdv-bod-sun)"/></g>`
@@ -1210,7 +1210,31 @@
     return "a record kept since the path began";
   };
 
-  // Standing reuses the SAME per-path instrument the Patron tab renders.
+  const renderJournalPietyGauge = (slot, inst = {}) => {
+    const instData = inst.data || {};
+    const piety = clamp(instData.piety !== undefined ? instData.piety : state.piety, 0, 85);
+    const tier = numberOrZero(inst.tier !== undefined ? inst.tier : state.tier);
+    const pct = (value) => `${Math.round((value / 85) * 1000) / 10}%`;
+    const gauge = document.createElement("div");
+    gauge.className = "bod-gauge";
+    gauge.setAttribute("aria-hidden", "true");
+    const track = document.createElement("div");
+    track.className = "bod-gauge__track";
+    const fill = document.createElement("span");
+    fill.className = isWaning(inst) ? "bod-gauge__fill is-waning" : "bod-gauge__fill";
+    fill.style.width = pct(piety);
+    track.appendChild(fill);
+    gauge.appendChild(track);
+    thresholds.forEach((threshold, index) => {
+      const pip = document.createElement("span");
+      pip.className = tier >= index + 1 ? "bod-gauge__pip full" : "bod-gauge__pip";
+      pip.style.left = pct(threshold.value);
+      gauge.appendChild(pip);
+    });
+    slot.append(gauge);
+  };
+
+  // Piety paths get the book-styled gauge; other paths keep their live instruments.
   const renderJournalStanding = (instOverride) => {
     if (!nodes.journalInstrument) return;
     clear(nodes.journalInstrument);
@@ -1218,8 +1242,26 @@
     const fromState = state.instrument && typeof state.instrument === "object" ? state.instrument : null;
     const inst = fromOverride || fromState || pietyInstrumentFromState();
     const kind = text(inst.kind, "piety").toLowerCase();
-    const renderer = instrumentRenderers[kind] || renderPietyInstrument;
-    renderer(nodes.journalInstrument, inst);
+    const labelEl = document.querySelector("#pdv-journal-modal .bod-standing-label");
+    const pietyKind = kind === "piety" || !instrumentRenderers[kind];
+    if (labelEl) {
+      clear(labelEl);
+      labelEl.classList.toggle("is-tiered", pietyKind);
+      if (pietyKind) {
+        const tier = numberOrZero(inst.tier !== undefined ? inst.tier : state.tier);
+        labelEl.appendChild(document.createTextNode("Standing \u2014 "));
+        const em = document.createElement("em");
+        em.textContent = text(inst.tierLabel, tierName(tier));
+        labelEl.appendChild(em);
+      } else {
+        labelEl.textContent = "Standing";
+      }
+    }
+    if (pietyKind) {
+      renderJournalPietyGauge(nodes.journalInstrument, inst);
+    } else {
+      instrumentRenderers[kind](nodes.journalInstrument, inst);
+    }
   };
 
   const journalEntryNode = (entry) => {
@@ -1257,12 +1299,12 @@
   const fitJournalBook = () => {
     const scaler = document.getElementById("pdv-journal-scaler");
     if (!scaler) return;
-    const designWidth = 1180;
-    const designHeight = 720;
+    const designWidth = 1264;
+    const designHeight = 756;
     const margin = 20;
     const s = Math.min(1, (window.innerWidth - margin * 2) / designWidth, (window.innerHeight - margin * 2) / designHeight);
-    const x = Math.max(margin, (window.innerWidth - designWidth * s) / 2);
-    const y = Math.max(margin, (window.innerHeight - designHeight * s) / 2);
+    const x = Math.max(margin, (window.innerWidth - designWidth * s) / 2) + 42 * s;
+    const y = Math.max(margin, (window.innerHeight - designHeight * s) / 2) + 10 * s;
     scaler.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
   };
   window.addEventListener("resize", () => {

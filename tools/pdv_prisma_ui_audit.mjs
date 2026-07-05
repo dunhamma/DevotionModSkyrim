@@ -460,6 +460,19 @@ function verifyBookOfDaysChronicleActionContract({ manager, eventBus, actionRout
     pass("Focused-panel Ledger roster filter preserves native race deity/Prince packets.", managerPath);
   }
 
+  const shrinePrayerAwardBlock = functionBlock(manager, "AwardShrinePrayerToDeityName");
+  const shrineRosterGateIndex = shrinePrayerAwardBlock.indexOf("IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())");
+  const shrineAwardIndex = shrinePrayerAwardBlock.indexOf('AwardPiety(deity, 2.0, "shrine_prayer_" + sourceId)');
+  if (
+    shrineRosterGateIndex < 0 ||
+    shrineAwardIndex < 0 ||
+    shrineRosterGateIndex > shrineAwardIndex
+  ) {
+    fail("Divine shrine prayer awards must be gated by the player's origin roster before piety or Book of Days movement.", managerPath);
+  } else {
+    pass("Divine shrine prayer awards are gated by the player's origin roster before piety or Book of Days movement.", managerPath);
+  }
+
   if (
     readSkillIndex < 0 ||
     broadBookIndex < 0 ||

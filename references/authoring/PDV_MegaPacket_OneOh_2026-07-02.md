@@ -1,29 +1,35 @@
-# PDV 1.0 Mega Test Packet -- everything left to prove in game (2026-07-02)
+# PDV 1.0 Mega Test Packet -- consolidated remaining in-game proof (2026-07-02; updated 2026-07-05)
 
-Status: READY TO RUN (machine preflight green as of 2026-07-02; see Preflight Evidence below).
+Status: STRICT BETA-READINESS GATE PASSED 2026-07-05; residual runtime/manual proof remains below.
 Owner plan: `C:\Users\Admin\.claude\plans\kick-off-session-let-s-mighty-flask.md`.
 
 **What this is.** One ordered packet consolidating every remaining in-game proof between the
-current build and the strict 1.0 beta claim. It sequences the existing sheets -- it does NOT
-replace them. **On any conflict, the source run sheet wins**; this packet only owns the order,
-the save plan, and the evidence-sink map.
+current build and the next 1.0 work. It sequences the existing sheets -- it does NOT replace
+them. **On any conflict, the source run sheet wins**; this packet only owns the order, the save
+plan, and the evidence-sink map.
 
 **Proof boundary.** Everything below is Route/runtime or Manual/acceptance proof. The
 machine/readback bucket is already closed (see Preflight Evidence). Do not let a passing
-section here claim anything for compatibility, final-world placement, or V2 scope.
+section here claim anything for compatibility, final-world placement, V2 scope, or public
+support without the matching proof bucket.
 
 **Evidence intake rule.** Ledger statuses are `pending` / `evidence-recorded` /
 `not-applicable` only -- never write `pass`/`done` into
 `PDV_Phase20_ManualEvidenceLedger.json`; the beta gate derives the verdict.
 
+**Handoff reconciliation.** `PDV_SessionHandoff_2026-07-05_QuestExpansion.md` was written
+before `PDV_SessionHandoff_2026-07-05_DunmerCloseout.md`. Its Quest Expansion smoke queue is
+still valid, but its "Dunmer is the only blocker" statement is superseded. Imperial closed on
+2026-07-04, Dunmer closed on 2026-07-05, and the current strict audit passes.
+
 ---
 
-## Preflight Evidence (machine gates, run 2026-07-02 -- rerun before the session if anything changed)
+## Preflight Evidence (latest sanity pass 2026-07-05)
 
 | Gate | Result |
 |---|---|
 | `node .\tools\pdv_compile.mjs` | 0 errors / 0 warnings (PDV__ManagerQuest recompiled) |
-| `node .\tools\pdv_verify.mjs` | FAIL=0, WARN=1 (medallion glyph fallback, known), PASS=3512 |
+| `node .\tools\pdv_verify.mjs --json` | FAIL=0, WARN=1 (medallion glyph fallback, known), PASS=3513 |
 | `node .\tools\pdv_integrity_harness.mjs` | signal_e2e 39 GREEN / 0 RED; deity_chain 0 blockers; eligibility 147/0 |
 | `node .\tools\pdv_prisma_ui_audit.mjs` | PASS (49 checks) |
 | `node .\tools\pdv_prisma_toast_fallback_audit.mjs` | PASS incl. negative fixtures |
@@ -31,21 +37,29 @@ section here claim anything for compatibility, final-world placement, or V2 scop
 | `node .\tools\pdv_book_of_days_audit.mjs` | PASS=110, WARN=0, FAIL=0 |
 | `node .\tools\pdv_requiem_penalty_audit.mjs` | PASS (incl. Imperial ResistDisease -5 preservation) |
 | `node .\tools\pdv_daedric_beta_gate.mjs --json` | PASS=16 |
-| `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` | FAIL=2 -- exactly Imperial:7 + Dunmer:7 manual slots (expected; this packet closes them) |
+| `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` | STRICT_GATE_PASS; PASS=31, WARN=1, INFO=2, blockers=[] |
 
-Build state: live-source and MO2 are hash-identical for `PDV__ManagerQuest.psc`, `PDV_MCM.psc`,
-`PDV_DaedricPath_Hircine.psc` (the 2026-07-01 Prisma beat wires + MCM startup guard are deployed
-and compiled). Do NOT rebuild the tester zip from a pre-gate state afterward.
+Build state: live-source and MO2 were hash-identical for `PDV__ManagerQuest.psc`, `PDV_MCM.psc`,
+`PDV_DaedricPath_Hircine.psc` in the 2026-07-02 preflight. Rerun the quick sanity commands below
+before a new testing sitting if any code, plugin, Prisma, reward, Daedric, or runtime-surfacing
+file changed:
+
+```powershell
+git status --short
+node .\tools\pdv_beta_readiness_audit.mjs --strict --json
+node .\tools\pdv_verify.mjs --json
+```
 
 ---
 
-## Session plan (three sittings; A+B are the strict-gate long pole)
+## Session plan (post-strict-gate residual queue)
 
 | Sitting | Instance | Sections | Approx |
 |---|---|---|---|
-| 1 | **Anvil** | A. Imperial sheet -> E. day-to-day signal sweep (same Imperial save) -> C1. universal U1-U8 -> C2. beat spot-checks (origin flips) | long |
-| 2 | **Anvil** | B. Dunmer sheet -> F. Prince V2 deepening -> C3. focus-trap re-confirm | medium |
-| 3 | **Authoria** | D. Requiem felt sweep (A1-A9, B1, B2) + any magnitude tuning notes | medium |
+| 1 | **Anvil** | A. Quest Expansion smoke rows -> E. day-to-day signal sweep, including 361/362 -> C1/C2 Prisma residual rows | medium |
+| 2 | **Anvil** | F. Prince V2 path-deepening -> C3 focus-trap re-confirm if Prisma changed | medium |
+| 3 | **Authoria** | D. Requiem felt sweep (A1-A9, B1, B2) + penalty feltness and tuning notes | medium |
+| 4 | **Repo-side** | Rerun strict audit, then resume Experience Mode -> ARR package -> WS-3 branding only if no new blockers appear | short |
 
 Shared preflight, every sitting: disposable **new save** (or main-menu `coc qasmoke`);
 MO2 Anvil: disable `Devotion - Living Deities Test` (skip on Authoria -- not in that list);
@@ -59,43 +73,47 @@ refuse tests can reload.
 
 ---
 
-## A. Imperial race sheet  [strict-gate blocker 1 of 2]
+## A. Quest Expansion smoke rows  [next Anvil test]
 
-Run `references/authoring/PDV_RunSheet_Imperial_V1.md` in full (origin `1`). Slots 1-7,
-including 4a-4h. Key reminders baked in there -- judge Concordat by **Raw value** not the band
-label; the Talos book (`player.additem 000ED04D 1`) is a PIETY axis, not Concordat; broad
-worship caps at Tier 2; Refuse is terminal + surfaced, Decline is silent by design; Justiciar
-kill credit is player-killing-blow only; do NOT use activator routes 110-113 (Khajiit).
+Source handoff: `references/authoring/PDV_SessionHandoff_2026-07-05_QuestExpansion.md`.
+Source contract: `references/authoring/PDV_QuestExpansion_Architecture.md`.
 
-Evidence sink map (run-sheet slot -> `PDV_Phase20_ManualEvidenceLedger.json` Imperial slot):
+Run these on a disposable save after the quick sanity commands pass. They are route/runtime and
+manual-display proof for the 40-50 quests-per-deity expansion and meta-faucets, not a reason to
+reopen the race strict gate unless they expose a regression.
 
-| Run-sheet slot | Ledger slot |
-|---|---|
-| 1 new records | `assetStatus` |
-| 2 Survey | `surveyStatusClarity` |
-| 3 stack | `stackSnapshot` |
-| 4a-4h offer/Concordat/Talos/substrate loops | `immersiveHookProof` |
-| 5 wrong-origin | `wrongOriginRejection` |
-| 6 generic silence | `genericHookRejection` |
-| 7 felt | `manualFeelNote` |
+- Matrix reload count: confirm `832` cells / `118` keys / `90` watched quests.
+- Five PROVISIONAL `setstage` probes: `DLC1SeranaCureSelfQuest 200`, `MQ301 240`, `MS05 300`,
+  `FreeformRiftenThane 200`, `FreeformSkyhavenTempleA 50`.
+- One fire per meta lane: Z'en gold wage, Julianos/Azura mage-aid, Azura twilight,
+  Nocturnal theft-window, Nocturnal night, Khenarthi outdoors, Akatosh/Xarxes 10th-quest wheel.
+- Yield negative: a Julianos College quest fires the CELL, not the meta lane.
+- Once-guard negative: re-fire the same eligible quest/lane and confirm it does not double-score.
+- `362` route proof: steal an owned loose item or owned container item, not a pickpocket. Confirm
+  `[PDV] EventBus: RouteAction complete: event 362` or the `PDV.Meta.LastTheftTime` timestamp
+  advances. A deity delta is useful only if the current table scores it.
 
-Also fill the sheet's own Record table and note logs for `PDV_V1_BetaReadinessGate.md`.
+Tester notes:
 
-## B. Dunmer race sheet  [strict-gate blocker 2 of 2]
+- Stance multipliers apply to meta lanes; foreign faces can land at `0.4x`, so do not false-fail
+  a reduced value if the origin/stance explains it.
+- The meta Ledger copy pass and Daedric-path name-repair hardening were marked DONE in the same
+  handoff; this sitting is for runtime smoke, not re-authoring those follow-ups.
 
-Run `references/authoring/PDV_RunSheet_Dunmer_V1.md` in full (origin `5`). Slots 1-8. Key
-reminders -- the ancestral urn is a usable **MISC item** (Miscellaneous section; 2026-07-04
-remediation replaced the crashing BOOK token; a book-type urn = regression FAIL) and must STAY
-in inventory after use; the ancestor act must land a **Ledger driver row** (the P0 regression);
-layer-label deepening is a NEXT-DAWN chronicle, not a toast; vampire = 0x prayer credit,
-werewolf = 0.5x, cure = full + scarred posture; broad three-Good-Daedra worship caps at Tier 2.
+## B. Closed race strict-gate packets  [do not retest without regression]
 
-Same ledger mapping as Imperial (slot 1 -> `assetStatus` ... slot 8 felt -> `manualFeelNote`;
-4a-4f -> `immersiveHookProof`; 7 neglect rides `immersiveHookProof` or the universal sheet).
+Imperial and Dunmer are both closed for the current beta-feel packet. Do not run these as next
+tests unless a new change touches their route handlers, Survey/status wording, focused Devotion
+panel filtering, Book of Days/Ledger payloads, rewards/Active Effects, Dunmer home logic, or
+Good Daedra/deviation-price surfaces.
+
+- Imperial: PASS 2026-07-04; final-world placement remains separate.
+- Dunmer: PASS 2026-07-05; all slots 1-8 plus shared Daedric inn-sleep proof recorded.
+- Current strict audit: `STRICT_GATE_PASS` 2026-07-05, with no blockers.
 
 ## C. Prisma verification (beats wired 2026-07-01 + universal surfaces)
 
-### C1. Universal sheet U1-U9 (once per character, ride the Session-1 Imperial save)
+### C1. Universal sheet U1-U9 (once on the current build)
 Run `references/authoring/PDV_RunSheet_Universal_Prisma_V1.md`. U6 (neglect drop) and U7
 (recovery at piety 15, no tier-up) are the newest rows; U8 covers offer accept/refuse with the
 LOCKED per-race strings (see the table there for exact Nord/Imperial/Dunmer/Altmer/Redguard
@@ -144,7 +162,7 @@ record TUNED values as notes; do NOT re-run cumulative-rebalance tools (not idem
 Evidence sink: Redguard + Daedric/Namira blocks of `PDV_Phase20_ManualEvidenceLedger.json`;
 route checker `node .\tools\pdv_phase20_runtime_check.mjs`.
 
-## E. Day-to-day signal sweep (ride the Session-1 Imperial save -- broadest native coverage)
+## E. Day-to-day signal sweep (Anvil -- broadest native coverage)
 
 Per `PDV_InGameTestingNeeded_Runbook.md` section 5. DebugLevel 2 (3 for cap checks). Marker:
 `[PDV] EventBus: <deity> event <id> delta <x>` -- delta must match `PDV_DeityLikesDislikes.csv`
@@ -160,7 +178,8 @@ exactly.
 - race-gate negative: flip `PDV_GLO_OriginRace`, same act scores 0 for non-native gods
 - attribution filter: environmental kill logs `skipped non-scoring attribution`
 - anti-farm: capped act stops at daily cap, 0.7^n decay; dawn bank moves PietyToday -> Piety
-- this run doubles as the fresh-save proof of the expanded likes/dislikes rows (v8/v3 bodies)
+- this run doubles as the fresh-save proof of the expanded likes/dislikes rows and the
+  now-runnable `362` route.
 
 Already confirmed 2026-06-10: 300/301/345 CSV-exact + race-gate + attribution. Remaining:
 craft / book / sleep / full transgression set incl. 361 and 362, plus Nord-origin spot-checks.
@@ -193,13 +212,11 @@ Marker: `[PDV] PrinceV2: <Prince> event <id> deepen <x>`.
 
 ## After the run (owner, repo side)
 
-1. Intake evidence: Imperial + Dunmer slots (`evidence-recorded` + notes) into
-   `PDV_Phase20_ManualEvidenceLedger.json`; fill both run-sheet Record tables; log capture into
-   `PDV_V1_BetaReadinessGate.md`; C-F results into their trackers (Requiem tracker Track B,
-   runbook sections 5/6, `PDV_PreBetaRaceGateLedger.md`).
-2. Rerun the gate: `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` -- the target is
-   NO FAIL blockers.
-3. Fold any new defects into existing trackers (not new docs); magnitude notes feed the
-   scaling/anti-farm pass.
-4. Only after the gate passes: proceed to Experience Mode build, then ARR compat, then
-   branding/packaging per the 1.0 plan.
+1. Intake Quest Expansion, day-to-day, Prisma, Prince V2, and Requiem results into their
+   existing trackers/runbook sections; do not create a new parallel handoff unless the result
+   changes the next-session queue.
+2. Rerun the gate: `node .\tools\pdv_beta_readiness_audit.mjs --strict --json`; the expected
+   result remains `STRICT_GATE_PASS` unless a new regression was found.
+3. Fold any new defects into existing trackers; magnitude notes feed the scaling/anti-farm pass.
+4. If the gate still passes and no residual test opens a blocker, proceed to Experience Mode
+   build, then ARR compat package, then WS-3 branding/packaging per the 1.0 plan.

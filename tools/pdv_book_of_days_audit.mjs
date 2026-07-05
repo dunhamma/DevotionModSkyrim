@@ -205,6 +205,8 @@ forbidText(path.join(REPO_VIEW, "app.js"), [
   "bod-standing-diamond",
   "journal-rune-mark",
   "bod-ledger",
+  "bod-gauge__labels",
+  "bod-gauge-caption",
 ], "repo app");
 
 forbidText(path.join(REPO_VIEW, "styles.css"), [
@@ -212,6 +214,8 @@ forbidText(path.join(REPO_VIEW, "styles.css"), [
   ".bod-standing-diamond",
   ".journal-rune-mark",
   ".bod-ledger",
+  ".bod-gauge__labels",
+  ".bod-gauge-caption",
 ], "repo styles");
 
 forbidText(path.join(REPO_VIEW, "index.html"), [

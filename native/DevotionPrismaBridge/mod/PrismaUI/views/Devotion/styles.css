@@ -1524,20 +1524,112 @@ h1 {
 
 /* The book: leather cover wrapping two parchment pages */
 #pdv-journal-modal .bod {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
   width: 1180px;
   min-height: 680px;
-  padding: 20px;
-  border-radius: 10px;
-  background:
-    linear-gradient(160deg, #4a3520 0%, #3a2817 55%, #2c1d10 100%);
-  box-shadow:
-    0 40px 110px rgba(10, 6, 2, 0.7),
-    inset 0 0 0 2px rgba(150, 110, 60, 0.35),
-    inset 0 0 0 6px rgba(40, 26, 14, 0.6);
   color: var(--bod-ink);
   font-family: var(--bod-serif);
+  filter: drop-shadow(0 40px 55px rgba(0, 0, 0, 0.7)) drop-shadow(0 8px 14px rgba(0, 0, 0, 0.5));
+}
+#pdv-journal-modal .bod::before {
+  content: "";
+  position: absolute;
+  inset: -30px -42px -46px;
+  border-radius: 12px 14px 14px 12px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='l'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23l)' opacity='0.55'/%3E%3C/svg%3E"),
+    linear-gradient(90deg, transparent calc(50% - 79px), rgba(0, 0, 0, 0.32) calc(50% - 74px), rgba(0, 0, 0, 0.32) calc(50% - 71px), rgba(226, 196, 126, 0.10) calc(50% - 68px), transparent calc(50% - 64px)),
+    linear-gradient(90deg, transparent calc(50% + 64px), rgba(226, 196, 126, 0.10) calc(50% + 68px), rgba(0, 0, 0, 0.32) calc(50% + 71px), rgba(0, 0, 0, 0.32) calc(50% + 74px), transparent calc(50% + 79px)),
+    radial-gradient(60% 55% at 22% 20%, rgba(122, 84, 44, 0.55), transparent 60%),
+    radial-gradient(55% 60% at 82% 78%, rgba(52, 34, 18, 0.6), transparent 62%),
+    radial-gradient(70% 60% at 50% 0%, rgba(120, 84, 44, 0.5), transparent 65%),
+    linear-gradient(150deg, #5a3d20 0%, #43301a 44%, #331f10 100%);
+  background-blend-mode: soft-light, normal, normal, normal, normal, normal, normal;
+  box-shadow:
+    inset 0 2px 1px rgba(214, 168, 96, 0.35),
+    inset 0 -6px 16px rgba(0, 0, 0, 0.7),
+    inset 8px 0 18px rgba(0, 0, 0, 0.45),
+    inset -8px 0 18px rgba(0, 0, 0, 0.45),
+    inset 0 0 0 5px rgba(0, 0, 0, 0.28),
+    inset 0 0 0 6px rgba(228, 196, 120, 0.32),
+    inset 0 0 0 12px rgba(0, 0, 0, 0.22),
+    inset 0 0 0 13px rgba(228, 196, 120, 0.18),
+    0 1px 0 rgba(226, 196, 126, 0.14);
+}
+#pdv-journal-modal .bod::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 150px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background:
+    linear-gradient(90deg,
+      transparent 0, transparent 40%,
+      rgba(255, 247, 219, 0.40) 43.5%, transparent 46.5%,
+      transparent 53.5%, rgba(255, 247, 219, 0.40) 56.5%,
+      transparent 60%, transparent 100%),
+    linear-gradient(90deg,
+      rgba(70, 50, 26, 0) 0%,
+      rgba(70, 50, 26, 0.06) 30%,
+      rgba(64, 45, 22, 0.18) 41%,
+      rgba(46, 32, 16, 0.45) 47%,
+      rgba(20, 13, 6, 0.78) 50%,
+      rgba(46, 32, 16, 0.45) 53%,
+      rgba(64, 45, 22, 0.18) 59%,
+      rgba(70, 50, 26, 0.06) 70%,
+      rgba(70, 50, 26, 0) 100%);
+}
+#pdv-journal-modal .bod-spine {
+  position: absolute;
+  z-index: 3;
+  top: -30px;
+  bottom: -46px;
+  left: 50%;
+  width: 64px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: linear-gradient(90deg,
+    rgba(0, 0, 0, 0) 0%, rgba(20, 13, 6, 0) 18%,
+    rgba(26, 17, 8, 0.5) 40%, rgba(10, 6, 3, 0.85) 50%,
+    rgba(26, 17, 8, 0.5) 60%, rgba(20, 13, 6, 0) 82%, rgba(0, 0, 0, 0) 100%);
+}
+#pdv-journal-modal .bod-spine::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 12px;
+  width: 120px;
+  height: 42px;
+  background: radial-gradient(52% 95% at 50% 100%, rgba(12, 8, 4, 0.85), rgba(14, 9, 4, 0.42) 55%, transparent 80%);
+}
+#pdv-journal-modal .bod-spine::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 22px;
+  width: 48px;
+  height: 20px;
+  background: radial-gradient(50% 95% at 50% 0%, rgba(12, 8, 4, 0.6), rgba(14, 9, 4, 0.28) 55%, transparent 80%);
+}
+#pdv-journal-modal .bod-tailfill {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: -17px;
+  width: 34px;
+  height: 20px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: repeating-linear-gradient(180deg, #d8caa4 0 2px, #c7b98c 2px 4px);
 }
 
 #pdv-journal-modal .bod-close {
@@ -1568,6 +1660,7 @@ h1 {
 /* Each parchment page */
 #pdv-journal-modal .bod-page {
   position: relative;
+  z-index: 1;
   padding: 40px 46px 44px;
   background:
     radial-gradient(120% 80% at 30% 8%, rgba(120, 96, 58, 0.10), transparent 60%),
@@ -1595,12 +1688,22 @@ h1 {
     inset 0 0 70px rgba(150, 120, 70, 0.10);
 }
 #pdv-journal-modal .bod-page--left {
-  border-radius: 6px 2px 2px 6px;
-  box-shadow: inset -22px 0 36px -20px rgba(20, 12, 4, 0.6);
+  border-radius: 4px 2px 2px 4px;
+  box-shadow:
+    inset 0 0 50px rgba(120, 92, 52, 0.28),
+    -1px 2px 0 #e2d4ae, -2px 4px 0 #cec091, -3px 6px 0 #e2d4ae,
+    -4px 8px 0 #cec091, -5px 10px 0 #ddceaa, -6px 12px 0 #c7b98c,
+    -7px 14px 0 #ddceaa, -8px 16px 0 #bfb185,
+    -9px 20px 26px rgba(0, 0, 0, 0.5);
 }
 #pdv-journal-modal .bod-page--right {
-  border-radius: 2px 6px 6px 2px;
-  box-shadow: inset 22px 0 36px -20px rgba(20, 12, 4, 0.6);
+  border-radius: 2px 4px 4px 2px;
+  box-shadow:
+    inset 0 0 50px rgba(120, 92, 52, 0.28),
+    1px 2px 0 #e2d4ae, 2px 4px 0 #cec091, 3px 6px 0 #e2d4ae,
+    4px 8px 0 #cec091, 5px 10px 0 #ddceaa, 6px 12px 0 #c7b98c,
+    7px 14px 0 #ddceaa, 8px 16px 0 #bfb185,
+    9px 20px 26px rgba(0, 0, 0, 0.5);
 }
 
 /* ---- Left page: frontispiece, centred ---- */
@@ -1676,6 +1779,54 @@ h1 {
   width: 280px;
   max-width: 100%;
 }
+
+#pdv-journal-modal .bod-standing-label.is-tiered {
+  font-size: 21px;
+  letter-spacing: 0.08em;
+  color: #2a1f12;
+}
+#pdv-journal-modal .bod-standing-label.is-tiered em {
+  color: #7a5a22;
+  font-style: italic;
+}
+#pdv-journal-modal .bod-gauge {
+  position: relative;
+  width: 320px;
+  max-width: 100%;
+  height: 26px;
+  margin-top: 10px;
+}
+#pdv-journal-modal .bod-gauge__track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 10px;
+  height: 6px;
+  border-radius: 3px;
+  border: 1px solid #7a5a22;
+  background: rgba(122, 90, 34, 0.12);
+}
+#pdv-journal-modal .bod-gauge__fill {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  bottom: 1px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #c8a350, #9a7c34);
+}
+#pdv-journal-modal .bod-gauge__fill.is-waning {
+  background: linear-gradient(180deg, #9a9078, #6f6552);
+}
+#pdv-journal-modal .bod-gauge__pip {
+  position: absolute;
+  top: 13px;
+  width: 12px;
+  height: 12px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  border: 1.4px solid #7a5a22;
+  background: #ece0c2;
+}
+#pdv-journal-modal .bod-gauge__pip.full { background: #9a7c44; }
 
 /* ---- Instruments re-tinted for parchment ---- */
 #pdv-journal-modal .instrument-svg {

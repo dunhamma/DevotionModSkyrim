@@ -47,15 +47,20 @@ zeroes regen buffs, so flat heals must show the bar move here).
   **50**, then **85**. After each inspection, close the Book with ESC and confirm the next tier-up does not
   re-open it by itself.
 - **See:** each step pops a **toast** and writes a **Book of Days** entry, but the **Book of Days never opens
-  by itself**. The Book entry names the level reached: **Seeker**, **Devoted**, then **Champion**. The left
-  instrument names the deity just advanced and fills to the relevant notch. At **Champion (85)** the Book of
-  Days entry is **pinned** (it won't get pruned later). No double entries on re-cross.
+  by itself**. The Book entry names the level reached: **Seeker**, **Devoted**, then **Champion**. For piety
+  paths, the left page shows the book-styled standing gauge: **Standing - <tier>**, fill based on piety/85,
+  and unlabeled lit diamonds at **25 / 50 / 85**. There should be no text row or piety caption beneath the
+  gauge. At **Champion (85)** the Book of Days entry is **pinned** (it won't get pruned later). No double
+  entries on re-cross.
 - **Record:** ___
 
 ### U3 -- daily favor + the dawn digest  [Tester] [R]+[M]
 - **Do:** MCM Debug -> award your patron a curated signal (so the day has activity). **Run Dawn.**
 - **See:** acts for your **active patron** flash a favor toast (other gods stay quiet); at dawn a **"dawn"**
   toast + a **Book of Days "the day's devotions"** line naming up to 3 gods. No spam of one-line entries.
+- **Negative:** on a Dunmer save, click a **Kynareth** shrine after this build. It must not add fresh
+  Kynareth/Kyne/Khenarthi piety, Ledger movement, Prisma toast, or a new Book of Days line. Ignore any
+  already-existing pre-fix row in the save; judge only new movement from the current click.
 - **Record:** ___
 
 ### U4 -- the Ledger + the substrate-driver fix  [Tester] [R]+[M]
