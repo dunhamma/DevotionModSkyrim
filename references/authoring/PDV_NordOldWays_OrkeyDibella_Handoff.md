@@ -45,26 +45,21 @@ All Papyrus changes are in BOTH the tracked live-source and the MO2 build copy
 | pdv_eligibility_reward_coverage_audit | PASS (147 rows, 0 failures) |
 | pdv_formal_offer_check | PASS (194 checks) |
 | pdv_prisma_ui_audit | PASS (88 checks) |
-| Orkey MESG in Devotion.esp | PENDING -- see below |
+| Orkey MESG in Devotion.esp | DONE 2026-07-06 -- 07161B, --check PASS |
+| SEQ refresh after ESP write | DONE (pdv_refresh_seq --write, backup kept) |
 | In-game offer smoke | PENDING -- owner action |
 
-## PENDING: Orkey MESG ESP write
+## Orkey MESG ESP write (completed)
 
-`dotnet run --project tools/pdv-nord-offer-author` fail-closed because
-SkyrimSE was RUNNING and held `Devotion.esp` (a session monitor is armed to
-retry on game exit). The dry-run passed: creates `PDV_Msg_Nord_Orkey_Offer`
-(07161B), rewires 13 offer properties, buttons [Accept | Not yet | Refuse].
-If the monitor did not complete it, run after closing the game:
-
-```
-dotnet run --project tools/pdv-nord-offer-author            # writes + backup
-dotnet run --project tools/pdv-nord-offer-author -- --check # must be PASS
-node tools/pdv_verify.mjs                                   # FAIL=0
-```
-
-Until that write lands, an Old Ways Arkay offer would show a NULL message
-(no offer box) -- the eligibility change is live in script, so do not smoke
-Orkey before the ESP write is in.
+The first write attempt fail-closed while SkyrimSE held `Devotion.esp`; after
+the game closed, `dotnet run --project tools/pdv-nord-offer-author` wrote
+`PDV_Msg_Nord_Orkey_Offer` (07161B:Devotion.esp), rewired all 13 offer
+properties, and `--check` reads back PASS with buttons
+[Accept | Not yet | Refuse]. ESP backup:
+`Backups\nord-offer\Devotion.esp.20260706-081114.bak`. The SEQ was
+regenerated afterward (`node tools/pdv_refresh_seq.mjs --write`) so
+`pdv_verify` is back to FAIL=0 with only the pre-existing medallion-glyph
+WARN. The build is smoke-ready.
 
 ## In-game smoke (owner, MCM debug page, default Nord Old Ways save)
 
