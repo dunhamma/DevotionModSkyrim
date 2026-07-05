@@ -75,10 +75,26 @@ Orkey lane:
 6. Rewards: at Seeker tier expect the Imperial Arkay T1 spell in Active
    Effects (same record as the Nine Divines lane).
 
-Dibella lane:
-7. "Reset commitment state" on Arkay (or continue on a second save).
-8. Repeat steps 1-5 with Dibella. EXPECT: offer "Dibella's Recognition";
-   all surfaces show "Dibella" (no rename in either baseline).
+Dibella lane (NOTE the one-patron rule: while Orkey/Arkay is the active
+patron, no new offer will evaluate -- "Reset commitment state" clears
+pending/cooldown only, NOT the active patron):
+7. Either load a pre-commit save, or on the same save: MCM debug >
+   "Debug patron override" with Dibella selected (this now resyncs reward
+   spells immediately -- fix 2026-07-06), or "Clear patron" then run the
+   offer flow organically.
+8. Repeat steps 1-5 with Dibella. EXPECT: offer "Dibella's Recognition"
+   (offer path only); all surfaces show "Dibella" (no rename in either
+   baseline); Active Effects show "Dibella's Grace" for the current tier
+   (Devoted at piety 50: Speech +13, Magicka Regeneration +5%).
+
+Known false-negative (FIXED 2026-07-06): before the fix, "Debug patron
+override" set the patron without resyncing reward families, so toasts,
+panel, and Survey all updated while Active Effects stayed empty until the
+next dawn. That was a debug-path gap in ForceSetActiveDeityByIndex (both
+baselines affected), not missing Old Ways reward wiring; the offer-accept
+path always synced. DebugClearActiveDeity got the same fix (strips reward
+spells immediately on clear). Requires a full game restart to load the
+recompiled PDV__ManagerQuest.pex.
 
 Cross-baseline check:
 9. On a Nine Divines Nord save, Arkay must still offer as "Arkay's Covenant"

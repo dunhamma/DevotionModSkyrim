@@ -10192,6 +10192,10 @@ Function ForceSetActiveDeityByIndex(Int deityIndex)
     endIf
 
     SetActiveDeity(deity)
+    ; Resync the race reward families immediately (mirrors DebugForceSetPietyByIndex):
+    ; without this a debug patron override surfaces every toast/panel/Survey cue but
+    ; grants no reward spells until the next dawn pass -- reads as "rewards not wired".
+    SyncFirstTierRaceRewardRuntime()
 EndFunction
 
 Function ForceSetPietyToday(Float amount)
@@ -10362,6 +10366,9 @@ EndFunction
 
 Function DebugClearActiveDeity()
     SetActiveDeity(None)
+    ; Strip the now-unfocused patron's reward spells immediately (same dawn-lag class
+    ; as ForceSetActiveDeityByIndex).
+    SyncFirstTierRaceRewardRuntime()
 EndFunction
 
 Function DebugSetBroadWorship()
