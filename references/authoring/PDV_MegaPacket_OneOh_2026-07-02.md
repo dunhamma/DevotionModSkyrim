@@ -302,6 +302,13 @@ Run the whole vocabulary here; every row lands on a Divine. Deltas must be CSV-e
 - transgression (the Divines read these as **dislikes**): owned lock `360`, **`361` trespass**
   (enter an owned home uninvited + detected), **`362` steal-item** (owned loose/container item, NOT
   a pickpocket), assault innocent `364`, raise undead `365`, daedric artifact `368`
+  - **`360` owned lock -- PROVEN 2026-07-05 via menu-hook fallback (SM route dead):** the LockPick
+    Story Manager event is not emitted in this setup, so 360 now routes from a
+    `RegisterForMenu("Lockpicking Menu")` hook in `PDV_PlayerEvents` (crosshair-ref capture on
+    open, locked->unlocked + owned/cell-owner check on close). In-game PASS on the Imperial save:
+    `Zenithar event 360 delta -0.5`, CSV-exact. `362` dislike side also fired CSV-exact the same
+    day (Mara/Stendarr/Zenithar/Julianos). Full record:
+    `PDV_SessionHandoff_2026-07-05_PickLock360SMFix.md`.
 - **`362` route proof**: `[PDV] EventBus: RouteAction complete: event 362` **or** an advanced
   `PDV.Meta.LastTheftTime` stamp (the Nocturnal meta-faucet consumes it). Under Imperial you also
   see the Divine **dislike** delta; the positive/like side is E3.
