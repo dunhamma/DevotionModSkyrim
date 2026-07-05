@@ -50,6 +50,7 @@ string[] genericFaucetReceiverQuests =
 ];
 
 var skyrimMaster = ModKey.FromNameAndExtension("Skyrim.esm");
+var devotionMaster = ModKey.FromNameAndExtension("Devotion.esp");
 var genericFaucetFillEntries = BuildGenericFaucetFillEntries(skyrimMaster);
 GenericFaucetStoryManagerNode[] genericFaucetStoryManagerNodes =
 [
@@ -57,7 +58,7 @@ GenericFaucetStoryManagerNode[] genericFaucetStoryManagerNodes =
     new("PDV__SM_NewVoicePowerNode", "PDV__SM_NewVoicePower", new FormKey(skyrimMaster, 0x02D389), new FormKey(skyrimMaster, 0x02D38A)),
     new("PDV__SM_IncreaseSkillNode", "PDV__SM_IncreaseSkill", new FormKey(skyrimMaster, 0x02D386), new FormKey(skyrimMaster, 0x02D387)),
     new("PDV__SM_ChangeLocationNode", "PDV__SM_ChangeLocation", new FormKey(skyrimMaster, 0x01320E), new FormKey(skyrimMaster, 0x0A39C6)),
-    new("PDV__SM_PickLockNode", "PDV__SM_PickLock", new FormKey(skyrimMaster, 0x05BD7B), null),
+    new("PDV__SM_PickLockNode", "PDV__SM_PickLock", new FormKey(devotionMaster, 0x071618), null),
     new("PDV__SM_AssaultActorNode", "PDV__SM_AssaultActor", new FormKey(skyrimMaster, 0x02C494), new FormKey(skyrimMaster, 0x0A39C0)),
     new("PDV__SM_AddToPlayerNode", "PDV__SM_AddToPlayer", new FormKey(skyrimMaster, 0x02C439), null),
 ];
@@ -1842,6 +1843,33 @@ static void EnsureGenericFaucetStoryManager(
     IEnumerable<GenericFaucetStoryManagerNode> nodes,
     AuthorReport report)
 {
+    var storyManagerRoot = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x00005B);
+
+    StoryManagerEventNode pickLockEvent;
+    if (index.TryGetValue("PDV__SM_PickLockEvent", out var existingPickLockEvent))
+    {
+        if (existingPickLockEvent is not StoryManagerEventNode typedPickLockEvent)
+        {
+            throw new InvalidOperationException($"PDV__SM_PickLockEvent exists as {existingPickLockEvent.GetType().Name}, expected SMEN/StoryManagerEventNode.");
+        }
+
+        pickLockEvent = typedPickLockEvent;
+    }
+    else
+    {
+        pickLockEvent = new StoryManagerEventNode(allocator.Next(), SkyrimRelease.SkyrimSE);
+        mod.StoryManagerEventNodes.Add(pickLockEvent);
+        index["PDV__SM_PickLockEvent"] = pickLockEvent;
+    }
+
+    pickLockEvent.EditorID = "PDV__SM_PickLockEvent";
+    pickLockEvent.FormVersion = 44;
+    pickLockEvent.Type = StoryManagerEventNode.Types.LockPick;
+    pickLockEvent.Parent = storyManagerRoot.ToNullableLink<IAStoryManagerNodeGetter>();
+    pickLockEvent.Flags = 0;
+    pickLockEvent.MaxConcurrentQuests = 0;
+    report.Actions.Add("Ensured PickLock SMEN root PDV__SM_PickLockEvent (Type=LockPick).");
+
     foreach (var nodeSpec in nodes)
     {
         var receiver = RequireRecord<Quest>(index, nodeSpec.ReceiverQuestEditorId);
@@ -1891,8 +1919,6 @@ static void EnsureGenericFaucetStoryManager(
     // attach the PDV__SM_Trespass receiver node under it with Shares Event. The receiver
     // fragment filters to the player trespasser, so no node-level conditions are needed.
     var trespassReceiver = RequireRecord<Quest>(index, "PDV__SM_Trespass");
-    var storyManagerRoot = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x00005B);
-
     StoryManagerEventNode trespassEvent;
     if (index.TryGetValue("PDV__SM_TrespassEvent", out var existingTrespassEvent))
     {
@@ -1953,6 +1979,8 @@ static void CheckGenericFaucetStoryManager(
     IEnumerable<GenericFaucetStoryManagerNode> nodes,
     AuthorReport report)
 {
+    var storyManagerRoot = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0x00005B);
+
     foreach (var nodeSpec in nodes)
     {
         var receiver = RequireRecord<Quest>(index, nodeSpec.ReceiverQuestEditorId);
@@ -1997,6 +2025,23 @@ static void CheckGenericFaucetStoryManager(
         }
 
         report.Actions.Add($"{nodeSpec.NodeEditorId} points at {nodeSpec.ReceiverQuestEditorId} with SharesEvent.");
+    }
+
+    if (!index.TryGetValue("PDV__SM_PickLockEvent", out var pickLockEventRecord) || pickLockEventRecord is not StoryManagerEventNode pickLockEventTyped)
+    {
+        report.Errors.Add("PDV__SM_PickLockEvent SMEN root is missing.");
+    }
+    else if (pickLockEventTyped.Type != StoryManagerEventNode.Types.LockPick)
+    {
+        report.Errors.Add($"PDV__SM_PickLockEvent has Type {pickLockEventTyped.Type}, expected LockPick.");
+    }
+    else if (!pickLockEventTyped.Parent.FormKey.Equals(storyManagerRoot))
+    {
+        report.Errors.Add($"PDV__SM_PickLockEvent parent is {pickLockEventTyped.Parent.FormKey}, expected {storyManagerRoot}.");
+    }
+    else
+    {
+        report.Actions.Add("PDV__SM_PickLockEvent is a retained LockPick SMEN root under the Story Manager root.");
     }
 
     if (!index.TryGetValue("PDV__SM_TrespassEvent", out var trespassEventRecord) || trespassEventRecord is not StoryManagerEventNode trespassEventTyped)

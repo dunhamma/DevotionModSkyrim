@@ -830,8 +830,13 @@ const GENERIC_FAUCET_STORY_MANAGER_NODES = [
     eventName: "Pick Lock",
     nodeEdid: "PDV__SM_PickLockNode",
     receiverQuest: "PDV__SM_PickLock",
-    parent: "Skyrim.esm:05BD7B",
+    parent: "Devotion.esp:071618",
     previousSibling: null,
+    eventRoot: {
+      edid: "PDV__SM_PickLockEvent",
+      parent: "Skyrim.esm:00005B",
+      type: "LockPick",
+    },
   },
   {
     eventName: "Trespass",
@@ -8272,6 +8277,23 @@ class Verifier {
       if (fields.Parent !== node.parent) {
         failures.push(`parent is ${fields.Parent || "(missing)"}, expected ${node.parent}`);
       }
+      if (node.eventRoot) {
+        const eventDetail = this.recordDetails.get(node.eventRoot.edid);
+        if (!eventDetail) {
+          failures.push(`event root ${node.eventRoot.edid} is missing`);
+        } else {
+          const eventFields = eventDetail.fields || {};
+          if (String(eventDetail.record_type || "").toUpperCase() !== "STORYMANAGEREVENTNODE") {
+            failures.push(`event root ${node.eventRoot.edid} type is ${eventDetail.record_type || "(missing)"}, expected STORYMANAGEREVENTNODE`);
+          }
+          if (eventFields.Type !== node.eventRoot.type) {
+            failures.push(`event root ${node.eventRoot.edid} event type is ${eventFields.Type || "(missing)"}, expected ${node.eventRoot.type}`);
+          }
+          if (eventFields.Parent !== node.eventRoot.parent) {
+            failures.push(`event root ${node.eventRoot.edid} parent is ${eventFields.Parent || "(missing)"}, expected ${node.eventRoot.parent}`);
+          }
+        }
+      }
       if ((fields.PreviousSibling || null) !== (node.previousSibling || null)) {
         failures.push(`previous sibling is ${fields.PreviousSibling || "(none)"}, expected ${node.previousSibling || "(none)"}`);
       }
@@ -8286,9 +8308,10 @@ class Verifier {
       if (failures.length) {
         this.fail("Generic faucet Story Manager node", `${node.nodeEdid}: ${failures.join("; ")}.`, PDV_ESP);
       } else {
+        const eventRootSuffix = node.eventRoot ? ` via ${node.eventRoot.edid}` : "";
         this.pass(
           "Generic faucet Story Manager node",
-          `${node.nodeEdid} routes ${node.eventName} to ${node.receiverQuest} with Shares Event.`,
+          `${node.nodeEdid} routes ${node.eventName}${eventRootSuffix} to ${node.receiverQuest} with Shares Event.`,
           PDV_ESP,
         );
       }
