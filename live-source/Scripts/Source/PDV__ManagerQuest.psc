@@ -9588,7 +9588,19 @@ Function RunDawnConsolidateScratch()
         Form deityForm = PDV_FLST_AllDeities.GetAt(i)
         PDV_DeityBase deity = deityForm as PDV_DeityBase
 
-        if deity
+        ; Dawn skip (2026-07-05): a deity outside the origin roster with zero
+        ; scratch and zero standing has nothing to consolidate and no surface
+        ; that reads its Week ring or tier -- skip the per-dawn writes for it.
+        ; Old saves with pre-gate foreign piety still consolidate (piety > 0
+        ; falls through to the full body).
+        Bool dawnSkip = False
+        if deity && !IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
+            if StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday") == 0.0 && StorageUtil.GetFloatValue(deityForm, "PDV.Piety") == 0.0
+                dawnSkip = True
+            endIf
+        endIf
+
+        if deity && !dawnSkip
             EnsureDeityState(deity)
 
             Float pietyToday = StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday")
