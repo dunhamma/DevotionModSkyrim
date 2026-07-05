@@ -274,11 +274,13 @@ Function HandleStoryTrespass(ObjectReference akVictim, ObjectReference akTrespas
         return
     endIf
 
-    if aiCrime <= 0
-        Trace(3, "HandleStoryTrespass skipped: no crime flag.")
-        return
-    endIf
-
+    ; aiCrime is deliberately NOT gated. The SM Trespass event fires at the
+    ; DETECTED-trespass moment (the on-screen "trespassing" warning); the bare
+    ; event carries aiCrime == 0 because no bounty is assigned yet -- an
+    ; escalated bounty arrives later via a separate CrimeGold event. Gating on
+    ; aiCrime > 0 made this signal effectively unsatisfiable, so event 361 never
+    ; fired in game (Mega Packet S1 E1, 2026-07-05). Anti-farm is handled
+    ; downstream by the EVT_TRESPASS daily cap (3/day).
     RouteActionWithAttribution(EVT_TRESPASS, ATTR_DIRECT_PLAYER, akTrespasser as Form, akVictim as Form)
 EndFunction
 
@@ -314,11 +316,29 @@ Function HandleStoryAssaultActor(ObjectReference akVictim, ObjectReference akAtt
         return
     endIf
 
-    if aiCrime <= 0 || victimActor.IsHostileToActor(playerActor)
-        Trace(3, "HandleStoryAssaultActor skipped: no innocent assault evidence.")
+    ; Diagnostic: capture the real crime value the SM event delivers so the
+    ; crime-vs-hostility timing is answerable straight from the log.
+    Trace(3, "HandleStoryAssaultActor: aiCrime=" + aiCrime)
+
+    if !ActorHasKeyword(victimActor, ActorTypeNPC)
+        Trace(3, "HandleStoryAssaultActor skipped: victim is not an NPC person.")
         return
     endIf
 
+    ; The original gate required aiCrime > 0 AND a non-hostile victim to score,
+    ; but those two are mutually exclusive in time: an assault becomes a crime
+    ; exactly as the victim turns hostile and fights back, so the conjunction
+    ; was never satisfiable (event 364 dead -- Mega Packet S1 E1, 2026-07-05).
+    ; Correct rule: score an innocent assault when the engine judges it a crime
+    ; (aiCrime != 0 -> a protected member of society, e.g. caught by guards) OR
+    ; the victim was still non-hostile (an unprovoked strike). Only a non-crime
+    ; hit on an already-hostile actor is genuine self-defense -- skip that.
+    if aiCrime == 0 && victimActor.IsHostileToActor(playerActor)
+        Trace(3, "HandleStoryAssaultActor skipped: self-defense (no crime, victim hostile).")
+        return
+    endIf
+
+    ; Anti-farm handled downstream by the EVT_ASSAULT_INNOCENT cap (2/day, 0.5d cooldown).
     RouteActionWithAttribution(EVT_ASSAULT_INNOCENT, ATTR_DIRECT_PLAYER, akAttacker as Form, victimActor as Form)
 EndFunction
 
