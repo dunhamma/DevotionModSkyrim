@@ -82,13 +82,15 @@ Run these on a disposable save after the quick sanity commands pass. They are ro
 manual-display proof for the 40-50 quests-per-deity expansion and meta-faucets, not a reason to
 reopen the race strict gate unless they expose a regression.
 
-**Why grouped by origin.** Unlike Section E's generic acts (hard race-gated to `0`), the quest
-path is NOT on/off: `ApplyDeityReaction` scores *every* deity on a quest cell -- and every meta
-lane -- scaled by the player race's STANCE toward that deity (`PDV__ManagerQuest.psc:1561-1585`):
-`NATIVE` = full `1.0x`, `FOREIGN`/`TOLERATED` = `0.4x` (the "foreign face rate"), `TABOO`/`HOSTILE`
-flips the positive into a negative stigma, `CURSE` routes to curse handling. So a foreign god still
-scores, just at `0.4x` -- testing each lane/probe under the origin whose native pantheon it feeds
-is what gives the clean *full-value* read. Set the origin once per block:
+**Why grouped by origin.** `ApplyDeityReaction` scores each deity on a quest cell -- and each
+meta lane -- by the player race's STANCE toward it: `NATIVE` = full `1.0x`,
+`TABOO`/`HOSTILE` flips the positive into a negative stigma, `CURSE` routes to curse handling.
+As of the 2026-07-05 reachability gate (see `PDV_HO_ForeignAwardGate_2026-07-05.md`), a
+`FOREIGN`/`TOLERATED` god that is NOT in the origin's dashboard roster and NOT a Daedric path is
+**skipped entirely** (DebugLevel-2 trace `QuestReaction skipped unreachable foreign deity`, no
+piety, no Ledger row); the reduced `0.4x` rate now applies only to roster-listed
+tolerated/foreign gods and Daedric-path faces. Testing each lane/probe under the origin whose
+native pantheon it feeds is what gives the clean full-value read. Set the origin once per block:
 console `set PDV_GLO_OriginRace to <n>` + `set PDV_GLO_DebugLevel to 2` on a fresh disposable
 save, then run every row in that block before flipping. Fire a matrix stage with
 `setstage <editorID> <stage>`; steal/outdoor/time rows need the described in-world action.
@@ -108,15 +110,16 @@ DONE 954bde5b) plus an `AwardPiety` line.
 - **Julianos mage-aid lane**: `setstage MG05 200` (Containment; mageAid, no Julianos cell)
   -> `meta_julianos` awards Julianos.
 - **Akatosh 10th-quest wheel**: advance 10 distinct watched quest stages; on the fire that takes
-  `PDV.Meta.QuestCount` to a multiple of 10 the wheel fires -> Akatosh awards full (Xarxes also
-  fires but at the `0.4x` foreign rate -- Imperial isn't Xarxes-native; prove Xarxes full under A5).
+  `PDV.Meta.QuestCount` to a multiple of 10 the wheel fires -> Akatosh awards full; Xarxes is
+  SKIPPED (off-roster for Imperial -- expect the DebugLevel-2 skip trace, no Ledger row). This
+  doubles as the **reachability-gate negative**; Xarxes' full-value arm is proven under A5.
 - **Probes**: `DLC1SeranaCureSelfQuest 200` (Arkay echo), `MS05 300` (Dibella +C),
   `FreeformSkyhavenTempleA 50` (Akatosh +S), `FreeformRiftenThane 200` (civic divines).
 
 ### A2. Bosmer (origin 4) -- Z'en gold wage
 - **Gold-wage lane**: `setstage MS05 300` (Tending the Flames; gold class, no Z'en cell)
-  -> `meta_zen_wage` awards Z'en at full value. (Dibella's cell still fires at the `0.4x` foreign
-  rate for Bosmer, not `0`; the full-value Z'en award is the proof the lane fired natively.)
+  -> `meta_zen_wage` awards Z'en at full value. (Dibella's cell is SKIPPED for Bosmer -- off-roster,
+  expect the skip trace at DebugLevel 2; the full-value Z'en award is the proof the lane fired.)
 - **Z'en yield negative**: `setstage FreeformSkyhavenTempleA 50` -> Z'en scores from its ECHO cell,
   `meta_zen_wage` suppressed (metaSkip).
 
@@ -138,8 +141,9 @@ DONE 954bde5b) plus an `AwardPiety` line.
 
 ### A5. Altmer (origin 3) -- Xarxes wheel (shared counter's second deity)
 - **10th-quest wheel**: advance 10 watched quest stages -> wheel fires -> Xarxes awards
-  (Akatosh also fires but at the `0.4x` foreign rate for Altmer). Proves both arms of the shared
-  Akatosh/Xarxes counter, and that Xarxes reads full here vs `0.4x` under A1.
+  (Akatosh SKIPPED -- off-roster for Altmer, expect the skip trace). Proves both arms of the
+  shared counter and both directions of the reachability gate: Xarxes full here vs skip-trace
+  under A1, Akatosh full under A1 vs skip-trace here.
 
 ### A6. Nord (origin 0) -- mercy cluster (doubles as the Section E Nord spot-check)
 - **Probe**: `MQ301 240` -> Kyne / Stuhn / Stendarr / Mara `mercy_spare` cluster scores.
@@ -160,9 +164,11 @@ signals). The lanes award the Nocturnal DEITY face, so the path must be active.
 
 Tester notes:
 
-- Stance multipliers apply to meta lanes; a foreign face can land at `0.4x`. Each block above is
-  already under the lane's native origin, so a full-value award is expected -- a `0.4x` reading
-  there is a real finding, not a stance artifact.
+- Each block above runs under the lane's native origin, so a full-value award is expected -- a
+  reduced or missing award there is a real finding. Off-roster gods no longer award at all
+  (reachability gate): the expected evidence for them is the DebugLevel-2 skip trace and the
+  ABSENCE of a Ledger driver row. An off-roster deity-face award appearing anywhere is a
+  regression against the gate.
 - The meta Ledger copy pass and Daedric-path name-repair hardening were marked DONE in the same
   handoff (954bde5b); this sitting is runtime smoke, not re-authoring those follow-ups.
 - The wheel counter increments on every meta-eligible watched fire, so other rows in a sitting also
