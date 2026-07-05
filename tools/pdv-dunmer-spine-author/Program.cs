@@ -9,6 +9,7 @@ using SkyrimFormList = Mutagen.Bethesda.Skyrim.FormList;
 const string defaultEsp = @"D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp";
 const string substrateEdid = "PDV_Substrate_DunmerAncestor";
 const string managerEdid = "PDV__ManagerQuest";
+const string dunmerHomeMessageEdid = "PDV_MESG_DunmerMarkHome";
 
 var dryRun = args.Contains("--dry-run");
 var write = args.Contains("--write");
@@ -104,12 +105,23 @@ static void AuthorDunmerSpine(
     WireQuestScript(substrate, "PDV_Substrate_DunmerAncestor", substrateProperties);
     report.Actions.Add("Wired PDV_Substrate_DunmerAncestor base and concrete scripts.");
 
+    var markHome = EnsureMessage(mod, index, allocator, dunmerHomeMessageEdid, report, message =>
+    {
+        message.Name = Tx("Ancestral Hearth");
+        message.Description = Tx("Make this place your home? Your ancestors will acknowledge your choice and settle where you sleep.");
+        message.Flags = Message.Flag.MessageBox;
+        message.MenuButtons.Clear();
+        message.MenuButtons.Add(new MessageButton { Text = Tx("Yes, mark this home") });
+        message.MenuButtons.Add(new MessageButton { Text = Tx("Not yet") });
+    });
+
     var manager = RequireRecord<Quest>(index, managerEdid);
     WireQuestScript(manager, "PDV__ManagerQuest", new ScriptProperty[]
     {
         ObjectProp("PDV_DunmerAncestorSubstrate", substrate.FormKey),
+        ObjectProp("PDV_MESG_DunmerMarkHome", markHome.FormKey),
     });
-    report.Actions.Add("Wired PDV_DunmerAncestorSubstrate on PDV__ManagerQuest.");
+    report.Actions.Add("Wired Dunmer ancestor substrate and home marker message on PDV__ManagerQuest.");
 
     EnsureFormListMember(index, "PDV_FLST_Substrates_All", substrate.FormKey, report);
     EnsureFormListMember(index, "PDV_FLST_Substrates_DevOnly", substrate.FormKey, report);
@@ -233,6 +245,37 @@ static MagicEffect EnsureMgef(
     return record;
 }
 
+static Message EnsureMessage(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    string editorId,
+    AuthorReport report,
+    Action<Message> configure)
+{
+    Message message;
+    if (index.TryGetValue(editorId, out var existing))
+    {
+        if (existing is not Message typed)
+        {
+            throw new InvalidOperationException($"{editorId} already exists as {existing.GetType().Name}, expected Message.");
+        }
+        message = typed;
+    }
+    else
+    {
+        message = new Message(allocator.Next(), SkyrimRelease.SkyrimSE);
+        mod.Messages.Add(message);
+        index[editorId] = message;
+        report.Actions.Add($"Created message {editorId}.");
+    }
+
+    message.EditorID = editorId;
+    message.FormVersion = 44;
+    configure(message);
+    return message;
+}
+
 static void CheckDunmerSpine(
     Dictionary<string, ISkyrimMajorRecordGetter> index,
     IReadOnlyList<SpellSpec> spellSpecs,
@@ -261,17 +304,39 @@ static void CheckDunmerSpine(
     }
 
     var manager = CheckRecord<Quest>(index, managerEdid, report);
+    var markHome = CheckDunmerHomeMessage(index, report);
     if (manager is not null)
     {
         var script = CheckQuestScript(manager, "PDV__ManagerQuest", report);
         if (script is not null)
         {
             CheckObjectProperty(script, "PDV_DunmerAncestorSubstrate", RequireRecord<Quest>(index, substrateEdid).FormKey, managerEdid, report);
+            if (markHome is not null)
+            {
+                CheckObjectProperty(script, "PDV_MESG_DunmerMarkHome", markHome.FormKey, managerEdid, report);
+            }
         }
     }
 
     CheckFormListMember(index, "PDV_FLST_Substrates_All", substrateEdid, report);
     CheckFormListMember(index, "PDV_FLST_Substrates_DevOnly", substrateEdid, report);
+}
+
+static Message? CheckDunmerHomeMessage(Dictionary<string, ISkyrimMajorRecordGetter> index, AuthorReport report)
+{
+    var message = CheckRecord<Message>(index, dunmerHomeMessageEdid, report);
+    if (message is null)
+    {
+        return null;
+    }
+
+    CheckMessageText(message, "Ancestral Hearth", "Make this place your home? Your ancestors will acknowledge your choice and settle where you sleep.", report);
+    CheckMessageButtons(message, ["Yes, mark this home", "Not yet"], report);
+    if ((message.Flags & Message.Flag.MessageBox) == 0)
+    {
+        report.Errors.Add($"{dunmerHomeMessageEdid} is not flagged as a MessageBox.");
+    }
+    return message;
 }
 
 static void CheckSpell(Dictionary<string, ISkyrimMajorRecordGetter> index, SpellSpec spec, AuthorReport report)
@@ -319,6 +384,36 @@ static void CheckSpell(Dictionary<string, ISkyrimMajorRecordGetter> index, Spell
             || (spellEffect.Data?.Duration ?? 0) != 0)
         {
             report.Errors.Add($"{spec.SpellEditorId}.{effectSpec.EffectEditorId} magnitude/area/duration is {spellEffect.Data?.Magnitude ?? 0.0f}/{spellEffect.Data?.Area ?? 0}/{spellEffect.Data?.Duration ?? 0}, expected {effectSpec.Magnitude}/0/0.");
+        }
+    }
+}
+
+static void CheckMessageText(Message message, string expectedName, string expectedDescription, AuthorReport report)
+{
+    if (!string.Equals(message.Name?.String ?? "", expectedName, StringComparison.Ordinal))
+    {
+        report.Errors.Add($"{message.EditorID} name is '{message.Name?.String}', expected '{expectedName}'.");
+    }
+    if (!string.Equals(message.Description?.String ?? "", expectedDescription, StringComparison.Ordinal))
+    {
+        report.Errors.Add($"{message.EditorID} description does not match the Dunmer home marker contract.");
+    }
+}
+
+static void CheckMessageButtons(Message message, string[] expectedButtons, AuthorReport report)
+{
+    if (message.MenuButtons.Count != expectedButtons.Length)
+    {
+        report.Errors.Add($"{message.EditorID} has {message.MenuButtons.Count} button(s), expected {expectedButtons.Length}.");
+        return;
+    }
+
+    for (var index = 0; index < expectedButtons.Length; index++)
+    {
+        var actual = message.MenuButtons[index].Text?.String ?? "";
+        if (!string.Equals(actual, expectedButtons[index], StringComparison.Ordinal))
+        {
+            report.Errors.Add($"{message.EditorID} button {index} is '{actual}', expected '{expectedButtons[index]}'.");
         }
     }
 }

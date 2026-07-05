@@ -1,8 +1,8 @@
 # PDV In-Game Testing Needed Runbook
 
 **Created:** 2026-06-10  
-**Status:** Active manual/runtime handoff after Imperial final-run closeout; strict audit now blocks on Dunmer race evidence
-**Companions:** `PDV_RunSheet_*_BetaFeel.md`, `PDV_BetaTestPacket_*.md` (historical/source notes), `PDV_Phase20_ManualEvidenceLedger.json`, `PDV_DaedricInGameSmokePacket.md`, `PDV_DaedricRuntimeEvidenceLedger.json`, `PDV_SessionHandoff_2026-07-04_ImperialCloseout.md`, `PDV_SessionHandoff_2026-06-29_PreBetaRaceCloseout.md`, `PDV_SessionHandoff_HircineAuditFixes.md`, `PDV_SessionHandoff_BosmerRuntimeFixes.md`, `PDV_BetaFeelReleaseGate.md`, `PDV_FaucetDetection_CKChecklist.md`, `PDV_DeityLikesDislikes.csv`, `PDV_PrinceLikesDislikes_V2_Spec.md`
+**Status:** Active manual/runtime handoff after Dunmer final-run closeout; strict beta-readiness audit passes from the synced evidence ledgers
+**Companions:** `PDV_RunSheet_*_BetaFeel.md`, `PDV_BetaTestPacket_*.md` (historical/source notes), `PDV_Phase20_ManualEvidenceLedger.json`, `PDV_DaedricInGameSmokePacket.md`, `PDV_DaedricRuntimeEvidenceLedger.json`, `PDV_SessionHandoff_2026-07-05_DunmerCloseout.md`, `PDV_SessionHandoff_2026-07-04_ImperialCloseout.md`, `PDV_SessionHandoff_2026-06-29_PreBetaRaceCloseout.md`, `PDV_SessionHandoff_HircineAuditFixes.md`, `PDV_SessionHandoff_BosmerRuntimeFixes.md`, `PDV_BetaFeelReleaseGate.md`, `PDV_FaucetDetection_CKChecklist.md`, `PDV_DeityLikesDislikes.csv`, `PDV_PrinceLikesDislikes_V2_Spec.md`
 
 ## Purpose
 
@@ -92,7 +92,7 @@ copy, stack/Active Effects, formal offer accept/refuse/cadence, broad Tier-2
 cap, Talos book pressure, Concordat raw-value movement/reorientation, Talos
 offer gating, civic-service Ledger/Book-of-Days surfacing, wrong-origin
 rejection, generic-source silence, and manual feel. Final-world placement
-remains separate. The remaining race blocker is Dunmer.
+remains separate. The remaining race blocker at that point was Dunmer.
 
 2026-07-05 Dunmer update: Dunmer 4e deviation-price, 4b home-toast display, 4c
 curse-posture display, Slot 5 Survey clarity, Slot 6 stack snapshot, Slot 7
@@ -102,6 +102,23 @@ route, Boethiah penalty, and Snapshot B ancestor-layer silence under vampire.
 Follow-up implementation in progress: replace the old Dunmer first-bed
 auto-declare with a Dunmer-styled `Ancestral Hearth` confirmation and
 Argonian-style move-home cadence.
+2026-07-05 follow-up: tester reported the Dunmer `Ancestral Hearth`
+confirmation, revised body copy, and three-consecutive-sleeps move-home option
+passed in game.
+
+2026-07-05 closeout: tester completed the remaining Dunmer packet. Wrong-origin
+rejection, generic-hook rejection, shared Daedric inn-sleep proof, all Dunmer
+slots 1-8, Survey/status clarity, stack snapshots, Prisma surfaces, Good Daedra
+temple surfacing, DA01 Black Star deviation price, and the Ancestral Hearth
+home/move-home flow are PASS for the current packet. Update ledgers before
+treating any strict-audit output from an older run as current.
+
+2026-07-05 strict gate rerun: after the Dunmer evidence sync,
+`node .\tools\pdv_beta_readiness_audit.mjs --strict --json` reports
+`STRICT_GATE_PASS` with `PASS=31`, `WARN=1`, `INFO=2`, and no blockers. The one
+warning is the paired-deity warning count, which the audit classifies as
+non-blocking. This closes the strict beta-readiness audit gate, not final-world
+placement, Requiem feltness proof, or later content-depth tranches.
 
 ## Preflight Before Opening Skyrim
 
@@ -139,8 +156,9 @@ Expected before manual testing:
 - Daedric beta-display gate: `PASS=16`.
 - Neglect ESP author check and strict neglect verifier: `PASS`.
 - Manager and MCM compile: `PASS`, including the Talos betrayal debug buttons.
-- Beta readiness audit: still `NOT_BETA_READY` until manual/runtime slots are
-  recorded.
+- Beta readiness audit: `STRICT_GATE_PASS` after the 2026-07-05 Dunmer evidence
+  sync (`PASS=31`, `WARN=1`, `INFO=2`, blockers `[]`). Treat any older
+  `NOT_BETA_READY` / `Dunmer:7` output as stale.
 
 2026-06-30 launch note: do not use
 `node .\tools\pdv_verify.mjs --strict-phase20-altmer --strict-phase20-race-costing --json`
@@ -164,9 +182,10 @@ audit passes.
 
 ## Current Last-Pass Blocker Snapshot
 
-As of the 2026-07-04 Imperial closeout, the active race beta-feel blocker is
-manual/runtime evidence only for Dunmer. Readback and verifier
-gates are necessary preflight, but they do not close these rows.
+As of the 2026-07-05 Dunmer closeout, all current race beta-feel packets have
+manual/runtime evidence recorded. Readback and verifier gates remain necessary
+preflight, but they do not replace manual/runtime evidence or final-world
+placement proof.
 
 Race ledger blockers from `PDV_Phase20_ManualEvidenceLedger.json`:
 
@@ -177,7 +196,7 @@ Race ledger blockers from `PDV_Phase20_ManualEvidenceLedger.json`:
 | Argonian | none for current beta packet; final-world placement remains separate |
 | Bosmer | none for current beta packet; final-world placement remains separate |
 | Breton | none for current Hidden Art packet; optional `ExposureRupture` edge once an MCM band setter exists; Knight's Road/Green Way remain deferred V1 arms |
-| Dunmer | `wrongOriginRejection`, `genericHookRejection`, `surveyStatusClarity`, `stackSnapshot`, `manualFeelNote`, `immersiveHookProof`, `assetStatus` |
+| Dunmer | none for current packet; final-world placement remains separate |
 | Imperial | none for current beta packet; final-world placement remains separate |
 | Nord | none for current beta packet; final-world placement remains separate |
 | Orc | none for current organic life-mode packet; Code Holds, Witnessed tranche, oath-break, and final-world placement remain separate |
@@ -310,7 +329,7 @@ with prior packet evidence.
 | --- | --- | --- |
 | Orc | `PDV_RunSheet_Orc_BetaFeel.md` | organic/source-specific markers plus `node .\tools\pdv_phase20_runtime_check.mjs --race orc --strict-manager` for QASmoke-only cross-checks |
 | Breton | `PDV_RunSheet_Breton_BetaFeel.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race breton --strict-manager` |
-| Dunmer | `PDV_RunSheet_Dunmer_BetaFeel.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race dunmer --strict-manager`; remaining slots are manual/log assembled |
+| Dunmer | `PDV_RunSheet_Dunmer_BetaFeel.md` | PASS 2026-07-05; no further current-packet retest unless a regression touches Dunmer routing, Survey, Prisma, home, or Good Daedra shrine surfaces |
 | Imperial | `PDV_RunSheet_Imperial_BetaFeel.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race imperial --strict-manager` |
 | Nord | `PDV_RunSheet_Nord_BetaFeel.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race nord --strict-manager` |
 | Altmer | `PDV_RunSheet_Altmer_BetaFeel.md` | `node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race altmer --strict-manager` |

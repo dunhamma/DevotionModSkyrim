@@ -1030,9 +1030,15 @@ Event OnKeyDown(Int a_keyCode)
 
     Int panelKey = StorageUtil.GetIntValue(None, "PDV.Panel.Hotkey", -1)
     if panelKey >= 0 && a_keyCode == panelKey
-        ; Open the focused interactive dashboard panel. A focused panel can't receive the
-        ; hotkey to toggle closed (it puts the game in menu mode), so this is OPEN ONLY --
-        ; the in-view X button / ESC close it via the bridge's PDVPanelClose listener.
+        ; Close first so the rebindable panel key can release the focused panel if
+        ; SkyUI delivers the key while the view has put the game in menu mode.
+        if PDV_PrismaBridge.IsPanelVisible()
+            PDV_PrismaBridge.CloseDevotionPanel()
+            return
+        endIf
+
+        ; Open the focused interactive dashboard panel only from gameplay. Close is
+        ; handled by the in-view X, ESC in the native bridge, or the same MCM key above.
         if Utility.IsInMenuMode()
             return
         endIf
@@ -1041,8 +1047,7 @@ Event OnKeyDown(Int a_keyCode)
         endIf
         Debug.Notification("The Devotion panel opens.")
         ; Player-owned UI entry point: push fresh panel data, then focus the view so the
-        ; dashboard filter buttons are clickable. Close is in-view (X button / ESC ->
-        ; the bridge's PDVPanelClose listener: Unfocus + Hide).
+        ; dashboard filter buttons are clickable.
         PDV_Manager.PushDevotionPanel(True)
         PDV_PrismaBridge.OpenDevotionPanel()
         return

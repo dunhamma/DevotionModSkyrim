@@ -2176,7 +2176,7 @@
   // unlike the non-focused Book of Days these in-view affordances actually work.
   // closeDevotionPanel also hides the shell locally so the panel disappears immediately.
   const onPanelEsc = (event) => {
-    if (event.key === "Escape") {
+    if (isEscapeKey(event)) {
       event.preventDefault();
       closeDevotionPanel();
     }

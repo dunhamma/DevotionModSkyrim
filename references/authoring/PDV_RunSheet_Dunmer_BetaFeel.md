@@ -341,9 +341,12 @@ ordinary Daedric contact, or artifact possession alone as deviation-price proof.
 - **Action:** at each snapshot, open Active Effects (the magic-effect list) and
   the MCM Status page; record what is present.
 - **Watch:** snapshot A shows the ancestor substrate + active focus reward layer.
-  Snapshot B shows the silence/deviation state (ancestor layer inert under
-  vampire) with the Good-Daedra layer still reachable, and NO generic Daedric
-  stack accreted from generic acts.
+  Snapshot B may still show the already-earned always-on
+  `Ancestor's Magic Steadiness` substrate in Active Effects; do not treat that
+  display row as a failure by itself. The Snapshot B proof is a fresh prayer
+  under `Curse vampire`: the ancestor practice does not rise, the log shows
+  `Dunmer ancestor layer silenced by curse posture (...)`, the Good-Daedra layer
+  remains reachable, and NO generic Daedric stack accretes from generic acts.
 - **PASS:** both snapshots match their descriptions; no suppressed-generic
   Daedric reward leaked into either stack.
 - **Note:** reward-record existence is machine-verified elsewhere (readback
@@ -361,11 +364,13 @@ HealRate/MagickaRate-style rate buff is +% of Requiem's near-zero base). DO NOT
 test the old aura. The NEW behavior, to be built before the Dunmer packet's home
 checks run:
 
-- **Declared ancestor-home:** sleeping in a bed makes that cell your
-  ancestor-space (cloned from the Argonian bed-of-choice; immediate, no settle
-  clock), with a Dunmer-flavored declaration notice. Any first interior bed-cell,
-  including an inn room, can become the V1 ancestor-home; there is no move-home
-  prompt yet.
+- **Declared ancestor-home:** sleeping in an interior bed opens the
+  Dunmer-styled `Ancestral Hearth` confirmation before that cell becomes your
+  ancestor-space. Any first interior bed-cell, including an inn room, can become
+  the V1 ancestor-home if accepted. If a home is already declared, sleeping in a
+  new interior cell three consecutive times offers to move the ancestor-home
+  there; a decline suppresses the re-prompt briefly, matching the Argonian
+  bed-of-choice pattern.
 - **Home-prayer ancestor watch (2026-07-04 rework, BUILT):** praying with the
   portable urn AT your declared home fires the bigger progress step
   (HomeBonusDelta 8 vs PrayerDelta 5) and **arms "The Ancestors Watch"** -- a
@@ -380,13 +385,18 @@ checks run:
   Magicka-Regen line is removed from its text.
 
 How to prove (route/runtime + manual-acceptance), under an ACTUAL Requiem list:
-1. Sleep in a bed -> confirm the declaration notice; that cell is now your home.
+1. Sleep in an interior bed -> accept the `Ancestral Hearth` confirmation; that
+   cell is now your home. If you choose `Not yet`, the cell is not marked.
+   Later, sleep in the same non-home interior three consecutive times to receive
+   the option to move your home there.
 2. Pray with the urn AT that home -> "The Ancestors Watch" appears in Active
    Effects and the bigger progress step lands. NO instant HP movement.
 3. Drop below ~20% health -> the watch fires once: the HP bar restores fully
    (the load-bearing Requiem check) with the brink toast + Book of Days line.
    A second near-death the same day stays silent (daily guard).
 4. Sleep to dawn -> the watch leaves Active Effects until the next home prayer.
+5. **2026-07-05 tester report:** first-home confirmation, revised body copy,
+   and three-consecutive-sleeps move-home option passed in game.
 5. Pray with the urn ELSEWHERE -> base prayer only, no watch armed.
 
 ---
@@ -465,25 +475,25 @@ yet landed) / DEFERRED (no runnable step) / N/A.
 
 | Slot | Boundary | Status field | Result |
 |---|---|---|---|
-| 1. assetStatus | manual-acceptance | no-new-mesh confirmed? | |
-| 2. wrongOriginRejection | route/runtime | non-Dunmer origin moved native layer? (expect NO) | |
-| 3. genericHookRejection | route/runtime | generic act moved native layer? (expect NO) | |
-| Shared Daedric inn-sleep proof | route/runtime + manual | negative Prince inn-only sleep + positive 314 control | |
+| 1. assetStatus | manual-acceptance | no-new-mesh confirmed? | PASS 2026-07-05 tester-reported |
+| 2. wrongOriginRejection | route/runtime | non-Dunmer origin moved native layer? (expect NO) | PASS 2026-07-05 tester-reported |
+| 3. genericHookRejection | route/runtime | generic act moved native layer? (expect NO) | PASS 2026-07-05 tester/log-confirmed; generic shrine/theft/location/action routes fired, but no new native RouteDunmer movement or ancestor substrate progress |
+| Shared Daedric inn-sleep proof | route/runtime + manual | negative Prince inn-only sleep + positive 314 control | PASS 2026-07-05 tester-reported; Part A log-confirmed Namira non-inn sleep event 314 scored 0 and no negative PrinceV2 314 penalty; Parts B/C tester-reported pass |
 | 4a. immersiveHook -- Reclamation focus | route/runtime | focus 0 + focus 1 markers present? | PASS 2026-07-04 tester-reported |
-| 4b. immersiveHook -- ash-prayer / home rite | route/runtime | prayer + home bonus credit + Survey rise? | PASS 2026-07-04 tester-reported through home bonus; toast copy changed afterward and needs one display retest |
-| 4c. immersiveHook -- curse silence | route/runtime | vampire 0x silence + 4 posture labels? | PASS 2026-07-04 tester-reported; Survey copy changed afterward and needs one display retest |
+| 4b. immersiveHook -- ash-prayer / home rite | route/runtime | prayer + home bonus credit + Survey rise? | PASS 2026-07-05 tester-reported including revised home-bonus toast |
+| 4c. immersiveHook -- curse silence | route/runtime | vampire 0x silence + 4 posture labels? | PASS 2026-07-05 tester-reported including revised Survey copy |
 | 4d. immersiveHook -- twilight / outdoor shrine | route/runtime + display | twilight marker + once-per-window + Good Daedra toast? | PASS 2026-07-04 from Papyrus.0.log plus tester-reported Prisma toast after restart |
-| 4e. immersiveHook -- deviation price | route/runtime + display | DA01 Black Star stage 110 routes deviation price, writes `Reclamation strained`, and keeps panel origin-scoped? | RUNTIME PENDING for post-fix display; static/readback wired for DA01 stage 110 only |
-| 5. surveyStatusClarity | manual-acceptance | compact focus + named standing + curse posture, counter-free? | |
-| 6. stackSnapshot | manual-acceptance | snapshots A + B match, no generic leak? | |
-| 7. manualFeelNote | manual-acceptance | feel note recorded | |
-| 8. Prisma surfaces | manual-acceptance | toast/panel/Chronicle/Ledger safe and populated, including recovery? | |
+| 4e. immersiveHook -- deviation price | route/runtime + display | DA01 Black Star stage 110 routes deviation price, writes `Reclamation strained`, and keeps panel origin-scoped? | PASS 2026-07-05 tester-reported; Papyrus log confirmed DA01 route + Boethiah penalty, source/audit confirmed `Reclamation strained` Chronicle/toast path |
+| 5. surveyStatusClarity | manual-acceptance | compact focus + named standing + curse posture, counter-free? | PASS 2026-07-05 tester-reported |
+| 6. stackSnapshot | manual-acceptance | snapshots A + B match, no generic leak? | PASS 2026-07-05 tester screenshots + Papyrus log; Snapshot B fresh prayer under vampire logged ancestor-layer silence, and the always-on ancestor substrate can remain visible |
+| 7. manualFeelNote | manual-acceptance | feel note recorded | PASS 2026-07-05 tester-reported |
+| 8. Prisma surfaces | manual-acceptance | toast/panel/Chronicle/Ledger safe and populated, including recovery? | PASS 2026-07-05 tester-reported |
 
 Blocking notes:
 
-After the run, before log rotation, re-run the accepted route checker
-(`node .\tools\pdv_phase20_runtime_check.mjs --track p2-books --race dunmer
---strict-manager`) to attach fresh route proof, then transcribe these statuses
-into the Dunmer block of
-`references/authoring/PDV_Phase20_ManualEvidenceLedger.json` and only then touch
-verdicts in `PDV_PreBetaRaceGateLedger.md`.
+Closed 2026-07-05. These statuses have been transcribed into the Dunmer block of
+`references/authoring/PDV_Phase20_ManualEvidenceLedger.json`, mirrored into
+`PDV_PreBetaRaceGateLedger.md`, and rolled into the current next-session
+handoff. Do not reopen the Dunmer packet unless a regression touches Dunmer
+routing, Survey, Prisma, home, Good Daedra shrine, deviation-price, or stack
+surfaces.

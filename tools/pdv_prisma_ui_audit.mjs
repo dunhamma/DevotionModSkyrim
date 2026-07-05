@@ -845,6 +845,12 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     } else {
       pass("Prisma bridge Papyrus source exposes IsJournalVisible.", bridgePath);
     }
+
+    if (!bridge.includes("Bool Function IsPanelVisible() Global Native")) {
+      fail("Prisma bridge Papyrus source must expose IsPanelVisible for focused-panel key-close state.", bridgePath);
+    } else {
+      pass("Prisma bridge Papyrus source exposes IsPanelVisible.", bridgePath);
+    }
   }
 
   const mcmPath = path.join(DEVOTION_SOURCE, "PDV_MCM.psc");
@@ -896,6 +902,23 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
       pass("Book of Days hotkey reconciles stale Papyrus open state.", mcmPath);
     }
 
+    const panelSlice = panelKeyIndex >= 0 ? onKeyDown.slice(panelKeyIndex) : "";
+    const panelVisibleIndex = panelSlice.indexOf("PDV_PrismaBridge.IsPanelVisible()");
+    const panelCloseIndex = panelSlice.indexOf("PDV_PrismaBridge.CloseDevotionPanel()");
+    const panelMenuIndex = panelSlice.indexOf("Utility.IsInMenuMode()");
+    if (
+      !panelSlice ||
+      panelVisibleIndex < 0 ||
+      panelCloseIndex < 0 ||
+      panelMenuIndex < 0 ||
+      panelVisibleIndex > panelMenuIndex ||
+      panelCloseIndex > panelMenuIndex
+    ) {
+      fail("Devotion panel hotkey must close a visible focused panel before the menu-mode open guard.", mcmPath);
+    } else {
+      pass("Devotion panel hotkey closes a visible focused panel before the menu-mode open guard.", mcmPath);
+    }
+
     if (
       !registerJournalHotkeyBlock.includes('StorageUtil.SetIntValue(None, "PDV.Panel.Hotkey", -1)') ||
       !registerJournalHotkeyBlock.includes("savedPanelKey == savedKey")
@@ -939,16 +962,27 @@ if (!fs.existsSync(NATIVE_BRIDGE_SOURCE)) {
     pass("Native Prisma bridge updates Book of Days visible state on open and close.", NATIVE_BRIDGE_SOURCE);
   }
 
-  if (!nativeBridge.includes("class JournalEscapeSink") || !nativeBridge.includes("RegisterInputSink()")) {
-    fail("Native Prisma bridge must register a Book of Days ESC input sink.", NATIVE_BRIDGE_SOURCE);
+  if (!nativeBridge.includes("class PrismaInputSink") || !nativeBridge.includes("RegisterInputSink()")) {
+    fail("Native Prisma bridge must register a Prisma ESC input sink.", NATIVE_BRIDGE_SOURCE);
   } else {
-    pass("Native Prisma bridge registers a Book of Days ESC input sink.", NATIVE_BRIDGE_SOURCE);
+    pass("Native Prisma bridge registers a Prisma ESC input sink.", NATIVE_BRIDGE_SOURCE);
   }
 
   if (!nativeBridge.includes("button->GetIDCode() == 1") || !nativeBridge.includes("RE::BSEventNotifyControl::kStop")) {
-    fail("Native Book of Days ESC input sink must consume keyboard ESC before Skyrim opens the pause menu.", NATIVE_BRIDGE_SOURCE);
+    fail("Native Prisma ESC input sink must consume keyboard ESC before Skyrim opens the pause menu.", NATIVE_BRIDGE_SOURCE);
   } else {
-    pass("Native Book of Days ESC input sink consumes keyboard ESC.", NATIVE_BRIDGE_SOURCE);
+    pass("Native Prisma ESC input sink consumes keyboard ESC.", NATIVE_BRIDGE_SOURCE);
+  }
+
+  if (
+    !nativeBridge.includes("bool g_panelVisible = false;") ||
+    !nativeBridge.includes('ClosePanelSurface("keyboard_escape")') ||
+    !nativeBridge.includes("PapyrusIsPanelVisible") ||
+    !nativeBridge.includes('RegisterFunction("IsPanelVisible"')
+  ) {
+    fail("Focused Devotion panel must have native ESC close and a Papyrus-visible panel state.", NATIVE_BRIDGE_SOURCE);
+  } else {
+    pass("Focused Devotion panel has native ESC close and Papyrus-visible panel state.", NATIVE_BRIDGE_SOURCE);
   }
 
   if (!nativeBridge.includes("g_prisma->Focus(g_view, true, false);")) {
@@ -1074,6 +1108,12 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
     fail("Overlay ESC handler must bind at window/document capture on keydown and keyup.", DEVOTION_PRISMA_VIEW);
   } else {
     pass("Overlay ESC handler binds at window/document capture on keydown and keyup.", DEVOTION_PRISMA_VIEW);
+  }
+
+  if (!app.includes("const onPanelEsc = (event) => {\n    if (isEscapeKey(event))")) {
+    fail("Focused panel ESC handler must use the robust shared Escape detector.", DEVOTION_PRISMA_VIEW);
+  } else {
+    pass("Focused panel ESC handler uses the robust shared Escape detector.", DEVOTION_PRISMA_VIEW);
   }
 
   if (

@@ -42,6 +42,7 @@ namespace
     bool g_choicePause = false;
     bool g_domReady = false;
     bool g_journalVisible = false;
+    bool g_panelVisible = false;
     bool g_inputSinkRegistered = false;
 
     std::filesystem::path LogPath()
@@ -139,6 +140,15 @@ namespace
         }
     }
 
+    void ClosePanelSurface(std::string_view a_source) noexcept
+    {
+        g_panelFocusPending = false;
+        g_panelVisible = false;
+        g_journalVisible = false;
+        logs::info("Prisma focused panel close requested by {}", a_source);
+        HidePrismaView();
+    }
+
     void HideJournalDom() noexcept
     {
         if (g_prisma && g_view && g_prisma->IsValid(g_view) && g_domReady) {
@@ -167,16 +177,19 @@ namespace
             CloseJournalSurface("js_panel_close");
             return;
         }
-        logs::info("Prisma panel close requested: {}", arg);
-        HidePrismaView();
+        if (arg.empty()) {
+            ClosePanelSurface("js_panel_close");
+        } else {
+            ClosePanelSurface(arg);
+        }
     }
 
-    class JournalEscapeSink final : public RE::BSTEventSink<RE::InputEvent*>
+    class PrismaInputSink final : public RE::BSTEventSink<RE::InputEvent*>
     {
     public:
-        static JournalEscapeSink* GetSingleton()
+        static PrismaInputSink* GetSingleton()
         {
-            static JournalEscapeSink singleton;
+            static PrismaInputSink singleton;
             return std::addressof(singleton);
         }
 
@@ -184,7 +197,7 @@ namespace
             RE::InputEvent* const* a_event,
             RE::BSTEventSource<RE::InputEvent*>*) override
         {
-            if (!g_journalVisible || !a_event) {
+            if ((!g_journalVisible && !g_panelVisible && !g_panelFocusPending) || !a_event) {
                 return RE::BSEventNotifyControl::kContinue;
             }
 
@@ -198,7 +211,11 @@ namespace
                     button->GetDevice() == RE::INPUT_DEVICES::kKeyboard &&
                     button->GetIDCode() == 1;  // DIK_ESCAPE
                 if (keyboardEscape) {
-                    CloseJournalSurface("keyboard_escape", true);
+                    if (g_journalVisible) {
+                        CloseJournalSurface("keyboard_escape", true);
+                    } else {
+                        ClosePanelSurface("keyboard_escape");
+                    }
                     return RE::BSEventNotifyControl::kStop;
                 }
             }
@@ -217,9 +234,9 @@ namespace
             logs::warn("Input sink registration skipped: BSInputDeviceManager unavailable");
             return;
         }
-        inputManager->AddEventSink(JournalEscapeSink::GetSingleton());
+        inputManager->AddEventSink(PrismaInputSink::GetSingleton());
         g_inputSinkRegistered = true;
-        logs::info("Registered Book of Days ESC input sink");
+        logs::info("Registered Prisma ESC input sink");
     }
 
     bool SendLastPayload()
@@ -280,6 +297,7 @@ namespace
         if (g_panelFocusPending && g_prisma && g_view && g_prisma->IsValid(g_view)) {
             g_prisma->Show(g_view);
             g_prisma->Focus(g_view, true, false);
+            g_panelVisible = true;
             logs::info("Prisma deferred panel focus (cold-view open)");
             g_panelFocusPending = false;
         }
@@ -352,6 +370,7 @@ namespace
         }
 
         g_prisma->Show(g_view);
+        g_panelVisible = true;
         if (g_domReady) {
             g_prisma->Focus(g_view, true, false);
             SendLastPayload();
@@ -367,13 +386,7 @@ namespace
 
     bool ClosePanel()
     {
-        g_panelFocusPending = false;  // cancel any deferred cold-view focus
-        g_journalVisible = false;
-        if (!g_prisma || !g_view || !g_prisma->IsValid(g_view)) {
-            return true;
-        }
-
-        HidePrismaView();
+        ClosePanelSurface("papyrus_panel_close");
         return true;
     }
 
@@ -383,11 +396,11 @@ namespace
             return false;
         }
 
-        if (g_prisma->IsHidden(g_view)) {
-            return OpenPanel();
+        if (g_panelVisible || g_panelFocusPending) {
+            return ClosePanel();
         }
 
-        return ClosePanel();
+        return OpenPanel();
     }
 
     bool PapyrusIsAvailable(RE::StaticFunctionTag*)
@@ -417,6 +430,15 @@ namespace
             g_journalVisible = false;
         }
         return g_journalVisible;
+    }
+
+    bool PapyrusIsPanelVisible(RE::StaticFunctionTag*)
+    {
+        if (!g_prisma || !g_view || !g_prisma->IsValid(g_view) || g_prisma->IsHidden(g_view)) {
+            g_panelVisible = false;
+            g_panelFocusPending = false;
+        }
+        return g_panelVisible || g_panelFocusPending;
     }
 
     bool PapyrusSendJson(RE::StaticFunctionTag*, RE::BSFixedString a_payload)
@@ -536,6 +558,7 @@ namespace
         a_vm->RegisterFunction("CloseDevotionPanel", kPapyrusScript.data(), PapyrusCloseDevotionPanel);
         a_vm->RegisterFunction("ToggleDevotionPanel", kPapyrusScript.data(), PapyrusToggleDevotionPanel);
         a_vm->RegisterFunction("IsJournalVisible", kPapyrusScript.data(), PapyrusIsJournalVisible);
+        a_vm->RegisterFunction("IsPanelVisible", kPapyrusScript.data(), PapyrusIsPanelVisible);
         a_vm->RegisterFunction("SendJson", kPapyrusScript.data(), PapyrusSendJson);
         a_vm->RegisterFunction("SendOverlayJson", kPapyrusScript.data(), PapyrusSendOverlayJson);
         a_vm->RegisterFunction("SupportsChoice", kPapyrusScript.data(), PapyrusSupportsChoice);

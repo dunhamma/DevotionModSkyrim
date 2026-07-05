@@ -17,6 +17,12 @@ from runtime proof and manual feel proof.
 `Conditional` remains internal only. External beta-feel readiness requires
 pass-level race evidence plus Daedric 20C content-ready closure.
 
+2026-07-05 update: after Imperial and Dunmer manual/runtime evidence was
+recorded, `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` reports
+`STRICT_GATE_PASS` with `PASS=31`, `WARN=1`, `INFO=2`, and no blockers. This
+closes the current strict beta-readiness audit gate, while final-world
+placement and later content-depth work remain separate.
+
 ## Evidence Baseline
 
 ```text
@@ -86,8 +92,8 @@ Status: all exact organic quest-stage senders are placed/readback-clean; current
 | Redguard | Pass - manual/runtime packet 2026-06-19 | Ancestor-spine book route packet-proven; 8/8 beta-feel dimensions | Manual slots evidence-recorded; non-blocking follow-ups A/B/C tracked (B: HoonDing/Leki day-to-day leak fix APPLIED 2026-06-19 -- regen+compile+verifier clean, awaiting in-game reconfirm) |
 | Bosmer | Pass - per gate-ledger DA05 + variety/reward packet | See PDV_PreBetaRaceGateLedger.md; manual-evidence slots tracked in PDV_Phase20_ManualEvidenceLedger.json | Slots in manual-evidence ledger |
 | Breton | Pass - per gate-ledger manual/runtime packet 2026-06-19 | See PDV_PreBetaRaceGateLedger.md; manual-evidence slots tracked in PDV_Phase20_ManualEvidenceLedger.json | Slots in manual-evidence ledger |
-| Dunmer | Fail - runtime/manual proof deferred | Azura and Boethiah book source families are filled/readback-clean and ready for packet proof | All seven manual slots pending |
-| Imperial | Fail - runtime/manual proof deferred | Public Talos book source family is filled/readback-clean and ready for packet proof | All seven manual slots pending |
+| Dunmer | Pass - manual/runtime packet 2026-07-05 | See PDV_PreBetaRaceGateLedger.md and PDV_RunSheet_Dunmer_BetaFeel.md; Azura/Boethiah book source families, Good Daedra temple prayer, DA01 Black Star deviation price, Ancestral Hearth home rite, Survey/status, stack, rejection, and asset slots passed | Manual slots evidence-recorded; final-world placement separate |
+| Imperial | Pass - manual/runtime packet 2026-07-04 | Public Talos book source family, Concordat emitters, civic-service Ledger/Book-of-Days surfacing, formal offer cadence, Survey/status, stack, rejection, and manual-feel slots passed | Manual slots evidence-recorded; final-world placement separate |
 | Nord | Pass - per gate-ledger manual/runtime packet 2026-06-18 | See PDV_PreBetaRaceGateLedger.md; manual-evidence slots tracked in PDV_Phase20_ManualEvidenceLedger.json | Slots in manual-evidence ledger |
 
 ## P2 FormList Shell State

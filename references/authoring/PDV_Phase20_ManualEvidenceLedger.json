@@ -326,38 +326,45 @@
       }
     },
     "Dunmer": {
-      "status": "pending",
-      "raceVerdictBeforeEvidence": "Fail - runtime/manual proof deferred",
-      "runtimeProofCommand": "No Phase 20 route command yet; audit manually through Survey/status and stack review.",
+      "status": "evidence-recorded",
+      "evidenceSummary": "Manual/runtime packet PASS 2026-07-05: Dunmer run-sheet slots 1-8 plus shared Daedric inn-sleep proof passed. Evidence covers the no-new-custom-asset surface, wrong-origin rejection, generic-hook rejection, portable ash-prayer, Ancestral Hearth home confirmation and three-consecutive-sleeps move-home option, Reclamation focus, Good Daedra temple prayer surfacing, DA01 Black Star deviation-price route and Book/ledger surfaces, Survey/status clarity, stack snapshots, curse-posture ancestor silence, Prisma surfaces, and manual feel. Final-world placement remains separate.",
+      "raceVerdictBeforeEvidence": "Evidence recorded - current Dunmer packet passed; final-world placement remains separate",
+      "runtimeProofCommand": "No single Phase 20 route command for Dunmer; evidence assembled from PDV_RunSheet_Dunmer_BetaFeel.md plus Papyrus log markers for DA01 stage 110, Snapshot B curse silence, generic-source silence, and shared Daedric 314/315 controls.",
       "manualEvidenceSlots": {
         "wrongOriginRejection": {
-          "status": "pending",
-          "expected": "Non-Dunmer origin cannot read ancestor/Reclamation state as native."
+          "status": "evidence-recorded",
+          "expected": "Non-Dunmer origin cannot read ancestor/Reclamation state as native.",
+          "note": "2026-07-05 tester-reported PASS: wrong-origin book/source checks did not move native Dunmer ancestor or Reclamation state."
         },
         "genericHookRejection": {
-          "status": "pending",
-          "expected": "Generic Daedric contact, shrine use, theft, murder, ash proximity, and tomb travel do not move native Dunmer layers by themselves."
+          "status": "evidence-recorded",
+          "expected": "Generic Daedric contact, shrine use, theft, murder, ash proximity, and tomb travel do not move native Dunmer layers by themselves.",
+          "note": "2026-07-05 log-confirmed PASS: generic shrine/location/action routes fired, but no new native RouteDunmer movement or ancestor substrate progress occurred."
         },
         "surveyStatusClarity": {
-          "status": "pending",
-          "expected": "Survey/MCM explains ancestor posture, active Reclamation, diaspora burden, private shrine state, and Daedric deviation cost."
+          "status": "evidence-recorded",
+          "expected": "Survey/MCM explains ancestor posture, active Reclamation, diaspora burden, private shrine state, and Daedric deviation cost.",
+          "note": "2026-07-05 tester-reported PASS: Survey copy was shortened, standing language clarified, curse/deviation posture remained legible, and the focused panel stayed scoped to the Dunmer deity roster."
         },
         "stackSnapshot": {
-          "status": "pending",
-          "expected": "Expected Reclamation build and edge deviation/curse build record ancestor substrate, active focus, silence/deviation, and suppressed generic Daedric stacking."
+          "status": "evidence-recorded",
+          "expected": "Expected Reclamation build and edge deviation/curse build record ancestor substrate, active focus, silence/deviation, and suppressed generic Daedric stacking.",
+          "note": "2026-07-05 PASS: Snapshot A/B active-effect checks confirmed the expected Dunmer ancestor/Reclamation stack. Under vampire posture, earned ancestor steadiness remained while new ancestor progress was silenced; no active effect was expected to be removed."
         },
         "manualFeelNote": {
-          "status": "pending",
-          "expected": "Ancestor substrate stays interpretive/identity-heavy while the foreground Reclamation remains the loudest reward layer."
+          "status": "evidence-recorded",
+          "expected": "Ancestor substrate stays interpretive/identity-heavy while the foreground Reclamation remains the loudest reward layer.",
+          "note": "2026-07-05 tester-reported PASS: manual-feel slot accepted after the home confirmation, Survey wording, Good Daedra temple toast, and Reclamation/deviation surfaces were corrected."
         },
         "immersiveHookProof": {
-          "status": "pending",
+          "status": "evidence-recorded",
           "expected": "Prove Dunmer portable ash-prayer/home rite, Reclamation focus, and deviation-price immersive hooks outside QASmoke, with stack audit and rejected generic Daedric behavior.",
-          "note": "2026-06-04: Accepted P2 book-route log proof recorded for Azura and Boethiah Reclamation focus via strict manager checker. This is accepted-route proof only; wrong-origin, generic-source silence, Survey/status, stack snapshot, and feel remain pending."
+          "note": "2026-07-05 PASS: portable ash-prayer, Ancestral Hearth home confirmation, three-sleeps move-home option, Reclamation focus, Good Daedra temple prayer surfacing, and DA01 Black Star stage-110 deviation-price route all passed. Log-confirmed DA01 markers include RouteDunmerDeviationPrice complete and Dunmer deviation price routed: eventbus_131_po3_queststage_dunmer_da01_black_star."
         },
         "assetStatus": {
-          "status": "pending",
-          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation."
+          "status": "evidence-recorded",
+          "expected": "Confirm every immersive hook contract for this race has explicit asset status; current contract target is no required new custom mesh. If any hook requires a new mesh, name the missing asset before implementation.",
+          "note": "2026-07-05 tester-reported PASS: Dunmer uses existing MISC urn, MCM/debug surfaces, existing DLC2 Good Daedra shrine hooks, and message/Prisma surfaces. No new custom mesh is required for the current packet."
         }
       }
     },

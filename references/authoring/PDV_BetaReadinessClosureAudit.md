@@ -118,15 +118,36 @@ This moves Bosmer from source-blocked to runtime/manual pending. It does not
 prove DA05 route delivery, wrong-origin rejection, generic-source silence,
 Survey/status clarity, reward/stack behavior, or feel.
 
+## 2026-07-05 Closure Run
+
+After the Imperial and Dunmer manual/runtime closeouts were transcribed into
+`PDV_Phase20_ManualEvidenceLedger.json`, the strict audit passed:
+
+```text
+Verdict: STRICT_GATE_PASS
+Counts: PASS=31 WARN=1 INFO=2
+Blockers: []
+```
+
+The pass means the strict beta-readiness closure audit now sees authority,
+readback, runtime-route, manual race evidence, and Daedric runtime/display
+evidence aligned for the current beta-feel gate. It does not claim
+final-world placement, Requiem feltness proof, likes/dislikes reload proof, or
+future content-depth tranches.
+
+The remaining warning is the paired-deity warning count, which the audit reports
+as non-blocking for this gate.
+
 ## Closeout Order
 
-1. Continue per-race beta packets and update
-   `PDV_Phase20_ManualEvidenceLedger.json` only with actual manual/runtime
-   evidence.
-2. Run the Bosmer DA05 source packet and record route, wrong-origin,
-   generic-source, Survey/status, reward/stack, and feel evidence.
-3. Run Daedric controlled, organic, display, generic-silence, save/load, stack,
-   and curse no-double-fire proof before any full Devotion beta-feel claim.
+1. Preserve the current strict-audit pass in the active handoff and avoid using
+   older `NOT_BETA_READY` or `Dunmer:7` output as current state.
+2. Keep future beta-feel release claims tied to rerunning
+   `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` after any
+   evidence, Daedric, Prisma, reward, or runtime-surfacing change.
+3. Track final-world placement, Requiem feltness proof, likes/dislikes reload
+   proof, and future content-depth tranches outside this strict gate unless the
+   gate contract is intentionally expanded.
 
 ## Boundary
 

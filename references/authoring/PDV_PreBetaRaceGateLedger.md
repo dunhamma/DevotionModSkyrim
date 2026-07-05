@@ -268,17 +268,17 @@ Blocking follow-up: no Breton reward expansion until the expected/edge stack aud
 ```text
 Race: Dunmer
 Lane type: P2 full end-state wiring with stack audit
-Verdict: Fail - runtime/manual proof deferred
+Verdict: Pass - manual/runtime packet 2026-07-05; final-world placement separate
 No-in-game status: Planning-Ready
 Expected build: ash-prayer and ancestor practice into one Reclamation focus.
 Edge build: ancestor substrate plus Reclamation plus Daedric deviation or curse price.
 Rejected hooks: generic crime as Mephala, generic cruelty as Boethiah, generic twilight/magic as Azura, Tribunal memory as a controllable path, non-Reclamation deviation without price.
-Survey/status result: source now has Dunmer-specific Survey/MCM readout for ancestor layer, portable ash-prayer, private home rite, standing, and curse posture; needs runtime display proof and future Reclamation/deviation price surfacing before pass.
+Survey/status result: PASS 2026-07-05. Runtime display proof accepted after copy cleanup: Survey/MCM reports ancestor layer, portable ash-prayer, Ancestral Hearth/private home rite, Reclamation standing, curse posture, and deviation price without exposing non-Dunmer deity rows.
 Reward ceiling: ancestor substrate is identity/utility; Reclamation focus is the loud foreground; deviations carry visible price.
-Stack snapshot: ancestor substrate, posture, Reclamation focus, active favor, portable/home bonus, deviation price, curse state, Daedric modifiers.
-Next automatable action: run the strict immersive-hook verifier, then wire portable ash-prayer/home rite, Reclamation focus, and deviation-price hook contracts.
-Deferred manual proof: ancestor/Reclamation stack audit, rejected generic Daedric behavior, Survey display, immersive hook proof, and asset-status confirmation.
-Blocking follow-up: no Dunmer pass or reward expansion until overstack risk and deviation-price behavior are audited.
+Stack snapshot: PASS 2026-07-05. Expected/edge active-effect snapshots confirmed ancestor substrate plus Reclamation focus; vampire posture silences new ancestor progress without stripping already-earned ancestor effects.
+Next automatable action: rerun the strict beta audit and keep this row in sync with `PDV_Phase20_ManualEvidenceLedger.json`; no further Dunmer packet retest is required unless a regression changes routing, Survey, or Prisma surfaces.
+Deferred manual proof: none for the current Dunmer packet. Final-world placement and future Grey Quarter/twilight/layer-weight expansion remain separate.
+Blocking follow-up: do not promote broader Dunmer reward expansion until any new Grey Quarter, twilight, layer-weight, or deviation-price content is separately audited.
 ```
 
 ### Imperial
