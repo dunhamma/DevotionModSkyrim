@@ -68,6 +68,13 @@ zeroes regen buffs, so flat heals must show the bar move here).
   the Argonian Hist potion, a Khajiit lunar act). Re-check the Ledger.
 - **See:** the Ledger lists **driver rows per god** (the reason + how many + net). **Crucially**, the substrate
   act now shows a row -- before the fix these were invisible. (A Prince you're building toward shows a "watching" row.)
+- **Also (curated driver-reason retest, fix on main c8a4aa34):** award **two different curated signals**
+  via MCM Debug (command 7: deity index + signal type) or natural play -- e.g. Talos signal **101**
+  (shrine defiance) plus any second god's curated signal. Each new driver row must read its **own
+  signal-specific trigger phrase** -- Talos 101 reads **"defiant prayer at a Talos shrine"** -- and the
+  two rows must be **distinct**. Any new curated row reading the generic "a devotional rite" or
+  "An act of devotion" = FAIL (that was the Sitting-1 U4 bug). Caveat: rows recorded before the fix
+  keep their old copy until they age out of the 6-entry ring -- judge only rows added now.
 - **Record:** ___
 
 ### U5 -- the Book of Days + pruning  [Tester] [R]+[M]
@@ -115,7 +122,7 @@ zeroes regen buffs, so flat heals must show the bar move here).
 | U1 panel/Book close | cold open focuses; ESC/X always release | | |
 | U2 tier-ups | toast + BoD each tier; Champion pinned | | |
 | U3 favor + digest | patron favor toasts; dawn names the gods | | |
-| U4 Ledger + substrate fix | driver rows incl. substrate; watching row | | |
+| U4 Ledger + substrate fix | driver rows incl. substrate; per-signal reason copy (no generic "a devotional rite"); watching row | | |
 | U5 Book of Days + prune | legible; ordinary prune, milestones persist | | |
 | U6 neglect | toast + BoD once on first lapse | | |
 | U7 neglect recovery | recovery beat surfaces; no repeat lapse or forced panel | | |

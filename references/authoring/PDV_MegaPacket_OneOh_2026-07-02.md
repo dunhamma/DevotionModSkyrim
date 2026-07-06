@@ -234,6 +234,12 @@ Run `references/authoring/PDV_RunSheet_Universal_Prisma_V1.md`. U6 (neglect drop
 LOCKED per-race strings (see the table there for exact Nord/Imperial/Dunmer/Altmer/Redguard
 toast copy). Blank Book of Days line anywhere = FAIL.
 
+U4 now also carries the **curated driver-reason retest** (Sitting-1 U4 found every curated
+award recording generic "a devotional rite"; fixed on main `c8a4aa34` -- awards now carry the
+per-signal phrase from `HumanizeCuratedSignalReason`). Award two curated signals and confirm
+distinct trigger-stating rows; Talos 101 = "defiant prayer at a Talos shrine". In-game proof
+for this fix is still owed -- record it in the U4 row.
+
 ### C2. Beat spot-checks (the 2026-07-01 wires -- confirm each renders; MCM-driven, origin flips on disposable saves)
 Copy authority: `PDV_PrismaParity_AuthoringDraft.md` (LOCKED 2026-06-25) for offer/Altmer copy;
 `PDV_PrismaAuthoringBeats_Copy.md` for the rest.
