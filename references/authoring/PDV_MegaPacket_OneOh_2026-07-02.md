@@ -249,6 +249,17 @@ Ledger shows it as a clearly-marked "Watching" card, set apart from patron and p
 In-game proof still owed -- record it in the U4 row. (The watching Prince's driver-row *copy* is
 the curated-reason retest above; the two U4 retests are independent and can be judged on one save.)
 
+U4 also carries the **watching-Prince Book of Days retest** (the badge above surfaces the pre-pact
+Prince in the panel, but a Book-of-Days-only player had no journal line naming WHICH Prince took
+interest until the deeper half-Seeker "The world tilts toward `<Prince>`." beat; fixed on main
+`2f75a860` -- the FIRST time a signal leaves a Prince pre-pact with piety above zero now writes a
+named, unpinned chronicle "`<Prince>` has taken an interest in you." plus one soft "`<Prince>` takes
+note" cue). On a no-pact save, seed a Prince via Developer Options Daedric debug "Route live sender"
+(+10, tier 0) and confirm ONE named "has taken an interest" line appears in the Book of Days naming
+that Prince; route the same sender again and confirm NO duplicate of that line (a distinct "The world
+tilts toward `<Prince>`." line appearing once piety crosses half-Seeker ~12.5 is the expected deeper
+beat, not a duplicate). In-game proof still owed -- record it in the U4 row.
+
 ### C2. Beat spot-checks (the 2026-07-01 wires -- confirm each renders; MCM-driven, origin flips on disposable saves)
 Copy authority: `PDV_PrismaParity_AuthoringDraft.md` (LOCKED 2026-06-25) for offer/Altmer copy;
 `PDV_PrismaAuthoringBeats_Copy.md` for the rest.
