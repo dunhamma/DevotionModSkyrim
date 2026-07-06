@@ -918,21 +918,34 @@ Curse posture: `PDV_State_ArgonianHistPosture` uses `Normal = 0`, `Distant = 1`,
 
 ---
 
-## Notes for Implementation
+## Design North Stars
 
-### Priority order for building (suggested)
-1. **Nord** — already the prototype, most vanilla-hook surface
-2. **Orc** — single god, clearest signal logic, mode-ceiling gives natural difficulty curve
-3. **Dunmer** — layered architecture is complex but the ancestor-always-active pattern is distinct
-4. **Altmer** — Lorkhan Adjacency Penalty is implementation-demanding but the proof slice already exists
-5. **Khajiit** — silent emergent patron + lunar substrate has locked launch hooks; implementation should stay careful around signal weighting
-6. **Imperial** — ConcordatStanding is architecturally proven (same pattern as Breton); lower priority only because less distinct playstyle signal
-7. **Redguard** — rich lore but limited vanilla hook surface; Ash'abah especially needs careful trigger work
-8. **Bosmer** — four paths is the most implementation surface of any race; Old Contract GreenPact tagging is significant custom work
-9. **Breton** — three-track system with three distinct mechanics; high total complexity, can ship after others without gaps
+These are the cross-cutting principles the tracker exists to protect. They are
+not scheduling guidance -- they are the bar every race's feel is measured
+against during tuning, editorial, and balancing.
 
-### Cross-cutting observations
 - **The most fun Champions share one trait:** they feel like *recognition*, not just progression. The god noticed what you were doing before you knew it mattered.
 - **The best frictions are diegetic:** Green Pact, Lorkhan Penalty, and ConcordatStanding all feel like they come from the world, not from a mod ruleset. Aim for this in all remaining friction mechanics.
-- **Neglect should feel like absence, not punishment** (in most cases). The Bosmer Old Contract terminal state is the deliberate exception — and it works *because* it's exceptional.
+- **Neglect should feel like absence, not punishment** (in most cases). The Bosmer Old Contract terminal state is the deliberate exception — and it works *because* it's exceptional. (The 1.0 neglect model is flat, Requiem-felt debuffs that bite on a few-day lapse; keep the *texture* of absence even where the mechanic is a concrete stat hit.)
 - **Champion should be rare.** The architecture says Tier 3 is meant to feel exceptional. Threshold values during balancing should take this seriously — especially for paths with hard compliance mechanics.
+
+### Build-order retrospective (historical)
+
+All nine build-order races below are now implemented and packet-proven; this
+list is kept only as a record of the original sequencing rationale, not as
+forward guidance. Read it to understand *why* the codebase grew the way it did,
+not as a plan.
+
+1. **Nord** — the prototype, most vanilla-hook surface
+2. **Orc** — single god, clearest signal logic, mode-ceiling gives natural difficulty curve
+3. **Dunmer** — layered architecture is complex but the ancestor-always-active pattern is distinct
+4. **Altmer** — Lorkhan Adjacency Penalty is implementation-demanding but the proof slice already existed
+5. **Khajiit** — silent emergent patron + lunar substrate on locked launch hooks; careful signal weighting
+6. **Imperial** — ConcordatStanding shares Breton's proven pattern; sequenced later only for less distinct playstyle signal
+7. **Redguard** — rich lore but limited vanilla hook surface; Ash'abah especially needed careful trigger work
+8. **Bosmer** — four paths, the most implementation surface of any race; Old Contract GreenPact tagging is significant custom work
+9. **Breton** — three-track system with three distinct mechanics; high total complexity, shipped after others without gaps
+
+(Argonian is absent from the original nine-item list because it entered the
+roster as a substrate-layered race alongside the Phase 2 all-race propagation;
+it is now packet-proven like the rest.)
