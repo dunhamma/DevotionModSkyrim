@@ -75,6 +75,14 @@ zeroes regen buffs, so flat heals must show the bar move here).
   two rows must be **distinct**. Any new curated row reading the generic "a devotional rite" or
   "An act of devotion" = FAIL (that was the Sitting-1 U4 bug). Caveat: rows recorded before the fix
   keep their old copy until they age out of the 6-entry ring -- judge only rows added now.
+- **Also (watching-Prince badge, fix on main 692396bb):** on a **no-pact** save, seed a Daedric
+  Prince to **pre-pact** via MCM -> Devotion -> Developer Options (Daedric debug) -- commitment
+  signals so the path holds piety at **tier 0**; do NOT accept/form the pact. Open the panel ->
+  **Ledger**. The pre-pact Prince (e.g. Namira, Mephala) must render as a distinct **"Watching"**
+  card -- a "Watching" badge above the Prince's name, visibly set apart from patron and pantheon
+  rows (before the fix it was an ordinary god card with no indicator). A watching Prince showing as
+  a plain pantheon-style row = FAIL. Its driver-row *copy* is covered by the curated-reason retest
+  above; this row proves the **watching status** renders.
 - **Record:** ___
 
 ### U5 -- the Book of Days + pruning  [Tester] [R]+[M]
@@ -122,7 +130,7 @@ zeroes regen buffs, so flat heals must show the bar move here).
 | U1 panel/Book close | cold open focuses; ESC/X always release | | |
 | U2 tier-ups | toast + BoD each tier; Champion pinned | | |
 | U3 favor + digest | patron favor toasts; dawn names the gods | | |
-| U4 Ledger + substrate fix | driver rows incl. substrate; per-signal reason copy (no generic "a devotional rite"); watching row | | |
+| U4 Ledger + substrate fix | driver rows incl. substrate; per-signal reason copy (no generic "a devotional rite"); pre-pact Prince shows a distinct "Watching" badge | | |
 | U5 Book of Days + prune | legible; ordinary prune, milestones persist | | |
 | U6 neglect | toast + BoD once on first lapse | | |
 | U7 neglect recovery | recovery beat surfaces; no repeat lapse or forced panel | | |

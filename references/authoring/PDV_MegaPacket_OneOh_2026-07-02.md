@@ -240,6 +240,15 @@ per-signal phrase from `HumanizeCuratedSignalReason`). Award two curated signals
 distinct trigger-stating rows; Talos 101 = "defiant prayer at a Talos shrine". In-game proof
 for this fix is still owed -- record it in the U4 row.
 
+U4 also carries the **watching-Prince badge retest** (Sitting-1 U4 found a pre-pact Prince you
+are building toward rendering as an ordinary god card with no indicator; fixed on main `692396bb`
+-- the dashboard tagged it `system:"watching"` but the view only surfaced `god.state`, so it now
+renders a distinct "Watching" kicker badge above the god name). On a no-pact save, seed a Prince
+to pre-pact (Developer Options Daedric debug: commitment signals, tier 0, no pact) and confirm the
+Ledger shows it as a clearly-marked "Watching" card, set apart from patron and pantheon rows.
+In-game proof still owed -- record it in the U4 row. (The watching Prince's driver-row *copy* is
+the curated-reason retest above; the two U4 retests are independent and can be judged on one save.)
+
 ### C2. Beat spot-checks (the 2026-07-01 wires -- confirm each renders; MCM-driven, origin flips on disposable saves)
 Copy authority: `PDV_PrismaParity_AuthoringDraft.md` (LOCKED 2026-06-25) for offer/Altmer copy;
 `PDV_PrismaAuthoringBeats_Copy.md` for the rest.
