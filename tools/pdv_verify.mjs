@@ -1026,6 +1026,7 @@ class Verifier {
     strictCommitment = false,
     strictNeglectDecay = false,
     strictExperienceMode = false,
+    strictCuratedSignalDispatch = false,
   } = {}) {
     this.strictPhase3 = strictPhase3;
     this.strictPreflight = strictPreflight;
@@ -1052,6 +1053,7 @@ class Verifier {
     this.strictCommitment = strictCommitment;
     this.strictNeglectDecay = strictNeglectDecay;
     this.strictExperienceMode = strictExperienceMode;
+    this.strictCuratedSignalDispatch = strictCuratedSignalDispatch;
     this.findings = [];
     this.recordsByEdid = new Map();
     this.recordsByFormid = new Map();
@@ -1320,8 +1322,50 @@ class Verifier {
     }
   }
 
+  curatedSignalDispatchGap(check, detail, filePath = null) {
+    if (this.strictCuratedSignalDispatch) {
+      this.fail(check, detail, filePath);
+    } else {
+      this.info(check, detail, filePath);
+    }
+  }
+
+  // Registry-driven curated-signal dispatch coverage: every declared+scored deity SIGNAL_
+  // must have a real AwardCuratedSignal[Scaled] dispatch, else it can never bank piety (the
+  // dead-signal class found 2026-07-06). Delegates to the standalone gate check so there is a
+  // single source of truth; reserved/known-gap signals live in tools/pdv_reserved_signals.json.
+  checkCuratedSignalDispatch() {
+    const gate = path.join(__dirname, "pdv_signal_e2e_gate.mjs");
+    const check = "Curated-signal dispatch coverage";
+    if (!exists(gate)) {
+      this.info(check, "pdv_signal_e2e_gate.mjs not found; skipped.", gate);
+      return;
+    }
+    const result = spawnSync(process.execPath, [gate, "--dispatch-coverage-only"], {
+      encoding: "utf8",
+      cwd: PROJECT_ROOT,
+    });
+    let parsed = null;
+    try {
+      parsed = JSON.parse(result.stdout || "{}");
+    } catch {
+      this.curatedSignalDispatchGap(check, `Could not parse dispatch-coverage output (exit ${result.status}).`, gate);
+      return;
+    }
+    if (parsed.status === "PASS") {
+      this.pass(check, `${parsed.declaredScored} declared+scored signals; ${parsed.dispatched} dispatched; ${parsed.reservedKnownGaps} reserved known-gaps; 0 unlisted, 0 stale.`, gate);
+      return;
+    }
+    const bits = [];
+    if (parsed.failures?.length) bits.push(`${parsed.failures.length} undispatched+scored signal(s) NOT in the reserved ledger: ${parsed.failures.join(", ")}`);
+    if (parsed.staleLedger?.length) bits.push(`${parsed.staleLedger.length} stale reservation(s) (now wired/undeclared -- remove from ledger): ${parsed.staleLedger.join(", ")}`);
+    if (parsed.ledgerError?.length) bits.push(`reserved-ledger parse error: ${parsed.ledgerError.join("; ")}`);
+    this.curatedSignalDispatchGap(check, bits.join(" | ") || "dispatch-coverage FAIL.", gate);
+  }
+
   async run() {
     this.checkPaths();
+    this.checkCuratedSignalDispatch();
     if (exists(PDV_ESP) && exists(MUTAGEN_BRIDGE)) {
       this.loadRecordInventory();
       this.loadRecordDetails();
@@ -10377,8 +10421,10 @@ function parseArgs(argv) {
       args.strictPhase17 = true;
     } else if (arg === "--strict-experience-mode") {
       args.strictExperienceMode = true;
+    } else if (arg === "--strict-curated-signal-dispatch") {
+      args.strictCuratedSignalDispatch = true;
     } else if (arg === "-h" || arg === "--help") {
-      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-experience-mode] [--strict-phase11] [--strict-phase12] [--strict-phase13] [--strict-phase14] [--strict-phase15] [--strict-phase16] [--strict-phase17] [--strict-phase18] [--strict-phase19] [--strict-phase20-roster] [--strict-phase20-altmer] [--strict-phase20-race-costing] [--strict-nord]");
+      console.log("Usage: node tools/pdv_verify.mjs [--json] [--strict-phase3] [--strict-preflight] [--strict-skeleton] [--strict-pattern-proving] [--strict-phase7] [--strict-phase8] [--strict-phase9] [--strict-phase10] [--strict-khajiit] [--strict-commitment] [--strict-neglect-decay] [--strict-experience-mode] [--strict-phase11] [--strict-phase12] [--strict-phase13] [--strict-phase14] [--strict-phase15] [--strict-phase16] [--strict-phase17] [--strict-phase18] [--strict-phase19] [--strict-phase20-roster] [--strict-phase20-altmer] [--strict-phase20-race-costing] [--strict-nord] [--strict-curated-signal-dispatch]");
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${arg}`);
@@ -10416,6 +10462,7 @@ const verifier = new Verifier({
   strictCommitment: args.strictCommitment,
   strictNeglectDecay: args.strictNeglectDecay,
   strictExperienceMode: args.strictExperienceMode,
+  strictCuratedSignalDispatch: args.strictCuratedSignalDispatch,
 });
 const findings = await verifier.run();
 const counts = verifier.counts();
