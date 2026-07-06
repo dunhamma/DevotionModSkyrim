@@ -263,6 +263,10 @@ Daedric ledger state from `PDV_DaedricRuntimeEvidenceLedger.json`:
 
 Additional last-pass runtime sweeps before any broad beta-feel claim:
 
+The day-to-day V1, Prince V2, and C2 Prisma spot-checks are consolidated into a
+single by-save run sheet for one sitting:
+`references/authoring/PDV_CombinedSweep_DayToDay_PrinceV2_C2_2026-07-06.md`.
+
 - Day-to-day V1 faucet sweep: finish craft, book, sleep, transgression,
   trespass `361`, steal-item `362`, events `1` and `2`, anti-farm,
   attribution filter, race gate, and dawn bank checks.
