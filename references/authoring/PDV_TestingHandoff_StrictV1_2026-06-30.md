@@ -175,6 +175,12 @@ release-claim boundary.
 
 ### 2. Universal Prisma V1 Smoke
 
+2026-07-06 checkpoint: U1-U9 passed in game during Mega Packet Sitting 1. This
+section remains the recipe if a future Prisma/source change invalidates that
+evidence; do not rerun it only to close the current Sitting-1 residuals. The
+open Prisma residuals are the Mega Packet C2 per-origin beats: Altmer alignment
+band, Khajiit Champion pin pruning survival, and Redguard sect Champion toast.
+
 Run `references/authoring/PDV_RunSheet_Universal_Prisma_V1.md` before the race
 sheets because the latest update touches shared Prisma behavior.
 

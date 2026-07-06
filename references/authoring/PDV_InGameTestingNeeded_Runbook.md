@@ -113,6 +113,16 @@ temple surfacing, DA01 Black Star deviation price, and the Ancestral Hearth
 home/move-home flow are PASS for the current packet. Update ledgers before
 treating any strict-audit output from an older run as current.
 
+2026-07-06 Prisma checkpoint: Mega Packet Sitting 1's Universal Prisma sheet
+U1-U9 is PASS in game. Confirmed panel/Book close, tier gauge, favor/dawn digest,
+Ledger/substrate rows, pruning, neglect lapse/recovery, offer accept/refuse, and
+whole-record readability. Same pass re-verified Orkey Old Ways offer/naming,
+curated driver copy, watching badge/onset Book line, and one-per-quest-fire
+surfacing aggregation. Remaining Sitting-1 Prisma work is only C2 beat 3 Altmer
+alignment band, C2 beat 5 Khajiit Champion pin survives pruning, and C2 beat 6
+Redguard per-sect Champion toast. Do not rerun U1-U9 unless new Prisma/source
+changes invalidate the evidence.
+
 2026-07-05 strict gate rerun: after the Dunmer evidence sync,
 `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` reports
 `STRICT_GATE_PASS` with `PASS=31`, `WARN=1`, `INFO=2`, and no blockers. The one
@@ -218,14 +228,12 @@ Additional last-pass runtime sweeps before any broad beta-feel claim:
 - Prince V2 path-deepening sweep: prove deepen-not-initiate, open-path deepen
   markers, dual-face Azura behavior, anti-farm, and Hircine curse
   no-double-fire.
-- Prisma recovery sweep: run `PDV_RunSheet_Universal_Prisma_V1.md` U6/U7 once
-  on the current build, and make sure the drop and recovery beats appear as
-  player-owned toast/Book-of-Days/Chronicle surfaces without forcing the full
-  Prisma panel.
-- Prisma authoring-beats sweep: run Universal U8 for formal offer accept/refuse,
-  Daedric D8 for Hircine renunciation, Redguard 6d for sect champion-entry, and
-  the Altmer Thalmor-alignment regression row. These prove manual display only;
-  keep them separate from the static Prisma-to-1.0 audit.
+- Prisma residual sweep: Universal U1-U9, including U6/U7 recovery and U8
+  offer accept/refuse, passed on 2026-07-06. Finish only the remaining C2
+  per-origin spot-checks unless new Prisma/source changes invalidate the run:
+  Altmer Thalmor-alignment band toast/chronicle, Khajiit Champion pinned entry
+  after pruning, and Redguard per-sect Champion toast. These prove manual display
+  only; keep them separate from the static Prisma-to-1.0 audit.
 - Requiem felt-penalty sweep: prove the new negative Health penalties are felt
   in-game and Imperial remains disease-resistance based.
 

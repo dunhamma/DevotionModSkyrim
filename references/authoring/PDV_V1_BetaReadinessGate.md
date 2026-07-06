@@ -27,7 +27,7 @@ recorded; the beta opens when all rows below are GREEN and the small-build items
 | Redguard | `PDV_RunSheet_Redguard_V1.md` | PENDING | PENDING | **PENDING** | offers + sect champion chronicle; Requiem heal feel |
 | Breton | `PDV_RunSheet_Breton_V1.md` | PENDING | PENDING | **PENDING** | NEW tradition + druidic-fork beats |
 | Daedric (16) | `PDV_RunSheet_Daedric_V1.md` | PENDING | PENDING | **PENDING** | milestones, titles, Hircine, pre-pact watching |
-| Universal Prisma | `PDV_RunSheet_Universal_Prisma_V1.md` | -- | PENDING | **PENDING** | panel/ESC, tier, digest, Ledger, prune, neglect |
+| Universal Prisma | `PDV_RunSheet_Universal_Prisma_V1.md` | -- | GREEN | **GREEN** | U1-U9 pass in game on 2026-07-06; residual C2 per-origin spot-checks tracked in the Mega Packet, not this universal row |
 
 Allowed verdicts: GREEN / RED / PENDING. Do not mark GREEN until every row of that sheet is filled.
 
