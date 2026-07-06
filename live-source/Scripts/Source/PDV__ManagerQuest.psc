@@ -3339,10 +3339,60 @@ Function HandleDaedricPrinceSignal(Int pathIndex, String sourceId)
     ; gain/cost beat lands for every Prince organically, not just Hircine's bespoke
     ; hunt rite. The MCM debug page already surfaces all phases per selected Prince.
     ShowDaedricMilestonePresentation(path, tierBefore, tierAfter, False)
+    ; Pre-pact "watching" onset. If this signal established interest without a
+    ; commitment (still tier 0, piety now above zero), chronicle a NAMED Book of Days
+    ; line + one soft cue so a Book-of-Days-only player learns WHICH Prince is watching
+    ; -- panel-badge parity for the same pre-pact state. A tier gain is a commitment and
+    ; is surfaced by ShowDaedricMilestonePresentation above, so this stays silent then.
+    MaybeChronicleDaedricWatchingOnset(path, pathIndex, path.GetStoredPiety(), tierAfter)
     RequestPanelRefresh()
 
     if GetDebugLevel() >= 2
         Debug.Trace("[PDV] Daedric live signal: " + path.DeityName + " index " + pathIndex + " source " + sourceId)
+    endIf
+EndFunction
+
+; One-shot NAMED pre-pact chronicle: fires the first time a Prince enters the "watching"
+; state (tier 0 with piety above zero -- the same state the panel surfaces as a badge).
+; Latched per Prince via "PDV.Daedric.WatchingChronicled" on the deity form; the latch is
+; reset in PDV_DaedricPathBase.UpdatePrePactNoticeState the moment interest lapses to
+; nothing or the Prince commits, so a genuine re-entry into watching chronicles again.
+; Repeated sub-threshold signals that merely deepen an existing watch stay silent.
+Function MaybeChronicleDaedricWatchingOnset(PDV_DaedricPathBase path, Int pathIndex, Float pietyAfter, Int tierAfter)
+    if !path
+        return
+    endIf
+    ; Only pre-pact watching chronicles here; a tier gain is a pact (milestone surface),
+    ; and a signal that left the Prince at the zero floor is not yet watching.
+    if tierAfter > TIER_NONE || pietyAfter <= 0.0
+        return
+    endIf
+
+    Form deityForm = path.GetDeityForm()
+    if StorageUtil.GetIntValue(deityForm, "PDV.Daedric.WatchingChronicled") == 1
+        return
+    endIf
+    StorageUtil.SetIntValue(deityForm, "PDV.Daedric.WatchingChronicled", 1)
+
+    String symbolName = GetPrismaSymbolForDeity(path)
+    if symbolName == "journal"
+        symbolName = "daedric"
+    endIf
+
+    ; Neutral/curiosity onset, unpinned (a soft interest, not a milestone). Names the
+    ; Prince using the path's player-facing name (AppendBookOfDaysEntry normalizes it).
+    ; The deeper "The world tilts toward <Prince>." pressure beat still fires later once
+    ; piety crosses the half-Seeker threshold.
+    AppendBookOfDaysEntry(path.DeityName + " has taken an interest in you.", Utility.GetCurrentGameTime() as Int, "daedric.pressure", symbolName, False, 1, "A Prince takes interest")
+
+    ; Single soft transient cue that NAMES the Prince (the prior watching popup did not).
+    ; One-shot alongside the journal line above -- never per-signal. The "watching" phase
+    ; falls through to the Daedric toast defaults ("<Prince> takes note"), so no view
+    ; change is needed; the context line carries the soft framing.
+    SendPrismaDaedricToast(path.DeityName, "watching", "An interest taken, not yet a pact.", symbolName)
+
+    if GetDebugLevel() >= 1
+        Debug.Trace("[PDV] Daedric watching onset chronicled: " + path.DeityName + " index " + pathIndex)
     endIf
 EndFunction
 

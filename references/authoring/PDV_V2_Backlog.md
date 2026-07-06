@@ -70,8 +70,16 @@ These were deferred before this session; listed here so V2 has one index.
   localization (string-table externalization for non-English).
 - **Jyggalag.** Out of 1.0 scope unless future adopted Creation Club /
   Sheogorath-Jyggalag content is explicitly added (Daedric manifest Section 7).
-
----
+- **Unique rune for aggregate (mixed) surface displays (+/- rune).** Owner idea
+  (2026-07-05, Mega Packet Sitting 1). The quest-reaction surfacing aggregation
+  (one toast + one Book of Days line per quest fire) can carry BOTH gains and
+  displeasure at once (a "deed weighed" mixed fire -- e.g. natives approve while a
+  TABOO deity takes offense). For 1.0 the aggregate leads its tone/symbol with the
+  stronger side. V2 polish: author a dedicated **aggregate rune/glyph that visually
+  carries both a plus and a minus component** so a mixed beat reads as mixed at a
+  glance (toast + Chronicle symbol), instead of borrowing the stronger side's
+  single-valence symbol. Copy/symbol per pdv-player-copy guardrails; pairs with the
+  medallion-glyph work.
 
 ## 3. Curse-access notoriety enhancement (Hircine / Molag Bal)
 

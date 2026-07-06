@@ -366,6 +366,17 @@ Function UpdatePrePactNoticeState(Float priorPiety, Float normalizedPiety, Int t
     Float noticeThreshold = ThresholdSeeker * 0.5
     Form deityForm = GetDeityForm()
 
+    ; Watching-onset chronicle latch. The manager writes a NAMED Book of Days line
+    ; ("<Prince> has taken an interest in you.") the first time this Prince crosses
+    ; above zero piety while still pre-pact. Clear it here the moment the Prince leaves
+    ; the watching state -- either it commits to a pact (tier gained) or its interest
+    ; lapses back to nothing -- so a later re-entry into watching chronicles afresh.
+    ; Kept distinct from the half-Seeker "world tilts" pressure latch below: watching
+    ; ends only at zero, not merely at a dip under the pressure threshold.
+    if tierValue > TIER_NONE || normalizedPiety <= 0.0
+        StorageUtil.SetIntValue(deityForm, "PDV.Daedric.WatchingChronicled", 0)
+    endIf
+
     if tierValue > TIER_NONE || normalizedPiety < noticeThreshold
         StorageUtil.SetIntValue(deityForm, DAEDRIC_PREPACT_NOTICE_SHOWN_KEY, 0)
         return

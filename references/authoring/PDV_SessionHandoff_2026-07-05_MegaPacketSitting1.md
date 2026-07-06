@@ -2,11 +2,14 @@
 
 ## TL;DR
 
-Mega Packet Sitting 1 (Anvil) is functionally COMPLETE: Section A (8 origins), the E1 day-to-day
-signal sweep, and all Block-F mechanics passed in-game. The sweep caught **4 real end-to-end
-wiring bugs** -- ALL 4 now fixed + proven in-game. One loose end for Codex: a
-`pdv_verify` FAIL that is verifier contract-drift from the `360` fix (not a functional
-regression). Strict beta gate still `STRICT_GATE_PASS`.
+Mega Packet Sitting 1 (Anvil) has now closed Block 1 plus the Universal Prisma sheet:
+Section A (8 origins), the E1 day-to-day signal sweep, all Block-F mechanics, and
+Prisma U1-U9 passed in game. The sweep caught **4 real end-to-end wiring bugs** in
+the Section A/E1 pass, then the Prisma pass caught a second wave of player-facing
+surface bugs; the closed Prisma fixes listed below were re-verified in game. The only
+remaining Sitting-1 Prisma work is C2 beats 3, 5, and 6. Strict beta gate still
+`STRICT_GATE_PASS` from the prior gate run; this handoff does not claim a fresh repo
+gate after the 2026-07-06 Prisma run.
 
 ## IMMEDIATE for Codex -- reconcile the pdv_verify FAIL (contract drift)
 
@@ -79,17 +82,62 @@ Pattern: all 4 are the recurring PDV failure class -- "declared + scripted but t
 reaches the handler end-to-end." Machine gates passed on all of them; only in-game exercise caught
 them.
 
+## Prisma checkpoint -- 2026-07-06
+
+**Universal sheet U1-U9: PASS in game.** Confirmed surfaces:
+
+- U1 cold-open focus plus ESC/X/Book-key close.
+- U2 Seeker/Devoted/Champion tier-up toasts and Book of Days entries; standing label is
+  patron-owned by design, so an uncommitted patron can read "Unproven" while the gauge itself
+  reflects piety.
+- U3 active-patron favor toast and dawn digest.
+- U4 Ledger driver rows, substrate visibility, curated driver copy, pre-pact "Watching" badge,
+  and named watching-onset Book of Days line.
+- U5 ordinary Book of Days pruning with milestones pinned.
+- U6/U7 neglect lapse and recovery; confirmed by design that active patron piety is decay-shielded
+  and neglect is a recency-lapse debuff after three days without devotional action.
+- U8 formal offer accept/refuse copy and pinned Book of Days entries.
+- U9 whole-record read: toast, Chronicle, and Ledger read as one surface, not disconnected systems.
+
+**Same-day Prisma fixes re-verified in game:**
+
+- Orkey Old Ways offer + "Orkey" normalize-gate naming; internal key remains Arkay.
+- Curated driver copy now names the real trigger, such as "defiant prayer at a Talos shrine",
+  instead of generic "a devotional rite".
+- Pre-pact watching Prince badge and named watching-onset Book of Days line.
+- Surfacing aggregation: one toast plus one Book of Days line per quest fire, not one burst per
+  matrix cell.
+
+**Filed / still open from the Prisma pass:**
+
+- `task_387bfc95`: MCM Debug curated-signal slider caps at 0-999, while many deity signal IDs are
+  1000+.
+- `task_e6904bb3`: Orkey/Dibella patrons have no neglect debuff spell.
+- `task_8c27e440`: formal offer Refuse should go quiet -- pinned chronicle only, no warning toast
+  or sound; Accept keeps its flourish.
+- `task_7dab1ebb`: Hircine renunciation over-fires and replaces the intended renounce copy; residue
+  should arrive later rather than same-frame.
+
+**Testing gotchas captured:** the MCM "Selected deity" is a debug cursor, not the active patron, and
+resets on page reset; cycle it to the target before every Force Piety / Apply action. Commitment
+offers need piety >= `COMMITMENT_OFFER_THRESHOLD` (50) plus seeded signal-days. `set timescale`
+only advances game time while the console is closed.
+
 ## Still pending for Sitting 1 / next Anvil boot
 
-- **C1/C2 Prisma render checks** (universal sheet U1-U9 + the 2026-07-01 beat spot-checks) -- NOT
-  run this sitting; still owed for the Sitting-1 scope.
-- **Surfacing live re-verify** (the ONLY in-game unknown left): the surfacing fix now emits an
-  AGGREGATED one-per-quest-fire toast + Book of Days line (not per-cell) -- unseen on screen yet
-  because it was compiled after the Section A run. Fire a base quest-reaction cell on the next
-  Anvil boot to confirm. (341 is already PROVEN via its own fix -- do NOT re-confirm.)
+- **C2 beat 3 -- Altmer alignment band:** drive Thalmor alignment across a committed band; confirm
+  the band toast and chronicle.
+- **C2 beat 5 -- Khajiit Champion pin:** force a Khajiit patron to Champion, run dawn, then wait
+  22+ days; confirm the Champion chronicle survives pruning.
+- **C2 beat 6 -- Redguard sect Champion toast:** drive a Redguard sect to Champion entry; confirm
+  the per-sect Champion toast.
+
+Do **not** rerun Universal Prisma U1-U9 just to close Sitting 1; it passed on 2026-07-06 unless a
+new Prisma/source change invalidates the evidence.
 
 ## Gate state at handoff
 
-`STRICT_GATE_PASS` (PASS=31, WARN=1, INFO=2, blockers=[]). `pdv_verify` PASS=3511, WARN=2,
-**FAIL=1 (the PickLock-node verifier drift above -- the only thing to clear)**. After that clears,
-resume the 1.0 roadmap: Experience Mode build -> ARR compat -> WS-3 branding.
+Prior gate state before the Prisma checkpoint: `STRICT_GATE_PASS` (PASS=31, WARN=1, INFO=2,
+blockers=[]). `pdv_verify` subsequently had a PickLock-node verifier drift in this handoff, and a
+later reconcile cleared that class in the living burndown. After C2 beats 3/5/6 close, resume the
+1.0 roadmap queue from the current burndown rather than this dated gate count.

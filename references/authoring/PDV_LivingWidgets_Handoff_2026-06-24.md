@@ -80,10 +80,19 @@ roadmap: megapacket → Experience Mode → ARR compat → branding.
 
 ```js
 var labels=['megapacket smoke','requiem felt sweep','experience mode','ARR compat','branding + packaging'];
-var effort=[2,1,2.5,1.5,1];            // est sessions, SOFT — refresh from velocity
-var cum=[25,38,69,88,100];             // cumulative % of remaining road
-var fill=['#378ADD','#378ADD','#A32D2D','#7F77DD','#888780']; // blue=in-game test, red=build, purple/gray=compat+packaging
+var effort=[2,1,0.5,1.5,1];            // est sessions, SOFT — see 07-06 note
+var cum=[33,50,58,83,100];             // cumulative % of remaining road
+var fill=['#378ADD','#378ADD','#A32D2D','#7F77DD','#888780']; // blue=in-game test, red=build-smoke, purple/gray=compat+packaging
 // 1F freeze annotation after 'requiem felt sweep' (x=1.5); 1.0 ready at end (x=4.5).
+// 2026-07-06 update: Sitting-1 Prisma U1-U9 PASS, but the run stayed bug-heavy;
+// megapacket bar should not fully burn down until the three C2 residual beats close.
+// Experience Mode BUILT 07-05 (b09acefb, all 5 steps) so its bar collapsed 2.5 -> 0.5
+// (Session G smoke + Redguard earn-halt mirror still unbuilt). U/Prisma catches include
+// panel movement filter, debug resync, Nord reused-spell strip (+lint), Orkey/Dibella,
+// curated driver copy, watching badge/onset line, and surfacing aggregation.
+// Cards: ~6 sessions / 8+ bugs caught+fixed / ~79% burned.
+// 2026-07-05 evening: Sitting 1 (Section A 8 origins + E1 sweep + mechanics) PASSED;
+// 4 wiring bugs (341/360/365/361+364) found AND fixed+proven same day.
 ```
 Note (2026-07-05): signal-floor ×23, race testing (10/10 packets), and Daedric
 in-game proof (PASS=16) are DONE and removed. Megapacket smoke = Anvil sittings
