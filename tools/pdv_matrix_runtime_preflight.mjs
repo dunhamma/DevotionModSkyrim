@@ -10,6 +10,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const args = process.argv.slice(2);
 const MO2_ROOT = normalizePath(getArg("--mo2") ?? "D:/Wabbajack/modlists/ARR");
@@ -24,7 +25,100 @@ const PAPYRUS_LOG = normalizePath(getArg("--log") ?? "C:/Users/Admin/Documents/M
 
 const findings = [];
 
-main();
+// --name-resolution-only: pure-static gate (no MO2) -- every deity name in the quest-matrix
+// CSVs must resolve through the manager's runtime name model (RepairDeityRuntimeName
+// canonical names + CanonicalDaedricPathName + IsQuestReactionNameMatch aliases), else
+// ApplyDeityReaction silently drops the cell (the Clavicus != "Clavicus Vile" class).
+// Shelled by pdv_verify on every run; also folded into the full preflight below.
+if (args.includes("--name-resolution-only")) {
+  const result = checkMatrixNameResolution();
+  console.log(JSON.stringify(result, null, 2));
+  process.exitCode = result.status === "PASS" ? 0 : 1;
+} else {
+  main();
+}
+
+function checkMatrixNameResolution() {
+  const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const managerPath = path.join(repoRoot, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
+  const authoringDir = path.join(repoRoot, "references", "authoring");
+  const issues = [];
+  if (!exists(managerPath)) {
+    return { check: "matrixNameResolution", status: "FAIL", issues: [`manager source missing: ${managerPath}`] };
+  }
+  const managerText = fs.readFileSync(managerPath, "utf8");
+
+  // Accepted requested-names, all parsed from the manager source (never hand-copied).
+  const accepted = new Set();
+  for (const m of managerText.matchAll(/RepairDeityRuntimeName\(\s*PDV_[A-Za-z0-9_]+\s*,\s*"([^"]+)"\s*\)/g)) {
+    accepted.add(m[1]);
+  }
+  const daedricFn = managerText.match(/String Function CanonicalDaedricPathName[\s\S]*?EndFunction/);
+  for (const m of (daedricFn ? daedricFn[0] : "").matchAll(/return "([^"]+)"/g)) {
+    accepted.add(m[1]);
+  }
+  const aliasFn = managerText.match(/Bool Function IsQuestReactionNameMatch[\s\S]*?EndFunction/);
+  for (const m of (aliasFn ? aliasFn[0] : "").matchAll(/requestedName == "([^"]+)"/g)) {
+    accepted.add(m[1]);
+  }
+  if (accepted.size < 30) {
+    issues.push(`accepted-name extraction suspiciously small (${accepted.size}) -- manager name-model parse may have broken`);
+  }
+
+  // Minimal quoted-field CSV parser: enough for the matrix files (quotes around citation).
+  const parseCsvLine = (line) => {
+    const cells = [];
+    let cur = "";
+    let inQ = false;
+    for (let i = 0; i < line.length; i += 1) {
+      const ch = line[i];
+      if (inQ) {
+        if (ch === '"' && line[i + 1] === '"') { cur += '"'; i += 1; }
+        else if (ch === '"') inQ = false;
+        else cur += ch;
+      } else if (ch === '"') inQ = true;
+      else if (ch === ",") { cells.push(cur); cur = ""; }
+      else cur += ch;
+    }
+    cells.push(cur);
+    return cells;
+  };
+
+  const files = fs.readdirSync(authoringDir).filter((f) => /^PDV_QuestReactionMatrix.*\.csv$/i.test(f));
+  const unknown = [];
+  let cellsChecked = 0;
+  for (const file of files) {
+    const lines = fs.readFileSync(path.join(authoringDir, file), "utf8").split(/\r?\n/).filter((l) => l.trim() !== "");
+    const header = parseCsvLine(lines[0] || "").map((h) => h.trim().toLowerCase());
+    const deityCol = header.indexOf("deity");
+    if (deityCol < 0) {
+      issues.push(`${file}: no 'deity' column found -- header drift`);
+      continue;
+    }
+    for (const line of lines.slice(1)) {
+      const name = (parseCsvLine(line)[deityCol] || "").trim();
+      if (name === "") continue;
+      cellsChecked += 1;
+      if (!accepted.has(name)) unknown.push(`${file}: "${name}"`);
+    }
+  }
+
+  if (process.env.PDV_MATRIX_NAME_SELFTEST === "1") {
+    unknown.push("(selftest): \"Clavicus\"");
+  }
+
+  const distinctUnknown = [...new Set(unknown)];
+  const ok = distinctUnknown.length === 0 && issues.length === 0;
+  return {
+    check: "matrixNameResolution",
+    status: ok ? "PASS" : "FAIL",
+    acceptedNames: accepted.size,
+    files: files.length,
+    cellsChecked,
+    unknownNames: distinctUnknown,
+    issues,
+  };
+}
 
 function main() {
   checkMo2Profile();
@@ -34,6 +128,12 @@ function main() {
   checkSourceConstants(enabledMods);
   checkPexFiles(enabledMods);
   checkPapyrusLog();
+  const nameRes = checkMatrixNameResolution();
+  if (nameRes.status === "PASS") {
+    pass("Matrix deity-name resolution", `${nameRes.cellsChecked} cells across ${nameRes.files} CSVs resolve against ${nameRes.acceptedNames} canonical names.`);
+  } else {
+    fail("Matrix deity-name resolution", `${nameRes.unknownNames.length} unresolvable deity name(s): ${nameRes.unknownNames.slice(0, 10).join("; ")}${nameRes.issues.length ? ` | issues: ${nameRes.issues.join("; ")}` : ""}`);
+  }
 
   const counts = findings.reduce((acc, finding) => {
     acc[finding.status] = (acc[finding.status] ?? 0) + 1;

@@ -1,0 +1,24 @@
+{
+  "_README": "Reserved orphan Route*/Handle* functions: defined but with zero live call sites (dead plumbing). Keys are <Script>.<FunctionName>. The route-reachability gate (tools/pdv_signal_e2e_gate.mjs) reports a listed key as a documented KNOWN-GAP; any orphan NOT listed FAILs, and a stale entry (now called / removed) FAILs. Verdicts land in Phase 4 of the dead-wiring burndown (wire the intended caller or remove the function).",
+  "_seededDate": "2026-07-07",
+  "PDV_EventBus.RouteBosmerBaanDarGap": {
+    "reason": "Orphan route (found 2026-07-06): forwards to HandlePlayerBelowHealthGate but nothing calls it. Phase 4 verdict pending -- git-history the intended caller (BaanDar gap concept) then wire or remove.",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  },
+  "PDV_EventBus.RouteOrcStrongholdPresence": {
+    "reason": "Orphan route (found 2026-07-06): forwards to HandleOrcStrongholdPresence but nothing calls it. Phase 4 verdict pending -- check whether the handler is reached via another path, then wire or remove.",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  },
+  "PDV__ManagerQuest.HandleNordAncestorSpine": {
+    "reason": "Orphan handler (gate find 2026-07-07): zero call sites. Phase 4 verdict pending -- likely superseded by AwardNordRouteFamilySignal ancestor-spine lanes; confirm then remove or wire.",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  },
+  "PDV__ManagerQuest.HandleDunmerClumsyCrime": {
+    "reason": "Orphan handler (gate find 2026-07-07): zero call sites. Phase 4 verdict pending -- check the Dunmer deviation-price route family for the intended caller, then wire or remove.",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  }
+}

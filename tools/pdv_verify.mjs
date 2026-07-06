@@ -1322,50 +1322,74 @@ class Verifier {
     }
   }
 
-  curatedSignalDispatchGap(check, detail, filePath = null) {
-    if (this.strictCuratedSignalDispatch) {
-      this.fail(check, detail, filePath);
-    } else {
-      this.info(check, detail, filePath);
-    }
-  }
+  // Declaration-side gate family (DEFAULT-FAIL, owner ruling 2026-07-07: always on, no
+  // opt-in flag -- an opt-in flag nobody passes is how the dead-signal class hid). Shells
+  // the pure-static standalone modes so each check has a single source of truth:
+  //  - pdv_signal_e2e_gate --declaration-gates-only: curated-signal dispatch coverage,
+  //    EVT emission coverage, Route/Handle reachability, likes/dislikes CSV->codegen
+  //    freshness (reserved ledgers: pdv_reserved_signals/events/routes.json).
+  //  - pdv_matrix_runtime_preflight --name-resolution-only: quest-matrix deity names
+  //    resolve through the manager's runtime name model.
+  // --strict-curated-signal-dispatch is retained as a NO-OP alias.
+  checkDeclarationGates() {
+    const shellJson = (script, flag) => {
+      const toolPath = path.join(__dirname, script);
+      if (!exists(toolPath)) return { missing: toolPath };
+      const result = spawnSync(process.execPath, [toolPath, flag], { encoding: "utf8", cwd: PROJECT_ROOT });
+      try {
+        return { parsed: JSON.parse(result.stdout || "{}"), toolPath };
+      } catch {
+        return { unparsable: `exit ${result.status}`, toolPath };
+      }
+    };
 
-  // Registry-driven curated-signal dispatch coverage: every declared+scored deity SIGNAL_
-  // must have a real AwardCuratedSignal[Scaled] dispatch, else it can never bank piety (the
-  // dead-signal class found 2026-07-06). Delegates to the standalone gate check so there is a
-  // single source of truth; reserved/known-gap signals live in tools/pdv_reserved_signals.json.
-  checkCuratedSignalDispatch() {
-    const gate = path.join(__dirname, "pdv_signal_e2e_gate.mjs");
-    const check = "Curated-signal dispatch coverage";
-    if (!exists(gate)) {
-      this.info(check, "pdv_signal_e2e_gate.mjs not found; skipped.", gate);
-      return;
+    const gates = shellJson("pdv_signal_e2e_gate.mjs", "--declaration-gates-only");
+    const gatesCheck = "Declaration gates (signals/events/routes/csv)";
+    if (gates.missing) {
+      this.info(gatesCheck, "pdv_signal_e2e_gate.mjs not found; skipped.", gates.missing);
+    } else if (gates.unparsable) {
+      this.fail(gatesCheck, `Could not parse --declaration-gates-only output (${gates.unparsable}).`, gates.toolPath);
+    } else {
+      const p = gates.parsed;
+      const sub = [
+        ["Curated-signal dispatch coverage", p.dispatch, (s) => `${s.declaredScored} declared+scored; ${s.dispatched} dispatched; ${s.reservedKnownGaps} reserved`],
+        ["EVT emission coverage", p.events, (s) => `${s.declared} declared; ${s.emitted} emitted; ${s.reservedKnownGaps} reserved`],
+        ["Route/Handle reachability", p.routes, (s) => `${s.reachable}/${s.targets} reachable; ${s.reservedKnownGaps} reserved`],
+        ["Likes/dislikes CSV->codegen freshness", p.csvFreshness, (s) => `${s.csvIds} csv ids ~ ${s.seededIds} seeded (version ${s.version})`],
+      ];
+      for (const [name, section, okDetail] of sub) {
+        if (!section) {
+          this.fail(name, "Section missing from --declaration-gates-only output.", gates.toolPath);
+          continue;
+        }
+        if (section.status === "PASS") {
+          this.pass(name, `${okDetail(section)}; 0 unlisted, 0 stale.`, gates.toolPath);
+        } else {
+          const bits = [];
+          for (const key of ["failures", "staleLedger", "ledgerError", "csvNotSeeded", "seededNotCsv", "seededNotInSuperset"]) {
+            if (Array.isArray(section[key]) && section[key].length) bits.push(`${key}: ${section[key].join(", ")}`);
+          }
+          this.fail(name, bits.join(" | ") || "FAIL.", gates.toolPath);
+        }
+      }
     }
-    const result = spawnSync(process.execPath, [gate, "--dispatch-coverage-only"], {
-      encoding: "utf8",
-      cwd: PROJECT_ROOT,
-    });
-    let parsed = null;
-    try {
-      parsed = JSON.parse(result.stdout || "{}");
-    } catch {
-      this.curatedSignalDispatchGap(check, `Could not parse dispatch-coverage output (exit ${result.status}).`, gate);
-      return;
+
+    const nameRes = shellJson("pdv_matrix_runtime_preflight.mjs", "--name-resolution-only");
+    const nameCheck = "Quest-matrix deity-name resolution";
+    if (nameRes.missing) {
+      this.info(nameCheck, "pdv_matrix_runtime_preflight.mjs not found; skipped.", nameRes.missing);
+    } else if (nameRes.unparsable) {
+      this.fail(nameCheck, `Could not parse --name-resolution-only output (${nameRes.unparsable}).`, nameRes.toolPath);
+    } else if (nameRes.parsed.status === "PASS") {
+      this.pass(nameCheck, `${nameRes.parsed.cellsChecked} cells across ${nameRes.parsed.files} CSVs resolve against ${nameRes.parsed.acceptedNames} canonical names.`, nameRes.toolPath);
+    } else {
+      this.fail(nameCheck, `Unresolvable deity names: ${(nameRes.parsed.unknownNames || []).slice(0, 10).join("; ")}${(nameRes.parsed.issues || []).length ? ` | ${nameRes.parsed.issues.join("; ")}` : ""}`, nameRes.toolPath);
     }
-    if (parsed.status === "PASS") {
-      this.pass(check, `${parsed.declaredScored} declared+scored signals; ${parsed.dispatched} dispatched; ${parsed.reservedKnownGaps} reserved known-gaps; 0 unlisted, 0 stale.`, gate);
-      return;
-    }
-    const bits = [];
-    if (parsed.failures?.length) bits.push(`${parsed.failures.length} undispatched+scored signal(s) NOT in the reserved ledger: ${parsed.failures.join(", ")}`);
-    if (parsed.staleLedger?.length) bits.push(`${parsed.staleLedger.length} stale reservation(s) (now wired/undeclared -- remove from ledger): ${parsed.staleLedger.join(", ")}`);
-    if (parsed.ledgerError?.length) bits.push(`reserved-ledger parse error: ${parsed.ledgerError.join("; ")}`);
-    this.curatedSignalDispatchGap(check, bits.join(" | ") || "dispatch-coverage FAIL.", gate);
   }
 
   async run() {
     this.checkPaths();
-    this.checkCuratedSignalDispatch();
+    this.checkDeclarationGates();
     if (exists(PDV_ESP) && exists(MUTAGEN_BRIDGE)) {
       this.loadRecordInventory();
       this.loadRecordDetails();
