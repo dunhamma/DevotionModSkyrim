@@ -117,6 +117,10 @@ Spell Property PDV_SPEL_Neglect_Shor Auto
 Spell Property PDV_SPEL_Neglect_Tsun Auto
 Spell Property PDV_SPEL_Neglect_Stuhn Auto
 Spell Property PDV_SPEL_Neglect_Talos Auto
+; Nord Old Ways patrons added after the per-patron batch (Orkey/Dibella roster). Arkay's neglect
+; surfaces as "Orkey" in Old Ways context; the property/record key stays Arkay.
+Spell Property PDV_SPEL_Neglect_Arkay Auto
+Spell Property PDV_SPEL_Neglect_Dibella Auto
 Spell Property PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery Auto
 Spell Property PDV_SPEL_Favor_Kyne_StormRoadGrace Auto
 Spell Property PDV_SPEL_Favor_Kyne_GuidedHunt Auto
@@ -11659,6 +11663,10 @@ Function SyncNordPatronNeglectSpells()
     SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Tsun,  isNord && _activeDeity == PDV_Tsun  && IsNeglectFlagActive(PDV_Tsun))
     SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Stuhn, isNord && _activeDeity == PDV_Stuhn && IsNeglectFlagActive(PDV_Stuhn))
     SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Talos, isNord && _activeDeity == PDV_Talos && IsNeglectFlagActive(PDV_Talos))
+    ; Nord Old Ways patrons (Orkey/Dibella roster). _activeDeity keys on the internal Arkay/Dibella
+    ; deity, not the "Orkey" display name; the spell record carries the Orkey-facing name.
+    SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Arkay,   isNord && _activeDeity == PDV_Arkay   && IsNeglectFlagActive(PDV_Arkay))
+    SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Dibella, isNord && _activeDeity == PDV_Dibella && IsNeglectFlagActive(PDV_Dibella))
 EndFunction
 
 Function SyncFirstTierRaceRewardRuntime()

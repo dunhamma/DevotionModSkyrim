@@ -64,6 +64,14 @@ node .\tools\pdv_verify.mjs --json
 > `pdv_formal_offer_check`; `pdv_book_of_days_audit` had one unrelated repo/live
 > `app.js` LF/CRLF hash drift. Manual smoke still needs to confirm Refuse is silent
 > and Accept still toasts/sounds.
+>
+> Update 2026-07-06: Orkey/Dibella Old Ways neglect parity is machine/readback
+> closed. `pdv-neglect-esp-author --write` authored `PDV_SPEL_Neglect_Arkay` /
+> `PDV_MGEF_Neglect_Arkay` as **Orkey's Neglect** (`ResistMagic -5`) and
+> `PDV_SPEL_Neglect_Dibella` / `PDV_MGEF_Neglect_Dibella` as **Dibella's
+> Neglect** (`Restoration -5`), wired both manager VMAD spell properties, and
+> `SyncNordPatronNeglectSpells()` now handles internal Arkay/Orkey and Dibella.
+> Machine gates passed; manual smoke still needs Active Effects confirmation.
 
 ---
 
@@ -244,6 +252,12 @@ LOCKED per-race accept strings and the 2026-07-06 quiet-refuse ruling. Accept st
 race-specific toast + pinned chronicle; Refuse gives **no toast, no sound, no screen wash** and
 writes only the pinned refusal chronicle. Blank Book of Days line anywhere = FAIL.
 
+U6 follow-up after `task_e6904bb3`: on a Nord Old Ways save, commit Orkey, force
+piety to 0, run dawn, and confirm **Orkey's Neglect** appears in Active Effects
+as Magic Resistance -5%. Repeat for Dibella and confirm **Dibella's Neglect**
+appears as Restoration -5. These are felt-effect checks; the record/readback
+gate is already closed.
+
 U4 now also carries the **curated driver-reason retest** (Sitting-1 U4 found every curated
 award recording generic "a devotional rite"; fixed on main `c8a4aa34` -- awards now carry the
 per-signal phrase from `HumanizeCuratedSignalReason`). Award two curated signals and confirm
@@ -308,7 +322,9 @@ record TUNED values as notes; do NOT re-run cumulative-rebalance tools (not idem
 - **Penalty feltness:** Argonian Hist Distant -10 max Health, Breton Tradition Distant -10,
   Breton Excommunication -15 (Active Effects shows a Maximum Health label, bar ceiling drops,
   no old Health Regeneration line); Imperial civic lapse stays ResistDisease -5 with NO
-  Health-based effect. Prove unrelated Requiem regen changes are not being counted.
+  Health-based effect. Nord Old Ways Orkey/Dibella neglect now also needs felt confirmation:
+  Orkey's Neglect = Magic Resistance -5%, Dibella's Neglect = Restoration -5. Prove unrelated
+  Requiem regen changes are not being counted.
 
 Evidence sink: Redguard + Daedric/Namira blocks of `PDV_Phase20_ManualEvidenceLedger.json`;
 route checker `node .\tools\pdv_phase20_runtime_check.mjs`.

@@ -120,6 +120,11 @@ them.
 `SurfaceTransition(..., silent=True)` and removes the warning toast, so only the pinned refusal
 chronicle writes. Accept remains fully surfaced. Machine gates passed; manual smoke is still owed.
 
+`task_e6904bb3` was also implemented after this checkpoint: Orkey/Dibella Old Ways neglect records
+and manager wiring are machine/readback closed. Orkey uses the internal Arkay key but displays
+"Orkey's Neglect" with `ResistMagic -5`; Dibella displays "Dibella's Neglect" with `Restoration -5`.
+Manual smoke is still owed for both Active Effects rows.
+
 **Testing gotchas captured:** the MCM "Selected deity" is a debug cursor, not the active patron, and
 resets on page reset; cycle it to the target before every Force Piety / Apply action. Commitment
 offers need piety >= `COMMITMENT_OFFER_THRESHOLD` (50) plus seeded signal-days. `set timescale`

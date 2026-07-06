@@ -129,6 +129,13 @@ silently -- no toast, no sound, no screen wash -- while Accept keeps its toast
 and sound. Manual smoke still needs one disposable offer refuse and one accept
 control to prove the player-facing behavior in game.
 
+2026-07-06 Old Ways neglect update: `task_e6904bb3` is implemented and
+machine/readback closed. `pdv-neglect-esp-author --write` authored Orkey's
+Neglect as `ResistMagic -5` under the internal Arkay key, authored Dibella's
+Neglect as `Restoration -5`, and filled the manager VMAD properties. Manual
+smoke still needs Orkey and Dibella committed on Nord Old Ways saves, piety
+forced to 0, dawn run, and Active Effects confirmation for the two flat effects.
+
 2026-07-05 strict gate rerun: after the Dunmer evidence sync,
 `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` reports
 `STRICT_GATE_PASS` with `PASS=31`, `WARN=1`, `INFO=2`, and no blockers. The one
@@ -242,6 +249,9 @@ Additional last-pass runtime sweeps before any broad beta-feel claim:
   after U8, also run the small formal-offer control: Refuse should be silent but
   pinned, Accept should still toast/sound. These prove manual display only; keep
   them separate from the static Prisma-to-1.0 audit.
+- Old Ways neglect felt smoke: commit Orkey, force piety to 0, run dawn, and
+  confirm Magic Resistance -5 in Active Effects; repeat for Dibella and confirm
+  Restoration -5.
 - Requiem felt-penalty sweep: prove the new negative Health penalties are felt
   in-game and Imperial remains disease-resistance based.
 

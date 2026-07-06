@@ -94,6 +94,9 @@ zeroes regen buffs, so flat heals must show the bar move here).
 ### U6 -- neglect drop  [Tester] [R]+[M]
 - **Do:** MCM Debug -> set your patron's piety to **0**. **Run Dawn.**
 - **See:** a **"rites thinning / neglect"** toast + a Book of Days note, once, on the first lapse.
+- **Old Ways follow-up:** on Nord Old Ways saves, repeat this once with **Orkey** committed and once with
+  **Dibella** committed. Confirm Active Effects shows **Orkey's Neglect** as Magic Resistance -5% and
+  **Dibella's Neglect** as Restoration -5. This is manual felt proof; machine readback is already closed.
 - **Record:** ___
 
 ### U7 -- neglect recovery  [Tester] [R]+[M]
@@ -131,7 +134,7 @@ zeroes regen buffs, so flat heals must show the bar move here).
 | U3 favor + digest | patron favor toasts; dawn names the gods | | |
 | U4 Ledger + substrate fix | driver rows incl. substrate; per-signal reason copy (no generic "a devotional rite"); pre-pact Prince shows a distinct "Watching" badge | | |
 | U5 Book of Days + prune | legible; ordinary prune, milestones persist | | |
-| U6 neglect | toast + BoD once on first lapse | | |
+| U6 neglect | toast + BoD once on first lapse; Orkey/Dibella Active Effects prove their flat neglect spells | | |
 | U7 neglect recovery | recovery beat surfaces; no repeat lapse or forced panel | | |
 | U8 offer accept/refuse | accept toast + pinned BoD; refuse silent + pinned BoD; no forced panel; no blank lines | | |
 | U9 reads | one coherent record; no blank/double/wrong-space | | |
