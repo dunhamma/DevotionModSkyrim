@@ -100,7 +100,7 @@ function verifyManager(text, filePath, pass, fail) {
     ["Offer refuse Altmer line", "The foundation stands as it was. You kept to it alone, and ", "Altmer refuse chronicle is present."],
     ["Offer accept Redguard line", "The sect's broad worship narrows to one charge. You took ", "Redguard accept chronicle is present."],
     ["Offer refuse Redguard line", "The sect's broad worship holds as it was. You set ", "Redguard refuse chronicle is present."],
-    ["Refuse cue dispatch", 'DispatchDiegeticCue("offer", pendingDeity.DeityName, "refuse", pendingDeity, "absence")', "Refuse path emits the Book of Days cue before terminal refusal state."],
+    ["Refuse silent surface", 'SurfaceTransition("offer", pendingDeity.DeityName, "refuse", pendingDeity.DeityIndex, "absence", False, True, True)', "Refuse path writes the pinned Book of Days cue without director wash/sound."],
     ["Accept cue dispatch", 'DispatchDiegeticCue("offer", pendingDeity.DeityName, "accept", pendingDeity, "revelation")', "Accept path emits the Book of Days cue from the shared handler."],
     ["Accept direct Prisma toast", 'SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "good", BuildCommitmentOfferAcceptToastLine(pendingDeity), "")', "Accept path emits the locked per-race Prisma toast without the generic shift template."],
     ["Refuse direct Prisma toast", 'SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "warning", BuildCommitmentOfferRefuseToastLine(pendingDeity), "")', "Refuse path emits the locked per-race Prisma toast without the generic shift template."],
@@ -153,9 +153,18 @@ function verifyManager(text, filePath, pass, fail) {
   const refuseFunction = extractFunction(text, "DebugRefusePendingCommitment");
   if (!refuseFunction) {
     fail("Refuse function", "DebugRefusePendingCommitment is missing.", filePath);
+  } else if (!refuseFunction.includes('SurfaceTransition("offer", pendingDeity.DeityName, "refuse", pendingDeity.DeityIndex, "absence", False, True, True)')) {
+    fail("Refuse surface", "Commitment refuse must write the pinned chronicle through silent SurfaceTransition.", filePath);
+  } else if (!refuseFunction.includes('SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "warning", BuildCommitmentOfferRefuseToastLine(pendingDeity), "")')) {
+    fail("Refuse direct Prisma toast", "Commitment refuse must emit the explicit refusal toast.", filePath);
+  } else if (refuseFunction.includes('DispatchDiegeticCue("offer"')) {
+    fail("Refuse director dispatch", "Commitment refuse must not dispatch the diegetic director wash/sound path.", filePath);
   } else if (/SendPrismaShiftToast\(BuildCommitmentOffer/.test(refuseFunction)) {
     fail("Refuse toast template", "Commitment refuse still uses the generic shift-toast template.", filePath);
   } else {
+    pass("Refuse surface", "Commitment refuse writes a pinned chronicle through silent SurfaceTransition.", filePath);
+    pass("Refuse direct Prisma toast", "Commitment refuse emits the explicit refusal toast.", filePath);
+    pass("Refuse director dispatch", "Commitment refuse avoids the diegetic director wash/sound path.", filePath);
     pass("Refuse toast template", "Commitment refuse uses a direct toast instead of the generic shift template.", filePath);
   }
 }

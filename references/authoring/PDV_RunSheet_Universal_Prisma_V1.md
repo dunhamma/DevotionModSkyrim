@@ -94,6 +94,12 @@ zeroes regen buffs, so flat heals must show the bar move here).
 ### U6 -- neglect drop  [Tester] [R]+[M]
 - **Do:** MCM Debug -> set your patron's piety to **0**. **Run Dawn.**
 - **See:** a **"rites thinning / neglect"** toast + a Book of Days note, once, on the first lapse.
+- **Old Ways follow-up:** on Nord Old Ways saves, repeat this once with **Orkey** committed and once with
+  **Dibella** committed. Reselect the same deity, ensure it is the active patron with **Force selected patron**
+  or **Debug patron override**, click **Prime decay eligible**, then **Run neglect pass**. Confirm Active Effects
+  shows **Orkey's Neglect** as Magic Resistance -5% and **Dibella's Neglect** as Restoration -5. Do not force
+  target piety to 0 for this check; the trigger is recency lapse, not piety floor. This is manual felt proof;
+  machine readback is already closed.
 - **Record:** ___
 
 ### U7 -- neglect recovery  [Tester] [R]+[M]
@@ -110,10 +116,9 @@ zeroes regen buffs, so flat heals must show the bar move here).
 - **See:** **Accept** gives the locked race-specific Prisma toast (Nord/Imperial: *"{patron} has named you their
   own."*; Dunmer: *"The ash-prayer has a name: {patron}."*; Altmer: *"You name {patron} your focus."*; Redguard:
   *"You walk under {patron} now."*) and a pinned Book of Days line for the race's offer-accept wording. **Refuse**
-  gives the locked race-specific Prisma toast (Nord/Imperial: *"You turned {patron} away."*; Dunmer: *"You set
-  {patron} aside."*; Altmer: *"You keep to the foundation."*; Redguard: *"You keep to the sect."*) and a pinned
-  Book of Days line saying that patron will not ask again. Neither choice
-  forces the full Devotion panel open. Book of Days lines are not blank, and the next Book key press still opens.
+  shows the locked refusal toast and writes the pinned Book of Days line saying that patron will not ask again,
+  with no sound, no screen wash, and no forced panel. Book of Days lines are not blank, and the next Book key
+  press still opens.
 - **Record:** ___
 
 ### U9 -- how it reads  [Tester] [M]
@@ -132,9 +137,9 @@ zeroes regen buffs, so flat heals must show the bar move here).
 | U3 favor + digest | patron favor toasts; dawn names the gods | | |
 | U4 Ledger + substrate fix | driver rows incl. substrate; per-signal reason copy (no generic "a devotional rite"); pre-pact Prince shows a distinct "Watching" badge | | |
 | U5 Book of Days + prune | legible; ordinary prune, milestones persist | | |
-| U6 neglect | toast + BoD once on first lapse | | |
+| U6 neglect | toast + BoD once on first lapse; Orkey/Dibella Active Effects prove their flat neglect spells | | |
 | U7 neglect recovery | recovery beat surfaces; no repeat lapse or forced panel | | |
-| U8 offer accept/refuse | toast + pinned BoD; no forced panel; no blank lines | | |
+| U8 offer accept/refuse | accept toast + pinned BoD; refuse toast + pinned BoD; no refuse wash/sound; no forced panel; no blank lines | | |
 | U9 reads | one coherent record; no blank/double/wrong-space | | |
 
 Owner: capture the Papyrus + `DevotionPrismaBridge` logs, record into `PDV_V1_BetaReadinessGate.md`.

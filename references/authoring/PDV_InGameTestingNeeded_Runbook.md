@@ -113,6 +113,57 @@ temple surfacing, DA01 Black Star deviation price, and the Ancestral Hearth
 home/move-home flow are PASS for the current packet. Update ledgers before
 treating any strict-audit output from an older run as current.
 
+2026-07-06 Prisma checkpoint: Mega Packet Sitting 1's Universal Prisma sheet
+U1-U9 is PASS in game. Confirmed panel/Book close, tier gauge, favor/dawn digest,
+Ledger/substrate rows, pruning, neglect lapse/recovery, offer accept/refuse, and
+whole-record readability. Same pass re-verified Orkey Old Ways offer/naming,
+curated driver copy, watching badge/onset Book line, and one-per-quest-fire
+surfacing aggregation. Remaining Sitting-1 Prisma work is only C2 beat 3 Altmer
+alignment band, C2 beat 5 Khajiit Champion pin survives pruning, and C2 beat 6
+Redguard per-sect Champion toast. Do not rerun U1-U9 unless new Prisma/source
+changes invalidate the evidence.
+
+2026-07-06 formal-offer refuse update: `task_8c27e440` is implemented in source
+and machine-gated. Refuse now writes the pinned Book of Days refusal chronicle
+and emits the explicit refusal toast, but it must not play the diegetic screen
+wash or D1 sound. Accept keeps its toast and sound. Manual smoke PASSED
+2026-07-06: the disposable-offer refuse showed the refusal toast + pinned
+chronicle and accept kept its toast/sound. Note: the offer PRESENTATION itself
+fires an intended `"present"/"revelation"` wash when the MessageBox appears
+(guarded to a one-shot per deity); that is separate from the refuse response,
+which stays silent. Owner is happy with the offer-present wash as-is for now.
+
+2026-07-06 Old Ways neglect update: `task_e6904bb3` is implemented and
+machine/readback closed. `pdv-neglect-esp-author --write` authored Orkey's
+Neglect as `ResistMagic -5` under the internal Arkay key, authored Dibella's
+Neglect as `Restoration -5`, and filled the manager VMAD properties. Manual
+smoke still needs Orkey and Dibella committed on Nord Old Ways saves, the
+selected deity primed as decay-eligible, a targeted neglect pass, and Active
+Effects confirmation for the two flat effects. Do not use target-piety 0 as the
+trigger; active-patron neglect is a recency-lapse check keyed off
+`PDV.LastEventGameTime`, not current piety.
+
+2026-07-06 neglect smoke debug-surface note: the first Orkey retest froze after
+repeated SkyUI MCM `ShowMessage()` re-entry errors while debug confirmations were
+open. The immediate rerun did not freeze, but the Papyrus log showed the same
+`ShowMessage()` errors and no manager traces, so the neglect/decay actions never
+executed. `PDV_MCM` now bypasses modal confirmations for the neglect/decay debug
+buttons, uses immediate `Debug.Notification()` feedback, and exposes a
+`Force selected patron` setup row because the next live log showed Arkay/Orkey
+being primed while the backend was still in `Broad worship`. This is
+compile/static proof only; rerun Orkey/Dibella Active Effects smoke after a
+fresh Skyrim launch before marking the manual proof passed.
+
+2026-07-06 Old Ways neglect smoke PASSED (manual/runtime): after a fresh Skyrim
+launch, Orkey (Nord Old Ways Arkay) showed `Orkey's Neglect` = Magic Resistance
+-5% and Dibella showed `Dibella's Neglect` = Restoration -5 in Active Effects.
+The proven path uses a new modal-free `Prime neglect eligible` MCM button
+(commit cad3d07) that sets the selected deity active AND drops its piety to 0,
+then `Run neglect pass`. `Prime decay eligible` does NOT work for the neglect
+smoke: it sets piety 20 (above the piety<=10 neglect floor) and a lapse stamp of
+exactly the grace boundary (not strictly greater), so neither flagging path
+fires. Neglect needs active-patron + piety<=10; decay is a separate system.
+
 2026-07-05 strict gate rerun: after the Dunmer evidence sync,
 `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` reports
 `STRICT_GATE_PASS` with `PASS=31`, `WARN=1`, `INFO=2`, and no blockers. The one
@@ -212,20 +263,34 @@ Daedric ledger state from `PDV_DaedricRuntimeEvidenceLedger.json`:
 
 Additional last-pass runtime sweeps before any broad beta-feel claim:
 
+The day-to-day V1, Prince V2, and C2 Prisma spot-checks are consolidated into a
+single by-save run sheet for one sitting:
+`references/authoring/PDV_CombinedSweep_DayToDay_PrinceV2_C2_2026-07-06.md`.
+
 - Day-to-day V1 faucet sweep: finish craft, book, sleep, transgression,
   trespass `361`, steal-item `362`, events `1` and `2`, anti-farm,
   attribution filter, race gate, and dawn bank checks.
 - Prince V2 path-deepening sweep: prove deepen-not-initiate, open-path deepen
   markers, dual-face Azura behavior, anti-farm, and Hircine curse
   no-double-fire.
-- Prisma recovery sweep: run `PDV_RunSheet_Universal_Prisma_V1.md` U6/U7 once
-  on the current build, and make sure the drop and recovery beats appear as
-  player-owned toast/Book-of-Days/Chronicle surfaces without forcing the full
-  Prisma panel.
-- Prisma authoring-beats sweep: run Universal U8 for formal offer accept/refuse,
-  Daedric D8 for Hircine renunciation, Redguard 6d for sect champion-entry, and
-  the Altmer Thalmor-alignment regression row. These prove manual display only;
-  keep them separate from the static Prisma-to-1.0 audit.
+- Prisma residual sweep: Universal U1-U9, including U6/U7 recovery and U8
+  offer accept/refuse, passed on 2026-07-06. Finish only the remaining C2
+  per-origin spot-checks unless new Prisma/source changes invalidate the run:
+  Altmer Thalmor-alignment band toast/chronicle, Khajiit Champion pinned entry
+  after pruning, and Redguard per-sect Champion toast. The small formal-offer
+  control (Refuse toasts + pins with no wash/sound; Accept toasts/sounds) PASSED
+  2026-07-06 -- the offer-present wash is intended and separate. These prove
+  manual display only; keep them separate from the static Prisma-to-1.0 audit.
+- Old Ways neglect felt smoke: PASSED 2026-07-06. Recipe (deterministic):
+  reselect Orkey/Arkay, click the modal-free `Prime neglect eligible` row
+  (notification `PDV: neglect eligible primed (active + piety 0).`), then
+  `Run neglect pass`, and confirm `Orkey's Neglect` = Magic Resistance -5% in
+  Active Effects; repeat for Dibella and confirm `Dibella's Neglect` =
+  Restoration -5. Do NOT use `Prime decay eligible` (wrong system: piety 20 is
+  above the piety<=10 neglect floor and the lapse stamp lands exactly on the
+  grace boundary, so nothing flags), `Debug patron override` (still opens a
+  Yes/No modal that can freeze), or `Set Broad worship` (the blocking state). A
+  Skyrim relaunch is required to load the updated `PDV_MCM.pex`.
 - Requiem felt-penalty sweep: prove the new negative Health penalties are felt
   in-game and Imperial remains disease-resistance based.
 

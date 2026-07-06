@@ -768,6 +768,7 @@ Event OnUpdate()
     ProcessPendingDaedricLapse()
     ProcessPendingDaedricPrePactNotices()
     DrainHircineRenunciationJournal()
+    ProcessDelayedHircineResiduePrismaToasts()
     ProcessQueuedPrismaToastRetry()
 
     if DebugCommand != 0
@@ -2266,7 +2267,7 @@ Function DebugSetDiegeticD1Enabled(Bool enabled)
     endIf
 EndFunction
 
-Function SurfaceTransition(String eventClass, String surfaceKey, String direction, Int deityIndex = -1, String toneOverride = "", Bool repeatable = false, Bool headline = false)
+Function SurfaceTransition(String eventClass, String surfaceKey, String direction, Int deityIndex = -1, String toneOverride = "", Bool repeatable = false, Bool headline = false, Bool silent = false)
     if eventClass == "" || surfaceKey == "" || direction == ""
         return
     endIf
@@ -2290,7 +2291,10 @@ Function SurfaceTransition(String eventClass, String surfaceKey, String directio
 
     StorageUtil.SetIntValue(None, guard, 1)
     StorageUtil.SetStringValue(None, "PDV.Surfaced.Last", guard)
-    if PDV_DiegeticDirectorService
+    ; A silent transition (e.g. a formal-offer REFUSAL) still writes the permanent pinned
+    ; Book of Days chronicle below, but skips the transient director cue -- no screen wash,
+    ; no D1 sound. A refusal is a quiet closing-of-the-door, not an announced moment.
+    if PDV_DiegeticDirectorService && !silent
         PDV_DiegeticDirectorService.Dispatch(eventClass, surfaceKey, direction, deityIndex, toneOverride)
     endIf
 
@@ -3340,10 +3344,60 @@ Function HandleDaedricPrinceSignal(Int pathIndex, String sourceId)
     ; gain/cost beat lands for every Prince organically, not just Hircine's bespoke
     ; hunt rite. The MCM debug page already surfaces all phases per selected Prince.
     ShowDaedricMilestonePresentation(path, tierBefore, tierAfter, False)
+    ; Pre-pact "watching" onset. If this signal established interest without a
+    ; commitment (still tier 0, piety now above zero), chronicle a NAMED Book of Days
+    ; line + one soft cue so a Book-of-Days-only player learns WHICH Prince is watching
+    ; -- panel-badge parity for the same pre-pact state. A tier gain is a commitment and
+    ; is surfaced by ShowDaedricMilestonePresentation above, so this stays silent then.
+    MaybeChronicleDaedricWatchingOnset(path, pathIndex, path.GetStoredPiety(), tierAfter)
     RequestPanelRefresh()
 
     if GetDebugLevel() >= 2
         Debug.Trace("[PDV] Daedric live signal: " + path.DeityName + " index " + pathIndex + " source " + sourceId)
+    endIf
+EndFunction
+
+; One-shot NAMED pre-pact chronicle: fires the first time a Prince enters the "watching"
+; state (tier 0 with piety above zero -- the same state the panel surfaces as a badge).
+; Latched per Prince via "PDV.Daedric.WatchingChronicled" on the deity form; the latch is
+; reset in PDV_DaedricPathBase.UpdatePrePactNoticeState the moment interest lapses to
+; nothing or the Prince commits, so a genuine re-entry into watching chronicles again.
+; Repeated sub-threshold signals that merely deepen an existing watch stay silent.
+Function MaybeChronicleDaedricWatchingOnset(PDV_DaedricPathBase path, Int pathIndex, Float pietyAfter, Int tierAfter)
+    if !path
+        return
+    endIf
+    ; Only pre-pact watching chronicles here; a tier gain is a pact (milestone surface),
+    ; and a signal that left the Prince at the zero floor is not yet watching.
+    if tierAfter > TIER_NONE || pietyAfter <= 0.0
+        return
+    endIf
+
+    Form deityForm = path.GetDeityForm()
+    if StorageUtil.GetIntValue(deityForm, "PDV.Daedric.WatchingChronicled") == 1
+        return
+    endIf
+    StorageUtil.SetIntValue(deityForm, "PDV.Daedric.WatchingChronicled", 1)
+
+    String symbolName = GetPrismaSymbolForDeity(path)
+    if symbolName == "journal"
+        symbolName = "daedric"
+    endIf
+
+    ; Neutral/curiosity onset, unpinned (a soft interest, not a milestone). Names the
+    ; Prince using the path's player-facing name (AppendBookOfDaysEntry normalizes it).
+    ; The deeper "The world tilts toward <Prince>." pressure beat still fires later once
+    ; piety crosses the half-Seeker threshold.
+    AppendBookOfDaysEntry(path.DeityName + " has taken an interest in you.", Utility.GetCurrentGameTime() as Int, "daedric.pressure", symbolName, False, 1, "A Prince takes interest")
+
+    ; Single soft transient cue that NAMES the Prince (the prior watching popup did not).
+    ; One-shot alongside the journal line above -- never per-signal. The "watching" phase
+    ; falls through to the Daedric toast defaults ("<Prince> takes note"), so no view
+    ; change is needed; the context line carries the soft framing.
+    SendPrismaDaedricToast(path.DeityName, "watching", "An interest taken, not yet a pact.", symbolName)
+
+    if GetDebugLevel() >= 1
+        Debug.Trace("[PDV] Daedric watching onset chronicled: " + path.DeityName + " index " + pathIndex)
     endIf
 EndFunction
 
@@ -14226,8 +14280,6 @@ Function DebugRenounceHircinePath()
     if PDV_HircinePath
         PDV_HircinePath.RenouncePath("mcm")
         DrainHircineRenunciationJournal()
-        DrainHircineResiduePrismaToasts()
-        SendPrismaDaedricToast("Hircine", "lapse", "", "hircine")
         RequestPanelRefresh()
     endIf
 EndFunction
@@ -14714,7 +14766,12 @@ Function DebugRefusePendingCommitment()
         return
     endIf
 
-    DispatchDiegeticCue("offer", pendingDeity.DeityName, "refuse", pendingDeity, "absence")
+    ; Owner ruling (Mega Packet Sitting 1 U8): formal-offer REFUSAL is visible as
+    ; a refusal toast and pinned Book of Days chronicle, but it must not fire the
+    ; diegetic director's screen wash or D1 sound. SurfaceTransition with
+    ; silent=True writes and pins the chronicle while skipping that director cue.
+    ; The ACCEPT path keeps its revelation toast + sound.
+    SurfaceTransition("offer", pendingDeity.DeityName, "refuse", pendingDeity.DeityIndex, "absence", False, True, True)
     SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "warning", BuildCommitmentOfferRefuseToastLine(pendingDeity), "")
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 1)
     StorageUtil.SetIntValue(None, "PDV.Commitment.Rupture", 1)
@@ -15110,6 +15167,10 @@ Function DrainHircineResiduePrismaToasts()
     endIf
 
     Form hircineForm = PDV_HircinePath.GetDeityForm()
+    if StorageUtil.GetIntValue(hircineForm, "PDV.Daedric.Hircine.ResidueToastDelayTicks") > 0
+        return
+    endIf
+
     if StorageUtil.GetIntValue(hircineForm, "PDV.Daedric.Hircine.ResidueToastPending") == 1
         StorageUtil.SetIntValue(hircineForm, "PDV.Daedric.Hircine.ResidueToastPending", 0)
         SendPrismaDaedricToast("Hircine", "residue", "The hunt's old mark still follows.", "hircine")
@@ -15118,6 +15179,21 @@ Function DrainHircineResiduePrismaToasts()
         StorageUtil.SetIntValue(hircineForm, "PDV.Daedric.Hircine.ResidueClearToastPending", 0)
         SendPrismaDaedricToast("Hircine", "residue", "The hunt's old mark fades.", "hircine")
     endIf
+EndFunction
+
+Function ProcessDelayedHircineResiduePrismaToasts()
+    if !PDV_HircinePath
+        return
+    endIf
+
+    Form hircineForm = PDV_HircinePath.GetDeityForm()
+    Int delayTicks = StorageUtil.GetIntValue(hircineForm, "PDV.Daedric.Hircine.ResidueToastDelayTicks")
+    if delayTicks > 0
+        StorageUtil.SetIntValue(hircineForm, "PDV.Daedric.Hircine.ResidueToastDelayTicks", delayTicks - 1)
+        return
+    endIf
+
+    DrainHircineResiduePrismaToasts()
 EndFunction
 
 Function DrainHircineRenunciationJournal()
@@ -15131,6 +15207,7 @@ Function DrainHircineRenunciationJournal()
     endIf
 
     StorageUtil.SetIntValue(hircineForm, "PDV.Daedric.Hircine.RenunciationJournalPending", 0)
+    SendPrismaToast("hircine", "neutral", "You renounce the hunt.", "Hircine's pact is set down.")
     AppendBookOfDaysEntry("Hircine's mark fades from your blood, and the pack is no longer yours.", Utility.GetCurrentGameTime() as Int, "reorientation", "hircine", True, 3)
 EndFunction
 

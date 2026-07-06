@@ -41,8 +41,9 @@ make the race impossible to judge.
 ## Required Automated Gate
 
 Run the closure audit before making any race beta-feel or full beta-feel
-readiness claim. It is fail-closed and is expected to return `NOT_BETA_READY`
-while manual/runtime evidence is still pending:
+readiness claim. It is fail-closed: while manual/runtime evidence is pending it
+returns `NOT_BETA_READY`; after the 2026-07-05 Imperial/Dunmer evidence sync it
+returns `STRICT_GATE_PASS` for the current beta-feel gate.
 
 ```powershell
 node .\tools\pdv_beta_readiness_audit.mjs --strict
@@ -85,19 +86,31 @@ node .\tools\pdv_phase20_runtime_check.mjs --race all
 
 ## Current Last-Pass Scope
 
-The 2026-06-30 strict audit leaves the automated/readback side green enough to
-proceed with the final manual runtime proof, but not green enough to claim
-strict v1.0 beta readiness. The fail-closed audit currently blocks on:
+The 2026-07-05 strict audit passes after the Imperial and Dunmer manual/runtime
+closeouts were synced to `PDV_Phase20_ManualEvidenceLedger.json`:
 
-- Race manual evidence: Imperial and Dunmer still need all seven required
-  manual/runtime slots.
+```text
+Verdict: STRICT_GATE_PASS
+Counts: PASS=31 WARN=1 INFO=2
+Blockers: []
+```
+
+That closes the current race beta-feel gate. It does not close final-world
+placement, Requiem feltness, Prince V2 depth proof, or residual Prisma display
+spot-checks. Current residual proof still lives outside the strict gate:
+
+- Mega Packet Sitting 1: Section A quest-expansion, E1 day-to-day sweep, and
+  Universal Prisma U1-U9 passed in game; remaining Anvil checks are C2 beats
+  3/5/6 plus the small formal-offer Refuse/Accept control because Refuse changed
+  after the original U8 pass.
+- Old Ways neglect felt smoke: Orkey/Dibella neglect records are machine/readback
+  closed, but Active Effects proof remains open.
 - Requiem feltness: the Argonian/Breton negative-Health penalty conversion is
   backend/readback clean, but still needs Active Effects, `player.getav Health`,
   HP-bar movement, and manual feel proof under a Requiem load.
-- Book of Days package sync: `pdv_book_of_days_audit.mjs` must pass before
-  rebuilding or sharing a tester package.
-- Claim boundaries: Race Beta-Feel and Full Devotion Beta-Feel claims stay
-  blocked until the matching ledgers are updated from in-game evidence.
+- Claim boundaries: broader release, compatibility, final-world placement, and
+  public-support claims stay blocked until their matching proof buckets are
+  recorded.
 
 The Daedric beta-display gate is currently closed for this claim surface:
 `node .\tools\pdv_daedric_beta_gate.mjs --json` reports `PASS=16`. Rerun it

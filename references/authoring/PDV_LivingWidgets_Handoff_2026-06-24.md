@@ -74,24 +74,45 @@ races 8/10, today 24. (Full code pattern: see widget `devotion_build_arc_refresh
 ## Widget 2 — projection-to-1.0 (phased burnup) — RE-DERIVE, estimates
 Bars = est. sessions per REMAINING workstream; teal line = cumulative % of the
 remaining road; dashed 1F-freeze + 1.0 gates. DONE phases drop off. Current
-remaining (≈8 sessions as of 2026-07-05, down from 15.5 on 06-25 and the ~28
-baseline — ~71% of the original road burned). Sequencing per the approved 1.0
-roadmap: megapacket → Experience Mode → ARR compat → branding.
+remaining (≈5 sessions as of 2026-07-06 evening, down from 15.5 on 06-25 and the
+~28 baseline — ~82% of the original road burned). Sequencing per the approved 1.0
+roadmap: megapacket → Experience Mode smoke → ARR compat → branding.
 
 ```js
 var labels=['megapacket smoke','requiem felt sweep','experience mode','ARR compat','branding + packaging'];
-var effort=[2,1,2.5,1.5,1];            // est sessions, SOFT — refresh from velocity
-var cum=[25,38,69,88,100];             // cumulative % of remaining road
-var fill=['#378ADD','#378ADD','#A32D2D','#7F77DD','#888780']; // blue=in-game test, red=build, purple/gray=compat+packaging
+var effort=[1,1,0.5,1.5,1];            // est sessions, SOFT — see 07-06 evening note
+var cum=[20,40,50,80,100];             // cumulative % of remaining road
+var fill=['#378ADD','#378ADD','#A32D2D','#7F77DD','#888780']; // blue=in-game test, red=build-smoke, purple/gray=compat+packaging
 // 1F freeze annotation after 'requiem felt sweep' (x=1.5); 1.0 ready at end (x=4.5).
+// 2026-07-06 evening: megapacket bar burned 2 -> 1. Universal Prisma U1-U9 ALL PASS
+// in game; C2 beats 1/2/4 ran; all three U4 retests (curated driver-reason, watching
+// badge, watching-onset BoD line) re-verified; Sitting-1 quest-reaction aggregation
+// re-verify CLOSED. Remaining = Sitting-1 tail (C2 beats 3/5/6, Refuse/Accept
+// control, Orkey/Dibella Active Effects smoke after the MCM freeze-guard restart)
+// + Sitting 2 (Prince V2 F + C3-if-changed). Bug tally 16 caught in-game across the
+// packet (07-06 cascade added: driver-reason, watching badge, watching BoD line,
+// refuse surfaces, Hircine over-fire, Old Ways neglect lapses, MCM ShowMessage
+// freeze, app.js CRLF drift). Open tasks: 387bfc95 slider cap, 7dab1ebb Hircine,
+// e6904bb3 + 8c27e440 manual smoke owed.
+// Cards: ~5 sessions / 16 bugs caught+fixed / ~82% burned.
+// 2026-07-06 midday: Sitting-1 Prisma U1-U9 PASS, but the run stayed bug-heavy;
+// megapacket bar held until the C2 residual beats close.
+// Experience Mode BUILT 07-05 (b09acefb, all 5 steps) so its bar collapsed 2.5 -> 0.5
+// (Session G smoke + Redguard earn-halt mirror still unbuilt). U/Prisma catches include
+// panel movement filter, debug resync, Nord reused-spell strip (+lint), Orkey/Dibella,
+// curated driver copy, watching badge/onset line, and surfacing aggregation.
+// Cards: ~6 sessions / 8+ bugs caught+fixed / ~79% burned.
+// 2026-07-05 evening: Sitting 1 (Section A 8 origins + E1 sweep + mechanics) PASSED;
+// 4 wiring bugs (341/360/365/361+364) found AND fixed+proven same day.
 ```
 Note (2026-07-05): signal-floor ×23, race testing (10/10 packets), and Daedric
 in-game proof (PASS=16) are DONE and removed. Megapacket smoke = Anvil sittings
 1-2 of `PDV_MegaPacket_OneOh_2026-07-02.md` (quest-expansion A-rows, day-to-day
 E-sweep, Prisma C, Prince V2 F); requiem felt sweep = Authoria sitting 3.
-Experience Mode is still design-locked-not-built (includes Redguard earn-halt).
+Experience Mode is BUILT (b09acefb 2026-07-05); its bar is the Session G in-game
+smoke + the Redguard earn-halt mirror (still unbuilt).
 Rendered as `devotion_projection_to_oneoh_2026_07_05` with metric cards
-(sessions remaining ~8 / vs 06-25 15.5→8 / ~71% of baseline burned).
+(sessions remaining ~5 / 16 in-game bugs caught+fixed / ~82% of baseline burned).
 
 ---
 

@@ -58,12 +58,45 @@ without reopening any closed race packet.
 
 | Item | Proof boundary | Notes |
 | --- | --- | --- |
-| Quest-matrix expansion (40-50 quests/deity) | Compile/readback clean; in-game smoke pending | 832 matrix cells / 118 keys / 90 watched quests live; 7 meta-faucet lanes wired; copy pass + Daedric path name-repair done (954bde5b) |
-| `EVT_STEAL_ITEM` (362) SM wiring | Compile/readback clean; route proof pending | Papyrus receiver + QUST 071615 + SMQN 071616 under SMEN 02C439; aiAcquireType 1/3/5 (Steal/Pickpocket/Container) |
-| Foreign-award reachability gate | Compile/readback clean; A1/A5 route proof pending | Off-roster `FOREIGN`/`TOLERATED` quest awards now skip entirely with a DebugLevel-2 skip trace (no piety, no Ledger row); reduced `0.4x` applies only to roster-listed tolerated/foreign + Daedric-path faces; dawn loop also skips zero-state non-roster deities |
+| Quest-matrix expansion (40-50 quests/deity) | **In-game proven (Sitting 1, 2026-07-05)** | 832 matrix cells / 118 keys / 90 watched quests live; 7 meta-faucet lanes wired; Section A passed across all 8 setstage-able origins incl. the Akatosh/Xarxes wheel; see `PDV_SessionHandoff_2026-07-05_MegaPacketSitting1.md` |
+| `EVT_STEAL_ITEM` (362) SM wiring | **In-game proven both sentiment sides (Sitting 1)** | Dunmer like-side (Mephala +0.5/Boethiah +0.25) and Imperial dislike-side (Zenithar -1.0) both fired; retires the last 362 pending flag |
+| Foreign-award reachability gate | **In-game proven both directions (Sitting 1)** | Native pantheons score full; off-roster `FOREIGN`/`TOLERATED` gods skip-trace with no piety / no Ledger row (Xarxes full + Akatosh skip under Altmer, inverse under Imperial); reduced `0.4x` applies only to roster-listed tolerated/foreign + Daedric-path faces |
 | Dunmer ancestral urn rebuild | In-game proven (Dunmer packet) | Rebuilt as usable MISC item (click-to-pray via OnEquipped), fixing the book-menu CTD; Remiros HD assets bundled self-contained |
-| Book of Days + Prisma hardening | Machine/readback clean; C1/C2 render check pending | Path/gauge rendering fix, cover presentation refresh, escape/hotkey close contract centralized, deity-text normalization |
+| Book of Days + Prisma hardening | **Universal Prisma U1-U9 in-game PASS (2026-07-06); C2 residual beats pending** | Path/gauge rendering fix, cover presentation refresh, escape/hotkey close contract centralized, deity-text normalization; remaining C2 beats are Altmer band, Khajiit Champion pin, Redguard sect Champion toast |
 | Redguard orphan VMAD property cleanup | Readback clean; runtime log check pending | Four stale `PDV_Notif_Redguard_*_NeglectTexture` properties stripped from `PDV__ManagerQuest [00C325]`; property count `419 -> 415`; backup `Backups\orphan-vmad-cleanup\Devotion.esp.20260705-170936.bak` |
+
+## Mega Packet Prisma checkpoint (2026-07-05 evening -> 2026-07-06)
+
+The Universal Prisma sheet (U1-U9) is now in-game PASS. The run went slowly because
+it caught real player-facing bugs and forced several fix-and-redeploy loops; that is
+the packet doing its job. Do not burn down the whole megapacket-smoke estimate from
+this alone, because C2 still has three short per-origin beats and Prince V2/Requiem
+remain separate. Caught and fixed during the Prisma pass:
+
+| Item | Proof boundary | Notes |
+| --- | --- | --- |
+| Panel movement filter missed losses | Fixed + merged (72b8b076) | Roster gods with only NEGATIVE recent movement were invisible; panel filter now ORs `HasRecentPietyMovement` (7-day Week ring + driver days), per the owner "Ledger monitors ALL data points" rule |
+| Debug patron override/clear left stale rewards | Fixed (aa59daf4) | Override/clear now resync reward spells immediately |
+| Imperial lane stripped reused Nord Divine reward spells | Fixed (2af9ba9d) + lint (57509902) | `SyncImperialRewards` granted-then-stripped cross-lane reused SPELs same pass; new `pdv_reward_runtime_order_lint.mjs` guards the class |
+| Nord Old Ways roster: Orkey + Dibella | Built + in-game smoke PASS (829bbbfa, 7d40afe7) | Arkay-as-Orkey display override + Dibella offers/rewards/display; Orkey MESG 07161B + SEQ refresh |
+| Orkey/Dibella Old Ways neglect | Manual Active Effects smoke PASS (2026-07-06) | `PDV_SPEL_Neglect_Arkay` / `PDV_MGEF_Neglect_Arkay` displays as "Orkey's Neglect" with `ResistMagic -5`; `PDV_SPEL_Neglect_Dibella` / `PDV_MGEF_Neglect_Dibella` displays as "Dibella's Neglect" with `Restoration -5`. Confirmed in Active Effects on a Nord Old Ways save (fresh launch) via the new modal-free `Prime neglect eligible` MCM row (sets deity active + piety 0, then `Run neglect pass`). Note: `Prime decay eligible` does NOT flag neglect -- it sets piety 20 (above the piety<=10 floor) and a lapse stamp on the exact grace boundary, so neither flagging path fires; neglect is a separate system from decay |
+| Curated driver copy | Fixed + in-game re-verified (c8a4aa34) | Curated rows name the actual trigger, e.g. "defiant prayer at a Talos shrine", rather than generic "a devotional rite" |
+| Watching Prince dashboard/Book of Days | Fixed + in-game re-verified (692396bb, 2f75a860) | Pre-pact Princes show a distinct Watching badge and a named watching-onset Book of Days line |
+| Quest-reaction surfacing aggregation | Fixed + in-game re-verified | Quest fires now emit one aggregate toast plus one Book of Days line, not a burst per matrix cell |
+
+Filed from the same pass and still open: `task_387bfc95` slider cap >=1000,
+and `task_7dab1ebb` Hircine renounce over-fire/copy. **Closed 2026-07-06:**
+`task_e6904bb3` Orkey/Dibella neglect debuff manual Active Effects smoke PASSED
+(Orkey Magic Resistance -5%, Dibella Restoration -5) via the new modal-free
+`Prime neglect eligible` button (commit `cad3d07`); `task_8c27e440` Refuse
+correction manual smoke PASSED (refusal toast + pinned chronicle, no screen wash
+or D1 sound; Accept keeps its toast + sound; the offer-present wash is intended
+and separate).
+
+Still owed for Sitting-1 Prisma: C2 beat 3 Altmer alignment band, C2 beat 5 Khajiit
+Champion pin survives pruning, and C2 beat 6 Redguard per-sect Champion toast. After
+that, continue Prince V2 (Section F), C3 only if Prisma changed again, and the
+Authoria Requiem felt sweep as separate proof lanes.
 
 ## Burned Down
 
@@ -87,6 +120,7 @@ These items are no longer counted as open beta-feel blockers.
 | Altmer/Imperial/Dunmer track emitters wired (2026-06-14) | Compile/readback clean | Altmer ThalmorAlignment now live (banned-texts -5, consort -25, Thalmor-kill -20); Imperial Stormcloak-defiance now lands -20 via the point table + Thalmor-Justiciar-kill -10; Dunmer DLC2 outdoor-shrine twilight prayer. ~6 no-clean-hook actions (arrest/report/help-escape/Thalmor-mission/Orc-oath-break/Redguard-Dawnguard-cure) documented as deferred in `PDV_NextBuildPass_RecordSpec.md` sec.10. **Route-proven 2026-06-14** (Papyrus log): Altmer banned-texts/consort/kill -> raw -75; Imperial defiance -20; Imperial Thalmor-kill -10 (open kill, after a rank-gate fix). Only the Dunmer DLC2 Solstheim shrine remains unobserved (needs Solstheim); full manual beta-feel separate |
 | Imperial current beta-feel packet | Manual/runtime packet evidence | Imperial V1 slots 1-7 passed in game on 2026-07-04: assets, Survey/status, stack, formal offer accept/refuse/cadence, broad Tier-2 cap, Talos book pressure, Concordat raw/reorientation, Talos offer gate, civic-service Ledger/Book-of-Days route, wrong-origin rejection, generic-source silence, and final feel. Final-world placement remains separate |
 | Dunmer current beta-feel packet | Manual/runtime packet evidence | Dunmer slots 1-8 plus shared Daedric inn-sleep proof passed in game on 2026-07-05: assets, wrong-origin rejection, generic-hook rejection, ash-prayer, Ancestral Hearth home/move-home, Reclamation focus, Good Daedra temple prayer, DA01 Black Star deviation price, Survey/status, stack snapshots, Prisma surfaces, and manual feel. Final-world placement remains separate |
+| Mega Packet Sitting 1 (Anvil) | Runtime route + manual evidence (2026-07-05/06) | Section A quest-expansion smoke across 8 origins, E1 day-to-day sweep CSV-exact (craft/knowledge/sleep/transgressions incl. 360/361/362/364/365/368), mechanics confirmed (attribution filter, anti-farm daily cap, dawn bank, race-gate-by-dropout). 4 end-to-end wiring bugs found and fixed+proven same day: 341 OnItemRemoved, 360 menu-hook fallback (SM LockPick dead), 365 caster-side OnSpellCast, 361/364 aiCrime gate. Universal Prisma U1-U9 also PASS; C2 remaining is only Altmer band, Khajiit Champion pin, and Redguard sect Champion toast. |
 
 ## Immediate Recheck Debt
 
@@ -152,21 +186,23 @@ These should not be allowed to inflate the current beta-feel burn:
 
 ## Recommended Next Sequence
 
-1. Preserve the strict beta-readiness pass (`STRICT_GATE_PASS`, `PASS=31`,
+1. Finish the three remaining Sitting-1 Prisma C2 beats: Altmer alignment band,
+   Khajiit Champion pin pruning survival, and Redguard per-sect Champion toast.
+2. Preserve the strict beta-readiness pass (`STRICT_GATE_PASS`, `PASS=31`,
    `WARN=1`, `INFO=2`, blockers `[]`) in the next-session handoff and ignore
-   older `Dunmer:7` audit output.
-2. Prove the Requiem penalty feltness add-on under a Requiem load: Active
+   older `Dunmer:7` audit output unless a fresh gate contradicts it.
+3. Prove the Requiem penalty feltness add-on under a Requiem load: Active
    Effects, `player.getav Health`, HP-bar/manual feel notes, and Imperial
    disease-resistance preservation.
-3. Prove the expanded likes/dislikes rows on a new save, including the version
+4. Prove the expanded likes/dislikes rows on a new save, including the version
    bump reload behavior; keep pending event rows classified as inert unless
    their routers are implemented.
-4. Do the magnitude/anti-farm scaling pass only after rejected hooks and stack
+5. Do the magnitude/anti-farm scaling pass only after rejected hooks and stack
    snapshots are recorded for the race being tuned.
-5. Continue later ESP/source tranches from `PDV_NextBuildPass_RecordSpec.md`
+6. Continue later ESP/source tranches from `PDV_NextBuildPass_RecordSpec.md`
    only where they have exact source authority; keep quest-stage/source routing
    separate from manual acceptance proof.
-6. Keep D1 diegetic surfacing, final-world placement, V2 dialogue, and
+7. Keep D1 diegetic surfacing, final-world placement, V2 dialogue, and
    compatibility work off the beta-feel path unless the release scope changes.
 
 ## Current Gate Bundle

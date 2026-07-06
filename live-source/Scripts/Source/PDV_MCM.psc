@@ -128,6 +128,9 @@ Int _oidCurseOriginApply = -1
 Int _oidForceCurseNone = -1
 Int _oidForceCurseWerewolf = -1
 Int _oidForceCurseVampire = -1
+Bool _patternActionPromptOpen = False
+Int _oidForceSelectedPatron = -1
+Int _oidPrimeNeglectEligible = -1
 Int _oidNeglectRunPass = -1
 Int _oidDecayPrimeGrace = -1
 Int _oidDecayPrimeEligible = -1
@@ -411,6 +414,10 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Backend-forces the shared curse service to Werewolf for Hircine entry smoke.")
     elseIf a_option == _oidForceCurseVampire
         SetInfoText("Backend-forces the shared curse service to Vampire for the Hircine negative path.")
+    elseIf a_option == _oidForceSelectedPatron
+        SetInfoText("Debug-only setup: makes the selected deity the active focused patron so active-patron neglect can be smoked deterministically.")
+    elseIf a_option == _oidPrimeNeglectEligible
+        SetInfoText("One-click neglect setup (no modal): forces the selected deity active AND drops its piety to 0 so it is neglect-eligible. Then click Run neglect pass and check Active Effects.")
     elseIf a_option == _oidNeglectRunPass
         SetInfoText("Runs only the neglect/spell-layer selection pass without the rest of dawn.")
     elseIf a_option == _oidDecayPrimeGrace
@@ -943,28 +950,92 @@ Function OnOptionSelect(Int a_option)
         return
     endIf
 
+    if a_option == _oidForceSelectedPatron
+        PDV__ManagerQuest forcePatronManager = GetManagerService()
+        PDV_DeityBase forcePatronDeity = GetSelectedDeity()
+        if forcePatronManager && forcePatronDeity
+            forcePatronManager.SetActiveDeity(forcePatronDeity)
+            Debug.Notification("PDV: active patron forced.")
+            ForcePageReset()
+        else
+            Debug.Notification("PDV: select a deity first.")
+        endIf
+        return
+    endIf
+
+    if a_option == _oidPrimeNeglectEligible
+        PDV__ManagerQuest primeNeglectManager = GetManagerService()
+        PDV_DeityBase primeNeglectDeity = GetSelectedDeity()
+        if primeNeglectManager && primeNeglectDeity
+            ; Deterministic active-patron neglect setup, modal-free: make the selected deity the
+            ; active patron, then drop its piety to 0 so ApplyGenericNeglectFlags selects it (piety
+            ; <= NEGLECT_ACTIVE_PIETY_MAX). Sidesteps Prime-decay-eligible, which sets piety 20 and
+            ; a lapse stamp of exactly the grace boundary -- neither flags neglect.
+            primeNeglectManager.SetActiveDeity(primeNeglectDeity)
+            primeNeglectManager.DebugForceSetPietyByIndex(primeNeglectDeity.DeityIndex, 0.0)
+            Debug.Notification("PDV: neglect eligible primed (active + piety 0).")
+            ForcePageReset()
+        else
+            Debug.Notification("PDV: select a deity first.")
+        endIf
+        return
+    endIf
+
     if a_option == _oidNeglectRunPass
-        RunPatternAction("Run the neglect/spell-layer pass now?", 38)
+        PDV__ManagerQuest neglectManager = GetManagerService()
+        if neglectManager
+            neglectManager.DebugRunNeglectPass()
+            Debug.Notification("PDV: neglect pass run.")
+        else
+            Debug.Notification("PDV: manager is not assigned.")
+        endIf
         return
     endIf
 
     if a_option == _oidDecayPrimeGrace
-        RunPatternAction("Prime selected deity inside the decay grace window?", 39)
+        PDV__ManagerQuest decayGraceManager = GetManagerService()
+        PDV_DeityBase decayGraceDeity = GetSelectedDeity()
+        if decayGraceManager && decayGraceDeity
+            decayGraceManager.DebugPrimeDecayGraceByIndex(decayGraceDeity.DeityIndex)
+            Debug.Notification("PDV: decay grace primed.")
+        else
+            Debug.Notification("PDV: select a deity first.")
+        endIf
         return
     endIf
 
     if a_option == _oidDecayPrimeEligible
-        RunPatternAction("Prime selected deity as eligible for decay?", 40)
+        PDV__ManagerQuest decayEligibleManager = GetManagerService()
+        PDV_DeityBase decayEligibleDeity = GetSelectedDeity()
+        if decayEligibleManager && decayEligibleDeity
+            decayEligibleManager.DebugPrimeDecayEligibleByIndex(decayEligibleDeity.DeityIndex)
+            Debug.Notification("PDV: decay eligible primed.")
+        else
+            Debug.Notification("PDV: select a deity first.")
+        endIf
         return
     endIf
 
     if a_option == _oidDecayRunPass
-        RunPatternAction("Run the decay-only pass now?", 41)
+        PDV__ManagerQuest decayRunManager = GetManagerService()
+        if decayRunManager
+            decayRunManager.DebugRunDecayPass()
+            Debug.Notification("PDV: decay pass run.")
+        else
+            Debug.Notification("PDV: manager is not assigned.")
+        endIf
         return
     endIf
 
     if a_option == _oidDecayRunProofDays
-        RunPatternAction("Run compressed decay proof days for selected deity?", 42)
+        PDV__ManagerQuest decayProofManager = GetManagerService()
+        PDV_DeityBase decayProofDeity = GetSelectedDeity()
+        if decayProofManager && decayProofDeity
+            decayProofManager.DebugRunDecayProofDaysByIndex(decayProofDeity.DeityIndex)
+            Debug.Notification("PDV: decay proof days run.")
+        else
+            Debug.Notification("PDV: select a deity first.")
+        endIf
         return
     endIf
 
@@ -1612,6 +1683,8 @@ Function BuildDaedricPage()
 
     AddEmptyOption()
     AddHeaderOption("Neglect & decay", OPTION_FLAG_NONE)
+    _oidForceSelectedPatron = AddTextOption("Force selected patron", "Focused", OPTION_FLAG_NONE)
+    _oidPrimeNeglectEligible = AddTextOption("Prime neglect eligible", "Active + piety 0", OPTION_FLAG_NONE)
     _oidNeglectRunPass = AddTextOption("Run neglect pass", "Targeted", OPTION_FLAG_NONE)
     _oidDecayPrimeGrace = AddTextOption("Prime decay grace", "Proof", OPTION_FLAG_NONE)
     _oidDecayPrimeEligible = AddTextOption("Prime decay eligible", "Proof", OPTION_FLAG_NONE)
@@ -2213,13 +2286,21 @@ Float Function GetSelectedDeityPietyToday()
 EndFunction
 
 Function RunPatternAction(String promptText, Int actionId)
+    if _patternActionPromptOpen
+        return
+    endIf
+
     PDV__ManagerQuest manager = GetManagerService()
     if !manager
         ShowMessage("PDV_Manager is not assigned.", False, "$OK", "")
         return
     endIf
 
-    if !ShowMessage(promptText, True, "$Yes", "$No")
+    _patternActionPromptOpen = True
+    Bool confirmed = ShowMessage(promptText, True, "$Yes", "$No")
+    _patternActionPromptOpen = False
+
+    if !confirmed
         return
     endIf
 
