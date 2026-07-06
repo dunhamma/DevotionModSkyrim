@@ -342,10 +342,15 @@
           "actorValue": "Restoration",
           "magnitude": 13,
           "effectName": "Restoration"
+        },
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 5,
+          "effectName": "Resist Magic"
         }
       ],
-      "playerFacingText": "The Mother's mercy mends. Restoration +13; you wake mended after rest.",
-      "designNote": "HealRateMult removed 2026-06-20 (Requiem-swallowed); the heal is now an event-driven flat RestoreActorValue on rest (HandleImperialMaraSleepMercy, Devoted 25 HP), Requiem-proof."
+      "playerFacingText": "The Mother's mercy mends, and her love wards. Restoration +13, Resist Magic +5%.",
+      "designNote": "Scripted wake-mercy heal (HandleImperialMaraSleepMercy) retired 2026-07-06 -- replaced by a real passive Resist Magic effect so Mara reads as two Requiem-felt passives like Arkay/Dibella, and works identically on the reused Nord lane. ResistMagic +5/+15 (T2/T3) matches the accepted Akatosh/Julianos/Kynareth secondary ceiling."
     },
     {
       "emphasis": "Mara",
@@ -359,10 +364,15 @@
           "actorValue": "Restoration",
           "magnitude": 23,
           "effectName": "Restoration"
+        },
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 15,
+          "effectName": "Resist Magic"
         }
       ],
-      "playerFacingText": "Mara's compassion works through you. Restoration +23; you wake fully mended after rest.",
-      "signature": "Compassion of the Mother: strongest Restoration; the mercy-on-rest heal (40 HP, Requiem-proof flat RestoreActorValue via HandleImperialMaraSleepMercy) is the Champion healing surface; Champion Survey text is the V1 recognition surface."
+      "playerFacingText": "Mara's compassion works through you, mending and warding. Restoration +23, Resist Magic +15%.",
+      "signature": "Compassion of the Mother: strongest Restoration paired with her protective ward (Resist Magic +15%), both Requiem-felt passives; Champion Survey text is the V1 recognition surface. The former scripted mercy-on-rest heal was retired 2026-07-06 in favor of the passive ward."
     },
     {
       "emphasis": "Arkay",

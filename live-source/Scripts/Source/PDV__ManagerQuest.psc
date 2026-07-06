@@ -3917,7 +3917,6 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, String reas
     endIf
 
     if GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
-        HandleImperialMaraSleepMercy(playerRef)
         HandleImperialSleepEvents(playerRef, reason)
     endIf
 
@@ -4502,34 +4501,13 @@ Function HandleBretonSleepEvents(Actor playerRef, String reason)
     ShowP2BookNotice("po3_book_breton_sleep_dream", "Inherited dream", "The old mixed blood wards itself in sleep.")
 EndFunction
 
-; Mara's Mercy heal-on-rest. Imperial event-driven heal authored as a flat
-; RestoreActorValue (Requiem-proof) rather than a HealRateMult rate buff, which
-; Requiem drives to ~0. Fires once per day when Mara is the active focused
-; patron at Devoted+, scaled by tier. Rest is Requiem's intended recovery loop,
-; so a mercy-on-rest reads on-design, not as re-introduced passive regen.
-Function HandleImperialMaraSleepMercy(Actor playerRef)
-    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL || !PDV_Mara
-        return
-    endIf
-    if _activeDeity != PDV_Mara
-        return
-    endIf
-    Int tier = GetTier(PDV_Mara)
-    if tier < TIER_DEVOTED
-        return
-    endIf
-    Int today = (Utility.GetCurrentGameTime() as Int) + 1
-    if StorageUtil.GetIntValue(None, "PDV.Imperial.MaraMercyDay") == today
-        return
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.Imperial.MaraMercyDay", today)
-    Float healAmount = 25.0
-    if tier >= TIER_CHAMPION
-        healAmount = 40.0
-    endIf
-    playerRef.RestoreActorValue("Health", healAmount)
-    SendPrismaToast("mara", "good", "Mara's mercy", "You wake mended through your rest.")
-EndFunction
+; Mara's Mercy scripted heal-on-rest was retired 2026-07-06. It was the second
+; half of the Mara reward but not a real passive effect (an event-driven
+; RestoreActorValue that never showed in Active Effects and, being Imperial-gated,
+; never fired on the reused Nord lane). It is replaced by a passive Resist Magic
+; effect on PDV_Bless_Imperial_Mara_T2/T3 (see PDV_ImperialRewardRecords.spec.json),
+; so Mara now reads as two Requiem-felt passives -- Restoration + Resist Magic --
+; identically for Imperial and Nord patrons.
 
 ; Argonian sleep-exit dispatcher. Dreams fire here now; the bed-of-choice
 ; declaration and the adaptation rite join this entry point in later tranches.
