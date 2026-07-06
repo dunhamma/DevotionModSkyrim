@@ -3239,7 +3239,7 @@ Function AwardCuratedSignal(PDV_DeityBase deity, Int signalType, Form contextRef
         return
     endIf
 
-    AwardPiety(deity, delta, "a devotional rite")
+    AwardPiety(deity, delta, CuratedSignalDriverReason(deity, signalType))
 
     if GetDebugLevel() >= 2
         Debug.Trace("[PDV] AwardCuratedSignal: " + deity.DeityName + " signal " + signalType + " delta " + delta)
@@ -3273,7 +3273,7 @@ Function AwardCuratedSignalScaled(PDV_DeityBase deity, Int signalType, Form cont
     endIf
 
     Float scaledDelta = delta * multiplier
-    AwardPiety(deity, scaledDelta, HumanizeCuratedSignalReason(deity, signalType))
+    AwardPiety(deity, scaledDelta, CuratedSignalDriverReason(deity, signalType))
 
     if GetDebugLevel() >= 2
         Debug.Trace("[PDV] AwardCuratedSignalScaled: " + deity.DeityName + " signal " + signalType + " delta " + scaledDelta + " multiplier " + multiplier)
@@ -10481,6 +10481,14 @@ String Function HumanizeDriverReason(String raw)
     if raw == ""
         return "An act of devotion"
     endIf
+    ; A reason carrying the display sentinel is ALREADY finished player-facing copy
+    ; (a per-signal curated phrase from HumanizeCuratedSignalReason). Strip the marker
+    ; and store it verbatim; do NOT re-humanize, which would drop the specific phrase
+    ; to a generic fallback. Every other reason is a routing token resolved below.
+    String dispMark = DisplayReasonMarker()
+    if StringUtil.Find(raw, dispMark) == 0
+        return StringUtil.Substring(raw, StringUtil.GetLength(dispMark))
+    endIf
     if StringContainsToken(raw, "meta_zen_wage")
         return "a quest paid in gold"
     elseIf StringContainsToken(raw, "meta_julianos_wisdom")
@@ -10743,7 +10751,9 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
 
     if PDV_Talos && deity == PDV_Talos
         if signalType == PDV_Talos.SIGNAL_SHRINE_DEFIANCE
-            return "open Talos worship"
+            return "defiant prayer at a Talos shrine"
+        elseIf signalType == PDV_Talos.SIGNAL_PROTECT_WORSHIPPER
+            return "protecting a Talos worshipper"
         elseIf signalType == PDV_Talos.SIGNAL_DEFIANCE_MILESTONE
             return "defiance of the Talos ban"
         elseIf signalType == PDV_Talos.SIGNAL_ANCESTOR_SPINE
@@ -10762,12 +10772,18 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
             return "keeping the Green Pact"
         elseIf signalType == PDV_Yffre.SIGNAL_LIVING_STORY
             return "a Living Story deed"
+        elseIf signalType == PDV_Yffre.SIGNAL_PACT_VIOLATION
+            return "breaking the Green Pact"
+        elseIf signalType == PDV_Yffre.SIGNAL_RECOMMITMENT
+            return "recommitting to the Green Pact"
         elseIf signalType == PDV_Yffre.SIGNAL_SHARED_PACT_MEMORY
             return "a pact-true deed"
         endIf
     elseIf PDV_Zen && deity == PDV_Zen
         if signalType == PDV_Zen.SIGNAL_EXCHANGE
             return "fair exchange"
+        elseIf signalType == PDV_Zen.SIGNAL_CONFIRMATION
+            return "a rite confirming your path"
         elseIf signalType == PDV_Zen.SIGNAL_SHARED_PACT_MEMORY
             return "a pact-true deed"
         endIf
@@ -10776,12 +10792,22 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
             return "a Bandit Road deed"
         elseIf signalType == PDV_BaanDar.SIGNAL_ROAD_TRICK
             return "roadside cunning"
+        elseIf signalType == PDV_BaanDar.SIGNAL_CONFIRMATION
+            return "a rite confirming your path"
+        elseIf signalType == PDV_BaanDar.SIGNAL_BETRAYAL
+            return "betraying someone who trusted you"
         elseIf signalType == PDV_BaanDar.SIGNAL_SHARED_PACT_MEMORY
             return "a pact-true deed"
         endIf
     elseIf PDV_Khenarthi && deity == PDV_Khenarthi
         if signalType == PDV_Khenarthi.SIGNAL_ROAD_HOME
             return "returning by the road home"
+        elseIf signalType == PDV_Khenarthi.SIGNAL_OPEN_ROAD
+            return "fair weather on the open road"
+        elseIf signalType == PDV_Khenarthi.SIGNAL_CARAVAN_AID
+            return "aiding a caravan"
+        elseIf signalType == PDV_Khenarthi.SIGNAL_CARAVAN_HARM
+            return "harming a caravan"
         endIf
     elseIf PDV_Azura && deity == PDV_Azura
         if signalType == PDV_Azura.SIGNAL_MOON_OBSERVANCE
@@ -10790,18 +10816,26 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
             return "a threshold rite"
         elseIf signalType == PDV_Azura.SIGNAL_ANCESTOR_SPINE
             return "Dunmer ancestor rites"
+        elseIf signalType == PDV_Azura.SIGNAL_DUNMER_TWILIGHT_RITE
+            return "a twilight rite of the Reclamations"
         elseIf signalType == PDV_Azura.SIGNAL_DESECRATION
             return "desecration"
         endIf
     elseIf PDV_Rajhin && deity == PDV_Rajhin
         if signalType == PDV_Rajhin.SIGNAL_ELEGANT_THEFT
             return "artful theft"
+        elseIf signalType == PDV_Rajhin.SIGNAL_LEGEND_MADE
+            return "a legendary heist"
+        elseIf signalType == PDV_Rajhin.SIGNAL_BOTCHED_THEFT
+            return "a botched theft"
         endIf
     elseIf PDV_Alkosh && deity == PDV_Alkosh
         if signalType == PDV_Alkosh.SIGNAL_DRAGON_ORDER
             return "keeping dragon order"
         elseIf signalType == PDV_Alkosh.SIGNAL_NAMED_DRAGON
             return "defeating a named dragon"
+        elseIf signalType == PDV_Alkosh.SIGNAL_CHAOS_AID
+            return "aiding the Dragon Cult"
         endIf
     elseIf PDV_Hist && deity == PDV_Hist
         if signalType == PDV_Hist.SIGNAL_HIST_PULSE
@@ -10816,6 +10850,8 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
     elseIf PDV_Sithis && deity == PDV_Sithis
         if signalType == PDV_Sithis.SIGNAL_VOID_THRESHOLD
             return "crossing a Void threshold"
+        elseIf signalType == PDV_Sithis.SIGNAL_VOID_MILESTONE
+            return "a deeper turn toward the Void"
         endIf
     elseIf PDV_Malacath && deity == PDV_Malacath
         if signalType == PDV_Malacath.SIGNAL_STRONGHOLD_FORGE
@@ -10834,6 +10870,14 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
             return "breaking the code by curse"
         elseIf signalType == PDV_Malacath.SIGNAL_BROKEN_FAITH_KIN
             return "breaking faith with kin"
+        elseIf signalType == PDV_Malacath.SIGNAL_BLOOD_KIN
+            return "standing with your Blood-Kin"
+        elseIf signalType == PDV_Malacath.SIGNAL_EXILE_RETURN
+            return "carrying a burden home from exile"
+        elseIf signalType == PDV_Malacath.SIGNAL_FOUR_HOLDS_VISIT
+            return "reaching an Orc stronghold"
+        elseIf signalType == PDV_Malacath.SIGNAL_OATH_BREAK
+            return "breaking an oath"
         endIf
     elseIf PDV_Tuwhacca && deity == PDV_Tuwhacca
         if signalType == PDV_Tuwhacca.SIGNAL_CROWN_FORM
@@ -10844,12 +10888,16 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
             return "honoring the Far Shores"
         elseIf signalType == PDV_Tuwhacca.SIGNAL_ANCESTOR_SPINE
             return "Yokudan ancestor rites"
+        elseIf signalType == PDV_Tuwhacca.SIGNAL_VAMPIRE_REENTRY
+            return "returning to the cycle after vampirism"
         elseIf signalType == PDV_Tuwhacca.SIGNAL_DEATH_DUTY_ABANDONMENT
             return "abandoning death duty"
         endIf
     elseIf PDV_Leki && deity == PDV_Leki
         if signalType == PDV_Leki.SIGNAL_SWORD_SINGING
             return "sword-singing"
+        elseIf signalType == PDV_Leki.SIGNAL_HONORABLE_DUEL
+            return "an honorable duel won"
         endIf
     elseIf PDV_HoonDing && deity == PDV_HoonDing
         if signalType == PDV_HoonDing.SIGNAL_MAKE_WAY
@@ -10860,16 +10908,28 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
             return "disciplined study"
         elseIf signalType == PDV_Magnus.SIGNAL_MAGIC_MILESTONE
             return "a magic milestone"
+        elseIf signalType == PDV_Magnus.SIGNAL_ARCANE_RECOVERY
+            return "recovering lost arcane knowledge"
+        elseIf signalType == PDV_Magnus.SIGNAL_SHARED_PACT_MEMORY
+            return "keeping faith with the arts"
         elseIf signalType == PDV_Magnus.SIGNAL_ANCESTOR_SPINE
             return "Breton ancestor rites"
         endIf
     elseIf PDV_Xarxes && deity == PDV_Xarxes
         if signalType == PDV_Xarxes.SIGNAL_LINEAGE_HONORED
             return "honoring lineage"
+        elseIf signalType == PDV_Xarxes.SIGNAL_RECORD_KEEPING
+            return "preserving knowledge and history"
+        elseIf signalType == PDV_Xarxes.SIGNAL_LEDGER_RESTORED
+            return "restoring a lost record"
+        elseIf signalType == PDV_Xarxes.SIGNAL_SHARED_PACT_MEMORY
+            return "keeping the long record"
         endIf
     elseIf PDV_Boethiah && deity == PDV_Boethiah
         if signalType == PDV_Boethiah.SIGNAL_RIGHTEOUS_STRUGGLE
             return "righteous struggle"
+        elseIf signalType == PDV_Boethiah.SIGNAL_HONORABLE_DUEL
+            return "winning an honorable duel"
         elseIf signalType == PDV_Boethiah.SIGNAL_SHARED_PACT_MEMORY
             return "a deed for the Reclamations"
         elseIf signalType == PDV_Boethiah.SIGNAL_RECLAMATION_ABANDONED
@@ -10878,6 +10938,8 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
     elseIf PDV_Mephala && deity == PDV_Mephala
         if signalType == PDV_Mephala.SIGNAL_SECRET_KEPT
             return "a secret kept"
+        elseIf signalType == PDV_Mephala.SIGNAL_WEB_WOVEN
+            return "weaving a plot by cunning"
         elseIf signalType == PDV_Mephala.SIGNAL_SHARED_PACT_MEMORY
             return "a deed for the Reclamations"
         elseIf signalType == PDV_Mephala.SIGNAL_SECRET_BETRAYED
@@ -10890,6 +10952,8 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
             return "civic service"
         elseIf signalType == PDV_Akatosh.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
+        elseIf signalType == PDV_Akatosh.SIGNAL_COVENANT_MILESTONE
+            return "honoring the Covenant"
         endIf
     elseIf PDV_Mara && deity == PDV_Mara
         if signalType == PDV_Mara.SIGNAL_MERCY
@@ -10948,20 +11012,63 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
     elseIf PDV_Tsun && deity == PDV_Tsun
         if signalType == PDV_Tsun.SIGNAL_TRIAL_ENDURED
             return "a trial endured"
+        elseIf signalType == PDV_Tsun.SIGNAL_ADVERSITY_SURVIVED
+            return "surviving hard adversity"
+        elseIf signalType == PDV_Tsun.SIGNAL_ENDURANCE_VIGIL
+            return "keeping an endurance vigil"
         endIf
     elseIf PDV_Stuhn && deity == PDV_Stuhn
-        if signalType == PDV_Stuhn.SIGNAL_PROTECT_BOND
+        if signalType == PDV_Stuhn.SIGNAL_MERCY_GRANTED
+            return "granting mercy to the beaten"
+        elseIf signalType == PDV_Stuhn.SIGNAL_JUST_SPOILS
+            return "claiming just spoils"
+        elseIf signalType == PDV_Stuhn.SIGNAL_PROTECT_BOND
             return "protecting a bond"
         endIf
     elseIf PDV_Shor && deity == PDV_Shor
-        if signalType == PDV_Shor.SIGNAL_HONORED_DEAD
+        if signalType == PDV_Shor.SIGNAL_HONORABLE_BATTLE
+            return "an honorable battle"
+        elseIf signalType == PDV_Shor.SIGNAL_HONORED_DEAD
             return "honoring the dead"
+        elseIf signalType == PDV_Shor.SIGNAL_SOVNGARDE_VALOR
+            return "valor worthy of Sovngarde"
         elseIf signalType == PDV_Shor.SIGNAL_ANCESTOR_SPINE
             return "Nord ancestor rites"
+        endIf
+    elseIf PDV_Dibella && deity == PDV_Dibella
+        if signalType == PDV_Dibella.SIGNAL_CIVIC_SERVICE
+            return "civic service"
+        elseIf signalType == PDV_Dibella.SIGNAL_GRACE
+            return "an act of grace"
+        elseIf signalType == PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR
+            return "civic service (patron bonus)"
+        endIf
+    elseIf PDV_Trinimac && deity == PDV_Trinimac
+        if signalType == PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY
+            return "honoring fallen Trinimac"
+        elseIf signalType == PDV_Trinimac.SIGNAL_ALTMER_ORTHODOX_PRESSURE
+            return "upholding elven orthodoxy"
         endIf
     endIf
 
     return "a devotional rite"
+EndFunction
+
+; Sentinel prefix that flags a reason string as ALREADY player-facing display copy.
+; RecordDeityDriver runs every reason through HumanizeDriverReason before storing it;
+; a reason carrying this marker is stored verbatim (marker stripped) instead of being
+; re-humanized. The bracketed token can never collide with a real routing token
+; (routing tokens never start with '['), and it is stripped before storage/display.
+String Function DisplayReasonMarker()
+    return "[disp]"
+EndFunction
+
+; Build the driver-ledger reason for a curated signal: the specific per-signal phrase
+; from HumanizeCuratedSignalReason, marked so HumanizeDriverReason keeps it verbatim.
+; This is the single wiring point that turns curated awards into distinct, trigger-
+; stating Ledger rows instead of the generic "a devotional rite".
+String Function CuratedSignalDriverReason(PDV_DeityBase deity, Int signalType)
+    return DisplayReasonMarker() + HumanizeCuratedSignalReason(deity, signalType)
 EndFunction
 
 ; Per-god rollup state for the Devotion dashboard, derived only from existing data
