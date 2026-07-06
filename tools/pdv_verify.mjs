@@ -148,7 +148,7 @@ const PHASE20_RACE_IMPLEMENTATION_MANIFESTS = [
 ];
 const DEITY_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes.csv");
 const PRINCE_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes_Princes_V2.csv");
-const EXPECTED_LIKES_DISLIKES_VERSION = 12;
+const EXPECTED_LIKES_DISLIKES_VERSION = 13; // 13 = dead-row retraction (kill-event3/4 + mine-or-chop 335), 2026-07-07
 const EXPECTED_PRINCE_LD_VERSION = 4;
 const PHASE20_NO_IN_GAME_PROOF_GATES = path.join(
   PROJECT_ROOT,

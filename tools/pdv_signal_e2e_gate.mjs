@@ -997,9 +997,10 @@ function evaluateEventEmissionCoverage() {
   for (const m of managerLive.matchAll(/\bWriteP?LD\s*\(\s*[A-Za-z_][A-Za-z0-9_]*\s*,\s*(\d+)\b/g)) {
     dataConsumedIds.add(Number(m[1]));
   }
-  for (const m of managerLive.matchAll(/\bp?ldEvents\s*\[\s*\d+\s*\]\s*=\s*(\d+)\b/g)) {
-    dataConsumedIds.add(Number(m[1]));
-  }
+  // NOTE: the ldEvents/pldEvents clear-superset arrays (GetLikesDislikesEventTypes /
+  // GetPrinceEventTypes) are deliberately NOT consumption -- they are janitor lists that
+  // must KEEP retired ids so old saves clear removed rows (per the ClearRowsForDeity
+  // MAINTENANCE contract). Only CSV rows and WriteLD/WritePLD seeds promise piety.
 
   const results = [];
   for (const d of declared) {
