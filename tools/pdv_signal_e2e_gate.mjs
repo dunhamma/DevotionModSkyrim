@@ -24,6 +24,11 @@ const PLAYER_EVENTS_PATH = `${SOURCE_DIR}/PDV_PlayerEvents.psc`;
 const EVENT_BUS_PATH = `${SOURCE_DIR}/PDV_EventBus.psc`;
 const MANAGER_PATH = `${SOURCE_DIR}/PDV__ManagerQuest.psc`;
 const RESERVED_SIGNALS_PATH = `${ROOT}/tools/pdv_reserved_signals.json`;
+const RESERVED_EVENTS_PATH = `${ROOT}/tools/pdv_reserved_events.json`;
+const RESERVED_ROUTES_PATH = `${ROOT}/tools/pdv_reserved_routes.json`;
+const EVENT_TYPES_PATH = `${SOURCE_DIR}/PDV_EventTypes.psc`;
+const LIKES_CSV_PATH = `${ROOT}/references/authoring/PDV_DeityLikesDislikes.csv`;
+const PRINCE_LIKES_CSV_PATH = `${ROOT}/references/authoring/PDV_DeityLikesDislikes_Princes_V2.csv`;
 const P2_AUTHOR_PROJECT = `${ROOT}/tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj`;
 const MCP_CHECK = `${ROOT}/tools/pdv_mcp_check.mjs`;
 const COMPLETENESS_AUDIT = `${ROOT}/tools/pdv_completeness_audit.mjs`;
@@ -82,13 +87,17 @@ function main() {
 
   const curatedParity = evaluateCuratedSignalParity(managerText);
   const dispatchCoverage = evaluateCuratedSignalDispatchCoverage();
+  const eventCoverage = evaluateEventEmissionCoverage();
+  const routeReach = evaluateRouteReachability();
+  const csvFreshness = evaluateCsvCodegenFreshness();
 
-  writeLedgers(rows, helpers, curatedParity, dispatchCoverage);
+  writeLedgers(rows, helpers, curatedParity, dispatchCoverage, eventCoverage, routeReach, csvFreshness);
 
   const counts = countBy(rows, (row) => row.verdict);
   const surfacesPass = !rows.some((row) => row.verdict !== "GREEN");
+  const declarationGatesOk = dispatchCoverage.ok && eventCoverage.ok && routeReach.ok && csvFreshness.ok;
   const summary = {
-    status: surfacesPass && curatedParity.ok && dispatchCoverage.ok ? "PASS" : "FAIL",
+    status: surfacesPass && curatedParity.ok && declarationGatesOk ? "PASS" : "FAIL",
     surfaces: rows.length,
     counts,
     curatedSignalParity: {
@@ -108,6 +117,34 @@ function main() {
       failures: dispatchCoverage.failures.length,
       staleLedger: dispatchCoverage.staleLedger.length,
       ledgerError: dispatchCoverage.ledgerError.length,
+    },
+    eventEmissionCoverage: {
+      status: eventCoverage.ok ? "PASS" : "FAIL",
+      declared: eventCoverage.declared,
+      emitted: eventCoverage.emitted,
+      deadPromises: eventCoverage.deadPromises,
+      deadConstants: eventCoverage.deadConstants,
+      reservedKnownGaps: eventCoverage.knownGaps.length,
+      failures: eventCoverage.failures.length,
+      staleLedger: eventCoverage.staleLedger.length,
+    },
+    routeReachability: {
+      status: routeReach.ok ? "PASS" : "FAIL",
+      targets: routeReach.targets,
+      reachable: routeReach.reachable,
+      orphans: routeReach.orphans,
+      reservedKnownGaps: routeReach.knownGaps.length,
+      failures: routeReach.failures.length,
+      staleLedger: routeReach.staleLedger.length,
+    },
+    csvCodegenFreshness: {
+      status: csvFreshness.ok ? "PASS" : "FAIL",
+      csvIds: csvFreshness.csvIds,
+      seededIds: csvFreshness.seededIds,
+      version: csvFreshness.version,
+      csvNotSeeded: csvFreshness.csvNotSeeded.length,
+      seededNotCsv: csvFreshness.seededNotCsv.length,
+      seededNotInSuperset: csvFreshness.seededNotInSuperset.length,
     },
     mcp: mcp.ok ? "PASS" : "SKIP",
     ledger: "references/authoring/PDV_SignalE2EGateLedger.md",
@@ -792,19 +829,29 @@ function evaluateCuratedSignalParity(managerText) {
   return { total: refs.length, okCount, gaps, cross, byIndex, ok };
 }
 
-function loadReservedSignals() {
-  if (!fs.existsSync(RESERVED_SIGNALS_PATH)) return {};
+function loadReservedLedger(ledgerPath) {
+  if (!fs.existsSync(ledgerPath)) return {};
   try {
-    const raw = JSON.parse(fs.readFileSync(RESERVED_SIGNALS_PATH, "utf8").replace(/^﻿/, ""));
+    const raw = JSON.parse(fs.readFileSync(ledgerPath, "utf8").replace(/^﻿/, ""));
     const out = {};
     for (const [k, v] of Object.entries(raw)) {
-      if (k.startsWith("_")) continue; // _README / _seededDate metadata keys, never signal entries
+      if (k.startsWith("_")) continue; // _README / _seededDate metadata keys, never entries
       out[k] = v;
     }
     return out;
   } catch (err) {
     return { __error: String((err && err.message) || err) };
   }
+}
+
+function loadReservedSignals() {
+  return loadReservedLedger(RESERVED_SIGNALS_PATH);
+}
+
+// Strip Papyrus comments (block ;/ ... /; and line ;...) so token scans do not
+// count commented-out or documentation references as live code.
+function stripPapyrusComments(text) {
+  return text.replace(/;\/[\s\S]*?\/;/g, "").replace(/;[^\n]*/g, "");
 }
 
 // Registry-driven dispatch coverage: the INVERSE of evaluateCuratedSignalParity, and the
@@ -899,6 +946,248 @@ function evaluateCuratedSignalDispatchCoverage() {
   };
 }
 
+// Gate A -- EVT emission coverage: the event-type sibling of dispatch coverage, closing
+// the class that produced the five manually-found dead events (341/360/361/362/364/365)
+// and the 2026-07-07 finds (350/351/335/366 dead data rows; 310/311/312 dead constants).
+// Registry = every `Int Property EVT_X = N` in PDV_EventTypes.psc. An event is EMITTED if
+// an emitter script references its token on a live (non-declaration, comment-stripped)
+// line or routes its raw id; it is CONSUMED if consumer scripts reference it or the
+// likes/dislikes data (CSV rows, WriteLD/WritePLD seeds, clear-superset array) carries its
+// id. FAIL: consumed-but-never-emitted (a data row promising piety that can never fire)
+// and declared-but-never-anything (dead constant) -- unless reserved in
+// tools/pdv_reserved_events.json. Emitted-but-unconsumed is reported as info only.
+function evaluateEventEmissionCoverage() {
+  const declText = fs.readFileSync(EVENT_TYPES_PATH, "utf8");
+  const declared = [];
+  for (const m of declText.matchAll(/^\s*Int\s+Property\s+(EVT_[A-Z0-9_]+)\s*=\s*(-?\d+)\s+AutoReadOnly/gim)) {
+    declared.push({ name: m[1], id: Number(m[2]), key: `PDV_EventTypes.${m[1]}` });
+  }
+
+  const allFiles = fs.readdirSync(SOURCE_DIR).filter((f) => /\.psc$/i.test(f));
+  const emitterFiles = allFiles.filter((f) =>
+    /^(PDV_PlayerEvents|PDV_ActionRouter|PDV_EventBus|PDV_FragmentBridge|PDV_EventSignalActivator|PDV_EventSignalEffect|PDV__SM_[A-Za-z]+)\.psc$/i.test(f));
+  const consumerFiles = allFiles.filter((f) =>
+    /^(PDV__ManagerQuest|PDV_DeityBase|PDV_Deity_[A-Za-z]+|PDV_DaedricPathBase|PDV_DaedricPath_[A-Za-z]+|PDV_Substrate_[A-Za-z]+)\.psc$/i.test(f));
+
+  const liveText = (file) => {
+    const stripped = stripPapyrusComments(fs.readFileSync(`${SOURCE_DIR}/${file}`, "utf8"));
+    // Drop declaration lines everywhere (emitter scripts re-declare local EVT_ consts).
+    return stripped.replace(/^\s*Int\s+Property\s+EVT_[A-Z0-9_]+\s*=.*$/gim, "");
+  };
+  const emitterText = emitterFiles.map(liveText).join("\n");
+  const consumerText = consumerFiles.map(liveText).join("\n");
+
+  // Raw-int routing (RouteAction(350, ...)) counts as emission by id.
+  const rawEmittedIds = new Set();
+  for (const m of emitterText.matchAll(/\bRouteAction(?:WithAttribution)?\s*\(\s*(\d+)\b/g)) {
+    rawEmittedIds.add(Number(m[1]));
+  }
+
+  // Data consumption: CSV eventId columns + manager WriteLD/WritePLD seeds + clear-superset array.
+  const dataConsumedIds = new Set();
+  for (const csvPath of [LIKES_CSV_PATH, PRINCE_LIKES_CSV_PATH]) {
+    if (!fs.existsSync(csvPath)) continue;
+    const lines = fs.readFileSync(csvPath, "utf8").split(/\r?\n/).slice(1);
+    for (const line of lines) {
+      const id = Number((line.split(",")[1] || "").trim());
+      if (Number.isFinite(id) && id > 0) dataConsumedIds.add(id);
+    }
+  }
+  const managerLive = stripPapyrusComments(fs.readFileSync(MANAGER_PATH, "utf8"));
+  for (const m of managerLive.matchAll(/\bWriteP?LD\s*\(\s*[A-Za-z_][A-Za-z0-9_]*\s*,\s*(\d+)\b/g)) {
+    dataConsumedIds.add(Number(m[1]));
+  }
+  for (const m of managerLive.matchAll(/\bp?ldEvents\s*\[\s*\d+\s*\]\s*=\s*(\d+)\b/g)) {
+    dataConsumedIds.add(Number(m[1]));
+  }
+
+  const results = [];
+  for (const d of declared) {
+    const tokenRe = new RegExp(`\\b${d.name}\\b`);
+    const emitted = tokenRe.test(emitterText) || rawEmittedIds.has(d.id);
+    const consumed = tokenRe.test(consumerText) || dataConsumedIds.has(d.id);
+    let verdict = "OK";
+    if (!emitted && consumed) verdict = "DEAD_PROMISE";
+    else if (!emitted && !consumed) verdict = "DEAD_CONSTANT";
+    else if (emitted && !consumed) verdict = "EMITTED_UNCONSUMED";
+    results.push({ ...d, emitted, consumed, verdict });
+  }
+
+  // Data-seeded ids not covered by the EventTypes registry: they may be declared LOCALLY
+  // in another script (PlayerEvents EVT_SLEEP_IN_INN=315, ActionRouter 303-style) -- an id
+  // counts as emitted if ANY of its declaring tokens appears live in an emitter, or it is
+  // routed raw. Otherwise its rows are dead promises (the Namira cannibalize-367 / Clavicus
+  // persuade-354 / Kyne kill-event3/4 class -- ids documented only in comments or nowhere).
+  const declaredIds = new Set(declared.map((d) => d.id));
+  const unionDeclared = new Map(); // id -> Set of declaring token names, across ALL scripts
+  for (const file of allFiles) {
+    const text = fs.readFileSync(`${SOURCE_DIR}/${file}`, "utf8");
+    for (const m of text.matchAll(/^\s*Int\s+Property\s+(EVT_[A-Z0-9_]+)\s*=\s*(-?\d+)\s+AutoReadOnly/gim)) {
+      const id = Number(m[2]);
+      if (!unionDeclared.has(id)) unionDeclared.set(id, new Set());
+      unionDeclared.get(id).add(m[1]);
+    }
+  }
+  const idEmitted = (id) => {
+    if (rawEmittedIds.has(id)) return true;
+    for (const name of unionDeclared.get(id) || []) {
+      if (new RegExp(`\\b${name}\\b`).test(emitterText)) return true;
+    }
+    return false;
+  };
+  const undeclaredDead = [...dataConsumedIds]
+    .filter((id) => !declaredIds.has(id) && !idEmitted(id))
+    .sort((a, b) => a - b)
+    .map((id) => {
+      const names = [...(unionDeclared.get(id) || [])];
+      return { name: names[0] || `(undeclared id ${id})`, id, key: `PDV_EventTypes.ID_${id}`, emitted: false, consumed: true, verdict: names.length ? "DEAD_PROMISE_LOCAL_DECL" : "DEAD_PROMISE_UNDECLARED" };
+    });
+
+  const bad = [...results.filter((r) => r.verdict === "DEAD_PROMISE" || r.verdict === "DEAD_CONSTANT"), ...undeclaredDead];
+  if (process.env.PDV_EVENT_EMISSION_SELFTEST === "1") {
+    bad.push({ name: "EVT_SELFTEST_DEAD", id: -999, key: "PDV_EventTypes.EVT_SELFTEST_DEAD", emitted: false, consumed: true, verdict: "DEAD_PROMISE" });
+  }
+
+  const reserved = loadReservedLedger(RESERVED_EVENTS_PATH);
+  const ledgerError = reserved.__error ? [reserved.__error] : [];
+  const knownGaps = [];
+  const failures = [];
+  for (const b of bad) {
+    if (reserved[b.key]) knownGaps.push({ ...b, reason: (reserved[b.key] && reserved[b.key].reason) || "(no reason given)" });
+    else failures.push(b);
+  }
+  const badKeys = new Set(bad.map((b) => b.key));
+  const staleLedger = Object.keys(reserved).filter((k) => !k.startsWith("__")).filter((k) => !badKeys.has(k));
+
+  const infoUnconsumed = results.filter((r) => r.verdict === "EMITTED_UNCONSUMED").map((r) => r.key);
+  const ok = failures.length === 0 && staleLedger.length === 0 && ledgerError.length === 0;
+  return {
+    declared: declared.length,
+    emitted: results.filter((r) => r.emitted).length,
+    deadPromises: results.filter((r) => r.verdict === "DEAD_PROMISE").length,
+    deadConstants: results.filter((r) => r.verdict === "DEAD_CONSTANT").length,
+    knownGaps,
+    failures,
+    staleLedger,
+    ledgerError,
+    infoUnconsumed,
+    ok,
+  };
+}
+
+// Gate B -- Route/Handle reachability: an EventBus Route* or manager Handle* function with
+// ZERO call sites is dead plumbing (the RouteBosmerBaanDarGap / RouteOrcStrongholdPresence
+// class). Any live (comment-stripped) call site counts -- reachability, not trigger
+// quality, is the claim. Reserved orphans live in tools/pdv_reserved_routes.json.
+function evaluateRouteReachability() {
+  const allFiles = fs.readdirSync(SOURCE_DIR).filter((f) => /\.psc$/i.test(f));
+  const liveByFile = new Map(allFiles.map((f) => [f, stripPapyrusComments(fs.readFileSync(`${SOURCE_DIR}/${f}`, "utf8"))]));
+
+  const targets = [];
+  for (const m of (liveByFile.get("PDV_EventBus.psc") || "").matchAll(/^\s*(?:[A-Za-z_][\w\[\]]*\s+)?Function\s+(Route[A-Za-z0-9_]+)\s*\(/gim)) {
+    targets.push({ name: m[1], kind: "route", key: `PDV_EventBus.${m[1]}` });
+  }
+  for (const m of (liveByFile.get("PDV__ManagerQuest.psc") || "").matchAll(/^\s*(?:[A-Za-z_][\w\[\]]*\s+)?Function\s+(Handle[A-Za-z0-9_]+)\s*\(/gim)) {
+    targets.push({ name: m[1], kind: "handle", key: `PDV__ManagerQuest.${m[1]}` });
+  }
+
+  const orphans = [];
+  let reachable = 0;
+  for (const t of targets) {
+    let callers = 0;
+    const callRe = new RegExp(`\\b${t.name}\\s*\\(`, "g");
+    const defRe = new RegExp(`Function\\s+${t.name}\\s*\\(`, "gi");
+    for (const text of liveByFile.values()) {
+      const calls = (text.match(callRe) || []).length;
+      const defs = (text.match(defRe) || []).length;
+      callers += Math.max(0, calls - defs);
+    }
+    if (callers === 0) orphans.push(t);
+    else reachable += 1;
+  }
+
+  if (process.env.PDV_ROUTE_REACH_SELFTEST === "1") {
+    orphans.push({ name: "RouteSelftestOrphan", kind: "route", key: "PDV_EventBus.RouteSelftestOrphan" });
+  }
+
+  const reserved = loadReservedLedger(RESERVED_ROUTES_PATH);
+  const ledgerError = reserved.__error ? [reserved.__error] : [];
+  const knownGaps = [];
+  const failures = [];
+  for (const o of orphans) {
+    if (reserved[o.key]) knownGaps.push({ ...o, reason: (reserved[o.key] && reserved[o.key].reason) || "(no reason given)" });
+    else failures.push(o);
+  }
+  const orphanKeys = new Set(orphans.map((o) => o.key));
+  const staleLedger = Object.keys(reserved).filter((k) => !k.startsWith("__")).filter((k) => !orphanKeys.has(k));
+
+  const ok = failures.length === 0 && staleLedger.length === 0 && ledgerError.length === 0;
+  return { targets: targets.length, reachable, orphans: orphans.length, knownGaps, failures, staleLedger, ledgerError, ok };
+}
+
+// Gate D -- CSV -> codegen freshness: a likes/dislikes CSV edit is inert until
+// pdv_likesdislikes_gen regenerates the manager seed block and the version bumps
+// (the likes-dislikes-csv-codegen class). Content-level check at event-id granularity:
+// D1 every CSV event id has a manager WriteLD/WritePLD seed; D2 every seeded id is still
+// in a CSV (removed row not regenerated); D3 the ClearRowsForDeity superset array
+// (GetLikesDislikesEventTypes) covers every seeded id -- the MAINTENANCE invariant the
+// manager itself documents. Per-deity delta drift is out of scope (id-set granularity).
+function evaluateCsvCodegenFreshness() {
+  const readCsvIds = (csvPath) => {
+    const ids = new Set();
+    if (!fs.existsSync(csvPath)) return ids;
+    const lines = fs.readFileSync(csvPath, "utf8").split(/\r?\n/).slice(1);
+    for (const line of lines) {
+      const id = Number((line.split(",")[1] || "").trim());
+      if (Number.isFinite(id) && id > 0) ids.add(id);
+    }
+    return ids;
+  };
+  const deityCsvIds = readCsvIds(LIKES_CSV_PATH);
+  const princeCsvIds = readCsvIds(PRINCE_LIKES_CSV_PATH);
+
+  const managerLive = stripPapyrusComments(fs.readFileSync(MANAGER_PATH, "utf8"));
+  const collectIds = (re) => {
+    const ids = new Set();
+    for (const m of managerLive.matchAll(re)) ids.add(Number(m[1]));
+    return ids;
+  };
+  // Deity seeds/superset and Prince seeds/superset are SEPARATE systems (WriteLD /
+  // GetLikesDislikesEventTypes vs WritePLD / GetPrinceEventTypes) -- compare per side.
+  const deitySeeded = collectIds(/\bWriteLD\s*\(\s*[A-Za-z_][A-Za-z0-9_]*\s*,\s*(\d+)\b/g);
+  const princeSeeded = collectIds(/\bWritePLD\s*\(\s*[A-Za-z_][A-Za-z0-9_]*\s*,\s*(\d+)\b/g);
+  const fns = buildFunctionMap(managerLive);
+  const supersetOf = (fnName) => {
+    const ids = new Set();
+    for (const m of (fns.get(fnName) || "").matchAll(/\[\s*\d+\s*\]\s*=\s*(\d+)\b/g)) ids.add(Number(m[1]));
+    return ids;
+  };
+  const deitySuperset = supersetOf("GetLikesDislikesEventTypes");
+  const princeSuperset = supersetOf("GetPrinceEventTypes");
+
+  const diff = (a, b) => [...a].filter((id) => !b.has(id)).sort((x, y) => x - y);
+  const csvNotSeeded = [...diff(deityCsvIds, deitySeeded).map((id) => `deity:${id}`), ...diff(princeCsvIds, princeSeeded).map((id) => `prince:${id}`)];
+  const seededNotCsv = [...diff(deitySeeded, deityCsvIds).map((id) => `deity:${id}`), ...diff(princeSeeded, princeCsvIds).map((id) => `prince:${id}`)];
+  const seededNotInSuperset = [...diff(deitySeeded, deitySuperset).map((id) => `deity:${id}`), ...diff(princeSeeded, princeSuperset).map((id) => `prince:${id}`)];
+  const versionMatch = managerLive.match(/LIKES_DISLIKES_VERSION\s*=\s*(\d+)/);
+
+  if (process.env.PDV_CSV_FRESHNESS_SELFTEST === "1") {
+    csvNotSeeded.push("deity:-999");
+  }
+
+  const ok = csvNotSeeded.length === 0 && seededNotCsv.length === 0 && seededNotInSuperset.length === 0;
+  return {
+    csvIds: deityCsvIds.size + princeCsvIds.size,
+    seededIds: deitySeeded.size + princeSeeded.size,
+    supersetIds: deitySuperset.size + princeSuperset.size,
+    version: versionMatch ? Number(versionMatch[1]) : null,
+    csvNotSeeded,
+    seededNotCsv,
+    seededNotInSuperset,
+    ok,
+  };
+}
+
 function buildFunctionMap(text) {
   const functions = new Map();
   const re = /^\s*(?:[A-Za-z_][\w\[\]]*\s+)?Function\s+([A-Za-z_][A-Za-z0-9_]*)\s*\([^)]*\)[\s\S]*?^\s*EndFunction/gim;
@@ -944,7 +1233,7 @@ function unique(items) {
   return [...new Set(items.filter(Boolean))];
 }
 
-function writeLedgers(rows, helpers, curatedParity, dispatchCoverage) {
+function writeLedgers(rows, helpers, curatedParity, dispatchCoverage, eventCoverage, routeReach, csvFreshness) {
   const counts = countBy(rows, (row) => row.verdict);
   const statusCounts = {};
   for (const row of rows) {
@@ -1034,6 +1323,70 @@ function writeLedgers(rows, helpers, curatedParity, dispatchCoverage) {
       }
       md.push("");
     }
+  }
+  if (eventCoverage) {
+    md.push("## EVT Emission Coverage");
+    md.push("");
+    md.push("Every declared EVT_ in PDV_EventTypes.psc must be EMITTED by a real emitter script (or reserved in tools/pdv_reserved_events.json). DEAD_PROMISE = data rows/consumers exist but the event never fires; DEAD_CONSTANT = declared and referenced nowhere. Emitted-but-unconsumed is informational.");
+    md.push(`Status: ${eventCoverage.ok ? "PASS" : "FAIL"} | declared=${eventCoverage.declared} | emitted=${eventCoverage.emitted} | dead-promises=${eventCoverage.deadPromises} | dead-constants=${eventCoverage.deadConstants} | reserved=${eventCoverage.knownGaps.length} | unlisted-FAIL=${eventCoverage.failures.length} | stale-ledger=${eventCoverage.staleLedger.length}`);
+    md.push("");
+    if (eventCoverage.failures.length) {
+      md.push("### Dead events NOT reserved (FAIL)");
+      for (const f of eventCoverage.failures) md.push(`- ${asciiSafe(f.key)} (id ${f.id}, ${asciiSafe(f.verdict)})`);
+      md.push("");
+    }
+    if (eventCoverage.staleLedger.length) {
+      md.push("### Stale event reservations (FAIL -- remove from ledger)");
+      for (const s of eventCoverage.staleLedger) md.push(`- ${asciiSafe(s)}`);
+      md.push("");
+    }
+    if (eventCoverage.knownGaps.length) {
+      md.push("### Reserved dead events (documented deferral)");
+      for (const k of eventCoverage.knownGaps.slice().sort((a, b) => a.key.localeCompare(b.key))) {
+        md.push(`- ${asciiSafe(k.key)} (id ${k.id}, ${asciiSafe(k.verdict)}): ${asciiSafe(k.reason)}`);
+      }
+      md.push("");
+    }
+    if (eventCoverage.infoUnconsumed.length) {
+      md.push("### Emitted but unconsumed (info)");
+      for (const i of eventCoverage.infoUnconsumed) md.push(`- ${asciiSafe(i)}`);
+      md.push("");
+    }
+  }
+  if (routeReach) {
+    md.push("## Route/Handle Reachability");
+    md.push("");
+    md.push("Every PDV_EventBus Route* and PDV__ManagerQuest Handle* function needs at least one live call site, else it is dead plumbing. Reserved orphans live in tools/pdv_reserved_routes.json.");
+    md.push(`Status: ${routeReach.ok ? "PASS" : "FAIL"} | targets=${routeReach.targets} | reachable=${routeReach.reachable} | orphans=${routeReach.orphans} | reserved=${routeReach.knownGaps.length} | unlisted-FAIL=${routeReach.failures.length} | stale-ledger=${routeReach.staleLedger.length}`);
+    md.push("");
+    if (routeReach.failures.length) {
+      md.push("### Orphans NOT reserved (FAIL)");
+      for (const f of routeReach.failures) md.push(`- ${asciiSafe(f.key)} (${asciiSafe(f.kind)})`);
+      md.push("");
+    }
+    if (routeReach.staleLedger.length) {
+      md.push("### Stale route reservations (FAIL -- remove from ledger)");
+      for (const s of routeReach.staleLedger) md.push(`- ${asciiSafe(s)}`);
+      md.push("");
+    }
+    if (routeReach.knownGaps.length) {
+      md.push("### Reserved orphans (documented deferral)");
+      for (const k of routeReach.knownGaps.slice().sort((a, b) => a.key.localeCompare(b.key))) {
+        md.push(`- ${asciiSafe(k.key)}: ${asciiSafe(k.reason)}`);
+      }
+      md.push("");
+    }
+  }
+  if (csvFreshness) {
+    md.push("## Likes/Dislikes CSV -> Codegen Freshness");
+    md.push("");
+    md.push("Event-id-set cross-check between the likes/dislikes CSVs and the manager's generated WriteLD/WritePLD seeds + ClearRowsForDeity superset array. A mismatch means a CSV edit shipped without rerunning pdv_likesdislikes_gen (inert edit) or a removed row was not regenerated. Per-deity delta drift is out of scope.");
+    md.push(`Status: ${csvFreshness.ok ? "PASS" : "FAIL"} | csv-ids=${csvFreshness.csvIds} | seeded-ids=${csvFreshness.seededIds} | superset-ids=${csvFreshness.supersetIds} | LIKES_DISLIKES_VERSION=${csvFreshness.version}`);
+    md.push("");
+    if (csvFreshness.csvNotSeeded.length) md.push(`### CSV ids with no manager seed (FAIL): ${csvFreshness.csvNotSeeded.join(", ")}`);
+    if (csvFreshness.seededNotCsv.length) md.push(`### Seeded ids no longer in any CSV (FAIL): ${csvFreshness.seededNotCsv.join(", ")}`);
+    if (csvFreshness.seededNotInSuperset.length) md.push(`### Seeded ids missing from ClearRowsForDeity superset (FAIL): ${csvFreshness.seededNotInSuperset.join(", ")}`);
+    if (!csvFreshness.ok) md.push("");
   }
   md.push("## RED / INCOMPLETE By Failing Step");
   md.push("");
@@ -1127,23 +1480,58 @@ function asciiSafe(value) {
     .replace(/[^\x00-\x7F]/g, "?");
 }
 
-// --dispatch-coverage-only: run ONLY the registry-driven curated-signal dispatch check
-// (pure static, no MCP/dotnet), print JSON, and exit non-zero on FAIL. Used by pdv_verify's
-// strict profile and for fast local/pre-commit checks of the dead-signal class.
-if (process.argv.includes("--dispatch-coverage-only")) {
-  const coverage = evaluateCuratedSignalDispatchCoverage();
+// --declaration-gates-only (alias: --dispatch-coverage-only): run ONLY the pure-static
+// declaration-side gates (no MCP/dotnet), print JSON, exit non-zero on any FAIL. This is
+// what pdv_verify shells on every run, so the whole family is default-FAIL everywhere.
+if (process.argv.includes("--declaration-gates-only") || process.argv.includes("--dispatch-coverage-only")) {
+  const dispatch = evaluateCuratedSignalDispatchCoverage();
+  const events = evaluateEventEmissionCoverage();
+  const routes = evaluateRouteReachability();
+  const csv = evaluateCsvCodegenFreshness();
+  const ok = dispatch.ok && events.ok && routes.ok && csv.ok;
   console.log(JSON.stringify({
-    check: "curatedSignalDispatchCoverage",
-    status: coverage.ok ? "PASS" : "FAIL",
-    declaredScored: coverage.declaredScored,
-    dispatched: coverage.dispatched,
-    undispatched: coverage.undispatched,
-    reservedKnownGaps: coverage.knownGaps.length,
-    failures: coverage.failures.map((f) => f.key),
-    staleLedger: coverage.staleLedger,
-    ledgerError: coverage.ledgerError,
+    check: "declarationGates",
+    status: ok ? "PASS" : "FAIL",
+    dispatch: {
+      status: dispatch.ok ? "PASS" : "FAIL",
+      declaredScored: dispatch.declaredScored,
+      dispatched: dispatch.dispatched,
+      undispatched: dispatch.undispatched,
+      reservedKnownGaps: dispatch.knownGaps.length,
+      failures: dispatch.failures.map((f) => f.key),
+      staleLedger: dispatch.staleLedger,
+      ledgerError: dispatch.ledgerError,
+    },
+    events: {
+      status: events.ok ? "PASS" : "FAIL",
+      declared: events.declared,
+      emitted: events.emitted,
+      reservedKnownGaps: events.knownGaps.length,
+      failures: events.failures.map((f) => `${f.key} (id ${f.id}, ${f.verdict})`),
+      staleLedger: events.staleLedger,
+      ledgerError: events.ledgerError,
+      infoUnconsumed: events.infoUnconsumed,
+    },
+    routes: {
+      status: routes.ok ? "PASS" : "FAIL",
+      targets: routes.targets,
+      reachable: routes.reachable,
+      reservedKnownGaps: routes.knownGaps.length,
+      failures: routes.failures.map((f) => f.key),
+      staleLedger: routes.staleLedger,
+      ledgerError: routes.ledgerError,
+    },
+    csvFreshness: {
+      status: csv.ok ? "PASS" : "FAIL",
+      csvIds: csv.csvIds,
+      seededIds: csv.seededIds,
+      version: csv.version,
+      csvNotSeeded: csv.csvNotSeeded,
+      seededNotCsv: csv.seededNotCsv,
+      seededNotInSuperset: csv.seededNotInSuperset,
+    },
   }, null, 2));
-  process.exitCode = coverage.ok ? 0 : 1;
+  process.exitCode = ok ? 0 : 1;
 } else {
   main();
 }

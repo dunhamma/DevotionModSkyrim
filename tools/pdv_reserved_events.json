@@ -1,0 +1,64 @@
+{
+  "_README": "Reserved dead event types: declared (or data-seeded) but never emitted from a real emitter script. Keys are PDV_EventTypes.<EVT_NAME> for declared constants and PDV_EventTypes.ID_<id> for data-seeded ids with no (live) declaration. The EVT emission coverage gate (tools/pdv_signal_e2e_gate.mjs) reports a listed key as a documented KNOWN-GAP; any dead event NOT listed FAILs, and a stale entry (now emitted / no longer present) FAILs. Verdicts per the 2026-07-07 owner grill session. Delete an entry when its verdict lands.",
+  "_seededDate": "2026-07-07",
+  "PDV_EventTypes.EVT_HEAL_OR_CURE_NPC": {
+    "reason": "WIRE post-mega-packet (owner 2026-07-07): 19 deity rows incl. a two-sided axis (Boethiah/Sithis/Mephala dislike). Emitter spec = OnMagicEffectApplyEx, player-cast restore/cure on friendly NPC, ConsumeDailyRepeatMultiplier anti-farm. Spec in PDV_DeadWiring_Burndown.md.",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  },
+  "PDV_EventTypes.EVT_VAMPIRE_FEED": {
+    "reason": "WIRE post-mega-packet (owner 2026-07-07): Molag Bal signature row (+0.5). Emitter needs feed-detection research (PO3/animation/quest-stage; curse-state synergy). Spec in PDV_DeadWiring_Burndown.md.",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  },
+  "PDV_EventTypes.EVT_CLEAR_BOUNTY": {
+    "reason": "RESERVED indefinitely (owner 2026-07-07): detector ambiguous (bounty reaching zero can mean paid, jailed, or died; no clean vanilla event). Rows kept (Mara/Stendarr/Zenithar atonement axis) pending a reliable detector design.",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  },
+  "PDV_EventTypes.EVT_MINE_OR_CHOP": {
+    "reason": "RETRACT in Phase 2 (owner 2026-07-07): single Zenithar row redundant with his wired curated SIGNAL_HONEST_WORK. Delete row + regen + remove constant, then delete this entry.",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  },
+  "PDV_EventTypes.EVT_PRAY_AT_SHRINE": {
+    "reason": "REMOVE in Phase 2 (owner 2026-07-07): superseded dead constant (shrine prayer covered by curated Daedric/Dunmer shrine routes).",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  },
+  "PDV_EventTypes.EVT_TAKE_BLESSING": {
+    "reason": "REMOVE in Phase 2 (owner 2026-07-07): superseded dead constant (blessing coverage lives in curated/blessing routes).",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  },
+  "PDV_EventTypes.EVT_SHOUT_TO_OPEN_SKY": {
+    "reason": "REMOVE in Phase 2 (owner 2026-07-07): superseded dead constant (EVT_SHOUT_ATTACK + Kyne SIGNAL_SKY_ROAD cover the concept).",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  },
+  "PDV_EventTypes.EVT_PICKPOCKET": {
+    "reason": "REMOVE in Phase 2 (gate find 2026-07-07): superseded by EVT_STEAL_ITEM 362 aiAcquireType=3 pickpocket discrimination; zero refs anywhere.",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  },
+  "PDV_EventTypes.ID_3": {
+    "reason": "RETRACT in Phase 2 (gate find 2026-07-07): Kyne 'kill-event3' legacy placeholder row from the original 1-4 victim ladder; classifier now routes 1/2/300/301/302 only.",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  },
+  "PDV_EventTypes.ID_4": {
+    "reason": "RETRACT in Phase 2 (gate find 2026-07-07): Kyne 'kill-event4' legacy placeholder row from the original 1-4 victim ladder; classifier now routes 1/2/300/301/302 only.",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  },
+  "PDV_EventTypes.ID_354": {
+    "reason": "DEAD PROMISE, verdict pending (gate find 2026-07-07): 'persuade-success' exists only as a comment + Clavicus Vile Prince row (+0.5); no constant, no emitter. Fold into the 350/366 emitter-spec review post-packet (persuade detection = speechcraft hook research).",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  },
+  "PDV_EventTypes.ID_367": {
+    "reason": "DEAD PROMISE, verdict pending (gate find 2026-07-07): 'cannibalize' exists only as a comment + Namira signature Prince row (+2.0); no constant, no emitter. Fold into the 350/366 emitter-spec review post-packet (Ring of Namira / PO3 cannibal detection).",
+    "deferredBy": "dead-wiring burndown plan",
+    "date": "2026-07-07"
+  }
+}
