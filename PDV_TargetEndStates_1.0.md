@@ -579,6 +579,8 @@ The defining payoff for Nord is that the *right* god claimed you — the one tha
 - **Shor Champion:** Combat trials feel cosmically real. Honorable kills have a different weight. Sovngarde-adjacent content gives more resonance (this is a privilege/recognition layer, not a mechanical buff).
 - **Kyne/Kynareth Champion (Nine Divines):** Same beat as Old Ways Kyne — the outdoors changes. A Nord playing Nine Divines who chose Kynareth should still feel like the storm-mother's child, just in the Imperial frame.
 
+The four beats above are the headline Champions, but they are not the whole Old Ways roster. Shor, Tsun, and Stuhn are focusable Old Ways patrons in their own right (each with its own offer, rewards, and neglect), and the Old Ways roster also carries Arkay — surfaced to Old Ways Nords under his ancestral name **Orkey** (death-rite and ancestor-quiet framing) — and **Dibella** (hearth, love, and artistry) as full offer/reward/display/neglect paths. A Nord's Champion can land on any of them, not only the four marquee gods.
+
 **The offer IS part of the payoff.** Broad worship giving way to a god's approach is itself a Champion-trajectory experience. The moment of commitment should be surfaced clearly and diegetically.
 
 ### Signature friction
@@ -589,7 +591,7 @@ For players who committed, the friction is **staying consistent enough** that th
 ### Neglect texture
 - Kyne's neglect feels like the weather turning indifferent. You used to have a sense the outdoors was on your side. Now it's just weather.
 - Talos/Ysmir neglect feels like the old faith fading — the shouts feel more like technique than spirituality.
-- General Nord neglect: the ancestors are quiet. No specific punishment, but an absence of the small graces that felt like Sovngarde was paying attention.
+- General Nord neglect: the ancestors are quiet. The mechanical cost is a mild, flat debuff (a lapsed patron's neglect spell), but it should still *read* as absence — the loss of the small graces that felt like Sovngarde was paying attention — rather than as a dramatic punishment.
 
 ---
 
@@ -637,7 +639,7 @@ The **ConcordatStanding track** is the signature friction — it's running const
 The secondary friction: Imperial Divines worship is *civic*, which means it has a public/private dimension. Defiance while maintaining public compliance is a real character expression the mod should support mechanically (Private Defiant band).
 
 ### Neglect texture
-- Let Arkay devotion lapse during a civil war playthrough and the mass graves around you feel like a failure. Not a debuff — a quiet presence of something wrong.
+- Let Arkay devotion lapse during a civil war playthrough and the mass graves around you feel like a failure. The mild civic-neglect debuff is present, but the intent is the quiet presence of something wrong, not a punitive stat swing.
 - Stendarr devotion lapsing while ConcordatStanding rises toward Enforcer should feel like a specific theological collapse, not generic neglect.
 - General Divine devotion neglect for an Imperial means the civic scaffolding of their religion starts to feel hollow — shrines feel like architecture, not presence.
 
@@ -713,9 +715,9 @@ The **infrastructure ceiling** — you simply cannot do proper burial rites, can
 The **ancestors are always watching** is the subtler ongoing friction. Combat acts, social choices, the things you do to other Dunmer — the ancestor layer interprets all of it. Playing a Dunmer who exploits their own people costs more than it looks like on the surface.
 
 ### Neglect texture
-The ash-prayer going quiet. There's no dramatic punishment — the ancestor layer simply stops generating the small flavor confirmations that told you they were present.
+The ash-prayer going quiet. The mechanical cost is a mild, flat neglect debuff, but there is no *dramatic* punishment — the ancestor layer simply stops generating the small flavor confirmations that told you they were present.
 
-Dunmer neglect is about **silence**, not punishment. Ancestors don't curse you for drifting. They just stop responding. After weeks of nothing, the ancestral layer has a hollow quality that's hard to describe mechanically but is its own kind of loss.
+Dunmer neglect is about **silence** first, cost second. Ancestors don't rage at you for drifting; the debuff is quiet and the felt experience is that they stop responding. After weeks of nothing, the ancestral layer has a hollow quality that's hard to describe mechanically but is its own kind of loss.
 
 Vampire note: the ash-prayer going SILENT (ancestors don't speak to undead) is one of the most atmospheric moments in the whole mod. The cure-and-restore arc matters — but the scar (permanent piety reduction) means you carry what happened.
 
@@ -793,8 +795,8 @@ Caravan helpers don't notice you the same way. Night travel feels more dangerous
 ### Champion moment
 Four completely different Champions — more path-divergent at the top than any other race:
 
-- **Old Contract Champion (Y'ffre Orthodox):** The Green Pact is your religion, and you've maintained it. At Champion, animals never flee from you unprovoked, hunting feels guided (contextual favor in hunting contexts), and GreenPactCompliance at Strict (80+) gives Y'ffre's 1.2x modifier. The payoff for carrying the hardest devotional burden is the highest ceiling of any Bosmer path.
-- **Living Story Champion (Y'ffre Moderate):** You carry the oral tradition. Special dialogue privilege options in relevant contexts — you can name things, situate people, tell the story correctly. Community belonging feels real rather than performed. The secondary Bosmer gods (Arkay, Xarxes, Mara, Stendarr) add texture rather than competing.
+- **Old Contract Champion (Y'ffre Orthodox):** The Green Pact is your religion, and you've maintained it. At Champion, hunting feels guided (contextual favor in hunting contexts) and GreenPactCompliance at Strict (80+) gives Y'ffre's 1.2x modifier. The payoff for carrying the hardest devotional burden is the highest ceiling of any Bosmer path. (The "animals never flee from you unprovoked" and per-item Green Pact feedback are the tag-layer payoff that the ratification note lists as deferred-with-dependency; treat them as the intended feel, not a shipped-and-proven surface until the tag layer lands.)
+- **Living Story Champion (Y'ffre Moderate):** You carry the oral tradition. Special dialogue-privilege moments in relevant contexts — naming things, situating people, telling the story correctly. (Per the Voiced Content Scope note above, V1 delivers this as the non-voiced equivalent — Survey/status, message, or notification — with voiced dialogue deferred to V2.) Community belonging feels real rather than performed. The secondary Bosmer gods (Arkay, Xarxes, Mara, Stendarr) add texture rather than competing.
 - **Exchange Champion (Z'en):** Balance restored. Proportionate vengeance completed, debt settled — these acts have a clean satisfaction that ordinary questline completions don't. The favor that follows a debt-settling act has a quality of *rightness* to it.
 - **Bandit Road Champion (Baan Dar):** The improbable reversal. Once per in-game week (rough target), Baan Dar luck fires in a situation where you were at a severe disadvantage. It shouldn't feel like a power — it should feel like the god of pariahs interceding on behalf of another pariah.
 
@@ -883,7 +885,7 @@ The hardest, most earned Champion in the mod — and possibly the one with the m
 **Mode ceiling** is the other friction: City Orc and Legion-exile players can feel the ceiling of what their mode allows, and accessing Stronghold Orc standing requires actual stronghold integration (Blood-Kin, communal participation, proven strength in a stronghold context).
 
 ### Neglect texture
-Malacath's neglect feels like **emptiness at the forge**. The work that used to feel like worship just feels like work. Oath-breaking (joining factions that require deception, failing commitments to allies, cowardly choices in conflict) doesn't generate punishment — it generates absence. Malacath has looked away.
+Malacath's neglect feels like **emptiness at the forge**. The work that used to feel like worship just feels like work. Oath-breaking (joining factions that require deception, failing commitments to allies, cowardly choices in conflict) applies only a mild, flat debuff — the point is absence, not retribution. Malacath has looked away.
 
 For Stronghold Orc neglect: drifting toward city life without maintaining the code. Not betrayal — just drift. But the ancestors know the difference between a Stronghold Orc and someone who used to be one.
 
