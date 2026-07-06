@@ -127,3 +127,41 @@ Cross-baseline check:
 
 Proof boundary: everything above the smoke section is machine/readback proof
 only; no beta-feel or in-game claim is made until the owner smoke passes.
+
+## Follow-on: Mara reward redesign (2026-07-06, commit c5e3a4d)
+
+Testing the reused rewards surfaced that Mara only ever showed ONE Active
+Effect (Restoration). Its second half was a scripted heal-on-wake
+(HandleImperialMaraSleepMercy) -- not a real passive, invisible in Active
+Effects, and Imperial-gated so it never fired on the reused Nord lane at all.
+Owner ruling: Mara should read as two passive effects like Arkay/Dibella.
+
+Change (affects Imperial AND the reused Nord lane, one shared spell family):
+- PDV_ImperialRewardRecords.spec.json: Mara T2/T3 gain a Resist Magic
+  secondary (+5 / +15), matching the accepted Akatosh/Julianos/Kynareth
+  secondary-ResistMagic ceiling and the T2-onward secondary pattern; T1 stays
+  single-effect (Restoration +5). playerFacingText updated; wake-heal design
+  notes scrubbed.
+- Manager: HandleImperialMaraSleepMercy + its call site removed (compiles 0/0).
+- Mara is now Restoration + Resist Magic -- two Requiem-felt passives,
+  identical for Imperial and Nord patrons.
+
+ESP author (PENDING game-lock release): the write mints
+PDV_MGEF_Imperial_Mara_T2_ResistMagic + _T3_ResistMagic and rebuilds the two
+spell effect lists. Dry-run PASS, 0 errors, no capstone/preserve records in
+the Imperial spec (nothing protected to drop). Run when Skyrim is closed:
+
+```
+dotnet run --project tools/pdv-phase20-race-author -c Release -- \
+  --author-rewards --rewards-spec references/authoring/PDV_ImperialRewardRecords.spec.json
+node tools/pdv_refresh_seq.mjs --write        # ESP write bumps SEQ freshness
+node tools/pdv_compile.mjs --script PDV_MCM    # refresh BoD-hotkey pex dependency
+node tools/pdv_verify.mjs                      # FAIL=0
+node tools/pdv_eligibility_reward_coverage_audit.mjs   # PASS
+node tools/pdv_requiem_penalty_audit.mjs       # unaffected (Mara is positive)
+```
+
+Smoke (Nord Old Ways OR Imperial, Mara patron, Devoted 50+): Active Effects
+should show "Mara's Mercy - Devoted" with TWO lines -- Restoration +13 and
+Resist Magic +5%. Requires a full game restart to load the new ESP + pex.
+The former wake-on-rest heal + "Mara's mercy" toast are intentionally gone.
