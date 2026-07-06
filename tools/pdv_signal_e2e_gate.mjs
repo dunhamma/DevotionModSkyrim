@@ -23,6 +23,7 @@ const SOURCE_DIR = `${ROOT}/live-source/Scripts/Source`;
 const PLAYER_EVENTS_PATH = `${SOURCE_DIR}/PDV_PlayerEvents.psc`;
 const EVENT_BUS_PATH = `${SOURCE_DIR}/PDV_EventBus.psc`;
 const MANAGER_PATH = `${SOURCE_DIR}/PDV__ManagerQuest.psc`;
+const RESERVED_SIGNALS_PATH = `${ROOT}/tools/pdv_reserved_signals.json`;
 const P2_AUTHOR_PROJECT = `${ROOT}/tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj`;
 const MCP_CHECK = `${ROOT}/tools/pdv_mcp_check.mjs`;
 const COMPLETENESS_AUDIT = `${ROOT}/tools/pdv_completeness_audit.mjs`;
@@ -80,13 +81,14 @@ function main() {
   );
 
   const curatedParity = evaluateCuratedSignalParity(managerText);
+  const dispatchCoverage = evaluateCuratedSignalDispatchCoverage();
 
-  writeLedgers(rows, helpers, curatedParity);
+  writeLedgers(rows, helpers, curatedParity, dispatchCoverage);
 
   const counts = countBy(rows, (row) => row.verdict);
   const surfacesPass = !rows.some((row) => row.verdict !== "GREEN");
   const summary = {
-    status: surfacesPass && curatedParity.ok ? "PASS" : "FAIL",
+    status: surfacesPass && curatedParity.ok && dispatchCoverage.ok ? "PASS" : "FAIL",
     surfaces: rows.length,
     counts,
     curatedSignalParity: {
@@ -96,6 +98,16 @@ function main() {
       gaps: curatedParity.gaps.length,
       cross: curatedParity.cross.length,
       byIndex: curatedParity.byIndex.length,
+    },
+    curatedSignalDispatch: {
+      status: dispatchCoverage.ok ? "PASS" : "FAIL",
+      declaredScored: dispatchCoverage.declaredScored,
+      dispatched: dispatchCoverage.dispatched,
+      undispatched: dispatchCoverage.undispatched,
+      reservedKnownGaps: dispatchCoverage.knownGaps.length,
+      failures: dispatchCoverage.failures.length,
+      staleLedger: dispatchCoverage.staleLedger.length,
+      ledgerError: dispatchCoverage.ledgerError.length,
     },
     mcp: mcp.ok ? "PASS" : "SKIP",
     ledger: "references/authoring/PDV_SignalE2EGateLedger.md",
@@ -780,6 +792,113 @@ function evaluateCuratedSignalParity(managerText) {
   return { total: refs.length, okCount, gaps, cross, byIndex, ok };
 }
 
+function loadReservedSignals() {
+  if (!fs.existsSync(RESERVED_SIGNALS_PATH)) return {};
+  try {
+    const raw = JSON.parse(fs.readFileSync(RESERVED_SIGNALS_PATH, "utf8").replace(/^﻿/, ""));
+    const out = {};
+    for (const [k, v] of Object.entries(raw)) {
+      if (k.startsWith("_")) continue; // _README / _seededDate metadata keys, never signal entries
+      out[k] = v;
+    }
+    return out;
+  } catch (err) {
+    return { __error: String((err && err.message) || err) };
+  }
+}
+
+// Registry-driven dispatch coverage: the INVERSE of evaluateCuratedSignalParity, and the
+// check that closes the dead-signal class found 2026-07-06. Parity proves "every AWARDED
+// signal is scored"; this proves "every DECLARED + SCORED signal is really AWARDED from a
+// non-debug, non-display trigger." A signal that is declared (Int Property SIGNAL_X) and
+// handled in ScoreCuratedSignal but never passed to AwardCuratedSignal[Scaled] can never
+// bank piety. The whole suite missed this because every prior check anchored on the DISPATCH
+// side (award call sites) reasoning forward to scoring, so a zero-dispatch signal was
+// structurally invisible; this one enumerates the DECLARATION side (the deity-script
+// SIGNAL_ registry) and computes {declared+scored} MINUS {really-dispatched}. Undispatched
+// signals must be either wired or explicitly logged in tools/pdv_reserved_signals.json.
+// Pure static source check -- no server, always runs.
+function evaluateCuratedSignalDispatchCoverage() {
+  const deityFiles = fs.readdirSync(SOURCE_DIR).filter((f) => /^PDV_Deity_.*\.psc$/i.test(f));
+  // 1. Enumerate the audit REGISTRY from declarations (not from dispatch).
+  const declared = [];
+  const declRe = /^\s*Int\s+Property\s+(SIGNAL_[A-Z0-9_]+)\s*=\s*-?\d+\s+AutoReadOnly/gim;
+  for (const file of deityFiles) {
+    const text = fs.readFileSync(`${SOURCE_DIR}/${file}`, "utf8");
+    // Deity-script filename -> manager property/owner (PDV_Deity_Malacath.psc -> PDV_Malacath).
+    const owner = `PDV_${file.replace(/^PDV_Deity_/i, "").replace(/\.psc$/i, "")}`;
+    const scoreBody = buildFunctionMap(text).get("ScoreCuratedSignal") || "";
+    for (const m of text.matchAll(declRe)) {
+      const signal = m[1];
+      // "Scored" == ScoreCuratedSignal has a '== SIGNAL_X' branch (a declared-but-unhandled
+      // signal is the separate parity class, not this one).
+      const scored = new RegExp(`==\\s*${signal}\\b`).test(scoreBody);
+      declared.push({ owner, signal, file, scored, key: `${owner}.${signal}` });
+    }
+  }
+  // 2. Build the REAL-dispatch set: AwardCuratedSignal[Scaled] call sites only, excluding
+  //    Debug* enclosing functions and the display-phrase maps. awardRe requires an actual
+  //    Award call, so a bare SIGNAL_ reference inside HumanizeCuratedSignalReason /
+  //    CuratedSignalDriverReason (a token->phrase map) never matches -- that false-positive
+  //    is exactly what let completeness_audit mark BLOOD_KIN as "sent". AwardCuratedSignalByIndex
+  //    is dynamic/debug seeding and deliberately does NOT count as coverage.
+  const allFiles = fs.readdirSync(SOURCE_DIR).filter((f) => /\.psc$/i.test(f));
+  const awardRe = /\bAwardCuratedSignal(?:Scaled)?\s*\(\s*(PDV_[A-Za-z0-9_]+)\s*,\s*(PDV_[A-Za-z0-9_]+)\.(SIGNAL_[A-Za-z0-9_]+)/g;
+  const DISPLAY_FNS = /^(HumanizeCuratedSignalReason|CuratedSignalDriverReason)$/;
+  const dispatched = new Set();
+  for (const file of allFiles) {
+    const text = fs.readFileSync(`${SOURCE_DIR}/${file}`, "utf8");
+    if (!text.includes("AwardCuratedSignal")) continue;
+    for (const m of text.matchAll(awardRe)) {
+      let enclosing = "";
+      for (const fm of text.slice(0, m.index).matchAll(/(?:^|\n)\s*(?:[A-Za-z_][\w\[\]]*\s+)?Function\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(/g)) {
+        enclosing = fm[1];
+      }
+      if (/Debug/i.test(enclosing) || DISPLAY_FNS.test(enclosing)) continue;
+      dispatched.add(`${m[2]}.${m[3]}`); // owner.signal
+    }
+  }
+  // 3. Diff: scored-declared MINUS really-dispatched.
+  const undispatched = declared
+    .filter((d) => d.scored && !dispatched.has(d.key))
+    .map((d) => ({ owner: d.owner, signal: d.signal, file: d.file, key: d.key }));
+
+  if (process.env.PDV_SIGNAL_DISPATCH_SELFTEST === "1") {
+    // FAIL-direction self-test: a scored+declared signal with no dispatch and no ledger entry
+    // must surface, proving the checker is not a can-only-say-PASS no-op.
+    undispatched.push({ owner: "PDV_Hist", signal: "SIGNAL_SELFTEST_UNDISPATCHED", file: "(selftest)", key: "PDV_Hist.SIGNAL_SELFTEST_UNDISPATCHED" });
+  }
+
+  // 4. Ledger split: listed => documented known-gap (informational); unlisted => hard FAIL.
+  const reserved = loadReservedSignals();
+  const ledgerError = reserved.__error ? [reserved.__error] : [];
+  const knownGaps = [];
+  const failures = [];
+  for (const u of undispatched) {
+    if (reserved[u.key]) knownGaps.push({ ...u, reason: (reserved[u.key] && reserved[u.key].reason) || "(no reason given)" });
+    else failures.push(u);
+  }
+  // 5. Anti-rot: a ledger entry that is no longer undispatched (now wired, or no longer
+  //    declared/scored) is stale and must be removed -- also a FAIL.
+  const undispatchedKeys = new Set(undispatched.map((u) => u.key));
+  const staleLedger = Object.keys(reserved)
+    .filter((k) => !k.startsWith("__"))
+    .filter((k) => !undispatchedKeys.has(k));
+
+  const ok = failures.length === 0 && staleLedger.length === 0 && ledgerError.length === 0;
+  return {
+    declaredTotal: declared.length,
+    declaredScored: declared.filter((d) => d.scored).length,
+    dispatched: dispatched.size,
+    undispatched: undispatched.length,
+    knownGaps,
+    failures,
+    staleLedger,
+    ledgerError,
+    ok,
+  };
+}
+
 function buildFunctionMap(text) {
   const functions = new Map();
   const re = /^\s*(?:[A-Za-z_][\w\[\]]*\s+)?Function\s+([A-Za-z_][A-Za-z0-9_]*)\s*\([^)]*\)[\s\S]*?^\s*EndFunction/gim;
@@ -825,7 +944,7 @@ function unique(items) {
   return [...new Set(items.filter(Boolean))];
 }
 
-function writeLedgers(rows, helpers, curatedParity) {
+function writeLedgers(rows, helpers, curatedParity, dispatchCoverage) {
   const counts = countBy(rows, (row) => row.verdict);
   const statusCounts = {};
   for (const row of rows) {
@@ -881,6 +1000,37 @@ function writeLedgers(rows, helpers, curatedParity) {
       md.push("### By-index call sites (manual review)");
       for (const b of curatedParity.byIndex) {
         md.push(`- ${asciiSafe(b.file)}: ${asciiSafe(b.context)}`);
+      }
+      md.push("");
+    }
+  }
+  if (dispatchCoverage) {
+    md.push("## Curated-Signal Dispatch Coverage");
+    md.push("");
+    md.push("Registry-driven INVERSE of parity: every DECLARED + SCORED SIGNAL_ in a PDV_Deity_*.psc must have a real AwardCuratedSignal[Scaled] dispatch (non-Debug, non-display). An undispatched signal can never bank piety (the dead-signal class). Reserved known-gaps live in tools/pdv_reserved_signals.json; anything undispatched and NOT reserved FAILs, and a stale reservation FAILs too. Pure static source check -- no server.");
+    md.push(`Status: ${dispatchCoverage.ok ? "PASS" : "FAIL"} | declared-scored=${dispatchCoverage.declaredScored} | dispatched=${dispatchCoverage.dispatched} | undispatched=${dispatchCoverage.undispatched} | reserved-known-gaps=${dispatchCoverage.knownGaps.length} | unlisted-FAIL=${dispatchCoverage.failures.length} | stale-ledger=${dispatchCoverage.staleLedger.length}`);
+    md.push("");
+    if (dispatchCoverage.ledgerError.length) {
+      md.push("### Reserved-ledger parse error");
+      for (const e of dispatchCoverage.ledgerError) md.push(`- ${asciiSafe(e)}`);
+      md.push("");
+    }
+    if (dispatchCoverage.failures.length) {
+      md.push("### Undispatched and NOT reserved (FAIL -- wire a trigger or add a justified ledger entry)");
+      for (const f of dispatchCoverage.failures) {
+        md.push(`- ${asciiSafe(f.key)} (declared+scored in ${asciiSafe(f.file)}, NO real AwardCuratedSignal[Scaled] dispatch)`);
+      }
+      md.push("");
+    }
+    if (dispatchCoverage.staleLedger.length) {
+      md.push("### Stale reservations (FAIL -- now wired or no longer declared; remove from ledger)");
+      for (const s of dispatchCoverage.staleLedger) md.push(`- ${asciiSafe(s)}`);
+      md.push("");
+    }
+    if (dispatchCoverage.knownGaps.length) {
+      md.push("### Reserved known-gaps (documented deferral -- burn down toward empty)");
+      for (const k of dispatchCoverage.knownGaps.slice().sort((a, b) => a.key.localeCompare(b.key))) {
+        md.push(`- ${asciiSafe(k.key)}: ${asciiSafe(k.reason)}`);
       }
       md.push("");
     }
@@ -977,4 +1127,23 @@ function asciiSafe(value) {
     .replace(/[^\x00-\x7F]/g, "?");
 }
 
-main();
+// --dispatch-coverage-only: run ONLY the registry-driven curated-signal dispatch check
+// (pure static, no MCP/dotnet), print JSON, and exit non-zero on FAIL. Used by pdv_verify's
+// strict profile and for fast local/pre-commit checks of the dead-signal class.
+if (process.argv.includes("--dispatch-coverage-only")) {
+  const coverage = evaluateCuratedSignalDispatchCoverage();
+  console.log(JSON.stringify({
+    check: "curatedSignalDispatchCoverage",
+    status: coverage.ok ? "PASS" : "FAIL",
+    declaredScored: coverage.declaredScored,
+    dispatched: coverage.dispatched,
+    undispatched: coverage.undispatched,
+    reservedKnownGaps: coverage.knownGaps.length,
+    failures: coverage.failures.map((f) => f.key),
+    staleLedger: coverage.staleLedger,
+    ledgerError: coverage.ledgerError,
+  }, null, 2));
+  process.exitCode = coverage.ok ? 0 : 1;
+} else {
+  main();
+}

@@ -16,7 +16,7 @@ MCP: SKIP - MCP server not reachable at http://127.0.0.1:27016/mcp (ECONNREFUSED
 - formLists: SKIP - (skipped) - UNKNOWN-server-down
 - aliasProperties: SKIP - (skipped) - UNKNOWN-server-down
 - sourceFill: SKIP - (skipped) - UNKNOWN-server-down
-- completenessAudit: FAIL (exit 1) - node tools/pdv_completeness_audit.mjs --json --skip-esp - Completeness audit FAIL; source indexed 1643 functions, 86 signal consts.
+- completenessAudit: FAIL (exit 1) - node tools/pdv_completeness_audit.mjs --json --skip-esp - Completeness audit FAIL; source indexed 1683 functions, 86 signal consts.
 
 ## Column Counts
 
@@ -34,6 +34,46 @@ MCP: SKIP - MCP server not reachable at http://127.0.0.1:27016/mcp (ECONNREFUSED
 
 Every AwardCuratedSignal[Scaled](deity, deity.SIGNAL_X) must resolve to a deity script that DEFINES and HANDLES SIGNAL_X in ScoreCuratedSignal, else the curated piety silently scores 0.0 (the Kyne class). Pure static source check -- no server.
 Status: PASS | references=106 | ok=106 | gaps=0 | cross-deity=0 | by-index=0
+
+## Curated-Signal Dispatch Coverage
+
+Registry-driven INVERSE of parity: every DECLARED + SCORED SIGNAL_ in a PDV_Deity_*.psc must have a real AwardCuratedSignal[Scaled] dispatch (non-Debug, non-display). An undispatched signal can never bank piety (the dead-signal class). Reserved known-gaps live in tools/pdv_reserved_signals.json; anything undispatched and NOT reserved FAILs, and a stale reservation FAILs too. Pure static source check -- no server.
+Status: PASS | declared-scored=118 | dispatched=85 | undispatched=33 | reserved-known-gaps=33 | unlisted-FAIL=0 | stale-ledger=0
+
+### Reserved known-gaps (documented deferral -- burn down toward empty)
+- PDV_Akatosh.SIGNAL_COVENANT_MILESTONE: Wave 2 milestone: decide curated vs quest-reaction ownership before wiring (avoid double-credit).
+- PDV_Arkay.SIGNAL_CIVIC_SERVICE: Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.
+- PDV_Boethiah.SIGNAL_HONORABLE_DUEL: Wave 3: needs an honorable-duel/test detector (Dunmer Reclamation).
+- PDV_Dibella.SIGNAL_CIVIC_SERVICE: Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.
+- PDV_Dibella.SIGNAL_GRACE: Wave 3: Dibella signature beat; needs an act-of-grace detector. Currently only patron-civic-favor fires for her.
+- PDV_Julianos.SIGNAL_CIVIC_SERVICE: Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.
+- PDV_Khenarthi.SIGNAL_CARAVAN_AID: Wave 3: caravan-aid detector (CARAVAN_HARM penalty is wired; AID is not).
+- PDV_Khenarthi.SIGNAL_OPEN_ROAD: Low value (delta 0.3 ambient weather); Wave 3 or REMOVE.
+- PDV_Kynareth.SIGNAL_CIVIC_SERVICE: Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.
+- PDV_Leki.SIGNAL_HONORABLE_DUEL: Wave 3: needs an honorable-duel detector (Redguard).
+- PDV_Magnus.SIGNAL_ARCANE_RECOVERY: Wave 3: hook OnSpellLearned/OnBookRead (recovered arcane knowledge).
+- PDV_Magnus.SIGNAL_SHARED_PACT_MEMORY: Wave 1 parity gap: Altmer lane lacks the active-patron ancestor-memory dawn pulse that Bosmer/Dunmer wire (cf AwardActiveDunmerReclamationMemorySignal).
+- PDV_Malacath.SIGNAL_BLOOD_KIN: Wave 1 mis-wire: HandleOrcBloodKinCrisis records life-mode progress but omits the curated dispatch its 3 sibling handlers (CityDignity/LegionService/SelfMadeCommunity) all have. Quick connect.
+- PDV_Malacath.SIGNAL_EXILE_RETURN: Wave 2 milestone: Legion-Exile burden-carried-home beat; needs an exile-return detector within the LEGION_EXILE life-mode.
+- PDV_Mara.SIGNAL_CIVIC_SERVICE: Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.
+- PDV_Mephala.SIGNAL_WEB_WOVEN: Wave 3: needs a plot-resolved-by-cunning detector.
+- PDV_Rajhin.SIGNAL_LEGEND_MADE: Wave 3: big-heist/legend milestone; extend the Rajhin theft route.
+- PDV_Shor.SIGNAL_HONORABLE_BATTLE: Wave 3: needs an honorable-open-combat detector.
+- PDV_Shor.SIGNAL_SOVNGARDE_VALOR: Wave 2 milestone: decide curated vs quest-reaction ownership before wiring (avoid double-credit).
+- PDV_Sithis.SIGNAL_VOID_MILESTONE: Wave 2 milestone: decide curated vs quest-reaction ownership before wiring (avoid double-credit).
+- PDV_Stendarr.SIGNAL_CIVIC_SERVICE: Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.
+- PDV_Stuhn.SIGNAL_JUST_SPOILS: Wave 3: needs a just-spoils act detector.
+- PDV_Stuhn.SIGNAL_MERCY_GRANTED: Wave 3: needs a spare/ransom-defeated-foe detector.
+- PDV_Talos.SIGNAL_PROTECT_WORSHIPPER: Wave 3: needs a protect-a-Talos-worshipper detector.
+- PDV_Trinimac.SIGNAL_ALTMER_ORTHODOX_PRESSURE: Wave 3: hook RouteAltmerOrthodox* pressure routes. Rare-by-design frequency, but must fire.
+- PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY: Wave 3: hook Orc apostasy / Altmer orthodoxy routes. Rare-by-design frequency, but must fire.
+- PDV_Tsun.SIGNAL_ADVERSITY_SURVIVED: Wave 3: needs a hard-fight-at-disadvantage / long-ordeal detector.
+- PDV_Tsun.SIGNAL_ENDURANCE_VIGIL: Wave 2 milestone: decide curated vs quest-reaction ownership before wiring (avoid double-credit).
+- PDV_Tuwhacca.SIGNAL_VAMPIRE_REENTRY: Wave 1 half-built: OnVampirismStateChanged hook + PDV.Redguard.VampireReentryNeeded flag exist but the flag is set-never-read; award on cure was never connected.
+- PDV_Xarxes.SIGNAL_LEDGER_RESTORED: Wave 2: recover-a-lost-record beat; hook a quest/activator.
+- PDV_Xarxes.SIGNAL_RECORD_KEEPING: Wave 3: hook OnBookRead (cataloguing knowledge/history).
+- PDV_Xarxes.SIGNAL_SHARED_PACT_MEMORY: Wave 1 parity gap: Altmer lane lacks the active-patron ancestor-memory dawn pulse that Bosmer/Dunmer wire (cf AwardActiveDunmerReclamationMemorySignal).
+- PDV_Zenithar.SIGNAL_CIVIC_SERVICE: Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.
 
 ## RED / INCOMPLETE By Failing Step
 
