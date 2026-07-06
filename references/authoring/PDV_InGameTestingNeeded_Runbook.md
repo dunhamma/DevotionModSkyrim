@@ -126,9 +126,12 @@ changes invalidate the evidence.
 2026-07-06 formal-offer refuse update: `task_8c27e440` is implemented in source
 and machine-gated. Refuse now writes the pinned Book of Days refusal chronicle
 and emits the explicit refusal toast, but it must not play the diegetic screen
-wash or D1 sound. Accept keeps its toast and sound. Manual smoke still needs one
-disposable offer refuse and one accept control to prove the player-facing behavior
-in game.
+wash or D1 sound. Accept keeps its toast and sound. Manual smoke PASSED
+2026-07-06: the disposable-offer refuse showed the refusal toast + pinned
+chronicle and accept kept its toast/sound. Note: the offer PRESENTATION itself
+fires an intended `"present"/"revelation"` wash when the MessageBox appears
+(guarded to a one-shot per deity); that is separate from the refuse response,
+which stays silent. Owner is happy with the offer-present wash as-is for now.
 
 2026-07-06 Old Ways neglect update: `task_e6904bb3` is implemented and
 machine/readback closed. `pdv-neglect-esp-author --write` authored Orkey's
@@ -270,10 +273,10 @@ Additional last-pass runtime sweeps before any broad beta-feel claim:
   offer accept/refuse, passed on 2026-07-06. Finish only the remaining C2
   per-origin spot-checks unless new Prisma/source changes invalidate the run:
   Altmer Thalmor-alignment band toast/chronicle, Khajiit Champion pinned entry
-  after pruning, and Redguard per-sect Champion toast. Because Refuse changed
-  after U8, also run the small formal-offer control: Refuse should toast and pin
-  with no wash/sound, Accept should still toast/sound. These prove manual display only; keep
-  them separate from the static Prisma-to-1.0 audit.
+  after pruning, and Redguard per-sect Champion toast. The small formal-offer
+  control (Refuse toasts + pins with no wash/sound; Accept toasts/sounds) PASSED
+  2026-07-06 -- the offer-present wash is intended and separate. These prove
+  manual display only; keep them separate from the static Prisma-to-1.0 audit.
 - Old Ways neglect felt smoke: PASSED 2026-07-06. Recipe (deterministic):
   reselect Orkey/Arkay, click the modal-free `Prime neglect eligible` row
   (notification `PDV: neglect eligible primed (active + piety 0).`), then
