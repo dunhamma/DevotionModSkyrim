@@ -130,6 +130,7 @@ Int _oidForceCurseWerewolf = -1
 Int _oidForceCurseVampire = -1
 Bool _patternActionPromptOpen = False
 Int _oidForceSelectedPatron = -1
+Int _oidPrimeNeglectEligible = -1
 Int _oidNeglectRunPass = -1
 Int _oidDecayPrimeGrace = -1
 Int _oidDecayPrimeEligible = -1
@@ -415,6 +416,8 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Backend-forces the shared curse service to Vampire for the Hircine negative path.")
     elseIf a_option == _oidForceSelectedPatron
         SetInfoText("Debug-only setup: makes the selected deity the active focused patron so active-patron neglect can be smoked deterministically.")
+    elseIf a_option == _oidPrimeNeglectEligible
+        SetInfoText("One-click neglect setup (no modal): forces the selected deity active AND drops its piety to 0 so it is neglect-eligible. Then click Run neglect pass and check Active Effects.")
     elseIf a_option == _oidNeglectRunPass
         SetInfoText("Runs only the neglect/spell-layer selection pass without the rest of dawn.")
     elseIf a_option == _oidDecayPrimeGrace
@@ -953,6 +956,24 @@ Function OnOptionSelect(Int a_option)
         if forcePatronManager && forcePatronDeity
             forcePatronManager.SetActiveDeity(forcePatronDeity)
             Debug.Notification("PDV: active patron forced.")
+            ForcePageReset()
+        else
+            Debug.Notification("PDV: select a deity first.")
+        endIf
+        return
+    endIf
+
+    if a_option == _oidPrimeNeglectEligible
+        PDV__ManagerQuest primeNeglectManager = GetManagerService()
+        PDV_DeityBase primeNeglectDeity = GetSelectedDeity()
+        if primeNeglectManager && primeNeglectDeity
+            ; Deterministic active-patron neglect setup, modal-free: make the selected deity the
+            ; active patron, then drop its piety to 0 so ApplyGenericNeglectFlags selects it (piety
+            ; <= NEGLECT_ACTIVE_PIETY_MAX). Sidesteps Prime-decay-eligible, which sets piety 20 and
+            ; a lapse stamp of exactly the grace boundary -- neither flags neglect.
+            primeNeglectManager.SetActiveDeity(primeNeglectDeity)
+            primeNeglectManager.DebugForceSetPietyByIndex(primeNeglectDeity.DeityIndex, 0.0)
+            Debug.Notification("PDV: neglect eligible primed (active + piety 0).")
             ForcePageReset()
         else
             Debug.Notification("PDV: select a deity first.")
@@ -1663,6 +1684,7 @@ Function BuildDaedricPage()
     AddEmptyOption()
     AddHeaderOption("Neglect & decay", OPTION_FLAG_NONE)
     _oidForceSelectedPatron = AddTextOption("Force selected patron", "Focused", OPTION_FLAG_NONE)
+    _oidPrimeNeglectEligible = AddTextOption("Prime neglect eligible", "Active + piety 0", OPTION_FLAG_NONE)
     _oidNeglectRunPass = AddTextOption("Run neglect pass", "Targeted", OPTION_FLAG_NONE)
     _oidDecayPrimeGrace = AddTextOption("Prime decay grace", "Proof", OPTION_FLAG_NONE)
     _oidDecayPrimeEligible = AddTextOption("Prime decay eligible", "Proof", OPTION_FLAG_NONE)
