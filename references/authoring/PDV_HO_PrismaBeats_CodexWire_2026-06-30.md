@@ -92,12 +92,11 @@ MCM-debug path and normal play. No separate handler to touch.
   with
   `"Where you stand in the Thalmor question shifts: " + surfaceKey + "."`
 
-### A5 -- Nord refuse toast  [CONDITIONAL -- only if director cue is silent]
+### A5 -- Nord refuse toast  [UPDATED 2026-07-06 -- toast required, director silent]
 
-- **First verify:** does `DispatchDiegeticCue("offer", ..., "refuse", ...)` (already wired in
-  `DebugRefusePendingCommitment`, `:13557`) produce a visible TOAST, or only the pinned chronicle?
-- **If toast already fires:** do nothing (copy is complete).
-- **If silent:** add, for parity with A1, symbol = `GetPrismaSymbolForDeity(pendingDeity)`:
+- **Current ruling:** `DebugRefusePendingCommitment` must send the explicit refusal toast and write
+  the pinned chronicle through silent `SurfaceTransition`; it must not dispatch the director wash/sound path.
+- **Required shape:** symbol = `GetPrismaSymbolForDeity(pendingDeity)`:
   ```
   SendPrismaShiftToast("You turn " + GetPublicDeityDisplayName(pendingDeity) + " away.", \
       GetPublicDeityDisplayName(pendingDeity) + " will not ask again.", GetPrismaSymbolForDeity(pendingDeity))

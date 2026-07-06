@@ -79,7 +79,7 @@ remain separate. Caught and fixed during the Prisma pass:
 | Debug patron override/clear left stale rewards | Fixed (aa59daf4) | Override/clear now resync reward spells immediately |
 | Imperial lane stripped reused Nord Divine reward spells | Fixed (2af9ba9d) + lint (57509902) | `SyncImperialRewards` granted-then-stripped cross-lane reused SPELs same pass; new `pdv_reward_runtime_order_lint.mjs` guards the class |
 | Nord Old Ways roster: Orkey + Dibella | Built + in-game smoke PASS (829bbbfa, 7d40afe7) | Arkay-as-Orkey display override + Dibella offers/rewards/display; Orkey MESG 07161B + SEQ refresh |
-| Orkey/Dibella Old Ways neglect | Machine/readback pass; manual Active Effects smoke pending | `PDV_SPEL_Neglect_Arkay` / `PDV_MGEF_Neglect_Arkay` displays as "Orkey's Neglect" with `ResistMagic -5`; `PDV_SPEL_Neglect_Dibella` / `PDV_MGEF_Neglect_Dibella` displays as "Dibella's Neglect" with `Restoration -5`; manager VMAD props and `SyncNordPatronNeglectSpells()` wiring are filled |
+| Orkey/Dibella Old Ways neglect | Machine/readback pass; manual Active Effects smoke pending | `PDV_SPEL_Neglect_Arkay` / `PDV_MGEF_Neglect_Arkay` displays as "Orkey's Neglect" with `ResistMagic -5`; `PDV_SPEL_Neglect_Dibella` / `PDV_MGEF_Neglect_Dibella` displays as "Dibella's Neglect" with `Restoration -5`; manager VMAD props and `SyncNordPatronNeglectSpells()` wiring are filled. First Orkey retest froze on MCM `ShowMessage()` re-entry; second retest no-op logged the same prompt error before manager execution; third showed Arkay/Orkey prime traces but backend `Broad worship`, so active-patron neglect correctly could not apply. `PDV_MCM` now bypasses modal confirmations for neglect/decay debug buttons and adds `Force selected patron`, but runtime Active Effects proof still needs rerun after relaunch |
 | Curated driver copy | Fixed + in-game re-verified (c8a4aa34) | Curated rows name the actual trigger, e.g. "defiant prayer at a Talos shrine", rather than generic "a devotional rite" |
 | Watching Prince dashboard/Book of Days | Fixed + in-game re-verified (692396bb, 2f75a860) | Pre-pact Princes show a distinct Watching badge and a named watching-onset Book of Days line |
 | Quest-reaction surfacing aggregation | Fixed + in-game re-verified | Quest fires now emit one aggregate toast plus one Book of Days line, not a burst per matrix cell |
@@ -87,9 +87,9 @@ remain separate. Caught and fixed during the Prisma pass:
 Filed from the same pass and still open: `task_387bfc95` slider cap >=1000,
 and `task_7dab1ebb` Hircine renounce over-fire/copy. `task_e6904bb3`
 Orkey/Dibella neglect debuff is implemented and machine/readback closed, with
-manual Active Effects smoke pending. `task_8c27e440` Refuse-goes-quiet is implemented and
-machine-gated; manual smoke still needs to confirm no toast/sound/wash and the
-pinned refusal chronicle.
+manual Active Effects smoke pending. `task_8c27e440` Refuse correction is implemented and
+machine-gated; manual smoke still needs to confirm the refusal toast + pinned chronicle
+with no screen wash or D1 sound.
 
 Still owed for Sitting-1 Prisma: C2 beat 3 Altmer alignment band, C2 beat 5 Khajiit
 Champion pin survives pruning, and C2 beat 6 Redguard per-sect Champion toast. After

@@ -304,6 +304,8 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
     "DebugDeclinePendingCommitment()",
     "elseIf choice == 2",
     "DebugRefusePendingCommitment()",
+    "SurfaceTransition(\"offer\", pendingDeity.DeityName, \"refuse\", pendingDeity.DeityIndex, \"absence\", False, True, True)",
+    "SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), \"warning\", BuildCommitmentOfferRefuseToastLine(pendingDeity), \"\")",
     "Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)",
     "return GetNordFormalCommitmentOfferMessage(deity)",
     "return GetImperialFormalCommitmentOfferMessage(deity)",
@@ -326,6 +328,13 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
     } else {
       fail("Formal offer source flow", `Manager is missing: ${snippet}`, sourcePath);
     }
+  }
+
+  const refuseFunction = sourceText.match(/Function\s+DebugRefusePendingCommitment\(\)([\s\S]*?)EndFunction/i)?.[1] || "";
+  if (refuseFunction.includes("DispatchDiegeticCue(\"offer\"")) {
+    fail("Formal offer refuse surface", "Refuse still dispatches the diegetic director path, which can produce wash/sound.", sourcePath);
+  } else {
+    pass("Formal offer refuse surface", "Refuse avoids the diegetic director dispatch; only toast + pinned chronicle remain.", sourcePath);
   }
 
   const helperExpectations = [

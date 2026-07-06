@@ -14766,12 +14766,13 @@ Function DebugRefusePendingCommitment()
         return
     endIf
 
-    ; Owner ruling (Mega Packet Sitting 1 U8): a formal-offer REFUSAL is a quiet
-    ; closing-of-the-door, not an announced/celebrated moment. Write ONLY the permanent
-    ; pinned Book of Days chronicle -- call SurfaceTransition with silent=True so no
-    ; transient toast, screen wash, or D1 sound fires (headline still pins the entry).
-    ; The ACCEPT path keeps its toast + sound (accepting IS a revelation moment).
+    ; Owner ruling (Mega Packet Sitting 1 U8): formal-offer REFUSAL is visible as
+    ; a refusal toast and pinned Book of Days chronicle, but it must not fire the
+    ; diegetic director's screen wash or D1 sound. SurfaceTransition with
+    ; silent=True writes and pins the chronicle while skipping that director cue.
+    ; The ACCEPT path keeps its revelation toast + sound.
     SurfaceTransition("offer", pendingDeity.DeityName, "refuse", pendingDeity.DeityIndex, "absence", False, True, True)
+    SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "warning", BuildCommitmentOfferRefuseToastLine(pendingDeity), "")
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 1)
     StorageUtil.SetIntValue(None, "PDV.Commitment.Rupture", 1)
     ClearPendingCommitment()

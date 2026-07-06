@@ -143,7 +143,7 @@ function verifyManager(text, filePath, pass, fail) {
     ["Offer accept Dunmer toast", "The ash-prayer has a name: ", "Dunmer accept toast uses locked copy."],
     ["Offer accept Altmer toast", "You name ", "Altmer accept toast uses locked copy."],
     ["Offer accept Redguard toast", "You walk under ", "Redguard accept toast uses locked copy."],
-    ["Offer refuse surface", 'DispatchDiegeticCue("offer", pendingDeity.DeityName, "refuse", pendingDeity, "absence")', "Terminal refusal dispatches a diegetic offer beat."],
+    ["Offer refuse surface", 'SurfaceTransition("offer", pendingDeity.DeityName, "refuse", pendingDeity.DeityIndex, "absence", False, True, True)', "Terminal refusal writes the pinned offer beat without director wash/sound."],
     ["Offer refuse toast helper", "String Function BuildCommitmentOfferRefuseToastLine(PDV_DeityBase deity)", "Commitment refuse resolves the locked per-race Prisma toast."],
     ["Offer refuse direct toast", 'SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "warning", BuildCommitmentOfferRefuseToastLine(pendingDeity), "")', "Commitment refuse uses the direct toast shape, not the generic shift template."],
     ["Offer refuse Altmer toast", "You keep to the foundation.", "Altmer refuse toast uses locked copy."],

@@ -30,7 +30,7 @@ a **polish pass** (review of already-shipped copy) per owner ruling.
 | Beat | Handoff claim | Verified live-source state | This pass |
 |---|---|---|---|
 | 1. Nord offer ACCEPT | no beat | **GENUINE GAP** -- `DebugAcceptPendingCommitment` emits nothing | NEW toast + wire existing chronicle |
-| 2. Nord offer REFUSE | no milestone | **WIRED** -- `DispatchDiegeticCue`->`SurfaceTransition("offer","refuse",headline)` = director cue + pinned BoD | polish + confirm toast |
+| 2. Nord offer REFUSE | no milestone | **WIRED** -- direct refusal toast + `SurfaceTransition("offer","refuse",headline,silent=True)` pinned BoD; no director wash/sound | confirm toast + no wash/sound |
 | 3. Altmer Thalmor band | invisible to both | **WIRED** -- `MaybeSurfaceAltmerAlignmentBandChange`: toast + reorientation chronicle | polish (optional) |
 | 4. Breton tradition | zero surface | **WIRED** -- toast + pinned BoD + emergence transition | accept-as-is |
 | 5. Hircine werewolf-onset | chronicle missing | **SURFACED-GENERIC** -- curse seam fires toast + pinned BoD, but chronicle uses the GENERIC line | **DEFERRED to V2** (do all races or none) |
@@ -224,15 +224,13 @@ Default is **accept-as-is** unless a clear win is noted.
 
 ## Beat 2 -- Nord offer REFUSE  [WIRED]
 
-- **Call-site:** `DebugRefusePendingCommitment()` (`:13554`) -> `DispatchDiegeticCue("offer",
-  name,"refuse",deity,"absence")` -> `SurfaceTransition("offer","refuse",headline=true)` =
-  director cue + **pinned** BoD.
+- **Call-site:** `DebugRefusePendingCommitment()` -> direct refusal toast plus
+  `SurfaceTransition("offer","refuse",headline=true,silent=True)` = **pinned** BoD with no
+  director wash/sound.
 - **Current chronicle (Nord branch):** `"The broad faith stays whole; you turned <Patron> away,
   and <Patron> will not ask again."` -- strong, permanent-door-closing voice. **Accept-as-is.**
-- **Confirm (Codex, not copy):** verify the director cue produces a visible *toast*, not only the
-  chronicle. **APPROVED fallback** -- if no toast surfaces, add an explicit refuse toast for parity
-  with the accept toast (#1): headline `You turn <Patron> away.` / context `<Patron> will not ask
-  again.` / symbol = deity symbol. (Only wire this if the director cue is confirmed silent.)
+- **Confirm (Codex, not copy):** visible refusal toast + pinned Chronicle entry; no screen wash,
+  no D1 sound.
 
 ## Beat 3 -- Altmer Thalmor-alignment band  [WIRED]
 
@@ -313,7 +311,7 @@ interleave with other manager edits.
    `MaybeShowRedguardChampionEntry`.
 4. **[polish] Beat 3 Altmer chronicle reword** -- update the Altmer branch of
    `BuildReorientationJournalLine` (`:2031`).
-5. **[polish] Beat 2 Nord refuse toast** -- ONLY if the director cue is confirmed silent.
+5. **[polish] Beat 2 Nord refuse toast** -- explicit refusal toast is required; director cue stays silent.
 6. **[DEFERRED to V2] Beat 5 werewolf-onset bespoke line** -- per-race, needs curse-type threading.
    See `PDV_V2_Backlog.md` section 5. Do NOT wire for 1.0.
 

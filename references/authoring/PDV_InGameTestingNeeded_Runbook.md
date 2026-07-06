@@ -125,16 +125,31 @@ changes invalidate the evidence.
 
 2026-07-06 formal-offer refuse update: `task_8c27e440` is implemented in source
 and machine-gated. Refuse now writes the pinned Book of Days refusal chronicle
-silently -- no toast, no sound, no screen wash -- while Accept keeps its toast
-and sound. Manual smoke still needs one disposable offer refuse and one accept
-control to prove the player-facing behavior in game.
+and emits the explicit refusal toast, but it must not play the diegetic screen
+wash or D1 sound. Accept keeps its toast and sound. Manual smoke still needs one
+disposable offer refuse and one accept control to prove the player-facing behavior
+in game.
 
 2026-07-06 Old Ways neglect update: `task_e6904bb3` is implemented and
 machine/readback closed. `pdv-neglect-esp-author --write` authored Orkey's
 Neglect as `ResistMagic -5` under the internal Arkay key, authored Dibella's
 Neglect as `Restoration -5`, and filled the manager VMAD properties. Manual
-smoke still needs Orkey and Dibella committed on Nord Old Ways saves, piety
-forced to 0, dawn run, and Active Effects confirmation for the two flat effects.
+smoke still needs Orkey and Dibella committed on Nord Old Ways saves, the
+selected deity primed as decay-eligible, a targeted neglect pass, and Active
+Effects confirmation for the two flat effects. Do not use target-piety 0 as the
+trigger; active-patron neglect is a recency-lapse check keyed off
+`PDV.LastEventGameTime`, not current piety.
+
+2026-07-06 neglect smoke debug-surface note: the first Orkey retest froze after
+repeated SkyUI MCM `ShowMessage()` re-entry errors while debug confirmations were
+open. The immediate rerun did not freeze, but the Papyrus log showed the same
+`ShowMessage()` errors and no manager traces, so the neglect/decay actions never
+executed. `PDV_MCM` now bypasses modal confirmations for the neglect/decay debug
+buttons, uses immediate `Debug.Notification()` feedback, and exposes a
+`Force selected patron` setup row because the next live log showed Arkay/Orkey
+being primed while the backend was still in `Broad worship`. This is
+compile/static proof only; rerun Orkey/Dibella Active Effects smoke after a
+fresh Skyrim launch before marking the manual proof passed.
 
 2026-07-05 strict gate rerun: after the Dunmer evidence sync,
 `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` reports
@@ -246,12 +261,19 @@ Additional last-pass runtime sweeps before any broad beta-feel claim:
   per-origin spot-checks unless new Prisma/source changes invalidate the run:
   Altmer Thalmor-alignment band toast/chronicle, Khajiit Champion pinned entry
   after pruning, and Redguard per-sect Champion toast. Because Refuse changed
-  after U8, also run the small formal-offer control: Refuse should be silent but
-  pinned, Accept should still toast/sound. These prove manual display only; keep
+  after U8, also run the small formal-offer control: Refuse should toast and pin
+  with no wash/sound, Accept should still toast/sound. These prove manual display only; keep
   them separate from the static Prisma-to-1.0 audit.
-- Old Ways neglect felt smoke: commit Orkey, force piety to 0, run dawn, and
+- Old Ways neglect felt smoke: reselect Orkey/Arkay, click `Force selected
+  patron` (or use `Debug patron override` from `Debug: State & Rewards` if the
+  new row is absent), then `Prime decay eligible`, then `Run neglect pass`, and
   confirm Magic Resistance -5 in Active Effects; repeat for Dibella and confirm
-  Restoration -5.
+  Restoration -5. Piety does not need to be forced to 0. After the 2026-07-06
+  MCM prompt re-entry/no-op, these neglect/decay buttons no longer open Yes/No
+  confirmations; expect immediate `PDV: active patron forced.` when using the
+  new row, plus `PDV: decay eligible primed.` and `PDV: neglect pass run.`
+  notifications. A Skyrim relaunch is required to load the updated
+  `PDV_MCM.pex`.
 - Requiem felt-penalty sweep: prove the new negative Health penalties are felt
   in-game and Imperial remains disease-resistance based.
 

@@ -538,6 +538,24 @@ static NeglectSpellSpec[] BuildSpecs() =>
         "Defiance left unkept softens; your resolve no longer hardens you. Armor -5 until you stand firm again.",
         "DamageResist",
         -5.0f),
+    new(
+        "PDV_SPEL_Neglect_Arkay",
+        "PDV_MGEF_Neglect_Arkay",
+        "PDV_SPEL_Neglect_Arkay",
+        "Orkey's Neglect",
+        "Orkey's Neglect",
+        "Orkey the Old Knocker turns from the neglectful, and the ward that keeps the grave quiet thins. Magic Resistance -5% until you tend the rites of life and death again.",
+        "ResistMagic",
+        -5.0f),
+    new(
+        "PDV_SPEL_Neglect_Dibella",
+        "PDV_MGEF_Neglect_Dibella",
+        "PDV_SPEL_Neglect_Dibella",
+        "Dibella's Neglect",
+        "Dibella's Neglect",
+        "Dibella's grace withdraws from the unloving, and your restorative arts lose their warmth. Restoration -5 until you honor beauty and love again.",
+        "Restoration",
+        -5.0f),
 ];
 
 sealed record NeglectSpellSpec(

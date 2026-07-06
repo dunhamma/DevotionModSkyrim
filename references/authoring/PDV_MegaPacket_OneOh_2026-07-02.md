@@ -1,4 +1,4 @@
-# PDV 1.0 Mega Test Packet -- consolidated remaining in-game proof (2026-07-02; updated 2026-07-05)
+# PDV 1.0 Mega Test Packet -- consolidated remaining in-game proof (2026-07-02; updated 2026-07-06)
 
 Status: STRICT BETA-READINESS GATE PASSED 2026-07-05; residual runtime/manual proof remains below.
 Owner plan: `C:\Users\Admin\.claude\plans\kick-off-session-let-s-mighty-flask.md`.
@@ -21,6 +21,12 @@ support without the matching proof bucket.
 before `PDV_SessionHandoff_2026-07-05_DunmerCloseout.md`. Its Quest Expansion smoke queue is
 still valid, but its "Dunmer is the only blocker" statement is superseded. Imperial closed on
 2026-07-04, Dunmer closed on 2026-07-05, and the current strict audit passes.
+
+**Sitting-1 checkpoint.** `PDV_SessionHandoff_2026-07-05_MegaPacketSitting1.md` records the
+current post-closeout state: Section A quest-expansion smoke passed across all eight
+setstage-able origins; the E1 day-to-day sweep and Block-F mechanics passed; Universal Prisma
+U1-U9 passed in game on 2026-07-06. Do not rerun those sections just to close the packet unless
+a new source, Prisma, reward, or runtime-surfacing change invalidates the evidence.
 
 ---
 
@@ -56,14 +62,16 @@ node .\tools\pdv_verify.mjs --json
 > MO2 build copy (hash-identical). Rerun the three sanity commands above before
 > Sitting 1.
 >
-> Update 2026-07-06: formal-offer **Refuse** was changed after the U8 pass to obey
-> the owner "refuse goes quiet" ruling. `SurfaceTransition(..., silent=True)` now
-> writes the pinned refusal chronicle but skips the transient director cue; the
-> warning toast was removed. Accept remains fully surfaced. Machine gates passed
-> for manager+MCM compile, `pdv_verify`, `pdv_prisma_ui_audit`, and
-> `pdv_formal_offer_check`; `pdv_book_of_days_audit` had one unrelated repo/live
-> `app.js` LF/CRLF hash drift. Manual smoke still needs to confirm Refuse is silent
-> and Accept still toasts/sounds.
+> Update 2026-07-06: formal-offer **Refuse** was corrected after the U8 pass to
+> obey the owner ruling precisely: a refusal toast is expected, and the pinned Book
+> of Days refusal chronicle is expected, but there must be no diegetic screen wash
+> or D1 sound. `SurfaceTransition(..., silent=True)` owns the pinned chronicle;
+> the manager sends the refusal toast directly. Accept remains fully surfaced.
+> Machine gates passed for manager+MCM compile, `pdv_verify`,
+> `pdv_prisma_ui_audit`, and `pdv_formal_offer_check`; `pdv_book_of_days_audit`
+> had one unrelated repo/live `app.js` LF/CRLF hash drift. Manual smoke still
+> needs to confirm Refuse toast + pinned chronicle with no wash/sound, and Accept
+> still toasts/sounds.
 >
 > Update 2026-07-06: Orkey/Dibella Old Ways neglect parity is machine/readback
 > closed. `pdv-neglect-esp-author --write` authored `PDV_SPEL_Neglect_Arkay` /
@@ -72,6 +80,16 @@ node .\tools\pdv_verify.mjs --json
 > Neglect** (`Restoration -5`), wired both manager VMAD spell properties, and
 > `SyncNordPatronNeglectSpells()` now handles internal Arkay/Orkey and Dibella.
 > Machine gates passed; manual smoke still needs Active Effects confirmation.
+>
+> Freeze note 2026-07-06: the first Orkey retest froze on repeated MCM
+> `ShowMessage()` re-entry while debug confirmations were still open. The
+> immediate rerun did not freeze, but logged the same `ShowMessage()` errors and
+> never reached the manager. The next live log showed `Prime decay eligible`
+> firing against Arkay/Orkey while the backend still reported `state=Broad
+> worship`, so active-patron neglect correctly could not apply. The live
+> `PDV_MCM` now bypasses modal confirmations for neglect/decay debug buttons,
+> adds `Force selected patron`, and recompiles cleanly; restart Skyrim and rerun
+> the Active Effects smoke before calling this passed.
 
 ---
 
@@ -79,7 +97,7 @@ node .\tools\pdv_verify.mjs --json
 
 | Sitting | Instance | Sections | Approx |
 |---|---|---|---|
-| 1 | **Anvil** | A. Quest Expansion smoke rows -> E. day-to-day signal sweep, including 361/362 -> C1/C2 Prisma residual rows | medium |
+| 1 | **Anvil** | **Closed:** A quest-expansion, E1 day-to-day, C1 U1-U9. **Remaining:** C2 beats 3/5/6, formal-offer Refuse/Accept control, Old Ways Orkey/Dibella neglect Active Effects smoke | short |
 | 2 | **Anvil** | F. Prince V2 path-deepening -> C3 focus-trap re-confirm if Prisma changed | medium |
 | 3 | **Authoria** | D. Requiem felt sweep (A1-A9, B1, B2) + penalty feltness and tuning notes | medium |
 | 4 | **Repo-side** | Rerun strict audit, then resume Experience Mode -> ARR package -> WS-3 branding only if no new blockers appear | short |
@@ -96,14 +114,16 @@ refuse tests can reload.
 
 ---
 
-## A. Quest Expansion smoke rows  [next Anvil test]
+## A. Quest Expansion smoke rows  [passed 2026-07-05; regression recipe]
 
 Source handoff: `references/authoring/PDV_SessionHandoff_2026-07-05_QuestExpansion.md`.
 Source contract: `references/authoring/PDV_QuestExpansion_Architecture.md`.
 
-Run these on a disposable save after the quick sanity commands pass. They are route/runtime and
-manual-display proof for the 40-50 quests-per-deity expansion and meta-faucets, not a reason to
-reopen the race strict gate unless they expose a regression.
+These rows passed in Mega Packet Sitting 1 across all eight setstage-able origins. Keep the steps
+below as the regression recipe if quest-matrix, reachability, surfacing, or day-to-day routing
+changes invalidate the evidence. They are route/runtime and manual-display proof for the
+40-50 quests-per-deity expansion and meta-faucets, not a reason to reopen the race strict gate
+unless they expose a regression.
 
 **Why grouped by origin.** `ApplyDeityReaction` scores each deity on a quest cell -- and each
 meta lane -- by the player race's STANCE toward it: `NATIVE` = full `1.0x`,
@@ -245,24 +265,36 @@ Good Daedra/deviation-price surfaces.
 
 ## C. Prisma verification (beats wired 2026-07-01 + universal surfaces)
 
-### C1. Universal sheet U1-U9 (once on the current build)
-Run `references/authoring/PDV_RunSheet_Universal_Prisma_V1.md`. U6 (neglect drop) and U7
+### C1. Universal sheet U1-U9  [passed 2026-07-06; do not rerun without regression]
+`references/authoring/PDV_RunSheet_Universal_Prisma_V1.md` passed in game during Mega Packet
+Sitting 1. Confirmed coverage: panel/Book close, tier gauge, favor/dawn digest, Ledger/substrate
+rows, pruning, neglect lapse/recovery, offer accept/refuse copy, and one-record readability. U6
+(neglect drop) and U7
 (recovery at piety 15, no tier-up) are the newest rows; U8 covers offer accept/refuse with the
-LOCKED per-race accept strings and the 2026-07-06 quiet-refuse ruling. Accept still gives the
-race-specific toast + pinned chronicle; Refuse gives **no toast, no sound, no screen wash** and
-writes only the pinned refusal chronicle. Blank Book of Days line anywhere = FAIL.
+LOCKED per-race accept strings and the 2026-07-06 corrected refuse ruling. Accept still gives the
+race-specific toast + pinned chronicle; Refuse gives the locked refusal toast + pinned chronicle,
+with **no sound and no screen wash**. Because Refuse changed after the original U8 pass, run
+one tiny Refuse/Accept control before closing Sitting 1. Blank Book of Days line anywhere = FAIL.
 
-U6 follow-up after `task_e6904bb3`: on a Nord Old Ways save, commit Orkey, force
-piety to 0, run dawn, and confirm **Orkey's Neglect** appears in Active Effects
-as Magic Resistance -5%. Repeat for Dibella and confirm **Dibella's Neglect**
-appears as Restoration -5. These are felt-effect checks; the record/readback
-gate is already closed.
+U6 follow-up after `task_e6904bb3`: on a Nord Old Ways save, reselect Orkey/Arkay,
+click **Force selected patron**, then **Prime decay eligible**, then **Run neglect
+pass**, and confirm **Orkey's Neglect** appears in Active Effects as Magic
+Resistance -5%. Repeat for Dibella and confirm **Dibella's Neglect** appears as
+Restoration -5. Do not force piety to 0 for this smoke; active-patron neglect is
+a recency-lapse check keyed off the deity's last-event timestamp, and the
+backend must not be in Broad worship. These are felt-effect checks; the
+record/readback gate is already closed. The neglect/decay debug buttons should
+now fire directly with small `PDV:` notifications rather than MCM Yes/No
+confirmations; relaunch Skyrim after the 18:54 `PDV_MCM.pex` compile before
+retesting. If **Force selected patron** is absent, use **Debug patron override**
+on the selected deity in `Debug: State & Rewards`; it calls the same active-patron
+manager path.
 
 U4 now also carries the **curated driver-reason retest** (Sitting-1 U4 found every curated
 award recording generic "a devotional rite"; fixed on main `c8a4aa34` -- awards now carry the
 per-signal phrase from `HumanizeCuratedSignalReason`). Award two curated signals and confirm
 distinct trigger-stating rows; Talos 101 = "defiant prayer at a Talos shrine". In-game proof
-for this fix is still owed -- record it in the U4 row.
+passed during the 2026-07-06 U4 retest.
 
 U4 also carries the **watching-Prince badge retest** (Sitting-1 U4 found a pre-pact Prince you
 are building toward rendering as an ordinary god card with no indicator; fixed on main `692396bb`
@@ -270,7 +302,7 @@ are building toward rendering as an ordinary god card with no indicator; fixed o
 renders a distinct "Watching" kicker badge above the god name). On a no-pact save, seed a Prince
 to pre-pact (Developer Options Daedric debug: commitment signals, tier 0, no pact) and confirm the
 Ledger shows it as a clearly-marked "Watching" card, set apart from patron and pantheon rows.
-In-game proof still owed -- record it in the U4 row. (The watching Prince's driver-row *copy* is
+In-game proof passed during the 2026-07-06 U4 retest. (The watching Prince's driver-row *copy* is
 the curated-reason retest above; the two U4 retests are independent and can be judged on one save.)
 
 U4 also carries the **watching-Prince Book of Days retest** (the badge above surfaces the pre-pact
@@ -282,7 +314,7 @@ note" cue). On a no-pact save, seed a Prince via Developer Options Daedric debug
 (+10, tier 0) and confirm ONE named "has taken an interest" line appears in the Book of Days naming
 that Prince; route the same sender again and confirm NO duplicate of that line (a distinct "The world
 tilts toward `<Prince>`." line appearing once piety crosses half-Seeker ~12.5 is the expected deeper
-beat, not a duplicate). In-game proof still owed -- record it in the U4 row.
+beat, not a duplicate). In-game proof passed during the 2026-07-06 U4 retest.
 
 ### C2. Beat spot-checks (the 2026-07-01 wires -- confirm each renders; MCM-driven, origin flips on disposable saves)
 Copy authority: `PDV_PrismaParity_AuthoringDraft.md` (LOCKED 2026-06-25) for offer/Altmer copy;
@@ -291,7 +323,7 @@ Copy authority: `PDV_PrismaParity_AuthoringDraft.md` (LOCKED 2026-06-25) for off
 | # | Beat | Origin | Do | See |
 |---|---|---|---|---|
 | 1 | Nord offer ACCEPT | 0 | Seed commitment signals -> Evaluate -> Accept | Toast + PINNED BoD "The broad faith narrows to one; {patron} has named you their own."; Ledger shows the carryover driver |
-| 2 | Nord offer REFUSE | 0 | fresh save, same gate -> Refuse | **No toast, no sound, no screen wash**; PINNED BoD "...you turned {patron} away, and {patron} will not ask again."; no forced panel |
+| 2 | Nord offer REFUSE | 0 | fresh save, same gate -> Refuse | Refusal toast + PINNED BoD "...you turned {patron} away, and {patron} will not ask again."; **no sound, no screen wash**; no forced panel |
 | 3 | Altmer alignment band | 3 | drive Thalmor alignment across a committed band (MCM debug) | Toast "The Thalmor question turns in you: {band}." + chronicle (locked copy); remember the band label lags raw by design |
 | 4 | Hircine renunciation | any | open Hircine path (MCM Daedric debug), then Renounce | Renunciation toast + PINNED reorientation chronicle from PRODUCTION RenouncePath (not the debug button); no double entry on the same tick; residue toast still arrives later |
 | 5 | Khajiit Champion pin | 6 | force a Khajiit patron to Champion, Run Dawn; then wait 22+ days | Champion chronicle is PINNED (survives pruning) with tier-band suffix |
