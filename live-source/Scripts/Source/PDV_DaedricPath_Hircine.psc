@@ -114,6 +114,10 @@ EndFunction
 Function RenouncePath(String reason)
     ResetDaedricForDebug()
     SetStoredPiety(0.0, "renounce_" + reason)
+    Form pendingLapse = StorageUtil.GetFormValue(None, "PDV.Daedric.PendingLapse")
+    if pendingLapse == GetDeityForm()
+        StorageUtil.SetFormValue(None, "PDV.Daedric.PendingLapse", None)
+    endIf
     BeginNordResidueRecovery("renounce_" + reason)
     StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.Renounced", 1)
     StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.RenunciationJournalPending", 1)
@@ -134,6 +138,7 @@ Function ResetPilotForDebug()
     StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueUntil", 0.0)
     StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueToastPending", 0)
     StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueClearToastPending", 0)
+    StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueToastDelayTicks", 0)
     StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.RenunciationJournalPending", 0)
     Trace(2, "ResetPilotForDebug")
 EndFunction
@@ -176,6 +181,11 @@ Function BeginNordResidueRecovery(String reason)
     StorageUtil.SetStringValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueReason", reason)
     StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueToastPending", 1)
     StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueClearToastPending", 0)
+    if StringUtil.Find(reason, "renounce_") == 0
+        StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueToastDelayTicks", 3)
+    else
+        StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueToastDelayTicks", 0)
+    endIf
 EndFunction
 
 String Function GetResidueSummary()

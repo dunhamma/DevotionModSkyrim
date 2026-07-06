@@ -768,6 +768,7 @@ Event OnUpdate()
     ProcessPendingDaedricLapse()
     ProcessPendingDaedricPrePactNotices()
     DrainHircineRenunciationJournal()
+    ProcessDelayedHircineResiduePrismaToasts()
     ProcessQueuedPrismaToastRetry()
 
     if DebugCommand != 0
@@ -14279,8 +14280,6 @@ Function DebugRenounceHircinePath()
     if PDV_HircinePath
         PDV_HircinePath.RenouncePath("mcm")
         DrainHircineRenunciationJournal()
-        DrainHircineResiduePrismaToasts()
-        SendPrismaDaedricToast("Hircine", "lapse", "", "hircine")
         RequestPanelRefresh()
     endIf
 EndFunction
@@ -15167,6 +15166,10 @@ Function DrainHircineResiduePrismaToasts()
     endIf
 
     Form hircineForm = PDV_HircinePath.GetDeityForm()
+    if StorageUtil.GetIntValue(hircineForm, "PDV.Daedric.Hircine.ResidueToastDelayTicks") > 0
+        return
+    endIf
+
     if StorageUtil.GetIntValue(hircineForm, "PDV.Daedric.Hircine.ResidueToastPending") == 1
         StorageUtil.SetIntValue(hircineForm, "PDV.Daedric.Hircine.ResidueToastPending", 0)
         SendPrismaDaedricToast("Hircine", "residue", "The hunt's old mark still follows.", "hircine")
@@ -15175,6 +15178,21 @@ Function DrainHircineResiduePrismaToasts()
         StorageUtil.SetIntValue(hircineForm, "PDV.Daedric.Hircine.ResidueClearToastPending", 0)
         SendPrismaDaedricToast("Hircine", "residue", "The hunt's old mark fades.", "hircine")
     endIf
+EndFunction
+
+Function ProcessDelayedHircineResiduePrismaToasts()
+    if !PDV_HircinePath
+        return
+    endIf
+
+    Form hircineForm = PDV_HircinePath.GetDeityForm()
+    Int delayTicks = StorageUtil.GetIntValue(hircineForm, "PDV.Daedric.Hircine.ResidueToastDelayTicks")
+    if delayTicks > 0
+        StorageUtil.SetIntValue(hircineForm, "PDV.Daedric.Hircine.ResidueToastDelayTicks", delayTicks - 1)
+        return
+    endIf
+
+    DrainHircineResiduePrismaToasts()
 EndFunction
 
 Function DrainHircineRenunciationJournal()
@@ -15188,6 +15206,7 @@ Function DrainHircineRenunciationJournal()
     endIf
 
     StorageUtil.SetIntValue(hircineForm, "PDV.Daedric.Hircine.RenunciationJournalPending", 0)
+    SendPrismaToast("hircine", "neutral", "You renounce the hunt.", "Hircine's pact is set down.")
     AppendBookOfDaysEntry("Hircine's mark fades from your blood, and the pack is no longer yours.", Utility.GetCurrentGameTime() as Int, "reorientation", "hircine", True, 3)
 EndFunction
 
