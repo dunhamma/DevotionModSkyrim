@@ -538,6 +538,29 @@ static NeglectSpellSpec[] BuildSpecs() =>
         "Defiance left unkept softens; your resolve no longer hardens you. Armor -5 until you stand firm again.",
         "DamageResist",
         -5.0f),
+    // Nord Old Ways patrons added after the original batch (Orkey/Dibella roster, 7d40afe7).
+    // Record/key stays Arkay -- the internal StorageUtil/quest-matching key -- but the player-facing
+    // name reads "Orkey" to match the Old Ways normalize-gate surfacing (this spell only ever fires
+    // for a Nord Old Ways patron of Arkay-as-Orkey; under Nine Divines Arkay's lapse uses the broad
+    // Imperial neglect). Thematic flat, mild, Requiem-felt: Orkey the Old Knocker wards the grave.
+    new(
+        "PDV_SPEL_Neglect_Arkay",
+        "PDV_MGEF_Neglect_Arkay",
+        "PDV_SPEL_Neglect_Arkay",
+        "Orkey's Neglect",
+        "Orkey's Neglect",
+        "Orkey the Old Knocker turns from the neglectful, and the ward that keeps the grave quiet thins. Magic Resistance -5% until you tend the rites of life and death again.",
+        "ResistMagic",
+        -5.0f),
+    new(
+        "PDV_SPEL_Neglect_Dibella",
+        "PDV_MGEF_Neglect_Dibella",
+        "PDV_SPEL_Neglect_Dibella",
+        "Dibella's Neglect",
+        "Dibella's Neglect",
+        "Dibella's grace withdraws from the unloving, and your restorative arts lose their warmth. Restoration -5 until you honor beauty and love again.",
+        "Restoration",
+        -5.0f),
 ];
 
 sealed record NeglectSpellSpec(
