@@ -2262,7 +2262,7 @@ Function DebugSetDiegeticD1Enabled(Bool enabled)
     endIf
 EndFunction
 
-Function SurfaceTransition(String eventClass, String surfaceKey, String direction, Int deityIndex = -1, String toneOverride = "", Bool repeatable = false, Bool headline = false)
+Function SurfaceTransition(String eventClass, String surfaceKey, String direction, Int deityIndex = -1, String toneOverride = "", Bool repeatable = false, Bool headline = false, Bool silent = false)
     if eventClass == "" || surfaceKey == "" || direction == ""
         return
     endIf
@@ -2286,7 +2286,10 @@ Function SurfaceTransition(String eventClass, String surfaceKey, String directio
 
     StorageUtil.SetIntValue(None, guard, 1)
     StorageUtil.SetStringValue(None, "PDV.Surfaced.Last", guard)
-    if PDV_DiegeticDirectorService
+    ; A silent transition (e.g. a formal-offer REFUSAL) still writes the permanent pinned
+    ; Book of Days chronicle below, but skips the transient director cue -- no screen wash,
+    ; no D1 sound. A refusal is a quiet closing-of-the-door, not an announced moment.
+    if PDV_DiegeticDirectorService && !silent
         PDV_DiegeticDirectorService.Dispatch(eventClass, surfaceKey, direction, deityIndex, toneOverride)
     endIf
 
@@ -14706,8 +14709,12 @@ Function DebugRefusePendingCommitment()
         return
     endIf
 
-    DispatchDiegeticCue("offer", pendingDeity.DeityName, "refuse", pendingDeity, "absence")
-    SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "warning", BuildCommitmentOfferRefuseToastLine(pendingDeity), "")
+    ; Owner ruling (Mega Packet Sitting 1 U8): a formal-offer REFUSAL is a quiet
+    ; closing-of-the-door, not an announced/celebrated moment. Write ONLY the permanent
+    ; pinned Book of Days chronicle -- call SurfaceTransition with silent=True so no
+    ; transient toast, screen wash, or D1 sound fires (headline still pins the entry).
+    ; The ACCEPT path keeps its toast + sound (accepting IS a revelation moment).
+    SurfaceTransition("offer", pendingDeity.DeityName, "refuse", pendingDeity.DeityIndex, "absence", False, True, True)
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 1)
     StorageUtil.SetIntValue(None, "PDV.Commitment.Rupture", 1)
     ClearPendingCommitment()
