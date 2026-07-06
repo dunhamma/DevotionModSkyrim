@@ -1,6 +1,6 @@
 # PDV Target End States - 1.0 Product Tracker
 **Created:** 2026-05-18
-**Last updated:** 2026-06-07 (Phase 2 all-race static gate complete; all ten races have authored/deity/reward/manager/readback coverage, while runtime/manual beta packets remain pending)
+**Last updated:** 2026-07-07 (all ten race beta-feel packets pass current manual/runtime evidence per `references/authoring/PDV_PreBetaRaceGateLedger.md`; the Daedric beta-display gate passes all sixteen Princes; strict beta-readiness audit is `STRICT_GATE_PASS` with no blockers. Remaining 1.0 distance is the Authoria/ARR Requiem felt sweep, residual C2 Prisma beats, Prince V2, Experience Mode, final immersive world placement, and branding polish -- see "Remaining 1.0 Distance" below)
 **Status:** Living 1.0 product/end-state tracker
 **Purpose:** Track what each race's devotion should feel like at launch, how
 close each race is to implementation-ready acceptance, and where the 1.0
@@ -108,6 +108,18 @@ proof: the ten `PDV_BetaTestPacket_{Race}.md` walks, Active Effects display,
 save/load sanity, stack snapshots, and manual feel notes still gate external
 beta readiness.
 
+Runtime/manual closeout (2026-07-07): the runtime/manual gap above is now
+closed at the current-packet level. All ten races carry `Pass` verdicts with
+recorded manual/runtime evidence in
+`references/authoring/PDV_PreBetaRaceGateLedger.md` (latest closures: Imperial
+2026-07-04, Dunmer 2026-07-05), `node .\tools\pdv_beta_readiness_audit.mjs
+--strict` returns `STRICT_GATE_PASS` with no blockers, and
+`node .\tools\pdv_daedric_beta_gate.mjs` passes all sixteen Princes against the
+runtime/manual evidence ledger. These verdicts cover the packets as run, not
+the full launch scope: final immersive world placement, the Authoria/ARR
+Requiem felt sweep, the residual C2 Prisma beats, and the Prince V2
+path-deepening proof remain open (see "Remaining 1.0 Distance" below).
+
 Acceptance:
 
 - All locked race-architecture gods and cultural worship targets are
@@ -137,19 +149,20 @@ Status values:
 - `Static`: machine/readback/verifier-covered; runtime/manual proof still pending.
 - `Drafted`: full manifest prose is authored and verifier-clean, pending promotion into shipped ESP records (used in the Content authored column).
 - `Ratified`: manifest prose authored, verifier-clean, gap-audited (no missing V1 surface), and checked against the locked content guardrails; pending final editorial read and CAT-6 promotion (used in the Content authored column).
+- `Packet-proven`: the race's current manual/runtime beta-feel packet passed and is evidence-recorded in `references/authoring/PDV_PreBetaRaceGateLedger.md` (used in the In-game proven column). This is current-packet proof, not full launch proof: final immersive world placement, the Authoria/ARR Requiem felt sweep, and any later-added surfaces still gate 1.0.
 
 | Race | Architecture locked | Implementation-spec locked | Hook feasibility checked | Content authored | Verifier-covered | In-game proven |
 |---|---|---|---|---|---|---|
-| Nord | Locked | Locked | Locked | Ratified | Static | Pending |
-| Imperial | Locked | Locked | Locked | Ratified | Static | Partial |
-| Breton | Locked | Locked | Locked | Ratified | Static | Pending |
-| Dunmer | Locked | Locked | Locked | Ratified | Static | Pending |
-| Altmer | Locked | Partial | Partial | Ratified | Static | Partial |
-| Khajiit | Locked | Locked | Locked | Ratified | Static | Partial |
-| Bosmer | Locked | Locked | Partial | Ratified | Static | Pending |
-| Redguard | Locked | Locked | Locked | Ratified | Static | Pending |
-| Orc | Locked | Locked | Partial | Ratified | Static | Pending |
-| Argonian | Locked | Locked | Locked | Ratified | Static | Pending |
+| Nord | Locked | Locked | Locked | Ratified | Static | Packet-proven (2026-06-18) |
+| Imperial | Locked | Locked | Locked | Ratified | Static | Packet-proven (2026-07-04) |
+| Breton | Locked | Locked | Locked | Ratified | Static | Packet-proven (2026-06-19) |
+| Dunmer | Locked | Locked | Locked | Ratified | Static | Packet-proven (2026-07-05) |
+| Altmer | Locked | Partial | Partial | Ratified | Static | Packet-proven |
+| Khajiit | Locked | Locked | Locked | Ratified | Static | Packet-proven |
+| Bosmer | Locked | Locked | Partial | Ratified | Static | Packet-proven |
+| Redguard | Locked | Locked | Locked | Ratified | Static | Packet-proven (2026-06-19) |
+| Orc | Locked | Locked | Partial | Ratified | Static | Packet-proven (2026-06-18) |
+| Argonian | Locked | Locked | Locked | Ratified | Static | Packet-proven (2026-06-18) |
 
 Content-authoring ratification audit (2026-05-31): a whole-roster gap audit
 confirmed the V1 manifest prose is content-complete. `pdv_content_verify` is
@@ -160,9 +173,12 @@ state/band/posture/crisis transitions); no required V1 surface is missing; and
 guardrail spot-checks passed (Altmer MarriageBeat = mortal continuity, no
 moon-sugar/generic-theft framing for Khajiit, Survey copy fiction-facing with no
 route/debug counters, Redguard Tu'whacca-primary). Daedric CAT-6 record/readback
-promotion is now complete as a code/readback track, but display readiness still
-requires controlled in-game proof, live sender proof, wrong/generic-source
-silence, stack/Survey legibility, and V2 voiced dialogue remains out of scope.
+promotion is now complete as a code/readback track. (Update 2026-06-13: the
+display-readiness slots that were open here -- controlled in-game proof, live
+sender proof, wrong/generic-source silence, and stack/Survey legibility -- have
+since passed; `pdv_daedric_beta_gate` reads all sixteen Princes as `pass` in
+`PDV_DaedricRuntimeEvidenceLedger.json`.) V2 voiced dialogue remains out of
+scope.
 Deferred-with-dependency prose stays recorded in the race manifest:
 Bosmer Green Pact per-item feedback (tag layer, Section 17.7a), MCM player-tab
 copy (Section 16.1/16.4), and localization (Section 23). Final editorial
@@ -237,10 +253,11 @@ contracts, static verifier expansion, final placement contracts, stack audits,
 Survey/status copy prep, recognition packet prep, and Daedric proof-path
 closeout. As of 2026-06-07, the Daedric CAT-6 record/readback portion is
 complete and the MCM/EventBus plus physical QASmoke proof sender surface exists;
-all sixteen exact organic live sender routes are also wired/readback. The
-remaining Daedric blockers are counted runtime/display proof, runtime proof for
-those exact live senders, wrong/generic-source silence, and stack/Survey
-legibility.
+all sixteen exact organic live sender routes are also wired/readback. (Update
+2026-06-13: the Daedric blockers listed here -- counted runtime/display proof,
+live sender runtime proof, wrong/generic-source silence, and stack/Survey
+legibility -- have since closed; the all-sixteen beta-display gate passes. The
+Prince V2 path-deepening proof is the remaining Daedric in-game lane.)
 `PDV_Phase20_NoInGameProof_Gates.json` is the
 structured gate for that work and is checked by the strict Phase 20
 race-costing verifier. It does not permit any race to move to `Pass` without
@@ -251,17 +268,19 @@ Reward magnitudes,
 immersion proof, and exact effect values remain tuning work for every race until
 implementation and playtesting prove the feel.
 
-Daedric full-content readiness remains a separate 1.0 content gate. All sixteen
-Skyrim-present Princes now have draft rows plus CAT-6 records/readback, with
+Daedric full-content readiness is now beta-display proven (2026-06-13). All
+sixteen Skyrim-present Princes have CAT-6 records/readback with
 manifest-derived per-Prince contracts for QUST, SPEL, MGEF, MESG, stigma
 globals, arrays, path wiring, Daedric FormList membership, and manager FormList
-wiring. This closes the record/readback promotion blocker and creates the
-controlled MCM/EventBus/QASmoke proof surface plus all sixteen exact organic
-quest-stage senders, but it does not prove beta-display behavior.
-Controlled/debug sender proof, runtime proof for the exact organic senders,
-wrong/generic-source silence, stack/Survey legibility, and deeper Hircine/Molag
-Bal curse-access proof remain before broad runtime promotion of the Prince
-paths.
+wiring; on top of that, the runtime/manual evidence ledger
+(`PDV_DaedricRuntimeEvidenceLedger.json`) records passing route markers, Active
+Effects, summaries, Prisma/notification display, generic-source silence,
+save/load, stack legibility, manual feel, and Hircine/Molag Bal curse
+no-double-fire for all sixteen Princes, and `pdv_daedric_beta_gate` passes.
+The pact redesign (one-active hard switch, ~2x high-stakes magnitudes) is
+in-game proven. Still open on the Daedric lane: the Prince V2 path-deepening
+proof (deepen-not-initiate, open-path deepen, Azura-as-path, curse
+coordination) and final immersive world placement of proof surfaces.
 
 The 2026-05-31 lore cross-review keeps the current workshop defaults. Altmer
 `MarriageBeat` is a Marriage / Mortal Continuity crisis about household,
@@ -275,8 +294,9 @@ supporting pressures; Bosmer reads through Y'ffre/Green Pact, Living Story,
 Exchange/Z'en, and Bandit Road/Baan Dar without exposing raw counters. Runil is
 now scoped to the planned V2 recognition/dialogue enhancement, not V1. The
 Khajiit lunar CAT-6 pilot has been superseded by all-Prince Daedric CAT-6
-record/readback proof; beta-display closeout now depends on runtime/display
-evidence rather than additional target-record promotion.
+record/readback proof; beta-display closeout depended on runtime/display
+evidence rather than additional target-record promotion, and that evidence has
+since been recorded (all-sixteen `pdv_daedric_beta_gate` pass, 2026-06-13).
 
 Experience Mode is design-locked but not implemented. `Pilgrim's Path` remains
 the default authored experience; `Wayfarer's Path` is the future lenient mode.
@@ -298,6 +318,58 @@ pilot is `PDV_Bless_Khajiit_Lunar_T1`, with `PDV_Bless_Bosmer_Exchange_T1` as
 fallback only if the Khajiit target
 record path is blocked. Drafting can continue; mass promotion and mass
 recognition should wait for those gates.
+
+## Remaining 1.0 Distance (2026-07-07)
+
+This section states the honest distance between the current proven state and
+the 1.0 launch target, in proof-bucket language. Authoritative living detail:
+`references/authoring/PDV_BetaFeelBurndown.md` and `AGENTS.md`.
+
+Landed since the 2026-06-07 update (beyond the race/Daedric closeouts above):
+
+- Quest-reaction matrix expansion: 832 matrix cells (~40-50 quests per deity,
+  90 watched quests, 7 meta-faucet lanes) live and in-game proven across all
+  eight setstage-able origins, including the paired-deity credit rule.
+- Foreign-award reachability gate: in-game proven both directions -- native
+  pantheons score full, off-roster `FOREIGN`/`TOLERATED` gods skip silently
+  with no piety and no Ledger row, and the reduced `0.4x` applies only to
+  roster-listed tolerated/foreign gods and Daedric-path faces.
+- Felt-neglect rework: neglect debuffs are flat (Requiem-felt) and bite on a
+  few-day lapse. Nord/Imperial neglect ESP batch is machine/readback clean;
+  Orkey and Dibella neglect passed manual Active Effects smoke (2026-07-06);
+  the remaining per-patron neglect Active Effects smoke is still open.
+- Universal Prisma sheet U1-U9: in-game PASS (2026-07-06), with the bugs it
+  caught (panel loss-visibility, stale debug rewards, cross-lane reward strip,
+  driver copy, Watching-Prince surfacing, quest-toast aggregation) fixed and
+  re-verified.
+- Pre-beta tester bundles ship as GitHub prereleases (current: PreBeta 9).
+
+Open to 1.0, by lane:
+
+- **Manual (in-game) proof lanes:** residual C2 Prisma beats (Altmer alignment
+  band, Khajiit Champion pin survives pruning, Redguard per-sect Champion
+  toast); Prince V2 path-deepening sweep (deepen-not-initiate, open-path
+  deepen, Azura-as-path, curse coordination; mega-packet Section F); C3
+  focus-trap re-confirm only if Prisma changes again; remaining per-patron
+  neglect Active Effects smoke; Requiem penalty feltness (Argonian/Breton
+  Health penalties, Imperial preservation -- readback `PASS=44`, Active
+  Effects/HP-bar proof open); Talos betrayal debug smoke (compile-clean,
+  organic detection is follow-on).
+- **Compatibility gate:** the Authoria/ARR Requiem felt sweep and accepted ARR
+  integration-test package remain the hard 1.0 compat gate; the other six
+  Bordello lists still target `patch-packaged` (see "1.0 Compatibility Gate").
+- **Unbuilt feature scope:** Experience Mode (Pilgrim's/Wayfarer's Path) is
+  design-locked but not implemented -- `PDV_ModePreset`, `PDV_GLO_Mode`, MCM
+  surfacing, manager scalars, verifier readback, and two-mode runtime smoke
+  are all open.
+- **Placement:** final immersive world placement of proof/devotional surfaces
+  (all Phase 20 packets and Daedric proof refs currently live in `QASmoke`).
+- **Presentation polish:** branding pass (WS-3) and journal polish (FP-049)
+  from the final-polish-look lane; final editorial read-through of the
+  ratified race content manifests.
+
+Small filed defects (e.g. slider cap, Hircine renounce over-fire copy) are
+tracked in the burndown, not here.
 
 ## 1.0 Compatibility Gate
 
@@ -459,6 +531,16 @@ Phase 18A/B runtime closeout (2026-05-30):
 
 **Implementation split:** Nord pantheon baseline is separate from commitment depth. `PDV_State_NordPantheonBaseline` stores `OldWays = 0` or `NineDivines = 1`; broad vs primary commitment uses the shared patron state and active patron globals. This lets Old Ways + Talos/Ysmir and Nine Divines + Talos remain distinct presentations without inventing separate commitment machinery.
 
+**Roster update (2026-07-06, in-game smoke passed):** the Old Ways roster now
+includes Orkey and Dibella alongside the promoted focusable Old Ways gods
+(Shor, Tsun, and Stuhn were promoted to focusable in the Phase 2 all-race
+pass). Orkey is a display-name override on the shared Arkay deity ledger --
+Nord Old Ways surfaces show "Orkey" while the internal `DeityName` stays Arkay
+-- with its own offer, rewards, and neglect spell ("Orkey's Neglect",
+`ResistMagic -5`). Dibella has offers, rewards, display, and neglect
+("Dibella's Neglect", `Restoration -5`). Both neglect debuffs passed manual
+Active Effects smoke on a Nord Old Ways save.
+
 **Primary-offer gate:** Nord primary offers are dawn-evaluated. A god must belong to the chosen pantheon baseline, meet the Faithful / Tier 2 offer threshold (`50` persistent piety by default), show qualifying signal activity on at least two separate in-game days within the last seven days, and not be blocked by cooldown. Major sacred events may count as one qualifying day, but do not bypass the sustained-pattern requirement or piety threshold alone.
 
 **Offer-decline rule:** "Not yet" is a player-agency choice, not a piety failure. Declining sets only a per-deity cooldown: seven in-game days after the first decline, fourteen after repeated declines. Broad worship continues and other qualifying gods may still offer.
@@ -606,7 +688,7 @@ Strongly path-dependent — the three traditions have almost no overlap at Champ
 
 **Setup shape:** No choice required. Layer 1 (ancestors) is always active. Layer 2 (Good Daedra acknowledgment) deepens naturally. Layer 3 (primary Good Daedra focus) unlocked by piety threshold.
 
-**Implementation state:** Dunmer does not use `PDV_State_DunmerPath`. Shared patron state owns primary focus; `PDV_Substrate_DunmerAncestor` owns the always-active ancestor substrate. `PDV_State_DunmerAncestorPosture` uses `Normal = 0`, `Strained = 1`, `Silent = 2`, and `RestoredScarred = 3`.
+**Implementation state:** Dunmer does not use `PDV_State_DunmerPath`. Shared patron state owns primary focus; `PDV_Substrate_DunmerAncestor` owns the always-active ancestor substrate. `PDV_State_DunmerAncestorPosture` uses `Normal = 0`, `Strained = 1`, `Silent = 2`, and `RestoredScarred = 3`. The Dunmer manual/runtime beta-feel packet closed on 2026-07-05; that closeout also rebuilt the ancestral urn as a usable MISC item (click-to-pray via `OnEquipped`, replacing the book-token pattern that crashed), giving the portable/private ancestor shrine its shipped form.
 
 **Focus options:** Native Dunmer focus is Azura, Boethiah, and Mephala. Other Daedric Princes may qualify only through the global Daedric path system, and present as deviation, trial, pact, taboo, curse pressure, or foreign bargain. Aedric patron commitment is not a Dunmer 1.0 path. The option map should preserve class appeal: Azura covers mage/restoration/threshold play, Boethiah covers warrior/spellsword/revolution play, Mephala covers stealth/social/network play, and non-Reclamation Daedric paths broaden appeal without becoming normal Dunmer religion.
 
@@ -664,7 +746,7 @@ The question the friction asks is: *how much of Skyrim's content are you willing
 ### Neglect texture
 ThalmørAlignment drift in the wrong direction for your faction is the primary neglect signal. An Orthodox Altmer who consorts with Daedra or helps Talos worshippers isn't just losing piety — they're becoming theologically incoherent. The neglect texture is **inconsistency**, not absence.
 
-Werewolf note: complete halt — no path forward, not even the heretical Tier 1 that vampire gets. The beast is the precise inversion of the Apotheosis project. This is now source/record-wired through the Altmer curse-message slice, but still needs runtime proof.
+Werewolf note: complete halt — no path forward, not even the heretical Tier 1 that vampire gets. The beast is the precise inversion of the Apotheosis project. This is source/record-wired through the Altmer curse-message slice; the current Altmer beta-feel packet closed `Pass` with no deferred manual proof and the werewolf hard halt in its recorded stack snapshot (see `PDV_PreBetaRaceGateLedger.md`), though the packet's edge lane does not record a dedicated werewolf-halt run.
 
 ---
 
@@ -672,7 +754,7 @@ Werewolf note: complete halt — no path forward, not even the heretical Tier 1 
 
 **Setup shape:** All Khajiit begin inside the Lunar Lattice automatically (no choice). Broad lunar worship (Tier 2 cap). Focused deity emphasis emerges *silently* through behavior — no formal offer system. Tier 3 through focused commitment.
 
-**Implementation state:** `PDV_Substrate_KhajiitLunar` owns the lunar substrate with canonical prefix `PDV.Substrate.KhajiitLunar.*`. Existing first keys are `Metric`, `Tier`, `LastEvent`, `LastPhase`, `ObservanceCount`, and `RoadHomeCount`. 1.0 uses the hybrid moon model: current phase gives small per-phase bonuses, while full-cycle consistency determines substrate strength. Prefer real Masser/Secunda state where reliable; otherwise use an abstract 28-day fallback. Khajiit do not use formal offer state for focus; `PDV_GLO_KhajiitFocusedEmphasis` mirrors the leading deity emphasis for CK/readback proof. Enum values are `None = 0`, `Khenarthi = 1`, `Azurah = 2`, `BaanDar = 3`, `Rajhin = 4`, `Alkosh = 5`. Focus requires `50` piety and a `15` piety lead over the next-highest focused deity; otherwise broad lunar worship remains valid. Road homes are `2-3` player-designated rest anchors, and piety requires cycling between them rather than repeating one convenient rest point. The first Phase 20 proof packet now wires ACTI bases for moon observance, two road-home anchors, Baan Dar road trickery, Rajhin elegant theft, and Alkosh dragon/order response; the manager rejects immediate same-anchor road-home repeats and exposes all five focus weights in summary readback. Curse/shadow pressure uses `PDV_State_KhajiitLunarPosture`: `Normal = 0`, `Strained = 1`, `Corrupted = 2`, `ShadowDrift = 3`. Vampirism sets `Corrupted`, lycanthropy sets `Strained`, and `ShadowDrift` requires dominant Nocturnal/shadow behavior rather than ordinary night travel. The six proof references are placed in `QASmoke` and pass readback plus route runtime proof. **(2026-06-07) The Khajiit piety pilot is now complete and runtime-proven.** The five emphasis deities (`PDV_Deity_Azura`/`Khenarthi`/`Rajhin`/`Alkosh` + shared `PDV_Deity_BaanDar`) are scripted, Start-Game-Enabled, and in `PDV_FLST_AllDeities` (now 10 members); Khajiit acts now **double-route** to pulse the matching emphasis deity's piety alongside the substrate/focus signal, so identity and devotion advance together; per-emphasis **T1/T2/T3 reward spells** grant at Seeker/Devoted/Champion; lunar **neglect** and **creed-violation piety loss** are wired; a tier-up notice fires for the focused emphasis; and **shared-deity reconciliation** (`PDV_DeityBase.EligibleStateTrackOriginRace`) gives the Khajiit Baan Dar emphasis full parity without disturbing Bosmer Bandit Road. In-game smoke confirmed all of the above. See `references/authoring/PDV_SessionHandoff_KhajiitPilot.md`. Remaining: optional R2/R5 smoke confirmations and cross-race propagation (Phase 2).
+**Implementation state:** `PDV_Substrate_KhajiitLunar` owns the lunar substrate with canonical prefix `PDV.Substrate.KhajiitLunar.*`. Existing first keys are `Metric`, `Tier`, `LastEvent`, `LastPhase`, `ObservanceCount`, and `RoadHomeCount`. 1.0 uses the hybrid moon model: current phase gives small per-phase bonuses, while full-cycle consistency determines substrate strength. Prefer real Masser/Secunda state where reliable; otherwise use an abstract 28-day fallback. Khajiit do not use formal offer state for focus; `PDV_GLO_KhajiitFocusedEmphasis` mirrors the leading deity emphasis for CK/readback proof. Enum values are `None = 0`, `Khenarthi = 1`, `Azurah = 2`, `BaanDar = 3`, `Rajhin = 4`, `Alkosh = 5`. Focus requires `50` piety and a `15` piety lead over the next-highest focused deity; otherwise broad lunar worship remains valid. Road homes are `2-3` player-designated rest anchors, and piety requires cycling between them rather than repeating one convenient rest point. The first Phase 20 proof packet now wires ACTI bases for moon observance, two road-home anchors, Baan Dar road trickery, Rajhin elegant theft, and Alkosh dragon/order response; the manager rejects immediate same-anchor road-home repeats and exposes all five focus weights in summary readback. Curse/shadow pressure uses `PDV_State_KhajiitLunarPosture`: `Normal = 0`, `Strained = 1`, `Corrupted = 2`, `ShadowDrift = 3`. Vampirism sets `Corrupted`, lycanthropy sets `Strained`, and `ShadowDrift` requires dominant Nocturnal/shadow behavior rather than ordinary night travel. The six proof references are placed in `QASmoke` and pass readback plus route runtime proof. **(2026-06-07) The Khajiit piety pilot is now complete and runtime-proven.** The five emphasis deities (`PDV_Deity_Azura`/`Khenarthi`/`Rajhin`/`Alkosh` + shared `PDV_Deity_BaanDar`) are scripted, Start-Game-Enabled, and in `PDV_FLST_AllDeities` (now 10 members); Khajiit acts now **double-route** to pulse the matching emphasis deity's piety alongside the substrate/focus signal, so identity and devotion advance together; per-emphasis **T1/T2/T3 reward spells** grant at Seeker/Devoted/Champion; lunar **neglect** and **creed-violation piety loss** are wired; a tier-up notice fires for the focused emphasis; and **shared-deity reconciliation** (`PDV_DeityBase.EligibleStateTrackOriginRace`) gives the Khajiit Baan Dar emphasis full parity without disturbing Bosmer Bandit Road. In-game smoke confirmed all of the above. See `references/authoring/PDV_SessionHandoff_KhajiitPilot.md`. The Phase 2 cross-race propagation that this pilot seeded is complete (static gate 2026-06-07; all ten race packets have since passed manual/runtime evidence). The Khajiit beta-feel packet itself passed with the wired lunar packet, Baan Dar Champion capstone, Rajhin elegant-theft edge, Alkosh word-of-power dawn drip, rejection sweep, Survey/status, and stack snapshot; the five phase-blessing spells and the full lunar curse-posture (`PDV_State_KhajiitLunarPosture` + curse MessageBoxes + ShadowDrift evidence gate) were closed and proven in-game on 2026-06-13.
 
 ### Champion moment
 
