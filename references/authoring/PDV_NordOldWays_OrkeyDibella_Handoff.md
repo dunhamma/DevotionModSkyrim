@@ -146,10 +146,15 @@ Change (affects Imperial AND the reused Nord lane, one shared spell family):
 - Mara is now Restoration + Resist Magic -- two Requiem-felt passives,
   identical for Imperial and Nord patrons.
 
-ESP author (PENDING game-lock release): the write mints
-PDV_MGEF_Imperial_Mara_T2_ResistMagic + _T3_ResistMagic and rebuilds the two
-spell effect lists. Dry-run PASS, 0 errors, no capstone/preserve records in
-the Imperial spec (nothing protected to drop). Run when Skyrim is closed:
+ESP author (DONE 2026-07-06, after game exit): minted
+PDV_MGEF_Imperial_Mara_T2_ResistMagic (07161C) + _T3_ResistMagic (07161D),
+both ValueModifier/ResistMagic, no conditions. Readback confirms Mara T2 =
+Restoration +13 / Resist Magic +5%, Mara T3 = Restoration +23 / Resist Magic
++15% (two effects each). Backup: Backups\phase20-race-rewards\
+Devotion.esp.20260706-132944.bak. Post-write chain all green: SEQ refreshed,
+PDV_MCM recompiled, pdv_verify FAIL=0 (only the pre-existing medallion-glyph
+WARN), coverage audit PASS 147, requiem penalty audit 44/44 PASS. Only the
+in-game restart + smoke remains. Commands used:
 
 ```
 dotnet run --project tools/pdv-phase20-race-author -c Release -- \
