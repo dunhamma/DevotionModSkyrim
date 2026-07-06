@@ -978,6 +978,41 @@ h1 {
 .god__meta-state.is-good { color: var(--green); }
 .god__meta-state.is-warning { color: var(--red); }
 
+/* System kicker: a pill above the god name marking a distinguished relationship
+   (a watching pre-pact Prince, or a neglected god). Sits on its own line above
+   the name so it reads as identity, not a metric. Carried by a label word so the
+   signal survives without colour. Placed after the .god.v-* rules so the edge
+   accent below wins the border-left-color cascade. */
+.god.sys-watching { border-left-color: var(--blue); }
+.god.sys-warning { border-left-color: var(--red); }
+
+.god__badge {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 5px;
+  padding: 1px 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.god__badge.is-watching {
+  color: var(--blue);
+  border-color: rgba(157, 184, 210, 0.55);
+  background: rgba(157, 184, 210, 0.12);
+}
+
+.god__badge.is-warning {
+  color: var(--red);
+  border-color: rgba(201, 121, 104, 0.55);
+  background: rgba(201, 121, 104, 0.12);
+}
+
 .god__net { display: grid; justify-items: end; gap: 1px; text-align: right; }
 
 .god__net strong { font-size: 25px; line-height: 1; font-variant-numeric: tabular-nums; }

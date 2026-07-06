@@ -1675,6 +1675,17 @@
   const DASH_STATE_LABELS = { gaining: "Gaining", steady: "Steady", starving: "Starving", neglected: "Needs attention" };
   const DASH_STATE_VALENCE = { gaining: "good", steady: "neutral", starving: "warning", neglected: "warning" };
 
+  // A god's SYSTEM (patron / pantheon / watching / neglected) is a different axis
+  // from its STATE. patron/pantheon are the ordinary cases and read fine without a
+  // tag, so only the distinguished relationships get a kicker badge: a pre-pact
+  // Prince you are building toward ("watching"), and a neglected god. (The manager
+  // currently only emits "watching" here -- neglect is carried through god.state --
+  // but "neglected" is declared in the systems array, so we surface it too.)
+  const DASH_SYSTEM_BADGES = {
+    watching: { label: "Watching", tone: "watching" },
+    neglected: { label: "Neglected", tone: "warning" },
+  };
+
   const dashboardGodMatches = (god) => {
     const stateKey = text(god.state, "steady");
     if (dashboardFilter.god && text(god.god) !== dashboardFilter.god) return false;
@@ -1781,6 +1792,18 @@
 
     const identity = document.createElement("span");
     identity.className = "god__identity";
+
+    // Kicker badge for a distinguished relationship (watching Prince / neglected
+    // god). Sits above the name so it reads as "what this god is", not a metric.
+    const systemBadge = DASH_SYSTEM_BADGES[text(god.system)];
+    if (systemBadge) {
+      block.classList.add(`sys-${systemBadge.tone}`);
+      const badge = document.createElement("span");
+      badge.className = `god__badge is-${systemBadge.tone}`;
+      badge.textContent = systemBadge.label;
+      identity.appendChild(badge);
+    }
+
     const name = document.createElement("strong");
     name.className = "god__name";
     name.textContent = displayName(god.god, text(god.god, "A god"));
