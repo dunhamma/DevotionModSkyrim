@@ -110,10 +110,9 @@ zeroes regen buffs, so flat heals must show the bar move here).
 - **See:** **Accept** gives the locked race-specific Prisma toast (Nord/Imperial: *"{patron} has named you their
   own."*; Dunmer: *"The ash-prayer has a name: {patron}."*; Altmer: *"You name {patron} your focus."*; Redguard:
   *"You walk under {patron} now."*) and a pinned Book of Days line for the race's offer-accept wording. **Refuse**
-  gives the locked race-specific Prisma toast (Nord/Imperial: *"You turned {patron} away."*; Dunmer: *"You set
-  {patron} aside."*; Altmer: *"You keep to the foundation."*; Redguard: *"You keep to the sect."*) and a pinned
-  Book of Days line saying that patron will not ask again. Neither choice
-  forces the full Devotion panel open. Book of Days lines are not blank, and the next Book key press still opens.
+  is intentionally quiet after the 2026-07-06 ruling: no toast, no sound, no screen wash, and no forced panel.
+  It still writes the pinned Book of Days line saying that patron will not ask again. Book of Days lines are not
+  blank, and the next Book key press still opens.
 - **Record:** ___
 
 ### U9 -- how it reads  [Tester] [M]
@@ -134,7 +133,7 @@ zeroes regen buffs, so flat heals must show the bar move here).
 | U5 Book of Days + prune | legible; ordinary prune, milestones persist | | |
 | U6 neglect | toast + BoD once on first lapse | | |
 | U7 neglect recovery | recovery beat surfaces; no repeat lapse or forced panel | | |
-| U8 offer accept/refuse | toast + pinned BoD; no forced panel; no blank lines | | |
+| U8 offer accept/refuse | accept toast + pinned BoD; refuse silent + pinned BoD; no forced panel; no blank lines | | |
 | U9 reads | one coherent record; no blank/double/wrong-space | | |
 
 Owner: capture the Papyrus + `DevotionPrismaBridge` logs, record into `PDV_V1_BetaReadinessGate.md`.

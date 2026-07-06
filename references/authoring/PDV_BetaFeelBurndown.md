@@ -84,8 +84,10 @@ remain separate. Caught and fixed during the Prisma pass:
 | Quest-reaction surfacing aggregation | Fixed + in-game re-verified | Quest fires now emit one aggregate toast plus one Book of Days line, not a burst per matrix cell |
 
 Filed from the same pass and still open: `task_387bfc95` slider cap >=1000,
-`task_e6904bb3` Orkey/Dibella neglect debuff, `task_8c27e440` Refuse-goes-quiet,
-and `task_7dab1ebb` Hircine renounce over-fire/copy.
+`task_e6904bb3` Orkey/Dibella neglect debuff, and `task_7dab1ebb` Hircine
+renounce over-fire/copy. `task_8c27e440` Refuse-goes-quiet is implemented and
+machine-gated; manual smoke still needs to confirm no toast/sound/wash and the
+pinned refusal chronicle.
 
 Still owed for Sitting-1 Prisma: C2 beat 3 Altmer alignment band, C2 beat 5 Khajiit
 Champion pin survives pruning, and C2 beat 6 Redguard per-sect Champion toast. After

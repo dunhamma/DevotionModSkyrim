@@ -55,6 +55,15 @@ node .\tools\pdv_verify.mjs --json
 > A10). Both recompiled 0 errors / 0 warnings and live-source was re-synced to the
 > MO2 build copy (hash-identical). Rerun the three sanity commands above before
 > Sitting 1.
+>
+> Update 2026-07-06: formal-offer **Refuse** was changed after the U8 pass to obey
+> the owner "refuse goes quiet" ruling. `SurfaceTransition(..., silent=True)` now
+> writes the pinned refusal chronicle but skips the transient director cue; the
+> warning toast was removed. Accept remains fully surfaced. Machine gates passed
+> for manager+MCM compile, `pdv_verify`, `pdv_prisma_ui_audit`, and
+> `pdv_formal_offer_check`; `pdv_book_of_days_audit` had one unrelated repo/live
+> `app.js` LF/CRLF hash drift. Manual smoke still needs to confirm Refuse is silent
+> and Accept still toasts/sounds.
 
 ---
 
@@ -231,8 +240,9 @@ Good Daedra/deviation-price surfaces.
 ### C1. Universal sheet U1-U9 (once on the current build)
 Run `references/authoring/PDV_RunSheet_Universal_Prisma_V1.md`. U6 (neglect drop) and U7
 (recovery at piety 15, no tier-up) are the newest rows; U8 covers offer accept/refuse with the
-LOCKED per-race strings (see the table there for exact Nord/Imperial/Dunmer/Altmer/Redguard
-toast copy). Blank Book of Days line anywhere = FAIL.
+LOCKED per-race accept strings and the 2026-07-06 quiet-refuse ruling. Accept still gives the
+race-specific toast + pinned chronicle; Refuse gives **no toast, no sound, no screen wash** and
+writes only the pinned refusal chronicle. Blank Book of Days line anywhere = FAIL.
 
 U4 now also carries the **curated driver-reason retest** (Sitting-1 U4 found every curated
 award recording generic "a devotional rite"; fixed on main `c8a4aa34` -- awards now carry the
@@ -267,7 +277,7 @@ Copy authority: `PDV_PrismaParity_AuthoringDraft.md` (LOCKED 2026-06-25) for off
 | # | Beat | Origin | Do | See |
 |---|---|---|---|---|
 | 1 | Nord offer ACCEPT | 0 | Seed commitment signals -> Evaluate -> Accept | Toast + PINNED BoD "The broad faith narrows to one; {patron} has named you their own."; Ledger shows the carryover driver |
-| 2 | Nord offer REFUSE | 0 | fresh save, same gate -> Refuse | Toast + PINNED BoD "...you turned {patron} away, and {patron} will not ask again."; no forced panel |
+| 2 | Nord offer REFUSE | 0 | fresh save, same gate -> Refuse | **No toast, no sound, no screen wash**; PINNED BoD "...you turned {patron} away, and {patron} will not ask again."; no forced panel |
 | 3 | Altmer alignment band | 3 | drive Thalmor alignment across a committed band (MCM debug) | Toast "The Thalmor question turns in you: {band}." + chronicle (locked copy); remember the band label lags raw by design |
 | 4 | Hircine renunciation | any | open Hircine path (MCM Daedric debug), then Renounce | Renunciation toast + PINNED reorientation chronicle from PRODUCTION RenouncePath (not the debug button); no double entry on the same tick; residue toast still arrives later |
 | 5 | Khajiit Champion pin | 6 | force a Khajiit patron to Champion, Run Dawn; then wait 22+ days | Champion chronicle is PINNED (survives pruning) with tier-band suffix |

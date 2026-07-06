@@ -113,10 +113,12 @@ them.
 - `task_387bfc95`: MCM Debug curated-signal slider caps at 0-999, while many deity signal IDs are
   1000+.
 - `task_e6904bb3`: Orkey/Dibella patrons have no neglect debuff spell.
-- `task_8c27e440`: formal offer Refuse should go quiet -- pinned chronicle only, no warning toast
-  or sound; Accept keeps its flourish.
 - `task_7dab1ebb`: Hircine renunciation over-fires and replaces the intended renounce copy; residue
   should arrive later rather than same-frame.
+
+`task_8c27e440` was implemented after this checkpoint: formal offer Refuse now calls
+`SurfaceTransition(..., silent=True)` and removes the warning toast, so only the pinned refusal
+chronicle writes. Accept remains fully surfaced. Machine gates passed; manual smoke is still owed.
 
 **Testing gotchas captured:** the MCM "Selected deity" is a debug cursor, not the active patron, and
 resets on page reset; cycle it to the target before every Force Piety / Apply action. Commitment

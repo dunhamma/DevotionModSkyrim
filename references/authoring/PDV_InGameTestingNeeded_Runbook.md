@@ -123,6 +123,12 @@ alignment band, C2 beat 5 Khajiit Champion pin survives pruning, and C2 beat 6
 Redguard per-sect Champion toast. Do not rerun U1-U9 unless new Prisma/source
 changes invalidate the evidence.
 
+2026-07-06 formal-offer refuse update: `task_8c27e440` is implemented in source
+and machine-gated. Refuse now writes the pinned Book of Days refusal chronicle
+silently -- no toast, no sound, no screen wash -- while Accept keeps its toast
+and sound. Manual smoke still needs one disposable offer refuse and one accept
+control to prove the player-facing behavior in game.
+
 2026-07-05 strict gate rerun: after the Dunmer evidence sync,
 `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` reports
 `STRICT_GATE_PASS` with `PASS=31`, `WARN=1`, `INFO=2`, and no blockers. The one
@@ -232,8 +238,10 @@ Additional last-pass runtime sweeps before any broad beta-feel claim:
   offer accept/refuse, passed on 2026-07-06. Finish only the remaining C2
   per-origin spot-checks unless new Prisma/source changes invalidate the run:
   Altmer Thalmor-alignment band toast/chronicle, Khajiit Champion pinned entry
-  after pruning, and Redguard per-sect Champion toast. These prove manual display
-  only; keep them separate from the static Prisma-to-1.0 audit.
+  after pruning, and Redguard per-sect Champion toast. Because Refuse changed
+  after U8, also run the small formal-offer control: Refuse should be silent but
+  pinned, Accept should still toast/sound. These prove manual display only; keep
+  them separate from the static Prisma-to-1.0 audit.
 - Requiem felt-penalty sweep: prove the new negative Health penalties are felt
   in-game and Imperial remains disease-resistance based.
 
