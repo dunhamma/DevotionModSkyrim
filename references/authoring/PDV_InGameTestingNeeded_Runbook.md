@@ -151,6 +151,16 @@ being primed while the backend was still in `Broad worship`. This is
 compile/static proof only; rerun Orkey/Dibella Active Effects smoke after a
 fresh Skyrim launch before marking the manual proof passed.
 
+2026-07-06 Old Ways neglect smoke PASSED (manual/runtime): after a fresh Skyrim
+launch, Orkey (Nord Old Ways Arkay) showed `Orkey's Neglect` = Magic Resistance
+-5% and Dibella showed `Dibella's Neglect` = Restoration -5 in Active Effects.
+The proven path uses a new modal-free `Prime neglect eligible` MCM button
+(commit cad3d07) that sets the selected deity active AND drops its piety to 0,
+then `Run neglect pass`. `Prime decay eligible` does NOT work for the neglect
+smoke: it sets piety 20 (above the piety<=10 neglect floor) and a lapse stamp of
+exactly the grace boundary (not strictly greater), so neither flagging path
+fires. Neglect needs active-patron + piety<=10; decay is a separate system.
+
 2026-07-05 strict gate rerun: after the Dunmer evidence sync,
 `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` reports
 `STRICT_GATE_PASS` with `PASS=31`, `WARN=1`, `INFO=2`, and no blockers. The one
@@ -264,16 +274,16 @@ Additional last-pass runtime sweeps before any broad beta-feel claim:
   after U8, also run the small formal-offer control: Refuse should toast and pin
   with no wash/sound, Accept should still toast/sound. These prove manual display only; keep
   them separate from the static Prisma-to-1.0 audit.
-- Old Ways neglect felt smoke: reselect Orkey/Arkay, click `Force selected
-  patron` (or use `Debug patron override` from `Debug: State & Rewards` if the
-  new row is absent), then `Prime decay eligible`, then `Run neglect pass`, and
-  confirm Magic Resistance -5 in Active Effects; repeat for Dibella and confirm
-  Restoration -5. Piety does not need to be forced to 0. After the 2026-07-06
-  MCM prompt re-entry/no-op, these neglect/decay buttons no longer open Yes/No
-  confirmations; expect immediate `PDV: active patron forced.` when using the
-  new row, plus `PDV: decay eligible primed.` and `PDV: neglect pass run.`
-  notifications. A Skyrim relaunch is required to load the updated
-  `PDV_MCM.pex`.
+- Old Ways neglect felt smoke: PASSED 2026-07-06. Recipe (deterministic):
+  reselect Orkey/Arkay, click the modal-free `Prime neglect eligible` row
+  (notification `PDV: neglect eligible primed (active + piety 0).`), then
+  `Run neglect pass`, and confirm `Orkey's Neglect` = Magic Resistance -5% in
+  Active Effects; repeat for Dibella and confirm `Dibella's Neglect` =
+  Restoration -5. Do NOT use `Prime decay eligible` (wrong system: piety 20 is
+  above the piety<=10 neglect floor and the lapse stamp lands exactly on the
+  grace boundary, so nothing flags), `Debug patron override` (still opens a
+  Yes/No modal that can freeze), or `Set Broad worship` (the blocking state). A
+  Skyrim relaunch is required to load the updated `PDV_MCM.pex`.
 - Requiem felt-penalty sweep: prove the new negative Health penalties are felt
   in-game and Imperial remains disease-resistance based.
 
