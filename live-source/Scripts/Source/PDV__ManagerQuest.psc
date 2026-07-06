@@ -12640,6 +12640,20 @@ Function SyncImperialRewards(Actor playerRef)
     Bool broadCivicFaithful = isImperial && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount") >= 6
     SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T2, broadCivicFaithful, "Imperial Civic T2")
 
+    ; The Divine reward SPELs below are REUSED by the Nord baseline lanes
+    ; (SyncNordRewardFamily: Mara/Arkay/Dibella + the whole Nine Divines set, owner ruling
+    ; 2026-06-27). SyncNordRewards runs BEFORE this in SyncFirstTierRaceRewardRuntime and
+    ; grants the Nord patron's spell; running the Imperial family here on a non-Imperial save
+    ; (isActive is false because origin != Imperial) would REMOVE that just-granted spell in
+    ; the same pass -- which is why Nord reused-spell rewards never reached Active Effects.
+    ; Only the player's own race lane should manage these records; skip entirely when not
+    ; Imperial. SyncNordRewards runs unconditionally and already owns both grant and cleanup
+    ; for these spells on every non-Imperial save (Civic_T2 above is Imperial-only, so it
+    ; stays before this guard to keep self-clearing).
+    if !isImperial
+        return
+    endIf
+
     SyncImperialRewardFamily(playerRef, PDV_Akatosh, PDV_Bless_Imperial_Akatosh_T1, PDV_Bless_Imperial_Akatosh_T2, PDV_Bless_Imperial_Akatosh_T3, "Akatosh")
     SyncImperialRewardFamily(playerRef, PDV_Mara, PDV_Bless_Imperial_Mara_T1, PDV_Bless_Imperial_Mara_T2, PDV_Bless_Imperial_Mara_T3, "Mara")
     SyncImperialRewardFamily(playerRef, PDV_Arkay, PDV_Bless_Imperial_Arkay_T1, PDV_Bless_Imperial_Arkay_T2, PDV_Bless_Imperial_Arkay_T3, "Arkay")

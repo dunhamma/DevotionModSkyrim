@@ -87,14 +87,39 @@ pending/cooldown only, NOT the active patron):
    baseline); Active Effects show "Dibella's Grace" for the current tier
    (Devoted at piety 50: Speech +13, Magicka Regeneration +5%).
 
-Known false-negative (FIXED 2026-07-06): before the fix, "Debug patron
-override" set the patron without resyncing reward families, so toasts,
-panel, and Survey all updated while Active Effects stayed empty until the
-next dawn. That was a debug-path gap in ForceSetActiveDeityByIndex (both
-baselines affected), not missing Old Ways reward wiring; the offer-accept
-path always synced. DebugClearActiveDeity got the same fix (strips reward
-spells immediately on clear). Requires a full game restart to load the
-recompiled PDV__ManagerQuest.pex.
+Root-cause bug (FIXED 2026-07-06, commit after aa59daf): even a clean
+offer -> accept granted the reused Imperial reward spell and then STRIPPED
+it in the same pass, so Nord reused-spell rewards never reached Active
+Effects while every display cue (toast/BoD/panel/Survey) passed.
+
+Mechanism: the Nord baseline lanes reuse the Imperial Divine reward SPELs
+(Mara/Arkay-Orkey/Dibella + the whole Nine Divines set, owner ruling
+2026-06-27). In SyncFirstTierRaceRewardRuntime, SyncNordRewards runs and
+grants the Nord patron's spell; SyncImperialRewards runs AFTER it and,
+because it managed the same records unconditionally with
+isActive = origin == IMPERIAL (false on a Nord save), removed the spell
+SyncNordRewards had just added. Net: no Active Effect. Confirmed in the
+Papyrus log (offer.Orkey.Accept fired, tier Devoted, no errors) plus static
+trace of both lanes. This latently affected ALL Nord reused-spell rewards,
+not just the new Orkey/Dibella ones -- the coverage audit could not see it
+because it is a static existence/fill check, not a runtime add-then-remove
+ordering check.
+
+Fix: SyncImperialRewards now early-returns its reward-family block when the
+player is not Imperial (Civic_T2, an Imperial-only record, stays before the
+guard to keep self-clearing). Only the player's own race lane manages the
+reused records; SyncNordRewards runs unconditionally and already owns both
+grant and cleanup on every non-Imperial save, and on Imperial saves the
+Nord-first / Imperial-last order still grants correctly.
+
+Earlier same-day fix (also shipped): "Debug patron override"
+(ForceSetActiveDeityByIndex) and DebugClearActiveDeity did not resync reward
+families -- a separate debug-path dawn-lag gap. Both now call
+SyncFirstTierRaceRewardRuntime. The offer-accept path always synced; that
+gap was NOT the reason Active Effects were missing (the strip above was).
+
+Both fixes require a full game restart to load the recompiled
+PDV__ManagerQuest.pex.
 
 Cross-baseline check:
 9. On a Nine Divines Nord save, Arkay must still offer as "Arkay's Covenant"
