@@ -47,7 +47,7 @@ All Papyrus changes are in BOTH the tracked live-source and the MO2 build copy
 | pdv_prisma_ui_audit | PASS (88 checks) |
 | Orkey MESG in Devotion.esp | DONE 2026-07-06 -- 07161B, --check PASS |
 | SEQ refresh after ESP write | DONE (pdv_refresh_seq --write, backup kept) |
-| In-game offer smoke | PENDING -- owner action |
+| In-game offer smoke | PASS 2026-07-06 -- owner confirmed Orkey + Dibella offer, accept, and Active Effects on a default Nord Old Ways save (after the reused-spell-strip fix) |
 
 ## Orkey MESG ESP write (completed)
 
