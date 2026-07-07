@@ -85,9 +85,6 @@ Int Property EVT_KILL_DRAGON = 302 AutoReadOnly
 Int Property EVT_KILL_ANIMAL_NONCOMBAT = 303 AutoReadOnly
 Int Property EVT_MURDER_DEFENSELESS = 304 AutoReadOnly
 ; Devotional / observance
-Int Property EVT_PRAY_AT_SHRINE = 310 AutoReadOnly
-Int Property EVT_TAKE_BLESSING = 311 AutoReadOnly
-Int Property EVT_SHOUT_TO_OPEN_SKY = 312 AutoReadOnly
 Int Property EVT_REST_UNDER_OPEN_SKY = 313 AutoReadOnly
 Int Property EVT_SLEEP_IN_BED = 314 AutoReadOnly
 ; Labor / craft (one Story Manager Craft Item node covers smith/enchant/brew/cook)
@@ -96,7 +93,6 @@ Int Property EVT_ENCHANT_ITEM = 331 AutoReadOnly
 Int Property EVT_BREW_POTION = 332 AutoReadOnly
 Int Property EVT_COOK_MEAL = 333 AutoReadOnly
 Int Property EVT_HARVEST_INGREDIENT = 334 AutoReadOnly
-Int Property EVT_MINE_OR_CHOP = 335 AutoReadOnly
 ; Knowledge
 Int Property EVT_READ_SKILL_BOOK = 340 AutoReadOnly
 Int Property EVT_READ_SPELL_TOME = 341 AutoReadOnly
@@ -111,7 +107,6 @@ Int Property EVT_CLEAR_BOUNTY = 351 AutoReadOnly
 Int Property EVT_PICK_OWNED_LOCK = 360 AutoReadOnly
 Int Property EVT_TRESPASS = 361 AutoReadOnly
 Int Property EVT_STEAL_ITEM = 362 AutoReadOnly
-Int Property EVT_PICKPOCKET = 363 AutoReadOnly
 Int Property EVT_ASSAULT_INNOCENT = 364 AutoReadOnly
 Int Property EVT_RAISE_UNDEAD = 365 AutoReadOnly
 Int Property EVT_VAMPIRE_FEED = 366 AutoReadOnly
@@ -277,12 +272,6 @@ String Function EventLabel(Int eventType)
         return "kill-animal-noncombat"
     elseIf eventType == EVT_MURDER_DEFENSELESS
         return "murder-defenseless"
-    elseIf eventType == EVT_PRAY_AT_SHRINE
-        return "pray-at-shrine"
-    elseIf eventType == EVT_TAKE_BLESSING
-        return "take-blessing"
-    elseIf eventType == EVT_SHOUT_TO_OPEN_SKY
-        return "shout-to-open-sky"
     elseIf eventType == EVT_REST_UNDER_OPEN_SKY
         return "rest-under-open-sky"
     elseIf eventType == EVT_SLEEP_IN_BED
@@ -297,8 +286,6 @@ String Function EventLabel(Int eventType)
         return "cook-meal"
     elseIf eventType == EVT_HARVEST_INGREDIENT
         return "harvest-ingredient"
-    elseIf eventType == EVT_MINE_OR_CHOP
-        return "mine-or-chop"
     elseIf eventType == EVT_READ_SKILL_BOOK
         return "read-skill-book"
     elseIf eventType == EVT_READ_SPELL_TOME
@@ -321,8 +308,6 @@ String Function EventLabel(Int eventType)
         return "trespass"
     elseIf eventType == EVT_STEAL_ITEM
         return "steal-item"
-    elseIf eventType == EVT_PICKPOCKET
-        return "pickpocket"
     elseIf eventType == EVT_ASSAULT_INNOCENT
         return "assault-innocent"
     elseIf eventType == EVT_RAISE_UNDEAD

@@ -288,8 +288,9 @@ EndFunction
 Function HandleStoryAddToPlayer(ObjectReference akOwner, ObjectReference akContainer, Location akLocation, Form akItemBase, Int aiAcquireType)
     ; Story Manager "Player Add Item" fires for every acquisition mode; only the
     ; steal acquire type (1, per the vanilla WIAddItem03 event-data guard) is a
-    ; theft act. Pickpocket arrives as type 3 and stays unrouted until
-    ; EVT_PICKPOCKET wiring lands.
+    ; theft act. Pickpocket arrives as type 3 and stays deliberately unrouted
+    ; (the dead EVT_PICKPOCKET constant was removed 2026-07-07 by the dead-wiring
+    ; burndown; re-declare and route it here if pickpocket ever becomes a scored act).
     if aiAcquireType != 1
         Trace(3, "HandleStoryAddToPlayer skipped: acquire type " + aiAcquireType + " is not steal.")
         return

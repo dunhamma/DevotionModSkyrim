@@ -1,8 +1,6 @@
 actor,eventId,eventName,sentiment,tier,baseDelta,dailyCap,cooldownDays,stanceGate,conditionTag,originGate,notes
 kyne,1,kill-hostile-beast,-,small,-0.5,2,0,,,,Kyne protects beasts; softened to -0.5 + cap 2/day for self-defense fairness (combat migration)
 kyne,2,kill-hostile-humanoid,+,small,0.5,0,0,,,,uncapped (combat migration)
-kyne,3,kill-event3,+,small,0.25,0,0,,,,legacy branch; router does not emit 3 yet
-kyne,4,kill-event4,+,small,0.5,0,0,,,,legacy branch; router does not emit 4 yet
 kyne,40,shout-attack,+,small,0.35,3,0.0208,,Shout,,NOT read - Kyne shout uses property-based call
 kyne,343,learn-word-of-power,+,medium,1.0,2,0.5,,,,Kyne gifted the Voice to mankind
 kyne,313,rest-under-open-sky,+,small,0.5,3,0,,,,the Kiss of Kyne is wind and open sky
@@ -208,7 +206,6 @@ Stendarr,365,raise-undead,-,large,-1.5,1,1.0,,ActorTypeUndead,,necromancy is the
 Stendarr,362,steal-item,-,medium,-0.75,2,0.5,,owned,,the god of just rule abhors taking what is not lawfully yours
 Stendarr,361,trespass,-,small,-0.25,3,0,,,,just rule honors lawful bounds and the peace of another's home
 Stendarr,351,clear-bounty-serve-time,+,medium,0.75,1,0.5,,,,answering for one's crimes is the just mercy Stendarr asks of all
-Zenithar,335,mine-ore-or-chop-wood,+,small,0.5,3,0,,,,honest toil at the vein and the woodpile; the root of all trade
 Zenithar,333,cook-meal,+,small,0.25,3,0,,,,the victualler's craft; value made from honest provisioning
 Zenithar,344,increase-skill,+,small,0.25,3,0,,,,mastery earned by labor is the merchant-warrior's wealth
 Zenithar,351,clear-bounty-serve-time,+,small,0.5,3,0,,,,a debt paid in full honors the god of fair dealing

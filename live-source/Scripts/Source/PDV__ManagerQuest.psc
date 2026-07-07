@@ -535,7 +535,7 @@ Float Property DECAY_PER_DAY = 0.5 AutoReadOnly
 Float Property BROAD_WORSHIP_DECAY_MULTIPLIER = 0.2 AutoReadOnly
 Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; Bump when PDV_DeityLikesDislikes.csv OR the stance matrix changes so existing saves reload.
-Int Property LIKES_DISLIKES_VERSION = 12 AutoReadOnly
+Int Property LIKES_DISLIKES_VERSION = 13 AutoReadOnly
 Int Property PRINCE_LD_VERSION = 4 AutoReadOnly
 ; Bump when the Daedric pact model changes so existing saves re-run the migration
 ; (v2: active-pact-only sync + milestone presentation refresh; v3: collapse a
@@ -9208,8 +9208,6 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
     if ldName == "kyne"
         WriteLD(deity, 1, -0.5, 2, 0.0, -1)
         WriteLD(deity, 2, 0.5, 0, 0.0, -1)
-        WriteLD(deity, 3, 0.25, 0, 0.0, -1)
-        WriteLD(deity, 4, 0.5, 0, 0.0, -1)
         WriteLD(deity, 40, 0.35, 3, 0.0208, -1)
         WriteLD(deity, 343, 1.0, 2, 0.5, -1)
         WriteLD(deity, 313, 0.5, 3, 0.0, -1)
@@ -9267,7 +9265,6 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 362, -1.0, 2, 0.5, -1)
         WriteLD(deity, 360, -0.5, 3, 0.0, -1)
         WriteLD(deity, 361, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 335, 0.5, 3, 0.0, -1)
         WriteLD(deity, 333, 0.25, 3, 0.0, -1)
         WriteLD(deity, 344, 0.25, 3, 0.0, -1)
         WriteLD(deity, 351, 0.5, 3, 0.0, -1)
