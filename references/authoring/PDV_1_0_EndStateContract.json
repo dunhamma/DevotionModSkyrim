@@ -361,6 +361,46 @@
       "post10": false
     },
     {
+      "id": "C-DISLIKE-DEBUFF-BUILD",
+      "title": "Minor dislike-consequence overlay built: every deity dislike lane carries a small felt domain sting beyond piety loss",
+      "category": "machine-gate",
+      "lane": "dislike-consequence",
+      "evidence": {
+        "read": {
+          "kind": "not-built",
+          "params": {
+            "plannedEvidence": "node .\\tools\\pdv_dislike_consequence_audit.mjs exit-zero (domain-sting records exist, every deity maps to one domain, magnitudes match the spec bands, penalties are Requiem-proof-shaped, standing/band/anti-stack gates present). Build per PDV_CodexHandoff_DislikeConsequence_V2.md."
+          }
+        }
+      },
+      "freshness": {
+        "sources": ["@managerLive", "@managerDeployed", "@espDeployed"],
+        "onDrift": "FAIL"
+      },
+      "closes": "Execute PDV_CodexHandoff_DislikeConsequence_V2.md (shared domain overlay, ~6-7 MGEF), then wire the strict audit and replace this read block with its evidence. Once the felt registry enumerates the disfavor class, the per-domain stings prove through C-FELT-FAMILY during the race sittings.",
+      "post10": false
+    },
+    {
+      "id": "C-DISLIKE-DEBUFF-TUNING",
+      "title": "Anti-stack / Requiem-felt tuning sign-off for the dislike-consequence overlay",
+      "category": "evidence-gate",
+      "lane": "dislike-consequence",
+      "evidence": {
+        "read": {
+          "kind": "manual-slots",
+          "ledger": "references/authoring/PDV_1_0_ManualSignoffLedger.json",
+          "passRule": "slots-all-pass",
+          "params": { "group": "dislikeStackTuning" }
+        }
+      },
+      "freshness": {
+        "sources": ["@espDeployed"],
+        "onDrift": "STALE"
+      },
+      "closes": "In a dedicated sitting, confirm the 32-source disfavor stack stays legible under Requiem alongside neglect and prince prices (no over-stack, stings fade, ordinary play unstung), and record the sign-off.",
+      "post10": false
+    },
+    {
       "id": "C-1-0",
       "title": "1.0 ship gate: every non-post-1.0 criterion passes",
       "category": "rollup",
@@ -393,12 +433,6 @@
       "id": "X-MEGA-F",
       "title": "Mega Test Packet Sitting F (Prince V2 path-deepening)",
       "reason": "Content-depth pass beyond the 1.0 Prince surface contract; explicitly post-1.0."
-    },
-    {
-      "id": "X-DISLIKE-DEBUFF",
-      "title": "Minor debuff/consequence on deity dislike lanes",
-      "priority": "high",
-      "reason": "Design intent confirmed 2026-07-07 but never specced or built: deity dislikes are piety-loss-only in V1. Deferred to V2 as a PRIORITY item; V1 felt bar for dislikes is loss surfacing (toast/BoD/Ledger row). Full Codex handoff: references/authoring/PDV_CodexHandoff_DislikeConsequence_V2.md."
     },
     {
       "id": "X-VOICED-V2",

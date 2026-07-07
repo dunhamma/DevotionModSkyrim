@@ -1,13 +1,17 @@
-# Codex Handoff - V2 Minor Dislike-Consequence Packet
+# Codex Handoff - Minor Dislike-Consequence Packet (V1 tracked gate)
 
-**Created:** 2026-07-07
-**Priority:** HIGH (V2). Recorded as `X-DISLIKE-DEBUFF` in
-`references/authoring/PDV_1_0_EndStateContract.json`.
+**Created:** 2026-07-07 (as V2). **Pulled into V1 as a tracked gate 2026-07-07.**
+**Priority:** HIGH - now a 1.0 SHIP GATE, not a deferral. Tracked as
+`C-DISLIKE-DEBUFF-BUILD` (machine) + `C-DISLIKE-DEBUFF-TUNING` (human sign-off)
+in `references/authoring/PDV_1_0_EndStateContract.json`.
 **Owner on execution:** Codex (headless). Claude authored this handoff; do not
 treat it as built.
-**Gate impact:** none on 1.0. This is a post-1.0 build. Do NOT let it re-open or
-block any 1.0 criterion. When it lands, it changes the felt-family proof bar for
-deity-price lanes (see Section 9).
+**Sequencing (important):** build this BEFORE the user's race felt-proof
+sittings so the per-domain stings prove through C-FELT-FAMILY in the same
+passes. Headless build runs in parallel with the user's play lane.
+**Gate impact:** closes C-DISLIKE-DEBUFF-BUILD (records + audit) and feeds
+C-DISLIKE-DEBUFF-TUNING (the anti-stack sitting) and C-FELT-FAMILY (per-domain
+felt proof, via the felt-registry extension in Section 8).
 
 ---
 
@@ -201,15 +205,23 @@ split-toolchain drift rule.
 
 ---
 
-## 9. Effect on the 1.0 felt-family gate (do not touch during 1.0)
+## 9. Effect on the 1.0 felt-family gate (this IS a 1.0 gate now)
 
 Today `C-FELT-FAMILY` proves deity-`price` families by LOSS SURFACING (cheap;
-mostly retro-credited). Once this packet ships in V2, each stung deity-price
-lane graduates to FELT-MECHANIC proof (observe the domain sting in Active
-Effects + confirm it does not bite ordinary play). That is a V2 re-test cost
-(~2-4 play sittings + a balance/anti-stack tuning pass), NOT a 1.0 cost. When
-D3 lands, update the `X-DISLIKE-DEBUFF` exclusion note and re-scope the affected
-family slots' expected text - but only after 1.0 ships.
+mostly retro-credited). Because the shared overlay is DOMAIN-keyed (~6-7 domain
+stings, not 32 bespoke), the added felt-proof surface is ~6-7 DOMAIN
+observations, and each fires during a race sitting the user is already running
+(you transgress against your native deities in that race's pass anyway). So the
+per-domain felt proof rides `C-FELT-FAMILY` in the existing sittings once the
+felt registry enumerates the new disfavor class (Section 8) - do NOT create a
+separate felt ledger.
+
+The one genuinely-additional cost is `C-DISLIKE-DEBUFF-TUNING`: a dedicated
+anti-stack / Requiem-felt sitting (32 sources feeding 6-7 stings alongside
+neglect + prince prices) with a real over-stack iteration risk. When D3 lands,
+regenerate the felt registry so the domain stings appear as families, and
+update the affected deity-`price` family slots' expected text from
+loss-surfacing to domain-sting felt proof.
 
 ---
 

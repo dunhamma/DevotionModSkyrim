@@ -33,6 +33,8 @@ small pass-rule vocabulary, so contract edits never require tool edits).
 | C-PACING-SIGNOFF | 10 dated per-race pacing sign-offs | human | PDV_PacingSignoffLedger.json |
 | C-FELT-TRACE | Every declared felt effect machine-traced end to end | machine | pdv_felt_trace_audit.mjs |
 | C-FELT-FAMILY | One in-game felt proof per lane x class family | human | PDV_FeltFamilyEvidenceLedger.json |
+| C-DISLIKE-DEBUFF-BUILD | Minor felt domain sting on every deity dislike lane | machine | not-built; closes via pdv_dislike_consequence_audit.mjs (build per the V2 handoff) |
+| C-DISLIKE-DEBUFF-TUNING | Anti-stack / Requiem-felt tuning sign-off | human | PDV_1_0_ManualSignoffLedger.json |
 | C-1-0 | Rollup: everything above | rollup | generated burndown |
 
 ## Drift doctrine
@@ -57,8 +59,12 @@ Every criterion names its freshness sources (content files hashed into
   visible toast, Book of Days beat, or panel Ledger row.
 - Neglect, creed-loss, Prince price, and curse families prove by FELT
   MECHANIC: the debuff observed in Active Effects plus a feel note.
-- Minor debuff consequences for deity dislike lanes were design intent but
-  never built; deferred to V2 as PRIORITY (X-DISLIKE-DEBUFF).
+- Minor debuff consequences for deity dislike lanes (shared domain-sting
+  overlay) were pulled INTO V1 as tracked gates on 2026-07-07
+  (C-DISLIKE-DEBUFF-BUILD + C-DISLIKE-DEBUFF-TUNING). The per-domain stings
+  prove through C-FELT-FAMILY during the race sittings once built; the build
+  is headless Codex work sequenced before the sittings. Handoff:
+  PDV_CodexHandoff_DislikeConsequence_V2.md.
 
 ## Explicitly post-1.0 (recorded so audits stop nagging)
 

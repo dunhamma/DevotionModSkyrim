@@ -68,6 +68,16 @@
         }
       }
     },
+    "dislikeStackTuning": {
+      "criterion": "C-DISLIKE-DEBUFF-TUNING",
+      "slots": {
+        "antiStackRequiemFelt": {
+          "status": "pending",
+          "expected": "Dedicated sitting after the dislike-consequence overlay is built: transgress across multiple domains at once and confirm the disfavor stack stays legible under Requiem alongside neglect and prince prices -- no over-stack, the 3-domain cap holds, stings are felt on the HP/stat bar (flat, not regen-zeroed), stings fade on schedule, and ordinary play (sub-band acts, no-standing characters) stays unstung.",
+          "note": ""
+        }
+      }
+    },
     "requiemTrackB": {
       "criterion": "C-REQUIEM-TRACKB",
       "slots": {
