@@ -14,17 +14,19 @@
     "references/authoring/PDV_DaedricPrinceRecordContracts.json": "040bb0dc17ff5208",
     "references/authoring/PDV_DeityLikesDislikes.csv": "fd84966648876b5b",
     "references/authoring/PDV_DeityLikesDislikes_Princes_V2.csv": "93b6474ad6c56304",
-    "live-source/Scripts/Source/PDV__ManagerQuest.psc": "420e80e6f8e2436e"
+    "references/authoring/PDV_DislikeConsequenceRecords.spec.json": "339d87cc5896c89e",
+    "live-source/Scripts/Source/PDV__ManagerQuest.psc": "c37cc57bfe2c161c"
   },
   "counts": {
-    "effects": 457,
-    "families": 141,
+    "effects": 471,
+    "families": 148,
     "byClass": {
       "boon": 196,
       "neglect": 10,
       "curse": 5,
       "substrate-favor": 25,
-      "price": 221
+      "price": 221,
+      "disfavor-sting": 14
     }
   },
   "familyBand": [
@@ -9940,6 +9942,356 @@
       "familyId": "Daedric-HermaeusMora|price"
     },
     {
+      "effectId": "PDV_SPEL_Disfavor_SkyStormHunt_Light",
+      "class": "disfavor-sting",
+      "lane": "Disfavor-SkyStormHunt",
+      "race": null,
+      "origin": "dislike-consequence-spec",
+      "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.SkyStormHunt.light",
+      "displayName": "Weather Turns Sharp",
+      "tier": "light",
+      "wiringProperty": "PDV_SPEL_Disfavor_SkyStormHunt_Light",
+      "expected": {
+        "espEditorIds": [
+          "PDV_SPEL_Disfavor_SkyStormHunt_Light",
+          "PDV_MGEF_Disfavor_SkyStormHunt_Light"
+        ],
+        "effects": [
+          {
+            "actorValue": "ResistFrost",
+            "magnitude": -2,
+            "durationHours": 2
+          }
+        ]
+      },
+      "familyId": "Disfavor-SkyStormHunt|disfavor-sting"
+    },
+    {
+      "effectId": "PDV_SPEL_Disfavor_SkyStormHunt_Sharp",
+      "class": "disfavor-sting",
+      "lane": "Disfavor-SkyStormHunt",
+      "race": null,
+      "origin": "dislike-consequence-spec",
+      "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.SkyStormHunt.sharp",
+      "displayName": "Weather Turns Against You",
+      "tier": "sharp",
+      "wiringProperty": "PDV_SPEL_Disfavor_SkyStormHunt_Sharp",
+      "expected": {
+        "espEditorIds": [
+          "PDV_SPEL_Disfavor_SkyStormHunt_Sharp",
+          "PDV_MGEF_Disfavor_SkyStormHunt_Sharp"
+        ],
+        "effects": [
+          {
+            "actorValue": "ResistFrost",
+            "magnitude": -4,
+            "durationHours": 4
+          }
+        ]
+      },
+      "familyId": "Disfavor-SkyStormHunt|disfavor-sting"
+    },
+    {
+      "effectId": "PDV_SPEL_Disfavor_DeathAncestors_Light",
+      "class": "disfavor-sting",
+      "lane": "Disfavor-DeathAncestors",
+      "race": null,
+      "origin": "dislike-consequence-spec",
+      "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.DeathAncestors.light",
+      "displayName": "Rest Turns Uneasy",
+      "tier": "light",
+      "wiringProperty": "PDV_SPEL_Disfavor_DeathAncestors_Light",
+      "expected": {
+        "espEditorIds": [
+          "PDV_SPEL_Disfavor_DeathAncestors_Light",
+          "PDV_MGEF_Disfavor_DeathAncestors_Light"
+        ],
+        "effects": [
+          {
+            "actorValue": "ResistDisease",
+            "magnitude": -2,
+            "durationHours": 2
+          }
+        ]
+      },
+      "familyId": "Disfavor-DeathAncestors|disfavor-sting"
+    },
+    {
+      "effectId": "PDV_SPEL_Disfavor_DeathAncestors_Sharp",
+      "class": "disfavor-sting",
+      "lane": "Disfavor-DeathAncestors",
+      "race": null,
+      "origin": "dislike-consequence-spec",
+      "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.DeathAncestors.sharp",
+      "displayName": "Restless Quiet",
+      "tier": "sharp",
+      "wiringProperty": "PDV_SPEL_Disfavor_DeathAncestors_Sharp",
+      "expected": {
+        "espEditorIds": [
+          "PDV_SPEL_Disfavor_DeathAncestors_Sharp",
+          "PDV_MGEF_Disfavor_DeathAncestors_Sharp"
+        ],
+        "effects": [
+          {
+            "actorValue": "ResistDisease",
+            "magnitude": -4,
+            "durationHours": 4
+          }
+        ]
+      },
+      "familyId": "Disfavor-DeathAncestors|disfavor-sting"
+    },
+    {
+      "effectId": "PDV_SPEL_Disfavor_MercyProtection_Light",
+      "class": "disfavor-sting",
+      "lane": "Disfavor-MercyProtection",
+      "race": null,
+      "origin": "dislike-consequence-spec",
+      "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.MercyProtection.light",
+      "displayName": "The Ward Thins",
+      "tier": "light",
+      "wiringProperty": "PDV_SPEL_Disfavor_MercyProtection_Light",
+      "expected": {
+        "espEditorIds": [
+          "PDV_SPEL_Disfavor_MercyProtection_Light",
+          "PDV_MGEF_Disfavor_MercyProtection_Light"
+        ],
+        "effects": [
+          {
+            "actorValue": "ResistMagic",
+            "magnitude": -2,
+            "durationHours": 2
+          }
+        ]
+      },
+      "familyId": "Disfavor-MercyProtection|disfavor-sting"
+    },
+    {
+      "effectId": "PDV_SPEL_Disfavor_MercyProtection_Sharp",
+      "class": "disfavor-sting",
+      "lane": "Disfavor-MercyProtection",
+      "race": null,
+      "origin": "dislike-consequence-spec",
+      "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.MercyProtection.sharp",
+      "displayName": "The Ward Breaks",
+      "tier": "sharp",
+      "wiringProperty": "PDV_SPEL_Disfavor_MercyProtection_Sharp",
+      "expected": {
+        "espEditorIds": [
+          "PDV_SPEL_Disfavor_MercyProtection_Sharp",
+          "PDV_MGEF_Disfavor_MercyProtection_Sharp"
+        ],
+        "effects": [
+          {
+            "actorValue": "ResistMagic",
+            "magnitude": -4,
+            "durationHours": 4
+          }
+        ]
+      },
+      "familyId": "Disfavor-MercyProtection|disfavor-sting"
+    },
+    {
+      "effectId": "PDV_SPEL_Disfavor_WarHonor_Light",
+      "class": "disfavor-sting",
+      "lane": "Disfavor-WarHonor",
+      "race": null,
+      "origin": "dislike-consequence-spec",
+      "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.WarHonor.light",
+      "displayName": "Honor Falters",
+      "tier": "light",
+      "wiringProperty": "PDV_SPEL_Disfavor_WarHonor_Light",
+      "expected": {
+        "espEditorIds": [
+          "PDV_SPEL_Disfavor_WarHonor_Light",
+          "PDV_MGEF_Disfavor_WarHonor_Light"
+        ],
+        "effects": [
+          {
+            "actorValue": "OneHanded",
+            "magnitude": -3,
+            "durationHours": 2
+          }
+        ]
+      },
+      "familyId": "Disfavor-WarHonor|disfavor-sting"
+    },
+    {
+      "effectId": "PDV_SPEL_Disfavor_WarHonor_Sharp",
+      "class": "disfavor-sting",
+      "lane": "Disfavor-WarHonor",
+      "race": null,
+      "origin": "dislike-consequence-spec",
+      "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.WarHonor.sharp",
+      "displayName": "Honor Recoils",
+      "tier": "sharp",
+      "wiringProperty": "PDV_SPEL_Disfavor_WarHonor_Sharp",
+      "expected": {
+        "espEditorIds": [
+          "PDV_SPEL_Disfavor_WarHonor_Sharp",
+          "PDV_MGEF_Disfavor_WarHonor_Sharp"
+        ],
+        "effects": [
+          {
+            "actorValue": "OneHanded",
+            "magnitude": -5,
+            "durationHours": 4
+          }
+        ]
+      },
+      "familyId": "Disfavor-WarHonor|disfavor-sting"
+    },
+    {
+      "effectId": "PDV_SPEL_Disfavor_OrderTradeLore_Light",
+      "class": "disfavor-sting",
+      "lane": "Disfavor-OrderTradeLore",
+      "race": null,
+      "origin": "dislike-consequence-spec",
+      "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.OrderTradeLore.light",
+      "displayName": "The Ledger Sours",
+      "tier": "light",
+      "wiringProperty": "PDV_SPEL_Disfavor_OrderTradeLore_Light",
+      "expected": {
+        "espEditorIds": [
+          "PDV_SPEL_Disfavor_OrderTradeLore_Light",
+          "PDV_MGEF_Disfavor_OrderTradeLore_Light"
+        ],
+        "effects": [
+          {
+            "actorValue": "Speechcraft",
+            "magnitude": -3,
+            "durationHours": 2
+          }
+        ]
+      },
+      "familyId": "Disfavor-OrderTradeLore|disfavor-sting"
+    },
+    {
+      "effectId": "PDV_SPEL_Disfavor_OrderTradeLore_Sharp",
+      "class": "disfavor-sting",
+      "lane": "Disfavor-OrderTradeLore",
+      "race": null,
+      "origin": "dislike-consequence-spec",
+      "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.OrderTradeLore.sharp",
+      "displayName": "The Ledger Turns",
+      "tier": "sharp",
+      "wiringProperty": "PDV_SPEL_Disfavor_OrderTradeLore_Sharp",
+      "expected": {
+        "espEditorIds": [
+          "PDV_SPEL_Disfavor_OrderTradeLore_Sharp",
+          "PDV_MGEF_Disfavor_OrderTradeLore_Sharp"
+        ],
+        "effects": [
+          {
+            "actorValue": "Speechcraft",
+            "magnitude": -5,
+            "durationHours": 4
+          }
+        ]
+      },
+      "familyId": "Disfavor-OrderTradeLore|disfavor-sting"
+    },
+    {
+      "effectId": "PDV_SPEL_Disfavor_MoonLuckShadow_Light",
+      "class": "disfavor-sting",
+      "lane": "Disfavor-MoonLuckShadow",
+      "race": null,
+      "origin": "dislike-consequence-spec",
+      "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.MoonLuckShadow.light",
+      "displayName": "Fortune Slips",
+      "tier": "light",
+      "wiringProperty": "PDV_SPEL_Disfavor_MoonLuckShadow_Light",
+      "expected": {
+        "espEditorIds": [
+          "PDV_SPEL_Disfavor_MoonLuckShadow_Light",
+          "PDV_MGEF_Disfavor_MoonLuckShadow_Light"
+        ],
+        "effects": [
+          {
+            "actorValue": "Sneak",
+            "magnitude": -3,
+            "durationHours": 2
+          }
+        ]
+      },
+      "familyId": "Disfavor-MoonLuckShadow|disfavor-sting"
+    },
+    {
+      "effectId": "PDV_SPEL_Disfavor_MoonLuckShadow_Sharp",
+      "class": "disfavor-sting",
+      "lane": "Disfavor-MoonLuckShadow",
+      "race": null,
+      "origin": "dislike-consequence-spec",
+      "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.MoonLuckShadow.sharp",
+      "displayName": "Fortune Turns",
+      "tier": "sharp",
+      "wiringProperty": "PDV_SPEL_Disfavor_MoonLuckShadow_Sharp",
+      "expected": {
+        "espEditorIds": [
+          "PDV_SPEL_Disfavor_MoonLuckShadow_Sharp",
+          "PDV_MGEF_Disfavor_MoonLuckShadow_Sharp"
+        ],
+        "effects": [
+          {
+            "actorValue": "Sneak",
+            "magnitude": -5,
+            "durationHours": 4
+          }
+        ]
+      },
+      "familyId": "Disfavor-MoonLuckShadow|disfavor-sting"
+    },
+    {
+      "effectId": "PDV_SPEL_Disfavor_VoidSecrets_Light",
+      "class": "disfavor-sting",
+      "lane": "Disfavor-VoidSecrets",
+      "race": null,
+      "origin": "dislike-consequence-spec",
+      "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.VoidSecrets.light",
+      "displayName": "Quiet Unease",
+      "tier": "light",
+      "wiringProperty": "PDV_SPEL_Disfavor_VoidSecrets_Light",
+      "expected": {
+        "espEditorIds": [
+          "PDV_SPEL_Disfavor_VoidSecrets_Light",
+          "PDV_MGEF_Disfavor_VoidSecrets_Light"
+        ],
+        "effects": [
+          {
+            "actorValue": "Magicka",
+            "magnitude": -5,
+            "durationHours": 2
+          }
+        ]
+      },
+      "familyId": "Disfavor-VoidSecrets|disfavor-sting"
+    },
+    {
+      "effectId": "PDV_SPEL_Disfavor_VoidSecrets_Sharp",
+      "class": "disfavor-sting",
+      "lane": "Disfavor-VoidSecrets",
+      "race": null,
+      "origin": "dislike-consequence-spec",
+      "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.VoidSecrets.sharp",
+      "displayName": "The Hidden Stirs",
+      "tier": "sharp",
+      "wiringProperty": "PDV_SPEL_Disfavor_VoidSecrets_Sharp",
+      "expected": {
+        "espEditorIds": [
+          "PDV_SPEL_Disfavor_VoidSecrets_Sharp",
+          "PDV_MGEF_Disfavor_VoidSecrets_Sharp"
+        ],
+        "effects": [
+          {
+            "actorValue": "Magicka",
+            "magnitude": -10,
+            "durationHours": 4
+          }
+        ]
+      },
+      "familyId": "Disfavor-VoidSecrets|disfavor-sting"
+    },
+    {
       "effectId": "PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery",
       "class": "substrate-favor",
       "lane": "Favor-Kyne",
@@ -10967,6 +11319,76 @@
         "csv:Dibella:304",
         "csv:Dibella:364",
         "csv:Dibella:365"
+      ]
+    },
+    {
+      "familyId": "Disfavor-DeathAncestors|disfavor-sting",
+      "lane": "Disfavor-DeathAncestors",
+      "class": "disfavor-sting",
+      "race": null,
+      "members": [
+        "PDV_SPEL_Disfavor_DeathAncestors_Light",
+        "PDV_SPEL_Disfavor_DeathAncestors_Sharp"
+      ]
+    },
+    {
+      "familyId": "Disfavor-MercyProtection|disfavor-sting",
+      "lane": "Disfavor-MercyProtection",
+      "class": "disfavor-sting",
+      "race": null,
+      "members": [
+        "PDV_SPEL_Disfavor_MercyProtection_Light",
+        "PDV_SPEL_Disfavor_MercyProtection_Sharp"
+      ]
+    },
+    {
+      "familyId": "Disfavor-MoonLuckShadow|disfavor-sting",
+      "lane": "Disfavor-MoonLuckShadow",
+      "class": "disfavor-sting",
+      "race": null,
+      "members": [
+        "PDV_SPEL_Disfavor_MoonLuckShadow_Light",
+        "PDV_SPEL_Disfavor_MoonLuckShadow_Sharp"
+      ]
+    },
+    {
+      "familyId": "Disfavor-OrderTradeLore|disfavor-sting",
+      "lane": "Disfavor-OrderTradeLore",
+      "class": "disfavor-sting",
+      "race": null,
+      "members": [
+        "PDV_SPEL_Disfavor_OrderTradeLore_Light",
+        "PDV_SPEL_Disfavor_OrderTradeLore_Sharp"
+      ]
+    },
+    {
+      "familyId": "Disfavor-SkyStormHunt|disfavor-sting",
+      "lane": "Disfavor-SkyStormHunt",
+      "class": "disfavor-sting",
+      "race": null,
+      "members": [
+        "PDV_SPEL_Disfavor_SkyStormHunt_Light",
+        "PDV_SPEL_Disfavor_SkyStormHunt_Sharp"
+      ]
+    },
+    {
+      "familyId": "Disfavor-VoidSecrets|disfavor-sting",
+      "lane": "Disfavor-VoidSecrets",
+      "class": "disfavor-sting",
+      "race": null,
+      "members": [
+        "PDV_SPEL_Disfavor_VoidSecrets_Light",
+        "PDV_SPEL_Disfavor_VoidSecrets_Sharp"
+      ]
+    },
+    {
+      "familyId": "Disfavor-WarHonor|disfavor-sting",
+      "lane": "Disfavor-WarHonor",
+      "class": "disfavor-sting",
+      "race": null,
+      "members": [
+        "PDV_SPEL_Disfavor_WarHonor_Light",
+        "PDV_SPEL_Disfavor_WarHonor_Sharp"
       ]
     },
     {

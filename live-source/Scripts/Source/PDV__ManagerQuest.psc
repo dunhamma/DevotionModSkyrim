@@ -121,6 +121,20 @@ Spell Property PDV_SPEL_Neglect_Talos Auto
 ; surfaces as "Orkey" in Old Ways context; the property/record key stays Arkay.
 Spell Property PDV_SPEL_Neglect_Arkay Auto
 Spell Property PDV_SPEL_Neglect_Dibella Auto
+Spell Property PDV_SPEL_Disfavor_SkyStormHunt_Light Auto
+Spell Property PDV_SPEL_Disfavor_SkyStormHunt_Sharp Auto
+Spell Property PDV_SPEL_Disfavor_DeathAncestors_Light Auto
+Spell Property PDV_SPEL_Disfavor_DeathAncestors_Sharp Auto
+Spell Property PDV_SPEL_Disfavor_MercyProtection_Light Auto
+Spell Property PDV_SPEL_Disfavor_MercyProtection_Sharp Auto
+Spell Property PDV_SPEL_Disfavor_WarHonor_Light Auto
+Spell Property PDV_SPEL_Disfavor_WarHonor_Sharp Auto
+Spell Property PDV_SPEL_Disfavor_OrderTradeLore_Light Auto
+Spell Property PDV_SPEL_Disfavor_OrderTradeLore_Sharp Auto
+Spell Property PDV_SPEL_Disfavor_MoonLuckShadow_Light Auto
+Spell Property PDV_SPEL_Disfavor_MoonLuckShadow_Sharp Auto
+Spell Property PDV_SPEL_Disfavor_VoidSecrets_Light Auto
+Spell Property PDV_SPEL_Disfavor_VoidSecrets_Sharp Auto
 Spell Property PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery Auto
 Spell Property PDV_SPEL_Favor_Kyne_StormRoadGrace Auto
 Spell Property PDV_SPEL_Favor_Kyne_GuidedHunt Auto
@@ -537,6 +551,19 @@ Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; Bump when PDV_DeityLikesDislikes.csv OR the stance matrix changes so existing saves reload.
 Int Property LIKES_DISLIKES_VERSION = 13 AutoReadOnly
 Int Property PRINCE_LD_VERSION = 4 AutoReadOnly
+Int Property DISFAVOR_DOMAIN_NONE = 0 AutoReadOnly
+Int Property DISFAVOR_DOMAIN_SKY_STORM_HUNT = 1 AutoReadOnly
+Int Property DISFAVOR_DOMAIN_DEATH_ANCESTORS = 2 AutoReadOnly
+Int Property DISFAVOR_DOMAIN_MERCY_PROTECTION = 3 AutoReadOnly
+Int Property DISFAVOR_DOMAIN_WAR_HONOR = 4 AutoReadOnly
+Int Property DISFAVOR_DOMAIN_ORDER_TRADE_LORE = 5 AutoReadOnly
+Int Property DISFAVOR_DOMAIN_MOON_LUCK_SHADOW = 6 AutoReadOnly
+Int Property DISFAVOR_DOMAIN_VOID_SECRETS = 7 AutoReadOnly
+Float Property DISFAVOR_LIGHT_MIN_DELTA = 0.5 AutoReadOnly
+Float Property DISFAVOR_SHARP_MIN_DELTA = 1.0 AutoReadOnly
+Float Property DISFAVOR_LIGHT_DURATION_DAYS = 0.0833333 AutoReadOnly
+Float Property DISFAVOR_SHARP_DURATION_DAYS = 0.1666667 AutoReadOnly
+Int Property DISFAVOR_MAX_ACTIVE_DOMAINS = 3 AutoReadOnly
 ; Bump when the Daedric pact model changes so existing saves re-run the migration
 ; (v2: active-pact-only sync + milestone presentation refresh; v3: collapse a
 ; co-held patron+Prince, keep higher tier, tie -> Prince).
@@ -731,6 +758,7 @@ Int _pendingDaedricMilestoneDelayTicks = 0
 String _pendingPrismaToastRetryPayload = ""
 String _pendingPrismaToastRetryLabel = ""
 Int _pendingPrismaToastRetryDelayTicks = 0
+Int _pendingLikesDislikesEventType = -1
 
 Event OnInit()
     InitializePreflightState()
@@ -746,6 +774,7 @@ Event OnInit()
     MigrateDaedricPactsIfNeeded()
     RefreshPatronMirrors()
     UpdateContextualFavorRuntime()
+    UpdateDisfavorStingRuntime()
     EnsureSurveyDevotionPower()
     EnsureDunmerAncestralUrn()
     EnsureArgonianHistSapToken()
@@ -760,6 +789,7 @@ Event OnUpdate()
     ; resolves (it self-disables via a StorageUtil flag after it completes).
     EnsureUnifiedStartupChoice()
     UpdateContextualFavorRuntime()
+    UpdateDisfavorStingRuntime()
     if !_diegeticLoadHandled
         HandleDiegeticLoad("update")
     endIf
@@ -1364,6 +1394,13 @@ EndEvent
 
 Function AwardPiety(PDV_DeityBase deity, Float amount, String reason = "")
     AwardPietyInternal(deity, amount, True, reason)
+EndFunction
+
+Function AwardPietyFromLikesDislikes(PDV_DeityBase deity, Float amount, Int eventType, String reason = "")
+    Int previousEventType = _pendingLikesDislikesEventType
+    _pendingLikesDislikesEventType = eventType
+    AwardPietyInternal(deity, amount, True, reason)
+    _pendingLikesDislikesEventType = previousEventType
 EndFunction
 
 String Function ResolveQuestReactionCellFile(String cellPrefix)
@@ -8556,7 +8593,7 @@ Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, Stri
         if deity
             Float delta = deity.ScoreAction(eventType, playerRef as Form, shoutUsed as Form)
             if delta != 0.0
-                AwardPiety(deity, delta * multiplier, reason)
+                AwardPietyFromLikesDislikes(deity, delta * multiplier, eventType, reason)
                 scoredCount += 1
             endIf
         endIf
@@ -10489,6 +10526,9 @@ Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry
         ; the broad lane has no single patron, so it tracks any positive pantheon act.
         StorageUtil.SetFloatValue(None, "PDV.Devotion.LastActTime", Utility.GetCurrentGameTime())
     endIf
+    if allowRivalry && appliedAmount < 0.0 && _pendingLikesDislikesEventType >= 0
+        ApplyDisfavorSting(deity, appliedAmount, reason)
+    endIf
 
     ; Attribution: any deity with visible piety movement must carry the reason into
     ; its recent-driver ring. The dashboard shows every deity with PietyToday, so
@@ -10512,6 +10552,306 @@ Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry
     if appliedAmount != 0.0
         RequestPanelRefresh()
     endIf
+EndFunction
+
+Function ApplyDisfavorSting(PDV_DeityBase deity, Float appliedAmount, String sourceTag)
+    if !deity || appliedAmount >= 0.0 || _pendingLikesDislikesEventType < 0
+        return
+    endIf
+
+    Float baseDelta = GetDislikeBaseDeltaForEvent(deity, _pendingLikesDislikesEventType)
+    if baseDelta >= 0.0
+        return
+    endIf
+
+    Float absDelta = 0.0 - baseDelta
+    if absDelta <= DISFAVOR_LIGHT_MIN_DELTA
+        return
+    endIf
+
+    if !HasDisfavorStanding(deity)
+        Trace(3, "Disfavor sting skipped: no standing for " + deity.DeityName)
+        return
+    endIf
+
+    Int domainValue = DomainForDeity(deity)
+    if domainValue == DISFAVOR_DOMAIN_NONE
+        Trace(2, "Disfavor sting skipped: no domain for " + deity.DeityName)
+        return
+    endIf
+
+    if IsDisfavorRepeatSuppressed(deity, domainValue, _pendingLikesDislikesEventType)
+        Trace(3, "Disfavor sting suppressed for repeat " + deity.DeityName + " / " + GetDisfavorDomainLabel(domainValue))
+        return
+    endIf
+
+    UpdateDisfavorStingRuntime()
+
+    Bool domainAlreadyActive = IsDisfavorDomainActive(domainValue)
+    if !domainAlreadyActive && CountActiveDisfavorStings() >= DISFAVOR_MAX_ACTIVE_DOMAINS
+        Trace(2, "Disfavor sting suppressed by active-domain cap for " + GetDisfavorDomainLabel(domainValue))
+        return
+    endIf
+
+    Bool sharpBand = absDelta > DISFAVOR_SHARP_MIN_DELTA
+    Spell targetSpell = GetDisfavorSpell(domainValue, sharpBand)
+    if !targetSpell
+        Trace(1, "Disfavor sting skipped: missing spell for " + GetDisfavorDomainLabel(domainValue))
+        return
+    endIf
+
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return
+    endIf
+
+    ClearDisfavorDomainSpellOnly(playerRef, domainValue)
+    playerRef.AddSpell(targetSpell, False)
+    StorageUtil.SetIntValue(None, GetDisfavorActiveKey(domainValue), 1)
+    StorageUtil.SetFloatValue(None, GetDisfavorExpiryKey(domainValue), Utility.GetCurrentGameTime() + GetDisfavorDurationDays(sharpBand))
+    StorageUtil.SetStringValue(None, GetDisfavorBandKey(domainValue), GetDisfavorBandLabel(sharpBand))
+    MarkDisfavorRepeatUsed(deity, domainValue, _pendingLikesDislikesEventType)
+    Trace(1, "Disfavor sting applied: " + deity.DeityName + " -> " + GetDisfavorDomainLabel(domainValue) + " " + GetDisfavorBandLabel(sharpBand) + " (" + sourceTag + ")")
+EndFunction
+
+Float Function GetDislikeBaseDeltaForEvent(PDV_DeityBase deity, Int eventType)
+    if !deity
+        return 0.0
+    endIf
+
+    Form deityForm = deity as Form
+    String tableKeyPrefix = "PDV.LD." + eventType
+    Float baseDelta = StorageUtil.GetFloatValue(deityForm, tableKeyPrefix + ".D")
+    if baseDelta < 0.0
+        return baseDelta
+    endIf
+
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace >= 0
+        Float originDelta = StorageUtil.GetFloatValue(deityForm, tableKeyPrefix + ".O" + originRace + ".D")
+        if originDelta < 0.0
+            return originDelta
+        endIf
+    endIf
+
+    return 0.0
+EndFunction
+
+Bool Function HasDisfavorStanding(PDV_DeityBase deity)
+    if !deity
+        return False
+    endIf
+    if GetPatronState() == PATRON_STATE_ACTIVE && deity == _activeDeity
+        return True
+    endIf
+    return GetPiety(deity) >= 25.0
+EndFunction
+
+Bool Function IsDisfavorRepeatSuppressed(PDV_DeityBase deity, Int domainValue, Int eventType)
+    Int currentDay = GetDisfavorDayIndex()
+    return StorageUtil.GetIntValue(deity as Form, GetDisfavorRepeatDayKey(domainValue, eventType), -1) == currentDay
+EndFunction
+
+Function MarkDisfavorRepeatUsed(PDV_DeityBase deity, Int domainValue, Int eventType)
+    if !deity
+        return
+    endIf
+    StorageUtil.SetIntValue(deity as Form, GetDisfavorRepeatDayKey(domainValue, eventType), GetDisfavorDayIndex())
+EndFunction
+
+Int Function GetDisfavorDayIndex()
+    Float adjustedDayTime = Utility.GetCurrentGameTime() - 0.25
+    return adjustedDayTime as Int
+EndFunction
+
+Int Function DomainForDeity(PDV_DeityBase deity)
+    if deity == PDV_Kyne || deity == PDV_Kynareth || deity == PDV_Khenarthi || deity == PDV_HoonDing
+        return DISFAVOR_DOMAIN_SKY_STORM_HUNT
+    elseIf deity == PDV_Arkay || deity == PDV_Tuwhacca || deity == PDV_Xarxes || deity == PDV_Magnus
+        return DISFAVOR_DOMAIN_DEATH_ANCESTORS
+    elseIf deity == PDV_Mara || deity == PDV_Stendarr || deity == PDV_Dibella || deity == PDV_Stuhn
+        return DISFAVOR_DOMAIN_MERCY_PROTECTION
+    elseIf deity == PDV_Shor || deity == PDV_Tsun || deity == PDV_Talos || deity == PDV_Leki || deity == PDV_Trinimac || deity == PDV_Malacath
+        return DISFAVOR_DOMAIN_WAR_HONOR
+    elseIf deity == PDV_Zenithar || deity == PDV_Julianos || deity == PDV_Akatosh || deity == PDV_Zen || deity == PDV_Yffre || deity == PDV_AuriEl
+        return DISFAVOR_DOMAIN_ORDER_TRADE_LORE
+    elseIf deity == PDV_Azura || deity == PDV_Rajhin || deity == PDV_BaanDar || deity == PDV_Alkosh
+        return DISFAVOR_DOMAIN_MOON_LUCK_SHADOW
+    elseIf deity == PDV_Sithis || deity == PDV_Mephala || deity == PDV_Hist || deity == PDV_Boethiah
+        return DISFAVOR_DOMAIN_VOID_SECRETS
+    endIf
+
+    return DISFAVOR_DOMAIN_NONE
+EndFunction
+
+Function UpdateDisfavorStingRuntime()
+    ClearDisfavorIfExpired(DISFAVOR_DOMAIN_SKY_STORM_HUNT)
+    ClearDisfavorIfExpired(DISFAVOR_DOMAIN_DEATH_ANCESTORS)
+    ClearDisfavorIfExpired(DISFAVOR_DOMAIN_MERCY_PROTECTION)
+    ClearDisfavorIfExpired(DISFAVOR_DOMAIN_WAR_HONOR)
+    ClearDisfavorIfExpired(DISFAVOR_DOMAIN_ORDER_TRADE_LORE)
+    ClearDisfavorIfExpired(DISFAVOR_DOMAIN_MOON_LUCK_SHADOW)
+    ClearDisfavorIfExpired(DISFAVOR_DOMAIN_VOID_SECRETS)
+EndFunction
+
+Function ClearDisfavorIfExpired(Int domainValue)
+    if !IsDisfavorDomainActive(domainValue)
+        return
+    endIf
+
+    Float expiresAt = StorageUtil.GetFloatValue(None, GetDisfavorExpiryKey(domainValue))
+    if expiresAt > 0.0 && Utility.GetCurrentGameTime() < expiresAt
+        return
+    endIf
+
+    ClearDisfavorDomain(domainValue, "expired")
+EndFunction
+
+Function ClearDisfavorDomain(Int domainValue, String reason)
+    Actor playerRef = Game.GetPlayer()
+    if playerRef
+        ClearDisfavorDomainSpellOnly(playerRef, domainValue)
+    endIf
+    StorageUtil.SetIntValue(None, GetDisfavorActiveKey(domainValue), 0)
+    StorageUtil.SetFloatValue(None, GetDisfavorExpiryKey(domainValue), 0.0)
+    StorageUtil.SetStringValue(None, GetDisfavorBandKey(domainValue), "")
+    Trace(2, "Disfavor sting cleared: " + GetDisfavorDomainLabel(domainValue) + " (" + reason + ")")
+EndFunction
+
+Function ClearDisfavorDomainSpellOnly(Actor playerRef, Int domainValue)
+    if !playerRef
+        return
+    endIf
+
+    Spell lightSpell = GetDisfavorSpell(domainValue, False)
+    Spell sharpSpell = GetDisfavorSpell(domainValue, True)
+    if lightSpell && playerRef.HasSpell(lightSpell)
+        playerRef.RemoveSpell(lightSpell)
+    endIf
+    if sharpSpell && playerRef.HasSpell(sharpSpell)
+        playerRef.RemoveSpell(sharpSpell)
+    endIf
+EndFunction
+
+Bool Function IsDisfavorDomainActive(Int domainValue)
+    return StorageUtil.GetIntValue(None, GetDisfavorActiveKey(domainValue)) == 1
+EndFunction
+
+Int Function CountActiveDisfavorStings()
+    Int activeCount = 0
+    if IsDisfavorDomainActive(DISFAVOR_DOMAIN_SKY_STORM_HUNT)
+        activeCount += 1
+    endIf
+    if IsDisfavorDomainActive(DISFAVOR_DOMAIN_DEATH_ANCESTORS)
+        activeCount += 1
+    endIf
+    if IsDisfavorDomainActive(DISFAVOR_DOMAIN_MERCY_PROTECTION)
+        activeCount += 1
+    endIf
+    if IsDisfavorDomainActive(DISFAVOR_DOMAIN_WAR_HONOR)
+        activeCount += 1
+    endIf
+    if IsDisfavorDomainActive(DISFAVOR_DOMAIN_ORDER_TRADE_LORE)
+        activeCount += 1
+    endIf
+    if IsDisfavorDomainActive(DISFAVOR_DOMAIN_MOON_LUCK_SHADOW)
+        activeCount += 1
+    endIf
+    if IsDisfavorDomainActive(DISFAVOR_DOMAIN_VOID_SECRETS)
+        activeCount += 1
+    endIf
+    return activeCount
+EndFunction
+
+Spell Function GetDisfavorSpell(Int domainValue, Bool sharpBand)
+    if domainValue == DISFAVOR_DOMAIN_SKY_STORM_HUNT
+        if sharpBand
+            return PDV_SPEL_Disfavor_SkyStormHunt_Sharp
+        endIf
+        return PDV_SPEL_Disfavor_SkyStormHunt_Light
+    elseIf domainValue == DISFAVOR_DOMAIN_DEATH_ANCESTORS
+        if sharpBand
+            return PDV_SPEL_Disfavor_DeathAncestors_Sharp
+        endIf
+        return PDV_SPEL_Disfavor_DeathAncestors_Light
+    elseIf domainValue == DISFAVOR_DOMAIN_MERCY_PROTECTION
+        if sharpBand
+            return PDV_SPEL_Disfavor_MercyProtection_Sharp
+        endIf
+        return PDV_SPEL_Disfavor_MercyProtection_Light
+    elseIf domainValue == DISFAVOR_DOMAIN_WAR_HONOR
+        if sharpBand
+            return PDV_SPEL_Disfavor_WarHonor_Sharp
+        endIf
+        return PDV_SPEL_Disfavor_WarHonor_Light
+    elseIf domainValue == DISFAVOR_DOMAIN_ORDER_TRADE_LORE
+        if sharpBand
+            return PDV_SPEL_Disfavor_OrderTradeLore_Sharp
+        endIf
+        return PDV_SPEL_Disfavor_OrderTradeLore_Light
+    elseIf domainValue == DISFAVOR_DOMAIN_MOON_LUCK_SHADOW
+        if sharpBand
+            return PDV_SPEL_Disfavor_MoonLuckShadow_Sharp
+        endIf
+        return PDV_SPEL_Disfavor_MoonLuckShadow_Light
+    elseIf domainValue == DISFAVOR_DOMAIN_VOID_SECRETS
+        if sharpBand
+            return PDV_SPEL_Disfavor_VoidSecrets_Sharp
+        endIf
+        return PDV_SPEL_Disfavor_VoidSecrets_Light
+    endIf
+
+    return None
+EndFunction
+
+Float Function GetDisfavorDurationDays(Bool sharpBand)
+    if sharpBand
+        return DISFAVOR_SHARP_DURATION_DAYS
+    endIf
+    return DISFAVOR_LIGHT_DURATION_DAYS
+EndFunction
+
+String Function GetDisfavorBandLabel(Bool sharpBand)
+    if sharpBand
+        return "sharp"
+    endIf
+    return "light"
+EndFunction
+
+String Function GetDisfavorDomainLabel(Int domainValue)
+    if domainValue == DISFAVOR_DOMAIN_SKY_STORM_HUNT
+        return "SkyStormHunt"
+    elseIf domainValue == DISFAVOR_DOMAIN_DEATH_ANCESTORS
+        return "DeathAncestors"
+    elseIf domainValue == DISFAVOR_DOMAIN_MERCY_PROTECTION
+        return "MercyProtection"
+    elseIf domainValue == DISFAVOR_DOMAIN_WAR_HONOR
+        return "WarHonor"
+    elseIf domainValue == DISFAVOR_DOMAIN_ORDER_TRADE_LORE
+        return "OrderTradeLore"
+    elseIf domainValue == DISFAVOR_DOMAIN_MOON_LUCK_SHADOW
+        return "MoonLuckShadow"
+    elseIf domainValue == DISFAVOR_DOMAIN_VOID_SECRETS
+        return "VoidSecrets"
+    endIf
+
+    return "None"
+EndFunction
+
+String Function GetDisfavorActiveKey(Int domainValue)
+    return "PDV.Disfavor.Domain." + domainValue + ".Active"
+EndFunction
+
+String Function GetDisfavorExpiryKey(Int domainValue)
+    return "PDV.Disfavor.Domain." + domainValue + ".ExpiresAt"
+EndFunction
+
+String Function GetDisfavorBandKey(Int domainValue)
+    return "PDV.Disfavor.Domain." + domainValue + ".Band"
+EndFunction
+
+String Function GetDisfavorRepeatDayKey(Int domainValue, Int eventType)
+    return "PDV.Disfavor.Repeat." + domainValue + "." + eventType + ".Day"
 EndFunction
 
 ; Per-deity recent-driver ring (the acts that recently moved this god), keyed on the
@@ -13095,6 +13435,20 @@ Function StripAllPdvSpells(Actor playerRef)
 
     SyncRaceRewardSpell(playerRef, PDV_SPEL_SurveyDevotion, False, "PDV_SPEL_SurveyDevotion")
     SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Kyne, False, "PDV_SPEL_Neglect_Kyne")
+    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_SkyStormHunt_Light, False, "PDV_SPEL_Disfavor_SkyStormHunt_Light")
+    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_SkyStormHunt_Sharp, False, "PDV_SPEL_Disfavor_SkyStormHunt_Sharp")
+    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_DeathAncestors_Light, False, "PDV_SPEL_Disfavor_DeathAncestors_Light")
+    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_DeathAncestors_Sharp, False, "PDV_SPEL_Disfavor_DeathAncestors_Sharp")
+    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_MercyProtection_Light, False, "PDV_SPEL_Disfavor_MercyProtection_Light")
+    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_MercyProtection_Sharp, False, "PDV_SPEL_Disfavor_MercyProtection_Sharp")
+    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_WarHonor_Light, False, "PDV_SPEL_Disfavor_WarHonor_Light")
+    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_WarHonor_Sharp, False, "PDV_SPEL_Disfavor_WarHonor_Sharp")
+    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_OrderTradeLore_Light, False, "PDV_SPEL_Disfavor_OrderTradeLore_Light")
+    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_OrderTradeLore_Sharp, False, "PDV_SPEL_Disfavor_OrderTradeLore_Sharp")
+    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_MoonLuckShadow_Light, False, "PDV_SPEL_Disfavor_MoonLuckShadow_Light")
+    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_MoonLuckShadow_Sharp, False, "PDV_SPEL_Disfavor_MoonLuckShadow_Sharp")
+    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_VoidSecrets_Light, False, "PDV_SPEL_Disfavor_VoidSecrets_Light")
+    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_VoidSecrets_Sharp, False, "PDV_SPEL_Disfavor_VoidSecrets_Sharp")
     SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery, False, "PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery")
     SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_Kyne_StormRoadGrace, False, "PDV_SPEL_Favor_Kyne_StormRoadGrace")
     SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_Kyne_GuidedHunt, False, "PDV_SPEL_Favor_Kyne_GuidedHunt")

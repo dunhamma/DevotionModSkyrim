@@ -723,6 +723,69 @@
       "note": "",
       "creditedFrom": null
     },
+    "Disfavor-DeathAncestors|disfavor-sting": {
+      "status": "pending",
+      "lane": "Disfavor-DeathAncestors",
+      "class": "disfavor-sting",
+      "race": null,
+      "expected": "Feel one disfavor-sting effect of lane Disfavor-DeathAncestors in game (e.g. Rest Turns Uneasy) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Disfavor-MercyProtection|disfavor-sting": {
+      "status": "pending",
+      "lane": "Disfavor-MercyProtection",
+      "class": "disfavor-sting",
+      "race": null,
+      "expected": "Feel one disfavor-sting effect of lane Disfavor-MercyProtection in game (e.g. The Ward Thins) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Disfavor-MoonLuckShadow|disfavor-sting": {
+      "status": "pending",
+      "lane": "Disfavor-MoonLuckShadow",
+      "class": "disfavor-sting",
+      "race": null,
+      "expected": "Feel one disfavor-sting effect of lane Disfavor-MoonLuckShadow in game (e.g. Fortune Slips) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Disfavor-OrderTradeLore|disfavor-sting": {
+      "status": "pending",
+      "lane": "Disfavor-OrderTradeLore",
+      "class": "disfavor-sting",
+      "race": null,
+      "expected": "Feel one disfavor-sting effect of lane Disfavor-OrderTradeLore in game (e.g. The Ledger Sours) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Disfavor-SkyStormHunt|disfavor-sting": {
+      "status": "pending",
+      "lane": "Disfavor-SkyStormHunt",
+      "class": "disfavor-sting",
+      "race": null,
+      "expected": "Feel one disfavor-sting effect of lane Disfavor-SkyStormHunt in game (e.g. Weather Turns Sharp) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Disfavor-VoidSecrets|disfavor-sting": {
+      "status": "pending",
+      "lane": "Disfavor-VoidSecrets",
+      "class": "disfavor-sting",
+      "race": null,
+      "expected": "Feel one disfavor-sting effect of lane Disfavor-VoidSecrets in game (e.g. Quiet Unease) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Disfavor-WarHonor|disfavor-sting": {
+      "status": "pending",
+      "lane": "Disfavor-WarHonor",
+      "class": "disfavor-sting",
+      "race": null,
+      "expected": "Feel one disfavor-sting effect of lane Disfavor-WarHonor in game (e.g. Honor Falters) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
     "Dunmer-Azura|boon": {
       "status": "pending",
       "lane": "Dunmer-Azura",

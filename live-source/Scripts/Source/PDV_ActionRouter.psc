@@ -411,7 +411,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
         if deity
             Float delta = deity.ScoreAction(eventType, actorRef, targetRef)
             if delta != 0.0
-                PDV_Manager.AwardPiety(deity, delta, GetEventReason(eventType))
+                PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, GetEventReason(eventType))
                 scoredCount += 1
 
                 if GetDebugLevel() >= 2

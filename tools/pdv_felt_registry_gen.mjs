@@ -41,6 +41,7 @@ const REGISTRY_REL = `${AUTH}/PDV_FeltEffectRegistry.json`;
 const LEDGER_REL = `${AUTH}/PDV_FeltFamilyEvidenceLedger.json`;
 const MANUAL_LEDGER_REL = `${AUTH}/PDV_Phase20_ManualEvidenceLedger.json`;
 const DAEDRIC_LEDGER_REL = `${AUTH}/PDV_DaedricRuntimeEvidenceLedger.json`;
+const DISLIKE_CONSEQUENCE_SPEC_REL = `${AUTH}/PDV_DislikeConsequenceRecords.spec.json`;
 const RACES = ["Altmer", "Argonian", "Bosmer", "Breton", "Dunmer", "Imperial", "Khajiit", "Nord", "Orc", "Redguard"];
 const FAMILY_BAND = [100, 300];
 
@@ -251,7 +252,39 @@ function buildRegistry() {
     }
   }
 
-  // 4) Contextual favor spells: every wired favor is a manager Spell Property
+  // 4) Dislike consequence domain stings: shared spell-backed consequences
+  // derived from negative likes/dislikes deltas, not one bespoke record per god.
+  sourceHashes[DISLIKE_CONSEQUENCE_SPEC_REL] = sha(DISLIKE_CONSEQUENCE_SPEC_REL);
+  if (fs.existsSync(path.join(ROOT, DISLIKE_CONSEQUENCE_SPEC_REL))) {
+    const disfavorSpec = loadJson(DISLIKE_CONSEQUENCE_SPEC_REL);
+    for (const domain of disfavorSpec.domains ?? []) {
+      for (const band of ["light", "sharp"]) {
+        const entry = domain[band];
+        if (!entry) continue;
+        effects.push({
+          effectId: entry.spellEditorId,
+          class: "disfavor-sting",
+          lane: `Disfavor-${domain.domain}`,
+          race: null,
+          origin: "dislike-consequence-spec",
+          declaredIn: `${DISLIKE_CONSEQUENCE_SPEC_REL} domains.${domain.domain}.${band}`,
+          displayName: entry.displayName ?? null,
+          tier: band,
+          wiringProperty: entry.propertyName ?? entry.spellEditorId,
+          expected: {
+            espEditorIds: [entry.spellEditorId, entry.magicEffectEditorId].filter(Boolean),
+            effects: [{
+              actorValue: domain.actorValue ?? null,
+              magnitude: entry.magnitude ?? null,
+              durationHours: entry.durationHours ?? null,
+            }],
+          },
+        });
+      }
+    }
+  }
+
+  // 5) Contextual favor spells: every wired favor is a manager Spell Property
   // (PDV_SPEL_Favor_<Lane>_<Family>). Manager-scan keeps this exhaustive as
   // new favor lanes land without needing a new manifest mapping.
   const managerRel = "live-source/Scripts/Source/PDV__ManagerQuest.psc";

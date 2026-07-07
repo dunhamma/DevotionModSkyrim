@@ -1,0 +1,218 @@
+{
+  "schema": "pdv.dislike-consequence-records.v1",
+  "status": "v2-authority-2026-07-07",
+  "managerScript": "PDV__ManagerQuest",
+  "designReference": "references/authoring/PDV_DislikeConsequence_DesignReference.md",
+  "thresholds": {
+    "standingPietyFloor": 25.0,
+    "lightMinExclusiveAbsDelta": 0.5,
+    "lightMaxInclusiveAbsDelta": 1.0,
+    "sharpMinExclusiveAbsDelta": 1.0,
+    "maxSimultaneousDomains": 3
+  },
+  "domains": [
+    {
+      "domain": "SkyStormHunt",
+      "domainId": 1,
+      "actorValue": "ResistFrost",
+      "light": {
+        "spellEditorId": "PDV_SPEL_Disfavor_SkyStormHunt_Light",
+        "magicEffectEditorId": "PDV_MGEF_Disfavor_SkyStormHunt_Light",
+        "propertyName": "PDV_SPEL_Disfavor_SkyStormHunt_Light",
+        "displayName": "Weather Turns Sharp",
+        "description": "The road and weather turn cold for a while. Frost Resistance -2%.",
+        "magnitude": -2.0,
+        "durationHours": 2
+      },
+      "sharp": {
+        "spellEditorId": "PDV_SPEL_Disfavor_SkyStormHunt_Sharp",
+        "magicEffectEditorId": "PDV_MGEF_Disfavor_SkyStormHunt_Sharp",
+        "propertyName": "PDV_SPEL_Disfavor_SkyStormHunt_Sharp",
+        "displayName": "Weather Turns Against You",
+        "description": "The road and weather turn against you for a while. Frost Resistance -4%.",
+        "magnitude": -4.0,
+        "durationHours": 4
+      }
+    },
+    {
+      "domain": "DeathAncestors",
+      "domainId": 2,
+      "actorValue": "ResistDisease",
+      "light": {
+        "spellEditorId": "PDV_SPEL_Disfavor_DeathAncestors_Light",
+        "magicEffectEditorId": "PDV_MGEF_Disfavor_DeathAncestors_Light",
+        "propertyName": "PDV_SPEL_Disfavor_DeathAncestors_Light",
+        "displayName": "Rest Turns Uneasy",
+        "description": "The quiet of the dead grows uneasy for a while. Disease Resistance -2%.",
+        "magnitude": -2.0,
+        "durationHours": 2
+      },
+      "sharp": {
+        "spellEditorId": "PDV_SPEL_Disfavor_DeathAncestors_Sharp",
+        "magicEffectEditorId": "PDV_MGEF_Disfavor_DeathAncestors_Sharp",
+        "propertyName": "PDV_SPEL_Disfavor_DeathAncestors_Sharp",
+        "displayName": "Restless Quiet",
+        "description": "The dead do not rest easy around you for a while. Disease Resistance -4%.",
+        "magnitude": -4.0,
+        "durationHours": 4
+      }
+    },
+    {
+      "domain": "MercyProtection",
+      "domainId": 3,
+      "actorValue": "ResistMagic",
+      "light": {
+        "spellEditorId": "PDV_SPEL_Disfavor_MercyProtection_Light",
+        "magicEffectEditorId": "PDV_MGEF_Disfavor_MercyProtection_Light",
+        "propertyName": "PDV_SPEL_Disfavor_MercyProtection_Light",
+        "displayName": "The Ward Thins",
+        "description": "Mercy withdraws its shelter for a while. Magic Resistance -2%.",
+        "magnitude": -2.0,
+        "durationHours": 2
+      },
+      "sharp": {
+        "spellEditorId": "PDV_SPEL_Disfavor_MercyProtection_Sharp",
+        "magicEffectEditorId": "PDV_MGEF_Disfavor_MercyProtection_Sharp",
+        "propertyName": "PDV_SPEL_Disfavor_MercyProtection_Sharp",
+        "displayName": "The Ward Breaks",
+        "description": "Mercy withdraws its shelter sharply for a while. Magic Resistance -4%.",
+        "magnitude": -4.0,
+        "durationHours": 4
+      }
+    },
+    {
+      "domain": "WarHonor",
+      "domainId": 4,
+      "actorValue": "OneHanded",
+      "light": {
+        "spellEditorId": "PDV_SPEL_Disfavor_WarHonor_Light",
+        "magicEffectEditorId": "PDV_MGEF_Disfavor_WarHonor_Light",
+        "propertyName": "PDV_SPEL_Disfavor_WarHonor_Light",
+        "displayName": "Honor Falters",
+        "description": "Honor recoils from the act for a while. One-Handed -3.",
+        "magnitude": -3.0,
+        "durationHours": 2
+      },
+      "sharp": {
+        "spellEditorId": "PDV_SPEL_Disfavor_WarHonor_Sharp",
+        "magicEffectEditorId": "PDV_MGEF_Disfavor_WarHonor_Sharp",
+        "propertyName": "PDV_SPEL_Disfavor_WarHonor_Sharp",
+        "displayName": "Honor Recoils",
+        "description": "Honor recoils sharply from the act for a while. One-Handed -5.",
+        "magnitude": -5.0,
+        "durationHours": 4
+      }
+    },
+    {
+      "domain": "OrderTradeLore",
+      "domainId": 5,
+      "actorValue": "Speechcraft",
+      "light": {
+        "spellEditorId": "PDV_SPEL_Disfavor_OrderTradeLore_Light",
+        "magicEffectEditorId": "PDV_MGEF_Disfavor_OrderTradeLore_Light",
+        "propertyName": "PDV_SPEL_Disfavor_OrderTradeLore_Light",
+        "displayName": "The Ledger Sours",
+        "description": "Order and fair dealing sour around you for a while. Speech -3.",
+        "magnitude": -3.0,
+        "durationHours": 2
+      },
+      "sharp": {
+        "spellEditorId": "PDV_SPEL_Disfavor_OrderTradeLore_Sharp",
+        "magicEffectEditorId": "PDV_MGEF_Disfavor_OrderTradeLore_Sharp",
+        "propertyName": "PDV_SPEL_Disfavor_OrderTradeLore_Sharp",
+        "displayName": "The Ledger Turns",
+        "description": "Order and fair dealing turn against you for a while. Speech -5.",
+        "magnitude": -5.0,
+        "durationHours": 4
+      }
+    },
+    {
+      "domain": "MoonLuckShadow",
+      "domainId": 6,
+      "actorValue": "Sneak",
+      "light": {
+        "spellEditorId": "PDV_SPEL_Disfavor_MoonLuckShadow_Light",
+        "magicEffectEditorId": "PDV_MGEF_Disfavor_MoonLuckShadow_Light",
+        "propertyName": "PDV_SPEL_Disfavor_MoonLuckShadow_Light",
+        "displayName": "Fortune Slips",
+        "description": "Fortune slips into shadow for a while. Sneak -3.",
+        "magnitude": -3.0,
+        "durationHours": 2
+      },
+      "sharp": {
+        "spellEditorId": "PDV_SPEL_Disfavor_MoonLuckShadow_Sharp",
+        "magicEffectEditorId": "PDV_MGEF_Disfavor_MoonLuckShadow_Sharp",
+        "propertyName": "PDV_SPEL_Disfavor_MoonLuckShadow_Sharp",
+        "displayName": "Fortune Turns",
+        "description": "Fortune turns hard into shadow for a while. Sneak -5.",
+        "magnitude": -5.0,
+        "durationHours": 4
+      }
+    },
+    {
+      "domain": "VoidSecrets",
+      "domainId": 7,
+      "actorValue": "Magicka",
+      "light": {
+        "spellEditorId": "PDV_SPEL_Disfavor_VoidSecrets_Light",
+        "magicEffectEditorId": "PDV_MGEF_Disfavor_VoidSecrets_Light",
+        "propertyName": "PDV_SPEL_Disfavor_VoidSecrets_Light",
+        "displayName": "Quiet Unease",
+        "description": "A quiet unease clings to hidden things for a while. Magicka -5.",
+        "magnitude": -5.0,
+        "durationHours": 2
+      },
+      "sharp": {
+        "spellEditorId": "PDV_SPEL_Disfavor_VoidSecrets_Sharp",
+        "magicEffectEditorId": "PDV_MGEF_Disfavor_VoidSecrets_Sharp",
+        "propertyName": "PDV_SPEL_Disfavor_VoidSecrets_Sharp",
+        "displayName": "The Hidden Stirs",
+        "description": "A sharp unease clings to hidden things for a while. Magicka -10.",
+        "magnitude": -10.0,
+        "durationHours": 4
+      }
+    }
+  ],
+  "deityDomains": {
+    "akatosh": "OrderTradeLore",
+    "alkosh": "MoonLuckShadow",
+    "Arkay": "DeathAncestors",
+    "auri-el": "OrderTradeLore",
+    "azurah": "MoonLuckShadow",
+    "Baan Dar": "MoonLuckShadow",
+    "Boethiah": "VoidSecrets",
+    "Dibella": "MercyProtection",
+    "HoonDing": "SkyStormHunt",
+    "Julianos": "OrderTradeLore",
+    "khenarthi": "SkyStormHunt",
+    "Kynareth": "SkyStormHunt",
+    "kyne": "SkyStormHunt",
+    "Leki": "WarHonor",
+    "magnus": "DeathAncestors",
+    "Malacath": "WarHonor",
+    "Mara": "MercyProtection",
+    "Mephala": "VoidSecrets",
+    "rajhin": "MoonLuckShadow",
+    "Shor": "WarHonor",
+    "sithis": "VoidSecrets",
+    "Stendarr": "MercyProtection",
+    "Stuhn": "MercyProtection",
+    "Talos": "WarHonor",
+    "The Hist": "VoidSecrets",
+    "trinimac": "WarHonor",
+    "Tsun": "WarHonor",
+    "Tu'whacca": "DeathAncestors",
+    "xarxes": "DeathAncestors",
+    "Y'ffre": "OrderTradeLore",
+    "Z'en": "OrderTradeLore",
+    "Zenithar": "OrderTradeLore"
+  },
+  "managerGateExpectations": [
+    "Function AwardPietyFromLikesDislikes(PDV_DeityBase deity, Float amount, Int eventType, String reason = \"\")",
+    "Function ApplyDisfavorSting(PDV_DeityBase deity, Float appliedAmount, String sourceTag)",
+    "Bool Function HasDisfavorStanding(PDV_DeityBase deity)",
+    "Bool Function IsDisfavorRepeatSuppressed(PDV_DeityBase deity, Int domainValue, Int eventType)",
+    "Int Function CountActiveDisfavorStings()",
+    "Function UpdateDisfavorStingRuntime()"
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "schema": "pdv.dislike-consequence-test-ledger.v1",
+  "status": "pending-v2-runtime-proof",
+  "proofBoundary": "Codex D3/D4 provides design, record readback, source-gate, and compile proof only. These slots require in-game V2 observation under Requiem.",
+  "updated": "2026-07-07",
+  "domains": {
+    "SkyStormHunt": {
+      "positiveSharp": { "status": "pending", "note": "" },
+      "standingGateNegative": { "status": "pending", "note": "" },
+      "bandGateNegative": { "status": "pending", "note": "" },
+      "antiStack": { "status": "pending", "note": "" },
+      "requiemFelt": { "status": "pending", "note": "" },
+      "refresh": { "status": "pending", "note": "" }
+    },
+    "DeathAncestors": {
+      "positiveSharp": { "status": "pending", "note": "" },
+      "standingGateNegative": { "status": "pending", "note": "" },
+      "bandGateNegative": { "status": "pending", "note": "" },
+      "antiStack": { "status": "pending", "note": "" },
+      "requiemFelt": { "status": "pending", "note": "" },
+      "refresh": { "status": "pending", "note": "" }
+    },
+    "MercyProtection": {
+      "positiveSharp": { "status": "pending", "note": "" },
+      "standingGateNegative": { "status": "pending", "note": "" },
+      "bandGateNegative": { "status": "pending", "note": "" },
+      "antiStack": { "status": "pending", "note": "" },
+      "requiemFelt": { "status": "pending", "note": "" },
+      "refresh": { "status": "pending", "note": "" }
+    },
+    "WarHonor": {
+      "positiveSharp": { "status": "pending", "note": "" },
+      "standingGateNegative": { "status": "pending", "note": "" },
+      "bandGateNegative": { "status": "pending", "note": "" },
+      "antiStack": { "status": "pending", "note": "" },
+      "requiemFelt": { "status": "pending", "note": "" },
+      "refresh": { "status": "pending", "note": "" }
+    },
+    "OrderTradeLore": {
+      "positiveSharp": { "status": "pending", "note": "" },
+      "standingGateNegative": { "status": "pending", "note": "" },
+      "bandGateNegative": { "status": "pending", "note": "" },
+      "antiStack": { "status": "pending", "note": "" },
+      "requiemFelt": { "status": "pending", "note": "" },
+      "refresh": { "status": "pending", "note": "" }
+    },
+    "MoonLuckShadow": {
+      "positiveSharp": { "status": "pending", "note": "" },
+      "standingGateNegative": { "status": "pending", "note": "" },
+      "bandGateNegative": { "status": "pending", "note": "" },
+      "antiStack": { "status": "pending", "note": "" },
+      "requiemFelt": { "status": "pending", "note": "" },
+      "refresh": { "status": "pending", "note": "" }
+    },
+    "VoidSecrets": {
+      "positiveSharp": { "status": "pending", "note": "" },
+      "standingGateNegative": { "status": "pending", "note": "" },
+      "bandGateNegative": { "status": "pending", "note": "" },
+      "antiStack": { "status": "pending", "note": "" },
+      "requiemFelt": { "status": "pending", "note": "" },
+      "refresh": { "status": "pending", "note": "" }
+    }
+  }
+}

@@ -3,11 +3,11 @@
   "status": "PASS",
   "bridge": "live",
   "counts": {
-    "PASS": 457,
+    "PASS": 471,
     "SKIP": 0,
     "RED": 0
   },
-  "registryEffects": 457,
+  "registryEffects": 471,
   "redRows": [],
   "skipCount": 0
 }

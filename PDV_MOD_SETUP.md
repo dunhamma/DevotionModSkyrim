@@ -82,6 +82,8 @@
 | `tools/pdv-phase20-cat6-author` | Narrow direct-framework helper that creates/checks the preserved pilot-provisional CAT-6 Khajiit Lunar Tier 1 SPEL plus night-gated stamina/disease MGEFs; standalone CAT-6 grant ownership is superseded by the all-race reward contract |
 | `tools/pdv-phase20-reward-author` | Narrow direct-framework helper that creates/checks all-ten-race first-tier reward `SPEL`/`MGEF` packets from the reward contract and wires matching `PDV__ManagerQuest` reward spell properties after automated smoke |
 | `tools/pdv-neglect-esp-author` | Narrow direct-framework helper that checks/writes the Nord/Imperial felt-neglect ESP batch: Kyne/Imperial MGEF conversions, four Nord patron neglect SPEL/MGEF records, and `PDV__ManagerQuest` VMAD spell-property wiring, with backups under `Backups\neglect-esp\` |
+| `tools/pdv-dislike-consequence-author` | Narrow direct-framework helper that creates/checks the shared deity-domain disfavor sting SPEL/MGEF records and `PDV__ManagerQuest` VMAD spell-property wiring from `PDV_DislikeConsequenceRecords.spec.json`, with backups under `Backups\dislike-consequence\` |
+| `tools/pdv_dislike_consequence_audit.mjs` | Read-only strict audit for dislike-consequence V2; checks the shared-domain spec, 32-deity CSV threshold/domain coverage, manager/router source gates, and live ESP readback |
 | `tools/pdv-balancing-author` | Narrow direct-framework helper that retunes deity threshold scalar VMAD properties and `IsAedric` flags for the balancing handoff |
 | `tools/pdv-shrine-blessing-author` | Narrow direct-framework helper that discovers clickable shrine blessing activators and creates/checks no-vanilla-effect main-ESP shrine `SPEL` overrides, `BlessingMessage` prayer-text `MESG` overrides, shared altar-remove message suppression, and hidden once-per-day PDV shrine-prayer signal `MGEF` records from `references/authoring/PDV_ShrineBlessingNeutralization.manifest.json`; it does not replace activator scripts |
 | `tools/pdv-writing-polish-author` | Narrow direct-framework helper that updates/checks locked player-facing writing polish in `Devotion.esp` for Bosmer variety descriptions, Bosmer path-suggestion messages, Dunmer neglect names, and Baan Dar Gap effect-data drift; writes backups under `Backups\writing-polish\` |
@@ -395,6 +397,7 @@ node .\tools\pdv_content_verify.mjs --json
 node .\tools\pdv_content_verify.mjs --strict-phase20-roster
 node .\tools\pdv_prisma_ui_audit.mjs
 node .\tools\pdv_prisma_to_oneoh_audit.mjs
+node .\tools\pdv_dislike_consequence_audit.mjs --strict-dislike-consequence
 node .\tools\pdv_author.mjs list-manifests
 node .\tools\pdv_author.mjs status phase4
 node .\tools\pdv_author.mjs plan phase4
