@@ -372,7 +372,9 @@ function retroCredit(registry) {
     const stem = slot.lane.slice("Daedric-".length);
     const row = princeRows.find((p) => canonicalPrince(p.stem).toLowerCase() === stem.toLowerCase());
     if (!row) continue;
-    const structural = slot.class === "boon" ? "activeEffects" : slot.class === "curse" ? "curseNoDoubleFire" : null;
+    // Prince ledger activeEffects notes record "boon/price confirmed in
+    // Active Effects", so both classes credit from that slot.
+    const structural = (slot.class === "boon" || slot.class === "price") ? "activeEffects" : slot.class === "curse" ? "curseNoDoubleFire" : null;
     if (!structural) continue;
     if (row.slots?.[structural]?.status === "pass") {
       slot.status = "retro-credited";

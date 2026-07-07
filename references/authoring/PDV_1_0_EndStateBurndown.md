@@ -21,7 +21,7 @@ Overall: **RED** (mode: read). Contract: references/authoring/PDV_1_0_EndStateCo
 | C-PACING-SIM | pacing | machine-gate | PASS | status = "PASS" | Re-tune the authored piety tables for any race outside the bands, then re-run pdv_pacing_sim.mjs. |
 | C-PACING-SIGNOFF | pacing | evidence-gate | RED | 10/10 slots open: Altmer, Argonian, Bosmer, Breton, Dunmer, Imperial, Khajiit, Nord, +2 more | After a real play sitting per race, record a dated sign-off in PDV_PacingSignoffLedger.json. |
 | C-FELT-TRACE | felt-effects | machine-gate | PASS | status = "PASS" | Fix the broken link named in PDV_FeltTraceLedger.md (wiring, dispatch, missing record, or magnitude mismatch), then re-run. |
-| C-FELT-FAMILY | felt-effects | evidence-gate | RED | 115/141 slots open: Akatosh/price, Alkosh/price, Altmer-AuriEl/boon, Altmer-CurseState/curse, Altmer-Magnus/boon, Altmer-Orthodox/boon, Altmer-VampireExiledPath/curse, Altmer-Xarxes/boon, +107 more | Play one member of each pending family in game and record the evidence slot (or retro-credit from an existing packet where the mapping is unambiguous). |
+| C-FELT-FAMILY | felt-effects | evidence-gate | RED | 98/141 slots open: Akatosh/price, Alkosh/price, Altmer-AuriEl/boon, Altmer-CurseState/curse, Altmer-Magnus/boon, Altmer-Orthodox/boon, Altmer-VampireExiledPath/curse, Altmer-Xarxes/boon, +90 more | Play one member of each pending family in game and record the evidence slot (or retro-credit from an existing packet where the mapping is unambiguous). |
 | C-1-0 | rollup | rollup | RED | 8 PASS / 0 STALE / 8 RED | Burn the RED criteria above. |
 
 ## Explicitly post-1.0 (not gating)
@@ -30,6 +30,7 @@ Overall: **RED** (mode: read). Contract: references/authoring/PDV_1_0_EndStateCo
 - **X-FP049** FP-049 journal polish item - Cosmetic polish; ships in 1.0.x.
 - **X-MEGA-D** Mega Test Packet Sitting D as a standalone item - The Requiem felt content of Sitting D is gated by C-REQUIEM-TRACKB; the packet formality itself is not a separate ship gate.
 - **X-MEGA-F** Mega Test Packet Sitting F (Prince V2 path-deepening) - Content-depth pass beyond the 1.0 Prince surface contract; explicitly post-1.0.
+- **X-DISLIKE-DEBUFF** Minor debuff/consequence on deity dislike lanes - Design intent confirmed 2026-07-07 but never specced or built: deity dislikes are piety-loss-only in V1. Deferred to V2 as a PRIORITY item; V1 felt bar for dislikes is loss surfacing (toast/BoD/Ledger row).
 - **X-VOICED-V2** Voiced dialogue and recognition scale packet - Deferred to V2 per PDV_Architecture_v3.md Section 21.3; V1 uses non-voiced surfaces.
 - **X-GREENPACT-TAGS** Bosmer Green Pact per-item tag layer - Scoped outside 1.0 per race manifest deferred-with-dependency prose.
 - **X-JYGGALAG** Jyggalag surface - Out of 1.0 scope unless future adopted content explicitly adds him.

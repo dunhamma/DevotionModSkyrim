@@ -15,7 +15,7 @@
       "lane": "Akatosh",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Akatosh in game (e.g. kill-dragon) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -24,7 +24,7 @@
       "lane": "Alkosh",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Alkosh in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -33,7 +33,7 @@
       "lane": "Altmer-AuriEl",
       "class": "boon",
       "race": "Altmer",
-      "expected": "Feel one boon effect of lane Altmer-AuriEl in game (e.g. Auri-El's Dawn - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -42,7 +42,7 @@
       "lane": "Altmer-CurseState",
       "class": "curse",
       "race": "Altmer",
-      "expected": "Feel one curse effect of lane Altmer-CurseState in game (e.g. PDV_Msg_Altmer_CurseState_WerewolfHardHalt) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -51,7 +51,7 @@
       "lane": "Altmer-Magnus",
       "class": "boon",
       "race": "Altmer",
-      "expected": "Feel one boon effect of lane Altmer-Magnus in game (e.g. Magnus's Arts - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -60,7 +60,7 @@
       "lane": "Altmer-Orthodox",
       "class": "boon",
       "race": "Altmer",
-      "expected": "Feel one boon effect of lane Altmer-Orthodox in game (e.g. Altmer Orthodox Steadiness) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -69,7 +69,7 @@
       "lane": "Altmer-VampireExiledPath",
       "class": "curse",
       "race": "Altmer",
-      "expected": "Feel one curse effect of lane Altmer-VampireExiledPath in game (e.g. PDV_Msg_Altmer_VampireExiledPath_Entry) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -78,7 +78,7 @@
       "lane": "Altmer-Xarxes",
       "class": "boon",
       "race": "Altmer",
-      "expected": "Feel one boon effect of lane Altmer-Xarxes in game (e.g. Xarxes's Record - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -87,7 +87,7 @@
       "lane": "Argonian-Hist",
       "class": "boon",
       "race": "Argonian",
-      "expected": "Feel one boon effect of lane Argonian-Hist in game (e.g. Hist Communion - Faithful) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -96,7 +96,7 @@
       "lane": "Argonian-People",
       "class": "boon",
       "race": "Argonian",
-      "expected": "Feel one boon effect of lane Argonian-People in game (e.g. Chosen People - Kin) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -105,7 +105,7 @@
       "lane": "Argonian-Sithis",
       "class": "boon",
       "race": "Argonian",
-      "expected": "Feel one boon effect of lane Argonian-Sithis in game (e.g. Void Distance - Faced) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -114,7 +114,7 @@
       "lane": "Argonian-Substrate",
       "class": "substrate-favor",
       "race": "Argonian",
-      "expected": "Feel one substrate-favor effect of lane Argonian-Substrate in game (e.g. Hist Memory) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -123,7 +123,7 @@
       "lane": "Argonian-supportSpells",
       "class": "boon",
       "race": "Argonian",
-      "expected": "Feel one boon effect of lane Argonian-supportSpells in game (e.g. Void-Held Surge) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -132,7 +132,7 @@
       "lane": "Arkay",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Arkay in game (e.g. raise-undead) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -141,7 +141,7 @@
       "lane": "Auriel",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Auriel in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -150,7 +150,7 @@
       "lane": "Azurah",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Azurah in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -159,7 +159,7 @@
       "lane": "BaanDar",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane BaanDar in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -168,7 +168,7 @@
       "lane": "Boethiah",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Boethiah in game (e.g. heal-or-cure-npc) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -177,7 +177,7 @@
       "lane": "Bosmer-BanditRoad",
       "class": "boon",
       "race": "Bosmer",
-      "expected": "Feel one boon effect of lane Bosmer-BanditRoad in game (e.g. Bandit Road - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -186,7 +186,7 @@
       "lane": "Bosmer-Exchange",
       "class": "boon",
       "race": "Bosmer",
-      "expected": "Feel one boon effect of lane Bosmer-Exchange in game (e.g. The Exchange - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -195,7 +195,7 @@
       "lane": "Bosmer-LivingStory",
       "class": "boon",
       "race": "Bosmer",
-      "expected": "Feel one boon effect of lane Bosmer-LivingStory in game (e.g. Living Story - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -232,7 +232,7 @@
       "lane": "Breton-GreenWay",
       "class": "boon",
       "race": "Breton",
-      "expected": "Feel one boon effect of lane Breton-GreenWay in game (e.g. Green Way - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -241,7 +241,7 @@
       "lane": "Breton-HiddenArt",
       "class": "boon",
       "race": "Breton",
-      "expected": "Feel one boon effect of lane Breton-HiddenArt in game (e.g. Hidden Art - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -250,7 +250,7 @@
       "lane": "Breton-KnightsRoad",
       "class": "boon",
       "race": "Breton",
-      "expected": "Feel one boon effect of lane Breton-KnightsRoad in game (e.g. Knight's Vow - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -259,7 +259,7 @@
       "lane": "Breton-Tradition",
       "class": "boon",
       "race": "Breton",
-      "expected": "Feel one boon effect of lane Breton-Tradition in game (e.g. Tradition's Footing - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -268,7 +268,7 @@
       "lane": "CreedLoss-Breton",
       "class": "price",
       "race": "Breton",
-      "expected": "Feel one price effect of lane CreedLoss-Breton in game (e.g. The Vow Broken) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -286,13 +286,17 @@
       }
     },
     "Daedric-Azura|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-Azura",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-Azura in game (e.g. Azura Price - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: Azura activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Azura",
+        "slot": "activeEffects"
+      }
     },
     "Daedric-Boethiah|boon": {
       "status": "retro-credited",
@@ -308,13 +312,17 @@
       }
     },
     "Daedric-Boethiah|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-Boethiah",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-Boethiah in game (e.g. Boethiah Price - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: Boethiah activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Boethiah",
+        "slot": "activeEffects"
+      }
     },
     "Daedric-ClavicusVile|boon": {
       "status": "retro-credited",
@@ -330,13 +338,17 @@
       }
     },
     "Daedric-ClavicusVile|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-ClavicusVile",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-ClavicusVile in game (e.g. steal-item) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: ClavicusVile activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "ClavicusVile",
+        "slot": "activeEffects"
+      }
     },
     "Daedric-HermaeusMora|boon": {
       "status": "retro-credited",
@@ -352,13 +364,17 @@
       }
     },
     "Daedric-HermaeusMora|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-HermaeusMora",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-HermaeusMora in game (e.g. Hermaeus Mora Price - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: HermaeusMora activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "HermaeusMora",
+        "slot": "activeEffects"
+      }
     },
     "Daedric-Hircine|boon": {
       "status": "retro-credited",
@@ -387,13 +403,17 @@
       }
     },
     "Daedric-Hircine|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-Hircine",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-Hircine in game (e.g. Hircine Price - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: Hircine activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Hircine",
+        "slot": "activeEffects"
+      }
     },
     "Daedric-Malacath|boon": {
       "status": "retro-credited",
@@ -409,13 +429,17 @@
       }
     },
     "Daedric-Malacath|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-Malacath",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-Malacath in game (e.g. Malacath Price - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: Malacath activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Malacath",
+        "slot": "activeEffects"
+      }
     },
     "Daedric-MehrunesDagon|boon": {
       "status": "retro-credited",
@@ -431,13 +455,17 @@
       }
     },
     "Daedric-MehrunesDagon|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-MehrunesDagon",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-MehrunesDagon in game (e.g. Mehrunes Dagon Price - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: MehrunesDagon activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "MehrunesDagon",
+        "slot": "activeEffects"
+      }
     },
     "Daedric-Mephala|boon": {
       "status": "retro-credited",
@@ -453,13 +481,17 @@
       }
     },
     "Daedric-Mephala|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-Mephala",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-Mephala in game (e.g. Mephala Price - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: Mephala activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Mephala",
+        "slot": "activeEffects"
+      }
     },
     "Daedric-Meridia|boon": {
       "status": "retro-credited",
@@ -475,13 +507,17 @@
       }
     },
     "Daedric-Meridia|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-Meridia",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-Meridia in game (e.g. Meridia Price - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: Meridia activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Meridia",
+        "slot": "activeEffects"
+      }
     },
     "Daedric-MolagBal|boon": {
       "status": "retro-credited",
@@ -510,13 +546,17 @@
       }
     },
     "Daedric-MolagBal|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-MolagBal",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-MolagBal in game (e.g. Molag Bal Price - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: MolagBal activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "MolagBal",
+        "slot": "activeEffects"
+      }
     },
     "Daedric-Namira|boon": {
       "status": "retro-credited",
@@ -532,13 +572,17 @@
       }
     },
     "Daedric-Namira|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-Namira",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-Namira in game (e.g. Namira Price - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: Namira activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Namira",
+        "slot": "activeEffects"
+      }
     },
     "Daedric-Nocturnal|boon": {
       "status": "retro-credited",
@@ -554,13 +598,17 @@
       }
     },
     "Daedric-Nocturnal|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-Nocturnal",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-Nocturnal in game (e.g. Nocturnal Price - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: Nocturnal activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Nocturnal",
+        "slot": "activeEffects"
+      }
     },
     "Daedric-Peryite|boon": {
       "status": "retro-credited",
@@ -576,13 +624,17 @@
       }
     },
     "Daedric-Peryite|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-Peryite",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-Peryite in game (e.g. Peryite Price - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: Peryite activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Peryite",
+        "slot": "activeEffects"
+      }
     },
     "Daedric-Sanguine|boon": {
       "status": "retro-credited",
@@ -598,13 +650,17 @@
       }
     },
     "Daedric-Sanguine|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-Sanguine",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-Sanguine in game (e.g. Sanguine Price - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: Sanguine activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Sanguine",
+        "slot": "activeEffects"
+      }
     },
     "Daedric-Sheogorath|boon": {
       "status": "retro-credited",
@@ -620,13 +676,17 @@
       }
     },
     "Daedric-Sheogorath|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-Sheogorath",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-Sheogorath in game (e.g. Sheogorath Price - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: Sheogorath activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Sheogorath",
+        "slot": "activeEffects"
+      }
     },
     "Daedric-Vaermina|boon": {
       "status": "retro-credited",
@@ -642,20 +702,24 @@
       }
     },
     "Daedric-Vaermina|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Daedric-Vaermina",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Daedric-Vaermina in game (e.g. Vaermina Price - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "note": "Retro-credited 2026-07-07: Vaermina activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Vaermina",
+        "slot": "activeEffects"
+      }
     },
     "Dibella|price": {
       "status": "pending",
       "lane": "Dibella",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Dibella in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -664,7 +728,7 @@
       "lane": "Dunmer-Azura",
       "class": "boon",
       "race": "Dunmer",
-      "expected": "Feel one boon effect of lane Dunmer-Azura in game (e.g. Azura's Twilight - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -673,7 +737,7 @@
       "lane": "Dunmer-Boethiah",
       "class": "boon",
       "race": "Dunmer",
-      "expected": "Feel one boon effect of lane Dunmer-Boethiah in game (e.g. Boethiah's Struggle - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -682,7 +746,7 @@
       "lane": "Dunmer-Mephala",
       "class": "boon",
       "race": "Dunmer",
-      "expected": "Feel one boon effect of lane Dunmer-Mephala in game (e.g. Mephala's Web - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -691,7 +755,7 @@
       "lane": "Dunmer-Reclamation",
       "class": "boon",
       "race": "Dunmer",
-      "expected": "Feel one boon effect of lane Dunmer-Reclamation in game (e.g. Reclamation Communion - Faithful) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -700,7 +764,7 @@
       "lane": "Dunmer-Substrate",
       "class": "substrate-favor",
       "race": "Dunmer",
-      "expected": "Feel one substrate-favor effect of lane Dunmer-Substrate in game (e.g. Dunmer Ancestor's Steadiness) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -762,7 +826,7 @@
       "lane": "HoonDing",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane HoonDing in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -771,7 +835,7 @@
       "lane": "Imperial-Akatosh",
       "class": "boon",
       "race": "Imperial",
-      "expected": "Feel one boon effect of lane Imperial-Akatosh in game (e.g. Akatosh's Covenant - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -780,7 +844,7 @@
       "lane": "Imperial-Arkay",
       "class": "boon",
       "race": "Imperial",
-      "expected": "Feel one boon effect of lane Imperial-Arkay in game (e.g. Arkay's Vigil - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -789,7 +853,7 @@
       "lane": "Imperial-Civic",
       "class": "boon",
       "race": "Imperial",
-      "expected": "Feel one boon effect of lane Imperial-Civic in game (e.g. Civic Faith - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -798,7 +862,7 @@
       "lane": "Imperial-Dibella",
       "class": "boon",
       "race": "Imperial",
-      "expected": "Feel one boon effect of lane Imperial-Dibella in game (e.g. Dibella's Grace - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -807,7 +871,7 @@
       "lane": "Imperial-Julianos",
       "class": "boon",
       "race": "Imperial",
-      "expected": "Feel one boon effect of lane Imperial-Julianos in game (e.g. Julianos's Wisdom - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -816,7 +880,7 @@
       "lane": "Imperial-Kynareth",
       "class": "boon",
       "race": "Imperial",
-      "expected": "Feel one boon effect of lane Imperial-Kynareth in game (e.g. Kynareth's Breath - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -825,7 +889,7 @@
       "lane": "Imperial-Mara",
       "class": "boon",
       "race": "Imperial",
-      "expected": "Feel one boon effect of lane Imperial-Mara in game (e.g. Mara's Mercy - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -834,7 +898,7 @@
       "lane": "Imperial-Stendarr",
       "class": "boon",
       "race": "Imperial",
-      "expected": "Feel one boon effect of lane Imperial-Stendarr in game (e.g. Stendarr's Mercy - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -843,7 +907,7 @@
       "lane": "Imperial-Talos",
       "class": "boon",
       "race": "Imperial",
-      "expected": "Feel one boon effect of lane Imperial-Talos in game (e.g. Talos's Resolve - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -852,7 +916,7 @@
       "lane": "Imperial-Zenithar",
       "class": "boon",
       "race": "Imperial",
-      "expected": "Feel one boon effect of lane Imperial-Zenithar in game (e.g. Zenithar's Trade - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -861,7 +925,7 @@
       "lane": "Julianos",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Julianos in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -870,7 +934,7 @@
       "lane": "Khajiit-Alkosh",
       "class": "boon",
       "race": "Khajiit",
-      "expected": "Feel one boon effect of lane Khajiit-Alkosh in game (e.g. Alkosh's Order - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -879,7 +943,7 @@
       "lane": "Khajiit-Azurah",
       "class": "boon",
       "race": "Khajiit",
-      "expected": "Feel one boon effect of lane Khajiit-Azurah in game (e.g. Azurah's Twilight - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -888,7 +952,7 @@
       "lane": "Khajiit-BaanDar",
       "class": "boon",
       "race": "Khajiit",
-      "expected": "Feel one boon effect of lane Khajiit-BaanDar in game (e.g. Baan Dar's Guile - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -897,7 +961,7 @@
       "lane": "Khajiit-Khenarthi",
       "class": "boon",
       "race": "Khajiit",
-      "expected": "Feel one boon effect of lane Khajiit-Khenarthi in game (e.g. Khenarthi's Road - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -906,7 +970,7 @@
       "lane": "Khajiit-Lunar",
       "class": "substrate-favor",
       "race": "Khajiit",
-      "expected": "Feel one substrate-favor effect of lane Khajiit-Lunar in game (e.g. Khajiit Lunar Road) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -915,7 +979,7 @@
       "lane": "Khajiit-Rajhin",
       "class": "boon",
       "race": "Khajiit",
-      "expected": "Feel one boon effect of lane Khajiit-Rajhin in game (e.g. Rajhin's Shadow - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -924,7 +988,7 @@
       "lane": "Khajiit-Substrate",
       "class": "substrate-favor",
       "race": "Khajiit",
-      "expected": "Feel one substrate-favor effect of lane Khajiit-Substrate in game (e.g. Lunar Hardiness) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -933,7 +997,7 @@
       "lane": "Khenarthi",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Khenarthi in game (e.g. raise-undead) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -942,7 +1006,7 @@
       "lane": "Kynareth",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Kynareth in game (e.g. raise-undead) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -951,7 +1015,7 @@
       "lane": "Kyne",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Kyne in game (e.g. kill-hostile-beast) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -960,7 +1024,7 @@
       "lane": "Leki",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Leki in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -969,7 +1033,7 @@
       "lane": "Magnus",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Magnus in game (e.g. raise-undead) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -978,7 +1042,7 @@
       "lane": "Malacath",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Malacath in game (e.g. steal-item) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -987,7 +1051,7 @@
       "lane": "Mara",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Mara in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -996,7 +1060,7 @@
       "lane": "Mephala",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Mephala in game (e.g. kill-hostile-humanoid) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -1005,7 +1069,7 @@
       "lane": "Neglect-Altmer",
       "class": "neglect",
       "race": "Altmer",
-      "expected": "Feel one neglect effect of lane Neglect-Altmer in game (e.g. The Dawn Withheld) and record what was observed.",
+      "expected": "Felt-mechanic bar: prime neglect-eligible via the debug MCM, pass a dawn, and record the neglect debuff observed in Active Effects plus how it feels.",
       "note": "",
       "creditedFrom": null
     },
@@ -1014,7 +1078,7 @@
       "lane": "Neglect-ArgonianHist",
       "class": "neglect",
       "race": "Argonian",
-      "expected": "Feel one neglect effect of lane Neglect-ArgonianHist in game (e.g. The Hist Distant) and record what was observed.",
+      "expected": "Felt-mechanic bar: prime neglect-eligible via the debug MCM, pass a dawn, and record the neglect debuff observed in Active Effects plus how it feels.",
       "note": "",
       "creditedFrom": null
     },
@@ -1037,7 +1101,7 @@
       "lane": "Neglect-Breton",
       "class": "neglect",
       "race": "Breton",
-      "expected": "Feel one neglect effect of lane Neglect-Breton in game (e.g. The Tradition Grows Distant) and record what was observed.",
+      "expected": "Felt-mechanic bar: prime neglect-eligible via the debug MCM, pass a dawn, and record the neglect debuff observed in Active Effects plus how it feels.",
       "note": "",
       "creditedFrom": null
     },
@@ -1046,7 +1110,7 @@
       "lane": "Neglect-Dunmer",
       "class": "neglect",
       "race": "Dunmer",
-      "expected": "Feel one neglect effect of lane Neglect-Dunmer in game (e.g. The Ancestors' Silence) and record what was observed.",
+      "expected": "Felt-mechanic bar: prime neglect-eligible via the debug MCM, pass a dawn, and record the neglect debuff observed in Active Effects plus how it feels.",
       "note": "",
       "creditedFrom": null
     },
@@ -1055,7 +1119,7 @@
       "lane": "Neglect-Imperial",
       "class": "neglect",
       "race": "Imperial",
-      "expected": "Feel one neglect effect of lane Neglect-Imperial in game (e.g. The Divines Grow Distant) and record what was observed.",
+      "expected": "Felt-mechanic bar: prime neglect-eligible via the debug MCM, pass a dawn, and record the neglect debuff observed in Active Effects plus how it feels.",
       "note": "",
       "creditedFrom": null
     },
@@ -1064,7 +1128,7 @@
       "lane": "Neglect-KhajiitLunar",
       "class": "neglect",
       "race": "Khajiit",
-      "expected": "Feel one neglect effect of lane Neglect-KhajiitLunar in game (e.g. The Moons Withdrawn) and record what was observed.",
+      "expected": "Felt-mechanic bar: prime neglect-eligible via the debug MCM, pass a dawn, and record the neglect debuff observed in Active Effects plus how it feels.",
       "note": "",
       "creditedFrom": null
     },
@@ -1073,7 +1137,7 @@
       "lane": "Neglect-Kyne",
       "class": "neglect",
       "race": "Nord",
-      "expected": "Feel one neglect effect of lane Neglect-Kyne in game (e.g. The Weather Stops Cooperating) and record what was observed.",
+      "expected": "Felt-mechanic bar: prime neglect-eligible via the debug MCM, pass a dawn, and record the neglect debuff observed in Active Effects plus how it feels.",
       "note": "",
       "creditedFrom": null
     },
@@ -1082,7 +1146,7 @@
       "lane": "Neglect-Orc",
       "class": "neglect",
       "race": "Orc",
-      "expected": "Feel one neglect effect of lane Neglect-Orc in game (e.g. The Code Goes Unkept) and record what was observed.",
+      "expected": "Felt-mechanic bar: prime neglect-eligible via the debug MCM, pass a dawn, and record the neglect debuff observed in Active Effects plus how it feels.",
       "note": "",
       "creditedFrom": null
     },
@@ -1091,7 +1155,7 @@
       "lane": "Neglect-Redguard",
       "class": "neglect",
       "race": "Redguard",
-      "expected": "Feel one neglect effect of lane Neglect-Redguard in game (e.g. Ancestors at a Distance) and record what was observed.",
+      "expected": "Felt-mechanic bar: prime neglect-eligible via the debug MCM, pass a dawn, and record the neglect debuff observed in Active Effects plus how it feels.",
       "note": "",
       "creditedFrom": null
     },
@@ -1100,7 +1164,7 @@
       "lane": "Nord-Kyne",
       "class": "boon",
       "race": "Nord",
-      "expected": "Feel one boon effect of lane Nord-Kyne in game (e.g. Kyne's Sky - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1109,7 +1173,7 @@
       "lane": "Nord-OldWays",
       "class": "boon",
       "race": "Nord",
-      "expected": "Feel one boon effect of lane Nord-OldWays in game (e.g. Old Ways - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1118,7 +1182,7 @@
       "lane": "Nord-Shor",
       "class": "boon",
       "race": "Nord",
-      "expected": "Feel one boon effect of lane Nord-Shor in game (e.g. Shor's Favor - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1127,7 +1191,7 @@
       "lane": "Nord-Stuhn",
       "class": "boon",
       "race": "Nord",
-      "expected": "Feel one boon effect of lane Nord-Stuhn in game (e.g. Stuhn's Ward - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1136,7 +1200,7 @@
       "lane": "Nord-Talos",
       "class": "boon",
       "race": "Nord",
-      "expected": "Feel one boon effect of lane Nord-Talos in game (e.g. Talos's Resolve - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1145,7 +1209,7 @@
       "lane": "Nord-Tsun",
       "class": "boon",
       "race": "Nord",
-      "expected": "Feel one boon effect of lane Nord-Tsun in game (e.g. Tsun's Trial - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1154,7 +1218,7 @@
       "lane": "Orc-City",
       "class": "boon",
       "race": "Orc",
-      "expected": "Feel one boon effect of lane Orc-City in game (e.g. Private Fidelity - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1163,7 +1227,7 @@
       "lane": "Orc-LegionExile",
       "class": "boon",
       "race": "Orc",
-      "expected": "Feel one boon effect of lane Orc-LegionExile in game (e.g. Foreign Discipline - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1172,7 +1236,7 @@
       "lane": "Orc-Malacath",
       "class": "boon",
       "race": "Orc",
-      "expected": "Feel one boon effect of lane Orc-Malacath in game (e.g. Malacath's Regard - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1181,7 +1245,7 @@
       "lane": "Orc-Stronghold",
       "class": "boon",
       "race": "Orc",
-      "expected": "Feel one boon effect of lane Orc-Stronghold in game (e.g. Forge-Worthy - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1190,7 +1254,7 @@
       "lane": "Orc-supportSpells",
       "class": "boon",
       "race": "Orc",
-      "expected": "Feel one boon effect of lane Orc-supportSpells in game (e.g. The Code Holds) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1199,7 +1263,7 @@
       "lane": "Orc-TrialOfIron",
       "class": "boon",
       "race": "Orc",
-      "expected": "Feel one boon effect of lane Orc-TrialOfIron in game (e.g. Trial of Iron - Tusk) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1208,7 +1272,7 @@
       "lane": "OrcCodeHolds",
       "class": "boon",
       "race": "Orc",
-      "expected": "Feel one boon effect of lane OrcCodeHolds in game (e.g. The Code Holds - Devoted) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1217,7 +1281,7 @@
       "lane": "Rajhin",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Rajhin in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -1226,7 +1290,7 @@
       "lane": "Redguard-AncestorSpine",
       "class": "boon",
       "race": "Redguard",
-      "expected": "Feel one boon effect of lane Redguard-AncestorSpine in game (e.g. Ancestor Spine - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1249,7 +1313,7 @@
       "lane": "Redguard-HoonDing",
       "class": "boon",
       "race": "Redguard",
-      "expected": "Feel one boon effect of lane Redguard-HoonDing in game (e.g. HoonDing's Way - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1258,7 +1322,7 @@
       "lane": "Redguard-Leki",
       "class": "boon",
       "race": "Redguard",
-      "expected": "Feel one boon effect of lane Redguard-Leki in game (e.g. Leki's Sword-Song - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1267,7 +1331,7 @@
       "lane": "Redguard-Tuwhacca",
       "class": "boon",
       "race": "Redguard",
-      "expected": "Feel one boon effect of lane Redguard-Tuwhacca in game (e.g. Tu'whacca's Ward - Seeker) and record what was observed.",
+      "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -1276,7 +1340,7 @@
       "lane": "Shor",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Shor in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -1285,7 +1349,7 @@
       "lane": "Sithis",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Sithis in game (e.g. raise-undead) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -1294,7 +1358,7 @@
       "lane": "Stendarr",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Stendarr in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -1303,7 +1367,7 @@
       "lane": "Stuhn",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Stuhn in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -1312,7 +1376,7 @@
       "lane": "Talos",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Talos in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -1321,7 +1385,7 @@
       "lane": "TheHist",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane TheHist in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -1330,7 +1394,7 @@
       "lane": "Trinimac",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Trinimac in game (e.g. accept-daedric-artifact) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -1339,7 +1403,7 @@
       "lane": "Tsun",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Tsun in game (e.g. murder-defenseless) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -1348,7 +1412,7 @@
       "lane": "Tuwhacca",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Tuwhacca in game (e.g. raise-undead) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -1357,7 +1421,7 @@
       "lane": "Xarxes",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Xarxes in game (e.g. accept-daedric-artifact) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -1366,7 +1430,7 @@
       "lane": "Yffre",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Yffre in game (e.g. raise-undead) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
@@ -1375,18 +1439,21 @@
       "lane": "Zen",
       "class": "price",
       "race": null,
-      "expected": "Feel one price effect of lane Zen in game (e.g. steal-item) and record what was observed.",
+      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
       "note": "",
       "creditedFrom": null
     },
     "Zenithar|price": {
-      "status": "pending",
+      "status": "retro-credited",
       "lane": "Zenithar",
       "class": "price",
       "race": null,
       "expected": "Feel one price effect of lane Zenithar in game (e.g. steal-item) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "Retro-credited 2026-07-07: Mega Packet Sitting 1 (2026-07-05) observed multiple in-game Zenithar losses: event 360 delta -0.5 (EventBus log), 361 -0.25 x3, steal-item -1.0, with Ledger row semantics proven the same sitting.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_SessionHandoff_2026-07-05_MegaPacketSitting1.md",
+        "matched": "Zenithar -0.5 / -0.25 x3 / -1.0 observed in game"
+      }
     }
   },
   "updated": "2026-07-07"

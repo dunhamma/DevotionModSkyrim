@@ -48,6 +48,18 @@ Every criterion names its freshness sources (content files hashed into
 - The gate also compares the git live-source manager against the MO2 deployed
   copy and emits a `live-vs-deployed-drift` finding when they differ.
 
+## Felt proof bar (agreed 2026-07-07)
+
+- Debug-primed proof is ACCEPTED for family slots: prime patron/piety/pact
+  state via the debug MCM, then observe the live effect. Organic routes are
+  already machine-proven by the trace and e2e gates.
+- Price/dislike families prove by LOSS SURFACING: one displeasing act, then a
+  visible toast, Book of Days beat, or panel Ledger row.
+- Neglect, creed-loss, Prince price, and curse families prove by FELT
+  MECHANIC: the debuff observed in Active Effects plus a feel note.
+- Minor debuff consequences for deity dislike lanes were design intent but
+  never built; deferred to V2 as PRIORITY (X-DISLIKE-DEBUFF).
+
 ## Explicitly post-1.0 (recorded so audits stop nagging)
 
 WS-3 branding, FP-049 journal polish, Mega Test Packet Sittings D and F as

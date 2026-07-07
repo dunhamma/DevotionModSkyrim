@@ -395,6 +395,12 @@
       "reason": "Content-depth pass beyond the 1.0 Prince surface contract; explicitly post-1.0."
     },
     {
+      "id": "X-DISLIKE-DEBUFF",
+      "title": "Minor debuff/consequence on deity dislike lanes",
+      "priority": "high",
+      "reason": "Design intent confirmed 2026-07-07 but never specced or built: deity dislikes are piety-loss-only in V1. Deferred to V2 as a PRIORITY item; V1 felt bar for dislikes is loss surfacing (toast/BoD/Ledger row)."
+    },
+    {
       "id": "X-VOICED-V2",
       "title": "Voiced dialogue and recognition scale packet",
       "reason": "Deferred to V2 per PDV_Architecture_v3.md Section 21.3; V1 uses non-voiced surfaces."
