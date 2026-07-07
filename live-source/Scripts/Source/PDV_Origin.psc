@@ -59,6 +59,7 @@ Float Property AURIEL_START_PIETY_ALTMER = 10.0 Auto
 Float Property AURIEL_START_PIETY_OTHER = 0.0 Auto
 
 String Property NORD_PROVISIONAL_KEY = "PDV.OriginNordProvisional" AutoReadOnly
+Int Property QASMOKE_CELL_FORM_ID = 0x00032AE7 AutoReadOnly
 
 ; Custom-race compatibility layer (resolves modded/custom races to a vanilla
 ; profile so all downstream stance/UI/seeding logic works unchanged). See
@@ -92,7 +93,7 @@ Function InitializeOrigin()
         return
     endIf
 
-    if ShouldDeferProvisionalNordCapture(raceIndex)
+    if ShouldDeferProvisionalNordCapture(raceIndex, playerActor)
         return
     endIf
 
@@ -127,18 +128,35 @@ Function EnsureOriginInventoryTokens()
     PDV_Manager.EnsureArgonianHistSapToken()
 EndFunction
 
-Bool Function ShouldDeferProvisionalNordCapture(Int raceIndex)
+Bool Function ShouldDeferProvisionalNordCapture(Int raceIndex, Actor playerActor)
     if raceIndex != RACE_NORD
         return false
     endIf
 
     if StorageUtil.GetIntValue(None, NORD_PROVISIONAL_KEY) == 1
+        if IsQASmokeCell(playerActor)
+            Trace(1, "InitializeOrigin deferred: provisional Nord capture is in QASmoke.")
+            return true
+        endIf
         return false
     endIf
 
     StorageUtil.SetIntValue(None, NORD_PROVISIONAL_KEY, 1)
     Trace(1, "InitializeOrigin deferred: first Nord capture treated as provisional.")
     return true
+EndFunction
+
+Bool Function IsQASmokeCell(Actor playerActor)
+    if !playerActor
+        return false
+    endIf
+
+    Cell parentCell = playerActor.GetParentCell()
+    if !parentCell
+        return false
+    endIf
+
+    return parentCell.GetFormID() == QASMOKE_CELL_FORM_ID
 EndFunction
 
 Function ClearProvisionalNordCapture()
