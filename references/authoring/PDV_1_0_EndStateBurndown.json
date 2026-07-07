@@ -3,7 +3,7 @@
   "mode": "read",
   "strictStale": false,
   "counts": {
-    "PASS": 8,
+    "PASS": 10,
     "STALE": 0,
     "RED": 8
   },
@@ -44,7 +44,7 @@
       "category": "machine-gate",
       "title": "Default framework verifier is clean (FAIL=0)",
       "status": "PASS",
-      "detail": "last observed PASS 2026-07-07T04:57:51.234Z",
+      "detail": "last observed PASS 2026-07-07T08:41:59.629Z",
       "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run (or pdv_verify.mjs directly) with the houseCARL bridge live.",
       "drift": false
     },
@@ -54,7 +54,7 @@
       "category": "machine-gate",
       "title": "Content verifier is clean (FAIL=0, WARN=0)",
       "status": "PASS",
-      "detail": "last observed PASS 2026-07-07T02:46:21.004Z",
+      "detail": "last observed PASS 2026-07-07T08:41:59.715Z",
       "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run (or pdv_content_verify.mjs directly).",
       "drift": false
     },
@@ -63,8 +63,8 @@
       "lane": "audits",
       "category": "machine-gate",
       "title": "Integrity harness gates pass (e2e signal gate, deity chain, eligibility coverage)",
-      "status": "RED",
-      "detail": "pattern 'Overall: \\*\\*PASS\\*\\*' matched 0x, need 1",
+      "status": "PASS",
+      "detail": "pattern matched 1x (min 1)",
       "closes": "Fix the failing gate check named in PDV_IntegrityHarnessLedger.md, then re-run the harness.",
       "drift": false
     },
@@ -74,7 +74,7 @@
       "category": "machine-gate",
       "title": "Experience Mode is built (PDV_ModePreset, PDV_GLO_Mode, MCM surfacing, manager scalars, ActionRouter handling, verifier readback)",
       "status": "PASS",
-      "detail": "last observed PASS 2026-07-07T06:31:56.825Z",
+      "detail": "last observed PASS 2026-07-07T08:42:25.338Z",
       "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-EXPMODE-BUILD (strict experience-mode verifier).",
       "drift": false
     },
@@ -164,8 +164,28 @@
       "category": "evidence-gate",
       "title": "One-per-family in-game felt proof recorded for every lane x effect-class family",
       "status": "RED",
-      "detail": "98/141 slots open: Akatosh|price, Alkosh|price, Altmer-AuriEl|boon, Altmer-CurseState|curse, Altmer-Magnus|boon, Altmer-Orthodox|boon, Altmer-VampireExiledPath|curse, Altmer-Xarxes|boon, +90 more",
+      "detail": "105/148 slots open: Akatosh|price, Alkosh|price, Altmer-AuriEl|boon, Altmer-CurseState|curse, Altmer-Magnus|boon, Altmer-Orthodox|boon, Altmer-VampireExiledPath|curse, Altmer-Xarxes|boon, +97 more",
       "closes": "Play one member of each pending family in game and record the evidence slot (or retro-credit from an existing packet where the mapping is unambiguous).",
+      "drift": false
+    },
+    {
+      "id": "C-DISLIKE-DEBUFF-BUILD",
+      "lane": "dislike-consequence",
+      "category": "machine-gate",
+      "title": "Minor dislike-consequence overlay built: every deity dislike lane carries a small felt domain sting beyond piety loss",
+      "status": "PASS",
+      "detail": "last observed PASS 2026-07-07T08:42:29.130Z",
+      "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-DISLIKE-DEBUFF-BUILD (strict dislike-consequence audit: 14 domain spells, dispatch wiring, 3-domain cap, live ESP readback). Per-domain stings prove through C-FELT-FAMILY during the race sittings.",
+      "drift": false
+    },
+    {
+      "id": "C-DISLIKE-DEBUFF-TUNING",
+      "lane": "dislike-consequence",
+      "category": "evidence-gate",
+      "title": "Anti-stack / Requiem-felt tuning sign-off for the dislike-consequence overlay",
+      "status": "RED",
+      "detail": "1/1 slots open: antiStackRequiemFelt",
+      "closes": "In a dedicated sitting, confirm the 32-source disfavor stack stays legible under Requiem alongside neglect and prince prices (no over-stack, stings fade, ordinary play unstung), and record the sign-off.",
       "drift": false
     },
     {
@@ -174,7 +194,7 @@
       "category": "rollup",
       "title": "1.0 ship gate: every non-post-1.0 criterion passes",
       "status": "RED",
-      "detail": "8 PASS / 0 STALE / 8 RED",
+      "detail": "10 PASS / 0 STALE / 8 RED",
       "closes": "Burn the RED criteria above.",
       "drift": false
     }
@@ -200,12 +220,6 @@
       "id": "X-MEGA-F",
       "title": "Mega Test Packet Sitting F (Prince V2 path-deepening)",
       "reason": "Content-depth pass beyond the 1.0 Prince surface contract; explicitly post-1.0."
-    },
-    {
-      "id": "X-DISLIKE-DEBUFF",
-      "title": "Minor debuff/consequence on deity dislike lanes",
-      "priority": "high",
-      "reason": "Design intent confirmed 2026-07-07 but never specced or built: deity dislikes are piety-loss-only in V1. Deferred to V2 as a PRIORITY item; V1 felt bar for dislikes is loss surfacing (toast/BoD/Ledger row)."
     },
     {
       "id": "X-VOICED-V2",

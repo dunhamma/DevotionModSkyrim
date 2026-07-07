@@ -9,10 +9,10 @@ Overall: **RED** (mode: read). Contract: references/authoring/PDV_1_0_EndStateCo
 | C-RACE-RUBRIC | races | evidence-gate | PASS | pattern matched 10x (min 10) | Re-run the race beta-feel packet for any race whose ledger verdict regresses below Pass. |
 | C-PRINCE-GATE | princes | machine-gate | PASS | exit 0 | Record the missing slot evidence in PDV_DaedricRuntimeEvidenceLedger.json via pdv_daedric_evidence_intake.mjs. |
 | C-AUDIT-BETA-STRICT | audits | machine-gate | PASS | pattern matched 1x (min 1) | Fix the blocker named by pdv_beta_readiness_audit.mjs --strict, then re-run. |
-| C-AUDIT-VERIFY | audits | machine-gate | PASS | last observed PASS 2026-07-07T04:57:51.234Z | Run node .\tools\pdv_1_0_endstate_gate.mjs --run (or pdv_verify.mjs directly) with the houseCARL bridge live. |
-| C-AUDIT-CONTENT | audits | machine-gate | PASS | last observed PASS 2026-07-07T02:46:21.004Z | Run node .\tools\pdv_1_0_endstate_gate.mjs --run (or pdv_content_verify.mjs directly). |
-| C-AUDIT-INTEGRITY | audits | machine-gate | RED | pattern 'Overall: \*\*PASS\*\*' matched 0x, need 1 | Fix the failing gate check named in PDV_IntegrityHarnessLedger.md, then re-run the harness. |
-| C-EXPMODE-BUILD | experience-mode | machine-gate | PASS | last observed PASS 2026-07-07T06:31:56.825Z | Run node .\tools\pdv_1_0_endstate_gate.mjs --run --only C-EXPMODE-BUILD (strict experience-mode verifier). |
+| C-AUDIT-VERIFY | audits | machine-gate | PASS | last observed PASS 2026-07-07T08:41:59.629Z | Run node .\tools\pdv_1_0_endstate_gate.mjs --run (or pdv_verify.mjs directly) with the houseCARL bridge live. |
+| C-AUDIT-CONTENT | audits | machine-gate | PASS | last observed PASS 2026-07-07T08:41:59.715Z | Run node .\tools\pdv_1_0_endstate_gate.mjs --run (or pdv_content_verify.mjs directly). |
+| C-AUDIT-INTEGRITY | audits | machine-gate | PASS | pattern matched 1x (min 1) | Fix the failing gate check named in PDV_IntegrityHarnessLedger.md, then re-run the harness. |
+| C-EXPMODE-BUILD | experience-mode | machine-gate | PASS | last observed PASS 2026-07-07T08:42:25.338Z | Run node .\tools\pdv_1_0_endstate_gate.mjs --run --only C-EXPMODE-BUILD (strict experience-mode verifier). |
 | C-EXPMODE-SMOKE | experience-mode | evidence-gate | RED | 2/2 slots open: pilgrimPathSmoke, wayfarerPathSmoke | Run the two-mode in-game smoke after C-EXPMODE-BUILD closes; record both slots in PDV_1_0_ManualSignoffLedger.json. |
 | C-COMPAT-ARR | compatibility | evidence-gate | RED | 1/1 slots open: arrAcceptedPackage | Deliver the ARR evidence packet per the pdv-compat-package workflow and record maintainer acceptance. |
 | C-COMPAT-BORDELLO | compatibility | evidence-gate | RED | 6/6 slots open: JOJ, TOT, HOH, MOM, DoD, VOV | Package each list per the 1.0 Compatibility Gate definition (religion-removal set, list patch, placement notes, patcher rerun steps, maintainer brief, smoke checklist). |
@@ -21,8 +21,10 @@ Overall: **RED** (mode: read). Contract: references/authoring/PDV_1_0_EndStateCo
 | C-PACING-SIM | pacing | machine-gate | PASS | status = "PASS" | Re-tune the authored piety tables for any race outside the bands, then re-run pdv_pacing_sim.mjs. |
 | C-PACING-SIGNOFF | pacing | evidence-gate | RED | 10/10 slots open: Altmer, Argonian, Bosmer, Breton, Dunmer, Imperial, Khajiit, Nord, +2 more | After a real play sitting per race, record a dated sign-off in PDV_PacingSignoffLedger.json. |
 | C-FELT-TRACE | felt-effects | machine-gate | PASS | status = "PASS" | Fix the broken link named in PDV_FeltTraceLedger.md (wiring, dispatch, missing record, or magnitude mismatch), then re-run. |
-| C-FELT-FAMILY | felt-effects | evidence-gate | RED | 98/141 slots open: Akatosh/price, Alkosh/price, Altmer-AuriEl/boon, Altmer-CurseState/curse, Altmer-Magnus/boon, Altmer-Orthodox/boon, Altmer-VampireExiledPath/curse, Altmer-Xarxes/boon, +90 more | Play one member of each pending family in game and record the evidence slot (or retro-credit from an existing packet where the mapping is unambiguous). |
-| C-1-0 | rollup | rollup | RED | 8 PASS / 0 STALE / 8 RED | Burn the RED criteria above. |
+| C-FELT-FAMILY | felt-effects | evidence-gate | RED | 105/148 slots open: Akatosh/price, Alkosh/price, Altmer-AuriEl/boon, Altmer-CurseState/curse, Altmer-Magnus/boon, Altmer-Orthodox/boon, Altmer-VampireExiledPath/curse, Altmer-Xarxes/boon, +97 more | Play one member of each pending family in game and record the evidence slot (or retro-credit from an existing packet where the mapping is unambiguous). |
+| C-DISLIKE-DEBUFF-BUILD | dislike-consequence | machine-gate | PASS | last observed PASS 2026-07-07T08:42:29.130Z | Run node .\tools\pdv_1_0_endstate_gate.mjs --run --only C-DISLIKE-DEBUFF-BUILD (strict dislike-consequence audit: 14 domain spells, dispatch wiring, 3-domain cap, live ESP readback). Per-domain stings prove through C-FELT-FAMILY during the race sittings. |
+| C-DISLIKE-DEBUFF-TUNING | dislike-consequence | evidence-gate | RED | 1/1 slots open: antiStackRequiemFelt | In a dedicated sitting, confirm the 32-source disfavor stack stays legible under Requiem alongside neglect and prince prices (no over-stack, stings fade, ordinary play unstung), and record the sign-off. |
+| C-1-0 | rollup | rollup | RED | 10 PASS / 0 STALE / 8 RED | Burn the RED criteria above. |
 
 ## Explicitly post-1.0 (not gating)
 
@@ -30,7 +32,6 @@ Overall: **RED** (mode: read). Contract: references/authoring/PDV_1_0_EndStateCo
 - **X-FP049** FP-049 journal polish item - Cosmetic polish; ships in 1.0.x.
 - **X-MEGA-D** Mega Test Packet Sitting D as a standalone item - The Requiem felt content of Sitting D is gated by C-REQUIEM-TRACKB; the packet formality itself is not a separate ship gate.
 - **X-MEGA-F** Mega Test Packet Sitting F (Prince V2 path-deepening) - Content-depth pass beyond the 1.0 Prince surface contract; explicitly post-1.0.
-- **X-DISLIKE-DEBUFF** Minor debuff/consequence on deity dislike lanes - Design intent confirmed 2026-07-07 but never specced or built: deity dislikes are piety-loss-only in V1. Deferred to V2 as a PRIORITY item; V1 felt bar for dislikes is loss surfacing (toast/BoD/Ledger row).
 - **X-VOICED-V2** Voiced dialogue and recognition scale packet - Deferred to V2 per PDV_Architecture_v3.md Section 21.3; V1 uses non-voiced surfaces.
 - **X-GREENPACT-TAGS** Bosmer Green Pact per-item tag layer - Scoped outside 1.0 per race manifest deferred-with-dependency prose.
 - **X-JYGGALAG** Jyggalag surface - Out of 1.0 scope unless future adopted content explicitly adds him.

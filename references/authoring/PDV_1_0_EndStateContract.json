@@ -366,18 +366,17 @@
       "category": "machine-gate",
       "lane": "dislike-consequence",
       "evidence": {
-        "read": {
-          "kind": "not-built",
-          "params": {
-            "plannedEvidence": "node .\\tools\\pdv_dislike_consequence_audit.mjs exit-zero (domain-sting records exist, every deity maps to one domain, magnitudes match the spec bands, penalties are Requiem-proof-shaped, standing/band/anti-stack gates present). Build per PDV_CodexHandoff_DislikeConsequence_V2.md."
-          }
+        "read": { "kind": "stamp-only" },
+        "run": {
+          "tool": ["tools/pdv_dislike_consequence_audit.mjs", "--strict-dislike-consequence"],
+          "passRule": "exit-zero"
         }
       },
       "freshness": {
         "sources": ["@managerLive", "@managerDeployed", "@espDeployed"],
         "onDrift": "FAIL"
       },
-      "closes": "Execute PDV_CodexHandoff_DislikeConsequence_V2.md (shared domain overlay, ~6-7 MGEF), then wire the strict audit and replace this read block with its evidence. Once the felt registry enumerates the disfavor class, the per-domain stings prove through C-FELT-FAMILY during the race sittings.",
+      "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-DISLIKE-DEBUFF-BUILD (strict dislike-consequence audit: 14 domain spells, dispatch wiring, 3-domain cap, live ESP readback). Per-domain stings prove through C-FELT-FAMILY during the race sittings.",
       "post10": false
     },
     {
