@@ -10854,6 +10854,141 @@ String Function GetDisfavorRepeatDayKey(Int domainValue, Int eventType)
     return "PDV.Disfavor.Repeat." + domainValue + "." + eventType + ".Day"
 EndFunction
 
+; ---------------------------------------------------------------------------
+; Debug-only disfavor harness. Called ONLY from the MCM Debug page so a tester
+; can prove the dislike losses + the 7 disfavor domain stings from menu clicks
+; instead of performing each transgression in-world. No organic caller, no
+; economy/dispatch change: DebugFireDislike routes the real dispatch entrypoint,
+; the domain-sting path mirrors ApplyDisfavorSting's spell/expiry writes exactly.
+; ---------------------------------------------------------------------------
+
+; Fire the real dislike loss + sting path for one (deity, event) pair. Reads the
+; live table delta the same way the runtime does; a non-negative delta means the
+; deity has no dislike row for this event, so nothing fires. Clears the per-day
+; repeat guard first so back-to-back fires on the same game-day are not suppressed.
+Function DebugFireDislike(PDV_DeityBase deity, Int eventType)
+    if !deity
+        Trace(1, "DebugFireDislike skipped: no deity.")
+        return
+    endIf
+    Float delta = GetDislikeBaseDeltaForEvent(deity, eventType)
+    if delta >= 0.0
+        Trace(1, "DebugFireDislike: no dislike row for " + deity.DeityName + " event " + eventType)
+        return
+    endIf
+    Int domainValue = DomainForDeity(deity)
+    if domainValue != DISFAVOR_DOMAIN_NONE
+        StorageUtil.SetIntValue(deity as Form, GetDisfavorRepeatDayKey(domainValue, eventType), -1)
+    endIf
+    AwardPietyFromLikesDislikes(deity, delta, eventType, "debug_fire_dislike")
+    Trace(1, "DebugFireDislike: " + deity.DeityName + " event " + eventType + " delta " + delta)
+EndFunction
+
+; Directly add a domain sting spell + register its expiry the same way
+; ApplyDisfavorSting does, so the eyeball check uses the real spell + real expiry.
+; Bypasses the standing/repeat/cap gates on purpose (raw MGEF inspection).
+Function DebugApplyDomainSting(Int domainValue, Bool sharp)
+    ApplyDebugDomainSting(domainValue, sharp, False)
+EndFunction
+
+; Shared core for the debug sting apply. respectCap reproduces ApplyDisfavorSting's
+; active-domain cap so DebugBurstAntiStack can demonstrate the 4th distinct domain
+; is suppressed at the cap. Returns True when the sting was applied.
+Bool Function ApplyDebugDomainSting(Int domainValue, Bool sharp, Bool respectCap)
+    if domainValue < DISFAVOR_DOMAIN_SKY_STORM_HUNT || domainValue > DISFAVOR_DOMAIN_VOID_SECRETS
+        Trace(1, "DebugApplyDomainSting skipped: bad domain " + domainValue)
+        return False
+    endIf
+    UpdateDisfavorStingRuntime()
+    Bool domainAlreadyActive = IsDisfavorDomainActive(domainValue)
+    if respectCap && !domainAlreadyActive && CountActiveDisfavorStings() >= DISFAVOR_MAX_ACTIVE_DOMAINS
+        Trace(2, "DebugApplyDomainSting suppressed by active-domain cap: " + GetDisfavorDomainLabel(domainValue))
+        return False
+    endIf
+    Spell targetSpell = GetDisfavorSpell(domainValue, sharp)
+    if !targetSpell
+        Trace(1, "DebugApplyDomainSting skipped: missing spell for " + GetDisfavorDomainLabel(domainValue))
+        return False
+    endIf
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return False
+    endIf
+    ClearDisfavorDomainSpellOnly(playerRef, domainValue)
+    playerRef.AddSpell(targetSpell, False)
+    StorageUtil.SetIntValue(None, GetDisfavorActiveKey(domainValue), 1)
+    StorageUtil.SetFloatValue(None, GetDisfavorExpiryKey(domainValue), Utility.GetCurrentGameTime() + GetDisfavorDurationDays(sharp))
+    StorageUtil.SetStringValue(None, GetDisfavorBandKey(domainValue), GetDisfavorBandLabel(sharp))
+    Trace(1, "DebugApplyDomainSting applied: " + GetDisfavorDomainLabel(domainValue) + " " + GetDisfavorBandLabel(sharp))
+    return True
+EndFunction
+
+; Clear first, then fire 4 distinct-domain stings (Sky, Death, War, Order) with the
+; cap respected, so the tester sees 3 active and the 4th suppressed at the cap.
+Function DebugBurstAntiStack()
+    ClearAllDisfavorStings()
+    ApplyDebugDomainSting(DISFAVOR_DOMAIN_SKY_STORM_HUNT, True, True)
+    ApplyDebugDomainSting(DISFAVOR_DOMAIN_DEATH_ANCESTORS, True, True)
+    ApplyDebugDomainSting(DISFAVOR_DOMAIN_WAR_HONOR, True, True)
+    ApplyDebugDomainSting(DISFAVOR_DOMAIN_ORDER_TRADE_LORE, True, True)
+    Trace(1, "DebugBurstAntiStack: " + GetActiveDisfavorSummary())
+EndFunction
+
+; One-line readout of every active disfavor domain with its band + remaining
+; game-minutes; "none" when empty. Clears expired stings first so the count is live.
+String Function GetActiveDisfavorSummary()
+    UpdateDisfavorStingRuntime()
+    String summary = ""
+    Int domainValue = DISFAVOR_DOMAIN_SKY_STORM_HUNT
+    while domainValue <= DISFAVOR_DOMAIN_VOID_SECRETS
+        if IsDisfavorDomainActive(domainValue)
+            Float expiresAt = StorageUtil.GetFloatValue(None, GetDisfavorExpiryKey(domainValue))
+            Int remainMinutes = ((expiresAt - Utility.GetCurrentGameTime()) * 24.0 * 60.0) as Int
+            if remainMinutes < 0
+                remainMinutes = 0
+            endIf
+            String band = StorageUtil.GetStringValue(None, GetDisfavorBandKey(domainValue))
+            if band == ""
+                band = "?"
+            endIf
+            if summary != ""
+                summary += "; "
+            endIf
+            summary += GetDisfavorDomainLabel(domainValue) + " " + band + " (~" + remainMinutes + "m)"
+        endIf
+        domainValue += 1
+    endWhile
+    if summary == ""
+        return "Active disfavor: none (0/" + DISFAVOR_MAX_ACTIVE_DOMAINS + ")."
+    endIf
+    return "Active disfavor (" + CountActiveDisfavorStings() + "/" + DISFAVOR_MAX_ACTIVE_DOMAINS + "): " + summary
+EndFunction
+
+; Remove every active disfavor spell + clear its active/expiry/band keys, reusing
+; the runtime's own ClearDisfavorDomain so the removal path matches expiry cleanup.
+Function ClearAllDisfavorStings()
+    Int domainValue = DISFAVOR_DOMAIN_SKY_STORM_HUNT
+    while domainValue <= DISFAVOR_DOMAIN_VOID_SECRETS
+        if IsDisfavorDomainActive(domainValue)
+            ClearDisfavorDomain(domainValue, "debug_clear")
+        endIf
+        domainValue += 1
+    endWhile
+EndFunction
+
+; Debug label helper: does the selected deity dislike this event, at what delta,
+; into which domain? Lets the MCM button hint tell the tester whether a fire will land.
+String Function DebugDislikeSummaryLine(PDV_DeityBase deity, Int eventType)
+    if !deity
+        return "event " + eventType + " | no deity"
+    endIf
+    Float delta = GetDislikeBaseDeltaForEvent(deity, eventType)
+    if delta >= 0.0
+        return "event " + eventType + " | " + deity.DeityName + " | no dislike row"
+    endIf
+    return "event " + eventType + " | " + deity.DeityName + " | " + delta + " -> " + GetDisfavorDomainLabel(DomainForDeity(deity))
+EndFunction
+
 ; Per-deity recent-driver ring (the acts that recently moved this god), keyed on the
 ; deity form, capped at 6 FIFO. Powers the dashboard's "recent drivers".
 Function RecordDeityDriver(PDV_DeityBase deity, String reason, Float delta)

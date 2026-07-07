@@ -65,6 +65,14 @@ Int _oidSeedBroadLane = -1
 Int _oidPrepareUninstall = -1
 Int _oidPendingSignalType = -1
 Int _oidApplyCuratedSignal = -1
+Int _oidDisfavorEventId = -1
+Int _oidFireDislike = -1
+Int _oidDisfavorDomainCycle = -1
+Int _oidDisfavorBandToggle = -1
+Int _oidApplyDomainSting = -1
+Int _oidDisfavorBurst = -1
+Int _oidDisfavorShow = -1
+Int _oidDisfavorClear = -1
 Int _oidRunDawn = -1
 Int _oidShowPietyMap = -1
 Int _oidShowStructuralMap = -1
@@ -162,6 +170,9 @@ Int _selectedDaedricPathIndex = 0
 Float _pendingPiety = 10.0
 Float _pendingPietyToday = 1.0
 Int _pendingSignalType = 103
+Int _pendingDisfavorEventId = 365
+Int _pendingDisfavorDomain = 1
+Bool _pendingDisfavorSharp = False
 Int _selectedCurseOrigin = 0
 
 Event OnInit()
@@ -288,6 +299,22 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Choose the curated signal ID to apply to the selected deity. Talos uses 101, 102, and 103. Auri-El uses 201 and 202.")
     elseIf a_option == _oidApplyCuratedSignal
         SetInfoText("Routes the chosen curated signal through the manager so stance and rivalry apply normally.")
+    elseIf a_option == _oidDisfavorEventId
+        SetInfoText("Choose the dislike event ID to fire (e.g. 304 murder-defenseless, 362 steal-item, 365 raise-undead). The button label shows whether the selected deity has a dislike row for it.")
+    elseIf a_option == _oidFireDislike
+        SetInfoText("Fires the real dislike loss + disfavor sting for the selected deity through the live dispatch. Set Target piety >= 25 first so the standing gate passes; below standing only the piety loss applies.")
+    elseIf a_option == _oidDisfavorDomainCycle
+        SetInfoText("Cycles the disfavor domain (1 Sky/Storm/Hunt .. 7 Void/Secrets) for the direct Apply domain sting button.")
+    elseIf a_option == _oidDisfavorBandToggle
+        SetInfoText("Toggles the disfavor band (Light or Sharp) for the direct Apply domain sting button.")
+    elseIf a_option == _oidApplyDomainSting
+        SetInfoText("Directly adds the selected domain + band sting spell with a real expiry so you can eyeball the raw MGEF magnitude, text, and duration. Bypasses standing/repeat/cap gates.")
+    elseIf a_option == _oidDisfavorBurst
+        SetInfoText("Clears active disfavor, then fires four distinct-domain stings so you can confirm the cap holds at 3 active and the 4th is suppressed.")
+    elseIf a_option == _oidDisfavorShow
+        SetInfoText("Shows the active disfavor domains with their band and remaining game-minutes.")
+    elseIf a_option == _oidDisfavorClear
+        SetInfoText("Removes all active disfavor sting spells and clears their expiry state.")
     elseIf a_option == _oidRunDawn
         SetInfoText("Runs ProcessDawn immediately so scratch piety consolidates into stored piety.")
     elseIf a_option == _oidShowPietyMap
@@ -545,6 +572,57 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidApplyCuratedSignal
         DebugApplyCuratedSignal()
+        return
+    endIf
+
+    if a_option == _oidFireDislike
+        DebugFireSelectedDislike()
+        return
+    endIf
+
+    if a_option == _oidDisfavorDomainCycle
+        _pendingDisfavorDomain += 1
+        if _pendingDisfavorDomain > 7
+            _pendingDisfavorDomain = 1
+        endIf
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidDisfavorBandToggle
+        _pendingDisfavorSharp = !_pendingDisfavorSharp
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidApplyDomainSting
+        if PDV_Manager
+            PDV_Manager.DebugApplyDomainSting(_pendingDisfavorDomain, _pendingDisfavorSharp)
+            ShowMessage(PDV_Manager.GetActiveDisfavorSummary(), False, "$OK", "")
+        endIf
+        return
+    endIf
+
+    if a_option == _oidDisfavorBurst
+        if PDV_Manager
+            PDV_Manager.DebugBurstAntiStack()
+            ShowMessage(PDV_Manager.GetActiveDisfavorSummary(), False, "$OK", "")
+        endIf
+        return
+    endIf
+
+    if a_option == _oidDisfavorShow
+        if PDV_Manager
+            ShowMessage(PDV_Manager.GetActiveDisfavorSummary(), False, "$OK", "")
+        endIf
+        return
+    endIf
+
+    if a_option == _oidDisfavorClear
+        if PDV_Manager
+            PDV_Manager.ClearAllDisfavorStings()
+            ShowMessage(PDV_Manager.GetActiveDisfavorSummary(), False, "$OK", "")
+        endIf
         return
     endIf
 
@@ -1180,6 +1258,14 @@ Function OnOptionSliderOpen(Int a_option)
         SetSliderDialogDefaultValue(_pendingSignalType as Float)
         SetSliderDialogRange(SIGNAL_TYPE_MIN, SIGNAL_TYPE_MAX)
         SetSliderDialogInterval(1.0)
+        return
+    endIf
+
+    if a_option == _oidDisfavorEventId
+        SetSliderDialogStartValue(_pendingDisfavorEventId as Float)
+        SetSliderDialogDefaultValue(_pendingDisfavorEventId as Float)
+        SetSliderDialogRange(SIGNAL_TYPE_MIN, SIGNAL_TYPE_MAX)
+        SetSliderDialogInterval(1.0)
     endIf
 EndFunction
 
@@ -1208,6 +1294,13 @@ Function OnOptionSliderAccept(Int a_option, Float a_value)
     if a_option == _oidPendingSignalType
         _pendingSignalType = ClampSignalType(a_value as Int)
         SetSliderOptionValue(_oidPendingSignalType, _pendingSignalType as Float, "{0}", False)
+        return
+    endIf
+
+    if a_option == _oidDisfavorEventId
+        _pendingDisfavorEventId = ClampSignalType(a_value as Int)
+        SetSliderOptionValue(_oidDisfavorEventId, _pendingDisfavorEventId as Float, "{0}", False)
+        ForcePageReset()
     endIf
 EndFunction
 
@@ -1582,6 +1675,17 @@ Function BuildStatePage()
     _oidApplyCuratedSignal = AddTextOption("Apply curated signal", GetSelectedSignalLabel(), OPTION_FLAG_NONE)
 
     AddEmptyOption()
+    AddHeaderOption("Disfavor (dislikes)", OPTION_FLAG_NONE)
+    _oidDisfavorEventId = AddSliderOption("Dislike event ID", _pendingDisfavorEventId as Float, "{0}", OPTION_FLAG_NONE)
+    _oidFireDislike = AddTextOption("Fire dislike vs selected deity", GetFireDislikeLabel(), OPTION_FLAG_NONE)
+    _oidDisfavorDomainCycle = AddTextOption("Cycle disfavor domain", GetDisfavorDomainCycleLabel(), OPTION_FLAG_NONE)
+    _oidDisfavorBandToggle = AddTextOption("Cycle disfavor band", GetDisfavorBandCycleLabel(), OPTION_FLAG_NONE)
+    _oidApplyDomainSting = AddTextOption("Apply domain sting", "Direct MGEF add", OPTION_FLAG_NONE)
+    _oidDisfavorBurst = AddTextOption("Anti-stack burst (4 domains)", "Cap holds at 3", OPTION_FLAG_NONE)
+    _oidDisfavorShow = AddTextOption("Show active disfavor", "Summary message", OPTION_FLAG_NONE)
+    _oidDisfavorClear = AddTextOption("Clear active disfavor", "Remove all stings", OPTION_FLAG_NONE)
+
+    AddEmptyOption()
     AddHeaderOption("Actions", OPTION_FLAG_NONE)
     _oidPrepareUninstall = AddTextOption("Prepare for uninstall", "Strip + stop", OPTION_FLAG_NONE)
     _oidRunDawn = AddTextOption("Run dawn pass", "Consolidate scratch", OPTION_FLAG_NONE)
@@ -1812,6 +1916,44 @@ Function DebugApplyCuratedSignal()
         PDV_Manager.DebugAwardCuratedSignalByIndex(deity.DeityIndex, _pendingSignalType)
         ForcePageReset()
     endIf
+EndFunction
+
+Function DebugFireSelectedDislike()
+    PDV_DeityBase deity = GetSelectedDeity()
+    if !deity
+        ShowMessage("No selected deity is available.", False, "$OK", "")
+        return
+    endIf
+    if !PDV_Manager
+        return
+    endIf
+
+    if ShowMessage("Fire dislike event " + _pendingDisfavorEventId + " vs " + deity.DeityName + "? Set Target piety >= 25 first (or make it your patron) so the disfavor standing gate passes; below standing it applies the piety loss only.", True, "$Yes", "$No")
+        PDV_Manager.DebugFireDislike(deity, _pendingDisfavorEventId)
+        ShowMessage(PDV_Manager.GetActiveDisfavorSummary(), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+String Function GetFireDislikeLabel()
+    if !PDV_Manager
+        return "event " + _pendingDisfavorEventId
+    endIf
+    return PDV_Manager.DebugDislikeSummaryLine(GetSelectedDeity(), _pendingDisfavorEventId)
+EndFunction
+
+String Function GetDisfavorDomainCycleLabel()
+    if PDV_Manager
+        return _pendingDisfavorDomain + " " + PDV_Manager.GetDisfavorDomainLabel(_pendingDisfavorDomain)
+    endIf
+    return "Domain " + _pendingDisfavorDomain
+EndFunction
+
+String Function GetDisfavorBandCycleLabel()
+    if _pendingDisfavorSharp
+        return "Sharp"
+    endIf
+    return "Light"
 EndFunction
 
 Function SyncSelection()
