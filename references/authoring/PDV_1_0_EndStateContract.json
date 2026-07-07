@@ -398,7 +398,7 @@
       "id": "X-DISLIKE-DEBUFF",
       "title": "Minor debuff/consequence on deity dislike lanes",
       "priority": "high",
-      "reason": "Design intent confirmed 2026-07-07 but never specced or built: deity dislikes are piety-loss-only in V1. Deferred to V2 as a PRIORITY item; V1 felt bar for dislikes is loss surfacing (toast/BoD/Ledger row)."
+      "reason": "Design intent confirmed 2026-07-07 but never specced or built: deity dislikes are piety-loss-only in V1. Deferred to V2 as a PRIORITY item; V1 felt bar for dislikes is loss surfacing (toast/BoD/Ledger row). Full Codex handoff: references/authoring/PDV_CodexHandoff_DislikeConsequence_V2.md."
     },
     {
       "id": "X-VOICED-V2",
