@@ -1,462 +1,259 @@
-# PDV 1.0 Mega Test Packet -- consolidated remaining in-game proof (2026-07-02; updated 2026-07-06)
+# PDV 1.0 Test Packet -- gate-driven close-out (rewritten 2026-07-07)
 
-Status: STRICT BETA-READINESS GATE PASSED 2026-07-05; residual runtime/manual proof remains below.
-Owner plan: `C:\Users\Admin\.claude\plans\kick-off-session-let-s-mighty-flask.md`.
+Status: machine gates PASS (10/18); the 8 remaining criteria are play + external.
+Supersedes the 2026-07-02 A-F mega-packet structure (Sections A quest-expansion,
+B closed races, C1 Prisma, E1 day-to-day all PASSED in Sitting 1 -- kept only as
+regression recipes at the bottom).
 
-**What this is.** One ordered packet consolidating every remaining in-game proof between the
-current build and the next 1.0 work. It sequences the existing sheets -- it does NOT replace
-them. **On any conflict, the source run sheet wins**; this packet only owns the order, the save
-plan, and the evidence-sink map.
+**What this is.** The single packet that walks the remaining in-game and external
+proof needed to close 1.0. It is an ORCHESTRATOR: it owns the order, the save
+plan, and the evidence-sink map. The source of truth is the contract +
+generated burndown, and on any conflict the burndown wins:
 
-**Proof boundary.** Everything below is Route/runtime or Manual/acceptance proof. The
-machine/readback bucket is already closed (see Preflight Evidence). Do not let a passing
-section here claim anything for compatibility, final-world placement, V2 scope, or public
-support without the matching proof bucket.
+- Gate authority: `references/authoring/PDV_1_0_EndStateContract.json`
+- Live status: `node .\tools\pdv_1_0_endstate_gate.mjs` ->
+  `references/authoring/PDV_1_0_EndStateBurndown.md`
 
-**Evidence intake rule.** Ledger statuses are `pending` / `evidence-recorded` /
-`not-applicable` only -- never write `pass`/`done` into
-`PDV_Phase20_ManualEvidenceLedger.json`; the beta gate derives the verdict.
-
-**Handoff reconciliation.** `PDV_SessionHandoff_2026-07-05_QuestExpansion.md` was written
-before `PDV_SessionHandoff_2026-07-05_DunmerCloseout.md`. Its Quest Expansion smoke queue is
-still valid, but its "Dunmer is the only blocker" statement is superseded. Imperial closed on
-2026-07-04, Dunmer closed on 2026-07-05, and the current strict audit passes.
-
-**Sitting-1 checkpoint.** `PDV_SessionHandoff_2026-07-05_MegaPacketSitting1.md` records the
-current post-closeout state: Section A quest-expansion smoke passed across all eight
-setstage-able origins; the E1 day-to-day sweep and Block-F mechanics passed; Universal Prisma
-U1-U9 passed in game on 2026-07-06. Do not rerun those sections just to close the packet unless
-a new source, Prisma, reward, or runtime-surfacing change invalidates the evidence.
+**How proof is recorded.** Each proof writes to a structured ledger (the
+evidence-sink map, Section 6). Statuses are `pending` / `evidence-recorded` /
+`retro-credited` / `not-applicable` -- never `pass`/`done`. Record a result by
+reporting it to Claude (who writes the ledger slot with provenance and
+regenerates the burndown) or by editing the named ledger directly. The gate
+derives PASS; you never hand-write a verdict.
 
 ---
 
-## Preflight Evidence (latest sanity pass 2026-07-05)
+## 1. Current gate state (regenerate before every sitting)
 
-| Gate | Result |
-|---|---|
-| `node .\tools\pdv_compile.mjs` | 0 errors / 0 warnings (PDV__ManagerQuest recompiled) |
-| `node .\tools\pdv_verify.mjs --json` | FAIL=0, WARN=1 (medallion glyph fallback, known), PASS=3513 |
-| `node .\tools\pdv_integrity_harness.mjs` | signal_e2e 39 GREEN / 0 RED; deity_chain 0 blockers; eligibility 147/0 |
-| `node .\tools\pdv_prisma_ui_audit.mjs` | PASS (49 checks) |
-| `node .\tools\pdv_prisma_toast_fallback_audit.mjs` | PASS incl. negative fixtures |
-| `node .\tools\pdv_prisma_to_oneoh_audit.mjs` | PASS incl. negative fixtures |
-| `node .\tools\pdv_book_of_days_audit.mjs` | PASS=110, WARN=0, FAIL=0 |
-| `node .\tools\pdv_requiem_penalty_audit.mjs` | PASS (incl. Imperial ResistDisease -5 preservation) |
-| `node .\tools\pdv_daedric_beta_gate.mjs --json` | PASS=16 |
-| `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` | STRICT_GATE_PASS; PASS=31, WARN=1, INFO=2, blockers=[] |
+10 PASS (all machine): race rubric, 16 Princes, beta-strict audit, framework
+verifier, content verifier, integrity harness, Experience Mode build, pacing
+sim, felt-effect machine trace, dislike-consequence build.
 
-Build state: live-source and MO2 were hash-identical for `PDV__ManagerQuest.psc`, `PDV_MCM.psc`,
-`PDV_DaedricPath_Hircine.psc` in the 2026-07-02 preflight. Rerun the quick sanity commands below
-before a new testing sitting if any code, plugin, Prisma, reward, Daedric, or runtime-surfacing
-file changed:
+8 RED -- the entire remaining 1.0 surface, all play or external:
+
+| Criterion | What closes it | Evidence sink |
+|---|---|---|
+| C-FELT-FAMILY | one in-game felt proof per lane x class family (105 pending) | `PDV_FeltFamilyEvidenceLedger.json` |
+| C-DISLIKE-DEBUFF-TUNING | one anti-stack / Requiem-felt sitting | `PDV_1_0_ManualSignoffLedger.json` (dislikeStackTuning) |
+| C-PACING-SIGNOFF | 10 dated per-race pacing sign-offs | `PDV_PacingSignoffLedger.json` |
+| C-PLACEMENT-FINAL | 10 pending in-world hook proofs | `PDV_InWorldHookProofLedger.json` |
+| C-REQUIEM-TRACKB | Requiem felt sweeps A / B1 / B2 | `PDV_1_0_ManualSignoffLedger.json` (requiemTrackB) |
+| C-EXPMODE-SMOKE | two-mode runtime smoke | `PDV_1_0_ManualSignoffLedger.json` (experienceModeSmoke) |
+| C-COMPAT-ARR | ARR package accepted | `PDV_1_0_ManualSignoffLedger.json` (compatARR) |
+| C-COMPAT-BORDELLO | 6 lists patch-packaged | `PDV_1_0_ManualSignoffLedger.json` (compatBordello) |
+
+The race sittings (Section 4) close the first four in a single per-race pass.
+Sections 5 close the cross-cutting gates. C-1-0 (the ship gate) flips green when
+all eight do.
+
+---
+
+## 2. Preflight (rerun if any code/plugin/reward/Prisma/Daedric file changed)
 
 ```powershell
 git status --short
-node .\tools\pdv_beta_readiness_audit.mjs --strict --json
-node .\tools\pdv_verify.mjs --json
+node .\tools\pdv_1_0_endstate_gate.mjs            # regenerate the burndown
+node .\tools\pdv_verify.mjs --json                # FAIL=0
+node .\tools\pdv_dislike_consequence_audit.mjs --strict-dislike-consequence
 ```
 
-> Update 2026-07-05: `PDV__ManagerQuest.psc` changed after this preflight -- the
-> foreign-award reachability gate and the quest-reaction surfacing rework (new row
-> A10). Both recompiled 0 errors / 0 warnings and live-source was re-synced to the
-> MO2 build copy (hash-identical). Rerun the three sanity commands above before
-> Sitting 1.
->
-> Update 2026-07-06: formal-offer **Refuse** was corrected after the U8 pass to
-> obey the owner ruling precisely: a refusal toast is expected, and the pinned Book
-> of Days refusal chronicle is expected, but there must be no diegetic screen wash
-> or D1 sound. `SurfaceTransition(..., silent=True)` owns the pinned chronicle;
-> the manager sends the refusal toast directly. Accept remains fully surfaced.
-> Machine gates passed for manager+MCM compile, `pdv_verify`,
-> `pdv_prisma_ui_audit`, and `pdv_formal_offer_check`; `pdv_book_of_days_audit`
-> had one unrelated repo/live `app.js` LF/CRLF hash drift. Manual smoke still
-> needs to confirm Refuse toast + pinned chronicle with no wash/sound, and Accept
-> still toasts/sounds.
->
-> Update 2026-07-06: Orkey/Dibella Old Ways neglect parity is machine/readback
-> closed. `pdv-neglect-esp-author --write` authored `PDV_SPEL_Neglect_Arkay` /
-> `PDV_MGEF_Neglect_Arkay` as **Orkey's Neglect** (`ResistMagic -5`) and
-> `PDV_SPEL_Neglect_Dibella` / `PDV_MGEF_Neglect_Dibella` as **Dibella's
-> Neglect** (`Restoration -5`), wired both manager VMAD spell properties, and
-> `SyncNordPatronNeglectSpells()` now handles internal Arkay/Orkey and Dibella.
-> Machine gates passed; manual smoke still needs Active Effects confirmation.
->
-> Freeze note 2026-07-06: the first Orkey retest froze on repeated MCM
-> `ShowMessage()` re-entry while debug confirmations were still open. The
-> immediate rerun did not freeze, but logged the same `ShowMessage()` errors and
-> never reached the manager. The next live log showed `Prime decay eligible`
-> firing against Arkay/Orkey while the backend still reported `state=Broad
-> worship`, so active-patron neglect correctly could not apply. The live
-> `PDV_MCM` now bypasses modal confirmations for neglect/decay debug buttons,
-> adds `Force selected patron`, and recompiles cleanly; restart Skyrim and rerun
-> the Active Effects smoke before calling this passed.
+Drift guard: the gate flags `live-vs-deployed-drift` if the git live-source
+manager and the MO2 deployed copy differ (e.g. a parallel Codex build mid-flight).
+If it fires, sync live-source -> MO2 (or wait for the build to deploy) before
+trusting any source-read audit. The debug-MCM dislike/disfavor buttons
+(`PDV_CodexHandoff_DisfavorDebugMCM.md`) must be built and deployed before the
+sittings -- they are how you fire dislikes and stings from the menu.
+
+Shared per-sitting setup (unchanged from the proven flow):
+- Disposable **new save** (or main-menu `coc qasmoke`); MO2 Anvil: disable
+  `Devotion - Living Deities Test` (not present on Authoria).
+- Console `set PDV_GLO_OriginRace to <n>` + `set PDV_GLO_DebugLevel to 2`;
+  all seeding via **MCM -> Devotion -> Developer Options** (never `cqf`).
+- Origin indices: 0 Nord, 1 Imperial, 2 Breton, 3 Altmer, 4 Bosmer, 5 Dunmer,
+  6 Khajiit, 7 Argonian, 8 Orc, 9 Redguard.
+- Papyrus log: `...\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log`.
+- Walk location-anchored hooks in via load door / fast-travel (`coc` skips Story
+  location-change triggers). Hard-save at the clean start so origin flips reload.
 
 ---
 
-## Session plan (post-strict-gate residual queue)
+## 3. Proof bars (what "felt" means per class -- agreed 2026-07-07)
 
-| Sitting | Instance | Sections | Approx |
-|---|---|---|---|
-| 1 | **Anvil** | **Closed:** A quest-expansion, E1 day-to-day, C1 U1-U9. **Remaining:** C2 beats 3/5/6, formal-offer Refuse/Accept control, Old Ways Orkey/Dibella neglect Active Effects smoke | short |
-| 2 | **Anvil** | F. Prince V2 path-deepening -> C3 focus-trap re-confirm if Prisma changed | medium |
-| 3 | **Authoria** | D. Requiem felt sweep (A1-A9, B1, B2) + penalty feltness and tuning notes | medium |
-| 4 | **Repo-side** | Rerun strict audit, then resume Experience Mode -> ARR package -> WS-3 branding only if no new blockers appear | short |
-
-Shared preflight, every sitting: disposable **new save** (or main-menu `coc qasmoke`);
-MO2 Anvil: disable `Devotion - Living Deities Test` (skip on Authoria -- not in that list);
-console `set PDV_GLO_OriginRace to <n>` + `set PDV_GLO_DebugLevel to 2`; seeds via
-**MCM -> Devotion -> Developer Options** (never `cqf`). Origin indices: 0 Nord, 1 Imperial,
-2 Breton, 3 Altmer, 4 Bosmer, 5 Dunmer, 6 Khajiit, 7 Argonian, 8 Orc, 9 Redguard.
-Papyrus log: `...\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log`.
-Walk into location-anchored hooks via load door / fast-travel -- `coc` skips Story
-location-change triggers. Make a hard save at the clean start so origin flips and terminal
-refuse tests can reload.
+- **Debug-primed proof is accepted.** Prime patron/piety/pact/curse state via the
+  Developer Options page, then observe the real effect. Organic routes are
+  already machine-proven by the trace and e2e gates.
+- **Boons / substrate / favor:** debug-prime the deity to a tier, confirm the
+  spell in Active Effects at the right magnitude. (Daedric: Force Seeker/Devoted/
+  Champion.)
+- **Neglect / curse / disfavor sting:** felt-mechanic -- the debuff is visible in
+  Active Effects (flat, Requiem-felt), plus a one-line feel note.
+- **Prices / dislikes (deity):** loss-surfacing -- one displeasing act, then a
+  visible toast, Book of Days beat, or panel Ledger row. No felt debuff exists
+  for the piety-loss dislikes themselves; the felt layer is the domain sting.
+- **In-world hooks:** the hook fires from its REAL context during play (quest
+  stage, book, road/tomb/forge), not the QASmoke debug sender.
+- **Pacing:** magnitudes/pacing felt right in a real sitting on that race.
 
 ---
 
-## A. Quest Expansion smoke rows  [passed 2026-07-05; regression recipe]
+## 4. Race sittings -- the spine (closes C-FELT-FAMILY, C-PACING-SIGNOFF, C-PLACEMENT-FINAL, and the disfavor felt families)
 
-Source handoff: `references/authoring/PDV_SessionHandoff_2026-07-05_QuestExpansion.md`.
-Source contract: `references/authoring/PDV_QuestExpansion_Architecture.md`.
+Print the live checklist for each race:
 
-These rows passed in Mega Packet Sitting 1 across all eight setstage-able origins. Keep the steps
-below as the regression recipe if quest-matrix, reachability, surfacing, or day-to-day routing
-changes invalidate the evidence. They are route/runtime and manual-display proof for the
-40-50 quests-per-deity expansion and meta-faucets, not a reason to reopen the race strict gate
-unless they expose a regression.
+```powershell
+node .\tools\pdv_felt_registry_gen.mjs --sitting <Race>
+```
 
-**Why grouped by origin.** `ApplyDeityReaction` scores each deity on a quest cell -- and each
-meta lane -- by the player race's STANCE toward it: `NATIVE` = full `1.0x`,
-`TABOO`/`HOSTILE` flips the positive into a negative stigma, `CURSE` routes to curse handling.
-As of the 2026-07-05 reachability gate (see `PDV_HO_ForeignAwardGate_2026-07-05.md`), a
-`FOREIGN`/`TOLERATED` god that is NOT in the origin's dashboard roster and NOT a Daedric path is
-**skipped entirely** (DebugLevel-2 trace `QuestReaction skipped unreachable foreign deity`, no
-piety, no Ledger row); the reduced `0.4x` rate now applies only to roster-listed
-tolerated/foreign gods and Daedric-path faces. Testing each lane/probe under the origin whose
-native pantheon it feeds is what gives the clean full-value read. Set the origin once per block:
-console `set PDV_GLO_OriginRace to <n>` + `set PDV_GLO_DebugLevel to 2` on a fresh disposable
-save, then run every row in that block before flipping. Fire a matrix stage with
-`setstage <editorID> <stage>`; steal/outdoor/time rows need the described in-world action.
-Markers: cell fires log `[PDV] EventBus: <deity> event <id> delta <x>`; meta lanes land as a
-Ledger driver with the humanized reason (`meta_zen_wage`, `meta_julianos_*`, ... -- copy pass
-DONE 954bde5b) plus an `AwardPiety` line. As of 2026-07-05 a base quest cell also flushes ONE
-aggregated top-left toast + ONE Book of Days beat per quest fire, on top of the per-god panel
-driver rows -- proof lives in A10; meta and behavioral faucets stay quiet-Ledger-only.
+The sheet lists that race's pending boon / substrate / neglect / curse families,
+its roster-deity dislikes, AND the disfavor domain stings its transgressions
+trigger, plus the pacing sign-off reminder. One pass per race, four moves:
 
-### A0. Run once (any origin -- fold into the Imperial block)
-- **Matrix reload count**: on load, confirm `832` cells / `118` keys / `90` watched quests.
-- **Yield negative** (needs Julianos native -> do under Imperial): `setstage MG01 200` (First
-  Lessons). Julianos scores from its CELL (`EventBus: Julianos event ... delta`); `meta_julianos`
-  must NOT also fire -- MG01 carries a Julianos cell so `metaSkip` suppresses the lane.
-- **Once-guard negative**: after any meta lane fires for a quest, `setstage` that same quest again
-  -> `PDV.Meta.Done.<qid>` suppresses; confirm no second award.
+1. **Boons.** For each boon family: Developer Options -> select deity ->
+   Target piety 85 -> Apply -> confirm the boon in Active Effects.
+2. **Neglect / substrate / curse** (where the race has them): Prime neglect
+   eligible -> Run neglect pass -> confirm the debuff; set focus/substrate/curse
+   via the dedicated setters and confirm.
+3. **Dislikes + disfavor stings.** Set standing (Target piety 25), then
+   **Fire dislike vs selected deity** for each roster deity's transgression:
+   confirm the loss surface (toast / BoD / Ledger) AND the domain sting in Active
+   Effects. Shared domains prove once across all sittings.
+4. **In-world hook proof** (only the races with pending hooks -- Altmer, Khajiit,
+   Redguard, Bosmer, Breton, Imperial; see the hook ledger): reach the one pending
+   hook from its real context and confirm the route.
+5. **Close:** record the race's pacing sign-off.
 
-### A1. Imperial (origin 1) -- Divines hub + mage-aid + wheel
-- **Julianos mage-aid lane**: `setstage MG05 200` (Containment; mageAid, no Julianos cell)
-  -> `meta_julianos` awards Julianos.
-- **Akatosh 10th-quest wheel**: advance 10 distinct watched quest stages; on the fire that takes
-  `PDV.Meta.QuestCount` to a multiple of 10 the wheel fires -> Akatosh awards full; Xarxes is
-  SKIPPED (off-roster for Imperial -- expect the DebugLevel-2 skip trace, no Ledger row). This
-  doubles as the **reachability-gate negative**; Xarxes' full-value arm is proven under A5.
-- **Probes**: `DLC1SeranaCureSelfQuest 200` (Arkay echo), `MS05 300` (Dibella +C),
-  `FreeformSkyhavenTempleA 50` (Akatosh +S), `FreeformRiftenThane 200` (civic divines).
+Report results to Claude (or edit the ledgers): felt families ->
+`PDV_FeltFamilyEvidenceLedger.json`; pacing -> `PDV_PacingSignoffLedger.json`;
+hook proofs -> `PDV_InWorldHookProofLedger.json`.
 
-### A2. Bosmer (origin 4) -- Z'en gold wage
-- **Gold-wage lane**: `setstage MS05 300` (Tending the Flames; gold class, no Z'en cell)
-  -> `meta_zen_wage` awards Z'en at full value. (Dibella's cell is SKIPPED for Bosmer -- off-roster,
-  expect the skip trace at DebugLevel 2; the full-value Z'en award is the proof the lane fired.)
-- **Z'en yield negative**: `setstage FreeformSkyhavenTempleA 50` -> Z'en scores from its ECHO cell,
-  `meta_zen_wage` suppressed (metaSkip).
+**Recommended order (light -> heavy):** Bosmer (6) -> Dunmer (8) -> Argonian (8)
+-> Redguard (8) -> Orc (10) -> Altmer (11) -> Breton (11) -> Khajiit (12) ->
+Nord (24 with all disfavor domains) -> Imperial (heaviest boon set). Start with
+Nord if you want to shake out the debug-prime workflow on the most-documented
+race first; either way the 7 shared disfavor domains finish early and drop off
+later sheets.
 
-### A3. Dunmer (origin 5) -- Azura mage-aid/twilight + 362 steal
-- **Azura mage-aid lane**: `setstage MG05 200` -> `meta_azura` awards Azura (no Azura cell on MG05).
-- **Azura twilight lane**: `set gamehour to 5` (dawn) or a dusk hour, then fire any watched quest
-  with no Azura cell -> `meta_azura` (twilight arm).
-- **362 steal proof**: steal an owned loose item or owned container item (NOT a pickpocket)
-  -> Mephala/Boethiah steal-likes wake; `RouteAction complete: event 362` and
-  `PDV.Meta.LastTheftTime` advances.
-- **Probes**: `DLC1SeranaCureSelfQuest 200` (Azura +S -- the primary cell, strongest single probe),
-  `MQ301 240` (Mephala deceit echo).
-
-### A4. Khajiit (origin 6) -- Khenarthi outdoors + Rajhin steal
-- **Khenarthi outdoors lane**: standing OUTDOORS, `setstage` a watched quest with no Khenarthi cell
-  -> `meta_khenarthi` awards Khenarthi. Repeat the same fire INDOORS -> lane silent (negative).
-- **362 steal**: same steal action -> Rajhin steal-like wakes.
-- **Probe**: `MQ301 240` (Rajhin / Baan Dar deceit).
-
-### A5. Altmer (origin 3) -- Xarxes wheel (shared counter's second deity)
-- **10th-quest wheel**: advance 10 watched quest stages -> wheel fires -> Xarxes awards
-  (Akatosh SKIPPED -- off-roster for Altmer, expect the skip trace). Proves both arms of the
-  shared counter and both directions of the reachability gate: Xarxes full here vs skip-trace
-  under A1, Akatosh full under A1 vs skip-trace here.
-
-### A6. Nord (origin 0) -- mercy cluster (doubles as the Section E Nord spot-check)
-- **Probe**: `MQ301 240` -> Kyne / Stuhn / Stendarr / Mara `mercy_spare` cluster scores.
-
-### A7. Redguard (origin 9) -- Tu'whacca
-- **Probe**: `DLC1SeranaCureSelfQuest 200` -> Tu'whacca `cure_undeath` echo scores.
-
-### A8. Orc (origin 8) -- Malacath civic
-- **Probe**: `FreeformRiftenThane 200` -> Malacath civic/thane scores.
-
-### A9. Nocturnal path (any origin -- reuse the Dunmer or Imperial save)
-Open the Nocturnal path first (MCM -> Devotion -> Developer Options -> Daedric debug, 3 commitment
-signals). The lanes award the Nocturnal DEITY face, so the path must be active.
-- **Theft-window lane (tier 1)**: perform a 362 steal, then fire a watched quest ->
-  `meta_nocturnal_theft` awards Nocturnal (`LastTheftTime > LastFulfillTime`).
-- **Night lane (tier 2)**: with no recent theft, fire a watched quest at a night hour
-  (`set gamehour to 1`) -> `meta_nocturnal_night`.
-
-### A10. Quest-reaction surfacing -- one toast + one Book of Days per quest fire (reuse the A3/A4 saves)
-
-New 2026-07-05. A base quest-reaction cell now flushes a SINGLE aggregated top-left toast plus a
-SINGLE Book of Days beat per quest fire, however many deities the cell fans to. This sits on top of
-the per-god panel driver Ledger rows, which already worked. v1 emitted one toast PER god (6 per
-assassination stage); this proves the aggregation. The per-cell `AwardPiety` + `QuestReaction
-piety:` lines still appear once per landed god in the log -- the aggregation is only for the
-toast + Book of Days beat. `DebugLevel 2`.
-
-- **One toast, not N (multi-positive)**: on the A3 Dunmer save, `setstage MQ301 240` (deceit ->
-  Mephala + Boethiah both native +). Expect EXACTLY ONE toast, titled by the strongest reactor:
-  "{God} and 1 other mark your deed." NOT one toast per god.
-- **Book of Days lists every landed god**: open Book of Days -> a single new line
-  "{God} and {God} marked your deed." naming each god that landed piety on that fire. No blank line.
-- **Mixed fire "A deed weighed"**: on the A4 Khajiit save, fire a Dark Brotherhood assassination
-  contract stage (the 2026-07-05 log fired these: Mephala/Baan Dar/Rajhin native +, Clavicus Vile
-  tolerated 0.4x, **Sithis TABOO -**). Expect ONE toast "A deed weighed" reading
-  "{God} marks your deed; Sithis takes offense." and ONE Book of Days line
-  "...marked your deed; Sithis took offense." Tone/symbol follow the stronger side.
-- **Negative-only "A deed ill-received"**: a fire that only offends (all landed cells negative) ->
-  ONE warning toast "A deed ill-received" / "{God} takes offense at your deed." + matching Book of
-  Days line. (Sithis stigma folds in here -- v1 dropped it entirely via an early return.)
-- **No double toast for the active patron**: with an active patron who reacts positively to the
-  fire, confirm exactly ONE toast (the aggregated quest toast), never that plus the generic favor
-  pulse.
-- **Faucets stay quiet (negative)**: on the SAME fires, the meta lanes (`meta_*`) and any
-  behavioral faucet still land ONLY as Ledger driver rows + `AwardPiety` lines -- they must NOT add
-  their own toast or Book of Days line.
-- **Off-roster gods absent**: reachability-skipped gods contribute nothing to the toast "and N
-  others" count or the Book of Days list (they never landed piety).
-- **Panel driver rows intact**: the per-god Ledger "recent drivers" still show each god's own
-  reason/delta, unchanged.
-
-Tester notes:
-
-- Each block above runs under the lane's native origin, so a full-value award is expected -- a
-  reduced or missing award there is a real finding. Off-roster gods no longer award at all
-  (reachability gate): the expected evidence for them is the DebugLevel-2 skip trace and the
-  ABSENCE of a Ledger driver row. An off-roster deity-face award appearing anywhere is a
-  regression against the gate.
-- The meta Ledger copy pass and Daedric-path name-repair hardening were marked DONE in the same
-  handoff (954bde5b); this sitting is runtime smoke, not re-authoring those follow-ups.
-- The wheel counter increments on every meta-eligible watched fire, so other rows in a sitting also
-  advance `PDV.Meta.QuestCount` -- just watch for the `%10 == 0` fire rather than counting from zero.
-
-## B. Closed race strict-gate packets  [do not retest without regression]
-
-Imperial and Dunmer are both closed for the current beta-feel packet. Do not run these as next
-tests unless a new change touches their route handlers, Survey/status wording, focused Devotion
-panel filtering, Book of Days/Ledger payloads, rewards/Active Effects, Dunmer home logic, or
-Good Daedra/deviation-price surfaces.
-
-- Imperial: PASS 2026-07-04; final-world placement remains separate.
-- Dunmer: PASS 2026-07-05; all slots 1-8 plus shared Daedric inn-sleep proof recorded.
-- Current strict audit: `STRICT_GATE_PASS` 2026-07-05, with no blockers.
-
-## C. Prisma verification (beats wired 2026-07-01 + universal surfaces)
-
-### C1. Universal sheet U1-U9  [passed 2026-07-06; do not rerun without regression]
-`references/authoring/PDV_RunSheet_Universal_Prisma_V1.md` passed in game during Mega Packet
-Sitting 1. Confirmed coverage: panel/Book close, tier gauge, favor/dawn digest, Ledger/substrate
-rows, pruning, neglect lapse/recovery, offer accept/refuse copy, and one-record readability. U6
-(neglect drop) and U7
-(recovery at piety 15, no tier-up) are the newest rows; U8 covers offer accept/refuse with the
-LOCKED per-race accept strings and the 2026-07-06 corrected refuse ruling. Accept still gives the
-race-specific toast + pinned chronicle; Refuse gives the locked refusal toast + pinned chronicle,
-with **no sound and no screen wash**. Because Refuse changed after the original U8 pass, run
-one tiny Refuse/Accept control before closing Sitting 1. Blank Book of Days line anywhere = FAIL.
-
-U6 follow-up after `task_e6904bb3`: on a Nord Old Ways save, reselect Orkey/Arkay,
-click **Force selected patron**, then **Prime decay eligible**, then **Run neglect
-pass**, and confirm **Orkey's Neglect** appears in Active Effects as Magic
-Resistance -5%. Repeat for Dibella and confirm **Dibella's Neglect** appears as
-Restoration -5. Do not force piety to 0 for this smoke; active-patron neglect is
-a recency-lapse check keyed off the deity's last-event timestamp, and the
-backend must not be in Broad worship. These are felt-effect checks; the
-record/readback gate is already closed. The neglect/decay debug buttons should
-now fire directly with small `PDV:` notifications rather than MCM Yes/No
-confirmations; relaunch Skyrim after the 18:54 `PDV_MCM.pex` compile before
-retesting. If **Force selected patron** is absent, use **Debug patron override**
-on the selected deity in `Debug: State & Rewards`; it calls the same active-patron
-manager path.
-
-U4 now also carries the **curated driver-reason retest** (Sitting-1 U4 found every curated
-award recording generic "a devotional rite"; fixed on main `c8a4aa34` -- awards now carry the
-per-signal phrase from `HumanizeCuratedSignalReason`). Award two curated signals and confirm
-distinct trigger-stating rows; Talos 101 = "defiant prayer at a Talos shrine". In-game proof
-passed during the 2026-07-06 U4 retest.
-
-U4 also carries the **watching-Prince badge retest** (Sitting-1 U4 found a pre-pact Prince you
-are building toward rendering as an ordinary god card with no indicator; fixed on main `692396bb`
--- the dashboard tagged it `system:"watching"` but the view only surfaced `god.state`, so it now
-renders a distinct "Watching" kicker badge above the god name). On a no-pact save, seed a Prince
-to pre-pact (Developer Options Daedric debug: commitment signals, tier 0, no pact) and confirm the
-Ledger shows it as a clearly-marked "Watching" card, set apart from patron and pantheon rows.
-In-game proof passed during the 2026-07-06 U4 retest. (The watching Prince's driver-row *copy* is
-the curated-reason retest above; the two U4 retests are independent and can be judged on one save.)
-
-U4 also carries the **watching-Prince Book of Days retest** (the badge above surfaces the pre-pact
-Prince in the panel, but a Book-of-Days-only player had no journal line naming WHICH Prince took
-interest until the deeper half-Seeker "The world tilts toward `<Prince>`." beat; fixed on main
-`2f75a860` -- the FIRST time a signal leaves a Prince pre-pact with piety above zero now writes a
-named, unpinned chronicle "`<Prince>` has taken an interest in you." plus one soft "`<Prince>` takes
-note" cue). On a no-pact save, seed a Prince via Developer Options Daedric debug "Route live sender"
-(+10, tier 0) and confirm ONE named "has taken an interest" line appears in the Book of Days naming
-that Prince; route the same sender again and confirm NO duplicate of that line (a distinct "The world
-tilts toward `<Prince>`." line appearing once piety crosses half-Seeker ~12.5 is the expected deeper
-beat, not a duplicate). In-game proof passed during the 2026-07-06 U4 retest.
-
-### C2. Beat spot-checks (the 2026-07-01 wires -- confirm each renders; MCM-driven, origin flips on disposable saves)
-Copy authority: `PDV_PrismaParity_AuthoringDraft.md` (LOCKED 2026-06-25) for offer/Altmer copy;
-`PDV_PrismaAuthoringBeats_Copy.md` for the rest.
-
-| # | Beat | Origin | Do | See |
-|---|---|---|---|---|
-| 1 | Nord offer ACCEPT | 0 | Seed commitment signals -> Evaluate -> Accept | Toast + PINNED BoD "The broad faith narrows to one; {patron} has named you their own."; Ledger shows the carryover driver |
-| 2 | Nord offer REFUSE | 0 | fresh save, same gate -> Refuse | Refusal toast + PINNED BoD "...you turned {patron} away, and {patron} will not ask again."; **no sound, no screen wash**; no forced panel |
-| 3 | Altmer alignment band | 3 | drive Thalmor alignment across a committed band (MCM debug) | Toast "The Thalmor question turns in you: {band}." + chronicle (locked copy); remember the band label lags raw by design |
-| 4 | Hircine renunciation | any | open Hircine path (MCM Daedric debug), then Renounce | Renunciation toast + PINNED reorientation chronicle from PRODUCTION RenouncePath (not the debug button); no double entry on the same tick; residue toast still arrives later |
-| 5 | Khajiit Champion pin | 6 | force a Khajiit patron to Champion, Run Dawn; then wait 22+ days | Champion chronicle is PINNED (survives pruning) with tier-band suffix |
-| 6 | Redguard sect Champion toast | 9 | drive a sect to Champion entry | per-sect toast ("The {sect} way, made public.") alongside the existing chronicle |
-
-### C3. Cold-view focus-trap re-confirm (~15 min, any save)
-From a COLD game start (no prior panel open this session), fire a gameplay toast, then open the
-panel. ESC must release input every time; `DevotionPrismaBridge.log` clean (no focus-before-
-OnDomReady). This re-proves the `g_panelFocusPending` defer after the DLL rebuild.
-
-## D. Requiem felt sweep  [Authoria instance -- feel is only provable here]
-
-Run `references/authoring/PDV_RequiemSmokeTest_Tracker.md` Track B. Magnitudes are PROVISIONAL:
-record TUNED values as notes; do NOT re-run cumulative-rebalance tools (not idempotent).
-
-- **Sweep A (A1-A9):** each converted Fortify-Health reward is felt -- `player.getav Health`
-  before/after + HP bar. A7 Mara sleep-mercy (once/day 25/40), A8 Dunmer home-prayer ANCESTOR
-  WATCH (2026-07-04 rework: home prayer arms a visible once-per-day near-death full restore
-  that expires at dawn; NO instant heal -- an on-the-spot pulse is a regression), A9 Orc Code
-  Holds near-death restore.
-- **Sweep B1:** Redguard Tu'whacca event-heal (T2<T3, once/day), Namira heal-on-feed
-  (tier-scaled, stops at cap), Ash'abah stigma (Survey label + marked-moment notice, NO piety
-  drop), Breton Vigilant nod (WitchcraftExposure >= 50 Survey line).
-- **Sweep B2:** HoonDing -- dragon make-way once/day (+Trace), 2nd same-day dragon decayed x0.7,
-  generic bandit silent, listed named boss fires once + dedups, road-passage routes
-  Forebear/Leki NOT HoonDing, Champion cheat-death save at <20% health once/day. Plus one
-  approved Ash'abah clearable undead site scores; a non-listed clearable site stays silent.
-- **Penalty feltness:** Argonian Hist Distant -10 max Health, Breton Tradition Distant -10,
-  Breton Excommunication -15 (Active Effects shows a Maximum Health label, bar ceiling drops,
-  no old Health Regeneration line); Imperial civic lapse stays ResistDisease -5 with NO
-  Health-based effect. Nord Old Ways Orkey/Dibella neglect now also needs felt confirmation:
-  Orkey's Neglect = Magic Resistance -5%, Dibella's Neglect = Restoration -5. Prove unrelated
-  Requiem regen changes are not being counted.
-
-Evidence sink: Redguard + Daedric/Namira blocks of `PDV_Phase20_ManualEvidenceLedger.json`;
-route checker `node .\tools\pdv_phase20_runtime_check.mjs`.
-
-## E. Day-to-day signal sweep -- grouped by origin race (Anvil)
-
-Per `PDV_InGameTestingNeeded_Runbook.md` section 5. DebugLevel 2 (3 for cap checks). Marker:
-`[PDV] EventBus: <deity> event <id> delta <x>` -- delta must match `PDV_DeityLikesDislikes.csv`
-exactly.
-
-**Why the grouping is different from Section A.** These are generic acts scored off the
-likes/dislikes table and hard **race-gated** -- an act only scores deities native to the current
-origin. But **Imperial's Nine Divines cover every 300-series event** (all combat/craft/knowledge/
-sleep events have a Divine liker; every transgression has a Divine *disliker*). So this is NOT one
-block per race -- it is one broad **Imperial** pass plus **two small flips** for what the Divines
-cannot score. Both flips reuse a Section A origin, so you never reroll: run E2 on the A6 Nord save,
-E3 on the A3 Dunmer save.
-
-### E1. Imperial (origin 1) -- primary pass (~22/24 events + all mechanics)
-Run the whole vocabulary here; every row lands on a Divine. Deltas must be CSV-exact.
-- combat by victim: draugr `300`, Dremora `301`, dragon `302` (Akatosh reads this as a **dislike**,
-  `-`), non-hostile animal / criminal victim `303`/`304`
-- craft (use the stations): smith `330`, enchant `331`, brew `332`, cook `333`
-- knowledge: skill book `340`, spell `341`, lore book `342`, word wall `343`, skill-up
-  (`player.incPCS <skill>`) `344`, new location `345`
-- devotional sleep: outside `313`, inside `314`
-- transgression (the Divines read these as **dislikes**): owned lock `360`, **`361` trespass**
-  (enter an owned home uninvited + detected), **`362` steal-item** (owned loose/container item, NOT
-  a pickpocket), assault innocent `364`, raise undead `365`, daedric artifact `368`
-  - **`360` owned lock -- PROVEN 2026-07-05 via menu-hook fallback (SM route dead):** the LockPick
-    Story Manager event is not emitted in this setup, so 360 now routes from a
-    `RegisterForMenu("Lockpicking Menu")` hook in `PDV_PlayerEvents` (crosshair-ref capture on
-    open, locked->unlocked + owned/cell-owner check on close). In-game PASS on the Imperial save:
-    `Zenithar event 360 delta -0.5`, CSV-exact. `362` dislike side also fired CSV-exact the same
-    day (Mara/Stendarr/Zenithar/Julianos). Full record:
-    `PDV_SessionHandoff_2026-07-05_PickLock360SMFix.md`.
-- **`362` route proof**: `[PDV] EventBus: RouteAction complete: event 362` **or** an advanced
-  `PDV.Meta.LastTheftTime` stamp (the Nocturnal meta-faucet consumes it). Under Imperial you also
-  see the Divine **dislike** delta; the positive/like side is E3.
-- **mechanics (origin-neutral -- prove once, here):** attribution filter (an environmental/indirect
-  kill logs `skipped non-scoring attribution`); anti-farm at DebugLevel 3 (a capped act stops at its
-  daily cap, `0.7^n` decay); dawn bank (`PietyToday -> Piety` at ~06:00 moves standing/tier)
-- **race-gate negative:** after a native act scores (e.g. `330` -> Zenithar), `set PDV_GLO_OriginRace
-  to 3`, repeat the same act -> `0`, then flip back to `1`
-
-### E2. Nord (origin 0) -- the two Kyne combat lines the Divines can't score
-Events `1`/`2` are the only sweep rows with no Divine scorer. Run on the **A6 Nord save**.
-- kill-hostile-beast -> event `1`: Kyne **dislike** (`-3`, beast protection)
-- kill-hostile-humanoid -> event `2`: Kyne **like** (`+`)
-
-(doubles as the Nord-origin spot-check the runbook still owes)
-
-### E3. Dunmer (origin 5) -- the transgression LIKE side + the `362` like-delta
-The Imperial pass shows transgressions as dislikes; here the same events land as the **positive**
-rows (Mephala/Boethiah are native). Run on the **A3 Dunmer save**, right after the A3 `362` steal.
-- steal-item `362` -> Mephala/Boethiah **like** delta (the like-side E1 cannot show)
-- owned lock `360`, trespass `361`, assault `364`, daedric artifact `368` -> confirm the
-  `+` sentiment rows fire for Mephala / Boethiah / Azura
-- optional Khajiit (origin 6, A4 save) extends the trickster set to Rajhin / Baan Dar / Azurah
-
-This whole sweep doubles as the fresh-save proof of the expanded likes/dislikes rows and the
-now-runnable `362` route.
-
-Already confirmed 2026-06-10 (Imperial): `300`/`301`/`345` CSV-exact + race-gate + attribution --
-skip those in E1. Remaining: craft / book / sleep / the full transgression set incl. `361` and
-`362` (E1), Kyne `1`/`2` (E2), and the transgression like-side (E3).
-
-## F. Prince V2 path-deepening (per runbook section 6)
-
-Marker: `[PDV] PrinceV2: <Prince> event <id> deepen <x>`.
-
-- deepen-not-initiate: BEFORE committing (e.g. Namira), liked act -> NO marker, no path piety
-- open the path (MCM Daedric debug, 3 commitment signals) -> same act fires; MCM contract `p=` rises
-- dual-face: off-race origin (0) opens Azura PATH -> PrinceV2 fires; native origin (5/6) ->
-  Azura is the DEITY face (EventBus line, not PrinceV2), path inert -- no double-dip
-- curse coordination: werewolf active + Hircine path open -> beast kill deepens Hircine with
-  NO double-fired curse transition
-- after any Daedric change: rerun `node .\tools\pdv_daedric_runtime_check.mjs` +
-  `node .\tools\pdv_daedric_beta_gate.mjs --json` (must stay PASS=16)
+**Pending in-world hooks (10, fold into the owning race sitting):** Altmer
+orthodox-cost; Khajiit road-home; Redguard Ash'abah death-duty + HoonDing
+make-way (make-way overlaps Requiem Sweep B2 -- one act, two gates); Bosmer
+Living Story + Exchange; Breton tradition readback + Knight's Road vow + Green
+Way standing; Imperial focused-patron civic favor.
 
 ---
 
-## Stop conditions (abort the packet, bring back notes)
+## 5. Cross-cutting gates
 
-- an accepted source fires for the wrong race, or generic gameplay becomes a scoring faucet
+### 5a. Disfavor anti-stack tuning (Anvil) -- closes C-DISLIKE-DEBUFF-TUNING
+One dedicated sitting after the disfavor stings are felt individually. Use the
+debug buttons: **Anti-stack burst (4 domains)** -> confirm the 3-domain cap holds
+and the 4th is suppressed; confirm stings are felt on the HP/stat bar under
+Requiem, fade on schedule, and that sub-band acts / no-standing characters stay
+unstung. Sink: `PDV_1_0_ManualSignoffLedger.json` (dislikeStackTuning).
+
+### 5b. Requiem felt sweep (Authoria) -- closes C-REQUIEM-TRACKB
+Run `PDV_RequiemSmokeTest_Tracker.md` Track B; feel is only provable on Authoria.
+Magnitudes PROVISIONAL -- record tuned values as notes, do NOT re-run
+cumulative-rebalance tools (not idempotent).
+- **Sweep A:** each converted Fortify-Health reward felt (`player.getav Health`
+  before/after + HP bar); A7 Mara sleep-mercy, A8 Dunmer home-prayer ancestor
+  watch (once/day near-death restore, no instant heal), A9 Orc Code Holds.
+- **Sweep B1:** Redguard Tu'whacca event-heal, Namira heal-on-feed (tier-scaled,
+  caps), Ash'abah stigma (Survey label, no piety drop), Breton Vigilant nod.
+- **Sweep B2:** HoonDing dragon make-way once/day (+ decay on repeat, generic
+  bandit silent, named boss dedups), Champion cheat-death save. (Make-way also
+  closes the Redguard HoonDing in-world hook.)
+- **Penalty feltness:** Argonian Hist Distant -10 max Health, Breton Tradition
+  Distant -10 / Excommunication -15 (Active Effects Maximum Health label, bar
+  ceiling drops), Imperial civic lapse stays ResistDisease -5 with no Health
+  effect; Nord Orkey's Neglect = Magic Resist -5%, Dibella's = Restoration -5.
+Sinks: `PDV_1_0_ManualSignoffLedger.json` (requiemTrackB) + the Redguard/Daedric
+blocks of `PDV_Phase20_ManualEvidenceLedger.json`.
+
+### 5c. Experience Mode two-mode smoke (Anvil) -- closes C-EXPMODE-SMOKE
+Now unblocked (build gate closed). Fresh save Pilgrim's Path: mode readback
+correct, economy at authored rates, MCM shows the mode. Toggle Wayfarer's Path:
+manager scalars apply, cheap-repeatable handling relaxes, save/load keeps the
+mode. Sink: `PDV_1_0_ManualSignoffLedger.json` (experienceModeSmoke).
+
+### 5d. Compatibility (repo + external) -- closes C-COMPAT-ARR, C-COMPAT-BORDELLO
+Codex/repo work, not a play sitting. ARR/Authoria integration package delivered
+and accepted by the maintainer (start early -- acceptance has external latency);
+the other six Bordello lists (JOJ, TOT, HOH, MOM, DoD, VOV) reach patch-packaged.
+Sinks: `PDV_1_0_ManualSignoffLedger.json` (compatARR, compatBordello).
+
+---
+
+## 6. Evidence-sink map
+
+| Proof | Ledger | Gate |
+|---|---|---|
+| Boon / substrate / neglect / curse / disfavor / dislike felt | `PDV_FeltFamilyEvidenceLedger.json` | C-FELT-FAMILY |
+| Per-race pacing sign-off | `PDV_PacingSignoffLedger.json` | C-PACING-SIGNOFF |
+| In-world hook fired from real context | `PDV_InWorldHookProofLedger.json` | C-PLACEMENT-FINAL |
+| Disfavor anti-stack / Requiem tuning | `PDV_1_0_ManualSignoffLedger.json` (dislikeStackTuning) | C-DISLIKE-DEBUFF-TUNING |
+| Requiem Track B sweeps | `PDV_1_0_ManualSignoffLedger.json` (requiemTrackB) | C-REQUIEM-TRACKB |
+| Experience Mode smoke | `PDV_1_0_ManualSignoffLedger.json` (experienceModeSmoke) | C-EXPMODE-SMOKE |
+| ARR + Bordello | `PDV_1_0_ManualSignoffLedger.json` (compatARR / compatBordello) | C-COMPAT-* |
+| Disfavor per-race raw run notes | `PDV_DislikeConsequence_TestLedger.json` | (feeds felt families) |
+
+---
+
+## 7. Stop conditions (abort, bring back notes)
+
+- an accepted source fires for the wrong race, or generic gameplay becomes a
+  scoring faucet
 - a generic act scores a non-native god (race-gate leak)
-- an UNcommitted transgressive Prince path deepens from an ambient act
+- **a disfavor sting bites ordinary play** (a sub-0.5 act, or a character with no
+  standing with the offended deity)
+- **disfavor stings over-stack past 3 domains, do not fade, or read as a
+  regen-rate change under Requiem instead of a flat penalty**
+- an uncommitted transgressive Prince path deepens from an ambient act
 - Survey/status shows route IDs / raw counters instead of player wording
-- a reward or price stacks invisibly or cannot be explained from the UI
+- a reward, price, or sting stacks invisibly or cannot be explained from the UI
 - Prisma opens as a BLOCKING panel where only a toast/notification is expected
 - save/load changes visible state unexpectedly
 - any Book of Days line renders BLANK
 
-## After the run (owner, repo side)
+---
 
-1. Intake Quest Expansion, day-to-day, Prisma, Prince V2, and Requiem results into their
-   existing trackers/runbook sections; do not create a new parallel handoff unless the result
-   changes the next-session queue.
-2. Rerun the gate: `node .\tools\pdv_beta_readiness_audit.mjs --strict --json`; the expected
-   result remains `STRICT_GATE_PASS` unless a new regression was found.
-3. Fold any new defects into existing trackers; magnitude notes feed the scaling/anti-farm pass.
-4. If the gate still passes and no residual test opens a blocker, proceed to Experience Mode
-   build, then ARR compat package, then WS-3 branding/packaging per the 1.0 plan.
+## 8. After the run
+
+1. Record results into the named ledgers (Section 6) -- report to Claude or edit
+   the slots; never write `pass`/`done`.
+2. Regenerate: `node .\tools\pdv_1_0_endstate_gate.mjs` and read the burndown.
+3. Fold any defect into its tracker; magnitude/anti-stack notes feed the tuning
+   pass. Re-run the affected machine gate if source changed.
+4. **Exit criterion:** C-1-0 flips green when all eight play/external criteria
+   are recorded. That -- not any prose here -- is 1.0 test-complete.
+
+---
+
+## Explicitly post-1.0 (do not test for 1.0)
+
+WS-3 branding, FP-049 journal, the residual C2 Prisma cosmetic beats (Altmer
+band, Khajiit Champion pin, Redguard sect toast -- fold in opportunistically
+during those race sittings if convenient, but they do not gate), Mega Sitting F
+Prince V2 path-deepening (Prince price felt families already credited), voiced
+dialogue / recognition V2, Bosmer Green Pact per-item tags, Jyggalag. See
+`post10Exclusions` in the contract.
+
+---
+
+## Appendix: regression recipes (already PASSED in Sitting 1 -- rerun only on regression)
+
+These closed on 2026-07-05/06 and are NOT part of the 1.0 remaining queue. Rerun
+only if the named source changes.
+
+- **A. Quest Expansion smoke** (832 cells / 118 keys / 90 quests; meta-faucets;
+  reachability gate; A10 aggregated toast+BoD). Source:
+  `PDV_SessionHandoff_2026-07-05_QuestExpansion.md`. Regroup by origin; fire cells
+  with `setstage <editorID> <stage>`.
+- **B. Closed race strict-gate packets** (Imperial 2026-07-04, Dunmer 2026-07-05).
+  Do not retest without a route/surfacing/reward change.
+- **C1. Universal Prisma U1-U9** (panel/Book close, tier gauge, favor/dawn digest,
+  neglect lapse/recovery, offer accept/refuse copy). Source:
+  `PDV_RunSheet_Universal_Prisma_V1.md`. Blank Book of Days line = FAIL.
+- **E1. Day-to-day signal sweep** (likes/dislikes deltas CSV-exact, race-gate,
+  anti-farm, dawn bank). Source: `PDV_InGameTestingNeeded_Runbook.md` section 5.
+  Note: the dislike side of this now ALSO fires the disfavor stings (Section 4).
+- **C3. Cold-view focus-trap** re-confirm after any Prisma DLL rebuild.
