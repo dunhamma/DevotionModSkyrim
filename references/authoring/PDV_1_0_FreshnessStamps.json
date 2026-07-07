@@ -1,0 +1,71 @@
+{
+  "schema": "pdv.1-0.freshness-stamps.v1",
+  "updated": "2026-07-07T06:52:22.610Z",
+  "stamps": {
+    "C-RACE-RUBRIC": {
+      "observedAt": "2026-07-07T02:45:38.705Z",
+      "result": "PASS",
+      "sourceHashes": {
+        "@managerLive": "420e80e6f8e2436e0ffe5b0a7a54985fc8bdf14c57be25ffaa3f265ee4a8d22a",
+        "@managerDeployed": "420e80e6f8e2436e0ffe5b0a7a54985fc8bdf14c57be25ffaa3f265ee4a8d22a"
+      }
+    },
+    "C-PRINCE-GATE": {
+      "observedAt": "2026-07-07T06:52:22.566Z",
+      "result": "PASS",
+      "sourceHashes": {
+        "references/authoring/PDV_DaedricPrinceRecordContracts.json": "040bb0dc17ff520832a4a09daf2e7e0bfa92225c059e7497f45155081e96d4c9"
+      }
+    },
+    "C-AUDIT-BETA-STRICT": {
+      "observedAt": "2026-07-07T02:46:20.930Z",
+      "result": "PASS",
+      "sourceHashes": {
+        "@managerLive": "420e80e6f8e2436e0ffe5b0a7a54985fc8bdf14c57be25ffaa3f265ee4a8d22a",
+        "@managerDeployed": "420e80e6f8e2436e0ffe5b0a7a54985fc8bdf14c57be25ffaa3f265ee4a8d22a"
+      }
+    },
+    "C-AUDIT-CONTENT": {
+      "observedAt": "2026-07-07T02:46:21.004Z",
+      "result": "PASS",
+      "sourceHashes": {
+        "@managerLive": "420e80e6f8e2436e0ffe5b0a7a54985fc8bdf14c57be25ffaa3f265ee4a8d22a"
+      }
+    },
+    "C-FELT-TRACE": {
+      "observedAt": "2026-07-07T06:50:41.083Z",
+      "result": "PASS",
+      "sourceHashes": {
+        "@managerLive": "420e80e6f8e2436e0ffe5b0a7a54985fc8bdf14c57be25ffaa3f265ee4a8d22a",
+        "@managerDeployed": "420e80e6f8e2436e0ffe5b0a7a54985fc8bdf14c57be25ffaa3f265ee4a8d22a",
+        "references/authoring/PDV_FeltEffectRegistry.json": "41214cf1100485d1d98ea4adcb9ec2b810b8ec54255bdd3bbca536b3c584afcb"
+      }
+    },
+    "C-PACING-SIM": {
+      "observedAt": "2026-07-07T02:46:21.054Z",
+      "result": "PASS",
+      "sourceHashes": {
+        "@managerLive": "420e80e6f8e2436e0ffe5b0a7a54985fc8bdf14c57be25ffaa3f265ee4a8d22a",
+        "@managerDeployed": "420e80e6f8e2436e0ffe5b0a7a54985fc8bdf14c57be25ffaa3f265ee4a8d22a"
+      }
+    },
+    "C-AUDIT-VERIFY": {
+      "observedAt": "2026-07-07T04:57:51.234Z",
+      "result": "PASS",
+      "sourceHashes": {
+        "@managerLive": "420e80e6f8e2436e0ffe5b0a7a54985fc8bdf14c57be25ffaa3f265ee4a8d22a",
+        "@managerDeployed": "420e80e6f8e2436e0ffe5b0a7a54985fc8bdf14c57be25ffaa3f265ee4a8d22a",
+        "@espDeployed": "1d3002e6b69d818ce4b1bd751098eb69b87b59225933480ce249bfd7051eb653"
+      }
+    },
+    "C-EXPMODE-BUILD": {
+      "observedAt": "2026-07-07T06:31:56.825Z",
+      "result": "PASS",
+      "sourceHashes": {
+        "@managerLive": "420e80e6f8e2436e0ffe5b0a7a54985fc8bdf14c57be25ffaa3f265ee4a8d22a",
+        "@managerDeployed": "420e80e6f8e2436e0ffe5b0a7a54985fc8bdf14c57be25ffaa3f265ee4a8d22a",
+        "@espDeployed": "1d3002e6b69d818ce4b1bd751098eb69b87b59225933480ce249bfd7051eb653"
+      }
+    }
+  }
+}

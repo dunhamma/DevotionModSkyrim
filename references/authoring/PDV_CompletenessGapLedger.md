@@ -6,7 +6,7 @@ GAP-REVIEW = authority is prose, identifier may be a proposed name (adjudicate, 
 fix the build or correct the contract row's check_hint). NEEDS-MANUAL = not machine-checkable.
 
 Verdicts: PASS=361 | NEEDS-MANUAL=293 | GAP-REVIEW=53 | FUTURE=59 | WAIVED=2
-Layers: source=live; esp=1745 EditorIDs; runtime=read-only from gate ledger.
+Layers: source=live; esp=1758 EditorIDs; runtime=read-only from gate ledger.
 
 ## GAP-REVIEW (53)
 
@@ -202,7 +202,7 @@ Layers: source=live; esp=1745 EditorIDs; runtime=read-only from gate ledger.
 | BC-0341 | reward_tier | Dunmer | Dunmer Azura T3 -- The Moonshadow Warden | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Dunmer section (DRAFT) |
 | BC-0342 | reward_tier | Dunmer | Dunmer Boethiah T3 -- The Duel of the Worthy | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Dunmer section (DRAFT); LOCKED implementation rules, r |
 | BC-0343 | reward_tier | Dunmer | Dunmer Mephala T3 -- The Spinner's Web | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Dunmer section (DRAFT); LOCKED implementation rules, r |
-| BC-0345 | reward_tier | Dunmer | Dunmer reward ceiling: ancestor substrate + one Reclamation foreground | Gate ledger verdict: Fail (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Dunmer, Reward ceiling |
+| BC-0345 | reward_tier | Dunmer | Dunmer reward ceiling: ancestor substrate + one Reclamation foreground | Gate ledger verdict: Pass (runtime proof is the user's smoke lane). | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Dunmer, Reward ceiling |
 | BC-0353 | reward_tier | Imperial | Imperial Akatosh T3 -- Endurance of the Covenant | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Imperial section (DRAFT); LOCKED rules 1 and 2 |
 | BC-0354 | reward_tier | Imperial | Imperial Arkay T3 -- Ward of the Cycle | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Imperial/Nine Divines section (DRAFT) |
 | BC-0356 | reward_tier | Imperial | Imperial Mara T3 -- Compassion of the Mother | No machine-checkable identifier extractable from requirement/check_hint. | PDV_Phase2_CapstoneSignatures.md -- Imperial/Nine Divines section (DRAFT) |

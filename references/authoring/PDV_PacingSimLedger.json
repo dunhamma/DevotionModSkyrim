@@ -1,0 +1,186 @@
+{
+  "schema": "pdv.pacing-sim-ledger.v1",
+  "status": "PASS",
+  "clamp": 4.3,
+  "clampApplied": true,
+  "params": {
+    "dawnClampPerDay": 4.3,
+    "tiers": {
+      "seeker": 25,
+      "devoted": 50,
+      "champion": 85
+    },
+    "greedyDaysTo85Band": [
+      18,
+      24
+    ],
+    "steadyDaysTo85Band": [
+      26,
+      45
+    ]
+  },
+  "assumptions": {
+    "uncappedTypicalUses": 2,
+    "defaultNetPerDay": 3.3,
+    "model": "best single deity focused play; dailyCap = max firings/day; milestones clamp-bypassing one-time budget, info only"
+  },
+  "findings": [],
+  "perRace": [
+    {
+      "race": "Altmer",
+      "bestDeity": "Xarxes",
+      "grossDailyMax": 9.75,
+      "greedyDaysTo85": 20,
+      "steadyDaysTo85": 26,
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "race": "Argonian",
+      "bestDeity": "The Hist",
+      "grossDailyMax": 7.75,
+      "greedyDaysTo85": 20,
+      "steadyDaysTo85": 26,
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "race": "Bosmer",
+      "bestDeity": "Baan Dar",
+      "grossDailyMax": 7.75,
+      "greedyDaysTo85": 20,
+      "steadyDaysTo85": 26,
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "race": "Breton",
+      "bestDeity": "Kynareth",
+      "grossDailyMax": 9.5,
+      "greedyDaysTo85": 20,
+      "steadyDaysTo85": 26,
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "race": "Dunmer",
+      "bestDeity": "Mephala",
+      "grossDailyMax": 10,
+      "greedyDaysTo85": 20,
+      "steadyDaysTo85": 26,
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "race": "Imperial",
+      "bestDeity": "Kynareth",
+      "grossDailyMax": 9.5,
+      "greedyDaysTo85": 20,
+      "steadyDaysTo85": 26,
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "race": "Khajiit",
+      "bestDeity": "Azurah",
+      "grossDailyMax": 11.25,
+      "greedyDaysTo85": 20,
+      "steadyDaysTo85": 26,
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "race": "Nord",
+      "bestDeity": "Kyne",
+      "grossDailyMax": 9.55,
+      "greedyDaysTo85": 20,
+      "steadyDaysTo85": 26,
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "race": "Orc",
+      "bestDeity": "Malacath",
+      "grossDailyMax": 7.5,
+      "greedyDaysTo85": 20,
+      "steadyDaysTo85": 26,
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "race": "Redguard",
+      "bestDeity": "Tu'whacca",
+      "grossDailyMax": 6.75,
+      "greedyDaysTo85": 20,
+      "steadyDaysTo85": 26,
+      "status": "PASS",
+      "notes": []
+    }
+  ],
+  "princeInfo": [
+    {
+      "prince": "Mehrunes Dagon",
+      "grossDailyMax": 9.5
+    },
+    {
+      "prince": "Hircine",
+      "grossDailyMax": 7
+    },
+    {
+      "prince": "Meridia",
+      "grossDailyMax": 4.5
+    },
+    {
+      "prince": "Molag Bal",
+      "grossDailyMax": 10.75
+    },
+    {
+      "prince": "Hermaeus Mora",
+      "grossDailyMax": 12.75
+    },
+    {
+      "prince": "Namira",
+      "grossDailyMax": 7
+    },
+    {
+      "prince": "Nocturnal",
+      "grossDailyMax": 7.75
+    },
+    {
+      "prince": "Peryite",
+      "grossDailyMax": 4.75
+    },
+    {
+      "prince": "Sanguine",
+      "grossDailyMax": 2.5
+    },
+    {
+      "prince": "Sheogorath",
+      "grossDailyMax": 7.75
+    },
+    {
+      "prince": "Vaermina",
+      "grossDailyMax": 8.5
+    },
+    {
+      "prince": "Clavicus Vile",
+      "grossDailyMax": 4
+    },
+    {
+      "prince": "Azura",
+      "grossDailyMax": 8.5
+    },
+    {
+      "prince": "Boethiah",
+      "grossDailyMax": 7.75
+    },
+    {
+      "prince": "Mephala",
+      "grossDailyMax": 10.25
+    },
+    {
+      "prince": "Malacath",
+      "grossDailyMax": 7.5
+    }
+  ]
+}

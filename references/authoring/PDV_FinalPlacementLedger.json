@@ -1,0 +1,110 @@
+{
+  "schema": "pdv.final-placement-ledger.v1",
+  "status": "FAIL",
+  "counts": {
+    "PASS": 31,
+    "RED": 20
+  },
+  "redRows": [
+    {
+      "edid": "PDV_REFR_OrcStrongholdForgeSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_OrcCityDignitySignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_OrcLegionServiceSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_OrcSelfMadeCommunitySignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_RedguardCrownTombRespectSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_RedguardForebearRoadSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_RedguardAshAbahDeathDutySignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_RedguardFarShoresTokenSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_BosmerOldContractProperHuntSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_BosmerOldContractForestKeptSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_BosmerLivingStoryCommunityKeptSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_BosmerLivingStoryNatureSiteSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_BosmerExchangeDebtSettledSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_BosmerExchangeProportionateVengeanceSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_BosmerBanditRoadRoadLifeSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_BosmerBanditRoadReversalSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_OrcFourHolds_DushnikhYalSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_OrcFourHolds_MorKhazgurSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_OrcFourHolds_NarzulburSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    },
+    {
+      "edid": "PDV_REFR_OrcFourHolds_LargashburSignal",
+      "status": "RED",
+      "detail": "pending final placement (intended: TBD)"
+    }
+  ]
+}

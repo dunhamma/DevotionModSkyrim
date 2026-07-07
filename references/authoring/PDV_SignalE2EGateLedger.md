@@ -16,7 +16,7 @@ MCP: SKIP - MCP server not reachable at http://127.0.0.1:27016/mcp (ECONNREFUSED
 - formLists: SKIP - (skipped) - UNKNOWN-server-down
 - aliasProperties: SKIP - (skipped) - UNKNOWN-server-down
 - sourceFill: SKIP - (skipped) - UNKNOWN-server-down
-- completenessAudit: FAIL (exit 1) - node tools/pdv_completeness_audit.mjs --json --skip-esp - Completeness audit FAIL; source indexed 1643 functions, 86 signal consts.
+- completenessAudit: FAIL (exit 1) - node tools/pdv_completeness_audit.mjs --json --skip-esp - Completeness audit FAIL; source indexed 1683 functions, 86 signal consts.
 
 ## Column Counts
 

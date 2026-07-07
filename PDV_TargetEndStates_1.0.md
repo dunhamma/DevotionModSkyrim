@@ -120,27 +120,57 @@ the full launch scope: final immersive world placement, the Authoria/ARR
 Requiem felt sweep, the residual C2 Prisma beats, and the Prince V2
 path-deepening proof remain open (see "Remaining 1.0 Distance" below).
 
-Acceptance:
+### 1.0 Gate Authority
+
+As of 2026-07-07, binary 1.0 ship-gate truth lives in the machine-checkable
+contract `references/authoring/PDV_1_0_EndStateContract.json` (human companion:
+`references/authoring/PDV_1_0_EndStateContract.md`). Run
+`node .\tools\pdv_1_0_endstate_gate.mjs` to regenerate
+`references/authoring/PDV_1_0_EndStateBurndown.md`, the single cross-check of
+contract criteria vs recorded testing evidence. This document remains the
+design and product-feel authority; when this prose and the contract disagree
+about whether 1.0 is done, the contract wins and this prose should be fixed.
+
+Acceptance (gate ids refer to contract criteria):
 
 - All locked race-architecture gods and cultural worship targets are
-  content-ready.
+  content-ready. (gates: C-RACE-RUBRIC, C-AUDIT-CONTENT, C-FELT-TRACE)
 - All sixteen Skyrim-present Daedric Prince surfaces are content-ready for
   1.0: Azura, Boethiah, Mephala, Malacath, Meridia, Hircine, Molag Bal,
   Nocturnal, Hermaeus Mora, Mehrunes Dagon, Sheogorath, Namira, Sanguine,
-  Clavicus Vile, Peryite, and Vaermina.
+  Clavicus Vile, Peryite, and Vaermina. (gate: C-PRINCE-GATE)
 - Every race/god and race/Prince pairing has authored handling: response
   state, commitment gate, boon or favor surface, price/neglect/stigma,
   exit/residue, hook source, implementation status, verifier status, runtime
-  proof status, and player-facing feedback.
+  proof status, and player-facing feedback. (gates: C-AUDIT-BETA-STRICT,
+  C-AUDIT-VERIFY)
 - Race runtime slices with parity risk have implementation-costing manifests
   before source or CK work: state surfaces, accepted hooks, rejected hooks,
   immersion proof, player surfacing, verifier gate, and runtime proof route.
+  (gate: C-AUDIT-VERIFY via --strict-phase20-race-costing)
 - Native, tolerated, foreign, taboo, hostile, and curse-access paths all have
-  visible handling. Universal safe worship is not required.
-- No Skyrim-present locked god or Prince may remain dev-only at 1.0.
+  visible handling. Universal safe worship is not required. (gates:
+  C-FELT-TRACE, C-FELT-FAMILY)
+- Anything meant to have an in-game felt effect (boons, prices/dislikes,
+  neglect, substrates/favors, curses, for deities and Princes alike) is
+  machine-traced end to end and felt-proven in game one-per-family.
+  (gates: C-FELT-TRACE, C-FELT-FAMILY, C-REQUIEM-TRACKB)
+- Reward magnitudes and piety pacing pass the economy simulation bands and
+  carry a dated per-race sign-off. (gates: C-PACING-SIM, C-PACING-SIGNOFF)
+- No Skyrim-present locked god or Prince may remain dev-only at 1.0; every
+  player-reachable trigger object is placed outside QASmoke.
+  (gate: C-PLACEMENT-FINAL)
+- Experience Mode is built and two-mode runtime smoke is recorded.
+  (gates: C-EXPMODE-BUILD, C-EXPMODE-SMOKE)
+- The ARR/Authoria package is accepted and the other six Bordello lists are
+  patch-packaged. (gates: C-COMPAT-ARR, C-COMPAT-BORDELLO)
 - Jyggalag remains excluded unless future adopted content explicitly adds him.
+  (contract exclusion: X-JYGGALAG)
 
 ## 1.0 Acceptance Tracker
+
+This tracker is descriptive progress reporting only; binary gate truth is the
+end-state contract and its generated burndown (see "1.0 Gate Authority").
 
 Status values:
 - `Locked`: ready to plan implementation; remaining changes are tuning or content.
@@ -321,8 +351,9 @@ recognition should wait for those gates.
 
 ## Remaining 1.0 Distance (2026-07-07)
 
-This section states the honest distance between the current proven state and
-the 1.0 launch target, in proof-bucket language. Authoritative living detail:
+This section is a dated narrative snapshot, not gate authority. The generated
+gate truth is `references/authoring/PDV_1_0_EndStateBurndown.md` (regenerate
+with `node .\tools\pdv_1_0_endstate_gate.mjs`); narrative living detail:
 `references/authoring/PDV_BetaFeelBurndown.md` and `AGENTS.md`.
 
 Landed since the 2026-06-07 update (beyond the race/Daedric closeouts above):
@@ -796,7 +827,7 @@ Caravan helpers don't notice you the same way. Night travel feels more dangerous
 Four completely different Champions — more path-divergent at the top than any other race:
 
 - **Old Contract Champion (Y'ffre Orthodox):** The Green Pact is your religion, and you've maintained it. At Champion, hunting feels guided (contextual favor in hunting contexts) and GreenPactCompliance at Strict (80+) gives Y'ffre's 1.2x modifier. The payoff for carrying the hardest devotional burden is the highest ceiling of any Bosmer path. (The "animals never flee from you unprovoked" and per-item Green Pact feedback are the tag-layer payoff that the ratification note lists as deferred-with-dependency; treat them as the intended feel, not a shipped-and-proven surface until the tag layer lands.)
-- **Living Story Champion (Y'ffre Moderate):** You carry the oral tradition. Special dialogue-privilege moments in relevant contexts — naming things, situating people, telling the story correctly. (Per the Voiced Content Scope note above, V1 delivers this as the non-voiced equivalent — Survey/status, message, or notification — with voiced dialogue deferred to V2.) Community belonging feels real rather than performed. The secondary Bosmer gods (Arkay, Xarxes, Mara, Stendarr) add texture rather than competing.
+- **Living Story Champion (Y'ffre Moderate):** You carry the oral tradition. Special dialogue-privilege moments arise in relevant contexts — naming things, situating people, telling the story correctly. (Per the Voiced Content Scope note above, V1 delivers this as the non-voiced equivalent — Survey/status, message, or notification — with voiced dialogue deferred to V2.) Community belonging feels real rather than performed. The secondary Bosmer gods (Arkay, Xarxes, Mara, Stendarr) add texture rather than competing.
 - **Exchange Champion (Z'en):** Balance restored. Proportionate vengeance completed, debt settled — these acts have a clean satisfaction that ordinary questline completions don't. The favor that follows a debt-settling act has a quality of *rightness* to it.
 - **Bandit Road Champion (Baan Dar):** The improbable reversal. Once per in-game week (rough target), Baan Dar luck fires in a situation where you were at a severe disadvantage. It shouldn't feel like a power — it should feel like the god of pariahs interceding on behalf of another pariah.
 
@@ -885,7 +916,7 @@ The hardest, most earned Champion in the mod — and possibly the one with the m
 **Mode ceiling** is the other friction: City Orc and Legion-exile players can feel the ceiling of what their mode allows, and accessing Stronghold Orc standing requires actual stronghold integration (Blood-Kin, communal participation, proven strength in a stronghold context).
 
 ### Neglect texture
-Malacath's neglect feels like **emptiness at the forge**. The work that used to feel like worship just feels like work. Oath-breaking (joining factions that require deception, failing commitments to allies, cowardly choices in conflict) applies only a mild, flat debuff — the point is absence, not retribution. Malacath has looked away.
+Malacath's neglect feels like **emptiness at the forge**. The work that used to feel like worship just feels like work. Oath-breaking (joining factions that require deception, failing commitments to allies, cowardly choices in conflict) draws only a mild, flat debuff — the point is absence, not retribution. Malacath has looked away.
 
 For Stronghold Orc neglect: drifting toward city life without maintaining the code. Not betrayal — just drift. But the ancestors know the difference between a Stronghold Orc and someone who used to be one.
 

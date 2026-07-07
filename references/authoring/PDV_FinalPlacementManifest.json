@@ -1,0 +1,581 @@
+{
+  "schema": "pdv.final-placement-manifest.v1",
+  "purpose": "Per-reference final-world placement tracker for C-PLACEMENT-FINAL. Fill intended worldspace/cell per ref (Wave-4 final placement contracts), place via CK/houseCARL, then record observed readback and flip status to 'placed'. Debug-only senders get status 'dev-only' with a reason.",
+  "rules": {
+    "allowedStatuses": [
+      "qasmoke-only",
+      "placed",
+      "dev-only",
+      "not-applicable"
+    ],
+    "placedRequires": [
+      "observed.cell",
+      "observed.date",
+      "observed.evidence"
+    ]
+  },
+  "refs": {
+    "PDV_REFR_AltmerLorkhanPressureSignal": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:07101F",
+      "lane": "AltmerLorkhanPressure",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Organic route is vanilla books (Auri-El/Magnus/Xarxes) + MQ104 stage 160; manual evidence ledger records pressure must NOT be a visible click object and no placed proof object is required."
+    },
+    "PDV_REFR_AltmerDragonbornCrisisSignal": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071020",
+      "lane": "AltmerDragonbornCrisis",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Organic route is vanilla books (Auri-El/Magnus/Xarxes) + MQ104 stage 160; manual evidence ledger records pressure must NOT be a visible click object and no placed proof object is required."
+    },
+    "PDV_REFR_AltmerDawnSteadinessSignal": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071021",
+      "lane": "AltmerDawnSteadiness",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Organic route is vanilla books (Auri-El/Magnus/Xarxes) + MQ104 stage 160; manual evidence ledger records pressure must NOT be a visible click object and no placed proof object is required."
+    },
+    "PDV_REFR_AltmerOrthodoxCostSignal": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071022",
+      "lane": "AltmerOrthodoxCost",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Organic route is vanilla books (Auri-El/Magnus/Xarxes) + MQ104 stage 160; manual evidence ledger records pressure must NOT be a visible click object and no placed proof object is required."
+    },
+    "PDV_REFR_ArgonianHistMaintenanceSignal": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071023",
+      "lane": "ArgonianHistMaintenance",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Organic route is Hist book/sap vial/near-water/bed-of-choice state; assetStatus records no placed visible pressure object required."
+    },
+    "PDV_REFR_ArgonianPeopleSupportSignal": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071024",
+      "lane": "ArgonianPeopleSupport",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Organic route is Hist book/sap vial/near-water/bed-of-choice state; assetStatus records no placed visible pressure object required."
+    },
+    "PDV_REFR_ArgonianVoidSignal": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071025",
+      "lane": "ArgonianVoid",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Organic route is Hist book/sap vial/near-water/bed-of-choice state; assetStatus records no placed visible pressure object required."
+    },
+    "PDV_REFR_ArgonianBedOfChoiceSignal": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071026",
+      "lane": "ArgonianBedOfChoice",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Organic route is Hist book/sap vial/near-water/bed-of-choice state; assetStatus records no placed visible pressure object required."
+    },
+    "PDV_REFR_OrcStrongholdForgeSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:071027",
+      "lane": "OrcStrongholdForge",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_OrcCityDignitySignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:071028",
+      "lane": "OrcCityDignity",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_OrcLegionServiceSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:071029",
+      "lane": "OrcLegionService",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_OrcSelfMadeCommunitySignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:07102A",
+      "lane": "OrcSelfMadeCommunity",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_RedguardCrownTombRespectSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:07102B",
+      "lane": "RedguardCrownTombRespect",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_RedguardForebearRoadSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:07102C",
+      "lane": "RedguardForebearRoad",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_RedguardAshAbahDeathDutySignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:07102D",
+      "lane": "RedguardAshAbahDeathDuty",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_RedguardFarShoresTokenSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:07102E",
+      "lane": "RedguardFarShoresToken",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_KhajiitMoonObservanceSignal": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:07102F",
+      "lane": "KhajiitMoonObservance",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Organic route is lunar books + behavioral hooks (road-home travel, theft, dragon, rest); no placed-object contract exists for Khajiit surfaces."
+    },
+    "PDV_REFR_KhajiitRoadHomeAnchorOneSignal": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071030",
+      "lane": "KhajiitRoadHomeAnchorOne",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Organic route is lunar books + behavioral hooks (road-home travel, theft, dragon, rest); no placed-object contract exists for Khajiit surfaces."
+    },
+    "PDV_REFR_KhajiitRoadHomeAnchorTwoSignal": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071031",
+      "lane": "KhajiitRoadHomeAnchorTwo",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Organic route is lunar books + behavioral hooks (road-home travel, theft, dragon, rest); no placed-object contract exists for Khajiit surfaces."
+    },
+    "PDV_REFR_KhajiitBaanDarRoadTrickSignal": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071032",
+      "lane": "KhajiitBaanDarRoadTrick",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Organic route is lunar books + behavioral hooks (road-home travel, theft, dragon, rest); no placed-object contract exists for Khajiit surfaces."
+    },
+    "PDV_REFR_KhajiitRajhinElegantTheftSignal": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071033",
+      "lane": "KhajiitRajhinElegantTheft",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Organic route is lunar books + behavioral hooks (road-home travel, theft, dragon, rest); no placed-object contract exists for Khajiit surfaces."
+    },
+    "PDV_REFR_KhajiitAlkoshDragonOrderSignal": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071034",
+      "lane": "KhajiitAlkoshDragonOrder",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Organic route is lunar books + behavioral hooks (road-home travel, theft, dragon, rest); no placed-object contract exists for Khajiit surfaces."
+    },
+    "PDV_REFR_BosmerOldContractProperHuntSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:071035",
+      "lane": "BosmerOldContractProperHunt",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_BosmerOldContractForestKeptSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:071036",
+      "lane": "BosmerOldContractForestKept",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_BosmerLivingStoryCommunityKeptSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:071037",
+      "lane": "BosmerLivingStoryCommunityKept",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_BosmerLivingStoryNatureSiteSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:071038",
+      "lane": "BosmerLivingStoryNatureSite",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_BosmerExchangeDebtSettledSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:071039",
+      "lane": "BosmerExchangeDebtSettled",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_BosmerExchangeProportionateVengeanceSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:07103A",
+      "lane": "BosmerExchangeProportionateVengeance",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_BosmerBanditRoadRoadLifeSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:07103B",
+      "lane": "BosmerBanditRoadRoadLife",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_BosmerBanditRoadReversalSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:07103C",
+      "lane": "BosmerBanditRoadReversal",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_Daedric_Boethiah_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071463",
+      "lane": "Daedric_Boethiah_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_Azura_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071464",
+      "lane": "Daedric_Azura_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_Vaermina_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071465",
+      "lane": "Daedric_Vaermina_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_Meridia_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071466",
+      "lane": "Daedric_Meridia_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_Molag_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071467",
+      "lane": "Daedric_Molag_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_Mephala_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071468",
+      "lane": "Daedric_Mephala_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_Malacath_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071469",
+      "lane": "Daedric_Malacath_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_Dagon_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:07146A",
+      "lane": "Daedric_Dagon_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_Sheo_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:07146B",
+      "lane": "Daedric_Sheo_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_Namira_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:07146C",
+      "lane": "Daedric_Namira_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_Sanguine_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:07146D",
+      "lane": "Daedric_Sanguine_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_Vile_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:07146E",
+      "lane": "Daedric_Vile_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_Mora_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:07146F",
+      "lane": "Daedric_Mora_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_Nocturnal_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071470",
+      "lane": "Daedric_Nocturnal_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_Peryite_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071471",
+      "lane": "Daedric_Peryite_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_Hircine_LiveSender_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071472",
+      "lane": "Daedric_Hircine_LiveSender_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_Daedric_GenericSilenceProbe_QASmoke": {
+      "status": "dev-only",
+      "formid": "Devotion.esp:071473",
+      "lane": "Daedric_GenericSilenceProbe_QASmoke",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
+    },
+    "PDV_REFR_OrcFourHolds_DushnikhYalSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:071550",
+      "lane": "OrcFourHolds_DushnikhYal",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_OrcFourHolds_MorKhazgurSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:071551",
+      "lane": "OrcFourHolds_MorKhazgur",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_OrcFourHolds_NarzulburSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:071552",
+      "lane": "OrcFourHolds_Narzulbur",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    },
+    "PDV_REFR_OrcFourHolds_LargashburSignal": {
+      "status": "qasmoke-only",
+      "formid": "Devotion.esp:071553",
+      "lane": "OrcFourHolds_Largashbur",
+      "intended": {
+        "worldspace": "TBD",
+        "cell": "TBD"
+      },
+      "observed": null,
+      "reason": ""
+    }
+  },
+  "updated": "2026-07-07"
+}

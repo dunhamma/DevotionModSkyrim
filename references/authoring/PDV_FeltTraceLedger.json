@@ -1,0 +1,13 @@
+{
+  "schema": "pdv.felt-trace-ledger.v1",
+  "status": "PASS",
+  "bridge": "live",
+  "counts": {
+    "PASS": 457,
+    "SKIP": 0,
+    "RED": 0
+  },
+  "registryEffects": 457,
+  "redRows": [],
+  "skipCount": 0
+}

@@ -1,0 +1,1393 @@
+{
+  "schema": "pdv.felt-family-evidence-ledger.v1",
+  "purpose": "One in-game felt-proof slot per lane x effect-class family (C-FELT-FAMILY). Statuses: pending / evidence-recorded / retro-credited / not-applicable. Retro-credits carry creditedFrom provenance; never hand-copy machine claims into these slots.",
+  "rules": {
+    "allowedStatuses": [
+      "pending",
+      "evidence-recorded",
+      "retro-credited",
+      "not-applicable"
+    ]
+  },
+  "families": {
+    "Akatosh|price": {
+      "status": "pending",
+      "lane": "Akatosh",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Akatosh in game (e.g. kill-dragon) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Alkosh|price": {
+      "status": "pending",
+      "lane": "Alkosh",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Alkosh in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Altmer-AuriEl|boon": {
+      "status": "pending",
+      "lane": "Altmer-AuriEl",
+      "class": "boon",
+      "race": "Altmer",
+      "expected": "Feel one boon effect of lane Altmer-AuriEl in game (e.g. Auri-El's Dawn - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Altmer-CurseState|curse": {
+      "status": "pending",
+      "lane": "Altmer-CurseState",
+      "class": "curse",
+      "race": "Altmer",
+      "expected": "Feel one curse effect of lane Altmer-CurseState in game (e.g. PDV_Msg_Altmer_CurseState_WerewolfHardHalt) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Altmer-Magnus|boon": {
+      "status": "pending",
+      "lane": "Altmer-Magnus",
+      "class": "boon",
+      "race": "Altmer",
+      "expected": "Feel one boon effect of lane Altmer-Magnus in game (e.g. Magnus's Arts - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Altmer-Orthodox|boon": {
+      "status": "pending",
+      "lane": "Altmer-Orthodox",
+      "class": "boon",
+      "race": "Altmer",
+      "expected": "Feel one boon effect of lane Altmer-Orthodox in game (e.g. Altmer Orthodox Steadiness) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Altmer-VampireExiledPath|curse": {
+      "status": "pending",
+      "lane": "Altmer-VampireExiledPath",
+      "class": "curse",
+      "race": "Altmer",
+      "expected": "Feel one curse effect of lane Altmer-VampireExiledPath in game (e.g. PDV_Msg_Altmer_VampireExiledPath_Entry) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Altmer-Xarxes|boon": {
+      "status": "pending",
+      "lane": "Altmer-Xarxes",
+      "class": "boon",
+      "race": "Altmer",
+      "expected": "Feel one boon effect of lane Altmer-Xarxes in game (e.g. Xarxes's Record - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Argonian-Hist|boon": {
+      "status": "pending",
+      "lane": "Argonian-Hist",
+      "class": "boon",
+      "race": "Argonian",
+      "expected": "Feel one boon effect of lane Argonian-Hist in game (e.g. Hist Communion - Faithful) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Argonian-People|boon": {
+      "status": "pending",
+      "lane": "Argonian-People",
+      "class": "boon",
+      "race": "Argonian",
+      "expected": "Feel one boon effect of lane Argonian-People in game (e.g. Chosen People - Kin) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Argonian-Sithis|boon": {
+      "status": "pending",
+      "lane": "Argonian-Sithis",
+      "class": "boon",
+      "race": "Argonian",
+      "expected": "Feel one boon effect of lane Argonian-Sithis in game (e.g. Void Distance - Faced) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Argonian-Substrate|substrate-favor": {
+      "status": "pending",
+      "lane": "Argonian-Substrate",
+      "class": "substrate-favor",
+      "race": "Argonian",
+      "expected": "Feel one substrate-favor effect of lane Argonian-Substrate in game (e.g. Hist Memory) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Argonian-supportSpells|boon": {
+      "status": "pending",
+      "lane": "Argonian-supportSpells",
+      "class": "boon",
+      "race": "Argonian",
+      "expected": "Feel one boon effect of lane Argonian-supportSpells in game (e.g. Void-Held Surge) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Arkay|price": {
+      "status": "pending",
+      "lane": "Arkay",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Arkay in game (e.g. raise-undead) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Auriel|price": {
+      "status": "pending",
+      "lane": "Auriel",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Auriel in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Azurah|price": {
+      "status": "pending",
+      "lane": "Azurah",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Azurah in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "BaanDar|price": {
+      "status": "pending",
+      "lane": "BaanDar",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane BaanDar in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Boethiah|price": {
+      "status": "pending",
+      "lane": "Boethiah",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Boethiah in game (e.g. heal-or-cure-npc) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Bosmer-BanditRoad|boon": {
+      "status": "pending",
+      "lane": "Bosmer-BanditRoad",
+      "class": "boon",
+      "race": "Bosmer",
+      "expected": "Feel one boon effect of lane Bosmer-BanditRoad in game (e.g. Bandit Road - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Bosmer-Exchange|boon": {
+      "status": "pending",
+      "lane": "Bosmer-Exchange",
+      "class": "boon",
+      "race": "Bosmer",
+      "expected": "Feel one boon effect of lane Bosmer-Exchange in game (e.g. The Exchange - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Bosmer-LivingStory|boon": {
+      "status": "pending",
+      "lane": "Bosmer-LivingStory",
+      "class": "boon",
+      "race": "Bosmer",
+      "expected": "Feel one boon effect of lane Bosmer-LivingStory in game (e.g. Living Story - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Bosmer-OldContract|boon": {
+      "status": "retro-credited",
+      "lane": "Bosmer-OldContract",
+      "class": "boon",
+      "race": "Bosmer",
+      "expected": "Feel one boon effect of lane Bosmer-OldContract in game (e.g. Old Contract - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: 'Old Contract - Seeker' named in Bosmer packet evidence.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json",
+        "race": "Bosmer",
+        "slot": "stackSnapshot",
+        "matched": "Old Contract - Seeker"
+      }
+    },
+    "Bosmer-Yffre|boon": {
+      "status": "retro-credited",
+      "lane": "Bosmer-Yffre",
+      "class": "boon",
+      "race": "Bosmer",
+      "expected": "Feel one boon effect of lane Bosmer-Yffre in game (e.g. Y'ffre's Weave - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: 'Y'ffre's Weave - Seeker' named in Bosmer packet evidence.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json",
+        "race": "Bosmer",
+        "slot": "stackSnapshot",
+        "matched": "Y'ffre's Weave - Seeker"
+      }
+    },
+    "Breton-GreenWay|boon": {
+      "status": "pending",
+      "lane": "Breton-GreenWay",
+      "class": "boon",
+      "race": "Breton",
+      "expected": "Feel one boon effect of lane Breton-GreenWay in game (e.g. Green Way - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Breton-HiddenArt|boon": {
+      "status": "pending",
+      "lane": "Breton-HiddenArt",
+      "class": "boon",
+      "race": "Breton",
+      "expected": "Feel one boon effect of lane Breton-HiddenArt in game (e.g. Hidden Art - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Breton-KnightsRoad|boon": {
+      "status": "pending",
+      "lane": "Breton-KnightsRoad",
+      "class": "boon",
+      "race": "Breton",
+      "expected": "Feel one boon effect of lane Breton-KnightsRoad in game (e.g. Knight's Vow - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Breton-Tradition|boon": {
+      "status": "pending",
+      "lane": "Breton-Tradition",
+      "class": "boon",
+      "race": "Breton",
+      "expected": "Feel one boon effect of lane Breton-Tradition in game (e.g. Tradition's Footing - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "CreedLoss-Breton|price": {
+      "status": "pending",
+      "lane": "CreedLoss-Breton",
+      "class": "price",
+      "race": "Breton",
+      "expected": "Feel one price effect of lane CreedLoss-Breton in game (e.g. The Vow Broken) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-Azura|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-Azura",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-Azura in game (e.g. Azura Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Azura activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Azura",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-Azura|price": {
+      "status": "pending",
+      "lane": "Daedric-Azura",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-Azura in game (e.g. Azura Price - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-Boethiah|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-Boethiah",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-Boethiah in game (e.g. Boethiah Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Boethiah activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Boethiah",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-Boethiah|price": {
+      "status": "pending",
+      "lane": "Daedric-Boethiah",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-Boethiah in game (e.g. Boethiah Price - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-ClavicusVile|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-ClavicusVile",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-ClavicusVile in game (e.g. Clavicus Vile Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: ClavicusVile activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "ClavicusVile",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-ClavicusVile|price": {
+      "status": "pending",
+      "lane": "Daedric-ClavicusVile",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-ClavicusVile in game (e.g. steal-item) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-HermaeusMora|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-HermaeusMora",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-HermaeusMora in game (e.g. Hermaeus Mora Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: HermaeusMora activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "HermaeusMora",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-HermaeusMora|price": {
+      "status": "pending",
+      "lane": "Daedric-HermaeusMora",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-HermaeusMora in game (e.g. Hermaeus Mora Price - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-Hircine|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-Hircine",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-Hircine in game (e.g. Hircine Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Hircine activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Hircine",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-Hircine|curse": {
+      "status": "retro-credited",
+      "lane": "Daedric-Hircine",
+      "class": "curse",
+      "race": null,
+      "expected": "Feel one curse effect of lane Daedric-Hircine in game (e.g. Hircine curse-access pressure) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Hircine curseNoDoubleFire slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Hircine",
+        "slot": "curseNoDoubleFire"
+      }
+    },
+    "Daedric-Hircine|price": {
+      "status": "pending",
+      "lane": "Daedric-Hircine",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-Hircine in game (e.g. Hircine Price - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-Malacath|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-Malacath",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-Malacath in game (e.g. Malacath Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Malacath activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Malacath",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-Malacath|price": {
+      "status": "pending",
+      "lane": "Daedric-Malacath",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-Malacath in game (e.g. Malacath Price - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-MehrunesDagon|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-MehrunesDagon",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-MehrunesDagon in game (e.g. Mehrunes Dagon Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: MehrunesDagon activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "MehrunesDagon",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-MehrunesDagon|price": {
+      "status": "pending",
+      "lane": "Daedric-MehrunesDagon",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-MehrunesDagon in game (e.g. Mehrunes Dagon Price - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-Mephala|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-Mephala",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-Mephala in game (e.g. Mephala Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Mephala activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Mephala",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-Mephala|price": {
+      "status": "pending",
+      "lane": "Daedric-Mephala",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-Mephala in game (e.g. Mephala Price - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-Meridia|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-Meridia",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-Meridia in game (e.g. Meridia Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Meridia activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Meridia",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-Meridia|price": {
+      "status": "pending",
+      "lane": "Daedric-Meridia",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-Meridia in game (e.g. Meridia Price - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-MolagBal|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-MolagBal",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-MolagBal in game (e.g. Molag Bal Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: MolagBal activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "MolagBal",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-MolagBal|curse": {
+      "status": "retro-credited",
+      "lane": "Daedric-MolagBal",
+      "class": "curse",
+      "race": null,
+      "expected": "Feel one curse effect of lane Daedric-MolagBal in game (e.g. Molag Bal curse-access pressure) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: MolagBal curseNoDoubleFire slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "MolagBal",
+        "slot": "curseNoDoubleFire"
+      }
+    },
+    "Daedric-MolagBal|price": {
+      "status": "pending",
+      "lane": "Daedric-MolagBal",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-MolagBal in game (e.g. Molag Bal Price - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-Namira|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-Namira",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-Namira in game (e.g. Namira Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Namira activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Namira",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-Namira|price": {
+      "status": "pending",
+      "lane": "Daedric-Namira",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-Namira in game (e.g. Namira Price - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-Nocturnal|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-Nocturnal",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-Nocturnal in game (e.g. Nocturnal Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Nocturnal activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Nocturnal",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-Nocturnal|price": {
+      "status": "pending",
+      "lane": "Daedric-Nocturnal",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-Nocturnal in game (e.g. Nocturnal Price - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-Peryite|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-Peryite",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-Peryite in game (e.g. Peryite Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Peryite activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Peryite",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-Peryite|price": {
+      "status": "pending",
+      "lane": "Daedric-Peryite",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-Peryite in game (e.g. Peryite Price - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-Sanguine|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-Sanguine",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-Sanguine in game (e.g. Sanguine Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Sanguine activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Sanguine",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-Sanguine|price": {
+      "status": "pending",
+      "lane": "Daedric-Sanguine",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-Sanguine in game (e.g. Sanguine Price - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-Sheogorath|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-Sheogorath",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-Sheogorath in game (e.g. Sheogorath Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Sheogorath activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Sheogorath",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-Sheogorath|price": {
+      "status": "pending",
+      "lane": "Daedric-Sheogorath",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-Sheogorath in game (e.g. Sheogorath Price - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Daedric-Vaermina|boon": {
+      "status": "retro-credited",
+      "lane": "Daedric-Vaermina",
+      "class": "boon",
+      "race": null,
+      "expected": "Feel one boon effect of lane Daedric-Vaermina in game (e.g. Vaermina Boon - Seeker) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Vaermina activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
+        "prince": "Vaermina",
+        "slot": "activeEffects"
+      }
+    },
+    "Daedric-Vaermina|price": {
+      "status": "pending",
+      "lane": "Daedric-Vaermina",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Daedric-Vaermina in game (e.g. Vaermina Price - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Dibella|price": {
+      "status": "pending",
+      "lane": "Dibella",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Dibella in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Dunmer-Azura|boon": {
+      "status": "pending",
+      "lane": "Dunmer-Azura",
+      "class": "boon",
+      "race": "Dunmer",
+      "expected": "Feel one boon effect of lane Dunmer-Azura in game (e.g. Azura's Twilight - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Dunmer-Boethiah|boon": {
+      "status": "pending",
+      "lane": "Dunmer-Boethiah",
+      "class": "boon",
+      "race": "Dunmer",
+      "expected": "Feel one boon effect of lane Dunmer-Boethiah in game (e.g. Boethiah's Struggle - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Dunmer-Mephala|boon": {
+      "status": "pending",
+      "lane": "Dunmer-Mephala",
+      "class": "boon",
+      "race": "Dunmer",
+      "expected": "Feel one boon effect of lane Dunmer-Mephala in game (e.g. Mephala's Web - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Dunmer-Reclamation|boon": {
+      "status": "pending",
+      "lane": "Dunmer-Reclamation",
+      "class": "boon",
+      "race": "Dunmer",
+      "expected": "Feel one boon effect of lane Dunmer-Reclamation in game (e.g. Reclamation Communion - Faithful) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Dunmer-Substrate|substrate-favor": {
+      "status": "pending",
+      "lane": "Dunmer-Substrate",
+      "class": "substrate-favor",
+      "race": "Dunmer",
+      "expected": "Feel one substrate-favor effect of lane Dunmer-Substrate in game (e.g. Dunmer Ancestor's Steadiness) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Favor-Altmer|substrate-favor": {
+      "status": "retro-credited",
+      "lane": "Favor-Altmer",
+      "class": "substrate-favor",
+      "race": null,
+      "expected": "Feel one substrate-favor effect of lane Favor-Altmer in game (e.g. Shared DawnSteadiness) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Altmer packet stackSnapshot (2026-06-10) records Active Effects screenshot with live effect Altmer: Dawn Steadiness and Survey Last favor: Dawn steadiness.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json",
+        "race": "Altmer",
+        "slot": "stackSnapshot",
+        "matched": "Altmer: Dawn Steadiness"
+      }
+    },
+    "Favor-Kyne|substrate-favor": {
+      "status": "retro-credited",
+      "lane": "Favor-Kyne",
+      "class": "substrate-favor",
+      "race": null,
+      "expected": "Feel one substrate-favor effect of lane Favor-Kyne in game (e.g. OpenSkyRestRecovery) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Phase 12 contextual-favor pilot runtimeProofStatus=passed covers live activation of the focused Kyne lane (see PDV_Phase12_ContextualFavor_Runbook.md).",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase12ContextualFavorPilot.manifest.json",
+        "slot": "runtimeProofStatus",
+        "matched": "Kyne lane"
+      }
+    },
+    "Favor-NordBroadNineDivines|substrate-favor": {
+      "status": "retro-credited",
+      "lane": "Favor-NordBroadNineDivines",
+      "class": "substrate-favor",
+      "race": null,
+      "expected": "Feel one substrate-favor effect of lane Favor-NordBroadNineDivines in game (e.g. KynarethRoadGrace) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Phase 12 pilot runtimeProofStatus=passed covers live activation of the Nord Broad Nine Divines lane.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase12ContextualFavorPilot.manifest.json",
+        "slot": "runtimeProofStatus",
+        "matched": "NordBroadNineDivines lane"
+      }
+    },
+    "Favor-NordBroadOldWays|substrate-favor": {
+      "status": "retro-credited",
+      "lane": "Favor-NordBroadOldWays",
+      "class": "substrate-favor",
+      "race": null,
+      "expected": "Feel one substrate-favor effect of lane Favor-NordBroadOldWays in game (e.g. SkyRoadEndurance) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: Phase 12 pilot runtimeProofStatus=passed covers live activation of the Nord Broad Old Ways lane.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase12ContextualFavorPilot.manifest.json",
+        "slot": "runtimeProofStatus",
+        "matched": "NordBroadOldWays lane"
+      }
+    },
+    "HoonDing|price": {
+      "status": "pending",
+      "lane": "HoonDing",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane HoonDing in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Imperial-Akatosh|boon": {
+      "status": "pending",
+      "lane": "Imperial-Akatosh",
+      "class": "boon",
+      "race": "Imperial",
+      "expected": "Feel one boon effect of lane Imperial-Akatosh in game (e.g. Akatosh's Covenant - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Imperial-Arkay|boon": {
+      "status": "pending",
+      "lane": "Imperial-Arkay",
+      "class": "boon",
+      "race": "Imperial",
+      "expected": "Feel one boon effect of lane Imperial-Arkay in game (e.g. Arkay's Vigil - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Imperial-Civic|boon": {
+      "status": "pending",
+      "lane": "Imperial-Civic",
+      "class": "boon",
+      "race": "Imperial",
+      "expected": "Feel one boon effect of lane Imperial-Civic in game (e.g. Civic Faith - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Imperial-Dibella|boon": {
+      "status": "pending",
+      "lane": "Imperial-Dibella",
+      "class": "boon",
+      "race": "Imperial",
+      "expected": "Feel one boon effect of lane Imperial-Dibella in game (e.g. Dibella's Grace - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Imperial-Julianos|boon": {
+      "status": "pending",
+      "lane": "Imperial-Julianos",
+      "class": "boon",
+      "race": "Imperial",
+      "expected": "Feel one boon effect of lane Imperial-Julianos in game (e.g. Julianos's Wisdom - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Imperial-Kynareth|boon": {
+      "status": "pending",
+      "lane": "Imperial-Kynareth",
+      "class": "boon",
+      "race": "Imperial",
+      "expected": "Feel one boon effect of lane Imperial-Kynareth in game (e.g. Kynareth's Breath - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Imperial-Mara|boon": {
+      "status": "pending",
+      "lane": "Imperial-Mara",
+      "class": "boon",
+      "race": "Imperial",
+      "expected": "Feel one boon effect of lane Imperial-Mara in game (e.g. Mara's Mercy - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Imperial-Stendarr|boon": {
+      "status": "pending",
+      "lane": "Imperial-Stendarr",
+      "class": "boon",
+      "race": "Imperial",
+      "expected": "Feel one boon effect of lane Imperial-Stendarr in game (e.g. Stendarr's Mercy - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Imperial-Talos|boon": {
+      "status": "pending",
+      "lane": "Imperial-Talos",
+      "class": "boon",
+      "race": "Imperial",
+      "expected": "Feel one boon effect of lane Imperial-Talos in game (e.g. Talos's Resolve - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Imperial-Zenithar|boon": {
+      "status": "pending",
+      "lane": "Imperial-Zenithar",
+      "class": "boon",
+      "race": "Imperial",
+      "expected": "Feel one boon effect of lane Imperial-Zenithar in game (e.g. Zenithar's Trade - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Julianos|price": {
+      "status": "pending",
+      "lane": "Julianos",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Julianos in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Khajiit-Alkosh|boon": {
+      "status": "pending",
+      "lane": "Khajiit-Alkosh",
+      "class": "boon",
+      "race": "Khajiit",
+      "expected": "Feel one boon effect of lane Khajiit-Alkosh in game (e.g. Alkosh's Order - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Khajiit-Azurah|boon": {
+      "status": "pending",
+      "lane": "Khajiit-Azurah",
+      "class": "boon",
+      "race": "Khajiit",
+      "expected": "Feel one boon effect of lane Khajiit-Azurah in game (e.g. Azurah's Twilight - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Khajiit-BaanDar|boon": {
+      "status": "pending",
+      "lane": "Khajiit-BaanDar",
+      "class": "boon",
+      "race": "Khajiit",
+      "expected": "Feel one boon effect of lane Khajiit-BaanDar in game (e.g. Baan Dar's Guile - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Khajiit-Khenarthi|boon": {
+      "status": "pending",
+      "lane": "Khajiit-Khenarthi",
+      "class": "boon",
+      "race": "Khajiit",
+      "expected": "Feel one boon effect of lane Khajiit-Khenarthi in game (e.g. Khenarthi's Road - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Khajiit-Lunar|substrate-favor": {
+      "status": "pending",
+      "lane": "Khajiit-Lunar",
+      "class": "substrate-favor",
+      "race": "Khajiit",
+      "expected": "Feel one substrate-favor effect of lane Khajiit-Lunar in game (e.g. Khajiit Lunar Road) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Khajiit-Rajhin|boon": {
+      "status": "pending",
+      "lane": "Khajiit-Rajhin",
+      "class": "boon",
+      "race": "Khajiit",
+      "expected": "Feel one boon effect of lane Khajiit-Rajhin in game (e.g. Rajhin's Shadow - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Khajiit-Substrate|substrate-favor": {
+      "status": "pending",
+      "lane": "Khajiit-Substrate",
+      "class": "substrate-favor",
+      "race": "Khajiit",
+      "expected": "Feel one substrate-favor effect of lane Khajiit-Substrate in game (e.g. Lunar Hardiness) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Khenarthi|price": {
+      "status": "pending",
+      "lane": "Khenarthi",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Khenarthi in game (e.g. raise-undead) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Kynareth|price": {
+      "status": "pending",
+      "lane": "Kynareth",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Kynareth in game (e.g. raise-undead) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Kyne|price": {
+      "status": "pending",
+      "lane": "Kyne",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Kyne in game (e.g. kill-hostile-beast) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Leki|price": {
+      "status": "pending",
+      "lane": "Leki",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Leki in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Magnus|price": {
+      "status": "pending",
+      "lane": "Magnus",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Magnus in game (e.g. raise-undead) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Malacath|price": {
+      "status": "pending",
+      "lane": "Malacath",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Malacath in game (e.g. steal-item) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Mara|price": {
+      "status": "pending",
+      "lane": "Mara",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Mara in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Mephala|price": {
+      "status": "pending",
+      "lane": "Mephala",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Mephala in game (e.g. kill-hostile-humanoid) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Neglect-Altmer|neglect": {
+      "status": "pending",
+      "lane": "Neglect-Altmer",
+      "class": "neglect",
+      "race": "Altmer",
+      "expected": "Feel one neglect effect of lane Neglect-Altmer in game (e.g. The Dawn Withheld) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Neglect-ArgonianHist|neglect": {
+      "status": "pending",
+      "lane": "Neglect-ArgonianHist",
+      "class": "neglect",
+      "race": "Argonian",
+      "expected": "Feel one neglect effect of lane Neglect-ArgonianHist in game (e.g. The Hist Distant) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Neglect-Bosmer|neglect": {
+      "status": "retro-credited",
+      "lane": "Neglect-Bosmer",
+      "class": "neglect",
+      "race": "Bosmer",
+      "expected": "Feel one neglect effect of lane Neglect-Bosmer in game (e.g. The Path Goes Quiet) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: 'The Path Goes Quiet' named in Bosmer packet evidence.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json",
+        "race": "Bosmer",
+        "slot": "stackSnapshot",
+        "matched": "The Path Goes Quiet"
+      }
+    },
+    "Neglect-Breton|neglect": {
+      "status": "pending",
+      "lane": "Neglect-Breton",
+      "class": "neglect",
+      "race": "Breton",
+      "expected": "Feel one neglect effect of lane Neglect-Breton in game (e.g. The Tradition Grows Distant) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Neglect-Dunmer|neglect": {
+      "status": "pending",
+      "lane": "Neglect-Dunmer",
+      "class": "neglect",
+      "race": "Dunmer",
+      "expected": "Feel one neglect effect of lane Neglect-Dunmer in game (e.g. The Ancestors' Silence) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Neglect-Imperial|neglect": {
+      "status": "pending",
+      "lane": "Neglect-Imperial",
+      "class": "neglect",
+      "race": "Imperial",
+      "expected": "Feel one neglect effect of lane Neglect-Imperial in game (e.g. The Divines Grow Distant) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Neglect-KhajiitLunar|neglect": {
+      "status": "pending",
+      "lane": "Neglect-KhajiitLunar",
+      "class": "neglect",
+      "race": "Khajiit",
+      "expected": "Feel one neglect effect of lane Neglect-KhajiitLunar in game (e.g. The Moons Withdrawn) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Neglect-Kyne|neglect": {
+      "status": "pending",
+      "lane": "Neglect-Kyne",
+      "class": "neglect",
+      "race": "Nord",
+      "expected": "Feel one neglect effect of lane Neglect-Kyne in game (e.g. The Weather Stops Cooperating) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Neglect-Orc|neglect": {
+      "status": "pending",
+      "lane": "Neglect-Orc",
+      "class": "neglect",
+      "race": "Orc",
+      "expected": "Feel one neglect effect of lane Neglect-Orc in game (e.g. The Code Goes Unkept) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Neglect-Redguard|neglect": {
+      "status": "pending",
+      "lane": "Neglect-Redguard",
+      "class": "neglect",
+      "race": "Redguard",
+      "expected": "Feel one neglect effect of lane Neglect-Redguard in game (e.g. Ancestors at a Distance) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Nord-Kyne|boon": {
+      "status": "pending",
+      "lane": "Nord-Kyne",
+      "class": "boon",
+      "race": "Nord",
+      "expected": "Feel one boon effect of lane Nord-Kyne in game (e.g. Kyne's Sky - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Nord-OldWays|boon": {
+      "status": "pending",
+      "lane": "Nord-OldWays",
+      "class": "boon",
+      "race": "Nord",
+      "expected": "Feel one boon effect of lane Nord-OldWays in game (e.g. Old Ways - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Nord-Shor|boon": {
+      "status": "pending",
+      "lane": "Nord-Shor",
+      "class": "boon",
+      "race": "Nord",
+      "expected": "Feel one boon effect of lane Nord-Shor in game (e.g. Shor's Favor - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Nord-Stuhn|boon": {
+      "status": "pending",
+      "lane": "Nord-Stuhn",
+      "class": "boon",
+      "race": "Nord",
+      "expected": "Feel one boon effect of lane Nord-Stuhn in game (e.g. Stuhn's Ward - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Nord-Talos|boon": {
+      "status": "pending",
+      "lane": "Nord-Talos",
+      "class": "boon",
+      "race": "Nord",
+      "expected": "Feel one boon effect of lane Nord-Talos in game (e.g. Talos's Resolve - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Nord-Tsun|boon": {
+      "status": "pending",
+      "lane": "Nord-Tsun",
+      "class": "boon",
+      "race": "Nord",
+      "expected": "Feel one boon effect of lane Nord-Tsun in game (e.g. Tsun's Trial - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Orc-City|boon": {
+      "status": "pending",
+      "lane": "Orc-City",
+      "class": "boon",
+      "race": "Orc",
+      "expected": "Feel one boon effect of lane Orc-City in game (e.g. Private Fidelity - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Orc-LegionExile|boon": {
+      "status": "pending",
+      "lane": "Orc-LegionExile",
+      "class": "boon",
+      "race": "Orc",
+      "expected": "Feel one boon effect of lane Orc-LegionExile in game (e.g. Foreign Discipline - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Orc-Malacath|boon": {
+      "status": "pending",
+      "lane": "Orc-Malacath",
+      "class": "boon",
+      "race": "Orc",
+      "expected": "Feel one boon effect of lane Orc-Malacath in game (e.g. Malacath's Regard - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Orc-Stronghold|boon": {
+      "status": "pending",
+      "lane": "Orc-Stronghold",
+      "class": "boon",
+      "race": "Orc",
+      "expected": "Feel one boon effect of lane Orc-Stronghold in game (e.g. Forge-Worthy - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Orc-supportSpells|boon": {
+      "status": "pending",
+      "lane": "Orc-supportSpells",
+      "class": "boon",
+      "race": "Orc",
+      "expected": "Feel one boon effect of lane Orc-supportSpells in game (e.g. The Code Holds) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Orc-TrialOfIron|boon": {
+      "status": "pending",
+      "lane": "Orc-TrialOfIron",
+      "class": "boon",
+      "race": "Orc",
+      "expected": "Feel one boon effect of lane Orc-TrialOfIron in game (e.g. Trial of Iron - Tusk) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "OrcCodeHolds|boon": {
+      "status": "pending",
+      "lane": "OrcCodeHolds",
+      "class": "boon",
+      "race": "Orc",
+      "expected": "Feel one boon effect of lane OrcCodeHolds in game (e.g. The Code Holds - Devoted) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Rajhin|price": {
+      "status": "pending",
+      "lane": "Rajhin",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Rajhin in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Redguard-AncestorSpine|boon": {
+      "status": "pending",
+      "lane": "Redguard-AncestorSpine",
+      "class": "boon",
+      "race": "Redguard",
+      "expected": "Feel one boon effect of lane Redguard-AncestorSpine in game (e.g. Ancestor Spine - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Redguard-FarShoresToken|boon": {
+      "status": "retro-credited",
+      "lane": "Redguard-FarShoresToken",
+      "class": "boon",
+      "race": "Redguard",
+      "expected": "Feel one boon effect of lane Redguard-FarShoresToken in game (e.g. Far Shores Token) and record what was observed.",
+      "note": "Retro-credited 2026-07-07: 'Far Shores Token' named in Redguard packet evidence.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json",
+        "race": "Redguard",
+        "slot": "surveyStatusClarity",
+        "matched": "Far Shores Token"
+      }
+    },
+    "Redguard-HoonDing|boon": {
+      "status": "pending",
+      "lane": "Redguard-HoonDing",
+      "class": "boon",
+      "race": "Redguard",
+      "expected": "Feel one boon effect of lane Redguard-HoonDing in game (e.g. HoonDing's Way - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Redguard-Leki|boon": {
+      "status": "pending",
+      "lane": "Redguard-Leki",
+      "class": "boon",
+      "race": "Redguard",
+      "expected": "Feel one boon effect of lane Redguard-Leki in game (e.g. Leki's Sword-Song - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Redguard-Tuwhacca|boon": {
+      "status": "pending",
+      "lane": "Redguard-Tuwhacca",
+      "class": "boon",
+      "race": "Redguard",
+      "expected": "Feel one boon effect of lane Redguard-Tuwhacca in game (e.g. Tu'whacca's Ward - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Shor|price": {
+      "status": "pending",
+      "lane": "Shor",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Shor in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Sithis|price": {
+      "status": "pending",
+      "lane": "Sithis",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Sithis in game (e.g. raise-undead) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Stendarr|price": {
+      "status": "pending",
+      "lane": "Stendarr",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Stendarr in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Stuhn|price": {
+      "status": "pending",
+      "lane": "Stuhn",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Stuhn in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Talos|price": {
+      "status": "pending",
+      "lane": "Talos",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Talos in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "TheHist|price": {
+      "status": "pending",
+      "lane": "TheHist",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane TheHist in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Trinimac|price": {
+      "status": "pending",
+      "lane": "Trinimac",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Trinimac in game (e.g. accept-daedric-artifact) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Tsun|price": {
+      "status": "pending",
+      "lane": "Tsun",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Tsun in game (e.g. murder-defenseless) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Tuwhacca|price": {
+      "status": "pending",
+      "lane": "Tuwhacca",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Tuwhacca in game (e.g. raise-undead) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Xarxes|price": {
+      "status": "pending",
+      "lane": "Xarxes",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Xarxes in game (e.g. accept-daedric-artifact) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Yffre|price": {
+      "status": "pending",
+      "lane": "Yffre",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Yffre in game (e.g. raise-undead) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Zen|price": {
+      "status": "pending",
+      "lane": "Zen",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Zen in game (e.g. steal-item) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Zenithar|price": {
+      "status": "pending",
+      "lane": "Zenithar",
+      "class": "price",
+      "race": null,
+      "expected": "Feel one price effect of lane Zenithar in game (e.g. steal-item) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    }
+  },
+  "updated": "2026-07-07"
+}

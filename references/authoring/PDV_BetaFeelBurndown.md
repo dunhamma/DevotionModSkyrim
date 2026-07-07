@@ -6,6 +6,16 @@
 `PDV_BetaFeelReleaseGate.md`, `PDV_InGameTestingNeeded_Runbook.md`, and the
 2026-06-14 build-batch handoffs.
 
+## 1.0 Gate
+
+Beta-feel is not the ship bar. The binary 1.0 ship gate is
+`references/authoring/PDV_1_0_EndStateContract.json`; run
+`node .\tools\pdv_1_0_endstate_gate.mjs` to regenerate
+`references/authoring/PDV_1_0_EndStateBurndown.md`, which cross-checks every
+contract criterion against recorded evidence. Items this report calls
+"non-blocking" may still be 1.0 ship gates there (placement, Requiem Track B,
+pacing, felt-effect proof, Experience Mode, compatibility).
+
 ## Purpose
 
 This report consolidates the current beta-feel burn from the all-race audit
