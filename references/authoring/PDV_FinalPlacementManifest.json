@@ -104,7 +104,7 @@
       "reason": "Organic route is Hist book/sap vial/near-water/bed-of-choice state; assetStatus records no placed visible pressure object required."
     },
     "PDV_REFR_OrcStrongholdForgeSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:071027",
       "lane": "OrcStrongholdForge",
       "intended": {
@@ -112,10 +112,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to existing stronghold forges/city-service/CW quest stages (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_OrcCityDignitySignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:071028",
       "lane": "OrcCityDignity",
       "intended": {
@@ -123,10 +123,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to existing stronghold forges/city-service/CW quest stages (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_OrcLegionServiceSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:071029",
       "lane": "OrcLegionService",
       "intended": {
@@ -134,10 +134,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to existing stronghold forges/city-service/CW quest stages (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_OrcSelfMadeCommunitySignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:07102A",
       "lane": "OrcSelfMadeCommunity",
       "intended": {
@@ -145,10 +145,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to existing stronghold forges/city-service/CW quest stages (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_RedguardCrownTombRespectSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:07102B",
       "lane": "RedguardCrownTombRespect",
       "intended": {
@@ -156,10 +156,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to MS08 stages, tomb/road context, Hall of the Dead quests (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_RedguardForebearRoadSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:07102C",
       "lane": "RedguardForebearRoad",
       "intended": {
@@ -167,10 +167,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to MS08 stages, tomb/road context, Hall of the Dead quests (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_RedguardAshAbahDeathDutySignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:07102D",
       "lane": "RedguardAshAbahDeathDuty",
       "intended": {
@@ -178,10 +178,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to MS08 stages, tomb/road context, Hall of the Dead quests (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_RedguardFarShoresTokenSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:07102E",
       "lane": "RedguardFarShoresToken",
       "intended": {
@@ -189,7 +189,7 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to MS08 stages, tomb/road context, Hall of the Dead quests (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_KhajiitMoonObservanceSignal": {
       "status": "dev-only",
@@ -258,7 +258,7 @@
       "reason": "Organic route is lunar books + behavioral hooks (road-home travel, theft, dragon, rest); no placed-object contract exists for Khajiit surfaces."
     },
     "PDV_REFR_BosmerOldContractProperHuntSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:071035",
       "lane": "BosmerOldContractProperHunt",
       "intended": {
@@ -266,10 +266,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to curated hunt/forest/nature-site/DA05 quest context (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_BosmerOldContractForestKeptSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:071036",
       "lane": "BosmerOldContractForestKept",
       "intended": {
@@ -277,10 +277,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to curated hunt/forest/nature-site/DA05 quest context (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_BosmerLivingStoryCommunityKeptSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:071037",
       "lane": "BosmerLivingStoryCommunityKept",
       "intended": {
@@ -288,10 +288,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to curated hunt/forest/nature-site/DA05 quest context (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_BosmerLivingStoryNatureSiteSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:071038",
       "lane": "BosmerLivingStoryNatureSite",
       "intended": {
@@ -299,10 +299,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to curated hunt/forest/nature-site/DA05 quest context (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_BosmerExchangeDebtSettledSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:071039",
       "lane": "BosmerExchangeDebtSettled",
       "intended": {
@@ -310,10 +310,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to curated hunt/forest/nature-site/DA05 quest context (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_BosmerExchangeProportionateVengeanceSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:07103A",
       "lane": "BosmerExchangeProportionateVengeance",
       "intended": {
@@ -321,10 +321,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to curated hunt/forest/nature-site/DA05 quest context (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_BosmerBanditRoadRoadLifeSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:07103B",
       "lane": "BosmerBanditRoadRoadLife",
       "intended": {
@@ -332,10 +332,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to curated hunt/forest/nature-site/DA05 quest context (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_BosmerBanditRoadReversalSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:07103C",
       "lane": "BosmerBanditRoadReversal",
       "intended": {
@@ -343,7 +343,7 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to curated hunt/forest/nature-site/DA05 quest context (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_Daedric_Boethiah_LiveSender_QASmoke": {
       "status": "dev-only",
@@ -533,7 +533,7 @@
       "reason": "Controlled debug proof sender; the organic player route is the exact vanilla quest-stage sender per PDV_DaedricControlledProof_Runbook.md. No world placement planned."
     },
     "PDV_REFR_OrcFourHolds_DushnikhYalSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:071550",
       "lane": "OrcFourHolds_DushnikhYal",
       "intended": {
@@ -541,10 +541,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to existing stronghold forges/city-service/CW quest stages (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_OrcFourHolds_MorKhazgurSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:071551",
       "lane": "OrcFourHolds_MorKhazgur",
       "intended": {
@@ -552,10 +552,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to existing stronghold forges/city-service/CW quest stages (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_OrcFourHolds_NarzulburSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:071552",
       "lane": "OrcFourHolds_Narzulbur",
       "intended": {
@@ -563,10 +563,10 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to existing stronghold forges/city-service/CW quest stages (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     },
     "PDV_REFR_OrcFourHolds_LargashburSignal": {
-      "status": "qasmoke-only",
+      "status": "dev-only",
       "formid": "Devotion.esp:071553",
       "lane": "OrcFourHolds_Largashbur",
       "intended": {
@@ -574,7 +574,7 @@
         "cell": "TBD"
       },
       "observed": null,
-      "reason": ""
+      "reason": "Hook contracts bind to existing stronghold forges/city-service/CW quest stages (newMeshRequired:false); ref is the relatedQASmokeProof debug sender."
     }
   },
   "updated": "2026-07-07"

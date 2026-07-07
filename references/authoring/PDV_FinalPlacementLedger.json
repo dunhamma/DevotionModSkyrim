@@ -1,110 +1,72 @@
 {
-  "schema": "pdv.final-placement-ledger.v1",
+  "schema": "pdv.final-placement-ledger.v2",
   "status": "FAIL",
+  "scope": "in-world hook proof + ref classification inventory (re-scoped 2026-07-07)",
   "counts": {
-    "PASS": 31,
-    "RED": 20
+    "PASS": 73,
+    "RED": 10,
+    "SKIP": 0
   },
   "redRows": [
     {
-      "edid": "PDV_REFR_OrcStrongholdForgeSignal",
+      "item": "altmer-orthodox-costly-enforcement",
+      "kind": "hook",
       "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
+      "detail": "pending in-world proof (Altmer): Accepted orthodox-cost trigger, generic Thalmor/anti-Thalmor silence, Survey last-favor cl"
     },
     {
-      "edid": "PDV_REFR_OrcCityDignitySignal",
+      "item": "khajiit-road-home-circuit",
+      "kind": "hook",
       "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
+      "detail": "pending in-world proof (Khajiit): Anchor one and two, fast-travel and same-anchor rejection, wrong-origin silence, Survey ro"
     },
     {
-      "edid": "PDV_REFR_OrcLegionServiceSignal",
+      "item": "redguard-ashabah-death-duty",
+      "kind": "hook",
       "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
+      "detail": "pending in-world proof (Redguard): Accepted death-duty/private rite trigger, generic undead/Arkay rejection, wrong-origin sil"
     },
     {
-      "edid": "PDV_REFR_OrcSelfMadeCommunitySignal",
+      "item": "redguard-hoonding-make-way-cap",
+      "kind": "hook",
       "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
+      "detail": "pending in-world proof (Redguard): One make-way source and generic combat rejection before reward promotion."
     },
     {
-      "edid": "PDV_REFR_RedguardCrownTombRespectSignal",
+      "item": "bosmer-living-story-community-nature",
+      "kind": "hook",
       "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
+      "detail": "pending in-world proof (Bosmer): Living Story trigger, generic kindness/forest rejection, wrong-origin silence, Survey path"
     },
     {
-      "edid": "PDV_REFR_RedguardForebearRoadSignal",
+      "item": "bosmer-exchange-debt-redress",
+      "kind": "hook",
       "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
+      "detail": "pending in-world proof (Bosmer): Exchange trigger, generic trade/theft rejection, wrong-origin silence, Survey favor memory"
     },
     {
-      "edid": "PDV_REFR_RedguardAshAbahDeathDutySignal",
+      "item": "breton-tradition-choice-readback",
+      "kind": "hook",
       "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
+      "detail": "pending in-world proof (Breton): Tradition setup/readback, rejected casual switching, wrong-origin silence, Survey traditio"
     },
     {
-      "edid": "PDV_REFR_RedguardFarShoresTokenSignal",
+      "item": "breton-knightly-road-vow",
+      "kind": "hook",
       "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
+      "detail": "pending in-world proof (Breton): Vow/service trigger, generic help/combat rejection, wrong-origin silence, Survey vow integ"
     },
     {
-      "edid": "PDV_REFR_BosmerOldContractProperHuntSignal",
+      "item": "breton-green-way-standing",
+      "kind": "hook",
       "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
+      "detail": "pending in-world proof (Breton): Druidic trigger, animal/outdoor/generic harvest rejection, wrong-origin silence, Survey Dr"
     },
     {
-      "edid": "PDV_REFR_BosmerOldContractForestKeptSignal",
+      "item": "imperial-focused-patron-civic-favor",
+      "kind": "hook",
       "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
-    },
-    {
-      "edid": "PDV_REFR_BosmerLivingStoryCommunityKeptSignal",
-      "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
-    },
-    {
-      "edid": "PDV_REFR_BosmerLivingStoryNatureSiteSignal",
-      "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
-    },
-    {
-      "edid": "PDV_REFR_BosmerExchangeDebtSettledSignal",
-      "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
-    },
-    {
-      "edid": "PDV_REFR_BosmerExchangeProportionateVengeanceSignal",
-      "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
-    },
-    {
-      "edid": "PDV_REFR_BosmerBanditRoadRoadLifeSignal",
-      "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
-    },
-    {
-      "edid": "PDV_REFR_BosmerBanditRoadReversalSignal",
-      "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
-    },
-    {
-      "edid": "PDV_REFR_OrcFourHolds_DushnikhYalSignal",
-      "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
-    },
-    {
-      "edid": "PDV_REFR_OrcFourHolds_MorKhazgurSignal",
-      "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
-    },
-    {
-      "edid": "PDV_REFR_OrcFourHolds_NarzulburSignal",
-      "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
-    },
-    {
-      "edid": "PDV_REFR_OrcFourHolds_LargashburSignal",
-      "status": "RED",
-      "detail": "pending final placement (intended: TBD)"
+      "detail": "pending in-world proof (Imperial): Patron civic favor, broad-attendance rejection, wrong-origin silence, stack snapshot."
     }
   ]
 }

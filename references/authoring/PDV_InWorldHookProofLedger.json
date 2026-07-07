@@ -1,0 +1,283 @@
+{
+  "schema": "pdv.in-world-hook-proof-ledger.v1",
+  "purpose": "One slot per immersive hook contract (C-PLACEMENT-FINAL): dated empirical proof that the hook fired from its REAL in-world context during play (not the QASmoke debug sender). Statuses: pending / evidence-recorded / retro-credited / not-applicable.",
+  "rules": {
+    "allowedStatuses": [
+      "pending",
+      "evidence-recorded",
+      "retro-credited",
+      "not-applicable"
+    ]
+  },
+  "hooks": {
+    "altmer-dawn-study-coherence": {
+      "race": "Altmer",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Positive dawn/study trigger, wrong-origin silence, generic spell/College silence, Survey wording, repeat rejection.",
+      "note": "Retro-credited 2026-07-07: Auri-El/Magnus/Xarxes book routes proven in game (2026-06-04 log proof + 2026-06-06 restart packet book checks passed).",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "altmer-lorkhan-crisis-pressure": {
+      "race": "Altmer",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Curated pressure stage, rejected generic pressure cases, wrong-origin silence, Survey scar/pressure clarity.",
+      "note": "Retro-credited 2026-07-07: MQ104 stage 160 live quest-stage route proof in Papyrus.0.log (RouteAltmerLorkhanPressure tier 2, 2026-06-06).",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "altmer-orthodox-costly-enforcement": {
+      "race": "Altmer",
+      "status": "pending",
+      "expected": "In-world proof at real context: Accepted orthodox-cost trigger, generic Thalmor/anti-Thalmor silence, Survey last-favor clarity.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "khajiit-lunar-observance": {
+      "race": "Khajiit",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Sleep/rest observance, moon-sugar and night-stealth silence, wrong-origin silence, Survey lunar wording.",
+      "note": "Retro-credited 2026-07-07: Lunar books (Words of Clan Mother Ahnissi, Tale of Dro Zira) produced in-game toasts + KhajiitLunar metrics (2026-06-06).",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "khajiit-road-home-circuit": {
+      "race": "Khajiit",
+      "status": "pending",
+      "expected": "In-world proof at real context: Anchor one and two, fast-travel and same-anchor rejection, wrong-origin silence, Survey road cadence.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "khajiit-focus-baan-dar-rajhin-alkosh": {
+      "race": "Khajiit",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Curated focus trigger plus generic theft, dragon spam, moon-sugar, and wrong-origin rejection.",
+      "note": "Retro-credited 2026-07-07: Packet pass covers Baan Dar Champion capstone, Rajhin elegant-theft edge with per-target 7-day cooldown, and Alkosh word-drip (2026-06-14).",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_PreBetaRaceGateLedger.md"
+      }
+    },
+    "argonian-hist-water-rest-maintenance": {
+      "race": "Argonian",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Accepted water/rest maintenance, swimming and same-bed rejection, wrong-origin silence, Survey Hist/bed clarity.",
+      "note": "Retro-credited 2026-07-07: Hist book + SapVial + near-water recovery proven in game; Rooted Rest fired (2026-06-18 packet PASS).",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "argonian-people-community-support": {
+      "race": "Argonian",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Community support trigger, proximity/generic helping rejection, wrong-origin silence, Survey People clarity.",
+      "note": "Retro-credited 2026-07-07: Hist/People/Void layered system incl. community routes passed 2026-06-18.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_PreBetaRaceGateLedger.md"
+      }
+    },
+    "argonian-void-threshold": {
+      "race": "Argonian",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Threshold behavior, generic murder silence, wrong-origin silence, Survey Void wording, Hist floor preserved.",
+      "note": "Retro-credited 2026-07-07: Shadowscale veil fired in game (2026-06-18 packet PASS); Void layer surfaced.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "orc-stronghold-quality-forge": {
+      "race": "Orc",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Accepted quality craft, raw craft spam rejection, wrong-origin silence, Survey mode clarity.",
+      "note": "Retro-credited 2026-07-07: 2026-06-29 organic runtime proof recorded outside QASmoke: Stronghold/City/Legion organic routes proven with EventBus markers logged.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "orc-city-dignity-self-made-community": {
+      "race": "Orc",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Accepted city/community trigger, city presence/barter rejection, wrong-origin silence, Survey life-mode clarity.",
+      "note": "Retro-credited 2026-07-07: 2026-06-29 organic runtime proof outside QASmoke: City route proven (9-hold Thane + HousePurchase City sources).",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "orc-legion-exile-service": {
+      "race": "Orc",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Accepted service milestone, membership/patrol rejection, wrong-origin silence, Survey Legion/Exile wording.",
+      "note": "Retro-credited 2026-07-07: CW02A stage 200 logged OrcLegionService (2026-06-29 organic proof outside QASmoke).",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "redguard-crown-forebear-sect": {
+      "race": "Redguard",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Sect trigger, fast-travel/combat/proximity rejection, wrong-origin silence, Survey sect clarity.",
+      "note": "Retro-credited 2026-07-07: Sect no-flip proven in game: Crown signal did not flip default Forebear (2-of-7-days + 3-day lock), 2026-06-19 packet PASS.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "redguard-ashabah-death-duty": {
+      "race": "Redguard",
+      "status": "pending",
+      "expected": "In-world proof at real context: Accepted death-duty/private rite trigger, generic undead/Arkay rejection, wrong-origin silence, Survey Far Shores clarity.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "redguard-hoonding-make-way-cap": {
+      "race": "Redguard",
+      "status": "pending",
+      "expected": "In-world proof at real context: One make-way source and generic combat rejection before reward promotion.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "bosmer-old-contract-proper-hunt-forest-kept": {
+      "race": "Bosmer",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Old Contract proper-hunt and forest-kept trigger, generic animal/forest/harvest rejection, wrong-origin silence, Survey Pact binding/compliance clarity.",
+      "note": "Retro-credited 2026-07-07: DA05 stage 100 accepted Old Contract source passed in game with visible threshold-crossing proof; stage 105 mercy branch passed on a clean save (2026-06-13).",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "bosmer-living-story-community-nature": {
+      "race": "Bosmer",
+      "status": "pending",
+      "expected": "In-world proof at real context: Living Story trigger, generic kindness/forest rejection, wrong-origin silence, Survey path clarity.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "bosmer-exchange-debt-redress": {
+      "race": "Bosmer",
+      "status": "pending",
+      "expected": "In-world proof at real context: Exchange trigger, generic trade/theft rejection, wrong-origin silence, Survey favor memory.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "bosmer-bandit-road-pact-pressure": {
+      "race": "Bosmer",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Reversal trigger, generic theft/crime rejection, item-tag deferral, wrong-origin silence, Survey Pact pressure clarity.",
+      "note": "Retro-credited 2026-07-07: Baan Dar reversal refresh passed 2026-06-16 with seven-day major-favor cooldown observed.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_PreBetaRaceGateLedger.md"
+      }
+    },
+    "breton-tradition-choice-readback": {
+      "race": "Breton",
+      "status": "pending",
+      "expected": "In-world proof at real context: Tradition setup/readback, rejected casual switching, wrong-origin silence, Survey tradition clarity, stack snapshot.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "breton-knightly-road-vow": {
+      "race": "Breton",
+      "status": "pending",
+      "expected": "In-world proof at real context: Vow/service trigger, generic help/combat rejection, wrong-origin silence, Survey vow integrity.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "breton-hidden-art-exposure": {
+      "race": "Breton",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Curated occult trigger, generic spell/artifact rejection, wrong-origin silence, Survey exposure cost.",
+      "note": "Retro-credited 2026-07-07: Hidden Art book route + per-book surfacing proven; WitchcraftExposure -1/dawn decay log-confirmed (2026-06-19, retest 2026-06-28).",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "breton-green-way-standing": {
+      "race": "Breton",
+      "status": "pending",
+      "expected": "In-world proof at real context: Druidic trigger, animal/outdoor/generic harvest rejection, wrong-origin silence, Survey DruidicStanding.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "dunmer-portable-ash-prayer-home-rite": {
+      "race": "Dunmer",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Portable prayer/home rite, generic shrine/ash rejection, wrong-origin silence, Survey ancestor clarity.",
+      "note": "Retro-credited 2026-07-07: Portable ash-prayer, Ancestral Hearth home confirmation, three-sleeps move-home all passed 2026-07-05.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "dunmer-reclamation-focus": {
+      "race": "Dunmer",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Reclamation trigger, generic crime/cruelty/magic rejection, wrong-origin silence, Survey focus clarity.",
+      "note": "Retro-credited 2026-07-07: Reclamation focus + Good Daedra temple prayer surfacing passed 2026-07-05.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "dunmer-deviation-price": {
+      "race": "Dunmer",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Deviation price source, generic Daedric rejection, wrong-origin silence, edge stack snapshot.",
+      "note": "Retro-credited 2026-07-07: DA01 Black Star stage-110 deviation price route log-confirmed (RouteDunmerDeviationPrice complete, 2026-07-05).",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "imperial-civic-service-whitelist": {
+      "race": "Imperial",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Civic act, faction/attendance/bounty-alone rejection, wrong-origin silence, Survey civic clarity.",
+      "note": "Retro-credited 2026-07-07: MQ103 stage 190 produced the civic-service toast and expected Ledger driver via the real quest-stage sender (2026-07-04).",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "imperial-public-private-talos-pressure": {
+      "race": "Imperial",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Public/private Talos pressure, anti-Thalmor/proximity rejection, wrong-origin silence, Survey Concordat clarity.",
+      "note": "Retro-credited 2026-07-07: Talos book route passed in game as public Talos piety pressure; Concordat raw emitters moved as expected (2026-07-04).",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "imperial-focused-patron-civic-favor": {
+      "race": "Imperial",
+      "status": "pending",
+      "expected": "In-world proof at real context: Patron civic favor, broad-attendance rejection, wrong-origin silence, stack snapshot.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "nord-broad-focused-old-ways-state": {
+      "race": "Nord",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Broad and focused readout, non-Nord silence, universal-stack rejection, Survey clarity.",
+      "note": "Retro-credited 2026-07-07: Nords Arise! book routed Nord Old Ways state in game (eventbus_150_po3_book_nord_old_ways_ancestor, 2026-06-29).",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    },
+    "nord-kyne-talos-context": {
+      "race": "Nord",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Kyne/Talos context, generic travel/kill/anti-Thalmor rejection, wrong-origin silence, stack cap.",
+      "note": "Retro-credited 2026-07-07: Phase 18A/B fresh-save runtime proof covers broad Old Ways/Nine Divines, focused Kyne, and Talos status (2026-05-30 closeout).",
+      "creditedFrom": {
+        "ledger": "PDV_TargetEndStates_1.0.md"
+      }
+    },
+    "nord-hircine-arkay-curse-edge": {
+      "race": "Nord",
+      "status": "retro-credited",
+      "expected": "In-world proof at real context: Curse/Hircine edge, generic kill/tomb rejection, wrong-origin silence, stack snapshot.",
+      "note": "Retro-credited 2026-07-07: Hircine/Arkay book routes proven (2026-06-04/06-29); Phase 18 Hircine/werewolf tension + vampire rupture/scar had fresh-save runtime proof.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_Phase20_ManualEvidenceLedger.json"
+      }
+    }
+  },
+  "updated": "2026-07-07"
+}

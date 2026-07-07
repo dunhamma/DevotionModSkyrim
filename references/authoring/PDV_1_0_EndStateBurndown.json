@@ -112,10 +112,10 @@
       "id": "C-PLACEMENT-FINAL",
       "lane": "placement",
       "category": "machine-gate",
-      "title": "Final-world placement: every player-reachable trigger object placed outside QASmoke",
+      "title": "Final-world proof (re-scoped 2026-07-07): every immersive hook proven at its real in-world context; every ESP PDV_REFR classified (QASmoke activators are permanent debug senders)",
       "status": "RED",
       "detail": "status = \"FAIL\", need \"PASS\"",
-      "closes": "Fill intended placements in PDV_FinalPlacementManifest.json, place the refs in CK/houseCARL, then re-run pdv_placement_gate.mjs.",
+      "closes": "Record the pending in-world hook proofs in PDV_InWorldHookProofLedger.json (fold into the matching race sittings), then re-run pdv_placement_gate.mjs.",
       "drift": false
     },
     {

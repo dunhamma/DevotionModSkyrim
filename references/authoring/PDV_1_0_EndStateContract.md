@@ -27,7 +27,7 @@ small pass-rule vocabulary, so contract edits never require tool edits).
 | C-EXPMODE-SMOKE | Two-mode runtime smoke | human | PDV_1_0_ManualSignoffLedger.json |
 | C-COMPAT-ARR | ARR package accepted | human | PDV_1_0_ManualSignoffLedger.json |
 | C-COMPAT-BORDELLO | 6 lists patch-packaged | human | PDV_1_0_ManualSignoffLedger.json |
-| C-PLACEMENT-FINAL | Trigger objects placed outside QASmoke | machine | pdv_placement_gate.mjs + PDV_FinalPlacementManifest.json |
+| C-PLACEMENT-FINAL | In-world hook proof + ref classification (re-scoped: hooks bind to existing world context, no placed objects) | machine | pdv_placement_gate.mjs + PDV_InWorldHookProofLedger.json |
 | C-REQUIEM-TRACKB | Requiem felt sweeps A/B1/B2 | human | PDV_1_0_ManualSignoffLedger.json |
 | C-PACING-SIM | Piety economy in band for all races | machine | pdv_pacing_sim.mjs |
 | C-PACING-SIGNOFF | 10 dated per-race pacing sign-offs | human | PDV_PacingSignoffLedger.json |
