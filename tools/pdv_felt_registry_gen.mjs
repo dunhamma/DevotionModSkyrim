@@ -432,19 +432,33 @@ function sittingSheet(registry, race) {
   const ledger = JSON.parse(fs.readFileSync(path.join(ROOT, LEDGER_REL), "utf8"));
   const spec = loadJson(`${AUTH}/PDV_${race}RewardRecords.spec.json`);
   const rosterDeities = new Set((spec.deityQuests ?? []).map((q) => normalizeLaneToken(q.deityName)));
+
+  // Roster deity -> disfavor domain, from the dislike-consequence spec. A race
+  // sitting exercises the domain stings of whatever native deities it offends,
+  // so surface those cross-cutting Disfavor-<domain> families here too.
+  const raceDomains = new Set();
+  try {
+    const dc = loadJson(DISLIKE_CONSEQUENCE_SPEC_REL);
+    const byNorm = {};
+    for (const [deity, domain] of Object.entries(dc.deityDomains ?? {})) byNorm[normalizeLaneToken(deity)] = domain;
+    for (const rd of rosterDeities) if (byNorm[rd]) raceDomains.add(byNorm[rd]);
+  } catch { /* spec absent -> no disfavor rows */ }
+
   const rows = [];
   for (const [familyId, slot] of Object.entries(ledger.families)) {
     if (slot.status !== "pending") continue;
     const isRaceFamily = slot.race === race || slot.lane.startsWith(`${race}-`) || slot.lane.startsWith(`Neglect-${race}`) || slot.lane === `Favor-${race}`;
     const isRosterPrice = slot.class === "price" && !slot.lane.startsWith("Daedric-") && rosterDeities.has(normalizeLaneToken(slot.lane));
-    if (!isRaceFamily && !isRosterPrice) continue;
+    const isRaceDisfavor = slot.class === "disfavor-sting" && raceDomains.has(String(slot.lane).replace(/^Disfavor-/, ""));
+    if (!isRaceFamily && !isRosterPrice && !isRaceDisfavor) continue;
     const sample = registry.effects.find((e) => e.familyId === familyId);
     rows.push({ familyId, class: slot.class, sample: sample?.displayName ?? sample?.effectId ?? "", expected: slot.expected });
   }
-  const order = { boon: 0, "substrate-favor": 1, neglect: 2, curse: 3, price: 4 };
+  const order = { boon: 0, "substrate-favor": 1, neglect: 2, curse: 3, "disfavor-sting": 4, price: 5 };
   rows.sort((a, b) => (order[a.class] ?? 9) - (order[b.class] ?? 9) || a.familyId.localeCompare(b.familyId));
   console.log(`# ${race} felt-proof sitting sheet (${rows.length} pending families)`);
-  console.log(`# Bar: debug-primed OK; prices = loss surfacing; neglect/curse = felt mechanic.`);
+  console.log(`# Bar: debug-primed OK; prices = loss surfacing; neglect/curse/disfavor = felt mechanic.`);
+  console.log(`# Disfavor stings ride the dislike acts: transgress against a native god, watch its domain sting in Active Effects.`);
   console.log(`# Close the sitting by recording the ${race} pacing sign-off in PDV_PacingSignoffLedger.json.`);
   for (const r of rows) {
     console.log(`\n[ ] ${r.familyId}  (e.g. ${r.sample})`);
