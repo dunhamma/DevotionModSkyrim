@@ -14,7 +14,7 @@
     "references/authoring/PDV_DaedricPrinceRecordContracts.json": "040bb0dc17ff5208",
     "references/authoring/PDV_DeityLikesDislikes.csv": "fd84966648876b5b",
     "references/authoring/PDV_DeityLikesDislikes_Princes_V2.csv": "93b6474ad6c56304",
-    "references/authoring/PDV_DislikeConsequenceRecords.spec.json": "339d87cc5896c89e",
+    "references/authoring/PDV_DislikeConsequenceRecords.spec.json": "e71d9a0af6b6d5cb",
     "live-source/Scripts/Source/PDV__ManagerQuest.psc": "c37cc57bfe2c161c"
   },
   "counts": {
