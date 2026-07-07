@@ -60,9 +60,12 @@ node .\tools\pdv_dislike_consequence_audit.mjs --strict-dislike-consequence
 Drift guard: the gate flags `live-vs-deployed-drift` if the git live-source
 manager and the MO2 deployed copy differ (e.g. a parallel Codex build mid-flight).
 If it fires, sync live-source -> MO2 (or wait for the build to deploy) before
-trusting any source-read audit. The debug-MCM dislike/disfavor buttons
-(`PDV_CodexHandoff_DisfavorDebugMCM.md`) must be built and deployed before the
-sittings -- they are how you fire dislikes and stings from the menu.
+trusting any source-read audit. The debug-MCM dislike/disfavor buttons are BUILT
+and deployed (2026-07-07): Developer Options carries a "Dislikes & disfavor"
+section -- Dislike event ID slider + **Fire dislike vs selected deity**, domain
+cycle + band toggle + **Apply domain sting**, **Anti-stack burst (4 domains)**,
+and **Show / Clear active disfavor**. These are how you fire dislikes and stings
+from the menu (no in-world transgressions needed).
 
 Shared per-sitting setup (unchanged from the proven flow):
 - Disposable **new save** (or main-menu `coc qasmoke`); MO2 Anvil: disable
