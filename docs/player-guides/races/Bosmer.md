@@ -33,41 +33,107 @@ First-run choice is free. Switching later is not a casual toggle - the world has
 
 ## How You Gain Piety
 
+<!-- Review tags (strip before player release, along with the REVIEW SCAFFOLDING block below):
+     [WIRED]  = fires organically in normal play now (hook named)
+     [QUEST]  = fires only from a specific vanilla quest stage (via the quest-reaction matrix)
+     [PARTIAL]= organic but narrowly gated (path/sect/mode state or rare condition)
+     [STUB]   = only reachable via a dev-only signal activator or the debug MCM; not organic
+     [INERT]  = a CSV/matrix row exists but does not fire organically
+     Deltas from PDV_DeityLikesDislikes.csv (day-to-day) and PDV_Deity_*.psc DELTA_* (curated). -->
+
 Remember that piety is tracked separately for each god, daily gains are capped (about 4.3 per god per day), and repeating the exact same deed earns less each time. Variety beats grinding. Your main earning deeds depend on your path:
 
 **Old Contract (Y'ffre)**
-- Hunting an animal properly - a clean, respectful kill, not wanton slaughter (a stalked, first-arrow kill is the real hunt).
-- Eating meat or other animal-sourced food and keeping plant food out of your diet.
-- Keeping the forest: restraint with the living world, leaving the green intact.
-- Putting down the undead, which restores the natural cycle the Pact protects.
+- Hunting an animal properly - a clean, respectful kill, not wanton slaughter (a stalked, first-arrow kill is the real hunt). `[STUB: dev-only activator BosmerOldContractProperHunt 071035; no organic clean-kill hook - fires only from the debug MCM]`
+- Eating meat or other animal-sourced food and keeping plant food out of your diet. `[WIRED: OnObjectEquipped -> RouteBosmerGreenPactFood -> PACT_POSITIVE +2.0]`
+- Keeping the forest: restraint with the living world, leaving the green intact. `[STUB: dev-only activator BosmerOldContractForestKept 071036; no organic hook]`
+- Putting down the undead, which restores the natural cycle the Pact protects. `[WIRED: CSV kill-undead (300) +0.5, kill event]`
 
 **Living Story (Y'ffre)**
-- Helping an NPC preserve, protect, or remember something that matters (community, tradition, a life). This must be genuine help, not a trivial errand.
-- Visiting a nature site - a grove, a standing stone, an outdoor sanctuary.
-- Healing or curing the hurt, and reading the old lore and songs of the world.
-- The secondary gods add texture here: burial and grief quests please Arkay, ancestry choices please Xarxes, family and community work pleases Mara, and choosing mercy pleases Stendarr.
+- Helping an NPC preserve, protect, or remember something that matters (community, tradition, a life). This must be genuine help, not a trivial errand. `[STUB: dev-only activator BosmerLivingStoryCommunityKept 071037; no organic hook]`
+- Visiting a nature site - a grove, a standing stone, an outdoor sanctuary. `[WIRED: 6 curated green-song sites in PDV_FLST_BosmerGreenSongs, location hook -> AwardBosmerSong -> LIVING_STORY +2.5, one-shot per site. The separate dev-only NatureSite activator 071038 is unused.]`
+- Healing or curing the hurt, and reading the old lore and songs of the world. `[WIRED: CSV heal-or-cure-npc (350) +0.5; read-lore-book (342) +0.25]`
+- The secondary gods add texture here: burial and grief quests please Arkay, ancestry choices please Xarxes, family and community work pleases Mara, and choosing mercy pleases Stendarr. `[QUEST/INERT: only via the quest-reaction matrix for those deities; almost all Bosmer-adjacent rows are echo rows flagged "REVIEW before promotion" - largely inert]`
 
 **Exchange (Z'en)**
-- Settling a debt or honoring a contract or promise, especially under pressure.
-- Completing a quest that redresses a wrong - proportionate vengeance, the account made even.
-- Defending allies by striking an enemy who attacked first, rather than being the aggressor.
-- Honest labor and craft: cooking, smithing, brewing, and studying a trade all repay the world its due.
+- Settling a debt or honoring a contract or promise, especially under pressure. `[STUB: dev-only activator BosmerExchangeDebtSettled 071039; no organic hook]`
+- Completing a quest that redresses a wrong - proportionate vengeance, the account made even. `[STUB: dev-only activator BosmerExchangeProportionateVengeance 07103A; no organic hook]`
+- Defending allies by striking an enemy who attacked first, rather than being the aggressor. `[STUB: no organic Z'en "defend ally" hook; not present in the likes table]`
+- Honest labor and craft: cooking, smithing, brewing, and studying a trade all repay the world its due. `[WIRED: CSV Z'en cook-meal (333) +0.5, smith-item (330) +0.5, brew-potion (332) +0.25, enchant-item (331) +0.25, read-skill-book (340) +0.25, increase-skill (344) +0.25]`
 
 **Bandit Road (Baan Dar)**
-- Sleeping outdoors and living the road instead of resting in inns.
-- Surviving combat against severe odds - outnumbered, outmatched, and winning anyway.
-- Pickpocketing or slipping past a notable target; the trickster opens every door.
-- Discovering new places and sharpening your skills - the survivor walks every road and adapts.
+- Sleeping outdoors and living the road instead of resting in inns. `[WIRED: CSV rest-under-open-sky (313) +0.5, OnSleepStop. The dev-only RoadLife activator 07103B is the separate curated lane.]`
+- Surviving combat against severe odds - outnumbered, outmatched, and winning anyway. `[STUB: dev-only activator BosmerBanditRoadReversal 07103C; no organic outnumbered-survival hook]`
+- Pickpocketing or slipping past a notable target; the trickster opens every door. `[WIRED: CSV pick-owned-lock (360) +0.25, steal-item (362) +0.5, trespass (361) +0.25]`
+- Discovering new places and sharpening your skills - the survivor walks every road and adapts. `[WIRED: CSV discover-location (345) +0.5, increase-skill (344) +0.25]`
 
-On every path, a respectful offering at a Y'ffre shrine (or a Kynareth shrine as the proxy) earns piety. And the shared Green Pact memory means proper hunting and animal-sourced food give a small bonus even off the Old Contract.
+On every path, a respectful offering at a Y'ffre shrine (or a Kynareth shrine as the proxy) earns piety. `[PARTIAL: shrine blessings were normalized to cure-only; shrine-prayer piety is not confirmed as an organic earn - verify]` And the shared Green Pact memory means proper hunting and animal-sourced food give a small bonus even off the Old Contract. `[WIRED (food) / STUB (hunting): SHARED_PACT_MEMORY +1.0 fires off-path from animal-sourced food; the "proper hunting" half has no organic hook]`
 
 ## How You Lose Piety
 
-- **Dislikes.** Each god turns away from acts that offend it. Y'ffre dislikes raising the undead, shaping dead matter through smithing and enchanting, and harming the innocent. Z'en dislikes theft (a debt taken and never paid), breaking into property, and killing those who owe nothing. Baan Dar, fittingly, dislikes the clumsy murder of the defenseless and the settled smith's honest trade - the road owes nothing to comfort.
-- **Neglect ("The Path Goes Quiet").** If you stop walking your path, your god grows quiet. For a Bosmer this kicks in once a god's piety has fallen to 10 or below and that god is among your lowest - this is a gentle drift, not a punishment. It slows your stamina recovery by 5% until you walk the path again. (Note this is lower than the usual neglect line; your path forgives a longer silence before it fades.)
-- **Natural drift.** Piety eases downward over time if you never feed it. Quiet weeks cool any god.
-- **The broad-worship cap.** If you spread yourself thin and never commit, you are capped at Devoted. Reaching Champion requires committing fully to a single path and its god.
-- **The Old Contract penalty (this path only).** On the Old Contract, breaking the Green Pact - eating plant food, defiling the forest, breaking your restraint - is a real loss. Y'ffre's regard cools and the Pact tightens against you. The other three paths get the Green Pact's gentle bonus but never this penalty.
+- **Dislikes.** Each god turns away from acts that offend it. Y'ffre dislikes raising the undead, shaping dead matter through smithing and enchanting, and harming the innocent. Z'en dislikes theft (a debt taken and never paid), breaking into property, and killing those who owe nothing. Baan Dar, fittingly, dislikes the clumsy murder of the defenseless and the settled smith's honest trade - the road owes nothing to comfort. `[WIRED: CSV dislikes - Y'ffre raise-undead (365) -1.0, smith-item (330) -0.25, enchant-item (331) -0.25, assault-innocent (364) -0.5; Z'en steal-item (362) -0.75, pick-owned-lock (360) -0.25, murder-defenseless (304) -1.0; Baan Dar murder-defenseless (304) -0.75, smith-item (330) -0.25. Note: Baan Dar LIKES trespass/ambush.]`
+- **Neglect ("The Path Goes Quiet").** If you stop walking your path, your god grows quiet. For a Bosmer this kicks in once a god's piety has fallen to 10 or below and that god is among your lowest - this is a gentle drift, not a punishment. It slows your stamina recovery by 5% until you walk the path again. (Note this is lower than the usual neglect line; your path forgives a longer silence before it fades.) `[WIRED: neglect gate piety <=10 and bottom-3; Stamina Regeneration -5%]`
+- **Natural drift.** Piety eases downward over time if you never feed it. Quiet weeks cool any god. `[WIRED: passive decay ~-0.5/day per deity]`
+- **The broad-worship cap.** If you spread yourself thin and never commit, you are capped at Devoted. Reaching Champion requires committing fully to a single path and its god. `[WIRED: broad worship caps at Devoted]`
+- **The Old Contract penalty (this path only).** On the Old Contract, breaking the Green Pact - eating plant food, defiling the forest, breaking your restraint - is a real loss. Y'ffre's regard cools and the Pact tightens against you. The other three paths get the Green Pact's gentle bonus but never this penalty. `[WIRED (plant food) / STUB (defile forest): OnObjectEquipped plant food -> PACT_VIOLATION -2.0 on the Old Contract; "defiling the forest" has no organic hook]`
+
+<!-- REVIEW SCAFFOLDING - strip before player release -->
+
+### Quests That Move Your Standing
+
+Quest-reaction rows for the Bosmer gods, pulled from `PDV_QuestReactionMatrix_Full.csv` and consumed at runtime by `ApplyQuestReaction` -> `ApplyDeityReaction` in `PDV__ManagerQuest.psc`. Hand-authored rows (with real UESP citations) are promoted and fire when the quest is on the watch list; "echo" rows carry the citation "cross-gen candidate ... REVIEW before promotion" and are **not** promoted (INERT).
+
+**Y'ffre**
+
+| Quest | Stage | Deed | Valence/Intensity/Mag | Status |
+|-------|-------|------|-----------------------|--------|
+| Kyne's Sacred Trials (dunHunterQST) | 100 | Hunted with respect under the forest's law | + / m / small | WIRED |
+| The Blessings of Nature (T03) | 200 | Restored the Gildergreen | + / S / small | WIRED |
+| The Blessings of Nature (T03) | 100 | Tapped the Eldergleam with Nettlebane | - / C / small | WIRED |
+
+Plus 1 echo row (DA05 Ill Met By Moonlight, the_hunt) flagged REVIEW -> INERT.
+
+**Z'en**
+
+| Quest | Stage | Deed | Valence/Intensity/Mag | Status |
+|-------|-------|------|-----------------------|--------|
+| Kolskeggr Mine reclaim (FreeformKolskeggrA) | 200 | Restored the mine to honest labor | + / S / small | WIRED |
+| Recipe for Disaster (DB08) | 200 | Stole the Writ of Passage | - / m / small | WIRED |
+| A Chance Arrangement (TG00) | 200 | Framed Brand-Shei | - / m / small | WIRED |
+| Taking Care of Business (TG01) | 200 | Extorted shopkeepers | - / S / small | WIRED |
+| Loud and Clear (TG02) | 200 | Burgled Goldenglow | - / m / small | WIRED |
+| Dampened Spirits (TG03) | 200 | Ruined an honest brewer | - / S / small | WIRED |
+| Hard Answers (TG06) | 200 | Burgled/forged Gallus's journal | - / m / small | WIRED |
+
+Plus ~8 echo rows (keep_oath / uphold_law_justice: BardsCollegeLute, CW01A, CW01B, DA03, DarkBrotherhoodSanctuaryRepair, DB02a, FreeformSkyhavenTempleA, TG08A) flagged REVIEW -> INERT.
+
+**Baan Dar**
+
+| Quest | Stage | Deed | Valence/Intensity/Mag | Status |
+|-------|-------|------|-----------------------|--------|
+| Delayed Burial (DB01Misc) | 200 | Lied to the guard about Cicero (harmless trick) | + / C / milestone | WIRED |
+| Diplomatic Immunity (MQ201) | 250 | Clever infiltration/reversal vs the Thalmor | + / C / milestone | WIRED |
+| Dampened Spirits (TG03) | 200 | Pariah prank toppling a rich man's table | + / m / small | WIRED |
+| Scoundrel's Folly (TG04) | 200 | Slipped through the strong men's halls | + / m / small | WIRED |
+| Blindsighted (TG08B) | 50 | Robbed the betrayer Mercer | + / m / small | WIRED |
+
+Plus ~20 echo rows (mostly prove_by_struggle / deceit / kill_the_helpless across C01, C02, DA02, DA06, DA08, DB01, DB05, DB06, DB09, DB11, MQ101, MQ105, MQ206, MQ301, MQ305, TG05, dunHunterQST) flagged REVIEW -> INERT.
+
+Caveat: all day-to-day CSV rows above are live only if the generated `LoadRowsForDeity` table has been regenerated and `LIKES_DISLIKES_VERSION` bumped; the matrix is live only if the quest is present in `questWatchFormIdsCsv` in the compiled JSON.
+
+### Review Notes
+
+Discrepancies between what the guide/design promises and what actually fires (for owner triage; tagged by path):
+
+- **Old Contract:** "proper hunting (a clean first-arrow kill)" and "keeping the forest" have **no organic hook** - they exist only as dev-only activators 071035/071036 (debug MCM). The real Old Contract organic gains are eating meat/insect food (PACT_POSITIVE) and visiting the 6 green-song sites.
+- **Living Story:** "helping a community preserve/protect/remember" is dev-only 071037 (no organic hook). Real Living Story organic gains are the green-song sites, healing/curing, and reading lore. The separate NatureSite activator 071038 is unused (green songs cover nature sites).
+- **Exchange:** "settling a debt," "proportionate vengeance," and "defending allies" have no organic hooks (071039/07103A dev-only; defend-ally absent from the table). The only organic Exchange gains are generic honest craft/labor (Z'en cook/smith/brew/study), which are not debt-specific.
+- **Bandit Road:** "surviving against the odds" is dev-only 07103C (no organic hook). Real organic gains are sleeping outdoors, theft/lockpick/trespass, discovery, and skill-ups.
+- **Pattern:** four of the five curated "signature" lanes (Old Contract hunt/forest, Living Story community, Exchange debt/vengeance, Bandit Road road-life/reversal) ship as scripts + dev-only senders but never got organic triggers. Only two curated lanes were organically hooked: animal food (PACT_POSITIVE) and green-song location. This is the prime remap target for the race.
+- **Secondary Living Story gods** (Arkay/Xarxes/Mara/Stendarr) reach Bosmer play only through the quest matrix, and the Bosmer-adjacent rows are almost all echo/REVIEW -> inert.
+- **Shrine offering** piety is unconfirmed (shrines normalized to cure-only).
+
+<!-- END REVIEW SCAFFOLDING -->
 
 ## Bonuses by Tier
 

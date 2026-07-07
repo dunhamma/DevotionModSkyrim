@@ -36,35 +36,133 @@ Instead of one sacred shrine, you set **2 to 3 road-homes**: rest anchors that y
 
 ## How You Gain Piety
 
+<!-- Review tags (strip before player release, along with the REVIEW SCAFFOLDING block below):
+     [WIRED]  = fires organically in normal play now (hook named)
+     [QUEST]  = fires only from a specific vanilla quest stage (via the quest-reaction matrix)
+     [PARTIAL]= organic but narrowly gated (rare condition, moon-phase, book/quest-stage gated)
+     [STUB]   = only reachable via a dev-only signal activator or the debug MCM; not organic
+     [INERT]  = a CSV/matrix row exists but does not fire organically
+     Day-to-day deltas from PDV_DeityLikesDislikes.csv; curated deltas from PDV_Deity_*.psc DELTA_*. -->
+
 Lead with the road life. The most common and important ways to earn piety:
 
-- **Sleep outdoors**, not in an inn or a house. This is the core road-life act and pleases the lunar bond, Khenarthi, Baan Dar, and Rajhin all at once.
-- **Travel on foot between major areas** instead of fast-traveling. The road itself is the worship. (Fast travel does not count - it would make this too easy to farm.)
-- **Cycle between your 2 to 3 road-homes** over time rather than camping the same spot.
-- **Help, trade with, and protect the Khajiit caravans** - Ma'dran, Ri'saad, Ahkari, and Khaara and their people. Community belonging is a large part of Khajiit religious life, and the caravans are where it lives.
-- **Observe dawn or dusk outdoors.** A quiet time-of-day act that especially pleases Azurah.
-- **Defend or protect any threatened Khajiit.**
+- **Sleep outdoors**, not in an inn or a house. This is the core road-life act and pleases the lunar bond, Khenarthi, Baan Dar, and Rajhin all at once. `[WIRED: OnSleepStop with PDV_LastSleepStartedOutside -> EVT_REST_UNDER_OPEN_SKY (313). CSV rest-under-open-sky rows: khenarthi +0.5, Baan Dar +0.5, rajhin +0.25, azurah +0.5. NOTE: this is a same-god-per-night dislike gate on inn sleep, not the caravan/lunar curated lane.]`
+- **Travel on foot between major areas** instead of fast-traveling. The road itself is the worship. (Fast travel does not count - it would make this too easy to farm.) `[STUB: no organic travel-on-foot / location hook. HandleKhajiitRoadHome/RoadHomeAnchor route only from the dev-only activator (Devotion.esp:071030/071031 KhajiitRoadHomeAnchorOne/Two) and the debug MCM (RunPatternAction 10). There is no HandleStoryChangeLocation or step/travel poll for Khajiit road-life.]`
+- **Cycle between your 2 to 3 road-homes** over time rather than camping the same spot. `[STUB: same as above - the road-home anchor repeat-rejection logic exists in HandleKhajiitRoadHomeAnchor, but the only callers are the dev-only activator and MCM. No organic circuit tracking.]`
+- **Help, trade with, and protect the Khajiit caravans** - Ma'dran, Ri'saad, Ahkari, and Khaara and their people. Community belonging is a large part of Khajiit religious life, and the caravans are where it lives. `[STUB: SIGNAL_CARAVAN_AID (+1.5, Khenarthi) has no organic caller. Only the harm side (RouteKhajiitKhenarthiCaravanHarm -> SIGNAL_CARAVAN_HARM) exists, and it too fires only from the dev-only activator. No caravan-aid/protect hook of any kind.]`
+- **Observe dawn or dusk outdoors.** A quiet time-of-day act that especially pleases Azurah. `[STUB: SIGNAL_THRESHOLD_RITE (+1.5, Azura, "dawn/dusk") has no organic time-of-day caller. Moon observance (SIGNAL_MOON_OBSERVANCE +0.4) fires organically, but only from lunar BOOKS and two quest stages (see PARTIAL below), not from standing outside at dawn.]`
+- **Defend or protect any threatened Khajiit.** `[STUB: no organic "defend a Khajiit" hook exists in PlayerEvents or ActionRouter.]`
 
 Then the focus-specific deeds, which steer who emerges as your patron:
 
-- **Khenarthi:** discover new locations, rest under open sky, heal or cure people, free trapped souls (defeat undead), guide great souls to rest (slay dragons), and learn Words of Power - the Voice is her breath given shape.
-- **Azurah:** show mercy by healing or curing the cursed and outcast, observe dawn and dusk, read lore and prophecy, enchant items (soul-work honors her), learn Words of Power, and complete the Azura's Star quest - that quest is the single strongest Khajiit piety event there is.
-- **Baan Dar:** survive a fight that began while you were badly outnumbered (3 or more enemies), pick owned locks, take what survival demands, trespass and walk every road, rest rough under open sky, and pull off improbable reversals as the clever exile.
-- **Rajhin:** steal and pickpocket from notable, high-value targets while undetected, pick owned locks, and slip through thresholds with style. Story-worthy thefts earn the most; petty theft stays too small to matter.
-- **Alkosh:** defeat dragons (named dragons most of all), drive back chaos by killing the undead and Daedra, learn Words of Power as ordered dominion, read the chronicles of the ages, and make order-keeping, anti-chaos choices.
+- **Khenarthi:** discover new locations, rest under open sky, heal or cure people, free trapped souls (defeat undead), guide great souls to rest (slay dragons), and learn Words of Power - the Voice is her breath given shape. `[WIRED (day-to-day CSV, blank originGate): discover-location (345) +0.5, rest-under-open-sky (313) +0.5, heal-or-cure-npc (350) +0.25, kill-undead (300) +0.5, kill-dragon (302) +0.75, learn-word-of-power (343) +0.75. The curated SIGNAL_ROAD_HOME lane (+0.4) is STUB - see road-home above.]`
+- **Azurah:** show mercy by healing or curing the cursed and outcast, observe dawn and dusk, read lore and prophecy, enchant items (soul-work honors her), learn Words of Power, and complete the Azura's Star quest - that quest is the single strongest Khajiit piety event there is. `[WIRED (CSV): heal-or-cure-npc (350) +0.75, rest-under-open-sky (313) +0.5, read-lore-book (342) +0.25, enchant-item (331) +0.5, discover-location (345) +0.5, learn-word-of-power (343) +0.75, kill-undead (300) +0.5, accept-daedric-artifact (368, ActorTypeDaedra) +0.5.] [QUEST: Azura's Star = The Black Star (DA01) s100 serve_a_daedra +/C milestone -> ApplyQuestReaction. "Observe dawn and dusk" as a curated rite is STUB (SIGNAL_THRESHOLD_RITE has no organic caller).]`
+- **Baan Dar:** survive a fight that began while you were badly outnumbered (3 or more enemies), pick owned locks, take what survival demands, trespass and walk every road, rest rough under open sky, and pull off improbable reversals as the clever exile. `[WIRED (CSV): pick-owned-lock (360, owned) +0.25, steal-item (362) +0.5, trespass (361) +0.25, discover-location (345) +0.5, increase-skill (344) +0.25, rest-under-open-sky (313) +0.5.] [PARTIAL (organic combat hooks): outnumbered win (3+ kills OR level-delta >=5 with health dipped below half, one/day) -> RouteKhajiitBaanDarRoadTrick; near-fatal reversal (health <=10%, >=1 kill, once/week) -> RouteKhajiitBaanDarReversal (+SIGNAL_BANDIT_ROAD). Both fire from OnCombatStateChanged/OnActorKilled for originRace 6.]`
+- **Rajhin:** steal and pickpocket from notable, high-value targets while undetected, pick owned locks, and slip through thresholds with style. Story-worthy thefts earn the most; petty theft stays too small to matter. `[WIRED (CSV): steal-item (362) +0.5, pick-owned-lock (360, owned) +0.5, trespass (361) +0.25, discover-location (345) +0.25.] [PARTIAL (curated elegant-theft): OnItemAdded while sneaking + undetected, source is on PDV_FLST_RajhinNotableTargets OR taken value >=200 gold, 7-day per-target cooldown -> RouteKhajiitRajhinElegantTheft -> SIGNAL_ELEGANT_THEFT (+0.4). This is the "story-worthy theft" beat.]`
+- **Alkosh:** defeat dragons (named dragons most of all), drive back chaos by killing the undead and Daedra, learn Words of Power as ordered dominion, read the chronicles of the ages, and make order-keeping, anti-chaos choices. `[WIRED (CSV): kill-dragon (302) +1.5, kill-undead (300) +0.5, learn-word-of-power (343) +0.75, kill-daedra (301, ActorTypeDaedra) +0.75, read-lore-book (342) +0.25.] [PARTIAL (curated dragon lane): OnActorKilled ActorTypeDragon -> named dragon (PDV_FLST_AlkoshNamedDragons, one-shot per base) fires SIGNAL_NAMED_DRAGON; generic dragon = emphasis-only nudge once/week; Paarthurnax -> RouteKhajiitAlkoshChaosAid (negative). "Order-keeping choices" as a curated act is STUB.]`
 
 Remember that piety is tracked separately for each god, daily gain is capped at about 4.3 per god per day, and repeating the exact same deed earns less each time. Variety across these acts matters far more than grinding one of them.
+
+The moon-observance pulse that feeds the lunar bond (and a small Azurah pulse) does fire organically, but not from watching the sky: `[PARTIAL: SIGNAL_MOON_OBSERVANCE (+0.4) routes via RouteKhajiitLunarSubstrate from PDV_FLST_P2_KhajiitLunarSources immersive book reads (OnBookRead / PO3 source hooks) and two quest stages (MQ104 s160, DA01 s100). The debug MCM and the dev-only MoonObservance activator (Devotion.esp:07102F) are the other, non-organic callers.]`
 
 ## How You Lose Piety
 
 Your standing is rarely in sharp danger - the Lattice does not collapse easily - but it can thin and slip in several ways:
 
-- **Dislikes.** Each god turns away from acts against their nature. Killing the helpless offends every one of the five (Rajhin in particular wants artful theft, never crude slaughter). Raising the undead is a grave sin to Azurah, Khenarthi, and Alkosh, who all guide or order souls toward their proper rest. Alkosh is offended by lawless slaughter, trespass, and bearing a Daedric Prince's gift. Rajhin scorns brute assault on the innocent and even the soft comfort of a warm inn bed.
-- **Neglect (a god growing quiet).** This is the main Khajiit risk. When you stay indoors, urban, and cut off from the road, sky, and caravans for a long stretch, the small nightly bonuses stop building, the lunar bond gives much weaker piety, and the caravans stop recognizing you because you have not been where they travel. It is not urgent or harsh - it is a slow thinning, "less held, less known, less real." If you have been neglecting the moons, you carry a small penalty (Stamina Regeneration -5% at night) until you return to the road.
-- **Focus drifting back to broad.** If a god was emerging as your focus and you stop doing the things that drew them - stop journeying, stop sleeping outside - your balance simply slides back toward broad worship. The god does not punish you; they just stop sending wind.
-- **The broad-worship cap.** Honoring several gods at once is valid and complete, but it caps you at the Devoted tier. Reaching Champion requires letting one single god clearly lead.
+- **Dislikes.** Each god turns away from acts against their nature. Killing the helpless offends every one of the five (Rajhin in particular wants artful theft, never crude slaughter). Raising the undead is a grave sin to Azurah, Khenarthi, and Alkosh, who all guide or order souls toward their proper rest. Alkosh is offended by lawless slaughter, trespass, and bearing a Daedric Prince's gift. Rajhin scorns brute assault on the innocent and even the soft comfort of a warm inn bed. `[WIRED: CSV dislikes (blank originGate) - murder-defenseless (304): khenarthi -1.0, azurah -0.75, Baan Dar -0.75, rajhin -0.75, alkosh -1.0. raise-undead (365, ActorTypeUndead): khenarthi -0.75, azurah -1.5, alkosh -1.0. assault-innocent (364): rajhin -0.5, alkosh -0.5, azurah -1.0. alkosh trespass (361) -0.25; alkosh accept-daedric-artifact (368) -0.75. rajhin sleep-in-inn (315) -0.25, fired by OnSleepStop when PDV_LastSleptInInn. NOTE the CSV also gives Baan Dar +0.5 assault-innocent (the ambush like) - Baan Dar does NOT dislike it.]`
+- **Neglect (a god growing quiet).** This is the main Khajiit risk. When you stay indoors, urban, and cut off from the road, sky, and caravans for a long stretch, the small nightly bonuses stop building, the lunar bond gives much weaker piety, and the caravans stop recognizing you because you have not been where they travel. It is not urgent or harsh - it is a slow thinning, "less held, less known, less real." If you have been neglecting the moons, you carry a small penalty (Stamina Regeneration -5% at night) until you return to the road. `[WIRED: SyncKhajiitNeglectSpell adds PDV_SPEL_Neglect_KhajiitLunar when time since PDV.Khajiit.LastLunarSourceTime exceeds KHAJIIT_LUNAR_NEGLECT_GRACE_DAYS. NOTE the gate is a grace-days-since-last-lunar-source timer, NOT a piety threshold; and because road-life/caravan/dawn hooks are STUB, in practice the only organic acts that reset LastLunarSourceTime are lunar-book moon observance and the curated focus signals (theft/dragon/reversal), not "returning to the road" as the copy implies.]`
+- **Focus drifting back to broad.** If a god was emerging as your focus and you stop doing the things that drew them - stop journeying, stop sleeping outside - your balance simply slides back toward broad worship. The god does not punish you; they just stop sending wind. `[WIRED: passive per-deity decay (~-0.5/day) erodes an unfed focus; broad-cap re-clamps when no god leads. "Stop journeying" is not itself organically tracked - see road-life STUBs above.]`
+- **The broad-worship cap.** Honoring several gods at once is valid and complete, but it caps you at the Devoted tier. Reaching Champion requires letting one single god clearly lead. `[WIRED: broad worship caps at Devoted; Champion requires a focus emphasis leading by margin (see Unique Mechanics).]`
 
 The Khajiit carry no formal reputation track (no faction standing that swings for or against you). Your standing is simply how well you have kept the road and the moons.
+
+<!-- REVIEW SCAFFOLDING - strip before player release -->
+
+### Quests That Move Your Standing
+
+Quest-reaction rows for the five Khajiit gods, pulled from `PDV_QuestReactionMatrix_Full.csv` and consumed at runtime by `ApplyQuestReaction` -> `ApplyDeityReaction` in `PDV__ManagerQuest.psc`. A positive reaction for a Khajiit-focus deity also nudges the focused-emphasis system via `BridgeKhajiitMatrixFocus`. Hand-authored rows (real UESP citations, "small"/"milestone") are promoted and fire when the quest is on the watch list; "echo" rows carry the citation "cross-gen candidate ... REVIEW before promotion" and are **not** promoted (INERT). Azura's rows are keyed "Azura" in the matrix (not "Azurah").
+
+**Khenarthi**
+
+| Quest | Stage | Deed | Valence/Intensity/Mag | Status |
+|-------|-------|------|-----------------------|--------|
+| The Book of Love (t02) | 200 | Honored the dead / laid a soul to rest | + / m / small | WIRED |
+| The Blessings of Nature (T03) | 200 | Restored the Gildergreen (sky-blessed land) | + / m / small | WIRED |
+
+Plus 11 echo rows (honor_the_dead / the_open_road candidates) flagged REVIEW -> INERT.
+
+**Azurah (matrix "Azura")**
+
+| Quest | Stage | Deed | Valence/Intensity/Mag | Status |
+|-------|-------|------|-----------------------|--------|
+| The Black Star / Azura's Star (DA01) | 100 | Served Azura and reclaimed her Star | + / C / milestone | WIRED (strongest Khajiit event) |
+| The Black Star (DA01) | 110 | Defied Azura (gave the Star to Nelacar) | - / S / small | WIRED |
+| Glory of the Dead (C06) | 65 | Cured Kodlak of the beast-taint | + / m / small | WIRED |
+| Serana's Cure (DLC1SeranaCureSelfQuest) | 200 | Cured Serana's vampirism | + / S / small | WIRED |
+| The Jagged Crown (CW02A/CW02B) | 72 | Slew the crypt undead | + / m / small | WIRED |
+| The Break of Dawn (DA09) | 500 | Cleansed Meridia's temple of undeath | + / m / small | WIRED |
+| Impatience of a Saint (DLC1VQSaint) | 200 | Honored the dead | + / m / small | WIRED |
+
+Plus 6 echo rows flagged REVIEW -> INERT.
+
+**Baan Dar**
+
+| Quest | Stage | Deed | Valence/Intensity/Mag | Status |
+|-------|-------|------|-----------------------|--------|
+| Delayed Burial (DB01Misc) | 200 | Lied to the guard about Cicero (harmless trickery) | + / C / milestone | WIRED |
+| Diplomatic Immunity (MQ201) | 250 | Clever infiltration/reversal vs the Thalmor | + / C / milestone | WIRED |
+| Dampened Spirits (TG03) | 200 | Pariah prank on a rich brewer | + / m / small | WIRED |
+| Scoundrel's Folly (TG04) | 200 | Slipped through the strong men's halls | + / m / small | WIRED |
+| Blindsighted (TG08B) | 50 | Robbed the betrayer Mercer | + / m / small | WIRED |
+
+Plus 20 echo rows (prove_by_struggle / deceit candidates) flagged REVIEW -> INERT.
+
+**Rajhin**
+
+| Quest | Stage | Deed | Valence/Intensity/Mag | Status |
+|-------|-------|------|-----------------------|--------|
+| A Chance Arrangement (TG00) | 200 | Framed Brand-Shei | + / C / small | WIRED |
+| Taking Care of Business (TG01) | 200 | Extorted shopkeepers | + / C / milestone | WIRED |
+| Loud and Clear (TG02) | 200 | Burgled Goldenglow | + / C / milestone | WIRED |
+| Hard Answers (TG06) | 200 | Burgled/forged Gallus's journal | + / C / milestone | WIRED |
+| The Pursuit (TG07) | 200 | Broke into Mercer's house | + / C / milestone | WIRED |
+| Blindsighted (TG08B) | 50 | Robbed Mercer | + / m / small | WIRED |
+| Diplomatic Immunity (MQ201) | 250 | Artful infiltration | + / C / small | WIRED |
+| Delayed Burial (DB01Misc) | 200 | Deceived the guard | + / S / small | WIRED |
+| Dampened Spirits (TG03) | 200 | Deceit against the brewer | + / m / small | WIRED |
+| Scoundrel's Folly (TG04) | 200 | Deceit / infiltration | + / m / small | WIRED |
+
+Plus 7 echo rows flagged REVIEW -> INERT.
+
+**Alkosh**
+
+| Quest | Stage | Deed | Valence/Intensity/Mag | Status |
+|-------|-------|------|-----------------------|--------|
+| Dragonslayer (MQ305) | 200 | Slew Alduin, the world-ending dragon | + / S / small | WIRED |
+| Alduin's Bane (MQ206) | 220 | Broke the named chaos-dragon | + / S / small | WIRED |
+| A Blade in the Dark (MQ106) | 200 | Slew Sahloknir in honorable combat | + / S / small | WIRED |
+| Dragon Rising (MQ104) | 160 | Slew Mirmulnir | + / S / small | WIRED (also routes lunar substrate) |
+| Joining the Legion (CW01A) | 160/200 | Served Imperial order | + / m / small | WIRED |
+| The Jagged Crown (CW02A) | 30/80 | Served Imperial order | + / m / small | WIRED |
+
+Plus 13 echo rows (serve_empire_order / kill_honorable_combat candidates) flagged REVIEW -> INERT.
+
+Caveat: all day-to-day CSV rows in the gain/loss sections above are live only if the generated `LoadRowsForDeity` table has been regenerated and `LIKES_DISLIKES_VERSION` bumped; the matrix rows are live only if the quest is present in `questWatchFormIdsCsv` in the compiled JSON.
+
+### Review Notes
+
+Discrepancies between what the guide/design promises and what actually fires (for owner triage):
+
+- **The whole "road life" front of the guide is largely STUB.** Travel-on-foot, cycling road-homes, caravan help/trade/protect, dawn/dusk observance, and defending a threatened Khajiit are all presented as the *core* Khajiit acts, but none has an organic hook. `HandleKhajiitRoadHome`, `HandleKhajiitRoadHomeAnchor`, `SIGNAL_CARAVAN_AID`, and `SIGNAL_THRESHOLD_RITE` route only from the dev-only signal activators (Devotion.esp:071030/071031/07102F) and the debug MCM. This is the prime remap target for the race: the marquee identity ("the road itself is the worship") is not wired.
+- **Sleeping outdoors is the one road-life act that IS wired** - but through the shared `EVT_REST_UNDER_OPEN_SKY` (313) CSV rows, i.e. the generic sleep hook, not the Khajiit curated road-home lane. Inn sleep (315) organically triggers the Rajhin dislike.
+- **Moon observance fires, but not from the sky.** `SIGNAL_MOON_OBSERVANCE` (+0.4) reaches play only through P2 immersive lunar BOOK reads (`PDV_FLST_P2_KhajiitLunarSources`) and two quest stages (MQ104 s160, DA01 s100). The design's "observe dawn and dusk under the sky" has no time-of-day caller.
+- **Moon-phase bonus (the 24-day cycle):** the phase-blessing spells and `GetKhajiitMoonPhaseFromGameDay` / `SyncKhajiitPhaseBlessing` are wired and driven by the real Skyrim moon, so the *reward* half (a bonus while your Devoted god's phase is up) is real. But the phase does not itself *earn* piety organically, and the observance that feeds standing depends on the book/quest sources above.
+- **Silent emergence IS wired.** Focus emphasis is driven behaviorally: `AdjustKhajiitFocusedEmphasis` from CSV/curated signals plus `BridgeKhajiitMatrixFocus` from quest reactions, evaluated at dawn. The problem is the *inputs* are thin - because road-life is STUB, the only organic emphasis drivers are the CSV like-rows, the combat/theft/dragon curated beats, the lunar books, and quest reactions.
+- **Baan Dar and Alkosh have the strongest organic curated lanes.** Outnumbered-win and near-fatal reversal (Baan Dar) and named/generic dragon kills (Alkosh) fire from real combat/kill events for originRace 6. Rajhin's elegant-theft beat (notable-target or >=200-gold sneak-lift) is also organic.
+- **Anti-creed curated signals are mostly STUB.** Azurah desecration (703), Khenarthi caravan-harm (604), Rajhin botched-theft, and Baan Dar betrayal route only from the dev-only activator. The undead/murder/assault CSV dislike rows are the organic loss path; Alkosh chaos-aid (Paarthurnax kill) is the one organic anti-creed beat.
+- **Quest matrix:** Rajhin (10 promoted), Azurah (8, incl. Azura's Star milestone), Alkosh (6), Baan Dar (5), Khenarthi (2) all have real promoted rows; echo rows across all five (57 total) are REVIEW -> inert.
+
+<!-- END REVIEW SCAFFOLDING -->
 
 ## Bonuses by Tier
 
