@@ -95,7 +95,7 @@ for (const manualId of ["DA10", "DA13", "DA06", "dunHunterQST", "MS05", "Freefor
 assert("shrine cap helper exists", manager.includes("Bool Function ConsumeShrinePrayerCredit("), "Missing shared daily shrine cap helper.");
 assert("shrine cap is called", manager.includes("if !ConsumeShrinePrayerCredit(deity, sourceId)"), "AwardShrinePrayerToDeityName does not consume the per-deity daily cap.");
 assert("shrine cap key is deity scoped", manager.includes("\"PDV.Signal.ShrinePrayer.\" + deityKey"), "Shrine cap must key by resolved deity, not only by shrine/source.");
-assert("likes dislikes version bumped", /Int Property LIKES_DISLIKES_VERSION = 14 AutoReadOnly/.test(manager), "LIKES_DISLIKES_VERSION should be 14 for the remap rows.");
+assert("likes dislikes version bumped", /Int Property LIKES_DISLIKES_VERSION = 15 AutoReadOnly/.test(manager), "LIKES_DISLIKES_VERSION should be 15 for the signal-floor rows.");
 
 const syncBretonRewards = functionBody(manager, "SyncBretonRewards");
 assert("breton hidden art reward uses magnus", syncBretonRewards.includes("BRETON_TRADITION_HIDDEN_ART") && syncBretonRewards.includes("PDV_Magnus"), "Hidden Art reward family should read Magnus.");

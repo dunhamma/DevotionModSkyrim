@@ -571,7 +571,7 @@ Float Property DECAY_PER_DAY = 0.5 AutoReadOnly
 Float Property BROAD_WORSHIP_DECAY_MULTIPLIER = 0.2 AutoReadOnly
 Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; Bump when PDV_DeityLikesDislikes.csv OR the stance matrix changes so existing saves reload.
-Int Property LIKES_DISLIKES_VERSION = 14 AutoReadOnly
+Int Property LIKES_DISLIKES_VERSION = 15 AutoReadOnly
 Int Property PRINCE_LD_VERSION = 4 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_NONE = 0 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_SKY_STORM_HUNT = 1 AutoReadOnly
@@ -8895,7 +8895,7 @@ Function ClearRowsForDeity(PDV_DeityBase deity)
 EndFunction
 
 Int[] Function GetLikesDislikesEventTypes()
-    Int[] ldEvents = new Int[32]
+    Int[] ldEvents = new Int[34]
     ldEvents[0] = 1
     ldEvents[1] = 2
     ldEvents[2] = 3
@@ -8928,6 +8928,8 @@ Int[] Function GetLikesDislikesEventTypes()
     ldEvents[29] = 365
     ldEvents[30] = 368
     ldEvents[31] = 315
+    ldEvents[32] = 303
+    ldEvents[33] = 366
     return ldEvents
 EndFunction
 
@@ -9302,6 +9304,9 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 302, 1.0, 1, 0.5, -1)
         WriteLD(deity, 300, 0.5, 3, 0.0, -1)
         WriteLD(deity, 304, -1.0, 2, 0.5, -1)
+        WriteLD(deity, 366, -0.75, 2, 0.5, -1)
+        WriteLD(deity, 365, -1.0, 2, 0.5, -1)
+        WriteLD(deity, 303, -0.5, 3, 0.0, -1)
     elseIf ldName == "akatosh"
         WriteLD(deity, 302, -0.75, 2, 0.5, -1)
         WriteLD(deity, 343, 0.75, 2, 0.5, -1)
@@ -9326,6 +9331,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 364, -1.0, 2, 0.5, -1)
         WriteLD(deity, 368, -1.0, 2, 0.5, -1)
         WriteLD(deity, 300, 0.75, 3, 0.0, 2)
+        WriteLD(deity, 366, -1.5, 1, 1.0, -1)
     elseIf ldName == "Mara"
         WriteLD(deity, 350, 0.75, 2, 0.5, -1)
         WriteLD(deity, 333, 0.5, 3, 0.0, -1)
@@ -9339,6 +9345,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 333, 0.5, 3, 0.0, 2)
         WriteLD(deity, 314, 0.35, 2, 0.5, 2)
         WriteLD(deity, 362, -0.5, 3, 0.0, 2)
+        WriteLD(deity, 366, -1.0, 2, 0.5, -1)
     elseIf ldName == "Stendarr"
         WriteLD(deity, 301, 0.75, 2, 0.5, -1)
         WriteLD(deity, 300, 0.5, 3, 0.0, -1)
@@ -9351,6 +9358,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 361, -0.25, 3, 0.0, -1)
         WriteLD(deity, 351, 0.75, 1, 0.5, -1)
         WriteLD(deity, 351, 0.75, 1, 0.5, 2)
+        WriteLD(deity, 366, -1.5, 1, 1.0, -1)
     elseIf ldName == "Zenithar"
         WriteLD(deity, 330, 0.5, 3, 0.0, -1)
         WriteLD(deity, 331, 0.5, 3, 0.0, -1)
@@ -9386,6 +9394,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 344, 0.25, 3, 0.0, -1)
         WriteLD(deity, 364, -0.5, 3, 0.0, -1)
         WriteLD(deity, 365, -0.75, 2, 0.5, -1)
+        WriteLD(deity, 366, -0.75, 2, 0.5, -1)
     elseIf ldName == "Kynareth"
         WriteLD(deity, 313, 0.75, 2, 0.5, -1)
         WriteLD(deity, 345, 0.5, 3, 0.0, -1)
@@ -9398,6 +9407,8 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 368, -1.0, 1, 0.5, -1)
         WriteLD(deity, 334, 0.25, 3, 0.0, -1)
         WriteLD(deity, 313, 0.25, 2, 0.5, 2)
+        WriteLD(deity, 303, -0.5, 3, 0.0, -1)
+        WriteLD(deity, 366, -1.0, 2, 0.5, -1)
     elseIf ldName == "Talos"
         WriteLD(deity, 343, 1.0, 2, 0.5, -1)
         WriteLD(deity, 345, 0.5, 3, 0.0, -1)
@@ -9408,6 +9419,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 362, -0.5, 3, 0.0, -1)
         WriteLD(deity, 364, -0.75, 2, 0.5, -1)
         WriteLD(deity, 351, 0.5, 2, 0.5, 0)
+        WriteLD(deity, 366, -0.75, 2, 0.5, -1)
     elseIf ldName == "Shor"
         WriteLD(deity, 343, 0.5, 3, 0.0, -1)
         WriteLD(deity, 313, 0.25, 3, 0.0, -1)
@@ -9442,6 +9454,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 360, -0.5, 3, 0.0, -1)
         WriteLD(deity, 350, 0.75, 2, 0.5, 0)
         WriteLD(deity, 351, 0.5, 2, 0.5, 0)
+        WriteLD(deity, 313, 0.25, 3, 0.0, -1)
     elseIf ldName == "auri-el"
         WriteLD(deity, 344, 0.5, 3, 0.0, -1)
         WriteLD(deity, 342, 0.25, 3, 0.0, -1)
@@ -9453,6 +9466,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 343, 0.75, 2, 0.5, -1)
         WriteLD(deity, 365, -1.5, 1, 1.0, -1)
         WriteLD(deity, 364, -0.5, 3, 0.0, -1)
+        WriteLD(deity, 366, -1.0, 2, 0.5, -1)
     elseIf ldName == "magnus"
         WriteLD(deity, 341, 0.75, 2, 0.5, -1)
         WriteLD(deity, 331, 0.5, 3, 0.0, -1)
@@ -9465,6 +9479,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 342, 0.5, 3, 0.0, 2)
         WriteLD(deity, 331, 0.35, 2, 0.5, 2)
         WriteLD(deity, 365, -1.25, 1, 1.0, 2)
+        WriteLD(deity, 366, -0.5, 3, 0.0, -1)
     elseIf ldName == "xarxes"
         WriteLD(deity, 342, 0.75, 2, 0.5, -1)
         WriteLD(deity, 340, 0.5, 3, 0.0, -1)
@@ -9527,6 +9542,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 313, 0.5, 3, 0.0, -1)
         WriteLD(deity, 364, 0.5, 2, 0.0, -1)
         WriteLD(deity, 330, -0.25, 3, 0.0, -1)
+        WriteLD(deity, 351, -0.25, 2, 0.5, -1)
     elseIf ldName == "khenarthi"
         WriteLD(deity, 345, 0.5, 3, 0.0, -1)
         WriteLD(deity, 313, 0.5, 3, 0.0, -1)
@@ -9538,6 +9554,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 304, -1.0, 2, 0.5, -1)
         WriteLD(deity, 313, 0.5, 3, 0.0, 6)
         WriteLD(deity, 350, 0.5, 3, 0.0, 6)
+        WriteLD(deity, 366, -0.75, 2, 0.5, -1)
     elseIf ldName == "rajhin"
         WriteLD(deity, 362, 0.5, 3, 0.0, -1)
         WriteLD(deity, 360, 0.5, 3, 0.0, -1)
@@ -9549,6 +9566,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 315, -0.25, 3, 0.0, -1)
         WriteLD(deity, 360, 0.35, 3, 0.0, 6)
         WriteLD(deity, 304, -0.75, 2, 0.5, 6)
+        WriteLD(deity, 366, -0.5, 3, 0.0, -1)
     elseIf ldName == "alkosh"
         WriteLD(deity, 302, 1.5, 1, 1.0, -1)
         WriteLD(deity, 300, 0.5, 3, 0.0, -1)
@@ -9560,6 +9578,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 301, 0.75, 2, 0.5, -1)
         WriteLD(deity, 368, -0.75, 2, 0.5, -1)
         WriteLD(deity, 342, 0.25, 3, 0.0, -1)
+        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
     elseIf ldName == "azurah"
         WriteLD(deity, 313, 0.5, 3, 0.0, -1)
         WriteLD(deity, 350, 0.75, 2, 0.5, -1)
@@ -9572,6 +9591,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 300, 0.5, 3, 0.0, -1)
         WriteLD(deity, 365, -1.5, 1, 1.0, -1)
         WriteLD(deity, 364, -1.0, 2, 0.5, -1)
+        WriteLD(deity, 366, -1.0, 2, 0.5, -1)
     elseIf ldName == "Boethiah"
         WriteLD(deity, 2, 0.25, 3, 0.0, -1)
         WriteLD(deity, 344, 0.5, 3, 0.0, -1)
@@ -9595,6 +9615,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 2, -0.25, 3, 0.0, -1)
         WriteLD(deity, 350, -0.5, 2, 0.0, -1)
         WriteLD(deity, 313, -0.25, 2, 0.0, -1)
+        WriteLD(deity, 366, 0.35, 3, 0.0, -1)
     elseIf ldName == "The Hist"
         WriteLD(deity, 313, 0.5, 3, 0.0, -1)
         WriteLD(deity, 350, 0.75, 2, 0.5, -1)
@@ -9620,6 +9641,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 331, -0.5, 3, 0.0, -1)
         WriteLD(deity, 304, 0.35, 1, 1.0, 7)
         WriteLD(deity, 351, -0.25, 2, 0.5, 7)
+        WriteLD(deity, 366, 0.5, 3, 0.0, -1)
     elseIf ldName == "Malacath"
         WriteLD(deity, 330, 0.75, 2, 0.5, -1)
         WriteLD(deity, 330, 0.25, 3, 0.0, 8)
@@ -9643,6 +9665,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 304, -0.75, 2, 0.5, -1)
         WriteLD(deity, 301, 0.75, 2, 0.5, -1)
         WriteLD(deity, 368, -1.0, 2, 0.5, -1)
+        WriteLD(deity, 366, -1.5, 1, 1.0, -1)
     elseIf ldName == "Leki"
         WriteLD(deity, 344, 0.25, 3, 0.0, -1)
         WriteLD(deity, 330, 0.75, 2, 0.5, -1)
@@ -9652,6 +9675,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 302, 1.0, 1, 0.5, -1)
         WriteLD(deity, 340, 0.25, 3, 0.0, -1)
         WriteLD(deity, 364, -0.75, 2, 0.5, -1)
+        WriteLD(deity, 360, -0.25, 3, 0.0, -1)
     elseIf ldName == "HoonDing"
         WriteLD(deity, 302, 1.5, 1, 1.0, -1)
         WriteLD(deity, 344, 0.25, 3, 0.0, -1)
@@ -9663,6 +9687,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 361, 0.25, 3, 0.0, -1)
         WriteLD(deity, 315, -0.25, 3, 0.0, -1)
         WriteLD(deity, 365, -0.75, 2, 0.5, -1)
+        WriteLD(deity, 366, -0.75, 2, 0.5, -1)
     endIf
 EndFunction
 

@@ -339,3 +339,26 @@ rajhin,304,murder-defenseless,-,medium,-0.75,2,0.5,,,khajiit,botched cruelty is 
 Talos,351,clear-bounty-serve-time,+,small,0.5,2,0.5,,,nord,costly public accountability can serve honorable rule
 sithis,304,murder-defenseless,+,small,0.35,1,1.0,,,argonian,Void threshold signal only when other significant signals also exist
 sithis,351,clear-bounty-serve-time,-,small,-0.25,2,0.5,,,argonian,settling back into civic order resists the Void threshold
+Arkay,366,feed-as-vampire,-,large,-1.5,1,1.0,,,,vampiric feeding is undeath preying on the living; a core sin against the cycle
+Stendarr,366,feed-as-vampire,-,large,-1.5,1,1.0,,,,the Vigil was raised to hunt the vampire; the feeding is the abomination itself
+Mara,366,feed-as-vampire,-,medium,-1.0,2,0.5,,,,feeding on the sleeping and trusting violates the hearth she shelters
+kyne,366,feed-as-vampire,-,medium,-0.75,2,0.5,,,,the vampire's hunger is a corruption of the breath of life she gives
+kyne,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,,binding the dead denies them the winds' last carrying
+kyne,303,kill-animal-noncombat,-,small,-0.5,3,0,,,,wanton slaughter of peaceful beasts angers the mother of storms and beasts
+Kynareth,303,kill-animal-noncombat,-,small,-0.5,3,0,,,,slaying harmless creatures wounds the living web she keeps
+Kynareth,366,feed-as-vampire,-,medium,-1.0,2,0.5,,,,the vampire preys upon the living world the sky-goddess protects
+Talos,366,feed-as-vampire,-,medium,-0.75,2,0.5,,,,vampirism corrupts the mankind the Hero-God champions
+Tu'whacca,366,feed-as-vampire,-,large,-1.5,1,1.0,,,,each feeding chains another soul short of the Far Shores
+auri-el,366,feed-as-vampire,-,medium,-1.0,2,0.5,,,,the blood-hunger drags the soul furthest from its ascent to the light
+Dibella,366,feed-as-vampire,-,medium,-0.75,2,0.5,,,,predation on the living body defiles beauty and intimacy alike
+khenarthi,366,feed-as-vampire,-,medium,-0.75,2,0.5,,,,the fed-upon soul is waylaid on the road home she keeps
+azurah,366,feed-as-vampire,-,medium,-1.0,2,0.5,,,,the Bal-corrupted hunger mocks her mercy toward the cursed
+magnus,366,feed-as-vampire,-,small,-0.5,3,0,,,,blood-hunger is corrupted vitality outside the architect's lawful design
+HoonDing,366,feed-as-vampire,-,medium,-0.75,2,0.5,,,,the parasite's hunger halts the sword onward; it makes no way
+rajhin,366,feed-as-vampire,-,small,-0.5,3,0,,,,crude blood-hunger is not the artful cat's elegant taking
+sithis,366,feed-as-vampire,+,small,0.5,3,0,,,,each feeding is a small unmaking; the Void does not judge hunger
+Mephala,366,feed-as-vampire,+,small,0.35,3,0,,,,secret predation upon the trusting weaves neatly into the web
+Leki,360,pick-owned-lock,-,small,-0.25,3,0,,owned,,the sword-singer meets the door's owner face to face; no picked wards
+Baan Dar,351,clear-bounty-serve-time,-,small,-0.25,2,0.5,,,,the pariah pays no debt to the law that cast him out
+Stuhn,313,rest-under-open-sky,+,small,0.25,3,0,,,,the shield-god kept the rough war-camps of old Atmora
+alkosh,344,increase-skill,+,small,0.25,3,0,,,,disciplined mastery keeps the proper order of progression
