@@ -38,7 +38,21 @@ const offerRoster = {
   altmer: [
     "PDV_Msg_Altmer_AuriEl_Offer",
     "PDV_Msg_Altmer_Magnus_Offer",
-    "PDV_Msg_Altmer_Xarxes_Offer"
+    "PDV_Msg_Altmer_Xarxes_Offer",
+    "PDV_Msg_Altmer_Trinimac_Offer",
+    "PDV_Msg_Altmer_Syrabane_Offer"
+  ],
+  breton: [
+    "PDV_Msg_Breton_Akatosh_Offer",
+    "PDV_Msg_Breton_Arkay_Offer",
+    "PDV_Msg_Breton_Dibella_Offer",
+    "PDV_Msg_Breton_Julianos_Offer",
+    "PDV_Msg_Breton_Kynareth_Offer",
+    "PDV_Msg_Breton_Magnus_Offer",
+    "PDV_Msg_Breton_Mara_Offer",
+    "PDV_Msg_Breton_Stendarr_Offer",
+    "PDV_Msg_Breton_Yffre_Offer",
+    "PDV_Msg_Breton_Zenithar_Offer"
   ],
   imperial: [
     "PDV_Msg_Imperial_Akatosh_Offer",
@@ -65,6 +79,9 @@ const expectedResponseProperties = [
   "PDV_Msg_Altmer_OfferResponse_Accept",
   "PDV_Msg_Altmer_OfferResponse_NotYet",
   "PDV_Msg_Altmer_OfferResponse_Refuse",
+  "PDV_Msg_Breton_OfferResponse_Accept",
+  "PDV_Msg_Breton_OfferResponse_NotYet",
+  "PDV_Msg_Breton_OfferResponse_Refuse",
   "PDV_Msg_Imperial_OfferResponse_Accept",
   "PDV_Msg_Imperial_OfferResponse_NotYet",
   "PDV_Msg_Imperial_OfferResponse_Refuse",
@@ -217,10 +234,10 @@ function verifySpecShape(spec, specPath, pass, fail) {
     ...expectedResponseProperties
   ].filter((editorId) => !editorId.startsWith("PDV_Msg_Nord_"));
 
-  if (messageRecords.length === 30) {
-    pass("Formal offer spec shape", "Spec declares 30 post-Kyne message records.", specPath);
+  if (messageRecords.length === 45) {
+    pass("Formal offer spec shape", "Spec declares 45 post-Kyne message records.", specPath);
   } else {
-    fail("Formal offer spec shape", `Expected 30 post-Kyne message records, found ${messageRecords.length}.`, specPath);
+    fail("Formal offer spec shape", `Expected 45 post-Kyne message records, found ${messageRecords.length}.`, specPath);
   }
 
   for (const editorId of expectedSpecIds) {
@@ -254,8 +271,6 @@ function verifySpecShape(spec, specPath, pass, fail) {
   }
 
   const forbiddenSpecTokens = [
-    "PDV_Msg_Altmer_Trinimac_Offer",
-    "PDV_Msg_Altmer_Syrabane_Offer",
     "PDV_Msg_Redguard_Satakal_Offer",
     "PDV_Msg_Redguard_Ruptga_Offer",
     "PDV_Msg_Redguard_Tava_Offer",
@@ -264,7 +279,6 @@ function verifySpecShape(spec, specPath, pass, fail) {
     "PDV_Msg_Bosmer_",
     "PDV_Msg_Orc_",
     "PDV_Msg_Khajiit_",
-    "PDV_Msg_Breton_",
     "PDV_Msg_Argonian_"
   ];
   const specText = JSON.stringify(spec);
@@ -311,9 +325,10 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
     "return GetImperialFormalCommitmentOfferMessage(deity)",
     "return GetDunmerFormalCommitmentOfferMessage(deity)",
     "return GetAltmerFormalCommitmentOfferMessage(deity)",
+    "return GetBretonFormalCommitmentOfferMessage(deity)",
     "return GetRedguardFormalCommitmentOfferMessage(deity)",
     "Bool Function UsesFormalCommitmentOffersForDeity(PDV_DeityBase deity)",
-    "return IsNordOfferEligibleDeity(deity) || IsImperialOfferEligibleDeity(deity) || IsDunmerOfferEligibleDeity(deity) || IsAltmerOfferEligibleDeity(deity) || IsRedguardOfferEligibleDeity(deity)",
+    "return IsNordOfferEligibleDeity(deity) || IsImperialOfferEligibleDeity(deity) || IsDunmerOfferEligibleDeity(deity) || IsAltmerOfferEligibleDeity(deity) || IsRedguardOfferEligibleDeity(deity) || IsBretonOfferEligibleDeity(deity)",
     "Bool Function IsImperialTalosOfferAllowed()",
     "PDV_ConcordatStandingTrack.GetValue() <= 50",
     "Bool Function ShouldSuppressImperialTalosTierSurface(PDV_DeityBase deity)",
@@ -340,7 +355,8 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
   const helperExpectations = [
     ["IsNordOfferEligibleDeity", ["PDV_Kyne"]],
     ["IsDunmerOfferEligibleDeity", ["PDV_Azura", "PDV_Boethiah", "PDV_Mephala"]],
-    ["IsAltmerOfferEligibleDeity", ["PDV_AuriEl", "PDV_Magnus", "PDV_Xarxes"]],
+    ["IsAltmerOfferEligibleDeity", ["PDV_AuriEl", "PDV_Magnus", "PDV_Xarxes", "PDV_Trinimac", "PDV_Syrabane"]],
+    ["IsBretonOfferEligibleDeity", ["PDV_Stendarr", "PDV_Akatosh", "PDV_Mara", "PDV_Arkay", "PDV_Julianos", "PDV_Zenithar", "PDV_Kynareth", "PDV_Dibella", "PDV_Magnus", "PDV_Yffre"]],
     ["IsImperialOfferEligibleDeity", ["PDV_Akatosh", "PDV_Mara", "PDV_Arkay", "PDV_Stendarr", "PDV_Zenithar", "PDV_Dibella", "PDV_Julianos", "PDV_Kynareth", "PDV_Talos"]],
     ["IsRedguardOfferEligibleDeity", ["PDV_Tuwhacca", "PDV_HoonDing", "PDV_Leki"]]
   ];
@@ -363,15 +379,11 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
     "GetBosmerFormalCommitmentOfferMessage",
     "GetKhajiitFormalCommitmentOfferMessage",
     "GetOrcFormalCommitmentOfferMessage",
-    "GetBretonFormalCommitmentOfferMessage",
     "GetArgonianFormalCommitmentOfferMessage",
     "IsBosmerOfferEligibleDeity",
     "IsKhajiitOfferEligibleDeity",
     "IsOrcOfferEligibleDeity",
-    "IsBretonOfferEligibleDeity",
     "IsArgonianOfferEligibleDeity",
-    "PDV_Msg_Altmer_Trinimac_Offer",
-    "PDV_Msg_Altmer_Syrabane_Offer",
     "PDV_Msg_Redguard_Satakal_Offer",
     "PDV_Msg_Redguard_Ruptga_Offer",
     "PDV_Msg_Redguard_Tava_Offer",

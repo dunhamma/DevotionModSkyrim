@@ -67,6 +67,12 @@ cycle + band toggle + **Apply domain sting**, **Anti-stack burst (4 domains)**,
 and **Show / Clear active disfavor**. These are how you fire dislikes and stings
 from the menu (no in-world transgressions needed).
 
+2026-07-09 deity signal remap addendum: if testing the remap tranche, run
+`references/authoring/PDV_DeitySignalRemap_InGameSmoke_Runbook.md` after this
+machine preflight. The remap's compile/readback gates make it smoke-ready only;
+they do not close runtime-route proof, manual visual proof, or player-guide
+claims.
+
 Shared per-sitting setup (unchanged from the proven flow):
 - Disposable **new save** (or main-menu `coc qasmoke`); MO2 Anvil: disable
   `Devotion - Living Deities Test` (not present on Authoria).

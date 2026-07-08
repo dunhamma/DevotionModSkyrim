@@ -38,6 +38,7 @@
     ["kynareth", "Kynareth"],
     ["magnus", "Magnus"],
     ["xarxes", "Xarxes"],
+    ["syrabane", "Syrabane"],
     ["trinimac", "Trinimac"],
     ["khenarthi", "Khenarthi"],
     ["rajhin", "Rajhin"],
@@ -211,6 +212,12 @@
       ["path", { d: "M14 12 C12 12 12 16 14 16 H32 C30 16 30 12 32 12 C36 12 36 36 32 36 H14 C12 36 12 32 14 32" }],
       ["path", { d: "M30 10 L36 22", class: "symbol-thin" }],
       ["path", { d: "M18 22 H27 M18 27 H24", class: "symbol-thin" }],
+    ],
+    syrabane: [
+      ["path", { d: "M24 8 L36 14 V23 C36 32 31 38 24 41 C17 38 12 32 12 23 V14 Z" }],
+      ["path", { d: "M24 14 V33 M17 23 H31", class: "symbol-thin" }],
+      ["path", { d: "M15 13 L33 37 M33 13 L15 37", class: "symbol-thin" }],
+      ["circle", { cx: "24", cy: "23", r: "3", class: "symbol-thin" }],
     ],
     trinimac: [
       ["path", { d: "M24 18 V42" }],

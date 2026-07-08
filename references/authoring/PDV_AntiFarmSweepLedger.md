@@ -6,16 +6,14 @@ Anti-farm doctrine: every signal handler that awards POSITIVE (gain) PIETY needs
 
 Scope: PDV__ManagerQuest.psc handler-shaped functions (Handle<X> / Record<X>Scaled / Try<X> / Award<X>Signal) that transitively reach AwardPiety / AwardCuratedSignal[Scaled]. Substrate AdjustMetric (the favor/buff channel, not the piety pulse) is intentionally out of scope. The audit is caller-aware (a thin emit-wrapper reads CAPPED when every caller is capped) and sign-aware: only POSITIVE-delta (gain) handlers are a farm exploit and fail the build; PENALTY-only handlers (negative delta -- anti-creed, oath-break, Lorkhan-pressure) cannot be farmed for gain and are reported as friction-pacing review only.
 
-Summary: 127 piety-awarding handlers | 117 CAPPED | 0 allowlisted one-shot | 1 UNCAPPED-GAIN (findings) | 9 uncapped-penalty-only (review)
+Summary: 127 piety-awarding handlers | 118 CAPPED | 0 allowlisted one-shot | 0 UNCAPPED-GAIN (findings) | 9 uncapped-penalty-only (review)
 Self-test: off
 
 ## UNCAPPED GAIN -- genuine anti-farm gaps (the doctrine target)
 
 Each awards POSITIVE piety with neither an own-tree cap nor full caller coverage. Add a Consume*/day-key gate on the pulse, or (if inherently single-fire) add to ONESHOT_ALLOWLIST with justification.
 
-| handler | callers |
-|---|---|
-| HandleShrinePrayer | (top-level / event-driven) |
+- none
 
 ## Uncapped PENALTY-only -- friction-pacing review (not a farm exploit)
 
@@ -140,6 +138,7 @@ These award only a NEGATIVE delta, so repeating them costs the player -- not far
 | HandleRedguardForebearRoadPassage | own-handler-gate |
 | HandleRedguardSleepEvents | own-handler-gate |
 | HandleShoutAttack | own-handler-gate |
+| HandleShrinePrayer | called-fn-gate |
 | HandleStateTransitionConfirmationRite | called-fn-gate |
 | HandleTalosBetrayal | own-handler-gate |
 | HandleTalosShrineDefiance | own-handler-gate |

@@ -12,6 +12,12 @@ Overall: **PASS**
 | PASS | Altmer | Offer | Magnus | T1 | PDV_Bless_Altmer_Magnus_T1 | yes | yes | PDV_Bless_Altmer_Magnus_T1 |
 | PASS | Altmer | Offer | Magnus | T2 | PDV_Bless_Altmer_Magnus_T2 | yes | yes | PDV_Bless_Altmer_Magnus_T2 |
 | PASS | Altmer | Offer | Magnus | T3 | PDV_Bless_Altmer_Magnus_T3 | yes | yes | PDV_Bless_Altmer_Magnus_T3 |
+| PASS | Altmer | Offer | PDV_Syrabane | T1 | PDV_Bless_Altmer_Syrabane_T1 | yes | yes | PDV_Bless_Altmer_Syrabane_T1 |
+| PASS | Altmer | Offer | PDV_Syrabane | T2 | PDV_Bless_Altmer_Syrabane_T2 | yes | yes | PDV_Bless_Altmer_Syrabane_T2 |
+| PASS | Altmer | Offer | PDV_Syrabane | T3 | PDV_Bless_Altmer_Syrabane_T3 | yes | yes | PDV_Bless_Altmer_Syrabane_T3 |
+| PASS | Altmer | Offer | PDV_Trinimac | T1 | PDV_Bless_Altmer_Trinimac_T1 | yes | yes | PDV_Bless_Altmer_Trinimac_T1 |
+| PASS | Altmer | Offer | PDV_Trinimac | T2 | PDV_Bless_Altmer_Trinimac_T2 | yes | yes | PDV_Bless_Altmer_Trinimac_T2 |
+| PASS | Altmer | Offer | PDV_Trinimac | T3 | PDV_Bless_Altmer_Trinimac_T3 | yes | yes | PDV_Bless_Altmer_Trinimac_T3 |
 | PASS | Altmer | Offer | Xarxes | T1 | PDV_Bless_Altmer_Xarxes_T1 | yes | yes | PDV_Bless_Altmer_Xarxes_T1 |
 | PASS | Altmer | Offer | Xarxes | T2 | PDV_Bless_Altmer_Xarxes_T2 | yes | yes | PDV_Bless_Altmer_Xarxes_T2 |
 | PASS | Altmer | Offer | Xarxes | T3 | PDV_Bless_Altmer_Xarxes_T3 | yes | yes | PDV_Bless_Altmer_Xarxes_T3 |
@@ -36,12 +42,12 @@ Overall: **PASS**
 | PASS | Bosmer | Old Contract | Y'ffre | T1 | PDV_Bless_Bosmer_OldContract_T1 | yes | yes | PDV_Bless_Bosmer_OldContract_T1 |
 | PASS | Bosmer | Old Contract | Y'ffre | T2 | PDV_Bless_Bosmer_OldContract_T2 | yes | yes | PDV_Bless_Bosmer_OldContract_T2 |
 | PASS | Bosmer | Old Contract | Y'ffre | T3 | PDV_Bless_Bosmer_OldContract_T3 | yes | yes | PDV_Bless_Bosmer_OldContract_T3 |
-| PASS | Breton | Green Way | Kynareth | T1 | PDV_Bless_Breton_GreenWay_T1 | yes | yes | PDV_Bless_Breton_GreenWay_T1 |
-| PASS | Breton | Green Way | Kynareth | T2 | PDV_Bless_Breton_GreenWay_T2 | yes | yes | PDV_Bless_Breton_GreenWay_T2 |
-| PASS | Breton | Green Way | Kynareth | T3 | PDV_Bless_Breton_GreenWay_T3 | yes | yes | PDV_Bless_Breton_GreenWay_T3 |
-| PASS | Breton | Hidden Art | Julianos | T1 | PDV_Bless_Breton_HiddenArt_T1 | yes | yes | PDV_Bless_Breton_HiddenArt_T1 |
-| PASS | Breton | Hidden Art | Julianos | T2 | PDV_Bless_Breton_HiddenArt_T2 | yes | yes | PDV_Bless_Breton_HiddenArt_T2 |
-| PASS | Breton | Hidden Art | Julianos | T3 | PDV_Bless_Breton_HiddenArt_T3 | yes | yes | PDV_Bless_Breton_HiddenArt_T3 |
+| PASS | Breton | Green Way | Y'ffre | T1 | PDV_Bless_Breton_GreenWay_T1 | yes | yes | PDV_Bless_Breton_GreenWay_T1 |
+| PASS | Breton | Green Way | Y'ffre | T2 | PDV_Bless_Breton_GreenWay_T2 | yes | yes | PDV_Bless_Breton_GreenWay_T2 |
+| PASS | Breton | Green Way | Y'ffre | T3 | PDV_Bless_Breton_GreenWay_T3 | yes | yes | PDV_Bless_Breton_GreenWay_T3 |
+| PASS | Breton | Hidden Art | Magnus | T1 | PDV_Bless_Breton_HiddenArt_T1 | yes | yes | PDV_Bless_Breton_HiddenArt_T1 |
+| PASS | Breton | Hidden Art | Magnus | T2 | PDV_Bless_Breton_HiddenArt_T2 | yes | yes | PDV_Bless_Breton_HiddenArt_T2 |
+| PASS | Breton | Hidden Art | Magnus | T3 | PDV_Bless_Breton_HiddenArt_T3 | yes | yes | PDV_Bless_Breton_HiddenArt_T3 |
 | PASS | Breton | Knight's Road | Stendarr | T1 | PDV_Bless_Breton_KnightsRoad_T1 | yes | yes | PDV_Bless_Breton_KnightsRoad_T1 |
 | PASS | Breton | Knight's Road | Stendarr | T2 | PDV_Bless_Breton_KnightsRoad_T2 | yes | yes | PDV_Bless_Breton_KnightsRoad_T2 |
 | PASS | Breton | Knight's Road | Stendarr | T3 | PDV_Bless_Breton_KnightsRoad_T3 | yes | yes | PDV_Bless_Breton_KnightsRoad_T3 |

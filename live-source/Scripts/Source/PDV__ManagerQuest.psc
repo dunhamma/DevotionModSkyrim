@@ -85,6 +85,7 @@ PDV_Deity_Kynareth Property PDV_Kynareth Auto
 PDV_Deity_AuriEl Property PDV_AuriEl Auto
 PDV_Deity_Magnus Property PDV_Magnus Auto
 PDV_Deity_Xarxes Property PDV_Xarxes Auto
+PDV_DeityBase Property PDV_Syrabane Auto
 PDV_ReputationTrack Property PDV_ConcordatStandingTrack Auto
 PDV_Substrate_ImperialAncestor Property PDV_ImperialAncestorSubstrate Auto
 PDV_Substrate_BretonAncestor Property PDV_BretonAncestorSubstrate Auto
@@ -159,9 +160,15 @@ Spell Property PDV_Bless_Altmer_AuriEl_T3 Auto
 Spell Property PDV_Bless_Altmer_Magnus_T1 Auto
 Spell Property PDV_Bless_Altmer_Magnus_T2 Auto
 Spell Property PDV_Bless_Altmer_Magnus_T3 Auto
+Spell Property PDV_Bless_Altmer_Trinimac_T1 Auto
+Spell Property PDV_Bless_Altmer_Trinimac_T2 Auto
+Spell Property PDV_Bless_Altmer_Trinimac_T3 Auto
 Spell Property PDV_Bless_Altmer_Xarxes_T1 Auto
 Spell Property PDV_Bless_Altmer_Xarxes_T2 Auto
 Spell Property PDV_Bless_Altmer_Xarxes_T3 Auto
+Spell Property PDV_Bless_Altmer_Syrabane_T1 Auto
+Spell Property PDV_Bless_Altmer_Syrabane_T2 Auto
+Spell Property PDV_Bless_Altmer_Syrabane_T3 Auto
 Spell Property PDV_Bless_Altmer_Spine_Always Auto
 Spell Property PDV_Bless_Altmer_Spine_Mid Auto
 Spell Property PDV_Bless_Altmer_Spine_High Auto
@@ -502,9 +509,24 @@ Message Property PDV_Msg_Dunmer_OfferResponse_Refuse Auto
 Message Property PDV_Msg_Altmer_AuriEl_Offer Auto
 Message Property PDV_Msg_Altmer_Magnus_Offer Auto
 Message Property PDV_Msg_Altmer_Xarxes_Offer Auto
+Message Property PDV_Msg_Altmer_Trinimac_Offer Auto
+Message Property PDV_Msg_Altmer_Syrabane_Offer Auto
 Message Property PDV_Msg_Altmer_OfferResponse_Accept Auto
 Message Property PDV_Msg_Altmer_OfferResponse_NotYet Auto
 Message Property PDV_Msg_Altmer_OfferResponse_Refuse Auto
+Message Property PDV_Msg_Breton_Akatosh_Offer Auto
+Message Property PDV_Msg_Breton_Arkay_Offer Auto
+Message Property PDV_Msg_Breton_Dibella_Offer Auto
+Message Property PDV_Msg_Breton_Julianos_Offer Auto
+Message Property PDV_Msg_Breton_Kynareth_Offer Auto
+Message Property PDV_Msg_Breton_Magnus_Offer Auto
+Message Property PDV_Msg_Breton_Mara_Offer Auto
+Message Property PDV_Msg_Breton_Stendarr_Offer Auto
+Message Property PDV_Msg_Breton_Yffre_Offer Auto
+Message Property PDV_Msg_Breton_Zenithar_Offer Auto
+Message Property PDV_Msg_Breton_OfferResponse_Accept Auto
+Message Property PDV_Msg_Breton_OfferResponse_NotYet Auto
+Message Property PDV_Msg_Breton_OfferResponse_Refuse Auto
 Message Property PDV_Msg_Imperial_Akatosh_Offer Auto
 Message Property PDV_Msg_Imperial_Talos_Offer Auto
 Message Property PDV_Msg_Imperial_Kynareth_Offer Auto
@@ -549,7 +571,7 @@ Float Property DECAY_PER_DAY = 0.5 AutoReadOnly
 Float Property BROAD_WORSHIP_DECAY_MULTIPLIER = 0.2 AutoReadOnly
 Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; Bump when PDV_DeityLikesDislikes.csv OR the stance matrix changes so existing saves reload.
-Int Property LIKES_DISLIKES_VERSION = 13 AutoReadOnly
+Int Property LIKES_DISLIKES_VERSION = 14 AutoReadOnly
 Int Property PRINCE_LD_VERSION = 4 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_NONE = 0 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_SKY_STORM_HUNT = 1 AutoReadOnly
@@ -1053,6 +1075,7 @@ Function EnsureCanonicalDeityDisplayNames()
     repaired += RepairDeityRuntimeName(PDV_AuriEl, "Auri-El")
     repaired += RepairDeityRuntimeName(PDV_Magnus, "Magnus")
     repaired += RepairDeityRuntimeName(PDV_Xarxes, "Xarxes")
+    repaired += RepairDeityRuntimeName(PDV_Syrabane, "Syrabane")
     repaired += RepairDaedricPathRuntimeNames()
     if repaired > 0 && GetDebugLevel() >= 1
         Debug.Trace("[PDV] Canonical deity display names repaired: " + repaired)
@@ -1826,6 +1849,28 @@ Function FlushQuestReactionSurface()
     endIf
 
     ResetQuestReactionSurface()
+EndFunction
+
+Bool Function ConsumeShrinePrayerCredit(PDV_DeityBase deity, String sourceId)
+    if !deity
+        return False
+    endIf
+
+    Int today = Utility.GetCurrentGameTime() as Int
+    String deityKey = deity.DeityName
+    if deityKey == ""
+        deityKey = "" + deity.GetFormID()
+    endIf
+    String guardKey = "PDV.Signal.ShrinePrayer." + deityKey
+    if StorageUtil.GetIntValue(None, guardKey) == today
+        if GetDebugLevel() >= 2
+            Debug.Trace("[PDV] Shrine prayer daily cap blocked " + deityKey + " from " + sourceId)
+        endIf
+        return False
+    endIf
+
+    StorageUtil.SetIntValue(None, guardKey, today)
+    return True
 EndFunction
 
 ; Maps a quest-reaction deity name to its Khajiit focused-emphasis value, or
@@ -2687,7 +2732,7 @@ Bool Function IsDashboardDeityInOriginRoster(PDV_DeityBase deity, Int originRace
     elseIf originRace == ORIGIN_BRETON
         return deity == PDV_Kynareth || deity == PDV_Talos || deity == PDV_Mara || deity == PDV_Akatosh || deity == PDV_Arkay || deity == PDV_Stendarr || deity == PDV_Julianos || deity == PDV_Dibella || deity == PDV_Zenithar || deity == PDV_Magnus || deity == PDV_Yffre
     elseIf originRace == ORIGIN_ALTMER
-        return deity == PDV_Mara || deity == PDV_Stendarr || deity == PDV_Magnus || deity == PDV_Yffre || deity == PDV_AuriEl || deity == PDV_Xarxes || deity == PDV_Trinimac
+        return deity == PDV_Mara || deity == PDV_Stendarr || deity == PDV_Magnus || deity == PDV_Yffre || deity == PDV_AuriEl || deity == PDV_Xarxes || deity == PDV_Trinimac || deity == PDV_Syrabane
     elseIf originRace == ORIGIN_BOSMER
         return deity == PDV_Yffre || deity == PDV_AuriEl || deity == PDV_Xarxes || deity == PDV_BaanDar || deity == PDV_Zen
     elseIf originRace == ORIGIN_DUNMER
@@ -3886,6 +3931,10 @@ Bool Function AwardShrinePrayerToDeityName(String deityName, String shrineLabel,
         if GetDebugLevel() >= 2
             Debug.Trace("[PDV] Shrine prayer skipped outside origin roster: " + deity.DeityName + " from " + shrineLabel + " source " + sourceId)
         endIf
+        return False
+    endIf
+
+    if !ConsumeShrinePrayerCredit(deity, sourceId)
         return False
     endIf
 
@@ -9265,6 +9314,8 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 301, 0.5, 3, 0.0, -1)
         WriteLD(deity, 304, -0.75, 2, 0.5, -1)
         WriteLD(deity, 368, -0.75, 2, 0.5, -1)
+        WriteLD(deity, 351, 0.75, 1, 0.5, 2)
+        WriteLD(deity, 362, -0.75, 2, 0.5, 2)
     elseIf ldName == "Arkay"
         WriteLD(deity, 300, 0.5, 3, 0.0, -1)
         WriteLD(deity, 365, -1.5, 1, 1.0, -1)
@@ -9274,6 +9325,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 301, 0.75, 2, 0.5, -1)
         WriteLD(deity, 364, -1.0, 2, 0.5, -1)
         WriteLD(deity, 368, -1.0, 2, 0.5, -1)
+        WriteLD(deity, 300, 0.75, 3, 0.0, 2)
     elseIf ldName == "Mara"
         WriteLD(deity, 350, 0.75, 2, 0.5, -1)
         WriteLD(deity, 333, 0.5, 3, 0.0, -1)
@@ -9284,6 +9336,9 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 365, -1.0, 2, 0.5, -1)
         WriteLD(deity, 362, -0.5, 3, 0.0, -1)
         WriteLD(deity, 351, 0.5, 2, 0.0, -1)
+        WriteLD(deity, 333, 0.5, 3, 0.0, 2)
+        WriteLD(deity, 314, 0.35, 2, 0.5, 2)
+        WriteLD(deity, 362, -0.5, 3, 0.0, 2)
     elseIf ldName == "Stendarr"
         WriteLD(deity, 301, 0.75, 2, 0.5, -1)
         WriteLD(deity, 300, 0.5, 3, 0.0, -1)
@@ -9295,6 +9350,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 362, -0.75, 2, 0.5, -1)
         WriteLD(deity, 361, -0.25, 3, 0.0, -1)
         WriteLD(deity, 351, 0.75, 1, 0.5, -1)
+        WriteLD(deity, 351, 0.75, 1, 0.5, 2)
     elseIf ldName == "Zenithar"
         WriteLD(deity, 330, 0.5, 3, 0.0, -1)
         WriteLD(deity, 331, 0.5, 3, 0.0, -1)
@@ -9341,6 +9397,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 304, -1.0, 2, 0.5, -1)
         WriteLD(deity, 368, -1.0, 1, 0.5, -1)
         WriteLD(deity, 334, 0.25, 3, 0.0, -1)
+        WriteLD(deity, 313, 0.25, 2, 0.5, 2)
     elseIf ldName == "Talos"
         WriteLD(deity, 343, 1.0, 2, 0.5, -1)
         WriteLD(deity, 345, 0.5, 3, 0.0, -1)
@@ -9350,6 +9407,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 302, 1.5, 1, 1.0, -1)
         WriteLD(deity, 362, -0.5, 3, 0.0, -1)
         WriteLD(deity, 364, -0.75, 2, 0.5, -1)
+        WriteLD(deity, 351, 0.5, 2, 0.5, 0)
     elseIf ldName == "Shor"
         WriteLD(deity, 343, 0.5, 3, 0.0, -1)
         WriteLD(deity, 313, 0.25, 3, 0.0, -1)
@@ -9382,6 +9440,8 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 300, 0.25, 3, 0.0, -1)
         WriteLD(deity, 362, -0.75, 2, 0.5, -1)
         WriteLD(deity, 360, -0.5, 3, 0.0, -1)
+        WriteLD(deity, 350, 0.75, 2, 0.5, 0)
+        WriteLD(deity, 351, 0.5, 2, 0.5, 0)
     elseIf ldName == "auri-el"
         WriteLD(deity, 344, 0.5, 3, 0.0, -1)
         WriteLD(deity, 342, 0.25, 3, 0.0, -1)
@@ -9401,6 +9461,10 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 332, 0.25, 3, 0.0, -1)
         WriteLD(deity, 365, -0.75, 2, 0.5, -1)
         WriteLD(deity, 368, -0.75, 1, 0.5, -1)
+        WriteLD(deity, 341, 0.75, 2, 0.5, 2)
+        WriteLD(deity, 342, 0.5, 3, 0.0, 2)
+        WriteLD(deity, 331, 0.35, 2, 0.5, 2)
+        WriteLD(deity, 365, -1.25, 1, 1.0, 2)
     elseIf ldName == "xarxes"
         WriteLD(deity, 342, 0.75, 2, 0.5, -1)
         WriteLD(deity, 340, 0.5, 3, 0.0, -1)
@@ -9425,6 +9489,9 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 330, 0.25, 3, 0.0, -1)
         WriteLD(deity, 362, -0.5, 3, 0.0, -1)
         WriteLD(deity, 364, -0.75, 2, 0.5, -1)
+        WriteLD(deity, 2, 0.35, 3, 0.0, 3)
+        WriteLD(deity, 368, -1.5, 1, 1.0, 3)
+        WriteLD(deity, 304, -1.0, 2, 0.5, 3)
     elseIf ldName == "Y'ffre"
         WriteLD(deity, 313, 0.5, 3, 0.0, -1)
         WriteLD(deity, 342, 0.25, 3, 0.0, -1)
@@ -9435,6 +9502,9 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 300, 0.5, 3, 0.0, -1)
         WriteLD(deity, 333, 0.5, 3, 0.0, -1)
         WriteLD(deity, 331, -0.25, 3, 0.0, -1)
+        WriteLD(deity, 313, 0.75, 2, 0.5, 2)
+        WriteLD(deity, 334, 0.25, 3, 0.0, 2)
+        WriteLD(deity, 331, -0.35, 3, 0.0, 2)
     elseIf ldName == "Z'en"
         WriteLD(deity, 333, 0.5, 3, 0.0, -1)
         WriteLD(deity, 330, 0.5, 3, 0.0, -1)
@@ -9466,6 +9536,8 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 350, 0.25, 3, 0.0, -1)
         WriteLD(deity, 343, 0.75, 2, 0.5, -1)
         WriteLD(deity, 304, -1.0, 2, 0.5, -1)
+        WriteLD(deity, 313, 0.5, 3, 0.0, 6)
+        WriteLD(deity, 350, 0.5, 3, 0.0, 6)
     elseIf ldName == "rajhin"
         WriteLD(deity, 362, 0.5, 3, 0.0, -1)
         WriteLD(deity, 360, 0.5, 3, 0.0, -1)
@@ -9475,6 +9547,8 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 364, -0.5, 3, 0.0, -1)
         WriteLD(deity, 313, 0.25, 3, 0.0, -1)
         WriteLD(deity, 315, -0.25, 3, 0.0, -1)
+        WriteLD(deity, 360, 0.35, 3, 0.0, 6)
+        WriteLD(deity, 304, -0.75, 2, 0.5, 6)
     elseIf ldName == "alkosh"
         WriteLD(deity, 302, 1.5, 1, 1.0, -1)
         WriteLD(deity, 300, 0.5, 3, 0.0, -1)
@@ -9544,6 +9618,8 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 361, 0.25, 3, 0.0, -1)
         WriteLD(deity, 330, -0.5, 3, 0.0, -1)
         WriteLD(deity, 331, -0.5, 3, 0.0, -1)
+        WriteLD(deity, 304, 0.35, 1, 1.0, 7)
+        WriteLD(deity, 351, -0.25, 2, 0.5, 7)
     elseIf ldName == "Malacath"
         WriteLD(deity, 330, 0.75, 2, 0.5, -1)
         WriteLD(deity, 330, 0.25, 3, 0.0, 8)
@@ -12232,7 +12308,9 @@ Function SyncAltmerRewards(Actor playerRef)
 
     SyncAltmerRewardFamily(playerRef, PDV_AuriEl, PDV_Bless_Altmer_AuriEl_T1, PDV_Bless_Altmer_AuriEl_T2, PDV_Bless_Altmer_AuriEl_T3, "Auri-El")
     SyncAltmerRewardFamily(playerRef, PDV_Magnus, PDV_Bless_Altmer_Magnus_T1, PDV_Bless_Altmer_Magnus_T2, PDV_Bless_Altmer_Magnus_T3, "Magnus")
+    SyncAltmerRewardFamily(playerRef, PDV_Trinimac, PDV_Bless_Altmer_Trinimac_T1, PDV_Bless_Altmer_Trinimac_T2, PDV_Bless_Altmer_Trinimac_T3, "Trinimac")
     SyncAltmerRewardFamily(playerRef, PDV_Xarxes, PDV_Bless_Altmer_Xarxes_T1, PDV_Bless_Altmer_Xarxes_T2, PDV_Bless_Altmer_Xarxes_T3, "Xarxes")
+    SyncAltmerRewardFamily(playerRef, PDV_Syrabane, PDV_Bless_Altmer_Syrabane_T1, PDV_Bless_Altmer_Syrabane_T2, PDV_Bless_Altmer_Syrabane_T3, "Syrabane")
 EndFunction
 
 Function SyncAltmerAncestorSubstrate(Actor playerRef, Bool isAltmer)
@@ -12396,8 +12474,8 @@ Function SyncBretonRewards(Actor playerRef)
     SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T2, broadFaithful, "Breton Tradition T2")
 
     SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_KNIGHTS_ROAD, traditionValue, PDV_Stendarr, PDV_Bless_Breton_KnightsRoad_T1, PDV_Bless_Breton_KnightsRoad_T2, PDV_Bless_Breton_KnightsRoad_T3, "KnightsRoad")
-    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_HIDDEN_ART, traditionValue, PDV_Julianos, PDV_Bless_Breton_HiddenArt_T1, PDV_Bless_Breton_HiddenArt_T2, PDV_Bless_Breton_HiddenArt_T3, "HiddenArt")
-    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_GREEN_WAY, traditionValue, PDV_Kynareth, PDV_Bless_Breton_GreenWay_T1, PDV_Bless_Breton_GreenWay_T2, PDV_Bless_Breton_GreenWay_T3, "GreenWay")
+    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_HIDDEN_ART, traditionValue, PDV_Magnus, PDV_Bless_Breton_HiddenArt_T1, PDV_Bless_Breton_HiddenArt_T2, PDV_Bless_Breton_HiddenArt_T3, "HiddenArt")
+    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_GREEN_WAY, traditionValue, PDV_Yffre, PDV_Bless_Breton_GreenWay_T1, PDV_Bless_Breton_GreenWay_T2, PDV_Bless_Breton_GreenWay_T3, "GreenWay")
     SyncBretonKnightlyVowCreedLossSpells(isBreton && traditionValue == BRETON_TRADITION_KNIGHTS_ROAD)
     SyncBretonWitchcraftExposureRuptureSpell(isBreton)
     SyncBretonDruidicForkBetrayalSpell(isBreton && GetBretonDruidicForkValue() == BRETON_DRUIDIC_FORK_BETRAYED)
@@ -12450,9 +12528,9 @@ PDV_DeityBase Function GetBretonTraditionDeity(Int traditionValue)
     if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
         return PDV_Stendarr
     elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
-        return PDV_Julianos
+        return PDV_Magnus
     elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
-        return PDV_Kynareth
+        return PDV_Yffre
     endIf
 
     return None
@@ -14874,6 +14952,12 @@ Function EvaluateFormalCommitmentOffer()
         return
     endIf
 
+    Message offerMessage = GetFormalCommitmentOfferMessage(candidate)
+    if !offerMessage
+        Trace(1, "Commitment offer skipped for " + candidate.DeityName + ": no offer message wired.")
+        return
+    endIf
+
     if GetPendingCommitmentDeityIndex() == candidate.DeityIndex
         return
     endIf
@@ -14912,6 +14996,8 @@ Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
         return GetDunmerFormalCommitmentOfferMessage(deity)
     elseIf originRace == ORIGIN_ALTMER
         return GetAltmerFormalCommitmentOfferMessage(deity)
+    elseIf originRace == ORIGIN_BRETON
+        return GetBretonFormalCommitmentOfferMessage(deity)
     elseIf originRace == ORIGIN_REDGUARD
         return GetRedguardFormalCommitmentOfferMessage(deity)
     endIf
@@ -14983,6 +15069,36 @@ Message Function GetAltmerFormalCommitmentOfferMessage(PDV_DeityBase deity)
         return PDV_Msg_Altmer_Magnus_Offer
     elseIf deity == PDV_Xarxes
         return PDV_Msg_Altmer_Xarxes_Offer
+    elseIf deity == PDV_Trinimac
+        return PDV_Msg_Altmer_Trinimac_Offer
+    elseIf deity == PDV_Syrabane
+        return PDV_Msg_Altmer_Syrabane_Offer
+    endIf
+
+    return None
+EndFunction
+
+Message Function GetBretonFormalCommitmentOfferMessage(PDV_DeityBase deity)
+    if deity == PDV_Stendarr
+        return PDV_Msg_Breton_Stendarr_Offer
+    elseIf deity == PDV_Akatosh
+        return PDV_Msg_Breton_Akatosh_Offer
+    elseIf deity == PDV_Mara
+        return PDV_Msg_Breton_Mara_Offer
+    elseIf deity == PDV_Arkay
+        return PDV_Msg_Breton_Arkay_Offer
+    elseIf deity == PDV_Julianos
+        return PDV_Msg_Breton_Julianos_Offer
+    elseIf deity == PDV_Zenithar
+        return PDV_Msg_Breton_Zenithar_Offer
+    elseIf deity == PDV_Kynareth
+        return PDV_Msg_Breton_Kynareth_Offer
+    elseIf deity == PDV_Dibella
+        return PDV_Msg_Breton_Dibella_Offer
+    elseIf deity == PDV_Magnus
+        return PDV_Msg_Breton_Magnus_Offer
+    elseIf deity == PDV_Yffre
+        return PDV_Msg_Breton_Yffre_Offer
     endIf
 
     return None
@@ -15117,7 +15233,7 @@ Bool Function UsesFormalCommitmentOffersForDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    return IsNordOfferEligibleDeity(deity) || IsImperialOfferEligibleDeity(deity) || IsDunmerOfferEligibleDeity(deity) || IsAltmerOfferEligibleDeity(deity) || IsRedguardOfferEligibleDeity(deity)
+    return IsNordOfferEligibleDeity(deity) || IsImperialOfferEligibleDeity(deity) || IsDunmerOfferEligibleDeity(deity) || IsAltmerOfferEligibleDeity(deity) || IsRedguardOfferEligibleDeity(deity) || IsBretonOfferEligibleDeity(deity)
 EndFunction
 
 ; Nord's defining mechanic: deeds reveal which god noticed you. Any deity in the
@@ -15171,7 +15287,41 @@ Bool Function IsAltmerOfferEligibleDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    return deity == PDV_AuriEl || deity == PDV_Magnus || deity == PDV_Xarxes
+    return deity == PDV_AuriEl || deity == PDV_Magnus || deity == PDV_Xarxes || deity == PDV_Trinimac || deity == PDV_Syrabane
+EndFunction
+
+Bool Function IsBretonOfferEligibleDeity(PDV_DeityBase deity)
+    if !deity
+        return False
+    endIf
+
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
+        return False
+    endIf
+
+    Int traditionValue = GetBretonTraditionValue()
+    if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
+        return deity == PDV_Stendarr || deity == PDV_Akatosh || deity == PDV_Mara || deity == PDV_Arkay || deity == PDV_Julianos || deity == PDV_Zenithar || deity == PDV_Kynareth || deity == PDV_Dibella
+    elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
+        if deity == PDV_Magnus || deity == PDV_Mara
+            return True
+        endIf
+        return IsBretonHiddenArtDaedricOfferDeity(deity)
+    elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
+        return deity == PDV_Yffre
+    endIf
+
+    return False
+EndFunction
+
+Bool Function IsBretonHiddenArtDaedricOfferDeity(PDV_DeityBase deity)
+    PDV_DaedricPathBase path = deity as PDV_DaedricPathBase
+    if !path
+        return False
+    endIf
+
+    String pathName = path.DeityName
+    return pathName == "Hermaeus Mora" || pathName == "Hircine" || pathName == "Namira" || pathName == "Nocturnal"
 EndFunction
 
 Bool Function IsImperialOfferEligibleDeity(PDV_DeityBase deity)
@@ -17077,9 +17227,14 @@ Function HandleBretonHiddenArtExposure(String reason)
     StorageUtil.SetStringValue(None, "PDV.Breton.LastHiddenArtReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonHiddenArtExposure")
-    if StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) == BRETON_TRADITION_HIDDEN_ART && PDV_Julianos
+    if StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) == BRETON_TRADITION_HIDDEN_ART && PDV_Magnus
         if multiplier > 0.0
-            AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_LAWFUL_ORDER, None, multiplier)
+            AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
+        endIf
+    endIf
+    if StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) == BRETON_TRADITION_HIDDEN_ART && PDV_Mara
+        if multiplier > 0.0 && StringContainsToken(reason, "home")
+            AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
         endIf
     endIf
     AwardBretonAncestorSpinePulse(multiplier, reason)
@@ -17124,9 +17279,9 @@ Function HandleBretonGreenWayStanding(String reason)
     StorageUtil.SetStringValue(None, "PDV.Breton.LastGreenWayReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonGreenWayStanding")
-    if IsBretonGreenWayForkEligible() && PDV_Kynareth
+    if IsBretonGreenWayForkEligible() && PDV_Yffre
         if multiplier > 0.0
-            AwardCuratedSignalScaled(PDV_Kynareth, PDV_Kynareth.SIGNAL_OPEN_SKY, None, multiplier)
+            AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_LIVING_STORY, None, multiplier)
         endIf
     endIf
     AwardBretonAncestorSpinePulse(multiplier, reason)
@@ -18770,7 +18925,7 @@ String Function GetAltmerMedallionEntriesJson()
     entries = entries + "," + PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Endurance, pilgrimage, and old discipline.")
     entries = entries + "," + RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, "Story, form, and natural law.")
     entries = entries + "," + RosterMedallionEntry("auri-el", "Auri-El", "god", "auri-el", PDV_AuriEl, "The founding light and ancestral ascent.")
-    entries = entries + "," + PendingMedallionEntry("syrabane", "Syrabane", "god", "syrabane", "Magic, craft, and survival through wisdom.")
+    entries = entries + "," + RosterMedallionEntry("syrabane", "Syrabane", "god", "syrabane", PDV_Syrabane, "Protection, apprentices, and survival through wisdom.")
     entries = entries + "," + RosterMedallionEntry("xarxes", "Xarxes", "god", "xarxes", PDV_Xarxes, "Lineage, record, and ordered memory.")
     entries = entries + "," + RosterMedallionEntry("trinimac", "Trinimac", "god", "trinimac", PDV_Trinimac, "Warrior order and unbroken nobility.")
     return entries
@@ -21351,6 +21506,9 @@ String Function GetPrismaSymbolForDeity(PDV_DeityBase deity)
     endIf
     if deity.DeityName == "Trinimac"
         return "trinimac"
+    endIf
+    if deity.DeityName == "Syrabane"
+        return "syrabane"
     endIf
     if deity.DeityName == "Khenarthi"
         return "khenarthi"

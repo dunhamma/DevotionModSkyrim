@@ -52,9 +52,108 @@
       "messageBox": true,
       "buttons": ["Accept", "Not yet", "Refuse"]
     },
+    {
+      "editorId": "PDV_Msg_Altmer_Trinimac_Offer",
+      "kind": "messageBox",
+      "title": "Trinimac's High Example",
+      "body": "You have kept the old strength without bowing to the thing that broke it. Name Trinimac your focus, and the high law of the ancestor-warrior becomes your road. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Altmer_Syrabane_Offer",
+      "kind": "messageBox",
+      "title": "Syrabane's Apprentice Ward",
+      "body": "You have protected knowledge where pride would spend it. Name Syrabane your focus, and the apprentice's ward becomes your disciplined road. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
     { "editorId": "PDV_Msg_Altmer_OfferResponse_Accept", "title": "Accept", "body": "You name this focus. The foundation narrows to a single disciplined road, and the dawn holds in you." },
     { "editorId": "PDV_Msg_Altmer_OfferResponse_NotYet", "title": "Not Yet", "body": "Not yet. The foundation stands as it was, and the path waits for you." },
     { "editorId": "PDV_Msg_Altmer_OfferResponse_Refuse", "title": "Refuse", "body": "You keep to the foundation alone. The focus is set aside, and the offer will not soon return." },
+    {
+      "editorId": "PDV_Msg_Breton_Stendarr_Offer",
+      "kind": "messageBox",
+      "title": "Stendarr's Knightly Road",
+      "body": "Your vows have bent toward mercy and judgment. Name Stendarr your focus, and the Knight's Road becomes a charge you carry openly. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Breton_Akatosh_Offer",
+      "kind": "messageBox",
+      "title": "Akatosh's Covenant",
+      "body": "You have answered order with more than habit. Name Akatosh your focus, and oath, lineage, and lawful time become the road beneath your feet. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Breton_Mara_Offer",
+      "kind": "messageBox",
+      "title": "Mara at the Hearth",
+      "body": "You have kept home, mercy, and hidden life from breaking apart. Name Mara your focus, and the hearth becomes the art that shelters every other vow. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Breton_Arkay_Offer",
+      "kind": "messageBox",
+      "title": "Arkay's Death-Duty",
+      "body": "You have met the dead with duty instead of fear. Name Arkay your focus, and the right passage of souls becomes your charge. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Breton_Julianos_Offer",
+      "kind": "messageBox",
+      "title": "Julianos' Written Law",
+      "body": "You have trusted study, law, and measured judgment. Name Julianos your focus, and the courtly mind becomes a devotion of its own. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Breton_Zenithar_Offer",
+      "kind": "messageBox",
+      "title": "Zenithar's Honest Weight",
+      "body": "You have made work and exchange part of your faith. Name Zenithar your focus, and fair obligation becomes the road you keep. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Breton_Kynareth_Offer",
+      "kind": "messageBox",
+      "title": "Kynareth's Open Road",
+      "body": "You have honored the sky without mistaking it for the Green Way's deeper law. Name Kynareth your focus, and the wind and road answer as a Divine vow. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Breton_Dibella_Offer",
+      "kind": "messageBox",
+      "title": "Dibella's Courtly Grace",
+      "body": "You have treated beauty as repair, not display. Name Dibella your focus, and grace, art, and tenderness become a vow you keep. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Breton_Magnus_Offer",
+      "kind": "messageBox",
+      "title": "Magnus in the Hidden Art",
+      "body": "You have kept magic disciplined and half-concealed, old practice held inside ordinary life. Name Magnus your focus, and the Hidden Art becomes your road. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
+      "editorId": "PDV_Msg_Breton_Yffre_Offer",
+      "kind": "messageBox",
+      "title": "Y'ffre and the Green Way",
+      "body": "You have listened for the story under leaf, hunt, and old boundary. Name Y'ffre your focus, and the Green Way becomes the law you answer. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    { "editorId": "PDV_Msg_Breton_OfferResponse_Accept", "title": "Accept", "body": "You name the focus. The Breton road narrows, but the old layers remain beneath it." },
+    { "editorId": "PDV_Msg_Breton_OfferResponse_NotYet", "title": "Not Yet", "body": "Not yet. The tradition holds as it was, and the offer waits for stronger proof." },
+    { "editorId": "PDV_Msg_Breton_OfferResponse_Refuse", "title": "Refuse", "body": "You keep to the wider tradition. The focus is set aside, and will not soon return." },
     {
       "editorId": "PDV_Msg_Imperial_Akatosh_Offer",
       "kind": "messageBox",

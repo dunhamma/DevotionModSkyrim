@@ -414,6 +414,29 @@ function verifyKynarethMedallionContract(manager, app, managerPath, appPath) {
   }
 }
 
+function verifySyrabaneDisplayContract(manager, app, managerPath, appPath) {
+  const requiredManagerFragments = [
+    'PDV_Trinimac || deity == PDV_Syrabane',
+    'RosterMedallionEntry("syrabane", "Syrabane", "god", "syrabane", PDV_Syrabane',
+    'deity.DeityName == "Syrabane"',
+    'return "syrabane"',
+  ];
+  const missingManager = requiredManagerFragments.filter((fragment) => !manager.includes(fragment));
+  if (manager.includes('PendingMedallionEntry("syrabane"')) {
+    missingManager.push("Syrabane still emitted as pending medallion entry");
+  }
+
+  const missingApp = [];
+  if (!app.includes('["syrabane", "Syrabane"]')) missingApp.push("display label");
+  if (!/syrabane:\s*\[/.test(app)) missingApp.push("glyph spec");
+
+  if (missingManager.length > 0 || missingApp.length > 0) {
+    fail(`Syrabane origin-roster/display contract is incomplete; manager missing ${missingManager.length}, Prisma missing ${missingApp.length}.`, missingManager.length > 0 ? managerPath : appPath);
+  } else {
+    pass("Syrabane origin-roster/display contract is live and has Prisma glyph coverage.", managerPath);
+  }
+}
+
 function verifyBookOfDaysChronicleActionContract({ manager, eventBus, actionRouter, eventTypes, app, index, managerPath, eventBusPath, actionRouterPath, eventTypesPath, appPath, indexPath }) {
   const journalPayloadBlock = functionBlock(manager, "BuildJournalPayloadJson");
   const dashboardBlock = functionBlock(manager, "GetDashboardJson");
@@ -488,8 +511,11 @@ function verifyBookOfDaysChronicleActionContract({ manager, eventBus, actionRout
 
   const eventBusRoute = functionBlock(eventBus, "RouteActionWithAttribution");
   const actionRouterRoute = functionBlock(actionRouter, "RouteActionWithAttribution");
+  const eventBusPassesReason =
+    eventBusRoute.includes("PDV_Manager.AwardPiety(deity, delta, GetEventReason(eventType))") ||
+    eventBusRoute.includes("PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, GetEventReason(eventType))");
   if (
-    !eventBusRoute.includes("PDV_Manager.AwardPiety(deity, delta, GetEventReason(eventType))") ||
+    !eventBusPassesReason ||
     !functionBlock(eventBus, "GetEventReason").includes("eventTypes.EventLabel(eventType)")
   ) {
     fail("EventBus routed piety must pass event-label driver reasons into AwardPiety.", eventBusPath);
@@ -497,8 +523,11 @@ function verifyBookOfDaysChronicleActionContract({ manager, eventBus, actionRout
     pass("EventBus routed piety passes event-label driver reasons into AwardPiety.", eventBusPath);
   }
 
+  const actionRouterPassesReason =
+    actionRouterRoute.includes("PDV_Manager.AwardPiety(deity, delta, GetEventReason(eventType))") ||
+    actionRouterRoute.includes("PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, GetEventReason(eventType))");
   if (
-    !actionRouterRoute.includes("PDV_Manager.AwardPiety(deity, delta, GetEventReason(eventType))") ||
+    !actionRouterPassesReason ||
     !functionBlock(actionRouter, "GetEventReason").includes("eventTypes.EventLabel(eventType)")
   ) {
     fail("ActionRouter fallback piety must pass event-label driver reasons into AwardPiety.", actionRouterPath);
@@ -815,9 +844,11 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     const actionRouterPath = path.join(DEVOTION_SOURCE, "PDV_ActionRouter.psc");
     const eventTypesPath = path.join(DEVOTION_SOURCE, "PDV_EventTypes.psc");
     if (fs.existsSync(appPath)) {
-      verifyKynarethMedallionContract(manager, read(appPath), managerPath, appPath);
+      const liveApp = read(appPath);
+      verifyKynarethMedallionContract(manager, liveApp, managerPath, appPath);
+      verifySyrabaneDisplayContract(manager, liveApp, managerPath, appPath);
     } else {
-      fail("Live Prisma app.js is missing for Kynareth symbol contract audit.", appPath);
+      fail("Live Prisma app.js is missing for medallion symbol contract audit.", appPath);
     }
     if (
       fs.existsSync(appPath) &&

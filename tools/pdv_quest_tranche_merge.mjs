@@ -9,6 +9,7 @@ const files = [
   "references/authoring/PDV_QuestReactionMatrix_Tranche6_CompatCore.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche7_CrossEcho.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche8_PoolExpansion.csv",
+  "references/authoring/PDV_QuestReactionMatrix_Tranche9_DeitySignalRemap.csv",
 ];
 let hdr = null;
 const body = [];

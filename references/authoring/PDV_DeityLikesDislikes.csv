@@ -312,3 +312,30 @@ Z'en,350,heal-or-cure-npc,+,small,0.5,3,0,,,,tending the hurt repays a debt of c
 Z'en,344,increase-skill,+,small,0.25,3,0,,,,toil compounds; the laborer repays the world in earned skill
 Z'en,304,murder-defenseless,-,medium,-1.0,2,0.5,,,,slaying one who owes no debt is a ledger flung past all balance
 Z'en,364,assault-innocent,-,small,-0.5,3,0,,,,violence where no debt is owed throws the exchange out of true
+magnus,341,read-spell-tome,+,medium,0.75,2,0.5,,,breton,Hidden Art treats formal magical study as benign old practice
+magnus,342,read-lore-book,+,small,0.5,3,0,,,breton,Hidden Art values hidden magical reading when it is not mere loot
+magnus,331,enchant-item,+,small,0.35,2,0.5,,,breton,Hidden Art accepts controlled occult craft but not exposure spam
+magnus,365,raise-undead,-,large,-1.25,1,1.0,,ActorTypeUndead,breton,necromancy ruptures the benign magic frame
+Mara,333,cook-meal,+,small,0.5,3,0,,,breton,Hidden Art cover rests on hearth and domestic continuity
+Mara,314,sleep-in-bed,+,small,0.35,2,0.5,,,breton,a kept home helps the cover hold
+Mara,362,steal-item,-,small,-0.5,3,0,,owned,breton,the hidden household cannot be protected by robbing another
+Y'ffre,313,rest-under-open-sky,+,medium,0.75,2,0.5,,,breton,Green Way outdoor rites belong to Yffre not Kynareth
+Y'ffre,334,harvest-ingredient,+,small,0.25,3,0,,,breton,curated gathering supports Green Way practice without making every herb a boon
+Y'ffre,331,enchant-item,-,small,-0.35,3,0,,,breton,binding power into worked matter strains the Green Way
+Kynareth,313,rest-under-open-sky,+,small,0.25,2,0.5,,,breton,Kynareth remains a Divine contributor only and not Green Way owner
+akatosh,351,clear-bounty-serve-time,+,medium,0.75,1,0.5,,,breton,answering lawful debt supports Knight Road order
+akatosh,362,steal-item,-,medium,-0.75,2,0.5,,owned,breton,oath and order are broken by theft
+Stendarr,351,clear-bounty-serve-time,+,medium,0.75,1,0.5,,,breton,atonement and justice repair the vow
+Arkay,300,kill-undead,+,medium,0.75,3,0,,ActorTypeUndead,breton,Knight Road death duty uses Arkay without creating Orkey
+trinimac,2,kill-hostile-humanoid,+,small,0.35,3,0,,,altmer,civilization defense can support the orthodox martial path
+trinimac,368,accept-daedric-artifact,-,large,-1.5,1,1.0,,ActorTypeDaedra,altmer,Daedric service breaks the orthodox Trinimac frame
+trinimac,304,murder-defenseless,-,medium,-1.0,2,0.5,,,altmer,the martial ancestor rejects cowardly slaughter
+Stuhn,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,nord,mercy and prisoner care are Stuhn work
+Stuhn,351,clear-bounty-serve-time,+,small,0.5,2,0.5,,,nord,lawful ransom and answered debt fit Stuhn
+khenarthi,313,rest-under-open-sky,+,small,0.5,3,0,,,khajiit,the road home is under the sky
+khenarthi,350,heal-or-cure-npc,+,small,0.5,3,0,,,khajiit,hospitality and comfort support the road home
+rajhin,360,pick-owned-lock,+,small,0.35,3,0,,owned,khajiit,Rajhin favors artful entry more than brute theft
+rajhin,304,murder-defenseless,-,medium,-0.75,2,0.5,,,khajiit,botched cruelty is not elegant theft
+Talos,351,clear-bounty-serve-time,+,small,0.5,2,0.5,,,nord,costly public accountability can serve honorable rule
+sithis,304,murder-defenseless,+,small,0.35,1,1.0,,,argonian,Void threshold signal only when other significant signals also exist
+sithis,351,clear-bounty-serve-time,-,small,-0.25,2,0.5,,,argonian,settling back into civic order resists the Void threshold

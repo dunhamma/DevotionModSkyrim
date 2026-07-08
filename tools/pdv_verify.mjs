@@ -148,7 +148,7 @@ const PHASE20_RACE_IMPLEMENTATION_MANIFESTS = [
 ];
 const DEITY_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes.csv");
 const PRINCE_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes_Princes_V2.csv");
-const EXPECTED_LIKES_DISLIKES_VERSION = 13;
+const EXPECTED_LIKES_DISLIKES_VERSION = 14;
 const EXPECTED_PRINCE_LD_VERSION = 4;
 const PHASE20_NO_IN_GAME_PROOF_GATES = path.join(
   PROJECT_ROOT,
