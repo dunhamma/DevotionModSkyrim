@@ -140,6 +140,28 @@ Each waiver names the surfaces that carry the deity's felt identity instead.
   is Arkay's); all honor_the_dead stages already rowed; VQ08 slay_undead
   top-up added. One short of pos floor; tracked only.
 
+## 2026-07-09 addendum - cowardice-axis expansion + Boethiah/Mephala Companions review
+
+User-authorized theology change: the cowardice-signal gods (Talos, Tsun,
+HoonDing) now also disapprove treachery/assassination. Part B updated and 14
+DB-questline dislike rows added (Talos 6, Tsun 4, HoonDing 4). Plus 8 lore-clean
+negatives for low deities on existing axes (Arkay/Tu'whacca necromancy via Soul
+Cairn VQ04/VQ05; Kynareth necromancy; Magnus reckless_magic DA01; Julianos
+sow_chaos DB11 + reckless_magic TTR4a). Full.csv 971 -> 993 cells. New quest
+dislike counts: Talos 0->6, Tsun 0->4, HoonDing 0->4, Julianos 3->5, Magnus
+3->4, Kynareth 3->4, Arkay 5->7, Tu'whacca 2->4.
+
+**Boethiah & Mephala + Companions: NO clean dislike (investigated, not added).**
+Both Princes already APPROVE the entire Dark Brotherhood assassination line (~10
+rows each) and their Part B is pro-treachery/assassination/deceit. Boethiah's
+only disapprove is `cowardice`(C); Mephala has NO disapprove axis at all
+(positive-only by design). The Companions questline (honor, brotherhood, open
+combat, curing lycanthropy) contains no player act either Prince scorns - it is
+not cowardly, and its hidden Circle-lycanthropy secret is if anything
+Mephala-adjacent-positive. Forcing a Companions dislike would contradict their
+theology. Per the "not concerned about Princes - they have other signals"
+guidance, left as-is; their thin negatives are by design.
+
 ## Follow-ups (routed to the Codex handoffs)
 
 1. Part D faucet proposals (Sanguine skooma, Sheogorath Wabbajack staff-fire) -

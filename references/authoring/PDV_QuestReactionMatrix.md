@@ -190,7 +190,7 @@ to most gods).
 
 **Talos** — heroism, defiance of the Thalmor, the Nord/Imperial cause, the Voice.
 - approve: `defy_tyranny_talos`(C), `kill_honorable_combat`(S), `prove_by_struggle`(S), `protect_the_weak`(m), `honorable_duel`(m)
-- disapprove: `cowardice`(S) *(compliance/submission to the Concordat scores nothing; never a gain)*
+- disapprove: `cowardice`(S), `murder_treacherous`(S), `kill_the_helpless`(m), `assassination_contract`(m) *(compliance/submission to the Concordat scores nothing; never a gain. Treachery/assassination added 2026-07-09 — the Hero-god of Man reviles cold-blood murder and regicide, mirroring Shor's disapprove.)*
 - indifferent: theft, the dead, craft, romance.
 - anchor: Hero-god of Man; the Talos ban. (UESP: Talos). FILTERED for Imperials by
   ConcordatStanding; faithful defiance only.
@@ -216,8 +216,8 @@ to most gods).
 
 **Tsun** — trials, endurance, the shield-thane at the whalebone bridge.
 - approve: `prove_by_struggle`(C), `kill_honorable_combat`(S), `protect_the_weak`(m, *shield the weaker*)
-- disapprove: `cowardice`(C)
-- anchor: Shield-Thane of Shor; god of trials. (Imperial Library: Tsun)
+- disapprove: `cowardice`(C), `murder_treacherous`(S), `kill_the_helpless`(m), `assassination_contract`(m)
+- anchor: Shield-Thane of Shor; god of trials. (Imperial Library: Tsun) *(Treachery/assassination added 2026-07-09 — the shield-gate keeper judges assassination the antithesis of honorable combat, matching his king Shor.)*
 
 **Stuhn** — mercy to the yielding, ransom, just spoils, the honored bond.
 - approve: `mercy_spare`(C), `keep_oath`(S), `protect_the_weak`(S), `uphold_law_justice`(m)
@@ -304,8 +304,8 @@ to most gods).
 
 **HoonDing** — the Make Way God, the spirit of perseverance against impossible odds.
 - approve: `prove_by_struggle`(C, *impossible odds, make way*), `defend_kin_home`(S), `kill_honorable_combat`(m)
-- disapprove: `cowardice`(S)
-- anchor: Yokudan avatar of "making way." (UESP: HoonDing). Thin -> rare/milestone.
+- disapprove: `cowardice`(S), `murder_treacherous`(m), `kill_the_helpless`(m)
+- anchor: Yokudan avatar of "making way." (UESP: HoonDing). Thin -> rare/milestone. *(Treachery/helpless-kill added 2026-07-09 — stealth-murder is the cowardly opposite of making way head-on against impossible odds.)*
 
 **Leki** — Saint of the Spirit Sword, sword-singing, honorable single combat.
 - approve: `honorable_duel`(C), `kill_honorable_combat`(S)
