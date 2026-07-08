@@ -34,6 +34,67 @@ Do not convert one proof type into another. The external beta-feel claim still
 requires all ten races plus all sixteen Skyrim-present Daedric Princes in the
 readiness evidence.
 
+## Authority Note (2026-07-09)
+
+Ship truth now lives in `PDV_1_0_EndStateContract.json` + the generated
+`PDV_1_0_EndStateBurndown.md` (`node .\tools\pdv_1_0_endstate_gate.mjs`). This
+document remains the narrative beta-feel burn; where the two disagree, the
+contract gate wins.
+
+### Contract-era snapshot (as of 2026-07-09, post `--run` re-green)
+
+Gate rollup after `node .\tools\pdv_1_0_endstate_gate.mjs --run`:
+**8 PASS / 1 STALE / 9 RED** (was 1 PASS / 1 STALE / 16 RED in read-mode before
+the re-green). The remap wiring (5f245de) had drift-voided every machine PASS;
+the `--run` re-executed each gate tool and re-greened the ones that pass
+statically. Re-greened: C-PRINCE-GATE, C-AUDIT-BETA-STRICT, C-AUDIT-VERIFY,
+C-AUDIT-CONTENT, C-EXPMODE-BUILD, C-PACING-SIM, C-FELT-TRACE, C-DISLIKE-DEBUFF-BUILD.
+
+Two machine gates did NOT re-green, and only one is substantive:
+- **C-AUDIT-INTEGRITY (RED)** -- the `signal_e2e_gate` sub-check needs the live
+  Anvil MCP runtime bridge (`127.0.0.1:27016`) to confirm the 39 curated/reserved
+  signal surfaces actually dispatch in game. Headless, that bridge is down
+  (`ECONNREFUSED`), so the surfaces read `INCOMPLETE`, not RED. Statically the gate
+  is clean: parity PASS, gaps 0, cross 0, deity_chain PASS, eligibility-reward
+  coverage PASS (153 rows, 0 failures). This closes when the remap in-game smoke
+  (`PDV_DeitySignalRemap_InGameSmoke_Runbook.md`) runs with Anvil + MCP live -- the
+  SAME sitting that burns the felt-family slots. Not a code regression.
+- **C-PLACEMENT-FINAL (RED)** -- known/expected; in-world hook proofs re-scoped
+  2026-07-07 (a9e73e0) to fold into the per-race sittings.
+- **C-RACE-RUBRIC (STALE)** -- race-sheet drift from the remap decisions
+  (1631351 edited the race sheets); re-observes when a race ledger is re-run.
+
+The substantive open work is the **evidence-gate slots** (all in-game/packaging,
+none machine-greenable):
+
+| Lane | Open | Notes |
+| --- | --- | --- |
+| C-FELT-FAMILY | 105/148 | One-per-family in-game felt proof; 43 recorded (22 -> 43 between 07-07 and 07-09) |
+| C-PACING-SIGNOFF | 10/10 | Dated per-race play-sitting sign-offs; fold into felt-family sittings |
+| C-EXPMODE-SMOKE | 2/2 | Pilgrim + Wayfarer in-game smoke (build gate closed 07-07) |
+| C-REQUIEM-TRACKB | 3/3 | Authoria sweeps A/B1/B2 |
+| C-DISLIKE-DEBUFF-TUNING | 1/1 | 32-source disfavor anti-stack legibility under Requiem |
+| C-COMPAT-ARR | 1/1 | Maintainer-accepted evidence packet |
+| C-COMPAT-BORDELLO | 6/6 | Six-list packaging per the 1.0 Compatibility Gate |
+| C-PLACEMENT-FINAL | gate FAIL | In-world hook proofs; re-scoped 07-07 (a9e73e0), folds into race sittings |
+
+### The gap arc (2026-07-06 -> 2026-07-09): every gap became a gate
+
+The recurring failure class ("declared but not wired end-to-end") kept being
+found by the owner's own review passes -- and each discovery was converted into
+a permanent machine gate rather than a one-off fix:
+
+| Found | Gap | Systemic response |
+| --- | --- | --- |
+| 07-06/07 | Dislikes scored piety but had no felt consequence | Dislike-consequence packet: 14 domain sting spells + registry hash + `C-DISLIKE-DEBUFF-*` gates (01bdacf, 80aff22) |
+| 07-07 | Prose end-states unverifiable; "done" claims drifted | 1.0 End-State Contract + `pdv_1_0_endstate_gate.mjs` with drift-voiding evidence (23d266f) |
+| 07-08 | Wired-vs-stub review: curated "signature" fork lanes are dev-only stubs across all 10 races; guides lead with acts that never fire organically; neglect timers unresettable through the named acts; 4 copy inversions | 10 guides tagged `[WIRED]/[QUEST]/[PARTIAL]/[STUB]/[INERT]` + `_WiredVsStub_ReviewSummary.md`; deity signal remap designed + locked (ddb81ce, 1631351) |
+| 07-09 | (response lands) | Signal remap WIRED: manager +184 lines, 27 new CSV rows, remap smoke runbook + wiring-gap deep-dive shipped (5f245de); in-game smoke owed |
+
+The felt-trace exhaustive gate (441/441 PASS pre-drift) and curated-signal
+parity (107/107) both hold; the remap re-green is repo-side work, not a
+regression.
+
 ## Current Snapshot
 
 As of the 2026-07-05 AEST Dunmer closeout, plus the same-day post-closeout
@@ -68,7 +129,7 @@ without reopening any closed race packet.
 
 | Item | Proof boundary | Notes |
 | --- | --- | --- |
-| Quest-matrix expansion (40-50 quests/deity) | **In-game proven (Sitting 1, 2026-07-05)** | 832 matrix cells / 118 keys / 90 watched quests live; 7 meta-faucet lanes wired; Section A passed across all 8 setstage-able origins incl. the Akatosh/Xarxes wheel; see `PDV_SessionHandoff_2026-07-05_MegaPacketSitting1.md` |
+| Quest-matrix expansion (40-50 quests/deity) | **In-game proven for pre-remap 832-cell packet; remap rows source/readback only** | 832 matrix cells / 118 keys / 90 watched quests passed Section A across all 8 setstage-able origins incl. the Akatosh/Xarxes wheel; current source/readback matrix is 884 cells / 90 watched quests / 45 deity names after T9, but the new remap rows need `PDV_DeitySignalRemap_InGameSmoke_Runbook.md` before they count as runtime/display proof. |
 | `EVT_STEAL_ITEM` (362) SM wiring | **In-game proven both sentiment sides (Sitting 1)** | Dunmer like-side (Mephala +0.5/Boethiah +0.25) and Imperial dislike-side (Zenithar -1.0) both fired; retires the last 362 pending flag |
 | Foreign-award reachability gate | **In-game proven both directions (Sitting 1)** | Native pantheons score full; off-roster `FOREIGN`/`TOLERATED` gods skip-trace with no piety / no Ledger row (Xarxes full + Akatosh skip under Altmer, inverse under Imperial); reduced `0.4x` applies only to roster-listed tolerated/foreign + Daedric-path faces |
 | Dunmer ancestral urn rebuild | In-game proven (Dunmer packet) | Rebuilt as usable MISC item (click-to-pray via OnEquipped), fixing the book-menu CTD; Remiros HD assets bundled self-contained |

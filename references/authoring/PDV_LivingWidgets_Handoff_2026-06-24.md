@@ -72,11 +72,27 @@ races 8/10, today 24. (Full code pattern: see widget `devotion_build_arc_refresh
 ---
 
 ## Widget 2 — projection-to-1.0 (phased burnup) — RE-DERIVE, estimates
-Bars = est. sessions per REMAINING workstream; teal line = cumulative % of the
-remaining road; dashed 1F-freeze + 1.0 gates. DONE phases drop off. Current
-remaining (≈5 sessions as of 2026-07-06 evening, down from 15.5 on 06-25 and the
-~28 baseline — ~82% of the original road burned). Sequencing per the approved 1.0
-roadmap: megapacket → Experience Mode smoke → ARR compat → branding.
+
+**MODEL CHANGE 2026-07-09 (contract era).** The projection is now derived from
+the 1.0 End-State Contract (`pdv_1_0_endstate_gate.mjs` burndown), NOT the old
+5-lane roadmap. Rendered as `devotion_projection_to_oneoh_contract_era`:
+
+```js
+var labels=['remap re-green','felt + pacing sittings ×5','requiem + sting tuning','expmode smoke','ARR compat','bordello lists ×6'];
+var effort=[0.5,5,1.5,0.5,1.5,1.5];    // ~10.5 sessions vs the old ~5 — the CONTRACT
+var cum=[5,52,67,71,86,100];           // widened (148 felt families, 10 pacing signoffs,
+var fill=['#A32D2D','#378ADD','#378ADD','#378ADD','#7F77DD','#7F77DD']; // 6 bordello lists, placement, sting tuning)
+// Cards: ~10.5 sessions / felt families 43-of-148 / 128 open evidence slots.
+// Felt-family velocity: 22 -> 43 recorded between 07-07 and 07-09.
+// Machine-gate REDs on 07-09 are drift-voids from the remap wiring (5f245de), not
+// regressions — they re-green with --run. Companion one-off charts rendered 07-09:
+// devotion_gap_to_gate_arc (5 gap->gate rows) + devotion_build_arc_commits_per_day
+// (354 commits, per-day counts by era; refresh via `git log --since=2026-06-14
+// --pretty=%ad --date=short | sort | uniq -c`).
+```
+
+Old model (kept for history) — sequencing megapacket → Experience Mode smoke →
+ARR compat → branding, remaining ≈5 sessions as of 2026-07-06 evening:
 
 ```js
 var labels=['megapacket smoke','requiem felt sweep','experience mode','ARR compat','branding + packaging'];
