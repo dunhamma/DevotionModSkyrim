@@ -336,7 +336,8 @@
       ],
       "route": "PDV_EventBus.RouteArgonianCommunity(sourceId)",
       "acceptedUse": "Curated Argonian collective, dock, Assemblage, or named Argonian aid milestones.",
-      "rejectedUse": "Generic helping, generic Riften/Windhelm travel, or unrelated favor quests."
+      "rejectedUse": "Generic helping, generic Riften/Windhelm travel, or unrelated favor quests.",
+      "sourcePromotionRule": "Launch source-fill is limited to exact approved Argonian Ceremony, Histcarp/shared-food continuity, and Derkeethus rescue completion. Windhelm Assemblage, Jaree-Ra betrayal, and future extrapolated Argonian quests stay candidate-only until exact quest/stage/outcome readback plus rejected-context rules are approved."
     },
     {
       "property": "PDV_FLST_P2_ArgonianSithisSources",
@@ -347,7 +348,8 @@
       ],
       "route": "PDV_EventBus.RouteArgonianSithisAcknowledgment(sourceId)",
       "acceptedUse": "Curated Dark Brotherhood or death-facing Sithis threshold milestones.",
-      "rejectedUse": "Generic murder, generic stealth, ordinary assassination contracts, or non-terminal Brotherhood activity."
+      "rejectedUse": "Generic murder, generic stealth, ordinary assassination contracts, or non-terminal Brotherhood activity.",
+      "sourcePromotionRule": "Launch sources contribute significant signals toward the three-signal Void activation gate; no single source bypasses the gate. Future death/void/change quests are expected, but remain candidate-only until exact quest/stage/outcome readback, accepted/rejected context, duplicate guard, and evidence are approved."
     },
     {
       "property": "PDV_FLST_P2_BosmerYffreSources",
@@ -860,6 +862,7 @@
     },
     {
       "property": "PDV_FLST_P2_ArgonianCommunitySources",
+      "sourcePromotionRule": "Launch set is exact/readback-backed only. Future People-layer quest extrapolations belong in the candidate queue until promoted by exact metadata; generic Argonian contact and generic city presence remain rejected.",
       "sources": [
         {
           "formKey": "Skyrim.esm:0F68A8",
@@ -888,10 +891,28 @@
           "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey argonian_derkeethus_community.",
           "rationale": "Exact Derkeethus rescue completion restores an Argonian community member; rejects generic Argonian proximity or ordinary cave clearing."
         }
+      ],
+      "candidateExpansionPolicy": [
+        {
+          "target": "Windhelm Assemblage",
+          "status": "candidate-only",
+          "promotionRequirement": "Exact quest/favor/NPC outcome readback proving community support or survival context; generic Windhelm presence is rejected."
+        },
+        {
+          "target": "Jaree-Ra betrayal",
+          "status": "candidate-only-negative",
+          "promotionRequirement": "Exact quest/outcome readback before applying People-layer loss; do not penalize ordinary pirate/crime contact or generic Argonian NPC hostility."
+        },
+        {
+          "target": "future Argonian People quests",
+          "status": "candidate-only",
+          "promotionRequirement": "Exact quest/stage/outcome metadata, accepted context, rejected context, duplicate guard, and local readback evidence before live source-fill."
+        }
       ]
     },
     {
       "property": "PDV_FLST_P2_ArgonianSithisSources",
+      "sourcePromotionRule": "Sithis sources are threshold signals, not direct full activation. DB01 and DB11 are exact launch milestones; future death/void/change quests can be extrapolated into candidates but must not route until exact readback approval.",
       "sources": [
         {
           "formKey": "Skyrim.esm:0A0322",
@@ -918,7 +939,7 @@
           "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
           "rejectedStageContext": "Generic murder, generic stealth play, and radiant assassination loops do not route this source.",
           "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey argonian_db01_sithis.",
-          "rationale": "Exact Innocence Lost completion is a one-shot Sithis/Dark Brotherhood threshold; rejects generic murder and radiant assassination loops."
+          "rationale": "Exact Innocence Lost completion is a one-shot Sithis/Dark Brotherhood threshold signal; it contributes toward, but does not bypass, the three-signal activation gate."
         },
         {
           "formKey": "Skyrim.esm:01EA59",
@@ -931,7 +952,24 @@
           "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
           "rejectedStageContext": "Radiant assassination loops, ordinary crime, and non-terminal Dark Brotherhood stages do not route this source.",
           "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey argonian_db11_sithis.",
-          "rationale": "Exact Hail Sithis completion is a one-shot Sithis end-state source; rejects generic assassination loops."
+          "rationale": "Exact Hail Sithis completion is a one-shot Sithis end-state threshold signal; it contributes toward, but does not bypass, the three-signal activation gate."
+        }
+      ],
+      "candidateExpansionPolicy": [
+        {
+          "target": "future non-Brotherhood death/void/change quest beats",
+          "status": "candidate-only",
+          "promotionRequirement": "Exact quest/stage/outcome metadata, accepted context, rejected context, duplicate guard, and local readback evidence before live source-fill."
+        },
+        {
+          "target": "Dark Brotherhood contracts or later Brotherhood content",
+          "status": "candidate-only-or-controlled-route",
+          "promotionRequirement": "Must avoid radiant assassination loops and ordinary murder; route only exact milestones or separately controlled post-threshold content."
+        },
+        {
+          "target": "Soul Cairn / death-plane contact",
+          "status": "future-review",
+          "promotionRequirement": "Requires exact stage/outcome readback and a one-shot threshold rationale; repeated worldspace travel is rejected."
         }
       ]
     },
@@ -1626,6 +1664,7 @@
       "dispatch": "PDV_EventBusService.RouteArgonianSithisAcknowledgment(\"po3_queststage_argonian_db01\")",
       "acceptedContext": "Dark Brotherhood initiation milestone as a one-shot Sithis source.",
       "rejectedContext": "Generic murder, generic stealth play, or radiant assassination loops.",
+      "thresholdPolicy": "Counts as one significant signal toward Void activation; does not fully activate Sithis by itself.",
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "db-sithis-path",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",
@@ -1644,6 +1683,7 @@
       "dispatch": "PDV_EventBusService.RouteArgonianSithisAcknowledgment(\"po3_queststage_argonian_db11\")",
       "acceptedContext": "Dark Brotherhood end-state as a one-shot Sithis source.",
       "rejectedContext": "Radiant assassination loops or generic crime.",
+      "thresholdPolicy": "Counts as one significant signal toward Void activation; does not fully activate Sithis by itself.",
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",
       "mutualExclusionGroup": "db-sithis-path",
       "stageReadbackEvidence": "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv",

@@ -1,7 +1,7 @@
 {
   "schema": "pdv-breton-records.v1",
   "status": "design-draft-2026-06-07; recognition V1 Survey/status only; P2 audit-only (no new reward volume beyond gate/ledger); pending authoring run",
-  "notes": "Authoritative record spec for the Breton tradition pilot. BUDGET VERDICT = Overstack Risk; discipline is the point. GATE TYPE = STATE-enum-gated (R7): rewards gate on PDV_State_BretonTradition (KnightsRoad=0 | HiddenArt=1 | GreenWay=2) plus the active tradition's focused patron tier within that state. ONLY the active tradition's focused reward family pays at a time (the other two are suppressed) -- this is the Overstack Risk control. BROAD LANE = the Tradition STATE, not a deity (R1): broad T1 fills the FIXED manager property PDV_Bless_Breton_Tradition_T1 (R2) granted via PATRON_STATE_BROAD; broad T2 is PDV_Bless_Breton_Tradition_T2 (new). NO flat Breton pantheon or generic broad-worship deity. Breton OWNS NO Aedric deities (R5): Knight's Road focuses REUSE Imperial-owned Divines (Akatosh/Stendarr/Arkay/Mara) create:false + Stance_Breton NATIVE; Hidden Art lawful-occult may reuse Julianos; Green Way nature may reuse Kynareth. Hidden Art Daedric forks and Green Way werewolf/Daedric forks route through the existing Phase 20C Daedric system (R6) -- NO new records here. THREE STANDING TRACKS (KnightlyVowIntegrity, WitchcraftExposure, DruidicStanding) are PRESSURE ONLY: they modify access/penalty/rupture and NEVER pay a second or third always-on boon family; they must not all pay positive rewards at once. Hidden Art focused rewards are stronger ONLY because WitchcraftExposure/rupture/Vigilant pressure is the price (magnitude conditioned on visible exposure cost). T3 NPC recognition is V1-deferred (PDV_RecognitionDialogueScalePacket.md); V1 T3 ships stat/signature effects with Champion Survey text as the recognition surface. Player-facing text is ASCII-only and uses Skyrim ActorValue names. No magnitude exceeds ~12%. Broad stays softer than focused.",
+  "notes": "Authoritative record spec for the Breton tradition pilot. BUDGET VERDICT = Overstack Risk; discipline is the point. GATE TYPE = STATE-enum-gated (R7): rewards gate on PDV_State_BretonTradition (KnightsRoad=0 | HiddenArt=1 | GreenWay=2) plus the active tradition's focused patron tier within that state. ONLY the active tradition's focused reward family pays at a time (the other two are suppressed) -- this is the Overstack Risk control. BROAD LANE = the Tradition STATE, not a deity (R1): broad T1 fills the FIXED manager property PDV_Bless_Breton_Tradition_T1 (R2) granted via PATRON_STATE_BROAD; broad T2 is PDV_Bless_Breton_Tradition_T2 (new). NO flat Breton pantheon or generic broad-worship deity. Breton OWNS NO Aedric deities (R5): Knight's Road focuses REUSE Imperial-owned Divines where applicable; Hidden Art reuses existing PDV_Deity_Magnus for benign magic and PDV_Deity_Mara for hearth/home/cover rows; Julianos is Knight's Road study-law only. Green Way routes to existing Y'ffre. Kynareth is removed from Green Way offer/reward ownership and any former Green Way Kynareth proxy/source/payout item routes to Y'ffre. Phynaster is proof-gated and not authored here until a concrete pilgrimage/endurance plus elven-heritage hook package is accepted. Hidden Art Daedric forks and Green Way werewolf/Daedric forks route through the existing Phase 20C Daedric system (R6) -- NO new records here. THREE STANDING TRACKS (KnightlyVowIntegrity, WitchcraftExposure, DruidicStanding) are PRESSURE ONLY: they modify access/penalty/rupture and NEVER pay a second or third always-on boon family; they must not all pay positive rewards at once. Hidden Art focused rewards are stronger ONLY because WitchcraftExposure/rupture/Vigilant pressure is the price (magnitude conditioned on visible exposure cost). T3 NPC recognition is V1-deferred (PDV_RecognitionDialogueScalePacket.md); V1 T3 ships stat/signature effects with Champion Survey text as the recognition surface. Player-facing text is ASCII-only and uses Skyrim ActorValue names. No magnitude exceeds ~12%. Broad stays softer than focused.",
   "deityQuests": [
     {
       "editorId": "PDV_Deity_Akatosh",
@@ -43,8 +43,12 @@
       "stanceBreton": "NATIVE",
       "create": false,
       "owner": "Imperial",
-      "reuse": "Reuse; add Stance_Breton NATIVE. Knight's Road mercy focus.",
+      "reuse": "Reuse; add Stance_Breton NATIVE. Knight's Road mercy focus; Hidden Art hearth/home/cover rows use the same shared Mara record.",
       "tradition": "KnightsRoad",
+      "traditionRoles": [
+        "KnightsRoad",
+        "HiddenArt"
+      ],
       "deityIndex": "existing"
     },
     {
@@ -54,18 +58,35 @@
       "stanceBreton": "NATIVE",
       "create": false,
       "owner": "Imperial",
-      "reuse": "Reuse; add Stance_Breton NATIVE. Hidden Art lawful-scholar (occult restraint) focus.",
-      "tradition": "HiddenArt",
+      "reuse": "Reuse; add Stance_Breton NATIVE. Knight's Road study-law focus only; not a Hidden Art patron.",
+      "tradition": "KnightsRoad",
+      "traditionRoles": [
+        "KnightsRoad"
+      ],
       "deityIndex": "existing"
     },
     {
-      "editorId": "PDV_Deity_Kynareth",
-      "script": "PDV_Deity_Kynareth",
-      "deityName": "Kynareth",
+      "editorId": "PDV_Deity_Magnus",
+      "script": "PDV_Deity_Magnus",
+      "deityName": "Magnus",
       "stanceBreton": "NATIVE",
       "create": false,
-      "owner": "Imperial",
-      "reuse": "Reuse; add Stance_Breton NATIVE. Green Way nature focus where appropriate.",
+      "owner": "Altmer",
+      "reuse": "Reuse existing Altmer-owned Magnus record. Hidden Art benign magic, sorcery, formal study, and hidden magical practice focus.",
+      "tradition": "HiddenArt",
+      "traditionRoles": [
+        "HiddenArt"
+      ],
+      "deityIndex": "existing"
+    },
+    {
+      "editorId": "PDV_Deity_Yffre",
+      "script": "PDV_Deity_Yffre",
+      "deityName": "Y'ffre",
+      "stanceBreton": "NATIVE",
+      "create": false,
+      "owner": "Bosmer/shared",
+      "reuse": "Reuse existing Y'ffre record. Green Way covenant owner; receives former Green Way Kynareth proxy/source/payout items.",
       "tradition": "GreenWay",
       "deityIndex": "existing"
     }
@@ -102,8 +123,13 @@
       "reuse": "existing manager property; do not recreate"
     },
     {
-      "property": "PDV_Kynareth",
-      "record": "PDV_Deity_Kynareth",
+      "property": "PDV_Magnus",
+      "record": "PDV_Deity_Magnus",
+      "reuse": "existing manager property; do not recreate"
+    },
+    {
+      "property": "PDV_Yffre",
+      "record": "PDV_Deity_Yffre",
       "reuse": "existing manager property; do not recreate"
     }
   ],
@@ -195,9 +221,15 @@
         "actorValue": "Health",
         "magnitude": -10,
         "effectName": "Maximum Health"
+      },
+      {
+        "magicEffectEditorId": "PDV_MGEF_Neglect_Breton_MagicResist",
+        "actorValue": "ResistMagic",
+        "magnitude": -5,
+        "effectName": "Magic Resistance"
       }
     ],
-    "playerFacingText": "You have let your chosen tradition lapse. Maximum Health -10 until you return to it.",
+    "playerFacingText": "You have let your chosen tradition lapse. Maximum Health -10, Magic Resistance -5% until you return to it.",
     "designNote": "Gentle baseline only. The real BITE is reserved for rupture/excommunication/curse fork (WitchcraftExposure Ruptured, druidic-fork betrayal, vampire onset), not ordinary lapse. Neglect is not a creed-violation loss and does not corrode a specific patron."
   },
   "emphasisRewards": [
@@ -256,12 +288,12 @@
       "displayName": "Knight's Vow - Seeker",
       "effects": [
         {
-          "actorValue": "Block",
+          "actorValue": "Speech",
           "magnitude": 5,
-          "effectName": "Block"
+          "effectName": "Speech"
         }
       ],
-      "playerFacingText": "The vow steadies your guard. Block +5."
+      "playerFacingText": "The vow steadies your word. Speech +5."
     },
     {
       "emphasis": "KnightsRoad",
@@ -273,9 +305,9 @@
       "displayName": "Knight's Aegis - Devoted",
       "effects": [
         {
-          "actorValue": "Block",
+          "actorValue": "Speech",
           "magnitude": 13,
-          "effectName": "Block"
+          "effectName": "Speech"
         },
         {
           "actorValue": "Restoration",
@@ -283,7 +315,7 @@
           "effectName": "Restoration"
         }
       ],
-      "playerFacingText": "You stand between the weak and harm. Block +13, Restoration +8."
+      "playerFacingText": "You stand between the weak and harm. Speech +13, Restoration +8."
     },
     {
       "emphasis": "KnightsRoad",
@@ -295,9 +327,9 @@
       "displayName": "Knight's Bulwark - Champion",
       "effects": [
         {
-          "actorValue": "Block",
+          "actorValue": "Speech",
           "magnitude": 25,
-          "effectName": "Block"
+          "effectName": "Speech"
         },
         {
           "actorValue": "Restoration",
@@ -310,8 +342,8 @@
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "The vow is your bulwark. Block +25, Restoration +18, Armor +50.",
-      "signature": "Bulwark of the kept vow: strongest guard, mercy, and armor; Champion Survey text is the V1 recognition surface. Vow breach (KnightlyVowIntegrity) revokes access until repair."
+      "playerFacingText": "The vow is your reputation. Speech +25, Restoration +18, Armor +50.",
+      "signature": "The kept vow: strongest word, mercy, and armor; Champion Survey text is the V1 recognition surface. Vow breach (KnightlyVowIntegrity) revokes access until repair."
     },
     {
       "emphasis": "HiddenArt",
@@ -320,7 +352,8 @@
       "threshold": "Seeker 25",
       "gate": "focused tradition family; STATE-enum-gated on PDV_State_BretonTradition == HiddenArt; magnitude CONDITIONED on visible WitchcraftExposure cost (the price). Stronger than other T1 families ONLY because exposure/rupture/Vigilant pressure is paid.",
       "reuseDeities": [
-        "PDV_Deity_Julianos (lawful restraint)",
+        "PDV_Deity_Magnus (benign magic and hidden magical practice)",
+        "PDV_Deity_Mara (hearth/home/cover)",
         "Daedric via 20C (R6)"
       ],
       "spellEditorId": "PDV_Bless_Breton_HiddenArt_T1",
@@ -393,7 +426,7 @@
       "threshold": "Seeker 25",
       "gate": "focused tradition family; STATE-enum-gated on PDV_State_BretonTradition == GreenWay; DruidicStanding modifies access (pressure, not boon)",
       "reuseDeities": [
-        "PDV_Deity_Kynareth (nature, where appropriate)"
+        "PDV_Deity_Yffre (Green Way covenant owner; absorbs former Kynareth nature proxy items)"
       ],
       "spellEditorId": "PDV_Bless_Breton_GreenWay_T1",
       "displayName": "Green Way - Seeker",
@@ -469,7 +502,7 @@
       "deity": "Stendarr / Mara",
       "effects": [
         {
-          "actorValue": "Block",
+          "actorValue": "Speech",
           "magnitude": -5
         },
         {
@@ -482,7 +515,7 @@
         "KnightlyVowIntegrity falls to Lapsed/Forsworn on an authored breach"
       ],
       "antiRepeat": "authored vow-breach beat only; ordinary inconvenience or a failed-not-betrayed outcome does not corrode.",
-      "playerFacingText": "You broke the vow. Block and Restoration falter until the vow is repaired. Block -5, Restoration -5."
+      "playerFacingText": "You broke the vow. Speech and Restoration falter until the vow is repaired. Speech -5, Restoration -5."
     },
     {
       "id": "exposure-rupture",
@@ -562,10 +595,28 @@
   ],
   "v1RecognitionSurface": "Champion Survey/status text only (non-voiced). The tradition Survey reports the active PDV_State_BretonTradition spine, KnightlyVowIntegrity/WitchcraftExposure/DruidicStanding bands, PDV_State_BretonDruidicFork, curse posture, and WHY parallel tradition rewards are not all active. Voiced NPC recognition lines are V2 per PDV_RecognitionDialogueScalePacket.md.",
   "budget": "Two always-on families only: broad Tradition lane (Layer 1, capped at T2/Faithful) + the ONE active tradition's focused family (Layer 2, T1/T2/T3, selected by PDV_State_BretonTradition). The other two focused families are suppressed. The three standing tracks (KnightlyVowIntegrity/WitchcraftExposure/DruidicStanding) MODIFY access/penalty/rupture and are NOT a third buff track; they must not all pay positive rewards at once. Hidden Art is the strongest focused family ONLY because WitchcraftExposure/rupture/Vigilant pressure is its price. At the PDV_RaceRewardBudgetLedger Breton ceiling: 'One tradition spine plus one focused patron within it; cross-track pressure modifies or penalizes but adds no extra always-on boon family.' No magnitude exceeds ~12%. Broad stays softer than every focused family.",
+  "phynasterAcceptanceGate": {
+    "status": "implementation-plan-gate-deferred",
+    "liveRecordPolicy": "Do not create PDV_Deity_Phynaster, do not add Phynaster offer eligibility, and do not make Phynaster selectable until this gate passes.",
+    "positiveSourceFamiliesRequired": 3,
+    "positiveSourceFamilyThemes": [
+      "pilgrimage/endurance",
+      "elven heritage/longevity",
+      "Direnni memory or disciplined long practice"
+    ],
+    "dislikeOrFailureFamiliesRequired": 1,
+    "copyRequired": [
+      "formal offer flavor distinct from Y'ffre",
+      "reward presentation distinct from Y'ffre",
+      "likes/dislikes rows distinct from generic Green Way behavior"
+    ],
+    "noOverlapRule": "Phynaster cannot own Y'ffre's nature covenant, standing-stone rites, hunting support, Kynareth/Kyne shrine proxies, nature-site quest doubles, or the Green Way reward identity.",
+    "failureOutcome": "Keep Phynaster as non-selectable Breton flavor/support for V1; no deity QUST, no formal offer, no focused reward ownership."
+  },
   "authoringPlan": {
     "vehicle": "Author with a Phase 20 Breton Mutagen helper (mirror tools/pdv-phase20-khajiit-author with an --author-rewards mode reading this spec); one backed-up framework-ESP write. Reuse reward-author patterns (EnsureMagicEffect/ConfigureMagicEffect/EnsureSpell/ConfigureSpell/ParseActorValue). NO night-condition wiring (Breton has no lunar/substrate layer). NO new deity QUSTs.",
-    "recordCreation": "Create 16 net-new SPEL with their MGEFs: broad Tradition T1/T2 (2; T1 record fills the EXISTING manager property PDV_Bless_Breton_Tradition_T1, T2 is new) + 3 tradition focused families x T1/T2/T3 (9: KnightsRoad/HiddenArt/GreenWay) + 4 creed-loss SPEL (vow-integrity/exposure-rupture/excommunication/druidic-fork-betrayal) + PDV_SPEL_Neglect_Breton (1). Create ZERO deity QUSTs: Breton OWNS no Aedric deities (R5). REUSE Imperial-owned Akatosh/Stendarr/Arkay/Mara/Julianos and Kynareth (create:false) by adding Stance_Breton NATIVE; this is a reconcile-shared-deity stance add, not record creation. Daedric forks route through the existing Phase 20C system (R6); create no Daedric records.",
-    "stanceReconcile": "For each reused deity (Akatosh/Stendarr/Arkay/Mara/Julianos/Kynareth), run the author tool's --reconcile-shared-deity mode to add Stance_Breton=0 (NATIVE) without recreating the QUST. The Imperial owner spec must have authored these records first (authoring order: Imperial before Breton).",
+    "recordCreation": "Create 16 net-new SPEL with their MGEFs: broad Tradition T1/T2 (2; T1 record fills the EXISTING manager property PDV_Bless_Breton_Tradition_T1, T2 is new) + 3 tradition focused families x T1/T2/T3 (9: KnightsRoad/HiddenArt/GreenWay) + 4 creed-loss SPEL (vow-integrity/exposure-rupture/excommunication/druidic-fork-betrayal) + PDV_SPEL_Neglect_Breton (1). Create ZERO deity QUSTs in this baseline: Breton OWNS no Aedric deities (R5), and Phynaster remains blocked until phynasterAcceptanceGate passes. Green Way uses existing Y'ffre; Kynareth is removed from Green Way offer/reward ownership and any former Green Way Kynareth proxy/source/payout item routes to Y'ffre. Daedric forks route through the existing Phase 20C system (R6); create no Daedric records.",
+    "stanceReconcile": "For reused deities, add or verify Stance_Breton=0 (NATIVE) only where the deity is actually used by a Breton lane. Green Way uses existing PDV_Deity_Yffre; do not reconcile Kynareth as a Green Way owner.",
     "noDeityQuestStructureNeeded": "Because Breton creates no deity QUSTs, there is no new SGE+SEQ work here. (Reused deities already carry SGE+SEQ from their Imperial-owner authoring run; the BaanDar SGE-omission failure mode does not apply to a pure stance-reconcile.)",
     "baseline": {
       "existingDeityQuests": {
@@ -573,15 +624,16 @@
         "PDV_Deity_Talos": "03DE87",
         "PDV_Deity_AuriEl": "03DE88",
         "PDV_Deity_Yffre": "06CB52",
+        "PDV_Deity_Magnus": "Altmer-owned existing; resolve current FormID at author time",
         "PDV_Deity_Zen": "06FA1B",
         "PDV_Deity_BaanDar": "06FA1C"
       },
-      "reusedRecords": "Akatosh/Stendarr/Arkay/Mara/Julianos/Kynareth are Imperial-owned (create:true in PDV_ImperialRewardRecords.spec.json); Breton references them create:false + Stance_Breton NATIVE. Indices stay as assigned by the Imperial run (next-available, clear of low indices and Khajiit 40-43).",
+      "reusedRecords": "Breton references existing deity records where needed and creates no new deity QUSTs. Hidden Art references PDV_Deity_Magnus and PDV_Deity_Mara; Green Way references PDV_Deity_Yffre; Kynareth is not a Green Way owner; Phynaster remains proof-gated until a live record/scoring path is accepted.",
       "formListAllDeities": "017E47 -- Breton adds NO new members (all reused deities are already added by the Imperial owner run). Do not re-add.",
       "stateTracks": "PDV_State_BretonTradition (KnightsRoad=0/HiddenArt=1/GreenWay=2) + PDV_State_BretonDruidicFork (None/Druidic/Werewolf/Betrayed) + the three pressure rep-tracks KnightlyVowIntegrity/WitchcraftExposure/DruidicStanding (see PDV_Phase20BretonImplementationCosting.manifest.json)."
     },
-    "wiring": "Same run: add Stance_Breton NATIVE to the 6 reused deity QUSTs; do NOT add anything to FLST 017E47 (reused deities already present). The broad Tradition T1 fills the existing PDV_Bless_Breton_Tradition_T1 manager property and is granted via the broad-worship path (PATRON_STATE_BROAD); Tradition T2 is a new broad property. Wire the 9 focused tradition reward props (KnightsRoad/HiddenArt/GreenWay T1/T2/T3) gated on PDV_State_BretonTradition (one active tradition selects the eligible family; suppress the other two) + 4 creed-loss SPEL props + PDV_SPEL_Neglect_Breton. Hidden Art reward props additionally check WitchcraftExposure (magnitude conditioned on exposure cost; rupture revokes). The three standing tracks are wired as access/penalty/rupture modifiers only, never as boon grants.",
-    "verify": "housecarl readback (profile Devotion Dev): FLST 017E47 unchanged (no Breton additions); the 6 reused deity QUSTs each carry Stance_Breton NATIVE; the 16 new SPEL exist with correct MGEF actor-values/magnitudes (no magnitude > ~12%; Hidden Art is the strongest focused family but exposure-gated); broad Tradition T1 fills the existing manager property; manager reward + creed-loss + neglect props resolve; PDV_State_BretonTradition selects exactly one eligible focused family with the other two suppressed; the three standing tracks resolve as pressure modifiers, not boon grants. Then runtime smoke (QASmoke routes 120-124 per the costing manifest)."
+    "wiring": "Same run: add or verify Stance_Breton NATIVE on each reused deity QUST actually used by the Breton lanes, including Magnus and Mara for Hidden Art and Y'ffre for Green Way; do NOT add anything to FLST 017E47 (reused deities already present). The broad Tradition T1 fills the existing PDV_Bless_Breton_Tradition_T1 manager property and is granted via the broad-worship path (PATRON_STATE_BROAD); Tradition T2 is a new broad property. Wire the 9 focused tradition reward props (KnightsRoad/HiddenArt/GreenWay T1/T2/T3) gated on PDV_State_BretonTradition (one active tradition selects the eligible family; suppress the other two) + 4 creed-loss SPEL props + PDV_SPEL_Neglect_Breton. Hidden Art reward props additionally check WitchcraftExposure (magnitude conditioned on exposure cost; rupture revokes). The three standing tracks are wired as access/penalty/rupture modifiers only, never as boon grants.",
+    "verify": "housecarl readback (profile Devotion Dev): FLST 017E47 unchanged (no Breton additions); every reused deity QUST actually used by a Breton lane carries Stance_Breton NATIVE; the 16 new SPEL exist with correct MGEF actor-values/magnitudes (no magnitude > ~12%; Hidden Art is the strongest focused family but exposure-gated); broad Tradition T1 fills the existing manager property; manager reward + creed-loss + neglect props resolve; PDV_State_BretonTradition selects exactly one eligible focused family with the other two suppressed; the three standing tracks resolve as pressure modifiers, not boon grants. Then runtime smoke (QASmoke routes 120-124 per the costing manifest)."
   },
   "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run",
   "ceilingReviewApplied20260614": "Percent-mult crossings clamped to Requiem ceilings (Magicka/Stamina/ResistMagic T2 10/T3 20; HealRateMult T2 15/T3 30; ResistDisease T2 30/T3 50). DamageResist rescaled to the armor-points ladder T1 15/T2 30/T3 50 (armor points are exempt from the flat ~12 magnitude ceiling because +4 AR is ~0.3% damage reduction in Requiem). Per the 2026-06-14 Requiem ceiling review; mirrors the Orc spec."

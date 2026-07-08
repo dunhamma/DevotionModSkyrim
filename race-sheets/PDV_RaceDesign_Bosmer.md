@@ -37,6 +37,8 @@ Path switching: limited, destination-sensitive, carries real cost
 
 **Shared Green Pact memory (LOCKED):** Green Pact respect still matters for all Bosmer paths. Proper hunting, animal-sourced food, restraint around needless plant use where detectable, and respect for the living world can provide modest positive weighting for `LivingStory`, `Exchange`, and `BanditRoad`. Only `OldContract` carries the hard covenant burden: plant-use penalties, `GreenPactCompliance`, forced reckoning, Y'ffre exclusivity, and terminal renunciation. Other paths can be rewarded for honoring Bosmer inheritance, but they are not punished for failing Old Contract discipline. Implementation should use shared Bosmer signal weighting interpreted by the active path, not a hidden background Old Contract ledger.
 
+**Y'ffre storage lock (LOCKED 2026-07-08):** `OldContract` and `LivingStory` both use the same internal `PDV_Deity_Yffre` deity record and piety ledger. The split is path interpretation: `OldContract` owns GPC, PactBound, plant-use penalties, and forced reckoning; `LivingStory` owns community, memory, preservation, and nature-site expression. Do not create a second Y'ffre storage record or shadow ledger for either path.
+
 **Secondary Bosmer religious layer (all paths):** Arkay, Xarxes, Mara, Stendarr — present as background influences, not core paths. These gods receive piety from appropriate acts across all Bosmer paths.
 
 **External pressures — not core paths:** Hircine (hunt/shape/curse), Nocturnal (Guild criminal overlap). Neither is a normal Bosmer theological backbone.

@@ -26,7 +26,7 @@
   "designRules": [
     "Tradition is the spine (R1/R7): rewards gate on PDV_State_BretonTradition (KnightsRoad | HiddenArt | GreenWay) plus the active tradition's focused patron tier within that state. Gods sit INSIDE the chosen tradition.",
     "Broad lane is the Tradition state, not a deity: broad T1 is the FIXED manager property PDV_Bless_Breton_Tradition_T1 (R2) granted via PATRON_STATE_BROAD; broad T2 is PDV_Bless_Breton_Tradition_T2 (new). Do NOT create a flat Breton pantheon or generic broad-worship deity (R1, ledger).",
-    "Breton OWNS no Aedric deities (R5). Knight's Road focuses REUSE Imperial-owned Divines (Stendarr/Arkay/Mara/Julianos, plus Akatosh NATIVE) with create:false and a Stance_Breton added NATIVE. Green Way nature focus may reuse Kynareth (create:false). Hidden Art occult-lawful may reference Julianos (reuse).",
+    "Breton OWNS no Aedric deities (R5). Knight's Road focuses REUSE Imperial-owned Divines where applicable. Hidden Art reuses existing Magnus for benign magic and Mara for hearth/home/cover; Julianos is Knight's Road study-law only. Green Way nature focus routes to existing Y'ffre; Kynareth is removed from Green Way offer/reward ownership and former Green Way Kynareth proxy/source/payout items route to Y'ffre. Phynaster is proof-gated and not authored here until a concrete pilgrimage/endurance plus elven-heritage hook package is accepted.",
     "Hidden Art Daedric forks and Green Way werewolf/Daedric forks route through the existing Phase 20C Daedric Prince system (R6). NO new Aedric or Daedric records here.",
     "Exactly ONE tradition's focused reward family pays at a time (Overstack Risk control). The active PDV_State_BretonTradition value selects which of KnightsRoad/HiddenArt/GreenWay focused families is eligible; the other two are suppressed.",
     "The three standing tracks (KnightlyVowIntegrity, WitchcraftExposure, DruidicStanding) are PRESSURE ONLY: they modify access, gate, penalize, or rupture. They are NEVER a second or third always-on boon family. They must not all pay positive rewards at once for the same character.",
@@ -123,10 +123,29 @@
     { "editorId": "PDV_Deity_Akatosh", "create": false, "stanceBreton": "NATIVE", "owner": "Imperial", "tradition": "KnightsRoad", "note": "Reuse only; add Stance_Breton NATIVE. Breton creates NO Aedric deity." },
     { "editorId": "PDV_Deity_Stendarr", "create": false, "stanceBreton": "NATIVE", "owner": "Imperial", "tradition": "KnightsRoad", "note": "Knight's Road mercy/protection focus; reuse only." },
     { "editorId": "PDV_Deity_Arkay", "create": false, "stanceBreton": "NATIVE", "owner": "Imperial", "tradition": "KnightsRoad", "note": "Knight's Road vigil/death-duty focus; reuse only." },
-    { "editorId": "PDV_Deity_Mara", "create": false, "stanceBreton": "NATIVE", "owner": "Imperial", "tradition": "KnightsRoad", "note": "Knight's Road mercy focus; reuse only." },
-    { "editorId": "PDV_Deity_Julianos", "create": false, "stanceBreton": "NATIVE", "owner": "Imperial", "tradition": "HiddenArt", "note": "Hidden Art lawful-scholar focus (occult restraint); reuse only." },
-    { "editorId": "PDV_Deity_Kynareth", "create": false, "stanceBreton": "NATIVE", "owner": "Imperial", "tradition": "GreenWay", "note": "Green Way nature focus where appropriate; reuse only." }
+    { "editorId": "PDV_Deity_Mara", "create": false, "stanceBreton": "NATIVE", "owner": "Imperial", "tradition": "KnightsRoad", "traditionRoles": ["KnightsRoad", "HiddenArt"], "note": "Knight's Road mercy focus and Hidden Art hearth/home/cover focus; reuse only." },
+    { "editorId": "PDV_Deity_Julianos", "create": false, "stanceBreton": "NATIVE", "owner": "Imperial", "tradition": "KnightsRoad", "traditionRoles": ["KnightsRoad"], "note": "Knight's Road study-law focus only; not a Hidden Art patron. Reuse only." },
+    { "editorId": "PDV_Deity_Magnus", "create": false, "stanceBreton": "NATIVE", "owner": "Altmer", "tradition": "HiddenArt", "traditionRoles": ["HiddenArt"], "note": "Hidden Art benign magic, sorcery, formal study, and hidden magical practice focus; reuse only." },
+    { "editorId": "PDV_Deity_Yffre", "create": false, "stanceBreton": "NATIVE", "owner": "Bosmer/shared", "tradition": "GreenWay", "note": "Green Way covenant owner; receives former Kynareth Green Way proxy/source/payout items. Reuse only." }
   ],
+  "phynasterAcceptanceGate": {
+    "status": "implementation-plan-gate-deferred",
+    "liveRecordPolicy": "Do not create PDV_Deity_Phynaster, do not add Phynaster offer eligibility, and do not make Phynaster selectable until this gate passes.",
+    "positiveSourceFamiliesRequired": 3,
+    "positiveSourceFamilyThemes": [
+      "pilgrimage/endurance",
+      "elven heritage/longevity",
+      "Direnni memory or disciplined long practice"
+    ],
+    "dislikeOrFailureFamiliesRequired": 1,
+    "copyRequired": [
+      "formal offer flavor distinct from Y'ffre",
+      "reward presentation distinct from Y'ffre",
+      "likes/dislikes rows distinct from generic Green Way behavior"
+    ],
+    "noOverlapRule": "Phynaster cannot own Y'ffre's nature covenant, standing-stone rites, hunting support, Kynareth/Kyne shrine proxies, nature-site quest doubles, or the Green Way reward identity.",
+    "failureOutcome": "Keep Phynaster as non-selectable Breton flavor/support for V1; no deity QUST, no formal offer, no focused reward ownership."
+  },
   "daedricForkPolicy": {
     "system": "Phase 20C Daedric Prince track (PDV_DeityCoverageMatrix.json slice 20C)",
     "rule": "Hidden Art Daedric forks and Green Way werewolf/Daedric forks route through the existing 20C Daedric system per R6. This manifest authors NO new Daedric Prince records and NO new Aedric records for forks.",
@@ -196,7 +215,7 @@
       "mode": "marked",
       "lane": "focused-tradition",
       "tradition": "HiddenArt",
-      "deity": "Daedric via Phase 20C (R6); Julianos reuse for lawful-occult restraint",
+      "deity": "Magnus and Mara reuse for benign magic/hearth-cover; Daedric via Phase 20C (R6)",
       "progressionCurrency": "piety-faucet-within-active-tradition",
       "gateType": "state-enum-gated",
       "realHookSource": "Curated PO3 BookRead/SpellLearned/QuestStageChange on whitelisted forbidden/occult texts, spells, and Daedric/witchcraft milestones. NOT generic spellcasting/College membership/artifact ownership/private curiosity.",
@@ -214,10 +233,10 @@
       "mode": "marked",
       "lane": "focused-tradition",
       "tradition": "GreenWay",
-      "deity": "Kynareth (reuse, create:false) where appropriate; druidic standing context",
+      "deity": "Y'ffre (reuse, create:false); Green Way covenant owner and druidic standing context",
       "progressionCurrency": "piety-faucet-within-active-tradition",
       "gateType": "state-enum-gated",
-      "realHookSource": "Curated nature-site/standing-stone/quest/book sources; PO3 ItemHarvested only for tag-backed druidic sources after tag proof. NOT ordinary animal kills/generic harvests/outdoor travel/generic Kynareth-Kyne shrine visits.",
+      "realHookSource": "Curated nature-site/standing-stone/quest/book sources; PO3 ItemHarvested only for tag-backed druidic sources after tag proof. NOT ordinary animal kills/generic harvests/outdoor travel/generic Kynareth-Kyne shrine visits. If a Kynareth/Kyne place or shrine is accepted as a Green Way proxy, route the payout to Y'ffre.",
       "antiFarm": "Daily/source-family cap and tag-backed harvest whitelist only; DruidicStanding gates access (pressure, not boon).",
       "hookSources": [
         "Breton origin, Green Way active",
@@ -290,8 +309,11 @@
     "wireTo": "PDV__ManagerQuest",
     "displayName": "The Tradition Grows Distant",
     "severity": "gentle-baseline",
-    "effects": [ { "actorValue": "HealRateMult", "magnitude": -5.0 } ],
-    "designNote": "Gentle diegetic texture for letting the chosen tradition lapse. The real BITE is reserved for rupture/excommunication/curse fork (exposure Ruptured, druidic-fork betrayal, vampire onset), not ordinary lapse. Neglect is not a creed-violation loss and does not corrode a specific patron."
+    "effects": [
+      { "actorValue": "Health", "magnitude": -10.0 },
+      { "actorValue": "ResistMagic", "magnitude": -5.0 }
+    ],
+    "designNote": "Gentle but felt texture for letting the chosen tradition lapse: Maximum Health -10 plus Magic Resistance -5%. The real BITE is reserved for rupture/excommunication/curse fork (exposure Ruptured, druidic-fork betrayal, vampire onset), not ordinary lapse. Neglect is not a creed-violation loss and does not corrode a specific patron."
   },
   "rejectedHooks": [
     "casual tradition switching",
@@ -452,7 +474,7 @@
       "PDV_State_BretonTradition enum (KnightsRoad/HiddenArt/GreenWay) and PDV_State_BretonDruidicFork are present, and only the active tradition's focused family is eligible, before runtime work",
       "the three standing tracks (KnightlyVowIntegrity/WitchcraftExposure/DruidicStanding) read back as pressure/access/rupture modifiers, never as boon tracks",
       "each tradition favor act has exactly one anti-farm mechanism; Hidden Art stronger magnitude is conditioned on visible WitchcraftExposure cost",
-      "Breton creates no new Aedric deities (Divines/Kynareth reused create:false) and routes Daedric forks through the Phase 20C system",
+      "Breton creates no new Aedric deities, routes Hidden Art benign magic to existing Magnus and hearth/cover to existing Mara, routes Green Way to existing Y'ffre rather than Kynareth, keeps Phynaster proof-gated until accepted, and routes Daedric forks through the Phase 20C system",
       "rejected hook families (switching, spellcasting, College, artifact, private curiosity, ordinary kills/harvests/travel, generic shrines, three-track simultaneity, flat pantheon) become verifier or runtime negative cases",
       "creed-violation loss fires only on medium/major vow-integrity, exposure-rupture, excommunication, and druidic-fork-betrayal beats",
       "at most two always-on boon families exist: broad Tradition plus the one active tradition's focused family; broad stays softer than focused; no magnitude > ~12%"
@@ -476,7 +498,7 @@
     "Define PDV_State_BretonTradition (KnightsRoad/HiddenArt/GreenWay) and PDV_State_BretonDruidicFork readback, with single-active-tradition suppression of the other focused families.",
     "Wire the three standing-track readbacks (KnightlyVowIntegrity/WitchcraftExposure/DruidicStanding) as pressure/access/rupture modifiers only.",
     "Wire each tradition favor lane with exactly one anti-farm mechanism; condition Hidden Art stronger magnitude on visible WitchcraftExposure cost.",
-    "Reuse Divines/Kynareth (create:false, add Stance_Breton) and route Daedric forks through the Phase 20C system; create no new deity records.",
+    "Reuse existing deity records as needed; route Hidden Art benign magic to Magnus and hearth/cover to Mara, route Green Way to Y'ffre rather than Kynareth, keep Phynaster proof-gated until accepted, and route Daedric forks through the Phase 20C system; create no new deity records.",
     "Add negative tests for switching, spellcasting/College/artifact/private curiosity, ordinary kills/harvests/travel, generic shrines, three-track simultaneity, and any flat-pantheon reward."
   ]
 }

@@ -18,6 +18,8 @@
   "designRules": [
     "Hist and People play must be viable before Void/Sithis receives deeper runtime reward.",
     "Sithis is a threshold layer, not the default Argonian build.",
+    "Sithis/Void activation requires three significant signals. Dark Brotherhood initiation or end-state milestones count as significant signals but never bypass the threshold alone. Future death/void/change quests are expected but remain candidate-only until exact quest/stage/outcome readback is approved.",
+    "People-layer launch promotion is exact-source only: Argonian Ceremony text, Histcarp/shared-food continuity, and Derkeethus rescue completion. Windhelm Assemblage and Jaree-Ra remain candidate/extrapolation targets until exact quest/stage/outcome readback is approved.",
     "Water, rest, reflection, and chosen-family cadence should feel like maintenance, not chores.",
     "Vampire, werewolf, and domination pressure change Hist posture visibly without deleting Saxhleel identity.",
     "Community support must have readable surfacing because vanilla social hooks are sparse."
@@ -124,7 +126,8 @@
         "named Argonian aid",
         "cooldown per NPC or quest"
       ],
-      "rewardIntent": "chosen-family stability"
+      "rewardIntent": "chosen-family stability",
+      "sourcePromotionRule": "Launch source-fill is limited to exact approved sources: Argonian Ceremony text, Histcarp/shared-food continuity, and Derkeethus rescue completion. Future named-aid quests are candidates only until exact quest/stage/outcome readback and rejected-context rules are approved."
     },
     {
       "id": "community-assemblage-kept",
@@ -135,7 +138,8 @@
         "community survival",
         "rare stronger weight"
       ],
-      "rewardIntent": "make sparse vanilla Argonian community visible"
+      "rewardIntent": "make sparse vanilla Argonian community visible",
+      "sourcePromotionRule": "Windhelm Assemblage is a heavy People-lane target, but generic Windhelm presence, Riften presence, and ordinary Argonian NPC contact are rejected. Promote only exact Assemblage quest/favor outcomes after readback."
     },
     {
       "id": "void-death-faced",
@@ -145,7 +149,8 @@
         "curated death-facing choice",
         "threshold signal"
       ],
-      "rewardIntent": "Void meaning without generic murder"
+      "rewardIntent": "Void meaning without generic murder",
+      "sourcePromotionRule": "Future death/void/change quest beats should be added, but only from the candidate queue after exact quest/stage/outcome readback, accepted context, rejected context, duplicate guard, and evidence are approved. Each promoted source contributes one significant signal toward the three-signal gate."
     },
     {
       "id": "void-brotherhood-contract",
@@ -155,7 +160,8 @@
         "Dark Brotherhood contract",
         "post-threshold context"
       ],
-      "rewardIntent": "Sithis route payoff after activation, not before"
+      "rewardIntent": "Sithis route payoff after activation, not before",
+      "sourcePromotionRule": "Dark Brotherhood initiation/end-state milestones are one-shot significant signals; contracts or later Brotherhood content need exact/control-gated routing and must not become radiant assassination loops."
     }
   ],
   "rejectedHooks": [
@@ -271,8 +277,9 @@
   "runtimeProof": {
     "positive": [
       "a non-assassin Argonian can maintain identity through water, rest, reflection, and community aid",
+      "People-layer launch sources route only from exact approved Argonian Ceremony, Histcarp, and Derkeethus sources, while Windhelm Assemblage, Jaree-Ra, and future quests remain candidate-only until readback",
       "a chosen bed can be designated, returned to, and lapsed with readable feedback",
-      "three significant Void signals can activate Sithis without making the first Dark Brotherhood beat sufficient",
+      "three significant Void signals can activate Sithis without making the first Dark Brotherhood beat sufficient, and future death/void/change quests contribute only after exact readback approval",
       "vampire and werewolf states produce distinct Hist posture and recovery behavior"
     ],
     "negative": [

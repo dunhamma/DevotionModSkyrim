@@ -1,5 +1,5 @@
 # PDV Race Design — Nord
-**Last updated:** 2026-05-28
+**Last updated:** 2026-07-08
 **Status:** Implementation locked for 1.0 experience shape; reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.1)
 
@@ -7,7 +7,7 @@
 
 ## Religious Identity
 
-Nords in 4E 201 carry two overlapping pantheons simultaneously — the Old Ways (Shor, Kyne, Tsun, Stuhn, Mara, Talos/Ysmir) and the Nine Divines (Akatosh, Kynareth, Mara, Zenithar, Arkay, Stendarr, Julianos, Dibella, Talos). In practice, most Nords blend them without theological anxiety. The primary tension of the era is the Talos ban: Ulfric's war is explicitly a religious war, and every Nord in Skyrim has already taken a position on it even if they'd claim otherwise.
+Nords in 4E 201 carry two overlapping pantheons simultaneously — the Old Ways (Shor, Kyne, Tsun, Stuhn, Mara, Orkey-as-Arkay, Talos/Ysmir) and the Nine Divines (Akatosh, Kynareth, Mara, Zenithar, Arkay, Stendarr, Julianos, Dibella, Talos). In practice, most Nords blend them without theological anxiety. The primary tension of the era is the Talos ban: Ulfric's war is explicitly a religious war, and every Nord in Skyrim has already taken a position on it even if they'd claim otherwise.
 
 **Core design intent:** Nord devotion should feel like your deeds reveal which god noticed you — not like you spawned with a passive religious package. The broad-to-primary transition arc is the Nord's defining mechanic.
 
@@ -17,7 +17,7 @@ Nords in 4E 201 carry two overlapping pantheons simultaneously — the Old Ways 
 
 ```
 Step 1: Choose pantheon baseline at setup
-  → Old Ways:     Shor, Kyne, Tsun, Stuhn, Mara, Talos/Ysmir
+  → Old Ways:     Shor, Kyne, Tsun, Stuhn, Mara, Orkey-as-Arkay, Talos/Ysmir
   → Nine Divines: All Nine
 
 Step 2: Broad worship accumulates across your chosen pantheon
@@ -34,7 +34,9 @@ Step 3: A god's offer fires based on your actual playstyle
 Step 4: Primary patron committed → Tier 3 (Devoted) becomes reachable
 ```
 
-**Non-worshippable gods (excluded):** Alduin (World-Eater, feared not worshipped), Orkey (enemy-god, propitiated not loved), Jhunal (forgotten by 4E 201 Nords, absorbed into Julianos).
+**Non-worshippable gods (excluded):** Alduin (World-Eater, feared not worshipped), independent Orkey (enemy-god, propitiated not loved), Jhunal (forgotten by 4E 201 Nords, absorbed into Julianos). For V1, Orkey is not a separate deity record; he is the Old Ways display/offer/neglect framing for Arkay's death-cycle surface.
+
+**Orkey storage/display lock (LOCKED 2026-07-08):** Orkey visibly replaces Arkay only under the Old Ways baseline. The internal deity record, piety ledger, offer cooldowns, reward sync, and neglect sync remain `PDV_Deity_Arkay` / `PDV_Arkay`. Do not create `PDV_Deity_Orkey`, and do not split Arkay/Orkey storage. Nine Divines Nords continue to see Arkay.
 
 **Implementation split (LOCKED):** Nord pantheon baseline and commitment state are separate. `PDV_State_NordPantheonBaseline` stores setup framing only: `OldWays = 0`, `NineDivines = 1`. Commitment depth uses the shared patron state model (`PDV_GLO_PatronState` for broad worship vs active patron, `PDV_GLO_PatronDeity` for the committed god). Do not implement `Broad` and `Primary` as Nord baseline states.
 

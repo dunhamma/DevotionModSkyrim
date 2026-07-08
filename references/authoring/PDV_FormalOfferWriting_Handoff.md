@@ -1,7 +1,7 @@
 # PDV Formal Deity Offer Writing Handoff
 
 **Owner:** Claude writing pass only
-**Status:** Ready for copy review/conformance
+**Status:** Ready for copy review/conformance for the original record wave; superseded for Altmer scope by the 2026-07-08 deity-signal remap
 **Implementation anchor:** `references/authoring/PDV_FormalOffer_RecordWave.spec.json`
 
 ## Scope
@@ -15,7 +15,7 @@ Offer races in this packet:
 | Nord | Kyne, Shor, Tsun, Stuhn, Akatosh, Mara, Arkay, Stendarr, Zenithar, Julianos, Dibella, Talos, Kynareth | Existing live copy. Audit only unless a concrete voice defect is found. |
 | Imperial | Akatosh, Talos, Kynareth, Mara, Zenithar, Arkay, Stendarr, Julianos, Dibella | Talos is Concordat-gated. Keep the offer private/defiant in tone, not generic rebellion. |
 | Dunmer | Azura, Boethiah, Mephala | Reclamation focus. Do not imply abandoning ancestor reverence. |
-| Altmer | Auri-El, Magnus, Xarxes | Trinimac and Syrabane are out of scope until promoted by a later design/record pass. |
+| Altmer | Auri-El, Magnus, Xarxes | Original packet only. 2026-07-08 remap promotes Trinimac and Syrabane into Altmer formal-offer design scope; they need an addendum before implementation. |
 | Redguard | Tu'whacca, HoonDing, Leki | Deity-in-sect offers. The sect is presentation/identity context, not the offered patron. |
 
 No-offer races in this packet:
@@ -74,8 +74,8 @@ Dunmer:
 - Do not write this as "choose a Daedric Prince over your people."
 
 Altmer:
-- Auri-El remains the foundation; Magnus and Xarxes are disciplined orthodox focus paths.
-- Exclude Trinimac/Syrabane from this pass.
+- Auri-El remains the foundation; Magnus and Xarxes are disciplined focus paths in this original packet.
+- 2026-07-08 remap addendum required: Trinimac is high-orthodoxy defense/enforcement gated; Syrabane is protection/apprentice gated.
 - Avoid Thalmor-only language unless the specific offer body already requires it.
 
 Redguard:
@@ -90,7 +90,7 @@ Stop and flag instead of drafting if:
 
 - A requested EditorID is not in `PDV_FormalOffer_RecordWave.spec.json`.
 - A draft adds Breton, Bosmer, Khajiit, Orc, or Argonian formal accept/decline deity offers.
-- A draft promotes Altmer Trinimac/Syrabane into formal offers.
+- A draft promotes Altmer Trinimac/Syrabane without referencing the 2026-07-08 remap addendum and its gates.
 - A draft adds a new Redguard offer deity beyond Tu'whacca, HoonDing, and Leki.
 - The body needs mechanics text to make sense; that means the design surface is unclear and should come back to implementation/design.
 

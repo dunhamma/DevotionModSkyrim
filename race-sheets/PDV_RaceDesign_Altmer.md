@@ -41,6 +41,8 @@ Step 4: Primary secondary god focus (Layer 3)
 
 Altmer uses the shared patron-state model for formal commitment. `ThalmorAlignment` is the orthodoxy/coherence track, not a Broad/Primary commitment state. The player experience is Auri-El foundation plus faction-theological coherence plus secondary focus, not casual whole-pantheon worship.
 
+**V1 focus roster:** Auri-El, Magnus, Trinimac, Xarxes, and Syrabane. Phynaster remains part of the wider Altmeri pantheon presentation, but he is roster/flavor-only for V1: no `PDV_Deity_Phynaster`, no formal offer, and no reward family.
+
 ---
 
 ## ThalmorAlignment Track
@@ -221,7 +223,7 @@ If the player would not reasonably understand the theological meaning, do not pe
 - After studying or advancing in magical skill: next spell cast of that school is free
 - ThalmorAlignment above 70: enforcement acts generate stronger piety
 - ThalmorAlignment below 30: self-cultivation acts generate stronger piety, scholarship privileges more accessible
-- College of Winterhold advancement (regardless of faction) generates Julianos/Magnus piety
+- College of Winterhold advancement generates Magnus/Xarxes piety by study or record context; Syrabane only on protection/apprentice beats
 - Lorkhan Adjacency Penalty still fires -- but ThalmorAlignment modifier applies correctly
 
 ### Tier 3 -- Devoted (primary secondary god committed)
@@ -239,6 +241,7 @@ If the player would not reasonably understand the theological meaning, do not pe
 - *Champion moment:* Martial virtue made devotional. Trinimac is the god of civilization's defense -- the Champion who reaches this tier has fought in Trinimac's name through the enforcement frame. After completing an enforcement or defense-of-civilization act with ThalmorAlignment above 70, armor rating +15 for one in-game day (Trinimac's martial blessing). Thalmor characters treat you with explicit recognition privilege at this tier.
 - *Specific payoff:* One-handed damage +5% cumulative (Tier 1 + Tier 3). After defeating enemies threatening elven/civilizational interests, brief health regen. Lorkhan penalty at Thalmor Orthodox x1.5 -- this Champion suffers the most from Lorkhan-adjacent content. That tension is intentional.
 - *Lore note:* Trinimac is Altmer-native but specialist. Not every Altmer will reach him. He is the god of those who defend the project by force -- the most orthodox-aggressive Champion path.
+- *Offer and gain rule:* Trinimac is a true focused path, not pressure-only. The formal offer requires `ThalmorAlignment >= 70` plus meaningful civilization-defense/enforcement signals. After access, `ThalmorAlignment` continues to weight Trinimac gain and offer readiness, but it remains pressure/access/interpretation and never becomes a third boon track.
 
 **Xarxes focus (ancestry/scholarship, Psijic or Divine Body primary):**
 - *Champion moment:* The records-keeper acknowledges your genealogical fidelity. After completing a quest with significant ancestry, family duty, or genealogical content, 24-hour magic cost reduction. Reading rare tomes (one-time books, particularly lore-heavy volumes) generates strong Xarxes piety. Knowledge of Altmeri heritage acts generate the strongest scoring.
@@ -247,6 +250,7 @@ If the player would not reasonably understand the theological meaning, do not pe
 **Syrabane focus (magical protection, Psijic or Divine Body primary):**
 - *Champion moment:* The apprentices' protector watches over you. Magic-using enemies deal 15% less damage at Champion. After casting a protective spell (Ward, Oakflesh-line), next non-protection spell cost -10%. College and magical-institution content generates strong piety.
 - *Specific payoff:* Ward spells absorb more (15% bonus to ward strength). Magical institutions treat you with recognition privilege.
+- *Offer and gain rule:* Syrabane is a true Altmer focused path, but the launch lane starts narrow. Formal offer and gain require warding, magical protection, apprentice or College aid, curse/disease warding, or anti-mage survival. Generic magic advancement, generic College membership, every ward cast, and raw magic-resistance stacking stay rejected unless the narrow implementation proves too thin.
 
 ## Focused-Deity Launch Hook Posture
 
@@ -323,8 +327,8 @@ The failure mode the mod should make legible: a devout Altmer who fully engaged 
 
 | Action | Direction | Cadence | Notes |
 |--------|-----------|---------|-------|
-| Advance in any magic skill to next tier (25/50/75/100) | +piety (Magnus, Syrabane, Julianos) | Per milestone | Finite progression |
-| Read a skill book or rare lore tome | +piety (Xarxes, Magnus, Julianos) | Per book, one-time | Rich early-game signal pool |
+| Advance in any magic skill to next tier (25/50/75/100) | +piety (Magnus; Syrabane only for ward/protection milestones) | Per milestone | Finite progression; generic skill gain is not a Syrabane source |
+| Read a skill book or rare lore tome | +piety (Xarxes, Magnus; Syrabane only for protection/apprentice texts) | Per book, one-time | Rich early-game signal pool |
 | Arrest or report a Talos worshipper | +ThalmorAlignment +15 | Per event | Thalmor cooperation |
 | Help a Thalmor prisoner escape | -ThalmorAlignment -15 | Per event | Defection signal |
 | Consort with Daedra (accept a Daedric quest) | -ThalmorAlignment -25 | Per quest | Breaks oldest Altmer religious law |
@@ -335,7 +339,7 @@ The failure mode the mod should make legible: a devout Altmer who fully engaged 
 | Get married at Mara's Temple | Lorkhan Penalty Tier 3 | One-time | Minor penalty |
 | Build a homestead | Lorkhan Penalty Tier 3 | One-time | Minor penalty |
 | Dawn observation (shrine interaction or time-window) | +piety (Auri-El Layer 1) | Daily cap | Foundation signal |
-| College of Winterhold advancement | +piety (Magnus, Syrabane, Julianos) | Per guild rank | Structured progression |
+| College of Winterhold advancement | +piety (Magnus/Xarxes by study or record context; Syrabane only for apprentice/protection beats) | Per guild rank | Structured progression; generic membership is rejected |
 | Complete Thalmor-sanctioned mission | +ThalmorAlignment +20 | Per mission | Reinforces Orthodox path |
 
 ---
@@ -347,7 +351,8 @@ The failure mode the mod should make legible: a devout Altmer who fully engaged 
 **Complexity flags:**
 - **Lorkhan Adjacency Penalty system:** The most novel Altmer mechanic. Requires a curated list of trigger events mapped to penalty tiers, with ThalmorAlignment multiplier applied at trigger time. This is primarily content/curation work -- the framework event system can handle it, but the trigger list needs careful maintenance.
 - **ThalmorAlignment track:** Same architecture as Imperial ConcordatStanding -- proven pattern. Key complexity is making sure Thalmor cooperation quests correctly flag their beats (several are Thalmor Embassy content that isn't always faction-flagged).
-- **Trinimac gating on ThalmorAlignment:** The offer for Trinimac as primary focus should only fire when ThalmorAlignment is above 70. Offer system needs to check track state before firing, same as Imperial Talos commitment gate.
+- **Trinimac gating on ThalmorAlignment:** The offer for Trinimac as primary focus should only fire when ThalmorAlignment is above 70 and a meaningful civilization-defense/enforcement signal exists. Offer and gain readiness continue to be weighted by the current alignment band after access, but ThalmorAlignment is not a reward family.
+- **Syrabane protection gate:** The offer for Syrabane should only fire from protection/apprentice proof. If the narrow row set is too thin during implementation, widen deliberately through authored defensive texts or institution-protection beats before allowing generic magic advancement.
 - **Altmer vampire path:** The lack of a cure-and-restore arc (unlike Dunmer, Imperial, Redguard) needs a clear one-time state flag. Once a player has been an Altmer vampire, there is no recovery arc -- the theological position is LOCKED at "no recoverable Altmer position." This needs to be surfaced clearly when vampirism activates.
 - **Altmer werewolf:** Complete halt of devotion -- not even the Tier 1 heretical cap that vampire gets. The state needs clean detection that doesn't rely on transformation animation (may already be sleeping, could be any time). Use SaxhlMon ActiveEffects or persistent curse flag.
 
@@ -357,6 +362,7 @@ The failure mode the mod should make legible: a devout Altmer who fully engaged 
 - Dawn/dusk observation: Cost Class B (time-state check)
 - ThalmorAlignment updates: Cost Class A (specific action detection)
 - Trinimac offer gate: Cost Class B (track-state check in offer evaluation)
+- Syrabane offer gate: Cost Class B (curated protection/apprentice source check in offer evaluation)
 
 ---
 

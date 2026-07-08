@@ -1,7 +1,7 @@
 {
   "schema": "pdv-altmer-records.v1",
   "status": "design-locked-2026-06-07; conforms to PDV_Phase2_DeityRoster_and_ArchitectureRulings R1-R8; pending authoring run",
-  "notes": "Authoritative record spec for the Altmer race (Phase 2, OFFER / active-patron gate). Modelled structurally on PDV_KhajiitRewardRecords.spec.json. Altmer is an OFFER race: rewards gate on IsFirstTierRaceRewardEligible (active patron tier >= Seeker). Broad worship is the Orthodox STATE (R1), NOT a deity record. Altmer OWNS Magnus and Xarxes (create:true); REUSES Auri-El (create:false). Trinimac is owned by Orc and is orthodoxy PRESSURE via stance, not a reward patron here (R5/R6). Daedric forks route through the existing 20C Daedric system (R6). ThalmorAlignment is pressure/access, NOT a third boon track (R8). T3 recognition is V1 Survey/status text only (non-voiced), per PDV_RecognitionDialogueScalePacket.md.",
+  "notes": "Authoritative record spec for the Altmer race (Phase 2, OFFER / active-patron gate). Modelled structurally on PDV_KhajiitRewardRecords.spec.json. Altmer is an OFFER race: rewards gate on IsFirstTierRaceRewardEligible (active patron tier >= Seeker). Broad worship is the Orthodox STATE (R1), NOT a deity record. Altmer OWNS Magnus, Xarxes, and Syrabane (create:true); REUSES Auri-El (create:false) and the Orc-owned Trinimac record (create:false). Trinimac is a true Altmer focused path behind a hard high-orthodoxy gate: ThalmorAlignment >= 70 plus meaningful civilization-defense/enforcement signals. Syrabane is a true Altmer focused path starting narrow: warding, magical protection, apprentice/College aid, curse/disease warding, and anti-mage survival only. Phynaster is roster/flavor-only for Altmer V1: no PDV_Deity_Phynaster, no formal offer, and no reward family. ThalmorAlignment gates Trinimac access and modulates Trinimac gain/offer weight after access, but is pressure/access/interpretation, NOT a third boon track (R8). Daedric forks route through the existing 20C Daedric system (R6). T3 recognition is V1 Survey/status text only (non-voiced), per PDV_RecognitionDialogueScalePacket.md.",
   "gate": {
     "type": "offer",
     "eligibility": "IsFirstTierRaceRewardEligible",
@@ -10,6 +10,14 @@
     "broadLaneIsState": "R1: Orthodox is PATRON_STATE_BROAD resolved by GetFirstTierRaceRewardSpellForOrigin(); there is NO PDV_Deity_Orthodox / PDV_Deity_Nine record.",
     "originRaceIndex": 3
   },
+  "excludedNativeRoster": [
+    {
+      "deityName": "Phynaster",
+      "policy": "Altmer roster/flavor-only for V1",
+      "reason": "The V1 focused roster is already full with Auri-El, Magnus, Trinimac, Xarxes, and Syrabane. Phynaster's longevity/pilgrimage identity remains lore presentation, not a sixth reward/offer path.",
+      "implementationRule": "Do not create PDV_Deity_Phynaster, a PDV_Phynaster manager property, Altmer Phynaster reward spells, formal-offer messages, or scoring rows in this spec."
+    }
+  ],
   "deityQuests": [
     {
       "editorId": "PDV_Deity_AuriEl",
@@ -44,16 +52,28 @@
       "deityIndex": "next-available"
     },
     {
+      "editorId": "PDV_Deity_Syrabane",
+      "script": "PDV_Deity_Syrabane",
+      "deityName": "Syrabane",
+      "create": true,
+      "stanceAltmer": "NATIVE",
+      "owner": "Altmer",
+      "addToFormList": "PDV_FLST_AllDeities",
+      "deityIndex": "next-available",
+      "accessGate": "True Altmer focused path, but launch breadth is narrow: formal offer and gain require warding, magical protection, apprentice/College aid, curse/disease warding, or anti-mage survival. Generic magic skill gain, every ward cast, and generic College membership do not qualify."
+    },
+    {
       "editorId": "PDV_Deity_Trinimac",
       "script": "PDV_Deity_Trinimac",
       "deityName": "Trinimac",
       "create": false,
-      "stanceAltmer": "PRESSURE",
+      "stanceAltmer": "NATIVE",
       "shared": [
-        "owned by Orc spec (create:true). Altmer reuses with Stance_Altmer added as orthodoxy PRESSURE only (R5). NOT a reward patron and NOT a 3-tier set in this spec. Listed only to confirm the shared-deity stance reconciliation; if the Orc spec has not run, Altmer authoring must skip Trinimac reconciliation rather than create the record."
+        "owned by Orc spec (create:true). Altmer reuses with Stance_Altmer NATIVE and adds high-orthodoxy offer/reward gating. If the Orc spec has not run, Altmer authoring must skip Trinimac reconciliation rather than create the record."
       ],
       "addToFormList": "PDV_FLST_AllDeities",
-      "deityIndex": "existing-or-orc-owned"
+      "deityIndex": "existing-or-orc-owned",
+      "accessGate": "ThalmorAlignment >= 70 plus meaningful civilization-defense/enforcement signal; current alignment band modulates gain and offer readiness after access."
     }
   ],
   "managerDeityProperties": [
@@ -69,6 +89,16 @@
     {
       "property": "PDV_Xarxes",
       "record": "PDV_Deity_Xarxes"
+    },
+    {
+      "property": "PDV_Syrabane",
+      "record": "PDV_Deity_Syrabane",
+      "note": "new manager property; Altmer uses it for the narrow protection/apprentice focused offer and reward support"
+    },
+    {
+      "property": "PDV_Trinimac",
+      "record": "PDV_Deity_Trinimac",
+      "note": "existing shared manager property; Altmer uses it for high-orthodoxy focused offer/reward support"
     }
   ],
   "broadState": {
@@ -114,7 +144,7 @@
         "playerFacingText": "Your coherence holds against a divided world. Magicka Regeneration +7%, Magic Resistance +5%."
       }
     ],
-    "stackRule": "Broad < focused. Broad Orthodox caps at T2/Faithful. When an Auri-El/Magnus/Xarxes focus is active, suppress broad Orthodox T2 so the focused set is the loud layer."
+    "stackRule": "Broad < focused. Broad Orthodox caps at T2/Faithful. When an Auri-El/Magnus/Trinimac/Xarxes/Syrabane focus is active, suppress broad Orthodox T2 so the focused set is the loud layer."
   },
   "emphasisRewards": [
     {
@@ -224,6 +254,62 @@
       "recognition": "V1 Survey/status text only (non-voiced): Champion Survey names the player a true student of the arts. Voiced NPC recognition is V2."
     },
     {
+      "emphasis": "Trinimac",
+      "tier": "T1",
+      "spellEditorId": "PDV_Bless_Altmer_Trinimac_T1",
+      "displayName": "Trinimac's Charge - Seeker",
+      "gate": "focused patron family; offer/access requires ThalmorAlignment >= 70 plus a meaningful civilization-defense or enforcement signal; current alignment band modulates gain/offer readiness after access.",
+      "effects": [
+        {
+          "actorValue": "OneHanded",
+          "magnitude": 5,
+          "effectName": "One-Handed"
+        }
+      ],
+      "playerFacingText": "Civilization is defended by your hand. One-Handed +5."
+    },
+    {
+      "emphasis": "Trinimac",
+      "tier": "T2",
+      "spellEditorId": "PDV_Bless_Altmer_Trinimac_T2",
+      "displayName": "Trinimac's Charge - Devoted",
+      "gate": "focused patron family; high-orthodoxy access remains required; ThalmorAlignment is pressure/access weighting, not a separate boon track.",
+      "effects": [
+        {
+          "actorValue": "OneHanded",
+          "magnitude": 13,
+          "effectName": "One-Handed"
+        },
+        {
+          "actorValue": "DamageResist",
+          "magnitude": 15,
+          "effectName": "Armor"
+        }
+      ],
+      "playerFacingText": "The martial ancestor steadies the orthodox arm. One-Handed +13, Armor +15."
+    },
+    {
+      "emphasis": "Trinimac",
+      "tier": "T3",
+      "spellEditorId": "PDV_Bless_Altmer_Trinimac_T3",
+      "displayName": "Trinimac's Defense - Champion",
+      "gate": "focused patron family; Champion access requires active Trinimac focus plus sustained high-orthodoxy coherence.",
+      "effects": [
+        {
+          "actorValue": "OneHanded",
+          "magnitude": 25,
+          "effectName": "One-Handed"
+        },
+        {
+          "actorValue": "DamageResist",
+          "magnitude": 50,
+          "effectName": "Armor"
+        }
+      ],
+      "playerFacingText": "You defend the project by force and discipline. One-Handed +25, Armor +50.",
+      "recognition": "V1 Survey/status text only (non-voiced): Champion Survey names the player a defender of the ancestral project. Voiced Thalmor/orthodox recognition is V2."
+    },
+    {
       "emphasis": "Xarxes",
       "tier": "T1",
       "spellEditorId": "PDV_Bless_Altmer_Xarxes_T1",
@@ -275,6 +361,62 @@
       ],
       "playerFacingText": "Your name and works are written into the long ledger. Restoration +25, Magicka Regeneration +15%.",
       "recognition": "V1 Survey/status text only (non-voiced): Champion Survey names the player a keeper of the ancestral record. Voiced NPC recognition is V2."
+    },
+    {
+      "emphasis": "Syrabane",
+      "tier": "T1",
+      "spellEditorId": "PDV_Bless_Altmer_Syrabane_T1",
+      "displayName": "Syrabane's Guard - Seeker",
+      "gate": "focused patron family; launch gain requires warding, magical protection, apprentice/College aid, curse/disease warding, or anti-mage survival. Generic spellcasting and every ward cast are rejected.",
+      "effects": [
+        {
+          "actorValue": "Restoration",
+          "magnitude": 5,
+          "effectName": "Restoration"
+        }
+      ],
+      "playerFacingText": "The apprentice's god steadies your protective art. Restoration +5."
+    },
+    {
+      "emphasis": "Syrabane",
+      "tier": "T2",
+      "spellEditorId": "PDV_Bless_Altmer_Syrabane_T2",
+      "displayName": "Syrabane's Guard - Devoted",
+      "gate": "focused patron family; protection-first sources only unless implementation proof shows the lane is too thin.",
+      "effects": [
+        {
+          "actorValue": "Restoration",
+          "magnitude": 13,
+          "effectName": "Restoration"
+        },
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 8,
+          "effectName": "Magic Resistance"
+        }
+      ],
+      "playerFacingText": "The ward holds around the one still learning. Restoration +13, Magic Resistance +8%."
+    },
+    {
+      "emphasis": "Syrabane",
+      "tier": "T3",
+      "spellEditorId": "PDV_Bless_Altmer_Syrabane_T3",
+      "displayName": "Syrabane's Ward - Champion",
+      "gate": "focused patron family; Champion access requires active Syrabane focus plus sustained protection/apprentice proof.",
+      "effects": [
+        {
+          "actorValue": "Restoration",
+          "magnitude": 25,
+          "effectName": "Restoration"
+        },
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 20,
+          "effectName": "Magic Resistance"
+        }
+      ],
+      "playerFacingText": "You protect the path for yourself and the vulnerable mage. Restoration +25, Magic Resistance +20%.",
+      "recognition": "V1 Survey/status text only (non-voiced): Champion Survey names the player as Syrabane's warding hand. Voiced College/apprentice recognition is V2."
     }
   ],
   "faucet": {
@@ -316,6 +458,16 @@
         "delta": 1.5,
         "antiFarm": "ScoreRepeatableAction(dailyCap=1, cooldownDays=0) - milestone, not per-cast; generic spellcasting spam is rejected",
         "hookSource": "Curated magic-milestone quest stages via PO3 QuestStageChange (College of Winterhold curated stages)"
+      },
+      {
+        "act": "Protective warding / apprentice aid (Syrabane secondary)",
+        "routeId": "p2-protection",
+        "route": "RouteAltmerSyrabaneWarding",
+        "handler": "HandleAltmerSyrabaneWarding",
+        "deity": "PDV_Deity_Syrabane",
+        "delta": 1.8,
+        "antiFarm": "ScoreRepeatableAction(dailyCap=1, cooldownDays=0) on curated protection milestones only; every ward cast is rejected",
+        "hookSource": "Curated ward/protection milestones, apprentice/College aid, curse/disease warding, anti-mage survival, and protected vulnerable-mage quest stages where locally verified"
       },
       {
         "act": "Coherent act / orthodoxy-gated institutional duty (orthodox-cost favor)",
@@ -449,40 +601,40 @@
     "vampire power as a clean devotion route"
   ],
   "v1RecognitionSurface": "Champion Survey/status text only (non-voiced). GetAltmerSummary explains Auri-El foundation, current standing, crisis state, Lorkhan pressure, ThalmorAlignment band, most recent orthodox/dawn favor, and curse posture in fiction-facing terms. Voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md.",
-  "budget": "Two always-on boon families (R8 cap): (1) Auri-El foundation [broad Orthodox state reward + Auri-El focus], (2) ONE secondary focus (Magnus OR Xarxes, one active at a time) plus one active contextual favor family. ThalmorAlignment is pressure/access/interpretation, NOT a third boon track. Lorkhan/crisis is pressure, not a boon. Reward ceiling per ledger = Auri-El foundation + one secondary + one contextual favor family.",
+  "budget": "Two always-on boon families (R8 cap): (1) Auri-El foundation [broad Orthodox state reward + Auri-El focus], (2) ONE secondary focus (Magnus OR Trinimac OR Xarxes OR Syrabane, one active at a time) plus one active contextual favor family. Syrabane launch breadth stays protection/apprentice-only until implementation proof shows the narrow lane is too thin. ThalmorAlignment is pressure/access/interpretation, NOT a third boon track; for Trinimac it gates access and modulates gain/offer weight. Lorkhan/crisis is pressure, not a boon. Reward ceiling per ledger = Auri-El foundation + one secondary + one contextual favor family.",
   "balanceInvariants": {
     "boonFamilyCap": "2 (Auri-El foundation + one secondary focus). ThalmorAlignment and crisis are NOT counted boon families.",
     "broadLessThanFocused": "Broad Orthodox caps at T2/Faithful and is suppressed when a patron is focused; focused 3-tier sets reach Champion.",
     "oneAntiFarmPerAct": "Each faucet act uses exactly ScoreRepeatableAction OR ConsumeDailyRepeatMultiplier, never both. Active-patron piety acts use ScoreRepeatableAction only.",
-    "magnitudeCeiling": "~12% (T3 MagickaRateMult/Restoration/Alteration peaks at 12).",
+    "magnitudeCeiling": "Percentage-style effects follow the 2026-06-14 Requiem ceiling review (MagickaRateMult and ResistMagic can reach the documented T3 caps; DamageResist is armor points and exempt). Skill ActorValue bonuses are point bonuses, not percentages.",
     "asciiOnly": "All playerFacingText is ASCII-only (Auri-El written with hyphen-minus).",
-    "actorValuesValid": "MagickaRateMult, ResistMagic, Alteration, Restoration are valid Skyrim ActorValue names.",
-    "deityIndex": "Magnus/Xarxes use next-available (serial author-time assignment, collision-free); Auri-El reuses its existing index; reused deities create:false.",
+    "actorValuesValid": "MagickaRateMult, ResistMagic, Alteration, Restoration, OneHanded, DamageResist are valid Skyrim ActorValue names.",
+    "deityIndex": "Magnus/Xarxes/Syrabane use next-available (serial author-time assignment, collision-free); Auri-El reuses its existing index; Trinimac is reused create:false from Orc.",
     "oneActiveFavorFamily": "Only one contextual favor family is loud at a time (costing-manifest rule)."
   },
   "rulingCompliance": {
     "R1": "Broad Orthodox is a STATE (PATRON_STATE_BROAD), not a deity. No PDV_Deity_Orthodox/Nine record created.",
     "R2": "Broad T1 editorId is the FIXED manager property PDV_Bless_Altmer_Orthodox_T1; broad T2 = PDV_Bless_Altmer_Orthodox_T2 (same stem).",
-    "R3": "Focused sets named PDV_Bless_Altmer_<Patron>_T1/T2/T3 for AuriEl/Magnus/Xarxes; grant logic mirrors SyncKhajiitEmphasisRewards (one active focus; T1>=Seeker, T2>=Devoted, T3>=Champion).",
-    "R4": "Auri-El is a SHARED record; Altmer references create:false and adds Stance_Altmer via --reconcile-shared-deity. Trinimac shared from Orc owner (create:false, PRESSURE stance only).",
-    "R5": "Only focusable patrons (Auri-El, Magnus, Xarxes) get/keep deity records. Trinimac is orthodoxy pressure, not a focusable reward patron here.",
+    "R3": "Focused sets named PDV_Bless_Altmer_<Patron>_T1/T2/T3 for AuriEl/Magnus/Trinimac/Xarxes/Syrabane; grant logic mirrors SyncKhajiitEmphasisRewards (one active focus; T1>=Seeker, T2>=Devoted, T3>=Champion).",
+    "R4": "Auri-El is a SHARED record; Altmer references create:false and adds Stance_Altmer via --reconcile-shared-deity. Trinimac is shared from Orc owner (create:false) but Altmer treats it as NATIVE/focusable behind high-orthodoxy access.",
+    "R5": "Only focusable patrons (Auri-El, Magnus, Trinimac, Xarxes, Syrabane) get/keep deity records. Trinimac reuses the Orc-owned shared record and does not create a new Altmer-owned QUST; Syrabane is Altmer-owned and protection-gated. Phynaster remains roster/flavor-only for Altmer V1 and is not authored.",
     "R6": "Daedric forks route through the existing 20C Daedric system; no new Daedric Prince records authored.",
     "R7": "Altmer is offer / active-patron: rewards gate on IsFirstTierRaceRewardEligible (patron tier >= Seeker).",
     "R8": "<=2 boon families; broad<focused; one anti-farm per act; magnitude ceiling ~12%; creed-loss medium/major only; ASCII-only text; Skyrim ActorValue names only; ThalmorAlignment is not a third boon track."
   },
   "authoringPlan": {
     "vehicle": "tools/pdv-baandar-sge-author or the generalized pdv-phase20 author with an --author-rewards mode reading this spec; one backed-up framework-ESP write. Reuse reward-author patterns (EnsureMagicEffect/ConfigureMagicEffect/EnsureSpell/ConfigureSpell/ParseActorValue, --reconcile-shared-deity, stances[]).",
-    "recordCreation": "Create 2 deity QUSTs (Magnus, Xarxes) with Stance_Altmer=NATIVE and deityIndex next-available. REUSE PDV_Deity_AuriEl (03DE88, create:false) and reconcile Stance_Altmer. Create SPEL+MGEF for: broad Orthodox T2 (T1 reward record wired to fixed property), 9 emphasis spells (AuriEl/Magnus/Xarxes x T1/T2/T3), and PDV_SPEL_Neglect_Altmer. Do NOT create Trinimac (Orc-owned) or any Daedric record.",
+    "recordCreation": "Create 3 deity QUSTs (Magnus, Xarxes, Syrabane) with Stance_Altmer=NATIVE and deityIndex next-available. REUSE PDV_Deity_AuriEl (03DE88, create:false) and PDV_Deity_Trinimac (Orc-owned create:false) and reconcile Stance_Altmer. Create SPEL+MGEF for: broad Orthodox T2 (T1 reward record wired to fixed property), 15 emphasis spells (AuriEl/Magnus/Trinimac/Xarxes/Syrabane x T1/T2/T3), and PDV_SPEL_Neglect_Altmer. Do NOT create Phynaster or any Daedric record.",
     "deityQuestStructure": "Mirror an existing deity quest (read PDV_Deity_AuriEl 03DE88 or PDV_Deity_Kyne 0120B6 fully first): FormVersion 44, Start-Game-Enabled flag, QuestAdapter VMAD hosting PDV_Deity_<Name> script, base properties DeityName(String), DeityIndex(Int, next-available), Stance_Altmer=0(NATIVE), PDV_GLO_OriginRace, PDV_GLO_DebugLevel. Thresholds use script defaults (25/50/85). Per MEMORY: every PDV_Deity_* QUST needs the SGE (Start-Game-Enabled) flag AND a SEQ entry - confirm the author helper sets the SGE flag and emits the SEQ record (this is how BaanDar shipped broken).",
-    "wiring": "Same run: add Magnus/Xarxes to FLST PDV_FLST_AllDeities (017E47); wire deity props (PDV_Magnus/PDV_Xarxes) + broad Orthodox T1/T2 props + 9 emphasis spell props + PDV_SPEL_Neglect_Altmer on PDV__ManagerQuest; confirm existing PDV_AuriEl prop.",
+    "wiring": "Same run: add Magnus/Xarxes/Syrabane to FLST PDV_FLST_AllDeities (017E47); confirm reused Auri-El and Trinimac are already present. Wire deity props (PDV_Magnus/PDV_Xarxes/PDV_Syrabane/PDV_Trinimac) + broad Orthodox T1/T2 props + 15 emphasis spell props + PDV_SPEL_Neglect_Altmer on PDV__ManagerQuest; confirm existing PDV_AuriEl prop. Add Altmer Trinimac formal offer eligibility/message routing behind the ThalmorAlignment >= 70 gate and meaningful-signal requirement, and add Altmer Syrabane formal offer eligibility/message routing behind the narrow protection/apprentice proof requirement.",
     "baseline": {
       "existingDeityQuests": {
         "PDV_Deity_AuriEl": "03DE88"
       },
       "formListAllDeities": "017E47",
-      "khajiitDeityIndices": "40-43 preserved; Magnus/Xarxes assign next-available above the highest existing index at author time"
+      "khajiitDeityIndices": "40-43 preserved; Magnus/Xarxes/Syrabane assign next-available above the highest existing index at author time"
     },
-    "verify": "housecarl readback (profile Devotion Dev): Magnus/Xarxes QUSTs exist with SGE flag + SEQ entries, DeityName/DeityIndex/Stance_Altmer set; FLST 017E47 includes Magnus/Xarxes; the 11 new SPEL (broad T2 + 9 emphasis + neglect) exist with correct MGEF actor-values/magnitudes; AuriEl Stance_Altmer reconciled. Then strict verifier (--strict-phase20-race-costing --strict-phase20-altmer) and runtime smoke (p2-books track per PDV_BetaTestPacket_Altmer.md)."
+    "verify": "housecarl readback (profile Devotion Dev): Magnus/Xarxes/Syrabane QUSTs exist with SGE flag + SEQ entries, DeityName/DeityIndex/Stance_Altmer set; Trinimac exists as the shared Orc-owned record with Stance_Altmer reconciled to NATIVE/focusable; FLST 017E47 includes Magnus/Xarxes/Syrabane and already includes Trinimac; the 17 new SPEL (broad T2 + 15 emphasis + neglect) exist with correct MGEF actor-values/magnitudes; AuriEl Stance_Altmer reconciled; formal offer eligibility includes Trinimac only when ThalmorAlignment >= 70 plus meaningful signal proof and Syrabane only when protection/apprentice proof exists. Then strict verifier (--strict-phase20-race-costing --strict-phase20-altmer) and runtime smoke (p2-books track per PDV_BetaTestPacket_Altmer.md plus Trinimac gated-offer proof plus Syrabane protection-offer proof)."
   },
   "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run",
   "ceilingReviewApplied20260614": "Percent-mult crossings clamped to Requiem ceilings (Magicka/Stamina/ResistMagic T2 10/T3 20; HealRateMult T2 15/T3 30; ResistDisease T2 30/T3 50). DamageResist rescaled to the armor-points ladder T1 15/T2 30/T3 50 (armor points are exempt from the flat ~12 magnitude ceiling because +4 AR is ~0.3% damage reduction in Requiem). Per the 2026-06-14 Requiem ceiling review; mirrors the Orc spec."

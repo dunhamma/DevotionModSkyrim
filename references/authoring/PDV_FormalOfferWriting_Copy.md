@@ -1,12 +1,17 @@
 # PDV Formal Deity Offer -- Writing Pass Output
 
 **Owner:** Claude writing pass (copy only)
-**Status:** Ready for copy review / conformance, then codex authoring
+**Status:** Ready for copy review / conformance for the original record wave; superseded for Altmer scope by the 2026-07-08 deity-signal remap
 **Implementation anchor:** `references/authoring/PDV_FormalOffer_RecordWave.spec.json`
 **Handoff:** `references/authoring/PDV_FormalOfferWriting_Handoff.md`
 
 This is the Required Output for the formal-offer writing pass. Final copy is committed in the
 record-wave spec above; this document is the human-readable review table plus the Nord audit.
+
+**Altmer remap note (2026-07-08):** This output predates the Trinimac/Syrabane
+promotion. Keep the existing Auri-El/Magnus/Xarxes copy as historical accepted
+copy, but do not treat the Altmer section as complete until Trinimac and
+Syrabane addendum copy is written from the remap gates.
 
 ## Record-requirement notes (for codex)
 
@@ -37,7 +42,7 @@ record-wave spec above; this document is the human-readable review table plus th
 | Exactly 3 buttons per offer | Pass |
 | Response mirrors present (Imperial, Dunmer, Altmer, Redguard) | Pass (enriched from thin placeholders) |
 | No no-offer race converted to an offer race | Pass |
-| No out-of-scope deity added | Pass (Trinimac/Syrabane excluded; Redguard limited to the three) |
+| No out-of-scope deity added | Historical pass for the original wave (Trinimac/Syrabane excluded then; 2026-07-08 remap now requires an Altmer addendum) |
 
 ## Imperial (9 offers)
 
@@ -77,7 +82,7 @@ Shared response mirrors (Dunmer):
 
 ## Altmer (3 offers)
 
-Disciplined orthodox focus; Auri-El is the foundation; Trinimac/Syrabane excluded; avoid Thalmor-only language.
+Disciplined focus; Auri-El is the foundation. Original wave excluded Trinimac/Syrabane; 2026-07-08 remap now requires an addendum for Trinimac high-orthodoxy defense and Syrabane protection/apprentice gates.
 
 Shared response mirrors (Altmer):
 - `response_accept` (`PDV_Msg_Altmer_OfferResponse_Accept`): "You name this focus. The foundation narrows to a single disciplined road, and the dawn holds in you."

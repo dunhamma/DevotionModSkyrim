@@ -15,6 +15,9 @@
   ],
   "designRules": [
     "Auri-El remains the foundation; secondary focus and alignment modify play but do not create generic broad worship.",
+    "Trinimac is a true Altmer focused path behind ThalmorAlignment >= 70 plus meaningful civilization-defense/enforcement proof; alignment gates access and weights gain/offer readiness, but is not a third boon track.",
+    "Syrabane is a true Altmer focused path, launched narrow around warding, magical protection, apprentice/College aid, curse/disease warding, and anti-mage survival; widen only if implementation proof shows the narrow lane is too thin.",
+    "Phynaster remains Altmer roster/flavor-only for V1; do not create an Altmer Phynaster deity record, formal offer, reward family, or scoring path.",
     "Lorkhan pressure is authored and tagged, not ambient Skyrim existence.",
     "Crisis states are player-readable and recoverable; they do not silently remove a patron.",
     "Positive devotional upkeep must trend net-positive for normal Altmer play.",
@@ -37,6 +40,21 @@
       "decision": "Altmer orthodox cost proof reward row",
       "outcome": "Ratified",
       "value": "PDV_Msg_Altmer_FavorMarked_ThalmorOrthodox_ProjectDefended"
+    },
+    {
+      "decision": "Altmer Trinimac focus gate",
+      "outcome": "Ratified",
+      "value": "Trinimac is a true focused path gated by ThalmorAlignment >= 70 plus meaningful civilization-defense/enforcement signals; ThalmorAlignment modulates Trinimac gain and offer readiness after access, without becoming a third boon track."
+    },
+    {
+      "decision": "Altmer Syrabane focus gate",
+      "outcome": "Ratified",
+      "value": "Syrabane is a true focused path, launched narrow: offer/gain proof must be warding, magical protection, apprentice/College aid, curse/disease warding, or anti-mage survival. Generic magic advancement, generic College membership, every ward cast, and raw magic-resistance farming remain rejected unless a later implementation review widens the lane deliberately."
+    },
+    {
+      "decision": "Altmer Phynaster V1 posture",
+      "outcome": "Ratified",
+      "value": "Phynaster remains Altmer roster/flavor-only for V1. The implementation plan must not create PDV_Deity_Phynaster, a PDV_Phynaster manager property, Altmer Phynaster reward spells, formal-offer messages, or scoring rows."
     }
   ],
   "stateSurfaces": [
@@ -110,6 +128,7 @@
       ],
       "notes": [
         "Alignment gates interpretation, access, and Trinimac posture.",
+        "For Trinimac, ThalmorAlignment >= 70 is required for formal offer/focused access, and current alignment band weights gain and offer readiness after access.",
         "It is not a third steady boon package."
       ]
     }
@@ -242,7 +261,8 @@
         "civilization defense",
         "orthodoxy-gated threat"
       ],
-      "rewardIntent": "warrior/enforcer support with a high gate"
+      "rewardIntent": "warrior/enforcer support with a high gate",
+      "focusedPath": "Trinimac true focus; offer/reward access requires high alignment and meaningful defense/enforcement proof."
     },
     {
       "id": "xarxes-record-kept",
@@ -265,7 +285,8 @@
         "protective magic",
         "safe recovery"
       ],
-      "rewardIntent": "protective support without generic mercy copy"
+      "rewardIntent": "protective support without generic mercy copy",
+      "focusedPath": "Syrabane true focus; offer/reward access requires protection/apprentice proof. Breadth may widen only through authored defensive texts or institution-protection beats if narrow proof is too thin."
     }
   ],
   "triggerSurfaces": [

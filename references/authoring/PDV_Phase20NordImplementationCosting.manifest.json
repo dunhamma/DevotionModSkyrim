@@ -18,7 +18,7 @@
   "designRules": [
     "Broad worship is a STATE (PDV_State_NordPantheonBaseline: OldWays|NineDivines), not a deity; broad lane caps at Faithful (T2) and never reaches T3.",
     "Focused patron devotion must be stronger, sharper, and narrower than broad Old Ways or broad Nine Divines; suppress broad T2 favors when a patron is focused.",
-    "Nord can FOCUS ANY GOD IN ITS CHOSEN PANTHEON (decision 2026-06-07; supersedes the retired 'Nord owns zero new deities / broad-only Shor/Tsun/Stuhn'). Old Ways lane = Kyne(reuse) + Talos(reuse) + Shor/Tsun/Stuhn(NEW, Nord-owned QUSTs, create:true, Stance_Nord NATIVE). Nine Divines lane = the 8 Divines(reuse, Imperial-owned; Nord reconciles Stance_Nord only) + Talos(reuse). Hircine routes through the Phase 20C Daedric system, not a new Aedric record.",
+    "Nord can FOCUS ANY GOD IN ITS CHOSEN PANTHEON (decision 2026-06-07; supersedes the retired 'Nord owns zero new deities / broad-only Shor/Tsun/Stuhn'). Old Ways lane = Kyne(reuse) + Talos(reuse) + Shor/Tsun/Stuhn(NEW, Nord-owned QUSTs, create:true, Stance_Nord NATIVE) + Mara(reuse) + Arkay-as-Orkey(reuse/display alias). Nine Divines lane = the 8 Divines(reuse, Imperial-owned; Nord reconciles Stance_Nord only) + Talos(reuse). Orkey is not a new deity record; it is Old Ways presentation for PDV_Deity_Arkay / PDV_Arkay. Hircine routes through the Phase 20C Daedric system, not a new Aedric record.",
     "Pantheon baseline and shared patron state stay separate; do not implement Broad/Primary as Nord baseline states.",
     "Talos pressure requires costly faithful signals, not generic anti-Thalmor violence or ordinary Civil War preference.",
     "Kyne/Talos/Shor/Tsun/Stuhn/Divines/Hircine/broad must not stack into a universal best build; only one focus is active at a time; broad blended favors at Faithful stay softer than Devoted patron benefits.",
@@ -136,7 +136,7 @@
         "Hall of the Dead / burial-adjacent quest stages",
         "draugr boss or necromancer operation completion"
       ],
-      "rewardIntent": "Arkay plus Shor/ancestor quiet; per quest/site, avoids repeat tomb farming",
+      "rewardIntent": "Orkey/Arkay plus Shor/ancestor quiet; per quest/site, avoids repeat tomb farming",
       "antiFarm": "per quest/site one-shot; reject repeat tomb visits"
     },
     {
@@ -311,7 +311,7 @@
       "name": "PDV NORD OLD WAYS BOOK SIGNAL",
       "activateText": "RECORD OLD WAYS BOOK READ",
       "oncePerDayKey": "PDV.Signal.NordOldWaysBook",
-      "immersionProof": "Approved Old Ways book-read source family (NordsArise/DreamOfSovngarde/SovngardeReexamination) as one-time Old Ways identity signals; TotemsOfHircine is the Hircine/Arkay edge book."
+      "immersionProof": "Approved Old Ways book-read source family (NordsArise/DreamOfSovngarde/SovngardeReexamination) as one-time Old Ways identity signals; TotemsOfHircine is the Hircine/Arkay edge book. Old Ways presentation can surface Arkay-facing death-cycle content as Orkey without changing the internal Arkay route."
     }
   ],
   "immersionProof": {

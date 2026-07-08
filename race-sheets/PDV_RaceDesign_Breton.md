@@ -41,7 +41,7 @@ Breton does **not** use the generic broad-worship lane. "Tradition breadth" mean
 
 Normal Breton tradition switching is not available in 1.0. The setup choice is stable. Major authored forks can rupture or redirect a path, such as the Green Way werewolf trial opening Hircine, but casual mid-game reorientation is a future explicit feature.
 
-**Cross-lane pressure rule:** The tracks pull asymmetrically. Hidden Art acts can strongly damage KnightlyVowIntegrity and raise WitchcraftExposure. Knightly public cover can slowly lower WitchcraftExposure, but it does not erase severe occult commitments by itself. Knight's Road and Green Way can overlap gently through mercy, protection, nature restraint, and Kynareth/Y'ffre-adjacent conduct. Hidden Art and Green Way overlap mainly through Hircine and old magic, but that overlap creates fork pressure rather than a free hybrid.
+**Cross-lane pressure rule:** The tracks pull asymmetrically. Hidden Art acts can strongly damage KnightlyVowIntegrity and raise WitchcraftExposure. Knightly public cover can slowly lower WitchcraftExposure, but it does not erase severe occult commitments by itself. Knight's Road and Green Way can overlap gently through mercy, protection, nature restraint, and Y'ffre-adjacent conduct; Skyrim-facing Kynareth places/tools can act only as proxy sources routed to Y'ffre, not as Green Way patron ownership. Hidden Art and Green Way overlap mainly through Hircine and old magic, but that overlap creates fork pressure rather than a free hybrid.
 
 ---
 
@@ -140,7 +140,15 @@ Notorious (75-100): Full social rupture; Daedric prince rewards full commitment;
 
 ## The Green Way
 
-### Available deities: Y'ffre (primary), Magnus, Phynaster
+### Available deities: Y'ffre (primary), Phynaster (proof-gated)
+
+Phynaster's Green Way spine is pilgrimage/endurance plus elven heritage/longevity: long road, short stride, disciplined life, Direnni memory, and old practice. He is not a second nature god. Y'ffre still owns the nature covenant and the Green Way reward identity; Phynaster can become a focused Green Way offer only if the implementation pass finds concrete, non-generic hooks.
+
+Phynaster promotion gate: before he becomes offer-eligible or gets a live deity record, the implementation plan must produce at least three positive source families, at least one dislike/failure family, distinct offer/reward copy, and a no-overlap rule with Y'ffre. If that fails, Phynaster stays flavor/support for Breton V1.
+
+This gate is deferred to implementation planning; do not treat the race walkthrough as approval to create Phynaster records or offer hooks.
+
+Magnus can contribute only thin old-magic support rows where the source is genuinely druidic or earthbones-adjacent. He is not Green Way offer-eligible and does not own Green Way reward tiers.
 
 ### DruidicStanding (Y'ffre's ongoing covenant)
 
@@ -160,12 +168,12 @@ The Old Contract (strict Bosmer Green Pact) gives the full hard-compliance mecha
 - Outdoor sleep fully restores stamina and restores 50% of missing health (in addition to normal sleep benefits)
 - Animals rarely aggro unless genuinely threatened
 - Standing stone interactions generate piety (Breton druids use stones as focal points)
-- Kynareth shrine interactions generate modest Y'ffre-adjacent piety (nature-adjacent, lore-defensible)
+- Kynareth shrine interactions can generate modest Y'ffre-adjacent piety only as explicit proxy sources routed to Y'ffre; they do not make Kynareth a Green Way patron
 
 **Tier 3 — Devoted:**
 - *Y'ffre Champion:* Voice of the Living Story — in forested outdoor areas, armor rating +10. Hunting shots (bow, first hit on an animal not attacked first) have bonus damage. Nature-site quests (anything set in forests, groves, standing stone areas) give double piety. Werewolf fork: if "beast serves the Green" was chosen, beast form gains nature-aligned bonus (animals don't attack you in beast form).
-- *Magnus Champion:* Elder Way's mastery — spell cost -10% all schools; Alteration specifically -15%. Psijic-adjacent content (Order of the Owl, rare tomes) generates strong piety.
-- *Phynaster Champion:* Longevity's gift — resist magic 15% cumulative (Breton race base + Tier 1 + Devoted bonus stacks here intentionally). Elven-heritage acts (appreciation of elven craftsmanship, engagement with Altmer/Bosmer cultural content) generate modest piety.
+- *Old-magic support:* Magnus-adjacent sources can lightly support the Green Way only when they read as druidic old magic, earthbones memory, or nature-rite scholarship. Formal arcane study belongs to Hidden Art.
+- *Phynaster Champion:* Longevity's gift: resist magic 15% cumulative (Breton race base + Tier 1 + Devoted bonus stacks here intentionally). Pilgrimage/endurance and elven-heritage acts (appreciation of elven craftsmanship, engagement with Altmer/Bosmer cultural content, long-practice discipline) generate modest piety.
 
 **Champion moment for Green Way:** The forest in Skyrim is cold and often hostile. A Green Way Champion should feel like the forest has been taught to recognize them — animals settling when you approach, hunting feeling guided, the outdoors cooperating rather than merely enduring. This is quiet power, appropriate for a tradition about covenant rather than conquest.
 
@@ -247,7 +255,7 @@ The Old Contract (strict Bosmer Green Pact) gives the full hard-compliance mecha
 - Standing stone activators are a clean finite surface: `DoomstoneApprentice` (`Skyrim.esm:0D2331`), `DoomstoneAtronach` (`Skyrim.esm:0D2334`), `DoomstoneLady` (`Skyrim.esm:0D2330`), `DoomstoneLord` (`Skyrim.esm:0D2336`), `DoomstoneLover` (`Skyrim.esm:0D2332`), `DoomstoneMage` (`Skyrim.esm:0D232E`), `DoomstoneRitual` (`Skyrim.esm:0D2337`), `DoomstoneSerpent` (`Skyrim.esm:0D2339`), `DoomstoneShadow` (`Skyrim.esm:0D2335`), `DoomstoneSteed` (`Skyrim.esm:0D2333`), `DoomstoneThief` (`Skyrim.esm:0D232F`), `DoomstoneTower` (`Skyrim.esm:0D2338`), and `DoomstoneWarrior` (`Skyrim.esm:0D232D`).
 - Solstheim standing stones add optional later support through `dlc2StandingStoneBeastACT`, `dlc2StandingStoneEarthACT`, `dlc2StandingStoneSunACT`, `dlc2StandingStoneTreeACT`, `dlc2StandingStoneWaterACT`, and `dlc2StandingStoneWindACT`.
 - `LocTypeSprigganGrove` (`Skyrim.esm:0130EA`) is a strong nature-site tag with exactly three extracted vanilla examples: `MossMotherCavernLocation` (`Skyrim.esm:01927E`), `RoadsideRuinsLocation` (`Skyrim.esm:04787B`), and `ShadowgreenCavernLocation` (`Skyrim.esm:01929C`).
-- `ShrineOfKynareth` (`Skyrim.esm:0D987F`) and `WhiterunTempleofKynarethLocation` (`Skyrim.esm:01F87D`) can provide modest Y'ffre-adjacent support, not full replacement worship.
+- `ShrineOfKynareth` (`Skyrim.esm:0D987F`) and `WhiterunTempleofKynarethLocation` (`Skyrim.esm:01F87D`) can provide modest Y'ffre-adjacent proxy support if explicitly routed to Y'ffre, not Kynareth worship or full replacement worship.
 - `PlayerWerewolfFaction` (`Skyrim.esm:091822`) and Companions beast-blood quest signals support the one-time Green Way Druidic Trial.
 
 **Green Way: weak or cautious hooks**

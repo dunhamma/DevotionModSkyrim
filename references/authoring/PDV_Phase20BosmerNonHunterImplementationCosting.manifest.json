@@ -21,6 +21,7 @@
     "Old Contract, Living Story, Exchange, and Bandit Road need comparable felt attention.",
     "Green Pact item/tag work must not expand before non-hunter favor tables are formalized.",
     "Y'ffre's Old Contract and Living Story share the deity ledger but must play differently.",
+    "Do not fork Y'ffre storage: Old Contract and Living Story both reuse PDV_Deity_Yffre; path state only changes gates, weights, penalties, reward copy, and presentation.",
     "Z'en is not Zenithar, and Baan Dar road survival is not generic crime."
   ],
   "stateSurfaces": [

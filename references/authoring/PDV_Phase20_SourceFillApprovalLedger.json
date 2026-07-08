@@ -53,6 +53,22 @@
     "Book entries are one-shot per source/form/family through PDV_PlayerEvents repeat gates.",
     "Do not approve duplicate abbreviated books, broad lore-only books, shrine blessings, spell effects, generic faction records, or generic quest records in this pass."
   ],
+  "designPromotionAddenda": [
+    {
+      "race": "Argonian",
+      "routeFamily": "People / community",
+      "status": "design-locked-pending-live-fill-readback",
+      "rule": "People-layer launch promotion is exact-source only: Argonian Ceremony text, Histcarp/shared-food continuity, and Derkeethus rescue completion. Windhelm Assemblage, Jaree-Ra betrayal, and future extrapolated Argonian quests remain candidate-only until exact quest/stage/outcome readback plus accepted/rejected context rules are approved.",
+      "proofBoundary": "This addendum does not update the liveFillReadback proof count; live source-fill/readback remains required before claiming implemented coverage."
+    },
+    {
+      "race": "Argonian",
+      "routeFamily": "Void / Sithis",
+      "status": "design-locked-pending-live-fill-readback",
+      "rule": "Sithis/Void activation requires three significant signals. DB01 and DB11 are exact launch milestones in the P2 receiver manifest, but each contributes one threshold signal and does not fully activate Void scoring alone. Future death/void/change quests are expected and remain candidate-only until exact quest/stage/outcome readback plus accepted/rejected context rules are approved.",
+      "proofBoundary": "This addendum does not update the historical liveFillReadback proof count; live source-fill/readback remains required before claiming implemented Sithis coverage."
+    }
+  ],
   "approvedLiveFillGroups": [
     {
       "race": "Breton",
@@ -404,7 +420,7 @@
       "source": "DB01, DB11, DLC1VQ04",
       "receiverDecision": "book receivers are live; Skyrim.esm exact-stage source support exists; DLC1 row remains future-review",
       "fillDecision": "blocked",
-      "blocker": "Only approved Hist book-read entries are filled; no approved Void/Sithis quest-stage entries are declared."
+      "blocker": "Live-proof ledger currently proves approved Hist book-read entries only. Argonian People and Sithis launch entries are design-locked in the P2 receiver manifest but still need live fill/readback before implementation proof; DB01/DB11 count as threshold signals, while DLC1VQ04 remains future-review."
     },
     {
       "race": "Khajiit",

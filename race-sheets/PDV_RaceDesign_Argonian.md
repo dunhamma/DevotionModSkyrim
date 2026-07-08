@@ -50,6 +50,8 @@ The Hist remains constitutive even in absence
 
 **Sithis activation (LOCKED):** Every Argonian has baseline Sithis awareness, but full active `Void` scoring requires repeated strong signals. Joining the Dark Brotherhood counts as one major signal, not full activation by itself. Full activation requires at least three significant Sithis signals, preferably across at least two in-game days or quest beats. Valid signals are Dark Brotherhood milestones/contracts and curated death/void/change choices. Generic stealth, generic murder, and ordinary killing do not count.
 
+**Sithis source promotion (LOCKED 2026-07-08):** More death, void, change, and non-Brotherhood quest beats should be added over time, but only through the exact-readback candidate queue. A promoted quest source must name the exact quest/stage/outcome, accepted context, rejected context, duplicate guard, and evidence. Each promoted source contributes a significant signal; none bypasses the three-signal activation gate.
+
 **Curse posture enum (LOCKED):** Add `PDV_State_ArgonianHistPosture` for Hist-distance and curse interpretation, with exact values `Normal = 0`, `Distant = 1`, `Strained = 2`, `Silenced = 3`, and `Corrupted = 4`. Low uncursed Hist relation may become `Distant`; active lycanthropy sets `Strained`; active vampirism sets at least `Silenced`, and may become `Corrupted` when vampirism is paired with Molag Bal / domination / feeding-pattern pressure.
 
 **Curse split (LOCKED):** Vampire is the deep grief state: Hist silenced or corrupted, community damaged, and Sithis more available but not automatically good. Werewolf is serious strain but recoverable: the shape is altered, the Hist relation is stressed, but Saxhleel identity is not spiritually annihilated.
@@ -87,6 +89,8 @@ The strongest vanilla-facing Argonian gameplay layer. The Hist is distant — co
 - In-game solidarity acts with other Argonians (not necessarily quest-flagged; named Argonian NPC interactions)
 
 **Community can buffer low Hist relation.** If Hist relation is low, community signals partially compensate — the people hold you together when the trees cannot. This is architecturally important: a player who maintains strong community ties will experience less consequence from Hist decay than one who plays entirely solo.
+
+**People-layer source promotion (LOCKED 2026-07-08):** Launch source-fill is exact/readback-backed only: Argonian Ceremony text, Histcarp/shared-food continuity, and Derkeethus rescue completion. Windhelm Assemblage remains a heavy People-lane target, and Jaree-Ra betrayal remains a potential negative People loss, but both stay candidate-only until exact quest/stage/outcome readback is approved. Future Argonian quests can be extrapolated into the candidate queue, not promoted from broad prose alone.
 
 ### Layer 3 — Sithis Acknowledgment
 
@@ -168,13 +172,15 @@ Every Argonian has a light baseline awareness of Sithis as change, void, and dea
 | Hist | Rest or idle near a large body of water | Daily cap | Broader than sleep — meditation proxy |
 | Hist | Enter a swamp or significant wetland area | Per zone, daily cap | Black Marsh-proxy environment |
 | Hist | Cross or wade through a large river | Daily cap | Movement through water, not just proximity |
-| Community | Help a named Argonian NPC (quest or dialogue) | Per NPC, cooldown | Any named Argonian anywhere in Skyrim |
-| Community | Complete a quest helping the Windhelm Assemblage | Per quest | Extra-heavy weight; primary Argonian community |
-| Community | Protect an Argonian NPC from violence | Per event | Reactive to NPC threat; naturally rare |
-| Community | Riften Docks interaction (buy from, help, defend Argonians) | Per interaction type, daily cap | Secondary community hub |
-| Sithis | Join the Dark Brotherhood | One-time | Major threshold |
-| Sithis | Complete a Dark Brotherhood contract | Per contract | Strong recurring signal; natural rate-limit |
-| Sithis | Choose a death-acknowledging dialogue option | Per choice, cooldown | Curated list of nodes; small piety |
+| Community | Argonian Ceremony text, Histcarp/shared-food continuity, Derkeethus rescue completion | One-shot or capped source | Exact launch sources only; not generic Argonian contact |
+| Community | Help a named Argonian NPC (quest or dialogue) | Candidate queue | Requires exact quest/stage/outcome readback before source-fill |
+| Community | Complete a quest helping the Windhelm Assemblage | Candidate queue | Extra-heavy target, but generic Windhelm presence is rejected |
+| Community | Protect an Argonian NPC from violence | Candidate queue | Reactive to NPC threat; exact source/outcome required |
+| Community | Riften Docks interaction (buy from, help, defend Argonians) | Candidate queue | Secondary hub; generic Riften presence is rejected |
+| Sithis | Dark Brotherhood initiation or end-state milestones | One-shot significant signal | Exact launch sources; one signal does not fully activate Void scoring |
+| Sithis | Future death/void/change quest beat | Candidate queue | Requires exact quest/stage/outcome readback before source-fill |
+| Sithis | Complete a Dark Brotherhood contract | Candidate queue / post-threshold context | No radiant assassination loop; exact source or controlled route required |
+| Sithis | Choose a death-acknowledging dialogue option | Candidate queue | Curated node list required; small piety only |
 | All | Near-water combat win | Hist layer | Location-keyword + Story Manager kill event |
 | Hist decay | Any in-game day without a Hist-recovery signal | Passive negative | Small; recoverable with water proximity |
 
