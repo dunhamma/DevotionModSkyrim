@@ -227,7 +227,7 @@ to most gods).
 ### Altmer
 
 **Auri-El** — the soul-god, Elven ancestry, the ascendant order.
-- approve: `disciplined_study`(S), `honor_the_dead`(m, *ancestry*), `prove_by_struggle`(m), `uphold_law_justice`(m)
+- approve: `disciplined_study`(S), `honor_the_dead`(m, *ancestry*), `prove_by_struggle`(m), `uphold_law_justice`(m), `kill_honorable_combat`(m, *ONLY vs the World-Eater and its dragon-heralds — the ascendant order against un-time; NOT generic battle. Recorded 2026-07-09 to back the MQ104/106/206/305 rows a tag-consistency check surfaced.*)
 - disapprove: `serve_a_daedra:*`(S), `sow_chaos_madness`(m)
 - anchor: Elven Akatosh; the Chantry of Auri-El. (UESP: Auriel)
 

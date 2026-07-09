@@ -60,7 +60,69 @@ Expected readback result:
 Stop if any new readback gate fails. Do not continue into Skyrim to "see if it
 works"; fix the machine proof first.
 
+### 0.1 Machine-provable discharge - do NOT spend in-game time on these
+
+Everything below is proven by tooling with NO Skyrim session. Discharge it first;
+the in-game run then only covers what a human must actually observe. Re-running
+these before a smoke sitting is far cheaper than re-proving in game.
+
+| Claim | Discharged by | Needs game? |
+|---|---|---|
+| Every cell's valence/tag/magnitude is sign-correct CSV->JSON | `pdv_quest_matrix_compile.mjs --check` + valence audit (734 +, 237 -, 0 mismatch) | NO |
+| New quests are registered/watched | `questWatch.editorIds` in the compiled JSON (135 quests) | NO |
+| Crypt-clear + Paarthurnax kill/spare fan-outs name the right deities | `pdv_deity_signal_remap_adversary_check.mjs` asserts each deity in the .psc | NO |
+| Anti-farm caps exist on every repeatable | `ConsumeDailyRepeatMultiplier` (crypt/faucet) + `dailyCap`/`cooldownDays` columns (LD) | NO |
+| Likes/dislikes codegen folded + version bumped | grep `LoadRowsForDeity` + `LIKES_DISLIKES_VERSION = 15` | NO |
+| Every authored tag is in that deity's Part B approve/disapprove | tag-vs-Part-B static check (see note) | NO |
+| Crypt + plant-food FormLists are populated | `dotnet ... --author-undead-crypt-clear-sites --check` / green-pact audit | NO |
+| Papyrus compiles clean | `pdv_compile.mjs` 0 error / 0 warning | NO |
+| No `echo` rows survive; magnitude->piety values correct | compile value table (milestone 8-18 / small 2-6) | NO |
+
+Recommended NEW static gate: a **tag-vs-Part-B consistency check** (author a
+`pdv_tag_profile_audit.mjs`) - it caught `Auri-El + kill_honorable_combat`
+off-profile in this session before any play. Until it exists, run the parse
+check ad hoc. Known-safe parser exceptions: Prince self-serve
+(`serve_a_daedra:<self>`), `destroy_reject_daedra:<prince>` hostile branches,
+Z'en inheriting Zenithar's `theft_burglary` by paired-echo, and deities whose
+profile is operative-only (Syrabane) / header-aliased (The Hist, Azurah/Azura).
+
+What STILL needs the game (nothing above proves these): route acceptance /
+actual piety movement, Book of Days / toast / Prisma legibility + one-per-quest
+aggregation, Active Effects application, save/load stack, live stance/
+reachability filtering, crypt `IsCleared()` timing, Paarthurnax `OnDeath` /
+SPARE latch firing, LD table reload on a version bump, runtime daily-cap
+enforcement, and the Green Way location/harvest/plant hooks.
+
 ## 1. Devotion Dev Setup
+
+### 1.0 Efficient execution plan - batch by origin + save-state
+
+The costly moves in-game are origin switches, fresh saves, and log capture. Do
+NOT walk the sections top-to-bottom; walk them by ORIGIN so each origin is set
+once. Capture logs once per sitting, not per test. Suggested sittings:
+
+| Sitting | Origin | Save | Covers (sections / 2026-07-09 cases) |
+|---|---|---|---|
+| A | Nord (0) | **fresh, NOT v15-stamped** | LD v15 366/303 FIRST (needs the version reload), then shrine cap (2), MQ spine setstage (10.1/10.2 Dagon flip), crypt-clear (10.3), cowardice-god DB dislikes (10.8), Paarthurnax kill+spare (10.4) |
+| B | Bosmer (4) | save | Y'ffre Green Way + necromancy + bardic (10.7), DA05 duplicate-branch (9) |
+| C | Breton (2) | fresh | P2 exact-stage (4), formal offers (5), neglect/recovery (7), multi-deity route (3) |
+| D | Altmer (3) | save | Syrabane/Trinimac offers + rewards (6) |
+| E | any disposable | disposable | taboo/hostile (8), readback-refresh rows (10.5: DBDestroy/MS10/CR13), remaining adversary (9), borderline prove-or-drop rows |
+
+Rules that save the most time:
+- Run 0.1 machine discharge first - it removes ~half the "does it exist / is it
+  wired" questions from every sitting below.
+- The **LD v15 (366/303) case MUST be the first act on a save that has never
+  loaded version 15** - once the table stamps, you cannot re-observe the reload
+  without another fresh save. Do it before any setstage in Sitting A.
+- `setstage` quest fan-out is origin-agnostic for WHICH cells score, but which
+  deities are VISIBLE depends on the origin roster + reachability gate - pick the
+  origin that makes the target deity reachable (e.g. death gods read on any
+  origin; Talos is Concordat-gated for Imperials).
+- One hard save before each origin/quest/state change so you can reload instead
+  of rebuilding the save.
+
+### 1.1 MO2 setup and per-sitting prep
 
 Use Anvil MO2:
 
@@ -455,7 +517,7 @@ runtime-proven yet. Use a clean save; `coc` skips Story location triggers -
 enter via load door/fast-travel. Each case: capture the standard evidence shape
 (section 10).
 
-### 11.1 Main-quest per-deity fan-out (progression beats now count)
+### 10.1 Main-quest per-deity fan-out (progression beats now count)
 Steps: `setstage MQ305 200` (Dragonslayer), `setstage MQ206 220` (read the
 Elder Scroll), `setstage MQ302 300` (Season Unending).
 - Runtime-route proof: MQ305 fires the death gods **Arkay/Tu'whacca (milestone
@@ -464,13 +526,13 @@ Elder Scroll), `setstage MQ302 300` (Season Unending).
 - Manual visual: one aggregated toast + one Book of Days line per quest fire
   naming the reacting deities; focused-panel Ledger shows the movement.
 
-### 11.2 Mehrunes Dagon correction (valence flip)
+### 10.2 Mehrunes Dagon correction (valence flip)
 Steps: `setstage MQ305 200` (or MQ206 220) with Dagon in the dashboard roster.
 - Proof: Dagon takes a **LOSS** (`serve_empire_order`, not a gain) - the Prince
   of Destruction does not cheer the world being saved. Confirm his ordinary
   dragon-KILL beats (MQ104/106/303) still register as GAINS.
 
-### 11.3 Crypt-clear signal
+### 10.3 Crypt-clear signal
 Steps: enter then fully clear a draugr barrow on `PDV_FLST_UndeadCryptClearSites`
 (e.g. Bleak Falls Barrow); re-clear-eligible sites the same day.
 - Runtime-route: `Undead crypt clear fired for location ...` marker once per
@@ -479,7 +541,7 @@ Steps: enter then fully clear a draugr barrow on `PDV_FLST_UndeadCryptClearSites
 - Manual visual: gains appear in Ledger/Book of Days; no double-fire on re-enter
   of an already-cleared site after save/load.
 
-### 11.4 Paarthurnax kill/spare fork (Codex-built)
+### 10.4 Paarthurnax kill/spare fork (Codex-built)
 Steps (KILL): kill the Paarthurnax actor. Steps (SPARE): reach `MQ305 200` and
 leave Paarthurnax alive (or trigger the load-catchup latch).
 - KILL proof: **Shor/Tsun/Kyne (-S), Stendarr/Stuhn (-C), Mara (-S)** losses;
@@ -488,14 +550,14 @@ leave Paarthurnax alive (or trigger the load-catchup latch).
 - SPARE proof: **Stuhn(+C)/Stendarr(+C)/Mara(+S)/Kyne(+m)** gains via the
   `RoutePaarthurnaxSpare` latch. Confirm kill and spare are mutually exclusive.
 
-### 11.5 Readback-refresh quest rows
+### 10.5 Readback-refresh quest rows
 Steps: `setstage DBDestroy 200`, `setstage MS10 100`, `setstage CR13 200` (as a
 werewolf).
 - Proof: DBDestroy = **Sithis milestone LOSS** (break_oath_betray) + Stendarr/
   Talos gains; MS10 = **Zenithar milestone gain** + Z'en; CR13 = **Hircine cure
   LOSS + Y'ffre gain**.
 
-### 11.6 Likes/dislikes v15 (events 366 + 303) - NEW SAVE REQUIRED
+### 10.6 Likes/dislikes v15 (events 366 + 303) - NEW SAVE REQUIRED
 Prereq: a save that has NOT stamped `PDV.LD.Version=15`; confirm log
 `Likes/dislikes table + stances loaded (version 15)`.
 Steps: feed as a vampire (366); kill a non-hostile animal out of combat (303).
@@ -503,7 +565,7 @@ Steps: feed as a vampire (366); kill a non-hostile animal out of combat (303).
   feed same day capped); 303 = **Kyne/Kynareth LOSSES** (cap 3/day). Driver copy
   states the trigger; no stale re-fire after save/load.
 
-### 11.7 Y'ffre Green Way + necromancy + bardic (Bosmer, origin 4)
+### 10.7 Y'ffre Green Way + necromancy + bardic (Bosmer, origin 4)
 Steps: visit a Bosmer sacred site (Eldergleam Sanctuary / Ancestor Glade /
 All-Maker stone); consume a plant food on `PDV_FLST_GreenPact_PlantFoods`;
 `setstage DLC1VQ04 200` (Soul Cairn necromancy); `setstage BardsCollegePoeticEdda 200`.
@@ -511,7 +573,7 @@ All-Maker stone); consume a plant food on `PDV_FLST_GreenPact_PlantFoods`;
   (Meat Mandate); DLC1VQ04 = Y'ffre necromancy LOSS; Poetic Edda = Y'ffre
   bardic GAIN (the Storyteller).
 
-### 11.8 Cowardice-god assassination dislikes
+### 10.8 Cowardice-god assassination dislikes
 Steps: `setstage DB01 200`, `setstage DB11 200` (regicide).
 - Proof: **Talos/Tsun/HoonDing take LOSSES** on the treacherous-murder /
   assassination beats (new Part B axis), alongside the existing Kyne/Baan Dar/
