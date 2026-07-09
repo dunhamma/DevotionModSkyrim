@@ -213,6 +213,46 @@ EVT_KILL_UNDEAD dispatch today (365 is raise-undead); adding one would need an
 ActorTypeUndead branch in `ClassifyKillVictim` (PDV_ActionRouter). Low priority -
 the crypt-cleared signal already captures the meaningful version.
 
+## H. Paarthurnax fork - custom hook needed (Codex)
+
+The single biggest MQ moral choice - spare vs KILL Paarthurnax - has NO
+quest-stage hook and so cannot be a matrix row. Confirmed in readback: no quest
+has "Paarthurnax" in its editor_id; the kill demand lives in
+`FreeformSkyhavenTempleA` ("Rebuilding the Blades") which has NO
+completion/fail stages (only follower-recruit/dragon-lair objectives), and the
+actual kill is an unscripted world act on the Paarthurnax actor. Matrix rows
+here would be inert.
+
+Custom hook (Codex): `OnDeath` on the Paarthurnax NPC for the KILL branch; a
+latch for the SPARE branch (player reaches the Delphine/Esbern ultimatum and
+leaves him alive / abandons or refuses the Blades demand). Proposed reactions
+once hooked:
+- KILL Paarthurnax (kinslaying a repentant Voice-mentor): Shor -S, Tsun -S,
+  Kyne -S (he taught mankind her Voice), Stendarr -C (kill_the_helpless - he is
+  unresisting), Stuhn -C (the yielding slain), Mara -S (mercy denied).
+- SPARE Paarthurnax: Stuhn +C (mercy_spare), Stendarr +C, Mara +S, Kyne +m.
+
+## Main-quest per-deity review (DONE this session, 2026-07-09)
+
+Reviewed all 18 MQ beats against all 45 deities (3 parallel passes). Net: 26 new
+rows + 3 modified (Full.csv 1045 -> 1071). Highlights:
+- **Death gods on MQ305 (biggest find):** Alduin DEVOURS the honored dead in
+  Sovngarde; defeating him frees them. Arkay/Tu'whacca (honor_the_dead C,
+  milestone) + Khenarthi (m) were absent from the defeat beat - now added.
+- **Knowledge gods on the lore spine:** Julianos/Mora/Magnus milestone on MQ206
+  (reading the Elder Scroll), Magnus on MQ205 (Blackreach), Mora on MQ203, plus
+  Julianos/Xarxes/Syrabane on MQ103/203/204. Magnus had ZERO MQ rows before.
+- **Mehrunes Dagon CORRECTION:** his + on the two Alduin-DEFEAT beats
+  (MQ206/MQ305) flipped to - serve_empire_order - the Prince of Destruction does
+  not cheer the World-Eater's fall. His ordinary dragon-KILL rows
+  (MQ104/106/303) stay + (he likes the violence, not the salvation).
+- **Order/peace:** Akatosh + Stuhn added to Season Unending (MQ302, all 3
+  concession stages); Shor/Tsun on the Helgen escape; Auri-El on the dragon-
+  slayings; HoonDing on the Odahviing trap; Mephala keep_secret on MQ201.
+- **Confirmed no-MQ-business (correct-by-design):** Namira, Sanguine, Peryite,
+  Vaermina, Sheogorath, The Hist, Sithis, Y'ffre, Zenithar, Z'en, Dibella,
+  Meridia, Azura.
+
 ## F. Proof boundary
 
 Everything above section B is authority/readback/static only - compile PASS,
