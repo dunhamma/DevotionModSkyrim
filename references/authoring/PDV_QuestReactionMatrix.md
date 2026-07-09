@@ -321,7 +321,7 @@ to most gods).
 
 **Sithis** — the Void, the original night, death-as-change, the Brotherhood.
 - approve: `assassination_contract`(C), `murder_treacherous`(S), `embrace... void`(m)
-- disapprove: (Sithis judges little; emptiness) — `cowardice`(m, *failed the contract*)
+- disapprove: (Sithis judges little; emptiness) — `cowardice`(m, *failed the contract*), `break_oath_betray`(C, *destroying/betraying the Night Mother's family is the one act the Void does not forgive. Added 2026-07-09.*)
 - anchor: The Void; Sithis/Padomay. (UESP: Sithis). High-threshold tertiary.
 
 ### Daedric Princes (Part B-2)
