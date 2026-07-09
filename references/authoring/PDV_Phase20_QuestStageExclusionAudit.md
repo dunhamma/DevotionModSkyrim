@@ -19,7 +19,7 @@ generic "not used" bucket.
 | `EXCL_TECHNICAL_CONTROLLER` | Init, alias-fill, cache, scheduler, objective, monitor, handler, tracking, tutorial, debug, or controller quest. |
 | `EXCL_DIALOGUE_SCENE_AMBIENT` | Dialogue, scene, bark, hello, commentary, rumor, or ambient NPC quest without a specific player-owned INFO or fragment outcome. |
 | `EXCL_RADIANT_REPEATABLE` | Radiant job, world encounter, random target/location, repeatable service, or side-job pattern that cannot support one-shot theological scoring. |
-| `EXCL_CONTAINER_TOO_BROAD` | Whole questline/container quest where generic progress would fire unrelated stages. |
+| `EXCL_CONTAINER_TOO_BROAD` | A quest whose watched stage is a container/umbrella that fires on UNRELATED stages the deity has no read on. NOTE (2026-07-09): this is NOT a licence to skip a questline's progression beats. A main-quest/questline progression stage with an exact, relevant deity read (e.g. Alduin's Wall -> Julianos disciplined_study) DOES count; exclude only when the specific watched stage genuinely fires for unrelated content. "It's a middle beat" is not an exclusion reason. |
 | `EXCL_OUTCOME_AMBIGUOUS` | Quest is useful, but the receiver cannot distinguish the moral branch or mutually exclusive outcome. |
 | `EXCL_NON_PLAYER_AGENCY` | World, NPC, or system state, not a legible player act. |
 | `EXCL_WRONG_ROUTE_OR_RACE` | Semantically valid elsewhere, but not for this race/route family. |

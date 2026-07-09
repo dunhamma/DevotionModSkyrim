@@ -548,8 +548,15 @@ confirmation only (it collapses stages to counts). UESP via **WebSearch** (WebFe
 **Procedure (per quest):** (1) pull the CSV row by `editor_id`; read
 `stage_log_summary`+`objective_summary`+`completion_stages`/`fail_stages`. (2) identify
 the meaningful moral outcome(s) — terminal/branch stages where the player DID something
-judgeable (spare/kill, cleanse/corrupt, feast/refuse, bargain/reject); ignore
-travel/fetch stages. (3) tag each outcome with Part A act-tags BY READING. (4) for each
+judgeable (spare/kill, cleanse/corrupt, feast/refuse, bargain/reject). Only pure
+travel/fetch/monitor stages with no player act are ignored. **A questline's
+progression beats DO count where a deity has a relevant read — a quest is the
+completion of an arc and "it's a middle beat" is NOT grounds to skip it (doctrine
+2026-07-09).** The main questline especially should be covered end-to-end for the
+appropriate deity: the lore beats (Alduin's Wall, Elder Knowledge, the Throat of the
+World) are disciplined-study / ancient-record / forbidden-knowledge for
+Julianos/Xarxes/Mora; the covenant runs Akatosh through the whole arc; Season Unending
+is peace for Mara/Stendarr; and so on. (3) tag each outcome with Part A act-tags BY READING. (4) for each
 god whose Part B/B-2 profile contains a matched tag, emit a cell: valence from
 approve/disapprove, magnitude from intensity(C/S/m) × stage type (completion=milestone,
 intermediate=small). (5) cite the journal line (or UESP/WebSearch if ambiguous).
