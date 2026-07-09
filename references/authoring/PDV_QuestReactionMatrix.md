@@ -410,15 +410,31 @@ above (cross-referenced, not duplicated).
 ## Part C — Magnitude + the race-stance modulation
 
 ### C1. Magnitude (how big the gain/loss is)
+
+**Event-scale model (2026-07-09 recalibration).** Signal weight follows the SCALE
+of the event, not just tag centrality. A quest is the completion of an arc / a big
+thematic beat, so quests sit at the TOP; single in-game incidents sit at the bottom;
+a location/crypt cleared sits in between.
+
+| Event scale | Surface | Magnitude tier | Piety (C/S/m) |
+| --- | --- | --- | --- |
+| Quest = arc completion | quest-reaction matrix | **milestone** (core arcs) / **small** (peripheral) | 18/12/8 · 6/4/2 |
+| Location / crypt cleared | location-cleared signal (Ash'abah pattern, generalized) | **small** | 6/4/2 |
+| Single incident (kill undead in the wild, etc.) | day-to-day faucet | day-to-day | ~0.25-0.5, daily-capped |
+
 Per `(quest-outcome x deity)`:
 - **milestone** if the matched tag is **C** (core) for that deity AND the stage is a
-  `completion`/terminal outcome (from the CSV `completion_stages`). Big one-time
-  piety swing.
-- **small** if the tag is **S/m**, or the stage is intermediate. Modest swing.
-- Final delta = base(magnitude) x intensity(C/S/m). Exact numbers tuned against the
-  85-to-Champion / 4.3-day-cap budget (see [[piety-pacing-model]]); quest swings are
-  one-shot so they are NOT anti-farm-gated, but a single milestone should not exceed
-  ~one tier-step, and a loss should sting without being unrecoverable.
+  `completion`/terminal outcome. Big one-time piety swing (the deity's primary/thematic quests).
+- **small** for everything else: S/m tags, intermediate stages, and the former
+  cross-generation fan-out breadth cells.
+- **echo tier RETIRED 2026-07-09.** It formerly paid 1-3 (half of small) to keep
+  ~40-quest-per-deity fan-out from distorting pacing. Per the event-scale decision,
+  a quest completion should never pay a trivial 1-3; all 533 echo rows were promoted
+  to small (2-6). `value.echo.*` remains in the compile value table but is now unused.
+- Final delta = base(magnitude) x intensity(C/S/m). Quest swings are one-shot and
+  NOT anti-farm-gated (uncapped straight to AwardPiety), so milestone quests move the
+  needle hard toward the 85-Champion budget (see [[piety-pacing-model]]) — completing a
+  deity's core questline is intended to carry a focused player toward Champion.
 
 ### C2. Race-stance modulation (CRITICAL — the "matrix" dimension)
 A deity's profile is **universal** (what the god likes/dislikes). The piety effect

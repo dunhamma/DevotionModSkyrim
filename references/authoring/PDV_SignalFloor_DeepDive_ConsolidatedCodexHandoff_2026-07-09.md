@@ -130,6 +130,69 @@ Dibella: Markarth favors/Recorder/Angeline (radiant favors), TG01 statue
 the Root, not Sovngarde); no readback refresh warranted (candidate universe
 genuinely empty).
 
+## G. Magnitude recalibration (DONE this session) + crypt-cleared signal (Codex build)
+
+### G1. Event-scale magnitude model - echo tier RETIRED
+
+Design decision (2026-07-09): signal weight follows EVENT SCALE. Quests are arc
+completions and sit at the top; single incidents at the bottom; a location/crypt
+cleared in between.
+
+| Event scale | Surface | Tier | Piety |
+|---|---|---|---|
+| Quest = arc completion | quest-reaction matrix | milestone (core) / small (peripheral) | 8-18 / 2-6 |
+| Location / crypt cleared | location-cleared signal (this section) | small | 2-6 |
+| Single incident (undead in the wild) | day-to-day faucet | day-to-day | 0.25-0.5 daily-capped |
+
+Applied: all 533 `echo` rows promoted to `small` across the source tranches
+(Full.csv now 891 small / 114 milestone / 0 echo). `value.echo.*` left in the
+compile value table but unused; do not author new echo rows. Quest awards are
+UNCAPPED (ApplyQuestReactionPiety -> AwardPiety full amount), so milestone
+completions move hard toward the 85-Champion budget - intended. Chosen scope was
+"retire echo -> small; keep the existing 114 milestone as the primary-arc tier"
+(not "all quests milestone"), to protect the 30-45 day pacing target. Optional
+future refinement (NOT applied): promote the 59 `small.C` core-tag rows to
+milestone if in-game pacing shows core quests still feel light.
+
+### G2. Generalized crypt-cleared signal (Codex - Papyrus + FormList + CK)
+
+The mod already has the exact pattern, scoped to one sect:
+`PDV__ManagerQuest.psc` `TrackRedguardAshAbahUndeadSiteVisit(Location)` arms a
+site on entry; `HandleRedguardAshAbahUndeadSiteClear(Location)` fires when
+`Location.IsCleared()`, once per site, with `ConsumeDailyRepeatMultiplier` for
+anti-farm, keyed off `PDV_FLST_RedguardAshAbahUndeadClearSites`. Generalize it:
+
+1. New FormList `PDV_FLST_UndeadCryptClearSites` (CK/houseCARL) - curated Location
+   records for draugr barrows / undead crypts / necromancer lairs (Bleak Falls
+   Barrow, Ustengrav, Labyrinthian, Korvanjund, Movarth's Lair, Ansilvund,
+   Forsaken Cave, etc.). Location records, not cells; use `IsCleared()`.
+2. New handlers mirroring the Ash'abah pair (arm-on-enter via the existing
+   location-change hook; fire-on-`IsCleared()`), NOT origin-gated - fires for any
+   player. Once per site + `ConsumeDailyRepeatMultiplier("PDV.Signal.UndeadCryptClear")`.
+3. Fan out at the **small** tier (2-6) to the undead-domain deities:
+   Arkay, Stendarr, Meridia, Tu'whacca, Azura, and **Y'ffre** (bone-law: draugr
+   are matter walking outside its fixed story - Part B `slay_undead`(m) was added
+   for exactly this). Weight by each deity's undead-tag intensity.
+4. This is the correct home for "cleared a draugr crypt." The 6 Y'ffre draugr
+   quest-echoes added earlier were REMOVED this session (wrong surface + echo
+   weight); Y'ffre keeps the Part B `slay_undead` approval, realized via this
+   signal once built.
+5. MIGRATION REVIEW (after the signal is live): the existing `slay_undead` QUEST
+   rows on dungeon-clear quests (MQ103 Bleak Falls, CW02A/B Jagged Crown, MG07
+   Labyrinthian for Arkay/Stendarr/Meridia/Tu'whacca/Azura) now double-cover
+   undead-clearing on both surfaces. Decide per row: keep as a quest milestone
+   where the undead-purge IS the arc (DA09 Break of Dawn, MS14 Laid to Rest), but
+   migrate the incidental dungeon-clear rows to the crypt-cleared signal to avoid
+   double-crediting.
+
+### G3. Day-to-day "kill undead in the wild" (optional, smallest tier)
+
+If a single wild-undead kill should register at all, it belongs in the day-to-day
+faucet (0.25-0.5, daily-capped), NOT the quest matrix. There is no
+EVT_KILL_UNDEAD dispatch today (365 is raise-undead); adding one would need an
+ActorTypeUndead branch in `ClassifyKillVictim` (PDV_ActionRouter). Low priority -
+the crypt-cleared signal already captures the meaningful version.
+
 ## F. Proof boundary
 
 Everything above section B is authority/readback/static only - compile PASS,

@@ -37,11 +37,10 @@ const VALUE_TABLE = {
   "value.small.C": 6.0,
   "value.small.S": 4.0,
   "value.small.m": 2.0,
-  // echo tier (2026-07-04): generated breadth cells from the Part B cross-generation
-  // expansion. Half of small so ~40-quest-per-deity coverage cannot distort the
-  // 4.3/day pacing envelope; tune these three knobs after in-game measurement.
-  // GetQuestReactionBaseValue reads value.<magnitude>.<intensity> straight from the
-  // compiled JSON, so no Papyrus change is needed for the new tier.
+  // echo tier RETIRED 2026-07-09 (event-scale recalibration): a quest completion
+  // should never pay a trivial 1-3. All former echo rows were promoted to small in
+  // the source tranches; these three values remain only so old/external references
+  // resolve, but no live row uses magnitude "echo" anymore. Do not author new echo rows.
   "value.echo.C": 3.0,
   "value.echo.S": 2.0,
   "value.echo.m": 1.0,
