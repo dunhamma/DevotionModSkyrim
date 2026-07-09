@@ -50,6 +50,8 @@ $Map = @(
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\fonts\IMFellEnglish-Regular.ttf"; Dst = "PrismaUI\views\Devotion\fonts\IMFellEnglish-Regular.ttf" },
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\fonts\IMFellEnglish-Regular.woff2"; Dst = "PrismaUI\views\Devotion\fonts\IMFellEnglish-Regular.woff2" },
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\fonts\OFL-IMFellEnglish.txt"; Dst = "PrismaUI\views\Devotion\fonts\OFL-IMFellEnglish.txt" },
+    @{ Src = "live-source\Scripts\Source\PDV__ManagerQuest.psc";             Dst = "Scripts\Source\PDV__ManagerQuest.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_ActionRouter.psc";              Dst = "Scripts\Source\PDV_ActionRouter.psc" },
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap.json";       Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap.json" },
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_TemporaryRaceMap.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_TemporaryRaceMap.json" },
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt" }

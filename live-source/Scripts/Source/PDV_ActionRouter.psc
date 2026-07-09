@@ -161,9 +161,11 @@ Function HandleStoryKillActor(ObjectReference akVictim, ObjectReference akKiller
         ; casual draugr fighting.
         PDV_Manager.HandleRedguardAshAbahMajorBurden(victimActor as Form, eventType)
         PDV_Manager.TrackRedguardAshAbahUndeadSiteVisit(akLocation)
+        PDV_Manager.TrackUndeadCryptClearSiteVisit(akLocation)
         ; Final-kill fast path for clearable undead sites. If the clear flag settles later,
         ; HandleStoryChangeLocation also checks the old location when the player leaves.
         PDV_Manager.HandleRedguardAshAbahUndeadSiteClear(akLocation)
+        PDV_Manager.HandleUndeadCryptSiteClear(akLocation)
     endIf
 EndFunction
 
@@ -241,7 +243,9 @@ Function HandleStoryChangeLocation(ObjectReference akActor, Location akOldLocati
         PDV_Manager.HandleNordLocationChange(akNewLocation)
         PDV_Manager.HandleOrcLocationChange(akNewLocation)
         PDV_Manager.TrackRedguardAshAbahUndeadSiteVisit(akNewLocation)
+        PDV_Manager.TrackUndeadCryptClearSiteVisit(akNewLocation)
         PDV_Manager.HandleRedguardAshAbahUndeadSiteClear(akOldLocation)
+        PDV_Manager.HandleUndeadCryptSiteClear(akOldLocation)
     endIf
 
     if !MarkLocationSeen(akNewLocation)

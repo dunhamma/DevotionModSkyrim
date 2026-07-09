@@ -19,6 +19,7 @@ var authorCapstones = all || args.Contains("--author-capstones");
 var authorHoonDingBosses = all || args.Contains("--author-hoonding-bosses");
 var authorNamira = all || args.Contains("--author-namira");
 var authorAshAbahClearedSites = all || args.Contains("--author-ashabah-cleared-sites");
+var authorUndeadCryptClearSites = all || args.Contains("--author-undead-crypt-clear-sites");
 var espPath = Path.GetFullPath(GetArg(args, "--esp") ?? defaultEsp);
 
 var capstones = new[]
@@ -130,9 +131,9 @@ var report = new AuthorReport
 
 try
 {
-    if (!authorCapstones && !authorHoonDingBosses && !authorNamira && !authorAshAbahClearedSites)
+    if (!authorCapstones && !authorHoonDingBosses && !authorNamira && !authorAshAbahClearedSites && !authorUndeadCryptClearSites)
     {
-        throw new InvalidOperationException("Specify --all or one of --author-capstones, --author-hoonding-bosses, --author-namira, --author-ashabah-cleared-sites.");
+        throw new InvalidOperationException("Specify --all or one of --author-capstones, --author-hoonding-bosses, --author-namira, --author-ashabah-cleared-sites, --author-undead-crypt-clear-sites.");
     }
 
     if (!File.Exists(espPath))
@@ -167,6 +168,11 @@ try
         {
             CheckAshAbahClearedSites(index, ashAbahClearedSites, report);
         }
+
+        if (authorUndeadCryptClearSites)
+        {
+            CheckUndeadCryptClearSites(index, ashAbahClearedSites, report);
+        }
     }
     else
     {
@@ -188,6 +194,11 @@ try
         if (authorAshAbahClearedSites)
         {
             AuthorAshAbahClearedSites(mod, index, allocator, ashAbahClearedSites, report);
+        }
+
+        if (authorUndeadCryptClearSites)
+        {
+            AuthorUndeadCryptClearSites(mod, index, allocator, ashAbahClearedSites, report);
         }
 
         if (report.Errors.Count == 0)
@@ -560,6 +571,61 @@ static void CheckAshAbahClearedSites(
     var manager = RequireRecord<Quest>(index, "PDV__ManagerQuest");
     var managerScript = RequireScript(manager, "PDV__ManagerQuest");
     CheckObjectProperty(managerScript, "PDV_FLST_RedguardAshAbahUndeadClearSites", list.FormKey, "PDV__ManagerQuest", report);
+    report.Actions.Add($"{list.EditorID} cleared-site list check complete.");
+}
+
+static void AuthorUndeadCryptClearSites(
+    SkyrimMod mod,
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    FormKeyAllocator allocator,
+    IReadOnlyList<LocationEntry> locations,
+    AuthorReport report)
+{
+    var list = EnsureFormList(mod, index, allocator, "PDV_FLST_UndeadCryptClearSites", report);
+    list.Items.Clear();
+    foreach (var location in locations)
+    {
+        list.Items.Add(location.FormKey.ToLinkGetter<ISkyrimMajorRecordGetter>());
+    }
+
+    var manager = RequireRecord<Quest>(index, "PDV__ManagerQuest");
+    var managerScript = RequireScript(manager, "PDV__ManagerQuest");
+    UpsertProperties(managerScript, new ScriptProperty[]
+    {
+        ObjectProp("PDV_FLST_UndeadCryptClearSites", list.FormKey)
+    });
+    report.Actions.Add($"Rebuilt PDV_FLST_UndeadCryptClearSites with {locations.Count} clearable undead location(s) and wired manager property.");
+}
+
+static void CheckUndeadCryptClearSites(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    IReadOnlyList<LocationEntry> locations,
+    AuthorReport report)
+{
+    var list = RequireRecord<SkyrimFormList>(index, "PDV_FLST_UndeadCryptClearSites");
+    var actual = list.Items.Select(item => item.FormKey).ToList();
+    if (actual.Count != locations.Count)
+    {
+        report.Errors.Add($"{list.EditorID} has {actual.Count} entries; expected {locations.Count}.");
+    }
+
+    for (var i = 0; i < locations.Count; i++)
+    {
+        if (i >= actual.Count)
+        {
+            report.Errors.Add($"{list.EditorID} is missing expected slot {i}: {locations[i].Label} {locations[i].FormKey}.");
+            continue;
+        }
+
+        if (!actual[i].Equals(locations[i].FormKey))
+        {
+            report.Errors.Add($"{list.EditorID}[{i}] is {actual[i]}, expected {locations[i].Label} {locations[i].FormKey}.");
+        }
+    }
+
+    var manager = RequireRecord<Quest>(index, "PDV__ManagerQuest");
+    var managerScript = RequireScript(manager, "PDV__ManagerQuest");
+    CheckObjectProperty(managerScript, "PDV_FLST_UndeadCryptClearSites", list.FormKey, "PDV__ManagerQuest", report);
     report.Actions.Add($"{list.EditorID} cleared-site list check complete.");
 }
 

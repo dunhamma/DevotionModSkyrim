@@ -38,6 +38,7 @@ FormList Property PDV_FLST_AllDeities Auto
 FormList Property PDV_FLST_DaedricPaths_All Auto
 FormList Property PDV_FLST_HoonDing_BreakthroughBosses Auto
 FormList Property PDV_FLST_RedguardAshAbahUndeadClearSites Auto
+FormList Property PDV_FLST_UndeadCryptClearSites Auto
 Faction Property NecromancerFaction Auto
 Faction Property WarlockFaction Auto
 String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
@@ -7491,6 +7492,121 @@ Function HandleRedguardAshAbahUndeadSiteClear(Location clearedLocation)
     RecordRedguardSectSignal(REDGUARD_SECT_ASHABAH, multiplier, burdenReason)
     ApplyRedguardAshAbahDutyRewards(burdenReason, multiplier)
     Trace(2, "Redguard Ash'abah undead-site clear fired for location " + clearedLocation.GetFormID() + " multiplier=" + multiplier)
+EndFunction
+
+Function TrackUndeadCryptClearSiteVisit(Location currentLocation)
+    if !currentLocation || !PDV_FLST_UndeadCryptClearSites
+        return
+    endIf
+
+    if !PDV_FLST_UndeadCryptClearSites.HasForm(currentLocation)
+        return
+    endIf
+
+    if currentLocation.IsCleared()
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.UndeadCryptClear.Armed." + currentLocation.GetFormID(), 1)
+EndFunction
+
+Function HandleUndeadCryptSiteClear(Location clearedLocation)
+    if !clearedLocation || !PDV_FLST_UndeadCryptClearSites
+        return
+    endIf
+
+    if !PDV_FLST_UndeadCryptClearSites.HasForm(clearedLocation)
+        return
+    endIf
+
+    if !clearedLocation.IsCleared()
+        return
+    endIf
+
+    String siteKey = "PDV.UndeadCryptClear.Seen." + clearedLocation.GetFormID()
+    if StorageUtil.GetIntValue(None, siteKey, 0) == 1
+        return
+    endIf
+
+    String armKey = "PDV.UndeadCryptClear.Armed." + clearedLocation.GetFormID()
+    if StorageUtil.GetIntValue(None, armKey, 0) != 1
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, siteKey, 1)
+    StorageUtil.SetIntValue(None, armKey, 0)
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.UndeadCryptClear")
+    ApplyUndeadCryptClearReactions(clearedLocation, multiplier)
+    Trace(2, "Undead crypt clear fired for location " + clearedLocation.GetFormID() + " multiplier=" + multiplier)
+EndFunction
+
+Function ApplyUndeadCryptClearReactions(Location clearedLocation, Float repeatMultiplier)
+    if repeatMultiplier <= 0.0
+        return
+    endIf
+
+    ApplyUndeadCryptClearReaction("Arkay", "C", clearedLocation, repeatMultiplier)
+    ApplyUndeadCryptClearReaction("Meridia", "C", clearedLocation, repeatMultiplier)
+    ApplyUndeadCryptClearReaction("Stendarr", "S", clearedLocation, repeatMultiplier)
+    ApplyUndeadCryptClearReaction("Tu'whacca", "S", clearedLocation, repeatMultiplier)
+    ApplyUndeadCryptClearReaction("Azura", "m", clearedLocation, repeatMultiplier)
+    ApplyUndeadCryptClearReaction("Y'ffre", "m", clearedLocation, repeatMultiplier)
+EndFunction
+
+Function ApplyUndeadCryptClearReaction(String deityName, String intensity, Location clearedLocation, Float repeatMultiplier)
+    PDV_DeityBase deity = GetQuestReactionDeity(deityName)
+    if !deity
+        if GetDebugLevel() >= 1
+            Debug.Trace("[PDV] UndeadCryptClear skipped unknown deity: " + deityName)
+        endIf
+        return
+    endIf
+
+    Float amount = GetQuestReactionBaseValue("small", intensity) * repeatMultiplier
+    if amount == 0.0
+        return
+    endIf
+
+    String sourceTag = "undead_crypt_clear"
+    String stance = GetQuestReactionStance(deityName, deity)
+    if stance == "CURSE"
+        StorageUtil.SetStringValue(None, "PDV.QuestReaction.LastCurse", deityName + "." + sourceTag)
+        HandleCurseStateRefresh("quest_reaction_" + deityName)
+        if GetDebugLevel() >= 1
+            Debug.Trace("[PDV] UndeadCryptClear curse routed: " + deityName)
+        endIf
+        return
+    endIf
+
+    if stance == "TABOO" || stance == "HOSTILE"
+        ApplyQuestReactionStigma(deity, amount, sourceTag)
+        return
+    endIf
+
+    if stance == "FOREIGN" || stance == "TOLERATED"
+        if !IsQuestReactionDeityReachable(deity)
+            if GetDebugLevel() >= 2
+                Debug.Trace("[PDV] UndeadCryptClear skipped unreachable foreign deity: " + deityName)
+            endIf
+            return
+        endIf
+    endIf
+
+    Float stanceMultiplier = 1.0
+    if stance == "FOREIGN"
+        stanceMultiplier = JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.FOREIGN", 0.4)
+    elseIf stance == "TOLERATED"
+        stanceMultiplier = JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.TOLERATED", 0.4)
+    endIf
+
+    Float appliedReactionAmount = amount * stanceMultiplier
+    _suppressAwardFavorToast = True
+    ApplyQuestReactionPiety(deity, appliedReactionAmount, deityName + "." + sourceTag)
+    _suppressAwardFavorToast = False
+
+    if IsKhajiitOrigin()
+        BridgeKhajiitMatrixFocus(deityName, "small")
+    endIf
 EndFunction
 
 Bool Function IsRedguardNamedNecromancerBurden(Actor victimActor)

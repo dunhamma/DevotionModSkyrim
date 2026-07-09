@@ -168,6 +168,14 @@ milestone if in-game pacing shows core quests still feel light.
 
 ### G2. Generalized crypt-cleared signal (Codex - Papyrus + FormList + CK)
 
+Implementation correction, 2026-07-09 AEST: this item was initially only
+specced in the handoff/matrix pass. It is now built at source/readback level:
+`PDV_FLST_UndeadCryptClearSites` exists in `Devotion.esp` as
+`07165E:Devotion.esp`, `PDV__ManagerQuest` declares and wires the property, and
+`PDV_ActionRouter` calls the generic arm/check handlers from kill and
+change-location events. Proof remains machine-only: compile/readback/verifier
+pass, but no in-game crypt-clear smoke has run.
+
 The mod already has the exact pattern, scoped to one sect:
 `PDV__ManagerQuest.psc` `TrackRedguardAshAbahUndeadSiteVisit(Location)` arms a
 site on entry; `HandleRedguardAshAbahUndeadSiteClear(Location)` fires when
