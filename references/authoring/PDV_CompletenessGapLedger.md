@@ -5,8 +5,8 @@ Contract: PDV_BetaContract.csv (768 rows). Gate fails on unwaived GAP only;
 GAP-REVIEW = authority is prose, identifier may be a proposed name (adjudicate, then either
 fix the build or correct the contract row's check_hint). NEEDS-MANUAL = not machine-checkable.
 
-Verdicts: PASS=361 | NEEDS-MANUAL=293 | GAP-REVIEW=53 | FUTURE=59 | WAIVED=2
-Layers: source=live; esp=1786 EditorIDs; runtime=read-only from gate ledger.
+Verdicts: PASS=362 | NEEDS-MANUAL=292 | GAP-REVIEW=53 | FUTURE=59 | WAIVED=2
+Layers: source=live; esp=1818 EditorIDs; runtime=read-only from gate ledger.
 
 ## GAP-REVIEW (53)
 
@@ -66,7 +66,7 @@ Layers: source=live; esp=1786 EditorIDs; runtime=read-only from gate ledger.
 | BC-0713 | other | ALL | D-15 Daedric stigma model | missing: PDV_GLO_DaedricExposure | PDV_Architecture_v3.md Section11.6 D-15 |
 | BC-0732 | other | ALL | Mara privilege pilot | missing: PDV_Privilege_Mara_ | PDV_Architecture_v3.md Section21 forward phase plan table Phase 11 |
 
-## NEEDS-MANUAL (293)
+## NEEDS-MANUAL (292)
 
 | ID | Surface | Race | Target | Detail | Authority |
 |---|---|---|---|---|---|
@@ -266,7 +266,6 @@ Layers: source=live; esp=1786 EditorIDs; runtime=read-only from gate ledger.
 | BC-0450 | anti_farm | ALL | Vaermina - Skull of Corruption | No machine-checkable identifier extractable from requirement/check_hint. | PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv - Vaermina / Harvest dreams |
 | BC-0453 | anti_farm | Bosmer | Bandit Road reversal seven-day cooldown | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceEffectReviewLedger.md -- Bosmer active-path baseline, conditions and cadence |
 | BC-0454 | anti_farm | Bosmer | Bosmer path switching destination-gated | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Bosmer, Needs verifier/proof |
-| BC-0455 | anti_farm | Bosmer | GPC consumption tracking | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Bosmer.md -- Implementation flags / GreenPactCompliance tagging |
 | BC-0459 | anti_farm | Khajiit | Road-home circuit | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceDesign_Khajiit.md -- Road-home cadence (LOCKED) |
 | BC-0460 | anti_farm | Khajiit | Road-home circuit must require 2-3 anchor cycling | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Khajiit, Change; PDV_RaceEffectReviewLedger |
 | BC-0461 | anti_farm | Nord | Nord dawn-only offer gate with cooldown | No machine-checkable identifier extractable from requirement/check_hint. | PDV_RaceRewardBudgetLedger.md -- Focused Pass: Nord, Needs verifier/proof |
@@ -435,7 +434,7 @@ Layers: source=live; esp=1786 EditorIDs; runtime=read-only from gate ledger.
 | BC-0762 | other | Nord | Froki/Heimskr/Andurs/Aela recognition dialogue | 1.0/V2 tier; tracked, not gated. | PDV_TargetEndStates_1.0.md Phase 18A/B runtime closeout; PDV_Architecture_v3.md Section21. |
 | BC-0763 | other | Nord | Nord full stack audit (P2 audit-only lane) | 1.0/V2 tier; tracked, not gated. | references/authoring/PDV_PreBetaRaceGateLedger.md Nord; references/authoring/PDV_PreBetaRa |
 
-## PASS (361)
+## PASS (362)
 
 (passing rows listed in the CSV only)
 

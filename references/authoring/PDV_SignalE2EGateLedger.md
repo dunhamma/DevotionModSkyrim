@@ -16,7 +16,7 @@ MCP: PASS - Server live, profile Devotion Dev.
 - formLists: PASS (exit 0) - dotnet run --project ./tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj -- --check-formlists - PASS
 - aliasProperties: PASS (exit 0) - dotnet run --project ./tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj -- --check-alias-properties - PASS
 - sourceFill: PASS (exit 0) - dotnet run --project ./tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill - PASS
-- completenessAudit: PASS (exit 0) - node tools/pdv_completeness_audit.mjs --json - Completeness audit PASS; source indexed 1716 functions, 86 signal consts.
+- completenessAudit: PASS (exit 0) - node tools/pdv_completeness_audit.mjs --json - Completeness audit PASS; source indexed 1721 functions, 86 signal consts.
 
 ## Column Counts
 
@@ -33,7 +33,7 @@ MCP: PASS - Server live, profile Devotion Dev.
 ## Curated-Signal Parity
 
 Every AwardCuratedSignal[Scaled](deity, deity.SIGNAL_X) must resolve to a deity script that DEFINES and HANDLES SIGNAL_X in ScoreCuratedSignal, else the curated piety silently scores 0.0 (the Kyne class). Pure static source check -- no server.
-Status: PASS | references=106 | ok=106 | gaps=0 | cross-deity=0 | by-index=0
+Status: PASS | references=107 | ok=107 | gaps=0 | cross-deity=0 | by-index=0
 
 ## RED / INCOMPLETE By Failing Step
 

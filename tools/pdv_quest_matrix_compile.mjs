@@ -78,6 +78,13 @@ const DEITY_ALIASES = new Map([
   ["Mephala / Mafala", "Mephala"],
 ]);
 
+// These rows are distinct faucet acts for floor coverage, but share the same
+// manager anti-farm bucket as their parent daily action.
+const FAUCET_CAP_TAG_ALIASES = new Map([
+  ["Sanguine.revel_indulge_skooma", "revel_indulge"],
+  ["Sheogorath.serve_a_daedra:sheogorath_fire", "serve_a_daedra:sheogorath"],
+]);
+
 const FAUCET_FORM_LISTS = {
   "faucetForms.Namira.cannibalism": [
     "0x1016B3|Skyrim.esm", // Human Flesh
@@ -90,6 +97,13 @@ const FAUCET_FORM_LISTS = {
     "0x02C35A|Skyrim.esm", // Black-Briar Mead
     "0x034C5F|Skyrim.esm", // Wine
     "0x085D52|Skyrim.esm", // Alto Wine
+  ],
+  "faucetForms.Sanguine.revel_indulge_skooma": [
+    "0x057A7A|Skyrim.esm", // Skooma
+    "0x057A7B|Skyrim.esm", // Kordir's Skooma
+    "0x03F4BD|Skyrim.esm", // Double-Distilled Skooma
+    "0x01391D|Dawnguard.esm", // Redwater Skooma
+    "0x0AED90|Skyrim.esm", // Sleeping Tree Sap
   ],
   "faucetForms.Hermaeus Mora.forbidden_knowledge": [
     "0x016E2D|Dragonborn.esm",
@@ -175,6 +189,21 @@ const FAUCET_FORM_LISTS = {
     "0x05DB88|Skyrim.esm", // Nightingale Hood 01
     "0x0FCC13|Skyrim.esm", // Nightingale Hood 02
     "0x0FCC12|Skyrim.esm", // Nightingale Hood 03
+  ],
+};
+
+const FAUCET_SPELL_FORM_LISTS = {
+  "faucetSpellForms.Sanguine.serve_a_daedra:sanguine": [
+    "0x01CB36|Skyrim.esm", // Sanguine Rose
+    "0x10E38D|Skyrim.esm", // Sanguine Rose enchantment
+  ],
+  "faucetSpellForms.Vaermina.serve_a_daedra:vaermina": [
+    "0x035066|Skyrim.esm", // Skull of Corruption
+    "0x0A0D9B|Skyrim.esm", // Skull of Corruption enchantment
+  ],
+  "faucetSpellForms.Sheogorath.serve_a_daedra:sheogorath_fire": [
+    "0x02AC6F|Skyrim.esm", // Wabbajack
+    "0x09B245|Skyrim.esm", // Wabbajack enchantment
   ],
 };
 
@@ -289,6 +318,7 @@ function main() {
     editorIdByDecimal.set(resolved.decimal, editorId);
   }
 
+  const faucetSpecsByKey = new Map();
   for (const row of faucetRows) {
     if ((row.buildability || "").toUpperCase() === "DEFERRED") {
       continue;
@@ -297,13 +327,32 @@ function main() {
     const deity = row.deity.trim();
     const tag = row.act_tag.trim();
     const key = `${deity}.${tag}`;
+    const capTag = FAUCET_CAP_TAG_ALIASES.get(key) ?? tag;
+    const spec = {
+      deity,
+      valence: row.valence.trim(),
+      intensity: row.intensity.trim(),
+      magnitude: row.magnitude.trim(),
+      tag: capTag,
+      cap: row.anti_farm_cap.trim(),
+    };
+    const existingSpec = faucetSpecsByKey.get(key);
+    if (existingSpec) {
+      const fields = ["deity", "valence", "intensity", "magnitude", "tag", "cap"];
+      const conflicting = fields.filter((field) => existingSpec[field] !== spec[field]);
+      if (conflicting.length > 0) {
+        throw new Error(`Conflicting duplicate faucet key ${key}: ${conflicting.join(", ")}`);
+      }
+    } else {
+      faucetSpecsByKey.set(key, spec);
+      out[`faucet.${key}.deity`] = spec.deity;
+      out[`faucet.${key}.valence`] = spec.valence;
+      out[`faucet.${key}.intensity`] = spec.intensity;
+      out[`faucet.${key}.magnitude`] = spec.magnitude;
+      out[`faucet.${key}.tag`] = spec.tag;
+      out[`faucet.${key}.cap`] = spec.cap;
+    }
     out.faucetKeys.push(key);
-    out[`faucet.${key}.deity`] = deity;
-    out[`faucet.${key}.valence`] = row.valence.trim();
-    out[`faucet.${key}.intensity`] = row.intensity.trim();
-    out[`faucet.${key}.magnitude`] = row.magnitude.trim();
-    out[`faucet.${key}.tag`] = tag;
-    out[`faucet.${key}.cap`] = row.anti_farm_cap.trim();
   }
 
   out.questWatchFormIdsCsv = out.questWatchFormIds.join(",");
@@ -355,6 +404,9 @@ function main() {
   out.metaSkipInts = metaSkipInts;
 
   for (const [key, forms] of Object.entries(FAUCET_FORM_LISTS)) {
+    attachRuntimeFormList(out, key, forms);
+  }
+  for (const [key, forms] of Object.entries(FAUCET_SPELL_FORM_LISTS)) {
     attachRuntimeFormList(out, key, forms);
   }
   for (const [key, forms] of Object.entries(FAUCET_EFFECT_LISTS)) {
@@ -423,7 +475,11 @@ function validate(out) {
   if (out.questWatchPluginsCsv.split(",").filter(Boolean).length !== out.questWatchPlugins.length) {
     throw new Error("Runtime quest watch plugin CSV is out of sync.");
   }
-  for (const key of [...Object.keys(FAUCET_FORM_LISTS), ...Object.keys(FAUCET_EFFECT_LISTS)]) {
+  for (const key of [
+    ...Object.keys(FAUCET_FORM_LISTS),
+    ...Object.keys(FAUCET_SPELL_FORM_LISTS),
+    ...Object.keys(FAUCET_EFFECT_LISTS),
+  ]) {
     if (out[key].length !== out[`${key}.formIds`].length || out[key].length !== out[`${key}.plugins`].length) {
       throw new Error(`Faucet FormID/plugin lists are out of sync for ${key}.`);
     }

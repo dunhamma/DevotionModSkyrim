@@ -51,7 +51,7 @@ node .\tools\pdv_prisma_ui_audit.mjs --json
 Expected readback result:
 
 - `PDV__ManagerQuest` and `PDV_MCM` compile with `0 error(s), 0 warning(s)`.
-- Quest matrix compile passes at 876 cells / 90 watched quests.
+- Quest matrix compile passes at 884 cells / 90 watched quests.
 - `pdv_verify` has no `FAIL`; only the existing medallion glyph fallback warning is allowed.
 - Formal offer check passes with 45 post-Kyne message records.
 - Eligibility reward coverage includes Altmer `PDV_Syrabane`, Altmer `PDV_Trinimac`, Breton Hidden Art `Magnus`, and Breton Green Way `Y'ffre`.

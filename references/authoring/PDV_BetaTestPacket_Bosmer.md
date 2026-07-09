@@ -207,6 +207,57 @@ Survey/status clarity: PASS/FAIL
 Feel note:
 ```
 
+## Open Smoke - Y'ffre Green Site Fanout
+
+Source implementation landed 2026-07-09, but no in-game site smoke is recorded
+yet. Test this separately from DA05: it proves the signal-floor location-site
+surface, not hunt-law pressure.
+
+Use a Bosmer save with debug level 2. Travel by normal load door, fast travel, or
+walking; do not rely on `coc` alone because the location-change story event can
+be skipped. Expected one-shot site keys:
+
+```text
+eldergleam
+gildergreen
+ancestor_glade
+allmaker_wind
+allmaker_water
+allmaker_sun
+allmaker_earth
+allmaker_beast
+allmaker_tree
+```
+
+Expected log markers:
+
+```text
+[PDV] Y'ffre green site remembered: <siteKey>
+[PDV] Bosmer favor LivingStory.NatureSite recorded
+```
+
+Daily-cap marker if a second site is hit on the same in-game day:
+
+```text
+[PDV] Y'ffre green site capped for today: <siteKey>
+```
+
+Special cases: Eldergleam awards inside the cave cell, Gildergreen awards near
+the outdoor Whiterun tree, and Tree Stone awards near `DLC2StandingStoneTreeREF`
+after entering the broad Temple of Miraak location. The Tree Stone is proximity
+based because Skyrim has no dedicated Tree Stone `LCTN`.
+
+Manual evidence to record:
+
+```text
+Y'ffre site tested:
+Remembered marker: PASS/FAIL
+LivingStory.NatureSite marker: PASS/FAIL
+Same-day cap behavior, if attempted: PASS/PENDING/FAIL
+Survey/status clarity:
+Feel note:
+```
+
 ## Wrong-Origin Check - DA05
 
 Use a clean reload/reset before DA05 has resolved.

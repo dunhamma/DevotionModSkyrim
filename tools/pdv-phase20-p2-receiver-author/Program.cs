@@ -50,8 +50,16 @@ string[] genericFaucetReceiverQuests =
 ];
 
 var skyrimMaster = ModKey.FromNameAndExtension("Skyrim.esm");
+var dawnguardMaster = ModKey.FromNameAndExtension("Dawnguard.esm");
+var hearthFiresMaster = ModKey.FromNameAndExtension("HearthFires.esm");
+var dragonbornMaster = ModKey.FromNameAndExtension("Dragonborn.esm");
 var devotionMaster = ModKey.FromNameAndExtension("Devotion.esp");
 var genericFaucetFillEntries = BuildGenericFaucetFillEntries(skyrimMaster);
+var greenPactPlantFoodEntries = BuildGreenPactPlantFoodEntries(
+    skyrimMaster,
+    dawnguardMaster,
+    hearthFiresMaster,
+    dragonbornMaster);
 GenericFaucetStoryManagerNode[] genericFaucetStoryManagerNodes =
 [
     new("PDV__SM_CraftItemNode", "PDV__SM_CraftItem", new FormKey(skyrimMaster, 0x039D86), new FormKey(skyrimMaster, 0x04F593)),
@@ -414,7 +422,7 @@ try
     }
     else if (checkGreenPact)
     {
-        CheckGreenPact(index, playerEventsPath, kidPath, greenPactFormLists, greenPactKeywords, report);
+        CheckGreenPact(index, playerEventsPath, kidPath, greenPactFormLists, greenPactKeywords, greenPactPlantFoodEntries, report);
         if (report.Errors.Count > 0)
         {
             throw new InvalidOperationException("Green Pact tag layer check failed.");
@@ -428,6 +436,7 @@ try
         EnsureFormLists(mod, index, allocator, greenPactFormLists, report);
         EnsureKeywords(mod, index, allocator, greenPactKeywords, report);
         WireGreenPactAliasProperties(mod, index, greenPactFormLists, greenPactKeywords, report);
+        FillGreenPactPlantFoods(index, greenPactPlantFoodEntries, report);
         WriteKidIfNeeded(kidPath, dryRun, report);
         WriteModIfNeeded(mod, espPath, dryRun, report);
         report.Status = "PASS";
@@ -1741,6 +1750,48 @@ static IReadOnlyDictionary<string, GenericFaucetEntry[]> BuildGenericFaucetFillE
     };
 }
 
+static GenericFaucetEntry[] BuildGreenPactPlantFoodEntries(
+    ModKey skyrimMaster,
+    ModKey dawnguardMaster,
+    ModKey hearthFiresMaster,
+    ModKey dragonbornMaster)
+{
+    FormKey S(uint id) => new(skyrimMaster, id);
+    FormKey Dg(uint id) => new(dawnguardMaster, id);
+    FormKey Hf(uint id) => new(hearthFiresMaster, id);
+    FormKey Db(uint id) => new(dragonbornMaster, id);
+    GenericFaucetEntry E(FormKey formKey, string label) => new(formKey, label);
+
+    return
+    [
+        E(Hf(0x003533), "Apple Dumpling"),
+        E(Hf(0x0009DC), "Garlic Bread"),
+        E(Hf(0x003537), "Potato Bread"),
+        E(Dg(0x014DC4), "Soul Husk"),
+        E(Db(0x0206E7), "Ash Yam"),
+        E(S(0x064B2E), "Red Apple"),
+        E(S(0x064B2F), "Green Apple"),
+        E(S(0x0EBA01), "Apple Cabbage Soup"),
+        E(S(0x065C97), "Bread"),
+        E(S(0x065C98), "Bread Slice"),
+        E(S(0x064B3F), "Cabbage"),
+        E(S(0x0F431B), "Potato Cabbage Soup"),
+        E(S(0x0EBA02), "Cabbage Soup"),
+        E(S(0x064B40), "Carrot"),
+        E(S(0x10D666), "Gourd"),
+        E(S(0x0669A5), "Leek"),
+        E(S(0x064B3E), "Grilled Leeks"),
+        E(S(0x064B43), "Apple Pie"),
+        E(S(0x064B41), "Potato"),
+        E(S(0x064B3A), "Baked Potatoes"),
+        E(Hf(0x00353D), "Potato Soup"),
+        E(S(0x064B42), "Tomato"),
+        E(S(0x0F431C), "Tomato Soup"),
+        E(S(0x0F431E), "Vegetable Soup"),
+        E(Hf(0x0009DB), "Braided Bread"),
+    ];
+}
+
 static void EnsureGenericFaucetReceivers(
     SkyrimMod mod,
     Dictionary<string, ISkyrimMajorRecordGetter> index,
@@ -2072,6 +2123,7 @@ static void CheckGreenPact(
     string kidPath,
     IEnumerable<string> formListNames,
     IEnumerable<string> keywordNames,
+    IReadOnlyCollection<GenericFaucetEntry> plantFoodEntries,
     AuthorReport report)
 {
     foreach (var formListName in formListNames)
@@ -2107,6 +2159,7 @@ static void CheckGreenPact(
     }
 
     CheckAliasProperties(index, formListNames.Concat(keywordNames), report);
+    CheckGreenPactPlantFoods(index, plantFoodEntries, report);
 
     if (!File.Exists(playerEventsPath))
     {
@@ -2149,6 +2202,61 @@ static void CheckGreenPact(
         }
 
         report.Actions.Add($"Green Pact KID ini exists: {kidPath}");
+    }
+}
+
+static void FillGreenPactPlantFoods(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    IReadOnlyCollection<GenericFaucetEntry> plantFoodEntries,
+    AuthorReport report)
+{
+    var formList = RequireRecord<SkyrimFormList>(index, "PDV_FLST_GreenPact_PlantFoods");
+    var existing = formList.Items.Select(item => item.FormKey).ToHashSet();
+
+    foreach (var entry in plantFoodEntries)
+    {
+        if (existing.Contains(entry.FormKey))
+        {
+            report.Actions.Add($"PDV_FLST_GreenPact_PlantFoods already contains {entry.EditorId} ({entry.FormKey}).");
+            continue;
+        }
+
+        formList.Items.Add(entry.FormKey.ToLinkGetter<ISkyrimMajorRecordGetter>());
+        existing.Add(entry.FormKey);
+        report.Actions.Add($"Added Authoria/Requiem baseline plant food {entry.EditorId} ({entry.FormKey}) to PDV_FLST_GreenPact_PlantFoods.");
+    }
+}
+
+static void CheckGreenPactPlantFoods(
+    Dictionary<string, ISkyrimMajorRecordGetter> index,
+    IReadOnlyCollection<GenericFaucetEntry> plantFoodEntries,
+    AuthorReport report)
+{
+    if (!index.TryGetValue("PDV_FLST_GreenPact_PlantFoods", out var record) || record is not SkyrimFormList formList)
+    {
+        report.Errors.Add("PDV_FLST_GreenPact_PlantFoods is missing or is not a FLST/FormList.");
+        return;
+    }
+
+    var actual = formList.Items.Select(item => item.FormKey).ToArray();
+    var actualSet = actual.ToHashSet();
+
+    foreach (var duplicate in actual.GroupBy(item => item).Where(group => group.Count() > 1).Select(group => group.Key))
+    {
+        report.Errors.Add($"PDV_FLST_GreenPact_PlantFoods contains duplicate entry {duplicate}.");
+    }
+
+    foreach (var entry in plantFoodEntries)
+    {
+        if (!actualSet.Contains(entry.FormKey))
+        {
+            report.Errors.Add($"PDV_FLST_GreenPact_PlantFoods is missing Authoria/Requiem baseline plant food {entry.EditorId} ({entry.FormKey}).");
+        }
+    }
+
+    if (plantFoodEntries.All(entry => actualSet.Contains(entry.FormKey)))
+    {
+        report.Actions.Add($"PDV_FLST_GreenPact_PlantFoods contains the Authoria/Requiem baseline plant-food set ({plantFoodEntries.Count} entries).");
     }
 }
 

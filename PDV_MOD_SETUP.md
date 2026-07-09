@@ -1,4 +1,4 @@
-# Player Devotion â€” Mod Development Setup Reference
+# Player Devotion -- Mod Development Setup Reference
 **Project:** Devotion Framework + Race Modules
 **Engine:** Skyrim Special Edition (SSE)
 **Last Updated:** 4E 201 (update this when your setup changes)
@@ -13,7 +13,7 @@
 | `references/tamriel-daily-worship-4e201.html` | Race-by-race daily practice reference - design source document |
 | `references/tamriel-cursed-worship-4e201.html` | Race-by-race curse-state religious interpretation source |
 | `references/tamriel-daedric-worship-4e201.html` | Race-by-race Daedric practice source |
-| `PDV_MOD_SETUP.md` | This file â€” dev environment and architecture reference |
+| `PDV_MOD_SETUP.md` | This file -- dev environment and architecture reference |
 | `PDV_Architecture_v3.md` | Forward architecture, subsystem gates, beta/launch roadmap |
 | `PDV_TargetEndStates_1.0.md` | 1.0 product target, per-race acceptance state, roadmap traceability |
 | `references/authoring/PDV_DeityCoverageMatrix.json` | Phase 20 full roster authority for locked gods and Skyrim-present Princes across every race |
@@ -75,8 +75,8 @@
 | `tools/pdv_prisma_ui_audit.mjs` | Read-only Prisma UI policy audit; blocks gameplay scripts from opening focused/blocking Prisma UI without default-off/player-owned gating and fails stale Book-of-Days manager/MCM bytecode |
 | `tools/pdv_prisma_toast_fallback_audit.mjs` | Read-only Prisma-first toast fallback audit; fails raw player-facing top-left-only gameplay notices, checks stable toast helpers use shared fallback behavior, and hardens the P2 book route from `OnBookRead` through `ShowP2BookNotice` |
 | `tools/pdv-phase20-proof-placement-author` | Narrow direct-framework helper that creates/checks the current 34 QASmoke Phase 20 proof REFRs across Altmer, Argonian, Orc, Redguard, Khajiit, and Bosmer |
-| `tools/pdv-phase20-p2-receiver-author` | Narrow direct-framework helper that creates/checks the empty `PDV_FLST_P2_*` receiver FormList shells for all ten race immersive hooks, wires/checks those FormLists on the existing `PDV_PlayerEvents` alias script, fills/checks explicitly approved exact source entries from the receiver manifest, authors/checks generic faucet receiver QUST/Story Manager nodes including AddToPlayer theft, and checks Phase 2 Green Pact / capstone static authoring packets |
-| `tools/pdv_phase2_reward_readback_audit.mjs` | Read-only Phase 2 static closeout audit for reward records, manager spell/deity properties, FLST/SEQ/SGE state, Green Pact static layer, capstone records, and real-hook classification |
+| `tools/pdv-phase20-p2-receiver-author` | Narrow direct-framework helper that creates/checks the empty `PDV_FLST_P2_*` receiver FormList shells for all ten race immersive hooks, wires/checks those FormLists on the existing `PDV_PlayerEvents` alias script, fills/checks explicitly approved exact source entries from the receiver manifest, authors/checks generic faucet receiver QUST/Story Manager nodes including AddToPlayer theft, authors/checks the Green Pact plant-food baseline, and checks capstone static authoring packets |
+| `tools/pdv_phase2_reward_readback_audit.mjs` | Read-only Phase 2 static closeout audit for reward records, manager spell/deity properties, FLST/SEQ/SGE state, Green Pact static layer plus the plant-food baseline, capstone records, and real-hook classification |
 | `tools/pdv-phase20-race-author` | Race-agnostic direct-framework reward/spec author/checker that creates/wires and readbacks per-race deity, reward, neglect, creed-loss, support-spell, state-track/reputation-track/global mirror, and message-record packets from `PDV_{Race}RewardRecords.spec.json` or a scoped tranche spec; `--check-rewards` verifies spell/MGEF copy, magnitudes, archetypes, conditions, and VMAD properties, can preserve explicit capstone extra effects such as Khajiit Baan Dar T3, and regen AVs are authored as PeakValueModifier effects |
 | `tools/pdv-requiem-tail-author` | Narrow direct-framework helper for the Requiem-tail closeout: creates/checks hidden Shor/HoonDing low-health save effects and heal spells, HoonDing breakthrough boss FormList plus manager faction/FormList VMAD properties, Redguard Ash'abah clearable-undead-site FormList wiring, and Namira zero-passive/copy normalization directly in `Devotion.esp` with backups under `Backups\requiem-tail\`; no persistent patch plugin ships |
 | `tools/pdv-phase20-cat6-author` | Narrow direct-framework helper that creates/checks the preserved pilot-provisional CAT-6 Khajiit Lunar Tier 1 SPEL plus night-gated stamina/disease MGEFs; standalone CAT-6 grant ownership is superseded by the all-race reward contract |
@@ -98,6 +98,8 @@
 | `tools/pdv_extract_quest_stage_readback.mjs` | Read-only vanilla/DLC quest-stage readback helper that writes `references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv` for Phase 20 exact-source review |
 | `tools/pdv_skyrim_refs_bridge.mjs` | Read-only bridge for querying the neutral `SkyrimGamePlayReferences` repo |
 | `tools/pdv_quest_matrix_compile.mjs` | Quest-reaction matrix compiler that emits live PapyrusUtil JSON from the frozen matrix/faucet/readback/stance inputs |
+| `tools/pdv_quest_tranche_merge.mjs` | Source-tranche merger for `PDV_QuestReactionMatrix_Full.csv`; edit tranches, not Full |
+| `tools/pdv_deity_signal_remap_adversary_check.mjs` | Static guard for the 2026-07 deity signal remap: shrine cap, Syrabane display, offer eligibility, likes/dislikes versioning, quest rows, and exclusions |
 | `native/DevotionPrismaBridge/` | C++ SKSE/Prisma bridge scaffold plus mirrored runtime Prisma panel assets |
 | `references/PDV_Anvil_MO2_MCP_Intake.md` | Codex-facing intake for the Anvil MO2 MCP plugin and optional tool status |
 
@@ -124,7 +126,7 @@
 | Tool | Purpose | Source |
 |------|---------|--------|
 | **VS Code** | Primary script editor | code.visualstudio.com |
-| **Papyrus Extension for VS Code** | Syntax, autocomplete, compile | VS Code marketplace â€” search "Papyrus" by joelday |
+| **Papyrus Extension for VS Code** | Syntax, autocomplete, compile | VS Code marketplace -- search "Papyrus" by joelday |
 | **Notepad++** | Fallback text editor, log reading | notepad-plus-plus.org |
 | **Git** | Version control (strongly recommended) | git-scm.com |
 
@@ -145,9 +147,9 @@
 The active dev profile is **Devotion Dev** inside the Anvil MO2 instance. Source and compiled scripts live at `D:\Wabbajack\modlists\Anvil\mods\Devotion\` and are managed by MO2 (`meta.ini` present).
 
 ```
-[Profile: Devotion Dev]      â† work here (active; inside Anvil MO2 instance)
-[Profile: PDV_Testing]       â† optional clean ship-verification profile (create before public release)
-[Your normal play profile]   â† never touched by this project
+[Profile: Devotion Dev]      <- work here (active; inside Anvil MO2 instance)
+[Profile: PDV_Testing]       <- optional clean ship-verification profile (create before public release)
+[Your normal play profile]   <- never touched by this project
 ```
 
 ### Development Load Order (Minimum)
@@ -165,8 +167,8 @@ Address Library for SKSE Plugins
 powerofthree's Tweaks
 powerofthree's Papyrus Extender
 ---
-Devotion.esp    â† your core file
-PDV_Nord.esp                    â† race module (add as built)
+Devotion.esp    <- your core file
+PDV_Nord.esp                    <- race module (add as built)
 PDV_Imperial.esp
 PDV_Dunmer.esp
 PDV_Altmer.esp
@@ -177,13 +179,13 @@ PDV_Orc.esp
 PDV_Argonian.esp
 ```
 
-**Rule:** Keep the Devotion Dev profile minimal â€” Skyrim/DLC, SKSE, SkyUI, Address Library, powerofthree's Tweaks, powerofthree's Papyrus Extender, and PDV plugins only. Every additional mod is a potential false positive when debugging. The Anvil instance hosts a full modlist; Devotion Dev is the curated subset for PDV work.
+**Rule:** Keep the Devotion Dev profile minimal -- Skyrim/DLC, SKSE, SkyUI, Address Library, powerofthree's Tweaks, powerofthree's Papyrus Extender, and PDV plugins only. Every additional mod is a potential false positive when debugging. The Anvil instance hosts a full modlist; Devotion Dev is the curated subset for PDV work.
 
 ### MO2 Settings to Configure
 
-- **Mod Organizer â†’ Settings â†’ Nexus:** Not needed for development
-- **Mod Organizer â†’ Settings â†’ Plugins:** Ensure BSA extraction is ON for vanilla assets
-- **Right-click game executable â†’ Edit:** Add `-forcesteamloader` argument if CK fails to launch
+- **Mod Organizer -> Settings -> Nexus:** Not needed for development
+- **Mod Organizer -> Settings -> Plugins:** Ensure BSA extraction is ON for vanilla assets
+- **Right-click game executable -> Edit:** Add `-forcesteamloader` argument if CK fails to launch
 
 ---
 
@@ -236,7 +238,7 @@ The wrapper outputs `.pex` files directly into the MO2-managed `Devotion\Scripts
 
 Creation Kit's built-in Papyrus compiler (Ctrl+F7 in the CK script editor) remains valid when working interactively in CK. For scripted/terminal work, prefer `node .\tools\pdv_compile.mjs` from the docs workspace because it checks stale scripts, treats warnings as failures, and runs the verifier after successful compiles. VS Code with the Papyrus extension provides editor features (syntax, intellisense, hover, format) but does not drive compilation.
 
-> `compile.ps1` and `skyrimse.ppj` exist in the mod folder as legacy files from an earlier toolchain. Do not use them â€” defer to `tools\pdv_compile.mjs` for terminal compiles or the CK compiler for interactive CK work.
+> `compile.ps1` and `skyrimse.ppj` exist in the mod folder as legacy files from an earlier toolchain. Do not use them -- defer to `tools\pdv_compile.mjs` for terminal compiles or the CK compiler for interactive CK work.
 >
 > `ScriptCompile.bat` in the `Papyrus Compiler` folder is a stale Bethesda development artifact that points at internal `C:\Projects\TESV\Build...` paths. Treat it as an example invocation, not a working wrapper.
 >
@@ -247,9 +249,9 @@ Creation Kit's built-in Papyrus compiler (Ctrl+F7 in the CK script editor) remai
 | File | Role |
 |---|---|
 | `SkyrimSE.code-workspace` | VS Code workspace (rooted at the mod folder) |
-| `compile.ps1` | Legacy â€” do not use |
-| `skyrimse.ppj` | Legacy â€” do not use |
-| `meta.ini` | MO2 mod metadata â€” do not edit manually |
+| `compile.ps1` | Legacy -- do not use |
+| `skyrimse.ppj` | Legacy -- do not use |
+| `meta.ini` | MO2 mod metadata -- do not edit manually |
 
 ### Native Prisma bridge scaffold
 
@@ -590,6 +592,8 @@ Phase 10 Dunmer substrate proof-graduation is closed as of 2026-05-24. The count
 
 `tools\pdv_quest_matrix_compile.mjs` compiles the frozen quest-reaction matrix, Part D faucet CSV, stance matrices, quest-stage readback, and the narrow manual quest FormID fallback into `D:\Wabbajack\modlists\Anvil\mods\Devotion\SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionMatrix.json`. Run `node .\tools\pdv_quest_matrix_compile.mjs --check` before writing live JSON, then compile `PDV_EventBus`, `PDV_PlayerEvents`, and `PDV__ManagerQuest` after receiver/manager source edits.
 
+Current remap note (2026-07-09): source tranches plus the signal-floor readback/faucet tranche compile to 1013 cells / 124 watched quests / 45 deity names. Use `node .\tools\pdv_quest_tranche_merge.mjs`, then `node .\tools\pdv_quest_matrix_compile.mjs --check --json`, then the formal-offer/remap/signal-floor gates before claiming source/readback readiness. Green source/readback gates still do not prove runtime-route, Active Effects, Book of Days, Survey/status, Prisma/notification, save/load stack behavior, or new skooma/staff-fire faucet behavior; use `references\authoring\PDV_DeitySignalRemap_InGameSmoke_Runbook.md` plus the relevant signal-floor handoff/runbook for that.
+
 `tools\pdv_skyrim_refs_bridge.mjs` is a read-only lookup bridge into the neutral `dunhamma/SkyrimGamePlayReferences` repo. Set `SKYRIM_GAMEPLAY_REFERENCES_ROOT` when the clone is not under `scratch\SkyrimGamePlayReferences`. Use it to list or search broad reference tables such as reverse keywords, faction relationships, condition-bearing effects, cells, containers/furniture, enchantments, leveled lists, FormLists, shouts, and worldspaces. It does not copy data into PDV or replace local xEdit/CK verification. Bridge rules live in `references\vanilla-gameplay\PDV_SkyrimGamePlayReferences_Bridge.md`.
 
 Tracked JSON manifests live under `references\authoring\` and can be addressed by manifest id or file path. `PDV_DeityCoverageMatrix.json` is the Phase 20 roster authority: it reconciles the Phase 4 stance/Daedric matrices into the 1.0 requirement that every locked god and all sixteen Skyrim-present Daedric Prince surfaces be content-ready for every race. `PDV_MedallionRoster.manifest.json` is the lightweight UI/runtime intent contract for the medallion surface: full native roster visibility, live-record readback for honest roster copy, and offer-only commitment with no direct medallion selection path. `mcm-property-wiring` is the canonical batch target for the current `PDV_MCM` properties and defaults to `PDV_PropertyWiringOverlay.esp`, replacing repeated `PDV_Author_one_off_*` property patches when CK property editing is unstable. `preflight-router-services` is the V3 canary target for co-attaching `PDV_EventTypes` and `PDV_EventBus` to `PDV_ActionRouter`; it defaults to `PDV_PreflightRouterServicesOverlay.esp`. `skeleton-track-scaffold` is the V3 Structural Skeleton track wiring batch for the locked 12 track quests/globals/FormLists and defaults to `PDV_SkeletonTrackScaffoldOverlay.esp`. `structural-systems-scaffold` is the broad follow-on batch for substrates, sacred places, Hircine, curse state, and MCM scaffold properties. `structural-systems-arrays` is a reporting/TODO manifest for manual threshold/state-array wiring. `PDV_Phase11PrivilegePilot.manifest.json` is the CK-safe runtime contract for the D-10 Arngeir/Kynareth privilege pilot, including the CK-authored branch/topic/unnamed INFO readback and runtime proof status. `PDV_Phase12ContextualFavorPilot.manifest.json` is the targeted contextual-favor runtime contract manifest for Kyne + Nord broad lanes. The scaffold manifests require CK/xEdit creation of the records first. Use `plan` first to inspect a batch, then `apply`, then run `node .\tools\pdv_verify.mjs`.
@@ -731,7 +735,7 @@ Keep these in mind before blaming CKPE or MO2 for compile weirdness:
 ### File Naming Convention
 
 ```
-Devotion.esp    â† master file, all races depend on this
+Devotion.esp    <- master file, all races depend on this
 PDV_Nord.esp
 PDV_Imperial.esp
 PDV_Dunmer.esp
@@ -772,7 +776,7 @@ Race ESPs declare the framework ESP as a master. Event capture lives in framewor
 
 ### EditorID Prefix Convention
 
-All records use the prefix `PDV_`. Internal/machinery records add a double-underscore (`PDV__X`). Globals carry `_GLO_` infix; internal Globals (config, debug, dev) add a second underscore (`PDV_GLO__X`). Borrowed from the Gods And Worship taxonomy â€” lets a CK or xEdit reader recognize the role of a record from its name alone.
+All records use the prefix `PDV_`. Internal/machinery records add a double-underscore (`PDV__X`). Globals carry `_GLO_` infix; internal Globals (config, debug, dev) add a second underscore (`PDV_GLO__X`). Borrowed from the Gods And Worship taxonomy -- lets a CK or xEdit reader recognize the role of a record from its name alone.
 
 ```
 # Quest records
@@ -825,13 +829,13 @@ Enable detailed Papyrus logging for development.
 **What to look for:**
 
 ```
-[PDV]  â† your trace messages will appear here
-error  â† search this to find script errors
-warning â† non-fatal issues worth addressing
+[PDV]  <- your trace messages will appear here
+error  <- search this to find script errors
+warning <- non-fatal issues worth addressing
 ```
 
 **Recommended log viewer:** Notepad++ with auto-refresh enabled.
-Open log â†’ Edit â†’ Monitoring (tail -f equivalent).
+Open log -> Edit -> Monitoring (tail -f equivalent).
 
 **Add trace calls to every significant function during development:**
 
@@ -887,39 +891,39 @@ Quick reference for the values that everything else reads and writes.
 
 | Key | Range | Purpose |
 |-----|-------|---------|
-| `PDV.Piety` | 0â€“200 | Current piety. Source of truth. Drives tier. |
+| `PDV.Piety` | 0--200 | Current piety. Source of truth. Drives tier. |
 | `PDV.PietyToday` | unbounded | Daily scratch. Consolidated at dawn, then reset. |
-| `PDV.Tier` | 0â€“3 | 0=None, 1=Seeker, 2=Devoted, 3=Champion |
+| `PDV.Tier` | 0--3 | 0=None, 1=Seeker, 2=Devoted, 3=Champion |
 | `PDV.LastTierChange` | game time | Grace period tracking + MCM display |
 
-Read/write via `StorageUtil.GetFloatValue(deityForm, key)` / `StorageUtil.SetFloatValue(deityForm, key, value)`. PapyrusUtil SE is an SKSE DLL â€” no ESP master required, just call it directly.
+Read/write via `StorageUtil.GetFloatValue(deityForm, key)` / `StorageUtil.SetFloatValue(deityForm, key, value)`. PapyrusUtil SE is an SKSE DLL -- no ESP master required, just call it directly.
 
 ### Mirror GlobalVariables (active patron only)
 
 | EditorID | Type | Purpose |
 |----------|------|---------|
 | `PDV_GLO_ActivePiety` | Float | Active patron's current `PDV.Piety` |
-| `PDV_GLO_ActiveTier` | Float | Active patron's tier (0â€“3) |
+| `PDV_GLO_ActiveTier` | Float | Active patron's tier (0--3) |
 | `PDV_GLO_ActiveDeityIndex` | Float | Stable int for active deity. -1 = none |
 
-Mirrors are write-only caches refreshed by `PDV__ManagerQuest.RefreshPatronMirrors()`. Never read them as source of truth â€” always read StorageUtil. Never write them directly â€” always call `AwardPiety` or `RecomputeTier`.
+Mirrors are write-only caches refreshed by `PDV__ManagerQuest.RefreshPatronMirrors()`. Never read them as source of truth -- always read StorageUtil. Never write them directly -- always call `AwardPiety` or `RecomputeTier`.
 
 ### Tier Thresholds (defaults, tunable per-deity in Phase 2+)
 
 | Tier | Label | Piety threshold |
 |------|-------|----------------|
 | 0 | None | < 10 |
-| 1 | Seeker | â‰¥ 10 |
-| 2 | Devoted | â‰¥ 50 |
-| 3 | Champion | â‰¥ 150 |
+| 1 | Seeker | >= 10 |
+| 2 | Devoted | >= 50 |
+| 3 | Champion | >= 150 |
 
 ### System GlobalVariables (Phase 2+)
 
 | EditorID | Purpose |
 |----------|---------|
-| `PDV_GLO_OriginRace` | Permanent cultural origin race index 0â€“9, set once at game start |
+| `PDV_GLO_OriginRace` | Permanent cultural origin race index 0--9, set once at game start |
 | `PDV_GLO_PatronDeity` | FormID of active patron. 0 = none |
-| `PDV_GLO_DebugLevel` | 0â€“3 trace verbosity, MCM-toggleable |
+| `PDV_GLO_DebugLevel` | 0--3 trace verbosity, MCM-toggleable |
 
 Phase 4 implementation note:
 
@@ -997,23 +1001,23 @@ Follow this sequence. Do not skip ahead.
 [x] CK launches and finds all vanilla assets
 [x] Devotion.esp created
 [x] PDV__ManagerQuest (Start-Game-Enabled) and PDV__MainQuest (RunOnce) created in CK
-[x] Phase 0 â€” PDV_MasterQuest deleted, rename to PDV__ManagerQuest clean
-[x] Phase 1 â€” StorageUtil data model; mirror globals declared and verified in-game;
+[x] Phase 0 -- PDV_MasterQuest deleted, rename to PDV__ManagerQuest clean
+[x] Phase 1 -- StorageUtil data model; mirror globals declared and verified in-game;
       PDV__ManagerQuest refactored with AwardPiety/GetPiety/RecomputeTier/RefreshPatronMirrors
-[x] Phase 2 â€” PDV_DeityBase + PDV_Deity_Kyne; PDV_FLST_AllDeities; ProcessDawn loop;
+[x] Phase 2 -- PDV_DeityBase + PDV_Deity_Kyne; PDV_FLST_AllDeities; ProcessDawn loop;
       CK compile/wiring/runtime verification complete
-[x] Phase 3 â€” PDV_ActionRouter + PDV__SM_KillActor complete;
+[x] Phase 3 -- PDV_ActionRouter + PDV__SM_KillActor complete;
       CK wiring, Story Manager routing, SEQ, and runtime verification all passed
-[x] Phase 4 â€” scripts/tooling, framework ESP wiring, and full in-game proof passed
-[x] Phase 5 â€” MCM dev slice script/tooling/framework wiring landed; in-game SkyUI proof passed
-[x] Phase 6 â€” Talos + Auri-El hostile-path proof slice framework-wired and full in-game proof passed
+[x] Phase 4 -- scripts/tooling, framework ESP wiring, and full in-game proof passed
+[x] Phase 5 -- MCM dev slice script/tooling/framework wiring landed; in-game SkyUI proof passed
+[x] Phase 6 -- Talos + Auri-El hostile-path proof slice framework-wired and full in-game proof passed
 [x] V3 Preflight - script/tooling, framework-owned record wiring, strict verifier gate, and clean-start smoke complete
 [x] V3 Structural Skeleton - broad structural systems scaffold is merged, strict-verifier clean, and runtime-smoked
 [ ] Debug spell created and tested
 [ ] Nord module complete
 ```
 
-Check off as you go. If something at step N breaks, the problem is in step N â€” not step N-7.
+Check off as you go. If something at step N breaks, the problem is in step N -- not step N-7.
 
 ---
 
@@ -1026,7 +1030,7 @@ The houseCARL MCP's Mutagen overlay holds an open handle on the Anvil load order
 Usually a corrupted plugin. Check your load order in MO2. Ensure no plugin has a missing master.
 
 **Script compiles but quest doesn't run:**
-Confirm `Start Game Enabled` is checked on the quest record in CK. Confirm the script is attached to the quest (Quest â†’ Scripts tab, not just saved in the source folder).
+Confirm `Start Game Enabled` is checked on the quest record in CK. Confirm the script is attached to the quest (Quest -> Scripts tab, not just saved in the source folder).
 
 **Trace messages not appearing in Papyrus.0.log:**
 Confirm `bEnableLogging=1` and `bEnableTrace=1` in the active game/profile INIs, not just CK defaults. For the current `Devotion Dev` runtime, the live Papyrus path is `C:\Users\Admin\Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log`. There may also be `Papyrus.1.log`; `.0` is usually the newest active session, but verify timestamps instead of assuming.
@@ -1091,7 +1095,7 @@ git add .
 git commit -m "Initial project structure"
 ```
 
-**.gitignore** â€” exclude compiled scripts and CK temp files:
+**.gitignore** -- exclude compiled scripts and CK temp files:
 
 ```
 *.pex
@@ -1132,13 +1136,17 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 **2026-06-20 AEST - Ohmes-Raht / custom-race V1 support contract:** Custom races resolve into PDV's existing ten race profiles rather than adding bespoke V1 race paths. Ohmes-Raht / Half-Khajiit ships as Khajiit profile `6` through `SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap.json` entries for `HalfKhajiitRace` (`03322B`) and `HalfKhajiitRaceVampire` (`05693A`). Temporary beast-form races use the separate `PDV_TemporaryRaceMap.json` defer list so origin capture waits until the player reverts; they must not be mapped as permanent cultural origins. `tools\sync-devotion-to-live.ps1` copies the packaged StorageUtil JSON/README files into the live MO2 mod folder. Runtime/manual custom-race smoke remains separate from readback proof.
 
-**2026-06-20 AEST - Book of Days Prisma recovery closeout:** The live-only Book of Days path is now part of tracked recovery state: `PDV_MCM.psc` owns the player hotkey toggle/open-state reset, `PDV__ManagerQuest.psc` builds the journal payload with a race+path-only `survey` line (`Race | Path`, rendered by Prisma as `Race · Path`), and standing remains meter-only. `native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\app.js`/`index.html`/`styles.css` render the left-page path line and use fixed viewport math for the scaled book so the preview stays in frame on narrow viewports. The repo Prisma view was synced to live with backup `generated\live-devotion-backups\pre-sync-20260620-141135`; `PDV_MCM` and `PDV__ManagerQuest` compiled 0/0; `pdv_prisma_ui_audit` passed 13 checks; default `pdv_verify` passed `FAIL=0 WARN=3 PASS=3057 INFO=33`; and the eyeball preview artifacts live under `scratch\prisma-book-preview\`. Boundary: this is compile/verifier/UI-preview proof, not fresh in-game hotkey/runtime proof.
+**2026-06-20 AEST - Book of Days Prisma recovery closeout:** The live-only Book of Days path is now part of tracked recovery state: `PDV_MCM.psc` owns the player hotkey toggle/open-state reset, `PDV__ManagerQuest.psc` builds the journal payload with a race+path-only `survey` line (`Race | Path`, rendered by Prisma as `Race - Path`), and standing remains meter-only. `native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\app.js`/`index.html`/`styles.css` render the left-page path line and use fixed viewport math for the scaled book so the preview stays in frame on narrow viewports. The repo Prisma view was synced to live with backup `generated\live-devotion-backups\pre-sync-20260620-141135`; `PDV_MCM` and `PDV__ManagerQuest` compiled 0/0; `pdv_prisma_ui_audit` passed 13 checks; default `pdv_verify` passed `FAIL=0 WARN=3 PASS=3057 INFO=33`; and the eyeball preview artifacts live under `scratch\prisma-book-preview\`. Boundary: this is compile/verifier/UI-preview proof, not fresh in-game hotkey/runtime proof.
 
 **2026-06-20 AEST - Live Devotion restore and primary-plugin guard:** The Anvil live mod folder was found missing its primary Devotion artifacts and was restored from `generated\live-devotion-snapshot\2026-06-15-final-polish`, then brought back to post-16 state: `PDV__ManagerQuest.psc` regenerated the small-signal table at `LIKES_DISLIKES_VERSION = 9` with 312 rows; the retired Windhelm proof records were removed through `tools\pdv-phase9-author -- --retire-windhelm-proof-records`; the Book of Days Prisma view and fonts were restored live from the current branch; the startup confirm-screen packet and D1 diegetic packet were reapplied, with `PDV_DiegeticDirector.D1Enabled = True` read back from ESP VMAD; SEQ was refreshed; scripts compiled 0/0; and default `pdv_verify` passed at `FAIL=0 WARN=2 TODO=0 PASS=3002 INFO=33`. External recovery copy: `generated\live-devotion-backups\post-restore-20260620-105204`; Prisma restore backup: `generated\live-devotion-backups\pre-prisma-restore-20260620-110158`. `tools\sync-devotion-to-live.ps1` now fail-closes if the live mod folder lacks `Devotion.esp` or looks damaged, takes a pre-sync backup of primary artifacts, includes the Book of Days font assets, excludes untracked scratch Papyrus by default, and must never create an empty replacement for the main mod folder. Boundary: the current `pdv_book_of_days_audit.mjs` proves UI hash parity but still fails the expanded journal-history Papyrus contract; that source is not present in current Git history and was not invented during restore.
 
 **2026-06-17 AEST - Trusted first-look cleanup issues resolved:** The first-look log/property and Windhelm visible-proof-surface issues are closed after machine cleanup plus tester confirmation. Redguard stale manager VMAD properties for removed `*_NeglectTexture` props were pruned from `Devotion.esp`; the hidden Talos receiver override on `10753E:Skyrim.esm` was retired so the vanilla shrine reference wins; and the five Phase 9 Bosmer Windhelm proof ACTI/REFR records plus the `Devotion.esp` `WindhelmTempleofTalos` cell override were removed so Lux wins the cell again. Backups: `Backups\vmad-stale-property-prune\Devotion.esp.20260616-214622.bak`, `Backups\windhelm-hidden-talos-cleanup\Devotion.esp.20260616-220104.bak`, and `Backups\bosmer-windhelm-signal-cleanup\Devotion.esp.20260616-224337.bak`. Evidence: houseCARL readback shows the retired Talos/Bosmer records absent and `WindhelmTempleofTalos` won by `Lux.esp`; `pdv_refresh_seq --write --json` passes with `changed=false questCount=39`; default `pdv_verify --json` passes at `PASS=2990 WARN=2 INFO=47`; `tools\pdv-phase9-author -- --check-placements` passes the retired-record absence check. User retest on 2026-06-17 reported fixed.
 
 **2026-06-15 AEST - Mod identity rename to Devotion:** Public mod identity and the active framework plugin are now `Devotion` / `Devotion.esp`. The live Anvil mod file was renamed from `PlayerDevotion_Framework.esp` to `Devotion.esp`, the SEQ file from `PlayerDevotion_Framework.seq` to `Devotion.seq`, and the Devotion Dev profile now loads `*Devotion.esp`. Rename backups are under `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\rename-devotion\`. Internal `PDV_` script/record identifiers and existing data paths such as `SKSE\Plugins\StorageUtilData\PlayerDevotion\` remain intentionally unchanged to avoid save/data churn. Proof is machine/readback only: the renamed scripts compile 0/0, default `pdv_verify --json` passes at `PASS=3028 WARN=2 INFO=45`, `pdv_refresh_seq --write --json` passes with `changed=false questCount=39`, and `pdv_daedric_test_readiness --deep --json` passes at `PASS=71`. Runtime/manual beta proof remains separate.
+
+**2026-07-09 AEST - Green Pact plant-food baseline readback closeout:** houseCARL review of the ARR Authoria/Requiem setup found the Bosmer food rule is not broad keyword tagging: `Requiem - Food and Beverages Redone` attaches Green Pact behavior to Bosmer through a race effect and a curated `Apo_BosmerExclusionFoods` FormList of earthborn foods. PDV now mirrors that conservative pattern for base/DLC plant foods only: `tools\pdv-phase20-p2-receiver-author --author-green-pact` fills `PDV_FLST_GreenPact_PlantFoods` with the 25 non-Requiem FormKeys, `--check-green-pact` fails if any baseline entry is missing, and `pdv_phase2_reward_readback_audit.mjs` now checks the same baseline. Live write backup: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Backups\phase20-p2-receivers\Devotion.esp.20260709-135850.bak`. Proof boundary: ESP/readback and static source-path proof only; no new Papyrus compile was needed because `PDV_PlayerEvents.RouteBosmerGreenPactFood` and OldContract-gated `HandleGreenPactViolation` were already present. Runtime consumption proof and full expansion for potions, ingredients, firewood/lumber, flora harvests, and mod-added food KID curation remain open. The broad reward readback audit now passes the Green Pact baseline but still has unrelated Breton reward-record failures.
+
+**2026-07-09 AEST - Bosmer Y'ffre green-site fanout source implementation:** `PDV__ManagerQuest.HandleBosmerLocationChange` now dispatches the signal-floor location-site surface requested in `PDV_SignalFloor_DeepDive_ConsolidatedCodexHandoff_2026-07-09.md`. New per-site StorageUtil keys live under `PDV.Yffre.Seen.*` with `PDV.Yffre.SiteCount`, `PDV.Yffre.LastSite`, and a shared once/day cap `PDV.Signal.YffreGreenSite`; successful sites route through the existing `HandleBosmerLivingStoryNatureSite(...)` evidence/signal path. Covered sites are Eldergleam, Gildergreen, Ancestor Glade, All-Maker Wind/Water/Sun/Earth/Beast, and All-Maker Tree. Tree Stone uses `DLC2TempleOfMiraakLocation` only to arm a proximity poll and awards near `DLC2StandingStoneTreeREF`, because houseCARL readback found no dedicated `DLC2StoneTreeLocation`. Source was synced to the live Anvil Devotion source and compiled: `PDV__ManagerQuest` 0 errors / 0 warnings, verifier `FAIL=0 WARN=2 TODO=0 PASS=3546 INFO=68`. Proof boundary: source/compile/verifier only; no in-game location-change smoke has run.
 
 **2026-07-05 AEST - AddToPlayer generic faucet receiver closeout:** `tools\pdv-phase20-p2-receiver-author` now includes the generic `PDV__SM_AddToPlayer` QUST and `PDV__SM_AddToPlayerNode` Story Manager node under vanilla `PlayerAddItem` root `02C439:Skyrim.esm`. Live writes succeeded after Skyrim released `Devotion.esp`, with backups `Backups\phase20-p2-receivers\Devotion.esp.20260705-092142.bak` and `Devotion.esp.20260705-092146.bak`; focused receiver and Story Manager checks pass, and `pdv_verify --strict-phase3` reports `FAIL=0`, `TODO=0`. Proof boundary: compile/readback/strict-gate only. Runtime proof for `362` must steal an owned loose/container item, not pickpocket, and record either `[PDV] EventBus: RouteAction complete: event 362` or an advanced `PDV.Meta.LastTheftTime` timestamp; a deity delta is optional because the Nocturnal meta-faucet consumes the timestamp.
 
@@ -1186,17 +1194,17 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 **2026-05-21 - Phase 8 runtime proof closeout and overlay lesson:** Phase 8's Imperial Concordat pilot is now runtime-proven end to end on an Imperial save. Baseline `Uncommitted`, pending start/cancel, 3-day commit into `PublicCompliant`, committed-state multiplier persistence under raw rollback, 3-day commit into `ConcordatEnforcer`, halved inward movement while the extreme gate was locked, save/load persistence before and after gate unlock, and 3-day exit back to `PublicCompliant` all passed. `tools\pdv_verify.mjs --strict-phase8` is now part of the live closeout ladder, and the combined compile+verify gate stayed fully clean at `FAIL=0, WARN=0, TODO=0, PASS=642, INFO=28` on 2026-05-20 20:20:45 AEST. Durable lesson: `PDV_Phase8ConcordatTalosOverlay.esp` should not be treated as the steady-state runtime wiring path; partial VMAD overrides can win with blank/default Talos values. The live fix is manager-owned runtime wiring plus save-healing in `PDV__ManagerQuest`, and the overlay should remain inactive unless it is explicitly rebuilt as a full safe override.
 
-**2026-05-09 â€” Framework vs. Monolithic:** One core ESP owns the quest spine and globals. Nine race ESPs patch in as modules.
+**2026-05-09 -- Framework vs. Monolithic:** One core ESP owns the quest spine and globals. Nine race ESPs patch in as modules.
 
-**2026-05-09 â€” Dawn detection:** `RegisterForUpdateGameTime(1.0)` with hour-window check. Chosen over Story Manager dawn event for reliability.
+**2026-05-09 -- Dawn detection:** `RegisterForUpdateGameTime(1.0)` with hour-window check. Chosen over Story Manager dawn event for reliability.
 
-**2026-05-09 â€” Bootstrap / Manager quest split:** `PDV__MainQuest` (RunOnce bootstrap) and `PDV__ManagerQuest` (Start-Game-Enabled runtime). Runtime owns the mirror globals API and the dawn consolidation loop.
+**2026-05-09 -- Bootstrap / Manager quest split:** `PDV__MainQuest` (RunOnce bootstrap) and `PDV__ManagerQuest` (Start-Game-Enabled runtime). Runtime owns the mirror globals API and the dawn consolidation loop.
 
-**2026-05-09 â€” Naming taxonomy:** Internal/machinery records prefixed `PDV__X`; runtime Globals prefixed `PDV_GLO_X`; internal/system Globals prefixed `PDV_GLO__X`. See Â§ EditorID Prefix Convention above.
+**2026-05-09 -- Naming taxonomy:** Internal/machinery records prefixed `PDV__X`; runtime Globals prefixed `PDV_GLO_X`; internal/system Globals prefixed `PDV_GLO__X`. See Section  EditorID Prefix Convention above.
 
-**2026-05-10 â€” Variable storage (v2):** StorageUtil (PapyrusUtil SE) is source of truth for all per-deity piety/tier values, keyed by deity FormID. Three mirror GlobalVariables shadow the active patron's values for vanilla CK Condition reads. Mirrors are write-only caches. `PDV_GLO_DevotionLevel` and the three buckets removed.
+**2026-05-10 -- Variable storage (v2):** StorageUtil (PapyrusUtil SE) is source of truth for all per-deity piety/tier values, keyed by deity FormID. Three mirror GlobalVariables shadow the active patron's values for vanilla CK Condition reads. Mirrors are write-only caches. `PDV_GLO_DevotionLevel` and the three buckets removed.
 
-**2026-05-10 â€” PapyrusUtil SE:** SKSE DLL plugin â€” no ESP master, no xEdit step. Call `StorageUtil.*` directly. Never add as a plugin master.
+**2026-05-10 -- PapyrusUtil SE:** SKSE DLL plugin -- no ESP master, no xEdit step. Call `StorageUtil.*` directly. Never add as a plugin master.
 
 **2026-05-18 - PO3 Papyrus Extender dependency:** PDV v3 accepts powerofthree's Papyrus Extender as a hard runtime dependency for event hooks that vanilla Story Manager/player aliases cannot expose cleanly. This also makes Address Library for SKSE Plugins and powerofthree's Tweaks required runtime SKSE-plugin dependencies. These are not ESP masters. Use PO3 for runtime event hooks, not keyword/classification/NPC distribution; that remains offline patcher territory. SPID remains deferred for future cost-benefit review if PDV needs actor-load distribution, outfit lifecycle behavior, or broad dynamic injection that generated patches cannot represent cleanly.
 
@@ -1220,23 +1228,23 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 **2026-05-19 - Slice 0/1 implementation packets:** The current combined strict verifier baseline is `node .\tools\pdv_verify.mjs --strict-preflight --strict-skeleton --strict-pattern-proving --json` => `PASS=458, WARN=2, INFO=28`, no `FAIL` or `TODO`, at 2026-05-19 16:44 AEST. Treat the two warnings (`PDV_MCM` duplicate VMAD and stale SEQ freshness) as known waivers until manual consolidation or a post-CK SEQ refresh. Slice 1 implementation should add only normal-play triggers into existing EventBus routes for Dunmer portable shrine/home bonus, Bosmer Green Pact violation, and Hircine hunt rite; do not broaden into full Green Pact tagging, Daedric price/stigma, curse detection, or content cloning during that closeout.
 
-**2026-05-10 â€” CK compiler toolchain, revised 2026-05-12:** Source `.psc` files live in `Scripts\Source\`. Compiled `.pex` output to `Scripts\`. Terminal/Codex compiles use `tools\pdv_compile.mjs`, which spawns `PapyrusCompiler.exe` directly with `<script.psc> -f=<flags> -i=<source-dirs> -o=<output-dir>`. CK compiler (Ctrl+F7) remains valid for interactive CK work. `compile.ps1`, `skyrimse.ppj`, and Bethesda's shipped `ScriptCompile.bat` are legacy/stale artifacts and should not be used.
+**2026-05-10 -- CK compiler toolchain, revised 2026-05-12:** Source `.psc` files live in `Scripts\Source\`. Compiled `.pex` output to `Scripts\`. Terminal/Codex compiles use `tools\pdv_compile.mjs`, which spawns `PapyrusCompiler.exe` directly with `<script.psc> -f=<flags> -i=<source-dirs> -o=<output-dir>`. CK compiler (Ctrl+F7) remains valid for interactive CK work. `compile.ps1`, `skyrimse.ppj`, and Bethesda's shipped `ScriptCompile.bat` are legacy/stale artifacts and should not be used.
 
-**2026-05-10 â€” Console command source of truth:** `PDV_SkyrimConsoleReference.md` (UESP-sourced). Confirmed working: `GetGlobalValue <var>` (read), `set <var> to <value>` (write). `cgf` does not work on instance functions.
+**2026-05-10 -- Console command source of truth:** `PDV_SkyrimConsoleReference.md` (UESP-sourced). Confirmed working: `GetGlobalValue <var>` (read), `set <var> to <value>` (write). `cgf` does not work on instance functions.
 
-**2026-05-11 â€” Phase 2 verified:** `PDV_DeityBase`, `PDV_Deity_Kyne`, and `PDV__ManagerQuest` compile and are wired in CK. In-game testing verified patron activation, mirror globals, dawn clamp, persistent piety consolidation, and tier threshold transition.
+**2026-05-11 -- Phase 2 verified:** `PDV_DeityBase`, `PDV_Deity_Kyne`, and `PDV__ManagerQuest` compile and are wired in CK. In-game testing verified patron activation, mirror globals, dawn clamp, persistent piety consolidation, and tier threshold transition.
 
-**2026-05-11 â€” Phase 3 preflight:** Keep `PDV_ActionRouter` as a persistent service quest. Use a separate non-Start-Game-Enabled receiver quest (`PDV__SM_KillActor`) for the Kill Actor Story Manager event. The receiver handles `OnStoryKillActor`, calls the router, then stops/resets. PDV Story Manager nodes must check `Shares Event`; event capture writes only through `AwardPiety()` into `PDV.PietyToday`.
+**2026-05-11 -- Phase 3 preflight:** Keep `PDV_ActionRouter` as a persistent service quest. Use a separate non-Start-Game-Enabled receiver quest (`PDV__SM_KillActor`) for the Kill Actor Story Manager event. The receiver handles `OnStoryKillActor`, calls the router, then stops/resets. PDV Story Manager nodes must check `Shares Event`; event capture writes only through `AwardPiety()` into `PDV.PietyToday`.
 
-**2026-05-11 â€” Phase 3 scripts compiled:** `PDV_ActionRouter.psc` and `PDV__SM_KillActor.psc` were added to `Scripts\Source` and compile to `.pex` in `Devotion\Scripts`. The first compile caught Papyrus name-shadowing issues (`ActorBase`, `Message`), which were fixed before final compile.
+**2026-05-11 -- Phase 3 scripts compiled:** `PDV_ActionRouter.psc` and `PDV__SM_KillActor.psc` were added to `Scripts\Source` and compile to `.pex` in `Devotion\Scripts`. The first compile caught Papyrus name-shadowing issues (`ActorBase`, `Message`), which were fixed before final compile.
 
 **2026-05-14 - Phase 3 complete:** `PDV_ActionRouter` and `PDV__SM_KillActor` quest records are created and wired in `Devotion.esp`; the Kill Actor Story Manager receiver node exists with `Shares Event`; `Devotion.seq` is generated under `Devotion\Seq`; Papyrus logging is enabled in the `Devotion Dev` profile. Runtime verification passed for Kyne activation, hostile bandit scoring (`event 2`, `+0.5` scratch), hostile wolf scoring (`event 1`, `-3.0` scratch), neutral-kill rejection, rapid dual-kill accumulation, and dawn consolidation/clamping.
 
-**2026-05-11 â€” Local Codex skills:** `pdv-doc-sync` and `pdv-papyrus-ck` skill sources live under `skills\` in this docs project, are packaged as `.skill` files, and are installed under `C:\Users\Admin\.codex\skills`.
+**2026-05-11 -- Local Codex skills:** `pdv-doc-sync` and `pdv-papyrus-ck` skill sources live under `skills\` in this docs project, are packaged as `.skill` files, and are installed under `C:\Users\Admin\.codex\skills`.
 
-**2026-05-12 â€” PDV local toolchain:** `tools/pdv_compile.mjs` and `tools/pdv_verify.mjs` are the local health/build loop for the Anvil/Devotion setup. The compiler directly spawns the verified `PapyrusCompiler.exe` CLI with short `-f`, `-i`, and `-o` args, compiles active PDV scripts into `Devotion\Scripts`, treats warnings as failures, and runs the verifier after successful compiles. Normal verifier mode should remain useful during active implementation; strict Phase 3 mode intentionally fails until `PDV_ActionRouter`, `PDV__SM_KillActor`, and the Kill Actor Story Manager node exist in the ESP.
+**2026-05-12 -- PDV local toolchain:** `tools/pdv_compile.mjs` and `tools/pdv_verify.mjs` are the local health/build loop for the Anvil/Devotion setup. The compiler directly spawns the verified `PapyrusCompiler.exe` CLI with short `-f`, `-i`, and `-o` args, compiles active PDV scripts into `Devotion\Scripts`, treats warnings as failures, and runs the verifier after successful compiles. Normal verifier mode should remain useful during active implementation; strict Phase 3 mode intentionally fails until `PDV_ActionRouter`, `PDV__SM_KillActor`, and the Kill Actor Story Manager node exist in the ESP.
 
-**2026-05-15 â€” PDV overlay authoring tool, revised 2026-05-16:** `tools/pdv_author.mjs` is the safe automation path for CK-adjacent ESP wiring on existing PDV records. It reads `Devotion.esp` through the same local Mutagen bridge as the verifier, then writes **reversible overlay patch plugins** into the `Devotion` mod rather than mutating the framework ESP in place. v1 scope is intentionally narrow: existing-record scalar/object VMAD properties and FormList membership only. New records, VMAD array properties such as `RivalDeities`, and Story Manager tree authoring remain manual CK/xEdit work. Generated patches must keep `Skyrim.esm` as the first master when using extended FormID ranges; do not manually insert masters into an existing patch without remapping FormIDs.
+**2026-05-15 -- PDV overlay authoring tool, revised 2026-05-16:** `tools/pdv_author.mjs` is the safe automation path for CK-adjacent ESP wiring on existing PDV records. It reads `Devotion.esp` through the same local Mutagen bridge as the verifier, then writes **reversible overlay patch plugins** into the `Devotion` mod rather than mutating the framework ESP in place. v1 scope is intentionally narrow: existing-record scalar/object VMAD properties and FormList membership only. New records, VMAD array properties such as `RivalDeities`, and Story Manager tree authoring remain manual CK/xEdit work. Generated patches must keep `Skyrim.esm` as the first master when using extended FormID ranges; do not manually insert masters into an existing patch without remapping FormIDs.
 
 **2026-05-16 - Temporary overlays merged back and retired:** `PDV_ManagerPatronWirePatch.esp` and `PDV_MCMWirePatch.esp` were temporary rescue artifacts for CK instability. Their VMAD deltas have been merged directly into `Devotion.esp`: `PDV__ManagerQuest` now owns `PDV_GLO_PatronDeity`, and `PDV_MCM` is script-attached with required properties on the framework record. Both overlays are unticked in the `Devotion Dev` profile and must not be treated as runtime requirements.
 

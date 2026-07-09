@@ -874,6 +874,7 @@ Event OnUpdate()
     TryArgonianNearWaterMaintenance()
     TryBosmerEldergleamInterior()
     TryBosmerGildergreenProximity()
+    TryBosmerYffreTreeStoneProximity()
     TryCCSaintsRecognition()
     TryCCFishingDevotion()
 
@@ -5381,10 +5382,10 @@ String Function GetBosmerDreamText(Int pathState)
 EndFunction
 
 ; Songs of the Green: one location-change entry. Counts every newly-seen location
-; (for the Hearth discovery delta) and awards the curated Songs sites once each.
-; Eldergleam is held for the interior poll (TryBosmerEldergleamInterior) so the
-; vision lands in the cave at the water and the great tree, not at the exterior
-; approach.
+; (for the Hearth discovery delta), awards the curated Songs sites once each,
+; and dispatches the narrower Y'ffre green-site fanout for the signal floor.
+; Eldergleam, Gildergreen, and the Tree Stone are held for bounded polls so
+; broad parent locations do not fire before the player reaches the actual site.
 Function HandleBosmerLocationChange(Location loc)
     if !loc || GetPlayerOriginRaceIndex() != ORIGIN_BOSMER
         return
@@ -5397,25 +5398,24 @@ Function HandleBosmerLocationChange(Location loc)
         StorageUtil.AdjustIntValue(None, "PDV.BosLoc.DiscoveryCount", 1)
     endIf
 
-    ; Eldergleam's water and great tree are inside the cave, but the sanctuary
-    ; LOCATION spans the exterior approach. Arm the interior catch and keep the
-    ; flag in sync so it clears the moment the player leaves; the OnUpdate poll
-    ; awards it on a cave cell. Same shared interior cells as the Argonian set.
+    Bool armEldergleam = False
     if loc.GetFormID() == 0x000192AC
-        StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", 1)
-        return
+        armEldergleam = True
     endIf
-    StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", 0)
+    StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", BoolToInt(armEldergleam))
 
-    ; Gildergreen (outdoors): entering the Whiterun city LOCATION (0x00018A56)
-    ; arms a proximity poll so the vision lands AT THE GILDERGREEN TREE in the
-    ; Wind District, not inside the Temple of Kynareth. Mirrors Eldergleam
-    ; arm/disarm; the OnUpdate poll TryBosmerGildergreenProximity awards at the tree.
+    Bool armGildergreen = False
     if loc.GetFormID() == 0x00018A56
-        StorageUtil.SetIntValue(None, "PDV.BosSongs.GildergreenActive", 1)
+        armGildergreen = True
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.BosSongs.GildergreenActive", BoolToInt(armGildergreen))
+
+    Bool armTreeStone = IsLocationFromFile(loc, 0x000142B6, "Dragonborn.esm")
+    StorageUtil.SetIntValue(None, "PDV.Yffre.TreeStoneActive", BoolToInt(armTreeStone))
+
+    if armEldergleam || armGildergreen || armTreeStone
         return
     endIf
-    StorageUtil.SetIntValue(None, "PDV.BosSongs.GildergreenActive", 0)
 
     ; Temple of Kynareth interior (0x0001F87D) stays the Gildergreen song's FLST
     ; slot id (milestone-of-6 count + Naming-at-songs check), but the vision must
@@ -5425,9 +5425,42 @@ Function HandleBosmerLocationChange(Location loc)
         return
     endIf
 
+    TryAwardBosmerYffreLocationSite(loc)
+
     if PDV_FLST_BosmerGreenSongs && PDV_FLST_BosmerGreenSongs.HasForm(loc)
         AwardBosmerSong(loc.GetFormID())
     endIf
+EndFunction
+
+Bool Function TryAwardBosmerYffreLocationSite(Location loc)
+    if IsLocationFromFile(loc, 0x00003583, "Dawnguard.esm")
+        return TryAwardBosmerYffreGreenSite("ancestor_glade", "location_ancestor_glade")
+    elseIf IsLocationFromFile(loc, 0x000142DF, "Dragonborn.esm")
+        return TryAwardBosmerYffreGreenSite("allmaker_wind", "location_allmaker_wind")
+    elseIf IsLocationFromFile(loc, 0x000142DE, "Dragonborn.esm")
+        return TryAwardBosmerYffreGreenSite("allmaker_water", "location_allmaker_water")
+    elseIf IsLocationFromFile(loc, 0x000142DC, "Dragonborn.esm")
+        return TryAwardBosmerYffreGreenSite("allmaker_sun", "location_allmaker_sun")
+    elseIf IsLocationFromFile(loc, 0x000142A4, "Dragonborn.esm")
+        return TryAwardBosmerYffreGreenSite("allmaker_earth", "location_allmaker_earth")
+    elseIf IsLocationFromFile(loc, 0x00014296, "Dragonborn.esm")
+        return TryAwardBosmerYffreGreenSite("allmaker_beast", "location_allmaker_beast")
+    endIf
+
+    return False
+EndFunction
+
+Bool Function IsLocationFromFile(Location loc, Int sourceFormId, String pluginName)
+    if !loc
+        return False
+    endIf
+
+    Location expectedLoc = Game.GetFormFromFile(sourceFormId, pluginName) as Location
+    if !expectedLoc
+        return False
+    endIf
+
+    return loc == expectedLoc
 EndFunction
 
 ; Bounded poll (OnUpdate): only while inside the armed Eldergleam sanctuary
@@ -5441,7 +5474,14 @@ Function TryBosmerEldergleamInterior()
         return
     endIf
 
-    if GetPlayerOriginRaceIndex() != ORIGIN_BOSMER || StorageUtil.GetIntValue(None, "PDV.BosSongs.Seen.103084") == 1
+    if GetPlayerOriginRaceIndex() != ORIGIN_BOSMER
+        StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", 0)
+        return
+    endIf
+
+    Bool songSeen = StorageUtil.GetIntValue(None, "PDV.BosSongs.Seen.103084") == 1
+    Bool yffreSeen = StorageUtil.GetIntValue(None, "PDV.Yffre.Seen.eldergleam") == 1
+    if songSeen && yffreSeen
         StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", 0)
         return
     endIf
@@ -5453,7 +5493,10 @@ Function TryBosmerEldergleamInterior()
 
     Int cellId = parentCell.GetFormID()
     if cellId == 0x0003A9EC || cellId == 0x0003A9E0 || cellId == 0x0003A9E3
-        AwardBosmerSong(0x000192AC)
+        if !songSeen
+            AwardBosmerSong(0x000192AC)
+        endIf
+        TryAwardBosmerYffreGreenSite("eldergleam", "location_eldergleam")
         StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", 0)
     endIf
 EndFunction
@@ -5466,12 +5509,20 @@ EndFunction
 ; resolved once and cached (vanilla static form; avoids a hot-loop lookup). The
 ; ~600 distance covers the Gildergreen planter without firing across the district.
 ObjectReference _bosGildergreenRef
+ObjectReference _bosYffreTreeStoneRef
 
 Function TryBosmerGildergreenProximity()
     if StorageUtil.GetIntValue(None, "PDV.BosSongs.GildergreenActive") != 1
         return
     endIf
-    if GetPlayerOriginRaceIndex() != ORIGIN_BOSMER || StorageUtil.GetIntValue(None, "PDV.BosSongs.Seen.129149") == 1
+    if GetPlayerOriginRaceIndex() != ORIGIN_BOSMER
+        StorageUtil.SetIntValue(None, "PDV.BosSongs.GildergreenActive", 0)
+        return
+    endIf
+
+    Bool songSeen = StorageUtil.GetIntValue(None, "PDV.BosSongs.Seen.129149") == 1
+    Bool yffreSeen = StorageUtil.GetIntValue(None, "PDV.Yffre.Seen.gildergreen") == 1
+    if songSeen && yffreSeen
         StorageUtil.SetIntValue(None, "PDV.BosSongs.GildergreenActive", 0)
         return
     endIf
@@ -5484,9 +5535,64 @@ Function TryBosmerGildergreenProximity()
     endIf
 
     if Game.GetPlayer().GetDistance(_bosGildergreenRef) < 600.0
-        AwardBosmerSong(0x0001F87D)
+        if !songSeen
+            AwardBosmerSong(0x0001F87D)
+        endIf
+        TryAwardBosmerYffreGreenSite("gildergreen", "location_gildergreen")
         StorageUtil.SetIntValue(None, "PDV.BosSongs.GildergreenActive", 0)
     endIf
+EndFunction
+
+Function TryBosmerYffreTreeStoneProximity()
+    if StorageUtil.GetIntValue(None, "PDV.Yffre.TreeStoneActive") != 1
+        return
+    endIf
+    if GetPlayerOriginRaceIndex() != ORIGIN_BOSMER || StorageUtil.GetIntValue(None, "PDV.Yffre.Seen.allmaker_tree") == 1
+        StorageUtil.SetIntValue(None, "PDV.Yffre.TreeStoneActive", 0)
+        return
+    endIf
+
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return
+    endIf
+
+    Cell parentCell = playerRef.GetParentCell()
+    if !parentCell || parentCell.IsInterior()
+        return
+    endIf
+
+    if !_bosYffreTreeStoneRef
+        _bosYffreTreeStoneRef = Game.GetFormFromFile(0x00026EEC, "Dragonborn.esm") as ObjectReference
+    endIf
+    if !_bosYffreTreeStoneRef
+        return
+    endIf
+
+    if playerRef.GetDistance(_bosYffreTreeStoneRef) < 700.0
+        TryAwardBosmerYffreGreenSite("allmaker_tree", "location_allmaker_tree")
+        StorageUtil.SetIntValue(None, "PDV.Yffre.TreeStoneActive", 0)
+    endIf
+EndFunction
+
+Bool Function TryAwardBosmerYffreGreenSite(String siteKey, String reason)
+    String seenKey = "PDV.Yffre.Seen." + siteKey
+    if StorageUtil.GetIntValue(None, seenKey) == 1
+        return False
+    endIf
+
+    if !ConsumeOncePerDaySignal("PDV.Signal.YffreGreenSite")
+        Trace(2, "Y'ffre green site capped for today: " + siteKey)
+        return False
+    endIf
+
+    StorageUtil.SetIntValue(None, seenKey, 1)
+    StorageUtil.AdjustIntValue(None, "PDV.Yffre.SiteCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Yffre.LastSite", siteKey)
+    StorageUtil.SetFloatValue(None, "PDV.Yffre.LastSiteTime", Utility.GetCurrentGameTime())
+    HandleBosmerLivingStoryNatureSite(reason)
+    Trace(2, "Y'ffre green site remembered: " + siteKey)
+    return True
 EndFunction
 
 ; One-shot award per Songs site, keyed by LCTN FormID. Small path piety + vision

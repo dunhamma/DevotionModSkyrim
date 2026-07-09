@@ -71,9 +71,14 @@ build/
 # Generated runtime log snapshots
 generated/runtime-log-snapshots/
 
+# Generated live-mod snapshots from local proof/deploy runs. Older committed
+# snapshots remain tracked; new timestamped snapshots should stay local.
+generated/live-devotion-snapshot/
+
 # Release packaging artifacts (tracked dist/ content is unaffected)
 dist/Rynfri_JoJ_Package/
 dist/Rynfri_JoJ_Package.zip
+dist/Devotion.PreBeta.*.zip
 
 # Untracked scratch output folders (tracked scratch/ files are unaffected)
 scratch/mcm-anomaly-bsa/

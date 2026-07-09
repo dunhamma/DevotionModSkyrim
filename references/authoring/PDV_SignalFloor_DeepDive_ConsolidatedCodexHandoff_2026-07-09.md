@@ -84,12 +84,24 @@ debt; pre-1.0 per standing directive):
    empty) with curated wild-gathered ingredients; daily-capped.
 2. Location-site fanout via `HandleBosmerLocationChange`: per-site
    `PDV.Yffre.Seen.<X>` keys for Eldergleam Sanctuary, Ancestor Glade,
-   All-Maker stones, the Gildergreen; one-per-site + daily cap.
-3. WEATHER hook (net-new; no deity uses weather yet) - a green/storm
-   open-sky attunement pulse.
-4. Plant-consumption negative (the Meat Mandate; shipped
-   `PDV_Msg_Bosmer_GreenPact_PlantConsumed_Marked` copy is MECHANICS-BLOCKED
-   pending a food-tag layer).
+   All-Maker stones, the Gildergreen; one-per-site + daily cap. SOURCE
+   IMPLEMENTED 2026-07-09 in `PDV__ManagerQuest.psc`: direct LCTN awards cover
+   Ancestor Glade and the Wind/Water/Sun/Earth/Beast All-Maker stones;
+   Eldergleam and Gildergreen share the existing bounded place polls; Tree Stone
+   arms from `DLC2TempleOfMiraakLocation` and awards only near
+   `DLC2StandingStoneTreeREF` because no dedicated Tree Stone LCTN exists. Proof
+   is compile/verifier/source-routing only; in-game location smoke remains open.
+3. WEATHER hook DEFERRED TO V2 INVESTIGATION (owner ruling 2026-07-09).
+   Do not implement as passive weather detection for V1. If this comes back, it
+   should be designed first as a player-initiated sky-welcoming ritual/prayer,
+   with weather or open-sky context as support rather than the trigger.
+4. Plant-consumption negative (the Meat Mandate) is no longer mechanics-blocked
+   for base/DLC plant foods: `PDV_FLST_GreenPact_PlantFoods` is readback-filled
+   with the 25 Authoria/Requiem baseline earthborn food FormKeys, and
+   `--check-green-pact` / `pdv_phase2_reward_readback_audit` now fail if that
+   baseline drifts. Remaining scope is runtime consumption proof plus the full
+   tag expansion for potions, ingredients, firewood/lumber, flora harvests, and
+   mod-added food curation.
 
 **Hist substrate enrichment** (per the 2026-06-25 decision doc - quest matrix
 is NOT the Hist's home):

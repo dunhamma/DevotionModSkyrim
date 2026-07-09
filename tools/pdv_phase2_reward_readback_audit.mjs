@@ -125,6 +125,33 @@ const GREEN_PACT_KEYWORDS = [
   "PDV_KW_GreenPact_Insect",
 ];
 const GREEN_PACT_KID = path.join(DEVOTION_MOD, "SKSE", "Plugins", "KeywordItemDistributor", "PDV_GreenPact_KID.ini");
+const GREEN_PACT_PLANT_FOODS = [
+  { formKey: "HearthFires.esm:003533", label: "Apple Dumpling" },
+  { formKey: "HearthFires.esm:0009DC", label: "Garlic Bread" },
+  { formKey: "HearthFires.esm:003537", label: "Potato Bread" },
+  { formKey: "Dawnguard.esm:014DC4", label: "Soul Husk" },
+  { formKey: "Dragonborn.esm:0206E7", label: "Ash Yam" },
+  { formKey: "Skyrim.esm:064B2E", label: "Red Apple" },
+  { formKey: "Skyrim.esm:064B2F", label: "Green Apple" },
+  { formKey: "Skyrim.esm:0EBA01", label: "Apple Cabbage Soup" },
+  { formKey: "Skyrim.esm:065C97", label: "Bread" },
+  { formKey: "Skyrim.esm:065C98", label: "Bread Slice" },
+  { formKey: "Skyrim.esm:064B3F", label: "Cabbage" },
+  { formKey: "Skyrim.esm:0F431B", label: "Potato Cabbage Soup" },
+  { formKey: "Skyrim.esm:0EBA02", label: "Cabbage Soup" },
+  { formKey: "Skyrim.esm:064B40", label: "Carrot" },
+  { formKey: "Skyrim.esm:10D666", label: "Gourd" },
+  { formKey: "Skyrim.esm:0669A5", label: "Leek" },
+  { formKey: "Skyrim.esm:064B3E", label: "Grilled Leeks" },
+  { formKey: "Skyrim.esm:064B43", label: "Apple Pie" },
+  { formKey: "Skyrim.esm:064B41", label: "Potato" },
+  { formKey: "Skyrim.esm:064B3A", label: "Baked Potatoes" },
+  { formKey: "HearthFires.esm:00353D", label: "Potato Soup" },
+  { formKey: "Skyrim.esm:064B42", label: "Tomato" },
+  { formKey: "Skyrim.esm:0F431C", label: "Tomato Soup" },
+  { formKey: "Skyrim.esm:0F431E", label: "Vegetable Soup" },
+  { formKey: "HearthFires.esm:0009DB", label: "Braided Bread" },
+];
 
 const json = process.argv.includes("--json");
 const findings = [];
@@ -241,6 +268,10 @@ function propertyMap(script) {
 
 function propTarget(prop) {
   return prop?.Object || prop?.Data || null;
+}
+
+function formListEntries(detailRecord) {
+  return (detailRecord?.fields?.Items || detailRecord?.fields?.Entries || []).map((entry) => entry.FormKey || entry);
 }
 
 function formidToEdid(formid, recordsByEdid) {
@@ -539,6 +570,22 @@ function main() {
     } else {
       fail("Green Pact alias property", `PDV_PlayerEvents.${editorId} resolves to ${targetEdid || "(missing)"}.`);
     }
+  }
+  const plantFoodEntries = formListEntries(detailsByEdid.get("PDV_FLST_GreenPact_PlantFoods"));
+  const plantFoodSet = new Set(plantFoodEntries);
+  const plantFoodDuplicates = plantFoodEntries.filter((entry, index) => plantFoodEntries.indexOf(entry) !== index);
+  for (const duplicate of [...new Set(plantFoodDuplicates)]) {
+    fail("Green Pact plant baseline", `PDV_FLST_GreenPact_PlantFoods contains duplicate entry ${duplicate}.`);
+  }
+  for (const expected of GREEN_PACT_PLANT_FOODS) {
+    if (plantFoodSet.has(expected.formKey)) {
+      pass("Green Pact plant baseline", `PDV_FLST_GreenPact_PlantFoods contains ${expected.label}.`);
+    } else {
+      fail("Green Pact plant baseline", `PDV_FLST_GreenPact_PlantFoods is missing ${expected.label} (${expected.formKey}).`);
+    }
+  }
+  if (GREEN_PACT_PLANT_FOODS.every((expected) => plantFoodSet.has(expected.formKey))) {
+    pass("Green Pact plant baseline", `PDV_FLST_GreenPact_PlantFoods contains the Authoria/Requiem baseline set (${GREEN_PACT_PLANT_FOODS.length} entries).`);
   }
   if (fs.existsSync(GREEN_PACT_KID)) {
     pass("Green Pact KID", "PDV_GreenPact_KID.ini exists.", GREEN_PACT_KID);

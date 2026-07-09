@@ -37,8 +37,8 @@
     },
     {
       "race": "Argonian",
-      "bestDeity": "The Hist",
-      "grossDailyMax": 7.75,
+      "bestDeity": "Sithis",
+      "grossDailyMax": 8.6,
       "greedyDaysTo85": 20,
       "steadyDaysTo85": 26,
       "status": "PASS",
@@ -46,8 +46,8 @@
     },
     {
       "race": "Bosmer",
-      "bestDeity": "Baan Dar",
-      "grossDailyMax": 7.75,
+      "bestDeity": "Y'ffre",
+      "grossDailyMax": 9,
       "greedyDaysTo85": 20,
       "steadyDaysTo85": 26,
       "status": "PASS",
@@ -55,8 +55,8 @@
     },
     {
       "race": "Breton",
-      "bestDeity": "Kynareth",
-      "grossDailyMax": 9.5,
+      "bestDeity": "Y'ffre",
+      "grossDailyMax": 9,
       "greedyDaysTo85": 20,
       "steadyDaysTo85": 26,
       "status": "PASS",
@@ -65,7 +65,7 @@
     {
       "race": "Dunmer",
       "bestDeity": "Mephala",
-      "grossDailyMax": 10,
+      "grossDailyMax": 11.05,
       "greedyDaysTo85": 20,
       "steadyDaysTo85": 26,
       "status": "PASS",
@@ -74,7 +74,7 @@
     {
       "race": "Imperial",
       "bestDeity": "Kynareth",
-      "grossDailyMax": 9.5,
+      "grossDailyMax": 10,
       "greedyDaysTo85": 20,
       "steadyDaysTo85": 26,
       "status": "PASS",
@@ -91,8 +91,8 @@
     },
     {
       "race": "Nord",
-      "bestDeity": "Kyne",
-      "grossDailyMax": 9.55,
+      "bestDeity": "Kynareth",
+      "grossDailyMax": 10,
       "greedyDaysTo85": 20,
       "steadyDaysTo85": 26,
       "status": "PASS",
@@ -100,8 +100,8 @@
     },
     {
       "race": "Orc",
-      "bestDeity": "Malacath",
-      "grossDailyMax": 7.5,
+      "bestDeity": "Trinimac",
+      "grossDailyMax": 8.05,
       "greedyDaysTo85": 20,
       "steadyDaysTo85": 26,
       "status": "PASS",

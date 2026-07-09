@@ -108,6 +108,14 @@ Int Property EVT_PICK_OWNED_LOCK = 360 AutoReadOnly
 Int Property EVT_RAISE_UNDEAD = 365 AutoReadOnly
 Int Property EVT_ACCEPT_DAEDRIC_ARTIFACT = 368 AutoReadOnly
 
+Bool PDV_QuestReactionSpellFaucetCacheReady = false
+Form PDV_QRSpellSanguine0 = None
+Form PDV_QRSpellSanguine1 = None
+Form PDV_QRSpellVaermina0 = None
+Form PDV_QRSpellVaermina1 = None
+Form PDV_QRSpellSheogorathFire0 = None
+Form PDV_QRSpellSheogorathFire1 = None
+
 Bool PDV_LastSleepStartedOutside = false
 Bool PDV_LastSleptInInn = false
 Keyword PDV_KW_LocTypeInn
@@ -354,6 +362,8 @@ Event OnSpellCast(Form akSpell)
     ; (the alias forwards ObjectReference.OnSpellCast automatically - no PO3 registration).
     ; Reuse the raise-undead effect FormList by matching the cast spell's own effects, so no
     ; new SPELL FormList / ESP work is needed. Manager scores by event type + applies caps.
+    RouteQuestReactionSpellFaucet(akSpell)
+
     Spell castSpell = akSpell as Spell
     if castSpell && SpellHasRaiseUndeadEffect(castSpell)
         Trace(2, "Raise-undead cast detected: " + castSpell.GetName())
@@ -887,6 +897,8 @@ Function RegisterGenericEffectList(FormList effectList)
 EndFunction
 
 Function RegisterQuestReactionFaucetEvents()
+    CacheQuestReactionSpellFaucetForms()
+
     if !JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE)
         return
     endIf
@@ -910,6 +922,27 @@ Function RegisterQuestReactionEffectList(String listKey)
         endIf
         sourceIndex += 1
     endWhile
+EndFunction
+
+Function CacheQuestReactionSpellFaucetForms()
+    PDV_QuestReactionSpellFaucetCacheReady = true
+
+    if !JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE)
+        PDV_QRSpellSanguine0 = None
+        PDV_QRSpellSanguine1 = None
+        PDV_QRSpellVaermina0 = None
+        PDV_QRSpellVaermina1 = None
+        PDV_QRSpellSheogorathFire0 = None
+        PDV_QRSpellSheogorathFire1 = None
+        return
+    endIf
+
+    PDV_QRSpellSanguine0 = GetQuestReactionRuntimeForm("faucetSpellForms.Sanguine.serve_a_daedra:sanguine", 0)
+    PDV_QRSpellSanguine1 = GetQuestReactionRuntimeForm("faucetSpellForms.Sanguine.serve_a_daedra:sanguine", 1)
+    PDV_QRSpellVaermina0 = GetQuestReactionRuntimeForm("faucetSpellForms.Vaermina.serve_a_daedra:vaermina", 0)
+    PDV_QRSpellVaermina1 = GetQuestReactionRuntimeForm("faucetSpellForms.Vaermina.serve_a_daedra:vaermina", 1)
+    PDV_QRSpellSheogorathFire0 = GetQuestReactionRuntimeForm("faucetSpellForms.Sheogorath.serve_a_daedra:sheogorath_fire", 0)
+    PDV_QRSpellSheogorathFire1 = GetQuestReactionRuntimeForm("faucetSpellForms.Sheogorath.serve_a_daedra:sheogorath_fire", 1)
 EndFunction
 
 Function RegisterQuestReactionMatrix()
@@ -1443,6 +1476,9 @@ Function RouteQuestReactionObjectFaucet(Form sourceForm)
     if ShouldRouteQuestReactionFaucet("Sanguine.revel_indulge", "faucetForms.Sanguine.revel_indulge", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Sanguine.revel_indulge", sourceForm)
     endIf
+    if ShouldRouteQuestReactionFaucet("Sanguine.revel_indulge_skooma", "faucetForms.Sanguine.revel_indulge_skooma", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Sanguine.revel_indulge_skooma", sourceForm)
+    endIf
     if ShouldRouteQuestReactionFaucet("Clavicus Vile.serve_a_daedra:clavicus", "faucetForms.Clavicus Vile.serve_a_daedra:clavicus", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Clavicus Vile.serve_a_daedra:clavicus", sourceForm)
     endIf
@@ -1479,6 +1515,42 @@ Function RouteQuestReactionObjectFaucet(Form sourceForm)
     if ShouldRouteQuestReactionFaucet("Dibella.aesthetic_devotion", "faucetForms.Dibella.aesthetic_devotion", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Dibella.aesthetic_devotion", sourceForm)
     endIf
+EndFunction
+
+Function RouteQuestReactionSpellFaucet(Form sourceForm)
+    if !sourceForm || !PDV_EventBusService
+        return
+    endIf
+
+    if !PDV_QuestReactionSpellFaucetCacheReady
+        CacheQuestReactionSpellFaucetForms()
+    endIf
+
+    if MatchesCachedQuestReactionSpellFaucet(sourceForm, PDV_QRSpellSanguine0, PDV_QRSpellSanguine1)
+        PDV_EventBusService.RouteQuestReactionFaucet("Sanguine.serve_a_daedra:sanguine", sourceForm)
+    endIf
+    if MatchesCachedQuestReactionSpellFaucet(sourceForm, PDV_QRSpellVaermina0, PDV_QRSpellVaermina1)
+        PDV_EventBusService.RouteQuestReactionFaucet("Vaermina.serve_a_daedra:vaermina", sourceForm)
+    endIf
+    if MatchesCachedQuestReactionSpellFaucet(sourceForm, PDV_QRSpellSheogorathFire0, PDV_QRSpellSheogorathFire1)
+        PDV_EventBusService.RouteQuestReactionFaucet("Sheogorath.serve_a_daedra:sheogorath_fire", sourceForm)
+    endIf
+EndFunction
+
+Bool Function MatchesCachedQuestReactionSpellFaucet(Form sourceForm, Form sourceA, Form sourceB)
+    if !sourceForm
+        return false
+    endIf
+
+    if sourceA && sourceForm == sourceA
+        return true
+    endIf
+
+    if sourceB && sourceForm == sourceB
+        return true
+    endIf
+
+    return false
 EndFunction
 
 Function RouteQuestReactionMagicEffectFaucet(Form sourceForm)
@@ -1568,6 +1640,7 @@ EndFunction
 
 Function ReloadQuestReactionMatrixJson()
     ReloadQuestReactionMatrixJsonFile(QUEST_REACTION_MATRIX_FILE)
+    CacheQuestReactionSpellFaucetForms()
 EndFunction
 
 Function ReloadQuestReactionMatrixJsonFile(String matrixFile)
@@ -1586,6 +1659,8 @@ String Function GetQuestReactionFormIdKey(String listKey)
         return "faucetFormsNamiraCannibalismFormIds"
     elseIf listKey == "faucetForms.Sanguine.revel_indulge"
         return "faucetFormsSanguineRevelIndulgeFormIds"
+    elseIf listKey == "faucetForms.Sanguine.revel_indulge_skooma"
+        return "faucetFormsSanguineRevelIndulgeSkoomaFormIds"
     elseIf listKey == "faucetForms.Hermaeus Mora.forbidden_knowledge"
         return "faucetFormsHermaeusMoraForbiddenKnowledgeFormIds"
     elseIf listKey == "faucetForms.Hermaeus Mora.disciplined_study"
@@ -1618,6 +1693,12 @@ String Function GetQuestReactionFormIdKey(String listKey)
         return "faucetFormsMehrunesDagonServeADaedraMehrunesDagonFormIds"
     elseIf listKey == "faucetForms.Nocturnal.serve_a_daedra:nocturnal"
         return "faucetFormsNocturnalServeADaedraNocturnalFormIds"
+    elseIf listKey == "faucetSpellForms.Sanguine.serve_a_daedra:sanguine"
+        return "faucetSpellFormsSanguineServeADaedraSanguineFormIds"
+    elseIf listKey == "faucetSpellForms.Vaermina.serve_a_daedra:vaermina"
+        return "faucetSpellFormsVaerminaServeADaedraVaerminaFormIds"
+    elseIf listKey == "faucetSpellForms.Sheogorath.serve_a_daedra:sheogorath_fire"
+        return "faucetSpellFormsSheogorathServeADaedraSheogorathFireFormIds"
     elseIf listKey == "faucetEffectForms.Namira.cannibalism"
         return "faucetEffectFormsNamiraCannibalismFormIds"
     elseIf listKey == "faucetEffectForms.Dibella.charity"
@@ -1634,6 +1715,8 @@ String Function GetQuestReactionPluginKey(String listKey)
         return "faucetFormsNamiraCannibalismPlugins"
     elseIf listKey == "faucetForms.Sanguine.revel_indulge"
         return "faucetFormsSanguineRevelIndulgePlugins"
+    elseIf listKey == "faucetForms.Sanguine.revel_indulge_skooma"
+        return "faucetFormsSanguineRevelIndulgeSkoomaPlugins"
     elseIf listKey == "faucetForms.Hermaeus Mora.forbidden_knowledge"
         return "faucetFormsHermaeusMoraForbiddenKnowledgePlugins"
     elseIf listKey == "faucetForms.Hermaeus Mora.disciplined_study"
@@ -1666,6 +1749,12 @@ String Function GetQuestReactionPluginKey(String listKey)
         return "faucetFormsMehrunesDagonServeADaedraMehrunesDagonPlugins"
     elseIf listKey == "faucetForms.Nocturnal.serve_a_daedra:nocturnal"
         return "faucetFormsNocturnalServeADaedraNocturnalPlugins"
+    elseIf listKey == "faucetSpellForms.Sanguine.serve_a_daedra:sanguine"
+        return "faucetSpellFormsSanguineServeADaedraSanguinePlugins"
+    elseIf listKey == "faucetSpellForms.Vaermina.serve_a_daedra:vaermina"
+        return "faucetSpellFormsVaerminaServeADaedraVaerminaPlugins"
+    elseIf listKey == "faucetSpellForms.Sheogorath.serve_a_daedra:sheogorath_fire"
+        return "faucetSpellFormsSheogorathServeADaedraSheogorathFirePlugins"
     elseIf listKey == "faucetEffectForms.Namira.cannibalism"
         return "faucetEffectFormsNamiraCannibalismPlugins"
     elseIf listKey == "faucetEffectForms.Dibella.charity"

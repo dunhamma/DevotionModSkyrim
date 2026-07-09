@@ -164,7 +164,42 @@ can ride with this one.
 
 ---
 
-## 5. Triage note
+## 5. Breton / Y'ffre sky-welcoming ritual investigation
+
+**Decision:** 2026-07-09. The proposed Green Way / Y'ffre weather hook is
+deferred out of V1 and becomes a V2 investigation item. It should not ship as a
+passive "weather changed, award piety" detector.
+
+**What it is:** A player-initiated sky-welcoming ritual, effectively a prayer or
+open-sky devotional act for Breton Green Way and possibly other Y'ffre-aligned
+surfaces. The fantasy is that the player deliberately welcomes or answers the
+living sky, rather than being rewarded because rain, clear sky, or storm weather
+happened to transition nearby.
+
+**Why V2, not V1:** Passive weather detection is too ambient and too easy to
+misread as generic nature spam. It also needs interaction design: where the
+ritual is performed, whether it is a power, lesser ritual, activator, standing
+stone adjunct, or prayer surface, how it avoids overlap with shrine prayer and
+standing-stone hooks, and how it communicates "you performed the rite" rather
+than "weather farmed you piety." V1 should keep Green Way support to already
+scoped curated sources, not add a new ritual surface late.
+
+**What exists today:**
+- `PDV_PlayerEvents.OnWeatherChange(...)` can receive PO3 weather changes and
+  route a whitelisted weather form as `po3_weather`.
+- `PDV_FLST_P2_BretonGreenWaySources` declares `weather` as a possible source
+  kind.
+- The old Green Way env-shell handoff proposed passive curated weather fills,
+  but that part is now explicitly superseded by this V2 item.
+
+**First V2 step:** Design the ritual surface before touching FormLists or
+weather records. Decide whether it is a prayer spell/power, a standing-stone or
+outdoor activator, or a scripted open-sky action. Then define the anti-farm rule
+(likely once per day), eligible locations/weather context, player-facing copy,
+and whether any passive weather readback remains only as context after the
+player performs the ritual.
+
+## 6. Triage note
 
 After 1.0 ships, convert this stub into a real V2 roadmap: group the voiced
 dialogue work into a single CAT-style content lane (draft -> ratify -> voice ->

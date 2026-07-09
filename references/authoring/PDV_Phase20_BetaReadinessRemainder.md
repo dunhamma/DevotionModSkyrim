@@ -12,7 +12,9 @@
   service into explicit public-service, mercy, lawful-order, honest-work, and death-duty families.
 - Nord source IDs now carry parseable family tokens before they enter the manager.
 - Bosmer Green Pact static layer is live: five FLSTs, five KYWDs, `PDV_PlayerEvents` alias properties,
-  event-driven food/equip routing, and a conservative KID placeholder.
+  event-driven food/equip routing, the 25-entry base/DLC plant-food baseline in
+  `PDV_FLST_GreenPact_PlantFoods`, and a conservative KID placeholder for later
+  mod-added food curation.
 - V1 T3 low-health fallback capstone skeleton is live on the seven approved once-per-race save homes.
 - `tools/pdv_phase2_reward_readback_audit.mjs --json` now checks reward records, MGEF magnitudes,
   manager properties, FLST membership, SGE/SEQ, capstone script attachments, and Green Pact wiring.

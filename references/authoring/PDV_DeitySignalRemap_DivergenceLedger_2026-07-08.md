@@ -1,13 +1,16 @@
 # PDV Deity Signal Remap Divergence Ledger - 2026-07-08
 
-**Status:** audit snapshot; owner-lock pending.
+**Status:** superseded audit snapshot; implementation landed 2026-07-09 in commit
+`5f245de`, with runtime/manual smoke still pending.
 **Input handoff:** `references/authoring/PDV_SessionHandoff_DeitySignalRemap_2026-07-08.md`.
 **Purpose:** reconcile the 10-race deity signal remap against current guides,
 architecture, CSV/script signal surfaces, quest-matrix surfaces, and machine gates
 before implementation planning.
 
 This file is an audit and walk-through ledger. It does not authorize ESP, CSV,
-Papyrus, or player-guide edits by itself.
+Papyrus, or player-guide edits by itself. For current implementation follow-up,
+use `PDV_DeitySignalRemap_NextSessionHandoff_2026-07-09.md` and
+`PDV_DeitySignalRemap_InGameSmoke_Runbook.md`.
 
 ## Owner Lock Log
 

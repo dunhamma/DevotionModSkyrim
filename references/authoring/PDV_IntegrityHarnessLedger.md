@@ -13,5 +13,5 @@ Overall: **PASS** (FAIL iff a gate check fails or a check errors; findings-style
 | specced_minus | findings | OK | 0 unemitted minuses |
 | completeness | findings | OK | PASS; PASS=361 NEEDS-MANUAL=293 GAP-REVIEW=53 FUTURE=59 WAIVED=2 |
 | deity_chain | gate | PASS | 0 blockers (0 resolution / 0 reachability) |
-| eligibility_reward_coverage | gate | PASS | 147 rows; 0 failures |
+| eligibility_reward_coverage | gate | PASS | 153 rows; 0 failures |
 

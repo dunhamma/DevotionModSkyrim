@@ -26,6 +26,26 @@ const PLUGIN_PATHS = new Map([
   ["Dragonborn.esm", path.posix.join(CLEANED_MASTERS_ROOT, "Dragonborn.esm")],
 ]);
 
+const PINNED_READBACK_CANDIDATES = [
+  // Signal-floor deep-dive refresh, 2026-07-09. These quests are exact
+  // handoff targets that the broad candidate scan intentionally misses.
+  pinnedQuest("Skyrim.esm", "Skyrim.esm:018B4B", "MS01", "Forsworn Conspiracy: Mephala/Clavicus deceit readback target"),
+  pinnedQuest("Skyrim.esm", "Skyrim.esm:040A5E", "MS02", "Cidhna Mine: Madanach betrayal, Nocturnal/Mephala readback target"),
+  pinnedQuest("Skyrim.esm", "Skyrim.esm:0934FB", "DBDestroy", "Destroy the Dark Brotherhood: Sithis negative and expose-route readback target"),
+  pinnedQuest("Skyrim.esm", "Skyrim.esm:0E3163", "CR13", "Companions Purity: Farkas/Vilkas cure readback target"),
+  pinnedQuest("Skyrim.esm", "Skyrim.esm:0E3145", "CR12", "Totems of Hircine: radiant hunt-law readback target"),
+  pinnedQuest("Skyrim.esm", "Skyrim.esm:01DBFC", "MS10", "Rise in the East: actual EditorID for the EEC civic-prosperity target"),
+  pinnedQuest("Skyrim.esm", "Skyrim.esm:053511", "MS05", "Tending the Flames: Dibella provisional stage confirmation"),
+  pinnedQuest("Skyrim.esm", "Skyrim.esm:023B6C", "T01", "Heart of Dibella: provisional stage confirmation"),
+  pinnedQuest("Skyrim.esm", "Skyrim.esm:0211D5", "t02", "Book of Love: provisional stage confirmation"),
+  pinnedQuest("Skyrim.esm", "Skyrim.esm:074793", "RelationshipMarriage", "Bonds of Matrimony: direct wedding-row review target"),
+  pinnedQuest("Skyrim.esm", "Skyrim.esm:01FD72", "FreeformKolskeggrA", "Kolskeggr Mine: actual stock EditorID for the labor-restoration target"),
+  pinnedQuest("Skyrim.esm", "Skyrim.esm:0E49E7", "FreeformShorsStone01", "Shor's Stone mine quest: labor-restoration readback target"),
+  pinnedQuest("Skyrim.esm", "Skyrim.esm:0E49E8", "FreeformShorsStone02", "Shor's Stone delivery quest: labor-restoration readback target"),
+  pinnedQuest("Skyrim.esm", "Skyrim.esm:06136B", "FreeformSoljundsSinkholeA", "Soljund's Sinkhole: labor-restoration readback target"),
+  pinnedQuest("Skyrim.esm", "Skyrim.esm:01C48E", "T03", "Blessings of Nature: T03 stage 105 spot-check target"),
+];
+
 function main() {
   const args = process.argv.slice(2);
   const formidFilter = readArg(args, "--formid");
@@ -36,7 +56,7 @@ function main() {
   const chunkSize = readIntArg(args, "--chunk-size") || 25;
   const maxDepth = readIntArg(args, "--max-depth") || 8;
 
-  let candidates = parseCsv(fs.readFileSync(INPUT_CSV, "utf8"))
+  let candidates = appendPinnedCandidates(parseCsv(fs.readFileSync(INPUT_CSV, "utf8")))
     .filter((row) => !formidFilter || sameText(row.formid, formidFilter))
     .filter((row) => !editorIdFilter || sameText(row.editor_id, editorIdFilter))
     .slice(0, limit || undefined);
@@ -84,6 +104,34 @@ function main() {
 
   writeCsv(outputPath, rows);
   console.log(`Wrote ${rows.length} quest-stage readback rows to ${outputPath}`);
+}
+
+function pinnedQuest(plugin, formid, editorId, pdvUse) {
+  return {
+    plugin,
+    formid,
+    editor_id: editorId,
+    pdv_use: `signal-floor deep-dive readback refresh: ${pdvUse}`,
+    detail_status: "curated exact quest-stage readback target from PDV_SignalFloor_DeepDive_ConsolidatedCodexHandoff_2026-07-09.md",
+    validation: "curated-readback-refresh-2026-07-09",
+  };
+}
+
+function appendPinnedCandidates(rows) {
+  const seen = new Set(rows.map(candidateKey));
+  const out = [...rows];
+  for (const row of PINNED_READBACK_CANDIDATES) {
+    const key = candidateKey(row);
+    if (!seen.has(key)) {
+      out.push(row);
+      seen.add(key);
+    }
+  }
+  return out;
+}
+
+function candidateKey(row) {
+  return `${row.plugin || ""}|${row.formid || ""}|${row.editor_id || ""}`.toLowerCase();
 }
 
 function toReadbackRow(candidate, record) {

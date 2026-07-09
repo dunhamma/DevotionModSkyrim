@@ -13,19 +13,19 @@ Proof boundary: this is source/readback planning plus the narrow Syrabane displa
 
 Source: `references/authoring/PDV_QuestReactionMatrix_Full.csv`, counted by `deity`.
 
-Total rows: 876.
+Total rows: 884.
 
 Low or missing rows:
 
 | Deity | Current quest rows | Current interpretation |
 | --- | ---: | --- |
-| Syrabane | 0 | True wiring gap. He is now a live Altmer focus, but the matrix has no quest rows. |
 | The Hist | 2 | Thin by vanilla-quest availability. Should lean on Argonian P2/non-quest sources and only add exact quest rows where the branch genuinely fits. |
 | Namira | 2 | Probably acceptable for V1 if Daedric quest/faucet paths carry the Prince. Add only exact Namira outcomes. |
 | Sanguine | 2 | Probably acceptable for V1 if Daedric quest/faucet paths carry the Prince. Add only exact revel/excess outcomes. |
 | Vaermina | 4 | Thin but not necessarily wrong; Waking Nightmare carries the core branch. |
 | Peryite | 6 | Thin but acceptable if The Only Cure plus disease/pestilence rows are exact. |
 | Y'ffre | 7 | Needs a targeted Green Way/Y'ffre breadth pass, not generic nature spam. |
+| Syrabane | 8 | Implemented as the approved broad Altmer warding/apprentice/protection slice; runtime smoke remains open. |
 | Sheogorath | 8 | Low but Prince-specific enough for V1. |
 | Zenithar | 10 | Needs civic/work/trade fanout review, especially Imperial/Breton/Divine rows. |
 
@@ -37,7 +37,7 @@ Altmer focus comparison:
 | Magnus | 12 |
 | Xarxes | 18 |
 | Trinimac | 15 |
-| Syrabane | 0 |
+| Syrabane | 8 |
 
 ## Syrabane Display Gap
 

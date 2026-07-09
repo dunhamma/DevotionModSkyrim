@@ -7,14 +7,14 @@ Overall: **PASS**. Clamp: 4.3 (applied: true). Bands: greedy [18,24], steady [26
 | Race | Best deity | Gross/day | Greedy d85 | Steady d85 | Status | Notes |
 |---|---|---|---|---|---|---|
 | Altmer | Xarxes | 9.75 | 20 | 26 | PASS |  |
-| Argonian | The Hist | 7.75 | 20 | 26 | PASS |  |
-| Bosmer | Baan Dar | 7.75 | 20 | 26 | PASS |  |
-| Breton | Kynareth | 9.5 | 20 | 26 | PASS |  |
-| Dunmer | Mephala | 10 | 20 | 26 | PASS |  |
-| Imperial | Kynareth | 9.5 | 20 | 26 | PASS |  |
+| Argonian | Sithis | 8.6 | 20 | 26 | PASS |  |
+| Bosmer | Y'ffre | 9 | 20 | 26 | PASS |  |
+| Breton | Y'ffre | 9 | 20 | 26 | PASS |  |
+| Dunmer | Mephala | 11.05 | 20 | 26 | PASS |  |
+| Imperial | Kynareth | 10 | 20 | 26 | PASS |  |
 | Khajiit | Azurah | 11.25 | 20 | 26 | PASS |  |
-| Nord | Kyne | 9.55 | 20 | 26 | PASS |  |
-| Orc | Malacath | 7.5 | 20 | 26 | PASS |  |
+| Nord | Kynareth | 10 | 20 | 26 | PASS |  |
+| Orc | Trinimac | 8.05 | 20 | 26 | PASS |  |
 | Redguard | Tu'whacca | 6.75 | 20 | 26 | PASS |  |
 
 Prince renewable gross/day (info only):

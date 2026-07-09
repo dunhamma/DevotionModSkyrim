@@ -209,10 +209,12 @@ sender proof, wrong/generic-source silence, and stack/Survey legibility -- have
 since passed; `pdv_daedric_beta_gate` reads all sixteen Princes as `pass` in
 `PDV_DaedricRuntimeEvidenceLedger.json`.) V2 voiced dialogue remains out of
 scope.
-Deferred-with-dependency prose stays recorded in the race manifest:
-Bosmer Green Pact per-item feedback (tag layer, Section 17.7a), MCM player-tab
-copy (Section 16.1/16.4), and localization (Section 23). Final editorial
-read-through is the remaining ratification step.
+Deferred-with-dependency prose stays recorded in the race manifest: full Bosmer
+Green Pact per-item feedback beyond the current 25-entry base/DLC plant-food
+baseline (potions, ingredients, firewood/lumber, flora harvests, mod-added food
+curation, and in-game consumption proof), MCM player-tab copy (Section
+16.1/16.4), and localization (Section 23). Final editorial read-through is the
+remaining ratification step.
 
 All ten races are now implementation-spec locked at the design level. Altmer's
 remaining closeout items (crisis resolution hooks, final crisis trigger list,
@@ -361,6 +363,11 @@ Landed since the 2026-06-07 update (beyond the race/Daedric closeouts above):
 - Quest-reaction matrix expansion: 832 matrix cells (~40-50 quests per deity,
   90 watched quests, 7 meta-faucet lanes) live and in-game proven across all
   eight setstage-able origins, including the paired-deity credit rule.
+- Deity signal remap follow-up: source/readback matrix is now 884 cells / 90
+  watched quests / 45 deity names after the T9 remap tranche, but only the
+  pre-remap 832-cell quest-expansion packet has in-game route proof. The remap
+  smoke runbook must prove the new route/display/stack behavior before any
+  guide or beta-readiness claim uses the new rows.
 - Foreign-award reachability gate: in-game proven both directions -- native
   pantheons score full, off-roster `FOREIGN`/`TOLERATED` gods skip silently
   with no piety and no Ledger row, and the reduced `0.4x` applies only to
@@ -558,7 +565,7 @@ Phase 18A/B runtime closeout (2026-05-30):
 
 ## Nord
 
-**Setup shape:** Broad worship (Tier 2 cap) → a god notices your actual playstyle → offer fires → commit → Tier 3 unlocked. Old Ways or Nine Divines baseline.
+**Setup shape:** Broad worship (Tier 2 cap) -> a god notices your actual playstyle -> offer fires -> commit -> Tier 3 unlocked. Old Ways or Nine Divines baseline.
 
 **Implementation split:** Nord pantheon baseline is separate from commitment depth. `PDV_State_NordPantheonBaseline` stores `OldWays = 0` or `NineDivines = 1`; broad vs primary commitment uses the shared patron state and active patron globals. This lets Old Ways + Talos/Ysmir and Nine Divines + Talos remain distinct presentations without inventing separate commitment machinery.
 
@@ -603,32 +610,32 @@ Cure restores access but leaves a visible scar/status note. Existing patron
 piety is not cleared.
 
 ### Champion moment
-The defining payoff for Nord is that the *right* god claimed you — the one that matches how you actually played. A player who hunted and camped and learned the Thu'um gets claimed by Kyne. A player who fought with the Stormcloaks and defied the ban gets claimed by Talos/Ysmir. The Champion moment should feel like recognition, not just a bigger number.
+The defining payoff for Nord is that the *right* god claimed you -- the one that matches how you actually played. A player who hunted and camped and learned the Thu'um gets claimed by Kyne. A player who fought with the Stormcloaks and defied the ban gets claimed by Talos/Ysmir. The Champion moment should feel like recognition, not just a bigger number.
 
-- **Kyne Champion:** Storms are no longer enemies. Wind-resistance, animals calm near you, and outdoor rest restores more. Kyne's favor is environmental — it changes the texture of being outside.
-- **Talos/Ysmir Champion:** The old faith marks you. In Stormcloak-allied areas, NPCs react as if they know. Shouts feel spiritually grounded in a way they didn't at Tier 2. This Champion is about identity in defiance — the cost of holding it openly should be present.
+- **Kyne Champion:** Storms are no longer enemies. Wind-resistance, animals calm near you, and outdoor rest restores more. Kyne's favor is environmental -- it changes the texture of being outside.
+- **Talos/Ysmir Champion:** The old faith marks you. In Stormcloak-allied areas, NPCs react as if they know. Shouts feel spiritually grounded in a way they didn't at Tier 2. This Champion is about identity in defiance -- the cost of holding it openly should be present.
 - **Shor Champion:** Combat trials feel cosmically real. Honorable kills have a different weight. Sovngarde-adjacent content gives more resonance (this is a privilege/recognition layer, not a mechanical buff).
-- **Kyne/Kynareth Champion (Nine Divines):** Same beat as Old Ways Kyne — the outdoors changes. A Nord playing Nine Divines who chose Kynareth should still feel like the storm-mother's child, just in the Imperial frame.
+- **Kyne/Kynareth Champion (Nine Divines):** Same beat as Old Ways Kyne -- the outdoors changes. A Nord playing Nine Divines who chose Kynareth should still feel like the storm-mother's child, just in the Imperial frame.
 
-The four beats above are the headline Champions, but they are not the whole Old Ways roster. Shor, Tsun, and Stuhn are focusable Old Ways patrons in their own right (each with its own offer, rewards, and neglect), and the Old Ways roster also carries Arkay — surfaced to Old Ways Nords under his ancestral name **Orkey** (death-rite and ancestor-quiet framing) — and **Dibella** (hearth, love, and artistry) as full offer/reward/display/neglect paths. A Nord's Champion can land on any of them, not only the four marquee gods.
+The four beats above are the headline Champions, but they are not the whole Old Ways roster. Shor, Tsun, and Stuhn are focusable Old Ways patrons in their own right (each with its own offer, rewards, and neglect), and the Old Ways roster also carries Arkay -- surfaced to Old Ways Nords under his ancestral name **Orkey** (death-rite and ancestor-quiet framing) -- and **Dibella** (hearth, love, and artistry) as full offer/reward/display/neglect paths. A Nord's Champion can land on any of them, not only the four marquee gods.
 
 **The offer IS part of the payoff.** Broad worship giving way to a god's approach is itself a Champion-trajectory experience. The moment of commitment should be surfaced clearly and diegetically.
 
 ### Signature friction
-There's no hard constraint for Nord — that's intentional. The friction is **time and consistency**: broad worship can take a long time before an offer fires. The player can also decline. This means the friction is about patience and identity — you don't choose which god finds you, you just live and see who shows up.
+There's no hard constraint for Nord -- that's intentional. The friction is **time and consistency**: broad worship can take a long time before an offer fires. The player can also decline. This means the friction is about patience and identity -- you don't choose which god finds you, you just live and see who shows up.
 
-For players who committed, the friction is **staying consistent enough** that the relationship holds. A Kyne Champion who stops going outside, stops hunting, starts spending all their time in cities — that relationship will fray.
+For players who committed, the friction is **staying consistent enough** that the relationship holds. A Kyne Champion who stops going outside, stops hunting, starts spending all their time in cities -- that relationship will fray.
 
 ### Neglect texture
 - Kyne's neglect feels like the weather turning indifferent. You used to have a sense the outdoors was on your side. Now it's just weather.
-- Talos/Ysmir neglect feels like the old faith fading — the shouts feel more like technique than spirituality.
-- General Nord neglect: the ancestors are quiet. The mechanical cost is a mild, flat debuff (a lapsed patron's neglect spell), but it should still *read* as absence — the loss of the small graces that felt like Sovngarde was paying attention — rather than as a dramatic punishment.
+- Talos/Ysmir neglect feels like the old faith fading -- the shouts feel more like technique than spirituality.
+- General Nord neglect: the ancestors are quiet. The mechanical cost is a mild, flat debuff (a lapsed patron's neglect spell), but it should still *read* as absence -- the loss of the small graces that felt like Sovngarde was paying attention -- rather than as a dramatic punishment.
 
 ---
 
 ## Imperial
 
-**Setup shape:** Broad Nine Divines worship (Tier 2 cap) → piety-threshold offer for chosen primary god → Tier 3 unlocked. ConcordatStanding track active from the start, affecting Talos specifically.
+**Setup shape:** Broad Nine Divines worship (Tier 2 cap) -> piety-threshold offer for chosen primary god -> Tier 3 unlocked. ConcordatStanding track active from the start, affecting Talos specifically.
 
 **Implementation state:** Imperial broad vs primary commitment uses shared patron state, not `PDV_State_ImperialWorship`. Imperial-specific pressure lives in `PDV_RepTrack_ConcordatStanding`.
 
@@ -660,19 +667,19 @@ Final trigger selection depends on usable game hooks: quest stages, shrine/Hall 
 Imperial Champion is politically loaded in a way no other race's is. The *same Tier 3* means something completely different depending on where ConcordatStanding sits.
 
 - **Champion Stendarr + Open Defiant Standing:** You've committed to mercy in a world that wanted you to persecute. Your god knows what that cost. Stendarr's favor in mercy-situations (restraining rather than killing, paying bounties to protect the innocent) feels distinctly earned.
-- **Champion Akatosh + Concordat Compliant:** Civic order, long devotion streaks, persistent faith through upheaval. Akatosh's temporal boons reward consistency — sleep refreshes more fully, long journeys don't wear you down the same way.
+- **Champion Akatosh + Concordat Compliant:** Civic order, long devotion streaks, persistent faith through upheaval. Akatosh's temporal boons reward consistency -- sleep refreshes more fully, long journeys don't wear you down the same way.
 - **Champion Arkay:** The death-rites are real to you. Properly dealt-with dead (burial quests, Hall of the Dead, defeating necromancers) feel like acts of faith rather than miscellaneous quests. Recognition privilege at death-related institutions.
-- **The Talos commitment:** Champion status here requires having navigated the Concordat pressure and still committed. That's the entire arc — it should feel like the mod recognized you did the hard thing.
+- **The Talos commitment:** Champion status here requires having navigated the Concordat pressure and still committed. That's the entire arc -- it should feel like the mod recognized you did the hard thing.
 
 ### Signature friction
-The **ConcordatStanding track** is the signature friction — it's running constantly under your Nine Divines devotion, and it has real stakes. Every time a Talos worshipper needs help or every time the Thalmor approach you, there's a theological decision embedded in the gameplay choice. An Imperial player genuinely can't be indifferent to the Concordat.
+The **ConcordatStanding track** is the signature friction -- it's running constantly under your Nine Divines devotion, and it has real stakes. Every time a Talos worshipper needs help or every time the Thalmor approach you, there's a theological decision embedded in the gameplay choice. An Imperial player genuinely can't be indifferent to the Concordat.
 
 The secondary friction: Imperial Divines worship is *civic*, which means it has a public/private dimension. Defiance while maintaining public compliance is a real character expression the mod should support mechanically (Private Defiant band).
 
 ### Neglect texture
 - Let Arkay devotion lapse during a civil war playthrough and the mass graves around you feel like a failure. The mild civic-neglect debuff is present, but the intent is the quiet presence of something wrong, not a punitive stat swing.
 - Stendarr devotion lapsing while ConcordatStanding rises toward Enforcer should feel like a specific theological collapse, not generic neglect.
-- General Divine devotion neglect for an Imperial means the civic scaffolding of their religion starts to feel hollow — shrines feel like architecture, not presence.
+- General Divine devotion neglect for an Imperial means the civic scaffolding of their religion starts to feel hollow -- shrines feel like architecture, not presence.
 
 **Vampire note:** Complete collapse. No workaround. The re-entry arc (post-cure) is itself a meaningful late-game experience.
 
@@ -680,13 +687,18 @@ The secondary friction: Imperial Divines worship is *civic*, which means it has 
 
 ## Breton
 
-**Setup shape:** Choose tradition first (Knight's Road / Hidden Art / Green Way) → tradition breadth within that lane → focused deity emphasis emerges → Tier 3 unlocked.
+**Setup shape:** Choose tradition first (Knight's Road / Hidden Art / Green Way) -> tradition breadth within that lane -> focused deity emphasis emerges -> Tier 3 unlocked.
 
 **Implementation-lock note (2026-05-19):** Breton does not use the generic broad-worship lane. The setup choice must be explicit, normal patron offers come only from the chosen tradition, and Hircine is fork-access rather than baseline Breton worship: Hidden Art can reach him through Daedric commitment, while Green Way reaches him only through the werewolf Druidic Trial.
 
 **Implementation status:** Breton is implementation-locked for 1.0 experience shape. `WitchcraftExposure`, `KnightlyVowIntegrity`, and `DruidicStanding` all exist for every Breton; exposure is always active, while Integrity and DruidicStanding may remain dormant until their tradition or a major authored event makes them relevant. Normal tradition switching is unavailable in 1.0; only major authored forks can redirect the frame.
 
 **Launch-hook posture:** Knight's Road and Hidden Art have strong 1.0 support through faction, quest-stage, shrine, Vigilant, Daedric, Dawnguard, Nightingale, Black Book, and curse-state hooks. Green Way is viable as location/rite-first through standing-stone activators, `LocTypeSprigganGrove`, Kynareth-adjacent shrine support, outdoor sleep cadence, and the werewolf Druidic Trial. Generic "help without reward," generic spellcasting, artifact ownership alone, and ordinary animal kills are not launch-safe hooks without curated filters.
+
+**V2 investigation note (2026-07-09):** Do not add a passive Green Way weather
+hook to V1. The open-sky/weather idea is now a V2 investigation for a
+player-initiated sky-welcoming ritual or prayer, with weather/context as support
+rather than the trigger.
 
 **Vigilant pressure note:** Vanilla has real Vigilant hostility and world-interaction support in specific cases, but not a general "known Daedra worshipper" hunter reputation system. Breton 1.0 should use the existing faction/world surfaces where they naturally fire and treat exposure-driven hunters as authored PDV pressure, not assumed vanilla behavior.
 
@@ -699,21 +711,21 @@ The secondary friction: Imperial Divines worship is *civic*, which means it has 
 **Contextual favor posture:** Breton favors are authored per tradition lane for launch, not per deity table. Knight's Road, Hidden Art, and Green Way each get `3-5` trigger families, with focused deity flavor layered onto the tradition. Hidden Art explicitly supports two intentional end states: careful occult cover and open Notorious rupture. Notorious is stronger and louder, but socially costly rather than a pure upgrade.
 
 ### Champion moment
-Strongly path-dependent — the three traditions have almost no overlap at Champion:
+Strongly path-dependent -- the three traditions have almost no overlap at Champion:
 
-- **Knight's Road Champion (Stendarr/Akatosh):** Your KnightlyVowIntegrity is intact AND you've maintained Tier 3. This is one of the hardest Champions to reach because the game actively offers you Thieves Guild, Dark Brotherhood, and expediency at every turn. The payoff should be proportional — protection of something that matters when you're defending others, not just a passive stat.
-- **Hidden Art Champion:** You've become Notorious or near it on the WitchcraftExposure track AND maintained Daedric patron devotion. At this point your social situation is in genuine rupture, but the Daedric patron's favor is at its strongest (the 1.25x modifier kicks in at Notorious). This is the "you went all the way" moment. The payoff should feel like having a Daedric patron who actually shows up — contextual favors that feel dangerous and real.
-- **Green Way Champion:** Y'ffre's oldest claim on the Bosmer has a Breton analog here. The forest acknowledges you in Skyrim's limited way — hunting feels guided, outdoor sleep feels protected, the druidic standing makes standing stones feel more responsive (flavor/recognition layer).
+- **Knight's Road Champion (Stendarr/Akatosh):** Your KnightlyVowIntegrity is intact AND you've maintained Tier 3. This is one of the hardest Champions to reach because the game actively offers you Thieves Guild, Dark Brotherhood, and expediency at every turn. The payoff should be proportional -- protection of something that matters when you're defending others, not just a passive stat.
+- **Hidden Art Champion:** You've become Notorious or near it on the WitchcraftExposure track AND maintained Daedric patron devotion. At this point your social situation is in genuine rupture, but the Daedric patron's favor is at its strongest (the 1.25x modifier kicks in at Notorious). This is the "you went all the way" moment. The payoff should feel like having a Daedric patron who actually shows up -- contextual favors that feel dangerous and real.
+- **Green Way Champion:** Y'ffre's oldest claim on the Bosmer has a Breton analog here. The forest acknowledges you in Skyrim's limited way -- hunting feels guided, outdoor sleep feels protected, the druidic standing makes standing stones feel more responsive (flavor/recognition layer).
 
 ### Signature friction
 - **KnightlyVowIntegrity** for Knights: the game will break it if you're not paying attention. Every join-the-Guild moment, every shortcut, every unjust kill. Maintaining it while playing a full Skyrim run is the friction.
 - **WitchcraftExposure** for Hidden Art: you can hide for a while, but Daedric quests raise it. At some point you have to decide whether you're going all the way or maintaining cover. Both choices are valid but require intention.
-- **Druidic Standing + Werewolf fork** for Green Way: the moment after first transformation fires a one-time theological choice. That IS the signature friction for Green Way Bretons — the question of whether the beast serves the Green or takes over.
+- **Druidic Standing + Werewolf fork** for Green Way: the moment after first transformation fires a one-time theological choice. That IS the signature friction for Green Way Bretons -- the question of whether the beast serves the Green or takes over.
 
 ### Neglect texture
 - Knight neglect is about Integrity, not piety. If Integrity collapses through unjust choices, the god's daily shift halves. It *feels* like your patron is disappointed rather than distant.
-- Hidden Art neglect is tricky — if you go Notorious and then stop doing Daedric acts, the patron's reward (1.25x) vanishes and social rupture remains. You've paid the cost without getting the benefit.
-- Green Way neglect feels like the forest stopped noticing you — Druidic Standing simply no longer modulates things that were quietly helpful before.
+- Hidden Art neglect is tricky -- if you go Notorious and then stop doing Daedric acts, the patron's reward (1.25x) vanishes and social rupture remains. You've paid the cost without getting the benefit.
+- Green Way neglect feels like the forest stopped noticing you -- Druidic Standing simply no longer modulates things that were quietly helpful before.
 
 ---
 
@@ -726,10 +738,10 @@ Strongly path-dependent — the three traditions have almost no overlap at Champ
 **Focus options:** Native Dunmer focus is Azura, Boethiah, and Mephala. Other Daedric Princes may qualify only through the global Daedric path system, and present as deviation, trial, pact, taboo, curse pressure, or foreign bargain. Aedric patron commitment is not a Dunmer 1.0 path. The option map should preserve class appeal: Azura covers mage/restoration/threshold play, Boethiah covers warrior/spellsword/revolution play, Mephala covers stealth/social/network play, and non-Reclamation Daedric paths broaden appeal without becoming normal Dunmer religion.
 
 ### Champion moment
-Dunmer Champion is quieter and more cumulative than any other race — because the layered architecture means Tier 3 isn't a sudden opening, it's the final deepening of something that was always there.
+Dunmer Champion is quieter and more cumulative than any other race -- because the layered architecture means Tier 3 isn't a sudden opening, it's the final deepening of something that was always there.
 
 - **Azura Champion:** Painful truth and transformation carry specific weight. Dawn, dusk, Azura's Star, cure arcs, exile beats, and major choice-points give brief prophetic flavor when the character becomes something truer, not merely stronger. Azura's relationship with Dunmer vampires gives this one an additional texture: Azura Champion who becomes vampire enters a genuinely complicated theological space rather than simple collapse.
-- **Boethiah Champion:** Trial, overthrow, and self-authorship have residual force. Defeating significant enemies, surviving betrayal, removing false authority, and rejecting imposed Auri-El / Altmer order generate recognition at the ancestor layer — the ancestors witnessed who you chose to become.
+- **Boethiah Champion:** Trial, overthrow, and self-authorship have residual force. Defeating significant enemies, surviving betrayal, removing false authority, and rejecting imposed Auri-El / Altmer order generate recognition at the ancestor layer -- the ancestors witnessed who you chose to become.
 - **Mephala Champion:** Hidden communities, information networks, obligation webs, and necessary lies feel acknowledged. The mod cannot track every secret in any real way, but joining the Thieves Guild, protecting hidden Dunmer communities, maintaining discretion in sensitive quests, and acting through trusted networks signal correctly.
 
 Azura has a hard threshold boundary: dawn, dusk, night, and magic-adjacent play do not trigger focused favor by themselves after the basic shared-layer rhythm. Her moments require a real threshold, painful truth, transformation, exile-continuity, artifact/shrine rite, or curated major transition.
@@ -738,25 +750,25 @@ Boethiah has a hard cruelty boundary: random betrayal, generic violence, casual 
 
 Mephala has a hard crime boundary: random murder, casual theft, convenient lying, and generic crime do not trigger favor. Her moments require hidden obligation, protected community, dangerous knowledge, targeted hidden violence, a maintained network, or curated artifact/quest context.
 
-**The ancestor layer is always the Champion's ground floor.** Even at Champion, the Dunmer's relationship with their ancestors (Layer 1) remains the foundational texture — Layer 3 sits on top of it, not instead of it.
+**The ancestor layer is always the Champion's ground floor.** Even at Champion, the Dunmer's relationship with their ancestors (Layer 1) remains the foundational texture -- Layer 3 sits on top of it, not instead of it.
 
 ### Signature friction
-The **infrastructure ceiling** — you simply cannot do proper burial rites, cannot visit ancestral tombs in the way your religion requires, cannot maintain a full household shrine. These absences are baked into playing a Dunmer in Skyrim. The friction isn't what the mod does to you, it's what the world already took away. The mod acknowledges this rather than pretending it's fine.
+The **infrastructure ceiling** -- you simply cannot do proper burial rites, cannot visit ancestral tombs in the way your religion requires, cannot maintain a full household shrine. These absences are baked into playing a Dunmer in Skyrim. The friction isn't what the mod does to you, it's what the world already took away. The mod acknowledges this rather than pretending it's fine.
 
-The **ancestors are always watching** is the subtler ongoing friction. Combat acts, social choices, the things you do to other Dunmer — the ancestor layer interprets all of it. Playing a Dunmer who exploits their own people costs more than it looks like on the surface.
+The **ancestors are always watching** is the subtler ongoing friction. Combat acts, social choices, the things you do to other Dunmer -- the ancestor layer interprets all of it. Playing a Dunmer who exploits their own people costs more than it looks like on the surface.
 
 ### Neglect texture
-The ash-prayer going quiet. The mechanical cost is a mild, flat neglect debuff, but there is no *dramatic* punishment — the ancestor layer simply stops generating the small flavor confirmations that told you they were present.
+The ash-prayer going quiet. The mechanical cost is a mild, flat neglect debuff, but there is no *dramatic* punishment -- the ancestor layer simply stops generating the small flavor confirmations that told you they were present.
 
 Dunmer neglect is about **silence** first, cost second. Ancestors don't rage at you for drifting; the debuff is quiet and the felt experience is that they stop responding. After weeks of nothing, the ancestral layer has a hollow quality that's hard to describe mechanically but is its own kind of loss.
 
-Vampire note: the ash-prayer going SILENT (ancestors don't speak to undead) is one of the most atmospheric moments in the whole mod. The cure-and-restore arc matters — but the scar (permanent piety reduction) means you carry what happened.
+Vampire note: the ash-prayer going SILENT (ancestors don't speak to undead) is one of the most atmospheric moments in the whole mod. The cure-and-restore arc matters -- but the scar (permanent piety reduction) means you carry what happened.
 
 ---
 
 ## Altmer
 
-**Setup shape:** Choose faction alignment (Thalmor Orthodox / Divine Body / Psijic) → ThalmørAlignment starts accordingly → Layer 1 (Auri-El) always active → primary secondary deity through piety threshold → Tier 3.
+**Setup shape:** Choose faction alignment (Thalmor Orthodox / Divine Body / Psijic) -> ThalmorAlignment starts accordingly -> Layer 1 (Auri-El) always active -> primary secondary deity through piety threshold -> Tier 3.
 
 **Implementation-lock note (2026-05-19; closeout 2026-05-30):** Altmer uses shared patron state for formal commitment. `ThalmorAlignment` is the orthodoxy/coherence track, not a Broad/Primary state. There is no generic broad-worship lane: the player experience is Auri-El foundation, faction-theological coherence, and secondary focus. Bands remain `0-30 Heterodox`, `31-69 Orthodox Moderate`, `70-100 Thalmor Devout`; setup starts remain `75`, `50`, and `25`. The final implementation-spec closeout locks `PDV_State_AltmerCrisis`, the crisis source list, resolution routes, contextual-favor lane families, focused-deity launch hooks, and rejected-surface tests in `race-sheets/PDV_RaceDesign_Altmer.md`.
 
@@ -765,27 +777,27 @@ Vampire note: the ash-prayer going SILENT (ancestors don't speak to undead) is o
 **Altmer economy posture:** Basic devotional upkeep should trend positive: dawn Auri-El observance, study, magic milestones, College/Psijic milestones, and faction-coherent acts are the positive counterweight. Lorkhan pressure uses implementation tags `PDV_ALT_LORKHAN_T1_DIRECT`, `PDV_ALT_LORKHAN_T2_SHOR_ADJ`, `PDV_ALT_LORKHAN_T3_MORTAL_VALIDATION`, `PDV_ALT_LORKHAN_T4_CONTEXT`, and `PDV_ALT_CRISIS_FAITH`. Tier 3 penalties are explicit-action only, capped once per in-game day, and never fire for walking through Nord towns, having Nord friends, sleeping indoors, ordinary quests, or simply continuing to exist as Dragonborn after the authored crisis/declaration beat. If the theological meaning would not be obvious, reject the penalty or surface a first-time Altmer interpretation notification.
 
 ### Champion moment
-The most demanding and most interesting Champion to reach. Getting to Tier 3 as an Altmer means you've maintained devotion while authored Lorkhan pressure kept testing your coherence — the Dragonborn declaration can cost you, visiting Mara's temple can cost you, the *Companions questline* can cost you. Reaching Champion means you managed those explicit collisions and still kept faith.
+The most demanding and most interesting Champion to reach. Getting to Tier 3 as an Altmer means you've maintained devotion while authored Lorkhan pressure kept testing your coherence -- the Dragonborn declaration can cost you, visiting Mara's temple can cost you, the *Companions questline* can cost you. Reaching Champion means you managed those explicit collisions and still kept faith.
 
-- **Thalmor Orthodox Champion (Trinimac/Auri-El):** Theological coherence rewarded. Your enforcement acts and martial excellence feel divinely grounded. The Thalmor respond to you as someone who embodies the faith rather than just following orders. Lorkhan penalties hit you hardest (1.5x) AND you still got here — that's the statement.
+- **Thalmor Orthodox Champion (Trinimac/Auri-El):** Theological coherence rewarded. Your enforcement acts and martial excellence feel divinely grounded. The Thalmor respond to you as someone who embodies the faith rather than just following orders. Lorkhan penalties hit you hardest (1.5x) AND you still got here -- that's the statement.
 - **Divine Body Champion (Magnus/Xarxes):** Scholarship and self-cultivation at its apex. Your magical investment feels like the right path toward the spirits you were before Mundus. College of Winterhold content feels spiritually productive rather than just academically interesting.
-- **Psijic Champion:** The rarest path and the most internally coherent — meditation, the Elder Way, heterodox independence. Lorkhan penalties are softer (0.75x), which means reaching Champion here is more achievable but the penalties still exist. The payoff is a quieter, more self-possessed faith.
+- **Psijic Champion:** The rarest path and the most internally coherent -- meditation, the Elder Way, heterodox independence. Lorkhan penalties are softer (0.75x), which means reaching Champion here is more achievable but the penalties still exist. The payoff is a quieter, more self-possessed faith.
 
 ### Signature friction
-The **Lorkhan Adjacency Penalty** is the signature mechanic of the whole Altmer experience, and it's the most aggressive friction in the mod. It's not about what you did wrong — it's about what certain explicit mortal-world commitments mean from the Altmer perspective. Being declared Dragonborn can fire a Tier 2 beat once. Visiting the Hall of Valor fires when the authored story/location hook proves it. Getting married fires because it is a deliberate mortal-continuity choice.
+The **Lorkhan Adjacency Penalty** is the signature mechanic of the whole Altmer experience, and it's the most aggressive friction in the mod. It's not about what you did wrong -- it's about what certain explicit mortal-world commitments mean from the Altmer perspective. Being declared Dragonborn can fire a Tier 2 beat once. Visiting the Hall of Valor fires when the authored story/location hook proves it. Getting married fires because it is a deliberate mortal-continuity choice.
 
-The question the friction asks is: *how much of Skyrim's content are you willing to engage with on Altmer terms?* Some Altmer players will find themselves turning down questlines for theological reasons — which is exactly the right kind of friction.
+The question the friction asks is: *how much of Skyrim's content are you willing to engage with on Altmer terms?* Some Altmer players will find themselves turning down questlines for theological reasons -- which is exactly the right kind of friction.
 
 ### Neglect texture
-ThalmørAlignment drift in the wrong direction for your faction is the primary neglect signal. An Orthodox Altmer who consorts with Daedra or helps Talos worshippers isn't just losing piety — they're becoming theologically incoherent. The neglect texture is **inconsistency**, not absence.
+ThalmorAlignment drift in the wrong direction for your faction is the primary neglect signal. An Orthodox Altmer who consorts with Daedra or helps Talos worshippers isn't just losing piety -- they're becoming theologically incoherent. The neglect texture is **inconsistency**, not absence.
 
-Werewolf note: complete halt — no path forward, not even the heretical Tier 1 that vampire gets. The beast is the precise inversion of the Apotheosis project. This is source/record-wired through the Altmer curse-message slice; the current Altmer beta-feel packet closed `Pass` with no deferred manual proof and the werewolf hard halt in its recorded stack snapshot (see `PDV_PreBetaRaceGateLedger.md`), though the packet's edge lane does not record a dedicated werewolf-halt run.
+Werewolf note: complete halt -- no path forward, not even the heretical Tier 1 that vampire gets. The beast is the precise inversion of the Apotheosis project. This is source/record-wired through the Altmer curse-message slice; the current Altmer beta-feel packet closed `Pass` with no deferred manual proof and the werewolf hard halt in its recorded stack snapshot (see `PDV_PreBetaRaceGateLedger.md`), though the packet's edge lane does not record a dedicated werewolf-halt run.
 
 ---
 
 ## Khajiit
 
-**Setup shape:** All Khajiit begin inside the Lunar Lattice automatically (no choice). Broad lunar worship (Tier 2 cap). Focused deity emphasis emerges *silently* through behavior — no formal offer system. Tier 3 through focused commitment.
+**Setup shape:** All Khajiit begin inside the Lunar Lattice automatically (no choice). Broad lunar worship (Tier 2 cap). Focused deity emphasis emerges *silently* through behavior -- no formal offer system. Tier 3 through focused commitment.
 
 **Implementation state:** `PDV_Substrate_KhajiitLunar` owns the lunar substrate with canonical prefix `PDV.Substrate.KhajiitLunar.*`. Existing first keys are `Metric`, `Tier`, `LastEvent`, `LastPhase`, `ObservanceCount`, and `RoadHomeCount`. 1.0 uses the hybrid moon model: current phase gives small per-phase bonuses, while full-cycle consistency determines substrate strength. Prefer real Masser/Secunda state where reliable; otherwise use an abstract 28-day fallback. Khajiit do not use formal offer state for focus; `PDV_GLO_KhajiitFocusedEmphasis` mirrors the leading deity emphasis for CK/readback proof. Enum values are `None = 0`, `Khenarthi = 1`, `Azurah = 2`, `BaanDar = 3`, `Rajhin = 4`, `Alkosh = 5`. Focus requires `50` piety and a `15` piety lead over the next-highest focused deity; otherwise broad lunar worship remains valid. Road homes are `2-3` player-designated rest anchors, and piety requires cycling between them rather than repeating one convenient rest point. The first Phase 20 proof packet now wires ACTI bases for moon observance, two road-home anchors, Baan Dar road trickery, Rajhin elegant theft, and Alkosh dragon/order response; the manager rejects immediate same-anchor road-home repeats and exposes all five focus weights in summary readback. Curse/shadow pressure uses `PDV_State_KhajiitLunarPosture`: `Normal = 0`, `Strained = 1`, `Corrupted = 2`, `ShadowDrift = 3`. Vampirism sets `Corrupted`, lycanthropy sets `Strained`, and `ShadowDrift` requires dominant Nocturnal/shadow behavior rather than ordinary night travel. The six proof references are placed in `QASmoke` and pass readback plus route runtime proof. **(2026-06-07) The Khajiit piety pilot is now complete and runtime-proven.** The five emphasis deities (`PDV_Deity_Azura`/`Khenarthi`/`Rajhin`/`Alkosh` + shared `PDV_Deity_BaanDar`) are scripted, Start-Game-Enabled, and in `PDV_FLST_AllDeities` (now 10 members); Khajiit acts now **double-route** to pulse the matching emphasis deity's piety alongside the substrate/focus signal, so identity and devotion advance together; per-emphasis **T1/T2/T3 reward spells** grant at Seeker/Devoted/Champion; lunar **neglect** and **creed-violation piety loss** are wired; a tier-up notice fires for the focused emphasis; and **shared-deity reconciliation** (`PDV_DeityBase.EligibleStateTrackOriginRace`) gives the Khajiit Baan Dar emphasis full parity without disturbing Bosmer Bandit Road. In-game smoke confirmed all of the above. See `references/authoring/PDV_SessionHandoff_KhajiitPilot.md`. The Phase 2 cross-race propagation that this pilot seeded is complete (static gate 2026-06-07; all ten race packets have since passed manual/runtime evidence). The Khajiit beta-feel packet itself passed with the wired lunar packet, Baan Dar Champion capstone, Rajhin elegant-theft edge, Alkosh word-of-power dawn drip, rejection sweep, Survey/status, and stack snapshot; the five phase-blessing spells and the full lunar curse-posture (`PDV_State_KhajiitLunarPosture` + curse MessageBoxes + ShadowDrift evidence gate) were closed and proven in-game on 2026-06-13.
 
@@ -793,23 +805,23 @@ Werewolf note: complete halt — no path forward, not even the heretical Tier 1 
 
 Khajiit Champion is cosmic in texture. The moon and road-life are always present, but at Champion, they feel *responsive*.
 
-- **Khenarthi Champion:** Open-road life has a current. Travel feels right in a way it didn't — minor weather cooperation, outdoor sleep more restorative, the sense that the wind is going your way. Subtle but pervasive.
-- **Azurah Champion:** Threshold moments have weight. Major quest completions, dungeon entries, significant choices — these briefly feel foreordained rather than accidental. Flavor text at twilight-coded events.
-- **Baan Dar Champion:** The reversal you weren't supposed to survive becomes story. At Champion, trickster-survival acts (narrow escapes, outsmarting superior opponents, surviving the cities that don't want you) carry a blessed quality — Baan Dar rewards the clever exile.
+- **Khenarthi Champion:** Open-road life has a current. Travel feels right in a way it didn't -- minor weather cooperation, outdoor sleep more restorative, the sense that the wind is going your way. Subtle but pervasive.
+- **Azurah Champion:** Threshold moments have weight. Major quest completions, dungeon entries, significant choices -- these briefly feel foreordained rather than accidental. Flavor text at twilight-coded events.
+- **Baan Dar Champion:** The reversal you weren't supposed to survive becomes story. At Champion, trickster-survival acts (narrow escapes, outsmarting superior opponents, surviving the cities that don't want you) carry a blessed quality -- Baan Dar rewards the clever exile.
 - **Rajhin Champion:** Elegant theft becomes mythic theater. Story-worthy stolen items, notable undetected theft, and artful deception feel like performance rather than grind; petty theft stays too small to matter.
-- **Alkosh Champion:** Fighting dragons feels cosmically correct. Anti-chaos, order-keeping, exceptional threat responses — these are what Alkosh notices. Rarest to reach, most specific in its payoff.
+- **Alkosh Champion:** Fighting dragons feels cosmically correct. Anti-chaos, order-keeping, exceptional threat responses -- these are what Alkosh notices. Rarest to reach, most specific in its payoff.
 
-**The silent emergent patron system is itself part of the experience.** Khajiit don't formally commit — their worship deepens through lived behavior. The Champion tier should feel like the moon noticed you, not like you applied for recognition.
+**The silent emergent patron system is itself part of the experience.** Khajiit don't formally commit -- their worship deepens through lived behavior. The Champion tier should feel like the moon noticed you, not like you applied for recognition.
 
 ### Signature friction
-**Moon-phase awareness** and **exile-life maintenance**. Khajiit are excluded from most cities' temples, locked out of the institutional worship infrastructure everyone else has. The friction is playing a character whose religion exists in the open road, the caravan camp, the night sky — and Skyrim's cities are hostile to all of that.
+**Moon-phase awareness** and **exile-life maintenance**. Khajiit are excluded from most cities' temples, locked out of the institutional worship infrastructure everyone else has. The friction is playing a character whose religion exists in the open road, the caravan camp, the night sky -- and Skyrim's cities are hostile to all of that.
 
 The caravan community weighting means Khajiit players who stay city-bound and never interact with Ma'dran or Ri'saad's caravans are genuinely missing their primary community-signal surface. That's intentional friction built into the worldspace.
 
 ### Neglect texture
-The lunar substrate weakens when you've been **indoors, urban, and disconnected from the road**. Not punished — just quieter. The community belonging that buffered everything starts to thin. The sense of being cosmologically held by the Lattice fades into something more like being lost in a foreign country.
+The lunar substrate weakens when you've been **indoors, urban, and disconnected from the road**. Not punished -- just quieter. The community belonging that buffered everything starts to thin. The sense of being cosmologically held by the Lattice fades into something more like being lost in a foreign country.
 
-Caravan helpers don't notice you the same way. Night travel feels more dangerous, less guided. The moons are still there — you just stopped listening.
+Caravan helpers don't notice you the same way. Night travel feels more dangerous, less guided. The moons are still there -- you just stopped listening.
 
 ---
 
@@ -824,31 +836,31 @@ Caravan helpers don't notice you the same way. Night travel feels more dangerous
 **Path switching:** First-run path choice is free. Later path switches are Bosmer-specific system-suggested offers, not the generic deity-offer queue and not a simple MCM toggle. The game surfaces a popup when the destination path has enough evidence, the player accepts or refuses, and a curated rite confirms the new path. Living Story needs one strong community/story signal and acts as fallback. Exchange and Bandit Road need two destination-coded signals on separate in-game days within seven, unless a major curated quest beat clearly proves the path. Old Contract re-entry requires explicit recommitment, no terminal second renunciation, and three Pact-positive days within seven; `GreenPactCompliance` snaps to 30 on re-entry. Old ledgers are preserved, but only the active path gets full scoring/favor/Champion eligibility. After switching, automatic switching is locked for seven in-game days unless an authored major exception fires.
 
 ### Champion moment
-Four completely different Champions — more path-divergent at the top than any other race:
+Four completely different Champions -- more path-divergent at the top than any other race:
 
-- **Old Contract Champion (Y'ffre Orthodox):** The Green Pact is your religion, and you've maintained it. At Champion, hunting feels guided (contextual favor in hunting contexts) and GreenPactCompliance at Strict (80+) gives Y'ffre's 1.2x modifier. The payoff for carrying the hardest devotional burden is the highest ceiling of any Bosmer path. (The "animals never flee from you unprovoked" and per-item Green Pact feedback are the tag-layer payoff that the ratification note lists as deferred-with-dependency; treat them as the intended feel, not a shipped-and-proven surface until the tag layer lands.)
-- **Living Story Champion (Y'ffre Moderate):** You carry the oral tradition. Special dialogue-privilege moments arise in relevant contexts — naming things, situating people, telling the story correctly. (Per the Voiced Content Scope note above, V1 delivers this as the non-voiced equivalent — Survey/status, message, or notification — with voiced dialogue deferred to V2.) Community belonging feels real rather than performed. The secondary Bosmer gods (Arkay, Xarxes, Mara, Stendarr) add texture rather than competing.
-- **Exchange Champion (Z'en):** Balance restored. Proportionate vengeance completed, debt settled — these acts have a clean satisfaction that ordinary questline completions don't. The favor that follows a debt-settling act has a quality of *rightness* to it.
-- **Bandit Road Champion (Baan Dar):** The improbable reversal. Once per in-game week (rough target), Baan Dar luck fires in a situation where you were at a severe disadvantage. It shouldn't feel like a power — it should feel like the god of pariahs interceding on behalf of another pariah.
+- **Old Contract Champion (Y'ffre Orthodox):** The Green Pact is your religion, and you've maintained it. At Champion, hunting feels guided (contextual favor in hunting contexts) and GreenPactCompliance at Strict (80+) gives Y'ffre's 1.2x modifier. The payoff for carrying the hardest devotional burden is the highest ceiling of any Bosmer path. (The base/DLC plant-food violation baseline is now readback-authored; "animals never flee from you unprovoked" and the full per-item Green Pact package beyond plant foods remain deferred-with-dependency until their tag/proof layer lands.)
+- **Living Story Champion (Y'ffre Moderate):** You carry the oral tradition. Special dialogue-privilege moments arise in relevant contexts -- naming things, situating people, telling the story correctly. (Per the Voiced Content Scope note above, V1 delivers this as the non-voiced equivalent -- Survey/status, message, or notification -- with voiced dialogue deferred to V2.) Community belonging feels real rather than performed. The secondary Bosmer gods (Arkay, Xarxes, Mara, Stendarr) add texture rather than competing.
+- **Exchange Champion (Z'en):** Balance restored. Proportionate vengeance completed, debt settled -- these acts have a clean satisfaction that ordinary questline completions don't. The favor that follows a debt-settling act has a quality of *rightness* to it.
+- **Bandit Road Champion (Baan Dar):** The improbable reversal. Once per in-game week (rough target), Baan Dar luck fires in a situation where you were at a severe disadvantage. It shouldn't feel like a power -- it should feel like the god of pariahs interceding on behalf of another pariah.
 
 ### Signature friction
-**Old Contract Green Pact compliance** is the most mechanically demanding friction in the mod. Every food choice matters. Potions made from plants — gone. Firewood — gone. The mod has to tag plant-based consumables and the player has to track what they're putting in their body. For a game where alchemy and plant consumption are everywhere, this is real friction.
+**Old Contract Green Pact compliance** is the most mechanically demanding friction in the mod. The shipped static baseline now recognizes curated base/DLC plant foods as violations; the full friction target still requires authored tags for plant potions, ingredients, firewood/lumber, flora harvests, and mod-added food. For a game where alchemy and plant consumption are everywhere, that proof-backed tag layer is real friction rather than arbitrary inventory punishment.
 
-The other paths have friction through **path identity** — you made a choice, and the game holds you to it. The Exchange player who starts playing like a trickster feels the misalignment. The Bandit Road player who starts accumulating civic standing feels the tension.
+The other paths have friction through **path identity** -- you made a choice, and the game holds you to it. The Exchange player who starts playing like a trickster feels the misalignment. The Bandit Road player who starts accumulating civic standing feels the tension.
 
-**Forced reckoning moment for Old Contract:** three consecutive days in Apostate band → Y'ffre confronts you with a recommit-or-renounce choice. This is not background noise — it's a designed story beat that turns neglect into an explicit scene.
+**Forced reckoning moment for Old Contract:** three consecutive days in Apostate band -> Y'ffre confronts you with a recommit-or-renounce choice. This is not background noise -- it's a designed story beat that turns neglect into an explicit scene.
 
 ### Neglect texture
-- Old Contract: the Apostate band's forced reckoning IS the neglect texture. After the second renunciation, Y'ffre's ledger freezes permanently. The neglect system has a terminal state — which is itself the most powerful statement about what devotion means.
+- Old Contract: the Apostate band's forced reckoning IS the neglect texture. After the second renunciation, Y'ffre's ledger freezes permanently. The neglect system has a terminal state -- which is itself the most powerful statement about what devotion means.
 - Living Story: the oral tradition dries up. The flavor text that placed you in context stops appearing. You're still a Bosmer, but you're not carrying the story forward.
 - Exchange: unpaid debts accumulate without acknowledgment. The justice of the world ignores you.
-- Bandit Road: Baan Dar's luck goes dormant. You survive by skill, not by the pariah's luck — which is actually a meaningful absence once you've felt it.
+- Bandit Road: Baan Dar's luck goes dormant. You survive by skill, not by the pariah's luck -- which is actually a meaningful absence once you've felt it.
 
 ---
 
 ## Redguard
 
-**Setup shape:** Choose sect (Crown / Forebear / Ash'abah) at setup. All three within the same Yokudan religious universe. Ancestor reverence always active. Broad worship to Tier 2 → focused primary deity → Tier 3.
+**Setup shape:** Choose sect (Crown / Forebear / Ash'abah) at setup. All three within the same Yokudan religious universe. Ancestor reverence always active. Broad worship to Tier 2 -> focused primary deity -> Tier 3.
 
 **Broad worship lane:** Redguard breadth is sect-shaped. Crown, Forebear, and Ash'abah each count as their own broad-worship devotional lane for contextual favors; they share a Yokudan spine but should not collapse into one generic Yokudan package.
 
@@ -861,37 +873,37 @@ The other paths have friction through **path identity** — you made a choice, a
 **MS08 hook:** `In My Time Of Need` is verified as `MS08` / QUST `Skyrim.esm:01CF25`. Stage `200` completes the Saadia-helped route; stage `201` completes the Kematu/Alik'r-delivery route. One-time sect meaning is locked: stage `201` is Crown / Hammerfell justice / ancestor-duty positive; stage `200` is Forebear / exile-protection / anti-Alik'r positive.
 
 ### Champion moment
-Ancestor reverence carries all three Redguard Champions — it's the ground they share:
+Ancestor reverence carries all three Redguard Champions -- it's the ground they share:
 
-- **Crown Champion (Satakal/Tu'whacca/Ruptga/Leki):** Martial bearing and sacred inheritance at their apex. Visiting tombs at Champion level gives Tu'whacca's recognition — the ancestors feel actively present rather than passively honored. Sword discipline (Leki) and proven strength (Onsi) in honorable combat carry specific favor.
-- **Forebear Champion (Tava/HoonDing/Leki):** Pragmatic dignity rewarded. You've maintained Redguard identity while living in mixed society, negotiating, surviving, making a way through impossible obstacles (HoonDing). Tava's favor on the road — journeys feel guided rather than endured.
-- **Ash'abah Champion:** Emotionally the most resonant in the whole mod. You've borne the impurity obligation for others — cleansing the undead, tending the dead properly, doing the work that makes your own people uncomfortable. Tu'whacca's blessing at death-sites at Champion level should feel personal and earned. You did what others wouldn't. The god of the Far Shores noticed.
+- **Crown Champion (Satakal/Tu'whacca/Ruptga/Leki):** Martial bearing and sacred inheritance at their apex. Visiting tombs at Champion level gives Tu'whacca's recognition -- the ancestors feel actively present rather than passively honored. Sword discipline (Leki) and proven strength (Onsi) in honorable combat carry specific favor.
+- **Forebear Champion (Tava/HoonDing/Leki):** Pragmatic dignity rewarded. You've maintained Redguard identity while living in mixed society, negotiating, surviving, making a way through impossible obstacles (HoonDing). Tava's favor on the road -- journeys feel guided rather than endured.
+- **Ash'abah Champion:** Emotionally the most resonant in the whole mod. You've borne the impurity obligation for others -- cleansing the undead, tending the dead properly, doing the work that makes your own people uncomfortable. Tu'whacca's blessing at death-sites at Champion level should feel personal and earned. You did what others wouldn't. The god of the Far Shores noticed.
 
-**HoonDing note:** "Making a way" — impossible-odds victories — should be something Forebear and Crown Champions can access in different flavors. This is the Redguard theological truth about surviving in Skyrim as an exile.
+**HoonDing note:** "Making a way" -- impossible-odds victories -- should be something Forebear and Crown Champions can access in different flavors. This is the Redguard theological truth about surviving in Skyrim as an exile.
 
 Crown may receive rare make-way favor, but only as Ruptga/HoonDing-adjacent sacred survival through honorable adversity. It is not Forebear improvisation, road pragmatism, or social adaptation.
 
 ### Signature friction
-**Every death encounter is a theological moment.** The ancestor reverence layer is always watching how you deal with the dead. Draugr, necromancers, improper burials, Hall of the Dead quests — these aren't miscellaneous content for a Redguard. They're devotion opportunities and potential obligations.
+**Every death encounter is a theological moment.** The ancestor reverence layer is always watching how you deal with the dead. Draugr, necromancers, improper burials, Hall of the Dead quests -- these aren't miscellaneous content for a Redguard. They're devotion opportunities and potential obligations.
 
 **Ash'abah friction** is social: bearing the impurity of undead-cleansing means the sect carries stigma from other Redguard characters. The burden IS the path.
 
 Ash'abah routine undead-cleansing and burial duty should usually be Noted. Marked moments belong to real burden-bearing: major tombs, major necromancer operations, costly impurity choices, or later custom social-stigma content.
 
-**Sect identity** is also friction for Crown players specifically — maintaining orthodox Yokudan practice in a city built around Nine Divines infrastructure requires intentional choices about how you interact with Imperial religious spaces.
+**Sect identity** is also friction for Crown players specifically -- maintaining orthodox Yokudan practice in a city built around Nine Divines infrastructure requires intentional choices about how you interact with Imperial religious spaces.
 
 ### Neglect texture
-Ignoring the Alik'r, ignoring Redguard solidarity moments, treating the dead disrespectfully (using necromancy, bypassing burial obligations) — the ancestor layer quiets. Not angry, just distant.
+Ignoring the Alik'r, ignoring Redguard solidarity moments, treating the dead disrespectfully (using necromancy, bypassing burial obligations) -- the ancestor layer quiets. Not angry, just distant.
 
 For Ash'abah neglect: failing to engage with undead-duty content (skipping Hall of the Dead quests, leaving draugr tombs unaddressed when you could act) means the obligation goes unmet. The layer that felt like meaningful burden becomes just weight with no recognition.
 
-Vampire cure recovery note: Redguard vampire restoration goes through Tu'whacca first — "proper mortality, ancestor order, right re-entry into the cycle" before any specific primary god devotion can resume. This feels like a theologically correct re-entry arc, not a generic debuff reversal.
+Vampire cure recovery note: Redguard vampire restoration goes through Tu'whacca first -- "proper mortality, ancestor order, right re-entry into the cycle" before any specific primary god devotion can resume. This feels like a theologically correct re-entry arc, not a generic debuff reversal.
 
 ---
 
 ## Orc
 
-**Setup shape:** Malacath always. Player implies or chooses a life-mode (Stronghold / City / Legion-exile). Mode determines ceiling and expression. No separate focused-primary deity layer — deepening comes through mode-specific Malacath excellence.
+**Setup shape:** Malacath always. Player implies or chooses a life-mode (Stronghold / City / Legion-exile). Mode determines ceiling and expression. No separate focused-primary deity layer -- deepening comes through mode-specific Malacath excellence.
 
 **Contextual favor lane:** Orc favors follow the current Malacath life-mode, not one generic Malacath lane. `Stronghold Orc`, `City Orc`, and `Legion / service / exile Orc` each count as separate lanes. Stronghold can lean on stronger vanilla anchors such as Blood-Kin, stronghold locations, `The Cursed Tribe`, forge/labor hooks, and proven-strength events. City and Legion/Exile dignity, oath, and service favors must use curated high-confidence hooks only; do not promise broad simulation of disrespect, contracts, or oath-breaking until implementation proves a concrete hook.
 
@@ -904,21 +916,21 @@ Implementation lock: Orc mode is a single active state track, `PDV_StateTrack_Or
 Additional favor locks: worthy-challenge favor is Quiet by default and becomes Noted only for stronghold crisis, boss, trial, or Malacath-significant fights. Self-made community is valid for both City and Legion/Exile only through `PDV_SacredPlace` or faction-favor proxy hooks; City presents it as belonging built, while Legion/Exile presents it as burden returned from. Endurance is context, not piety by itself, with only tiny flavor or funny debuff allowed for overextension.
 
 ### Champion moment
-The hardest, most earned Champion in the mod — and possibly the one with the most meaningful ceiling asymmetry:
+The hardest, most earned Champion in the mod -- and possibly the one with the most meaningful ceiling asymmetry:
 
-- **Stronghold Orc Champion:** You've maintained forge excellence, communal provision, oath-keeping, AND proven strength. All three legs of Malacath's code. The stronghold accepts you in a way Blood-Kin alone didn't — the chief and shaman speak to you differently. Forge work at Champion level feels sacred in the way only Orc craft does.
+- **Stronghold Orc Champion:** You've maintained forge excellence, communal provision, oath-keeping, AND proven strength. All three legs of Malacath's code. The stronghold accepts you in a way Blood-Kin alone didn't -- the chief and shaman speak to you differently. Forge work at Champion level feels sacred in the way only Orc craft does.
 - **City Orc Champion:** Lower ceiling, but arguably the more impressive theological act. You've maintained Malacath's code without the structure that makes it supportable. Private fidelity under public compromise, quality labor and dignity without stronghold recognition, Orc identity inside a mixed society that doesn't fully respect it. The Champion moment here is quiet: Malacath was watching, and he saw you hold the code when you didn't have to.
-- **Legion/Exile Orc Champion:** Honor under foreign discipline — the hardest mode's Champion carries a specific resonance. You've carried Malacath's burden privately while the surrounding structure belonged to someone else. The endurance is the faith.
+- **Legion/Exile Orc Champion:** Honor under foreign discipline -- the hardest mode's Champion carries a specific resonance. You've carried Malacath's burden privately while the surrounding structure belonged to someone else. The endurance is the faith.
 
 ### Signature friction
-**Malacath doesn't petition — he observes.** You can't pray harder or visit more shrines. You either live the code or you don't. This means the friction isn't a mechanic the mod imposes — it's the gap between Orc theological ideals (forge excellence, strength, oath, communal provision) and what Skyrim offers. A City Orc who stops doing quality work, stops honoring commitments, stops maintaining any solidarity with other Orcs — Malacath stops caring.
+**Malacath doesn't petition -- he observes.** You can't pray harder or visit more shrines. You either live the code or you don't. This means the friction isn't a mechanic the mod imposes -- it's the gap between Orc theological ideals (forge excellence, strength, oath, communal provision) and what Skyrim offers. A City Orc who stops doing quality work, stops honoring commitments, stops maintaining any solidarity with other Orcs -- Malacath stops caring.
 
 **Mode ceiling** is the other friction: City Orc and Legion-exile players can feel the ceiling of what their mode allows, and accessing Stronghold Orc standing requires actual stronghold integration (Blood-Kin, communal participation, proven strength in a stronghold context).
 
 ### Neglect texture
-Malacath's neglect feels like **emptiness at the forge**. The work that used to feel like worship just feels like work. Oath-breaking (joining factions that require deception, failing commitments to allies, cowardly choices in conflict) draws only a mild, flat debuff — the point is absence, not retribution. Malacath has looked away.
+Malacath's neglect feels like **emptiness at the forge**. The work that used to feel like worship just feels like work. Oath-breaking (joining factions that require deception, failing commitments to allies, cowardly choices in conflict) draws only a mild, flat debuff -- the point is absence, not retribution. Malacath has looked away.
 
-For Stronghold Orc neglect: drifting toward city life without maintaining the code. Not betrayal — just drift. But the ancestors know the difference between a Stronghold Orc and someone who used to be one.
+For Stronghold Orc neglect: drifting toward city life without maintaining the code. Not betrayal -- just drift. But the ancestors know the difference between a Stronghold Orc and someone who used to be one.
 
 ---
 
@@ -959,8 +971,8 @@ against during tuning, editorial, and balancing.
 
 - **The most fun Champions share one trait:** they feel like *recognition*, not just progression. The god noticed what you were doing before you knew it mattered.
 - **The best frictions are diegetic:** Green Pact, Lorkhan Penalty, and ConcordatStanding all feel like they come from the world, not from a mod ruleset. Aim for this in all remaining friction mechanics.
-- **Neglect should feel like absence, not punishment** (in most cases). The Bosmer Old Contract terminal state is the deliberate exception — and it works *because* it's exceptional. (The 1.0 neglect model is flat, Requiem-felt debuffs that bite on a few-day lapse; keep the *texture* of absence even where the mechanic is a concrete stat hit.)
-- **Champion should be rare.** The architecture says Tier 3 is meant to feel exceptional. Threshold values during balancing should take this seriously — especially for paths with hard compliance mechanics.
+- **Neglect should feel like absence, not punishment** (in most cases). The Bosmer Old Contract terminal state is the deliberate exception -- and it works *because* it's exceptional. (The 1.0 neglect model is flat, Requiem-felt debuffs that bite on a few-day lapse; keep the *texture* of absence even where the mechanic is a concrete stat hit.)
+- **Champion should be rare.** The architecture says Tier 3 is meant to feel exceptional. Threshold values during balancing should take this seriously -- especially for paths with hard compliance mechanics.
 
 ### Build-order retrospective (historical)
 
@@ -969,15 +981,15 @@ list is kept only as a record of the original sequencing rationale, not as
 forward guidance. Read it to understand *why* the codebase grew the way it did,
 not as a plan.
 
-1. **Nord** — the prototype, most vanilla-hook surface
-2. **Orc** — single god, clearest signal logic, mode-ceiling gives natural difficulty curve
-3. **Dunmer** — layered architecture is complex but the ancestor-always-active pattern is distinct
-4. **Altmer** — Lorkhan Adjacency Penalty is implementation-demanding but the proof slice already existed
-5. **Khajiit** — silent emergent patron + lunar substrate on locked launch hooks; careful signal weighting
-6. **Imperial** — ConcordatStanding shares Breton's proven pattern; sequenced later only for less distinct playstyle signal
-7. **Redguard** — rich lore but limited vanilla hook surface; Ash'abah especially needed careful trigger work
-8. **Bosmer** — four paths, the most implementation surface of any race; Old Contract GreenPact tagging is significant custom work
-9. **Breton** — three-track system with three distinct mechanics; high total complexity, shipped after others without gaps
+1. **Nord** -- the prototype, most vanilla-hook surface
+2. **Orc** -- single god, clearest signal logic, mode-ceiling gives natural difficulty curve
+3. **Dunmer** -- layered architecture is complex but the ancestor-always-active pattern is distinct
+4. **Altmer** -- Lorkhan Adjacency Penalty is implementation-demanding but the proof slice already existed
+5. **Khajiit** -- silent emergent patron + lunar substrate on locked launch hooks; careful signal weighting
+6. **Imperial** -- ConcordatStanding shares Breton's proven pattern; sequenced later only for less distinct playstyle signal
+7. **Redguard** -- rich lore but limited vanilla hook surface; Ash'abah especially needed careful trigger work
+8. **Bosmer** -- four paths, the most implementation surface of any race; Old Contract GreenPact tagging is significant custom work
+9. **Breton** -- three-track system with three distinct mechanics; high total complexity, shipped after others without gaps
 
 (Argonian is absent from the original nine-item list because it entered the
 roster as a substrate-layered race alongside the Phase 2 all-race propagation;
