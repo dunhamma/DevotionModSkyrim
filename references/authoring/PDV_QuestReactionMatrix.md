@@ -250,7 +250,7 @@ to most gods).
 ### Bosmer
 
 **Y'ffre** — the Storyteller, the Green Pact, the forest's law.
-- approve: `green_pact`(C), `honor_the_wild`(S), `the_hunt`(S, *within the Pact*), `defend_kin_home`(m)
+- approve: `green_pact`(C), `honor_the_wild`(S), `the_hunt`(S, *within the Pact*), `defend_kin_home`(m), `slay_undead`(m, *bone-law kept: the walking dead are matter outside its fixed story; mirrors his shipped kill-undead day-to-day like. Added 2026-07-09.*)
 - disapprove: `defile_nature`(C), `green_pact`(C, *as violation — branch-dependent*)
 - anchor: Bosmeri forest-god; the Green Pact. (UESP: Y'ffre)
 
