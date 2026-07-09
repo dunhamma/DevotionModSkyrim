@@ -1,6 +1,6 @@
 {
   "schema": "pdv.1-0.freshness-stamps.v1",
-  "updated": "2026-07-08T22:20:09.768Z",
+  "updated": "2026-07-09T03:04:30.212Z",
   "stamps": {
     "C-RACE-RUBRIC": {
       "observedAt": "2026-07-07T09:22:07.856Z",
@@ -11,76 +11,76 @@
       }
     },
     "C-PRINCE-GATE": {
-      "observedAt": "2026-07-08T22:19:34.351Z",
+      "observedAt": "2026-07-09T03:03:47.775Z",
       "result": "PASS",
       "sourceHashes": {
         "references/authoring/PDV_DaedricPrinceRecordContracts.json": "040bb0dc17ff520832a4a09daf2e7e0bfa92225c059e7497f45155081e96d4c9"
       }
     },
     "C-AUDIT-BETA-STRICT": {
-      "observedAt": "2026-07-08T22:19:34.418Z",
+      "observedAt": "2026-07-09T03:03:47.848Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "5befb7211a0f51bebfedfb115cb7ff46fbc1480571ecb88e0d5a9c2f292ec76d",
-        "@managerDeployed": "5befb7211a0f51bebfedfb115cb7ff46fbc1480571ecb88e0d5a9c2f292ec76d"
+        "@managerLive": "bb64b968a6001e3dcc188abed133aa040736d7ddcbb216368b6c3801ee49d165",
+        "@managerDeployed": "62e4017c82707bbd11c4d0d79e1a097f90f94193b86e13eb3ac46cabe6f208e7"
       }
     },
     "C-AUDIT-CONTENT": {
-      "observedAt": "2026-07-08T22:19:46.808Z",
+      "observedAt": "2026-07-09T03:04:00.365Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "5befb7211a0f51bebfedfb115cb7ff46fbc1480571ecb88e0d5a9c2f292ec76d"
+        "@managerLive": "bb64b968a6001e3dcc188abed133aa040736d7ddcbb216368b6c3801ee49d165"
       }
     },
     "C-FELT-TRACE": {
-      "observedAt": "2026-07-08T22:20:07.512Z",
+      "observedAt": "2026-07-09T03:04:26.349Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "5befb7211a0f51bebfedfb115cb7ff46fbc1480571ecb88e0d5a9c2f292ec76d",
-        "@managerDeployed": "5befb7211a0f51bebfedfb115cb7ff46fbc1480571ecb88e0d5a9c2f292ec76d",
+        "@managerLive": "bb64b968a6001e3dcc188abed133aa040736d7ddcbb216368b6c3801ee49d165",
+        "@managerDeployed": "62e4017c82707bbd11c4d0d79e1a097f90f94193b86e13eb3ac46cabe6f208e7",
         "references/authoring/PDV_FeltEffectRegistry.json": "d372f5624dea46a228891f653c71992634321094d375ba47ffd3df78925b00fe"
       }
     },
     "C-PACING-SIM": {
-      "observedAt": "2026-07-08T22:20:06.687Z",
+      "observedAt": "2026-07-09T03:04:25.534Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "5befb7211a0f51bebfedfb115cb7ff46fbc1480571ecb88e0d5a9c2f292ec76d",
-        "@managerDeployed": "5befb7211a0f51bebfedfb115cb7ff46fbc1480571ecb88e0d5a9c2f292ec76d"
+        "@managerLive": "bb64b968a6001e3dcc188abed133aa040736d7ddcbb216368b6c3801ee49d165",
+        "@managerDeployed": "62e4017c82707bbd11c4d0d79e1a097f90f94193b86e13eb3ac46cabe6f208e7"
       }
     },
     "C-AUDIT-VERIFY": {
-      "observedAt": "2026-07-08T22:19:46.718Z",
+      "observedAt": "2026-07-09T03:04:00.280Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "5befb7211a0f51bebfedfb115cb7ff46fbc1480571ecb88e0d5a9c2f292ec76d",
-        "@managerDeployed": "5befb7211a0f51bebfedfb115cb7ff46fbc1480571ecb88e0d5a9c2f292ec76d",
+        "@managerLive": "bb64b968a6001e3dcc188abed133aa040736d7ddcbb216368b6c3801ee49d165",
+        "@managerDeployed": "62e4017c82707bbd11c4d0d79e1a097f90f94193b86e13eb3ac46cabe6f208e7",
         "@espDeployed": "7c7f99eab2542bce32ca07ac3633224bac5346cb3083204a22428918d90a3864"
       }
     },
     "C-EXPMODE-BUILD": {
-      "observedAt": "2026-07-08T22:20:05.786Z",
+      "observedAt": "2026-07-09T03:04:24.700Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "5befb7211a0f51bebfedfb115cb7ff46fbc1480571ecb88e0d5a9c2f292ec76d",
-        "@managerDeployed": "5befb7211a0f51bebfedfb115cb7ff46fbc1480571ecb88e0d5a9c2f292ec76d",
+        "@managerLive": "bb64b968a6001e3dcc188abed133aa040736d7ddcbb216368b6c3801ee49d165",
+        "@managerDeployed": "62e4017c82707bbd11c4d0d79e1a097f90f94193b86e13eb3ac46cabe6f208e7",
         "@espDeployed": "7c7f99eab2542bce32ca07ac3633224bac5346cb3083204a22428918d90a3864"
       }
     },
     "C-AUDIT-INTEGRITY": {
-      "observedAt": "2026-07-07T09:21:40.000Z",
+      "observedAt": "2026-07-09T03:04:12.536Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "cfe5a00a20e50833f8e0d019f4c3e67f31444413ff086924585ac0946b010c62",
-        "@managerDeployed": "cfe5a00a20e50833f8e0d019f4c3e67f31444413ff086924585ac0946b010c62"
+        "@managerLive": "bb64b968a6001e3dcc188abed133aa040736d7ddcbb216368b6c3801ee49d165",
+        "@managerDeployed": "62e4017c82707bbd11c4d0d79e1a097f90f94193b86e13eb3ac46cabe6f208e7"
       }
     },
     "C-DISLIKE-DEBUFF-BUILD": {
-      "observedAt": "2026-07-08T22:20:09.737Z",
+      "observedAt": "2026-07-09T03:04:30.183Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "5befb7211a0f51bebfedfb115cb7ff46fbc1480571ecb88e0d5a9c2f292ec76d",
-        "@managerDeployed": "5befb7211a0f51bebfedfb115cb7ff46fbc1480571ecb88e0d5a9c2f292ec76d",
+        "@managerLive": "bb64b968a6001e3dcc188abed133aa040736d7ddcbb216368b6c3801ee49d165",
+        "@managerDeployed": "62e4017c82707bbd11c4d0d79e1a097f90f94193b86e13eb3ac46cabe6f208e7",
         "@espDeployed": "7c7f99eab2542bce32ca07ac3633224bac5346cb3083204a22428918d90a3864"
       }
     }

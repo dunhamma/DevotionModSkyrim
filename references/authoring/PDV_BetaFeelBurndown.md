@@ -43,26 +43,32 @@ contract gate wins.
 
 ### Contract-era snapshot (as of 2026-07-09, post `--run` re-green)
 
-Gate rollup after `node .\tools\pdv_1_0_endstate_gate.mjs --run`:
-**8 PASS / 1 STALE / 9 RED** (was 1 PASS / 1 STALE / 16 RED in read-mode before
-the re-green). The remap wiring (5f245de) had drift-voided every machine PASS;
-the `--run` re-executed each gate tool and re-greened the ones that pass
-statically. Re-greened: C-PRINCE-GATE, C-AUDIT-BETA-STRICT, C-AUDIT-VERIFY,
-C-AUDIT-CONTENT, C-EXPMODE-BUILD, C-PACING-SIM, C-FELT-TRACE, C-DISLIKE-DEBUFF-BUILD.
+Gate rollup after `node .\tools\pdv_1_0_endstate_gate.mjs --run` with the Anvil
+MCP bridge live: **9 PASS / 1 STALE / 8 RED** (was 1 PASS / 1 STALE / 16 RED in
+read-mode before the re-green). The remap wiring (5f245de) and the tranche-10
+signal-floor commit (6147991) had drift-voided every machine PASS; the `--run`
+re-executed each gate tool and re-greened all nine machine gates: C-PRINCE-GATE,
+C-AUDIT-BETA-STRICT, C-AUDIT-VERIFY, C-AUDIT-CONTENT, **C-AUDIT-INTEGRITY**,
+C-EXPMODE-BUILD, C-PACING-SIM, C-FELT-TRACE, C-DISLIKE-DEBUFF-BUILD.
 
-Two machine gates did NOT re-green, and only one is substantive:
-- **C-AUDIT-INTEGRITY (RED)** -- the `signal_e2e_gate` sub-check needs the live
-  Anvil MCP runtime bridge (`127.0.0.1:27016`) to confirm the 39 curated/reserved
-  signal surfaces actually dispatch in game. Headless, that bridge is down
-  (`ECONNREFUSED`), so the surfaces read `INCOMPLETE`, not RED. Statically the gate
-  is clean: parity PASS, gaps 0, cross 0, deity_chain PASS, eligibility-reward
-  coverage PASS (153 rows, 0 failures). This closes when the remap in-game smoke
-  (`PDV_DeitySignalRemap_InGameSmoke_Runbook.md`) runs with Anvil + MCP live -- the
-  SAME sitting that burns the felt-family slots. Not a code regression.
+**C-AUDIT-INTEGRITY closed 2026-07-09 when the Anvil MCP bridge came up.** Its
+`signal_e2e_gate` sub-check needs the live bridge (`127.0.0.1:27016`) to confirm
+the 39 curated/reserved signal surfaces dispatch; headless it had been down
+(`ECONNREFUSED`) leaving them `INCOMPLETE`. With the bridge live the gate reads
+**39 GREEN / 0 RED, mcp PASS, parity PASS**, and the full harness is PASS
+(deity_chain, eligibility-reward 153/0, signal_floor, spine, specced_minus,
+completeness all OK). No code change was needed -- it was purely proof-pending
+on the runtime.
+
+No machine gate is red. The two non-green machine rows are both non-substantive:
 - **C-PLACEMENT-FINAL (RED)** -- known/expected; in-world hook proofs re-scoped
   2026-07-07 (a9e73e0) to fold into the per-race sittings.
 - **C-RACE-RUBRIC (STALE)** -- race-sheet drift from the remap decisions
   (1631351 edited the race sheets); re-observes when a race ledger is re-run.
+
+Caveat: the gate flags `live-vs-deployed-drift` -- the git live-source manager is
+ahead of the MO2 deployed `.pex`. The machine green reflects live-source + live
+ESP records; recompile/deploy to MO2 before in-game smoke to mirror this state.
 
 The substantive open work is the **evidence-gate slots** (all in-game/packaging,
 none machine-greenable):

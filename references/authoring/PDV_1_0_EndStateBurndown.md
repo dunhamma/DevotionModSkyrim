@@ -11,7 +11,7 @@ Overall: **RED** (mode: run). Contract: references/authoring/PDV_1_0_EndStateCon
 | C-AUDIT-BETA-STRICT | audits | machine-gate | PASS | --run tools/pdv_beta_readiness_audit.mjs --strict: exit 0 | Fix the blocker named by pdv_beta_readiness_audit.mjs --strict, then re-run. |
 | C-AUDIT-VERIFY | audits | machine-gate | PASS | --run tools/pdv_verify.mjs: exit 0 | Run node .\tools\pdv_1_0_endstate_gate.mjs --run (or pdv_verify.mjs directly) with the houseCARL bridge live. |
 | C-AUDIT-CONTENT | audits | machine-gate | PASS | --run tools/pdv_content_verify.mjs: exit 0 | Run node .\tools\pdv_1_0_endstate_gate.mjs --run (or pdv_content_verify.mjs directly). |
-| C-AUDIT-INTEGRITY | audits | machine-gate | RED | --run tools/pdv_integrity_harness.mjs: exit 1 | Fix the failing gate check named in PDV_IntegrityHarnessLedger.md, then re-run the harness. |
+| C-AUDIT-INTEGRITY | audits | machine-gate | PASS | --run tools/pdv_integrity_harness.mjs: exit 0 | Fix the failing gate check named in PDV_IntegrityHarnessLedger.md, then re-run the harness. |
 | C-EXPMODE-BUILD | experience-mode | machine-gate | PASS | --run tools/pdv_verify.mjs --strict-experience-mode: exit 0 | Run node .\tools\pdv_1_0_endstate_gate.mjs --run --only C-EXPMODE-BUILD (strict experience-mode verifier). |
 | C-EXPMODE-SMOKE | experience-mode | evidence-gate | RED | 2/2 slots open: pilgrimPathSmoke, wayfarerPathSmoke | Run the two-mode in-game smoke after C-EXPMODE-BUILD closes; record both slots in PDV_1_0_ManualSignoffLedger.json. |
 | C-COMPAT-ARR | compatibility | evidence-gate | RED | 1/1 slots open: arrAcceptedPackage | Deliver the ARR evidence packet per the pdv-compat-package workflow and record maintainer acceptance. |
@@ -24,7 +24,11 @@ Overall: **RED** (mode: run). Contract: references/authoring/PDV_1_0_EndStateCon
 | C-FELT-FAMILY | felt-effects | evidence-gate | RED | 105/148 slots open: Akatosh/price, Alkosh/price, Altmer-AuriEl/boon, Altmer-CurseState/curse, Altmer-Magnus/boon, Altmer-Orthodox/boon, Altmer-VampireExiledPath/curse, Altmer-Xarxes/boon, +97 more | Play one member of each pending family in game and record the evidence slot (or retro-credit from an existing packet where the mapping is unambiguous). |
 | C-DISLIKE-DEBUFF-BUILD | dislike-consequence | machine-gate | PASS | --run tools/pdv_dislike_consequence_audit.mjs --strict-dislike-consequence: exit 0 | Run node .\tools\pdv_1_0_endstate_gate.mjs --run --only C-DISLIKE-DEBUFF-BUILD (strict dislike-consequence audit: 14 domain spells, dispatch wiring, 3-domain cap, live ESP readback). Per-domain stings prove through C-FELT-FAMILY during the race sittings. |
 | C-DISLIKE-DEBUFF-TUNING | dislike-consequence | evidence-gate | RED | 1/1 slots open: antiStackRequiemFelt | In a dedicated sitting, confirm the 32-source disfavor stack stays legible under Requiem alongside neglect and prince prices (no over-stack, stings fade, ordinary play unstung), and record the sign-off. |
-| C-1-0 | rollup | rollup | RED | 8 PASS / 1 STALE / 9 RED | Burn the RED criteria above. |
+| C-1-0 | rollup | rollup | RED | 9 PASS / 1 STALE / 8 RED | Burn the RED criteria above. |
+
+## Drift findings
+
+- live-vs-deployed-drift: git live-source manager differs from the MO2 deployed copy; sync live-source to MO2 (or vice versa) before trusting source-read audits.
 
 ## Explicitly post-1.0 (not gating)
 

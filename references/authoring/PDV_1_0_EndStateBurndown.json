@@ -3,9 +3,9 @@
   "mode": "run",
   "strictStale": false,
   "counts": {
-    "PASS": 8,
+    "PASS": 9,
     "STALE": 1,
-    "RED": 9
+    "RED": 8
   },
   "rows": [
     {
@@ -63,8 +63,8 @@
       "lane": "audits",
       "category": "machine-gate",
       "title": "Integrity harness gates pass (e2e signal gate, deity chain, eligibility coverage)",
-      "status": "RED",
-      "detail": "--run tools/pdv_integrity_harness.mjs: exit 1",
+      "status": "PASS",
+      "detail": "--run tools/pdv_integrity_harness.mjs: exit 0",
       "closes": "Fix the failing gate check named in PDV_IntegrityHarnessLedger.md, then re-run the harness.",
       "drift": false
     },
@@ -194,12 +194,14 @@
       "category": "rollup",
       "title": "1.0 ship gate: every non-post-1.0 criterion passes",
       "status": "RED",
-      "detail": "8 PASS / 1 STALE / 9 RED",
+      "detail": "9 PASS / 1 STALE / 8 RED",
       "closes": "Burn the RED criteria above.",
       "drift": false
     }
   ],
-  "findings": [],
+  "findings": [
+    "live-vs-deployed-drift: git live-source manager differs from the MO2 deployed copy; sync live-source to MO2 (or vice versa) before trusting source-read audits."
+  ],
   "post10Exclusions": [
     {
       "id": "X-BRANDING",
