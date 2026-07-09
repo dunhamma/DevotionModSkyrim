@@ -51,7 +51,7 @@ node .\tools\pdv_prisma_ui_audit.mjs --json
 Expected readback result:
 
 - `PDV__ManagerQuest` and `PDV_MCM` compile with `0 error(s), 0 warning(s)`.
-- Quest matrix compile passes at 884 cells / 90 watched quests.
+- Quest matrix compile passes at 1071 cells / 135 watched quests / 169 keys / 26 faucet acts (2026-07-09 signal-floor + quest-matrix session; was 884/90). LIKES_DISLIKES_VERSION = 15.
 - `pdv_verify` has no `FAIL`; only the existing medallion glyph fallback warning is allowed.
 - Formal offer check passes with 45 post-Kyne message records.
 - Eligibility reward coverage includes Altmer `PDV_Syrabane`, Altmer `PDV_Trinimac`, Breton Hidden Art `Magnus`, and Breton Green Way `Y'ffre`.
@@ -447,7 +447,83 @@ Run these after the happy paths. Record explicit absence, not just "nothing odd.
 | Generic unapproved quest source | Run `setstage MG01 200` when testing Hidden Art. | It may trigger the older quest matrix College study rows, but it must not count as a Hidden Art P2 source or replace `MG08 200` as the remap terminal proof. |
 | Save/load stack | After an accepted Syrabane/Trinimac/Breton focus reward or Breton neglect, save, quit to menu, reload. | Exactly one expected reward/neglect effect remains, no stale duplicate, Survey/status and Book of Days still agree. |
 
-## 10. Evidence Notes
+## 10. 2026-07-09 Signal-Floor + Quest-Matrix Session
+
+Scope: everything authored in the 2026-07-09 session (see
+`PDV_SignalFloor_MasterHandoff_2026-07-09.md`). All static-proven only; NONE
+runtime-proven yet. Use a clean save; `coc` skips Story location triggers -
+enter via load door/fast-travel. Each case: capture the standard evidence shape
+(section 10).
+
+### 11.1 Main-quest per-deity fan-out (progression beats now count)
+Steps: `setstage MQ305 200` (Dragonslayer), `setstage MQ206 220` (read the
+Elder Scroll), `setstage MQ302 300` (Season Unending).
+- Runtime-route proof: MQ305 fires the death gods **Arkay/Tu'whacca (milestone
+  gain) + Khenarthi**; MQ206 fires **Julianos/Hermaeus Mora/Magnus (milestone)
+  + Xarxes**; MQ302 fires **Mara/Stendarr + Akatosh + Stuhn**.
+- Manual visual: one aggregated toast + one Book of Days line per quest fire
+  naming the reacting deities; focused-panel Ledger shows the movement.
+
+### 11.2 Mehrunes Dagon correction (valence flip)
+Steps: `setstage MQ305 200` (or MQ206 220) with Dagon in the dashboard roster.
+- Proof: Dagon takes a **LOSS** (`serve_empire_order`, not a gain) - the Prince
+  of Destruction does not cheer the world being saved. Confirm his ordinary
+  dragon-KILL beats (MQ104/106/303) still register as GAINS.
+
+### 11.3 Crypt-clear signal
+Steps: enter then fully clear a draugr barrow on `PDV_FLST_UndeadCryptClearSites`
+(e.g. Bleak Falls Barrow); re-clear-eligible sites the same day.
+- Runtime-route: `Undead crypt clear fired for location ...` marker once per
+  site; fan-out to **Arkay(C)/Meridia(C)/Stendarr(S)/Tu'whacca(S)/Azura(m)/
+  Y'ffre(m)**; a second qualifying clear the same day is daily-repeat-capped.
+- Manual visual: gains appear in Ledger/Book of Days; no double-fire on re-enter
+  of an already-cleared site after save/load.
+
+### 11.4 Paarthurnax kill/spare fork (Codex-built)
+Steps (KILL): kill the Paarthurnax actor. Steps (SPARE): reach `MQ305 200` and
+leave Paarthurnax alive (or trigger the load-catchup latch).
+- KILL proof: **Shor/Tsun/Kyne (-S), Stendarr/Stuhn (-C), Mara (-S)** losses;
+  Khajiit also get the existing Alkosh chaos-aid consequence. One-shot
+  (`PDV.Paarthurnax.KillSeen`).
+- SPARE proof: **Stuhn(+C)/Stendarr(+C)/Mara(+S)/Kyne(+m)** gains via the
+  `RoutePaarthurnaxSpare` latch. Confirm kill and spare are mutually exclusive.
+
+### 11.5 Readback-refresh quest rows
+Steps: `setstage DBDestroy 200`, `setstage MS10 100`, `setstage CR13 200` (as a
+werewolf).
+- Proof: DBDestroy = **Sithis milestone LOSS** (break_oath_betray) + Stendarr/
+  Talos gains; MS10 = **Zenithar milestone gain** + Z'en; CR13 = **Hircine cure
+  LOSS + Y'ffre gain**.
+
+### 11.6 Likes/dislikes v15 (events 366 + 303) - NEW SAVE REQUIRED
+Prereq: a save that has NOT stamped `PDV.LD.Version=15`; confirm log
+`Likes/dislikes table + stances loaded (version 15)`.
+Steps: feed as a vampire (366); kill a non-hostile animal out of combat (303).
+- Proof: 366 = **Arkay/Stendarr-class LOSSES** (large tier, cap 1/day - second
+  feed same day capped); 303 = **Kyne/Kynareth LOSSES** (cap 3/day). Driver copy
+  states the trigger; no stale re-fire after save/load.
+
+### 11.7 Y'ffre Green Way + necromancy + bardic (Bosmer, origin 4)
+Steps: visit a Bosmer sacred site (Eldergleam Sanctuary / Ancestor Glade /
+All-Maker stone); consume a plant food on `PDV_FLST_GreenPact_PlantFoods`;
+`setstage DLC1VQ04 200` (Soul Cairn necromancy); `setstage BardsCollegePoeticEdda 200`.
+- Proof: site visit = Y'ffre gain; plant consumption = **Y'ffre LOSS**
+  (Meat Mandate); DLC1VQ04 = Y'ffre necromancy LOSS; Poetic Edda = Y'ffre
+  bardic GAIN (the Storyteller).
+
+### 11.8 Cowardice-god assassination dislikes
+Steps: `setstage DB01 200`, `setstage DB11 200` (regicide).
+- Proof: **Talos/Tsun/HoonDing take LOSSES** on the treacherous-murder /
+  assassination beats (new Part B axis), alongside the existing Kyne/Baan Dar/
+  Rajhin/Khenarthi reactions.
+
+### Borderline rows to prove-or-drop
+`DA14Start 70` (Sanguine), `DLC2RRFavor01 200` (Zenithar keep-vs-report),
+`T03 105` (Y'ffre, manual-FormID stage), the HearthFires adoption stages
+(`BYOHRelationshipAdoption 10` / `BYOHRelationshipAdoptableOrphanage 200`,
+Dibella). If any fires silently or wrong, drop or re-anchor the row.
+
+## 11. Evidence Notes
 
 Record results in the active manual evidence surface for the owning race or
 cross-system sitting. Do not edit player guides from this run alone.
