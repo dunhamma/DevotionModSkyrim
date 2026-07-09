@@ -250,8 +250,8 @@ to most gods).
 ### Bosmer
 
 **Y'ffre** — the Storyteller, the Green Pact, the forest's law.
-- approve: `green_pact`(C), `honor_the_wild`(S), `the_hunt`(S, *within the Pact*), `defend_kin_home`(m), `slay_undead`(m, *bone-law kept: the walking dead are matter outside its fixed story; mirrors his shipped kill-undead day-to-day like. Added 2026-07-09.*)
-- disapprove: `defile_nature`(C), `green_pact`(C, *as violation — branch-dependent*)
+- approve: `green_pact`(C), `honor_the_wild`(S), `the_hunt`(S, *within the Pact*), `defend_kin_home`(m), `slay_undead`(m, *bone-law kept: the walking dead are matter outside its fixed story; mirrors his shipped kill-undead day-to-day like. Added 2026-07-09.*), `aesthetic_devotion`(S, *the Storyteller: song, saga, and the first story preserved — bardic arts are his domain. Added 2026-07-09.*)
+- disapprove: `defile_nature`(C), `green_pact`(C, *as violation — branch-dependent*), `necromancy`(S, *dead matter bound and animated against the fixed forms the first story set — a fundamental bone-law violation. Added 2026-07-09.*)
 - anchor: Bosmeri forest-god; the Green Pact. (UESP: Y'ffre)
 
 **Z'en** — the trader-god, debt, balance, proportionate redress.
