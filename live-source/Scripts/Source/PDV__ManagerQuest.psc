@@ -6429,6 +6429,53 @@ Function HandleKhajiitAlkoshChaosAid(String reason)
     Trace(2, "Khajiit Alkosh chaos-aid routed (" + reason + ")")
 EndFunction
 
+Function HandlePaarthurnaxKill(Form sourceForm, String reason)
+    String killKey = "PDV.Paarthurnax.KillSeen"
+    if StorageUtil.GetIntValue(None, killKey, 0) == 1
+        Trace(2, "Paarthurnax kill repeat blocked (" + reason + ")")
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, killKey, 1)
+    StorageUtil.SetStringValue(None, "PDV.Paarthurnax.KillReason", reason)
+    ApplyPaarthurnaxKillReaction("Shor", "S", sourceForm)
+    ApplyPaarthurnaxKillReaction("Tsun", "S", sourceForm)
+    ApplyPaarthurnaxKillReaction("Kyne", "S", sourceForm)
+    ApplyPaarthurnaxKillReaction("Stendarr", "C", sourceForm)
+    ApplyPaarthurnaxKillReaction("Stuhn", "C", sourceForm)
+    ApplyPaarthurnaxKillReaction("Mara", "S", sourceForm)
+    Trace(2, "Paarthurnax kill fork routed (" + reason + ")")
+EndFunction
+
+Function ApplyPaarthurnaxKillReaction(String deityName, String intensity, Form sourceForm)
+    ApplyDeityReaction(deityName, "-", intensity, "small", "paarthurnax_kill", True, sourceForm)
+EndFunction
+
+Function HandlePaarthurnaxSpare(Form sourceForm, String reason)
+    String spareKey = "PDV.Paarthurnax.SpareSeen"
+    if StorageUtil.GetIntValue(None, spareKey, 0) == 1
+        Trace(2, "Paarthurnax spare repeat blocked (" + reason + ")")
+        return
+    endIf
+
+    if StorageUtil.GetIntValue(None, "PDV.Paarthurnax.KillSeen", 0) == 1
+        Trace(2, "Paarthurnax spare blocked because kill fork already fired (" + reason + ")")
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, spareKey, 1)
+    StorageUtil.SetStringValue(None, "PDV.Paarthurnax.SpareReason", reason)
+    ApplyPaarthurnaxSpareReaction("Stuhn", "C", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Stendarr", "C", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Mara", "S", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Kyne", "m", sourceForm)
+    Trace(2, "Paarthurnax spare fork routed (" + reason + ")")
+EndFunction
+
+Function ApplyPaarthurnaxSpareReaction(String deityName, String intensity, Form sourceForm)
+    ApplyDeityReaction(deityName, "+", intensity, "small", "paarthurnax_spare", True, sourceForm)
+EndFunction
+
 Function HandleKhajiitBaanDarBetrayal(String reason)
     if !IsKhajiitOrigin() || !PDV_BaanDar
         return

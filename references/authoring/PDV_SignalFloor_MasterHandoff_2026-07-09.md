@@ -13,8 +13,9 @@ remain valid as detail references):
 - Quest matrix `PDV_QuestReactionMatrix_Full.csv`: **1071 cells, 169 quest keys,
   135 watched quests, 45 deities, 26 faucet acts** (generated from the Tranche
   CSVs via `pdv_quest_tranche_merge.mjs`; Tranche10 holds this session's rows).
-- Likes/dislikes `PDV_DeityLikesDislikes.csv`: **364 rows**, folded into
-  `PDV__ManagerQuest.psc` `LoadRowsForDeity`, **`LIKES_DISLIKES_VERSION = 15`**.
+- Likes/dislikes `PDV_DeityLikesDislikes.csv`: **363 data rows / 364
+  nonblank lines including header**, folded into `PDV__ManagerQuest.psc`
+  `LoadRowsForDeity`, **`LIKES_DISLIKES_VERSION = 15`**.
 - Gates at handoff: matrix compile `--check` PASS; adversary check PASS
   (expected thin-Hist warning only); `pdv_verify` **3546 PASS / 0 FAIL / 1 WARN**
   (pre-existing medallion-glyph fallback); formal-offer PASS; strict
@@ -112,9 +113,19 @@ Verified present in live source - do NOT redo:
   `PDV__ManagerQuest.psc`, armed via `PDV_ActionRouter` location-change hooks,
   keyed off `PDV_FLST_UndeadCryptClearSites`, once-per-site + daily-repeat cap.
   Deity fan-out matches spec: Arkay C, Meridia C, Stendarr S, Tu'whacca S,
-  Azura m, Y'ffre m.
-- **Paarthurnax hook (partial)** - `PDV_PlayerEvents.psc` has a `Paarthurnax`
-  ActorBase property + OnDeath classification routing a kill to Alkosh chaos-aid.
+  Azura m, Y'ffre m. Follow-up readback confirms
+  `PDV_FLST_UndeadCryptClearSites` is populated and wired to
+  `PDV__ManagerQuest`.
+- **Paarthurnax kill/spare fork (Codex follow-up)** - `PDV_PlayerEvents.psc` now
+  detects Paarthurnax before the Khajiit-only organic kill gate and routes a
+  global one-shot KILL fork through `PDV_EventBus.RoutePaarthurnaxKill` to
+  `PDV__ManagerQuest.HandlePaarthurnaxKill`. The event is global, while the
+  actual piety movement still honors quest-reaction stance/reachability rules.
+  Fan-out request: Shor -S, Tsun -S, Kyne -S, Stendarr -C, Stuhn -C, Mara -S.
+  Khajiit still also receive the existing Alkosh chaos-aid consequence. SPARE
+  now latches from `MQ305` stage 200 / load catchup when
+  `Paarthurnax.GetDeadCount() == 0`, routing Stuhn +C, Stendarr +C, Mara +S,
+  and Kyne +m through `PDV_EventBus.RoutePaarthurnaxSpare`.
 - **Manager recompiled** - the two freshness WARNs (pex/SEQ) from earlier are
   cleared; verify is back to 1 WARN.
 
@@ -122,14 +133,12 @@ Verified present in live source - do NOT redo:
 
 ## PART 3 - What REMAINS for Codex (actionable)
 
-### 3A. Crypt-clear FormList population (verify / fill)
+### 3A. Crypt-clear FormList population - CLOSED by Codex follow-up
 
-The crypt-clear signal is code-complete but inert if `PDV_FLST_UndeadCryptClearSites`
-is empty. **Confirm the FormList is populated** with draugr/undead-crypt
-**Location** records (not cells): Bleak Falls Barrow, Ustengrav, Labyrinthian,
-Korvanjund, Movarth's Lair, Ansilvund, Forsaken Cave, Shroud Hearth Barrow,
-etc. Use CK/houseCARL. If empty, fill it - this is the home for "cleared a
-draugr crypt" that replaced the removed Y'ffre quest echoes.
+`dotnet run --project .\tools\pdv-requiem-tail-author\PdvRequiemTailAuthor.csproj -- --author-undead-crypt-clear-sites --check`
+passes. `PDV_FLST_UndeadCryptClearSites` is populated, wired to
+`PDV__ManagerQuest`, and remains the home for "cleared a draugr crypt" that
+replaced the removed Y'ffre quest echoes.
 - MIGRATION NOTE: once live, the existing `slay_undead` QUEST rows on incidental
   dungeon-clear quests (MQ103 Bleak Falls, CW02A/B Jagged Crown, MG07
   Labyrinthian for Arkay/Stendarr/Meridia/Tu'whacca/Azura) now double-cover
@@ -137,24 +146,25 @@ draugr crypt" that replaced the removed Y'ffre quest echoes.
   Dawn, MS14 Laid to Rest) as quest milestones; consider migrating the purely
   incidental dungeon-clear rows to the crypt-clear surface.
 
-### 3B. Paarthurnax spare/kill fork - expand the hook (optional enhancement)
+### 3B. Paarthurnax spare/kill fork - CLOSED by Codex follow-up
 
-The hook exists but only routes a KILL to Alkosh chaos-aid. The full multi-god
-fork Claude spec'd is not wired. If desired, extend the existing Paarthurnax
-`OnDeath` routing (KILL branch) and add a SPARE latch (player reaches the
-Delphine/Esbern ultimatum and leaves him alive / abandons the Blades demand):
-- KILL (kinslaying a repentant Voice-mentor): Shor -S, Tsun -S, Kyne -S,
-  Stendarr -C (kill_the_helpless), Stuhn -C, Mara -S.
-- SPARE: Stuhn +C (mercy_spare), Stendarr +C, Mara +S, Kyne +m.
-This is a felt-quality enhancement, not a blocker.
+KILL is now wired as a global one-shot signal, before the Khajiit-only dragon
+kill gate, and the adversary checker now guards this route. The old Khajiit
+Alkosh chaos-aid consequence is preserved for Khajiit origin players.
 
-### 3C. Version-pin review (Claude touched toolchain - please review)
+SPARE is wired for V1 without relying on `FreeformSkyHavenTempleA`: when the
+already-watched `MQ305` reaches stage 200, or when a save loads with `MQ305`
+stage 200 already done, `PDV_PlayerEvents` checks `Paarthurnax.GetDeadCount()`.
+If the kill latch has not fired and the dead count is still zero, it routes a
+one-shot spare/mercy signal to Stuhn, Stendarr, Mara, and Kyne.
+
+### 3C. Version-pin review - CLOSED by Codex follow-up
 
 Claude synced two version-pin literals from 14 -> 15 when bumping
 `LIKES_DISLIKES_VERSION`: `EXPECTED_LIKES_DISLIKES_VERSION` in
 `tools/pdv_verify.mjs` and the assert in
-`tools/pdv_deity_signal_remap_adversary_check.mjs`. These are Codex-owned
-toolchain files (CLAUDE.md rule 4) - please confirm the sync is acceptable.
+`tools/pdv_deity_signal_remap_adversary_check.mjs`. Codex confirmed both remain
+at 15, compiled the touched scripts, and reran the verifier/adversary gates.
 
 ### 3D. Plant-consumption runtime proof
 
@@ -182,6 +192,8 @@ Story location triggers - enter via load doors. Minimum representative set:
 | 9 | Likes/dislikes v15 | new save; vampire-feed (366) + non-combat animal kill (303) | Arkay/Stendarr-class losses (366), Kyne/Kynareth losses (303); log "version 15 loaded"; daily caps hold |
 | 10 | Green Way behavioral | visit a Bosmer sacred site; consume a plant food | Y'ffre site gain; Y'ffre plant-consumption loss |
 | 11 | Season Unending | `setstage MQ302 300` | Mara/Stendarr + Akatosh + Stuhn gains |
+| 12 | Paarthurnax kill fork | kill Paarthurnax on a race with reachable listed gods (Nord recommended); repeat after save/load if possible | Reachable Shor/Tsun/Kyne/Mara/Stendarr/Stuhn losses fire once through stance/reachability; Khajiit also receives the existing Alkosh chaos-aid consequence; repeat is blocked |
+| 13 | Paarthurnax spare fork | with Paarthurnax alive and neither latch set, complete `MQ305` stage 200 or load a save where that stage is already done | Reachable Stuhn/Stendarr/Mara/Kyne gains fire once through stance/reachability; if the kill latch already fired, spare stays silent |
 
 Per smoke: confirm Book of Days records it, Survey/status lane correct, toast/
 Prisma coherent, no duplicate/stale effect stack after save/load, wrong-origin
@@ -192,12 +204,12 @@ s200, T03 s105, the HearthFires adoption stages.
 
 ## PART 4 - Session commit inventory (main branch)
 
-`6147991` tranche10 signal-floor + LD v15 · `873141b` cowardice-god assassination
-dislikes · `0f7db28` low-deity deep-dive + consolidated handoff · `bc89547`
-Y'ffre bone-law echoes (later removed) · `06dc22a` event-scale magnitude / echo
-retired · `f872a1e` Y'ffre necromancy + bardic · `1e1cb60` readback-refresh rows ·
-`d0e5141` MS01/MS02/C05 second look · `29678e0` main-quest progression + doctrine ·
-`97a9bf7` MQ205 phantom-deity fix · `874e4bc` main-quest per-deity review + Dagon.
+`6147991` tranche10 signal-floor + LD v15; `873141b` cowardice-god assassination
+dislikes; `0f7db28` low-deity deep-dive + consolidated handoff; `bc89547`
+Y'ffre bone-law echoes (later removed); `06dc22a` event-scale magnitude / echo
+retired; `f872a1e` Y'ffre necromancy + bardic; `1e1cb60` readback-refresh rows;
+`d0e5141` MS01/MS02/C05 second look; `29678e0` main-quest progression + doctrine;
+`97a9bf7` MQ205 phantom-deity fix; `874e4bc` main-quest per-deity review + Dagon.
 (Codex interleaved: `ab85c4d`, `6e8aa971` Bosmer/Green Pact, `3c0e0dd6` crypt-clear.)
 
 Files authored/owned by Claude this session (all data/docs, no toolchain logic):

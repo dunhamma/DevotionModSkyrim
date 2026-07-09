@@ -91,6 +91,7 @@ FormList Property PDV_FLST_RajhinNotableTargets Auto
 Keyword Property ActorTypeDragon Auto
 ActorBase Property Paarthurnax Auto
 
+Int Property MQ305_FORM_ID = 0x00046EF2 AutoReadOnly
 String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
 String Property QUEST_REACTION_MATRIX_FILE_ARR = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR" AutoReadOnly
 
@@ -146,6 +147,7 @@ Event OnPlayerLoadGame()
     RegisterForPlayerEvents()
     QueueOriginInitialization()
     RouteCurseRefresh("load")
+    RoutePaarthurnaxSpareLoadCheck()
     Trace(2, "Player load observed; sleep hooks refreshed.")
 EndEvent
 
@@ -303,6 +305,7 @@ EndEvent
 Event OnQuestStageChange(Quest akQuest, Int aiNewStage)
     RouteP2ImmersiveQuestStage(akQuest, aiNewStage)
     RouteQuestReactionStage(akQuest, aiNewStage)
+    RoutePaarthurnaxSpareQuestStage(akQuest, aiNewStage)
 EndEvent
 
 Event OnPDVConcordatCompliance(String eventName, String strArg, Float numArg, Form sender)
@@ -661,12 +664,86 @@ Event OnActorKilled(Actor akVictim, Actor akKiller)
         return
     endIf
 
-    if GetOriginRaceValue() != 6
+    Int originRace = GetOriginRaceValue()
+
+    if IsPaarthurnaxActor(akVictim)
+        if !PDV_EventBusService
+            Trace(1, "Paarthurnax kill skipped: PDV_EventBusService not assigned.")
+            return
+        endIf
+
+        PDV_EventBusService.RoutePaarthurnaxKill(akVictim as Form)
+        if originRace == 6
+            PDV_EventBusService.RouteKhajiitAlkoshChaosAid()
+        endIf
+        Trace(1, "Paarthurnax slain; global kill fork routed.")
+        return
+    endIf
+
+    if originRace != 6
+        return
+    endIf
+
+    if !PDV_EventBusService
+        Trace(1, "Khajiit organic kill skipped: PDV_EventBusService not assigned.")
         return
     endIf
 
     HandleKhajiitOrganicKill(akVictim, playerRef)
 EndEvent
+
+Bool Function IsPaarthurnaxActor(Actor victimActor)
+    if !victimActor || !ActorTypeDragon || !victimActor.HasKeyword(ActorTypeDragon) || !Paarthurnax
+        return False
+    endIf
+
+    ActorBase victimBase = victimActor.GetActorBase()
+    ActorBase victimLeveledBase = victimActor.GetLeveledActorBase()
+    return victimBase == Paarthurnax || victimLeveledBase == Paarthurnax
+EndFunction
+
+Function RoutePaarthurnaxSpareQuestStage(Quest sourceQuest, Int stageValue)
+    if !sourceQuest || stageValue != 200 || sourceQuest.GetFormID() != MQ305_FORM_ID
+        return
+    endIf
+
+    RoutePaarthurnaxSpareIfAlive(sourceQuest as Form, "mq305_stage_200")
+EndFunction
+
+Function RoutePaarthurnaxSpareLoadCheck()
+    if StorageUtil.GetIntValue(None, "PDV.Paarthurnax.SpareSeen", 0) == 1 || StorageUtil.GetIntValue(None, "PDV.Paarthurnax.KillSeen", 0) == 1
+        return
+    endIf
+
+    Quest mq305 = Game.GetFormFromFile(MQ305_FORM_ID, "Skyrim.esm") as Quest
+    if mq305 && mq305.GetStageDone(200)
+        RoutePaarthurnaxSpareIfAlive(mq305 as Form, "load_mq305_complete")
+    endIf
+EndFunction
+
+Function RoutePaarthurnaxSpareIfAlive(Form sourceForm, String reason)
+    if !PDV_EventBusService
+        Trace(1, "Paarthurnax spare skipped: PDV_EventBusService not assigned.")
+        return
+    endIf
+
+    if !Paarthurnax
+        Trace(1, "Paarthurnax spare skipped: Paarthurnax ActorBase not assigned.")
+        return
+    endIf
+
+    if StorageUtil.GetIntValue(None, "PDV.Paarthurnax.SpareSeen", 0) == 1 || StorageUtil.GetIntValue(None, "PDV.Paarthurnax.KillSeen", 0) == 1
+        return
+    endIf
+
+    if Paarthurnax.GetDeadCount() > 0
+        Trace(2, "Paarthurnax spare skipped: Paarthurnax is dead (" + reason + ").")
+        return
+    endIf
+
+    PDV_EventBusService.RoutePaarthurnaxSpare(sourceForm)
+    Trace(1, "Paarthurnax alive at main-quest closeout; spare fork routed (" + reason + ").")
+EndFunction
 
 Function HandleKhajiitOrganicKill(Actor victimActor, Actor playerRef)
     ; Dragon classification: Paarthurnax -> chaos-aid negative; named-dragon list ->

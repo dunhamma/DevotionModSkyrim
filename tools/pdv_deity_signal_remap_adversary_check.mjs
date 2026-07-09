@@ -21,6 +21,8 @@ const files = {
   readback: path.join(ROOT, "references", "vanilla-gameplay", "extracted", "vanilla-quest-stage-readback.csv"),
   medallion: path.join(ROOT, "references", "authoring", "PDV_MedallionRoster.manifest.json"),
   prismaApp: path.join(ROOT, "native", "DevotionPrismaBridge", "mod", "PrismaUI", "views", "Devotion", "app.js"),
+  playerEvents: path.join(ROOT, "live-source", "Scripts", "Source", "PDV_PlayerEvents.psc"),
+  eventBus: path.join(ROOT, "live-source", "Scripts", "Source", "PDV_EventBus.psc"),
 };
 
 const failures = [];
@@ -80,6 +82,8 @@ function functionBody(source, functionName) {
 }
 
 const manager = read(files.manager);
+const playerEvents = read(files.playerEvents);
+const eventBus = read(files.eventBus);
 const medallion = read(files.medallion);
 const prismaApp = read(files.prismaApp);
 const trancheText = read(files.tranche);
@@ -96,6 +100,19 @@ assert("shrine cap helper exists", manager.includes("Bool Function ConsumeShrine
 assert("shrine cap is called", manager.includes("if !ConsumeShrinePrayerCredit(deity, sourceId)"), "AwardShrinePrayerToDeityName does not consume the per-deity daily cap.");
 assert("shrine cap key is deity scoped", manager.includes("\"PDV.Signal.ShrinePrayer.\" + deityKey"), "Shrine cap must key by resolved deity, not only by shrine/source.");
 assert("likes dislikes version bumped", /Int Property LIKES_DISLIKES_VERSION = 15 AutoReadOnly/.test(manager), "LIKES_DISLIKES_VERSION should be 15 for the signal-floor rows.");
+assert("paarthurnax kill helper exists", playerEvents.includes("Bool Function IsPaarthurnaxActor") && playerEvents.includes("RoutePaarthurnaxKill(akVictim as Form)"), "Paarthurnax kill must be detected before Khajiit-only organic kill routing.");
+assert("paarthurnax kill eventbus route exists", eventBus.includes("Function RoutePaarthurnaxKill(Form sourceForm)") && eventBus.includes("HandlePaarthurnaxKill(sourceForm, \"eventbus_paarthurnax_kill\")"), "EventBus must expose the global Paarthurnax kill route.");
+assert("paarthurnax kill manager route exists", manager.includes("Function HandlePaarthurnaxKill(Form sourceForm, String reason)") && manager.includes("\"PDV.Paarthurnax.KillSeen\""), "Manager must apply the one-shot Paarthurnax kill fork.");
+for (const deity of ["Shor", "Tsun", "Kyne", "Stendarr", "Stuhn", "Mara"]) {
+  assert(`paarthurnax kill fanout ${deity}`, manager.includes(`ApplyPaarthurnaxKillReaction("${deity}",`), `Missing Paarthurnax kill reaction for ${deity}.`);
+}
+assert("paarthurnax spare mq305 latch exists", playerEvents.includes("Function RoutePaarthurnaxSpareQuestStage") && playerEvents.includes("MQ305_FORM_ID") && playerEvents.includes("Paarthurnax.GetDeadCount() > 0"), "Paarthurnax spare must latch off MQ305 completion with Paarthurnax still alive.");
+assert("paarthurnax spare load catchup exists", playerEvents.includes("Function RoutePaarthurnaxSpareLoadCheck") && playerEvents.includes("load_mq305_complete"), "Existing saves with MQ305 complete and Paarthurnax alive need a load-time spare catchup.");
+assert("paarthurnax spare eventbus route exists", eventBus.includes("Function RoutePaarthurnaxSpare(Form sourceForm)") && eventBus.includes("HandlePaarthurnaxSpare(sourceForm, \"eventbus_paarthurnax_spare\")"), "EventBus must expose the global Paarthurnax spare route.");
+assert("paarthurnax spare manager route exists", manager.includes("Function HandlePaarthurnaxSpare(Form sourceForm, String reason)") && manager.includes("\"PDV.Paarthurnax.SpareSeen\"") && manager.includes("\"PDV.Paarthurnax.KillSeen\""), "Manager must apply the one-shot Paarthurnax spare fork and suppress it after kill.");
+for (const deity of ["Stuhn", "Stendarr", "Mara", "Kyne"]) {
+  assert(`paarthurnax spare fanout ${deity}`, manager.includes(`ApplyPaarthurnaxSpareReaction("${deity}",`), `Missing Paarthurnax spare reaction for ${deity}.`);
+}
 
 const syncBretonRewards = functionBody(manager, "SyncBretonRewards");
 assert("breton hidden art reward uses magnus", syncBretonRewards.includes("BRETON_TRADITION_HIDDEN_ART") && syncBretonRewards.includes("PDV_Magnus"), "Hidden Art reward family should read Magnus.");

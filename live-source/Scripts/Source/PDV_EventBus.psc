@@ -364,6 +364,24 @@ Function RouteKhajiitAlkoshChaosAid()
     Trace(2, "RouteKhajiitAlkoshChaosAid complete")
 EndFunction
 
+Function RoutePaarthurnaxKill(Form sourceForm)
+    if !PDV_Manager
+        Trace(1, "RoutePaarthurnaxKill skipped: PDV_Manager not assigned.")
+        return
+    endIf
+    PDV_Manager.HandlePaarthurnaxKill(sourceForm, "eventbus_paarthurnax_kill")
+    Trace(2, "RoutePaarthurnaxKill complete")
+EndFunction
+
+Function RoutePaarthurnaxSpare(Form sourceForm)
+    if !PDV_Manager
+        Trace(1, "RoutePaarthurnaxSpare skipped: PDV_Manager not assigned.")
+        return
+    endIf
+    PDV_Manager.HandlePaarthurnaxSpare(sourceForm, "eventbus_paarthurnax_spare")
+    Trace(2, "RoutePaarthurnaxSpare complete")
+EndFunction
+
 Function RouteKhajiitBaanDarBetrayal()
     if !PDV_Manager
         Trace(1, "RouteKhajiitBaanDarBetrayal skipped: PDV_Manager not assigned.")
