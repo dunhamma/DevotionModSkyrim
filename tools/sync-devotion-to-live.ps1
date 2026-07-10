@@ -3,7 +3,7 @@
     Copy the repo's tracked Devotion mod files into the live Wabbajack/MO2 mod folder.
 
 .DESCRIPTION
-    This repo holds editable copies of the PrismaUI view files and the PDV__ManagerQuest
+    This repo holds editable copies of the PrismaUI view files and core Devotion
     Papyrus source, but the game loads them from the Wabbajack mod folder, which is not in
     the repo. After git pull, run this script to push the repo copies to the live path in
     one step.
@@ -51,6 +51,7 @@ $Map = @(
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\fonts\IMFellEnglish-Regular.woff2"; Dst = "PrismaUI\views\Devotion\fonts\IMFellEnglish-Regular.woff2" },
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\fonts\OFL-IMFellEnglish.txt"; Dst = "PrismaUI\views\Devotion\fonts\OFL-IMFellEnglish.txt" },
     @{ Src = "live-source\Scripts\Source\PDV__ManagerQuest.psc";             Dst = "Scripts\Source\PDV__ManagerQuest.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_MCM.psc";                       Dst = "Scripts\Source\PDV_MCM.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_ActionRouter.psc";              Dst = "Scripts\Source\PDV_ActionRouter.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_EventBus.psc";                  Dst = "Scripts\Source\PDV_EventBus.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_PlayerEvents.psc";              Dst = "Scripts\Source\PDV_PlayerEvents.psc" },

@@ -100,6 +100,10 @@
 | `tools/pdv_quest_matrix_compile.mjs` | Quest-reaction matrix compiler that emits live PapyrusUtil JSON from the frozen matrix/faucet/readback/stance inputs |
 | `tools/pdv_quest_tranche_merge.mjs` | Source-tranche merger for `PDV_QuestReactionMatrix_Full.csv`; edit tranches, not Full |
 | `tools/pdv_deity_signal_remap_adversary_check.mjs` | Static guard for the 2026-07 deity signal remap: shrine cap, Syrabane display, offer eligibility, likes/dislikes versioning, quest rows, and exclusions |
+| `tools/pdv_signal_floor_smoke_gate.mjs` | Backend/static smoke gate for the 2026-07-09 signal-floor handoff; checks scenario manifest, source CSVs, live PapyrusUtil JSON, manager/MCM harness tokens, and optional Papyrus log markers, then writes `PDV_SignalFloorSmokeLedger.{md,json}` |
+| `references/authoring/PDV_SignalFloorSmokeScenarios_2026-07-09.json` | Scenario manifest for the signal-floor smoke set: representative quest-stage fan-out, LD v15, Green Way, crypt-clear, Paarthurnax kill/spare, and borderline prove-or-drop rows |
+| `references/authoring/PDV_SignalFloorSmokeLedger.md` | Generated signal-floor smoke result ledger; backend PASS can leave runtime marker/manual slots OPEN without promoting the slice to runtime proof |
+| `references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md` | Single co-testing runbook for the remaining 1.0 smoke closeout; use it for machine preflight, signal-floor smoke cards, exact evidence capture, stop conditions, and remaining 1.0 evidence sinks |
 | `native/DevotionPrismaBridge/` | C++ SKSE/Prisma bridge scaffold plus mirrored runtime Prisma panel assets |
 | `references/PDV_Anvil_MO2_MCP_Intake.md` | Codex-facing intake for the Anvil MO2 MCP plugin and optional tool status |
 
@@ -592,7 +596,7 @@ Phase 10 Dunmer substrate proof-graduation is closed as of 2026-05-24. The count
 
 `tools\pdv_quest_matrix_compile.mjs` compiles the frozen quest-reaction matrix, Part D faucet CSV, stance matrices, quest-stage readback, and the narrow manual quest FormID fallback into `D:\Wabbajack\modlists\Anvil\mods\Devotion\SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionMatrix.json`. Run `node .\tools\pdv_quest_matrix_compile.mjs --check` before writing live JSON, then compile `PDV_EventBus`, `PDV_PlayerEvents`, and `PDV__ManagerQuest` after receiver/manager source edits.
 
-Current remap note (2026-07-09): source tranches plus the signal-floor master closeout compile to 1071 cells / 169 quest keys / 135 watched quests / 45 deity names. Use `node .\tools\pdv_quest_tranche_merge.mjs`, then `node .\tools\pdv_quest_matrix_compile.mjs --check --json`, then the formal-offer/remap/signal-floor gates before claiming source/readback readiness. Green source/readback gates still do not prove runtime-route, Active Effects, Book of Days, Survey/status, Prisma/notification, save/load stack behavior, or new skooma/staff-fire/Paarthurnax/crypt-clear behavior; use `references\authoring\PDV_SignalFloor_MasterHandoff_2026-07-09.md` plus the relevant smoke runbook for that.
+Current remap note (2026-07-09; co-test runbook added 2026-07-10): source tranches plus the signal-floor master closeout compile to 1071 cells / 169 quest keys / 135 watched quests / 45 deity names / 26 faucet acts. Use `node .\tools\pdv_quest_tranche_merge.mjs`, then `node .\tools\pdv_quest_matrix_compile.mjs --check --json`, then the formal-offer/remap/signal-floor gates before claiming source/readback readiness. For the representative smoke set, run `node .\tools\pdv_signal_floor_smoke_gate.mjs --check --json`; use `--write-ledger` to regenerate `PDV_SignalFloorSmokeLedger.{md,json}` after source, runtime JSON, or Papyrus log evidence changes. The Debug: State & Rewards MCM page has a `Signal-floor smoke` controlled route selector backed by `PDV__ManagerQuest.DebugRunSignalFloorSmokeScenario`, but those routes remain backend/log convenience only. Green source/readback gates still do not prove runtime-route, Active Effects, Book of Days, Survey/status, Prisma/notification, save/load stack behavior, or new skooma/staff-fire/Paarthurnax/crypt-clear behavior; use `references\authoring\PDV_SignalFloor_MasterHandoff_2026-07-09.md` for authority and `references\authoring\PDV_1_0_CoTest_Runbook_2026-07-10.md` for live tester/Codex steps.
 
 `tools\pdv_skyrim_refs_bridge.mjs` is a read-only lookup bridge into the neutral `dunhamma/SkyrimGamePlayReferences` repo. Set `SKYRIM_GAMEPLAY_REFERENCES_ROOT` when the clone is not under `scratch\SkyrimGamePlayReferences`. Use it to list or search broad reference tables such as reverse keywords, faction relationships, condition-bearing effects, cells, containers/furniture, enchantments, leveled lists, FormLists, shouts, and worldspaces. It does not copy data into PDV or replace local xEdit/CK verification. Bridge rules live in `references\vanilla-gameplay\PDV_SkyrimGamePlayReferences_Bridge.md`.
 
@@ -686,6 +690,9 @@ Individual tools (all read-only except their own generated ledgers):
 - `node tools/pdv_signal_e2e_gate.mjs` -> `PDV_SignalE2EGateLedger.{md,csv}` (P2 surface
   wiring + the **curated-signal parity** check; exit 1 on RED or a parity gap)
 - `node tools/pdv_signal_floor_audit.mjs` -> `PDV_SignalFloorLedger.{md,csv}` (per-path floor)
+- `node tools/pdv_signal_floor_smoke_gate.mjs --write-ledger` ->
+  `PDV_SignalFloorSmokeLedger.{md,json}` (representative signal-floor smoke matrix; backend
+  PASS may still leave runtime/manual slots OPEN)
 - `node tools/pdv_spine_stack_score.mjs` -> `PDV_SpineStackScoreLedger.{md,csv}` (ancestral-spine
   parity, Argonian=100%, <70%=target; reads `PDV_SpineStackRegistry.csv`)
 - `node tools/pdv_specced_minus_audit.mjs` -> `PDV_SpeccedMinusLedger.{md,csv}` (minus signals

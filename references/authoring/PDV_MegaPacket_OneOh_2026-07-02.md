@@ -1,9 +1,10 @@
 # PDV 1.0 Test Packet -- gate-driven close-out (rewritten 2026-07-07)
 
-Status: machine gates PASS (10/18); the 8 remaining criteria are play + external.
-Supersedes the 2026-07-02 A-F mega-packet structure (Sections A quest-expansion,
-B closed races, C1 Prisma, E1 day-to-day all PASSED in Sitting 1 -- kept only as
-regression recipes at the bottom).
+Status: orchestrator only; regenerate the live gate before every sitting. A
+2026-07-10 read-mode run was RED because source/deployed drift voided older
+machine evidence. Supersedes the 2026-07-02 A-F mega-packet structure (Sections
+A quest-expansion, B closed races, C1 Prisma, E1 day-to-day all PASSED in
+Sitting 1 -- kept only as regression recipes at the bottom).
 
 **What this is.** The single packet that walks the remaining in-game and external
 proof needed to close 1.0. It is an ORCHESTRATOR: it owns the order, the save
@@ -13,6 +14,8 @@ generated burndown, and on any conflict the burndown wins:
 - Gate authority: `references/authoring/PDV_1_0_EndStateContract.json`
 - Live status: `node .\tools\pdv_1_0_endstate_gate.mjs` ->
   `references/authoring/PDV_1_0_EndStateBurndown.md`
+- Co-testing operator sheet:
+  `references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md`
 
 **How proof is recorded.** Each proof writes to a structured ledger (the
 evidence-sink map, Section 6). Statuses are `pending` / `evidence-recorded` /
@@ -25,11 +28,14 @@ derives PASS; you never hand-write a verdict.
 
 ## 1. Current gate state (regenerate before every sitting)
 
-10 PASS (all machine): race rubric, 16 Princes, beta-strict audit, framework
-verifier, content verifier, integrity harness, Experience Mode build, pacing
-sim, felt-effect machine trace, dislike-consequence build.
+The generated burndown wins over this prose. Historical re-green shape after the
+2026-07-09 `--run` was 10/18 machine or evidence gates closed, with 8 play or
+external RED criteria below. A 2026-07-10 read-mode run reported **1 PASS / 1
+STALE / 16 RED** because source/deployed drift voided older machine evidence.
+Recertify with `node .\tools\pdv_1_0_endstate_gate.mjs --run` before treating
+new in-game observations as 1.0 evidence.
 
-8 RED -- the entire remaining 1.0 surface, all play or external:
+The expected post-recertification open surface remains the play/external gates:
 
 | Criterion | What closes it | Evidence sink |
 |---|---|---|
@@ -72,6 +78,12 @@ from the menu (no in-world transgressions needed).
 machine preflight. The remap's compile/readback gates make it smoke-ready only;
 they do not close runtime-route proof, manual visual proof, or player-guide
 claims.
+
+2026-07-10 co-test addendum: for live tester/Codex sessions, start from
+`references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md`. It consolidates
+the signal-floor smoke cards, exact evidence capture template, stop conditions,
+and the 1.0 evidence-sink map without replacing this packet or the generated
+burndown.
 
 Shared per-sitting setup (unchanged from the proven flow):
 - Disposable **new save** (or main-menu `coc qasmoke`); MO2 Anvil: disable

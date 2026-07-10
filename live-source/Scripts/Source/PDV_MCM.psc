@@ -78,6 +78,8 @@ Int _oidShowPietyMap = -1
 Int _oidShowStructuralMap = -1
 Int _oidRunScaffoldApiSmoke = -1
 Int _oidReloadQuestMatrix = -1
+Int _oidSignalFloorScenario = -1
+Int _oidSignalFloorRun = -1
 Int _oidDiegeticD1 = -1
 Int _oidShowPatternSummary = -1
 Int _oidConcordatDefiance = -1
@@ -167,6 +169,7 @@ Int _oidArgonianVoid = -1
 
 Int _selectedListIndex = 0
 Int _selectedDaedricPathIndex = 0
+Int _selectedSignalFloorScenario = 0
 Float _pendingPiety = 10.0
 Float _pendingPietyToday = 1.0
 Int _pendingSignalType = 103
@@ -325,6 +328,10 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Exercises one safe set/read/reset path on each scaffold family and writes trace output.")
     elseIf a_option == _oidReloadQuestMatrix
         SetInfoText("Forces a fresh disk re-read of the quest-reaction matrix JSON (core + ARR channel) into memory. Use after regenerating the matrix mid-session so already-watched quests pick up newly-authored cells. Brand-new watched quests still need a game reload.")
+    elseIf a_option == _oidSignalFloorScenario
+        SetInfoText("Cycles the controlled signal-floor smoke scenario. These routes are backend proof only; organic smoke still proves runtime route and display behavior.")
+    elseIf a_option == _oidSignalFloorRun
+        SetInfoText("Runs the selected signal-floor backend route through the manager debug harness. Record runtime and manual proof separately in the smoke ledger.")
     elseIf a_option == _oidDiegeticD1
         SetInfoText("Runtime toggle for the D1 diegetic surfaces (screen, sound, music). Default off; flip on to preview and tune on the current save, then bake D1Enabled into the ESP to ship.")
     elseIf a_option == _oidShowPatternSummary
@@ -675,6 +682,17 @@ Function OnOptionSelect(Int a_option)
         if PDV_Manager
             ShowMessage(PDV_Manager.DebugReloadQuestMatrix(), False, "$OK", "")
         endIf
+        return
+    endIf
+
+    if a_option == _oidSignalFloorScenario
+        CycleSignalFloorScenario()
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidSignalFloorRun
+        RunSignalFloorSmokeScenario()
         return
     endIf
 
@@ -1694,6 +1712,11 @@ Function BuildStatePage()
     _oidShowStructuralMap = AddTextOption("Show structural map", "Message", OPTION_FLAG_NONE)
     _oidRunScaffoldApiSmoke = AddTextOption("Run scaffold smoke", "API set/read/reset", OPTION_FLAG_NONE)
     _oidReloadQuestMatrix = AddTextOption("Reload quest matrix", "Re-read JSON", OPTION_FLAG_NONE)
+
+    AddEmptyOption()
+    AddHeaderOption("Signal-floor smoke", OPTION_FLAG_NONE)
+    _oidSignalFloorScenario = AddTextOption("Selected smoke", GetSignalFloorScenarioLabel(), OPTION_FLAG_NONE)
+    _oidSignalFloorRun = AddTextOption("Run signal-floor smoke", "Controlled route", OPTION_FLAG_NONE)
     _oidDiegeticD1 = AddTextOption("Diegetic surfaces (D1)", DiegeticD1Label(), OPTION_FLAG_NONE)
 
     ; --- Right column: race focus/state setters + favor ---
@@ -1843,6 +1866,38 @@ Function CycleSelectedDaedricPath()
     _selectedDaedricPathIndex += 1
     if _selectedDaedricPathIndex >= pathCount
         _selectedDaedricPathIndex = 0
+    endIf
+EndFunction
+
+Function CycleSignalFloorScenario()
+    Int count = 1
+    if PDV_Manager
+        count = PDV_Manager.DebugGetSignalFloorSmokeScenarioCount() + 1
+    endIf
+
+    _selectedSignalFloorScenario += 1
+    if _selectedSignalFloorScenario >= count
+        _selectedSignalFloorScenario = 0
+    endIf
+EndFunction
+
+String Function GetSignalFloorScenarioLabel()
+    if PDV_Manager
+        return PDV_Manager.DebugGetSignalFloorSmokeLabel(_selectedSignalFloorScenario)
+    endIf
+    return "Unavailable"
+EndFunction
+
+Function RunSignalFloorSmokeScenario()
+    if !EnsureManagerBinding("signal_floor_smoke")
+        ShowMessage("Devotion is still starting up.", False, "$OK", "")
+        return
+    endIf
+
+    String label = PDV_Manager.DebugGetSignalFloorSmokeLabel(_selectedSignalFloorScenario)
+    if ShowMessage("Run controlled signal-floor smoke scenario: " + label + "? This is backend proof only; organic route and display checks remain separate.", True, "$Yes", "$No")
+        ShowMessage(PDV_Manager.DebugRunSignalFloorSmokeScenario(_selectedSignalFloorScenario), False, "$OK", "")
+        ForcePageReset()
     endIf
 EndFunction
 

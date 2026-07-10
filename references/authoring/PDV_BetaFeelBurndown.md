@@ -41,6 +41,14 @@ Ship truth now lives in `PDV_1_0_EndStateContract.json` + the generated
 document remains the narrative beta-feel burn; where the two disagree, the
 contract gate wins.
 
+2026-07-10 co-test note: use
+`references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md` as the single
+operator sheet during live tester/Codex sessions. A current read-mode gate run
+reported **1 PASS / 1 STALE / 16 RED** because source/deployed drift voided
+older machine proofs. Re-green with `pdv_1_0_endstate_gate.mjs --run` before
+spending live play time as 1.0 evidence; then record results in the structured
+ledgers named by the generated burndown.
+
 ### Contract-era snapshot (as of 2026-07-09, post `--run` re-green)
 
 Gate rollup after `node .\tools\pdv_1_0_endstate_gate.mjs --run` with the Anvil
@@ -135,7 +143,7 @@ without reopening any closed race packet.
 
 | Item | Proof boundary | Notes |
 | --- | --- | --- |
-| Quest-matrix expansion (40-50 quests/deity) | **In-game proven for pre-remap 832-cell packet; remap rows source/readback only** | 832 matrix cells / 118 keys / 90 watched quests passed Section A across all 8 setstage-able origins incl. the Akatosh/Xarxes wheel; current source/readback matrix is 884 cells / 90 watched quests / 45 deity names after T9, but the new remap rows need `PDV_DeitySignalRemap_InGameSmoke_Runbook.md` before they count as runtime/display proof. |
+| Quest-matrix/signal-floor expansion | **Backend/static smoke ready; runtime/manual smoke pending** | The pre-remap 832-cell packet is still the in-game-proven baseline for Section A. The current source/live-runtime matrix is now 1071 cells / 169 quest keys / 135 watched quests / 45 deity names / 26 faucet acts, with LD v15 folded into compiled manager source. `PDV_SignalFloorSmokeLedger.md` is backend PASS at 142 PASS / 12 runtime OPEN, and Debug MCM now exposes controlled `Signal-floor smoke` routes for the representative set. These controlled routes are not organic proof; Book of Days, Survey/status, Prisma/toast, duplicate suppression, wrong-origin silence, save/load, and manual feel remain open until in-game smoke records them. |
 | `EVT_STEAL_ITEM` (362) SM wiring | **In-game proven both sentiment sides (Sitting 1)** | Dunmer like-side (Mephala +0.5/Boethiah +0.25) and Imperial dislike-side (Zenithar -1.0) both fired; retires the last 362 pending flag |
 | Foreign-award reachability gate | **In-game proven both directions (Sitting 1)** | Native pantheons score full; off-roster `FOREIGN`/`TOLERATED` gods skip-trace with no piety / no Ledger row (Xarxes full + Akatosh skip under Altmer, inverse under Imperial); reduced `0.4x` applies only to roster-listed tolerated/foreign + Daedric-path faces |
 | Dunmer ancestral urn rebuild | In-game proven (Dunmer packet) | Rebuilt as usable MISC item (click-to-pray via OnEquipped), fixing the book-menu CTD; Remiros HD assets bundled self-contained |

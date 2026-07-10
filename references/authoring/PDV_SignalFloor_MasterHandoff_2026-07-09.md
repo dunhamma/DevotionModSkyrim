@@ -20,6 +20,20 @@ remain valid as detail references):
   (expected thin-Hist warning only); `pdv_verify` **3546 PASS / 0 FAIL / 1 WARN**
   (pre-existing medallion-glyph fallback); formal-offer PASS; strict
   dislike-consequence audit PASS.
+- Codex backend smoke closeout (2026-07-09 AEST): `tools/pdv_signal_floor_smoke_gate.mjs`
+  plus `PDV_SignalFloorSmokeScenarios_2026-07-09.json` now checks the
+  representative smoke set against source CSVs, live PapyrusUtil JSON, live
+  manager/MCM source, and optional Papyrus log markers. Current ledger:
+  **PASS** backend/static, **142 PASS / 12 runtime OPEN** in
+  `PDV_SignalFloorSmokeLedger.md`; runtime/manual proof remains open.
+- Debug MCM closeout: `PDV_MCM.psc` now exposes `Signal-floor smoke` on the
+  Debug: State & Rewards page; `PDV__ManagerQuest.psc` owns the controlled
+  backend route harness. `PDV__ManagerQuest` and `PDV_MCM` compiled live with
+  **0 errors / 0 warnings**.
+- Co-test runbook: use
+  `references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md` for the live
+  tester/Codex sequence, evidence capture template, stop conditions, and the
+  bridge from these smoke cases into the remaining 1.0 gate evidence sinks.
 - Live runtime JSON regenerated at
   `D:\Wabbajack\modlists\Anvil\mods\Devotion\SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionMatrix.json`.
 
@@ -199,6 +213,51 @@ Per smoke: confirm Book of Days records it, Survey/status lane correct, toast/
 Prisma coherent, no duplicate/stale effect stack after save/load, wrong-origin
 routes silent. Borderline rows to prove-or-drop: DA14Start s70, DLC2RRFavor01
 s200, T03 s105, the HearthFires adoption stages.
+
+### 3F. Backend smoke tooling - CLOSED by Codex follow-up
+
+The test plan now has a durable backend gate and result ledger:
+
+- Manifest: `references/authoring/PDV_SignalFloorSmokeScenarios_2026-07-09.json`
+- Gate/ledger tool: `node .\tools\pdv_signal_floor_smoke_gate.mjs --check --json`
+  and `node .\tools\pdv_signal_floor_smoke_gate.mjs --write-ledger`
+- Generated evidence: `references/authoring/PDV_SignalFloorSmokeLedger.md` and
+  `.json`
+- Co-test operator sheet:
+  `references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md`
+
+Current generated result is backend/static **PASS** with 12 runtime marker slots
+still **OPEN** by design. Use `--strict-runtime` only after the in-game pass is
+expected to have filled those Papyrus log markers.
+
+The Debug MCM now has a controlled `Signal-floor smoke` selector/run button for
+the 12 non-borderline scenarios. These debug routes are a convenience for
+backend route observation and log collection; they do **not** replace organic
+proof for quest-stage firing, plant consumption, crypt entry/clear, Paarthurnax
+kill/spare, Book of Days display, Survey/status clarity, duplicate suppression,
+wrong-origin silence, save/load, or manual feel.
+
+Closeout commands run:
+
+```powershell
+node .\tools\pdv_compile.mjs --script PDV__ManagerQuest --script PDV_MCM
+node .\tools\pdv_ascii_guard.mjs
+node .\tools\pdv_quest_matrix_compile.mjs --check --papyrusutil-check
+node .\tools\pdv_deity_signal_remap_adversary_check.mjs
+node .\tools\pdv_signal_floor_smoke_gate.mjs --check --json
+node .\tools\pdv_signal_floor_smoke_gate.mjs --write-ledger
+node .\tools\pdv_signal_e2e_gate.mjs
+node .\tools\pdv_signal_floor_audit.mjs
+node .\tools\pdv_prisma_ui_audit.mjs
+node .\tools\pdv_verify.mjs --json
+```
+
+Observed results: compile 0/0 for both touched scripts; ASCII clean; matrix
+compile `1071 cells / 169 keys / 135 watched quests / 26 faucet acts`; remap
+adversary PASS with the expected thin-Hist design warning; smoke gate PASS
+backend with 12 runtime OPEN; signal e2e 39/39 GREEN; signal floor 51/51 PASS;
+Prisma UI audit 89 PASS; verifier `PASS=3546, WARN=1, INFO=68`, where the
+single warning is the known medallion glyph fallback.
 
 ---
 

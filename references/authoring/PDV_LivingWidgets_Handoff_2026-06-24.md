@@ -37,37 +37,32 @@ them living. Companion to memory [[living-beta-progress-charts]] (data model) an
 | projection-to-1.0 | estimate + ledgers | re-derive remaining-phase session estimates from harness state (soft numbers) |
 | spine-parity tracker | spine score tool | `node tools/pdv_spine_stack_score.mjs` → read `PDV_SpineStackScoreLedger.csv` |
 
-## Current snapshot (2026-07-05, regenerated)
-- Commits: **647** over **57** days (05-10→07-05); busiest single day 31 (06-01), 07-05 close behind at 27.
-- Races proven (gate ledger): **10/10** — Imperial closed 07-04, Dunmer closed 07-05. The long pole is down.
-- E2E wiring gate: **39 GREEN / 0 RED** (DONE). Integrity Harness: **built** (DONE).
-- Signal floor: **28/51 PASS**, **23 race-paths under floor** (all 16 Princes done).
-- Spine parity: **7/7 at parity (DONE)** — after the 6e retrofit all 10 races clear the 70% floor; lowest Bosmer 73.3%, highest Argonian 100% (Nord/Orc/Redguard lifted).
-- Specced minuses: **0 unemitted (16/16 wired) — DONE** (6c: removed 9 pantheon + 2 Daedric, wired 3 Daedric + 3 Hist + Tu'whacca).
-- Per-culture ancestral LD (6d): **mechanism DONE** (committed ec36725; originGate column + native-gated overlay read); content rows + new-save proof play-gated.
-- **Machine-buildable build items left = 23 floor + 0 minuses = 23** (spine 0, gate 0, minuses 0).
-- Play-gated (NOT in the 23): ancestral-LD content rows, run-sheets
-  (Dunmer/Imperial + re-verify the 8 proven races on new spine/signal dims),
-  Requiem HP-bar sweep, Daedric in-game proof, Experience Mode (build+test).
+## Current snapshot (2026-07-09, regenerated)
+- Commits: **742** over a **61-day** span (05-10→07-09); busiest single day 62 (06-24), then 07-05 at 49; this week (07-05→07-09) = 122.
+- Races proven (gate ledger): **10/10** — Imperial 07-04, Dunmer 07-05. Long pole down.
+- **1.0 contract gate (`pdv_1_0_endstate_gate.mjs`): 9 PASS / 1 STALE / 8 RED after the 07-09 `--run` re-green with the Anvil bridge live.** ALL NINE machine gates green (Prince, beta-strict, verify, content, integrity, expmode-build, pacing-sim, felt-trace, dislike-build). C-AUDIT-INTEGRITY closed when the bridge confirmed 39/39 signal surfaces GREEN.
+- The 8 remaining RED are evidence-gate slots only (no code): C-FELT-FAMILY (105/148 open), C-PACING-SIGNOFF (10), C-EXPMODE-SMOKE (2), C-REQUIEM-TRACKB (3), C-DISLIKE-DEBUFF-TUNING (1), C-COMPAT-ARR (1), C-COMPAT-BORDELLO (6), C-PLACEMENT-FINAL (folds into race sittings). C-RACE-RUBRIC STALE = race-sheet drift.
+- E2E wiring gate 39 GREEN / 0 RED; spine 7/7; specced minuses 0/16; all DONE.
+- Design guidance now bars dual-axis charts, so BOTH widgets were rebuilt single-axis on 07-09 (build-arc = commit bars + cards; projection = horizontal remaining-effort bars + cards). The old dual-axis burnup (cumulative % line) is retired.
+- Caveat carried on the projection: gate flags live-vs-deployed manager drift; recompile/deploy to MO2 before in-game smoke.
 
 ---
 
-## Widget 1 — build-arc history
-Daily commits (amber bars) + cumulative races-proven (teal stepped line, right axis).
-Refresh: extend `commits`/`labels` with new days; bump races line only when a NEW
-race packet PASSES the gate ledger.
+## Widget 1 — build-arc history (SINGLE-AXIS as of 07-09)
+Daily commit bars, one y-axis (blue `#378ADD`), + 4 metric cards + milestone
+annotation lines. Races line RETIRED (10/10 done; dual-axis barred by guidance).
+Refresh: append new days to `commits`, regen `labels`, move the last milestone.
 
 ```js
-// data (57 days, 05-10→07-05):
-var commits=[4,0,0,10,1,8,15,5,6,8,6,18,0,1,4,6,5,2,13,12,31,26,12,11,4,27,18,23,13,8,11,19,10,21,13,12,22,4,5,0,4,21,29,8,16,24,14,0,7,9,5,9,4,3,2,13,27];
-var races=[];for(var i=0;i<57;i++){races.push(i<31?0:i<35?1:i<37?2:i<39?3:i<40?6:i<55?8:i<56?9:10);}
-var labels=[];var d=new Date(2026,4,10);for(var j=0;j<57;j++){labels.push((d.getMonth()+1)+'/'+d.getDate());d=new Date(d.getTime()+86400000);}
-// milestone annotation lines (index → label): 21 phase 20 gate, 34 9-race audit, 41 requiem conv., 44 signal-equity audit + harness, 55 Imperial proven (9/10), 56 Dunmer proven (10/10)
+// data (61 days, 05-10→07-09):
+var commits=[4,0,0,10,1,8,15,5,8,6,6,18,0,1,4,6,5,2,13,12,31,26,12,11,4,27,18,23,13,8,11,19,10,21,13,12,22,4,5,0,4,21,29,8,16,62,14,0,7,9,5,9,4,3,2,13,49,30,20,5,18];
+var labels=[];var d=new Date(2026,4,10);for(var j=0;j<61;j++){labels.push((d.getMonth()+1)+'/'+d.getDate());d=new Date(d.getTime()+86400000);}
+// milestone annotation lines (label → text): '6/24' integrity harness (idx45, 62-spike), '7/5' races 10/10 (idx56), '7/9' gates 9/9 (idx60)
 ```
-Build: type bar (commits, left axis `c` max ~33) + type line stepped (races, right
-axis `r` 0-10); pointRadius 4 only where races changes; annotation vertical dashed
-lines at the indices above (xAdjust -50 when index>38). Cards: commits 516, days 46,
-races 8/10, today 24. (Full code pattern: see widget `devotion_build_arc_refreshed_through_06_24`.)
+Build: type bar, single y-axis, maxBarThickness 14, x autoSkip maxTicksLimit 12;
+annotation vertical dashed lines keyed by DATE LABEL (not index). Cards: total
+commits 742, day span 61, this week (7/5-7/9) 122, busiest day 62. Rendered as
+`devotion_build_arc_through_2026_07_09`.
 
 ---
 
@@ -77,18 +72,22 @@ races 8/10, today 24. (Full code pattern: see widget `devotion_build_arc_refresh
 the 1.0 End-State Contract (`pdv_1_0_endstate_gate.mjs` burndown), NOT the old
 5-lane roadmap. Rendered as `devotion_projection_to_oneoh_contract_era`:
 
+SINGLE-AXIS horizontal bars (dual-axis burnup retired 07-09). Bars = est. sessions
+per REMAINING lane, colored by TYPE (blue `#378ADD` = in-game testing, gray
+`#888780` = packaging); 2-item legend; 3 metric cards. All machine gates are green,
+so no build/red bars remain — every lane is play-or-package. Rendered as
+`devotion_projection_to_oneoh_2026_07_09`:
+
 ```js
-var labels=['remap re-green','felt + pacing sittings ×5','requiem + sting tuning','expmode smoke','ARR compat','bordello lists ×6'];
-var effort=[0.5,5,1.5,0.5,1.5,1.5];    // ~10.5 sessions vs the old ~5 — the CONTRACT
-var cum=[5,52,67,71,86,100];           // widened (148 felt families, 10 pacing signoffs,
-var fill=['#A32D2D','#378ADD','#378ADD','#378ADD','#7F77DD','#7F77DD']; // 6 bordello lists, placement, sting tuning)
-// Cards: ~10.5 sessions / felt families 43-of-148 / 128 open evidence slots.
+// indexAxis:'y'; sorted descending; total ~10.5 sessions:
+var labels=['in-game felt + pacing sweep','6-list compat package','ARR compat packet','requiem track B (Authoria)','experience mode smoke'];
+var effort=[5,2.5,1.5,1,0.5];
+var fill=['#378ADD','#888780','#888780','#378ADD','#378ADD']; // blue=in-game test, gray=packaging
+// Cards: machine gates 9/9 green | est. sessions left ~10.5 | felt families 43/148.
 // Felt-family velocity: 22 -> 43 recorded between 07-07 and 07-09.
-// Machine-gate REDs on 07-09 are drift-voids from the remap wiring (5f245de), not
-// regressions — they re-green with --run. Companion one-off charts rendered 07-09:
-// devotion_gap_to_gate_arc (5 gap->gate rows) + devotion_build_arc_commits_per_day
-// (354 commits, per-day counts by era; refresh via `git log --since=2026-06-14
-// --pretty=%ad --date=short | sort | uniq -c`).
+// WHY ~10.5 not the old ~5: the contract counts scope the soft estimate lumped/omitted
+// (per-family felt proof ×148, 10 pacing signoffs, 6-list bordello compat). Number went
+// UP because accounting got rigorous, not because of regression — all code work is green.
 ```
 
 Old model (kept for history) — sequencing megapacket → Experience Mode smoke →

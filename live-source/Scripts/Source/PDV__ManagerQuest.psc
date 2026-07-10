@@ -3545,6 +3545,148 @@ String Function DebugReloadQuestMatrix()
     return "Quest matrix reloaded.\nCore: " + coreCells + " watched quests.\nARR channel: " + arrState + "."
 EndFunction
 
+Int Function DebugGetSignalFloorSmokeScenarioCount()
+    return 12
+EndFunction
+
+String Function DebugGetSignalFloorSmokeLabel(Int scenarioIndex)
+    if scenarioIndex <= 0
+        return "Reload matrix + LD v15"
+    elseIf scenarioIndex == 1
+        return "DLC2SV01 200"
+    elseIf scenarioIndex == 2
+        return "MQ305 200"
+    elseIf scenarioIndex == 3
+        return "MQ206 220"
+    elseIf scenarioIndex == 4
+        return "DBDestroy 200"
+    elseIf scenarioIndex == 5
+        return "MS10 100"
+    elseIf scenarioIndex == 6
+        return "CR13 200"
+    elseIf scenarioIndex == 7
+        return "MQ302 300"
+    elseIf scenarioIndex == 8
+        return "Crypt clear"
+    elseIf scenarioIndex == 9
+        return "Likes/dislikes v15"
+    elseIf scenarioIndex == 10
+        return "Green Way"
+    elseIf scenarioIndex == 11
+        return "Paarthurnax kill"
+    elseIf scenarioIndex == 12
+        return "Paarthurnax spare"
+    endIf
+    return "Unknown"
+EndFunction
+
+String Function DebugRunSignalFloorSmokeScenario(Int scenarioIndex)
+    String label = DebugGetSignalFloorSmokeLabel(scenarioIndex)
+    StorageUtil.SetStringValue(None, "PDV.SignalFloorSmoke.LastScenario", label)
+
+    if scenarioIndex <= 0
+        String reloadText = DebugReloadQuestMatrix()
+        StorageUtil.SetIntValue(None, "PDV.LD.Version", 0)
+        EnsureLikesDislikesTable()
+        Trace(1, "SignalFloorSmoke debug reload completed.")
+        return "Signal-floor baseline reloaded. " + reloadText
+    elseIf scenarioIndex == 1
+        return DebugRouteSignalFloorQuest(0x00019B4A, "Dragonborn.esm", 200, label)
+    elseIf scenarioIndex == 2
+        return DebugRouteSignalFloorQuest(0x00046EF2, "Skyrim.esm", 200, label)
+    elseIf scenarioIndex == 3
+        return DebugRouteSignalFloorQuest(0x00036193, "Skyrim.esm", 220, label)
+    elseIf scenarioIndex == 4
+        return DebugRouteSignalFloorQuest(0x000934FB, "Skyrim.esm", 200, label)
+    elseIf scenarioIndex == 5
+        return DebugRouteSignalFloorQuest(0x0001DBFC, "Skyrim.esm", 100, label)
+    elseIf scenarioIndex == 6
+        return DebugRouteSignalFloorQuest(0x000E3163, "Skyrim.esm", 200, label)
+    elseIf scenarioIndex == 7
+        return DebugRouteSignalFloorQuest(0x00045923, "Skyrim.esm", 300, label)
+    elseIf scenarioIndex == 8
+        return DebugRouteSignalFloorCryptClear()
+    elseIf scenarioIndex == 9
+        return DebugRouteSignalFloorLikesDislikes()
+    elseIf scenarioIndex == 10
+        return DebugRouteSignalFloorGreenWay()
+    elseIf scenarioIndex == 11
+        return DebugRouteSignalFloorPaarthurnaxKill()
+    elseIf scenarioIndex == 12
+        return DebugRouteSignalFloorPaarthurnaxSpare()
+    endIf
+
+    return "Unknown signal-floor smoke scenario."
+EndFunction
+
+String Function DebugRouteSignalFloorQuest(Int questFormId, String pluginName, Int stageValue, String label)
+    DebugReloadQuestMatrix()
+    Quest sourceQuest = Game.GetFormFromFile(questFormId, pluginName) as Quest
+    if !sourceQuest
+        Trace(1, "SignalFloorSmoke quest missing: " + label)
+        return label + ": quest not found in " + pluginName + "."
+    endIf
+
+    ApplyQuestReaction(sourceQuest, stageValue)
+    String reactionKey = StorageUtil.GetStringValue(None, "PDV.QuestReaction.LastKey")
+    Int count = StorageUtil.GetIntValue(None, "PDV.QuestReaction.LastCellCount")
+    Trace(1, "SignalFloorSmoke quest routed: " + label + " key " + reactionKey + " cells " + count)
+    return label + ": routed " + reactionKey + " (" + count + " cells). Controlled backend route only; run organic smoke for route and display proof."
+EndFunction
+
+String Function DebugRouteSignalFloorCryptClear()
+    if !PDV_FLST_UndeadCryptClearSites || PDV_FLST_UndeadCryptClearSites.GetSize() <= 0
+        return "Crypt-clear FormList is missing or empty."
+    endIf
+
+    Location cryptLoc = PDV_FLST_UndeadCryptClearSites.GetAt(0) as Location
+    if !cryptLoc
+        return "Crypt-clear FormList slot 0 is not a Location."
+    endIf
+
+    ApplyUndeadCryptClearReactions(cryptLoc, 1.0)
+    Trace(1, "SignalFloorSmoke crypt-clear debug fanout routed.")
+    return "Crypt-clear fanout routed from FormList slot 0. Controlled backend route only; organic proof still requires entering and clearing a listed crypt."
+EndFunction
+
+String Function DebugRouteSignalFloorLikesDislikes()
+    StorageUtil.SetIntValue(None, "PDV.LD.Version", 0)
+    EnsureLikesDislikesTable()
+    DebugFireDislike(GetQuestReactionDeity("Kyne"), 303)
+    DebugFireDislike(GetQuestReactionDeity("Arkay"), 366)
+    Trace(1, "SignalFloorSmoke LD v15 debug fired events 303 and 366.")
+    return "Likes/dislikes v15 reloaded; fired Kyne 303 and Arkay 366 through the debug dislike harness. Controlled backend route only."
+EndFunction
+
+String Function DebugRouteSignalFloorGreenWay()
+    if !IsBosmerOrigin()
+        return "Set origin to Bosmer before running Green Way signal-floor debug."
+    endIf
+
+    Bool siteRouted = TryAwardBosmerYffreGreenSite("mcm_signal_floor", "mcm_signal_floor_green_site")
+    DebugTriggerGreenPactViolation()
+    Trace(1, "SignalFloorSmoke Green Way debug routed; site=" + BoolToInt(siteRouted))
+    return "Green Way backend routes fired. Site=" + BoolToInt(siteRouted) + ". Plant-food organic proof still requires consuming a listed plant food."
+EndFunction
+
+String Function DebugRouteSignalFloorPaarthurnaxKill()
+    Form sourceForm = Game.GetFormFromFile(0x00046EF2, "Skyrim.esm")
+    StorageUtil.SetIntValue(None, "PDV.Paarthurnax.KillSeen", 0)
+    StorageUtil.SetIntValue(None, "PDV.Paarthurnax.SpareSeen", 0)
+    HandlePaarthurnaxKill(sourceForm, "mcm_signal_floor_kill")
+    Trace(1, "SignalFloorSmoke Paarthurnax kill debug routed.")
+    return "Paarthurnax kill fork routed with latches reset first. Controlled backend route only; organic kill proof still required."
+EndFunction
+
+String Function DebugRouteSignalFloorPaarthurnaxSpare()
+    Form sourceForm = Game.GetFormFromFile(0x00046EF2, "Skyrim.esm")
+    StorageUtil.SetIntValue(None, "PDV.Paarthurnax.KillSeen", 0)
+    StorageUtil.SetIntValue(None, "PDV.Paarthurnax.SpareSeen", 0)
+    HandlePaarthurnaxSpare(sourceForm, "mcm_signal_floor_spare")
+    Trace(1, "SignalFloorSmoke Paarthurnax spare debug routed.")
+    return "Paarthurnax spare fork routed with latches reset first. Controlled backend route only; organic MQ305/alive proof still required."
+EndFunction
+
 Function HandleDaedricGenericSilenceProbe(String sourceId)
     if GetDebugLevel() >= 2
         Debug.Trace("[PDV] Daedric generic silence probe ignored: " + sourceId)

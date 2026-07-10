@@ -1,0 +1,953 @@
+{
+  "generatedAt": "2026-07-09T07:40:01.764Z",
+  "status": "PASS",
+  "backendStatus": "PASS",
+  "strictRuntime": false,
+  "runtimeOpen": 12,
+  "counts": {
+    "PASS": 142,
+    "OPEN": 12
+  },
+  "proofBoundary": "These scenarios define backend, runtime-route, and manual-display evidence separately. Backend PASS does not prove in-game firing, Book of Days display, Survey/status clarity, duplicate suppression, wrong-origin silence, or save/load stack behavior.",
+  "files": {
+    "scenarios": "references/authoring/PDV_SignalFloorSmokeScenarios_2026-07-09.json",
+    "matrix": "references/authoring/PDV_QuestReactionMatrix_Full.csv",
+    "likes": "references/authoring/PDV_DeityLikesDislikes.csv",
+    "runtimeJson": "D:/Wabbajack/modlists/Anvil/mods/Devotion/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix.json",
+    "papyrusLog": "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log"
+  },
+  "findings": [
+    {
+      "status": "PASS",
+      "check": "scenario manifest",
+      "detail": "Scenario manifest schema is current."
+    },
+    {
+      "status": "PASS",
+      "check": "runtime JSON shape",
+      "detail": "Runtime JSON has PapyrusUtil typed buckets."
+    },
+    {
+      "status": "PASS",
+      "check": "matrix row count",
+      "detail": "Matrix has 1071 rows."
+    },
+    {
+      "status": "PASS",
+      "check": "runtime quest key count",
+      "detail": "Runtime JSON has 169 quest keys."
+    },
+    {
+      "status": "PASS",
+      "check": "runtime watched quest count",
+      "detail": "Runtime JSON has 135 watched quests."
+    },
+    {
+      "status": "PASS",
+      "check": "runtime faucet count",
+      "detail": "Runtime JSON has 26 faucet acts."
+    },
+    {
+      "status": "PASS",
+      "check": "echo tier retired",
+      "detail": "No live quest matrix rows use retired echo magnitude."
+    },
+    {
+      "status": "PASS",
+      "check": "Part D faucet source count",
+      "detail": "Part D has 26 active faucet rows."
+    },
+    {
+      "status": "PASS",
+      "check": "likes/dislikes version",
+      "detail": "Manager pins LIKES_DISLIKES_VERSION 15."
+    },
+    {
+      "status": "PASS",
+      "check": "likes/dislikes event 303",
+      "detail": "Event 303 has 2 rows."
+    },
+    {
+      "status": "PASS",
+      "check": "likes/dislikes clear superset 303",
+      "detail": "GetLikesDislikesEventTypes includes 303."
+    },
+    {
+      "status": "PASS",
+      "check": "likes/dislikes event 366",
+      "detail": "Event 366 has 16 rows."
+    },
+    {
+      "status": "PASS",
+      "check": "likes/dislikes clear superset 366",
+      "detail": "GetLikesDislikesEventTypes includes 366."
+    },
+    {
+      "status": "PASS",
+      "check": "Debug MCM signal-floor section",
+      "detail": "Debug MCM exposes the signal-floor smoke section."
+    },
+    {
+      "status": "PASS",
+      "check": "manager debug harness",
+      "detail": "Manager exposes signal-floor debug harness functions."
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "quest_dlc2sv01_200",
+      "title": "Quest fan-out plus aggregated surface",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "status": "PASS",
+      "findings": [
+        {
+          "status": "PASS",
+          "check": "quest matrix rows",
+          "detail": "3 source rows found."
+        },
+        {
+          "status": "PASS",
+          "check": "row The Hist",
+          "detail": "The Hist +m/small is present."
+        },
+        {
+          "status": "PASS",
+          "check": "row Y'ffre",
+          "detail": "Y'ffre +m/small is present."
+        },
+        {
+          "status": "PASS",
+          "check": "row Syrabane",
+          "detail": "Syrabane +S/small is present."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime key",
+          "detail": "Runtime JSON has key 105290|200."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime cell count",
+          "detail": "Runtime cell count matches source (3)."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity The Hist",
+          "detail": "The Hist is in runtime JSON."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Y'ffre",
+          "detail": "Y'ffre is in runtime JSON."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Syrabane",
+          "detail": "Syrabane is in runtime JSON."
+        },
+        {
+          "status": "OPEN",
+          "check": "runtime marker",
+          "detail": "No current Papyrus log marker for QuestReaction: 105290|200 applied."
+        },
+        {
+          "status": "PASS",
+          "check": "Debug MCM scenario index",
+          "detail": "Manager maps debug scenario 1."
+        }
+      ],
+      "manualChecks": [
+        "one aggregated toast",
+        "Book of Days line names all landed deities",
+        "Survey/status lane coherent"
+      ]
+    },
+    {
+      "id": "quest_mq305_200_death_gods",
+      "title": "Main-quest death gods and Dagon correction",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "status": "PASS",
+      "findings": [
+        {
+          "status": "PASS",
+          "check": "quest matrix rows",
+          "detail": "17 source rows found."
+        },
+        {
+          "status": "PASS",
+          "check": "row Arkay",
+          "detail": "Arkay +C/milestone is present."
+        },
+        {
+          "status": "PASS",
+          "check": "row Tu'whacca",
+          "detail": "Tu'whacca +C/milestone is present."
+        },
+        {
+          "status": "PASS",
+          "check": "row Khenarthi",
+          "detail": "Khenarthi +m/small is present."
+        },
+        {
+          "status": "PASS",
+          "check": "row Mehrunes Dagon",
+          "detail": "Mehrunes Dagon -m/small is present."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime key",
+          "detail": "Runtime JSON has key 290546|200."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime cell count",
+          "detail": "Runtime cell count matches source (17)."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Arkay",
+          "detail": "Arkay is in runtime JSON."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Tu'whacca",
+          "detail": "Tu'whacca is in runtime JSON."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Khenarthi",
+          "detail": "Khenarthi is in runtime JSON."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Mehrunes Dagon",
+          "detail": "Mehrunes Dagon is in runtime JSON."
+        },
+        {
+          "status": "OPEN",
+          "check": "runtime marker",
+          "detail": "No current Papyrus log marker for QuestReaction: 290546|200 applied."
+        },
+        {
+          "status": "PASS",
+          "check": "Debug MCM scenario index",
+          "detail": "Manager maps debug scenario 2."
+        }
+      ],
+      "manualChecks": [
+        "Dagon is a loss, not a gain",
+        "death-god gains are visible where reachable",
+        "duplicate route does not stack after save/load"
+      ]
+    },
+    {
+      "id": "quest_mq206_220_lore_gods",
+      "title": "Main-quest lore gods",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "status": "PASS",
+      "findings": [
+        {
+          "status": "PASS",
+          "check": "quest matrix rows",
+          "detail": "19 source rows found."
+        },
+        {
+          "status": "PASS",
+          "check": "row Julianos",
+          "detail": "Julianos +C/milestone is present."
+        },
+        {
+          "status": "PASS",
+          "check": "row Hermaeus Mora",
+          "detail": "Hermaeus Mora +C/milestone is present."
+        },
+        {
+          "status": "PASS",
+          "check": "row Magnus",
+          "detail": "Magnus +C/milestone is present."
+        },
+        {
+          "status": "PASS",
+          "check": "row Mehrunes Dagon",
+          "detail": "Mehrunes Dagon -m/small is present."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime key",
+          "detail": "Runtime JSON has key 221587|220."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime cell count",
+          "detail": "Runtime cell count matches source (19)."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Julianos",
+          "detail": "Julianos is in runtime JSON."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Hermaeus Mora",
+          "detail": "Hermaeus Mora is in runtime JSON."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Magnus",
+          "detail": "Magnus is in runtime JSON."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Mehrunes Dagon",
+          "detail": "Mehrunes Dagon is in runtime JSON."
+        },
+        {
+          "status": "OPEN",
+          "check": "runtime marker",
+          "detail": "No current Papyrus log marker for QuestReaction: 221587|220 applied."
+        },
+        {
+          "status": "PASS",
+          "check": "Debug MCM scenario index",
+          "detail": "Manager maps debug scenario 3."
+        }
+      ],
+      "manualChecks": [
+        "Julianos/Mora/Magnus milestone gains land",
+        "Dagon correction is a loss"
+      ]
+    },
+    {
+      "id": "quest_dbdestroy_200_sithis",
+      "title": "Sithis strongest negative",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "status": "PASS",
+      "findings": [
+        {
+          "status": "PASS",
+          "check": "quest matrix rows",
+          "detail": "3 source rows found."
+        },
+        {
+          "status": "PASS",
+          "check": "row Sithis",
+          "detail": "Sithis -C/milestone is present."
+        },
+        {
+          "status": "PASS",
+          "check": "row Stendarr",
+          "detail": "Stendarr +S/small is present."
+        },
+        {
+          "status": "PASS",
+          "check": "row Talos",
+          "detail": "Talos +m/small is present."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime key",
+          "detail": "Runtime JSON has key 603387|200."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime cell count",
+          "detail": "Runtime cell count matches source (3)."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Sithis",
+          "detail": "Sithis is in runtime JSON."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Stendarr",
+          "detail": "Stendarr is in runtime JSON."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Talos",
+          "detail": "Talos is in runtime JSON."
+        },
+        {
+          "status": "OPEN",
+          "check": "runtime marker",
+          "detail": "No current Papyrus log marker for QuestReaction: 603387|200 applied."
+        },
+        {
+          "status": "PASS",
+          "check": "Debug MCM scenario index",
+          "detail": "Manager maps debug scenario 4."
+        }
+      ],
+      "manualChecks": [
+        "Sithis loss is strongest negative",
+        "Stendarr/Talos gains are visible where reachable"
+      ]
+    },
+    {
+      "id": "quest_ms10_100_zenithar",
+      "title": "Zenithar milestone",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "status": "PASS",
+      "findings": [
+        {
+          "status": "PASS",
+          "check": "quest matrix rows",
+          "detail": "2 source rows found."
+        },
+        {
+          "status": "PASS",
+          "check": "row Zenithar",
+          "detail": "Zenithar +C/milestone is present."
+        },
+        {
+          "status": "PASS",
+          "check": "row Z'en",
+          "detail": "Z'en +S/small is present."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime key",
+          "detail": "Runtime JSON has key 121852|100."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime cell count",
+          "detail": "Runtime cell count matches source (2)."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Zenithar",
+          "detail": "Zenithar is in runtime JSON."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Z'en",
+          "detail": "Z'en is in runtime JSON."
+        },
+        {
+          "status": "OPEN",
+          "check": "runtime marker",
+          "detail": "No current Papyrus log marker for QuestReaction: 121852|100 applied."
+        },
+        {
+          "status": "PASS",
+          "check": "Debug MCM scenario index",
+          "detail": "Manager maps debug scenario 5."
+        }
+      ],
+      "manualChecks": [
+        "Zenithar milestone gain and Z'en gain land where reachable"
+      ]
+    },
+    {
+      "id": "quest_cr13_200_hircine_cure",
+      "title": "Hircine cure dislike",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "status": "PASS",
+      "findings": [
+        {
+          "status": "PASS",
+          "check": "quest matrix rows",
+          "detail": "2 source rows found."
+        },
+        {
+          "status": "PASS",
+          "check": "row Hircine",
+          "detail": "Hircine -S/small is present."
+        },
+        {
+          "status": "PASS",
+          "check": "row Y'ffre",
+          "detail": "Y'ffre +m/small is present."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime key",
+          "detail": "Runtime JSON has key 930147|200."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime cell count",
+          "detail": "Runtime cell count matches source (2)."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Hircine",
+          "detail": "Hircine is in runtime JSON."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Y'ffre",
+          "detail": "Y'ffre is in runtime JSON."
+        },
+        {
+          "status": "OPEN",
+          "check": "runtime marker",
+          "detail": "No current Papyrus log marker for QuestReaction: 930147|200 applied."
+        },
+        {
+          "status": "PASS",
+          "check": "Debug MCM scenario index",
+          "detail": "Manager maps debug scenario 6."
+        }
+      ],
+      "manualChecks": [
+        "run as werewolf for organic proof",
+        "Hircine loss and Y'ffre gain are distinct"
+      ]
+    },
+    {
+      "id": "quest_mq302_300_season_unending",
+      "title": "Season Unending",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "status": "PASS",
+      "findings": [
+        {
+          "status": "PASS",
+          "check": "quest matrix rows",
+          "detail": "4 source rows found."
+        },
+        {
+          "status": "PASS",
+          "check": "row Mara",
+          "detail": "Mara +S/small is present."
+        },
+        {
+          "status": "PASS",
+          "check": "row Stendarr",
+          "detail": "Stendarr +S/small is present."
+        },
+        {
+          "status": "PASS",
+          "check": "row Akatosh",
+          "detail": "Akatosh +S/small is present."
+        },
+        {
+          "status": "PASS",
+          "check": "row Stuhn",
+          "detail": "Stuhn +S/small is present."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime key",
+          "detail": "Runtime JSON has key 284963|300."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime cell count",
+          "detail": "Runtime cell count matches source (4)."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Mara",
+          "detail": "Mara is in runtime JSON."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Stendarr",
+          "detail": "Stendarr is in runtime JSON."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Akatosh",
+          "detail": "Akatosh is in runtime JSON."
+        },
+        {
+          "status": "PASS",
+          "check": "runtime deity Stuhn",
+          "detail": "Stuhn is in runtime JSON."
+        },
+        {
+          "status": "OPEN",
+          "check": "runtime marker",
+          "detail": "No current Papyrus log marker for QuestReaction: 284963|300 applied."
+        },
+        {
+          "status": "PASS",
+          "check": "Debug MCM scenario index",
+          "detail": "Manager maps debug scenario 7."
+        }
+      ],
+      "manualChecks": [
+        "all three concession stages remain covered; smoke uses stage 300"
+      ]
+    },
+    {
+      "id": "crypt_clear_undead",
+      "title": "Crypt-clear signal",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "status": "PASS",
+      "findings": [
+        {
+          "status": "PASS",
+          "check": "source token ApplyUndeadCryptClearReaction(\"Arkay\", \"C\"",
+          "detail": "ApplyUndeadCryptClearReaction(\"Arkay\", \"C\" present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ApplyUndeadCryptClearReaction(\"Meridia\", \"C\"",
+          "detail": "ApplyUndeadCryptClearReaction(\"Meridia\", \"C\" present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ApplyUndeadCryptClearReaction(\"Stendarr\", \"S\"",
+          "detail": "ApplyUndeadCryptClearReaction(\"Stendarr\", \"S\" present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ApplyUndeadCryptClearReaction(\"Tu'whacca\", \"S\"",
+          "detail": "ApplyUndeadCryptClearReaction(\"Tu'whacca\", \"S\" present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ApplyUndeadCryptClearReaction(\"Azura\", \"m\"",
+          "detail": "ApplyUndeadCryptClearReaction(\"Azura\", \"m\" present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ApplyUndeadCryptClearReaction(\"Y'ffre\", \"m\"",
+          "detail": "ApplyUndeadCryptClearReaction(\"Y'ffre\", \"m\" present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token PDV.Signal.UndeadCryptClear",
+          "detail": "PDV.Signal.UndeadCryptClear present."
+        },
+        {
+          "status": "PASS",
+          "check": "manager function TrackUndeadCryptClearSiteVisit",
+          "detail": "TrackUndeadCryptClearSiteVisit exists."
+        },
+        {
+          "status": "PASS",
+          "check": "manager function HandleUndeadCryptSiteClear",
+          "detail": "HandleUndeadCryptSiteClear exists."
+        },
+        {
+          "status": "PASS",
+          "check": "manager function ApplyUndeadCryptClearReactions",
+          "detail": "ApplyUndeadCryptClearReactions exists."
+        },
+        {
+          "status": "OPEN",
+          "check": "runtime marker",
+          "detail": "No current Papyrus log marker for Undead crypt clear fired."
+        },
+        {
+          "status": "PASS",
+          "check": "Debug MCM scenario index",
+          "detail": "Manager maps debug scenario 8."
+        }
+      ],
+      "manualChecks": [
+        "enter via load door; coc skips location triggers",
+        "same-site repeat stays blocked/capped"
+      ]
+    },
+    {
+      "id": "likes_dislikes_v15",
+      "title": "Likes/dislikes v15: vampire feed plus non-combat animal kill",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "status": "PASS",
+      "findings": [
+        {
+          "status": "PASS",
+          "check": "LD Arkay 366",
+          "detail": "Arkay event 366 row is present."
+        },
+        {
+          "status": "PASS",
+          "check": "LD Stendarr 366",
+          "detail": "Stendarr event 366 row is present."
+        },
+        {
+          "status": "PASS",
+          "check": "LD kyne 303",
+          "detail": "kyne event 303 row is present."
+        },
+        {
+          "status": "PASS",
+          "check": "LD Kynareth 303",
+          "detail": "Kynareth event 303 row is present."
+        },
+        {
+          "status": "PASS",
+          "check": "LD sithis 366",
+          "detail": "sithis event 366 row is present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token LIKES_DISLIKES_VERSION = 15",
+          "detail": "LIKES_DISLIKES_VERSION = 15 present in manager source."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ldEvents[32] = 303",
+          "detail": "ldEvents[32] = 303 present in manager source."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ldEvents[33] = 366",
+          "detail": "ldEvents[33] = 366 present in manager source."
+        },
+        {
+          "status": "OPEN",
+          "check": "runtime marker",
+          "detail": "No current Papyrus log marker for LD v15 reload."
+        },
+        {
+          "status": "PASS",
+          "check": "Debug MCM scenario index",
+          "detail": "Manager maps debug scenario 9."
+        }
+      ],
+      "manualChecks": [
+        "new save or unstamped save logs version 15 loaded",
+        "daily caps hold"
+      ]
+    },
+    {
+      "id": "green_way_behavioral",
+      "title": "Green Way behavioral",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "status": "PASS",
+      "findings": [
+        {
+          "status": "PASS",
+          "check": "source token PDV_FLST_GreenPact_PlantFoods",
+          "detail": "PDV_FLST_GreenPact_PlantFoods present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token PDV_KW_GreenPact_Plant",
+          "detail": "PDV_KW_GreenPact_Plant present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token RouteGreenPactViolation()",
+          "detail": "RouteGreenPactViolation() present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_VIOLATION",
+          "detail": "AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_VIOLATION present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token TryAwardBosmerYffreGreenSite",
+          "detail": "TryAwardBosmerYffreGreenSite present."
+        },
+        {
+          "status": "PASS",
+          "check": "manager function TryAwardBosmerYffreGreenSite",
+          "detail": "TryAwardBosmerYffreGreenSite exists."
+        },
+        {
+          "status": "PASS",
+          "check": "manager function RouteBosmerGreenPactFood",
+          "detail": "RouteBosmerGreenPactFood exists."
+        },
+        {
+          "status": "PASS",
+          "check": "manager function HandleGreenPactViolation",
+          "detail": "HandleGreenPactViolation exists."
+        },
+        {
+          "status": "OPEN",
+          "check": "runtime marker",
+          "detail": "No current Papyrus log marker for Green Pact plant food violation routed."
+        },
+        {
+          "status": "PASS",
+          "check": "Debug MCM scenario index",
+          "detail": "Manager maps debug scenario 10."
+        }
+      ],
+      "manualChecks": [
+        "visit a Bosmer sacred site",
+        "consume plant food as Bosmer Old Contract",
+        "plant proof is not replaced by direct debug route"
+      ]
+    },
+    {
+      "id": "paarthurnax_kill",
+      "title": "Paarthurnax kill fork",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "status": "PASS",
+      "findings": [
+        {
+          "status": "PASS",
+          "check": "source token RoutePaarthurnaxKill(akVictim as Form)",
+          "detail": "RoutePaarthurnaxKill(akVictim as Form) present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token Function RoutePaarthurnaxKill(Form sourceForm)",
+          "detail": "Function RoutePaarthurnaxKill(Form sourceForm) present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token HandlePaarthurnaxKill(sourceForm, \"eventbus_paarthurnax_kill\")",
+          "detail": "HandlePaarthurnaxKill(sourceForm, \"eventbus_paarthurnax_kill\") present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token PDV.Paarthurnax.KillSeen",
+          "detail": "PDV.Paarthurnax.KillSeen present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ApplyPaarthurnaxKillReaction(\"Shor\"",
+          "detail": "ApplyPaarthurnaxKillReaction(\"Shor\" present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ApplyPaarthurnaxKillReaction(\"Tsun\"",
+          "detail": "ApplyPaarthurnaxKillReaction(\"Tsun\" present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ApplyPaarthurnaxKillReaction(\"Kyne\"",
+          "detail": "ApplyPaarthurnaxKillReaction(\"Kyne\" present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ApplyPaarthurnaxKillReaction(\"Stendarr\"",
+          "detail": "ApplyPaarthurnaxKillReaction(\"Stendarr\" present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ApplyPaarthurnaxKillReaction(\"Stuhn\"",
+          "detail": "ApplyPaarthurnaxKillReaction(\"Stuhn\" present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ApplyPaarthurnaxKillReaction(\"Mara\"",
+          "detail": "ApplyPaarthurnaxKillReaction(\"Mara\" present."
+        },
+        {
+          "status": "OPEN",
+          "check": "runtime marker",
+          "detail": "No current Papyrus log marker for Paarthurnax."
+        },
+        {
+          "status": "PASS",
+          "check": "Debug MCM scenario index",
+          "detail": "Manager maps debug scenario 11."
+        }
+      ],
+      "manualChecks": [
+        "organic kill on reachable listed-god race",
+        "repeat after save/load is blocked",
+        "Khajiit also keeps Alkosh chaos-aid consequence"
+      ]
+    },
+    {
+      "id": "paarthurnax_spare",
+      "title": "Paarthurnax spare fork",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "status": "PASS",
+      "findings": [
+        {
+          "status": "PASS",
+          "check": "source token RoutePaarthurnaxSpareQuestStage",
+          "detail": "RoutePaarthurnaxSpareQuestStage present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token RoutePaarthurnaxSpareLoadCheck",
+          "detail": "RoutePaarthurnaxSpareLoadCheck present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token Function RoutePaarthurnaxSpare(Form sourceForm)",
+          "detail": "Function RoutePaarthurnaxSpare(Form sourceForm) present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token HandlePaarthurnaxSpare(sourceForm, \"eventbus_paarthurnax_spare\")",
+          "detail": "HandlePaarthurnaxSpare(sourceForm, \"eventbus_paarthurnax_spare\") present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token PDV.Paarthurnax.SpareSeen",
+          "detail": "PDV.Paarthurnax.SpareSeen present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token PDV.Paarthurnax.KillSeen",
+          "detail": "PDV.Paarthurnax.KillSeen present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ApplyPaarthurnaxSpareReaction(\"Stuhn\"",
+          "detail": "ApplyPaarthurnaxSpareReaction(\"Stuhn\" present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ApplyPaarthurnaxSpareReaction(\"Stendarr\"",
+          "detail": "ApplyPaarthurnaxSpareReaction(\"Stendarr\" present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ApplyPaarthurnaxSpareReaction(\"Mara\"",
+          "detail": "ApplyPaarthurnaxSpareReaction(\"Mara\" present."
+        },
+        {
+          "status": "PASS",
+          "check": "source token ApplyPaarthurnaxSpareReaction(\"Kyne\"",
+          "detail": "ApplyPaarthurnaxSpareReaction(\"Kyne\" present."
+        },
+        {
+          "status": "OPEN",
+          "check": "runtime marker",
+          "detail": "No current Papyrus log marker for Paarthurnax alive."
+        },
+        {
+          "status": "PASS",
+          "check": "Debug MCM scenario index",
+          "detail": "Manager maps debug scenario 12."
+        }
+      ],
+      "manualChecks": [
+        "Paarthurnax alive at MQ305 stage 200",
+        "if kill latch already fired, spare stays silent"
+      ]
+    },
+    {
+      "id": "borderline_rows_review",
+      "title": "Borderline rows to prove or drop",
+      "bucket": "backend-static;manual-review",
+      "status": "PASS",
+      "findings": [
+        {
+          "status": "PASS",
+          "check": "borderline DA14Start",
+          "detail": "DA14Start has 1 matrix rows."
+        },
+        {
+          "status": "PASS",
+          "check": "borderline DLC2RRFavor01",
+          "detail": "DLC2RRFavor01 has 1 matrix rows."
+        },
+        {
+          "status": "PASS",
+          "check": "borderline T03",
+          "detail": "T03 has 12 matrix rows."
+        },
+        {
+          "status": "PASS",
+          "check": "borderline BYOHRelationshipAdoption",
+          "detail": "BYOHRelationshipAdoption has 1 matrix rows."
+        }
+      ],
+      "manualChecks": [
+        "DA14Start s70",
+        "DLC2RRFavor01 s200",
+        "T03 s105",
+        "HearthFires adoption stages"
+      ]
+    }
+  ]
+}

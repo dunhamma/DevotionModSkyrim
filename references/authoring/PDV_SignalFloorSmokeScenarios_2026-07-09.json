@@ -1,0 +1,201 @@
+{
+  "schema": "pdv-signal-floor-smoke-scenarios.v1",
+  "generatedFor": "PDV_SignalFloor_MasterHandoff_2026-07-09.md",
+  "proofBoundary": "These scenarios define backend, runtime-route, and manual-display evidence separately. Backend PASS does not prove in-game firing, Book of Days display, Survey/status clarity, duplicate suppression, wrong-origin silence, or save/load stack behavior.",
+  "expected": {
+    "likesDislikesVersion": 15,
+    "questCells": 1071,
+    "questKeys": 169,
+    "watchedQuests": 135,
+    "faucetActs": 26
+  },
+  "scenarios": [
+    {
+      "id": "quest_dlc2sv01_200",
+      "title": "Quest fan-out plus aggregated surface",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "trigger": { "type": "quest-stage", "editorId": "DLC2SV01", "plugin": "Dragonborn.esm", "formId": "019B4A", "stage": 200 },
+      "expectedRows": [
+        { "deity": "The Hist", "valence": "+", "intensity": "m", "magnitude": "small", "actTagIncludes": "defend_kin_home" },
+        { "deity": "Y'ffre", "valence": "+", "intensity": "m", "magnitude": "small", "actTagIncludes": "honor_the_wild" },
+        { "deity": "Syrabane", "valence": "+", "intensity": "S", "magnitude": "small", "actTagIncludes": "protect_the_weak" }
+      ],
+      "manualChecks": [ "one aggregated toast", "Book of Days line names all landed deities", "Survey/status lane coherent" ],
+      "debugMcmScenario": 1
+    },
+    {
+      "id": "quest_mq305_200_death_gods",
+      "title": "Main-quest death gods and Dagon correction",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "trigger": { "type": "quest-stage", "editorId": "MQ305", "plugin": "Skyrim.esm", "formId": "046EF2", "stage": 200 },
+      "expectedRows": [
+        { "deity": "Arkay", "valence": "+", "intensity": "C", "magnitude": "milestone", "actTagIncludes": "honor_the_dead" },
+        { "deity": "Tu'whacca", "valence": "+", "intensity": "C", "magnitude": "milestone", "actTagIncludes": "honor_the_dead" },
+        { "deity": "Khenarthi", "valence": "+", "intensity": "m", "magnitude": "small", "actTagIncludes": "honor_the_dead" },
+        { "deity": "Mehrunes Dagon", "valence": "-", "intensity": "m", "magnitude": "small", "actTagIncludes": "serve_empire_order" }
+      ],
+      "manualChecks": [ "Dagon is a loss, not a gain", "death-god gains are visible where reachable", "duplicate route does not stack after save/load" ],
+      "debugMcmScenario": 2
+    },
+    {
+      "id": "quest_mq206_220_lore_gods",
+      "title": "Main-quest lore gods",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "trigger": { "type": "quest-stage", "editorId": "MQ206", "plugin": "Skyrim.esm", "formId": "036193", "stage": 220 },
+      "expectedRows": [
+        { "deity": "Julianos", "valence": "+", "intensity": "C", "magnitude": "milestone", "actTagIncludes": "disciplined_study" },
+        { "deity": "Hermaeus Mora", "valence": "+", "intensity": "C", "magnitude": "milestone", "actTagIncludes": "forbidden_knowledge" },
+        { "deity": "Magnus", "valence": "+", "intensity": "C", "magnitude": "milestone", "actTagIncludes": "disciplined_study" },
+        { "deity": "Mehrunes Dagon", "valence": "-", "intensity": "m", "magnitude": "small", "actTagIncludes": "serve_empire_order" }
+      ],
+      "manualChecks": [ "Julianos/Mora/Magnus milestone gains land", "Dagon correction is a loss" ],
+      "debugMcmScenario": 3
+    },
+    {
+      "id": "quest_dbdestroy_200_sithis",
+      "title": "Sithis strongest negative",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "trigger": { "type": "quest-stage", "editorId": "DBDestroy", "plugin": "Skyrim.esm", "formId": "0934FB", "stage": 200 },
+      "expectedRows": [
+        { "deity": "Sithis", "valence": "-", "intensity": "C", "magnitude": "milestone", "actTagIncludes": "break_oath_betray" },
+        { "deity": "Stendarr", "valence": "+", "intensity": "S", "magnitude": "small", "actTagIncludes": "uphold_law_justice" },
+        { "deity": "Talos", "valence": "+", "intensity": "m", "magnitude": "small", "actTagIncludes": "protect_the_weak" }
+      ],
+      "manualChecks": [ "Sithis loss is strongest negative", "Stendarr/Talos gains are visible where reachable" ],
+      "debugMcmScenario": 4
+    },
+    {
+      "id": "quest_ms10_100_zenithar",
+      "title": "Zenithar milestone",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "trigger": { "type": "quest-stage", "editorId": "MS10", "plugin": "Skyrim.esm", "formId": "01DBFC", "stage": 100 },
+      "expectedRows": [
+        { "deity": "Zenithar", "valence": "+", "intensity": "C", "magnitude": "milestone", "actTagIncludes": "honest_labor_trade" },
+        { "deity": "Z'en", "valence": "+", "intensity": "S", "magnitude": "small", "actTagIncludes": "honest_labor_trade" }
+      ],
+      "manualChecks": [ "Zenithar milestone gain and Z'en gain land where reachable" ],
+      "debugMcmScenario": 5
+    },
+    {
+      "id": "quest_cr13_200_hircine_cure",
+      "title": "Hircine cure dislike",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "trigger": { "type": "quest-stage", "editorId": "CR13", "plugin": "Skyrim.esm", "formId": "0E3163", "stage": 200 },
+      "expectedRows": [
+        { "deity": "Hircine", "valence": "-", "intensity": "S", "magnitude": "small", "actTagIncludes": "cure_undeath" },
+        { "deity": "Y'ffre", "valence": "+", "intensity": "m", "magnitude": "small", "actTagIncludes": "the_hunt" }
+      ],
+      "manualChecks": [ "run as werewolf for organic proof", "Hircine loss and Y'ffre gain are distinct" ],
+      "debugMcmScenario": 6
+    },
+    {
+      "id": "quest_mq302_300_season_unending",
+      "title": "Season Unending",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "trigger": { "type": "quest-stage", "editorId": "MQ302", "plugin": "Skyrim.esm", "formId": "045923", "stage": 300 },
+      "expectedRows": [
+        { "deity": "Mara", "valence": "+", "intensity": "S", "magnitude": "small", "actTagIncludes": "heal_comfort" },
+        { "deity": "Stendarr", "valence": "+", "intensity": "S", "magnitude": "small", "actTagIncludes": "mercy_spare" },
+        { "deity": "Akatosh", "valence": "+", "intensity": "S", "magnitude": "small", "actTagIncludes": "serve_empire_order" },
+        { "deity": "Stuhn", "valence": "+", "intensity": "S", "magnitude": "small", "actTagIncludes": "keep_oath" }
+      ],
+      "manualChecks": [ "all three concession stages remain covered; smoke uses stage 300" ],
+      "debugMcmScenario": 7
+    },
+    {
+      "id": "crypt_clear_undead",
+      "title": "Crypt-clear signal",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "trigger": { "type": "direct-manager", "managerFunctions": [ "TrackUndeadCryptClearSiteVisit", "HandleUndeadCryptSiteClear", "ApplyUndeadCryptClearReactions" ] },
+      "expectedFunctions": [
+        "ApplyUndeadCryptClearReaction(\"Arkay\", \"C\"",
+        "ApplyUndeadCryptClearReaction(\"Meridia\", \"C\"",
+        "ApplyUndeadCryptClearReaction(\"Stendarr\", \"S\"",
+        "ApplyUndeadCryptClearReaction(\"Tu'whacca\", \"S\"",
+        "ApplyUndeadCryptClearReaction(\"Azura\", \"m\"",
+        "ApplyUndeadCryptClearReaction(\"Y'ffre\", \"m\"",
+        "PDV.Signal.UndeadCryptClear"
+      ],
+      "manualChecks": [ "enter via load door; coc skips location triggers", "same-site repeat stays blocked/capped" ],
+      "debugMcmScenario": 8
+    },
+    {
+      "id": "likes_dislikes_v15",
+      "title": "Likes/dislikes v15: vampire feed plus non-combat animal kill",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "trigger": { "type": "likes-dislikes", "eventIds": [ 366, 303 ] },
+      "expectedRows": [
+        { "actor": "Arkay", "eventId": 366, "sentiment": "-", "baseDelta": "-1.5" },
+        { "actor": "Stendarr", "eventId": 366, "sentiment": "-", "baseDelta": "-1.5" },
+        { "actor": "kyne", "eventId": 303, "sentiment": "-", "baseDelta": "-0.5" },
+        { "actor": "Kynareth", "eventId": 303, "sentiment": "-", "baseDelta": "-0.5" },
+        { "actor": "sithis", "eventId": 366, "sentiment": "+", "baseDelta": "0.5" }
+      ],
+      "expectedSourceTokens": [ "LIKES_DISLIKES_VERSION = 15", "ldEvents[32] = 303", "ldEvents[33] = 366" ],
+      "manualChecks": [ "new save or unstamped save logs version 15 loaded", "daily caps hold" ],
+      "debugMcmScenario": 9
+    },
+    {
+      "id": "green_way_behavioral",
+      "title": "Green Way behavioral",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "trigger": { "type": "direct-manager", "managerFunctions": [ "TryAwardBosmerYffreGreenSite", "RouteBosmerGreenPactFood", "HandleGreenPactViolation" ] },
+      "expectedFunctions": [
+        "PDV_FLST_GreenPact_PlantFoods",
+        "PDV_KW_GreenPact_Plant",
+        "RouteGreenPactViolation()",
+        "AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_VIOLATION",
+        "TryAwardBosmerYffreGreenSite"
+      ],
+      "manualChecks": [ "visit a Bosmer sacred site", "consume plant food as Bosmer Old Contract", "plant proof is not replaced by direct debug route" ],
+      "debugMcmScenario": 10
+    },
+    {
+      "id": "paarthurnax_kill",
+      "title": "Paarthurnax kill fork",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "trigger": { "type": "special-route", "route": "paarthurnax-kill" },
+      "expectedFunctions": [
+        "RoutePaarthurnaxKill(akVictim as Form)",
+        "Function RoutePaarthurnaxKill(Form sourceForm)",
+        "HandlePaarthurnaxKill(sourceForm, \"eventbus_paarthurnax_kill\")",
+        "PDV.Paarthurnax.KillSeen",
+        "ApplyPaarthurnaxKillReaction(\"Shor\"",
+        "ApplyPaarthurnaxKillReaction(\"Tsun\"",
+        "ApplyPaarthurnaxKillReaction(\"Kyne\"",
+        "ApplyPaarthurnaxKillReaction(\"Stendarr\"",
+        "ApplyPaarthurnaxKillReaction(\"Stuhn\"",
+        "ApplyPaarthurnaxKillReaction(\"Mara\""
+      ],
+      "manualChecks": [ "organic kill on reachable listed-god race", "repeat after save/load is blocked", "Khajiit also keeps Alkosh chaos-aid consequence" ],
+      "debugMcmScenario": 11
+    },
+    {
+      "id": "paarthurnax_spare",
+      "title": "Paarthurnax spare fork",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "trigger": { "type": "special-route", "route": "paarthurnax-spare" },
+      "expectedFunctions": [
+        "RoutePaarthurnaxSpareQuestStage",
+        "RoutePaarthurnaxSpareLoadCheck",
+        "Function RoutePaarthurnaxSpare(Form sourceForm)",
+        "HandlePaarthurnaxSpare(sourceForm, \"eventbus_paarthurnax_spare\")",
+        "PDV.Paarthurnax.SpareSeen",
+        "PDV.Paarthurnax.KillSeen",
+        "ApplyPaarthurnaxSpareReaction(\"Stuhn\"",
+        "ApplyPaarthurnaxSpareReaction(\"Stendarr\"",
+        "ApplyPaarthurnaxSpareReaction(\"Mara\"",
+        "ApplyPaarthurnaxSpareReaction(\"Kyne\""
+      ],
+      "manualChecks": [ "Paarthurnax alive at MQ305 stage 200", "if kill latch already fired, spare stays silent" ],
+      "debugMcmScenario": 12
+    },
+    {
+      "id": "borderline_rows_review",
+      "title": "Borderline rows to prove or drop",
+      "bucket": "backend-static;manual-review",
+      "trigger": { "type": "borderline-review", "editorIds": [ "DA14Start", "DLC2RRFavor01", "T03", "BYOHRelationshipAdoption" ] },
+      "manualChecks": [ "DA14Start s70", "DLC2RRFavor01 s200", "T03 s105", "HearthFires adoption stages" ]
+    }
+  ]
+}
