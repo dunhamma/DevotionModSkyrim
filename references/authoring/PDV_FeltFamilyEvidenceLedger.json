@@ -268,7 +268,7 @@
       "lane": "CreedLoss-Breton",
       "class": "price",
       "race": "Breton",
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_SPEL_CreedLoss_Breton_VowIntegrity, PDV_SPEL_CreedLoss_Breton_ExposureRupture, PDV_SPEL_CreedLoss_Breton_Excommunication, PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "",
       "creditedFrom": null
     },
@@ -290,7 +290,7 @@
       "lane": "Daedric-Azura",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Azura_Seeker, PDV_Price_Daedric_Azura_Devoted, PDV_Price_Daedric_Azura_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: Azura activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -316,7 +316,7 @@
       "lane": "Daedric-Boethiah",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Boethiah_Seeker, PDV_Price_Daedric_Boethiah_Devoted, PDV_Price_Daedric_Boethiah_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: Boethiah activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -342,7 +342,7 @@
       "lane": "Daedric-ClavicusVile",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Vile_Seeker, PDV_Price_Daedric_Vile_Devoted, PDV_Price_Daedric_Vile_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: ClavicusVile activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -368,7 +368,7 @@
       "lane": "Daedric-HermaeusMora",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Mora_Seeker, PDV_Price_Daedric_Mora_Devoted, PDV_Price_Daedric_Mora_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: HermaeusMora activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -407,7 +407,7 @@
       "lane": "Daedric-Hircine",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Hircine_Seeker, PDV_Price_Daedric_Hircine_Devoted, PDV_Price_Daedric_Hircine_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: Hircine activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -433,7 +433,7 @@
       "lane": "Daedric-Malacath",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Malacath_Seeker, PDV_Price_Daedric_Malacath_Devoted, PDV_Price_Daedric_Malacath_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: Malacath activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -459,7 +459,7 @@
       "lane": "Daedric-MehrunesDagon",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Dagon_Seeker, PDV_Price_Daedric_Dagon_Devoted, PDV_Price_Daedric_Dagon_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: MehrunesDagon activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -485,7 +485,7 @@
       "lane": "Daedric-Mephala",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Mephala_Seeker, PDV_Price_Daedric_Mephala_Devoted, PDV_Price_Daedric_Mephala_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: Mephala activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -511,7 +511,7 @@
       "lane": "Daedric-Meridia",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Meridia_Seeker, PDV_Price_Daedric_Meridia_Devoted, PDV_Price_Daedric_Meridia_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: Meridia activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -550,7 +550,7 @@
       "lane": "Daedric-MolagBal",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Molag_Seeker, PDV_Price_Daedric_Molag_Devoted, PDV_Price_Daedric_Molag_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: MolagBal activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -576,7 +576,7 @@
       "lane": "Daedric-Namira",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Namira_Seeker, PDV_Price_Daedric_Namira_Devoted, PDV_Price_Daedric_Namira_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: Namira activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -602,7 +602,7 @@
       "lane": "Daedric-Nocturnal",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Nocturnal_Seeker, PDV_Price_Daedric_Nocturnal_Devoted, PDV_Price_Daedric_Nocturnal_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: Nocturnal activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -628,7 +628,7 @@
       "lane": "Daedric-Peryite",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Peryite_Seeker, PDV_Price_Daedric_Peryite_Devoted, PDV_Price_Daedric_Peryite_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: Peryite activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -654,7 +654,7 @@
       "lane": "Daedric-Sanguine",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Sanguine_Seeker, PDV_Price_Daedric_Sanguine_Devoted, PDV_Price_Daedric_Sanguine_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: Sanguine activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -680,7 +680,7 @@
       "lane": "Daedric-Sheogorath",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Sheo_Seeker, PDV_Price_Daedric_Sheo_Devoted, PDV_Price_Daedric_Sheo_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: Sheogorath activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -706,7 +706,7 @@
       "lane": "Daedric-Vaermina",
       "class": "price",
       "race": null,
-      "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
+      "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_Price_Daedric_Vaermina_Seeker, PDV_Price_Daedric_Vaermina_Devoted, PDV_Price_Daedric_Vaermina_Champion) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
       "note": "Retro-credited 2026-07-07: Vaermina activeEffects slot recorded pass in the Daedric runtime evidence ledger.",
       "creditedFrom": {
         "ledger": "references/authoring/PDV_DaedricRuntimeEvidenceLedger.json",
@@ -1519,5 +1519,25 @@
       }
     }
   },
-  "updated": "2026-07-07"
+  "updated": "2026-07-07",
+  "audits": [
+    {
+      "date": "2026-07-09",
+      "audit": "retro-credit sweep + recent-change impact check",
+      "result": "NO additional retro-credit available; all 43 existing credits verified valid",
+      "doNotRepeat": "Both crediting paths are exhausted as of this date. Do not re-run this hunt unless a NEW evidence ledger is recorded or new felt effects are authored.",
+      "method": {
+        "path1_nameMatch": "verbatim effect displayName searched across PDV_Phase20_ManualEvidenceLedger, PDV_DaedricRuntimeEvidenceLedger, PDV_Phase12ContextualFavorPilot.manifest -> 0/105 pending matched. Matcher validated by positive control: re-found 8 of the 9 name-matched credits (1 miss credited from a session-handoff .md outside the ledger set).",
+        "path1_generousSweep": "displayName searched across all 440 references/authoring files -> 103 hits, ALL in reward/dislike SPEC files (declarations, not evidence) or PDV_BetaTestPacket_Argonian.md (run-sheet template with blank PASS/FAIL fields). Naming a spell in a spec is not proof it was felt.",
+        "path2_princeSlot": "16/16 princes already carry a recorded activeEffects pass; 0 pending families sit on a Daedric- lane. Exhausted."
+      },
+      "driftCheck": {
+        "question": "Did the 07-05..07-09 remap / tranche-10 / Yffre work invalidate the 43 credits?",
+        "answer": "No. Effect definitions (espEditorIds + actorValue + magnitude) compared at credit-date commit 904ab791 vs HEAD: 0 of 43 changed, 0 new effects added into credited families.",
+        "registryStability": "effects 471 -> 471; families 148 -> 148; 0 added, 0 removed, 0 member-list changes.",
+        "falsePositiveCleared": "File-level drift flagged 3 Bosmer credits (spec touched by 6e8aa971 after crediting, incl. Bosmer-Yffre|boon). Record-level inspection cleared them: only notes/designNote prose changed.",
+        "rootCause": "The remap/tranche-10/Yffre wave was SIGNAL-side (likes-dislikes CSV rows, quest-matrix cells, manager dispatch). It never touched MGEF/SPEL effect records, so the felt surface never moved."
+      }
+    }
+  ]
 }
