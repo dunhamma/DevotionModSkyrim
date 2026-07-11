@@ -156,12 +156,15 @@ signal-floor smoke state is open at runtime:
    matrix expansion, Book of Days aggregation, and the risky organic routes.
    Cards 2, 3, 4, 5, and 7 have passed after retest; continue with the next
    open card.
-3. **Race sittings for 1.0.** Use
-   `node .\tools\pdv_felt_registry_gen.mjs --sitting <Race>` and the 1.0 mega
-   packet. Each race sitting feeds C-FELT-FAMILY, C-PACING-SIGNOFF, and
+3. **Race sittings for 1.0.** Work the **Felt-Family Race Sittings
+   (deduplicated plan)** section below - ten checklist sittings that prove every
+   pending felt family (107 at snapshot) ONCE each (the raw `--sitting <Race>`
+   sheets repeat shared price/sting families across races; the plan assigns each
+   to a single sitting). Each race sitting feeds C-FELT-FAMILY, C-PACING-SIGNOFF, and
    C-PLACEMENT-FINAL. If a race's beta-feel verdict has regressed, re-run its
    beta-feel packet during the same sitting to clear the C-RACE-RUBRIC stale
-   state.
+   state. (`--sitting <Race>` is still useful for a live single-race regen, but it
+   re-lists shared families the plan has already assigned elsewhere.)
 4. **Cross-cutting 1.0 smoke.** Experience Mode two-mode smoke, Requiem Track B,
    dislike anti-stack under Requiem, ARR acceptance, and Bordello compatibility
    packaging.
@@ -218,6 +221,227 @@ node .\tools\pdv_signal_floor_smoke_gate.mjs --write-ledger
 node .\tools\pdv_1_0_endstate_gate.mjs
 ```
 
+## Felt-Family Race Sittings (deduplicated plan)
+
+SNAPSHOT of `PDV_FeltFamilyEvidenceLedger.json` as of 2026-07-11 (107 pending families). This is a generated point-in-time bundle; if the ledger grows or credits land, regenerate it. Each family is proven ONCE: every shared price/sting is assigned to a single race sitting whose native gods exercise it, so running these ten sittings proves all 107 with zero re-tests (the raw per-race `--sitting` sheets repeat shared families across races). Sink every observation into `PDV_FeltFamilyEvidenceLedger.json`; close each sitting with the race pacing sign-off in `PDV_PacingSignoffLedger.json` (C-PACING-SIGNOFF) and any in-world hook proof (C-PLACEMENT-FINAL).
+
+| # | Sitting | Origin idx | Families | Running total |
+|---|---|---|---|---|
+| 1 | Nord | 0 | 13 | 13 |
+| 2 | Imperial | 1 | 13 | 26 |
+| 3 | Breton | 2 | 12 | 38 |
+| 4 | Khajiit | 6 | 12 | 50 |
+| 5 | Altmer | 3 | 11 | 61 |
+| 6 | Orc | 8 | 11 | 72 |
+| 7 | Redguard | 9 | 10 | 82 |
+| 8 | Dunmer | 5 | 9 | 91 |
+| 9 | Bosmer | 4 | 8 | 99 |
+| 10 | Argonian | 7 | 8 | 107 |
+
+### 1. Nord sitting (13 families) - `set PDV_GLO_OriginRace to 0`
+
+**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
+- [ ] `Nord-Kyne|boon`  (e.g. Kyne's Sky - Seeker)
+- [ ] `Nord-OldWays|boon`  (e.g. Old Ways - Seeker)
+- [ ] `Nord-Shor|boon`  (e.g. Shor's Favor - Seeker)
+- [ ] `Nord-Stuhn|boon`  (e.g. Stuhn's Ward - Seeker)
+- [ ] `Nord-Talos|boon`  (e.g. Talos's Resolve - Seeker)
+- [ ] `Nord-Tsun|boon`  (e.g. Tsun's Trial - Seeker)
+
+**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
+- [ ] `Neglect-Kyne|neglect`  (e.g. The Weather Stops Cooperating)
+
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
+- [ ] `Dibella|price`  (e.g. murder-defenseless)
+- [ ] `Kyne|price`  (e.g. kill-hostile-beast)
+- [ ] `Shor|price`  (e.g. murder-defenseless)
+- [ ] `Stuhn|price`  (e.g. murder-defenseless)
+- [ ] `Talos|price`  (e.g. murder-defenseless)
+- [ ] `Tsun|price`  (e.g. murder-defenseless)
+
+### 2. Imperial sitting (13 families) - `set PDV_GLO_OriginRace to 1`
+
+**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
+- [ ] `Imperial-Akatosh|boon`  (e.g. Akatosh's Covenant - Seeker)
+- [ ] `Imperial-Arkay|boon`  (e.g. Arkay's Vigil - Seeker)
+- [ ] `Imperial-Civic|boon`  (e.g. Civic Faith - Seeker)
+- [ ] `Imperial-Dibella|boon`  (e.g. Dibella's Grace - Seeker)
+- [ ] `Imperial-Julianos|boon`  (e.g. Julianos's Wisdom - Seeker)
+- [ ] `Imperial-Kynareth|boon`  (e.g. Kynareth's Breath - Seeker)
+- [ ] `Imperial-Mara|boon`  (e.g. Mara's Mercy - Seeker)
+- [ ] `Imperial-Stendarr|boon`  (e.g. Stendarr's Mercy - Seeker)
+- [ ] `Imperial-Talos|boon`  (e.g. Talos's Resolve - Seeker)
+- [ ] `Imperial-Zenithar|boon`  (e.g. Zenithar's Trade - Seeker)
+
+**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
+- [ ] `Neglect-Imperial|neglect`  (e.g. The Divines Grow Distant)
+
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
+- [ ] `Kynareth|price`  (e.g. raise-undead)
+- [ ] `Stendarr|price`  (e.g. murder-defenseless)
+
+### 3. Breton sitting (12 families) - `set PDV_GLO_OriginRace to 2`
+
+**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
+- [ ] `Breton-GreenWay|boon`  (e.g. Green Way - Seeker)
+- [ ] `Breton-HiddenArt|boon`  (e.g. Hidden Art - Seeker)
+- [ ] `Breton-KnightsRoad|boon`  (e.g. Knight's Vow - Seeker)
+- [ ] `Breton-Tradition|boon`  (e.g. Tradition's Footing - Seeker)
+
+**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
+- [ ] `Neglect-Breton|neglect`  (e.g. The Tradition Grows Distant)
+
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
+- [ ] `Akatosh|price`  (e.g. kill-dragon)
+- [ ] `Arkay|price`  (e.g. raise-undead)
+- [ ] `CreedLoss-Breton|price`  (e.g. The Vow Broken)
+- [ ] `Julianos|price`  (e.g. murder-defenseless)
+- [ ] `Magnus|price`  (e.g. raise-undead)
+- [ ] `Mara|price`  (e.g. murder-defenseless)
+
+**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects:
+- [ ] `Disfavor-MercyProtection|disfavor-sting`  (e.g. The Ward Thins)
+
+### 4. Khajiit sitting (12 families) - `set PDV_GLO_OriginRace to 6`
+
+**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
+- [ ] `Khajiit-Alkosh|boon`  (e.g. Alkosh's Order - Seeker)
+- [ ] `Khajiit-Azurah|boon`  (e.g. Azurah's Twilight - Seeker)
+- [ ] `Khajiit-BaanDar|boon`  (e.g. Baan Dar's Guile - Seeker)
+- [ ] `Khajiit-Khenarthi|boon`  (e.g. Khenarthi's Road - Seeker)
+- [ ] `Khajiit-Rajhin|boon`  (e.g. Rajhin's Shadow - Seeker)
+
+**substrate-favor** - prime the substrate/context state, read the effect in Active Effects:
+- [ ] `Khajiit-Lunar|substrate-favor`  (e.g. Khajiit Lunar Road)
+- [ ] `Khajiit-Substrate|substrate-favor`  (e.g. Lunar Hardiness)
+
+**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
+- [ ] `Neglect-KhajiitLunar|neglect`  (e.g. The Moons Withdrawn)
+
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
+- [ ] `Alkosh|price`  (e.g. murder-defenseless)
+- [ ] `Azurah|price`  (e.g. murder-defenseless)
+- [ ] `Khenarthi|price`  (e.g. raise-undead)
+- [ ] `Rajhin|price`  (e.g. murder-defenseless)
+
+### 5. Altmer sitting (11 families) - `set PDV_GLO_OriginRace to 3`
+
+**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
+- [ ] `Altmer-AuriEl|boon`  (e.g. Auri-El's Dawn - Seeker)
+- [ ] `Altmer-Magnus|boon`  (e.g. Magnus's Arts - Seeker)
+- [ ] `Altmer-Orthodox|boon`  (e.g. Altmer Orthodox Steadiness)
+- [ ] `Altmer-Syrabane|boon`  (e.g. Syrabane's Guard - Seeker)
+- [ ] `Altmer-Trinimac|boon`  (e.g. Trinimac's Charge - Seeker)
+- [ ] `Altmer-Xarxes|boon`  (e.g. Xarxes's Record - Seeker)
+
+**curse** - prime the curse state via debug MCM, read the curse effect in Active Effects:
+- [ ] `Altmer-CurseState|curse`
+- [ ] `Altmer-VampireExiledPath|curse`
+
+**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
+- [ ] `Neglect-Altmer|neglect`  (e.g. The Dawn Withheld)
+
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
+- [ ] `Auriel|price`  (e.g. murder-defenseless)
+- [ ] `Xarxes|price`  (e.g. accept-daedric-artifact)
+
+### 6. Orc sitting (11 families) - `set PDV_GLO_OriginRace to 8`
+
+**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
+- [ ] `Orc-City|boon`  (e.g. Private Fidelity - Seeker)
+- [ ] `Orc-LegionExile|boon`  (e.g. Foreign Discipline - Seeker)
+- [ ] `Orc-Malacath|boon`  (e.g. Malacath's Regard - Seeker)
+- [ ] `Orc-Stronghold|boon`  (e.g. Forge-Worthy - Seeker)
+- [ ] `Orc-TrialOfIron|boon`  (e.g. Trial of Iron - Tusk)
+- [ ] `Orc-supportSpells|boon`  (e.g. The Code Holds)
+- [ ] `OrcCodeHolds|boon`  (e.g. The Code Holds - Devoted)
+
+**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
+- [ ] `Neglect-Orc|neglect`  (e.g. The Code Goes Unkept)
+
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
+- [ ] `Malacath|price`  (e.g. steal-item)
+- [ ] `Trinimac|price`  (e.g. accept-daedric-artifact)
+
+**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects:
+- [ ] `Disfavor-WarHonor|disfavor-sting`  (e.g. Honor Falters)
+
+### 7. Redguard sitting (10 families) - `set PDV_GLO_OriginRace to 9`
+
+**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
+- [ ] `Redguard-AncestorSpine|boon`  (e.g. Ancestor Spine - Seeker)
+- [ ] `Redguard-HoonDing|boon`  (e.g. HoonDing's Way - Seeker)
+- [ ] `Redguard-Leki|boon`  (e.g. Leki's Sword-Song - Seeker)
+- [ ] `Redguard-Tuwhacca|boon`  (e.g. Tu'whacca's Ward - Seeker)
+
+**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
+- [ ] `Neglect-Redguard|neglect`  (e.g. Ancestors at a Distance)
+
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
+- [ ] `HoonDing|price`  (e.g. murder-defenseless)
+- [ ] `Leki|price`  (e.g. murder-defenseless)
+- [ ] `Tuwhacca|price`  (e.g. raise-undead)
+
+**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects:
+- [ ] `Disfavor-DeathAncestors|disfavor-sting`  (e.g. Rest Turns Uneasy)
+- [ ] `Disfavor-SkyStormHunt|disfavor-sting`  (e.g. Weather Turns Sharp)
+
+### 8. Dunmer sitting (9 families) - `set PDV_GLO_OriginRace to 5`
+
+**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
+- [ ] `Dunmer-Azura|boon`  (e.g. Azura's Twilight - Seeker)
+- [ ] `Dunmer-Boethiah|boon`  (e.g. Boethiah's Struggle - Seeker)
+- [ ] `Dunmer-Mephala|boon`  (e.g. Mephala's Web - Seeker)
+- [ ] `Dunmer-Reclamation|boon`  (e.g. Reclamation Communion - Faithful)
+
+**substrate-favor** - prime the substrate/context state, read the effect in Active Effects:
+- [ ] `Dunmer-Substrate|substrate-favor`  (e.g. Dunmer Ancestor's Steadiness)
+
+**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
+- [ ] `Neglect-Dunmer|neglect`  (e.g. The Ancestors' Silence)
+
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
+- [ ] `Boethiah|price`  (e.g. heal-or-cure-npc)
+- [ ] `Mephala|price`  (e.g. kill-hostile-humanoid)
+
+**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects:
+- [ ] `Disfavor-VoidSecrets|disfavor-sting`  (e.g. Quiet Unease)
+
+### 9. Bosmer sitting (8 families) - `set PDV_GLO_OriginRace to 4`
+
+**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
+- [ ] `Bosmer-BanditRoad|boon`  (e.g. Bandit Road - Seeker)
+- [ ] `Bosmer-Exchange|boon`  (e.g. The Exchange - Seeker)
+- [ ] `Bosmer-LivingStory|boon`  (e.g. Living Story - Seeker)
+
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
+- [ ] `BaanDar|price`  (e.g. murder-defenseless)
+- [ ] `Yffre|price`  (e.g. raise-undead)
+- [ ] `Zen|price`  (e.g. steal-item)
+
+**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects:
+- [ ] `Disfavor-MoonLuckShadow|disfavor-sting`  (e.g. Fortune Slips)
+- [ ] `Disfavor-OrderTradeLore|disfavor-sting`  (e.g. The Ledger Sours)
+
+### 10. Argonian sitting (8 families) - `set PDV_GLO_OriginRace to 7`
+
+**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
+- [ ] `Argonian-Hist|boon`  (e.g. Hist Communion - Faithful)
+- [ ] `Argonian-People|boon`  (e.g. Chosen People - Kin)
+- [ ] `Argonian-Sithis|boon`  (e.g. Void Distance - Faced)
+- [ ] `Argonian-supportSpells|boon`  (e.g. Void-Held Surge)
+
+**substrate-favor** - prime the substrate/context state, read the effect in Active Effects:
+- [ ] `Argonian-Substrate|substrate-favor`  (e.g. Hist Memory)
+
+**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
+- [ ] `Neglect-ArgonianHist|neglect`  (e.g. The Hist Distant)
+
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
+- [ ] `Sithis|price`  (e.g. raise-undead)
+- [ ] `TheHist|price`  (e.g. murder-defenseless)
+
+
 ## 1.0 Open Gate Map
 
 The generated burndown is current authority. These are the practical closeout
@@ -226,7 +450,7 @@ lanes this runbook feeds:
 | Criterion | How testing closes it | Evidence sink |
 |---|---|---|
 | C-RACE-RUBRIC | Re-run the race beta-feel packet for any race whose ledger verdict regresses below Pass (currently STALE from source drift) | Per-race beta-feel packet ledgers |
-| C-FELT-FAMILY | One in-game felt proof per pending lane/class family | `PDV_FeltFamilyEvidenceLedger.json` |
+| C-FELT-FAMILY | Work the ten checklists in **Felt-Family Race Sittings (deduplicated plan)** above - every pending family (107 at snapshot), each proven once | `PDV_FeltFamilyEvidenceLedger.json` |
 | C-DISLIKE-DEBUFF-TUNING | Dedicated anti-stack/Requiem-felt sitting | `PDV_1_0_ManualSignoffLedger.json` (`dislikeStackTuning`) |
 | C-PACING-SIGNOFF | One dated real-play pacing sign-off per race | `PDV_PacingSignoffLedger.json` |
 | C-PLACEMENT-FINAL | Pending in-world hook proofs folded into race sittings | `PDV_InWorldHookProofLedger.json` |

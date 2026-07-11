@@ -432,6 +432,11 @@ function sittingSheet(registry, race) {
   const ledger = JSON.parse(fs.readFileSync(path.join(ROOT, LEDGER_REL), "utf8"));
   const spec = loadJson(`${AUTH}/PDV_${race}RewardRecords.spec.json`);
   const rosterDeities = new Set((spec.deityQuests ?? []).map((q) => normalizeLaneToken(q.deityName)));
+  // normalizeLaneToken only uppercases the first char, so a deity's roster form
+  // and its CSV lane form can canonicalize differently (roster "Auri-El" -> "AuriEl"
+  // vs CSV lane "auri-el" -> "Auriel"). Match roster prices case-insensitively so
+  // such families are not silently dropped from the sitting sheet.
+  const rosterDeitiesLc = new Set([...rosterDeities].map((d) => d.toLowerCase()));
 
   // Roster deity -> disfavor domain, from the dislike-consequence spec. A race
   // sitting exercises the domain stings of whatever native deities it offends,
@@ -448,7 +453,7 @@ function sittingSheet(registry, race) {
   for (const [familyId, slot] of Object.entries(ledger.families)) {
     if (slot.status !== "pending") continue;
     const isRaceFamily = slot.race === race || slot.lane.startsWith(`${race}-`) || slot.lane.startsWith(`Neglect-${race}`) || slot.lane === `Favor-${race}`;
-    const isRosterPrice = slot.class === "price" && !slot.lane.startsWith("Daedric-") && rosterDeities.has(normalizeLaneToken(slot.lane));
+    const isRosterPrice = slot.class === "price" && !slot.lane.startsWith("Daedric-") && rosterDeitiesLc.has(normalizeLaneToken(slot.lane).toLowerCase());
     const isRaceDisfavor = slot.class === "disfavor-sting" && raceDomains.has(String(slot.lane).replace(/^Disfavor-/, ""));
     if (!isRaceFamily && !isRosterPrice && !isRaceDisfavor) continue;
     const sample = registry.effects.find((e) => e.familyId === familyId);
