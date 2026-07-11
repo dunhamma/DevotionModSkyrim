@@ -131,10 +131,7 @@
       "lane": "audits",
       "evidence": {
         "read": {
-          "kind": "ledger-md",
-          "ledger": "references/authoring/PDV_IntegrityHarnessLedger.md",
-          "passRule": "md-contains",
-          "params": { "pattern": "Overall: \\*\\*PASS\\*\\*", "minCount": 1 }
+          "kind": "stamp-only"
         },
         "run": {
           "tool": ["tools/pdv_integrity_harness.mjs"],
@@ -145,7 +142,7 @@
         "sources": ["@managerLive", "@managerDeployed"],
         "onDrift": "FAIL"
       },
-      "closes": "Fix the failing gate check named in PDV_IntegrityHarnessLedger.md, then re-run the harness.",
+      "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-AUDIT-INTEGRITY with the Anvil MCP bridge live (127.0.0.1:27016) so the harness signal_e2e_gate can confirm dispatch; a passing --run stamps fresh. Read mode then trusts the stamp until @managerLive/@managerDeployed drift, rather than re-reading the volatile PDV_IntegrityHarnessLedger.md (which flips to FAIL on any headless harness run with the bridge down).",
       "post10": false
     },
     {
