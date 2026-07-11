@@ -223,7 +223,7 @@
       "threshold": "broad-worship state, civic progress >= Seeker-equivalent",
       "gate": "BROAD LANE = PATRON_STATE_BROAD (NOT a deity tier). Granted by the broad-worship reward path; editorId is the FIXED manager property PDV_Bless_Imperial_Civic_T1 (GetFirstTierRaceRewardSpellForOrigin). Per Ruling R1/R2 in PDV_Phase2_DeityRoster_and_ArchitectureRulings.md.",
       "spellEditorId": "PDV_Bless_Imperial_Civic_T1",
-      "displayName": "Civic Faith - Seeker",
+      "displayName": "The Divines' Regard - Seeker",
       "effects": [
         {
           "actorValue": "Health",
@@ -231,7 +231,7 @@
           "effectName": "Fortify Health"
         }
       ],
-      "playerFacingText": "The Nine note your civic faith. Maximum Health +10."
+      "playerFacingText": "The Divines regard your shared devotion. Maximum Health +10."
     },
     {
       "emphasis": "Civic",
@@ -240,7 +240,7 @@
       "threshold": "broad-worship state, capped at Faithful (broad lane stops here)",
       "gate": "BROAD LANE = PATRON_STATE_BROAD (NOT a deity tier). New manager property PDV_Bless_Imperial_Civic_T2 (B2). Broad stays below focused.",
       "spellEditorId": "PDV_Bless_Imperial_Civic_T2",
-      "displayName": "Civic Faith - Faithful",
+      "displayName": "The Divines' Regard - Faithful",
       "effects": [
         {
           "actorValue": "Health",
@@ -252,7 +252,7 @@
           "magnitude": 10
         }
       ],
-      "playerFacingText": "A faithful citizen of the Empire is well-kept. Maximum Health +20, Disease Resistance +10%.",
+      "playerFacingText": "The Divines deepen their regard for your shared devotion. Maximum Health +20, Disease Resistance +10%.",
       "signature": "Broad civic resilience: faster recovery and disease ward; broad lane stops here, below focused patron benefits."
     },
     {

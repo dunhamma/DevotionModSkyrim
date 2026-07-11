@@ -131,8 +131,14 @@ void ValidateSpell(DisfavorSpell? spell, string domain, string band)
         throw new InvalidOperationException($"{domain}/{band} spell spec is incomplete.");
     }
     EnsureAscii(spell.displayName, spell.spellEditorId);
+    EnsureAscii(SpellDisplayName(spell), spell.spellEditorId);
     EnsureAscii(spell.description, spell.spellEditorId);
 }
+
+string SpellDisplayName(DisfavorSpell spell) =>
+    string.IsNullOrWhiteSpace(spell.sourceDisplayName)
+        ? spell.displayName!
+        : spell.sourceDisplayName!;
 
 List<ExpandedSpell> ExpandSpells(DisfavorSpec spec)
 {
@@ -172,7 +178,7 @@ void BuildSpell(
 
     spell.EditorID = spec.Definition.spellEditorId;
     spell.FormVersion = 44;
-    spell.Name = Tx(spec.Definition.displayName!);
+    spell.Name = Tx(SpellDisplayName(spec.Definition));
     spell.Description = Tx(spec.Definition.description!);
     spell.BaseCost = 0;
     spell.Type = SpellType.Ability;
@@ -288,9 +294,10 @@ void CheckSpell(Dictionary<string, ISkyrimMajorRecordGetter> index, ExpandedSpel
         return;
     }
 
-    if (!string.Equals(spell.Name?.String ?? "", spec.Definition.displayName, StringComparison.Ordinal))
+    var expectedSpellName = SpellDisplayName(spec.Definition);
+    if (!string.Equals(spell.Name?.String ?? "", expectedSpellName, StringComparison.Ordinal))
     {
-        report.Errors.Add($"{spec.Definition.spellEditorId} name is '{spell.Name?.String}', expected '{spec.Definition.displayName}'.");
+        report.Errors.Add($"{spec.Definition.spellEditorId} name is '{spell.Name?.String}', expected '{expectedSpellName}'.");
     }
     if (!string.Equals(spell.Description?.String ?? "", spec.Definition.description, StringComparison.Ordinal))
     {
@@ -528,6 +535,7 @@ sealed class DisfavorSpell
     public string? magicEffectEditorId { get; set; }
     public string? propertyName { get; set; }
     public string? displayName { get; set; }
+    public string? sourceDisplayName { get; set; }
     public string? description { get; set; }
     public float magnitude { get; set; }
     public int durationHours { get; set; }

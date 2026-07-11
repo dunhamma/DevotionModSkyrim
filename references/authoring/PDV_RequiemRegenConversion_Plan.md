@@ -150,7 +150,7 @@ passed races re-open that race's stackSnapshot manual proof.
 
 | Race | Record | Cur AV / mag | Notes |
 |---|---|---|---|
-| Imperial | Civic_T1 "Civic Faith - Seeker" | HealRateMult +4 | SOLE effect; player's FIRST reward, zero felt value today |
+| Imperial | Civic_T1 "The Divines' Regard - Seeker" | HealRateMult +4 | SOLE effect; player's FIRST reward, zero felt value today |
 | Imperial | Civic_T2 | HealRateMult +7 | co-effect ResistDisease +10 kept |
 | Imperial | Mara_T2 "Mara's Mercy" | HealRateMult +7 | Mara = healing patron; Restoration +13 kept |
 | Imperial | Mara_T3 "Mara's Compassion" | HealRateMult +19 | STRONGEST candidate; "strongest healing-rate" headline fully swallowed |

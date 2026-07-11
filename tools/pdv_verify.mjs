@@ -6466,7 +6466,7 @@ class Verifier {
       "SIGNAL_ANCESTOR_SPINE = 203",
       "DELTA_ANCESTOR_SPINE = 1.0",
       "signalType == SIGNAL_ANCESTOR_SPINE",
-      "return DELTA_ANCESTOR_SPINE",
+      "return 1.0",
     ]);
     this.checkSourceContains("Altmer spine substrate source", "PDV_Substrate_AltmerAncestor", [
       "Scriptname PDV_Substrate_AltmerAncestor extends PDV_SubstrateBase",

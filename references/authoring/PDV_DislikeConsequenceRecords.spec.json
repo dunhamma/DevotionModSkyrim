@@ -19,8 +19,9 @@
         "spellEditorId": "PDV_SPEL_Disfavor_SkyStormHunt_Light",
         "magicEffectEditorId": "PDV_MGEF_Disfavor_SkyStormHunt_Light",
         "propertyName": "PDV_SPEL_Disfavor_SkyStormHunt_Light",
-        "displayName": "Weather Turns Sharp",
-        "description": "The road and weather turn cold for a while. Frost Resistance -2%.",
+        "displayName": "Weather turns cold for a while.",
+        "sourceDisplayName": "Favor Slips",
+        "description": "Weather turns cold for a while. Frost Resistance -2%.",
         "magnitude": -2.0,
         "durationHours": 2
       },
@@ -28,8 +29,9 @@
         "spellEditorId": "PDV_SPEL_Disfavor_SkyStormHunt_Sharp",
         "magicEffectEditorId": "PDV_MGEF_Disfavor_SkyStormHunt_Sharp",
         "propertyName": "PDV_SPEL_Disfavor_SkyStormHunt_Sharp",
-        "displayName": "Weather Turns Against You",
-        "description": "The road and weather turn against you for a while. Frost Resistance -4%.",
+        "displayName": "Weather turns against you for a while.",
+        "sourceDisplayName": "Favor Slips",
+        "description": "Weather turns against you for a while. Frost Resistance -4%.",
         "magnitude": -4.0,
         "durationHours": 4
       }
@@ -42,8 +44,9 @@
         "spellEditorId": "PDV_SPEL_Disfavor_DeathAncestors_Light",
         "magicEffectEditorId": "PDV_MGEF_Disfavor_DeathAncestors_Light",
         "propertyName": "PDV_SPEL_Disfavor_DeathAncestors_Light",
-        "displayName": "Rest Turns Uneasy",
-        "description": "The quiet of the dead grows uneasy for a while. Disease Resistance -2%.",
+        "displayName": "Rest grows uneasy for a while.",
+        "sourceDisplayName": "Favor Slips",
+        "description": "Rest grows uneasy for a while. Disease Resistance -2%.",
         "magnitude": -2.0,
         "durationHours": 2
       },
@@ -51,8 +54,9 @@
         "spellEditorId": "PDV_SPEL_Disfavor_DeathAncestors_Sharp",
         "magicEffectEditorId": "PDV_MGEF_Disfavor_DeathAncestors_Sharp",
         "propertyName": "PDV_SPEL_Disfavor_DeathAncestors_Sharp",
-        "displayName": "Restless Quiet",
-        "description": "The dead do not rest easy around you for a while. Disease Resistance -4%.",
+        "displayName": "The dead grow restless for a while.",
+        "sourceDisplayName": "Favor Slips",
+        "description": "The dead grow restless for a while. Disease Resistance -4%.",
         "magnitude": -4.0,
         "durationHours": 4
       }
@@ -65,8 +69,9 @@
         "spellEditorId": "PDV_SPEL_Disfavor_MercyProtection_Light",
         "magicEffectEditorId": "PDV_MGEF_Disfavor_MercyProtection_Light",
         "propertyName": "PDV_SPEL_Disfavor_MercyProtection_Light",
-        "displayName": "The Ward Thins",
-        "description": "Mercy withdraws its shelter for a while. Magic Resistance -2%.",
+        "displayName": "Mercy withdraws for a while.",
+        "sourceDisplayName": "Favor Slips",
+        "description": "Mercy withdraws for a while. Magic Resistance -2%.",
         "magnitude": -2.0,
         "durationHours": 2
       },
@@ -74,8 +79,9 @@
         "spellEditorId": "PDV_SPEL_Disfavor_MercyProtection_Sharp",
         "magicEffectEditorId": "PDV_MGEF_Disfavor_MercyProtection_Sharp",
         "propertyName": "PDV_SPEL_Disfavor_MercyProtection_Sharp",
-        "displayName": "The Ward Breaks",
-        "description": "Mercy withdraws its shelter sharply for a while. Magic Resistance -4%.",
+        "displayName": "Mercy withdraws sharply for a while.",
+        "sourceDisplayName": "Favor Slips",
+        "description": "Mercy withdraws sharply for a while. Magic Resistance -4%.",
         "magnitude": -4.0,
         "durationHours": 4
       }
@@ -88,8 +94,9 @@
         "spellEditorId": "PDV_SPEL_Disfavor_WarHonor_Light",
         "magicEffectEditorId": "PDV_MGEF_Disfavor_WarHonor_Light",
         "propertyName": "PDV_SPEL_Disfavor_WarHonor_Light",
-        "displayName": "Honor Falters",
-        "description": "Honor recoils from the act for a while. One-Handed -3.",
+        "displayName": "Honor recoils for a while.",
+        "sourceDisplayName": "Favor Slips",
+        "description": "Honor recoils for a while. One-Handed -3.",
         "magnitude": -3.0,
         "durationHours": 2
       },
@@ -97,8 +104,9 @@
         "spellEditorId": "PDV_SPEL_Disfavor_WarHonor_Sharp",
         "magicEffectEditorId": "PDV_MGEF_Disfavor_WarHonor_Sharp",
         "propertyName": "PDV_SPEL_Disfavor_WarHonor_Sharp",
-        "displayName": "Honor Recoils",
-        "description": "Honor recoils sharply from the act for a while. One-Handed -5.",
+        "displayName": "Honor recoils sharply for a while.",
+        "sourceDisplayName": "Favor Slips",
+        "description": "Honor recoils sharply for a while. One-Handed -5.",
         "magnitude": -5.0,
         "durationHours": 4
       }
@@ -111,8 +119,9 @@
         "spellEditorId": "PDV_SPEL_Disfavor_OrderTradeLore_Light",
         "magicEffectEditorId": "PDV_MGEF_Disfavor_OrderTradeLore_Light",
         "propertyName": "PDV_SPEL_Disfavor_OrderTradeLore_Light",
-        "displayName": "The Ledger Sours",
-        "description": "Order and fair dealing sour around you for a while. Speech -3.",
+        "displayName": "Order sours for a while.",
+        "sourceDisplayName": "Favor Slips",
+        "description": "Order sours for a while. Speech -3.",
         "magnitude": -3.0,
         "durationHours": 2
       },
@@ -120,8 +129,9 @@
         "spellEditorId": "PDV_SPEL_Disfavor_OrderTradeLore_Sharp",
         "magicEffectEditorId": "PDV_MGEF_Disfavor_OrderTradeLore_Sharp",
         "propertyName": "PDV_SPEL_Disfavor_OrderTradeLore_Sharp",
-        "displayName": "The Ledger Turns",
-        "description": "Order and fair dealing turn against you for a while. Speech -5.",
+        "displayName": "Order turns against you for a while.",
+        "sourceDisplayName": "Favor Slips",
+        "description": "Order turns against you for a while. Speech -5.",
         "magnitude": -5.0,
         "durationHours": 4
       }
@@ -134,8 +144,9 @@
         "spellEditorId": "PDV_SPEL_Disfavor_MoonLuckShadow_Light",
         "magicEffectEditorId": "PDV_MGEF_Disfavor_MoonLuckShadow_Light",
         "propertyName": "PDV_SPEL_Disfavor_MoonLuckShadow_Light",
-        "displayName": "Fortune Slips",
-        "description": "Fortune slips into shadow for a while. Sneak -3.",
+        "displayName": "Fortune slips for a while.",
+        "sourceDisplayName": "Favor Slips",
+        "description": "Fortune slips for a while. Sneak -3.",
         "magnitude": -3.0,
         "durationHours": 2
       },
@@ -143,8 +154,9 @@
         "spellEditorId": "PDV_SPEL_Disfavor_MoonLuckShadow_Sharp",
         "magicEffectEditorId": "PDV_MGEF_Disfavor_MoonLuckShadow_Sharp",
         "propertyName": "PDV_SPEL_Disfavor_MoonLuckShadow_Sharp",
-        "displayName": "Fortune Turns",
-        "description": "Fortune turns hard into shadow for a while. Sneak -5.",
+        "displayName": "Fortune turns hard for a while.",
+        "sourceDisplayName": "Favor Slips",
+        "description": "Fortune turns hard for a while. Sneak -5.",
         "magnitude": -5.0,
         "durationHours": 4
       }
@@ -157,8 +169,9 @@
         "spellEditorId": "PDV_SPEL_Disfavor_VoidSecrets_Light",
         "magicEffectEditorId": "PDV_MGEF_Disfavor_VoidSecrets_Light",
         "propertyName": "PDV_SPEL_Disfavor_VoidSecrets_Light",
-        "displayName": "Quiet Unease",
-        "description": "A quiet unease clings to hidden things for a while. Magicka -5.",
+        "displayName": "Unease clings for a while.",
+        "sourceDisplayName": "Favor Slips",
+        "description": "Unease clings for a while. Magicka -5.",
         "magnitude": -5.0,
         "durationHours": 2
       },
@@ -166,8 +179,9 @@
         "spellEditorId": "PDV_SPEL_Disfavor_VoidSecrets_Sharp",
         "magicEffectEditorId": "PDV_MGEF_Disfavor_VoidSecrets_Sharp",
         "propertyName": "PDV_SPEL_Disfavor_VoidSecrets_Sharp",
-        "displayName": "The Hidden Stirs",
-        "description": "A sharp unease clings to hidden things for a while. Magicka -10.",
+        "displayName": "Unease sharpens for a while.",
+        "sourceDisplayName": "Favor Slips",
+        "description": "Unease sharpens for a while. Magicka -10.",
         "magnitude": -10.0,
         "durationHours": 4
       }

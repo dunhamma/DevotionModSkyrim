@@ -1193,6 +1193,8 @@ Function EnsureBosmerRuntimeWiring()
 EndFunction
 
 Function EnsureNordRuntimeWiring()
+    EnsureNordOrkeyRewardRuntimeWiring()
+
     if !PDV_NordPantheonBaselineTrack
         return
     endIf
@@ -1210,6 +1212,37 @@ Function EnsureNordRuntimeWiring()
         labels[0] = "OldWays"
         labels[1] = "NineDivines"
         PDV_NordPantheonBaselineTrack.StateLabels = labels
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.NordPantheonBaseline.DebugState", PDV_NordPantheonBaselineTrack.GetCurrentState())
+EndFunction
+
+Function EnsureNordOrkeyRewardRuntimeWiring()
+    Bool repaired = False
+
+    if !PDV_Bless_Nord_Arkay_T1
+        PDV_Bless_Nord_Arkay_T1 = Game.GetFormFromFile(0x071660, "Devotion.esp") as Spell
+        if PDV_Bless_Nord_Arkay_T1
+            repaired = True
+        endIf
+    endIf
+
+    if !PDV_Bless_Nord_Arkay_T2
+        PDV_Bless_Nord_Arkay_T2 = Game.GetFormFromFile(0x071663, "Devotion.esp") as Spell
+        if PDV_Bless_Nord_Arkay_T2
+            repaired = True
+        endIf
+    endIf
+
+    if !PDV_Bless_Nord_Arkay_T3
+        PDV_Bless_Nord_Arkay_T3 = Game.GetFormFromFile(0x071666, "Devotion.esp") as Spell
+        if PDV_Bless_Nord_Arkay_T3
+            repaired = True
+        endIf
+    endIf
+
+    if repaired
+        Trace(1, "Nord Orkey reward runtime wiring repaired.")
     endIf
 EndFunction
 
@@ -1998,6 +2031,19 @@ Function FlushLikesDislikesSurface(Int eventType)
 
     Trace(1, "Likes/dislikes surface flushed: event " + eventType + ", positive " + _ldSurfPosCount + ", negative " + _ldSurfNegCount)
     ResetLikesDislikesSurface()
+EndFunction
+
+Function SurfaceDebugDislikeEvent(PDV_DeityBase deity, Float amount, Int eventType)
+    if !deity || amount >= 0.0
+        return
+    endIf
+
+    String deityName = GetPublicDeityDisplayName(deity)
+    String symbolName = GetPrismaSymbolForDeity(deity)
+    Int nowDay = Utility.GetCurrentGameTime() as Int
+    SendPrismaToast(symbolName, "warning", "A deed ill-received", deityName + " takes offense at the act.")
+    AppendBookOfDaysEntry(deityName + " took offense at the act.", nowDay, "favor.loss", symbolName, False, 1, "A deed ill-received")
+    Trace(1, "Debug dislike surface flushed: " + deity.DeityName + " event " + eventType)
 EndFunction
 
 Bool Function ConsumeShrinePrayerCredit(PDV_DeityBase deity, String sourceId)
@@ -11294,6 +11340,10 @@ Float Function GetDislikeBaseDeltaForEvent(PDV_DeityBase deity, Int eventType)
         return 0.0
     endIf
 
+    if !IsGenericLikesDislikesDeityReachable(deity)
+        return 0.0
+    endIf
+
     Form deityForm = deity as Form
     String tableKeyPrefix = "PDV.LD." + eventType
     Float baseDelta = StorageUtil.GetFloatValue(deityForm, tableKeyPrefix + ".D")
@@ -11546,6 +11596,10 @@ Function DebugFireDislike(PDV_DeityBase deity, Int eventType)
         Trace(1, "DebugFireDislike skipped: no deity.")
         return
     endIf
+    if !IsGenericLikesDislikesDeityReachable(deity)
+        Trace(1, "DebugFireDislike: " + deity.DeityName + " is not reachable in the current origin/baseline.")
+        return
+    endIf
     Float delta = GetDislikeBaseDeltaForEvent(deity, eventType)
     if delta >= 0.0
         Trace(1, "DebugFireDislike: no dislike row for " + deity.DeityName + " event " + eventType)
@@ -11555,7 +11609,11 @@ Function DebugFireDislike(PDV_DeityBase deity, Int eventType)
     if domainValue != DISFAVOR_DOMAIN_NONE
         StorageUtil.SetIntValue(deity as Form, GetDisfavorRepeatDayKey(domainValue, eventType), -1)
     endIf
+    Bool nativeSurface = ShouldSurfaceLikesDislikesEvent(eventType)
     AwardPietyFromLikesDislikes(deity, delta, eventType, "debug_fire_dislike")
+    if !nativeSurface
+        SurfaceDebugDislikeEvent(deity, delta, eventType)
+    endIf
     Trace(1, "DebugFireDislike: " + deity.DeityName + " event " + eventType + " delta " + delta)
 EndFunction
 
@@ -11656,6 +11714,9 @@ EndFunction
 String Function DebugDislikeSummaryLine(PDV_DeityBase deity, Int eventType)
     if !deity
         return "event " + eventType + " | no deity"
+    endIf
+    if !IsGenericLikesDislikesDeityReachable(deity)
+        return "event " + eventType + " | " + deity.DeityName + " | not current pantheon"
     endIf
     Float delta = GetDislikeBaseDeltaForEvent(deity, eventType)
     if delta >= 0.0
@@ -13672,6 +13733,8 @@ Function SyncNordRewards(Actor playerRef)
         return
     endIf
 
+    EnsureNordOrkeyRewardRuntimeWiring()
+
     Bool isNord = GetPlayerOriginRaceIndex() == ORIGIN_NORD
     Int baselineState = GetNordPantheonBaselineState()
     SyncNordAncestorSubstrate(playerRef, isNord)
@@ -13693,9 +13756,11 @@ Function SyncNordRewards(Actor playerRef)
     ; No Nord-specific Mara reward records exist, so reuse the Imperial Mara spells -- this IS
     ; the Nine Divines Mara reward (Restoration +5/+13/+23 + wake-mended), identical across lanes.
     SyncNordRewardFamily(playerRef, -1, PDV_Mara, PDV_Bless_Imperial_Mara_T1, PDV_Bless_Imperial_Mara_T2, PDV_Bless_Imperial_Mara_T3, "Mara")
-    ; Arkay is focusable in BOTH lanes (Old Ways names him Orkey; owner directive
-    ; 2026-07-05), like Mara -- baseline -1, same Imperial reward reuse either way.
-    SyncNordRewardFamily(playerRef, -1, PDV_Arkay, PDV_Bless_Imperial_Arkay_T1, PDV_Bless_Imperial_Arkay_T2, PDV_Bless_Imperial_Arkay_T3, "Arkay")
+    ; Arkay is focusable in BOTH lanes. Old Ways names him Orkey and uses
+    ; Orkey-facing Nord reward records so Active Effects do not surface Arkay.
+    ; Nine Divines keeps the existing Imperial Arkay rewards.
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_OLD_WAYS, PDV_Arkay, PDV_Bless_Nord_Arkay_T1, PDV_Bless_Nord_Arkay_T2, PDV_Bless_Nord_Arkay_T3, "Orkey")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Arkay, PDV_Bless_Imperial_Arkay_T1, PDV_Bless_Imperial_Arkay_T2, PDV_Bless_Imperial_Arkay_T3, "Arkay")
     SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Stendarr, PDV_Bless_Imperial_Stendarr_T1, PDV_Bless_Imperial_Stendarr_T2, PDV_Bless_Imperial_Stendarr_T3, "Stendarr")
     SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Zenithar, PDV_Bless_Imperial_Zenithar_T1, PDV_Bless_Imperial_Zenithar_T2, PDV_Bless_Imperial_Zenithar_T3, "Zenithar")
     ; Dibella is focusable in BOTH lanes (owner directive 2026-07-05), like Mara --
@@ -14768,11 +14833,13 @@ Int Function ResolveEligibleFavorLane()
 EndFunction
 
 Int Function GetNordPantheonBaselineState()
+    Int stateValue = StorageUtil.GetIntValue(None, "PDV.NordPantheonBaseline.DebugState", NORD_BASELINE_OLD_WAYS)
     if PDV_NordPantheonBaselineTrack
-        return PDV_NordPantheonBaselineTrack.GetCurrentState()
+        stateValue = PDV_NordPantheonBaselineTrack.GetCurrentState()
+        StorageUtil.SetIntValue(None, "PDV.NordPantheonBaseline.DebugState", stateValue)
     endIf
 
-    return StorageUtil.GetIntValue(None, "PDV.NordPantheonBaseline.DebugState")
+    return stateValue
 EndFunction
 
 Bool Function IsFavorFamilyOnCooldown(Int laneValue, Int familyValue)
@@ -15242,6 +15309,8 @@ Function DebugSetNordPantheonBaseline(Int stateValue)
     if PDV_NordPantheonBaselineTrack && PDV_NordPantheonBaselineTrack.GetCurrentState() != normalizedState
         PDV_NordPantheonBaselineTrack.SetState(normalizedState, "mcm_pattern")
     endIf
+    SyncFirstTierRaceRewardRuntime()
+    RequestPanelRefresh()
 EndFunction
 
 ; --- State-axis debug setters: make focus/tradition/mode-gated Champion blessings
@@ -15863,6 +15932,19 @@ Bool Function IsNordOfferEligibleDeity(PDV_DeityBase deity)
     endIf
 
     return False
+EndFunction
+
+Bool Function IsGenericLikesDislikesDeityReachable(PDV_DeityBase deity)
+    if !deity
+        return False
+    endIf
+
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace == ORIGIN_NORD
+        return IsNordOfferEligibleDeity(deity)
+    endIf
+
+    return deity.GetStanceForRace(originRace) == deity.STANCE_NATIVE
 EndFunction
 
 Bool Function IsDunmerOfferEligibleDeity(PDV_DeityBase deity)
@@ -17696,10 +17778,9 @@ EndFunction
 Function ApplyNordInitialChoice(Int baselineValue, String reason)
     BeginRaceSetupQuietPresentation(reason)
     Int normalized = ClampInt(baselineValue, NORD_BASELINE_OLD_WAYS, NORD_BASELINE_NINE_DIVINES)
+    StorageUtil.SetIntValue(None, "PDV.NordPantheonBaseline.DebugState", normalized)
     if PDV_NordPantheonBaselineTrack
         PDV_NordPantheonBaselineTrack.SetState(normalized, reason)
-    else
-        StorageUtil.SetIntValue(None, "PDV.NordPantheonBaseline.DebugState", normalized)
     endIf
 
     SetBroadWorship()

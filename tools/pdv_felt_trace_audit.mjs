@@ -62,9 +62,9 @@ export function parseGeneratedRows(managerSource) {
     for (const line of m[1].split(/\r?\n/)) {
       const branch = line.match(/(?:if|elseIf)\s+ldName\s*==\s*"([^"]+)"/i);
       if (branch) { current = branch[1]; if (!map.has(current)) map.set(current, []); continue; }
-      const call = line.match(new RegExp(`${writer}\\s*\\(\\s*\\w+\\s*,\\s*(\\d+)\\s*,\\s*(-?[\\d.]+)\\s*,\\s*(\\d+)\\s*,\\s*(-?[\\d.]+)`));
+      const call = line.match(new RegExp(`${writer}\\s*\\(\\s*\\w+\\s*,\\s*(\\d+)\\s*,\\s*(-?[\\d.]+)\\s*,\\s*(\\d+)\\s*,\\s*(-?[\\d.]+)(?:\\s*,\\s*(-?\\d+))?`));
       if (call && current) {
-        map.get(current).push({ eventId: Number(call[1]), delta: Number(call[2]), cap: Number(call[3]), cooldown: Number(call[4]) });
+        map.get(current).push({ eventId: Number(call[1]), delta: Number(call[2]), cap: Number(call[3]), cooldown: Number(call[4]), originGate: call[5] === undefined ? null : Number(call[5]) });
       }
     }
   }
@@ -109,7 +109,8 @@ export function traceEffects(registry, corpus, tables, esp) {
       const eventId = Number(e.declaredIn.match(/eventId=(\d+)/)?.[1]);
       if (!branch) { wired = "RED"; detail.push(`no generated branch for actor '${branchName}' (run pdv_likesdislikes_gen + version bump)`); }
       else {
-        const row = branch.find((r) => r.eventId === eventId);
+        const expectedOriginGate = Number.isFinite(e.expected.originGate) ? e.expected.originGate : null;
+        const row = branch.find((r) => r.eventId === eventId && (expectedOriginGate === null || r.originGate === expectedOriginGate));
         if (!row) { wired = "RED"; detail.push(`eventId ${eventId} missing from generated '${branchName}' rows (CSV/codegen drift)`); }
         else if (Math.abs(row.delta - e.expected.delta) > 0.001) { wired = "RED"; detail.push(`delta drift: generated ${row.delta} vs CSV ${e.expected.delta}`); }
         else if (Number.isFinite(e.expected.dailyCap) && row.cap !== e.expected.dailyCap) { wired = "RED"; detail.push(`dailyCap drift: generated ${row.cap} vs CSV ${e.expected.dailyCap}`); }
@@ -160,6 +161,7 @@ function selfTest() {
     "Function LoadRowsForDeity(PDV_DeityBase deity)",
     '    if ldName == "kyne"',
     "        WriteLD(deity, 1, -0.5, 2, 0.0, -1)",
+    "        WriteLD(deity, 1, -0.75, 1, 1.0, 2)",
     '    elseIf ldName == "Arkay"',
     "        WriteLD(deity, 40, 0.35, 3, 0.0208, -1)",
     "    endIf",
@@ -173,11 +175,14 @@ function selfTest() {
   ].join("\n");
   const tables = parseGeneratedRows(src);
   expect("deity branch parsed", tables.deity.get("kyne")?.[0]?.delta === -0.5);
+  expect("deity origin gate parsed", tables.deity.get("kyne")?.[1]?.originGate === 2);
   expect("prince branch parsed", tables.prince.get("Hircine")?.[0]?.eventId === 304);
 
   const registry = { effects: [
     { effectId: "csv:kyne:1", familyId: "Kyne|price", class: "price", lane: "Kyne", origin: "likes-dislikes-csv",
-      declaredIn: "x.csv actor=kyne eventId=1", expected: { espEditorIds: [], delta: -0.5, dailyCap: 2 } },
+      declaredIn: "x.csv actor=kyne eventId=1 originGate=-1", expected: { espEditorIds: [], delta: -0.5, dailyCap: 2, originGate: -1 } },
+    { effectId: "csv:kyne:1:origin:2", familyId: "Kyne|price", class: "price", lane: "Kyne", origin: "likes-dislikes-csv",
+      declaredIn: "x.csv actor=kyne eventId=1 originGate=2", expected: { espEditorIds: [], delta: -0.75, dailyCap: 1, originGate: 2 } },
     { effectId: "csv:kyne:99", familyId: "Kyne|price", class: "price", lane: "Kyne", origin: "likes-dislikes-csv",
       declaredIn: "x.csv actor=kyne eventId=99", expected: { espEditorIds: [], delta: -1, dailyCap: 0 } },
     { effectId: "csv:hircine:304", familyId: "Daedric-Hircine|price", class: "price", lane: "Daedric-Hircine", origin: "likes-dislikes-csv",
@@ -190,6 +195,7 @@ function selfTest() {
   const rows = traceEffects(registry, src, tables, { down: true, reason: "self-test" });
   const byId = Object.fromEntries(rows.map((r) => [r.effectId, r]));
   expect("csv row match PASS", byId["csv:kyne:1"].wired === "PASS");
+  expect("csv origin row match PASS", byId["csv:kyne:1:origin:2"].wired === "PASS");
   expect("csv missing row RED", byId["csv:kyne:99"].wired === "RED");
   expect("csv delta drift RED", byId["csv:hircine:304"].wired === "RED");
   expect("wired spell PASS + record SKIP on bridge down", byId["PDV_Bless_Test_T1"].wired === "PASS" && byId["PDV_Bless_Test_T1"].record === "SKIP");

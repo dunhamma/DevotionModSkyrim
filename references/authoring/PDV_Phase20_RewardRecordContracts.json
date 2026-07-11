@@ -145,18 +145,18 @@
       "lane": "Civic service, lawful patronage, and private/public Talos pressure",
       "spellEditorId": "PDV_Bless_Imperial_Civic_T1",
       "magicEffectEditorId": "PDV_MGEF_Imperial_Civic_T1_HealRateMult",
-      "displayName": "Civic Faith - Seeker",
+      "displayName": "The Divines' Regard - Seeker",
       "effects": [
         {
           "magicEffectEditorId": "PDV_MGEF_Imperial_Civic_T1_HealRateMult",
-          "displayName": "Civic Faith - Seeker",
+          "displayName": "The Divines' Regard - Seeker",
           "actorValue": "HealRateMult",
           "magnitude": 4,
           "area": 0,
           "duration": 0
         }
       ],
-      "playerFacingText": "The Nine note your civic faith. Health Regeneration +4%.",
+      "playerFacingText": "The Divines regard your shared devotion. Health Regeneration +4%.",
       "recordReadbackAssertion": "SPEL PDV_Bless_Imperial_Civic_T1 exists, carries one MGEF, and the MGEF description is ASCII-safe.",
       "grantRemovalOwner": "PDV__ManagerQuest Imperial civic state at dawn after smoke.",
       "stackCapRule": "Do not stack civic T1 with an unresolved Talos-pressure penalty or private-Talos privilege.",

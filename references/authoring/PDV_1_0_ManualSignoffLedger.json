@@ -1,6 +1,6 @@
 {
   "schema": "pdv.1-0.manual-signoff-ledger.v1",
-  "updated": "2026-07-07",
+  "updated": "2026-07-11",
   "purpose": "Structured intake ledger for the human-observed 1.0 ship-gate evidence that no machine audit can produce: Experience Mode smoke, compatibility acceptance, and Requiem Track B felt sweeps. Read by tools/pdv_1_0_endstate_gate.mjs.",
   "rules": {
     "allowedSlotStatuses": ["pending", "not-applicable", "evidence-recorded"],
@@ -12,14 +12,14 @@
       "criterion": "C-EXPMODE-SMOKE",
       "slots": {
         "pilgrimPathSmoke": {
-          "status": "pending",
+          "status": "evidence-recorded",
           "expected": "Default Pilgrim's Path mode: fresh save, mode readback correct, piety economy behaves at authored rates, MCM surfacing shows the mode.",
-          "note": ""
+          "note": "2026-07-11: In-game smoke on Auri-El signal 201 after backend delta fix. Player confirmed Pilgrim piety-map scratch 1.000000; Papyrus log confirms AwardPiety raw 1.000000, applied 1.000000, today=1.000000 at 12:24:00 AEST."
         },
         "wayfarerPathSmoke": {
-          "status": "pending",
+          "status": "evidence-recorded",
           "expected": "Wayfarer's Path mode: toggle applies manager scalars, cheap-repeatable handling relaxes per spec, save/load keeps the mode, MCM surfacing shows the mode.",
-          "note": ""
+          "note": "2026-07-11: In-game smoke after MCM switch to Wayfarer's Path on same Auri-El signal 201 path. Player confirmed piety-map scratch 1.250000; Papyrus log confirms AwardPiety raw 1.000000, applied 1.250000, today=1.250000 at 12:25:23 AEST."
         }
       }
     },

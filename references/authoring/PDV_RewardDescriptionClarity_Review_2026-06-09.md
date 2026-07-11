@@ -233,8 +233,8 @@ magnitude, not a duration. Approve the wording, then re-author the MGEF/SPEL
 | `PDV_Bless_Imperial_Arkay_T1` | +5% Disease Resistance | The keeper of the cycle wards your flesh. Disease Resistance +5%. |
 | `PDV_Bless_Imperial_Arkay_T2` | +15% Disease Resistance, +20 Health | You keep the vigil between life and death. Disease Resistance +15%, Maximum Health +20. |
 | `PDV_Bless_Imperial_Arkay_T3` | +27% Disease Resistance, +30 Health | Arkay's ward stands between you and the grave. Disease Resistance +27%, Maximum Health +30. |
-| `PDV_Bless_Imperial_Civic_T1` | +10 Health | The Nine note your civic faith. Maximum Health +10. |
-| `PDV_Bless_Imperial_Civic_T2` | +20 Health, +10% Disease Resistance | A faithful citizen of the Empire is well-kept. Maximum Health +20, Disease Resistance +10%. |
+| `PDV_Bless_Imperial_Civic_T1` | +10 Health | The Divines regard your shared devotion. Maximum Health +10. |
+| `PDV_Bless_Imperial_Civic_T2` | +20 Health, +10% Disease Resistance | The Divines deepen their regard for your shared devotion. Maximum Health +20, Disease Resistance +10%. |
 | `PDV_Bless_Imperial_Dibella_T1` | +5 Speech | Grace touches your words. Speech +5. |
 | `PDV_Bless_Imperial_Dibella_T2` | +13 Speech, +5% Magicka Regen | Beauty and persuasion answer you. Speech +13, Magicka Regeneration +5%. |
 | `PDV_Bless_Imperial_Dibella_T3` | +25 Speech, +13% Magicka Regen | Dibella's inspiration moves through your words. Speech +25, Magicka Regeneration +13%. |

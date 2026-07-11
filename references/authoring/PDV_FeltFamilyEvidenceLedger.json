@@ -11,13 +11,18 @@
   },
   "families": {
     "Akatosh|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Akatosh",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Akatosh price pass and Order sours for a while active effect. Papyrus.0.log shows Akatosh event 302 delta -0.750000, OrderTradeLore Light sting, piety loss, and debug dislike surface flush.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Imperial",
+        "slot": "Akatosh|price",
+        "matched": "DebugFireDislike: Akatosh event 302 delta -0.750000"
+      }
     },
     "Alkosh|price": {
       "status": "pending",
@@ -61,6 +66,24 @@
       "class": "boon",
       "race": "Altmer",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Altmer-Syrabane|boon": {
+      "status": "pending",
+      "lane": "Altmer-Syrabane",
+      "class": "boon",
+      "race": "Altmer",
+      "expected": "Feel one boon effect of lane Altmer-Syrabane in game (e.g. Syrabane's Guard - Seeker) and record what was observed.",
+      "note": "",
+      "creditedFrom": null
+    },
+    "Altmer-Trinimac|boon": {
+      "status": "pending",
+      "lane": "Altmer-Trinimac",
+      "class": "boon",
+      "race": "Altmer",
+      "expected": "Feel one boon effect of lane Altmer-Trinimac in game (e.g. Trinimac's Charge - Seeker) and record what was observed.",
       "note": "",
       "creditedFrom": null
     },
@@ -128,13 +151,18 @@
       "creditedFrom": null
     },
     "Arkay|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Arkay",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Old Ways Orkey/Arkay event 365 rendered the expected UI and active-effect consequence; Papyrus log shows Arkay event 365 delta -1.500000 and DeathAncestors sharp sting applied.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Nord",
+        "slot": "Arkay|price",
+        "matched": "Orkey/Arkay event 365 displayed DeathAncestors sharp active effect"
+      }
     },
     "Auriel|price": {
       "status": "pending",
@@ -715,76 +743,106 @@
       }
     },
     "Dibella|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Dibella",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Dibella event 304 passed; Papyrus log shows MercyProtection light sting, piety loss, and debug dislike surface flush.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Nord",
+        "slot": "Dibella|price",
+        "matched": "Debug dislike surface flushed: Dibella event 304"
+      }
     },
     "Disfavor-DeathAncestors|disfavor-sting": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Disfavor-DeathAncestors",
       "class": "disfavor-sting",
       "race": null,
-      "expected": "Feel one disfavor-sting effect of lane Disfavor-DeathAncestors in game (e.g. Rest Turns Uneasy) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Feel one disfavor-sting effect of lane Disfavor-DeathAncestors in game (e.g. Rest grows uneasy for a while.) and record what was observed.",
+      "note": "2026-07-11 co-test: tester confirmed Old Ways Orkey/Arkay event 365 active effect; Papyrus log shows DeathAncestors sharp sting applied. Favor Slips ESP readback passed; source-label visual recheck still owed in game.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Nord",
+        "slot": "Disfavor-DeathAncestors|disfavor-sting",
+        "matched": "Arkay event 365 applied DeathAncestors sharp"
+      }
     },
     "Disfavor-MercyProtection|disfavor-sting": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Disfavor-MercyProtection",
       "class": "disfavor-sting",
       "race": null,
-      "expected": "Feel one disfavor-sting effect of lane Disfavor-MercyProtection in game (e.g. The Ward Thins) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Feel one disfavor-sting effect of lane Disfavor-MercyProtection in game (e.g. Mercy withdraws for a while.) and record what was observed.",
+      "note": "2026-07-11 co-test: tester confirmed Mara event 304 active-effect copy rendered in game. Favor Slips ESP readback passed; source-label visual recheck still owed in game.",
+      "creditedFrom": {
+        "ledger": "co-test chat",
+        "race": "Nord",
+        "slot": "Disfavor-MercyProtection|disfavor-sting",
+        "matched": "Mara event 304 displayed MercyProtection sharp active effect"
+      }
     },
     "Disfavor-MoonLuckShadow|disfavor-sting": {
       "status": "pending",
       "lane": "Disfavor-MoonLuckShadow",
       "class": "disfavor-sting",
       "race": null,
-      "expected": "Feel one disfavor-sting effect of lane Disfavor-MoonLuckShadow in game (e.g. Fortune Slips) and record what was observed.",
+      "expected": "Feel one disfavor-sting effect of lane Disfavor-MoonLuckShadow in game (e.g. Fortune slips for a while.) and record what was observed.",
       "note": "",
       "creditedFrom": null
     },
     "Disfavor-OrderTradeLore|disfavor-sting": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Disfavor-OrderTradeLore",
       "class": "disfavor-sting",
       "race": null,
-      "expected": "Feel one disfavor-sting effect of lane Disfavor-OrderTradeLore in game (e.g. The Ledger Sours) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Feel one disfavor-sting effect of lane Disfavor-OrderTradeLore in game (e.g. Order sours for a while.) and record what was observed.",
+      "note": "2026-07-11 co-test: tester confirmed Order sours for a while during the Akatosh price run. Papyrus.0.log shows Akatosh -> OrderTradeLore Light from debug_fire_dislike.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Imperial",
+        "slot": "Disfavor-OrderTradeLore|disfavor-sting",
+        "matched": "Disfavor sting applied: Akatosh -> OrderTradeLore Light"
+      }
     },
     "Disfavor-SkyStormHunt|disfavor-sting": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Disfavor-SkyStormHunt",
       "class": "disfavor-sting",
       "race": null,
-      "expected": "Feel one disfavor-sting effect of lane Disfavor-SkyStormHunt in game (e.g. Weather Turns Sharp) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Feel one disfavor-sting effect of lane Disfavor-SkyStormHunt in game (e.g. Weather turns cold for a while.) and record what was observed.",
+      "note": "2026-07-11 co-test reconciliation: tester confirmed the weather/SkyStormHunt pass was already covered during the Kyne/Kynareth price run. Papyrus.1.log shows Kynareth event 365 delta -1.000000, SkyStormHunt Light sting, and debug dislike surface flush; shared disfavor row was stale.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.1.log",
+        "race": "Imperial",
+        "slot": "Disfavor-SkyStormHunt|disfavor-sting",
+        "matched": "Disfavor sting applied: Kynareth -> SkyStormHunt Light"
+      }
     },
     "Disfavor-VoidSecrets|disfavor-sting": {
       "status": "pending",
       "lane": "Disfavor-VoidSecrets",
       "class": "disfavor-sting",
       "race": null,
-      "expected": "Feel one disfavor-sting effect of lane Disfavor-VoidSecrets in game (e.g. Quiet Unease) and record what was observed.",
+      "expected": "Feel one disfavor-sting effect of lane Disfavor-VoidSecrets in game (e.g. Unease clings for a while.) and record what was observed.",
       "note": "",
       "creditedFrom": null
     },
     "Disfavor-WarHonor|disfavor-sting": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Disfavor-WarHonor",
       "class": "disfavor-sting",
       "race": null,
-      "expected": "Feel one disfavor-sting effect of lane Disfavor-WarHonor in game (e.g. Honor Falters) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "expected": "Feel one disfavor-sting effect of lane Disfavor-WarHonor in game (e.g. Honor recoils for a while.) and record what was observed.",
+      "note": "2026-07-11 co-test: first Shor event 304 run was correctly suppressed by the active-domain cap; tester reloaded and reran, and Papyrus log shows WarHonor sharp sting applied. Favor Slips ESP readback passed; source-label visual recheck still owed in game.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Nord",
+        "slot": "Disfavor-WarHonor|disfavor-sting",
+        "matched": "Shor event 304 applied WarHonor sharp after reload"
+      }
     },
     "Dunmer-Azura|boon": {
       "status": "pending",
@@ -894,103 +952,158 @@
       "creditedFrom": null
     },
     "Imperial-Akatosh|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Imperial-Akatosh",
       "class": "boon",
       "race": "Imperial",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Imperial-Akatosh boon pass; Papyrus log shows Imperial Akatosh T1 reward added.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Imperial",
+        "slot": "Imperial-Akatosh|boon",
+        "matched": "Race reward added: Imperial Akatosh T1"
+      }
     },
     "Imperial-Arkay|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Imperial-Arkay",
       "class": "boon",
       "race": "Imperial",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Imperial-Arkay boon pass; Papyrus log shows Imperial Arkay T1 reward added.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Imperial",
+        "slot": "Imperial-Arkay|boon",
+        "matched": "Race reward added: Imperial Arkay T1"
+      }
     },
     "Imperial-Civic|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Imperial-Civic",
       "class": "boon",
       "race": "Imperial",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Imperial-Civic boon pass; screenshot showed the pre-rename Civic Faith - Seeker label in Active Effects and Papyrus log shows Imperial T1 reward added. Player-facing label is now The Divines' Regard - Seeker/Faithful.",
+      "creditedFrom": {
+        "ledger": "co-test chat + screenshot + Papyrus.0.log",
+        "race": "Imperial",
+        "slot": "Imperial-Civic|boon",
+        "matched": "Race reward added: Imperial T1"
+      }
     },
     "Imperial-Dibella|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Imperial-Dibella",
       "class": "boon",
       "race": "Imperial",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Imperial-Dibella boon pass; Papyrus log shows Imperial Dibella T1 reward added.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Imperial",
+        "slot": "Imperial-Dibella|boon",
+        "matched": "Race reward added: Imperial Dibella T1"
+      }
     },
     "Imperial-Julianos|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Imperial-Julianos",
       "class": "boon",
       "race": "Imperial",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Imperial-Julianos boon pass; Papyrus log shows Imperial Julianos T1 reward added.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Imperial",
+        "slot": "Imperial-Julianos|boon",
+        "matched": "Race reward added: Imperial Julianos T1"
+      }
     },
     "Imperial-Kynareth|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Imperial-Kynareth",
       "class": "boon",
       "race": "Imperial",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Imperial-Kynareth boon pass; Papyrus log shows Imperial Kynareth T1 reward added.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Imperial",
+        "slot": "Imperial-Kynareth|boon",
+        "matched": "Race reward added: Imperial Kynareth T1"
+      }
     },
     "Imperial-Mara|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Imperial-Mara",
       "class": "boon",
       "race": "Imperial",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Imperial-Mara boon pass; Papyrus log shows Imperial Mara T1 reward added.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Imperial",
+        "slot": "Imperial-Mara|boon",
+        "matched": "Race reward added: Imperial Mara T1"
+      }
     },
     "Imperial-Stendarr|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Imperial-Stendarr",
       "class": "boon",
       "race": "Imperial",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Imperial-Stendarr boon pass; Papyrus log shows Imperial Stendarr T1 reward added.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Imperial",
+        "slot": "Imperial-Stendarr|boon",
+        "matched": "Race reward added: Imperial Stendarr T1"
+      }
     },
     "Imperial-Talos|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Imperial-Talos",
       "class": "boon",
       "race": "Imperial",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Imperial-Talos boon pass; Papyrus log shows Imperial Talos T1 reward added.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Imperial",
+        "slot": "Imperial-Talos|boon",
+        "matched": "Race reward added: Imperial Talos T1"
+      }
     },
     "Imperial-Zenithar|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Imperial-Zenithar",
       "class": "boon",
       "race": "Imperial",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Imperial-Zenithar boon pass; Papyrus log shows Imperial Zenithar T1 reward added.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Imperial",
+        "slot": "Imperial-Zenithar|boon",
+        "matched": "Race reward added: Imperial Zenithar T1"
+      }
     },
     "Julianos|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Julianos",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Julianos price pass. Papyrus.0.log shows Julianos event 304 delta -1.500000, OrderTradeLore sharp sting, piety loss, and debug dislike surface flush.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Imperial",
+        "slot": "Julianos|price",
+        "matched": "DebugFireDislike: Julianos event 304 delta -1.500000"
+      }
     },
     "Khajiit-Alkosh|boon": {
       "status": "pending",
@@ -1065,22 +1178,32 @@
       "creditedFrom": null
     },
     "Kynareth|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Kynareth",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Kynareth price pass after the first event 364 attempt correctly found no row; Papyrus log shows event 365 loss, SkyStormHunt Light sting, and debug dislike surface flush.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Imperial",
+        "slot": "Kynareth|price",
+        "matched": "DebugFireDislike: Kynareth event 365 delta -1.000000"
+      }
     },
     "Kyne|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Kyne",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Kyne price produced toast and Book of Days; no Active Effects sting expected for the small event 303 loss.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Nord",
+        "slot": "Kyne|price",
+        "matched": "DebugFireDislike: Kyne event 303 delta -0.500000"
+      }
     },
     "Leki|price": {
       "status": "pending",
@@ -1110,13 +1233,18 @@
       "creditedFrom": null
     },
     "Mara|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Mara",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Mara event 304 passed, with same active-effect copy style issue now queued for the disfavor sentence rewrite.",
+      "creditedFrom": {
+        "ledger": "co-test chat",
+        "race": "Nord",
+        "slot": "Mara|price",
+        "matched": "Mara event 304 pass reported by tester"
+      }
     },
     "Mephala|price": {
       "status": "pending",
@@ -1178,13 +1306,18 @@
       "creditedFrom": null
     },
     "Neglect-Imperial|neglect": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Neglect-Imperial",
       "class": "neglect",
       "race": "Imperial",
       "expected": "Felt-mechanic bar: prime neglect-eligible via the debug MCM, pass a dawn, and record the neglect debuff observed in Active Effects plus how it feels.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Imperial neglect Active Effects pass for The Divines Grow Distant. Toast was not observed and is not required for this slot; Imperial civic-lapse sync adds/removes PDV_SPEL_Neglect_Imperial directly rather than using the patron-neglect toast path. Papyrus log shows the Imperial civic service route and dawn passes used for setup.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log + source read",
+        "race": "Imperial",
+        "slot": "Neglect-Imperial|neglect",
+        "matched": "Imperial civic service routed; SyncImperialNeglectSpell handles PDV_SPEL_Neglect_Imperial without a dedicated toast"
+      }
     },
     "Neglect-KhajiitLunar|neglect": {
       "status": "pending",
@@ -1196,13 +1329,18 @@
       "creditedFrom": null
     },
     "Neglect-Kyne|neglect": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Neglect-Kyne",
       "class": "neglect",
       "race": "Nord",
       "expected": "Felt-mechanic bar: prime neglect-eligible via the debug MCM, pass a dawn, and record the neglect debuff observed in Active Effects plus how it feels.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Nord Kyne neglect pass; Papyrus log showed the matching neglect.Kyne.drop dispatch.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Nord",
+        "slot": "Neglect-Kyne|neglect",
+        "matched": "Diegetic dispatch neglect.Kyne.drop tone absence"
+      }
     },
     "Neglect-Orc|neglect": {
       "status": "pending",
@@ -1223,58 +1361,88 @@
       "creditedFrom": null
     },
     "Nord-Kyne|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Nord-Kyne",
       "class": "boon",
       "race": "Nord",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Kyne's Sky Seeker active effect; rotated Papyrus log shows Kyne tier 0 -> 1 and Nord Kyne T1 reward added.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.3.log",
+        "race": "Nord",
+        "slot": "Nord-Kyne|boon",
+        "matched": "Race reward added: Nord Kyne T1"
+      }
     },
     "Nord-OldWays|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Nord-OldWays",
       "class": "boon",
       "race": "Nord",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Old Ways Seeker active effect during the up-to-25 Book of Days check; Papyrus logs show the shared Nord T1 reward added during Nord patron checks.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus logs",
+        "race": "Nord",
+        "slot": "Nord-OldWays|boon",
+        "matched": "Race reward added: Nord T1"
+      }
     },
     "Nord-Shor|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Nord-Shor",
       "class": "boon",
       "race": "Nord",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: up-to-25 Book of Days/Active Effects sweep covered Shor; rotated Papyrus log shows Shor tier 0 -> 1 and Nord Shor T1 reward added.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.1.log",
+        "race": "Nord",
+        "slot": "Nord-Shor|boon",
+        "matched": "Race reward added: Nord Shor T1"
+      }
     },
     "Nord-Stuhn|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Nord-Stuhn",
       "class": "boon",
       "race": "Nord",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: up-to-25 Book of Days/Active Effects sweep covered Stuhn; Papyrus log shows Stuhn tier 0 -> 1 and Nord Stuhn T1 reward added.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Nord",
+        "slot": "Nord-Stuhn|boon",
+        "matched": "Race reward added: Nord Stuhn T1"
+      }
     },
     "Nord-Talos|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Nord-Talos",
       "class": "boon",
       "race": "Nord",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: up-to-25 Book of Days/Active Effects sweep covered Talos; rotated Papyrus log shows Nord Talos T1 reward added.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.2/Papyrus.3.log",
+        "race": "Nord",
+        "slot": "Nord-Talos|boon",
+        "matched": "Race reward added: Nord Talos T1"
+      }
     },
     "Nord-Tsun|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Nord-Tsun",
       "class": "boon",
       "race": "Nord",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: up-to-25 Book of Days/Active Effects sweep covered Tsun; Papyrus log shows Tsun tier 0 -> 1 and Nord Tsun T1 reward added.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Nord",
+        "slot": "Nord-Tsun|boon",
+        "matched": "Race reward added: Nord Tsun T1"
+      }
     },
     "Orc-City|boon": {
       "status": "pending",
@@ -1399,13 +1567,18 @@
       "creditedFrom": null
     },
     "Shor|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Shor",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Shor event 304 after reload rendered the expected UI and active-effect consequence; Papyrus log shows Shor event 304 delta -1.500000 and WarHonor sharp sting applied.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Nord",
+        "slot": "Shor|price",
+        "matched": "Shor event 304 displayed WarHonor sharp active effect after reload"
+      }
     },
     "Sithis|price": {
       "status": "pending",
@@ -1417,31 +1590,46 @@
       "creditedFrom": null
     },
     "Stendarr|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Stendarr",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Stendarr price pass; Papyrus log shows MercyProtection sharp sting, debug dislike surface flush, and Stendarr event 304 piety loss.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Imperial",
+        "slot": "Stendarr|price",
+        "matched": "DebugFireDislike: Stendarr event 304 delta -1.500000"
+      }
     },
     "Stuhn|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Stuhn",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Stuhn event 304 passed; Papyrus log shows MercyProtection sharp sting, piety loss, and debug dislike surface flush.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Nord",
+        "slot": "Stuhn|price",
+        "matched": "Debug dislike surface flushed: Stuhn event 304"
+      }
     },
     "Talos|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Talos",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Talos event 304 after debug UI surfacing fix produced the expected toast, Book of Days entry, and disfavor active effect; final active-effect wording changed afterward and still needs a copy retest.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Nord",
+        "slot": "Talos|price",
+        "matched": "Debug dislike surface flushed: Talos event 304"
+      }
     },
     "TheHist|price": {
       "status": "pending",
@@ -1462,13 +1650,18 @@
       "creditedFrom": null
     },
     "Tsun|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Tsun",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-11 co-test: tester confirmed Tsun event 304 passed; Papyrus log shows WarHonor sharp sting, piety loss, and debug dislike surface flush.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Nord",
+        "slot": "Tsun|price",
+        "matched": "Debug dislike surface flushed: Tsun event 304"
+      }
     },
     "Tuwhacca|price": {
       "status": "pending",
@@ -1519,7 +1712,7 @@
       }
     }
   },
-  "updated": "2026-07-07",
+  "updated": "2026-07-11",
   "audits": [
     {
       "date": "2026-07-09",

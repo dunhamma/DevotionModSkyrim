@@ -45,6 +45,9 @@ Int Property RACE_ARGONIAN = 7 AutoReadOnly
 Int Property RACE_ORSIMER = 8 AutoReadOnly
 Int Property RACE_REDGUARD = 9 AutoReadOnly
 
+Int Property NORD_BASELINE_OLD_WAYS = 0 AutoReadOnly
+Int Property NORD_BASELINE_NINE_DIVINES = 1 AutoReadOnly
+
 Int Property Stance_Nord = 1 Auto
 Int Property Stance_Imperial = 1 Auto
 Int Property Stance_Breton = 1 Auto
@@ -105,7 +108,32 @@ EndFunction
 ; FOREIGN/TABOO/HOSTILE deities score 0 for generic acts; cross-pantheon worship goes
 ; through the Daedric path (stigma) or curated signals, never the generic faucet.
 Bool Function IsRaceNativeForPlayer()
-    return GetStanceForPlayer() == STANCE_NATIVE
+    if GetStanceForPlayer() != STANCE_NATIVE
+        return False
+    endIf
+
+    if GetCurrentOriginRaceIndex() == RACE_NORD
+        return IsNordBaselineNativeForPlayer()
+    endIf
+
+    return True
+EndFunction
+
+Bool Function IsNordBaselineNativeForPlayer()
+    Int baselineState = StorageUtil.GetIntValue(None, "PDV.NordPantheonBaseline.DebugState")
+
+    ; Shared Nord-native names remain live in both baselines.
+    if DeityName == "Talos" || DeityName == "Mara" || DeityName == "Arkay" || DeityName == "Dibella"
+        return True
+    endIf
+
+    if baselineState == NORD_BASELINE_OLD_WAYS
+        return DeityName == "Kyne" || DeityName == "Shor" || DeityName == "Tsun" || DeityName == "Stuhn"
+    elseIf baselineState == NORD_BASELINE_NINE_DIVINES
+        return DeityName == "Akatosh" || DeityName == "Stendarr" || DeityName == "Zenithar" || DeityName == "Julianos" || DeityName == "Kynareth"
+    endIf
+
+    return False
 EndFunction
 
 Float Function ScoreFromTable(Int eventType)

@@ -241,46 +241,48 @@ SNAPSHOT of `PDV_FeltFamilyEvidenceLedger.json` as of 2026-07-11 (107 pending fa
 ### 1. Nord sitting (13 families) - `set PDV_GLO_OriginRace to 0`
 
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [ ] `Nord-Kyne|boon`  (e.g. Kyne's Sky - Seeker)
-- [ ] `Nord-OldWays|boon`  (e.g. Old Ways - Seeker)
-- [ ] `Nord-Shor|boon`  (e.g. Shor's Favor - Seeker)
-- [ ] `Nord-Stuhn|boon`  (e.g. Stuhn's Ward - Seeker)
-- [ ] `Nord-Talos|boon`  (e.g. Talos's Resolve - Seeker)
-- [ ] `Nord-Tsun|boon`  (e.g. Tsun's Trial - Seeker)
+- [x] `Nord-Kyne|boon`  (e.g. Kyne's Sky - Seeker)
+- [x] `Nord-OldWays|boon`  (e.g. Old Ways - Seeker)
+- [x] `Nord-Shor|boon`  (e.g. Shor's Favor - Seeker)
+- [x] `Nord-Stuhn|boon`  (e.g. Stuhn's Ward - Seeker)
+- [x] `Nord-Talos|boon`  (e.g. Talos's Resolve - Seeker)
+- [x] `Nord-Tsun|boon`  (e.g. Tsun's Trial - Seeker)
 
 **neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
-- [ ] `Neglect-Kyne|neglect`  (e.g. The Weather Stops Cooperating)
+- [x] `Neglect-Kyne|neglect`  (e.g. The Weather Stops Cooperating)
 
 **price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
-- [ ] `Dibella|price`  (e.g. murder-defenseless)
-- [ ] `Kyne|price`  (e.g. kill-hostile-beast)
-- [ ] `Shor|price`  (e.g. murder-defenseless)
-- [ ] `Stuhn|price`  (e.g. murder-defenseless)
-- [ ] `Talos|price`  (e.g. murder-defenseless)
-- [ ] `Tsun|price`  (e.g. murder-defenseless)
+- [x] `Dibella|price`  (e.g. murder-defenseless)
+- [x] `Kyne|price`  (e.g. kill-hostile-beast)
+- [x] `Shor|price`  (e.g. murder-defenseless)
+- [x] `Stuhn|price`  (e.g. murder-defenseless)
+- [x] `Talos|price`  (e.g. murder-defenseless)
+- [x] `Tsun|price`  (e.g. murder-defenseless)
 
 ### 2. Imperial sitting (13 families) - `set PDV_GLO_OriginRace to 1`
 
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [ ] `Imperial-Akatosh|boon`  (e.g. Akatosh's Covenant - Seeker)
-- [ ] `Imperial-Arkay|boon`  (e.g. Arkay's Vigil - Seeker)
-- [ ] `Imperial-Civic|boon`  (e.g. Civic Faith - Seeker)
-- [ ] `Imperial-Dibella|boon`  (e.g. Dibella's Grace - Seeker)
-- [ ] `Imperial-Julianos|boon`  (e.g. Julianos's Wisdom - Seeker)
-- [ ] `Imperial-Kynareth|boon`  (e.g. Kynareth's Breath - Seeker)
-- [ ] `Imperial-Mara|boon`  (e.g. Mara's Mercy - Seeker)
-- [ ] `Imperial-Stendarr|boon`  (e.g. Stendarr's Mercy - Seeker)
-- [ ] `Imperial-Talos|boon`  (e.g. Talos's Resolve - Seeker)
-- [ ] `Imperial-Zenithar|boon`  (e.g. Zenithar's Trade - Seeker)
+- [x] `Imperial-Akatosh|boon`  (e.g. Akatosh's Covenant - Seeker)
+- [x] `Imperial-Arkay|boon`  (e.g. Arkay's Vigil - Seeker)
+- [x] `Imperial-Civic|boon`  (e.g. The Divines' Regard - Seeker)
+- [x] `Imperial-Dibella|boon`  (e.g. Dibella's Grace - Seeker)
+- [x] `Imperial-Julianos|boon`  (e.g. Julianos's Wisdom - Seeker)
+- [x] `Imperial-Kynareth|boon`  (e.g. Kynareth's Breath - Seeker)
+- [x] `Imperial-Mara|boon`  (e.g. Mara's Mercy - Seeker)
+- [x] `Imperial-Stendarr|boon`  (e.g. Stendarr's Mercy - Seeker)
+- [x] `Imperial-Talos|boon`  (e.g. Talos's Resolve - Seeker)
+- [x] `Imperial-Zenithar|boon`  (e.g. Zenithar's Trade - Seeker)
 
 **neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
-- [ ] `Neglect-Imperial|neglect`  (e.g. The Divines Grow Distant)
+- [x] `Neglect-Imperial|neglect`  (e.g. The Divines Grow Distant)
 
 **price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
-- [ ] `Kynareth|price`  (e.g. raise-undead)
-- [ ] `Stendarr|price`  (e.g. murder-defenseless)
+- [x] `Kynareth|price`  (e.g. raise-undead)
+- [x] `Stendarr|price`  (e.g. murder-defenseless)
 
-### 3. Breton sitting (12 families) - `set PDV_GLO_OriginRace to 2`
+### 3. Breton sitting (8 pending families; 12 original families) - `set PDV_GLO_OriginRace to 2`
+
+Pause note, 2026-07-11: Breton runtime proof is paused before boon evidence. Live source readback shows `Breton-KnightsRoad|boon` is currently keyed to `PDV_Stendarr` specifically, not any Knight's Road deity family member. Architect review must decide whether Breton tradition rewards stay single-deity anchored or broaden to any eligible tradition deity before this sitting continues.
 
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
 - [ ] `Breton-GreenWay|boon`  (e.g. Green Way - Seeker)
@@ -292,15 +294,15 @@ SNAPSHOT of `PDV_FeltFamilyEvidenceLedger.json` as of 2026-07-11 (107 pending fa
 - [ ] `Neglect-Breton|neglect`  (e.g. The Tradition Grows Distant)
 
 **price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
-- [ ] `Akatosh|price`  (e.g. kill-dragon)
-- [ ] `Arkay|price`  (e.g. raise-undead)
+- [x] `Akatosh|price`  (e.g. kill-dragon)
+- [x] `Arkay|price`  (e.g. raise-undead)
 - [ ] `CreedLoss-Breton|price`  (e.g. The Vow Broken)
-- [ ] `Julianos|price`  (e.g. murder-defenseless)
+- [x] `Julianos|price`  (e.g. murder-defenseless)
 - [ ] `Magnus|price`  (e.g. raise-undead)
-- [ ] `Mara|price`  (e.g. murder-defenseless)
+- [x] `Mara|price`  (e.g. murder-defenseless)
 
-**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects:
-- [ ] `Disfavor-MercyProtection|disfavor-sting`  (e.g. The Ward Thins)
+**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects and confirm the source label says `Favor Slips`:
+- [x] `Disfavor-MercyProtection|disfavor-sting`  (e.g. Mercy withdraws for a while.)
 
 ### 4. Khajiit sitting (12 families) - `set PDV_GLO_OriginRace to 6`
 
@@ -363,8 +365,8 @@ SNAPSHOT of `PDV_FeltFamilyEvidenceLedger.json` as of 2026-07-11 (107 pending fa
 - [ ] `Malacath|price`  (e.g. steal-item)
 - [ ] `Trinimac|price`  (e.g. accept-daedric-artifact)
 
-**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects:
-- [ ] `Disfavor-WarHonor|disfavor-sting`  (e.g. Honor Falters)
+**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects and confirm the source label says `Favor Slips`:
+- [x] `Disfavor-WarHonor|disfavor-sting`  (e.g. Honor recoils for a while.)
 
 ### 7. Redguard sitting (10 families) - `set PDV_GLO_OriginRace to 9`
 
@@ -382,9 +384,9 @@ SNAPSHOT of `PDV_FeltFamilyEvidenceLedger.json` as of 2026-07-11 (107 pending fa
 - [ ] `Leki|price`  (e.g. murder-defenseless)
 - [ ] `Tuwhacca|price`  (e.g. raise-undead)
 
-**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects:
-- [ ] `Disfavor-DeathAncestors|disfavor-sting`  (e.g. Rest Turns Uneasy)
-- [ ] `Disfavor-SkyStormHunt|disfavor-sting`  (e.g. Weather Turns Sharp)
+**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects and confirm the source label says `Favor Slips`:
+- [x] `Disfavor-DeathAncestors|disfavor-sting`  (e.g. Rest grows uneasy for a while.)
+- [x] `Disfavor-SkyStormHunt|disfavor-sting`  (e.g. Weather turns cold for a while.)
 
 ### 8. Dunmer sitting (9 families) - `set PDV_GLO_OriginRace to 5`
 
@@ -404,8 +406,8 @@ SNAPSHOT of `PDV_FeltFamilyEvidenceLedger.json` as of 2026-07-11 (107 pending fa
 - [ ] `Boethiah|price`  (e.g. heal-or-cure-npc)
 - [ ] `Mephala|price`  (e.g. kill-hostile-humanoid)
 
-**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects:
-- [ ] `Disfavor-VoidSecrets|disfavor-sting`  (e.g. Quiet Unease)
+**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects and confirm the source label says `Favor Slips`:
+- [ ] `Disfavor-VoidSecrets|disfavor-sting`  (e.g. Unease clings for a while.)
 
 ### 9. Bosmer sitting (8 families) - `set PDV_GLO_OriginRace to 4`
 
@@ -419,9 +421,9 @@ SNAPSHOT of `PDV_FeltFamilyEvidenceLedger.json` as of 2026-07-11 (107 pending fa
 - [ ] `Yffre|price`  (e.g. raise-undead)
 - [ ] `Zen|price`  (e.g. steal-item)
 
-**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects:
-- [ ] `Disfavor-MoonLuckShadow|disfavor-sting`  (e.g. Fortune Slips)
-- [ ] `Disfavor-OrderTradeLore|disfavor-sting`  (e.g. The Ledger Sours)
+**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects and confirm the source label says `Favor Slips`:
+- [ ] `Disfavor-MoonLuckShadow|disfavor-sting`  (e.g. Fortune slips for a while.)
+- [ ] `Disfavor-OrderTradeLore|disfavor-sting`  (e.g. Order sours for a while.)
 
 ### 10. Argonian sitting (8 families) - `set PDV_GLO_OriginRace to 7`
 
@@ -441,6 +443,13 @@ SNAPSHOT of `PDV_FeltFamilyEvidenceLedger.json` as of 2026-07-11 (107 pending fa
 - [ ] `Sithis|price`  (e.g. raise-undead)
 - [ ] `TheHist|price`  (e.g. murder-defenseless)
 
+
+## Co-Test Defects / Follow-Ups
+
+- 2026-07-11: Old Ways Nord Julianos dislike debug retest passed as silence proof. Do not credit this to `Julianos|price`; the expected proof was that an Old Ways Nord cannot reach Julianos through generic likes/dislikes. Tester observed no toast, no Book of Days entry, no Active Effect, and Papyrus log shows `DebugFireDislike: Julianos is not reachable in the current origin/baseline.`
+- 2026-07-11: `Disfavor-SkyStormHunt|disfavor-sting` retro-credited from the already-run Kyne/Kynareth weather proof. Papyrus log shows `Kynareth -> SkyStormHunt Light`; tester confirmed this had already been covered, so no repeat Imperial step is required.
+- 2026-07-11: `Favor Slips` source-label write landed in the live ESP and readback passed. Runtime visual recheck is still owed because the player-facing Active Effects source label must be seen in game.
+- 2026-07-11: Breton co-test paused before boon proof. Current source keys Knight's Road reward sync to Stendarr specifically; architecture review is pending on whether this remains the intended anchor model.
 
 ## 1.0 Open Gate Map
 

@@ -102,9 +102,6 @@ Overall: **PASS**
 | PASS | Khajiit | Rajhin | Rajhin | T1 | PDV_Bless_Khajiit_Rajhin_T1 | yes | yes | PDV_Bless_Khajiit_Rajhin_T1 |
 | PASS | Khajiit | Rajhin | Rajhin | T2 | PDV_Bless_Khajiit_Rajhin_T2 | yes | yes | PDV_Bless_Khajiit_Rajhin_T2 |
 | PASS | Khajiit | Rajhin | Rajhin | T3 | PDV_Bless_Khajiit_Rajhin_T3 | yes | yes | PDV_Bless_Khajiit_Rajhin_T3 |
-| PASS | Nord | All | Arkay | T1 | PDV_Bless_Imperial_Arkay_T1 | yes | yes | PDV_Bless_Imperial_Arkay_T1 |
-| PASS | Nord | All | Arkay | T2 | PDV_Bless_Imperial_Arkay_T2 | yes | yes | PDV_Bless_Imperial_Arkay_T2 |
-| PASS | Nord | All | Arkay | T3 | PDV_Bless_Imperial_Arkay_T3 | yes | yes | PDV_Bless_Imperial_Arkay_T3 |
 | PASS | Nord | All | Dibella | T1 | PDV_Bless_Imperial_Dibella_T1 | yes | yes | PDV_Bless_Imperial_Dibella_T1 |
 | PASS | Nord | All | Dibella | T2 | PDV_Bless_Imperial_Dibella_T2 | yes | yes | PDV_Bless_Imperial_Dibella_T2 |
 | PASS | Nord | All | Dibella | T3 | PDV_Bless_Imperial_Dibella_T3 | yes | yes | PDV_Bless_Imperial_Dibella_T3 |
@@ -117,6 +114,9 @@ Overall: **PASS**
 | PASS | Nord | Nine Divines | Akatosh | T1 | PDV_Bless_Imperial_Akatosh_T1 | yes | yes | PDV_Bless_Imperial_Akatosh_T1 |
 | PASS | Nord | Nine Divines | Akatosh | T2 | PDV_Bless_Imperial_Akatosh_T2 | yes | yes | PDV_Bless_Imperial_Akatosh_T2 |
 | PASS | Nord | Nine Divines | Akatosh | T3 | PDV_Bless_Imperial_Akatosh_T3 | yes | yes | PDV_Bless_Imperial_Akatosh_T3 |
+| PASS | Nord | Nine Divines | Arkay | T1 | PDV_Bless_Imperial_Arkay_T1 | yes | yes | PDV_Bless_Imperial_Arkay_T1 |
+| PASS | Nord | Nine Divines | Arkay | T2 | PDV_Bless_Imperial_Arkay_T2 | yes | yes | PDV_Bless_Imperial_Arkay_T2 |
+| PASS | Nord | Nine Divines | Arkay | T3 | PDV_Bless_Imperial_Arkay_T3 | yes | yes | PDV_Bless_Imperial_Arkay_T3 |
 | PASS | Nord | Nine Divines | Julianos | T1 | PDV_Bless_Imperial_Julianos_T1 | yes | yes | PDV_Bless_Imperial_Julianos_T1 |
 | PASS | Nord | Nine Divines | Julianos | T2 | PDV_Bless_Imperial_Julianos_T2 | yes | yes | PDV_Bless_Imperial_Julianos_T2 |
 | PASS | Nord | Nine Divines | Julianos | T3 | PDV_Bless_Imperial_Julianos_T3 | yes | yes | PDV_Bless_Imperial_Julianos_T3 |
@@ -129,6 +129,9 @@ Overall: **PASS**
 | PASS | Nord | Nine Divines | Zenithar | T1 | PDV_Bless_Imperial_Zenithar_T1 | yes | yes | PDV_Bless_Imperial_Zenithar_T1 |
 | PASS | Nord | Nine Divines | Zenithar | T2 | PDV_Bless_Imperial_Zenithar_T2 | yes | yes | PDV_Bless_Imperial_Zenithar_T2 |
 | PASS | Nord | Nine Divines | Zenithar | T3 | PDV_Bless_Imperial_Zenithar_T3 | yes | yes | PDV_Bless_Imperial_Zenithar_T3 |
+| PASS | Nord | Old Ways | Arkay | T1 | PDV_Bless_Nord_Arkay_T1 | yes | yes | PDV_Bless_Nord_Arkay_T1 |
+| PASS | Nord | Old Ways | Arkay | T2 | PDV_Bless_Nord_Arkay_T2 | yes | yes | PDV_Bless_Nord_Arkay_T2 |
+| PASS | Nord | Old Ways | Arkay | T3 | PDV_Bless_Nord_Arkay_T3 | yes | yes | PDV_Bless_Nord_Arkay_T3 |
 | PASS | Nord | Old Ways | Kyne | T1 | PDV_Bless_Nord_Kyne_T1 | yes | yes | PDV_Bless_Nord_Kyne_T1 |
 | PASS | Nord | Old Ways | Kyne | T2 | PDV_Bless_Nord_Kyne_T2 | yes | yes | PDV_Bless_Nord_Kyne_T2 |
 | PASS | Nord | Old Ways | Kyne | T3 | PDV_Bless_Nord_Kyne_T3 | yes | yes | PDV_Bless_Nord_Kyne_T3 |

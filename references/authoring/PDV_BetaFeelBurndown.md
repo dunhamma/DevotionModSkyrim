@@ -163,7 +163,7 @@ remain separate. Caught and fixed during the Prisma pass:
 | Panel movement filter missed losses | Fixed + merged (72b8b076) | Roster gods with only NEGATIVE recent movement were invisible; panel filter now ORs `HasRecentPietyMovement` (7-day Week ring + driver days), per the owner "Ledger monitors ALL data points" rule |
 | Debug patron override/clear left stale rewards | Fixed (aa59daf4) | Override/clear now resync reward spells immediately |
 | Imperial lane stripped reused Nord Divine reward spells | Fixed (2af9ba9d) + lint (57509902) | `SyncImperialRewards` granted-then-stripped cross-lane reused SPELs same pass; new `pdv_reward_runtime_order_lint.mjs` guards the class |
-| Nord Old Ways roster: Orkey + Dibella | Built + in-game smoke PASS (829bbbfa, 7d40afe7) | Arkay-as-Orkey display override + Dibella offers/rewards/display; Orkey MESG 07161B + SEQ refresh |
+| Nord Old Ways roster: Orkey + Dibella | Built + in-game smoke PASS (829bbbfa, 7d40afe7); Orkey reward display fix readback PASS 2026-07-11 | Arkay-as-Orkey display override + Dibella offers/rewards/display; Orkey MESG 07161B + SEQ refresh. 2026-07-11 fix split Old Ways Orkey rewards to `PDV_Bless_Nord_Arkay_T1/T2/T3` so Active Effects say Orkey while Nine Divines Arkay keeps the Imperial Arkay records |
 | Orkey/Dibella Old Ways neglect | Manual Active Effects smoke PASS (2026-07-06) | `PDV_SPEL_Neglect_Arkay` / `PDV_MGEF_Neglect_Arkay` displays as "Orkey's Neglect" with `ResistMagic -5`; `PDV_SPEL_Neglect_Dibella` / `PDV_MGEF_Neglect_Dibella` displays as "Dibella's Neglect" with `Restoration -5`. Confirmed in Active Effects on a Nord Old Ways save (fresh launch) via the new modal-free `Prime neglect eligible` MCM row (sets deity active + piety 0, then `Run neglect pass`). Note: `Prime decay eligible` does NOT flag neglect -- it sets piety 20 (above the piety<=10 floor) and a lapse stamp on the exact grace boundary, so neither flagging path fires; neglect is a separate system from decay |
 | Curated driver copy | Fixed + in-game re-verified (c8a4aa34) | Curated rows name the actual trigger, e.g. "defiant prayer at a Talos shrine", rather than generic "a devotional rite" |
 | Watching Prince dashboard/Book of Days | Fixed + in-game re-verified (692396bb, 2f75a860) | Pre-pact Princes show a distinct Watching badge and a named watching-onset Book of Days line |
@@ -238,7 +238,7 @@ these reopen a closed race packet unless they surface a regression.
 | Argonian | Pass | No blocker for current packet; final-world placement separate |
 | Orc | Pass | No blocker for current packet; final-world placement separate |
 | Redguard | Pass | manual/runtime packet 2026-06-19 (8/8 dims); non-blocking follow-ups: vampire earn-halt (content), HoonDing/Leki day-to-day leak fix APPLIED 2026-06-19 (regen+compile+verifier clean; awaiting in-game reconfirm), Arkay shrine cosmetic; final-world placement separate |
-| Breton | Pass | No blocker for current packet; final-world placement separate |
+| Breton | Pass with 1.0 felt-proof follow-up paused | Prior beta packet had no blocker; current 1.0 co-test Breton felt-family pass is paused for architecture review of Knight's Road reward anchoring before runtime evidence continues; final-world placement separate |
 | Dunmer | Pass | Current Dunmer packet passed 2026-07-05; final-world placement separate |
 | Imperial | Pass | Current Imperial V1 packet passed 2026-07-04; final-world placement separate |
 | Nord | Pass | No blocker for current packet; final-world placement separate |

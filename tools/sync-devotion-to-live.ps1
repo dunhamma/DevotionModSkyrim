@@ -51,6 +51,7 @@ $Map = @(
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\fonts\IMFellEnglish-Regular.woff2"; Dst = "PrismaUI\views\Devotion\fonts\IMFellEnglish-Regular.woff2" },
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\fonts\OFL-IMFellEnglish.txt"; Dst = "PrismaUI\views\Devotion\fonts\OFL-IMFellEnglish.txt" },
     @{ Src = "live-source\Scripts\Source\PDV__ManagerQuest.psc";             Dst = "Scripts\Source\PDV__ManagerQuest.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_Deity_AuriEl.psc";              Dst = "Scripts\Source\PDV_Deity_AuriEl.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_MCM.psc";                       Dst = "Scripts\Source\PDV_MCM.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_ActionRouter.psc";              Dst = "Scripts\Source\PDV_ActionRouter.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_EventBus.psc";                  Dst = "Scripts\Source\PDV_EventBus.psc" },

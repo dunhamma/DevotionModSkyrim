@@ -1,31 +1,31 @@
 {
   "schema": "pdv.felt-effect-registry.v1",
   "sourceHashes": {
-    "references/authoring/PDV_AltmerRewardRecords.spec.json": "98227c6c34494e3c",
+    "references/authoring/PDV_AltmerRewardRecords.spec.json": "3e5c2701ca9fb35c",
     "references/authoring/PDV_ArgonianRewardRecords.spec.json": "70d68cc893b4cc73",
-    "references/authoring/PDV_BosmerRewardRecords.spec.json": "5f37a65c34ebb99e",
-    "references/authoring/PDV_BretonRewardRecords.spec.json": "86d3375dead19b2c",
+    "references/authoring/PDV_BosmerRewardRecords.spec.json": "76aa12869ead555f",
+    "references/authoring/PDV_BretonRewardRecords.spec.json": "9fbe0c9b8ff1eff6",
     "references/authoring/PDV_DunmerRewardRecords.spec.json": "16d3b0d9e6b097f9",
-    "references/authoring/PDV_ImperialRewardRecords.spec.json": "d82ebfc57af90259",
+    "references/authoring/PDV_ImperialRewardRecords.spec.json": "448485332e14d728",
     "references/authoring/PDV_KhajiitRewardRecords.spec.json": "87dddbce151d7409",
-    "references/authoring/PDV_NordRewardRecords.spec.json": "2c760923088f57b1",
-    "references/authoring/PDV_OrcRewardRecords.spec.json": "7c95ad66634c9e64",
+    "references/authoring/PDV_NordRewardRecords.spec.json": "a8299a3ef9882411",
+    "references/authoring/PDV_OrcRewardRecords.spec.json": "65d168f36b8c8956",
     "references/authoring/PDV_RedguardRewardRecords.spec.json": "43cbd365f0306a74",
     "references/authoring/PDV_DaedricPrinceRecordContracts.json": "040bb0dc17ff5208",
-    "references/authoring/PDV_DeityLikesDislikes.csv": "fd84966648876b5b",
+    "references/authoring/PDV_DeityLikesDislikes.csv": "151481553cc34ee2",
     "references/authoring/PDV_DeityLikesDislikes_Princes_V2.csv": "93b6474ad6c56304",
-    "references/authoring/PDV_DislikeConsequenceRecords.spec.json": "e71d9a0af6b6d5cb",
-    "live-source/Scripts/Source/PDV__ManagerQuest.psc": "c37cc57bfe2c161c"
+    "references/authoring/PDV_DislikeConsequenceRecords.spec.json": "430b071b6bf66d6d",
+    "live-source/Scripts/Source/PDV__ManagerQuest.psc": "7d04a998017f45dc"
   },
   "counts": {
-    "effects": 471,
-    "families": 148,
+    "effects": 504,
+    "families": 150,
     "byClass": {
-      "boon": 196,
+      "boon": 202,
       "neglect": 10,
       "curse": 5,
       "substrate-favor": 25,
-      "price": 221,
+      "price": 248,
       "disfavor-sting": 14
     }
   },
@@ -252,12 +252,94 @@
       "familyId": "Altmer-Magnus|boon"
     },
     {
+      "effectId": "PDV_Bless_Altmer_Trinimac_T1",
+      "class": "boon",
+      "lane": "Altmer-Trinimac",
+      "race": "Altmer",
+      "origin": "race-spec",
+      "declaredIn": "references/authoring/PDV_AltmerRewardRecords.spec.json $.emphasisRewards[6]",
+      "displayName": "Trinimac's Charge - Seeker",
+      "tier": "T1",
+      "wiringProperty": null,
+      "expected": {
+        "espEditorIds": [
+          "PDV_Bless_Altmer_Trinimac_T1"
+        ],
+        "effects": [
+          {
+            "actorValue": "OneHanded",
+            "magnitude": 5,
+            "duration": null
+          }
+        ]
+      },
+      "familyId": "Altmer-Trinimac|boon"
+    },
+    {
+      "effectId": "PDV_Bless_Altmer_Trinimac_T2",
+      "class": "boon",
+      "lane": "Altmer-Trinimac",
+      "race": "Altmer",
+      "origin": "race-spec",
+      "declaredIn": "references/authoring/PDV_AltmerRewardRecords.spec.json $.emphasisRewards[7]",
+      "displayName": "Trinimac's Charge - Devoted",
+      "tier": "T2",
+      "wiringProperty": null,
+      "expected": {
+        "espEditorIds": [
+          "PDV_Bless_Altmer_Trinimac_T2"
+        ],
+        "effects": [
+          {
+            "actorValue": "OneHanded",
+            "magnitude": 13,
+            "duration": null
+          },
+          {
+            "actorValue": "DamageResist",
+            "magnitude": 15,
+            "duration": null
+          }
+        ]
+      },
+      "familyId": "Altmer-Trinimac|boon"
+    },
+    {
+      "effectId": "PDV_Bless_Altmer_Trinimac_T3",
+      "class": "boon",
+      "lane": "Altmer-Trinimac",
+      "race": "Altmer",
+      "origin": "race-spec",
+      "declaredIn": "references/authoring/PDV_AltmerRewardRecords.spec.json $.emphasisRewards[8]",
+      "displayName": "Trinimac's Defense - Champion",
+      "tier": "T3",
+      "wiringProperty": null,
+      "expected": {
+        "espEditorIds": [
+          "PDV_Bless_Altmer_Trinimac_T3"
+        ],
+        "effects": [
+          {
+            "actorValue": "OneHanded",
+            "magnitude": 25,
+            "duration": null
+          },
+          {
+            "actorValue": "DamageResist",
+            "magnitude": 50,
+            "duration": null
+          }
+        ]
+      },
+      "familyId": "Altmer-Trinimac|boon"
+    },
+    {
       "effectId": "PDV_Bless_Altmer_Xarxes_T1",
       "class": "boon",
       "lane": "Altmer-Xarxes",
       "race": "Altmer",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_AltmerRewardRecords.spec.json $.emphasisRewards[6]",
+      "declaredIn": "references/authoring/PDV_AltmerRewardRecords.spec.json $.emphasisRewards[9]",
       "displayName": "Xarxes's Record - Seeker",
       "tier": "T1",
       "wiringProperty": null,
@@ -281,7 +363,7 @@
       "lane": "Altmer-Xarxes",
       "race": "Altmer",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_AltmerRewardRecords.spec.json $.emphasisRewards[7]",
+      "declaredIn": "references/authoring/PDV_AltmerRewardRecords.spec.json $.emphasisRewards[10]",
       "displayName": "Xarxes's Record - Devoted",
       "tier": "T2",
       "wiringProperty": null,
@@ -310,7 +392,7 @@
       "lane": "Altmer-Xarxes",
       "race": "Altmer",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_AltmerRewardRecords.spec.json $.emphasisRewards[8]",
+      "declaredIn": "references/authoring/PDV_AltmerRewardRecords.spec.json $.emphasisRewards[11]",
       "displayName": "Xarxes's Ledger - Champion",
       "tier": "T3",
       "wiringProperty": null,
@@ -332,6 +414,88 @@
         ]
       },
       "familyId": "Altmer-Xarxes|boon"
+    },
+    {
+      "effectId": "PDV_Bless_Altmer_Syrabane_T1",
+      "class": "boon",
+      "lane": "Altmer-Syrabane",
+      "race": "Altmer",
+      "origin": "race-spec",
+      "declaredIn": "references/authoring/PDV_AltmerRewardRecords.spec.json $.emphasisRewards[12]",
+      "displayName": "Syrabane's Guard - Seeker",
+      "tier": "T1",
+      "wiringProperty": null,
+      "expected": {
+        "espEditorIds": [
+          "PDV_Bless_Altmer_Syrabane_T1"
+        ],
+        "effects": [
+          {
+            "actorValue": "Restoration",
+            "magnitude": 5,
+            "duration": null
+          }
+        ]
+      },
+      "familyId": "Altmer-Syrabane|boon"
+    },
+    {
+      "effectId": "PDV_Bless_Altmer_Syrabane_T2",
+      "class": "boon",
+      "lane": "Altmer-Syrabane",
+      "race": "Altmer",
+      "origin": "race-spec",
+      "declaredIn": "references/authoring/PDV_AltmerRewardRecords.spec.json $.emphasisRewards[13]",
+      "displayName": "Syrabane's Guard - Devoted",
+      "tier": "T2",
+      "wiringProperty": null,
+      "expected": {
+        "espEditorIds": [
+          "PDV_Bless_Altmer_Syrabane_T2"
+        ],
+        "effects": [
+          {
+            "actorValue": "Restoration",
+            "magnitude": 13,
+            "duration": null
+          },
+          {
+            "actorValue": "ResistMagic",
+            "magnitude": 8,
+            "duration": null
+          }
+        ]
+      },
+      "familyId": "Altmer-Syrabane|boon"
+    },
+    {
+      "effectId": "PDV_Bless_Altmer_Syrabane_T3",
+      "class": "boon",
+      "lane": "Altmer-Syrabane",
+      "race": "Altmer",
+      "origin": "race-spec",
+      "declaredIn": "references/authoring/PDV_AltmerRewardRecords.spec.json $.emphasisRewards[14]",
+      "displayName": "Syrabane's Ward - Champion",
+      "tier": "T3",
+      "wiringProperty": null,
+      "expected": {
+        "espEditorIds": [
+          "PDV_Bless_Altmer_Syrabane_T3"
+        ],
+        "effects": [
+          {
+            "actorValue": "Restoration",
+            "magnitude": 25,
+            "duration": null
+          },
+          {
+            "actorValue": "ResistMagic",
+            "magnitude": 20,
+            "duration": null
+          }
+        ]
+      },
+      "familyId": "Altmer-Syrabane|boon"
     },
     {
       "effectId": "PDV_SPEL_Neglect_Altmer",
@@ -1266,6 +1430,11 @@
             "actorValue": "Health",
             "magnitude": -10,
             "duration": null
+          },
+          {
+            "actorValue": "ResistMagic",
+            "magnitude": -5,
+            "duration": null
           }
         ]
       },
@@ -1340,7 +1509,7 @@
         ],
         "effects": [
           {
-            "actorValue": "Block",
+            "actorValue": "Speech",
             "magnitude": 5,
             "duration": null
           }
@@ -1364,7 +1533,7 @@
         ],
         "effects": [
           {
-            "actorValue": "Block",
+            "actorValue": "Speech",
             "magnitude": 13,
             "duration": null
           },
@@ -1393,7 +1562,7 @@
         ],
         "effects": [
           {
-            "actorValue": "Block",
+            "actorValue": "Speech",
             "magnitude": 25,
             "duration": null
           },
@@ -1601,7 +1770,7 @@
         ],
         "effects": [
           {
-            "actorValue": "Block",
+            "actorValue": "Speech",
             "magnitude": -5,
             "duration": null
           },
@@ -2122,7 +2291,7 @@
       "race": "Imperial",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_ImperialRewardRecords.spec.json $.emphasisRewards[0]",
-      "displayName": "Civic Faith - Seeker",
+      "displayName": "The Divines' Regard - Seeker",
       "tier": "T1",
       "wiringProperty": null,
       "expected": {
@@ -2146,7 +2315,7 @@
       "race": "Imperial",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_ImperialRewardRecords.spec.json $.emphasisRewards[1]",
-      "displayName": "Civic Faith - Faithful",
+      "displayName": "The Divines' Regard - Faithful",
       "tier": "T2",
       "wiringProperty": null,
       "expected": {
@@ -7243,13 +7412,14 @@
       "lane": "Kyne",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=kyne eventId=1",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=kyne eventId=1 originGate=-1",
       "displayName": "kill-hostile-beast",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Kyne|price"
     },
@@ -7259,13 +7429,14 @@
       "lane": "Akatosh",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=akatosh eventId=302",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=akatosh eventId=302 originGate=-1",
       "displayName": "kill-dragon",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Akatosh|price"
     },
@@ -7275,13 +7446,14 @@
       "lane": "Akatosh",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=akatosh eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=akatosh eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Akatosh|price"
     },
@@ -7291,13 +7463,14 @@
       "lane": "Arkay",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Arkay eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Arkay eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "large",
       "expected": {
         "espEditorIds": [],
         "delta": -1.5,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Arkay|price"
     },
@@ -7307,13 +7480,14 @@
       "lane": "Arkay",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Arkay eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Arkay eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Arkay|price"
     },
@@ -7323,13 +7497,14 @@
       "lane": "Mara",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mara eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mara eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "large",
       "expected": {
         "espEditorIds": [],
         "delta": -1.5,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Mara|price"
     },
@@ -7339,13 +7514,14 @@
       "lane": "Mara",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mara eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mara eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Mara|price"
     },
@@ -7355,13 +7531,14 @@
       "lane": "Stendarr",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stendarr eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stendarr eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "large",
       "expected": {
         "espEditorIds": [],
         "delta": -1.5,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Stendarr|price"
     },
@@ -7371,13 +7548,14 @@
       "lane": "Stendarr",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stendarr eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stendarr eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Stendarr|price"
     },
@@ -7387,13 +7565,14 @@
       "lane": "Stendarr",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stendarr eventId=368",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stendarr eventId=368 originGate=-1",
       "displayName": "accept-daedric-artifact",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Stendarr|price"
     },
@@ -7403,13 +7582,14 @@
       "lane": "Zenithar",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Zenithar eventId=362",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Zenithar eventId=362 originGate=-1",
       "displayName": "steal-item",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Zenithar|price"
     },
@@ -7419,13 +7599,14 @@
       "lane": "Zenithar",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Zenithar eventId=360",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Zenithar eventId=360 originGate=-1",
       "displayName": "pick-owned-lock",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Zenithar|price"
     },
@@ -7435,13 +7616,14 @@
       "lane": "Zenithar",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Zenithar eventId=361",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Zenithar eventId=361 originGate=-1",
       "displayName": "trespass",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Zenithar|price"
     },
@@ -7451,13 +7633,14 @@
       "lane": "Dibella",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Dibella eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Dibella eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Dibella|price"
     },
@@ -7467,13 +7650,14 @@
       "lane": "Kynareth",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Kynareth eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Kynareth eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Kynareth|price"
     },
@@ -7483,13 +7667,14 @@
       "lane": "Talos",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Talos eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Talos eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Talos|price"
     },
@@ -7499,13 +7684,14 @@
       "lane": "Shor",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Shor eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Shor eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "large",
       "expected": {
         "espEditorIds": [],
         "delta": -1.5,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Shor|price"
     },
@@ -7515,13 +7701,14 @@
       "lane": "Shor",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Shor eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Shor eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Shor|price"
     },
@@ -7531,13 +7718,14 @@
       "lane": "Tsun",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Tsun eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Tsun eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "large",
       "expected": {
         "espEditorIds": [],
         "delta": -1.5,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Tsun|price"
     },
@@ -7547,13 +7735,14 @@
       "lane": "Tsun",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Tsun eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Tsun eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Tsun|price"
     },
@@ -7563,13 +7752,14 @@
       "lane": "Stuhn",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stuhn eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stuhn eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "large",
       "expected": {
         "espEditorIds": [],
         "delta": -2,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Stuhn|price"
     },
@@ -7579,13 +7769,14 @@
       "lane": "Stuhn",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stuhn eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stuhn eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Stuhn|price"
     },
@@ -7595,13 +7786,14 @@
       "lane": "Auriel",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=auri-el eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=auri-el eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "large",
       "expected": {
         "espEditorIds": [],
         "delta": -1.5,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Auriel|price"
     },
@@ -7611,13 +7803,14 @@
       "lane": "Auriel",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=auri-el eventId=368",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=auri-el eventId=368 originGate=-1",
       "displayName": "accept-daedric-artifact",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Auriel|price"
     },
@@ -7627,13 +7820,14 @@
       "lane": "Xarxes",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=xarxes eventId=368",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=xarxes eventId=368 originGate=-1",
       "displayName": "accept-daedric-artifact",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Xarxes|price"
     },
@@ -7643,13 +7837,14 @@
       "lane": "Trinimac",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=trinimac eventId=368",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=trinimac eventId=368 originGate=-1",
       "displayName": "accept-daedric-artifact",
       "tier": "large",
       "expected": {
         "espEditorIds": [],
         "delta": -2,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Trinimac|price"
     },
@@ -7659,13 +7854,14 @@
       "lane": "Trinimac",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=trinimac eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=trinimac eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Trinimac|price"
     },
@@ -7675,13 +7871,14 @@
       "lane": "Trinimac",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=trinimac eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=trinimac eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Trinimac|price"
     },
@@ -7691,13 +7888,14 @@
       "lane": "Yffre",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Y'ffre eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Y'ffre eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Yffre|price"
     },
@@ -7707,13 +7905,14 @@
       "lane": "Yffre",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Y'ffre eventId=330",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Y'ffre eventId=330 originGate=-1",
       "displayName": "smith-item",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Yffre|price"
     },
@@ -7723,13 +7922,14 @@
       "lane": "Zen",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Z'en eventId=362",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Z'en eventId=362 originGate=-1",
       "displayName": "steal-item",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Zen|price"
     },
@@ -7739,13 +7939,14 @@
       "lane": "BaanDar",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Baan Dar eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Baan Dar eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "BaanDar|price"
     },
@@ -7755,13 +7956,14 @@
       "lane": "Khenarthi",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=khenarthi eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=khenarthi eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Khenarthi|price"
     },
@@ -7771,13 +7973,14 @@
       "lane": "Rajhin",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=rajhin eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=rajhin eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Rajhin|price"
     },
@@ -7787,13 +7990,14 @@
       "lane": "Rajhin",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=rajhin eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=rajhin eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Rajhin|price"
     },
@@ -7803,13 +8007,14 @@
       "lane": "Alkosh",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=alkosh eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=alkosh eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Alkosh|price"
     },
@@ -7819,13 +8024,14 @@
       "lane": "Alkosh",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=alkosh eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=alkosh eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Alkosh|price"
     },
@@ -7835,13 +8041,14 @@
       "lane": "Azurah",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=azurah eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=azurah eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Azurah|price"
     },
@@ -7851,13 +8058,14 @@
       "lane": "Boethiah",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Boethiah eventId=350",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Boethiah eventId=350 originGate=-1",
       "displayName": "heal-or-cure-npc",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Boethiah|price"
     },
@@ -7867,13 +8075,14 @@
       "lane": "TheHist",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=The Hist eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=The Hist eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "TheHist|price"
     },
@@ -7883,13 +8092,14 @@
       "lane": "TheHist",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=The Hist eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=The Hist eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "TheHist|price"
     },
@@ -7899,13 +8109,14 @@
       "lane": "Sithis",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=sithis eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=sithis eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Sithis|price"
     },
@@ -7915,13 +8126,14 @@
       "lane": "Sithis",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=sithis eventId=315",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=sithis eventId=315 originGate=-1",
       "displayName": "sleep-in-inn",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Sithis|price"
     },
@@ -7931,13 +8143,14 @@
       "lane": "Sithis",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=sithis eventId=350",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=sithis eventId=350 originGate=-1",
       "displayName": "heal-or-cure-npc",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Sithis|price"
     },
@@ -7947,13 +8160,14 @@
       "lane": "Malacath",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Malacath eventId=362",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Malacath eventId=362 originGate=-1",
       "displayName": "steal-item",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Malacath|price"
     },
@@ -7963,13 +8177,14 @@
       "lane": "Malacath",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Malacath eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Malacath eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Malacath|price"
     },
@@ -7979,13 +8194,14 @@
       "lane": "Tuwhacca",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Tu'whacca eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Tu'whacca eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "large",
       "expected": {
         "espEditorIds": [],
         "delta": -1.5,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Tuwhacca|price"
     },
@@ -7995,13 +8211,14 @@
       "lane": "Tuwhacca",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Tu'whacca eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Tu'whacca eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Tuwhacca|price"
     },
@@ -8011,13 +8228,14 @@
       "lane": "Leki",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Leki eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Leki eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Leki|price"
     },
@@ -8027,13 +8245,14 @@
       "lane": "Leki",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Leki eventId=362",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Leki eventId=362 originGate=-1",
       "displayName": "steal-item",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Leki|price"
     },
@@ -8043,13 +8262,14 @@
       "lane": "HoonDing",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=HoonDing eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=HoonDing eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "HoonDing|price"
     },
@@ -8059,13 +8279,14 @@
       "lane": "Yffre",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Y'ffre eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Y'ffre eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Yffre|price"
     },
@@ -8075,13 +8296,14 @@
       "lane": "Zen",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Z'en eventId=360",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Z'en eventId=360 originGate=-1",
       "displayName": "pick-owned-lock",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Zen|price"
     },
@@ -8091,13 +8313,14 @@
       "lane": "Alkosh",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=alkosh eventId=361",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=alkosh eventId=361 originGate=-1",
       "displayName": "trespass",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Alkosh|price"
     },
@@ -8107,13 +8330,14 @@
       "lane": "Kyne",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=kyne eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=kyne eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Kyne|price"
     },
@@ -8123,13 +8347,14 @@
       "lane": "Akatosh",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=akatosh eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=akatosh eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Akatosh|price"
     },
@@ -8139,13 +8364,14 @@
       "lane": "Akatosh",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=akatosh eventId=368",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=akatosh eventId=368 originGate=-1",
       "displayName": "accept-daedric-artifact",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Akatosh|price"
     },
@@ -8155,13 +8381,14 @@
       "lane": "Arkay",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Arkay eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Arkay eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Arkay|price"
     },
@@ -8171,13 +8398,14 @@
       "lane": "Arkay",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Arkay eventId=368",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Arkay eventId=368 originGate=-1",
       "displayName": "accept-daedric-artifact",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Arkay|price"
     },
@@ -8187,13 +8415,14 @@
       "lane": "Mara",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mara eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mara eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Mara|price"
     },
@@ -8203,13 +8432,14 @@
       "lane": "Mara",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mara eventId=362",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mara eventId=362 originGate=-1",
       "displayName": "steal-item",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Mara|price"
     },
@@ -8219,13 +8449,14 @@
       "lane": "Stendarr",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stendarr eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stendarr eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "large",
       "expected": {
         "espEditorIds": [],
         "delta": -1.5,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Stendarr|price"
     },
@@ -8235,13 +8466,14 @@
       "lane": "Stendarr",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stendarr eventId=362",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stendarr eventId=362 originGate=-1",
       "displayName": "steal-item",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Stendarr|price"
     },
@@ -8251,13 +8483,14 @@
       "lane": "Stendarr",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stendarr eventId=361",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stendarr eventId=361 originGate=-1",
       "displayName": "trespass",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Stendarr|price"
     },
@@ -8267,13 +8500,14 @@
       "lane": "Zenithar",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Zenithar eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Zenithar eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Zenithar|price"
     },
@@ -8283,13 +8517,14 @@
       "lane": "Zenithar",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Zenithar eventId=368",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Zenithar eventId=368 originGate=-1",
       "displayName": "accept-daedric-artifact",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Zenithar|price"
     },
@@ -8299,13 +8534,14 @@
       "lane": "Julianos",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Julianos eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Julianos eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "large",
       "expected": {
         "espEditorIds": [],
         "delta": -1.5,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Julianos|price"
     },
@@ -8315,13 +8551,14 @@
       "lane": "Julianos",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Julianos eventId=362",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Julianos eventId=362 originGate=-1",
       "displayName": "steal-item",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Julianos|price"
     },
@@ -8331,13 +8568,14 @@
       "lane": "Julianos",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Julianos eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Julianos eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Julianos|price"
     },
@@ -8347,13 +8585,14 @@
       "lane": "Julianos",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Julianos eventId=361",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Julianos eventId=361 originGate=-1",
       "displayName": "trespass",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Julianos|price"
     },
@@ -8363,13 +8602,14 @@
       "lane": "Dibella",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Dibella eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Dibella eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Dibella|price"
     },
@@ -8379,13 +8619,14 @@
       "lane": "Dibella",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Dibella eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Dibella eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Dibella|price"
     },
@@ -8395,13 +8636,14 @@
       "lane": "Kynareth",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Kynareth eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Kynareth eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Kynareth|price"
     },
@@ -8411,13 +8653,14 @@
       "lane": "Kynareth",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Kynareth eventId=368",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Kynareth eventId=368 originGate=-1",
       "displayName": "accept-daedric-artifact",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Kynareth|price"
     },
@@ -8427,13 +8670,14 @@
       "lane": "Talos",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Talos eventId=362",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Talos eventId=362 originGate=-1",
       "displayName": "steal-item",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Talos|price"
     },
@@ -8443,13 +8687,14 @@
       "lane": "Talos",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Talos eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Talos eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Talos|price"
     },
@@ -8459,13 +8704,14 @@
       "lane": "Shor",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Shor eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Shor eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Shor|price"
     },
@@ -8475,13 +8721,14 @@
       "lane": "Shor",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Shor eventId=362",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Shor eventId=362 originGate=-1",
       "displayName": "steal-item",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Shor|price"
     },
@@ -8491,13 +8738,14 @@
       "lane": "Tsun",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Tsun eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Tsun eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Tsun|price"
     },
@@ -8507,13 +8755,14 @@
       "lane": "Tsun",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Tsun eventId=368",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Tsun eventId=368 originGate=-1",
       "displayName": "accept-daedric-artifact",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Tsun|price"
     },
@@ -8523,13 +8772,14 @@
       "lane": "Stuhn",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stuhn eventId=362",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stuhn eventId=362 originGate=-1",
       "displayName": "steal-item",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Stuhn|price"
     },
@@ -8539,13 +8789,14 @@
       "lane": "Stuhn",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stuhn eventId=360",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stuhn eventId=360 originGate=-1",
       "displayName": "pick-owned-lock",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Stuhn|price"
     },
@@ -8555,13 +8806,14 @@
       "lane": "Auriel",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=auri-el eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=auri-el eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "large",
       "expected": {
         "espEditorIds": [],
         "delta": -1.5,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Auriel|price"
     },
@@ -8571,13 +8823,14 @@
       "lane": "Auriel",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=auri-el eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=auri-el eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Auriel|price"
     },
@@ -8587,13 +8840,14 @@
       "lane": "Magnus",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=magnus eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=magnus eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Magnus|price"
     },
@@ -8603,13 +8857,14 @@
       "lane": "Magnus",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=magnus eventId=368",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=magnus eventId=368 originGate=-1",
       "displayName": "accept-daedric-artifact",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Magnus|price"
     },
@@ -8619,13 +8874,14 @@
       "lane": "Xarxes",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=xarxes eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=xarxes eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Xarxes|price"
     },
@@ -8635,13 +8891,14 @@
       "lane": "Xarxes",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=xarxes eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=xarxes eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Xarxes|price"
     },
@@ -8651,13 +8908,14 @@
       "lane": "Trinimac",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=trinimac eventId=362",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=trinimac eventId=362 originGate=-1",
       "displayName": "steal-item",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Trinimac|price"
     },
@@ -8667,13 +8925,14 @@
       "lane": "Trinimac",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=trinimac eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=trinimac eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Trinimac|price"
     },
@@ -8683,13 +8942,14 @@
       "lane": "Yffre",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Y'ffre eventId=331",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Y'ffre eventId=331 originGate=-1",
       "displayName": "enchant-item",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Yffre|price"
     },
@@ -8699,13 +8959,14 @@
       "lane": "BaanDar",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Baan Dar eventId=330",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Baan Dar eventId=330 originGate=-1",
       "displayName": "smith-item",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "BaanDar|price"
     },
@@ -8715,13 +8976,14 @@
       "lane": "Khenarthi",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=khenarthi eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=khenarthi eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Khenarthi|price"
     },
@@ -8731,13 +8993,14 @@
       "lane": "Rajhin",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=rajhin eventId=315",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=rajhin eventId=315 originGate=-1",
       "displayName": "sleep-in-inn",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Rajhin|price"
     },
@@ -8747,13 +9010,14 @@
       "lane": "Alkosh",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=alkosh eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=alkosh eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Alkosh|price"
     },
@@ -8763,13 +9027,14 @@
       "lane": "Alkosh",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=alkosh eventId=368",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=alkosh eventId=368 originGate=-1",
       "displayName": "accept-daedric-artifact",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Alkosh|price"
     },
@@ -8779,13 +9044,14 @@
       "lane": "Azurah",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=azurah eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=azurah eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "large",
       "expected": {
         "espEditorIds": [],
         "delta": -1.5,
-        "dailyCap": 1
+        "dailyCap": 1,
+        "originGate": -1
       },
       "familyId": "Azurah|price"
     },
@@ -8795,13 +9061,14 @@
       "lane": "Azurah",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=azurah eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=azurah eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Azurah|price"
     },
@@ -8811,13 +9078,14 @@
       "lane": "Boethiah",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Boethiah eventId=315",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Boethiah eventId=315 originGate=-1",
       "displayName": "sleep-in-inn",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Boethiah|price"
     },
@@ -8827,13 +9095,14 @@
       "lane": "Boethiah",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Boethiah eventId=333",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Boethiah eventId=333 originGate=-1",
       "displayName": "cook-meal",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Boethiah|price"
     },
@@ -8843,13 +9112,14 @@
       "lane": "Mephala",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mephala eventId=2",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mephala eventId=2 originGate=-1",
       "displayName": "kill-hostile-humanoid",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Mephala|price"
     },
@@ -8859,13 +9129,14 @@
       "lane": "Mephala",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mephala eventId=350",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mephala eventId=350 originGate=-1",
       "displayName": "heal-or-cure-npc",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Mephala|price"
     },
@@ -8875,13 +9146,14 @@
       "lane": "Mephala",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mephala eventId=313",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mephala eventId=313 originGate=-1",
       "displayName": "rest-under-open-sky",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Mephala|price"
     },
@@ -8891,13 +9163,14 @@
       "lane": "TheHist",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=The Hist eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=The Hist eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "TheHist|price"
     },
@@ -8907,13 +9180,14 @@
       "lane": "TheHist",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=The Hist eventId=331",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=The Hist eventId=331 originGate=-1",
       "displayName": "enchant-item",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "TheHist|price"
     },
@@ -8923,13 +9197,14 @@
       "lane": "Sithis",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=sithis eventId=330",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=sithis eventId=330 originGate=-1",
       "displayName": "smith-item",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Sithis|price"
     },
@@ -8939,13 +9214,14 @@
       "lane": "Sithis",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=sithis eventId=331",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=sithis eventId=331 originGate=-1",
       "displayName": "enchant-item",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Sithis|price"
     },
@@ -8955,13 +9231,14 @@
       "lane": "Malacath",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Malacath eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Malacath eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Malacath|price"
     },
@@ -8971,13 +9248,14 @@
       "lane": "Malacath",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Malacath eventId=315",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Malacath eventId=315 originGate=-1",
       "displayName": "sleep-in-inn",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Malacath|price"
     },
@@ -8987,13 +9265,14 @@
       "lane": "Tuwhacca",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Tu'whacca eventId=368",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Tu'whacca eventId=368 originGate=-1",
       "displayName": "accept-daedric-artifact",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Tuwhacca|price"
     },
@@ -9003,13 +9282,14 @@
       "lane": "Leki",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Leki eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Leki eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Leki|price"
     },
@@ -9019,13 +9299,14 @@
       "lane": "HoonDing",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=HoonDing eventId=315",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=HoonDing eventId=315 originGate=-1",
       "displayName": "sleep-in-inn",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.25,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "HoonDing|price"
     },
@@ -9035,13 +9316,14 @@
       "lane": "HoonDing",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=HoonDing eventId=365",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=HoonDing eventId=365 originGate=-1",
       "displayName": "raise-undead",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -0.75,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "HoonDing|price"
     },
@@ -9051,13 +9333,14 @@
       "lane": "Zen",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Z'en eventId=304",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Z'en eventId=304 originGate=-1",
       "displayName": "murder-defenseless",
       "tier": "medium",
       "expected": {
         "espEditorIds": [],
         "delta": -1,
-        "dailyCap": 2
+        "dailyCap": 2,
+        "originGate": -1
       },
       "familyId": "Zen|price"
     },
@@ -9067,15 +9350,475 @@
       "lane": "Zen",
       "race": null,
       "origin": "likes-dislikes-csv",
-      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Z'en eventId=364",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Z'en eventId=364 originGate=-1",
       "displayName": "assault-innocent",
       "tier": "small",
       "expected": {
         "espEditorIds": [],
         "delta": -0.5,
-        "dailyCap": 3
+        "dailyCap": 3,
+        "originGate": -1
       },
       "familyId": "Zen|price"
+    },
+    {
+      "effectId": "csv:magnus:365:origin:2",
+      "class": "price",
+      "lane": "Magnus",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=magnus eventId=365 originGate=2",
+      "displayName": "raise-undead",
+      "tier": "large",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -1.25,
+        "dailyCap": 1,
+        "originGate": 2
+      },
+      "familyId": "Magnus|price"
+    },
+    {
+      "effectId": "csv:Mara:362:origin:2",
+      "class": "price",
+      "lane": "Mara",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mara eventId=362 originGate=2",
+      "displayName": "steal-item",
+      "tier": "small",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.5,
+        "dailyCap": 3,
+        "originGate": 2
+      },
+      "familyId": "Mara|price"
+    },
+    {
+      "effectId": "csv:Y'ffre:331:origin:2",
+      "class": "price",
+      "lane": "Yffre",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Y'ffre eventId=331 originGate=2",
+      "displayName": "enchant-item",
+      "tier": "small",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.35,
+        "dailyCap": 3,
+        "originGate": 2
+      },
+      "familyId": "Yffre|price"
+    },
+    {
+      "effectId": "csv:akatosh:362:origin:2",
+      "class": "price",
+      "lane": "Akatosh",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=akatosh eventId=362 originGate=2",
+      "displayName": "steal-item",
+      "tier": "medium",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.75,
+        "dailyCap": 2,
+        "originGate": 2
+      },
+      "familyId": "Akatosh|price"
+    },
+    {
+      "effectId": "csv:trinimac:368:origin:3",
+      "class": "price",
+      "lane": "Trinimac",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=trinimac eventId=368 originGate=3",
+      "displayName": "accept-daedric-artifact",
+      "tier": "large",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -1.5,
+        "dailyCap": 1,
+        "originGate": 3
+      },
+      "familyId": "Trinimac|price"
+    },
+    {
+      "effectId": "csv:trinimac:304:origin:3",
+      "class": "price",
+      "lane": "Trinimac",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=trinimac eventId=304 originGate=3",
+      "displayName": "murder-defenseless",
+      "tier": "medium",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -1,
+        "dailyCap": 2,
+        "originGate": 3
+      },
+      "familyId": "Trinimac|price"
+    },
+    {
+      "effectId": "csv:rajhin:304:origin:6",
+      "class": "price",
+      "lane": "Rajhin",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=rajhin eventId=304 originGate=6",
+      "displayName": "murder-defenseless",
+      "tier": "medium",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.75,
+        "dailyCap": 2,
+        "originGate": 6
+      },
+      "familyId": "Rajhin|price"
+    },
+    {
+      "effectId": "csv:sithis:351:origin:7",
+      "class": "price",
+      "lane": "Sithis",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=sithis eventId=351 originGate=7",
+      "displayName": "clear-bounty-serve-time",
+      "tier": "small",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.25,
+        "dailyCap": 2,
+        "originGate": 7
+      },
+      "familyId": "Sithis|price"
+    },
+    {
+      "effectId": "csv:Arkay:366",
+      "class": "price",
+      "lane": "Arkay",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Arkay eventId=366 originGate=-1",
+      "displayName": "feed-as-vampire",
+      "tier": "large",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -1.5,
+        "dailyCap": 1,
+        "originGate": -1
+      },
+      "familyId": "Arkay|price"
+    },
+    {
+      "effectId": "csv:Stendarr:366",
+      "class": "price",
+      "lane": "Stendarr",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Stendarr eventId=366 originGate=-1",
+      "displayName": "feed-as-vampire",
+      "tier": "large",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -1.5,
+        "dailyCap": 1,
+        "originGate": -1
+      },
+      "familyId": "Stendarr|price"
+    },
+    {
+      "effectId": "csv:Mara:366",
+      "class": "price",
+      "lane": "Mara",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Mara eventId=366 originGate=-1",
+      "displayName": "feed-as-vampire",
+      "tier": "medium",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -1,
+        "dailyCap": 2,
+        "originGate": -1
+      },
+      "familyId": "Mara|price"
+    },
+    {
+      "effectId": "csv:kyne:366",
+      "class": "price",
+      "lane": "Kyne",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=kyne eventId=366 originGate=-1",
+      "displayName": "feed-as-vampire",
+      "tier": "medium",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.75,
+        "dailyCap": 2,
+        "originGate": -1
+      },
+      "familyId": "Kyne|price"
+    },
+    {
+      "effectId": "csv:kyne:365",
+      "class": "price",
+      "lane": "Kyne",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=kyne eventId=365 originGate=-1",
+      "displayName": "raise-undead",
+      "tier": "medium",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -1,
+        "dailyCap": 2,
+        "originGate": -1
+      },
+      "familyId": "Kyne|price"
+    },
+    {
+      "effectId": "csv:kyne:303",
+      "class": "price",
+      "lane": "Kyne",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=kyne eventId=303 originGate=-1",
+      "displayName": "kill-animal-noncombat",
+      "tier": "small",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.5,
+        "dailyCap": 3,
+        "originGate": -1
+      },
+      "familyId": "Kyne|price"
+    },
+    {
+      "effectId": "csv:Kynareth:303",
+      "class": "price",
+      "lane": "Kynareth",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Kynareth eventId=303 originGate=-1",
+      "displayName": "kill-animal-noncombat",
+      "tier": "small",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.5,
+        "dailyCap": 3,
+        "originGate": -1
+      },
+      "familyId": "Kynareth|price"
+    },
+    {
+      "effectId": "csv:Kynareth:366",
+      "class": "price",
+      "lane": "Kynareth",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Kynareth eventId=366 originGate=-1",
+      "displayName": "feed-as-vampire",
+      "tier": "medium",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -1,
+        "dailyCap": 2,
+        "originGate": -1
+      },
+      "familyId": "Kynareth|price"
+    },
+    {
+      "effectId": "csv:Talos:366",
+      "class": "price",
+      "lane": "Talos",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Talos eventId=366 originGate=-1",
+      "displayName": "feed-as-vampire",
+      "tier": "medium",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.75,
+        "dailyCap": 2,
+        "originGate": -1
+      },
+      "familyId": "Talos|price"
+    },
+    {
+      "effectId": "csv:Tu'whacca:366",
+      "class": "price",
+      "lane": "Tuwhacca",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Tu'whacca eventId=366 originGate=-1",
+      "displayName": "feed-as-vampire",
+      "tier": "large",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -1.5,
+        "dailyCap": 1,
+        "originGate": -1
+      },
+      "familyId": "Tuwhacca|price"
+    },
+    {
+      "effectId": "csv:auri-el:366",
+      "class": "price",
+      "lane": "Auriel",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=auri-el eventId=366 originGate=-1",
+      "displayName": "feed-as-vampire",
+      "tier": "medium",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -1,
+        "dailyCap": 2,
+        "originGate": -1
+      },
+      "familyId": "Auriel|price"
+    },
+    {
+      "effectId": "csv:Dibella:366",
+      "class": "price",
+      "lane": "Dibella",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Dibella eventId=366 originGate=-1",
+      "displayName": "feed-as-vampire",
+      "tier": "medium",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.75,
+        "dailyCap": 2,
+        "originGate": -1
+      },
+      "familyId": "Dibella|price"
+    },
+    {
+      "effectId": "csv:khenarthi:366",
+      "class": "price",
+      "lane": "Khenarthi",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=khenarthi eventId=366 originGate=-1",
+      "displayName": "feed-as-vampire",
+      "tier": "medium",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.75,
+        "dailyCap": 2,
+        "originGate": -1
+      },
+      "familyId": "Khenarthi|price"
+    },
+    {
+      "effectId": "csv:azurah:366",
+      "class": "price",
+      "lane": "Azurah",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=azurah eventId=366 originGate=-1",
+      "displayName": "feed-as-vampire",
+      "tier": "medium",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -1,
+        "dailyCap": 2,
+        "originGate": -1
+      },
+      "familyId": "Azurah|price"
+    },
+    {
+      "effectId": "csv:magnus:366",
+      "class": "price",
+      "lane": "Magnus",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=magnus eventId=366 originGate=-1",
+      "displayName": "feed-as-vampire",
+      "tier": "small",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.5,
+        "dailyCap": 3,
+        "originGate": -1
+      },
+      "familyId": "Magnus|price"
+    },
+    {
+      "effectId": "csv:HoonDing:366",
+      "class": "price",
+      "lane": "HoonDing",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=HoonDing eventId=366 originGate=-1",
+      "displayName": "feed-as-vampire",
+      "tier": "medium",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.75,
+        "dailyCap": 2,
+        "originGate": -1
+      },
+      "familyId": "HoonDing|price"
+    },
+    {
+      "effectId": "csv:rajhin:366",
+      "class": "price",
+      "lane": "Rajhin",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=rajhin eventId=366 originGate=-1",
+      "displayName": "feed-as-vampire",
+      "tier": "small",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.5,
+        "dailyCap": 3,
+        "originGate": -1
+      },
+      "familyId": "Rajhin|price"
+    },
+    {
+      "effectId": "csv:Leki:360",
+      "class": "price",
+      "lane": "Leki",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Leki eventId=360 originGate=-1",
+      "displayName": "pick-owned-lock",
+      "tier": "small",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.25,
+        "dailyCap": 3,
+        "originGate": -1
+      },
+      "familyId": "Leki|price"
+    },
+    {
+      "effectId": "csv:Baan Dar:351",
+      "class": "price",
+      "lane": "BaanDar",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Baan Dar eventId=351 originGate=-1",
+      "displayName": "clear-bounty-serve-time",
+      "tier": "small",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.25,
+        "dailyCap": 2,
+        "originGate": -1
+      },
+      "familyId": "BaanDar|price"
     },
     {
       "effectId": "csv:Daedric:Mehrunes Dagon:350",
@@ -9948,7 +10691,7 @@
       "race": null,
       "origin": "dislike-consequence-spec",
       "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.SkyStormHunt.light",
-      "displayName": "Weather Turns Sharp",
+      "displayName": "Weather turns cold for a while.",
       "tier": "light",
       "wiringProperty": "PDV_SPEL_Disfavor_SkyStormHunt_Light",
       "expected": {
@@ -9973,7 +10716,7 @@
       "race": null,
       "origin": "dislike-consequence-spec",
       "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.SkyStormHunt.sharp",
-      "displayName": "Weather Turns Against You",
+      "displayName": "Weather turns against you for a while.",
       "tier": "sharp",
       "wiringProperty": "PDV_SPEL_Disfavor_SkyStormHunt_Sharp",
       "expected": {
@@ -9998,7 +10741,7 @@
       "race": null,
       "origin": "dislike-consequence-spec",
       "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.DeathAncestors.light",
-      "displayName": "Rest Turns Uneasy",
+      "displayName": "Rest grows uneasy for a while.",
       "tier": "light",
       "wiringProperty": "PDV_SPEL_Disfavor_DeathAncestors_Light",
       "expected": {
@@ -10023,7 +10766,7 @@
       "race": null,
       "origin": "dislike-consequence-spec",
       "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.DeathAncestors.sharp",
-      "displayName": "Restless Quiet",
+      "displayName": "The dead grow restless for a while.",
       "tier": "sharp",
       "wiringProperty": "PDV_SPEL_Disfavor_DeathAncestors_Sharp",
       "expected": {
@@ -10048,7 +10791,7 @@
       "race": null,
       "origin": "dislike-consequence-spec",
       "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.MercyProtection.light",
-      "displayName": "The Ward Thins",
+      "displayName": "Mercy withdraws for a while.",
       "tier": "light",
       "wiringProperty": "PDV_SPEL_Disfavor_MercyProtection_Light",
       "expected": {
@@ -10073,7 +10816,7 @@
       "race": null,
       "origin": "dislike-consequence-spec",
       "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.MercyProtection.sharp",
-      "displayName": "The Ward Breaks",
+      "displayName": "Mercy withdraws sharply for a while.",
       "tier": "sharp",
       "wiringProperty": "PDV_SPEL_Disfavor_MercyProtection_Sharp",
       "expected": {
@@ -10098,7 +10841,7 @@
       "race": null,
       "origin": "dislike-consequence-spec",
       "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.WarHonor.light",
-      "displayName": "Honor Falters",
+      "displayName": "Honor recoils for a while.",
       "tier": "light",
       "wiringProperty": "PDV_SPEL_Disfavor_WarHonor_Light",
       "expected": {
@@ -10123,7 +10866,7 @@
       "race": null,
       "origin": "dislike-consequence-spec",
       "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.WarHonor.sharp",
-      "displayName": "Honor Recoils",
+      "displayName": "Honor recoils sharply for a while.",
       "tier": "sharp",
       "wiringProperty": "PDV_SPEL_Disfavor_WarHonor_Sharp",
       "expected": {
@@ -10148,7 +10891,7 @@
       "race": null,
       "origin": "dislike-consequence-spec",
       "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.OrderTradeLore.light",
-      "displayName": "The Ledger Sours",
+      "displayName": "Order sours for a while.",
       "tier": "light",
       "wiringProperty": "PDV_SPEL_Disfavor_OrderTradeLore_Light",
       "expected": {
@@ -10173,7 +10916,7 @@
       "race": null,
       "origin": "dislike-consequence-spec",
       "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.OrderTradeLore.sharp",
-      "displayName": "The Ledger Turns",
+      "displayName": "Order turns against you for a while.",
       "tier": "sharp",
       "wiringProperty": "PDV_SPEL_Disfavor_OrderTradeLore_Sharp",
       "expected": {
@@ -10198,7 +10941,7 @@
       "race": null,
       "origin": "dislike-consequence-spec",
       "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.MoonLuckShadow.light",
-      "displayName": "Fortune Slips",
+      "displayName": "Fortune slips for a while.",
       "tier": "light",
       "wiringProperty": "PDV_SPEL_Disfavor_MoonLuckShadow_Light",
       "expected": {
@@ -10223,7 +10966,7 @@
       "race": null,
       "origin": "dislike-consequence-spec",
       "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.MoonLuckShadow.sharp",
-      "displayName": "Fortune Turns",
+      "displayName": "Fortune turns hard for a while.",
       "tier": "sharp",
       "wiringProperty": "PDV_SPEL_Disfavor_MoonLuckShadow_Sharp",
       "expected": {
@@ -10248,7 +10991,7 @@
       "race": null,
       "origin": "dislike-consequence-spec",
       "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.VoidSecrets.light",
-      "displayName": "Quiet Unease",
+      "displayName": "Unease clings for a while.",
       "tier": "light",
       "wiringProperty": "PDV_SPEL_Disfavor_VoidSecrets_Light",
       "expected": {
@@ -10273,7 +11016,7 @@
       "race": null,
       "origin": "dislike-consequence-spec",
       "declaredIn": "references/authoring/PDV_DislikeConsequenceRecords.spec.json domains.VoidSecrets.sharp",
-      "displayName": "The Hidden Stirs",
+      "displayName": "Unease sharpens for a while.",
       "tier": "sharp",
       "wiringProperty": "PDV_SPEL_Disfavor_VoidSecrets_Sharp",
       "expected": {
@@ -10590,7 +11333,8 @@
         "csv:akatosh:302",
         "csv:akatosh:365",
         "csv:akatosh:304",
-        "csv:akatosh:368"
+        "csv:akatosh:368",
+        "csv:akatosh:362:origin:2"
       ]
     },
     {
@@ -10645,6 +11389,28 @@
       "members": [
         "PDV_Bless_Altmer_Orthodox_T1",
         "PDV_Bless_Altmer_Orthodox_T2"
+      ]
+    },
+    {
+      "familyId": "Altmer-Syrabane|boon",
+      "lane": "Altmer-Syrabane",
+      "class": "boon",
+      "race": "Altmer",
+      "members": [
+        "PDV_Bless_Altmer_Syrabane_T1",
+        "PDV_Bless_Altmer_Syrabane_T2",
+        "PDV_Bless_Altmer_Syrabane_T3"
+      ]
+    },
+    {
+      "familyId": "Altmer-Trinimac|boon",
+      "lane": "Altmer-Trinimac",
+      "class": "boon",
+      "race": "Altmer",
+      "members": [
+        "PDV_Bless_Altmer_Trinimac_T1",
+        "PDV_Bless_Altmer_Trinimac_T2",
+        "PDV_Bless_Altmer_Trinimac_T3"
       ]
     },
     {
@@ -10730,7 +11496,8 @@
         "csv:Arkay:365",
         "csv:Arkay:304",
         "csv:Arkay:364",
-        "csv:Arkay:368"
+        "csv:Arkay:368",
+        "csv:Arkay:366"
       ]
     },
     {
@@ -10742,7 +11509,8 @@
         "csv:auri-el:304",
         "csv:auri-el:368",
         "csv:auri-el:365",
-        "csv:auri-el:364"
+        "csv:auri-el:364",
+        "csv:auri-el:366"
       ]
     },
     {
@@ -10753,7 +11521,8 @@
       "members": [
         "csv:azurah:304",
         "csv:azurah:365",
-        "csv:azurah:364"
+        "csv:azurah:364",
+        "csv:azurah:366"
       ]
     },
     {
@@ -10763,7 +11532,8 @@
       "race": null,
       "members": [
         "csv:Baan Dar:304",
-        "csv:Baan Dar:330"
+        "csv:Baan Dar:330",
+        "csv:Baan Dar:351"
       ]
     },
     {
@@ -11318,7 +12088,8 @@
       "members": [
         "csv:Dibella:304",
         "csv:Dibella:364",
-        "csv:Dibella:365"
+        "csv:Dibella:365",
+        "csv:Dibella:366"
       ]
     },
     {
@@ -11501,7 +12272,8 @@
       "members": [
         "csv:HoonDing:304",
         "csv:HoonDing:315",
-        "csv:HoonDing:365"
+        "csv:HoonDing:365",
+        "csv:HoonDing:366"
       ]
     },
     {
@@ -11706,7 +12478,8 @@
       "race": null,
       "members": [
         "csv:khenarthi:365",
-        "csv:khenarthi:304"
+        "csv:khenarthi:304",
+        "csv:khenarthi:366"
       ]
     },
     {
@@ -11717,7 +12490,9 @@
       "members": [
         "csv:Kynareth:365",
         "csv:Kynareth:304",
-        "csv:Kynareth:368"
+        "csv:Kynareth:368",
+        "csv:Kynareth:303",
+        "csv:Kynareth:366"
       ]
     },
     {
@@ -11727,7 +12502,10 @@
       "race": null,
       "members": [
         "csv:kyne:1",
-        "csv:kyne:304"
+        "csv:kyne:304",
+        "csv:kyne:366",
+        "csv:kyne:365",
+        "csv:kyne:303"
       ]
     },
     {
@@ -11738,7 +12516,8 @@
       "members": [
         "csv:Leki:304",
         "csv:Leki:362",
-        "csv:Leki:364"
+        "csv:Leki:364",
+        "csv:Leki:360"
       ]
     },
     {
@@ -11748,7 +12527,9 @@
       "race": null,
       "members": [
         "csv:magnus:365",
-        "csv:magnus:368"
+        "csv:magnus:368",
+        "csv:magnus:365:origin:2",
+        "csv:magnus:366"
       ]
     },
     {
@@ -11772,7 +12553,9 @@
         "csv:Mara:304",
         "csv:Mara:364",
         "csv:Mara:365",
-        "csv:Mara:362"
+        "csv:Mara:362",
+        "csv:Mara:362:origin:2",
+        "csv:Mara:366"
       ]
     },
     {
@@ -12023,7 +12806,9 @@
       "members": [
         "csv:rajhin:304",
         "csv:rajhin:364",
-        "csv:rajhin:315"
+        "csv:rajhin:315",
+        "csv:rajhin:304:origin:6",
+        "csv:rajhin:366"
       ]
     },
     {
@@ -12100,7 +12885,8 @@
         "csv:sithis:315",
         "csv:sithis:350",
         "csv:sithis:330",
-        "csv:sithis:331"
+        "csv:sithis:331",
+        "csv:sithis:351:origin:7"
       ]
     },
     {
@@ -12114,7 +12900,8 @@
         "csv:Stendarr:368",
         "csv:Stendarr:365",
         "csv:Stendarr:362",
-        "csv:Stendarr:361"
+        "csv:Stendarr:361",
+        "csv:Stendarr:366"
       ]
     },
     {
@@ -12137,7 +12924,8 @@
       "members": [
         "csv:Talos:304",
         "csv:Talos:362",
-        "csv:Talos:364"
+        "csv:Talos:364",
+        "csv:Talos:366"
       ]
     },
     {
@@ -12162,7 +12950,9 @@
         "csv:trinimac:304",
         "csv:trinimac:365",
         "csv:trinimac:362",
-        "csv:trinimac:364"
+        "csv:trinimac:364",
+        "csv:trinimac:368:origin:3",
+        "csv:trinimac:304:origin:3"
       ]
     },
     {
@@ -12185,7 +12975,8 @@
       "members": [
         "csv:Tu'whacca:365",
         "csv:Tu'whacca:304",
-        "csv:Tu'whacca:368"
+        "csv:Tu'whacca:368",
+        "csv:Tu'whacca:366"
       ]
     },
     {
@@ -12208,7 +12999,8 @@
         "csv:Y'ffre:365",
         "csv:Y'ffre:330",
         "csv:Y'ffre:364",
-        "csv:Y'ffre:331"
+        "csv:Y'ffre:331",
+        "csv:Y'ffre:331:origin:2"
       ]
     },
     {
@@ -12238,5 +13030,5 @@
     }
   ],
   "orphans": [],
-  "updated": "2026-07-07"
+  "updated": "2026-07-11"
 }

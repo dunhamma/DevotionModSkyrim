@@ -95,9 +95,6 @@ PASS,Khajiit,Khenarthi,Khenarthi,T3,PDV_Bless_Khajiit_Khenarthi_T3,true,true,PDV
 PASS,Khajiit,Rajhin,Rajhin,T1,PDV_Bless_Khajiit_Rajhin_T1,true,true,PDV_Bless_Khajiit_Rajhin_T1,SyncKhajiitEmphasisFamily,Rajhin
 PASS,Khajiit,Rajhin,Rajhin,T2,PDV_Bless_Khajiit_Rajhin_T2,true,true,PDV_Bless_Khajiit_Rajhin_T2,SyncKhajiitEmphasisFamily,Rajhin
 PASS,Khajiit,Rajhin,Rajhin,T3,PDV_Bless_Khajiit_Rajhin_T3,true,true,PDV_Bless_Khajiit_Rajhin_T3,SyncKhajiitEmphasisFamily,Rajhin
-PASS,Nord,All,Arkay,T1,PDV_Bless_Imperial_Arkay_T1,true,true,PDV_Bless_Imperial_Arkay_T1,SyncNordRewardFamily,Arkay
-PASS,Nord,All,Arkay,T2,PDV_Bless_Imperial_Arkay_T2,true,true,PDV_Bless_Imperial_Arkay_T2,SyncNordRewardFamily,Arkay
-PASS,Nord,All,Arkay,T3,PDV_Bless_Imperial_Arkay_T3,true,true,PDV_Bless_Imperial_Arkay_T3,SyncNordRewardFamily,Arkay
 PASS,Nord,All,Dibella,T1,PDV_Bless_Imperial_Dibella_T1,true,true,PDV_Bless_Imperial_Dibella_T1,SyncNordRewardFamily,Dibella
 PASS,Nord,All,Dibella,T2,PDV_Bless_Imperial_Dibella_T2,true,true,PDV_Bless_Imperial_Dibella_T2,SyncNordRewardFamily,Dibella
 PASS,Nord,All,Dibella,T3,PDV_Bless_Imperial_Dibella_T3,true,true,PDV_Bless_Imperial_Dibella_T3,SyncNordRewardFamily,Dibella
@@ -110,6 +107,9 @@ PASS,Nord,All,Talos,T3,PDV_Bless_Nord_Talos_T3,true,true,PDV_Bless_Nord_Talos_T3
 PASS,Nord,Nine Divines,Akatosh,T1,PDV_Bless_Imperial_Akatosh_T1,true,true,PDV_Bless_Imperial_Akatosh_T1,SyncNordRewardFamily,Akatosh
 PASS,Nord,Nine Divines,Akatosh,T2,PDV_Bless_Imperial_Akatosh_T2,true,true,PDV_Bless_Imperial_Akatosh_T2,SyncNordRewardFamily,Akatosh
 PASS,Nord,Nine Divines,Akatosh,T3,PDV_Bless_Imperial_Akatosh_T3,true,true,PDV_Bless_Imperial_Akatosh_T3,SyncNordRewardFamily,Akatosh
+PASS,Nord,Nine Divines,Arkay,T1,PDV_Bless_Imperial_Arkay_T1,true,true,PDV_Bless_Imperial_Arkay_T1,SyncNordRewardFamily,Arkay
+PASS,Nord,Nine Divines,Arkay,T2,PDV_Bless_Imperial_Arkay_T2,true,true,PDV_Bless_Imperial_Arkay_T2,SyncNordRewardFamily,Arkay
+PASS,Nord,Nine Divines,Arkay,T3,PDV_Bless_Imperial_Arkay_T3,true,true,PDV_Bless_Imperial_Arkay_T3,SyncNordRewardFamily,Arkay
 PASS,Nord,Nine Divines,Julianos,T1,PDV_Bless_Imperial_Julianos_T1,true,true,PDV_Bless_Imperial_Julianos_T1,SyncNordRewardFamily,Julianos
 PASS,Nord,Nine Divines,Julianos,T2,PDV_Bless_Imperial_Julianos_T2,true,true,PDV_Bless_Imperial_Julianos_T2,SyncNordRewardFamily,Julianos
 PASS,Nord,Nine Divines,Julianos,T3,PDV_Bless_Imperial_Julianos_T3,true,true,PDV_Bless_Imperial_Julianos_T3,SyncNordRewardFamily,Julianos
@@ -122,6 +122,9 @@ PASS,Nord,Nine Divines,Stendarr,T3,PDV_Bless_Imperial_Stendarr_T3,true,true,PDV_
 PASS,Nord,Nine Divines,Zenithar,T1,PDV_Bless_Imperial_Zenithar_T1,true,true,PDV_Bless_Imperial_Zenithar_T1,SyncNordRewardFamily,Zenithar
 PASS,Nord,Nine Divines,Zenithar,T2,PDV_Bless_Imperial_Zenithar_T2,true,true,PDV_Bless_Imperial_Zenithar_T2,SyncNordRewardFamily,Zenithar
 PASS,Nord,Nine Divines,Zenithar,T3,PDV_Bless_Imperial_Zenithar_T3,true,true,PDV_Bless_Imperial_Zenithar_T3,SyncNordRewardFamily,Zenithar
+PASS,Nord,Old Ways,Arkay,T1,PDV_Bless_Nord_Arkay_T1,true,true,PDV_Bless_Nord_Arkay_T1,SyncNordRewardFamily,Orkey
+PASS,Nord,Old Ways,Arkay,T2,PDV_Bless_Nord_Arkay_T2,true,true,PDV_Bless_Nord_Arkay_T2,SyncNordRewardFamily,Orkey
+PASS,Nord,Old Ways,Arkay,T3,PDV_Bless_Nord_Arkay_T3,true,true,PDV_Bless_Nord_Arkay_T3,SyncNordRewardFamily,Orkey
 PASS,Nord,Old Ways,Kyne,T1,PDV_Bless_Nord_Kyne_T1,true,true,PDV_Bless_Nord_Kyne_T1,SyncNordRewardFamily,Kyne
 PASS,Nord,Old Ways,Kyne,T2,PDV_Bless_Nord_Kyne_T2,true,true,PDV_Bless_Nord_Kyne_T2,SyncNordRewardFamily,Kyne
 PASS,Nord,Old Ways,Kyne,T3,PDV_Bless_Nord_Kyne_T3,true,true,PDV_Bless_Nord_Kyne_T3,SyncNordRewardFamily,Kyne

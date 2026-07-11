@@ -1,6 +1,6 @@
 {
   "schema": "pdv.1-0.pacing-signoff-ledger.v1",
-  "updated": "2026-07-07",
+  "updated": "2026-07-11",
   "purpose": "Per-race dated human sign-off that reward magnitudes and piety pacing felt right in a real play sitting. Companion to PDV_PacingSimLedger.json (machine half of the C-PACING gates). Read by tools/pdv_1_0_endstate_gate.mjs.",
   "rules": {
     "allowedSlotStatuses": ["pending", "not-applicable", "evidence-recorded"],
@@ -16,7 +16,7 @@
         "Bosmer": { "status": "pending", "expected": "Magnitudes and pacing felt right in a real Bosmer sitting.", "note": "", "simLedgerHash": null },
         "Breton": { "status": "pending", "expected": "Magnitudes and pacing felt right in a real Breton sitting.", "note": "", "simLedgerHash": null },
         "Dunmer": { "status": "pending", "expected": "Magnitudes and pacing felt right in a real Dunmer sitting.", "note": "", "simLedgerHash": null },
-        "Imperial": { "status": "pending", "expected": "Magnitudes and pacing felt right in a real Imperial sitting.", "note": "", "simLedgerHash": null },
+        "Imperial": { "status": "evidence-recorded", "expected": "Magnitudes and pacing felt right in a real Imperial sitting.", "note": "2026-07-11 co-test: tester signed off Imperial pacing as feeling fine overall after Imperial boon, price, disfavor, and neglect checks.", "simLedgerHash": "BDD0397E2B86E0DBC060C7F63E1EE83FAD813DD1904735188BA26BED8E4D16B2" },
         "Khajiit": { "status": "pending", "expected": "Magnitudes and pacing felt right in a real Khajiit sitting.", "note": "", "simLedgerHash": null },
         "Nord": { "status": "pending", "expected": "Magnitudes and pacing felt right in a real Nord sitting.", "note": "", "simLedgerHash": null },
         "Orc": { "status": "pending", "expected": "Magnitudes and pacing felt right in a real Orc sitting.", "note": "", "simLedgerHash": null },

@@ -36,11 +36,11 @@ EndFunction
 
 Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
     if signalType == SIGNAL_DAWN_ACKNOWLEDGMENT
-        return DELTA_DAWN_ACKNOWLEDGMENT
+        return 1.0
     elseIf signalType == SIGNAL_ORTHODOXY_AFFIRMATION
-        return DELTA_ORTHODOXY_AFFIRMATION
+        return 3.0
     elseIf signalType == SIGNAL_ANCESTOR_SPINE
-        return DELTA_ANCESTOR_SPINE
+        return 1.0
     endIf
 
     return 0.0

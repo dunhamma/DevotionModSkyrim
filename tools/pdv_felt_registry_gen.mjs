@@ -234,19 +234,41 @@ function buildRegistry() {
       const sentiment = cols[idx("sentiment")];
       if (sentiment !== "-") continue;
       const actor = cols[idx("actor")];
+      const eventId = cols[idx("eventId")];
+      const originGateIndex = idx("originGate");
+      const originGateRaw = originGateIndex >= 0 ? String(cols[originGateIndex] ?? "").trim().toLowerCase() : "";
+      const originGateMap = new Map([
+        ["", -1],
+        ["nord", 0],
+        ["imperial", 1],
+        ["breton", 2],
+        ["altmer", 3],
+        ["bosmer", 4],
+        ["dunmer", 5],
+        ["khajiit", 6],
+        ["argonian", 7],
+        ["saxhleel", 7],
+        ["orc", 8],
+        ["orsimer", 8],
+        ["redguard", 9],
+        ["yokudan", 9],
+      ]);
+      const originGate = originGateMap.get(originGateRaw);
+      if (originGate === undefined) throw new Error(`${rel} actor=${actor} eventId=${eventId}: unknown originGate '${originGateRaw}'`);
       effects.push({
-        effectId: `csv:${actor}:${cols[idx("eventId")]}`,
+        effectId: `csv:${actor}:${eventId}${originGate === -1 ? "" : `:origin:${originGate}`}`,
         class: "price",
         lane: laneFor(actor),
         race: null,
         origin: "likes-dislikes-csv",
-        declaredIn: `${rel} actor=${actor} eventId=${cols[idx("eventId")]}`,
+        declaredIn: `${rel} actor=${actor} eventId=${eventId}${originGateIndex >= 0 ? ` originGate=${originGate}` : ""}`,
         displayName: cols[idx("eventName")],
         tier: cols[idx("tier")],
         expected: {
           espEditorIds: [],
           delta: Number(cols[idx("baseDelta")]),
           dailyCap: Number(cols[idx("dailyCap")]),
+          ...(originGateIndex >= 0 ? { originGate } : {}),
         },
       });
     }

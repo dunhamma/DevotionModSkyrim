@@ -72,8 +72,10 @@ Orkey lane:
 5. Accept. EXPECT: toast "Orkey has named you their own."; Book of Days
    chronicle line names Orkey; panel dashboard god block + medallion roster
    show "Orkey" with the Arkay glyph; Survey focused line names Orkey.
-6. Rewards: at Seeker tier expect the Imperial Arkay T1 spell in Active
-   Effects (same record as the Nine Divines lane).
+6. Rewards: at Seeker tier expect `Orkey's Vigil - Seeker` in Active
+   Effects. Fixed 2026-07-11: Old Ways Orkey now uses dedicated Orkey-facing
+   `PDV_Bless_Nord_Arkay_T1/T2/T3` reward records; Nine Divines Arkay keeps
+   the Imperial Arkay records.
 
 Dibella lane (NOTE the one-patron rule: while Orkey/Arkay is the active
 patron, no new offer will evaluate -- "Reset commitment state" clears
