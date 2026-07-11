@@ -1,11 +1,11 @@
 {
   "status": "RED",
-  "mode": "read",
+  "mode": "run",
   "strictStale": false,
   "counts": {
-    "PASS": 1,
+    "PASS": 2,
     "STALE": 1,
-    "RED": 16
+    "RED": 15
   },
   "rows": [
     {
@@ -73,10 +73,10 @@
       "lane": "experience-mode",
       "category": "machine-gate",
       "title": "Experience Mode is built (PDV_ModePreset, PDV_GLO_Mode, MCM surfacing, manager scalars, ActionRouter handling, verifier readback)",
-      "status": "RED",
-      "detail": "evidence voided by source drift - last observed PASS 2026-07-10T23:33:36.087Z; drift since 2026-07-10T23:33:36.087Z: @managerLive, @managerDeployed",
+      "status": "PASS",
+      "detail": "--run tools/pdv_verify.mjs --strict-experience-mode: exit 0",
       "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-EXPMODE-BUILD (strict experience-mode verifier).",
-      "drift": true
+      "drift": false
     },
     {
       "id": "C-EXPMODE-SMOKE",
@@ -194,7 +194,7 @@
       "category": "rollup",
       "title": "1.0 ship gate: every non-post-1.0 criterion passes",
       "status": "RED",
-      "detail": "1 PASS / 1 STALE / 16 RED",
+      "detail": "2 PASS / 1 STALE / 15 RED",
       "closes": "Burn the RED criteria above.",
       "drift": false
     }

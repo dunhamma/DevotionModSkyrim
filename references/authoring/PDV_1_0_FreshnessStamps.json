@@ -1,6 +1,6 @@
 {
   "schema": "pdv.1-0.freshness-stamps.v1",
-  "updated": "2026-07-11T01:53:26.200Z",
+  "updated": "2026-07-11T01:54:47.762Z",
   "stamps": {
     "C-RACE-RUBRIC": {
       "observedAt": "2026-07-07T09:22:07.856Z",
@@ -11,7 +11,7 @@
       }
     },
     "C-PRINCE-GATE": {
-      "observedAt": "2026-07-11T01:53:26.147Z",
+      "observedAt": "2026-07-11T01:54:36.931Z",
       "result": "PASS",
       "sourceHashes": {
         "references/authoring/PDV_DaedricPrinceRecordContracts.json": "040bb0dc17ff520832a4a09daf2e7e0bfa92225c059e7497f45155081e96d4c9"
@@ -59,11 +59,11 @@
       }
     },
     "C-EXPMODE-BUILD": {
-      "observedAt": "2026-07-10T23:33:36.087Z",
+      "observedAt": "2026-07-11T01:54:47.721Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "eec0ed60f65722dcbba2ac96412ba4a3871735639b32f09e7c57e9b9f556743e",
-        "@managerDeployed": "eec0ed60f65722dcbba2ac96412ba4a3871735639b32f09e7c57e9b9f556743e",
+        "@managerLive": "21c485c7e6431a8b20ba6f3ee2a591147692ff41294aa2a14137753e9ecf3c8d",
+        "@managerDeployed": "21c485c7e6431a8b20ba6f3ee2a591147692ff41294aa2a14137753e9ecf3c8d",
         "@espDeployed": "589cda60268ac3467050427aa4466972ae65d30bca0293f0a5b217af5892eaac"
       }
     },
