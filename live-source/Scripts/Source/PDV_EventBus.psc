@@ -1468,6 +1468,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     Int count = PDV_FLST_AllDeities.GetSize()
     Int scoredCount = 0
 
+    PDV_Manager.BeginLikesDislikesSurface(eventType)
     while i < count
         PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
         if deity
@@ -1486,6 +1487,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
 
         i += 1
     endWhile
+    PDV_Manager.FlushLikesDislikesSurface(eventType)
 
     ; V2: also deepen any OPEN transgressive-Prince paths (separate fan-out; path's own piety).
     PDV_Manager.RouteActionToOpenPaths(eventType, actorRef, targetRef)

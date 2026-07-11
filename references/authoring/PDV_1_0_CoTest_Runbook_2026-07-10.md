@@ -24,9 +24,11 @@ generated ledgers still decide state:
 
 Generated 2026-07-10 from live tools:
 
-- Signal-floor smoke gate: **PASS** backend/static, **142 PASS / 12 runtime
-  OPEN**. This means the representative scenarios are source/runtime-JSON/MCM
-  harness ready, not in-game proven.
+- Signal-floor smoke gate: **PASS after MQ305, MQ206, DBDestroy, MS10, and MQ302 retests**. The source/runtime-JSON
+  / MCM harness checks pass, and the 2026-07-10 source fix reachability-gates
+  `TABOO` / `HOSTILE` non-Daedric quest reactions before they can write piety
+  or Book of Days surface. Cards 2, 3, 4, 5, and 7 now have in-game manual
+  evidence recorded; broader signal-floor runtime/manual openings remain.
 - 1.0 end-state gate: **RED** in read mode, **1 PASS / 1 STALE / 16 RED**.
   Recent manager/deployed drift voided several older machine proofs. Before
   using live play time as 1.0 evidence, run the recertification preflight below
@@ -94,7 +96,10 @@ node .\tools\pdv_signal_floor_smoke_gate.mjs --check --json
 Expected backend state before in-game smoke:
 
 - `pdv_verify`: FAIL=0. The known medallion glyph fallback warning is allowed.
-- Quest matrix: 1071 rows, 169 quest keys, 135 watched quests, 26 faucet acts.
+- Quest matrix: 1057 rows, 169 quest keys, 135 watched quests, 26 faucet acts.
+- `pdv_deity_signal_remap_adversary_check`: PASS. Its
+  `potentialOffRosterHostileSurfaces` count is expected to remain nonzero
+  because the source guard, not row deletion, owns that cross-origin policy.
 - Likes/dislikes version: `LIKES_DISLIKES_VERSION = 15`.
 - Signal-floor smoke gate: backend PASS; runtime OPEN is expected until live
   Papyrus markers exist.
@@ -145,10 +150,12 @@ signal-floor smoke state is open at runtime:
 1. **Recertify machine gates.** Run `pdv_1_0_endstate_gate.mjs --run` after the
    deployed/live state is settled. Do not spend a long in-game sitting while the
    burndown is drift-red unless the point is defect reproduction.
-2. **Signal-floor representative smoke.** Close the 12 runtime/manual openings
+2. **Signal-floor representative smoke.** Close the remaining runtime/manual openings
    from `PDV_SignalFloorSmokeLedger.md`. Use the table below. This is the best
    first co-test target because it directly checks the new MCM harness, backend
    matrix expansion, Book of Days aggregation, and the risky organic routes.
+   Cards 2, 3, 4, 5, and 7 have passed after retest; continue with the next
+   open card.
 3. **Race sittings for 1.0.** Use
    `node .\tools\pdv_felt_registry_gen.mjs --sitting <Race>` and the 1.0 mega
    packet. Each race sitting feeds C-FELT-FAMILY, C-PACING-SIGNOFF, and
@@ -178,13 +185,13 @@ For every card, capture:
 
 | # | Scenario | Route to run | Expected result | Required manual checks |
 |---:|---|---|---|---|
-| 1 | Quest fan-out and aggregation | `setstage DLC2SV01 200`; controlled MCM index 1 is allowed for route smoke | Hist, Y'ffre, and Syrabane rows land as one aggregated surface | One toast, one Book of Days line naming landed deities, coherent Survey/status |
+| 1 | Quest fan-out and aggregation | `setstage DLC2SV01 200`; controlled MCM index 1 is allowed for route smoke | Hist, Y'ffre, and Syrabane rows exist; visible landed deities are origin-roster gated (Altmer: Y'ffre + Syrabane, Argonian: Hist) | One toast, one Book of Days line naming landed deities, coherent Survey/status |
 | 2 | Main-quest death gods and Dagon correction | `setstage MQ305 200`; controlled MCM index 2 | Arkay and Tu'whacca milestone gains, Khenarthi gain, Mehrunes Dagon loss | Dagon is a loss; reachable gods only; repeat after save/load does not stack |
-| 3 | Main-quest lore gods | `setstage MQ206 220`; controlled MCM index 3 | Julianos, Hermaeus Mora, and Magnus milestone gains; Dagon loss | Milestone scale visible; Dagon correction remains negative |
-| 4 | Sithis strongest negative | `setstage DBDestroy 200`; controlled MCM index 4 | Sithis milestone loss plus Stendarr/Talos gains | Sithis is the strongest negative; gains visible only where reachable |
-| 5 | Zenithar milestone | `setstage MS10 100`; controlled MCM index 5 | Zenithar milestone gain plus Z'en small gain | Both deities visible where reachable |
-| 6 | Hircine cure dislike | Be a werewolf, then `setstage CR13 200`; controlled MCM index 6 | Hircine loss plus Y'ffre gain | Organic proof should be as werewolf; both sides distinct |
-| 7 | Season Unending | `setstage MQ302 300`; controlled MCM index 7 | Mara, Stendarr, Akatosh, and Stuhn gains | Stage 300 smoke stands in for the concession-stage coverage set |
+| 3 | Main-quest lore gods | `setstage MQ206 220`; controlled MCM index 3 | Source rows include Julianos, Hermaeus Mora, Magnus, Xarxes, and Dagon; Altmer display is roster-gated: Magnus/Xarxes visible, Dagon loss visible, no Shor/Talos/Nord combat fan-out | Lore gains visible where reachable; Dagon correction remains negative; no stale Nord fan-out |
+| 4 | Sithis strongest negative | `setstage DBDestroy 200`; controlled MCM index 4 | Split-origin proof: Argonian shows the Sithis milestone loss; Nord or Breton shows the Stendarr/Talos gains | Argonian Sithis loss is strongest negative; Nord/Breton Stendarr/Talos gains are visible |
+| 5 | Zenithar milestone | `setstage MS10 100`; controlled MCM index 5 | Split-origin proof: Nord/Imperial/Breton shows the Zenithar milestone gain; Bosmer shows the Z'en small gain | Zenithar and Z'en gains are visible where reachable |
+| 6 | Hircine cure dislike | Controlled MCM index 6 for this sitting. Organic proof requires an active Companions `CR13` Farkas/Vilkas Purity quest; a generic werewolf save plus `setstage CR13 200` is not reliable. | Hircine loss plus Y'ffre gain | Controlled route/display proof now; organic CR13 proof remains separate unless the save is already on the active cure quest |
+| 7 | Season Unending | `setstage MQ302 300`; controlled MCM index 7 | Imperial shows Mara, Stendarr, and Akatosh; Stuhn skips there by roster gate. Nord shows Stuhn too. | Stage 300 smoke stands in for the concession-stage coverage set |
 | 8 | Crypt clear | Enter and clear a listed undead crypt through a load door; Bleak Falls is acceptable; controlled MCM index 8 only for route smoke | Arkay, Meridia, Stendarr, Tu'whacca, Azura, and Y'ffre gains once per site | Same-site repeat stays blocked/capped; `coc` is not organic proof |
 | 9 | Likes/dislikes v15 | Fresh or unstamped save; fire vampire feed 366 and non-combat animal kill 303; controlled MCM index 9 | Arkay/Stendarr losses for 366; Kyne/Kynareth losses for 303; v15 reload marker | Daily caps hold; old save loads the v15 table once |
 | 10 | Green Way behavior | Bosmer Old Contract: visit sacred site, then consume plant food; controlled MCM index 10 only for route smoke | Y'ffre site gain and plant-consumption loss | Plant proof must use real item consumption; debug route is not enough |
@@ -198,10 +205,11 @@ Use these as the default live order unless a bug report points elsewhere:
 
 | Sitting | Origin/save | Primary purpose |
 |---|---|---|
-| A | Fresh Nord or unstamped save | LD v15 first, MQ305/MQ206/MQ302, Dagon correction, crypt clear, Sithis, Paarthurnax kill/spare |
+| A | Fresh Nord or unstamped save | LD v15 first, MQ305/MQ206/MQ302, Dagon correction, crypt clear, Card 4 Stendarr/Talos half, Paarthurnax kill/spare |
 | B | Bosmer | Green Way sacred site and plant-food proof, Y'ffre-sensitive rows, wrong-origin silence where useful |
 | C | Breton or Altmer | Formal-offer/reward overlap spot checks while running quest-stage fan-out |
 | D | Disposable edge save | Borderline prove-or-drop rows, repeat/save-load adversary checks, generic-source silence |
+| E | Argonian | Card 4 Sithis loss half, Hist/Sithis-sensitive rows |
 
 After each sitting, regenerate the relevant ledgers:
 

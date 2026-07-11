@@ -1,0 +1,336 @@
+{
+  "schema": "pdv-signal-floor-smoke-manual-evidence.v1",
+  "updated": "2026-07-11",
+  "purpose": "Structured intake ledger for human-observed signal-floor smoke evidence that the generated backend/runtime smoke gate cannot infer from Papyrus logs alone.",
+  "rules": {
+    "allowedCheckStatuses": ["pending", "evidence-recorded", "not-applicable", "defect"],
+    "recordingRule": "Record only observations that happened in game. Keep runtime-route proof separate from manual display evidence."
+  },
+  "scenarios": {
+    "quest_dlc2sv01_200": {
+      "status": "evidence-recorded",
+      "origin": "Altmer",
+      "route": "organic setstage DLC2SV01 200",
+      "observedAtLocal": "2026-07-10T18:54:14+10:00",
+      "artifacts": [
+        "C:/Users/Admin/AppData/Local/Temp/codex-clipboard-7d8fe21a-a366-4ddc-bae6-a95cf9d8aea7.png",
+        "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.2.log"
+      ],
+      "checks": {
+        "one aggregated toast": {
+          "status": "evidence-recorded",
+          "note": "Tester reported all Card 1 surfaces passed after organic setstage."
+        },
+        "Book of Days line names all landed deities": {
+          "status": "evidence-recorded",
+          "note": "Tester reported all Card 1 surfaces passed after organic setstage."
+        },
+        "Survey/status lane coherent": {
+          "status": "evidence-recorded",
+          "note": "Screenshot shows coherent Altmer Survey/status text: uncommitted in the Thalmor question, Auriel foundation held, Standing Distant, Last favor Noted, Aldmeri heritage quiet."
+        }
+      },
+      "notes": [
+        "Papyrus log confirms Y'ffre and Syrabane piety landed; The Hist was skipped as unreachable foreign deity under Altmer, which matches origin-roster gating."
+      ]
+    },
+    "quest_mq305_200_death_gods": {
+      "status": "evidence-recorded",
+      "origin": "Imperial",
+      "route": "organic setstage MQ305 200",
+      "observedAtLocal": "2026-07-11T07:33:44+10:00",
+      "artifacts": [
+        "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.1.log"
+      ],
+      "checks": {
+        "Dagon is a loss, not a gain": {
+          "status": "evidence-recorded",
+          "note": "Papyrus log confirms Mehrunes Dagon applied as a negative taboo quest reaction: -2.000000 from serve_empire_order."
+        },
+        "death-god gains are visible where reachable": {
+          "status": "evidence-recorded",
+          "note": "Papyrus log confirms Imperial-reachable Arkay landed as a milestone death-god gain (+18.000000); Tu'whacca and Khenarthi were skipped as unreachable foreign deities under Imperial roster gating."
+        },
+        "duplicate route does not stack after save/load": {
+          "status": "evidence-recorded",
+          "note": "Tester reported the Imperial card passed, including the repeat/save-load check. The retained retest log contains one MQ305 application in the inspected window."
+        }
+      },
+      "notes": [
+        "Papyrus log confirms MQ305 stage 200 route at 2026-07-11 07:33:44 local: Dagon loss, Arkay gain, off-roster death-god skips, and QuestReaction 290546|200 applied 17 cells."
+      ]
+    },
+    "quest_mq206_220_lore_gods": {
+      "status": "evidence-recorded",
+      "origin": "Altmer",
+      "route": "organic setstage MQ206 220",
+      "observedAtLocal": "2026-07-11T07:24:34+10:00",
+      "artifacts": [
+        "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.1.log"
+      ],
+      "checks": {
+        "lore gains are visible where reachable": {
+          "status": "evidence-recorded",
+          "note": "Tester reported the in-game MQ206 retest passed. Papyrus log confirms Magnus and Xarxes piety landed under Altmer, Julianos skipped as off-roster foreign, and Hermaeus Mora routed through Daedric stigma."
+        },
+        "Dagon correction is a loss": {
+          "status": "evidence-recorded",
+          "note": "Papyrus log confirms Mehrunes Dagon applied as a negative taboo quest reaction: -2.000000 from serve_empire_order."
+        },
+        "no Shor/Talos/Nord combat fan-out": {
+          "status": "evidence-recorded",
+          "note": "Current Papyrus log shows MQ206 applied 5 cells and contains no Shor/Talos/Nord combat piety lines for the retest window."
+        }
+      },
+      "notes": [
+        "Supersedes the pre-fix 2026-07-10 defect screenshot/log where Shor, Talos, and stale Nord/struggle rows surfaced.",
+        "Root cause found 2026-07-10: Tranche2/5/7 retained older MQ206 stage 220 combat/struggle rows after the Tranche10 lore-god smoke contract was added. Removed stale rows and regenerated PDV_QuestReactionMatrix.json.",
+        "Follow-on source guard added 2026-07-10: ApplyDeityReaction now reachability-gates TABOO/HOSTILE non-Daedric quest reactions before stigma, piety, or Book of Days surface. pdv_deity_signal_remap_adversary_check now guards this class.",
+        "Altmer-specific retest expectation: Julianos is a source row but off-roster/foreign, Hermaeus Mora is taboo and routes through the Daedric stigma path, Magnus and Xarxes are visible native lore gains, and Mehrunes Dagon should remain a visible loss."
+      ]
+    },
+    "quest_dbdestroy_200_sithis": {
+      "status": "evidence-recorded",
+      "origin": "Nord + Argonian",
+      "route": "organic setstage DBDestroy 200 split-origin",
+      "observedAtLocal": "2026-07-11T07:43:18+10:00",
+      "artifacts": [
+        "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log"
+      ],
+      "checks": {
+        "Sithis loss is strongest negative": {
+          "status": "evidence-recorded",
+          "note": "Tester reported the Argonian Sithis half passed. Papyrus log confirms Sithis applied as the milestone loss: -18.000000 from break_oath_betray, while Stendarr and Talos skipped as unreachable foreign deities under Argonian."
+        },
+        "Stendarr/Talos gains are visible where reachable": {
+          "status": "evidence-recorded",
+          "note": "Tester reported the Nord Stendarr/Talos half passed. Papyrus log confirms Stendarr +4.000000 and Talos +2.000000 landed under the reachable Nord roster, while Sithis skipped as unreachable taboo/hostile."
+        }
+      },
+      "notes": [
+        "Card 4 is intentionally split-origin after the quest-reaction reachability guard: Sithis is a non-Prince Argonian deity surface, while Stendarr/Talos are reachable on Nord/Breton. Papyrus confirms QuestReaction 603387|200 applied in both proof windows."
+      ]
+    },
+    "quest_ms10_100_zenithar": {
+      "status": "evidence-recorded",
+      "origin": "Imperial + Bosmer",
+      "route": "organic setstage MS10 100 split-origin",
+      "observedAtLocal": "2026-07-11T07:55:19+10:00",
+      "artifacts": [
+        "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log"
+      ],
+      "checks": {
+        "Zenithar milestone gain and Z'en gain land where reachable": {
+          "status": "evidence-recorded",
+          "note": "Tester reported both Card 5 sides passed. Papyrus log confirms Imperial-reachable Zenithar landed as a milestone gain (+18.000000) with Z'en skipped off-roster, then Bosmer-reachable Z'en landed (+4.000000) with Zenithar skipped off-roster."
+        }
+      },
+      "notes": [
+        "Papyrus confirms QuestReaction 121852|100 applied in both proof windows: Imperial at 2026-07-11 07:51:58 local and Bosmer at 2026-07-11 07:55:19 local."
+      ]
+    },
+    "quest_cr13_200_hircine_cure": {
+      "status": "evidence-recorded",
+      "origin": "Bosmer current test save",
+      "route": "controlled MCM signal-floor scenario 6 (CR13 200)",
+      "observedAtLocal": "2026-07-11T08:13:35+10:00",
+      "artifacts": [
+        "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log"
+      ],
+      "checks": {
+        "controlled CR13 route shows Hircine loss and Y'ffre gain in toast and Book of Days": {
+          "status": "evidence-recorded",
+          "note": "Tester reported toasts and Book of Days passed. Papyrus log confirms Hircine loss, Y'ffre gain, QuestReaction 930147|200 applied 2 cells, and SignalFloorSmoke routed CR13 200."
+        },
+        "organic CR13 proof is not claimed without an active Farkas/Vilkas cure quest": {
+          "status": "not-applicable",
+          "note": "This pass used the controlled MCM route after generic setstage CR13 200 did not emit a reliable organic quest-stage event. Organic CR13 proof remains separate and requires an active Companions Purity cure quest save."
+        }
+      },
+      "notes": [
+        "Papyrus confirms the controlled CR13 path at 2026-07-11 08:13:35 local: Hircine -1.600000 from cure_undeath, Y'ffre +2.000000 raw from the_hunt with current scaling applied, and QuestReaction 930147|200 applied 2 cells.",
+        "This is controlled route/display proof, not organic CR13 quest proof."
+      ]
+    },
+    "quest_mq302_300_season_unending": {
+      "status": "evidence-recorded",
+      "origin": "Imperial",
+      "route": "organic setstage MQ302 300",
+      "observedAtLocal": "2026-07-11T07:52:12+10:00",
+      "artifacts": [
+        "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log"
+      ],
+      "checks": {
+        "all three concession stages remain covered; smoke uses stage 300": {
+          "status": "evidence-recorded",
+          "note": "Tester reported Card 7 was run on Imperial without Stuhn. Papyrus log confirms stage 300 fired and Imperial-reachable Mara, Stendarr, and Akatosh landed; Stuhn skipped as an unreachable foreign deity, which matches origin-roster gating."
+        }
+      },
+      "notes": [
+        "This records Imperial route/display evidence for the stage-300 smoke path. It does not claim a Stuhn display under Imperial; Stuhn is only visible on a Stuhn-reachable origin such as Nord."
+      ]
+    },
+    "crypt_clear_undead": {
+      "status": "evidence-recorded",
+      "origin": "Bosmer current test save",
+      "route": "organic Mara's Eye Pond undead clear",
+      "observedAtLocal": "2026-07-11T09:12:30+10:00",
+      "artifacts": [
+        "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log"
+      ],
+      "checks": {
+        "enter via load door; coc skips location triggers": {
+          "status": "evidence-recorded",
+          "note": "Tester reported Mara's Eye Pond passed in game. Papyrus log confirms the undead crypt clear fired for location 970579; Meridia and Y'ffre landed, while Arkay, Stendarr, Tu'whacca, and Azura were skipped as unreachable foreign deities under the current origin."
+        },
+        "same-site repeat stays blocked/capped": {
+          "status": "evidence-recorded",
+          "note": "Tester reported exit did not produce a second fire. Current Papyrus log shows one fresh crypt-clear fire for location 970579 at 09:11:41, then no additional undead-crypt-clear marker after the 09:12:30 exit-stage route marker."
+        }
+      },
+      "notes": [
+        "This records first-clear route/display evidence for Card 8 after the crypt-clear surface fix.",
+        "The current-session repeat observation covers exit/no-double-fire behavior after the fresh 09:11:41 clear."
+      ]
+    },
+    "likes_dislikes_v15": {
+      "status": "evidence-recorded",
+      "origin": "Bosmer current test save",
+      "route": "controlled MCM signal-floor scenario 9 plus organic supporting checks",
+      "observedAtLocal": "2026-07-11T10:47:02+10:00",
+      "artifacts": [
+        "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log"
+      ],
+      "checks": {
+        "new save or unstamped save logs version 15 loaded": {
+          "status": "evidence-recorded",
+          "note": "Papyrus.0.log confirms Likes/dislikes table + stances loaded (version 15) at 2026-07-11 10:47:01 local."
+        },
+        "daily caps hold": {
+          "status": "not-applicable",
+          "note": "Owner explicitly waived strict cow-repeat/daily-cap proof on 2026-07-11 because cow testing caused bounty friction. This is not claimed as proven repeat-suppression behavior."
+        }
+      },
+      "notes": [
+        "Papyrus.0.log confirms SignalFloorSmoke LD v15 debug fired events 303 and 366, with Kyne event 303 and Arkay event 366 routed.",
+        "Organic cow event 303 and MCM direct 366 were separately observed earlier in the same sitting."
+      ]
+    },
+    "green_way_behavioral": {
+      "status": "evidence-recorded",
+      "origin": "Bosmer current test save",
+      "route": "organic Eldergleam Sanctuary coc doorway / interior cell-poll plus Red Apple plant-food consumption",
+      "observedAtLocal": "2026-07-11T09:40:25+10:00",
+      "artifacts": [
+        "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log"
+      ],
+      "checks": {
+        "visit a Bosmer sacred site": {
+          "status": "evidence-recorded",
+          "note": "Tester reported Eldergleam fired immediately after coc'ing to the door. Papyrus.0.log lines 200-202 confirm Bosmer favor LivingStory.NatureSite recorded for path 1 (location_eldergleam), BosmerPath -> LivingStory evidence recorded, and Y'ffre green site remembered: Eldergleam."
+        },
+        "consume plant food as Bosmer Old Contract": {
+          "status": "evidence-recorded",
+          "note": "Tester reported apple UI pass after reload. Papyrus.0.log lines 39-44 confirm Y'ffre -2 piety, signal 303, diegetic dispatch creed.Green Pact.drop tone absence, Green Pact violation count 1, and PlayerEvents plant-food route."
+        },
+        "plant proof is not replaced by direct debug route": {
+          "status": "evidence-recorded",
+          "note": "Proof used real Red Apple consumption after item add, not the MCM debug route. Runtime marker is PlayerEvents: Green Pact plant food violation routed with eventbus_32."
+        }
+      },
+      "notes": [
+        "Card 10 now has runtime-route plus manual front-side proof for both the sacred-site half and the real plant-food half.",
+        "The plant-food proof is tied to the live PlayerEvents route, not the controlled debug scenario."
+      ]
+    },
+    "paarthurnax_kill": {
+      "status": "not-applicable",
+      "origin": "owner waiver",
+      "route": "controlled MCM signal-floor scenario 11 proved; organic kill not run",
+      "observedAtLocal": "2026-07-11T11:46:58+10:00",
+      "artifacts": [
+        "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log",
+        "references/authoring/PDV_SignalFloorSmokePersonalBacklog_2026-07-11.md"
+      ],
+      "checks": {
+        "organic kill on reachable listed-god race": {
+          "status": "not-applicable",
+          "note": "Owner explicitly waived organic Paarthurnax kill proof on 2026-07-11. Controlled route proof exists in Papyrus.0.log: Shor, Tsun, Kyne, Stendarr, Stuhn, and Mara reactions landed, followed by SignalFloorSmoke Paarthurnax kill debug routed."
+        },
+        "repeat after save/load is blocked": {
+          "status": "not-applicable",
+          "note": "Owner explicitly waived the repeat/save-load adversary check for the organic Paarthurnax kill path. This is recorded as backlog, not proven duplicate suppression."
+        },
+        "Khajiit also keeps Alkosh chaos-aid consequence": {
+          "status": "not-applicable",
+          "note": "Owner explicitly waived the Khajiit organic Paarthurnax kill branch for this 1.0 closeout. This is recorded as backlog, not proven Khajiit display evidence."
+        }
+      },
+      "notes": [
+        "Do not claim organic Paarthurnax kill proof from this slot. Controlled route proof and owner waiver are sufficient for this signal-floor closeout.",
+        "See PDV_SignalFloorSmokePersonalBacklog_2026-07-11.md if bug reports arrive."
+      ]
+    },
+    "paarthurnax_spare": {
+      "status": "not-applicable",
+      "origin": "owner waiver",
+      "route": "controlled MCM signal-floor scenario 12 proved; organic spare/latch checks not run",
+      "observedAtLocal": "2026-07-11T11:46:58+10:00",
+      "artifacts": [
+        "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log",
+        "references/authoring/PDV_SignalFloorSmokePersonalBacklog_2026-07-11.md"
+      ],
+      "checks": {
+        "Paarthurnax alive at MQ305 stage 200": {
+          "status": "not-applicable",
+          "note": "Owner explicitly waived organic Paarthurnax spare proof on 2026-07-11. Controlled route proof exists in Papyrus.0.log: Stuhn, Stendarr, Mara, and Kyne reactions landed, followed by SignalFloorSmoke Paarthurnax spare debug routed."
+        },
+        "if kill latch already fired, spare stays silent": {
+          "status": "not-applicable",
+          "note": "Owner explicitly waived the kill-latch adversary check. This is recorded as backlog, not proven latch-silence behavior."
+        }
+      },
+      "notes": [
+        "Do not claim organic Paarthurnax spare/latch proof from this slot. Controlled route proof and owner waiver are sufficient for this signal-floor closeout.",
+        "See PDV_SignalFloorSmokePersonalBacklog_2026-07-11.md if bug reports arrive."
+      ]
+    },
+    "borderline_rows_review": {
+      "status": "pending",
+      "origin": "Bosmer current test save; Nord current test save",
+      "route": "manual prove-or-drop review",
+      "observedAtLocal": "2026-07-11T11:40:19+10:00",
+      "artifacts": [
+        "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log"
+      ],
+      "checks": {
+        "DA14Start s70": {
+          "status": "not-applicable",
+          "note": "Dropped after tester reported no toast or Book of Days from setstage DA14Start 70, and the current Papyrus log contained no DA14Start quest-reaction route. The tranche handoff explicitly said this start-handler row should be dropped if silent."
+        },
+        "DLC2RRFavor01 s200": {
+          "status": "evidence-recorded",
+          "note": "Nord test produced toast and Book of Days. Papyrus.0.log confirms Zenithar +2.000000 from uphold_law_justice and QuestReaction 151006|200 applied 1 cells at 2026-07-11 11:30:22 local."
+        },
+        "BYOHRelationshipAdoption s10": {
+          "status": "evidence-recorded",
+          "note": "Nord test produced Dibella toast/Book of Days. Papyrus.0.log confirms Dibella +2.000000 from marriage_family and QuestReaction 17076|10 applied 1 cells at 2026-07-11 11:32:46 local."
+        },
+        "BYOHRelationshipAdoptableOrphanage s200": {
+          "status": "evidence-recorded",
+          "note": "Nord test produced Dibella toast/Book of Days. Papyrus.0.log confirms Dibella +2.000000 from charity,marriage_family and QuestReaction 17030|200 applied 1 cells at 2026-07-11 11:37:33 local."
+        },
+        "T03 s105": {
+          "status": "evidence-recorded",
+          "note": "Bosmer test produced Y'ffre display after setstage T03 105. Papyrus.0.log confirms Y'ffre +4.000000 from honor_the_wild, QuestReaction 115854|105 applied 1 cells, and EventBus route complete for stage 105 at 2026-07-11 11:40:14 local."
+        }
+      },
+      "notes": [
+        "DA14Start s70 was removed from the source quest-reaction matrix and from the remaining Card 13 borderline checklist after in-game silence.",
+        "DLC2RRFavor01 s200 is kept after Nord runtime-route and manual display evidence.",
+        "Both HearthFires adoption stages are kept after Nord runtime-route and manual display evidence.",
+        "T03 s105 is kept after Bosmer runtime-route and manual display evidence."
+      ]
+    }
+  }
+}

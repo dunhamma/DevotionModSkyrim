@@ -18,6 +18,9 @@ const files = {
   merge: path.join(ROOT, "tools", "pdv_quest_tranche_merge.mjs"),
   likes: path.join(ROOT, "references", "authoring", "PDV_DeityLikesDislikes.csv"),
   full: path.join(ROOT, "references", "authoring", "PDV_QuestReactionMatrix_Full.csv"),
+  stance: path.join(ROOT, "references", "phase4", "PDV_StanceMatrix.csv"),
+  daedricMatrix: path.join(ROOT, "references", "phase4", "PDV_DaedricRacePrinceMatrix.csv"),
+  daedricContracts: path.join(ROOT, "references", "authoring", "PDV_DaedricPrinceRecordContracts.json"),
   readback: path.join(ROOT, "references", "vanilla-gameplay", "extracted", "vanilla-quest-stage-readback.csv"),
   medallion: path.join(ROOT, "references", "authoring", "PDV_MedallionRoster.manifest.json"),
   prismaApp: path.join(ROOT, "native", "DevotionPrismaBridge", "mod", "PrismaUI", "views", "Devotion", "app.js"),
@@ -30,6 +33,10 @@ const warnings = [];
 
 function read(file) {
   return fs.readFileSync(file, "utf8");
+}
+
+function readJson(file) {
+  return JSON.parse(read(file));
 }
 
 function assert(name, condition, detail) {
@@ -81,6 +88,103 @@ function functionBody(source, functionName) {
   return source.slice(start, next < 0 ? source.length : next);
 }
 
+const RACES = ["Nord", "Imperial", "Breton", "Altmer", "Bosmer", "Dunmer", "Khajiit", "Argonian", "Orc", "Redguard"];
+
+const ORIGIN_ROSTERS = {
+  Nord: ["Kyne", "Kynareth", "Talos", "Shor", "Tsun", "Stuhn", "Mara", "Akatosh", "Arkay", "Stendarr", "Julianos", "Dibella", "Zenithar"],
+  Imperial: ["Kynareth", "Mara", "Akatosh", "Arkay", "Stendarr", "Julianos", "Dibella", "Zenithar"],
+  Breton: ["Kynareth", "Talos", "Mara", "Akatosh", "Arkay", "Stendarr", "Julianos", "Dibella", "Zenithar", "Magnus", "Y'ffre"],
+  Altmer: ["Mara", "Stendarr", "Magnus", "Y'ffre", "Auri-El", "Xarxes", "Trinimac", "Syrabane"],
+  Bosmer: ["Y'ffre", "Auri-El", "Xarxes", "Baan Dar", "Z'en"],
+  Dunmer: ["Azura", "Boethiah", "Mephala"],
+  Khajiit: ["Azura", "Boethiah", "Mephala", "Baan Dar", "Rajhin", "Alkosh", "Khenarthi"],
+  Argonian: ["The Hist", "Sithis"],
+  Orc: ["Malacath"],
+  Redguard: ["Tu'whacca", "Leki", "HoonDing"],
+};
+
+function normalizeName(value) {
+  return String(value ?? "")
+    .trim()
+    .replace(/[’]/g, "'")
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+}
+
+function splitAliasNames(value) {
+  return String(value ?? "")
+    .split("/")
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
+function buildStanceLookup(stanceEntries) {
+  const byName = new Map();
+  for (const entry of stanceEntries) {
+    for (const alias of splitAliasNames(entry.row.WorshipObject)) {
+      byName.set(normalizeName(alias), entry.row);
+    }
+  }
+  const hist = byName.get(normalizeName("Hist"));
+  if (hist) byName.set(normalizeName("The Hist"), hist);
+  return byName;
+}
+
+function buildDaedricNames(matrixEntries, contracts) {
+  const names = new Set();
+  for (const entry of matrixEntries) {
+    for (const alias of splitAliasNames(entry.row.Prince)) names.add(normalizeName(alias));
+  }
+  for (const prince of contracts.princes ?? []) names.add(normalizeName(prince.displayName));
+  return names;
+}
+
+function runtimeStanceFor(deityName, race, stanceByName) {
+  if (normalizeName(deityName) === normalizeName("Z'en")) {
+    return race === "Bosmer" ? "NATIVE" : "FOREIGN";
+  }
+  const row = stanceByName.get(normalizeName(deityName));
+  return row?.[race] || "FOREIGN";
+}
+
+function potentialOffRosterHostileSurfaces(fullEntries, stanceByName, daedricNames) {
+  const rosters = Object.fromEntries(
+    Object.entries(ORIGIN_ROSTERS).map(([race, names]) => [race, new Set(names.map(normalizeName))]),
+  );
+  const groups = new Map();
+  for (const entry of fullEntries) {
+    const key = `${entry.row.editor_id}|${entry.row.outcome_stage}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(entry);
+  }
+
+  const findings = [];
+  for (const [key, entries] of groups.entries()) {
+    const distinctDeities = new Set(entries.map((entry) => entry.row.deity));
+    if (distinctDeities.size < 2) continue;
+    for (const entry of entries) {
+      const deity = entry.row.deity;
+      const isDaedricPath = daedricNames.has(normalizeName(deity));
+      if (isDaedricPath) continue;
+      for (const race of RACES) {
+        if (rosters[race].has(normalizeName(deity))) continue;
+        const stance = runtimeStanceFor(deity, race, stanceByName);
+        if (stance === "TABOO" || stance === "HOSTILE") {
+          findings.push({
+            key,
+            lineNumber: entry.lineNumber,
+            race,
+            deity,
+            valence: entry.row.valence,
+            stance,
+          });
+        }
+      }
+    }
+  }
+  return findings;
+}
+
 const manager = read(files.manager);
 const playerEvents = read(files.playerEvents);
 const eventBus = read(files.eventBus);
@@ -90,6 +194,10 @@ const trancheText = read(files.tranche);
 const merge = read(files.merge);
 const likesRows = parseCsv(read(files.likes));
 const trancheRows = parseCsv(trancheText);
+const fullRows = parseCsv(read(files.full));
+const stanceRows = parseCsv(read(files.stance));
+const daedricMatrixRows = parseCsv(read(files.daedricMatrix));
+const daedricContracts = readJson(files.daedricContracts);
 const readbackRows = parseCsv(read(files.readback));
 const readbackIds = new Set(readbackRows.map((entry) => entry.row.editor_id).filter(Boolean));
 for (const manualId of ["DA10", "DA13", "DA06", "dunHunterQST", "MS05", "FreeformKolskeggrA", "MQ105U", "MS14", "T01", "t02", "T03"]) {
@@ -130,6 +238,26 @@ assert("altmer syrabane manifest live roster", medallion.includes('"optionId": "
 assert("altmer syrabane prisma glyph", prismaApp.includes('["syrabane", "Syrabane"]') && /syrabane:\s*\[/.test(prismaApp), "Prisma app.js lacks Syrabane display-name or glyph coverage.");
 assert("breton hidden art daedric set present", /Hermaeus Mora/.test(manager) && /Hircine/.test(manager) && /Namira/.test(manager) && /Nocturnal/.test(manager), "Hidden Art Daedric offer set is incomplete.");
 
+const applyDeityReaction = functionBody(manager, "ApplyDeityReaction");
+const tabooHostileStart = applyDeityReaction.indexOf('if stance == "TABOO" || stance == "HOSTILE"');
+const tabooHostileBranch = tabooHostileStart >= 0 ? applyDeityReaction.slice(tabooHostileStart, applyDeityReaction.indexOf("; Reachability gate", tabooHostileStart)) : "";
+const tabooHostileGateIndex = tabooHostileBranch.indexOf("if !IsQuestReactionDeityReachable(deity)");
+const tabooHostileStigmaIndex = tabooHostileBranch.indexOf("ApplyQuestReactionStigma");
+const tabooHostilePietyIndex = tabooHostileBranch.indexOf("ApplyQuestReactionPiety");
+const tabooHostileGateBeforeAwards = tabooHostileGateIndex >= 0
+  && (tabooHostileStigmaIndex < 0 || tabooHostileGateIndex < tabooHostileStigmaIndex)
+  && (tabooHostilePietyIndex < 0 || tabooHostileGateIndex < tabooHostilePietyIndex);
+const potentialHostileLeaks = potentialOffRosterHostileSurfaces(
+  fullRows,
+  buildStanceLookup(stanceRows),
+  buildDaedricNames(daedricMatrixRows, daedricContracts),
+);
+assert(
+  "quest-reaction taboo/hostile off-roster gate",
+  tabooHostileGateBeforeAwards,
+  `ApplyDeityReaction must reachability-gate TABOO/HOSTILE non-Daedric reactions before piety/stigma/surface; current matrix has ${potentialHostileLeaks.length} potential off-roster hostile/taboo surface(s).`,
+);
+
 const generatedBranches = [...manager.matchAll(/(?:if|elseIf) ldName == "([^"]+)"/g)].map((match) => match[1]);
 for (const duplicate of ["Akatosh", "Trinimac", "Khenarthi"]) {
   assert(`no unreachable ${duplicate} generated branch`, !generatedBranches.includes(duplicate), `Use the existing runtime key casing for ${duplicate}.`);
@@ -165,6 +293,8 @@ const result = {
   warnings,
   checked: {
     trancheRows: trancheRows.length,
+    fullRows: fullRows.length,
+    potentialOffRosterHostileSurfaces: potentialHostileLeaks.length,
     readbackIds: readbackIds.size,
     likesRows: likesRows.length,
   },

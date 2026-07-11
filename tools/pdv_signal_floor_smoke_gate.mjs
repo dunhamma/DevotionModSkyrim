@@ -29,6 +29,7 @@ const LIKES_CSV = getArg("--likes") ?? path.join(AUTH, "PDV_DeityLikesDislikes.c
 const FAUCET_CSV = getArg("--faucets") ?? path.join(AUTH, "PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv");
 const RUNTIME_JSON = getArg("--runtime-json") ?? "D:/Wabbajack/modlists/Anvil/mods/Devotion/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix.json";
 const PAPYRUS_LOG = getArg("--log") ?? "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log";
+const MANUAL_LEDGER = getArg("--manual-ledger") ?? path.join(AUTH, "PDV_SignalFloorSmokeManualEvidence.json");
 const OUT_MD = path.join(AUTH, "PDV_SignalFloorSmokeLedger.md");
 const OUT_JSON = path.join(AUTH, "PDV_SignalFloorSmokeLedger.json");
 
@@ -47,6 +48,7 @@ function main() {
   const likesRows = readCsv(LIKES_CSV);
   const faucetRows = readCsv(FAUCET_CSV);
   const runtime = readJson(RUNTIME_JSON);
+  const manualEvidence = readOptionalManualEvidence(MANUAL_LEDGER);
   const sourceText = readSources();
   const papyrusLog = fs.existsSync(PAPYRUS_LOG) ? fs.readFileSync(PAPYRUS_LOG, "utf8") : "";
 
@@ -54,12 +56,13 @@ function main() {
 
   const results = [];
   for (const scenario of scenarios.scenarios ?? []) {
-    results.push(checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, papyrusLog));
+    results.push(checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, papyrusLog, manualEvidence));
   }
 
   const counts = countFindings([...findings, ...results.flatMap((result) => result.findings)]);
   const backendStatus = counts.FAIL ? "FAIL" : "PASS";
-  const runtimeOpen = results.reduce((total, result) => total + result.findings.filter((finding) => finding.status === "OPEN").length, 0);
+  const runtimeOpen = results.reduce((total, result) => total + result.findings.filter((finding) => finding.status === "OPEN" && finding.check === "runtime marker").length, 0);
+  const manualOpen = results.reduce((total, result) => total + result.findings.filter((finding) => finding.status === "OPEN" && finding.check.startsWith("manual ")).length, 0);
   const status = backendStatus === "FAIL" ? "FAIL" : (STRICT_RUNTIME && runtimeOpen > 0 ? "FAIL" : "PASS");
   const report = {
     generatedAt: new Date().toISOString(),
@@ -67,6 +70,7 @@ function main() {
     backendStatus,
     strictRuntime: STRICT_RUNTIME,
     runtimeOpen,
+    manualOpen,
     counts,
     proofBoundary: scenarios.proofBoundary,
     files: {
@@ -75,6 +79,7 @@ function main() {
       likes: rel(LIKES_CSV),
       runtimeJson: RUNTIME_JSON,
       papyrusLog: PAPYRUS_LOG,
+      manualEvidenceLedger: fs.existsSync(MANUAL_LEDGER) ? rel(MANUAL_LEDGER) : null,
     },
     findings,
     scenarios: results,
@@ -85,7 +90,7 @@ function main() {
   if (JSON_OUT) {
     console.log(JSON.stringify(report, null, 2));
   } else {
-    console.log(`Signal-floor smoke gate: ${status} (backend ${backendStatus}, runtime OPEN ${runtimeOpen})`);
+    console.log(`Signal-floor smoke gate: ${status} (backend ${backendStatus}, runtime OPEN ${runtimeOpen}, manual OPEN ${manualOpen})`);
     for (const finding of findings) console.log(`[${finding.status}] ${finding.check}: ${finding.detail}`);
     for (const result of results) {
       const localCounts = countFindings(result.findings);
@@ -134,7 +139,7 @@ function checkGlobalContracts(scenarios, matrixRows, likesRows, faucetRows, runt
   assert("manager debug harness", manager.includes("Function DebugRunSignalFloorSmokeScenario") && manager.includes("Function DebugGetSignalFloorSmokeLabel"), "Manager exposes signal-floor debug harness functions.", "Manager signal-floor debug harness functions are missing.");
 }
 
-function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, papyrusLog) {
+function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, papyrusLog, manualEvidence) {
   const local = [];
   const add = (status, check, detail) => local.push({ status, check, detail });
   const ok = (check, condition, pass, fail) => add(condition ? "PASS" : "FAIL", check, condition ? pass : fail);
@@ -142,6 +147,9 @@ function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, pap
   if (scenario.trigger?.type === "quest-stage") {
     const rows = matrixRows.filter((row) => row.editor_id === scenario.trigger.editorId && Number(row.outcome_stage) === Number(scenario.trigger.stage));
     ok("quest matrix rows", rows.length > 0, `${rows.length} source rows found.`, `No source rows for ${scenario.trigger.editorId} ${scenario.trigger.stage}.`);
+    if (scenario.exactRows) {
+      ok("quest matrix exact row count", rows.length === (scenario.expectedRows ?? []).length, `${scenario.trigger.editorId} ${scenario.trigger.stage} has exactly ${rows.length} expected rows.`, `${scenario.trigger.editorId} ${scenario.trigger.stage} has ${rows.length} rows; expected ${(scenario.expectedRows ?? []).length}. Extra deities: ${rows.map((row) => row.deity).join(", ")}.`);
+    }
     for (const expected of scenario.expectedRows ?? []) {
       const match = rows.find((row) =>
         row.deity === expected.deity &&
@@ -164,6 +172,10 @@ function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, pap
       }
       const marker = `QuestReaction: ${runtimeKey} applied`;
       add(papyrusLog.includes(marker) ? "PASS" : "OPEN", "runtime marker", papyrusLog.includes(marker) ? `Papyrus log contains ${marker}.` : `No current Papyrus log marker for ${marker}.`);
+      for (const expected of scenario.expectedRows ?? []) {
+        const unknownMarker = `QuestReaction skipped unknown deity: ${expected.deity}`;
+        ok(`runtime deity resolved ${expected.deity}`, !papyrusLog.includes(unknownMarker), `${expected.deity} was not skipped as unknown in the Papyrus log.`, `${expected.deity} was skipped as an unknown deity in the Papyrus log.`);
+      }
     }
   } else if (scenario.trigger?.type === "likes-dislikes") {
     for (const expected of scenario.expectedRows ?? []) {
@@ -188,14 +200,34 @@ function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, pap
     for (const fn of scenario.trigger.managerFunctions ?? []) {
       ok(`manager function ${fn}`, sourceText.manager.includes(`Function ${fn}`) || sourceText.playerEvents.includes(`Function ${fn}`), `${fn} exists.`, `${fn} is missing.`);
     }
+    if (scenario.id === "crypt_clear_undead") {
+      const reactionsBody = functionBody(sourceText.manager, "ApplyUndeadCryptClearReactions");
+      const reactionBody = functionBody(sourceText.manager, "ApplyUndeadCryptClearReaction");
+      ok("crypt-clear surface reset", reactionsBody.includes("ResetQuestReactionSurface()"), "Crypt-clear resets the quest-reaction surface before fanout.", "Crypt-clear fanout does not reset the quest-reaction surface.");
+      ok("crypt-clear surface flush", reactionsBody.includes("FlushQuestReactionSurface()"), "Crypt-clear flushes one aggregated quest-reaction surface after fanout.", "Crypt-clear fanout does not flush the quest-reaction surface.");
+      ok("crypt-clear positive surface", reactionBody.includes('AccumulateQuestReactionSurface(deity, appliedReactionAmount, "small")'), "Crypt-clear positive awards are accumulated for toast/Book of Days.", "Crypt-clear positive awards are not accumulated for toast/Book of Days.");
+      ok("crypt-clear taboo surface", reactionBody.includes('AccumulateQuestReactionSurface(deity, amount * -1.0, "small")'), "Crypt-clear taboo losses are accumulated for toast/Book of Days.", "Crypt-clear taboo losses are not accumulated for toast/Book of Days.");
+    } else if (scenario.id === "paarthurnax_kill") {
+      const killBody = functionBody(sourceText.manager, "HandlePaarthurnaxKill");
+      const reactionBody = functionBody(sourceText.manager, "ApplyPaarthurnaxKillReaction");
+      ok("paarthurnax kill surface reset", killBody.includes("ResetQuestReactionSurface()"), "Paarthurnax kill resets the quest-reaction surface before fanout.", "Paarthurnax kill fanout does not reset the quest-reaction surface.");
+      ok("paarthurnax kill surface flush", killBody.includes("FlushQuestReactionSurface()"), "Paarthurnax kill flushes one aggregated quest-reaction surface after fanout.", "Paarthurnax kill fanout does not flush the quest-reaction surface.");
+      ok("paarthurnax kill non-faucet surface", reactionBody.includes('ApplyDeityReaction(deityName, "-", intensity, "small", "paarthurnax_kill", False, sourceForm)'), "Paarthurnax kill reactions use the surfaced quest-reaction path.", "Paarthurnax kill reactions still use a quiet/faucet path.");
+    } else if (scenario.id === "paarthurnax_spare") {
+      const spareBody = functionBody(sourceText.manager, "HandlePaarthurnaxSpare");
+      const reactionBody = functionBody(sourceText.manager, "ApplyPaarthurnaxSpareReaction");
+      ok("paarthurnax spare surface reset", spareBody.includes("ResetQuestReactionSurface()"), "Paarthurnax spare resets the quest-reaction surface before fanout.", "Paarthurnax spare fanout does not reset the quest-reaction surface.");
+      ok("paarthurnax spare surface flush", spareBody.includes("FlushQuestReactionSurface()"), "Paarthurnax spare flushes one aggregated quest-reaction surface after fanout.", "Paarthurnax spare fanout does not flush the quest-reaction surface.");
+      ok("paarthurnax spare non-faucet surface", reactionBody.includes('ApplyDeityReaction(deityName, "+", intensity, "small", "paarthurnax_spare", False, sourceForm)'), "Paarthurnax spare reactions use the surfaced quest-reaction path.", "Paarthurnax spare reactions still use a quiet/faucet path.");
+    }
     const markerNeedle = scenario.id === "crypt_clear_undead"
       ? "Undead crypt clear fired"
       : scenario.id === "green_way_behavioral"
         ? "Green Pact plant food violation routed"
-        : scenario.id === "paarthurnax_kill"
-          ? "Paarthurnax"
+      : scenario.id === "paarthurnax_kill"
+          ? "SignalFloorSmoke Paarthurnax kill debug routed"
           : scenario.id === "paarthurnax_spare"
-            ? "Paarthurnax alive"
+            ? "SignalFloorSmoke Paarthurnax spare debug routed"
             : "";
     if (markerNeedle) {
       add(papyrusLog.includes(markerNeedle) ? "PASS" : "OPEN", "runtime marker", papyrusLog.includes(markerNeedle) ? `Papyrus log contains ${markerNeedle}.` : `No current Papyrus log marker for ${markerNeedle}.`);
@@ -214,6 +246,22 @@ function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, pap
     ok("Debug MCM scenario index", sourceText.manager.includes(labelToken), `Manager maps debug scenario ${scenario.debugMcmScenario}.`, `Manager lacks debug scenario ${scenario.debugMcmScenario}.`);
   }
 
+  const manualRecord = manualEvidence?.scenarios?.[scenario.id] ?? null;
+  const manualOpen = [];
+  for (const check of scenario.manualChecks ?? []) {
+    const record = manualRecord?.checks?.[check];
+    if (record?.status === "evidence-recorded") {
+      add("PASS", `manual ${check}`, record.note ? `${check}: ${record.note}` : `${check}: evidence recorded.`);
+    } else if (record?.status === "not-applicable") {
+      add("PASS", `manual ${check}`, record.note ? `${check}: not applicable - ${record.note}` : `${check}: not applicable.`);
+    } else if (record?.status === "defect") {
+      add("FAIL", `manual ${check}`, record.note ? `${check}: defect - ${record.note}` : `${check}: defect recorded.`);
+    } else {
+      manualOpen.push(check);
+      add("OPEN", `manual ${check}`, `${check}: no manual evidence recorded.`);
+    }
+  }
+
   const localCounts = countFindings(local);
   const status = localCounts.FAIL ? "FAIL" : "PASS";
   return {
@@ -223,6 +271,15 @@ function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, pap
     status,
     findings: local,
     manualChecks: scenario.manualChecks ?? [],
+    manualChecksOpen: manualOpen,
+    manualEvidence: manualRecord ? {
+      status: manualRecord.status ?? "unknown",
+      route: manualRecord.route ?? "",
+      origin: manualRecord.origin ?? "",
+      observedAtLocal: manualRecord.observedAtLocal ?? "",
+      artifacts: manualRecord.artifacts ?? [],
+      notes: manualRecord.notes ?? [],
+    } : null,
   };
 }
 
@@ -265,7 +322,7 @@ function writeLedgers(report) {
   md.push("");
   md.push(`Generated: ${report.generatedAt}`);
   md.push("");
-  md.push(`Status: **${report.status}** (backend: **${report.backendStatus}**, runtime OPEN: **${report.runtimeOpen}**)`);
+  md.push(`Status: **${report.status}** (backend: **${report.backendStatus}**, runtime OPEN: **${report.runtimeOpen}**, manual OPEN: **${report.manualOpen}**)`);
   md.push("");
   md.push(`Proof boundary: ${report.proofBoundary}`);
   md.push("");
@@ -279,14 +336,18 @@ function writeLedgers(report) {
   md.push("");
   md.push("## Scenario Checks");
   md.push("");
-  md.push("| Scenario | Bucket | Status | Non-PASS findings | Manual checks still required |");
-  md.push("|---|---|---|---|---|");
+  md.push("| Scenario | Bucket | Status | Non-PASS findings | Manual checks still required | Manual evidence |");
+  md.push("|---|---|---|---|---|---|");
   for (const scenario of report.scenarios) {
     const open = scenario.findings
       .filter((finding) => finding.status !== "PASS")
       .map((finding) => `${finding.status} ${finding.check}: ${finding.detail}`)
       .join("<br>");
-    md.push(`| \`${scenario.id}\` | ${markdownCell(scenario.bucket)} | ${scenario.status} | ${markdownCell(open || "None")} | ${markdownCell((scenario.manualChecks ?? []).join("; ") || "None")} |`);
+    const manualRequired = (scenario.manualChecksOpen ?? scenario.manualChecks ?? []).join("; ") || "None";
+    const evidence = scenario.manualEvidence
+      ? [`${scenario.manualEvidence.status}`, scenario.manualEvidence.origin, scenario.manualEvidence.route, scenario.manualEvidence.observedAtLocal].filter(Boolean).join("; ")
+      : "None";
+    md.push(`| \`${scenario.id}\` | ${markdownCell(scenario.bucket)} | ${scenario.status} | ${markdownCell(open || "None")} | ${markdownCell(manualRequired)} | ${markdownCell(evidence)} |`);
   }
   md.push("");
   md.push("## Allowed Claim");
@@ -296,12 +357,25 @@ function writeLedgers(report) {
   } else {
     md.push("The signal-floor smoke matrix is not backend-ready. Fix the FAIL rows before spending manual runtime time.");
   }
-  md.push("");
   fs.writeFileSync(OUT_MD, md.join("\n") + "\n", "utf8");
 }
 
 function readJson(file) {
   return JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, ""));
+}
+
+function readOptionalManualEvidence(file) {
+  if (!fs.existsSync(file)) return null;
+  const ledger = readJson(file);
+  assert("manual evidence ledger", ledger.schema === "pdv-signal-floor-smoke-manual-evidence.v1", "Manual evidence ledger schema is current.", "Manual evidence ledger schema is wrong.");
+  return ledger;
+}
+
+function functionBody(source, name) {
+  const start = source.indexOf(`Function ${name}(`);
+  if (start < 0) return "";
+  const end = source.indexOf("EndFunction", start);
+  return end < 0 ? source.slice(start) : source.slice(start, end + "EndFunction".length);
 }
 
 function readCsv(file) {

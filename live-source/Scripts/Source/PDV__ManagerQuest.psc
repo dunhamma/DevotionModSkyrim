@@ -754,6 +754,7 @@ String Property SHOUT_DUPLICATE_KEY = "PDV.ShoutAttack.LastTime" AutoReadOnly
 Int _shoutRefreshTicks = 0
 Bool _panelDirty = False
 Bool _suppressAwardFavorToast = False
+Bool _suppressCurseTransitionOutputs = False
 ; Quest-reaction surface accumulator (2026-07-05): one quest fire = one toast +
 ; one Book of Days beat, no matter how many deities its cells fan to. Reset at
 ; the top of ApplyQuestReaction, filled per landed base cell, flushed after the
@@ -769,6 +770,20 @@ String _qrSurfBestNegName = ""
 String _qrSurfBestPosSymbol = ""
 String _qrSurfBestNegSymbol = ""
 Bool _qrSurfMilestone = False
+; Likes/dislikes smoke surface accumulator (2026-07-11): event 303 and 366
+; should score through the generic action router but still leave one visible
+; toast + Book of Days beat for the whole fan-out.
+Int _ldSurfEventType = -1
+String _ldSurfPosNamesCsv = ""
+String _ldSurfNegNamesCsv = ""
+Int _ldSurfPosCount = 0
+Int _ldSurfNegCount = 0
+Float _ldSurfBestPosAmount = 0.0
+Float _ldSurfBestNegAmount = 0.0
+String _ldSurfBestPosName = ""
+String _ldSurfBestNegName = ""
+String _ldSurfBestPosSymbol = ""
+String _ldSurfBestNegSymbol = ""
 Bool _dawnHadActivity = False
 Bool Property AutoPushPrismaPanel = False Auto
 Bool Property AllowPrismaBlockingSurfaces = False Auto
@@ -1422,10 +1437,21 @@ Function AwardPiety(PDV_DeityBase deity, Float amount, String reason = "")
 EndFunction
 
 Function AwardPietyFromLikesDislikes(PDV_DeityBase deity, Float amount, Int eventType, String reason = "")
+    Bool ownsSurface = False
+    if ShouldSurfaceLikesDislikesEvent(eventType) && _ldSurfEventType != eventType
+        BeginLikesDislikesSurface(eventType)
+        ownsSurface = True
+    endIf
+
     Int previousEventType = _pendingLikesDislikesEventType
     _pendingLikesDislikesEventType = eventType
     AwardPietyInternal(deity, amount, True, reason)
     _pendingLikesDislikesEventType = previousEventType
+    AccumulateLikesDislikesSurface(deity, amount, eventType)
+
+    if ownsSurface
+        FlushLikesDislikesSurface(eventType)
+    endIf
 EndFunction
 
 String Function ResolveQuestReactionCellFile(String cellPrefix)
@@ -1656,6 +1682,13 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
     endIf
 
     if stance == "TABOO" || stance == "HOSTILE"
+        if !IsQuestReactionDeityReachable(deity)
+            if GetDebugLevel() >= 2
+                Debug.Trace("[PDV] QuestReaction skipped unreachable taboo/hostile deity: " + deityName + " " + sourceTag)
+            endIf
+            return
+        endIf
+
         if amount > 0.0
             ApplyQuestReactionStigma(deity, amount, sourceTag)
             ; A taboo deity reaction is a real negative piety award (paths take
@@ -1663,6 +1696,11 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
             ; surface as displeasure so the loss is not invisible.
             if !isFaucet && magnitude != "meta" && !(deity as PDV_DaedricPathBase)
                 AccumulateQuestReactionSurface(deity, amount * -1.0, magnitude)
+            endIf
+        else
+            ApplyQuestReactionPiety(deity, amount, "taboo_" + sourceTag)
+            if !isFaucet && magnitude != "meta"
+                AccumulateQuestReactionSurface(deity, amount, magnitude)
             endIf
         endIf
         return
@@ -1851,6 +1889,115 @@ Function FlushQuestReactionSurface()
     endIf
 
     ResetQuestReactionSurface()
+EndFunction
+
+Bool Function ShouldSurfaceLikesDislikesEvent(Int eventType)
+    return eventType == 303 || eventType == 366
+EndFunction
+
+Function ResetLikesDislikesSurface()
+    _ldSurfEventType = -1
+    _ldSurfPosNamesCsv = ""
+    _ldSurfNegNamesCsv = ""
+    _ldSurfPosCount = 0
+    _ldSurfNegCount = 0
+    _ldSurfBestPosAmount = 0.0
+    _ldSurfBestNegAmount = 0.0
+    _ldSurfBestPosName = ""
+    _ldSurfBestNegName = ""
+    _ldSurfBestPosSymbol = ""
+    _ldSurfBestNegSymbol = ""
+EndFunction
+
+Function BeginLikesDislikesSurface(Int eventType)
+    if !ShouldSurfaceLikesDislikesEvent(eventType)
+        return
+    endIf
+
+    ResetLikesDislikesSurface()
+    _ldSurfEventType = eventType
+EndFunction
+
+Function AccumulateLikesDislikesSurface(PDV_DeityBase deity, Float amount, Int eventType)
+    if !ShouldSurfaceLikesDislikesEvent(eventType) || !deity || amount == 0.0
+        return
+    endIf
+
+    if _ldSurfEventType != eventType
+        BeginLikesDislikesSurface(eventType)
+    endIf
+
+    String deityName = GetPublicDeityDisplayName(deity)
+    if amount > 0.0
+        if _ldSurfPosNamesCsv != ""
+            _ldSurfPosNamesCsv = _ldSurfPosNamesCsv + "|"
+        endIf
+        _ldSurfPosNamesCsv = _ldSurfPosNamesCsv + deityName
+        _ldSurfPosCount += 1
+        if amount > _ldSurfBestPosAmount
+            _ldSurfBestPosAmount = amount
+            _ldSurfBestPosName = deityName
+            _ldSurfBestPosSymbol = GetPrismaSymbolForDeity(deity)
+        endIf
+    else
+        if _ldSurfNegNamesCsv != ""
+            _ldSurfNegNamesCsv = _ldSurfNegNamesCsv + "|"
+        endIf
+        _ldSurfNegNamesCsv = _ldSurfNegNamesCsv + deityName
+        _ldSurfNegCount += 1
+        if amount < _ldSurfBestNegAmount
+            _ldSurfBestNegAmount = amount
+            _ldSurfBestNegName = deityName
+            _ldSurfBestNegSymbol = GetPrismaSymbolForDeity(deity)
+        endIf
+    endIf
+EndFunction
+
+Function FlushLikesDislikesSurface(Int eventType)
+    if !ShouldSurfaceLikesDislikesEvent(eventType)
+        return
+    endIf
+
+    if _ldSurfPosCount == 0 && _ldSurfNegCount == 0
+        ResetLikesDislikesSurface()
+        return
+    endIf
+
+    Int nowDay = Utility.GetCurrentGameTime() as Int
+    if _ldSurfNegCount == 0
+        String posMsg = _ldSurfBestPosName + " marks the act."
+        if _ldSurfPosCount == 2
+            posMsg = JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " mark the act."
+        elseIf _ldSurfPosCount > 2
+            posMsg = _ldSurfBestPosName + " and " + (_ldSurfPosCount - 1) + " others mark the act."
+        endIf
+        SendPrismaToast(_ldSurfBestPosSymbol, "good", "A deed noticed", posMsg)
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " marked the act.", nowDay, "favor.act", _ldSurfBestPosSymbol, False, 1, "A deed noticed")
+    elseIf _ldSurfPosCount == 0
+        String negMsg = _ldSurfBestNegName + " takes offense at the act."
+        if _ldSurfNegCount == 2
+            negMsg = JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " take offense at the act."
+        elseIf _ldSurfNegCount > 2
+            negMsg = _ldSurfBestNegName + " and " + (_ldSurfNegCount - 1) + " others take offense at the act."
+        endIf
+        SendPrismaToast(_ldSurfBestNegSymbol, "warning", "A deed ill-received", negMsg)
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " took offense at the act.", nowDay, "favor.loss", _ldSurfBestNegSymbol, False, 1, "A deed ill-received")
+    else
+        Bool positiveLeads = _ldSurfBestPosAmount >= (_ldSurfBestNegAmount * -1.0)
+        String mixedTone = "good"
+        String mixedSymbol = _ldSurfBestPosSymbol
+        String mixedBodTone = "favor.act"
+        if !positiveLeads
+            mixedTone = "warning"
+            mixedSymbol = _ldSurfBestNegSymbol
+            mixedBodTone = "favor.loss"
+        endIf
+        SendPrismaToast(mixedSymbol, mixedTone, "A deed weighed", _ldSurfBestPosName + " marks the act; " + _ldSurfBestNegName + " takes offense.")
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " marked the act; " + JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, 1, "A deed weighed")
+    endIf
+
+    Trace(1, "Likes/dislikes surface flushed: event " + eventType + ", positive " + _ldSurfPosCount + ", negative " + _ldSurfNegCount)
+    ResetLikesDislikesSurface()
 EndFunction
 
 Bool Function ConsumeShrinePrayerCredit(PDV_DeityBase deity, String sourceId)
@@ -5967,6 +6114,8 @@ Function HandleGreenPactViolation(String reason)
     AdjustBosmerGreenPactCompliance(-15, reason)
     if PDV_Yffre
         AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_VIOLATION, None)
+        SendPrismaToast(GetPrismaSymbolForDeity(PDV_Yffre), "warning", "Green Pact broken", "You crossed Y'ffre's creed, and the path recoils.")
+        SurfaceTransition("creed", "Green Pact", "drop", PDV_Yffre.DeityIndex, "absence", True)
     endIf
 
     Trace(2, "Green Pact violation count " + violationCount + " (" + reason + ")")
@@ -6580,17 +6729,19 @@ Function HandlePaarthurnaxKill(Form sourceForm, String reason)
 
     StorageUtil.SetIntValue(None, killKey, 1)
     StorageUtil.SetStringValue(None, "PDV.Paarthurnax.KillReason", reason)
+    ResetQuestReactionSurface()
     ApplyPaarthurnaxKillReaction("Shor", "S", sourceForm)
     ApplyPaarthurnaxKillReaction("Tsun", "S", sourceForm)
     ApplyPaarthurnaxKillReaction("Kyne", "S", sourceForm)
     ApplyPaarthurnaxKillReaction("Stendarr", "C", sourceForm)
     ApplyPaarthurnaxKillReaction("Stuhn", "C", sourceForm)
     ApplyPaarthurnaxKillReaction("Mara", "S", sourceForm)
+    FlushQuestReactionSurface()
     Trace(2, "Paarthurnax kill fork routed (" + reason + ")")
 EndFunction
 
 Function ApplyPaarthurnaxKillReaction(String deityName, String intensity, Form sourceForm)
-    ApplyDeityReaction(deityName, "-", intensity, "small", "paarthurnax_kill", True, sourceForm)
+    ApplyDeityReaction(deityName, "-", intensity, "small", "paarthurnax_kill", False, sourceForm)
 EndFunction
 
 Function HandlePaarthurnaxSpare(Form sourceForm, String reason)
@@ -6607,15 +6758,17 @@ Function HandlePaarthurnaxSpare(Form sourceForm, String reason)
 
     StorageUtil.SetIntValue(None, spareKey, 1)
     StorageUtil.SetStringValue(None, "PDV.Paarthurnax.SpareReason", reason)
+    ResetQuestReactionSurface()
     ApplyPaarthurnaxSpareReaction("Stuhn", "C", sourceForm)
     ApplyPaarthurnaxSpareReaction("Stendarr", "C", sourceForm)
     ApplyPaarthurnaxSpareReaction("Mara", "S", sourceForm)
     ApplyPaarthurnaxSpareReaction("Kyne", "m", sourceForm)
+    FlushQuestReactionSurface()
     Trace(2, "Paarthurnax spare fork routed (" + reason + ")")
 EndFunction
 
 Function ApplyPaarthurnaxSpareReaction(String deityName, String intensity, Form sourceForm)
-    ApplyDeityReaction(deityName, "+", intensity, "small", "paarthurnax_spare", True, sourceForm)
+    ApplyDeityReaction(deityName, "+", intensity, "small", "paarthurnax_spare", False, sourceForm)
 EndFunction
 
 Function HandleKhajiitBaanDarBetrayal(String reason)
@@ -6768,6 +6921,10 @@ String Function GetKhajiitLunarPostureReadout(Int posture)
 EndFunction
 
 Function ShowKhajiitMessage(Message messageRecord, String fallbackText, Bool suppressModal)
+    if _suppressCurseTransitionOutputs
+        return
+    endIf
+
     if suppressModal
         SendPrismaToast("lunar", "warning", "", fallbackText)
         return
@@ -7734,12 +7891,14 @@ Function ApplyUndeadCryptClearReactions(Location clearedLocation, Float repeatMu
         return
     endIf
 
+    ResetQuestReactionSurface()
     ApplyUndeadCryptClearReaction("Arkay", "C", clearedLocation, repeatMultiplier)
     ApplyUndeadCryptClearReaction("Meridia", "C", clearedLocation, repeatMultiplier)
     ApplyUndeadCryptClearReaction("Stendarr", "S", clearedLocation, repeatMultiplier)
     ApplyUndeadCryptClearReaction("Tu'whacca", "S", clearedLocation, repeatMultiplier)
     ApplyUndeadCryptClearReaction("Azura", "m", clearedLocation, repeatMultiplier)
     ApplyUndeadCryptClearReaction("Y'ffre", "m", clearedLocation, repeatMultiplier)
+    FlushQuestReactionSurface()
 EndFunction
 
 Function ApplyUndeadCryptClearReaction(String deityName, String intensity, Location clearedLocation, Float repeatMultiplier)
@@ -7769,6 +7928,9 @@ Function ApplyUndeadCryptClearReaction(String deityName, String intensity, Locat
 
     if stance == "TABOO" || stance == "HOSTILE"
         ApplyQuestReactionStigma(deity, amount, sourceTag)
+        if !(deity as PDV_DaedricPathBase)
+            AccumulateQuestReactionSurface(deity, amount * -1.0, "small")
+        endIf
         return
     endIf
 
@@ -7792,6 +7954,7 @@ Function ApplyUndeadCryptClearReaction(String deityName, String intensity, Locat
     _suppressAwardFavorToast = True
     ApplyQuestReactionPiety(deity, appliedReactionAmount, deityName + "." + sourceTag)
     _suppressAwardFavorToast = False
+    AccumulateQuestReactionSurface(deity, appliedReactionAmount, "small")
 
     if IsKhajiitOrigin()
         BridgeKhajiitMatrixFocus(deityName, "small")
@@ -16002,11 +16165,25 @@ Function HandleCurseStateTransition(Int oldState, Int newState, String reason)
     StorageUtil.SetIntValue(None, "PDV.Curse.State", newState)
     StorageUtil.SetFloatValue(None, "PDV.Curse.LastTransitionAt", Utility.GetCurrentGameTime())
     StorageUtil.SetStringValue(None, "PDV.Curse.LastTransitionReason", reason)
+
+    Bool suppressOutputs = IsCurseStateLoadReconciliation(reason)
+    Bool previousSuppress = _suppressCurseTransitionOutputs
+    _suppressCurseTransitionOutputs = suppressOutputs
     ApplyCurseRaceHandlers(oldState, newState, reason)
+    _suppressCurseTransitionOutputs = previousSuppress
+
     Trace(1, "Curse transition " + oldState + " -> " + newState + " (" + reason + ")")
-    SendPrismaCurseToast(oldState, newState)
-    SurfaceCurseTransitionDiegetic(oldState, newState)
+    if suppressOutputs
+        Trace(2, "Curse transition surfaced silently during load reconciliation.")
+    else
+        SendPrismaCurseToast(oldState, newState)
+        SurfaceCurseTransitionDiegetic(oldState, newState)
+    endIf
     RequestPanelRefresh()
+EndFunction
+
+Bool Function IsCurseStateLoadReconciliation(String reason)
+    return reason == "eventbus_Load" || reason == "eventbus_alias_init"
 EndFunction
 
 ; Derive a typed "curse" Prisma event from an old-to-new curse-state transition.
@@ -16837,12 +17014,14 @@ Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
     elseIf originRace == ORIGIN_NORD
         ApplyNordCurseHandlers(oldState, newState, reason)
         if PDV_HircinePath
-            PDV_HircinePath.HandleCurseTransition(oldState, newState, reason)
-            if oldState != 1 && newState == 1
-                AppendBookOfDaysEntry("The beast-blood took you and stirred Hircine. The Hunt is in you now.", Utility.GetCurrentGameTime() as Int, "curse.onset", "hircine", False, 3)
+            if !_suppressCurseTransitionOutputs
+                PDV_HircinePath.HandleCurseTransition(oldState, newState, reason)
+                if oldState != 1 && newState == 1
+                    AppendBookOfDaysEntry("The beast-blood took you and stirred Hircine. The Hunt is in you now.", Utility.GetCurrentGameTime() as Int, "curse.onset", "hircine", False, 3)
+                endIf
+                PDV_HircinePath.UpdateResidueRecovery()
+                DrainHircineResiduePrismaToasts()
             endIf
-            PDV_HircinePath.UpdateResidueRecovery()
-            DrainHircineResiduePrismaToasts()
         endIf
     endIf
 EndFunction
@@ -16970,6 +17149,10 @@ Function ApplyArgonianCurseHandlers(Int oldState, Int newState, String reason)
 EndFunction
 
 Function ShowArgonianMessage(Message messageRecord, String fallback, Bool suppressModal)
+    if _suppressCurseTransitionOutputs
+        return
+    endIf
+
     if suppressModal || !messageRecord
         SendPrismaToast("hist", "warning", "", fallback)
         return
@@ -17016,7 +17199,9 @@ Function ApplyOrcCurseHandlers(Int oldState, Int newState, String reason)
         StorageUtil.SetIntValue(None, "PDV.Curse.Orc.VampireScar", 1)
     elseIf newState == 1
         StorageUtil.SetIntValue(None, "PDV.Curse.Orc.CodePressure", 1)
-        EmitMalacathCurseCodeRuptureMinus("werewolf_onset_" + reason)
+        if !_suppressCurseTransitionOutputs
+            EmitMalacathCurseCodeRuptureMinus("werewolf_onset_" + reason)
+        endIf
     elseIf oldState != 0
         StorageUtil.SetIntValue(None, "PDV.Curse.Orc.CodePressure", 0)
     else
@@ -17109,6 +17294,10 @@ Bool Function ShouldSuppressAltmerCurseModal(String reason)
 EndFunction
 
 Function ShowNordMessage(Message messageRecord, String fallbackText, Bool suppressModal)
+    if _suppressCurseTransitionOutputs
+        return
+    endIf
+
     if suppressModal
         SendPrismaToast("kyne", "warning", "", fallbackText)
         return
@@ -17150,6 +17339,10 @@ Function ShowOrcNotification(Message messageRecord, String fallbackText)
 EndFunction
 
 Function ShowOrcMessage(Message messageRecord, String fallbackText, Bool suppressModal)
+    if _suppressCurseTransitionOutputs
+        return
+    endIf
+
     if suppressModal
         SendPrismaToast("malacath", "warning", "", fallbackText)
         return
@@ -17164,6 +17357,10 @@ Function ShowOrcMessage(Message messageRecord, String fallbackText, Bool suppres
 EndFunction
 
 Function ShowRedguardMessage(Message messageRecord, String fallbackText, Bool suppressModal)
+    if _suppressCurseTransitionOutputs
+        return
+    endIf
+
     if suppressModal
         SendPrismaToast("tuwhacca", "warning", "", fallbackText)
         return
@@ -17178,6 +17375,10 @@ Function ShowRedguardMessage(Message messageRecord, String fallbackText, Bool su
 EndFunction
 
 Function ShowAltmerMessage(Message messageRecord, String fallbackText, Bool suppressModal)
+    if _suppressCurseTransitionOutputs
+        return
+    endIf
+
     if suppressModal
         SendPrismaToast("auriel", "warning", "", fallbackText)
         return

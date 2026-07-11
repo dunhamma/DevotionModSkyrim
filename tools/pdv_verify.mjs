@@ -2522,6 +2522,11 @@ class Verifier {
       "elseIf PDV_CurseStateService.IsVampire()",
       "Function HandleCurseStateRefresh(String reason)",
       "Function HandleCurseStateTransition(Int oldState, Int newState, String reason)",
+      "Bool _suppressCurseTransitionOutputs = False",
+      "Bool Function IsCurseStateLoadReconciliation(String reason)",
+      "return reason == \"eventbus_Load\" || reason == \"eventbus_alias_init\"",
+      "Curse transition surfaced silently during load reconciliation.",
+      "if !_suppressCurseTransitionOutputs",
     ], this.phase15Gap.bind(this));
 
     this.checkSourceContains("Phase 15 source", "PDV_PlayerEvents", [

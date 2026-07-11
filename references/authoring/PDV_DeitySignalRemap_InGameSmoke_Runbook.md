@@ -551,8 +551,11 @@ leave Paarthurnax alive (or trigger the load-catchup latch).
   `RoutePaarthurnaxSpare` latch. Confirm kill and spare are mutually exclusive.
 
 ### 10.5 Readback-refresh quest rows
-Steps: `setstage DBDestroy 200`, `setstage MS10 100`, `setstage CR13 200` (as a
-werewolf).
+Steps: `setstage DBDestroy 200`, `setstage MS10 100`; for CR13, use the
+controlled signal-floor MCM scenario unless the save is already on the active
+Farkas/Vilkas Companions Purity quest. A generic werewolf save plus
+`setstage CR13 200` is not a reliable organic trigger because CR13 is a radiant
+quest with questgiver aliases and cure-state prerequisites.
 - Proof: DBDestroy = **Sithis milestone LOSS** (break_oath_betray) + Stendarr/
   Talos gains; MS10 = **Zenithar milestone gain** + Z'en; CR13 = **Hircine cure
   LOSS + Y'ffre gain**.

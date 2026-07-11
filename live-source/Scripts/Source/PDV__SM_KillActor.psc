@@ -20,6 +20,16 @@ Scriptname PDV__SM_KillActor extends Quest
 PDV_ActionRouter Property PDV_Router Auto
 
 Event OnStoryKillActor(ObjectReference akVictim, ObjectReference akKiller, Location akLocation, Int aiCrimeStatus, Int aiRelationshipRank)
+    Int hasVictim = 0
+    Int hasKiller = 0
+    if akVictim
+        hasVictim = 1
+    endIf
+    if akKiller
+        hasKiller = 1
+    endIf
+    Debug.Trace("[PDV] PDV__SM_KillActor: OnStoryKillActor received, victim=" + hasVictim + ", killer=" + hasKiller + ", crime=" + aiCrimeStatus + ", relationship=" + aiRelationshipRank)
+
     if PDV_Router
         PDV_Router.HandleStoryKillActor(akVictim, akKiller, akLocation, aiCrimeStatus, aiRelationshipRank)
     else

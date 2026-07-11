@@ -104,6 +104,15 @@ Function HandleStoryKillActor(ObjectReference akVictim, ObjectReference akKiller
 
     Actor killerActor = akKiller as Actor
     Actor victimActor = akVictim as Actor
+    Int hasVictimActor = 0
+    Int hasKillerActor = 0
+    if victimActor
+        hasVictimActor = 1
+    endIf
+    if killerActor
+        hasKillerActor = 1
+    endIf
+    Trace(1, "HandleStoryKillActor entry: victimActor=" + hasVictimActor + ", killerActor=" + hasKillerActor + ", crime=" + aiCrimeStatus + ", relationship=" + aiRelationshipRank)
 
     if !victimActor
         Trace(2, "HandleStoryKillActor skipped: victim was not an Actor.")
@@ -133,6 +142,7 @@ Function HandleStoryKillActor(ObjectReference akVictim, ObjectReference akKiller
 
     if !IsHostileKill(victimActor, playerActor, aiRelationshipRank)
         Int nonHostileEvent = ClassifyNonHostileKillVictim(victimActor, aiCrimeStatus)
+        Trace(1, "HandleStoryKillActor non-hostile classification: event=" + nonHostileEvent + ", animal=" + KeywordFlag(victimActor, ActorTypeAnimal) + ", npc=" + KeywordFlag(victimActor, ActorTypeNPC) + ", creature=" + KeywordFlag(victimActor, ActorTypeCreature) + ", crime=" + aiCrimeStatus)
         if nonHostileEvent == EVT_NONE
             Trace(2, "HandleStoryKillActor skipped: no hostility/noncombat evidence.")
             return
@@ -410,6 +420,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     Int count = PDV_FLST_AllDeities.GetSize()
     Int scoredCount = 0
 
+    PDV_Manager.BeginLikesDislikesSurface(eventType)
     while i < count
         PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
         if deity
@@ -428,6 +439,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
 
         i += 1
     endWhile
+    PDV_Manager.FlushLikesDislikesSurface(eventType)
 
     ; V2: also deepen any OPEN transgressive-Prince paths (fallback path; EventBus does the same).
     PDV_Manager.RouteActionToOpenPaths(eventType, actorRef, targetRef)
@@ -565,6 +577,14 @@ Bool Function ActorHasKeyword(Actor actorRef, Keyword keywordRef)
     endIf
 
     return false
+EndFunction
+
+Int Function KeywordFlag(Actor actorRef, Keyword keywordRef)
+    if ActorHasKeyword(actorRef, keywordRef)
+        return 1
+    endIf
+
+    return 0
 EndFunction
 
 Bool Function ObjectHasKeyword(ObjectReference objectRef, Keyword keywordRef)

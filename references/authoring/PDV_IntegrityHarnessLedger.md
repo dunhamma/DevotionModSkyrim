@@ -11,7 +11,7 @@ Overall: **PASS** (FAIL iff a gate check fails or a check errors; findings-style
 | signal_floor | findings | OK | see PDV_SignalFloorLedger |
 | spine_stack_score | findings | OK | worst Bosmer 73.3%; 0 targets; 0 dead-decls |
 | specced_minus | findings | OK | 0 unemitted minuses |
-| completeness | findings | OK | PASS; PASS=361 NEEDS-MANUAL=293 GAP-REVIEW=53 FUTURE=59 WAIVED=2 |
+| completeness | findings | OK | PASS; PASS=362 NEEDS-MANUAL=292 GAP-REVIEW=53 FUTURE=59 WAIVED=2 |
 | deity_chain | gate | PASS | 0 blockers (0 resolution / 0 reachability) |
 | eligibility_reward_coverage | gate | PASS | 153 rows; 0 failures |
 

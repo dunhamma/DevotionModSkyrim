@@ -4,9 +4,9 @@
   "proofBoundary": "These scenarios define backend, runtime-route, and manual-display evidence separately. Backend PASS does not prove in-game firing, Book of Days display, Survey/status clarity, duplicate suppression, wrong-origin silence, or save/load stack behavior.",
   "expected": {
     "likesDislikesVersion": 15,
-    "questCells": 1071,
-    "questKeys": 169,
-    "watchedQuests": 135,
+    "questCells": 1056,
+    "questKeys": 168,
+    "watchedQuests": 134,
     "faucetActs": 26
   },
   "scenarios": [
@@ -46,9 +46,11 @@
         { "deity": "Julianos", "valence": "+", "intensity": "C", "magnitude": "milestone", "actTagIncludes": "disciplined_study" },
         { "deity": "Hermaeus Mora", "valence": "+", "intensity": "C", "magnitude": "milestone", "actTagIncludes": "forbidden_knowledge" },
         { "deity": "Magnus", "valence": "+", "intensity": "C", "magnitude": "milestone", "actTagIncludes": "disciplined_study" },
+        { "deity": "Xarxes", "valence": "+", "intensity": "S", "magnitude": "small", "actTagIncludes": "disciplined_study" },
         { "deity": "Mehrunes Dagon", "valence": "-", "intensity": "m", "magnitude": "small", "actTagIncludes": "serve_empire_order" }
       ],
-      "manualChecks": [ "Julianos/Mora/Magnus milestone gains land", "Dagon correction is a loss" ],
+      "exactRows": true,
+      "manualChecks": [ "lore gains are visible where reachable", "Dagon correction is a loss", "no Shor/Talos/Nord combat fan-out" ],
       "debugMcmScenario": 3
     },
     {
@@ -85,7 +87,7 @@
         { "deity": "Hircine", "valence": "-", "intensity": "S", "magnitude": "small", "actTagIncludes": "cure_undeath" },
         { "deity": "Y'ffre", "valence": "+", "intensity": "m", "magnitude": "small", "actTagIncludes": "the_hunt" }
       ],
-      "manualChecks": [ "run as werewolf for organic proof", "Hircine loss and Y'ffre gain are distinct" ],
+      "manualChecks": [ "controlled CR13 route shows Hircine loss and Y'ffre gain in toast and Book of Days", "organic CR13 proof is not claimed without an active Farkas/Vilkas cure quest" ],
       "debugMcmScenario": 6
     },
     {
@@ -145,6 +147,8 @@
         "PDV_KW_GreenPact_Plant",
         "RouteGreenPactViolation()",
         "AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_VIOLATION",
+        "SendPrismaToast(GetPrismaSymbolForDeity(PDV_Yffre), \"warning\", \"Green Pact broken\"",
+        "SurfaceTransition(\"creed\", \"Green Pact\", \"drop\"",
         "TryAwardBosmerYffreGreenSite"
       ],
       "manualChecks": [ "visit a Bosmer sacred site", "consume plant food as Bosmer Old Contract", "plant proof is not replaced by direct debug route" ],
@@ -194,8 +198,8 @@
       "id": "borderline_rows_review",
       "title": "Borderline rows to prove or drop",
       "bucket": "backend-static;manual-review",
-      "trigger": { "type": "borderline-review", "editorIds": [ "DA14Start", "DLC2RRFavor01", "T03", "BYOHRelationshipAdoption" ] },
-      "manualChecks": [ "DA14Start s70", "DLC2RRFavor01 s200", "T03 s105", "HearthFires adoption stages" ]
+      "trigger": { "type": "borderline-review", "editorIds": [ "DLC2RRFavor01", "T03", "BYOHRelationshipAdoption", "BYOHRelationshipAdoptableOrphanage" ] },
+      "manualChecks": [ "DLC2RRFavor01 s200", "T03 s105", "BYOHRelationshipAdoption s10", "BYOHRelationshipAdoptableOrphanage s200" ]
     }
   ]
 }
