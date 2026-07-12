@@ -1052,17 +1052,20 @@ if (!fs.existsSync(NATIVE_BRIDGE_SOURCE)) {
     pass("Book of Days close routes converge on CloseJournalSurface.", NATIVE_BRIDGE_SOURCE);
   }
 
+  const structuredJournalPayloadDetection =
+    journalPayloadDetection.includes('FindTopLevelKey(a_payload, "mode", &mode)') &&
+    journalPayloadDetection.includes('mode == "journal"') &&
+    journalPayloadDetection.includes('FindTopLevelKey(a_payload, "journal")') &&
+    journalPayloadDetection.includes("&&");
   if (
     !journalPayloadDetection ||
-    !journalPayloadDetection.includes('a_payload.find("\\"mode\\":\\"journal\\"")') ||
-    !journalPayloadDetection.includes('a_payload.find("\\"journal\\":")') ||
-    !journalPayloadDetection.includes("&&") ||
+    !structuredJournalPayloadDetection ||
     journalPayloadDetection.includes("||") ||
     nativeBridge.includes('a_payload.find("\\"journal\\"")')
   ) {
-    fail("Native bridge must require explicit journal mode plus a journal object, not any payload containing a journal key or symbol value.", NATIVE_BRIDGE_SOURCE);
+    fail("Native bridge must require explicit top-level journal mode plus a top-level journal object, not any payload containing a journal key or symbol value.", NATIVE_BRIDGE_SOURCE);
   } else {
-    pass("Native bridge only marks explicit journal-mode payloads with journal objects as Book of Days visible.", NATIVE_BRIDGE_SOURCE);
+    pass("Native bridge only marks explicit top-level journal-mode payloads with top-level journal objects as Book of Days visible.", NATIVE_BRIDGE_SOURCE);
   }
 
   if (

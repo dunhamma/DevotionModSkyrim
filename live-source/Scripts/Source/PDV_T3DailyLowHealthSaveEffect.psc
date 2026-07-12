@@ -161,8 +161,11 @@ String Function JsonSafeString(String rawText)
     Int count = StringUtil.GetLength(rawText)
     while i < count
         String currentChar = StringUtil.GetNthChar(rawText, i)
+        Int currentOrd = StringUtil.AsOrd(currentChar)
         if currentChar == "\"" || currentChar == "\\"
             safeText = safeText + "'"
+        elseIf currentOrd < 32
+            safeText = safeText + " "
         else
             safeText = safeText + currentChar
         endIf

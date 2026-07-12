@@ -29,11 +29,13 @@ function main(argv) {
   const managerPath = path.join(LIVE_SOURCE, "PDV__ManagerQuest.psc");
   const directorPath = path.join(LIVE_SOURCE, "PDV_DiegeticDirector.psc");
   const hircinePath = path.join(LIVE_SOURCE, "PDV_DaedricPath_Hircine.psc");
+  const lowHealthPath = path.join(LIVE_SOURCE, "PDV_T3DailyLowHealthSaveEffect.psc");
   const appPath = path.join(LIVE_VIEW, "app.js");
 
   verifyHashPair("Manager source parity", path.join(REPO_SOURCE, "PDV__ManagerQuest.psc"), managerPath, pass, fail);
   verifyHashPair("Director source parity", path.join(REPO_SOURCE, "PDV_DiegeticDirector.psc"), directorPath, pass, fail);
   verifyHashPair("Hircine source parity", path.join(REPO_SOURCE, "PDV_DaedricPath_Hircine.psc"), hircinePath, pass, fail);
+  verifyHashPair("Low-health effect source parity", path.join(REPO_SOURCE, "PDV_T3DailyLowHealthSaveEffect.psc"), lowHealthPath, pass, fail);
 
   for (const name of ["index.html", "styles.css", "app.js"]) {
     verifyHashPair(`Prisma view ${name} parity`, path.join(REPO_VIEW, name), path.join(LIVE_VIEW, name), pass, fail);
@@ -42,11 +44,14 @@ function main(argv) {
   const manager = readRequired(managerPath, "Manager source", pass, fail);
   const director = readRequired(directorPath, "Director source", pass, fail);
   const hircine = readRequired(hircinePath, "Hircine source", pass, fail);
+  const lowHealth = readRequired(lowHealthPath, "Low-health effect source", pass, fail);
   const app = readRequired(appPath, "Prisma app", pass, fail);
 
   if (manager) verifyManager(manager, managerPath, pass, fail);
+  if (manager) verifyJsonSafeString(manager, "Manager JsonSafeString", managerPath, pass, fail);
   if (director) verifyDirector(director, directorPath, pass, fail);
   if (hircine) verifyHircine(hircine, hircinePath, pass, fail);
+  if (lowHealth) verifyJsonSafeString(lowHealth, "Low-health effect JsonSafeString", lowHealthPath, pass, fail);
   if (app) verifyApp(app, appPath, pass, fail);
   if (manager) runNegativeFixtures(manager, pass, fail);
 
@@ -192,6 +197,24 @@ function verifyHircine(text, filePath, pass, fail) {
   for (const [check, snippet, detail] of requiredSnippets) {
     requireSnippet(text, snippet, check, detail, filePath, pass, fail);
   }
+}
+
+function verifyJsonSafeString(text, label, filePath, pass, fail) {
+  const block = functionBlock(text, "JsonSafeString");
+  if (!block) {
+    fail(label, "JsonSafeString helper is missing.", filePath);
+    return;
+  }
+
+  requireSnippet(block, "StringUtil.AsOrd(currentChar)", `${label}: control-character ordinal`, "Helper reads each character ordinal before JSON emission.", filePath, pass, fail);
+  requireSnippet(block, "currentOrd < 32", `${label}: control-character guard`, "Helper replaces JSON-forbidden ASCII control characters before JSON emission.", filePath, pass, fail);
+  requireSnippet(block, 'safeText = safeText + " "', `${label}: control-character replacement`, "Helper flattens control characters into a parseable single-line JSON string.", filePath, pass, fail);
+}
+
+function functionBlock(source, functionName) {
+  const pattern = new RegExp(`(?:[A-Za-z_][\\w]*\\s+)?Function\\s+${functionName}\\b[\\s\\S]*?EndFunction`, "i");
+  const match = source.match(pattern);
+  return match ? match[0] : "";
 }
 
 function verifyApp(text, filePath, pass, fail) {

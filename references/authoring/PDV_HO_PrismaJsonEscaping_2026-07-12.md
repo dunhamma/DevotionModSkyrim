@@ -59,3 +59,42 @@ of substring sniffing, guards all bridge state with a recursive mutex, and uses
 std::from_chars for choice-index parsing. Papyrus/JS contract unchanged; the
 rebuilt DLL is deployed to the Anvil MO2 Devotion mod. In-game smoke for the
 panel/journal/choice/toast paths is still pending (user-driven).
+
+## Closeout - 2026-07-12
+
+Implemented option (a). `JsonSafeString` now reads each character with
+`StringUtil.AsOrd(currentChar)` and replaces any ASCII control character
+(`currentOrd < 32`) with a space before JSON emission. This was applied to both
+live JSON sanitizer copies:
+
+- `live-source/Scripts/Source/PDV__ManagerQuest.psc`
+- `live-source/Scripts/Source/PDV_T3DailyLowHealthSaveEffect.psc`
+
+The exact tracked files were synced to the Anvil MO2 live source folder before
+compile/audit.
+
+Audit trace:
+
+- `node .\tools\pdv_compile.mjs --script PDV__ManagerQuest` - PASS, 0 errors,
+  0 warnings; verifier `FAIL=0`, `WARN=1`.
+- `node .\tools\pdv_compile.mjs --script PDV_T3DailyLowHealthSaveEffect` -
+  PASS, 0 errors, 0 warnings; verifier `FAIL=0`, `WARN=1`.
+- `node .\tools\pdv_compile.mjs --script PDV_MCM` - PASS, 0 errors, 0 warnings;
+  re-freshed Book of Days hotkey bytecode dependency after the manager compile.
+- `node .\tools\pdv_prisma_to_oneoh_audit.mjs --json` - PASS (`PASS=74`,
+  `FAIL=0`). The audit now explicitly checks the manager and low-health
+  `JsonSafeString` helpers for the control-character guard.
+- `node .\tools\pdv_prisma_ui_audit.mjs` - PASS (`89 checks`). The stale native
+  bridge audit expectation was updated to the already-shipped root-level JSON
+  parser contract.
+- `node .\tools\pdv_ascii_guard.mjs` - PASS, 94 files ASCII-clean.
+- `node .\tools\pdv_1_0_endstate_gate.mjs --run --json` - machine rows stayed
+  green for verifier/content/integrity/felt trace against the new manager hash;
+  overall 1.0 remains `RED` for pre-existing evidence/release slots and
+  `C-RACE-RUBRIC` is `STALE` because the manager source hash changed.
+
+Proof boundary: source/deployment, compile, verifier, and static Prisma audit
+proof are closed for this fix. In-game focused-panel smoke remains the manual
+proof slot: after any piety-moving act with non-empty recent events, open the
+panel through the debug MCM page and confirm Today/summary renders instead of
+`Bad JSON`.

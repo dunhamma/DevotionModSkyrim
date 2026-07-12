@@ -73,6 +73,7 @@ git status --short
 node .\tools\pdv_1_0_endstate_gate.mjs
 node .\tools\pdv_verify.mjs --json
 node .\tools\pdv_signal_floor_smoke_gate.mjs --check --json
+node .\tools\pdv_prisma_to_oneoh_audit.mjs --json
 node .\tools\pdv_prisma_ui_audit.mjs --json
 ```
 
@@ -229,6 +230,23 @@ For every card, capture:
 | 12 | Paarthurnax spare fork | Paarthurnax alive and neither latch set; complete/load `MQ305` stage 200; controlled MCM index 12 only for route smoke | Stuhn/Stendarr/Mara/Kyne gains once | If kill latch already fired, spare remains silent |
 | 13 | Borderline prove-or-drop rows | Review `DA14Start` s70, `DLC2RRFavor01` s200, `T03` s105, HearthFires adoption stages | Decide prove, revise, or drop | Manual review only; no generated runtime marker expected |
 
+## Prisma Panel Regression Card
+
+Run this after any Prisma, manager summary/survey, Book of Days, toast, or
+`JsonSafeString` change. It proves the focused panel can parse a real payload
+whose summary source includes recent-event line breaks.
+
+Preconditions:
+
+- `node .\tools\pdv_prisma_to_oneoh_audit.mjs --json` returns PASS.
+- `node .\tools\pdv_prisma_ui_audit.mjs` returns PASS.
+- `PDV__ManagerQuest`, `PDV_T3DailyLowHealthSaveEffect`, and `PDV_MCM` compile
+  0/0 if touched.
+
+| # | Scenario | Route to run | Expected result | Required manual checks |
+|---:|---|---|---|---|
+| PJ1 | Focused panel summary JSON escaping | On a live save, perform any piety-moving act that writes a recent devotion event. Then use the Player MCM page `Open Devotion panel` key path, not `cqf`, to open the focused panel. | The Today/summary panel renders. No `Bad JSON` status appears. Summary text may be flattened to one line where the source Survey text had line breaks. | Toast/Prisma panel visible, no blank panel, no parser error in the Prisma status text or native log, ESC/X closes the panel, Book of Days still opens/closes separately. |
+
 ## Reserved Signal + Matrix Freshness Cards (2026-07-12, post-build)
 
 Authority: `references/authoring/PDV_HO_ReservedSignalDispatch_QuestMatrixFreshness_2026-07-12.md`.
@@ -249,7 +267,7 @@ Preconditions:
   lists the four built signals as live known gaps.
 - Khenarthi `OPEN_ROAD` is removed, not routed.
 - Manager and MCM compile 0/0 if debug buttons changed.
-- `Reload quest matrix` in MCM reports the expected 135 core watched quests
+- `Reload quest matrix` in MCM reports the expected 134 core watched quests
   after JSON deployment; if a runtime route logs `0 quest entries`, stop and
   rerun the matrix compile/deploy path.
 
@@ -265,7 +283,7 @@ Matrix freshness / name-normalization cards:
 
 | # | Scenario | Route to run | Expected result | Required manual checks |
 |---:|---|---|---|---|
-| RM1 | Runtime JSON deployed and reloadable | Run matrix compile/deploy, then MCM Developer Options -> `Reload quest matrix`. | MCM reports 135 core watched quests; ARR channel is regenerated if present. | If counts are stale, stop before testing quest rows. |
+| RM1 | Runtime JSON deployed and reloadable | Run matrix compile/deploy, then MCM Developer Options -> `Reload quest matrix`. | MCM reports 134 core watched quests; ARR channel is regenerated if present. | If counts are stale, stop before testing quest rows. |
 | RM2 | `Y'ffre` spelling class | Fire one landed tranche10 row whose matrix deity name is exactly `Y'ffre`. | Runtime lands on `PDV_Yffre`, not a silent zero-row drop. | Book of Days/toast names Y'ffre correctly; no fallback `Yffre` miss. |
 | RM3 | `Baan Dar` spelling class | Fire one landed row whose matrix deity name is exactly `Baan Dar`. | Runtime lands on `PDV_BaanDar`. | Display keeps the space and does not expose raw EditorID spelling. |
 | RM4 | `Azura` spelling across Dunmer and Khajiit | Fire one landed `Azura` matrix row as Dunmer, then one as Khajiit. | Both land on `PDV_Azura`; Khajiit focus copy can still present Azurah elsewhere without breaking matrix routing. | Record both origins separately; no apostrophe/name-normalization silent drop. |
@@ -584,6 +602,7 @@ Retest before checking `Khajiit-Lunar|substrate-favor`.
 - 2026-07-12: B2 partial runtime/manual proof recorded after the focused Champion hotfix. Active Effects now shows the T3 reward stack as `Knight's Bulwark - Champion` with Armor, Block, and Magic Resistance. This proves the focused Champion reward/effect stack side of B2, but does not by itself prove the updated toast/Book of Days patron wording; that presentation retest remains open.
 - 2026-07-12: HOTFIX follow-up for B2 duplicate Champion toasts. Retest showed the intended Breton-specific toast (`Julianos names you Champion through the Knight's Road.`) plus an extra generic tier toast (`Devotion deepens / Julianos names you Champion.`). Architecture check confirmed this was not a rejection of the focused-patron model: Breton lanes are two-phase, with broad tradition T1/T2 and focused patron T3. Source now suppresses the generic tier surface only for Breton in-tradition focused Champion transitions and lets the Breton tradition presentation own the single toast/Book-of-Days entry. Synced to live MO2 source; `PDV__ManagerQuest` and `PDV_MCM` compile 0/0; verifier FAIL=0 WARN=1; Prisma UI audit PASS 89. Manual B2 presentation retest still owed after full Skyrim relaunch.
 - 2026-07-12: BOOK-READ FARM CLOSED. The generic book faucet (events 340 skill / 341 spell tome / 342 lore) never tracked "already read", so the same lore book could be re-read up to its per-deity daily cap every day forever, and the once-per-day Azura/Hermaeus Mora book faucets refreshed off any shelf book. Fix in `PDV_PlayerEvents.psc`: a once-ever `PDV.BookRead.<formID>.Seen` guard (`MarkGenericBookRead`) marks each book base form on first read, shared across `OnBookRead` and the `OnItemRemoved` consume-on-learn tome ingress so a learn plus a later re-read of another copy credit exactly once. Azura `fate_threshold` and HM `disciplined_study` now also require an unread book; HM `forbidden_knowledge` keeps its own per-form manager guard and is untouched, as are the P2 racial-source and Altmer Talos-Mistake one-shots. Compile 0/0; verifier FAIL=0. Runtime-route + manual-display proof owed via the Book-Read Unread Cap card below. Save-compat: existing saves have no seen keys, so every previously-read book credits once more post-update, then never again (expected, no migration).
+- 2026-07-12: PRISMA JSON ESCAPING HOTFIX LANDED. `JsonSafeString` now strips ASCII control characters in the manager and low-health toast helper before Prisma JSON emission, closing the focused-panel `Bad JSON` failure when `GetSurveyDevotionText()` contributes recent-event newlines to the panel summary. Synced to live MO2 source; manager, low-health effect, and MCM compile 0/0; verifier FAIL=0 WARN=1; `pdv_prisma_to_oneoh_audit` PASS 74/0; Prisma UI audit PASS 89. Manual PJ1 panel smoke remains owed.
 
 - 2026-07-12: BRETON TWO-AXIS SPLIT LANDED; ready for BX smoke after a full Skyrim relaunch/new save. Owner ruled the 2026-07-11 pool-as-T3-gate model an error; the intent was always two orthogonal axes (tradition = practice track; patron championing over the full 11-god roster, so a Green Way Breton can champion Magnus). Authority: `PDV_BretonTwoAxis_BuildSpec_2026-07-12.md`. Source now tiers traditions from practice counts, grants resonant Champion patrons through the tradition T3, grants non-resonant Champion patrons `PDV_Bless_Breton_PatronChampion`, includes Talos in Breton formal offers, and surfaces Breton two-axis state through Survey/status, Book of Days, and Prisma toasts. Pool-gated B1/B1a are historical only; run BX1-BX7 for current proof. Backend/readback gates passed: manager/EventBus/ActionRouter/MCM compile 0/0, Breton reward and formal-offer readback PASS, Prisma UI audit PASS 89, phase-2 reward readback PASS=1415, signal-floor audit PASS 51/51, adversary check PASS, and verifier FAIL=0.
 
@@ -719,6 +738,8 @@ Stop the sitting and capture the save/log if any of these happen:
   deity/surface.
 - A toast, Prisma panel, Survey/status, or Active Effects label exposes raw IDs,
   counters, dev labels, or missing text.
+- The focused Prisma panel reports `Bad JSON`, renders blank, or will not close
+  through ESC/X after a panel smoke case.
 - A repeat route stacks after it should be latched, capped, or blocked.
 - Save/load changes piety, rewards, neglect, price, or disfavor state by itself.
 - A Requiem-felt debuff over-stacks, is invisible, never fades, or bites
