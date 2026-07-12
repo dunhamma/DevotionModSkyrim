@@ -568,20 +568,6 @@ h1 {
   fill: rgba(188, 179, 162, 0.12);
 }
 
-.instrument-svg .instrument-warning,
-.instrument-svg .instrument-warning-thin {
-  stroke: var(--red);
-}
-
-.instrument-svg .instrument-warning {
-  fill: rgba(201, 121, 104, 0.18);
-}
-
-.instrument-svg .instrument-warning-thin {
-  stroke-width: 1.35;
-  opacity: 0.7;
-}
-
 /* Waning (grey) + Daedric star/blood fills - shared by Patron tab & Book */
 .instrument-svg .instrument-fade {
   stroke: currentColor;

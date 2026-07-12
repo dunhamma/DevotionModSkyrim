@@ -534,28 +534,6 @@
     addInstrumentCaption(slot, inst, text(data.focus, "Lunar Lattice"));
   };
 
-  const renderHistInstrument = (slot, inst = {}) => {
-    const data = inst.data || {};
-    const hist = clamp(data.hist, 0, 100);
-    const people = clamp(data.people, 0, 100);
-    const voidValue = clamp(data.void, 0, 100);
-    const svg = makeInstrumentSvg();
-    appendSvg(svg, "path", { d: "M150 126 V68", class: "instrument-outline" });
-    appendSvg(svg, "path", { d: "M150 126 C120 125 98 118 82 104", class: "instrument-thin" });
-    appendSvg(svg, "path", { d: "M150 126 C180 125 202 118 218 104", class: "instrument-thin" });
-    const arcs = 1 + Math.round(people / 50);
-    for (let i = 0; i < arcs; i += 1) {
-      const radius = 36 + i * 18;
-      appendSvg(svg, "path", { d: `M${150 - radius} 70 A ${radius} ${radius} 0 0 1 ${150 + radius} 70`, class: i === 0 || hist > 35 ? "instrument-outline" : "instrument-muted" });
-    }
-    appendSvg(svg, "circle", { cx: "150", cy: "48", r: "5", class: data.voidActive || voidValue > 60 ? "instrument-warning" : "instrument-fill" });
-    if (voidValue > 0) {
-      appendSvg(svg, "path", { d: `M238 42 L266 75 L238 108 Z`, class: "instrument-warning-thin" });
-    }
-    slot.appendChild(svg);
-    addInstrumentCaption(slot, inst, "The Hist");
-  };
-
   const renderAncestorInstrument = (slot, inst = {}) => {
     const data = inst.data || {};
     const depthValue = data.depth !== undefined ? data.depth : inst.tier;
@@ -572,50 +550,6 @@
     });
     slot.appendChild(svg);
     addInstrumentCaption(slot, inst, "Ancestor layer");
-  };
-
-  const renderForgeInstrument = (slot, inst = {}) => {
-    const svg = makeInstrumentSvg();
-    const heat = clamp01(inst.primary || 0.5);
-    appendSvg(svg, "path", { d: "M92 110 H208 L226 128 H74 Z", class: "instrument-fill-soft" });
-    appendSvg(svg, "path", { d: "M122 102 H178 L194 112 H106 Z", class: "instrument-outline" });
-    appendSvg(svg, "path", { d: `M150 ${96 - heat * 24} C128 82 136 58 150 44 C164 58 172 82 150 ${96 - heat * 24} Z`, class: heat > 0.7 ? "instrument-fill" : "instrument-outline" });
-    appendSvg(svg, "path", { d: "M92 92 C70 74 72 50 92 34", class: "instrument-thin" });
-    appendSvg(svg, "path", { d: "M208 92 C230 74 228 50 208 34", class: "instrument-thin" });
-    slot.appendChild(svg);
-    addInstrumentCaption(slot, inst, "Malacath");
-  };
-
-  const renderSectsInstrument = (slot, inst = {}) => {
-    const data = inst.data || {};
-    const active = text(data.sect || inst.state, "").toLowerCase();
-    const svg = makeInstrumentSvg();
-    ["crown", "forebear", "ash'abah"].forEach((sect, index) => {
-      const x = 82 + index * 68;
-      const selected = active.indexOf(sect.replace("'", "")) >= 0 || (sect === "ash'abah" && active.indexOf("ash") >= 0);
-      appendSvg(svg, "path", { d: `M${x} 40 C${x + 16} 70 ${x + 12} 98 ${x} 122 C${x - 12} 98 ${x - 16} 70 ${x} 40 Z`, class: selected ? "instrument-fill-soft" : "instrument-muted" });
-      appendSvg(svg, "path", { d: `M${x - 18} 120 H${x + 18}`, class: "instrument-thin" });
-      if (selected) appendSvg(svg, "circle", { cx: x, cy: "82", r: "30", class: "instrument-outline" });
-    });
-    appendSvg(svg, "path", { d: "M60 130 C110 112 190 112 240 130", class: "instrument-thin" });
-    slot.appendChild(svg);
-    addInstrumentCaption(slot, inst, "Yokudan path");
-  };
-
-  const renderBranchInstrument = (slot, inst = {}) => {
-    const data = inst.data || {};
-    const rings = clamp(data.evidenceDays || inst.tier || 1, 1, 3);
-    const svg = makeInstrumentSvg();
-    appendSvg(svg, "path", { d: "M82 120 C126 100 174 70 220 30", class: "instrument-outline" });
-    appendSvg(svg, "path", { d: "M174 64 q38 -28 56 -12 q-22 30 -56 12 Z", class: "instrument-fill-soft" });
-    for (let i = 0; i < rings; i += 1) {
-      appendSvg(svg, "path", { d: `M${88 - i * 8} 124 A ${28 + i * 8} ${20 + i * 5} 0 0 1 ${134 + i * 8} 124`, class: "instrument-thin" });
-    }
-    if (data.pactBound) {
-      appendSvg(svg, "path", { d: "M122 100 L142 112 M138 88 L158 100 M154 76 L174 88", class: "instrument-warning-thin" });
-    }
-    slot.appendChild(svg);
-    addInstrumentCaption(slot, inst, "Green Pact");
   };
 
   const renderDaedricInstrument = (slot, inst = {}) => {
