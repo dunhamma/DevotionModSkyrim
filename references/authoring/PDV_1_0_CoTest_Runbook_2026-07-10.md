@@ -107,9 +107,16 @@ before running the reserved-signal smoke cards below.
 Expected backend state before in-game smoke:
 
 - `pdv_verify`: FAIL=0. The known medallion glyph fallback warning is allowed.
-- Quest matrix after the 2026-07-12 matrix-freshness package: 1057 rows, 169
-  quest keys, 135 watched quests, 26 faucet acts. If the tools still report the
-  older 1056 / 168 / 134 counts, Package B is not deployed.
+- Quest matrix after the 2026-07-12 matrix-freshness package: **1055 rows, 168
+  quest keys, 134 watched quests, 26 faucet acts.** (The earlier 1057/169/135
+  prediction was wrong: Package B found tranche10's `MQ105Ustengrav` rows were
+  silently DROPPED at compile because the key drifted from the established
+  `MQ105U` manual-FormID mapping. Normalizing the key surfaced a duplicate Kyne
+  prove_by_struggle row already authored by tranche7, which was removed; the
+  tranche10 Akatosh keep_oath row now deploys. Net: -1 row vs the old 1056, and
+  the Horn-trial cell finally carries its tranche10 credit.) If the tools report
+  1056 / 168 / 134, the MQ105U fix is not merged; regen with
+  `pdv_quest_tranche_merge` + `pdv_quest_matrix_compile`.
 - `pdv_deity_signal_remap_adversary_check`: PASS. Its
   `potentialOffRosterHostileSurfaces` count is expected to remain nonzero
   because the source guard, not row deletion, owns that cross-origin policy.
