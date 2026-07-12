@@ -163,11 +163,36 @@ patron-swap strips the old one) folds into the Breton co-test sitting - add a
 card per the two-axis runbook cards, replacing the obsolete BX2 (which assumed
 the tradition-T3-as-capstone model).
 
-## Follow-ups
+## Requiem parity - RESOLVED 2026-07-13 (no conversion needed)
 
-- Requiem conversion of the RateMult-regen champion boons (Akatosh, Julianos,
-  Kynareth, Dibella, Magnus, Y'ffre-stamina) is a SEPARATE global pass across all
-  races' T3 records, not this build - mirror-as-is here for parity.
-- DamageResist armor-points ceiling (damageresist-armor-points-ceiling-exemption)
-  may affect the Armor +50 boons (Stendarr/Talos); verify against the fixed
-  ceiling when the Requiem pass runs.
+An earlier draft of this section flagged the Magicka/Stamina regen champion boons
+as "Requiem-inert, convert later." That was WRONG - verified against the project's
+own conversion ruling and the shipped ESP:
+
+- The project's Requiem conversion (`PDV_RequiemRegenConversion_Plan.md`) targeted
+  ONLY `HealRateMult`/`HealRate` (HEALTH regen), which Requiem drives to ~0
+  (swallowed) - those became flat Fortify Health / scripted RestoreActorValue
+  across all races. **None of the 11 champion boons use HealRateMult.**
+- `MagickaRateMult`/`StaminaRateMult` are the project's explicit "reduced but NOT
+  zeroed -> partly felt -> leave as-is, note-only" category (plan doc lines
+  218-226, which names Imperial Akatosh/Dibella/Julianos/Kynareth and Breton
+  GreenWay as the examples deliberately left unconverted). The 6 regen effects
+  here (Akatosh/Julianos/Magnus Magicka, Kynareth/Y'ffre Stamina, Dibella Magicka)
+  are all in that leave-as-is class.
+- Plan-doc line 224 requires regen AVs use `PeakValueModifier`. The author tool
+  did this automatically: houseCARL readback confirms `PDV_MGEF_Breton_Champion_
+  Akatosh_MagickaRateMult` = PeakValueModifier, byte-matching the Imperial
+  reference `PDV_MGEF_Imperial_Akatosh_T3_MagickaRateMult` = PeakValueModifier.
+  Non-regen AVs (ResistMagic) correctly stayed ValueModifier.
+- DamageResist armor points (Stendarr/Talos Armor +50) are **Requiem-EXEMPT**
+  (plan doc lines 172/181: "DamageResist ... armor pts, Requiem-exempt, kept").
+  The Y'ffre reuse GreenWay_T3 already had its HealRateMult converted to flat
+  Health in the 2026-06 batch.
+
+Conclusion: the champion boons are at EXACT Requiem parity with the reference
+races - mirroring them verbatim reproduced the already-converted state. Converting
+the Magicka/Stamina regen to flat here would make Breton champions DIVERGE from
+(stronger under Requiem than) their Imperial counterparts, breaking parity, not
+achieving it. If a future balance review decides muted regen should become a
+felt secondary, that is a project-WIDE change across every race's regen reward,
+not a Breton-only edit.
