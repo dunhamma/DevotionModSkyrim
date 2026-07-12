@@ -94,3 +94,6 @@ scratch/live-prisma-before-*/
 scratch/apply_ld_regen.mjs
 scratch/new_loadrows.txt
 scratch/promote_static_routes.mjs
+
+# Local backup snapshots (tool-generated, never committed)
+backups/
