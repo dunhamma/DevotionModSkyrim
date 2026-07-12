@@ -19,6 +19,12 @@ namespace
     constexpr auto kPanelCloseListener = "PDVPanelClose"sv;
     constexpr std::size_t kMaxPendingOverlayPayloads = 16;
 
+    // Guards all mutable bridge state below. Papyrus natives arrive on VM
+    // threads while Prisma callbacks (OnDomReady, JS listeners) and the input
+    // sink arrive on engine threads. Recursive because a Prisma call made while
+    // the lock is held can invoke a JS listener synchronously on the same thread.
+    std::recursive_mutex g_stateMutex;
+
     PRISMA_UI_API::IVPrismaUI2* g_prisma = nullptr;
     PrismaView g_view = 0;
     std::string g_lastPayload;
@@ -27,7 +33,6 @@ namespace
     // Choice-panel return-channel state. Status codes match the Papyrus contract:
     //   -3 = no choice active, -2 = pending (focused, awaiting a pick),
     //   -1 = cancelled (ESC / cancel), >=0 = chosen option index.
-    // Phase 0 keeps these plain (single choice at a time); Phase 1 adds a mutex.
     std::string g_choicePendingMenu;
     std::string g_choiceResultMenu;
     int g_choiceStatus = -3;
@@ -102,6 +107,8 @@ namespace
     // immediately release focus so the player is never trapped on the panel.
     void OnChoiceResult(const char* a_argument) noexcept
     {
+        const std::lock_guard lock(g_stateMutex);
+
         const std::string arg = a_argument ? a_argument : "";
         const auto bar = arg.find_last_of('|');
         const std::string menu = (bar == std::string::npos) ? std::string() : arg.substr(0, bar);
@@ -110,15 +117,9 @@ namespace
         int status = -1;  // default to cancel on empty/garbage
         if (!token.empty() && token != "cancel") {
             int parsed = 0;
-            bool digits = true;
-            for (const char c : token) {
-                if (c < '0' || c > '9') {
-                    digits = false;
-                    break;
-                }
-                parsed = (parsed * 10) + (c - '0');
-            }
-            if (digits) {
+            const auto* last = token.data() + token.size();
+            const auto [ptr, ec] = std::from_chars(token.data(), last, parsed);
+            if (ec == std::errc() && ptr == last && parsed >= 0) {
                 status = parsed;
             }
         }
@@ -172,6 +173,8 @@ namespace
     // focus, cursor, and view visibility cannot drift by close route.
     void OnPanelClose(const char* a_argument) noexcept
     {
+        const std::lock_guard lock(g_stateMutex);
+
         const std::string arg = a_argument ? a_argument : "";
         if (arg.find("journal") != std::string::npos) {
             CloseJournalSurface("js_panel_close");
@@ -197,6 +200,8 @@ namespace
             RE::InputEvent* const* a_event,
             RE::BSTEventSource<RE::InputEvent*>*) override
         {
+            const std::lock_guard lock(g_stateMutex);
+
             if ((!g_journalVisible && !g_panelVisible && !g_panelFocusPending) || !a_event) {
                 return RE::BSEventNotifyControl::kContinue;
             }
@@ -260,6 +265,129 @@ namespace
         logs::info("Prisma overlay deferred until DOM ready (queued={})", g_pendingOverlayPayloads.size());
     }
 
+    std::size_t SkipJsonWhitespace(const std::string& a_json, std::size_t a_pos)
+    {
+        while (a_pos < a_json.size() &&
+               (a_json[a_pos] == ' ' || a_json[a_pos] == '\t' || a_json[a_pos] == '\n' || a_json[a_pos] == '\r')) {
+            ++a_pos;
+        }
+        return a_pos;
+    }
+
+    // Reads the JSON string whose opening quote is at a_pos. Returns the index one
+    // past the closing quote, or npos on malformed input. Escapes are skipped, not
+    // decoded -- the routing keys/values this bridge inspects never contain them.
+    std::size_t ScanJsonString(const std::string& a_json, std::size_t a_pos, std::string* a_out)
+    {
+        ++a_pos;
+        std::string value;
+        while (a_pos < a_json.size()) {
+            const char c = a_json[a_pos];
+            if (c == '\\') {
+                if (a_pos + 1 >= a_json.size()) {
+                    return std::string::npos;
+                }
+                value.push_back(a_json[a_pos + 1]);
+                a_pos += 2;
+                continue;
+            }
+            if (c == '"') {
+                if (a_out) {
+                    *a_out = std::move(value);
+                }
+                return a_pos + 1;
+            }
+            value.push_back(c);
+            ++a_pos;
+        }
+        return std::string::npos;
+    }
+
+    // Overlay routing used to sniff raw substrings, which a nested object or a
+    // string value could false-match. This walks the root object's first level
+    // only: returns true when the root has a_key, copying its value into a_value
+    // when that value is a string (a_value is cleared for non-string values).
+    bool FindTopLevelKey(const std::string& a_json, std::string_view a_key, std::string* a_value = nullptr)
+    {
+        std::size_t pos = SkipJsonWhitespace(a_json, 0);
+        if (pos >= a_json.size() || a_json[pos] != '{') {
+            return false;
+        }
+        ++pos;
+        while (pos < a_json.size()) {
+            pos = SkipJsonWhitespace(a_json, pos);
+            if (pos >= a_json.size() || a_json[pos] != '"') {
+                return false;  // end of object or malformed key
+            }
+            std::string key;
+            pos = ScanJsonString(a_json, pos, &key);
+            if (pos == std::string::npos) {
+                return false;
+            }
+            pos = SkipJsonWhitespace(a_json, pos);
+            if (pos >= a_json.size() || a_json[pos] != ':') {
+                return false;
+            }
+            pos = SkipJsonWhitespace(a_json, pos + 1);
+            if (pos >= a_json.size()) {
+                return false;
+            }
+            const bool match = key == a_key;
+            if (a_json[pos] == '"') {
+                std::string value;
+                pos = ScanJsonString(a_json, pos, &value);
+                if (pos == std::string::npos) {
+                    return false;
+                }
+                if (match) {
+                    if (a_value) {
+                        *a_value = std::move(value);
+                    }
+                    return true;
+                }
+            } else {
+                if (match) {
+                    if (a_value) {
+                        a_value->clear();
+                    }
+                    return true;
+                }
+                // Skip a non-string value (number/bool/null/array/object) to the
+                // next root-level comma or the closing brace.
+                int depth = 0;
+                bool inString = false;
+                while (pos < a_json.size()) {
+                    const char c = a_json[pos];
+                    if (inString) {
+                        if (c == '\\') {
+                            ++pos;
+                        } else if (c == '"') {
+                            inString = false;
+                        }
+                    } else if (c == '"') {
+                        inString = true;
+                    } else if (c == '{' || c == '[') {
+                        ++depth;
+                    } else if (c == '}' || c == ']') {
+                        if (depth == 0) {
+                            return false;  // closing brace of the root object
+                        }
+                        --depth;
+                    } else if (c == ',' && depth == 0) {
+                        break;
+                    }
+                    ++pos;
+                }
+            }
+            pos = SkipJsonWhitespace(a_json, pos);
+            if (pos >= a_json.size() || a_json[pos] != ',') {
+                return false;
+            }
+            ++pos;
+        }
+        return false;
+    }
+
     bool SendOverlayPayload(const std::string& a_payload)
     {
         if (!g_prisma || !g_view || !g_prisma->IsValid(g_view)) {
@@ -273,10 +401,11 @@ namespace
 
         g_prisma->Show(g_view);
         g_prisma->InteropCall(g_view, kReceiveOverlayFunction.data(), a_payload.c_str());
+        std::string mode;
         const bool isJournalPayload =
-            a_payload.find("\"mode\":\"journal\"") != std::string::npos &&
-            a_payload.find("\"journal\":") != std::string::npos;
-        if (a_payload.find("\"journalClose\"") != std::string::npos) {
+            FindTopLevelKey(a_payload, "mode", &mode) && mode == "journal" &&
+            FindTopLevelKey(a_payload, "journal");
+        if (FindTopLevelKey(a_payload, "journalClose")) {
             CloseJournalSurface("papyrus_journal_close");
         } else if (isJournalPayload) {
             g_journalVisible = true;
@@ -287,6 +416,8 @@ namespace
 
     void OnDomReady(PrismaView a_view) noexcept
     {
+        const std::lock_guard lock(g_stateMutex);
+
         logs::info("Prisma DOM ready for view {}", a_view);
         g_domReady = true;
         if (g_panelFocusPending && !g_lastPayload.empty()) {
@@ -405,27 +536,32 @@ namespace
 
     bool PapyrusIsAvailable(RE::StaticFunctionTag*)
     {
+        const std::lock_guard lock(g_stateMutex);
         AcquirePrisma();
         return g_prisma != nullptr;
     }
 
     bool PapyrusOpenDevotionPanel(RE::StaticFunctionTag*)
     {
+        const std::lock_guard lock(g_stateMutex);
         return OpenPanel();
     }
 
     bool PapyrusCloseDevotionPanel(RE::StaticFunctionTag*)
     {
+        const std::lock_guard lock(g_stateMutex);
         return ClosePanel();
     }
 
     bool PapyrusToggleDevotionPanel(RE::StaticFunctionTag*)
     {
+        const std::lock_guard lock(g_stateMutex);
         return TogglePanel();
     }
 
     bool PapyrusIsJournalVisible(RE::StaticFunctionTag*)
     {
+        const std::lock_guard lock(g_stateMutex);
         if (!g_prisma || !g_view || !g_prisma->IsValid(g_view) || g_prisma->IsHidden(g_view)) {
             g_journalVisible = false;
         }
@@ -434,6 +570,7 @@ namespace
 
     bool PapyrusIsPanelVisible(RE::StaticFunctionTag*)
     {
+        const std::lock_guard lock(g_stateMutex);
         if (!g_prisma || !g_view || !g_prisma->IsValid(g_view) || g_prisma->IsHidden(g_view)) {
             g_panelVisible = false;
             g_panelFocusPending = false;
@@ -443,6 +580,8 @@ namespace
 
     bool PapyrusSendJson(RE::StaticFunctionTag*, RE::BSFixedString a_payload)
     {
+        const std::lock_guard lock(g_stateMutex);
+
         const auto* payload = a_payload.data();
         g_lastPayload = payload && payload[0] ? payload : "{}";
 
@@ -455,6 +594,8 @@ namespace
 
     bool PapyrusSendOverlayJson(RE::StaticFunctionTag*, RE::BSFixedString a_payload)
     {
+        const std::lock_guard lock(g_stateMutex);
+
         const auto* payload = a_payload.data();
         const auto overlayPayload = payload && payload[0] ? std::string(payload) : "{}";
 
@@ -512,12 +653,14 @@ namespace
 
     bool PapyrusSupportsChoice(RE::StaticFunctionTag*)
     {
+        const std::lock_guard lock(g_stateMutex);
         AcquirePrisma();
         return g_prisma != nullptr;
     }
 
     bool PapyrusShowChoice(RE::StaticFunctionTag*, RE::BSFixedString a_menuId, RE::BSFixedString a_payload, bool a_pauseGame)
     {
+        const std::lock_guard lock(g_stateMutex);
         const auto* menu = a_menuId.data();
         const auto* payload = a_payload.data();
         return ShowChoiceImpl(menu && menu[0] ? menu : "choice", payload && payload[0] ? payload : "{}", a_pauseGame);
@@ -525,11 +668,14 @@ namespace
 
     bool PapyrusCancelChoice(RE::StaticFunctionTag*)
     {
+        const std::lock_guard lock(g_stateMutex);
         return CancelChoiceImpl();
     }
 
     std::int32_t PapyrusConsumePendingChoice(RE::StaticFunctionTag*, RE::BSFixedString a_menuId)
     {
+        const std::lock_guard lock(g_stateMutex);
+
         const std::string menu = a_menuId.data() ? a_menuId.data() : "";
         const int status = g_choiceStatus;
 
@@ -575,6 +721,7 @@ namespace
             return;
         }
 
+        const std::lock_guard lock(g_stateMutex);
         if (a_message->type == SKSE::MessagingInterface::kPostLoad) {
             AcquirePrisma();
         } else if (a_message->type == SKSE::MessagingInterface::kInputLoaded) {

@@ -3,9 +3,11 @@
 #include <RE/Skyrim.h>
 #include <SKSE/SKSE.h>
 
+#include <charconv>
 #include <deque>
 #include <filesystem>
 #include <memory>
+#include <mutex>
 #include <optional>
 #include <string>
 #include <string_view>
