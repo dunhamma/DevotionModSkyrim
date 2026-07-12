@@ -96,7 +96,7 @@ node .\tools\pdv_signal_floor_smoke_gate.mjs --check --json
 Expected backend state before in-game smoke:
 
 - `pdv_verify`: FAIL=0. The known medallion glyph fallback warning is allowed.
-- Quest matrix: 1057 rows, 169 quest keys, 135 watched quests, 26 faucet acts.
+- Quest matrix: 1056 rows, 168 quest keys, 134 watched quests, 26 faucet acts.
 - `pdv_deity_signal_remap_adversary_check`: PASS. Its
   `potentialOffRosterHostileSurfaces` count is expected to remain nonzero
   because the source guard, not row deletion, owns that cross-origin policy.
@@ -282,18 +282,25 @@ SNAPSHOT of `PDV_FeltFamilyEvidenceLedger.json` as of 2026-07-11 (107 pending fa
 
 ### 3. Breton sitting (active runtime checklist; generic Tradition lane retired) - `set PDV_GLO_OriginRace to 2`
 
-Resolved note, 2026-07-12: Breton runtime proof is unpaused for B1-B5 below. The Knight's Road/Stendarr anchor question is resolved in favor of tradition-pool breadth, and the old Breton ancestor substrate is retired at runtime; migrated saves should clear `Breton Inherited Ward` on the next reward/dawn sync.
+Build note, 2026-07-12: the Breton **two-axis split** is now landed and ready
+for in-game smoke. Authority: `PDV_BretonTwoAxis_BuildSpec_2026-07-12.md`.
+Tradition T1/T2 now lights from practice COUNTS
+(`KnightlyVowCount` / `HiddenArtCount` / `GreenWayCount`), not pooled deity
+piety. Patron championing is orthogonal over the 11-god Breton roster plus
+Daedric-via-20C. Resonant Champion patrons unlock the active tradition T3;
+non-resonant Champion patrons grant the modest
+`PDV_Bless_Breton_PatronChampion` beside the practiced tradition.
 
-SCOPE CHANGE PENDING (2026-07-12, design-locked NOT built): the owner ruled the pool-as-T3-gate model an error and locked a **two-axis split** (tradition = practice track; patron championing orthogonal over the full 11-god roster). Authority: `PDV_BretonTwoAxis_BuildSpec_2026-07-12.md`, handed to Codex. When that build lands it RE-SCOPES this sitting:
-- Tradition T1/T2 will light from service COUNTS (KnightlyVowCount/HiddenArtCount/GreenWayCount), not pooled deity piety, so cards **B1/B1a (pooled-piety math) become obsolete** and are replaced by BX3 below. Do not re-prove B1/B1a against the new build.
-- A new felt family `Breton-PatronChampion|boon` appears (non-resonant patron Champion boon); add it to the boon checklist once the record exists.
-- The Breton Two-Axis Cards (BX1-BX7) below own the new runtime/manual proof. Passed cards from the pool-gated build (B1/B1a/B3) stay recorded as historical evidence for the shipped-at-the-time code, but the family verdicts re-open until re-proven under the two-axis build.
-- The still-open pool-gated cards (Green Way boon, Hidden Art boon, Breton neglect, CreedLoss-Breton, Magnus price, B2/B4/B5) remain valid to run; B2 (focused Champion) folds into BX2 (resonant patron -> tradition T3).
+Run BX1-BX7 below for the current build. B1/B1a/B3 remain historical proof for
+the superseded pool-gated build and should not be used as two-axis proof. The
+old Breton ancestor substrate and generic `Tradition's Footing` lane remain
+retired at runtime.
 
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
 - [ ] `Breton-GreenWay|boon`  (e.g. Green Way - Seeker)
 - [ ] `Breton-HiddenArt|boon`  (e.g. Hidden Art - Seeker)
 - [x] `Breton-KnightsRoad|boon`  (e.g. Knight's Vow - Seeker; B1/B1a passed 2026-07-12)
+- [ ] `Breton-PatronChampion|boon`  (e.g. Patron's Mark - Champion; BX1)
 - [x] `Breton-Tradition|boon` is N/A - the generic Tradition's Footing lane is retired; absence confirmed via B3 on 2026-07-12.
 
 **neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
@@ -352,8 +359,10 @@ patron override.
 `PDV_Bless_Khajiit_Lunar_T1` is the Khajiit substrate Mid slot, but the generic
 first-tier race-reward sync was still managing that shared spell and could strip
 it after substrate grant. `PDV__ManagerQuest.psc` now leaves Khajiit Lunar_T1 to
-`PDV_Substrate_KhajiitLunar`; retest from a fresh runtime path before checking
-`Khajiit-Lunar|substrate-favor`.
+`PDV_Substrate_KhajiitLunar`; `tools/pdv_reward_runtime_order_lint.mjs` now
+fails on substrate-owner violations, and `PDV_SubstrateBase.psc` reconciles
+unchanged tiers so a stripped Mid boon can re-add on the next substrate signal.
+Retest before checking `Khajiit-Lunar|substrate-favor`.
 
 **neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
 - [ ] `Neglect-KhajiitLunar|neglect`  (e.g. The Moons Withdrawn)
@@ -500,16 +509,15 @@ it after substrate grant. `PDV__ManagerQuest.psc` now leaves Khajiit Lunar_T1 to
 - 2026-07-12: HOTFIX follow-up for B2 duplicate Champion toasts. Retest showed the intended Breton-specific toast (`Julianos names you Champion through the Knight's Road.`) plus an extra generic tier toast (`Devotion deepens / Julianos names you Champion.`). Architecture check confirmed this was not a rejection of the focused-patron model: Breton lanes are two-phase, with broad tradition T1/T2 and focused patron T3. Source now suppresses the generic tier surface only for Breton in-tradition focused Champion transitions and lets the Breton tradition presentation own the single toast/Book-of-Days entry. Synced to live MO2 source; `PDV__ManagerQuest` and `PDV_MCM` compile 0/0; verifier FAIL=0 WARN=1; Prisma UI audit PASS 89. Manual B2 presentation retest still owed after full Skyrim relaunch.
 - 2026-07-12: BOOK-READ FARM CLOSED. The generic book faucet (events 340 skill / 341 spell tome / 342 lore) never tracked "already read", so the same lore book could be re-read up to its per-deity daily cap every day forever, and the once-per-day Azura/Hermaeus Mora book faucets refreshed off any shelf book. Fix in `PDV_PlayerEvents.psc`: a once-ever `PDV.BookRead.<formID>.Seen` guard (`MarkGenericBookRead`) marks each book base form on first read, shared across `OnBookRead` and the `OnItemRemoved` consume-on-learn tome ingress so a learn plus a later re-read of another copy credit exactly once. Azura `fate_threshold` and HM `disciplined_study` now also require an unread book; HM `forbidden_knowledge` keeps its own per-form manager guard and is untouched, as are the P2 racial-source and Altmer Talos-Mistake one-shots. Compile 0/0; verifier FAIL=0. Runtime-route + manual-display proof owed via the Book-Read Unread Cap card below. Save-compat: existing saves have no seen keys, so every previously-read book credits once more post-update, then never again (expected, no migration).
 
-- 2026-07-12: BRETON TWO-AXIS SPLIT DESIGN-LOCKED, HANDED TO CODEX (build pending). Owner ruled the 2026-07-11 pool-as-T3-gate model an error; the intent was always two orthogonal axes (tradition = practice track; patron championing over the full 11-god roster, so a Green Way Breton can champion Magnus). Lore-confirmed. Authority: `PDV_BretonTraditionReconciliation`-superseding spec `PDV_BretonTwoAxis_BuildSpec_2026-07-12.md`. Test-sheet impact captured this session: (a) new **Breton Two-Axis Split Cards (BX1-BX7)** added below, BLOCKED until the build lands; (b) pool-gated cards **B1/B1a marked obsolete-on-build** (tiering moves from pooled piety to service counts) and replaced by BX3; (c) B2 folds into BX2; (d) new felt family `Breton-PatronChampion|boon` flagged for the Breton sitting boon checklist once the record exists; (e) resonance sets locked with overlap (Mara all three lanes, Dibella GW+HA, Kynareth KR+GW, Magnus HA-resonant-but-championable-anywhere, Zenithar unlaned). No source/records/runtime changed this session - design + test-scope only. Do not run BX cards or re-prove B1/B1a against the new build.
+- 2026-07-12: BRETON TWO-AXIS SPLIT LANDED; ready for BX smoke after a full Skyrim relaunch/new save. Owner ruled the 2026-07-11 pool-as-T3-gate model an error; the intent was always two orthogonal axes (tradition = practice track; patron championing over the full 11-god roster, so a Green Way Breton can champion Magnus). Authority: `PDV_BretonTwoAxis_BuildSpec_2026-07-12.md`. Source now tiers traditions from practice counts, grants resonant Champion patrons through the tradition T3, grants non-resonant Champion patrons `PDV_Bless_Breton_PatronChampion`, includes Talos in Breton formal offers, and surfaces Breton two-axis state through Survey/status, Book of Days, and Prisma toasts. Pool-gated B1/B1a are historical only; run BX1-BX7 for current proof. Backend/readback gates passed: manager/EventBus/ActionRouter/MCM compile 0/0, Breton reward and formal-offer readback PASS, Prisma UI audit PASS 89, phase-2 reward readback PASS=1415, signal-floor audit PASS 51/51, adversary check PASS, and verifier FAIL=0.
 
-## Breton Tradition + Dislike Cards (2026-07-12)
+## Breton Tradition + Dislike Cards (2026-07-12, superseded by BX for reward tiering)
 
-Cover the reconciliation (Part 1) and the softer Y'ffre dislike set (Part 3).
-Both are **compile + readback proven**; these cards close the runtime-route and
-manual-display buckets. Use origin index 2 (Breton); seed tradition via the Debug
-MCM (`DebugSetBretonTradition`) or a fresh Breton save. Cards B4/B5 need a **fresh
-save** -- the new likes/dislikes rows load on first table build, and the version
-was held at 15, so an existing v15 save will not show them.
+These cards cover the superseded pool-gated reconciliation (Part 1) and the
+softer Y'ffre dislike set (Part 3). B1/B1a/B2/B3 are historical for the code that
+was live when they were run; do not use them as proof for the current two-axis
+build. B4/B5 remain valid Green Way dislike/like smoke cards on a save that has
+loaded `LIKES_DISLIKES_VERSION = 16`.
 
 | # | Scenario | Steps | Expected | Manual checks |
 |---:|---|---|---|---|
@@ -520,20 +528,21 @@ was held at 15, so an existing v15 save will not show them.
 | B4 | Green Way Y'ffre dislikes (softer set) | Green Way Breton, fresh save. Fire raise-undead (365) and assault-innocent (364). | Y'ffre loss surfaces for both; necromancy is the stronger (-medium) | Loss visible (toast / Book of Days / panel Ledger); daily caps hold; NO smithing or food penalty (softer set) |
 | B5 | Green Way hunt like | Same save; kill wild game (non-combat animal, event 303). | Y'ffre small gain (respectful hunt); cook-meal also gains | Gain visible; pairs with cook; a minor Kynareth -303 is expected (cross-deity, by design) |
 
-## Breton Two-Axis Split Cards (2026-07-12, BLOCKED on build)
+## Breton Two-Axis Split Cards (2026-07-12, ready for smoke)
 
-Owner-locked design, **NOT built** - do not run until Codex lands
-`PDV_BretonTwoAxis_BuildSpec_2026-07-12.md`. These close the runtime-route and
-manual-display buckets for the two-axis model (tradition practice vs patron
-championing). Use origin index 2 (Breton); seed tradition via the Debug MCM;
-several cards need a **fresh save** because the likes/dislikes version bumps
-(16 -> 17) and the practice-count tiering is new state.
+The two-axis build is source/record/readback complete. These cards close the
+runtime-route and manual-display buckets for the current Breton model (tradition
+practice vs patron championing). Use origin index 2 (Breton); seed tradition via
+the Debug MCM; use a **fresh save or a full relaunch into a save that has not
+cached the older manager PEX**. `LIKES_DISLIKES_VERSION` remains 16 because this
+build did not change CSV rows; the new practice layer consumes existing event
+IDs and quest tags.
 
 Preconditions to check first (backend, before any in-game step):
 - `GetBretonTraditionPoolPiety`/`GetBretonTraditionPietyPoolTier` retired; tier
   reads practice counts.
 - Record `PDV_Bless_Breton_PatronChampion` exists (spec + readback).
-- `LIKES_DISLIKES_VERSION = 17`.
+- `LIKES_DISLIKES_VERSION = 16`.
 - `HandleBretonSleepEvents` no longer awards Julianos under Hidden Art.
 
 | # | Scenario | Steps | Expected | Manual checks |

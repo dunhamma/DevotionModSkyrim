@@ -79,15 +79,22 @@ so no build/red bars remain — every lane is play-or-package. Rendered as
 `devotion_projection_to_oneoh_2026_07_09`:
 
 ```js
-// indexAxis:'y'; sorted descending; total ~10.5 sessions:
-var labels=['in-game felt + pacing sweep','6-list compat package','ARR compat packet','requiem track B (Authoria)','experience mode smoke'];
-var effort=[5,2.5,1.5,1,0.5];
-var fill=['#378ADD','#888780','#888780','#378ADD','#378ADD']; // blue=in-game test, gray=packaging
-// Cards: machine gates 9/9 green | est. sessions left ~10.5 | felt families 43/148.
-// Felt-family velocity: 22 -> 43 recorded between 07-07 and 07-09.
-// WHY ~10.5 not the old ~5: the contract counts scope the soft estimate lumped/omitted
-// (per-family felt proof ×148, 10 pacing signoffs, 6-list bordello compat). Number went
-// UP because accounting got rigorous, not because of regression — all code work is green.
+// indexAxis:'y'; sorted descending; total ~6 sessions (2026-07-12):
+var labels=['felt-family sweep (71 net families)','ARR compat packet','Bordello compat (2 build-targets, 6 lists)','requiem track B (Authoria)'];
+var effort=[2.5,1.5,1,1];
+var fill=['#378ADD','#888780','#888780','#378ADD']; // blue=in-game test, gray=packaging
+// OWNER CORRECTION 2026-07-12: C-COMPAT-BORDELLO's 6 lists (JOJ/TOT/HOH/MOM/DoD/VOV)
+// collapse to just 2 real build-targets because of how the lists are built (shared base) --
+// so the packaging WORK is 2 passes, ~1 session, not 6. The gate still carries 6 evidence
+// slots (one sign-off per list), but they close from 2 packaging efforts. Bar dropped 2.5 -> 1.
+// Cards: felt-family 79/150 (53%) | sessions to 1.0 ~6 (was 10.5) | compat build-targets 2 not 6.
+// Experience Mode smoke CLOSED (2/2), signal-floor smoke CLOSED (13/13) -> both bars removed.
+// Nord + Imperial felt sittings DONE + verified (13/13 each, ticks backed by ledger).
+// 07-11: 35 felt families recorded in ONE testing day (WITH bug-finding). Cross-cutting
+// pre-cleared 10 of the remaining 8 sittings' 82 families -> 72 net; Breton walks in
+// half-done (6/12). Caveat: Nord/Imperial were Divines-heavy so cleared an outsized
+// share of shared pantheon families; bespoke races left (Khajiit/Argonian/Dunmer/Bosmer)
+// hold closer to nominal. pacing (1/10), placement hooks (73/83), dislike-tuning fold in.
 ```
 
 Old model (kept for history) — sequencing megapacket → Experience Mode smoke →

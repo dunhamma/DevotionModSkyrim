@@ -192,12 +192,12 @@
         }
       ],
       "playerFacingText": "The moons have noticed how you move. Stamina Regeneration +5% (at night), Disease Resistance +15% (at night).",
-      "recordReadbackAssertion": "Pilot-provisional SPEL PDV_Bless_Khajiit_Lunar_T1 exists, carries night-gated stamina/disease MGEFs, preserves CAT-6 source text, and is manager-wired through the all-race reward contract.",
-      "grantRemovalOwner": "PDV__ManagerQuest Khajiit lunar substrate at dawn after smoke.",
+      "recordReadbackAssertion": "Pilot-provisional SPEL PDV_Bless_Khajiit_Lunar_T1 exists, carries night-gated stamina/disease MGEFs, preserves CAT-6 source text, and is wired as the Khajiit lunar substrate Mid slot.",
+      "grantRemovalOwner": "PDV_Substrate_KhajiitLunar Substrate_Mid via PDV_SubstrateBase.SyncSubstrateBoonsToTier.",
       "stackCapRule": "No more than one Khajiit lunar T1 active; night-gated subeffects must not bypass manager suppression.",
       "daedricInteraction": "Azurah focus and Daedric champion effects are explicit overlays, not silent additions.",
       "implementationStatus": "records-authored-manager-wired-pending-runtime-proof",
-      "notes": "Current CAT-6 pilot record is preserved as the Khajiit T1 reward packet; broad grant behavior is now owned by the all-race reward contract, not by the standalone CAT-6 pilot."
+      "notes": "Current CAT-6 pilot record is preserved as the Khajiit lunar substrate Mid reward packet; generic first-tier runtime must not directly manage this reused spell."
     },
     {
       "race": "Nord",

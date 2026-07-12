@@ -51,6 +51,7 @@ const offerRoster = {
     "PDV_Msg_Breton_Magnus_Offer",
     "PDV_Msg_Breton_Mara_Offer",
     "PDV_Msg_Breton_Stendarr_Offer",
+    "PDV_Msg_Breton_Talos_Offer",
     "PDV_Msg_Breton_Yffre_Offer",
     "PDV_Msg_Breton_Zenithar_Offer"
   ],
@@ -234,10 +235,10 @@ function verifySpecShape(spec, specPath, pass, fail) {
     ...expectedResponseProperties
   ].filter((editorId) => !editorId.startsWith("PDV_Msg_Nord_"));
 
-  if (messageRecords.length === 45) {
-    pass("Formal offer spec shape", "Spec declares 45 post-Kyne message records.", specPath);
+  if (messageRecords.length === 46) {
+    pass("Formal offer spec shape", "Spec declares 46 post-Kyne message records.", specPath);
   } else {
-    fail("Formal offer spec shape", `Expected 45 post-Kyne message records, found ${messageRecords.length}.`, specPath);
+    fail("Formal offer spec shape", `Expected 46 post-Kyne message records, found ${messageRecords.length}.`, specPath);
   }
 
   for (const editorId of expectedSpecIds) {
@@ -356,7 +357,7 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
     ["IsNordOfferEligibleDeity", ["PDV_Kyne"]],
     ["IsDunmerOfferEligibleDeity", ["PDV_Azura", "PDV_Boethiah", "PDV_Mephala"]],
     ["IsAltmerOfferEligibleDeity", ["PDV_AuriEl", "PDV_Magnus", "PDV_Xarxes", "PDV_Trinimac", "PDV_Syrabane"]],
-    ["IsBretonOfferEligibleDeity", ["PDV_Stendarr", "PDV_Akatosh", "PDV_Mara", "PDV_Arkay", "PDV_Julianos", "PDV_Zenithar", "PDV_Kynareth", "PDV_Dibella", "PDV_Magnus", "PDV_Yffre"]],
+    ["IsBretonOfferEligibleDeity", ["PDV_Stendarr", "PDV_Akatosh", "PDV_Mara", "PDV_Arkay", "PDV_Julianos", "PDV_Zenithar", "PDV_Kynareth", "PDV_Dibella", "PDV_Magnus", "PDV_Talos", "PDV_Yffre"]],
     ["IsImperialOfferEligibleDeity", ["PDV_Akatosh", "PDV_Mara", "PDV_Arkay", "PDV_Stendarr", "PDV_Zenithar", "PDV_Dibella", "PDV_Julianos", "PDV_Kynareth", "PDV_Talos"]],
     ["IsRedguardOfferEligibleDeity", ["PDV_Tuwhacca", "PDV_HoonDing", "PDV_Leki"]]
   ];

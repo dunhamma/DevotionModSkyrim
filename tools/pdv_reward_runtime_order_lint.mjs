@@ -44,6 +44,8 @@ const LIVE_SOURCE = path.join(REPO_ROOT, "live-source", "Scripts", "Source", "PD
 const ANVIL_SOURCE = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source/PDV__ManagerQuest.psc";
 const OUT_MD = path.join(REPO_ROOT, "references", "authoring", "PDV_RewardRuntimeOrderLintLedger.md");
 const OUT_CSV = path.join(REPO_ROOT, "references", "authoring", "PDV_RewardRuntimeOrderLintLedger.csv");
+const REWARD_SPEC_DIR = path.join(REPO_ROOT, "references", "authoring");
+const REWARD_SPEC_RE = /^PDV_.*RewardRecords\.spec\.json$/;
 
 const RUNTIME_ENTRY = "SyncFirstTierRaceRewardRuntime";
 const REWARD_SPELL_RE = /^PDV_Bless_\w+$/;
@@ -394,6 +396,41 @@ function makeEvent(spell, boundOrigin, guardOrigin, laneName, laneDispatchIndex,
   return { spell, boundOrigin, guardOrigin, laneName, laneDispatchIndex, stmt, site };
 }
 
+// Some reward SPELs are intentionally re-used records whose runtime ownership moved
+// behind a substrate module. If the generic T1 dispatcher also manages that same SPEL,
+// it can strip a substrate grant even though ordinary lane-order analysis sees no
+// cross-lane reuse. Read the owner contract from the reward specs so the invariant
+// lives with the declared record owner, not in hardcoded Khajiit-only logic.
+function collectSubstrateOwnedSpells(specDir = REWARD_SPEC_DIR) {
+  const owners = new Map();
+  if (!fs.existsSync(specDir)) return owners;
+
+  const files = fs.readdirSync(specDir).filter((name) => REWARD_SPEC_RE.test(name)).sort();
+  for (const file of files) {
+    const full = path.join(specDir, file);
+    let spec;
+    try {
+      spec = JSON.parse(fs.readFileSync(full, "utf8"));
+    } catch {
+      continue;
+    }
+
+    const substrate = spec.substrateBoons;
+    if (!substrate || typeof substrate.wireTo !== "string" || !substrate.wireTo.startsWith("PDV_Substrate")) continue;
+    const slots = Array.isArray(substrate.slots) ? substrate.slots : [];
+    for (const slot of slots) {
+      if (!slot || typeof slot.spellEditorId !== "string" || !REWARD_SPELL_RE.test(slot.spellEditorId)) continue;
+      owners.set(slot.spellEditorId, {
+        owner: substrate.wireTo,
+        slot: typeof slot.slotProperty === "string" ? slot.slotProperty : "",
+        specPath: toPosix(path.relative(REPO_ROOT, full)),
+      });
+    }
+  }
+
+  return owners;
+}
+
 // Parse SyncFirstTierRaceRewardRuntime into the ordered dispatch of inline reward calls
 // and lane-function calls, then expand each lane into its managed-spell events.
 function buildEvents(source) {
@@ -441,8 +478,29 @@ function globalPos(ev) {
 // Collision analysis
 // ---------------------------------------------------------------------------
 
-function analyzeManagerSource(source) {
+function analyzeOwnerContracts(events, substrateOwners) {
+  const findings = [];
+  for (const ev of events) {
+    const owner = substrateOwners.get(ev.spell);
+    if (!owner) continue;
+    if (ev.laneName !== "SyncFirstTierRaceRewardRuntime(inline)") continue;
+    findings.push({
+      spell: ev.spell,
+      contractOwner: owner.owner,
+      slot: owner.slot,
+      specPath: owner.specPath,
+      managingLane: ev.laneName,
+      managingSite: ev.site,
+    });
+  }
+  findings.sort((a, b) => (a.spell + a.contractOwner).localeCompare(b.spell + b.contractOwner));
+  return findings;
+}
+
+function analyzeManagerSource(source, opts = {}) {
   const events = buildEvents(source);
+  const substrateOwners = opts.substrateOwners || collectSubstrateOwnedSpells();
+  const ownerFindings = analyzeOwnerContracts(events, substrateOwners);
 
   // Inventory: group events by spell; reuse-collision candidates are managed by >1 call site.
   const bySpell = new Map();
@@ -502,7 +560,7 @@ function analyzeManagerSource(source) {
 
   inventory.sort((a, b) => a.spell.localeCompare(b.spell));
   findings.sort((a, b) => (a.spell + a.origin).localeCompare(b.spell + b.origin));
-  return { events, inventory, findings };
+  return { events, inventory, findings, ownerFindings };
 }
 
 // ---------------------------------------------------------------------------
@@ -521,8 +579,8 @@ function displaySourcePath(sourcePath) {
   return !rel.startsWith("..") && !path.isAbsolute(rel) ? toPosix(rel) : toPosix(sourcePath);
 }
 
-function writeLedgers(sourcePath, inventory, findings) {
-  const status = findings.length ? "FAIL" : "PASS";
+function writeLedgers(sourcePath, inventory, findings, ownerFindings) {
+  const status = findings.length || ownerFindings.length ? "FAIL" : "PASS";
   const md = [
     "# PDV Reward Runtime-Order Lint Ledger",
     "",
@@ -530,7 +588,7 @@ function writeLedgers(sourcePath, inventory, findings) {
     "",
     `Source checked: \`${displaySourcePath(sourcePath)}\``,
     "",
-    `Overall: **${status}** (${inventory.length} reused spells, ${findings.length} add-then-remove collisions)`,
+    `Overall: **${status}** (${inventory.length} reused spells, ${findings.length} add-then-remove collisions, ${ownerFindings.length} owner-contract violations)`,
     "",
     "## Reuse inventory (SPELs managed by more than one call site)",
     "",
@@ -556,10 +614,26 @@ function writeLedgers(sourcePath, inventory, findings) {
     md.push("");
   }
 
+  md.push("## Findings (owner contract violations)", "");
+  if (ownerFindings.length === 0) {
+    md.push("_None: no substrate-owned reward SPEL is directly managed by the generic T1 dispatcher._", "");
+  } else {
+    md.push("| Spell | Contract owner | Slot | Managing lane | Spec |", "|---|---|---|---|---|");
+    for (const f of ownerFindings) {
+      md.push(`| ${f.spell} | ${f.contractOwner} | ${f.slot || "-"} | ${f.managingLane} (${f.managingSite}) | ${f.specPath} |`);
+    }
+    md.push("");
+  }
+
   const csv = [
-    "spell,origin,grantingLane,grantingSite,grantPos,strippingLane,strippingSite,stripPos",
+    "kind,spell,origin,grantingLane,grantingSite,grantPos,strippingLane,strippingSite,stripPos,contractOwner,slot,specPath,managingLane,managingSite",
     ...findings.map((f) =>
-      [f.spell, f.origin, f.grantingLane, f.grantingSite, f.grantPos, f.strippingLane, f.strippingSite, f.stripPos]
+      ["runtime-order", f.spell, f.origin, f.grantingLane, f.grantingSite, f.grantPos, f.strippingLane, f.strippingSite, f.stripPos, "", "", "", "", ""]
+        .map(csvCell)
+        .join(",")
+    ),
+    ...ownerFindings.map((f) =>
+      ["owner-contract", f.spell, "", "", "", "", "", "", "", f.contractOwner, f.slot, f.specPath, f.managingLane, f.managingSite]
         .map(csvCell)
         .join(",")
     ),
@@ -582,7 +656,7 @@ function resolveSourcePath() {
 // Self-test: synthetic fixtures exercising the real analysis pipeline
 // ---------------------------------------------------------------------------
 
-function fixture({ imperialGuard = false, imperialFirst = false }) {
+function fixture({ imperialGuard = false, imperialFirst = false, khajiitInline = false }) {
   const nordLane = [
     "Function SyncNordRewards(Actor playerRef)",
     "    Bool isNord = GetPlayerOriginRaceIndex() == ORIGIN_NORD",
@@ -603,6 +677,9 @@ function fixture({ imperialGuard = false, imperialFirst = false }) {
   );
 
   const dispatch = ["Function SyncFirstTierRaceRewardRuntime()", "    Actor playerRef = Game.GetPlayer()"];
+  if (khajiitInline) {
+    dispatch.push("    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Lunar_T1, True, \"Khajiit T1\")");
+  }
   if (imperialFirst) {
     dispatch.push("    SyncImperialRewards(playerRef)", "    SyncNordRewards(playerRef)");
   } else {
@@ -671,6 +748,26 @@ function selfTest() {
     ) && !reversed.findings.some((f) => f.origin === "ORIGIN_NORD"),
   ]);
 
+  // 4. Owner-contract bug: a substrate-owned SPEL is directly managed in the generic
+  //    T1 dispatcher. This was the Khajiit Lunar Road class: no cross-lane reuse was
+  //    needed for the generic dispatcher to strip the substrate-owned spell.
+  const substrateOwners = new Map([
+    [
+      "PDV_Bless_Khajiit_Lunar_T1",
+      { owner: "PDV_Substrate_KhajiitLunar", slot: "Substrate_Mid", specPath: "fixture" },
+    ],
+  ]);
+  const ownerBug = analyzeManagerSource(fixture({ khajiitInline: true }), { substrateOwners });
+  cases.push([
+    "owner-contract fixture catches generic T1 management of substrate spell",
+    ownerBug.ownerFindings.some(
+      (f) =>
+        f.spell === "PDV_Bless_Khajiit_Lunar_T1" &&
+        f.contractOwner === "PDV_Substrate_KhajiitLunar" &&
+        f.managingLane === "SyncFirstTierRaceRewardRuntime(inline)"
+    ),
+  ]);
+
   const ok = cases.every(([, pass]) => pass);
   console.log(
     JSON.stringify(
@@ -678,6 +775,7 @@ function selfTest() {
         ok,
         checks: Object.fromEntries(cases.map(([name, pass]) => [name, pass])),
         buggyFindings: buggy.findings.map((f) => `${f.spell}[${f.origin}] ${f.grantingLane}->${f.strippingLane}`),
+        ownerFindings: ownerBug.ownerFindings.map((f) => `${f.spell} managed by ${f.managingLane}, owner ${f.contractOwner}`),
       },
       null,
       2
@@ -698,19 +796,27 @@ function main() {
 
   const sourcePath = resolveSourcePath();
   const source = fs.readFileSync(sourcePath, "utf8");
-  const { inventory, findings } = analyzeManagerSource(source);
-  writeLedgers(sourcePath, inventory, findings);
+  const { inventory, findings, ownerFindings } = analyzeManagerSource(source);
+  writeLedgers(sourcePath, inventory, findings, ownerFindings);
 
   const summary = {
-    status: findings.length ? "FAIL" : "PASS",
+    status: findings.length || ownerFindings.length ? "FAIL" : "PASS",
     source: toPosix(sourcePath),
     reusedSpells: inventory.length,
     collisions: findings.length,
+    ownerContractViolations: ownerFindings.length,
     findings: findings.map((f) => ({
       spell: f.spell,
       origin: f.origin,
       grantingLane: f.grantingLane,
       strippingLane: f.strippingLane,
+    })),
+    ownerFindings: ownerFindings.map((f) => ({
+      spell: f.spell,
+      contractOwner: f.contractOwner,
+      slot: f.slot,
+      managingLane: f.managingLane,
+      specPath: f.specPath,
     })),
     ledger: toPosix(path.relative(REPO_ROOT, OUT_MD)),
   };
@@ -718,7 +824,7 @@ function main() {
   if (JSON_MODE) {
     console.log(JSON.stringify(summary, null, 2));
   } else {
-    console.log(`PDV reward runtime-order lint: ${summary.status} (${summary.reusedSpells} reused spells, ${summary.collisions} collisions)`);
+    console.log(`PDV reward runtime-order lint: ${summary.status} (${summary.reusedSpells} reused spells, ${summary.collisions} collisions, ${summary.ownerContractViolations} owner-contract violations)`);
     console.log(`Source: ${summary.source}`);
     if (findings.length) {
       console.log("Add-then-remove collisions (a later lane strips a spell an earlier lane granted):");
@@ -726,16 +832,22 @@ function main() {
         console.log(`  - ${f.spell} on ${f.origin}: ${f.grantingLane} grants, then ${f.strippingLane} strips`);
       }
     }
+    if (ownerFindings.length) {
+      console.log("Owner-contract violations (generic T1 dispatcher manages a substrate-owned SPEL):");
+      for (const f of ownerFindings) {
+        console.log(`  - ${f.spell}: ${f.managingLane} manages, but ${f.contractOwner}.${f.slot} owns it (${f.specPath})`);
+      }
+    }
     console.log(`Ledger: ${summary.ledger}`);
   }
-  process.exitCode = findings.length ? 1 : 0;
+  process.exitCode = summary.status === "FAIL" ? 1 : 0;
 }
 
 try {
   main();
 } catch (error) {
   if (JSON_MODE) {
-    console.log(JSON.stringify({ status: "FAIL", reusedSpells: 0, collisions: 1, error: error.message }, null, 2));
+    console.log(JSON.stringify({ status: "FAIL", reusedSpells: 0, collisions: 1, ownerContractViolations: 0, error: error.message }, null, 2));
   } else {
     console.error(`[FAIL] ${error.message}`);
   }

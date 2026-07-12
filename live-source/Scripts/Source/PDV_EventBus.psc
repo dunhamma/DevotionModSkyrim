@@ -1468,6 +1468,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     Int count = PDV_FLST_AllDeities.GetSize()
     Int scoredCount = 0
 
+    PDV_Manager.HandleBretonActionPracticeSignal(eventType, GetEventReason(eventType))
     PDV_Manager.BeginLikesDislikesSurface(eventType)
     while i < count
         PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase

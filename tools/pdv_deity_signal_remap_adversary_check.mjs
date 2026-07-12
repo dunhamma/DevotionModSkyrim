@@ -222,15 +222,25 @@ for (const deity of ["Stuhn", "Stendarr", "Mara", "Kyne"]) {
   assert(`paarthurnax spare fanout ${deity}`, manager.includes(`ApplyPaarthurnaxSpareReaction("${deity}",`), `Missing Paarthurnax spare reaction for ${deity}.`);
 }
 
-// Post-reconciliation (2026-07-12, PDV_BretonTraditionReconciliation_BuildSpec):
-// the tradition is the reward lane. Deity-pool associations moved out of
-// SyncBretonRewards into GetBretonTraditionPoolBestTier (broad breadth) and
-// IsDeityInBretonTraditionPool (focused), so validate those.
-const bretonTraditionBody = functionBody(manager, "GetBretonTraditionPoolBestTier") + "\n" + functionBody(manager, "IsDeityInBretonTraditionPool");
-assert("breton hidden art reward uses magnus", bretonTraditionBody.includes("BRETON_TRADITION_HIDDEN_ART") && bretonTraditionBody.includes("PDV_Magnus"), "Hidden Art broad breadth should read Magnus.");
-assert("breton green way reward uses yffre", bretonTraditionBody.includes("BRETON_TRADITION_GREEN_WAY") && bretonTraditionBody.includes("PDV_Yffre"), "Green Way pool should read Y'ffre.");
-assert("breton hidden art reward not julianos", !/BRETON_TRADITION_HIDDEN_ART[\s\S]{0,180}PDV_Julianos/.test(bretonTraditionBody), "Hidden Art still routes to Julianos.");
-assert("breton green way reward not kynareth", !/BRETON_TRADITION_GREEN_WAY[\s\S]{0,180}PDV_Kynareth/.test(bretonTraditionBody), "Green Way still routes to Kynareth.");
+// Two-axis Breton build (2026-07-12, PDV_BretonTwoAxis_BuildSpec):
+// tradition practice counts light T1/T2; a named resonance set decides whether a
+// Champion patron sources tradition T3 or the modest PatronChampion boon.
+const bretonTraditionBody = [
+  functionBody(manager, "GetBretonTraditionTier"),
+  functionBody(manager, "GetBretonPracticeTier"),
+  functionBody(manager, "GetBretonPracticeCount"),
+  functionBody(manager, "IsDeityResonantWithBretonTradition"),
+  functionBody(manager, "SyncBretonPatronChampionReward"),
+  functionBody(manager, "HandleBretonSleepEvents")
+].join("\n");
+assert("breton pool piety retired", !manager.includes("GetBretonTraditionPoolPiety") && !manager.includes("IsDeityInBretonTraditionPool"), "Breton tiering still exposes retired pool-piety helpers.");
+assert("breton practice count tiering", bretonTraditionBody.includes("GetBretonPracticeCount") && bretonTraditionBody.includes("practiceCount >= 6") && bretonTraditionBody.includes("practiceCount >= 3"), "Breton T1/T2 should be practice-count gated.");
+assert("breton patron champion boon wired", manager.includes("PDV_Bless_Breton_PatronChampion") && bretonTraditionBody.includes("IsBretonNonResonantPatronChampion"), "Breton non-resonant Champion boon is not wired.");
+assert("breton knights road resonance set", /BRETON_TRADITION_KNIGHTS_ROAD[\s\S]{0,220}PDV_Talos[\s\S]{0,80}PDV_Kynareth/.test(bretonTraditionBody), "Knight's Road resonance set must include Talos and Kynareth overlap.");
+assert("breton green way resonance set", /BRETON_TRADITION_GREEN_WAY[\s\S]{0,180}PDV_Yffre[\s\S]{0,80}PDV_Mara[\s\S]{0,80}PDV_Kynareth[\s\S]{0,80}PDV_Dibella/.test(bretonTraditionBody), "Green Way resonance set must include Y'ffre, Mara, Kynareth, and Dibella.");
+assert("breton hidden art resonance set", /BRETON_TRADITION_HIDDEN_ART[\s\S]{0,260}PDV_Magnus[\s\S]{0,80}PDV_Mara[\s\S]{0,80}PDV_Julianos[\s\S]{0,80}PDV_Dibella/.test(bretonTraditionBody) && bretonTraditionBody.includes("PDV_DaedricPathBase"), "Hidden Art resonance set must include Magnus, Mara, Julianos, Dibella, and Daedric paths.");
+const bretonSleepBody = functionBody(manager, "HandleBretonSleepEvents");
+assert("breton hidden art sleep uses mara", bretonSleepBody.includes("PDV_Mara") && !bretonSleepBody.includes("PDV_Julianos"), "Hidden Art sleep reflection must award Mara, not Julianos.");
 
 assert("breton offers included", manager.includes("IsBretonOfferEligibleDeity(deity)"), "Formal offer gate does not include Breton eligibility.");
 assert("altmer trinimac offer included", /IsAltmerOfferEligibleDeity[\s\S]*PDV_Trinimac/.test(manager), "Altmer offer eligibility does not include Trinimac.");

@@ -1,7 +1,7 @@
 {
   "schema": "pdv-breton-records.v1",
-  "status": "PARTIALLY SUPERSEDED 2026-07-12 by references/authoring/PDV_BretonTraditionReconciliation_BuildSpec_2026-07-11.md -- the tradition IS the reward lane: the broad 'Tradition' Tier 1/2 emphasisRewards are RETIRED (no generic broad lane per v3 12.5), each tradition family's T1/T2 now light from deity-pool BREADTH (capped at Tier 2), and T3 gates on a focused patron. The 'Tradition' broad emphasisRewards and single-active-deity gate wording below are the pre-reconciliation model, kept for record. design-draft-2026-06-07; recognition V1 Survey/status only; P2 audit-only (no new reward volume beyond gate/ledger); pending authoring run",
-  "notes": "Authoritative record spec for the Breton tradition pilot. BUDGET VERDICT = Overstack Risk; discipline is the point. GATE TYPE = STATE-enum-gated (R7): rewards gate on PDV_State_BretonTradition (KnightsRoad=0 | HiddenArt=1 | GreenWay=2) plus the active tradition's focused patron tier within that state. ONLY the active tradition's focused reward family pays at a time (the other two are suppressed) -- this is the Overstack Risk control. BROAD LANE = the Tradition STATE, not a deity (R1): broad T1 fills the FIXED manager property PDV_Bless_Breton_Tradition_T1 (R2) granted via PATRON_STATE_BROAD; broad T2 is PDV_Bless_Breton_Tradition_T2 (new). NO flat Breton pantheon or generic broad-worship deity. Breton OWNS NO Aedric deities (R5): Knight's Road focuses REUSE Imperial-owned Divines where applicable; Hidden Art reuses existing PDV_Deity_Magnus for benign magic and PDV_Deity_Mara for hearth/home/cover rows; Julianos is Knight's Road study-law only. Green Way routes to existing Y'ffre. Kynareth is removed from Green Way offer/reward ownership and any former Green Way Kynareth proxy/source/payout item routes to Y'ffre. Phynaster is proof-gated and not authored here until a concrete pilgrimage/endurance plus elven-heritage hook package is accepted. Hidden Art Daedric forks and Green Way werewolf/Daedric forks route through the existing Phase 20C Daedric system (R6) -- NO new records here. THREE STANDING TRACKS (KnightlyVowIntegrity, WitchcraftExposure, DruidicStanding) are PRESSURE ONLY: they modify access/penalty/rupture and NEVER pay a second or third always-on boon family; they must not all pay positive rewards at once. Hidden Art focused rewards are stronger ONLY because WitchcraftExposure/rupture/Vigilant pressure is the price (magnitude conditioned on visible exposure cost). T3 NPC recognition is V1-deferred (PDV_RecognitionDialogueScalePacket.md); V1 T3 ships stat/signature effects with Champion Survey text as the recognition surface. Player-facing text is ASCII-only and uses Skyrim ActorValue names. No magnitude exceeds ~12%. Broad stays softer than focused.",
+  "status": "UPDATED 2026-07-12 by references/authoring/PDV_BretonTwoAxis_BuildSpec_2026-07-12.md -- two-axis build authority: tradition practice counts light T1/T2, resonant Champion patron lights the tradition T3, and non-resonant Champion patron grants PDV_Bless_Breton_PatronChampion beside the practiced tradition. Retired broad Tradition_T1/T2 records remain force-removed migration records.",
+  "notes": "Authoritative record spec for the Breton two-axis tradition pilot. BUDGET VERDICT = Overstack Risk; discipline is the point. Tradition practice is state-gated by PDV_State_BretonTradition and count thresholds (>=3 Observant/T1, >=6 Faithful/T2). T3 is not pooled piety: it requires an active Champion patron in that tradition's resonance set and is the champion payoff. A Champion patron outside the active tradition's resonance set receives the single modest PatronChampion boon instead; it does not unlock a second tradition family. Breton owns no new Aedric deity quests; reused Aedric records remain shared. Hidden Art Daedric forks route through the existing Phase 20C system. KnightlyVowIntegrity, WitchcraftExposure, and DruidicStanding are pressure/rupture tracks, not parallel boon tracks. Player-facing text is ASCII-only and no Breton magnitude exceeds the locked budget.",
   "deityQuests": [
     {
       "editorId": "PDV_Deity_Akatosh",
@@ -288,12 +288,12 @@
       "displayName": "Knight's Vow - Seeker",
       "effects": [
         {
-          "actorValue": "Speech",
+          "actorValue": "Block",
           "magnitude": 5,
-          "effectName": "Speech"
+          "effectName": "Block"
         }
       ],
-      "playerFacingText": "The vow steadies your word. Speech +5."
+      "playerFacingText": "The vow steadies your guard. Block +5."
     },
     {
       "emphasis": "KnightsRoad",
@@ -305,17 +305,17 @@
       "displayName": "Knight's Aegis - Devoted",
       "effects": [
         {
-          "actorValue": "Speech",
+          "actorValue": "Block",
           "magnitude": 13,
-          "effectName": "Speech"
+          "effectName": "Block"
         },
         {
-          "actorValue": "Restoration",
+          "actorValue": "ResistMagic",
           "magnitude": 8,
-          "effectName": "Restoration"
+          "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "You stand between the weak and harm. Speech +13, Restoration +8."
+      "playerFacingText": "You stand between the weak and harm. Block +13, Magic Resistance +8%."
     },
     {
       "emphasis": "KnightsRoad",
@@ -327,14 +327,14 @@
       "displayName": "Knight's Bulwark - Champion",
       "effects": [
         {
-          "actorValue": "Speech",
+          "actorValue": "Block",
           "magnitude": 25,
-          "effectName": "Speech"
+          "effectName": "Block"
         },
         {
-          "actorValue": "Restoration",
+          "actorValue": "ResistMagic",
           "magnitude": 18,
-          "effectName": "Restoration"
+          "effectName": "Magic Resistance"
         },
         {
           "actorValue": "DamageResist",
@@ -342,7 +342,7 @@
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "The vow is your reputation. Speech +25, Restoration +18, Armor +50.",
+      "playerFacingText": "The vow is your bulwark. Block +25, Magic Resistance +18%, Armor +50.",
       "signature": "The kept vow: strongest word, mercy, and armor; Champion Survey text is the V1 recognition surface. Vow breach (KnightlyVowIntegrity) revokes access until repair."
     },
     {
@@ -488,6 +488,24 @@
       ],
       "playerFacingText": "The covenant of the wild is kept in you. Stamina Regeneration +20%, Restoration +18, Maximum Health +20.",
       "signature": "Covenant of the wild: strongest outdoor stamina/restoration/recovery; Champion Survey text is the V1 recognition surface. The werewolf fork is a real authored fork (Druidic Trial); betrayal drives major creed-loss and any Hircine pressure routes through the Phase 20C system."
+    },
+    {
+      "emphasis": "PatronChampion",
+      "tier": "Champion",
+      "threshold": "Non-resonant patron Champion 85",
+      "gate": "non-resonant patron champion boon; active Breton patron is Champion but does not resonate with PDV_State_BretonTradition, so the practiced tradition remains capped at T2 and this single modest boon stands beside it",
+      "spellEditorId": "PDV_Bless_Breton_PatronChampion",
+      "spellProperty": "PDV_Bless_Breton_PatronChampion",
+      "displayName": "Patron's Mark - Champion",
+      "effects": [
+        {
+          "actorValue": "Health",
+          "magnitude": 10,
+          "effectName": "Maximum Health"
+        }
+      ],
+      "playerFacingText": "Your chosen patron stands beside your Breton tradition. Maximum Health +10.",
+      "signature": "Non-resonant Champion proof path: Green Way + Magnus or Knight's Road + Dibella should keep the tradition at T2 and add only this small PatronChampion spell."
     }
   ],
   "creedViolationLoss": [

@@ -4,7 +4,7 @@
     "references/authoring/PDV_AltmerRewardRecords.spec.json": "3e5c2701ca9fb35c",
     "references/authoring/PDV_ArgonianRewardRecords.spec.json": "70d68cc893b4cc73",
     "references/authoring/PDV_BosmerRewardRecords.spec.json": "76aa12869ead555f",
-    "references/authoring/PDV_BretonRewardRecords.spec.json": "9fbe0c9b8ff1eff6",
+    "references/authoring/PDV_BretonRewardRecords.spec.json": "1d22fad78c2b71f5",
     "references/authoring/PDV_DunmerRewardRecords.spec.json": "16d3b0d9e6b097f9",
     "references/authoring/PDV_ImperialRewardRecords.spec.json": "448485332e14d728",
     "references/authoring/PDV_KhajiitRewardRecords.spec.json": "87dddbce151d7409",
@@ -12,20 +12,20 @@
     "references/authoring/PDV_OrcRewardRecords.spec.json": "65d168f36b8c8956",
     "references/authoring/PDV_RedguardRewardRecords.spec.json": "43cbd365f0306a74",
     "references/authoring/PDV_DaedricPrinceRecordContracts.json": "040bb0dc17ff5208",
-    "references/authoring/PDV_DeityLikesDislikes.csv": "151481553cc34ee2",
+    "references/authoring/PDV_DeityLikesDislikes.csv": "9d7ec050e632024d",
     "references/authoring/PDV_DeityLikesDislikes_Princes_V2.csv": "93b6474ad6c56304",
     "references/authoring/PDV_DislikeConsequenceRecords.spec.json": "430b071b6bf66d6d",
-    "live-source/Scripts/Source/PDV__ManagerQuest.psc": "7d04a998017f45dc"
+    "live-source/Scripts/Source/PDV__ManagerQuest.psc": "059f133ec6a763ac"
   },
   "counts": {
-    "effects": 504,
-    "families": 150,
+    "effects": 507,
+    "families": 151,
     "byClass": {
-      "boon": 202,
+      "boon": 203,
       "neglect": 10,
       "curse": 5,
       "substrate-favor": 25,
-      "price": 248,
+      "price": 250,
       "disfavor-sting": 14
     }
   },
@@ -1509,7 +1509,7 @@
         ],
         "effects": [
           {
-            "actorValue": "Speech",
+            "actorValue": "Block",
             "magnitude": 5,
             "duration": null
           }
@@ -1533,12 +1533,12 @@
         ],
         "effects": [
           {
-            "actorValue": "Speech",
+            "actorValue": "Block",
             "magnitude": 13,
             "duration": null
           },
           {
-            "actorValue": "Restoration",
+            "actorValue": "ResistMagic",
             "magnitude": 8,
             "duration": null
           }
@@ -1562,12 +1562,12 @@
         ],
         "effects": [
           {
-            "actorValue": "Speech",
+            "actorValue": "Block",
             "magnitude": 25,
             "duration": null
           },
           {
-            "actorValue": "Restoration",
+            "actorValue": "ResistMagic",
             "magnitude": 18,
             "duration": null
           },
@@ -1753,6 +1753,30 @@
         ]
       },
       "familyId": "Breton-GreenWay|boon"
+    },
+    {
+      "effectId": "PDV_Bless_Breton_PatronChampion",
+      "class": "boon",
+      "lane": "Breton-PatronChampion",
+      "race": "Breton",
+      "origin": "race-spec",
+      "declaredIn": "references/authoring/PDV_BretonRewardRecords.spec.json $.emphasisRewards[11]",
+      "displayName": "Patron's Mark - Champion",
+      "tier": "Champion",
+      "wiringProperty": "PDV_Bless_Breton_PatronChampion",
+      "expected": {
+        "espEditorIds": [
+          "PDV_Bless_Breton_PatronChampion"
+        ],
+        "effects": [
+          {
+            "actorValue": "Health",
+            "magnitude": 10,
+            "duration": null
+          }
+        ]
+      },
+      "familyId": "Breton-PatronChampion|boon"
     },
     {
       "effectId": "PDV_SPEL_CreedLoss_Breton_VowIntegrity",
@@ -9413,6 +9437,40 @@
       "familyId": "Yffre|price"
     },
     {
+      "effectId": "csv:Y'ffre:365:origin:2",
+      "class": "price",
+      "lane": "Yffre",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Y'ffre eventId=365 originGate=2",
+      "displayName": "raise-undead",
+      "tier": "medium",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -1,
+        "dailyCap": 2,
+        "originGate": 2
+      },
+      "familyId": "Yffre|price"
+    },
+    {
+      "effectId": "csv:Y'ffre:364:origin:2",
+      "class": "price",
+      "lane": "Yffre",
+      "race": null,
+      "origin": "likes-dislikes-csv",
+      "declaredIn": "references/authoring/PDV_DeityLikesDislikes.csv actor=Y'ffre eventId=364 originGate=2",
+      "displayName": "assault-innocent",
+      "tier": "small",
+      "expected": {
+        "espEditorIds": [],
+        "delta": -0.5,
+        "dailyCap": 3,
+        "originGate": 2
+      },
+      "familyId": "Yffre|price"
+    },
+    {
       "effectId": "csv:akatosh:362:origin:2",
       "class": "price",
       "lane": "Akatosh",
@@ -11635,6 +11693,15 @@
       ]
     },
     {
+      "familyId": "Breton-PatronChampion|boon",
+      "lane": "Breton-PatronChampion",
+      "class": "boon",
+      "race": "Breton",
+      "members": [
+        "PDV_Bless_Breton_PatronChampion"
+      ]
+    },
+    {
       "familyId": "Breton-Tradition|boon",
       "lane": "Breton-Tradition",
       "class": "boon",
@@ -13000,7 +13067,9 @@
         "csv:Y'ffre:330",
         "csv:Y'ffre:364",
         "csv:Y'ffre:331",
-        "csv:Y'ffre:331:origin:2"
+        "csv:Y'ffre:331:origin:2",
+        "csv:Y'ffre:365:origin:2",
+        "csv:Y'ffre:364:origin:2"
       ]
     },
     {
@@ -13030,5 +13099,5 @@
     }
   ],
   "orphans": [],
-  "updated": "2026-07-11"
+  "updated": "2026-07-12"
 }

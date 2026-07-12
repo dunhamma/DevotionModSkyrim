@@ -282,6 +282,15 @@
       "note": "",
       "creditedFrom": null
     },
+    "Breton-PatronChampion|boon": {
+      "status": "pending",
+      "lane": "Breton-PatronChampion",
+      "class": "boon",
+      "race": "Breton",
+      "expected": "Two-axis Breton proof: run BX1 with a Green Way Breton and non-resonant Champion patron (Magnus or Zenithar). Observe Patron's Mark - Champion in Active Effects while the practiced tradition stays capped at T2, with no extra tradition T3 stack.",
+      "note": "Added 2026-07-12 with the Breton two-axis build. This family is only for non-resonant Champion patrons; resonant Champion patrons should prove the active tradition T3 instead.",
+      "creditedFrom": null
+    },
     "Breton-Tradition|boon": {
       "status": "not-applicable",
       "lane": "Breton-Tradition",
@@ -1147,7 +1156,7 @@
       "class": "substrate-favor",
       "race": "Khajiit",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
+      "note": "2026-07-12 co-test: tester reported Lunar Hardiness appeared but Khajiit Lunar Road had not surfaced. Backend fixed so generic first-tier reward sync no longer manages PDV_Bless_Khajiit_Lunar_T1, reward runtime-order lint now fails on substrate-owner violations, and PDV_SubstrateBase reconciles unchanged tiers so a stripped Mid boon can re-add on the next substrate signal. Runtime/manual Active Effects proof remains owed.",
       "creditedFrom": null
     },
     "Khajiit-Rajhin|boon": {
@@ -1712,7 +1721,7 @@
       }
     }
   },
-  "updated": "2026-07-11",
+  "updated": "2026-07-12",
   "audits": [
     {
       "date": "2026-07-09",

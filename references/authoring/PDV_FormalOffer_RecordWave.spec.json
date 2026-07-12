@@ -144,6 +144,14 @@
       "buttons": ["Accept", "Not yet", "Refuse"]
     },
     {
+      "editorId": "PDV_Msg_Breton_Talos_Offer",
+      "kind": "messageBox",
+      "title": "Talos' Open Defiance",
+      "body": "You have carried courage where law and fear press hard. Name Talos your focus, and the Breton road takes on an open war-cry. Will you?",
+      "messageBox": true,
+      "buttons": ["Accept", "Not yet", "Refuse"]
+    },
+    {
       "editorId": "PDV_Msg_Breton_Yffre_Offer",
       "kind": "messageBox",
       "title": "Y'ffre and the Green Way",

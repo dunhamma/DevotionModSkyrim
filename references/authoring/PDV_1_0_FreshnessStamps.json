@@ -1,6 +1,6 @@
 {
   "schema": "pdv.1-0.freshness-stamps.v1",
-  "updated": "2026-07-12T02:06:36.424Z",
+  "updated": "2026-07-12T06:12:55.783Z",
   "stamps": {
     "C-RACE-RUBRIC": {
       "observedAt": "2026-07-07T09:22:07.856Z",
@@ -11,7 +11,7 @@
       }
     },
     "C-PRINCE-GATE": {
-      "observedAt": "2026-07-12T02:06:36.357Z",
+      "observedAt": "2026-07-12T06:12:54.855Z",
       "result": "PASS",
       "sourceHashes": {
         "references/authoring/PDV_DaedricPrinceRecordContracts.json": "040bb0dc17ff520832a4a09daf2e7e0bfa92225c059e7497f45155081e96d4c9"
@@ -33,12 +33,12 @@
       }
     },
     "C-FELT-TRACE": {
-      "observedAt": "2026-07-11T08:01:01.354Z",
+      "observedAt": "2026-07-12T06:12:55.740Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "7d04a998017f45dcd243112ed3cdfd22384ea1cea320ef1c6df1ae2fd6db2b21",
-        "@managerDeployed": "7d04a998017f45dcd243112ed3cdfd22384ea1cea320ef1c6df1ae2fd6db2b21",
-        "references/authoring/PDV_FeltEffectRegistry.json": "9e2f98dc033e56aff09625a8bce8f5c6f69847054d340922730426c177e3a9e1"
+        "@managerLive": "059f133ec6a763ac9a4ed8afce5aed7dc8ada2aee96fb4744e29a7535cb713fa",
+        "@managerDeployed": "059f133ec6a763ac9a4ed8afce5aed7dc8ada2aee96fb4744e29a7535cb713fa",
+        "references/authoring/PDV_FeltEffectRegistry.json": "db909494d86508703dbe1d22a2379c8019d02388cc44bd94494a574ccf47c33b"
       }
     },
     "C-PACING-SIM": {
@@ -85,7 +85,7 @@
       }
     },
     "C-EXPMODE-SMOKE": {
-      "observedAt": "2026-07-12T02:06:36.366Z",
+      "observedAt": "2026-07-12T06:12:54.863Z",
       "result": "PASS",
       "sourceHashes": {}
     }

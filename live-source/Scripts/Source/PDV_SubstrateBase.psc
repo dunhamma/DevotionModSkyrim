@@ -93,9 +93,47 @@ Int Function RecomputeSubstrateTier()
         StorageUtil.SetIntValue(GetSubstrateForm(), GetTierKey(), newTier)
         SyncSubstrateBoonsToTier(newTier)
         Trace(1, SubstrateName + " tier " + oldTier + " -> " + newTier)
+    elseIf !IsSubstrateBoonStateCurrent(newTier)
+        SyncSubstrateBoonsToTier(newTier)
+        Trace(2, SubstrateName + " boon reconciled for tier " + newTier)
     endIf
 
     return newTier
+EndFunction
+
+Bool Function IsSubstrateBoonStateCurrent(Int tierValue)
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return True
+    endIf
+
+    Spell expectedSpell = GetExpectedSubstrateBoon(tierValue)
+    if expectedSpell && !playerRef.HasSpell(expectedSpell)
+        return False
+    endIf
+    if Substrate_Always && Substrate_Always != expectedSpell && playerRef.HasSpell(Substrate_Always)
+        return False
+    endIf
+    if Substrate_Mid && Substrate_Mid != expectedSpell && playerRef.HasSpell(Substrate_Mid)
+        return False
+    endIf
+    if Substrate_High && Substrate_High != expectedSpell && playerRef.HasSpell(Substrate_High)
+        return False
+    endIf
+
+    return True
+EndFunction
+
+Spell Function GetExpectedSubstrateBoon(Int tierValue)
+    if tierValue >= SUBSTRATE_TIER_HIGH && Substrate_High
+        return Substrate_High
+    elseIf tierValue >= SUBSTRATE_TIER_MID && Substrate_Mid
+        return Substrate_Mid
+    elseIf tierValue >= SUBSTRATE_TIER_LOW && Substrate_Always
+        return Substrate_Always
+    endIf
+
+    return None
 EndFunction
 
 ; Highest-slot-only: only the top reached substrate slot is granted, and that
@@ -104,12 +142,9 @@ EndFunction
 Function SyncSubstrateBoonsToTier(Int tierValue)
     ClearSubstrateBoons()
 
-    if tierValue >= SUBSTRATE_TIER_HIGH && Substrate_High
-        Game.GetPlayer().AddSpell(Substrate_High, False)
-    elseIf tierValue >= SUBSTRATE_TIER_MID && Substrate_Mid
-        Game.GetPlayer().AddSpell(Substrate_Mid, False)
-    elseIf tierValue >= SUBSTRATE_TIER_LOW && Substrate_Always
-        Game.GetPlayer().AddSpell(Substrate_Always, False)
+    Spell expectedSpell = GetExpectedSubstrateBoon(tierValue)
+    if expectedSpell
+        Game.GetPlayer().AddSpell(expectedSpell, False)
     endIf
 EndFunction
 

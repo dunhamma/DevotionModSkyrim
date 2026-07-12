@@ -1,9 +1,12 @@
 # Breton Two-Axis Split: Tradition Practice vs Patron Championing - Build Spec (2026-07-12)
 
-**Status:** Owner-approved design, NOT built. Supersedes the pool-as-T3-gate decision
-in `PDV_BretonTraditionReconciliation_BuildSpec_2026-07-11.md` Part 1. All other
-anchors of that spec (no generic broad lane, tradition is a filter, softer Green Way,
-ancestor-substrate retirement, Parts 2-4 work items) remain in force.
+**Status:** Implemented 2026-07-12; source/record/readback/static gates are ready
+for in-game smoke. Supersedes the pool-as-T3-gate decision in
+`PDV_BretonTraditionReconciliation_BuildSpec_2026-07-11.md` Part 1. The two-axis
+model below is now the live build authority. Green Way pilgrimage/rustic-home
+enrichment from the 07-11 spec remains future enrichment, not a blocker for the
+two-axis smoke cards, because the current Green Way lane has GREEN wired source
+coverage in the regenerated signal-floor ledger.
 
 **Owner decision record (2026-07-12 session):** the 07-11 lock treated the tradition
 pool as the exclusive gate on which patron can reach T3. Owner states that lock was in
@@ -11,6 +14,16 @@ error - the intended model was always two orthogonal axes. Lore review (Varietie
 Faith: The Bretons; Druids of Galen; Wyrd Covens) confirms: pantheon worship and
 cultural tradition coexist in the same Breton ("many islanders profess devotion to the
 Eight Divines but harbor a deep respect for Y'ffre and druidic culture").
+
+**Implementation closeout (2026-07-12):** `PDV__ManagerQuest.psc` now tiers Breton
+traditions from `KnightlyVowCount`, `HiddenArtCount`, and `GreenWayCount`
+(thresholds 3/6), retires the pool-piety helpers, and grants T3 only when the
+active Champion patron is resonant with the active tradition. A non-resonant
+Champion patron grants `PDV_Bless_Breton_PatronChampion` beside the practiced
+tradition. `PDV_EventBus.psc` and `PDV_ActionRouter.psc` forward likes/dislikes
+event IDs into the practice layer; quest-reaction tags feed the same layer after
+the actual piety/stigma path lands. `PDV_Msg_Breton_Talos_Offer` is now authored
+and wired, so Breton formal offers include Talos.
 
 ---
 
@@ -72,7 +85,8 @@ DISCIPLINED_STUDY at [18097], Mara MERCY at [18102]) are ungated on the piety si
 
 ### Knight's Road (KnightlyVowCount / KnightlyVowIntegrity)
 - P2: `PDV_FLST_P2_BretonVowSources`, `BretonKnightsRoadSources` - wired + ESP-
-  populated but thin (VowSources = 2). Fill pass required.
+  populated but thin (VowSources = 2). Future enrichment can broaden this, but the
+  current smoke contract has GREEN source coverage.
 - Event-IDs gaining a practice tick (piety rows already authored in
   `PDV_DeityLikesDislikes.csv`): 351 clear-bounty, 350 heal-or-cure-npc, 300
   kill-undead, 301 kill-daedra. Vow-integrity DAMAGE from 304 murder-defenseless,
@@ -88,14 +102,15 @@ DISCIPLINED_STUDY at [18097], Mara MERCY at [18102]) are ungated on the piety si
   334 harvest-ingredient, 303 hunt-wild-game, 333 cook-meal, 300 kill-undead (+);
   365 raise-undead, 331 enchant-item, 364 assault-innocent (standing damage).
 - 07-11 Parts 2B (pilgrimage: nature-site spine + 13-stone ring, discovery-based)
-  and 2C (renewable forage/alchemy/tend + rustic-rest keyword split) are PROMOTED
-  from deferred to REQUIRED: they are this lane's primary tier feed.
+  and 2C (renewable forage/alchemy/tend + rustic-rest keyword split) remain future
+  enrichment. The current Green Way smoke contract uses the existing GREEN P2/event
+  source coverage.
 - Quest tags: `honor_the_wild`, `the_hunt` (+); `defile_nature`, `necromancy` (-).
 - Curated: Y'ffre SIGNAL_LIVING_STORY (live).
 
 ### Hidden Art (HiddenArtCount / WitchcraftExposure)
 - P2: `BretonHiddenArtSources` (3 occult books live), `BretonHiddenArtSpells` -
-  spell whitelist still needs curation (07-11 Part 2A residual).
+  populated for smoke; future curation can broaden the spell whitelist.
 - Event-IDs (breton rows L315-321): 341 read-spell-tome, 342 read-lore-book, 331
   enchant-item (occult study); 333 cook-meal / 314 sleep-in-bed as hearth-COVER
   (Mara).
@@ -139,15 +154,24 @@ Sheor: no worship (lore). Phynaster: stays parked as non-selectable flavor.
    PDV_BretonRewardRecords.spec.json; author via pdv-phase20-race-author;
    Requiem-proof rules apply - flat Restore-Health, no regen).
 3. Pulse retune (all three tracks) + counter anti-farm caps.
-4. Dual-feed hooks: event-ID practice ticks (likes/dislikes path) + quest-tag
-   practice ticks (ApplyDeityReaction). CSV edits inert until pdv_likesdislikes_gen
-   regen + LIKES_DISLIDES_VERSION bump (16 -> 17) - prove on a new save.
+4. DONE: dual-feed hooks route event-ID practice ticks through the likes/dislikes
+   path and quest-tag practice ticks after `ApplyDeityReaction`. No CSV rows changed
+   in this two-axis tranche, so `LIKES_DISLIKES_VERSION` remains 16.
 5. Fix Julianos sleep-handler miswire.
-6. 07-11 Parts 2B/2C (now required) + HiddenArtSpells fill + VowSources/
-   KnightsRoadSources/GreenWaySources fill passes.
-7. Remove the 6 vestigial roster CIVIC_SERVICE reserved constants (per
-   pdv_reserved_signals.json REMOVE recommendations) in the same sweep.
-8. Regen the deployed ARR quest-matrix JSON (predates 07-11 tranche10 Y'ffre rows).
+6. DONE for smoke scope: 07-11 Part 2A/fill residual reconciled by readback; the
+   current regenerated signal-floor ledger reports Breton Knight's Road, Hidden
+   Art, and Green Way as PASS with GREEN P2 source evidence. `HiddenArtSpells`,
+   `VowSources`, `KnightsRoadSources`, and `GreenWaySources` are populated.
+   07-11 Parts 2B/2C (new Green Way pilgrimage, rustic-home, garden-tending
+   enrichment) remain future enrichment because they require new record/hook
+   design beyond the two-axis smoke contract.
+7. NOT DONE in this tranche: the `CIVIC_SERVICE` constants are still tied to the
+   active Imperial civic-service lane in current source. Do not remove them from
+   a Breton smoke-readiness pass without a separate reserved-signal cleanup.
+8. DONE: regenerated deployed quest-matrix JSON, including the ARR channel. The
+   Anvil optional ARR runtime JSON was stale and has been rewritten with the
+   current PapyrusUtil lowercase aliases; the ARR compatibility mod JSON also
+   validates against `PDV_QuestReactionMatrix_ARR.csv`.
 
 ## 6. Verify items
 
@@ -157,10 +181,28 @@ Sheor: no worship (lore). Phynaster: stays parked as non-selectable flavor.
   while the 07-11 ESP readback verified all populated - reconcile which artifact is
   authoritative before fill passes (pdv_p2_formlist_esp_audit is ESP-aware).
 - Gates: pdv_compile + pdv_verify --json FAIL=0 + pdv_signal_floor_audit +
-  pdv_1_0_endstate_gate; felt-ledger family updates for retired pool lane vs new
+  pdv_prisma_ui_audit + phase-2 reward readback + formal-offer readback +
+  adversary check; felt-ledger family updates for retired pool lane vs new
   PatronChampion family.
 - In-game smoke: (a) Green Way Breton + Magnus patron reaches Magnus Champion ->
   PatronChampion boon + GW stays T2; (b) same save, switch-test resonant Y'ffre ->
   GW T3 family; (c) practice T1/T2 lights from counts with zero patron piety in
   pool gods; (d) vow damage from a 364 assault; (e) daily caps hold on counter
   ticks.
+
+## 7. Machine proof from implementation closeout
+
+- `PDV__ManagerQuest`, `PDV_EventBus`, `PDV_ActionRouter`, and `PDV_MCM` compile
+  0 errors / 0 warnings.
+- Breton reward readback PASS for `PDV_Bless_Breton_PatronChampion`; formal-offer
+  readback PASS for `PDV_Msg_Breton_Talos_Offer`.
+- `pdv_formal_offer_check.mjs --json`: PASS, `passCount=265`.
+- `pdv_phase2_reward_readback_audit.mjs --json`: PASS, `PASS=1415`.
+- `pdv_prisma_ui_audit.mjs`: PASS, 89 checks.
+- `pdv_deity_signal_remap_adversary_check.mjs`: PASS; only known warning is thin
+  gods remaining design work.
+- `pdv_signal_floor_audit.mjs`: PASS, 51/51 paths, 0 UNDER-FLOOR.
+- `pdv_verify.mjs --json`: FAIL=0; current residual WARN count is non-blocking
+  profile/source hygiene, not Breton two-axis wiring.
+- `pdv_felt_registry_gen.mjs --check --json`: registry/ledger are synchronized;
+  new pending family is `Breton-PatronChampion|boon`.

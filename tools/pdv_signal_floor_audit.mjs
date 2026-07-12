@@ -776,13 +776,15 @@ const neverPopulated = [...ALL_TYPES].filter(t =>
 
 md.push("## Data-quality caveats");
 md.push("");
-md.push("- **No `weather`, `harvest`, or `spell-learned` P2 source is GREEN in the E2E gate.** " +
-  "Several FormLists *declare* these `sourceKinds` (e.g. `BretonGreenWaySources` weather/harvest, " +
-  "`NordKyneTalosSources` weather, `BretonHiddenArtSpells` spell-learned), but none are wired end-to-end. " +
-  (neverGreenP2Kinds.length ? `Never-GREEN P2 kinds: \`${neverGreenP2Kinds.join("`, `")}\`. ` : "") +
-  (neverPopulated.length ? `Never-populated manifest fallback kinds: \`${neverPopulated.join("`, `")}\`. ` : "") +
-  "The likes-dislikes CSV also carries no weather event-id (only env ids 313/314/345). " +
-  "Net effect: `weather` and `harvest` are currently unreachable as wired distinct types for every path.");
+if (neverGreenP2Kinds.length) {
+  md.push("- **Some declared P2 source kinds still have no GREEN E2E surface.** " +
+    `Never-GREEN P2 kinds: \`${neverGreenP2Kinds.join("`, `")}\`. ` +
+    (neverPopulated.length ? `Never-populated manifest fallback kinds: \`${neverPopulated.join("`, `")}\`. ` : "") +
+    "Do not count those kinds toward a path's wired floor until the E2E gate row is GREEN.");
+} else {
+  md.push("- **Every curated P2 source kind currently has at least one GREEN E2E surface.** " +
+    "Per-path floor credit still depends on the path-specific GREEN row evidence in the table above.");
+}
 md.push("- **Only GREEN E2E surfaces contribute P2 `book` or `quest-stage` breadth.** " +
   (greenP2Properties.length ? `Current GREEN surfaces: \`${greenP2Properties.sort().join("`, `")}\`. ` : "Current GREEN surfaces: none. ") +
   "Nord Old Ways' MQ104/MQ304 routes and Redguard's MS08 routes remain blocked by static-only route review, " +

@@ -1,11 +1,11 @@
 {
   "status": "RED",
-  "mode": "read",
+  "mode": "run",
   "strictStale": false,
   "counts": {
-    "PASS": 2,
+    "PASS": 3,
     "STALE": 1,
-    "RED": 15
+    "RED": 14
   },
   "rows": [
     {
@@ -44,7 +44,7 @@
       "category": "machine-gate",
       "title": "Default framework verifier is clean (FAIL=0)",
       "status": "RED",
-      "detail": "evidence voided by source drift - last observed PASS 2026-07-11T07:41:32.215Z; drift since 2026-07-11T07:41:32.215Z: @managerLive, @managerDeployed",
+      "detail": "evidence voided by source drift - last observed PASS 2026-07-11T07:41:32.215Z; drift since 2026-07-11T07:41:32.215Z: @managerLive, @managerDeployed, @espDeployed",
       "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run (or pdv_verify.mjs directly) with the houseCARL bridge live.",
       "drift": true
     },
@@ -74,7 +74,7 @@
       "category": "machine-gate",
       "title": "Experience Mode is built (PDV_ModePreset, PDV_GLO_Mode, MCM surfacing, manager scalars, ActionRouter handling, verifier readback)",
       "status": "RED",
-      "detail": "evidence voided by source drift - last observed PASS 2026-07-11T07:41:52.147Z; drift since 2026-07-11T07:41:52.147Z: @managerLive, @managerDeployed",
+      "detail": "evidence voided by source drift - last observed PASS 2026-07-11T07:41:52.147Z; drift since 2026-07-11T07:41:52.147Z: @managerLive, @managerDeployed, @espDeployed",
       "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-EXPMODE-BUILD (strict experience-mode verifier).",
       "drift": true
     },
@@ -153,10 +153,10 @@
       "lane": "felt-effects",
       "category": "machine-gate",
       "title": "Felt-effect machine trace exhaustive and green (every declared effect: declared, wired, dispatched, record exists, magnitude matches)",
-      "status": "RED",
-      "detail": "evidence voided by source drift - status = \"PASS\"; drift since 2026-07-11T08:01:01.354Z: @managerLive, @managerDeployed, references/authoring/PDV_FeltEffectRegistry.json",
+      "status": "PASS",
+      "detail": "--run tools/pdv_felt_trace_audit.mjs --json: exit 0",
       "closes": "Fix the broken link named in PDV_FeltTraceLedger.md (wiring, dispatch, missing record, or magnitude mismatch), then re-run.",
-      "drift": true
+      "drift": false
     },
     {
       "id": "C-FELT-FAMILY",
@@ -164,7 +164,7 @@
       "category": "evidence-gate",
       "title": "One-per-family in-game felt proof recorded for every lane x effect-class family",
       "status": "RED",
-      "detail": "71/150 slots open: Alkosh|price, Altmer-AuriEl|boon, Altmer-CurseState|curse, Altmer-Magnus|boon, Altmer-Orthodox|boon, Altmer-Syrabane|boon, Altmer-Trinimac|boon, Altmer-VampireExiledPath|curse, +63 more",
+      "detail": "72/151 slots open: Alkosh|price, Altmer-AuriEl|boon, Altmer-CurseState|curse, Altmer-Magnus|boon, Altmer-Orthodox|boon, Altmer-Syrabane|boon, Altmer-Trinimac|boon, Altmer-VampireExiledPath|curse, +64 more",
       "closes": "Play one member of each pending family in game and record the evidence slot (or retro-credit from an existing packet where the mapping is unambiguous).",
       "drift": false
     },
@@ -174,7 +174,7 @@
       "category": "machine-gate",
       "title": "Minor dislike-consequence overlay built: every deity dislike lane carries a small felt domain sting beyond piety loss",
       "status": "RED",
-      "detail": "evidence voided by source drift - last observed PASS 2026-07-11T07:41:55.273Z; drift since 2026-07-11T07:41:55.273Z: @managerLive, @managerDeployed",
+      "detail": "evidence voided by source drift - last observed PASS 2026-07-11T07:41:55.273Z; drift since 2026-07-11T07:41:55.273Z: @managerLive, @managerDeployed, @espDeployed",
       "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-DISLIKE-DEBUFF-BUILD (strict dislike-consequence audit: 14 domain spells, dispatch wiring, 3-domain cap, live ESP readback). Per-domain stings prove through C-FELT-FAMILY during the race sittings.",
       "drift": true
     },
@@ -194,7 +194,7 @@
       "category": "rollup",
       "title": "1.0 ship gate: every non-post-1.0 criterion passes",
       "status": "RED",
-      "detail": "2 PASS / 1 STALE / 15 RED",
+      "detail": "3 PASS / 1 STALE / 14 RED",
       "closes": "Burn the RED criteria above.",
       "drift": false
     }
