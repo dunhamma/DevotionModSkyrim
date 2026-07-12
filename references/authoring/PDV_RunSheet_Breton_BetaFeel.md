@@ -5,6 +5,14 @@ Companions: `PDV_BetaTestPacket_Breton.md`, `PDV_Phase20_ManualEvidenceLedger.js
 
 This sheet is the current Breton final-run surface. It proves the wired Hidden Art lane, confirms the remaining stack/feel gaps honestly, and embeds the Prisma checks needed for the beta pass. It does not mutate evidence ledgers.
 
+## 2026-07-12 Co-Test Addendum
+
+- Hidden Art/Magnus resonant Champion passed runtime + Active Effects: tester screenshot showed `Hidden Art - Champion` on Conjuration, Illusion, and Magicka Regeneration, and the log showed HiddenArt T3 added with no separate PatronChampion stack. Exact toast/Book-of-Days Champion wording was not separately captured.
+- Hidden Art sleep-hearth cover passed runtime: Mara event 314 landed and Julianos did not receive event 314/LAWFUL_ORDER from the sleep handler.
+- Green Way/Y'ffre dislike price passed for 365/364: 365 applied `Order sours for a while.` / `Favor Slips`; 364 applied the smaller piety loss and debug surface. A single Book of Days line across both debug dislikes is expected because the same same-day loss line de-dupes.
+- Green Way hunt event 303 is still open. It is a positive Y'ffre row and must be proved through the non-hostile animal kill/action route; `DebugFireDislike` correctly refuses it.
+- Hidden Art reached Seeker quickly because current practice counts tick once per source key per day, not because deity piety bypassed the dawn clamp. Keep this as a tuning follow-up, not a test failure.
+
 ## Proof Key
 
 - ROUTE/RUNTIME: Papyrus log marker, checker output, or numeric state movement.
@@ -177,7 +185,7 @@ Record ledger statuses only as `pending`, `evidence-recorded`, or `not-applicabl
 |---|---|---|---|
 | Hidden Art route | ROUTE/RUNTIME | | |
 | WitchcraftExposure decay | ROUTE/RUNTIME | | |
-| Stack snapshot | MANUAL | | |
+| Stack snapshot | MANUAL | PASS 2026-07-12 | Resonant Champion stack proved as `Hidden Art - Champion` Conjuration/Illusion/Magicka Regeneration; no PatronChampion double stack. |
 | Wrong-origin rejection | ROUTE/RUNTIME | | |
 | Generic-source silence | ROUTE/RUNTIME | | |
 | Survey/status clarity | MANUAL | | |

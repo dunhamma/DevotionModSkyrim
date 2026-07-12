@@ -265,22 +265,32 @@
       "creditedFrom": null
     },
     "Breton-HiddenArt|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Breton-HiddenArt",
       "class": "boon",
       "race": "Breton",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-12 co-test: resonant Hidden Art/Magnus Champion stack observed in Active Effects as Hidden Art - Champion on Conjuration, Illusion, and Magicka Regeneration. Runtime log showed HiddenArt T3 added and no separate PatronChampion stack.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md",
+        "race": "Breton",
+        "slot": "BX2",
+        "matched": "Hidden Art - Champion"
+      }
     },
     "Breton-KnightsRoad|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Breton-KnightsRoad",
       "class": "boon",
       "race": "Breton",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-12 co-test: focused Champion stack observed in Active Effects as Knight's Bulwark - Champion with Armor, Block, and Magic Resistance. Toast/Book-of-Days wording was tracked separately and not required for this felt Active Effects slot.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md",
+        "race": "Breton",
+        "slot": "B2",
+        "matched": "Knight's Bulwark - Champion"
+      }
     },
     "Breton-PatronChampion|boon": {
       "status": "pending",
@@ -301,13 +311,18 @@
       "creditedFrom": null
     },
     "CreedLoss-Breton|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "CreedLoss-Breton",
       "class": "price",
       "race": "Breton",
       "expected": "Price bar (clarified 2026-07-09). This family carries BOTH observable price effects (PDV_SPEL_CreedLoss_Breton_VowIntegrity, PDV_SPEL_CreedLoss_Breton_ExposureRupture, PDV_SPEL_CreedLoss_Breton_Excommunication, PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal) AND CSV dislike signals. One-per-family: EITHER observe one price effect in Active Effects, OR commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). The prior class-uniform \"loss-surfacing bar\" text wrongly implied the Active Effects route was unavailable.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-12 co-test: Green Way Breton Y'ffre dislike price passed via CSV dislike signals 365 and 364. Runtime log showed 365 -1.0 with OrderTradeLore Light and 364 -0.5; tester screenshot showed Active Effects `Order sours for a while.` / `Favor Slips`. One Book of Days line across both debug dislikes is expected because identical same-day loss lines de-dupe.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md",
+        "race": "Breton",
+        "slot": "B4",
+        "matched": "Y'ffre dislike 365/364"
+      }
     },
     "Daedric-Azura|boon": {
       "status": "retro-credited",

@@ -1,12 +1,20 @@
 # PDV Beta Test Packet - Breton
 
 Created: 2026-06-06
-Status: ready to run - Hidden Art book packet; Knight's Road and Green Way pending
+Status: partially proved 2026-07-12 - Hidden Art stack and Green Way dislike price recorded; Green Way hunt 303 and exact Champion toast/Book-of-Days wording still open
 Mode: console-assisted beta-feel packet
 
 This packet starts Breton beta-feel proof from the approved Hidden Art book
 source family. It does not prove Knight's Road, Green Way, vow integrity,
 DruidicStanding, or curse/Daedric rupture by itself.
+
+## 2026-07-12 Evidence Update
+
+- Hidden Art/Magnus resonant Champion: runtime + Active Effects passed. Expected visible stack is only `Hidden Art - Champion` on Conjuration, Illusion, and Magicka Regeneration; do not expect a separate PatronChampion spell on the resonant path.
+- Hidden Art sleep-hearth cover: runtime passed. Mara gets event 314; Julianos does not get sleep-driven event 314/LAWFUL_ORDER.
+- Green Way/Y'ffre 365/364 dislike price: runtime passed. 365 shows `Order sours for a while.` / `Favor Slips`; 364 applies the smaller piety loss. One Book of Days line across both debug dislikes is expected because the identical same-day loss line de-dupes.
+- Green Way hunt 303: still open. Prove through the non-hostile animal kill/action route; `DebugFireDislike` correctly reports no row because 303 is a positive like.
+- Book-read guard: partial runtime only. Lore and skill same-book repeat skips passed; spell-tome repeat, Azura/Hermaeus Mora unread-faucet behavior, and Altmer Talos Mistake non-regression still need explicit capture.
 
 ## Preflight
 
