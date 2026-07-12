@@ -2320,7 +2320,6 @@
   const renderChoicePanel = (choice) => {
     const menu = text(choice.menu, "choice");
     const options = Array.isArray(choice.options) ? choice.options : [];
-    console.log("PDV choice render: menu=" + menu + " options=" + options.length);
 
     const stale = document.getElementById("pdv-choice-overlay");
     if (stale) stale.remove();
