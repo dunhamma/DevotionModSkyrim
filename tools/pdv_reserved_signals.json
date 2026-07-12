@@ -140,5 +140,40 @@
     "reason": "Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.",
     "deferredBy": "curated-signal wiring audit",
     "date": "2026-07-06"
+  },
+  "PDV_Julianos.SIGNAL_LAWFUL_ORDER": {
+    "reason": "Orphaned 2026-07-12 by the Breton sleep-handler miswire fix (hearth-cover moved to Mara MERCY, correct per the two-axis spec). Rewire from study signals (341/342) in the Breton two-axis build, or REMOVE if Julianos study credit stays on the likes/dislikes path.",
+    "deferredBy": "main-merge dispatch-coverage sweep",
+    "date": "2026-07-12"
+  },
+  "PDV_Magnus.SIGNAL_ANCESTOR_SPINE": {
+    "reason": "Orphaned by the Breton ancestor-substrate retirement (substrate boons cleared, spine pulses no-op). Vestigial: recommend REMOVE (const + Score branch + reason copy) with the deferred ESP record deletion.",
+    "deferredBy": "main-merge dispatch-coverage sweep",
+    "date": "2026-07-12"
+  },
+  "PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING": {
+    "reason": "Curated signature lane declared+scored in the deity-signal remap but never dispatched (wired-vs-stub class). Wave 3: Altmer Syrabane detector work, or fold into quest-reaction ownership.",
+    "deferredBy": "main-merge dispatch-coverage sweep",
+    "date": "2026-07-12"
+  },
+  "PDV_Syrabane.SIGNAL_APPRENTICE_AID": {
+    "reason": "Same Syrabane signature-lane class: declared+scored, no dispatch. Wave 3.",
+    "deferredBy": "main-merge dispatch-coverage sweep",
+    "date": "2026-07-12"
+  },
+  "PDV_Syrabane.SIGNAL_CURSE_DISEASE_WARDING": {
+    "reason": "Same Syrabane signature-lane class: declared+scored, no dispatch. Wave 3.",
+    "deferredBy": "main-merge dispatch-coverage sweep",
+    "date": "2026-07-12"
+  },
+  "PDV_Syrabane.SIGNAL_ANTI_MAGE_SURVIVAL": {
+    "reason": "Same Syrabane signature-lane class: declared+scored, no dispatch. Wave 3.",
+    "deferredBy": "main-merge dispatch-coverage sweep",
+    "date": "2026-07-12"
+  },
+  "PDV_Syrabane.SIGNAL_MAGICAL_CONTAINMENT": {
+    "reason": "Same Syrabane signature-lane class: declared+scored, no dispatch. Wave 3.",
+    "deferredBy": "main-merge dispatch-coverage sweep",
+    "date": "2026-07-12"
   }
 }
