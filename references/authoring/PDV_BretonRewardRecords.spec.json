@@ -490,22 +490,211 @@
       "signature": "Covenant of the wild: strongest outdoor stamina/restoration/recovery; Champion Survey text is the V1 recognition surface. The werewolf fork is a real authored fork (Druidic Trial); betrayal drives major creed-loss and any Hircine pressure routes through the Phase 20C system."
     },
     {
-      "emphasis": "PatronChampion",
+      "emphasis": "Champion_Mara",
       "tier": "Champion",
-      "threshold": "Non-resonant patron Champion 85",
-      "gate": "non-resonant patron champion boon; active Breton patron is Champion but does not resonate with PDV_State_BretonTradition, so the practiced tradition remains capped at T2 and this single modest boon stands beside it",
-      "spellEditorId": "PDV_Bless_Breton_PatronChampion",
-      "spellProperty": "PDV_Bless_Breton_PatronChampion",
-      "displayName": "Patron's Mark - Champion",
+      "threshold": "Champion 85",
+      "gate": "unified patron champion boon; granted when the active Champion patron is Mara, regardless of tradition resonance (resonance drives presentation only). Tradition stays capped at T2 practice. Effects mirror the canonical per-deity T3 exactly.",
+      "spellEditorId": "PDV_Bless_Breton_Champion_Mara",
+      "spellProperty": "PDV_Bless_Breton_Champion_Mara",
+      "displayName": "Mara's Compassion - Champion",
       "effects": [
         {
-          "actorValue": "Health",
-          "magnitude": 10,
-          "effectName": "Maximum Health"
+          "actorValue": "Restoration",
+          "magnitude": 23,
+          "effectName": "Restoration"
+        },
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 15,
+          "effectName": "Resist Magic"
         }
       ],
-      "playerFacingText": "Your chosen patron stands beside your Breton tradition. Maximum Health +10.",
-      "signature": "Non-resonant Champion proof path: Green Way + Magnus or Knight's Road + Dibella should keep the tradition at T2 and add only this small PatronChampion spell."
+      "playerFacingText": "Mara's compassion works through you, mending and warding. Restoration +23, Resist Magic +15%.",
+      "signature": "Unified champion boon: Breton copy of the Imperial Mara T3, magnitudes verbatim. Granted to any Breton whose Champion patron is Mara."
+    },
+    {
+      "emphasis": "Champion_Arkay",
+      "tier": "Champion",
+      "threshold": "Champion 85",
+      "gate": "unified patron champion boon; granted when the active Champion patron is Arkay, regardless of tradition resonance (resonance drives presentation only). Tradition stays capped at T2 practice. Effects mirror the canonical per-deity T3 exactly.",
+      "spellEditorId": "PDV_Bless_Breton_Champion_Arkay",
+      "spellProperty": "PDV_Bless_Breton_Champion_Arkay",
+      "displayName": "Arkay's Ward - Champion",
+      "effects": [
+        {
+          "actorValue": "ResistDisease",
+          "magnitude": 27,
+          "effectName": "Disease Resistance"
+        },
+        {
+          "actorValue": "Health",
+          "magnitude": 30,
+          "effectName": "Fortify Health"
+        }
+      ],
+      "playerFacingText": "Arkay wards the cycle in you against rot and undeath. Disease Resistance +27%, Health +30.",
+      "signature": "Unified champion boon: Breton copy of the Imperial Arkay T3, magnitudes verbatim."
+    },
+    {
+      "emphasis": "Champion_Akatosh",
+      "tier": "Champion",
+      "threshold": "Champion 85",
+      "gate": "unified patron champion boon; granted when the active Champion patron is Akatosh, regardless of tradition resonance (resonance drives presentation only). Tradition stays capped at T2 practice. Effects mirror the canonical per-deity T3 exactly.",
+      "spellEditorId": "PDV_Bless_Breton_Champion_Akatosh",
+      "spellProperty": "PDV_Bless_Breton_Champion_Akatosh",
+      "displayName": "Akatosh's Endurance - Champion",
+      "effects": [
+        {
+          "actorValue": "MagickaRateMult",
+          "magnitude": 20,
+          "effectName": "Magicka Regeneration"
+        },
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 15,
+          "effectName": "Magic Resistance"
+        }
+      ],
+      "playerFacingText": "Akatosh's endurance steadies your magicka and turns hostile magic. Magicka Regeneration +20%, Magic Resistance +15%.",
+      "signature": "Unified champion boon: Breton copy of the Imperial Akatosh T3, magnitudes verbatim. RateMult regen is Requiem-inert; global Requiem pass owns conversion."
+    },
+    {
+      "emphasis": "Champion_Julianos",
+      "tier": "Champion",
+      "threshold": "Champion 85",
+      "gate": "unified patron champion boon; granted when the active Champion patron is Julianos, regardless of tradition resonance (resonance drives presentation only). Tradition stays capped at T2 practice. Effects mirror the canonical per-deity T3 exactly.",
+      "spellEditorId": "PDV_Bless_Breton_Champion_Julianos",
+      "spellProperty": "PDV_Bless_Breton_Champion_Julianos",
+      "displayName": "Julianos's Insight - Champion",
+      "effects": [
+        {
+          "actorValue": "MagickaRateMult",
+          "magnitude": 20,
+          "effectName": "Magicka Regeneration"
+        },
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 15,
+          "effectName": "Magic Resistance"
+        }
+      ],
+      "playerFacingText": "Julianos's insight sharpens your recovery and your wards. Magicka Regeneration +20%, Magic Resistance +15%.",
+      "signature": "Unified champion boon: Breton copy of the Imperial Julianos T3, magnitudes verbatim. RateMult regen is Requiem-inert."
+    },
+    {
+      "emphasis": "Champion_Kynareth",
+      "tier": "Champion",
+      "threshold": "Champion 85",
+      "gate": "unified patron champion boon; granted when the active Champion patron is Kynareth, regardless of tradition resonance (resonance drives presentation only). Tradition stays capped at T2 practice. Effects mirror the canonical per-deity T3 exactly.",
+      "spellEditorId": "PDV_Bless_Breton_Champion_Kynareth",
+      "spellProperty": "PDV_Bless_Breton_Champion_Kynareth",
+      "displayName": "Kynareth's Sky - Champion",
+      "effects": [
+        {
+          "actorValue": "StaminaRateMult",
+          "magnitude": 20,
+          "effectName": "Stamina Regeneration"
+        },
+        {
+          "actorValue": "ResistMagic",
+          "magnitude": 13,
+          "effectName": "Magic Resistance"
+        }
+      ],
+      "playerFacingText": "Kynareth's sky fills your breath and shields you. Stamina Regeneration +20%, Magic Resistance +13%.",
+      "signature": "Unified champion boon: Breton copy of the Imperial Kynareth T3, magnitudes verbatim. RateMult regen is Requiem-inert."
+    },
+    {
+      "emphasis": "Champion_Dibella",
+      "tier": "Champion",
+      "threshold": "Champion 85",
+      "gate": "unified patron champion boon; granted when the active Champion patron is Dibella, regardless of tradition resonance (resonance drives presentation only). Tradition stays capped at T2 practice. Effects mirror the canonical per-deity T3 exactly.",
+      "spellEditorId": "PDV_Bless_Breton_Champion_Dibella",
+      "spellProperty": "PDV_Bless_Breton_Champion_Dibella",
+      "displayName": "Dibella's Inspiration - Champion",
+      "effects": [
+        {
+          "actorValue": "Speechcraft",
+          "magnitude": 25,
+          "effectName": "Speech"
+        },
+        {
+          "actorValue": "MagickaRateMult",
+          "magnitude": 13,
+          "effectName": "Magicka Regeneration"
+        }
+      ],
+      "playerFacingText": "Dibella's inspiration graces your voice and your art. Speech +25, Magicka Regeneration +13%.",
+      "signature": "Unified champion boon: Breton copy of the Imperial Dibella T3, magnitudes verbatim."
+    },
+    {
+      "emphasis": "Champion_Zenithar",
+      "tier": "Champion",
+      "threshold": "Champion 85",
+      "gate": "unified patron champion boon; granted when the active Champion patron is Zenithar, regardless of tradition resonance (resonance drives presentation only). Tradition stays capped at T2 practice. Effects mirror the canonical per-deity T3 exactly.",
+      "spellEditorId": "PDV_Bless_Breton_Champion_Zenithar",
+      "spellProperty": "PDV_Bless_Breton_Champion_Zenithar",
+      "displayName": "Zenithar's Prosperity - Champion",
+      "effects": [
+        {
+          "actorValue": "CarryWeight",
+          "magnitude": 120,
+          "effectName": "Carry Weight"
+        },
+        {
+          "actorValue": "Speechcraft",
+          "magnitude": 20,
+          "effectName": "Speech"
+        }
+      ],
+      "playerFacingText": "Zenithar's prosperity rewards honest labor and fair trade. Carry Weight +120, Speech +20.",
+      "signature": "Unified champion boon: Breton copy of the Imperial Zenithar T3, magnitudes verbatim. The unlaned deity - non-resonant in every tradition - so this is his only Breton payout."
+    },
+    {
+      "emphasis": "Champion_Talos",
+      "tier": "Champion",
+      "threshold": "Champion 85",
+      "gate": "unified patron champion boon; granted when the active Champion patron is Talos, regardless of tradition resonance (resonance drives presentation only). Tradition stays capped at T2 practice. Effects mirror the canonical per-deity T3 exactly.",
+      "spellEditorId": "PDV_Bless_Breton_Champion_Talos",
+      "spellProperty": "PDV_Bless_Breton_Champion_Talos",
+      "displayName": "Talos's Triumph - Champion",
+      "effects": [
+        {
+          "actorValue": "DamageResist",
+          "magnitude": 50,
+          "effectName": "Armor"
+        },
+        {
+          "actorValue": "OneHanded",
+          "magnitude": 20,
+          "effectName": "One-Handed"
+        }
+      ],
+      "playerFacingText": "Talos's triumph hardens your guard and your sword-arm. Armor +50, One-Handed +20.",
+      "signature": "Unified champion boon: Breton copy of the Imperial Talos T3, magnitudes verbatim. Armor via DamageResist - verify against the fixed armor-points ceiling in the Requiem pass."
+    },
+    {
+      "emphasis": "Champion_Magnus",
+      "tier": "Champion",
+      "threshold": "Champion 85",
+      "gate": "unified patron champion boon; granted when the active Champion patron is Magnus, regardless of tradition resonance (resonance drives presentation only). Tradition stays capped at T2 practice. Effects mirror the canonical per-deity T3 exactly.",
+      "spellEditorId": "PDV_Bless_Breton_Champion_Magnus",
+      "spellProperty": "PDV_Bless_Breton_Champion_Magnus",
+      "displayName": "Magnus's Aperture - Champion",
+      "effects": [
+        {
+          "actorValue": "Alteration",
+          "magnitude": 25,
+          "effectName": "Alteration"
+        },
+        {
+          "actorValue": "MagickaRateMult",
+          "magnitude": 15,
+          "effectName": "Magicka Regeneration"
+        }
+      ],
+      "playerFacingText": "You see through the aperture Magnus left in the world. Alteration +25, Magicka Regeneration +15%.",
+      "signature": "Unified champion boon: Breton copy of the Altmer Magnus T3, magnitudes verbatim. RateMult regen is Requiem-inert."
     }
   ],
   "creedViolationLoss": [

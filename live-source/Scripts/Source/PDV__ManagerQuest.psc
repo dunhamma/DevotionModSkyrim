@@ -262,7 +262,20 @@ Spell Property PDV_Bless_Breton_HiddenArt_T3 Auto
 Spell Property PDV_Bless_Breton_GreenWay_T1 Auto
 Spell Property PDV_Bless_Breton_GreenWay_T2 Auto
 Spell Property PDV_Bless_Breton_GreenWay_T3 Auto
-Spell Property PDV_Bless_Breton_PatronChampion Auto
+Spell Property PDV_Bless_Breton_PatronChampion Auto ; retired 2026-07-13 (unified champion model); property kept declared+None for save-compat, no longer granted
+; Unified patron-champion boons (2026-07-13): the active Champion patron brings
+; their own signature boon regardless of tradition resonance. Stendarr reuses
+; KnightsRoad_T3, Y'ffre reuses GreenWay_T3, a Daedric Hidden Art patron reuses
+; HiddenArt_T3; the nine below are Breton copies of each deity's canonical T3.
+Spell Property PDV_Bless_Breton_Champion_Mara Auto
+Spell Property PDV_Bless_Breton_Champion_Arkay Auto
+Spell Property PDV_Bless_Breton_Champion_Akatosh Auto
+Spell Property PDV_Bless_Breton_Champion_Julianos Auto
+Spell Property PDV_Bless_Breton_Champion_Kynareth Auto
+Spell Property PDV_Bless_Breton_Champion_Dibella Auto
+Spell Property PDV_Bless_Breton_Champion_Zenithar Auto
+Spell Property PDV_Bless_Breton_Champion_Talos Auto
+Spell Property PDV_Bless_Breton_Champion_Magnus Auto
 Spell Property PDV_SPEL_Neglect_Breton Auto
 Spell Property PDV_SPEL_CreedLoss_Breton_VowIntegrity Auto
 Spell Property PDV_SPEL_CreedLoss_Breton_ExposureRupture Auto
@@ -6759,6 +6772,38 @@ Function HandleKhajiitKhenarthiCaravanHarm(String reason)
     Trace(2, "Khajiit Khenarthi caravan-harm routed (" + reason + ")")
 EndFunction
 
+String Function GetReservedSignalSurfaceName(PDV_DeityBase deity)
+    if !deity
+        return ""
+    endIf
+    if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
+        if deity == PDV_Boethiah
+            return "Boethra"
+        elseIf deity == PDV_Mephala
+            return "Mafala"
+        elseIf deity == PDV_Azura
+            return "Azurah"
+        endIf
+    endIf
+    return GetPublicDeityDisplayName(deity)
+EndFunction
+
+Function SurfaceReservedSignal(PDV_DeityBase deity, String titleText, String actionText)
+    if !deity || titleText == "" || actionText == ""
+        return
+    endIf
+    String deityName = GetReservedSignalSurfaceName(deity)
+    String bodyText = actionText
+    if deityName != ""
+        bodyText = deityName + " " + actionText
+    endIf
+    String symbolName = GetPrismaSymbolForDeity(deity)
+    SendPrismaToast(symbolName, "good", titleText, bodyText)
+    AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "favor.act", symbolName, False, 1, titleText)
+    RecordRecentDevotionEvent(bodyText)
+    RequestPanelRefresh()
+EndFunction
+
 ; Positive twin of the caravan-harm route: defending or supporting a caravan.
 ; Repeatable, so unlike the anti-creed handlers it is daily-capped on the pulse.
 Function HandleKhajiitKhenarthiCaravanAid(String reason)
@@ -6771,6 +6816,7 @@ Function HandleKhajiitKhenarthiCaravanAid(String reason)
         return
     endIf
     AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_CARAVAN_AID, None, multiplier)
+    SurfaceReservedSignal(PDV_Khenarthi, "Caravan defended", "marks the caravan road kept safe.")
     Trace(2, "Khajiit Khenarthi caravan-aid routed (" + reason + ")")
 EndFunction
 
@@ -6786,6 +6832,7 @@ Function HandleKhajiitRajhinLegendMade(String reason)
         return
     endIf
     AwardCuratedSignalScaled(PDV_Rajhin, PDV_Rajhin.SIGNAL_LEGEND_MADE, None, multiplier)
+    SurfaceReservedSignal(PDV_Rajhin, "Legend made", "marks a theft worth remembering.")
     Trace(2, "Khajiit Rajhin legend-made routed (" + reason + ")")
 EndFunction
 
@@ -6801,6 +6848,7 @@ Function HandleMephalaWebWoven(String reason)
         return
     endIf
     AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_WEB_WOVEN, None, multiplier)
+    SurfaceReservedSignal(PDV_Mephala, "Web woven", "marks a web woven in shadow.")
     Trace(2, "Mephala web-woven routed (" + reason + ")")
 EndFunction
 
@@ -6814,6 +6862,7 @@ Function HandleBoethiahHonorableDuel(String reason)
         return
     endIf
     AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_HONORABLE_DUEL, None, multiplier)
+    SurfaceReservedSignal(PDV_Boethiah, "Duel honored", "marks a trial honorably won.")
     Trace(2, "Boethiah honorable-duel routed (" + reason + ")")
 EndFunction
 
@@ -13216,10 +13265,15 @@ Function SyncBretonRewards(Actor playerRef)
     SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T1, False, "Breton Tradition T1 (retired)")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T2, False, "Breton Tradition T2 (retired)")
 
-    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_KNIGHTS_ROAD, traditionValue, PDV_Bless_Breton_KnightsRoad_T1, PDV_Bless_Breton_KnightsRoad_T2, PDV_Bless_Breton_KnightsRoad_T3, "KnightsRoad")
-    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_HIDDEN_ART, traditionValue, PDV_Bless_Breton_HiddenArt_T1, PDV_Bless_Breton_HiddenArt_T2, PDV_Bless_Breton_HiddenArt_T3, "HiddenArt")
-    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_GREEN_WAY, traditionValue, PDV_Bless_Breton_GreenWay_T1, PDV_Bless_Breton_GreenWay_T2, PDV_Bless_Breton_GreenWay_T3, "GreenWay")
-    SyncBretonPatronChampionReward(playerRef, isBreton, traditionValue)
+    ; Unified model (2026-07-13): the tradition family grants T1/T2 practice only.
+    ; The former T3 slots (KnightsRoad_T3 / GreenWay_T3 / HiddenArt_T3) are now
+    ; patron-champion boons owned solely by SyncBretonChampionBoon, so the family
+    ; sync must not touch them (else it would strip a boon the champion sync just
+    ; granted - the reused-spell cross-lane strip, within Breton).
+    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_KNIGHTS_ROAD, traditionValue, PDV_Bless_Breton_KnightsRoad_T1, PDV_Bless_Breton_KnightsRoad_T2, "KnightsRoad")
+    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_HIDDEN_ART, traditionValue, PDV_Bless_Breton_HiddenArt_T1, PDV_Bless_Breton_HiddenArt_T2, "HiddenArt")
+    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_GREEN_WAY, traditionValue, PDV_Bless_Breton_GreenWay_T1, PDV_Bless_Breton_GreenWay_T2, "GreenWay")
+    SyncBretonChampionBoon(playerRef, isBreton, traditionValue)
     SyncBretonKnightlyVowCreedLossSpells(isBreton && traditionValue == BRETON_TRADITION_KNIGHTS_ROAD)
     SyncBretonWitchcraftExposureRuptureSpell(isBreton)
     SyncBretonDruidicForkBetrayalSpell(isBreton && GetBretonDruidicForkValue() == BRETON_DRUIDIC_FORK_BETRAYED)
@@ -13236,7 +13290,10 @@ Function SyncBretonAncestorSubstrate(Actor playerRef, Bool isBreton)
     PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
 EndFunction
 
-Function SyncBretonTraditionRewardFamily(Actor playerRef, Int thisTradition, Int activeTradition, Spell t1, Spell t2, Spell t3, String label)
+; Unified model (2026-07-13): the tradition family grants T1/T2 practice tiers
+; only. Champion is a patron property now (SyncBretonChampionBoon), not a
+; tradition tier, so this no longer manages a T3 slot.
+Function SyncBretonTraditionRewardFamily(Actor playerRef, Int thisTradition, Int activeTradition, Spell t1, Spell t2, String label)
     Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_BRETON && thisTradition == activeTradition
     if thisTradition == BRETON_TRADITION_HIDDEN_ART && StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure") >= 100
         isActive = False
@@ -13254,47 +13311,114 @@ Function SyncBretonTraditionRewardFamily(Actor playerRef, Int thisTradition, Int
 
     Bool hadT1Spell = HasRewardSpell(playerRef, t1)
     Bool hadT2Spell = HasRewardSpell(playerRef, t2)
-    Bool hadT3Spell = HasRewardSpell(playerRef, t3)
     Bool wantsT1Spell = isActive && activeTier == TIER_SEEKER
-    Bool wantsT2Spell = isActive && activeTier == TIER_DEVOTED
-    Bool wantsT3Spell = isActive && activeTier >= TIER_CHAMPION
+    Bool wantsT2Spell = isActive && activeTier >= TIER_DEVOTED
     SyncRaceRewardSpell(playerRef, t1, wantsT1Spell, "Breton " + label + " T1")
     SyncRaceRewardSpell(playerRef, t2, wantsT2Spell, "Breton " + label + " T2")
-    SyncRaceRewardSpell(playerRef, t3, wantsT3Spell, "Breton " + label + " T3")
     MaybeShowBretonTraditionRewardPresentation(playerRef, t1, hadT1Spell, wantsT1Spell, presentationDeity, label, TIER_SEEKER)
     MaybeShowBretonTraditionRewardPresentation(playerRef, t2, hadT2Spell, wantsT2Spell, presentationDeity, label, TIER_DEVOTED)
-    MaybeShowBretonTraditionRewardPresentation(playerRef, t3, hadT3Spell, wantsT3Spell, presentationDeity, label, TIER_CHAMPION)
 EndFunction
 
-Function SyncBretonPatronChampionReward(Actor playerRef, Bool isBreton, Int traditionValue)
-    Bool hadSpell = HasRewardSpell(playerRef, PDV_Bless_Breton_PatronChampion)
-    Bool wantsSpell = isBreton && IsBretonNonResonantPatronChampion(traditionValue)
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_PatronChampion, wantsSpell, "Breton Patron Champion")
-    MaybeShowBretonPatronChampionPresentation(playerRef, hadSpell, wantsSpell)
+; Unified model (2026-07-13): the active Champion patron brings their OWN
+; champion boon, resonant or not. Exactly one is active at a time; every other
+; Breton champion boon strips. Resonance selects the presentation line only.
+Function SyncBretonChampionBoon(Actor playerRef, Bool isBreton, Int traditionValue)
+    Spell wantSpell = None
+    if isBreton && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity && GetTier(_activeDeity) >= TIER_CHAMPION
+        wantSpell = GetBretonPatronChampionBoon(_activeDeity, traditionValue)
+    endIf
+
+    Bool hadWanted = wantSpell && HasRewardSpell(playerRef, wantSpell)
+    SyncBretonChampionBoonExclusive(playerRef, wantSpell)
+    MaybeShowBretonChampionBoonPresentation(playerRef, wantSpell, hadWanted, traditionValue)
 EndFunction
 
-Function MaybeShowBretonPatronChampionPresentation(Actor playerRef, Bool hadSpell, Bool wantsSpell)
+; Grants wantSpell and strips every other Breton champion boon. Stendarr/Y'ffre/
+; Daedric reuse the former tradition-T3 records; the nine below are the authored
+; per-deity copies. SyncRaceRewardSpell no-ops on a None property, so an unbuilt
+; record is safe.
+Function SyncBretonChampionBoonExclusive(Actor playerRef, Spell wantSpell)
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_KnightsRoad_T3, wantSpell == PDV_Bless_Breton_KnightsRoad_T3, "Breton Champion Stendarr")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_GreenWay_T3, wantSpell == PDV_Bless_Breton_GreenWay_T3, "Breton Champion Yffre")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_HiddenArt_T3, wantSpell == PDV_Bless_Breton_HiddenArt_T3, "Breton Champion HiddenArt")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Mara, wantSpell == PDV_Bless_Breton_Champion_Mara, "Breton Champion Mara")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Arkay, wantSpell == PDV_Bless_Breton_Champion_Arkay, "Breton Champion Arkay")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Akatosh, wantSpell == PDV_Bless_Breton_Champion_Akatosh, "Breton Champion Akatosh")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Julianos, wantSpell == PDV_Bless_Breton_Champion_Julianos, "Breton Champion Julianos")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Kynareth, wantSpell == PDV_Bless_Breton_Champion_Kynareth, "Breton Champion Kynareth")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Dibella, wantSpell == PDV_Bless_Breton_Champion_Dibella, "Breton Champion Dibella")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Zenithar, wantSpell == PDV_Bless_Breton_Champion_Zenithar, "Breton Champion Zenithar")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Talos, wantSpell == PDV_Bless_Breton_Champion_Talos, "Breton Champion Talos")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Magnus, wantSpell == PDV_Bless_Breton_Champion_Magnus, "Breton Champion Magnus")
+EndFunction
+
+; Maps an active Champion patron to their Breton champion boon. Stendarr and
+; Y'ffre reuse the tradition capstones they always were; a Daedric Hidden Art
+; patron gets the occult practitioner cap (the prince's own reward flows through
+; the 20C pact); the rest get their authored per-deity copy.
+Spell Function GetBretonPatronChampionBoon(PDV_DeityBase deity, Int traditionValue)
+    if !deity
+        return None
+    endIf
+    if deity == PDV_Stendarr
+        return PDV_Bless_Breton_KnightsRoad_T3
+    elseIf deity == PDV_Yffre
+        return PDV_Bless_Breton_GreenWay_T3
+    elseIf deity == PDV_Mara
+        return PDV_Bless_Breton_Champion_Mara
+    elseIf deity == PDV_Arkay
+        return PDV_Bless_Breton_Champion_Arkay
+    elseIf deity == PDV_Akatosh
+        return PDV_Bless_Breton_Champion_Akatosh
+    elseIf deity == PDV_Julianos
+        return PDV_Bless_Breton_Champion_Julianos
+    elseIf deity == PDV_Kynareth
+        return PDV_Bless_Breton_Champion_Kynareth
+    elseIf deity == PDV_Dibella
+        return PDV_Bless_Breton_Champion_Dibella
+    elseIf deity == PDV_Zenithar
+        return PDV_Bless_Breton_Champion_Zenithar
+    elseIf deity == PDV_Talos
+        return PDV_Bless_Breton_Champion_Talos
+    elseIf deity == PDV_Magnus
+        return PDV_Bless_Breton_Champion_Magnus
+    endIf
+
+    PDV_DaedricPathBase path = deity as PDV_DaedricPathBase
+    if path
+        return PDV_Bless_Breton_HiddenArt_T3
+    endIf
+    return None
+EndFunction
+
+Function MaybeShowBretonChampionBoonPresentation(Actor playerRef, Spell wantSpell, Bool hadWanted, Int traditionValue)
     if IsRaceSetupQuietPresentationActive()
         return
     endIf
-    if !playerRef || !PDV_Bless_Breton_PatronChampion || !wantsSpell || !playerRef.HasSpell(PDV_Bless_Breton_PatronChampion)
-        return
-    endIf
-    if hadSpell && StorageUtil.GetIntValue(None, "PDV.Breton.PatronChampionNoticeShown") == 1
-        return
-    endIf
-    if !_activeDeity
+    if !playerRef || !wantSpell || !_activeDeity || !playerRef.HasSpell(wantSpell)
         return
     endIf
 
-    StorageUtil.SetIntValue(None, "PDV.Breton.PatronChampionNoticeShown", 1)
     String deityName = GetPublicDeityDisplayName(_activeDeity)
+    String shownKey = "PDV.Breton.ChampionBoonNoticeShown." + deityName
+    if hadWanted && StorageUtil.GetIntValue(None, shownKey) == 1
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, shownKey, 1)
     String traditionLabel = GetBretonTraditionLabel()
     String symbolName = GetPrismaSymbolForDeity(_activeDeity)
-    String line = deityName + " names you Champion. The " + traditionLabel + " remains your practice, and your patron's mark settles beside it."
-    SendPrismaToast(symbolName, "good", "A patron's mark", line)
-    AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, True, TIER_CHAMPION, "A patron's mark")
-    Trace(1, "Breton non-resonant Patron Champion presentation shown: " + deityName + " / " + traditionLabel)
+    String titleText = deityName + " names you Champion"
+    String line = deityName + " names you Champion. The " + traditionLabel + " remains your practice, and your patron's mark stands beside it."
+    if IsBretonResonantPatronChampion(traditionValue)
+        line = deityName + " names you Champion through the " + traditionLabel + "."
+    endIf
+    if NotifyTierUp(_activeDeity, TIER_CHAMPION)
+        Trace(2, "Breton champion boon marked generic tier guard: " + deityName)
+    endIf
+    SendPrismaToast(symbolName, "good", titleText, line)
+    AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, True, TIER_CHAMPION, titleText)
+    Trace(1, "Breton champion boon presentation shown: " + deityName + " / " + traditionLabel)
 EndFunction
 
 Function MaybeShowBretonTraditionRewardPresentation(Actor playerRef, Spell rewardSpell, Bool hadSpell, Bool wantsSpell, PDV_DeityBase deity, String traditionLabel, Int tierValue)
@@ -13342,10 +13466,10 @@ EndFunction
 ; Breton two-axis model: tradition practice earns T1/T2 by count; an active
 ; Champion patron only lifts the tradition to T3 if that patron resonates with
 ; the chosen tradition. Non-resonant Champion patrons grant PatronChampion.
+; Unified model (2026-07-13): the tradition tier is the PRACTICE tier and caps at
+; Devoted (T2). Champion is a patron property (SyncBretonChampionBoon), no longer
+; a tradition tier, so the old resonant->CHAMPION shortcut is gone.
 Int Function GetBretonTraditionTier(Int traditionValue)
-    if IsBretonResonantPatronChampion(traditionValue)
-        return TIER_CHAMPION
-    endIf
     return GetBretonPracticeTier(traditionValue)
 EndFunction
 
