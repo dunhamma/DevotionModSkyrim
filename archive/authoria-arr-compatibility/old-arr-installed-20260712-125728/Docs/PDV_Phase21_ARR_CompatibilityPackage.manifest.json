@@ -1,0 +1,147 @@
+{
+  "schema": "pdv.phase21.authoria-arr-compat-package.v1",
+  "status": "trusted-tester-package-readback-pass-runtime-pending",
+  "target": {
+    "targetId": "ARR",
+    "listName": "Authoria - Requiem Reforged",
+    "priority": "P0",
+    "mo2Root": "D:\\Wabbajack\\modlists\\ARR",
+    "profile": "Authoria - Requiem Reforged - Main Profile"
+  },
+  "supportBoundary": {
+    "publicSupportClaim": false,
+    "releaseGate": "1.0 gate requires accepted Authoria integration/test package.",
+    "handoff": "references/authoring/PDV_Phase21_ARR_AuthorHandoff.md"
+  },
+  "profileState": {
+    "backupDir": "D:\\Wabbajack\\modlists\\ARR\\profiles\\Authoria - Requiem Reforged - Main Profile\\pdv-authoria-backups",
+    "backupStamp": "20260614-224145",
+    "localTestMod": "D:\\Wabbajack\\modlists\\ARR\\mods\\Devotion - PlayerDevotion Local Test",
+    "localTestTarget": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion",
+    "pdvPlugin": "Devotion.esp",
+    "pdvPlacement": "active before Requiem for the Indifferent.esp"
+  },
+  "archonRemovalSet": {
+    "status": "local-profile-disabled",
+    "count": 15,
+    "plugins": [
+      "Archon.esp",
+      "Archon - Vigilant.esp",
+      "Archon - BDS.esp",
+      "Archon - Mandra Shrines.esp",
+      "Archon - Wyrmstooth.esp",
+      "Archon - HOHQE.esp",
+      "Archon - TG Alt Endings.esp",
+      "Archon - TOCQE.esp",
+      "Archon - TWDQE.esp",
+      "Archon - Markarth Entrance and Farm Overhaul.esp",
+      "Archon - Lux Via.esp",
+      "Lux - Archon.esp",
+      "Lux - Archon - Mandra Shrines.esp",
+      "Authoria - Master Patch - Archon.esp",
+      "Authoria - Papyrus - Missing Properties - Archon Fix.esp"
+    ],
+    "note": "The earlier dossier text said 16, but the table and live profile resolve to 15 active Archon-family plugins."
+  },
+  "shrineReplacement": {
+    "status": "local-readback-pass",
+    "policy": "PDV framework owns cure-only shrine SPEL overrides; no global shrine ACTI/script replacement.",
+    "spellTargets": [
+      "0FB988:Skyrim.esm",
+      "0FB994:Skyrim.esm",
+      "0FB995:Skyrim.esm",
+      "0FB996:Skyrim.esm",
+      "0FB997:Skyrim.esm",
+      "0FB998:Skyrim.esm",
+      "10E8AE:Skyrim.esm",
+      "0FB999:Skyrim.esm",
+      "0FB99A:Skyrim.esm",
+      "0FB99B:Skyrim.esm",
+      "011360:Dawnguard.esm",
+      "03BCFB:Dragonborn.esm",
+      "03BCFC:Dragonborn.esm",
+      "03BCFD:Dragonborn.esm"
+    ],
+    "readback": {
+      "winner": "Devotion.esp",
+      "archonState": "inactive",
+      "requiemState": "middle-layer input",
+      "goodDaedraCureEffect": "071554:Devotion.esp",
+      "goodDaedraRouteScript": "PDV_DunmerShrinePrayerEffect"
+    }
+  },
+  "compatPatchPlugin": {
+    "plannedName": "PDV_AuthoriaARR_Compatibility.esp",
+    "emitted": true,
+    "reason": "No additional ARR-specific record override is required for the proven cure-only shrine replacement slice after Archon removal and PDV framework activation. The current trusted-tester add-on separately emits PDV_AuthoriaARR_Compatibility.esp for 11 shrine-prayer ACTIs plus a BOS swap file, loaded after Devotion.esp.",
+    "packagePath": "dist/PDV_AuthoriaARR_Compatibility/PDV_AuthoriaARR_Compatibility.esp",
+    "bosSwapPath": "dist/PDV_AuthoriaARR_Compatibility/PDV_AuthoriaARR_ShrinePrayer_SWAP.ini"
+  },
+  "extensionChannel": {
+    "status": "machine-validated-runtime-pending",
+    "purpose": "Second quest-reaction matrix channel adding devotion hooks from the list's own content (new-lands + CC), separate from and leaving unchanged the core matrix.",
+    "loader": "Generic second-channel loader in PDV_PlayerEvents.psc + PDV__ManagerQuest.psc; loads PDV_QuestReactionMatrix_ARR when present, no-op when absent; both compile 0/0; core matrix and core --check unchanged.",
+    "data": {
+      "source": "references/authoring/PDV_QuestReactionMatrix_ARR.csv",
+      "runtimeJson": "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR.json",
+      "cells": 24,
+      "questKeys": 22,
+      "watchedQuests": 20,
+      "faucetActs": 24,
+      "content": ["Vigilant", "Glenmoril", "Unslaad", "Olenveld", "ForgottenCity", "SEC Saints & Seducers", "DAc0da"],
+      "promotedToCore": "Gray Cowl CC + House of Horrors QE + The Only Cure QE (6 cells) moved to the core matrix via Tranche6 (equity-audit PASS); no longer in this channel."
+    },
+    "machineProof": "node tools/pdv_quest_matrix_compile.mjs --matrix references/authoring/PDV_QuestReactionMatrix_ARR.csv --output <ARR.json> --check = PASS (24 cells / 22 keys / 20 quests / 24 faucet acts)",
+    "runtimeRunbook": "references/vanilla-gameplay/compatibility/PDV_Phase21_ARR_SmokeRunbook.md",
+    "extensionMap": "references/vanilla-gameplay/compatibility/PDV_Phase21_ARR_ExtensionMap.md",
+    "runtimeVerifyCells": 5,
+    "held": [
+      "DAc0da Pan-Argonia ending (zDcdMqArgoEnd) - ambiguous bad-ending valence + uncertain quest-ID mapping; deferred."
+    ],
+    "done": [
+      "Core promotion of the QE + Gray Cowl hooks to the core matrix via Tranche6 (equity-audit PASS).",
+      "DAc0da Worm Cult (+Arkay) and Numidium (+Akatosh) cells authored to the channel via web research."
+    ]
+  },
+  "deferredSlices": [
+    {
+      "id": "arr-daedric-shrine-acti-map",
+      "status": "superseded-by-shrineprayer-bos-swap",
+      "reason": "Definitive 2026-06-15 scan: the man_DaedricShrines family is STAT-based (mesh/statue replacers), not ACTI. Zero of the 16 Princes have a clean route anchor; the only ACTIs (Nocturnal x2) carry TempleBlessingScript, which PDV must not replace. Jyggalag/Sithis/Kynareth/Mara are STAT-only; Mehrunes Dagon is worldspace-placement only. A shrine-prayer adapter would require PDV to place its own invisible marker ACTIs/trigger volumes at shrine cell positions (new ESP + placement + runtime) OR a location-trigger hook (new PDV_FLST_HolySites + manager handler) - both ESP/runtime design decisions, held for review. No clean data-only adapter exists. Confirmed by a placed-reference trace: only the two Nocturnal activators are clickable (both TempleBlessingScript->AltarNocturnalSpell 10E8AE, already covered by the shrine-blessing manifest); the other 15 Princes place only decorative STAT meshes with no ACTI/script/spell. SUPERSEDED 2026-06-15: a Base Object Swapper STAT->ACTI base-swap (PDV_Phase21_ARR_ShrinePrayer) makes the statues clickable WITHOUT a native ACTI - 11 Prince prayer Activators built in dist/PDV_AuthoriaARR_Compatibility. The 'no clean adapter' conclusion applied only to overriding the man_ records in place; the swap sidesteps it. Remaining: Kynareth/Mara Aedric prayer variant + the location-trigger half for new-land temples."
+    },
+    {
+      "id": "author-runtime-smoke",
+      "status": "pending",
+      "reason": "Local readback is not runtime/manual proof or Authoria maintainer acceptance."
+    },
+    {
+      "id": "papyrus-release-hardening",
+      "status": "pending",
+      "evidence": "references/authoring/PDV_Phase21_ARR_PapyrusOptimizationReview.md",
+      "reason": "Optimization review found no broken ARR shrine contract, but pre-existing ManagerQuest/PlayerEvents/DaedricPathBase suboptimal patterns should be fixed or waived before ready/public support."
+    }
+  ],
+  "verificationCommands": [
+    "housecarl_load_order_status lookup=Devotion.esp",
+    "housecarl_load_order_status lookup=Archon.esp",
+    "housecarl_batch_record_detail shrine spell targets conflict_tree=true",
+    "dotnet run --project .\\tools\\pdv-shrine-blessing-author -- --check",
+    "dotnet run --project .\\tools\\pdv-arr-shrineprayer-author -- --check",
+    "node .\\tools\\pdv_verify.mjs --json",
+    "node .\\tools\\pdv_patch.mjs validate",
+    "node .\\tools\\pdv_patch.mjs plan --json"
+  ],
+  "smokeRequirement": {
+    "status": "pending",
+    "checks": [
+      "ARR startup",
+      "MCM/status open",
+      "Divine/Talos/Nocturnal/Auriel shrine cure-only behavior",
+      "Azura/Boethiah/Mephala altar route through PDV_DunmerShrinePrayerEffect",
+      "one non-shrine devotion action",
+      "dawn tick",
+      "save/reload",
+      "Papyrus log clean"
+    ]
+  }
+}

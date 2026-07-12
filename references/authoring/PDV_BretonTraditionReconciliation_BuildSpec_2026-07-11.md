@@ -1,6 +1,7 @@
 # Breton Tradition Reconciliation + Green Way Enrichment - Build Spec (2026-07-11)
 
-**Status:** design-locked, pending sign-off then gated ESP write.
+**Status:** Part 1 implemented and compiled; runtime/manual proof pending. Part 2+
+Green Way enrichment remains deferred.
 **Owner decisions captured this session; do not re-open without owner.**
 
 Purpose: fix three linked problems found this session, all on Breton:
@@ -65,9 +66,12 @@ lights from tradition breadth; focused phase (T3) from a committed patron.
 4. `GetFirstTierRaceRewardSpellForOrigin` ([14239]): return the ACTIVE
    tradition's T1 (KnightsRoad_T1 / HiddenArt_T1 / GreenWay_T1) instead of the
    generic Tradition_T1.
-5. Verify `PDV_BretonAncestorSubstrate` ([13127]) is not a live second always-on
-   boon (design ref says Breton has no substrate); if inert, leave; if live,
-   flag to owner - it affects the "one family" budget claim.
+5. RESOLVED 2026-07-12: `PDV_BretonAncestorSubstrate` was still a live second
+   always-on boon. Runtime hotfix keeps the legacy record/property for save and
+   verifier compatibility, but `SyncBretonAncestorSubstrate`,
+   `AwardBretonAncestorSpinePulse`, and `RunDawnRefreshBretonAncestor` now clear
+   legacy boons instead of recomputing/granting them. Survey/status copy now
+   omits the mixed-inheritance layer. ESP record deletion remains deferred.
 
 Records/spec: mark `PDV_Bless_Breton_Tradition_T1/T2` deprecated in
 `PDV_BretonRewardRecords.spec.json` (stop granting; defer ESP record deletion).

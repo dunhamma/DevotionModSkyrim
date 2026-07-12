@@ -4976,10 +4976,13 @@ Function HandleBretonSleepEvents(Actor playerRef, String reason)
     endIf
 
     AwardBretonAncestorSpinePulse(multiplier, "sleep_dream_" + reason)
-    if GetBretonTraditionValue() == BRETON_TRADITION_HIDDEN_ART && PDV_Julianos
+    if GetBretonTraditionValue() != BRETON_TRADITION_HIDDEN_ART
+        return
+    endIf
+    if PDV_Julianos
         AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_LAWFUL_ORDER, None, multiplier)
     endIf
-    ShowP2BookNotice("po3_book_breton_sleep_dream", "Inherited dream", "The old mixed blood wards itself in sleep.")
+    ShowP2BookNotice("po3_book_breton_sleep_reflection", "Hidden reflection", "Rest gives the Hidden Art a lawful shape.")
 EndFunction
 
 ; Mara's Mercy scripted heal-on-rest was retired 2026-07-06. It was the second
@@ -10498,7 +10501,7 @@ String Function BuildModeChangeLine(String modeLabel)
     elseIf originRace == ORIGIN_IMPERIAL
         return BuildImperialConcordatBookLine(modeLabel)
     elseIf originRace == ORIGIN_BRETON
-        return "The old mixed inheritance turns under your chosen road: " + modeLabel + "."
+        return "Your Breton road turns under the chosen tradition: " + modeLabel + "."
     endIf
     return "Your path turns. You walk now as: " + modeLabel + "."
 EndFunction
@@ -13159,10 +13162,9 @@ Function SyncBretonAncestorSubstrate(Actor playerRef, Bool isBreton)
     endIf
 
     if isBreton
-        PDV_BretonAncestorSubstrate.RecomputeSubstrateTier()
-    else
-        PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
+        Trace(2, "Breton ancestor substrate retired; clearing legacy boons.")
     endIf
+    PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
 EndFunction
 
 Function SyncBretonTraditionRewardFamily(Actor playerRef, Int thisTradition, Int activeTradition, Spell t1, Spell t2, Spell t3, String label)
@@ -13181,12 +13183,51 @@ Function SyncBretonTraditionRewardFamily(Actor playerRef, Int thisTradition, Int
         presentationDeity = GetBretonTraditionPresentationDeity(thisTradition)
     endIf
 
-    Bool hadChampionSpell = HasRewardSpell(playerRef, t3)
-    Bool wantsChampionSpell = isActive && activeTier >= TIER_CHAMPION
-    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == TIER_SEEKER, "Breton " + label + " T1")
-    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == TIER_DEVOTED, "Breton " + label + " T2")
-    SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Breton " + label + " T3")
-    MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, presentationDeity, "Breton " + label)
+    Bool hadT1Spell = HasRewardSpell(playerRef, t1)
+    Bool hadT2Spell = HasRewardSpell(playerRef, t2)
+    Bool hadT3Spell = HasRewardSpell(playerRef, t3)
+    Bool wantsT1Spell = isActive && activeTier == TIER_SEEKER
+    Bool wantsT2Spell = isActive && activeTier == TIER_DEVOTED
+    Bool wantsT3Spell = isActive && activeTier >= TIER_CHAMPION
+    SyncRaceRewardSpell(playerRef, t1, wantsT1Spell, "Breton " + label + " T1")
+    SyncRaceRewardSpell(playerRef, t2, wantsT2Spell, "Breton " + label + " T2")
+    SyncRaceRewardSpell(playerRef, t3, wantsT3Spell, "Breton " + label + " T3")
+    MaybeShowBretonTraditionRewardPresentation(playerRef, t1, hadT1Spell, wantsT1Spell, presentationDeity, label, TIER_SEEKER)
+    MaybeShowBretonTraditionRewardPresentation(playerRef, t2, hadT2Spell, wantsT2Spell, presentationDeity, label, TIER_DEVOTED)
+    MaybeShowBretonTraditionRewardPresentation(playerRef, t3, hadT3Spell, wantsT3Spell, presentationDeity, label, TIER_CHAMPION)
+EndFunction
+
+Function MaybeShowBretonTraditionRewardPresentation(Actor playerRef, Spell rewardSpell, Bool hadSpell, Bool wantsSpell, PDV_DeityBase deity, String traditionLabel, Int tierValue)
+    if IsRaceSetupQuietPresentationActive()
+        return
+    endIf
+    if !playerRef || !rewardSpell || !wantsSpell || !playerRef.HasSpell(rewardSpell)
+        return
+    endIf
+
+    String displayLabel = GetBretonTraditionRewardDisplayLabel(traditionLabel)
+    String shownKey = "PDV.Breton.TraditionRewardNoticeShown." + displayLabel + "." + tierValue
+    if hadSpell && StorageUtil.GetIntValue(None, shownKey) == 1
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, shownKey, 1)
+    String tierLabel = GetTierStandingLabel(tierValue)
+    String symbolName = GetPrismaSymbolForDeity(deity)
+    String line = "The " + displayLabel + " names you " + tierLabel + "."
+    SendPrismaToast(symbolName, "good", displayLabel + " deepens", line)
+    AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, tierValue >= TIER_CHAMPION, tierValue, displayLabel + " deepens")
+EndFunction
+
+String Function GetBretonTraditionRewardDisplayLabel(String label)
+    if label == "KnightsRoad"
+        return "Knight's Road"
+    elseIf label == "HiddenArt"
+        return "Hidden Art"
+    elseIf label == "GreenWay"
+        return "Green Way"
+    endIf
+    return label
 EndFunction
 
 ; v3 12.5 + race sheet 10.3: the tradition IS the reward lane. Broad worship
@@ -17965,27 +18006,15 @@ Bool Function ShouldBretonDruidicStandingFray()
 EndFunction
 
 Function AwardBretonAncestorSpinePulse(Float multiplier, String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON || multiplier <= 0.0
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
         return
     endIf
 
-    Int tierBefore = 0
     if PDV_BretonAncestorSubstrate
-        tierBefore = PDV_BretonAncestorSubstrate.GetSubstrateTier()
-        PDV_BretonAncestorSubstrate.RecordAncestralResistanceScaled(multiplier, reason)
-        Int tierAfter = PDV_BretonAncestorSubstrate.GetSubstrateTier()
-        SendPrismaSubstrateProgress("breton-ancestor", tierBefore, tierAfter, multiplier, "The mixed inheritance answers.", "magnus", GetBretonAncestorLayerLabel())
+        PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
     endIf
 
-    if PDV_Magnus
-        AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_ANCESTOR_SPINE, None, multiplier)
-    endIf
-
-    StorageUtil.AdjustFloatValue(None, "PDV.Breton.AncestralStanding", multiplier)
-    StorageUtil.AdjustIntValue(None, "PDV.Breton.AncestorSpineSourceCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Breton.LastAncestorSpineReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Breton.LastAncestorSpineTime", Utility.GetCurrentGameTime())
-    Trace(2, "Breton ancestor spine routed with multiplier " + multiplier)
+    Trace(2, "Retired Breton ancestor spine signal ignored: " + reason + " x" + multiplier)
 EndFunction
 
 Function RunDawnRefreshBretonAncestor()
@@ -17993,8 +18022,7 @@ Function RunDawnRefreshBretonAncestor()
         return
     endIf
 
-    Bool curseActive = StorageUtil.GetIntValue(None, "PDV.Curse.Breton.RestorationState") > 0
-    PDV_BretonAncestorSubstrate.ProcessAncestralDawn(curseActive, "dawn")
+    PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
 EndFunction
 
 Function HandleBretonKnightlyVow(String reason)
@@ -21248,9 +21276,6 @@ String Function GetBretonSurveyText()
     Int tradition = StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1)
     if tradition < 0
         String unchosenText = "You have not yet chosen a tradition. Breton faith takes its shape once you walk the Knight's Road, the Hidden Art, or the Green Way. Standing: " + band + "."
-        if PDV_BretonAncestorSubstrate
-            unchosenText = unchosenText + " Your mixed inheritance is " + GetBretonAncestorLayerLabel() + "."
-        endIf
         return unchosenText
     endIf
 
@@ -21311,10 +21336,6 @@ String Function GetBretonSurveyText()
         text = text + " A curse sits on you, and your tradition will not hold until it is restored."
     endIf
 
-    if PDV_BretonAncestorSubstrate
-        text = text + " Your mixed inheritance is " + GetBretonAncestorLayerLabel() + "."
-    endIf
-
     return text
 EndFunction
 
@@ -21368,10 +21389,10 @@ EndFunction
 
 String Function GetBretonAncestorLayerLabel()
     if !PDV_BretonAncestorSubstrate
-        return "latent"
+        return "retired"
     endIf
 
-    return PDV_BretonAncestorSubstrate.GetAncestralPostureLabel()
+    return "retired"
 EndFunction
 
 String Function GetBretonCursePostureLabel()
@@ -21792,10 +21813,10 @@ EndFunction
 
 String Function GetBretonAncestorSummary()
     if !PDV_BretonAncestorSubstrate
-        return "missing"
+        return "retired"
     endIf
 
-    return PDV_BretonAncestorSubstrate.GetPilotSummary()
+    return "retired"
 EndFunction
 
 String Function GetOrcSummary()

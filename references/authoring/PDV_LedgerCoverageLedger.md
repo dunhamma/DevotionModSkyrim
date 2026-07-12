@@ -128,7 +128,7 @@ piety channel (e.g. record a driver inside SetStoredPiety for Daedric paths).
 - PDV__ManagerQuest.psc:13064 `EmitHistVoidOverreachMinus` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_VOID_OVERREACH, None, multiplier)
 - PDV__ManagerQuest.psc:14501 `HandleTalosBetrayal` [AwardPiety] -- AwardPiety(PDV_Talos, pietyLoss, reason)
 - PDV__ManagerQuest.psc:15164 `DebugAcceptPendingCommitment` [AwardPiety] -- AwardPiety(pendingDeity, carryAmount, "commitment_carryover")
-- PDV__ManagerQuest.psc:17172 `AwardBretonAncestorSpinePulse` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+- RETIRED 2026-07-12: `AwardBretonAncestorSpinePulse` no longer writes a Magnus ledger driver; it only clears legacy Breton ancestor-substrate boons and traces the retired signal.
 - PDV__ManagerQuest.psc:17207 `HandleBretonKnightlyVow` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Stendarr, PDV_Stendarr.SIGNAL_MERCY, None, multiplier)
 - PDV__ManagerQuest.psc:17232 `HandleBretonHiddenArtExposure` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
 - PDV__ManagerQuest.psc:17237 `HandleBretonHiddenArtExposure` [AwardCuratedSignalScaled] -- AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
@@ -225,4 +225,3 @@ a design check, not auto-counted as an earn bypass.
 - PDV_Substrate_NordAncestor.psc:27 `RecordAncestorStandingScaled`
 - PDV_Substrate_NordAncestor.psc:41 `RecordAncestralRestScaled`
 - PDV_Substrate_NordAncestor.psc:55 `RecordHearthReturnScaled`
-

@@ -164,7 +164,7 @@
       "category": "evidence-gate",
       "title": "One-per-family in-game felt proof recorded for every lane x effect-class family",
       "status": "RED",
-      "detail": "72/150 slots open: Alkosh|price, Altmer-AuriEl|boon, Altmer-CurseState|curse, Altmer-Magnus|boon, Altmer-Orthodox|boon, Altmer-Syrabane|boon, Altmer-Trinimac|boon, Altmer-VampireExiledPath|curse, +64 more",
+      "detail": "71/150 slots open: Alkosh|price, Altmer-AuriEl|boon, Altmer-CurseState|curse, Altmer-Magnus|boon, Altmer-Orthodox|boon, Altmer-Syrabane|boon, Altmer-Trinimac|boon, Altmer-VampireExiledPath|curse, +63 more",
       "closes": "Play one member of each pending family in game and record the evidence slot (or retro-credit from an existing packet where the mapping is unambiguous).",
       "drift": false
     },

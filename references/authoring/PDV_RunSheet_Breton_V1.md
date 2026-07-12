@@ -54,7 +54,7 @@ regardless of load order). Only the preflight changes:
 - **See:** the Breton lines read like narration -- the **tradition** you walk (Knight's Road vow / Hidden Art
   cover / Green Way covenant), plus a **vow / exposure / druidic-standing** line, your **standing** band, the
   **druidic fork** line only when Green Way has forked, a **cross-tradition pull** line only if pressure > 0,
-  and the **mixed inheritance** layer. No raw numbers/enum codes leaking.
+  and no obsolete **mixed inheritance** layer. No raw numbers/enum codes leaking.
 - **Record:** ___
 
 ### Slot 3 -- effect stack is clean  [Tester] [M] + [Dev] [R]
@@ -81,12 +81,11 @@ regardless of load order). Only the preflight changes:
 - **[Dev] log:** a `cross-tradition pressure` trace marker in Papyrus.0.log.
 - **Record:** ___
 
-### Slot 4c -- substrate act (mixed inheritance, new Prisma beat)  [Tester] [R]+[M]
-- **Do:** Award a **Breton mixed-inheritance** substrate act (the ancestor spine pulse; organic maintenance or
-  MCM seed). Open the panel -> **Ledger** page after.
-- **See:** a **toast** for the substrate act (*"The mixed inheritance answers."*) and a **new driver row** in the
-  Ledger for the act (token `breton-ancestor`, against Magnus). No per-act Chronicle entry -- substrate lands in
-  the Ledger, not the Book of Days.
+### Slot 4c -- retired substrate absence (mixed inheritance)  [Tester] [R]+[M]
+- **Do:** On a migrated Breton save or after any old ancestor-spine seed path, run one reward sync or pass a dawn.
+  Open **Active Effects**, **Survey Devotion**, and the panel -> **Ledger** page after.
+- **See:** no `Breton Inherited Ward`, no mixed-inheritance Survey line, and no new `breton-ancestor` Ledger row.
+  The legacy records may still exist in the ESP, but the runtime path is retired for 1.0.
 - **Record:** ___
 
 ### Slot 4d -- druidic fork: Werewolf (Green Way, new Prisma beat)  [Tester] [R]+[M]
@@ -141,7 +140,7 @@ regardless of load order). Only the preflight changes:
 | tier Seeker/Devoted/Champion | Y | Y (pinned Champion) | N | Force patron piety + Run Dawn |
 | tradition-choice (start-lock) | **Y** | **Y (pinned)** | N | startup choice / `DebugSetBretonTradition` |
 | off-tradition -> cross-tradition pressure | N | N | N | off-tradition act (Survey line only) |
-| substrate act (breton-ancestor) | **Y** | N | **Y (driver)** | ancestor spine pulse / organic maintenance |
+| retired substrate absence (breton-ancestor) | N | N | N | reward sync / dawn / old spine pulse cleanup |
 | druidic-fork Werewolf | **Y** | **Y** | N | Green Way -> beast-blood path |
 | druidic-fork Betrayed | **Y** | **Y** | N | Green Way -> break faith |
 | druidic-fork None / Druidic | N | N | N | silent (default Green Way state) |
@@ -158,8 +157,8 @@ regardless of load order). Only the preflight changes:
   accept/refuse offer popup. Off-tradition acts feed the cross-tradition-pressure layer.
 - **Only Werewolf and Betrayed forks surface.** None and Druidic (the default Green Way fork) are silent by
   design -- no missing toast there.
-- **Substrate lands in the Ledger, not the Book of Days.** If the substrate act leaves the Ledger empty, FAIL
-  (the scaled-curated substrate-driver regression).
+- **Breton substrate is retired in 1.0.** If `breton-ancestor` writes a new toast, Book of Days entry, Ledger
+  driver, or `Breton Inherited Ward` active effect, FAIL.
 - **`coc` skips location/behavioral triggers** -- walk/fast-travel in for any location- or sleep-keyed hook.
 - **Champion + tradition-choice Book-of-Days entries are pinned** (survive pruning); ordinary entries prune at 21 days.
 - **MCM Debug page, not `cqf`.**
@@ -170,11 +169,11 @@ regardless of load order). Only the preflight changes:
 | Slot | What it proves | Status | Note |
 |---|---|---|---|
 | 1 new records | chosen-tradition blessing family live; others dormant | | |
-| 2 Survey | tradition/vow/exposure/druidic/pressure/inheritance legible | | |
+| 2 Survey | tradition/vow/exposure/druidic/pressure legible; no mixed-inheritance copy | | |
 | 3 stack | tradition reward layer, no rogue aura | | |
 | 4a tradition-choice | toast + pinned BoD, non-empty, names tradition | | |
 | 4b start-lock + pressure | off-tradition act -> pressure, NO switch | | |
-| 4c substrate act | toast + Ledger driver (breton-ancestor) | | |
+| 4c retired substrate absence | no toast, no Ledger driver, no Breton Inherited Ward | | |
 | 4d fork Werewolf | toast + BoD, non-empty; Survey updates | | |
 | 4e fork Betrayed | toast + BoD, non-empty; Survey updates | | |
 | 4f tier/curse/neglect | per-universal surfaces fire | | |
