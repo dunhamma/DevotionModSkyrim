@@ -1,5 +1,16 @@
 # PDV In-Game Run-Sheet -- Breton (V1)
 
+> STALE REWARD MODEL (2026-07-12). This sheet is a Prisma/surfacing run-sheet; its
+> reward-mapping notes predate two model changes. Slot 1's single-deity mapping
+> (Knight's Road -> Stendarr, Hidden Art -> Julianos, Green Way -> Kynareth) was
+> superseded by the 07-11 tradition-pool reconciliation and again by the owner-locked
+> **two-axis split** (tradition = practice track; patron championing over the full
+> 11-god roster; a Green Way Breton can champion Magnus). For the current reward math
+> and its test cards, use `PDV_1_0_CoTest_Runbook_2026-07-10.md` (Breton Two-Axis
+> Split Cards BX1-BX7) and `PDV_BretonTwoAxis_BuildSpec_2026-07-12.md`. The Prisma /
+> Survey / Book-of-Days SURFACING slots below remain useful, but do not treat the
+> deity->tradition mapping in Slot 1 as authoritative.
+
 Status: V1 (Unit D Prisma live `5e9e502`; tradition-choice + druidic-fork toasts/Book-of-Days are NEW
 build items this pass). Created 2026-06-25. Pair with `PDV_RunSheet_Universal_Prisma_V1.md`. Sources:
 `PDV_PreBetaRaceGateLedger.md`, `PDV_PrismaParityRegistry.csv`, `PDV_PrismaParity_AuthoringDraft.md`.

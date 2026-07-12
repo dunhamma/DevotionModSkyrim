@@ -284,11 +284,17 @@ SNAPSHOT of `PDV_FeltFamilyEvidenceLedger.json` as of 2026-07-11 (107 pending fa
 
 Resolved note, 2026-07-12: Breton runtime proof is unpaused for B1-B5 below. The Knight's Road/Stendarr anchor question is resolved in favor of tradition-pool breadth, and the old Breton ancestor substrate is retired at runtime; migrated saves should clear `Breton Inherited Ward` on the next reward/dawn sync.
 
+SCOPE CHANGE PENDING (2026-07-12, design-locked NOT built): the owner ruled the pool-as-T3-gate model an error and locked a **two-axis split** (tradition = practice track; patron championing orthogonal over the full 11-god roster). Authority: `PDV_BretonTwoAxis_BuildSpec_2026-07-12.md`, handed to Codex. When that build lands it RE-SCOPES this sitting:
+- Tradition T1/T2 will light from service COUNTS (KnightlyVowCount/HiddenArtCount/GreenWayCount), not pooled deity piety, so cards **B1/B1a (pooled-piety math) become obsolete** and are replaced by BX3 below. Do not re-prove B1/B1a against the new build.
+- A new felt family `Breton-PatronChampion|boon` appears (non-resonant patron Champion boon); add it to the boon checklist once the record exists.
+- The Breton Two-Axis Cards (BX1-BX7) below own the new runtime/manual proof. Passed cards from the pool-gated build (B1/B1a/B3) stay recorded as historical evidence for the shipped-at-the-time code, but the family verdicts re-open until re-proven under the two-axis build.
+- The still-open pool-gated cards (Green Way boon, Hidden Art boon, Breton neglect, CreedLoss-Breton, Magnus price, B2/B4/B5) remain valid to run; B2 (focused Champion) folds into BX2 (resonant patron -> tradition T3).
+
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
 - [ ] `Breton-GreenWay|boon`  (e.g. Green Way - Seeker)
 - [ ] `Breton-HiddenArt|boon`  (e.g. Hidden Art - Seeker)
-- [ ] `Breton-KnightsRoad|boon`  (e.g. Knight's Vow - Seeker)
-- [x] `Breton-Tradition|boon` is N/A - the generic Tradition's Footing lane is retired; confirm absence via B3.
+- [x] `Breton-KnightsRoad|boon`  (e.g. Knight's Vow - Seeker; B1/B1a passed 2026-07-12)
+- [x] `Breton-Tradition|boon` is N/A - the generic Tradition's Footing lane is retired; absence confirmed via B3 on 2026-07-12.
 
 **neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
 - [ ] `Neglect-Breton|neglect`  (e.g. The Tradition Grows Distant)
@@ -306,16 +312,48 @@ Resolved note, 2026-07-12: Breton runtime proof is unpaused for B1-B5 below. The
 
 ### 4. Khajiit sitting (12 families) - `set PDV_GLO_OriginRace to 6`
 
+Runtime note, 2026-07-12: Initial Khajiit setup pass succeeded through origin
+6, moon observance, road-home cadence, and Survey/status display. Tester found
+the Survey correct but too paragraph-heavy. Source hotfix compacted
+`GetKhajiitSurveyText()` to present-state lines only (`Lunar Lattice`, standing,
+moon practice, road home, and current moon phase) and removed the past-tense
+"lunar source read" sentence from Survey because accepted P2 book notices already
+feed Book of Days. Compile 0/0 for `PDV__ManagerQuest` and `PDV_MCM`; verifier
+FAIL=0 WARN=1; Prisma UI audit PASS 89. Manual retest of the new copy is owed
+after a full Skyrim relaunch. Do not mark the reward-family rows below complete
+until their Active Effects / Book of Days / toast surfaces are explicitly read.
+2026-07-12 Baan Dar focused-emergence pass recorded: tester confirmed the
+remaining Baan Dar steps passed as expected, covering the focused Seeker boon
+surface and no-offer/no-wrong-focus expectations for `Khajiit-BaanDar|boon`.
+2026-07-12 Rajhin focused-emergence pass recorded: tester confirmed
+`Khajiit focus -> Rajhin` swaps the active focused boon as soon as target piety
+is applied in the debug harness; no dawn pass is needed for this controlled
+focus-swap proof.
+2026-07-12 Alkosh focused-emergence pass recorded: tester confirmed
+`Khajiit focus -> Alkosh` plus Alkosh target piety produced the expected focused
+boon swap, with no commitment offer or wrong-focus reward stack.
+2026-07-12 Azurah and Khenarthi focused-emergence passes recorded: tester
+confirmed both remaining focused boon families passed through the behavior-button
+paths (moon observance for Azurah, road-home cadence for Khenarthi), not debug
+patron override.
+
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [ ] `Khajiit-Alkosh|boon`  (e.g. Alkosh's Order - Seeker)
-- [ ] `Khajiit-Azurah|boon`  (e.g. Azurah's Twilight - Seeker)
-- [ ] `Khajiit-BaanDar|boon`  (e.g. Baan Dar's Guile - Seeker)
-- [ ] `Khajiit-Khenarthi|boon`  (e.g. Khenarthi's Road - Seeker)
-- [ ] `Khajiit-Rajhin|boon`  (e.g. Rajhin's Shadow - Seeker)
+- [x] `Khajiit-Alkosh|boon`  (e.g. Alkosh's Order - Seeker; focused-emergence pass 2026-07-12)
+- [x] `Khajiit-Azurah|boon`  (e.g. Azurah's Twilight - Seeker; behavior-button focus pass 2026-07-12)
+- [x] `Khajiit-BaanDar|boon`  (e.g. Baan Dar's Guile - Seeker; focused-emergence pass 2026-07-12)
+- [x] `Khajiit-Khenarthi|boon`  (e.g. Khenarthi's Road - Seeker; behavior-button focus pass 2026-07-12)
+- [x] `Khajiit-Rajhin|boon`  (e.g. Rajhin's Shadow - Seeker; immediate focus-swap pass 2026-07-12)
 
 **substrate-favor** - prime the substrate/context state, read the effect in Active Effects:
 - [ ] `Khajiit-Lunar|substrate-favor`  (e.g. Khajiit Lunar Road)
-- [ ] `Khajiit-Substrate|substrate-favor`  (e.g. Lunar Hardiness)
+- [x] `Khajiit-Substrate|substrate-favor`  (e.g. Lunar Hardiness; observed during prior Khajiit pushes 2026-07-12)
+
+2026-07-12 hotfix note: tester saw Lunar Hardiness but not Khajiit Lunar Road.
+`PDV_Bless_Khajiit_Lunar_T1` is the Khajiit substrate Mid slot, but the generic
+first-tier race-reward sync was still managing that shared spell and could strip
+it after substrate grant. `PDV__ManagerQuest.psc` now leaves Khajiit Lunar_T1 to
+`PDV_Substrate_KhajiitLunar`; retest from a fresh runtime path before checking
+`Khajiit-Lunar|substrate-favor`.
 
 **neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
 - [ ] `Neglect-KhajiitLunar|neglect`  (e.g. The Moons Withdrawn)
@@ -451,10 +489,18 @@ Resolved note, 2026-07-12: Breton runtime proof is unpaused for B1-B5 below. The
 - 2026-07-11: `Favor Slips` source-label write landed in the live ESP and readback passed. Runtime visual recheck is still owed because the player-facing Active Effects source label must be seen in game.
 - 2026-07-11: Breton co-test paused before boon proof. Current source keys Knight's Road reward sync to Stendarr specifically; architecture review is pending on whether this remains the intended anchor model.
 
-- 2026-07-12: RESOLVED the 2026-07-11 Knight's Road/Stendarr anchor question. Architecture review (v3 12.5 + race sheet 10.3) confirmed the tradition is the lane, not a single deity. Manager reconciliation landed (compile 0/0, verifier FAIL=0): tradition breadth across the deity pool lights T1/T2, a focused patron unlocks T3, and the generic "Tradition's Footing" lane is retired. See `PDV_BretonTraditionReconciliation_BuildSpec_2026-07-11.md`. Green Way pilgrimage/sleep enrichment deferred to a focused session (spec Part 2).
+- 2026-07-12: RESOLVED the 2026-07-11 Knight's Road/Stendarr anchor question. Architecture review (v3 12.5 + race sheet 10.3) confirmed the tradition is the lane, not a single deity. Manager reconciliation landed (compile 0/0, verifier FAIL=0): pooled piety across the tradition deity pool lights T1/T2, a focused patron unlocks T3, and the generic "Tradition's Footing" lane is retired. See `PDV_BretonTraditionReconciliation_BuildSpec_2026-07-11.md`. Green Way pilgrimage/sleep enrichment deferred to a focused session (spec Part 2).
 - 2026-07-12: CORRECTION to a same-session claim -- the six Breton P2 FormLists were NOT empty; that was a wrong-field houseCARL query (`FormIDs` vs `Items`). Lists are populated; the fill tool ran as a verified no-op (ESP byte-identical). Residual is a stale signal-floor ledger, tracked separately.
 - 2026-07-12: HOTFIX for B1 runtime display defect. Tester confirmed Mara can now light Knight's Vow/Aegis, but toast and Book of Days only named Mara and Active Effects still showed `Breton Inherited Ward`. Manager hotfix now emits a tradition-specific reward toast/Book of Days entry (`Knight's Road deepens`; `The Knight's Road names you Seeker/Devoted.`), keeps the reward spell, and clears the retired Breton ancestor substrate on reward/dawn/legacy signal sync. Compile 0/0; verifier FAIL=0; Prisma UI audit PASS 89.
+- 2026-07-12: HOTFIX follow-up for B1/B1a pooled math and Knight's Road reward feel. Manager now sums piety across the eligible tradition deity pool for broad T1/T2 instead of reading the best single deity tier, while focused patron still owns T3. Live Knight's Road reward records now preserve Block and replace Restoration with Magic Resistance (`Knight's Aegis`: Block +13, Magic Resistance +8%; `Knight's Bulwark`: Block +25, Magic Resistance +18%, Armor +50). Scoped Knight's-Road-only reward readback PASS; ESP backup `Backups\phase20-race-rewards\Devotion.esp.20260712-131544.bak`. Same closeout fixed Breton neglect readback so `The Tradition Grows Distant` now carries Maximum Health -10 plus Magic Resistance -5; ESP backup `Backups\phase20-race-rewards\Devotion.esp.20260712-131917.bak`. Phase 2 reward readback PASS=1410 WARN=0 FAIL=0; Requiem penalty audit PASS=44; SEQ refresh PASS unchanged; compile 0/0; verifier FAIL=0 WARN=1. Runtime/manual proof remains `Neglect-Breton|neglect` plus the other open Breton cards below.
+- 2026-07-12: Breton B1/B1a/B3 runtime/manual proof PASSED. Tester confirmed Knight's Road pooled piety lights T1/T2 from mixed eligible deity sources, including the mixed-source 25/50 case; `Knight's Aegis` appears with the updated reward effects; toast and Book of Days name Knight's Road rather than Mara; and the old `Breton Inherited Ward` / generic `Tradition's Footing` surfaces are absent after retirement sync. This closes `Breton-KnightsRoad|boon` and confirms `Breton-Tradition|boon` as not-applicable/retired. Remaining Breton sitting items: Green Way boon, Hidden Art boon, Breton neglect, CreedLoss-Breton, Magnus price, and B2/B4/B5.
+- 2026-07-12: BACKEND CLEANUP QUEUED FOR NEXT SKYRIM-CLOSED WINDOW. Papyrus load noise includes one PDV-owned stale VMAD property, `PDV_Faction_Hunted_Vigilant`, still present on `PDV__ManagerQuest` after the source property was retired. Do not touch the ESP while Skyrim holds it. When Skyrim is closed, strip only that orphan VMAD property from `Devotion.esp`, then verify with `pdv_verify` and a fresh Papyrus-log load that the warning is gone. External noise from missing CC plugins, NiOverride, FISS, or other mods is out of this PDV cleanup scope.
+- 2026-07-12: HOTFIX for B2 focused Champion presentation. Tester reported that Julianos-at-85 granted the Knight's Road T3 route in the log but the visible toast used the public `Devoted` band and did not clearly call out Julianos as Champion. `PDV__ManagerQuest` now keeps public tier bands for ordinary standing, but tier toasts use `Champion` for Champion reaches, and Breton T3 tradition presentation names the focused patron (`Julianos names you Champion through the Knight's Road.`) while still granting the tradition reward spell (`Knight's Bulwark - Champion`). Synced to live MO2 source; `PDV__ManagerQuest` and `PDV_MCM` compile 0/0; verifier FAIL=0 WARN=1; Prisma UI audit PASS 89. Manual B2 retest is still owed after relaunch/reload because the running game had the old PEX loaded.
+- 2026-07-12: B2 partial runtime/manual proof recorded after the focused Champion hotfix. Active Effects now shows the T3 reward stack as `Knight's Bulwark - Champion` with Armor, Block, and Magic Resistance. This proves the focused Champion reward/effect stack side of B2, but does not by itself prove the updated toast/Book of Days patron wording; that presentation retest remains open.
+- 2026-07-12: HOTFIX follow-up for B2 duplicate Champion toasts. Retest showed the intended Breton-specific toast (`Julianos names you Champion through the Knight's Road.`) plus an extra generic tier toast (`Devotion deepens / Julianos names you Champion.`). Architecture check confirmed this was not a rejection of the focused-patron model: Breton lanes are two-phase, with broad tradition T1/T2 and focused patron T3. Source now suppresses the generic tier surface only for Breton in-tradition focused Champion transitions and lets the Breton tradition presentation own the single toast/Book-of-Days entry. Synced to live MO2 source; `PDV__ManagerQuest` and `PDV_MCM` compile 0/0; verifier FAIL=0 WARN=1; Prisma UI audit PASS 89. Manual B2 presentation retest still owed after full Skyrim relaunch.
 - 2026-07-12: BOOK-READ FARM CLOSED. The generic book faucet (events 340 skill / 341 spell tome / 342 lore) never tracked "already read", so the same lore book could be re-read up to its per-deity daily cap every day forever, and the once-per-day Azura/Hermaeus Mora book faucets refreshed off any shelf book. Fix in `PDV_PlayerEvents.psc`: a once-ever `PDV.BookRead.<formID>.Seen` guard (`MarkGenericBookRead`) marks each book base form on first read, shared across `OnBookRead` and the `OnItemRemoved` consume-on-learn tome ingress so a learn plus a later re-read of another copy credit exactly once. Azura `fate_threshold` and HM `disciplined_study` now also require an unread book; HM `forbidden_knowledge` keeps its own per-form manager guard and is untouched, as are the P2 racial-source and Altmer Talos-Mistake one-shots. Compile 0/0; verifier FAIL=0. Runtime-route + manual-display proof owed via the Book-Read Unread Cap card below. Save-compat: existing saves have no seen keys, so every previously-read book credits once more post-update, then never again (expected, no migration).
+
+- 2026-07-12: BRETON TWO-AXIS SPLIT DESIGN-LOCKED, HANDED TO CODEX (build pending). Owner ruled the 2026-07-11 pool-as-T3-gate model an error; the intent was always two orthogonal axes (tradition = practice track; patron championing over the full 11-god roster, so a Green Way Breton can champion Magnus). Lore-confirmed. Authority: `PDV_BretonTraditionReconciliation`-superseding spec `PDV_BretonTwoAxis_BuildSpec_2026-07-12.md`. Test-sheet impact captured this session: (a) new **Breton Two-Axis Split Cards (BX1-BX7)** added below, BLOCKED until the build lands; (b) pool-gated cards **B1/B1a marked obsolete-on-build** (tiering moves from pooled piety to service counts) and replaced by BX3; (c) B2 folds into BX2; (d) new felt family `Breton-PatronChampion|boon` flagged for the Breton sitting boon checklist once the record exists; (e) resonance sets locked with overlap (Mara all three lanes, Dibella GW+HA, Kynareth KR+GW, Magnus HA-resonant-but-championable-anywhere, Zenithar unlaned). No source/records/runtime changed this session - design + test-scope only. Do not run BX cards or re-prove B1/B1a against the new build.
 
 ## Breton Tradition + Dislike Cards (2026-07-12)
 
@@ -467,11 +513,44 @@ was held at 15, so an existing v15 save will not show them.
 
 | # | Scenario | Steps | Expected | Manual checks |
 |---:|---|---|---|---|
-| B1 | Tradition breadth lights T1/T2 (not single-deity) | Knight's Road Breton, broad patron state. Build piety on a NON-Stendarr pool deity (Mara or Arkay) to Seeker, then Devoted. | Knight's Vow (T1) lights at pool-Seeker; Knight's Aegis (T2) at pool-Devoted, with NO Stendarr piety. Toast title should be `Knight's Road deepens`; Book of Days should add `The Knight's Road names you Seeker/Devoted.` | Reward spell present in Active Effects/Magic; the pre-fix bug (only Stendarr moved it) is gone; the display is not Mara-only; `Breton Inherited Ward` clears and does not return |
-| B2 | Focused patron unlocks T3 | Same save; accept a focused patron offer within Knight's Road; take that deity to Champion. | Knight's Bulwark (T3) lights only after commitment + Champion; broad phase alone caps at T2 | T3 present only when focused; broad-only never yields T3 |
-| B3 | Generic Tradition lane and ancestor substrate retired | Any Breton, broad worship; also valid on the B1 migrated save after one reward sync/dawn. | No "Tradition's Footing" Health buff granted; no `Breton Inherited Ward`; migrated saves lose both obsolete effects | Survey/Active Effects show only the active tradition family, no generic tradition Health spell, and no mixed-inheritance substrate copy |
+| B1 | PASSED 2026-07-12 - Tradition breadth lights T1/T2 (not single-deity) | Knight's Road Breton, broad patron state. Build pooled piety across the eligible Knight's Road deities, with Stendarr at 0 if possible. | Knight's Vow (T1) lights at pooled Seeker; Knight's Aegis (T2) at pooled Devoted, with NO Stendarr piety required. Toast title should be `Knight's Road deepens`; Book of Days should add `The Knight's Road names you Seeker/Devoted.` | Reward spell present in Active Effects/Magic; the pre-fix bug (only Stendarr moved it) is gone; the display is not Mara-only; `Breton Inherited Ward` clears and does not return |
+| B1a | PASSED 2026-07-12 - Mixed-source pool math | Knight's Road Breton, broad patron state. Split piety across eligible Knight's Road deities, e.g. Mara + Arkay + Julianos totaling 25, then 50; no one deity needs to cross the threshold. | Knight's Vow lights at pooled 25; Knight's Aegis lights at pooled 50; broad pool remains capped at Devoted. | Confirmed: the lane is a general tradition total, not best-single-deity tier |
+| B2 | PARTIAL 2026-07-12 - Focused patron unlocks T3 | Same save; accept a focused patron offer within Knight's Road; take that deity to Champion. | `Knight's Bulwark - Champion` lights only after commitment + Champion; broad phase alone caps at T2. Exactly one toast/Book-of-Days entry should name the patron as Champion, e.g. `Julianos names you Champion through the Knight's Road.` | Active Effects T3 stack PASSED: Armor, Block, and Magic Resistance all show from `Knight's Bulwark - Champion`. Still owed: post-duplicate-hotfix toast/Book of Days wording must name the focused patron as Champion with no second generic `Devotion deepens` tier toast |
+| B3 | PASSED 2026-07-12 - Generic Tradition lane and ancestor substrate retired | Any Breton, broad worship; also valid on the B1 migrated save after one reward sync/dawn. | No "Tradition's Footing" Health buff granted; no `Breton Inherited Ward`; migrated saves lose both obsolete effects | Confirmed retired successfully: Survey/Active Effects show only the active tradition family, no generic tradition Health spell, and no mixed-inheritance substrate copy |
 | B4 | Green Way Y'ffre dislikes (softer set) | Green Way Breton, fresh save. Fire raise-undead (365) and assault-innocent (364). | Y'ffre loss surfaces for both; necromancy is the stronger (-medium) | Loss visible (toast / Book of Days / panel Ledger); daily caps hold; NO smithing or food penalty (softer set) |
 | B5 | Green Way hunt like | Same save; kill wild game (non-combat animal, event 303). | Y'ffre small gain (respectful hunt); cook-meal also gains | Gain visible; pairs with cook; a minor Kynareth -303 is expected (cross-deity, by design) |
+
+## Breton Two-Axis Split Cards (2026-07-12, BLOCKED on build)
+
+Owner-locked design, **NOT built** - do not run until Codex lands
+`PDV_BretonTwoAxis_BuildSpec_2026-07-12.md`. These close the runtime-route and
+manual-display buckets for the two-axis model (tradition practice vs patron
+championing). Use origin index 2 (Breton); seed tradition via the Debug MCM;
+several cards need a **fresh save** because the likes/dislikes version bumps
+(16 -> 17) and the practice-count tiering is new state.
+
+Preconditions to check first (backend, before any in-game step):
+- `GetBretonTraditionPoolPiety`/`GetBretonTraditionPietyPoolTier` retired; tier
+  reads practice counts.
+- Record `PDV_Bless_Breton_PatronChampion` exists (spec + readback).
+- `LIKES_DISLIKES_VERSION = 17`.
+- `HandleBretonSleepEvents` no longer awards Julianos under Hidden Art.
+
+| # | Scenario | Steps | Expected | Manual checks |
+|---:|---|---|---|---|
+| BX1 | Cross-tradition patron championing (the headline case) | Green Way Breton, fresh save. Commit to **Magnus** as patron (non-resonant for Green Way); take Magnus to Champion (85). | Magnus reaches his own Champion tier and grants the modest `PDV_Bless_Breton_PatronChampion` boon; Green Way tradition family stays capped at T2. | Both surface at once: Magnus Champion recognition (Survey/BoD/toast) AND a Green Way T2 family effect; total always-on effects = 2, not 3; NO Green Way T3 spell |
+| BX2 | Resonant patron unlocks tradition T3 (folds old B2) | Any tradition; commit to a patron IN that lane's resonance set (e.g. Knight's Road + Stendarr, or Green Way + Y'ffre); take to Champion. | Tradition T3 family lights and IS the champion payoff; exactly one toast/BoD names the patron as Champion through the lane; NO separate PatronChampion boon stacked on top. | One always-on T3 family + Champion recognition; no double boon; no generic `Devotion deepens` second toast |
+| BX3 | Practice-count tier (replaces B1/B1a) | Fresh Breton, any tradition, NO patron and zero pool-god piety. Fire that lane's practice signals (vow acts / occult study / Green Way behavior) to hit the count thresholds. | Tradition T1 lights at the low count threshold, T2 at the high one, with zero deity piety in the pool. | Counter-driven, not piety-driven; caps at T2 without a patron; daily anti-farm cap holds on the count ticks |
+| BX4 | Overlap resonance sets | For each overlap: prove the patron sources T3 in a lane it overlaps into. Mara -> Knight's Road AND Green Way AND Hidden Art; Dibella -> Green Way AND Hidden Art (NOT Knight's Road); Kynareth -> Knight's Road AND Green Way. | In each overlapping lane, that patron at Champion sources the tradition T3 (resonant path, not PatronChampion). Dibella under Knight's Road takes the non-resonant PatronChampion path instead. | Resonance membership is name-based and correct per lane; Dibella is explicitly NOT resonant in Knight's Road |
+| BX5 | Dual-feed (practice tick + deity piety) | Active tradition A, patron in tradition B (off-tradition). Fire a signal in tradition A's set. | The practice counter for A ticks (tradition-gated), AND the deity(s) the signal maps to still receive piety regardless of active tradition. Off-tradition patron keeps earning piety. | Piety is never tradition-gated; only the practice tick is; CrossTraditionPressure still records an off-tradition source |
+| BX6 | Julianos sleep-handler fix | Hidden Art Breton; trigger the hearth-cover sleep signal (`HandleBretonSleepEvents`). | Mara receives the hearth-cover credit; Julianos does NOT get a LAWFUL_ORDER award from sleep. Julianos credit now comes only from study signals (341/342). | The old miswire is gone: no Julianos movement on a Hidden Art sleep; Mara hearth-cover present |
+| BX7 | Pulse retune (no track pegging) | Any lane; fire a single renewable practice signal and read the pressure track delta. | Renewable source moves the track a small amount (+2..+5), not +25; a curated source ~+5; a milestone +15..20. Track no longer pegs 0->100 in ~2 acts. | Neglect/fray decay stays meaningful because the track is not instantly maxed; magnitudes match spec section 2 |
+
+Ledger note: once these pass, the two-axis build re-opens the felt-family verdicts
+for `Breton-GreenWay|boon`, `Breton-HiddenArt|boon`, and adds
+`Breton-PatronChampion|boon`; sink evidence into `PDV_FeltFamilyEvidenceLedger.json`
+and re-run the felt gate. B1/B1a evidence stays as historical (pool-gated build)
+and is NOT carried forward as two-axis proof.
 
 ## Book-Read Unread Cap Card (2026-07-12)
 
