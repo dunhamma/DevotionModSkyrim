@@ -643,42 +643,25 @@
     const normalized = { ...payload };
     normalized.event = eventName(payload);
 
-    if (!normalized.deity) {
-      normalized.deity = text(payload.deityName || payload.patron, "");
-    }
-    if (!normalized.symbol) {
-      normalized.symbol = text(payload.mark, "");
-    }
-    if (!normalized.context) {
-      normalized.context = text(payload.act || payload.source || payload.label, "");
-    }
-    if (!normalized.message) {
-      normalized.message = text(payload.text, "");
-    }
-    if (!normalized.tierLabel) {
-      normalized.tierLabel = text(payload.tierName, "");
-    }
-    if (!normalized.rival) {
-      normalized.rival = text(payload.rivalName, "");
-    }
-    if (!normalized.shiftMode) {
-      normalized.shiftMode = text(payload.shiftMode || payload.mode || payload.state, "");
-    }
-    if (!normalized.prince) {
-      normalized.prince = text(payload.prince || payload.daedra || payload.daedricPrince, "");
-    }
-    if (!normalized.phase) {
-      normalized.phase = text(payload.phase || payload.daedricPhase, "");
-    }
-    if (!normalized.curse) {
-      normalized.curse = text(payload.curse || payload.curseType, "");
-    }
-    if (!normalized.substrate) {
-      normalized.substrate = text(payload.substrate, "");
-    }
-    if (!normalized.state) {
-      normalized.state = text(payload.state, "");
-    }
+    const fallbackFields = [
+      ["deity", ["deityName", "patron"]],
+      ["symbol", ["mark"]],
+      ["context", ["act", "source", "label"]],
+      ["message", ["text"]],
+      ["tierLabel", ["tierName"]],
+      ["rival", ["rivalName"]],
+      ["shiftMode", ["shiftMode", "mode", "state"]],
+      ["prince", ["prince", "daedra", "daedricPrince"]],
+      ["phase", ["phase", "daedricPhase"]],
+      ["curse", ["curse", "curseType"]],
+      ["substrate", ["substrate"]],
+      ["state", ["state"]],
+    ];
+    fallbackFields.forEach(([field, sources]) => {
+      if (!normalized[field]) {
+        normalized[field] = text(sources.map((key) => payload[key]).find(Boolean), "");
+      }
+    });
 
     return normalized;
   };
