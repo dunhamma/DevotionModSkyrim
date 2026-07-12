@@ -41,6 +41,7 @@ const PATHS = {
   quest: join(AUTH, "PDV_QuestReactionMatrix_Full.csv"),
   partd: join(AUTH, "PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv"),
   directRenewables: join(AUTH, "PDV_SignalFloorDirectRenewables.csv"),
+  espLedger: join(AUTH, "PDV_P2FormListEspLedger.csv"),
   playerEvents: join(REPO, "live-source", "Scripts", "Source", "PDV_PlayerEvents.psc"),
   managerQuest: join(REPO, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc"),
   outCsv: join(AUTH, "PDV_SignalFloorLedger.csv"),
@@ -155,6 +156,19 @@ const princeLikesRows = existsSync(PATHS.princeLikes) ? csvToObjects(readFileSyn
 const questRows = csvToObjects(readFileSync(PATHS.quest, "utf8"));
 const partdRows = csvToObjects(readFileSync(PATHS.partd, "utf8"));
 const directRenewableRows = existsSync(PATHS.directRenewables) ? csvToObjects(readFileSync(PATHS.directRenewables, "utf8")) : [];
+
+// ESP-truth ledger (from tools/pdv_p2_formlist_esp_audit.mjs). When present, it lets
+// this source-only audit tell a server-down "shell" SKIP (E2E could not read the ESP)
+// apart from a genuinely empty FormList: a populated list that reads as INCOMPLETE/shell
+// is stale-ledger drift, not missing content. Verdicts still require a GREEN E2E surface;
+// this only makes the blocked-surface labels and truth_status honest.
+const espLedgerRows = existsSync(PATHS.espLedger) ? csvToObjects(readFileSync(PATHS.espLedger, "utf8")) : [];
+const espPopByProp = new Map();
+for (const row of espLedgerRows) {
+  if (!row.property) continue;
+  const n = parseInt(row.esp_item_count, 10);
+  espPopByProp.set(row.property, { itemCount: Number.isFinite(n) ? n : null, verdict: row.verdict || "" });
+}
 const playerEventsText = existsSync(PATHS.playerEvents) ? readFileSync(PATHS.playerEvents, "utf8") : "";
 const managerQuestText = existsSync(PATHS.managerQuest) ? readFileSync(PATHS.managerQuest, "utf8") : "";
 
@@ -404,9 +418,18 @@ for (const row of registry) {
         addTypes(wiredTypes, kinds);
         wiredEvidence.push(`p2-e2e-green:${prop}[${kinds.sort().join(",")}]`);
       } else if (gate) {
-        const status = `${verdict || "UNKNOWN"}${gate.failing_step ? `/${gate.failing_step}` : ""}`;
+        const esp = espPopByProp.get(prop);
+        const espNote = esp && esp.itemCount > 0
+          ? `,esp-populated:${esp.itemCount}`
+          : (esp && esp.itemCount === 0 ? ",esp-EMPTY" : "");
+        const status = `${verdict || "UNKNOWN"}${gate.failing_step ? `/${gate.failing_step}` : ""}${espNote}`;
         blockedP2Surfaces.push(`${prop}:${status}`);
-        if (verdict === "INCOMPLETE" || e2eHasSkip(gate)) truthStatus = "UNKNOWN-server-down";
+        if (verdict === "INCOMPLETE" || e2eHasSkip(gate)) {
+          // A server-down SKIP the deployed ESP contradicts (list populated) is a
+          // stale-ledger artifact, not an empty shell. Label it truthfully; the verdict
+          // stays proof-limited (this status is not in the PASS allowlist below).
+          truthStatus = (esp && esp.itemCount > 0) ? "esp-populated-live-e2e-pending" : "UNKNOWN-server-down";
+        }
       } else if (decl) {
         blockedP2Surfaces.push(`${prop}:missing-e2e-row`);
         if (truthStatus === "e2e-ledger") truthStatus = "missing-e2e-row";

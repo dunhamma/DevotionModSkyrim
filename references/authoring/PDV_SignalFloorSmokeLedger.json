@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-07-11T01:53:16.339Z",
+  "generatedAt": "2026-07-12T03:18:06.211Z",
   "status": "PASS",
   "backendStatus": "PASS",
   "strictRuntime": false,
-  "runtimeOpen": 9,
+  "runtimeOpen": 12,
   "manualOpen": 0,
   "counts": {
-    "PASS": 215,
-    "OPEN": 9
+    "PASS": 212,
+    "OPEN": 12
   },
   "proofBoundary": "These scenarios define backend, runtime-route, and manual-display evidence separately. Backend PASS does not prove in-game firing, Book of Days display, Survey/status clarity, duplicate suppression, wrong-origin silence, or save/load stack behavior.",
   "files": {
@@ -67,7 +67,7 @@
     {
       "status": "PASS",
       "check": "likes/dislikes version",
-      "detail": "Manager pins LIKES_DISLIKES_VERSION 15."
+      "detail": "Manager pins LIKES_DISLIKES_VERSION 16."
     },
     {
       "status": "PASS",
@@ -1031,8 +1031,8 @@
         },
         {
           "status": "PASS",
-          "check": "source token LIKES_DISLIKES_VERSION = 15",
-          "detail": "LIKES_DISLIKES_VERSION = 15 present in manager source."
+          "check": "source token LIKES_DISLIKES_VERSION = 16",
+          "detail": "LIKES_DISLIKES_VERSION = 16 present in manager source."
         },
         {
           "status": "PASS",
@@ -1045,9 +1045,9 @@
           "detail": "ldEvents[33] = 366 present in manager source."
         },
         {
-          "status": "PASS",
+          "status": "OPEN",
           "check": "runtime marker",
-          "detail": "Papyrus log contains LD v15 reload marker."
+          "detail": "No current Papyrus log marker for LD v16 reload."
         },
         {
           "status": "PASS",
@@ -1258,9 +1258,9 @@
           "detail": "Paarthurnax kill reactions use the surfaced quest-reaction path."
         },
         {
-          "status": "PASS",
+          "status": "OPEN",
           "check": "runtime marker",
-          "detail": "Papyrus log contains SignalFloorSmoke Paarthurnax kill debug routed."
+          "detail": "No current Papyrus log marker for SignalFloorSmoke Paarthurnax kill debug routed."
         },
         {
           "status": "PASS",
@@ -1376,9 +1376,9 @@
           "detail": "Paarthurnax spare reactions use the surfaced quest-reaction path."
         },
         {
-          "status": "PASS",
+          "status": "OPEN",
           "check": "runtime marker",
-          "detail": "Papyrus log contains SignalFloorSmoke Paarthurnax spare debug routed."
+          "detail": "No current Papyrus log marker for SignalFloorSmoke Paarthurnax spare debug routed."
         },
         {
           "status": "PASS",

@@ -50,9 +50,7 @@
       "race": "Breton",
       "sourceKinds": [
         "quest-stage",
-        "book",
-        "weather",
-        "harvest"
+        "book"
       ],
       "route": "PDV_EventBus.RouteBretonTraditionChoice(2, sourceId) plus RouteBretonGreenWayStanding(sourceId)",
       "acceptedUse": "Curated druidic, nature-site, standing-stone, landscape, or Green Way sources.",
@@ -1369,6 +1367,19 @@
           "sourceKind": "book",
           "status": "approved-for-fill",
           "rationale": "PLACEHOLDER (best available; Green Way book pool is barren): wild-nature-spirit lore read as a deliberate Green Way source; rejects generic forest travel and ordinary loot. Swap for a stronger druidic book if one is added."
+        },
+        {
+          "formKey": "Skyrim.esm:015CC2",
+          "editorId": "dunEldergleamT03",
+          "sourceKind": "quest-stage",
+          "status": "approved-for-fill",
+          "approvedStages": [
+            100
+          ],
+          "stageReadbackEvidence": "houseCARL dunEldergleamT03 (015CC2) live read 2026-06-24: stages [0,10,20,30,40,50,51,52,100]; 100 = final.",
+          "rejectedStageContext": "Intermediate quest stages, generic Whiterun temple errands, and repeated Eldergleam Sanctuary visits do not route this source.",
+          "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey breton_eldergleam_blessings.",
+          "rationale": "Exact The Blessings of Nature completion (Gildergreen restored) is the one-shot nature-site Green Way quest-stage milestone; matches the approved breton-eldergleam-blessings route entry and rejects generic nature travel."
         }
       ]
     },

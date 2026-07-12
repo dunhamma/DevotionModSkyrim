@@ -15,12 +15,14 @@ Int Property SIGNAL_LIVING_STORY = 302 AutoReadOnly
 Int Property SIGNAL_PACT_VIOLATION = 303 AutoReadOnly
 Int Property SIGNAL_RECOMMITMENT = 304 AutoReadOnly
 Int Property SIGNAL_SHARED_PACT_MEMORY = 305 AutoReadOnly
+Int Property SIGNAL_GREEN_WAY = 306 AutoReadOnly
 
 Float Property DELTA_PACT_POSITIVE = 2.0 Auto
 Float Property DELTA_LIVING_STORY = 2.5 Auto
 Float Property DELTA_PACT_VIOLATION = -2.0 Auto
 Float Property DELTA_RECOMMITMENT = 4.0 Auto
 Float Property DELTA_SHARED_PACT_MEMORY = 1.0 Auto
+Float Property DELTA_GREEN_WAY = 2.5 Auto
 
 Float Function ScoreAction(Int eventType, Form actorRef, Form targetRef)
     return ScoreFromTable(eventType)
@@ -37,6 +39,8 @@ Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
         return DELTA_RECOMMITMENT
     elseIf signalType == SIGNAL_SHARED_PACT_MEMORY
         return DELTA_SHARED_PACT_MEMORY
+    elseIf signalType == SIGNAL_GREEN_WAY
+        return DELTA_GREEN_WAY
     endIf
 
     return 0.0

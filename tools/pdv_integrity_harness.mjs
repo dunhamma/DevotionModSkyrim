@@ -25,6 +25,7 @@ const CHECKS = [
   { id: "mcp_liveness", role: "proof", cmd: ["tools/pdv_mcp_check.mjs", "--json"], read: (j) => j?.ok ? "live" : "down" },
   { id: "signal_e2e_gate", role: "gate", slow: true, cmd: ["tools/pdv_signal_e2e_gate.mjs"], read: (j) => j ? `${j.counts?.GREEN ?? "?"} GREEN / ${j.counts?.RED ?? 0} RED; parity ${j.curatedSignalParity?.status ?? "?"}` : null },
   { id: "signal_floor", role: "findings", cmd: ["tools/pdv_signal_floor_audit.mjs"], read: () => "see PDV_SignalFloorLedger" },
+  { id: "p2_formlist_esp", role: "findings", cmd: ["tools/pdv_p2_formlist_esp_audit.mjs", "--json"], read: (j) => j?.summary ? (j.summary.inconclusive ? `INCONCLUSIVE (bridge down: ${j.summary.inconclusiveReason ?? "?"})` : `${j.summary.populated}/${j.summary.surfaces} populated; ${j.summary.empty} empty; drift ${j.summary.driftRows}; fill-missing ${j.summary.fillMissingRows}; fails ${j.summary.fails}`) : null },
   { id: "spine_stack_score", role: "findings", cmd: ["tools/pdv_spine_stack_score.mjs"], read: (j) => j ? `worst ${j.worstFirst?.[0] ?? "?"}; ${j.parityTargets?.length ?? "?"} targets; ${j.diegeticDeadDeclarations?.length ?? 0} dead-decls` : null },
   { id: "specced_minus", role: "findings", cmd: ["tools/pdv_specced_minus_audit.mjs"], read: (j) => j ? `${j.unemitted?.length ?? "?"} unemitted minuses` : null },
   { id: "completeness", role: "findings", slow: true, cmd: ["tools/pdv_completeness_audit.mjs", "--json"], read: (j) => j ? `${j.status}; ${j.counts ? Object.entries(j.counts).map(([k, v]) => `${k}=${v}`).join(" ") : ""}` : null },

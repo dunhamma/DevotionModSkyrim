@@ -3,7 +3,7 @@
   "generatedFor": "PDV_SignalFloor_MasterHandoff_2026-07-09.md",
   "proofBoundary": "These scenarios define backend, runtime-route, and manual-display evidence separately. Backend PASS does not prove in-game firing, Book of Days display, Survey/status clarity, duplicate suppression, wrong-origin silence, or save/load stack behavior.",
   "expected": {
-    "likesDislikesVersion": 15,
+    "likesDislikesVersion": 16,
     "questCells": 1056,
     "questKeys": 168,
     "watchedQuests": 134,
@@ -133,7 +133,7 @@
         { "actor": "Kynareth", "eventId": 303, "sentiment": "-", "baseDelta": "-0.5" },
         { "actor": "sithis", "eventId": 366, "sentiment": "+", "baseDelta": "0.5" }
       ],
-      "expectedSourceTokens": [ "LIKES_DISLIKES_VERSION = 15", "ldEvents[32] = 303", "ldEvents[33] = 366" ],
+      "expectedSourceTokens": [ "LIKES_DISLIKES_VERSION = 16", "ldEvents[32] = 303", "ldEvents[33] = 366" ],
       "manualChecks": [ "new save or unstamped save logs version 15 loaded", "daily caps hold" ],
       "debugMcmScenario": 9
     },

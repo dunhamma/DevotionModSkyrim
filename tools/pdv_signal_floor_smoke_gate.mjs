@@ -56,7 +56,7 @@ function main() {
 
   const results = [];
   for (const scenario of scenarios.scenarios ?? []) {
-    results.push(checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, papyrusLog, manualEvidence));
+    results.push(checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, papyrusLog, manualEvidence, scenarios.expected ?? {}));
   }
 
   const counts = countFindings([...findings, ...results.flatMap((result) => result.findings)]);
@@ -139,7 +139,7 @@ function checkGlobalContracts(scenarios, matrixRows, likesRows, faucetRows, runt
   assert("manager debug harness", manager.includes("Function DebugRunSignalFloorSmokeScenario") && manager.includes("Function DebugGetSignalFloorSmokeLabel"), "Manager exposes signal-floor debug harness functions.", "Manager signal-floor debug harness functions are missing.");
 }
 
-function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, papyrusLog, manualEvidence) {
+function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, papyrusLog, manualEvidence, expected) {
   const local = [];
   const add = (status, check, detail) => local.push({ status, check, detail });
   const ok = (check, condition, pass, fail) => add(condition ? "PASS" : "FAIL", check, condition ? pass : fail);
@@ -190,8 +190,9 @@ function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, pap
     for (const token of scenario.expectedSourceTokens ?? []) {
       ok(`source token ${token}`, sourceText.manager.includes(token), `${token} present in manager source.`, `${token} missing from manager source.`);
     }
-    const marker = `Likes/dislikes table + stances loaded (version 15)`;
-    add(papyrusLog.includes(marker) ? "PASS" : "OPEN", "runtime marker", papyrusLog.includes(marker) ? "Papyrus log contains LD v15 reload marker." : "No current Papyrus log marker for LD v15 reload.");
+    const ldVersion = expected.likesDislikesVersion;
+    const marker = `Likes/dislikes table + stances loaded (version ${ldVersion})`;
+    add(papyrusLog.includes(marker) ? "PASS" : "OPEN", "runtime marker", papyrusLog.includes(marker) ? `Papyrus log contains LD v${ldVersion} reload marker.` : `No current Papyrus log marker for LD v${ldVersion} reload.`);
   } else if (scenario.trigger?.type === "direct-manager" || scenario.trigger?.type === "special-route") {
     for (const token of scenario.expectedFunctions ?? []) {
       const haystack = `${sourceText.manager}\n${sourceText.playerEvents}\n${sourceText.eventBus}`;

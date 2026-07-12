@@ -54,3 +54,52 @@ All `sourceKind: harvest`, `status: approved-for-fill`.
 2. Author the harvest sourceFillEntries group + the Eldergleam routeEntry in the manifest.
 3. `dotnet run --project ./tools/pdv-phase20-p2-receiver-author -- --fill-source-entries`.
 4. `node tools/pdv_signal_e2e_gate.mjs` -> Green Way surfaces GREEN; `node tools/pdv_signal_floor_audit.mjs` -> breton_green_way 2/5 -> 4-5/5.
+
+---
+
+## Execution status 2026-07-12 (floor-pass session)
+
+Done this session:
+- Manifest: `GreenWaySources` sourceKinds trimmed to `[quest-stage, book]` (weather/harvest
+  were phantom declarations a GREEN surface would falsely credit); Eldergleam quest-stage
+  sourceFillEntry added (`Skyrim.esm:015CC2`, approvedStages [100], full exact-stage metadata)
+  matching the already-approved `breton-eldergleam-blessings` routeEntry.
+  `--check-route-entries` (46 match) and `--check-exact-stage-gates` (29 approved) PASS.
+- Breton driver-row voice: Green Way signals now award `PDV_Yffre.SIGNAL_GREEN_WAY` (new, 306,
+  DELTA 2.5) instead of reusing the Bosmer-voiced `SIGNAL_LIVING_STORY`; humanized phrase
+  "keeping the Green Way". Prisma JS needs no change (rows render pre-humanized strings).
+- Papyrus-optimization pass on the route path: fixed the day-0 self-suppression in
+  `MarkP2SourceRoute` (day-key now stores day+1; StorageUtil int default 0 == game day 0
+  silently ate all harvest/weather routes on the first in-game day) and made the retired
+  ancestor-substrate strip one-shot (`PDV.Breton.SubstrateLegacyCleared`).
+- Compiles: PDV_Deity_Yffre, PDV__ManagerQuest, PDV_PlayerEvents, PDV_MCM all clean; pdv_verify FAIL=0.
+
+PENDING (blocked in-session):
+- **ESP fill** (`--fill-source-entries` adds 015CC2 to `GreenWaySources`): blocked while
+  SkyrimSE.exe holds `Devotion.esp`. IMPORTANT: with the manifest entry now declared, the E2E
+  gate's `--check-source-fill` REDs until this fill lands -- run the fill BEFORE the gate.
+- **Live E2E run** (Anvil MCP server up) -> both Green Way surfaces GREEN -> floor ledger
+  `breton_green_way` PASS 5/5, 2/2 (day-to-day, quest-reaction, book, quest-stage, harvest).
+
+## Runtime smoke checklist (MCM-driven; proof class = runtime-route, currently OPEN)
+
+Run on a NEW save or post-fill load (quest-stage watch registration re-reads the FormList at
+init; an old session predating the fill will not watch dunEldergleamT03).
+
+1. **Book (once-ever)**: read *The Wispmother*. Expect: Green Way tradition latch (if setup
+   incomplete) or CrossTraditionPressure (if another tradition latched); driver row
+   "keeping the Green Way"; `PDV.Breton.DruidicStanding` +25.
+2. **Harvest (once/day/form)**: harvest Nirnroot (or Spriggan Sap / Taproot / Crimson
+   Nirnroot). Expect: same row/standing; second harvest of the SAME form same day = silent
+   (day-key); different form same day = routes with x0.7 decayed multiplier.
+   Day-0 regression: harvesting on game day 0 must now route (day+1 key fix).
+3. **Quest-stage (once-ever)**: complete The Blessings of Nature (dunEldergleamT03 stage 100).
+   Expect: one-shot "keeping the Green Way" row; no re-fire on later stages/revisits.
+4. Verify in panel: Ledger driver rows read "keeping the Green Way" (NOT "a Living Story
+   deed"); Survey Green Way band moves with DruidicStanding.
+
+## Follow-ups (out of this session's scope)
+- Nord Old Ways floor pass: same pattern (trim phantom weather on NordKyneTalosSources or wire
+  classification-based weather; curate its missing 5th type; live E2E).
+- Wispmother book remains a flagged PLACEHOLDER pending a stronger druidic book.
+- Weather stays deferred pending classification-based detection (NAT fragility, above).

@@ -279,12 +279,25 @@ Event OnShoutAttack(Shout akShout)
 EndEvent
 
 Event OnBookRead(Book akBook)
-    RouteGenericBookRead(akBook)
+    if !akBook
+        return
+    endIf
+
+    if !PDV_EventBusService
+        Trace(1, "Book read skipped: PDV_EventBusService not assigned.")
+        return
+    endIf
+
+    ; Once-ever per book base form: repeat reads never award generic or daily-faucet
+    ; piety again. Marked only after the bus check so a dropped event cannot burn
+    ; the book's single credit.
+    Bool firstRead = MarkGenericBookRead(akBook as Form)
+    RouteGenericBookRead(akBook, firstRead)
     RouteP2ImmersiveSource(akBook as Form, "po3_book")
-    RouteQuestReactionBookFaucet(akBook as Form)
+    RouteQuestReactionBookFaucet(akBook as Form, firstRead)
     ; Altmer "read banned texts": The Talos Mistake (Skyrim.esm:000ED04D) pushes the
     ; ThalmorAlignment track toward the heterodox pole. Manager enforces origin + one-shot.
-    if akBook && akBook.GetFormID() == 0x000ED04D && PDV_EventBusService
+    if akBook.GetFormID() == 0x000ED04D
         PDV_EventBusService.RouteAltmerAlignmentSignal("read_banned_texts", akBook as Form, "po3_book_talos_mistake")
     endIf
 EndEvent
@@ -409,8 +422,13 @@ Event OnHitEx(ObjectReference akAggressor, Form akSource, Projectile akProjectil
     RouteQuestReactionBlockedHitFaucet()
 EndEvent
 
-Function RouteGenericBookRead(Book akBook)
+Function RouteGenericBookRead(Book akBook, Bool firstRead)
     if !akBook
+        return
+    endIf
+
+    if !firstRead
+        Trace(2, "Generic book read repeat skipped: " + akBook.GetFormID())
         return
     endIf
 
@@ -854,6 +872,18 @@ Event OnItemRemoved(Form akBaseItem, Int aiItemCount, ObjectReference akItemRefe
     endIf
 
     if !HasListedForm(PDV_FLST_FaucetSpellTomes, akBaseItem)
+        return
+    endIf
+
+    if !PDV_EventBusService
+        Trace(1, "Spell tome learn skipped: PDV_EventBusService not assigned.")
+        return
+    endIf
+
+    ; Shares the once-ever book key with OnBookRead so a consumed-on-learn tome
+    ; and a later re-read of another copy (spell now known) credit exactly once.
+    if !MarkGenericBookRead(akBaseItem)
+        Trace(2, "Spell tome learn repeat skipped: " + akBaseItem.GetFormID())
         return
     endIf
 
@@ -1526,18 +1556,20 @@ Function RouteQuestReactionStage(Quest sourceQuest, Int newStage)
     PDV_EventBusService.RouteQuestReaction(sourceQuest, newStage)
 EndFunction
 
-Function RouteQuestReactionBookFaucet(Form sourceForm)
+Function RouteQuestReactionBookFaucet(Form sourceForm, Bool firstRead)
     if !sourceForm || !PDV_EventBusService
         return
     endIf
 
-    if ShouldRouteQuestReactionFaucet("Azura.fate_threshold", "faucetForms.Azura.fate_threshold", sourceForm)
+    ; The once-per-day faucets only credit unread books; forbidden_knowledge keeps
+    ; its own once-ever per-form guard in the manager and routes regardless.
+    if firstRead && ShouldRouteQuestReactionFaucet("Azura.fate_threshold", "faucetForms.Azura.fate_threshold", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Azura.fate_threshold", sourceForm)
     endIf
     if ShouldRouteQuestReactionFaucet("Hermaeus Mora.forbidden_knowledge", "faucetForms.Hermaeus Mora.forbidden_knowledge", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Hermaeus Mora.forbidden_knowledge", sourceForm)
     endIf
-    if ShouldRouteQuestReactionFaucet("Hermaeus Mora.disciplined_study", "faucetForms.Hermaeus Mora.disciplined_study", sourceForm)
+    if firstRead && ShouldRouteQuestReactionFaucet("Hermaeus Mora.disciplined_study", "faucetForms.Hermaeus Mora.disciplined_study", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Hermaeus Mora.disciplined_study", sourceForm)
     endIf
 EndFunction
@@ -1902,17 +1934,34 @@ Bool Function MarkP2SourceRoute(Form sourceForm, String routeKey, String sourceK
 
     String baseKey = "PDV.P2Source." + routeKey + "." + sourceForm.GetFormID()
     if sourceKind == "po3_weather" || sourceKind == "po3_harvest"
-        Int currentDay = Utility.GetCurrentGameTime() as Int
+        ; Store day+1: StorageUtil int keys default to 0, and game day 0 as Int is
+        ; also 0, so a raw day key would silently suppress every harvest/weather
+        ; route on the first in-game day (storageutil-day-key-zero-default class).
+        Int currentDayMark = (Utility.GetCurrentGameTime() as Int) + 1
         String dayKey = baseKey + ".Day"
-        if StorageUtil.GetIntValue(None, dayKey) == currentDay
+        if StorageUtil.GetIntValue(None, dayKey) == currentDayMark
             return false
         endIf
 
-        StorageUtil.SetIntValue(None, dayKey, currentDay)
+        StorageUtil.SetIntValue(None, dayKey, currentDayMark)
         return true
     endIf
 
     String seenKey = baseKey + ".Seen"
+    if StorageUtil.GetIntValue(None, seenKey) == 1
+        return false
+    endIf
+
+    StorageUtil.SetIntValue(None, seenKey, 1)
+    return true
+EndFunction
+
+Bool Function MarkGenericBookRead(Form bookForm)
+    if !bookForm
+        return false
+    endIf
+
+    String seenKey = "PDV.BookRead." + bookForm.GetFormID() + ".Seen"
     if StorageUtil.GetIntValue(None, seenKey) == 1
         return false
     endIf
