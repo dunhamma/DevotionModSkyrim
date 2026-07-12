@@ -77,6 +77,97 @@ Status: PASS | declared-scored=123 | dispatched=88 | undispatched=35 | reserved-
 - PDV_Xarxes.SIGNAL_SHARED_PACT_MEMORY: Wave 1 parity gap: Altmer lane lacks the active-patron ancestor-memory dawn pulse that Bosmer/Dunmer wire (cf AwardActiveDunmerReclamationMemorySignal).
 - PDV_Zenithar.SIGNAL_CIVIC_SERVICE: Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.
 
+## EVT Emission Coverage
+
+Every declared EVT_ in PDV_EventTypes.psc must be EMITTED by a real emitter script (or reserved in tools/pdv_reserved_events.json). DEAD_PROMISE = data rows/consumers exist but the event never fires; DEAD_CONSTANT = declared and referenced nowhere. Emitted-but-unconsumed is informational.
+Status: PASS | declared=88 | emitted=85 | dead-promises=3 | dead-constants=0 | reserved=8 | unlisted-FAIL=0 | stale-ledger=0
+
+### Reserved dead events (documented deferral)
+- PDV_EventTypes.EVT_CLEAR_BOUNTY (id 351, DEAD_PROMISE): RESERVED indefinitely (owner 2026-07-07): detector ambiguous (bounty reaching zero can mean paid, jailed, or died; no clean vanilla event). Rows kept (Mara/Stendarr/Zenithar atonement axis) pending a reliable detector design.
+- PDV_EventTypes.EVT_HEAL_OR_CURE_NPC (id 350, DEAD_PROMISE): WIRE post-mega-packet (owner 2026-07-07): 19 deity rows incl. a two-sided axis (Boethiah/Sithis/Mephala dislike). Emitter spec = OnMagicEffectApplyEx, player-cast restore/cure on friendly NPC, ConsumeDailyRepeatMultiplier anti-farm. Spec in PDV_DeadWiring_Burndown.md.
+- PDV_EventTypes.EVT_VAMPIRE_FEED (id 366, DEAD_PROMISE): WIRE post-mega-packet (owner 2026-07-07): Molag Bal signature row (+0.5). Emitter needs feed-detection research (PO3/animation/quest-stage; curse-state synergy). Spec in PDV_DeadWiring_Burndown.md.
+- PDV_EventTypes.ID_3 (id 3, DEAD_PROMISE_UNDECLARED): RETRACT in Phase 2 (gate find 2026-07-07): Kyne 'kill-event3' legacy placeholder row from the original 1-4 victim ladder; classifier now routes 1/2/300/301/302 only.
+- PDV_EventTypes.ID_335 (id 335, DEAD_PROMISE_UNDECLARED): DEAD PROMISE, verdict pending (main-merge gate find 2026-07-12): id 335 exists only as a GetLikesDislikesEventTypes superset slot in the manager; no constant, no CSV row, no emitter. RETRACT the superset slot in the next likes/dislikes consolidation pass, or declare+wire if a 335 act is designed.
+- PDV_EventTypes.ID_354 (id 354, DEAD_PROMISE_UNDECLARED): DEAD PROMISE, verdict pending (gate find 2026-07-07): 'persuade-success' exists only as a comment + Clavicus Vile Prince row (+0.5); no constant, no emitter. Fold into the 350/366 emitter-spec review post-packet (persuade detection = speechcraft hook research).
+- PDV_EventTypes.ID_367 (id 367, DEAD_PROMISE_UNDECLARED): DEAD PROMISE, verdict pending (gate find 2026-07-07): 'cannibalize' exists only as a comment + Namira signature Prince row (+2.0); no constant, no emitter. Fold into the 350/366 emitter-spec review post-packet (Ring of Namira / PO3 cannibal detection).
+- PDV_EventTypes.ID_4 (id 4, DEAD_PROMISE_UNDECLARED): RETRACT in Phase 2 (gate find 2026-07-07): Kyne 'kill-event4' legacy placeholder row from the original 1-4 victim ladder; classifier now routes 1/2/300/301/302 only.
+
+### Emitted but unconsumed (info)
+- PDV_EventTypes.EVT_NONE
+- PDV_EventTypes.EVT_SLEEP_MOON_OBSERVANCE
+- PDV_EventTypes.EVT_CONCORDAT_COMPLIANCE
+- PDV_EventTypes.EVT_CONCORDAT_DEFIANCE
+- PDV_EventTypes.EVT_DUNMER_PORTABLE_SHRINE
+- PDV_EventTypes.EVT_DUNMER_HOME_BONUS
+- PDV_EventTypes.EVT_GREEN_PACT_VIOLATION
+- PDV_EventTypes.EVT_KHAJIIT_ROAD_HOME
+- PDV_EventTypes.EVT_HIRCINE_HUNT_RITE
+- PDV_EventTypes.EVT_TALOS_SHRINE_DEFIANCE
+- PDV_EventTypes.EVT_BOSMER_LIVING_STORY
+- PDV_EventTypes.EVT_BOSMER_EXCHANGE
+- PDV_EventTypes.EVT_BOSMER_BANDIT_ROAD
+- PDV_EventTypes.EVT_BOSMER_PACT_POSITIVE
+- PDV_EventTypes.EVT_STATE_TRANSITION_CONFIRM_RITE
+- PDV_EventTypes.EVT_ALTMER_LORKHAN_PRESSURE
+- PDV_EventTypes.EVT_ALTMER_CRISIS_SOURCE
+- PDV_EventTypes.EVT_ALTMER_DAWN_STEADINESS
+- PDV_EventTypes.EVT_ALTMER_ORTHODOX_COST
+- PDV_EventTypes.EVT_ARGONIAN_HIST_MAINTENANCE
+- PDV_EventTypes.EVT_ARGONIAN_PEOPLE_SUPPORT
+- PDV_EventTypes.EVT_ARGONIAN_VOID_SIGNAL
+- PDV_EventTypes.EVT_ARGONIAN_BED_OF_CHOICE
+- PDV_EventTypes.EVT_ORC_STRONGHOLD_FORGE
+- PDV_EventTypes.EVT_ORC_CITY_DIGNITY
+- PDV_EventTypes.EVT_ORC_LEGION_SERVICE
+- PDV_EventTypes.EVT_ORC_SELF_MADE_COMMUNITY
+- PDV_EventTypes.EVT_ORC_OATH_BREAK
+- PDV_EventTypes.EVT_ORC_FOUR_HOLDS_VISIT
+- PDV_EventTypes.EVT_REDGUARD_CROWN_TOMB_RESPECT
+- PDV_EventTypes.EVT_REDGUARD_FOREBEAR_ROAD
+- PDV_EventTypes.EVT_REDGUARD_ASHABAH_DEATH_DUTY
+- PDV_EventTypes.EVT_REDGUARD_FAR_SHORES_TOKEN
+- PDV_EventTypes.EVT_KHAJIIT_BAANDAR_ROAD_TRICK
+- PDV_EventTypes.EVT_KHAJIIT_RAJHIN_ELEGANT_THEFT
+- PDV_EventTypes.EVT_KHAJIIT_ALKOSH_DRAGON_ORDER
+- PDV_EventTypes.EVT_BOSMER_OLD_CONTRACT_PROPER_HUNT
+- PDV_EventTypes.EVT_BOSMER_OLD_CONTRACT_FOREST_KEPT
+- PDV_EventTypes.EVT_BOSMER_LIVING_STORY_COMMUNITY
+- PDV_EventTypes.EVT_BOSMER_LIVING_STORY_NATURE_SITE
+- PDV_EventTypes.EVT_BOSMER_EXCHANGE_DEBT_SETTLED
+- PDV_EventTypes.EVT_BOSMER_EXCHANGE_PROPORTIONATE_VENGEANCE
+- PDV_EventTypes.EVT_BOSMER_BANDIT_ROAD_ROAD_LIFE
+- PDV_EventTypes.EVT_BOSMER_BANDIT_ROAD_REVERSAL
+- PDV_EventTypes.EVT_BRETON_TRADITION_CHOICE
+- PDV_EventTypes.EVT_BRETON_KNIGHTLY_VOW
+- PDV_EventTypes.EVT_BRETON_HIDDEN_ART_EXPOSURE
+- PDV_EventTypes.EVT_BRETON_GREEN_WAY_STANDING
+- PDV_EventTypes.EVT_DUNMER_RECLAMATION_FOCUS
+- PDV_EventTypes.EVT_DUNMER_DEVIATION_PRICE
+- PDV_EventTypes.EVT_IMPERIAL_CIVIC_SERVICE
+- PDV_EventTypes.EVT_IMPERIAL_TALOS_PRESSURE
+- PDV_EventTypes.EVT_IMPERIAL_PATRON_CIVIC_FAVOR
+- PDV_EventTypes.EVT_NORD_OLD_WAYS_STATE
+- PDV_EventTypes.EVT_NORD_KYNE_TALOS_CONTEXT
+- PDV_EventTypes.EVT_NORD_HIRCINE_ARKAY_EDGE
+- PDV_EventTypes.EVT_DAEDRIC_PRINCE_SIGNAL
+- PDV_EventTypes.EVT_DAEDRIC_GENERIC_SILENCE
+
+## Route/Handle Reachability
+
+Every PDV_EventBus Route* and PDV__ManagerQuest Handle* function needs at least one live call site, else it is dead plumbing. Reserved orphans live in tools/pdv_reserved_routes.json.
+Status: PASS | targets=218 | reachable=214 | orphans=4 | reserved=4 | unlisted-FAIL=0 | stale-ledger=0
+
+### Reserved orphans (documented deferral)
+- PDV__ManagerQuest.HandleDunmerClumsyCrime: Orphan handler (gate find 2026-07-07): zero call sites. Phase 4 verdict pending -- check the Dunmer deviation-price route family for the intended caller, then wire or remove.
+- PDV__ManagerQuest.HandleNordAncestorSpine: Orphan handler (gate find 2026-07-07): zero call sites. Phase 4 verdict pending -- likely superseded by AwardNordRouteFamilySignal ancestor-spine lanes; confirm then remove or wire.
+- PDV_EventBus.RouteBosmerBaanDarGap: Orphan route (found 2026-07-06): forwards to HandlePlayerBelowHealthGate but nothing calls it. Phase 4 verdict pending -- git-history the intended caller (BaanDar gap concept) then wire or remove.
+- PDV_EventBus.RouteOrcStrongholdPresence: Orphan route (found 2026-07-06): forwards to HandleOrcStrongholdPresence but nothing calls it. Phase 4 verdict pending -- check whether the handler is reached via another path, then wire or remove.
+
+## Likes/Dislikes CSV -> Codegen Freshness
+
+Event-id-set cross-check between the likes/dislikes CSVs and the manager's generated WriteLD/WritePLD seeds + ClearRowsForDeity superset array. A mismatch means a CSV edit shipped without rerunning pdv_likesdislikes_gen (inert edit) or a removed row was not regenerated. Per-deity delta drift is out of scope.
+Status: PASS | csv-ids=62 | seeded-ids=62 | superset-ids=65 | LIKES_DISLIKES_VERSION=16
+
 ## RED / INCOMPLETE By Failing Step
 
 ## Per-Surface Ledger

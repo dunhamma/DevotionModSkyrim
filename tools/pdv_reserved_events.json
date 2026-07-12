@@ -16,31 +16,6 @@
     "deferredBy": "dead-wiring burndown plan",
     "date": "2026-07-07"
   },
-  "PDV_EventTypes.EVT_MINE_OR_CHOP": {
-    "reason": "RETRACT in Phase 2 (owner 2026-07-07): single Zenithar row redundant with his wired curated SIGNAL_HONEST_WORK. Delete row + regen + remove constant, then delete this entry.",
-    "deferredBy": "dead-wiring burndown plan",
-    "date": "2026-07-07"
-  },
-  "PDV_EventTypes.EVT_PRAY_AT_SHRINE": {
-    "reason": "REMOVE in Phase 2 (owner 2026-07-07): superseded dead constant (shrine prayer covered by curated Daedric/Dunmer shrine routes).",
-    "deferredBy": "dead-wiring burndown plan",
-    "date": "2026-07-07"
-  },
-  "PDV_EventTypes.EVT_TAKE_BLESSING": {
-    "reason": "REMOVE in Phase 2 (owner 2026-07-07): superseded dead constant (blessing coverage lives in curated/blessing routes).",
-    "deferredBy": "dead-wiring burndown plan",
-    "date": "2026-07-07"
-  },
-  "PDV_EventTypes.EVT_SHOUT_TO_OPEN_SKY": {
-    "reason": "REMOVE in Phase 2 (owner 2026-07-07): superseded dead constant (EVT_SHOUT_ATTACK + Kyne SIGNAL_SKY_ROAD cover the concept).",
-    "deferredBy": "dead-wiring burndown plan",
-    "date": "2026-07-07"
-  },
-  "PDV_EventTypes.EVT_PICKPOCKET": {
-    "reason": "REMOVE in Phase 2 (gate find 2026-07-07): superseded by EVT_STEAL_ITEM 362 aiAcquireType=3 pickpocket discrimination; zero refs anywhere.",
-    "deferredBy": "dead-wiring burndown plan",
-    "date": "2026-07-07"
-  },
   "PDV_EventTypes.ID_3": {
     "reason": "RETRACT in Phase 2 (gate find 2026-07-07): Kyne 'kill-event3' legacy placeholder row from the original 1-4 victim ladder; classifier now routes 1/2/300/301/302 only.",
     "deferredBy": "dead-wiring burndown plan",
@@ -60,5 +35,10 @@
     "reason": "DEAD PROMISE, verdict pending (gate find 2026-07-07): 'cannibalize' exists only as a comment + Namira signature Prince row (+2.0); no constant, no emitter. Fold into the 350/366 emitter-spec review post-packet (Ring of Namira / PO3 cannibal detection).",
     "deferredBy": "dead-wiring burndown plan",
     "date": "2026-07-07"
+  },
+  "PDV_EventTypes.ID_335": {
+    "reason": "DEAD PROMISE, verdict pending (main-merge gate find 2026-07-12): id 335 exists only as a GetLikesDislikesEventTypes superset slot in the manager; no constant, no CSV row, no emitter. RETRACT the superset slot in the next likes/dislikes consolidation pass, or declare+wire if a 335 act is designed.",
+    "deferredBy": "main-merge dispatch-coverage sweep",
+    "date": "2026-07-12"
   }
 }
