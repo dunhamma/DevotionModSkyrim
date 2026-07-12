@@ -47,7 +47,7 @@
     {
       "race": "Bosmer",
       "bestDeity": "Y'ffre",
-      "grossDailyMax": 9,
+      "grossDailyMax": 14.25,
       "greedyDaysTo85": 20,
       "steadyDaysTo85": 26,
       "status": "PASS",
@@ -56,7 +56,7 @@
     {
       "race": "Breton",
       "bestDeity": "Y'ffre",
-      "grossDailyMax": 9,
+      "grossDailyMax": 14.25,
       "greedyDaysTo85": 20,
       "steadyDaysTo85": 26,
       "status": "PASS",

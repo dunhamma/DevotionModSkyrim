@@ -8,8 +8,8 @@ Mechanism-agnostic parity score for each race's always-active ancestral spine (p
 
 | Race | % | Raw | Target? | Boon x3 | Sink x2 | Minus x2 | Renew x1 | Dieg x1 | Text x1 | Richness |
 |---|---|---|---|---|---|---|---|---|---|---|
+| Breton | 60% | 18 | **YES** | 2 | 2 | 1 | 2 | 2 | 2 | MODERATE |
 | Bosmer | 73.3% | 22 | - | 2 | 2 | 2 | 2 | 3 | 3 | RICH |
-| Breton | 76.7% | 23 | - | 3 | 3 | 1 | 2 | 2 | 2 | MODERATE |
 | Dunmer | 80% | 24 | - | 3 | 3 | 2 | 2 | 1 | 2 | MODERATE |
 | Orc | 80% | 24 | - | 3 | 3 | 1 | 2 | 3 | 2 | MODERATE |
 | Imperial | 80% | 24 | - | 3 | 3 | 1 | 2 | 2 | 3 | MODERATE |
@@ -21,7 +21,7 @@ Mechanism-agnostic parity score for each race's always-active ancestral spine (p
 
 ## Parity build targets (<70%, worst-first)
 
-- none
+- **Breton** 60% - Updated 2026-07-12: Breton ancestor substrate is runtime-retired for 1.0. Legacy PDV_Substrate_BretonAncestor records/properties remain for save/readback compatibility, but manager sync/dawn/legacy signal paths clear the old ResistMagic boons instead of granting them. Stack budget now belongs to the active tradition family; no mixed-inheritance Survey or Book-of-Days surface should appear.
 
 ## Diegetic dead-declaration drift-check (deterministic, live source)
 

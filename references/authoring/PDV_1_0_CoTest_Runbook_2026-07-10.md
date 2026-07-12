@@ -93,16 +93,32 @@ node .\tools\pdv_deity_signal_remap_adversary_check.mjs
 node .\tools\pdv_signal_floor_smoke_gate.mjs --check --json
 ```
 
+After the 2026-07-12 reserved-signal dispatch package lands, also add:
+
+```powershell
+node .\tools\pdv_signal_e2e_gate.mjs
+node .\tools\pdv_verify.mjs --strict-curated-signal-dispatch --json
+```
+
+If `--strict-curated-signal-dispatch` is not recognized, the coding package is
+not fully merged into this checkout yet. Stop and finish the backend merge
+before running the reserved-signal smoke cards below.
+
 Expected backend state before in-game smoke:
 
 - `pdv_verify`: FAIL=0. The known medallion glyph fallback warning is allowed.
-- Quest matrix: 1056 rows, 168 quest keys, 134 watched quests, 26 faucet acts.
+- Quest matrix after the 2026-07-12 matrix-freshness package: 1057 rows, 169
+  quest keys, 135 watched quests, 26 faucet acts. If the tools still report the
+  older 1056 / 168 / 134 counts, Package B is not deployed.
 - `pdv_deity_signal_remap_adversary_check`: PASS. Its
   `potentialOffRosterHostileSurfaces` count is expected to remain nonzero
   because the source guard, not row deletion, owns that cross-origin policy.
 - Likes/dislikes version: `LIKES_DISLIKES_VERSION = 16`.
 - Signal-floor smoke gate: backend PASS; runtime OPEN is expected until live
   Papyrus markers exist.
+- Reserved-signal package: `pdv_signal_e2e_gate.mjs` PASS and
+  `pdv_verify --strict-curated-signal-dispatch` FAIL=0. The four built signals
+  burn from the reserved list, and Khenarthi `OPEN_ROAD` burns by removal.
 
 ## In-Game Setup
 
@@ -150,13 +166,17 @@ signal-floor smoke state is open at runtime:
 1. **Recertify machine gates.** Run `pdv_1_0_endstate_gate.mjs --run` after the
    deployed/live state is settled. Do not spend a long in-game sitting while the
    burndown is drift-red unless the point is defect reproduction.
-2. **Signal-floor representative smoke.** Close the remaining runtime/manual openings
+2. **Reserved-signal dispatch + matrix freshness, if the 2026-07-12 package has
+   landed.** Run the machine gates above, then work the **Reserved Signal +
+   Matrix Freshness Cards** section. This prevents stale JSON/name-normalization
+   bugs from contaminating later Khajiit or signal-floor evidence.
+3. **Signal-floor representative smoke.** Close the remaining runtime/manual openings
    from `PDV_SignalFloorSmokeLedger.md`. Use the table below. This is the best
    first co-test target because it directly checks the new MCM harness, backend
    matrix expansion, Book of Days aggregation, and the risky organic routes.
    Cards 2, 3, 4, 5, and 7 have passed after retest; continue with the next
    open card.
-3. **Race sittings for 1.0.** Work the **Felt-Family Race Sittings
+4. **Race sittings for 1.0.** Work the **Felt-Family Race Sittings
    (deduplicated plan)** section below - ten checklist sittings that prove every
    pending felt family (107 at snapshot) ONCE each (the raw `--sitting <Race>`
    sheets repeat shared price/sting families across races; the plan assigns each
@@ -165,7 +185,7 @@ signal-floor smoke state is open at runtime:
    beta-feel packet during the same sitting to clear the C-RACE-RUBRIC stale
    state. (`--sitting <Race>` is still useful for a live single-race regen, but it
    re-lists shared families the plan has already assigned elsewhere.)
-4. **Cross-cutting 1.0 smoke.** Experience Mode two-mode smoke, Requiem Track B,
+5. **Cross-cutting 1.0 smoke.** Experience Mode two-mode smoke, Requiem Track B,
    dislike anti-stack under Requiem, ARR acceptance, and Bordello compatibility
    packaging.
 
@@ -201,6 +221,49 @@ For every card, capture:
 | 11 | Paarthurnax kill fork | Reachable listed-god race, Nord recommended; kill Paarthurnax; controlled MCM index 11 only for route smoke | Shor/Tsun/Kyne/Stendarr/Stuhn/Mara reactions; Khajiit keeps Alkosh chaos-aid case | Repeat after save/load is blocked |
 | 12 | Paarthurnax spare fork | Paarthurnax alive and neither latch set; complete/load `MQ305` stage 200; controlled MCM index 12 only for route smoke | Stuhn/Stendarr/Mara/Kyne gains once | If kill latch already fired, spare remains silent |
 | 13 | Borderline prove-or-drop rows | Review `DA14Start` s70, `DLC2RRFavor01` s200, `T03` s105, HearthFires adoption stages | Decide prove, revise, or drop | Manual review only; no generated runtime marker expected |
+
+## Reserved Signal + Matrix Freshness Cards (2026-07-12, post-build)
+
+Authority: `references/authoring/PDV_HO_ReservedSignalDispatch_QuestMatrixFreshness_2026-07-12.md`.
+Run this section only after the coding package lands, compiles, and passes the
+reserved-signal gates in **Machine Preflight**. These cards close
+backend/static and runtime-route proof for the dispatch package. Manual-display
+proof (toast, Book of Days, Survey/status, Active Effects) is recorded in the
+normal race sitting or signal-floor ledger; do not call the package manually
+proven from MCM route markers alone.
+
+Use MCM Developer Options for the new reserved-signal debug buttons. Do not use
+`cqf`. For organic routes, Codex must name the exact quest/stage/source from the
+landed code or compiled matrix before the tester runs the case; do not guess
+stage IDs from the design note.
+
+Preconditions:
+- `tools/pdv_reserved_signals.json` is present in the main tree and no longer
+  lists the four built signals as live known gaps.
+- Khenarthi `OPEN_ROAD` is removed, not routed.
+- Manager and MCM compile 0/0 if debug buttons changed.
+- `Reload quest matrix` in MCM reports the expected 135 core watched quests
+  after JSON deployment; if a runtime route logs `0 quest entries`, stop and
+  rerun the matrix compile/deploy path.
+
+| # | Scenario | Route to run | Expected result | Required manual checks |
+|---:|---|---|---|---|
+| RS1 | Khenarthi `CARAVAN_AID` | Controlled MCM reserved-signal button, then organic caravan-aid route if a caravan combat save is available. | Khenarthi receives a small pulse through `PDV.Signal.KhenarthiCaravanAid`; daily cap holds on repeat. | Runtime marker, driver reason names the caravan-aid event, toast/Book of Days/ledger are readable where Khenarthi is reachable. |
+| RS2 | Rajhin `LEGEND_MADE` | Controlled MCM button, then one organic high-value theft route (single stolen item value >= 500) or the landed TG08B latch. | Rajhin receives a medium pulse; same-day repeat is capped; one-shot latch does not double-fire. | Runtime marker, no ordinary low-value theft triggers this row, display names Rajhin cleanly. |
+| RS3 | Mephala `WEB_WOVEN` | Controlled MCM button, then one landed curated quest-stage source from `PDV_FLST_P2_MephalaWebSources`. | Mephala receives the pulse through normal reachability/stance gates; no origin hardcode. | Prove one Dunmer/Khajiit-relevant route if available; wrong-origin silence remains intact where Mephala is not reachable. |
+| RS4 | Boethiah `HONORABLE_DUEL` | Controlled MCM button, then organic brawl-victory or `DA02` champion-duel source from the landed route list. | Boethiah receives the pulse through normal reachability/stance gates; daily cap or latch holds on repeat. | Prove the route does not fire from generic combat; display text says when it fired, not poetic filler. |
+| RS5 | Khenarthi `OPEN_ROAD` removal | Backend only unless a regression appears. Search/gate confirms no constant, registry row, debug button, or dispatch route survives. | The e2e reserved list burns this entry by removal. | Any live `OPEN_ROAD` pulse is a defect; road-home cadence remains the Khajiit travel identity route. |
+
+Matrix freshness / name-normalization cards:
+
+| # | Scenario | Route to run | Expected result | Required manual checks |
+|---:|---|---|---|---|
+| RM1 | Runtime JSON deployed and reloadable | Run matrix compile/deploy, then MCM Developer Options -> `Reload quest matrix`. | MCM reports 135 core watched quests; ARR channel is regenerated if present. | If counts are stale, stop before testing quest rows. |
+| RM2 | `Y'ffre` spelling class | Fire one landed tranche10 row whose matrix deity name is exactly `Y'ffre`. | Runtime lands on `PDV_Yffre`, not a silent zero-row drop. | Book of Days/toast names Y'ffre correctly; no fallback `Yffre` miss. |
+| RM3 | `Baan Dar` spelling class | Fire one landed row whose matrix deity name is exactly `Baan Dar`. | Runtime lands on `PDV_BaanDar`. | Display keeps the space and does not expose raw EditorID spelling. |
+| RM4 | `Azura` spelling across Dunmer and Khajiit | Fire one landed `Azura` matrix row as Dunmer, then one as Khajiit. | Both land on `PDV_Azura`; Khajiit focus copy can still present Azurah elsewhere without breaking matrix routing. | Record both origins separately; no apostrophe/name-normalization silent drop. |
+| RM5 | Wrong-origin silence | Fire one known Khajiit-roster-only or origin-limited row as an unrelated origin, Altmer recommended. | The route stays silent or only reachable deities surface. | No off-roster hostile/taboo fan-out; adversary check remains PASS. |
+| RM6 | ARR compatibility matrix freshness | Regenerate the ARR package from the current matrix after core JSON is green. | ARR `PDV_QuestReactionMatrix_ARR.json` no longer predates tranche10; no new Requiem masters. | Backend/package proof only unless running an ARR profile smoke. |
 
 ## Efficient Sitting Split
 
@@ -343,6 +406,12 @@ boon swap, with no commitment offer or wrong-focus reward stack.
 confirmed both remaining focused boon families passed through the behavior-button
 paths (moon observance for Azurah, road-home cadence for Khenarthi), not debug
 patron override.
+Post-build reserved-signal note: when the 2026-07-12 reserved-signal package
+lands, fold Khenarthi `CARAVAN_AID` and Rajhin `LEGEND_MADE` manual-display
+proof into this Khajiit sitting if those gods are reachable on the test save.
+The reserved-signal section owns backend/static and runtime-route proof; this
+race sitting owns visible Khajiit-facing readability. Phase-blessing and
+substrate LOW/HIGH band cards remain separate pending additions.
 
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
 - [x] `Khajiit-Alkosh|boon`  (e.g. Alkosh's Order - Seeker; focused-emergence pass 2026-07-12)

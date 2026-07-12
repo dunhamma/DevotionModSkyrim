@@ -10,7 +10,7 @@ Overall: **PASS** (FAIL iff a gate check fails or a check errors; findings-style
 | signal_e2e_gate | gate | PASS | 39 GREEN / 0 RED; parity PASS |
 | signal_floor | findings | OK | see PDV_SignalFloorLedger |
 | p2_formlist_esp | findings | OK | 39/39 populated; 0 empty; drift 0; fill-missing 0; fails 0 |
-| spine_stack_score | findings | OK | worst Bosmer 73.3%; 0 targets; 0 dead-decls |
+| spine_stack_score | findings | OK | worst Breton 60%; 1 targets; 0 dead-decls |
 | specced_minus | findings | OK | 0 unemitted minuses |
 | completeness | findings | OK | PASS; PASS=362 NEEDS-MANUAL=292 GAP-REVIEW=53 FUTURE=59 WAIVED=2 |
 | deity_chain | gate | PASS | 0 blockers (0 resolution / 0 reachability) |

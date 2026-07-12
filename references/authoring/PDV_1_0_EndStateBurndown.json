@@ -3,9 +3,9 @@
   "mode": "run",
   "strictStale": false,
   "counts": {
-    "PASS": 3,
+    "PASS": 10,
     "STALE": 1,
-    "RED": 14
+    "RED": 7
   },
   "rows": [
     {
@@ -24,7 +24,7 @@
       "category": "machine-gate",
       "title": "All 16 Skyrim-present Princes pass the Daedric beta-display gate",
       "status": "PASS",
-      "detail": "exit 0",
+      "detail": "--run tools/pdv_daedric_beta_gate.mjs --json: exit 0",
       "closes": "Record the missing slot evidence in PDV_DaedricRuntimeEvidenceLedger.json via pdv_daedric_evidence_intake.mjs.",
       "drift": false
     },
@@ -33,50 +33,50 @@
       "lane": "audits",
       "category": "machine-gate",
       "title": "Strict beta-readiness audit passes (authority/readback/runtime/manual buckets)",
-      "status": "RED",
-      "detail": "evidence voided by source drift - pattern matched 1x (min 1); drift since 2026-07-11T07:41:20.962Z: @managerLive, @managerDeployed",
+      "status": "PASS",
+      "detail": "--run tools/pdv_beta_readiness_audit.mjs --strict: exit 0",
       "closes": "Fix the blocker named by pdv_beta_readiness_audit.mjs --strict, then re-run.",
-      "drift": true
+      "drift": false
     },
     {
       "id": "C-AUDIT-VERIFY",
       "lane": "audits",
       "category": "machine-gate",
       "title": "Default framework verifier is clean (FAIL=0)",
-      "status": "RED",
-      "detail": "evidence voided by source drift - last observed PASS 2026-07-11T07:41:32.215Z; drift since 2026-07-11T07:41:32.215Z: @managerLive, @managerDeployed, @espDeployed",
+      "status": "PASS",
+      "detail": "--run tools/pdv_verify.mjs: exit 0",
       "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run (or pdv_verify.mjs directly) with the houseCARL bridge live.",
-      "drift": true
+      "drift": false
     },
     {
       "id": "C-AUDIT-CONTENT",
       "lane": "audits",
       "category": "machine-gate",
       "title": "Content verifier is clean (FAIL=0, WARN=0)",
-      "status": "RED",
-      "detail": "evidence voided by source drift - last observed PASS 2026-07-11T07:41:32.291Z; drift since 2026-07-11T07:41:32.291Z: @managerLive",
+      "status": "PASS",
+      "detail": "--run tools/pdv_content_verify.mjs: exit 0",
       "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run (or pdv_content_verify.mjs directly).",
-      "drift": true
+      "drift": false
     },
     {
       "id": "C-AUDIT-INTEGRITY",
       "lane": "audits",
       "category": "machine-gate",
       "title": "Integrity harness gates pass (e2e signal gate, deity chain, eligibility coverage)",
-      "status": "RED",
-      "detail": "evidence voided by source drift - last observed PASS 2026-07-11T02:41:36.469Z; drift since 2026-07-11T02:41:36.469Z: @managerLive, @managerDeployed",
+      "status": "PASS",
+      "detail": "--run tools/pdv_integrity_harness.mjs: exit 0",
       "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-AUDIT-INTEGRITY with the Anvil MCP bridge live (127.0.0.1:27016) so the harness signal_e2e_gate can confirm dispatch; a passing --run stamps fresh. Read mode then trusts the stamp until @managerLive/@managerDeployed drift, rather than re-reading the volatile PDV_IntegrityHarnessLedger.md (which flips to FAIL on any headless harness run with the bridge down).",
-      "drift": true
+      "drift": false
     },
     {
       "id": "C-EXPMODE-BUILD",
       "lane": "experience-mode",
       "category": "machine-gate",
       "title": "Experience Mode is built (PDV_ModePreset, PDV_GLO_Mode, MCM surfacing, manager scalars, ActionRouter handling, verifier readback)",
-      "status": "RED",
-      "detail": "evidence voided by source drift - last observed PASS 2026-07-11T07:41:52.147Z; drift since 2026-07-11T07:41:52.147Z: @managerLive, @managerDeployed, @espDeployed",
+      "status": "PASS",
+      "detail": "--run tools/pdv_verify.mjs --strict-experience-mode: exit 0",
       "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-EXPMODE-BUILD (strict experience-mode verifier).",
-      "drift": true
+      "drift": false
     },
     {
       "id": "C-EXPMODE-SMOKE",
@@ -114,7 +114,7 @@
       "category": "machine-gate",
       "title": "Final-world proof (re-scoped 2026-07-07): every immersive hook proven at its real in-world context; every ESP PDV_REFR classified (QASmoke activators are permanent debug senders)",
       "status": "RED",
-      "detail": "status = \"FAIL\", need \"PASS\"",
+      "detail": "--run tools/pdv_placement_gate.mjs --json: exit 1",
       "closes": "Record the pending in-world hook proofs in PDV_InWorldHookProofLedger.json (fold into the matching race sittings), then re-run pdv_placement_gate.mjs.",
       "drift": false
     },
@@ -133,10 +133,10 @@
       "lane": "pacing",
       "category": "machine-gate",
       "title": "Pacing economy simulation in band for all races (dawn clamp + Champion-time bands)",
-      "status": "RED",
-      "detail": "evidence voided by source drift - status = \"PASS\"; drift since 2026-07-11T07:41:52.911Z: @managerLive, @managerDeployed",
+      "status": "PASS",
+      "detail": "--run tools/pdv_pacing_sim.mjs --json: exit 0",
       "closes": "Re-tune the authored piety tables for any race outside the bands, then re-run pdv_pacing_sim.mjs.",
-      "drift": true
+      "drift": false
     },
     {
       "id": "C-PACING-SIGNOFF",
@@ -173,10 +173,10 @@
       "lane": "dislike-consequence",
       "category": "machine-gate",
       "title": "Minor dislike-consequence overlay built: every deity dislike lane carries a small felt domain sting beyond piety loss",
-      "status": "RED",
-      "detail": "evidence voided by source drift - last observed PASS 2026-07-11T07:41:55.273Z; drift since 2026-07-11T07:41:55.273Z: @managerLive, @managerDeployed, @espDeployed",
+      "status": "PASS",
+      "detail": "--run tools/pdv_dislike_consequence_audit.mjs --strict-dislike-consequence: exit 0",
       "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-DISLIKE-DEBUFF-BUILD (strict dislike-consequence audit: 14 domain spells, dispatch wiring, 3-domain cap, live ESP readback). Per-domain stings prove through C-FELT-FAMILY during the race sittings.",
-      "drift": true
+      "drift": false
     },
     {
       "id": "C-DISLIKE-DEBUFF-TUNING",
@@ -194,7 +194,7 @@
       "category": "rollup",
       "title": "1.0 ship gate: every non-post-1.0 criterion passes",
       "status": "RED",
-      "detail": "3 PASS / 1 STALE / 14 RED",
+      "detail": "10 PASS / 1 STALE / 7 RED",
       "closes": "Burn the RED criteria above.",
       "drift": false
     }

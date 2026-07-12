@@ -8,8 +8,8 @@ Overall: **PASS**. Clamp: 4.3 (applied: true). Bands: greedy [18,24], steady [26
 |---|---|---|---|---|---|---|
 | Altmer | Xarxes | 9.75 | 20 | 26 | PASS |  |
 | Argonian | Sithis | 8.6 | 20 | 26 | PASS |  |
-| Bosmer | Y'ffre | 9 | 20 | 26 | PASS |  |
-| Breton | Y'ffre | 9 | 20 | 26 | PASS |  |
+| Bosmer | Y'ffre | 14.25 | 20 | 26 | PASS |  |
+| Breton | Y'ffre | 14.25 | 20 | 26 | PASS |  |
 | Dunmer | Mephala | 11.05 | 20 | 26 | PASS |  |
 | Imperial | Kynareth | 10 | 20 | 26 | PASS |  |
 | Khajiit | Azurah | 11.25 | 20 | 26 | PASS |  |

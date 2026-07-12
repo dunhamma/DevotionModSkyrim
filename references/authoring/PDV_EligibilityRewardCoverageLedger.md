@@ -42,15 +42,12 @@ Overall: **PASS**
 | PASS | Bosmer | Old Contract | Y'ffre | T1 | PDV_Bless_Bosmer_OldContract_T1 | yes | yes | PDV_Bless_Bosmer_OldContract_T1 |
 | PASS | Bosmer | Old Contract | Y'ffre | T2 | PDV_Bless_Bosmer_OldContract_T2 | yes | yes | PDV_Bless_Bosmer_OldContract_T2 |
 | PASS | Bosmer | Old Contract | Y'ffre | T3 | PDV_Bless_Bosmer_OldContract_T3 | yes | yes | PDV_Bless_Bosmer_OldContract_T3 |
-| PASS | Breton | Green Way | Y'ffre | T1 | PDV_Bless_Breton_GreenWay_T1 | yes | yes | PDV_Bless_Breton_GreenWay_T1 |
-| PASS | Breton | Green Way | Y'ffre | T2 | PDV_Bless_Breton_GreenWay_T2 | yes | yes | PDV_Bless_Breton_GreenWay_T2 |
-| PASS | Breton | Green Way | Y'ffre | T3 | PDV_Bless_Breton_GreenWay_T3 | yes | yes | PDV_Bless_Breton_GreenWay_T3 |
-| PASS | Breton | Hidden Art | Magnus | T1 | PDV_Bless_Breton_HiddenArt_T1 | yes | yes | PDV_Bless_Breton_HiddenArt_T1 |
-| PASS | Breton | Hidden Art | Magnus | T2 | PDV_Bless_Breton_HiddenArt_T2 | yes | yes | PDV_Bless_Breton_HiddenArt_T2 |
-| PASS | Breton | Hidden Art | Magnus | T3 | PDV_Bless_Breton_HiddenArt_T3 | yes | yes | PDV_Bless_Breton_HiddenArt_T3 |
-| PASS | Breton | Knight's Road | Stendarr | T1 | PDV_Bless_Breton_KnightsRoad_T1 | yes | yes | PDV_Bless_Breton_KnightsRoad_T1 |
-| PASS | Breton | Knight's Road | Stendarr | T2 | PDV_Bless_Breton_KnightsRoad_T2 | yes | yes | PDV_Bless_Breton_KnightsRoad_T2 |
-| PASS | Breton | Knight's Road | Stendarr | T3 | PDV_Bless_Breton_KnightsRoad_T3 | yes | yes | PDV_Bless_Breton_KnightsRoad_T3 |
+| PASS | Breton | Green Way | PDV_Bless_Breton_GreenWay_T1 | T1 | PDV_Bless_Breton_GreenWay_T2 | yes | yes | PDV_Bless_Breton_GreenWay_T2 |
+| PASS | Breton | Green Way | PDV_Bless_Breton_GreenWay_T1 | T2 | PDV_Bless_Breton_GreenWay_T3 | yes | yes | PDV_Bless_Breton_GreenWay_T3 |
+| PASS | Breton | Hidden Art | PDV_Bless_Breton_HiddenArt_T1 | T1 | PDV_Bless_Breton_HiddenArt_T2 | yes | yes | PDV_Bless_Breton_HiddenArt_T2 |
+| PASS | Breton | Hidden Art | PDV_Bless_Breton_HiddenArt_T1 | T2 | PDV_Bless_Breton_HiddenArt_T3 | yes | yes | PDV_Bless_Breton_HiddenArt_T3 |
+| PASS | Breton | Knight's Road | PDV_Bless_Breton_KnightsRoad_T1 | T1 | PDV_Bless_Breton_KnightsRoad_T2 | yes | yes | PDV_Bless_Breton_KnightsRoad_T2 |
+| PASS | Breton | Knight's Road | PDV_Bless_Breton_KnightsRoad_T1 | T2 | PDV_Bless_Breton_KnightsRoad_T3 | yes | yes | PDV_Bless_Breton_KnightsRoad_T3 |
 | PASS | Dunmer | Reclamation | Azura/Azurah | T1 | PDV_Bless_Dunmer_Azura_T1 | yes | yes | PDV_Bless_Dunmer_Azura_T1 |
 | PASS | Dunmer | Reclamation | Azura/Azurah | T2 | PDV_Bless_Dunmer_Azura_T2 | yes | yes | PDV_Bless_Dunmer_Azura_T2 |
 | PASS | Dunmer | Reclamation | Azura/Azurah | T3 | PDV_Bless_Dunmer_Azura_T3 | yes | yes | PDV_Bless_Dunmer_Azura_T3 |
