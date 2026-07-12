@@ -4,7 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Devotion</title>
-  <link rel="stylesheet" href="styles.css?v=watching-badge-20260706">
+  <!-- Cache-bust: bump BOTH ?v= strings (here and the app.js script tag at the
+       bottom) together whenever app.js or styles.css changes. -->
+  <link rel="stylesheet" href="styles.css?v=cleanup-pass-20260712">
 </head>
 <body>
   <main class="devotion-shell" aria-label="Devotion status">
@@ -226,6 +228,6 @@
     <button type="button" data-demo-toast="substrate_thin">Substrate (thin)</button>
   </aside>
 
-  <script src="app.js?v=watching-badge-20260706"></script>
+  <script src="app.js?v=cleanup-pass-20260712"></script>
 </body>
 </html>
