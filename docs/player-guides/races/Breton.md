@@ -89,7 +89,7 @@ Green Way deeds:
 - Forage and harvest from the wild; rest in the open air (Kynareth and Y'ffre both honor this). `[WIRED (harvest): OnItemHarvested -> RouteP2ImmersiveSource("po3_harvest") -> PDV_FLST_P2_BretonGreenWayHarvests (SprigganSap 063B5F, Taproot 03AD71, Nirnroot 059B86, NirnrootRed 0B701A) -> RouteBretonGreenWayStanding -> HandleBretonGreenWayStanding: DruidicStanding +25 AND (if Green Way + Druidic fork) Kynareth SIGNAL_OPEN_SKY +3.0. Only these four curated harvests route the druidic lane - ordinary plant-picking does not. Generic harvest also fires the Kynareth CSV harvest-ingredient (334) +0.25.]`
 - Visit a shrine of Kynareth for modest nature-aligned credit. `[PARTIAL: shrine-prayer piety unconfirmed as an organic earn (shrines normalized to cure-only). Kynareth's day-to-day table (open-sky, discover-location, harvest, heal) is the real Green-adjacent earn.]`
 - Read the old druidic lore. `[WIRED (placeholder): OnBookRead -> PDV_FLST_P2_BretonGreenWaySources currently holds ONE placeholder book (Book2CommonTheWispmother 083B3B) -> RouteBretonGreenWayStanding -> Kynareth. The Green Way book pool is barren; this single book is flagged PLACEHOLDER in the fill manifest.]`
-- Curated, contextual hunts can give credit, but ordinary animal kills do not. `[INERT: there is no Breton curated-hunt hook. No animal-kill or hunt row routes Green Way; this is descriptive design, not wired.]`
+- Hunt wild game. The Green Pact takes meat with respect, and the slain are honored - so a hunt, and cooking what you take, both earn Y'ffre's favor. `[WIRED 2026-07-12 (CSV, breton-gated): hunt-wild-game (303) - Y'ffre +0.25; cook-meal (333) - Y'ffre +0.5; plus kill-undead (300) +0.5 and heal-or-cure (350) +0.5, all breton Y'ffre rows added with LIKES_DISLIKES_VERSION 16. Fires on the animal-kill event, daily-capped. A minor Kynareth -303 is expected by design. This is a day-to-day CSV earn, not the curated DruidicStanding lane.]`
 
 To reach the top tier you must commit to a single god within your tradition. Honoring several at once is welcome, but it caps you at the middle tier. `[WIRED: broad worship caps at Devoted.]`
 
@@ -207,16 +207,11 @@ Discrepancies between what the guide/design promises and what actually fires (fo
 
 Note: these are current beta values and may be tuned before release.
 
-Two kinds of blessing run at once: a gentle shared "Tradition" blessing that any Breton earns for keeping their chosen path, and the stronger focused blessing of the single tradition you walk. Only your active tradition's focused family pays - the other two stay dormant. Remember, only one temporary favor blessing can be active at a time across all your gods.
+Your tradition *is* your blessing, and it grows in two stages. You earn the first two tiers (Seeker and Devoted) by practicing your tradition *broadly* - honoring any of its gods advances the same family, capped at Devoted. The top tier (Champion) comes only when you commit to a single god within the tradition. Only your chosen tradition's family pays; the other two stay dormant. Remember, only one temporary favor blessing can be active at a time across all your gods.
 
-Shared Tradition blessing (any Breton, capped at the middle tier):
+(There is no separate generic "Tradition" blessing. An earlier beta granted a flat Health-regeneration "Tradition's Footing" buff on top; that has been retired so your tradition's own flavor pays from the very first tier.) `[WIRED 2026-07-12: the generic PDV_Bless_Breton_Tradition_T1/T2 lane is RETIRED and force-removed on migration; SyncBretonTraditionRewardFamily now lights T1/T2 from best-of-pool tradition breadth (capped at Devoted) and T3 from the focused patron. See breton-tradition reconciliation.]`
 
-| Tier | What you gain |
-|------|----------------|
-| Seeker | Health Regeneration +4% |
-| Devoted | Health Regeneration +6%, Magic Resistance +5% |
-
-Knight's Road (focused):
+Knight's Road (Seeker/Devoted from broad practice; Champion from focusing one god):
 
 | Tier | What you gain |
 |------|----------------|
