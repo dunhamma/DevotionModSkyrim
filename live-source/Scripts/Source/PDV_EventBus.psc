@@ -346,6 +346,66 @@ Function RouteKhajiitKhenarthiCaravanHarm()
     Trace(2, "RouteKhajiitKhenarthiCaravanHarm complete")
 EndFunction
 
+Function RouteKhajiitKhenarthiCaravanAid(String asSourceId = "")
+    if !PDV_Manager
+        Trace(1, "RouteKhajiitKhenarthiCaravanAid skipped: PDV_Manager not assigned.")
+        return
+    endIf
+
+    String reason = "eventbus_khajiit_khenarthi_caravan_aid"
+    if asSourceId != ""
+        reason = reason + "_" + asSourceId
+    endIf
+
+    PDV_Manager.HandleKhajiitKhenarthiCaravanAid(reason)
+    Trace(2, "RouteKhajiitKhenarthiCaravanAid complete: " + reason)
+EndFunction
+
+Function RouteKhajiitRajhinLegendMade(String asSourceId = "")
+    if !PDV_Manager
+        Trace(1, "RouteKhajiitRajhinLegendMade skipped: PDV_Manager not assigned.")
+        return
+    endIf
+
+    String reason = "eventbus_khajiit_rajhin_legend_made"
+    if asSourceId != ""
+        reason = reason + "_" + asSourceId
+    endIf
+
+    PDV_Manager.HandleKhajiitRajhinLegendMade(reason)
+    Trace(2, "RouteKhajiitRajhinLegendMade complete: " + reason)
+EndFunction
+
+Function RouteMephalaWebWoven(String asSourceId = "")
+    if !PDV_Manager
+        Trace(1, "RouteMephalaWebWoven skipped: PDV_Manager not assigned.")
+        return
+    endIf
+
+    String reason = "eventbus_mephala_web_woven"
+    if asSourceId != ""
+        reason = reason + "_" + asSourceId
+    endIf
+
+    PDV_Manager.HandleMephalaWebWoven(reason)
+    Trace(2, "RouteMephalaWebWoven complete: " + reason)
+EndFunction
+
+Function RouteBoethiahHonorableDuel(String asSourceId = "")
+    if !PDV_Manager
+        Trace(1, "RouteBoethiahHonorableDuel skipped: PDV_Manager not assigned.")
+        return
+    endIf
+
+    String reason = "eventbus_boethiah_honorable_duel"
+    if asSourceId != ""
+        reason = reason + "_" + asSourceId
+    endIf
+
+    PDV_Manager.HandleBoethiahHonorableDuel(reason)
+    Trace(2, "RouteBoethiahHonorableDuel complete: " + reason)
+EndFunction
+
 Function RouteKhajiitRajhinBotchedTheft()
     if !PDV_Manager
         Trace(1, "RouteKhajiitRajhinBotchedTheft skipped: PDV_Manager not assigned.")
@@ -1462,6 +1522,13 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     ; above already filtered); one StorageUtil write, no new events.
     if eventType == 360 || eventType == 361 || eventType == 362
         StorageUtil.SetFloatValue(None, "PDV.Meta.LastTheftTime", Utility.GetCurrentGameTime())
+    endIf
+
+    ; Rajhin legend-made: a single steal whose base take is >= 500 gold rises above
+    ; the elegant-theft cadence (SIGNAL_LEGEND_MADE). The manager handler owns the
+    ; Khajiit-origin gate and the daily cap; this is only the value gate.
+    if eventType == 362 && targetRef && (targetRef.GetGoldValue() >= 500)
+        PDV_Manager.HandleKhajiitRajhinLegendMade("eventbus_362_grand_theft")
     endIf
 
     Int i = 0

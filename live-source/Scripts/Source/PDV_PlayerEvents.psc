@@ -134,6 +134,15 @@ Bool PDV_CombatNearFatalFlag = false
 Bool PDV_CombatBelowHealthRouted = false
 Bool PDV_OriginQueuedThisLoad = false
 
+; Khajiit caravan-defense detector forms (Khenarthi CARAVAN_AID). Resolved once
+; per load via GetFormFromFile; script variables so no VMAD property fill is
+; needed. The three caravan leaders' persistent refs are the proximity anchors.
+Bool PDV_CaravanFormsResolved = false
+Faction PDV_KhajiitCaravanFactionRef = None
+ObjectReference PDV_CaravanLeaderRisaad = None
+ObjectReference PDV_CaravanLeaderAhkari = None
+ObjectReference PDV_CaravanLeaderMadran = None
+
 Event OnInit()
     PDV_OriginQueuedThisLoad = false
     RegisterForPlayerEvents()
@@ -319,6 +328,7 @@ Event OnQuestStageChange(Quest akQuest, Int aiNewStage)
     RouteP2ImmersiveQuestStage(akQuest, aiNewStage)
     RouteQuestReactionStage(akQuest, aiNewStage)
     RoutePaarthurnaxSpareQuestStage(akQuest, aiNewStage)
+    RouteCuratedMilestoneQuestStage(akQuest, aiNewStage)
 EndEvent
 
 Event OnPDVConcordatCompliance(String eventName, String strArg, Float numArg, Form sender)
@@ -786,6 +796,20 @@ Function HandleKhajiitOrganicKill(Actor victimActor, Actor playerRef)
         endIf
     endIf
 
+    ; Caravan defense (Khenarthi CARAVAN_AID): killing a faction-hostile actor
+    ; while a living caravan leader's camp is loaded within ~2048 units reads as
+    ; defending the caravan. IsHostileToActor is faction/relationship math, so it
+    ; still discriminates on the corpse; a murdered innocent near a camp stays
+    ; silent, and caravan members themselves are excluded (that is HARM's lane).
+    ; The manager handler owns the Khajiit-origin gate and the daily cap.
+    EnsureKhajiitCaravanForms()
+    if PDV_KhajiitCaravanFactionRef && !victimActor.IsInFaction(PDV_KhajiitCaravanFactionRef)
+        if victimActor.IsHostileToActor(playerRef) && IsKhajiitCaravanLeaderNearby(playerRef)
+            PDV_EventBusService.RouteKhajiitKhenarthiCaravanAid("organic_caravan_defense")
+            Trace(1, "Khajiit caravan-defense kill routed for Khenarthi.")
+        endIf
+    endIf
+
     ; Baan Dar session tracking: kills open a session if the combat-state event was
     ; missed, then feed the counters. Health is sampled at the kill too, so a dip
     ; just before the killing blow is not lost between polls.
@@ -835,15 +859,14 @@ Event OnItemAdded(Form akBaseItem, Int aiItemCount, ObjectReference akItemRefere
         return
     endIf
 
+    Int takenValue = 0
+    if akBaseItem
+        takenValue = akBaseItem.GetGoldValue() * aiItemCount
+    endIf
+
     Bool notableTarget = PDV_FLST_RajhinNotableTargets && PDV_FLST_RajhinNotableTargets.HasForm(sourceBase)
-    if !notableTarget
-        Int takenValue = 0
-        if akBaseItem
-            takenValue = akBaseItem.GetGoldValue() * aiItemCount
-        endIf
-        if takenValue < 200
-            return
-        endIf
+    if !notableTarget && takenValue < 200
+        return
     endIf
 
     String targetKey = "PDV.Khajiit.Rajhin.Target." + sourceBase.GetFormID()
@@ -857,6 +880,12 @@ Event OnItemAdded(Form akBaseItem, Int aiItemCount, ObjectReference akItemRefere
     StorageUtil.SetFloatValue(None, targetKey, nowTime)
     PDV_EventBusService.RouteKhajiitRajhinElegantTheft("organic_elegant_theft")
     Trace(1, "Khajiit Rajhin elegant theft detected.")
+
+    ; Rajhin legend-made: a single pickpocket take worth >= 500 gold rises above
+    ; the elegant-theft cadence. The manager handler owns origin gate + daily cap.
+    if takenValue >= 500
+        PDV_EventBusService.RouteKhajiitRajhinLegendMade("organic_grand_pickpocket")
+    endIf
 EndEvent
 
 Event OnItemRemoved(Form akBaseItem, Int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
@@ -959,6 +988,7 @@ Function RegisterForP2ImmersiveSignals()
     RegisterQuestStageList(PDV_FLST_P2_KhajiitFocusedSources)
     RegisterQuestStageList(PDV_FLST_P2_OrcMalacathSources)
     RegisterOrcLifeModeQuestSources()
+    RegisterCuratedSignalQuestSources()
     RegisterQuestStageList(PDV_FLST_P2_RedguardSpineSources)
     RegisterQuestStageList(PDV_FLST_P2_RedguardCrownSources)
     RegisterQuestStageList(PDV_FLST_P2_RedguardForebearSources)
@@ -1126,6 +1156,81 @@ Function RegisterQuestStageByFormId(Int localFormId, String pluginName)
     else
         Trace(1, "Quest-stage registration missing form " + localFormId + " from " + pluginName)
     endIf
+EndFunction
+
+; Curated-signal milestone quest sources (reserved-signal dispatch, 2026-07-12).
+; DA08/MQ201 are matrix-watched and usually already registered by the matrix hook
+; refresh; explicit registration keeps these routes alive even if the deployed
+; matrix JSON drops them. The brawl quest is not matrix-watched at all.
+Function RegisterCuratedSignalQuestSources()
+    RegisterQuestStageByFormId(0x0004A37B, "Skyrim.esm") ; DA08 (The Whispering Door)
+    RegisterQuestStageByFormId(0x00035D5F, "Skyrim.esm") ; MQ201 (Diplomatic Immunity)
+    RegisterQuestStageByFormId(0x00047AE6, "Skyrim.esm") ; DGIntimidateQuest (brawls)
+EndFunction
+
+; Mephala WEB_WOVEN: plots the player resolves by cunning, at beats the quest
+; matrix does NOT already credit to Mephala (checked 2026-07-12: DA08 has no
+; Mephala matrix cell; MQ201 s250 credits Rajhin/Baan Dar/Nocturnal but not
+; Mephala) - so these one-shots add no double-credit.
+; Boethiah HONORABLE_DUEL: DGIntimidateQuest stage 100 is the brawl VICTORY
+; fragment (the one that runs Game.IncrementStat "Brawls Won"); stages 150/180/
+; 200 are cheat/loss/shutdown paths and stay silent. Brawls repeat, so this uses
+; the manager's daily cap instead of a one-shot.
+Function RouteCuratedMilestoneQuestStage(Quest sourceQuest, Int newStage)
+    if !sourceQuest || !PDV_EventBusService
+        return
+    endIf
+
+    Int questFormId = sourceQuest.GetFormID()
+    if questFormId == 0x0004A37B && newStage == 60
+        if MarkP2SourceRoute(sourceQuest as Form, "mephala_da08_web_woven", "po3_queststage")
+            PDV_EventBusService.RouteMephalaWebWoven("da08_whispering_door")
+        endIf
+    elseIf questFormId == 0x00035D5F && newStage == 250
+        if MarkP2SourceRoute(sourceQuest as Form, "mephala_mq201_web_woven", "po3_queststage")
+            PDV_EventBusService.RouteMephalaWebWoven("mq201_diplomatic_immunity")
+        endIf
+    elseIf questFormId == 0x00047AE6 && newStage == 100
+        PDV_EventBusService.RouteBoethiahHonorableDuel("brawl_won")
+    endIf
+EndFunction
+
+Function EnsureKhajiitCaravanForms()
+    if PDV_CaravanFormsResolved
+        return
+    endIf
+
+    PDV_CaravanFormsResolved = true
+    PDV_KhajiitCaravanFactionRef = Game.GetFormFromFile(0x000EB091, "Skyrim.esm") as Faction
+    PDV_CaravanLeaderRisaad = Game.GetFormFromFile(0x00074340, "Skyrim.esm") as ObjectReference
+    PDV_CaravanLeaderAhkari = Game.GetFormFromFile(0x0007434A, "Skyrim.esm") as ObjectReference
+    PDV_CaravanLeaderMadran = Game.GetFormFromFile(0x00074345, "Skyrim.esm") as ObjectReference
+    if !PDV_KhajiitCaravanFactionRef
+        Trace(1, "Khajiit caravan faction failed to resolve; caravan-defense detector inert.")
+    endIf
+EndFunction
+
+Bool Function IsKhajiitCaravanLeaderNearby(Actor playerRef)
+    if IsCaravanLeaderLoadedNear(PDV_CaravanLeaderRisaad, playerRef)
+        return true
+    endIf
+    if IsCaravanLeaderLoadedNear(PDV_CaravanLeaderAhkari, playerRef)
+        return true
+    endIf
+    return IsCaravanLeaderLoadedNear(PDV_CaravanLeaderMadran, playerRef)
+EndFunction
+
+Bool Function IsCaravanLeaderLoadedNear(ObjectReference leaderRef, Actor playerRef)
+    if !leaderRef || !playerRef || !leaderRef.Is3DLoaded()
+        return false
+    endIf
+
+    Actor leaderActor = leaderRef as Actor
+    if leaderActor && leaderActor.IsDead()
+        return false
+    endIf
+
+    return leaderRef.GetDistance(playerRef) <= 2048.0
 EndFunction
 
 Function RouteP2ImmersiveSource(Form sourceForm, String sourceKind)

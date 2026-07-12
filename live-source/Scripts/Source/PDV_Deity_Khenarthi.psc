@@ -11,12 +11,12 @@
 Scriptname PDV_Deity_Khenarthi extends PDV_DeityBase
 
 Int Property SIGNAL_ROAD_HOME = 601 AutoReadOnly     ; small repeatable road-home cadence pulse
-Int Property SIGNAL_OPEN_ROAD = 602 AutoReadOnly     ; favorable open-road / weather travel
+; 602 (SIGNAL_OPEN_ROAD) removed 2026-07-12: passive weather-travel detection is the
+; same class the owner ruled out for Green Way V1; road-home owns travel identity.
 Int Property SIGNAL_CARAVAN_AID = 603 AutoReadOnly   ; caravan/community support, curated
 Int Property SIGNAL_CARAVAN_HARM = 604 AutoReadOnly  ; anti-creed: harming caravan/kin
 
 Float Property DELTA_ROAD_HOME = 0.4 Auto
-Float Property DELTA_OPEN_ROAD = 0.3 Auto
 Float Property DELTA_CARAVAN_AID = 1.5 Auto
 Float Property DELTA_CARAVAN_HARM = -2.0 Auto
 
@@ -27,8 +27,6 @@ EndFunction
 Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
     if signalType == SIGNAL_ROAD_HOME
         return DELTA_ROAD_HOME
-    elseIf signalType == SIGNAL_OPEN_ROAD
-        return DELTA_OPEN_ROAD
     elseIf signalType == SIGNAL_CARAVAN_AID
         return DELTA_CARAVAN_AID
     elseIf signalType == SIGNAL_CARAVAN_HARM

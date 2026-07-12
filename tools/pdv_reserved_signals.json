@@ -1,0 +1,144 @@
+{
+  "_README": "Reserved curated deity signals: declared (Int Property SIGNAL_X) and handled in ScoreCuratedSignal, but INTENTIONALLY not yet dispatched from a real trigger. Each key is <DeityProp>.<SIGNAL_NAME>. The dispatch-coverage audit (tools/pdv_signal_e2e_gate.mjs -> evaluateCuratedSignalDispatchCoverage) reports a listed key as a documented KNOWN-GAP instead of failing. Any undispatched+scored signal NOT listed here is a HARD FAIL. Delete an entry when you wire the signal (a stale entry -- now dispatched or no longer declared -- also FAILs). Seeded 2026-07-06 from the curated-signal wiring audit; shrink toward empty by 1.0. NOTE 2026-07-12: registry reconciled into main from worktree great-lewin (the dispatch-coverage gate tooling itself still lives on branch claude/great-lewin-c094ed pending merge). Burned this date: Khenarthi OPEN_ROAD (removed const), Khenarthi CARAVAN_AID + Rajhin LEGEND_MADE + Mephala WEB_WOVEN + Boethiah HONORABLE_DUEL (wired).",
+  "_seededDate": "2026-07-06",
+  "PDV_Akatosh.SIGNAL_COVENANT_MILESTONE": {
+    "reason": "Wave 2 milestone: decide curated vs quest-reaction ownership before wiring (avoid double-credit).",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Arkay.SIGNAL_CIVIC_SERVICE": {
+    "reason": "Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Dibella.SIGNAL_CIVIC_SERVICE": {
+    "reason": "Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Dibella.SIGNAL_GRACE": {
+    "reason": "Wave 3: Dibella signature beat; needs an act-of-grace detector. Currently only patron-civic-favor fires for her.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Julianos.SIGNAL_CIVIC_SERVICE": {
+    "reason": "Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Kynareth.SIGNAL_CIVIC_SERVICE": {
+    "reason": "Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Leki.SIGNAL_HONORABLE_DUEL": {
+    "reason": "Wave 3: needs an honorable-duel detector (Redguard).",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Magnus.SIGNAL_ARCANE_RECOVERY": {
+    "reason": "Wave 3: hook OnSpellLearned/OnBookRead (recovered arcane knowledge).",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Magnus.SIGNAL_SHARED_PACT_MEMORY": {
+    "reason": "Wave 1 parity gap: Altmer lane lacks the active-patron ancestor-memory dawn pulse that Bosmer/Dunmer wire (cf AwardActiveDunmerReclamationMemorySignal).",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Malacath.SIGNAL_BLOOD_KIN": {
+    "reason": "Wave 1 mis-wire: HandleOrcBloodKinCrisis records life-mode progress but omits the curated dispatch its 3 sibling handlers (CityDignity/LegionService/SelfMadeCommunity) all have. Quick connect.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Malacath.SIGNAL_EXILE_RETURN": {
+    "reason": "Wave 2 milestone: Legion-Exile burden-carried-home beat; needs an exile-return detector within the LEGION_EXILE life-mode.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Mara.SIGNAL_CIVIC_SERVICE": {
+    "reason": "Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Shor.SIGNAL_HONORABLE_BATTLE": {
+    "reason": "Wave 3: needs an honorable-open-combat detector.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Shor.SIGNAL_SOVNGARDE_VALOR": {
+    "reason": "Wave 2 milestone: decide curated vs quest-reaction ownership before wiring (avoid double-credit).",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Sithis.SIGNAL_VOID_MILESTONE": {
+    "reason": "Wave 2 milestone: decide curated vs quest-reaction ownership before wiring (avoid double-credit).",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Stendarr.SIGNAL_CIVIC_SERVICE": {
+    "reason": "Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Stuhn.SIGNAL_MERCY_GRANTED": {
+    "reason": "Wave 3: needs a spare/ransom-defeated-foe detector.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Stuhn.SIGNAL_JUST_SPOILS": {
+    "reason": "Wave 3: needs a just-spoils act detector.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Talos.SIGNAL_PROTECT_WORSHIPPER": {
+    "reason": "Wave 3: needs a protect-a-Talos-worshipper detector.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY": {
+    "reason": "Wave 3: hook Orc apostasy / Altmer orthodoxy routes. Rare-by-design frequency, but must fire.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Trinimac.SIGNAL_ALTMER_ORTHODOX_PRESSURE": {
+    "reason": "Wave 3: hook RouteAltmerOrthodox* pressure routes. Rare-by-design frequency, but must fire.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Tsun.SIGNAL_ADVERSITY_SURVIVED": {
+    "reason": "Wave 3: needs a hard-fight-at-disadvantage / long-ordeal detector.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Tsun.SIGNAL_ENDURANCE_VIGIL": {
+    "reason": "Wave 2 milestone: decide curated vs quest-reaction ownership before wiring (avoid double-credit).",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Tuwhacca.SIGNAL_VAMPIRE_REENTRY": {
+    "reason": "Wave 1 half-built: OnVampirismStateChanged hook + PDV.Redguard.VampireReentryNeeded flag exist but the flag is set-never-read; award on cure was never connected.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Xarxes.SIGNAL_RECORD_KEEPING": {
+    "reason": "Wave 3: hook OnBookRead (cataloguing knowledge/history).",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Xarxes.SIGNAL_LEDGER_RESTORED": {
+    "reason": "Wave 2: recover-a-lost-record beat; hook a quest/activator.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Xarxes.SIGNAL_SHARED_PACT_MEMORY": {
+    "reason": "Wave 1 parity gap: Altmer lane lacks the active-patron ancestor-memory dawn pulse that Bosmer/Dunmer wire (cf AwardActiveDunmerReclamationMemorySignal).",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  },
+  "PDV_Zenithar.SIGNAL_CIVIC_SERVICE": {
+    "reason": "Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.",
+    "deferredBy": "curated-signal wiring audit",
+    "date": "2026-07-06"
+  }
+}

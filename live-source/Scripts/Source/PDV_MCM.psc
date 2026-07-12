@@ -104,6 +104,10 @@ Int _oidDunmerHomeBonus = -1
 Int _oidKhajiitMoonObservance = -1
 Int _oidKhajiitRoadHome = -1
 Int _oidKhajiitPostureCycle = -1
+Int _oidKhajiitCaravanAid = -1
+Int _oidKhajiitLegendMade = -1
+Int _oidMephalaWebWoven = -1
+Int _oidBoethiahHonorableDuel = -1
 Int _oidDebugSetBroadWorship = -1
 Int _oidNordOldWays = -1
 Int _oidNordNineDivines = -1
@@ -380,6 +384,14 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Records one Khajiit road-home cadence event.")
     elseIf a_option == _oidKhajiitPostureCycle
         SetInfoText("Cycles the Khajiit Lunar Lattice posture (Normal / Strained / Corrupted / ShadowDrift) to surface each readout and curse message for proving.")
+    elseIf a_option == _oidKhajiitCaravanAid
+        SetInfoText("Fires one Khenarthi caravan-aid signal (daily-capped). Organic route: kill a hostile near a living caravan leader's camp.")
+    elseIf a_option == _oidKhajiitLegendMade
+        SetInfoText("Fires one Rajhin legend-made signal (daily-capped). Organic route: a single steal or pickpocket take worth 500+ gold.")
+    elseIf a_option == _oidMephalaWebWoven
+        SetInfoText("Fires one Mephala web-woven signal (daily-capped). Organic routes: DA08 or Diplomatic Immunity resolution one-shots.")
+    elseIf a_option == _oidBoethiahHonorableDuel
+        SetInfoText("Fires one Boethiah honorable-duel signal (daily-capped). Organic route: win a brawl.")
     elseIf a_option == _oidDebugSetBroadWorship
         SetInfoText("Sets the manager to Broad worship so the Nord broad favor lanes can be tested.")
     elseIf a_option == _oidNordOldWays
@@ -816,6 +828,26 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidKhajiitPostureCycle
         RunPatternAction("Cycle the Khajiit lunar posture (Normal/Strained/Corrupted/ShadowDrift)?", 57)
+        return
+    endIf
+
+    if a_option == _oidKhajiitCaravanAid
+        RunPatternAction("Fire one Khenarthi caravan-aid signal?", 60)
+        return
+    endIf
+
+    if a_option == _oidKhajiitLegendMade
+        RunPatternAction("Fire one Rajhin legend-made signal?", 61)
+        return
+    endIf
+
+    if a_option == _oidMephalaWebWoven
+        RunPatternAction("Fire one Mephala web-woven signal?", 62)
+        return
+    endIf
+
+    if a_option == _oidBoethiahHonorableDuel
+        RunPatternAction("Fire one Boethiah honorable-duel signal?", 63)
         return
     endIf
 
@@ -1807,6 +1839,10 @@ Function BuildDaedricPage()
     _oidKhajiitMoonObservance = AddTextOption("Khajiit moon observance", "Emergent lane", OPTION_FLAG_NONE)
     _oidKhajiitRoadHome = AddTextOption("Khajiit road-home cadence", "Emergent lane", OPTION_FLAG_NONE)
     _oidKhajiitPostureCycle = AddTextOption("Khajiit lunar posture", "Cycle posture", OPTION_FLAG_NONE)
+    _oidKhajiitCaravanAid = AddTextOption("Khajiit caravan aid", "Emergent lane", OPTION_FLAG_NONE)
+    _oidKhajiitLegendMade = AddTextOption("Khajiit legend-made heist", "Emergent lane", OPTION_FLAG_NONE)
+    _oidMephalaWebWoven = AddTextOption("Mephala web woven", "Milestone lane", OPTION_FLAG_NONE)
+    _oidBoethiahHonorableDuel = AddTextOption("Boethiah honorable duel", "Brawl win", OPTION_FLAG_NONE)
 
     AddEmptyOption()
     AddHeaderOption("Neglect & decay", OPTION_FLAG_NONE)
@@ -2598,6 +2634,30 @@ Function RunPatternAction(String promptText, Int actionId)
             PDV_EventBusService.RouteTalosShrineDefiance()
         else
             manager.DebugRecordTalosShrineDefiance()
+        endIf
+    elseIf actionId == 60
+        if PDV_EventBusService
+            PDV_EventBusService.RouteKhajiitKhenarthiCaravanAid("mcm")
+        else
+            manager.DebugRecordKhajiitCaravanAid()
+        endIf
+    elseIf actionId == 61
+        if PDV_EventBusService
+            PDV_EventBusService.RouteKhajiitRajhinLegendMade("mcm")
+        else
+            manager.DebugRecordKhajiitLegendMade()
+        endIf
+    elseIf actionId == 62
+        if PDV_EventBusService
+            PDV_EventBusService.RouteMephalaWebWoven("mcm")
+        else
+            manager.DebugRecordMephalaWebWoven()
+        endIf
+    elseIf actionId == 63
+        if PDV_EventBusService
+            PDV_EventBusService.RouteBoethiahHonorableDuel("mcm")
+        else
+            manager.DebugRecordBoethiahHonorableDuel()
         endIf
     elseIf actionId == 58
         manager.DebugApplyTalosBetrayalCompliance()

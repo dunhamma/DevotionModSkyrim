@@ -69,6 +69,7 @@ Int Property ROUTE_KHAJIIT_KHENARTHI_CARAVAN_HARM = 111 AutoReadOnly
 Int Property ROUTE_KHAJIIT_RAJHIN_BOTCHED_THEFT = 112 AutoReadOnly
 Int Property ROUTE_KHAJIIT_ALKOSH_CHAOS_AID = 113 AutoReadOnly
 Int Property ROUTE_KHAJIIT_BAANDAR_BETRAYAL = 114 AutoReadOnly
+Int Property ROUTE_KHAJIIT_KHENARTHI_CARAVAN_AID = 115 AutoReadOnly
 Int Property ROUTE_DAEDRIC_PRINCE_SIGNAL = 200 AutoReadOnly
 Int Property ROUTE_DAEDRIC_GENERIC_SILENCE = 201 AutoReadOnly
 Int Property ROUTE_DAEDRIC_SHRINE_PRAYER = 202 AutoReadOnly
@@ -197,6 +198,8 @@ Function RouteSignal()
         PDV_EventBusService.RouteKhajiitAzurahDesecration()
     elseIf RouteId == ROUTE_KHAJIIT_KHENARTHI_CARAVAN_HARM
         PDV_EventBusService.RouteKhajiitKhenarthiCaravanHarm()
+    elseIf RouteId == ROUTE_KHAJIIT_KHENARTHI_CARAVAN_AID
+        PDV_EventBusService.RouteKhajiitKhenarthiCaravanAid("acti_trigger")
     elseIf RouteId == ROUTE_KHAJIIT_RAJHIN_BOTCHED_THEFT
         PDV_EventBusService.RouteKhajiitRajhinBotchedTheft()
     elseIf RouteId == ROUTE_KHAJIIT_ALKOSH_CHAOS_AID

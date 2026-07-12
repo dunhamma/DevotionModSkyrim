@@ -6759,6 +6759,64 @@ Function HandleKhajiitKhenarthiCaravanHarm(String reason)
     Trace(2, "Khajiit Khenarthi caravan-harm routed (" + reason + ")")
 EndFunction
 
+; Positive twin of the caravan-harm route: defending or supporting a caravan.
+; Repeatable, so unlike the anti-creed handlers it is daily-capped on the pulse.
+Function HandleKhajiitKhenarthiCaravanAid(String reason)
+    if !IsKhajiitOrigin() || !PDV_Khenarthi
+        return
+    endIf
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.KhenarthiCaravanAid")
+    if multiplier <= 0.0
+        Trace(2, "Khajiit Khenarthi caravan-aid blocked by daily cap (" + reason + ")")
+        return
+    endIf
+    AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_CARAVAN_AID, None, multiplier)
+    Trace(2, "Khajiit Khenarthi caravan-aid routed (" + reason + ")")
+EndFunction
+
+; Big-heist milestone above the elegant-theft cadence: a single steal whose take
+; is >= 500 gold (value gate lives at the ingress). Daily-capped on the pulse.
+Function HandleKhajiitRajhinLegendMade(String reason)
+    if !IsKhajiitOrigin() || !PDV_Rajhin
+        return
+    endIf
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RajhinLegendMade")
+    if multiplier <= 0.0
+        Trace(2, "Khajiit Rajhin legend-made blocked by daily cap (" + reason + ")")
+        return
+    endIf
+    AwardCuratedSignalScaled(PDV_Rajhin, PDV_Rajhin.SIGNAL_LEGEND_MADE, None, multiplier)
+    Trace(2, "Khajiit Rajhin legend-made routed (" + reason + ")")
+EndFunction
+
+; Mephala/Boethiah serve BOTH the Dunmer Reclamations and the Khajiit roster, so
+; these two gate on quest-reaction reachability, not a single origin.
+Function HandleMephalaWebWoven(String reason)
+    if !PDV_Mephala || !IsQuestReactionDeityReachable(PDV_Mephala)
+        return
+    endIf
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.MephalaWebWoven")
+    if multiplier <= 0.0
+        Trace(2, "Mephala web-woven blocked by daily cap (" + reason + ")")
+        return
+    endIf
+    AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_WEB_WOVEN, None, multiplier)
+    Trace(2, "Mephala web-woven routed (" + reason + ")")
+EndFunction
+
+Function HandleBoethiahHonorableDuel(String reason)
+    if !PDV_Boethiah || !IsQuestReactionDeityReachable(PDV_Boethiah)
+        return
+    endIf
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BoethiahHonorableDuel")
+    if multiplier <= 0.0
+        Trace(2, "Boethiah honorable-duel blocked by daily cap (" + reason + ")")
+        return
+    endIf
+    AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_HONORABLE_DUEL, None, multiplier)
+    Trace(2, "Boethiah honorable-duel routed (" + reason + ")")
+EndFunction
+
 Function HandleKhajiitRajhinBotchedTheft(String reason)
     if !IsKhajiitOrigin() || !PDV_Rajhin
         return
@@ -12087,8 +12145,6 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
     elseIf PDV_Khenarthi && deity == PDV_Khenarthi
         if signalType == PDV_Khenarthi.SIGNAL_ROAD_HOME
             return "returning by the road home"
-        elseIf signalType == PDV_Khenarthi.SIGNAL_OPEN_ROAD
-            return "fair weather on the open road"
         elseIf signalType == PDV_Khenarthi.SIGNAL_CARAVAN_AID
             return "aiding a caravan"
         elseIf signalType == PDV_Khenarthi.SIGNAL_CARAVAN_HARM
@@ -15457,6 +15513,22 @@ EndFunction
 
 Function DebugRecordKhajiitRoadHome()
     HandleKhajiitRoadHome("mcm")
+EndFunction
+
+Function DebugRecordKhajiitCaravanAid()
+    HandleKhajiitKhenarthiCaravanAid("mcm")
+EndFunction
+
+Function DebugRecordKhajiitLegendMade()
+    HandleKhajiitRajhinLegendMade("mcm")
+EndFunction
+
+Function DebugRecordMephalaWebWoven()
+    HandleMephalaWebWoven("mcm")
+EndFunction
+
+Function DebugRecordBoethiahHonorableDuel()
+    HandleBoethiahHonorableDuel("mcm")
 EndFunction
 
 Function DebugRecordArgonianHistMaintenance()
