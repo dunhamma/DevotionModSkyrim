@@ -903,8 +903,8 @@
         return `${name} marked what you did.`;
       },
       listTitle: (payload) => {
-        const state = text(payload.state, "");
-        return state || substrateName(payload);
+        const stateText = text(payload.state, "");
+        return stateText || substrateName(payload);
       },
       listText: (payload) => {
         const context = contextName(payload);
