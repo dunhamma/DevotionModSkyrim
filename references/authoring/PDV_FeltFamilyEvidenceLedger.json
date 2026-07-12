@@ -1130,40 +1130,60 @@
       }
     },
     "Khajiit-Alkosh|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Khajiit-Alkosh",
       "class": "boon",
       "race": "Khajiit",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-12 co-test: tester confirmed Khajiit-Alkosh|boon (e.g. Alkosh's Order - Seeker) in the Khajiit sitting; runbook box checked and reconciled to the ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md",
+        "race": "Khajiit",
+        "slot": "Khajiit-Alkosh|boon",
+        "matched": "runbook checkbox [x] (2026-07-12 co-test, reconciled from operator dashboard; no separate Papyrus marker captured)"
+      }
     },
     "Khajiit-Azurah|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Khajiit-Azurah",
       "class": "boon",
       "race": "Khajiit",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-12 co-test: tester confirmed Khajiit-Azurah|boon (e.g. Azurah's Twilight - Seeker) in the Khajiit sitting; runbook box checked and reconciled to the ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md",
+        "race": "Khajiit",
+        "slot": "Khajiit-Azurah|boon",
+        "matched": "runbook checkbox [x] (2026-07-12 co-test, reconciled from operator dashboard; no separate Papyrus marker captured)"
+      }
     },
     "Khajiit-BaanDar|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Khajiit-BaanDar",
       "class": "boon",
       "race": "Khajiit",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-12 co-test: tester confirmed Khajiit-BaanDar|boon (e.g. Baan Dar's Guile - Seeker) in the Khajiit sitting; runbook box checked and reconciled to the ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md",
+        "race": "Khajiit",
+        "slot": "Khajiit-BaanDar|boon",
+        "matched": "runbook checkbox [x] (2026-07-12 co-test, reconciled from operator dashboard; no separate Papyrus marker captured)"
+      }
     },
     "Khajiit-Khenarthi|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Khajiit-Khenarthi",
       "class": "boon",
       "race": "Khajiit",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-12 co-test: tester confirmed Khajiit-Khenarthi|boon (e.g. Khenarthi's Road - Seeker) in the Khajiit sitting; runbook box checked and reconciled to the ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md",
+        "race": "Khajiit",
+        "slot": "Khajiit-Khenarthi|boon",
+        "matched": "runbook checkbox [x] (2026-07-12 co-test, reconciled from operator dashboard; no separate Papyrus marker captured)"
+      }
     },
     "Khajiit-Lunar|substrate-favor": {
       "status": "pending",
@@ -1175,22 +1195,32 @@
       "creditedFrom": null
     },
     "Khajiit-Rajhin|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Khajiit-Rajhin",
       "class": "boon",
       "race": "Khajiit",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-12 co-test: tester confirmed Khajiit-Rajhin|boon (e.g. Rajhin's Shadow - Seeker) in the Khajiit sitting; runbook box checked and reconciled to the ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md",
+        "race": "Khajiit",
+        "slot": "Khajiit-Rajhin|boon",
+        "matched": "runbook checkbox [x] (2026-07-12 co-test, reconciled from operator dashboard; no separate Papyrus marker captured)"
+      }
     },
     "Khajiit-Substrate|substrate-favor": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Khajiit-Substrate",
       "class": "substrate-favor",
       "race": "Khajiit",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-12 co-test: tester confirmed Khajiit-Substrate|substrate-favor (e.g. Lunar Hardiness) in the Khajiit sitting; runbook box checked and reconciled to the ledger.",
+      "creditedFrom": {
+        "ledger": "references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md",
+        "race": "Khajiit",
+        "slot": "Khajiit-Substrate|substrate-favor",
+        "matched": "runbook checkbox [x] (2026-07-12 co-test, reconciled from operator dashboard; no separate Papyrus marker captured)"
+      }
     },
     "Khenarthi|price": {
       "status": "pending",
