@@ -212,7 +212,7 @@
         }
       },
       "freshness": { "sources": [], "onDrift": "STALE" },
-      "closes": "Package each list per the 1.0 Compatibility Gate definition (religion-removal set, list patch, placement notes, patcher rerun steps, maintainer brief, smoke checklist).",
+      "closes": "Package each list per the 1.0 Compatibility Gate definition (religion-removal set, list patch, placement notes, patcher rerun steps, maintainer brief, smoke checklist). EFFICIENCY (owner, 2026-07-12): the six lists collapse to TWO real build-targets - DoD-base and JOJ-base - which SHARE the religion-removal set, so the packaging WORK is 2 passes (~1 session) not 6. The gate still records one sign-off per list (no list silently skipped); each list's slot closes off its base-group's package. Confirm the per-list -> base mapping (which of TOT/HOH/MOM/VOV are DoD-base vs JOJ-base) at packaging time.",
       "post10": false
     },
     {

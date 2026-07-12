@@ -84,9 +84,10 @@ var labels=['felt-family sweep (71 net families)','ARR compat packet','Bordello 
 var effort=[2.5,1.5,1,1];
 var fill=['#378ADD','#888780','#888780','#378ADD']; // blue=in-game test, gray=packaging
 // OWNER CORRECTION 2026-07-12: C-COMPAT-BORDELLO's 6 lists (JOJ/TOT/HOH/MOM/DoD/VOV)
-// collapse to just 2 real build-targets because of how the lists are built (shared base) --
-// so the packaging WORK is 2 passes, ~1 session, not 6. The gate still carries 6 evidence
-// slots (one sign-off per list), but they close from 2 packaging efforts. Bar dropped 2.5 -> 1.
+// collapse to 2 real build-targets -- DoD-base and JOJ-base -- which SHARE the
+// religion-removal set. Packaging WORK is 2 passes, ~1 session, not 6. The gate still
+// carries 6 evidence slots (one sign-off per list), closed from the 2 base packages.
+// Per-list -> base mapping (TOT/HOH/MOM/VOV) TBD at packaging time. Bar dropped 2.5 -> 1.
 // Cards: felt-family 79/150 (53%) | sessions to 1.0 ~6 (was 10.5) | compat build-targets 2 not 6.
 // Experience Mode smoke CLOSED (2/2), signal-floor smoke CLOSED (13/13) -> both bars removed.
 // Nord + Imperial felt sittings DONE + verified (13/13 each, ticks backed by ledger).
