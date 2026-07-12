@@ -100,7 +100,7 @@ Expected backend state before in-game smoke:
 - `pdv_deity_signal_remap_adversary_check`: PASS. Its
   `potentialOffRosterHostileSurfaces` count is expected to remain nonzero
   because the source guard, not row deletion, owns that cross-origin policy.
-- Likes/dislikes version: `LIKES_DISLIKES_VERSION = 15`.
+- Likes/dislikes version: `LIKES_DISLIKES_VERSION = 16`.
 - Signal-floor smoke gate: backend PASS; runtime OPEN is expected until live
   Papyrus markers exist.
 
@@ -280,15 +280,15 @@ SNAPSHOT of `PDV_FeltFamilyEvidenceLedger.json` as of 2026-07-11 (107 pending fa
 - [x] `Kynareth|price`  (e.g. raise-undead)
 - [x] `Stendarr|price`  (e.g. murder-defenseless)
 
-### 3. Breton sitting (8 pending families; 12 original families) - `set PDV_GLO_OriginRace to 2`
+### 3. Breton sitting (active runtime checklist; generic Tradition lane retired) - `set PDV_GLO_OriginRace to 2`
 
-Pause note, 2026-07-11: Breton runtime proof is paused before boon evidence. Live source readback shows `Breton-KnightsRoad|boon` is currently keyed to `PDV_Stendarr` specifically, not any Knight's Road deity family member. Architect review must decide whether Breton tradition rewards stay single-deity anchored or broaden to any eligible tradition deity before this sitting continues.
+Resolved note, 2026-07-12: Breton runtime proof is unpaused for B1-B5 below. The Knight's Road/Stendarr anchor question is resolved in favor of tradition-pool breadth, and the old Breton ancestor substrate is retired at runtime; migrated saves should clear `Breton Inherited Ward` on the next reward/dawn sync.
 
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
 - [ ] `Breton-GreenWay|boon`  (e.g. Green Way - Seeker)
 - [ ] `Breton-HiddenArt|boon`  (e.g. Hidden Art - Seeker)
 - [ ] `Breton-KnightsRoad|boon`  (e.g. Knight's Vow - Seeker)
-- [ ] `Breton-Tradition|boon`  (e.g. Tradition's Footing - Seeker)
+- [x] `Breton-Tradition|boon` is N/A - the generic Tradition's Footing lane is retired; confirm absence via B3.
 
 **neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
 - [ ] `Neglect-Breton|neglect`  (e.g. The Tradition Grows Distant)
@@ -450,6 +450,48 @@ Pause note, 2026-07-11: Breton runtime proof is paused before boon evidence. Liv
 - 2026-07-11: `Disfavor-SkyStormHunt|disfavor-sting` retro-credited from the already-run Kyne/Kynareth weather proof. Papyrus log shows `Kynareth -> SkyStormHunt Light`; tester confirmed this had already been covered, so no repeat Imperial step is required.
 - 2026-07-11: `Favor Slips` source-label write landed in the live ESP and readback passed. Runtime visual recheck is still owed because the player-facing Active Effects source label must be seen in game.
 - 2026-07-11: Breton co-test paused before boon proof. Current source keys Knight's Road reward sync to Stendarr specifically; architecture review is pending on whether this remains the intended anchor model.
+
+- 2026-07-12: RESOLVED the 2026-07-11 Knight's Road/Stendarr anchor question. Architecture review (v3 12.5 + race sheet 10.3) confirmed the tradition is the lane, not a single deity. Manager reconciliation landed (compile 0/0, verifier FAIL=0): tradition breadth across the deity pool lights T1/T2, a focused patron unlocks T3, and the generic "Tradition's Footing" lane is retired. See `PDV_BretonTraditionReconciliation_BuildSpec_2026-07-11.md`. Green Way pilgrimage/sleep enrichment deferred to a focused session (spec Part 2).
+- 2026-07-12: CORRECTION to a same-session claim -- the six Breton P2 FormLists were NOT empty; that was a wrong-field houseCARL query (`FormIDs` vs `Items`). Lists are populated; the fill tool ran as a verified no-op (ESP byte-identical). Residual is a stale signal-floor ledger, tracked separately.
+- 2026-07-12: HOTFIX for B1 runtime display defect. Tester confirmed Mara can now light Knight's Vow/Aegis, but toast and Book of Days only named Mara and Active Effects still showed `Breton Inherited Ward`. Manager hotfix now emits a tradition-specific reward toast/Book of Days entry (`Knight's Road deepens`; `The Knight's Road names you Seeker/Devoted.`), keeps the reward spell, and clears the retired Breton ancestor substrate on reward/dawn/legacy signal sync. Compile 0/0; verifier FAIL=0; Prisma UI audit PASS 89.
+- 2026-07-12: BOOK-READ FARM CLOSED. The generic book faucet (events 340 skill / 341 spell tome / 342 lore) never tracked "already read", so the same lore book could be re-read up to its per-deity daily cap every day forever, and the once-per-day Azura/Hermaeus Mora book faucets refreshed off any shelf book. Fix in `PDV_PlayerEvents.psc`: a once-ever `PDV.BookRead.<formID>.Seen` guard (`MarkGenericBookRead`) marks each book base form on first read, shared across `OnBookRead` and the `OnItemRemoved` consume-on-learn tome ingress so a learn plus a later re-read of another copy credit exactly once. Azura `fate_threshold` and HM `disciplined_study` now also require an unread book; HM `forbidden_knowledge` keeps its own per-form manager guard and is untouched, as are the P2 racial-source and Altmer Talos-Mistake one-shots. Compile 0/0; verifier FAIL=0. Runtime-route + manual-display proof owed via the Book-Read Unread Cap card below. Save-compat: existing saves have no seen keys, so every previously-read book credits once more post-update, then never again (expected, no migration).
+
+## Breton Tradition + Dislike Cards (2026-07-12)
+
+Cover the reconciliation (Part 1) and the softer Y'ffre dislike set (Part 3).
+Both are **compile + readback proven**; these cards close the runtime-route and
+manual-display buckets. Use origin index 2 (Breton); seed tradition via the Debug
+MCM (`DebugSetBretonTradition`) or a fresh Breton save. Cards B4/B5 need a **fresh
+save** -- the new likes/dislikes rows load on first table build, and the version
+was held at 15, so an existing v15 save will not show them.
+
+| # | Scenario | Steps | Expected | Manual checks |
+|---:|---|---|---|---|
+| B1 | Tradition breadth lights T1/T2 (not single-deity) | Knight's Road Breton, broad patron state. Build piety on a NON-Stendarr pool deity (Mara or Arkay) to Seeker, then Devoted. | Knight's Vow (T1) lights at pool-Seeker; Knight's Aegis (T2) at pool-Devoted, with NO Stendarr piety. Toast title should be `Knight's Road deepens`; Book of Days should add `The Knight's Road names you Seeker/Devoted.` | Reward spell present in Active Effects/Magic; the pre-fix bug (only Stendarr moved it) is gone; the display is not Mara-only; `Breton Inherited Ward` clears and does not return |
+| B2 | Focused patron unlocks T3 | Same save; accept a focused patron offer within Knight's Road; take that deity to Champion. | Knight's Bulwark (T3) lights only after commitment + Champion; broad phase alone caps at T2 | T3 present only when focused; broad-only never yields T3 |
+| B3 | Generic Tradition lane and ancestor substrate retired | Any Breton, broad worship; also valid on the B1 migrated save after one reward sync/dawn. | No "Tradition's Footing" Health buff granted; no `Breton Inherited Ward`; migrated saves lose both obsolete effects | Survey/Active Effects show only the active tradition family, no generic tradition Health spell, and no mixed-inheritance substrate copy |
+| B4 | Green Way Y'ffre dislikes (softer set) | Green Way Breton, fresh save. Fire raise-undead (365) and assault-innocent (364). | Y'ffre loss surfaces for both; necromancy is the stronger (-medium) | Loss visible (toast / Book of Days / panel Ledger); daily caps hold; NO smithing or food penalty (softer set) |
+| B5 | Green Way hunt like | Same save; kill wild game (non-combat animal, event 303). | Y'ffre small gain (respectful hunt); cook-meal also gains | Gain visible; pairs with cook; a minor Kynareth -303 is expected (cross-deity, by design) |
+
+## Book-Read Unread Cap Card (2026-07-12)
+
+Proves the once-ever per-book guard from the 2026-07-12 follow-up. **Compile +
+readback proven**; this card closes the runtime-route and manual-display
+buckets. Origin does not matter (any race); use a lore god's origin so the 342
+credit is reachable (e.g. Imperial index 1 reaches Arkay/Julianos). Set
+`PDV_GLO_DebugLevel to 2` and watch the Papyrus log plus the piety readout.
+Repeat traces to watch for: `Generic book read repeat skipped: <formID>` and
+`Spell tome learn repeat skipped: <formID>`.
+
+| # | Scenario | Steps | Expected | Manual checks |
+|---:|---|---|---|---|
+| BR1 | Lore book once-only | Read any unlisted lore book, then close and re-read the same book. | First read gives one 342 credit; re-read logs `Generic book read repeat skipped` and awards nothing. | Piety readout moves once only; no toast/Book of Days on the repeat |
+| BR2 | Skill book once-only | Read a `PDV_FLST_FaucetSkillBooks` entry, then re-read it. | First read gives one 340 credit; re-read is skipped. | Piety guard is independent of vanilla skill training; trace fires on repeat |
+| BR3 | Spell tome, unknown spell | Read a tome for an unknown spell (consumed on learn); `player.additem` another copy of the same tome and read it (spell now known, book opens). | Learn gives one 341 credit via `OnItemRemoved`; the second copy logs `Spell tome learn`/`Generic book read repeat skipped` and awards nothing. | Shared key holds across the two ingresses; no double-credit |
+| BR4 | Spell tome, already-known spell | Read a tome whose spell is already known and never routed before, then re-read. | First read gives one 341 credit via `OnBookRead`; re-read skipped. | Single credit; repeat trace present |
+| BR5 | Once-ever, not once-per-day | After BR1-BR4, wait 24+ game hours and re-read any of those books; then read a brand-new unread book. | Old books stay skipped after the day rollover; the new book credits normally. | Guard is permanent per form, and does not over-suppress fresh books |
+| BR6 | Daily book faucets need unread book | While Azura/HM faucet-eligible, read a fresh book (first-ever) and note the faucet credit; next day, re-read the same book, then read a new one. | Azura `fate_threshold` / HM `disciplined_study` credit only the unread book; the re-read gives no faucet credit; a new book does. HM `forbidden_knowledge` behaves exactly as before. | Forbidden-knowledge per-form guard unchanged; no daily refresh off a re-read |
+| BR7 | Non-regression: P2 + Altmer | Read a P2 racial-source book twice, and the Talos Mistake once. | P2 once-ever behavior and the Altmer one-shot are unchanged from before the fix. | No behavior change on the already-guarded paths |
 
 ## 1.0 Open Gate Map
 

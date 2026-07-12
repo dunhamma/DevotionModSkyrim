@@ -134,7 +134,7 @@
         { "actor": "sithis", "eventId": 366, "sentiment": "+", "baseDelta": "0.5" }
       ],
       "expectedSourceTokens": [ "LIKES_DISLIKES_VERSION = 16", "ldEvents[32] = 303", "ldEvents[33] = 366" ],
-      "manualChecks": [ "new save or unstamped save logs version 15 loaded", "daily caps hold" ],
+      "manualChecks": [ "new save or unstamped save logs version 16 loaded", "daily caps hold" ],
       "debugMcmScenario": 9
     },
     {

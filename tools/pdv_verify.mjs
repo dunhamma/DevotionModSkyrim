@@ -148,7 +148,7 @@ const PHASE20_RACE_IMPLEMENTATION_MANIFESTS = [
 ];
 const DEITY_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes.csv");
 const PRINCE_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes_Princes_V2.csv");
-const EXPECTED_LIKES_DISLIKES_VERSION = 15;
+const EXPECTED_LIKES_DISLIKES_VERSION = 16;
 const EXPECTED_PRINCE_LD_VERSION = 4;
 const PHASE20_NO_IN_GAME_PROOF_GATES = path.join(
   PROJECT_ROOT,
@@ -4120,8 +4120,10 @@ class Verifier {
       "Function ShouldRouteP2Source(FormList sourceList, Form sourceForm, String routeKey, String sourceKind)",
       "Function ShouldRouteP2QuestStage(FormList sourceList, Quest sourceQuest, Int expectedFormId, Int approvedStage, String routeKey, Int newStage)",
       "Function MarkP2SourceRoute(Form sourceForm, String routeKey, String sourceKind)",
+      "Function MarkGenericBookRead(Form bookForm)",
       "Function HasListedForm(FormList sourceList, Form sourceForm)",
       "PDV.P2Source.",
+      "PDV.BookRead.",
       "PDV_FLST_P2_BretonKnightsRoadSources",
       "PDV_FLST_P2_DunmerAzuraSources",
       "PDV_FLST_P2_ImperialCivicSources",
@@ -6612,8 +6614,8 @@ class Verifier {
     this.checkSourceContains("Breton spine manager source", "PDV__ManagerQuest", [
       "PDV_Substrate_BretonAncestor Property PDV_BretonAncestorSubstrate Auto",
       "Function AwardBretonAncestorSpinePulse(Float multiplier, String reason)",
-      "PDV_Magnus.SIGNAL_ANCESTOR_SPINE",
-      "\"PDV.Breton.AncestralStanding\"",
+      "Retired Breton ancestor spine signal ignored",
+      "PDV_BretonAncestorSubstrate.ClearSubstrateBoons()",
       "AwardBretonAncestorSpinePulse(multiplier, reason)",
       "Function SyncBretonAncestorSubstrate(Actor playerRef, Bool isBreton)",
       "Function HandleBretonSleepEvents(Actor playerRef, String reason)",
@@ -8386,7 +8388,7 @@ class Verifier {
     ], this.todo.bind(this));
 
     this.checkSourceContains("Generic faucet PO3 source", "PDV_PlayerEvents", [
-      "RouteGenericBookRead(akBook)",
+      "RouteGenericBookRead(akBook, firstRead)",
       "RouteGenericAction(EVT_HARVEST_INGREDIENT",
       "RouteGenericAction(EVT_ACCEPT_DAEDRIC_ARTIFACT",
       "RouteGenericAction(EVT_RAISE_UNDEAD",
