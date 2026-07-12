@@ -487,8 +487,16 @@
   const bloodDropPath = (cx, cy, r) =>
     `M${cx} ${(cy - r * 1.8).toFixed(1)} C${cx + r * 1.15} ${cy - r * 0.2} ${cx + r * 1.05} ${cy + r * 0.9} ${cx} ${cy + r} C${cx - r * 1.05} ${cy + r * 0.9} ${cx - r * 1.15} ${cy - r * 0.2} ${cx} ${(cy - r * 1.8).toFixed(1)} Z`;
 
-  const renderPietyInstrument = (slot, inst = {}) => {
+  // Shared frame for all instrument renderers: build the SVG, hand it to the
+  // per-instrument draw callback, then mount it with its caption.
+  const renderInstrumentFrame = (slot, inst, caption, draw) => {
     const svg = makeInstrumentSvg();
+    draw(svg);
+    slot.appendChild(svg);
+    addInstrumentCaption(slot, inst, caption);
+  };
+
+  const renderPietyInstrument = (slot, inst = {}) => renderInstrumentFrame(slot, inst, tierName(state.tier), (svg) => {
     const instData = inst.data || {};
     const piety = clamp(instData.piety !== undefined ? instData.piety : state.piety, 0, 85);
     const primary = clamp01(inst.primary || piety / 85);
@@ -519,26 +527,22 @@
         class: "instrument-thin",
       });
     }
-    slot.appendChild(svg);
-    addInstrumentCaption(slot, inst, tierName(state.tier));
-  };
+  });
 
   const renderLunarInstrument = (slot, inst = {}) => {
     const data = inst.data || {};
-    const phase = clamp(data.phase || 1, 1, 8);
-    const svg = makeInstrumentSvg();
-    const fill = fillClass(inst);
-    appendMoonPhase(svg, 118, 80, 30, phase, fill);
-    appendMoonPhase(svg, 178, 50, 14, phase, fill);
-    slot.appendChild(svg);
-    addInstrumentCaption(slot, inst, text(data.focus, "Lunar Lattice"));
+    renderInstrumentFrame(slot, inst, text(data.focus, "Lunar Lattice"), (svg) => {
+      const phase = clamp(data.phase || 1, 1, 8);
+      const fill = fillClass(inst);
+      appendMoonPhase(svg, 118, 80, 30, phase, fill);
+      appendMoonPhase(svg, 178, 50, 14, phase, fill);
+    });
   };
 
-  const renderAncestorInstrument = (slot, inst = {}) => {
+  const renderAncestorInstrument = (slot, inst = {}) => renderInstrumentFrame(slot, inst, "Ancestor layer", (svg) => {
     const data = inst.data || {};
     const depthValue = data.depth !== undefined ? data.depth : inst.tier;
     const depth = clamp(depthValue, 0, 3);
-    const svg = makeInstrumentSvg();
     const fillSoft = fillSoftClass(inst);
     appendSvg(svg, "path", { d: "M96 124 V56 Q150 22 204 56 V124", class: "instrument-outline" });
     const xs = [120, 150, 180];
@@ -548,15 +552,12 @@
       appendSvg(svg, "circle", { cx: x + 9, cy: "84", r: "2", class: "instrument-dark" });
       appendSvg(svg, "circle", { cx: x + 21, cy: "84", r: "2", class: "instrument-dark" });
     });
-    slot.appendChild(svg);
-    addInstrumentCaption(slot, inst, "Ancestor layer");
-  };
+  });
 
-  const renderDaedricInstrument = (slot, inst = {}) => {
+  const renderDaedricInstrument = (slot, inst = {}) => renderInstrumentFrame(slot, inst, "Daedric pact", (svg) => {
     const level = clamp01(inst.primary !== undefined ? inst.primary : clamp(state.piety, 0, 85) / 85);
     const lit = Math.round(level * 5);
     const waning = isWaning(inst);
-    const svg = makeInstrumentSvg();
     for (let i = 0; i < 5; i += 1) {
       const x = 70 + i * 40;
       appendSvg(svg, "path", { d: starSixPath(x, 52, 13), class: i < lit ? (waning ? "instrument-star-muted" : "instrument-star") : "instrument-muted" });
@@ -565,9 +566,7 @@
       const x = 70 + i * 40;
       appendSvg(svg, "path", { d: bloodDropPath(x, 104, 9), class: i < lit ? (waning ? "instrument-fade" : "instrument-blood") : "instrument-blood-muted" });
     }
-    slot.appendChild(svg);
-    addInstrumentCaption(slot, inst, "Daedric pact");
-  };
+  });
 
   const instrumentRenderers = {
     piety: renderPietyInstrument,
