@@ -283,12 +283,12 @@
       "creditedFrom": null
     },
     "Breton-Tradition|boon": {
-      "status": "pending",
+      "status": "not-applicable",
       "lane": "Breton-Tradition",
       "class": "boon",
       "race": "Breton",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
+      "note": "2026-07-12: N/A -- the generic 'Tradition' broad reward (PDV_Bless_Breton_Tradition_T1/T2) was RETIRED by the tradition reconciliation (v3 12.5, no generic Breton broad lane). The reward family no longer grants, so there is no felt effect to prove. The Breton tradition boon is now proven per-tradition via Breton-KnightsRoad/HiddenArt/GreenWay|boon. Drop this slot fully when the deprecated Tradition ESP records are removed and the felt registry is regenerated. See PDV_BretonTraditionReconciliation_BuildSpec_2026-07-11.md.",
       "creditedFrom": null
     },
     "CreedLoss-Breton|price": {

@@ -322,6 +322,12 @@ Mara,362,steal-item,-,small,-0.5,3,0,,owned,breton,the hidden household cannot b
 Y'ffre,313,rest-under-open-sky,+,medium,0.75,2,0.5,,,breton,Green Way outdoor rites belong to Yffre not Kynareth
 Y'ffre,334,harvest-ingredient,+,small,0.25,3,0,,,breton,curated gathering supports Green Way practice without making every herb a boon
 Y'ffre,331,enchant-item,-,small,-0.35,3,0,,,breton,binding power into worked matter strains the Green Way
+Y'ffre,303,hunt-wild-game,+,small,0.25,3,0,,,breton,the Green Pact hunt takes meat with respect; the slain are honored; never wasted
+Y'ffre,333,cook-meal,+,small,0.5,3,0,,,breton,the Green Way wastes no kill; the slain are eaten; never squandered
+Y'ffre,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,breton,putting down the unliving restores the natural cycle the Green Way keeps
+Y'ffre,350,heal-or-cure-npc,+,small,0.5,3,0,,,breton,mend living things as the Green Way intends
+Y'ffre,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,breton,raising the dead defiles the natural cycle the Green Way keeps
+Y'ffre,364,assault-innocent,-,small,-0.5,3,0,,,breton,violence against the innocent breaks the Green Way harmony
 Kynareth,313,rest-under-open-sky,+,small,0.25,2,0.5,,,breton,Kynareth remains a Divine contributor only and not Green Way owner
 akatosh,351,clear-bounty-serve-time,+,medium,0.75,1,0.5,,,breton,answering lawful debt supports Knight Road order
 akatosh,362,steal-item,-,medium,-0.75,2,0.5,,owned,breton,oath and order are broken by theft

@@ -100,7 +100,7 @@ Expected backend state before in-game smoke:
 - `pdv_deity_signal_remap_adversary_check`: PASS. Its
   `potentialOffRosterHostileSurfaces` count is expected to remain nonzero
   because the source guard, not row deletion, owns that cross-origin policy.
-- Likes/dislikes version: `LIKES_DISLIKES_VERSION = 15`.
+- Likes/dislikes version: `LIKES_DISLIKES_VERSION = 16`.
 - Signal-floor smoke gate: backend PASS; runtime OPEN is expected until live
   Papyrus markers exist.
 
@@ -450,6 +450,26 @@ Pause note, 2026-07-11: Breton runtime proof is paused before boon evidence. Liv
 - 2026-07-11: `Disfavor-SkyStormHunt|disfavor-sting` retro-credited from the already-run Kyne/Kynareth weather proof. Papyrus log shows `Kynareth -> SkyStormHunt Light`; tester confirmed this had already been covered, so no repeat Imperial step is required.
 - 2026-07-11: `Favor Slips` source-label write landed in the live ESP and readback passed. Runtime visual recheck is still owed because the player-facing Active Effects source label must be seen in game.
 - 2026-07-11: Breton co-test paused before boon proof. Current source keys Knight's Road reward sync to Stendarr specifically; architecture review is pending on whether this remains the intended anchor model.
+
+- 2026-07-12: RESOLVED the 2026-07-11 Knight's Road/Stendarr anchor question. Architecture review (v3 12.5 + race sheet 10.3) confirmed the tradition is the lane, not a single deity. Manager reconciliation landed (compile 0/0, verifier FAIL=0): tradition breadth across the deity pool lights T1/T2, a focused patron unlocks T3, and the generic "Tradition's Footing" lane is retired. See `PDV_BretonTraditionReconciliation_BuildSpec_2026-07-11.md`. Green Way pilgrimage/sleep enrichment deferred to a focused session (spec Part 2).
+- 2026-07-12: CORRECTION to a same-session claim -- the six Breton P2 FormLists were NOT empty; that was a wrong-field houseCARL query (`FormIDs` vs `Items`). Lists are populated; the fill tool ran as a verified no-op (ESP byte-identical). Residual is a stale signal-floor ledger, tracked separately.
+
+## Breton Tradition + Dislike Cards (2026-07-12)
+
+Cover the reconciliation (Part 1) and the softer Y'ffre dislike set (Part 3).
+Both are **compile + readback proven**; these cards close the runtime-route and
+manual-display buckets. Use origin index 2 (Breton); seed tradition via the Debug
+MCM (`DebugSetBretonTradition`) or a fresh Breton save. Cards B4/B5 need a **fresh
+save** -- the new likes/dislikes rows load on first table build, and the version
+was held at 15, so an existing v15 save will not show them.
+
+| # | Scenario | Steps | Expected | Manual checks |
+|---:|---|---|---|---|
+| B1 | Tradition breadth lights T1/T2 (not single-deity) | Knight's Road Breton, broad patron state. Build piety on a NON-Stendarr pool deity (Mara or Arkay) to Seeker, then Devoted. | Knight's Vow (T1) lights at pool-Seeker; Knight's Aegis (T2) at pool-Devoted, with NO Stendarr piety | Reward spell present in Active Effects/Magic; the pre-fix bug (only Stendarr moved it) is gone |
+| B2 | Focused patron unlocks T3 | Same save; accept a focused patron offer within Knight's Road; take that deity to Champion. | Knight's Bulwark (T3) lights only after commitment + Champion; broad phase alone caps at T2 | T3 present only when focused; broad-only never yields T3 |
+| B3 | Generic Tradition lane retired | Any Breton, broad worship. | No "Tradition's Footing" Health buff granted; migrated saves lose it | Survey/Active Effects show only the tradition family, no generic tradition Health spell |
+| B4 | Green Way Y'ffre dislikes (softer set) | Green Way Breton, fresh save. Fire raise-undead (365) and assault-innocent (364). | Y'ffre loss surfaces for both; necromancy is the stronger (-medium) | Loss visible (toast / Book of Days / panel Ledger); daily caps hold; NO smithing or food penalty (softer set) |
+| B5 | Green Way hunt like | Same save; kill wild game (non-combat animal, event 303). | Y'ffre small gain (respectful hunt); cook-meal also gains | Gain visible; pairs with cook; a minor Kynareth -303 is expected (cross-deity, by design) |
 
 ## 1.0 Open Gate Map
 

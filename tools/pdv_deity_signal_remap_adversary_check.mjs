@@ -207,7 +207,7 @@ for (const manualId of ["DA10", "DA13", "DA06", "dunHunterQST", "MS05", "Freefor
 assert("shrine cap helper exists", manager.includes("Bool Function ConsumeShrinePrayerCredit("), "Missing shared daily shrine cap helper.");
 assert("shrine cap is called", manager.includes("if !ConsumeShrinePrayerCredit(deity, sourceId)"), "AwardShrinePrayerToDeityName does not consume the per-deity daily cap.");
 assert("shrine cap key is deity scoped", manager.includes("\"PDV.Signal.ShrinePrayer.\" + deityKey"), "Shrine cap must key by resolved deity, not only by shrine/source.");
-assert("likes dislikes version bumped", /Int Property LIKES_DISLIKES_VERSION = 15 AutoReadOnly/.test(manager), "LIKES_DISLIKES_VERSION should be 15 for the signal-floor rows.");
+assert("likes dislikes version bumped", /Int Property LIKES_DISLIKES_VERSION = 16 AutoReadOnly/.test(manager), "LIKES_DISLIKES_VERSION should be 16 for the signal-floor rows.");
 assert("paarthurnax kill helper exists", playerEvents.includes("Bool Function IsPaarthurnaxActor") && playerEvents.includes("RoutePaarthurnaxKill(akVictim as Form)"), "Paarthurnax kill must be detected before Khajiit-only organic kill routing.");
 assert("paarthurnax kill eventbus route exists", eventBus.includes("Function RoutePaarthurnaxKill(Form sourceForm)") && eventBus.includes("HandlePaarthurnaxKill(sourceForm, \"eventbus_paarthurnax_kill\")"), "EventBus must expose the global Paarthurnax kill route.");
 assert("paarthurnax kill manager route exists", manager.includes("Function HandlePaarthurnaxKill(Form sourceForm, String reason)") && manager.includes("\"PDV.Paarthurnax.KillSeen\""), "Manager must apply the one-shot Paarthurnax kill fork.");
@@ -222,11 +222,15 @@ for (const deity of ["Stuhn", "Stendarr", "Mara", "Kyne"]) {
   assert(`paarthurnax spare fanout ${deity}`, manager.includes(`ApplyPaarthurnaxSpareReaction("${deity}",`), `Missing Paarthurnax spare reaction for ${deity}.`);
 }
 
-const syncBretonRewards = functionBody(manager, "SyncBretonRewards");
-assert("breton hidden art reward uses magnus", syncBretonRewards.includes("BRETON_TRADITION_HIDDEN_ART") && syncBretonRewards.includes("PDV_Magnus"), "Hidden Art reward family should read Magnus.");
-assert("breton green way reward uses yffre", syncBretonRewards.includes("BRETON_TRADITION_GREEN_WAY") && syncBretonRewards.includes("PDV_Yffre"), "Green Way reward family should read Y'ffre.");
-assert("breton hidden art reward not julianos", !/BRETON_TRADITION_HIDDEN_ART[\s\S]{0,180}PDV_Julianos/.test(syncBretonRewards), "Hidden Art still routes to Julianos.");
-assert("breton green way reward not kynareth", !/BRETON_TRADITION_GREEN_WAY[\s\S]{0,180}PDV_Kynareth/.test(syncBretonRewards), "Green Way still routes to Kynareth.");
+// Post-reconciliation (2026-07-12, PDV_BretonTraditionReconciliation_BuildSpec):
+// the tradition is the reward lane. Deity-pool associations moved out of
+// SyncBretonRewards into GetBretonTraditionPoolBestTier (broad breadth) and
+// IsDeityInBretonTraditionPool (focused), so validate those.
+const bretonTraditionBody = functionBody(manager, "GetBretonTraditionPoolBestTier") + "\n" + functionBody(manager, "IsDeityInBretonTraditionPool");
+assert("breton hidden art reward uses magnus", bretonTraditionBody.includes("BRETON_TRADITION_HIDDEN_ART") && bretonTraditionBody.includes("PDV_Magnus"), "Hidden Art broad breadth should read Magnus.");
+assert("breton green way reward uses yffre", bretonTraditionBody.includes("BRETON_TRADITION_GREEN_WAY") && bretonTraditionBody.includes("PDV_Yffre"), "Green Way pool should read Y'ffre.");
+assert("breton hidden art reward not julianos", !/BRETON_TRADITION_HIDDEN_ART[\s\S]{0,180}PDV_Julianos/.test(bretonTraditionBody), "Hidden Art still routes to Julianos.");
+assert("breton green way reward not kynareth", !/BRETON_TRADITION_GREEN_WAY[\s\S]{0,180}PDV_Kynareth/.test(bretonTraditionBody), "Green Way still routes to Kynareth.");
 
 assert("breton offers included", manager.includes("IsBretonOfferEligibleDeity(deity)"), "Formal offer gate does not include Breton eligibility.");
 assert("altmer trinimac offer included", /IsAltmerOfferEligibleDeity[\s\S]*PDV_Trinimac/.test(manager), "Altmer offer eligibility does not include Trinimac.");
