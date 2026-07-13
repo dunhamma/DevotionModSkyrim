@@ -140,12 +140,13 @@
     "effects": [
       {
         "magicEffectEditorId": "PDV_MGEF_Neglect_KhajiitLunar_Stamina",
-        "actorValue": "StaminaRateMult",
-        "magnitude": -5,
-        "nightOnly": true
+        "actorValue": "Stamina",
+        "magnitude": -10,
+        "nightOnly": true,
+        "effectName": "Fortify Stamina"
       }
     ],
-    "playerFacingText": "You have not kept the moons. At night your stamina regenerates 5% more slowly until you return to the road and the lattice."
+    "playerFacingText": "You have not kept the moons. Your Maximum Stamina is reduced by 10 until you return to the road and the lattice."
   },
   "emphasisRewards": [
     {

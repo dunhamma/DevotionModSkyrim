@@ -562,11 +562,12 @@
     "effects": [
       {
         "magicEffectEditorId": "PDV_MGEF_Neglect_Altmer_Magicka",
-        "actorValue": "MagickaRateMult",
-        "magnitude": -4
+        "actorValue": "Magicka",
+        "magnitude": -10,
+        "effectName": "Fortify Magicka"
       }
     ],
-    "playerFacingText": "You have let coherence lapse. Your magicka regenerates 4% more slowly until you return to dawn practice and the ancestral order.",
+    "playerFacingText": "You have let coherence lapse. Your Maximum Magicka is reduced by 10 until you return to dawn practice and the ancestral order.",
     "biteCondition": "Gentle thinning when Auri-El piety is flat/below floor. Real mechanical bite only at curse/exile posture: Exiled vampire caps favor low and blocks full orthodox restoration; werewolf hard-halts advancement (no rival viable Altmer path)."
   },
   "curseAndExile": {

@@ -115,12 +115,13 @@
     "effects": [
       {
         "magicEffectEditorId": "PDV_MGEF_Neglect_Dunmer_Magicka",
-        "actorValue": "MagickaRateMult",
-        "magnitude": -5,
-        "appliesAtPosture": "Silent"
+        "actorValue": "Magicka",
+        "magnitude": -10,
+        "appliesAtPosture": "Silent",
+        "effectName": "Fortify Magicka"
       }
     ],
-    "playerFacingText": "The ancestors have fallen silent and cannot reach you. Your magicka regenerates 5% more slowly until the connection is restored.",
+    "playerFacingText": "The ancestors have fallen silent and cannot reach you. Your Maximum Magicka is reduced by 10 until the connection is restored.",
     "decayRule": "Ancestor substrate has NO passive dawn decay (ledger ruling: Skyrim lacks tombs/House shrines and that absence must not punish the player). Neglect is purely posture-gated: gentle ancestor-silence flavor at Strained, a single -5% MagickaRateMult bite only at the Silent curse posture, lifted on return to Normal or RestoredScarred."
   },
   "emphasisRewards": [

@@ -84,11 +84,12 @@
     "effects": [
       {
         "magicEffectEditorId": "PDV_MGEF_Neglect_Bosmer_Stamina",
-        "actorValue": "StaminaRateMult",
-        "magnitude": -5
+        "actorValue": "Stamina",
+        "magnitude": -10,
+        "effectName": "Fortify Stamina"
       }
     ],
-    "playerFacingText": "Your path no longer answers. Stamina regenerates 5% more slowly until you walk it again.",
+    "playerFacingText": "Your path no longer answers. Your Maximum Stamina is reduced by 10 until you walk it again.",
     "designNote": "GENTLE by default (R: 'Neglect: gentle'). One shared Bosmer neglect spell, keyed to whichever path is active. Runtime investigation 2026-06-13 found the magnitude should stay StaminaRateMult -5 for the intended 5-point regen-mult penalty, but the author must write regen AVs with the vanilla-aligned PeakValueModifier archetype instead of generic ValueModifier. Neglect is distinct from creed-violation loss. The neglect BITE is reserved for forced reckoning / Old Contract renunciation, which are handled by the creed-loss + Green Pact systems below, NOT by a larger neglect magnitude. Day-to-day lapse is gentle drift; curated plant-food violations are OldContract-only and remain separate from neglect."
   },
   "greenPactHandling": {
