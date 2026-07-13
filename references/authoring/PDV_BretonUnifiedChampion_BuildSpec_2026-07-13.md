@@ -1,6 +1,6 @@
 # Breton Unified Patron-Champion Model - Build Spec (2026-07-13)
 
-**Status:** Owner-approved 2026-07-13; authoring in progress this session.
+**Status:** Implemented and runtime-proven 2026-07-13; Hidden Art Survey composition retest remains.
 Supersedes the **reward-semantics** of `PDV_BretonTwoAxis_BuildSpec_2026-07-12.md`
 sections 1 (Reward semantics) and the `PDV_Bless_Breton_PatronChampion` flat-boon
 design. Everything else in the two-axis spec (practice-count tiers, resonance
@@ -23,8 +23,9 @@ the None property. This build replaces that dead path entirely.
 
 ## The unified model
 
-- **Tradition owns T1/T2 practice** (unchanged from two-axis: counts 3/6 ->
-  Seeker/Devoted). The tradition tops out at T2; it no longer grants a T3.
+- **Tradition owns T1/T2 practice** (25/50 weighted practice points, capped at
+  four points per in-game day). The tradition tops out at T2; it no longer
+  grants a T3.
 - **Patron (at Champion 85) always brings their OWN Champion boon**, resonant or
   not. The patron's identity - not the tradition - determines the reward.
 - **Resonance becomes presentation only.** Resonant = "X names you Champion
@@ -34,6 +35,16 @@ the None property. This build replaces that dead path entirely.
 - **Budget unchanged:** tradition T2 practice boon (1) + patron Champion boon (1)
   = 2 always-on, at the ceiling. Same as before; only the second boon's identity
   changes from a flat +10 to the deity's real signature.
+
+### Hidden Art integrated-pact boundary
+
+Hidden Art remains the Breton base layer when Hircine, Hermaeus Mora, Namira,
+or Nocturnal becomes the active pact. Survey and Book of Days must retain the
+tradition/practice/exposure readout and append the Prince identity. The pact
+keeps its own boon, while the generic Prince price and generic Prince stigma are
+waived because `WitchcraftExposure` plus Vigilant pressure is this lane's sole
+cost. At Notorious exposure (100), practice and T1/T2 rewards remain active and
+gain for those four Prince paths is multiplied by 1.25.
 
 This resolves the incentive inversion the placeholder created: under the old
 model a non-resonant patron would (if enriched) out-reward a resonant one;

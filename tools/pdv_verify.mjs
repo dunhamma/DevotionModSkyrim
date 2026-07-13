@@ -806,6 +806,13 @@ const STORY_MANAGER_RECEIVER_SCRIPTS = [
 
 const GENERIC_FAUCET_STORY_MANAGER_NODES = [
   {
+    eventName: "Kill Actor",
+    nodeEdid: "PDV__SM_KillActorNode",
+    receiverQuest: "PDV__SM_KillActor",
+    parent: "Skyrim.esm:013010",
+    previousSibling: "Skyrim.esm:01E491",
+  },
+  {
     eventName: "Craft Item",
     nodeEdid: "PDV__SM_CraftItemNode",
     receiverQuest: "PDV__SM_CraftItem",
@@ -1355,6 +1362,7 @@ class Verifier {
         ["Curated-signal dispatch coverage", p.dispatch, (s) => `${s.declaredScored} declared+scored; ${s.dispatched} dispatched; ${s.reservedKnownGaps} reserved`],
         ["EVT emission coverage", p.events, (s) => `${s.declared} declared; ${s.emitted} emitted; ${s.reservedKnownGaps} reserved`],
         ["Route/Handle reachability", p.routes, (s) => `${s.reachable}/${s.targets} reachable; ${s.reservedKnownGaps} reserved`],
+        ["Kill classification inheritance", p.killClassification, () => "generic and special kill paths use actor/base/race keyword lookup"],
         ["Likes/dislikes CSV->codegen freshness", p.csvFreshness, (s) => `${s.csvIds} csv ids ~ ${s.seededIds} seeded (version ${s.version})`],
       ];
       for (const [name, section, okDetail] of sub) {
@@ -4164,7 +4172,10 @@ class Verifier {
       "Function HandleRedguardAncestorSpine(String reason)",
       "String Function GetNordContextSurveyText()",
       "String Function GetDunmerReclamationFocusLabel(Int focusValue)",
-      "PDV.Breton.TraditionHookCount",
+      "BRETON_PRACTICE_SEEKER_POINTS = 25",
+      "BRETON_PRACTICE_DEVOTED_POINTS = 50",
+      "BRETON_PRACTICE_DAILY_MAX_POINTS = 4",
+      "Function ConsumeBretonPracticePointBudget(Int requestedPoints)",
       "PDV.Dunmer.ReclamationFocusCount",
       "PDV.Signal.DunmerTwilight.",
       "PDV.Imperial.CivicServiceCount",
@@ -8051,6 +8062,12 @@ class Verifier {
     this.pass("Manager script", "PDV__ManagerQuest script is attached.", PDV_ESP);
     const props = propertyMap(script);
     this.checkObjectProperties("Manager property", props, MANAGER_PROPERTIES);
+
+    if (props.has("PDV_Faction_Hunted_Vigilant")) {
+      this.fail("Retired manager property", "PDV_Faction_Hunted_Vigilant remains serialized in the manager VMAD after its Papyrus declaration was retired.", PDV_ESP);
+    } else {
+      this.pass("Retired manager property", "PDV_Faction_Hunted_Vigilant is absent from the manager VMAD.", PDV_ESP);
+    }
 
     if (this.recordsByEdid.has("PDV_GLO_PatronState")) {
       this.checkObjectProperties("Manager preflight property", props, MANAGER_PREFLIGHT_PROPERTIES);

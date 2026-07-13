@@ -4,7 +4,7 @@
   "proofBoundary": "These scenarios define backend, runtime-route, and manual-display evidence separately. Backend PASS does not prove in-game firing, Book of Days display, Survey/status clarity, duplicate suppression, wrong-origin silence, or save/load stack behavior.",
   "expected": {
     "likesDislikesVersion": 16,
-    "questCells": 1056,
+    "questCells": 1055,
     "questKeys": 168,
     "watchedQuests": 134,
     "faucetActs": 26

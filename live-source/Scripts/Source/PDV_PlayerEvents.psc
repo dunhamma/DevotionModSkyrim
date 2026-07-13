@@ -721,7 +721,7 @@ Event OnActorKilled(Actor akVictim, Actor akKiller)
 EndEvent
 
 Bool Function IsPaarthurnaxActor(Actor victimActor)
-    if !victimActor || !ActorTypeDragon || !victimActor.HasKeyword(ActorTypeDragon) || !Paarthurnax
+    if !victimActor || !ActorTypeDragon || !ActorHasInheritedKeyword(victimActor, ActorTypeDragon) || !Paarthurnax
         return False
     endIf
 
@@ -776,7 +776,7 @@ EndFunction
 Function HandleKhajiitOrganicKill(Actor victimActor, Actor playerRef)
     ; Dragon classification: Paarthurnax -> chaos-aid negative; named-dragon list ->
     ; full Alkosh beat with a one-shot marker per base; other dragons -> weekly nudge.
-    if ActorTypeDragon && victimActor.HasKeyword(ActorTypeDragon)
+    if ActorTypeDragon && ActorHasInheritedKeyword(victimActor, ActorTypeDragon)
         ActorBase victimBase = victimActor.GetActorBase()
         ActorBase victimLeveledBase = victimActor.GetLeveledActorBase()
         if Paarthurnax && (victimBase == Paarthurnax || victimLeveledBase == Paarthurnax)
@@ -825,6 +825,28 @@ Function HandleKhajiitOrganicKill(Actor victimActor, Actor playerRef)
         endIf
         SampleCombatHealth(playerRef, "kill")
     endIf
+EndFunction
+
+Bool Function ActorHasInheritedKeyword(Actor actorRef, Keyword keywordRef)
+    if !actorRef || !keywordRef
+        return False
+    endIf
+
+    if actorRef.HasKeyword(keywordRef)
+        return True
+    endIf
+
+    ActorBase baseActor = actorRef.GetLeveledActorBase()
+    if baseActor && baseActor.HasKeyword(keywordRef)
+        return True
+    endIf
+
+    Race actorRace = actorRef.GetRace()
+    if actorRace && actorRace.HasKeyword(keywordRef)
+        return True
+    endIf
+
+    return False
 EndFunction
 
 Bool Function IsCombatSessionOrigin(Int originRace)

@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const DEVOTION_SOURCE = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
+const DEVOTION_SOURCE = process.env.PDV_PRISMA_AUDIT_SOURCE_ROOT || "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
 const DEVOTION_COMPILED = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts";
 const DEVOTION_PRISMA_VIEW = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PrismaUI\\views\\Devotion\\app.js";
 const DEVOTION_PRISMA_INDEX = path.join(path.dirname(DEVOTION_PRISMA_VIEW), "index.html");
@@ -313,6 +313,45 @@ function verifySessionCopyContracts(manager, managerPath) {
     fail("Dunmer Survey curse-posture copy must avoid dash punctuation and explicitly surface restored, but scarred recovery.", managerPath);
   } else {
     pass("Dunmer Survey curse-posture copy avoids dash punctuation and names restored, but scarred recovery.", managerPath);
+  }
+
+  const bretonSurvey = functionBlock(manager, "GetBretonSurveyText");
+  const bretonPatronSurvey = functionBlock(manager, "GetBretonPatronSurveySentence");
+  const bretonChampionPresentation = functionBlock(manager, "MaybeShowBretonChampionBoonPresentation");
+  const bretonChampionBoonName = functionBlock(manager, "GetBretonChampionBoonDisplayName");
+  if (
+    bretonSurvey.includes('" Standing: " + band') ||
+    bretonSurvey.includes("open but unproven") ||
+    bretonSurvey.includes("practice points).") ||
+    !bretonSurvey.includes('String practiceText = " Practice: " + GetPublicTierBand(practiceTier) + "."') ||
+    !bretonSurvey.includes('text = text + " Y\'ffre is listening."') ||
+    !bretonSurvey.includes("the old covenant accepts your shape")
+  ) {
+    fail("Breton Survey must lead with one qualitative practice band, omit numeric points and unrelated generic standing, and keep Green Way pressure/fork copy concise.", managerPath);
+  } else {
+    pass("Breton Survey leads with one qualitative practice band, omits numeric points, and keeps Green Way pressure/fork copy concise.", managerPath);
+  }
+
+  if (
+    bretonPatronSurvey.includes("tradition's highest blessing") ||
+    bretonPatronSurvey.includes("patron's mark") ||
+    bretonPatronSurvey.includes("20C path") ||
+    !bretonPatronSurvey.includes('String pactName = GetPublicDeityDisplayName(activePact)') ||
+    !bretonPatronSurvey.includes('return " Your pact with " + pactName + " stands beside the tradition."') ||
+    !bretonPatronSurvey.includes('Hidden Art - Champion stands beside the pact.') ||
+    !bretonPatronSurvey.includes("GetBretonChampionBoonDisplayName(_activeDeity)") ||
+    bretonChampionPresentation.includes("GetBretonChampionBoonDisplayName(_activeDeity)") ||
+    bretonChampionPresentation.includes("stands beside") ||
+    !bretonChampionPresentation.includes("if championSource as PDV_DaedricPathBase") ||
+    !bretonChampionPresentation.includes('String line = deityName + " names you Champion."') ||
+    !bretonChampionPresentation.includes('line = deityName + " names you Champion through the " + traditionLabel + "."') ||
+    !bretonChampionBoonName.includes('return "Knight\'s Bulwark - Champion"') ||
+    !bretonChampionBoonName.includes('return "Magnus\'s Aperture - Champion"') ||
+    !bretonChampionBoonName.includes('return "Hidden Art - Champion"')
+  ) {
+    fail("Breton Champion Survey must name the actual boon, while toast/Book copy stays to one patron-recognition sentence.", managerPath);
+  } else {
+    pass("Breton Champion Survey names the actual boon and toast/Book copy stays to one patron-recognition sentence.", managerPath);
   }
 
   const dunmerGoodDaedraShrine = functionBlock(manager, "HandleDunmerOutdoorGoodDaedraShrine");
@@ -1260,6 +1299,43 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
     fail("Reason-bearing substrate acts must feed both Prisma toast/ledger and the Book of Days chronicle.", managerPath);
   } else {
     pass("Reason-bearing substrate acts feed both Prisma toast/ledger and the Book of Days chronicle.", managerPath);
+  }
+
+  const reservedSignalSurfaceCases = [
+    ["HandleKhajiitKhenarthiCaravanAid", "PDV_Khenarthi", "Caravan defended", "marks the caravan road kept safe."],
+    ["HandleKhajiitRajhinLegendMade", "PDV_Rajhin", "Legend made", "marks a theft worth remembering."],
+    ["HandleMephalaWebWoven", "PDV_Mephala", "Web woven", "marks a web woven in shadow."],
+    ["HandleBoethiahHonorableDuel", "PDV_Boethiah", "Duel honored", "marks a trial honorably won."],
+  ];
+  const reservedSignalSurfaceHelper = functionBlock(managerForBroadLane, "SurfaceReservedSignal");
+  const reservedSignalNameHelper = functionBlock(managerForBroadLane, "GetReservedSignalSurfaceName");
+  const missingReservedSignalSurface = [];
+  if (
+    !reservedSignalSurfaceHelper.includes("SendPrismaToast(symbolName, \"good\", titleText, bodyText)") ||
+    !reservedSignalSurfaceHelper.includes('AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "favor.act", symbolName, False, 1, titleText)') ||
+    !reservedSignalSurfaceHelper.includes("RecordRecentDevotionEvent(bodyText)") ||
+    !reservedSignalSurfaceHelper.includes("RequestPanelRefresh()")
+  ) {
+    missingReservedSignalSurface.push("SurfaceReservedSignal helper");
+  }
+  if (
+    !reservedSignalNameHelper.includes('return "Boethra"') ||
+    !reservedSignalNameHelper.includes('return "Mafala"') ||
+    !reservedSignalNameHelper.includes('return "Azurah"')
+  ) {
+    missingReservedSignalSurface.push("Khajiit shared-deity display aliases");
+  }
+  for (const [handler, deityExpr, titleText, actionText] of reservedSignalSurfaceCases) {
+    const block = functionBlock(managerForBroadLane, handler);
+    const expectedCall = `SurfaceReservedSignal(${deityExpr}, "${titleText}", "${actionText}")`;
+    if (!block.includes(expectedCall)) {
+      missingReservedSignalSurface.push(handler);
+    }
+  }
+  if (missingReservedSignalSurface.length) {
+    fail(`Reserved signal handlers must surface Prisma toast, Book of Days, and panel recent-event copy: ${missingReservedSignalSurface.join(", ")}.`, managerPath);
+  } else {
+    pass("Reserved signal handlers surface Prisma toast, Book of Days, and panel recent-event copy.", managerPath);
   }
 
   if (

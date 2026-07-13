@@ -256,13 +256,18 @@
       }
     },
     "Breton-GreenWay|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Breton-GreenWay",
       "class": "boon",
       "race": "Breton",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-13 co-test: organic mixed-source practice reached 3 proven acts. Tester confirmed Green Way - Seeker in Active Effects plus matching Survey, Book of Days Seeker page text, first gauge segment, and tier toast. Post-fix Papyrus.0.log records harvest event 334, draugr event 300, and honor_the_wild as the three distinct practice pulses.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Breton",
+        "slot": "BX3-Seeker",
+        "matched": "Green Way - Seeker"
+      }
     },
     "Breton-HiddenArt|boon": {
       "status": "evidence-recorded",
@@ -297,8 +302,8 @@
       "lane": "Breton-PatronChampion",
       "class": "boon",
       "race": "Breton",
-      "expected": "Two-axis Breton proof: run BX1 with a Green Way Breton and non-resonant Champion patron (Magnus or Zenithar). Observe Patron's Mark - Champion in Active Effects while the practiced tradition stays capped at T2, with no extra tradition T3 stack.",
-      "note": "Added 2026-07-12 with the Breton two-axis build. This family is only for non-resonant Champion patrons; resonant Champion patrons should prove the active tradition T3 instead.",
+      "expected": "Unified Breton Champion proof: with a practiced tradition at T2, take a patron to Champion and observe that patron's own named Champion boon beside the tradition. Swap patrons and verify the old Champion boon strips; no generic Patron's Mark or third stack survives.",
+      "note": "Updated 2026-07-13 for the unified patron-Champion model. The ledger key is retained for compatibility, but the generic Patron's Mark family is retired; BUC1-BUC3 prove the replacement one-patron-one-signature-boon routing class.",
       "creditedFrom": null
     },
     "Breton-Tradition|boon": {

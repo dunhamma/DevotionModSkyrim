@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-07-12T03:18:06.211Z",
+  "generatedAt": "2026-07-12T07:56:27.109Z",
   "status": "PASS",
   "backendStatus": "PASS",
   "strictRuntime": false,
   "runtimeOpen": 12,
-  "manualOpen": 0,
+  "manualOpen": 1,
   "counts": {
-    "PASS": 212,
-    "OPEN": 12
+    "PASS": 211,
+    "OPEN": 13
   },
   "proofBoundary": "These scenarios define backend, runtime-route, and manual-display evidence separately. Backend PASS does not prove in-game firing, Book of Days display, Survey/status clarity, duplicate suppression, wrong-origin silence, or save/load stack behavior.",
   "files": {
@@ -37,7 +37,7 @@
     {
       "status": "PASS",
       "check": "matrix row count",
-      "detail": "Matrix has 1056 rows."
+      "detail": "Matrix has 1055 rows."
     },
     {
       "status": "PASS",
@@ -72,7 +72,7 @@
     {
       "status": "PASS",
       "check": "likes/dislikes event 303",
-      "detail": "Event 303 has 2 rows."
+      "detail": "Event 303 has 3 rows."
     },
     {
       "status": "PASS",
@@ -1055,9 +1055,9 @@
           "detail": "Manager maps debug scenario 9."
         },
         {
-          "status": "PASS",
-          "check": "manual new save or unstamped save logs version 15 loaded",
-          "detail": "new save or unstamped save logs version 15 loaded: Papyrus.0.log confirms Likes/dislikes table + stances loaded (version 15) at 2026-07-11 10:47:01 local."
+          "status": "OPEN",
+          "check": "manual new save or unstamped save logs version 16 loaded",
+          "detail": "new save or unstamped save logs version 16 loaded: no manual evidence recorded."
         },
         {
           "status": "PASS",
@@ -1066,10 +1066,12 @@
         }
       ],
       "manualChecks": [
-        "new save or unstamped save logs version 15 loaded",
+        "new save or unstamped save logs version 16 loaded",
         "daily caps hold"
       ],
-      "manualChecksOpen": [],
+      "manualChecksOpen": [
+        "new save or unstamped save logs version 16 loaded"
+      ],
       "manualEvidence": {
         "status": "evidence-recorded",
         "route": "controlled MCM signal-floor scenario 9 plus organic supporting checks",

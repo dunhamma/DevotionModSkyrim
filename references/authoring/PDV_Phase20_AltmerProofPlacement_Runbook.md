@@ -101,12 +101,15 @@ Negative checks:
   farming where expected.
 - Confirm ordinary travel in the test cell does not create Lorkhan pressure.
 
-Curse-message proof can use the existing MCM Developer Options curse controls:
+Curse-message proof uses the MCM Developer Options proof-race and curse-state controls:
 
-1. Cycle curse origin to Altmer and apply it.
-2. Force vampire and confirm the Exiled entry message/status.
-3. Force none and confirm cured-vampire scar recognition appears once.
-4. Force werewolf and confirm hard-halt copy/status.
+1. On `Debug: Daedric & Curse`, cycle `Curse proof race` to `Altmer`, then select `Apply proof race`.
+2. Select `Curse none` to establish a clean transition baseline.
+3. Force vampire and confirm the Exiled entry message/status.
+4. Force none and confirm cured-vampire scar recognition appears once.
+5. Force werewolf and confirm hard-halt copy/status.
+
+`Apply proof race` deliberately rewrites `PDV_GLO_OriginRace`, because the race-specific curse dispatcher reads the stored PDV origin. Use a throwaway proof save and restore the real origin before any unrelated test.
 
 Counted runtime proof should include the Papyrus log excerpt, Survey/player
 status readout, and the strict verifier result after any final manifest status

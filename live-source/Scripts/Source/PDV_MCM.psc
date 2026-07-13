@@ -62,6 +62,12 @@ Int _oidApplyPiety = -1
 Int _oidPendingPietyToday = -1
 Int _oidApplyPietyToday = -1
 Int _oidSeedBroadLane = -1
+Int _oidPendingBretonPractice = -1
+Int _oidApplyBretonPractice = -1
+Int _oidAddBretonRenewable = -1
+Int _oidAddBretonCurated = -1
+Int _oidShowBretonPractice = -1
+Int _oidResetBretonPractice = -1
 Int _oidPrepareUninstall = -1
 Int _oidPendingSignalType = -1
 Int _oidApplyCuratedSignal = -1
@@ -137,8 +143,8 @@ Int _oidDaedricLiveRoute = -1
 Int _oidDaedricRouteAll = -1
 Int _oidDaedricGenericProbe = -1
 Int _oidCurseRefreshFromPlayer = -1
-Int _oidCurseOriginCycle = -1
-Int _oidCurseOriginApply = -1
+Int _oidCurseProofRaceCycle = -1
+Int _oidCurseProofRaceApply = -1
 Int _oidForceCurseNone = -1
 Int _oidForceCurseWerewolf = -1
 Int _oidForceCurseVampire = -1
@@ -176,11 +182,12 @@ Int _selectedDaedricPathIndex = 0
 Int _selectedSignalFloorScenario = 0
 Float _pendingPiety = 10.0
 Float _pendingPietyToday = 1.0
+Float _pendingBretonPractice = 24.0
 Int _pendingSignalType = 103
 Int _pendingDisfavorEventId = 365
 Int _pendingDisfavorDomain = 1
 Bool _pendingDisfavorSharp = False
-Int _selectedCurseOrigin = 0
+Int _selectedCurseProofOrigin = -1
 
 Event OnInit()
     InitializePages()
@@ -302,6 +309,20 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Choose the scratch piety value to force onto the selected deity before dawn.")
     elseIf a_option == _oidApplyPietyToday
         SetInfoText("Applies the chosen scratch piety to the selected deity only.")
+    elseIf a_option == _oidSeedBroadLane
+        SetInfoText("Seeds the current origin's broad or tradition lane directly to T2 for reward/UI proof. Breton receives 50 practice points. This bypasses pacing.")
+    elseIf a_option == _oidPendingBretonPractice
+        SetInfoText("Sets the direct Breton practice-point target used by Apply practice target. Use 24/25 and 49/50 for boundary tests.")
+    elseIf a_option == _oidApplyBretonPractice
+        SetInfoText("Directly sets the active Breton tradition's practice points and clears today's debug budget. Boundary/UI proof only; not pacing proof.")
+    elseIf a_option == _oidAddBretonRenewable
+        SetInfoText("Adds a controlled +1 renewable pulse through the shared Breton daily cap and reward funnel.")
+    elseIf a_option == _oidAddBretonCurated
+        SetInfoText("Adds a controlled +2 curated pulse through the shared Breton daily cap and reward funnel.")
+    elseIf a_option == _oidShowBretonPractice
+        SetInfoText("Shows active tradition points, public standing, points awarded today, and remaining daily budget.")
+    elseIf a_option == _oidResetBretonPractice
+        SetInfoText("Resets the active Breton tradition to zero practice points and clears today's debug practice budget.")
     elseIf a_option == _oidPendingSignalType
         SetInfoText("Choose the curated signal ID to apply to the selected deity. Talos uses 101, 102, and 103. Auri-El uses 201 and 202.")
     elseIf a_option == _oidApplyCuratedSignal
@@ -450,10 +471,10 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Routes a generic Daedric silence probe that should not change Prince state.")
     elseIf a_option == _oidCurseRefreshFromPlayer
         SetInfoText("Refreshes curse detection from the live player state without forcing a backend override.")
-    elseIf a_option == _oidCurseOriginCycle
-        SetInfoText("Cycles the origin used for curse race-handler proof. Apply it with the next button.")
-    elseIf a_option == _oidCurseOriginApply
-        SetInfoText("Writes the selected curse-test origin into PDV_GLO_OriginRace for backend race-handler smoke.")
+    elseIf a_option == _oidCurseProofRaceCycle
+        SetInfoText("Cycles the stored PDV origin used by the race-specific curse dispatcher. This proof-only override covers all ten origins.")
+    elseIf a_option == _oidCurseProofRaceApply
+        SetInfoText("Temporarily rewrites PDV_GLO_OriginRace and refreshes dependent state. Use only on a throwaway proof save and restore the real origin afterward.")
     elseIf a_option == _oidForceCurseNone
         SetInfoText("Backend-forces the shared curse service to None for cure and residue smoke.")
     elseIf a_option == _oidForceCurseWerewolf
@@ -481,7 +502,7 @@ Function OnOptionHighlight(Int a_option)
     elseIf a_option == _oidKhajiitFocusBaanDar || a_option == _oidKhajiitFocusRajhin || a_option == _oidKhajiitFocusAlkosh
         SetInfoText("Forces the Khajiit emergent focus to this moon-path so its tier reward becomes testable. Then force piety and Run Dawn to light the Champion blessing.")
     elseIf a_option == _oidBretonKnightsRoad || a_option == _oidBretonHiddenArt || a_option == _oidBretonGreenWay
-        SetInfoText("Forces the Breton tradition so its tradition-gated reward family becomes testable. Then force piety and Run Dawn.")
+        SetInfoText("Forces the Breton tradition. Use Breton practice controls for its T1/T2 lane; deity piety remains the separate patron axis.")
     elseIf a_option == _oidOrcCity || a_option == _oidOrcStronghold || a_option == _oidOrcLegionExile
         SetInfoText("Forces the Orc life mode so its mode-gated Malacath reward becomes testable. Then force piety and Run Dawn.")
     elseIf a_option == _oidArgonianPeople || a_option == _oidArgonianVoid
@@ -646,9 +667,56 @@ Function OnOptionSelect(Int a_option)
     endIf
 
     if a_option == _oidSeedBroadLane
-        if ShowMessage("Seed the current race's broad-worship lane to Faithful (sets broad worship + the broad accumulator so the broad Fortify-Health applies)?", True, "$Yes", "$No")
+        String seedPrompt = "Seed the current race's broad-worship lane directly to T2? This bypasses normal accumulation and is reward/UI proof only."
+        if PDV_Manager && PDV_Manager.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_BRETON
+            seedPrompt = "Set the active Breton tradition directly to 50 practice points (Devoted)? This bypasses daily pacing and is reward/UI proof only."
+        endIf
+        if ShowMessage(seedPrompt, True, "$Yes", "$No")
             PDV_Manager.DebugSeedBroadLane()
             ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidApplyBretonPractice
+        if EnsureManagerBinding("debug_breton_practice_target")
+            if ShowMessage("Set the active Breton tradition directly to " + (_pendingBretonPractice as Int) + " practice points? This resets today's debug budget and bypasses pacing.", True, "$Yes", "$No")
+                ShowMessage(PDV_Manager.DebugSetBretonPracticePoints(_pendingBretonPractice as Int), False, "$OK", "")
+                ForcePageReset()
+            endIf
+        endIf
+        return
+    endIf
+
+    if a_option == _oidAddBretonRenewable
+        if EnsureManagerBinding("debug_breton_practice_renewable")
+            ShowMessage(PDV_Manager.DebugAddBretonPracticePoints(1), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidAddBretonCurated
+        if EnsureManagerBinding("debug_breton_practice_curated")
+            ShowMessage(PDV_Manager.DebugAddBretonPracticePoints(2), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidShowBretonPractice
+        if EnsureManagerBinding("debug_breton_practice_summary")
+            ShowMessage(PDV_Manager.DebugGetBretonPracticeSummary(), False, "$OK", "")
+        endIf
+        return
+    endIf
+
+    if a_option == _oidResetBretonPractice
+        if EnsureManagerBinding("debug_breton_practice_reset")
+            if ShowMessage("Reset the active Breton tradition to zero practice points and clear today's debug budget?", True, "$Yes", "$No")
+                ShowMessage(PDV_Manager.DebugResetBretonPracticePoints(), False, "$OK", "")
+                ForcePageReset()
+            endIf
         endIf
         return
     endIf
@@ -882,7 +950,7 @@ Function OnOptionSelect(Int a_option)
     endIf
 
     if a_option == _oidBretonKnightsRoad
-        RunPatternAction("Set the Breton tradition to Knights Road?", 46)
+        RunPatternAction("Set the Breton tradition to Knight's Road?", 46)
         return
     endIf
 
@@ -1052,14 +1120,18 @@ Function OnOptionSelect(Int a_option)
         return
     endIf
 
-    if a_option == _oidCurseOriginCycle
-        CycleCurseTestOrigin()
+    if a_option == _oidCurseProofRaceCycle
+        CycleCurseProofOrigin()
         ForcePageReset()
         return
     endIf
 
-    if a_option == _oidCurseOriginApply
-        RunPatternAction("Apply the selected curse-test origin?", 37)
+    if a_option == _oidCurseProofRaceApply
+        if PDV_CurseStateService && PDV_CurseStateService.GetCurseState() != 0
+            ShowMessage("Force Curse none before changing the proof race. This prevents the new race from receiving a false cure transition.", False, "$OK", "")
+            return
+        endIf
+        RunPatternAction("Temporarily rewrite the stored PDV origin to " + GetCurseProofOriginLabel() + " for curse race-handler proof? Use a throwaway save.", 37)
         return
     endIf
 
@@ -1303,6 +1375,14 @@ Function OnOptionSliderOpen(Int a_option)
         return
     endIf
 
+    if a_option == _oidPendingBretonPractice
+        SetSliderDialogStartValue(_pendingBretonPractice)
+        SetSliderDialogDefaultValue(24.0)
+        SetSliderDialogRange(0.0, 50.0)
+        SetSliderDialogInterval(1.0)
+        return
+    endIf
+
     if a_option == _oidPendingSignalType
         SetSliderDialogStartValue(_pendingSignalType as Float)
         SetSliderDialogDefaultValue(_pendingSignalType as Float)
@@ -1338,6 +1418,12 @@ Function OnOptionSliderAccept(Int a_option, Float a_value)
     if a_option == _oidPendingPietyToday
         _pendingPietyToday = ClampFloat(a_value, PIETY_TODAY_MIN, PIETY_TODAY_MAX)
         SetSliderOptionValue(_oidPendingPietyToday, _pendingPietyToday, "{1}", False)
+        return
+    endIf
+
+    if a_option == _oidPendingBretonPractice
+        _pendingBretonPractice = ClampFloat(a_value, 0.0, 50.0)
+        SetSliderOptionValue(_oidPendingBretonPractice, _pendingBretonPractice, "{0}", False)
         return
     endIf
 
@@ -1701,6 +1787,13 @@ String Function DiegeticD1Label()
     return "Off"
 EndFunction
 
+String Function GetBroadLaneSeedLabel()
+    if PDV_Manager && PDV_Manager.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_BRETON
+        return "Breton practice 50"
+    endIf
+    return "Origin lane T2"
+EndFunction
+
 Function BuildStatePage()
     SyncSelection()
     SetCursorFillMode(TOP_TO_BOTTOM)
@@ -1718,7 +1811,7 @@ Function BuildStatePage()
     _oidDebugLevel = AddSliderOption("Debug level", GetDebugLevelValue(), "{0}", OPTION_FLAG_NONE)
     _oidPendingPiety = AddSliderOption("Target piety", _pendingPiety, "{0}", OPTION_FLAG_NONE)
     _oidApplyPiety = AddTextOption("Apply target piety", FormatFloat(_pendingPiety), OPTION_FLAG_NONE)
-    _oidSeedBroadLane = AddTextOption("Seed broad lane (origin)", "Broad + 6 acts", OPTION_FLAG_NONE)
+    _oidSeedBroadLane = AddTextOption("Seed broad lane (origin)", GetBroadLaneSeedLabel(), OPTION_FLAG_NONE)
     _oidPendingPietyToday = AddSliderOption("Target scratch", _pendingPietyToday, "{1}", OPTION_FLAG_NONE)
     _oidApplyPietyToday = AddTextOption("Apply target scratch", FormatFloat(_pendingPietyToday), OPTION_FLAG_NONE)
     _oidPendingSignalType = AddSliderOption("Curated signal ID", _pendingSignalType as Float, "{0}", OPTION_FLAG_NONE)
@@ -1765,9 +1858,20 @@ Function BuildStatePage()
     _oidKhajiitFocusBaanDar = AddTextOption("Khajiit focus -> Baan Dar", "Force focus", OPTION_FLAG_NONE)
     _oidKhajiitFocusRajhin = AddTextOption("Khajiit focus -> Rajhin", "Force focus", OPTION_FLAG_NONE)
     _oidKhajiitFocusAlkosh = AddTextOption("Khajiit focus -> Alkosh", "Force focus", OPTION_FLAG_NONE)
-    _oidBretonKnightsRoad = AddTextOption("Breton -> Knights Road", "Tradition", OPTION_FLAG_NONE)
+    _oidBretonKnightsRoad = AddTextOption("Breton -> Knight's Road", "Tradition", OPTION_FLAG_NONE)
     _oidBretonHiddenArt = AddTextOption("Breton -> Hidden Art", "Tradition", OPTION_FLAG_NONE)
     _oidBretonGreenWay = AddTextOption("Breton -> Green Way", "Tradition", OPTION_FLAG_NONE)
+    Int bretonPracticeFlags = OPTION_FLAG_DISABLED
+    if PDV_Manager && PDV_Manager.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_BRETON
+        bretonPracticeFlags = OPTION_FLAG_NONE
+    endIf
+    AddHeaderOption("Breton practice", bretonPracticeFlags)
+    _oidPendingBretonPractice = AddSliderOption("Practice target", _pendingBretonPractice, "{0}", bretonPracticeFlags)
+    _oidApplyBretonPractice = AddTextOption("Apply practice target", "Direct boundary seed", bretonPracticeFlags)
+    _oidAddBretonRenewable = AddTextOption("Add renewable practice", "+1 capped pulse", bretonPracticeFlags)
+    _oidAddBretonCurated = AddTextOption("Add curated practice", "+2 capped pulse", bretonPracticeFlags)
+    _oidShowBretonPractice = AddTextOption("Show Breton practice", "Points + daily budget", bretonPracticeFlags)
+    _oidResetBretonPractice = AddTextOption("Reset Breton practice", "Points + debug budget", bretonPracticeFlags)
     _oidOrcCity = AddTextOption("Orc -> City", "Life mode", OPTION_FLAG_NONE)
     _oidOrcStronghold = AddTextOption("Orc -> Stronghold", "Life mode", OPTION_FLAG_NONE)
     _oidOrcLegionExile = AddTextOption("Orc -> Legion-Exile", "Life mode", OPTION_FLAG_NONE)
@@ -1786,6 +1890,9 @@ EndFunction
 
 Function BuildDaedricPage()
     SyncSelection()
+    if _selectedCurseProofOrigin < 0 && PDV_Manager
+        _selectedCurseProofOrigin = PDV_Manager.GetPlayerOriginRaceIndex()
+    endIf
     SetCursorFillMode(TOP_TO_BOTTOM)
 
     ; --- Left column: Daedric display proof + Hircine + Curse ---
@@ -1813,8 +1920,8 @@ Function BuildDaedricPage()
     AddEmptyOption()
     AddHeaderOption("Curse", OPTION_FLAG_NONE)
     _oidCurseRefreshFromPlayer = AddTextOption("Curse refresh", "Read player state", OPTION_FLAG_NONE)
-    _oidCurseOriginCycle = AddTextOption("Cycle curse origin", GetCurseOriginOptionLabel(), OPTION_FLAG_NONE)
-    _oidCurseOriginApply = AddTextOption("Apply curse origin", "Write origin global", OPTION_FLAG_NONE)
+    _oidCurseProofRaceCycle = AddTextOption("Curse proof race", GetCurseProofOriginLabel(), OPTION_FLAG_NONE)
+    _oidCurseProofRaceApply = AddTextOption("Apply proof race", "Rewrite PDV origin", OPTION_FLAG_NONE)
     _oidForceCurseNone = AddTextOption("Curse none", "Human baseline", OPTION_FLAG_NONE)
     _oidForceCurseWerewolf = AddTextOption("Curse werewolf", "Backend force", OPTION_FLAG_NONE)
     _oidForceCurseVampire = AddTextOption("Curse vampire", "Backend force", OPTION_FLAG_NONE)
@@ -1903,6 +2010,39 @@ Function CycleSelectedDaedricPath()
     if _selectedDaedricPathIndex >= pathCount
         _selectedDaedricPathIndex = 0
     endIf
+EndFunction
+
+Function CycleCurseProofOrigin()
+    _selectedCurseProofOrigin += 1
+    if _selectedCurseProofOrigin > 9
+        _selectedCurseProofOrigin = 0
+    endIf
+EndFunction
+
+String Function GetCurseProofOriginLabel()
+    if _selectedCurseProofOrigin == 0
+        return "Nord"
+    elseIf _selectedCurseProofOrigin == 1
+        return "Imperial"
+    elseIf _selectedCurseProofOrigin == 2
+        return "Breton"
+    elseIf _selectedCurseProofOrigin == 3
+        return "Altmer"
+    elseIf _selectedCurseProofOrigin == 4
+        return "Bosmer"
+    elseIf _selectedCurseProofOrigin == 5
+        return "Dunmer"
+    elseIf _selectedCurseProofOrigin == 6
+        return "Khajiit"
+    elseIf _selectedCurseProofOrigin == 7
+        return "Argonian"
+    elseIf _selectedCurseProofOrigin == 8
+        return "Orc"
+    elseIf _selectedCurseProofOrigin == 9
+        return "Redguard"
+    endIf
+
+    return "Unavailable"
 EndFunction
 
 Function CycleSignalFloorScenario()
@@ -2411,36 +2551,6 @@ String Function GetTalosGainMultiplierLabel()
     return "Unknown"
 EndFunction
 
-Function CycleCurseTestOrigin()
-    if _selectedCurseOrigin == 0
-        _selectedCurseOrigin = 4
-    elseIf _selectedCurseOrigin == 4
-        _selectedCurseOrigin = 2
-    elseIf _selectedCurseOrigin == 2
-        _selectedCurseOrigin = 5
-    elseIf _selectedCurseOrigin == 5
-        _selectedCurseOrigin = 3
-    else
-        _selectedCurseOrigin = 0
-    endIf
-EndFunction
-
-String Function GetCurseOriginOptionLabel()
-    if _selectedCurseOrigin == 0
-        return "Nord"
-    elseIf _selectedCurseOrigin == 4
-        return "Bosmer"
-    elseIf _selectedCurseOrigin == 2
-        return "Breton"
-    elseIf _selectedCurseOrigin == 5
-        return "Dunmer"
-    elseIf _selectedCurseOrigin == 3
-        return "Altmer"
-    endIf
-
-    return "" + _selectedCurseOrigin
-EndFunction
-
 String Function GetSelectedSignalLabel()
     if _pendingSignalType == 101
         return "Talos shrine defiance"
@@ -2696,7 +2806,11 @@ Function RunPatternAction(String promptText, Int actionId)
     elseIf actionId == 36
         manager.DebugRefreshCurseFromPlayerState()
     elseIf actionId == 37
-        manager.DebugSetOriginRace(_selectedCurseOrigin)
+        if manager.DebugSetCurseProofOriginRace(_selectedCurseProofOrigin)
+            Debug.Notification("PDV: curse proof race set to " + GetCurseProofOriginLabel() + ".")
+        else
+            Debug.Notification("PDV: curse proof race was not changed.")
+        endIf
     elseIf actionId == 38
         manager.DebugRunNeglectPass()
     elseIf actionId == 39

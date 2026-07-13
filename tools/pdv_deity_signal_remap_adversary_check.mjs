@@ -14,6 +14,7 @@ const ROOT = path.resolve(__dirname, "..");
 
 const files = {
   manager: path.join(ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc"),
+  mcm: path.join(ROOT, "live-source", "Scripts", "Source", "PDV_MCM.psc"),
   tranche: path.join(ROOT, "references", "authoring", "PDV_QuestReactionMatrix_Tranche9_DeitySignalRemap.csv"),
   merge: path.join(ROOT, "tools", "pdv_quest_tranche_merge.mjs"),
   likes: path.join(ROOT, "references", "authoring", "PDV_DeityLikesDislikes.csv"),
@@ -26,6 +27,7 @@ const files = {
   prismaApp: path.join(ROOT, "native", "DevotionPrismaBridge", "mod", "PrismaUI", "views", "Devotion", "app.js"),
   playerEvents: path.join(ROOT, "live-source", "Scripts", "Source", "PDV_PlayerEvents.psc"),
   eventBus: path.join(ROOT, "live-source", "Scripts", "Source", "PDV_EventBus.psc"),
+  daedricBase: path.join(ROOT, "live-source", "Scripts", "Source", "PDV_DaedricPathBase.psc"),
 };
 
 const failures = [];
@@ -106,7 +108,7 @@ const ORIGIN_ROSTERS = {
 function normalizeName(value) {
   return String(value ?? "")
     .trim()
-    .replace(/[’]/g, "'")
+    .replace(/[\u2019]/g, "'")
     .replace(/\s+/g, " ")
     .toLowerCase();
 }
@@ -186,6 +188,7 @@ function potentialOffRosterHostileSurfaces(fullEntries, stanceByName, daedricNam
 }
 
 const manager = read(files.manager);
+const mcm = read(files.mcm);
 const playerEvents = read(files.playerEvents);
 const eventBus = read(files.eventBus);
 const medallion = read(files.medallion);
@@ -222,20 +225,50 @@ for (const deity of ["Stuhn", "Stendarr", "Mara", "Kyne"]) {
   assert(`paarthurnax spare fanout ${deity}`, manager.includes(`ApplyPaarthurnaxSpareReaction("${deity}",`), `Missing Paarthurnax spare reaction for ${deity}.`);
 }
 
-// Two-axis Breton build (2026-07-12, PDV_BretonTwoAxis_BuildSpec):
-// tradition practice counts light T1/T2; a named resonance set decides whether a
-// Champion patron sources tradition T3 or the modest PatronChampion boon.
+// Unified Breton build (2026-07-13): weighted practice points light T1/T2;
+// every Champion patron brings that patron's own boon, while resonance changes
+// presentation only.
 const bretonTraditionBody = [
   functionBody(manager, "GetBretonTraditionTier"),
   functionBody(manager, "GetBretonPracticeTier"),
   functionBody(manager, "GetBretonPracticeCount"),
   functionBody(manager, "IsDeityResonantWithBretonTradition"),
-  functionBody(manager, "SyncBretonPatronChampionReward"),
+  functionBody(manager, "SyncBretonChampionBoon"),
+  functionBody(manager, "GetBretonPatronChampionBoon"),
   functionBody(manager, "HandleBretonSleepEvents")
 ].join("\n");
 assert("breton pool piety retired", !manager.includes("GetBretonTraditionPoolPiety") && !manager.includes("IsDeityInBretonTraditionPool"), "Breton tiering still exposes retired pool-piety helpers.");
-assert("breton practice count tiering", bretonTraditionBody.includes("GetBretonPracticeCount") && bretonTraditionBody.includes("practiceCount >= 6") && bretonTraditionBody.includes("practiceCount >= 3"), "Breton T1/T2 should be practice-count gated.");
-assert("breton patron champion boon wired", manager.includes("PDV_Bless_Breton_PatronChampion") && bretonTraditionBody.includes("IsBretonNonResonantPatronChampion"), "Breton non-resonant Champion boon is not wired.");
+assert("breton practice point tiering", bretonTraditionBody.includes("GetBretonPracticeCount") && bretonTraditionBody.includes("practiceCount >= BRETON_PRACTICE_DEVOTED_POINTS") && bretonTraditionBody.includes("practiceCount >= BRETON_PRACTICE_SEEKER_POINTS"), "Breton T1/T2 should use the 25/50 practice-point thresholds.");
+const bretonPracticeAward = functionBody(manager, "AwardBretonPracticePulse");
+const bretonPracticeBudget = functionBody(manager, "ConsumeBretonPracticePointBudget");
+const bretonActionPractice = functionBody(manager, "HandleBretonActionPracticeSignal");
+const bretonTagPractice = functionBody(manager, "HandleBretonQuestTagPracticeSignal");
+const bretonSurvey = functionBody(manager, "GetBretonSurveyText");
+const daedricBase = read(files.daedricBase);
+const makeActiveDaedricPact = functionBody(daedricBase, "MakeActiveDaedricPact");
+const syncDaedricContract = functionBody(daedricBase, "SyncDaedricContractToTier");
+const hiddenArtPriceWaiver = functionBody(daedricBase, "ShouldWaivePriceForPlayer");
+const applyPricePreservingPools = functionBody(daedricBase, "AddPriceSpellPreservingCurrentPools");
+assert("breton aggregate practice daily cap", manager.includes("BRETON_PRACTICE_DAILY_MAX_POINTS = 4") && bretonPracticeAward.includes("ConsumeBretonPracticePointBudget(requestedPoints)") && bretonPracticeBudget.includes('PDV.Breton.PracticePointsToday') && bretonPracticeBudget.includes("BRETON_PRACTICE_DAILY_MAX_POINTS - pointsToday"), "Breton practice points must be hard-capped at four total points per day across all source types.");
+assert("breton practice point weights", manager.includes("BRETON_PRACTICE_RENEWABLE_POINTS = 1") && manager.includes("BRETON_PRACTICE_CURATED_POINTS = 2"), "Breton practice signals must keep renewable and curated point weights explicit.");
+for (const lane of ["KNIGHTS_ROAD", "GREEN_WAY", "HIDDEN_ART"]) {
+  assert(`breton ${lane.toLowerCase()} renewable conversion`, bretonActionPractice.includes(`AwardBretonPracticePulse(BRETON_TRADITION_${lane}, BRETON_PRACTICE_RENEWABLE_POINTS`), `${lane} action signals must use the shared renewable practice-point weight.`);
+  assert(`breton ${lane.toLowerCase()} curated conversion`, bretonTagPractice.includes(`AwardBretonPracticePulse(BRETON_TRADITION_${lane}, BRETON_PRACTICE_CURATED_POINTS`), `${lane} quest-tag signals must use the shared curated practice-point weight.`);
+  assert(`breton ${lane.toLowerCase()} shared award funnel`, bretonPracticeAward.includes(`traditionValue == BRETON_TRADITION_${lane}`) && bretonPracticeAward.includes("SetBretonPracticeCount(traditionValue, GetBretonPracticeCount(traditionValue) + appliedPoints)"), `${lane} must write applied points through the shared capped practice store.`);
+}
+assert("breton all-lane survey practice band", bretonSurvey.includes('String practiceText = " Practice: " + GetPublicTierBand(practiceTier) + "."') && bretonSurvey.includes('"You walk the Knight\'s Road: vow, mercy, and protective justice." + practiceText') && bretonSurvey.includes('"You walk the Hidden Art: occult practice and the double life." + practiceText') && bretonSurvey.includes('"You walk the Green Way: the old druidic covenant." + practiceText') && !bretonSurvey.includes("practice points).") && !bretonSurvey.includes("proven acts"), "All three Breton Survey branches must share the concise qualitative practice band and omit numeric or retired proven-act wording.");
+const bretonDebugAdd = functionBody(manager, "DebugAddBretonPracticePoints");
+const bretonDebugSet = functionBody(manager, "DebugSetBretonPracticePoints");
+assert("breton debug practice funnel", bretonDebugAdd.includes("AwardBretonPracticePulse(GetBretonTraditionValue(), requestedPoints") && bretonDebugSet.includes("SetBretonPracticeCount(traditionValue, practicePoints)") && bretonDebugSet.includes('PDV.Breton.PracticePointsToday') && !manager.includes('StorageUtil.SetIntValue(None, "PDV.Debug.BretonPracticePulseSeq", 0)') && manager.includes("String Function DebugGetBretonPracticeSummary()") && manager.includes("String Function DebugResetBretonPracticePoints()"), "Breton debug controls must expose summary/set/reset, preserve the unique pulse sequence across target changes, and route +1/+2 pulses through the real capped practice funnel.");
+assert("breton debug menu current", mcm.includes('AddHeaderOption("Breton practice"') && mcm.includes('AddSliderOption("Practice target"') && mcm.includes('AddTextOption("Add renewable practice", "+1 capped pulse"') && mcm.includes('AddTextOption("Add curated practice", "+2 capped pulse"') && mcm.includes("DebugSetBretonPracticePoints") && mcm.includes("DebugAddBretonPracticePoints(1)") && mcm.includes("DebugAddBretonPracticePoints(2)") && mcm.includes("DebugGetBretonPracticeSummary") && mcm.includes("DebugResetBretonPracticePoints") && !mcm.includes("Broad + 6 acts") && !mcm.includes("Breton -> Knights Road") && !mcm.includes("Forces the Breton tradition so its tradition-gated reward family becomes testable. Then force piety and Run Dawn."), "MCM Breton controls must use practice-point language, expose capped boundary tools, and omit retired six-act/piety instructions.");
+const curseProofSetter = functionBody(manager, "DebugSetCurseProofOriginRace");
+const curseProofCycle = functionBody(mcm, "CycleCurseProofOrigin");
+const curseProofLabel = functionBody(mcm, "GetCurseProofOriginLabel");
+assert("mcm curse proof origin dispatcher", mcm.includes('AddTextOption("Curse proof race"') && mcm.includes('AddTextOption("Apply proof race"') && mcm.includes("DebugSetCurseProofOriginRace(_selectedCurseProofOrigin)") && curseProofCycle.includes("_selectedCurseProofOrigin > 9") && ["Nord", "Imperial", "Breton", "Altmer", "Bosmer", "Dunmer", "Khajiit", "Argonian", "Orc", "Redguard"].every((race) => curseProofLabel.includes(`return "${race}"`)), "The MCM curse proof tool must cover all ten stored origin indices and apply the selected race through the manager.");
+assert("manager curse proof origin rewrite", curseProofSetter.includes("PDV_CurseStateService.GetCurseState() != 0") && curseProofSetter.includes("PDV_GLO_OriginRace.SetValue(originRace as Float)") && curseProofSetter.includes("RefreshPatronMirrors()") && curseProofSetter.includes("UpdateContextualFavorRuntime()") && curseProofSetter.includes("RequestPanelRefresh()") && mcm.includes("Force Curse none before changing the proof race") && functionBody(manager, "ApplyCurseRaceHandlers").includes("Int originRace = GetPlayerOriginRaceIndex()"), "Race-specific curse proof must require a clean curse baseline, rewrite PDV_GLO_OriginRace, and refresh dependent state because the curse dispatcher reads the stored origin.");
+assert("breton patron-specific champion boons wired", bretonTraditionBody.includes("GetBretonPatronChampionBoon") && manager.includes("PDV_Bless_Breton_Champion_Mara") && manager.includes("PDV_Bless_Breton_Champion_Magnus") && !bretonTraditionBody.includes("PDV_Bless_Breton_PatronChampion"), "Breton Champion routing must grant the active patron's own boon and keep the retired generic PatronChampion path out of the sync.");
+assert("breton daedric hidden-art champion reachable", bretonTraditionBody.includes("GetActiveDaedricPactPath()") && bretonTraditionBody.includes("activePact.GetStoredTier() >= TIER_CHAMPION") && bretonTraditionBody.includes("traditionValue == BRETON_TRADITION_HIDDEN_ART") && bretonTraditionBody.includes("championSource = activePact") && bretonTraditionBody.includes("if path && traditionValue == BRETON_TRADITION_HIDDEN_ART"), "A live Champion Prince pact must source the Breton Hidden Art capstone without leaking that capstone into Knight's Road or Green Way.");
+assert("breton daedric milestone reward refresh", functionBody(manager, "ShowDaedricMilestonePresentation").includes("SyncFirstTierRaceRewardRuntime()"), "Daedric milestone processing must refresh Breton race rewards after the Champion offer resolves.");
 assert("breton knights road resonance set", /BRETON_TRADITION_KNIGHTS_ROAD[\s\S]{0,220}PDV_Talos[\s\S]{0,80}PDV_Kynareth/.test(bretonTraditionBody), "Knight's Road resonance set must include Talos and Kynareth overlap.");
 assert("breton green way resonance set", /BRETON_TRADITION_GREEN_WAY[\s\S]{0,180}PDV_Yffre[\s\S]{0,80}PDV_Mara[\s\S]{0,80}PDV_Kynareth[\s\S]{0,80}PDV_Dibella/.test(bretonTraditionBody), "Green Way resonance set must include Y'ffre, Mara, Kynareth, and Dibella.");
 assert("breton hidden art resonance set", /BRETON_TRADITION_HIDDEN_ART[\s\S]{0,260}PDV_Magnus[\s\S]{0,80}PDV_Mara[\s\S]{0,80}PDV_Julianos[\s\S]{0,80}PDV_Dibella/.test(bretonTraditionBody) && bretonTraditionBody.includes("PDV_DaedricPathBase"), "Hidden Art resonance set must include Magnus, Mara, Julianos, Dibella, and Daedric paths.");
@@ -251,6 +284,9 @@ assert("altmer syrabane prisma symbol route", manager.includes('deity.DeityName 
 assert("altmer syrabane manifest live roster", medallion.includes('"optionId": "syrabane"') && medallion.includes('"deityRecord": "PDV_Deity_Syrabane"'), "Medallion manifest still lacks Syrabane's live deity record.");
 assert("altmer syrabane prisma glyph", prismaApp.includes('["syrabane", "Syrabane"]') && /syrabane:\s*\[/.test(prismaApp), "Prisma app.js lacks Syrabane display-name or glyph coverage.");
 assert("breton hidden art daedric set present", /Hermaeus Mora/.test(manager) && /Hircine/.test(manager) && /Namira/.test(manager) && /Nocturnal/.test(manager), "Hidden Art Daedric offer set is incomplete.");
+assert("same daedric pact refresh is idempotent", makeActiveDaedricPact.includes("if priorPact != GetDeityForm()") && makeActiveDaedricPact.indexOf("if priorPact != GetDeityForm()") < makeActiveDaedricPact.indexOf("ClearLiveDaedricPactSpells()"), "Refreshing the current Prince must not hard-strip and regrant the live pact spell set.");
+assert("breton hidden art prince price waiver", syncDaedricContract.includes("ShouldWaivePriceForPlayer()") && hiddenArtPriceWaiver.includes("GetPlayerOriginRace() != RACE_BRETON") && hiddenArtPriceWaiver.includes('"PDV.Breton.Tradition"') && ["Hermaeus Mora", "Hircine", "Namira", "Nocturnal"].every((name) => hiddenArtPriceWaiver.includes(`DeityName == "${name}"`)), "A Breton walking Hidden Art must waive the global pact price for the four Hidden Art Princes; WitchcraftExposure remains the lane cost.");
+assert("daedric price sync preserves current pools", syncDaedricContract.includes("AddPriceSpellPreservingCurrentPools") && syncDaedricContract.includes("HasSpell(desiredPrice)") && applyPricePreservingPools.includes('GetActorValue("Health")') && applyPricePreservingPools.includes('GetActorValue("Magicka")') && applyPricePreservingPools.includes('GetActorValue("Stamina")') && applyPricePreservingPools.includes("RestoreCurrentPoolIfReduced"), "Applying a negative maximum-pool pact price must not consume the player's current Health, Magicka, or Stamina, and an unchanged price must not be reapplied.");
 
 const applyDeityReaction = functionBody(manager, "ApplyDeityReaction");
 const tabooHostileStart = applyDeityReaction.indexOf('if stance == "TABOO" || stance == "HOSTILE"');

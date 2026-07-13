@@ -277,6 +277,21 @@ if (mustExist(MANAGER)) {
   } else {
     add("PASS", "Champion reward Book of Days surfaces use internal tier labels.", MANAGER);
   }
+
+  const instrumentBuilder = functionBlock(manager, "BuildBookOfDaysInstrumentJson");
+  const hasBretonPracticeFallback =
+    instrumentBuilder.includes("elseIf originRace == ORIGIN_BRETON") &&
+    instrumentBuilder.includes("Int bretonPracticeTier = TIER_NONE") &&
+    instrumentBuilder.includes("bretonPracticeTier = GetBretonPracticeTier(GetBretonTraditionValue())") &&
+    instrumentBuilder.includes("pietyValue = GetBretonPracticeCount(GetBretonTraditionValue()) as Float") &&
+    instrumentBuilder.includes("tierLabel = GetPublicTierBand(bretonPracticeTier)") &&
+    manager.includes("Int Property BRETON_PRACTICE_SEEKER_POINTS = 25 AutoReadOnly") &&
+    manager.includes("Int Property BRETON_PRACTICE_DEVOTED_POINTS = 50 AutoReadOnly");
+  if (hasBretonPracticeFallback) {
+    add("PASS", "Book of Days uses Breton practice points and the 25/50 tier contract when no patron or pact owns the standing gauge.", MANAGER);
+  } else {
+    add("FAIL", "Book of Days must use Breton practice points and the 25/50 tier contract when no patron or pact owns the standing gauge.", MANAGER);
+  }
 }
 
 requireText(NATIVE_MAIN, [

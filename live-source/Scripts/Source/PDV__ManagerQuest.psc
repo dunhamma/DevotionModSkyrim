@@ -644,6 +644,11 @@ Int Property IMPERIAL_CIVIC_DEATH_DUTY = 5 AutoReadOnly
 Int Property BRETON_TRADITION_KNIGHTS_ROAD = 0 AutoReadOnly
 Int Property BRETON_TRADITION_HIDDEN_ART = 1 AutoReadOnly
 Int Property BRETON_TRADITION_GREEN_WAY = 2 AutoReadOnly
+Int Property BRETON_PRACTICE_SEEKER_POINTS = 25 AutoReadOnly
+Int Property BRETON_PRACTICE_DEVOTED_POINTS = 50 AutoReadOnly
+Int Property BRETON_PRACTICE_DAILY_MAX_POINTS = 4 AutoReadOnly
+Int Property BRETON_PRACTICE_RENEWABLE_POINTS = 1 AutoReadOnly
+Int Property BRETON_PRACTICE_CURATED_POINTS = 2 AutoReadOnly
 Int Property BRETON_DRUIDIC_FORK_NONE = 0 AutoReadOnly
 Int Property BRETON_DRUIDIC_FORK_DRUIDIC = 1 AutoReadOnly
 Int Property BRETON_DRUIDIC_FORK_WEREWOLF = 2 AutoReadOnly
@@ -2858,7 +2863,11 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
     j = j + ",\"nextText\":\"" + JsonSafeString(nextText) + "\""
     j = j + ",\"piety\":" + piety
     if panelCommitment == None && GetBroadLaneTierForOrigin(originRace) > TIER_NONE
-        j = j + ",\"pietyLabel\":\"" + JsonSafeString("" + GetBroadLaneServiceCount(originRace) + " broad acts") + "\""
+        if originRace == ORIGIN_BRETON
+            j = j + ",\"pietyLabel\":\"" + JsonSafeString("" + GetBroadLaneServiceCount(originRace) + " practice points") + "\""
+        else
+            j = j + ",\"pietyLabel\":\"" + JsonSafeString("" + GetBroadLaneServiceCount(originRace) + " broad acts") + "\""
+        endIf
     endIf
     j = j + ",\"pietyToday\":" + pietyToday
     j = j + ",\"todayMood\":\"" + JsonSafeString(GetPanelTodayMood(pietyToday)) + "\""
@@ -3211,6 +3220,9 @@ String Function GetPanelPatronNote()
     endIf
     PDV_DaedricPathBase pactPath = GetActiveDaedricPactPath()
     if pactPath
+        if GetPlayerOriginRaceIndex() == ORIGIN_BRETON && GetBretonTraditionValue() == BRETON_TRADITION_HIDDEN_ART && IsBretonHiddenArtDaedricOfferDeity(pactPath)
+            return "The " + pactPath.DeityName + " pact stands within the Hidden Art; the tradition remains your practiced road."
+        endIf
         return "A pact binds you; lesser devotions fall quiet."
     endIf
     if IsBroadWorshipActive()
@@ -5000,7 +5012,7 @@ Function HandleBretonSleepEvents(Actor playerRef, String reason)
     if PDV_Mara
         AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
     endIf
-    AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, 2, "event_314", "sleep_in_bed_" + reason)
+    AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_RENEWABLE_POINTS, "event_314", "sleep_in_bed_" + reason)
     ShowP2BookNotice("po3_book_breton_sleep_reflection", "Hidden reflection", "Rest gives the Hidden Art a hearth-kept shape.")
 EndFunction
 
@@ -11294,18 +11306,17 @@ Function DebugSetBroadWorship()
     SetBroadWorship()
 EndFunction
 
-; Debug: seed the player's race broad-worship lane to its Faithful (T2) reward so the
-; broad Fortify-Health is testable. The broad lanes gate on PATRON_STATE_BROAD + a >=6
-; COUNT accumulator (NOT deity piety), so "Apply target piety" cannot reach them. This
-; sets broad worship + the origin race's accumulator to its threshold + refreshes the
-; reward spells.
+; Debug: seed the player's race broad-worship lane to its T2 reward so the reward/UI
+; surface is testable. The lanes use origin-specific service accumulators (NOT deity
+; piety), so "Apply target piety" cannot reach them. For Breton this seeds the active
+; tradition to 50 practice points; it is not pacing proof.
 Function DebugSeedBroadLane()
     SetBroadWorship()
     Int origin = GetPlayerOriginRaceIndex()
     if origin == ORIGIN_IMPERIAL
         StorageUtil.SetIntValue(None, "PDV.Imperial.CivicServiceCount", 6)
     elseIf origin == ORIGIN_BRETON
-        StorageUtil.SetIntValue(None, "PDV.Breton.TraditionHookCount", 6)
+        SetBretonPracticeCount(GetBretonTraditionValue(), BRETON_PRACTICE_DEVOTED_POINTS)
     elseIf origin == ORIGIN_ORC
         StorageUtil.SetIntValue(None, "PDV.Orc.MalacathSourceCount", 6)
     elseIf origin == ORIGIN_ALTMER
@@ -11317,6 +11328,65 @@ Function DebugSeedBroadLane()
     SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
     Trace(1, "DebugSeedBroadLane seeded broad lane for origin " + origin + ".")
+EndFunction
+
+String Function DebugGetBretonPracticeSummary()
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
+        return "Breton practice controls require Breton origin."
+    endIf
+
+    Int traditionValue = GetBretonTraditionValue()
+    Int practicePoints = GetBretonPracticeCount(traditionValue)
+    Int today = Utility.GetCurrentGameTime() as Int
+    Int pointDay = StorageUtil.GetIntValue(None, "PDV.Breton.PracticePointDay", -1)
+    Int pointsToday = 0
+    if pointDay == today
+        pointsToday = StorageUtil.GetIntValue(None, "PDV.Breton.PracticePointsToday")
+    endIf
+    pointsToday = ClampInt(pointsToday, 0, BRETON_PRACTICE_DAILY_MAX_POINTS)
+    Int remainingToday = BRETON_PRACTICE_DAILY_MAX_POINTS - pointsToday
+    return GetBretonTraditionLabel() + ": " + practicePoints + "/" + BRETON_PRACTICE_DEVOTED_POINTS + " practice points (" + GetPublicTierBand(GetBretonPracticeTier(traditionValue)) + "). Today: " + pointsToday + "/" + BRETON_PRACTICE_DAILY_MAX_POINTS + "; remaining " + remainingToday + "."
+EndFunction
+
+String Function DebugSetBretonPracticePoints(Int practicePoints)
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
+        return "Breton practice target ignored: set Breton origin first."
+    endIf
+
+    Int traditionValue = GetBretonTraditionValue()
+    SetBretonPracticeCount(traditionValue, practicePoints)
+    Int today = Utility.GetCurrentGameTime() as Int
+    StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointDay", today)
+    StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointsToday", 0)
+    SyncFirstTierRaceRewardRuntime()
+    RequestPanelRefresh()
+    Trace(1, "DebugSetBretonPracticePoints: tradition " + traditionValue + " -> " + ClampInt(practicePoints, 0, BRETON_PRACTICE_DEVOTED_POINTS) + ".")
+    return DebugGetBretonPracticeSummary()
+EndFunction
+
+String Function DebugAddBretonPracticePoints(Int requestedPoints)
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
+        return "Breton practice pulse ignored: set Breton origin first."
+    endIf
+    if requestedPoints != BRETON_PRACTICE_RENEWABLE_POINTS && requestedPoints != BRETON_PRACTICE_CURATED_POINTS
+        return "Breton practice pulse ignored: debug weight must be +1 or +2."
+    endIf
+
+    Int sequence = StorageUtil.GetIntValue(None, "PDV.Debug.BretonPracticePulseSeq") + 1
+    StorageUtil.SetIntValue(None, "PDV.Debug.BretonPracticePulseSeq", sequence)
+    Bool applied = AwardBretonPracticePulse(GetBretonTraditionValue(), requestedPoints, "mcm_debug_" + sequence, "mcm-debug-practice")
+    if !applied
+        return "No practice points applied. " + DebugGetBretonPracticeSummary()
+    endIf
+    return DebugGetBretonPracticeSummary()
+EndFunction
+
+String Function DebugResetBretonPracticePoints()
+    String summary = DebugSetBretonPracticePoints(0)
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
+        return summary
+    endIf
+    return "Practice points and today's debug budget reset. " + summary
 EndFunction
 
 String Function DebugGetOriginDiagnostic()
@@ -12819,6 +12889,9 @@ Float Function GetCurseGainMultiplier(PDV_DeityBase deity)
 EndFunction
 
 Float Function GetDaedricStigmaGainMultiplier(PDV_DeityBase deity)
+    if GetPlayerOriginRaceIndex() == ORIGIN_BRETON && GetBretonTraditionValue() == BRETON_TRADITION_HIDDEN_ART && IsBretonHiddenArtDaedricOfferDeity(deity) && StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure") >= 100
+        return 1.25
+    endIf
     if PDV_HircinePath && deity == PDV_HircinePath
         Float stigma = PDV_HircinePath.GetStigma()
         if stigma >= 6.0
@@ -13299,9 +13372,6 @@ EndFunction
 ; tradition tier, so this no longer manages a T3 slot.
 Function SyncBretonTraditionRewardFamily(Actor playerRef, Int thisTradition, Int activeTradition, Spell t1, Spell t2, String label)
     Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_BRETON && thisTradition == activeTradition
-    if thisTradition == BRETON_TRADITION_HIDDEN_ART && StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure") >= 100
-        isActive = False
-    endIf
     if thisTradition == BRETON_TRADITION_GREEN_WAY && !IsBretonGreenWayForkEligible()
         isActive = False
     endIf
@@ -13328,13 +13398,22 @@ EndFunction
 ; Breton champion boon strips. Resonance selects the presentation line only.
 Function SyncBretonChampionBoon(Actor playerRef, Bool isBreton, Int traditionValue)
     Spell wantSpell = None
+    PDV_DeityBase championSource = None
     if isBreton && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity && GetTier(_activeDeity) >= TIER_CHAMPION
-        wantSpell = GetBretonPatronChampionBoon(_activeDeity, traditionValue)
+        championSource = _activeDeity
+    elseIf isBreton && traditionValue == BRETON_TRADITION_HIDDEN_ART
+        PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
+        if activePact && activePact.GetStoredTier() >= TIER_CHAMPION
+            championSource = activePact
+        endIf
+    endIf
+    if championSource
+        wantSpell = GetBretonPatronChampionBoon(championSource, traditionValue)
     endIf
 
     Bool hadWanted = wantSpell && HasRewardSpell(playerRef, wantSpell)
     SyncBretonChampionBoonExclusive(playerRef, wantSpell)
-    MaybeShowBretonChampionBoonPresentation(playerRef, wantSpell, hadWanted, traditionValue)
+    MaybeShowBretonChampionBoonPresentation(playerRef, wantSpell, hadWanted, traditionValue, championSource)
 EndFunction
 
 ; Grants wantSpell and strips every other Breton champion boon. Stendarr/Y'ffre/
@@ -13389,21 +13468,58 @@ Spell Function GetBretonPatronChampionBoon(PDV_DeityBase deity, Int traditionVal
     endIf
 
     PDV_DaedricPathBase path = deity as PDV_DaedricPathBase
-    if path
+    if path && traditionValue == BRETON_TRADITION_HIDDEN_ART
         return PDV_Bless_Breton_HiddenArt_T3
     endIf
     return None
 EndFunction
 
-Function MaybeShowBretonChampionBoonPresentation(Actor playerRef, Spell wantSpell, Bool hadWanted, Int traditionValue)
+String Function GetBretonChampionBoonDisplayName(PDV_DeityBase deity)
+    if deity == PDV_Stendarr
+        return "Knight's Bulwark - Champion"
+    elseIf deity == PDV_Yffre
+        return "Green Way - Champion"
+    elseIf deity == PDV_Mara
+        return "Mara's Compassion - Champion"
+    elseIf deity == PDV_Arkay
+        return "Arkay's Ward - Champion"
+    elseIf deity == PDV_Akatosh
+        return "Akatosh's Endurance - Champion"
+    elseIf deity == PDV_Julianos
+        return "Julianos's Insight - Champion"
+    elseIf deity == PDV_Kynareth
+        return "Kynareth's Sky - Champion"
+    elseIf deity == PDV_Dibella
+        return "Dibella's Inspiration - Champion"
+    elseIf deity == PDV_Zenithar
+        return "Zenithar's Prosperity - Champion"
+    elseIf deity == PDV_Talos
+        return "Talos's Triumph - Champion"
+    elseIf deity == PDV_Magnus
+        return "Magnus's Aperture - Champion"
+    endIf
+
+    if deity as PDV_DaedricPathBase
+        return "Hidden Art - Champion"
+    endIf
+    return "Champion blessing"
+EndFunction
+
+Function MaybeShowBretonChampionBoonPresentation(Actor playerRef, Spell wantSpell, Bool hadWanted, Int traditionValue, PDV_DeityBase championSource)
     if IsRaceSetupQuietPresentationActive()
         return
     endIf
-    if !playerRef || !wantSpell || !_activeDeity || !playerRef.HasSpell(wantSpell)
+    if !playerRef || !wantSpell || !championSource || !playerRef.HasSpell(wantSpell)
         return
     endIf
 
-    String deityName = GetPublicDeityDisplayName(_activeDeity)
+    ; The Prince milestone path already owns its toast and Book entry. Hidden Art's
+    ; practitioner capstone is an additional reward, not a second tier announcement.
+    if championSource as PDV_DaedricPathBase
+        return
+    endIf
+
+    String deityName = GetPublicDeityDisplayName(championSource)
     String shownKey = "PDV.Breton.ChampionBoonNoticeShown." + deityName
     if hadWanted && StorageUtil.GetIntValue(None, shownKey) == 1
         return
@@ -13411,13 +13527,13 @@ Function MaybeShowBretonChampionBoonPresentation(Actor playerRef, Spell wantSpel
 
     StorageUtil.SetIntValue(None, shownKey, 1)
     String traditionLabel = GetBretonTraditionLabel()
-    String symbolName = GetPrismaSymbolForDeity(_activeDeity)
+    String symbolName = GetPrismaSymbolForDeity(championSource)
     String titleText = deityName + " names you Champion"
-    String line = deityName + " names you Champion. The " + traditionLabel + " remains your practice, and your patron's mark stands beside it."
+    String line = deityName + " names you Champion."
     if IsBretonResonantPatronChampion(traditionValue)
         line = deityName + " names you Champion through the " + traditionLabel + "."
     endIf
-    if NotifyTierUp(_activeDeity, TIER_CHAMPION)
+    if NotifyTierUp(championSource, TIER_CHAMPION)
         Trace(2, "Breton champion boon marked generic tier guard: " + deityName)
     endIf
     SendPrismaToast(symbolName, "good", titleText, line)
@@ -13479,9 +13595,9 @@ EndFunction
 
 Int Function GetBretonPracticeTier(Int traditionValue)
     Int practiceCount = GetBretonPracticeCount(traditionValue)
-    if practiceCount >= 6
+    if practiceCount >= BRETON_PRACTICE_DEVOTED_POINTS
         return TIER_DEVOTED
-    elseIf practiceCount >= 3
+    elseIf practiceCount >= BRETON_PRACTICE_SEEKER_POINTS
         return TIER_SEEKER
     endIf
     return TIER_NONE
@@ -13496,6 +13612,17 @@ Int Function GetBretonPracticeCount(Int traditionValue)
         return StorageUtil.GetIntValue(None, "PDV.Breton.GreenWayCount")
     endIf
     return 0
+EndFunction
+
+Function SetBretonPracticeCount(Int traditionValue, Int practicePoints)
+    Int normalizedPoints = ClampInt(practicePoints, 0, BRETON_PRACTICE_DEVOTED_POINTS)
+    if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
+        StorageUtil.SetIntValue(None, "PDV.Breton.KnightlyVowCount", normalizedPoints)
+    elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
+        StorageUtil.SetIntValue(None, "PDV.Breton.HiddenArtCount", normalizedPoints)
+    elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
+        StorageUtil.SetIntValue(None, "PDV.Breton.GreenWayCount", normalizedPoints)
+    endIf
 EndFunction
 
 Bool Function IsBretonResonantPatronChampion(Int traditionValue)
@@ -14585,6 +14712,14 @@ EndFunction
 
 String Function GetBroadLaneNextThresholdText(Int origin)
     Int count = GetBroadLaneServiceCount(origin)
+    if origin == ORIGIN_BRETON
+        if count < BRETON_PRACTICE_SEEKER_POINTS
+            return "Observant at 25 practice points"
+        elseIf count < BRETON_PRACTICE_DEVOTED_POINTS
+            return "Faithful at 50 practice points"
+        endIf
+        return "Practice cap reached"
+    endIf
     if count < 3
         return "Observant at 3 broad acts"
     elseIf count < 6
@@ -15729,10 +15864,29 @@ Function DebugSetKhajiitFocus(Int focusValue)
     Trace(1, "Khajiit focus debug-set to " + GetKhajiitFocusLabel(focusValue))
 EndFunction
 
-; Forces the Breton tradition (Knights Road / Hidden Art / Green Way).
+; Forces the Breton tradition (Knight's Road / Hidden Art / Green Way).
 Function DebugSetBretonTradition(Int traditionValue)
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
+        Trace(1, "Breton tradition debug-set ignored: set Breton origin first")
+        return
+    endIf
+
     Int normalized = ClampInt(traditionValue, BRETON_TRADITION_KNIGHTS_ROAD, BRETON_TRADITION_GREEN_WAY)
+    BeginRaceSetupQuietPresentation("mcm_breton_tradition")
     StorageUtil.SetIntValue(None, "PDV.Breton.Tradition", normalized)
+    StorageUtil.SetIntValue(None, "PDV.Breton.SetupComplete", 1)
+    if normalized == BRETON_TRADITION_GREEN_WAY
+        SetBretonDruidicFork(BRETON_DRUIDIC_FORK_DRUIDIC, "mcm_breton_tradition")
+        if StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 0) < 50
+            StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", 50)
+        endIf
+    else
+        SetBretonDruidicFork(BRETON_DRUIDIC_FORK_NONE, "mcm_breton_tradition")
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Breton.DruidicForkInitialized", 1)
+    SyncFirstTierRaceRewardRuntime()
+    RequestPanelRefresh()
+    EndRaceSetupQuietPresentation()
     Trace(1, "Breton tradition debug-set to " + normalized)
 EndFunction
 
@@ -15941,13 +16095,20 @@ Function DebugRefreshCurseFromPlayerState()
     HandleCurseStateRefresh("mcm_refresh")
 EndFunction
 
-Function DebugSetOriginRace(Int originRace)
-    if PDV_GLO_OriginRace
-        PDV_GLO_OriginRace.SetValue(originRace as Float)
+Bool Function DebugSetCurseProofOriginRace(Int originRace)
+    if originRace < ORIGIN_NORD || originRace > ORIGIN_REDGUARD || !PDV_GLO_OriginRace || !PDV_CurseStateService
+        return False
+    endIf
+    if PDV_CurseStateService.GetCurseState() != 0
+        return False
     endIf
 
+    PDV_GLO_OriginRace.SetValue(originRace as Float)
     RefreshPatronMirrors()
     UpdateContextualFavorRuntime()
+    RequestPanelRefresh()
+    Trace(1, "Curse proof origin set to " + GetOriginRaceLabel(originRace) + " (" + originRace + ")")
+    return True
 EndFunction
 
 Function DebugEvaluateCommitmentOffer()
@@ -16271,6 +16432,10 @@ Bool Function IsEligibleForFormalCommitmentOffer(PDV_DeityBase deity)
         return False
     endIf
 
+    if IsCommitmentDeclineDelayActive(deity)
+        return False
+    endIf
+
     if GetPiety(deity) < COMMITMENT_OFFER_THRESHOLD
         return False
     endIf
@@ -16469,6 +16634,8 @@ Function DebugDeclinePendingCommitment()
         return
     endIf
 
+    StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Offered", 0)
+    StorageUtil.SetFloatValue(pendingDeity as Form, "PDV.Commitment.DeclinedAt", Utility.GetCurrentGameTime())
     ClearPendingCommitment()
     Trace(1, "Commitment declined/postponed.")
 EndFunction
@@ -16520,6 +16687,19 @@ Bool Function IsCommitmentOffered(PDV_DeityBase deity)
     endIf
 
     return StorageUtil.GetIntValue(deity as Form, "PDV.Commitment.Offered") == 1
+EndFunction
+
+Bool Function IsCommitmentDeclineDelayActive(PDV_DeityBase deity)
+    if !deity
+        return False
+    endIf
+
+    Float declinedAt = StorageUtil.GetFloatValue(deity as Form, "PDV.Commitment.DeclinedAt")
+    if declinedAt <= 0.0
+        return False
+    endIf
+
+    return (Utility.GetCurrentGameTime() - declinedAt) < COMMITMENT_DECLINE_DELAY_DAYS
 EndFunction
 
 Bool Function IsCommitmentRefused(PDV_DeityBase deity)
@@ -17037,12 +17217,15 @@ Function ShowDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier,
 
     if replayChampionOffer && newTier == TIER_CHAMPION
         path.ShowTierEntryMessage(oldTier, newTier)
+        SyncFirstTierRaceRewardRuntime()
         if path.GetStoredTier() < TIER_CHAMPION
             if GetDebugLevel() >= 1
                 Debug.Trace("[PDV] Daedric milestone presentation skipped after Champion decline: " + path.DeityName)
             endIf
             return
         endIf
+    else
+        SyncFirstTierRaceRewardRuntime()
     endIf
 
     String princeName = path.DeityName
@@ -18137,6 +18320,8 @@ Function ApplyBretonInitialChoice(Int traditionValue, String reason)
         AppendBookOfDaysEntry(BuildStartupRoadJournalLine(traditionLabel), Utility.GetCurrentGameTime() as Int, "reorientation", GetPrismaSymbolForDeity(traditionDeity), True, 3, "", True)
         SurfaceTransition("emergence", traditionDeity.DeityName, "onset", traditionDeity.DeityIndex, "revelation")
     endIf
+    SyncFirstTierRaceRewardRuntime()
+    RequestPanelRefresh()
     EndRaceSetupQuietPresentation()
 EndFunction
 
@@ -18211,7 +18396,6 @@ Function HandleBretonTraditionChoice(Int traditionValue, String reason)
     endIf
 
     ApplyBretonInitialChoice(traditionValue, reason)
-    StorageUtil.SetIntValue(None, "PDV.Breton.TraditionHookCount", StorageUtil.GetIntValue(None, "PDV.Breton.TraditionHookCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Breton.LastTraditionHookReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
     Trace(2, "Breton tradition choice routed: " + reason)
@@ -18300,25 +18484,25 @@ Function HandleBretonActionPracticeSignal(Int eventType, String reason)
 
     String sourceKey = "event_" + eventType
     if eventType == 350 || eventType == 351
-        AwardBretonPracticePulse(BRETON_TRADITION_KNIGHTS_ROAD, 5, sourceKey, reason)
+        AwardBretonPracticePulse(BRETON_TRADITION_KNIGHTS_ROAD, BRETON_PRACTICE_RENEWABLE_POINTS, sourceKey, reason)
     elseIf eventType == 300 || eventType == 301
-        AwardBretonPracticePulse(BRETON_TRADITION_KNIGHTS_ROAD, 3, sourceKey, reason)
+        AwardBretonPracticePulse(BRETON_TRADITION_KNIGHTS_ROAD, BRETON_PRACTICE_RENEWABLE_POINTS, sourceKey, reason)
     elseIf eventType == 304 || eventType == 364 || eventType == 362 || eventType == 366
         DamageBretonPracticePressure(BRETON_TRADITION_KNIGHTS_ROAD, 10, sourceKey, reason)
     endIf
 
     if eventType == 313 || eventType == 334 || eventType == 303 || eventType == 333 || eventType == 300
-        AwardBretonPracticePulse(BRETON_TRADITION_GREEN_WAY, 3, sourceKey, reason)
+        AwardBretonPracticePulse(BRETON_TRADITION_GREEN_WAY, BRETON_PRACTICE_RENEWABLE_POINTS, sourceKey, reason)
     elseIf eventType == 365 || eventType == 331 || eventType == 364
         DamageBretonPracticePressure(BRETON_TRADITION_GREEN_WAY, 10, sourceKey, reason)
     endIf
 
     if eventType == 341 || eventType == 342
-        AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, 5, sourceKey, reason)
+        AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_RENEWABLE_POINTS, sourceKey, reason)
     elseIf eventType == 331
-        AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, 3, sourceKey, reason)
+        AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_RENEWABLE_POINTS, sourceKey, reason)
     elseIf eventType == 333 || eventType == 314
-        AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, 2, sourceKey, reason)
+        AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_RENEWABLE_POINTS, sourceKey, reason)
     endIf
 EndFunction
 
@@ -18330,11 +18514,11 @@ Function HandleBretonQuestTagPracticeSignal(String sourceTag, Bool positive, Str
     String sourceKey = "tag_" + sourceTag
     if positive
         if sourceTag == "mercy_spare" || sourceTag == "protect_the_weak" || sourceTag == "uphold_law_justice" || sourceTag == "keep_oath"
-            AwardBretonPracticePulse(BRETON_TRADITION_KNIGHTS_ROAD, 5, sourceKey, reason)
+            AwardBretonPracticePulse(BRETON_TRADITION_KNIGHTS_ROAD, BRETON_PRACTICE_CURATED_POINTS, sourceKey, reason)
         elseIf sourceTag == "honor_the_wild" || sourceTag == "the_hunt"
-            AwardBretonPracticePulse(BRETON_TRADITION_GREEN_WAY, 5, sourceKey, reason)
+            AwardBretonPracticePulse(BRETON_TRADITION_GREEN_WAY, BRETON_PRACTICE_CURATED_POINTS, sourceKey, reason)
         elseIf sourceTag == "forbidden_knowledge"
-            AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, 5, sourceKey, reason)
+            AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_CURATED_POINTS, sourceKey, reason)
         endIf
     else
         if sourceTag == "kill_the_helpless" || sourceTag == "murder_treacherous"
@@ -18347,14 +18531,37 @@ Function HandleBretonQuestTagPracticeSignal(String sourceTag, Bool positive, Str
     endIf
 EndFunction
 
-Bool Function AwardBretonPracticePulse(Int traditionValue, Int pressureDelta, String sourceKey, String reason)
+Int Function ConsumeBretonPracticePointBudget(Int requestedPoints)
+    if requestedPoints <= 0
+        return 0
+    endIf
+
+    Int today = Utility.GetCurrentGameTime() as Int
+    Int budgetDay = StorageUtil.GetIntValue(None, "PDV.Breton.PracticePointDay", -1)
+    if budgetDay != today
+        StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointDay", today)
+        StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointsToday", 0)
+    endIf
+
+    Int pointsToday = StorageUtil.GetIntValue(None, "PDV.Breton.PracticePointsToday")
+    Int remaining = BRETON_PRACTICE_DAILY_MAX_POINTS - pointsToday
+    if remaining <= 0
+        return 0
+    endIf
+
+    Int appliedPoints = requestedPoints
+    if appliedPoints > remaining
+        appliedPoints = remaining
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointsToday", pointsToday + appliedPoints)
+    return appliedPoints
+EndFunction
+
+Bool Function AwardBretonPracticePulse(Int traditionValue, Int requestedPoints, String sourceKey, String reason)
     if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
         return False
     endIf
     if GetBretonTraditionValue() != traditionValue
-        return False
-    endIf
-    if traditionValue == BRETON_TRADITION_HIDDEN_ART && StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure") >= 100
         return False
     endIf
     if traditionValue == BRETON_TRADITION_GREEN_WAY && !IsBretonGreenWayForkEligible()
@@ -18364,27 +18571,33 @@ Bool Function AwardBretonPracticePulse(Int traditionValue, Int pressureDelta, St
         return False
     endIf
 
+    Int appliedPoints = ConsumeBretonPracticePointBudget(requestedPoints)
+    if appliedPoints <= 0
+        Trace(2, "Breton practice daily cap blocked " + sourceKey + ": " + reason)
+        return False
+    endIf
+
     if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
         StorageUtil.SetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", 100)
-        StorageUtil.AdjustIntValue(None, "PDV.Breton.KnightlyVowCount", 1)
+        SetBretonPracticeCount(traditionValue, GetBretonPracticeCount(traditionValue) + appliedPoints)
         StorageUtil.SetStringValue(None, "PDV.Breton.LastKnightlyVowReason", reason)
     elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
         Int exposureValue = StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure")
-        StorageUtil.SetIntValue(None, "PDV.Breton.WitchcraftExposure", ClampInt(exposureValue + pressureDelta, 0, 100))
-        StorageUtil.AdjustIntValue(None, "PDV.Breton.HiddenArtCount", 1)
+        StorageUtil.SetIntValue(None, "PDV.Breton.WitchcraftExposure", ClampInt(exposureValue + appliedPoints, 0, 100))
+        SetBretonPracticeCount(traditionValue, GetBretonPracticeCount(traditionValue) + appliedPoints)
         StorageUtil.SetStringValue(None, "PDV.Breton.LastHiddenArtReason", reason)
     elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
         EnsureBretonDruidicForkInitialized()
         Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
-        StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", ClampInt(standingValue + pressureDelta, 0, 100))
-        StorageUtil.AdjustIntValue(None, "PDV.Breton.GreenWayCount", 1)
+        StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", ClampInt(standingValue + appliedPoints, 0, 100))
+        SetBretonPracticeCount(traditionValue, GetBretonPracticeCount(traditionValue) + appliedPoints)
         StorageUtil.SetStringValue(None, "PDV.Breton.LastGreenWayReason", reason)
     endIf
 
     StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
     SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
-    Trace(2, "Breton practice pulse " + traditionValue + " from " + sourceKey + ": " + reason)
+    Trace(2, "Breton practice pulse " + traditionValue + " +" + appliedPoints + " from " + sourceKey + ": " + reason)
     return True
 EndFunction
 
@@ -18450,7 +18663,7 @@ Function HandleBretonKnightlyVow(String reason)
     if PDV_Stendarr
         AwardCuratedSignalScaled(PDV_Stendarr, PDV_Stendarr.SIGNAL_MERCY, None, multiplier)
     endIf
-    if !AwardBretonPracticePulse(BRETON_TRADITION_KNIGHTS_ROAD, 5, "handler_knightly_vow", reason)
+    if !AwardBretonPracticePulse(BRETON_TRADITION_KNIGHTS_ROAD, BRETON_PRACTICE_CURATED_POINTS, "handler_knightly_vow", reason)
         MaybeRecordBretonCrossTraditionPressure(BRETON_TRADITION_KNIGHTS_ROAD, "handler_knightly_vow", reason)
     endIf
 
@@ -18476,7 +18689,7 @@ Function HandleBretonHiddenArtExposure(String reason)
     if PDV_Mara && StringContainsToken(reason, "home")
         AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
     endIf
-    Bool practiceAwarded = AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, 5, "handler_hidden_art_exposure", reason)
+    Bool practiceAwarded = AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_CURATED_POINTS, "handler_hidden_art_exposure", reason)
     if !practiceAwarded
         MaybeRecordBretonCrossTraditionPressure(BRETON_TRADITION_HIDDEN_ART, "handler_hidden_art_exposure", reason)
     endIf
@@ -18527,7 +18740,7 @@ Function HandleBretonGreenWayStanding(String reason)
         ; Bosmer-only so driver rows read in the right tradition's voice.
         AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_GREEN_WAY, None, multiplier)
     endIf
-    if !AwardBretonPracticePulse(BRETON_TRADITION_GREEN_WAY, 5, "handler_green_way_standing", reason)
+    if !AwardBretonPracticePulse(BRETON_TRADITION_GREEN_WAY, BRETON_PRACTICE_CURATED_POINTS, "handler_green_way_standing", reason)
         MaybeRecordBretonCrossTraditionPressure(BRETON_TRADITION_GREEN_WAY, "handler_green_way_standing", reason)
     endIf
     AwardBretonAncestorSpinePulse(multiplier, reason)
@@ -19564,6 +19777,10 @@ String Function BuildBookOfDaysInstrumentJson(Int originRace)
     Int tierValue = 0
     Float pietyValue = 0.0
     Float championThreshold = 85.0
+    Int bretonPracticeTier = TIER_NONE
+    if originRace == ORIGIN_BRETON
+        bretonPracticeTier = GetBretonPracticeTier(GetBretonTraditionValue())
+    endIf
     if PDV_GLO_ActiveTier
         tierValue = PDV_GLO_ActiveTier.GetValueInt()
     endIf
@@ -19576,6 +19793,11 @@ String Function BuildBookOfDaysInstrumentJson(Int originRace)
         championThreshold = journalCommitment.ThresholdChampion
         tierValue = GetTier(journalCommitment)
         pietyValue = GetPiety(journalCommitment)
+    elseIf originRace == ORIGIN_BRETON
+        if bretonPracticeTier > TIER_NONE
+            tierValue = bretonPracticeTier
+            pietyValue = GetBretonPracticeCount(GetBretonTraditionValue()) as Float
+        endIf
     else
         Int broadTier = GetBroadLaneTierForOrigin(originRace)
         if broadTier > TIER_NONE
@@ -19585,7 +19807,9 @@ String Function BuildBookOfDaysInstrumentJson(Int originRace)
     endIf
 
     String tierLabel = GetCurrentStandingLabel()
-    if journalCommitment == None && GetBroadLaneTierForOrigin(originRace) > TIER_NONE
+    if journalCommitment == None && originRace == ORIGIN_BRETON && bretonPracticeTier > TIER_NONE
+        tierLabel = GetPublicTierBand(bretonPracticeTier)
+    elseIf journalCommitment == None && GetBroadLaneTierForOrigin(originRace) > TIER_NONE
         tierLabel = GetBroadLaneStandingLabel(originRace, GetBroadLaneTierForOrigin(originRace))
     endIf
     return GetPanelInstrumentJson(originRace, journalCommitment != None, tierValue, tierLabel, pietyValue, championThreshold)
@@ -20904,9 +21128,14 @@ String Function GetSurveyDevotionText()
         return AppendRecentDevotionEvents("Devotion has not settled yet. Wait a moment, then survey again.")
     endIf
 
-    ; Prince-wins: an active Daedric pact is the single commitment, surfaced for ALL
-    ; races (exclusivity means the patron is severed, so this never co-renders). The
-    ; tier>0 guard inside GetActiveDaedricPactPath prevents a stale-pointer ghost pact.
+    ; Hidden Art is a layered Breton tradition: its Survey owns the base practice and
+    ; exposure readout, then appends its integrated Prince through the patron sentence.
+    if originRace == ORIGIN_BRETON
+        return AppendRecentDevotionEvents(GetBretonSurveyText())
+    endIf
+
+    ; Prince-wins for races without a layered pact tradition. The tier>0 guard inside
+    ; GetActiveDaedricPactPath prevents a stale-pointer ghost pact.
     PDV_DaedricPathBase pactPath = GetActiveDaedricPactPath()
     if pactPath
         return AppendRecentDevotionEvents(GetDaedricSurveyText(pactPath))
@@ -20927,8 +21156,6 @@ String Function GetSurveyDevotionText()
             return AppendRecentDevotionEvents(GetRedguardSurveyText())
         elseIf originRace == ORIGIN_IMPERIAL
             return AppendRecentDevotionEvents(GetImperialSurveyText())
-        elseIf originRace == ORIGIN_BRETON
-            return AppendRecentDevotionEvents(GetBretonSurveyText())
         elseIf originRace == ORIGIN_DUNMER
             return AppendRecentDevotionEvents(GetDunmerSurveyText())
         endIf
@@ -21683,19 +21910,17 @@ String Function GetRedguardSurveySectText()
 EndFunction
 
 String Function GetBretonSurveyText()
-    String band = GetCurrentStandingBand()
     Int tradition = StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1)
     if tradition < 0
-        String unchosenText = "You have not yet chosen a tradition. Breton faith takes its shape once you walk the Knight's Road, the Hidden Art, or the Green Way. Standing: " + band + "."
+        String unchosenText = "You have not yet chosen a tradition. Breton faith takes shape on the Knight's Road, through the Hidden Art, or along the Green Way."
         return unchosenText
     endIf
 
     String text = ""
     Int practiceTier = GetBretonPracticeTier(tradition)
-    Int practiceCount = GetBretonPracticeCount(tradition)
-    String practiceText = " Practice: " + GetPublicTierBand(practiceTier) + " (" + practiceCount + " proven acts)."
+    String practiceText = " Practice: " + GetPublicTierBand(practiceTier) + "."
     if tradition == 0
-        text = "You walk the Knight's Road: vow, mercy, and protective justice." + practiceText + " Standing: " + band + "."
+        text = "You walk the Knight's Road: vow, mercy, and protective justice." + practiceText
         Int vow = StorageUtil.GetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", 100)
         if vow >= 70
             text = text + " Your knightly vow is intact."
@@ -21705,7 +21930,7 @@ String Function GetBretonSurveyText()
             text = text + " Your knightly vow is broken, and the Road is halted until you restore it."
         endIf
     elseIf tradition == 1
-        text = "You walk the Hidden Art: occult practice and the double life." + practiceText + " Standing: " + band + "."
+        text = "You walk the Hidden Art: occult practice and the double life." + practiceText
         Int exposure = StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure", 0)
         if exposure >= 100
             text = text + " Your practice is notorious, openly named, and your patron rewards the full commitment."
@@ -21719,14 +21944,14 @@ String Function GetBretonSurveyText()
             text = text + " Your practice stays hidden, unseen by those who would object."
         endIf
     else
-        text = "You walk the Green Way: the old druidic covenant." + practiceText + " Standing: " + band + "."
+        text = "You walk the Green Way: the old druidic covenant." + practiceText
         Int druidic = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
         if druidic >= 70
-            text = text + " The druidic covenant is acknowledged, and Y'ffre answers you steadily."
+            text = text + " Y'ffre answers you steadily."
         elseIf druidic < 30
-            text = text + " The druidic covenant is fraying, and the forest is beginning to forget you."
+            text = text + " The Green Way is fraying, and the forest begins to forget you."
         else
-            text = text + " The druidic covenant is open but unproven, and Y'ffre is waiting."
+            text = text + " Y'ffre is listening."
         endIf
     endIf
 
@@ -21734,11 +21959,11 @@ String Function GetBretonSurveyText()
 
     Int fork = GetBretonDruidicForkValue()
     if fork == 1
-        text = text + " The beast in you serves the Green, and the covenant has grown around the new shape."
+        text = text + " The beast in you serves the Green, and the old covenant accepts your shape."
     elseIf fork == 2
-        text = text + " You took the beast for your own, and the Green has closed against the wolf."
+        text = text + " You claimed the beast for yourself, and the Green has closed against the wolf."
     elseIf fork == 3
-        text = text + " The covenant counts you a betrayer, and the Green presses back against the broken trust."
+        text = text + " The covenant names you betrayer, and the Green presses against the broken trust."
     endIf
 
     if StorageUtil.GetIntValue(None, "PDV.Breton.CrossTraditionPressure") > 0
@@ -21765,7 +21990,7 @@ String Function GetBretonTraditionLabel()
         return "Green Way"
     endIf
 
-    return "Unchosen"
+    return "no tradition yet"
 EndFunction
 
 String Function GetBretonBookOfDaysPathStatusLabel()
@@ -21788,7 +22013,11 @@ EndFunction
 String Function GetBretonPatronSurveySentence(Int traditionValue)
     PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
     if activePact
-        return " Your Daedric pact stands beside the tradition through the 20C path."
+        String pactName = GetPublicDeityDisplayName(activePact)
+        if traditionValue == BRETON_TRADITION_HIDDEN_ART && activePact.GetStoredTier() >= TIER_CHAMPION
+            return " Your pact with " + pactName + " has opened the Hidden Art's deepest practice. Hidden Art - Champion stands beside the pact."
+        endIf
+        return " Your pact with " + pactName + " stands beside the tradition."
     endIf
 
     if !_activeDeity || GetPatronState() != PATRON_STATE_ACTIVE
@@ -21798,13 +22027,14 @@ String Function GetBretonPatronSurveySentence(Int traditionValue)
     String deityName = GetPublicDeityDisplayName(_activeDeity)
     Int patronTier = GetTier(_activeDeity)
     if patronTier >= TIER_CHAMPION
+        String boonName = GetBretonChampionBoonDisplayName(_activeDeity)
         if IsDeityResonantWithBretonTradition(traditionValue, _activeDeity)
-            return " " + deityName + " is your Champion patron within this tradition; the tradition's highest blessing carries that name."
+            return " " + deityName + " is your Champion patron through this tradition. " + boonName + " stands beside your practice."
         endIf
-        return " " + deityName + " is your Champion patron outside this tradition; the patron's mark stands beside your practiced blessing."
+        return " " + deityName + " is your Champion patron beyond this tradition. " + boonName + " stands beside your practice."
     endIf
 
-    return " " + deityName + " is your patron focus; the tradition still grows through practiced deeds."
+    return " " + deityName + " is your patron focus; your tradition advances through practiced deeds."
 EndFunction
 
 String Function GetBretonKnightlyVowLabel()
@@ -21836,7 +22066,7 @@ String Function GetBretonDruidicStandingLabel()
     if standingValue >= 70
         return "acknowledged"
     elseIf standingValue < 30
-        return "frayed"
+        return "fraying"
     endIf
 
     return "open"
@@ -21853,7 +22083,7 @@ EndFunction
 String Function GetBretonCursePostureLabel()
     Int curseValue = StorageUtil.GetIntValue(None, "PDV.Curse.Breton.RestorationState")
     if curseValue == 2
-        return "active rupture"
+        return "a ruptured tradition"
     elseIf curseValue == 1
         return "restoration needed"
     endIf

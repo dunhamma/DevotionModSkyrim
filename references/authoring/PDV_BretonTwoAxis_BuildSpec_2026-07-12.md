@@ -15,9 +15,10 @@ Faith: The Bretons; Druids of Galen; Wyrd Covens) confirms: pantheon worship and
 cultural tradition coexist in the same Breton ("many islanders profess devotion to the
 Eight Divines but harbor a deep respect for Y'ffre and druidic culture").
 
-**Implementation closeout (2026-07-12):** `PDV__ManagerQuest.psc` now tiers Breton
+**Implementation closeout (updated 2026-07-13):** `PDV__ManagerQuest.psc` now tiers Breton
 traditions from `KnightlyVowCount`, `HiddenArtCount`, and `GreenWayCount`
-(thresholds 3/6), retires the pool-piety helpers, and grants T3 only when the
+as practice-point stores (thresholds 25/50; four points maximum per day), retires
+the pool-piety helpers, and grants T3 only when the
 active Champion patron is resonant with the active tradition. A non-resonant
 Champion patron grants `PDV_Bless_Breton_PatronChampion` beside the practiced
 tradition. `PDV_EventBus.psc` and `PDV_ActionRouter.psc` forward likes/dislikes
@@ -57,16 +58,19 @@ Tradition never restricts WHO you can serve; it shapes HOW you live.
 - Tradition T1/T2 = practice-count thresholds (section 2), NOT pooled deity piety.
   `GetBretonTraditionPoolPiety` retires with the split.
 
-## 2. Tradition tier = practice counts
+## 2. Tradition tier = practice points
 
 Replace the pooled-piety tier read in `GetBretonTraditionTier` / retire
 `GetBretonTraditionPietyPoolTier` + `GetBretonTraditionPoolPiety`
 ([PDV__ManagerQuest.psc:13258-13289]).
 
-- T1/T2 from service-count thresholds on the EXISTING counters
-  (`PDV.Breton.KnightlyVowCount`, `HiddenArtCount`, `GreenWayCount`), following the
-  established broad-lane pattern (>=3 -> T1, >=6 -> T2; tune at build). Counter ticks
-  must be daily-capped/anti-farm like every piety pulse.
+- T1/T2 use the existing stores (`PDV.Breton.KnightlyVowCount`,
+  `HiddenArtCount`, `GreenWayCount`) as weighted practice points: 25 -> T1 and
+  50 -> T2. Renewable actions grant 1 point; curated quest/tag and dedicated
+  tradition signals grant 2. A hard aggregate cap of 4 points per in-game day
+  applies across all source types, in addition to each source's once-per-day
+  guard. Seeker is therefore impossible before day 7 and should normally land
+  around days 9-10 under varied ordinary play, comparable to deity piety pacing.
 - T3 requires: active patron in the tradition's resonance set AND that patron at
   Champion (85). Non-resonant Champion routes to the PatronChampion boon instead.
 - Pressure tracks unchanged in role (gate/modify/rupture, never a second boon).
@@ -77,7 +81,7 @@ Replace the pooled-piety tier read in `GetBretonTraditionTier` / retire
 
 ## 3. Dual-feed signal wiring (final state per lane)
 
-Principle: a signal in a lane's set ticks the practice counter ONLY when that
+Principle: a signal in a lane's set awards practice points ONLY when that
 tradition is active (off-tradition -> CrossTraditionPressure path, existing), but
 pays deity piety ALWAYS (deity axis is never tradition-gated). Existing curated
 awards currently gated on tradition (Stendarr MERCY at [18072], Magnus

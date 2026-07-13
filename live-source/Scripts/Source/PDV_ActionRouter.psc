@@ -577,6 +577,11 @@ Bool Function ActorHasKeyword(Actor actorRef, Keyword keywordRef)
         return true
     endIf
 
+    Race actorRace = actorRef.GetRace()
+    if actorRace && actorRace.HasKeyword(keywordRef)
+        return true
+    endIf
+
     return false
 EndFunction
 

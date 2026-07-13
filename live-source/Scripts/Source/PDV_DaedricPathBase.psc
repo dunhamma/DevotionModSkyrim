@@ -71,11 +71,14 @@ EndFunction
 ; and record them for the next switch. Idempotent.
 Function MakeActiveDaedricPact()
     Form priorPact = StorageUtil.GetFormValue(None, DAEDRIC_ACTIVE_PACT_KEY)
-    ClearLiveDaedricPactSpells()
+    if priorPact != GetDeityForm()
+        ClearLiveDaedricPactSpells()
+    endIf
     StorageUtil.SetFormValue(None, DAEDRIC_ACTIVE_PACT_KEY, GetDeityForm())
     Int tierValue = GetStoredTier()
     SyncPatronBoonsToTier(tierValue)
     SyncDaedricContractToTier(tierValue)
+    StorageUtil.FormListClear(None, DAEDRIC_LIVE_SPELLS_KEY)
     TrackLiveDaedricPactSpells(tierValue)
     ; THE exclusivity seam. Every NEW pact activation funnels through here -- the
     ; live commitment funnel, an ambient/shrine tier-up (OnTierChange auto-calls this),
@@ -115,7 +118,7 @@ Function TrackLiveDaedricPactSpells(Int tierValue)
 EndFunction
 
 Function TrackPactSpell(Spell pactSpell)
-    if pactSpell
+    if pactSpell && Game.GetPlayer().HasSpell(pactSpell)
         StorageUtil.FormListAdd(None, DAEDRIC_LIVE_SPELLS_KEY, pactSpell)
     endIf
 EndFunction
@@ -128,17 +131,22 @@ Function StripPactSpells()
 EndFunction
 
 Function SyncPatronBoonsToTier(Int tierValue)
-    ClearAllBoons()
-    if tierValue <= TIER_NONE || !IsActiveDaedricPact()
-        return
+    Spell desiredBoon = None
+    if tierValue > TIER_NONE && IsActiveDaedricPact()
+        if tierValue >= TIER_CHAMPION && Boon_Champion
+            desiredBoon = Boon_Champion
+        elseIf tierValue >= TIER_DEVOTED && Boon_Devoted
+            desiredBoon = Boon_Devoted
+        elseIf tierValue >= TIER_SEEKER && Boon_Seeker
+            desiredBoon = Boon_Seeker
+        endIf
     endIf
 
-    if tierValue >= TIER_CHAMPION && Boon_Champion
-        Game.GetPlayer().AddSpell(Boon_Champion, False)
-    elseIf tierValue >= TIER_DEVOTED && Boon_Devoted
-        Game.GetPlayer().AddSpell(Boon_Devoted, False)
-    elseIf tierValue >= TIER_SEEKER && Boon_Seeker
-        Game.GetPlayer().AddSpell(Boon_Seeker, False)
+    RemoveSpellUnlessDesired(Boon_Seeker, desiredBoon)
+    RemoveSpellUnlessDesired(Boon_Devoted, desiredBoon)
+    RemoveSpellUnlessDesired(Boon_Champion, desiredBoon)
+    if desiredBoon && !Game.GetPlayer().HasSpell(desiredBoon)
+        Game.GetPlayer().AddSpell(desiredBoon, False)
     endIf
 EndFunction
 
@@ -265,6 +273,12 @@ Float Function GetStigma()
 EndFunction
 
 Function AddStigma(Float amount, String reason)
+    if ShouldWaiveStigmaForPlayer()
+        ClearIntegratedPactStigma()
+        TraceDaedric(2, "Generic stigma waived for integrated Breton Hidden Art pact (" + reason + ")")
+        return
+    endIf
+
     Float modifiedAmount = amount * GetStigmaModifierForRace(GetPlayerOriginRace())
     Float newStigma = GetStigma() + modifiedAmount
 
@@ -496,17 +510,77 @@ Int Function GetPlayerOriginRace()
 EndFunction
 
 Function SyncDaedricContractToTier(Int tierValue)
-    ClearPriceSpells()
-    if tierValue <= TIER_NONE || !IsActiveDaedricPact()
-        return
+    if ShouldWaiveStigmaForPlayer()
+        ClearIntegratedPactStigma()
     endIf
 
-    if tierValue >= TIER_CHAMPION && Price_Champion
-        Game.GetPlayer().AddSpell(Price_Champion, False)
-    elseIf tierValue >= TIER_DEVOTED && Price_Devoted
-        Game.GetPlayer().AddSpell(Price_Devoted, False)
-    elseIf tierValue >= TIER_SEEKER && Price_Seeker
-        Game.GetPlayer().AddSpell(Price_Seeker, False)
+    Spell desiredPrice = None
+    if tierValue > TIER_NONE && IsActiveDaedricPact() && !ShouldWaivePriceForPlayer()
+        if tierValue >= TIER_CHAMPION && Price_Champion
+            desiredPrice = Price_Champion
+        elseIf tierValue >= TIER_DEVOTED && Price_Devoted
+            desiredPrice = Price_Devoted
+        elseIf tierValue >= TIER_SEEKER && Price_Seeker
+            desiredPrice = Price_Seeker
+        endIf
+    endIf
+
+    RemoveSpellUnlessDesired(Price_Seeker, desiredPrice)
+    RemoveSpellUnlessDesired(Price_Devoted, desiredPrice)
+    RemoveSpellUnlessDesired(Price_Champion, desiredPrice)
+    if desiredPrice && !Game.GetPlayer().HasSpell(desiredPrice)
+        AddPriceSpellPreservingCurrentPools(Game.GetPlayer(), desiredPrice)
+    endIf
+EndFunction
+
+Bool Function ShouldWaivePriceForPlayer()
+    return IsBretonHiddenArtIntegratedPact()
+EndFunction
+
+Bool Function ShouldWaiveStigmaForPlayer()
+    return IsBretonHiddenArtIntegratedPact()
+EndFunction
+
+Bool Function IsBretonHiddenArtIntegratedPact()
+    if GetPlayerOriginRace() != RACE_BRETON
+        return False
+    endIf
+    if StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) != 1
+        return False
+    endIf
+
+    return DeityName == "Hermaeus Mora" || DeityName == "Hircine" || DeityName == "Namira" || DeityName == "Nocturnal"
+EndFunction
+
+Function ClearIntegratedPactStigma()
+    if StigmaGlobal && StigmaGlobal.GetValue() != 0.0
+        StigmaGlobal.SetValue(0.0)
+    endIf
+    if StorageUtil.GetFloatValue(GetDeityForm(), "PDV.Daedric.Stigma") != 0.0
+        StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Daedric.Stigma", 0.0)
+    endIf
+EndFunction
+
+Function RemoveSpellUnlessDesired(Spell candidateSpell, Spell desiredSpell)
+    if candidateSpell && candidateSpell != desiredSpell && Game.GetPlayer().HasSpell(candidateSpell)
+        Game.GetPlayer().RemoveSpell(candidateSpell)
+    endIf
+EndFunction
+
+Function AddPriceSpellPreservingCurrentPools(Actor playerRef, Spell priceSpell)
+    Float healthBefore = playerRef.GetActorValue("Health")
+    Float magickaBefore = playerRef.GetActorValue("Magicka")
+    Float staminaBefore = playerRef.GetActorValue("Stamina")
+    playerRef.AddSpell(priceSpell, False)
+    RestoreCurrentPoolIfReduced(playerRef, "Health", healthBefore)
+    RestoreCurrentPoolIfReduced(playerRef, "Magicka", magickaBefore)
+    RestoreCurrentPoolIfReduced(playerRef, "Stamina", staminaBefore)
+EndFunction
+
+Function RestoreCurrentPoolIfReduced(Actor playerRef, String actorValueName, Float priorValue)
+    Float currentValue = playerRef.GetActorValue(actorValueName)
+    if currentValue < priorValue
+        playerRef.RestoreActorValue(actorValueName, priorValue - currentValue)
     endIf
 EndFunction
 

@@ -444,9 +444,11 @@ Prisma failures are UI failures unless the log marker, Survey state, or Active E
 - **Seeding is MCM-driven, not CallQuestFunction.** Use the `Debug: State & Rewards` and
   `Debug: Daedric & Curse` pages. The Dunmer buttons are
   `Dunmer ancestor prayer`, `Dunmer home bonus`; curse buttons are
-  `Curse none`, `Curse werewolf`, `Curse vampire` (and `Cycle curse origin` /
-  `Apply curse origin` for the curse race-handler smoke). Standard `set` /
-  `coc` console is allowed.
+  `Curse none`, `Curse werewolf`, `Curse vampire`. For Dunmer race-handler
+  setup, cycle `Curse proof race` to `Dunmer`, select `Apply proof race`, then
+  force `Curse none` before the target transition. The proof-race action rewrites
+  `PDV_GLO_OriginRace`; use a throwaway proof save and restore the real origin.
+  Standard `set` / `coc` console is allowed.
 - **`coc` skips Story location-change triggers.** The outdoor DLC2 Good-Daedra
   shrine arm (slot 4d) needs a load-door entry or fast-travel, never a `coc`
   straight into the altar cell. The MCM substrate buttons and book reads are

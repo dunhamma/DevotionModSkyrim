@@ -27,6 +27,7 @@ const RESERVED_SIGNALS_PATH = `${ROOT}/tools/pdv_reserved_signals.json`;
 const RESERVED_EVENTS_PATH = `${ROOT}/tools/pdv_reserved_events.json`;
 const RESERVED_ROUTES_PATH = `${ROOT}/tools/pdv_reserved_routes.json`;
 const EVENT_TYPES_PATH = `${SOURCE_DIR}/PDV_EventTypes.psc`;
+const ACTION_ROUTER_PATH = `${SOURCE_DIR}/PDV_ActionRouter.psc`;
 const LIKES_CSV_PATH = `${ROOT}/references/authoring/PDV_DeityLikesDislikes.csv`;
 const PRINCE_LIKES_CSV_PATH = `${ROOT}/references/authoring/PDV_DeityLikesDislikes_Princes_V2.csv`;
 const P2_AUTHOR_PROJECT = `${ROOT}/tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj`;
@@ -90,12 +91,13 @@ function main() {
   const eventCoverage = evaluateEventEmissionCoverage();
   const routeReach = evaluateRouteReachability();
   const csvFreshness = evaluateCsvCodegenFreshness();
+  const killClassification = evaluateKillClassification();
 
-  writeLedgers(rows, helpers, curatedParity, dispatchCoverage, eventCoverage, routeReach, csvFreshness);
+  writeLedgers(rows, helpers, curatedParity, dispatchCoverage, eventCoverage, routeReach, csvFreshness, killClassification);
 
   const counts = countBy(rows, (row) => row.verdict);
   const surfacesPass = !rows.some((row) => row.verdict !== "GREEN");
-  const declarationGatesOk = dispatchCoverage.ok && eventCoverage.ok && routeReach.ok && csvFreshness.ok;
+  const declarationGatesOk = dispatchCoverage.ok && eventCoverage.ok && routeReach.ok && csvFreshness.ok && killClassification.ok;
   const summary = {
     status: surfacesPass && curatedParity.ok && declarationGatesOk ? "PASS" : "FAIL",
     surfaces: rows.length,
@@ -136,6 +138,10 @@ function main() {
       reservedKnownGaps: routeReach.knownGaps.length,
       failures: routeReach.failures.length,
       staleLedger: routeReach.staleLedger.length,
+    },
+    killClassification: {
+      status: killClassification.ok ? "PASS" : "FAIL",
+      failures: killClassification.failures,
     },
     csvCodegenFreshness: {
       status: csvFreshness.ok ? "PASS" : "FAIL",
@@ -1125,6 +1131,50 @@ function evaluateRouteReachability() {
   return { targets: targets.length, reachable, orphans: orphans.length, knownGaps, failures, staleLedger, ledgerError, ok };
 }
 
+// Gate C -- Kill classification inheritance: actor-type keywords can live on a victim's
+// race rather than its actor base. Without this fallback, a real draugr Story Manager
+// kill reaches the router but silently misses EVT_KILL_UNDEAD and every downstream deity
+// reaction. Keep undead first so a race-derived undead type cannot fall through to NPC.
+function evaluateKillClassification() {
+  const routerText = fs.readFileSync(ACTION_ROUTER_PATH, "utf8");
+  const routerFunctions = buildFunctionMap(routerText);
+  const actorHasKeyword = routerFunctions.get("ActorHasKeyword") || "";
+  const classifyKillVictim = routerFunctions.get("ClassifyKillVictim") || "";
+  const playerEventsText = fs.readFileSync(PLAYER_EVENTS_PATH, "utf8");
+  const playerEventFunctions = buildFunctionMap(playerEventsText);
+  const inheritedKeyword = playerEventFunctions.get("ActorHasInheritedKeyword") || "";
+  const paarthurnaxCheck = playerEventFunctions.get("IsPaarthurnaxActor") || "";
+  const khajiitKill = playerEventFunctions.get("HandleKhajiitOrganicKill") || "";
+  const failures = [];
+
+  if (!/actorRef\.GetRace\s*\(\s*\)/.test(actorHasKeyword) || !/actorRace\.HasKeyword\s*\(\s*keywordRef\s*\)/.test(actorHasKeyword)) {
+    failures.push("ActorHasKeyword lacks the Actor.GetRace() keyword fallback.");
+  }
+
+  const undeadIndex = classifyKillVictim.indexOf("ActorHasKeyword(victimActor, ActorTypeUndead)");
+  const undeadReturnIndex = classifyKillVictim.indexOf("return EVT_KILL_UNDEAD");
+  const npcIndex = classifyKillVictim.indexOf("ActorHasKeyword(victimActor, ActorTypeNPC)");
+  if (undeadIndex < 0 || undeadReturnIndex < undeadIndex || npcIndex < 0 || undeadIndex > npcIndex) {
+    failures.push("ClassifyKillVictim must return EVT_KILL_UNDEAD before the generic NPC branch.");
+  }
+
+  if (!/actorRef\.GetRace\s*\(\s*\)/.test(inheritedKeyword) || !/actorRace\.HasKeyword\s*\(\s*keywordRef\s*\)/.test(inheritedKeyword)) {
+    failures.push("PDV_PlayerEvents special kill paths lack the actor/base/race keyword helper.");
+  }
+  if (!/ActorHasInheritedKeyword\s*\(\s*victimActor\s*,\s*ActorTypeDragon\s*\)/.test(paarthurnaxCheck)) {
+    failures.push("Paarthurnax recognition bypasses inherited ActorTypeDragon classification.");
+  }
+  if (!/ActorHasInheritedKeyword\s*\(\s*victimActor\s*,\s*ActorTypeDragon\s*\)/.test(khajiitKill)) {
+    failures.push("Khajiit organic dragon recognition bypasses inherited ActorTypeDragon classification.");
+  }
+
+  if (process.env.PDV_KILL_CLASSIFICATION_SELFTEST === "1") {
+    failures.push("Synthetic kill-classification failure.");
+  }
+
+  return { failures, ok: failures.length === 0 };
+}
+
 // Gate D -- CSV -> codegen freshness: a likes/dislikes CSV edit is inert until
 // pdv_likesdislikes_gen regenerates the manager seed block and the version bumps
 // (the likes-dislikes-csv-codegen class). Content-level check at event-id granularity:
@@ -1233,7 +1283,7 @@ function unique(items) {
   return [...new Set(items.filter(Boolean))];
 }
 
-function writeLedgers(rows, helpers, curatedParity, dispatchCoverage, eventCoverage, routeReach, csvFreshness) {
+function writeLedgers(rows, helpers, curatedParity, dispatchCoverage, eventCoverage, routeReach, csvFreshness, killClassification) {
   const counts = countBy(rows, (row) => row.verdict);
   const statusCounts = {};
   for (const row of rows) {
@@ -1388,6 +1438,17 @@ function writeLedgers(rows, helpers, curatedParity, dispatchCoverage, eventCover
     if (csvFreshness.seededNotInSuperset.length) md.push(`### Seeded ids missing from ClearRowsForDeity superset (FAIL): ${csvFreshness.seededNotInSuperset.join(", ")}`);
     if (!csvFreshness.ok) md.push("");
   }
+  if (killClassification) {
+    md.push("## Kill Classification Inheritance");
+    md.push("");
+    md.push("Actor-type classification checks actor reference, actor base, and actor race. This prevents race-derived undead (including draugr) from missing EVT_KILL_UNDEAD and falling through to the generic NPC branch.");
+    md.push(`Status: ${killClassification.ok ? "PASS" : "FAIL"}`);
+    if (killClassification.failures.length) {
+      md.push("");
+      for (const failure of killClassification.failures) md.push(`- ${asciiSafe(failure)}`);
+    }
+    md.push("");
+  }
   md.push("## RED / INCOMPLETE By Failing Step");
   md.push("");
   const problemRows = rows.filter((row) => row.verdict !== "GREEN");
@@ -1488,7 +1549,8 @@ if (process.argv.includes("--declaration-gates-only") || process.argv.includes("
   const events = evaluateEventEmissionCoverage();
   const routes = evaluateRouteReachability();
   const csv = evaluateCsvCodegenFreshness();
-  const ok = dispatch.ok && events.ok && routes.ok && csv.ok;
+  const killClassification = evaluateKillClassification();
+  const ok = dispatch.ok && events.ok && routes.ok && csv.ok && killClassification.ok;
   console.log(JSON.stringify({
     check: "declarationGates",
     status: ok ? "PASS" : "FAIL",
@@ -1520,6 +1582,10 @@ if (process.argv.includes("--declaration-gates-only") || process.argv.includes("
       failures: routes.failures.map((f) => f.key),
       staleLedger: routes.staleLedger,
       ledgerError: routes.ledgerError,
+    },
+    killClassification: {
+      status: killClassification.ok ? "PASS" : "FAIL",
+      failures: killClassification.failures,
     },
     csvFreshness: {
       status: csv.ok ? "PASS" : "FAIL",

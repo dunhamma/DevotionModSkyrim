@@ -24,6 +24,14 @@ This repo should be treated as a single-context project; skills should read the 
 
 ---
 
+## houseCARL v1.7+ Direct Plugin Work Rule
+
+Skyrim plugin record reads, writes, and record-state readback should use direct `housecarl_*` MCP calls. The CKRA bridge and PDV Mutagen record-author helper trees are retired/reference-only unless explicitly restored for forensics.
+
+Do not use `tools/creation-authoring`, `tools/creation-merge-runner`, `tools/pdv_author.mjs`, `tools/pdv_writer_review.mjs`, or `tools/pdv-*-author` for new ESP edits. Those retired trees are preserved only in `tools/pdv-authoring-trees-retired-2026-07-13.zip`. Keep using PDV compile, audit, runtime-check, evidence, documentation, and non-ESP generation tools where they do not write plugin records.
+
+---
+
 ## Project File Map
 
 | File | Role | Use When |
@@ -70,6 +78,7 @@ This repo should be treated as a single-context project; skills should read the 
 | `tools/pdv_phase20_base_wiring_audit.mjs` | Read-only all-race Phase 20 base wiring audit | Checking all ten races for P2 receiver contracts, live source-fill coverage counts, static quest-stage routes, and T1 reward manager script references against the live Devotion source |
 | `tools/pdv_beta_readiness_audit.mjs` | Read-only beta-readiness closure audit | Failing closed on broad "scaled out" or beta-feel claims until authority, readback, runtime-route, manual, and release-claim proof buckets all line up |
 | `tools/pdv_phase2_reward_readback_audit.mjs` | Read-only Phase 2 static reward/capstone readback audit | Checking Phase 2 reward records, manager deity/reward/neglect properties, FLST membership, SGE/SEQ state, Green Pact static layer plus the plant-food baseline, fallback capstone records, and real-hook classification |
+| `tools/pdv_breton_architecture_audit.mjs` | Read-only Breton architecture contract audit | Checking all three traditions, 25/50 pacing and daily cap, Survey/Book layered identity, all Champion mappings, Hidden Art integrated-Prince price/stigma rules, Notorious behavior, debug/startup reconciliation, retired reward cleanup, and live-sync coverage |
 | `tools/pdv_requiem_penalty_audit.mjs` | Read-only Requiem felt-penalty audit | Checking the Argonian/Breton converted negative Health penalties, old regen-MGEF orphaning, and Imperial `ResistDisease -5` preservation against specs plus live `Devotion.esp` |
 | `tools/pdv_eligibility_reward_coverage_audit.mjs` | Read-only live-code-to-ESP reward coverage audit | Checking every focusable/offer-eligible reward row derived from live Papyrus against live SPEL existence and filled `PDV__ManagerQuest` VMAD properties |
 | `tools/pdv_phase20_runtime_check.mjs` | Read-only Papyrus log checker for Phase 20 QASmoke runtime proof | Checking Altmer, Argonian, Orc, Redguard, Khajiit, and Bosmer route markers after in-game proof activation; route proof only, not a replacement for Survey/status immersion checks |
@@ -1054,6 +1063,8 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 ---
 
 ## Decisions Log
+
+- **Breton Hidden Art is a layered global pact with no duplicate cost (2026-07-13 AEST):** For a Breton actively walking Hidden Art, Hircine, Hermaeus Mora, Namira, and Nocturnal retain their global pact boon and Champion ownership, but do not apply the global Prince price or a second stigma layer. `WitchcraftExposure` plus authored Vigilant pressure is the lane's sole cost; Notorious exposure keeps practice/rewards active and multiplies integrated-Prince gain by 1.25. Survey must preserve the Hidden Art practice/exposure base and append the Prince, while Book of Days and the focused panel retain layered identity. Runtime co-test passed the capstone, Prince boon, price waiver, and current-pool preservation; only the corrected Survey composition remains to retest. `PDV_DaedricPathBase` hard-clears tracked spells only on a real Prince switch, syncs boon/price tiers idempotently, and preserves current Health/Magicka/Stamina when any non-waived negative pool price is first applied. `tools/pdv_breton_architecture_audit.mjs` guards the complete Breton wiring contract.
 
 - **Khajiit Lunar Road owner-contract guard and substrate self-heal (2026-07-12 AEST):** Runtime co-test saw `Lunar Hardiness` but not `Khajiit Lunar Road`. Diagnosis: `PDV_Bless_Khajiit_Lunar_T1` is the Khajiit lunar substrate `Substrate_Mid` slot, but the repo mirror still allowed the generic first-tier reward dispatcher to manage that reused spell; the deployed MO2 manager had the intended omission. `PDV__ManagerQuest` now leaves Lunar_T1 to `PDV_Substrate_KhajiitLunar`, `PDV_Phase20_RewardRecordContracts.json` names that substrate owner, and `tools/pdv_reward_runtime_order_lint.mjs` reads `substrateBoons` specs and fails closed when the generic T1 dispatcher directly manages a substrate-owned SPEL. `PDV_SubstrateBase` now reconciles the actual Active Effects boon when the stored tier is unchanged, so a previously stripped substrate boon can recover on the next substrate signal instead of requiring a tier transition. Proof boundary: source/tool/contract/compile/static only -- `PDV_SubstrateBase` compile 0/0, verifier `FAIL=0 WARN=1`, reward-runtime lint self-test PASS, repo and MO2 lint PASS with 0 collisions / 0 owner-contract violations, ASCII guard PASS, Prisma UI audit PASS 89. Runtime/manual proof for `Khajiit-Lunar|substrate-favor` remains open in the co-test runbook. Residual outside this Khajiit pass: the manager repo/live text comparison still shows unrelated Breton two-axis architecture drift; do not bulk-sync it as part of Khajiit closeout.
 
