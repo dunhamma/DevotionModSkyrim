@@ -20,6 +20,8 @@ small pass-rule vocabulary, so contract edits never require tool edits).
 | C-RACE-RUBRIC | 10 races pass the Pre-Beta Acceptance Rubric | evidence | PDV_PreBetaRaceGateLedger.md verdicts |
 | C-PRINCE-GATE | 16 Princes pass the Daedric beta-display gate | machine | pdv_daedric_beta_gate.mjs |
 | C-AUDIT-BETA-STRICT | Strict beta-readiness audit clean | machine | pdv_beta_readiness_audit.mjs --strict |
+| C-AUDIT-SUBSTRATE-PACING | Shared substrate 7/19-day pacing contract passes | machine | pdv_substrate_pacing_audit.mjs --json |
+| C-AUDIT-BROAD-PANTHEON | Imperial and Nord broad-pantheon parity contract passes | machine | pdv_broad_pantheon_audit.mjs --json |
 | C-AUDIT-VERIFY | Framework verifier FAIL=0 | machine | pdv_verify.mjs (via --run stamp) |
 | C-AUDIT-CONTENT | Content verifier clean | machine | pdv_content_verify.mjs (via --run stamp) |
 | C-AUDIT-INTEGRITY | Integrity harness gates pass | machine | PDV_IntegrityHarnessLedger.md |

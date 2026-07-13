@@ -1,6 +1,6 @@
 # PDV Target End States - 1.0 Product Tracker
 **Created:** 2026-05-18
-**Last updated:** 2026-07-07 (all ten race beta-feel packets pass current manual/runtime evidence per `references/authoring/PDV_PreBetaRaceGateLedger.md`; the Daedric beta-display gate passes all sixteen Princes; strict beta-readiness audit is `STRICT_GATE_PASS` with no blockers. Remaining 1.0 distance is the Authoria/ARR Requiem felt sweep, residual C2 Prisma beats, Prince V2, Experience Mode, final immersive world placement, and branding polish -- see "Remaining 1.0 Distance" below)
+**Last updated:** 2026-07-13 (pantheon parity and six-race substrate pacing are design-locked in the two new authority contracts; prior race packets remain historical evidence but are stale for the changed progression surfaces until the combined co-test is rerun)
 **Status:** Living 1.0 product/end-state tracker
 **Purpose:** Track what each race's devotion should feel like at launch, how
 close each race is to implementation-ready acceptance, and where the 1.0
@@ -15,6 +15,22 @@ roadmap still has gaps. This document owns product feel and launch acceptance;
 > These are player-experience targets and acceptance checkpoints, not a second
 > architecture spec. Treat them as the "north star" when making implementation
 > tradeoffs, and defer to v3 when a subsystem contract is in question.
+
+## 2026-07-13 Progression Rebaseline
+
+`references/authoring/PDV_SubstratePacingContracts.json` and
+`PDV_BroadPantheonContracts.json` are the launch authority for substrate timing
+and Imperial/Nord broad worship. They lock a first-authentic-act daily substrate
+credit of `+4`, the `1/25/75` tiers, day-7 mid and day-19 high pacing, mirrored
+Nord Old Ways/Nine Divines pools, and Imperial Divines piety rather than civic
+count for `The Divines' Regard`. They also retire the Khajiit anchor circuit and
+Argonian weighted composite/Hist Communion stack.
+
+The affected old race-packet results are not deleted: they prove the former
+implementation. They cannot prove the redesigned timing, reward resolver,
+migrations, Active Effects names, or player surfaces. Those six rows remain
+design-locked but return to runtime/manual recheck until the one-sitting co-test
+records the new behavior.
 
 ## Documentation Architecture Role
 
@@ -183,16 +199,16 @@ Status values:
 
 | Race | Architecture locked | Implementation-spec locked | Hook feasibility checked | Content authored | Verifier-covered | In-game proven |
 |---|---|---|---|---|---|---|
-| Nord | Locked | Locked | Locked | Ratified | Static | Packet-proven (2026-06-18) |
-| Imperial | Locked | Locked | Locked | Ratified | Static | Packet-proven (2026-07-04) |
+| Nord | Locked | Locked | Locked | Ratified | Recheck pending | Historical packet; pantheon/substrate recheck required |
+| Imperial | Locked | Locked | Locked | Ratified | Recheck pending | Historical packet; pantheon/substrate recheck required |
 | Breton | Locked | Locked | Locked | Ratified | Static | Packet-proven (2026-06-19) |
-| Dunmer | Locked | Locked | Locked | Ratified | Static | Packet-proven (2026-07-05) |
-| Altmer | Locked | Partial | Partial | Ratified | Static | Packet-proven |
-| Khajiit | Locked | Locked | Locked | Ratified | Static | Packet-proven |
+| Dunmer | Locked | Locked | Locked | Ratified | Recheck pending | Historical packet; substrate recheck required |
+| Altmer | Locked | Partial | Partial | Ratified | Recheck pending | Historical packet; substrate recheck required |
+| Khajiit | Locked | Locked | Locked | Ratified | Recheck pending | Historical packet; moon/road substrate recheck required |
 | Bosmer | Locked | Locked | Partial | Ratified | Static | Packet-proven |
 | Redguard | Locked | Locked | Locked | Ratified | Static | Packet-proven (2026-06-19) |
 | Orc | Locked | Locked | Partial | Ratified | Static | Packet-proven (2026-06-18) |
-| Argonian | Locked | Locked | Locked | Ratified | Static | Packet-proven (2026-06-18) |
+| Argonian | Locked | Locked | Locked | Ratified | Recheck pending | Historical packet; consolidated substrate recheck required |
 
 Content-authoring ratification audit (2026-05-31): a whole-roster gap audit
 confirmed the V1 manifest prose is content-complete. `pdv_content_verify` is
@@ -489,6 +505,12 @@ Pilot clearance result: Nord, Imperial, and Redguard cleared the cross-pilot rev
 
 Dunmer contextual-favor clearance result: Dunmer cleared user-experience review on 2026-05-18. The cleared shape is shared ancestor + Good Daedra favor before primary focus, then five focused trigger families each for Azura, Boethiah, and Mephala. Hook feasibility, substrate/focus implementation, curse posture, and Daedric deviation option mapping are now locked; remaining launch work is content weighting and implementation.
 
+**Supersession note (2026-07-13):** The implementation-lock audit below is
+historical. Current contracts replace the Khajiit road-home circuit with
+outdoor road-home practice and `Observe the Moons`, and replace the Argonian
+weighted composite with a dedicated cultural metric plus separate relation
+ledgers. Earlier packet proof cannot close the redesigned progression gates.
+
 Implementation-lock audit result (2026-05-19; Altmer closeout 2026-05-30): all races are architecture-locked and implementation-spec locked. Breton is closed at the explicit tradition setup, all-three-track, normal no-switching, hook feasibility, dawn math, recovery cadence, Hidden Art cover/notoriety, and tradition-authored favor-lane level; reward magnitudes remain tuning work. Redguard is closed at the state/offer and launch-hook-posture level: death-duty is buildable, Tu'whacca uses the Dunmer portable/private shrine pattern rather than a pure Arkay proxy, HoonDing can ship through curated milestone hooks, `MS08` is stage-verified, and Ash'abah social stigma is limited to light authored/custom 1.0 content. Dunmer is closed at the ancestor substrate, focus-gate, curse-posture, portable-shrine, and Daedric-deviation option-map level. Khajiit is closed at the lunar substrate, silent focused-emphasis, road-home circuit, curse posture, ShadowDrift boundary, five launch paths, and launch-hook-posture level. Argonian is closed at the single layered Hist substrate, visible Hist/People/Void layers, gentle Hist distance, one bed-of-choice anchor, Sithis activation threshold, and curse posture level. Altmer is now closed at shared patron-state use, no generic broad lane, `ThalmorAlignment` bands/start values, bounded Lorkhan economy, crisis-state enum/resolution routes, final crisis source list, contextual-favor lane families, and focused-deity launch hook posture.
 
 Phase 13-16 closure defaults (2026-05-26):
@@ -593,6 +615,13 @@ Active Effects smoke on a Nord Old Ways save.
 
 **Broad worship lane:** A player who prefers whole-pantheon Nord worship stays in a complete Faithful breadth lane rather than a failed patron lane. `Nord Broad Old Ways` and `Nord Broad Nine Divines` each count as a devotional lane for contextual favors. They get 3-5 blended trigger families, capped at Faithful, with softer and less specific favors than a focused Devoted patron.
 
+**Pantheon parity lock (2026-07-13):** Old Ways is Kyne, Shor, Tsun, Stuhn,
+Mara, Orkey, Dibella, and Talos. Nine Divines is Akatosh, Arkay, Dibella,
+Julianos, Kynareth, Mara, Stendarr, Zenithar, and Talos. Only one baseline is
+active. Both use the same signed broad-pool thresholds, decay, cap, and patron
+transition. Nine Divines receives the distinct `Faith of the Holds -
+Seeker/Faithful` record family; a partial resolver is a launch blocker.
+
 Broad Nine Divines Nords mostly use the same hook surface as Broad Old Ways Nords, but with Divine names and moral framing. They should still feel like Nords living through holds, weather, household duty, death rites, honor, and Talos pressure, not like Imperials doing civic religion.
 
 Talos pressure belongs in both broad Nord lanes. Old Ways Talos pressure reads as ancestral identity defiance; Nine Divines Talos pressure reads as carrying contradiction inside a public Divine frame. In both lanes, it should trigger favor only when the signal is costly and faithful, not merely anti-Thalmor violence or ordinary Civil War preference. Default surfacing is Noted; reserve Marked for high-cost events like hiding a worshipper, protecting a shrine, or defying Thalmor pressure face-to-face.
@@ -642,6 +671,13 @@ For players who committed, the friction is **staying consistent enough** that th
 **Offer gate:** Imperial uses the global formal-offer gate: dawn-only, `50` persistent piety by default, two qualifying signal days within seven, per-deity cooldowns, no persistent queue, and stable accepted patron in 1.0. `ConcordatStanding` filters and presents offers rather than replacing the shared offer machinery.
 
 **Broad worship lane:** Imperial broad worship is civic and institutional. Its contextual favors should be led by civic acts, with institutional places acting as amplifiers, recognition surfaces, or cleaner hooks where Skyrim supports them.
+
+**Divine pool and civic substrate lock (2026-07-13):** `The Divines' Regard`
+is fed by eligible deity piety signals, not civic-service counts. The Eight are
+eligible immediately; Talos joins only after explicit stance/prayer/defiance.
+Seeker grants Poison Resistance 10%; Faithful adds Disease Resistance 10% and
+there is no T3. Civic practice remains a separate daily-locked substrate whose
+first authentic act grants `+4` toward `1/25/75`; generic sleep is rejected.
 
 | Broad trigger family | Favor presentation |
 |---|---|
@@ -799,6 +835,13 @@ Werewolf note: complete halt -- no path forward, not even the heretical Tier 1 t
 
 **Setup shape:** All Khajiit begin inside the Lunar Lattice automatically (no choice). Broad lunar worship (Tier 2 cap). Focused deity emphasis emerges *silently* through behavior -- no formal offer system. Tier 3 through focused commitment.
 
+**2026-07-13 current contract:** Keep the existing lunar owner and save keys,
+but use the real 24-day moon formula, completed outdoor rest as road-home
+practice, and the deliberate `Observe the Moons` power. Designated anchors,
+circuits, abstract 28-day continuity, and generic sleep observance are retired
+from normal play. The first authentic lunar-road act per devotional day grants
+`+4`; older anchor/QASmoke evidence is historical only.
+
 **Implementation state:** `PDV_Substrate_KhajiitLunar` owns the lunar substrate with canonical prefix `PDV.Substrate.KhajiitLunar.*`. Existing first keys are `Metric`, `Tier`, `LastEvent`, `LastPhase`, `ObservanceCount`, and `RoadHomeCount`. 1.0 uses the hybrid moon model: current phase gives small per-phase bonuses, while full-cycle consistency determines substrate strength. Prefer real Masser/Secunda state where reliable; otherwise use an abstract 28-day fallback. Khajiit do not use formal offer state for focus; `PDV_GLO_KhajiitFocusedEmphasis` mirrors the leading deity emphasis for CK/readback proof. Enum values are `None = 0`, `Khenarthi = 1`, `Azurah = 2`, `BaanDar = 3`, `Rajhin = 4`, `Alkosh = 5`. Focus requires `50` piety and a `15` piety lead over the next-highest focused deity; otherwise broad lunar worship remains valid. Road homes are `2-3` player-designated rest anchors, and piety requires cycling between them rather than repeating one convenient rest point. The first Phase 20 proof packet now wires ACTI bases for moon observance, two road-home anchors, Baan Dar road trickery, Rajhin elegant theft, and Alkosh dragon/order response; the manager rejects immediate same-anchor road-home repeats and exposes all five focus weights in summary readback. Curse/shadow pressure uses `PDV_State_KhajiitLunarPosture`: `Normal = 0`, `Strained = 1`, `Corrupted = 2`, `ShadowDrift = 3`. Vampirism sets `Corrupted`, lycanthropy sets `Strained`, and `ShadowDrift` requires dominant Nocturnal/shadow behavior rather than ordinary night travel. The six proof references are placed in `QASmoke` and pass readback plus route runtime proof. **(2026-06-07) The Khajiit piety pilot is now complete and runtime-proven.** The five emphasis deities (`PDV_Deity_Azura`/`Khenarthi`/`Rajhin`/`Alkosh` + shared `PDV_Deity_BaanDar`) are scripted, Start-Game-Enabled, and in `PDV_FLST_AllDeities` (now 10 members); Khajiit acts now **double-route** to pulse the matching emphasis deity's piety alongside the substrate/focus signal, so identity and devotion advance together; per-emphasis **T1/T2/T3 reward spells** grant at Seeker/Devoted/Champion; lunar **neglect** and **creed-violation piety loss** are wired; a tier-up notice fires for the focused emphasis; and **shared-deity reconciliation** (`PDV_DeityBase.EligibleStateTrackOriginRace`) gives the Khajiit Baan Dar emphasis full parity without disturbing Bosmer Bandit Road. In-game smoke confirmed all of the above. See `references/authoring/PDV_SessionHandoff_KhajiitPilot.md`. The Phase 2 cross-race propagation that this pilot seeded is complete (static gate 2026-06-07; all ten race packets have since passed manual/runtime evidence). The Khajiit beta-feel packet itself passed with the wired lunar packet, Baan Dar Champion capstone, Rajhin elegant-theft edge, Alkosh word-of-power dawn drip, rejection sweep, Survey/status, and stack snapshot; the five phase-blessing spells and the full lunar curse-posture (`PDV_State_KhajiitLunarPosture` + curse MessageBoxes + ShadowDrift evidence gate) were closed and proven in-game on 2026-06-13.
 
 ### Champion moment
@@ -937,6 +980,13 @@ For Stronghold Orc neglect: drifting toward city life without maintaining the co
 ## Argonian
 
 **Setup shape:** No normal deity choice. All Argonians begin inside one layered Saxhleel exile system: `Hist`, `People`, and `Void`. The player experience is not "pick a patron"; it is watching which part of identity still holds while the Hist is distant.
+
+**2026-07-13 current contract:** Preserve the Hist/People/Void and posture save
+data, but add one dedicated `CulturalPractice` substrate metric. Relation values
+never recompute it. Exactly People or Void may be the active emphasis, and the
+second Hist reward family is retired. The first authentic cultural act per
+devotional day grants `+4`; earlier composite/three-family evidence is
+historical only.
 
 **Implementation state:** `PDV_Substrate_ArgonianHist` owns all three visible layers using `PDV.Substrate.ArgonianHist.*`. Canonical first keys are `Hist`, `People`, `Void`, `Tier`, `LastHistEvent`, `LastPeopleEvent`, `LastVoidEvent`, `LastMaintenanceDay`, `LastDecayDay`, `SithisSignalCount`, `BedOfChoiceSleepCount`, `BedOfChoiceLastSleep`, and `Posture`. Hist is primary; People can buffer; Void can stabilize but never replace Hist. The concrete substrate, `PDV_State_ArgonianHistPosture`, four route `60-63` ACTI proof base records, and manager/status surfacing are now record-wired; the four proof references are placed in `QASmoke` and pass readback plus route runtime proof, while pre-beta gameplay scaling remains open.
 

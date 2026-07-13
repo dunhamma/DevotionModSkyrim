@@ -1,10 +1,27 @@
 # PDV Race Design — Khajiit
 **Last updated:** 2026-06-12
-**Implementation status:** LOCKED (lunar substrate, focused emphasis, road homes, curse posture, and launch hook scope)
+**Implementation status:** LOCKED (lunar substrate, focused emphasis, outdoor road-home practice, Observe the Moons, curse posture, and launch hook scope)
 **Status:** Implementation locked for 1.0 experience shape; reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.6)
 
 ---
+
+## 2026-07-13 Lunar-Road Pacing Addendum
+
+This addendum supersedes later designated road-home anchors, circuits, generic
+sleep observance, and route-specific `+1/+2` magnitudes. Any completed outdoor
+rest is road-home practice: the road itself is home. The first approved outdoor
+rest, moon rite, caravan defense, Baan Dar reversal, notable Rajhin theft,
+Alkosh milestone, or curated lunar source in each 06:00 devotional day grants
+`+4` toward `1/25/75`; later acts grant zero. Generic inn/house sleep and
+generic theft or stealth do not qualify. The substrate does not decay.
+
+`Observe the Moons` is a Khajiit-only lesser power used outdoors from 20:00 to
+05:00. It resolves once after five still, uninterrupted seconds and shows one
+of four observations for the current presiding god. The first valid rite that
+day may grant the substrate credit and raw presiding-god piety `+0.4`; later
+casts are informational. `references/authoring/PDV_SubstratePacingContracts.json`
+is authoritative.
 
 ## Religious Identity
 
@@ -74,9 +91,10 @@ Window counts follow the accessibility ordering: Khenarthi/Azurah/Rajhin two pha
 
 **Broad fallback (LOCKED):** If no deity has a clear lead, the Khajiit remains in broad lunar Faithful state. Balanced worship is complete and valid; do not force a focus just because the player has enough total piety across several gods.
 
-**Road homes (LOCKED):** 1.0 implements Khajiit road homes as `2-3` player-designated rest anchors, not one sacred place. This preserves caravan-circuit identity and avoids reusing the Orc/Bosmer single-place pattern.
-
-**Road-home cadence (LOCKED):** Road-home piety requires cycling between anchors over time. Repeating the same camp, bed, or convenient outdoor rest does not count as road-home cadence. The devotional act is the circuit.
+**Road home (LOCKED, supersedes the 2026-06-10 circuit):** Any completed
+outdoor rest is authentic road-home practice. The road itself is home; 1.0 has
+no designated anchor, circuit, elapsed-distance requirement, or repeated-place
+rejection. Generic inn and house sleep do not qualify.
 
 **Lunar posture enum (LOCKED):** Add `PDV_State_KhajiitLunarPosture` for curse and shadow pressure, with exact values `Normal = 0`, `Strained = 1`, `Corrupted = 2`, and `ShadowDrift = 3`.
 
@@ -214,7 +232,7 @@ The lunar substrate weakens when you've been **indoors, urban, and disconnected 
 |---|---|---|---|
 | Lunar observance / moon-phase awareness | `ObserveMoonPhase`, dawn/dusk/night outdoor checks, `LastPhase`, `ObservanceCount`, real 24-day engine cycle via `GameDaysPassed % 24` | Strong (deterministic engine formula) | Phase replicates the Creation Kit GetCurrentMoonphase boundaries, so it matches the visible sky. Small phase bonuses only. |
 | Open road / Khenarthi | Sleep event, outdoor rest, location-change over time, no-fast-travel validation, open-sky checks | Medium-strong | Good launch lane. Cap daily and present as road-life continuity, not travel grinding. |
-| Road-home circuit | `RoadHomeCount`, 2-3 designated rest anchors, cycling validation, elapsed time/distance between anchors | Medium/custom | Viable as authored state. Repeating one camp or bed never counts as the circuit. |
+| Outdoor road-home rest | Completed outdoor rest, origin and devotional-day validation | Existing sleep completion route | No anchor or circuit state; first approved cultural act of the day claims +4. |
 | Caravan/community belonging | Named caravan NPC interaction/trade/favor signals (`Ma'dran`, `Ri'saad`, `Ahkari`, `Khaara`), Khajiit aid/protection | Medium | Use cooldown per caravan encounter. Weights lunar substrate plus `Khenarthi` / `Baan Dar`. |
 | Azurah thresholds | `The Black Star`, Azura shrine, dawn/dusk windows, major quest thresholds, dungeon entry/clear milestones | Strong for quest/shrine; medium for general thresholds | Use curated threshold beats and twilight windows. Do not turn dawn/dusk into a generic piety faucet. |
 | Baan Dar reversals | Near-death survival, escape/win from outnumbered pressure, pariah aid, exile-survival quest choices | Medium-risk | Use weekly caps and adversity filters. The trigger is meaningful reversal, not routine survival. |
@@ -245,7 +263,7 @@ Roadmap source: `references/authoring/PDV_RaceVarietyTranche_Roadmap.md`.
 The Lunar Lattice closed the substrate gap; this small addendum answers the
 remaining balance-audit risk ("Khenarthi/Azurah crowd out Baan Dar, Rajhin,
 and Alkosh") with three focus-gated signatures. No new substrate, place,
-pilgrimage, or rite work — road-home cadence already owns those jobs.
+pilgrimage, or rite work -- outdoor road-home practice already owns those jobs.
 Magnitudes tunable; gates and caps locked. Effect families remain blocked
 behind the race row in `PDV_RaceEffectReviewLedger.md`.
 

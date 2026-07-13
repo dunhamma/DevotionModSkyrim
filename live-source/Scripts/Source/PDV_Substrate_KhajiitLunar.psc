@@ -10,18 +10,28 @@
 
 Scriptname PDV_Substrate_KhajiitLunar extends PDV_SubstrateBase
 
-Float Property MoonObservanceDelta = 4.0 Auto
-Float Property RoadHomeDelta = 6.0 Auto
+Float Property MoonObservanceDelta = 4.0 Auto ; Legacy VMAD compatibility.
+Float Property RoadHomeDelta = 6.0 Auto ; Legacy VMAD compatibility.
+
+Bool Function IsAuthenticSubstrateSource(String sourceId)
+    return sourceId == "khajiit_moon" || sourceId == "khajiit_road_home" || sourceId == "khajiit_lunar_source" || sourceId == "khajiit_caravan_defense" || sourceId == "khajiit_baandar_reversal" || sourceId == "khajiit_rajhin_notable_theft" || sourceId == "khajiit_alkosh_milestone"
+EndFunction
 
 Function ObserveMoonPhase(Int phaseIndex, String reason)
     ObserveMoonPhaseScaled(phaseIndex, 1.0, reason)
 EndFunction
 
 Function ObserveMoonPhaseScaled(Int phaseIndex, Float multiplier, String reason)
+    Float normalizedMultiplier = ClampSignalMultiplier(multiplier)
+    if normalizedMultiplier <= 0.0
+        Trace(2, "Moon observance blocked for " + reason)
+        return
+    endIf
+
     StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.KhajiitLunar.LastPhase", phaseIndex)
     StorageUtil.AdjustIntValue(GetSubstrateForm(), "PDV.Substrate.KhajiitLunar.ObservanceCount", 1)
-    AdjustMetric(MoonObservanceDelta * ClampSignalMultiplier(multiplier), "moon_phase_" + phaseIndex + "_" + reason)
-    Trace(2, "Moon observance recorded for phase " + phaseIndex)
+    Float awarded = TryAwardSubstrateDayCredit("khajiit_moon", reason, 1.0)
+    Trace(2, "Moon observance recorded for phase " + phaseIndex + " with daily credit " + awarded)
 EndFunction
 
 Function RecordRoadHomeCadence(String reason)
@@ -29,9 +39,20 @@ Function RecordRoadHomeCadence(String reason)
 EndFunction
 
 Function RecordRoadHomeCadenceScaled(Float multiplier, String reason)
+    Float normalizedMultiplier = ClampSignalMultiplier(multiplier)
+    if normalizedMultiplier <= 0.0
+        Trace(2, "Road-home cadence blocked for " + reason)
+        return
+    endIf
+
     StorageUtil.AdjustIntValue(GetSubstrateForm(), "PDV.Substrate.KhajiitLunar.RoadHomeCount", 1)
-    AdjustMetric(RoadHomeDelta * ClampSignalMultiplier(multiplier), "road_home_" + reason)
-    Trace(2, "Road-home cadence recorded.")
+    Float awarded = TryAwardSubstrateDayCredit("khajiit_road_home", reason, 1.0)
+    Trace(2, "Road-home cadence recorded with daily credit " + awarded)
+EndFunction
+
+Function RecordCulturalSubstitute(String sourceId, String reason)
+    Float awarded = TryAwardSubstrateDayCredit(sourceId, reason, 1.0)
+    Trace(2, "Cultural substitute recorded with daily credit " + awarded + " (" + sourceId + ")")
 EndFunction
 
 Int Function GetLastObservedPhase()

@@ -1,7 +1,8 @@
 {
-  "schema": "pdv-khajiit-records.v1",
-  "status": "design-draft-2026-06-07; recognition deferred to V2; pending authoring run",
-  "notes": "Authoritative record spec for the Argonian pilot, the second substrate / no-offer reward gate (same family as the proven Khajiit pilot). Gate type is NO-OFFER: rewards branch on the PDV_Substrate_ArgonianHist tier + Hist posture + layer state, NOT on an active-patron offer. Hist is also the scripted patron target (PDV_Deity_Hist) so a small honest piety pulse keeps decay/neglect/creed-loss honest (double-route, exactly like the Khajiit pulse to its emphasis deity). Budget verdict is THIN (PDV_RaceRewardBudgetLedger.md, Focused Pass: Argonian 2026-05-30): Hist primary, People practical buffer, Void/Sithis high-threshold tertiary; strengthen Hist/People reward wealth BEFORE Void depth. Magnitudes follow the proven Khajiit substrate power level. T3 NPC recognition is V1-deferred (PDV_RecognitionDialogueScalePacket.md); V1 T3 ships stat/signature effects only with Champion Survey text as the recognition surface. All player-facing text is ASCII-only and uses Skyrim ActorValue names only.",
+  "schema": "pdv-argonian-records.v2",
+  "status": "implemented-static-readback-runtime-manual-proof-open",
+  "notes": "Current authority is PDV_SubstratePacingContracts.json. The dedicated cultural-practice metric grants at most +4 per devotional day. Hist, People, and Void remain independent relation ledgers; only act-specific Hist/water sources award Hist piety, People/bed sources affect relation only, and activated Void sources award Sithis. The former Hist Communion boon family is retired and never granted.",
+  "contractOverride": "The 2026-07-13 substrate contract supersedes every legacy composite, per-route magnitude, shared Histcarp, double-route, and Hist Communion statement retained below for record archaeology.",
   "deityQuests": [
     {
       "editorId": "PDV_Deity_Hist",
@@ -41,7 +42,7 @@
       {
         "slotProperty": "Substrate_Always",
         "spellEditorId": "PDV_Bless_Argonian_Substrate_Always",
-        "displayName": "Hist Memory",
+        "displayName": "Root Memory",
         "consolidation": "highest-slot-only; each slot carries the cumulative total",
         "effects": [
           {
@@ -57,7 +58,7 @@
       {
         "slotProperty": "Substrate_Mid",
         "spellEditorId": "PDV_Bless_Argonian_Substrate_Mid",
-        "displayName": "Hist Reach",
+        "displayName": "River-Kept Practice",
         "effects": [
           {
             "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_Mid_Magic",
@@ -86,7 +87,7 @@
       {
         "slotProperty": "Substrate_High",
         "spellEditorId": "PDV_Bless_Argonian_Substrate_High",
-        "displayName": "Hist Attunement",
+        "displayName": "Rooted Adaptation",
         "effects": [
           {
             "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_High_Magic",
@@ -145,8 +146,8 @@
     "wireTo": "PDV__ManagerQuest",
     "spellProperty": "PDV_SPEL_Neglect_ArgonianHist",
     "spellEditorId": "PDV_SPEL_Neglect_ArgonianHist",
-    "displayName": "The Hist Distant",
-    "biteCondition": "Gentle diegetic texture only at posture Distant; mechanical bite applies only at posture Silenced or Corrupted (vampire grief / domination), per PDV_Substrate_ArgonianHist.RefreshHistPosture and the ledger curse posture.",
+    "displayName": "The Hist Silenced",
+    "biteCondition": "Mechanical bite applies only at posture Silenced or Corrupted (vampire grief / domination), per PDV_Substrate_ArgonianHist.RefreshHistPosture and the ledger curse posture. Ordinary Distant posture remains relation texture without this debuff.",
     "effects": [
       {
         "magicEffectEditorId": "PDV_MGEF_Neglect_ArgonianHist_Health",
@@ -156,8 +157,8 @@
         "appliesAtPosture": "Silenced or Corrupted"
       }
     ],
-    "playerFacingText": "The Hist has grown distant and cannot reach you. Maximum Health -10 until the connection is restored.",
-    "decayRule": "Dawn Hist decay only after 3 days without valid maintenance (HistDawnGraceDays=3), then -1 per dawn (HistDawnDecay=1.0), non-curse floor 20 (HistNonCurseFloor=20.0); curse-active floor is MetricMin. This is the gentle diegetic Hist-distance texture, not a punishment faucet."
+    "playerFacingText": "The curse silences the Hist's reach. Maximum Health -10 until the silence is broken.",
+    "decayRule": "Dawn Hist decay only after 3 days without valid maintenance (HistDawnGraceDays=3), then -1 per dawn (HistDawnDecay=1.0), non-curse floor 20 (HistNonCurseFloor=20.0); curse-active floor is MetricMin. Ordinary distance is texture; this debuff is the Silenced/Corrupted curse consequence."
   },
   "emphasisRewards": [
     {
@@ -167,7 +168,8 @@
       "thresholdPiety": 25,
       "consolidation": "highest-tier-only; each tier carries the cumulative total",
       "spellEditorId": "PDV_Bless_Argonian_Hist_T1",
-      "displayName": "Hist Communion - Faithful",
+      "displayName": "Retired Argonian Relation - Faithful",
+      "runtimeStatus": "retired-compatibility-never-granted",
       "effects": [
         {
           "actorValue": "Health",
@@ -185,7 +187,8 @@
       "thresholdPiety": 50,
       "tierCap": "Faithful",
       "spellEditorId": "PDV_Bless_Argonian_Hist_T2",
-      "displayName": "Hist Communion - Devoted",
+      "displayName": "Retired Argonian Relation - Devoted",
+      "runtimeStatus": "retired-compatibility-never-granted",
       "effects": [
         {
           "actorValue": "Health",
@@ -421,7 +424,7 @@
     ]
   },
   "doubleRoute": {
-    "summary": "Same pattern as the Khajiit double-route. Each devotional act records on the SUBSTRATE (PDV_Substrate_ArgonianHist relation keys, anti-farm ConsumeDailyRepeatMultiplier 0.7^n) AND sends a SMALL honest piety pulse to the scripted patron PDV_Deity_Hist (anti-farm ScoreRepeatableAction). The two mechanisms are never both applied to one magnitude: the substrate side and the pulse side carry separate, independent anti-farm tools. The pulse keeps decay/neglect/creed-loss honest on the universal piety layer; the substrate carries the actual reward gating.",
+    "summary": "Superseded 2026-07-13: one act-specific cultural route may claim the shared daily substrate credit; only the deity or relation lane named by that act changes.",
     "acts": [
       {
         "act": "Hist water/rest/reflection maintenance",
@@ -483,7 +486,7 @@
   },
   "pace": {
     "model": "substrate-led (no piety faucet race), mirroring the Khajiit substrate cadence.",
-    "substrateCadence": "Hist maintenance at HistMaintenanceDelta 5.0 per accepted maintenance signal (capped one per day by ConsumeDailyRepeatMultiplier). About 5 maintenance signals (sleeps/water-rest/reflection beats) reach the MID substrate tier (25); roughly 15 reach HIGH (75) at full per-day value. With the 0.7^n same-day decay and a natural ~4-5 maintenance beats per in-game week, MID lands in roughly 1 in-game week and HIGH in roughly 3 in-game weeks of ordinary non-grind play. People support (4.0) and bed-of-choice (3.0) supplement composite via HistPeopleBufferWeight 0.25.",
+    "substrateCadence": "One authentic cultural-practice act per 06:00 devotional day grants +4; day 7 reaches 28 and day 19 caps at 75. Hist, People, and Void relation values never compose the cultural metric.",
     "pietyPulseRole": "The small +1 Hist pulse per act is NOT a progression race; it only keeps the universal piety layer (decay/neglect/creed-loss) honest so the substrate-led design does not float free of the shared piety mechanics.",
     "decayBalance": "Dawn Hist decay is -1/dawn only after 3 days without maintenance, non-curse floor 20 (HistDawnDecay/HistDawnGraceDays/HistNonCurseFloor). Ordinary play (a few maintenance beats per week) trends maintainable; a fully neglected exile drifts toward Distant but never below the non-curse floor unless cursed."
   },

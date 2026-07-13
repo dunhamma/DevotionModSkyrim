@@ -83,7 +83,7 @@ Hidden Art deeds:
 
 Green Way deeds:
 
-- Sleep outdoors, under the open sky rather than in an inn or house. `[WIRED: OnSleepStop with PDV_LastSleepStartedOutside -> EVT_REST_UNDER_OPEN_SKY (313). CSV rest-under-open-sky rows: Y'ffre +0.5, Kynareth +0.75, Akatosh +0.25, Mara sleep-in-bed (314) +0.25. NOTE: outdoor sleep does NOT feed the curated Green Way / DruidicStanding lane - HandleBretonSleepEvents only awards the Magnus ancestor spine (and Julianos if Hidden Art). The Green Way earn from sleep is the shared CSV rows, not the druidic track.]`
+- Sleep outdoors, under the open sky rather than in an inn or house. The shared day-to-day rows can honor Y'ffre, Kynareth, and Akatosh; the legacy Breton sleep handler feeds the inherited-ward layer and, under Hidden Art, Julianos.
 - Visit a standing stone (a rich, finite source early on - there are many across Skyrim). `[STUB: no organic standing-stone location hook for Breton. There is no HandleStoryChangeLocation or standing-stone route in PlayerEvents/ActionRouter; standing stones are not in any populated Breton FormList.]`
 - Walk nature sites - groves, forests, and standing-stone areas, especially on related quests. `[STUB: no organic nature-site location hook. The one quest-stage Green Way route is the Eldergleam blessings quest (89282 s100) via PDV_FLST_P2_BretonGreenWaySources -> Kynareth SIGNAL_OPEN_SKY.]`
 - Forage and harvest from the wild; rest in the open air (Kynareth and Y'ffre both honor this). `[WIRED (harvest): OnItemHarvested -> RouteP2ImmersiveSource("po3_harvest") -> PDV_FLST_P2_BretonGreenWayHarvests (SprigganSap 063B5F, Taproot 03AD71, Nirnroot 059B86, NirnrootRed 0B701A) -> RouteBretonGreenWayStanding -> HandleBretonGreenWayStanding: DruidicStanding +25 AND (if Green Way + Druidic fork) Kynareth SIGNAL_OPEN_SKY +3.0. Only these four curated harvests route the druidic lane - ordinary plant-picking does not. Generic harvest also fires the Kynareth CSV harvest-ingredient (334) +0.25.]`
@@ -93,7 +93,7 @@ Green Way deeds:
 
 To reach the top tier you must commit to a single god within your tradition. Honoring several at once is welcome, but it caps you at the middle tier. `[WIRED: broad worship caps at Devoted.]`
 
-Under every tradition, each qualifying act also gives a small shared pulse to Magnus (the mixed-inheritance "ancestor spine," SIGNAL_ANCESTOR_SPINE +1.0), and sleeping fires an ancestral-dream ancestor pulse. `[WIRED: AwardBretonAncestorSpinePulse runs inside every Handle* tradition hook and HandleBretonSleepEvents; feeds PDV_BretonAncestorSubstrate + Magnus. Magnus also has an organic day-to-day table (read-spell-tome 341 +0.75, enchant-item 331 +0.5, increase-skill 344 +0.25, read-lore-book 342 +0.25, brew-potion 332 +0.25).]`
+Under every tradition, each qualifying act also gives a small shared pulse to Magnus through the mixed-inheritance layer, and sleeping can fire an ancestral-dream pulse. The old Breton substrate records are compatibility-only under the 2026-07-13 active-substrate contract.
 
 ## How You Lose Piety
 
@@ -199,7 +199,7 @@ Discrepancies between what the guide/design promises and what actually fires (fo
 
 - **Shrine-prayer piety** (Stendarr's restore-honor, Kynareth's nature credit) is unconfirmed as an organic earn across races (shrines normalized to cure-only).
 
-- **Magnus ancestor spine** (+1.0 SIGNAL_ANCESTOR_SPINE) is the one lane that fires under all three traditions - every curated Handle* hook and sleep event calls `AwardBretonAncestorSpinePulse`.
+- **Magnus mixed inheritance** is the one shared theological lane under all three traditions. The former substrate boon records are retired compatibility surfaces and are not part of the active substrate roster.
 
 <!-- END REVIEW SCAFFOLDING -->
 

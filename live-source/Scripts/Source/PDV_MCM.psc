@@ -47,6 +47,7 @@ String Property PAGE_MODE = "Experience Mode" AutoReadOnly
 String Property PAGE_STATUS = "Status" AutoReadOnly
 String Property PAGE_DEBUG = "Debug: State & Rewards" AutoReadOnly
 String Property PAGE_DEBUG2 = "Debug: Daedric & Curse" AutoReadOnly
+String Property PAGE_PACING = "Debug: Pacing & Pantheons" AutoReadOnly
 
 Int _oidSurveyDevotion = -1
 Int _oidExportReport = -1
@@ -169,6 +170,39 @@ Int _oidOpenJournalNow = -1
 Int _oidJournalHotkey = -1
 Int _oidPanelHotkey = -1
 
+Int _oidPacingSubstrateOrigin = -1
+Int _oidPacingSubstrateOriginApply = -1
+Int _oidPacingSubstrateSource = -1
+Int _oidPacingSubstrateStatus = -1
+Int _oidPacingSubstrateTrigger = -1
+Int _oidPacingSubstrateReset = -1
+Int _oidPacingSubstrateSeed0 = -1
+Int _oidPacingSubstrateSeed24 = -1
+Int _oidPacingSubstrateSeed25 = -1
+Int _oidPacingSubstrateSeed74 = -1
+Int _oidPacingSubstrateSeed75 = -1
+Int _oidPacingBroadPool = -1
+Int _oidPacingBroadStatus = -1
+Int _oidPacingBroadReset = -1
+Int _oidPacingBroadSeed24 = -1
+Int _oidPacingBroadSeed25 = -1
+Int _oidPacingBroadSeed49 = -1
+Int _oidPacingBroadSeed50 = -1
+Int _oidPacingBroadFanout = -1
+Int _oidPacingBroadScratchPositive = -1
+Int _oidPacingBroadScratchNegative = -1
+Int _oidPacingBroadMigration = -1
+Int _oidPacingNordBaseline = -1
+Int _oidPacingNordBaselineApply = -1
+Int _oidPacingPatronStatus = -1
+Int _oidPacingSetBroad = -1
+Int _oidPacingPatronOffer = -1
+Int _oidPacingPatronAccept = -1
+Int _oidPacingPatronLapse = -1
+Int _oidPacingPatronRecover = -1
+Int _oidPacingImperialVampire = -1
+Int _oidPacingImperialCure = -1
+
 Int _oidKhajiitFocusBaanDar = -1
 Int _oidKhajiitFocusRajhin = -1
 Int _oidKhajiitFocusAlkosh = -1
@@ -192,6 +226,10 @@ Int _pendingDisfavorEventId = 365
 Int _pendingDisfavorDomain = 1
 Bool _pendingDisfavorSharp = False
 Int _selectedCurseProofOrigin = -1
+Int _selectedSubstratePacingOrigin = 0
+Int _selectedSubstratePacingSource = 0
+Int _selectedBroadPantheonPool = 0
+Int _selectedNordBaselineForPacing = 0
 
 Event OnInit()
     InitializePages()
@@ -275,6 +313,15 @@ Function OnPageReset(String a_page)
             return
         endIf
         BuildDaedricPage()
+        return
+    endIf
+
+    if a_page == PAGE_PACING
+        if !DeveloperOptionsEnabled()
+            BuildDeveloperLockedPage("Debug: Pacing & Pantheons")
+            return
+        endIf
+        BuildPacingPantheonsPage()
     endIf
 EndFunction
 
@@ -295,6 +342,52 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Switches between the authored Pilgrim's Path and the gentler Wayfarer's Path for future devotion events.")
     elseIf a_option == _oidDeveloperOptions
         SetInfoText("Shows the development Status and Debug pages for testing.")
+    elseIf a_option == _oidPacingSubstrateOrigin
+        SetInfoText("Cycles the substrate pacing target through Imperial, Dunmer, Argonian, Nord, Altmer, and Khajiit.")
+    elseIf a_option == _oidPacingSubstrateOriginApply
+        SetInfoText("Applies the selected race as the test origin and refreshes dependent state. Use only on the throwaway pacing save before triggering that race's true handler.")
+    elseIf a_option == _oidPacingSubstrateStatus
+        SetInfoText("Shows the selected metric, tier, devotional day, daily-credit state, last accepted or rejected source, and decay settings.")
+    elseIf a_option == _oidPacingSubstrateTrigger
+        SetInfoText("Runs one approved production handler for the selected race. Repeated or cross-source acts on the same devotional day must not add more credit.")
+    elseIf a_option == _oidPacingSubstrateReset
+        SetInfoText("Resets the selected substrate metric and its pacing telemetry for a clean proof case.")
+    elseIf a_option == _oidPacingSubstrateSeed0 || a_option == _oidPacingSubstrateSeed24 || a_option == _oidPacingSubstrateSeed25 || a_option == _oidPacingSubstrateSeed74 || a_option == _oidPacingSubstrateSeed75
+        SetInfoText("Direct boundary seed for tier and player-surface proof. This bypasses daily pacing and is not organic-route evidence.")
+    elseIf a_option == _oidPacingBroadPool
+        SetInfoText("Cycles the broad-pantheon target through Imperial Divines, Nord Old Ways, and Nord Nine Divines.")
+    elseIf a_option == _oidPacingBroadStatus
+        SetInfoText("Shows the selected pool standing, active roster, event scratch, most recent event, threshold, decay, and suppression state.")
+    elseIf a_option == _oidPacingBroadReset
+        SetInfoText("Resets the selected broad-pantheon pool and its migration/debug state for a clean proof case.")
+    elseIf a_option == _oidPacingBroadSeed24 || a_option == _oidPacingBroadSeed25 || a_option == _oidPacingBroadSeed49 || a_option == _oidPacingBroadSeed50
+        SetInfoText("Direct boundary seed for broad reward and display proof. This bypasses normal event aggregation and dawn pacing.")
+    elseIf a_option == _oidPacingBroadFanout
+        SetInfoText("Runs the signed mixed-god fan-out fixture. One logical event must contribute only its strongest eligible positive, or its strongest negative when no positive applies.")
+    elseIf a_option == _oidPacingBroadScratchPositive || a_option == _oidPacingBroadScratchNegative
+        SetInfoText("Stages deliberately excessive signed scratch. Wait through a real 06:00 dawn and confirm the selected pool folds no more than +4.3 or -4.3. This control does not advance time.")
+    elseIf a_option == _oidPacingBroadMigration
+        SetInfoText("Destructive throwaway-save fixture. Runs the real migration twice: Imperial count 3 to 25, Old Ways count 6 to 50, and eligible Nine Divines from the highest god only. Reload the clean QASmoke save afterward.")
+    elseIf a_option == _oidPacingNordBaseline
+        SetInfoText("Cycles the Nord broad baseline between Old Ways and Nine Divines. Only the selected baseline may gain or grant its broad boon.")
+    elseIf a_option == _oidPacingNordBaselineApply
+        SetInfoText("Applies the selected Nord baseline without changing either persistent broad pool.")
+    elseIf a_option == _oidPacingPatronStatus
+        SetInfoText("Shows the broad-to-focused transition, including pending offer, retained deity piety, boon suspension, and recovery state.")
+    elseIf a_option == _oidPacingSetBroad
+        SetInfoText("Returns the current Imperial or Nord test origin to clean broad worship, clears any pending offer, and preserves deity and pool ledgers.")
+    elseIf a_option == _oidPacingPatronOffer
+        SetInfoText("Runs the controlled patron-offer setup for the active Imperial or Nord broad baseline.")
+    elseIf a_option == _oidPacingPatronAccept
+        SetInfoText("Accepts the controlled offer. Deity piety is preserved, the broad boon is suppressed, and focused T2 begins at 50.")
+    elseIf a_option == _oidPacingPatronLapse
+        SetInfoText("Sets the active patron to 49 piety and resynchronizes rewards. Commitment remains, but the focused boon must suspend.")
+    elseIf a_option == _oidPacingPatronRecover
+        SetInfoText("Restores the active patron to 50 piety and resynchronizes rewards. Focused T2 must return without a new commitment.")
+    elseIf a_option == _oidPacingImperialVampire
+        SetInfoText("Applies Imperial vampire onset: reset civic standing to zero, strip its boon, and block civic and broad gains.")
+    elseIf a_option == _oidPacingImperialCure
+        SetInfoText("Applies Imperial vampire cure and seeds civic standing at 20. Two new devotional days are still needed to cross 25.")
     elseIf a_option == _oidSelectedDeity
         SetInfoText("Cycles the current debug target through the live deity roster.")
     elseIf a_option == _oidDebugPatronOverride
@@ -444,9 +537,9 @@ Function OnOptionHighlight(Int a_option)
     elseIf a_option == _oidCommitmentSeedSignals
         SetInfoText("Seeds a two-day commitment signal window on the selected deity so the formal offer gate can be smoked immediately.")
     elseIf a_option == _oidCommitmentReset
-        SetInfoText("Clears pending commitment, cooldown, rupture, carry-over, and seeded signal days for the selected deity.")
+        SetInfoText("Clears pending commitment, cooldown, rupture, legacy transition telemetry, and seeded signal days for the selected deity.")
     elseIf a_option == _oidAcceptCommitmentOffer
-        SetInfoText("Accepts the pending commitment offer and applies carry-over behavior.")
+        SetInfoText("Accepts the pending commitment offer, preserves deity piety, and grants the focused tier allowed by current piety.")
     elseIf a_option == _oidDeclineCommitmentOffer
         SetInfoText("Declines the pending commitment offer and postpones it.")
     elseIf a_option == _oidRefuseCommitmentOffer
@@ -555,6 +648,184 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidDeveloperOptions
         ToggleDeveloperOptions()
         ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidPacingSubstrateOrigin
+        _selectedSubstratePacingOrigin += 1
+        if _selectedSubstratePacingOrigin > 5
+            _selectedSubstratePacingOrigin = 0
+        endIf
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidPacingSubstrateOriginApply
+        DebugApplySubstratePacingOrigin()
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidPacingSubstrateSource
+        _selectedSubstratePacingSource += 1
+        if _selectedSubstratePacingSource > 2
+            _selectedSubstratePacingSource = 0
+        endIf
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidPacingSubstrateStatus
+        DebugShowSubstratePacingSummary()
+        return
+    endIf
+
+    if a_option == _oidPacingSubstrateTrigger
+        DebugTriggerSubstratePacingSource()
+        return
+    endIf
+
+    if a_option == _oidPacingSubstrateReset
+        DebugResetSubstratePacing()
+        return
+    endIf
+
+    if a_option == _oidPacingSubstrateSeed0
+        DebugSeedSubstratePacing(0.0)
+        return
+    endIf
+
+    if a_option == _oidPacingSubstrateSeed24
+        DebugSeedSubstratePacing(24.0)
+        return
+    endIf
+
+    if a_option == _oidPacingSubstrateSeed25
+        DebugSeedSubstratePacing(25.0)
+        return
+    endIf
+
+    if a_option == _oidPacingSubstrateSeed74
+        DebugSeedSubstratePacing(74.0)
+        return
+    endIf
+
+    if a_option == _oidPacingSubstrateSeed75
+        DebugSeedSubstratePacing(75.0)
+        return
+    endIf
+
+    if a_option == _oidPacingBroadPool
+        _selectedBroadPantheonPool += 1
+        if _selectedBroadPantheonPool > 2
+            _selectedBroadPantheonPool = 0
+        endIf
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidPacingBroadStatus
+        DebugShowBroadPantheonSummary()
+        return
+    endIf
+
+    if a_option == _oidPacingBroadReset
+        DebugResetBroadPantheonPool()
+        return
+    endIf
+
+    if a_option == _oidPacingBroadSeed24
+        DebugSeedBroadPantheonPool(24.0)
+        return
+    endIf
+
+    if a_option == _oidPacingBroadSeed25
+        DebugSeedBroadPantheonPool(25.0)
+        return
+    endIf
+
+    if a_option == _oidPacingBroadSeed49
+        DebugSeedBroadPantheonPool(49.0)
+        return
+    endIf
+
+    if a_option == _oidPacingBroadSeed50
+        DebugSeedBroadPantheonPool(50.0)
+        return
+    endIf
+
+    if a_option == _oidPacingBroadFanout
+        DebugRunBroadPantheonFanoutTest()
+        return
+    endIf
+
+    if a_option == _oidPacingBroadScratchPositive
+        DebugPrimeBroadPantheonScratch(100.0)
+        return
+    endIf
+
+    if a_option == _oidPacingBroadScratchNegative
+        DebugPrimeBroadPantheonScratch(-100.0)
+        return
+    endIf
+
+    if a_option == _oidPacingBroadMigration
+        DebugRunBroadPantheonMigrationFixture()
+        return
+    endIf
+
+    if a_option == _oidPacingNordBaseline
+        if _selectedNordBaselineForPacing == 0
+            _selectedNordBaselineForPacing = 1
+        else
+            _selectedNordBaselineForPacing = 0
+        endIf
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidPacingNordBaselineApply
+        DebugApplyNordBaselineForPacing()
+        return
+    endIf
+
+    if a_option == _oidPacingPatronStatus
+        DebugShowPatronOfferRecoverySummary()
+        return
+    endIf
+
+    if a_option == _oidPacingSetBroad
+        DebugSetBroadWorshipForPacing()
+        return
+    endIf
+
+    if a_option == _oidPacingPatronOffer
+        DebugRunPatronOfferForPacing()
+        return
+    endIf
+
+    if a_option == _oidPacingPatronAccept
+        DebugAcceptPatronForPacing()
+        return
+    endIf
+
+    if a_option == _oidPacingPatronLapse
+        DebugLapsePatronForPacing()
+        return
+    endIf
+
+    if a_option == _oidPacingPatronRecover
+        DebugRecoverPatronForPacing()
+        return
+    endIf
+
+    if a_option == _oidPacingImperialVampire
+        DebugSetImperialVampireForPacing(True)
+        return
+    endIf
+
+    if a_option == _oidPacingImperialCure
+        DebugSetImperialVampireForPacing(False)
         return
     endIf
 
@@ -1834,6 +2105,9 @@ String Function DiegeticD1Label()
 EndFunction
 
 String Function GetBroadLaneSeedLabel()
+    if PDV_Manager && PDV_Manager.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_IMPERIAL
+        return "Imperial pool 50"
+    endIf
     if PDV_Manager && PDV_Manager.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_BRETON
         return "Breton practice 50"
     endIf
@@ -2017,23 +2291,279 @@ Function BuildDaedricPage()
     _oidEvaluateCommitmentOffer = AddTextOption("Evaluate commitment", "Dawn-equivalent", OPTION_FLAG_NONE)
     _oidCommitmentSeedSignals = AddTextOption("Seed commitment signals", "2-day window", OPTION_FLAG_NONE)
     _oidCommitmentReset = AddTextOption("Reset commitment state", "Clear pending/cooldown", OPTION_FLAG_NONE)
-    _oidAcceptCommitmentOffer = AddTextOption("Accept commitment", "Carry-over", OPTION_FLAG_NONE)
+    _oidAcceptCommitmentOffer = AddTextOption("Accept commitment", "Preserve piety", OPTION_FLAG_NONE)
     _oidDeclineCommitmentOffer = AddTextOption("Decline commitment", "Postpone", OPTION_FLAG_NONE)
     _oidRefuseCommitmentOffer = AddTextOption("Refuse commitment", "Cooldown", OPTION_FLAG_NONE)
 
     SetCursorFillMode(LEFT_TO_RIGHT)
 EndFunction
 
+Function BuildPacingPantheonsPage()
+    SetCursorFillMode(TOP_TO_BOTTOM)
+
+    SetCursorPosition(0)
+    AddHeaderOption("Substrate pacing", OPTION_FLAG_NONE)
+    _oidPacingSubstrateOrigin = AddTextOption("Race", GetSubstratePacingOriginLabel(), OPTION_FLAG_NONE)
+    _oidPacingSubstrateOriginApply = AddTextOption("Apply test origin", "Throwaway save", OPTION_FLAG_NONE)
+    _oidPacingSubstrateSource = AddTextOption("Source", GetSubstratePacingSourceLabel(), OPTION_FLAG_NONE)
+    _oidPacingSubstrateStatus = AddTextOption("Status", "Open readout", OPTION_FLAG_NONE)
+    _oidPacingSubstrateTrigger = AddTextOption("Trigger approved source", "True handler", OPTION_FLAG_NONE)
+    _oidPacingSubstrateReset = AddTextOption("Reset substrate", "Metric + pacing state", OPTION_FLAG_NONE)
+
+    AddEmptyOption()
+    AddHeaderOption("Substrate boundary seeds", OPTION_FLAG_NONE)
+    _oidPacingSubstrateSeed0 = AddTextOption("Seed 0", "No boon", OPTION_FLAG_NONE)
+    _oidPacingSubstrateSeed24 = AddTextOption("Seed 24", "Below mid", OPTION_FLAG_NONE)
+    _oidPacingSubstrateSeed25 = AddTextOption("Seed 25", "Mid boundary", OPTION_FLAG_NONE)
+    _oidPacingSubstrateSeed74 = AddTextOption("Seed 74", "Below high", OPTION_FLAG_NONE)
+    _oidPacingSubstrateSeed75 = AddTextOption("Seed 75", "High boundary", OPTION_FLAG_NONE)
+
+    AddEmptyOption()
+    AddHeaderOption("Devotional clock", OPTION_FLAG_NONE)
+    AddTextOption("Day progression", "Use real wait and dawn", OPTION_FLAG_DISABLED)
+    AddTextOption("Organic proof", "One real ingress per race", OPTION_FLAG_DISABLED)
+
+    SetCursorPosition(1)
+    AddHeaderOption("Broad pantheon pool", OPTION_FLAG_NONE)
+    _oidPacingBroadPool = AddTextOption("Pool", GetBroadPantheonPoolLabel(), OPTION_FLAG_NONE)
+    _oidPacingBroadStatus = AddTextOption("Status", "Open readout", OPTION_FLAG_NONE)
+    _oidPacingBroadReset = AddTextOption("Reset pool", "Standing + scratch", OPTION_FLAG_NONE)
+    _oidPacingBroadSeed24 = AddTextOption("Seed 24", "Below Seeker", OPTION_FLAG_NONE)
+    _oidPacingBroadSeed25 = AddTextOption("Seed 25", "Seeker boundary", OPTION_FLAG_NONE)
+    _oidPacingBroadSeed49 = AddTextOption("Seed 49", "Below Faithful", OPTION_FLAG_NONE)
+    _oidPacingBroadSeed50 = AddTextOption("Seed 50", "Faithful boundary", OPTION_FLAG_NONE)
+    _oidPacingBroadFanout = AddTextOption("Signed fan-out test", "Strongest delta only", OPTION_FLAG_NONE)
+    _oidPacingBroadScratchPositive = AddTextOption("Prime +100 scratch", "Real dawn caps +4.3", OPTION_FLAG_NONE)
+    _oidPacingBroadScratchNegative = AddTextOption("Prime -100 scratch", "Real dawn caps -4.3", OPTION_FLAG_NONE)
+    _oidPacingBroadMigration = AddTextOption("Run migration fixture", "Destructive: throwaway save", OPTION_FLAG_NONE)
+
+    AddEmptyOption()
+    AddHeaderOption("Nord baseline", OPTION_FLAG_NONE)
+    _oidPacingNordBaseline = AddTextOption("Selected baseline", GetNordBaselinePacingLabel(), OPTION_FLAG_NONE)
+    _oidPacingNordBaselineApply = AddTextOption("Apply baseline", "Keep both pools", OPTION_FLAG_NONE)
+
+    AddEmptyOption()
+    AddHeaderOption("Patron transition", OPTION_FLAG_NONE)
+    _oidPacingPatronStatus = AddTextOption("Status", "Offer + lapse + recovery", OPTION_FLAG_NONE)
+    _oidPacingSetBroad = AddTextOption("Return to broad worship", "Clean baseline state", OPTION_FLAG_NONE)
+    _oidPacingPatronOffer = AddTextOption("Prepare patron offer", "Controlled setup", OPTION_FLAG_NONE)
+    _oidPacingPatronAccept = AddTextOption("Accept patron", "Preserve deity piety", OPTION_FLAG_NONE)
+    _oidPacingPatronLapse = AddTextOption("Lapse patron to 49", "Suspend focused boon", OPTION_FLAG_NONE)
+    _oidPacingPatronRecover = AddTextOption("Recover patron to 50", "Restore focused T2", OPTION_FLAG_NONE)
+
+    AddEmptyOption()
+    AddHeaderOption("Imperial vampire state", OPTION_FLAG_NONE)
+    _oidPacingImperialVampire = AddTextOption("Vampire onset", "Reset + block", OPTION_FLAG_NONE)
+    _oidPacingImperialCure = AddTextOption("Vampire cure", "Seed civic 20", OPTION_FLAG_NONE)
+
+    SetCursorFillMode(LEFT_TO_RIGHT)
+EndFunction
+
+String Function GetSubstratePacingSourceLabel()
+    if _selectedSubstratePacingSource == 0
+        return "Primary approved"
+    elseIf _selectedSubstratePacingSource == 1
+        return "Alternate approved"
+    endIf
+    return "Rejected probe"
+EndFunction
+
 Function InitializePages()
     ModName = "Devotion"
-    String[] configuredPages = new String[6]
+    String[] configuredPages = new String[7]
     configuredPages[0] = PAGE_PLAYER
     configuredPages[1] = PAGE_COMPAT
     configuredPages[2] = PAGE_MODE
     configuredPages[3] = PAGE_STATUS
     configuredPages[4] = PAGE_DEBUG
     configuredPages[5] = PAGE_DEBUG2
+    configuredPages[6] = PAGE_PACING
     Pages = configuredPages
+EndFunction
+
+String Function GetSubstratePacingOriginLabel()
+    if _selectedSubstratePacingOrigin == 0
+        return "Imperial"
+    elseIf _selectedSubstratePacingOrigin == 1
+        return "Dunmer"
+    elseIf _selectedSubstratePacingOrigin == 2
+        return "Argonian"
+    elseIf _selectedSubstratePacingOrigin == 3
+        return "Nord"
+    elseIf _selectedSubstratePacingOrigin == 4
+        return "Altmer"
+    endIf
+    return "Khajiit"
+EndFunction
+
+Function DebugApplySubstratePacingOrigin()
+    if !PDV_Manager
+        ShowMessage("PDV manager is not available.", False, "$OK", "")
+        return
+    endIf
+    Int originValue = GetSelectedSubstratePacingOriginValue()
+    if PDV_Manager.DebugSetCurseProofOriginRace(originValue)
+        ShowMessage("Test origin applied: " + GetSubstratePacingOriginLabel() + ". Use only on this throwaway pacing save.", False, "$OK", "")
+    else
+        ShowMessage("Test origin was not changed. Clear the forced curse state, then try again.", False, "$OK", "")
+    endIf
+EndFunction
+
+Int Function GetSelectedSubstratePacingOriginValue()
+    if !PDV_Manager
+        return -1
+    endIf
+    if _selectedSubstratePacingOrigin == 0
+        return PDV_Manager.ORIGIN_IMPERIAL
+    elseIf _selectedSubstratePacingOrigin == 1
+        return PDV_Manager.ORIGIN_DUNMER
+    elseIf _selectedSubstratePacingOrigin == 2
+        return PDV_Manager.ORIGIN_ARGONIAN
+    elseIf _selectedSubstratePacingOrigin == 3
+        return PDV_Manager.ORIGIN_NORD
+    elseIf _selectedSubstratePacingOrigin == 4
+        return PDV_Manager.ORIGIN_ALTMER
+    endIf
+    return PDV_Manager.ORIGIN_KHAJIIT
+EndFunction
+
+String Function GetBroadPantheonPoolLabel()
+    if _selectedBroadPantheonPool == 0
+        return "Imperial Divines"
+    elseIf _selectedBroadPantheonPool == 1
+        return "Nord Old Ways"
+    endIf
+    return "Nord Nine Divines"
+EndFunction
+
+String Function GetNordBaselinePacingLabel()
+    if _selectedNordBaselineForPacing == 0
+        return "Old Ways"
+    endIf
+    return "Nine Divines"
+EndFunction
+
+Function DebugShowSubstratePacingSummary()
+    if EnsureManagerBinding("pacing_substrate_summary")
+        ShowMessage(PDV_Manager.DebugGetSubstratePacingSummary(GetSelectedSubstratePacingOriginValue()), False, "$OK", "")
+    endIf
+EndFunction
+
+Function DebugTriggerSubstratePacingSource()
+    if EnsureManagerBinding("pacing_substrate_trigger")
+        ShowMessage(PDV_Manager.DebugTriggerSubstratePacingSource(GetSelectedSubstratePacingOriginValue(), _selectedSubstratePacingSource), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+Function DebugSeedSubstratePacing(Float targetMetric)
+    if EnsureManagerBinding("pacing_substrate_seed")
+        ShowMessage(PDV_Manager.DebugSeedSubstrateMetric(GetSelectedSubstratePacingOriginValue(), targetMetric), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+Function DebugResetSubstratePacing()
+    if EnsureManagerBinding("pacing_substrate_reset")
+        ShowMessage(PDV_Manager.DebugResetSubstratePacing(GetSelectedSubstratePacingOriginValue()), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+Function DebugShowBroadPantheonSummary()
+    if EnsureManagerBinding("pacing_broad_summary")
+        ShowMessage(PDV_Manager.DebugGetBroadPantheonSummary(_selectedBroadPantheonPool), False, "$OK", "")
+    endIf
+EndFunction
+
+Function DebugSeedBroadPantheonPool(Float targetStanding)
+    if EnsureManagerBinding("pacing_broad_seed")
+        ShowMessage(PDV_Manager.DebugSeedBroadPantheonPool(_selectedBroadPantheonPool, targetStanding), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+Function DebugResetBroadPantheonPool()
+    if EnsureManagerBinding("pacing_broad_reset")
+        ShowMessage(PDV_Manager.DebugResetBroadPantheonPool(_selectedBroadPantheonPool), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+Function DebugRunBroadPantheonFanoutTest()
+    if EnsureManagerBinding("pacing_broad_fanout")
+        ShowMessage(PDV_Manager.DebugRunBroadPantheonFanoutTest(), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+Function DebugPrimeBroadPantheonScratch(Float scratchValue)
+    if EnsureManagerBinding("pacing_broad_scratch")
+        ShowMessage(PDV_Manager.DebugPrimeBroadPantheonScratch(_selectedBroadPantheonPool, scratchValue), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+Function DebugRunBroadPantheonMigrationFixture()
+    if EnsureManagerBinding("pacing_broad_migration")
+        ShowMessage(PDV_Manager.DebugRunBroadPantheonMigrationFixture(), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+Function DebugApplyNordBaselineForPacing()
+    if EnsureManagerBinding("pacing_nord_baseline")
+        ShowMessage(PDV_Manager.DebugSetNordBaselineForPacing(_selectedNordBaselineForPacing), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+Function DebugShowPatronOfferRecoverySummary()
+    if EnsureManagerBinding("pacing_patron_summary")
+        ShowMessage(PDV_Manager.DebugOfferAcceptRecoverySummary(), False, "$OK", "")
+    endIf
+EndFunction
+
+Function DebugSetBroadWorshipForPacing()
+    if EnsureManagerBinding("pacing_set_broad")
+        ShowMessage(PDV_Manager.DebugSetBroadWorshipForPacing(), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+Function DebugRunPatronOfferForPacing()
+    if EnsureManagerBinding("pacing_patron_offer")
+        ShowMessage(PDV_Manager.DebugRunPatronOfferForPacing(), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+Function DebugAcceptPatronForPacing()
+    if EnsureManagerBinding("pacing_patron_accept")
+        ShowMessage(PDV_Manager.DebugAcceptPatronForPacing(), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+Function DebugLapsePatronForPacing()
+    if EnsureManagerBinding("pacing_patron_lapse")
+        ShowMessage(PDV_Manager.DebugLapsePatronForPacing(), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+Function DebugRecoverPatronForPacing()
+    if EnsureManagerBinding("pacing_patron_recover")
+        ShowMessage(PDV_Manager.DebugRecoverPatronForPacing(), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+Function DebugSetImperialVampireForPacing(Bool vampireOnset)
+    if EnsureManagerBinding("pacing_imperial_vampire")
+        ShowMessage(PDV_Manager.DebugSetImperialVampireForPacing(vampireOnset), False, "$OK", "")
+        ForcePageReset()
+    endIf
 EndFunction
 
 Function CycleSelectedDeity()
@@ -3179,11 +3709,9 @@ String Function RunSubstrateSmoke()
     endIf
 
     Float oldMetric = substrate.GetMetric()
-    substrate.AdjustMetric(1.0, "mcm_scaffold_smoke")
-    Float adjustedMetric = substrate.GetMetric()
-    substrate.ResetForDebug()
-    substrate.SetMetric(oldMetric, "mcm_scaffold_restore")
-    Debug.Trace("[PDV] MCM ScaffoldSmoke: substrate " + substrate.SubstrateName + " " + oldMetric + " -> " + adjustedMetric + " -> " + substrate.GetMetric())
+    Int oldTier = substrate.GetSubstrateTier()
+    Int recomputedTier = substrate.RecomputeSubstrateTier()
+    Debug.Trace("[PDV] MCM ScaffoldSmoke: substrate " + substrate.SubstrateName + " metric " + oldMetric + ", tier " + oldTier + " -> " + recomputedTier)
     return "Substrate ok"
 EndFunction
 

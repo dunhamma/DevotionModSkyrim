@@ -39,6 +39,7 @@ FormList Property PDV_FLST_DaedricPaths_All Auto
 FormList Property PDV_FLST_HoonDing_BreakthroughBosses Auto
 FormList Property PDV_FLST_RedguardAshAbahUndeadClearSites Auto
 FormList Property PDV_FLST_UndeadCryptClearSites Auto
+FormList Property PDV_FLST_KhajiitMoonContemplations Auto
 Faction Property NecromancerFaction Auto
 Faction Property WarlockFaction Auto
 String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
@@ -112,6 +113,7 @@ PDV_StateTrack Property PDV_KhajiitLunarPostureTrack Auto
 PDV_DaedricPath_Hircine Property PDV_HircinePath Auto
 PDV_CurseState Property PDV_CurseStateService Auto
 Spell Property PDV_SPEL_SurveyDevotion Auto
+Spell Property PDV_Power_Khajiit_ObserveMoons Auto
 Spell Property PDV_SPEL_Neglect_Kyne Auto
 ; Per-patron Nord neglect (follow-on): one gentle flat neglect spell per focusable non-Kyne Nord
 ; patron. None until the ESP batch authors them; SyncNordPatronNeglectSpells no-ops until then.
@@ -352,6 +354,8 @@ Spell Property PDV_Bless_Khajiit_Alkosh_T3 Auto
 Spell Property PDV_SPEL_Neglect_KhajiitLunar Auto
 Spell Property PDV_Bless_Nord_OldWays_T1 Auto
 Spell Property PDV_Bless_Nord_OldWays_T2 Auto
+Spell Property PDV_Bless_Nord_NineDivines_T1 Auto
+Spell Property PDV_Bless_Nord_NineDivines_T2 Auto
 Spell Property PDV_Bless_Nord_Kyne_T1 Auto
 Spell Property PDV_Bless_Nord_Kyne_T2 Auto
 Spell Property PDV_Bless_Nord_Kyne_T3 Auto
@@ -619,7 +623,20 @@ Float Property NEGLECT_LAPSE_GRACE_DAYS = 3.0 AutoReadOnly
 Float Property COMMITMENT_OFFER_THRESHOLD = 50.0 AutoReadOnly
 Float Property COMMITMENT_DECLINE_DELAY_DAYS = 1.0 AutoReadOnly
 Float Property COMMITMENT_REFUSE_COOLDOWN_DAYS = 3.0 AutoReadOnly
-Float Property COMMITMENT_CARRYOVER_MULTIPLIER = 0.7 AutoReadOnly
+Float Property COMMITMENT_CARRYOVER_MULTIPLIER = 1.0 AutoReadOnly
+Float Property BROAD_PANTHEON_SEEKER_THRESHOLD = 25.0 AutoReadOnly
+Float Property BROAD_PANTHEON_FAITHFUL_THRESHOLD = 50.0 AutoReadOnly
+Float Property BROAD_PANTHEON_POOL_MAX = 50.0 AutoReadOnly
+Float Property BROAD_PANTHEON_DECAY_GRACE_DAYS = 2.0 AutoReadOnly
+Float Property BROAD_PANTHEON_DECAY_PER_DAWN = 0.1 AutoReadOnly
+Int Property BROAD_PANTHEON_SCHEMA_VERSION = 1 AutoReadOnly
+String Property BROAD_PANTHEON_IMPERIAL = "ImperialDivines" AutoReadOnly
+String Property BROAD_PANTHEON_NORD_OLD = "NordOldWays" AutoReadOnly
+String Property BROAD_PANTHEON_NORD_NINE = "NordNineDivines" AutoReadOnly
+
+; Transient call-context guard: the home route is valid only as the second half
+; of a portable prayer performed inside the declared Dunmer home.
+Bool _dunmerHomePrayerContext = False
 
 Int Property BOSMER_PATH_OLD_CONTRACT = 0 AutoReadOnly
 Int Property BOSMER_PATH_LIVING_STORY = 1 AutoReadOnly
@@ -814,6 +831,19 @@ String _ldSurfBestNegName = ""
 String _ldSurfBestPosSymbol = ""
 String _ldSurfBestNegSymbol = ""
 Bool _dawnHadActivity = False
+Int _broadPantheonEventDepth = 0
+String _broadPantheonEventId = ""
+Int _broadPantheonSelfEventSequence = 0
+Float _broadPantheonBestPositive = 0.0
+Float _broadPantheonWorstNegative = 0.0
+String _broadPantheonEventPool = ""
+Bool _khajiitMoonObservationPending = False
+Int _khajiitMoonObservationGeneration = 0
+Float _khajiitMoonObservationStartRealTime = 0.0
+Cell _khajiitMoonObservationCell = None
+Float _khajiitMoonObservationX = 0.0
+Float _khajiitMoonObservationY = 0.0
+Float _khajiitMoonObservationZ = 0.0
 Bool Property AutoPushPrismaPanel = False Auto
 Bool Property AllowPrismaBlockingSurfaces = False Auto
 PDV_DaedricPathBase _pendingDaedricMilestonePath = None
@@ -836,12 +866,17 @@ Event OnInit()
     EnsureLikesDislikesTable()
     EnsurePrinceLikesDislikesTable()
     MigrateDaedricPactsIfNeeded()
+    MigrateBroadPantheonPools()
     RefreshPatronMirrors()
     UpdateContextualFavorRuntime()
     UpdateDisfavorStingRuntime()
     EnsureSurveyDevotionPower()
     EnsureDunmerAncestralUrn()
     EnsureArgonianHistSapToken()
+    if PDV_ArgonianHistSubstrate
+        PDV_ArgonianHistSubstrate.MigrateLegacyCompositeMetricOnce()
+    endIf
+    EnsureKhajiitObserveMoonsPower()
     RequestPanelRefresh()
     HandleDiegeticLoad("init")
     RegisterForSingleUpdate(1.0)
@@ -863,7 +898,6 @@ Event OnUpdate()
     ProcessPendingDaedricPrePactNotices()
     DrainHircineRenunciationJournal()
     ProcessDelayedHircineResiduePrismaToasts()
-
     if DebugCommand != 0
         RunDebugCommand()
     endIf
@@ -889,6 +923,8 @@ Event OnUpdate()
         EnsureLikesDislikesTable()
         EnsurePrinceLikesDislikesTable()
         MigrateDaedricPactsIfNeeded()
+        MigrateBroadPantheonPools()
+        EnsureKhajiitObserveMoonsPower()
         _shoutRefreshTicks = 0
     endIf
 
@@ -898,8 +934,7 @@ Event OnUpdate()
     ; baseline (Init flag) handles existing saves where OnInit does not re-run.
     ; Fire at ~06:00 (dawn), not midnight: subtract 0.25 day (6h) before the day-int
     ; truncation so the rollover lands at dawn. 0.25 = 6/24; use 5.0/24.0 for 05:00.
-    Float pdvDawnAdjustedTime = Utility.GetCurrentGameTime() - 0.25
-    Int pdvCurrentDawnDay = pdvDawnAdjustedTime as Int
+    Int pdvCurrentDawnDay = GetDevotionalDay()
     if StorageUtil.GetIntValue(None, "PDV.DawnAuto.Init") == 0
         StorageUtil.SetIntValue(None, "PDV.DawnAuto.Init", 1)
         StorageUtil.SetIntValue(None, "PDV.DawnAuto.LastDay", pdvCurrentDawnDay)
@@ -937,7 +972,7 @@ Event OnUpdate()
                 seedCellId = seedCell.GetFormID()
             endIf
             if seedCellId != 0
-                SetArgonianHome(seedPlayer, seedCellId, Utility.GetCurrentGameTime() as Int, "debug_seed")
+                SetArgonianHome(seedPlayer, seedCellId, GetDevotionalDay() + 2, "debug_seed")
                 Debug.Notification("PDV seed: this cell is now your Argonian home; adaptation cleared, rite clock re-armed.")
             else
                 Debug.Notification("PDV seed: no parent cell; home not declared.")
@@ -1549,6 +1584,7 @@ Function ApplyQuestReaction(Quest sourceQuest, Int stageValue)
         return
     endIf
 
+    BeginBroadPantheonEvent("quest_" + reactionKey)
     ResetQuestReactionSurface()
     Int i = 0
     while i < cellCount
@@ -1566,6 +1602,7 @@ Function ApplyQuestReaction(Quest sourceQuest, Int stageValue)
     endIf
 
     EvaluateQuestMetaFaucets(sourceQuest, reactionKey, cellPrefix, matrixFile)
+    FlushBroadPantheonEvent()
 EndFunction
 
 Function EvaluateQuestMetaFaucets(Quest sourceQuest, String reactionKey, String cellPrefix, String matrixFile)
@@ -1971,6 +2008,7 @@ Function ResetLikesDislikesSurface()
 EndFunction
 
 Function BeginLikesDislikesSurface(Int eventType)
+    BeginBroadPantheonEvent("likes_dislikes_" + eventType + "_" + Utility.GetCurrentGameTime())
     if !ShouldSurfaceLikesDislikesEvent(eventType)
         return
     endIf
@@ -2016,11 +2054,13 @@ EndFunction
 
 Function FlushLikesDislikesSurface(Int eventType)
     if !ShouldSurfaceLikesDislikesEvent(eventType)
+        FlushBroadPantheonEvent()
         return
     endIf
 
     if _ldSurfPosCount == 0 && _ldSurfNegCount == 0
         ResetLikesDislikesSurface()
+        FlushBroadPantheonEvent()
         return
     endIf
 
@@ -2059,6 +2099,7 @@ Function FlushLikesDislikesSurface(Int eventType)
 
     Trace(1, "Likes/dislikes surface flushed: event " + eventType + ", positive " + _ldSurfPosCount + ", negative " + _ldSurfNegCount)
     ResetLikesDislikesSurface()
+    FlushBroadPantheonEvent()
 EndFunction
 
 Function SurfaceDebugDislikeEvent(PDV_DeityBase deity, Float amount, Int eventType)
@@ -2405,14 +2446,13 @@ Bool Function MarkQuestReactionFaucet(String deityName, String sourceTag, Form s
         return True
     endIf
 
-    Float adjustedDayTime = Utility.GetCurrentGameTime() - 0.25
-    Int currentDay = adjustedDayTime as Int
+    Int currentDayStamp = GetDevotionalDay() + 2
     String dayKey = capKey + ".Day"
-    if StorageUtil.GetIntValue(None, dayKey) == currentDay
+    if StorageUtil.GetIntValue(None, dayKey) == currentDayStamp
         return False
     endIf
 
-    StorageUtil.SetIntValue(None, dayKey, currentDay)
+    StorageUtil.SetIntValue(None, dayKey, currentDayStamp)
     return True
 EndFunction
 
@@ -2776,6 +2816,7 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
     endIf
 
     Int originRace = GetPlayerOriginRaceIndex()
+    Bool pantheonBroadPresentation = IsPantheonBroadPoolPresentationActive(originRace)
     String originLabel = "Unknown"
     if originRace >= 0
         originLabel = GetOriginRaceLabel(originRace)
@@ -2812,6 +2853,10 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
         piety = GetPiety(_activeDeity)
         pietyToday = GetPietyToday(_activeDeity)
         tierValue = GetTier(_activeDeity)
+        if IsFocusedPantheonBoonSuspended()
+            tierValue = TIER_NONE
+            tierLabelOverride = "Committed - boon suspended"
+        endIf
         if _activeDeity.ThresholdChampion > 0.0
             championThreshold = _activeDeity.ThresholdChampion
         endIf
@@ -2823,22 +2868,29 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
         symbolName = GetPanelQuasiPatronSymbol(originRace)
         tierLabelOverride = GetPanelQuasiPatronTierLabel(originRace)
         Int broadTier = GetBroadLaneTierForOrigin(originRace)
-        if broadTier > TIER_NONE
+        if pantheonBroadPresentation || broadTier > TIER_NONE
             titleText = GetBroadLaneDisplayName(originRace)
             symbolName = GetBroadLaneSymbol(originRace)
             tierValue = broadTier
             tierLabelOverride = GetBroadLaneStandingLabel(originRace, broadTier)
-            piety = GetBroadLaneServiceCount(originRace) as Float
+            piety = GetBroadLaneStandingValue(originRace)
+            pietyToday = GetBroadLaneScratchValue(originRace)
         endIf
         if PDV_GLO_ActivePiety
-            if broadTier <= TIER_NONE
+            if !pantheonBroadPresentation && broadTier <= TIER_NONE
                 piety = PDV_GLO_ActivePiety.GetValue()
             endIf
         endIf
         if PDV_GLO_ActiveTier
-            if broadTier <= TIER_NONE
+            if !pantheonBroadPresentation && broadTier <= TIER_NONE
                 tierValue = PDV_GLO_ActiveTier.GetValueInt()
             endIf
+        endIf
+        if originRace == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
+            piety = PDV_ArgonianHistSubstrate.GetMetric()
+            tierValue = PDV_ArgonianHistSubstrate.GetSubstrateTier()
+            tierLabelOverride = GetArgonianCulturalPracticeLabel()
+            championThreshold = 75.0
         endIf
     endIf
 
@@ -2862,17 +2914,25 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
     j = j + ",\"tier\":" + tierValue
     j = j + ",\"tierLabel\":\"" + JsonSafeString(tierLabel) + "\""
     String nextText = GetPanelNextThresholdText(panelCommitment, piety)
-    if panelCommitment == None && GetBroadLaneTierForOrigin(originRace) > TIER_NONE
+    if IsFocusedPantheonBoonSuspended()
+        nextText = "Focused boon returns at 50 piety"
+    elseIf panelCommitment == None && originRace == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
+        nextText = GetArgonianCulturalNextThresholdText(piety)
+    elseIf panelCommitment == None && (pantheonBroadPresentation || GetBroadLaneTierForOrigin(originRace) > TIER_NONE)
         nextText = GetBroadLaneNextThresholdText(originRace)
     endIf
     j = j + ",\"nextText\":\"" + JsonSafeString(nextText) + "\""
     j = j + ",\"piety\":" + piety
-    if panelCommitment == None && GetBroadLaneTierForOrigin(originRace) > TIER_NONE
+    if panelCommitment == None && (pantheonBroadPresentation || GetBroadLaneTierForOrigin(originRace) > TIER_NONE)
         if originRace == ORIGIN_BRETON
             j = j + ",\"pietyLabel\":\"" + JsonSafeString("" + GetBroadLaneServiceCount(originRace) + " practice points") + "\""
+        elseIf originRace == ORIGIN_IMPERIAL || originRace == ORIGIN_NORD
+            j = j + ",\"pietyLabel\":\"" + JsonSafeString(FormatTwoDecimals(GetBroadLaneStandingValue(originRace)) + " pantheon standing") + "\""
         else
             j = j + ",\"pietyLabel\":\"" + JsonSafeString("" + GetBroadLaneServiceCount(originRace) + " broad acts") + "\""
         endIf
+    elseIf panelCommitment == None && originRace == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
+        j = j + ",\"pietyLabel\":\"" + JsonSafeString(FormatTwoDecimals(piety) + " cultural practice") + "\""
     endIf
     j = j + ",\"pietyToday\":" + pietyToday
     j = j + ",\"todayMood\":\"" + JsonSafeString(GetPanelTodayMood(pietyToday)) + "\""
@@ -3087,7 +3147,11 @@ EndFunction
 String Function GetPanelInstrumentJson(Int originRace, Bool hasActiveDeity, Int tierValue, String tierLabel, Float piety, Float championThreshold)
     String kindText = GetPanelInstrumentKind(originRace, hasActiveDeity)
     Float primary = 0.0
-    if kindText == "piety"
+    if kindText == "broad"
+        primary = ClampValue(piety / BROAD_PANTHEON_POOL_MAX, 0.0, 1.0)
+    elseIf kindText == "cultural"
+        primary = ClampValue(piety / 75.0, 0.0, 1.0)
+    elseIf kindText == "piety"
         Float pietyDenom = championThreshold
         if pietyDenom <= 0.0
             pietyDenom = 85.0
@@ -3121,17 +3185,28 @@ String Function GetPanelNextThresholdText(PDV_DeityBase deity, Float piety)
     return "Champion path"
 EndFunction
 
+String Function GetArgonianCulturalNextThresholdText(Float metric)
+    if metric < 1.0
+        return "Root Memory at 1"
+    elseIf metric < 25.0
+        return "River-Kept Practice at 25"
+    elseIf metric < 75.0
+        return "Rooted Adaptation at 75"
+    endIf
+    return "Rooted Adaptation"
+EndFunction
+
 String Function GetPanelInstrumentKind(Int originRace, Bool hasActiveDeity)
     if hasActiveDeity
         return "piety"
     endIf
-    if GetBroadLaneTierForOrigin(originRace) > TIER_NONE
+    if IsPantheonBroadPoolPresentationActive(originRace) || GetBroadLaneTierForOrigin(originRace) > TIER_NONE
         return "broad"
     endIf
     if originRace == ORIGIN_KHAJIIT
         return "lunar"
     elseIf originRace == ORIGIN_ARGONIAN
-        return "hist"
+        return "cultural"
     elseIf originRace == ORIGIN_DUNMER
         return "ancestor"
     elseIf originRace == ORIGIN_ORC
@@ -3147,8 +3222,8 @@ EndFunction
 String Function GetPanelInstrumentState(Int originRace, String kindText, String tierLabel)
     if kindText == "lunar"
         return GetPanelQuasiPatronTierLabel(originRace)
-    elseIf kindText == "hist"
-        return GetArgonianHistPostureLabel()
+    elseIf kindText == "cultural"
+        return GetArgonianCulturalPracticeLabel()
     elseIf kindText == "ancestor"
         return GetDunmerAncestorLayerLabel()
     elseIf kindText == "forge"
@@ -3163,6 +3238,9 @@ EndFunction
 
 String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Float piety)
     if kindText == "broad"
+        if originRace == ORIGIN_IMPERIAL || originRace == ORIGIN_NORD
+            return "{\"standing\":" + FormatTwoDecimals(GetBroadLaneStandingValue(originRace)) + ",\"scratch\":" + FormatTwoDecimals(GetBroadLaneScratchValue(originRace)) + ",\"pool\":\"" + JsonSafeString(GetActiveBroadPantheonPoolId()) + "\",\"baseline\":\"" + JsonSafeString(GetBroadLaneDisplayName(originRace)) + "\"}"
+        endIf
         return "{\"acts\":" + GetBroadLaneServiceCount(originRace) + "}"
     endIf
     if kindText == "lunar"
@@ -3176,7 +3254,7 @@ String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Floa
             lunarTier = GetKhajiitLunarTierLabel(PDV_KhajiitLunarSubstrate.GetSubstrateTier())
         endIf
         return "{\"phase\":" + phase + ",\"focus\":\"" + JsonSafeString(GetKhajiitFocusLabel(focus)) + "\",\"lunarTier\":\"" + JsonSafeString(lunarTier) + "\"}"
-    elseIf kindText == "hist"
+    elseIf kindText == "cultural"
         Float hist = 0.0
         Float people = 0.0
         Float voidValue = 0.0
@@ -3187,7 +3265,13 @@ String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Floa
             voidValue = PDV_ArgonianHistSubstrate.GetVoidRelation()
             voidActive = PDV_ArgonianHistSubstrate.IsVoidFullyActive()
         endIf
-        return "{\"hist\":" + FormatTwoDecimals(hist) + ",\"people\":" + FormatTwoDecimals(people) + ",\"void\":" + FormatTwoDecimals(voidValue) + ",\"voidActive\":" + BoolToJson(voidActive) + "}"
+        Float culturalMetric = 0.0
+        Int culturalTier = TIER_NONE
+        if PDV_ArgonianHistSubstrate
+            culturalMetric = PDV_ArgonianHistSubstrate.GetMetric()
+            culturalTier = PDV_ArgonianHistSubstrate.GetSubstrateTier()
+        endIf
+        return "{\"metric\":" + FormatTwoDecimals(culturalMetric) + ",\"culturalTier\":" + culturalTier + ",\"hist\":" + FormatTwoDecimals(hist) + ",\"people\":" + FormatTwoDecimals(people) + ",\"void\":" + FormatTwoDecimals(voidValue) + ",\"voidActive\":" + BoolToJson(voidActive) + "}"
     elseIf kindText == "ancestor"
         Int depth = 0
         Int prayer = 0
@@ -3233,6 +3317,9 @@ String Function GetPanelPatronNote()
     if IsBroadWorshipActive()
         return "You keep the broad rites of your people, with no single patron yet named."
     endIf
+    if IsFocusedPantheonBoonSuspended()
+        return "The commitment remains, but its boon is suspended below 50 piety."
+    endIf
     ; GetPlayerMcmModeLine handles all races: active patron, substrate, and
     ; state-track modes, so it works for both deity and quasi-patron cases.
     return GetPlayerMcmModeLine()
@@ -3248,6 +3335,9 @@ String Function GetPanelTodayMood(Float pietyToday)
 EndFunction
 
 String Function GetPanelDriftLabel()
+    if IsFocusedPantheonBoonSuspended()
+        return "Suspended"
+    endIf
     if StorageUtil.GetIntValue(None, "PDV.Neglect.ActiveCount") > 0
         return "Thinning"
     endIf
@@ -3359,6 +3449,16 @@ String Function GetPanelRelationsJson()
         endIf
     endIf
 
+    if GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
+        items = AppendJsonItem(items, PanelPlainObject("hist", "neutral", "Hist relation", GetArgonianLayerStrengthLabel(PDV_ArgonianHistSubstrate.GetHistRelation())))
+        items = AppendJsonItem(items, PanelPlainObject("journal", "neutral", "People relation", GetArgonianLayerStrengthLabel(PDV_ArgonianHistSubstrate.GetPeopleRelation())))
+        String voidTone = "neutral"
+        if PDV_ArgonianHistSubstrate.IsVoidFullyActive()
+            voidTone = "warning"
+        endIf
+        items = AppendJsonItem(items, PanelPlainObject("sithis", voidTone, "Void relation", GetArgonianVoidStrengthLabel(PDV_ArgonianHistSubstrate.GetVoidRelation())))
+    endIf
+
     if IsBroadWorshipActive()
         items = AppendJsonItem(items, PanelPlainObject("", "neutral", "", "You keep the broad rites of your people, with no single patron named."))
     endIf
@@ -3385,7 +3485,7 @@ EndFunction
 
 String Function GetPanelQuasiPatronName(Int originRace)
     if originRace == ORIGIN_ARGONIAN
-        return "The Hist"
+        return "Saxhleel Practice"
     elseIf originRace == ORIGIN_ORC
         return "Malacath"
     elseIf originRace == ORIGIN_KHAJIIT
@@ -3445,7 +3545,7 @@ EndFunction
 ; Uses the same label functions as MCM/Survey so the panel matches those surfaces.
 String Function GetPanelQuasiPatronTierLabel(Int originRace)
     if originRace == ORIGIN_ARGONIAN
-        return "Hist: " + GetArgonianHistPostureLabel()
+        return GetArgonianCulturalPracticeLabel()
     elseIf originRace == ORIGIN_ORC
         return GetOrcLifeModeLabel()
     elseIf originRace == ORIGIN_KHAJIIT
@@ -3470,6 +3570,21 @@ String Function GetPanelQuasiPatronTierLabel(Int originRace)
         return GetAltmerCrisisStateLabel()
     endIf
     return ""
+EndFunction
+
+String Function GetArgonianCulturalPracticeLabel()
+    if !PDV_ArgonianHistSubstrate
+        return "Practice quiet"
+    endIf
+    Int tierValue = PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    if tierValue >= TIER_CHAMPION
+        return "Rooted Adaptation"
+    elseIf tierValue >= TIER_DEVOTED
+        return "River-Kept Practice"
+    elseIf tierValue >= TIER_SEEKER
+        return "Root Memory"
+    endIf
+    return "Practice quiet"
 EndFunction
 
 String Function PanelEventObject(String eventName, PDV_DeityBase deity, String context, String itemText, String amountText, String tone, String tierLabel, String rival)
@@ -4234,14 +4349,37 @@ PDV_DeityBase Function GetShrinePrayerDeityByName(String deityName)
 EndFunction
 
 Function HandleShrinePrayer(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String shrineLabel, String sourceId)
+    if GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL && !IsImperialVampireStateActive() && ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Talos")
+        StorageUtil.SetIntValue(None, "PDV.Imperial.TalosBroadUnlocked", 1)
+        Trace(1, "Imperial broad Talos roster unlocked by explicit prayer: " + sourceId)
+    endIf
+    BeginBroadPantheonEvent("shrine_prayer_" + sourceId)
     Bool awarded = False
     awarded = AwardShrinePrayerToDeityName(primaryDeityName, shrineLabel, sourceId) || awarded
     awarded = AwardShrinePrayerToDeityName(secondaryDeityName, shrineLabel, sourceId) || awarded
     awarded = AwardShrinePrayerToDeityName(tertiaryDeityName, shrineLabel, sourceId) || awarded
+    FlushBroadPantheonEvent()
 
     if awarded
+        HandleSubstrateShrinePrayer(primaryDeityName, secondaryDeityName, tertiaryDeityName, sourceId)
         String label = ResolveShrinePrayerJournalLabel(primaryDeityName, secondaryDeityName, tertiaryDeityName, shrineLabel)
         AppendBookOfDaysEntry("You offered prayer at " + label + "'s shrine.", Utility.GetCurrentGameTime() as Int, "favor.act", "journal", False, 1, "Shrine prayer answered")
+    endIf
+EndFunction
+
+Function HandleSubstrateShrinePrayer(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String sourceId)
+    Int origin = GetPlayerOriginRaceIndex()
+    if origin == ORIGIN_IMPERIAL && PDV_ImperialAncestorSubstrate && !IsImperialVampireStateActive()
+        PDV_DeityBase primary = GetShrinePrayerDeityByName(primaryDeityName)
+        PDV_DeityBase secondary = GetShrinePrayerDeityByName(secondaryDeityName)
+        PDV_DeityBase tertiary = GetShrinePrayerDeityByName(tertiaryDeityName)
+        if IsDeityEligibleForBroadPantheon(primary, BROAD_PANTHEON_IMPERIAL) || IsDeityEligibleForBroadPantheon(secondary, BROAD_PANTHEON_IMPERIAL) || IsDeityEligibleForBroadPantheon(tertiary, BROAD_PANTHEON_IMPERIAL)
+            PDV_ImperialAncestorSubstrate.RecordCivicStandingScaled(1.0, "divine_prayer_" + sourceId)
+        endIf
+    elseIf origin == ORIGIN_ALTMER && PDV_AltmerAncestorSubstrate && !IsAltmerFavorSuppressedByCurse()
+        if GetShrinePrayerDeityByName(primaryDeityName) == PDV_AuriEl || GetShrinePrayerDeityByName(secondaryDeityName) == PDV_AuriEl || GetShrinePrayerDeityByName(tertiaryDeityName) == PDV_AuriEl
+            PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, "auriel_shrine_rite_" + sourceId)
+        endIf
     endIf
 EndFunction
 
@@ -4421,7 +4559,10 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, String reas
     endIf
 
     if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
-        HandleKhajiitMoonObservance(GetKhajiitMoonPhaseFromGameDay(Utility.GetCurrentGameTime()), reason)
+        Cell khajiitRestCell = playerRef.GetParentCell()
+        if khajiitRestCell && !khajiitRestCell.IsInterior()
+            HandleKhajiitRoadHome("outdoor_rest_" + reason)
+        endIf
     endIf
 
     if GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN
@@ -4430,10 +4571,6 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, String reas
 
     if GetPlayerOriginRaceIndex() == ORIGIN_BOSMER
         HandleBosmerSleepEvents(playerRef, reason)
-    endIf
-
-    if GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
-        HandleImperialSleepEvents(playerRef, reason)
     endIf
 
     if GetPlayerOriginRaceIndex() == ORIGIN_BRETON
@@ -4458,6 +4595,46 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, String reas
 
     if GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
         HandleRedguardSleepEvents(playerRef, reason)
+    endIf
+EndFunction
+
+; Production likes/dislikes events that are also authentic cultural-practice
+; ingress converge here. Deity scoring remains separate in the event bus.
+Function HandleSubstrateActionEvent(Int eventType, String reason)
+    Int origin = GetPlayerOriginRaceIndex()
+    if origin == ORIGIN_IMPERIAL && !IsImperialVampireStateActive() && PDV_ImperialAncestorSubstrate
+        if eventType == 330 || eventType == 331 || eventType == 332
+            Float metricBefore = PDV_ImperialAncestorSubstrate.GetMetric()
+            Int tierBefore = PDV_ImperialAncestorSubstrate.GetSubstrateTier()
+            PDV_ImperialAncestorSubstrate.RecordCivicStandingScaled(1.0, "craft_" + reason)
+            SendPrismaSubstrateProgress("imperial-civic", tierBefore, PDV_ImperialAncestorSubstrate.GetSubstrateTier(), PDV_ImperialAncestorSubstrate.GetMetric() - metricBefore, "Completed craft strengthened civic practice.", "journal", GetImperialCivicTierName())
+        endIf
+    elseIf origin == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
+        if eventType == 333
+            Float metricBefore = PDV_ArgonianHistSubstrate.GetMetric()
+            Int tierBefore = PDV_ArgonianHistSubstrate.GetSubstrateTier()
+            PDV_ArgonianHistSubstrate.RecordCulturalPractice("argonian_cooked_meal", reason)
+            SendPrismaSubstrateProgress("argonian-practice", tierBefore, PDV_ArgonianHistSubstrate.GetSubstrateTier(), PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The first cooked meal kept Saxhleel practice.", "journal", GetArgonianCulturalPracticeLabel())
+        endIf
+    elseIf origin == ORIGIN_NORD && PDV_NordAncestorSubstrate
+        if eventType == 313
+            Float metricBefore = PDV_NordAncestorSubstrate.GetMetric()
+            Int tierBefore = PDV_NordAncestorSubstrate.GetSubstrateTier()
+            PDV_NordAncestorSubstrate.RecordAncestralRestScaled(1.0, "open_sky_rest_" + reason)
+            SendPrismaSubstrateProgress("ancestor", tierBefore, PDV_NordAncestorSubstrate.GetSubstrateTier(), PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The open sky kept the old practice.", "journal", GetNordAncestorLayerLabel())
+        elseIf eventType == 333
+            Float metricBefore = PDV_NordAncestorSubstrate.GetMetric()
+            Int tierBefore = PDV_NordAncestorSubstrate.GetSubstrateTier()
+            PDV_NordAncestorSubstrate.RecordHearthReturnScaled(1.0, "cooked_meal_" + reason)
+            SendPrismaSubstrateProgress("ancestor", tierBefore, PDV_NordAncestorSubstrate.GetSubstrateTier(), PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The first cooked meal kept the hearth.", "journal", GetNordAncestorLayerLabel())
+        endIf
+    elseIf origin == ORIGIN_ALTMER && PDV_AltmerAncestorSubstrate && !IsAltmerFavorSuppressedByCurse()
+        if eventType == 331
+            Float metricBefore = PDV_AltmerAncestorSubstrate.GetMetric()
+            Int tierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
+            PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, "enchantment_" + reason)
+            SendPrismaSubstrateProgress("altmer-heritage", tierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore, "Successful enchantment reinforced ordered practice.", "journal", GetAltmerHeritageTierName())
+        endIf
     endIf
 EndFunction
 
@@ -4858,9 +5035,10 @@ Bool Function IsRedguardRememberingCoherent(Int sectAtRite)
 EndFunction
 
 ; The Disciplines of Return: at rest, with a 7-day cooldown, the player sets one cultivation
-; discipline of magic. One-active, swap via re-rite (clear-before-add). "Not yet" does not
-; spend the cooldown. Returns true when the menu was shown so the dream is suppressed that
-; night. The handler guard already blocks this while curse-suppressed.
+; discipline of magic. One-active, swap via re-rite (clear-before-add). "Not yet" records a
+; short three-devotional-day prompt cooldown so declining cannot reopen the menu every rest.
+; Returns true when the menu was shown so the dream is suppressed that night. The handler
+; guard already blocks this while curse-suppressed.
 Bool Function TryAltmerDisciplinesRite(Actor playerRef, String reason)
     if !playerRef || !PDV_MESG_AltmerDisciplines || !IsAltmerOrigin()
         return false
@@ -4871,12 +5049,22 @@ Bool Function TryAltmerDisciplinesRite(Actor playerRef, String reason)
         return false
     endIf
 
+    ; GetDevotionalDay can be -1 before the first 06:00 boundary. Reserve zero
+    ; exactly as the shared substrate stamp does so a first-day decline sticks.
+    Int todayStamp = GetDevotionalDay() + 2
+    Int lastDeclineStamp = StorageUtil.GetIntValue(None, "PDV.Alt.Disc.LastDeclineDay")
+    if lastDeclineStamp > 0 && (todayStamp - lastDeclineStamp) < 3
+        return false
+    endIf
+
     Utility.Wait(0.5)
     Int pressed = PDV_MESG_AltmerDisciplines.Show()
     if pressed < 0 || pressed > 3
-        return true                 ; "Not yet" -- cooldown not spent
+        StorageUtil.SetIntValue(None, "PDV.Alt.Disc.LastDeclineDay", todayStamp)
+        return true                 ; "Not yet" -- short prompt cooldown only
     endIf
 
+    StorageUtil.SetIntValue(None, "PDV.Alt.Disc.LastDeclineDay", 0)
     ApplyAltmerDiscipline(playerRef, pressed)
     return true
 EndFunction
@@ -4988,16 +5176,8 @@ Function HandleAltmerSleepEvents(Actor playerRef, String reason)
 EndFunction
 
 Function HandleImperialSleepEvents(Actor playerRef, String reason)
-    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ImperialCivicRest")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    AwardImperialAncestorSpinePulse(multiplier, "sleep_rest_" + reason)
+    ; Retained for save/script compatibility. Imperial sleep is not a civic or
+    ; pantheon signal under the pacing contract.
 EndFunction
 
 Function HandleBretonSleepEvents(Actor playerRef, String reason)
@@ -5066,7 +5246,9 @@ Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, Stri
         return false
     endIf
 
-    Int today = Utility.GetCurrentGameTime() as Int
+    ; Every bed cadence uses the shared 06:00 devotional day, encoded with
+    ; +2 so day zero cannot be mistaken for an unset legacy value.
+    Int todayStamp = GetDevotionalDay() + 2
     Int declaredId = StorageUtil.GetIntValue(None, "PDV.ArgBed.DeclaredFormID")
     if declaredId != 0 && sleepCellId == declaredId
         StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateFormID", 0)
@@ -5074,8 +5256,15 @@ Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, Stri
         StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateDay", 0)
         HandleArgonianBedOfChoiceReturn("declared_" + reason)
         if PDV_SPEL_ArgonianRootedRest && StorageUtil.GetIntValue(PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount") >= 12
-            PDV_SPEL_ArgonianRootedRest.Cast(playerRef, playerRef)
-            SendPrismaToast("hist", "good", "Rooted rest", "You wake feeling rooted.")
+            Int rootedRestStamp = GetDevotionalDay() + 2
+            if ReadZeroReservedDevotionalDayStamp("PDV.Argonian.RootedRestDay") != rootedRestStamp
+                WriteZeroReservedDevotionalDayStamp("PDV.Argonian.RootedRestDay")
+                PDV_SPEL_ArgonianRootedRest.Cast(playerRef, playerRef)
+                SendPrismaToast("hist", "good", "Rooted rest", "You wake feeling rooted.")
+                Trace(1, "[PDV][ARGONIAN_ROOTED_REST] granted day=" + GetDevotionalDay())
+            else
+                Trace(2, "Argonian Rooted Rest suppressed: already granted this devotional day")
+            endIf
         endIf
         return false
     endIf
@@ -5085,7 +5274,7 @@ Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, Stri
     endIf
 
     Int declinedDay = StorageUtil.GetIntValue(None, "PDV.ArgBed.DeclineDay")
-    if declinedDay > 0 && (today + 1 - declinedDay) < 3
+    if declinedDay > 0 && (todayStamp - declinedDay) < 3
         return false
     endIf
 
@@ -5095,11 +5284,11 @@ Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, Stri
     if candidateId != sleepCellId
         candidateCount = 1
         StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateFormID", sleepCellId)
-    elseIf candidateDay != today + 1
+    elseIf candidateDay != todayStamp
         candidateCount += 1
     endIf
     StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateCount", candidateCount)
-    StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateDay", today + 1)
+    StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateDay", todayStamp)
 
     if candidateCount < 3
         return false
@@ -5108,10 +5297,10 @@ Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, Stri
     Utility.Wait(0.5)
     Int pressed = PDV_MESG_ArgonianMarkBed.Show()
     if pressed == 0
-        SetArgonianHome(playerRef, sleepCellId, today, reason)
+        SetArgonianHome(playerRef, sleepCellId, todayStamp, reason)
         SendPrismaToast("hist", "good", "Place of rest", "The Hist remembers it now.")
     else
-        StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclineDay", today + 1)
+        StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclineDay", todayStamp)
         StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateFormID", 0)
         StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateCount", 0)
         StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateDay", 0)
@@ -5119,22 +5308,30 @@ Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, Stri
     return true
 EndFunction
 
-Function SetArgonianHome(Actor playerRef, Int sleepCellId, Int today, String reason)
+Function SetArgonianHome(Actor playerRef, Int sleepCellId, Int devotionalDayStamp, String reason)
     if sleepCellId == 0
         return
     endIf
 
+    ; Adaptation's older maturation clock remains a raw game-day value.  The
+    ; declaration/candidate cadence above is the one governed by 06:00 days.
+    Int today = Utility.GetCurrentGameTime() as Int
+
     StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclaredFormID", sleepCellId)
-    StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclaredDay", today + 1)
+    StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclaredDay", devotionalDayStamp)
     StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclineDay", 0)
     StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateFormID", 0)
     StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateCount", 0)
     StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateDay", 0)
     if PDV_ArgonianHistSubstrate
         StorageUtil.SetIntValue(PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount", 0)
+        StorageUtil.SetIntValue(PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepDay", 0)
     endIf
-    ClearArgonianAdaptation(playerRef)
-    StorageUtil.SetIntValue(None, "PDV.Adapt.DueDay", today + Utility.RandomInt(10, 14) + 1)
+    ; A chosen adaptation is permanent and follows the player to a new home.
+    ; Only an unadapted player rolls a new maturation clock.
+    if StorageUtil.GetIntValue(None, "PDV.Adapt.Active") == 0
+        StorageUtil.SetIntValue(None, "PDV.Adapt.DueDay", today + Utility.RandomInt(10, 14) + 1)
+    endIf
     Trace(2, "Argonian home declared: " + reason)
 EndFunction
 
@@ -5241,10 +5438,8 @@ Spell Function GetArgonianAdaptationSpell(Int adaptationIndex)
     return None
 EndFunction
 
-; Dawn-sync slot maintenance: self-heal the active adaptation if something
-; stripped it, and let the root grow quiet below the signature threshold.
-; PDV.Adapt.Active stays set while quiet so the change returns on its own
-; when the composite recovers; no re-rite needed.
+; Dawn-sync slot maintenance: the chosen adaptation is a permanent bodily
+; change. Metric 75 gates the one-time rite, not continued ownership.
 Function SyncArgonianAdaptation(Actor playerRef, Bool isArgonian)
     Int activeAdaptation = StorageUtil.GetIntValue(None, "PDV.Adapt.Active")
     if activeAdaptation <= 0
@@ -5256,15 +5451,13 @@ Function SyncArgonianAdaptation(Actor playerRef, Bool isArgonian)
         return
     endIf
 
-    Bool eligible = isArgonian && PDV_ArgonianHistSubstrate && PDV_ArgonianHistSubstrate.GetMetric() >= ARGONIAN_REWARD_SIGNATURE_THRESHOLD
-    if eligible
+    if isArgonian
         if !playerRef.HasSpell(activeSpell)
             playerRef.AddSpell(activeSpell, False)
         endIf
     else
         if playerRef.HasSpell(activeSpell)
             playerRef.RemoveSpell(activeSpell)
-            SendPrismaToast("hist", "warning", "The root grows quiet", "The change fades from your scales.")
         endIf
     endIf
 EndFunction
@@ -5309,6 +5502,11 @@ Function AwardArgonianSacredWater(Int siteFormId)
     Int seenCount = StorageUtil.AdjustIntValue(None, "PDV.ArgWaters.Count", 1)
 
     PDV_ArgonianHistSubstrate.SetHistRelation(PDV_ArgonianHistSubstrate.GetHistRelation() + 1.0, "sacred_water")
+    PDV_ArgonianHistSubstrate.StampHistMaintenance("sacred_water_" + siteFormId)
+    PDV_ArgonianHistSubstrate.RecordCulturalPractice("argonian_sacred_water", "sacred_water_" + siteFormId)
+    if PDV_Hist
+        AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, 1.0)
+    endIf
     Debug.MessageBox("The water remembers. For one slow breath you stand in the marsh again, and the root speaks your name.")
     SendPrismaSubstrateToast("ArgonianHist", "water", "A water that remembers.", "hist", GetArgonianHistPostureLabel())
     AppendBookOfDaysEntry("A water that remembers.", Utility.GetCurrentGameTime() as Int, "substrate.act", "hist", False)
@@ -5371,18 +5569,34 @@ Function TryArgonianNearWaterMaintenance()
         return
     endIf
 
-    Int pdvEncodedWaterDay = (Utility.GetCurrentGameTime() as Int) + 1
-    if StorageUtil.GetIntValue(None, "PDV.Argonian.NearWaterDay") == pdvEncodedWaterDay
+    Int pdvEncodedWaterDay = GetDevotionalDay() + 2
+    if ReadZeroReservedDevotionalDayStamp("PDV.Argonian.NearWaterDay") == pdvEncodedWaterDay
         return
     endIf
 
     Actor argonianPlayer = Game.GetPlayer()
-    if !argonianPlayer || !argonianPlayer.IsSwimming()
+    Cell waterCell = None
+    if argonianPlayer
+        waterCell = argonianPlayer.GetParentCell()
+    endIf
+    if !argonianPlayer || !argonianPlayer.IsSwimming() || !waterCell || waterCell.IsInterior()
+        StorageUtil.SetFloatValue(None, "PDV.Argonian.WaterPractice.StartRealTime", 0.0)
         return
     endIf
 
-    StorageUtil.SetIntValue(None, "PDV.Argonian.NearWaterDay", pdvEncodedWaterDay)
+    Float startedAt = StorageUtil.GetFloatValue(None, "PDV.Argonian.WaterPractice.StartRealTime")
+    if startedAt <= 0.0
+        StorageUtil.SetFloatValue(None, "PDV.Argonian.WaterPractice.StartRealTime", Utility.GetCurrentRealTime())
+        return
+    endIf
+    if Utility.GetCurrentRealTime() - startedAt < 10.0
+        return
+    endIf
+
+    WriteZeroReservedDevotionalDayStamp("PDV.Argonian.NearWaterDay")
+    StorageUtil.SetFloatValue(None, "PDV.Argonian.WaterPractice.StartRealTime", 0.0)
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianNearWater")
+    Float metricBefore = PDV_ArgonianHistSubstrate.GetMetric()
     Int tierBefore = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     PDV_ArgonianHistSubstrate.RecordHistMaintenanceScaled(multiplier, "near_water")
     RefreshArgonianHistPosture("near_water")
@@ -5390,12 +5604,7 @@ Function TryArgonianNearWaterMaintenance()
     if PDV_Hist
         AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
     endIf
-    Float peopleRelation = PDV_ArgonianHistSubstrate.GetPeopleRelation()
-    Float voidRelation = PDV_ArgonianHistSubstrate.GetVoidRelation()
-    if GetArgonianActiveFocus(peopleRelation, voidRelation, True) == ARGONIAN_FOCUS_PEOPLE
-        HandleArgonianPeopleSupport("near_water_people")
-    endIf
-    SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "The water remembers you.", "hist", GetArgonianHistPostureLabel())
+    SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The water remembers you.", "journal", GetArgonianCulturalPracticeLabel())
     RequestPanelRefresh()
     Trace(2, "Argonian near-water Hist maintenance routed.")
 EndFunction
@@ -5412,6 +5621,11 @@ Function HandleArgonianSapVision()
 
     StorageUtil.SetIntValue(None, "PDV.ArgWaters.SapVision", 1)
     PDV_ArgonianHistSubstrate.SetHistRelation(PDV_ArgonianHistSubstrate.GetHistRelation() + 1.0, "sleeping_tree_sap")
+    PDV_ArgonianHistSubstrate.StampHistMaintenance("sleeping_tree_sap")
+    PDV_ArgonianHistSubstrate.RecordCulturalPractice("argonian_hist", "sleeping_tree_sap")
+    if PDV_Hist
+        AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, 1.0)
+    endIf
     Debug.MessageBox("The sap is strange and far from home, but for one heartbeat a root answers. Somewhere, the Hist turned to listen.")
     Trace(2, "Sleeping Tree Sap vision fired.")
 EndFunction
@@ -5444,12 +5658,11 @@ Function DebugSeedArgonian(Float histValue, Float peopleValue, Float voidValue)
     endIf
     StorageUtil.SetIntValue(PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.SithisSignalCount", signals)
 
-    PDV_ArgonianHistSubstrate.RefreshCompositeMetric("debug_seed")
     RefreshArgonianHistPosture("debug_seed")
     SyncArgonianRewards(Game.GetPlayer())
 
     Bool voidActive = PDV_ArgonianHistSubstrate.IsVoidFullyActive()
-    Debug.MessageBox("PDV seed applied. Hist " + histValue + ", People " + peopleValue + ", Void " + voidValue + ". Composite " + PDV_ArgonianHistSubstrate.GetMetric() + ", Void active " + voidActive + ". Rewards re-synced; rite available at composite >= 75 next sleep at your bed or a sacred water.")
+    Debug.MessageBox("PDV relation seed applied. Hist " + histValue + ", People " + peopleValue + ", Void " + voidValue + ". Cultural practice remains " + PDV_ArgonianHistSubstrate.GetMetric() + "; Void active " + voidActive + ". Use Debug: Pacing & Pantheons seed 75 separately for adaptation-threshold proof.")
 EndFunction
 
 ; Shadowscale signature: while the Void is the active foreground emphasis, a
@@ -6386,23 +6599,29 @@ Function HandleDunmerPortableShrinePrayer(String reason)
         Float layerWeight = GetDunmerCurseLayerWeight(1)
         if layerWeight > 0.0
             Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.DunmerPortableShrinePrayer") * layerWeight
+            Float metricBefore = PDV_DunmerAncestorSubstrate.GetMetric()
             Int tierBefore = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
             PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(multiplier, reason)
-            AwardDunmerAncestorSpinePulse(multiplier, reason)
             Int tierAfter = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
-            SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "Ancestor prayer marked.", "ancestor", GetDunmerAncestorLayerLabel())
+            SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, PDV_DunmerAncestorSubstrate.GetMetric() - metricBefore, "Ancestor prayer marked.", "ancestor", GetDunmerAncestorLayerLabel())
         else
             Trace(2, "Dunmer ancestor layer silenced by curse posture (" + reason + ")")
         endIf
         NotifyDiegeticRoutineFavor("dunmer_portable_shrine")
-        TryAwardDunmerTwilightWindowSignal(reason)
-        AwardActiveDunmerReclamationMemorySignal()
+        Bool twilightAwarded = TryAwardDunmerTwilightWindowSignal(reason)
+        if !twilightAwarded
+            AwardActiveDunmerReclamationMemorySignal()
+        endIf
+        ; Home presence changes the substrate/ward only. The portable prayer
+        ; already supplied the one deity-piety pulse for this logical act.
         ; Home-prayer bonus (11a, reworked 2026-07-04): praying with the portable urn at
         ; your declared ancestor-home fires the bigger home progress step + arms the
         ; ancestor watch (once-per-day near-death save until dawn).
         ; HandleDunmerPlayerHomeBonus self-gates on curse posture.
         if IsPlayerAtDunmerDeclaredHome(Game.GetPlayer())
+            _dunmerHomePrayerContext = True
             HandleDunmerPlayerHomeBonus(reason + "_home")
+            _dunmerHomePrayerContext = False
         endIf
         RequestPanelRefresh()
         Trace(2, "Dunmer portable shrine prayer routed (" + reason + ")")
@@ -6410,21 +6629,28 @@ Function HandleDunmerPortableShrinePrayer(String reason)
 EndFunction
 
 Function HandleDunmerPlayerHomeBonus(String reason)
+    Actor homePlayer = Game.GetPlayer()
+    if !_dunmerHomePrayerContext || !IsPlayerAtDunmerDeclaredHome(homePlayer)
+        if PDV_DunmerAncestorSubstrate
+            PDV_DunmerAncestorSubstrate.RecordDailyCreditReject("dunmer_home_prayer", reason, "requires_paired_home_prayer")
+        endIf
+        Trace(2, "Dunmer home-only substrate route rejected (" + reason + ")")
+        return
+    endIf
     if PDV_DunmerAncestorSubstrate
         Float layerWeight = GetDunmerCurseLayerWeight(1)
         if layerWeight > 0.0
             Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.DunmerHomeBonus") * layerWeight
+            Float metricBefore = PDV_DunmerAncestorSubstrate.GetMetric()
             Int tierBefore = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
             PDV_DunmerAncestorSubstrate.RecordPlayerHomeBonusScaled(multiplier, reason)
-            AwardDunmerAncestorSpinePulse(multiplier, reason)
             Int tierAfter = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
-            SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "Prayers within the home feel more meaningful.", "ancestor", GetDunmerAncestorLayerLabel())
+            SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, PDV_DunmerAncestorSubstrate.GetMetric() - metricBefore, "Prayers within the home feel more meaningful.", "ancestor", GetDunmerAncestorLayerLabel())
             ; Ancestor watch (11a rework 2026-07-04): the home prayer no longer heals on
             ; the spot; it arms a once-per-day near-death save that lasts until dawn (the
             ; BaanDar-style low-health watcher, PDV_T3DailyLowHealthSaveEffect on the
             ; PDV_SPEL_Dunmer_AncestorWatch ability). ProcessDawn disarms it, so each
             ; day's protection must be re-earned with a fresh home prayer.
-            Actor homePlayer = Game.GetPlayer()
             if homePlayer && PDV_SPEL_Dunmer_AncestorWatch && !homePlayer.HasSpell(PDV_SPEL_Dunmer_AncestorWatch)
                 homePlayer.AddSpell(PDV_SPEL_Dunmer_AncestorWatch, False)
                 Trace(2, "Dunmer ancestor watch armed (" + reason + ")")
@@ -6433,7 +6659,6 @@ Function HandleDunmerPlayerHomeBonus(String reason)
             Trace(2, "Dunmer home rite silenced by curse posture (" + reason + ")")
         endIf
         NotifyDiegeticRoutineFavor("dunmer_home_bonus")
-        AwardActiveDunmerReclamationMemorySignal()
         RequestPanelRefresh()
         Trace(2, "Dunmer player-home bonus routed (" + reason + ")")
     endIf
@@ -6556,116 +6781,196 @@ Bool Function IsPlayerAtDunmerDeclaredHome(Actor playerRef)
 EndFunction
 
 Function HandleKhajiitMoonObservance(Int phaseIndex, String reason)
-    if !IsKhajiitOrigin() || !PDV_KhajiitLunarSubstrate
+    ; Compatibility ingress is intentionally inert. Only the validated
+    ; five-second Observe the Moons power may award observance credit.
+    Trace(2, "Legacy moon observance ignored: " + reason)
+EndFunction
+
+Function HandleKhajiitLunarSubstrate(String sourceId)
+    if GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT || !PDV_KhajiitLunarSubstrate
         return
     endIf
 
-    if phaseIndex < 1 || phaseIndex > 8
-        phaseIndex = GetKhajiitMoonPhaseFromGameDay(Utility.GetCurrentGameTime())
+    ; Curated books and exact quest milestones are cultural substitutes. They
+    ; claim the shared substrate day only; deity piety/focus remains on its own
+    ; specifically authored receiver route.
+    PDV_KhajiitLunarSubstrate.RecordCulturalSubstitute("khajiit_lunar_source", "p2_khajiit_lunar_" + sourceId)
+    RequestPanelRefresh()
+EndFunction
+
+Function EnsureKhajiitObserveMoonsPower()
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef || !PDV_Power_Khajiit_ObserveMoons
+        return
+    endIf
+    if IsKhajiitOrigin()
+        if !playerRef.HasSpell(PDV_Power_Khajiit_ObserveMoons)
+            playerRef.AddSpell(PDV_Power_Khajiit_ObserveMoons, False)
+        endIf
+    elseIf playerRef.HasSpell(PDV_Power_Khajiit_ObserveMoons)
+        playerRef.RemoveSpell(PDV_Power_Khajiit_ObserveMoons)
+    endIf
+EndFunction
+
+Int Function BeginKhajiitMoonObservation(Actor playerRef)
+    if !playerRef || playerRef != Game.GetPlayer() || !IsValidKhajiitMoonObservationContext(playerRef)
+        StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastReject", "invalid_start_context")
+        Trace(1, "[PDV][MOON_RITE] rejected start: invalid_start_context")
+        return 0
+    endIf
+    if _khajiitMoonObservationPending
+        if Utility.GetCurrentRealTime() - _khajiitMoonObservationStartRealTime > 30.0
+            _khajiitMoonObservationPending = False
+            Trace(1, "[PDV][MOON_RITE] cleared stale pending observation")
+        else
+            StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastReject", "already_pending")
+            Trace(1, "[PDV][MOON_RITE] rejected start: already_pending")
+            return 0
+        endIf
     endIf
 
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.KhajiitMoonObservance")
-    ; Metric pacing is owned by the shared daily budget, not the repeat multiplier.
-    ; The substrate call still runs at multiplier 0 so LastPhase/ObservanceCount record.
-    Float grantedMetric = ConsumeKhajiitLunarMetricBudget(KHAJIIT_LUNAR_MOON_METRIC)
-    Float metricMultiplier = 0.0
-    if PDV_KhajiitLunarSubstrate.MoonObservanceDelta > 0.0
-        metricMultiplier = grantedMetric / PDV_KhajiitLunarSubstrate.MoonObservanceDelta
+    _khajiitMoonObservationGeneration += 1
+    if _khajiitMoonObservationGeneration <= 0
+        _khajiitMoonObservationGeneration = 1
     endIf
-    if grantedMetric <= 0.0
-        Trace(2, "Khajiit lunar daily metric budget blocked moon observance: " + reason)
+    _khajiitMoonObservationPending = True
+    _khajiitMoonObservationStartRealTime = Utility.GetCurrentRealTime()
+    _khajiitMoonObservationCell = playerRef.GetParentCell()
+    _khajiitMoonObservationX = playerRef.GetPositionX()
+    _khajiitMoonObservationY = playerRef.GetPositionY()
+    _khajiitMoonObservationZ = playerRef.GetPositionZ()
+    StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastReject", "")
+    Trace(1, "[PDV][MOON_RITE] started token=" + _khajiitMoonObservationGeneration)
+    return _khajiitMoonObservationGeneration
+EndFunction
+
+Function ProcessPendingKhajiitMoonObservation(Int observationToken)
+    if !_khajiitMoonObservationPending || observationToken <= 0 || observationToken != _khajiitMoonObservationGeneration
+        Trace(1, "[PDV][MOON_RITE] rejected completion: stale_token=" + observationToken)
+        return
     endIf
-    Int tierBefore = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
-    PDV_KhajiitLunarSubstrate.ObserveMoonPhaseScaled(phaseIndex, metricMultiplier, reason)
-    Int tierAfter = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
-    AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_AZURAH, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
-    ; Double-route: the same observance feeds the lunar substrate (identity) AND a small
-    ; foreground piety pulse to the emphasis deity (Azurah) so piety/decay/neglect stay honest.
-    if PDV_Azura
-        AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None, multiplier)
+    if Utility.GetCurrentRealTime() - _khajiitMoonObservationStartRealTime < 5.0
+        StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastReject", "delay_incomplete")
+        Trace(1, "[PDV][MOON_RITE] rejected completion: delay_incomplete token=" + observationToken)
+        return
     endIf
-    StorageUtil.AdjustIntValue(None, "PDV.Khajiit.LunarSourceCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Khajiit.LastLunarSourceReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
-    ShowP2BookNotice(reason, "The Lunar Lattice", "The moons sit nearer to your road.")
-    SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, multiplier, "The moons marked this observance.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
-    NotifyDiegeticRoutineFavor("khajiit_moon_observance")
+    _khajiitMoonObservationPending = False
+    Actor playerRef = Game.GetPlayer()
+    if !IsValidKhajiitMoonObservationContext(playerRef) || playerRef.GetParentCell() != _khajiitMoonObservationCell
+        StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastReject", "interrupted_context")
+        Trace(1, "[PDV][MOON_RITE] rejected completion: interrupted_context token=" + observationToken)
+        return
+    endIf
+
+    Float dx = playerRef.GetPositionX() - _khajiitMoonObservationX
+    Float dy = playerRef.GetPositionY() - _khajiitMoonObservationY
+    Float dz = playerRef.GetPositionZ() - _khajiitMoonObservationZ
+    if (dx * dx) + (dy * dy) + (dz * dz) > 16384.0
+        StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastReject", "moved_too_far")
+        Trace(1, "[PDV][MOON_RITE] rejected completion: moved_too_far token=" + observationToken)
+        return
+    endIf
+
+    CompleteKhajiitMoonObservation(playerRef)
+EndFunction
+
+Bool Function IsValidKhajiitMoonObservationContext(Actor playerRef)
+    if !playerRef || !IsKhajiitOrigin() || playerRef.IsInCombat() || playerRef.IsOnMount() || playerRef.IsSwimming()
+        return False
+    endIf
+    Cell currentCell = playerRef.GetParentCell()
+    if !currentCell || currentCell.IsInterior()
+        return False
+    endIf
+    Float nowTime = Utility.GetCurrentGameTime()
+    Float hourOfDay = (nowTime - ((nowTime as Int) as Float)) * 24.0
+    return hourOfDay >= 20.0 || hourOfDay < 5.0
+EndFunction
+
+Function CompleteKhajiitMoonObservation(Actor playerRef)
+    Int phaseIndex = GetKhajiitMoonPhaseFromGameDay(Utility.GetCurrentGameTime())
+    Int focusValue = GetLunarPresidingFocus(phaseIndex)
+    Int tierBefore = TIER_NONE
+    Int tierAfter = TIER_NONE
+    Float metricBefore = 0.0
+    Float metricAfter = 0.0
+    if PDV_KhajiitLunarSubstrate
+        metricBefore = PDV_KhajiitLunarSubstrate.GetMetric()
+        tierBefore = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
+        PDV_KhajiitLunarSubstrate.ObserveMoonPhase(phaseIndex, "observe_moons_power")
+        tierAfter = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
+        metricAfter = PDV_KhajiitLunarSubstrate.GetMetric()
+    endIf
+
+    Int todayStamp = GetDevotionalDay() + 2
+    if ReadZeroReservedDevotionalDayStamp("PDV.Khajiit.MoonRite.PietyDay") != todayStamp
+        WriteZeroReservedDevotionalDayStamp("PDV.Khajiit.MoonRite.PietyDay")
+        PDV_DeityBase presidingDeity = GetKhajiitEmphasisDeity(focusValue)
+        if presidingDeity
+            AwardPietyInternal(presidingDeity, 0.4, True, "observe_moons_power")
+        endIf
+        StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
+        SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, metricAfter - metricBefore, "The moons marked this observance.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
+    endIf
+
+    ShowKhajiitMoonContemplation(focusValue)
+    StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastPhase", phaseIndex)
+    StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastFocus", focusValue)
+    StorageUtil.SetFloatValue(None, "PDV.Khajiit.MoonRite.LastSuccessTime", Utility.GetCurrentGameTime())
+    Trace(1, "[PDV][MOON_RITE] success phase=" + phaseIndex + " focus=" + focusValue + " metricDelta=" + (metricAfter - metricBefore))
     RequestPanelRefresh()
-    Trace(2, "Khajiit moon observance routed for phase " + phaseIndex + " with multiplier " + multiplier + " metric " + grantedMetric)
+EndFunction
+
+Function ShowKhajiitMoonContemplation(Int focusValue)
+    if !PDV_FLST_KhajiitMoonContemplations || focusValue < KHAJIIT_FOCUS_KHENARTHI || focusValue > KHAJIIT_FOCUS_ALKOSH
+        return
+    endIf
+    Int localIndex = Utility.RandomInt(0, 3)
+    Int messageIndex = ((focusValue - 1) * 4) + localIndex
+    Int lastIndex = StorageUtil.GetIntValue(None, "PDV.Khajiit.MoonRite.LastMessage", -1)
+    if messageIndex == lastIndex
+        localIndex = (localIndex + 1) % 4
+        messageIndex = ((focusValue - 1) * 4) + localIndex
+    endIf
+    Message contemplation = PDV_FLST_KhajiitMoonContemplations.GetAt(messageIndex) as Message
+    if contemplation
+        contemplation.Show()
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastMessage", messageIndex)
+    endIf
 EndFunction
 
 Function HandleKhajiitRoadHome(String reason)
-    HandleKhajiitRoadHomeAnchor(0, reason)
-EndFunction
-
-Function HandleKhajiitRoadHomeAnchor(Int anchorId, String reason)
     if !IsKhajiitOrigin() || !PDV_KhajiitLunarSubstrate
         return
     endIf
 
-    if anchorId > 0
-        Int lastAnchor = StorageUtil.GetIntValue(None, "PDV.Khajiit.RoadHome.LastAnchor")
-        if lastAnchor == anchorId
-            StorageUtil.AdjustIntValue(None, "PDV.Khajiit.RoadHome.RepeatRejectCount", 1)
-            Trace(2, "Khajiit road-home repeat anchor rejected: " + anchorId)
-            return
-        endIf
-
-        StorageUtil.SetIntValue(None, "PDV.Khajiit.RoadHome.LastAnchor", anchorId)
-    endIf
-
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.KhajiitRoadHome")
-    ; Metric pacing is owned by the shared daily budget, not the repeat multiplier.
-    ; The substrate call still runs at multiplier 0 so RoadHomeCount records.
-    Float grantedMetric = ConsumeKhajiitLunarMetricBudget(KHAJIIT_LUNAR_ROAD_METRIC)
-    Float metricMultiplier = 0.0
-    if PDV_KhajiitLunarSubstrate.RoadHomeDelta > 0.0
-        metricMultiplier = grantedMetric / PDV_KhajiitLunarSubstrate.RoadHomeDelta
-    endIf
-    if grantedMetric <= 0.0
-        Trace(2, "Khajiit lunar daily metric budget blocked road-home cadence: " + reason)
-    endIf
+    Float metricBefore = PDV_KhajiitLunarSubstrate.GetMetric()
     Int tierBefore = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
-    PDV_KhajiitLunarSubstrate.RecordRoadHomeCadenceScaled(metricMultiplier, reason)
+    PDV_KhajiitLunarSubstrate.RecordRoadHomeCadence(reason)
     Int tierAfter = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
     AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_KHENARTHI, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
     if PDV_Khenarthi
         AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_ROAD_HOME, None, multiplier)
     endIf
     StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
-    SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, multiplier, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
+    SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, PDV_KhajiitLunarSubstrate.GetMetric() - metricBefore, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
     NotifyDiegeticRoutineFavor("khajiit_road_home")
     RequestPanelRefresh()
-    Trace(2, "Khajiit road-home cadence routed with multiplier " + multiplier + " anchor " + anchorId + " metric " + grantedMetric)
+    Trace(2, "Khajiit road-home cadence routed with multiplier " + multiplier)
+EndFunction
+
+Function HandleKhajiitRoadHomeAnchor(Int anchorId, String reason)
+    ; Retired anchor/circuit ingress must never award metric or piety.
+    Trace(2, "Retired Khajiit road anchor ignored: " + anchorId + " (" + reason + ")")
 EndFunction
 
 ; Shared daily metric budget for the Khajiit lunar substrate (both lanes draw from
 ; one pool), mirroring ConsumeBretonPracticePointBudget. Returns the granted metric,
 ; clamped to the day's remaining budget (0 when exhausted).
 Float Function ConsumeKhajiitLunarMetricBudget(Float requestedMetric)
-    if requestedMetric <= 0.0
-        return 0.0
-    endIf
-
-    Int today = Utility.GetCurrentGameTime() as Int
-    Int budgetDay = StorageUtil.GetIntValue(None, "PDV.Khajiit.LunarMetricDay", -1)
-    if budgetDay != today
-        StorageUtil.SetIntValue(None, "PDV.Khajiit.LunarMetricDay", today)
-        StorageUtil.SetFloatValue(None, "PDV.Khajiit.LunarMetricToday", 0.0)
-    endIf
-
-    Float metricToday = StorageUtil.GetFloatValue(None, "PDV.Khajiit.LunarMetricToday")
-    Float remaining = KHAJIIT_LUNAR_METRIC_DAILY_MAX - metricToday
-    if remaining <= 0.0
-        return 0.0
-    endIf
-
-    Float appliedMetric = requestedMetric
-    if appliedMetric > remaining
-        appliedMetric = remaining
-    endIf
-    StorageUtil.SetFloatValue(None, "PDV.Khajiit.LunarMetricToday", metricToday + appliedMetric)
-    return appliedMetric
+    ; Compatibility-only. PDV_SubstrateBase owns the one daily +4 budget.
+    return 0.0
 EndFunction
 
 ; Direct boundary seed for reward/UI proof; explicitly bypasses the daily metric
@@ -6783,6 +7088,7 @@ Function HandleKhajiitAlkoshNamedDragon(String reason)
     if PDV_Alkosh
         AwardCuratedSignalScaled(PDV_Alkosh, PDV_Alkosh.SIGNAL_NAMED_DRAGON, None, multiplier)
     endIf
+    AwardKhajiitSubstrateSubstitute("khajiit_alkosh_milestone", reason)
     Trace(1, "Khajiit Alkosh named-dragon beat routed (" + reason + ")")
 EndFunction
 
@@ -6819,6 +7125,7 @@ Function HandleKhajiitBaanDarReversal(String reason)
     if PDV_BaanDar
         AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_BANDIT_ROAD, None, multiplier)
     endIf
+    AwardKhajiitSubstrateSubstitute("khajiit_baandar_reversal", reason)
     Trace(1, "Khajiit Baan Dar near-fatal reversal routed (" + reason + ")")
 EndFunction
 
@@ -6933,6 +7240,7 @@ Function HandleKhajiitKhenarthiCaravanAid(String reason)
         return
     endIf
     AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_CARAVAN_AID, None, multiplier)
+    AwardKhajiitSubstrateSubstitute("khajiit_caravan_defense", reason)
     SurfaceReservedSignal(PDV_Khenarthi, "Caravan defended", "marks the caravan road kept safe.")
     Trace(2, "Khajiit Khenarthi caravan-aid routed (" + reason + ")")
 EndFunction
@@ -6949,8 +7257,15 @@ Function HandleKhajiitRajhinLegendMade(String reason)
         return
     endIf
     AwardCuratedSignalScaled(PDV_Rajhin, PDV_Rajhin.SIGNAL_LEGEND_MADE, None, multiplier)
+    AwardKhajiitSubstrateSubstitute("khajiit_rajhin_notable_theft", reason)
     SurfaceReservedSignal(PDV_Rajhin, "Legend made", "marks a theft worth remembering.")
     Trace(2, "Khajiit Rajhin legend-made routed (" + reason + ")")
+EndFunction
+
+Function AwardKhajiitSubstrateSubstitute(String sourceId, String reason)
+    if IsKhajiitOrigin() && PDV_KhajiitLunarSubstrate
+        PDV_KhajiitLunarSubstrate.RecordCulturalSubstitute(sourceId, reason)
+    endIf
 EndFunction
 
 ; Mephala/Boethiah serve BOTH the Dunmer Reclamations and the Khajiit roster, so
@@ -7287,6 +7602,7 @@ Function HandleArgonianHistMaintenance(String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianHistMaintenance")
+    Float metricBefore = PDV_ArgonianHistSubstrate.GetMetric()
     Int tierBefore = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     PDV_ArgonianHistSubstrate.RecordHistMaintenanceScaled(multiplier, reason)
     RefreshArgonianHistPosture(reason)
@@ -7300,7 +7616,7 @@ Function HandleArgonianHistMaintenance(String reason)
     StorageUtil.SetStringValue(None, "PDV.Argonian.LastHistSourceReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
     ShowP2BookNotice(reason, "The Hist remembers", "The reading carries the smell of home.")
-    SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "The Hist memory stirred.", "hist", GetArgonianHistPostureLabel())
+    SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The Hist memory stirred.", "journal", GetArgonianCulturalPracticeLabel())
     RequestPanelRefresh()
     Trace(2, "Argonian Hist maintenance routed with multiplier " + multiplier)
 EndFunction
@@ -7311,16 +7627,12 @@ Function HandleArgonianPeopleSupport(String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianPeopleSupport")
+    Float metricBefore = PDV_ArgonianHistSubstrate.GetMetric()
     Int tierBefore = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     PDV_ArgonianHistSubstrate.RecordPeopleSupportScaled(multiplier, reason)
     RefreshArgonianHistPosture(reason)
     Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
-    ; Double-route: small honest +1 Hist pulse (the universal layer stays Hist-honest).
-    if PDV_Hist
-        AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
-    endIf
-    StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
-    SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "Your people were supported.", "hist", GetArgonianHistPostureLabel())
+    SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "Your people were supported.", "journal", GetArgonianCulturalPracticeLabel())
     RequestPanelRefresh()
     Trace(2, "Argonian People support routed with multiplier " + multiplier)
 EndFunction
@@ -7331,16 +7643,12 @@ Function HandleArgonianBedOfChoiceReturn(String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianBedOfChoice")
+    Float metricBefore = PDV_ArgonianHistSubstrate.GetMetric()
     Int tierBefore = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     PDV_ArgonianHistSubstrate.RecordBedOfChoiceReturnScaled(multiplier, reason)
     RefreshArgonianHistPosture(reason)
     Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
-    ; Double-route: small honest +1 Hist pulse (the universal layer stays Hist-honest).
-    if PDV_Hist
-        AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
-    endIf
-    StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
-    SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "The chosen rest took root.", "hist", GetArgonianHistPostureLabel())
+    SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The chosen rest took root.", "journal", GetArgonianCulturalPracticeLabel())
     RequestPanelRefresh()
     Trace(2, "Argonian bed-of-choice return routed with multiplier " + multiplier)
 EndFunction
@@ -7351,15 +7659,12 @@ Function HandleArgonianVoidSignal(String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianVoidSignal")
+    Float metricBefore = PDV_ArgonianHistSubstrate.GetMetric()
     Int tierBefore = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     PDV_ArgonianHistSubstrate.RecordVoidSignalScaled(multiplier, reason)
     RefreshArgonianHistPosture(reason)
     Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
-    ; Double-route: the universal layer stays Hist-honest even on the Void route (small +1 Hist
-    ; pulse). The Sithis threshold pulse only lands once the Void is fully active (>=3 signals).
-    if PDV_Hist
-        AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
-    endIf
+    ; Void piety belongs to Sithis only after the relation is explicitly active.
     if PDV_Sithis && PDV_ArgonianHistSubstrate.IsVoidFullyActive()
         AwardCuratedSignalScaled(PDV_Sithis, PDV_Sithis.SIGNAL_VOID_THRESHOLD, None, multiplier)
     endIf
@@ -7368,8 +7673,7 @@ Function HandleArgonianVoidSignal(String reason)
     if PDV_ArgonianHistSubstrate.IsVoidFullyActive() && PDV_ArgonianHistSubstrate.GetHistRelation() <= PDV_ArgonianHistSubstrate.HistNonCurseFloor
         EmitHistVoidOverreachMinus(reason)
     endIf
-    StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
-    SendPrismaSubstrateProgress("hist", tierBefore, tierAfter, multiplier, "The Void was noticed.", "hist", GetArgonianHistPostureLabel())
+    SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The Void was noticed.", "journal", GetArgonianCulturalPracticeLabel())
     RequestPanelRefresh()
     Trace(2, "Argonian Void signal routed with multiplier " + multiplier)
 EndFunction
@@ -7385,6 +7689,7 @@ Function RunDawnRefreshArgonianHist()
     endIf
 
     PDV_ArgonianHistSubstrate.ProcessHistDistanceDawn(curseActive, "dawn")
+    PDV_ArgonianHistSubstrate.ProcessCulturalPracticeDawn(curseActive, "dawn")
     RefreshArgonianHistPosture("dawn")
 EndFunction
 
@@ -8553,14 +8858,11 @@ Function RecordNordAncestorSpine(String reason, Float multiplier)
 
     Int tierBefore = 0
     if PDV_NordAncestorSubstrate
+        Float metricBefore = PDV_NordAncestorSubstrate.GetMetric()
         tierBefore = PDV_NordAncestorSubstrate.GetSubstrateTier()
         PDV_NordAncestorSubstrate.RecordAncestorStandingScaled(multiplier, reason)
         Int tierAfter = PDV_NordAncestorSubstrate.GetSubstrateTier()
-        SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "The old line remembered.", "shor", GetNordAncestorLayerLabel())
-    endIf
-
-    if PDV_Shor
-        AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+        SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The old line remembered.", "journal", GetNordAncestorLayerLabel())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Nord.AncestralStanding", multiplier)
@@ -8577,14 +8879,11 @@ Function RecordNordAncestralRest(String reason, Float multiplier)
 
     Int tierBefore = 0
     if PDV_NordAncestorSubstrate
+        Float metricBefore = PDV_NordAncestorSubstrate.GetMetric()
         tierBefore = PDV_NordAncestorSubstrate.GetSubstrateTier()
         PDV_NordAncestorSubstrate.RecordAncestralRestScaled(multiplier, reason)
         Int tierAfter = PDV_NordAncestorSubstrate.GetSubstrateTier()
-        SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "The old line rested near.", "shor", GetNordAncestorLayerLabel())
-    endIf
-
-    if PDV_Shor
-        AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+        SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The old line rested near.", "journal", GetNordAncestorLayerLabel())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Nord.AncestralStanding", multiplier)
@@ -8602,14 +8901,11 @@ Function RecordNordHearthReturn(String reason, Float multiplier)
 
     Int tierBefore = 0
     if PDV_NordAncestorSubstrate
+        Float metricBefore = PDV_NordAncestorSubstrate.GetMetric()
         tierBefore = PDV_NordAncestorSubstrate.GetSubstrateTier()
         PDV_NordAncestorSubstrate.RecordHearthReturnScaled(multiplier, reason)
         Int tierAfter = PDV_NordAncestorSubstrate.GetSubstrateTier()
-        SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, multiplier, "The hearth remembered your return.", "shor", GetNordAncestorLayerLabel())
-    endIf
-
-    if PDV_Shor
-        AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+        SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The hearth remembered your return.", "journal", GetNordAncestorLayerLabel())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Nord.AncestralStanding", multiplier)
@@ -8931,6 +9227,10 @@ Function MaybeEmitHircineStigmaPrice(Float stigmaBefore, Float stigmaAfter)
 EndFunction
 
 Function HandleTalosShrineDefiance(String reason)
+    if GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL && !IsImperialVampireStateActive()
+        StorageUtil.SetIntValue(None, "PDV.Imperial.TalosBroadUnlocked", 1)
+        Trace(1, "Imperial broad Talos roster unlocked by shrine defiance: " + reason)
+    endIf
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.TalosShrineDefiance")
     if PDV_Talos
         AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
@@ -9216,7 +9516,11 @@ Function HandleAltmerDawnSteadiness(String reason)
     TryActivateContextualFavor(FAVOR_LANE_ALTMER, FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
     if multiplier > 0.0
         AwardAltmerDawnSignal(reason, multiplier)
-        AwardAltmerAncestorSpinePulse(multiplier, reason)
+        ; Passive dawn acknowledgement is piety-only. Curated Auri-El/Magnus
+        ; books and the exact MG08 source are finite heritage substitutes.
+        if StringContainsToken(reason, "eventbus_p2_altmer_auriel_") || StringContainsToken(reason, "eventbus_p2_altmer_magnus_")
+            AwardAltmerAncestorSpinePulse(1.0, "curated_heritage_" + reason)
+        endIf
     endIf
     if reason == "eventbus_p2_altmer_auriel_po3_book_altmer_auriel"
         ShowP2BookNotice(reason, "Auri-El's dawn", "The morning rite settles deeper.")
@@ -9282,6 +9586,10 @@ Function HandleAltmerMagicSkillIncrease(String skillName)
     Float skillValue = playerRef.GetActorValue(skillName)
     Int awardedCount = 0
 
+    ; Every real increase in one of the six magic skills may claim today's
+    ; substrate credit; milestone piety remains a separate finite signal.
+    AwardAltmerAncestorSpinePulse(1.0, "magic_skill_increase_" + skillName)
+
     awardedCount += TryAwardAltmerMagicMilestone(skillName, skillValue, 25)
     awardedCount += TryAwardAltmerMagicMilestone(skillName, skillValue, 50)
     awardedCount += TryAwardAltmerMagicMilestone(skillName, skillValue, 75)
@@ -9291,26 +9599,22 @@ Function HandleAltmerMagicSkillIncrease(String skillName)
         StorageUtil.SetStringValue(None, "PDV.Altmer.LastMagicMilestoneSkill", skillName)
         StorageUtil.SetIntValue(None, "PDV.Altmer.LastMagicMilestoneCount", awardedCount)
         StorageUtil.SetFloatValue(None, "PDV.Altmer.LastMagicMilestoneTime", Utility.GetCurrentGameTime())
-        AwardAltmerAncestorSpinePulse(awardedCount as Float, "magic_milestone_" + skillName)
         Trace(2, "Altmer magic milestone routed: " + skillName + " x" + awardedCount)
     endIf
 EndFunction
 
 Function AwardAltmerAncestorSpinePulse(Float multiplier, String reason)
-    if !IsAltmerOrigin() || multiplier <= 0.0
+    if !IsAltmerOrigin() || multiplier <= 0.0 || IsAltmerFavorSuppressedByCurse()
         return
     endIf
 
     Int tierBefore = 0
     if PDV_AltmerAncestorSubstrate
+        Float metricBefore = PDV_AltmerAncestorSubstrate.GetMetric()
         tierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
         PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(multiplier, reason)
         Int tierAfter = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
-        SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, multiplier, "The old line holds its shape.", "auriel", GetAltmerHeritageLayerLabel())
-    endIf
-
-    if PDV_AuriEl
-        AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+        SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore, "The old line holds its shape.", "journal", GetAltmerHeritageTierName())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Altmer.AncestralStanding", multiplier)
@@ -9489,6 +9793,7 @@ Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, Stri
     Int i = 0
     Int count = PDV_FLST_AllDeities.GetSize()
     Int scoredCount = 0
+    BeginBroadPantheonEvent("shout_attack_" + eventType + "_" + reason)
 
     while i < count
         PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
@@ -9502,6 +9807,7 @@ Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, Stri
 
         i += 1
     endWhile
+    FlushBroadPantheonEvent()
 
     Trace(2, "Shout attack routed: event " + eventType + ", scored deities " + scoredCount + " (" + reason + ")")
 EndFunction
@@ -10647,6 +10953,7 @@ Function ProcessDawn()
     EnsureAkatoshRuntimeIdentity()
     RunDawnAwardAltmerAuriElDawn()
     RunDawnConsolidateScratch()
+    ProcessBroadPantheonDawn()
     RunDawnConsolidateDaedricWeek()
     RunDawnRefreshTrackStates()
     RunDawnApplyDecayNoop()
@@ -10800,18 +11107,18 @@ Function RecordBookOfDaysFedName(String displayName)
 EndFunction
 
 Function RunDawnAwardAltmerAuriElDawn()
-    if !IsAltmerOrigin() || !PDV_AuriEl
+    if !IsAltmerOrigin() || !PDV_AuriEl || IsAltmerFavorSuppressedByCurse()
         return
     endIf
 
-    Int dawnDay = (Utility.GetCurrentGameTime() - 0.25) as Int
-    if StorageUtil.GetIntValue(None, "PDV.Altmer.AuriElDawn.LastDay") == dawnDay
+    Int dawnDayStamp = GetDevotionalDay() + 2
+    if StorageUtil.GetIntValue(None, "PDV.Altmer.AuriElDawn.LastDay") == dawnDayStamp
         return
     endIf
 
-    StorageUtil.SetIntValue(None, "PDV.Altmer.AuriElDawn.LastDay", dawnDay)
+    StorageUtil.SetIntValue(None, "PDV.Altmer.AuriElDawn.LastDay", dawnDayStamp)
     AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 2.0)
-    Trace(2, "Altmer Auri-El dawn acknowledgment routed for day " + dawnDay)
+    Trace(2, "Altmer Auri-El dawn acknowledgment routed for devotional day " + (dawnDayStamp - 2))
 EndFunction
 
 Function RunDawnConsolidateScratch()
@@ -11408,14 +11715,14 @@ Function DebugSetBroadWorship()
 EndFunction
 
 ; Debug: seed the player's race broad-worship lane to its T2 reward so the reward/UI
-; surface is testable. The lanes use origin-specific service accumulators (NOT deity
-; piety), so "Apply target piety" cannot reach them. For Breton this seeds the active
-; tradition to 50 practice points; it is not pacing proof.
+; surface is testable. Imperial uses the manager-owned broad-pantheon pool directly;
+; frozen migration counters are never written. Breton seeds its separate active
+; tradition to 50 practice points. This is not pacing proof.
 Function DebugSeedBroadLane()
     SetBroadWorship()
     Int origin = GetPlayerOriginRaceIndex()
     if origin == ORIGIN_IMPERIAL
-        StorageUtil.SetIntValue(None, "PDV.Imperial.CivicServiceCount", 6)
+        SetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL, BROAD_PANTHEON_FAITHFUL_THRESHOLD, "debug_seed_broad_lane")
     elseIf origin == ORIGIN_BRETON
         SetBretonPracticeCount(GetBretonTraditionValue(), BRETON_PRACTICE_DEVOTED_POINTS)
     elseIf origin == ORIGIN_ORC
@@ -11522,19 +11829,413 @@ Function DebugResetDeityByIndex(Int deityIndex)
     endIf
 EndFunction
 
-Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry, String reason = "")
+Function BeginBroadPantheonEvent(String logicalEventId)
+    ; Papyrus may schedule independent event stacks on this quest. Do not let a
+    ; second logical act borrow the first stack's temporary accumulator.
+    Float waitStarted = Utility.GetCurrentRealTime()
+    while _broadPantheonEventDepth > 0 && _broadPantheonEventId != logicalEventId
+        Utility.WaitMenuMode(0.01)
+        if Utility.GetCurrentRealTime() - waitStarted >= 2.0
+            Trace(1, "[PDV][BROAD_SCOPE_ABORT] discarded stalled logical event " + _broadPantheonEventId + " before " + logicalEventId)
+            ClearBroadPantheonEventScope()
+        endIf
+    endWhile
+    if _broadPantheonEventDepth == 0
+        _broadPantheonEventId = logicalEventId
+        _broadPantheonEventPool = GetActiveBroadPantheonPoolId()
+        _broadPantheonBestPositive = 0.0
+        _broadPantheonWorstNegative = 0.0
+    endIf
+    _broadPantheonEventDepth += 1
+EndFunction
+
+Function AccumulateBroadPantheonDelta(PDV_DeityBase deity, Float appliedDelta)
+    if _broadPantheonEventDepth <= 0 || _broadPantheonEventPool == "" || !deity
+        return
+    endIf
+    if !IsDeityEligibleForBroadPantheon(deity, _broadPantheonEventPool)
+        return
+    endIf
+
+    if appliedDelta > 0.0 && appliedDelta > _broadPantheonBestPositive
+        _broadPantheonBestPositive = appliedDelta
+    elseIf appliedDelta < 0.0 && appliedDelta < _broadPantheonWorstNegative
+        _broadPantheonWorstNegative = appliedDelta
+    endIf
+EndFunction
+
+Function FlushBroadPantheonEvent()
+    if _broadPantheonEventDepth > 1
+        _broadPantheonEventDepth -= 1
+        return
+    endIf
+
+    Float chosenDelta = 0.0
+    if _broadPantheonBestPositive > 0.0
+        chosenDelta = _broadPantheonBestPositive
+    elseIf _broadPantheonWorstNegative < 0.0
+        chosenDelta = _broadPantheonWorstNegative
+    endIf
+
+    if _broadPantheonEventPool != "" && chosenDelta != 0.0
+        Float nowTime = Utility.GetCurrentGameTime()
+        Bool duplicateEvent = IsRecentBroadPantheonEventDuplicate(_broadPantheonEventPool, _broadPantheonEventId, nowTime)
+        if !duplicateEvent
+            CatchUpBroadPantheonDecayBeforeCurrentDay(_broadPantheonEventPool)
+            if GetBroadPantheonScratch(_broadPantheonEventPool) == 0.0
+                WriteZeroReservedDevotionalDayStamp(GetBroadPantheonScratchDayKey(_broadPantheonEventPool))
+            endIf
+            StorageUtil.AdjustFloatValue(None, GetBroadPantheonScratchKey(_broadPantheonEventPool), chosenDelta)
+            StorageUtil.SetStringValue(None, GetBroadPantheonLastEventKey(_broadPantheonEventPool), _broadPantheonEventId)
+            StorageUtil.SetFloatValue(None, GetBroadPantheonLastEventTimeKey(_broadPantheonEventPool), nowTime)
+            RememberBroadPantheonEvent(_broadPantheonEventPool, _broadPantheonEventId, nowTime)
+            if chosenDelta > 0.0
+                WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(_broadPantheonEventPool))
+            endIf
+        endIf
+    endIf
+
+    ClearBroadPantheonEventScope()
+EndFunction
+
+Function ClearBroadPantheonEventScope()
+    _broadPantheonEventDepth = 0
+    _broadPantheonEventId = ""
+    _broadPantheonEventPool = ""
+    _broadPantheonBestPositive = 0.0
+    _broadPantheonWorstNegative = 0.0
+EndFunction
+
+Bool Function IsRecentBroadPantheonEventDuplicate(String poolId, String logicalEventId, Float nowTime)
+    if logicalEventId == ""
+        return False
+    endIf
+    String idKey = GetBroadPantheonRecentEventIdsKey(poolId)
+    String timeKey = GetBroadPantheonRecentEventTimesKey(poolId)
+    Int count = StorageUtil.StringListCount(None, idKey)
+    Int index = count - 1
+    while index >= 0
+        if StorageUtil.StringListGet(None, idKey, index) == logicalEventId
+            Float priorTime = StorageUtil.FloatListGet(None, timeKey, index)
+            if priorTime > 0.0 && (nowTime - priorTime) < 0.02
+                return True
+            endIf
+        endIf
+        index -= 1
+    endWhile
+    return False
+EndFunction
+
+Function RememberBroadPantheonEvent(String poolId, String logicalEventId, Float nowTime)
+    String idKey = GetBroadPantheonRecentEventIdsKey(poolId)
+    String timeKey = GetBroadPantheonRecentEventTimesKey(poolId)
+    while StorageUtil.StringListCount(None, idKey) >= 8
+        StorageUtil.StringListRemoveAt(None, idKey, 0)
+        StorageUtil.FloatListRemoveAt(None, timeKey, 0)
+    endWhile
+    StorageUtil.StringListAdd(None, idKey, logicalEventId, True)
+    StorageUtil.FloatListAdd(None, timeKey, nowTime, True)
+EndFunction
+
+String Function GetActiveBroadPantheonPoolId()
+    if GetPatronState() != PATRON_STATE_BROAD
+        return ""
+    endIf
+    Int origin = GetPlayerOriginRaceIndex()
+    if origin == ORIGIN_IMPERIAL
+        if IsImperialVampireStateActive()
+            return ""
+        endIf
+        return BROAD_PANTHEON_IMPERIAL
+    elseIf origin == ORIGIN_NORD
+        if GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
+            return BROAD_PANTHEON_NORD_NINE
+        endIf
+        return BROAD_PANTHEON_NORD_OLD
+    endIf
+    return ""
+EndFunction
+
+Bool Function IsDeityEligibleForBroadPantheon(PDV_DeityBase deity, String poolId)
+    if !deity
+        return False
+    endIf
+    if poolId == BROAD_PANTHEON_IMPERIAL
+        if deity == PDV_Talos
+            return StorageUtil.GetIntValue(None, "PDV.Imperial.TalosBroadUnlocked") == 1
+        endIf
+        return deity == PDV_Akatosh || deity == PDV_Arkay || deity == PDV_Dibella || deity == PDV_Julianos || deity == PDV_Kynareth || deity == PDV_Mara || deity == PDV_Stendarr || deity == PDV_Zenithar
+    elseIf poolId == BROAD_PANTHEON_NORD_OLD
+        return deity == PDV_Kyne || deity == PDV_Shor || deity == PDV_Tsun || deity == PDV_Stuhn || deity == PDV_Mara || deity == PDV_Arkay || deity == PDV_Dibella || deity == PDV_Talos
+    elseIf poolId == BROAD_PANTHEON_NORD_NINE
+        return deity == PDV_Akatosh || deity == PDV_Arkay || deity == PDV_Dibella || deity == PDV_Julianos || deity == PDV_Kynareth || deity == PDV_Mara || deity == PDV_Stendarr || deity == PDV_Zenithar || deity == PDV_Talos
+    endIf
+    return False
+EndFunction
+
+Float Function GetBroadPantheonStanding(String poolId)
+    if poolId == ""
+        return 0.0
+    endIf
+    return StorageUtil.GetFloatValue(None, GetBroadPantheonStandingKey(poolId))
+EndFunction
+
+Float Function GetBroadPantheonScratch(String poolId)
+    if poolId == ""
+        return 0.0
+    endIf
+    return StorageUtil.GetFloatValue(None, GetBroadPantheonScratchKey(poolId))
+EndFunction
+
+Function SetBroadPantheonStanding(String poolId, Float standing, String reason = "")
+    if poolId == ""
+        return
+    endIf
+    StorageUtil.SetFloatValue(None, GetBroadPantheonStandingKey(poolId), ClampValue(standing, 0.0, BROAD_PANTHEON_POOL_MAX))
+    StorageUtil.SetStringValue(None, GetBroadPantheonLastEventKey(poolId), reason)
+EndFunction
+
+Function ResetBroadPantheonPool(String poolId)
+    SetBroadPantheonStanding(poolId, 0.0, "debug_reset")
+    StorageUtil.SetFloatValue(None, GetBroadPantheonScratchKey(poolId), 0.0)
+    StorageUtil.SetIntValue(None, GetBroadPantheonScratchDayKey(poolId), 0)
+    StorageUtil.SetIntValue(None, GetBroadPantheonScratchDayKey(poolId) + ".Encoding", 2)
+    StorageUtil.SetIntValue(None, GetBroadPantheonLastGainDayKey(poolId), 0)
+    WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastProcessedDayKey(poolId))
+    StorageUtil.SetFloatValue(None, GetBroadPantheonLastEventTimeKey(poolId), 0.0)
+    StorageUtil.StringListClear(None, GetBroadPantheonRecentEventIdsKey(poolId))
+    StorageUtil.FloatListClear(None, GetBroadPantheonRecentEventTimesKey(poolId))
+    SyncBroadPantheonRewards(Game.GetPlayer())
+EndFunction
+
+Function ProcessBroadPantheonDawn()
+    Float signedCap = PIETY_DAILY_MAX_DELTA
+    if PDV_ModePresetRef
+        signedCap = signedCap * PDV_ModePresetRef.DailyCapScalar()
+    endIf
+    ; Every pool is processed, including a suppressed pool outside activePool,
+    ; so commitment and Nord baseline switching never pause the
+    ; BROAD_PANTHEON_DECAY_PER_DAWN inactivity rule.
+    ProcessOneBroadPantheonDawn(BROAD_PANTHEON_IMPERIAL, signedCap)
+    ProcessOneBroadPantheonDawn(BROAD_PANTHEON_NORD_OLD, signedCap)
+    ProcessOneBroadPantheonDawn(BROAD_PANTHEON_NORD_NINE, signedCap)
+    SyncBroadPantheonRewards(Game.GetPlayer())
+EndFunction
+
+Function ProcessOneBroadPantheonDawn(String poolId, Float signedCap)
+    ProcessBroadPantheonThroughDay(poolId, GetDevotionalDay(), signedCap, "dawn")
+EndFunction
+
+Function ProcessBroadPantheonThroughDay(String poolId, Int targetDay, Float signedCap, String reason)
+    Int processedStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonLastProcessedDayKey(poolId))
+    Int lastProcessedDay = targetDay - 1
+    if processedStamp <= 0
+        ; Existing saves process the target dawn once without inventing older
+        ; retroactive inactivity before this runtime knew the key.
+        lastProcessedDay = targetDay - 1
+    else
+        lastProcessedDay = processedStamp - 2
+    endIf
+    if targetDay <= lastProcessedDay
+        return
+    endIf
+
+    Float standing = GetBroadPantheonStanding(poolId)
+    Float scratch = GetBroadPantheonScratch(poolId)
+    Int scratchStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonScratchDayKey(poolId))
+    Int scratchDay = targetDay
+    if scratchStamp > 0
+        scratchDay = scratchStamp - 2
+    endIf
+    Bool scratchEligible = scratch != 0.0 && scratchDay <= targetDay
+    Float applied = 0.0
+    if scratchEligible
+        applied = ClampValue(scratch * GAIN_RATE_SCALE, 0.0 - signedCap, signedCap)
+        if applied != 0.0
+            standing = ClampValue(standing + applied, 0.0, BROAD_PANTHEON_POOL_MAX)
+            SetBroadPantheonStanding(poolId, standing, reason + "_fold")
+            if applied > 0.0 && ReadZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(poolId)) <= 0
+                StorageUtil.SetIntValue(None, GetBroadPantheonLastGainDayKey(poolId), scratchDay + 2)
+                StorageUtil.SetIntValue(None, GetBroadPantheonLastGainDayKey(poolId) + ".Encoding", 2)
+            endIf
+        endIf
+        StorageUtil.SetFloatValue(None, GetBroadPantheonScratchKey(poolId), 0.0)
+        StorageUtil.SetIntValue(None, GetBroadPantheonScratchDayKey(poolId), 0)
+    endIf
+
+    if standing > 0.0
+        Int lastGainStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(poolId))
+        Int lastGainDay = lastGainStamp - 2
+        Int firstDecayDay = lastProcessedDay + 1
+        ; A folded positive or negative scratch is an activity day.  It may
+        ; change standing, but can never also suffer inactivity decay.
+        if scratchEligible && firstDecayDay <= scratchDay
+            firstDecayDay = scratchDay + 1
+        endIf
+        if lastGainStamp > 0 && firstDecayDay <= lastGainDay + (BROAD_PANTHEON_DECAY_GRACE_DAYS as Int)
+            firstDecayDay = lastGainDay + (BROAD_PANTHEON_DECAY_GRACE_DAYS as Int) + 1
+        endIf
+        Int elapsedDecayDays = targetDay - firstDecayDay + 1
+        if elapsedDecayDays > 0
+            SetBroadPantheonStanding(poolId, standing - (BROAD_PANTHEON_DECAY_PER_DAWN * elapsedDecayDays), reason + "_inactive_decay")
+        endIf
+    endIf
+    StorageUtil.SetIntValue(None, GetBroadPantheonLastProcessedDayKey(poolId), targetDay + 2)
+    StorageUtil.SetIntValue(None, GetBroadPantheonLastProcessedDayKey(poolId) + ".Encoding", 2)
+    Trace(1, "[PDV][BROAD_CATCHUP] pool=" + poolId + " through=" + targetDay + " applied=" + applied + " standing=" + GetBroadPantheonStanding(poolId))
+EndFunction
+
+Function CatchUpBroadPantheonDecayBeforeCurrentDay(String poolId)
+    Int targetDay = GetDevotionalDay() - 1
+    Float signedCap = PIETY_DAILY_MAX_DELTA
+    if PDV_ModePresetRef
+        signedCap = signedCap * PDV_ModePresetRef.DailyCapScalar()
+    endIf
+    ProcessBroadPantheonThroughDay(poolId, targetDay, signedCap, "pre_event_catchup")
+EndFunction
+
+Function MigrateBroadPantheonPools()
+    if StorageUtil.GetIntValue(None, "PDV.BroadPantheon.Version") >= BROAD_PANTHEON_SCHEMA_VERSION
+        return
+    endIf
+
+    Float imperialSeed = (StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount") as Float) * 50.0 / 6.0
+    Float oldWaysSeed = (StorageUtil.GetIntValue(None, "PDV.Nord.OldWaysContextCount") as Float) * 50.0 / 6.0
+    SetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL, imperialSeed, "migration_v1")
+    SetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD, oldWaysSeed, "migration_v1")
+
+    Float highestNineDivines = 0.0
+    if GetPlayerOriginRaceIndex() == ORIGIN_NORD && GetPatronState() == PATRON_STATE_BROAD && GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
+        highestNineDivines = GetPiety(PDV_Akatosh)
+        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Arkay))
+        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Dibella))
+        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Julianos))
+        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Kynareth))
+        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Mara))
+        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Stendarr))
+        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Zenithar))
+        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Talos))
+        SetBroadPantheonStanding(BROAD_PANTHEON_NORD_NINE, highestNineDivines, "migration_v1_highest")
+    endIf
+
+    if imperialSeed > 0.0
+        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(BROAD_PANTHEON_IMPERIAL))
+    endIf
+    if oldWaysSeed > 0.0
+        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(BROAD_PANTHEON_NORD_OLD))
+    endIf
+    if highestNineDivines > 0.0
+        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(BROAD_PANTHEON_NORD_NINE))
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.BroadPantheon.Version", BROAD_PANTHEON_SCHEMA_VERSION)
+    SyncBroadPantheonRewards(Game.GetPlayer())
+EndFunction
+
+String Function GetBroadPantheonStandingKey(String poolId)
+    return "PDV.BroadPantheon." + poolId + ".Standing"
+EndFunction
+
+String Function GetBroadPantheonScratchKey(String poolId)
+    return "PDV.BroadPantheon." + poolId + ".Scratch"
+EndFunction
+
+String Function GetBroadPantheonScratchDayKey(String poolId)
+    return "PDV.BroadPantheon." + poolId + ".ScratchDay"
+EndFunction
+
+String Function GetBroadPantheonLastEventKey(String poolId)
+    return "PDV.BroadPantheon." + poolId + ".LastEvent"
+EndFunction
+
+String Function GetBroadPantheonLastEventTimeKey(String poolId)
+    return "PDV.BroadPantheon." + poolId + ".LastEventTime"
+EndFunction
+
+String Function GetBroadPantheonRecentEventIdsKey(String poolId)
+    return "PDV.BroadPantheon." + poolId + ".RecentEventIds"
+EndFunction
+
+String Function GetBroadPantheonRecentEventTimesKey(String poolId)
+    return "PDV.BroadPantheon." + poolId + ".RecentEventTimes"
+EndFunction
+
+String Function GetBroadPantheonLastGainDayKey(String poolId)
+    return "PDV.BroadPantheon." + poolId + ".LastGainDay"
+EndFunction
+
+String Function GetBroadPantheonLastProcessedDayKey(String poolId)
+    return "PDV.BroadPantheon." + poolId + ".LastProcessedDay"
+EndFunction
+
+Int Function GetDevotionalDay()
+    Float shiftedTime = Utility.GetCurrentGameTime() - 0.25
+    Int truncatedDay = shiftedTime as Int
+    if shiftedTime < 0.0 && shiftedTime != (truncatedDay as Float)
+        return truncatedDay - 1
+    endIf
+    return truncatedDay
+EndFunction
+
+; Manager-owned daily stamps use the same zero-reserved encoding as substrates.
+; Existing +1 stamps are migrated once per key through a sibling encoding flag.
+Int Function ReadZeroReservedDevotionalDayStamp(String keyName)
+    Int stamp = StorageUtil.GetIntValue(None, keyName)
+    String encodingKey = keyName + ".Encoding"
+    if StorageUtil.GetIntValue(None, encodingKey) < 2
+        if stamp > 0
+            stamp += 1
+            StorageUtil.SetIntValue(None, keyName, stamp)
+        endIf
+        StorageUtil.SetIntValue(None, encodingKey, 2)
+    endIf
+    return stamp
+EndFunction
+
+Function WriteZeroReservedDevotionalDayStamp(String keyName)
+    StorageUtil.SetIntValue(None, keyName, GetDevotionalDay() + 2)
+    StorageUtil.SetIntValue(None, keyName + ".Encoding", 2)
+EndFunction
+
+Float Function MaxFloat(Float firstValue, Float secondValue)
+    if secondValue > firstValue
+        return secondValue
+    endIf
+    return firstValue
+EndFunction
+
+Bool Function IsImperialVampireStateActive()
+    return StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHalt") == 1
+EndFunction
+
+Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry, String reason = "")
+    Bool ownsBroadEvent = _broadPantheonEventDepth == 0
+    if ownsBroadEvent
+        _broadPantheonSelfEventSequence += 1
+        if _broadPantheonSelfEventSequence <= 0
+            _broadPantheonSelfEventSequence = 1
+        endIf
+        String eventLabel = reason
+        if eventLabel == ""
+            eventLabel = "piety"
+        endIf
+        BeginBroadPantheonEvent(eventLabel + "_auto_" + _broadPantheonSelfEventSequence)
+    endIf
     Form deityForm = GetDeityFormOrNone(deity)
     if !deityForm
         if GetDebugLevel() >= 1
             Debug.Trace("[PDV] AwardPiety skipped: no deity supplied.")
         endIf
-        return
+        if ownsBroadEvent
+            FlushBroadPantheonEvent()
+        endIf
+        return 0.0
     endIf
 
     EnsureDeityState(deity)
 
     Int stance = deity.GetStanceForPlayer()
     Float appliedAmount = RunGainPipeline(deity, amount, stance)
+    AccumulateBroadPantheonDelta(deity, appliedAmount)
 
     StorageUtil.AdjustFloatValue(deityForm, "PDV.PietyToday", appliedAmount)
     if appliedAmount != 0.0
@@ -11572,6 +12273,10 @@ Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry
     if appliedAmount != 0.0
         RequestPanelRefresh()
     endIf
+    if ownsBroadEvent
+        FlushBroadPantheonEvent()
+    endIf
+    return appliedAmount
 EndFunction
 
 Function ApplyDisfavorSting(PDV_DeityBase deity, Float appliedAmount, String sourceTag)
@@ -11684,8 +12389,7 @@ Function MarkDisfavorRepeatUsed(PDV_DeityBase deity, Int domainValue, Int eventT
 EndFunction
 
 Int Function GetDisfavorDayIndex()
-    Float adjustedDayTime = Utility.GetCurrentGameTime() - 0.25
-    return adjustedDayTime as Int
+    return GetDevotionalDay() + 2
 EndFunction
 
 Int Function DomainForDeity(PDV_DeityBase deity)
@@ -13196,11 +13900,9 @@ Function SyncFirstTierRaceRewardRuntime()
     ; the tradition family T1 on the tradition-breadth tier (v3 12.5, no generic
     ; broad lane). Managing it in this floor path too would fight that grant.
     SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Reclamation_T1, shouldBeActive && activeReward == PDV_Bless_Dunmer_Reclamation_T1, "Dunmer T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T1, shouldBeActive && activeReward == PDV_Bless_Imperial_Civic_T1, "Imperial T1")
     ; Khajiit Lunar_T1 is intentionally absent here: PDV_Substrate_KhajiitLunar
     ; owns it as the Substrate_Mid slot. Managing it in this generic T1 path
     ; would fight the substrate grant and strip Khajiit Lunar Road.
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T1, shouldBeActive && activeReward == PDV_Bless_Nord_OldWays_T1, "Nord T1")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Malacath_T1, shouldBeActive && activeReward == PDV_Bless_Orc_Malacath_T1, "Orc T1")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_AncestorSpine_T1, shouldBeActive && activeReward == PDV_Bless_Redguard_AncestorSpine_T1, "Redguard T1")
 
@@ -13260,6 +13962,34 @@ Function SyncFirstTierRaceRewardRuntime()
     ; focused Divine/Talos families gate on the active patron's tier.
     SyncImperialRewards(playerRef)
     SyncImperialNeglectSpell(IsImperialCivicNeglected())
+    SyncBroadPantheonRewards(playerRef)
+EndFunction
+
+Function SyncBroadPantheonRewards(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+
+    String activePool = ""
+    Float standing = 0.0
+    if GetPatronState() == PATRON_STATE_BROAD
+        activePool = GetActiveBroadPantheonPoolId()
+        standing = GetBroadPantheonStanding(activePool)
+    endIf
+
+    Bool imperialSeeker = activePool == BROAD_PANTHEON_IMPERIAL && standing >= BROAD_PANTHEON_SEEKER_THRESHOLD && standing < BROAD_PANTHEON_FAITHFUL_THRESHOLD
+    Bool imperialFaithful = activePool == BROAD_PANTHEON_IMPERIAL && standing >= BROAD_PANTHEON_FAITHFUL_THRESHOLD
+    Bool oldWaysSeeker = activePool == BROAD_PANTHEON_NORD_OLD && standing >= BROAD_PANTHEON_SEEKER_THRESHOLD && standing < BROAD_PANTHEON_FAITHFUL_THRESHOLD
+    Bool oldWaysFaithful = activePool == BROAD_PANTHEON_NORD_OLD && standing >= BROAD_PANTHEON_FAITHFUL_THRESHOLD
+    Bool nineSeeker = activePool == BROAD_PANTHEON_NORD_NINE && standing >= BROAD_PANTHEON_SEEKER_THRESHOLD && standing < BROAD_PANTHEON_FAITHFUL_THRESHOLD
+    Bool nineFaithful = activePool == BROAD_PANTHEON_NORD_NINE && standing >= BROAD_PANTHEON_FAITHFUL_THRESHOLD
+
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T1, imperialSeeker, "The Divines' Regard - Seeker")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T2, imperialFaithful, "The Divines' Regard - Faithful")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T1, oldWaysSeeker, "Old Ways - Seeker")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T2, oldWaysFaithful, "Old Ways - Faithful")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_NineDivines_T1, nineSeeker, "Faith of the Holds - Seeker")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_NineDivines_T2, nineFaithful, "Faith of the Holds - Faithful")
 EndFunction
 
 Function SyncAltmerRewards(Actor playerRef)
@@ -14360,9 +15090,6 @@ Function SyncNordRewards(Actor playerRef)
     Bool isNord = GetPlayerOriginRaceIndex() == ORIGIN_NORD
     Int baselineState = GetNordPantheonBaselineState()
     SyncNordAncestorSubstrate(playerRef, isNord)
-    Bool broadOldWaysFaithful = isNord && GetPatronState() == PATRON_STATE_BROAD && baselineState == NORD_BASELINE_OLD_WAYS && StorageUtil.GetIntValue(None, "PDV.Nord.OldWaysContextCount") >= 6
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T2, broadOldWaysFaithful, "Nord OldWays T2")
-
     SyncNordRewardFamily(playerRef, NORD_BASELINE_OLD_WAYS, PDV_Kyne, PDV_Bless_Nord_Kyne_T1, PDV_Bless_Nord_Kyne_T2, PDV_Bless_Nord_Kyne_T3, "Kyne")
     SyncNordRewardFamily(playerRef, NORD_BASELINE_OLD_WAYS, PDV_Shor, PDV_Bless_Nord_Shor_T1, PDV_Bless_Nord_Shor_T2, PDV_Bless_Nord_Shor_T3, "Shor")
     SyncNordRewardFamily(playerRef, NORD_BASELINE_OLD_WAYS, PDV_Tsun, PDV_Bless_Nord_Tsun_T1, PDV_Bless_Nord_Tsun_T2, PDV_Bless_Nord_Tsun_T3, "Tsun")
@@ -14407,15 +15134,14 @@ EndFunction
 Function SyncNordRewardFamily(Actor playerRef, Int requiredBaseline, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
     Bool baselineOk = requiredBaseline < 0 || GetNordPantheonBaselineState() == requiredBaseline
     Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_NORD && baselineOk && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == deity
-    Int activeTier = TIER_NONE
+    Float activePiety = 0.0
     if isActive && deity
-        activeTier = GetTier(deity)
+        activePiety = GetPiety(deity)
     endIf
-
     Bool hadChampionSpell = HasRewardSpell(playerRef, t3)
-    Bool wantsChampionSpell = isActive && activeTier >= TIER_CHAMPION
-    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == TIER_SEEKER, "Nord " + label + " T1")
-    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == TIER_DEVOTED, "Nord " + label + " T2")
+    Bool wantsChampionSpell = isActive && activePiety >= 85.0
+    SyncRaceRewardSpell(playerRef, t1, False, "Nord " + label + " T1 compatibility")
+    SyncRaceRewardSpell(playerRef, t2, isActive && activePiety >= 50.0 && activePiety < 85.0, "Nord " + label + " T2")
     SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Nord " + label + " T3")
     MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Nord " + label)
 EndFunction
@@ -14525,12 +15251,11 @@ Function SyncArgonianRewards(Actor playerRef)
 
     ; Hist broad set, HIGHEST TIER ONLY (each tier spell carries the cumulative
     ; magnitude, so total power is unchanged but only one tier shows at a time).
-    Bool wantHistSig = isArgonian && histRelation >= ARGONIAN_REWARD_SIGNATURE_THRESHOLD
-    Bool wantHistT2 = isArgonian && !wantHistSig && histRelation >= ARGONIAN_REWARD_T2_THRESHOLD
-    Bool wantHistT1 = isArgonian && !wantHistSig && !wantHistT2 && histRelation >= ARGONIAN_REWARD_T1_THRESHOLD
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T1, wantHistT1, "Argonian Hist T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T2, wantHistT2, "Argonian Hist T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_Signature, wantHistSig, "Argonian Hist Signature")
+    ; Retired Hist Communion boon family: the cultural-practice substrate now
+    ; owns the universal identity boon, while Hist remains a relation ledger.
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T1, False, "Argonian Hist T1 retired")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T2, False, "Argonian Hist T2 retired")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_Signature, False, "Argonian Hist Signature retired")
 
     ; People focused set, highest tier only (active only when People is the focus).
     Bool peopleActive = isArgonian && activeFocus == ARGONIAN_FOCUS_PEOPLE
@@ -14585,12 +15310,12 @@ Bool Function IsArgonianHistNeglected()
         return False
     endIf
 
-    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Argonian.LastHistSourceTime")
-    if lastSource <= 0.0
+    if !PDV_ArgonianHistSubstrate.HasHistMaintenance()
         return True
     endIf
 
-    return (Utility.GetCurrentGameTime() - lastSource) > ARGONIAN_HIST_NEGLECT_GRACE_DAYS
+    Int elapsedDays = GetDevotionalDay() - PDV_ArgonianHistSubstrate.GetLastHistMaintenanceDevotionalDay()
+    return elapsedDays > (ARGONIAN_HIST_NEGLECT_GRACE_DAYS as Int)
 EndFunction
 
 Function SyncArgonianNeglectSpell(Bool shouldBeActive)
@@ -14620,9 +15345,6 @@ Function SyncImperialRewards(Actor playerRef)
 
     Bool isImperial = GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
     SyncImperialAncestorSubstrate(playerRef, isImperial)
-    Bool broadCivicFaithful = isImperial && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount") >= 6
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T2, broadCivicFaithful, "Imperial Civic T2")
-
     ; The Divine reward SPELs below are REUSED by the Nord baseline lanes
     ; (SyncNordRewardFamily: Mara/Arkay/Dibella + the whole Nine Divines set, owner ruling
     ; 2026-06-27). SyncNordRewards runs BEFORE this in SyncFirstTierRaceRewardRuntime and
@@ -14661,16 +15383,15 @@ Function SyncImperialAncestorSubstrate(Actor playerRef, Bool isImperial)
 EndFunction
 
 Function SyncImperialRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
-    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == deity
-    Int activeTier = TIER_NONE
+    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == deity && !IsImperialVampireStateActive()
+    Float activePiety = 0.0
     if isActive && deity
-        activeTier = GetTier(deity)
+        activePiety = GetPiety(deity)
     endIf
-
     Bool hadChampionSpell = HasRewardSpell(playerRef, t3)
-    Bool wantsChampionSpell = isActive && activeTier >= TIER_CHAMPION
-    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == TIER_SEEKER, "Imperial " + label + " T1")
-    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == TIER_DEVOTED, "Imperial " + label + " T2")
+    Bool wantsChampionSpell = isActive && activePiety >= 85.0
+    SyncRaceRewardSpell(playerRef, t1, False, "Imperial " + label + " T1 compatibility")
+    SyncRaceRewardSpell(playerRef, t2, isActive && activePiety >= 50.0 && activePiety < 85.0, "Imperial " + label + " T2")
     SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Imperial " + label + " T3")
     MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Imperial " + label)
 EndFunction
@@ -14680,11 +15401,11 @@ Bool Function IsImperialCivicNeglected()
         return False
     endIf
 
-    if StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount") <= 0
+    if !PDV_ImperialAncestorSubstrate || PDV_ImperialAncestorSubstrate.GetMetric() <= 0.0
         return False
     endIf
 
-    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Imperial.LastCivicServiceTime")
+    Float lastSource = PDV_ImperialAncestorSubstrate.GetLastAcceptedTime()
     if lastSource <= 0.0
         return False
     endIf
@@ -14748,9 +15469,30 @@ Bool Function HasBroadLanePresentation(Int origin)
     return origin == ORIGIN_IMPERIAL || origin == ORIGIN_BRETON || origin == ORIGIN_ORC || origin == ORIGIN_ALTMER || origin == ORIGIN_NORD || origin == ORIGIN_BOSMER || origin == ORIGIN_DUNMER || origin == ORIGIN_REDGUARD
 EndFunction
 
+Bool Function IsPantheonBroadPoolPresentationActive(Int origin)
+    if origin != ORIGIN_IMPERIAL && origin != ORIGIN_NORD
+        return False
+    endIf
+    return GetActiveBroadPantheonPoolId() != ""
+EndFunction
+
+Float Function GetBroadLaneStandingValue(Int origin)
+    if origin == ORIGIN_IMPERIAL || origin == ORIGIN_NORD
+        return GetBroadPantheonStanding(GetActiveBroadPantheonPoolId())
+    endIf
+    return GetBroadLaneServiceCount(origin) as Float
+EndFunction
+
+Float Function GetBroadLaneScratchValue(Int origin)
+    if origin == ORIGIN_IMPERIAL || origin == ORIGIN_NORD
+        return GetBroadPantheonScratch(GetActiveBroadPantheonPoolId())
+    endIf
+    return 0.0
+EndFunction
+
 Int Function GetBroadLaneServiceCount(Int origin)
     if origin == ORIGIN_IMPERIAL
-        return StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount")
+        return GetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL) as Int
     elseIf origin == ORIGIN_BRETON
         return GetBretonPracticeCount(GetBretonTraditionValue())
     elseIf origin == ORIGIN_ORC
@@ -14758,10 +15500,10 @@ Int Function GetBroadLaneServiceCount(Int origin)
     elseIf origin == ORIGIN_ALTMER
         return StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count") + StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count")
     elseIf origin == ORIGIN_NORD
-        if GetNordPantheonBaselineState() != NORD_BASELINE_OLD_WAYS
-            return 0
+        if GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
+            return GetBroadPantheonStanding(BROAD_PANTHEON_NORD_NINE) as Int
         endIf
-        return StorageUtil.GetIntValue(None, "PDV.Nord.OldWaysContextCount")
+        return GetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD) as Int
     elseIf origin == ORIGIN_BOSMER
         return GetBosmerFavorSignalCount()
     elseIf origin == ORIGIN_DUNMER
@@ -14778,7 +15520,15 @@ Int Function GetBroadLaneTierForOrigin(Int origin)
     endIf
 
     Int count = GetBroadLaneServiceCount(origin)
-    if count >= 6
+    if origin == ORIGIN_IMPERIAL || origin == ORIGIN_NORD
+        Float standing = GetBroadLaneStandingValue(origin)
+        if standing >= BROAD_PANTHEON_FAITHFUL_THRESHOLD
+            return TIER_DEVOTED
+        elseIf standing >= BROAD_PANTHEON_SEEKER_THRESHOLD
+            return TIER_SEEKER
+        endIf
+        return TIER_NONE
+    elseIf count >= 6
         return TIER_DEVOTED
     elseIf count >= 3
         return TIER_SEEKER
@@ -14788,7 +15538,7 @@ EndFunction
 
 String Function GetBroadLaneDisplayName(Int origin)
     if origin == ORIGIN_IMPERIAL
-        return "Civic Faith"
+        return "The Divines' Regard"
     elseIf origin == ORIGIN_ALTMER
         return "Orthodox Faith"
     elseIf origin == ORIGIN_BOSMER
@@ -14798,11 +15548,14 @@ String Function GetBroadLaneDisplayName(Int origin)
     elseIf origin == ORIGIN_DUNMER
         return "Reclamation Communion"
     elseIf origin == ORIGIN_NORD
+        if GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
+            return "Faith of the Holds"
+        endIf
         return "Old Ways"
     elseIf origin == ORIGIN_ORC
         return "Malacath's Code"
     elseIf origin == ORIGIN_REDGUARD
-        return "Ancestor Spine"
+        return "Ancestors' Regard"
     endIf
     return "Broad Faith"
 EndFunction
@@ -14819,6 +15572,9 @@ String Function GetBroadLaneSymbol(Int origin)
     elseIf origin == ORIGIN_DUNMER
         return "ancestor"
     elseIf origin == ORIGIN_NORD
+        if GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
+            return "akatosh"
+        endIf
         return "kyne"
     elseIf origin == ORIGIN_ORC
         return "malacath"
@@ -14839,6 +15595,15 @@ EndFunction
 
 String Function GetBroadLaneNextThresholdText(Int origin)
     Int count = GetBroadLaneServiceCount(origin)
+    if origin == ORIGIN_IMPERIAL || origin == ORIGIN_NORD
+        Float standing = GetBroadLaneStandingValue(origin)
+        if standing < BROAD_PANTHEON_SEEKER_THRESHOLD
+            return "Seeker at 25 pantheon standing"
+        elseIf standing < BROAD_PANTHEON_FAITHFUL_THRESHOLD
+            return "Faithful at 50 pantheon standing"
+        endIf
+        return "Pantheon standing cap reached"
+    endIf
     if origin == ORIGIN_BRETON
         if count < BRETON_PRACTICE_SEEKER_POINTS
             return "Observant at 25 practice points"
@@ -15963,8 +16728,399 @@ Function DebugSetNordPantheonBaseline(Int stateValue)
     if PDV_NordPantheonBaselineTrack && PDV_NordPantheonBaselineTrack.GetCurrentState() != normalizedState
         PDV_NordPantheonBaselineTrack.SetState(normalizedState, "mcm_pattern")
     endIf
+    PDV_DeityBase pending = GetPendingCommitmentDeity()
+    if pending && !IsNordOfferEligibleDeity(pending)
+        ClearPendingCommitment()
+    endIf
+    if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity && !IsNordOfferEligibleDeity(_activeDeity)
+        SetBroadWorship()
+    endIf
     SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
+EndFunction
+
+PDV_SubstrateBase Function GetSubstrateForPacingOrigin(Int originValue)
+    if originValue == ORIGIN_IMPERIAL
+        return PDV_ImperialAncestorSubstrate as PDV_SubstrateBase
+    elseIf originValue == ORIGIN_DUNMER
+        return PDV_DunmerAncestorSubstrate as PDV_SubstrateBase
+    elseIf originValue == ORIGIN_ARGONIAN
+        return PDV_ArgonianHistSubstrate as PDV_SubstrateBase
+    elseIf originValue == ORIGIN_NORD
+        return PDV_NordAncestorSubstrate as PDV_SubstrateBase
+    elseIf originValue == ORIGIN_ALTMER
+        return PDV_AltmerAncestorSubstrate as PDV_SubstrateBase
+    elseIf originValue == ORIGIN_KHAJIIT
+        return PDV_KhajiitLunarSubstrate as PDV_SubstrateBase
+    endIf
+    return None
+EndFunction
+
+String Function DebugGetSubstratePacingSummary(Int originValue)
+    PDV_SubstrateBase substrate = GetSubstrateForPacingOrigin(originValue)
+    if !substrate
+        return "No active pacing substrate is wired for origin " + originValue + "."
+    endIf
+    String summary = "metric=" + substrate.GetMetric() + " tier=" + substrate.GetSubstrateTier() + " day=" + substrate.GetDevotionalDay() + " encodedStamp=" + substrate.GetEncodedDailyCreditStamp() + " spent=" + substrate.IsDailyCreditSpent() + " accepted=" + substrate.GetLastAcceptedSource() + " acceptedEvent=" + substrate.GetLastAcceptedLogicalEvent() + " rejected=" + substrate.GetLastRejectedSource() + " rejectedEvent=" + substrate.GetLastRejectedLogicalEvent() + " rejectReason=" + substrate.GetLastCreditRejectReason() + " decay=" + GetSubstrateDecaySummary(originValue)
+    if originValue == ORIGIN_KHAJIIT
+        summary = summary + " moonReject=" + StorageUtil.GetStringValue(None, "PDV.Khajiit.MoonRite.LastReject")
+    endIf
+    return summary
+EndFunction
+
+String Function GetSubstrateDecaySummary(Int originValue)
+    if originValue == ORIGIN_DUNMER || originValue == ORIGIN_KHAJIIT
+        return "none"
+    elseIf originValue == ORIGIN_IMPERIAL || originValue == ORIGIN_ARGONIAN || originValue == ORIGIN_NORD || originValue == ORIGIN_ALTMER
+        return "3-day grace, -1/dawn, floor 20 (curse floor 0)"
+    endIf
+    return "n/a"
+EndFunction
+
+String Function DebugTriggerSubstratePacingSource(Int originValue, Int sourceIndex = 0)
+    if originValue == ORIGIN_IMPERIAL
+        if sourceIndex == 0
+            HandleImperialCivicService("mcm_debug_public_service")
+        elseIf sourceIndex == 1
+            HandleSubstrateShrinePrayer("Mara", "", "", "mcm_debug_divine_prayer")
+        else
+            HandleImperialSleepEvents(Game.GetPlayer(), "mcm_debug_rejected_sleep")
+            if PDV_ImperialAncestorSubstrate
+                PDV_ImperialAncestorSubstrate.RecordDailyCreditReject("imperial_sleep", "mcm_debug_rejected_sleep", "retired_route")
+            endIf
+        endIf
+    elseIf originValue == ORIGIN_DUNMER
+        if sourceIndex == 0
+            HandleDunmerPortableShrinePrayer("mcm_debug_portable_prayer")
+        elseIf sourceIndex == 1
+            HandleDunmerReclamationFocus(1, "mcm_debug_reclamation_book")
+        else
+            HandleDunmerPlayerHomeBonus("mcm_debug_rejected_home_only")
+        endIf
+    elseIf originValue == ORIGIN_ARGONIAN
+        if sourceIndex == 0
+            HandleArgonianHistMaintenance("mcm_debug_hist_maintenance")
+        elseIf sourceIndex == 1
+            HandleArgonianPeopleSupport("mcm_debug_people_support")
+        elseIf PDV_ArgonianHistSubstrate
+            PDV_ArgonianHistSubstrate.RecordDailyCreditReject("argonian_brief_swim", "mcm_debug_brief_swim", "duration_too_short")
+        endIf
+    elseIf originValue == ORIGIN_NORD
+        if sourceIndex == 0
+            if GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
+                HandleNordOldWaysState("mcm_debug_nine_road_grace")
+            else
+                HandleNordOldWaysState("mcm_debug_sky_road")
+            endIf
+        elseIf sourceIndex == 1 && PDV_NordAncestorSubstrate
+            HandleSubstrateActionEvent(313, "mcm_debug_open_sky_rest")
+        elseIf PDV_NordAncestorSubstrate
+            PDV_NordAncestorSubstrate.RecordDailyCreditReject("nord_universal_shor", "mcm_debug_universal_shor", "retired_route")
+        endIf
+    elseIf originValue == ORIGIN_ALTMER
+        if sourceIndex == 0
+            HandleSubstrateShrinePrayer("Auri-El", "", "", "mcm_debug_auriel_rite")
+        elseIf sourceIndex == 1
+            HandleAltmerMagicSkillIncrease("Alteration")
+        elseIf PDV_AltmerAncestorSubstrate
+            PDV_AltmerAncestorSubstrate.RecordDailyCreditReject("altmer_passive_dawn", "mcm_debug_passive_dawn", "retired_route")
+        endIf
+    elseIf originValue == ORIGIN_KHAJIIT
+        if sourceIndex == 0
+            HandleKhajiitRoadHome("mcm_debug_outdoor_rest")
+        elseIf sourceIndex == 1
+            HandleKhajiitLunarSubstrate("mcm_debug_caravan_defense")
+        else
+            HandleKhajiitRoadHomeAnchor(1, "mcm_debug_rejected_anchor")
+            if PDV_KhajiitLunarSubstrate
+                PDV_KhajiitLunarSubstrate.RecordDailyCreditReject("khajiit_road_anchor", "mcm_debug_rejected_anchor", "retired_route")
+            endIf
+        endIf
+    endIf
+    return DebugGetSubstratePacingSummary(originValue)
+EndFunction
+
+String Function DebugSeedSubstrateMetric(Int originValue, Float metricValue)
+    PDV_SubstrateBase substrate = GetSubstrateForPacingOrigin(originValue)
+    if !substrate
+        return "No substrate is wired."
+    endIf
+    ResetSubstratePacingState(originValue)
+    substrate.DebugSetMetric(ClampValue(metricValue, 0.0, 75.0))
+    return DebugGetSubstratePacingSummary(originValue)
+EndFunction
+
+String Function DebugResetSubstratePacing(Int originValue)
+    PDV_SubstrateBase substrate = GetSubstrateForPacingOrigin(originValue)
+    if !substrate
+        return "No substrate is wired."
+    endIf
+    ResetSubstratePacingState(originValue)
+    return DebugGetSubstratePacingSummary(originValue)
+EndFunction
+
+Function ResetSubstratePacingState(Int originValue)
+    if originValue == ORIGIN_IMPERIAL && PDV_ImperialAncestorSubstrate
+        PDV_ImperialAncestorSubstrate.ResetPilotForDebug()
+        ResetDailyRepeatKey("PDV.Signal.ImperialCivicService")
+    elseIf originValue == ORIGIN_DUNMER && PDV_DunmerAncestorSubstrate
+        PDV_DunmerAncestorSubstrate.ResetPilotForDebug()
+        ResetDailyRepeatKey("PDV.Signal.DunmerPortableShrinePrayer")
+        ResetDailyRepeatKey("PDV.Signal.DunmerHomeBonus")
+    elseIf originValue == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
+        PDV_ArgonianHistSubstrate.ResetPilotForDebug()
+        ResetDailyRepeatKey("PDV.Signal.ArgonianHistMaintenance")
+        ResetDailyRepeatKey("PDV.Signal.ArgonianPeopleSupport")
+        ResetDailyRepeatKey("PDV.Signal.ArgonianBedOfChoice")
+        ResetDailyRepeatKey("PDV.Signal.ArgonianVoidSignal")
+    elseIf originValue == ORIGIN_NORD && PDV_NordAncestorSubstrate
+        PDV_NordAncestorSubstrate.ResetPilotForDebug()
+        ResetDailyRepeatKey("PDV.Signal.NordAncestorSpine")
+        StorageUtil.SetIntValue(None, "PDV.Signal.NordAncestralRest.Day", -1)
+    elseIf originValue == ORIGIN_ALTMER && PDV_AltmerAncestorSubstrate
+        PDV_AltmerAncestorSubstrate.ResetPilotForDebug()
+        ResetDailyRepeatKey("PDV.Signal.AltmerAncestorSpine")
+    elseIf originValue == ORIGIN_KHAJIIT && PDV_KhajiitLunarSubstrate
+        PDV_KhajiitLunarSubstrate.ResetPilotForDebug()
+        ResetDailyRepeatKey("PDV.Signal.KhajiitRoadHome")
+    endIf
+EndFunction
+
+Function ResetDailyRepeatKey(String keyPrefix)
+    StorageUtil.SetIntValue(None, keyPrefix + ".Day", -1)
+    StorageUtil.SetIntValue(None, keyPrefix + ".Count", 0)
+EndFunction
+
+String Function GetBroadPantheonPoolIdByDebugIndex(Int poolIndex)
+    if poolIndex == 0
+        return BROAD_PANTHEON_IMPERIAL
+    elseIf poolIndex == 1
+        return BROAD_PANTHEON_NORD_OLD
+    elseIf poolIndex == 2
+        return BROAD_PANTHEON_NORD_NINE
+    endIf
+    return ""
+EndFunction
+
+String Function DebugGetBroadPantheonSummary(Int poolIndex)
+    String poolId = GetBroadPantheonPoolIdByDebugIndex(poolIndex)
+    if poolId == ""
+        return "No broad pantheon pool selected."
+    endIf
+    Int gainStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(poolId))
+    Int processedStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonLastProcessedDayKey(poolId))
+    Int scratchStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonScratchDayKey(poolId))
+    return poolId + " roster=" + GetBroadPantheonRosterForDebug(poolId) + " standing=" + GetBroadPantheonStanding(poolId) + " scratch=" + GetBroadPantheonScratch(poolId) + " scratchDay=" + (scratchStamp - 2) + " active=" + (GetActiveBroadPantheonPoolId() == poolId) + " lastGainDay=" + (gainStamp - 2) + " lastProcessedDay=" + (processedStamp - 2) + " grace=2 decay=-0.1/day lastEvent=" + StorageUtil.GetStringValue(None, GetBroadPantheonLastEventKey(poolId))
+EndFunction
+
+String Function GetBroadPantheonRosterForDebug(String poolId)
+    if poolId == BROAD_PANTHEON_IMPERIAL
+        if StorageUtil.GetIntValue(None, "PDV.Imperial.TalosBroadUnlocked") == 1
+            return "Akatosh/Arkay/Dibella/Julianos/Kynareth/Mara/Stendarr/Zenithar/Talos (unlocked)"
+        endIf
+        return "Akatosh/Arkay/Dibella/Julianos/Kynareth/Mara/Stendarr/Zenithar (Talos locked)"
+    elseIf poolId == BROAD_PANTHEON_NORD_OLD
+        return "Kyne/Shor/Tsun/Stuhn/Mara/Orkey/Dibella/Talos"
+    endIf
+    return "Akatosh/Arkay/Dibella/Julianos/Kynareth/Mara/Stendarr/Zenithar/Talos"
+EndFunction
+
+String Function DebugSeedBroadPantheonPool(Int poolIndex, Float standingValue)
+    String poolId = GetBroadPantheonPoolIdByDebugIndex(poolIndex)
+    SetBroadPantheonStanding(poolId, standingValue, "mcm_boundary_seed")
+    SyncBroadPantheonRewards(Game.GetPlayer())
+    return DebugGetBroadPantheonSummary(poolIndex)
+EndFunction
+
+String Function DebugResetBroadPantheonPool(Int poolIndex)
+    String poolId = GetBroadPantheonPoolIdByDebugIndex(poolIndex)
+    ResetBroadPantheonPool(poolId)
+    return DebugGetBroadPantheonSummary(poolIndex)
+EndFunction
+
+String Function DebugRunBroadPantheonFanoutTest()
+    String poolId = GetActiveBroadPantheonPoolId()
+    if poolId == ""
+        return "Set Imperial/Nord broad worship and an active baseline first."
+    endIf
+    _broadPantheonSelfEventSequence += 1
+    String fixtureId = "mcm_signed_fanout_" + _broadPantheonSelfEventSequence
+    Float scratchBefore = GetBroadPantheonScratch(poolId)
+    BeginBroadPantheonEvent(fixtureId)
+    if poolId == BROAD_PANTHEON_NORD_OLD
+        AwardPietyInternal(PDV_Kyne, 1.0, True, fixtureId + "_kyne")
+        AwardPietyInternal(PDV_Shor, 2.0, True, fixtureId + "_shor")
+        AwardPietyInternal(PDV_Tsun, -4.0, True, fixtureId + "_tsun")
+    else
+        AwardPietyInternal(PDV_Akatosh, 1.0, True, fixtureId + "_akatosh")
+        AwardPietyInternal(PDV_Mara, 2.0, True, fixtureId + "_mara")
+        AwardPietyInternal(PDV_Zenithar, -4.0, True, fixtureId + "_zenithar")
+    endIf
+    FlushBroadPantheonEvent()
+    Float positiveEventDelta = GetBroadPantheonScratch(poolId) - scratchBefore
+    BeginBroadPantheonEvent(fixtureId + "_negative")
+    if poolId == BROAD_PANTHEON_NORD_OLD
+        AwardPietyInternal(PDV_Kyne, -1.0, False, fixtureId + "_kyne_negative")
+        AwardPietyInternal(PDV_Tsun, -4.0, False, fixtureId + "_tsun_negative")
+    else
+        AwardPietyInternal(PDV_Mara, -1.0, False, fixtureId + "_mara_negative")
+        AwardPietyInternal(PDV_Zenithar, -4.0, False, fixtureId + "_zenithar_negative")
+    endIf
+    FlushBroadPantheonEvent()
+    Float negativeEventDelta = GetBroadPantheonScratch(poolId) - scratchBefore - positiveEventDelta
+    Trace(1, "[PDV][PS-A4] pool=" + poolId + " strongestPositive=" + positiveEventDelta + " strongestNegative=" + negativeEventDelta + " scratch=" + GetBroadPantheonScratch(poolId))
+    return "Post-pipeline fan-out: strongest positive=" + positiveEventDelta + "; strongest negative=" + negativeEventDelta + "; final scratch=" + GetBroadPantheonScratch(poolId)
+EndFunction
+
+String Function DebugPrimeBroadPantheonScratch(Int poolIndex, Float scratchValue)
+    String poolId = GetBroadPantheonPoolIdByDebugIndex(poolIndex)
+    if poolId == ""
+        return "No broad pantheon pool selected."
+    endIf
+    StorageUtil.SetFloatValue(None, GetBroadPantheonScratchKey(poolId), scratchValue)
+    WriteZeroReservedDevotionalDayStamp(GetBroadPantheonScratchDayKey(poolId))
+    StorageUtil.SetStringValue(None, GetBroadPantheonLastEventKey(poolId), "mcm_signed_cap_prime")
+    Trace(1, "[PDV][PS-A5] staged pool=" + poolId + " scratch=" + scratchValue + "; wait through real dawn")
+    return DebugGetBroadPantheonSummary(poolIndex) + " | Wait through real dawn; expected signed fold cap is 4.3."
+EndFunction
+
+String Function DebugRunBroadPantheonMigrationFixture()
+    ; This deliberately exercises the real migration and is confined to the
+    ; clearly-labelled throwaway-save MCM control.
+    StorageUtil.SetIntValue(None, "PDV.Imperial.CivicServiceCount", 3)
+    StorageUtil.SetIntValue(None, "PDV.Nord.OldWaysContextCount", 6)
+    ResetBroadPantheonPool(BROAD_PANTHEON_IMPERIAL)
+    ResetBroadPantheonPool(BROAD_PANTHEON_NORD_OLD)
+    ResetBroadPantheonPool(BROAD_PANTHEON_NORD_NINE)
+    StorageUtil.SetIntValue(None, "PDV.BroadPantheon.Version", 0)
+
+    Bool nineEligible = GetPlayerOriginRaceIndex() == ORIGIN_NORD && GetPatronState() == PATRON_STATE_BROAD && GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
+    if nineEligible
+        StorageUtil.SetFloatValue(PDV_Akatosh as Form, "PDV.Piety", 37.0)
+        StorageUtil.SetFloatValue(PDV_Mara as Form, "PDV.Piety", 42.0)
+        StorageUtil.SetFloatValue(PDV_Zenithar as Form, "PDV.Piety", 11.0)
+    endIf
+
+    MigrateBroadPantheonPools()
+    Float imperialOnce = GetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL)
+    Float oldWaysOnce = GetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD)
+    Float nineOnce = GetBroadPantheonStanding(BROAD_PANTHEON_NORD_NINE)
+    MigrateBroadPantheonPools()
+    Bool idempotent = imperialOnce == GetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL) && oldWaysOnce == GetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD) && nineOnce == GetBroadPantheonStanding(BROAD_PANTHEON_NORD_NINE)
+    Trace(1, "[PDV][PS-A12] migration imperial=" + imperialOnce + " oldWays=" + oldWaysOnce + " nine=" + nineOnce + " nineEligible=" + nineEligible + " idempotent=" + idempotent)
+    return "Migration fixture: Imperial=" + imperialOnce + " (expected 25); Old Ways=" + oldWaysOnce + " (expected 50); Nine=" + nineOnce + " (expected 42 when eligible); second run unchanged=" + idempotent + ". Reload the clean QASmoke save now."
+EndFunction
+
+String Function DebugSetNordBaselineForPacing(Int baselineValue)
+    DebugSetNordPantheonBaseline(baselineValue)
+    return DebugGetBroadPantheonSummary(baselineValue + 1)
+EndFunction
+
+String Function DebugOfferAcceptRecoverySummary()
+    String activeName = "none"
+    if _activeDeity
+        activeName = _activeDeity.DeityName + " piety=" + GetPiety(_activeDeity)
+    endIf
+    PDV_DeityBase pending = GetPendingCommitmentDeity()
+    String pendingName = "none"
+    if pending
+        pendingName = pending.DeityName
+    endIf
+    PDV_DeityBase candidate = pending
+    if !candidate
+        candidate = GetPacingPatronCandidate()
+    endIf
+    Int qualifyingDays = 0
+    Bool baselineEligible = False
+    Float declinedAt = 0.0
+    if candidate
+        qualifyingDays = GetRecentCommitmentSignalDayCount(candidate, 7)
+        baselineEligible = UsesFormalCommitmentOffersForDeity(candidate)
+        declinedAt = StorageUtil.GetFloatValue(candidate as Form, "PDV.Commitment.DeclinedAt")
+    endIf
+    return "state=" + GetPatronStateLabel() + " active=" + activeName + " pending=" + pendingName + " qualifyingDays=" + qualifyingDays + " baselineEligible=" + baselineEligible + " offeredAt=" + StorageUtil.GetFloatValue(None, "PDV.Commitment.OfferedAt") + " declinedAt=" + declinedAt
+EndFunction
+
+String Function DebugSetBroadWorshipForPacing()
+    ClearPendingCommitment()
+    SetBroadWorship()
+    SyncFirstTierRaceRewardRuntime()
+    RequestPanelRefresh()
+    Trace(1, "[PDV][BROAD_TEST] clean broad worship restored")
+    return DebugOfferAcceptRecoverySummary()
+EndFunction
+
+String Function DebugRunPatronOfferForPacing()
+    PDV_DeityBase candidate = GetPacingPatronCandidate()
+    if !candidate
+        return "Select Imperial or Nord broad worship before preparing an offer."
+    endIf
+
+    ; Deterministic clean-save setup: preserve all unrelated ledgers, return to
+    ; broad worship, make one baseline-eligible candidate exactly qualified,
+    ; clear its offer/cooldown state, and leave it pending for the separate
+    ; Accept button. No message box races this controlled MCM sequence.
+    SetBroadWorship()
+    ClearPendingCommitment()
+    Form candidateForm = candidate as Form
+    StorageUtil.SetFloatValue(candidateForm, "PDV.Piety", COMMITMENT_OFFER_THRESHOLD)
+    StorageUtil.SetIntValue(candidateForm, "PDV.Commitment.Offered", 0)
+    StorageUtil.SetIntValue(candidateForm, "PDV.Commitment.Refused", 0)
+    StorageUtil.SetFloatValue(candidateForm, "PDV.Commitment.DeclinedAt", 0.0)
+    DebugSeedCommitmentSignalDaysByIndex(candidate.DeityIndex)
+    StorageUtil.SetIntValue(None, "PDV.Commitment.PendingDeityIndex", candidate.DeityIndex)
+    StorageUtil.SetFloatValue(None, "PDV.Commitment.OfferedAt", Utility.GetCurrentGameTime())
+    RecomputeTier(candidate)
+    SyncFirstTierRaceRewardRuntime()
+    RequestPanelRefresh()
+    return DebugOfferAcceptRecoverySummary()
+EndFunction
+
+PDV_DeityBase Function GetPacingPatronCandidate()
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace == ORIGIN_IMPERIAL
+        return PDV_Akatosh
+    elseIf originRace == ORIGIN_NORD
+        if GetNordPantheonBaselineState() == NORD_BASELINE_OLD_WAYS
+            return PDV_Kyne
+        endIf
+        return PDV_Akatosh
+    endIf
+    return None
+EndFunction
+
+String Function DebugAcceptPatronForPacing()
+    DebugAcceptPendingCommitment()
+    return DebugOfferAcceptRecoverySummary()
+EndFunction
+
+String Function DebugLapsePatronForPacing()
+    if _activeDeity
+        StorageUtil.SetFloatValue(_activeDeity as Form, "PDV.Piety", 49.0)
+        RecomputeTier(_activeDeity)
+        SyncFirstTierRaceRewardRuntime()
+        RequestPanelRefresh()
+    endIf
+    return DebugOfferAcceptRecoverySummary()
+EndFunction
+
+String Function DebugRecoverPatronForPacing()
+    if _activeDeity
+        StorageUtil.SetFloatValue(_activeDeity as Form, "PDV.Piety", 50.0)
+        RecomputeTier(_activeDeity)
+        SyncFirstTierRaceRewardRuntime()
+        RequestPanelRefresh()
+    endIf
+    return DebugOfferAcceptRecoverySummary()
+EndFunction
+
+String Function DebugSetImperialVampireForPacing(Bool vampireActive)
+    if vampireActive
+        DebugForceCurseVampire()
+    else
+        DebugForceCurseNone()
+    endIf
+    return DebugGetSubstratePacingSummary(ORIGIN_IMPERIAL)
 EndFunction
 
 ; --- State-axis debug setters: make focus/tradition/mode-gated Champion blessings
@@ -16231,8 +17387,28 @@ Bool Function DebugSetCurseProofOriginRace(Int originRace)
     endIf
 
     PDV_GLO_OriginRace.SetValue(originRace as Float)
+    if PDV_ImperialAncestorSubstrate
+        PDV_ImperialAncestorSubstrate.RecomputeSubstrateTier()
+    endIf
+    if PDV_DunmerAncestorSubstrate
+        PDV_DunmerAncestorSubstrate.RecomputeSubstrateTier()
+    endIf
+    if PDV_ArgonianHistSubstrate
+        PDV_ArgonianHistSubstrate.RecomputeSubstrateTier()
+    endIf
+    if PDV_NordAncestorSubstrate
+        PDV_NordAncestorSubstrate.RecomputeSubstrateTier()
+    endIf
+    if PDV_AltmerAncestorSubstrate
+        PDV_AltmerAncestorSubstrate.RecomputeSubstrateTier()
+    endIf
+    if PDV_KhajiitLunarSubstrate
+        PDV_KhajiitLunarSubstrate.RecomputeSubstrateTier()
+    endIf
     RefreshPatronMirrors()
     UpdateContextualFavorRuntime()
+    SyncFirstTierRaceRewardRuntime()
+    EnsureKhajiitObserveMoonsPower()
     RequestPanelRefresh()
     Trace(1, "Curse proof origin set to " + GetOriginRaceLabel(originRace) + " (" + originRace + ")")
     return True
@@ -16496,13 +17672,13 @@ Function DebugAcceptPendingCommitment()
         return
     endIf
 
-    Float carrySource = 0.0
-    if _activeDeity && _activeDeity != pendingDeity
-        carrySource = GetPiety(_activeDeity)
+    if !IsPendingCommitmentStillAcceptable(pendingDeity)
+        ClearPendingCommitment()
+        Trace(1, "Pending commitment invalidated before acceptance.")
+        return
     endIf
 
-    Float carryAmount = carrySource * COMMITMENT_CARRYOVER_MULTIPLIER
-    StorageUtil.SetFloatValue(None, "PDV.Commitment.LastCarryover", carryAmount)
+    StorageUtil.SetFloatValue(None, "PDV.Commitment.LastCarryover", 0.0)
 
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Offered", 0)
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 0)
@@ -16510,12 +17686,22 @@ Function DebugAcceptPendingCommitment()
     SyncFirstTierRaceRewardRuntime()
     DispatchDiegeticCue("offer", pendingDeity.DeityName, "accept", pendingDeity, "revelation")
     SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "good", BuildCommitmentOfferAcceptToastLine(pendingDeity), "")
-    if carryAmount > 0.0
-        AwardPiety(pendingDeity, carryAmount, "commitment_carryover")
-    endIf
     ClearPendingCommitment()
     StorageUtil.SetIntValue(None, "PDV.Commitment.Rupture", 0)
     Trace(1, "Commitment accepted for " + pendingDeity.DeityName + ".")
+EndFunction
+
+Bool Function IsPendingCommitmentStillAcceptable(PDV_DeityBase deity)
+    if !deity || !UsesFormalCommitmentOffersForDeity(deity)
+        return False
+    endIf
+    if GetPiety(deity) < COMMITMENT_OFFER_THRESHOLD || !HasRecentCommitmentSignalDays(deity, 2, 7)
+        return False
+    endIf
+    if IsCommitmentRefused(deity) || IsCommitmentDeclineDelayActive(deity)
+        return False
+    endIf
+    return True
 EndFunction
 
 PDV_DeityBase Function GetBestFormalCommitmentOfferCandidate()
@@ -17164,17 +18350,27 @@ Bool Function SendPrismaSubstrateToast(String substrate, String phase, String co
     return SendPrismaToastPayloadOrFallback(j, fallbackTitle, context, allowFallback)
 EndFunction
 
-Function SendPrismaSubstrateProgress(String substrate, Int tierBefore, Int tierAfter, Float multiplier, String context, String symbolName, String stateLabel)
+Function SendPrismaSubstrateProgress(String substrate, Int tierBefore, Int tierAfter, Float grantedMetric, String context, String symbolName, String stateLabel)
+    ; Presentation follows the actual daily-credit result, never a route's
+    ; repeat multiplier. Same-day, duplicate, and capped acts therefore stay
+    ; silent on substrate toasts and Book entries.
+    if grantedMetric <= 0.0
+        return
+    endIf
     if tierAfter > tierBefore
         SendPrismaSubstrateToast(substrate, "deepen", context, symbolName, stateLabel)
     elseIf tierAfter < tierBefore
         SendPrismaSubstrateToast(substrate, "thin", context, symbolName, stateLabel)
-    elseIf multiplier > 0.0
+    else
         SendPrismaSubstrateToast(substrate, "act", context, symbolName, stateLabel)
     endIf
 
-    if multiplier > 0.0 && context != "" && tierAfter >= tierBefore
-        AppendBookOfDaysEntry(context, Utility.GetCurrentGameTime() as Int, "substrate.act", symbolName, False)
+    if context != "" && tierAfter >= tierBefore
+        String entryText = context
+        if stateLabel != ""
+            entryText = stateLabel + ": " + context
+        endIf
+        AppendBookOfDaysEntry(entryText, Utility.GetCurrentGameTime() as Int, "substrate.act", symbolName, False)
     endIf
 EndFunction
 
@@ -18035,6 +19231,11 @@ Function ApplyImperialCurseHandlers(Int oldState, Int newState, String reason)
     if newState == 2
         StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHalt", 1)
         StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHistory", 1)
+        if PDV_ImperialAncestorSubstrate
+            PDV_ImperialAncestorSubstrate.SetMetric(0.0, "vampire_onset")
+            PDV_ImperialAncestorSubstrate.ClearSubstrateBoons()
+        endIf
+        StorageUtil.SetFloatValue(None, GetBroadPantheonScratchKey(BROAD_PANTHEON_IMPERIAL), 0.0)
         ClearActiveFavor("imperial_vampire")
     elseIf newState == 1
         ; Werewolf strains but does not halt the civic path the way undeath does.
@@ -18042,9 +19243,14 @@ Function ApplyImperialCurseHandlers(Int oldState, Int newState, String reason)
     elseIf oldState == 2 && newState == 0
         ; Cured: the halt lifts, but VampireHistory stays set as the scar.
         StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHalt", 0)
+        if PDV_ImperialAncestorSubstrate
+            PDV_ImperialAncestorSubstrate.SetMetric(20.0, "vampire_cure_seed")
+        endIf
     else
         StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHalt", 0)
     endIf
+    SyncBroadPantheonRewards(Game.GetPlayer())
+    SyncImperialRewards(Game.GetPlayer())
 EndFunction
 
 ; While an Imperial bears the vampire halt, the Nine Divines path stops growing:
@@ -18966,6 +20172,9 @@ Function HandleDunmerReclamationFocus(Int focusValue, String reason)
     endIf
 
     Float layerWeight = GetDunmerCurseLayerWeight(2) * multiplier
+    if PDV_DunmerAncestorSubstrate && GetDunmerCurseLayerWeight(1) > 0.0
+        PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(1.0, "reclamation_source_" + reason)
+    endIf
     StorageUtil.SetIntValue(None, "PDV.Dunmer.ReclamationFocus", ClampInt(focusValue, 0, 2))
     StorageUtil.SetIntValue(None, "PDV.Dunmer.ReclamationFocusCount", StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Dunmer.LastReclamationReason", reason)
@@ -18978,6 +20187,57 @@ Function HandleDunmerReclamationFocus(Int focusValue, String reason)
         ShowP2BookNotice(reason, "Mephala's web", "The Reclamation turns toward secrets.")
     endIf
     Trace(2, "Dunmer Reclamation focus routed: " + reason + " weight " + layerWeight)
+EndFunction
+
+Function HandleDunmerHonorableVictory(Form victimForm)
+    ; Canonical player-alias ingress. It records only the clean-combat half; a
+    ; single caller cannot award until Story Manager independently confirms the
+    ; hostile, non-murder classification for the same victim.
+    RecordDunmerCombatVictoryEvidence(victimForm)
+EndFunction
+
+Function RecordDunmerCombatVictoryEvidence(Form victimForm)
+    if GetPlayerOriginRaceIndex() != ORIGIN_DUNMER || !victimForm
+        return
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Dunmer.HonorableCombatVictim", victimForm.GetFormID())
+    StorageUtil.SetFloatValue(None, "PDV.Dunmer.HonorableCombatTime", Utility.GetCurrentGameTime())
+    TryResolveDunmerHonorableVictory(victimForm)
+EndFunction
+
+Function RecordDunmerStoryVictoryEvidence(Form victimForm, Int relationshipRank)
+    if GetPlayerOriginRaceIndex() != ORIGIN_DUNMER || !victimForm || relationshipRank > -2
+        return
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Dunmer.HonorableStoryVictim", victimForm.GetFormID())
+    StorageUtil.SetFloatValue(None, "PDV.Dunmer.HonorableStoryTime", Utility.GetCurrentGameTime())
+    TryResolveDunmerHonorableVictory(victimForm)
+EndFunction
+
+Function TryResolveDunmerHonorableVictory(Form victimForm)
+    if !PDV_DunmerAncestorSubstrate || !victimForm
+        return
+    endIf
+    Int victimId = victimForm.GetFormID()
+    if StorageUtil.GetIntValue(None, "PDV.Dunmer.HonorableCombatVictim") != victimId || StorageUtil.GetIntValue(None, "PDV.Dunmer.HonorableStoryVictim") != victimId
+        return
+    endIf
+    Float combatTime = StorageUtil.GetFloatValue(None, "PDV.Dunmer.HonorableCombatTime")
+    Float storyTime = StorageUtil.GetFloatValue(None, "PDV.Dunmer.HonorableStoryTime")
+    if combatTime <= 0.0 || storyTime <= 0.0 || combatTime - storyTime > 0.02 || storyTime - combatTime > 0.02
+        return
+    endIf
+    Actor victim = victimForm as Actor
+    Actor playerRef = Game.GetPlayer()
+    if !victim || !playerRef || victim.GetLevel() < playerRef.GetLevel()
+        return
+    endIf
+
+    ; Clear both halves before awarding so repeated callbacks cannot double-fire.
+    StorageUtil.SetIntValue(None, "PDV.Dunmer.HonorableCombatVictim", 0)
+    StorageUtil.SetIntValue(None, "PDV.Dunmer.HonorableStoryVictim", 0)
+    PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(1.0, "honorable_victory_" + victim.GetFormID())
+    Trace(2, "Dunmer honorable victory accepted for " + victim.GetFormID())
 EndFunction
 
 Function HandleDunmerDeviationPrice(String reason)
@@ -19050,6 +20310,9 @@ EndFunction
 ; enforces Dunmer origin, the dawn/dusk window, and the once-per-window-per-day cap.
 Function HandleDunmerOutdoorGoodDaedraShrine(String reason)
     if TryAwardDunmerTwilightWindowSignal(reason)
+        if PDV_DunmerAncestorSubstrate && GetDunmerCurseLayerWeight(1) > 0.0
+            PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(1.0, "good_daedra_altar_" + reason)
+        endIf
         SendPrismaToast("journal", "good", "Good Daedra", "The Good Daedra hear the ash-prayer.")
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
         SendPrismaToast("journal", "neutral", "Shrine quiet", "The shrine is quiet in this hour.")
@@ -19242,20 +20505,17 @@ Function AwardImperialPatronCivicSignal(Float multiplier)
 EndFunction
 
 Function AwardImperialAncestorSpinePulse(Float multiplier, String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL || multiplier <= 0.0
+    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL || multiplier <= 0.0 || IsImperialVampireStateActive()
         return
     endIf
 
     Int tierBefore = 0
     if PDV_ImperialAncestorSubstrate
+        Float metricBefore = PDV_ImperialAncestorSubstrate.GetMetric()
         tierBefore = PDV_ImperialAncestorSubstrate.GetSubstrateTier()
         PDV_ImperialAncestorSubstrate.RecordCivicStandingScaled(multiplier, reason)
         Int tierAfter = PDV_ImperialAncestorSubstrate.GetSubstrateTier()
-        SendPrismaSubstrateProgress("imperial-civic", tierBefore, tierAfter, multiplier, "Your public service steadies your devotion.", "talos", GetImperialCivicLayerLabel())
-    endIf
-
-    if PDV_Talos
-        AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+        SendPrismaSubstrateProgress("imperial-civic", tierBefore, tierAfter, PDV_ImperialAncestorSubstrate.GetMetric() - metricBefore, "Your public service steadies your devotion.", "journal", GetImperialCivicTierName())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Imperial.AncestralStanding", multiplier)
@@ -19270,12 +20530,16 @@ Function RunDawnRefreshImperialAncestor()
         return
     endIf
 
-    PDV_ImperialAncestorSubstrate.ProcessCivicDawn(False, "dawn")
+    PDV_ImperialAncestorSubstrate.ProcessCivicDawn(IsImperialVampireStateActive(), "dawn")
 EndFunction
 
 Function HandleImperialCivicService(String reason)
     if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
         Trace(2, "Imperial civic service ignored for non-Imperial origin.")
+        return
+    endIf
+    if IsImperialVampireStateActive()
+        Trace(2, "Imperial civic service blocked by vampirism: " + reason)
         return
     endIf
 
@@ -19290,7 +20554,7 @@ Function HandleImperialCivicService(String reason)
         return
     endIf
 
-    StorageUtil.SetIntValue(None, "PDV.Imperial.CivicServiceCount", StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount") + 1)
+    ; Legacy CivicServiceCount is frozen after broad-pool migration.
     StorageUtil.SetStringValue(None, "PDV.Imperial.LastCivicServiceReason", reason)
     StorageUtil.SetStringValue(None, "PDV.Imperial.LastCivicFamily", GetImperialCivicFamilyLabel(civicFamily))
     StorageUtil.SetFloatValue(None, "PDV.Imperial.LastCivicServiceTime", Utility.GetCurrentGameTime())
@@ -19304,6 +20568,10 @@ Function HandleImperialTalosPressure(Bool isPrivate, String reason)
         Trace(2, "Imperial Talos pressure ignored for non-Imperial origin.")
         return
     endIf
+    if IsImperialVampireStateActive()
+        Trace(2, "Imperial Talos pressure blocked by vampirism: " + reason)
+        return
+    endIf
 
     String repeatKey = "PDV.Signal.ImperialPublicTalosPressure"
     if isPrivate
@@ -19314,6 +20582,8 @@ Function HandleImperialTalosPressure(Bool isPrivate, String reason)
     if multiplier <= 0.0
         return
     endIf
+
+    StorageUtil.SetIntValue(None, "PDV.Imperial.TalosBroadUnlocked", 1)
 
     if isPrivate
         StorageUtil.SetIntValue(None, "PDV.Imperial.PrivateTalosPressureCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PrivateTalosPressureCount") + 1)
@@ -19336,6 +20606,10 @@ EndFunction
 Function HandleImperialPatronCivicFavor(String reason)
     if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
         Trace(2, "Imperial patron civic favor ignored for non-Imperial origin.")
+        return
+    endIf
+    if IsImperialVampireStateActive()
+        Trace(2, "Imperial patron civic favor blocked by vampirism: " + reason)
         return
     endIf
 
@@ -19484,7 +20758,11 @@ Bool Function RouteNordFamily(String reason, String countKey, String lastReasonK
         TryActivateContextualFavor(laneValue, favorFamily, reason)
     endIf
 
-    StorageUtil.SetIntValue(None, countKey, StorageUtil.GetIntValue(None, countKey) + 1)
+    ; The old OldWaysContextCount is frozen after migration; other route
+    ; counters remain telemetry for their non-migration families.
+    if countKey != "PDV.Nord.OldWaysContextCount"
+        StorageUtil.SetIntValue(None, countKey, StorageUtil.GetIntValue(None, countKey) + 1)
+    endIf
     StorageUtil.SetStringValue(None, lastReasonKey, reason)
     StorageUtil.SetFloatValue(None, lastTimeKey, Utility.GetCurrentGameTime())
     if multiplier > 0.0
@@ -19507,7 +20785,11 @@ Function HandleNordOldWaysState(String reason)
     endIf
 
     if RouteNordFamily(reason, "PDV.Nord.OldWaysContextCount", "PDV.Nord.LastOldWaysReason", "PDV.Nord.LastOldWaysSignalTime", "Nord Old Ways state")
-        ShowP2BookNotice(reason, "The Old Ways", "The elder gods of the Nords stand nearer.")
+        if GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
+            ShowP2BookNotice(reason, "Faith of the Holds", "The Divines honored in the holds stand nearer.")
+        else
+            ShowP2BookNotice(reason, "The Old Ways", "The elder gods of the Nords stand nearer.")
+        endIf
     endIf
 EndFunction
 
@@ -19533,7 +20815,7 @@ EndFunction
 
 String Function GetStartupCanonicalSummary(Int originRace)
     if originRace == ORIGIN_NORD
-        return "You begin by choosing your pantheon baseline: the Old Ways of Kyne, Shor, Tsun, Stuhn, Mara, and Talos, or the Nine Divines as Skyrim now names them."
+        return "You begin by choosing your pantheon baseline: the Old Ways of Kyne, Shor, Tsun, Stuhn, Mara, Orkey, Dibella, and Talos, or the Nine Divines as Skyrim now names them."
     elseIf originRace == ORIGIN_IMPERIAL
         return "You begin in the broad embrace of the Nine Divines, even as the White-Gold Concordat presses down on the open worship of Talos."
     elseIf originRace == ORIGIN_DUNMER
@@ -19704,7 +20986,7 @@ String Function GetStartupOptionSummary(Int originRace, Int optionValue)
         if optionValue == NORD_BASELINE_NINE_DIVINES
             return "Skyrim's gods carried through the Imperial names and the public shrines."
         endIf
-        return "Kyne, Shor, Tsun, Stuhn, Mara, and Talos kept as the old Nord spine."
+        return "Kyne, Shor, Tsun, Stuhn, Mara, Orkey, Dibella, and Talos kept as the Old Ways."
     endIf
 
     return GetStartupCanonicalSummary(originRace)
@@ -19733,7 +21015,7 @@ String Function GetStartupOptionDescription(Int originRace, Int optionValue)
         elseIf optionValue == REDGUARD_SECT_ASHABAH
             return "The Ash'abah bear funerary duty and the work of the unquiet dead at real social cost. This path is narrower and heavier by design."
         endIf
-        return "The Forebear carries Redguard identity into mixed public life, bridging adaptation without letting the Yokudan spine break."
+        return "The Forebear carries Redguard identity into mixed public life, adapting without letting the old road break."
     elseIf originRace == ORIGIN_ORC
         if optionValue == ORC_LIFE_MODE_STRONGHOLD
             return "Stronghold life is the full expression of Malacath: labor, oath, strength, and provision held in common."
@@ -19745,7 +21027,7 @@ String Function GetStartupOptionDescription(Int originRace, Int optionValue)
         if optionValue == NORD_BASELINE_NINE_DIVINES
             return "The Nine Divines lane keeps Nord devotion inside Skyrim's public shrines and Imperial names, with Talos still central to the road ahead."
         endIf
-        return "The Old Ways lane keeps Kyne, Shor, Tsun, Stuhn, Mara, and Talos as your native pantheon baseline."
+        return "The Old Ways lane keeps Kyne, Shor, Tsun, Stuhn, Mara, Orkey, Dibella, and Talos as your native pantheon baseline."
     endIf
 
     return GetStartupCanonicalSummary(originRace)
@@ -19996,28 +21278,43 @@ String Function BuildBookOfDaysInstrumentJson(Int originRace)
     endIf
 
     PDV_DeityBase journalCommitment = ResolveBookOfDaysStandingDeity()
+    if IsPantheonBroadPoolPresentationActive(originRace) || originRace == ORIGIN_ARGONIAN
+        ; A remembered prior deity must not hide the active broad pool.
+        journalCommitment = None
+    endIf
     if journalCommitment
         championThreshold = journalCommitment.ThresholdChampion
         tierValue = GetTier(journalCommitment)
         pietyValue = GetPiety(journalCommitment)
+        if IsFocusedPantheonBoonSuspended()
+            tierValue = TIER_NONE
+        endIf
     elseIf originRace == ORIGIN_BRETON
         if bretonPracticeTier > TIER_NONE
             tierValue = bretonPracticeTier
             pietyValue = GetBretonPracticeCount(GetBretonTraditionValue()) as Float
         endIf
+    elseIf originRace == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
+        tierValue = PDV_ArgonianHistSubstrate.GetSubstrateTier()
+        pietyValue = PDV_ArgonianHistSubstrate.GetMetric()
+        championThreshold = 75.0
     else
         Int broadTier = GetBroadLaneTierForOrigin(originRace)
-        if broadTier > TIER_NONE
+        if IsPantheonBroadPoolPresentationActive(originRace) || broadTier > TIER_NONE
             tierValue = broadTier
-            pietyValue = GetBroadLaneServiceCount(originRace) as Float
+            pietyValue = GetBroadLaneStandingValue(originRace)
         endIf
     endIf
 
     String tierLabel = GetCurrentStandingLabel()
     if journalCommitment == None && originRace == ORIGIN_BRETON && bretonPracticeTier > TIER_NONE
         tierLabel = GetPublicTierBand(bretonPracticeTier)
-    elseIf journalCommitment == None && GetBroadLaneTierForOrigin(originRace) > TIER_NONE
+    elseIf journalCommitment == None && originRace == ORIGIN_ARGONIAN
+        tierLabel = GetArgonianCulturalPracticeLabel()
+    elseIf journalCommitment == None && (IsPantheonBroadPoolPresentationActive(originRace) || GetBroadLaneTierForOrigin(originRace) > TIER_NONE)
         tierLabel = GetBroadLaneStandingLabel(originRace, GetBroadLaneTierForOrigin(originRace))
+    elseIf journalCommitment && IsFocusedPantheonBoonSuspended()
+        tierLabel = "Committed - boon suspended"
     endIf
     return GetPanelInstrumentJson(originRace, journalCommitment != None, tierValue, tierLabel, pietyValue, championThreshold)
 EndFunction
@@ -21568,6 +22865,9 @@ String Function GetNordSurveyBaseText()
     String contextText = GetNordContextSurveyText()
     if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity
         String focusedText = "Standing: " + band + ". " + GetPublicDeityDisplayName(_activeDeity) + " names you."
+        if IsFocusedPantheonBoonSuspended()
+            return focusedText + " The commitment remains, but its boon is suspended until 50 piety." + contextText
+        endIf
         if StorageUtil.GetIntValue(None, "PDV.Neglect.ActiveCount") > 0
             return focusedText + " The bond is thinning and needs attention." + contextText
         endIf
@@ -21595,10 +22895,9 @@ EndFunction
 
 String Function GetNordContextSurveyText()
     String text = ""
-    Int oldWaysCount = StorageUtil.GetIntValue(None, "PDV.Nord.OldWaysContextCount")
     Int kyneTalosCount = StorageUtil.GetIntValue(None, "PDV.Nord.KyneTalosContextCount")
     Int edgeCount = StorageUtil.GetIntValue(None, "PDV.Nord.HircineArkayEdgeCount")
-    if oldWaysCount > 0
+    if GetNordPantheonBaselineState() == NORD_BASELINE_OLD_WAYS && GetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD) > 0.0
         text = text + " Recent acts confirm the old road."
     endIf
     if kyneTalosCount > 0
@@ -21642,6 +22941,9 @@ String Function GetNordDevotionModeLabel()
 EndFunction
 
 String Function GetCurrentStandingLabel()
+    if IsFocusedPantheonBoonSuspended()
+        return "Committed - boon suspended"
+    endIf
     Int tierValue = TIER_NONE
     PDV_DaedricPathBase standingPact = GetActiveDaedricPactPath()
     if standingPact
@@ -21673,6 +22975,9 @@ EndFunction
 ; mirroring GetCurrentStandingLabel's tier resolution. Survey + player surfaces use this;
 ; GetCurrentStandingLabel keeps the internal Seeker/Champion words for dev/MCM only.
 String Function GetCurrentStandingBand()
+    if IsFocusedPantheonBoonSuspended()
+        return "Distant"
+    endIf
     Int tierValue = TIER_NONE
     PDV_DaedricPathBase standingPact = GetActiveDaedricPactPath()
     if standingPact
@@ -21685,6 +22990,14 @@ String Function GetCurrentStandingBand()
         tierValue = PDV_GLO_ActiveTier.GetValueInt()
     endIf
     return GetPublicTierBand(tierValue)
+EndFunction
+
+Bool Function IsFocusedPantheonBoonSuspended()
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace != ORIGIN_IMPERIAL && originRace != ORIGIN_NORD
+        return False
+    endIf
+    return GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity && GetPiety(_activeDeity) < COMMITMENT_OFFER_THRESHOLD
 EndFunction
 
 String Function GetPlayerCursePublicLabel()
@@ -21766,7 +23079,7 @@ String Function GetAltmerSurveyText()
     endIf
 
     if PDV_AltmerAncestorSubstrate
-        text = text + " Your Aldmeri heritage is " + GetAltmerHeritageLayerLabel() + "."
+        text = text + " Your heritage practice is " + GetAltmerHeritageTierName() + "."
     endIf
 
     return text
@@ -21778,6 +23091,21 @@ String Function GetAltmerHeritageLayerLabel()
     endIf
 
     return PDV_AltmerAncestorSubstrate.GetHeritagePostureLabel()
+EndFunction
+
+String Function GetAltmerHeritageTierName()
+    if !PDV_AltmerAncestorSubstrate
+        return "Heritage quiet"
+    endIf
+    Int tierValue = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
+    if tierValue >= TIER_CHAMPION
+        return "Exemplar Heritage"
+    elseIf tierValue >= TIER_DEVOTED
+        return "Disciplined Heritage"
+    elseIf tierValue >= TIER_SEEKER
+        return "Ordered Heritage"
+    endIf
+    return "Heritage quiet"
 EndFunction
 
 String Function GetAltmerAlignmentSurveyBaseText()
@@ -21984,6 +23312,8 @@ String Function GetArgonianSurveyText()
         text = text + " You have sat with the old Hist-lore, and it stays with you."
     endIf
 
+    text = text + " Cultural practice: " + GetArgonianCulturalPracticeLabel() + "."
+
     return text
 EndFunction
 
@@ -22076,7 +23406,7 @@ String Function GetRedguardSurveyText()
 
     String text = GetRedguardSurveySectText()
     if StorageUtil.GetIntValue(None, "PDV.Redguard.AncestorSpineSourceCount") > 0
-        text = text + " You have read the words of an ancestor-spine, and the dead are nearer for it."
+        text = text + " You have read the words of the ancestors, and the dead are nearer for it."
     endIf
     Float farShoresWeight = StorageUtil.GetFloatValue(None, "PDV.Redguard.FarShoresToken")
     if farShoresWeight > 0.0
@@ -22372,6 +23702,9 @@ String Function GetImperialSurveyText()
     String text = ""
     if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity
         text = GetPublicDeityDisplayName(_activeDeity) + " holds your focus among the Nine. Standing: " + band + ". " + BuildImperialConcordatSurveySentence(concordat)
+        if IsFocusedPantheonBoonSuspended()
+            text = text + " The commitment remains, but its boon is suspended until 50 piety."
+        endIf
     else
         text = "You worship the Nine Divines broadly, and your standing is " + band + ". " + BuildImperialConcordatSurveySentence(concordat)
     endIf
@@ -22385,7 +23718,7 @@ String Function GetImperialSurveyText()
         text = text + " Your patron has taken note of the civic good you have done in their name."
     endIf
     if PDV_ImperialAncestorSubstrate
-        text = text + " Your civic inheritance is " + GetImperialCivicLayerLabel() + "."
+        text = text + " Civic practice: " + GetImperialCivicTierName() + "."
     endIf
 
     if PDV_ConcordatStandingTrack && PDV_ConcordatStandingTrack.HasExtremeResetGate()
@@ -22439,6 +23772,21 @@ String Function GetImperialCivicLayerLabel()
     endIf
 
     return PDV_ImperialAncestorSubstrate.GetCivicPostureLabel()
+EndFunction
+
+String Function GetImperialCivicTierName()
+    if !PDV_ImperialAncestorSubstrate
+        return "Civic practice quiet"
+    endIf
+    Int tierValue = PDV_ImperialAncestorSubstrate.GetSubstrateTier()
+    if tierValue >= TIER_CHAMPION
+        return "Civic Exemplar"
+    elseIf tierValue >= TIER_DEVOTED
+        return "Civic Discipline"
+    elseIf tierValue >= TIER_SEEKER
+        return "Civic Steadiness"
+    endIf
+    return "Civic practice quiet"
 EndFunction
 
 String Function GetImperialCursePostureLabel()
@@ -23231,6 +24579,9 @@ String Function GetPrismaSymbolForDeity(PDV_DeityBase deity)
     endIf
     if deity.DeityName == "Syrabane"
         return "syrabane"
+    endIf
+    if deity.DeityName == "Phynaster"
+        return "phynaster"
     endIf
     if deity.DeityName == "Khenarthi"
         return "khenarthi"

@@ -1,6 +1,6 @@
 # Devotion (PDV) — Race Architecture Design Reference
 **Started:** May 12, 2026
-**Last updated:** May 26, 2026 (Phase 13-16 closure defaults synced)
+**Last updated:** July 13, 2026 (pantheon parity and substrate pacing authority synced)
 **Status:** Living reference — race architecture and pre-matrix requirements locked as confirmed
 
 **Current implementation boundary:** Early sections of this reference were
@@ -11,6 +11,13 @@ reputation/state tracks, and origin-gated substrates where needed. Treat any
 remaining `Combat/Social/Lifestyle` wording in older per-race notes as
 domain-signal shorthand, not as a request to restore bucket records or
 `PDV_GLO_DevotionLevel`.
+
+**Current progression authority:**
+`references/authoring/PDV_SubstratePacingContracts.json` and
+`PDV_BroadPantheonContracts.json` supersede older route magnitudes, carry-over
+loss, Nord partial-roster or partial-resolver language, Khajiit road-home
+circuits, and the Argonian weighted composite/second Hist reward family. Older
+sections remain useful theological history only where they conflict.
 
 ---
 
@@ -150,7 +157,7 @@ Multiple worship targets are culturally available. Broad-worship lane eligibilit
 
 | Race | Pantheon | Notes |
 |------|----------|-------|
-| Nord | Old Ways + Nine Divines | Two full pantheons blend in practice simultaneously |
+| Nord | Old Ways + Nine Divines | Two recognized pantheons; the player selects one complete active baseline |
 | Imperial | Nine Divines | Different gods for different professions and life events |
 | Breton | Divines + Druidic + Witchcraft | Pragmatic syncretism is literally their tagline |
 | Dunmer | Three Good Daedra + Ancestral spirits | Multi-deity by design; ancestors mediate all practice |
@@ -199,7 +206,7 @@ Broad-worship lanes exist only where culturally normal and experientially useful
 - Represents: "this god knows your name"
 
 **Switching from broad to primary:**
-- The accepted deity carries forward 70% of current piety into foreground commitment handling
+- The accepted deity preserves 100% of current piety and begins focused reward eligibility at T2
 - Weights immediately shift to primary-focused
 - Switching requires a threshold offer/event; it is not a normal player MCM toggle
 - Rationale: committing to a primary deity is a theological act, not a preference setting
@@ -216,12 +223,12 @@ weighting instead of formal offers.
 
 | Race | Worship Type | Special v3 Architecture | Setup / Commitment Shape | Status |
 |------|-------------|-------------------------|--------------------------|--------|
-| Nord | Poly | Broad-worship combos; possible substrate promotion after playtest | Broad vs Primary, Old Ways / Nine Divines | LOCKED |
+| Nord | Poly | Mirrored broad pools plus Nord cultural substrate | Broad vs Primary, Old Ways / Nine Divines | LOCKED |
 | Imperial | Poly | `ConcordatStanding` reputation track | Broad vs Primary with public/private Talos pressure | LOCKED |
 | Breton | Three-Track Poly | `WitchcraftExposure`, `KnightlyVowIntegrity`, `DruidicStanding` | Tradition-first: Knight / Hidden Art / Green Way | LOCKED |
 | Dunmer | Layered | Strong ancestor substrate plus Good Daedra foreground | No setup choice; portable shrine and home bonus | LOCKED |
 | Altmer | Poly | `ThalmorAlignment`, Lorkhan reactions, crisis state | Faction/theological identity and threshold offers | LOCKED |
-| Khajiit | Layered Lunar | Strong lunar substrate, moon cycle, road homes, emergent patron | No formal setup; behavior shifts emphasis silently | LOCKED |
+| Khajiit | Layered Lunar | Strong lunar substrate, outdoor road-home practice, Observe the Moons, emergent patron | No formal setup; behavior shifts emphasis silently | LOCKED |
 | Bosmer | Multi-Path | `BosmerPath` state track and PDV-owned Green Pact tagging | Explicit 4-path choice at setup | LOCKED |
 | Redguard | Sect-Layered Poly | Sect state; light ancestor reverence | Crown vs Forebear vs Ash'abah | LOCKED |
 | Orc | Single-Core Social Modes | `OrcLifeMode` state and `PDV_SacredPlace` contextual modifier | Malacath across Stronghold / City / Exile | LOCKED |
@@ -238,11 +245,11 @@ This audit separates **architecture locked** from **implementation-spec locked**
 | Breton | Locked | Yes | Explicit tradition setup, all three state tracks, normal no-switching rule, hook feasibility, dawn math, recovery cadence, threshold values, Hidden Art cover/notoriety split, and tradition-authored favor lanes are locked; reward magnitudes remain tunable |
 | Dunmer | Locked | Yes | No `PDV_State_DunmerPath`; shared patron state owns native focus, `PDV_Substrate_DunmerAncestor` owns the ancestor substrate, `PDV_State_DunmerAncestorPosture` owns curse/restoration posture, and the Dunmer Daedric deviation option map is locked |
 | Altmer | Locked | Yes | `ThalmorAlignment` bands/start values, shared patron-state use, no generic broad lane, bounded Lorkhan economy, `PDV_State_AltmerCrisis`, crisis source/resolution routes, contextual favor lanes, and launch-focused deity hook posture are locked |
-| Khajiit | Locked | Yes | Lunar substrate namespace, hybrid moon-cycle model, real/fallback phase source, silent no-offer emergence, focused-emphasis enum/threshold/fallback, road-home circuit rules, lunar posture enum, curse posture, ShadowDrift boundary, five launch focused paths, and launch hook posture are locked |
+| Khajiit | Locked | Yes | Lunar substrate namespace, real 24-day phase source, silent no-offer emergence, focused-emphasis enum/threshold/fallback, outdoor road-home practice, Observe the Moons, lunar posture, five launch focused paths, and launch hook posture are locked |
 | Bosmer | Locked | Yes | Path enum, Old Contract split, Living Story fallback, shared Pact-positive signal weighting, path-switch request shape, destination gates, ledger preservation, and seven-day switch lockout are locked |
 | Redguard | Locked | Yes | `PDV_State_RedguardSect`, setup/default, ancestor layer posture, sect switching, broad -> focused offer gate, Dunmer-pattern portable/private Tu'whacca shrine, HoonDing 1.0 milestone posture, MS08 stage hooks, and launch hook posture are locked; Ash'abah social stigma is limited to light authored 1.0 content |
 | Orc | Locked | Yes | `PDV_State_OrcLifeMode` is locked as `City = 0`, `Stronghold = 1`, `LegionExile = 2`; setup/MCM records intent; active lane is world-confirmed; soft and major switch gates are defined |
-| Argonian | Locked | Yes | `PDV_Substrate_ArgonianHist`, visible `Hist` / `People` / `Void` layers, StorageUtil keys, gentle Hist distance, single bed-of-choice cadence, Sithis activation threshold, and curse posture enum are locked |
+| Argonian | Locked | Yes | Dedicated `CulturalPractice` substrate, separate `Hist` / `People` / `Void` ledgers, one People-or-Void emphasis, gentle Hist distance, bed cadence, Sithis activation, and curse posture are locked |
 
 **Remaining implementation-lock priority recommendation:**
 All ten races are implementation-spec locked as of the 2026-05-30 Altmer closeout. The next priority is implementation costing and verifier assertion design, not further architecture lock work.
@@ -718,8 +725,8 @@ Before implementation work expands, create a race signal matrix with these colum
 **Setup Flow:**
 ```
 Step 1: Choose pantheon baseline
-→ [Old Ways]      6 primary god options (Shor, Kyne, Tsun, Stuhn, Mara, Talos/Ysmir)
-→ [Nine Divines]  9 primary god options (all Nine)
+-> [Old Ways]      8 primary god options (Kyne, Shor, Tsun, Stuhn, Mara, Orkey, Dibella, Talos)
+-> [Nine Divines]  9 primary god options (Akatosh, Arkay, Dibella, Julianos, Kynareth, Mara, Stendarr, Zenithar, Talos)
 
 Step 2: Worship broadly until a god's offer fires
 → Broad worship cap: Tier 2 (Faithful) — lore-accurate, most Nords blend pantheons
@@ -733,7 +740,15 @@ Step 2: Worship broadly until a god's offer fires
 - Player's actual playstyle determines which god notices them first
 - Multiple offers possible if player excels across domains
 - Player can decline ("Not yet") — offer cooldown applies, broad worship continues
-- 70% piety carry-over on commitment
+- 100% piety preservation on commitment; focused T2 begins at 50 and T3 at 85
+
+**2026-07-13 Nord parity override (LOCKED):** Old Ways is Kyne, Shor, Tsun,
+Stuhn, Mara, Orkey, Dibella, and Talos. Nine Divines is Akatosh, Arkay,
+Dibella, Julianos, Kynareth, Mara, Stendarr, Zenithar, and Talos. Only one
+baseline is active. Both use the same manager-owned signed pool thresholds,
+decay, cap, and patron transition. Nine Divines has distinct `Faith of the
+Holds - Seeker/Faithful` broad reward records. A patron accepts at piety 50,
+preserves piety, suppresses broad reward, and begins at focused T2.
 
 **Nord implementation split (LOCKED 2026-05-19):**
 - Do not use one overloaded `PDV_State_NordWorship` enum for both pantheon identity and commitment depth
@@ -767,7 +782,7 @@ Step 2: Worship broadly until a god's offer fires
 **Nord acceptance / no-switching rule (LOCKED 2026-05-19):**
 - Accepting a primary offer sets `PDV_GLO_PatronState` to active primary and `PDV_GLO_PatronDeity` to the accepted deity
 - Accepting clears pending Nord offer candidates
-- The accepted deity receives the standard 70% piety carry-over
+- The accepted deity preserves all current piety and begins focused reward eligibility at T2
 - Other deity ledgers remain intact but become background-only
 - Competing primary offers do not fire while active primary is set
 - If devotion later decays below Tier 3, the patron relationship weakens but does not automatically clear
@@ -1849,8 +1864,7 @@ Rationale:
 - `PDV_Substrate_KhajiitLunar` is the canonical substrate owner
 - Use the existing StorageUtil prefix `PDV.Substrate.KhajiitLunar.*`, extending from current keys rather than renaming them
 - Canonical first keys are `Metric`, `Tier`, `LastEvent`, `LastPhase`, `ObservanceCount`, and `RoadHomeCount`
-- 1.0 uses the hybrid moon model: current phase gives small per-phase activity bonuses, while full-cycle consistency determines overall substrate strength
-- Prefer reliable real Skyrim Masser/Secunda state where available; if implementation proof is weak or brittle, use an abstract 28-day fallback cycle
+- 1.0 uses the real Skyrim 24-day Masser/Secunda formula and a deliberate `Observe the Moons` power; there is no abstract continuity fallback
 - Khajiit remain the only no-offer race in 1.0. Focused deity emphasis shifts silently at dawn based on weighted behavior; no formal patron offer fires
 - Do not use `PDV_GLO_PatronState = active primary` to represent Khajiit focus
 - Add a Khajiit-specific current emphasis state, recommended as `PDV_State_KhajiitFocusedEmphasis`, with a CK-readable mirror only if implementation needs conditions
@@ -1858,8 +1872,9 @@ Rationale:
 - `PDV_State_KhajiitFocusedEmphasis` uses exact enum values: `None = 0`, `Khenarthi = 1`, `Azurah = 2`, `BaanDar = 3`, `Rajhin = 4`, `Alkosh = 5`
 - Focus activates only when one focused deity has at least `50` persistent piety and leads the next-highest Khajiit focused deity by at least `15` piety, evaluated at dawn
 - If no deity has a clear lead, the Khajiit remains in broad lunar Faithful state; balanced worship is complete and valid, not an error state
-- Khajiit road homes are `2-3` player-designated rest anchors, not one sacred place
-- Road-home piety requires cycling between anchors over time; repeatedly using the same camp, bed, or convenient outdoor rest does not count as cadence
+- Any completed outdoor rest is road-home practice; the road itself is home
+- No designated anchor, circuit, elapsed-distance rule, or repeated-place rejection belongs to normal play
+- `Observe the Moons` is valid outdoors from 20:00 to 05:00, resolves after one five-second stillness check, and awards only the first valid rite each devotional day
 - Add `PDV_State_KhajiitLunarPosture` for curse and shadow pressure, using exact enum values `Normal = 0`, `Strained = 1`, `Corrupted = 2`, and `ShadowDrift = 3`
 - Active vampirism sets `PDV_State_KhajiitLunarPosture = Corrupted`; the Lattice still holds the character, but caravan/community belonging and ordinary lunar rewards weaken
 - Active lycanthropy sets `PDV_State_KhajiitLunarPosture = Strained`; Hircine adds a competing shape, but Khajiit identity remains recognizably Khajiit
@@ -2606,10 +2621,11 @@ Rationale:
 
 **Argonian implementation locks (LOCKED 2026-05-19):**
 - `PDV_Substrate_ArgonianHist` is the canonical substrate owner
-- Use one layered substrate with visible `Hist`, `People`, and `Void` readout layers, not three selectable paths or patron commitments
+- Use one dedicated `CulturalPractice` substrate metric plus separate visible `Hist`, `People`, and `Void` relation ledgers
 - Use the StorageUtil prefix `PDV.Substrate.ArgonianHist.*`
 - Canonical first keys are `Hist`, `People`, `Void`, `Tier`, `LastHistEvent`, `LastPeopleEvent`, `LastVoidEvent`, `LastMaintenanceDay`, `SithisSignalCount`, `BedOfChoiceSleepCount`, and `BedOfChoiceLastSleep`
-- `Hist` remains primary; `People` can buffer low Hist relation; `Void` can stabilize but never replace the Hist
+- `Hist` remains constitutive; exactly `People` or `Void` may be the active emphasis, and relation values never recompute the cultural metric
+- Retire the separate Hist Communion reward family; the cultural substrate plus one active emphasis is the normal two-family maximum
 - Hist distance is dawn-evaluated and always gently running in Skyrim. If no valid Hist-maintenance signal occurred in the last three in-game days, reduce `Hist` by `1` per dawn, with a non-curse floor of `20`
 - Valid Hist maintenance comes from water, wetland, rest, reflection, and the 1.0 Hist sap meditation tool; ordinary helping quests, ordinary combat, and generic crafting do not restore Hist
 - 1.0 does not provide full home-equivalent restoration outside Black Marsh
@@ -3056,7 +3072,9 @@ This is the **only race** that bypasses the standard `ProcessCommitmentOffers()`
 
 ### 12.4 Khajiit — Moon Cycle Reward Phasing (LOCKED)
 
-The Khajiit substrate reward cycles with the moons. Tied to Skyrim's actual Masser/Secunda moon data where possible (abstract 28-day cycle as fallback).
+The Khajiit substrate follows Skyrim's real 24-day Masser/Secunda formula and
+supports deliberate observation through `Observe the Moons`. There is no
+abstract continuity fallback.
 
 Rules:
 - Different phases favor different aspects of Khajiit life (road-travel, community, reflection, focused deity work)
@@ -3066,12 +3084,16 @@ Rules:
 
 ### 12.5 Khajiit — Road Homes (LOCKED)
 
-Khajiit designate 2-3 rest points (not one sacred place) as spiritual anchors along their road. This mirrors caravan-route thinking.
+Khajiit treat any completed outdoor rest as road-home practice. The road itself is home.
 
 Rules:
-- Cycling between road homes is itself devotional
-- A Khajiit who never returns is adrift; one who cycles reliably walks the moons' path
-- Uses the shared PDV_SacredPlace system with race-specific multi-location parameters
+- Completing an outdoor rest is itself devotional road-home practice
+- The same place may qualify on a later devotional day; the daily credit lock prevents farming
+- Khajiit does not use the shared `PDV_SacredPlace` system for this lane
+
+**Superseded 2026-07-13:** Khajiit has no designated road-home anchors or
+circuit and does not use `PDV_SacredPlace` for this lane. Any completed outdoor
+rest is road-home practice; the shared devotional-day lock prevents farming.
 
 ### 12.6 Argonian — Bed-of-Choice Community Designation (LOCKED)
 
@@ -3136,7 +3158,7 @@ A shared `PDV_SacredPlace` script architecture serves multiple races.
 | Race | Locations | Progression | Custom Loop |
 |------|-----------|-------------|-------------|
 | Argonian | 1 | Static (bed-of-choice) | Community decay timer |
-| Khajiit | 2-3 | Static (road circuit) | Circuit cycling tracker |
+| Khajiit | Retired | Not in shared sacred-place roster | Outdoor rest uses the substrate day lock |
 | Orc (City/Legion) | 1 | Dynamic (empty → established → thriving) | Investment progression |
 
 Race-specific hooks feed into the shared system. Custom loops per race feed back results via the shared contract.

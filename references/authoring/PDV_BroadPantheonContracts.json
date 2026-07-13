@@ -1,0 +1,126 @@
+{
+  "schema": "pdv.broad-pantheon-contracts.v1",
+  "title": "PDV Broad Pantheon Contracts",
+  "status": "implemented-static-readback-runtime-manual-proof-open",
+  "updated": "2026-07-13",
+  "authority": {
+    "architecture": "PDV_Architecture_v3.md",
+    "loreFinding": "Imperial collective Divine worship and the Nord Old Ways or Imperialized Divines alternatives are lore-supported. Only one Nord baseline is active at a time.",
+    "precedence": "This contract supersedes civic-service-count gating, the Old-Ways-only Nord reward resolver, and any roster that omits the locked Old Ways members below."
+  },
+  "representation": {
+    "type": "manager-owned StorageUtil pool",
+    "aggregateDeityRecord": false,
+    "pools": ["ImperialDivines", "NordOldWays", "NordNineDivines"],
+    "activeState": "PATRON_STATE_BROAD plus matching origin and Nord baseline where applicable"
+  },
+  "shared": {
+    "thresholds": { "seeker": 25.0, "faithful": 50.0 },
+    "cap": 50.0,
+    "tierCount": 2,
+    "rewardSync": "highest-slot-only",
+    "deityScoring": "Every deity receives its own ordinary signed piety independently of the broad pool.",
+    "logicalEventAggregation": {
+      "positiveRule": "Use the strongest applied positive eligible deity delta.",
+      "negativeRule": "If no eligible positive delta exists, use the most severe applied eligible negative delta.",
+      "neverSumGods": true,
+      "fanoutScope": ["single award", "likes-dislikes fan-out", "quest-matrix fan-out"],
+      "deltaStage": "post gain pipeline, stance, curse, and mode scaling"
+    },
+    "dailyFold": {
+      "time": "dawn",
+      "signedCap": 4.3,
+      "usesExistingGainScaling": true,
+      "usesModeScalar": true
+    },
+    "gainEligibility": "Only the pool matching the active origin and broad baseline receives event gains.",
+    "suppressedPersistence": "Pool value persists while inactive or committed.",
+    "decay": {
+      "appliesWhileSuppressed": true,
+      "graceDays": 2,
+      "amountPerDawn": 0.1,
+      "floor": 0.0,
+      "activityDefinition": "Any nonzero eligible signed pool event counts as activity for that devotional day; a negative event already reduces standing through signed scratch and does not also receive an inactivity tick. Only positive events reset the two-day last-gain grace."
+    },
+    "distinctDeityMinimum": 0,
+    "signalOverlap": "A single authentic act may separately satisfy a cultural substrate and a deity signal, but neither lane fabricates the other lane's credit."
+  },
+  "pools": [
+    {
+      "id": "ImperialDivines",
+      "origin": "Imperial",
+      "baseline": "Nine Divines",
+      "eligibleImmediately": ["Akatosh", "Arkay", "Dibella", "Julianos", "Kynareth", "Mara", "Stendarr", "Zenithar"],
+      "conditional": {
+        "Talos": "Eligible only after explicit Talos stance, prayer, or defiance unlock."
+      },
+      "rewardFamily": {
+        "tier1": { "name": "The Divines' Regard - Seeker", "effects": [{ "actorValue": "PoisonResist", "magnitude": 10.0 }] },
+        "tier2": { "name": "The Divines' Regard - Faithful", "effects": [{ "actorValue": "PoisonResist", "magnitude": 10.0 }, { "actorValue": "DiseaseResist", "magnitude": 10.0 }] },
+        "tier3": null
+      },
+      "rejectedInputs": ["generic civic standing", "generic sleep", "locked Talos piety", "civic service count"],
+      "migration": {
+        "versionKey": "PDV.BroadPantheon.Version",
+        "source": "PDV.Imperial.CivicServiceCount",
+        "formula": "clamp(oldCount * 50 / 6, 0, 50)",
+        "afterMigration": "Old count is frozen as telemetry and never gates rewards."
+      }
+    },
+    {
+      "id": "NordOldWays",
+      "origin": "Nord",
+      "baseline": "OldWays",
+      "eligibleImmediately": ["Kyne", "Shor", "Tsun", "Stuhn", "Mara", "Orkey", "Dibella", "Talos"],
+      "rewardFamily": {
+        "tier1": { "name": "Old Ways - Seeker", "effects": "Preserve the shipped Stamina effect packet." },
+        "tier2": { "name": "Old Ways - Faithful", "effects": "Preserve the shipped Stamina plus Frost Resistance effect packet." },
+        "tier3": null
+      },
+      "migration": {
+        "versionKey": "PDV.BroadPantheon.Version",
+        "source": "existing Old Ways broad count",
+        "formula": "clamp(oldCount * 50 / 6, 0, 50)",
+        "afterMigration": "Old count is frozen as telemetry and never gates rewards."
+      }
+    },
+    {
+      "id": "NordNineDivines",
+      "origin": "Nord",
+      "baseline": "NineDivines",
+      "eligibleImmediately": ["Akatosh", "Arkay", "Dibella", "Julianos", "Kynareth", "Mara", "Stendarr", "Zenithar", "Talos"],
+      "rewardFamily": {
+        "tier1": { "name": "Faith of the Holds - Seeker", "effects": [{ "actorValue": "PoisonResist", "magnitude": 10.0 }] },
+        "tier2": { "name": "Faith of the Holds - Faithful", "effects": [{ "actorValue": "PoisonResist", "magnitude": 10.0 }, { "actorValue": "DiseaseResist", "magnitude": 10.0 }] },
+        "tier3": null,
+        "recordPolicy": "Use distinct Nord records; never reuse the Imperial SPEL or MGEF records."
+      },
+      "migration": {
+        "versionKey": "PDV.BroadPantheon.Version",
+        "source": "highest eligible Nine Divines deity piety",
+        "formula": "clamp(maxEligibleDeityPiety, 0, 50)",
+        "neverSumGods": true
+      }
+    }
+  ],
+  "nordParity": {
+    "onlyOneBaselineActive": true,
+    "sameMechanics": ["signed logical-event pool", "25 and 50 thresholds", "50 cap", "two-day grace then 0.1 decay", "formal patron offer at 50", "T2 commitment transition", "highest-slot-only broad rewards"],
+    "allowedDifferences": ["eligible roster", "player-facing theology", "reward effect packet"],
+    "forbiddenDifference": "One baseline may not depend only on shared cross-race deity signals while the other has a separate reachable broad reward implementation."
+  },
+  "patronTransition": {
+    "offerRequires": ["deity piety at least 50", "qualifying signal days", "baseline eligibility", "offer cooldown eligibility"],
+    "acceptance": ["preserve all deity piety", "suppress broad reward immediately", "grant focused T2 when deity piety is 50-84", "grant focused T3 at 85 or above"],
+    "focusedT1": "Compatibility artifact only; never granted to Imperial or Nord focused patrons.",
+    "below50": "Commitment persists, but the focused boon is suspended until piety recovers to 50.",
+    "carryoverLoss": false
+  },
+  "proofBoundary": {
+    "authority": "This JSON and reconciled design documentation.",
+    "staticReadback": "Manager source, direct houseCARL record and VMAD/FormList readback, verifier and adversary audits.",
+    "runtimeRoute": "Counted event aggregation, dawn fold, decay, baseline, and transition traces.",
+    "manualPlayerSurface": "Active Effects, Survey, Prisma, Book of Days, save/load, and stack-legibility observation.",
+    "releaseClaim": "Forbidden until all earlier buckets pass for both Nord baselines and Imperial."
+  }
+}

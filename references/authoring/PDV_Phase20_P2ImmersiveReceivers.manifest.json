@@ -17,7 +17,7 @@
     "status": "exact-stage-supported-two-approved-stage-fills-live-readback-pass-pending-runtime-proof",
     "receiverStatus": "exact-stage-supported",
     "rule": "Quest-stage source entries may be approved only when PDV_PlayerEvents compares aiNewStage against explicit approvedStages for that source and route family. Whole-quest FormList membership alone is not sufficient.",
-    "checkCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates",
+    "checkCommand": "node .\\tools\\pdv_signal_e2e_gate.mjs",
     "approvedQuestStageEntries": 2,
     "approvedQuestStageScope": "Two approved quest-stage source groups are live-fill eligible in the source-fill ledger: Altmer MQ104 stage 160 and Bosmer DA05 stages 100/105. Khajiit MQ104 stage 160 and Khajiit DA01 stage 100 have static exact-stage route metadata but remain blocked for authority until the source-fill ledger declares approved live-fill groups for them.",
     "runtimeProofStatus": "pending-runtime"
@@ -459,27 +459,27 @@
   ],
   "formListShellReadback": {
     "status": "record-wired",
-    "authorTool": "tools/pdv-phase20-p2-receiver-author",
-    "command": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-formlists",
+    "readbackTool": "tools/pdv_housecarl_p2_readback.mjs",
+    "command": "node .\\tools\\pdv_housecarl_p2_readback.mjs --check-formlists",
     "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\Devotion.esp.20260604-094058.bak",
-    "readbackResult": "PASS - all 34 PDV_FLST_P2_* receiver FormLists exist as FLST records"
+    "readbackResult": "PASS 2026-07-14 - all 39 PDV_FLST_P2_* receiver FormLists exist as winning FLST records through direct houseCARL"
   },
   "aliasPropertyReadback": {
     "status": "alias-properties-wired",
-    "authorTool": "tools/pdv-phase20-p2-receiver-author",
-    "command": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-alias-properties",
+    "readbackTool": "tools/pdv_housecarl_p2_readback.mjs",
+    "command": "node .\\tools\\pdv_housecarl_p2_readback.mjs --check-alias-properties",
     "backupPath": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\Devotion.esp.20260604-094110.bak",
-    "readbackResult": "PASS - all 34 PDV_FLST_P2_* properties on PDV_PlayerEvents alias point at their matching FLST records"
+    "readbackResult": "PASS 2026-07-14 - all 39 PDV_FLST_P2_* properties on PDV_PlayerEvents alias point at their matching winning FLST records through direct houseCARL"
   },
   "sourceFillPlan": {
     "status": "p2-book-and-exact-stage-fill-live-readback-pass-pending-runtime-proof",
-    "fillCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --fill-source-entries",
-    "checkCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill",
+    "fillCommand": "Retired helper preserved as historical evidence only; future approved fills must use reviewed direct houseCARL writes.",
+    "checkCommand": "node .\\tools\\pdv_housecarl_p2_readback.mjs --check-source-fill",
     "readbackResult": "PASS - approved P2 book-read source entries, Altmer MQ104 stage 160, Bosmer DA05 stages 100/105, Khajiit MQ104 stage 160, and Khajiit DA01 stage 100 source entries filled/read back on 2026-06-12; backup D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Backups\\phase20-p2-receivers\\Devotion.esp.20260612-161427.bak",
     "curationRunbook": "references/authoring/PDV_Phase20_P2SourceCuration_Runbook.md",
     "entryRule": "Only exact source records with status approved-for-fill may be written. This tranche approves the current book-read entries, the exact Altmer MQ104 stage-160 Lorkhan crisis source, the exact Bosmer DA05 stage-100/105 Yffre hunt-law branch source, and the exact Khajiit MQ104 stage-160 (Alkosh) and DA01 stage-100 (Azurah) focused-emphasis sources; other quest-stage source entries stay blocked until exact quest/stage candidates are approved and declared.",
     "formKeyFormat": "ModName.ext:localHex, for example Skyrim.esm:00000014. Do not use load-order FormIDs.",
-    "fillToolSafety": "The fill tool refuses unapproved entries, rejects sourceKind values not declared on the target receiver property, rejects duplicate property/form/sourceKind entries, rejects approved quest-stage entries unless exact-stage receiver support and approvedStages metadata exist, and writes no ESP changes when sourceFillEntries is empty."
+    "fillToolSafety": "The retired helper's safety behavior is historical evidence only. Current verification is direct houseCARL readback plus pdv_signal_e2e_gate static validation; any future write must be a reviewed direct houseCARL change constrained to approved-for-fill entries."
   },
   "sourceFillEntries": [
     {
@@ -727,13 +727,6 @@
           "sourceKind": "book",
           "status": "approved-for-fill",
           "rationale": "One-shot terminal volume for Saxhleel identity and Hist-distance context."
-        },
-        {
-          "formKey": "Skyrim.esm:106E18",
-          "editorId": "CritterPondFish05Ingredient",
-          "sourceKind": "harvest",
-          "status": "approved-for-fill",
-          "rationale": "Renewable PO3 harvest source for Histcarp; direct Saxhleel/Hist-adjacent food signal, not generic water proximity."
         }
       ]
     },
@@ -1407,7 +1400,7 @@
     "status": "static-route-verification-required",
     "sourceOfTruth": "routeEntries",
     "script": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_PlayerEvents.psc",
-    "verificationCommand": "dotnet run --project .\\tools\\pdv-phase20-p2-receiver-author\\PdvPhase20P2ReceiverAuthor.csproj -- --check-route-entries",
+    "verificationCommand": "node .\\tools\\pdv_signal_e2e_gate.mjs",
     "rule": "Every live PDV_PlayerEvents quest-stage branch must be represented here with property, expectedFormId, exact approvedStage, routeKey, dispatch, accepted/rejected context, duplicate guard, and review status. This manifest verifies static Papyrus routing; it does not authorize ESP source fill by itself."
   },
   "routeEntries": [
@@ -1492,7 +1485,7 @@
       "expectedFormId": 118518,
       "approvedStage": 200,
       "routeKey": "nord_c06_hircine_arkay",
-      "dispatch": "PDV_EventBusService.RouteNordHircineArkayEdge(\"po3_queststage_nord_c06_hircine\")",
+      "dispatch": "PDV_EventBusService.RouteNordHircineArkayEdge(\"po3_queststage_nord_c06_arkay\")",
       "acceptedContext": "Companions cure/end-state milestone as a one-shot Hircine/Arkay edge.",
       "rejectedContext": "Generic Companions progress or repeated lycanthropy state changes.",
       "duplicateGuard": "MarkP2SourceRoute stores quest form plus routeKey.",

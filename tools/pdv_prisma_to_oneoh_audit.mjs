@@ -153,7 +153,7 @@ function verifyManager(text, filePath, pass, fail) {
     ["Offer refuse direct toast", 'SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "warning", BuildCommitmentOfferRefuseToastLine(pendingDeity), "")', "Commitment refuse uses the direct toast shape, not the generic shift template."],
     ["Offer refuse Altmer toast", "You keep to the foundation.", "Altmer refuse toast uses locked copy."],
     ["Offer refuse Redguard toast", "You keep to the sect.", "Redguard refuse toast uses locked copy."],
-    ["Commitment carryover driver", 'AwardPiety(pendingDeity, carryAmount, "commitment_carryover")', "Commitment carryover uses the reason-bearing AwardPiety funnel."],
+    ["Commitment no-loss marker", 'StorageUtil.SetFloatValue(None, "PDV.Commitment.LastCarryover", 0.0)', "Patron acceptance records zero carryover loss while preserving deity piety."],
     ["Altmer alignment surface", "Your soul records where you stand in the Thalmor question: ", "Altmer Thalmor-alignment band writes the locked Chronicle line."],
     ["Breton tradition surface", "You set your tradition: ", "Breton irreversible tradition choice emits an immediate surface."],
     ["Argonian adaptation surface", "The Hist has reshaped you.", "Argonian adaptation emits a Prisma surface."],
@@ -167,6 +167,7 @@ function verifyManager(text, filePath, pass, fail) {
   forbidSnippet(text, 'eventClass == "drift"', "Retired drift producer branch", "No drift transition branch remains in the manager.", filePath, pass, fail);
   forbidSnippet(text, '"drift.warn"', "Retired drift tone", "No drift.warn tone entries remain in the manager.", filePath, pass, fail);
   forbidSnippet(text, "SendPrismaShiftToast(BuildCommitmentOffer", "Commitment shift-toast fallback", "Commitment accept/refuse do not reuse the generic shift-toast template.", filePath, pass, fail);
+  forbidSnippet(text, 'AwardPiety(pendingDeity, carryAmount, "commitment_carryover")', "Retired commitment carryover loss", "Patron acceptance preserves existing deity piety and applies no lossy carryover award.", filePath, pass, fail);
 
   if (/SurfaceTransition\("emergence"[\s\S]{0,140}"reach"/.test(text)) {
     fail("Emergence direction", 'A SurfaceTransition("emergence", ..., "reach") call remains; expected "onset".', filePath);

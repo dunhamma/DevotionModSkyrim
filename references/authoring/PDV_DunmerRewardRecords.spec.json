@@ -1,6 +1,7 @@
 {
-  "schema": "pdv-khajiit-records.v1",
-  "status": "design-draft-2026-06-07; recognition deferred to V2; pending authoring run",
+  "schema": "pdv-dunmer-records.v2",
+  "status": "implemented-static-readback-runtime-manual-proof-open",
+  "contractOverride": "PDV_SubstratePacingContracts.json supersedes all legacy PrayerDelta 5, HomeBonusDelta 8, and automatic ancestor-piety double-route text retained for record archaeology.",
   "notes": "Authoritative record spec for the Dunmer HYBRID pilot: an ancestor SUBSTRATE (no-offer) plus a focused RECLAMATION foreground (offer via shared active-patron state). Same substrate family as the proven Khajiit pilot and the Argonian draft. The ancestor substrate (PDV_Substrate_DunmerAncestor, StorageUtil keys PDV.Substrate.DunmerAncestor.*) carries the always-active identity layer with NO passive decay (ledger: Skyrim lacks tombs/House shrines and that absence must not punish the player). The Reclamation foreground is the real piety faucet via the offer/active-patron path (one foreground focus at a time). Broad worship is a STATE (R1): broad-lane reward is granted by the broad-worship reward path keyed on the race state, NOT an aggregate deity; broad T1 uses the FIXED manager property PDV_Bless_Dunmer_Reclamation_T1 (R2) and broad T2 is PDV_Bless_Dunmer_Reclamation_T2. The three focusable Reclamation patrons (Azura/Boethiah/Mephala) each get a 3-tier set (R3, Khajiit naming). Azura REUSES the existing PDV_Deity_Azura (create:false, add Stance_Dunmer -- the shared-deity reconciliation); Boethiah and Mephala are Dunmer-owned NEW deities (create:true). Do NOT implement PDV_State_DunmerPath. Double-route mirrors Khajiit/Argonian: each devotional act records on the substrate AND sends a small honest piety pulse to the active Reclamation patron, with separate anti-farm tools. Magnitudes mirror the proven Khajiit/Argonian substrate power level; no magnitude exceeds ~12%. T3 NPC recognition is V1-deferred (PDV_RecognitionDialogueScalePacket.md); V1 T3 ships stat/signature effects with Champion Survey text as the recognition surface. All player-facing text is ASCII-only and uses Skyrim ActorValue names only.",
   "deityQuests": [
     {
@@ -54,7 +55,7 @@
   ],
   "substrateBoons": {
     "wireTo": "PDV_Substrate_DunmerAncestor",
-    "wireToScriptNote": "Substrate quest editorId carrying the slot properties is PDV_Substrate_DunmerAncestor (extends PDV_SubstrateBase). StorageUtil key contract is PDV.Substrate.DunmerAncestor.* (PrayerCount, HomeCount; metric/tier carried by PDV_SubstrateBase). Proving helper deltas: PrayerDelta 5.0, HomeBonusDelta 8.0. Posture enum PDV_State_DunmerAncestorPosture: Normal(0), Strained(1), Silent(2), RestoredScarred(3). NO passive dawn decay (ledger).",
+    "wireToScriptNote": "PDV_Substrate_DunmerAncestor carries the slot properties and PDV.Substrate.DunmerAncestor.* save keys. Portable, home, altar, victory, book, crypt, death-duty, and exact quest routes all share one +4-per-devotional-day credit. Home context adds no second metric or deity award. There is no passive decay.",
     "slots": [
       {
         "slotProperty": "Substrate_Always",
@@ -381,7 +382,7 @@
     ]
   },
   "doubleRoute": {
-    "summary": "Same pattern as the Khajiit and Argonian double-route. Each maintenance act records on the SUBSTRATE (PDV_Substrate_DunmerAncestor, anti-farm ConsumeDailyRepeatMultiplier 0.7^n) AND sends a SMALL honest piety pulse to the ACTIVE Reclamation patron (anti-farm ScoreRepeatableAction). The two mechanisms are never both applied to one magnitude: the substrate side and the pulse side carry separate, independent anti-farm tools (R8). The Reclamation foreground itself is the offer/active-patron faucet -- the real progression engine -- while the substrate maintenance keeps the always-active ancestor layer alive (with NO passive decay) and the pulse keeps neglect/creed-loss honest on the universal piety layer.",
+    "summary": "Superseded 2026-07-13: each authentic act may claim one shared +4 substrate credit and at most one act-specific Reclamation piety consequence; home context never adds another award.",
     "acts": [
       {
         "act": "Portable ash-prayer (diaspora practice)",
@@ -390,9 +391,9 @@
         "realHookSource": "existing PDV portable ash-prayer token pattern / voluntary devotional surface (signalId dunmer-portable-ash-prayer-home-rite; favorFamily ancestor-portable-ash-prayer). NOT generic shrine use, ash proximity, or tomb travel.",
         "routeId": 130,
         "routeTarget": "PDV_EventBus.RouteDunmerPortableShrinePrayer()",
-        "handler": "HandleDunmerPortableShrinePrayer (substrate: PDV_Substrate_DunmerAncestor.RecordPortableShrinePrayerScaled, PrayerDelta 5.0)",
+        "handler": "HandleDunmerPortableShrinePrayer -> shared substrate day-credit helper",
         "targetDeity": "active Reclamation patron (Azura/Boethiah/Mephala; whichever foreground focus is active)",
-        "substrateDelta": "PrayerDelta 5.0 * repeat multiplier",
+        "substrateDelta": "+4 if the devotional-day credit is unspent; otherwise 0",
         "pietyPulseDelta": "+1 small honest pulse to the active Reclamation patron",
         "antiFarmSubstrate": "ConsumeDailyRepeatMultiplier 0.7^n (oncePerDayKey PDV.Signal.DunmerPortableAshPrayer)",
         "antiFarmPietyPulse": "ScoreRepeatableAction"
@@ -404,9 +405,9 @@
         "realHookSource": "player-home context / private home rite (signalId dunmer-portable-ash-prayer-home-rite; favorFamily ancestor-home-rite). NOT generic shrine use or location proximity.",
         "routeId": 131,
         "routeTarget": "PDV_EventBus.RouteDunmerPlayerHomeBonus()",
-        "handler": "HandleDunmerPlayerHomeBonus (substrate: PDV_Substrate_DunmerAncestor.RecordPlayerHomeBonusScaled, HomeBonusDelta 8.0)",
+        "handler": "HandleDunmerPlayerHomeBonus -> same shared substrate day-credit helper",
         "targetDeity": "active Reclamation patron (Azura/Boethiah/Mephala)",
-        "substrateDelta": "HomeBonusDelta 8.0 * repeat multiplier",
+        "substrateDelta": "+4 only if the same day's credit is still unspent; never additive with prayer",
         "pietyPulseDelta": "+1 small honest pulse to the active Reclamation patron",
         "antiFarmSubstrate": "ConsumeDailyRepeatMultiplier 0.7^n (oncePerDayKey PDV.Signal.DunmerPlayerHomeRite)",
         "antiFarmPietyPulse": "ScoreRepeatableAction"
@@ -443,7 +444,7 @@
   },
   "pace": {
     "model": "hybrid: substrate-led ancestor layer (no piety faucet) PLUS an offer/active-patron Reclamation foreground (real piety faucet), mirroring the Khajiit substrate cadence for the substrate and the Imperial-style offer cadence for the foreground.",
-    "substrateCadence": "Portable ash-prayer (PrayerDelta 5.0) and home rite (HomeBonusDelta 8.0), each capped one per day by ConsumeDailyRepeatMultiplier 0.7^n. About 5 prayer signals reach the MID substrate tier (25); roughly 15 reach HIGH (75) at full per-day value. With the 0.7^n same-day decay and a natural few maintenance beats per in-game week, MID lands in roughly 1 in-game week and HIGH in roughly 3 in-game weeks of ordinary non-grind play. There is NO passive decay, so the substrate never erodes between sessions.",
+    "substrateCadence": "One authentic act per 06:00 devotional day grants +4; day 7 reaches 28 and day 19 caps at 75. Home presence adds no second credit. There is no passive decay.",
     "foregroundCadence": "The Reclamation foreground is the real faucet: curated Azura/Boethiah/Mephala acts grant active-patron piety via the offer path (T1>=Seeker 25 / T2>=Devoted 50 / T3>=Champion 85), one focus at a time. Curated sources are rarer and more meaningful than the substrate maintenance beat, so the foreground rewards intentional Reclamation commitment rather than a grindable loop.",
     "pietyPulseRole": "The small +1 pulse per substrate maintenance act to the active Reclamation patron is NOT the progression race; it only keeps the universal piety layer (neglect/creed-loss) honest so the substrate-led ancestor layer does not float free of the shared piety mechanics.",
     "decayBalance": "Ancestor substrate has NO passive dawn decay (ledger). Neglect is purely posture-gated -- gentle ancestor-silence texture at Strained, a single -5% MagickaRateMult bite only at the Silent curse posture. Ordinary play stays net-positive; a neglected Dunmer drifts toward Strained flavor but is not punished mechanically unless cursed to Silent."

@@ -11,12 +11,12 @@ MCP: PASS - Server live, profile Devotion Dev.
 ## Helper Invocations
 
 - mcp: PASS (exit 0) - node tools/pdv_mcp_check.mjs --json - Server live, profile Devotion Dev.
-- routeEntries: PASS (exit 0) - dotnet run --project ./tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj -- --check-route-entries - PASS
-- exactStageGates: PASS (exit 0) - dotnet run --project ./tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj -- --check-exact-stage-gates - PASS
-- formLists: PASS (exit 0) - dotnet run --project ./tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj -- --check-formlists - PASS
-- aliasProperties: PASS (exit 0) - dotnet run --project ./tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj -- --check-alias-properties - PASS
-- sourceFill: PASS (exit 0) - dotnet run --project ./tools/pdv-phase20-p2-receiver-author/PdvPhase20P2ReceiverAuthor.csproj -- --check-source-fill - PASS
-- completenessAudit: PASS (exit 0) - node tools/pdv_completeness_audit.mjs --json - Completeness audit PASS; source indexed 1806 functions, 91 signal consts.
+- routeEntries: PASS (exit 0) - built-in static validation - Route-entry validation is built into this gate's manifest and source checks.
+- exactStageGates: PASS (exit 0) - built-in static validation - Exact-stage validation is built into this gate's route and manifest checks.
+- formLists: PASS (exit 0) - node tools/pdv_housecarl_p2_readback.mjs --check-formlists - PASS
+- aliasProperties: PASS (exit 0) - node tools/pdv_housecarl_p2_readback.mjs --check-alias-properties - PASS
+- sourceFill: PASS (exit 0) - node tools/pdv_housecarl_p2_readback.mjs --check-source-fill - PASS
+- completenessAudit: PASS (exit 0) - node tools/pdv_completeness_audit.mjs --json - Completeness audit PASS; source indexed 1961 functions, 91 signal consts.
 
 ## Column Counts
 
@@ -33,16 +33,17 @@ MCP: PASS - Server live, profile Devotion Dev.
 ## Curated-Signal Parity
 
 Every AwardCuratedSignal[Scaled](deity, deity.SIGNAL_X) must resolve to a deity script that DEFINES and HANDLES SIGNAL_X in ScoreCuratedSignal, else the curated piety silently scores 0.0 (the Kyne class). Pure static source check -- no server.
-Status: PASS | references=110 | ok=110 | gaps=0 | cross-deity=0 | by-index=0
+Status: PASS | references=103 | ok=103 | gaps=0 | cross-deity=0 | by-index=0
 
 ## Curated-Signal Dispatch Coverage
 
 Registry-driven INVERSE of parity: every DECLARED + SCORED SIGNAL_ in a PDV_Deity_*.psc must have a real AwardCuratedSignal[Scaled] dispatch (non-Debug, non-display). An undispatched signal can never bank piety (the dead-signal class). Reserved known-gaps live in tools/pdv_reserved_signals.json; anything undispatched and NOT reserved FAILs, and a stale reservation FAILs too. Pure static source check -- no server.
-Status: PASS | declared-scored=123 | dispatched=88 | undispatched=35 | reserved-known-gaps=35 | unlisted-FAIL=0 | stale-ledger=0
+Status: PASS | declared-scored=123 | dispatched=85 | undispatched=38 | reserved-known-gaps=38 | unlisted-FAIL=0 | stale-ledger=0
 
 ### Reserved known-gaps (documented deferral -- burn down toward empty)
 - PDV_Akatosh.SIGNAL_COVENANT_MILESTONE: Wave 2 milestone: decide curated vs quest-reaction ownership before wiring (avoid double-credit).
 - PDV_Arkay.SIGNAL_CIVIC_SERVICE: Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.
+- PDV_AuriEl.SIGNAL_ANCESTOR_SPINE: Superseded 2026-07-13: Altmer substrate credit is deity-neutral and passive dawn cannot invent Auri-El piety. Retained only as a compatibility constant/score arm pending a later dead-code removal pass.
 - PDV_Dibella.SIGNAL_CIVIC_SERVICE: Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.
 - PDV_Dibella.SIGNAL_GRACE: Wave 3: Dibella signature beat; needs an act-of-grace detector. Currently only patron-civic-favor fires for her.
 - PDV_Julianos.SIGNAL_CIVIC_SERVICE: Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.
@@ -55,6 +56,7 @@ Status: PASS | declared-scored=123 | dispatched=88 | undispatched=35 | reserved-
 - PDV_Malacath.SIGNAL_BLOOD_KIN: Wave 1 mis-wire: HandleOrcBloodKinCrisis records life-mode progress but omits the curated dispatch its 3 sibling handlers (CityDignity/LegionService/SelfMadeCommunity) all have. Quick connect.
 - PDV_Malacath.SIGNAL_EXILE_RETURN: Wave 2 milestone: Legion-Exile burden-carried-home beat; needs an exile-return detector within the LEGION_EXILE life-mode.
 - PDV_Mara.SIGNAL_CIVIC_SERVICE: Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.
+- PDV_Shor.SIGNAL_ANCESTOR_SPINE: Superseded 2026-07-13: Nord hearth/sky substrate credit is deity-neutral; active-baseline acts award deity piety only through their authentic god lane. Retained as compatibility code pending dead-code removal.
 - PDV_Shor.SIGNAL_HONORABLE_BATTLE: Wave 3: needs an honorable-open-combat detector.
 - PDV_Shor.SIGNAL_SOVNGARDE_VALOR: Wave 2 milestone: decide curated vs quest-reaction ownership before wiring (avoid double-credit).
 - PDV_Sithis.SIGNAL_VOID_MILESTONE: Wave 2 milestone: decide curated vs quest-reaction ownership before wiring (avoid double-credit).
@@ -66,6 +68,7 @@ Status: PASS | declared-scored=123 | dispatched=88 | undispatched=35 | reserved-
 - PDV_Syrabane.SIGNAL_CURSE_DISEASE_WARDING: Same Syrabane signature-lane class: declared+scored, no dispatch. Wave 3.
 - PDV_Syrabane.SIGNAL_MAGICAL_CONTAINMENT: Same Syrabane signature-lane class: declared+scored, no dispatch. Wave 3.
 - PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING: Curated signature lane declared+scored in the deity-signal remap but never dispatched (wired-vs-stub class). Wave 3: Altmer Syrabane detector work, or fold into quest-reaction ownership.
+- PDV_Talos.SIGNAL_ANCESTOR_SPINE: Superseded 2026-07-13: Imperial civic substrate credit no longer grants a universal Talos pulse. Talos enters broad worship only after explicit stance, prayer, or defiance unlock. Retained as compatibility code pending dead-code removal.
 - PDV_Talos.SIGNAL_PROTECT_WORSHIPPER: Wave 3: needs a protect-a-Talos-worshipper detector.
 - PDV_Trinimac.SIGNAL_ALTMER_ORTHODOX_PRESSURE: Wave 3: hook RouteAltmerOrthodox* pressure routes. Rare-by-design frequency, but must fire.
 - PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY: Wave 3: hook Orc apostasy / Altmer orthodoxy routes. Rare-by-design frequency, but must fire.
@@ -155,7 +158,7 @@ Status: PASS | declared=88 | emitted=85 | dead-promises=3 | dead-constants=0 | r
 ## Route/Handle Reachability
 
 Every PDV_EventBus Route* and PDV__ManagerQuest Handle* function needs at least one live call site, else it is dead plumbing. Reserved orphans live in tools/pdv_reserved_routes.json.
-Status: PASS | targets=218 | reachable=214 | orphans=4 | reserved=4 | unlisted-FAIL=0 | stale-ledger=0
+Status: PASS | targets=223 | reachable=219 | orphans=4 | reserved=4 | unlisted-FAIL=0 | stale-ledger=0
 
 ### Reserved orphans (documented deferral)
 - PDV__ManagerQuest.HandleDunmerClumsyCrime: Orphan handler (gate find 2026-07-07): zero call sites. Phase 4 verdict pending -- check the Dunmer deviation-price route family for the intended caller, then wire or remove.
@@ -167,6 +170,16 @@ Status: PASS | targets=218 | reachable=214 | orphans=4 | reserved=4 | unlisted-F
 
 Event-id-set cross-check between the likes/dislikes CSVs and the manager's generated WriteLD/WritePLD seeds + ClearRowsForDeity superset array. A mismatch means a CSV edit shipped without rerunning pdv_likesdislikes_gen (inert edit) or a removed row was not regenerated. Per-deity delta drift is out of scope.
 Status: PASS | csv-ids=62 | seeded-ids=62 | superset-ids=65 | LIKES_DISLIKES_VERSION=16
+
+## Kill Classification Inheritance
+
+Actor-type classification checks actor reference, actor base, and actor race. This prevents race-derived undead (including draugr) from missing EVT_KILL_UNDEAD and falling through to the generic NPC branch.
+Status: PASS
+
+## Optional-Plugin Form Resolution
+
+Quest-reaction matrix lookups check that an optional plugin is loaded before calling GetFormFromFile, preventing avoidable Papyrus errors for integrations absent from the player's load order.
+Status: PASS
 
 ## RED / INCOMPLETE By Failing Step
 

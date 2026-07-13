@@ -2,26 +2,26 @@
   "schema": "pdv.felt-effect-registry.v1",
   "sourceHashes": {
     "references/authoring/PDV_AltmerRewardRecords.spec.json": "91fbebdda0236b33",
-    "references/authoring/PDV_ArgonianRewardRecords.spec.json": "56593371b5411684",
+    "references/authoring/PDV_ArgonianRewardRecords.spec.json": "8c261c055f495a16",
     "references/authoring/PDV_BosmerRewardRecords.spec.json": "f69efeffafb13184",
-    "references/authoring/PDV_BretonRewardRecords.spec.json": "8c134398b6bfd288",
-    "references/authoring/PDV_DunmerRewardRecords.spec.json": "825c7a87feaf9fdb",
-    "references/authoring/PDV_ImperialRewardRecords.spec.json": "c72b46709179bc85",
-    "references/authoring/PDV_KhajiitRewardRecords.spec.json": "b76464680e851a66",
-    "references/authoring/PDV_NordRewardRecords.spec.json": "fb332ee304123034",
+    "references/authoring/PDV_BretonRewardRecords.spec.json": "dfb8708bbb0c4aca",
+    "references/authoring/PDV_DunmerRewardRecords.spec.json": "d9fd2b5efb4fb379",
+    "references/authoring/PDV_ImperialRewardRecords.spec.json": "47149d1ea6554bd8",
+    "references/authoring/PDV_KhajiitRewardRecords.spec.json": "7f4843d2a6b08fe7",
+    "references/authoring/PDV_NordRewardRecords.spec.json": "99b2f9ea6290aaa4",
     "references/authoring/PDV_OrcRewardRecords.spec.json": "9881565183122c1c",
     "references/authoring/PDV_RedguardRewardRecords.spec.json": "05297e252197dd86",
-    "references/authoring/PDV_DaedricPrinceRecordContracts.json": "15b22fd116679140",
+    "references/authoring/PDV_DaedricPrinceRecordContracts.json": "8da722675e3a257d",
     "references/authoring/PDV_DeityLikesDislikes.csv": "9d7ec050e632024d",
     "references/authoring/PDV_DeityLikesDislikes_Princes_V2.csv": "93b6474ad6c56304",
     "references/authoring/PDV_DislikeConsequenceRecords.spec.json": "430b071b6bf66d6d",
-    "live-source/Scripts/Source/PDV__ManagerQuest.psc": "cd3bf4fd54cd14f2"
+    "live-source/Scripts/Source/PDV__ManagerQuest.psc": "3f783a75b095900c"
   },
   "counts": {
-    "effects": 515,
-    "families": 159,
+    "effects": 517,
+    "families": 160,
     "byClass": {
-      "boon": 211,
+      "boon": 213,
       "neglect": 10,
       "curse": 5,
       "substrate-favor": 25,
@@ -582,7 +582,7 @@
       "race": "Argonian",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_ArgonianRewardRecords.spec.json $.substrateBoons.slots[0]",
-      "displayName": "Hist Memory",
+      "displayName": "Root Memory",
       "tier": null,
       "wiringProperty": null,
       "expected": {
@@ -606,7 +606,7 @@
       "race": "Argonian",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_ArgonianRewardRecords.spec.json $.substrateBoons.slots[1]",
-      "displayName": "Hist Reach",
+      "displayName": "River-Kept Practice",
       "tier": null,
       "wiringProperty": null,
       "expected": {
@@ -640,7 +640,7 @@
       "race": "Argonian",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_ArgonianRewardRecords.spec.json $.substrateBoons.slots[2]",
-      "displayName": "Hist Attunement",
+      "displayName": "Rooted Adaptation",
       "tier": null,
       "wiringProperty": null,
       "expected": {
@@ -674,7 +674,7 @@
       "race": "Argonian",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_ArgonianRewardRecords.spec.json $.neglect",
-      "displayName": "The Hist Distant",
+      "displayName": "The Hist Silenced",
       "tier": null,
       "wiringProperty": "PDV_SPEL_Neglect_ArgonianHist",
       "expected": {
@@ -698,7 +698,7 @@
       "race": "Argonian",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_ArgonianRewardRecords.spec.json $.emphasisRewards[0]",
-      "displayName": "Hist Communion - Faithful",
+      "displayName": "Retired Argonian Relation - Faithful",
       "tier": "T1",
       "wiringProperty": null,
       "expected": {
@@ -722,7 +722,7 @@
       "race": "Argonian",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_ArgonianRewardRecords.spec.json $.emphasisRewards[1]",
-      "displayName": "Hist Communion - Devoted",
+      "displayName": "Retired Argonian Relation - Devoted",
       "tier": "T2",
       "wiringProperty": null,
       "expected": {
@@ -2561,7 +2561,7 @@
         ],
         "effects": [
           {
-            "actorValue": "Health",
+            "actorValue": "PoisonResist",
             "magnitude": 10,
             "duration": null
           }
@@ -2585,8 +2585,8 @@
         ],
         "effects": [
           {
-            "actorValue": "Health",
-            "magnitude": 20,
+            "actorValue": "PoisonResist",
+            "magnitude": 10,
             "duration": null
           },
           {
@@ -3955,12 +3955,65 @@
       "familyId": "Nord-OldWays|boon"
     },
     {
+      "effectId": "PDV_Bless_Nord_NineDivines_T1",
+      "class": "boon",
+      "lane": "Nord-NineDivines",
+      "race": "Nord",
+      "origin": "race-spec",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[2]",
+      "displayName": "Faith of the Holds - Seeker",
+      "tier": "T1",
+      "wiringProperty": null,
+      "expected": {
+        "espEditorIds": [
+          "PDV_Bless_Nord_NineDivines_T1"
+        ],
+        "effects": [
+          {
+            "actorValue": "PoisonResist",
+            "magnitude": 10,
+            "duration": null
+          }
+        ]
+      },
+      "familyId": "Nord-NineDivines|boon"
+    },
+    {
+      "effectId": "PDV_Bless_Nord_NineDivines_T2",
+      "class": "boon",
+      "lane": "Nord-NineDivines",
+      "race": "Nord",
+      "origin": "race-spec",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[3]",
+      "displayName": "Faith of the Holds - Faithful",
+      "tier": "T2",
+      "wiringProperty": null,
+      "expected": {
+        "espEditorIds": [
+          "PDV_Bless_Nord_NineDivines_T2"
+        ],
+        "effects": [
+          {
+            "actorValue": "PoisonResist",
+            "magnitude": 10,
+            "duration": null
+          },
+          {
+            "actorValue": "ResistDisease",
+            "magnitude": 10,
+            "duration": null
+          }
+        ]
+      },
+      "familyId": "Nord-NineDivines|boon"
+    },
+    {
       "effectId": "PDV_Bless_Nord_Kyne_T1",
       "class": "boon",
       "lane": "Nord-Kyne",
       "race": "Nord",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[2]",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[4]",
       "displayName": "Kyne's Sky - Seeker",
       "tier": "T1",
       "wiringProperty": null,
@@ -3984,7 +4037,7 @@
       "lane": "Nord-Kyne",
       "race": "Nord",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[3]",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[5]",
       "displayName": "Kyne's Sky - Devoted",
       "tier": "T2",
       "wiringProperty": null,
@@ -4013,7 +4066,7 @@
       "lane": "Nord-Kyne",
       "race": "Nord",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[4]",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[6]",
       "displayName": "Kyne's Breath - Champion",
       "tier": "T3",
       "wiringProperty": null,
@@ -4042,7 +4095,7 @@
       "lane": "Nord-Shor",
       "race": "Nord",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[5]",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[7]",
       "displayName": "Shor's Favor - Seeker",
       "tier": "T1",
       "wiringProperty": null,
@@ -4066,7 +4119,7 @@
       "lane": "Nord-Shor",
       "race": "Nord",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[6]",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[8]",
       "displayName": "Shor's Favor - Devoted",
       "tier": "T2",
       "wiringProperty": null,
@@ -4095,7 +4148,7 @@
       "lane": "Nord-Shor",
       "race": "Nord",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[7]",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[9]",
       "displayName": "Shor's Hall - Champion",
       "tier": "T3",
       "wiringProperty": null,
@@ -4129,7 +4182,7 @@
       "lane": "Nord-Tsun",
       "race": "Nord",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[8]",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[10]",
       "displayName": "Tsun's Trial - Seeker",
       "tier": "T1",
       "wiringProperty": null,
@@ -4153,7 +4206,7 @@
       "lane": "Nord-Tsun",
       "race": "Nord",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[9]",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[11]",
       "displayName": "Tsun's Trial - Devoted",
       "tier": "T2",
       "wiringProperty": null,
@@ -4182,7 +4235,7 @@
       "lane": "Nord-Tsun",
       "race": "Nord",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[10]",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[12]",
       "displayName": "Tsun's Vigil - Champion",
       "tier": "T3",
       "wiringProperty": null,
@@ -4216,7 +4269,7 @@
       "lane": "Nord-Stuhn",
       "race": "Nord",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[11]",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[13]",
       "displayName": "Stuhn's Ward - Seeker",
       "tier": "T1",
       "wiringProperty": null,
@@ -4240,7 +4293,7 @@
       "lane": "Nord-Stuhn",
       "race": "Nord",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[12]",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[14]",
       "displayName": "Stuhn's Ward - Devoted",
       "tier": "T2",
       "wiringProperty": null,
@@ -4269,7 +4322,7 @@
       "lane": "Nord-Stuhn",
       "race": "Nord",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[13]",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[15]",
       "displayName": "Stuhn's Bulwark - Champion",
       "tier": "T3",
       "wiringProperty": null,
@@ -4303,7 +4356,7 @@
       "lane": "Nord-Talos",
       "race": "Nord",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[14]",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[16]",
       "displayName": "Talos's Resolve - Seeker",
       "tier": "T1",
       "wiringProperty": null,
@@ -4327,7 +4380,7 @@
       "lane": "Nord-Talos",
       "race": "Nord",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[15]",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[17]",
       "displayName": "Talos's Resolve - Devoted",
       "tier": "T2",
       "wiringProperty": null,
@@ -4356,7 +4409,7 @@
       "lane": "Nord-Talos",
       "race": "Nord",
       "origin": "race-spec",
-      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[16]",
+      "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[18]",
       "displayName": "Talos's Triumph - Champion",
       "tier": "T3",
       "wiringProperty": null,
@@ -7120,6 +7173,11 @@
         "effects": [
           {
             "actorValue": "Alteration",
+            "magnitude": 20,
+            "duration": 0
+          },
+          {
+            "actorValue": "Magicka",
             "magnitude": 20,
             "duration": 0
           }
@@ -13044,6 +13102,16 @@
         "PDV_Bless_Nord_Kyne_T1",
         "PDV_Bless_Nord_Kyne_T2",
         "PDV_Bless_Nord_Kyne_T3"
+      ]
+    },
+    {
+      "familyId": "Nord-NineDivines|boon",
+      "lane": "Nord-NineDivines",
+      "class": "boon",
+      "race": "Nord",
+      "members": [
+        "PDV_Bless_Nord_NineDivines_T1",
+        "PDV_Bless_Nord_NineDivines_T2"
       ]
     },
     {

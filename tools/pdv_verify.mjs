@@ -1421,9 +1421,45 @@ class Verifier {
     }
   }
 
+  checkPacingAndPantheonContracts() {
+    const audits = [
+      ["Substrate pacing contract", "pdv_substrate_pacing_audit.mjs"],
+      ["Broad pantheon contract", "pdv_broad_pantheon_audit.mjs"],
+      ["Pantheon and substrate record readback", "pdv_pantheon_record_readback.mjs"],
+      ["Pantheon presentation record readback", "pdv_pantheon_presentation_readback.mjs"],
+    ];
+    for (const [label, script] of audits) {
+      const toolPath = path.join(__dirname, script);
+      if (!exists(toolPath)) {
+        this.fail(label, `${script} is missing.`, toolPath);
+        continue;
+      }
+      const result = spawnSync(process.execPath, [toolPath, "--json"], {
+        encoding: "utf8",
+        cwd: PROJECT_ROOT,
+      });
+      let parsed = null;
+      try {
+        parsed = JSON.parse(result.stdout || "{}");
+      } catch {
+        this.fail(label, `${script} returned invalid JSON (exit ${result.status}).`, toolPath);
+        continue;
+      }
+      const failures = Array.isArray(parsed.findings)
+        ? parsed.findings.filter((finding) => finding.status !== "PASS").length
+        : 1;
+      if (result.status === 0 && parsed.status === "PASS" && failures === 0) {
+        this.pass(label, `${parsed.findings.length} contract/source/readback assertions passed.`, toolPath);
+      } else {
+        this.fail(label, `${failures} assertion(s) failed; audit exit ${result.status}.`, toolPath);
+      }
+    }
+  }
+
   async run() {
     this.checkPaths();
     this.checkDeclarationGates();
+    this.checkPacingAndPantheonContracts();
     if (exists(PDV_ESP) && exists(MUTAGEN_BRIDGE)) {
       this.loadRecordInventory();
       this.loadRecordDetails();
@@ -5976,8 +6012,9 @@ class Verifier {
       "Function HandleKhajiitAlkoshDragonOrder(String reason)",
       "Function RecordKhajiitFocusSignal(Int focusValue, String keyPrefix, String label, String reason)",
       "Bool Function IsKhajiitOrigin()",
-      "\"PDV.Khajiit.RoadHome.LastAnchor\"",
-      "\"PDV.Khajiit.RoadHome.RepeatRejectCount\"",
+      "Function BeginKhajiitMoonObservation(Actor playerRef)",
+      "Function ProcessPendingKhajiitMoonObservation(Int observationToken)",
+      "PDV_Power_Khajiit_ObserveMoons",
       "\"PDV.Signal.KhajiitBaanDarRoadTrick\"",
       "bd=",
     ]);
@@ -6267,7 +6304,8 @@ class Verifier {
       "Function AwardDunmerAncestorSpinePulse(Float multiplier, String reason)",
       "PDV_Azura.SIGNAL_ANCESTOR_SPINE",
       "\"PDV.Dunmer.AncestorSpine\"",
-      "AwardDunmerAncestorSpinePulse(multiplier, reason)",
+      "PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled",
+      "Function HandleDunmerHonorableVictory(Form victimForm)",
     ]);
 
     const substrateDetail = this.recordDetails.get("PDV_Substrate_DunmerAncestor");

@@ -7,6 +7,16 @@ that keeps parallel per-race spec/manifest authoring consistent).
 `PDV_DeityCoverageMatrix.json`, and the Phase 2 plan
 (`~/.claude/plans/use-our-handoff-to-validated-hellman.md`).
 
+> **Superseded scope notice (2026-07-13):** This file remains the historical
+> Phase 2 record and still governs shared deity identity. For Imperial and Nord
+> broad progression, `PDV_BroadPantheonContracts.json` now wins: broad worship
+> is still state rather than a deity, but progression is a manager-owned signed
+> pool rather than civic/service counts or a single race reward resolver. The
+> locked Old Ways roster is Kyne, Shor, Tsun, Stuhn, Mara, Orkey, Dibella, and
+> Talos. The Nine Divines roster is Akatosh, Arkay, Dibella, Julianos, Kynareth,
+> Mara, Stendarr, Zenithar, and Talos. Both Nord baselines must be mechanically
+> complete and only one is active at a time.
+
 These rulings were derived by reading the LIVE manager (`PDV__ManagerQuest.psc`) — they reflect
 how the engine actually works, not a fresh design. Every Phase 2 race spec MUST conform.
 
@@ -36,6 +46,12 @@ exact editorIds for the broad T1; the broad T2 follows the same stem with `_T2`:
 | Nord | OldWays | `PDV_Bless_Nord_OldWays_T1` | `PDV_Bless_Nord_OldWays_T2` |
 | Orc | Malacath | `PDV_Bless_Orc_Malacath_T1` | `PDV_Bless_Orc_Malacath_T2` |
 | Redguard | AncestorSpine | `PDV_Bless_Redguard_AncestorSpine_T1` | `PDV_Bless_Redguard_AncestorSpine_T2` |
+
+For Nord, the Old Ways row above remains its own record family. The Nine Divines
+baseline now requires distinct `Faith of the Holds - Seeker/Faithful` records;
+it must not reuse either Old Ways or Imperial records. For Imperial, the Civic
+EditorIDs remain compatibility identifiers while the player-facing family is
+`The Divines' Regard` and is gated by the Imperial Divines pool.
 
 ### R3 — Focused-patron 3-tier sets follow the Khajiit naming convention
 `PDV_Bless_<Race>_<Patron>_T1/T2/T3` (e.g. `PDV_Bless_Imperial_Mara_T1`,

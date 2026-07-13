@@ -81,18 +81,21 @@ ESP records; recompile/deploy to MO2 before in-game smoke to mirror this state.
 The substantive open work is the **evidence-gate slots** (all in-game/packaging,
 none machine-greenable):
 
+Counts current as of 2026-07-14.
+
 | Lane | Open | Notes |
 | --- | --- | --- |
-| C-FELT-FAMILY | 105/148 | One-per-family in-game felt proof; 43 recorded (22 -> 43 between 07-07 and 07-09). **2026-07-13:** any recorded tick that observed a Magicka/Stamina (or Health) regen-BAR reward is INVALIDATED by the regen->Fortify-pool conversion and must be re-proven as a pool-MAX effect; review the 43 recorded ticks for affected M/S families. |
-| C-PACING-SIGNOFF | 10/10 | Dated per-race play-sitting sign-offs; fold into felt-family sittings |
-| C-EXPMODE-SMOKE | 2/2 | Pilgrim + Wayfarer in-game smoke (build gate closed 07-07) |
-| C-REQUIEM-TRACKB | 3/3 | Authoria sweeps A/B1/B2 |
+| C-FELT-FAMILY | 58/151 | One-per-family in-game felt proof; **93 done (62%)** — 43 retro + 50 fresh (Nord/Imperial 13 each, Khajiit 10, Breton 10, + cross-cutting). **Owner ruling 2026-07-14 (keep-as-done + note drift, supersedes the earlier "invalidated" note):** the 07-13 regen->Fortify conversion changed the effect records on ~61 already-done families; they STAY proven (still felt, now as pool-MAX), but their recorded notes describe the pre-conversion regen effect. The converted effects' Requiem-feltness is re-proven by C-REQUIEM-TRACKB, which doubles as the re-confirm. |
+| PS-A pantheon/substrate adversarial | 0/12 cards (0/30 buckets) | **NEW 2026-07-14 lane.** Independent refutation closed 4 backend defects (broad-scratch self-decay, Argonian bed day-bounding, Sacred Water/Sleeping Tree Sap shared Hist clock, Nord Survey live-pool). Backend/static all PASS (verifier 4145/0/0, signal E2E 39/39, broad 95/95, substrate-pacing 116/116, Prisma 114/114). Runtime-route + manual/display evidence owed per card into `PDV_PantheonSubstrateRuntimeEvidenceLedger.json`; authority = runbook §Pantheon/substrate addendum. |
+| C-PACING-SIGNOFF | 9/10 | Dated per-race play-sitting sign-offs (Imperial recorded); fold into felt-family sittings |
+| C-EXPMODE-SMOKE | **PASS (2/2)** | Pilgrim + Wayfarer in-game smoke recorded |
+| C-REQUIEM-TRACKB | 4 open | Authoria sweeps; **build now complete** — the project-wide M/S regen->Fortify conversion shipped 07-13 (3777608e + Daedric/neglect/near-death), so Track B is runnable and re-proves the 61 converted felt families |
 | C-DISLIKE-DEBUFF-TUNING | 1/1 | 32-source disfavor anti-stack legibility under Requiem |
 | C-COMPAT-ARR | 1/1 | Maintainer-accepted evidence packet |
-| C-COMPAT-BORDELLO | 6/6 | Six-list packaging per the 1.0 Compatibility Gate |
+| C-COMPAT-BORDELLO | 6 slots = **2 build-targets** | DoD-base + JOJ-base share the religion-removal set; ~1 session of packaging, gate still records 6 sign-offs (owner 2026-07-12) |
 | C-PLACEMENT-FINAL | gate FAIL | In-world hook proofs; re-scoped 07-07 (a9e73e0), folds into race sittings |
 
-### The gap arc (2026-07-06 -> 2026-07-09): every gap became a gate
+### The gap arc (2026-07-06 -> 2026-07-14): every gap became a gate
 
 The recurring failure class ("declared but not wired end-to-end") kept being
 found by the owner's own review passes -- and each discovery was converted into
@@ -104,6 +107,8 @@ a permanent machine gate rather than a one-off fix:
 | 07-07 | Prose end-states unverifiable; "done" claims drifted | 1.0 End-State Contract + `pdv_1_0_endstate_gate.mjs` with drift-voiding evidence (23d266f) |
 | 07-08 | Wired-vs-stub review: curated "signature" fork lanes are dev-only stubs across all 10 races; guides lead with acts that never fire organically; neglect timers unresettable through the named acts; 4 copy inversions | 10 guides tagged `[WIRED]/[QUEST]/[PARTIAL]/[STUB]/[INERT]` + `_WiredVsStub_ReviewSummary.md`; deity signal remap designed + locked (ddb81ce, 1631351) |
 | 07-09 | (response lands) | Signal remap WIRED: manager +184 lines, 27 new CSV rows, remap smoke runbook + wiring-gap deep-dive shipped (5f245de); in-game smoke owed |
+| 07-13 | Magicka/Stamina (and Health) regen rewards are INERT under Requiem (Requiem zeroes regen) — a project-wide feltness gap: boons/prices/neglect/near-death "felt" nothing | Project-wide regen->Fortify-pool conversion: 9 races always-on regen + Daedric Prince boons/prices + race neglect/creed-loss penalties + Argonian Sithis near-death (3777608e, 90e5d3e7, 612dfe52, 361cd5e5, c452d9cf); C-REQUIEM-TRACKB re-proves |
+| 07-14 | Independent call-graph + presentation refutation found 4 backend bypasses (broad-scratch self-decay, Argonian bed day-bounding, Sacred Water/Sap shared Hist clock, Nord Survey frozen counter) | Backend fixes landed (all static/readback PASS) + a 12-card PS-A adversarial runtime lane (0/30 buckets) authored to close them with runtime/manual proof |
 
 The felt-trace exhaustive gate (441/441 PASS pre-drift) and curated-signal
 parity (107/107) both hold; the remap re-green is repo-side work, not a

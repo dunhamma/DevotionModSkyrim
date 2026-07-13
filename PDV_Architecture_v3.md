@@ -1,6 +1,6 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-07-13 AEST (v3.97 - Breton Hidden Art layered-pact contract)
+Last revised: 2026-07-14 AEST (v3.99 - pantheon parity machine/readback closeout)
 Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, Phase 17 decay, Phase 18A/B player status/Nord pilot, Phase 19 live generated patch closeout, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are proven/closed at their required gates. Phase 20 now owns the full-roster 1.0 content target: every locked race-architecture god and all sixteen Skyrim-present Daedric Prince surfaces must be content-ready for every race, with `references/authoring/PDV_DeityCoverageMatrix.json` and `--strict-phase20-roster` as the roster authority gate. The first Altmer Phase 20 runtime lane is source-scaffolded, compile-verified, crisis-record-wired, has the first two Altmer favor spell records wired, has four Altmer ACTI trigger proof base records wired for crisis, Lorkhan pressure, dawn steadiness, and orthodox cost, and now has Altmer Exiled vampire / werewolf halt manager source plus three `MESG` records wired to `PDV__ManagerQuest`; its four QASmoke proof references read back cleanly. Argonian, Orc, Redguard, Bosmer, and Khajiit have also crossed into source/record-wired proof slices, and all 30 Phase 20 proof references are now QASmoke-placed with helper/readback proof. Runtime proof and final immersive world placement remain open; `tools/pdv_phase20_runtime_check.mjs` and `references/authoring/PDV_Phase20_QASmokeRuntimeProof_Runbook.md` define the counted route-log, Survey/status, immersion, negative-hook, and anti-farm proof lane. `references/authoring/PDV_PreBetaRaceScalingSpine.md` and `PDV_PreBetaRaceGateLedger.md` now define the internal pre-beta scaling spine and all-race evidence ledger: Altmer active spine, Khajiit first contrast, Argonian second contrast, Orc / Redguard / Bosmer P1 packets, and Breton / Dunmer / Imperial / Nord P2 audit-only packets. The race gameplay audit now treats immersion as an explicit reward-budget axis, and `--strict-phase20-race-costing` enforces `immersionProof` blocks for all Phase 20 race-costing manifests. The current Phase 20 Altmer/race-costing gate is clean again after content-lock row reconciliation; the remaining warning is the existing unnamed CK-authored INFO record class. Phase 21 is the Authoria-first compatibility package lane because compatibility testing must wait until the mod's full content surface is stable enough to test against modlists.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, the historical Not Yet / Refuse / Accept branches, and accepted-patron persistence; current source supersedes the old 7/14-day reoffer cooldown with one offer per qualification, lapse-and-rebuild reoffer, and per-deity terminal refusal. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. Phase 17 runtime proof now covers grace, eligible decay, same-day guard, broad-worship reduced decay, active-patron skip, non-patron drift, and Devoted/Champion floors. Phase 18 runtime proof now covers the Player page, Developer Options persistence, Survey broad/focused states, Hircine/werewolf tension, vampire suppression/cure scar, save/load persistence, and positive/negative dialogue availability for Froki, Heimskr, Andurs, and Aela. The current combined Phase 18/Nord/Phase 19 strict gate is clean at `PASS=1208, INFO=28`, with no `FAIL`, `WARN`, or `TODO`. Authoring infrastructure has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, a reusable dialogue-v1 manifest/readback proof lane for CK-authored dialogue scaffolding, and an active generated classification patch for approved core vanilla/DLC rules; this does not broaden generated dialogue or generic gameplay authoring support.
 
 Current v3.97 addendum: Breton Hidden Art is a narrow layered-pact exception to
@@ -16,6 +16,35 @@ same-family Champion T3 is an absolute cumulative total and replaces its T2
 spell; distinct patron/Prince families may remain beside it. The compiler must
 reject tracked/deployed source drift before building live PEX files so source
 sync cannot silently occur after compilation.
+
+Current v3.98 addendum: `references/authoring/PDV_SubstratePacingContracts.json`
+and `PDV_BroadPantheonContracts.json` supersede earlier route-specific substrate
+magnitudes, civic-count broad rewards, the partial Nord Nine Divines resolver,
+Khajiit road-home circuits, and the Argonian weighted composite/Hist Communion
+stack. Imperial, Dunmer, Argonian, Nord, Altmer, and Khajiit now share an
+origin-specific first-authentic-act-per-devotional-day substrate credit of `+4`,
+with thresholds `1/25/75`, a positive cap of `75`, and a 06:00 day boundary.
+Imperial Divines, Nord Old Ways, and Nord Nine Divines use manager-owned broad
+pantheon pools, never aggregate deity records. One logical devotional act adds
+only its strongest applied eligible positive delta, or its most severe eligible
+negative delta when no positive exists. The two Nord baselines mirror thresholds,
+decay, patron transition, and T2 cap while retaining distinct rosters and reward
+families. These are locked design contracts pending source, record, runtime, and
+manual proof; older packet evidence proves only the superseded implementation.
+
+Current v3.99 proof update: the v3.98 contracts are implemented and closed at
+authority, source, compile, static, and direct-record-readback layers. The live
+manager owns the three pools, the shared substrate day-credit path, migrations,
+focused T2/T3 transition, Argonian cultural separation, and Observe the Moons.
+Direct houseCARL refutation proves exact approved P2 FormList membership, manager
+and alias VMAD bindings, focused spell/child-MGEF family-name parity, the six
+active substrate records, broad reward packets, and the ordered lunar message
+packet. `pdv_verify` is 4147 PASS / 0 WARN / 0 FAIL; the integrity harness is
+green at substrate 99/99, broad pantheon 88/88, record readback 81/81, and
+presentation readback 81/81. This supersedes the preceding "pending source and
+record" wording only. Organic ingress, save/load, player-visible boundaries,
+and feel remain open under PS-A1 through PS-A12 and cannot be inferred from
+machine/readback proof.
 
 Current v3.96 addendum: the signal-floor readback/faucet tranche has landed at
 source/compile/readback level. `tools/pdv_extract_quest_stage_readback.mjs` now
@@ -1007,6 +1036,8 @@ Spell    Property Substrate_High Auto            ; activates at a higher thresho
 Float    Property MidThreshold = 25.0 Auto
 Float    Property HighThreshold = 75.0 Auto
 
+Float    Property LowThreshold = 1.0 Auto
+
 Function OnInit()
     RegisterForSubstrateEvents()
 EndFunction
@@ -1021,23 +1052,34 @@ Function RecomputeSubstrateTier()
 EndFunction
 ```
 
+Positive substrate progress routes through one piety-neutral daily-credit seam.
+The devotional day is `floor(GameDaysPassed - 0.25)` and is stored as day plus
+one. The first approved authentic act for the matching origin grants `+4`; all
+later acts that devotional day grant zero. No credit banks across days, and
+different route families cannot bypass the shared day lock. Migration and
+developer boundary seeds are the only direct positive-write exceptions; decay
+and curse resets are the only direct negative-write exceptions.
+
 ### 8.2 Substrates needed for first release
 
-Strong persistent substrates are locked to three races for 1.0: Dunmer
-ancestor practice, Khajiit lunar life, and Argonian Hist relation. These are
-the only substrate quests expected to carry always-active race identity at
-meaningful strength.
+Strong persistent substrates are locked to six races for 1.0: Imperial civic
+practice, Dunmer ancestor practice, Argonian cultural practice, Nord
+hearth/sky-road practice, Altmer ordered heritage, and Khajiit lunar-road life.
+Breton's earlier substrate records are retired compatibility/migration surfaces
+and do not belong to the active substrate FormList.
 
 | Substrate | Origin | What it tracks | Aggregate metric |
 |---|---|---|---|
-| `PDV_Substrate_KhajiitLunar` | Khajiit | Lunar phase observance + moon cycle compliance + road-home cycling | Moon-observance count, modulated by cycle phase and road-home return frequency |
-| `PDV_Substrate_DunmerAncestor` | Dunmer | Portable shrine prayer, ancestor invocation, home-site bonus | Ancestor-event count, decays with neglect; bonus at player-owned property |
-| `PDV_Substrate_ArgonianHist` | Argonian | Hist maintenance + People support + Void threshold + bed-of-choice cadence | Layered Hist/People/Void relation metric, with Hist primary, People as buffer, and Void threshold-gated so Sithis cannot replace normal Argonian identity by default |
+| `PDV_Substrate_ImperialAncestor` | Imperial | Civic and public religious practice | Daily authentic civic-practice credit; never a generic sleep or Talos pulse |
+| `PDV_Substrate_DunmerAncestor` | Dunmer | Ancestor and Reclamation practice | Daily authentic practice credit; home context is texture, not a second award |
+| `PDV_Substrate_ArgonianHist` | Argonian | Saxhleel cultural practice | Dedicated `CulturalPractice` metric, separate from Hist/People/Void relation ledgers |
+| `PDV_Substrate_NordAncestor` | Nord | Hearthkeeping and open-sky cultural practice | Daily authentic practice credit shared across both pantheon baselines |
+| `PDV_Substrate_AltmerAncestor` | Altmer | Ordered rest, cultivation, heritage, and rite | Daily authentic practice credit; passive dawn is excluded |
+| `PDV_Substrate_KhajiitLunar` | Khajiit | Outdoor road-home life, lunar observance, caravan defense, and curated focus acts | Daily authentic practice credit; no designated anchors or circuit |
 
-Altmer orthodoxy, Redguard ancestor reverence, and Orc life-mode standing
-express identity through privileges, contextual favors, sacred-place modifiers,
-and state tracks first; promote one to a full substrate quest only if playtest
-feedback proves the lighter pattern insufficient. In particular, Orc
+Redguard ancestor reverence and Orc life-mode standing express identity through
+privileges, contextual favors, sacred-place modifiers, and state tracks. In
+particular, Orc
 City/Legion community location tracking uses `PDV_SacredPlace`, but it is not a
 strong persistent substrate and should not compete with Malacath's foreground
 mode as the main Orc boon lane.
@@ -1048,14 +1090,16 @@ silently change the active mode by location visits alone. Mode changes come
 from the Orc state-track gates: major gates immediately, or dawn-evaluated
 soft switches after sustained evidence.
 
-**Substrate promotion policy (LOCKED):** Non-substrate races (Nord, Imperial, Breton, Redguard, Altmer, Orc) can be promoted to full substrate if playtest proves lighter mechanics insufficient. Architecture supports promotion without refactoring. Candidates: Nord (pantheon-level broad worship may need always-on tracking), Breton (tension system may already provide equivalent depth).
+**Substrate roster policy (LOCKED):** The active 1.0 roster is the six origins
+listed above. Redguard and Orc remain outside it. Breton is explicitly retired;
+its old records may remain only for compatibility and migration.
 
 ### 8.3 Storage
 
 Substrates use their own StorageUtil key prefix to avoid colliding with deity keys:
 
 ```
-PDV.Substrate.<Name>.Metric     ; aggregate metric (0-100)
+PDV.Substrate.<Name>.Metric     ; aggregate metric (0-75)
 PDV.Substrate.<Name>.LastEvent  ; game time of last substrate event
 PDV.Substrate.<Name>.Tier       ; current substrate tier 0-3
 ```
@@ -1075,7 +1119,7 @@ Scriptname PDV_SacredPlace extends Quest
 
 ; -- Identity (set in CK per instance) --
 String   Property PlaceName Auto                 ; "ArgonianBedOfChoice"
-Int      Property MaxLocations = 1 Auto          ; Argonian: 1, Khajiit: 3, Orc: 1
+Int      Property MaxLocations = 1 Auto          ; Argonian: 1, Orc: 1
 Int      Property RequiredOriginRace Auto        ; RACE_ARGONIAN etc.
 
 ; -- Tracking --
@@ -1100,15 +1144,15 @@ Float Function GetPlaceBonus()                   ; read by substrate scoring
 | Race | Locations | Visit Model | Progression | Custom Behavior |
 |---|---|---|---|---|
 | Argonian | 1 | Sleep N nights/month at designated bed | Static | Community decay on absence |
-| Khajiit | 2-3 | Cycle between road homes | Static | Circuit completion bonus |
 | Orc (City/Legion) | 1 | Visit invested location | Dynamic (empty -> established -> thriving) | Investment builds over time |
 
 **Design rules:**
 - All towns work equally once designated (no mechanical bonus for specific locations)
 - Location-specific flavor text is allowed (Windhelm for Argonian, stronghold approaches for Orc)
-- Designation piggybacks off existing game concepts (bed ownership for Argonian, sleep location for Khajiit, return frequency for Orc)
+- Designation piggybacks off existing game concepts (bed ownership for Argonian, return frequency for Orc)
 - The shared system handles tracking; race-specific substrate scripts read `GetPlaceBonus()` and integrate into their own scoring
 - Orc usage feeds a contextual mode modifier only. Do not promote it into a strong substrate without a later playtest decision.
+- Khajiit is explicitly excluded. Outdoor rest is road-home practice without a designated place or circuit.
 
 ### 8.5a Argonian ritual/custom-content obligations (LOCKED)
 
@@ -1123,7 +1167,9 @@ roleplay.
 
 ### 8.6 Moon cycle substrate extensions (Khajiit-specific) (LOCKED)
 
-The Khajiit substrate includes a moon-cycle overlay tied to Skyrim's actual Masser/Secunda phase data (with abstract 28-day fallback if real moon data proves unreliable).
+The Khajiit substrate includes a moon-cycle overlay tied to Skyrim's actual
+24-day Masser/Secunda phase formula and a deliberate `Observe the Moons` lesser
+power. There is no abstract 28-day continuity score.
 
 ```papyrus
 ; PDV_Substrate_KhajiitLunar additions
@@ -1138,11 +1184,11 @@ EndFunction
 ```
 
 **Phase behavior:**
-- Each phase favors different Khajiit activities (road-travel, community, reflection, focused deity work)
-- Current-phase activity grants a small phase-favored bonus, but compliance across the full cycle determines overall substrate strength
-- Store both dimensions: `PDV.Substrate.KhajiitLunar.PhaseBonus` for the current phase and `PDV.Substrate.KhajiitLunar.CycleCompliance` for 28-day continuity
-- Special states emerge when moons overlap or oppose (heightened awareness or tension)
-- Current phase visible via power menu with flavor text on shift
+- Each phase identifies one presiding god: Khenarthi, Azurah, Baan Dar, Rajhin, or Alkosh.
+- `Observe the Moons` is valid outdoors from 20:00 to 05:00 while out of combat, unmounted, and not swimming.
+- One delayed check after five seconds aborts on combat, cell change, or movement over 128 units; there is no continuous polling.
+- Twenty authored messages provide four contemplations per god without immediate repetition.
+- The first valid rite per devotional day may claim the shared `+4` substrate credit and awards raw presiding-god piety `+0.4` without changing behavior-led focus weight. Later rites are informational.
 
 ---
 
@@ -1471,7 +1517,7 @@ The offer is an in-world threshold event, not an MCM toggle. Per the locked Nord
 
 - **Notification + dialogue topic.** A traveling priest, a dream sequence, a shrine epiphany. Content-author-driven.
 - **Player choice: Accept / Not Yet / Refuse.**
-  - Accept: 70% of current `PDV.Piety` carries over to the new patron's foreground state, patron is set, foreground boon spells are granted.
+  - Accept: current `PDV.Piety` is preserved, patron is set, the broad boon is suppressed, and Nord/Imperial focused reward eligibility begins at T2.
   - Not Yet: patron remains unset and the deity will not offer again unless piety lapses below the threshold and later re-qualifies.
   - Refuse: terminal per-deity response. The deity will not ask again.
 
@@ -1503,6 +1549,25 @@ For race designs where broad worship is culturally normal and experientially use
 - Broad worship counts as its own contextual-favor lane. It receives blended Faithful-capped favor families rather than enabling every individual deity's patron favor set.
 
 Broad-worship lane eligibility is content-authored, not automatic for every race with multiple worship targets. Current first-release posture: Nord, Imperial, and Redguard receive broad-worship lanes; Dunmer uses a special layered equivalent; Breton and Altmer do not receive a generic broad lane.
+
+Imperial and Nord use the following first-class broad-pool refinement:
+
+- `ImperialDivines`, `NordOldWays`, and `NordNineDivines` are manager-owned
+  StorageUtil pools, not deity records and not sums of deity piety.
+- Every deity keeps its own ordinary signed piety. A logical devotional act
+  contributes once to the eligible active pool using its strongest applied
+  positive delta, or its most severe applied negative delta if there is no
+  positive.
+- Pool scratch folds at dawn with the existing scaling and signed `4.3` cap.
+  Persistent thresholds are `25/50`, cap `50`, highest-slot-only, and no T3.
+- Inactive or commitment-suppressed pools persist but decay after two idle days
+  at `0.1` per dawn to floor zero.
+- Nord Old Ways and Nine Divines have identical pool mechanics. Their roster,
+  theology, and effect packet may differ; their completeness may not.
+- Patron acceptance at deity piety `50` preserves piety, suppresses the broad
+  boon, and begins at focused T2. Focused T1 is compatibility-only for Nord and
+  Imperial; T3 begins at `85`. Below `50`, commitment persists but its boon is
+  suspended.
 
 ### 12.6 Commitment offer defaults
 
@@ -2563,8 +2628,8 @@ that Daedric comparison point.
 | 2 | Imperial Concordat reputation pilot | `PDV_ReputationTrack` and `ConcordatStanding` as the first real reputation track | Scoring can ask for current band/multiplier; CK can read a mirror global; callers do not know band math | Slice 1; crime events may wait if they would create empty scaffolding | Uncommitted/private/open edge walk-back works, stance multiplier composes with track multiplier, verifier covers records/properties |
 | 3 | Bosmer Path state pilot | `PDV_StateTrack` and `PDV_State_BosmerPath` as the first real state track | Commitment and scoring can ask active path and eligibility; callers do not know switch proof history | Slice 2 or explicit waiver if reputation is not needed | Setup/default path, destination-gated switch, Old Contract Green Pact tagging, and PactBound separation work in normal play |
 | 4 | Dunmer Ancestor substrate pilot | `PDV_Substrate_DunmerAncestor` as the first strong substrate | Dawn/scoring can adjust substrate metric without writing patron piety; CK can inspect substrate tier/posture | Slice 1; no need to wait for all state tracks | Portable shrine prayer and player-owned-home bonus grant origin-only substrate progress; vampire/werewolf posture remains separate |
-| 5 | Khajiit lunar exception closeout | Lunar substrate plus emergent focused emphasis | Khajiit can update broad/focused state without formal patron offers | Slice 4 if shared substrate helpers are reused | Moon-cycle cadence, road-home circuit, and focused-emphasis lead logic work without `PDV_GLO_PatronState = active primary` |
-| 6 | Commitment offer pilot | Shared formal offer flow | Dawn can recompute candidates, fire at most one offer, and persist accepted patron state without a queue | Slice 3 for eligibility filtering; favor, decay, and privilege do not need to exist yet | Accept / Not Yet / Refuse works; 70% carry-over on accept works; Not Yet waits for lapse-and-rebuild requalification; Refuse is terminal per deity; no competing 1.0 offers fire after acceptance |
+| 5 | Khajiit lunar exception closeout | Lunar substrate plus emergent focused emphasis | Khajiit can update broad/focused state without formal patron offers | Slice 4 if shared substrate helpers are reused | Moon cadence, outdoor road-home practice, Observe the Moons, and focused-emphasis lead logic work without `PDV_GLO_PatronState = active primary` |
+| 6 | Commitment offer pilot | Shared formal offer flow | Dawn can recompute candidates, fire at most one offer, and persist accepted patron state without a queue | Slice 3 for eligibility filtering; favor, decay, and privilege do not need to exist yet | Accept / Not Yet / Refuse works; piety is preserved on accept; Not Yet waits for lapse-and-rebuild requalification; Refuse is terminal per deity; no competing 1.0 offers fire after acceptance |
 | 7 | Neglect/decay pilot | One accepted patron relationship weakening over time | Dawn owns decay and neglect effects; runtime events never write persistent decay directly | Slice 6 | Decay floors, grace, neglect spell apply/remove, and broad-worship suppression work |
 | 8 | Privilege pilot | Shrine/dialogue privilege pattern | CK Conditions can read mirror globals and track globals without script glue in dialogue/shrine content | D-10 resolved; Slice 6 preferred | One shrine or dialogue privilege proves condition shape and coexistence discipline |
 | 9 | Contextual favor pilot | Generic favor runtime with focused Kyne plus Nord broad-lane proof | Event/scoring can request a favor opportunity; the manager-owned favor runtime enforces one-active-boost cap, lane resolution, expiry, and anti-farm state | Slice 7; at least one reliable signal family from Slices 1-5 plus Nord baseline scaffolding | Focused Kyne and the two Nord broad lanes have locked trigger families, duration/surfacing rules work, and one-active anti-stack is verifier or smoke covered |
@@ -2913,7 +2978,7 @@ Must complete:
 - Imperial Concordat as the first reputation track, including wide Uncommitted band and edge walk-back gate.
 - Bosmer Path as the first state track, including Old Contract Green Pact tag handling.
 - Dunmer Ancestor as the first strong substrate, including portable shrine prayer and player-owned-home bonus.
-- Khajiit emergent patron/moon-cycle as the first special-case race exception, including road-home circuit and separate phase bonus/cycle compliance.
+- Khajiit emergent patron/moon-cycle as the first special-case race exception, including outdoor road-home practice, Observe the Moons, and phase-presiding-god presentation.
 - One contextual favor family.
 - One Daedric price/stigma path.
 - One commitment offer flow.

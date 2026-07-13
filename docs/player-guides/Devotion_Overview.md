@@ -59,7 +59,7 @@ Every race plays its own faith. Start with your character's race below, then rea
 - **Khajiit** - the moons and the Lunar Lattice, the road home, and gods like Azurah, Rajhin, and Alkosh. See the Khajiit race guide.
 - **Nord** - the Old Ways or the Nine Divines, Kyne on the storm and Talos in defiance. See the Nord race guide.
 - **Orc** - Malacath's hard code, lived through the stronghold, the city, or the legion. See the Orc race guide.
-- **Redguard** - the ancestor spine and the death-duty of Tu'whacca, pulled between Crown, Forebear, and Ash'abah. See the Redguard race guide.
+- **Redguard** - the ancestors' regard and the death-duty of Tu'whacca, pulled between Crown, Forebear, and Ash'abah. See the Redguard race guide.
 
 ## Requirements and Compatibility
 

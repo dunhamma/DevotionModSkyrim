@@ -1,0 +1,285 @@
+{
+  "schema": "pdv.substrate-pacing-contracts.v1",
+  "title": "PDV Substrate Pacing Contracts",
+  "status": "implemented-static-readback-runtime-manual-proof-open",
+  "updated": "2026-07-13",
+  "authority": {
+    "architecture": "PDV_Architecture_v3.md",
+    "productTarget": "PDV_TargetEndStates_1.0.md",
+    "precedence": "This contract supersedes earlier substrate magnitudes, route stacking, Khajiit road-home circuits, and the Argonian composite metric. Historical proof remains evidence of the old implementation only."
+  },
+  "shared": {
+    "activeOrigins": ["Imperial", "Dunmer", "Argonian", "Nord", "Altmer", "Khajiit"],
+    "retiredOrigins": ["Breton"],
+    "thresholds": {
+      "low": 1.0,
+      "mid": 25.0,
+      "high": 75.0
+    },
+    "positiveMetricCap": 75.0,
+    "devotionalDay": {
+      "formula": "floor(GameDaysPassed - 0.25)",
+      "boundaryLocalTime": "06:00",
+      "storedValue": "devotionalDay + 2 (zero reserved; legacy +1 stamps migrate once)",
+      "reason": "GetDevotionalDay can be -1 before 06:00 on the first game day, so the encoded plus-one sentinel itself is shifted once more to keep zero unambiguously unset."
+    },
+    "dailyCredit": {
+      "amount": 4.0,
+      "firstApprovedActOnly": true,
+      "laterApprovedActsReturn": 0.0,
+      "banking": false,
+      "crossFamilyBypass": false,
+      "pietyNeutral": true,
+      "validation": [
+        "matching origin",
+        "approved authentic source",
+        "curse restrictions",
+        "logical-event duplicate guard",
+        "devotional-day credit not already spent"
+      ],
+      "directPositiveWriteExceptions": ["versioned migration", "developer boundary seed"],
+      "negativeWriteExceptions": ["contracted decay", "curse transition reset"]
+    },
+    "timing": {
+      "uncursedNormalPlayTargetDaysToMid": [7, 10],
+      "continuousPracticeDayToMid": 7,
+      "continuousPracticeMetricAtMidDay": 28.0,
+      "continuousPracticeDayToHigh": 19,
+      "continuousPracticeMetricAtDay18": 72.0,
+      "continuousPracticeMetricAtDay19": 75.0,
+      "representativeItinerary": [
+        { "day": 1, "metric": 4.0 },
+        { "day": 2, "metric": 8.0 },
+        { "day": 3, "metric": 12.0 },
+        { "day": 4, "metric": 16.0 },
+        { "day": 5, "metric": 20.0 },
+        { "day": 6, "metric": 24.0 },
+        { "day": 7, "metric": 28.0 },
+        { "day": 18, "metric": 72.0 },
+        { "day": 19, "metric": 75.0 }
+      ]
+    },
+    "tierSync": "highest-slot-only",
+    "recordDisplayPolicy": "The SPEL and every child MGEF use the same visible family name so Active Effects roll up coherently.",
+    "visibleVocabulary": {
+      "forbidden": ["Spine", "spine"],
+      "scope": ["SPEL FULL", "MGEF FULL", "QUST FULL", "descriptions", "Active Effects", "MCM", "Prisma", "Survey", "journal", "current player and test documentation"],
+      "compatibilityException": "Legacy EditorIDs, script names, properties, and StorageUtil keys may retain old internal names."
+    }
+  },
+  "substrates": [
+    {
+      "origin": "Imperial",
+      "internalId": "PDV_Substrate_ImperialAncestor",
+      "displayTiers": ["Civic Steadiness", "Civic Discipline", "Civic Exemplar"],
+      "acceptedRenewableFamilies": [
+        "first eligible Divine prayer of the devotional day",
+        "first completed Smithing craft of the devotional day",
+        "first completed Enchanting craft of the devotional day",
+        "first completed Alchemy craft of the devotional day"
+      ],
+      "acceptedFiniteOrExactFamilies": [
+        "approved public service",
+        "approved mercy",
+        "approved lawful-order duty",
+        "approved death duty or burial",
+        "approved Thane completion",
+        "approved undead crypt clear",
+        "explicit Talos defiance"
+      ],
+      "rejectedFamilies": [
+        "generic sleep",
+        "cooking",
+        "generic combat",
+        "passive dawn",
+        "civic action inventing Talos or other deity piety"
+      ],
+      "overlapRule": "A single act may separately award deity piety only when that act is authentically tied to the deity; substrate credit itself is piety-neutral.",
+      "representativeSevenDayItinerary": ["Divine prayer", "Smithing completion", "Alchemy completion", "public service outcome", "Enchanting completion", "mercy outcome", "death duty"],
+      "decay": { "graceDays": 3, "amountPerDawn": 1.0, "normalFloor": 20.0, "vampireFloor": 0.0 },
+      "curse": {
+        "vampireOnset": "Set metric to 0, strip substrate boons, and block civic and broad-pantheon gains.",
+        "vampireCure": "Seed metric to 20 once; two later devotional-day credits cross 25.",
+        "werewolf": "No special substrate pacing exception."
+      },
+      "oldBehaviorSuperseded": ["positive generic sleep route", "universal Talos pulse", "route-specific +5 magnitudes"]
+    },
+    {
+      "origin": "Dunmer",
+      "internalId": "PDV_Substrate_DunmerAncestor",
+      "displayTiers": ["Dunmer Ancestor's Steadiness", "Dunmer Ancestor's Regard", "Dunmer Ancestor's Honor"],
+      "acceptedRenewableFamilies": [
+        "portable ash prayer",
+        "Good Daedra twilight altar",
+        "exact honorable victory"
+      ],
+      "acceptedFiniteOrExactFamilies": [
+        "approved Reclamation book",
+        "approved Reclamation quest outcome",
+        "approved crypt duty",
+        "approved death duty",
+        "approved DA01, DA02, or DA08 source membership"
+      ],
+      "rejectedFamilies": [
+        "separate player-home +8 metric bonus",
+        "home prayer double piety pulse",
+        "at-death sneaking proxy",
+        "generic murder",
+        "generic low-level combat"
+      ],
+      "honorableVictory": {
+        "requires": ["pre-existing hostility", "direct player kill", "victim level at least player level", "not murder", "no stealth opener"],
+        "tracking": "Clean combat state established before the killing blow."
+      },
+      "overlapRule": "An ash rite or victory awards deity piety separately only when the act is specifically authored for that Reclamation deity; no automatic Azura pulse.",
+      "representativeSevenDayItinerary": ["portable ash prayer", "Good Daedra twilight rite", "honorable victory", "portable ash prayer", "approved ancestor book", "Good Daedra twilight rite", "crypt duty"],
+      "decay": { "enabled": false },
+      "oldBehaviorSuperseded": ["Prayer 5 plus HomeBonus 8", "passive substrate decay", "automatic Azura ancestor pulse"]
+    },
+    {
+      "origin": "Argonian",
+      "internalId": "PDV_Substrate_ArgonianHist",
+      "canonicalMetric": "CulturalPractice",
+      "displayTiers": ["Root Memory", "River-Kept Practice", "Rooted Adaptation"],
+      "acceptedRenewableFamilies": [
+        "Hist Sap through an approved exact source",
+        "sustained exterior natural-water swimming or wading",
+        "sacred-water rest or reflection",
+        "Histcarp continuity",
+        "declared-bed return or sleep",
+        "first cooked meal of the devotional day",
+        "approved community support",
+        "activated Void or death-change rite"
+      ],
+      "acceptedFiniteOrExactFamilies": ["approved Hist source", "approved People source", "approved Sithis source after Void activation"],
+      "rejectedFamilies": [
+        "brief generic IsSwimming polling",
+        "Hist Sap repeat farming",
+        "Histcarp dual metric routing",
+        "generic Argonian contact",
+        "generic murder or stealth",
+        "relation values directly recomputing the cultural metric"
+      ],
+      "relations": {
+        "Hist": "Independent relation and posture ledger with its own maintenance decay.",
+        "People": "Independent relation ledger and one possible active emphasis; it is not a deity.",
+        "Void": "Independent relation ledger and the alternative active emphasis; it can feed Sithis only after activation.",
+        "activeEmphasis": "Exactly one of People or Void."
+      },
+      "pietyRouting": {
+        "HistWaterSap": "Hist",
+        "PeopleBedCommunity": "relation only",
+        "Void": "Sithis after activation",
+        "substrateCredit": "Any accepted family may claim the day's piety-neutral cultural credit."
+      },
+      "familyCap": "Cultural substrate plus exactly one People-or-Void emphasis; no separate Hist Communion family.",
+      "representativeSevenDayItinerary": ["sustained natural-water practice", "declared-bed return", "first cooked meal", "Hist Sap exact source", "community support", "sacred-water reflection", "sustained natural-water practice"],
+      "decay": { "graceDays": 3, "amountPerDawn": 1.0, "normalFloor": 20.0, "cursedFloor": 0.0 },
+      "migration": "Preserve Hist, People, and Void ledgers; seed CulturalPractice once from the old clamped composite and cap at 75.",
+      "oldBehaviorSuperseded": ["Hist plus 0.25 People plus 0.10 Void composite", "separate Hist Communion boon family", "four simultaneous Argonian layers"]
+    },
+    {
+      "origin": "Nord",
+      "internalId": "PDV_Substrate_NordAncestor",
+      "displayTiers": ["Nord Ancestor's Steadiness", "Nord Ancestor's Regard", "Nord Ancestor's Honor"],
+      "acceptedRenewableFamilies": [
+        "declared-hearth return",
+        "declared-hearth sleep",
+        "first cooked meal of the devotional day",
+        "completed exterior or open-sky rest"
+      ],
+      "acceptedFiniteOrExactFamilies": [
+        "approved cultural book",
+        "approved quest outcome",
+        "approved death duty",
+        "approved ordeal",
+        "approved hold or hearth defense"
+      ],
+      "rejectedFamilies": [
+        "universal Shor pulse",
+        "separate standing, rest, and hearth positive metric writes",
+        "indoor generic rest as Sky Road practice",
+        "generic combat"
+      ],
+      "overlapRule": "Substrate credit is deity-neutral. A qualifying act may separately award piety only to a god authentically tied to the act and eligible in the active pantheon baseline.",
+      "sourceCorrections": ["Resolve C06 Hircine and Arkay tokens by exact source", "Enforce DA05 mutually exclusive outcomes", "Canonicalize the orphan ancestor handler"],
+      "representativeSevenDayItinerary": ["declared-hearth return", "completed exterior rest", "first cooked meal", "declared-hearth sleep", "approved cultural book", "completed exterior rest", "hold defense"],
+      "decay": { "graceDays": 3, "amountPerDawn": 1.0, "normalFloor": 20.0, "curseFloor": 0.0 },
+      "oldBehaviorSuperseded": ["Standing 5, Rest 3, and Hearth 2 stacking", "universal Shor piety"]
+    },
+    {
+      "origin": "Altmer",
+      "internalId": "PDV_Substrate_AltmerAncestor",
+      "displayTiers": ["Ordered Heritage", "Disciplined Heritage", "Exemplar Heritage"],
+      "acceptedRenewableFamilies": [
+        "ordered rest after the rite decision",
+        "first daily increase among the six magic skills",
+        "first successful enchantment of the devotional day",
+        "Auri-El shrine rite"
+      ],
+      "acceptedFiniteOrExactFamilies": ["approved heritage book", "approved skill threshold", "approved MG08 outcome"],
+      "rejectedFamilies": [
+        "passive automatic Auri-El dawn",
+        "independent same-day +5 awards from sleep, dawn, rite, book, and skill",
+        "rite decline granting metric",
+        "curse-suppressed dawn bypass"
+      ],
+      "riteRule": "Not Yet grants no metric and does not spend the seven-day accepted-rite cooldown; it starts only a separate three-devotional-day reprompt cooldown. Accepting a rite choice starts the seven-day rite cooldown.",
+      "overlapRule": "Auri-El, Magnus, or Xarxes piety is separately act-specific; the substrate helper never creates a universal Auri-El pulse.",
+      "representativeSevenDayItinerary": ["ordered rest", "magic-skill increase", "completed enchantment", "Auri-El shrine rite", "ordered rest", "approved heritage book", "magic-skill increase"],
+      "decay": { "graceDays": 3, "amountPerDawn": 1.0, "normalFloor": 20.0, "curseFloor": 0.0 },
+      "oldBehaviorSuperseded": ["Heritage 5 per route", "universal Auri-El ancestor pulse"]
+    },
+    {
+      "origin": "Khajiit",
+      "internalId": "PDV_Substrate_KhajiitLunar",
+      "displayTiers": ["Lunar Hardiness", "Khajiit Lunar Road", "Lunar Attunement"],
+      "acceptedRenewableFamilies": [
+        "completed outdoor rest as road-home practice",
+        "successful Observe the Moons rite",
+        "approved caravan defense",
+        "approved Baan Dar reversal",
+        "approved notable Rajhin theft",
+        "approved Alkosh dragon or Word milestone"
+      ],
+      "acceptedFiniteOrExactFamilies": ["approved lunar book", "approved lunar quest", "approved MQ104 or DA01 outcome"],
+      "rejectedFamilies": [
+        "generic inn or house sleep",
+        "road-home anchor requirement",
+        "road-home circuit requirement",
+        "generic theft or stealth spam",
+        "continuous automatic moon polling"
+      ],
+      "roadHomeRule": "The outdoor road itself is home. No designated anchor, circuit, or repeated-location rejection is part of normal play.",
+      "observeTheMoons": {
+        "form": "Khajiit-only lesser power",
+        "validHours": "20:00-05:00",
+        "requires": ["exterior", "out of combat", "unmounted", "not swimming"],
+        "resolution": "One check after five seconds; abort on combat, cell change, or movement over 128 units; no continuous polling.",
+        "messages": {
+          "count": 20,
+          "perGod": 4,
+          "gods": ["Khenarthi", "Azurah", "Baan Dar", "Rajhin", "Alkosh"],
+          "noImmediateRepeat": true
+        },
+        "firstSuccessPerDevotionalDay": { "substrateCredit": 4.0, "presidingGodRawPiety": 0.4, "focusWeight": 0.0 },
+        "laterSuccessSameDay": "Informational only."
+      },
+      "representativeSevenDayItinerary": ["completed outdoor rest", "Observe the Moons", "caravan defense", "completed outdoor rest", "Baan Dar reversal", "Observe the Moons", "Alkosh dragon or Word milestone"],
+      "decay": { "enabled": false },
+      "oldBehaviorSuperseded": ["Moon 1 and Road 2 magnitudes", "generic sleep moon observance", "2-3 road-home anchors and circuit"]
+    }
+  ],
+  "retired": {
+    "Breton": {
+      "runtimeMembership": false,
+      "records": "Compatibility and migration only.",
+      "displayNames": ["Inherited Ward", "Warded Blood", "Awakened Inheritance"]
+    }
+  },
+  "otherVisibleNameMigrations": {
+    "Orc": ["Code-Held - City", "Code-Held - Stronghold", "Code-Held - Legion Exile"],
+    "RedguardBroad": ["Ancestors' Regard - Seeker", "Ancestors' Regard - Faithful"],
+    "RedguardModes": ["Crown's Form", "Forebear's Road", "Ash'abah Duty"]
+  }
+}

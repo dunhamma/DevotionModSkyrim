@@ -8,6 +8,12 @@ The trouble is that Skyrim is Lorkhan's world. Marriage, building a home, the Co
 
 At the start you pick a faction lean: how you relate to Thalmor orthodoxy. That choice sets a coherence track that colors the rest of your play. Above it all, Auri-El's dawn is always with you, no matter which path you walk. If this is your first Devotion character, read the How Devotion Works primer first, then come back here.
 
+Your ordered heritage advances at a deliberate daily pace. Only the first
+qualifying act after each 06:00 dawn counts: ordered rest after resolving the
+rite, disciplined magical study, a completed enchantment, an Auri-El rite, or
+an exact heritage milestone. Passive dawn does not advance it. Its visible
+stages are `Ordered Heritage`, `Disciplined Heritage`, and `Exemplar Heritage`.
+
 ## Your Gods
 
 The Altmer honor the Aldmeri ancestor-spirits, the et'Ada who once were divine. Your patron options are:
@@ -51,8 +57,9 @@ Auri-El is always with you, so dawn practice is your steady foundation. From the
 
 Two more organic sources worth naming:
 
-- **Aldmeri dreams while you rest.** Sleeping advances the ancestral heritage layer and, if Magnus is your active patron, nudges Magnus. `[WIRED: OnSleepStop -> HandleAltmerSleepEvents -> AwardAltmerAncestorSpinePulse (Auri-El SIGNAL_ANCESTOR_SPINE + heritage substrate), once-per-day repeat-gated. Subtle; feeds the ancestor spine, not a headline earn.]`
-- **The ancestor spine.** Every dawn-steadiness, orthodox, and magic-milestone award also pulses a small Auri-El ancestor-spine gain. `[WIRED: AwardAltmerAncestorSpinePulse fires alongside the book/milestone awards above -> Auri-El SIGNAL_ANCESTOR_SPINE +1.0 scaled.]`
+- **Ordered dreams while you rest.** Rest after resolving the rite decision can advance Ordered Heritage once for the devotional day. Magnus piety is separate and requires a Magnus-authentic act.
+- **Disciplined heritage.** Magical cultivation, completed enchantment, an Auri-El rite, or an exact heritage milestone can claim the same daily cultural credit. Passive dawn does not.
+- **A declined discipline rite stays quiet briefly.** Choosing `Not yet` does not spend the seven-day accepted-rite cooldown or choose a discipline, but it suppresses the same prompt for three devotional days so ordinary rest does not reopen it every night.
 
 Remember that piety is tracked separately for each god, daily gain is capped at about 4.3 per god per day, and repeating the exact same deed earns less each time. Variety and meaning matter far more than grinding.
 
@@ -192,7 +199,7 @@ At Champion, your standing also reads back in the Devotion panel and Survey text
 
 | Curse | What happens to your faith |
 |-------|----------------------------|
-| **Vampire** | Auri-El closes completely. To shrink from the sun is to shrink from the god of return, and the records expunge a vampire from the bloodline. Your magic still works, but it loses its religious framing and becomes mere power. There is no cure-and-restore arc for an Altmer vampire, unlike some other races. A tiny heretical self-justification exists ("vampirism is at least a path away from mortal limits"), but it accumulates piety very slowly and is hard-capped at the lowest tier. The honest summary: there is no recoverable Altmer position for a vampire. The file is clear. `[WIRED (collapse) / STUB (heresy): ApplyAltmerCurseHandlers on vampire onset sets PDV.Altmer.VampireExileActive=1 + VampireExileScar=1, clears active favor, and IsAltmerFavorSuppressedByCurse then hard-blocks HandleAltmerDawnSteadiness / OrthodoxCostlyEnforcement / ancestor-spine and the neglect gate - so the dawn earn-lanes go silent. The "heretical exile discipline that climbs very slowly, capped low" is copy/message only (PDV_Msg_Altmer_VampireExiledPath_Entry/Recognition): there is no organic earn-lane that awards the vampire-exile a slow trickle - the vampire-power route is explicitly rejected. Cure clears VampireExileActive (scar persists), reopening the normal earns.]` |
+| **Vampire** | Auri-El closes completely. To shrink from the sun is to shrink from the god of return, and the records expunge a vampire from the bloodline. Your magic still works, but it loses its religious framing and becomes mere power. There is no cure-and-restore arc for an Altmer vampire, unlike some other races. The active exile state clears ordinary favor and suppresses dawn, orthodoxy, and heritage gains; cure reopens those earns while leaving a scar. |
 | **Werewolf** | This is the most theologically annihilating fate in all of Tamriel. The beast-state is the exact inverse of the Apotheosis project: the maximum possible movement away from becoming spirit again. There is no heretical theology to soften it, not even the lowest cap that vampirism gets. Devotion halts entirely. There is no path forward in any direction. `[WIRED: IsAltmerFavorSuppressedByCurse returns True for werewolf as well as vampire (PDV_CurseStateService.IsWerewolf()), so the same favor suppression that closes the vampire's dawn lanes closes the werewolf's, with no exile-heresy message path at all. Werewolf has no dedicated Altmer earn or recovery lane; curing lifts the suppression.]` |
 
 ## Quick Reference

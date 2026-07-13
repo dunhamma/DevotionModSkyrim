@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 
 const DEVOTION_SOURCE = process.env.PDV_PRISMA_AUDIT_SOURCE_ROOT || "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
 const DEVOTION_COMPILED = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts";
@@ -13,6 +14,11 @@ const MCM_SOURCE = path.join(DEVOTION_SOURCE, "PDV_MCM.psc");
 const MANAGER_PEX = path.join(DEVOTION_COMPILED, "PDV__ManagerQuest.pex");
 const MCM_PEX = path.join(DEVOTION_COMPILED, "PDV_MCM.pex");
 const DAEDRIC_CONTRACT = path.join(REPO_ROOT, "references", "authoring", "PDV_DaedricPrinceRecordContracts.json");
+const REPO_PRISMA_VIEW_DIR = path.join(REPO_ROOT, "native", "DevotionPrismaBridge", "mod", "PrismaUI", "views", "Devotion");
+const REPO_PRISMA_APP = path.join(REPO_PRISMA_VIEW_DIR, "app.js");
+const REPO_PRISMA_STYLE = path.join(REPO_PRISMA_VIEW_DIR, "styles.css");
+const REPO_PRISMA_INDEX = path.join(REPO_PRISMA_VIEW_DIR, "index.html");
+const REPO_MANAGER_SOURCE = path.join(REPO_ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
 
 function fail(message, source = "") {
   failures.push({ message, source });
@@ -73,6 +79,75 @@ function verifyJournalBytecodeFreshness() {
   ) {
     requirePexAtLeastAsFresh(MCM_PEX, MANAGER_SOURCE, "Book of Days hotkey dependency");
     requirePexAtLeastAsFresh(MCM_PEX, MANAGER_PEX, "Book of Days hotkey dependency");
+  }
+
+}
+
+function verifyPrismaAssetCacheContract() {
+  for (const assetPath of [REPO_PRISMA_APP, REPO_PRISMA_STYLE, REPO_PRISMA_INDEX]) {
+    if (!exists(assetPath)) {
+      fail("Prisma cache-contract asset is missing.", assetPath);
+      return;
+    }
+  }
+
+  const appBytes = fs.readFileSync(REPO_PRISMA_APP);
+  const styleBytes = fs.readFileSync(REPO_PRISMA_STYLE);
+  const expectedKey = `pdv-${crypto.createHash("sha256").update(appBytes).update(styleBytes).digest("hex").slice(0, 16)}`;
+  const index = read(REPO_PRISMA_INDEX);
+  const styleMatch = index.match(/styles\.css\?v=([A-Za-z0-9_-]+)/);
+  const appMatch = index.match(/app\.js\?v=([A-Za-z0-9_-]+)/);
+  const styleKey = styleMatch?.[1] ?? "";
+  const appKey = appMatch?.[1] ?? "";
+
+  if (styleKey !== expectedKey || appKey !== expectedKey) {
+    fail(`Prisma asset cache key must be ${expectedKey} for the current app.js + styles.css bytes (found CSS=${styleKey || "missing"}, JS=${appKey || "missing"}).`, REPO_PRISMA_INDEX);
+  } else {
+    pass(`Prisma app.js and styles.css share current content-derived cache key ${expectedKey}.`, REPO_PRISMA_INDEX);
+  }
+
+  const app = appBytes.toString("utf8");
+  if (
+    !app.includes('state.instrument.primary !== undefined') ||
+    !app.includes('clamp01(numberOrZero(state.instrument.primary))') ||
+    !app.includes('const pietyPercent = Math.round(instrumentPrimary * 100);') ||
+    app.includes('const pietyPercent = Math.min(100, Math.round((piety / 85) * 100));')
+  ) {
+    fail("Focused-panel progress meter must use the kind-normalized instrument primary value, not a fixed 85-point piety denominator.", REPO_PRISMA_APP);
+  } else {
+    pass("Focused-panel progress meter uses the kind-normalized instrument primary value (broad 50/50 and Argonian 75/75 render full).", REPO_PRISMA_APP);
+  }
+
+  const culturalUiTokens = [
+    "const renderCulturalInstrument",
+    "[1 / 75, 25 / 75, 1]",
+    "cultural: renderCulturalInstrument",
+    'cultural: "Cultural practice"',
+    'broad: "Pantheon standing"',
+  ];
+  if (culturalUiTokens.some((token) => !app.includes(token)) || app.includes("detail.textContent = kind;")) {
+    fail("Prisma must render Argonian cultural practice as a 75-point instrument and translate internal instrument kinds into player-facing captions.", REPO_PRISMA_APP);
+  } else {
+    pass("Prisma renders the 75-point Argonian cultural instrument and hides internal instrument-kind tokens from player captions.", REPO_PRISMA_APP);
+  }
+
+  if (!exists(REPO_MANAGER_SOURCE)) {
+    fail("Repository manager source is missing for the Argonian panel payload contract.", REPO_MANAGER_SOURCE);
+    return;
+  }
+  const manager = read(REPO_MANAGER_SOURCE);
+  const culturalManagerTokens = [
+    'return "cultural"',
+    'return "Root Memory at 1"',
+    'return "River-Kept Practice at 25"',
+    'return "Rooted Adaptation at 75"',
+    'piety / 75.0',
+    'cultural practice',
+  ];
+  if (culturalManagerTokens.some((token) => !manager.includes(token))) {
+    fail("Manager focused-panel payload must expose Argonian cultural practice with 1/25/75 thresholds and a 75-point normalized instrument.", REPO_MANAGER_SOURCE);
+  } else {
+    pass("Manager focused-panel payload exposes Argonian cultural practice with the locked 1/25/75 semantics.", REPO_MANAGER_SOURCE);
   }
 }
 
@@ -1394,9 +1469,174 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   }
 
   if (
-    !managerForBroadLane.includes("Function SendPrismaSubstrateProgress(String substrate, Int tierBefore, Int tierAfter, Float multiplier, String context, String symbolName, String stateLabel)") ||
-    !managerForBroadLane.includes('if multiplier > 0.0 && context != "" && tierAfter >= tierBefore') ||
-    !managerForBroadLane.includes('AppendBookOfDaysEntry(context, Utility.GetCurrentGameTime() as Int, "substrate.act", symbolName, False)') ||
+    !managerForBroadLane.includes("Bool Function IsPantheonBroadPoolPresentationActive(Int origin)") ||
+    !managerForBroadLane.includes("Float Function GetBroadLaneStandingValue(Int origin)") ||
+    !managerForBroadLane.includes("Float Function GetBroadLaneScratchValue(Int origin)") ||
+    !managerForBroadLane.includes("primary = ClampValue(piety / BROAD_PANTHEON_POOL_MAX, 0.0, 1.0)") ||
+    !managerForBroadLane.includes('\\"scratch\\":') ||
+    !app.includes("const renderBroadInstrument") ||
+    !app.includes("broad: renderBroadInstrument")
+  ) {
+    fail("Imperial and Nord broad pools must render from 0-50 with float standing, live scratch, and a dedicated two-tier gauge.", managerPath);
+  } else {
+    pass("Imperial and Nord broad pools render from 0-50 with float standing, scratch, and a dedicated two-tier gauge.", managerPath);
+  }
+
+  if (
+    !managerForBroadLane.includes("Bool Function IsFocusedPantheonBoonSuspended()") ||
+    !managerForBroadLane.includes('tierLabelOverride = "Committed - boon suspended"') ||
+    !managerForBroadLane.includes('nextText = "Focused boon returns at 50 piety"') ||
+    !managerForBroadLane.includes('return "Suspended"')
+  ) {
+    fail("Focused Imperial/Nord commitment below 50 must remain committed while the panel and Survey explicitly suspend the boon.", managerPath);
+  } else {
+    pass("Focused Imperial/Nord commitment below 50 is explicitly surfaced as boon-suspended.", managerPath);
+  }
+
+  if (
+    !managerForBroadLane.includes('return "Saxhleel Practice"') ||
+    !managerForBroadLane.includes("String Function GetArgonianCulturalPracticeLabel()") ||
+    !managerForBroadLane.includes('\\"metric\\":') ||
+    !managerForBroadLane.includes('PanelPlainObject("hist", "neutral", "Hist relation"') ||
+    !managerForBroadLane.includes('PanelPlainObject("journal", "neutral", "People relation"') ||
+    !managerForBroadLane.includes('PanelPlainObject("sithis", voidTone, "Void relation"')
+  ) {
+    fail("Argonian panel must headline the cultural metric/tier and expose Hist, People, and Void as independent relations.", managerPath);
+  } else {
+    pass("Argonian panel separates cultural practice from Hist, People, and Void relations.", managerPath);
+  }
+
+  if (
+    !app.includes('if (kind === "broad")') ||
+    !app.includes('instData.standing !== undefined') ||
+    !app.includes('{ label: "Faithful", value: 50 }') ||
+    !app.includes('else if (kind === "cultural" || kind === "hist")') ||
+    !app.includes('instData.metric !== undefined') ||
+    !app.includes('{ label: "Root Memory", value: 1 }') ||
+    !app.includes('if (kind === "cultural") return "kept among root and river";')
+  ) {
+    fail("Book of Days must normalize cold-open broad standing to 50 and Argonian cultural metric to 75 with kind-specific pips.", DEVOTION_PRISMA_VIEW);
+  } else {
+    pass("Book of Days cold-open gauge uses kind-specific broad and Argonian standing semantics.", DEVOTION_PRISMA_VIEW);
+  }
+
+  if (
+    !managerForBroadLane.includes('return "Practice quiet"') ||
+    !managerForBroadLane.includes('elseIf tierValue >= TIER_SEEKER') ||
+    !managerForBroadLane.includes('return "Root Memory"')
+  ) {
+    fail("Argonian cultural practice must show a quiet zero-state and reserve Root Memory for metric 1+.", managerPath);
+  } else {
+    pass("Argonian cultural practice distinguishes metric 0 from the Root Memory tier at 1+.", managerPath);
+  }
+
+  const broadSymbolBody = functionBlock(managerForBroadLane, "GetBroadLaneSymbol");
+  if (
+    !broadSymbolBody.includes("NORD_BASELINE_NINE_DIVINES") ||
+    !broadSymbolBody.includes('return "akatosh"') ||
+    !broadSymbolBody.includes('return "kyne"')
+  ) {
+    fail("Nord broad-pool symbol must distinguish Nine Divines from Old Ways.", managerPath);
+  } else {
+    pass("Nord broad-pool symbol distinguishes Nine Divines (Akatosh) from Old Ways (Kyne).", managerPath);
+  }
+
+  const substrateNameBody = app.match(/const substrateName\s*=\s*\(payload\s*=\s*\{\}\)\s*=>\s*\{[\s\S]*?\n\s*\};/)?.[0] || "";
+  if (
+    !substrateNameBody.includes('const exactState = text(payload.state, "");') ||
+    !substrateNameBody.includes('s === "imperial-civic" || s === "altmer-heritage" || s === "argonian-practice"') ||
+    !substrateNameBody.includes('return exactState;') ||
+    !substrateNameBody.includes('if (s === "argonian-practice" || s === "argonianhist") return "Root Memory";') ||
+    managerForBroadLane.includes('SendPrismaSubstrateProgress("hist"')
+  ) {
+    fail("Prisma substrate copy must prefer the manager's exact state for the three renamed families and use argonian-practice as the canonical Argonian token.", DEVOTION_PRISMA_VIEW);
+  } else {
+    pass("Prisma substrate copy prefers exact renamed-family state and Argonian producers use the canonical argonian-practice token.", DEVOTION_PRISMA_VIEW);
+  }
+
+  const substrateProgressBody = functionBlock(managerForBroadLane, "SendPrismaSubstrateProgress");
+  const substrateProgressCalls = extractCalls(managerForBroadLane, "SendPrismaSubstrateProgress");
+  const staleMetricCalls = substrateProgressCalls.filter((call) =>
+    call.args[3]?.trim() === "multiplier" ||
+    (!call.args[3]?.includes("GetMetric() - metricBefore") && !call.args[3]?.includes("metricAfter - metricBefore"))
+  );
+  const creditGuard = substrateProgressBody.indexOf("if grantedMetric <= 0.0");
+  const creditReturn = substrateProgressBody.indexOf("return", creditGuard);
+  const firstPresentation = Math.min(
+    ...[substrateProgressBody.indexOf("SendPrismaSubstrateToast("), substrateProgressBody.indexOf("AppendBookOfDaysEntry(")].filter((index) => index >= 0),
+  );
+  if (
+    !substrateProgressBody.includes("Float grantedMetric") ||
+    creditGuard < 0 || creditReturn < creditGuard || firstPresentation < creditReturn ||
+    staleMetricCalls.length > 0 || substrateProgressCalls.length === 0 ||
+    !substrateProgressBody.includes('AppendBookOfDaysEntry(entryText, Utility.GetCurrentGameTime() as Int, "substrate.act", symbolName, False)') ||
+    !substrateProgressBody.includes('entryText = stateLabel + ": " + context')
+  ) {
+    fail(`Substrate presentation must be gated by actual grantedMetric with zero-credit suppression; ${staleMetricCalls.length} producer(s) do not pass a metric delta.`, managerPath);
+  } else {
+    pass(`All ${substrateProgressCalls.length} substrate progress producers pass actual metric deltas and zero-credit acts stay silent.`, managerPath);
+  }
+
+  const renamedFamilyLines = managerForBroadLane.split(/\r?\n/).filter((line) =>
+    /SendPrismaSubstrateProgress\("(?:imperial-civic|altmer-heritage|argonian-practice)"/.test(line)
+  );
+  const nonNeutralRenamedFamilyLines = renamedFamilyLines.filter((line) => !line.includes(', "journal",'));
+  if (renamedFamilyLines.length === 0 || nonNeutralRenamedFamilyLines.length > 0) {
+    fail(`Imperial civic, Altmer heritage, and Argonian practice progress must use a neutral journal symbol; found ${nonNeutralRenamedFamilyLines.length} non-neutral producer(s).`, managerPath);
+  } else {
+    pass(`All ${renamedFamilyLines.length} renamed-family progress producers use the neutral journal symbol.`, managerPath);
+  }
+
+  const nordStateBody = functionBlock(managerForBroadLane, "HandleNordOldWaysState");
+  if (
+    !nordStateBody.includes("GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES") ||
+    !nordStateBody.includes('ShowP2BookNotice(reason, "Faith of the Holds"') ||
+    !nordStateBody.includes('ShowP2BookNotice(reason, "The Old Ways"')
+  ) {
+    fail("Nord broad-state notices must title Nine Divines as Faith of the Holds and Old Ways as The Old Ways.", managerPath);
+  } else {
+    pass("Nord broad-state notices use the active baseline's exact family title.", managerPath);
+  }
+
+  const nordSurveyContextBody = functionBlock(managerForBroadLane, "GetNordContextSurveyText");
+  if (nordSurveyContextBody.includes('"PDV.Nord.OldWaysContextCount"')) {
+    fail("Nord Survey context must not read the frozen OldWaysContextCount migration field; current presentation must follow the active baseline and broad-pool standing.", managerPath);
+  } else {
+    pass("Nord Survey context contains no stale Old Ways service-count presentation dependency.", managerPath);
+  }
+
+  const rosterBody = functionBlock(managerForBroadLane, "GetBroadPantheonRosterForDebug");
+  if (
+    !rosterBody.includes('StorageUtil.GetIntValue(None, "PDV.Imperial.TalosBroadUnlocked") == 1') ||
+    !rosterBody.includes("/Talos (unlocked)") ||
+    !rosterBody.includes("(Talos locked)")
+  ) {
+    fail("Imperial broad-pool status must conditionally distinguish Talos locked from explicitly unlocked.", managerPath);
+  } else {
+    pass("Imperial broad-pool status conditionally distinguishes Talos locked and unlocked states.", managerPath);
+  }
+
+  const mcmForVisibleCopy = exists(MCM_SOURCE) ? read(MCM_SOURCE) : "";
+  if (/Spine/i.test(app) || /Spine/i.test(mcmForVisibleCopy)) {
+    fail("Current Prisma or MCM player-facing source still contains Spine; legacy identifiers belong only in compatibility internals.", /Spine/i.test(app) ? DEVOTION_PRISMA_VIEW : MCM_SOURCE);
+  } else {
+    pass("Current Prisma and MCM player-facing sources contain zero Spine text.", DEVOTION_PRISMA_VIEW);
+  }
+
+  if (
+    !managerForBroadLane.includes("String Function GetImperialCivicTierName()") ||
+    !managerForBroadLane.includes("String Function GetAltmerHeritageTierName()") ||
+    !managerForBroadLane.includes("String Function GetArgonianCulturalPracticeLabel()") ||
+    !managerForBroadLane.includes('"journal", GetImperialCivicTierName())') ||
+    !managerForBroadLane.includes('"journal", GetAltmerHeritageTierName())') ||
+    !managerForBroadLane.includes('"journal", GetArgonianCulturalPracticeLabel())')
+  ) {
+    fail("Renamed substrate producers must pass their exact current tier label into Prisma and Book of Days presentation.", managerPath);
+  } else {
+    pass("Renamed substrate producers pass exact current tier labels into Prisma and Book of Days presentation.", managerPath);
+  }
+
+  if (
     !managerForBroadLane.includes('AppendBookOfDaysEntry("The code was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)') ||
     !managerForBroadLane.includes('AppendBookOfDaysEntry("The Yokudan path was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "sect", False)') ||
     !managerForBroadLane.includes('return "public civic service"')
@@ -1483,6 +1723,7 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
 }
 
 verifyJournalBytecodeFreshness();
+verifyPrismaAssetCacheContract();
 verifyParityRegistryContracts(path.join(REPO_ROOT, "references", "authoring", "PDV_PrismaParityRegistry.csv"));
 
 for (const item of passes) {

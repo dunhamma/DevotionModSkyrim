@@ -39,6 +39,7 @@
     ["magnus", "Magnus"],
     ["xarxes", "Xarxes"],
     ["syrabane", "Syrabane"],
+    ["phynaster", "Phynaster"],
     ["trinimac", "Trinimac"],
     ["khenarthi", "Khenarthi"],
     ["rajhin", "Rajhin"],
@@ -46,7 +47,14 @@
     ["sithis", "Sithis"],
     ["tuwhacca", "Tu'whacca"],
     ["hoonding", "HoonDing"],
+    ["hoon-ding", "HoonDing"],
     ["leki", "Leki"],
+    ["tu-whacca", "Tu'whacca"],
+    ["riddle-thar", "Riddle'Thar"],
+    ["satakal", "Satakal"],
+    ["ruptga", "Ruptga"],
+    ["tava", "Tava"],
+    ["onsi", "Onsi"],
     ["lunar", "Lunar"],
     ["hist", "Hist"],
     ["ancestor", "Ancestor"],
@@ -219,6 +227,12 @@
       ["path", { d: "M15 13 L33 37 M33 13 L15 37", class: "symbol-thin" }],
       ["circle", { cx: "24", cy: "23", r: "3", class: "symbol-thin" }],
     ],
+    phynaster: [
+      ["path", { d: "M10 31 C16 24 22 18 38 13", class: "symbol-thin" }],
+      ["path", { d: "M11 35 C20 30 29 28 39 28", class: "symbol-thin" }],
+      ["circle", { cx: "14", cy: "32", r: "3" }],
+      ["path", { d: "M34 9 L36 14 L41 16 L36 18 L34 23 L32 18 L27 16 L32 14 Z" }],
+    ],
     trinimac: [
       ["path", { d: "M24 18 V42" }],
       ["path", { d: "M19 24 L24 18 L29 24" }],
@@ -267,6 +281,38 @@
       ["path", { d: "M24 6 V40" }],
       ["path", { d: "M19 12 H29" }],
       ["path", { d: "M14 22 C22 18 26 26 34 22", class: "symbol-thin" }],
+    ],
+    "tu-whacca": [
+      ["path", { d: "M12 40 V20 A12 12 0 0 1 36 20 V40" }],
+      ["path", { d: "M24 16 L26 21 L31 21 L27 24 L29 29 L24 26 L19 29 L21 24 L17 21 L22 21 Z", class: "symbol-thin" }],
+    ],
+    "hoon-ding": [
+      ["path", { d: "M12 12 L28 24 L12 36" }],
+      ["path", { d: "M22 12 L38 24 L22 36" }],
+    ],
+    "riddle-thar": [
+      ["circle", { cx: "24", cy: "24", r: "14" }],
+      ["path", { d: "M14 24 C18 16 22 16 24 24 C26 32 30 32 34 24", class: "symbol-thin" }],
+      ["circle", { cx: "24", cy: "24", r: "3" }],
+    ],
+    satakal: [
+      ["path", { d: "M24 8 C38 14 39 34 24 40 C9 34 10 14 24 8 Z" }],
+      ["path", { d: "M16 17 C30 14 34 25 27 31 C22 36 13 31 16 24 C18 20 25 21 26 25", class: "symbol-thin" }],
+    ],
+    ruptga: [
+      ["path", { d: "M24 7 V41 M16 14 H32 M18 41 H30" }],
+      ["path", { d: "M11 25 L24 14 L37 25", class: "symbol-thin" }],
+      ["circle", { cx: "24", cy: "10", r: "3" }],
+    ],
+    tava: [
+      ["path", { d: "M9 28 C16 19 22 19 27 24 C31 28 35 28 40 22" }],
+      ["path", { d: "M13 35 C21 30 29 31 36 35", class: "symbol-thin" }],
+      ["path", { d: "M24 10 V21 M20 14 L24 10 L28 14" }],
+    ],
+    onsi: [
+      ["path", { d: "M24 7 V39 M18 13 H30 M17 39 H31" }],
+      ["path", { d: "M14 24 H34", class: "symbol-thin" }],
+      ["path", { d: "M24 7 L20 13 H28 Z" }],
     ],
   };
 
@@ -463,7 +509,19 @@
     const title = document.createElement("strong");
     title.textContent = text(inst.state || inst.tierLabel, fallbackTitle);
     const detail = document.createElement("span");
-    detail.textContent = text(inst.kind, "piety");
+    const kind = text(inst.kind, "piety").toLowerCase();
+    const kindLabels = {
+      piety: "Devotional standing",
+      broad: "Pantheon standing",
+      cultural: "Cultural practice",
+      lunar: "Lunar practice",
+      ancestor: "Ancestral practice",
+      forge: "Code-held practice",
+      sects: "Yokudan tradition",
+      branch: "Bosmeri path",
+      daedric: "Daedric pact",
+    };
+    detail.textContent = kindLabels[kind] || "Devotional standing";
     caption.append(title, detail);
     slot.appendChild(caption);
   };
@@ -529,6 +587,42 @@
     }
   });
 
+  const renderBroadInstrument = (slot, inst = {}) => renderInstrumentFrame(slot, inst, "Pantheon standing", (svg) => {
+    const primary = clamp01(inst.primary);
+    const fill = fillClass(inst);
+    const fillWidth = Math.round(190 * primary);
+    appendSvg(svg, "rect", { x: "74", y: "68", width: "190", height: "14", rx: "7", class: "instrument-track" });
+    appendSvg(svg, "rect", { x: "74", y: "68", width: fillWidth, height: "14", rx: "7", class: fill });
+    [0.5, 1.0].forEach((threshold, index) => {
+      appendSvg(svg, "circle", {
+        cx: Math.round(74 + 190 * threshold),
+        cy: 105,
+        r: "7",
+        class: numberOrZero(inst.tier) >= index + 1 ? fill : "instrument-muted",
+      });
+    });
+    appendSvg(svg, "circle", { cx: "39", cy: "75", r: "24", class: "instrument-outline" });
+    appendSvg(svg, "path", { d: starSixPath(39, 75, 12), class: fill });
+  });
+
+  const renderCulturalInstrument = (slot, inst = {}) => renderInstrumentFrame(slot, inst, "Cultural practice", (svg) => {
+    const primary = clamp01(inst.primary);
+    const fill = fillClass(inst);
+    const fillWidth = Math.round(190 * primary);
+    appendSvg(svg, "rect", { x: "74", y: "68", width: "190", height: "14", rx: "7", class: "instrument-track" });
+    appendSvg(svg, "rect", { x: "74", y: "68", width: fillWidth, height: "14", rx: "7", class: fill });
+    [1 / 75, 25 / 75, 1].forEach((threshold, index) => {
+      appendSvg(svg, "circle", {
+        cx: Math.round(74 + 190 * threshold),
+        cy: 105,
+        r: "7",
+        class: numberOrZero(inst.tier) >= index + 1 ? fill : "instrument-muted",
+      });
+    });
+    appendSvg(svg, "circle", { cx: "39", cy: "75", r: "24", class: "instrument-outline" });
+    appendSvg(svg, "path", { d: "M27 78 Q39 54 51 78 Q46 94 39 102 Q32 94 27 78 Z", class: fill });
+  });
+
   const renderLunarInstrument = (slot, inst = {}) => {
     const data = inst.data || {};
     renderInstrumentFrame(slot, inst, text(data.focus, "Lunar Lattice"), (svg) => {
@@ -570,11 +664,13 @@
 
   const instrumentRenderers = {
     piety: renderPietyInstrument,
+    broad: renderBroadInstrument,
+    cultural: renderCulturalInstrument,
     lunar: renderLunarInstrument,
     ancestor: renderAncestorInstrument,
     daedric: renderDaedricInstrument,
     // These paths now share the Nord pattern (bar + pips) per the locked design.
-    hist: renderPietyInstrument,
+    hist: renderCulturalInstrument,
     forge: renderPietyInstrument,
     sects: renderPietyInstrument,
     branch: renderPietyInstrument,
@@ -683,11 +779,21 @@
 
   const substrateName = (payload = {}) => {
     const s = text(payload.substrate, "").toLowerCase();
+    const exactState = text(payload.state, "");
+    if (
+      exactState &&
+      (s === "imperial-civic" || s === "altmer-heritage" || s === "argonian-practice")
+    ) {
+      return exactState;
+    }
     if (s === "lunar") return "The moons";
     if (s === "hist") return "The Hist";
     if (s === "ancestor") return "Your ancestors";
     if (s === "stronghold") return "The stronghold";
     if (s === "sect") return "Your sect";
+    if (s === "imperial-civic") return "Civic Steadiness";
+    if (s === "altmer-heritage") return "Ordered Heritage";
+    if (s === "argonian-practice" || s === "argonianhist") return "Root Memory";
     return "Your path";
   };
 
@@ -1137,6 +1243,7 @@
     if (patron && patron !== "None") return `kept for ${patron}`;
     const kind = text(state.instrument && state.instrument.kind, "").toLowerCase();
     if (kind === "lunar") return "kept beneath the moons";
+    if (kind === "cultural") return "kept among root and river";
     if (kind === "hist") return "kept within the Hist";
     if (kind === "ancestor") return "kept among the ancestors";
     if (kind === "daedric") return "kept by the terms of the pact";
@@ -1145,9 +1252,26 @@
 
   const renderJournalPietyGauge = (slot, inst = {}) => {
     const instData = inst.data || {};
-    const piety = clamp(instData.piety !== undefined ? instData.piety : state.piety, 0, 85);
+    const kind = text(inst.kind, "piety").toLowerCase();
+    let cap = 85;
+    let value = instData.piety !== undefined ? numberOrZero(instData.piety) : numberOrZero(state.piety);
+    let gaugeThresholds = thresholds;
+    if (kind === "broad") {
+      cap = 50;
+      value = instData.standing !== undefined ? numberOrZero(instData.standing) : numberOrZero(inst.primary) * cap;
+      gaugeThresholds = [{ label: "Seeker", value: 25 }, { label: "Faithful", value: 50 }];
+    } else if (kind === "cultural" || kind === "hist") {
+      cap = 75;
+      value = instData.metric !== undefined ? numberOrZero(instData.metric) : numberOrZero(inst.primary) * cap;
+      gaugeThresholds = [{ label: "Root Memory", value: 1 }, { label: "River-Kept Practice", value: 25 }, { label: "Rooted Adaptation", value: 75 }];
+    } else if (kind !== "piety" && kind !== "daedric") {
+      cap = 1;
+      value = clamp01(inst.primary);
+      gaugeThresholds = [{ label: "First", value: 1 / 3 }, { label: "Middle", value: 2 / 3 }, { label: "High", value: 1 }];
+    }
+    const standing = clamp(value, 0, cap);
     const tier = numberOrZero(inst.tier !== undefined ? inst.tier : state.tier);
-    const pct = (value) => `${Math.round((value / 85) * 1000) / 10}%`;
+    const pct = (point) => `${Math.round((point / cap) * 1000) / 10}%`;
     const gauge = document.createElement("div");
     gauge.className = "bod-gauge";
     gauge.setAttribute("aria-hidden", "true");
@@ -1155,10 +1279,10 @@
     track.className = "bod-gauge__track";
     const fill = document.createElement("span");
     fill.className = isWaning(inst) ? "bod-gauge__fill is-waning" : "bod-gauge__fill";
-    fill.style.width = pct(piety);
+    fill.style.width = pct(standing);
     track.appendChild(fill);
     gauge.appendChild(track);
-    thresholds.forEach((threshold, index) => {
+    gaugeThresholds.forEach((threshold, index) => {
       const pip = document.createElement("span");
       pip.className = tier >= index + 1 ? "bod-gauge__pip full" : "bod-gauge__pip";
       pip.style.left = pct(threshold.value);
@@ -1952,7 +2076,10 @@
   const render = (payload = {}) => {
     state = { ...fallbackState, ...payload };
     const piety = Math.max(0, Math.min(200, numberOrZero(state.piety)));
-    const pietyPercent = Math.min(100, Math.round((piety / 85) * 100));
+    const instrumentPrimary = state.instrument && typeof state.instrument === "object" && state.instrument.primary !== undefined
+      ? clamp01(numberOrZero(state.instrument.primary))
+      : clamp01(piety / 85);
+    const pietyPercent = Math.round(instrumentPrimary * 100);
     const patronName = text(state.patron, "None");
 
     nodes.title.textContent = text(state.title, patronName === "None" ? "Devotion" : patronName);

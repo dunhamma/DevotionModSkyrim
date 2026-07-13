@@ -6,6 +6,21 @@
 
 ---
 
+## 2026-07-13 Substrate Pacing Addendum
+
+This addendum supersedes later `Prayer 5 + HomeBonus 8`, automatic Azura pulse,
+and passive substrate-decay language. The first approved ash prayer, Good
+Daedra twilight altar rite, exact honorable victory, or curated ancestor duty
+in each 06:00 devotional day grants `+4` toward `1/25/75`; later acts grant
+zero. Home context is meaningful texture but never a second metric or piety
+award. The Dunmer substrate does not decay passively.
+
+Honorable victory requires pre-existing hostility, a direct player kill, an
+opponent at least the player's level, no murder, and no stealth opener. Deity
+piety remains act-specific; the substrate helper never creates an automatic
+Azura award. `references/authoring/PDV_SubstratePacingContracts.json` is the
+authority.
+
 ## Religious Identity
 
 Dunmer religion in 4E 201 is a religion of displacement. The Tribunal is dead. Morrowind was destroyed. The ancestral tombs are unreachable. What remains is a faith carried in the body — the morning ash-prayer that doesn't require a shrine, the ancestor-consultation that doesn't require a tomb, the Good Daedra acknowledgment that predated the Tribunal and survives its fall. Dunmer in Skyrim aren't practicing a diminished version of their faith. They're practicing the core of it, stripped of everything that wasn't essential.

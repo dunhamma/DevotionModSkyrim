@@ -1,6 +1,12 @@
 {
   "schema": "pdv-imperial-records.v1",
-  "status": "design-draft-2026-06-07; recognition V1 Survey/status only; pending authoring run",
+  "status": "superseded in part 2026-07-13; focused effect records retained; broad pool and substrate governed by the parity contracts",
+  "contractOverride": {
+    "authority": ["PDV_BroadPantheonContracts.json", "PDV_SubstratePacingContracts.json"],
+    "broadGate": "ImperialDivines pool at 25/50; CivicServiceCount is telemetry only",
+    "focusedGrant": "T1 records are compatibility-only; accepting at deity piety 50 begins T2; T3 begins at 85",
+    "substrate": "Imperial civic practice is a separate 1/25/75 substrate with first approved act per devotional day granting +4"
+  },
   "notes": "Authoritative record spec for the Imperial active-patron pilot. PROGRESSION CURRENCY = real piety faucet; GATE TYPE = offer / active-patron (IsFirstTierRaceRewardEligible: patron piety Tier >= threshold AND active patron). NO substrate. TARGET PACE: assume ~2 qualifying civic signals/day, each a small piety delta, yielding ~12 days cold-start to Devoted at steady honest civic play (Nord-comparable); Talos faithful-defiance acts are rarer/costlier and do not accelerate the broad faucet. Broad Nine Divines is one always-on family (Layer 1, capped at T2/Devoted-Faithful); the active focused primary patron is the second always-on family (Layer 2, runs T1/T2/T3). ConcordatStanding (PDV_RepTrack_ConcordatStanding) MODIFIES Talos access/offer-priority/pressure, it is NOT a parallel buff track. Talos favor is faithful defiance only; compliance never grants Talos favor. Talos REUSES the existing PDV_Deity_Talos (create:false). T3 NPC recognition is V1-deferred (see PDV_RecognitionDialogueScalePacket.md); V1 T3 ships stat/signature effects with Champion Survey text as the recognition surface. Player-facing text is ASCII-only and uses Skyrim ActorValue names. No magnitude exceeds ~12%.",
   "deityQuests": [
     {
@@ -226,12 +232,12 @@
       "displayName": "The Divines' Regard - Seeker",
       "effects": [
         {
-          "actorValue": "Health",
+          "actorValue": "PoisonResist",
           "magnitude": 10,
-          "effectName": "Fortify Health"
+          "effectName": "Poison Resistance"
         }
       ],
-      "playerFacingText": "The Divines regard your shared devotion. Maximum Health +10."
+      "playerFacingText": "The Divines regard your shared devotion. Poison Resistance +10%."
     },
     {
       "emphasis": "Civic",
@@ -243,17 +249,17 @@
       "displayName": "The Divines' Regard - Faithful",
       "effects": [
         {
-          "actorValue": "Health",
-          "magnitude": 20,
-          "effectName": "Fortify Health"
+          "actorValue": "PoisonResist",
+          "magnitude": 10,
+          "effectName": "Poison Resistance"
         },
         {
           "actorValue": "ResistDisease",
           "magnitude": 10
         }
       ],
-      "playerFacingText": "The Divines deepen their regard for your shared devotion. Maximum Health +20, Disease Resistance +10%.",
-      "signature": "Broad civic resilience: faster recovery and disease ward; broad lane stops here, below focused patron benefits."
+      "playerFacingText": "The Divines deepen their regard for your shared devotion. Poison Resistance +10%, Disease Resistance +10%.",
+      "signature": "Broad Divine protection against poison and disease; broad lane stops here, below focused patron benefits."
     },
     {
       "emphasis": "Akatosh",

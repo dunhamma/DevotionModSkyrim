@@ -199,16 +199,20 @@ The positive proof that the Dunmer immersive hooks route outside QASmoke.
 
 **4b. Portable ash-prayer + home rite [ROUTE/RUNTIME]**
 
-- **Seed (MCM):** Debug: State & Rewards -> press **`Dunmer ancestor prayer`**
-  (records one portable-shrine ancestor prayer on the Dunmer substrate). For
-  the home arm, press **`Dunmer home bonus`** (records one player-home ancestor
-  bonus).
-- **Action / where to stand:** the MCM buttons route directly; no walk-in is
-  required for these substrate buttons. (If proving via the real urn instead,
-  read the urn token from inventory.)
-- **Watch:** Survey "Ancestor practice is ..." rises a tier across 2-3 prayers;
-  the home bonus reads as an added home-space credit, not a separate path.
-- **PASS:** prayer credits on the substrate and Survey reflects the rise.
+- **Current authority:** use PS-A2 in
+  `PDV_1_0_CoTest_Runbook_2026-07-10.md`. The substrate now has one shared +4
+  cultural credit per 06:00-to-06:00 devotional day.
+- **Rejected control:** the standalone **`Dunmer home bonus`** / pacing
+  `Rejected probe` must award zero and record `requires_paired_home_prayer`.
+- **Organic action:** declare the current interior through the Ancestral Hearth
+  sleep prompt, then click the usable `PDV_MISC_DunmerAncestralUrn` under
+  Miscellaneous while still in that cell. The portable prayer may claim the
+  day's +4; home presence adds no +8, no second substrate credit, and no second
+  deity-piety pulse.
+- **PASS:** one real home prayer produces one accepted cultural credit and one
+  context-appropriate Reclamation pulse. Same-day repeats remain at the same
+  metric. Use real dawns for additional pacing; same-day prayer spam cannot
+  raise a tier.
 
 **4c. Ancestor-layer curse silence (the signature consequence) [ROUTE/RUNTIME]**
 

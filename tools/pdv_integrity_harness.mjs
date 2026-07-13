@@ -31,6 +31,11 @@ const CHECKS = [
   { id: "completeness", role: "findings", slow: true, cmd: ["tools/pdv_completeness_audit.mjs", "--json"], read: (j) => j ? `${j.status}; ${j.counts ? Object.entries(j.counts).map(([k, v]) => `${k}=${v}`).join(" ") : ""}` : null },
   { id: "deity_chain", role: "gate", cmd: ["tools/pdv_deity_chain_audit.mjs", "--json"], read: (j) => j ? `${j.blockers} blockers (${j.resolutionGaps} resolution / ${j.reachabilityGaps} reachability)` : null },
   { id: "eligibility_reward_coverage", role: "gate", cmd: ["tools/pdv_eligibility_reward_coverage_audit.mjs", "--json"], read: (j) => j ? `${j.rows ?? "?"} rows; ${j.failures ?? "?"} failures` : null },
+  { id: "substrate_pacing", role: "gate", cmd: ["tools/pdv_substrate_pacing_audit.mjs", "--json"], read: (j) => j ? `${j.status}; ${j.findings?.length ?? "?"} assertions` : null },
+  { id: "broad_pantheon", role: "gate", cmd: ["tools/pdv_broad_pantheon_audit.mjs", "--json"], read: (j) => j ? `${j.status}; ${j.findings?.length ?? "?"} assertions` : null },
+  { id: "pantheon_record_readback", role: "gate", slow: true, cmd: ["tools/pdv_pantheon_record_readback.mjs", "--json"], read: (j) => j ? `${j.status}; ${j.assertions ?? "?"} assertions; ${j.failures ?? "?"} failures` : null },
+  { id: "pantheon_presentation_readback", role: "gate", slow: true, cmd: ["tools/pdv_pantheon_presentation_readback.mjs", "--json"], read: (j) => j ? `${j.status}; ${j.assertions ?? "?"} assertions; ${j.failures ?? "?"} failures` : null },
+  { id: "pantheon_substrate_runtime", role: "gate", cmd: ["tools/pdv_pantheon_substrate_runtime_evidence_check.mjs", "--strict", "--json"], read: (j) => j ? `${j.status}; ${j.summary?.passedCards ?? 0}/${j.summary?.requiredCards ?? 12} cards; ${j.summary?.openRequiredBuckets ?? "?"} open buckets` : null },
 ];
 
 function main() {

@@ -5,6 +5,25 @@
 
 ---
 
+## 2026-07-13 Progression Contract Addendum
+
+This addendum supersedes later partial-roster and asymmetric broad-lane text.
+Only one pantheon baseline is active. Old Ways contains Kyne, Shor, Tsun,
+Stuhn, Mara, Orkey, Dibella, and Talos. Nine Divines contains Akatosh, Arkay,
+Dibella, Julianos, Kynareth, Mara, Stendarr, Zenithar, and Talos. Both use the
+same signed broad-pool rules, thresholds `25/50`, cap 50, slow decay, and patron
+transition. Old Ways keeps its Stamina/Frost family; Nine Divines uses distinct
+Nord records named `Faith of the Holds - Seeker/Faithful` with Poison 10%, then
+Poison 10% plus Disease 10%.
+
+The first authentic hearthkeeping or open-sky act in each 06:00 devotional day
+grants the piety-neutral Nord substrate `+4`; later acts grant zero. The tiers
+are `1/25/75`. A specific act may separately award an eligible baseline god,
+but there is no universal Shor pulse. At deity piety 50, patron acceptance
+preserves piety, suppresses the broad boon, and begins focused T2; T3 begins at
+85. See `PDV_BroadPantheonContracts.json` and
+`PDV_SubstratePacingContracts.json`.
+
 ## Religious Identity
 
 Nords in 4E 201 carry two overlapping pantheons simultaneously — the Old Ways (Shor, Kyne, Tsun, Stuhn, Mara, Orkey-as-Arkay, Talos/Ysmir) and the Nine Divines (Akatosh, Kynareth, Mara, Zenithar, Arkay, Stendarr, Julianos, Dibella, Talos). In practice, most Nords blend them without theological anxiety. The primary tension of the era is the Talos ban: Ulfric's war is explicitly a religious war, and every Nord in Skyrim has already taken a position on it even if they'd claim otherwise.

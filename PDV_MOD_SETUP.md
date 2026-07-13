@@ -62,7 +62,13 @@
 | `references/authoring/PDV_RaceGameplayBalanceAudit.md`, `PDV_RaceRewardBudgetLedger.md`, `PDV_RaceEffectReviewLedger.md`, `PDV_RacePlaystyleCoverageLedger.md`, `PDV_RaceImplementationCostingBacklog.md` | Multi-lens race gameplay audit, reward/effect/playstyle/immersion ledgers, and implementation-costing backlog |
 | `tools/pdv_compile.mjs` | PapyrusCompiler wrapper for stale/all/targeted PDV script compiles |
 | `tools/pdv_verify.mjs` | Read-only verifier for Anvil/MO2/ESP/script wiring drift |
-| `tools/pdv_author.mjs` | Safe overlay-patch authoring helper for supported ESP wiring on existing PDV records |
+| `tools/pdv_author.mjs` | Retired/reference-only legacy overlay helper; new ESP work uses direct houseCARL v1.7+ calls |
+| `tools/pdv_housecarl_p2_readback.mjs` | Direct houseCARL exact readback for P2 receiver FormLists, approved source membership, and player-alias VMAD bindings; unexpected live members fail |
+| `tools/pdv_pantheon_record_readback.mjs` | Direct houseCARL focused Imperial/Nord reward and substrate inherited-property readback |
+| `tools/pdv_pantheon_presentation_readback.mjs` | Direct houseCARL Active-Effect family-name, broad reward, active-substrate, Observe-the-Moons, manager VMAD, and player-visible `Spine` readback |
+| `tools/pdv_substrate_pacing_audit.mjs` | Strict source/contract audit for the six paced substrates: one +4 devotional credit per 06:00 day, timing maths, authentic-route ownership, curse exceptions, decay, and player-copy exclusions |
+| `tools/pdv_broad_pantheon_audit.mjs` | Strict source/contract audit for Imperial, Nord Old Ways, and Nord Nine Divines pools: signed logical-event aggregation, active-baseline gating, grace/decay, migration, and T2 patron transition |
+| `tools/pdv_pantheon_substrate_runtime_evidence_check.mjs` | Fail-closed runtime/manual evidence checker for the 12 pantheon/substrate co-test cards; a static pass never closes an evidence bucket |
 | `tools/pdv_patch.mjs` | Offline patcher for classification/distribution manifests and generated patch review/live artifacts |
 | `tools/pdv_content_verify.mjs` | Read-only verifier for the race/Daedric content manifests plus Phase 20 roster coverage (ASCII, budgets, slot IDs, voice, full roster gate) |
 | `tools/pdv_formal_offer_check.mjs` | Read-only verifier for the formal-offer scale-out spec, live manager eligibility/source flow, no-offer race exclusions, quiet-emergence cues, and delegated ESP/property readback |
@@ -75,7 +81,7 @@
 | `tools/pdv_prisma_ui_audit.mjs` | Read-only Prisma UI policy audit; blocks gameplay scripts from opening focused/blocking Prisma UI without default-off/player-owned gating and fails stale Book-of-Days manager/MCM bytecode |
 | `tools/pdv_prisma_toast_fallback_audit.mjs` | Read-only Prisma-first toast fallback audit; fails raw player-facing top-left-only gameplay notices, checks stable toast helpers use shared fallback behavior, and hardens the P2 book route from `OnBookRead` through `ShowP2BookNotice` |
 | `tools/pdv-phase20-proof-placement-author` | Narrow direct-framework helper that creates/checks the current 34 QASmoke Phase 20 proof REFRs across Altmer, Argonian, Orc, Redguard, Khajiit, and Bosmer |
-| `tools/pdv-phase20-p2-receiver-author` | Narrow direct-framework helper that creates/checks the empty `PDV_FLST_P2_*` receiver FormList shells for all ten race immersive hooks, wires/checks those FormLists on the existing `PDV_PlayerEvents` alias script, fills/checks explicitly approved exact source entries from the receiver manifest, authors/checks generic faucet receiver QUST/Story Manager nodes including AddToPlayer theft, authors/checks the Green Pact plant-food baseline, and checks capstone static authoring packets |
+| `tools/pdv-phase20-p2-receiver-author` | Retired/reference-only historical author; current receiver verification uses `pdv_housecarl_p2_readback.mjs` and any new ESP edit uses direct houseCARL |
 | `tools/pdv_phase2_reward_readback_audit.mjs` | Read-only Phase 2 static closeout audit for reward records, manager spell/deity properties, FLST/SEQ/SGE state, Green Pact static layer plus the plant-food baseline, capstone records, and real-hook classification |
 | `tools/pdv-phase20-race-author` | Race-agnostic direct-framework reward/spec author/checker that creates/wires and readbacks per-race deity, reward, neglect, creed-loss, support-spell, state-track/reputation-track/global mirror, and message-record packets from `PDV_{Race}RewardRecords.spec.json` or a scoped tranche spec; `--check-rewards` verifies spell/MGEF copy, magnitudes, archetypes, conditions, and VMAD properties, can preserve explicit capstone extra effects such as Khajiit Baan Dar T3, and regen AVs are authored as PeakValueModifier effects |
 | `tools/pdv-requiem-tail-author` | Narrow direct-framework helper for the Requiem-tail closeout: creates/checks hidden Shor/HoonDing low-health save effects and heal spells, HoonDing breakthrough boss FormList plus manager faction/FormList VMAD properties, Redguard Ash'abah and generalized undead-crypt clearable-site FormList wiring, and Namira zero-passive/copy normalization directly in `Devotion.esp` with backups under `Backups\requiem-tail\`; no persistent patch plugin ships |
@@ -475,6 +481,16 @@ journal payload contract, including the repeated failure class where
 `PDV__ManagerQuest` was recompiled after a signature/open-close change but
 `PDV_MCM.pex` still contains the old hotkey call.
 
+For Pantheon Parity and Substrate Pacing work, run the two authority audits
+(`pdv_substrate_pacing_audit.mjs` and `pdv_broad_pantheon_audit.mjs`), direct
+houseCARL readbacks (`pdv_pantheon_record_readback.mjs`,
+`pdv_pantheon_presentation_readback.mjs`, and `pdv_housecarl_p2_readback.mjs
+--check-all`), the normal verifier, and the Prisma audit before opening Skyrim.
+Then run `pdv_pantheon_substrate_runtime_evidence_check.mjs`: it is expected to
+fail while the PS-A1 through PS-A12 evidence cards are open. Use a fresh
+main-menu `coc qasmoke` save after deployment; a static/readback pass does not
+prove old save instances, route delivery, or player-visible behavior.
+
 For Daedric Prince CAT-6 work, regenerate `references\authoring\PDV_DaedricPrinceRecordContracts.json` with `tools\pdv_generate_daedric_contract.mjs` before authoring. `tools\pdv-daedric-author` then dry-runs, writes, and checks the direct-framework ESP packet for all sixteen Skyrim-present Princes, including per-Prince records, base/concrete `PDV_DaedricPathBase` VMAD wiring, stigma globals, arrays, `PDV_FLST_DaedricPaths_All` membership, manager FormList wiring, the QASmoke proof sender ACTI/REFR packet, and all sixteen exact organic quest-stage source FormLists. This is still a record/readback gate only; controlled in-game display proof and live-source proof are required before calling a Prince beta-display ready.
 
 For design-first thin-Prince artifact faucets, keep the scope to low-risk equip events unless a richer artifact-use support path has been designed. `tools\pdv-prince-faucet-author` owns the direct-framework FormLists for Molag Bal, Hircine, Meridia, Sheogorath, Mehrunes Dagon, and Nocturnal artifacts; `tools\pdv_quest_matrix_compile.mjs --check` must report the matching Part D faucet count before live JSON write. This is machine/readback proof only until in-game artifact-equip smoke and wrong-origin silence are captured.
@@ -702,6 +718,13 @@ Individual tools (all read-only except their own generated ledgers):
 - `node tools/pdv_eligibility_reward_coverage_audit.mjs --json` ->
   `PDV_EligibilityRewardCoverageLedger.{md,csv}` (focusable reward rows from live Papyrus
   checked against live SPEL existence and manager VMAD property fill)
+- `node tools/pdv_substrate_pacing_audit.mjs --json` -> shared `+4` daily-credit,
+  `1/25/75`, decay, origin/source, and bypass contract
+- `node tools/pdv_broad_pantheon_audit.mjs --json` -> Imperial/Nord pool aggregation,
+  migration, baseline, decay, and patron-transition contract
+- `node tools/pdv_pantheon_record_readback.mjs --json` and
+  `node tools/pdv_pantheon_presentation_readback.mjs --json` -> direct houseCARL record,
+  VMAD, Active Effects, Observe-the-Moons, and player-copy readback
 - self-test env flags: `PDV_SIGNAL_E2E_PARITY_SELFTEST=1`, `PDV_SPINE_SELFTEST=1`, `PDV_SPECCED_MINUS_SELFTEST=1`
 
 **Gotchas:**
@@ -715,6 +738,13 @@ Individual tools (all read-only except their own generated ledgers):
 - **Repo-source drift:** `live-source/` is a junction to the canonical untracked live dir; the
   Grep/Glob editor index can surface a more-advanced worktree than bash sees on disk. Trust
   `pdv_compile`/`pdv_verify` (they read the live deploy dir) + git for ground truth.
+- **VMAD declarations are not bindings:** a Papyrus `Property ... Auto` declaration and a valid
+  target record do not prove the live QUST VMAD is filled. Read the exact manager/alias property
+  through houseCARL after every property addition. The Observe-the-Moons power and message list
+  existed but remained runtime-None until direct readback caught and repaired both bindings.
+- **Approved FormLists are exact sets:** readback must fail on unexpected members as well as
+  missing approved members. A rogue vanilla `CounterLeft01` entry survived until exact-membership
+  validation replaced presence-only checking.
 
 ### Papyrus authoring gotchas
 

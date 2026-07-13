@@ -2,11 +2,18 @@
 
 ## Overview
 
-Nords carry two faiths at once and rarely lose sleep over it. The Old Ways honor the gods of Atmora and Sovngarde - Kyne, Shor, Tsun, Stuhn, and Mara - alongside Talos, the Hero-God of Man. The Nine Divines bring the more temple-tidy Imperial roster - Akatosh, Mara, Arkay, Stendarr, Zenithar, Dibella, Julianos, Kynareth - and Talos stands in that crowd too, though the Thalmor would see him struck from it. Most Nords blend the two without theological anxiety, but every Nord in Skyrim has quietly taken a side on the Talos ban whether they admit it or not.
+Nords carry two overlapping religious languages and rarely lose sleep over it. The Old Ways honor Kyne, Shor, Tsun, Stuhn, Mara, Orkey, Dibella, and Talos. The Nine Divines honor Akatosh, Arkay, Dibella, Julianos, Kynareth, Mara, Stendarr, Zenithar, and Talos. Most Nords recognize both traditions, but Devotion asks which one frames your worship. Only that baseline is active at a time, and both are equally complete.
 
 For a Nord, faith is not a starting package handed to you. It is something your deeds reveal. You do not pick which god you serve. You live - you hunt, you fight, you defy the ban, you build a hearth - and at some point a god notices that the way you live points toward them, and offers to claim you. Until that moment you are a broad worshipper of your whole pantheon, honored by all and beloved by none in particular.
 
 The big choice at the start is which pantheon frames your worship: the Old Ways or the Nine Divines. After that, the choice that matters most is one you do not consciously make - it is made for you, by how you actually play.
+
+Both baselines build broad standing from the gods mixed within that tradition.
+Old Ways grants `Old Ways - Seeker/Faithful`; Nine Divines grants `Faith of the
+Holds - Seeker/Faithful`. At 50 piety a god may offer commitment. Accepting
+keeps your piety, sets the broad blessing aside, and begins the focused second
+tier. Hearthkeeping and outdoor rest also build a separate Nord cultural layer,
+but only the first authentic act after each 06:00 dawn advances it.
 
 ## Your Gods
 
@@ -17,16 +24,19 @@ If you start on the Old Ways, these are the gods who can claim you:
 - **Shor** - the old king of Atmora, lord of the Sovngarde mead-hall, who weighs your valor and your honorable kills.
 - **Tsun** - shield-thane of Shor, god of trials and adversity, who guards the whalebone bridge to Sovngarde.
 - **Stuhn** - the shield-god, brother of Tsun, who governs ransom, the just division of spoils, and mercy toward a beaten foe.
+- **Mara** - the hearth-mother, honored through care, household duty, and bonds kept.
+- **Orkey** - the old death-god, met through proper burial, crypt duty, and respect for the dead.
+- **Dibella** - the goddess of beauty, affection, and the life of the hall.
 
 If you start on the Nine Divines, you can be claimed by **Akatosh**, **Mara**, **Arkay**, **Stendarr**, **Zenithar**, **Dibella**, **Julianos**, or **Kynareth** - and Talos remains reachable in either pantheon. A Nord under the Divines still lives like a Nord: holds, weather, household duty, death rites, honor, and Talos pressure, just wearing temple names instead of old mythic ones.
 
-A few gods are off the table for Nords by design: Alduin (feared, not worshipped), Orkey (propitiated as an enemy-god), and Jhunal (forgotten by the Fourth Era). Foreign gods and the Daedric Princes are not part of normal Nord worship. The one Daedric road open to you is Hircine, and it opens only through the curse of lycanthropy - see "If You Are Cursed" below.
+A few gods are off the table for Nords by design: Alduin (feared, not worshipped) and Jhunal (forgotten by the Fourth Era). Foreign gods and the Daedric Princes are not part of normal Nord worship. The one Daedric road open to you is Hircine, and it opens only through the curse of lycanthropy - see "If You Are Cursed" below.
 
 ## Getting Started
 
 At the very start you set your **pantheon baseline**: Old Ways or Nine Divines. This is a framing choice. It decides which gods can notice you and what names and stories your worship wears. The underlying way devotion works is the same either way - only the roster and the flavor change.
 
-- **Old Ways** points you at Kyne, Talos, Shor, Tsun, and Stuhn. This is the mythic, hold-born, ancestors-and-Sovngarde frame. It leans into weather, the hunt, honorable combat, and quiet defiance of the Talos ban as ancestral identity.
+- **Old Ways** points you at Kyne, Shor, Tsun, Stuhn, Mara, Orkey, Dibella, and Talos. This is the mythic, hold-born, ancestors-and-Sovngarde frame. It leans into weather, the hunt, honorable combat, household duty, death order, and quiet defiance of the Talos ban as ancestral identity.
 - **Nine Divines** points you at the eight Imperial Divines plus Talos. It is the more temple-readable frame, but it still plays like a Nord - the difference is moral and verbal more than mechanical. Here, carrying Talos in your heart is a contradiction held inside a public Divine faith.
 
 You do not commit to a single god at the start. You begin as a **broad worshipper** of your chosen pantheon. You earn devotion across several gods at once, and that broad worship is its own honored path - but it caps you at the Devoted tier. To reach Champion, you must commit to one god when they offer to claim you. That offer is the heart of the Nord experience, and it is covered under Unique Mechanics.
@@ -164,9 +174,9 @@ Discrepancies between what the guide/design promises and what actually fires org
 - **Thu'um-in-use is property-based, not table-based.** Learning a Word of Power reads the CSV normally. USING a shout (OnShoutAttack) is scored only through the hard-coded `DELTA_SHOUT_ATTACK` properties on Kyne (+0.35) and Talos (+0.5); the CSV shout-attack (40) rows are explicitly NOT read. Other gods get nothing from using a shout.
 - **Hearth / hold is quest-only.** "Build a hearth and defend a hold" (marriage, home, freeing prisoners, aiding a hold) has no day-to-day like row. The only organic "hearth" hook is the interior sleep/return signal (`HandleNordSleepEvents` / `HandleNordLocationChange`), which feeds Shor's ancestral-rest substrate, NOT a Mara/Stuhn hold reward. Community-defense credit reaches the player only through the quest matrix.
 - **Neglect is felt only after commitment.** Every Nord neglect debuff (Kyne weather/stamina; the per-patron Shor/Tsun/Stuhn/Talos flat spells) is gated to `_activeDeity == that god`. A broad worshipper who never accepted an offer never feels neglect, so the "shouts feel like technique" / "weather stops helping" copy only applies to a claimed patron.
-- **Dead code:** `HandleNordAncestorSpine` (the general Shor ancestor-spine signal) has NO caller anywhere in live-source - only `RecordNordAncestralRest` (sleep) and `RecordNordHearthReturn` (location) invoke the underlying record function. Worth pruning or wiring.
+- **Canonical cultural route:** Hearth return, hearth sleep, first cooked meal, and completed exterior rest share one daily substrate credit. They do not create a universal Shor award.
 - **Hircine hunt-rite gain is STUB.** The werewolf-curse state penalties fire organically, but the Hircine hunt-rite REWARD lane (`HandleHircineHuntRite`) is dev-only/MCM, same pattern as the Talos defiance lane.
-- **Old Ways vs Nine Divines coverage:** the Old Ways patrons (Kyne/Shor/Tsun/Stuhn) get bespoke Nord signal wiring plus the shared CSV/quest rows; the Nine Divines gods rely almost entirely on the shared CSV rows and shared cross-race quest matrix. Both pantheons are organically reachable, but Old Ways has more Nord-specific hooks.
+- **Old Ways vs Nine Divines coverage:** both baselines must have the same complete broad-pool, threshold, decay, and commitment behavior. Their authentic deity routes and reward flavor differ, but neither may rely on a partial fallback resolver.
 
 <!-- END REVIEW SCAFFOLDING -->
 
@@ -183,17 +193,17 @@ There are two layers. The **broad layer** is what you get for honoring your whol
 | Seeker | Stamina Regeneration +4% |
 | Devoted | Stamina Regeneration +6%, Frost Resistance +10% |
 
-(The Nine Divines broad-worship path gives a comparable blended favor set, framed in Divine terms.)
+(The Nine Divines baseline uses **Faith of the Holds**: Poison Resistance +10% at Seeker, then Poison and Disease Resistance +10% at Faithful.)
 
-**Focused patron bonuses (Old Ways gods).** All share the same shape: a modest Seeker sign, a stable Devoted blessing, and a Champion capstone with a unique scripted moment on top of the numbers.
+**Focused patron bonuses (Old Ways gods).** Commitment enters directly at the Devoted/T2 effect at 50; the old Seeker records remain compatibility-only and are never granted. Champion begins at 85.
 
-- **Kyne** - Seeker: Stamina Regen +5%. Devoted: Stamina Regen +10%, Frost Resist +10%. Champion: Stamina Regen +20%, Frost Resist +25%, plus "The Storm Answers."
-- **Shor** - Seeker: Health Regen +5%. Devoted: Health Regen +15%, One-Handed +8. Champion: Health Regen +27%, One-Handed +18, Two-Handed +10, plus "Sovngarde Looks Back" (this capstone carries the Nord's single last-stand save).
-- **Tsun** - Seeker: Stamina Regen +5%. Devoted: Stamina Regen +10%, Block +10. Champion: Stamina Regen +20%, Block +22, Armor +50, plus "The Shield-Thane's Trial."
-- **Stuhn** - Seeker: Armor +15. Devoted: Armor +30, Block +8. Champion: Armor +50, Block +18, One-Handed +8, plus "Just Spoils, Honored Bonds."
-- **Talos** (reachable in either pantheon) - Seeker: Armor +15. Devoted: Armor +30, One-Handed +8. Champion: Armor +50, One-Handed +20, plus "Triumph of Faithful Defiance." Reached only through costly faithful defiance - compliance never builds it.
+- **Kyne** - T2: Stamina Regen +10%, Frost Resist +10%. Champion: Stamina Regen +20%, Frost Resist +25%, plus "The Storm Answers."
+- **Shor** - T2: Health Regen +15%, One-Handed +8. Champion: Health Regen +27%, One-Handed +18, Two-Handed +10, plus "Sovngarde Looks Back" (this capstone carries the Nord's single last-stand save).
+- **Tsun** - T2: Stamina Regen +10%, Block +10. Champion: Stamina Regen +20%, Block +22, Armor +50, plus "The Shield-Thane's Trial."
+- **Stuhn** - T2: Armor +30, Block +8. Champion: Armor +50, Block +18, One-Handed +8, plus "Just Spoils, Honored Bonds."
+- **Talos** (reachable in either pantheon) - T2: Armor +30, One-Handed +8. Champion: Armor +50, One-Handed +20, plus "Triumph of Faithful Defiance." Reached only through costly faithful defiance - compliance never builds it.
 
-**Focused patron bonuses (Nine Divines).** Each of the eight Divines has its own three-tier blessing in the Nord frame - for example Kynareth leans into Stamina and Frost like an open-sky cousin to Kyne, Mara into Healing, Stendarr into Block and Armor, Zenithar into carrying capacity and craft. Every Champion tier carries that god's signature moment. Exact magnitudes for the Divine families are still being finalized; expect the same general shape as the Old Ways gods above, with no single combat bonus exceeding about 12%.
+**Focused patron bonuses (Nine Divines).** Each eligible Divine likewise begins at its authored T2 effect at 50 and reaches its Champion capstone at 85. Kynareth leans into stamina and resistance, Mara into restoration, Stendarr into block and armor, and Zenithar into carrying capacity and craft. Focused T1 is never granted.
 
 ## Unique Mechanics
 
@@ -201,7 +211,7 @@ There are two layers. The **broad layer** is what you get for honoring your whol
 
 **You can say "Not yet."** Declining never costs you piety. It only sets a cooldown before that god offers again (seven days the first time, fourteen after). Broad worship continues, other qualifying gods can still step forward, and your play can drift toward someone new. A Nord who refuses Kyne and then turns to the forge may find Zenithar knocking instead.
 
-**Commitment is a living bond, not a brand.** When you accept, you keep most of your built-up devotion (a generous carry-over), the offer becomes your one patron, and Champion opens up. But the bond is not permanent paperwork - it must be fed. Stop living the way your patron expects and the relationship frays back down. This is the Nord signature: not a rule imposed on you, but the slow truth of who you turn out to be.
+**Commitment is a living bond, not a brand.** When you accept, every god keeps the devotion you already built; the broad boon is suppressed and the chosen god's focused Devoted blessing becomes active. Champion opens at 85. If that patron falls below 50, commitment remains but its blessing pauses until recovery. This is the Nord signature: not a rule imposed on you, but the slow truth of who you turn out to be.
 
 ## If You Are Cursed (Vampire or Werewolf)
 
@@ -211,7 +221,7 @@ There are two layers. The **broad layer** is what you get for honoring your whol
 
 ## Quick Reference
 
-- **Gods (Old Ways):** Kyne, Talos, Shor, Tsun, Stuhn. **(Nine Divines):** Akatosh, Mara, Arkay, Stendarr, Zenithar, Dibella, Julianos, Kynareth, plus Talos.
+- **Gods (Old Ways):** Kyne, Shor, Tsun, Stuhn, Mara, Orkey, Dibella, Talos. **(Nine Divines):** Akatosh, Arkay, Dibella, Julianos, Kynareth, Mara, Stendarr, Zenithar, Talos.
 - **Starting choice:** Old Ways or Nine Divines pantheon baseline; broad worship first, then a god offers to claim you.
 - **Top 3 ways to gain:** honorable combat and the hunt; learning and using the Thu'um; costly defiance of the Talos ban (plus open-sky rest, death rites, hearth and hold for the right gods).
 - **Main ways to lose:** murdering the defenseless and raising the dead; betraying the Talos faith once committed; theft and Daedric bargains; neglect and natural drift; the Devoted cap on broad worship.

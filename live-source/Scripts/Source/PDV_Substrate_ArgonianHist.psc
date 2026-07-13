@@ -1,24 +1,29 @@
 ;/ 
     PDV_Substrate_ArgonianHist.psc
-    PlayerDevotion - Argonian Hist/People/Void proving pilot
+    PlayerDevotion - Argonian cultural-practice substrate
     -----------------------------------------------------------------------
-    Concrete Phase 20 helper for the Saxhleel exile substrate. Hist remains
-    primary, People buffers exile, and Void/Sithis stays thresholded.
+    Cultural practice is a dedicated daily-budget metric. Hist, People, and
+    Void remain independent relation ledgers; relation changes do not derive
+    or overwrite the cultural metric.
     -----------------------------------------------------------------------
 /;
 
 Scriptname PDV_Substrate_ArgonianHist extends PDV_SubstrateBase
 
-Float Property HistMaintenanceDelta = 5.0 Auto
-Float Property PeopleSupportDelta = 4.0 Auto
-Float Property BedOfChoiceDelta = 3.0 Auto
-Float Property VoidSignalDelta = 2.0 Auto
+Float Property HistMaintenanceDelta = 5.0 Auto ; Relation delta, not metric gain.
+Float Property PeopleSupportDelta = 4.0 Auto ; Relation delta, not metric gain.
+Float Property BedOfChoiceDelta = 3.0 Auto ; Relation delta, not metric gain.
+Float Property VoidSignalDelta = 2.0 Auto ; Relation delta, not metric gain.
 Float Property HistPeopleBufferWeight = 0.25 Auto
 Float Property HistVoidStabilizerWeight = 0.10 Auto
 Float Property HistDawnDecay = 1.0 Auto
 Float Property HistDawnGraceDays = 3.0 Auto
 Float Property HistNonCurseFloor = 20.0 Auto
+Float Property CulturalDawnDecay = 1.0 Auto
+Float Property CulturalDawnGraceDays = 3.0 Auto
+Float Property CulturalNonCurseFloor = 20.0 Auto
 Int Property VoidActivationSignalsRequired = 3 Auto
+Int Property CulturalMetricMigrationVersion = 1 AutoReadOnly
 
 Int Property HIST_POSTURE_NORMAL = 0 AutoReadOnly
 Int Property HIST_POSTURE_DISTANT = 1 AutoReadOnly
@@ -26,16 +31,26 @@ Int Property HIST_POSTURE_STRAINED = 2 AutoReadOnly
 Int Property HIST_POSTURE_SILENCED = 3 AutoReadOnly
 Int Property HIST_POSTURE_CORRUPTED = 4 AutoReadOnly
 
+Bool Function IsAuthenticSubstrateSource(String sourceId)
+    return sourceId == "argonian_hist" || sourceId == "argonian_people" || sourceId == "argonian_bed" || sourceId == "argonian_void" || sourceId == "argonian_cooked_meal" || sourceId == "argonian_sacred_water"
+EndFunction
+
 Function RecordHistMaintenance(String reason)
     RecordHistMaintenanceScaled(1.0, reason)
 EndFunction
 
 Function RecordHistMaintenanceScaled(Float multiplier, String reason)
-    Float delta = HistMaintenanceDelta * ClampSignalMultiplier(multiplier)
+    Float normalizedMultiplier = ClampSignalMultiplier(multiplier)
+    if normalizedMultiplier <= 0.0
+        Trace(2, "Hist maintenance blocked for " + reason)
+        return
+    endIf
+
+    Float delta = HistMaintenanceDelta * normalizedMultiplier
     SetHistRelation(GetHistRelation() + delta, "hist_maintenance_" + reason)
-    StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastHistEvent", Utility.GetCurrentGameTime())
-    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastMaintenanceDay", Utility.GetCurrentGameTime() as Int)
-    Trace(2, "Hist maintenance recorded with delta " + delta)
+    StampHistMaintenance(reason)
+    Float awarded = TryAwardSubstrateDayCredit("argonian_hist", reason, 1.0)
+    Trace(2, "Hist maintenance recorded with relation delta " + delta + " and daily credit " + awarded)
 EndFunction
 
 Function RecordPeopleSupport(String reason)
@@ -43,10 +58,17 @@ Function RecordPeopleSupport(String reason)
 EndFunction
 
 Function RecordPeopleSupportScaled(Float multiplier, String reason)
-    Float delta = PeopleSupportDelta * ClampSignalMultiplier(multiplier)
+    Float normalizedMultiplier = ClampSignalMultiplier(multiplier)
+    if normalizedMultiplier <= 0.0
+        Trace(2, "People support blocked for " + reason)
+        return
+    endIf
+
+    Float delta = PeopleSupportDelta * normalizedMultiplier
     SetPeopleRelation(GetPeopleRelation() + delta, "people_support_" + reason)
     StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastPeopleEvent", Utility.GetCurrentGameTime())
-    Trace(2, "People support recorded with delta " + delta)
+    Float awarded = TryAwardSubstrateDayCredit("argonian_people", reason, 1.0)
+    Trace(2, "People support recorded with relation delta " + delta + " and daily credit " + awarded)
 EndFunction
 
 Function RecordBedOfChoiceReturn(String reason)
@@ -54,11 +76,36 @@ Function RecordBedOfChoiceReturn(String reason)
 EndFunction
 
 Function RecordBedOfChoiceReturnScaled(Float multiplier, String reason)
-    Float delta = BedOfChoiceDelta * ClampSignalMultiplier(multiplier)
+    Float normalizedMultiplier = ClampSignalMultiplier(multiplier)
+    if normalizedMultiplier <= 0.0
+        Trace(2, "Bed-of-choice return blocked for " + reason)
+        return
+    endIf
+
+    Float delta = BedOfChoiceDelta * normalizedMultiplier
     SetPeopleRelation(GetPeopleRelation() + delta, "bed_of_choice_" + reason)
-    StorageUtil.AdjustIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount", 1)
+    ; Rooted Rest is earned through twelve separate devotional days at the
+    ; declared bed.  A sleep loop must never compress that history into one day.
+    Int sleepStamp = GetDevotionalDay() + 2
+    if StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepDay") != sleepStamp
+        StorageUtil.AdjustIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount", 1)
+        StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepDay", sleepStamp)
+    endIf
     StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceLastSleep", Utility.GetCurrentGameTime())
-    Trace(2, "Bed-of-choice return recorded with delta " + delta)
+    Float awarded = TryAwardSubstrateDayCredit("argonian_bed", reason, 1.0)
+    Trace(2, "Bed-of-choice return recorded with relation delta " + delta + " and daily credit " + awarded)
+EndFunction
+
+; Hist-maintenance timing is independent of the relation magnitude and the
+; cultural-practice day credit.  Sacred water and Sleeping Tree Sap are both
+; genuine Hist contact, so they use this same clock without receiving the
+; routine +5 maintenance relation pulse.
+Function StampHistMaintenance(String reason)
+    StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastHistEvent", Utility.GetCurrentGameTime())
+    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastMaintenanceDay", GetDevotionalDay())
+    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastMaintenanceStamp", GetDevotionalDay() + 2)
+    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.MaintenanceStampVersion", 1)
+    Trace(3, "Hist maintenance clock stamped for " + reason)
 EndFunction
 
 Function RecordVoidSignal(String reason)
@@ -66,11 +113,53 @@ Function RecordVoidSignal(String reason)
 EndFunction
 
 Function RecordVoidSignalScaled(Float multiplier, String reason)
-    Float delta = VoidSignalDelta * ClampSignalMultiplier(multiplier)
+    Float normalizedMultiplier = ClampSignalMultiplier(multiplier)
+    if normalizedMultiplier <= 0.0
+        Trace(2, "Void signal blocked for " + reason)
+        return
+    endIf
+
+    Float delta = VoidSignalDelta * normalizedMultiplier
     SetVoidRelation(GetVoidRelation() + delta, "void_signal_" + reason)
     StorageUtil.AdjustIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.SithisSignalCount", 1)
     StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastVoidEvent", Utility.GetCurrentGameTime())
-    Trace(2, "Void signal recorded with delta " + delta)
+    Float awarded = TryAwardSubstrateDayCredit("argonian_void", reason, 1.0)
+    Trace(2, "Void signal recorded with relation delta " + delta + " and daily credit " + awarded)
+EndFunction
+
+; Cultural practices such as the first cooked meal affect the shared practice
+; metric only. They do not invent Hist piety or move the People/Void ledgers.
+Function RecordCulturalPractice(String sourceId, String reason)
+    Float awarded = TryAwardSubstrateDayCredit(sourceId, reason, 1.0)
+    Trace(2, "Cultural practice recorded with daily credit " + awarded + " (" + sourceId + ")")
+EndFunction
+
+Function EnsureHistMaintenanceStampEncoding()
+    if StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.MaintenanceStampVersion") >= 1
+        return
+    endIf
+
+    ; Legacy saves stored a raw devotional day, where zero was ambiguous. A
+    ; nonzero event time proves that the raw day was an actual maintenance act.
+    if StorageUtil.GetFloatValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastHistEvent") > 0.0
+        Int legacyDay = StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastMaintenanceDay")
+        StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastMaintenanceStamp", legacyDay + 2)
+    endIf
+    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.MaintenanceStampVersion", 1)
+EndFunction
+
+Bool Function HasHistMaintenance()
+    EnsureHistMaintenanceStampEncoding()
+    return StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastMaintenanceStamp") > 0
+EndFunction
+
+Int Function GetLastHistMaintenanceDevotionalDay()
+    EnsureHistMaintenanceStampEncoding()
+    Int stamp = StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastMaintenanceStamp")
+    if stamp <= 0
+        return -1
+    endIf
+    return stamp - 2
 EndFunction
 
 Function ProcessHistDistanceDawn(Bool curseActive, String reason)
@@ -78,19 +167,22 @@ Function ProcessHistDistanceDawn(Bool curseActive, String reason)
         return
     endIf
 
-    Int currentDay = Utility.GetCurrentGameTime() as Int
+    Int currentDay = GetDevotionalDay()
     Int lastDecayDay = StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastDecayDay")
     if lastDecayDay == currentDay
         return
     endIf
 
-    Int lastMaintenanceDay = StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastMaintenanceDay")
+    EnsureHistMaintenanceStampEncoding()
+    Int maintenanceStamp = StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastMaintenanceStamp")
+    Int lastMaintenanceDay = maintenanceStamp - 2
     Int dayDelta = currentDay - lastMaintenanceDay
-    if lastMaintenanceDay <= 0
+    if maintenanceStamp <= 0
         dayDelta = (HistDawnGraceDays as Int) + 1
     endIf
 
     if dayDelta <= (HistDawnGraceDays as Int)
+        StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastDecayDay", currentDay)
         return
     endIf
 
@@ -102,11 +194,19 @@ Function ProcessHistDistanceDawn(Bool curseActive, String reason)
     Float oldHist = GetHistRelation()
     if oldHist <= floorValue
         StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastDecayDay", currentDay)
-        RefreshCompositeMetric(reason)
         return
     endIf
 
-    Float newHist = oldHist - HistDawnDecay
+    Int decayDays = currentDay - lastDecayDay
+    Int graceEndDay = lastMaintenanceDay + (HistDawnGraceDays as Int)
+    if lastDecayDay < graceEndDay
+        decayDays = currentDay - graceEndDay
+    endIf
+    if decayDays < 1
+        decayDays = 1
+    endIf
+
+    Float newHist = oldHist - (HistDawnDecay * decayDays)
     if newHist < floorValue
         newHist = floorValue
     endIf
@@ -114,6 +214,81 @@ Function ProcessHistDistanceDawn(Bool curseActive, String reason)
     SetHistRelation(newHist, "hist_distance_dawn_" + reason)
     StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastDecayDay", currentDay)
     Trace(2, "Hist distance dawn decay " + oldHist + " -> " + newHist)
+EndFunction
+
+Function ProcessCulturalPracticeDawn(Bool curseActive, String reason)
+    if !IsOriginActive()
+        return
+    endIf
+
+    Int currentDay = GetDevotionalDay()
+    Int lastDecayDay = StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastCulturalDecayDay", -1)
+    if lastDecayDay == currentDay
+        return
+    endIf
+
+    Int lastMaintenanceDay = GetLastAcceptedDevotionalDay()
+    Int dayDelta = currentDay - lastMaintenanceDay
+    if !HasAcceptedSubstrateCredit()
+        dayDelta = (CulturalDawnGraceDays as Int) + 1
+    endIf
+
+    if dayDelta <= (CulturalDawnGraceDays as Int)
+        StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastCulturalDecayDay", currentDay)
+        RecomputeSubstrateTier()
+        return
+    endIf
+
+    Float floorValue = CulturalNonCurseFloor
+    if curseActive
+        floorValue = MetricMin
+    endIf
+
+    Float oldPractice = GetMetric()
+    if oldPractice <= floorValue
+        StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastCulturalDecayDay", currentDay)
+        RecomputeSubstrateTier()
+        return
+    endIf
+
+    Int graceEndDay = lastMaintenanceDay + (CulturalDawnGraceDays as Int)
+    if !HasAcceptedSubstrateCredit()
+        graceEndDay = currentDay - 1
+    endIf
+    Int decayDays = currentDay - lastDecayDay
+    if lastDecayDay < graceEndDay
+        decayDays = currentDay - graceEndDay
+    endIf
+    if decayDays < 1
+        decayDays = 1
+    endIf
+    Float newPractice = oldPractice - (CulturalDawnDecay * decayDays)
+    if newPractice < floorValue
+        newPractice = floorValue
+    endIf
+
+    SetMetric(newPractice, "argonian_cultural_dawn_" + reason)
+    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastCulturalDecayDay", currentDay)
+    Trace(2, "Cultural practice dawn decay " + oldPractice + " -> " + newPractice)
+EndFunction
+
+Function MigrateLegacyCompositeMetricOnce()
+    Int migratedVersion = StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.CulturalMetricMigrationVersion")
+    if migratedVersion >= CulturalMetricMigrationVersion
+        return
+    endIf
+
+    Float legacyComposite = GetHistRelation() + (GetPeopleRelation() * HistPeopleBufferWeight)
+    if IsVoidFullyActive()
+        legacyComposite = legacyComposite + (GetVoidRelation() * HistVoidStabilizerWeight)
+    endIf
+    if legacyComposite > HighThreshold
+        legacyComposite = HighThreshold
+    endIf
+
+    SetMetric(legacyComposite, "argonian_cultural_migration_v1")
+    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.CulturalMetricMigrationVersion", CulturalMetricMigrationVersion)
+    Trace(1, "Migrated legacy composite into cultural practice at " + legacyComposite)
 EndFunction
 
 Function RefreshHistPosture(Int curseState, Bool dominationPressure, String reason)
@@ -221,7 +396,7 @@ String Function GetHistPostureLabel()
 EndFunction
 
 String Function GetPilotSummary()
-    return "hist=" + GetHistRelation() + ";people=" + GetPeopleRelation() + ";void=" + GetVoidRelation() + ";tier=" + GetSubstrateTier() + ";posture=" + GetHistPostureLabel() + ";sithis=" + GetSithisSignalCount() + "/" + VoidActivationSignalsRequired + ";bed=" + StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount")
+    return "metric=" + GetMetric() + ";hist=" + GetHistRelation() + ";people=" + GetPeopleRelation() + ";void=" + GetVoidRelation() + ";tier=" + GetSubstrateTier() + ";posture=" + GetHistPostureLabel() + ";sithis=" + GetSithisSignalCount() + "/" + VoidActivationSignalsRequired + ";bed=" + StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount")
 EndFunction
 
 Function ResetPilotForDebug()
@@ -233,35 +408,36 @@ Function ResetPilotForDebug()
     StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastPeopleEvent", 0.0)
     StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastVoidEvent", 0.0)
     StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastMaintenanceDay", 0)
+    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastMaintenanceStamp", 0)
+    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.MaintenanceStampVersion", 1)
     StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastDecayDay", 0)
+    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastCulturalDecayDay", 0)
     StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.SithisSignalCount", 0)
     StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount", 0)
+    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepDay", 0)
     StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceLastSleep", 0.0)
     StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.Posture", HIST_POSTURE_NORMAL)
+    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.CulturalMetricMigrationVersion", CulturalMetricMigrationVersion)
     Trace(2, "ResetPilotForDebug")
 EndFunction
 
 Function SetHistRelation(Float value, String reason)
     StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.Hist", ClampFloat(value, MetricMin, MetricMax))
-    RefreshCompositeMetric(reason)
+    Trace(3, "Hist relation set (" + reason + ")")
 EndFunction
 
 Function SetPeopleRelation(Float value, String reason)
     StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.People", ClampFloat(value, MetricMin, MetricMax))
-    RefreshCompositeMetric(reason)
+    Trace(3, "People relation set (" + reason + ")")
 EndFunction
 
 Function SetVoidRelation(Float value, String reason)
     StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.Void", ClampFloat(value, MetricMin, MetricMax))
-    RefreshCompositeMetric(reason)
+    Trace(3, "Void relation set (" + reason + ")")
 EndFunction
 
 Function RefreshCompositeMetric(String reason)
-    Float composite = GetHistRelation() + (GetPeopleRelation() * HistPeopleBufferWeight)
-    if IsVoidFullyActive()
-        composite = composite + (GetVoidRelation() * HistVoidStabilizerWeight)
-    endIf
-    SetMetric(composite, "argonian_composite_" + reason)
+    Trace(1, "RefreshCompositeMetric is retired; cultural practice is event-fed (" + reason + ")")
 EndFunction
 
 Float Function ClampSignalMultiplier(Float multiplier)

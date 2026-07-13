@@ -14,9 +14,9 @@ PASS,Altmer,Offer,PDV_Trinimac,T3,PDV_Bless_Altmer_Trinimac_T3,true,true,PDV_Ble
 PASS,Altmer,Offer,Xarxes,T1,PDV_Bless_Altmer_Xarxes_T1,true,true,PDV_Bless_Altmer_Xarxes_T1,SyncAltmerRewardFamily,Xarxes
 PASS,Altmer,Offer,Xarxes,T2,PDV_Bless_Altmer_Xarxes_T2,true,true,PDV_Bless_Altmer_Xarxes_T2,SyncAltmerRewardFamily,Xarxes
 PASS,Altmer,Offer,Xarxes,T3,PDV_Bless_Altmer_Xarxes_T3,true,true,PDV_Bless_Altmer_Xarxes_T3,SyncAltmerRewardFamily,Xarxes
-PASS,Argonian,Hist,Hist,Signature,PDV_Bless_Argonian_Hist_Signature,true,true,PDV_Bless_Argonian_Hist_Signature,SyncArgonianRewards,Argonian Hist Signature
-PASS,Argonian,Hist,Hist,T1,PDV_Bless_Argonian_Hist_T1,true,true,PDV_Bless_Argonian_Hist_T1,SyncArgonianRewards,Argonian Hist T1
-PASS,Argonian,Hist,Hist,T2,PDV_Bless_Argonian_Hist_T2,true,true,PDV_Bless_Argonian_Hist_T2,SyncArgonianRewards,Argonian Hist T2
+PASS,Argonian,Hist,Hist,Signature,PDV_Bless_Argonian_Hist_Signature,true,true,PDV_Bless_Argonian_Hist_Signature,SyncArgonianRewards,Argonian Hist Signature retired
+PASS,Argonian,Hist,Hist,T1,PDV_Bless_Argonian_Hist_T1,true,true,PDV_Bless_Argonian_Hist_T1,SyncArgonianRewards,Argonian Hist T1 retired
+PASS,Argonian,Hist,Hist,T2,PDV_Bless_Argonian_Hist_T2,true,true,PDV_Bless_Argonian_Hist_T2,SyncArgonianRewards,Argonian Hist T2 retired
 PASS,Argonian,People,People,T1,PDV_Bless_Argonian_People_T1,true,true,PDV_Bless_Argonian_People_T1,SyncArgonianRewards,Argonian People T1
 PASS,Argonian,People,People,T2,PDV_Bless_Argonian_People_T2,true,true,PDV_Bless_Argonian_People_T2,SyncArgonianRewards,Argonian People T2
 PASS,Argonian,People,People,T3,PDV_Bless_Argonian_People_T3,true,true,PDV_Bless_Argonian_People_T3,SyncArgonianRewards,Argonian People T3

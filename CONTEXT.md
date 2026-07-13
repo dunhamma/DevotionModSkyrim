@@ -46,3 +46,38 @@ The curated quest/matrix faucet layer compiled from `PDV_QuestReactionMatrix` da
 ## Route Ownership
 
 The rule that each gameplay signal has one owning receiver path. Existing PO3 alias hooks own events they already observe cleanly; Story Manager receiver quests are added only for vanilla SM events not already owned by PO3.
+
+## Devotional Progression Language
+
+## Substrate Metric
+
+The origin-specific cultural-practice standing that gates a race's quiet identity boon family independently of deity piety.
+_Avoid_: spine, ancestry points
+
+## Broad Pantheon Pool
+
+The shared standing earned from the eligible gods of one active broad-worship baseline without creating an aggregate deity.
+_Avoid_: broad deity, pantheon piety sum
+
+## Relation Ledger
+
+An origin-specific relationship standing, such as Argonian Hist, People, or Void, that remains separate from substrate standing and deity piety.
+_Avoid_: substrate component, hidden deity
+
+## Logical Devotional Act
+
+One player deed and all of its routed consequences considered as a single scoring event for anti-fan-out rules.
+_Avoid_: each reaction row, each deity award
+
+## Relationships
+
+- A **Logical Devotional Act** may affect several deity ledgers but contributes at most one signed delta to one active **Broad Pantheon Pool**.
+- A valid cultural act may affect both a **Substrate Metric** and an appropriate deity or **Relation Ledger**, but each lane applies its own rules.
+- A **Relation Ledger** never derives or overwrites a **Substrate Metric**.
+- A **Broad Pantheon Pool** is worship state and never a deity record.
+
+## Flagged ambiguities
+
+- "Broad piety" previously meant either summed deity piety or a civic-service counter. Resolved: use **Broad Pantheon Pool**, fed once per **Logical Devotional Act**.
+- "Substrate" previously described both a cultural metric and Argonian relation values. Resolved: the **Substrate Metric** is separate from every **Relation Ledger**.
+- "Spine" previously appeared in internal and player-facing names. Resolved: it may survive only in compatibility identifiers; player-facing language uses the named cultural practice.

@@ -4,7 +4,9 @@
 
 Imperials carry the Nine Divines, the official, public, lawful religion of the Empire. For most races faith is a personal thing. For an Imperial it is also civic: your religion is tied to your role as a citizen of the order that the Empire built. You honor the gods through public duty, honest work, mercy, lawful burial, and standing for order in a province torn by war.
 
-There is no setup choice and no patron to pick at the start. Broad worship of all Nine Divines is simply switched on the moment you begin. You can deepen your faith later by committing to a single god, but the public, civic religion is always running underneath you.
+There is no setup choice and no patron to pick at the start. Broad worship of the Divines begins with you. Acts that genuinely honor one of the gods build `The Divines' Regard`; ordinary civic standing alone does not. Talos joins that shared worship only after you have taken a real Talos stance. If you later accept one god as patron, the broad blessing steps aside while your focused blessing begins at its second tier.
+
+Your civic practice is a separate, quieter layer. The first meaningful civic or religious act after each 06:00 dawn advances it; repeating other qualifying acts that day does not speed it up. Prayer, honest Smithing, Enchanting or Alchemy work, public service, mercy, burial duty, and lawful protection can count. Sleeping does not.
 
 The thing that makes Imperial faith different from every other race is the shadow of the White-Gold Concordat. Talos, the god who unified the Empire, is banned by treaty. Every choice you make about that ban quietly shifts where you stand, and that standing decides how freely you can honor Talos at all. You can comply with the ban, defy it in secret, or defy it openly, and the religion notices.
 
@@ -50,7 +52,7 @@ Piety is tracked separately for each god, and your daily gain with any single go
 
 - **Tend the dead properly (Arkay).** Clear a necromancer's operation, put restless undead to rest, complete a Hall of the Dead or burial quest. This is one of the cleanest, strongest ways to earn favor in the whole game. `[WIRED (day-to-day): CSV Arkay kill-undead (300, ActorTypeUndead) +0.5, heal-or-cure-npc (350) +0.5, read-lore-book (342) +0.25.] [QUEST (the civic "death duty" beat): only Laid to Rest (MS14) stage 200 fires the Arkay SIGNAL_DEATH_DUTY via PDV_FLST_P2_ImperialDeathDutySources. Generic undead-clearing earns the CSV +0.5, not the curated death-duty pulse.]`
 - **Show mercy and restraint (Stendarr, Mara).** Spare a surrendering enemy, heal or cure a hurt person, answer for a crime and serve your time rather than running from it. Meaningful mercy under real pressure counts; idly paying off a small bounty does not. `[WIRED (day-to-day): CSV Mara heal-or-cure-npc (350) +0.75, clear-bounty-serve-time (351) +0.5; Stendarr heal-or-cure-npc (350) +0.5, clear-bounty-serve-time (351) +0.75; Zenithar clear-bounty-serve-time (351) +0.5. "Serve your time" (351) fires if the serve-time event is emitted. There is no organic "spare a surrendering enemy" hook.] [QUEST (the civic "mercy" beat): only In My Time of Need (MS08) stage 200 (Saadia-aid branch) fires Mara SIGNAL_MERCY via PDV_FLST_P2_ImperialMercySources.]`
-- **Heal and care for people (Mara, Stendarr, Akatosh).** Mending the suffering, cooking a meal, resting in a proper bed, restoring a family or community. `[WIRED (day-to-day): CSV Mara cook-meal (333) +0.5, sleep-in-bed (314) +0.25, brew-potion (332) +0.25; Akatosh rest-under-open-sky (313) +0.25. Resting also fires the Imperial civic "spine" pulse -> Talos SIGNAL_ANCESTOR_SPINE, once/day, via OnSleepStop -> HandleImperialSleepEvents.]`
+- **Heal and care for people (Mara, Stendarr, Akatosh).** Mending suffering, restoring a family or community, and other deity-authentic care can build those gods. Sleeping never advances Civic Steadiness and never creates hidden Talos piety.
 - **Do honest work and fair trade (Zenithar).** Smithing, enchanting, brewing, mining and woodcutting, selling goods you came by honestly. Win by labor, not by plunder. `[WIRED (day-to-day): CSV Zenithar smith-item (330) +0.5, enchant-item (331) +0.5, brew-potion (332) +0.25, cook-meal (333) +0.25, increase-skill (344) +0.25.] [QUEST (the civic "honest work" beat): only The Golden Claw (MS13) stage 100 (returned to Lucan) or 110 (to Camilla) fires Zenithar SIGNAL_HONEST_WORK via PDV_FLST_P2_ImperialHonestWorkSources. Day-to-day crafting is the CSV rows, not the curated pulse.]`
 - **Study and master your craft (Julianos, Dibella, Akatosh).** Read skill books, spell tomes, and lore; improve your skills through patient practice. `[WIRED (day-to-day): CSV Julianos read-skill-book (340) +0.5, read-spell-tome (341) +0.5, read-lore-book (342) +0.5, learn-word-of-power (343) +0.75, increase-skill (344) +0.25, enchant-item (331) +0.25; Dibella read-lore-book (342) +0.25, enchant-item (331) +0.5, smith-item (330) +0.25, increase-skill (344) +0.25; Akatosh increase-skill (344) +0.25, learn-word-of-power (343) +0.75.]`
 - **Serve lawful order and the public (Akatosh, Talos).** Complete Legion public-service beats, aid a hold, resolve disputes lawfully, slay dragons with real intent. Concrete order-preserving acts earn favor; merely belonging to a faction does not. `[QUEST (the civic "public service" beat): only Bleak Falls Barrow (MQ103) stage 190 and the Imperial Jagged Crown (CW02A) stage 200 fire Akatosh SIGNAL_CIVIC_SERVICE via PDV_FLST_P2_Imperial(Civic/PublicService)Sources. "Lawful order" (Stendarr SIGNAL_LAWFUL_ORDER) fires only from In My Time of Need (MS08) stage 201 (Alik'r-justice branch). Faction membership never routes these.] [WIRED (day-to-day, Akatosh only): CSV kill-undead (300) +0.5, rest-under-open-sky (313) +0.25. Slaying a dragon is a Talos CSV +1.5 but an Akatosh CSV -0.75 (fraught reverence, not glory).]`
@@ -60,9 +62,9 @@ Piety is tracked separately for each god, and your daily gain with any single go
 ## How You Lose Piety
 
 - **Acts your gods despise.** Murdering the defenseless, assaulting the innocent, raising the dead, theft and trespass, and taking Daedric artifacts all cost piety. Necromancy is the gravest sin against Arkay, Stendarr, and Kynareth; cruelty to the helpless offends Mara, Stendarr, and Julianos most of all. `[WIRED: CSV dislikes - raise-undead (365): Arkay -1.5, Stendarr -1.5, Kynareth -1.0, Akatosh -1.0, Mara -1.0, Dibella -0.75; murder-defenseless (304): Mara -1.5, Stendarr -1.5, Julianos -1.5, Arkay -1.0, Dibella -1.0, Kynareth -1.0, Zenithar -1.0; assault-innocent (364): Mara -1.0, Stendarr -1.0, Arkay -1.0, Julianos -0.75, Dibella -0.5; accept-daedric-artifact (368): Stendarr -1.0, Kynareth -1.0, Arkay -1.0, Zenithar -0.75; steal-item (362): Zenithar -1.0, Stendarr -0.75, Mara -0.5, Julianos -0.5, Talos -0.5(x0.4); trespass (361): Stendarr/Zenithar/Julianos -0.25.]`
-- **Neglect (a god growing quiet).** If you stop feeding the civic religion (no death rites, no mercy, no public service, no honest work), the faith goes hollow. Shrines start to feel like mere architecture. Letting your devotion lapse slows your health recovery by about 5 percent until you return to public service. This is gentle texture, not a harsh punishment; the real bite is reserved for curses. `[WIRED: SyncImperialNeglectSpell(IsImperialCivicNeglected()) adds PDV_SPEL_Neglect_Imperial. NOTE the gate is a time-since-last-civic-service timer (> 3.0 days since PDV.Imperial.LastCivicServiceTime, AND CivicServiceCount > 0), NOT a piety threshold. Because civic service only fires from the handful of vanilla quest stages above, "return to public service" in practice means hitting another of those quest beats - ordinary daily CSV acts do NOT reset the civic-service timer.]`
+- **Neglect (a god growing quiet).** If you stop feeding civic practice through death rites, mercy, public service, prayer, or honest work, the faith goes hollow. After three idle days Civic Steadiness loses one point each dawn toward its normal floor.
 - **Natural drift.** Piety you do not maintain slowly settles. Steady, varied devotion keeps your standing where you want it. `[WIRED: passive per-deity decay (~-0.5/day per god).]`
-- **The broad-worship cap.** Honoring all Nine Divines at once is civic and normal, but it only takes you so far. Broad worship is capped at Devoted. To reach Champion you must commit to a single god as your patron. `[WIRED: broad worship caps at Devoted; broad civic reward floor gates on CivicServiceCount (T1 at >=3, T2 "Faithful" at >=6).]`
+- **The broad-worship cap.** Honoring the Divines broadly is civic and normal, but `The Divines' Regard` caps at Faithful. The shared pool reaches Seeker at 25 and Faithful at 50. Champion requires commitment to a single god.
 - **The Concordat track (your reputation with the Talos ban).** This is the Imperial's signature mechanic, and it is always running. Every major political choice shifts a hidden meter between five bands: `[PARTIAL: PDV_ConcordatStandingTrack (-100..+100, 5 states) modifies Talos gain/decay (GainModifyingTrack/DecayModifyingTrack) and gates his offer; it is a reputation track, not a piety buff. It only moves when ApplyImperialConcordatAction is called - see the wiring note in the review block for which of the listed acts actually have organic callers.]`
   - **Open Defiant** - you defy the ban in the open; the Thalmor hunt you, and your Talos devotion comes most freely.
   - **Private Defiant** - you keep the old faith in secret; the Thalmor are suspicious but Talos still answers strongly.
@@ -113,8 +115,8 @@ Caveat: CSV day-to-day rows are live only if `LoadRowsForDeity` was regenerated 
 
 Discrepancies between what the guide/design promises and what actually fires (for owner triage):
 
-- **"Civic service" is quest-stage-only, not act-based.** The marquee Imperial identity - "honor the gods through public duty, honest work, mercy, lawful burial" - reads as an everyday-act loop, but the curated civic-family signals (SIGNAL_CIVIC_SERVICE / MERCY / LAWFUL_ORDER / HONEST_WORK / DEATH_DUTY) fire ONLY from the ~8 vanilla quest stages in the table above. `HandleImperialCivicService` -> `AwardImperialCivicFamilySignal` has no everyday-act caller. Generic clearing/crafting/healing earns the domain god's day-to-day CSV delta, but never the curated civic pulse and never increments `CivicServiceCount`. This is the prime remap/expansion target for the race (compare the 2026-06-23 Imperial P2 handoff, which called Imperial "the worst-off race").
-- **Neglect timer keys off civic service, not piety.** `IsImperialCivicNeglected` = (>3 days since last civic-service quest beat) AND CivicServiceCount>0. So the health-regen -5% neglect spell only exists once you've hit >=1 civic quest stage, and only ordinary quest cadence clears it - daily CSV worship does not. The copy's "return to public service" is literally true and narrow.
+- **Civic practice is act-based and daily locked.** Prayer, first completed Smithing/Enchanting/Alchemy work, and exact public-duty outcomes share one daily cultural credit. Quest milestones remain useful substitutes rather than the only route.
+- **Divine regard keys off piety signals, not civic counts.** The broad pool sees one signed result from each logical devotional act even if that act produces several deity reactions.
 - **Talos is thin and gated.** Talos is largely absent from the generic Imperial likes (Concordat stance-1, tolerated); his CSV rows are combat/conqueror-flavored (learn-word-of-power, discover-location, kill-hostile-humanoid, kill-dragon) and scale ~0.4x for an Imperial. Organic Talos-defiance piety = the "Talos Mistake" book (public, one-shot) + MQ201 s250 (private). The guide-lead "activate a hidden Talos shrine" is STUB - `HandleTalosShrineDefiance` has only a dev-only activator + MCM caller, and `PDV_FinalPlacementManifest.json` places no hidden-shrine object. "Help a worshipper escape" / "refuse to report" are Concordat deltas with no organic caller, not Talos piety hooks.
 - **Concordat track: values live, callers mostly missing.** All eight pressure deltas exist in `GetImperialConcordatPressureForAction`, but only two `ApplyImperialConcordatAction` call sites fire organically: hidden_talos_shrine (dev-only/MCM -> STUB) and kill_thalmor_justiciar_unprovoked (-10, off the Altmer-alignment kill signal). Stormcloak/Legion siding, reporting/attacking a worshipper, escorting a Thalmor prisoner, and public observance have no organic caller yet. The track gates Talos gain/offers and clamps a raw value; the extreme-band Arkay/Stendarr cross-god bleed described in the guide is unverified in live code.
 - **Vampire civic-halt is real and dawn-scoped.** `VampireHalt` -> `GetImperialCurseGainMultiplier` 0.0x is applied to `clampedToday` at the dawn rollover, and only when the day's net is positive - so an Imperial can still LOSE piety while halted, and earn-then-cure-before-dawn does not slip past it. Cure clears the halt; `VampireHistory` scar persists. Werewolf is narrative-only (no multiplier).
@@ -126,30 +128,30 @@ Discrepancies between what the guide/design promises and what actually fires (fo
 
 Note: these are current beta values and may be tuned before release.
 
-The player-facing tiers are Seeker (25 piety), Devoted (50 piety), and Champion (85 piety). Only one temporary favor blessing can be active at a time across all your gods.
+Broad worship reaches Seeker at 25 pool standing and Faithful at 50. A focused patron begins directly at T2 when accepted at deity piety 50 and reaches Champion at 85; focused T1 records are compatibility artifacts and are never granted.
 
-**Broad Nine Divines (always-on civic faith, capped at Devoted):**
+**Broad Divines (active before commitment, capped at Faithful):**
 
 | Tier | What you gain |
 |------|----------------|
-| Seeker | Health Regeneration +4% |
-| Devoted | Health Regeneration +7%, Disease Resistance +10% |
+| Seeker | Poison Resistance +10% |
+| Faithful | Poison Resistance +10%, Disease Resistance +10% |
 
 Broad worship deliberately stays softer than a committed patron, and it stops at Devoted. To go further, commit to one god below.
 
-**Focused patron (Champion tier, by god).** Each focused god shares the same shape: a Seeker blessing, a stronger Devoted blessing, and a Champion capstone. Champion values are listed here; the Seeker and Devoted steps are gentler versions of the same effects.
+**Focused patron (T2 and Champion, by god).** Acceptance suppresses the broad boon and grants T2 at 50. Champion values are the 85-point capstone.
 
-| Patron god | Seeker | Champion (peak) |
+| Patron god | T2 at 50 | Champion (peak) |
 |------------|--------|------------------|
-| Akatosh | Magicka Regeneration +4% | Magicka Regeneration +20%, Magic Resistance +15% |
-| Mara | Restoration +5 | Restoration +23, Health Regeneration +19% |
-| Arkay | Disease Resistance +5% | Disease Resistance +27%, Health Regeneration +17% |
-| Stendarr | Block +5 | Block +25, Armor +50 |
-| Zenithar | Carry Weight +25 | Carry Weight +120, Speech +20 |
-| Dibella | Speech +5 | Speech +25, Magicka Regeneration +13% |
-| Julianos | Magicka Regeneration +4% | Magicka Regeneration +20%, Magic Resistance +15% |
-| Kynareth | Stamina Regeneration +4% | Stamina Regeneration +20%, Magic Resistance +13% |
-| Talos | Armor +15 | Armor +50, One-Handed +20 |
+| Akatosh | Magicka +25, Magic Resistance +5% | Magicka +40, Magic Resistance +15% |
+| Mara | Restoration +13, Magic Resistance +5% | Restoration +23, Health Regeneration +15% |
+| Arkay | Disease Resistance +15%, Health +20 | Disease Resistance +27%, Health +30 |
+| Stendarr | Block +13, Armor +30 | Block +25, Armor +50 |
+| Zenithar | Carry Weight +65, Speech +8 | Carry Weight +120, Speech +20 |
+| Dibella | Speech +13, Magicka +15 | Speech +25, Magicka +40 |
+| Julianos | Magicka +25, Magic Resistance +5% | Magicka +40, Magic Resistance +15% |
+| Kynareth | Stamina +25, Magic Resistance +5% | Stamina +40, Magic Resistance +13% |
+| Talos | Armor +30, One-Handed +8 | Armor +50, One-Handed +20 |
 
 Talos is special: his blessings are reached only through faithful defiance and are gated by your Concordat standing. You cannot become a Talos Champion while publicly enforcing the ban unless a fresh, costly act of defiance breaks that pattern first.
 

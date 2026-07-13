@@ -8,14 +8,13 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const DEFAULT_MANAGER = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source/PDV__ManagerQuest.psc";
 const DEFAULT_DIRECTOR = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source/PDV_DiegeticDirector.psc";
-const TITLE_PROJECT = path.join(PROJECT_ROOT, "tools", "pdv-daedric-offer-title-author");
+const DAEDRIC_CONTRACT = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DaedricPrinceRecordContracts.json");
 
 main(process.argv.slice(2));
 
@@ -104,7 +103,7 @@ function verifyManager(text, filePath, pass, fail) {
     ["Accept cue dispatch", 'DispatchDiegeticCue("offer", pendingDeity.DeityName, "accept", pendingDeity, "revelation")', "Accept path emits the Book of Days cue from the shared handler."],
     ["Accept direct Prisma toast", 'SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "good", BuildCommitmentOfferAcceptToastLine(pendingDeity), "")', "Accept path emits the locked per-race Prisma toast without the generic shift template."],
     ["Refuse direct Prisma toast", 'SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "warning", BuildCommitmentOfferRefuseToastLine(pendingDeity), "")', "Refuse path emits the locked per-race Prisma toast without the generic shift template."],
-    ["Carryover award funnel", 'AwardPiety(pendingDeity, carryAmount, "commitment_carryover")', "Commitment carryover uses the reason-bearing AwardPiety funnel."],
+    ["No-loss commitment telemetry", 'StorageUtil.SetFloatValue(None, "PDV.Commitment.LastCarryover", 0.0)', "Commitment acceptance preserves deity piety and records zero legacy carryover."],
     ["Altmer alignment toast", "The Thalmor question turns in you: ", "Altmer committed-band toast is present."],
     ["Altmer alignment chronicle", "Your soul records where you stand in the Thalmor question: ", "Altmer committed-band chronicle is present."],
     ["Altmer committed band source", "GetStateLabelAt(PDV_ThalmorAlignmentTrack.GetCommittedStateIndex())", "Altmer band uses committed state rather than raw value."],
@@ -135,17 +134,17 @@ function verifyManager(text, filePath, pass, fail) {
 
   const acceptFunction = extractFunction(text, "DebugAcceptPendingCommitment");
   if (!acceptFunction) {
-    fail("Carryover accept function", "DebugAcceptPendingCommitment is missing.", filePath);
-  } else if (!/SetActiveDeity\(pendingDeity\)[\s\S]*AwardPiety\(pendingDeity, carryAmount, "commitment_carryover"\)/.test(acceptFunction)) {
-    fail("Carryover accept order", "Carryover AwardPiety must occur after SetActiveDeity so driver capture sees the active patron.", filePath);
-  } else if (!/SetActiveDeity\(pendingDeity\)[\s\S]*SyncFirstTierRaceRewardRuntime\(\)[\s\S]*DispatchDiegeticCue\("offer", pendingDeity\.DeityName, "accept"/.test(acceptFunction)) {
+    fail("No-loss accept function", "DebugAcceptPendingCommitment is missing.", filePath);
+  } else if (/carryAmount|commitment_carryover|AwardPiety\(pendingDeity/.test(acceptFunction)) {
+    fail("No-loss patron transition", "Commitment acceptance must not deduct, re-award, or otherwise transform the patron's existing piety.", filePath);
+  } else if (!/StorageUtil\.SetFloatValue\(None, "PDV\.Commitment\.LastCarryover", 0\.0\)[\s\S]*SetActiveDeity\(pendingDeity\)[\s\S]*SyncFirstTierRaceRewardRuntime\(\)[\s\S]*DispatchDiegeticCue\("offer", pendingDeity\.DeityName, "accept"/.test(acceptFunction)) {
     fail("Accept reward sync", "Accept must resync race rewards after setting the active patron and before surfacing the accept beat.", filePath);
   } else if (/DebugForceSetPietyByIndex/.test(acceptFunction)) {
     fail("Carryover legacy setter", "DebugAcceptPendingCommitment still calls DebugForceSetPietyByIndex.", filePath);
   } else if (/SendPrismaShiftToast\(BuildCommitmentOffer/.test(acceptFunction)) {
     fail("Commitment toast template", "Commitment accept still uses the generic shift-toast template.", filePath);
   } else {
-    pass("Carryover accept order", "Carryover AwardPiety occurs after SetActiveDeity and legacy setter is absent.", filePath);
+    pass("No-loss patron transition", "Acceptance preserves patron piety, records zero legacy carryover, and contains no carryover award path.", filePath);
     pass("Accept reward sync", "Accept resyncs race rewards after setting the active patron.", filePath);
     pass("Commitment toast template", "Commitment accept uses a direct toast instead of the generic shift template.", filePath);
   }
@@ -184,26 +183,30 @@ function verifyDirector(text, filePath, pass, fail) {
 }
 
 function verifyDaedricTitles(pass, fail) {
-  const result = spawnSync("dotnet", ["run", "--project", TITLE_PROJECT, "--", "--check"], {
-    cwd: PROJECT_ROOT,
-    encoding: "utf8",
-    windowsHide: true
-  });
-
-  if (result.status !== 0) {
-    fail("Daedric title readback", result.stderr.trim() || result.stdout.trim() || "Title helper failed.");
+  if (!fs.existsSync(DAEDRIC_CONTRACT)) {
+    fail("Daedric title authority", "Daedric record contract is missing.", DAEDRIC_CONTRACT);
     return;
   }
 
   try {
-    const parsed = JSON.parse(result.stdout);
-    if (parsed.Status === "PASS" && Array.isArray(parsed.Actions) && parsed.Actions.length === 16) {
-      pass("Daedric title readback", "All 16 Daedric commitment MESG titles match locked Unit D copy.");
+    const parsed = JSON.parse(fs.readFileSync(DAEDRIC_CONTRACT, "utf8").replace(/^\uFEFF/, ""));
+    const princes = Array.isArray(parsed.princes) ? parsed.princes : [];
+    const commitments = princes.map((prince) => {
+      const messages = Array.isArray(prince.messages) ? prince.messages : [];
+      return messages.find((message) => message.property === "Msg_Commitment");
+    });
+    const editorIds = commitments.map((message) => message?.editorId).filter(Boolean);
+    const titles = commitments.map((message) => message?.title).filter(Boolean);
+    const valid = parsed.princeCount === 16 && princes.length === 16 && commitments.every((message) =>
+      message && message.messageBox === true && /^PDV_Msg_Daedric_.+_Commitment$/.test(message.editorId || "") && (message.title || "").trim().length > 0
+    ) && new Set(editorIds).size === 16 && new Set(titles).size === 16;
+    if (valid) {
+      pass("Daedric title authority", "All 16 distinct Daedric commitment MESG titles are present in the locked record contract.", DAEDRIC_CONTRACT);
     } else {
-      fail("Daedric title readback", `Unexpected title helper result: ${result.stdout.trim()}`);
+      fail("Daedric title authority", "Expected 16 distinct, titled commitment MessageBox contracts.", DAEDRIC_CONTRACT);
     }
   } catch (error) {
-    fail("Daedric title readback", `Title helper output was not JSON: ${error.message}`);
+    fail("Daedric title authority", `Could not parse the record contract: ${error.message}`, DAEDRIC_CONTRACT);
   }
 }
 

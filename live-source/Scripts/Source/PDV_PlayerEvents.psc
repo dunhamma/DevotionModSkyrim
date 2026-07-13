@@ -127,6 +127,8 @@ Bool PDV_LockpickMenuTargetWasLocked = false
 ; combat-state, PO3 kill events, and the combat poll all land on this alias, so
 ; no cross-script storage is needed.
 Bool PDV_CombatSessionActive = false
+Bool PDV_CombatStartedSneaking = false
+Bool PDV_CombatObservedSneaking = false
 Int PDV_CombatSessionKills = 0
 Int PDV_CombatMaxLevelDelta = 0
 Bool PDV_CombatLowHealthFlag = false
@@ -301,6 +303,7 @@ Event OnBookRead(Book akBook)
     ; piety again. Marked only after the bus check so a dropped event cannot burn
     ; the book's single credit.
     Bool firstRead = MarkGenericBookRead(akBook as Form)
+    PDV_EventBusService.BeginLogicalDevotionalAct("book_" + akBook.GetFormID())
     RouteGenericBookRead(akBook, firstRead)
     RouteP2ImmersiveSource(akBook as Form, "po3_book")
     RouteQuestReactionBookFaucet(akBook as Form, firstRead)
@@ -309,6 +312,7 @@ Event OnBookRead(Book akBook)
     if akBook.GetFormID() == 0x000ED04D
         PDV_EventBusService.RouteAltmerAlignmentSignal("read_banned_texts", akBook as Form, "po3_book_talos_mistake")
     endIf
+    PDV_EventBusService.FlushLogicalDevotionalAct()
 EndEvent
 
 Event OnSpellLearned(Spell akSpell)
@@ -316,8 +320,14 @@ Event OnSpellLearned(Spell akSpell)
 EndEvent
 
 Event OnItemHarvested(Form akProduce)
+    if PDV_EventBusService
+        PDV_EventBusService.BeginLogicalDevotionalAct("harvest_" + akProduce.GetFormID())
+    endIf
     RouteGenericAction(EVT_HARVEST_INGREDIENT, GetActorRef() as Form, akProduce)
     RouteP2ImmersiveSource(akProduce, "po3_harvest")
+    if PDV_EventBusService
+        PDV_EventBusService.FlushLogicalDevotionalAct()
+    endIf
 EndEvent
 
 Event OnWeatherChange(Weather akOldWeather, Weather akNewWeather)
@@ -325,10 +335,16 @@ Event OnWeatherChange(Weather akOldWeather, Weather akNewWeather)
 EndEvent
 
 Event OnQuestStageChange(Quest akQuest, Int aiNewStage)
+    if PDV_EventBusService && akQuest
+        PDV_EventBusService.BeginLogicalDevotionalAct("quest_" + akQuest.GetFormID() + "_" + aiNewStage)
+    endIf
     RouteP2ImmersiveQuestStage(akQuest, aiNewStage)
     RouteQuestReactionStage(akQuest, aiNewStage)
     RoutePaarthurnaxSpareQuestStage(akQuest, aiNewStage)
     RouteCuratedMilestoneQuestStage(akQuest, aiNewStage)
+    if PDV_EventBusService && akQuest
+        PDV_EventBusService.FlushLogicalDevotionalAct()
+    endIf
 EndEvent
 
 Event OnPDVConcordatCompliance(String eventName, String strArg, Float numArg, Form sender)
@@ -579,6 +595,9 @@ Function BeginCombatSession()
     endIf
 
     PDV_CombatSessionActive = true
+    Actor combatPlayer = Game.GetPlayer()
+    PDV_CombatStartedSneaking = combatPlayer && combatPlayer.IsSneaking()
+    PDV_CombatObservedSneaking = PDV_CombatStartedSneaking
     PDV_CombatSessionKills = 0
     PDV_CombatMaxLevelDelta = 0
     PDV_CombatLowHealthFlag = false
@@ -595,6 +614,9 @@ Function CombatPollTick()
     endIf
 
     SampleCombatHealth(playerRef, "combat_poll")
+    if playerRef.IsSneaking()
+        PDV_CombatObservedSneaking = true
+    endIf
 
     if playerRef.IsInCombat()
         RegisterForSingleUpdate(4.0)
@@ -706,6 +728,10 @@ Event OnActorKilled(Actor akVictim, Actor akKiller)
         endIf
         Trace(1, "Paarthurnax slain; global kill fork routed.")
         return
+    endIf
+
+    if originRace == 5 && PDV_EventBusService && PDV_CombatSessionActive && !PDV_CombatStartedSneaking && !PDV_CombatObservedSneaking && !playerRef.IsSneaking() && akVictim.IsHostileToActor(playerRef) && akVictim.GetLevel() >= playerRef.GetLevel()
+        PDV_EventBusService.RouteDunmerHonorableVictory(akVictim as Form)
     endIf
 
     if originRace != 6
@@ -850,7 +876,7 @@ Bool Function ActorHasInheritedKeyword(Actor actorRef, Keyword keywordRef)
 EndFunction
 
 Bool Function IsCombatSessionOrigin(Int originRace)
-    return originRace == 4 || originRace == 6 || originRace == 7 || originRace == 8
+    return originRace == 4 || originRace == 5 || originRace == 6 || originRace == 7 || originRace == 8
 EndFunction
 
 Event OnItemAdded(Form akBaseItem, Int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
@@ -1270,6 +1296,8 @@ Function RouteP2ImmersiveSource(Form sourceForm, String sourceKind)
         return
     endIf
 
+    PDV_EventBusService.BeginLogicalDevotionalAct(sourceKind + "_" + sourceForm.GetFormID())
+
     if ShouldRouteP2Source(PDV_FLST_P2_BretonKnightsRoadSources, sourceForm, "breton_knights_road", sourceKind)
         PDV_EventBusService.RouteBretonTraditionChoice(0, sourceKind + "_breton_knights_road")
     endIf
@@ -1400,6 +1428,7 @@ Function RouteP2ImmersiveSource(Form sourceForm, String sourceKind)
     if ShouldRouteP2Source(PDV_FLST_P2_RedguardAshAbahSources, sourceForm, "redguard_ashabah", sourceKind)
         PDV_EventBusService.RouteRedguardSectSignal(2, sourceKind + "_redguard_ashabah")
     endIf
+    PDV_EventBusService.FlushLogicalDevotionalAct()
 EndFunction
 
 Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)
@@ -1416,6 +1445,8 @@ Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)
         Trace(2, "P2 immersive quest stage skipped: no source quest.")
         return
     endIf
+
+    PDV_EventBusService.BeginLogicalDevotionalAct("p2_quest_" + sourceQuest.GetFormID() + "_" + newStage)
 
     if ShouldRouteP2QuestStage(PDV_FLST_P2_NordOldWaysSources, sourceQuest, 155916, 160, "nord_mq104_old_ways", newStage)
         PDV_EventBusService.RouteNordOldWaysState("po3_queststage_nord_mq104_old_ordeal")
@@ -1442,13 +1473,19 @@ Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)
         PDV_EventBusService.RouteNordHircineArkayEdge("po3_queststage_nord_c03_hircine")
     endIf
     if ShouldRouteP2QuestStage(PDV_FLST_P2_NordHircineArkaySources, sourceQuest, 118518, 200, "nord_c06_hircine_arkay", newStage)
-        PDV_EventBusService.RouteNordHircineArkayEdge("po3_queststage_nord_c06_hircine")
+        PDV_EventBusService.RouteNordHircineArkayEdge("po3_queststage_nord_c06_arkay")
     endIf
     if ShouldRouteP2QuestStage(PDV_FLST_P2_NordHircineArkaySources, sourceQuest, 173210, 100, "nord_da05_hircine_hunt", newStage)
-        PDV_EventBusService.RouteNordHircineArkayEdge("po3_queststage_nord_da05_kill_hircine")
+        if StorageUtil.GetIntValue(None, "PDV.P2.Nord.DA05Outcome") == 0
+            StorageUtil.SetIntValue(None, "PDV.P2.Nord.DA05Outcome", 100)
+            PDV_EventBusService.RouteNordHircineArkayEdge("po3_queststage_nord_da05_kill_hircine")
+        endIf
     endIf
     if ShouldRouteP2QuestStage(PDV_FLST_P2_NordHircineArkaySources, sourceQuest, 173210, 105, "nord_da05_arkay_mercy", newStage)
-        PDV_EventBusService.RouteNordHircineArkayEdge("po3_queststage_nord_da05_mercy_arkay")
+        if StorageUtil.GetIntValue(None, "PDV.P2.Nord.DA05Outcome") == 0
+            StorageUtil.SetIntValue(None, "PDV.P2.Nord.DA05Outcome", 105)
+            PDV_EventBusService.RouteNordHircineArkayEdge("po3_queststage_nord_da05_mercy_arkay")
+        endIf
     endIf
 
     if ShouldRouteP2QuestStage(PDV_FLST_P2_DunmerAzuraSources, sourceQuest, 166614, 100, "dunmer_da01_azura", newStage)
@@ -1618,6 +1655,7 @@ Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)
     if ShouldRouteP2QuestStage(PDV_FLST_Daedric_PeryiteLiveSources, sourceQuest, 563597, 100, "daedric_peryite_da13", newStage)
         PDV_EventBusService.RouteDaedricPrinceSignal(14, "po3_queststage_daedric_peryite_da13")
     endIf
+    PDV_EventBusService.FlushLogicalDevotionalAct()
 EndFunction
 
 Function RouteOrcLifeModeQuestStage(Quest sourceQuest, Int newStage)

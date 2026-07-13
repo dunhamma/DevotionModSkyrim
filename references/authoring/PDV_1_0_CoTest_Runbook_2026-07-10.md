@@ -49,6 +49,170 @@ Keep these separate when reporting results:
 | Manual/display | Tester-visible Book of Days, Survey/status, Prisma/toast, Active Effects, duplicate suppression, wrong-origin silence, save/load stack check | Full 1.0 ship readiness |
 | 1.0 claim | `pdv_1_0_endstate_gate.mjs` rollup PASS after all machine and evidence slots close | Any individual local pass by itself |
 
+## Pantheon Parity And Substrate Pacing Sitting
+
+Use the developer-only MCM page `Debug: Pacing & Pantheons`. Enable Developer
+Options and set `Debug Level` to `2` before the first card. This page has no
+artificial day-advance control: all cadence and decay evidence uses the game's
+real wait across 06:00. A debug dawn/process call may diagnose state, but cannot
+credit a timing, grace, or decay proof bucket.
+
+Before opening Skyrim, run:
+
+```powershell
+node .\tools\pdv_substrate_pacing_audit.mjs --json
+node .\tools\pdv_broad_pantheon_audit.mjs --json
+node .\tools\pdv_pantheon_record_readback.mjs --json
+node .\tools\pdv_pantheon_presentation_readback.mjs --json
+node .\tools\pdv_housecarl_p2_readback.mjs --check-all
+node .\tools\pdv_signal_e2e_gate.mjs
+node .\tools\pdv_verify.mjs --json
+node .\tools\pdv_prisma_ui_audit.mjs --json
+```
+
+Also run the runtime-evidence checker. Its expected pre-sitting result is FAIL
+with PS-A1 through PS-A12 OPEN; that failure is the proof boundary, not a
+machine-preflight failure:
+
+```powershell
+node .\tools\pdv_pantheon_substrate_runtime_evidence_check.mjs --json
+```
+
+The two readback commands above use the current direct houseCARL v1.7+ path.
+They do not call the retired P2 receiver author or any Mutagen/CKRA authoring
+tree. Treat a houseCARL/readback failure as a machine-preflight stop condition,
+not as an in-game test failure.
+
+After installing the current ESP and PEX files, fully exit and relaunch Skyrim.
+Clear or archive the previous Papyrus/Prisma logs. From the main menu, open the
+console and run `coc qasmoke`, then create a new disposable post-build save. Do
+not click Continue and do not load a save created before the current build:
+direct record readback cannot prove VMAD state already baked into an older save.
+
+Use that one fresh QASmoke save and keep the proof buckets separate:
+
+1. On the MCM page, cycle `Race` through Imperial, Dunmer, Argonian, Nord,
+   Altmer, and Khajiit. For each race, first use the clean pacing reset, click
+   `Apply test origin`, verify the applied origin in `Status`, select `Primary`,
+   then `Trigger approved source`. Repeat with `Alternate` to prove a second
+   true-handler family and with `Rejected` to prove the race-specific negative
+   fixture. Open `Status` and record metric `4`, tier, devotional day, encoded
+   spent-day stamp, accepted source, rejected source/reason, decay/grace, and
+   floor. For the wrong-origin adversary, select another race but deliberately
+   do **not** click `Apply test origin`; trigger its handler and capture the zero
+   delta/rejection. Only then apply that origin and continue.
+2. Still on day 1, repeat the same source and every available alternative
+   family for that race. Each metric must remain `4`. Save, reload, and confirm
+   that the metric and spent-day stamp remain unchanged.
+3. Wait through real dawns across 06:00. On each new devotional day, fire one
+   true handler for every race and record days 2-6 as `8/12/16/20/24`. On day 7 every race
+   must cross the middle boundary together at `28`. Do not use a debug dawn to
+   replace any of these waits.
+4. Use `Seed 0/24/25/74/75` only for boundary and UI proof. Confirm 0 has no
+   boon and 24/25 changes once. For the upper boundary, start on a fresh
+   devotional day, reset the substrate/day-credit state, apply the correct test
+   origin, choose `Seed 74`, and then fire one true production handler; confirm
+   the result caps at 75. Do not seed 74 after spending that day's credit. These
+   seeds are not organic pacing evidence; the full 19-day organic run is
+   optional long-form evidence.
+5. For Imperial, select the Imperial Divines pool and use the clean broad-state
+   reset/control before every fixture. Record standing, scratch, last event,
+   last gain day, last processed day, and stamp encoding in `Broad status`.
+   Use `Seed 24/25/49/50` for boundaries. Run the signed fan-out fixture from a
+   clean state for strongest-positive, strongest-negative, mixed rivalry, and
+   over-cap positive/negative cases; the dawn fold must clamp at `+/-4.3`.
+   Separately repeat with a real eligible Divine act and the true production
+   fan-out handler. Synthetic fan-out does not fill the organic-route bucket.
+   Talos must remain absent until its explicit stance/prayer/defiance unlock.
+6. For Nord, use `Selected baseline` plus `Apply baseline` to test Old Ways and
+   Nine Divines separately. Only the selected baseline may gain or grant its
+   broad boon; the suppressed pool must persist and decay after its grace.
+   Confirm `Old Ways` retains its Stamina/Frost packet and `Faith of the Holds`
+   gives Poison Resistance at 25, then Poison and Disease Resistance at 50.
+7. Use `Prepare patron offer`, `Accept patron`, `Lapse patron to 49`, and
+   `Recover patron to 50` for one
+   Imperial and each Nord baseline. Acceptance must preserve all deity piety,
+   remove the broad boon immediately, grant focused T2 at 50, suspend the boon
+   below 50 without clearing commitment, recover it at 50, and grant T3 only at
+   85. For the 85 boundary, select that committed deity on `Debug: State &
+   Rewards`, set its piety to 85, apply the piety value, and run the normal reward
+   sync; capture the T3 swap. Focused T1 must never appear.
+8. From a clean broad/substrate control, use Imperial `Vampire onset` and
+   `Vampire cure`. Onset must reset civic
+   standing to 0, strip civic/broad boons, and block gains. Cure must seed 20;
+   two new devotional days must reach 28 and restore the mid tier.
+9. Perform one actual in-world ingress per race. Required adversaries are:
+   generic Imperial sleep, generic Khajiit inn sleep, brief Argonian swimming,
+   Dunmer home double-route, passive Altmer dawn, and wrong-origin triggering;
+   each must award zero. Nord DA05 alternatives must be mutually exclusive and
+   C06 must not collide with the Hircine token. For Altmer, decline the
+   Disciplines of Return prompt once: it must not choose a discipline or spend
+   the seven-day accepted-rite cooldown, and the prompt must remain quiet for
+   the next three devotional days before becoming eligible again.
+10. Equip and cast the real Khajiit lesser power `Observe the Moons` outdoors
+    from 20:00-05:00, out of combat, unmounted, and not swimming. Stay within
+    128 units for five seconds. Confirm one of the current presiding god's four
+    messages, no immediate repeat, substrate +4 and raw piety +0.4 only on the
+    first valid rite that day, and informational-only later casts. Repeat once
+    with combat, a cell change, or excess movement to prove abort behavior.
+11. Capture Active Effects, Survey, Prisma, Book of Days, save/load, wrong-origin
+    silence, and stack legibility. Player-facing surfaces must contain no
+    legacy substrate-family labels, service-count Divines' Regard gate, aggregate-deity fiction, or
+    duplicate same-family tier.
+12. Immediately after each card, enter evidence in
+    `PDV_PantheonSubstrateRuntimeEvidenceLedger.json`. A required bucket may be
+    `PASS` only with its exact local timestamp and at least one concrete
+    `evidenceRefs` entry (screenshot path, Papyrus log plus unique marker/line,
+    or the timestamped co-test transcript section). Run the checker after every
+    card. Chat observations, machine readback, and unreferenced prose never
+    promote a bucket.
+
+### Pantheon/substrate adversarial addendum (2026-07-14)
+
+Machine closeout refreshed 2026-07-14 after the independent pre-sitting
+refutation: signal E2E is 39/39 GREEN; broad-pantheon audit is 95/95 PASS;
+substrate-pacing audit is 116/116 PASS; focused pantheon/substrate record
+readback is 89/89 PASS; presentation/Active-Effect/Observe-the-Moons readback
+is 81/81 PASS; exact P2 receiver/source-fill readback is PASS; manager, MCM,
+substrate base, and Argonian substrate compile 0/0; the integrated verifier is
+4145 PASS / 0 WARN / 0 FAIL; Prisma UI is 114/114 PASS. The independent
+refuters also closed four backend defects: signed negative broad scratch cannot
+decay on its own fold day; Argonian declared-bed use is devotional-day bounded;
+Sacred Water and Sleeping Tree Sap share the Hist-maintenance clock; and Nord
+Survey reads live active-pool standing rather than the frozen legacy counter.
+They reconfirmed zero uncapped substrate gain handlers, zero focused child-MGEF
+family-name mismatches, exact removal of the rogue Khajiit source
+`028B0E:Skyrim.esm`, and both manager VMAD bindings for Observe the Moons.
+These are backend/static and readback results only. PS-A1 through PS-A12 remain
+open until this sitting records runtime-route and manual/display evidence in
+the structured ledger.
+
+Run these targeted cards during the same sitting. They close bypasses found by
+the independent call-graph and presentation refuters; backend/static checks now
+pass, but every row below still needs runtime-route and manual/display evidence.
+Record each bucket in
+`references/authoring/PDV_PantheonSubstrateRuntimeEvidenceLedger.json`; do not
+promote a prose checkbox or chat observation without updating that ledger.
+
+| # | Scenario | Steps | Expected | Evidence to capture |
+|---:|---|---|---|---|
+| PS-A1 | Reserved-zero day stamps and first dawn | From the fresh main-menu `coc qasmoke` start, immediately run `set gamehour to 4` before making the card save (04:00 is inside the moon rite's pre-05:00 window). At Debug Level 2, exercise the Argonian sustained-water route, the real Khajiit moon rite, exact quest reaction `setstage DLC2SV01 200`, Imperial broad fan-out `setstage MQ302 300`, and the Argonian Sithis-negative latch `setstage DBDestroy 200` on clean origin/pool controls. Save/reload before 06:00, then use a real wait across 06:00 and repeat the relevant checks. Let the normal dawn exercise the Altmer and broad-grace latches. | Devotional day `-1`/encoded stamp `1` before 06:00 and day `0`/stamp `2` after 06:00 remain distinct, and the first 06:00 auto-dawn runs. Water, moon, quest-faucet, Altmer dawn, disfavor, and broad-grace latches never mistake day zero for unset state. | Status day/stamp, first-dawn trace, metric/piety/pool deltas, save/reload result, and exact log markers for each named latch. |
+| PS-A2 | Dunmer paired home prayer | Apply Dunmer origin, `coc RiverwoodSleepingGiantInn`, sleep once in its interior bed, and accept the first Ancestral Hearth prompt to declare that cell. Obtain the real `PDV_MISC_DunmerAncestralUrn` using `help "PDV_MISC_DunmerAncestralUrn" 4` plus `player.additem <returned FormID> 1`. On a clean normal-form devotional day, use the pacing page's Dunmer `Rejected probe` to invoke home-only without prayer, then click the urn under **Miscellaneous** while still in the declared cell. For the werewolf exception, use a separate fresh devotional day (or clean reset that also clears the daily-credit stamp), select `Curse werewolf` before clicking the real urn, and perform the route once. Never test +2 after a normal +4 has already spent the same day. | Home-only awards zero. Paired home prayer grants one cultural day credit, never a second +8 or second piety pulse. The explicit werewolf half-weight exception grants +2 on its own fresh day, not +4. | Accepted/rejected source, metric before/after, encoded daily-credit stamp, Azura piety before/after, Book/toast count, and the real urn route marker. |
+| PS-A3 | Argonian water and sap dual truth | Apply Argonian origin. On one devotional day, `coc Riverwood`, enter exterior water deep enough for `IsSwimming`, and remain continuously swimming for at least 10 real seconds; capture `Argonian near-water Hist maintenance routed`. After a real 06:00 boundary, run `player.additem 000AED90 1` and consume the Sleeping Tree Sap; capture `Sleeping Tree Sap vision fired`. Repeat each route once without resetting its anti-farm state. | Each act may claim cultural +4 exactly once and awards Hist piety exactly once. Hist, People, and Void relation ledgers remain independent; no Hist Communion boon appears. Same-day/repeated attempts remain silent. | Metric, Hist piety, all three relation values, the two exact log markers, Active Effects, and repeat silence. |
+| PS-A4 | Multi-deity event aggregation | From a clean Imperial broad-state control, run the real exact quest-matrix production event `setstage MQ302 300`, which routes Mara, Stendarr, and Akatosh for Imperial. Separately reset and run the signed fan-out fixture, including positive, negative, mixed rivalry, and the `Prime +100 scratch` / `Prime -100 scratch` controls. Cross 06:00 with real waits for each cap case. | Deities retain their individual signed piety. The pool receives one logical-event delta only: strongest applied positive, or strongest negative if no positive. The real production fan-out and synthetic fixture agree; the daily fold clamps at +/-4.3. | Per-deity deltas; `MQ302|300` route marker; pool standing, scratch, last event, encoded event stamp, last gain day, last processed day; final real-dawn folds; one Book/toast beat. |
+| PS-A5 | Broad panel and cold Book below threshold | For Imperial, Nord Old Ways, and Nord Nine Divines, inspect the Prisma panel at pool standing 0, 24, 25, 49, and 50. Close the panel/UI fully, then open Book of Days directly at 24 and 50. | The pool is visible from 0 through 50 with exact float standing and live scratch. Both surfaces mark only 25/50; Faithful at 50 is fully filled and never shown as 2/3 or with a false 85/T3 pip. Cold Book opening cannot reuse stale deity piety. | Panel and cold-Book screenshots at boundaries, tier text, pool/baseline identity, Active Effects at 24/25/49/50. |
+| PS-A6 | Focused suspension presentation | Accept an Imperial and each Nord baseline offer at 50, seed/drive the patron to 49, then restore 50. | Commitment persists at 49, focused boon is absent, and panel/Survey say `Committed - boon suspended` / recovery at 50. At 50 the T2 boon returns; focused T1 never appears. | Panel, Survey, Active Effects, patron state, no broad boon during commitment. |
+| PS-A7 | Imperial vampire full halt | First run the pacing page's controlled `Vampire onset` / `Vampire cure` sequence while committed to an Imperial Divine at T2 or T3, attempting civic and broad gains while halted. On a separate clean branch save, prove the live detector rather than the backend force: run `player.addspell 000ED0A8`, select `Curse refresh` on `Debug: Daedric & Curse`, and verify onset; then run `player.removespell 000ED0A8`, select `Curse refresh` again, and verify cure. Save/reload once while halted and once after cure. | Both controlled and player-state detection paths produce the same transition. Onset strips focused T2/T3 as well as broad/civic rewards, resets civic metric to 0, clears pending broad scratch, and blocks both lanes. Cure seeds civic 20; two new devotional days cross 25. | Active Effects before/onset/cure, metric/pool/scratch, blocked route traces, `vampirism_on/off` or player-state refresh markers, halted/cured save-load readback, and two-dawn recovery. |
+| PS-A8 | Stale pending offer | Prepare an eligible offer, then make it invalid before accepting: age activity beyond seven days, switch Nord baseline, lower piety below 50, or activate refusal/cooldown. Attempt acceptance. | Acceptance revalidates the current baseline, piety, two qualifying activity days, and cooldown. Invalid offers clear without commitment or rewards. | Pending state before/after, patron state, piety preserved, no focused/broad reward drift. |
+| PS-A9 | Argonian panel separation | Apply Argonian origin and open the focused panel at cultural metric 0, 24, 25, 74, and 75. Independently seed the relation ledgers with `setpqv PDV__ManagerQuest DebugSeedHist <value>`, `DebugSeedPeople <value>`, and `DebugSeedVoid <value>`, then `setpqv PDV__ManagerQuest DebugSeedGo 1`; use at least one People-leading and one Void-leading set. The `Argonian focus -> People/Void` MCM controls are a quick cross-check, not a substitute for the independent values. | Headline is `Saxhleel Practice`; tiers are `Root Memory`, `River-Kept Practice`, and `Rooted Adaptation`. The panel separately displays all three relation ledgers and only People or Void can be active focus. | Boundary screenshots, exact seeded relation values/labels, both focus states, and no retired Hist Communion family. |
+| PS-A10 | Exact substrate copy | Trigger one accepted substrate act for Imperial, Altmer, and Argonian, then inspect toast, Book of Days, Survey, panel, and Active Effects. | Exact public families are `Civic Steadiness`, `Ordered Heritage`, and `Root Memory`/the current Argonian tier. No raw token, generic fallback, or player-visible `Spine` appears. | Screenshots plus text transcription from every surface. |
+| PS-A11 | Broad decay catch-up | Begin from a clean broad-state control with zero pending scratch. Give the soon-to-be-suppressed pool standing through one real eligible positive act and a real 06:00 fold; record standing, last gain day, last processed day, and encoded stamps. Suppress it, then use the game's real wait to cross at least five devotional dawns in one jump. Save/reload and allow one more normal dawn processing pass on the same devotional day. | Two full grace days apply, then every eligible elapsed day deducts 0.1 in one idempotent catch-up. No pending scratch can masquerade as a late gain. Reprocessing the same devotional day deducts zero; standing never falls below 0. | Before/after broad status with standing, scratch, processed/gain day and encoded stamps; one catch-up log trace; save/reload; same-day repeat. |
+| PS-A12 | Argonian zero/one Book boundary | Apply Argonian origin, reset its cultural metric/pacing state to 0, close all Prisma surfaces, and cold-open the panel and Book of Days. On a fresh devotional day, use the real Riverwood sustained-swim ingress from PS-A3 (at least 10 continuous real seconds) to reach 4; do not use the MCM approved-source trigger for the organic bucket. Close and cold-open both surfaces again. | At 0 both surfaces say `Practice quiet`, show no Root Memory boon, and render an empty 1/25/75 gauge. At 4 they say `Root Memory`, show only its low-tier boon, and retain independent Hist/People/Void relations. | Cold-open screenshots at 0 and 4, exact near-water route marker, Active Effects, relation values, and no stale piety gauge. |
+
+For every defect, stop the card and use the capture template below. Controlled
+MCM proof never replaces the organic ingress in step 9 or the real moon power
+in step 10.
+
 ## How We Use This Together
 
 When testing live, use this loop:
@@ -595,7 +759,7 @@ Origin 6, DebugLevel 2. Controls on `Debug: Daedric & Curse` (seed/reset/show) a
 ### 7. Redguard sitting (10 families) - `set PDV_GLO_OriginRace to 9`
 
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [ ] `Redguard-AncestorSpine|boon`  (e.g. Ancestor Spine - Seeker)
+- [ ] `Redguard-AncestorsRegard|boon`  (e.g. Ancestors' Regard - Seeker)
 - [ ] `Redguard-HoonDing|boon`  (e.g. HoonDing's Way - Seeker)
 - [ ] `Redguard-Leki|boon`  (e.g. Leki's Sword-Song - Seeker)
 - [ ] `Redguard-Tuwhacca|boon`  (e.g. Tu'whacca's Ward - Seeker)
@@ -654,7 +818,7 @@ Active Effects when the Naming "Wanderer" told-self ability is granted.
 - [ ] `Disfavor-MoonLuckShadow|disfavor-sting`  (e.g. Fortune slips for a while.)
 - [ ] `Disfavor-OrderTradeLore|disfavor-sting`  (e.g. Order sours for a while.)
 
-### 10. Argonian sitting (8 families) - `set PDV_GLO_OriginRace to 7`
+### 10. Argonian sitting (7 active families) - `set PDV_GLO_OriginRace to 7`
 
 Also-in-this-origin (NOT felt-family rows; sink to `requiemTrackB.sweepC`, see the
 Sweep C addendum above): while on Argonian, run Sweep C **C13** for the two Adapt
@@ -663,16 +827,15 @@ converts - `PDV_SPEL_ArgonianAdapt_Sap` (Fortify Magicka +10) and
 Stamina rise in Active Effects when the Sacred-Waters adapt abilities are granted.
 
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [ ] `Argonian-Hist|boon`  (e.g. Hist Communion - Faithful)
 - [ ] `Argonian-People|boon`  (e.g. Chosen People - Kin)
 - [ ] `Argonian-Sithis|boon`  (e.g. Void Distance - Faced)
 - [ ] `Argonian-supportSpells|boon`  (e.g. Void-Held Surge)
 
 **substrate-favor** - prime the substrate/context state, read the effect in Active Effects:
-- [ ] `Argonian-Substrate|substrate-favor`  (e.g. Hist Memory)
+- [ ] `Argonian-Substrate|substrate-favor`  (e.g. Root Memory)
 
 **neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
-- [ ] `Neglect-ArgonianHist|neglect`  (e.g. The Hist Distant)
+- [ ] `Neglect-ArgonianHist|neglect`  (e.g. The Hist Silenced; curse posture only)
 
 **price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
 - [ ] `Sithis|price`  (e.g. raise-undead)
@@ -761,7 +924,7 @@ Preconditions to check first (backend, before any in-game step):
 | BX3 | CAP + 25/50 BOUNDARY/UI PASS; ORGANIC MULTI-DAY PACING OPEN - Practice-point tier (replaces B1/B1a) | Fresh Breton, any tradition, NO patron and zero pool-god piety. Earn varied practice points across multiple days. | Renewable +1, curated +2, no more than 4 total points per day; T1 at 25 and T2 at 50 with zero deity piety in the pool. | Current build passed the four-point daily cap and controlled 24 -> 25 Seeker / 49 -> 50 Devoted reward and display boundaries on 2026-07-13. Earlier organic harvest `event_334`, draugr `event_300`, and `honor_the_wild` proof remains valid for route diversity. Still open: one real multi-day pacing sign-off confirming ordinary play reaches Seeker on the intended cadence. |
 | BX4 | Overlap resonance sets | For each overlap: prove the patron sources T3 in a lane it overlaps into. Mara -> Knight's Road AND Green Way AND Hidden Art; Dibella -> Green Way AND Hidden Art (NOT Knight's Road); Kynareth -> Knight's Road AND Green Way. | In each overlapping lane, that patron at Champion sources the tradition T3 (resonant path, not PatronChampion). Dibella under Knight's Road takes the non-resonant PatronChampion path instead. | Resonance membership is name-based and correct per lane; Dibella is explicitly NOT resonant in Knight's Road |
 | BX5 | Dual-feed (practice tick + deity piety) | Active tradition A, patron in tradition B (off-tradition). Fire a signal in tradition A's set. | The practice counter for A ticks (tradition-gated), AND the deity(s) the signal maps to still receive piety regardless of active tradition. Off-tradition patron keeps earning piety. | Piety is never tradition-gated; only the practice tick is; CrossTraditionPressure still records an off-tradition source |
-| BX6 | RUNTIME PASS 2026-07-12 - Julianos sleep-handler fix | Hidden Art Breton; trigger the hearth-cover sleep signal (`HandleBretonSleepEvents`). | Mara receives the hearth-cover credit; Julianos does NOT get a LAWFUL_ORDER award from sleep. Julianos credit now comes only from study signals (341/342). | Log proved the retired ancestor-spine sleep signal was ignored, Mara event 314 landed, and no Julianos event 314/LAWFUL_ORDER line appeared. Manual surface is optional follow-up if a visible Mara hearth-cover beat is required. |
+| BX6 | RUNTIME PASS 2026-07-12 - Julianos sleep-handler fix | Hidden Art Breton; trigger the hearth-cover sleep signal (`HandleBretonSleepEvents`). | Mara receives the hearth-cover credit; Julianos does NOT get a LAWFUL_ORDER award from sleep. Julianos credit now comes only from study signals (341/342). | Log proved the retired compatibility sleep signal was ignored, Mara event 314 landed, and no Julianos event 314/LAWFUL_ORDER line appeared. Manual surface is optional follow-up if a visible Mara hearth-cover beat is required. |
 | BX7 | Pulse retune (no track pegging) | Any lane; fire a single renewable practice signal and read the pressure track delta. | Renewable source moves the track a small amount (+2..+5), not +25; a curated source ~+5; a milestone +15..20. Track no longer pegs 0->100 in ~2 acts. | Neglect/fray decay stays meaningful because the track is not instantly maxed; magnitudes match spec section 2 |
 
 ### Breton Unified Champion Cards (2026-07-13, current reward authority)

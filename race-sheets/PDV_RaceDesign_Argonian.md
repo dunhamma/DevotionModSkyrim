@@ -6,6 +6,23 @@
 
 ---
 
+## 2026-07-13 Substrate Consolidation Addendum
+
+This addendum supersedes later weighted-composite and three-layer-boon text.
+Argonian cultural practice is one dedicated substrate metric with tiers `Root
+Memory`, `River-Kept Practice`, and `Rooted Adaptation`. The first approved
+Hist, water, bed, meal, People, or activated Void practice in each 06:00
+devotional day grants `+4` toward `1/25/75`; later acts grant zero.
+
+Hist, People, and Void remain independent relation ledgers. Exactly People or
+Void may be the active emphasis. Hist/water/Sap acts may award Hist piety;
+People/bed/community acts move relation only; Void acts may award Sithis only
+after activation. The separate Hist Communion boon family is retired, so the
+normal maximum is the cultural substrate plus one emphasis family. The cultural
+metric has three idle days of grace, then loses 1 per dawn to floor 20, or zero
+while cursed. `references/authoring/PDV_SubstratePacingContracts.json` is the
+authority.
+
 ## Religious Identity
 
 Argonians don't have religion the way other races do. They have the Hist — and the Hist is not a god in any sense the rest of Tamriel would recognize. It gave Argonians their souls at birth. It will receive those souls at death. It is constitutive of what an Argonian *is*, not something they practice or choose. Sithis is the primordial void that preceded and surrounds everything — acknowledged as real, not worshipped as personal.
@@ -40,9 +57,16 @@ The Hist remains constitutive even in absence
 
 ## Implementation Locks
 
-**Single layered substrate (LOCKED):** Argonian uses one canonical substrate owner, `PDV_Substrate_ArgonianHist`. It owns all three visible layers rather than creating three selectable paths or patron-style commitments. Player-facing readout should present the layers as `Hist`, `People`, and `Void` under one Saxhleel exile identity.
+**Separate cultural substrate and relations (LOCKED 2026-07-13):** Argonian
+keeps the canonical owner `PDV_Substrate_ArgonianHist`, but its boon tiers read
+only the dedicated `CulturalPractice` metric. Hist, People, and Void are
+independent relation ledgers, not weighted components of that metric. Exactly
+People or Void may be the active emphasis.
 
-**Storage namespace (LOCKED):** Use `PDV.Substrate.ArgonianHist.*`. Canonical first keys are `Hist`, `People`, `Void`, `Tier`, `LastHistEvent`, `LastPeopleEvent`, `LastVoidEvent`, `LastMaintenanceDay`, `SithisSignalCount`, `BedOfChoiceSleepCount`, and `BedOfChoiceLastSleep`. `Hist` remains the primary metric; `People` can buffer it; `Void` can stabilize but never replace it.
+**Storage namespace (LOCKED):** Preserve `PDV.Substrate.ArgonianHist.*` for
+save compatibility. Add `CulturalPractice` and its devotional-day credit keys;
+retain `Hist`, `People`, `Void`, their last-event keys, maintenance clock,
+Sithis activation, and bed cadence as independent relation/state data.
 
 **Hist distance rule (LOCKED):** Hist distance is always gently running in Skyrim. Evaluate at dawn only. If no valid Hist-maintenance signal occurred in the last three in-game days, reduce `Hist` by `1` per dawn, with a non-curse floor of `20`. Valid maintenance can offset or recover the loss through water/wetland/rest/reflection signals and the Hist sap meditation tool. 1.0 does not provide a full home-equivalent restoration state outside Black Marsh.
 
@@ -117,7 +141,7 @@ Every Argonian has a light baseline awareness of Sithis as change, void, and dea
 - Resist disease 15% (exile resilience — the community keeps you healthy)
 - Windhelm Assemblage and Riften Docks NPCs treat you as a recognized member of the community (dialogue access)
 
-### Tier 2 — Faithful (active maintenance of all three layers)
+### Tier 2 -- Faithful (cultural practice maintained; one emphasis may be active)
 *The connection is maintained under exile conditions. Community is real. The void is accepted.*
 
 - Near water/wetlands: water health regen increases to +5 health/sec (from +2 at Tier 1)
@@ -128,7 +152,7 @@ Every Argonian has a light baseline awareness of Sithis as change, void, and dea
 - Sithis acknowledgment in dialogue generates modest piety at this tier
 - Hist relation maintenance (water-adjacent behavior) gives modest daily piety — the maintenance is itself devotional
 
-### Tier 3 — Devoted (all three layers actively maintained)
+### Tier 3 -- Devoted (cultural practice at its high threshold)
 *The Hist still knows you, even from this distance. Your community holds. The void is familiar.*
 
 **Hist Champion:**

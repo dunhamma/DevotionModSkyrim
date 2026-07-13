@@ -5,6 +5,27 @@
 
 ---
 
+## 2026-07-13 Progression Contract Addendum
+
+This addendum supersedes later civic-count and route-magnitude language. The
+Imperial Divines broad lane is a deity-signal pool: the Eight Divines qualify
+immediately and Talos joins only after explicit stance, prayer, or defiance.
+`The Divines' Regard` is highest-slot-only and caps at two tiers: Seeker grants
+Poison Resist 10%; Faithful grants Poison Resist 10% plus Disease Resist 10%.
+
+Imperial civic practice is a separate substrate. The first authentic civic act
+in each 06:00 devotional day grants `+4` toward `1/25/75`; later acts grant zero.
+Eligible renewable routes are Divine prayer and the first completed Smithing,
+Enchanting, or Alchemy work of the day. Generic sleep and automatic Talos piety
+are rejected. Vampire onset resets the metric to zero and blocks civic and
+broad gains; cure seeds 20 once. Visible tiers are `Civic Steadiness`, `Civic
+Discipline`, and `Civic Exemplar`.
+
+At deity piety 50, accepting a patron preserves piety, suppresses the broad
+boon, and begins focused T2. Focused T1 is compatibility-only; T3 begins at 85.
+`references/authoring/PDV_BroadPantheonContracts.json` and
+`PDV_SubstratePacingContracts.json` are authoritative.
+
 ## Religious Identity
 
 Imperials are the civic face of the Nine Divines — their religion is institutional, public, and politically entangled in a way no other race's is. The White-Gold Concordat has split Imperial theology into a wound that won't close: enforcing the Talos ban means betraying the man who unified the Empire and made the Divines a legal institution; defying it means choosing personal conscience over the civic order that Imperials built their identity around.

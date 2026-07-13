@@ -6,6 +6,19 @@
 
 ---
 
+## 2026-07-13 Substrate Pacing Addendum
+
+This addendum supersedes later independent +5 heritage routes and automatic
+Auri-El ancestry pulses. The first approved ordered rest, daily magic-skill
+increase, completed enchantment, Auri-El rite, or curated heritage milestone in
+each 06:00 devotional day grants `+4` toward `1/25/75`; later acts grant zero.
+Passive dawn never grants the cultural metric. A declined rite grants no metric
+and no cooldown; an accepted choice starts the seven-day rite cooldown.
+
+Deity piety remains act-specific for Auri-El, Magnus, and Xarxes. Visible tiers
+are `Ordered Heritage`, `Disciplined Heritage`, and `Exemplar Heritage`.
+`references/authoring/PDV_SubstratePacingContracts.json` is authoritative.
+
 ## Religious Identity
 
 Altmer religion is a project: the Apotheosis project. Auri-El, the god of time and the supreme Aldmeri ancestor, escaped Mundus -- the mortal plane, the trap. The Altmer want to follow. Every devotional act is a step toward re-achieving the divine nature their ancestors lost when Lorkhan tricked them into creating the mortal world.

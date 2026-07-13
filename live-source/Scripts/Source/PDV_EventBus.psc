@@ -15,6 +15,24 @@ PDV_EventTypes Property PDV_EventTypesService Auto
 FormList Property PDV_FLST_AllDeities Auto
 GlobalVariable Property PDV_GLO_DebugLevel Auto
 
+Function BeginLogicalDevotionalAct(String logicalEventId)
+    if PDV_Manager
+        PDV_Manager.BeginBroadPantheonEvent(logicalEventId)
+    endIf
+EndFunction
+
+Function FlushLogicalDevotionalAct()
+    if PDV_Manager
+        PDV_Manager.FlushBroadPantheonEvent()
+    endIf
+EndFunction
+
+Function RouteDunmerHonorableVictory(Form victimForm)
+    if PDV_Manager
+        PDV_Manager.HandleDunmerHonorableVictory(victimForm)
+    endIf
+EndFunction
+
 Function RouteAction(Int eventType, Form actorRef, Form targetRef)
     RouteActionWithAttribution(eventType, GetDirectPlayerAttribution(), actorRef, targetRef)
 EndFunction
@@ -457,7 +475,7 @@ Function RouteKhajiitLunarSubstrate(String sourceId)
         return
     endIf
 
-    PDV_Manager.HandleKhajiitMoonObservance(0, "eventbus_p2_khajiit_lunar_" + sourceId)
+    PDV_Manager.HandleKhajiitLunarSubstrate(sourceId)
     Trace(2, "RouteKhajiitLunarSubstrate complete: " + sourceId)
 EndFunction
 
@@ -1515,6 +1533,8 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
         Trace(1, "RouteAction skipped: PDV_FLST_AllDeities not assigned.")
         return
     endIf
+
+    PDV_Manager.HandleSubstrateActionEvent(eventType, GetEventReason(eventType))
 
     ; Quest-meta-faucet theft stamp (PDV_QuestExpansion_Architecture.md, 2026-07-05):
     ; Nocturnal's "done her way" lane compares this against the last watched-quest

@@ -1,7 +1,7 @@
 {
   "schema": "pdv.1-0.endstate-contract.v1",
   "title": "PDV 1.0 End State Contract",
-  "updated": "2026-07-07",
+  "updated": "2026-07-13",
   "designAuthority": "PDV_TargetEndStates_1.0.md",
   "gateTool": "tools/pdv_1_0_endstate_gate.mjs",
   "stampFile": "references/authoring/PDV_1_0_FreshnessStamps.json",
@@ -84,6 +84,67 @@
         "onDrift": "FAIL"
       },
       "closes": "Fix the blocker named by pdv_beta_readiness_audit.mjs --strict, then re-run.",
+      "post10": false
+    },
+    {
+      "id": "C-AUDIT-SUBSTRATE-PACING",
+      "title": "Shared substrate 7/19-day pacing contract passes",
+      "category": "machine-gate",
+      "lane": "audits",
+      "evidence": {
+        "read": { "kind": "stamp-only" },
+        "run": {
+          "tool": ["tools/pdv_substrate_pacing_audit.mjs", "--json"],
+          "passRule": "exit-zero"
+        }
+      },
+      "freshness": {
+        "sources": ["references/authoring/PDV_SubstratePacingContracts.json", "@managerLive", "@managerDeployed"],
+        "onDrift": "FAIL"
+      },
+      "closes": "Fix the failing contract/source assertion and rerun the substrate pacing audit.",
+      "post10": false
+    },
+    {
+      "id": "C-AUDIT-BROAD-PANTHEON",
+      "title": "Imperial and Nord broad-pantheon parity contract passes",
+      "category": "machine-gate",
+      "lane": "audits",
+      "evidence": {
+        "read": { "kind": "stamp-only" },
+        "run": {
+          "tool": ["tools/pdv_broad_pantheon_audit.mjs", "--json"],
+          "passRule": "exit-zero"
+        }
+      },
+      "freshness": {
+        "sources": ["references/authoring/PDV_BroadPantheonContracts.json", "@managerLive", "@managerDeployed"],
+        "onDrift": "FAIL"
+      },
+      "closes": "Fix the failing contract/source assertion and rerun the broad-pantheon audit.",
+      "post10": false
+    },
+    {
+      "id": "C-RUNTIME-PANTHEON-SUBSTRATE",
+      "title": "Pantheon and substrate adversarial runtime evidence is complete",
+      "category": "runtime-gate",
+      "lane": "runtime",
+      "evidence": {
+        "read": {
+          "kind": "ledger-json",
+          "ledger": "references/authoring/PDV_PantheonSubstrateRuntimeEvidenceLedger.json",
+          "passRule": "tool-owned"
+        },
+        "run": {
+          "tool": ["tools/pdv_pantheon_substrate_runtime_evidence_check.mjs", "--strict"],
+          "passRule": "exit-zero"
+        }
+      },
+      "freshness": {
+        "sources": ["references/authoring/PDV_PantheonSubstrateRuntimeEvidenceLedger.json", "@managerLive", "@managerDeployed", "@espDeployed"],
+        "onDrift": "FAIL"
+      },
+      "closes": "Run PS-A1 through PS-A12 from the co-test runbook on a fresh post-build QASmoke save and attach the required runtime, organic-route, manual-surface, and save/load evidence references.",
       "post10": false
     },
     {

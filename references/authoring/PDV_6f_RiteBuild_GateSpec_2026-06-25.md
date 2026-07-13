@@ -11,6 +11,11 @@ Commits this session:
 All three mirror the proven **Bosmer Naming** template (`TryBosmerNaming` ~3862 /
 `ApplyBosmerNaming` / `SyncBosmerNaming` / `GetBosmerNamingSpell` /
 `RemoveBosmerNamingSpells` / `IsBosmerNamingCoherent`): sleep-triggered, 7-day cooldown,
+> Superseded 2026-07-13 for the Altmer decline edge only: `Not yet` still does not
+> spend the seven-day accepted-rite cooldown, but now records a separate
+> three-devotional-day prompt cooldown. The implementation and current player guide
+> are authoritative; the historical R4 wording below is retained as evidence.
+
 "Not yet" doesn't spend cooldown, one-active clear-before-add, dawn fade/restore on
 coherence break. Each is `None`-guarded so it compiles and stays inert until its records
 are authored + VMAD-wired.

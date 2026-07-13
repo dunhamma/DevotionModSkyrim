@@ -2,25 +2,37 @@
     PDV_Substrate_DunmerAncestor.psc
     PlayerDevotion - Dunmer ancestor proving pilot
     -----------------------------------------------------------------------
-    Concrete proving helper attached alongside the structural substrate base.
-    Keeps ancestor metric inputs explicit so the first Pattern Proving wave
-    can exercise prayer and home-bonus paths without changing patron piety.
+    Concrete cultural-practice helper. Portable and home prayer are authentic
+    routes into the same daily substrate budget; home presence is not a second
+    metric bonus and this script does not change patron piety.
     -----------------------------------------------------------------------
 /;
 
 Scriptname PDV_Substrate_DunmerAncestor extends PDV_SubstrateBase
 
-Float Property PrayerDelta = 5.0 Auto
-Float Property HomeBonusDelta = 8.0 Auto
+Bool Function IsAuthenticSubstrateSource(String sourceId)
+    return sourceId == "dunmer_portable_prayer" || sourceId == "dunmer_home_prayer"
+EndFunction
+
+Float Property PrayerDelta = 5.0 Auto ; Legacy VMAD compatibility.
+Float Property HomeBonusDelta = 8.0 Auto ; Legacy VMAD compatibility.
 
 Function RecordPortableShrinePrayer(String reason)
     RecordPortableShrinePrayerScaled(1.0, reason)
 EndFunction
 
 Function RecordPortableShrinePrayerScaled(Float multiplier, String reason)
+    Float normalizedMultiplier = ClampSignalMultiplier(multiplier)
+    if normalizedMultiplier <= 0.0
+        Trace(2, "Portable shrine prayer blocked for " + reason)
+        return
+    endIf
+
     StorageUtil.AdjustIntValue(GetSubstrateForm(), "PDV.Substrate.DunmerAncestor.PrayerCount", 1)
-    AdjustMetric(PrayerDelta * ClampSignalMultiplier(multiplier), "ancestor_prayer_" + reason)
-    Trace(2, "Portable shrine prayer recorded.")
+    ; Dunmer curse posture is the explicit reduced-credit exception. Preserve
+    ; the validated weight all the way into the shared +4 daily grant.
+    Float awarded = TryAwardSubstrateDayCredit("dunmer_portable_prayer", reason, normalizedMultiplier)
+    Trace(2, "Portable shrine prayer recorded with daily credit " + awarded)
 EndFunction
 
 Function RecordPlayerHomeBonus(String reason)
@@ -28,9 +40,15 @@ Function RecordPlayerHomeBonus(String reason)
 EndFunction
 
 Function RecordPlayerHomeBonusScaled(Float multiplier, String reason)
+    Float normalizedMultiplier = ClampSignalMultiplier(multiplier)
+    if normalizedMultiplier <= 0.0
+        Trace(2, "Home prayer blocked for " + reason)
+        return
+    endIf
+
     StorageUtil.AdjustIntValue(GetSubstrateForm(), "PDV.Substrate.DunmerAncestor.HomeCount", 1)
-    AdjustMetric(HomeBonusDelta * ClampSignalMultiplier(multiplier), "home_bonus_" + reason)
-    Trace(2, "Player-home ancestor bonus recorded.")
+    Float awarded = TryAwardSubstrateDayCredit("dunmer_home_prayer", reason, normalizedMultiplier)
+    Trace(2, "Player-home prayer recorded with daily credit " + awarded)
 EndFunction
 
 Int Function GetPrayerCount()

@@ -18,7 +18,7 @@ The three you can commit to:
 - **HoonDing** - the Make Way God, the Walker-Who-Makes-Way. He appears only in rare moments of true make-way: impossible odds, honorable adversity, a battle that should have been lost.
 - **Leki** - the Lady of Swords, saint of the Sword-Singers. She rewards martial conduct and disciplined sword form, not raw kills.
 
-The wider Yokudan spine you honor but cannot focus on: **Satakal** (the Worldskin, the endless cycle of devouring and renewal), **Ruptga** / Tall Papa (the first to find the Far Shores), **Tava** (the bird-goddess of good passage and the open road), and **Onsi** (the warrior who taught the people to draw swords).
+The wider Yokudan inheritance you honor but cannot focus on: **Satakal** (the Worldskin, the endless cycle of devouring and renewal), **Ruptga** / Tall Papa (the first to find the Far Shores), **Tava** (the bird-goddess of good passage and the open road), and **Onsi** (the warrior who taught the people to draw swords).
 
 Note on Tu'whacca and Arkay: in Skyrim you will sometimes do your death duty in Nord spaces like the Hall of the Dead. You are not worshipping Arkay. You are using Skyrim's death institutions while you address Tu'whacca. The mod always speaks of Tu'whacca, never Arkay, when it credits your devotion.
 
@@ -51,7 +51,7 @@ Remember that piety is tracked separately for each god, daily gain per god is ca
 Your most common and important ways to earn:
 
 - **Defeat the undead** (draugr, skeletons, ghosts) - ending the restless dead so they reach the Far Shores. This is the bread and butter of Tu'whacca devotion and the ancestor layer. Daily capped; quality over quantity. `[WIRED: CSV Tu'whacca kill-undead (300) +0.5 (ActorTypeUndead), kill event; plus a Redguard-gated keep-the-death-duty (300) +0.25 row]`
-- **Clear a draugr tomb or dungeon** - finishing the whole place, boss included. Counts once per dungeon, not per visit. Strongest for Ash'abah, meaningful for all sects. `[PARTIAL: only for the curated undead sites in PDV_FLST_RedguardAshAbahUndeadClearSites -> HandleRedguardAshAbahUndeadSiteClear (arm on visit uncleared via HandleStoryChangeLocation, credit on Location.IsCleared) -> SIGNAL_DEATH_DUTY +2.0 + ancestor spine. A generic draugr dungeon not on the list does not count as a "clear."]`
+- **Clear a draugr tomb or dungeon** - finishing the whole place, boss included. Counts once per approved dungeon, not per visit. Strongest for Ash'abah, meaningful for all sects, and feeds ancestral regard alongside death duty.
 - **Complete a Hall of the Dead quest** - the most direct death-duty deed in Skyrim. One per hold, high weight, very strong for Ash'abah. `[STUB: no organic Hall-of-the-Dead quest hook; the death-duty signal lane (RouteRedguardAshAbahDeathDuty) has only the dev-only activator 07102D and unfilled P2 quest-stage sources. Related manifest ref PDV_REFR_RedguardAshAbahDeathDutySignal status:"dev-only".]`
 - **Defeat a necromancer and clear their operation** - every necromancer is a religious affront; ending one is real duty. Per site. `[PARTIAL: only a UNIQUE (named) necromancer in the Necromancer/Warlock faction -> HandleRedguardAshAbahMajorBurden (eventType 2, IsRedguardNamedNecromancerBurden) -> death-duty burden +2.0. Routine necromancer mobs and "clearing the operation" have no hook.]`
 - **Tend the Far Shores token** - a portable devotional surface you keep and use anywhere, praying as Tu'whacca's people do (see Unique Mechanics). Once per day. `[STUB: HandleRedguardFarShoresToken -> SIGNAL_FAR_SHORES_TOKEN +1.0 exists, but RouteRedguardFarShoresToken has only the dev-only activator 07102E (manifest PDV_REFR_RedguardFarShoresTokenSignal status:"dev-only"). No portable-token OnEquipped/activation hook is wired.]`
@@ -63,7 +63,7 @@ Your most common and important ways to earn:
 - **Sword discipline in honorable combat** (Leki) - clean, skilled one-handed form against a worthy foe, including smithing a true blade or sharpening your martial skill. `[WIRED (day-to-day): CSV Leki smith-item (330) +0.75, increase-skill (344) +0.25, read-skill-book (340) +0.25, learn-word-of-power (343) +0.75, kill-dragon (302) +1.0. The curated SIGNAL_SWORD_SINGING (+2.0) only fires on the dev-only/Forebear-road lane and only when Leki is active - PARTIAL - so day-to-day the CSV rows are what actually feed her.]`
 - **Resolve "In My Time Of Need"** (the Saadia / Alik'r quest) - a one-time deed that reads as a sect statement: delivering Saadia to the Alik'r leans Crown (Hammerfell justice, ancestor duty); protecting her leans Forebear (exile-protection). `[INERT: MS08 (In My Time of Need, 118565) stage-201 Crown / stage-200 Forebear routes exist (PDV_PlayerEvents:1268-1272) but their P2 source FormLists (PDV_FLST_P2_RedguardCrown/ForebearSources) are unfilled - the source-fill ledger marks MS08 "blocked". The stage fires nothing until those lists are filled.]`
 
-The one Redguard lane that genuinely fires from normal play with no patron/sect gate is the **ancestor-spine book**: reading Manual of Mixed Unit Tactics (Skyrim.esm:01ACD1) routes RouteRedguardAncestorSpine -> SIGNAL_ANCESTOR_SPINE +1.0 to Tu'whacca. `[WIRED: OnBookRead -> RouteP2ImmersiveSource -> PDV_FLST_P2_RedguardSpineSources (filled) -> HandleRedguardAncestorSpine]` Sleeping in a declared ancestral-rest cell also pulses the ancestor spine once per day. `[WIRED: OnSleepStop -> HandleRedguardSleepEvents -> RecordRedguardAncestralRest +1.0, once/day]`
+The one Redguard ancestral-regard lane that genuinely fires from normal play with no patron or sect gate includes the approved *Manual of Mixed Unit Tactics* source and declared ancestral rest. Internal compatibility identifiers retain their old names, but the visible broad family is `Ancestors' Regard - Seeker/Faithful`.
 
 ## How You Lose Piety
 
@@ -142,8 +142,8 @@ Discrepancies between what the guide/design promises and what actually fires (fo
 - **HoonDing and Leki curated signals are patron-gated.** `SIGNAL_MAKE_WAY` fires only while HoonDing is your active patron; `SIGNAL_SWORD_SINGING` only while Leki is active (and only on the road-passage lane). `SIGNAL_HONORABLE_DUEL` (+3.0) has **no** organic caller at all. Day-to-day, HoonDing and Leki are fed almost entirely by their generic CSV rows (dragon kills, skill-ups, smithing), not by their signature curated beats.
 - **"In My Time of Need" (MS08) = INERT.** The Crown/Forebear stage routes exist in `PDV_PlayerEvents` but the source FormLists are unfilled and the source-fill ledger explicitly marks MS08 "blocked." The one-time sect-statement deed described in the guide currently does nothing.
 - **Vampire re-entry reward not wired.** The cure "return through Tu'whacca" is narrative + neglect-clear only; `SIGNAL_VAMPIRE_REENTRY` (+4.0) is never awarded (delta-lookup only) and `VampireReentryNeeded` is set but never consumed.
-- **What DOES fire organically, no patron/sect gate:** the ancestor-spine book (Manual of Mixed Unit Tactics, the only filled Redguard P2 source), ancestral-rest sleep, the full CSV likes/dislikes tables for all three gods (kills, undead kills, steal, smith, skill-ups, artifact acceptance, etc.), curated undead-site clears, UNIQUE-undead / named-necromancer burdens, dragon/listed-boss make-way (HoonDing-active only), the neglect Magic-Resistance loss, and the promoted quest-matrix rows above.
-- **Background spine gods have no wiring.** Satakal, Ruptga, Tava, and Onsi have no likes/dislikes rows, no curated signals, and no quest-matrix rows - they are flavor only, as expected by design. "Tava blesses good passage" in the road-travel bullet has no Tava-specific mechanic.
+- **What does fire organically without patron/sect gate:** the approved ancestral-regard book, ancestral-rest sleep, the full CSV likes/dislikes tables for all three gods, curated undead-site clears, unique-undead and named-necromancer burdens, HoonDing make-way targets, neglect, and promoted quest reactions.
+- **Background inheritance gods have no direct wiring.** Satakal, Ruptga, Tava, and Onsi remain broad cultural framing rather than separate focus ledgers.
 
 <!-- END REVIEW SCAFFOLDING -->
 
@@ -213,7 +213,7 @@ Two things make a Redguard feel different from any other race.
 
 ## Quick Reference
 
-- **Gods:** Yokudan pantheon - focusable: Tu'whacca, HoonDing, Leki. Background spine: Satakal, Ruptga, Tava, Onsi.
+- **Gods:** Yokudan pantheon - focusable: Tu'whacca, HoonDing, Leki. Background inheritance: Satakal, Ruptga, Tava, Onsi.
 - **Starting choice:** Sect at setup - Crown (orthodoxy, sacred martial inheritance), Forebear (pragmatic adaptation), or Ash'abah (funerary duty, cleansing the undead). Ancestor reverence is always on.
 - **Top 3 ways to gain:** Defeat the undead and clear draugr tombs; complete Hall of the Dead quests and oppose necromancy; honor your sect's deed (Crown honorable combat / Forebear road and contracts / Ash'abah death duty) and tend the Far Shores token.
 - **Main ways to lose:** Raising the undead, killing the defenseless, theft, accepting Daedric artifacts; neglecting your sect's work (ancestors grow distant); spreading too thin (broad worship caps at Devoted).

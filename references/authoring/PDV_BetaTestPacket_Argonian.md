@@ -1,5 +1,11 @@
 # PDV Beta Test Packet - Argonian
 
+> **Superseded mechanics warning (2026-07-13):** This packet preserves older
+> runtime evidence, but its composite metric, per-route magnitudes, and Hist
+> Communion reward checks are no longer test authority. Current pacing and
+> one-sitting steps live in `PDV_SubstratePacingContracts.json` and
+> `PDV_1_0_CoTest_Runbook_2026-07-10.md`.
+
 Created: 2026-06-06
 Status: ready to run - Hist book packet; People/Void edge proof pending
 Mode: console-assisted beta-feel packet
@@ -148,18 +154,16 @@ cqf-callable if cqf works in your setup, but SetPQV is the supported path.
 
 ### Reward stack snapshot at seeded max
 
-With the Hist + People seeder applied (composite >= 75 reaches all tiers faster
-than the book track), confirm one consolidated Active-Effects snapshot against
-the authored spec magnitudes (disease resistance is GONE everywhere):
+For the current contract, seed cultural practice to 75 and People to 85. Confirm
+one highest-slot-only cultural boon plus one highest-slot-only relation emphasis:
 
-- Hist Memory (always): Resist Magic 5%.
-- Hist Attunement (substrate HIGH): Fortify Health +30 (near water), Resist Poison 12%,
-  Unarmed Damage +12.
-- Hist Communion - Devoted (Hist 50): Fortify Health +20 (near water), Fortify Stamina +25.
-- Chosen People - Kin (People 25): Carry Weight +25.
-- Chosen People - Family (People 50): Resist Poison 8%, Fortify Health.
-- Chosen People - Pillar (Champion 85): Fortify Health, Carry Weight +25,
-  Resist Magic 5%.
+- **Rooted Adaptation**: Magic Resistance +5%, Poison Resistance +22%, and
+  Maximum Health +30 near water.
+- **Chosen People - Pillar**: Carry Weight +50, Poison Resistance +8%, Health
+  +20, and Magic Resistance +5%.
+- No Hist Communion spell is present. Hist Communion records are retired
+  compatibility artifacts and the active family cap is substrate plus either
+  People or Void, never all three relation families.
 
 ### Reaction-layer fix checks
 
@@ -245,8 +249,10 @@ Confirm the seen-key / milestone anti-farm assertion: the all-six milestone
 fires as a MessageBox (not a missable toast) on the 6th arrival, and a repeat
 arrival at the already-seen Eldergleam vision does NOT re-fire (one-shot forever).
 
-- Sleeping Tree Sap (`player.additem 000AED90 1`, then drink): one-shot vision.
-  Log marker: `Sleeping Tree Sap vision fired`.
+- Sleeping Tree Sap (`player.additem 000AED90 1`, then drink): one-shot vision,
+  one cultural-practice claim if that devotional day's +4 remains available,
+  and one Hist relation/piety pulse. Log marker:
+  `Sleeping Tree Sap vision fired`.
 
 ### Hist Adaptations (dreaming root rite) -- "grow into your home" model (2026-06-18)
 
@@ -350,8 +356,10 @@ poll).
 1. `set PDV_GLO_OriginRace to 7`, `set PDV_GLO_DebugLevel to 2`.
 2. Go to water and actually SWIM (deep enough to swim): `coc Riverwood` then walk
    to the river, or any lake/coast.
-3. Within ~1s the log prints `Argonian near-water Hist maintenance routed`; Hist
-   practice nudges up; a "The water remembers you" toast may show.
+3. Remain continuously swimming for at least **10 real seconds**. The log then
+   prints `Argonian near-water Hist maintenance routed`; cultural practice may
+   claim that day's +4, Hist relation/piety moves once, and a "The water
+   remembers you" toast may show.
 4. Swim more the SAME day -> no second fire (day-capped; log stays quiet).
 5. Sleep to advance a day, swim again -> it fires once more.
 6. **PASS:** swimming credits Hist once/day, no per-second spam.

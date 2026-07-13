@@ -1,16 +1,16 @@
 ;/
     PDV_Substrate_ImperialAncestor.psc
-    PlayerDevotion - Imperial ancestral-spine substrate
+    PlayerDevotion - Imperial civic substrate
     -----------------------------------------------------------------------
-    Always-on Imperial identity layer. Civic service, disciplined Concordat
-    pressure, Talos memory, and rest maintenance deepen civic-ancestor standing
-    and band into a highest-slot boon without requiring an active patron.
+    Always-on Imperial identity layer. Civic service, honest work, disciplined
+    Concordat pressure, and exact Talos defiance deepen civic standing and band
+    into a highest-slot boon without requiring an active patron.
     -----------------------------------------------------------------------
 /;
 
 Scriptname PDV_Substrate_ImperialAncestor extends PDV_SubstrateBase
 
-Float Property CivicStandingDelta = 5.0 Auto
+Float Property CivicStandingDelta = 5.0 Auto ; Legacy VMAD compatibility; daily credit owns metric gain.
 Float Property DawnDecay = 1.0 Auto
 Float Property DawnGraceDays = 3.0 Auto
 Float Property NonCurseFloor = 20.0 Auto
@@ -19,18 +19,26 @@ Int Property POSTURE_QUIET = 0 AutoReadOnly
 Int Property POSTURE_STEADY = 1 AutoReadOnly
 Int Property POSTURE_DISCIPLINED = 2 AutoReadOnly
 
+Bool Function IsAuthenticSubstrateSource(String sourceId)
+    return sourceId == "imperial_civic"
+EndFunction
+
 Function RecordCivicStanding(String reason)
     RecordCivicStandingScaled(1.0, reason)
 EndFunction
 
 Function RecordCivicStandingScaled(Float multiplier, String reason)
-    Float delta = CivicStandingDelta * ClampSignalMultiplier(multiplier)
+    Float normalizedMultiplier = ClampSignalMultiplier(multiplier)
+    if normalizedMultiplier <= 0.0
+        Trace(2, "Civic standing blocked for " + reason)
+        return
+    endIf
+
     StorageUtil.AdjustIntValue(GetSubstrateForm(), "PDV.Substrate.ImperialAncestor.SourceCount", 1)
     StorageUtil.SetStringValue(GetSubstrateForm(), "PDV.Substrate.ImperialAncestor.LastReason", reason)
     StorageUtil.SetFloatValue(GetSubstrateForm(), "PDV.Substrate.ImperialAncestor.LastEvent", Utility.GetCurrentGameTime())
-    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ImperialAncestor.LastMaintenanceDay", Utility.GetCurrentGameTime() as Int)
-    AdjustMetric(delta, "imperial_civic_" + reason)
-    Trace(2, "Civic standing recorded with delta " + delta)
+    Float awarded = TryAwardSubstrateDayCredit("imperial_civic", reason, 1.0)
+    Trace(2, "Civic standing recorded with daily credit " + awarded)
 EndFunction
 
 Function ProcessCivicDawn(Bool curseActive, String reason)
@@ -38,19 +46,20 @@ Function ProcessCivicDawn(Bool curseActive, String reason)
         return
     endIf
 
-    Int currentDay = Utility.GetCurrentGameTime() as Int
+    Int currentDay = GetDevotionalDay()
     Int lastDecayDay = StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ImperialAncestor.LastDecayDay")
     if lastDecayDay == currentDay
         return
     endIf
 
-    Int lastMaintenanceDay = StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ImperialAncestor.LastMaintenanceDay")
+    Int lastMaintenanceDay = GetLastAcceptedDevotionalDay()
     Int dayDelta = currentDay - lastMaintenanceDay
-    if lastMaintenanceDay <= 0
+    if !HasAcceptedSubstrateCredit()
         dayDelta = (DawnGraceDays as Int) + 1
     endIf
 
     if dayDelta <= (DawnGraceDays as Int)
+        StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ImperialAncestor.LastDecayDay", currentDay)
         RecomputeSubstrateTier()
         return
     endIf
@@ -67,7 +76,18 @@ Function ProcessCivicDawn(Bool curseActive, String reason)
         return
     endIf
 
-    Float newStanding = oldStanding - DawnDecay
+    Int graceEndDay = lastMaintenanceDay + (DawnGraceDays as Int)
+    if !HasAcceptedSubstrateCredit()
+        graceEndDay = currentDay - 1
+    endIf
+    Int decayDays = currentDay - lastDecayDay
+    if lastDecayDay < graceEndDay
+        decayDays = currentDay - graceEndDay
+    endIf
+    if decayDays < 1
+        decayDays = 1
+    endIf
+    Float newStanding = oldStanding - (DawnDecay * decayDays)
     if newStanding < floorValue
         newStanding = floorValue
     endIf

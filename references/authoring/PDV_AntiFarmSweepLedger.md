@@ -6,7 +6,7 @@ Anti-farm doctrine: every signal handler that awards POSITIVE (gain) PIETY needs
 
 Scope: PDV__ManagerQuest.psc handler-shaped functions (Handle<X> / Record<X>Scaled / Try<X> / Award<X>Signal) that transitively reach AwardPiety / AwardCuratedSignal[Scaled]. Substrate AdjustMetric (the favor/buff channel, not the piety pulse) is intentionally out of scope. The audit is caller-aware (a thin emit-wrapper reads CAPPED when every caller is capped) and sign-aware: only POSITIVE-delta (gain) handlers are a farm exploit and fail the build; PENALTY-only handlers (negative delta -- anti-creed, oath-break, Lorkhan-pressure) cannot be farmed for gain and are reported as friction-pacing review only.
 
-Summary: 127 piety-awarding handlers | 118 CAPPED | 0 allowlisted one-shot | 0 UNCAPPED-GAIN (findings) | 9 uncapped-penalty-only (review)
+Summary: 137 piety-awarding handlers | 129 CAPPED | 0 allowlisted one-shot | 0 UNCAPPED-GAIN (findings) | 8 uncapped-penalty-only (review)
 Self-test: off
 
 ## UNCAPPED GAIN -- genuine anti-farm gaps (the doctrine target)
@@ -23,7 +23,6 @@ These award only a NEGATIVE delta, so repeating them costs the player -- not far
 |---|---|
 | AwardOrcOathBreakSignal | HandleOrcOathBreak |
 | HandleAltmerLorkhanPressure | DebugRecordAltmerLorkhanPressure |
-| HandleGreenPactViolation | DebugTriggerGreenPactViolation |
 | HandleKhajiitAlkoshChaosAid | (top-level / event-driven) |
 | HandleKhajiitAzurahDesecration | (top-level / event-driven) |
 | HandleKhajiitBaanDarBetrayal | (top-level / event-driven) |
@@ -65,8 +64,11 @@ These award only a NEGATIVE delta, so repeating them costs the player -- not far
 | HandleArgonianBedOfChoiceReturn | own-handler-gate |
 | HandleArgonianHistMaintenance | own-handler-gate |
 | HandleArgonianPeopleSupport | own-handler-gate |
+| HandleArgonianSacredWaterDiscovery | called-fn-gate |
+| HandleArgonianSapVision | own-handler-gate |
 | HandleArgonianSleepEvents | called-fn-gate |
 | HandleArgonianVoidSignal | own-handler-gate |
+| HandleBoethiahHonorableDuel | own-handler-gate |
 | HandleBosmerBanditRoadReversal | called-fn-gate |
 | HandleBosmerBanditRoadRoadLife | called-fn-gate |
 | HandleBosmerBanditRoadSignal | own-handler-gate |
@@ -81,24 +83,27 @@ These award only a NEGATIVE delta, so repeating them costs the player -- not far
 | HandleBosmerOldContractProperHunt | called-fn-gate |
 | HandleBosmerPactPositiveSignal | own-handler-gate |
 | HandleBosmerSleepEvents | called-fn-gate |
+| HandleBretonActionPracticeSignal | called-fn-gate |
 | HandleBretonGreenWayStanding | own-handler-gate |
 | HandleBretonHiddenArtExposure | own-handler-gate |
 | HandleBretonKnightlyVow | own-handler-gate |
+| HandleBretonQuestTagPracticeSignal | called-fn-gate |
 | HandleBretonSleepEvents | own-handler-gate |
+| HandleBretonTraditionChoice | called-fn-gate |
 | HandleCurseStateRefresh | called-fn-gate |
 | HandleCurseStateTransition | called-fn-gate |
 | HandleDaedricPrinceSignal | called-fn-gate |
 | HandleDunmerClumsyCrime | own-handler-gate |
 | HandleDunmerDeviationPrice | own-handler-gate |
 | HandleDunmerOutdoorGoodDaedraShrine | called-fn-gate |
-| HandleDunmerPlayerHomeBonus | own-handler-gate |
 | HandleDunmerPortableShrinePrayer | own-handler-gate |
 | HandleDunmerReclamationFocus | own-handler-gate |
 | HandleDunmerSleepEvents | called-fn-gate |
+| HandleGreenPactViolation | called-fn-gate |
+| HandleHircineHuntRite | own-handler-gate |
 | HandleHoonDingBreakthroughKill | own-handler-gate |
 | HandleImperialCivicService | own-handler-gate |
 | HandleImperialPatronCivicFavor | own-handler-gate |
-| HandleImperialSleepEvents | own-handler-gate |
 | HandleImperialTalosPressure | own-handler-gate |
 | HandleKhajiitAlkoshDragonOrder | called-fn-gate |
 | HandleKhajiitAlkoshNamedDragon | called-fn-gate |
@@ -106,16 +111,14 @@ These award only a NEGATIVE delta, so repeating them costs the player -- not far
 | HandleKhajiitBaanDarRoadTrick | called-fn-gate |
 | HandleKhajiitFocusedSource | called-fn-gate |
 | HandleKhajiitFocusedSourceForFocus | called-fn-gate |
-| HandleKhajiitMoonObservance | own-handler-gate |
+| HandleKhajiitKhenarthiCaravanAid | own-handler-gate |
 | HandleKhajiitRajhinElegantTheft | called-fn-gate |
-| HandleKhajiitRoadHome | called-fn-gate |
-| HandleKhajiitRoadHomeAnchor | own-handler-gate |
-| HandleNordAncestorSpine | own-handler-gate |
+| HandleKhajiitRajhinLegendMade | own-handler-gate |
+| HandleKhajiitRoadHome | own-handler-gate |
+| HandleMephalaWebWoven | own-handler-gate |
 | HandleNordHircineArkayEdge | called-fn-gate |
 | HandleNordKyneTalosContext | called-fn-gate |
-| HandleNordLocationChange | own-handler-gate |
 | HandleNordOldWaysState | called-fn-gate |
-| HandleNordSleepEvents | own-handler-gate |
 | HandleOrcBloodKinCrisis | called-fn-gate |
 | HandleOrcCityDignity | own-handler-gate |
 | HandleOrcFourHoldsVisit | own-handler-gate |
@@ -126,6 +129,8 @@ These award only a NEGATIVE delta, so repeating them costs the player -- not far
 | HandleOrcSleepEvents | own-handler-gate |
 | HandleOrcStrongholdForge | own-handler-gate |
 | HandleOrcStrongholdPresence | own-handler-gate |
+| HandlePaarthurnaxKill | own-handler-gate |
+| HandlePaarthurnaxSpare | own-handler-gate |
 | HandlePlayerBelowHealthGate | called-fn-gate |
 | HandlePlayerBelowHealthSurvived | called-fn-gate |
 | HandlePlayerSleepStop | called-fn-gate |
@@ -142,17 +147,22 @@ These award only a NEGATIVE delta, so repeating them costs the player -- not far
 | HandleStateTransitionConfirmationRite | called-fn-gate |
 | HandleTalosBetrayal | own-handler-gate |
 | HandleTalosShrineDefiance | own-handler-gate |
+| HandleUndeadCryptSiteClear | own-handler-gate |
 | HandleWayfarerAkatoshLevel | own-handler-gate |
 | TryAltmerDisciplinesRite | caller-gate (thin emit-wrapper; every caller capped) |
 | TryArgonianBedOfChoiceSleep | called-fn-gate |
+| TryArgonianEldergleamInterior | called-fn-gate |
 | TryArgonianNearWaterMaintenance | own-handler-gate |
 | TryArgonianSithisNearDeathBurst | own-handler-gate |
 | TryAwardAltmerMagicMilestone | own-handler-gate |
+| TryAwardBosmerYffreGreenSite | own-handler-gate |
+| TryAwardBosmerYffreLocationSite | called-fn-gate |
 | TryAwardDunmerTwilightWindowSignal | own-handler-gate |
 | TryBosmerBaanDarGap | own-handler-gate |
 | TryBosmerEldergleamInterior | called-fn-gate |
 | TryBosmerGildergreenProximity | called-fn-gate |
 | TryBosmerHearthSleep | called-fn-gate |
+| TryBosmerYffreTreeStoneProximity | called-fn-gate |
 | TryCCFishingDevotion | own-handler-gate |
 | TryOrcCodeHolds | own-handler-gate |
 | TryOrcTrialOfIron | caller-gate (thin emit-wrapper; every caller capped) |

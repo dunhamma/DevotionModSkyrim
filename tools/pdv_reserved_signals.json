@@ -175,5 +175,20 @@
     "reason": "Same Syrabane signature-lane class: declared+scored, no dispatch. Wave 3.",
     "deferredBy": "main-merge dispatch-coverage sweep",
     "date": "2026-07-12"
+  },
+  "PDV_AuriEl.SIGNAL_ANCESTOR_SPINE": {
+    "reason": "Superseded 2026-07-13: Altmer substrate credit is deity-neutral and passive dawn cannot invent Auri-El piety. Retained only as a compatibility constant/score arm pending a later dead-code removal pass.",
+    "deferredBy": "pantheon parity and substrate pacing implementation",
+    "date": "2026-07-13"
+  },
+  "PDV_Shor.SIGNAL_ANCESTOR_SPINE": {
+    "reason": "Superseded 2026-07-13: Nord hearth/sky substrate credit is deity-neutral; active-baseline acts award deity piety only through their authentic god lane. Retained as compatibility code pending dead-code removal.",
+    "deferredBy": "pantheon parity and substrate pacing implementation",
+    "date": "2026-07-13"
+  },
+  "PDV_Talos.SIGNAL_ANCESTOR_SPINE": {
+    "reason": "Superseded 2026-07-13: Imperial civic substrate credit no longer grants a universal Talos pulse. Talos enters broad worship only after explicit stance, prayer, or defiance unlock. Retained as compatibility code pending dead-code removal.",
+    "deferredBy": "pantheon parity and substrate pacing implementation",
+    "date": "2026-07-13"
   }
 }

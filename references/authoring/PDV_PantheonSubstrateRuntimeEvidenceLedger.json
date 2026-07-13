@@ -1,0 +1,50 @@
+{
+  "schema": "pdv.pantheon-substrate-runtime-evidence.v2",
+  "updatedAtLocal": "2026-07-14T03:00:00+10:00",
+  "authority": "references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md#pantheonsubstrate-adversarial-addendum-2026-07-14",
+  "proofBoundary": "Static and direct record readback do not fill runtimeRoute or manualDisplay. Controlled MCM proof does not fill organicRoute.",
+  "evidencePolicy": {
+    "passingStatus": "PASS",
+    "allowedStatuses": ["OPEN", "PASS", "FAIL", "BLOCKED", "NOT_REQUIRED"],
+    "passRequirements": "Every required bucket must be PASS and contain a concrete observedAtLocal timestamp plus at least one existing evidenceRefs file. Images may stand alone; logs and text must use file#locator, and that line number or marker must exist in the referenced file.",
+    "referenceExamples": [
+      "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log#line-or-unique-marker",
+      "references/authoring/evidence/pantheon-substrate/PS-A5-imperial-25.png",
+      "PDV_PantheonSubstrate_CoTest_2026-07-14.md#PS-A11"
+    ]
+  },
+  "machineProof": {
+    "capturedAtLocal": "2026-07-14T02:28:45+10:00",
+    "signalE2E": "PASS 39/39 GREEN",
+    "substratePacing": "PASS 105/105 including explicit MCM test-origin application",
+    "broadPantheon": "PASS 88/88",
+    "pantheonRecordReadback": "PASS 81/81 direct houseCARL",
+    "pantheonPresentationReadback": "PASS 81/81 direct houseCARL",
+    "p2ReceiverReadback": "PASS exact FormLists, source membership, and alias VMAD",
+    "papyrusCompile": "PASS manager and MCM 0 errors, 0 warnings",
+    "verifier": "PASS 4147, WARN 0, FAIL 0",
+    "integrityHarness": "PASS; substrate 105/105, broad 88/88, record 81/81, presentation 81/81",
+    "prismaUi": "PASS 107/107",
+    "prismaToOneOh": "PASS 75/75",
+    "bookOfDays": "PASS 126/126",
+    "toastFallback": "PASS 26/26",
+    "endStateGate": "11 PASS, 1 STALE, 8 RED; remaining RED/STALE rows are existing runtime, compatibility, placement, Requiem, tuning, and unrelated dislike-overlay gates",
+    "livePreflight": "PASS 2026-07-14 02:42 local: Skyrim 1.6.1170 launched through Devotion Dev; fresh Papyrus and PrismaUI logs opened; save not yet loaded, so no runtime card credited",
+    "runtimePromotion": "OPEN; PS-A1 through PS-A12 are not credited by machine proof"
+  },
+  "requiredCards": 12,
+  "cards": [
+    { "id": "PS-A1", "title": "Reserved-zero day stamps and first dawn", "requiredBuckets": ["runtimeRoute", "organicRoute", "saveLoad"], "runtimeRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "organicRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "manualDisplay": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "saveLoad": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "notes": "" },
+    { "id": "PS-A2", "title": "Dunmer paired home prayer", "requiredBuckets": ["runtimeRoute", "organicRoute", "manualDisplay"], "runtimeRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "organicRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "manualDisplay": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "saveLoad": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "notes": "" },
+    { "id": "PS-A3", "title": "Argonian water and sap dual truth", "requiredBuckets": ["runtimeRoute", "organicRoute", "manualDisplay"], "runtimeRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "organicRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "manualDisplay": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "saveLoad": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "notes": "" },
+    { "id": "PS-A4", "title": "Multi-deity event aggregation", "requiredBuckets": ["runtimeRoute", "organicRoute", "manualDisplay"], "runtimeRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "organicRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "manualDisplay": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "saveLoad": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "notes": "" },
+    { "id": "PS-A5", "title": "Broad panel and cold Book below threshold", "requiredBuckets": ["manualDisplay"], "runtimeRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "organicRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "manualDisplay": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "saveLoad": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "notes": "" },
+    { "id": "PS-A6", "title": "Focused suspension presentation", "requiredBuckets": ["runtimeRoute", "manualDisplay"], "runtimeRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "organicRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "manualDisplay": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "saveLoad": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "notes": "" },
+    { "id": "PS-A7", "title": "Imperial vampire full halt", "requiredBuckets": ["runtimeRoute", "organicRoute", "manualDisplay", "saveLoad"], "runtimeRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "organicRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "manualDisplay": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "saveLoad": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "notes": "" },
+    { "id": "PS-A8", "title": "Stale pending offer", "requiredBuckets": ["runtimeRoute", "manualDisplay"], "runtimeRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "organicRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "manualDisplay": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "saveLoad": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "notes": "" },
+    { "id": "PS-A9", "title": "Argonian panel separation", "requiredBuckets": ["manualDisplay"], "runtimeRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "organicRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "manualDisplay": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "saveLoad": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "notes": "" },
+    { "id": "PS-A10", "title": "Exact substrate copy", "requiredBuckets": ["runtimeRoute", "organicRoute", "manualDisplay"], "runtimeRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "organicRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "manualDisplay": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "saveLoad": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "notes": "" },
+    { "id": "PS-A11", "title": "Broad decay catch-up", "requiredBuckets": ["runtimeRoute", "saveLoad"], "runtimeRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "organicRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "manualDisplay": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "saveLoad": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "notes": "" },
+    { "id": "PS-A12", "title": "Argonian zero/one Book boundary", "requiredBuckets": ["runtimeRoute", "organicRoute", "manualDisplay"], "runtimeRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "organicRoute": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "manualDisplay": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "saveLoad": { "status": "OPEN", "observedAtLocal": "", "evidenceRefs": [], "notes": "" }, "notes": "" }
+  ]
+}

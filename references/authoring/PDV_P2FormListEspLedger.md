@@ -1,6 +1,6 @@
 # PDV P2 FormList ESP-Truth Ledger
 
-**Generated:** 2026-07-12 by `tools/pdv_p2_formlist_esp_audit.mjs` (reads the deployed Devotion.esp via mutagen-bridge.exe)
+**Generated:** 2026-07-13 by `tools/pdv_p2_formlist_esp_audit.mjs` (reads the deployed Devotion.esp via mutagen-bridge.exe)
 
 This audit is the server-independent counterpart to `pdv_signal_e2e_gate.mjs`. It reads the true FormList population (`Items` field) straight from `Devotion.esp` and fails on empty-but-routed lists, on ledger drift (a ledger calls a surface shell/unverified while the ESP proves it populated), and on manifest approved fills missing from the live ESP.
 
@@ -8,14 +8,8 @@ This audit is the server-independent counterpart to `pdv_signal_e2e_gate.mjs`. I
 
 - P2 receivers audited: **39**
 - Populated: **39** | Empty: **0** | Missing FLST record: **0**
-- FAIL rows: **0** | WARN rows: **1**
+- FAIL rows: **0** | WARN rows: **0**
 - ledger-drift (shell claim vs populated ESP): **0** | empty-routed: **0** | fill-missing: **0**
-
-## Findings
-
-| Level | Property | Race | Kind | Detail |
-|---|---|---|---|---|
-| WARN | `PDV_FLST_P2_KhajiitFocusedSources` | Khajiit | esp-undeclared | ESP holds 1 item(s) beyond the 3 manifest-declared approved fill(s). |
 
 ## Full per-receiver table
 
@@ -26,7 +20,7 @@ This audit is the server-independent counterpart to `pdv_signal_e2e_gate.mjs`. I
 | `PDV_FLST_P2_AltmerMagnusSources` | Altmer | yes | 2 | 2 | 0 | 0 | GREEN | no | OK |
 | `PDV_FLST_P2_AltmerXarxesSources` | Altmer | yes | 3 | 3 | 0 | 0 | GREEN | no | OK |
 | `PDV_FLST_P2_ArgonianCommunitySources` | Argonian | yes | 3 | 3 | 0 | 0 | GREEN | no | OK |
-| `PDV_FLST_P2_ArgonianHistSources` | Argonian | yes | 5 | 5 | 0 | 0 | GREEN | no | OK |
+| `PDV_FLST_P2_ArgonianHistSources` | Argonian | yes | 4 | 4 | 0 | 0 | GREEN | no | OK |
 | `PDV_FLST_P2_ArgonianSithisSources` | Argonian | yes | 4 | 4 | 0 | 0 | GREEN | no | OK |
 | `PDV_FLST_P2_BosmerBaanDarSources` | Bosmer | yes | 2 | 2 | 0 | 0 | GREEN | no | OK |
 | `PDV_FLST_P2_BosmerYffreSources` | Bosmer | yes | 1 | 1 | 0 | 0 | GREEN | no | OK |
@@ -50,7 +44,7 @@ This audit is the server-independent counterpart to `pdv_signal_e2e_gate.mjs`. I
 | `PDV_FLST_P2_ImperialPrivateTalosSources` | Imperial | yes | 1 | 1 | 0 | 0 | GREEN | no | OK |
 | `PDV_FLST_P2_ImperialPublicServiceSources` | Imperial | yes | 1 | 1 | 0 | 0 | GREEN | no | OK |
 | `PDV_FLST_P2_ImperialPublicTalosSources` | Imperial | yes | 1 | 1 | 0 | 0 | GREEN | no | OK |
-| `PDV_FLST_P2_KhajiitFocusedSources` | Khajiit | yes | 4 | 3 | 0 | 1 | GREEN | no | WARN |
+| `PDV_FLST_P2_KhajiitFocusedSources` | Khajiit | yes | 3 | 3 | 0 | 0 | GREEN | no | OK |
 | `PDV_FLST_P2_KhajiitLunarSources` | Khajiit | yes | 5 | 5 | 0 | 0 | GREEN | no | OK |
 | `PDV_FLST_P2_NordHircineArkaySources` | Nord | yes | 1 | 1 | 0 | 0 | GREEN | no | OK |
 | `PDV_FLST_P2_NordKyneTalosSources` | Nord | yes | 1 | 1 | 0 | 0 | GREEN | no | OK |

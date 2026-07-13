@@ -164,6 +164,12 @@ Function HandleStoryKillActor(ObjectReference akVictim, ObjectReference akKiller
     RouteActionWithAttribution(eventType, ATTR_DIRECT_PLAYER, killerActor as Form, victimActor as Form)
     if PDV_Manager
         PDV_Manager.HandleArgonianShadowscaleKill(playerActor)
+        if eventType == EVT_KILLED_HOSTILE_HUMANOID_IN_COMBAT && aiCrimeStatus == 0 && aiRelationshipRank <= -2
+            ; Story Manager contributes the hostile/non-murder half only. The
+            ; player-alias kill receiver must independently contribute direct
+            ; kill plus clean-opener evidence before the substrate can fire.
+            PDV_Manager.RecordDunmerStoryVictoryEvidence(victimActor as Form, aiRelationshipRank)
+        endIf
         PDV_Manager.HandleHoonDingBreakthroughKill(victimActor as Form, eventType)
         ; A UNIQUE (named/boss) undead defeat is the marked Ash'abah death-burden that
         ; lets a Redguard switch INTO the Ash'abah sect mid-game (origin/undead/Unique
@@ -415,6 +421,8 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
         Trace(1, "RouteAction skipped: PDV_FLST_AllDeities not assigned.")
         return
     endIf
+
+    PDV_Manager.HandleSubstrateActionEvent(eventType, GetEventReason(eventType))
 
     Int i = 0
     Int count = PDV_FLST_AllDeities.GetSize()

@@ -407,6 +407,14 @@ Function ClearAllBoons()
 EndFunction
 
 Bool Function ShouldSyncLegacyPatronBoons()
+    ; The manager exclusively owns Nord/Imperial focused rewards. Their T1
+    ; records remain installed compatibility artifacts but are never granted.
+    if PDV_GLO_OriginRace
+        Int originRace = PDV_GLO_OriginRace.GetValueInt()
+        if originRace == RACE_NORD || originRace == RACE_IMPERIAL
+            return False
+        endIf
+    endIf
     return True
 EndFunction
 

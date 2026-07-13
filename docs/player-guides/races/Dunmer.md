@@ -8,6 +8,13 @@ Above the ancestors stand the Reclamations - Azura, Boethiah, and Mephala. These
 
 You make no starting choice as a Dunmer. The layers are simply how your people believe. What unfolds over a playthrough is which Reclamation, if any, comes to claim you as their own.
 
+Ancestor practice grows deliberately: only the first authentic practice after
+each 06:00 dawn advances the cultural layer. A portable ash prayer, a twilight
+rite for the Good Daedra, an honorable victory, or an exact ancestor duty can
+count. Praying at home remains meaningful, but home presence does not add a
+second award and the rite does not automatically belong to Azura. This cultural
+standing does not passively decay.
+
 ## Your Gods
 
 Your devotion has two faces: the ever-present ancestors, and the three Reclamations above them.
@@ -46,9 +53,9 @@ Dunmer devotion is fed from two streams: quiet ancestor upkeep, and pointed acts
 
 **Keeping the ancestors:**
 
-- **Ash-prayer in exile.** Performing your portable ash-prayer - the diaspora rite a Dunmer carries when there is no tomb to visit - is the core maintenance of the ancestor bond. `[WIRED: the ancestral urn is a usable MISC granted to Dunmer (EnsureDunmerAncestralUrn -> PDV_MISC_DunmerAncestralUrn). Equip/use it from the inventory and PDV_DunmerAncestralUrn.OnEquipped -> RouteDunmerPortableShrinePrayer -> HandleDunmerPortableShrinePrayer: feeds the ancestor substrate (PrayerDelta 5.0, silenced under vampirism) AND fires Azura SIGNAL_ANCESTOR_SPINE +1.0. If a Reclamation is your active patron it also banks the ancestor-memory pulse +1.0 (once/dawn), and inside the dawn/dusk window it also fires the twilight rite - see below.]`
-- **Honor the hearth.** Performing your ancestor rite at home or a private shrine deepens the bond further and brings the dead closer. `[PARTIAL: not a separate act - using the urn while standing in your declared ancestor-home cell adds the bigger home step (HandleDunmerPlayerHomeBonus, HomeBonusDelta 8.0) and arms the once-per-day near-death "ancestor watch" save until dawn. You declare a home by sleeping in an interior and accepting PDV_MESG_DunmerMarkHome (HandleDunmerSleepEvents on OnSleepStop); moving homes needs 3 sleeps in the new cell.]`
-- **Stand with your people.** Solidarity with other Dunmer in the diaspora, and honorable victories the ancestors can be proud of, feed the always-present layer. `[STUB/INERT: there is NO organic "Dunmer solidarity" hook and NO organic "honorable victory" hook. Boethiah's SIGNAL_HONORABLE_DUEL (2002) has no caller anywhere. The only organic feed for "victories" is Boethiah's generic-combat CSV rows (kill-hostile-humanoid (2) +0.25, kill-hostile-beast (1) +0.25), which fire on any kill for a native Dunmer - not solidarity-specific.]`
+- **Ash-prayer in exile.** Performing your portable ash-prayer - the diaspora rite a Dunmer carries when there is no tomb to visit - is the core maintenance of the ancestor bond. `[WIRED: equip/use the ancestral urn to route the portable prayer. The first authentic Dunmer practice after each 06:00 dawn claims the shared +4 substrate credit. The act supplies one context-appropriate Reclamation piety consequence; home presence never duplicates it. A dawn/dusk prayer may instead carry Azura's twilight rite.]`
+- **Honor the hearth.** Performing your ancestor rite at home or a private shrine brings the dead closer and may arm ancestor-watch texture. Home context never adds a second cultural award or a second deity pulse.
+- **Stand with your people.** Exact diaspora-solidarity sources and honorable victories the ancestors can be proud of may claim the cultural day. `[PARTIAL/WIRED: honorable victory requires a direct player kill of an existing enemy (relationship rank <= -2), victim level at least the player's, crime status 0, and a combat session whose opener and duration were never stealthy. Ambiguous or player-provoked fights stay silent. Diaspora solidarity remains limited to curated exact sources rather than generic proximity.]`
 
 **Pleasing a Reclamation** (the real path to Champion - curated, meaningful acts, not generic crime or combat):
 
@@ -120,15 +127,15 @@ Caveat: all day-to-day CSV rows in the gain/loss sections above are live only if
 
 Discrepancies between what the guide/design promises and what actually fires (for owner triage):
 
-- **The ancestor layer is genuinely wired.** The ash-prayer urn (`PDV_MISC_DunmerAncestralUrn`, granted by `EnsureDunmerAncestralUrn`) fires organically on `OnEquipped` -> `RouteDunmerPortableShrinePrayer` -> `HandleDunmerPortableShrinePrayer`, feeding the substrate + Azura `SIGNAL_ANCESTOR_SPINE` (+1.0). The dev-only activator routes (`ROUTE_DUNMER_PORTABLE_SHRINE` / `ROUTE_DUNMER_HOME_BONUS` in `PDV_EventSignalActivator`) and the debug MCM (`DebugRecordDunmerAncestorPrayer`) are backups, NOT the organic path. This is the marquee identity and it works.
-- **The home rite is not a separate act.** It fires only when you ash-pray *inside your declared ancestor-home cell* (`IsPlayerAtDunmerDeclaredHome`). You declare a home by accepting `PDV_MESG_DunmerMarkHome` on sleep (`HandleDunmerSleepEvents`). The reward is the bigger home step plus the once-per-day near-death "ancestor watch" save (armed to dawn).
-- **"Stand with your people" is the weakest promise.** No Dunmer-solidarity hook and no honorable-victory hook exist. `SIGNAL_HONORABLE_DUEL` (2002) and `SIGNAL_WEB_WOVEN` (2102) have NO callers anywhere = dead signals. The only organic "victory" credit is Boethiah's generic kill-hostile CSV rows.
+- **The ancestor layer is genuinely wired.** The ash-prayer urn fires organically through the portable-prayer handler into the shared daily substrate helper. Development activators and the debug MCM are backups, not the organic path. This is the marquee identity and it works.
+- **The home rite is not a separate act.** It fires only when you ash-pray inside your declared ancestor-home cell. Home presence can arm the once-per-day near-death ancestor watch until dawn, but it adds no second metric credit or piety pulse.
+- **Honorable victory is deliberately strict.** A direct player kill of a previously hostile foe at least the player's level may count only when the kill is non-murderous and not delivered from stealth; ordinary or ambiguous kills stay silent.
 - **The Reclamation curated signals are focus-emergence, not gameplay beats.** `SIGNAL_RIGHTEOUS_STRUGGLE` (Boethiah +3.0), `SIGNAL_SECRET_KEPT` (Mephala +3.0), and Azura `SIGNAL_THRESHOLD_RITE` (+1.5) fire from `AwardDunmerReclamationFocusSignal`, whose only organic inputs are curated *book reads* (`PDV_FLST_P2_Dunmer*Sources`) and three DA quest stages (DA01 s100 Azura, DA02 s100 Boethiah, DA08 s60 Mephala). There is no "win a desperate struggle" or "keep a secret" runtime detector; the prose acts (surviving against the odds, overthrowing corrupt authority, protecting a hidden community, weaving a network) are **not** organically hooked.
-- **The only always-repeatable curated Reclamation feed is the ancestor-memory pulse.** While a Reclamation is your active patron, each ash-prayer/home rite banks that god's `SHARED_PACT_MEMORY`/`MOON_OBSERVANCE` +1.0 once per dawn (`AwardActiveDunmerReclamationMemorySignal`). Day-to-day Reclamation progress otherwise leans on the generic native-gated CSV like-rows.
+- **Reclamation piety stays act-specific.** A prayer, twilight rite, altar, book, or exact quest can carry one matching deity consequence. The home layer never invents an additional pulse.
 - **Twilight rite is dawn/dusk-gated.** Azura `SIGNAL_DUNMER_TWILIGHT_RITE` (+0.25) fires only when you ash-pray in the 06:00-09:00 or 18:00-21:00 window (once per window/day). `HandleDunmerOutdoorGoodDaedraShrine` is the Solstheim outdoor-altar entry point but reuses the same window gate.
 - **The deviation loss is narrow.** `HandleDunmerDeviationPrice` (RECLAMATION_ABANDONED -6.0 / Azura DESECRATION -2.5) fires organically only from the DA01 Black Star defiance stage, the deviation book FormList, and a post-deviation home-sleep. Generic foreign-artifact equipping does not route it - and for Boethiah/Mephala, accepting a Daedric artifact (368) is a positive +1.5 CSV like. The guide should not imply ordinary Prince-dealing auto-penalizes.
 - **The neglect spell is a curse consequence, not idle distance.** `IsDunmerAncestorNeglected()` is true only under vampire (posture 2) or werewolf (posture 1). The ancestor layer truly never decays; the "magicka mends slowly" penalty is the curse posture (layer-1 weight 0 under vampire), not a distance penalty.
-- **Prime remap targets:** the four dead curated Reclamation-gameplay signals (2001/2002/2101/2102 fired only via focus-emergence or not at all), the missing solidarity/honorable-victory hooks, and the inert clumsy-crime (`SIGNAL_SECRET_BETRAYED`) penalty.
+- **Prime remap targets:** the remaining dead curated Reclamation-gameplay signals (2001/2101/2102 fired only via focus-emergence or not at all), broader organic solidarity, and the inert clumsy-crime (`SIGNAL_SECRET_BETRAYED`) penalty. Honorable victory itself is now wired through the strict two-source provenance gate above.
 
 <!-- END REVIEW SCAFFOLDING -->
 

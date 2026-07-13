@@ -6,7 +6,7 @@
 
 ## Who They Worship
 
-Nords live between two overlapping pantheons — the **Old Ways** (Shor, Kyne, Tsun, Stuhn, Mara, Talos) and the **Nine Divines** (the Imperial pantheon adopted alongside their own). In practice, most Nords blend both traditions freely. A Nord might honor Kyne on the mountain and Arkay at a funeral without feeling any contradiction.
+Nords live between two overlapping pantheons — the **Old Ways** (Kyne, Shor, Tsun, Stuhn, Mara, Orkey, Dibella, Talos) and the **Nine Divines** (Akatosh, Arkay, Dibella, Julianos, Kynareth, Mara, Stendarr, Zenithar, Talos). In practice, most Nords recognize both traditions, but only one broad baseline is active at a time.
 
 What makes Nordic worship distinctive is that it's *earned* rather than declared. The gods watch. When a Nord lives in a way that catches a god's attention, that god reaches back.
 

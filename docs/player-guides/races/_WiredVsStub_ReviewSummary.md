@@ -33,7 +33,7 @@ claims below were re-confirmed directly against `live-source` callers.
    ancestor sleep) and **promoted quest-matrix rows**. The curated lanes are the
    prime remap target.
 
-2. **"Native day-to-day" is the reliable spine.** Across every race the
+2. **"Native day-to-day" is the reliable backbone.** Across every race the
    `PDV_DeityLikesDislikes.csv` rows fire organically (native-gated via
    `ScoreFromTable`/`IsRaceNativeForPlayer`). These are correct and carry the real
    moment-to-moment economy - but they are generic (kill/craft/sleep/read), which
@@ -46,13 +46,13 @@ claims below were re-confirmed directly against `live-source` callers.
    sect / hold coherence" often cannot actually reset the timer through the acts
    the copy names.
 
-4. **Copy inversions (guide says the opposite of the code).**
-   - Argonian: guide says "ordinary swimming does not count" for Hist water, but
-     `IsSwimming()` is the ONLY wired near-water trigger (no shore-rest hook).
+4. **Historical copy inversions (superseded by the 2026-07-13 pacing contract).**
+   - Argonian: the old one-second swimming gate is retired. Sustained exterior
+     swimming and exact sacred-water reflection now own the water routes.
    - Altmer: guide says "observe the dawn," but the dawn/coherence pulse fires
      from sacred **book reads**, not from time-of-day (the dawn route is dev-only).
-   - Khajiit: neglect copy says "return to the road," but road-life is STUB - only
-     lunar-book observance + curated theft/dragon/reversal beats reset neglect.
+   - Khajiit: road life is now wired through any completed outdoor rest, and the
+     real `Observe the Moons` power owns organic observance. Anchors stay retired.
    - Dunmer: guide frames foreign Daedric-artifact use as deviation, but equipping
      a Daedric artifact is a *positive* CSV like for Boethiah/Mephala.
 
@@ -61,7 +61,7 @@ claims below were re-confirmed directly against `live-source` callers.
      only ever SET to 100 and never lowered -> the whole mechanic is INERT.
    - Altmer `ResolveAltmerCrisis()` is defined but never called (no scored crisis
      resolution).
-   - Nord `HandleNordAncestorSpine` is defined with no caller (dead code).
+   - The legacy Nord substrate handler was defined with no caller (dead code at review time).
    - Dunmer `SIGNAL_SECRET_BETRAYED` / `HandleDunmerClumsyCrime`, `SIGNAL_HONORABLE_DUEL`
      (Boethiah 2002, Leki 2602/2002), `SIGNAL_WEB_WOVEN` - defined, no caller.
    - Orc `SIGNAL_BLOOD_KIN`, `SIGNAL_EXILE_RETURN`, `RouteOrcStrongholdForge`,
@@ -123,9 +123,9 @@ Real earns: sleep-outdoors + CSV rows; combat/theft/dragon/reversal (PARTIAL org
 | Forebear | road on foot / honest contract | S | activator 07102C dev-only | |
 | Crown/Forebear | In My Time of Need (MS08) | I | stage routes present but P2 source FormLists unfilled | fill MS08 stage sources |
 | Tu'whacca | vampire-cure re-entry reward | I | SIGNAL_VAMPIRE_REENTRY flag set, never consumed | |
-| Satakal/Ruptga/Tava/Onsi | background spine | I | no CSV/curated/matrix rows (by design) | "Tava blesses passage" has no mechanic |
+| Satakal/Ruptga/Tava/Onsi | background foundation | I | no CSV/curated/matrix rows (by design) | "Tava blesses passage" has no mechanic |
 
-Real earns: undead kills + named-undead kill event, ancestor-spine book (1 book), ancestral-rest sleep, CSV, dislikes; PARTIAL: draugr-tomb clear, necromancer, HoonDing make-way (patron-gated), Leki sword.
+Real earns: undead kills + named-undead kill event, ancestor book (1 book), ancestral-rest sleep, CSV, dislikes; PARTIAL: draugr-tomb clear, necromancer, HoonDing make-way (patron-gated), Leki sword.
 
 ### Nord (Old Ways / Nine Divines, emergent offer)
 
@@ -138,7 +138,7 @@ Real earns: undead kills + named-undead kill event, ancestor-spine book (1 book)
 | Hircine | werewolf hunt-rite gain | S | HandleHircineHuntRite dev-only/MCM (curse penalties DO fire) | |
 | Kyne+ | neglect debuffs | P | all neglect spells gated to `_activeDeity == god` | broad worshipper feels nothing |
 | Kyne/Talos | shout USE | P | property-based DELTA_SHOUT_ATTACK; CSV row 40 "NOT read" | other gods get nothing |
-| Shor | HandleNordAncestorSpine | I | defined, no caller (dead code) | prune or wire |
+| Shor | legacy Nord substrate handler | I | defined, no caller (dead code at review time) | prune or wire |
 
 ### Argonian (3 layers: Hist / People / Void)
 
@@ -187,7 +187,7 @@ WIRED: all 8 non-Talos Divines day-to-day CSV; civic neglect timer; vampire civi
 | system | crisis "reassert" resolution | I | ResolveAltmerCrisis() never called | crisis is a label + discipline fade |
 | system | ThalmorAlignment | P | track (not piety); orthodox-pole movers no organic caller | can only slide heterodox organically |
 
-WIRED: sacred Auri-El/Magnus/Xarxes book reads (dawn/scholarship/lineage pulses), CSV, magic-skill milestones (Magnus), ancestor spine; QUEST: Lorkhan/crisis MQ104 s160 / MQ304 s200 / C03 s200.
+WIRED: sacred Auri-El/Magnus/Xarxes book reads (dawn/scholarship/lineage pulses), CSV, magic-skill milestones (Magnus), heritage substrate; QUEST: Lorkhan/crisis MQ104 s160 / MQ304 s200 / C03 s200.
 
 ### Breton (3 traditions: Knight's Road / Hidden Art / Green Way)
 
@@ -200,7 +200,7 @@ WIRED: sacred Auri-El/Magnus/Xarxes book reads (dawn/scholarship/lineage pulses)
 | Hidden Art | Daedric-shrine use / Vigilant-caught exposure | S | no wired exposure input beyond books/spells | unbuilt exposure sources |
 | Green Way | werewolf Druidic Trial choice | P | auto-flips to WEREWOLF (no menu); BETRAYED branch never set | choice scene unbuilt |
 
-WIRED: Hidden Art forbidden books (OnBookRead) + spells (OnSpellLearned) + exposure, Green Way curated harvests (Spriggan/Nirnroot), Knight's Road vow lane (2 quests), CSV, Magnus ancestor spine. Breton has 0 dev-only activators.
+WIRED: Hidden Art forbidden books (OnBookRead) + spells (OnSpellLearned) + exposure, Green Way curated harvests (Spriggan/Nirnroot), Knight's Road vow lane (2 quests), CSV, inherited ward substrate. Breton has 0 dev-only activators.
 
 ### Orc (mono Malacath x 3 life-modes)
 
@@ -213,7 +213,7 @@ WIRED: Hidden Art forbidden books (OnBookRead) + spells (OnSpellLearned) + expos
 | Legion/Exile | completed service / endurance | Q/S | CW02A s200 + CW finale s500; else dev-only 071029 | endurance not wired |
 | all | oath-break loss (self-erasure) | S | RouteOrcOathBreak dev-only only | absent entirely |
 
-WIRED: generic smithing (CSV via HandleStoryCraftItem), kills, rest/inn, dislikes, four-holds location visit + ancestor spine, book-based broad conduct (PARTIAL), DA06 matrix milestone, neglect timer. Mode x1.00/0.75/0.60 lives in reward calendars, not per-act.
+WIRED: generic smithing (CSV via HandleStoryCraftItem), kills, rest/inn, dislikes, four-holds location visit + cultural substrate, book-based broad conduct (PARTIAL), DA06 matrix milestone, neglect timer. Mode x1.00/0.75/0.60 lives in reward calendars, not per-act.
 
 ---
 
@@ -229,7 +229,7 @@ WIRED: generic smithing (CSV via HandleStoryCraftItem), kills, rest/inn, dislike
    - Dunmer honorable-duel / web-woven / secret-kept gameplay signals.
    - Altmer orthodox-costly-enforcement + extra Lorkhan tiers (07101F-071022).
 2. **Advertised mechanics that are dead code** - Breton KnightlyVowIntegrity
-   degradation, Altmer ResolveAltmerCrisis, Nord HandleNordAncestorSpine,
+   degradation, Altmer ResolveAltmerCrisis, the Nord substrate handler,
    Dunmer/Redguard/Orc no-caller SIGNAL_* constants.
 3. **"Community / people / caravan" layers with no generic hook** - Argonian People,
    Khajiit caravans, Dunmer solidarity, Nord hold/hearth (all quest-or-nothing).
@@ -248,6 +248,6 @@ sleep open-sky/inn, read skill/lore/spell books, learn word-of-power, heal/cure,
 theft/lockpick/trespass, harvest, discover-location, raise-undead/murder/assault
 dislikes), native-gated. Plus real hooks: Bosmer food + green-song; Argonian
 bed-of-choice + sap + near-water; Dunmer ash-urn + home rite; Altmer/Breton/Redguard/
-Orc/Dunmer/Nord ancestor-spine sleep; Altmer + Breton + Dunmer + Imperial + Orc book
+Orc/Dunmer/Nord substrate sleep; Altmer + Breton + Dunmer + Imperial + Orc book
 routes; Orc four-holds + Nord/Orc location handlers; and promoted quest-matrix rows
 per god.
