@@ -361,9 +361,9 @@
           "effectName": "Block"
         },
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 5,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 15,
+          "effectName": "Fortify Stamina"
         },
         {
           "magicEffectEditorId": "PDV_MGEF_Orc_LegionExile_T3_Armor",
@@ -372,7 +372,7 @@
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "You carried the burden of service and exile and came back unbroken. One-Handed +23, Block +20, Stamina Regeneration +5%, Armor +50.",
+      "playerFacingText": "You carried the burden of service and exile and came back unbroken. One-Handed +23, Block +20, Fortify Stamina +15, Armor +50.",
       "signature": "Legion/Exile life at its highest: foreign discipline that kept the code, and a return earned by completed service. EQUAL felt value to Stronghold T3 (sharper situational, not a failed Stronghold). Champion Survey text is the V1 recognition surface."
     }
   ],

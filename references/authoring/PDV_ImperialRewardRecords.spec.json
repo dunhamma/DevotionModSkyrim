@@ -157,9 +157,9 @@
       "script": "PDV_Deity_Arkay",
       "gainTrack": "PDV_RepTrack_ConcordatStanding",
       "gainMultipliers": [
-        1.0,
-        1.0,
-        1.0,
+        1,
+        1,
+        1,
         0.85,
         0.85
       ]
@@ -171,7 +171,7 @@
       "gainMultipliers": [
         1.15,
         1.15,
-        1.0,
+        1,
         0.85,
         0.85
       ]
@@ -264,12 +264,12 @@
       "displayName": "Akatosh's Covenant - Seeker",
       "effects": [
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 4,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 15,
+          "effectName": "Fortify Magicka"
         }
       ],
-      "playerFacingText": "The Dragon God steadies the line of time within you. Magicka Regeneration +4%."
+      "playerFacingText": "The Dragon God steadies the line of time within you. Fortify Magicka +15."
     },
     {
       "emphasis": "Akatosh",
@@ -280,9 +280,9 @@
       "displayName": "Akatosh's Covenant - Devoted",
       "effects": [
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 10,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 25,
+          "effectName": "Fortify Magicka"
         },
         {
           "actorValue": "ResistMagic",
@@ -290,7 +290,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "The Covenant holds. Magicka Regeneration +10%, Magic Resistance +5%."
+      "playerFacingText": "The Covenant holds. Fortify Magicka +25, Magic Resistance +5%."
     },
     {
       "emphasis": "Akatosh",
@@ -301,9 +301,9 @@
       "displayName": "Akatosh's Endurance - Champion",
       "effects": [
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 20,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 40,
+          "effectName": "Fortify Magicka"
         },
         {
           "actorValue": "ResistMagic",
@@ -311,7 +311,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "You endure as the first Covenant endures. Magicka Regeneration +20%, Magic Resistance +15%.",
+      "playerFacingText": "You endure as the first Covenant endures. Fortify Magicka +40, Magic Resistance +15%.",
       "signature": "Endurance of the Covenant: strongest sustained magicka/ward; Champion Survey text is the V1 recognition surface."
     },
     {
@@ -581,12 +581,12 @@
           "effectName": "Speech"
         },
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 5,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 15,
+          "effectName": "Fortify Magicka"
         }
       ],
-      "playerFacingText": "Beauty and persuasion answer you. Speech +13, Magicka Regeneration +5%."
+      "playerFacingText": "Beauty and persuasion answer you. Speech +13, Fortify Magicka +15."
     },
     {
       "emphasis": "Dibella",
@@ -602,12 +602,12 @@
           "effectName": "Speech"
         },
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 13,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 40,
+          "effectName": "Fortify Magicka"
         }
       ],
-      "playerFacingText": "Dibella's inspiration moves through your words. Speech +25, Magicka Regeneration +13%.",
+      "playerFacingText": "Dibella's inspiration moves through your words. Speech +25, Fortify Magicka +40.",
       "signature": "Inspiration of beauty: strongest persuasion and magicka; Champion Survey text is the V1 recognition surface."
     },
     {
@@ -619,12 +619,12 @@
       "displayName": "Julianos's Wisdom - Seeker",
       "effects": [
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 4,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 15,
+          "effectName": "Fortify Magicka"
         }
       ],
-      "playerFacingText": "Wisdom and logic sharpen the mind. Magicka Regeneration +4%."
+      "playerFacingText": "Wisdom and logic sharpen the mind. Fortify Magicka +15."
     },
     {
       "emphasis": "Julianos",
@@ -635,9 +635,9 @@
       "displayName": "Julianos's Wisdom - Devoted",
       "effects": [
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 10,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 25,
+          "effectName": "Fortify Magicka"
         },
         {
           "actorValue": "ResistMagic",
@@ -645,7 +645,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "The God of Wisdom and Logic wards the disciplined mind. Magicka Regeneration +10%, Magic Resistance +5%."
+      "playerFacingText": "The God of Wisdom and Logic wards the disciplined mind. Fortify Magicka +25, Magic Resistance +5%."
     },
     {
       "emphasis": "Julianos",
@@ -656,9 +656,9 @@
       "displayName": "Julianos's Insight - Champion",
       "effects": [
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 20,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 40,
+          "effectName": "Fortify Magicka"
         },
         {
           "actorValue": "ResistMagic",
@@ -666,7 +666,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "Julianos grants the insight of law and lore. Magicka Regeneration +20%, Magic Resistance +15%.",
+      "playerFacingText": "Julianos grants the insight of law and lore. Fortify Magicka +40, Magic Resistance +15%.",
       "signature": "Insight of law and lore: strongest magicka/ward; Champion Survey text is the V1 recognition surface."
     },
     {
@@ -678,12 +678,12 @@
       "displayName": "Kynareth's Breath - Seeker",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 4,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 15,
+          "effectName": "Fortify Stamina"
         }
       ],
-      "playerFacingText": "The open air fills your lungs. Stamina Regeneration +4%."
+      "playerFacingText": "The open air fills your lungs. Fortify Stamina +15."
     },
     {
       "emphasis": "Kynareth",
@@ -694,9 +694,9 @@
       "displayName": "Kynareth's Breath - Devoted",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 10,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 25,
+          "effectName": "Fortify Stamina"
         },
         {
           "actorValue": "ResistMagic",
@@ -704,7 +704,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "The Lady of the heavens sustains you. Stamina Regeneration +10%, Magic Resistance +5%."
+      "playerFacingText": "The Lady of the heavens sustains you. Fortify Stamina +25, Magic Resistance +5%."
     },
     {
       "emphasis": "Kynareth",
@@ -715,9 +715,9 @@
       "displayName": "Kynareth's Sky - Champion",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 20,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 40,
+          "effectName": "Fortify Stamina"
         },
         {
           "actorValue": "ResistMagic",
@@ -725,7 +725,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "Kynareth's sky is open to you. Stamina Regeneration +20%, Magic Resistance +13%.",
+      "playerFacingText": "Kynareth's sky is open to you. Fortify Stamina +40, Magic Resistance +13%.",
       "signature": "Open sky: strongest stamina and ward; Champion Survey text is the V1 recognition surface."
     },
     {

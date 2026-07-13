@@ -411,12 +411,12 @@
           "effectName": "Illusion"
         },
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 8,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 25,
+          "effectName": "Fortify Magicka"
         }
       ],
-      "playerFacingText": "The art is yours, and the cover is your burden. Conjuration +27, Illusion +21, Magicka Regeneration +8%.",
+      "playerFacingText": "The art is yours, and the cover is your burden. Conjuration +27, Illusion +21, Fortify Magicka +25.",
       "signature": "The strongest focused family in the race -- and the most exposed. Champion Survey text is the V1 recognition surface. WitchcraftExposure Ruptured revokes access and drives major creed-loss; this strength exists ONLY because that price is real."
     },
     {
@@ -432,12 +432,12 @@
       "displayName": "Green Way - Seeker",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 4,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 15,
+          "effectName": "Fortify Stamina"
         }
       ],
-      "playerFacingText": "The rites keep you close to the land. Stamina Regeneration +4%."
+      "playerFacingText": "The rites keep you close to the land. Fortify Stamina +15."
     },
     {
       "emphasis": "GreenWay",
@@ -449,9 +449,9 @@
       "displayName": "Green Way - Devoted",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 10,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 25,
+          "effectName": "Fortify Stamina"
         },
         {
           "actorValue": "Restoration",
@@ -459,7 +459,7 @@
           "effectName": "Restoration"
         }
       ],
-      "playerFacingText": "The standing stones and outdoor rites answer you. Stamina Regeneration +10%, Restoration +8."
+      "playerFacingText": "The standing stones and outdoor rites answer you. Fortify Stamina +25, Restoration +8."
     },
     {
       "emphasis": "GreenWay",
@@ -471,9 +471,9 @@
       "displayName": "Green Way - Champion",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 20,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 40,
+          "effectName": "Fortify Stamina"
         },
         {
           "actorValue": "Restoration",
@@ -486,7 +486,7 @@
           "effectName": "Fortify Health"
         }
       ],
-      "playerFacingText": "The covenant of the wild is kept in you. Stamina Regeneration +20%, Restoration +18, Maximum Health +20.",
+      "playerFacingText": "The covenant of the wild is kept in you. Fortify Stamina +40, Restoration +18, Maximum Health +20.",
       "signature": "Covenant of the wild: strongest outdoor stamina/restoration/recovery; Champion Survey text is the V1 recognition surface. The werewolf fork is a real authored fork (Druidic Trial); betrayal drives major creed-loss and any Hircine pressure routes through the Phase 20C system."
     },
     {
@@ -545,9 +545,9 @@
       "displayName": "Akatosh's Endurance - Champion",
       "effects": [
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 20,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 40,
+          "effectName": "Fortify Magicka"
         },
         {
           "actorValue": "ResistMagic",
@@ -555,7 +555,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "Akatosh's endurance steadies your magicka and turns hostile magic. Magicka Regeneration +20%, Magic Resistance +15%.",
+      "playerFacingText": "Akatosh's endurance steadies your magicka and turns hostile magic. Fortify Magicka +40, Magic Resistance +15%.",
       "signature": "Unified champion boon: Breton copy of the Imperial Akatosh T3, magnitudes verbatim. RateMult regen is Requiem-inert; global Requiem pass owns conversion."
     },
     {
@@ -568,9 +568,9 @@
       "displayName": "Julianos's Insight - Champion",
       "effects": [
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 20,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 40,
+          "effectName": "Fortify Magicka"
         },
         {
           "actorValue": "ResistMagic",
@@ -578,7 +578,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "Julianos's insight sharpens your recovery and your wards. Magicka Regeneration +20%, Magic Resistance +15%.",
+      "playerFacingText": "Julianos's insight sharpens your recovery and your wards. Fortify Magicka +40, Magic Resistance +15%.",
       "signature": "Unified champion boon: Breton copy of the Imperial Julianos T3, magnitudes verbatim. RateMult regen is Requiem-inert."
     },
     {
@@ -591,9 +591,9 @@
       "displayName": "Kynareth's Sky - Champion",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 20,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 40,
+          "effectName": "Fortify Stamina"
         },
         {
           "actorValue": "ResistMagic",
@@ -601,7 +601,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "Kynareth's sky fills your breath and shields you. Stamina Regeneration +20%, Magic Resistance +13%.",
+      "playerFacingText": "Kynareth's sky fills your breath and shields you. Fortify Stamina +40, Magic Resistance +13%.",
       "signature": "Unified champion boon: Breton copy of the Imperial Kynareth T3, magnitudes verbatim. RateMult regen is Requiem-inert."
     },
     {
@@ -619,12 +619,12 @@
           "effectName": "Speech"
         },
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 13,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 40,
+          "effectName": "Fortify Magicka"
         }
       ],
-      "playerFacingText": "Dibella's inspiration graces your voice and your art. Speech +25, Magicka Regeneration +13%.",
+      "playerFacingText": "Dibella's inspiration graces your voice and your art. Speech +25, Fortify Magicka +40.",
       "signature": "Unified champion boon: Breton copy of the Imperial Dibella T3, magnitudes verbatim."
     },
     {
@@ -688,12 +688,12 @@
           "effectName": "Alteration"
         },
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 15,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 40,
+          "effectName": "Fortify Magicka"
         }
       ],
-      "playerFacingText": "You see through the aperture Magnus left in the world. Alteration +25, Magicka Regeneration +15%.",
+      "playerFacingText": "You see through the aperture Magnus left in the world. Alteration +25, Fortify Magicka +40.",
       "signature": "Unified champion boon: Breton copy of the Altmer Magnus T3, magnitudes verbatim. RateMult regen is Requiem-inert."
     }
   ],

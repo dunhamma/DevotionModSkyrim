@@ -68,10 +68,10 @@
           },
           {
             "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_Mid_HealRate",
-            "actorValue": "HealRateMult",
-            "magnitude": 120,
+            "actorValue": "Health",
+            "magnitude": 20,
             "nearWaterOnly": true,
-            "effectName": "Fortify Health Regeneration"
+            "effectName": "Fortify Health"
           },
           {
             "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_Mid_Poison",
@@ -81,7 +81,7 @@
             "effectName": "Poison Resistance"
           }
         ],
-        "playerFacingText": "The Hist reaches a little closer. Magic finds less purchase (5%) and your resistance to poison rises 10%. Near water, the Hist closes your wounds faster."
+        "playerFacingText": "The Hist reaches a little closer. Magic finds less purchase (5%) and your resistance to poison rises 10%. Near water, the Hist steadies you, raising your Maximum Health +20."
       },
       {
         "slotProperty": "Substrate_High",
@@ -97,10 +97,10 @@
           },
           {
             "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_High_HealRate",
-            "actorValue": "HealRateMult",
-            "magnitude": 160,
+            "actorValue": "Health",
+            "magnitude": 30,
             "nearWaterOnly": true,
-            "effectName": "Fortify Health Regeneration"
+            "effectName": "Fortify Health"
           },
           {
             "magicEffectEditorId": "PDV_MGEF_Argonian_Substrate_High_Poison",
@@ -110,7 +110,7 @@
             "effectName": "Poison Resistance"
           }
         ],
-        "playerFacingText": "You are deeply attuned to the Hist even far from the marsh. Magic finds little purchase (5%) and poison fails (22%). Near water, the Hist mends you swiftly."
+        "playerFacingText": "You are deeply attuned to the Hist even far from the marsh. Magic finds little purchase (5%) and poison fails (22%). Near water, the Hist fortifies you, raising your Maximum Health +30."
       }
     ],
     "substratePowerNote": "Mirrors the proven Khajiit substrate triad shape and power level (Always low + Mid + High climbing). Water-breathing is omitted because it is already Argonian racial; boons are themed to Hist/water identity (ResistDisease, HealRateMult near water/rest, ResistPoison). nearWaterOnly conditions are the Argonian analogue of the Khajiit nightOnly conditions; the always-on identity boon is unconditional, the contextual climb keys off near-water/rest context. 2026-06-23: the substrate Mid/High Health pool was converted to a near-water HealRateMult regen (Requiem-proof >100 band, a documented exception to the T2 15 / T3 30 HealRateMult ceiling per PDV_RequiemRegenFlips_Proposal); the substrate Unarmed claw moved to the Void/Sithis focus; restores the locked design's 'Hist Health is near-water, absence not abundance'."
@@ -119,11 +119,26 @@
     "formListEditorId": "PDV_FLST_WaterContextLocations",
     "note": "Generous near-water gate for every nearWaterOnly reward effect. GetInCurrentLocFormList walks the location parent chain, so the two hold entries (Hjaalmarch 01676E, Rift 01676C) blanket those wet holds and the settlement entries catch the river/lake towns. Open-water wilderness outside a named location does not match (acceptable per the 'near the water places' contract). Generic/promotable name -- NOT the 6-site ArgonianSacredWaters pilgrimage list (those sites are folded in here).",
     "locations": [
-      "01676E:Skyrim.esm", "01676C:Skyrim.esm", "018A53:Skyrim.esm", "018A58:Skyrim.esm",
-      "02263B:Skyrim.esm", "018A4B:Skyrim.esm", "018A4C:Skyrim.esm", "013163:Skyrim.esm",
-      "018A4E:Skyrim.esm", "018A4D:Skyrim.esm", "018E3D:Skyrim.esm", "018A52:Skyrim.esm",
-      "01BDFC:Skyrim.esm", "0192B6:Skyrim.esm", "019188:Skyrim.esm", "01919C:Skyrim.esm",
-      "0192AC:Skyrim.esm", "0192AD:Skyrim.esm", "018EEF:Skyrim.esm", "003583:Dawnguard.esm"
+      "01676E:Skyrim.esm",
+      "01676C:Skyrim.esm",
+      "018A53:Skyrim.esm",
+      "018A58:Skyrim.esm",
+      "02263B:Skyrim.esm",
+      "018A4B:Skyrim.esm",
+      "018A4C:Skyrim.esm",
+      "013163:Skyrim.esm",
+      "018A4E:Skyrim.esm",
+      "018A4D:Skyrim.esm",
+      "018E3D:Skyrim.esm",
+      "018A52:Skyrim.esm",
+      "01BDFC:Skyrim.esm",
+      "0192B6:Skyrim.esm",
+      "019188:Skyrim.esm",
+      "01919C:Skyrim.esm",
+      "0192AC:Skyrim.esm",
+      "0192AD:Skyrim.esm",
+      "018EEF:Skyrim.esm",
+      "003583:Dawnguard.esm"
     ]
   },
   "neglect": {
@@ -179,12 +194,12 @@
           "effectName": "Fortify Health"
         },
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 10,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 25,
+          "effectName": "Fortify Stamina"
         }
       ],
-      "playerFacingText": "The Hist holds you close even in exile. Stamina returns 10% faster; near water your Maximum Health rises +20."
+      "playerFacingText": "The Hist holds you close even in exile. Your Maximum Stamina rises +25; near water your Maximum Health rises +20."
     },
     {
       "emphasis": "Hist",
@@ -201,9 +216,9 @@
           "effectName": "Fortify Health"
         },
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 10,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 25,
+          "effectName": "Fortify Stamina"
         },
         {
           "actorValue": "ResistPoison",
@@ -211,7 +226,7 @@
           "effectName": "Poison Resistance"
         }
       ],
-      "playerFacingText": "You carry the marsh within you. Stamina returns 10% faster and your resistance to poison rises 10%; near water your Maximum Health rises +30."
+      "playerFacingText": "You carry the marsh within you. Your Maximum Stamina rises +25 and your resistance to poison rises 10%; near water your Maximum Health rises +30."
     },
     {
       "emphasis": "People",
@@ -344,9 +359,9 @@
       "effects": [
         {
           "magicEffectEditorId": "PDV_MGEF_Argonian_Sithis_T3_StaminaRate",
-          "actorValue": "StaminaRateMult",
-          "magnitude": 10,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 25,
+          "effectName": "Fortify Stamina"
         },
         {
           "magicEffectEditorId": "PDV_MGEF_Argonian_Sithis_T3_Unarmed",
@@ -355,8 +370,8 @@
           "effectName": "Unarmed Damage"
         }
       ],
-      "playerFacingText": "Sithis holds those who faced the Void unflinching. Stamina returns 10% faster, your bare strikes carry the Void's weight (+12 unarmed), and near death the Void can lend a brief surge.",
-      "ceilingNote": "User-locked 2026-06-14: Sithis T3 is a two-part capstone, passive +10% stamina regeneration plus a once/day below-20%-health burst."
+      "playerFacingText": "Sithis holds those who faced the Void unflinching. Your Maximum Stamina rises +25, your bare strikes carry the Void's weight (+12 unarmed), and near death the Void can lend a brief surge.",
+      "ceilingNote": "User-locked 2026-06-14: Sithis T3 is a two-part capstone, passive Fortify Stamina +25 (Requiem-converted 2026-07-13) plus a once/day below-20%-health burst."
     }
   ],
   "supportSpells": [

@@ -116,11 +116,12 @@
         "effects": [
           {
             "magicEffectEditorId": "PDV_MGEF_Bless_Altmer_Orthodox_T1",
-            "actorValue": "MagickaRateMult",
-            "magnitude": 4
+            "actorValue": "Magicka",
+            "magnitude": 15,
+            "effectName": "Fortify Magicka"
           }
         ],
-        "playerFacingText": "You keep to the ancestral order. Magicka Regeneration +4%."
+        "playerFacingText": "You keep to the ancestral order. Fortify Magicka +15."
       },
       {
         "tier": "T2",
@@ -132,8 +133,9 @@
         "effects": [
           {
             "magicEffectEditorId": "PDV_MGEF_Bless_Altmer_Orthodox_T2_Magicka",
-            "actorValue": "MagickaRateMult",
-            "magnitude": 7
+            "actorValue": "Magicka",
+            "magnitude": 25,
+            "effectName": "Fortify Magicka"
           },
           {
             "magicEffectEditorId": "PDV_MGEF_Bless_Altmer_Orthodox_T2_MagicResist",
@@ -141,7 +143,7 @@
             "magnitude": 5
           }
         ],
-        "playerFacingText": "Your coherence holds against a divided world. Magicka Regeneration +7%, Magic Resistance +5%."
+        "playerFacingText": "Your coherence holds against a divided world. Fortify Magicka +25, Magic Resistance +5%."
       }
     ],
     "stackRule": "Broad < focused. Broad Orthodox caps at T2/Faithful. When an Auri-El/Magnus/Trinimac/Xarxes/Syrabane focus is active, suppress broad Orthodox T2 so the focused set is the loud layer."
@@ -154,12 +156,12 @@
       "displayName": "Auri-El's Dawn - Seeker",
       "effects": [
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 5,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 15,
+          "effectName": "Fortify Magicka"
         }
       ],
-      "playerFacingText": "The Dawn steadies you. Magicka Regeneration +5%."
+      "playerFacingText": "The Dawn steadies you. Fortify Magicka +15."
     },
     {
       "emphasis": "AuriEl",
@@ -168,9 +170,9 @@
       "displayName": "Auri-El's Dawn - Devoted",
       "effects": [
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 10,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 25,
+          "effectName": "Fortify Magicka"
         },
         {
           "actorValue": "ResistMagic",
@@ -178,7 +180,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "The ancestor-light wards your mind. Magicka Regeneration +10%, Magic Resistance +6%."
+      "playerFacingText": "The ancestor-light wards your mind. Fortify Magicka +25, Magic Resistance +6%."
     },
     {
       "emphasis": "AuriEl",
@@ -187,9 +189,9 @@
       "displayName": "Auri-El's Return - Champion",
       "effects": [
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 20,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 40,
+          "effectName": "Fortify Magicka"
         },
         {
           "actorValue": "ResistMagic",
@@ -197,7 +199,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "You walk the path of return Auri-El first walked. Magicka Regeneration +20%, Magic Resistance +16%.",
+      "playerFacingText": "You walk the path of return Auri-El first walked. Fortify Magicka +40, Magic Resistance +16%.",
       "recognition": "V1 Survey/status text only (non-voiced): Champion Survey names the player as keeping the Dawn foundation. Voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md."
     },
     {
@@ -226,12 +228,12 @@
           "effectName": "Alteration"
         },
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 6,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 25,
+          "effectName": "Fortify Magicka"
         }
       ],
-      "playerFacingText": "The structure of the arts opens to you. Alteration +13, Magicka Regeneration +6%."
+      "playerFacingText": "The structure of the arts opens to you. Alteration +13, Fortify Magicka +25."
     },
     {
       "emphasis": "Magnus",
@@ -245,12 +247,12 @@
           "effectName": "Alteration"
         },
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 15,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 40,
+          "effectName": "Fortify Magicka"
         }
       ],
-      "playerFacingText": "You see through the aperture Magnus left in the world. Alteration +25, Magicka Regeneration +15%.",
+      "playerFacingText": "You see through the aperture Magnus left in the world. Alteration +25, Fortify Magicka +40.",
       "recognition": "V1 Survey/status text only (non-voiced): Champion Survey names the player a true student of the arts. Voiced NPC recognition is V2."
     },
     {
@@ -335,12 +337,12 @@
           "effectName": "Restoration"
         },
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 6,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 25,
+          "effectName": "Fortify Magicka"
         }
       ],
-      "playerFacingText": "What is kept is what endures. Restoration +13, Magicka Regeneration +6%."
+      "playerFacingText": "What is kept is what endures. Restoration +13, Fortify Magicka +25."
     },
     {
       "emphasis": "Xarxes",
@@ -354,12 +356,12 @@
           "effectName": "Restoration"
         },
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 15,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 40,
+          "effectName": "Fortify Magicka"
         }
       ],
-      "playerFacingText": "Your name and works are written into the long ledger. Restoration +25, Magicka Regeneration +15%.",
+      "playerFacingText": "Your name and works are written into the long ledger. Restoration +25, Fortify Magicka +40.",
       "recognition": "V1 Survey/status text only (non-voiced): Champion Survey names the player a keeper of the ancestral record. Voiced NPC recognition is V2."
     },
     {

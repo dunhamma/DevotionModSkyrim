@@ -156,11 +156,12 @@
           "magnitude": 8
         },
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 5
+          "actorValue": "Magicka",
+          "magnitude": 15,
+          "effectName": "Fortify Magicka"
         }
       ],
-      "playerFacingText": "The Reclamations hold you close even in exile. Magic Resistance +8%, Magicka Regeneration +5%."
+      "playerFacingText": "The Reclamations hold you close even in exile. Magic Resistance +8%, Fortify Magicka +15."
     },
     {
       "emphasis": "Azura",
@@ -172,12 +173,12 @@
       "displayName": "Azura's Twilight - Seeker",
       "effects": [
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 4,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 15,
+          "effectName": "Fortify Magicka"
         }
       ],
-      "playerFacingText": "Twilight sharpens your sight. Magicka Regeneration +4%."
+      "playerFacingText": "Twilight sharpens your sight. Fortify Magicka +15."
     },
     {
       "emphasis": "Azura",
@@ -189,9 +190,9 @@
       "displayName": "Azura's Foresight - Devoted",
       "effects": [
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 10,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 25,
+          "effectName": "Fortify Magicka"
         },
         {
           "actorValue": "Destruction",
@@ -199,7 +200,7 @@
           "effectName": "Destruction"
         }
       ],
-      "playerFacingText": "Azura's foresight guides your destruction to its mark. Magicka Regeneration +10%, Destruction +10.",
+      "playerFacingText": "Azura's foresight guides your destruction to its mark. Fortify Magicka +25, Destruction +10.",
       "rebalanceNote": "2026-07-04 owner ruling: ResistMagic 5 -> Destruction 10; the substrate spine already carries the resist identity and the Azura stack was over-capping resist."
     },
     {
@@ -212,9 +213,9 @@
       "displayName": "Azura's Star - Champion",
       "effects": [
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 20,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 40,
+          "effectName": "Fortify Magicka"
         },
         {
           "actorValue": "Destruction",
@@ -222,7 +223,7 @@
           "effectName": "Destruction"
         }
       ],
-      "playerFacingText": "You see by the twilight Azura keeps, and your destruction strikes true. Magicka Regeneration +20%, Destruction +25.",
+      "playerFacingText": "You see by the twilight Azura keeps, and your destruction strikes true. Fortify Magicka +40, Destruction +25.",
       "rebalanceNote": "2026-07-04 owner ruling: ResistMagic 15 -> Destruction 25 (cumulative-highest-only); see T2 note.",
       "recognition": "V1 Champion Survey text only (non-voiced); voiced NPC recognition is V2 per PDV_RecognitionDialogueScalePacket.md"
     },

@@ -143,11 +143,12 @@
       "displayName": "Y'ffre's Weave - Seeker",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 4
+          "actorValue": "Stamina",
+          "magnitude": 15,
+          "effectName": "Fortify Stamina"
         }
       ],
-      "playerFacingText": "The forest's story carries you a little. Stamina Regeneration +4%."
+      "playerFacingText": "The forest's story carries you a little. Fortify Stamina +15."
     },
     {
       "emphasis": "Yffre",
@@ -159,15 +160,16 @@
       "displayName": "Y'ffre's Weave - Faithful",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 6
+          "actorValue": "Stamina",
+          "magnitude": 25,
+          "effectName": "Fortify Stamina"
         },
         {
           "actorValue": "Sneak",
           "magnitude": 8
         }
       ],
-      "playerFacingText": "You move with the forest's grain. Stamina Regeneration +6%, Sneak +8.",
+      "playerFacingText": "You move with the forest's grain. Fortify Stamina +25, Sneak +8.",
       "signature": "Blended Y'ffre-interpreted woodland fit (story, Green Pact memory as modest positive weighting, forest belonging). Capped at Faithful; suppressed when a path family is active; below path-family benefits.",
       "suppressionRule": "Suppressed (not granted) whenever PDV_State_BosmerPath is committed to an active path with a focused path family granted."
     },
@@ -309,12 +311,12 @@
           "effectName": "Fortify Health"
         },
         {
-          "actorValue": "MagickaRateMult",
-          "magnitude": 5,
-          "effectName": "Magicka Regeneration"
+          "actorValue": "Magicka",
+          "magnitude": 15,
+          "effectName": "Fortify Magicka"
         }
       ],
-      "playerFacingText": "You are a story Y'ffre still tells. Speech +25, Maximum Health +30, Magicka Regeneration +5%.",
+      "playerFacingText": "You are a story Y'ffre still tells. Speech +25, Maximum Health +30, Fortify Magicka +15.",
       "signature": "Diaspora Y'ffre through memory, community, and storytelling -- NOT failed orthodoxy. Comparable richness to Old Contract through social/preservation/nature value rather than hunter sharpness. Champion Survey text is the V1 recognition surface."
     },
     {

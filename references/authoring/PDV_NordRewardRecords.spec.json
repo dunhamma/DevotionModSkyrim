@@ -276,11 +276,12 @@
       "displayName": "Old Ways - Seeker",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 4
+          "actorValue": "Stamina",
+          "magnitude": 15,
+          "effectName": "Fortify Stamina"
         }
       ],
-      "playerFacingText": "The old roads and weather are companionable to you. Stamina Regeneration +4%."
+      "playerFacingText": "The old roads and weather are companionable to you. Fortify Stamina +15."
     },
     {
       "emphasis": "OldWays",
@@ -292,15 +293,16 @@
       "displayName": "Old Ways - Faithful",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 6
+          "actorValue": "Stamina",
+          "magnitude": 25,
+          "effectName": "Fortify Stamina"
         },
         {
           "actorValue": "ResistFrost",
           "magnitude": 10
         }
       ],
-      "playerFacingText": "Skyrim itself looks after the faithful. Stamina Regeneration +6%, Frost Resistance +10%.",
+      "playerFacingText": "Skyrim itself looks after the faithful. Fortify Stamina +25, Frost Resistance +10%.",
       "signature": "Blended Old Ways resilience (weather, hearth, honor, death, Talos texture; Kyne + Shor + Tsun + Stuhn overlap). Capped at Faithful; suppressed when a focused patron is active; below focused-patron benefits.",
       "suppressionRule": "Suppressed (not granted) whenever PDV_GLO_PatronState is active-primary with a focused patron set."
     },
@@ -315,12 +317,12 @@
       "displayName": "Kyne's Sky - Seeker",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 5,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 15,
+          "effectName": "Fortify Stamina"
         }
       ],
-      "playerFacingText": "The storm-mother has noticed how you live. Stamina Regeneration +5%."
+      "playerFacingText": "The storm-mother has noticed how you live. Fortify Stamina +15."
     },
     {
       "emphasis": "Kyne",
@@ -333,9 +335,9 @@
       "displayName": "Kyne's Sky - Devoted",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 10,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 25,
+          "effectName": "Fortify Stamina"
         },
         {
           "actorValue": "ResistFrost",
@@ -343,7 +345,7 @@
           "effectName": "Frost Resistance"
         }
       ],
-      "playerFacingText": "The open sky steadies you against the cold. Stamina Regeneration +10%, Frost Resistance +10%."
+      "playerFacingText": "The open sky steadies you against the cold. Fortify Stamina +25, Frost Resistance +10%."
     },
     {
       "emphasis": "Kyne",
@@ -356,9 +358,9 @@
       "displayName": "Kyne's Breath - Champion",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 20,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 40,
+          "effectName": "Fortify Stamina"
         },
         {
           "actorValue": "ResistFrost",
@@ -366,7 +368,7 @@
           "effectName": "Frost Resistance"
         }
       ],
-      "playerFacingText": "Kyne's breath is in the wind at your back. Stamina Regeneration +20%, Frost Resistance +25%.",
+      "playerFacingText": "Kyne's breath is in the wind at your back. Fortify Stamina +40, Frost Resistance +25%.",
       "signature": "Carries the scripted T3 signature 'The Storm Answers' (see PDV_Phase2_CapstoneSignatures.md, Nord). Stat half above is the existing capstone; the scripted signature rides on top."
     },
     {
@@ -451,12 +453,12 @@
       "displayName": "Tsun's Trial - Seeker",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 5,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 15,
+          "effectName": "Fortify Stamina"
         }
       ],
-      "playerFacingText": "The shield-thane of Shor weighs your trials. Stamina Regeneration +5%."
+      "playerFacingText": "The shield-thane of Shor weighs your trials. Fortify Stamina +15."
     },
     {
       "emphasis": "Tsun",
@@ -469,9 +471,9 @@
       "displayName": "Tsun's Trial - Devoted",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 10,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 25,
+          "effectName": "Fortify Stamina"
         },
         {
           "actorValue": "Block",
@@ -479,7 +481,7 @@
           "effectName": "Block"
         }
       ],
-      "playerFacingText": "You stand the trials Tsun sets. Stamina Regeneration +10%, Block +10."
+      "playerFacingText": "You stand the trials Tsun sets. Fortify Stamina +25, Block +10."
     },
     {
       "emphasis": "Tsun",
@@ -492,9 +494,9 @@
       "displayName": "Tsun's Vigil - Champion",
       "effects": [
         {
-          "actorValue": "StaminaRateMult",
-          "magnitude": 20,
-          "effectName": "Stamina Regeneration"
+          "actorValue": "Stamina",
+          "magnitude": 40,
+          "effectName": "Fortify Stamina"
         },
         {
           "actorValue": "Block",
@@ -507,7 +509,7 @@
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "Tsun guards the bridge at your back. Stamina Regeneration +20%, Block +22, Armor +50.",
+      "playerFacingText": "Tsun guards the bridge at your back. Fortify Stamina +40, Block +22, Armor +50.",
       "signature": "Carries the scripted T3 signature 'The Shield-Thane's Trial' (see PDV_Phase2_CapstoneSignatures.md, Nord). Stat half above is the capstone; the scripted signature rides on top."
     },
     {
