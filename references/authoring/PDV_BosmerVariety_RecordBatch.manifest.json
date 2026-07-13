@@ -102,7 +102,7 @@
           "effectName": "Fortify Stamina"
         }
       ],
-      "playerFacingText": "You told yourself to become the Wanderer. The road tires you less. (Effect: +8% Stamina Regeneration.)"
+      "playerFacingText": "You told yourself to become the Wanderer. The road tires you less. (Effect: Fortify Stamina +15.)"
     },
     {
       "editorId": "PDV_SPEL_BosmerNaming_Keeper",

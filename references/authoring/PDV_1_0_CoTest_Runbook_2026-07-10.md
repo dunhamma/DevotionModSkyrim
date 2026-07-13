@@ -342,6 +342,17 @@ already-recorded proofs to re-open: Bosmer (BetaTestPacket L643), Breton Magnus
 champion (BetaTestPacket L13), Argonian Rooted-Rest, Redguard Tu'whacca. The
 Fortify magnitudes are PROVISIONAL - this sitting doubles as the tuning pass.
 
+ADDENDUM 2026-07-13 (variety-batch live converts): three variety-batch rewards had
+their LIVE `Devotion.esp` MGEFs converted RateMult -> Fortify in the 2026-07-13
+closeout and need FIRST-TIME felt proof (not a re-proof): Argonian
+`PDV_SPEL_ArgonianAdapt_Sap` (Fortify Magicka +10) and `PDV_SPEL_ArgonianAdapt_Marsh`
+(Fortify Stamina +15), and Bosmer `PDV_SPEL_BosmerNaming_Wanderer` (Fortify Stamina
++15). These are NOT tracked in `PDV_FeltFamilyEvidenceLedger.json` (the felt registry
+generator reads only race `RewardRecords` specs), so they will NOT appear in the race
+sittings below - prove them via `PDV_RequiemSmokeTest_Tracker.md` Sweep C card **C13**
+and sink the result into the `requiemTrackB.sweepC` slot of
+`PDV_1_0_ManualSignoffLedger.json`. Khajiit Lunar T1 was already Fortify +15 (not a gap).
+
 SNAPSHOT of `PDV_FeltFamilyEvidenceLedger.json` as of 2026-07-11 (107 pending families). This is a generated point-in-time bundle; if the ledger grows or credits land, regenerate it. Each family is proven ONCE: every shared price/sting is assigned to a single race sitting whose native gods exercise it, so running these ten sittings proves all 107 with zero re-tests (the raw per-race `--sitting` sheets repeat shared families across races). Sink every observation into `PDV_FeltFamilyEvidenceLedger.json`; close each sitting with the race pacing sign-off in `PDV_PacingSignoffLedger.json` (C-PACING-SIGNOFF) and any in-world hook proof (C-PLACEMENT-FINAL).
 
 | # | Sitting | Origin idx | Families | Running total |
@@ -403,7 +414,7 @@ SNAPSHOT of `PDV_FeltFamilyEvidenceLedger.json` as of 2026-07-11 (107 pending fa
 
 Build note, 2026-07-12: the Breton **two-axis split** is now landed and ready
 for in-game smoke. Authority: `PDV_BretonTwoAxis_BuildSpec_2026-07-12.md`.
-Tradition T1/T2 now lights from practice COUNTS
+Tradition T1/T2 now lights from weighted practice points
 (`KnightlyVowCount` / `HiddenArtCount` / `GreenWayCount`), not pooled deity
 piety. Patron championing is orthogonal over the 11-god Breton roster plus
 Daedric-via-20C. Resonant Champion patrons unlock the active tradition T3;
@@ -416,7 +427,7 @@ old Breton ancestor substrate and generic `Tradition's Footing` lane remain
 retired at runtime.
 
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [ ] `Breton-GreenWay|boon`  (e.g. Green Way - Seeker)
+- [x] `Breton-GreenWay|boon`  (`Green Way - Seeker`; organic mixed-source practice pass 2026-07-13)
 - [ ] `Breton-HiddenArt|boon`  (e.g. Hidden Art - Seeker)
 - [x] `Breton-KnightsRoad|boon`  (e.g. Knight's Vow - Seeker; B1/B1a passed 2026-07-12)
 - [ ] `Breton-PatronChampion|boon`  (e.g. Patron's Mark - Champion; BX1)
@@ -583,6 +594,11 @@ Retest before checking `Khajiit-Lunar|substrate-favor`.
 
 ### 9. Bosmer sitting (8 families) - `set PDV_GLO_OriginRace to 4`
 
+Also-in-this-origin (NOT a felt-family row; sink to `requiemTrackB.sweepC`, see the
+Sweep C addendum above): while on Bosmer, run Sweep C **C13** for
+`PDV_SPEL_BosmerNaming_Wanderer` (Fortify Stamina +15) - confirm Max Stamina rises in
+Active Effects when the Naming "Wanderer" told-self ability is granted.
+
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
 - [ ] `Bosmer-BanditRoad|boon`  (e.g. Bandit Road - Seeker)
 - [ ] `Bosmer-Exchange|boon`  (e.g. The Exchange - Seeker)
@@ -598,6 +614,12 @@ Retest before checking `Khajiit-Lunar|substrate-favor`.
 - [ ] `Disfavor-OrderTradeLore|disfavor-sting`  (e.g. Order sours for a while.)
 
 ### 10. Argonian sitting (8 families) - `set PDV_GLO_OriginRace to 7`
+
+Also-in-this-origin (NOT felt-family rows; sink to `requiemTrackB.sweepC`, see the
+Sweep C addendum above): while on Argonian, run Sweep C **C13** for the two Adapt
+converts - `PDV_SPEL_ArgonianAdapt_Sap` (Fortify Magicka +10) and
+`PDV_SPEL_ArgonianAdapt_Marsh` (Fortify Stamina +15) - confirm Max Magicka / Max
+Stamina rise in Active Effects when the Sacred-Waters adapt abilities are granted.
 
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
 - [ ] `Argonian-Hist|boon`  (e.g. Hist Communion - Faithful)
@@ -641,6 +663,18 @@ Retest before checking `Khajiit-Lunar|substrate-favor`.
 - 2026-07-12: BRETON TWO-AXIS SPLIT LANDED; ready for BX smoke after a full Skyrim relaunch/new save. Owner ruled the 2026-07-11 pool-as-T3-gate model an error; the intent was always two orthogonal axes (tradition = practice track; patron championing over the full 11-god roster, so a Green Way Breton can champion Magnus). Authority: `PDV_BretonTwoAxis_BuildSpec_2026-07-12.md`. Source now tiers traditions from practice counts, grants resonant Champion patrons through the tradition T3, grants non-resonant Champion patrons `PDV_Bless_Breton_PatronChampion`, includes Talos in Breton formal offers, and surfaces Breton two-axis state through Survey/status, Book of Days, and Prisma toasts. Pool-gated B1/B1a are historical only; run BX1-BX7 for current proof. Backend/readback gates passed: manager/EventBus/ActionRouter/MCM compile 0/0, Breton reward and formal-offer readback PASS, Prisma UI audit PASS 89, phase-2 reward readback PASS=1415, signal-floor audit PASS 51/51, adversary check PASS, and verifier FAIL=0.
 - 2026-07-12: BRETON CO-TEST UPDATE (20:02-20:40 `Papyrus.0.log`). BX2 Hidden Art/Magnus resonant Champion runtime + Active Effects passed: log shows Magnus patron start, Magnus tier 0 -> 3, generic tier surface suppressed for Breton resonant Champion, HiddenArt T1 removed, and HiddenArt T3 added; tester screenshot showed only `Hidden Art - Champion` effects (Conjuration, Illusion, Magicka Regeneration), with no separate PatronChampion stack. Toast/Book-of-Days exact Champion wording was not separately confirmed. BX6 runtime passed: sleep hearth-cover awarded Mara event 314 and no Julianos event 314/LAWFUL_ORDER line appeared. B4 runtime passed for Y'ffre 365/364: 365 applied `OrderTradeLore Light` / `Order sours for a while` Active Effect and -1.0 loss; 364 applied -0.5 loss and debug surface. Only one Book of Days line across 365/364 is expected because both debug dislike surfaces write the same same-day `Y'ffre took offense at the act.` line and Book of Days de-dupes same day/tone/line. B5 remains open: `DebugFireDislike` correctly reports no Y'ffre dislike row for 303 because 303 is a positive Breton-gated row; prove it through the non-hostile animal kill/action route, not the dislike harness. Practice-count pacing follow-up queued: Hidden Art reached Seeker quickly because practice counts tick per source key/day, not from clamped deity piety.
 
+- 2026-07-13: GREEN WAY ROUTE/UI + SHARED KILL CLASSIFICATION PASS. On the then-live 3/6 build, a fresh Green Way Breton received harvest `event_334`, draugr `event_300`, and `honor_the_wild` as three distinct practice acts. Tester confirmed Survey `3 proven acts`, `Green Way - Seeker` in Active Effects, Book of Days Seeker page text, the first gauge segment, and the tier toast. The first draugr attempt exposed that `PDV_ActionRouter.ActorHasKeyword` checked the actor and leveled base but not the actor race; the shared helper now includes the race fallback, `PDV_ActionRouter` compiles 0/0, and the default declaration gate requires that fallback plus undead-before-NPC ordering. The post-fix log records `event_300` at 14:59:50. This shared module covers every origin/deity consumer of generic kill events. Organic deer `event_303` also passed with Y'ffre +0.25, closing B5. The old same-day Seeker and six-act T2 targets are superseded by the staged 25/50 point contract below; retain this result only as route classification and UI plumbing proof.
+
+- 2026-07-13: GREEN WAY OLD-MODEL DEVOTED ROUTE/UI PASS. The 16:01-16:13 `Papyrus.0.log` session began from the prior three-act Green Way save, then accepted `event_303` non-hostile animal at 16:05:19, `event_333` cook-meal at 16:08:30, and `event_313` rest-under-open-sky at 16:11:50. At 16:11:49 the manager removed `Breton GreenWay T1` and added `Breton GreenWay T2` once. Tester confirmed Survey `6 proven acts`, `Green Way - Devoted`, second Book-of-Days gauge segment, Devoted page text, and one toast. No PDV/Prisma JSON or transition error appears around the award. This closes the retired 3/6 build's Green Way T2 route/UI proof only: the session predates the 16:21 deployment of the shared 25/50 practice-point conversion and cannot prove its pacing.
+
+- 2026-07-13: KILL CLASSIFICATION FOLLOW-THROUGH DEPLOYED. Generic undead/Daedra/dragon/NPC/animal/creature classification remains centralized in `PDV_ActionRouter`, so no race- or deity-specific copies are needed. Audit found the separate PO3 Paarthurnax/Khajiit dragon path still used direct actor-only `ActorTypeDragon` checks; `PDV_PlayerEvents` now uses actor/base/race inheritance there too. `pdv_verify` consumes the classifier gate as default-fail and explicitly verifies live `PDV__SM_KillActorNode` parent, receiver, previous sibling, and `SharesEvent` wiring. `PDV_PlayerEvents` synced and compiled 0/0; normal verifier PASS with both new checks; forced classifier self-test correctly FAILs. A Khajiit/Paarthurnax dragon regression smoke remains manual runtime proof.
+
+- 2026-07-13: BRETON SURVEY COPY CLEANUP DEPLOYED. Green Way Survey was presenting three competing status statements (`Practice: Observant`, generic deity `Standing: Distant`, and covenant `open but unproven`) even though practice points are the Breton lane authority. The live manager now omits generic standing from chosen Breton traditions, shortens the neutral Green Way pressure line to `Y'ffre is listening.`, and tightens the beast-fork sentence. The same pass replaces stale generic Champion `patron's mark` copy in Survey/toast with the actual boon name required by the unified Champion model. Manager/MCM compiled 0/0; Book of Days audit PASS=126 WARN=0 FAIL=0; Prisma UI audit PASS=92; verifier FAIL=0. Confirm the shorter Survey once after relaunch.
+
+- 2026-07-13: BRETON PRACTICE PACING REWORK DEPLOYED; RUNTIME PACING PROOF OPEN. Runtime proof showed the 3/6 integer-count model could reach Seeker and Devoted from three/six distinct source keys in one day. Owner target is Seeker no earlier than day 7 and preferably near day 10, paced like deity piety. The live manager now treats the existing tradition count stores as weighted practice points: renewable actions +1, curated quest/tag or dedicated tradition signals +2, aggregate maximum 4 points per in-game day, Seeker 25, Devoted 50. The existing per-source once/day guard remains. This yields earliest Seeker day 7 and earliest Devoted day 13; ordinary 2-3 point days reach Seeker around days 9-13. `Seed broad lane (origin)` now seeds the active Breton tradition to 50 instead of writing retired `PDV.Breton.TraditionHookCount`. Existing 2026-07-13 three-act evidence remains valid for route classification, reward/UI plumbing, and source diversity only; it no longer proves current pacing or the new threshold. Manager/MCM compiled 0/0; pacing adversary PASS; Book of Days audit PASS=126 WARN=0 FAIL=0; Prisma UI audit PASS=92; verifier FAIL=0. Retest the daily ceiling and 25/50 thresholds after a full relaunch.
+
+- 2026-07-13: ALL-THREE BRETON CONVERSION PARITY + VMAD NOISE CLEANUP COMPLETE. The adversary gate now fails unless Knight's Road, Hidden Art, and Green Way each route renewable actions through +1, curated tags through +2, the shared four-point daily budget, capped practice stores, and the same concise Survey `Practice: <band> (<points> practice points).` line with no `proven acts`. Direct houseCARL readback found the retired `PDV_Faction_Hunted_Vigilant` binding still serialized as manager VMAD property 159 despite its Papyrus declaration being gone; the property entry was removed in place after backup while preserving the faction record. Post-write houseCARL readback reports 469 manager properties and no retired binding. The verifier now default-fails if that binding returns. Final gates: verifier FAIL=0, adversary PASS, Book of Days PASS=126 WARN=0 FAIL=0, Prisma UI PASS=92.
+
 ## Breton Tradition + Dislike Cards (2026-07-12, superseded by BX for reward tiering)
 
 These cards cover the superseded pool-gated reconciliation (Part 1) and the
@@ -656,7 +690,7 @@ loaded `LIKES_DISLIKES_VERSION = 16`.
 | B2 | PARTIAL 2026-07-12 - Focused patron unlocks T3 | Same save; accept a focused patron offer within Knight's Road; take that deity to Champion. | `Knight's Bulwark - Champion` lights only after commitment + Champion; broad phase alone caps at T2. Exactly one toast/Book-of-Days entry should name the patron as Champion, e.g. `Julianos names you Champion through the Knight's Road.` | Active Effects T3 stack PASSED: Armor, Block, and Magic Resistance all show from `Knight's Bulwark - Champion`. Still owed: post-duplicate-hotfix toast/Book of Days wording must name the focused patron as Champion with no second generic `Devotion deepens` tier toast |
 | B3 | PASSED 2026-07-12 - Generic Tradition lane and ancestor substrate retired | Any Breton, broad worship; also valid on the B1 migrated save after one reward sync/dawn. | No "Tradition's Footing" Health buff granted; no `Breton Inherited Ward`; migrated saves lose both obsolete effects | Confirmed retired successfully: Survey/Active Effects show only the active tradition family, no generic tradition Health spell, and no mixed-inheritance substrate copy |
 | B4 | PASSED 2026-07-12 - Green Way Y'ffre dislikes (softer set) | Green Way Breton, fresh save. Fire raise-undead (365) and assault-innocent (364). | Y'ffre loss surfaces for both; necromancy is the stronger (-medium) | Log proved 365 -1.0 and 364 -0.5. Tester screenshot proved 365 Active Effect `Order sours for a while.` / `Favor Slips`. One Book of Days entry across 365/364 is expected because both debug dislike surfaces write the same same-day line and de-dupe. |
-| B5 | OPEN - Green Way hunt like | Same save; kill wild game (non-combat animal, event 303). Do not use `DebugFireDislike`; 303 is a positive row. | Y'ffre small gain (respectful hunt); cook-meal also gains | Needs organic/action-route proof for event 303. The 2026-07-12 dislike-harness attempt correctly logged `no dislike row for Y'ffre event 303`; that is not a route failure. |
+| B5 | PASSED 2026-07-13 - Green Way hunt like | Same save; kill wild game (non-combat animal, event 303). Do not use `DebugFireDislike`; 303 is a positive row. | Y'ffre small gain (respectful hunt); cook-meal also gains | Organic deer kill passed. `Papyrus.2.log` records Green Way practice from `event_303`, Y'ffre `+0.25`, and completed event-303 fan-out. |
 
 ## Breton Two-Axis Split Cards (2026-07-12, ready for smoke)
 
@@ -670,7 +704,7 @@ IDs and quest tags.
 
 Preconditions to check first (backend, before any in-game step):
 - `GetBretonTraditionPoolPiety`/`GetBretonTraditionPietyPoolTier` retired; tier
-  reads practice counts.
+  reads weighted practice points at 25/50.
 - Record `PDV_Bless_Breton_PatronChampion` exists (spec + readback).
 - `LIKES_DISLIKES_VERSION = 16`.
 - `HandleBretonSleepEvents` no longer awards Julianos under Hidden Art.
@@ -679,11 +713,26 @@ Preconditions to check first (backend, before any in-game step):
 |---:|---|---|---|---|
 | BX1 | Cross-tradition patron championing (the headline case) | Green Way Breton, fresh save. Commit to **Magnus** as patron (non-resonant for Green Way); take Magnus to Champion (85). | Magnus reaches his own Champion tier and grants the modest `PDV_Bless_Breton_PatronChampion` boon; Green Way tradition family stays capped at T2. | Both surface at once: Magnus Champion recognition (Survey/BoD/toast) AND a Green Way T2 family effect; total always-on effects = 2, not 3; NO Green Way T3 spell |
 | BX2 | ACTIVE EFFECTS PASS 2026-07-12 - Resonant patron unlocks tradition T3 (folds old B2) | Any tradition; commit to a patron IN that lane's resonance set (e.g. Hidden Art + Magnus, Knight's Road + Stendarr, or Green Way + Y'ffre); take to Champion. | Tradition T3 family lights and IS the champion payoff; exactly one toast/BoD names the patron as Champion through the lane; NO separate PatronChampion boon stacked on top. | Runtime + Active Effects passed for Hidden Art/Magnus: `Hidden Art - Champion` Conjuration, Illusion, and Magicka Regeneration only; no separate PatronChampion stack. Still owed if needed: exact toast/Book-of-Days patron wording capture. |
-| BX3 | Practice-count tier (replaces B1/B1a) | Fresh Breton, any tradition, NO patron and zero pool-god piety. Fire that lane's practice signals (vow acts / occult study / Green Way behavior) to hit the count thresholds. | Tradition T1 lights at the low count threshold, T2 at the high one, with zero deity piety in the pool. | Counter-driven, not piety-driven; caps at T2 without a patron; daily anti-farm cap holds on the count ticks |
+| BX3 | ROUTE/UI PASS; 25/50 PACING OPEN - Practice-point tier (replaces B1/B1a) | Fresh Breton, any tradition, NO patron and zero pool-god piety. Earn varied practice points across multiple days. | Renewable +1, curated +2, no more than 4 total points per day; T1 at 25 and T2 at 50 with zero deity piety in the pool. | The old three-source run proved harvest `event_334`, draugr `event_300`, and `honor_the_wild` route into Green Way and that reward/UI plumbing works, but its same-day Seeker result is superseded. Retest daily cap, earliest-day boundary, 25-point Seeker, and 50-point Devoted after deployment. |
 | BX4 | Overlap resonance sets | For each overlap: prove the patron sources T3 in a lane it overlaps into. Mara -> Knight's Road AND Green Way AND Hidden Art; Dibella -> Green Way AND Hidden Art (NOT Knight's Road); Kynareth -> Knight's Road AND Green Way. | In each overlapping lane, that patron at Champion sources the tradition T3 (resonant path, not PatronChampion). Dibella under Knight's Road takes the non-resonant PatronChampion path instead. | Resonance membership is name-based and correct per lane; Dibella is explicitly NOT resonant in Knight's Road |
 | BX5 | Dual-feed (practice tick + deity piety) | Active tradition A, patron in tradition B (off-tradition). Fire a signal in tradition A's set. | The practice counter for A ticks (tradition-gated), AND the deity(s) the signal maps to still receive piety regardless of active tradition. Off-tradition patron keeps earning piety. | Piety is never tradition-gated; only the practice tick is; CrossTraditionPressure still records an off-tradition source |
 | BX6 | RUNTIME PASS 2026-07-12 - Julianos sleep-handler fix | Hidden Art Breton; trigger the hearth-cover sleep signal (`HandleBretonSleepEvents`). | Mara receives the hearth-cover credit; Julianos does NOT get a LAWFUL_ORDER award from sleep. Julianos credit now comes only from study signals (341/342). | Log proved the retired ancestor-spine sleep signal was ignored, Mara event 314 landed, and no Julianos event 314/LAWFUL_ORDER line appeared. Manual surface is optional follow-up if a visible Mara hearth-cover beat is required. |
 | BX7 | Pulse retune (no track pegging) | Any lane; fire a single renewable practice signal and read the pressure track delta. | Renewable source moves the track a small amount (+2..+5), not +25; a curated source ~+5; a milestone +15..20. Track no longer pegs 0->100 in ~2 acts. | Neglect/fray decay stays meaningful because the track is not instantly maxed; magnitudes match spec section 2 |
+
+### Breton Unified Champion Cards (2026-07-13, current reward authority)
+
+These cards supersede BX1/BX2/BX4 reward expectations. Practice-count and
+dual-feed behavior from BX3/BX5/BX7 remain current. A tradition grants T1/T2;
+an active Champion patron always grants that patron's own Champion boon.
+Resonance changes presentation only. Authority:
+`PDV_BretonUnifiedChampion_BuildSpec_2026-07-13.md`.
+
+| # | Scenario | Steps | Expected | Manual checks |
+|---:|---|---|---|---|
+| BUC1 | OPEN - Non-resonant Champion brings own boon | Green Way at 50 practice points (use the corrected Breton broad-lane debug seed for controlled reward proof). Set Magnus as debug patron, set Target piety 85, and apply. No dawn is required for the controlled seed. | Green Way remains Devoted and `Magnus's Aperture - Champion` appears beside it. | Exactly two Breton always-on families: Green Way T2 + Magnus Champion. No generic `Patron's Mark`, no Hidden Art T3, one Champion toast/Book entry naming Magnus. |
+| BUC2 | OPEN - Resonant Champion also brings own boon | From BUC1, switch patron to Y'ffre and apply Target piety 85. | `Magnus's Aperture - Champion` strips; `Green Way - Champion` appears as Y'ffre's boon while Green Way T2 remains. | Exactly two families remain. One Champion toast/Book entry names Y'ffre through the Green Way; no duplicate generic tier toast. |
+| BUC3 | OPEN - Patron swap exclusivity | Continue switching between two already-Champion patrons, then clear the patron override. | Only the current patron's Champion boon is present; clearing patron strips the Champion boon and leaves Green Way T2. | No stale prior-patron effect, no third stack, and Book/Survey identify the current focus. |
+| BUC4 | OPEN - Daedric Hidden Art exception | Hidden Art Breton with a Champion Daedric pact through 20C. | `Hidden Art - Champion` is the practitioner capstone; the prince reward remains owned by the pact path. | No generic Aedric Breton Champion copy is added; stack remains within the two-family budget. |
 
 Ledger note: once these pass, the two-axis build re-opens the felt-family verdicts
 for `Breton-GreenWay|boon`, `Breton-HiddenArt|boon`, and adds

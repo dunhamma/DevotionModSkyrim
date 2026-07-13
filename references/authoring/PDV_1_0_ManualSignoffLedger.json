@@ -95,6 +95,11 @@
           "status": "pending",
           "expected": "In-game proof for B2 HoonDing rebuild: make-way felt effect and dragon daily decay behave as authored under Requiem.",
           "note": ""
+        },
+        "sweepC": {
+          "status": "pending",
+          "expected": "In-game Fortify-pool MAX proof under Requiem for the converted Magicka/Stamina rewards across Sweep C (C1-C12): seed each deity/tier via MCM, confirm the Magicka/Stamina bar MAX rises by the Fortify amount. Read the Active-Effects 'Fortify Magicka'/'Fortify Stamina' entry or the bar MAX, NOT player.getav (returns current, not the ceiling). Includes the 4 invalidated already-passed re-proofs (C6 Bosmer Yffre/LivingStory, C7 Breton Magnus-champion, C8 Argonian Rooted-Rest, C2 Imperial Akatosh cheat-death save re-attach) and the 3 live-converted variety records (Argonian Sap Fortify Magicka +10, Argonian Marsh Fortify Stamina +15, Bosmer Wanderer Fortify Stamina +15).",
+          "note": ""
         }
       }
     }

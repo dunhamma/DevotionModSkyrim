@@ -12,7 +12,50 @@ PASS=1482, reward-order lint PASS, pdv_verify FAIL=0, pdv_prisma_ui_audit PASS 9
 
 ---
 
-## 1. Variety-batch records - LIVE ESP re-author OWED (the one live gap)
+## CLOSEOUT 2026-07-13 (later session)
+
+**Item 1 (live-ESP gap) is DONE.** The live `Devotion.esp` MGEFs were converted
+IN-PLACE via houseCARL `bulk_apply` (target=Devotion.esp, in_place). Backup at
+`D:\Wabbajack\modlists\Anvil\mods\Devotion\Devotion.esp.bak-msconv-20260713`.
+
+- `PDV_MGEF_ArgonianAdapt_Sap` (0714D0): -> PeakValueModifier / Magicka / "Fortify
+  Magicka"; SPEL 0714D1 magnitude 5 -> 10.
+- `PDV_MGEF_ArgonianAdapt_Marsh` (0714D2): -> PeakValueModifier / Stamina / "Fortify
+  Stamina"; SPEL 0714D3 magnitude 8 -> 15.
+- `PDV_MGEF_BosmerNaming_Wanderer` (0714FA): -> PeakValueModifier / Stamina / "Fortify
+  Stamina"; SPEL 0714FB magnitude 8 -> 15; SPEL Description "+8% Stamina Regeneration"
+  -> "Fortify Stamina +15".
+- **Khajiit Lunar T1 was NOT a gap** -- live 07103D already read PeakValueModifier /
+  Stamina / +15. The handoff table's "StaminaRegen 5 -> +10" was stale. Reconciled to
+  the main Khajiit reward spec (+15 wins); CAT6 pilot manifest magnitude 10 -> 15.
+
+Correction to this handoff's premise: the variety-batch `.NET` author tools DO exist
+(`pdv-argonian-variety-author`, `pdv-bosmer-variety-author`, `pdv-phase20-cat6-author`)
+-- retired into `tools/pdv-authoring-trees-retired-2026-07-13.zip`. They hardcode the
+OLD RateMult values, so they were NOT reused; houseCARL in-place surgery was used
+instead. Because the edit kept the same FormIDs/editorIds (no new MGEF minted, no SPEL
+repoint) and none of the 3 MGEFs carry a VMAD, the capstone-save orphaning failure mode
+does NOT apply -- `--author-capstones` was correctly skipped.
+
+Gates re-run after the write: reward readback **PASS=1482 FAIL=0** (unchanged),
+`pdv_verify` **FAIL=0 WARN=2** (the 2 WARNs are benign SEQ/freshness timestamp
+artifacts from rewriting the ESP; no QUST touched, no SEQ regen needed).
+
+**Item 2 (Sweep C felt proof) scaffolded, still OWED (user-run):** added a `sweepC`
+slot to `requiemTrackB` in `PDV_1_0_ManualSignoffLedger.json`; added card **C13** (the
+3 live converts) + an MCM seed cheat-sheet to `PDV_RequiemSmokeTest_Tracker.md`. The
+4 invalidated re-proofs (C2/C6/C7/C8) are flagged. Run Sweep C in game and record
+evidence into the ledger + felt-family ledger.
+
+**Open item:** `pdv_felt_registry_gen.mjs` reads only `PDV_<race>RewardRecords.spec.json`,
+so the 3 variety abilities (Sap/Marsh/Wanderer) are NOT tracked in
+`PDV_FeltEffectRegistry.json` -- the same input-surface gap that hid them originally.
+Decide whether to fold them into a race reward spec or teach the generator the variety
+manifests. Not blocking (Sweep C proves by observation, not registry membership).
+
+---
+
+## 1. Variety-batch records - LIVE ESP re-author [DONE 2026-07-13 - see CLOSEOUT above]
 
 A completeness scan across ALL authoring JSON (not just `*RewardRecords.spec.json`)
 found 4 regen rewards in variety-batch manifests that the conversion first missed.

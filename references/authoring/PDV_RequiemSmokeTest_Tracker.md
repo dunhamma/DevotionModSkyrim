@@ -226,6 +226,26 @@ Authority: `PDV_RequiemMagickaStaminaConversion_BuildSpec_2026-07-13.md` (magnit
 PROVISIONAL). Any race previously felt-proven for an M/S regen reward is
 INVALIDATED and must be re-proven here.
 
+2026-07-13 live-ESP closeout: the last 3 RateMult survivors in the variety batches
+were converted in-place in `Devotion.esp` (Argonian Sap MGEF 0714D0 -> Fortify
+Magicka +10; Argonian Marsh 0714D2 + Bosmer Wanderer 0714FA -> Fortify Stamina +15;
+all now PeakValueModifier). Khajiit Lunar T1 (07103D) was already Fortify Stamina +15
+(non-gap; +10 pilot value retired). These 3 are proof-eligible now (card C13).
+
+MCM seed cheat-sheet (debug is MCM-driven, not cqf):
+- Unlock: Player page -> "Developer Options" -> unlock the Debug pages.
+- Seed a deity to a tier (C1-C9): pick it in "Selected deity", set "Target piety"
+  slider, press "Apply target piety". Use "Debug patron override" to make it active;
+  "Seed broad lane (origin)" for the broad floor; "Run dawn pass" to consolidate.
+- Daedric tier (C10): Daedric debug page -> "Force Seeker/Devoted/Champion".
+- Neglect penalties (C12): prime the neglect path (force deity active, drop its piety
+  to 0 -> "neglect eligible primed") then "Run neglect pass".
+- Near-death burst (C11): no button -- seed the Argonian Void/Sithis path
+  ("Argonian focus -> Void"), then drop below 20% HP in combat to trigger it.
+- Variety converts (C13): granted by the in-game variety lever, not a debug button.
+- OBSERVE: open Active Effects and read the "Fortify Magicka"/"Fortify Stamina" entry,
+  or watch the bar MAX rise. Do NOT trust `player.getav` (returns current, not ceiling).
+
 | Check | Race / reward | How to seed -> observe | Proof | Status | Note |
 |---|---|---|---|---|---|
 | C1 | Altmer Orthodox/AuriEl/Magnus/Xarxes Fortify Magicka | seed tier -> Maximum Magicka rises +15/+25/+40 | [M] | PENDING | whole Altmer magic identity |
@@ -240,6 +260,7 @@ INVALIDATED and must be re-proven here.
 | C10 | Daedric Sheogorath Fortify Magicka / Hircine Fortify Stamina | pact tier Seeker/Devoted/Champion -> Max pool rises +25/+40/+50 | [M] | PENDING | |
 | C11 | Argonian Sithis near-death burst (scripted) | Void path, drop <20% health in combat -> INSTANT Stamina restore (+100), once/day | [M] + [R] | PENDING | now RestoreActorValue, NOT a regen bar |
 | C12 | M/S neglect penalties felt | prime neglect (Altmer/Dunmer Magicka, Bosmer/Khajiit Stamina) -> Maximum Magicka/Stamina DROPS -10 | [M] | PENDING | Breton creed-loss -15 |
+| C13 | Variety-batch 2026-07-13 live converts: Argonian Sap/Marsh adapt + Bosmer Naming Wanderer | grant via the variety lever (Argonian Sacred-Waters/Eldergleam adapt; Bosmer L5 "Naming" told-self) -> Max Magicka +10 (Sap) / Max Stamina +15 (Marsh, Wanderer) in Active Effects | [M] | PENDING | the just-closed live-ESP RateMult gap; not in the RewardRecords spec surface (felt-registry does not track these 3 -- see handoff open item) |
 
 ### Sweep B1 — heal conversions + text (after B1 deploy) → run-sheet: `PDV_RunSheet_Redguard_BetaFeel.md`
 | Check | Surface | How to observe | Proof | Status | Note |

@@ -1,8 +1,8 @@
 {
   "schema": "pdv.cat6.promotion-pilot.v1",
   "status": "pilot-preserved-reward-contract-owned",
-  "updated": "2026-06-19",
-  "archetypeConventionNote": "Regen actor values (HealRate/MagickaRate/StaminaRate and the *RateMult AVs) use PeakValueModifier, NOT ValueModifier, per the 2026-06-13 decision (commit 7fed0a3). The StaminaRegen effect below is PeakValueModifier to match the live record; do NOT 'correct' it back to ValueModifier. Non-regen AVs like ResistDisease stay ValueModifier.",
+  "updated": "2026-07-13",
+  "archetypeConventionNote": "2026-07-13 Requiem M/S conversion: the Stamina effect below is now a flat Fortify max-pool (actorValue Stamina, PeakValueModifier, magnitude 15), reconciled UP to the main Khajiit reward spec (PDV_KhajiitRewardRecords.spec.json) which wins over this pilot's former magnitude 10. It was formerly StaminaRateMult regen (muted under Requiem). Keep PeakValueModifier; do NOT revert actorValue to StaminaRateMult or magnitude to 10. The live record 07103D already carries this Fortify shape (editorId still ends _StaminaRegen; harmless). Non-regen AVs like ResistDisease stay ValueModifier.",
   "supersededGrantOwner": "references/authoring/PDV_Phase20_RewardRecordContracts.json",
   "sourceManifest": "race-sheets/PDV_RaceContent_Manifest.md",
   "allowedRows": [
@@ -43,7 +43,7 @@
           "descriptionSource": "manifest-exact",
           "archetype": "PeakValueModifier",
           "actorValue": "Stamina",
-          "magnitude": 10,
+          "magnitude": 15,
           "duration": 0,
           "area": 0,
           "conditions": "night-only",
