@@ -28,7 +28,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| Hermaeus Mora (Daedric path): Vast, patient, archival; the god of what is known and what should not be known; speaks as though the answer is already recorded and you are the last to arrive at it; impersonal, encyclopedic, faintly horrifying in completeness -- he takes your secrets as tribute and your agency as a ledger entry; no warmth, no malice, only the accumulation. | `PDV_Bless_Daedric_Mora_Champion` | Passive blessing description; visible whenever the player views active effects. | Narrator | 131 / 200 |  | Mora names you archivist. Secrets yield; forbidden knowledge is yours; what drives lesser scholars to ruin is a tool in your hands. |  |
+| Hermaeus Mora (Daedric path): Vast, patient, archival; the god of what is known and what should not be known; speaks as though the answer is already recorded and you are the last to arrive at it; impersonal, encyclopedic, faintly horrifying in completeness -- he takes your secrets as tribute and your agency as a ledger entry; no warmth, no malice, only the accumulation. | `PDV_Bless_Daedric_Mora_Champion` | Passive blessing description; visible whenever the player views active effects. | Narrator | 94 / 200 |  | Mora's archive teaches the shape beneath the spell. Boon: Alteration +20, Fortify Magicka +20. |  |
 
 ## Price -- Seeker (Tier 1)
 
@@ -84,7 +84,7 @@ _1 row._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| Hermaeus Mora (Daedric path): Vast, patient, archival; the god of what is known and what should not be known; speaks as though the answer is already recorded and you are the last to arrive at it; impersonal, encyclopedic, faintly horrifying in completeness -- he takes your secrets as tribute and your agency as a ledger entry; no warmth, no malice, only the accumulation. | `PDV_Msg_Daedric_Mora_ChampionEntry` | MessageBox. One-time on first Champion tier. | God-voice | 16+261 / 40+500 |  | Title: "Mora's Archivist"   Body: "You have given me three things: your curiosity, your willingness to pay for it, and your silence on what you found. The archive is open. The Black Books, the dark corners, what other scholars refused -- yours to handle. You are catalogued now, beside all of it." |  |
+| Hermaeus Mora (Daedric path): Vast, patient, archival; the god of what is known and what should not be known; speaks as though the answer is already recorded and you are the last to arrive at it; impersonal, encyclopedic, faintly horrifying in completeness -- he takes your secrets as tribute and your agency as a ledger entry; no warmth, no malice, only the accumulation. | `PDV_Msg_Daedric_Mora_ChampionEntry` | MessageBox. One-time on first Champion tier. | God-voice | 16+260 / 40+500 |  | Title: "Mora's Archivist"   Body: "You have given me three things: your curiosity, your willingness to pay for it, and your silence on what you found. The archive is open. The Black Books the other scholars refused are yours to handle, if you desire it. You are catalogued now, beside all of it." |  |
 
 ## Commitment / pact (the gate clears)
 

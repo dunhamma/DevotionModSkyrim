@@ -700,7 +700,7 @@ Source: the `Hermaeus Mora` row of the matrix -- PathType `Forbidden-knowledge-a
 |---|---|---|---|---|---|---|---|
 | PDV_Bless_Daedric_Mora_Seeker | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Hermaeus Mora" Boon | Passive SPEL; pact engaged | Mora's archive opens a corner. You retain more of what you study; knowledge surfaces from texts that should give less. |
 | PDV_Bless_Daedric_Mora_Devoted | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Hermaeus Mora" Boon | Passive SPEL | Mora's collection deepens in you. Spell insight comes faster, and dangerous texts open their secrets to your study without the usual cost. |
-| PDV_Bless_Daedric_Mora_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Hermaeus Mora" Boon | Passive SPEL | Mora names you archivist. Secrets yield; forbidden knowledge is yours; what drives lesser scholars to ruin is a tool in your hands. |
+| PDV_Bless_Daedric_Mora_Champion | Boon description | Quiet | Narrator | 200/140 | DaedricMatrix "Hermaeus Mora" Boon | Passive SPEL | Mora's archive teaches the shape beneath the spell. Boon: Alteration +20, Fortify Magicka +20. |
 
 **Price descriptions** (`PDV_Price_Daedric_Mora_*`). Narrator, 200/140.
 
@@ -717,7 +717,7 @@ Source: the `Hermaeus Mora` row of the matrix -- PathType `Forbidden-knowledge-a
 | PDV_Notif_Daedric_Mora_SeekerEntry | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Mora opens a section for you. Seeker. |
 | PDV_Notif_Daedric_Mora_DevotedEntry | Notification | Marked | Narrator | 80/60 | Architecture v3 Section 11.1 | One per save | Mora's archive deepens its claim. Devoted. |
 | PDV_Notif_Daedric_Mora_Lapse | Notification | Noted | Narrator | 80/60 | Architecture v3 Section 11.2 | One per direction per save | Mora's archive closes. The forbidden knowledge dims. |
-| PDV_Msg_Daedric_Mora_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Hermaeus Mora"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Mora's Archivist" Body: "You have given me three things: your curiosity, your willingness to pay for it, and your silence on what you found. The archive is open. The Black Books, the dark corners, what other scholars refused -- yours to handle. You are catalogued now, beside all of it." |
+| PDV_Msg_Daedric_Mora_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | DaedricMatrix "Hermaeus Mora"; Architecture v3 Section 11 | One-time on first Champion tier | Title: "Mora's Archivist" Body: "You have given me three things: your curiosity, your willingness to pay for it, and your silence on what you found. The archive is open. The Black Books the other scholars refused are yours to handle, if you desire it. You are catalogued now, beside all of it." |
 
 **Commitment / pact.**
 

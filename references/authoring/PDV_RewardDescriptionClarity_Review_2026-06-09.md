@@ -148,7 +148,7 @@ magnitude, not a duration. Approve the wording, then re-author the MGEF/SPEL
 | `PDV_Bless_Daedric_Molag_Champion` | +20 Illusion | Molag Bal's domination settles into your will. Boon: Illusion +20. |
 | `PDV_Bless_Daedric_Molag_Devoted` | +15 Illusion | Molag Bal's domination settles into your will. Boon: Illusion +15. |
 | `PDV_Bless_Daedric_Molag_Seeker` | +10 Illusion | Molag Bal's domination settles into your will. Boon: Illusion +10. |
-| `PDV_Bless_Daedric_Mora_Champion` | +20 Alteration | Mora's archive teaches the shape beneath the spell. Boon: Alteration +20. |
+| `PDV_Bless_Daedric_Mora_Champion` | +20 Alteration; +20 Magicka | Mora's archive teaches the shape beneath the spell. Boon: Alteration +20, Fortify Magicka +20. |
 | `PDV_Bless_Daedric_Mora_Devoted` | +15 Alteration | Mora's archive teaches the shape beneath the spell. Boon: Alteration +15. |
 | `PDV_Bless_Daedric_Mora_Seeker` | +10 Alteration | Mora's archive teaches the shape beneath the spell. Boon: Alteration +10. |
 | `PDV_Bless_Daedric_Nocturnal_Champion` | +20 Lockpicking | Nocturnal's shadow opens what should stay closed. Boon: Lockpicking +20. |
@@ -363,4 +363,3 @@ magnitude, not a duration. Approve the wording, then re-author the MGEF/SPEL
 | `PDV_Bless_Redguard_Tuwhacca_T2` | +10% Magic Resistance | Tu'whacca steadies the soul against death's edge. Magic Resistance +10%, and the kept death-rite restores your health (event-driven, flat restore -- felt under Requiem). |
 | `PDV_Bless_Redguard_Tuwhacca_T3` | +20% Magic Resistance | Tu'whacca keeps the way to the Far Shores open for you and yours. Magic Resistance +20%, and the kept death-rite restores your health in full measure (event-driven, flat restore -- felt under Requiem). |
 | `PDV_SPEL_Neglect_Redguard` | -3% Magic Resistance | The ancestors feel distant and the road is colder. Your resistance to magic falls 3% until you keep the sect and the death duty again. |
-

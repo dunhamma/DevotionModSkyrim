@@ -8152,6 +8152,67 @@ class Verifier {
     }
     const contractsByQuest = new Map((contracts.princes || []).map((prince) => [prince.questEditorId, prince]));
 
+    const resourcePools = new Set(["Health", "Magicka", "Stamina"]);
+    for (const prince of contracts.princes || []) {
+      for (const price of prince.prices || []) {
+        const effectContract = (price.effects || [])[0];
+        if (!effectContract || !resourcePools.has(effectContract.actorValue)) {
+          continue;
+        }
+
+        const detail = this.recordDetails.get(price.magicEffectEditorId);
+        if (!detail) {
+          this.fail("Daedric resource-pool price", `${price.magicEffectEditorId} is missing from ESP detail readback.`, PDV_ESP);
+          continue;
+        }
+
+        const archetype = detail.fields?.Archetype || {};
+        const flags = String(detail.fields?.Flags || "").split(",").map((flag) => flag.trim());
+        if (
+          archetype.Type === "PeakValueModifier" &&
+          archetype.ActorValue === effectContract.actorValue &&
+          flags.includes("Recover")
+        ) {
+          this.pass(
+            "Daedric resource-pool price",
+            `${price.magicEffectEditorId} reversibly modifies maximum ${effectContract.actorValue}.`,
+            PDV_ESP,
+          );
+        } else {
+          this.fail(
+            "Daedric resource-pool price",
+            `${price.magicEffectEditorId} must use PeakValueModifier/${effectContract.actorValue} with Recover; found ${archetype.Type || "missing"}/${archetype.ActorValue || "missing"} flags=${flags.join(",") || "none"}.`,
+            PDV_ESP,
+          );
+        }
+      }
+    }
+
+    const mora = (contracts.princes || []).find((prince) => prince.displayName === "Hermaeus Mora");
+    const moraChampion = mora?.boons?.find((boon) => boon.property === "Boon_Champion");
+    const moraMagicka = moraChampion?.effects?.find((effect) => effect.actorValue === "Magicka");
+    const moraMagickaId = moraMagicka?.magicEffectEditorId;
+    const moraSpell = this.recordDetails.get(moraChampion?.spellEditorId);
+    const moraMagickaDetail = this.recordDetails.get(moraMagickaId);
+    const moraSpellEffect = (moraSpell?.fields?.Effects || []).find(
+      (effect) => formidToEdid(effect.BaseEffect, this.recordsByEdid) === moraMagickaId,
+    );
+    if (
+      moraMagickaId &&
+      moraMagickaDetail?.fields?.Archetype?.Type === "PeakValueModifier" &&
+      moraMagickaDetail.fields.Archetype.ActorValue === "Magicka" &&
+      String(moraMagickaDetail.fields.Flags || "").split(",").map((flag) => flag.trim()).includes("Recover") &&
+      Number(moraSpellEffect?.Data?.Magnitude) === Number(moraMagicka.magnitude)
+    ) {
+      this.pass("Hermaeus Mora Champion boon", `${moraChampion.spellEditorId} includes reversible Magicka +${moraMagicka.magnitude}.`, PDV_ESP);
+    } else {
+      this.fail(
+        "Hermaeus Mora Champion boon",
+        "The Mora Champion spell must include its contracted PeakValueModifier Magicka effect with Recover.",
+        PDV_ESP,
+      );
+    }
+
     for (const [questEdid, concreteScriptName, expectedDeityName] of DAEDRIC_PATH_SCRIPT_ATTACHMENTS) {
       const detail = this.recordDetails.get(questEdid);
       if (!detail) {

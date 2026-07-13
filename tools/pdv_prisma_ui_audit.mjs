@@ -401,6 +401,7 @@ function verifySessionCopyContracts(manager, managerPath) {
 
 function verifyDaedricToastContracts(manager, managerPath) {
   const milestoneBlock = functionBlock(manager, "ShowDaedricMilestonePresentation");
+  const milestoneSenderBlock = functionBlock(manager, "SendPrismaDaedricMilestoneToast");
   const senderBlock = functionBlock(manager, "SendPrismaDaedricToast");
   const replayBlock = functionBlock(manager, "ReplayConcreteDaedricChampionOffer");
   const residueBlock = functionBlock(manager, "DrainHircineResiduePrismaToasts");
@@ -409,6 +410,15 @@ function verifyDaedricToastContracts(manager, managerPath) {
     fail("Daedric milestone presentation must emit the paired boon toast after the milestone toast.", managerPath);
   } else {
     pass("Daedric milestone presentation emits the paired boon toast.", managerPath);
+  }
+
+  if (
+    milestoneSenderBlock.includes("QueuePrismaToastRetry") ||
+    manager.includes("Function ProcessQueuedPrismaToastRetry")
+  ) {
+    fail("Successful Daedric milestone sends must not be resent; the native bridge already queues cold-DOM overlays.", managerPath);
+  } else {
+    pass("Daedric milestone recognition has no unconditional duplicate retry.", managerPath);
   }
 
   if (!senderBlock.includes('if phase == "boon"') || !senderBlock.includes('j = j + ",\\\"tone\\\":\\\"good\\\""')) {
@@ -464,7 +474,7 @@ function mechanicRows(block) {
   return rows;
 }
 
-function expectedDaedricMechanicText(princeName, effect, kind) {
+function expectedDaedricMechanicText(princeName, effects, kind) {
   if (princeName === "Namira" && kind === "boon") {
     return "Feeding restores Health and Stamina";
   }
@@ -488,10 +498,12 @@ function expectedDaedricMechanicText(princeName, effect, kind) {
     ResistDisease: "Disease resistance",
   };
   const percentActorValues = new Set(["ResistMagic", "SpeedMult", "AttackDamageMult", "ResistDisease"]);
-  const magnitude = Number(effect.magnitude);
-  const signedMagnitude = magnitude > 0 ? `+${magnitude}` : String(magnitude);
-  const suffix = percentActorValues.has(effect.actorValue) ? `${signedMagnitude}%` : signedMagnitude;
-  return `${suffix} ${labels[effect.actorValue] || effect.actorValue}`;
+  return effects.map((effect) => {
+    const magnitude = Number(effect.magnitude);
+    const signedMagnitude = magnitude > 0 ? `+${magnitude}` : String(magnitude);
+    const suffix = percentActorValues.has(effect.actorValue) ? `${signedMagnitude}%` : signedMagnitude;
+    return `${suffix} ${labels[effect.actorValue] || effect.actorValue}`;
+  }).join("; ");
 }
 
 function verifyDaedricMechanicTextContract(manager, managerPath) {
@@ -508,8 +520,8 @@ function verifyDaedricMechanicTextContract(manager, managerPath) {
   for (const prince of contract.princes || []) {
     for (let index = 0; index < tiers.length; index += 1) {
       const key = `${prince.displayName}|${tiers[index]}`;
-      const expectedBoon = expectedDaedricMechanicText(prince.displayName, prince.boons[index].effects[0], "boon");
-      const expectedPrice = expectedDaedricMechanicText(prince.displayName, prince.prices[index].effects[0], "price");
+      const expectedBoon = expectedDaedricMechanicText(prince.displayName, prince.boons[index].effects, "boon");
+      const expectedPrice = expectedDaedricMechanicText(prince.displayName, prince.prices[index].effects, "price");
       if (boonRows.get(key) !== expectedBoon) mismatches.push(`${key} boon expected '${expectedBoon}' got '${boonRows.get(key) || "missing"}'`);
       if (priceRows.get(key) !== expectedPrice) mismatches.push(`${key} price expected '${expectedPrice}' got '${priceRows.get(key) || "missing"}'`);
     }
@@ -852,7 +864,6 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     const expectedOverlaySenderFunctions = [
       "ClosePrismaJournal",
       "DebugClosePrismaSurfaces",
-      "ProcessQueuedPrismaToastRetry",
       "SendPrismaCurseToast",
       "SendPrismaJournalPayload",
       "SendPrismaMedallionPayload",

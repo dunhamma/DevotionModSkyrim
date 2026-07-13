@@ -3689,14 +3689,23 @@
           "spellEditorId": "PDV_Bless_Daedric_Mora_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mora_Champion",
           "displayName": "Hermaeus Mora Boon - Champion",
-          "playerFacingText": "Mora's archive teaches the shape beneath the spell. Boon: Alteration +20.",
+          "playerFacingText": "Mora's archive teaches the shape beneath the spell. Boon: Alteration +20, Fortify Magicka +20.",
           "property": "Boon_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mora_Champion",
               "actorValue": "Alteration",
               "magnitude": 20,
               "area": 0,
               "duration": 0
+            },
+            {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mora_Champion_Magicka",
+              "actorValue": "Magicka",
+              "magnitude": 20,
+              "area": 0,
+              "duration": 0,
+              "effectName": "Fortify Magicka"
             }
           ]
         }
@@ -3776,7 +3785,7 @@
         {
           "editorId": "PDV_Msg_Daedric_Mora_ChampionEntry",
           "title": "Mora's Archivist",
-          "body": "You have given me three things: your curiosity, your willingness to pay for it, and your silence on what you found. The archive is open. The Black Books, the dark corners, what other scholars refused -- yours to handle. You are catalogued now, beside all of it.",
+          "body": "You have given me three things: your curiosity, your willingness to pay for it, and your silence on what you found. The archive is open. The Black Books the other scholars refused are yours to handle, if you desire it. You are catalogued now, beside all of it.",
           "property": "Msg_ChampionEntry",
           "messageBox": true,
           "buttons": [

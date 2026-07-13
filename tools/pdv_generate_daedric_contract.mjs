@@ -135,6 +135,19 @@ const SKILL_AVS = new Set([
   "Conjuration", "Destruction", "Illusion", "Restoration", "Enchanting",
 ]);
 
+const EXTRA_EFFECTS_BY_SPELL = {
+  PDV_Bless_Daedric_Mora_Champion: [
+    {
+      magicEffectEditorId: "PDV_MGEF_Bless_Daedric_Mora_Champion_Magicka",
+      actorValue: "Magicka",
+      magnitude: 20,
+      area: 0,
+      duration: 0,
+      effectName: "Fortify Magicka",
+    },
+  ],
+};
+
 function spellPacket(id, text, kind, meta, tierIndex) {
   const tierName = ["Seeker", "Devoted", "Champion"][tierIndex];
   const actorValues = kind === "boon" ? meta.mechanics : meta.price;
@@ -146,13 +159,16 @@ function spellPacket(id, text, kind, meta, tierIndex) {
   } else {
     magnitudes = isSkill ? [-10, -18, -25] : [-10, -20, -30];
   }
+  const magicEffectEditorId = id.replace("PDV_Bless_", "PDV_MGEF_Bless_").replace("PDV_Price_", "PDV_MGEF_Price_");
+  const effects = [{ magicEffectEditorId, actorValue, magnitude: magnitudes[tierIndex], area: 0, duration: 0 }];
+  effects.push(...(EXTRA_EFFECTS_BY_SPELL[id] || []));
   return {
     spellEditorId: id,
-    magicEffectEditorId: id.replace("PDV_Bless_", "PDV_MGEF_Bless_").replace("PDV_Price_", "PDV_MGEF_Price_"),
+    magicEffectEditorId,
     displayName: `${meta.displayName} ${kind === "boon" ? "Boon" : "Price"} - ${tierName}`,
     playerFacingText: text,
     property: `${kind === "boon" ? "Boon" : "Price"}_${tierName}`,
-    effects: [{ actorValue, magnitude: magnitudes[tierIndex], area: 0, duration: 0 }],
+    effects,
   };
 }
 

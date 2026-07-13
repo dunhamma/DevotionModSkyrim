@@ -822,9 +822,6 @@ Int _pendingDaedricMilestoneNewTier = 0
 String _pendingDaedricMilestoneReason = ""
 Bool _pendingDaedricMilestoneReplayChampionOffer = False
 Int _pendingDaedricMilestoneDelayTicks = 0
-String _pendingPrismaToastRetryPayload = ""
-String _pendingPrismaToastRetryLabel = ""
-Int _pendingPrismaToastRetryDelayTicks = 0
 Int _pendingLikesDislikesEventType = -1
 
 Event OnInit()
@@ -866,7 +863,6 @@ Event OnUpdate()
     ProcessPendingDaedricPrePactNotices()
     DrainHircineRenunciationJournal()
     ProcessDelayedHircineResiduePrismaToasts()
-    ProcessQueuedPrismaToastRetry()
 
     if DebugCommand != 0
         RunDebugCommand()
@@ -17530,55 +17526,10 @@ Bool Function SendPrismaDaedricMilestoneToast(String princeName, String tierLabe
     j = j + ",\"duration\":9000"
     j = j + "}}"
     Bool sent = SendPrismaToastPayloadOrFallback(j, titleText, flavorText, allowFallback)
-    if sent
-        QueuePrismaToastRetry(j, princeName + " " + tierLabel)
-    endIf
     if GetDebugLevel() >= 1
         Debug.Trace("[PDV] Daedric milestone Prisma payload sent=" + sent + " prince=" + princeName + " tier=" + tierLabel)
     endIf
     return sent
-EndFunction
-
-Function QueuePrismaToastRetry(String payload, String label)
-    if payload == ""
-        return
-    endIf
-
-    _pendingPrismaToastRetryPayload = payload
-    _pendingPrismaToastRetryLabel = label
-    _pendingPrismaToastRetryDelayTicks = 1
-    if GetDebugLevel() >= 2
-        Debug.Trace("[PDV] Prisma toast retry queued: " + label)
-    endIf
-EndFunction
-
-Function ProcessQueuedPrismaToastRetry()
-    if _pendingPrismaToastRetryPayload == ""
-        return
-    endIf
-
-    if _pendingPrismaToastRetryDelayTicks > 0
-        _pendingPrismaToastRetryDelayTicks -= 1
-        return
-    endIf
-
-    String payload = _pendingPrismaToastRetryPayload
-    String label = _pendingPrismaToastRetryLabel
-    _pendingPrismaToastRetryPayload = ""
-    _pendingPrismaToastRetryLabel = ""
-    _pendingPrismaToastRetryDelayTicks = 0
-
-    if !PDV_PrismaBridge.IsAvailable()
-        if GetDebugLevel() >= 1
-            Debug.Trace("[PDV] Prisma toast retry skipped: bridge unavailable for " + label)
-        endIf
-        return
-    endIf
-
-    Bool sent = PDV_PrismaBridge.SendOverlayJson(payload)
-    if GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Prisma toast retry sent=" + sent + " label=" + label)
-    endIf
 EndFunction
 
 ; Contract-derived Daedric milestone copy. Source: PDV_DaedricPrinceRecordContracts.json.
@@ -17763,7 +17714,7 @@ String Function GetDaedricBoonMechanicText(String princeName, Int tierValue)
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_DEVOTED
         return "+15 Alteration"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_CHAMPION
-        return "+20 Alteration"
+        return "+20 Alteration; +20 Magicka"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_SEEKER
         return "+10 Lockpicking"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_DEVOTED
