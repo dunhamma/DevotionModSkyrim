@@ -174,12 +174,12 @@
       "effects": [
         {
           "magicEffectEditorId": "PDV_MGEF_Bless_Khajiit_Lunar_T1_StaminaRegen",
-          "displayName": "Stamina Regeneration",
-          "actorValue": "StaminaRateMult",
-          "magnitude": 5,
+          "displayName": "Fortify Stamina",
+          "actorValue": "Stamina",
+          "magnitude": 15,
           "area": 0,
           "duration": 0,
-          "nightOnly": true
+          "nightOnly": false
         },
         {
           "magicEffectEditorId": "PDV_MGEF_Bless_Khajiit_Lunar_T1_DiseaseResist",
@@ -188,16 +188,16 @@
           "magnitude": 15,
           "area": 0,
           "duration": 0,
-          "nightOnly": true
+          "nightOnly": false
         }
       ],
-      "playerFacingText": "The moons have noticed how you move. Stamina Regeneration +5% (at night), Disease Resistance +15% (at night).",
-      "recordReadbackAssertion": "Pilot-provisional SPEL PDV_Bless_Khajiit_Lunar_T1 exists, carries night-gated stamina/disease MGEFs, preserves CAT-6 source text, and is wired as the Khajiit lunar substrate Mid slot.",
+      "playerFacingText": "The moons have noticed how you move. Fortify Stamina +15, Disease Resistance +15%.",
+      "recordReadbackAssertion": "Pilot-provisional SPEL PDV_Bless_Khajiit_Lunar_T1 exists, carries always-active stamina/disease MGEFs (night gate removed 2026-07-13), preserves CAT-6 source text, and is wired as the Khajiit lunar substrate Mid slot.",
       "grantRemovalOwner": "PDV_Substrate_KhajiitLunar Substrate_Mid via PDV_SubstrateBase.SyncSubstrateBoonsToTier.",
-      "stackCapRule": "No more than one Khajiit lunar T1 active; night-gated subeffects must not bypass manager suppression.",
+      "stackCapRule": "No more than one Khajiit lunar T1 active; subeffects must not bypass manager suppression.",
       "daedricInteraction": "Azurah focus and Daedric champion effects are explicit overlays, not silent additions.",
       "implementationStatus": "records-authored-manager-wired-pending-runtime-proof",
-      "notes": "Current CAT-6 pilot record is preserved as the Khajiit lunar substrate Mid reward packet; generic first-tier runtime must not directly manage this reused spell."
+      "notes": "Current CAT-6 pilot record is preserved as the Khajiit lunar substrate Mid reward packet; generic first-tier runtime must not directly manage this reused spell. 2026-07-13: night gate removed from all lunar substrate boons (owner decision - always-active, tier-up must never feel like a downgrade); Stamina effect reflects the Requiem M/S Fortify conversion."
     },
     {
       "race": "Nord",

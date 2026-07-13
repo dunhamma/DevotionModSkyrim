@@ -88,18 +88,18 @@
             "magicEffectEditorId": "PDV_MGEF_Bless_Khajiit_Lunar_T1_StaminaRegen",
             "actorValue": "Stamina",
             "magnitude": 15,
-            "nightOnly": true,
+            "nightOnly": false,
             "effectName": "Fortify Stamina"
           },
           {
             "magicEffectEditorId": "PDV_MGEF_Bless_Khajiit_Lunar_T1_DiseaseResist",
             "actorValue": "ResistDisease",
             "magnitude": 15,
-            "nightOnly": true,
+            "nightOnly": false,
             "effectName": "Disease Resistance"
           }
         ],
-        "playerFacingText": "The moons have noticed how you move. Fortify Stamina +15 (at night), Disease Resistance +15% (at night)."
+        "playerFacingText": "The moons have noticed how you move. Fortify Stamina +15, Disease Resistance +15%."
       },
       {
         "slotProperty": "Substrate_High",
@@ -110,25 +110,25 @@
             "magicEffectEditorId": "PDV_MGEF_Khajiit_Substrate_High_Stamina",
             "actorValue": "Stamina",
             "magnitude": 25,
-            "nightOnly": true,
+            "nightOnly": false,
             "effectName": "Fortify Stamina"
           },
           {
             "magicEffectEditorId": "PDV_MGEF_Khajiit_Substrate_High_Disease",
             "actorValue": "ResistDisease",
             "magnitude": 30,
-            "nightOnly": true,
+            "nightOnly": false,
             "effectName": "Disease Resistance"
           },
           {
             "magicEffectEditorId": "PDV_MGEF_Khajiit_Substrate_High_Magicka",
             "actorValue": "Magicka",
             "magnitude": 15,
-            "nightOnly": true,
+            "nightOnly": false,
             "effectName": "Fortify Magicka"
           }
         ],
-        "playerFacingText": "You are deeply attuned to the Lunar Lattice. At night your stamina and magicka regenerate faster and disease finds little purchase. Fortify Stamina +25 (at night), Disease Resistance +30% (at night), Fortify Magicka +15 (at night)."
+        "playerFacingText": "You are deeply attuned to the Lunar Lattice. Your stamina runs deep, your magicka wells full, and disease finds little purchase. Fortify Stamina +25, Disease Resistance +30%, Fortify Magicka +15."
       }
     ]
   },

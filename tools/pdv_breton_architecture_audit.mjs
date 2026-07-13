@@ -18,6 +18,7 @@ function functionBody(source, name) {
 const manager = read("live-source/Scripts/Source/PDV__ManagerQuest.psc");
 const mcm = read("live-source/Scripts/Source/PDV_MCM.psc");
 const daedricBase = read("live-source/Scripts/Source/PDV_DaedricPathBase.psc");
+const compiler = read("tools/pdv_compile.mjs");
 const sync = read("tools/sync-devotion-to-live.ps1");
 const spec = readJson("references/authoring/PDV_BretonRewardRecords.spec.json");
 const raceSheet = read("race-sheets/PDV_RaceDesign_Breton.md");
@@ -35,12 +36,15 @@ const patronSurvey = functionBody(manager, "GetBretonPatronSurveySentence");
 const bookPath = functionBody(manager, "GetBretonBookOfDaysPathStatusLabel");
 const rewardSync = functionBody(manager, "SyncBretonRewards");
 const familySync = functionBody(manager, "SyncBretonTraditionRewardFamily");
+const championReplacement = functionBody(manager, "IsBretonPracticeTierReplacedByChampion");
 const championSync = functionBody(manager, "SyncBretonChampionBoonExclusive");
 const championMap = functionBody(manager, "GetBretonPatronChampionBoon");
 const debugTradition = functionBody(manager, "DebugSetBretonTradition");
 const initialChoice = functionBody(manager, "ApplyBretonInitialChoice");
 const practiceAward = functionBody(manager, "AwardBretonPracticePulse");
 const daedricMultiplier = functionBody(manager, "GetDaedricStigmaGainMultiplier");
+const daedricToast = functionBody(manager, "SendPrismaDaedricToast");
+const daedricMilestone = functionBody(manager, "ShowDaedricMilestonePresentation");
 const priceSync = functionBody(daedricBase, "SyncDaedricContractToTier");
 const priceWaiver = functionBody(daedricBase, "ShouldWaivePriceForPlayer");
 const stigmaAward = functionBody(daedricBase, "AddStigma");
@@ -55,10 +59,12 @@ assert("practice pacing contract", manager.includes("BRETON_PRACTICE_SEEKER_POIN
 assert("survey preserves race layer under pact", surveyDispatch.indexOf("originRace == ORIGIN_BRETON") >= 0 && surveyDispatch.indexOf("originRace == ORIGIN_BRETON") < surveyDispatch.indexOf("if pactPath"), "Breton Survey must compose its tradition layer before the global Prince-wins fallback.");
 assert("survey covers all traditions", ["Knight's Road", "Hidden Art", "Green Way"].every((label) => survey.includes(label)) && survey.includes("GetBretonPatronSurveySentence"), "Survey must retain every tradition base and append patron/pact context.");
 assert("hidden art survey names pact", patronSurvey.includes("GetActiveDaedricPactPath") && patronSurvey.includes("Your pact with "), "Hidden Art Survey must append the active Prince without replacing the tradition.");
+assert("hidden art survey names pact and boon once", patronSurvey.includes("has opened Hidden Art - Champion.") && !patronSurvey.includes("Hidden Art - Champion stands beside the pact."), "Integrated Champion Survey copy must name the pact and actual boon without repeating the outcome.");
 assert("book path composes tradition and pact", bookPath.includes("traditionLabel") && bookPath.includes("activePact") && bookPath.includes(' + " / " + '), "Book of Days path status must name both Breton tradition and active pact.");
 assert("retired generic rewards strip", rewardSync.includes("PDV_Bless_Breton_Tradition_T1, False") && rewardSync.includes("PDV_Bless_Breton_Tradition_T2, False"), "Retired generic Breton reward spells must be removed from migrated saves.");
 assert("retired ancestor spine clears", rewardSync.includes("SyncBretonAncestorSubstrate") && functionBody(manager, "SyncBretonAncestorSubstrate").includes("ClearSubstrateBoons"), "The retired Breton ancestor spine must stay cleanup-only.");
 assert("three practice families", ["KnightsRoad", "HiddenArt", "GreenWay"].every((label) => rewardSync.includes(`"${label}"`)), "All three practice reward families must be synchronized.");
+assert("same-family champion replaces T2", familySync.includes("IsBretonPracticeTierReplacedByChampion") && familySync.includes("!championReplacesT2") && ["KnightsRoad_T3", "HiddenArt_T3", "GreenWay_T3"].every((id) => championReplacement.includes(id)), "A cumulative tradition Champion spell must replace its T2 spell instead of duplicating ActorValue lines.");
 assert("notorious does not revoke hidden art", !familySync.includes("WitchcraftExposure") && !practiceAward.includes('WitchcraftExposure") >= 100'), "Notorious exposure is a cost/reward posture, not a reason to disable Hidden Art practice rewards.");
 
 const championProps = ["Mara", "Arkay", "Akatosh", "Julianos", "Kynareth", "Dibella", "Zenithar", "Talos", "Magnus"];
@@ -70,6 +76,7 @@ assert("generic patron mark retired", !rewardSync.includes("PDV_Bless_Breton_Pat
 const hiddenPrinces = ["Hermaeus Mora", "Hircine", "Namira", "Nocturnal"];
 assert("hidden art prince roster consistent", hiddenPrinces.every((name) => manager.includes(`pathName == "${name}"`)) && hiddenPrinces.every((name) => integratedPact.includes(`DeityName == "${name}"`)) && priceWaiver.includes("IsBretonHiddenArtIntegratedPact") && stigmaWaiver.includes("IsBretonHiddenArtIntegratedPact"), "Offer, price-waiver, and stigma-waiver rosters must contain the same four Hidden Art Princes.");
 assert("hidden art price waived", priceSync.includes("ShouldWaivePriceForPlayer") && priceWaiver.includes("IsBretonHiddenArtIntegratedPact") && integratedPact.includes("RACE_BRETON") && integratedPact.includes('"PDV.Breton.Tradition"'), "The global Prince price must be waived only for a Breton walking Hidden Art with an integrated Prince.");
+assert("hidden art price presentation waived", daedricMilestone.includes("!path.ShouldWaivePriceForPlayer()") && daedricToast.includes('phase == "price"') && daedricToast.includes("activePact.ShouldWaivePriceForPlayer()"), "A waived integrated-pact price must not survive as milestone copy or a price-phase toast.");
 assert("hidden art duplicate stigma waived", stigmaAward.includes("ShouldWaiveStigmaForPlayer") && stigmaWaiver.includes("IsBretonHiddenArtIntegratedPact") && integratedPact.includes("RACE_BRETON") && integratedPact.includes('"PDV.Breton.Tradition"'), "WitchcraftExposure is the Hidden Art stigma layer; the generic per-Prince stigma must not stack.");
 assert("notorious pact gain multiplier", daedricMultiplier.includes("WitchcraftExposure") && daedricMultiplier.includes("1.25") && daedricMultiplier.includes("IsBretonHiddenArtDaedricOfferDeity"), "Notorious Hidden Art must deliver its locked 1.25 pact-gain reward for the four integrated Princes.");
 assert("same pact refresh idempotent", makeActivePact.indexOf("if priorPact != GetDeityForm()") >= 0 && makeActivePact.indexOf("if priorPact != GetDeityForm()") < makeActivePact.indexOf("ClearLiveDaedricPactSpells"), "Refreshing one Prince must not hard-strip and regrant the pact.");
@@ -80,6 +87,7 @@ assert("startup choice refreshes state", initialChoice.includes("SyncFirstTierRa
 assert("panel keeps layered hidden art note", panelNote.includes("BRETON_TRADITION_HIDDEN_ART") && panelNote.includes("Hidden Art"), "The focused panel must not describe an integrated Hidden Art pact as silencing the Breton tradition.");
 assert("mcm exposes controlled Breton tools", ["Apply practice target", "Add renewable practice", "Add curated practice", "Reset Breton practice"].every((label) => mcm.includes(label)), "MCM must expose the controlled Breton practice boundary and pacing tools.");
 assert("live sync includes daedric base", sync.includes("PDV_DaedricPathBase.psc"), "The guarded live sync must deploy the shared pact base changed by Breton fixes.");
+assert("compiler rejects source mirror drift", compiler.includes("checkTrackedSourceMirror") && compiler.includes("Tracked/deployed source drift") && compiler.includes("Sync live-source before compiling"), "The compiler must fail before producing a stale PEX when tracked and deployed source differ.");
 
 const specIds = new Set((spec.emphasisRewards ?? []).map((row) => row.spellEditorId));
 assert("reward spec covers live families", [

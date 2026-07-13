@@ -20,6 +20,7 @@ const STOCK_GAME = path.join(ANVIL_ROOT, "Stock Game");
 const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");
 const DEVOTION_SOURCE = path.join(DEVOTION_MOD, "Scripts", "Source");
 const DEVOTION_PEX = path.join(DEVOTION_MOD, "Scripts");
+const TRACKED_SOURCE = path.join(PROJECT_ROOT, "live-source", "Scripts", "Source");
 const SKYUI_HEADERS_SOURCE = path.join(PROJECT_ROOT, "tools", "skyui_compile_shim");
 const COMPILER_EXE = path.join(STOCK_GAME, "Papyrus Compiler", "PapyrusCompiler.exe");
 const ASSEMBLER_EXE = path.join(STOCK_GAME, "Papyrus Compiler", "PapyrusAssembler.exe");
@@ -405,6 +406,27 @@ function compileScript(scriptName, args, startedAt) {
   const output = pexPath(scriptName);
   const compilerArgs = compilerArguments(scriptName);
 
+  const mirrorCheck = checkTrackedSourceMirror(scriptName);
+  if (!mirrorCheck.ok) {
+    return {
+      script: scriptName,
+      source,
+      output,
+      command: formatCommand(COMPILER_EXE, compilerArgs),
+      status: null,
+      signal: null,
+      error: mirrorCheck.error,
+      warnings: false,
+      errors: true,
+      pexFresh: false,
+      straySkyuiOutputs: [],
+      outputUpdatedDuringRun: false,
+      ok: false,
+      stdout: "",
+      stderr: "",
+    };
+  }
+
   const result = spawnSync(COMPILER_EXE, compilerArgs, {
     cwd: path.dirname(COMPILER_EXE),
     encoding: "utf8",
@@ -687,6 +709,31 @@ function normalizeScriptName(value) {
 
 function scriptPath(scriptName) {
   return path.join(DEVOTION_SOURCE, `${scriptName}.psc`);
+}
+
+function trackedScriptPath(scriptName) {
+  return path.join(TRACKED_SOURCE, `${scriptName}.psc`);
+}
+
+function checkTrackedSourceMirror(scriptName) {
+  const tracked = trackedScriptPath(scriptName);
+  const deployed = scriptPath(scriptName);
+  if (!exists(tracked)) {
+    return { ok: true };
+  }
+  if (!exists(deployed)) {
+    return { ok: false, error: `Deployed source is missing: ${deployed}` };
+  }
+
+  const trackedBytes = fs.readFileSync(tracked);
+  const deployedBytes = fs.readFileSync(deployed);
+  if (!trackedBytes.equals(deployedBytes)) {
+    return {
+      ok: false,
+      error: `Tracked/deployed source drift for ${scriptName}. Sync live-source before compiling: ${tracked} -> ${deployed}`,
+    };
+  }
+  return { ok: true };
 }
 
 function pexPath(scriptName) {

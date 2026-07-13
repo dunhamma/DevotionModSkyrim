@@ -126,6 +126,12 @@ const PHASE20_DEITY_COVERAGE_MANIFEST = path.join(
   "authoring",
   "PDV_DeityCoverageMatrix.json",
 );
+const DAEDRIC_PRINCE_RECORD_CONTRACTS = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_DaedricPrinceRecordContracts.json",
+);
 const PHASE20_MEDALLION_ROSTER_MANIFEST = path.join(
   PROJECT_ROOT,
   "references",
@@ -537,13 +543,32 @@ const SKELETON_SACRED_PLACE_DEFINITIONS = [
 const SKELETON_DAEDRIC_PATH_DEFINITIONS = [
   {
     questEdid: "PDV_DaedricPath_Hircine",
-    scriptName: "PDV_DaedricPathBase",
+    scriptName: "PDV_DaedricPath_Hircine",
     deityName: "Hircine",
-    deityDomain: "Hunt, Lycanthropy, Predation",
-    deityIndex: 100,
-    stigmaGlobalEdid: "PDV_GLO_HircineStigma",
+    deityDomain: "Ill Met by Moonlight > werewolf state > Companions",
+    deityIndex: 1333,
+    stigmaGlobalEdid: "PDV_GLO_Daedric_Hircine_Stigma",
     commitmentSignalsRequired: 3,
   },
+];
+
+const DAEDRIC_PATH_SCRIPT_ATTACHMENTS = [
+  ["PDV_DaedricPath_Hircine", "PDV_DaedricPath_Hircine", "Hircine"],
+  ["PDV_DaedricPath_Mephala", "PDV_DaedricPath_Mephala", "Mephala"],
+  ["PDV_DaedricPath_Boethiah", "PDV_DaedricPath_Boethiah", "Boethiah"],
+  ["PDV_DaedricPath_Azura", "PDV_DaedricPath_Azura", "Azura"],
+  ["PDV_DaedricPath_Vaermina", "PDV_DaedricPath_Vaermina", "Vaermina"],
+  ["PDV_DaedricPath_Meridia", "PDV_DaedricPath_Meridia", "Meridia"],
+  ["PDV_DaedricPath_Molag", "PDV_DaedricPath_Molag", "Molag Bal"],
+  ["PDV_DaedricPath_Malacath", "PDV_DaedricPath_Malacath", "Malacath"],
+  ["PDV_DaedricPath_Dagon", "PDV_DaedricPath_Dagon", "Mehrunes Dagon"],
+  ["PDV_DaedricPath_Sheo", "PDV_DaedricPath_Sheo", "Sheogorath"],
+  ["PDV_DaedricPath_Namira", "PDV_DaedricPath_Namira", "Namira"],
+  ["PDV_DaedricPath_Sanguine", "PDV_DaedricPath_Sanguine", "Sanguine"],
+  ["PDV_DaedricPath_Vile", "PDV_DaedricPath_Vile", "Clavicus Vile"],
+  ["PDV_DaedricPath_Mora", "PDV_DaedricPath_Mora", "Hermaeus Mora"],
+  ["PDV_DaedricPath_Nocturnal", "PDV_DaedricPath_Nocturnal", "Nocturnal"],
+  ["PDV_DaedricPath_Peryite", "PDV_DaedricPath_Peryite", "Peryite"],
 ];
 
 const SKELETON_SERVICE_DEFINITIONS = [
@@ -1351,7 +1376,7 @@ class Verifier {
     };
 
     const gates = shellJson("pdv_signal_e2e_gate.mjs", "--declaration-gates-only");
-    const gatesCheck = "Declaration gates (signals/events/routes/csv)";
+    const gatesCheck = "Declaration gates (signals/events/routes/csv/runtime resolution)";
     if (gates.missing) {
       this.info(gatesCheck, "pdv_signal_e2e_gate.mjs not found; skipped.", gates.missing);
     } else if (gates.unparsable) {
@@ -1363,6 +1388,7 @@ class Verifier {
         ["EVT emission coverage", p.events, (s) => `${s.declared} declared; ${s.emitted} emitted; ${s.reservedKnownGaps} reserved`],
         ["Route/Handle reachability", p.routes, (s) => `${s.reachable}/${s.targets} reachable; ${s.reservedKnownGaps} reserved`],
         ["Kill classification inheritance", p.killClassification, () => "generic and special kill paths use actor/base/race keyword lookup"],
+        ["Optional-plugin form resolution", p.optionalPluginResolution, () => "quest-matrix lookups guard absent plugins before GetFormFromFile"],
         ["Likes/dislikes CSV->codegen freshness", p.csvFreshness, (s) => `${s.csvIds} csv ids ~ ${s.seededIds} seeded (version ${s.version})`],
       ];
       for (const [name, section, okDetail] of sub) {
@@ -1405,6 +1431,7 @@ class Verifier {
       this.checkMainQuestRecord();
       this.checkOriginRecord();
       this.checkManagerRecord();
+      this.checkDaedricPathScriptAttachments();
       this.checkKyneRecord();
       this.checkTalosRecord();
       this.checkAuriElRecord();
@@ -5159,10 +5186,11 @@ class Verifier {
       this.phase20RaceCostingGap("Phase 20 CAT-6 source row", `${packet.sourceRow} source row text was not found.`, RACE_CONTENT_MANIFEST);
       return;
     }
-    if (/at night/i.test(sourceText) && !/moving outdoors at night/i.test(sourceText)) {
-      this.pass("Phase 20 CAT-6 source row", "Khajiit Tier 1 source text matches the night-only pilot wording.", RACE_CONTENT_MANIFEST);
+    // 2026-07-13: night gate removed; the source row must no longer claim night-only.
+    if (!/at night/i.test(sourceText) && !/moving outdoors/i.test(sourceText)) {
+      this.pass("Phase 20 CAT-6 source row", "Khajiit Tier 1 source text matches the always-on pilot wording (night gate removed 2026-07-13).", RACE_CONTENT_MANIFEST);
     } else {
-      this.phase20RaceCostingGap("Phase 20 CAT-6 source row", "Khajiit Tier 1 source text must describe the pilot as night-only, not outdoor/moving-gated.", RACE_CONTENT_MANIFEST);
+      this.phase20RaceCostingGap("Phase 20 CAT-6 source row", "Khajiit Tier 1 source text must not describe the pilot as night-only or outdoor/moving-gated (night gate removed 2026-07-13).", RACE_CONTENT_MANIFEST);
     }
 
     const spellRecord = this.recordsByEdid.get(packet.spell);
@@ -5261,15 +5289,13 @@ class Verifier {
   }
 
   checkCat6NightConditions(conditions, effectEdid) {
-    const hasAfterSevenPm = conditions.some((condition) => condition.CompareOperator === "GreaterThanOrEqualTo"
-      && Number(condition.ComparisonValue) === 19
-      && String(condition.Flags || "").includes("OR"));
-    const hasBeforeSevenAm = conditions.some((condition) => condition.CompareOperator === "LessThanOrEqualTo"
-      && Number(condition.ComparisonValue) === 7);
-    if (conditions.length === 2 && hasAfterSevenPm && hasBeforeSevenAm) {
-      this.pass("Phase 20 CAT-6 night conditions", `${effectEdid} is gated to GetCurrentTime >= 19 OR <= 7.`, PDV_ESP);
+    // 2026-07-13 owner decision: the lunar substrate boons are always-active; the
+    // former GetCurrentTime >= 19 OR <= 7 night gate was removed from the records.
+    // The contract is now the inverse: any surviving condition is a regression.
+    if (conditions.length === 0) {
+      this.pass("Phase 20 CAT-6 always-on conditions", `${effectEdid} is unconditional (always active; night gate removed 2026-07-13).`, PDV_ESP);
     } else {
-      this.phase20RaceCostingGap("Phase 20 CAT-6 night conditions", `${effectEdid} does not read back the required 19:00-07:00 condition pair.`, PDV_ESP);
+      this.phase20RaceCostingGap("Phase 20 CAT-6 always-on conditions", `${effectEdid} carries ${conditions.length} condition(s); the lunar substrate boon must be unconditional (night gate removed 2026-07-13).`, PDV_ESP);
     }
   }
 
@@ -8045,6 +8071,21 @@ class Verifier {
     }
   }
 
+  checkRequiredNumericArrayValues(checkName, recordEdid, propName, values, expectedValues) {
+    const expected = Array.isArray(expectedValues) ? expectedValues : [];
+    const matches = values.length === expected.length
+      && values.every((value, index) => valuesEqual(value, expected[index]));
+    if (matches) {
+      this.pass(checkName, `${recordEdid}.${propName} matches all ${expected.length} contract values.`, PDV_ESP);
+    } else {
+      this.fail(
+        checkName,
+        `${recordEdid}.${propName} is ${JSON.stringify(values)}, expected ${JSON.stringify(expected)}.`,
+        PDV_ESP,
+      );
+    }
+  }
+
   checkManagerRecord() {
     const detail = this.recordDetails.get("PDV__ManagerQuest");
     if (!detail) {
@@ -8097,6 +8138,107 @@ class Verifier {
         "Missing QF files",
         `VMAD references fragment scripts with no source or pex on disk: ${missingQfFiles.join(", ")}`,
         PDV_ESP,
+      );
+    }
+  }
+
+  checkDaedricPathScriptAttachments() {
+    let contracts;
+    try {
+      contracts = JSON.parse(fs.readFileSync(DAEDRIC_PRINCE_RECORD_CONTRACTS, "utf8"));
+    } catch (error) {
+      this.fail("Daedric path inherited contract", `Could not parse record contracts: ${error.message}`, DAEDRIC_PRINCE_RECORD_CONTRACTS);
+      return;
+    }
+    const contractsByQuest = new Map((contracts.princes || []).map((prince) => [prince.questEditorId, prince]));
+
+    for (const [questEdid, concreteScriptName, expectedDeityName] of DAEDRIC_PATH_SCRIPT_ATTACHMENTS) {
+      const detail = this.recordDetails.get(questEdid);
+      if (!detail) {
+        this.fail("Daedric path script attachment", `${questEdid} is missing from ESP detail readback.`, PDV_ESP);
+        continue;
+      }
+
+      const scripts = detail.fields?.VirtualMachineAdapter?.Scripts || [];
+      const names = scripts.map((script) => script.Name).filter(Boolean);
+      if (names.length === 1 && names[0] === concreteScriptName) {
+        this.pass("Daedric path script attachment", `${questEdid} has only ${concreteScriptName} attached.`, PDV_ESP);
+      } else {
+        this.fail(
+          "Daedric path script attachment",
+          `${questEdid} must have exactly one VMAD script (${concreteScriptName}); found ${names.length ? names.join(", ") : "none"}.`,
+          PDV_ESP,
+        );
+        continue;
+      }
+
+      const props = propertyMap(scripts[0]);
+      const contract = contractsByQuest.get(questEdid);
+      if (!contract) {
+        this.fail("Daedric path inherited contract", `${questEdid} has no Prince record contract.`, DAEDRIC_PRINCE_RECORD_CONTRACTS);
+        continue;
+      }
+      this.checkScalarProperty(
+        "Daedric path inherited identity",
+        props,
+        "DeityName",
+        expectedDeityName,
+        this.fail.bind(this),
+      );
+      this.checkScalarProperty(
+        "Daedric path inherited identity",
+        props,
+        "DeityDomain",
+        contract.hookSource,
+        this.fail.bind(this),
+      );
+      this.checkScalarProperty(
+        "Daedric path inherited identity",
+        props,
+        "CommitmentSignalsRequired",
+        contract.commitmentSignalsRequired,
+        this.fail.bind(this),
+      );
+      this.checkRequiredNumericArrayValues(
+        "Daedric path inherited race contract",
+        questEdid,
+        "StateByRace",
+        extractNumericArrayProperty(props.get("StateByRace")),
+        contract.stateByRace,
+      );
+      this.checkRequiredNumericArrayValues(
+        "Daedric path inherited race contract",
+        questEdid,
+        "StigmaModByRace",
+        extractNumericArrayProperty(props.get("StigmaModByRace")),
+        contract.stigmaModByRace,
+      );
+      this.checkRequiredNumericArrayValues(
+        "Daedric path inherited race contract",
+        questEdid,
+        "ExitDifficultyByRace",
+        extractNumericArrayProperty(props.get("ExitDifficultyByRace")),
+        contract.exitDifficultyByRace,
+      );
+
+      const expectedObjects = {
+        PDV_GLO_OriginRace: "PDV_GLO_OriginRace",
+        PDV_GLO_DebugLevel: "PDV_GLO_DebugLevel",
+        StigmaGlobal: contract.stigmaGlobalEditorId,
+      };
+      for (const boon of contract.boons || []) {
+        expectedObjects[boon.property] = boon.spellEditorId;
+      }
+      for (const price of contract.prices || []) {
+        expectedObjects[price.property] = price.spellEditorId;
+      }
+      for (const message of contract.messages || []) {
+        expectedObjects[message.property] = message.editorId;
+      }
+      this.checkObjectProperties(
+        "Daedric path inherited contract property",
+        props,
+        expectedObjects,
       );
     }
   }

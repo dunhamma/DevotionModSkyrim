@@ -1,6 +1,6 @@
 # Breton Unified Patron-Champion Model - Build Spec (2026-07-13)
 
-**Status:** Implemented and runtime-proven 2026-07-13; Hidden Art Survey composition retest remains.
+**Status:** Implemented and runtime-proven 2026-07-13; integrated Hidden Art offer/toast replay remains.
 Supersedes the **reward-semantics** of `PDV_BretonTwoAxis_BuildSpec_2026-07-12.md`
 sections 1 (Reward semantics) and the `PDV_Bless_Breton_PatronChampion` flat-boon
 design. Everything else in the two-axis spec (practice-count tiers, resonance
@@ -32,9 +32,12 @@ the None property. This build replaces that dead path entirely.
   through the <lane>." Non-resonant = "X names you Champion; your patron's mark
   stands beside your practice." The resonance sets (two-axis spec section 4) are
   retained solely to pick which line fires.
-- **Budget unchanged:** tradition T2 practice boon (1) + patron Champion boon (1)
-  = 2 always-on, at the ceiling. Same as before; only the second boon's identity
-  changes from a flat +10 to the deity's real signature.
+- **Budget unchanged:** a distinct patron Champion boon remains beside tradition
+  T2, for two always-on families at the ceiling. When the patron maps to the
+  tradition's own cumulative T3 record (Stendarr, Y'ffre, or an integrated
+  Hidden Art Prince), T3 replaces T2 rather than duplicating the same ActorValues.
+  Hidden Art Champion therefore shows one Conjuration and one Illusion line at
+  the larger Champion values, plus the Prince's distinct pact boon.
 
 ### Hidden Art integrated-pact boundary
 
@@ -45,6 +48,10 @@ keeps its own boon, while the generic Prince price and generic Prince stigma are
 waived because `WitchcraftExposure` plus Vigilant pressure is this lane's sole
 cost. At Notorious exposure (100), practice and T1/T2 rewards remain active and
 gain for those four Prince paths is multiplied by 1.25.
+
+The T3 record carries absolute cumulative totals. Once an integrated Prince is
+Champion, `HiddenArt_T3` replaces `HiddenArt_T2`; both spells must never be live
+together.
 
 This resolves the incentive inversion the placeholder created: under the old
 model a non-resonant patron would (if enriched) out-reward a resonant one;
@@ -127,6 +134,8 @@ the manager VMAD property named in `spellProperty`.
   T3 slot (KnightsRoad_T3 / GreenWay_T3 / HiddenArt_T3 are now patron-champion
   records owned by the new sync, so remove them from the tradition family's
   managed set to avoid the reused-spell cross-lane strip within Breton itself).
+  Suppress T2 whenever the active Champion boon is this same tradition's T3,
+  because the T3 magnitudes are cumulative absolute totals.
 - Replace `SyncBretonPatronChampionReward` with `SyncBretonChampionBoon`: if
   `GetPatronState()==PATRON_STATE_ACTIVE && _activeDeity && GetTier(_activeDeity)
   >= TIER_CHAMPION`, grant `GetBretonPatronChampionBoon(_activeDeity,
@@ -168,11 +177,26 @@ copied), relaunch note for pex.
 
 ## Proof boundary
 
-Authoring + readback + compile + static-audit only. Runtime/manual proof (the
+Authoring + readback + compile + static-audit completed on 2026-07-13 after a
+clean source-first deployment of manager, PlayerEvents, MCM, and Survey. All
+four compiled 0/0; Breton audit 30/30, Prisma 92, Book of Days, Phase 2 reward
+readback, and the full verifier passed with FAIL=0. Runtime/manual proof (the
 champion boon appears in Active Effects, the presentation names the right boon,
 patron-swap strips the old one) folds into the Breton co-test sitting - add a
 card per the two-axis runbook cards, replacing the obsolete BX2 (which assumed
 the tradition-T3-as-capstone model).
+
+The 2026-07-13 Mora replay exposed two shared Daedric presentation defects. The
+red `+35` toast was stale presenter copy, not Mora's live Champion boon (`+20
+Alteration`) or price (`-30 Stamina`), and a redundant direct base-script VMAD
+attachment could consume the controlled Champion offer hook before the concrete
+Prince script. The repair contract-checks all 96 boon/price tier strings, marks
+boon toasts green, dispatches offer replay through the concrete Prince script,
+and removes the direct base attachment from all 16 Prince quests. Final backend
+proof: compile 0/0; Breton 32/32; Prisma 95/95; toast fallback 26/26; Book of
+Days 126/126; Phase 2 readback 1482/1482; verifier `PASS=3581 WARN=2 FAIL=0`.
+The remaining runtime replay is limited to the authored offer, green `+20
+Alteration` toast, waived price-toast silence, and concise Survey sentence.
 
 ## Requiem parity - RESOLVED 2026-07-13 (no conversion needed)
 

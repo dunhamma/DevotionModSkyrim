@@ -12,6 +12,7 @@ const MANAGER_SOURCE = path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc");
 const MCM_SOURCE = path.join(DEVOTION_SOURCE, "PDV_MCM.psc");
 const MANAGER_PEX = path.join(DEVOTION_COMPILED, "PDV__ManagerQuest.pex");
 const MCM_PEX = path.join(DEVOTION_COMPILED, "PDV_MCM.pex");
+const DAEDRIC_CONTRACT = path.join(REPO_ROOT, "references", "authoring", "PDV_DaedricPrinceRecordContracts.json");
 
 function fail(message, source = "") {
   failures.push({ message, source });
@@ -338,7 +339,8 @@ function verifySessionCopyContracts(manager, managerPath) {
     bretonPatronSurvey.includes("20C path") ||
     !bretonPatronSurvey.includes('String pactName = GetPublicDeityDisplayName(activePact)') ||
     !bretonPatronSurvey.includes('return " Your pact with " + pactName + " stands beside the tradition."') ||
-    !bretonPatronSurvey.includes('Hidden Art - Champion stands beside the pact.') ||
+    !bretonPatronSurvey.includes('has opened Hidden Art - Champion.') ||
+    bretonPatronSurvey.includes('Hidden Art - Champion stands beside the pact.') ||
     !bretonPatronSurvey.includes("GetBretonChampionBoonDisplayName(_activeDeity)") ||
     bretonChampionPresentation.includes("GetBretonChampionBoonDisplayName(_activeDeity)") ||
     bretonChampionPresentation.includes("stands beside") ||
@@ -349,9 +351,9 @@ function verifySessionCopyContracts(manager, managerPath) {
     !bretonChampionBoonName.includes('return "Magnus\'s Aperture - Champion"') ||
     !bretonChampionBoonName.includes('return "Hidden Art - Champion"')
   ) {
-    fail("Breton Champion Survey must name the actual boon, while toast/Book copy stays to one patron-recognition sentence.", managerPath);
+    fail("Breton Champion Survey must name the pact and actual boon once, while toast/Book copy stays to one patron-recognition sentence.", managerPath);
   } else {
-    pass("Breton Champion Survey names the actual boon and toast/Book copy stays to one patron-recognition sentence.", managerPath);
+    pass("Breton Champion Survey names the pact and actual boon once; toast/Book copy stays to one patron-recognition sentence.", managerPath);
   }
 
   const dunmerGoodDaedraShrine = functionBlock(manager, "HandleDunmerOutdoorGoodDaedraShrine");
@@ -399,6 +401,8 @@ function verifySessionCopyContracts(manager, managerPath) {
 
 function verifyDaedricToastContracts(manager, managerPath) {
   const milestoneBlock = functionBlock(manager, "ShowDaedricMilestonePresentation");
+  const senderBlock = functionBlock(manager, "SendPrismaDaedricToast");
+  const replayBlock = functionBlock(manager, "ReplayConcreteDaedricChampionOffer");
   const residueBlock = functionBlock(manager, "DrainHircineResiduePrismaToasts");
   const nordCurseBlock = functionBlock(manager, "ApplyCurseRaceHandlers");
   if (!milestoneBlock.includes('SendPrismaDaedricToast(princeName, "boon", boonText, symbolName)')) {
@@ -406,6 +410,28 @@ function verifyDaedricToastContracts(manager, managerPath) {
   } else {
     pass("Daedric milestone presentation emits the paired boon toast.", managerPath);
   }
+
+  if (!senderBlock.includes('if phase == "boon"') || !senderBlock.includes('j = j + ",\\\"tone\\\":\\\"good\\\""')) {
+    fail("Daedric boon payloads must explicitly declare a good tone instead of relying on UI inference.", managerPath);
+  } else {
+    pass("Daedric boon payloads explicitly declare a good tone.", managerPath);
+  }
+
+  const concreteScripts = [
+    "Boethiah", "Azura", "Vaermina", "Meridia", "Molag", "Mephala", "Malacath", "Dagon",
+    "Sheo", "Namira", "Sanguine", "Vile", "Mora", "Nocturnal", "Peryite", "Hircine",
+  ];
+  if (
+    !milestoneBlock.includes("ReplayConcreteDaedricChampionOffer(path, oldTier, newTier)") ||
+    milestoneBlock.includes("path.ShowTierEntryMessage(oldTier, newTier)") ||
+    concreteScripts.some((stem) => !replayBlock.includes(`pathForm as PDV_DaedricPath_${stem}`))
+  ) {
+    fail("Controlled Champion replay must resolve each concrete Prince script; the co-attached base script has an empty offer hook.", managerPath);
+  } else {
+    pass("Controlled Champion replay resolves all sixteen concrete Prince scripts.", managerPath);
+  }
+
+  verifyDaedricMechanicTextContract(manager, managerPath);
 
   if (
     !residueBlock.includes('SendPrismaDaedricToast("Hircine", "residue", "The hunt\\\'s old mark still follows.", "hircine")') &&
@@ -425,6 +451,74 @@ function verifyDaedricToastContracts(manager, managerPath) {
     fail("Hircine werewolf curse entry must write a Book of Days curse-onset entry.", managerPath);
   } else {
     pass("Hircine werewolf curse entry writes a Book of Days curse-onset entry.", managerPath);
+  }
+}
+
+function mechanicRows(block) {
+  const rows = new Map();
+  const pattern = /(?:if|elseIf)\s+\(princeName == "([^"]+)"(?:\s+\|\|\s+princeName == "[^"]+")?\)\s+&&\s+tierValue == (TIER_[A-Z]+)\s*\r?\n\s*return "([^"]+)"/g;
+  let match;
+  while ((match = pattern.exec(block))) {
+    rows.set(`${match[1]}|${match[2]}`, match[3]);
+  }
+  return rows;
+}
+
+function expectedDaedricMechanicText(princeName, effect, kind) {
+  if (princeName === "Namira" && kind === "boon") {
+    return "Feeding restores Health and Stamina";
+  }
+
+  const labels = {
+    OneHanded: "One-handed",
+    Speechcraft: "Speech",
+    ResistMagic: "Magic resistance",
+    Stamina: "Stamina",
+    Illusion: "Illusion",
+    Health: "Health",
+    Restoration: "Restoration",
+    Sneak: "Sneak",
+    DamageResist: "Armor rating",
+    SpeedMult: "Movement speed",
+    AttackDamageMult: "Attack damage",
+    Magicka: "Magicka",
+    CarryWeight: "Carry weight",
+    Alteration: "Alteration",
+    Lockpicking: "Lockpicking",
+    ResistDisease: "Disease resistance",
+  };
+  const percentActorValues = new Set(["ResistMagic", "SpeedMult", "AttackDamageMult", "ResistDisease"]);
+  const magnitude = Number(effect.magnitude);
+  const signedMagnitude = magnitude > 0 ? `+${magnitude}` : String(magnitude);
+  const suffix = percentActorValues.has(effect.actorValue) ? `${signedMagnitude}%` : signedMagnitude;
+  return `${suffix} ${labels[effect.actorValue] || effect.actorValue}`;
+}
+
+function verifyDaedricMechanicTextContract(manager, managerPath) {
+  if (!exists(DAEDRIC_CONTRACT)) {
+    fail("Daedric record contract is missing; Prisma mechanic copy cannot be checked.", DAEDRIC_CONTRACT);
+    return;
+  }
+
+  const contract = JSON.parse(read(DAEDRIC_CONTRACT));
+  const boonRows = mechanicRows(functionBlock(manager, "GetDaedricBoonMechanicText"));
+  const priceRows = mechanicRows(functionBlock(manager, "GetDaedricPriceMechanicText"));
+  const tiers = ["TIER_SEEKER", "TIER_DEVOTED", "TIER_CHAMPION"];
+  const mismatches = [];
+  for (const prince of contract.princes || []) {
+    for (let index = 0; index < tiers.length; index += 1) {
+      const key = `${prince.displayName}|${tiers[index]}`;
+      const expectedBoon = expectedDaedricMechanicText(prince.displayName, prince.boons[index].effects[0], "boon");
+      const expectedPrice = expectedDaedricMechanicText(prince.displayName, prince.prices[index].effects[0], "price");
+      if (boonRows.get(key) !== expectedBoon) mismatches.push(`${key} boon expected '${expectedBoon}' got '${boonRows.get(key) || "missing"}'`);
+      if (priceRows.get(key) !== expectedPrice) mismatches.push(`${key} price expected '${expectedPrice}' got '${priceRows.get(key) || "missing"}'`);
+    }
+  }
+
+  if (mismatches.length > 0) {
+    fail(`Daedric Prisma mechanic copy drifts from the record contract (${mismatches.slice(0, 4).join("; ")}).`, managerPath);
+  } else {
+    pass("Daedric Prisma mechanic copy matches all 96 boon/price tier rows in the record contract.", managerPath);
   }
 }
 

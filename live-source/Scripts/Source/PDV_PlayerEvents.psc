@@ -1851,6 +1851,10 @@ Form Function GetQuestReactionRuntimeFormFromCsv(String[] formIds, String[] plug
         return None
     endIf
 
+    if Game.GetModByName(pluginName) == 255
+        return None
+    endIf
+
     return Game.GetFormFromFile(localFormId, pluginName)
 EndFunction
 

@@ -92,12 +92,13 @@ function main() {
   const routeReach = evaluateRouteReachability();
   const csvFreshness = evaluateCsvCodegenFreshness();
   const killClassification = evaluateKillClassification();
+  const optionalPluginResolution = evaluateOptionalPluginResolution();
 
-  writeLedgers(rows, helpers, curatedParity, dispatchCoverage, eventCoverage, routeReach, csvFreshness, killClassification);
+  writeLedgers(rows, helpers, curatedParity, dispatchCoverage, eventCoverage, routeReach, csvFreshness, killClassification, optionalPluginResolution);
 
   const counts = countBy(rows, (row) => row.verdict);
   const surfacesPass = !rows.some((row) => row.verdict !== "GREEN");
-  const declarationGatesOk = dispatchCoverage.ok && eventCoverage.ok && routeReach.ok && csvFreshness.ok && killClassification.ok;
+  const declarationGatesOk = dispatchCoverage.ok && eventCoverage.ok && routeReach.ok && csvFreshness.ok && killClassification.ok && optionalPluginResolution.ok;
   const summary = {
     status: surfacesPass && curatedParity.ok && declarationGatesOk ? "PASS" : "FAIL",
     surfaces: rows.length,
@@ -142,6 +143,10 @@ function main() {
     killClassification: {
       status: killClassification.ok ? "PASS" : "FAIL",
       failures: killClassification.failures,
+    },
+    optionalPluginResolution: {
+      status: optionalPluginResolution.ok ? "PASS" : "FAIL",
+      failures: optionalPluginResolution.failures,
     },
     csvCodegenFreshness: {
       status: csvFreshness.ok ? "PASS" : "FAIL",
@@ -1175,7 +1180,28 @@ function evaluateKillClassification() {
   return { failures, ok: failures.length === 0 };
 }
 
-// Gate D -- CSV -> codegen freshness: a likes/dislikes CSV edit is inert until
+// Gate D -- Optional-plugin resolution: GetFormFromFile logs an error when its
+// plugin is absent. The quest matrix intentionally names optional integrations,
+// so every runtime lookup must prove the plugin is loaded before resolving forms.
+function evaluateOptionalPluginResolution() {
+  const playerEventsText = fs.readFileSync(PLAYER_EVENTS_PATH, "utf8");
+  const functions = buildFunctionMap(playerEventsText);
+  const resolver = functions.get("GetQuestReactionRuntimeFormFromCsv") || "";
+  const failures = [];
+  const modGuard = resolver.indexOf("Game.GetModByName(pluginName) == 255");
+  const formLookup = resolver.indexOf("Game.GetFormFromFile(localFormId, pluginName)");
+
+  if (modGuard < 0) {
+    failures.push("Quest-reaction runtime form resolution lacks an absent-plugin guard.");
+  }
+  if (formLookup < 0 || modGuard > formLookup) {
+    failures.push("Quest-reaction runtime form resolution must check plugin presence before GetFormFromFile.");
+  }
+
+  return { failures, ok: failures.length === 0 };
+}
+
+// Gate E -- CSV -> codegen freshness: a likes/dislikes CSV edit is inert until
 // pdv_likesdislikes_gen regenerates the manager seed block and the version bumps
 // (the likes-dislikes-csv-codegen class). Content-level check at event-id granularity:
 // D1 every CSV event id has a manager WriteLD/WritePLD seed; D2 every seeded id is still
@@ -1283,7 +1309,7 @@ function unique(items) {
   return [...new Set(items.filter(Boolean))];
 }
 
-function writeLedgers(rows, helpers, curatedParity, dispatchCoverage, eventCoverage, routeReach, csvFreshness, killClassification) {
+function writeLedgers(rows, helpers, curatedParity, dispatchCoverage, eventCoverage, routeReach, csvFreshness, killClassification, optionalPluginResolution) {
   const counts = countBy(rows, (row) => row.verdict);
   const statusCounts = {};
   for (const row of rows) {
@@ -1449,6 +1475,17 @@ function writeLedgers(rows, helpers, curatedParity, dispatchCoverage, eventCover
     }
     md.push("");
   }
+  if (optionalPluginResolution) {
+    md.push("## Optional-Plugin Form Resolution");
+    md.push("");
+    md.push("Quest-reaction matrix lookups check that an optional plugin is loaded before calling GetFormFromFile, preventing avoidable Papyrus errors for integrations absent from the player's load order.");
+    md.push(`Status: ${optionalPluginResolution.ok ? "PASS" : "FAIL"}`);
+    if (optionalPluginResolution.failures.length) {
+      md.push("");
+      for (const failure of optionalPluginResolution.failures) md.push(`- ${asciiSafe(failure)}`);
+    }
+    md.push("");
+  }
   md.push("## RED / INCOMPLETE By Failing Step");
   md.push("");
   const problemRows = rows.filter((row) => row.verdict !== "GREEN");
@@ -1550,7 +1587,8 @@ if (process.argv.includes("--declaration-gates-only") || process.argv.includes("
   const routes = evaluateRouteReachability();
   const csv = evaluateCsvCodegenFreshness();
   const killClassification = evaluateKillClassification();
-  const ok = dispatch.ok && events.ok && routes.ok && csv.ok && killClassification.ok;
+  const optionalPluginResolution = evaluateOptionalPluginResolution();
+  const ok = dispatch.ok && events.ok && routes.ok && csv.ok && killClassification.ok && optionalPluginResolution.ok;
   console.log(JSON.stringify({
     check: "declarationGates",
     status: ok ? "PASS" : "FAIL",
@@ -1586,6 +1624,10 @@ if (process.argv.includes("--declaration-gates-only") || process.argv.includes("
     killClassification: {
       status: killClassification.ok ? "PASS" : "FAIL",
       failures: killClassification.failures,
+    },
+    optionalPluginResolution: {
+      status: optionalPluginResolution.ok ? "PASS" : "FAIL",
+      failures: optionalPluginResolution.failures,
     },
     csvFreshness: {
       status: csv.ok ? "PASS" : "FAIL",

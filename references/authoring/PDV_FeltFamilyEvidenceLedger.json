@@ -25,13 +25,18 @@
       }
     },
     "Alkosh|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Alkosh",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-13 Khajiit co-test (origin 6): DebugFireDislike Alkosh event 304 (murder-defenseless) applied piety -1.0 exactly per v16 CSV, with 'Disfavor sting applied: Alkosh -> MoonLuckShadow Light' under Seeker standing (tier.Alkosh Seeker.Reach 07:05:44) and debug dislike surface flushed. Fired at 07:05:58 AFTER the 07:05:14 save reload; standing was re-seeded on the loaded state before the sting, so proof is on a clean state. Controlled-route + display proof.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log 2026-07-13; adversarial verify workflow wf_9e03d3c7-c70 (4/4 CONFIRMED_PASS, skeptic overallHold=true)",
+        "race": "Khajiit",
+        "slot": "Alkosh|price",
+        "matched": "DebugFireDislike: Alkosh event 304 delta -1.000000"
+      }
     },
     "Altmer-AuriEl|boon": {
       "status": "pending",
@@ -174,13 +179,18 @@
       "creditedFrom": null
     },
     "Azurah|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Azurah",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-13 Khajiit co-test (origin 6): DebugFireDislike Azurah event 304 (murder-defenseless) applied piety -0.75 exactly per v16 CSV, with 'Disfavor sting applied: Azura -> MoonLuckShadow Light' under Seeker standing (tier.Azura Seeker.Reach 07:01:40) and debug dislike surface flushed. On Khajiit origin Azurah routes to the shared PDV_Azura record, so the log 'Azura' name is the correct routing. Controlled-route + display proof.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log 2026-07-13; adversarial verify workflow wf_9e03d3c7-c70 (4/4 CONFIRMED_PASS, skeptic overallHold=true)",
+        "race": "Khajiit",
+        "slot": "Azurah|price",
+        "matched": "DebugFireDislike: Azura event 304 delta -0.750000"
+      }
     },
     "BaanDar|price": {
       "status": "pending",
@@ -1228,13 +1238,18 @@
       }
     },
     "Khenarthi|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Khenarthi",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-13 Khajiit co-test (origin 6): DebugFireDislike Khenarthi event 365 (raise-undead) applied piety -0.75 exactly per v16 CSV, with 'Disfavor sting applied: Khenarthi -> SkyStormHunt Light' under Seeker standing (tier.Khenarthi Seeker.Reach 07:03:24) and debug dislike surface flushed. NOTE: the debug harness bypasses the row's ActorTypeUndead conditionTag, so organic raise-undead-on-undead proof is NOT covered and remains owed for Khenarthi. Controlled-route + display proof satisfies the price-family slot.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log 2026-07-13; adversarial verify workflow wf_9e03d3c7-c70 (4/4 CONFIRMED_PASS, skeptic overallHold=true)",
+        "race": "Khajiit",
+        "slot": "Khenarthi|price",
+        "matched": "DebugFireDislike: Khenarthi event 365 delta -0.750000"
+      }
     },
     "Kynareth|price": {
       "status": "evidence-recorded",
@@ -1567,13 +1582,18 @@
       "creditedFrom": null
     },
     "Rajhin|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Rajhin",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-13 Khajiit co-test (origin 6): DebugFireDislike Rajhin event 304 (murder-defenseless) applied piety -0.75 exactly per v16 CSV, with 'Disfavor sting applied: Rajhin -> MoonLuckShadow Light' under Seeker standing (tier.Rajhin Seeker.Reach 07:04:33) and debug dislike surface flushed. Controlled-route + display proof.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log 2026-07-13; adversarial verify workflow wf_9e03d3c7-c70 (4/4 CONFIRMED_PASS, skeptic overallHold=true)",
+        "race": "Khajiit",
+        "slot": "Rajhin|price",
+        "matched": "DebugFireDislike: Rajhin event 304 delta -0.750000"
+      }
     },
     "Redguard-AncestorSpine|boon": {
       "status": "pending",

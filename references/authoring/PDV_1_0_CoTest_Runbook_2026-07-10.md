@@ -500,14 +500,27 @@ fails on substrate-owner violations, and `PDV_SubstrateBase.psc` reconciles
 unchanged tiers so a stripped Mid boon can re-add on the next substrate signal.
 Retest before checking `Khajiit-Lunar|substrate-favor`.
 
+2026-07-13 NIGHT GATE REMOVED: the 07-13 "no substrate effects at tier 2" report
+was NOT a strip regression - Lunar Road (and Lunar Attunement T3) were night-gated
+(`GetCurrentTime >= 19 OR <= 7`) on every effect, and the highest-slot-only design
+strips always-on Lunar Hardiness at tier 2, so a daytime tier-2 Khajiit showed an
+empty list while the grant worked correctly (4-agent deep dive; grant/strip/display
+hypotheses all ruled out). Owner decision: all lunar substrate boons are now ALWAYS
+ACTIVE. ESP conditions removed from 07103F + 071081 (backup
+`Backups\phase20-race-rewards\Devotion.esp.20260713-201006.bak`), descriptions
+de-nighted, spec/contracts/CAT-6 manifest/race-manifest/pdv_verify updated, SEQ
+regenerated; verifier FAIL=0 WARN=1 (allowed glyph), phase2 readback PASS=1482.
+Retest is now time-of-day independent: at tier 2 read `Khajiit Lunar Road`
+(Fortify Stamina +15, Disease Resistance +15%) in Active Effects.
+
 **neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
 - [ ] `Neglect-KhajiitLunar|neglect`  (e.g. The Moons Withdrawn)
 
 **price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
-- [ ] `Alkosh|price`  (e.g. murder-defenseless)
-- [ ] `Azurah|price`  (e.g. murder-defenseless)
-- [ ] `Khenarthi|price`  (e.g. raise-undead)
-- [ ] `Rajhin|price`  (e.g. murder-defenseless)
+- [x] `Alkosh|price`  (murder-defenseless 304, -1.0; sting MoonLuckShadow; 2026-07-13)
+- [x] `Azurah|price`  (murder-defenseless 304, -0.75; sting MoonLuckShadow; routes to PDV_Azura; 2026-07-13)
+- [x] `Khenarthi|price`  (raise-undead 365, -0.75; sting SkyStormHunt; debug bypasses ActorTypeUndead gate - organic proof still owed; 2026-07-13)
+- [x] `Rajhin|price`  (murder-defenseless 304, -0.75; sting MoonLuckShadow; 2026-07-13)
 
 ### 5. Altmer sitting (11 families) - `set PDV_GLO_OriginRace to 3`
 
@@ -736,7 +749,22 @@ Resonance changes presentation only. Authority:
 | BUC1 | PASSED 2026-07-13 - Non-resonant Champion brings own boon | Green Way at 50 practice points (use the corrected Breton broad-lane debug seed for controlled reward proof). Set Magnus as debug patron, set Target piety 85, and apply. No dawn is required for the controlled seed. | Green Way remains Devoted and `Magnus's Aperture - Champion` appears beside it. | Tester confirmed all expected surfaces: exactly Green Way T2 + Magnus Champion, no generic `Patron's Mark`, no Hidden Art T3 or third family, and one Champion toast/Book entry naming Magnus. Log records Magnus patron start 17:24:21, tier 0 -> 3 at 17:24:29, `Breton Champion Magnus` added at 17:24:30, and Magnus/Green Way boon presentation at 17:24:36. |
 | BUC2 | PASSED 2026-07-13 - Resonant Champion also brings own boon | From BUC1, switch patron to Y'ffre and apply Target piety 85. | `Magnus's Aperture - Champion` strips; `Green Way - Champion` appears as Y'ffre's boon while Green Way T2 remains. | Tester confirmed exactly two families, correct Magnus removal/Y'ffre replacement, and one Champion toast/Book entry with no duplicate generic tier toast. Log records Magnus patron end and boon removal at 17:26:52, Y'ffre tier 0 -> 3 at 17:26:55, generic tier suppression, `Breton Champion Yffre` added, and one boon presentation at 17:26:57. Copy-only follow-up is queued with no retest required: remove the redundant second boon sentence from toast/Book and numeric points from Survey. |
 | BUC3 | OPEN - Patron swap exclusivity | Continue switching between two already-Champion patrons, then clear the patron override. | Only the current patron's Champion boon is present; clearing patron strips the Champion boon and leaves Green Way T2. | No stale prior-patron effect, no third stack, and Book/Survey identify the current focus. |
-| BUC4 | GAMEPLAY PASS; SURVEY RETEST ONLY 2026-07-13 - Daedric Hidden Art exception | Hidden Art Breton with a Champion Hircine, Hermaeus Mora, Namira, or Nocturnal pact through 20C. | `Hidden Art - Champion` is the practitioner capstone; the Prince boon remains owned by the pact path, but the global Prince price and duplicate stigma are waived because WitchcraftExposure and Vigilant pressure are the Hidden Art cost. Survey retains the Hidden Art practice/exposure base and appends the Prince. | Tester passed the capstone, Prince boon, no-price, stack, and current-pool checks. Pre-fix Survey showed only the Prince because the global pact return bypassed the Breton renderer. After the 2026-07-13 layered-Survey repair, retest only Survey Devotion: expect Hidden Art base + practice band + exposure posture + active Prince/Champion sentence. |
+| BUC4 | GAMEPLAY/UI PASS; OFFER + TOAST REPLAY OPEN 2026-07-13 - Daedric Hidden Art exception | Hidden Art Breton with a Champion Hircine, Hermaeus Mora, Namira, or Nocturnal pact through 20C. Use `Daedric Prince > Hermaeus Mora > Force Champion`, close the MCM, accept the authored `Mora's Archivist` offer, and let the presentation queue drain. | `Hidden Art - Champion` replaces `Hidden Art - Devoted`; Mora's distinct Champion boon remains the second family as `+20 Alteration`. The global Mora Champion price is `-30 Stamina`, but its spell and every price presentation remain waived for integrated Hidden Art. Survey ends `Your pact with Hermaeus Mora has opened Hidden Art - Champion.` once. | Earlier Active Effects, Book of Days/journal, layered Survey, and backend price-waiver checks remain passed. The stray red `+35` toast matched neither Mora's boon nor price; it came from stale hardcoded presenter copy. Backend repair now contract-checks all 96 Prince boon/price tier strings, marks boon payloads green, dispatches controlled Champion replay through each concrete Prince script, and removes the redundant direct `PDV_DaedricPathBase` VMAD attachment from all 16 path quests. Compile 0/0; Breton 32/32; Prisma 95/95; toast fallback 26/26; Book of Days 126/126; Phase 2 readback 1482/1482; verifier `PASS=3581 WARN=2 FAIL=0`. Retest only: offer appears, accept, green `+20 Alteration` toast, no red/price toast, concise Survey sentence. |
+
+2026-07-13 post-repair Daedric adversarial audit: authority/source/readback is
+PASS across all sixteen Princes. Every path quest has exactly one concrete script;
+all concrete scripts extend `PDV_DaedricPathBase`; the operational FormList still
+has all 16 entries in contract order; exact deity identity, commitment threshold,
+three 10-race arrays, stigma global, all boon/price spells, and every tier/stigma/
+neglect/exit/race-response message match
+`PDV_DaedricPrinceRecordContracts.json`. The base plus all 16 concrete scripts and
+manager compile `0 errors / 0 warnings`. Gates: strict verifier
+`FAIL=0 WARN=1 PASS=4131`, organic quest guards `16/16`, eligibility/reward
+coverage `150/150`, Phase 2 readback `1482/1482`, Prisma-to-1.0 `74/74`, and
+Daedric test readiness PASS. The warning is the unrelated medallion glyph fallback.
+Post-change runtime proof still owed: one non-Breton Hermaeus Mora Champion control
+must show the ordinary `+20 Alteration` boon **and** `-30 Stamina` price, proving the
+Breton Hidden Art waiver did not escape its race/tradition/four-Prince gate.
 
 Ledger note: once these pass, the two-axis build re-opens the felt-family verdicts
 for `Breton-GreenWay|boon`, `Breton-HiddenArt|boon`, and adds

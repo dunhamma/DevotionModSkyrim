@@ -11,7 +11,11 @@ append the active Prince. `WitchcraftExposure` plus authored Vigilant pressure i
 the sole lane cost, so the generic Prince price and per-Prince stigma are waived;
 Notorious exposure keeps practice/rewards active and grants the locked 1.25 pact
 gain multiplier. Same-pact refresh is idempotent and any non-waived maximum-pool
-price preserves current Health, Magicka, and Stamina when first applied.
+price preserves current Health, Magicka, and Stamina when first applied. A
+same-family Champion T3 is an absolute cumulative total and replaces its T2
+spell; distinct patron/Prince families may remain beside it. The compiler must
+reject tracked/deployed source drift before building live PEX files so source
+sync cannot silently occur after compilation.
 
 Current v3.96 addendum: the signal-floor readback/faucet tranche has landed at
 source/compile/readback level. `tools/pdv_extract_quest_stage_readback.mjs` now
@@ -95,11 +99,13 @@ Current v3.90 addendum: `references/authoring/PDV_DaedricPrinceRecordContracts.j
 and `tools/pdv-daedric-author` now own the all-sixteen-Prince Daedric CAT-6
 record/readback gate. The generated contract derives from the Daedric content
 manifest and race/Prince matrix, creates/reads back QUST, SPEL, MGEF, MESG,
-stigma global, state-array, stigma-modifier, exit-difficulty, base/concrete
-path VMAD wiring, and `PDV_FLST_DaedricPaths_All` membership for every
-Skyrim-present Prince. Fifteen non-Hircine concrete `PDV_DaedricPath_<Prince>`
-scripts are generated and compile; Hircine remains the earlier special runtime
-pilot. The same author now also creates/checks route-200 QASmoke sender refs for
+stigma global, state-array, stigma-modifier, exit-difficulty, concrete path
+VMAD wiring, and `PDV_FLST_DaedricPaths_All` membership for every
+Skyrim-present Prince. Every quest attaches exactly one concrete
+`PDV_DaedricPath_<Prince>` script; inherited `PDV_DaedricPathBase` behavior and
+properties live on that concrete instance, and the base script must never be
+co-attached. All sixteen concrete scripts compile, including the earlier
+Hircine pilot. The same author now also creates/checks route-200 QASmoke sender refs for
 all 16 Princes and route-201 `PDV_REFR_Daedric_GenericSilenceProbe_QASmoke`, so
 the controlled in-game proof surface is physically placed and readback-clean.
 It also creates/checks exact organic quest-stage FormLists for all sixteen

@@ -112,6 +112,10 @@ Int _oidKhajiitRoadHome = -1
 Int _oidKhajiitPostureCycle = -1
 Int _oidKhajiitCaravanAid = -1
 Int _oidKhajiitLegendMade = -1
+Int _oidKhajiitLunarSeedT2 = -1
+Int _oidKhajiitLunarSeedT3 = -1
+Int _oidKhajiitLunarReset = -1
+Int _oidKhajiitLunarBudgetShow = -1
 Int _oidMephalaWebWoven = -1
 Int _oidBoethiahHonorableDuel = -1
 Int _oidDebugSetBroadWorship = -1
@@ -405,6 +409,14 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Records one Khajiit road-home cadence event.")
     elseIf a_option == _oidKhajiitPostureCycle
         SetInfoText("Cycles the Khajiit Lunar Lattice posture (Normal / Strained / Corrupted / ShadowDrift) to surface each readout and curse message for proving.")
+    elseIf a_option == _oidKhajiitLunarSeedT2
+        SetInfoText("Directly sets the lunar substrate metric to 25 (tier 2). Boundary/reward/UI proof only; bypasses the shared daily metric budget.")
+    elseIf a_option == _oidKhajiitLunarSeedT3
+        SetInfoText("Directly sets the lunar substrate metric to 75 (tier 3). Boundary/reward/UI proof only; bypasses the shared daily metric budget.")
+    elseIf a_option == _oidKhajiitLunarReset
+        SetInfoText("Resets the lunar substrate metric, counters, and boons to zero and clears today's shared metric budget.")
+    elseIf a_option == _oidKhajiitLunarBudgetShow
+        SetInfoText("Shows the lunar substrate metric, tier, metric spent today, and remaining shared daily budget (4 per game day across moon + road-home).")
     elseIf a_option == _oidKhajiitCaravanAid
         SetInfoText("Fires one Khenarthi caravan-aid signal (daily-capped). Organic route: kill a hostile near a living caravan leader's camp.")
     elseIf a_option == _oidKhajiitLegendMade
@@ -896,6 +908,40 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidKhajiitPostureCycle
         RunPatternAction("Cycle the Khajiit lunar posture (Normal/Strained/Corrupted/ShadowDrift)?", 57)
+        return
+    endIf
+
+    if a_option == _oidKhajiitLunarSeedT2
+        if EnsureManagerBinding("debug_khajiit_lunar_seed")
+            if ShowMessage("Seed the Khajiit lunar substrate directly to metric 25 (tier 2)? Boundary proof only; bypasses the daily metric budget.", True, "$Yes", "$No")
+                ShowMessage(PDV_Manager.DebugSetKhajiitLunarMetric(25.0), False, "$OK", "")
+            endIf
+        endIf
+        return
+    endIf
+
+    if a_option == _oidKhajiitLunarSeedT3
+        if EnsureManagerBinding("debug_khajiit_lunar_seed")
+            if ShowMessage("Seed the Khajiit lunar substrate directly to metric 75 (tier 3)? Boundary proof only; bypasses the daily metric budget.", True, "$Yes", "$No")
+                ShowMessage(PDV_Manager.DebugSetKhajiitLunarMetric(75.0), False, "$OK", "")
+            endIf
+        endIf
+        return
+    endIf
+
+    if a_option == _oidKhajiitLunarReset
+        if EnsureManagerBinding("debug_khajiit_lunar_reset")
+            if ShowMessage("Reset the Khajiit lunar substrate to zero and clear today's metric budget?", True, "$Yes", "$No")
+                ShowMessage(PDV_Manager.DebugResetKhajiitLunarSubstrate(), False, "$OK", "")
+            endIf
+        endIf
+        return
+    endIf
+
+    if a_option == _oidKhajiitLunarBudgetShow
+        if EnsureManagerBinding("debug_khajiit_lunar_budget")
+            ShowMessage(PDV_Manager.DebugGetKhajiitLunarBudgetSummary(), False, "$OK", "")
+        endIf
         return
     endIf
 
@@ -1946,6 +1992,10 @@ Function BuildDaedricPage()
     _oidKhajiitMoonObservance = AddTextOption("Khajiit moon observance", "Emergent lane", OPTION_FLAG_NONE)
     _oidKhajiitRoadHome = AddTextOption("Khajiit road-home cadence", "Emergent lane", OPTION_FLAG_NONE)
     _oidKhajiitPostureCycle = AddTextOption("Khajiit lunar posture", "Cycle posture", OPTION_FLAG_NONE)
+    _oidKhajiitLunarSeedT2 = AddTextOption("Seed lunar metric 25", "Tier 2 boundary", OPTION_FLAG_NONE)
+    _oidKhajiitLunarSeedT3 = AddTextOption("Seed lunar metric 75", "Tier 3 boundary", OPTION_FLAG_NONE)
+    _oidKhajiitLunarReset = AddTextOption("Reset lunar substrate", "Metric + budget", OPTION_FLAG_NONE)
+    _oidKhajiitLunarBudgetShow = AddTextOption("Show lunar budget", "Metric + daily budget", OPTION_FLAG_NONE)
     _oidKhajiitCaravanAid = AddTextOption("Khajiit caravan aid", "Emergent lane", OPTION_FLAG_NONE)
     _oidKhajiitLegendMade = AddTextOption("Khajiit legend-made heist", "Emergent lane", OPTION_FLAG_NONE)
     _oidMephalaWebWoven = AddTextOption("Mephala web woven", "Milestone lane", OPTION_FLAG_NONE)

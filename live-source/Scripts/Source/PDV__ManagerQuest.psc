@@ -734,6 +734,15 @@ Int Property KHAJIIT_SHADOWDRIFT_EVIDENCE_WINDOW = 7 AutoReadOnly
 Float Property KHAJIIT_FOCUS_THRESHOLD = 50.0 AutoReadOnly
 Float Property KHAJIIT_FOCUS_LEAD_REQUIRED = 15.0 AutoReadOnly
 Float Property KHAJIIT_FOCUS_SIGNAL_DELTA = 25.0 AutoReadOnly
+; Khajiit lunar substrate pacing (owner decision 2026-07-13): the lunar identity
+; metric advances at most KHAJIIT_LUNAR_METRIC_DAILY_MAX per game day across BOTH
+; lanes (moon observance + road home), mirroring the Breton practice-point budget.
+; Per-event metric requests are the small pulses below; the old per-lane geometric
+; decay still shrinks the piety/focus side but no longer owns metric pacing.
+; Earliest tier 2 (metric 25) = day 7; earliest tier 3 (metric 75) = day 19.
+Float Property KHAJIIT_LUNAR_METRIC_DAILY_MAX = 4.0 AutoReadOnly
+Float Property KHAJIIT_LUNAR_MOON_METRIC = 1.0 AutoReadOnly
+Float Property KHAJIIT_LUNAR_ROAD_METRIC = 2.0 AutoReadOnly
 ; Focus weight a quest-reaction piety award contributes to the Khajiit focused
 ; emphasis (the matrix->focus bridge). Smaller than a dedicated edge signal so a
 ; single quest cannot lock a focus; a milestone reaction counts double. With
@@ -6560,8 +6569,18 @@ Function HandleKhajiitMoonObservance(Int phaseIndex, String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.KhajiitMoonObservance")
+    ; Metric pacing is owned by the shared daily budget, not the repeat multiplier.
+    ; The substrate call still runs at multiplier 0 so LastPhase/ObservanceCount record.
+    Float grantedMetric = ConsumeKhajiitLunarMetricBudget(KHAJIIT_LUNAR_MOON_METRIC)
+    Float metricMultiplier = 0.0
+    if PDV_KhajiitLunarSubstrate.MoonObservanceDelta > 0.0
+        metricMultiplier = grantedMetric / PDV_KhajiitLunarSubstrate.MoonObservanceDelta
+    endIf
+    if grantedMetric <= 0.0
+        Trace(2, "Khajiit lunar daily metric budget blocked moon observance: " + reason)
+    endIf
     Int tierBefore = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
-    PDV_KhajiitLunarSubstrate.ObserveMoonPhaseScaled(phaseIndex, multiplier, reason)
+    PDV_KhajiitLunarSubstrate.ObserveMoonPhaseScaled(phaseIndex, metricMultiplier, reason)
     Int tierAfter = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
     AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_AZURAH, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
     ; Double-route: the same observance feeds the lunar substrate (identity) AND a small
@@ -6576,7 +6595,7 @@ Function HandleKhajiitMoonObservance(Int phaseIndex, String reason)
     SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, multiplier, "The moons marked this observance.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
     NotifyDiegeticRoutineFavor("khajiit_moon_observance")
     RequestPanelRefresh()
-    Trace(2, "Khajiit moon observance routed for phase " + phaseIndex + " with multiplier " + multiplier)
+    Trace(2, "Khajiit moon observance routed for phase " + phaseIndex + " with multiplier " + multiplier + " metric " + grantedMetric)
 EndFunction
 
 Function HandleKhajiitRoadHome(String reason)
@@ -6600,8 +6619,18 @@ Function HandleKhajiitRoadHomeAnchor(Int anchorId, String reason)
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.KhajiitRoadHome")
+    ; Metric pacing is owned by the shared daily budget, not the repeat multiplier.
+    ; The substrate call still runs at multiplier 0 so RoadHomeCount records.
+    Float grantedMetric = ConsumeKhajiitLunarMetricBudget(KHAJIIT_LUNAR_ROAD_METRIC)
+    Float metricMultiplier = 0.0
+    if PDV_KhajiitLunarSubstrate.RoadHomeDelta > 0.0
+        metricMultiplier = grantedMetric / PDV_KhajiitLunarSubstrate.RoadHomeDelta
+    endIf
+    if grantedMetric <= 0.0
+        Trace(2, "Khajiit lunar daily metric budget blocked road-home cadence: " + reason)
+    endIf
     Int tierBefore = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
-    PDV_KhajiitLunarSubstrate.RecordRoadHomeCadenceScaled(multiplier, reason)
+    PDV_KhajiitLunarSubstrate.RecordRoadHomeCadenceScaled(metricMultiplier, reason)
     Int tierAfter = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
     AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_KHENARTHI, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
     if PDV_Khenarthi
@@ -6611,7 +6640,83 @@ Function HandleKhajiitRoadHomeAnchor(Int anchorId, String reason)
     SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, multiplier, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
     NotifyDiegeticRoutineFavor("khajiit_road_home")
     RequestPanelRefresh()
-    Trace(2, "Khajiit road-home cadence routed with multiplier " + multiplier + " anchor " + anchorId)
+    Trace(2, "Khajiit road-home cadence routed with multiplier " + multiplier + " anchor " + anchorId + " metric " + grantedMetric)
+EndFunction
+
+; Shared daily metric budget for the Khajiit lunar substrate (both lanes draw from
+; one pool), mirroring ConsumeBretonPracticePointBudget. Returns the granted metric,
+; clamped to the day's remaining budget (0 when exhausted).
+Float Function ConsumeKhajiitLunarMetricBudget(Float requestedMetric)
+    if requestedMetric <= 0.0
+        return 0.0
+    endIf
+
+    Int today = Utility.GetCurrentGameTime() as Int
+    Int budgetDay = StorageUtil.GetIntValue(None, "PDV.Khajiit.LunarMetricDay", -1)
+    if budgetDay != today
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.LunarMetricDay", today)
+        StorageUtil.SetFloatValue(None, "PDV.Khajiit.LunarMetricToday", 0.0)
+    endIf
+
+    Float metricToday = StorageUtil.GetFloatValue(None, "PDV.Khajiit.LunarMetricToday")
+    Float remaining = KHAJIIT_LUNAR_METRIC_DAILY_MAX - metricToday
+    if remaining <= 0.0
+        return 0.0
+    endIf
+
+    Float appliedMetric = requestedMetric
+    if appliedMetric > remaining
+        appliedMetric = remaining
+    endIf
+    StorageUtil.SetFloatValue(None, "PDV.Khajiit.LunarMetricToday", metricToday + appliedMetric)
+    return appliedMetric
+EndFunction
+
+; Direct boundary seed for reward/UI proof; explicitly bypasses the daily metric
+; budget (mirrors DebugSetBretonPracticePoints).
+String Function DebugSetKhajiitLunarMetric(Float metricTarget)
+    if !IsKhajiitOrigin() || !PDV_KhajiitLunarSubstrate
+        return "Khajiit origin and lunar substrate are required."
+    endIf
+
+    Float clampedTarget = metricTarget
+    if clampedTarget < 0.0
+        clampedTarget = 0.0
+    elseIf clampedTarget > 100.0
+        clampedTarget = 100.0
+    endIf
+    PDV_KhajiitLunarSubstrate.SetMetric(clampedTarget, "mcm_debug_lunar_seed")
+    RequestPanelRefresh()
+    return "Lunar metric set to " + FormatTwoDecimals(clampedTarget) + "; tier " + PDV_KhajiitLunarSubstrate.GetSubstrateTier() + ". Direct boundary seed; bypasses the daily metric budget."
+EndFunction
+
+String Function DebugResetKhajiitLunarSubstrate()
+    if !IsKhajiitOrigin() || !PDV_KhajiitLunarSubstrate
+        return "Khajiit origin and lunar substrate are required."
+    endIf
+
+    PDV_KhajiitLunarSubstrate.ResetPilotForDebug()
+    StorageUtil.SetIntValue(None, "PDV.Khajiit.LunarMetricDay", -1)
+    StorageUtil.SetFloatValue(None, "PDV.Khajiit.LunarMetricToday", 0.0)
+    RequestPanelRefresh()
+    return "Lunar substrate reset to zero; daily metric budget cleared."
+EndFunction
+
+String Function DebugGetKhajiitLunarBudgetSummary()
+    if !IsKhajiitOrigin() || !PDV_KhajiitLunarSubstrate
+        return "Khajiit origin and lunar substrate are required."
+    endIf
+
+    Int today = Utility.GetCurrentGameTime() as Int
+    Float spentToday = 0.0
+    if StorageUtil.GetIntValue(None, "PDV.Khajiit.LunarMetricDay", -1) == today
+        spentToday = StorageUtil.GetFloatValue(None, "PDV.Khajiit.LunarMetricToday")
+    endIf
+    Float remaining = KHAJIIT_LUNAR_METRIC_DAILY_MAX - spentToday
+    if remaining < 0.0
+        remaining = 0.0
+    endIf
+    return "Lunar metric " + FormatTwoDecimals(PDV_KhajiitLunarSubstrate.GetMetric()) + ", tier " + PDV_KhajiitLunarSubstrate.GetSubstrateTier() + ". Today " + FormatTwoDecimals(spentToday) + " of " + FormatTwoDecimals(KHAJIIT_LUNAR_METRIC_DAILY_MAX) + " metric used, " + FormatTwoDecimals(remaining) + " remaining."
 EndFunction
 
 Function HandleKhajiitBaanDarRoadTrick(String reason)
@@ -13367,9 +13472,10 @@ Function SyncBretonAncestorSubstrate(Actor playerRef, Bool isBreton)
     PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
 EndFunction
 
-; Unified model (2026-07-13): the tradition family grants T1/T2 practice tiers
-; only. Champion is a patron property now (SyncBretonChampionBoon), not a
-; tradition tier, so this no longer manages a T3 slot.
+; Unified model (2026-07-13): the tradition family grants T1/T2 practice tiers.
+; A Champion boon that reuses this tradition's own T3 record replaces T2 because
+; the T3 effects are absolute cumulative totals. A distinct patron boon remains
+; beside T2 as the second family.
 Function SyncBretonTraditionRewardFamily(Actor playerRef, Int thisTradition, Int activeTradition, Spell t1, Spell t2, String label)
     Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_BRETON && thisTradition == activeTradition
     if thisTradition == BRETON_TRADITION_GREEN_WAY && !IsBretonGreenWayForkEligible()
@@ -13386,11 +13492,44 @@ Function SyncBretonTraditionRewardFamily(Actor playerRef, Int thisTradition, Int
     Bool hadT1Spell = HasRewardSpell(playerRef, t1)
     Bool hadT2Spell = HasRewardSpell(playerRef, t2)
     Bool wantsT1Spell = isActive && activeTier == TIER_SEEKER
-    Bool wantsT2Spell = isActive && activeTier >= TIER_DEVOTED
+    Bool championReplacesT2 = isActive && IsBretonPracticeTierReplacedByChampion(thisTradition)
+    Bool wantsT2Spell = isActive && activeTier >= TIER_DEVOTED && !championReplacesT2
     SyncRaceRewardSpell(playerRef, t1, wantsT1Spell, "Breton " + label + " T1")
     SyncRaceRewardSpell(playerRef, t2, wantsT2Spell, "Breton " + label + " T2")
     MaybeShowBretonTraditionRewardPresentation(playerRef, t1, hadT1Spell, wantsT1Spell, presentationDeity, label, TIER_SEEKER)
     MaybeShowBretonTraditionRewardPresentation(playerRef, t2, hadT2Spell, wantsT2Spell, presentationDeity, label, TIER_DEVOTED)
+EndFunction
+
+Bool Function IsBretonPracticeTierReplacedByChampion(Int traditionValue)
+    PDV_DeityBase championSource = GetBretonChampionSource(True, traditionValue)
+    if !championSource
+        return False
+    endIf
+
+    Spell championSpell = GetBretonPatronChampionBoon(championSource, traditionValue)
+    Spell traditionChampionSpell = None
+    if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
+        traditionChampionSpell = PDV_Bless_Breton_KnightsRoad_T3
+    elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
+        traditionChampionSpell = PDV_Bless_Breton_HiddenArt_T3
+    elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
+        traditionChampionSpell = PDV_Bless_Breton_GreenWay_T3
+    endIf
+
+    return championSpell && traditionChampionSpell && championSpell == traditionChampionSpell
+EndFunction
+
+PDV_DeityBase Function GetBretonChampionSource(Bool isBreton, Int traditionValue)
+    if isBreton && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity && GetTier(_activeDeity) >= TIER_CHAMPION
+        return _activeDeity
+    endIf
+    if isBreton && traditionValue == BRETON_TRADITION_HIDDEN_ART
+        PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
+        if activePact && activePact.GetStoredTier() >= TIER_CHAMPION
+            return activePact
+        endIf
+    endIf
+    return None
 EndFunction
 
 ; Unified model (2026-07-13): the active Champion patron brings their OWN
@@ -13398,15 +13537,7 @@ EndFunction
 ; Breton champion boon strips. Resonance selects the presentation line only.
 Function SyncBretonChampionBoon(Actor playerRef, Bool isBreton, Int traditionValue)
     Spell wantSpell = None
-    PDV_DeityBase championSource = None
-    if isBreton && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity && GetTier(_activeDeity) >= TIER_CHAMPION
-        championSource = _activeDeity
-    elseIf isBreton && traditionValue == BRETON_TRADITION_HIDDEN_ART
-        PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
-        if activePact && activePact.GetStoredTier() >= TIER_CHAMPION
-            championSource = activePact
-        endIf
-    endIf
+    PDV_DeityBase championSource = GetBretonChampionSource(isBreton, traditionValue)
     if championSource
         wantSpell = GetBretonPatronChampionBoon(championSource, traditionValue)
     endIf
@@ -17057,15 +17188,135 @@ EndFunction
 ; context    = optional short phrase
 ; symbolName = Prisma symbol key; falls back to journal until glyphs land
 Bool Function SendPrismaDaedricToast(String princeName, String phase, String context, String symbolName, Bool allowFallback = True)
+    if phase == "price"
+        PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
+        if activePact && activePact.DeityName == princeName && activePact.ShouldWaivePriceForPlayer()
+            Trace(2, "Daedric price toast suppressed for integrated Breton Hidden Art pact: " + princeName)
+            return True
+        endIf
+    endIf
+
     String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"daedric\""
     j = j + ",\"prince\":\"" + JsonSafeString(princeName) + "\""
     j = j + ",\"phase\":\"" + JsonSafeString(phase) + "\""
     j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    if phase == "boon"
+        j = j + ",\"tone\":\"good\""
+    endIf
     if context != ""
         j = j + ",\"context\":\"" + JsonSafeString(context) + "\""
     endIf
     j = j + "}}"
     return SendPrismaToastPayloadOrFallback(j, princeName, context, allowFallback)
+EndFunction
+
+Bool Function ReplayConcreteDaedricChampionOffer(PDV_DaedricPathBase path, Int oldTier, Int newTier)
+    if !path
+        return False
+    endIf
+
+    Form pathForm = path.GetDeityForm()
+    String princeName = path.DeityName
+    if princeName == "Boethiah"
+        PDV_DaedricPath_Boethiah concreteBoethiah = pathForm as PDV_DaedricPath_Boethiah
+        if concreteBoethiah
+            concreteBoethiah.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    elseIf princeName == "Azura"
+        PDV_DaedricPath_Azura concreteAzura = pathForm as PDV_DaedricPath_Azura
+        if concreteAzura
+            concreteAzura.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    elseIf princeName == "Vaermina"
+        PDV_DaedricPath_Vaermina concreteVaermina = pathForm as PDV_DaedricPath_Vaermina
+        if concreteVaermina
+            concreteVaermina.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    elseIf princeName == "Meridia"
+        PDV_DaedricPath_Meridia concreteMeridia = pathForm as PDV_DaedricPath_Meridia
+        if concreteMeridia
+            concreteMeridia.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    elseIf princeName == "Molag Bal"
+        PDV_DaedricPath_Molag concreteMolag = pathForm as PDV_DaedricPath_Molag
+        if concreteMolag
+            concreteMolag.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    elseIf princeName == "Mephala"
+        PDV_DaedricPath_Mephala concreteMephala = pathForm as PDV_DaedricPath_Mephala
+        if concreteMephala
+            concreteMephala.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    elseIf princeName == "Malacath"
+        PDV_DaedricPath_Malacath concreteMalacath = pathForm as PDV_DaedricPath_Malacath
+        if concreteMalacath
+            concreteMalacath.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    elseIf princeName == "Mehrunes Dagon"
+        PDV_DaedricPath_Dagon concreteDagon = pathForm as PDV_DaedricPath_Dagon
+        if concreteDagon
+            concreteDagon.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    elseIf princeName == "Sheogorath"
+        PDV_DaedricPath_Sheo concreteSheo = pathForm as PDV_DaedricPath_Sheo
+        if concreteSheo
+            concreteSheo.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    elseIf princeName == "Namira"
+        PDV_DaedricPath_Namira concreteNamira = pathForm as PDV_DaedricPath_Namira
+        if concreteNamira
+            concreteNamira.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    elseIf princeName == "Sanguine"
+        PDV_DaedricPath_Sanguine concreteSanguine = pathForm as PDV_DaedricPath_Sanguine
+        if concreteSanguine
+            concreteSanguine.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    elseIf princeName == "Clavicus Vile"
+        PDV_DaedricPath_Vile concreteVile = pathForm as PDV_DaedricPath_Vile
+        if concreteVile
+            concreteVile.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    elseIf princeName == "Hermaeus Mora"
+        PDV_DaedricPath_Mora concreteMora = pathForm as PDV_DaedricPath_Mora
+        if concreteMora
+            concreteMora.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    elseIf princeName == "Nocturnal"
+        PDV_DaedricPath_Nocturnal concreteNocturnal = pathForm as PDV_DaedricPath_Nocturnal
+        if concreteNocturnal
+            concreteNocturnal.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    elseIf princeName == "Peryite"
+        PDV_DaedricPath_Peryite concretePeryite = pathForm as PDV_DaedricPath_Peryite
+        if concretePeryite
+            concretePeryite.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    elseIf princeName == "Hircine"
+        PDV_DaedricPath_Hircine concreteHircine = pathForm as PDV_DaedricPath_Hircine
+        if concreteHircine
+            concreteHircine.ShowTierEntryMessage(oldTier, newTier)
+            return True
+        endIf
+    endIf
+
+    Trace(1, "Daedric Champion offer replay failed to resolve concrete path: " + princeName)
+    return False
 EndFunction
 
 Function DrainHircineResiduePrismaToasts()
@@ -17216,7 +17467,9 @@ Function ShowDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier,
     endIf
 
     if replayChampionOffer && newTier == TIER_CHAMPION
-        path.ShowTierEntryMessage(oldTier, newTier)
+        if !ReplayConcreteDaedricChampionOffer(path, oldTier, newTier)
+            return
+        endIf
         SyncFirstTierRaceRewardRuntime()
         if path.GetStoredTier() < TIER_CHAMPION
             if GetDebugLevel() >= 1
@@ -17232,7 +17485,10 @@ Function ShowDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier,
     String tierLabel = GetTierStandingLabel(newTier)
     String flavorText = GetDaedricMilestoneFlavor(princeName, newTier)
     String boonText = GetDaedricBoonMechanicText(princeName, newTier)
-    String priceText = GetDaedricPriceMechanicText(princeName, newTier)
+    String priceText = ""
+    if !path.ShouldWaivePriceForPlayer()
+        priceText = GetDaedricPriceMechanicText(princeName, newTier)
+    endIf
     String symbolName = GetPrismaSymbolForDeity(path)
     if symbolName == "journal"
         symbolName = "daedric"
@@ -17433,99 +17689,99 @@ String Function GetDaedricBoonMechanicText(String princeName, Int tierValue)
     if (princeName == "Boethiah") && tierValue == TIER_SEEKER
         return "+10 One-handed"
     elseIf (princeName == "Boethiah") && tierValue == TIER_DEVOTED
-        return "+25 Armor rating"
+        return "+15 One-handed"
     elseIf (princeName == "Boethiah") && tierValue == TIER_CHAMPION
-        return "+35 Armor rating"
+        return "+20 One-handed"
     elseIf (princeName == "Azura") && tierValue == TIER_SEEKER
-        return "+15% Magic resistance"
+        return "+10% Magic resistance"
     elseIf (princeName == "Azura") && tierValue == TIER_DEVOTED
-        return "+25% Magicka regeneration"
+        return "+15% Magic resistance"
     elseIf (princeName == "Azura") && tierValue == TIER_CHAMPION
-        return "+35% Magicka regeneration"
+        return "+20% Magic resistance"
     elseIf (princeName == "Vaermina") && tierValue == TIER_SEEKER
         return "+10 Illusion"
     elseIf (princeName == "Vaermina") && tierValue == TIER_DEVOTED
-        return "+18 Sneak"
+        return "+15 Illusion"
     elseIf (princeName == "Vaermina") && tierValue == TIER_CHAMPION
-        return "+25 Sneak"
+        return "+20 Illusion"
     elseIf (princeName == "Meridia") && tierValue == TIER_SEEKER
         return "+10 Restoration"
     elseIf (princeName == "Meridia") && tierValue == TIER_DEVOTED
-        return "+25% Disease resistance"
+        return "+15 Restoration"
     elseIf (princeName == "Meridia") && tierValue == TIER_CHAMPION
-        return "+35% Disease resistance"
+        return "+20 Restoration"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_SEEKER
-        return "+10 Speech"
+        return "+10 Illusion"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_DEVOTED
-        return "+18 Illusion"
+        return "+15 Illusion"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_CHAMPION
-        return "+25 Illusion"
+        return "+20 Illusion"
     elseIf (princeName == "Mephala") && tierValue == TIER_SEEKER
         return "+10 Sneak"
     elseIf (princeName == "Mephala") && tierValue == TIER_DEVOTED
-        return "+18 Pickpocket"
+        return "+15 Sneak"
     elseIf (princeName == "Mephala") && tierValue == TIER_CHAMPION
-        return "+25 Pickpocket"
+        return "+20 Sneak"
     elseIf (princeName == "Malacath") && tierValue == TIER_SEEKER
-        return "+15 Armor rating"
+        return "+10 Armor rating"
     elseIf (princeName == "Malacath") && tierValue == TIER_DEVOTED
-        return "+18 Two-handed"
+        return "+15 Armor rating"
     elseIf (princeName == "Malacath") && tierValue == TIER_CHAMPION
-        return "+25 Two-handed"
+        return "+20 Armor rating"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_SEEKER
-        return "+10 Destruction"
+        return "+5% Attack damage"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_DEVOTED
-        return "+18 One-handed"
+        return "+8% Attack damage"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_CHAMPION
-        return "+25 One-handed"
+        return "+12% Attack damage"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_SEEKER
-        return "+10 Illusion"
+        return "+25 Magicka"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_DEVOTED
-        return "+25% Magicka regeneration"
+        return "+40 Magicka"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_CHAMPION
-        return "+35% Magicka regeneration"
+        return "+50 Magicka"
     elseIf (princeName == "Namira") && tierValue == TIER_SEEKER
-        return "+10 Sneak"
+        return "Feeding restores Health and Stamina"
     elseIf (princeName == "Namira") && tierValue == TIER_DEVOTED
-        return "+25% Health regeneration"
+        return "Feeding restores Health and Stamina"
     elseIf (princeName == "Namira") && tierValue == TIER_CHAMPION
-        return "+35% Health regeneration"
+        return "Feeding restores Health and Stamina"
     elseIf (princeName == "Sanguine") && tierValue == TIER_SEEKER
-        return "+15% Stamina regeneration"
-    elseIf (princeName == "Sanguine") && tierValue == TIER_DEVOTED
-        return "+18 Speech"
-    elseIf (princeName == "Sanguine") && tierValue == TIER_CHAMPION
-        return "+25 Speech"
-    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_SEEKER
         return "+10 Speech"
-    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Sanguine") && tierValue == TIER_DEVOTED
+        return "+15 Speech"
+    elseIf (princeName == "Sanguine") && tierValue == TIER_CHAMPION
+        return "+20 Speech"
+    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_SEEKER
         return "+25 Carry weight"
+    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_DEVOTED
+        return "+50 Carry weight"
     elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_CHAMPION
-        return "+35 Carry weight"
+        return "+75 Carry weight"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_SEEKER
         return "+10 Alteration"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_DEVOTED
-        return "+25% Magicka regeneration"
+        return "+15 Alteration"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_CHAMPION
-        return "+35% Magicka regeneration"
+        return "+20 Alteration"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_SEEKER
-        return "+10 Sneak"
+        return "+10 Lockpicking"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_DEVOTED
-        return "+18 Lockpicking"
+        return "+15 Lockpicking"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_CHAMPION
-        return "+25 Lockpicking"
+        return "+20 Lockpicking"
     elseIf (princeName == "Peryite") && tierValue == TIER_SEEKER
-        return "+15% Disease resistance"
+        return "+25% Disease resistance"
     elseIf (princeName == "Peryite") && tierValue == TIER_DEVOTED
-        return "+25% Health regeneration"
+        return "+50% Disease resistance"
     elseIf (princeName == "Peryite") && tierValue == TIER_CHAMPION
-        return "+35% Health regeneration"
+        return "+75% Disease resistance"
     elseIf (princeName == "Hircine") && tierValue == TIER_SEEKER
-        return "+15% Stamina regeneration"
+        return "+25 Stamina"
     elseIf (princeName == "Hircine") && tierValue == TIER_DEVOTED
-        return "+18 Sneak"
+        return "+40 Stamina"
     elseIf (princeName == "Hircine") && tierValue == TIER_CHAMPION
-        return "+25 Sneak"
+        return "+50 Stamina"
     endIf
 
     return "pact boon active"
@@ -17533,101 +17789,101 @@ EndFunction
 
 String Function GetDaedricPriceMechanicText(String princeName, Int tierValue)
     if (princeName == "Boethiah") && tierValue == TIER_SEEKER
-        return "-10 Speech"
+        return "-8 Speech"
     elseIf (princeName == "Boethiah") && tierValue == TIER_DEVOTED
-        return "-18 Speech"
+        return "-12 Speech"
     elseIf (princeName == "Boethiah") && tierValue == TIER_CHAMPION
-        return "-25 Speech"
+        return "-15 Speech"
     elseIf (princeName == "Azura") && tierValue == TIER_SEEKER
-        return "-10% Stamina regeneration"
+        return "-10 Stamina"
     elseIf (princeName == "Azura") && tierValue == TIER_DEVOTED
-        return "-20% Stamina regeneration"
+        return "-20 Stamina"
     elseIf (princeName == "Azura") && tierValue == TIER_CHAMPION
-        return "-30% Stamina regeneration"
+        return "-30 Stamina"
     elseIf (princeName == "Vaermina") && tierValue == TIER_SEEKER
-        return "-10% Health regeneration"
+        return "-8 Health"
     elseIf (princeName == "Vaermina") && tierValue == TIER_DEVOTED
-        return "-20% Health regeneration"
+        return "-15 Health"
     elseIf (princeName == "Vaermina") && tierValue == TIER_CHAMPION
-        return "-30% Health regeneration"
+        return "-20 Health"
     elseIf (princeName == "Meridia") && tierValue == TIER_SEEKER
-        return "-10 Illusion"
+        return "-8 Illusion"
     elseIf (princeName == "Meridia") && tierValue == TIER_DEVOTED
-        return "-18 Illusion"
+        return "-12 Illusion"
     elseIf (princeName == "Meridia") && tierValue == TIER_CHAMPION
-        return "-25 Illusion"
+        return "-15 Illusion"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_SEEKER
-        return "-10% Health regeneration"
+        return "-8 Restoration"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_DEVOTED
-        return "-20% Health regeneration"
+        return "-12 Restoration"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_CHAMPION
-        return "-30% Health regeneration"
+        return "-15 Restoration"
     elseIf (princeName == "Mephala") && tierValue == TIER_SEEKER
-        return "-10 Speech"
+        return "-8 Speech"
     elseIf (princeName == "Mephala") && tierValue == TIER_DEVOTED
-        return "-18 Speech"
+        return "-12 Speech"
     elseIf (princeName == "Mephala") && tierValue == TIER_CHAMPION
-        return "-25 Speech"
+        return "-15 Speech"
     elseIf (princeName == "Malacath") && tierValue == TIER_SEEKER
-        return "-10% movement speed"
+        return "-3% Movement speed"
     elseIf (princeName == "Malacath") && tierValue == TIER_DEVOTED
-        return "-20% movement speed"
+        return "-5% Movement speed"
     elseIf (princeName == "Malacath") && tierValue == TIER_CHAMPION
-        return "-30% movement speed"
+        return "-8% Movement speed"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_SEEKER
-        return "-10 Armor rating"
+        return "-5 Armor rating"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_DEVOTED
-        return "-20 Armor rating"
+        return "-10 Armor rating"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_CHAMPION
-        return "-30 Armor rating"
+        return "-15 Armor rating"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_SEEKER
-        return "-10 Restoration"
+        return "-8 Restoration"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_DEVOTED
-        return "-18 Restoration"
+        return "-12 Restoration"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_CHAMPION
-        return "-25 Restoration"
+        return "-15 Restoration"
     elseIf (princeName == "Namira") && tierValue == TIER_SEEKER
-        return "-10 Speech"
+        return "-8 Speech"
     elseIf (princeName == "Namira") && tierValue == TIER_DEVOTED
-        return "-18 Speech"
+        return "-12 Speech"
     elseIf (princeName == "Namira") && tierValue == TIER_CHAMPION
-        return "-25 Speech"
+        return "-15 Speech"
     elseIf (princeName == "Sanguine") && tierValue == TIER_SEEKER
-        return "-10% Magicka regeneration"
+        return "-10 Magicka"
     elseIf (princeName == "Sanguine") && tierValue == TIER_DEVOTED
-        return "-20% Magicka regeneration"
+        return "-20 Magicka"
     elseIf (princeName == "Sanguine") && tierValue == TIER_CHAMPION
-        return "-30% Magicka regeneration"
+        return "-30 Magicka"
     elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_SEEKER
-        return "-10% Magicka regeneration"
+        return "-10 Magicka"
     elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_DEVOTED
-        return "-20% Magicka regeneration"
+        return "-20 Magicka"
     elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_CHAMPION
-        return "-30% Magicka regeneration"
+        return "-30 Magicka"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_SEEKER
-        return "-10% Stamina regeneration"
+        return "-10 Stamina"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_DEVOTED
-        return "-20% Stamina regeneration"
+        return "-20 Stamina"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_CHAMPION
-        return "-30% Stamina regeneration"
+        return "-30 Stamina"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_SEEKER
-        return "-10 Restoration"
+        return "-15 Carry weight"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_DEVOTED
-        return "-18 Restoration"
+        return "-25 Carry weight"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_CHAMPION
-        return "-25 Restoration"
+        return "-35 Carry weight"
     elseIf (princeName == "Peryite") && tierValue == TIER_SEEKER
-        return "-10% Stamina regeneration"
+        return "-10 Stamina"
     elseIf (princeName == "Peryite") && tierValue == TIER_DEVOTED
-        return "-20% Stamina regeneration"
+        return "-20 Stamina"
     elseIf (princeName == "Peryite") && tierValue == TIER_CHAMPION
-        return "-30% Stamina regeneration"
+        return "-30 Stamina"
     elseIf (princeName == "Hircine") && tierValue == TIER_SEEKER
-        return "-10% Health regeneration"
+        return "-8 Speech"
     elseIf (princeName == "Hircine") && tierValue == TIER_DEVOTED
-        return "-20% Health regeneration"
+        return "-12 Speech"
     elseIf (princeName == "Hircine") && tierValue == TIER_CHAMPION
-        return "-30% Health regeneration"
+        return "-15 Speech"
     endIf
 
     return "pact price active"
@@ -22015,7 +22271,7 @@ String Function GetBretonPatronSurveySentence(Int traditionValue)
     if activePact
         String pactName = GetPublicDeityDisplayName(activePact)
         if traditionValue == BRETON_TRADITION_HIDDEN_ART && activePact.GetStoredTier() >= TIER_CHAMPION
-            return " Your pact with " + pactName + " has opened the Hidden Art's deepest practice. Hidden Art - Champion stands beside the pact."
+            return " Your pact with " + pactName + " has opened Hidden Art - Champion."
         endIf
         return " Your pact with " + pactName + " stands beside the tradition."
     endIf

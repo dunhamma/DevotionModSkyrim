@@ -30,11 +30,8 @@
       "targetType": "Self",
       "grantWiring": "owned-by-phase20-reward-contract",
       "conditions": {
-        "mode": "night-only",
-        "startHourInclusive": 19,
-        "endHourInclusive": 7,
-        "ckFunction": "GetCurrentTime",
-        "logic": "GetCurrentTime >= 19 OR GetCurrentTime <= 7"
+        "mode": "always-on",
+        "note": "2026-07-13 owner decision: night gate removed from the lunar substrate boons; both effects apply at all times. Formerly GetCurrentTime >= 19 OR <= 7."
       },
       "effects": [
         {
@@ -46,7 +43,7 @@
           "magnitude": 15,
           "duration": 0,
           "area": 0,
-          "conditions": "night-only",
+          "conditions": "always-on",
           "effectName": "Fortify Stamina"
         },
         {
@@ -58,7 +55,7 @@
           "magnitude": 15,
           "duration": 0,
           "area": 0,
-          "conditions": "night-only"
+          "conditions": "always-on"
         }
       ],
       "acceptance": [
@@ -66,7 +63,7 @@
         "both magic effects exist in Devotion.esp",
         "spell uses both magic effects",
         "spell and magic effect text matches the source manifest row exactly",
-        "both effect entries are night-only from 19:00 through 07:00",
+        "both effect entries are unconditional (always active; night gate removed 2026-07-13)",
         "manager grant wiring, if present, is owned by PDV_Phase20_RewardRecordContracts.json",
         "no broad CAT-6 promotion is claimed"
       ]
