@@ -418,14 +418,15 @@
           "spellEditorId": "PDV_Price_Daedric_Azura_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Azura_Seeker",
           "displayName": "Azura Price - Seeker",
-          "playerFacingText": "Azura's foresight leaves the body tired. Price: Stamina regeneration -5%.",
+          "playerFacingText": "Azura's foresight leaves the body tired. Price: Fortify Stamina -10.",
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
-              "magnitude": -5,
+              "actorValue": "Stamina",
+              "magnitude": -10,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Stamina"
             }
           ]
         },
@@ -433,14 +434,15 @@
           "spellEditorId": "PDV_Price_Daedric_Azura_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Azura_Devoted",
           "displayName": "Azura Price - Devoted",
-          "playerFacingText": "Azura's foresight leaves the body tired. Price: Stamina regeneration -10%.",
+          "playerFacingText": "Azura's foresight leaves the body tired. Price: Fortify Stamina -20.",
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
-              "magnitude": -10,
+              "actorValue": "Stamina",
+              "magnitude": -20,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Stamina"
             }
           ]
         },
@@ -448,14 +450,15 @@
           "spellEditorId": "PDV_Price_Daedric_Azura_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Azura_Champion",
           "displayName": "Azura Price - Champion",
-          "playerFacingText": "Azura's foresight leaves the body tired. Price: Stamina regeneration -15%.",
+          "playerFacingText": "Azura's foresight leaves the body tired. Price: Fortify Stamina -30.",
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
-              "magnitude": -15,
+              "actorValue": "Stamina",
+              "magnitude": -30,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Stamina"
             }
           ]
         }
@@ -706,14 +709,15 @@
           "spellEditorId": "PDV_Price_Daedric_Vaermina_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vaermina_Seeker",
           "displayName": "Vaermina Price - Seeker",
-          "playerFacingText": "Vaermina leaves unrest inside sleep. Price: Health regeneration -5%.",
+          "playerFacingText": "Vaermina leaves unrest inside sleep. Price: Fortify Health -8.",
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "HealRateMult",
-              "magnitude": -5,
+              "actorValue": "Health",
+              "magnitude": -8,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Health"
             }
           ]
         },
@@ -721,14 +725,15 @@
           "spellEditorId": "PDV_Price_Daedric_Vaermina_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vaermina_Devoted",
           "displayName": "Vaermina Price - Devoted",
-          "playerFacingText": "Vaermina leaves unrest inside sleep. Price: Health regeneration -10%.",
+          "playerFacingText": "Vaermina leaves unrest inside sleep. Price: Fortify Health -15.",
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "HealRateMult",
-              "magnitude": -10,
+              "actorValue": "Health",
+              "magnitude": -15,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Health"
             }
           ]
         },
@@ -736,14 +741,15 @@
           "spellEditorId": "PDV_Price_Daedric_Vaermina_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vaermina_Champion",
           "displayName": "Vaermina Price - Champion",
-          "playerFacingText": "Vaermina leaves unrest inside sleep. Price: Health regeneration -15%.",
+          "playerFacingText": "Vaermina leaves unrest inside sleep. Price: Fortify Health -20.",
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "HealRateMult",
-              "magnitude": -15,
+              "actorValue": "Health",
+              "magnitude": -20,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Health"
             }
           ]
         }
@@ -2436,14 +2442,15 @@
           "spellEditorId": "PDV_Bless_Daedric_Sheo_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Sheo_Seeker",
           "displayName": "Sheogorath Boon - Seeker",
-          "playerFacingText": "Sheogorath's wrong angle feeds the impossible. Boon: Magicka regeneration +10%.",
+          "playerFacingText": "Sheogorath's wrong angle feeds the impossible. Boon: Fortify Magicka +25.",
           "property": "Boon_Seeker",
           "effects": [
             {
-              "actorValue": "MagickaRateMult",
-              "magnitude": 10,
+              "actorValue": "Magicka",
+              "magnitude": 25,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Magicka"
             }
           ]
         },
@@ -2451,14 +2458,15 @@
           "spellEditorId": "PDV_Bless_Daedric_Sheo_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Sheo_Devoted",
           "displayName": "Sheogorath Boon - Devoted",
-          "playerFacingText": "Sheogorath's wrong angle feeds the impossible. Boon: Magicka regeneration +15%.",
+          "playerFacingText": "Sheogorath's wrong angle feeds the impossible. Boon: Fortify Magicka +40.",
           "property": "Boon_Devoted",
           "effects": [
             {
-              "actorValue": "MagickaRateMult",
-              "magnitude": 15,
+              "actorValue": "Magicka",
+              "magnitude": 40,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Magicka"
             }
           ]
         },
@@ -2466,14 +2474,15 @@
           "spellEditorId": "PDV_Bless_Daedric_Sheo_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Sheo_Champion",
           "displayName": "Sheogorath Boon - Champion",
-          "playerFacingText": "Sheogorath's wrong angle feeds the impossible. Boon: Magicka regeneration +20%.",
+          "playerFacingText": "Sheogorath's wrong angle feeds the impossible. Boon: Fortify Magicka +50.",
           "property": "Boon_Champion",
           "effects": [
             {
-              "actorValue": "MagickaRateMult",
-              "magnitude": 20,
+              "actorValue": "Magicka",
+              "magnitude": 50,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Magicka"
             }
           ]
         }
@@ -3087,14 +3096,15 @@
           "spellEditorId": "PDV_Price_Daedric_Sanguine_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Sanguine_Seeker",
           "displayName": "Sanguine Price - Seeker",
-          "playerFacingText": "Sanguine's revelry dulls disciplined focus. Price: Magicka regeneration -5%.",
+          "playerFacingText": "Sanguine's revelry dulls disciplined focus. Price: Fortify Magicka -10.",
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "MagickaRateMult",
-              "magnitude": -5,
+              "actorValue": "Magicka",
+              "magnitude": -10,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Magicka"
             }
           ]
         },
@@ -3102,14 +3112,15 @@
           "spellEditorId": "PDV_Price_Daedric_Sanguine_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Sanguine_Devoted",
           "displayName": "Sanguine Price - Devoted",
-          "playerFacingText": "Sanguine's revelry dulls disciplined focus. Price: Magicka regeneration -10%.",
+          "playerFacingText": "Sanguine's revelry dulls disciplined focus. Price: Fortify Magicka -20.",
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "MagickaRateMult",
-              "magnitude": -10,
+              "actorValue": "Magicka",
+              "magnitude": -20,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Magicka"
             }
           ]
         },
@@ -3117,14 +3128,15 @@
           "spellEditorId": "PDV_Price_Daedric_Sanguine_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Sanguine_Champion",
           "displayName": "Sanguine Price - Champion",
-          "playerFacingText": "Sanguine's revelry dulls disciplined focus. Price: Magicka regeneration -15%.",
+          "playerFacingText": "Sanguine's revelry dulls disciplined focus. Price: Fortify Magicka -30.",
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "MagickaRateMult",
-              "magnitude": -15,
+              "actorValue": "Magicka",
+              "magnitude": -30,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Magicka"
             }
           ]
         }
@@ -3389,14 +3401,15 @@
           "spellEditorId": "PDV_Price_Daedric_Vile_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vile_Seeker",
           "displayName": "Clavicus Vile Price - Seeker",
-          "playerFacingText": "Vile's fine print taxes your reserves. Price: Magicka regeneration -5%.",
+          "playerFacingText": "Vile's fine print taxes your reserves. Price: Fortify Magicka -10.",
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "MagickaRateMult",
-              "magnitude": -5,
+              "actorValue": "Magicka",
+              "magnitude": -10,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Magicka"
             }
           ]
         },
@@ -3404,14 +3417,15 @@
           "spellEditorId": "PDV_Price_Daedric_Vile_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vile_Devoted",
           "displayName": "Clavicus Vile Price - Devoted",
-          "playerFacingText": "Vile's fine print taxes your reserves. Price: Magicka regeneration -10%.",
+          "playerFacingText": "Vile's fine print taxes your reserves. Price: Fortify Magicka -20.",
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "MagickaRateMult",
-              "magnitude": -10,
+              "actorValue": "Magicka",
+              "magnitude": -20,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Magicka"
             }
           ]
         },
@@ -3419,14 +3433,15 @@
           "spellEditorId": "PDV_Price_Daedric_Vile_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vile_Champion",
           "displayName": "Clavicus Vile Price - Champion",
-          "playerFacingText": "Vile's fine print taxes your reserves. Price: Magicka regeneration -15%.",
+          "playerFacingText": "Vile's fine print taxes your reserves. Price: Fortify Magicka -30.",
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "MagickaRateMult",
-              "magnitude": -15,
+              "actorValue": "Magicka",
+              "magnitude": -30,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Magicka"
             }
           ]
         }
@@ -3691,14 +3706,15 @@
           "spellEditorId": "PDV_Price_Daedric_Mora_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Mora_Seeker",
           "displayName": "Hermaeus Mora Price - Seeker",
-          "playerFacingText": "Mora's archive pulls thought away from the body. Price: Stamina regeneration -5%.",
+          "playerFacingText": "Mora's archive pulls thought away from the body. Price: Fortify Stamina -10.",
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
-              "magnitude": -5,
+              "actorValue": "Stamina",
+              "magnitude": -10,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Stamina"
             }
           ]
         },
@@ -3706,14 +3722,15 @@
           "spellEditorId": "PDV_Price_Daedric_Mora_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Mora_Devoted",
           "displayName": "Hermaeus Mora Price - Devoted",
-          "playerFacingText": "Mora's archive pulls thought away from the body. Price: Stamina regeneration -10%.",
+          "playerFacingText": "Mora's archive pulls thought away from the body. Price: Fortify Stamina -20.",
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
-              "magnitude": -10,
+              "actorValue": "Stamina",
+              "magnitude": -20,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Stamina"
             }
           ]
         },
@@ -3721,14 +3738,15 @@
           "spellEditorId": "PDV_Price_Daedric_Mora_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Mora_Champion",
           "displayName": "Hermaeus Mora Price - Champion",
-          "playerFacingText": "Mora's archive pulls thought away from the body. Price: Stamina regeneration -15%.",
+          "playerFacingText": "Mora's archive pulls thought away from the body. Price: Fortify Stamina -30.",
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
-              "magnitude": -15,
+              "actorValue": "Stamina",
+              "magnitude": -30,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Stamina"
             }
           ]
         }
@@ -4295,14 +4313,15 @@
           "spellEditorId": "PDV_Price_Daedric_Peryite_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Peryite_Seeker",
           "displayName": "Peryite Price - Seeker",
-          "playerFacingText": "Peryite's tasks grind down the body's urgency. Price: Stamina regeneration -5%.",
+          "playerFacingText": "Peryite's tasks grind down the body's urgency. Price: Fortify Stamina -10.",
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
-              "magnitude": -5,
+              "actorValue": "Stamina",
+              "magnitude": -10,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Stamina"
             }
           ]
         },
@@ -4310,14 +4329,15 @@
           "spellEditorId": "PDV_Price_Daedric_Peryite_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Peryite_Devoted",
           "displayName": "Peryite Price - Devoted",
-          "playerFacingText": "Peryite's tasks grind down the body's urgency. Price: Stamina regeneration -10%.",
+          "playerFacingText": "Peryite's tasks grind down the body's urgency. Price: Fortify Stamina -20.",
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
-              "magnitude": -10,
+              "actorValue": "Stamina",
+              "magnitude": -20,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Stamina"
             }
           ]
         },
@@ -4325,14 +4345,15 @@
           "spellEditorId": "PDV_Price_Daedric_Peryite_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Peryite_Champion",
           "displayName": "Peryite Price - Champion",
-          "playerFacingText": "Peryite's tasks grind down the body's urgency. Price: Stamina regeneration -15%.",
+          "playerFacingText": "Peryite's tasks grind down the body's urgency. Price: Fortify Stamina -30.",
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
-              "magnitude": -15,
+              "actorValue": "Stamina",
+              "magnitude": -30,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Stamina"
             }
           ]
         }
@@ -4550,14 +4571,15 @@
           "spellEditorId": "PDV_Bless_Daedric_Hircine_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Hircine_Seeker",
           "displayName": "Hircine Boon - Seeker",
-          "playerFacingText": "Hircine's hunt-sense drives the chase. Boon: Stamina regeneration +10%.",
+          "playerFacingText": "Hircine's hunt-sense drives the chase. Boon: Fortify Stamina +25.",
           "property": "Boon_Seeker",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
-              "magnitude": 10,
+              "actorValue": "Stamina",
+              "magnitude": 25,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Stamina"
             }
           ]
         },
@@ -4565,14 +4587,15 @@
           "spellEditorId": "PDV_Bless_Daedric_Hircine_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Hircine_Devoted",
           "displayName": "Hircine Boon - Devoted",
-          "playerFacingText": "Hircine's hunt-sense drives the chase. Boon: Stamina regeneration +15%.",
+          "playerFacingText": "Hircine's hunt-sense drives the chase. Boon: Fortify Stamina +40.",
           "property": "Boon_Devoted",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
-              "magnitude": 15,
+              "actorValue": "Stamina",
+              "magnitude": 40,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Stamina"
             }
           ]
         },
@@ -4580,14 +4603,15 @@
           "spellEditorId": "PDV_Bless_Daedric_Hircine_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Hircine_Champion",
           "displayName": "Hircine Boon - Champion",
-          "playerFacingText": "Hircine's hunt-sense drives the chase. Boon: Stamina regeneration +20%.",
+          "playerFacingText": "Hircine's hunt-sense drives the chase. Boon: Fortify Stamina +50.",
           "property": "Boon_Champion",
           "effects": [
             {
-              "actorValue": "StaminaRateMult",
-              "magnitude": 20,
+              "actorValue": "Stamina",
+              "magnitude": 50,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Stamina"
             }
           ]
         }
