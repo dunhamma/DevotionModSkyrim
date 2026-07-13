@@ -513,6 +513,34 @@ regenerated; verifier FAIL=0 WARN=1 (allowed glyph), phase2 readback PASS=1482.
 Retest is now time-of-day independent: at tier 2 read `Khajiit Lunar Road`
 (Fortify Stamina +15, Disease Resistance +15%) in Active Effects.
 
+2026-07-13 LUNAR METRIC BUDGET ADDED (pacing): the lunar substrate metric now
+draws from a shared daily budget of 4.0 across BOTH lanes (moon observance +1,
+road-home +2), mirroring the Breton practice-point budget. This replaces the old
+per-lane geometric decay for METRIC pacing (the decay still governs the
+piety/focus side). Earliest tier 2 (metric 25) = day 7; tier 3 (metric 75) =
+day 19. Manager + MCM compile 0/0; verifier FAIL=0; 5-agent adversarial review
+shipReady, no confirmed bugs (one accepted same-frame overshoot RISK shared with
+the Breton budget). Four new MCM Debug: Daedric & Curse -> Race signals controls:
+`Seed lunar metric 25` / `Seed lunar metric 75` (boundary seeds, bypass budget),
+`Reset lunar substrate`, `Show lunar budget`. Run the Lunar Budget smoke card
+below before crediting `Khajiit-Lunar|substrate-favor` pacing.
+
+### Khajiit Lunar Budget Smoke Card (2026-07-13)
+
+Origin 6, DebugLevel 2. Controls on `Debug: Daedric & Curse` (seed/reset/show) and
+`Debug: State & Rewards` behavior buttons (moon observance / road-home). Capture
+`Show lunar budget` before/after each step and the `metric` from Show pattern summary.
+
+| # | Step | Expected |
+|---:|---|---|
+| LB1 | On the tester save (metric 26.29, tier 2), fire ONE moon observance | metric -> 27.29 (grant 1.0, NOT old 4.0); Show budget spent 1.0 / remaining 3.0 |
+| LB2 | Drive spent to 3.0 (mix moon/road), then one road-home | grants exactly 1.0 (clamped from 2.0 request); Show budget spent 4.0 / remaining 0.0 |
+| LB3 | With 0 remaining, fire another moon observance | metric UNCHANGED; LastPhase/ObservanceCount still advance; piety/focus still awards; budget-exhausted trace at level 2 |
+| LB4 | Sleep/wait past midnight (and once across a multi-day skip) | Show budget re-arms spent 0.0 / remaining 4.0; next event grants normally (no day-0 suppression) |
+| LB5 | `Reset lunar substrate`, then one moon event same day | metric 0 -> tier 1; then grant 1.0 from a fresh 4.0 pool (sentinel -1 re-arm mid-day works) |
+| LB6 | `Seed lunar metric 25`, then `Seed lunar metric 75` | tier 2 then tier 3 with boon sync; seeding does NOT touch the spent pool (bypass by design) |
+| LB7 | Same-frame collision probe (accepted RISK): pre-load spent 3.0, take a load-door/fast-travel that trips both lunar ingresses | overshoot up to +1 beyond cap = known Breton-pattern behavior; larger overshoot or corrupted spent = file a bug |
+
 **neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
 - [ ] `Neglect-KhajiitLunar|neglect`  (e.g. The Moons Withdrawn)
 
