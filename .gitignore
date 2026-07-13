@@ -1,29 +1,5 @@
 native/CreationKitAuthoringBridge/bin/
 native/CreationKitAuthoringBridge/obj/
-tools/creation-merge-runner/bin/
-tools/creation-merge-runner/obj/
-tools/pdv-phase9-author/bin/
-tools/pdv-phase9-author/obj/
-tools/pdv-next-packet-author/bin/
-tools/pdv-next-packet-author/obj/
-tools/pdv-phase12-author/bin/
-tools/pdv-phase12-author/obj/
-tools/pdv-phase13-author/bin/
-tools/pdv-phase13-author/obj/
-tools/pdv-phase18-author/bin/
-tools/pdv-phase18-author/obj/
-tools/pdv-phase20-*-author/bin/
-tools/pdv-phase20-*-author/obj/
-tools/pdv-baandar-sge-author/bin/
-tools/pdv-baandar-sge-author/obj/
-tools/pdv-daedric-author/bin/
-tools/pdv-daedric-author/obj/
-tools/pdv-stance-author/bin/
-tools/pdv-stance-author/obj/
-tools/pdv-diegetic-author/bin/
-tools/pdv-diegetic-author/obj/
-tools/pdv-dunmer-urn-author/bin/
-tools/pdv-dunmer-urn-author/obj/
 native/vendor/Creation-Kit-Platform-Extended/
 
 # Local agent/editor settings
@@ -41,20 +17,6 @@ scratch/phase12_live/
 scratch/phase13_16_live/
 scratch/phase20-*.csv
 scratch/phase20-*.json
-
-# .NET build outputs for helper projects
-tools/pdv-balancing-author/bin/
-tools/pdv-balancing-author/obj/
-tools/pdv-startup-author/bin/
-tools/pdv-startup-author/obj/
-tools/pdv-argonian-variety-author/bin/
-tools/pdv-argonian-variety-author/obj/
-tools/pdv-arr-shrineprayer-author/bin/
-tools/pdv-arr-shrineprayer-author/obj/
-tools/pdv-faucet-fix-author/bin/
-tools/pdv-faucet-fix-author/obj/
-tools/pdv-requiem-tail-author/bin/
-tools/pdv-requiem-tail-author/obj/
 
 # === Consolidated build/scratch ignores (added 2026-06-24) ===
 # All .NET helper-tool build outputs (blanket; supersedes the per-tool bin/obj lines above)
@@ -97,3 +59,11 @@ scratch/promote_static_routes.mjs
 
 # Local backup snapshots (tool-generated, never committed)
 backups/
+
+# Convert/rebalance tool pre-change snapshots (.bak-msconv, .bak-penalty,
+# .bak-variety, .bak-daedric, etc. -- transient, keep local)
+*.bak-*
+
+# Retired tool-tree archives -- kept LOCAL only (too large for GitHub, and the
+# deleted source is already recoverable from pre-retirement git history)
+tools/*retired*.zip
