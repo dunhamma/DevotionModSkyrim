@@ -29,6 +29,12 @@ Positive-reward Requiem conversion is already COMPLETE across all 10 races. Thes
 three converted penalties were the remaining active swallowed `HealRateMult`
 penalties. Imperial is intentionally not part of that conversion.
 
+**UPDATE 2026-07-13:** the positive-reward conversion this doc references was
+HealRateMult-only; on 2026-07-13 the `MagickaRateMult`/`StaminaRateMult` positive
+reward buffs (all 10 races + Daedric) were ALSO converted to flat Fortify Magicka/
+Stamina pool. Positive-reward conversion now spans Health AND M/S pools. Authority:
+`PDV_RequiemMagickaStaminaConversion_BuildSpec_2026-07-13.md`.
+
 ---
 
 ## Correction Applied
@@ -78,6 +84,12 @@ disease-resistance based.
 
 - Stamina/Magicka-regen neglect effects (Kyne, Khajiit, Bosmer, Dunmer, Altmer):
   partly-felt under Requiem; optional review only, not this build.
+  **SUPERSEDED 2026-07-13:** Altmer/Dunmer (Magicka) + Bosmer/Khajiit (Stamina)
+  neglect and Breton `DruidicForkBetrayal` creed-loss WERE converted to mild
+  negative Fortify Magicka/Stamina pool (neglect -10, creed-loss -15) per
+  `PDV_RequiemMagickaStaminaConversion_BuildSpec_2026-07-13.md`. Kyne's neglect is
+  a Nord Kyne effect handled with the Nord neglect set. Historical text kept for
+  provenance.
 - Already-felt DamageResist/ResistMagic neglect (Orc, Redguard): leave as-is.
 - The ~24 orphaned positive `_HealRateMult` MGEFs: separate optional ESP-tidiness
   prune, not this build.

@@ -256,7 +256,7 @@ Preconditions:
 |---:|---|---|---|---|
 | PJ1 | Focused panel summary JSON escaping | On a live save, perform any piety-moving act that writes a recent devotion event. Then use the Player MCM page `Open Devotion panel` key path, not `cqf`, to open the focused panel. | The Today/summary panel renders. No `Bad JSON` status appears. Summary text may be flattened to one line where the source Survey text had line breaks. | Toast/Prisma panel visible, no blank panel, no parser error in the Prisma status text or native log, ESC/X closes the panel, Book of Days still opens/closes separately. |
 | PJ1 note | 2026-07-12 live panel proof | Player MCM `Open Devotion panel` after piety-moving smoke routes. | Focused panel rendered and closed; Book of Days still opened/closed separately. Prisma bridge log recorded panel close at 19:50:43 with no Bad JSON/parser error. | Tester confirmed manual pass. |
-| PJ1 note | 2026-07-12 header status-pill regression | The focused panel still exposed the debug-style `Live` state pill in its header. | Repo Prisma assets now remove the visible `pdv-status` header node, guard the two JS status writes, and bump the cache-bust string to `no-live-pill-20260712`. | Live Anvil file sync is pending until the open Prisma panel releases its lock; retest by reopening the focused panel and confirming no `Live` pill/button appears. |
+| PJ1 note | 2026-07-12 header status-pill regression | The focused panel still exposed the debug-style `Live` state pill in its header. | Repo and live Anvil Prisma assets now match: visible `pdv-status` header node removed, two JS status writes guarded, and cache-bust string bumped to `no-live-pill-20260712`. Narrow `PDV_MCM` recompile cleared the dependency freshness gate. | `pdv_prisma_ui_audit` PASS 90; retest by reopening the focused panel and confirming no `Live` pill/button appears. |
 | PJ1 note | 2026-07-12 panel style parity check | Tester also reported the expected panel visual upgrade, including border-weight changes, looked absent. | `styles.css` matched byte-for-byte between repo and live Anvil copy; no second `PrismaUI/views/Devotion` bundle was found in the active Anvil mods tree. | If the old border persists after a full panel reload, treat the border change as not present in the current stylesheet rather than a live-copy overwrite regression. |
 
 ## Reserved Signal + Matrix Freshness Cards (2026-07-12, post-build)
@@ -329,6 +329,18 @@ node .\tools\pdv_1_0_endstate_gate.mjs
 ```
 
 ## Felt-Family Race Sittings (deduplicated plan)
+
+RE-OPEN NOTE (2026-07-13): the project-wide Magicka/Stamina regen -> Fortify
+max-pool conversion (`PDV_RequiemMagickaStaminaConversion_BuildSpec_2026-07-13.md`)
+INVALIDATES any already-recorded `boon` felt-proof whose observed effect was a
+Magicka/Stamina (or the 2 Argonian Health-substrate) REGEN bar - the effect is now
+a flat pool MAX, so the expected Active-Effects observation changed from "regen
+faster" to "Maximum Magicka/Stamina/Health rises by the Fortify amount." Before
+crediting a `boon` tick for an M/S-reward family, re-prove it under Requiem as a
+pool-MAX effect (see `PDV_RequiemSmokeTest_Tracker.md` Sweep C). Known
+already-recorded proofs to re-open: Bosmer (BetaTestPacket L643), Breton Magnus
+champion (BetaTestPacket L13), Argonian Rooted-Rest, Redguard Tu'whacca. The
+Fortify magnitudes are PROVISIONAL - this sitting doubles as the tuning pass.
 
 SNAPSHOT of `PDV_FeltFamilyEvidenceLedger.json` as of 2026-07-11 (107 pending families). This is a generated point-in-time bundle; if the ledger grows or credits land, regenerate it. Each family is proven ONCE: every shared price/sting is assigned to a single race sitting whose native gods exercise it, so running these ten sittings proves all 107 with zero re-tests (the raw per-race `--sitting` sheets repeat shared families across races). Sink every observation into `PDV_FeltFamilyEvidenceLedger.json`; close each sitting with the race pacing sign-off in `PDV_PacingSignoffLedger.json` (C-PACING-SIGNOFF) and any in-world hook proof (C-PLACEMENT-FINAL).
 
@@ -713,7 +725,7 @@ lanes this runbook feeds:
 | C-DISLIKE-DEBUFF-TUNING | Dedicated anti-stack/Requiem-felt sitting | `PDV_1_0_ManualSignoffLedger.json` (`dislikeStackTuning`) |
 | C-PACING-SIGNOFF | One dated real-play pacing sign-off per race | `PDV_PacingSignoffLedger.json` |
 | C-PLACEMENT-FINAL | Pending in-world hook proofs folded into race sittings | `PDV_InWorldHookProofLedger.json` |
-| C-REQUIEM-TRACKB | Authoria/Requiem sweeps A, B1, and B2 | `PDV_1_0_ManualSignoffLedger.json` (`requiemTrackB`) |
+| C-REQUIEM-TRACKB | Authoria/Requiem sweeps A, B1, B2, **and C (2026-07-13: Magicka/Stamina Fortify-pool rewards + M/S neglect/creed-loss penalties + Daedric Sheo/Hircine + Argonian near-death restore)** | `PDV_1_0_ManualSignoffLedger.json` (`requiemTrackB`) |
 | C-EXPMODE-SMOKE | Pilgrim's Path and Wayfarer's Path runtime smoke | `PDV_1_0_ManualSignoffLedger.json` (`experienceModeSmoke`) |
 | C-COMPAT-ARR | Accepted ARR package evidence | `PDV_1_0_ManualSignoffLedger.json` (`compatARR`) |
 | C-COMPAT-BORDELLO | Six list compatibility packages | `PDV_1_0_ManualSignoffLedger.json` (`compatBordello`) |

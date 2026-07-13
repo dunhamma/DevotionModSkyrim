@@ -77,12 +77,16 @@ Validates the day-to-day vocabulary, race-gating, and the **1C anti-farm caps**.
 
 ---
 
-## Session C — Requiem HP-bar sweep (separate Requiem load order; disposable saves)
+## Session C — Requiem pool-MAX sweep, Health + Magicka + Stamina (separate Requiem load order; disposable saves)
 
 The load-bearing proof + the magnitude tune. **Record tuned magnitudes** — this run sets them.
 
 **Method per heal:** seed the deity to the tier (Apply target piety), `player.getav Health`,
 trigger the heal, `player.getav Health` again → confirm the bar moved; note the felt value.
+
+**Method per Fortify pool reward (2026-07-13):** the Magicka/Stamina rewards are flat
+POOL boosts, not restores — `player.getav Magicka/Stamina` returns CURRENT, so read the
+bar MAX / the Active-Effects "Fortify Magicka/Stamina" entry to confirm the ceiling rose.
 
 | # | Reward | Trigger | Pass / record |
 |---|---|---|---|
@@ -93,6 +97,12 @@ trigger the heal, `player.getav Health` again → confirm the bar moved; note th
 | B1a | Redguard Tu'whacca death-rite | death-duty/Ash'abah act | HP restores (30/50) once/day |
 | B1b | Namira heal-on-feed | Namira path ≥Seeker, feed | HP+Stamina pulse, tier-scaled; past cap silent |
 | B2a–f | HoonDing make-way | kill a dragon | make-way fires once; 2nd same-day soft-decays; generic bandit rejected; **Champion <20% HP → AvoidDeath save once/day**; road-passage routes to Forebear NOT HoonDing |
+| C1–C10 | M/S Fortify-pool rewards: Altmer/Imperial/Dunmer/Khajiit Magicka; Nord/Bosmer/Khajiit/Argonian/Orc/Breton Stamina; Daedric Sheo Magicka / Hircine Stamina | seed tier/patron via MCM | **Maximum Magicka/Stamina rises**; race +15/+25/+40, Daedric +25/+40/+50; note value per tier |
+| C11 | Argonian Sithis near-death burst (scripted) | Void path, <20% HP in combat | **instant Stamina restore** (+100), once/day — NOT a regen bar |
+| C12 | M/S neglect/creed-loss penalties | prime neglect / take creed-loss fork | Maximum Magicka/Stamina **drops** (-10 neglect / -15 creed-loss) |
+
+Any race already felt-proven for an M/S reward is INVALIDATED by the regen→Fortify-pool
+conversion and must be re-proven here as a pool-MAX effect.
 
 After tuning: hand me the felt values → I write them back into the specs + the 1B penalty conversion in the same pass.
 
@@ -146,7 +156,7 @@ signal, 1.5× dawn cap, mid-save flip changes nothing stored, default-Pilgrim on
 - **1A self-heal:** A2/A3 — Player page never shows "still starting up".
 - **1H origin:** A5/A6 — Ohmes→Khajiit, no creation tier-toast, stuck-save recovers, no re-spam.
 - **1C anti-farm:** B3/B4 — repeats decay; penalties don't.
-- **Requiem conversion:** Session C — every heal moves the HP bar; Nord Shor + HoonDing/Champion AvoidDeath saves fire.
+- **Requiem conversion:** Session C — every heal moves the HP bar; every Magicka/Stamina reward raises the pool MAX (Active Effects); Nord Shor + HoonDing/Champion AvoidDeath saves fire.
 
 ## What unblocks the 1F freeze
 Complete **B + C + D** and hand me the Session-C tuned magnitudes. I write the tune-back + the

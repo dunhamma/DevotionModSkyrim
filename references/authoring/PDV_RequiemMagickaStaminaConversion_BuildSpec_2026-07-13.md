@@ -80,6 +80,25 @@ the readback "T3 capstone script" rows.
   `regen-fortify-20260713` (both index.html ?v= strings); deployed LF.
 - No player-guide docs quote regen magnitudes (swept clean).
 
+## Completeness note (2026-07-13) - variety-batch ESP re-author OWED
+
+The initial conversion scanned only `PDV_*RewardRecords.spec.json` + the Daedric
+contract. A later exhaustive sweep across ALL authoring JSON found 4 regen rewards
+in the VARIETY-BATCH manifests that were also live in the ESP and thus missed:
+`PDV_SPEL_ArgonianAdapt_Sap` (Magicka 5), `PDV_SPEL_ArgonianAdapt_Marsh` (Stamina
+8), `PDV_SPEL_BosmerNaming_Wanderer` (Stamina 8), and a CAT6-pilot Stamina 5. Their
+SOURCE manifests (`PDV_ArgonianVariety_RecordBatch.manifest.json`,
+`PDV_BosmerVariety_RecordBatch.manifest.json`, `PDV_CAT6PromotionPilot.manifest.json`)
++ their MESG text were converted to Fortify pool (5->10, 8->15). `PDV_FeltEffectRegistry.json`
+was regenerated. **STILL OWED:** re-author those 4 records into `Devotion.esp` --
+they were originally authored via houseCARL-headless (no dedicated .NET tool), so
+until re-authored the LIVE ESP records still carry the old RateMult effect (muted
+under Requiem). This is the one remaining live-ESP gap in the "project-wide"
+conversion; do it in a focused houseCARL pass (set the MGEF archetype to
+ValueModifier/PeakValueModifier on Magicka/Stamina at the converted magnitude).
+`PDV_Phase20_RewardRecordContracts.json` (a hand-maintained, non-gate-enforced
+mirror) carries a supersession note but was not line-converted.
+
 ## Proof boundary / follow-ups
 
 - **In-game "felt" proof owed per race** (the release gate): on an actual Requiem/

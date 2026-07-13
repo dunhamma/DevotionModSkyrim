@@ -292,7 +292,10 @@ single by-save run sheet for one sitting:
   Yes/No modal that can freeze), or `Set Broad worship` (the blocking state). A
   Skyrim relaunch is required to load the updated `PDV_MCM.pex`.
 - Requiem felt-penalty sweep: prove the new negative Health penalties are felt
-  in-game and Imperial remains disease-resistance based.
+  in-game and Imperial remains disease-resistance based. (2026-07-13: this now
+  also covers the negative Fortify Magicka/Stamina penalties -- see the added rows
+  below -- and the positive M/S reward buffs converted to Fortify pool now owe
+  feltness proof too; cross-ref `PDV_RequiemSmokeTest_Tracker.md` Sweep C.)
 
 ### Requiem Penalty Feltness Add-On
 
@@ -315,11 +318,14 @@ capture the Active Effects line, and write a short HP-bar/manual feel note.
 | Breton Tradition Distant | Breton origin; force or naturally reach the tradition neglect/distant state | `PDV_MGEF_Neglect_Breton_Health` appears as Maximum Health; max Health drops by 10; text says Maximum Health -10 | Breton run-sheet stack snapshot/manual feel note plus ledger note |
 | Breton Excommunication | Breton origin; force creed-loss/excommunication once the route is reachable, or use the debug path if one is added | `PDV_SPEL_CreedLoss_Breton_Excommunication_MGEF_Health` appears as Maximum Health; max Health drops by 15; no old Health Regeneration penalty appears | Breton run-sheet edge-case note plus ledger note |
 | Imperial civic neglect preservation | Imperial origin; force or naturally reach civic neglect/distant state | Active Effect remains disease-resistance based (`ResistDisease -5`); no `PDV_MGEF_Neglect_Imperial_Health`; max Health does not drop from this effect | Imperial run-sheet stack snapshot/manual feel note plus ledger note |
+| Altmer / Dunmer neglect (2026-07-13) | Altmer or Dunmer origin; prime the neglect state (Prime neglect eligible) | Active Effect shows Maximum Magicka; max Magicka drops by 10; no old Magicka Regeneration penalty | run-sheet stack note plus ledger note |
+| Bosmer / Khajiit neglect (2026-07-13) | Bosmer or Khajiit origin; prime the neglect state | Active Effect shows Maximum Stamina; max Stamina drops by 10; no old Stamina Regeneration penalty | run-sheet stack note plus ledger note |
+| Breton DruidicForkBetrayal creed-loss (2026-07-13) | Breton Green Way; take the Druidic betrayal fork | Maximum Stamina drops by 15 (+ Restoration -8 co-effect); no old Stamina Regeneration penalty | Breton run-sheet edge-case note plus ledger note |
 
 Stop/fail rules:
 
-- If any converted penalty still displays Health Regeneration, stop and keep the
-  row open.
+- If any converted penalty still displays Health Regeneration, Magicka
+  Regeneration, or Stamina Regeneration, stop and keep the row open.
 - If `player.getav Health` does not change for an Argonian/Breton converted
   penalty, stop and keep the row open even if readback is green.
 - If Imperial gets a Health penalty, stop; that contradicts the 2026-06-30

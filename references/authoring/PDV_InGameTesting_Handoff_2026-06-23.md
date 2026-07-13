@@ -31,9 +31,12 @@ The substrate's +12 unarmed was moved to the Void/Sithis champion. Only the Peop
   everywhere (dry + wet). Check the Sithis near-water rewards toggle like the Hist ones did.
 
 ### 3. Argonian near-water — magnitude tuning read (provisional)
-The regen is `HealRateMult` 120 (Mid) / 160 (High) and the Hist-Sworn near-water pool is +30 — all
-PROVISIONAL under Requiem. The toggle is proven; the *feel* is the tuning question.
-- Near water, take a hit and gauge whether the regen is **felt** (Requiem nets ~+20/+60 effective).
+The substrate Mid/High are now **Fortify Health +20 / +30** near-water (2026-07-13
+conversion from `HealRateMult` 120/160; near-water gate kept) and the Hist-Sworn
+near-water pool is +30 — all PROVISIONAL under Requiem. The toggle is proven; the
+*feel* (does the Health bar MAX visibly rise near water) is the tuning question.
+See `PDV_RequiemMagickaStaminaConversion_BuildSpec_2026-07-13.md`.
+- Near water, confirm the **Health bar MAX rises by +20/+30** in Active Effects (2026-07-13: the Argonian substrate Mid/High are now Fortify Health +20/+30 near-water, not a HealRateMult regen; the "~+20/+60 effective regen" framing is superseded -- see `PDV_RequiemMagickaStaminaConversion_BuildSpec_2026-07-13.md`).
 - Spot-check the gate fires in **other** listed wetlands too (Morthal, Riften, Ivarstead, Darkwater
   Crossing, Kynesgrove), not just Riverwood — confirm "generous" feels right and nowhere dry leaks it.
 - Hand back a one-word gut read (thin / right / strong) so the magnitudes can be tuned back.

@@ -36,6 +36,13 @@ wired" reads (from the handoff/regen-plan rows and a Papyrus-only scan) are
 spell *records* were rewired at the ESP level.
 
 **Verified live state:**
+- **(2026-07-13) Magicka/Stamina positive conversion COMPLETE too.** The
+  `MagickaRateMult`/`StaminaRateMult` POSITIVE reward buffs across all 10 races +
+  the Daedric princes were converted to flat Fortify Magicka/Stamina pool (race
+  scale +15/+25/+40; Daedric +25/+40/+50), mirroring the June HealRateMult->Fortify
+  Health fix. "Positive-reward conversion complete" now spans Health AND the
+  Magicka/Stamina pools. Authority:
+  `PDV_RequiemMagickaStaminaConversion_BuildSpec_2026-07-13.md`.
 - **Positive-reward Requiem conversion is COMPLETE across all 10 races, incl. Nord.**
   Nord Shor T1 → `PDV_MGEF_Nord_Shor_T1_Health` (07157E), T3 → `_T3_Health`
   (071580) + the two combat buffs + `_T3_AvoidDeath` (071582 — the "Sovngarde
@@ -88,11 +95,23 @@ Magnitudes PROVISIONAL - tune on the HP bar in Session C with the positives.
 | Imperial "Divines Grow Distant" | `PDV_ImperialRewardRecords.spec.json` -> neglect | PRESERVED: `PDV_MGEF_Neglect_Imperial_Restoration` / `ResistDisease` / `-5` |
 | Breton "Tradition Grows Distant" | `PDV_BretonRewardRecords.spec.json` -> neglect | `PDV_MGEF_Neglect_Breton_Health` / `Health` / `-10` |
 | Breton "Cast Out" (excommunication) | `PDV_BretonRewardRecords.spec.json` -> creedLoss `excommunication.effects[0]` | `PDV_SPEL_CreedLoss_Breton_Excommunication_MGEF_Health` / `Health` / `-15` (major) |
+| Altmer neglect (2026-07-13) | `PDV_AltmerRewardRecords.spec.json` -> `PDV_SPEL_Neglect_Altmer` | Magicka regen -4 -> `Magicka` / `-10` (negative Fortify Magicka) |
+| Dunmer neglect (2026-07-13) | `PDV_DunmerRewardRecords.spec.json` -> `PDV_SPEL_Neglect_Dunmer` | Magicka regen -5 -> `Magicka` / `-10` |
+| Bosmer neglect (2026-07-13) | `PDV_BosmerRewardRecords.spec.json` -> `PDV_SPEL_Neglect_Bosmer` | Stamina regen -5 -> `Stamina` / `-10` |
+| Khajiit neglect (2026-07-13) | `PDV_KhajiitRewardRecords.spec.json` -> `PDV_SPEL_Neglect_KhajiitLunar` | Stamina regen -5 -> `Stamina` / `-10` |
+| Breton `DruidicForkBetrayal` creed-loss (2026-07-13) | `PDV_BretonRewardRecords.spec.json` -> creedLoss | Stamina regen -8 -> `Stamina` / `-15` (Restoration -8 co-effect kept) |
 
 Update each converted `playerFacingText` from "Health Regeneration -X%" to a felt
-"Maximum Health -Y" line. NOT touched (partly-felt under Requiem, optional review):
-the Stamina/Magicka-regen neglect effects (Kyne, Khajiit, Bosmer, Dunmer, Altmer);
-already-felt DamageResist/ResistMagic neglect (Orc, Redguard) stay.
+"Maximum Health -Y" line.
+
+**SUPERSEDED 2026-07-13:** the Stamina/Magicka-regen neglect/creed-loss effects
+that this section originally left "NOT touched (partly-felt, optional review)" --
+Altmer/Dunmer neglect (Magicka regen), Bosmer/Khajiit neglect (Stamina regen),
+Breton `DruidicForkBetrayal` creed-loss (Stamina regen) -- were CONVERTED to mild
+negative Fortify Magicka/Stamina pool (neglect -10, creed-loss -15) per
+`PDV_RequiemMagickaStaminaConversion_BuildSpec_2026-07-13.md`. They are now felt
+under Requiem, not optional-review. Already-felt DamageResist/ResistMagic neglect
+(Orc, Redguard) and the Imperial ResistDisease civic-lapse row still stay as-is.
 
 ---
 
@@ -198,6 +217,29 @@ before/after and watch the HP bar.
 | A8 | Dunmer home-prayer ancestor watch (2026-07-04 rework) | sleep (declare home → notice) → pray with urn AT home → "The Ancestors Watch" in Active Effects, NO instant heal → drop <20% health → full restore + brink toast once/day; expires at dawn; elsewhere → no watch | [M] + [R] | PENDING | replaced the instant flat Restore-Health pulse |
 | A9 | Orc Code Holds health half (event) | trigger near-death → flat Health restore (paired with the existing stamina restore, Seeker 40 / Devoted 60) | [M] | PENDING | |
 | A10 | Beta-feel poles (existing run-sheets) | run `PDV_RunSheet_Dunmer/Imperial/Orc_BetaFeel.md` (Orc life-mode runtime) | mixed | PENDING | |
+
+### Sweep C — Magicka/Stamina Fortify-pool conversion (2026-07-13, READY NOW)
+Core check: each converted Magicka/Stamina reward raises the POOL MAX (not the
+regen bar) under Requiem. `player.getav Magicka/Stamina` returns CURRENT, not the
+ceiling -- read the bar MAX / the Active-Effects "Fortify Magicka/Stamina" entry.
+Authority: `PDV_RequiemMagickaStaminaConversion_BuildSpec_2026-07-13.md` (magnitudes
+PROVISIONAL). Any race previously felt-proven for an M/S regen reward is
+INVALIDATED and must be re-proven here.
+
+| Check | Race / reward | How to seed -> observe | Proof | Status | Note |
+|---|---|---|---|---|---|
+| C1 | Altmer Orthodox/AuriEl/Magnus/Xarxes Fortify Magicka | seed tier -> Maximum Magicka rises +15/+25/+40 | [M] | PENDING | whole Altmer magic identity |
+| C2 | Imperial Akatosh/Dibella/Julianos Fortify Magicka; Kynareth Fortify Stamina | seed tier -> Max Magicka/Stamina rises | [M] | PENDING | Akatosh T3 cheat-death save re-attached, verify present |
+| C3 | Dunmer Azura/Reclamation Fortify Magicka | seed tier -> Max Magicka rises | [M] | PENDING | |
+| C4 | Nord OldWays/Kyne/Tsun Fortify Stamina | seed tier -> Max Stamina rises | [M] | PENDING | |
+| C5 | Khajiit Khenarthi/Azurah Fortify Stamina/Magicka (+ Lunar substrate) | seed tier -> Max pool rises | [M] | PENDING | |
+| C6 | Bosmer Yffre Fortify Stamina; LivingStory Fortify Magicka | seed tier -> Max pool rises | [M] | PENDING | INVALIDATED PASS re-proof (see beta packet) |
+| C7 | Breton GreenWay/HiddenArt + Champion boons Fortify Magicka/Stamina | seed tier/patron Champion -> Max pool rises | [M] | PENDING | Breton Magnus-champion PASS INVALIDATED, re-prove |
+| C8 | Argonian Hist/Sithis Fortify Stamina | seed tier -> Max Stamina rises | [M] | PENDING | INVALIDATED Rooted-Rest PASS re-proof |
+| C9 | Orc LegionExile Fortify Stamina | seed tier -> Max Stamina rises | [M] | PENDING | |
+| C10 | Daedric Sheogorath Fortify Magicka / Hircine Fortify Stamina | pact tier Seeker/Devoted/Champion -> Max pool rises +25/+40/+50 | [M] | PENDING | |
+| C11 | Argonian Sithis near-death burst (scripted) | Void path, drop <20% health in combat -> INSTANT Stamina restore (+100), once/day | [M] + [R] | PENDING | now RestoreActorValue, NOT a regen bar |
+| C12 | M/S neglect penalties felt | prime neglect (Altmer/Dunmer Magicka, Bosmer/Khajiit Stamina) -> Maximum Magicka/Stamina DROPS -10 | [M] | PENDING | Breton creed-loss -15 |
 
 ### Sweep B1 — heal conversions + text (after B1 deploy) → run-sheet: `PDV_RunSheet_Redguard_BetaFeel.md`
 | Check | Surface | How to observe | Proof | Status | Note |

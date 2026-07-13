@@ -5,7 +5,9 @@
   "archetypeConventionNote": "Regen actor values (HealRate/MagickaRate/StaminaRate and the *RateMult AVs) use PeakValueModifier, NOT ValueModifier, per the 2026-06-13 decision (commit 7fed0a3). The StaminaRegen effect below is PeakValueModifier to match the live record; do NOT 'correct' it back to ValueModifier. Non-regen AVs like ResistDisease stay ValueModifier.",
   "supersededGrantOwner": "references/authoring/PDV_Phase20_RewardRecordContracts.json",
   "sourceManifest": "race-sheets/PDV_RaceContent_Manifest.md",
-  "allowedRows": ["PDV_Bless_Khajiit_Lunar_T1"],
+  "allowedRows": [
+    "PDV_Bless_Khajiit_Lunar_T1"
+  ],
   "notAllowed": [
     "standalone CAT-6 grant wiring outside the all-race reward contract",
     "broad Khajiit reward rollout",
@@ -40,11 +42,12 @@
           "name": "Khajiit Lunar Tier 1 - Stamina",
           "descriptionSource": "manifest-exact",
           "archetype": "PeakValueModifier",
-          "actorValue": "StaminaRateMult",
-          "magnitude": 5.0,
+          "actorValue": "Stamina",
+          "magnitude": 10,
           "duration": 0,
           "area": 0,
-          "conditions": "night-only"
+          "conditions": "night-only",
+          "effectName": "Fortify Stamina"
         },
         {
           "magicEffect": "PDV_MGEF_Bless_Khajiit_Lunar_T1_DiseaseResist",
@@ -52,7 +55,7 @@
           "descriptionSource": "manifest-exact",
           "archetype": "ValueModifier",
           "actorValue": "ResistDisease",
-          "magnitude": 15.0,
+          "magnitude": 15,
           "duration": 0,
           "area": 0,
           "conditions": "night-only"

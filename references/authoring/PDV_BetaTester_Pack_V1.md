@@ -42,7 +42,9 @@ should see that -> mark it**.
 Every sheet has a **"Running in Authoria (Requiem)"** note. Short version: the tests and what you should see are
 **the same** -- just use the Authoria mod list, skip the "disable Living Deities Test" step, and everything
 else is identical. If a reward is a **heal**, the Requiem list is the best place to confirm the **HP bar
-actually moves**.
+actually moves**. Likewise, the magicka/stamina rewards are now flat **Fortify
+Magicka/Stamina** pool boosts (2026-07-13) -- on the Requiem list confirm the
+**Magicka/Stamina bar MAX rises** in Active Effects, the same way heals move the HP bar.
 
 ## Reporting back
 - Fill the **Record results here** table at the bottom of each sheet.

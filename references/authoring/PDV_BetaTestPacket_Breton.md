@@ -10,7 +10,7 @@ DruidicStanding, or curse/Daedric rupture by itself.
 
 ## 2026-07-12 Evidence Update
 
-- Hidden Art/Magnus resonant Champion: runtime + Active Effects passed. Expected visible stack is only `Hidden Art - Champion` on Conjuration, Illusion, and Magicka Regeneration; do not expect a separate PatronChampion spell on the resonant path.
+- Hidden Art/Magnus resonant Champion: runtime + Active Effects passed [MAGICKA LEG INVALIDATED 2026-07-13]. Expected visible stack is only `Hidden Art - Champion` on Conjuration, Illusion, and **Fortify Magicka (Maximum Magicka)** -- the third leg was converted from Magicka Regeneration to Fortify pool, so that part of the prior PASS must be re-proven (confirm the Magicka bar MAX rises by the Fortify amount). Conjuration/Illusion legs still valid. Do not expect a separate PatronChampion spell on the resonant path.
 - Hidden Art sleep-hearth cover: runtime passed. Mara gets event 314; Julianos does not get sleep-driven event 314/LAWFUL_ORDER.
 - Green Way/Y'ffre 365/364 dislike price: runtime passed. 365 shows `Order sours for a while.` / `Favor Slips`; 364 applies the smaller piety loss. One Book of Days line across both debug dislikes is expected because the identical same-day loss line de-dupes.
 - Green Way hunt 303: still open. Prove through the non-hostile animal kill/action route; `DebugFireDislike` correctly reports no row because 303 is a positive like.
@@ -152,12 +152,13 @@ in-game Active Effects PENDING):
 
 - `PDV_SPEL_CreedLoss_Breton_VowIntegrity` (Block -5% + Restoration -5%) -- held
   while KnightlyVowIntegrity is STRAINED (<70).
-- `PDV_SPEL_CreedLoss_Breton_Excommunication` (HealRateMult -8%) -- held at
-  BROKEN (<30).
+- `PDV_SPEL_CreedLoss_Breton_Excommunication` (negative Fortify Health approx -15;
+  2026-07-13 conversion from HealRateMult -8%) -- held at BROKEN (<30).
 - `PDV_SPEL_CreedLoss_Breton_ExposureRupture` (Conjuration -8% + Illusion -8%)
   -- held at WitchcraftExposure >= 100.
-- `PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal` (StaminaRateMult -8% +
-  Restoration -8%).
+- `PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal` (Fortify Stamina -15 +
+  Restoration -8; 2026-07-13: StaminaRateMult -8% leg -> negative Fortify Stamina,
+  Restoration co-effect unchanged).
 
 These are persistent-while-in-band (cleared on restoration above the band), and
 a threshold-crossing HUD notice fires when each first becomes active. To reach a

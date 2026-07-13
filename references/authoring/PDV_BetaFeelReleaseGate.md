@@ -107,7 +107,12 @@ spot-checks. Current residual proof still lives outside the strict gate:
   closed, but Active Effects proof remains open.
 - Requiem feltness: the Argonian/Breton negative-Health penalty conversion is
   backend/readback clean, but still needs Active Effects, `player.getav Health`,
-  HP-bar movement, and manual feel proof under a Requiem load.
+  HP-bar movement, and manual feel proof under a Requiem load. **Broadened
+  2026-07-13:** the Magicka/Stamina reward boons are now Fortify pool and the M/S
+  neglect/creed-loss debuffs are now negative Fortify (all races + Daedric), so the
+  residual Requiem-feltness proof also owes Magicka/Stamina Active-Effects +
+  `player.getav Magicka`/`Stamina` + bar-MAX proof (rise for boons, drop for
+  penalties), not just negative-Health. See `PDV_RequiemSmokeTest_Tracker.md` Sweep C.
 - Claim boundaries: broader release, compatibility, final-world placement, and
   public-support claims stay blocked until their matching proof buckets are
   recorded.

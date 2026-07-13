@@ -374,7 +374,7 @@ with the user 2026-06-14. Headline magnitudes recorded there:
   Code Holds source/record/readback is live as of 2026-06-14: one shared below-20% combat-session hook
   marks the dip, then Orc pays out on survived combat exit.
 - **Redguard Far Shores:** DELTA_FAR_SHORES_TOKEN 1.0; token UNCONDITIONAL V1 (BC-0524); Ash'abah category-gate.
-- **Argonian:** Sithis T3 = StaminaRateMult +10% passive + 50-stamina near-death burst (1/day);
+- **Argonian:** Sithis T3 = Fortify Stamina (Maximum Stamina) passive + scripted flat `RestoreActorValue("Stamina",100)` near-death burst (1/day) [2026-07-13 Requiem conversion; was StaminaRateMult +10% + 50-stamina-regen burst];
   curse MESGs (BC-0642); DominationPressure at Molag Bal>=25 + vampire is manager-live/readback-clean;
   Hist creed-loss -4/-8/-6.
   Sithis T3 source/record/readback is live as of 2026-06-14: passive T3 plus a once/day shared

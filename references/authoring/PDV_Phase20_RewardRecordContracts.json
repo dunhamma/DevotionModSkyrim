@@ -1,6 +1,6 @@
 {
   "schema": "pdv.phase20.reward-record-contracts.v1",
-  "status": "records-authored-manager-wired-pending-runtime-proof",
+  "status": "records-authored-manager-wired-pending-runtime-proof. REGEN MAGNITUDES SUPERSEDED: this hand-maintained mirror still lists the pre-conversion HealRateMult/MagickaRateMult/StaminaRateMult effects; the live ESP + PDV_*RewardRecords.spec.json converted them to flat Fortify max-pool per PDV_RequiemMagickaStaminaConversion_BuildSpec_2026-07-13.md (and the June HealRateMult->Fortify Health pass). Not gate-enforced (the reward readback audit reads the spec.json, not this file); update lazily.",
   "runtimeGrantStatus": "manager-wired-pending-runtime-proof",
   "owner": "references/authoring/PDV_RaceEffectReviewLedger.md plus references/authoring/PDV_RaceRewardBudgetLedger.md",
   "authorCommand": "dotnet run --project .\\tools\\pdv-phase20-reward-author\\PdvPhase20RewardAuthor.csproj -- --create-missing",

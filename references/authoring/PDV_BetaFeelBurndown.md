@@ -83,7 +83,7 @@ none machine-greenable):
 
 | Lane | Open | Notes |
 | --- | --- | --- |
-| C-FELT-FAMILY | 105/148 | One-per-family in-game felt proof; 43 recorded (22 -> 43 between 07-07 and 07-09) |
+| C-FELT-FAMILY | 105/148 | One-per-family in-game felt proof; 43 recorded (22 -> 43 between 07-07 and 07-09). **2026-07-13:** any recorded tick that observed a Magicka/Stamina (or Health) regen-BAR reward is INVALIDATED by the regen->Fortify-pool conversion and must be re-proven as a pool-MAX effect; review the 43 recorded ticks for affected M/S families. |
 | C-PACING-SIGNOFF | 10/10 | Dated per-race play-sitting sign-offs; fold into felt-family sittings |
 | C-EXPMODE-SMOKE | 2/2 | Pilgrim + Wayfarer in-game smoke (build gate closed 07-07) |
 | C-REQUIEM-TRACKB | 3/3 | Authoria sweeps A/B1/B2 |
@@ -128,7 +128,7 @@ quest-expansion and reachability-gate work (see "Since Dunmer Closeout" below):
 | Nord/Imperial felt-neglect ESP batch | **Machine/readback pass; runtime smoke pending** | `tools\pdv-neglect-esp-author --check` verifies Kyne/Imperial MGEF conversions, four Nord patron neglect spells, and manager VMAD properties; `pdv_verify --strict-neglect-decay` source-gates the lapse-aware runtime |
 | Imperial/Nord Talos creed runtime | **Compile pass; debug smoke pending** | Shared `PDV__ManagerQuest.HandleTalosBetrayal` applies focused-Talos `-2/-3` losses with MCM Debug buttons; Imperial also moves raw Concordat standing toward compliance. Organic betrayal detection remains follow-on |
 | Integrity harness | **Pass** | `node .\tools\pdv_integrity_harness.mjs` -> `signal_e2e_gate`, `deity_chain`, and `eligibility_reward_coverage` all PASS |
-| Requiem penalty conversion | **Backend/readback pass; feltness smoke pending** | `node .\tools\pdv_requiem_penalty_audit.mjs` -> `PASS=44`; Argonian/Breton Health penalties and Imperial preservation still need in-game Active Effects and HP-bar proof |
+| Requiem penalty conversion | **Backend/readback pass; feltness smoke pending** | `node .\tools\pdv_requiem_penalty_audit.mjs` -> `PASS=44`; Argonian/Breton Health penalties and Imperial preservation still need in-game Active Effects and HP-bar proof. **(2026-07-13)** the M/S regen debuffs (Altmer/Dunmer Magicka, Bosmer/Khajiit Stamina, Breton `DruidicForkBetrayal`) are now negative Fortify pool and also need Active-Effects proof (Maximum Magicka/Stamina bar ceiling DROPS); the positive M/S reward boons converted to Fortify pool owe feltness proof too (see `PDV_RequiemSmokeTest_Tracker.md` Sweep C). |
 | Book of Days package sync | **Closed for packaging preflight** | `pdv_book_of_days_audit.mjs` now passes with repo/live `index.html`, `styles.css`, `app.js`, and font hashes matched; `.gitattributes` keeps the two hash-sensitive text assets LF-normalized |
 
 The earlier recheck debt for Redguard curse-state message bodies and Imperial
@@ -278,7 +278,10 @@ These should not be allowed to inflate the current beta-feel burn:
    older `Dunmer:7` audit output unless a fresh gate contradicts it.
 3. Prove the Requiem penalty feltness add-on under a Requiem load: Active
    Effects, `player.getav Health`, HP-bar/manual feel notes, and Imperial
-   disease-resistance preservation.
+   disease-resistance preservation. **(2026-07-13)** also cover the M/S
+   Fortify-pool rewards and the negative-Fortify M/S penalties: `player.getav
+   Magicka`/`Stamina` + Magicka/Stamina bar-MAX movement (rise for boons, drop for
+   penalties). Cross-ref `PDV_RequiemSmokeTest_Tracker.md` Sweep C.
 4. Prove the expanded likes/dislikes rows on a new save, including the version
    bump reload behavior; keep pending event rows classified as inert unless
    their routers are implemented.

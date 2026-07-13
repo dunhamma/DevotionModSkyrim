@@ -7,15 +7,115 @@
   "atRiskEnumNames": "These Mutagen ActorValue/archetype member names must be confirmed at --dry-run, exactly as the Argonian batch corrected 'MagicResist' -> 'ResistMagic'. Suspected-but-unconfirmed: ActorValue.Archery (may be 'Marksman'), ActorValue.Speech (may be 'Speechcraft'), ActorValue.SpeedMult. If the dry-run reports an unknown enum member, fix the C# member name and re-run; FormIDs and magnitudes do not change.",
   "designReconciliation_KeeperAV": "The locked sheet listed the Naming rite's Keeper told-self as '+5% barter'. Vanilla has no separate barter ActorValue -- prices are governed by Speech, which is already the Speaker told-self. To keep the four one-active rite options mechanically distinct, Keeper is implemented as CarryWeight +15 (the keeper who holds and carries the community's goods and stories). The Bosmer race sheet Naming line was updated to match this batch on 2026-06-12; sheet and records are in sync.",
   "newRecords": [
-    { "editorId": "PDV_MESG_BosmerMarkHearth", "type": "MESG", "lever": "L2 Hearth of the Telling (Living Story)", "text": "Make this hearth the place your stories come home to? The Story is kept by being told here.", "buttons": ["Yes, this hearth is mine", "Not yet"], "wireTo": "PDV__ManagerQuest.PDV_MESG_BosmerMarkHearth", "buttonContract": "index 0 = declare hearth; any other = decline (3-day re-prompt cooldown in script). Cell-keyed like the Argonian bed-of-choice (GetFurnitureReference is None at OnSleepStart; the parent cell at sleep-stop is the reliable key)." },
-    { "editorId": "PDV_SPEL_BosmerTaleCarried", "type": "SPEL+MGEF", "lever": "L2 Hearth of the Telling (Living Story)", "design": "self-cast timed buff, Speech +5, duration 600s; Rested-family pattern (templated like Argonian Rooted Rest)", "actorValue": "Speech", "magnitude": 5.0, "duration": 600, "playerFacingText": "You told the tale, and others listened. (Effect: +5 Speech for 10 minutes.)", "wireTo": "PDV__ManagerQuest.PDV_SPEL_BosmerTaleCarried" },
-    { "editorId": "PDV_SPEL_BosmerScalesAtRest", "type": "SPEL+MGEF", "lever": "L3 signature (Exchange, once/day)", "design": "self-cast timed buff, Speech +10, duration 600s; the barter pulse after a settled account", "actorValue": "Speech", "magnitude": 10.0, "duration": 600, "playerFacingText": "The account is even. For a while, every bargain falls a little your way. (Effect: +10 Speech for 10 minutes.)", "wireTo": "PDV__ManagerQuest.PDV_SPEL_BosmerScalesAtRest" },
-    { "editorId": "PDV_SPEL_BosmerBaanDarGap", "type": "SPEL+MGEF", "lever": "L3 signature (Bandit Road, once/day)", "design": "self-cast timed buff, SpeedMult +40, duration 15s; the escape burst when death was close (deliberately distinct from the weekly Champion luck moment)", "actorValue": "SpeedMult", "magnitude": 40.0, "duration": 15, "playerFacingText": "Baan Dar opens a gap. Run. (Effect: +40% Movement Speed for 15 seconds.)", "wireTo": "PDV__ManagerQuest.PDV_SPEL_BosmerBaanDarGap" },
-    { "editorId": "PDV_MESG_BosmerNaming", "type": "MESG", "lever": "L5 The Naming (rite)", "text": "Y'ffre told the Bosmer their forms. In exile you tell your own.\nChoose one told-self. One holds at a time; choosing again retells you.\n\nHunter: Archery +5\nSpeaker: Speech +5\nWanderer: Stamina Regen +8%\nKeeper: Carry Weight +15", "buttons": ["Hunter", "Speaker", "Wanderer", "Keeper", "Not yet"], "wireTo": "PDV__ManagerQuest.PDV_MESG_BosmerNaming", "buttonContract": "indices 0-3 map to Hunter/Speaker/Wanderer/Keeper told-self abilities; 4 = no change (7-day cooldown NOT spent). Effects live in the BODY, not the buttons (Skyrim lays MessageBox buttons in one horizontal row)." },
-    { "editorId": "PDV_SPEL_BosmerNaming_Hunter", "type": "SPEL+MGEF ability", "lever": "L5 The Naming told-self", "effects": [{ "actorValue": "Archery", "magnitude": 5.0 }], "playerFacingText": "You told yourself to become the Hunter. Your aim runs truer. (Effect: +5 Archery.)" },
-    { "editorId": "PDV_SPEL_BosmerNaming_Speaker", "type": "SPEL+MGEF ability", "lever": "L5 The Naming told-self", "effects": [{ "actorValue": "Speech", "magnitude": 5.0 }], "playerFacingText": "You told yourself to become the Speaker. People lean in to listen. (Effect: +5 Speech.)" },
-    { "editorId": "PDV_SPEL_BosmerNaming_Wanderer", "type": "SPEL+MGEF ability", "lever": "L5 The Naming told-self", "effects": [{ "actorValue": "StaminaRateMult", "magnitude": 8.0 }], "playerFacingText": "You told yourself to become the Wanderer. The road tires you less. (Effect: +8% Stamina Regeneration.)" },
-    { "editorId": "PDV_SPEL_BosmerNaming_Keeper", "type": "SPEL+MGEF ability", "lever": "L5 The Naming told-self", "effects": [{ "actorValue": "CarryWeight", "magnitude": 15.0 }], "playerFacingText": "You told yourself to become the Keeper. You carry more of what the people need kept. (Effect: +15 Carry Weight.)" }
+    {
+      "editorId": "PDV_MESG_BosmerMarkHearth",
+      "type": "MESG",
+      "lever": "L2 Hearth of the Telling (Living Story)",
+      "text": "Make this hearth the place your stories come home to? The Story is kept by being told here.",
+      "buttons": [
+        "Yes, this hearth is mine",
+        "Not yet"
+      ],
+      "wireTo": "PDV__ManagerQuest.PDV_MESG_BosmerMarkHearth",
+      "buttonContract": "index 0 = declare hearth; any other = decline (3-day re-prompt cooldown in script). Cell-keyed like the Argonian bed-of-choice (GetFurnitureReference is None at OnSleepStart; the parent cell at sleep-stop is the reliable key)."
+    },
+    {
+      "editorId": "PDV_SPEL_BosmerTaleCarried",
+      "type": "SPEL+MGEF",
+      "lever": "L2 Hearth of the Telling (Living Story)",
+      "design": "self-cast timed buff, Speech +5, duration 600s; Rested-family pattern (templated like Argonian Rooted Rest)",
+      "actorValue": "Speech",
+      "magnitude": 5,
+      "duration": 600,
+      "playerFacingText": "You told the tale, and others listened. (Effect: +5 Speech for 10 minutes.)",
+      "wireTo": "PDV__ManagerQuest.PDV_SPEL_BosmerTaleCarried"
+    },
+    {
+      "editorId": "PDV_SPEL_BosmerScalesAtRest",
+      "type": "SPEL+MGEF",
+      "lever": "L3 signature (Exchange, once/day)",
+      "design": "self-cast timed buff, Speech +10, duration 600s; the barter pulse after a settled account",
+      "actorValue": "Speech",
+      "magnitude": 10,
+      "duration": 600,
+      "playerFacingText": "The account is even. For a while, every bargain falls a little your way. (Effect: +10 Speech for 10 minutes.)",
+      "wireTo": "PDV__ManagerQuest.PDV_SPEL_BosmerScalesAtRest"
+    },
+    {
+      "editorId": "PDV_SPEL_BosmerBaanDarGap",
+      "type": "SPEL+MGEF",
+      "lever": "L3 signature (Bandit Road, once/day)",
+      "design": "self-cast timed buff, SpeedMult +40, duration 15s; the escape burst when death was close (deliberately distinct from the weekly Champion luck moment)",
+      "actorValue": "SpeedMult",
+      "magnitude": 40,
+      "duration": 15,
+      "playerFacingText": "Baan Dar opens a gap. Run. (Effect: +40% Movement Speed for 15 seconds.)",
+      "wireTo": "PDV__ManagerQuest.PDV_SPEL_BosmerBaanDarGap"
+    },
+    {
+      "editorId": "PDV_MESG_BosmerNaming",
+      "type": "MESG",
+      "lever": "L5 The Naming (rite)",
+      "text": "Y'ffre told the Bosmer their forms. In exile you tell your own.\nChoose one told-self. One holds at a time; choosing again retells you.\n\nHunter: Archery +5\nSpeaker: Speech +5\nWanderer: Fortify Stamina +15\nKeeper: Carry Weight +15",
+      "buttons": [
+        "Hunter",
+        "Speaker",
+        "Wanderer",
+        "Keeper",
+        "Not yet"
+      ],
+      "wireTo": "PDV__ManagerQuest.PDV_MESG_BosmerNaming",
+      "buttonContract": "indices 0-3 map to Hunter/Speaker/Wanderer/Keeper told-self abilities; 4 = no change (7-day cooldown NOT spent). Effects live in the BODY, not the buttons (Skyrim lays MessageBox buttons in one horizontal row)."
+    },
+    {
+      "editorId": "PDV_SPEL_BosmerNaming_Hunter",
+      "type": "SPEL+MGEF ability",
+      "lever": "L5 The Naming told-self",
+      "effects": [
+        {
+          "actorValue": "Archery",
+          "magnitude": 5
+        }
+      ],
+      "playerFacingText": "You told yourself to become the Hunter. Your aim runs truer. (Effect: +5 Archery.)"
+    },
+    {
+      "editorId": "PDV_SPEL_BosmerNaming_Speaker",
+      "type": "SPEL+MGEF ability",
+      "lever": "L5 The Naming told-self",
+      "effects": [
+        {
+          "actorValue": "Speech",
+          "magnitude": 5
+        }
+      ],
+      "playerFacingText": "You told yourself to become the Speaker. People lean in to listen. (Effect: +5 Speech.)"
+    },
+    {
+      "editorId": "PDV_SPEL_BosmerNaming_Wanderer",
+      "type": "SPEL+MGEF ability",
+      "lever": "L5 The Naming told-self",
+      "effects": [
+        {
+          "actorValue": "Stamina",
+          "magnitude": 15,
+          "effectName": "Fortify Stamina"
+        }
+      ],
+      "playerFacingText": "You told yourself to become the Wanderer. The road tires you less. (Effect: +8% Stamina Regeneration.)"
+    },
+    {
+      "editorId": "PDV_SPEL_BosmerNaming_Keeper",
+      "type": "SPEL+MGEF ability",
+      "lever": "L5 The Naming told-self",
+      "effects": [
+        {
+          "actorValue": "CarryWeight",
+          "magnitude": 15
+        }
+      ],
+      "playerFacingText": "You told yourself to become the Keeper. You carry more of what the people need kept. (Effect: +15 Carry Weight.)"
+    }
   ],
   "formList": {
     "editorId": "PDV_FLST_BosmerGreenSongs",
@@ -24,28 +124,111 @@
     "orderNote": "Build in THIS manifest order; verify with a --check slot dump (FormList order-drift lesson). Script lookups are HasForm (order-tolerant), so order matters only for audit consistency.",
     "failClosed": "The author tool REFUSES a real --esp write while any entry below has verified=false; --dry-run and --check still run structurally and report PENDING slots. Resolve the four PENDING FormIDs via `node tools/pdv_extract_vanilla_gameplay_refs.mjs` (or the SkyrimGamePlayReferences bridge) before authoring, then set verified=true and fill formId.",
     "entries": [
-      { "slot": 0, "formId": "0192AC:Skyrim.esm", "editorId": "EldergleamSanctuaryLocation", "verified": true, "source": "PDV_ArgonianVariety_RecordBatch.manifest.json (runtime-proven 2026-06-11)", "why": "the great rooted being; the Story's oldest living tree. Intentionally SHARED with the Argonian Waters set under the shared-site rule -- Bosmer arrival fires race-distinct Y'ffre/Story vision text, not the Hist vision." },
-      { "slot": 1, "formId": "018A4E:Skyrim.esm", "editorId": "KynesgroveLocation", "verified": true, "source": "references/vanilla-gameplay/extracted/vanilla-location-signal-candidates.csv (parent_location field)", "why": "the grove the dragon Sahloknir was raised beside; a living-world site Kynareth-as-Y'ffre-proxy touches." },
-      { "slot": 2, "formId": "01F87D:Skyrim.esm", "editorId": "WhiterunTempleofKynarethLocation", "verified": true, "source": "houseCARL LCTN query 2026-06-12 (record defined in Skyrim.esm; load-order winner Skyrim.esm)", "why": "the Gildergreen anchor; Kynareth-proxy logic (locked) makes it the Bosmer set's anchor site. SWAP recorded: WhiterunWindDistrictLocation does NOT exist as an LCTN (houseCARL: 0 matches; full Whiterun LCTN enumeration confirms no Wind-District sub-location), and the exterior Wind-District plaza where the Gildergreen stands resolves only to the city-wide WhiterunLocation (018A56), too broad to feel like arriving at the sacred tree. Substituted the tightest real LCTN anchoring the Gildergreen: the Temple of Kynareth (Danica Pure-Spring's temple, devoted to the tree's goddess), immediately beside the tree -- same escape-hatch precedent as the Argonian Clearspring->Ancestor Glade swap." },
-      { "slot": 3, "formId": "019174:Skyrim.esm", "editorId": "EvergreenGroveLocation", "verified": true, "source": "houseCARL LCTN query 2026-06-12 (defined in Skyrim.esm)", "why": "wilderness grove; living-world Y'ffre site." },
-      { "slot": 4, "formId": "019157:Skyrim.esm", "editorId": "ClearspringTarnLocation", "verified": true, "source": "houseCARL LCTN query 2026-06-12 (defined in Skyrim.esm)", "why": "spring-fed tarn (was swapped OUT of the Argonian Waters set, so it is free for Bosmer)." },
-      { "slot": 5, "formId": "018EE4:Skyrim.esm", "editorId": "AutumnshadeClearingLocation", "verified": true, "source": "houseCARL LCTN query 2026-06-12 (defined in Skyrim.esm)", "why": "forest clearing near Riften; Bosmer-resonant woodland." }
+      {
+        "slot": 0,
+        "formId": "0192AC:Skyrim.esm",
+        "editorId": "EldergleamSanctuaryLocation",
+        "verified": true,
+        "source": "PDV_ArgonianVariety_RecordBatch.manifest.json (runtime-proven 2026-06-11)",
+        "why": "the great rooted being; the Story's oldest living tree. Intentionally SHARED with the Argonian Waters set under the shared-site rule -- Bosmer arrival fires race-distinct Y'ffre/Story vision text, not the Hist vision."
+      },
+      {
+        "slot": 1,
+        "formId": "018A4E:Skyrim.esm",
+        "editorId": "KynesgroveLocation",
+        "verified": true,
+        "source": "references/vanilla-gameplay/extracted/vanilla-location-signal-candidates.csv (parent_location field)",
+        "why": "the grove the dragon Sahloknir was raised beside; a living-world site Kynareth-as-Y'ffre-proxy touches."
+      },
+      {
+        "slot": 2,
+        "formId": "01F87D:Skyrim.esm",
+        "editorId": "WhiterunTempleofKynarethLocation",
+        "verified": true,
+        "source": "houseCARL LCTN query 2026-06-12 (record defined in Skyrim.esm; load-order winner Skyrim.esm)",
+        "why": "the Gildergreen anchor; Kynareth-proxy logic (locked) makes it the Bosmer set's anchor site. SWAP recorded: WhiterunWindDistrictLocation does NOT exist as an LCTN (houseCARL: 0 matches; full Whiterun LCTN enumeration confirms no Wind-District sub-location), and the exterior Wind-District plaza where the Gildergreen stands resolves only to the city-wide WhiterunLocation (018A56), too broad to feel like arriving at the sacred tree. Substituted the tightest real LCTN anchoring the Gildergreen: the Temple of Kynareth (Danica Pure-Spring's temple, devoted to the tree's goddess), immediately beside the tree -- same escape-hatch precedent as the Argonian Clearspring->Ancestor Glade swap."
+      },
+      {
+        "slot": 3,
+        "formId": "019174:Skyrim.esm",
+        "editorId": "EvergreenGroveLocation",
+        "verified": true,
+        "source": "houseCARL LCTN query 2026-06-12 (defined in Skyrim.esm)",
+        "why": "wilderness grove; living-world Y'ffre site."
+      },
+      {
+        "slot": 4,
+        "formId": "019157:Skyrim.esm",
+        "editorId": "ClearspringTarnLocation",
+        "verified": true,
+        "source": "houseCARL LCTN query 2026-06-12 (defined in Skyrim.esm)",
+        "why": "spring-fed tarn (was swapped OUT of the Argonian Waters set, so it is free for Bosmer)."
+      },
+      {
+        "slot": 5,
+        "formId": "018EE4:Skyrim.esm",
+        "editorId": "AutumnshadeClearingLocation",
+        "verified": true,
+        "source": "houseCARL LCTN query 2026-06-12 (defined in Skyrim.esm)",
+        "why": "forest clearing near Riften; Bosmer-resonant woodland."
+      }
     ]
   },
   "vmadWiring": {
     "quest": "PDV__ManagerQuest",
-    "properties": ["PDV_MESG_BosmerMarkHearth", "PDV_SPEL_BosmerTaleCarried", "PDV_SPEL_BosmerScalesAtRest", "PDV_SPEL_BosmerBaanDarGap", "PDV_MESG_BosmerNaming", "PDV_SPEL_BosmerNaming_Hunter", "PDV_SPEL_BosmerNaming_Speaker", "PDV_SPEL_BosmerNaming_Wanderer", "PDV_SPEL_BosmerNaming_Keeper", "PDV_FLST_BosmerGreenSongs"],
+    "properties": [
+      "PDV_MESG_BosmerMarkHearth",
+      "PDV_SPEL_BosmerTaleCarried",
+      "PDV_SPEL_BosmerScalesAtRest",
+      "PDV_SPEL_BosmerBaanDarGap",
+      "PDV_MESG_BosmerNaming",
+      "PDV_SPEL_BosmerNaming_Hunter",
+      "PDV_SPEL_BosmerNaming_Speaker",
+      "PDV_SPEL_BosmerNaming_Wanderer",
+      "PDV_SPEL_BosmerNaming_Keeper",
+      "PDV_FLST_BosmerGreenSongs"
+    ],
     "scriptLayerPending": "The PDV__ManagerQuest.psc Papyrus runtime layer (dream roller, hearth declaration, signature casts, Songs LCTN router, Naming rite) is authored as a paste-in handoff at references/authoring/PDV_BosmerVariety_PapyrusHandoff.md (property declarations + exact call-site insertions + full functions, modeled on the shipped Argonian variety code). This tool lands the records and forward-wires the VMAD properties; the properties stay inert (and harmless) until the handoff's Step 1 declarations + Step 3 functions are applied to the canonical .psc and recompiled. The combat signature (Baan Dar Opens the Gap) now uses the shared Khajiit/Bosmer combat-session poll in PDV_PlayerEvents, not a direct OnHitEx threshold route.",
     "existingSaveNote": "VMAD props bake at first init; the test path is a new game / coc qasmoke so wiring suffices for beta. For existing saves the features stay silently inert until a lazy GetFormFromFile fallback pass adds the authored FormIDs."
   },
   "scriptKeys": {
     "comment": "Reserved StorageUtil key plan for the pending Papyrus runtime layer; modeled on the Argonian keys. No records back these -- they are script state only.",
-    "dreams": ["PDV.BosDream.LastDay", "PDV.BosDream.LastPath (detect path change for elevated chance)"],
-    "hearth": ["PDV.BosHearth.PendingCell (transient)", "PDV.BosHearth.DeclaredCell", "PDV.BosHearth.DeclaredDay", "PDV.BosHearth.DeclineDay", "PDV.BosHearth.LocDiscoveryAtLastStay (location-discovery delta gates A Tale Carried, NOT sleep count)"],
-    "signatures": ["PDV.BosSig.ScalesLastDay (Exchange once/day)", "PDV.BosSig.GapLastDay (Bandit Road once/day)"],
-    "songs": ["PDV.BosSongs.Seen.<FormID>", "PDV.BosSongs.Count", "PDV.BosSongs.Milestone", "PDV.BosSongs.EldergleamActive (interior-poll arm; Eldergleam vision fires on the cave cells, not the exterior approach -- mirrors the Argonian Waters set)", "PDV.BosLoc.Seen.<FormID> + PDV.BosLoc.DiscoveryCount (new-location counter feeding the Hearth 3+ discovery delta)"],
-    "naming": ["PDV.BosNaming.Active (0=none, 1-4=Hunter/Speaker/Wanderer/Keeper)", "PDV.BosNaming.LastRiteDay"]
+    "dreams": [
+      "PDV.BosDream.LastDay",
+      "PDV.BosDream.LastPath (detect path change for elevated chance)"
+    ],
+    "hearth": [
+      "PDV.BosHearth.PendingCell (transient)",
+      "PDV.BosHearth.DeclaredCell",
+      "PDV.BosHearth.DeclaredDay",
+      "PDV.BosHearth.DeclineDay",
+      "PDV.BosHearth.LocDiscoveryAtLastStay (location-discovery delta gates A Tale Carried, NOT sleep count)"
+    ],
+    "signatures": [
+      "PDV.BosSig.ScalesLastDay (Exchange once/day)",
+      "PDV.BosSig.GapLastDay (Bandit Road once/day)"
+    ],
+    "songs": [
+      "PDV.BosSongs.Seen.<FormID>",
+      "PDV.BosSongs.Count",
+      "PDV.BosSongs.Milestone",
+      "PDV.BosSongs.EldergleamActive (interior-poll arm; Eldergleam vision fires on the cave cells, not the exterior approach -- mirrors the Argonian Waters set)",
+      "PDV.BosLoc.Seen.<FormID> + PDV.BosLoc.DiscoveryCount (new-location counter feeding the Hearth 3+ discovery delta)"
+    ],
+    "naming": [
+      "PDV.BosNaming.Active (0=none, 1-4=Hunter/Speaker/Wanderer/Keeper)",
+      "PDV.BosNaming.LastRiteDay"
+    ]
   },
   "authoringVehicle": "tools/pdv-bosmer-variety-author (built 2026-06-12 from tools/pdv-argonian-variety-author). Flags: --esp <path>, --dry-run, --check. The tool covers the 2 MESG, 3 timed-buff SPEL+MGEF, 4 ability SPEL+MGEF, the 6-entry FLST (fail-closed on unverified slots), and forward VMAD wiring of the 10 manager properties.",
-  "postBatchGates": ["resolve 4 PENDING LCTN FormIDs (pdv_extract_vanilla_gameplay_refs.mjs) and set verified=true", "--dry-run (catch ActorValue enum drift per atRiskEnumNames)", "pdv_verify.mjs", "FLST --check slot dump", "author PDV__ManagerQuest.psc Bosmer runtime layer + recompile", "BetaContract rows + pdv_completeness_audit.mjs", "runtime smoke per lever on a NEW save", "PDV_BetaTestPacket_Bosmer.md (create, modeled on PDV_BetaTestPacket_Argonian.md) incl. a DebugSeedBosmer SetPQV harness for path/coherence-gated phases"]
+  "postBatchGates": [
+    "resolve 4 PENDING LCTN FormIDs (pdv_extract_vanilla_gameplay_refs.mjs) and set verified=true",
+    "--dry-run (catch ActorValue enum drift per atRiskEnumNames)",
+    "pdv_verify.mjs",
+    "FLST --check slot dump",
+    "author PDV__ManagerQuest.psc Bosmer runtime layer + recompile",
+    "BetaContract rows + pdv_completeness_audit.mjs",
+    "runtime smoke per lever on a NEW save",
+    "PDV_BetaTestPacket_Bosmer.md (create, modeled on PDV_BetaTestPacket_Argonian.md) incl. a DebugSeedBosmer SetPQV harness for path/coherence-gated phases"
+  ]
 }

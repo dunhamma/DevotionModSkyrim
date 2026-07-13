@@ -178,6 +178,12 @@ cumulative-rebalance tools (not idempotent).
 - **Sweep A:** each converted Fortify-Health reward felt (`player.getav Health`
   before/after + HP bar); A7 Mara sleep-mercy, A8 Dunmer home-prayer ancestor
   watch (once/day near-death restore, no instant heal), A9 Orc Code Holds.
+- **Sweep C (2026-07-13):** each converted Fortify-Magicka/Stamina reward felt as a
+  POOL MAX rise (`player.getav Magicka/Stamina` returns current -- read the bar MAX
+  / Active-Effects "Fortify Magicka/Stamina" entry). Race boons +15/+25/+40; Daedric
+  Sheogorath Magicka / Hircine Stamina +25/+40/+50; Argonian Sithis near-death is
+  now a scripted flat `RestoreActorValue("Stamina",100)` (instant restore, not a
+  regen bar). Any race already M/S-felt-proven is INVALIDATED, re-prove here.
 - **Sweep B1:** Redguard Tu'whacca event-heal, Namira heal-on-feed (tier-scaled,
   caps), Ash'abah stigma (Survey label, no piety drop), Breton Vigilant nod.
 - **Sweep B2:** HoonDing dragon make-way once/day (+ decay on repeat, generic
@@ -187,6 +193,9 @@ cumulative-rebalance tools (not idempotent).
   Distant -10 / Excommunication -15 (Active Effects Maximum Health label, bar
   ceiling drops), Imperial civic lapse stays ResistDisease -5 with no Health
   effect; Nord Orkey's Neglect = Magic Resist -5%, Dibella's = Restoration -5.
+  **(2026-07-13) M/S neglect/creed-loss penalties now felt too:** Altmer/Dunmer
+  neglect -10 Maximum Magicka, Bosmer/Khajiit neglect -10 Maximum Stamina, Breton
+  `DruidicForkBetrayal` -15 Maximum Stamina (bar ceiling drops in Active Effects).
 Sinks: `PDV_1_0_ManualSignoffLedger.json` (requiemTrackB) + the Redguard/Daedric
 blocks of `PDV_Phase20_ManualEvidenceLedger.json`.
 

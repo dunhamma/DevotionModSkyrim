@@ -7,46 +7,191 @@
   "tranche0_rewardRedesign": {
     "vehicle": "tools/pdv-phase20-race-author --author-rewards --rewards-spec references/authoring/PDV_ArgonianRewardRecords.spec.json",
     "dryRun": "PASS 2026-06-11 13:05 (MagicResist spec name corrected to Mutagen enum ResistMagic)",
-    "expectedActions": ["PDV_MGEF_Argonian_Substrate_Always_Magic", "PDV_MGEF_Argonian_Substrate_High_Claws", "PDV_MGEF_Argonian_Hist_T2_StaminaRateMult", "PDV_MGEF_Argonian_People_T1_CarryWeight", "PDV_MGEF_Argonian_People_T2_ResistPoison", "PDV_MGEF_Argonian_People_T3_CarryWeight", "PDV_MGEF_Argonian_People_T3_ResistMagic"],
+    "expectedActions": [
+      "PDV_MGEF_Argonian_Substrate_Always_Magic",
+      "PDV_MGEF_Argonian_Substrate_High_Claws",
+      "PDV_MGEF_Argonian_Hist_T2_StaminaRateMult",
+      "PDV_MGEF_Argonian_People_T1_CarryWeight",
+      "PDV_MGEF_Argonian_People_T2_ResistPoison",
+      "PDV_MGEF_Argonian_People_T3_CarryWeight",
+      "PDV_MGEF_Argonian_People_T3_ResistMagic"
+    ],
     "readbackNote": "Old disease MGEFs (PDV_MGEF_Argonian_Substrate_Always_Disease, ..._High_Disease, and prior emphasis disease MGEFs) become orphaned records after Effects.Clear() rebuild - confirm spells no longer reference them; orphans are inert.",
     "knownDrift": "nearWaterOnly was never authored as real conditions on the deployed substrate spells (effects are unconditional); pre-existing, not worsened by this batch."
   },
   "newRecords": [
-    { "editorId": "PDV_SPEL_ArgonianShadowscaleVeil", "type": "SPEL+MGEF", "design": "self-cast fire-and-forget, Invisibility archetype, duration 15s (bumped from 4s 2026-06-18 per tester; tactical escape window) -- ESP record 0714C9:Devotion.esp Effects[0].Data.Duration apply PENDING Skyrim-closed, silent-ish; templated off vanilla Invisibility MGEF", "wireTo": "PDV__ManagerQuest.PDV_SPEL_ArgonianShadowscaleVeil" },
-    { "editorId": "PDV_SPEL_ArgonianRootedRest", "type": "SPEL+MGEF", "design": "self-cast timed buff, StaminaRateMult +5, duration ~600s; templated off vanilla Rested (Skyrim.esm 10D968) pattern", "wireTo": "PDV__ManagerQuest.PDV_SPEL_ArgonianRootedRest" },
-    { "editorId": "PDV_MESG_ArgonianMarkBed", "type": "MESG", "text": "Settle into this bed as your bed of choice? The root remembers where you rest.", "buttons": ["Yes, this is my bed", "Not yet"], "wireTo": "PDV__ManagerQuest.PDV_MESG_ArgonianMarkBed", "buttonContract": "index 0 = declare; any other = decline (3-day re-prompt cooldown in script)" },
-    { "editorId": "PDV_MESG_ArgonianAdaptRite", "type": "MESG", "text": "The root dreams, and the dream reaches for your shape. Ask for a change.", "buttons": ["Claws of the marsh", "Stillness of the skin", "Sap-quickened focus", "Marsh-born endurance", "Not yet"], "wireTo": "PDV__ManagerQuest.PDV_MESG_ArgonianAdaptRite", "buttonContract": "indices 0-3 map to Claws/Skin/Sap/Marsh adaptation spells; 4 = no change (cooldown NOT spent)" },
-    { "editorId": "PDV_SPEL_ArgonianAdapt_Claws", "type": "SPEL+MGEF ability", "effects": [{ "actorValue": "UnarmedDamage", "magnitude": 5.0 }], "playerFacingText": "The root sharpened your claws. Your bare strikes hit harder." },
-    { "editorId": "PDV_SPEL_ArgonianAdapt_Skin", "type": "SPEL+MGEF ability", "effects": [{ "actorValue": "Sneak", "magnitude": 5.0 }], "playerFacingText": "Your scales drink the light. You move a little quieter." },
-    { "editorId": "PDV_SPEL_ArgonianAdapt_Sap", "type": "SPEL+MGEF ability", "effects": [{ "actorValue": "MagickaRateMult", "magnitude": 5.0 }], "playerFacingText": "Sap-light runs behind your eyes. Magicka returns a little faster." },
-    { "editorId": "PDV_SPEL_ArgonianAdapt_Marsh", "type": "SPEL+MGEF ability", "effects": [{ "actorValue": "StaminaRateMult", "magnitude": 8.0 }], "playerFacingText": "Marsh endurance settles into your limbs. Stamina returns faster." }
+    {
+      "editorId": "PDV_SPEL_ArgonianShadowscaleVeil",
+      "type": "SPEL+MGEF",
+      "design": "self-cast fire-and-forget, Invisibility archetype, duration 15s (bumped from 4s 2026-06-18 per tester; tactical escape window) -- ESP record 0714C9:Devotion.esp Effects[0].Data.Duration apply PENDING Skyrim-closed, silent-ish; templated off vanilla Invisibility MGEF",
+      "wireTo": "PDV__ManagerQuest.PDV_SPEL_ArgonianShadowscaleVeil"
+    },
+    {
+      "editorId": "PDV_SPEL_ArgonianRootedRest",
+      "type": "SPEL+MGEF",
+      "design": "self-cast timed buff, StaminaRateMult +5, duration ~600s; templated off vanilla Rested (Skyrim.esm 10D968) pattern",
+      "wireTo": "PDV__ManagerQuest.PDV_SPEL_ArgonianRootedRest"
+    },
+    {
+      "editorId": "PDV_MESG_ArgonianMarkBed",
+      "type": "MESG",
+      "text": "Settle into this bed as your bed of choice? The root remembers where you rest.",
+      "buttons": [
+        "Yes, this is my bed",
+        "Not yet"
+      ],
+      "wireTo": "PDV__ManagerQuest.PDV_MESG_ArgonianMarkBed",
+      "buttonContract": "index 0 = declare; any other = decline (3-day re-prompt cooldown in script)"
+    },
+    {
+      "editorId": "PDV_MESG_ArgonianAdaptRite",
+      "type": "MESG",
+      "text": "The root dreams, and the dream reaches for your shape. Ask for a change.",
+      "buttons": [
+        "Claws of the marsh",
+        "Stillness of the skin",
+        "Sap-quickened focus",
+        "Marsh-born endurance",
+        "Not yet"
+      ],
+      "wireTo": "PDV__ManagerQuest.PDV_MESG_ArgonianAdaptRite",
+      "buttonContract": "indices 0-3 map to Claws/Skin/Sap/Marsh adaptation spells; 4 = no change (cooldown NOT spent)"
+    },
+    {
+      "editorId": "PDV_SPEL_ArgonianAdapt_Claws",
+      "type": "SPEL+MGEF ability",
+      "effects": [
+        {
+          "actorValue": "UnarmedDamage",
+          "magnitude": 5
+        }
+      ],
+      "playerFacingText": "The root sharpened your claws. Your bare strikes hit harder."
+    },
+    {
+      "editorId": "PDV_SPEL_ArgonianAdapt_Skin",
+      "type": "SPEL+MGEF ability",
+      "effects": [
+        {
+          "actorValue": "Sneak",
+          "magnitude": 5
+        }
+      ],
+      "playerFacingText": "Your scales drink the light. You move a little quieter."
+    },
+    {
+      "editorId": "PDV_SPEL_ArgonianAdapt_Sap",
+      "type": "SPEL+MGEF ability",
+      "effects": [
+        {
+          "actorValue": "Magicka",
+          "magnitude": 10,
+          "effectName": "Fortify Magicka"
+        }
+      ],
+      "playerFacingText": "Sap-light runs behind your eyes. Magicka returns a little faster."
+    },
+    {
+      "editorId": "PDV_SPEL_ArgonianAdapt_Marsh",
+      "type": "SPEL+MGEF ability",
+      "effects": [
+        {
+          "actorValue": "Stamina",
+          "magnitude": 15,
+          "effectName": "Fortify Stamina"
+        }
+      ],
+      "playerFacingText": "Marsh endurance settles into your limbs. Stamina returns faster."
+    }
   ],
   "formList": {
     "editorId": "PDV_FLST_ArgonianSacredWaters",
     "wireTo": "PDV__ManagerQuest.PDV_FLST_ArgonianSacredWaters",
     "orderNote": "Build in THIS manifest order; verify with a --check slot dump (FormList order-drift lesson). Script lookups are HasForm (name/form-based, order-tolerant), so order matters only for audit consistency.",
     "entries": [
-      { "formId": "0192AC:Skyrim.esm", "editorId": "EldergleamSanctuaryLocation", "why": "the great rooted being; nearest thing to a Hist in Skyrim" },
-      { "formId": "0192AD:Skyrim.esm", "editorId": "SleepingTreeCampLocation", "why": "the cousin-root; pairs with the Sleeping Tree Sap one-shot" },
-      { "formId": "01919C:Skyrim.esm", "editorId": "IlinaltasDeepLocation", "why": "the drowned water under Lake Ilinalta" },
-      { "formId": "003583:Dawnguard.esm", "editorId": "DLC1_AncestorsGladeLocation", "why": "the Canticle Tree and reflecting pool (swapped in for Clearspring Tarn 2026-06-11; adds Dawnguard.esm as a framework master)" },
-      { "formId": "018EEF:Skyrim.esm", "editorId": "BloatedMansGrottoLocation", "why": "pristine nature grotto with a pond, Kyne's Sacred Trials site (swapped in for Witchmist Grove 2026-06-11)" },
-      { "formId": "018A4D:Skyrim.esm", "editorId": "DarkwaterCrossingLocation", "why": "hot-spring settlement; home of Derkeethus (Argonian)" }
+      {
+        "formId": "0192AC:Skyrim.esm",
+        "editorId": "EldergleamSanctuaryLocation",
+        "why": "the great rooted being; nearest thing to a Hist in Skyrim"
+      },
+      {
+        "formId": "0192AD:Skyrim.esm",
+        "editorId": "SleepingTreeCampLocation",
+        "why": "the cousin-root; pairs with the Sleeping Tree Sap one-shot"
+      },
+      {
+        "formId": "01919C:Skyrim.esm",
+        "editorId": "IlinaltasDeepLocation",
+        "why": "the drowned water under Lake Ilinalta"
+      },
+      {
+        "formId": "003583:Dawnguard.esm",
+        "editorId": "DLC1_AncestorsGladeLocation",
+        "why": "the Canticle Tree and reflecting pool (swapped in for Clearspring Tarn 2026-06-11; adds Dawnguard.esm as a framework master)"
+      },
+      {
+        "formId": "018EEF:Skyrim.esm",
+        "editorId": "BloatedMansGrottoLocation",
+        "why": "pristine nature grotto with a pond, Kyne's Sacred Trials site (swapped in for Witchmist Grove 2026-06-11)"
+      },
+      {
+        "formId": "018A4D:Skyrim.esm",
+        "editorId": "DarkwaterCrossingLocation",
+        "why": "hot-spring settlement; home of Derkeethus (Argonian)"
+      }
     ]
   },
-  "sapSource": { "formId": "0AED90:Skyrim.esm", "editorId": "dunSleepingTreeCampSap", "hook": "PDV_PlayerEvents.OnObjectEquipped checks GetFormID() == 0x000AED90 (already shipped in script)" },
+  "sapSource": {
+    "formId": "0AED90:Skyrim.esm",
+    "editorId": "dunSleepingTreeCampSap",
+    "hook": "PDV_PlayerEvents.OnObjectEquipped checks GetFormID() == 0x000AED90 (already shipped in script)"
+  },
   "vmadWiring": {
     "quest": "PDV__ManagerQuest",
-    "properties": ["PDV_SPEL_ArgonianShadowscaleVeil", "PDV_SPEL_ArgonianRootedRest", "PDV_MESG_ArgonianMarkBed", "PDV_MESG_ArgonianAdaptRite", "PDV_SPEL_ArgonianAdapt_Claws", "PDV_SPEL_ArgonianAdapt_Skin", "PDV_SPEL_ArgonianAdapt_Sap", "PDV_SPEL_ArgonianAdapt_Marsh", "PDV_FLST_ArgonianSacredWaters"],
+    "properties": [
+      "PDV_SPEL_ArgonianShadowscaleVeil",
+      "PDV_SPEL_ArgonianRootedRest",
+      "PDV_MESG_ArgonianMarkBed",
+      "PDV_MESG_ArgonianAdaptRite",
+      "PDV_SPEL_ArgonianAdapt_Claws",
+      "PDV_SPEL_ArgonianAdapt_Skin",
+      "PDV_SPEL_ArgonianAdapt_Sap",
+      "PDV_SPEL_ArgonianAdapt_Marsh",
+      "PDV_FLST_ArgonianSacredWaters"
+    ],
     "existingSaveNote": "VMAD props bake at first init; the test path is a new game / coc qasmoke so wiring suffices for beta. For existing saves the features stay silently inert (None-guards) until a lazy GetFormFromFile fallback pass adds the authored FormIDs."
   },
   "scriptKeys": {
-    "dreams": ["PDV.ArgDream.Armed", "PDV.ArgDream.LastDay"],
-    "bed": ["PDV.ArgBed.PendingBed (transient Form)", "PDV.ArgBed.DeclaredFormID", "PDV.ArgBed.DeclaredDay", "PDV.ArgBed.DeclineDay"],
-    "shadowscale": ["PDV.Shadowscale.LastInvisDay"],
-    "waters": ["PDV.ArgWaters.Seen.<FormID>", "PDV.ArgWaters.Count", "PDV.ArgWaters.Milestone", "PDV.ArgWaters.SapVision"],
-    "adaptations": ["PDV.Adapt.Active (0=none, 1-4=Claws/Skin/Sap/Marsh)", "PDV.Adapt.LastRiteDay"]
+    "dreams": [
+      "PDV.ArgDream.Armed",
+      "PDV.ArgDream.LastDay"
+    ],
+    "bed": [
+      "PDV.ArgBed.PendingBed (transient Form)",
+      "PDV.ArgBed.DeclaredFormID",
+      "PDV.ArgBed.DeclaredDay",
+      "PDV.ArgBed.DeclineDay"
+    ],
+    "shadowscale": [
+      "PDV.Shadowscale.LastInvisDay"
+    ],
+    "waters": [
+      "PDV.ArgWaters.Seen.<FormID>",
+      "PDV.ArgWaters.Count",
+      "PDV.ArgWaters.Milestone",
+      "PDV.ArgWaters.SapVision"
+    ],
+    "adaptations": [
+      "PDV.Adapt.Active (0=none, 1-4=Claws/Skin/Sap/Marsh)",
+      "PDV.Adapt.LastRiteDay"
+    ]
   },
   "authoringVehicleNote": "race-author covers Tranche 0 + the 4 ability-shaped adaptation spells (AV constant effects) if expressed as a spec; the invisibility veil (archetype, durationed), Rooted Rest (durationed), 2 MESG and the FLST need a small sibling author modeled on tools/pdv-daedric-author's EnsureMessage/EnsureFormList/EnsureSpell patterns. Build that tool as the first step of the batch.",
-  "postBatchGates": ["pdv_verify.mjs", "FLST --check slot dump", "BetaContract rows + pdv_completeness_audit.mjs", "runtime smoke per tranche on a NEW save (LIKES_DISLIKES bump 5->6 also requires new save/qasmoke)", "PDV_BetaTestPacket_Argonian.md update incl. IsSneaking approximation + power-budget statement"]
+  "postBatchGates": [
+    "pdv_verify.mjs",
+    "FLST --check slot dump",
+    "BetaContract rows + pdv_completeness_audit.mjs",
+    "runtime smoke per tranche on a NEW save (LIKES_DISLIKES bump 5->6 also requires new save/qasmoke)",
+    "PDV_BetaTestPacket_Argonian.md update incl. IsSneaking approximation + power-budget statement"
+  ]
 }

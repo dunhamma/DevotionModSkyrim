@@ -153,12 +153,12 @@ than the book track), confirm one consolidated Active-Effects snapshot against
 the authored spec magnitudes (disease resistance is GONE everywhere):
 
 - Hist Memory (always): Resist Magic 5%.
-- Hist Attunement (substrate HIGH): Health Regen 9%, Resist Poison 12%,
+- Hist Attunement (substrate HIGH): Fortify Health +30 (near water), Resist Poison 12%,
   Unarmed Damage +12.
-- Hist Communion - Devoted (Hist 50): Health Regen 8%, Stamina Regen 10%.
+- Hist Communion - Devoted (Hist 50): Fortify Health +20 (near water), Fortify Stamina +25.
 - Chosen People - Kin (People 25): Carry Weight +25.
-- Chosen People - Family (People 50): Resist Poison 8%, Health Regen 5%.
-- Chosen People - Pillar (Champion 85): Health Regen 8%, Carry Weight +25,
+- Chosen People - Family (People 50): Resist Poison 8%, Fortify Health.
+- Chosen People - Pillar (Champion 85): Fortify Health, Carry Weight +25,
   Resist Magic 5%.
 
 ### Reaction-layer fix checks
@@ -362,9 +362,11 @@ before the real relation settles. Folded into the editorial sweep.
 
 ### Sithis T3 near-death burst (PENDING build-pass runtime confirmation)
 
-`PDV_Bless_Argonian_Sithis_T3` (always-on StaminaRateMult +10%) plus
-`PDV_SPEL_ArgonianSithisNearDeathBurst` (below 20% health -> +50 stamina regen
-for 10s, once/day) are authored, wired, and readback-clean (2026-06-14). The
+`PDV_Bless_Argonian_Sithis_T3` (always-on Fortify Stamina +40; 2026-07-13
+Requiem conversion) plus `PDV_SPEL_ArgonianSithisNearDeathBurst` (below 20% health
+-> now a scripted flat `RestoreActorValue("Stamina",100)` INSTANT restore, once/day;
+the old +50 stamina-regen-for-10s buff still casts for flavor but is muted under
+Requiem) are authored, wired, and readback-clean. The
 below-20% detection uses the shared combat-session poll
 (`RoutePlayerBelowHealthGate`). Runtime/manual proof of the once/day burst is
 PENDING. This is health-based, not kill-based, so the killing-blow caveat does
@@ -374,8 +376,9 @@ not apply.
 
 When Molag Bal path piety >= Seeker AND curse state == vampire, the manager
 writes `PDV.Curse.Argonian.DominationPressure` and escalates the Hist posture to
-**Corrupted (4)**; the neglect texture `PDV_MGEF_Neglect_ArgonianHist_HealRate`
-(HealRateMult -5) applies at Silenced or Corrupted. Molag Bal is
+**Corrupted (4)**; the neglect texture `PDV_MGEF_Neglect_ArgonianHist_Health`
+(negative Fortify Health approx -10, felt under Requiem; converted 2026-07-13 from
+the old HealRateMult -5) applies at Silenced or Corrupted. Molag Bal is
 Argonian-accessible by record (`PDV_DaedricPath_Molag`). To exercise: origin 7,
 MCM Daedric -> force the Molag Bal path to Seeker+, then Curse vampire -> Survey
 Hist posture should read Corrupted. Source/readback-clean; runtime PENDING.

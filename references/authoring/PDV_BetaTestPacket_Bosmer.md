@@ -576,9 +576,9 @@ the path button.
 | Path button | Scoring deity | T1 (25) -> T2 (50) -> T3 (85) |
 |---|---|---|
 | Bosmer -> OldContract | Y'ffre (3) | Archery+5 -> Arch+13/Sneak+10 -> Arch+25/Sneak+22/PoisonRes+10% |
-| Bosmer -> LivingStory | Y'ffre (3) | Speech+5 -> Speech+13/HRegen+10% -> Speech+25/HRegen+25%/MagRegen+5% |
+| Bosmer -> LivingStory | Y'ffre (3) | Speech+5 -> Speech+13/FortHealth -> Speech+25/FortHealth/**FortMagicka+15** (2026-07-13: MagRegen->Fortify Magicka pool; HRegen->Fortify Health) |
 | Bosmer -> Exchange | Z'en (4) | Speech+5 -> Speech+13/CarryWt+30 -> Speech+25/CarryWt+80/Armor+8 |
-| Bosmer -> BanditRoad | Baan Dar (5) | Armor+5 -> Armor+15/HRegen+10% -> Armor+27/HRegen+25%/Sneak+10 |
+| Bosmer -> BanditRoad | Baan Dar (5) | Armor+5 -> Armor+15/FortHealth -> Armor+27/FortHealth/Sneak+10 (HRegen->Fortify Health) |
 
 - Switching the path button must SWAP the family: only ONE path family in Active
   Effects at a time.
@@ -589,9 +589,9 @@ the path button.
   suppressed. Drop the active scoring deity below 25 + Run dawn pass -> the path
   family should remove; do not expect Y'ffre's Weave to appear unless the player
   is in broad worship state with enough broad favor. A neglected path shows
-  **The Path Goes Quiet** (StaminaRateMult -5, authored as a
-  PeakValueModifier regen effect after the initial ValueModifier shape felt too
-  harsh in runtime smoke).
+  **The Path Goes Quiet** (2026-07-13 Requiem conversion: now a mild negative
+  Fortify Stamina approx -10, i.e. reduced Maximum Stamina; was StaminaRateMult -5
+  regen).
 
 ### B. Variety levers
 Click **Seed Bosmer variety** first (clears once-day cooldowns + seeds 3
@@ -640,7 +640,7 @@ LivingStory T1/T2/T3: PASS 2026-06-13
 Exchange T1/T2/T3 mechanics: PASS 2026-06-13; T1/T2 Z'en copy remediated + readback-confirmed in the live ESP, but in-game confirm on a fresh load PENDING (the prior playthrough predated the 18:15 ESP refresh and showed the old non-Z'en copy)
 BanditRoad T1/T2/T3: PASS (prior playthrough, recorded 2026-06-13)
 Broad Y'ffre lane + suppression-under-path: suppression-under-path PASS (prior playthrough, recorded 2026-06-13); broad-lane appearance only relevant in broad-worship state
-Neglect "The Path Goes Quiet": PASS 2026-06-13 (fresh load; PeakValueModifier StaminaRateMult -5 confirmed -- stamina regen ~5% slower, not pinned near zero)
+Neglect "The Path Goes Quiet": PASS 2026-06-13 [INVALIDATED 2026-07-13] -- the recorded observation ("StaminaRateMult -5 ... stamina regen ~5% slower") no longer exists; the effect was converted to a mild negative Fortify Stamina (Maximum Stamina approx -10). RE-PROVE under a live Requiem list: confirm Maximum Stamina drops in Active Effects.
 -- Variety levers --
 Green Dreams: PASS 2026-06-13. Hearth+Tale Carried: PASS 2026-06-13. Songs (N/6): PASS 2026-06-16. Scales at Rest: PASS 2026-06-13 -- PDV_SPEL_BosmerScalesAtRest (Speech +10, 120s), notify "The account is even. The bargains fall your way for a while."; on-path fire + once/day + off-path silence confirmed (log: single "Bosmer Scales at Rest fired." on Exchange; off-path Exchange signal logged "RouteBosmerExchange complete: 42" route-only, no fire/cast/notify -- path gate at manager line 2941).
 Baan Dar Gap fires sub-20% in combat: PASS 2026-06-16
