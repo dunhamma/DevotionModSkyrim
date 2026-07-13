@@ -6055,6 +6055,10 @@ Function TryArgonianSithisNearDeathBurst(Actor playerRef)
     endIf
 
     PDV_SPEL_ArgonianSithisNearDeathBurst.Cast(playerRef, playerRef)
+    ; Requiem parity (2026-07-13): the cast StaminaRateMult burst is muted under
+    ; Requiem, so pair it with a felt flat stamina restore (TryOrcCodeHolds
+    ; pattern) - the Void lends an instant surge you can actually spend.
+    playerRef.RestoreActorValue("Stamina", 100.0)
     StorageUtil.SetIntValue(None, "PDV.Argonian.SithisNearDeathLastDay", today + 1)
     HandleArgonianVoidSignal("near_death_burst")
     Trace(2, "Argonian Sithis near-death burst fired.")
