@@ -215,7 +215,14 @@ Priority order: sole-effect tiers -> capstones -> mid tiers.
   it becomes a swallowed-health case needing flat-restore; as shipped (Stamina),
   note-only.
 
-## Magicka / Stamina regen -- secondary (leave as-is)
+## Magicka / Stamina regen -- CONVERTED 2026-07-13 (was "leave as-is")
+
+**SUPERSEDED:** the owner overrode the note-only ruling on 2026-07-13. All
+positive `MagickaRateMult`/`StaminaRateMult` reward effects (+ 2 Argonian
+HealRateMult survivors, the Daedric boons/prices, the regen penalties, and the
+Argonian near-death burst) were converted project-wide to flat Fortify max-pool /
+felt negatives. Authority: `PDV_RequiemMagickaStaminaConversion_BuildSpec_2026-07-13.md`.
+Original note-only rationale retained below for provenance:
 
 All `MagickaRateMult`/`StaminaRateMult` reward effects are REDUCED but NOT zeroed
 by Requiem -> partly felt, note-only. Includes Altmer's whole magicka-regen

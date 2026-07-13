@@ -1956,7 +1956,9 @@
     const patronName = text(state.patron, "None");
 
     nodes.title.textContent = text(state.title, patronName === "None" ? "Devotion" : patronName);
-    nodes.status.textContent = text(state.status, "Live");
+    if (nodes.status) {
+      nodes.status.textContent = text(state.status, "Live");
+    }
     renderSymbol(nodes.mark, state.symbol || state.mark || patronName || "journal");
     nodes.summary.textContent = text(state.summary, "No patron has answered yet.");
     nodes.patron.textContent = patronName;
@@ -2202,7 +2204,9 @@
         bindPanelClose();
         handlePayload(payload);
       } catch (error) {
-        nodes.status.textContent = "Bad JSON";
+        if (nodes.status) {
+          nodes.status.textContent = "Bad JSON";
+        }
         appendEmpty(nodes.acts, error instanceof Error ? error.message : "Could not parse payload.");
       }
     },
@@ -2357,7 +2361,7 @@
     shift_orc: { event: "shift", shiftMode: "Stronghold", symbol: "malacath" },
     shift_redguard: { event: "shift", shiftMode: "Crown" },
     shift_bosmer: { event: "shift", shiftMode: "Old Contract", symbol: "yffre" },
-    daedric_boon: { event: "daedric", prince: "Hircine", phase: "milestone", tierLabel: "Seeker", symbol: "hircine", flavor: "Hircine's hunt-sense is in you.", boonText: "+15% Stamina regeneration", priceText: "-10% Health regeneration" },
+    daedric_boon: { event: "daedric", prince: "Hircine", phase: "milestone", tierLabel: "Seeker", symbol: "hircine", flavor: "Hircine's hunt-sense is in you.", boonText: "Fortify Stamina +25", priceText: "Speech -8" },
     daedric_price: { event: "daedric", prince: "Hircine", phase: "price", symbol: "hircine", context: "Stigma has been rising." },
     daedric_lapse: { event: "daedric", prince: "Hircine", phase: "lapse", symbol: "hircine" },
     daedric_residue: { event: "daedric", prince: "Hircine", phase: "residue", symbol: "hircine" },
