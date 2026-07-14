@@ -1009,6 +1009,15 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   so no future session "finishes" the parity by converting them. Rationale: the parity
   ruling was about passive daily credit inventing deity piety; these three fire on
   deliberate acts through their gods' own lanes.
+- **[2026-07-15] — Khajiit Champion signature moments are POST-1.0 (owner correction):**
+  The four stat-only capstone moments (Khenarthi wind-speed, Azurah spell-ward, Rajhin
+  shadow-slip, Alkosh dragon-stagger) were mis-recorded as "defer to a design session";
+  the owner's ruling is post-1.0 by design — now entered in `PDV_V2_Backlog.md` and OFF
+  the 1.0 issue list. Guides already de-promise them, so V1 copy is honest; Baan Dar's
+  shipped cheat-death holds Khajiit's one-save-per-race slot, so the V2 designs must be
+  non-save mechanics. The remaining 1.0 issue candidates are only the two pre-existing
+  stale-gate-contract items (14 spine-source verify contracts; remap-adversary Breton
+  hidden-art-champion assert).
 - **[2026-07-15] — True-bug fix pass EXECUTED (scoped ManagerQuest pass + records + gate descope):**
   All phases of `PDV_HO_ScopedManagerPass_2026-07-15.md` landed in one session. Records:
   Akatosh's Endurance re-authored (Maximum Health +30 + Magic Resist +15) at Imperial AND

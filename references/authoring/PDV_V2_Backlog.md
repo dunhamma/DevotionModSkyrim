@@ -33,6 +33,7 @@ Phase 11 CTD becomes a V2 concern).
 | Arngeir / Kynareth recognition pilot | Section 9.4 D-10 spec; was runtime-proven before the CTD; design retained as the V2 spec. | Re-author the Arngeir line through the proven CK-safe path; voice it. |
 | Phase 18 Nord recognition quartet | Froki, Heimskr, Andurs, Aela - CK-authored and **live in the ESP**, unvoiced. Phase 18 dialogue verifier assertions exist. | First V2 step is actually a **V1 removal**: disable/remove these `DLBR`/`DIAL`/`INFO` records from the V1 release ESP (see Build Actions). Re-add voiced in V2. |
 | 39 `PDV_Dlog_*_Recognition` stubs | Draft prose complete (CAT-1) in `race-sheets/PDV_RaceContent_Manifest.md`; excluded from CAT-6 V1 promotion. | Ratify prose, voice it, promote via the Phase 19 pipeline. |
+| Khajiit Champion signature moments (4 of 5) | Khenarthi wind-speed, Azurah spell-ward, Rajhin shadow-slip, Alkosh dragon-stagger were guide fantasies with stat-only records behind them; the Nexus-final pass de-promised them, so V1 copy is honest. Baan Dar's cheat-death SHIPS and holds Khajiit's one-save-per-race slot (`PDV_MGEF_Khajiit_BaanDar_T3_AvoidDeath`, ESP-verified 2026-07-15). | Owner ruling 2026-07-15: post-1.0 by design. Design four bespoke NON-save mechanics (the save slot is taken), then record + script + anti-farm + Requiem-proof each; re-promise in guides only when they fire in-game. |
 
 ### 1.2 Scope-mapping reminder
 

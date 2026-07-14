@@ -589,7 +589,9 @@ is the internal tracker of record meanwhile; re-present for filing at fix-pass c
 level** (Altmer crisis exit wired; Orc forge routed + HearthHeld granted/converted;
 alignment rite mover landed; boons differentiated at both layers) — each still owes its
 RC runtime card before the issue would close as verified. Issue 5 (Khajiit signatures)
-remains the only open design item. NEW candidates surfaced by the pass, pre-existing and
-stash-proven not-this-pass: (a) 14 stale spine-source verify contracts, (b) the remap
-adversary breton-hidden-art-champion assert. Recommended issue list if filing now:
-Khajiit signatures + the two stale-gate-contract items.
+is OFF the 1.0 list entirely — owner ruling 2026-07-15: post-1.0 by design, now entered
+in `PDV_V2_Backlog.md` (guides already de-promise the moments, so V1 copy is honest).
+NEW candidates surfaced by the pass, pre-existing and stash-proven not-this-pass:
+(a) 14 stale spine-source verify contracts, (b) the remap adversary
+breton-hidden-art-champion assert. Recommended 1.0 issue list if filing now: ONLY the
+two stale-gate-contract items.

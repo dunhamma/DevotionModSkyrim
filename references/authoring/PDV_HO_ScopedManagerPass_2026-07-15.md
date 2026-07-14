@@ -14,7 +14,7 @@
 
 **v2 (2026-07-15 late):** upgraded from a signal-work handoff into the full TRUE-BUG fix
 plan after the owner ruled on the remaining design branches: Altmer alignment gets a
-small rite mover; Khajiit signature moments defer to a design session; the Nord dialogue
+small rite mover; Khajiit signature moments are POST-1.0 by owner ruling (V2 backlog); the Nord dialogue
 quartet was RE-CLASSIFIED as a planned V1 removal (`PDV_V2_Backlog.md:34`) -- its fix is
 a gate descope, not dialogue authoring. Twin-boon duplication proven to originate in the
 IMPERIAL T3 records (4 spells affected, not 2).
@@ -163,9 +163,9 @@ failures) / after (clean). AGENTS 07-14 "pre-existing debt" phrasing already cor
 
 ### 4f. Deferred by owner ruling (do NOT build here)
 
-- **Khajiit signature moments** (Khenarthi/Azurah/Rajhin/Alkosh): design session first;
-  each needs a bespoke non-save mechanic (Baan Dar holds Khajiit's one allowed save).
-  Issue #5 stays open with a design card.
+- **Khajiit signature moments** (Khenarthi/Azurah/Rajhin/Alkosh): POST-1.0 by owner
+  ruling (corrected 2026-07-15) -- entered in PDV_V2_Backlog.md; each needs a bespoke
+  non-save mechanic (Baan Dar holds Khajiit's one allowed save). NOT a 1.0 issue.
 - Syrabane x5 / Stuhn x2 / Trinimac orthodoxy wires (section 2 note).
 
 ## 5. Proof gates for this pass
