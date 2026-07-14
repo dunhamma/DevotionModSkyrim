@@ -184,6 +184,93 @@ A spell description that says `"See the readme for full effect details"` is a de
 
 (Internal docs cross-link freely — that's a different layer.)
 
+### 2.7 Phantom declarations — shipping the cheap half of a feature
+
+Don't ship the layers of a feature that live in the file you already have open and
+leave the layer that needs new detection for "later."
+
+A curated deity signal has four layers:
+
+| # | Layer | Lives in | Cost |
+|---|-------|----------|------|
+| 1 | `Int Property SIGNAL_X = N AutoReadOnly` | `PDV_Deity_<God>.psc` | trivial |
+| 2 | `ScoreCuratedSignal` DELTA branch | `PDV_Deity_<God>.psc` (same file) | trivial |
+| 3 | `HumanizeCuratedSignalReason` phrase | `PDV__ManagerQuest.psc` | trivial |
+| 4 | **A real caller of `AwardCuratedSignal[Scaled]`** | a detector across `PDV_PlayerEvents` / `PDV_ActionRouter` / `PDV_EventBus` / manager | **design work** |
+
+Layers 1-3 are local edits. Layer 4 is a design. Ship 1-3 and the signal is inert: it
+scores, it has a voice, it shows up in every static audit — and it can never pay the
+player a single point of piety.
+
+The project's own name for this is a **phantom declaration** (`7368c87f`: *"Every
+counted type now fires in-game; no phantom declarations"*). It is not hypothetical: 32
+curated signals reached `main` this way, alongside `EVT_STEAL_ITEM`, the SM LockPick
+event, and 8 DEAD_PROMISE events. The class has now been caught **eight separate times**
+between 2026-06-10 and 2026-07-14 and re-created after every catch.
+
+It recurs for two structural reasons, and neither is carelessness:
+
+1. **Layers 1 and 2 are not merely cheap — they are the same file, and that file is the
+   deliverable.** A task of the form "design God X's signal set" *produces*
+   `PDV_Deity_X.psc`. Declaring and scoring is what finishing that task looks like.
+   Layer 4 lives in four other scripts and is a different discipline (event detection).
+   It is not the last 25% of the task; it is a second task that nobody opened.
+2. **Nothing charges you for skipping layer 4.** The one gate that sees this class
+   (`pdv_signal_e2e_gate --dispatch-coverage-only`) is silenced by adding a line to
+   `tools/pdv_reserved_signals.json` — see § 5.2. Zero marginal cost.
+
+The design/build split makes it worse. `PDV_SessionHandoff_DeitySignalRemap_2026-07-08.md`
+spends ~270 lines on § 2 "Per-race locked design" (the const + score + phrase spec) and
+16 lines on § 3 "Build backlog" (the detectors) — six bullets with no owner, no date and
+no status marker. Half of that backlog is still open. **The detector work was not
+deprioritized; it was demoted out of the deliverable.**
+
+And because the design pass never has to touch the detector layer, it cannot discover
+that a signal is *undeliverable*. `IsCombatSessionOrigin` (`PDV_PlayerEvents.psc`) covers
+origins 4,5,6,7,8 only — **Nord, Imperial, Breton, Altmer and Redguard get no combat
+session at all.** Every combat-flavoured signature signal designed for those five races
+(Shor, Tsun, Stuhn, Leki, Talos) was unbuildable the day it was specced, and the design
+doc had no way to notice.
+
+**The rule: a signal, event, or route is not authored until something can fire it.**
+No commit may add `Int Property SIGNAL_X` to a `PDV_Deity_*.psc` without adding an
+`AwardCuratedSignal[Scaled](PDV_<God>, PDV_<God>.SIGNAL_X, ...)` call site in the same
+commit. If you cannot name the detector, you do not have a signal — you have a design
+note, and it belongs in the design doc, not in the script. This is `grep`-checkable in a
+pre-commit hook, which is the point: the previous seven responses to this class were
+prose, and prose got waived.
+
+An unfireable declaration is worse than an absent one, because absence is visible and a
+phantom looks like coverage.
+
+**Corollary — an unfired signal has never been tested against the systems it feeds.**
+Not the daily cap: `PIETY_DAILY_MAX_DELTA = 4.3` is a *hard* clamp applied at dawn
+(`ClampValue(pietyToday * GAIN_RATE_SCALE, -dailyCap, dailyCap)`), so no signal can
+blow it and raw delta is not the thing to fear. The thing to fear is **what the signal
+feeds on its way there**:
+
+- **The broad-pantheon pool.** `AwardPietyInternal` *auto-opens* a broad-pantheon event
+  scope when none is open, and `AccumulateBroadPantheonDelta` takes the **strongest
+  applied positive delta per logical event** (ADR-0001). So any curated award on a
+  pool-eligible deity (Kyne, Shor, Tsun, Stuhn, Mara, Arkay, Dibella, Talos, and the
+  Imperial Eight) raises that event's contribution to the pool. A high-delta signal on a
+  *frequent* trigger does not break the per-deity cap — it quietly converts ordinary play
+  into broad devotional standing, which is exactly what ADR-0001 exists to prevent.
+- **Anti-farm.** `AwardCuratedSignal*` has no internal cap. The cap is always the
+  caller's: `ConsumeDailyRepeatMultiplier` (soft `0.7^n` decay) for repeatables, or a
+  StorageUtil latch for one-shot milestones (precedent: `97ac3065`, Blood-Kin).
+
+When you move a signal from reserved to wired, its authored delta is a *proposal*, not a
+setting. Before it fires, answer three questions: **what triggers it, how often can that
+trigger fire, and is its deity pool-eligible?** A +2.5 signal on a rare milestone is
+fine; the same +2.5 on "won a hard fight" is a pool leak.
+
+**Corollary — check the cheaper lane first.** Before authoring a curated signal, check
+whether the act is already paid by the likes/dislikes CSV or the quest-reaction matrix.
+`Nord.md` promises that fair kills please Shor, Tsun and Stuhn — and all three already
+take capped CSV piety per humanoid kill. A curated signal for the same act would not
+have kept a promise; it would have double-paid one that was already kept.
+
 ---
 
 ## 3. Player-Facing Description Discipline
@@ -397,6 +484,71 @@ flag what was never authored — only a contract-driven gate can. Per-component
 self-assessment shares the author's blind spot; a citation requirement makes
 the blind spot visible instead of fatal. (Ratified 2026-06-10; see
 `references/authoring/PDV_CompletenessAudit_Plan.md`.)
+
+**Amendment (2026-07-14) — a gate citation is void if the gate passes by waiver.**
+If the gate reports PASS *because* the thing being claimed is covered by a reservation,
+waiver, or known-gap ledger entry, the citation proves nothing. Cite the gate **and its
+waiver count**. `pdv_signal_e2e_gate` prints `PASS` and `reserved-known-gaps=37` on the
+same line; a claim can quote the first half honestly and still be false. Likewise, read
+past the summary line: `PDV_SignalE2EGateLedger.md` currently prints `Summary: GREEN=39`
+(that count is per-surface) directly above `completenessAudit: FAIL (exit 1)` — a helper
+that fails out-of-band without turning the summary red. A green headline over a red
+helper is not a passing gate.
+
+### 5.2 Reserved ledgers are debt, not documentation
+
+`tools/pdv_reserved_signals.json`, `pdv_reserved_events.json` and
+`pdv_reserved_routes.json` let a declared-but-undispatched item register as a
+documented known-gap, so the coverage gate reports PASS instead of FAIL. That is a
+legitimate mechanism and a dangerous one: **parking a line is always cheaper than
+wiring or cutting**, so the ledger drifts from a to-do list into a silencer.
+
+It already has. Between 2026-07-07 and 2026-07-14 the signal ledger went
+33 -> 28 -> 35 -> 38 -> 37: six entries burned by wiring a real trigger, ten added by
+parking a new gap. Net +4, gate green throughout. Over the same period the *events*
+ledger shrank 12 -> 8. The difference is the lesson: **a ledger silences exactly where
+the remaining work is expensive**, because the parked item is by construction the
+expensive kind (see § 2.7).
+
+Rules:
+
+1. **Non-increasing.** A commit that adds a reserved entry without removing one is a
+   FAIL. This forces a refactor that orphans a dispatch to cut-or-wire in the same
+   commit instead of parking the wreckage. Every one of the five curated-signal
+   regressions (four `SIGNAL_ANCESTOR_SPINE`, one `SIGNAL_LAWFUL_ORDER`) was a
+   *correct* design change that manufactured a new "known gap" on its way out.
+2. **Entries are decisions, not descriptions.** Each requires `decision`
+   (`wire` | `cut` | `retired`), an `owner`, and an `expires` date. "Wave 3" is not a
+   date. A `wire` entry past its expiry FAILs.
+3. **`retired` is terminal, not debt.** A signal deliberately superseded by an
+   architecture change (substrate conversion, the Breton two-axis split) is not an
+   unfinished gap and must not share a bucket with unfinished work. Retiring is a
+   decision; reserving is a deferral. Conflating them is how five deliberate,
+   defensible removals booked themselves as five outstanding defects.
+4. **Removing the last caller is a gate event.** A commit that deletes the final
+   `AwardCuratedSignal*` call site for a signal must also delete the constant, the
+   score branch and the phrase — or explicitly mark the signal `retired`.
+5. **At 1.0 the `wire` and `cut` buckets must be EMPTY**, with the gate defaulting to
+   FAIL on any entry. Per the default-fail ruling in `pdv_verify.mjs`: "an opt-in flag
+   nobody passes is how the dead-signal class hid."
+6. **A ledger reason is a snapshot, not an authority. Re-check it against the newest
+   design lock before acting on it.** The ledger deferred Stuhn's two signals as
+   low-priority "Wave 3" on 2026-07-06. On 2026-07-13 the pantheon-parity lock
+   (`PDV_TargetEndStates_1.0.md`) *promoted* Stuhn to a focusable Old Ways patron "with
+   its own offer, rewards, and neglect." Acting on the older note would have stripped a
+   Champion-eligible patron down to one lane. Ledger entries go stale in both directions:
+   a "cut" can become contracted content, and a "wire" can become dead.
+7. **Before cutting, grep the contract ledgers.** A signal that looks vestigial in code
+   may be the scaffolding for a written commitment. `PDV_BetaContract.csv` BC-0153
+   contracts Syrabane's entire ward/protection lane at `BETA` status — the exact five
+   signals a code-only reading marks as dead.
+
+Rationale: § 5.1 established that a completeness claim must cite a gate. The phantom
+class is the next failure over — the gate *was* cited, the gate *was* green, and the
+gate could be satisfied by the half of the artifact that costs nothing. A gate that
+counts declarations measures authoring effort, not player-reachable behavior. **Gates
+must count what the player can reach.** (Ratified 2026-07-14; see
+`references/authoring/PDV_CuratedSignalDispatch_Forensics_2026-07-14.md`.)
 
 ---
 
