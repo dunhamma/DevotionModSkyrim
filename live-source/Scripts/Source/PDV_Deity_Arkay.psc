@@ -19,7 +19,6 @@
 
 Scriptname PDV_Deity_Arkay extends PDV_DeityBase
 
-Int Property SIGNAL_CIVIC_SERVICE = 1200 AutoReadOnly
 Int Property SIGNAL_DEATH_DUTY = 1201 AutoReadOnly
 Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1202 AutoReadOnly
 
@@ -38,9 +37,7 @@ Float Function ScoreAction(Int eventType, Form actorRef, Form targetRef)
 EndFunction
 
 Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
-    if signalType == SIGNAL_CIVIC_SERVICE
-        return DELTA_CIVIC_SERVICE
-    elseIf signalType == SIGNAL_DEATH_DUTY
+    if signalType == SIGNAL_DEATH_DUTY
         return DELTA_DEATH_DUTY
     elseIf signalType == SIGNAL_PATRON_CIVIC_FAVOR
         return DELTA_PATRON_CIVIC_FAVOR

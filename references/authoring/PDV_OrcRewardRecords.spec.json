@@ -544,15 +544,16 @@
       "effects": [
         {
           "magicEffectEditorId": "PDV_MGEF_OrcHearthHeld_StaminaRate",
-          "actorValue": "StaminaRateMult",
-          "magnitude": 5,
+          "actorValue": "Stamina",
+          "magnitude": 15,
           "duration": 600,
           "spellType": "Spell",
           "castType": "FireAndForget",
-          "effectName": "Stamina Regeneration"
+          "effectName": "Fortify Stamina",
+          "designNote": "Converted 2026-07-15 from Requiem-inert StaminaRateMult +5 to felt flat Fortify Stamina +15 (Kyne-neglect conversion precedent; MGEF EditorID keeps the _StaminaRate suffix as a benign misnomer to preserve the SPEL->MGEF link)."
         }
       ],
-      "playerFacingText": "You return to a place made yours by work and oath. Stamina returns faster for a while."
+      "playerFacingText": "You return to a place made yours by work and oath. Stamina holds deeper for a while."
     }
   ],
   "messageRecords": [

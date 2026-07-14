@@ -217,6 +217,10 @@ Function HandleStoryCraftItem(ObjectReference akBench, Location akLocation, Form
         return
     endIf
 
+    if eventType == EVT_SMITH_ITEM && PDV_Manager
+        PDV_Manager.HandleOrcStoryCraftForge(akLocation)
+    endIf
+
     RouteActionWithAttribution(eventType, ATTR_DIRECT_PLAYER, GetPlayerActor() as Form, akCreatedItem)
 EndFunction
 

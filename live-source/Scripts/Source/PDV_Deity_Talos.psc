@@ -20,7 +20,6 @@ Scriptname PDV_Deity_Talos extends PDV_DeityBase
 Int Property SIGNAL_SHRINE_DEFIANCE = 101 AutoReadOnly
 Int Property SIGNAL_PROTECT_WORSHIPPER = 102 AutoReadOnly
 Int Property SIGNAL_DEFIANCE_MILESTONE = 103 AutoReadOnly
-Int Property SIGNAL_ANCESTOR_SPINE = 104 AutoReadOnly
 Int Property EVT_SHOUT_ATTACK = 40 AutoReadOnly
 
 Float Property DELTA_SHRINE_DEFIANCE = 3.0 Auto
@@ -61,8 +60,6 @@ Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
         return DELTA_PROTECT_WORSHIPPER
     elseIf signalType == SIGNAL_DEFIANCE_MILESTONE
         return DELTA_DEFIANCE_MILESTONE
-    elseIf signalType == SIGNAL_ANCESTOR_SPINE
-        return DELTA_ANCESTOR_SPINE
     endIf
 
     return 0.0

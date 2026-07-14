@@ -630,7 +630,7 @@ Function SampleCombatHealth(Actor playerRef, String reason)
     Float healthPct = playerRef.GetActorValuePercentage("Health")
     if originRace == 4
         TryRoutePlayerBelowHealthGate(playerRef, healthPct, reason)
-    elseIf originRace == 6
+    elseIf originRace == 0 || originRace == 6
         if healthPct <= 0.10
             PDV_CombatNearFatalFlag = true
             PDV_CombatLowHealthFlag = true
@@ -671,6 +671,21 @@ Function ResolveCombatSession(String reason)
     if originRace == 8 && PDV_CombatBelowHealthRouted && PDV_EventBusService
         PDV_EventBusService.RoutePlayerBelowHealthSurvived(playerRef)
         Trace(1, "Orc Code Holds survival routed (" + reason + ").")
+        return
+    endIf
+
+    ; Nord: Tsun's adversity beat rides the same rare near-fatal reversal shape as
+    ; the Khajiit beat below, weekly-capped at the detector per the 2026-07-15
+    ; pool-feeding ruling (rarity is the guard, pool feeding is intended).
+    if originRace == 0
+        if PDV_CombatNearFatalFlag && PDV_CombatSessionKills >= 1 && PDV_EventBusService
+            Int nordWeekStamp = ((Utility.GetCurrentGameTime() as Int) / 7) + 1
+            if StorageUtil.GetIntValue(None, "PDV.Nord.Tsun.AdversityWeek") != nordWeekStamp
+                StorageUtil.SetIntValue(None, "PDV.Nord.Tsun.AdversityWeek", nordWeekStamp)
+                PDV_EventBusService.RouteNordTsunAdversity("organic_near_fatal_reversal")
+                Trace(1, "Nord near-fatal adversity detected (" + reason + ")")
+            endIf
+        endIf
         return
     endIf
 
@@ -732,6 +747,14 @@ Event OnActorKilled(Actor akVictim, Actor akKiller)
 
     if originRace == 5 && PDV_EventBusService && PDV_CombatSessionActive && !PDV_CombatStartedSneaking && !PDV_CombatObservedSneaking && !playerRef.IsSneaking() && akVictim.IsHostileToActor(playerRef) && akVictim.GetLevel() >= playerRef.GetLevel()
         PDV_EventBusService.RouteDunmerHonorableVictory(akVictim as Form)
+    endIf
+
+    if originRace == 0 && PDV_CombatSessionActive
+        PDV_CombatSessionKills += 1
+    endIf
+
+    if originRace == 9 && PDV_EventBusService && PDV_CombatSessionActive && !PDV_CombatStartedSneaking && !PDV_CombatObservedSneaking && !playerRef.IsSneaking() && akVictim.IsHostileToActor(playerRef) && akVictim.GetLevel() >= playerRef.GetLevel()
+        PDV_EventBusService.RouteRedguardLekiDuel(akVictim as Form)
     endIf
 
     if originRace != 6
@@ -876,7 +899,7 @@ Bool Function ActorHasInheritedKeyword(Actor actorRef, Keyword keywordRef)
 EndFunction
 
 Bool Function IsCombatSessionOrigin(Int originRace)
-    return originRace == 4 || originRace == 5 || originRace == 6 || originRace == 7 || originRace == 8
+    return originRace == 0 || originRace == 4 || originRace == 5 || originRace == 6 || originRace == 7 || originRace == 8 || originRace == 9
 EndFunction
 
 Event OnItemAdded(Form akBaseItem, Int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
@@ -1214,6 +1237,7 @@ Function RegisterCuratedSignalQuestSources()
     RegisterQuestStageByFormId(0x0004A37B, "Skyrim.esm") ; DA08 (The Whispering Door)
     RegisterQuestStageByFormId(0x00035D5F, "Skyrim.esm") ; MQ201 (Diplomatic Immunity)
     RegisterQuestStageByFormId(0x00047AE6, "Skyrim.esm") ; DGIntimidateQuest (brawls)
+    RegisterQuestStageByFormId(0x0001CF26, "Skyrim.esm") ; MS09 (Missing in Action)
 EndFunction
 
 ; Mephala WEB_WOVEN: plots the player resolves by cunning, at beats the quest
@@ -1240,6 +1264,13 @@ Function RouteCuratedMilestoneQuestStage(Quest sourceQuest, Int newStage)
         endIf
     elseIf questFormId == 0x00047AE6 && newStage == 100
         PDV_EventBusService.RouteBoethiahHonorableDuel("brawl_won")
+    elseIf questFormId == 0x0001CF26 && newStage == 201
+        ; Talos PROTECT_WORSHIPPER (2026-07-15 owner ruling): MS09 s201 is the
+        ; CompleteQuest rescue outcome (Thorald alive and free). Rescue-with-
+        ; Thalmor-kills counts; plain Thalmor killing never does.
+        if MarkP2SourceRoute(sourceQuest as Form, "talos_ms09_worshipper_rescued", "po3_queststage")
+            PDV_EventBusService.RouteTalosWorshipperRescued("ms09_thorald_rescued")
+        endIf
     endIf
 EndFunction
 

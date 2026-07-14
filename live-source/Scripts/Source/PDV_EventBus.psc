@@ -1646,6 +1646,33 @@ Int Function GetDebugLevel()
     return 0
 EndFunction
 
+Function RouteNordTsunAdversity(String asSourceId = "")
+    if !PDV_Manager
+        Trace(1, "RouteNordTsunAdversity skipped: PDV_Manager not assigned.")
+        return
+    endIf
+    PDV_Manager.HandleNordTsunAdversitySurvived("eventbus_nord_tsun_adversity_" + asSourceId)
+    Trace(2, "RouteNordTsunAdversity complete: " + asSourceId)
+EndFunction
+
+Function RouteRedguardLekiDuel(Form victimForm)
+    if !PDV_Manager
+        Trace(1, "RouteRedguardLekiDuel skipped: PDV_Manager not assigned.")
+        return
+    endIf
+    PDV_Manager.HandleLekiHonorableDuel("eventbus_redguard_leki_duel")
+    Trace(2, "RouteRedguardLekiDuel complete.")
+EndFunction
+
+Function RouteTalosWorshipperRescued(String asSourceId = "")
+    if !PDV_Manager
+        Trace(1, "RouteTalosWorshipperRescued skipped: PDV_Manager not assigned.")
+        return
+    endIf
+    PDV_Manager.HandleTalosWorshipperRescued("eventbus_talos_worshipper_rescued_" + asSourceId)
+    Trace(2, "RouteTalosWorshipperRescued complete: " + asSourceId)
+EndFunction
+
 Function Trace(Int level, String traceText)
     if GetDebugLevel() >= level
         Debug.Trace("[PDV] EventBus: " + traceText)

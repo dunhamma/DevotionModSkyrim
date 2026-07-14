@@ -29,7 +29,6 @@ Scriptname PDV_Deity_Tsun extends PDV_DeityBase
 
 Int Property SIGNAL_TRIAL_ENDURED = 3000 AutoReadOnly
 Int Property SIGNAL_ADVERSITY_SURVIVED = 3001 AutoReadOnly
-Int Property SIGNAL_ENDURANCE_VIGIL = 3002 AutoReadOnly
 
 Float Property DELTA_TRIAL_ENDURED = 2.0 Auto
 Float Property DELTA_ADVERSITY_SURVIVED = 2.5 Auto
@@ -50,8 +49,6 @@ Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
         return DELTA_TRIAL_ENDURED
     elseIf signalType == SIGNAL_ADVERSITY_SURVIVED
         return DELTA_ADVERSITY_SURVIVED
-    elseIf signalType == SIGNAL_ENDURANCE_VIGIL
-        return DELTA_ENDURANCE_VIGIL
     endIf
 
     return 0.0

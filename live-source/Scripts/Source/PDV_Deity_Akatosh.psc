@@ -18,7 +18,6 @@ Scriptname PDV_Deity_Akatosh extends PDV_DeityBase
 
 Int Property SIGNAL_CIVIC_SERVICE = 1000 AutoReadOnly
 Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1001 AutoReadOnly
-Int Property SIGNAL_COVENANT_MILESTONE = 1002 AutoReadOnly
 
 Float Property DELTA_CIVIC_SERVICE = 2.0 Auto
 Float Property DELTA_PATRON_CIVIC_FAVOR = 3.0 Auto
@@ -39,8 +38,6 @@ Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
         return DELTA_CIVIC_SERVICE
     elseIf signalType == SIGNAL_PATRON_CIVIC_FAVOR
         return DELTA_PATRON_CIVIC_FAVOR
-    elseIf signalType == SIGNAL_COVENANT_MILESTONE
-        return DELTA_COVENANT_MILESTONE
     endIf
 
     return 0.0

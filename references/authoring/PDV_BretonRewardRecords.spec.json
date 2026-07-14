@@ -545,9 +545,9 @@
       "displayName": "Akatosh's Endurance - Champion",
       "effects": [
         {
-          "actorValue": "Magicka",
-          "magnitude": 40,
-          "effectName": "Fortify Magicka"
+          "actorValue": "Health",
+          "magnitude": 30,
+          "effectName": "Maximum Health"
         },
         {
           "actorValue": "ResistMagic",
@@ -555,7 +555,7 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "Akatosh's endurance steadies your magicka and turns hostile magic. Fortify Magicka +40, Magic Resistance +15%.",
+      "playerFacingText": "Akatosh's endurance carries you through what would fell others. Maximum Health +30, Magic Resistance +15%.",
       "signature": "Unified champion boon: Breton copy of the Imperial Akatosh T3, magnitudes verbatim. RateMult regen is Requiem-inert; global Requiem pass owns conversion."
     },
     {

@@ -52,6 +52,7 @@ Your ways to earn:
 [*][b]Clear a draugr tomb[/b] - finishing a notable barrow, boss included. Counts once per tomb, not per visit. It feeds both your death duty and your ancestral regard.
 [*][b]Make a way[/b] (HoonDing) - bring down a dragon, or one of a short list of great adversaries, while HoonDing is your chosen patron. This is rare on purpose, and it is capped to one such moment per week. HoonDing does not notice ordinary victories, and he will not notice these ones either unless he is the god you have committed to.
 [*][b]Keep the sword-song[/b] (Leki) - forge a true blade, sharpen your martial skill, study a book of arms, learn a word of power, or bring down a dragon. Leki cares about the discipline behind the blade. Simply winning fights does not feed her.
+[*][b]Win honorable single combat[/b] (Leki) - meet a worthy foe in the open, no sneak opener, and fight it through to the end. Leki honors the duel itself, not the corpse count; repeated duels in one day mean less and less to her.
 [*][b]Honor the ancestors[/b] - read the approved book of your people's arms, the [i]Manual of Mixed Unit Tactics[/i], or take your rest where the dead are properly honored. This lane needs no patron and no sect; it is always open to you.
 [/list]
 

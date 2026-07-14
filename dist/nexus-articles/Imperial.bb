@@ -47,7 +47,7 @@ Piety is tracked separately for each god, and your daily gain with any single go
 [*][b]Study and master your craft (Julianos, Dibella, Akatosh).[/b] Read skill books, spell tomes, and lore. Learn a Word of Power. Improve your skills through patient practice.
 [*][b]Serve the Empire at the decisive moments (Akatosh, Stendarr, Zenithar, Mara).[/b] Civic favor is not earned by wearing a uniform, walking a patrol, or belonging to a faction. It is earned at the landmark deeds where the civic order actually holds or fails - the errand that saves a town, the crown recovered for the Legion, the burial duty done properly. The quests that carry these beats are listed below.
 [*][b]Walk the open land and learn a Shout (Kynareth, Talos, Akatosh).[/b] Rest under the open sky, discover new places, learn a Word of Power. The Thu'um is sacred to several of your gods. Kynareth also notices herbs gathered and potions brewed.
-[*][b]Keep the old faith under the ban (Talos).[/b] Talos favor comes only from genuine, costly acts against the ban. Reading the Thalmor's own tract on the subject, "The Talos Mistake", is enough to make you take a public position on it once. Walking into the Thalmor Embassy and walking out again is the private version of the same defiance. Generic rebellion, plain anti-Thalmor violence, and simply complying with the ban never earn Talos any favor. Note that Talos answers an Imperial far more faintly than he answers a Nord - the Empire's own treaty stands between you.
+[*][b]Keep the old faith under the ban (Talos).[/b] Talos favor comes only from genuine, costly acts against the ban. Reading the Thalmor's own tract on the subject, "The Talos Mistake", is enough to make you take a public position on it once. Walking into the Thalmor Embassy and walking out again is the private version of the same defiance. Carrying one of the Talos faithful out of Thalmor hands is the same defiance made flesh - Talos marks that rescue once, and the killing it takes earns nothing on its own. Generic rebellion, plain anti-Thalmor violence, and simply complying with the ban never earn Talos any favor. Note that Talos answers an Imperial far more faintly than he answers a Nord - the Empire's own treaty stands between you.
 [/list]
 
 [size=5][b]How You Lose Piety[/b][/size]
@@ -195,11 +195,11 @@ A patron only offers to claim you at 50 piety, so a patron's blessing begins at 
 
 Accepting a patron suppresses the broad boon and replaces it with that god's own. Champion belongs to commitment; broad worship cannot reach it.
 
-[b]Akatosh.[/b] The steady discipline of time, given back as depth of mind.
+[b]Akatosh.[/b] The steady discipline of time, given back as endurance.
 
 [list]
 [*][b]Devoted (50)[/b] [i]Akatosh's Covenant[/i] - Fortify Magicka +25, Magic Resistance +5%
-[*][b]Champion (85)[/b] [i]Akatosh's Endurance[/i] - Fortify Magicka +40, Magic Resistance +15%
+[*][b]Champion (85)[/b] [i]Akatosh's Endurance[/i] - Maximum Health +30, Magic Resistance +15%
 [/list]
 
 [b]Mara.[/b] Mercy shown becomes mercy you can give.

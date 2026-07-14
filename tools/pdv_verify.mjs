@@ -3001,6 +3001,24 @@ class Verifier {
 
   checkPhase18DialogueContracts(manifest) {
     const status = manifest?.dialogue?.implementationStatus || "missing";
+    if (status === "v1-removed-voiced-v2") {
+      // Owner-approved descope (2026-07-15): the Nord recognition quartet was
+      // deliberately REMOVED from the V1 ESP per PDV_V2_Backlog.md ("First V2
+      // step is actually a V1 removal"). The strict gate now guards that
+      // decision: any of these chains PRESENT in V1 is an unvoiced
+      // re-introduction and fails. Contract data stays in the manifest as the
+      // V2 re-authoring spec.
+      for (const contract of PHASE18_NORD_DIALOGUE_CONTRACTS) {
+        const branchRecord = this.recordsByEdid.get(contract.branch);
+        const topic = this.recordsByEdid.get(contract.topic);
+        if (branchRecord || topic) {
+          this.phase18Gap("Phase 18 Nord dialogue V1 removal", `${contract.id}: ${contract.branch}/${contract.topic} present in the ESP, but the quartet is V1-removed (PDV_V2_Backlog.md); unvoiced re-introduction is a regression.`, PDV_ESP);
+        } else {
+          this.pass("Phase 18 Nord dialogue V1 removal", `${contract.id}: chains absent from the V1 ESP as planned (voiced re-authoring is V2; contract retained in the manifest).`, PHASE18_STATUS_NORD_MANIFEST);
+        }
+      }
+      return;
+    }
     if (status !== "live-dialogue-authored") {
       this.info("Phase 18 Nord dialogue records", `Live dialogue readback is skipped because dialogue implementationStatus is ${status}.`, PHASE18_STATUS_NORD_MANIFEST);
       return;

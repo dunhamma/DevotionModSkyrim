@@ -17,7 +17,6 @@
 
 Scriptname PDV_Deity_Kynareth extends PDV_DeityBase
 
-Int Property SIGNAL_CIVIC_SERVICE = 1700 AutoReadOnly
 Int Property SIGNAL_OPEN_SKY = 1701 AutoReadOnly
 Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1702 AutoReadOnly
 
@@ -36,9 +35,7 @@ Float Function ScoreAction(Int eventType, Form actorRef, Form targetRef)
 EndFunction
 
 Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
-    if signalType == SIGNAL_CIVIC_SERVICE
-        return DELTA_CIVIC_SERVICE
-    elseIf signalType == SIGNAL_OPEN_SKY
+    if signalType == SIGNAL_OPEN_SKY
         return DELTA_OPEN_SKY
     elseIf signalType == SIGNAL_PATRON_CIVIC_FAVOR
         return DELTA_PATRON_CIVIC_FAVOR

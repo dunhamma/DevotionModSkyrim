@@ -584,3 +584,12 @@ Label: `needs-triage`. Repo: `dunhamma/DevotionModSkyrim`. Each issue body shoul
 **Owner ruling 2026-07-15: filing is HELD until after the fix pass lands.** This D3 list
 is the internal tracker of record meanwhile; re-present for filing at fix-pass closeout
 (likely reduced to whatever survives the pass unfixed).
+
+**FIX-PASS CLOSEOUT (2026-07-15, later same day): issues 1-4 are FIXED at source/record
+level** (Altmer crisis exit wired; Orc forge routed + HearthHeld granted/converted;
+alignment rite mover landed; boons differentiated at both layers) — each still owes its
+RC runtime card before the issue would close as verified. Issue 5 (Khajiit signatures)
+remains the only open design item. NEW candidates surfaced by the pass, pre-existing and
+stash-proven not-this-pass: (a) 14 stale spine-source verify contracts, (b) the remap
+adversary breton-hidden-art-champion assert. Recommended issue list if filing now:
+Khajiit signatures + the two stale-gate-contract items.

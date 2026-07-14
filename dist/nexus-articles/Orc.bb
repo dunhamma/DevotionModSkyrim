@@ -171,7 +171,9 @@ Note that all three Champion blessings carry the same +50 armor, so whichever li
 
 [b]The Code Holds.[/b] Survive a fight after dropping to near death without fleeing the area and health floods back into you, a hard reminder that you held. At Devoted and above, the surge is stronger and brings your stamina back with it.
 
-[b]A hearth held by choice.[/b] Rest somewhere and you can hold that place as yours: a home, a forge, a room, the roof the code stands under. Come back and rest there again and Malacath marks the return, and that return counts as living your mode - it keeps the code from going unkept the same way a stronghold or a completed service would. Just passing through does not count; the hearth is held by returning to it. For a City Orc this reads as belonging you built; for an Exile, as a burden you carried home.
+[b]A hearth held by choice.[/b] Rest somewhere and you can hold that place as yours: a home, a forge, a room, the roof the code stands under. Come back and rest there again and Malacath marks the return, and that return counts as living your mode - it keeps the code from going unkept the same way a stronghold or a completed service would. Just passing through does not count; the hearth is held by returning to it. For a City Orc this reads as belonging you built; for an Exile, as a burden you carried home. The first time an Exile walks back through a stronghold's gate, Malacath marks that homecoming once, and it counts for more than any day's labor. Holding a stronghold hearth also leaves a little more strength in you for a while after you return to it.
+
+[b]Work the stronghold forge.[/b] Quality work at a forge inside a stronghold is the Stronghold Orc's daily devotion - the smithing itself earns Malacath's regard and counts as living the code, the same as service or the hearth.
 
 [b]The Four Holds.[/b] Stand at each of the four Orc strongholds and each is counted once. Reach all four and a milestone marks it. For a City or Exile Orc, far from any stronghold, this is belonging that reaches across distance.
 

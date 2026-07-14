@@ -1009,6 +1009,27 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   so no future session "finishes" the parity by converting them. Rationale: the parity
   ruling was about passive daily credit inventing deity piety; these three fire on
   deliberate acts through their gods' own lanes.
+- **[2026-07-15] — True-bug fix pass EXECUTED (scoped ManagerQuest pass + records + gate descope):**
+  All phases of `PDV_HO_ScopedManagerPass_2026-07-15.md` landed in one session. Records:
+  Akatosh's Endurance re-authored (Maximum Health +30 + Magic Resist +15) at Imperial AND
+  Breton layers (was a Julianos duplicate at both); HearthHeld converted to flat Fortify
+  Stamina +15. Papyrus (compile 0/0, MCM refreshed): 21 signal cuts (phrase->branch->const,
+  DELTA floats retained for save safety), 8 wires (Tu'whacca re-entry on first mortal sect
+  act; Magnus/Xarxes active-patron heritage-memory dawn pulse; Trinimac orthodox pressure;
+  Leki duel + Tsun near-fatal adversity via combat sessions widened to Nord(0)/Redguard(9);
+  Talos protect-worshipper via MS09 s201 rescue; Malacath exile-return latch), Altmer
+  crisis exit (3 rite-evidence-days -> REASSERTING -> 2-day lockout -> SCARRED_RESOLVED at
+  dawn; 7-day heterodox acceptance below alignment 0), Orc stronghold forge routed from
+  Story Manager craft, +2 once/day orthodox-rite alignment mover (dead +15/+20 keys
+  deleted), medallion tier labels to canon (Seeker/Distant). Gates: dispatch coverage
+  102/94/8/8 PASS (ledger holds only the 8 wire-later entries); naming audit PASS; strict
+  Phase 18 34->14 via the approved dialogue descope (assert-ABSENT posture in pdv_verify +
+  manifest status v1-removed-voiced-v2). KNOWN PRE-EXISTING (stash-proven on pristine
+  main, NOT this pass): 14 stale spine-source verify contracts + the remap adversary
+  breton-hidden-art-champion assert — both need their own contract-refresh ruling. Guides:
+  Leki/Malacath/Talos beats restored, boon tables respliced, BBCode gate clean; the
+  tables tool's Observant/Faithful "retired-word" lint retired (inverted by the band
+  ratification). Runtime proof owed: RC1 + RC7-RC15 (co-test runbook).
 - **[2026-07-15] — Nord Phase 18 dialogue quartet reclassified: V1 removal, not debt:**
   The four absent Froki/Heimskr/Andurs/Aela chains (20 strict Phase 18/Nord failures)
   are the PLANNED V1 build action from `PDV_V2_Backlog.md` ("First V2 step is actually a

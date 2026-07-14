@@ -16,7 +16,6 @@
 
 Scriptname PDV_Deity_Mara extends PDV_DeityBase
 
-Int Property SIGNAL_CIVIC_SERVICE = 1100 AutoReadOnly
 Int Property SIGNAL_MERCY = 1101 AutoReadOnly
 Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1102 AutoReadOnly
 
@@ -35,9 +34,7 @@ Float Function ScoreAction(Int eventType, Form actorRef, Form targetRef)
 EndFunction
 
 Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
-    if signalType == SIGNAL_CIVIC_SERVICE
-        return DELTA_CIVIC_SERVICE
-    elseIf signalType == SIGNAL_MERCY
+    if signalType == SIGNAL_MERCY
         return DELTA_MERCY
     elseIf signalType == SIGNAL_PATRON_CIVIC_FAVOR
         return DELTA_PATRON_CIVIC_FAVOR

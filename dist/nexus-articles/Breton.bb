@@ -212,7 +212,7 @@ Champion (85) belongs to your patron. Whichever god of your tradition you carry 
 [*][b]A Daedric Prince (Hidden Art)[/b] [i]Hidden Art[/i] - Conjuration +27, Illusion +21, Fortify Magicka +25
 [*][b]Mara[/b] [i]Mara's Compassion[/i] - Restoration +23, Magic Resistance +15%
 [*][b]Arkay[/b] [i]Arkay's Ward[/i] - Disease Resistance +27%, Maximum Health +30
-[*][b]Akatosh[/b] [i]Akatosh's Endurance[/i] - Fortify Magicka +40, Magic Resistance +15%
+[*][b]Akatosh[/b] [i]Akatosh's Endurance[/i] - Maximum Health +30, Magic Resistance +15%
 [*][b]Julianos[/b] [i]Julianos's Insight[/i] - Fortify Magicka +40, Magic Resistance +15%
 [*][b]Kynareth[/b] [i]Kynareth's Sky[/i] - Fortify Stamina +40, Magic Resistance +13%
 [*][b]Dibella[/b] [i]Dibella's Inspiration[/i] - Speech +25, Fortify Magicka +40

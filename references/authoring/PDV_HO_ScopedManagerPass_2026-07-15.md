@@ -1,5 +1,17 @@
 # True-Bug Fix Plan + Scoped ManagerQuest Pass (owner-ruled 2026-07-15, v2)
 
+> **EXECUTED 2026-07-15 (same session, all phases).** Proof: every touched script
+> compiles 0 err / 0 warn (incl. PDV_MCM freshness recompile); dispatch gate
+> 102 declared / 94 dispatched / 8 undispatched / 8 reserved PASS; naming audit
+> 241/392/0 PASS; strict Phase 18 34 -> 14 failures (all 14 remainders are
+> PRE-EXISTING stale spine-source contracts from the pantheon session,
+> stash-tested against pristine main -- tracked follow-up, NOT this pass);
+> remap adversary check's single failure (breton hidden-art champion sourcing)
+> also pre-exists on pristine main. Papyrus-optimization review: no red flags;
+> one accepted yellow (router->manager hop per smith event, menu-paced).
+> Runtime proof = RC1 + RC7-RC15 cards in the co-test runbook (PS-A sitting).
+> Remaining in the ledger: the 8 wire-later entries only.
+
 **v2 (2026-07-15 late):** upgraded from a signal-work handoff into the full TRUE-BUG fix
 plan after the owner ruled on the remaining design branches: Altmer alignment gets a
 small rite mover; Khajiit signature moments defer to a design session; the Nord dialogue

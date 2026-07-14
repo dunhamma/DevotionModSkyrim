@@ -36,8 +36,13 @@ const TIER_LABEL = {
 };
 const TIER_ORDER = { T1: 1, T2: 2, T3: 3, Champion: 3, signature: 4 };
 
-// Retired design-sheet vocabulary that must never reach a player.
-const RETIRED_TIER_WORDS = /\b(Observant|Faithful)\b/i;
+// 2026-07-15: the old "Observant/Faithful are retired design-sheet words" lint is
+// itself retired -- BroadPantheonContracts playerFacingBands ratified
+// Distant/Observant/Faithful as the PLAYER-FACING broad-lane vocabulary (Seeker/
+// Devoted/Champion stay patron-ladder). A per-family vocabulary gate (broad names
+// must use bands, patron names must not) is the tracked follow-up; a bare word
+// blocklist can no longer express the rule.
+const RETIRED_TIER_WORDS = /$^/;
 
 // Reward records that EXIST in the specs and the ESP but which the manager
 // deliberately never grants -- it hard-codes their sync to False, labelled

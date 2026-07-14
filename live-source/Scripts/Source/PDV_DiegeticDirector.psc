@@ -494,9 +494,9 @@ String Function GetGenericTierLabel(Int tierValue)
         return "Devoted"
     endIf
     if tierValue == 1
-        return "Faithful"
+        return "Seeker"
     endIf
-    return "Observant"
+    return "Distant"
 EndFunction
 
 String Function GetKhajiitTierLabel(Int tierValue)
@@ -507,9 +507,9 @@ String Function GetKhajiitTierLabel(Int tierValue)
         return "Devoted"
     endIf
     if tierValue == 1
-        return "Faithful"
+        return "Seeker"
     endIf
-    return "Observant"
+    return "Distant"
 EndFunction
 
 String Function GetDunmerTierLabel(Int tierValue)

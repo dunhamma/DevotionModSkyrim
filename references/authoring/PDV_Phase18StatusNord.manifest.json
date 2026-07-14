@@ -10,37 +10,61 @@
     "description": "Ask PlayerDevotion for a thematic readout of your current standing."
   },
   "managerProperties": [
-    { "name": "PDV_SPEL_SurveyDevotion", "record": "PDV_SPEL_SurveyDevotion" },
-    { "name": "PDV_Msg_Nord_CurseState_WerewolfOnset", "record": "PDV_Msg_Nord_CurseState_WerewolfOnset" },
-    { "name": "PDV_Msg_Nord_CurseState_VampireOnset", "record": "PDV_Msg_Nord_CurseState_VampireOnset" },
-    { "name": "PDV_Msg_Nord_CurseState_VampireCured", "record": "PDV_Msg_Nord_CurseState_VampireCured" }
+    {
+      "name": "PDV_SPEL_SurveyDevotion",
+      "record": "PDV_SPEL_SurveyDevotion"
+    },
+    {
+      "name": "PDV_Msg_Nord_CurseState_WerewolfOnset",
+      "record": "PDV_Msg_Nord_CurseState_WerewolfOnset"
+    },
+    {
+      "name": "PDV_Msg_Nord_CurseState_VampireOnset",
+      "record": "PDV_Msg_Nord_CurseState_VampireOnset"
+    },
+    {
+      "name": "PDV_Msg_Nord_CurseState_VampireCured",
+      "record": "PDV_Msg_Nord_CurseState_VampireCured"
+    }
   ],
   "effectProperties": [
-    { "name": "PDV_Manager", "record": "PDV__ManagerQuest" },
-    { "name": "PDV_GLO_DebugLevel", "record": "PDV_GLO_DebugLevel" }
+    {
+      "name": "PDV_Manager",
+      "record": "PDV__ManagerQuest"
+    },
+    {
+      "name": "PDV_GLO_DebugLevel",
+      "record": "PDV_GLO_DebugLevel"
+    }
   ],
   "messages": [
     {
       "editorId": "PDV_Msg_Nord_CurseState_WerewolfOnset",
       "title": "Hircine's Pull",
       "body": "The beast is in the Companions' gift, but it stands against Shor's hall. Your seat on the bridge weakens while the hunt holds.",
-      "buttons": [ "OK" ]
+      "buttons": [
+        "OK"
+      ]
     },
     {
       "editorId": "PDV_Msg_Nord_CurseState_VampireOnset",
       "title": "Sovngarde Closes",
       "body": "Molag Bal's shadow has fallen across you. Sovngarde will not name you while you carry his thirst. Cure the curse, and even then the scar remains.",
-      "buttons": [ "OK" ]
+      "buttons": [
+        "OK"
+      ]
     },
     {
       "editorId": "PDV_Msg_Nord_CurseState_VampireCured",
       "title": "The Door Stands Ajar",
       "body": "The thirst is gone. The bridge is open again. But Tsun has seen what walked into the dark, and that is not forgotten.",
-      "buttons": [ "OK" ]
+      "buttons": [
+        "OK"
+      ]
     }
   ],
   "dialogue": {
-    "implementationStatus": "live-dialogue-authored",
+    "implementationStatus": "v1-removed-voiced-v2",
     "contracts": [
       {
         "id": "froki-kyne-champion",
@@ -50,7 +74,12 @@
         "infoHint": "PDV_INFO_Nord_Froki_KyneChampion",
         "prompt": "I sleep where Kyne sleeps. I hunt where she hunts.",
         "response": "Then you know the old wind. Do not let temple smoke blind you.",
-        "conditions": [ "speaker Froki", "origin Nord", "active Kyne", "tier >= Champion" ]
+        "conditions": [
+          "speaker Froki",
+          "origin Nord",
+          "active Kyne",
+          "tier >= Champion"
+        ]
       },
       {
         "id": "heimskr-talos-champion",
@@ -60,7 +89,12 @@
         "infoHint": "PDV_INFO_Nord_Heimskr_TalosChampion",
         "prompt": "The old breath is mine to carry. Tell me what is needed.",
         "response": "Then let the cowards hear it. Talos needs no quiet servants.",
-        "conditions": [ "speaker Heimskr", "origin Nord", "active Talos", "tier >= Champion" ]
+        "conditions": [
+          "speaker Heimskr",
+          "origin Nord",
+          "active Talos",
+          "tier >= Champion"
+        ]
       },
       {
         "id": "andurs-broad-death-rite",
@@ -70,7 +104,12 @@
         "infoHint": "PDV_INFO_Nord_Andurs_DeathRite",
         "prompt": "I keep the rites. What is owed the dead here?",
         "response": "A name, a prayer, and clean hands. That is more than many give.",
-        "conditions": [ "speaker Andurs", "origin Nord", "broad patron state", "curse state not Vampire" ]
+        "conditions": [
+          "speaker Andurs",
+          "origin Nord",
+          "broad patron state",
+          "curse state not Vampire"
+        ]
       },
       {
         "id": "aela-hircine-tension",
@@ -80,9 +119,14 @@
         "infoHint": "PDV_INFO_Nord_Aela_HircineTension",
         "prompt": "The hunt pulls at Sovngarde. What do you see in me?",
         "response": "I see someone standing between the hall and the hunt. Choose well.",
-        "conditions": [ "speaker Aela", "origin Nord", "curse state Werewolf or active Hircine path" ]
+        "conditions": [
+          "speaker Aela",
+          "origin Nord",
+          "curse state Werewolf or active Hircine path"
+        ]
       }
-    ]
+    ],
+    "v1RemovalNote": "Quartet removed from the V1 ESP per PDV_V2_Backlog.md (voiced-content non-goal, Section 21.3). Contracts retained below as the V2 re-authoring spec. Verify asserts ABSENCE in V1 (owner-approved descope 2026-07-15)."
   },
   "runtimeMatrix": {
     "status": "runtime-proven",
@@ -159,22 +203,38 @@
       {
         "id": "froki-kyne-champion",
         "positive": "Froki offers the Kyne Champion recognition only for Nord origin, active Kyne, tier >= Champion.",
-        "negatives": [ "non-Nord origin", "active deity not Kyne", "tier below Champion" ]
+        "negatives": [
+          "non-Nord origin",
+          "active deity not Kyne",
+          "tier below Champion"
+        ]
       },
       {
         "id": "heimskr-talos-champion",
         "positive": "Heimskr offers the Talos Champion recognition only for Nord origin, active Talos, tier >= Champion.",
-        "negatives": [ "non-Nord origin", "active deity not Talos", "tier below Champion" ]
+        "negatives": [
+          "non-Nord origin",
+          "active deity not Talos",
+          "tier below Champion"
+        ]
       },
       {
         "id": "andurs-broad-death-rite",
         "positive": "Andurs offers the broad death-rite recognition only for Nord origin, broad patron state, and non-vampire curse state.",
-        "negatives": [ "non-Nord origin", "active focused patron state", "curse state Vampire" ]
+        "negatives": [
+          "non-Nord origin",
+          "active focused patron state",
+          "curse state Vampire"
+        ]
       },
       {
         "id": "aela-hircine-tension",
         "positive": "Aela offers the hunt/Sovngarde tension recognition only for Nord origin with Werewolf curse state or active Hircine path.",
-        "negatives": [ "non-Nord origin", "curse state None with no active Hircine path", "curse state Vampire with no active Hircine path" ]
+        "negatives": [
+          "non-Nord origin",
+          "curse state None with no active Hircine path",
+          "curse state Vampire with no active Hircine path"
+        ]
       }
     ]
   }

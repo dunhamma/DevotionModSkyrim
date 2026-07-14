@@ -7410,6 +7410,48 @@ Function HandleBoethiahHonorableDuel(String reason)
     Trace(2, "Boethiah honorable-duel routed (" + reason + ")")
 EndFunction
 
+Function HandleNordTsunAdversitySurvived(String reason)
+    if !PDV_Tsun || !IsQuestReactionDeityReachable(PDV_Tsun)
+        return
+    endIf
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.NordTsunAdversity")
+    if multiplier <= 0.0
+        Trace(2, "Tsun adversity blocked by daily cap (" + reason + ")")
+        return
+    endIf
+    AwardCuratedSignalScaled(PDV_Tsun, PDV_Tsun.SIGNAL_ADVERSITY_SURVIVED, None, multiplier)
+    SurfaceReservedSignal(PDV_Tsun, "Adversity survived", "marks a hard fight endured to its end.")
+    Trace(2, "Tsun adversity-survived routed (" + reason + ")")
+EndFunction
+
+Function HandleLekiHonorableDuel(String reason)
+    if !PDV_Leki || !IsQuestReactionDeityReachable(PDV_Leki)
+        return
+    endIf
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.LekiHonorableDuel")
+    if multiplier <= 0.0
+        Trace(2, "Leki honorable-duel blocked by daily cap (" + reason + ")")
+        return
+    endIf
+    AwardCuratedSignalScaled(PDV_Leki, PDV_Leki.SIGNAL_HONORABLE_DUEL, None, multiplier)
+    SurfaceReservedSignal(PDV_Leki, "Duel honored", "marks single combat honorably won.")
+    Trace(2, "Leki honorable-duel routed (" + reason + ")")
+EndFunction
+
+Function HandleTalosWorshipperRescued(String reason)
+    if !PDV_Talos || !IsQuestReactionDeityReachable(PDV_Talos)
+        return
+    endIf
+    if StorageUtil.GetIntValue(None, "PDV.Signal.TalosWorshipperRescue.Done") == 1
+        Trace(2, "Talos worshipper-rescue already banked (" + reason + ")")
+        return
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Signal.TalosWorshipperRescue.Done", 1)
+    AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_PROTECT_WORSHIPPER, None, 1.0)
+    SurfaceReservedSignal(PDV_Talos, "A worshipper protected", "marks one of the faithful carried out of Thalmor hands.")
+    Trace(1, "Talos protect-worshipper routed (" + reason + ")")
+EndFunction
+
 Function HandleKhajiitRajhinBotchedTheft(String reason)
     if !IsKhajiitOrigin() || !PDV_Rajhin
         return
@@ -7878,6 +7920,18 @@ Bool Function IsArgonianMolagBalDominationPressureActive()
     return molagPath.GetStoredTier() >= TIER_SEEKER
 EndFunction
 
+; Organic stronghold forge (2026-07-15, D1#11 fix): Story Manager craft events at
+; a stronghold now reach the forge lane; the dev signal objects stay as debug.
+Function HandleOrcStoryCraftForge(Location craftLocation)
+    if !IsOrcOrigin()
+        return
+    endIf
+    if GetOrcStrongholdHoldId(craftLocation) <= 0
+        return
+    endIf
+    HandleOrcStrongholdForge("story_craft_stronghold")
+EndFunction
+
 Function HandleOrcStrongholdForge(String reason)
     if !IsOrcOrigin() || !PDV_OrcLifeModeTrack
         return
@@ -7897,6 +7951,13 @@ Function HandleOrcLocationChange(Location newLocation)
     Int holdId = GetOrcStrongholdHoldId(newLocation)
     if holdId <= 0
         return
+    endIf
+
+    if PDV_Malacath && PDV_OrcLifeModeTrack && PDV_OrcLifeModeTrack.GetCurrentState() == ORC_LIFE_MODE_LEGION_EXILE && StorageUtil.GetIntValue(None, "PDV.Signal.MalacathExileReturn.Done") != 1
+        StorageUtil.SetIntValue(None, "PDV.Signal.MalacathExileReturn.Done", 1)
+        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_EXILE_RETURN, None, 1.0)
+        SurfaceReservedSignal(PDV_Malacath, "Burden carried home", "marks the Exile's return to a stronghold hearth.")
+        Trace(1, "Malacath exile-return banked (location_stronghold)")
     endIf
 
     HandleOrcStrongholdPresence(holdId, "location_stronghold")
@@ -7925,6 +7986,13 @@ Function HandleOrcStrongholdPresence(Int holdId, String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcStrongholdPresence")
     RecordOrcLifeModeSignal(ORC_LIFE_MODE_STRONGHOLD, multiplier, reason)
+    if PDV_SPEL_OrcHearthHeld && PDV_OrcLifeModeTrack.GetCurrentState() == ORC_LIFE_MODE_STRONGHOLD && ConsumeOncePerDaySignal("PDV.Signal.OrcHearthHeld")
+        Actor hearthPlayer = Game.GetPlayer()
+        if hearthPlayer
+            PDV_SPEL_OrcHearthHeld.Cast(hearthPlayer, hearthPlayer)
+            Trace(2, "Orc hearth-held comfort cast (" + reason + ")")
+        endIf
+    endIf
     if holdId > 0
         HandleOrcFourHoldsVisit(holdId, reason)
     endIf
@@ -8778,6 +8846,11 @@ Function HandleRedguardFarShoresToken(String reason)
     StorageUtil.AdjustFloatValue(None, "PDV.Redguard.FarShoresToken", multiplier)
     StorageUtil.SetStringValue(None, "PDV.Redguard.LastSectReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Redguard.LastSectSignalTime", Utility.GetCurrentGameTime())
+
+    if StorageUtil.GetIntValue(None, "PDV.Redguard.VampireReentryNeeded") == 1 && StorageUtil.GetIntValue(None, "PDV.Curse.State") != 2
+        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireReentryNeeded", 0)
+        HandleRedguardVampireReentryComplete(reason)
+    endIf
     AwardRedguardFarShoresSignal(multiplier, reason)
     TryRedguardTuwhaccaDeathRiteHeal(reason)
     ShowRedguardNotification(PDV_Notif_Redguard_FarShoresToken_Activate, "You tend the Far Shores token and speak to Tu'whacca.")
@@ -8813,6 +8886,18 @@ Function RecordRedguardAncestorSpinePulse(Float multiplier, String reason)
     RequestPanelRefresh()
 EndFunction
 
+; Tu'whacca vampire re-entry (2026-07-15, wire): the cure sets
+; PDV.Redguard.VampireReentryNeeded; the next authentic sect act while mortal
+; completes the return through Tu'whacca. The flag itself is the one-shot latch.
+Function HandleRedguardVampireReentryComplete(String reason)
+    if !PDV_Tuwhacca || !IsQuestReactionDeityReachable(PDV_Tuwhacca)
+        return
+    endIf
+    AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_VAMPIRE_REENTRY, None, 1.0)
+    SurfaceReservedSignal(PDV_Tuwhacca, "The cycle restored", "marks the return through Tu'whacca after the curse.")
+    Trace(1, "Tu'whacca vampire re-entry completed (" + reason + ")")
+EndFunction
+
 Function RecordRedguardSectSignal(Int sectValue, Float multiplier, String reason)
     if !PDV_RedguardSectTrack
         return
@@ -8828,6 +8913,11 @@ Function RecordRedguardSectSignal(Int sectValue, Float multiplier, String reason
     StorageUtil.SetIntValue(None, "PDV.Redguard.LastSectSignal", sectValue)
     StorageUtil.SetStringValue(None, "PDV.Redguard.LastSectReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Redguard.LastSectSignalTime", Utility.GetCurrentGameTime())
+
+    if StorageUtil.GetIntValue(None, "PDV.Redguard.VampireReentryNeeded") == 1 && StorageUtil.GetIntValue(None, "PDV.Curse.State") != 2
+        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireReentryNeeded", 0)
+        HandleRedguardVampireReentryComplete(reason)
+    endIf
 
     if multiplier <= 0.0
         return
@@ -9532,10 +9622,8 @@ String Function GetAltmerCommittedAlignmentJournalBand()
 EndFunction
 
 Int Function GetAltmerThalmorPointsForAction(String actionKey)
-    if actionKey == "arrest_talos_worshipper"
-        return 15
-    elseIf actionKey == "complete_thalmor_mission"
-        return 20
+    if actionKey == "orthodox_rite"
+        return 2
     elseIf actionKey == "help_thalmor_prisoner_escape"
         return -15
     elseIf actionKey == "kill_thalmor_agent"
@@ -9626,6 +9714,91 @@ Function ResolveAltmerCrisis(Bool reassertOrthodoxy, String reason)
     StorageUtil.SetFloatValue(None, "PDV.Altmer.CrisisResolvedAt", Utility.GetCurrentGameTime())
 EndFunction
 
+; --- Altmer crisis exit (2026-07-15, D1#6 fix) ---
+; Reassert: three distinct devotional days of orthodox rites while the crisis is
+; open move the line to REASSERTING; a two-day lockout then settles it
+; SCARRED_RESOLVED at dawn. Living with it instead: after seven open days on the
+; heterodox side of the alignment track, the crisis settles on its own.
+Function RecordAltmerCrisisReassertEvidence(String reason)
+    Int crisisState = GetAltmerCrisisState()
+    if crisisState != ALTMER_CRISIS_DISSONANT && crisisState != ALTMER_CRISIS_QUESTIONING
+        return
+    endIf
+
+    Int todayStamp = (Utility.GetCurrentGameTime() as Int) + 1
+    if StorageUtil.GetIntValue(None, "PDV.Altmer.CrisisEvidence.Day") == todayStamp
+        return
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisEvidence.Day", todayStamp)
+
+    Int evidenceDays = StorageUtil.GetIntValue(None, "PDV.Altmer.CrisisEvidence.Days") + 1
+    StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisEvidence.Days", evidenceDays)
+    Trace(1, "Altmer crisis reassert evidence day " + evidenceDays + " (" + reason + ")")
+
+    if evidenceDays >= 3
+        StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisEvidence.Days", 0)
+        StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisEvidence.Day", 0)
+        ResolveAltmerCrisis(true, "orthodoxy_reasserted_" + reason)
+    endIf
+EndFunction
+
+Function EvaluateAltmerCrisisAtDawn()
+    if !IsAltmerOrigin()
+        return
+    endIf
+
+    Int crisisState = GetAltmerCrisisState()
+    Float nowTime = Utility.GetCurrentGameTime()
+
+    if crisisState == ALTMER_CRISIS_REASSERTING
+        Float resolvedAt = StorageUtil.GetFloatValue(None, "PDV.Altmer.CrisisResolvedAt")
+        if resolvedAt > 0.0 && (nowTime - resolvedAt) >= 2.0
+            SetAltmerCrisisState(ALTMER_CRISIS_SCARRED_RESOLVED, "reassert_lockout_complete")
+            SyncAltmerDisciplines(Game.GetPlayer())
+        endIf
+        return
+    endIf
+
+    if crisisState != ALTMER_CRISIS_DISSONANT && crisisState != ALTMER_CRISIS_QUESTIONING
+        return
+    endIf
+
+    Float startedAt = StorageUtil.GetFloatValue(None, "PDV.Altmer.CrisisStartedAt")
+    if startedAt <= 0.0 || (nowTime - startedAt) < 7.0
+        return
+    endIf
+
+    Int alignmentValue = 0
+    if PDV_ThalmorAlignmentTrack
+        alignmentValue = PDV_ThalmorAlignmentTrack.GetValue()
+    endIf
+    if alignmentValue < 0
+        ResolveAltmerCrisis(false, "lived_through_heterodox")
+        SyncAltmerDisciplines(Game.GetPlayer())
+    endIf
+EndFunction
+
+; Active-patron heritage memory: the Altmer mirror of the Dunmer ancestor-memory
+; dawn pulse (parity gap closed 2026-07-15). Once per dawn cycle, the daily rite
+; also keeps faith with an active Magnus or Xarxes patron.
+Function AwardActiveAltmerHeritageMemorySignal()
+    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER || GetPatronState() != PATRON_STATE_ACTIVE
+        return
+    endIf
+
+    Int heritageMemoryDay = (Utility.GetCurrentGameTime() as Int) + 1
+    if StorageUtil.GetIntValue(None, "PDV.Signal.AltmerHeritageMemory.Day") == heritageMemoryDay
+        return
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Signal.AltmerHeritageMemory.Day", heritageMemoryDay)
+
+    if _activeDeity == PDV_Magnus && PDV_Magnus
+        AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_SHARED_PACT_MEMORY, None, 1.0)
+    elseIf _activeDeity == PDV_Xarxes && PDV_Xarxes
+        AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_SHARED_PACT_MEMORY, None, 1.0)
+    endIf
+EndFunction
+
 Function HandleAltmerDawnSteadiness(String reason)
     if !IsAltmerOrigin()
         return
@@ -9649,6 +9822,11 @@ Function HandleAltmerDawnSteadiness(String reason)
             AwardAltmerAncestorSpinePulse(1.0, "curated_heritage_" + reason)
         endIf
     endIf
+    if ConsumeOncePerDaySignal("PDV.Signal.AltmerAlignmentRite")
+        ApplyAltmerAlignmentAction("orthodox_rite", "rite_" + reason)
+    endIf
+    RecordAltmerCrisisReassertEvidence("dawn_steadiness_" + reason)
+    AwardActiveAltmerHeritageMemorySignal()
     if reason == "eventbus_p2_altmer_auriel_po3_book_altmer_auriel"
         ShowP2BookNotice(reason, "Auri-El's dawn", "The morning rite settles deeper.")
     elseIf reason == "eventbus_p2_altmer_magnus_po3_book_altmer_magnus"
@@ -9675,6 +9853,14 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
         AwardAltmerOrthodoxSignal(reason, multiplier)
         AwardAltmerAncestorSpinePulse(multiplier, reason)
     endIf
+    if PDV_Trinimac && ConsumeOncePerDaySignal("PDV.Signal.TrinimacOrthodoxPressure")
+        AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_ALTMER_ORTHODOX_PRESSURE, None, 1.0)
+        SurfaceReservedSignal(PDV_Trinimac, "Orthodoxy upheld", "marks costly enforcement of the old order.")
+    endIf
+    if ConsumeOncePerDaySignal("PDV.Signal.AltmerAlignmentRite")
+        ApplyAltmerAlignmentAction("orthodox_rite", "rite_" + reason)
+    endIf
+    RecordAltmerCrisisReassertEvidence("orthodox_cost_" + reason)
     ShowP2BookNotice(reason, "The scribe Xarxes", "The old orthodoxy asks more of you.")
 EndFunction
 
@@ -11083,6 +11269,7 @@ Function ProcessDawn()
     ProcessBroadPantheonDawn()
     RunDawnConsolidateDaedricWeek()
     RunDawnRefreshTrackStates()
+    EvaluateAltmerCrisisAtDawn()
     RunDawnApplyDecayNoop()
     RunDawnApplySpellAndNeglectLayersNoop()
     RunDawnProcessCommitmentOffersNoop()
@@ -13193,16 +13380,12 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
             return "protecting a Talos worshipper"
         elseIf signalType == PDV_Talos.SIGNAL_DEFIANCE_MILESTONE
             return "defiance of the Talos ban"
-        elseIf signalType == PDV_Talos.SIGNAL_ANCESTOR_SPINE
-            return "public civic service"
         endIf
     elseIf PDV_AuriEl && deity == PDV_AuriEl
         if signalType == PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT
             return "dawn observance"
         elseIf signalType == PDV_AuriEl.SIGNAL_ORTHODOXY_AFFIRMATION
             return "orthodox lore study"
-        elseIf signalType == PDV_AuriEl.SIGNAL_ANCESTOR_SPINE
-            return "Altmer ancestor rites"
         endIf
     elseIf PDV_Yffre && deity == PDV_Yffre
         if signalType == PDV_Yffre.SIGNAL_PACT_POSITIVE
@@ -13287,8 +13470,6 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
     elseIf PDV_Sithis && deity == PDV_Sithis
         if signalType == PDV_Sithis.SIGNAL_VOID_THRESHOLD
             return "crossing a Void threshold"
-        elseIf signalType == PDV_Sithis.SIGNAL_VOID_MILESTONE
-            return "a deeper turn toward the Void"
         endIf
     elseIf PDV_Malacath && deity == PDV_Malacath
         if signalType == PDV_Malacath.SIGNAL_STRONGHOLD_FORGE
@@ -13345,20 +13526,12 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
             return "disciplined study"
         elseIf signalType == PDV_Magnus.SIGNAL_MAGIC_MILESTONE
             return "a magic milestone"
-        elseIf signalType == PDV_Magnus.SIGNAL_ARCANE_RECOVERY
-            return "recovering lost arcane knowledge"
         elseIf signalType == PDV_Magnus.SIGNAL_SHARED_PACT_MEMORY
             return "keeping faith with the arts"
-        elseIf signalType == PDV_Magnus.SIGNAL_ANCESTOR_SPINE
-            return "Breton ancestor rites"
         endIf
     elseIf PDV_Xarxes && deity == PDV_Xarxes
         if signalType == PDV_Xarxes.SIGNAL_LINEAGE_HONORED
             return "honoring lineage"
-        elseIf signalType == PDV_Xarxes.SIGNAL_RECORD_KEEPING
-            return "preserving knowledge and history"
-        elseIf signalType == PDV_Xarxes.SIGNAL_LEDGER_RESTORED
-            return "restoring a lost record"
         elseIf signalType == PDV_Xarxes.SIGNAL_SHARED_PACT_MEMORY
             return "keeping the long record"
         endIf
@@ -13389,22 +13562,16 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
             return "civic service"
         elseIf signalType == PDV_Akatosh.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
-        elseIf signalType == PDV_Akatosh.SIGNAL_COVENANT_MILESTONE
-            return "honoring the Covenant"
         endIf
     elseIf PDV_Mara && deity == PDV_Mara
         if signalType == PDV_Mara.SIGNAL_MERCY
             return "mercy"
-        elseIf signalType == PDV_Mara.SIGNAL_CIVIC_SERVICE
-            return "civic service"
         elseIf signalType == PDV_Mara.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
         endIf
     elseIf PDV_Arkay && deity == PDV_Arkay
         if signalType == PDV_Arkay.SIGNAL_DEATH_DUTY
             return "death duty"
-        elseIf signalType == PDV_Arkay.SIGNAL_CIVIC_SERVICE
-            return "civic service"
         elseIf signalType == PDV_Arkay.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
         endIf
@@ -13413,32 +13580,22 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
             return "mercy"
         elseIf signalType == PDV_Stendarr.SIGNAL_LAWFUL_ORDER
             return "upholding law and order"
-        elseIf signalType == PDV_Stendarr.SIGNAL_CIVIC_SERVICE
-            return "civic service"
         elseIf signalType == PDV_Stendarr.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
         endIf
     elseIf PDV_Zenithar && deity == PDV_Zenithar
         if signalType == PDV_Zenithar.SIGNAL_HONEST_WORK
             return "honest work"
-        elseIf signalType == PDV_Zenithar.SIGNAL_CIVIC_SERVICE
-            return "civic service"
         elseIf signalType == PDV_Zenithar.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
         endIf
     elseIf PDV_Julianos && deity == PDV_Julianos
-        if signalType == PDV_Julianos.SIGNAL_LAWFUL_ORDER
-            return "upholding law and order"
-        elseIf signalType == PDV_Julianos.SIGNAL_CIVIC_SERVICE
-            return "civic service"
-        elseIf signalType == PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR
+        if signalType == PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
         endIf
     elseIf PDV_Kynareth && deity == PDV_Kynareth
         if signalType == PDV_Kynareth.SIGNAL_OPEN_SKY
             return "deeds under the open sky"
-        elseIf signalType == PDV_Kynareth.SIGNAL_CIVIC_SERVICE
-            return "civic service"
         elseIf signalType == PDV_Kynareth.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
         endIf
@@ -13451,8 +13608,6 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
             return "a trial endured"
         elseIf signalType == PDV_Tsun.SIGNAL_ADVERSITY_SURVIVED
             return "surviving hard adversity"
-        elseIf signalType == PDV_Tsun.SIGNAL_ENDURANCE_VIGIL
-            return "keeping an endurance vigil"
         endIf
     elseIf PDV_Stuhn && deity == PDV_Stuhn
         if signalType == PDV_Stuhn.SIGNAL_MERCY_GRANTED
@@ -13463,21 +13618,11 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
             return "protecting a bond"
         endIf
     elseIf PDV_Shor && deity == PDV_Shor
-        if signalType == PDV_Shor.SIGNAL_HONORABLE_BATTLE
-            return "an honorable battle"
-        elseIf signalType == PDV_Shor.SIGNAL_HONORED_DEAD
+        if signalType == PDV_Shor.SIGNAL_HONORED_DEAD
             return "honoring the dead"
-        elseIf signalType == PDV_Shor.SIGNAL_SOVNGARDE_VALOR
-            return "valor worthy of Sovngarde"
-        elseIf signalType == PDV_Shor.SIGNAL_ANCESTOR_SPINE
-            return "Nord ancestor rites"
         endIf
     elseIf PDV_Dibella && deity == PDV_Dibella
-        if signalType == PDV_Dibella.SIGNAL_CIVIC_SERVICE
-            return "civic service"
-        elseIf signalType == PDV_Dibella.SIGNAL_GRACE
-            return "an act of grace"
-        elseIf signalType == PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR
+        if signalType == PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
         endIf
     elseIf PDV_Trinimac && deity == PDV_Trinimac

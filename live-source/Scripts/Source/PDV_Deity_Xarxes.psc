@@ -15,9 +15,7 @@
 
 Scriptname PDV_Deity_Xarxes extends PDV_DeityBase
 
-Int Property SIGNAL_RECORD_KEEPING = 1901 AutoReadOnly      ; preserving / cataloguing knowledge and history
 Int Property SIGNAL_LINEAGE_HONORED = 1902 AutoReadOnly     ; honoring ancestry / the ancestral record (curated)
-Int Property SIGNAL_LEDGER_RESTORED = 1903 AutoReadOnly     ; recovering a lost record / writing a name into the long ledger
 Int Property SIGNAL_SHARED_PACT_MEMORY = 1904 AutoReadOnly  ; small foundation-keeping pulse to the record
 
 Float Property DELTA_RECORD_KEEPING = 1.8 Auto
@@ -30,12 +28,8 @@ Float Function ScoreAction(Int eventType, Form actorRef, Form targetRef)
 EndFunction
 
 Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
-    if signalType == SIGNAL_RECORD_KEEPING
-        return DELTA_RECORD_KEEPING
-    elseIf signalType == SIGNAL_LINEAGE_HONORED
+    if signalType == SIGNAL_LINEAGE_HONORED
         return DELTA_LINEAGE_HONORED
-    elseIf signalType == SIGNAL_LEDGER_RESTORED
-        return DELTA_LEDGER_RESTORED
     elseIf signalType == SIGNAL_SHARED_PACT_MEMORY
         return DELTA_SHARED_PACT_MEMORY
     endIf

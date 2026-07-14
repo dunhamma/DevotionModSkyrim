@@ -19,7 +19,6 @@
 
 Scriptname PDV_Deity_Stendarr extends PDV_DeityBase
 
-Int Property SIGNAL_CIVIC_SERVICE = 1300 AutoReadOnly
 Int Property SIGNAL_MERCY = 1301 AutoReadOnly
 Int Property SIGNAL_LAWFUL_ORDER = 1302 AutoReadOnly
 Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1303 AutoReadOnly
@@ -40,9 +39,7 @@ Float Function ScoreAction(Int eventType, Form actorRef, Form targetRef)
 EndFunction
 
 Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
-    if signalType == SIGNAL_CIVIC_SERVICE
-        return DELTA_CIVIC_SERVICE
-    elseIf signalType == SIGNAL_MERCY
+    if signalType == SIGNAL_MERCY
         return DELTA_MERCY
     elseIf signalType == SIGNAL_LAWFUL_ORDER
         return DELTA_LAWFUL_ORDER

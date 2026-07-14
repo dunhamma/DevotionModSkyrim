@@ -16,8 +16,6 @@
 
 Scriptname PDV_Deity_Julianos extends PDV_DeityBase
 
-Int Property SIGNAL_CIVIC_SERVICE = 1600 AutoReadOnly
-Int Property SIGNAL_LAWFUL_ORDER = 1601 AutoReadOnly
 Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1602 AutoReadOnly
 
 Float Property DELTA_CIVIC_SERVICE = 2.0 Auto
@@ -35,11 +33,7 @@ Float Function ScoreAction(Int eventType, Form actorRef, Form targetRef)
 EndFunction
 
 Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
-    if signalType == SIGNAL_CIVIC_SERVICE
-        return DELTA_CIVIC_SERVICE
-    elseIf signalType == SIGNAL_LAWFUL_ORDER
-        return DELTA_LAWFUL_ORDER
-    elseIf signalType == SIGNAL_PATRON_CIVIC_FAVOR
+    if signalType == SIGNAL_PATRON_CIVIC_FAVOR
         return DELTA_PATRON_CIVIC_FAVOR
     endIf
 

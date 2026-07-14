@@ -15,8 +15,6 @@
 
 Scriptname PDV_Deity_Dibella extends PDV_DeityBase
 
-Int Property SIGNAL_CIVIC_SERVICE = 1500 AutoReadOnly
-Int Property SIGNAL_GRACE = 1501 AutoReadOnly
 Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1502 AutoReadOnly
 
 Float Property DELTA_CIVIC_SERVICE = 2.0 Auto
@@ -34,11 +32,7 @@ Float Function ScoreAction(Int eventType, Form actorRef, Form targetRef)
 EndFunction
 
 Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
-    if signalType == SIGNAL_CIVIC_SERVICE
-        return DELTA_CIVIC_SERVICE
-    elseIf signalType == SIGNAL_GRACE
-        return DELTA_GRACE
-    elseIf signalType == SIGNAL_PATRON_CIVIC_FAVOR
+    if signalType == SIGNAL_PATRON_CIVIC_FAVOR
         return DELTA_PATRON_CIVIC_FAVOR
     endIf
 

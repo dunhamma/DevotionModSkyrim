@@ -16,7 +16,6 @@
 
 Scriptname PDV_Deity_Zenithar extends PDV_DeityBase
 
-Int Property SIGNAL_CIVIC_SERVICE = 1400 AutoReadOnly
 Int Property SIGNAL_HONEST_WORK = 1401 AutoReadOnly
 Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1402 AutoReadOnly
 
@@ -35,9 +34,7 @@ Float Function ScoreAction(Int eventType, Form actorRef, Form targetRef)
 EndFunction
 
 Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
-    if signalType == SIGNAL_CIVIC_SERVICE
-        return DELTA_CIVIC_SERVICE
-    elseIf signalType == SIGNAL_HONEST_WORK
+    if signalType == SIGNAL_HONEST_WORK
         return DELTA_HONEST_WORK
     elseIf signalType == SIGNAL_PATRON_CIVIC_FAVOR
         return DELTA_PATRON_CIVIC_FAVOR

@@ -19,7 +19,6 @@
 Scriptname PDV_Deity_Sithis extends PDV_DeityBase
 
 Int Property SIGNAL_VOID_THRESHOLD = 2801 AutoReadOnly  ; curated death-facing / Void threshold signal (post-activation)
-Int Property SIGNAL_VOID_MILESTONE = 2802 AutoReadOnly  ; notable Void / death-change beat, curated
 
 Float Property DELTA_VOID_THRESHOLD = 2.0 Auto
 Float Property DELTA_VOID_MILESTONE = 4.0 Auto
@@ -31,8 +30,6 @@ EndFunction
 Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
     if signalType == SIGNAL_VOID_THRESHOLD
         return DELTA_VOID_THRESHOLD
-    elseIf signalType == SIGNAL_VOID_MILESTONE
-        return DELTA_VOID_MILESTONE
     endIf
 
     return 0.0

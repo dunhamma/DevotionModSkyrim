@@ -17,9 +17,7 @@ Scriptname PDV_Deity_Magnus extends PDV_DeityBase
 
 Int Property SIGNAL_DISCIPLINED_STUDY = 1801 AutoReadOnly   ; curated rare-text / threshold study milestone
 Int Property SIGNAL_MAGIC_MILESTONE = 1802 AutoReadOnly     ; magic milestone reached with restraint (study-framed)
-Int Property SIGNAL_ARCANE_RECOVERY = 1803 AutoReadOnly     ; recovering / restoring lost arcane knowledge
 Int Property SIGNAL_SHARED_PACT_MEMORY = 1804 AutoReadOnly  ; small foundation-keeping pulse to the arts
-Int Property SIGNAL_ANCESTOR_SPINE = 1807 AutoReadOnly      ; Breton mixed-inheritance spine pulse
 
 Float Property DELTA_DISCIPLINED_STUDY = 1.8 Auto
 Float Property DELTA_MAGIC_MILESTONE = 1.5 Auto
@@ -36,12 +34,8 @@ Float Function ScoreCuratedSignal(Int signalType, Form contextRef)
         return DELTA_DISCIPLINED_STUDY
     elseIf signalType == SIGNAL_MAGIC_MILESTONE
         return DELTA_MAGIC_MILESTONE
-    elseIf signalType == SIGNAL_ARCANE_RECOVERY
-        return DELTA_ARCANE_RECOVERY
     elseIf signalType == SIGNAL_SHARED_PACT_MEMORY
         return DELTA_SHARED_PACT_MEMORY
-    elseIf signalType == SIGNAL_ANCESTOR_SPINE
-        return DELTA_ANCESTOR_SPINE
     endIf
 
     return 0.0

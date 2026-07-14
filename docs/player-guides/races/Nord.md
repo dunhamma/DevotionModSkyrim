@@ -44,6 +44,7 @@ Nord worship is led by deeds, not by kneeling at shrines. Variety matters far mo
 
 - **Fight honorably.** Killing a worthy, armed foe in fair combat pleases Shor, Tsun, Stuhn, Kyne, and Talos. This is the most reliable Nord road to devotion, and it costs you nothing but the fight.
 - **Slay dragons.** Felling a dragon is a major deed for Talos, Shor, Tsun, and Kyne - the worthiest trial and the conqueror's supreme glory.
+- **Carry one of the faithful out of Thalmor hands.** Freeing a countryman the Thalmor took is faithful defiance of the first order, and Talos marks it once, deeply. The killing it takes to do it earns nothing on its own; the rescue is the deed.
 - **Learn the Thu'um.** Learning a Word of Power honors Talos, Kyne, Shor, Tsun, and (in the Divines frame) Julianos and Kynareth. Talos and Kynareth especially treasure it - the Voice is the warrior-god's mastery and the wind given form. Using a shout in earnest is noticed too, but only by Kyne and Talos; the other gods care that you learned it, not that you spent it.
 - **Rest under the open sky.** Sleeping outdoors, not in an inn or a house, pleases Kyne, Kynareth, Shor, and Tsun. Genuine open-sky rest only - a bed under a roof does not count.
 - **Put the restless dead to rest.** Destroying the walking undead honors Arkay, Shor, Tsun, Stuhn, Kyne, and Stendarr. The crypts of Skyrim are full of work no one else will do.

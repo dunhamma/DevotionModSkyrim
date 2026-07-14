@@ -308,9 +308,9 @@
       "displayName": "Akatosh's Endurance - Champion",
       "effects": [
         {
-          "actorValue": "Magicka",
-          "magnitude": 40,
-          "effectName": "Fortify Magicka"
+          "actorValue": "Health",
+          "magnitude": 30,
+          "effectName": "Maximum Health"
         },
         {
           "actorValue": "ResistMagic",
@@ -318,8 +318,8 @@
           "effectName": "Magic Resistance"
         }
       ],
-      "playerFacingText": "You endure as the first Covenant endures. Fortify Magicka +40, Magic Resistance +15%.",
-      "signature": "Endurance of the Covenant: strongest sustained magicka/ward; Champion Survey text is the V1 recognition surface."
+      "playerFacingText": "You endure as the first Covenant endures. Maximum Health +30, Magic Resistance +15%.",
+      "signature": "Endurance of the Covenant: order held across time made felt as lasting vitality. Re-authored 2026-07-15 (owner ruling): was a copy of Julianos's Fortify Magicka block -- the two Champions were identical. MGEF PDV_MGEF_Imperial_Akatosh_T3_Magicka retargeted to Health (EditorID suffix is a benign misnomer per the Kyne-neglect conversion precedent). Champion Survey text is the V1 recognition surface."
     },
     {
       "emphasis": "Mara",

@@ -1049,6 +1049,25 @@ as PS-A1..A12.
 | RC5 | Breton Hidden-Art credits Magnus (pex freshness) | Breton, read a Hidden-Art source book. | Ledger driver row voices Magnus disciplined study (never Julianos lawful order). | Code verified; this proves the DEPLOYED pex matches |
 | RC6 | Redguard neglect resets on ordinary practice | Redguard with declared ancestral-rest cell: sleep there (once/day signal), then check neglect state near day 5. | Sleep stamps the sect clock; neglect never engages while practicing; -3 ResistMagic only after 5+ days of NO practice. | Confirms NOT-A-BUG verdict on "permanent neglect" |
 
+### Fix-pass wire + fix cards (2026-07-15, run in the same sitting)
+
+The scoped ManagerQuest pass LANDED (cuts, wires, crisis exit, forge, alignment,
+labels, boon re-author). These prove the new behavior; RC1 above flips from
+bug-repro to fix-proof (blessing strips on MQ104 s160, then returns after 3
+distinct rite-days + 2-day lockout, with the "Coherence restored" toast).
+
+| ID | What landed | Steps | Expected |
+|----|-------------|-------|----------|
+| RC7 | Tu'whacca vampire re-entry | Redguard: contract + cure vampirism, then perform any sect act (ancestral-rest sleep is enough). | One-time "The cycle restored" surface + Tu'whacca piety on the first mortal sect act; never repeats until a new curse cycle. |
+| RC8 | Tsun adversity (rare detector) | Nord: win a fight after dropping below 10% health with at least one kill. | "Adversity survived" surfaces; second attempt same week stays silent (weekly cap). |
+| RC9 | Leki honorable duel | Redguard: kill a hostile foe at/above your level, no sneak opener, in open combat. | "Duel honored" surfaces with Leki piety; repeats decay per daily multiplier. |
+| RC10 | Talos worshipper rescue | Complete MS09 (Missing in Action) stage 201 as Nord or Imperial. | One-time "A worshipper protected" + Talos piety; plain Thalmor kills alone earn nothing. |
+| RC11 | Malacath exile return | Orc in LEGION_EXILE life mode: enter any stronghold. | One-time "Burden carried home" + Malacath piety. |
+| RC12 | Orc forge + hearth | Stronghold Orc: smith at a stronghold forge; also re-enter the stronghold. | Forge work earns AND stamps the life-mode clock (no neglect while forging daily); on stronghold entry, Hearth-Held (Fortify Stamina 15, 10 min) applies once per day. |
+| RC13 | Magnus/Xarxes heritage memory | Altmer with active Magnus (or Xarxes) patron: perform the daily dawn rite. | Once per day, a small shared-pact-memory pulse to the active patron on top of the rite's own signal. |
+| RC14 | Orthodox rite alignment + Trinimac | Altmer: perform dawn-steadiness or costly-enforcement rite. | +2 ThalmorAlignment once/day (track can now be HELD); costly enforcement also pulses Trinimac orthodox pressure once/day. |
+| RC15 | Akatosh's Endurance re-author | Imperial or Breton Akatosh Champion: check Active Effects. | "Akatosh's Endurance - Champion" shows Maximum Health +30 + Magic Resistance 15 (no longer a Julianos duplicate). Old saves keep the prior effect until re-grant. |
+
 ## 1.0 Open Gate Map
 
 The generated burndown is current authority. These are the practical closeout

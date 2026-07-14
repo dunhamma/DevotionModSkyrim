@@ -185,7 +185,7 @@ Champion (85) belongs to your patron. Whichever god of your tradition you carry 
 | A Daedric Prince (Hidden Art) | Hidden Art | Conjuration +27, Illusion +21, Fortify Magicka +25 |
 | Mara | Mara's Compassion | Restoration +23, Magic Resistance +15% |
 | Arkay | Arkay's Ward | Disease Resistance +27%, Maximum Health +30 |
-| Akatosh | Akatosh's Endurance | Fortify Magicka +40, Magic Resistance +15% |
+| Akatosh | Akatosh's Endurance | Maximum Health +30, Magic Resistance +15% |
 | Julianos | Julianos's Insight | Fortify Magicka +40, Magic Resistance +15% |
 | Kynareth | Kynareth's Sky | Fortify Stamina +40, Magic Resistance +13% |
 | Dibella | Dibella's Inspiration | Speech +25, Fortify Magicka +40 |
