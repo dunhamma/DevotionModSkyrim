@@ -1,4 +1,21 @@
-# PDV Bug Report - Player-Facing Tier-Name Drift (Blessing Records)
+# PDV Combined Session Bug Report - 2026-07-14
+
+Two bugs found in parallel sessions on 2026-07-14. They are filed together because
+**they are the same failure mode wearing different clothes** - see PART C.
+
+| | Bug | Scope | Status |
+|---|---|---|---|
+| **PART A** | Player-facing tier-name drift (blessing records) | `Devotion.esp` SPEL/MGEF Name fields; reward spec JSONs; Papyrus tier-label helpers | Specs FIXED. ESP write QUEUED (blocked on ESP lock). 2 decisions open. |
+| **PART B** | Curated-signal dispatch - 37 signals that can never fire | `PDV_Deity_*.psc`, `PDV__ManagerQuest.psc`, `tools/pdv_reserved_signals.json` | Audit COMPLETE. Prevention rules LANDED in `PDV_STANDARDS.md`. No signal code touched. 5 decisions open. |
+| **PART C** | The shared root pattern + the work they both block on | - | Read this before scheduling either fix. |
+
+**Neither bug is what its originating premise said it was, and in both cases acting on
+that premise would have shipped a regression.** That is not a coincidence; it is the
+finding.
+
+---
+
+# PART A - Player-Facing Tier-Name Drift (Blessing Records)
 
 **Date:** 2026-07-14
 **Scope:** `Devotion.esp` SPEL/MGEF Name (FULL) fields; per-race reward spec JSONs; live Papyrus tier-label helpers
@@ -190,3 +207,305 @@ Under the two-ladder model the broad helpers should return `Seeker` / `Faithful`
 ## 8. Suggested triage labels
 
 `bug` / `player-facing-copy` / `blocked-on-owner` / `needs-decision`
+
+---
+---
+
+# PART B - Curated-Signal Dispatch: 37 Signals That Can Never Fire
+
+**Date:** 2026-07-14
+**Scope:** `live-source/Scripts/Source/PDV_Deity_*.psc`, `PDV__ManagerQuest.psc`, `tools/pdv_reserved_signals.json`, `PDV_STANDARDS.md`
+**Status:** Audit COMPLETE. Prevention rules LANDED. **No signal code touched** - the wire/cut list awaits owner rulings.
+**Evidence basis:** git pickaxe over all history (`-G` on deity-bound dispatch patterns), live-source grep, CSV/matrix/contract-ledger reads. No runtime/in-game proof claimed.
+**Full forensics:** `references/authoring/PDV_CuratedSignalDispatch_Forensics_2026-07-14.md` (section 9 is the authoritative decision list).
+
+---
+
+## B0. TL;DR for the reviewer
+
+37 curated deity signals are **declared + scored + (usually) phrased, but never dispatched**.
+No caller of `AwardCuratedSignal[Scaled]` exists for any of them, so their piety can never
+fire. `node tools/pdv_signal_e2e_gate.mjs --dispatch-coverage-only` reports
+`123 declared+scored / 86 dispatched / 37 undispatched` - and **PASSes**, because all 37 are
+parked in `tools/pdv_reserved_signals.json`.
+
+The originating premise was "several of these (Shor, Leki, Talos) *were* wired, so something
+dropped them."
+
+**Half true, and the half that's false is instructive.**
+
+| Premise claimed | Actually true |
+|---|---|
+| Shor / Leki / Talos were all wired and got dropped | **Shor and Talos yes** (via `SIGNAL_ANCESTOR_SPINE`, removed 2026-07-14 by `652a5fe3`). **Leki never was.** |
+| One bug | **Two.** 5 REGRESSIONS (had a caller, lost it) + 32 OMISSIONS (never had one). |
+| All 37 are 3-of-4 layers | **6 are 2-of-4** - Syrabane x5 and `Zen.CIVIC_SERVICE` have no display phrase either. |
+| The 37 are a to-do list | The reserved ledger is a **silencer**: 33 -> 37 in 8 days (6 burned by wiring, 10 added by parking). |
+
+**Why Leki "feels" wired:** `PDV_Boethiah.SIGNAL_HONORABLE_DUEL` - the *same signal name* - has a
+real dispatch (`HandleBoethiahHonorableDuel`, fed by brawl victories). A duel signal genuinely
+does fire in play. It is never Leki's. Leki's const (2602) and Boethiah's (2002) also sit in
+colliding ID ranges with Syrabane's (2001-2005).
+
+---
+
+## B1. Root cause: three of four layers are free, the fourth is a design
+
+A curated signal has four layers:
+
+| # | Layer | Lives in | Cost |
+|---|-------|----------|------|
+| 1 | `Int Property SIGNAL_X = N AutoReadOnly` | `PDV_Deity_<God>.psc` | trivial |
+| 2 | `ScoreCuratedSignal` DELTA branch | **same file** | trivial |
+| 3 | `HumanizeCuratedSignalReason` phrase | `PDV__ManagerQuest.psc` | trivial |
+| 4 | **A real caller of `AwardCuratedSignal[Scaled]`** | a detector across `PDV_PlayerEvents` / `PDV_ActionRouter` / `PDV_EventBus` / manager | **design work** |
+
+Layers 1 and 2 are not merely cheap - **they are the same file, and that file IS the
+deliverable.** A task of the form "design God X's signal set" *produces* `PDV_Deity_X.psc`.
+Declaring and scoring is what finishing that task looks like. Layer 4 is a second task nobody
+opened.
+
+Caught in the act: commit `9840ec4c` ("test(signal-floor): close co-test smoke evidence")
+added **five Syrabane constants, five DELTA branches, and zero callers.**
+
+The design/build split institutionalised it. `PDV_SessionHandoff_DeitySignalRemap_2026-07-08.md`
+spends ~270 lines on section 2 "Per-race locked design" (the const/score/phrase spec) and
+**16 lines** on section 3 "Build backlog" (the detectors) - six bullets, no owner, no date, no
+status marker. Half of it is still open.
+
+And because the design pass never touches the detector layer, it cannot discover that a signal
+is **unbuildable**: `IsCombatSessionOrigin` covers origins 4-8 only, so **Nord, Imperial, Breton,
+Altmer and Redguard get no combat session at all.** Every combat-flavoured signal specced for
+Shor, Tsun, Stuhn, Leki and Talos was undeliverable the day it was written.
+
+The project already has a name for this - **"phantom declarations"** (`7368c87f`: *"Every counted
+type now fires in-game; no phantom declarations"*). **This is the eighth recurrence of the class
+since June**, and the 2026-07-08 wired-vs-stub review already tagged Leki's duel, Malacath's
+exile-return and Tu'whacca's vampire-reentry as `[INERT]`. The response to that review was a
+design pass that produced five more.
+
+---
+
+## B2. The 5 REGRESSIONS (proven, with commits)
+
+Method: deity-bound pickaxe over every tracked `.psc` in all history -
+`git log --all -G"AwardCuratedSignal[A-Za-z]*\(PDV_<God>, PDV_<God>\.<SIGNAL>"`.
+
+| Signal | Wired by | Killed by |
+|---|---|---|
+| `PDV_Shor.SIGNAL_ANCESTOR_SPINE` (3 call sites) | `12fa6aef` 2026-06-24 "Build Nord ancestor spine parity" | **`652a5fe3` 2026-07-14** "pantheon parity and substrate pacing" |
+| `PDV_Talos.SIGNAL_ANCESTOR_SPINE` | `0c833597` 2026-06-24 "Build Imperial spine parity" | **`652a5fe3`** |
+| `PDV_AuriEl.SIGNAL_ANCESTOR_SPINE` | `000c868d` 2026-06-24 "Build Altmer spine parity" | **`652a5fe3`** |
+| `PDV_Magnus.SIGNAL_ANCESTOR_SPINE` | `22dfa0c5` 2026-06-24 "Build Breton spine parity" | **`7368c87f`** 2026-07-12 |
+| `PDV_Julianos.SIGNAL_LAWFUL_ORDER` | present since >= `cd9ed5e7` 2026-06-07 | **`69905e9c`** 2026-07-12 "Prepare Breton two-axis smoke pass" (re-pointed in place to `PDV_Mara.SIGNAL_MERCY`) |
+
+**Every one of the 5 removals was intentional and defensible.** The defect is that each left the
+const, the score branch and the phrase behind - so a deliberate design change silently
+manufactured five new "known gaps." Confirmed lossless: the spine acts were **converted, not
+deleted**. `HandleSubstrateActionEvent` now routes a Nord hearth/sleep act to
+`RecordAncestralRestScaled` -> substrate **metric** -> tier -> Prisma journal row, awarding **no
+deity piety by design** (`PDV_SubstratePacingContracts.json`: `"pietyNeutral": true`).
+
+## B3. The 32 OMISSIONS
+
+Never had a deity-bound dispatch in any tracked commit. Most arrived pre-formed in baseline
+*imports* of the untracked MO2 tree (`d551d219`, `6bd9b123`) - **so git cannot show the authoring
+moment, and no diff ever showed a signal being added without a caller.** That blind spot is part
+of the bug.
+
+Two blind spots no gate currently checks:
+- **Phrase coverage** - 6 of the 37 have no `HumanizeCuratedSignalReason` arm.
+- **Reachability** - the 7 `SIGNAL_CIVIC_SERVICE` consts are **unreachable by construction**:
+  `AwardImperialCivicFamilySignal` is a 5-arm branch and each arm emits that god's *domain*
+  signal (`Mara.MERCY`, `Stendarr.LAWFUL_ORDER`, `Zenithar.HONEST_WORK`, `Arkay.DEATH_DUTY`).
+  Only Akatosh's arm emits `CIVIC_SERVICE`. Dibella, Julianos and Kynareth have **no arm at all**.
+
+---
+
+## B4. Decision list
+
+> **This list is the CORRECTED one.** A first pass produced a wire/cut table from a code-only
+> reading; an adversarial re-check against the current architecture killed three of its cuts. See
+> PART C - the failure was identical to the one PART A's ticket walked into.
+
+**CUT - confirmed safe (13)**
+
+| Signals | Why it holds |
+|---|---|
+| 4x `SIGNAL_ANCESTOR_SPINE` (Shor, Talos, AuriEl, Magnus) | Acts converted to substrate metric (B2). Dead code. **Also fix `PDV_SpineStackRegistry.csv`** - its Imperial/Altmer/Nord rows still claim these lanes are live. Leave the Dunmer/Redguard rows alone; those are wired. |
+| 7x `SIGNAL_CIVIC_SERVICE` | **Strongest cut.** Unreachable by construction, and it is the project's own written recommendation, 7x over, since 2026-07-06. |
+| `Julianos.SIGNAL_LAWFUL_ORDER` | Its ledger condition ("remove IF study credit stays on the likes/dislikes path") **verified met**: Julianos has CSV rows 340/341/342 (+0.5, cap 3) and 344. Stendarr owns `LAWFUL_ORDER` in the civic router. |
+| `Shor.SIGNAL_HONORABLE_BATTLE` | `Nord.md:58` ("fair kills please Shor, Tsun and Stuhn") is **already kept** by the CSV for all three, with caps (0.5/cap3, 0.75/cap2, 0.5/cap3). Wiring it would double-pay a kept promise. |
+
+**DO NOT CUT - first-pass errors (8)**
+
+| Signals | Why the cut must not land |
+|---|---|
+| **5x Syrabane** | **`PDV_BetaContract.csv` BC-0153, status `BETA`**, contracts exactly this lane (ward absorb +15%, post-ward spell cost -10%, College recognition). The five signals are its scaffolding. Syrabane is a fully built, offer-eligible patron (T1/T2/T3 blessings, formal offer, medallion, roster-locked). Cutting = the only offer-eligible patron in the mod with **zero** curated lanes. |
+| **2x Stuhn** (`MERCY_GRANTED`, `JUST_SPOILS`) | The **2026-07-13 pantheon-parity lock** (`PDV_TargetEndStates_1.0.md:618,649`) - one week *newer* than the ledger note - promotes Shor/Tsun/Stuhn to *focusable Old Ways patrons with their own offer, rewards and neglect*. Stuhn's dispatch is 1/3. |
+| `Trinimac.FALLEN_GOD_ORTHODOXY` | The ledger says it verbatim: *"Rare-by-design frequency, **but must fire**."* The live lane is **Altmer** (Thalmor Orthodox Champion, `TargetEndStates:818`), not the Orc anti-promise. Dispatch is 0/2. |
+
+**CUT - needs an explicit "we are not shipping this beat" ruling (8)**
+
+`Shor.SOVNGARDE_VALOR`, `Tsun.ENDURANCE_VIGIL`, `Sithis.VOID_MILESTONE`, `Akatosh.COVENANT_MILESTONE`,
+`Xarxes.RECORD_KEEPING`, `Xarxes.LEDGER_RESTORED`, `Magnus.ARCANE_RECOVERY`, `Dibella.GRACE`.
+
+Mechanically safe, and the double-credit evidence holds (MQ304 pays Shor **+S** and Tsun **+C**;
+DB11 pays Sithis **+C milestone**; Xarxes/Magnus already take paid CSV book/tome rows). **But these
+are deferrals with named hooks, not vestigial duplicates** - cutting is a decision to abandon those
+beats, not hygiene.
+
+**WIRE - safe (6)**
+
+`Tuwhacca.VAMPIRE_REENTRY` (one-shot latch; its flag `PDV.Redguard.VampireReentryNeeded` is written
+twice and read **zero** times - cheapest real win), `Malacath.EXILE_RETURN` (one-shot latch),
+`Magnus.SHARED_PACT_MEMORY` + `Xarxes.SHARED_PACT_MEMORY` (one dawn function; named Bosmer/Dunmer
+parity gap), `Trinimac.ALTMER_ORTHODOX_PRESSURE`, `Leki.HONORABLE_DUEL` (Leki has **no kill row in
+the CSV at all** - a combat-honour god with zero combat income, so this promise is genuinely unkept;
+needs `IsCombatSessionOrigin` widened to Redguard).
+
+**WIRE - blocked pending ruling (2)**
+
+| Signal | Blocker |
+|---|---|
+| `Tsun.ADVERSITY_SURVIVED` (+2.5) | **ADR-0001 broad-pool amplification** - see B5. |
+| `Talos.PROTECT_WORSHIPPER` (+4.0) | `PDV_TargetEndStates_1.0.md:690`: *"Talos favor comes only from authored faithful defiance, never generic rebellion or plain anti-Thalmor violence."* A Thalmor-kill detector sits directly on the forbidden surface. |
+
+---
+
+## B5. The pacing finding (and a correction worth reading)
+
+**You cannot blow the daily cap.** `PIETY_DAILY_MAX_DELTA = 4.3` is a **hard clamp** applied at dawn
+*after* all signals accumulate (`ClampValue(pietyToday * GAIN_RATE_SCALE 1.32, -cap, cap)`,
+`PDV__ManagerQuest.psc:588,592,11277`). Raw delta is not the risk. An earlier draft of this audit
+claimed otherwise; that claim is **retracted**.
+
+**The real risk is the broad-pantheon pool.** `AwardPietyInternal` (`:12337`) **auto-opens a
+broad-pantheon event scope** when none is open, then calls `AccumulateBroadPantheonDelta`. So every
+curated award on a pool-eligible deity (Kyne, Shor, Tsun, Stuhn, Talos, Mara, Arkay, Dibella + the
+Imperial Eight) feeds the broad pool, which keeps the **strongest applied delta per logical event**
+(ADR-0001).
+
+Precisely: combat **already** feeds the Nord Old Ways pool today (`AwardPietyFromLikesDislikes`
+routes through the same `AwardPietyInternal`), contributing `max(Shor 0.5, Tsun 0.75, Stuhn 0.5) =
+0.75` per kill. Wiring `Tsun.ADVERSITY_SURVIVED` at 2.5 would raise that to ~2.5 - roughly **3.3x** -
+converting ordinary fighting into Old Ways devotional standing. That is an **amplification of an
+existing channel, not a novel leak**, but it is a doctrine call for ADR-0001 and it is the
+highest-leverage decision in this bug.
+
+---
+
+## B6. Work completed this session
+
+**Landed:**
+- `references/authoring/PDV_CuratedSignalDispatch_Forensics_2026-07-14.md` - full forensics; section 9 is the authoritative decision list; the superseded first-pass reasoning is retained and marked RETRACTED where it was wrong.
+- `PDV_STANDARDS.md` **§2.7 "Phantom declarations"** - the four-layer rule, grep-checkable in a pre-commit hook: *no commit may add `Int Property SIGNAL_X` without an `AwardCuratedSignal` call site in the same commit*, plus the mirror rule for removals.
+- `PDV_STANDARDS.md` **§5.2 "Reserved ledgers are debt, not documentation"** - non-increasing ledger; entries carry `decision`/`owner`/`expires`; `retired` becomes a first-class terminal state distinct from `reserved`; *"a ledger reason is a snapshot, not an authority - re-check it against the newest design lock"*; *"before cutting, grep the contract ledgers."*
+- `PDV_STANDARDS.md` **§5.1 amendment** - a gate citation is void if the gate passes *because* of a waiver covering the thing being claimed.
+
+**NOT done, deliberately:** no signal was wired, no const deleted, no copy rewritten.
+
+## B7. Mandatory implementation conditions (any cut)
+
+1. **Delete the matching `tools/pdv_reserved_signals.json` entry in the SAME commit.** The gate FAILs
+   on a stale entry (its README: *"now dispatched **or no longer declared** - also FAILs"*).
+2. **Cut scope = `SIGNAL_*` const + `ScoreCuratedSignal` branch + display phrase. LEAVE the `DELTA_*`
+   `Auto` floats.** `SIGNAL_*` is `AutoReadOnly` (compile-time const, not save-baked, free to delete);
+   `DELTA_*` is `Auto` (save-persisted) - removing it buys nothing but Papyrus log noise.
+   Deletion order: phrase -> score branch -> const (else the compile breaks).
+3. **Fix `references/authoring/PDV_SpineStackRegistry.csv`** - stale since `652a5fe3`.
+4. Run `pdv_signal_e2e_gate --strict-curated-signal-dispatch` **and**
+   `pdv_deity_signal_remap_adversary_check` before and after.
+
+## B8. OPEN DECISIONS (5)
+
+1. **ADR-0001 / broad pool.** Should a curated signal on a pool-eligible deity feed the broad pantheon
+   pool at all? Today it does, automatically. Governs `Tsun` and every future Nord/Imperial signature
+   signal. **Highest leverage.**
+2. **Talos.** Is there an authored-defiance (quest-stage) route for "protect a Talos worshipper", or
+   does `Nord.md:60` / `Imperial.md:60` copy get softened to match `TargetEndStates:690`?
+3. **The 8 "abandon the beat" cuts.** Explicit yes/no. Design calls, not hygiene.
+4. **Spine doctrine parity.** Malacath, Tu'whacca and Azura *still* pulse deity piety from
+   substrate-ish contexts while Nord/Imperial/Altmer/Breton no longer do. Authentic god lanes, or is
+   pantheon parity half-applied?
+5. **Leki.** Build the duel detector to the `Redguard.md:58` spec (no sneak opener, no follower assist,
+   one-handed, fought to the end), or soften the copy?
+
+## B9. Proof boundary
+
+- **Proven by git pickaxe over all history:** every regression/omission classification in B2-B3.
+- **Proven by live-source grep:** every `.psc` line, gate, threshold and constant cited.
+- **Proven by data reads:** CSV rows, quest-matrix rows, `PDV_BetaContract.csv` BC-0153,
+  `PDV_TargetEndStates_1.0.md` locks.
+- **NOT proven:** nothing here has in-game runtime proof. No signal was wired; no piety was observed
+  firing. The decision list is a *recommendation*, not a verified change.
+
+## B10. Suggested triage labels
+
+`bug` / `dead-code` / `player-facing-copy` / `needs-decision` / `prevention-landed`
+
+---
+---
+
+# PART C - What the two bugs have in common
+
+These were found independently, by different sessions, in different subsystems. They are the
+same bug.
+
+### 1. Both originating premises were FALSE, and acting on either would have shipped a regression
+
+- **PART A:** the ticket said "8 records carry retired names; rename `Faithful` -> `Devoted`."
+  Acting on it would have told a **maxed** broad worshipper they were mid-ladder.
+- **PART B:** the first-pass audit said "cut Syrabane's 5, Stuhn's 2, Trinimac's 1 - they're dead
+  code." Acting on it would have **deleted the scaffolding for beta contract BC-0153** and stripped
+  a Champion-eligible patron down to one lane.
+
+In both cases the premise was internally coherent and confidently argued. In both cases the
+disconfirming evidence lived in a file the premise never opened.
+
+### 2. Both are "two parallel systems, one mental model"
+
+- **PART A:** two tier ladders - patron (`Seeker/Devoted/Champion`, cap 85) and broad
+  (`Seeker/Faithful`, cap 50). They share the T1 word *and* the 50-point gate, so a single-ladder
+  model looks right until it silently relabels the broad lane.
+- **PART B:** two piety lanes - curated signals, and the likes/dislikes CSV + quest-reaction matrix.
+  I nearly wired `Shor.HONORABLE_BATTLE` to keep a promise the **CSV already keeps** (Shor, Tsun
+  *and* Stuhn all take capped piety per humanoid kill). That would have double-paid every kill.
+
+**The generalisable rule: before you change a player-facing artifact, enumerate every lane, ladder
+or channel that artifact participates in.** Both bugs are what happens when you enumerate one.
+
+### 3. In both, the NEWER authority wins - and the older note is the trap
+
+- **PART A:** the specs were *right* and the ESP had drifted - the opposite of what the ticket assumed.
+- **PART B:** the reserved-ledger note (2026-07-06) deferred Stuhn as low-priority "Wave 3"; the
+  pantheon-parity lock (2026-07-13) **promoted** Stuhn to a focusable patron. Acting on the older note
+  would have amputated the god.
+
+Ledger and spec entries go stale **in both directions**. A "cut" can become contracted content; a
+"wire" can become dead. This is now `PDV_STANDARDS.md` §5.2 rule 6.
+
+### 4. They block on the SAME scoped pass - schedule them together
+
+This is the practical payoff of filing them jointly.
+
+- **PART A OPEN DECISION 2** needs `PDV__ManagerQuest.psc` edits to
+  `GetBroadLaneStandingLabel` / `GetBroadLaneNextThresholdText` (broad-lane **labels** - currently
+  returning the retired word `Observant`).
+- **PART B** needs `PDV__ManagerQuest.psc` edits to the `HumanizeCuratedSignalReason` phrases (cuts)
+  and to the broad-pool award path (B5, broad-lane **income**).
+
+Both touch the broad-pantheon code in the same file. Both are deferred for the same two reasons PART
+A already documented: `PDV__ManagerQuest.psc` is the file a parallel Codex `commit -a` sweep silently
+reverts, and both need a recompile the owner cannot run mid-smoke-test.
+
+**Recommendation: one scoped `PDV__ManagerQuest.psc` pass that closes PART A decision 2 and PART B's
+confirmed cuts together**, with a single recompile and a single fresh-save proof - rather than two
+passes that each risk clobbering the other's edits to the same file.
+
+### 5. Prevention landed this session
+
+`PDV_STANDARDS.md` gained §2.7 (phantom declarations - the four-layer rule), §5.2 (reserved ledgers
+are debt, with the "newer authority" and "grep the contract ledgers" rules), and a §5.1 amendment (a
+gate citation is void if the gate passes by waiver). §2.7's core rule is deliberately
+`grep`-checkable in a pre-commit hook: **the previous seven responses to this bug class were prose,
+and prose got waived.**
