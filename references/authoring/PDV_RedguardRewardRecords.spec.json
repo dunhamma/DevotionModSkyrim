@@ -155,7 +155,7 @@
       "threshold": "broad-worship state (PATRON_STATE_BROAD), AncestorSpine progress >= Seeker-equivalent",
       "gate": "BROAD LANE = PATRON_STATE_BROAD gated by PDV_State_RedguardSect (any sect) (NOT a deity tier, R1). Granted by the broad-worship reward path; editorId is the FIXED manager property PDV_Bless_Redguard_AncestorSpine_T1 (GetFirstTierRaceRewardSpellForOrigin, R2).",
       "spellEditorId": "PDV_Bless_Redguard_AncestorSpine_T1",
-      "displayName": "Ancestors' Regard - Seeker",
+      "displayName": "Ancestors' Regard - Observant",
       "effects": [
         {
           "actorValue": "ResistMagic",

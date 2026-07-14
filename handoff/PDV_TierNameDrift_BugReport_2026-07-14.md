@@ -1,13 +1,24 @@
-# PDV Combined Session Bug Report - 2026-07-14
+# PDV Combined Session Bug Report - 2026-07-14 (v2, adjudicated 2026-07-15)
+
+> **v2 NOTICE - PART D IS THE AUTHORITY.** On 2026-07-15 all claims below (plus
+> `references/authoring/PDV_PlayerStateBugs_2026-07-14.md` and the bug claims in
+> `PDV_RaceGuide_NexusFinalPass_2026-07-14.md`) were reconciled against current main
+> (post `0ff53544` guide rewrite + `5f9ce950` pantheon presentation), adversarially
+> audited with direct houseCARL ESP reads, and ruled on by the owner. **PART D holds the
+> verdict matrix, the executed fixes, and the rulings.** Parts A-C are the historical
+> record; where a Part A/B claim conflicts with Part D, Part D wins. In particular,
+> Part A's "rename to Seeker" premise was INVERTED by newer canon and its queued ESP
+> write was abandoned - do not resume it.
 
 Two bugs found in parallel sessions on 2026-07-14. They are filed together because
 **they are the same failure mode wearing different clothes** - see PART C.
 
-| | Bug | Scope | Status |
+| | Bug | Scope | Status (v2) |
 |---|---|---|---|
-| **PART A** | Player-facing tier-name drift (blessing records) | `Devotion.esp` SPEL/MGEF Name fields; reward spec JSONs; Papyrus tier-label helpers | Specs FIXED. ESP write QUEUED (blocked on ESP lock). 2 decisions open. |
-| **PART B** | Curated-signal dispatch - 37 signals that can never fire | `PDV_Deity_*.psc`, `PDV__ManagerQuest.psc`, `tools/pdv_reserved_signals.json` | Audit COMPLETE. Prevention rules LANDED in `PDV_STANDARDS.md`. No signal code touched. 5 decisions open. |
-| **PART C** | The shared root pattern + the work they both block on | - | Read this before scheduling either fix. |
+| **PART A** | Player-facing tier-name drift (blessing records) | `Devotion.esp` SPEL/MGEF Name fields; reward spec JSONs; Papyrus tier-label helpers | SUPERSEDED by Part D: canon bands are Distant/Observant/Faithful; 6-record band write EXECUTED with readback 2026-07-15; label-helper residue queued to the scoped pass. |
+| **PART B** | Curated-signal dispatch - 37 signals that can never fire | `PDV_Deity_*.psc`, `PDV__ManagerQuest.psc`, `tools/pdv_reserved_signals.json` | ADJUDICATED: 21 cut / 8 wire-now / 8 wire-later, all owner-ruled; ledger annotated with decision/owner/expires; execution handoff written. |
+| **PART C** | The shared root pattern + the work they both block on | - | Still the right lens; the scoped-pass handoff now exists (`references/authoring/PDV_HO_ScopedManagerPass_2026-07-15.md`). |
+| **PART D** | Reconciliation + adversarial-audit verdicts (2026-07-15) | everything above + `PDV_PlayerStateBugs_2026-07-14.md` | **CURRENT AUTHORITY.** |
 
 **Neither bug is what its originating premise said it was, and in both cases acting on
 that premise would have shipped a regression.** That is not a coincidence; it is the
@@ -509,3 +520,60 @@ are debt, with the "newer authority" and "grep the contract ledgers" rules), and
 gate citation is void if the gate passes by waiver). §2.7's core rule is deliberately
 `grep`-checkable in a pre-commit hook: **the previous seven responses to this bug class were prose,
 and prose got waived.**
+
+---
+---
+
+# PART D - Reconciliation + Adversarial-Audit Verdicts (2026-07-15) - CURRENT AUTHORITY
+
+Method: every claim in Parts A/B, `PDV_PlayerStateBugs_2026-07-14.md`, and
+`PDV_RaceGuide_NexusFinalPass_2026-07-14.md` was (1) re-verified against current main
+(post `0ff53544` + `5f9ce950`), (2) adversarially checked against the newest authorities
+(BroadPantheonContracts playerFacingBands, BetaContract BC-0153, the 2026-07-13
+pantheon-parity lock, AGENTS.md 07-14 ratifications), and (3) settled at the RECORD level
+with direct houseCARL reads where docs conflicted. Owner ruled on every open branch
+(grill, 2026-07-15). Proof boundary: static + ESP-readback; the runtime half is the six
+RC1-RC6 cards appended to `PDV_1_0_CoTest_Runbook_2026-07-10.md`.
+
+## D1. Verdict matrix
+
+| # | Claim (source) | Verdict | Evidence / action |
+|---|---|---|---|
+| 1 | Broad T1 blessings should read "- Seeker" (Part A) | **PREMISE-INVERTED (stale)** | `5f9ce950` ratified `playerFacingBands {0:Distant, 25:Observant, 50:Faithful}`; "Seeker" is internal/patron-ladder only. 071071/071073/0716C4 were already CORRECT as "- Observant". The queued 8-op write was abandoned. |
+| 2 | Remaining tier-word drift on broad records | **TRUE-BUG - FIXED 2026-07-15** | Full 241-spell sweep found 6 live offenders Part A never saw in full: Bosmer/Breton/Orc/Redguard broad T1 "- Seeker" + Dunmer T1 "- Faithful"/T2 "- Devoted". All 6 renamed in-place (backup `Devotion.esp.bak-bandnames-2026-07-15`), houseCARL load-order readback clean, naming audit PASS 241/392/0. Specs realigned in 6 JSONs (uniqueness-asserted, re-parsed, ASCII-clean). |
+| 3 | Dunmer Reclamation "Devoted" exception (Part A Decision 1) | **RULED + EXECUTED** | Owner: broad bands everywhere. T1 -> "- Observant", T2 -> "- Faithful"; spec `tierCap` Devoted -> Faithful. |
+| 4 | Three conflicting tier vocabularies (Part A Decision 2) | **PARTIALLY RESOLVED; residue queued** | Canon now fixed (broad: Distant/Observant/Faithful; patron: Seeker/Devoted/Champion). `PDV_DiegeticDirector.psc:497,510` still returns "Faithful" for tier 1 -> scoped pass. Gate gap recorded: NO audit validates SPEL tier words (naming audit covers child MGEFs only). |
+| 5 | The 37 undispatched curated signals (Part B) | **ADJUDICATED: 21 cut / 8 wire-now / 8 wire-later** | All 37 `pdv_reserved_signals.json` entries annotated with decision/owner/expires (gate PASS, staleLedger empty). Execution: `PDV_HO_ScopedManagerPass_2026-07-15.md`. Leki + Malacath owner-ruled KEEP-WIRE despite guide copy cut (restore copy on landing). Talos PROTECT_WORSHIPPER ruled WIRE via authored rescue routes; `TargetEndStates` :690 wording amended (rescue-with-Thalmor-kills = favor; plain killing != favor). Tsun ADVERSITY_SURVIVED wires only with a RARE detector - curated->pool feeding is ruled INTENDED, rarity is the guard. |
+| 6 | Altmer crisis never resolves (PlayerStateBugs #1, CONFIRMED) | **TRUE-BUG (HIGH)** | Re-verified on current main: `ResolveAltmerCrisis` has zero callers incl. MCM; `SCARRED_RESOLVED` unreachable; "Coherence restored" toast can never fire. Every main-quest Altmer loses the discipline blessing permanently. Fix designed in scoped-pass handoff section 4. Runtime card RC1. |
+| 7 | Redguard "permanent neglect" (NexusFinalPass #5, "most serious find") | **REFUTED - PREMISE-ERROR** | The three sect P2 lists are populated (Crown/Forebear from MS08 "In My Time Of Need"; Ash'abah from DA11Intro) and organically registered (`PDV_PlayerEvents.psc:1041-1043`). |
+| 8 | Redguard neglect "resetters all curated and rare" (PlayerStateBugs #2) | **ALSO WRONG - NOT-A-BUG** | Neither doc found the third lane: qualifying ancestral-rest SLEEP stamps the sect clock (`RecordRedguardAncestralRest` -> `RecordRedguardAncestorSpinePulse` -> `RecordRedguardSectSignal`, once/day), plus repeatable named-undead burden + crypt clears. Neglect binds only after 5 days of NO practice at all; penalty is -3 ResistMagic. Working as intended. RC6 proves the feel. |
+| 9 | All five Khajiit Champion signatures missing (PlayerStateBugs #3) | **PARTLY TRUE (4 of 5)** | ESP VMAD reads: `PDV_MGEF_Khajiit_BaanDar_T3_AvoidDeath` "Baan Dar Remembers" EXISTS with `PDV_T3DailyLowHealthSaveEffect` fully propertied (the spec is STALE - the ESP is ahead of it). Khenarthi/Azurah/Rajhin/Alkosh T3s are genuinely stat-only. Note the LOCKED one-save-per-race rule: Baan Dar carries Khajiit's save, so the other four signatures need non-save mechanics if built. Design decision -> issue list. |
+| 10 | Nord Shor last-stand save "gone" (PlayerStateBugs #4 / NexusFinalPass #6) | **REFUTED - PREMISE-ERROR** | `PDV_MGEF_Nord_Shor_T3_AvoidDeath` "Shor Remembers" on the live ESP with the save script, 20% trigger, flat HealSpell (Requiem-proofed), full Prisma properties. RC3 proves the fire. |
+| 11 | Orc stronghold forge dev-only + HearthHeld double-dead (PlayerStateBugs #5) | **TRUE-BUG** | `HandleOrcStrongholdForge` reachable only from dev objects; craft chain never stamps the life-mode clock; `PDV_SPEL_OrcHearthHeld` synced-False only AND its MGEF confirmed `StaminaRateMult` (Requiem-inert) at the ESP. Fix in scoped-pass section 4. |
+| 12 | Altmer orthodox track one-way (PlayerStateBugs #6) | **TRUE-BUG (design)** | All organic movers negative (-5/-20/-25); the positive keys (+15/+20) exist in the lookup table with NO emitter anywhere. Owner input on wire-vs-document requested in scoped-pass section 4. |
+| 13 | Breton twin champion boons identical (PlayerStateBugs #7) | **TRUE-BUG (spec + ESP)** | Both = Fortify Magicka +40 / Magic Resist +15, 2 effects each at the ESP. Both claim "copy of the Imperial [God] T3 verbatim" - check the Imperial source records during the fix; the duplication may originate upstream. |
+| 14 | Nord dialogue chains absent (AGENTS.md 07-14, in audit scope by ruling) | **TRUE-BUG (verified)** | Direct houseCARL queries: ZERO `PDV_DIAL_Nord_*` topics and ZERO Nord DLBR branches in Devotion.esp. The 20 strict Phase 18/Nord failures are real record absence, not a checker artifact. Restoration is CK-dialogue work - its own effort. |
+| 15 | Breton Hidden-Art credits the wrong god (guide claim, fixed by 0ff53544) | **FIXED + CODE-VERIFIED** | Guide now says Magnus; code confirmed: `HandleBretonHiddenArtExposure` awards `PDV_Magnus.SIGNAL_DISCIPLINED_STUDY`. RC5 covers deployed-pex freshness. |
+| 16 | "19 never-granted records, owner-confirmed 2026-07-14" (PlayerStateBugs dismissal) | **DISMISSAL STANDS; CITATION CORRECTED** | No such AGENTS.md entry exists. The actual authorities: `PDV_Architecture_v3.md:1577` (ADR-0005 focused T1 = save-compatible artifacts, never granted) + `PDV_DeityBase.psc:410`. Do not "fix" the 19 records. |
+| 17 | Spine-parity asymmetry (forensics 3a, unresolvable from evidence) | **RULED: AUTHENTIC LANES** | Malacath/Tu'whacca/Azura pulses are act-specific god lanes, not passive substrate. Ratified in AGENTS.md so no future session "finishes" the parity. |
+
+## D2. Executed this session (all proven)
+
+1. Six-record ESP band write, in place, with per-record houseCARL readback + fresh backup.
+2. Six spec JSONs realigned (uniqueness asserts, JSON re-parse, ASCII check).
+3. `pdv_active_effect_naming_audit` PASS (241/392/0); `pdv_signal_e2e_gate --dispatch-coverage-only` PASS (123/86/37, staleLedger empty) - before AND after.
+4. All 37 reserved-ledger entries annotated (21 cut / 16 wire) with owner + expiry.
+5. AGENTS.md: five 2026-07-15 Decisions Log entries (bands, pool-feeding, Talos rescue, spine-authenticity, ledger disposition). `PDV_TargetEndStates_1.0.md` :690 amended.
+6. RC1-RC6 runtime cards appended to the co-test runbook (PS-A sitting).
+7. `PDV_HO_ScopedManagerPass_2026-07-15.md` written: the single bundled .psc pass (21 cuts, 8 wires with detectors + caps, DiegeticDirector labels, Altmer crisis exit, Orc forge, twin boons, alignment mover).
+
+## D3. Proposed GitHub issues (TRUE-BUG verdicts only - awaiting owner approval, NOT filed)
+
+1. **Altmer: crisis has no exit; discipline blessing permanently lost after Dragon Rising** (high; D1#6)
+2. **Orc: stronghold forge path dev-only; HearthHeld never granted + Requiem-inert** (D1#11)
+3. **Altmer: orthodox alignment track has no positive organic mover** (design; D1#12)
+4. **Breton: Akatosh's Endurance and Julianos's Insight are identical capstones** (D1#13)
+5. **Khajiit: 4 of 5 Champion signature moments are stat-only records** (design decision; D1#9)
+6. **Nord: all four Phase 18 dialogue chains absent from the active ESP (20 strict failures)** (D1#14)
+
+Label: `needs-triage`. Repo: `dunhamma/DevotionModSkyrim`. Each issue body should cite its D1 row and the relevant runtime card.

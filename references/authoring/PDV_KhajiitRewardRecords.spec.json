@@ -297,6 +297,7 @@
       "spellEditorId": "PDV_Bless_Khajiit_BaanDar_T3",
       "displayName": "Baan Dar's Luck - Champion",
       "preserveAdditionalEffects": true,
+      "signature": "Carries the scripted T3 signature (ESP-verified 2026-07-15): PDV_MGEF_Khajiit_BaanDar_T3_AvoidDeath, script PDV_T3DailyLowHealthSaveEffect, key PDV.Capstone.Khajiit.BaanDarSlip, notification: Baan Dar slips you out of death's hand. This is Khajiit's single allowed cheat-death save (LOCKED one-save-per-race rule). The stat effects below are the base; the scripted signature rides on top and is protected by preserveAdditionalEffects.",
       "effects": [
         {
           "actorValue": "DamageResist",

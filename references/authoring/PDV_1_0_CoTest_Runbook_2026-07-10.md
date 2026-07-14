@@ -1033,6 +1033,22 @@ Repeat traces to watch for: `Generic book read repeat skipped: <formID>` and
 
 2026-07-12 Book-read co-test note: runtime evidence is partial, not a full BR close. BR1 passed for first lore read plus same-book repeat skip (`A Dance in Fire, v1`). BR2 passed for first skill-book read plus same-book repeat skip (`SkillAlteration1`). BR3 proved the first unknown spell-tome learn route, but did not capture the same-tome known-copy repeat skip. BR5 proved old books stay skipped after day rollover, but did not capture a fresh unread book credit after rollover. BR6 remains open; no Azura/Hermaeus Mora unread-book faucet trace was captured. BR7 partially passed for the Breton P2 Hagravens repeat skip; Altmer Talos Mistake one-shot was not captured in this sitting.
 
+## Reconciliation-Audit Runtime Cards (2026-07-15, append to the PS-A sitting)
+
+From the three-report reconciliation audit (see
+`handoff/PDV_TierNameDrift_BugReport_2026-07-14.md` Part D). Static/ESP proof is
+complete for each; these cards are the runtime half. Run them in the same sitting
+as PS-A1..A12.
+
+| ID | Claim being proven | Steps | Expected | Closes |
+|----|--------------------|-------|----------|--------|
+| RC1 | Altmer crisis has no exit (TRUE-BUG repro) | Fresh Altmer, set discipline coherent, `setstage MQ104 160` (or play Dragon Rising). Check Active Effects + Survey before/after; wait 5+ game days, pray, re-check. | Discipline blessing strips on the stage; NOTHING recovers it; no "Coherence restored" toast ever fires. | Repro evidence for the crisis issue |
+| RC2 | Broad T1 band renames present on a live save | As any of Bosmer/Breton/Orc/Redguard/Dunmer with broad T1 active, open Active Effects. | Parent blessing reads "<family> - Observant" (e.g. "Y'ffre's Weave - Observant"); Dunmer T2 reads "- Faithful". | RC readback -> player-surface proof |
+| RC3 | Shor's last-stand save fires (refutation proof) | Nord Shor Champion, take damage below 20% health once per day. | "Shor pulls you back from the edge." notification + Prisma "Shor's Last Stand"; flat heal (no regen dependency). | Confirms PREMISE-ERROR verdict on "save is gone" |
+| RC4 | Baan Dar's cheat-death fires | Khajiit Baan Dar Champion, drop below 20% health. | "Baan Dar slips you out of death's hand." + Prisma "Baan Dar's Luck". | Confirms 1-of-5 Khajiit signature EXISTS |
+| RC5 | Breton Hidden-Art credits Magnus (pex freshness) | Breton, read a Hidden-Art source book. | Ledger driver row voices Magnus disciplined study (never Julianos lawful order). | Code verified; this proves the DEPLOYED pex matches |
+| RC6 | Redguard neglect resets on ordinary practice | Redguard with declared ancestral-rest cell: sleep there (once/day signal), then check neglect state near day 5. | Sleep stamps the sect clock; neglect never engages while practicing; -3 ResistMagic only after 5+ days of NO practice. | Confirms NOT-A-BUG verdict on "permanent neglect" |
+
 ## 1.0 Open Gate Map
 
 The generated burndown is current authority. These are the practical closeout

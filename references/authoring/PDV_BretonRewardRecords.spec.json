@@ -240,7 +240,7 @@
       "threshold": "broad-worship state, tradition committed >= Seeker-equivalent",
       "gate": "BROAD LANE = PATRON_STATE_BROAD (NOT a deity tier). Granted by the broad-worship reward path; editorId is the FIXED manager property PDV_Bless_Breton_Tradition_T1 (GetFirstTierRaceRewardSpellForOrigin) per R1/R2. The broad family is the same for all three traditions; the focused family below is what differs.",
       "spellEditorId": "PDV_Bless_Breton_Tradition_T1",
-      "displayName": "Tradition's Footing - Seeker",
+      "displayName": "Tradition's Footing - Observant",
       "effects": [
         {
           "actorValue": "Health",

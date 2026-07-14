@@ -116,7 +116,7 @@
       "threshold": "broad-worship state (PATRON_STATE_BROAD), Malacath progress >= Seeker-equivalent",
       "gate": "BROAD LANE = PATRON_STATE_BROAD gated by the Orc broad-worship reward path (NOT a deity tier, R1). Granted via GetFirstTierRaceRewardSpellForOrigin; editorId is the FIXED manager property PDV_Bless_Orc_Malacath_T1 (R2). Independent of life mode -- broad Malacath is the floor that holds in any mode or before a mode locks in.",
       "spellEditorId": "PDV_Bless_Orc_Malacath_T1",
-      "displayName": "Malacath's Regard - Seeker",
+      "displayName": "Malacath's Regard - Observant",
       "effects": [
         {
           "actorValue": "DamageResist",

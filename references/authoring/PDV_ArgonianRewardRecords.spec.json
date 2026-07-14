@@ -168,7 +168,7 @@
       "thresholdPiety": 25,
       "consolidation": "highest-tier-only; each tier carries the cumulative total",
       "spellEditorId": "PDV_Bless_Argonian_Hist_T1",
-      "displayName": "Hist Communion - Seeker",
+      "displayName": "Hist Communion - Observant",
       "runtimeStatus": "retired-compatibility-never-granted",
       "effects": [
         {

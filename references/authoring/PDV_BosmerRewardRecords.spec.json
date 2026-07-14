@@ -141,7 +141,7 @@
       "threshold": "broad-worship state (PATRON_STATE_BROAD), Yffre-interpreted broad progress >= Seeker-equivalent",
       "gate": "BROAD LANE = PATRON_STATE_BROAD, Y'ffre-interpreted (NOT a deity tier, R1). Granted by the broad-worship reward path; editorId is the FIXED manager property PDV_Bless_Bosmer_Yffre_T1 (GetFirstTierRaceRewardSpellForOrigin, R2).",
       "spellEditorId": "PDV_Bless_Bosmer_Yffre_T1",
-      "displayName": "Y'ffre's Weave - Seeker",
+      "displayName": "Y'ffre's Weave - Observant",
       "effects": [
         {
           "actorValue": "Stamina",

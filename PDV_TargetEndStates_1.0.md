@@ -687,7 +687,7 @@ first authentic act grants `+4` toward `1/25/75`; generic sleep is rejected.
 | Honest trade, craft, tax / contract order | Zenithar-coded speech or commerce steadiness |
 | Public/private Talos pressure | Talos favor only when the authored signal is faithful defiance, not generic rebellion |
 
-Concordat compliance may move ConcordatStanding, alter access, or qualify Akatosh/civic-order favor when the act is genuinely order-preserving. It does not trigger Talos contextual favor. Talos favor comes only from authored faithful defiance, never generic rebellion or plain anti-Thalmor violence.
+Concordat compliance may move ConcordatStanding, alter access, or qualify Akatosh/civic-order favor when the act is genuinely order-preserving. It does not trigger Talos contextual favor. Talos favor comes only from authored faithful defiance, never generic rebellion or plain anti-Thalmor violence. Rescuing or protecting a Talos worshipper through an authored quest beat IS faithful defiance, and stays creditable even when Thalmor die in the doing -- the act that earns is the rescue, never the killing by itself. (Amended 2026-07-15 by owner ruling; the earlier wording overstated the restriction.)
 
 Talos offers normally require `Uncommitted`, `Private Defiant`, or `Open Defiant`. `Public Compliant` and `Concordat Enforcer` block Talos offers unless a fresh costly-defiance rupture signal is authored. Public compliance can amplify Akatosh / Zenithar civic-order offer eligibility, but never Talos. `Private Defiant` Talos offers should surface privately. `Uncommitted` leaves all Nine Divines offer eligibility neutral when real god-specific signals exist.
 

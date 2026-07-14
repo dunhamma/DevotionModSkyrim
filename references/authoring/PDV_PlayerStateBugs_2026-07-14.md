@@ -145,6 +145,15 @@ Resistance +15%. Two different gods, same capstone.
   `RestoreActorValue("Stamina", 100.0)` (`PDV__ManagerQuest.psc:~6288`) for exactly that reason.
   Working as intended. Its spec `playerFacingText` ("Stamina returns 50% faster") is misleading
   though.
-- **19 never-granted blessing records / no patron Seeker tier** - **intended**, owner-confirmed
-  2026-07-14. Retired-compatibility records kept so old saves do not break. A patron's blessing
-  begins at Devoted by design. Do not "fix".
+- **19 never-granted blessing records / no patron Seeker tier** - **intended**. (Citation
+  corrected 2026-07-15: no AGENTS.md owner-confirmation entry exists; the actual authorities are
+  `PDV_Architecture_v3.md` ADR-0005 -- "focused T1 records remain save-compatible artifacts but
+  are never granted" -- and the enforcement comment in `PDV_DeityBase.psc:410`.) Retired-
+  compatibility records kept so old saves do not break. A patron's blessing begins at Devoted by
+  design. Do not "fix".
+
+> **ADJUDICATED 2026-07-15:** every entry above now has a record-level verdict in
+> `handoff/PDV_TierNameDrift_BugReport_2026-07-14.md` PART D (D1 rows 6-13). Notable
+> reversals: #2 is NOT-A-BUG (a qualifying ancestral-rest sleep stamps the sect clock --
+> a lane this report missed); #4 is REFUTED (the Shor save ships, ESP-verified); #3 is
+> PARTLY refuted (Baan Dar's cheat-death ships; the other four are genuinely stat-only).

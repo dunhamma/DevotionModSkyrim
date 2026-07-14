@@ -977,6 +977,45 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 
 ## Decisions Log
 
+- **[2026-07-15] — Broad-band vocabulary applies to every broad-lane blessing family:** The
+  ratified `Distant/Observant/Faithful` public bands (BroadPantheonContracts
+  `playerFacingBands`) govern ALL broad-lane reward records, not only the three pool
+  families — including Dunmer Reclamation (its `tierCap: Devoted` spec exception is
+  revoked) and the retired Argonian Hist records on paper. Rationale: the Reclamation
+  grant gate is unambiguously broad (`PATRON_STATE_BROAD`, caps at 50); a lone "Devoted"
+  on a lane with no Champion rung tells a maxed player they are mid-ladder. Executed
+  2026-07-15: six ESP renames (Bosmer/Breton/Orc/Redguard broad T1 "- Seeker" ->
+  "- Observant"; Dunmer T1 -> "- Observant", T2 -> "- Faithful") with houseCARL readback
+  proof + six spec realignments. Gate gap noted: no audit yet validates SPEL tier words
+  against the bands (the naming audit covers child MGEFs only).
+- **[2026-07-15] — Curated signals feeding broad pools is INTENDED; the guard is trigger
+  rarity:** `AwardPietyInternal` auto-opening a broad-pantheon scope (so any curated award
+  on a pool-eligible deity feeds the pool's strongest-delta-per-event) matches the pool
+  contracts' own wording and stays. Rationale: award-path surgery would change behavior for
+  all 86 wired signals. Consequence: a curated signal on a pool-eligible deity may only
+  wire with a genuinely RARE detector — `Tsun.SIGNAL_ADVERSITY_SURVIVED` must key on
+  near-fatal reversal, not ordinary hard fights.
+- **[2026-07-15] — Talos protect-worshipper favor is wireable via authored rescue routes:**
+  The `PDV_TargetEndStates_1.0.md` "never generic rebellion or plain anti-Thalmor violence"
+  rule OVERSTATED the design: rescuing/protecting a Talos worshipper counts as authored
+  faithful defiance even when Thalmor die in the doing; plain Thalmor-killing still earns
+  nothing. `Talos.SIGNAL_PROTECT_WORSHIPPER` wires via quest-stage rescue beats (e.g. MS08
+  routes exist; MS09-class rescue stages), one-shot latched. TargetEndStates wording amended
+  same day.
+- **[2026-07-15] — Malacath/Tu'whacca/Azura deity pulses from substrate-adjacent contexts
+  are AUTHENTIC god lanes, not unfinished pantheon parity:** Orc life-mode, Ash'abah
+  named-undead burden, and Dunmer twilight-window pulses are act-specific and theologically
+  owned — unlike the four converted passive spines (Nord/Imperial/Altmer/Breton). Ratified
+  so no future session "finishes" the parity by converting them. Rationale: the parity
+  ruling was about passive daily credit inventing deity piety; these three fire on
+  deliberate acts through their gods' own lanes.
+- **[2026-07-15] — Reserved-signal ledger disposition (37 = 21 cut / 8 wire-now / 8
+  wire-later):** Every `tools/pdv_reserved_signals.json` entry now carries
+  decision/owner/expires per PDV_STANDARDS 5.2. Cuts and near-term wires belong to the
+  scoped ManagerQuest pass; Syrabane's five stay reserved for the BC-0153 beta warding
+  lane; Stuhn's two for the pantheon-parity focusable-patron build; Trinimac orthodoxy for
+  the Orthodox Champion lane. Leki/Malacath wires were owner-ruled KEPT despite the
+  Nexus-final guide cutting their copy — restore the copy when the wires land.
 - **Pantheon/substrate machine closeout ratified (2026-07-14 AEST; runtime/manual proof open):** Imperial Divines, Nord Old Ways, and Nord Nine Divines use separate manager-owned broad pools, each fed once per logical devotional act; Nord baselines are fully mirrored in thresholds, decay, offers, and two-tier broad rewards. The six active substrates use one piety-neutral +4 daily devotional credit, reaching 25 on day 7 and 75 on day 19; Argonian cultural practice is independent of Hist/People/Void relations. Direct houseCARL refutation proves exact P2 source membership, both Observe-the-Moons manager VMAD bindings, the ordered 20-message lunar packet, the six active substrate quests, and zero winning plugin Name/Description fields containing `Spine`. Active Effects have one durable presentation rule: the parent `PDV_Bless_*` spell shows the family and public tier, while every child MGEF shows the concise mechanical effect (or a distinct scripted-effect name). `pdv_active_effect_naming_audit.mjs` reads every 241 parent spells / 392 child effects and is now part of `pdv_verify`; a parent-name duplication is a regression. Focused commitment below 50 remains committed but displays as `Wavering`; the Book shows the deity name rather than a redundant `Focus` suffix. Presence-only FormList checks are insufficient: approved receiver lists must fail on unexpected members. Papyrus property declarations are not VMAD proof and every new object property must be read back from the live winning record. Late refutation also closed same-day negative-scratch decay, Argonian bed/Hist-maintenance clock, stale Nord Survey counter, and per-substrate rejected-event telemetry gaps. These results do not credit PS-A1 through PS-A12; organic ingress, save/load, and player-surface evidence remain a separate in-game sitting.
 
 - **Pantheon parity and shared substrate pacing implemented (2026-07-13 AEST; runtime/manual proof open):** Imperial Divines, Nord Old Ways, and Nord Nine Divines now use manager-owned signed broad-pantheon pools with `25/50` thresholds, a `50` cap, strongest-positive/otherwise-most-severe-negative logical-event aggregation, and two-day-grace suppressed-pool decay. Imperial Talos remains locked until explicit Talos practice or defiance; Nord activates exactly one baseline. Broad patron acceptance preserves deity piety, suppresses the broad boon, and focused Imperial/Nord families grant only T2 at `50-84` and T3 at `85+`, suspending below 50 without erasing commitment. The new Nord public-Divines family is `Faith of the Holds`; Imperial `The Divines' Regard` is Poison Resistance +10% then Poison and Disease Resistance +10%. All six active substrates now share one origin-validated 06:00-to-06:00 daily credit of `+4`, thresholds `1/25/75`, cap `75`, and no same-day cross-route bypass, yielding 28 on day 7 and 75 on day 19 in an uncursed normal run. Argonian cultural practice is separate from Hist/People/Void relations and Hist Communion is retired; Khajiit road-home no longer needs anchors and `Observe the Moons` is the authored nightly rite; generic Imperial and Khajiit sleep routes are retired. Breton compatibility substrate records retain save IDs but are removed from active substrate FormLists. Player-visible `Spine` naming is retired while EditorIDs, scripts, properties, and StorageUtil keys remain unchanged. Authority/static/compile/direct-record readback are the current proof boundary; organic route, player-surface, save/load, and feel evidence remain open in the co-test runbook.
