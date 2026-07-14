@@ -1034,8 +1034,10 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   102/94/8/8 PASS (ledger holds only the 8 wire-later entries); naming audit PASS; strict
   Phase 18 34->14 via the approved dialogue descope (assert-ABSENT posture in pdv_verify +
   manifest status v1-removed-voiced-v2). KNOWN PRE-EXISTING (stash-proven on pristine
-  main, NOT this pass): 14 stale spine-source verify contracts + the remap adversary
-  breton-hidden-art-champion assert — both need their own contract-refresh ruling. Guides:
+  main, NOT this pass): 14 stale spine-source verify contracts (DESCOPED same day with
+  owner sign-off — checkSourceLacks absence-guards; strict gate 0 FAIL / 4142 PASS) +
+  the remap adversary breton-hidden-art-champion assert (still owed a
+  stale-assert-vs-real-gap verdict). Guides:
   Leki/Malacath/Talos beats restored, boon tables respliced, BBCode gate clean; the
   tables tool's Observant/Faithful "retired-word" lint retired (inverted by the band
   ratification). Runtime proof owed: RC1 + RC7-RC15 (co-test runbook).
