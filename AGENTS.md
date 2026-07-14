@@ -1009,6 +1009,15 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   so no future session "finishes" the parity by converting them. Rationale: the parity
   ruling was about passive daily credit inventing deity piety; these three fire on
   deliberate acts through their gods' own lanes.
+- **[2026-07-15] — Nord Phase 18 dialogue quartet reclassified: V1 removal, not debt:**
+  The four absent Froki/Heimskr/Andurs/Aela chains (20 strict Phase 18/Nord failures)
+  are the PLANNED V1 build action from `PDV_V2_Backlog.md` ("First V2 step is actually a
+  V1 removal... Re-add voiced in V2"), owner-confirmed — the 07-14 "pre-existing debt"
+  classification below is superseded. The real defect is stale gate expectations:
+  `pdv_verify.mjs` `PHASE18_NORD_DIALOGUE_CONTRACTS` still asserts the removed records.
+  Descoping those contracts to V2-expected-absent is queued in the fix plan as a rule-5
+  toolchain edit REQUIRING explicit owner sign-off before execution. Rationale: a strict
+  gate asserting deliberately removed content trains people to ignore red gates.
 - **[2026-07-15] — Reserved-signal ledger disposition (37 = 21 cut / 8 wire-now / 8
   wire-later):** Every `tools/pdv_reserved_signals.json` entry now carries
   decision/owner/expires per PDV_STANDARDS 5.2. Cuts and near-term wires belong to the

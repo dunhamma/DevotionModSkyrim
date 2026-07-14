@@ -552,7 +552,7 @@ RC1-RC6 cards appended to `PDV_1_0_CoTest_Runbook_2026-07-10.md`.
 | 11 | Orc stronghold forge dev-only + HearthHeld double-dead (PlayerStateBugs #5) | **TRUE-BUG** | `HandleOrcStrongholdForge` reachable only from dev objects; craft chain never stamps the life-mode clock; `PDV_SPEL_OrcHearthHeld` synced-False only AND its MGEF confirmed `StaminaRateMult` (Requiem-inert) at the ESP. Fix in scoped-pass section 4. |
 | 12 | Altmer orthodox track one-way (PlayerStateBugs #6) | **TRUE-BUG (design)** | All organic movers negative (-5/-20/-25); the positive keys (+15/+20) exist in the lookup table with NO emitter anywhere. Owner input on wire-vs-document requested in scoped-pass section 4. |
 | 13 | Breton twin champion boons identical (PlayerStateBugs #7) | **TRUE-BUG (spec + ESP)** | Both = Fortify Magicka +40 / Magic Resist +15, 2 effects each at the ESP. Both claim "copy of the Imperial [God] T3 verbatim" - check the Imperial source records during the fix; the duplication may originate upstream. |
-| 14 | Nord dialogue chains absent (AGENTS.md 07-14, in audit scope by ruling) | **TRUE-BUG (verified)** | Direct houseCARL queries: ZERO `PDV_DIAL_Nord_*` topics and ZERO Nord DLBR branches in Devotion.esp. The 20 strict Phase 18/Nord failures are real record absence, not a checker artifact. Restoration is CK-dialogue work - its own effort. |
+| 14 | Nord dialogue chains absent (AGENTS.md 07-14, in audit scope by ruling) | **REVERSED 2026-07-15: INTENDED (V1 removal)** | The absence is real (houseCARL: ZERO `PDV_DIAL_Nord_*`, ZERO Nord DLBR) but it is the PLANNED V1 build action: `PDV_V2_Backlog.md:34` - "First V2 step is actually a V1 removal: disable/remove these DLBR/DIAL/INFO records from the V1 release ESP. Re-add voiced in V2." Owner confirmed the quartet is the V2-scoped NPC recognition class (Section 21.3 voiced-content non-goal). The ACTUAL defect is stale gate expectations: `pdv_verify.mjs` `PHASE18_NORD_DIALOGUE_CONTRACTS` still asserts the removed records (20 false strict failures) and the AGENTS 07-14 note mislabeled this "pre-existing debt". Fix = descope the verify contracts to V2-expected-absent (rule-5 toolchain edit; needs explicit owner sign-off, requested in the fix plan). |
 | 15 | Breton Hidden-Art credits the wrong god (guide claim, fixed by 0ff53544) | **FIXED + CODE-VERIFIED** | Guide now says Magnus; code confirmed: `HandleBretonHiddenArtExposure` awards `PDV_Magnus.SIGNAL_DISCIPLINED_STUDY`. RC5 covers deployed-pex freshness. |
 | 16 | "19 never-granted records, owner-confirmed 2026-07-14" (PlayerStateBugs dismissal) | **DISMISSAL STANDS; CITATION CORRECTED** | No such AGENTS.md entry exists. The actual authorities: `PDV_Architecture_v3.md:1577` (ADR-0005 focused T1 = save-compatible artifacts, never granted) + `PDV_DeityBase.psc:410`. Do not "fix" the 19 records. |
 | 17 | Spine-parity asymmetry (forensics 3a, unresolvable from evidence) | **RULED: AUTHENTIC LANES** | Malacath/Tu'whacca/Azura pulses are act-specific god lanes, not passive substrate. Ratified in AGENTS.md so no future session "finishes" the parity. |
@@ -571,9 +571,12 @@ RC1-RC6 cards appended to `PDV_1_0_CoTest_Runbook_2026-07-10.md`.
 
 1. **Altmer: crisis has no exit; discipline blessing permanently lost after Dragon Rising** (high; D1#6)
 2. **Orc: stronghold forge path dev-only; HearthHeld never granted + Requiem-inert** (D1#11)
-3. **Altmer: orthodox alignment track has no positive organic mover** (design; D1#12)
-4. **Breton: Akatosh's Endurance and Julianos's Insight are identical capstones** (D1#13)
-5. **Khajiit: 4 of 5 Champion signature moments are stat-only records** (design decision; D1#9)
-6. **Nord: all four Phase 18 dialogue chains absent from the active ESP (20 strict failures)** (D1#14)
+3. **Altmer: orthodox alignment track has no positive organic mover** (design; D1#12 - owner ruled 2026-07-15: small rite mover)
+4. **Breton + Imperial: Akatosh's Endurance and Julianos's Insight are identical capstones at BOTH layers** (D1#13 - 2026-07-15 ESP reads prove the duplication originates in the Imperial T3 records; 4 spells affected)
+5. **Khajiit: 4 of 5 Champion signature moments are stat-only records** (design; owner ruled 2026-07-15: defer to a design session)
 
-Label: `needs-triage`. Repo: `dunhamma/DevotionModSkyrim`. Each issue body should cite its D1 row and the relevant runtime card.
+~~6. Nord dialogue chains~~ - **WITHDRAWN 2026-07-15**: reversed to INTENDED (planned V1
+removal per `PDV_V2_Backlog.md:34`); the residual fix is descoping the stale
+`pdv_verify.mjs` Phase 18 contracts, tracked in the fix plan, not an issue.
+
+Label: `needs-triage`. Repo: `dunhamma/DevotionModSkyrim`. Each issue body should cite its D1 row and the relevant runtime card. Fix designs for all five live in `references/authoring/PDV_HO_ScopedManagerPass_2026-07-15.md` (v2, the true-bug fix plan).
