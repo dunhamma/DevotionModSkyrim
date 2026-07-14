@@ -46,11 +46,6 @@
     "deferredBy": "curated-signal wiring audit",
     "date": "2026-07-06"
   },
-  "PDV_Malacath.SIGNAL_BLOOD_KIN": {
-    "reason": "Wave 1 mis-wire: HandleOrcBloodKinCrisis records life-mode progress but omits the curated dispatch its 3 sibling handlers (CityDignity/LegionService/SelfMadeCommunity) all have. Quick connect.",
-    "deferredBy": "curated-signal wiring audit",
-    "date": "2026-07-06"
-  },
   "PDV_Malacath.SIGNAL_EXILE_RETURN": {
     "reason": "Wave 2 milestone: Legion-Exile burden-carried-home beat; needs an exile-return detector within the LEGION_EXILE life-mode.",
     "deferredBy": "curated-signal wiring audit",

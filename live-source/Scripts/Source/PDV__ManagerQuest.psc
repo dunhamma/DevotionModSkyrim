@@ -7937,6 +7937,15 @@ Function HandleOrcBloodKinCrisis(String reason)
     endIf
 
     RecordOrcLifeModeSignal(ORC_LIFE_MODE_STRONGHOLD, 1.0, reason)
+    ; Curated award (dead-wiring burndown Wave 1, 2026-07-07): this handler recorded
+    ; life-mode progress but -- unlike its CityDignity/LegionService/SelfMadeCommunity
+    ; siblings -- never dispatched the curated signal, so BLOOD_KIN could never bank.
+    ; The crisis is a one-shot quest milestone (The Cursed Tribe resolution); the latch
+    ; keeps a save-reload edge from ever double-banking it.
+    if StorageUtil.GetIntValue(None, "PDV.Signal.OrcBloodKinCrisis.Awarded") != 1
+        StorageUtil.SetIntValue(None, "PDV.Signal.OrcBloodKinCrisis.Awarded", 1)
+        AwardOrcBloodKinSignal(1.0)
+    endIf
     Trace(2, "Orc Blood-Kin crisis routed: " + reason)
 EndFunction
 
@@ -8152,6 +8161,12 @@ EndFunction
 Function AwardOrcStrongholdForgeSignal(Float multiplier)
     if PDV_Malacath
         AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_STRONGHOLD_FORGE, None, multiplier)
+    endIf
+EndFunction
+
+Function AwardOrcBloodKinSignal(Float multiplier)
+    if PDV_Malacath
+        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BLOOD_KIN, None, multiplier)
     endIf
 EndFunction
 
