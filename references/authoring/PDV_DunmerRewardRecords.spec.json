@@ -134,7 +134,7 @@
       "fixedManagerProperty": true,
       "broadGate": "Broad worship is a STATE (R1): granted by the broad-worship reward path keyed on the Dunmer race state, NOT an aggregate deity. R2 fixed editorId.",
       "spellEditorId": "PDV_Bless_Dunmer_Reclamation_T1",
-      "displayName": "Reclamation Communion - Faithful",
+      "displayName": "Reclamation Communion - Seeker",
       "effects": [
         {
           "actorValue": "ResistMagic",

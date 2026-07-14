@@ -168,7 +168,7 @@
       "thresholdPiety": 25,
       "consolidation": "highest-tier-only; each tier carries the cumulative total",
       "spellEditorId": "PDV_Bless_Argonian_Hist_T1",
-      "displayName": "Retired Argonian Relation - Faithful",
+      "displayName": "Hist Communion - Seeker",
       "runtimeStatus": "retired-compatibility-never-granted",
       "effects": [
         {
@@ -187,7 +187,7 @@
       "thresholdPiety": 50,
       "tierCap": "Faithful",
       "spellEditorId": "PDV_Bless_Argonian_Hist_T2",
-      "displayName": "Retired Argonian Relation - Devoted",
+      "displayName": "Hist Communion - Faithful",
       "runtimeStatus": "retired-compatibility-never-granted",
       "effects": [
         {
