@@ -1016,8 +1016,12 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   classification below is superseded. The real defect is stale gate expectations:
   `pdv_verify.mjs` `PHASE18_NORD_DIALOGUE_CONTRACTS` still asserts the removed records.
   Descoping those contracts to V2-expected-absent is queued in the fix plan as a rule-5
-  toolchain edit REQUIRING explicit owner sign-off before execution. Rationale: a strict
-  gate asserting deliberately removed content trains people to ignore red gates.
+  toolchain edit; **owner sign-off GRANTED 2026-07-15** (execute in fix-pass P3 with
+  before/after strict-gate proof). Rationale: a strict gate asserting deliberately
+  removed content trains people to ignore red gates. Same-day rulings: Akatosh's
+  Endurance re-authors to Fortify Health +30 + Magic Resist +15 at both Imperial and
+  Breton layers (Julianos's Insight keeps the Magicka block); GitHub issue filing is
+  HELD until after the fix pass lands (Part D D3 stays the internal tracker).
 - **[2026-07-15] — Reserved-signal ledger disposition (37 = 21 cut / 8 wire-now / 8
   wire-later):** Every `tools/pdv_reserved_signals.json` entry now carries
   decision/owner/expires per PDV_STANDARDS 5.2. Cuts and near-term wires belong to the

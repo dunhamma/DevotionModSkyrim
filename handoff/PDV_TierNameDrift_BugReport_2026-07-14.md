@@ -580,3 +580,7 @@ removal per `PDV_V2_Backlog.md:34`); the residual fix is descoping the stale
 `pdv_verify.mjs` Phase 18 contracts, tracked in the fix plan, not an issue.
 
 Label: `needs-triage`. Repo: `dunhamma/DevotionModSkyrim`. Each issue body should cite its D1 row and the relevant runtime card. Fix designs for all five live in `references/authoring/PDV_HO_ScopedManagerPass_2026-07-15.md` (v2, the true-bug fix plan).
+
+**Owner ruling 2026-07-15: filing is HELD until after the fix pass lands.** This D3 list
+is the internal tracker of record meanwhile; re-present for filing at fix-pass closeout
+(likely reduced to whatever survives the pass unfixed).

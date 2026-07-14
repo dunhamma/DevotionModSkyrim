@@ -127,22 +127,27 @@ and the Breton `Champion_Akatosh`/`Champion_Julianos` copy them verbatim. Four s
 duplication. Fix in P1 (records lane):
 
 - **Julianos's Insight keeps** Fortify Magicka 40 + Magic Resistance 15 (insight = magicka; fits).
-- **Akatosh's Endurance is re-authored to its name**: read
-  `race-sheets/PDV_RaceDesign_Imperial.md` for the authored intent; if the sheet is
-  silent, propose Fortify Health +30 + Fortify Stamina +30 + Magic Resistance 10
-  (endurance identity, comparable budget) for owner sign-off BEFORE the write.
-- Apply identically to the Imperial record and its Breton copy; update both specs +
-  `playerFacingText`; regenerate guide tables (`pdv_guide_tables_gen.mjs`) since the
-  Nexus articles print these numbers.
+- **Akatosh's Endurance -- OWNER RULED 2026-07-15: Fortify Health +30 + Magic Resistance
+  +15** (two-effect family idiom; keeps the resist existing Champions rely on; distinct
+  from every sibling -- race-sheet identity "Order held across time" noted, contextual
+  streak mechanics remain a V2-class idea). Rename the MGEF EditorID/Name accordingly
+  (`*_T3_Magicka` -> `*_T3_Health`, child Name "Fortify Health" per the presentation rule).
+- Apply identically to the Imperial record and its Breton copy (4 SPELs, 2 new/retargeted
+  MGEFs); update both specs + `playerFacingText`; regenerate guide tables
+  (`pdv_guide_tables_gen.mjs`) since the Nexus articles print these numbers. Existing
+  Champions keep the old effect until re-grant: version-gated migrate per the VMAD-bake
+  doctrine.
 
 ### 4e. Phase 18 Nord dialogue gate descope (D1#14 REVERSED -- planned V1 removal)
 
 NOT a dialogue-authoring task. `PDV_V2_Backlog.md:34` records the quartet's removal as
 the planned V1 build action. Fix: move `PHASE18_NORD_DIALOGUE_CONTRACTS` in
-`tools/pdv_verify.mjs` to a V2-expected-absent posture (assert the records are ABSENT
-from the V1 ESP, keep the contract data for V2 re-authoring). **Rule-5 toolchain edit:
-requires explicit owner sign-off before execution.** Also update the AGENTS 07-14
-"pre-existing debt" phrasing (correction entry already logged 2026-07-15).
+`tools/pdv_verify.mjs` (57-line constant at :346; consumers :2901 presence-check and
+:3009 field walk under strictPhase18/strictNord) to a V2-expected-absent posture: assert
+the four DLBR/DIAL/INFO chains are ABSENT from the V1 ESP (guarding against unvoiced
+re-introduction), keep the contract data in place as the V2 re-authoring spec.
+**Rule-5 sign-off: GRANTED by owner 2026-07-15.** Proof = strict gate before (20
+failures) / after (clean). AGENTS 07-14 "pre-existing debt" phrasing already corrected.
 
 ### 4f. Deferred by owner ruling (do NOT build here)
 
