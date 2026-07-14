@@ -226,10 +226,10 @@
       "emphasis": "Civic",
       "layer": "broad-state",
       "tier": "T1",
-      "threshold": "broad-worship state, civic progress >= Seeker-equivalent",
+      "threshold": "broad-worship state, pantheon standing >= 25 (Observant)",
       "gate": "BROAD LANE = PATRON_STATE_BROAD (NOT a deity tier). Granted by the broad-worship reward path; editorId is the FIXED manager property PDV_Bless_Imperial_Civic_T1 (GetFirstTierRaceRewardSpellForOrigin). Per Ruling R1/R2 in PDV_Phase2_DeityRoster_and_ArchitectureRulings.md.",
       "spellEditorId": "PDV_Bless_Imperial_Civic_T1",
-      "displayName": "The Divines' Regard - Seeker",
+      "displayName": "The Divines' Regard - Observant",
       "effects": [
         {
           "actorValue": "PoisonResist",
@@ -255,7 +255,8 @@
         },
         {
           "actorValue": "ResistDisease",
-          "magnitude": 10
+          "magnitude": 10,
+          "effectName": "Disease Resistance"
         }
       ],
       "playerFacingText": "The Divines deepen their regard for your shared devotion. Poison Resistance +10%, Disease Resistance +10%.",

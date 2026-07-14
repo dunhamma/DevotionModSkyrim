@@ -727,6 +727,7 @@
     warning: "neglect",
     tier_up: "tier",
     tier_change: "tier",
+    pantheon_tier: "pantheon",
     rival: "rivalry",
     path_shift: "shift",
     mode_change: "shift",
@@ -866,6 +867,14 @@
       message: (payload) => `${deityName(payload)} names you ${text(payload.tierLabel || payload.tierName, "faithful")}.`,
       listTitle: (payload) => text(payload.tierLabel || payload.tierName, "Tier changed"),
       listText: (payload) => `${possessive(deityName(payload))} path has deepened.`,
+    },
+    pantheon: {
+      tone: "good",
+      symbol: (payload) => payload.symbol || payload.mark || "journal",
+      title: () => "Favor deepens",
+      message: (payload) => `${text(payload.pantheon, "Shared worship")} has reached ${text(payload.tierLabel || payload.tierName, "a deeper standing")}.`,
+      listTitle: (payload) => text(payload.tierLabel || payload.tierName, "Standing deepened"),
+      listText: (payload) => `${text(payload.pantheon, "Shared worship")} has deepened.`,
     },
     rivalry: {
       tone: "warning",
@@ -1277,7 +1286,7 @@
     if (kind === "broad") {
       cap = 50;
       value = instData.standing !== undefined ? numberOrZero(instData.standing) : numberOrZero(inst.primary) * cap;
-      gaugeThresholds = [{ label: "Seeker", value: 25 }, { label: "Faithful", value: 50 }];
+      gaugeThresholds = [{ label: "Observant", value: 25 }, { label: "Faithful", value: 50 }];
     } else if (kind === "cultural" || kind === "hist") {
       cap = 75;
       value = instData.metric !== undefined ? numberOrZero(instData.metric) : numberOrZero(inst.primary) * cap;

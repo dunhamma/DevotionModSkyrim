@@ -278,10 +278,10 @@
       "emphasis": "OldWays",
       "layer": "broad-state",
       "tier": "T1",
-      "threshold": "broad-worship state (PATRON_STATE_BROAD), Old Ways progress >= Seeker-equivalent",
+      "threshold": "broad-worship state (PATRON_STATE_BROAD), Old Ways standing >= 25 (Observant)",
       "gate": "BROAD LANE = PATRON_STATE_BROAD gated by PDV_State_NordPantheonBaseline=OldWays (NOT a deity tier, R1). Granted by the broad-worship reward path; editorId is the FIXED manager property PDV_Bless_Nord_OldWays_T1 (GetFirstTierRaceRewardSpellForOrigin, R2).",
       "spellEditorId": "PDV_Bless_Nord_OldWays_T1",
-      "displayName": "Old Ways - Seeker",
+      "displayName": "Old Ways - Observant",
       "effects": [
         {
           "actorValue": "Stamina",
@@ -307,7 +307,8 @@
         },
         {
           "actorValue": "ResistFrost",
-          "magnitude": 10
+          "magnitude": 10,
+          "effectName": "Frost Resistance"
         }
       ],
       "playerFacingText": "Skyrim itself looks after the faithful. Fortify Stamina +25, Frost Resistance +10%.",
@@ -321,7 +322,7 @@
       "threshold": "NordNineDivines broad pool >= 25",
       "gate": "PATRON_STATE_BROAD and PDV_State_NordPantheonBaseline=NineDivines; distinct Nord record",
       "spellEditorId": "PDV_Bless_Nord_NineDivines_T1",
-      "displayName": "Faith of the Holds - Seeker",
+      "displayName": "Faith of the Holds - Observant",
       "effects": [
         {
           "actorValue": "PoisonResist",

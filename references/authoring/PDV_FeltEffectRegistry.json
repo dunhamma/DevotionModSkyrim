@@ -2552,7 +2552,7 @@
       "race": "Imperial",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_ImperialRewardRecords.spec.json $.emphasisRewards[0]",
-      "displayName": "The Divines' Regard - Seeker",
+      "displayName": "The Divines' Regard - Observant",
       "tier": "T1",
       "wiringProperty": null,
       "expected": {
@@ -3908,7 +3908,7 @@
       "race": "Nord",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[0]",
-      "displayName": "Old Ways - Seeker",
+      "displayName": "Old Ways - Observant",
       "tier": "T1",
       "wiringProperty": null,
       "expected": {
@@ -3961,7 +3961,7 @@
       "race": "Nord",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_NordRewardRecords.spec.json $.emphasisRewards[2]",
-      "displayName": "Faith of the Holds - Seeker",
+      "displayName": "Faith of the Holds - Observant",
       "tier": "T1",
       "wiringProperty": null,
       "expected": {

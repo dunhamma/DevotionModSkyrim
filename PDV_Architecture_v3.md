@@ -32,19 +32,18 @@ decay, patron transition, and T2 cap while retaining distinct rosters and reward
 families. These are locked design contracts pending source, record, runtime, and
 manual proof; older packet evidence proves only the superseded implementation.
 
-Current v3.99 proof update: the v3.98 contracts are implemented and closed at
+Current Pantheon/substrate proof update: the contracts are implemented and closed at
 authority, source, compile, static, and direct-record-readback layers. The live
 manager owns the three pools, the shared substrate day-credit path, migrations,
 focused T2/T3 transition, Argonian cultural separation, and Observe the Moons.
 Direct houseCARL refutation proves exact approved P2 FormList membership, manager
-and alias VMAD bindings, focused spell/child-MGEF family-name parity, the six
-active substrate records, broad reward packets, and the ordered lunar message
-packet. `pdv_verify` is 4147 PASS / 0 WARN / 0 FAIL; the integrity harness is
-green at substrate 99/99, broad pantheon 88/88, record readback 81/81, and
-presentation readback 81/81. This supersedes the preceding "pending source and
-record" wording only. Organic ingress, save/load, player-visible boundaries,
-and feel remain open under PS-A1 through PS-A12 and cannot be inferred from
-machine/readback proof.
+and alias VMAD bindings, the parent-boon/child-mechanic Active Effects naming
+convention, the six active substrate records, broad reward packets, and the
+ordered lunar message packet. The local default verifier reports `4145 PASS /
+79 INFO / 1 known WARN / 0 FAIL`, including the 392-effect naming audit. This
+supersedes the preceding "pending source and record" wording only. Organic
+ingress, save/load, player-visible boundaries, and feel remain open under
+PS-A1 through PS-A12 and cannot be inferred from machine/readback proof.
 
 Focused 2026-07-14 runtime/manual addendum: the tester confirmed that Survey
 Devotion and Observe the Moons both select from Magic > Powers without a
@@ -3137,6 +3136,20 @@ Gate coupling:
 ---
 
 ## 26. Revisions
+
+### v3.96 - 2026-07-14 AEST - Pantheon/substrate presentation ratification
+
+Ratified the player-facing boundary for the Pantheon Parity and Substrate
+Pacing build. Broad-pool public bands are `Distant`, `Observant`, and
+`Faithful`; internal `Seeker` identifiers remain compatibility-only. A boon
+spell owns the family/tier heading in Active Effects, while each child magic
+effect names only its concise mechanical result (or a distinct scripted
+effect). The focused commitment state below 50 piety remains committed but is
+labelled `Wavering`; the focused Book-of-Days identity is the deity name with
+no redundant `Focus` suffix. `pdv_active_effect_naming_audit.mjs` reads every
+`PDV_Bless_*` spell and child MGEF through houseCARL and is called by the
+normal verifier. This is static/readback coverage; the remaining PS-A6 and
+other co-test cards retain their separate runtime/manual proof obligations.
 
 ### v3.93 - 2026-06-24 AEST - Redguard spine pulse and thin-Prince equip faucets
 

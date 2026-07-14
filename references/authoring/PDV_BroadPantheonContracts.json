@@ -2,7 +2,7 @@
   "schema": "pdv.broad-pantheon-contracts.v1",
   "title": "PDV Broad Pantheon Contracts",
   "status": "implemented-static-readback-runtime-manual-proof-open",
-  "updated": "2026-07-13",
+  "updated": "2026-07-14",
   "authority": {
     "architecture": "PDV_Architecture_v3.md",
     "loreFinding": "Imperial collective Divine worship and the Nord Old Ways or Imperialized Divines alternatives are lore-supported. Only one Nord baseline is active at a time.",
@@ -16,6 +16,8 @@
   },
   "shared": {
     "thresholds": { "seeker": 25.0, "faithful": 50.0 },
+    "playerFacingBands": { "0": "Distant", "25": "Observant", "50": "Faithful" },
+    "activeEffectsConvention": "The spell FULL is '<family> - <public band>'; each child MGEF FULL is its concise mechanical effect name. Internal Seeker identifiers remain compatibility-only and never appear to the player.",
     "cap": 50.0,
     "tierCount": 2,
     "rewardSync": "highest-slot-only",
@@ -55,8 +57,8 @@
         "Talos": "Eligible only after explicit Talos stance, prayer, or defiance unlock."
       },
       "rewardFamily": {
-        "tier1": { "name": "The Divines' Regard - Seeker", "effects": [{ "actorValue": "PoisonResist", "magnitude": 10.0 }] },
-        "tier2": { "name": "The Divines' Regard - Faithful", "effects": [{ "actorValue": "PoisonResist", "magnitude": 10.0 }, { "actorValue": "DiseaseResist", "magnitude": 10.0 }] },
+        "tier1": { "name": "The Divines' Regard - Observant", "effects": [{ "actorValue": "PoisonResist", "magnitude": 10.0, "effectName": "Poison Resistance" }] },
+        "tier2": { "name": "The Divines' Regard - Faithful", "effects": [{ "actorValue": "PoisonResist", "magnitude": 10.0, "effectName": "Poison Resistance" }, { "actorValue": "DiseaseResist", "magnitude": 10.0, "effectName": "Disease Resistance" }] },
         "tier3": null
       },
       "rejectedInputs": ["generic civic standing", "generic sleep", "locked Talos piety", "civic service count"],
@@ -73,7 +75,7 @@
       "baseline": "OldWays",
       "eligibleImmediately": ["Kyne", "Shor", "Tsun", "Stuhn", "Mara", "Orkey", "Dibella", "Talos"],
       "rewardFamily": {
-        "tier1": { "name": "Old Ways - Seeker", "effects": "Preserve the shipped Stamina effect packet." },
+        "tier1": { "name": "Old Ways - Observant", "effects": "Preserve the shipped Stamina effect packet; child MGEF FULL is Fortify Stamina." },
         "tier2": { "name": "Old Ways - Faithful", "effects": "Preserve the shipped Stamina plus Frost Resistance effect packet." },
         "tier3": null
       },
@@ -90,8 +92,8 @@
       "baseline": "NineDivines",
       "eligibleImmediately": ["Akatosh", "Arkay", "Dibella", "Julianos", "Kynareth", "Mara", "Stendarr", "Zenithar", "Talos"],
       "rewardFamily": {
-        "tier1": { "name": "Faith of the Holds - Seeker", "effects": [{ "actorValue": "PoisonResist", "magnitude": 10.0 }] },
-        "tier2": { "name": "Faith of the Holds - Faithful", "effects": [{ "actorValue": "PoisonResist", "magnitude": 10.0 }, { "actorValue": "DiseaseResist", "magnitude": 10.0 }] },
+        "tier1": { "name": "Faith of the Holds - Observant", "effects": [{ "actorValue": "PoisonResist", "magnitude": 10.0, "effectName": "Poison Resistance" }] },
+        "tier2": { "name": "Faith of the Holds - Faithful", "effects": [{ "actorValue": "PoisonResist", "magnitude": 10.0, "effectName": "Poison Resistance" }, { "actorValue": "DiseaseResist", "magnitude": 10.0, "effectName": "Disease Resistance" }] },
         "tier3": null,
         "recordPolicy": "Use distinct Nord records; never reuse the Imperial SPEL or MGEF records."
       },

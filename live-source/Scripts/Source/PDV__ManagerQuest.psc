@@ -2855,7 +2855,7 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
         tierValue = GetTier(_activeDeity)
         if IsFocusedPantheonBoonSuspended()
             tierValue = TIER_NONE
-            tierLabelOverride = "Committed - boon suspended"
+            tierLabelOverride = "Wavering"
         endIf
         if _activeDeity.ThresholdChampion > 0.0
             championThreshold = _activeDeity.ThresholdChampion
@@ -4374,11 +4374,11 @@ Function HandleSubstrateShrinePrayer(String primaryDeityName, String secondaryDe
         PDV_DeityBase secondary = GetShrinePrayerDeityByName(secondaryDeityName)
         PDV_DeityBase tertiary = GetShrinePrayerDeityByName(tertiaryDeityName)
         if IsDeityEligibleForBroadPantheon(primary, BROAD_PANTHEON_IMPERIAL) || IsDeityEligibleForBroadPantheon(secondary, BROAD_PANTHEON_IMPERIAL) || IsDeityEligibleForBroadPantheon(tertiary, BROAD_PANTHEON_IMPERIAL)
-            PDV_ImperialAncestorSubstrate.RecordCivicStandingScaled(1.0, "divine_prayer_" + sourceId)
+            AwardImperialAncestorSpinePulse(1.0, "divine_prayer_" + sourceId)
         endIf
     elseIf origin == ORIGIN_ALTMER && PDV_AltmerAncestorSubstrate && !IsAltmerFavorSuppressedByCurse()
         if GetShrinePrayerDeityByName(primaryDeityName) == PDV_AuriEl || GetShrinePrayerDeityByName(secondaryDeityName) == PDV_AuriEl || GetShrinePrayerDeityByName(tertiaryDeityName) == PDV_AuriEl
-            PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, "auriel_shrine_rite_" + sourceId)
+            AwardAltmerAncestorSpinePulse(1.0, "auriel_shrine_rite_" + sourceId)
         endIf
     endIf
 EndFunction
@@ -5626,7 +5626,7 @@ Function HandleArgonianSapVision()
     if PDV_Hist
         AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, 1.0)
     endIf
-    Debug.MessageBox("The sap is strange and far from home, but for one heartbeat a root answers. Somewhere, the Hist turned to listen.")
+    Debug.MessageBox("The sap is strange and far from home, but it resonates, and the Hist stirs within.")
     Trace(2, "Sleeping Tree Sap vision fired.")
 EndFunction
 
@@ -11134,7 +11134,7 @@ Function EmitBookOfDaysBroadLaneTierChange(Int today)
 EndFunction
 
 String Function BuildBroadLaneTierReachJournalLine(Int originRace, Int tier)
-    return "Your " + GetBroadLaneDisplayName(originRace) + " has reached " + GetBroadLaneStandingLabel(originRace, tier) + "."
+    return GetBroadLaneDisplayName(originRace) + " has reached " + GetBroadLaneStandingLabel(originRace, tier) + "."
 EndFunction
 
 ; Snapshot-diff of the player's per-race mode label. GetPlayerMcmModeLine already
@@ -12168,6 +12168,7 @@ Function ProcessBroadPantheonThroughDay(String poolId, Int targetDay, Float sign
     endIf
 
     Float standing = GetBroadPantheonStanding(poolId)
+    Float standingBeforeProcessing = standing
     Float scratch = GetBroadPantheonScratch(poolId)
     Int scratchStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonScratchDayKey(poolId))
     Int scratchDay = targetDay
@@ -12209,7 +12210,47 @@ Function ProcessBroadPantheonThroughDay(String poolId, Int targetDay, Float sign
     endIf
     StorageUtil.SetIntValue(None, GetBroadPantheonLastProcessedDayKey(poolId), targetDay + 2)
     StorageUtil.SetIntValue(None, GetBroadPantheonLastProcessedDayKey(poolId) + ".Encoding", 2)
+    ; Debug boundary seeds are deliberately silent.  A broad transition becomes
+    ; player-facing only when real signed scratch settles at dawn.
+    if applied > 0.0 && poolId == GetActiveBroadPantheonPoolId()
+        MaybeSendBroadPantheonTierToast(poolId, standingBeforeProcessing, GetBroadPantheonStanding(poolId))
+    endIf
     Trace(1, "[PDV][BROAD_CATCHUP] pool=" + poolId + " through=" + targetDay + " applied=" + applied + " standing=" + GetBroadPantheonStanding(poolId))
+EndFunction
+
+Int Function GetBroadPantheonTierForStanding(Float standing)
+    if standing >= BROAD_PANTHEON_FAITHFUL_THRESHOLD
+        return TIER_DEVOTED
+    elseIf standing >= BROAD_PANTHEON_SEEKER_THRESHOLD
+        return TIER_SEEKER
+    endIf
+    return TIER_NONE
+EndFunction
+
+Function MaybeSendBroadPantheonTierToast(String poolId, Float previousStanding, Float currentStanding)
+    Int previousTier = GetBroadPantheonTierForStanding(previousStanding)
+    Int currentTier = GetBroadPantheonTierForStanding(currentStanding)
+    if currentTier <= previousTier
+        return
+    endIf
+
+    Int originRace = GetPlayerOriginRaceIndex()
+    if poolId != GetActiveBroadPantheonPoolId() || !HasBroadLanePresentation(originRace)
+        return
+    endIf
+
+    String familyName = GetBroadLaneDisplayName(originRace)
+    String tierName = GetBroadLaneStandingLabel(originRace, currentTier)
+    SendPrismaBroadPantheonTierToast(familyName, tierName, GetBroadLaneSymbol(originRace))
+EndFunction
+
+Bool Function SendPrismaBroadPantheonTierToast(String familyName, String tierName, String symbolName)
+    String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"pantheon\""
+    j = j + ",\"pantheon\":\"" + JsonSafeString(familyName) + "\""
+    j = j + ",\"tierLabel\":\"" + JsonSafeString(tierName) + "\""
+    j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    j = j + "}}"
+    return SendPrismaToastPayloadOrFallback(j, "", familyName + " has reached " + tierName + ".", True)
 EndFunction
 
 Function CatchUpBroadPantheonDecayBeforeCurrentDay(String poolId)
@@ -14111,11 +14152,11 @@ Function SyncBroadPantheonRewards(Actor playerRef)
     Bool nineSeeker = activePool == BROAD_PANTHEON_NORD_NINE && standing >= BROAD_PANTHEON_SEEKER_THRESHOLD && standing < BROAD_PANTHEON_FAITHFUL_THRESHOLD
     Bool nineFaithful = activePool == BROAD_PANTHEON_NORD_NINE && standing >= BROAD_PANTHEON_FAITHFUL_THRESHOLD
 
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T1, imperialSeeker, "The Divines' Regard - Seeker")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T1, imperialSeeker, "The Divines' Regard - Observant")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T2, imperialFaithful, "The Divines' Regard - Faithful")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T1, oldWaysSeeker, "Old Ways - Seeker")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T1, oldWaysSeeker, "Old Ways - Observant")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T2, oldWaysFaithful, "Old Ways - Faithful")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_NineDivines_T1, nineSeeker, "Faith of the Holds - Seeker")
+    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_NineDivines_T1, nineSeeker, "Faith of the Holds - Observant")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_NineDivines_T2, nineFaithful, "Faith of the Holds - Faithful")
 EndFunction
 
@@ -15725,7 +15766,7 @@ String Function GetBroadLaneNextThresholdText(Int origin)
     if origin == ORIGIN_IMPERIAL || origin == ORIGIN_NORD
         Float standing = GetBroadLaneStandingValue(origin)
         if standing < BROAD_PANTHEON_SEEKER_THRESHOLD
-            return "Seeker at 25 pantheon standing"
+            return "Observant at 25 pantheon standing"
         elseIf standing < BROAD_PANTHEON_FAITHFUL_THRESHOLD
             return "Faithful at 50 pantheon standing"
         endIf
@@ -21282,7 +21323,7 @@ String Function GetBookOfDaysPathStatusLabel(Int originRace)
     endIf
 
     if _activeDeity && GetPatronState() == PATRON_STATE_ACTIVE
-        return GetPublicDeityDisplayName(_activeDeity) + " Focus"
+        return GetPublicDeityDisplayName(_activeDeity)
     endIf
 
     if GetPatronState() == PATRON_STATE_BROAD
@@ -21443,7 +21484,7 @@ String Function BuildBookOfDaysInstrumentJson(Int originRace)
     elseIf journalCommitment == None && (IsPantheonBroadPoolPresentationActive(originRace) || GetBroadLaneTierForOrigin(originRace) > TIER_NONE)
         tierLabel = GetBroadLaneStandingLabel(originRace, GetBroadLaneTierForOrigin(originRace))
     elseIf journalCommitment && IsFocusedPantheonBoonSuspended()
-        tierLabel = "Committed - boon suspended"
+        tierLabel = "Wavering"
     endIf
     return GetPanelInstrumentJson(originRace, journalCommitment != None, tierValue, tierLabel, pietyValue, championThreshold)
 EndFunction
@@ -23068,7 +23109,7 @@ EndFunction
 
 String Function GetCurrentStandingLabel()
     if IsFocusedPantheonBoonSuspended()
-        return "Committed - boon suspended"
+        return "Wavering"
     endIf
     Int tierValue = TIER_NONE
     PDV_DaedricPathBase standingPact = GetActiveDaedricPactPath()
@@ -23384,58 +23425,32 @@ String Function GetBosmerComplianceBand()
 EndFunction
 
 String Function GetArgonianSurveyText()
-    String band = GetCurrentStandingBand()
     if !PDV_ArgonianHistSubstrate
-        return "The Hist is distant, far from Black Marsh, and your devotion is still settling. Standing: " + band + "."
-    endIf
-
-    String posture = GetArgonianHistPostureLabel()
-    String text = ""
-    if posture == "Normal"
-        text = "You carry the Saxhleel exile, far from Black Marsh. The Hist is distant, as it always is in Skyrim, but it still reaches you. Standing: " + band + "."
-    else
-        text = "You carry the Saxhleel exile, far from Black Marsh. The Hist is " + posture + ". Standing: " + band + "."
+        return "Far from Black Marsh, the Hist is distant and your practice is still settling."
     endIf
 
     Float histRel = PDV_ArgonianHistSubstrate.GetHistRelation()
-    if histRel >= 70.0
-        text = text + " Hist memory is held: the trees still reach you across all the miles."
-    elseIf histRel >= 35.0
-        text = text + " Hist memory is present, faint but real beneath the distance."
-    elseIf histRel > 0.0
-        text = text + " Hist memory is thin, more remembered than felt."
-    else
-        text = text + " Hist memory is distant, almost out of reach."
-    endIf
-
+    String text = "Far from Black Marsh, Hist memory is " + GetArgonianLayerStrengthLabel(histRel)
     Float peopleRel = PDV_ArgonianHistSubstrate.GetPeopleRelation()
     if peopleRel >= 70.0
-        text = text + " The People hold you close; the exile community knows you well."
+        text = text + " and the People are near."
     elseIf peopleRel >= 35.0
-        text = text + " The People are with you, the chosen family steady at your side."
+        text = text + " and the People are with you."
     elseIf peopleRel > 0.0
-        text = text + " The People are thin around you, the exile bonds loose."
+        text = text + " and the People are scattered."
     else
-        text = text + " The People are far off; you walk this exile largely alone."
+        text = text + " and the People are far off."
     endIf
 
     if PDV_ArgonianHistSubstrate.IsVoidFullyActive()
-        text = text + " Sithis is awake in you, a third way to make meaning in exile. The void is fully with you now, yet the Hist still comes first."
+        text = text + " Sithis is awake, but the Hist remains first."
     else
         Float voidRel = PDV_ArgonianHistSubstrate.GetVoidRelation()
         if voidRel >= 35.0
-            text = text + " Sithis stirs in you, the void no longer only a rumor at the edge."
+            text = text + " Sithis stirs at the edge."
         elseIf voidRel > 0.0
-            text = text + " Sithis waits at the edge of you, acknowledged but not yet faced."
+            text = text + " Sithis waits at the edge."
         endIf
-    endIf
-
-    Int bedCount = StorageUtil.GetIntValue(PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount")
-    if bedCount > 0
-        text = text + " The bed you chose has begun to matter; the root remembers where you rest."
-    endIf
-    if StorageUtil.GetIntValue(None, "PDV.Argonian.HistSourceCount") > 0
-        text = text + " You have sat with the old Hist-lore, and it stays with you."
     endIf
 
     text = text + " Cultural practice: " + GetArgonianCulturalPracticeLabel() + "."

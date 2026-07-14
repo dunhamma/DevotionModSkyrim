@@ -83,7 +83,8 @@ Work Rule".
 | `tools/pdv-authoring-trees-retired-2026-07-13.zip` | **Retired** Mutagen/CKPE record-author helper trees (`pdv_author.mjs`, `pdv_writer_review.mjs`, `creation-authoring`, `creation-merge-runner`, all `pdv-*-author`) | Forensics only. All plugin record reads/writes/verification now go through the `housecarl_*` MCP tools directly -- see the houseCARL Direct Plugin Work Rule above. Do not restore, extend, or copy the dry-run/backup/proof-ledger pattern. |
 | `tools/pdv_housecarl_p2_readback.mjs` | Direct houseCARL exact readback for P2 receiver FormLists, approved source membership, and player-alias VMAD bindings; unexpected live members fail |
 | `tools/pdv_pantheon_record_readback.mjs` | Direct houseCARL focused Imperial/Nord reward and substrate inherited-property readback |
-| `tools/pdv_pantheon_presentation_readback.mjs` | Direct houseCARL Active-Effect family-name, broad reward, active-substrate, Observe-the-Moons, manager VMAD, and player-visible `Spine` readback |
+| `tools/pdv_pantheon_presentation_readback.mjs` | Direct houseCARL broad reward, active-substrate, Observe-the-Moons, manager VMAD, and player-visible `Spine` readback |
+| `tools/pdv_active_effect_naming_audit.mjs` | Direct houseCARL audit of every `PDV_Bless_*` parent spell and child MGEF; parent spells use family/tier headings while child effects use concise mechanical or distinct scripted-effect labels |
 | `tools/pdv_substrate_pacing_audit.mjs` | Strict source/contract audit for the six paced substrates: one +4 devotional credit per 06:00 day, timing maths, authentic-route ownership, curse exceptions, decay, and player-copy exclusions |
 | `tools/pdv_broad_pantheon_audit.mjs` | Strict source/contract audit for Imperial, Nord Old Ways, and Nord Nine Divines pools: signed logical-event aggregation, active-baseline gating, grace/decay, migration, and T2 patron transition |
 | `tools/pdv_pantheon_substrate_runtime_evidence_check.mjs` | Fail-closed runtime/manual evidence checker for the 12 pantheon/substrate co-test cards; a static pass never closes an evidence bucket |
@@ -436,7 +437,8 @@ journal payload contract, including the repeated failure class where
 For Pantheon Parity and Substrate Pacing work, run the two authority audits
 (`pdv_substrate_pacing_audit.mjs` and `pdv_broad_pantheon_audit.mjs`), direct
 houseCARL readbacks (`pdv_pantheon_record_readback.mjs`,
-`pdv_pantheon_presentation_readback.mjs`, and `pdv_housecarl_p2_readback.mjs
+`pdv_pantheon_presentation_readback.mjs`,
+`pdv_active_effect_naming_audit.mjs`, and `pdv_housecarl_p2_readback.mjs
 --check-all`), the normal verifier, and the Prisma audit before opening Skyrim.
 Then run `pdv_pantheon_substrate_runtime_evidence_check.mjs`: it is expected to
 fail while the PS-A1 through PS-A12 evidence cards are open. Use a fresh

@@ -148,6 +148,7 @@ export function evaluate({ contract, managerSource, playerEventsSource, deityBas
   const dawn = bodyFor(managerSource, "ProcessBroadPantheonDawn");
   const migration = bodyFor(managerSource, "MigrateBroadPantheonPools");
   const sync = bodyFor(managerSource, "SyncBroadPantheonRewards");
+  const broadBookTier = bodyFor(managerSource, "BuildBroadLaneTierReachJournalLine");
   const devotionalDayBody = bodyFor(managerSource, "GetDevotionalDay");
   add(/Float\s+Function\s+AwardPietyInternal\s*\(/i.test(managerSource), "source.applied-delta-return", "AwardPietyInternal must return the post-pipeline applied Float delta");
   add(Boolean(begin), "source.begin-event", "BeginBroadPantheonEvent must exist");
@@ -157,6 +158,8 @@ export function evaluate({ contract, managerSource, playerEventsSource, deityBas
   add(Boolean(dawn), "source.dawn-fold", "ProcessBroadPantheonDawn must exist");
   add(Boolean(migration), "source.migration", "MigrateBroadPantheonPools must exist");
   add(Boolean(sync), "source.reward-sync", "SyncBroadPantheonRewards must exist");
+  add(/The Divines' Regard - Observant/i.test(sync) && /Old Ways - Observant/i.test(sync) && /Faith of the Holds - Observant/i.test(sync), "source.public-broad-ranks", "Broad reward trace labels must use the public Observant/Faithful rank vocabulary, never player-facing Seeker.");
+  add(/return\s+GetBroadLaneDisplayName\(originRace\)\s*\+\s*" has reached "/i.test(broadBookTier) && !/"Your /i.test(broadBookTier), "source.broad-book-possessive", "Broad Book of Days tier lines must say '<family> has reached <band>' without the malformed 'Your <family>'.");
   add(/shiftedTime\s*<\s*0\.0/i.test(devotionalDayBody) && /truncatedDay\s*-\s*1/i.test(devotionalDayBody), "source.day-zero-floor", "broad-pool day stamps must explicitly floor negative shifted time on game day zero");
   add(/>\s*0\.0/i.test(accumulate) && />\s*[A-Za-z_][A-Za-z0-9_]*/.test(accumulate), "source.strongest-positive", "event accumulator must compare positive candidates and retain the strongest");
   add(/<\s*0\.0/i.test(accumulate) && /<\s*[A-Za-z_][A-Za-z0-9_]*/.test(accumulate), "source.strongest-negative", "event accumulator must compare negative candidates and retain the most severe");

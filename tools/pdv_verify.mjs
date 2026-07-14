@@ -1427,6 +1427,7 @@ class Verifier {
       ["Broad pantheon contract", "pdv_broad_pantheon_audit.mjs"],
       ["Pantheon and substrate record readback", "pdv_pantheon_record_readback.mjs"],
       ["Pantheon presentation record readback", "pdv_pantheon_presentation_readback.mjs"],
+      ["Active-effect naming convention", "pdv_active_effect_naming_audit.mjs"],
     ];
     for (const [label, script] of audits) {
       const toolPath = path.join(__dirname, script);

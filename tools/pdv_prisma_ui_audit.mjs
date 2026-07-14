@@ -1469,6 +1469,20 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   }
 
   if (
+    !managerForBroadLane.includes('return GetBroadLaneDisplayName(originRace) + " has reached " + GetBroadLaneStandingLabel(originRace, tier) + "."') ||
+    managerForBroadLane.includes('return "Your " + GetBroadLaneDisplayName(originRace) + " has reached "') ||
+    !managerForBroadLane.includes("Function MaybeSendBroadPantheonTierToast") ||
+    !managerForBroadLane.includes("Bool Function SendPrismaBroadPantheonTierToast") ||
+    !app.includes('pantheon_tier: "pantheon"') ||
+    !app.includes("pantheon: {") ||
+    !app.includes('text(payload.pantheon, "Shared worship")')
+  ) {
+    fail("Broad pantheon milestones must use the public family name in Book of Days and the named dawn-fold toast, never malformed 'Your <family>' copy.", managerPath);
+  } else {
+    pass("Broad pantheon milestone copy uses public family names in Book of Days and named dawn-fold toasts.", managerPath);
+  }
+
+  if (
     !managerForBroadLane.includes("Bool Function IsPantheonBroadPoolPresentationActive(Int origin)") ||
     !managerForBroadLane.includes("Float Function GetBroadLaneStandingValue(Int origin)") ||
     !managerForBroadLane.includes("Float Function GetBroadLaneScratchValue(Int origin)") ||
@@ -1484,13 +1498,13 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
 
   if (
     !managerForBroadLane.includes("Bool Function IsFocusedPantheonBoonSuspended()") ||
-    !managerForBroadLane.includes('tierLabelOverride = "Committed - boon suspended"') ||
+    !managerForBroadLane.includes('tierLabelOverride = "Wavering"') ||
     !managerForBroadLane.includes('nextText = "Focused boon returns at 50 piety"') ||
     !managerForBroadLane.includes('return "Suspended"')
   ) {
     fail("Focused Imperial/Nord commitment below 50 must remain committed while the panel and Survey explicitly suspend the boon.", managerPath);
   } else {
-    pass("Focused Imperial/Nord commitment below 50 is explicitly surfaced as boon-suspended.", managerPath);
+    pass("Focused Imperial/Nord commitment below 50 is explicitly surfaced as Wavering while the boon is suspended.", managerPath);
   }
 
   if (
@@ -1504,6 +1518,32 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
     fail("Argonian panel must headline the cultural metric/tier and expose Hist, People, and Void as independent relations.", managerPath);
   } else {
     pass("Argonian panel separates cultural practice from Hist, People, and Void relations.", managerPath);
+  }
+
+  const shrineSubstratePrayer = functionBlock(managerForBroadLane, "HandleSubstrateShrinePrayer");
+  if (
+    !shrineSubstratePrayer.includes('AwardImperialAncestorSpinePulse(1.0, "divine_prayer_" + sourceId)') ||
+    !shrineSubstratePrayer.includes('AwardAltmerAncestorSpinePulse(1.0, "auriel_shrine_rite_" + sourceId)') ||
+    shrineSubstratePrayer.includes('PDV_ImperialAncestorSubstrate.RecordCivicStandingScaled') ||
+    shrineSubstratePrayer.includes('PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled')
+  ) {
+    fail("Imperial Divine and Altmer Auri-El shrine-prayer routes must use their shared substrate-presentation helpers, so an accepted act updates the metric, Book of Days, and Prisma toast together.", managerPath);
+  } else {
+    pass("Imperial Divine and Altmer Auri-El shrine-prayer routes use shared substrate presentation helpers.", managerPath);
+  }
+
+  const argonianSurvey = functionBlock(managerForBroadLane, "GetArgonianSurveyText");
+  if (
+    !argonianSurvey.includes('String text = "Far from Black Marsh, Hist memory is "') ||
+    !argonianSurvey.includes('text = text + " Cultural practice: " + GetArgonianCulturalPracticeLabel() + "."') ||
+    argonianSurvey.includes('You carry the Saxhleel exile') ||
+    argonianSurvey.includes('Standing: ') ||
+    argonianSurvey.includes('Your chosen bed has begun to matter.') ||
+    argonianSurvey.includes('A Reclamation text keeps the old roads')
+  ) {
+    fail("Argonian Survey must remain a compact Hist/People/conditional-Void/cultural-practice summary; detailed relation, bed, and lore copy belongs in the focused panel.", managerPath);
+  } else {
+    pass("Argonian Survey is compact while the focused panel retains detailed relation context.", managerPath);
   }
 
   if (
@@ -1533,6 +1573,7 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   if (
     !app.includes('if (kind === "broad")') ||
     !app.includes('instData.standing !== undefined') ||
+    !app.includes('{ label: "Observant", value: 25 }') ||
     !app.includes('{ label: "Faithful", value: 50 }') ||
     !app.includes('else if (kind === "cultural" || kind === "hist")') ||
     !app.includes('instData.metric !== undefined') ||

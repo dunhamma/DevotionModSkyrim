@@ -1024,7 +1024,7 @@
       "class": "boon",
       "race": "Imperial",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "2026-07-11 co-test: tester confirmed Imperial-Civic boon pass; screenshot showed the pre-rename Civic Faith - Seeker label in Active Effects and Papyrus log shows Imperial T1 reward added. Player-facing label is now The Divines' Regard - Seeker/Faithful.",
+      "note": "2026-07-11 co-test: tester confirmed Imperial-Civic boon pass; screenshot showed the pre-rename Civic Faith - Seeker label in Active Effects and Papyrus log shows Imperial T1 reward added. Current player-facing labels are The Divines' Regard - Observant/Faithful, with separate mechanical child-effect names for Active Effects clarity.",
       "creditedFrom": {
         "ledger": "co-test chat + screenshot + Papyrus.0.log",
         "race": "Imperial",

@@ -33,12 +33,12 @@ MCP: SKIP - MCP server not reachable at http://127.0.0.1:27016/mcp (ECONNREFUSED
 ## Curated-Signal Parity
 
 Every AwardCuratedSignal[Scaled](deity, deity.SIGNAL_X) must resolve to a deity script that DEFINES and HANDLES SIGNAL_X in ScoreCuratedSignal, else the curated piety silently scores 0.0 (the Kyne class). Pure static source check -- no server.
-Status: PASS | references=103 | ok=103 | gaps=0 | cross-deity=0 | by-index=0
+Status: PASS | references=104 | ok=104 | gaps=0 | cross-deity=0 | by-index=0
 
 ## Curated-Signal Dispatch Coverage
 
 Registry-driven INVERSE of parity: every DECLARED + SCORED SIGNAL_ in a PDV_Deity_*.psc must have a real AwardCuratedSignal[Scaled] dispatch (non-Debug, non-display). An undispatched signal can never bank piety (the dead-signal class). Reserved known-gaps live in tools/pdv_reserved_signals.json; anything undispatched and NOT reserved FAILs, and a stale reservation FAILs too. Pure static source check -- no server.
-Status: PASS | declared-scored=123 | dispatched=85 | undispatched=38 | reserved-known-gaps=38 | unlisted-FAIL=0 | stale-ledger=0
+Status: PASS | declared-scored=123 | dispatched=86 | undispatched=37 | reserved-known-gaps=37 | unlisted-FAIL=0 | stale-ledger=0
 
 ### Reserved known-gaps (documented deferral -- burn down toward empty)
 - PDV_Akatosh.SIGNAL_COVENANT_MILESTONE: Wave 2 milestone: decide curated vs quest-reaction ownership before wiring (avoid double-credit).
@@ -53,7 +53,6 @@ Status: PASS | declared-scored=123 | dispatched=85 | undispatched=38 | reserved-
 - PDV_Magnus.SIGNAL_ANCESTOR_SPINE: Orphaned by the Breton ancestor-substrate retirement (substrate boons cleared, spine pulses no-op). Vestigial: recommend REMOVE (const + Score branch + reason copy) with the deferred ESP record deletion.
 - PDV_Magnus.SIGNAL_ARCANE_RECOVERY: Wave 3: hook OnSpellLearned/OnBookRead (recovered arcane knowledge).
 - PDV_Magnus.SIGNAL_SHARED_PACT_MEMORY: Wave 1 parity gap: Altmer lane lacks the active-patron ancestor-memory dawn pulse that Bosmer/Dunmer wire (cf AwardActiveDunmerReclamationMemorySignal).
-- PDV_Malacath.SIGNAL_BLOOD_KIN: Wave 1 mis-wire: HandleOrcBloodKinCrisis records life-mode progress but omits the curated dispatch its 3 sibling handlers (CityDignity/LegionService/SelfMadeCommunity) all have. Quick connect.
 - PDV_Malacath.SIGNAL_EXILE_RETURN: Wave 2 milestone: Legion-Exile burden-carried-home beat; needs an exile-return detector within the LEGION_EXILE life-mode.
 - PDV_Mara.SIGNAL_CIVIC_SERVICE: Vestigial: redundant civic template constant. Akatosh owns generic civic via AwardImperialCivicFamilySignal; this deity earns civic through its specialized family signal + patron-civic-favor. Recommended REMOVE (delete the const + ScoreCuratedSignal branch) rather than wire.
 - PDV_Shor.SIGNAL_ANCESTOR_SPINE: Superseded 2026-07-13: Nord hearth/sky substrate credit is deity-neutral; active-baseline acts award deity piety only through their authentic god lane. Retained as compatibility code pending dead-code removal.

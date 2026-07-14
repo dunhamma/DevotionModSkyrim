@@ -54,19 +54,19 @@ async function main() {
   ]);
   const focusedIds = focusedEditors.map((editor) => spellInventory.get(editor)).filter(Boolean);
   const focusedSpellResult = await callHousecarl("housecarl_batch_record_detail", { formids: focusedIds, fields: ["EditorID", "Name", "Effects"], depth: 4, max_chars: 220_000 });
-  const expectedMgefNames = new Map();
+  const parentSpellNames = new Map();
   for (const block of blocks(extractHousecarlText(focusedSpellResult), "Spell")) {
     const editor = field(block, "EditorID");
     const name = field(block, "Name");
     if (!focusedEditors.includes(editor)) continue;
-    for (const effect of formIds(block, /Effects\[\d+\]\.BaseEffect\s*=\s*([0-9A-Fa-f]{6}:[^\s\r\n]+)/g)) expectedMgefNames.set(effect, name);
+    for (const effect of formIds(block, /Effects\[\d+\]\.BaseEffect\s*=\s*([0-9A-Fa-f]{6}:[^\s\r\n]+)/g)) parentSpellNames.set(effect, name);
   }
-  const focusedMgefResult = await callHousecarl("housecarl_batch_record_detail", { formids: [...expectedMgefNames.keys()], fields: ["EditorID", "Name"], depth: 2, max_chars: 140_000 });
+  const focusedMgefResult = await callHousecarl("housecarl_batch_record_detail", { formids: [...parentSpellNames.keys()], fields: ["EditorID", "Name"], depth: 2, max_chars: 140_000 });
   const actualMgefNames = new Map(blocks(extractHousecarlText(focusedMgefResult), "MagicEffect").map((block) => [field(block, "FormKey") || block.match(/formid=([0-9A-Fa-f]{6}:[^\s]+)/)?.[1], field(block, "Name")]));
-  for (const [effect, expectedName] of expectedMgefNames) {
+  for (const [effect, parentName] of parentSpellNames) {
     const actualName = actualMgefNames.get(effect);
-    if (actualName === expectedName) pass("focused Active Effects roll-up", `${effect} matches parent family ${expectedName}.`);
-    else fail("focused Active Effects roll-up", `${effect} is ${actualName || "unreadable"}; expected ${expectedName}.`);
+    if (actualName && actualName !== parentName) pass("focused Active Effects presentation", `${effect} uses its own mechanical label ${actualName}.`);
+    else fail("focused Active Effects presentation", `${effect} is ${actualName || "unreadable"}; it must not duplicate parent boon ${parentName}.`);
   }
 
   const substrates = new Map([
@@ -98,23 +98,26 @@ async function main() {
   else fail("active substrate FormList", `Active substrate membership is ${[...activeItems].join(", ")}.`);
 
   const broadSpecs = new Map([
-    ["071071:Devotion.esp", { name: "The Divines' Regard - Seeker", effects: [["PoisonResist", 10]] }],
-    ["0710BB:Devotion.esp", { name: "The Divines' Regard - Faithful", effects: [["PoisonResist", 10], ["ResistDisease", 10]] }],
-    ["071073:Devotion.esp", { name: "Old Ways - Seeker", effects: [["Stamina", 15]] }],
-    ["0711B6:Devotion.esp", { name: "Old Ways - Faithful", effects: [["Stamina", 25], ["ResistFrost", 10]] }],
-    ["0716C4:Devotion.esp", { name: "Faith of the Holds - Seeker", effects: [["PoisonResist", 10]] }],
-    ["0716C5:Devotion.esp", { name: "Faith of the Holds - Faithful", effects: [["PoisonResist", 10], ["ResistDisease", 10]] }],
+    ["071071:Devotion.esp", { name: "The Divines' Regard - Observant", effects: [["PoisonResist", 10, "Poison Resistance"]] }],
+    ["0710BB:Devotion.esp", { name: "The Divines' Regard - Faithful", effects: [["PoisonResist", 10, "Poison Resistance"], ["ResistDisease", 10, "Disease Resistance"]] }],
+    ["071073:Devotion.esp", { name: "Old Ways - Observant", effects: [["Stamina", 15, "Fortify Stamina"]] }],
+    ["0711B6:Devotion.esp", { name: "Old Ways - Faithful", effects: [["Stamina", 25, "Fortify Stamina"], ["ResistFrost", 10, "Frost Resistance"]] }],
+    ["0716C4:Devotion.esp", { name: "Faith of the Holds - Observant", effects: [["PoisonResist", 10, "Poison Resistance"]] }],
+    ["0716C5:Devotion.esp", { name: "Faith of the Holds - Faithful", effects: [["PoisonResist", 10, "Poison Resistance"], ["ResistDisease", 10, "Disease Resistance"]] }],
   ]);
   const broadSpellResult = await callHousecarl("housecarl_batch_record_detail", { formids: [...broadSpecs.keys()], fields: ["EditorID", "Name", "Effects"], depth: 4, max_chars: 70_000 });
   const broadBlocks = blocks(extractHousecarlText(broadSpellResult), "Spell");
   const broadMgefIds = [...new Set(broadBlocks.flatMap((block) => formIds(block, /Effects\[\d+\]\.BaseEffect\s*=\s*([0-9A-Fa-f]{6}:[^\s\r\n]+)/g)))];
   const broadMgefResult = await callHousecarl("housecarl_batch_record_detail", { formids: broadMgefIds, fields: ["Name", "Archetype"], depth: 3, max_chars: 50_000 });
-  const broadActorValue = new Map(blocks(extractHousecarlText(broadMgefResult), "MagicEffect").map((block) => [block.match(/formid=([0-9A-Fa-f]{6}:[^\s]+)/)?.[1], field(block, "Archetype.ActorValue")]));
+  const broadMgefDetails = new Map(blocks(extractHousecarlText(broadMgefResult), "MagicEffect").map((block) => [
+    block.match(/formid=([0-9A-Fa-f]{6}:[^\s]+)/)?.[1],
+    [field(block, "Archetype.ActorValue"), field(block, "Name")],
+  ]));
   for (const [formid, spec] of broadSpecs) {
     const block = broadBlocks.find((part) => part.includes(`formid=${formid.split(":")[0]}`)) || "";
     const ids = formIds(block, /Effects\[\d+\]\.BaseEffect\s*=\s*([0-9A-Fa-f]{6}:[^\s\r\n]+)/g);
     const magnitudes = [...block.matchAll(/Effects\[\d+\]\.Data\.Magnitude\s*=\s*([-0-9.]+)/g)].map((match) => Number(match[1]));
-    const actual = ids.map((id, index) => [broadActorValue.get(id), magnitudes[index]]);
+    const actual = ids.map((id, index) => [...(broadMgefDetails.get(id) || ["", ""]), magnitudes[index]]).map(([actorValue, effectName, magnitude]) => [actorValue, magnitude, effectName]);
     if (field(block, "Name") === spec.name && JSON.stringify(actual) === JSON.stringify(spec.effects)) pass("broad reward packet", `${spec.name} matches its locked effect packet.`);
     else fail("broad reward packet", `${formid} read ${field(block, "Name")} ${JSON.stringify(actual)}; expected ${spec.name} ${JSON.stringify(spec.effects)}.`);
   }

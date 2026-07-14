@@ -60,7 +60,7 @@
       ]
     },
     "tierSync": "highest-slot-only",
-    "recordDisplayPolicy": "The SPEL and every child MGEF use the same visible family name so Active Effects roll up coherently.",
+    "recordDisplayPolicy": "The SPEL FULL is the visible family/tier heading; each child MGEF FULL is the concise mechanical effect name or a distinct scripted-effect name. This keeps Active Effects legible without duplicate family lines.",
     "visibleVocabulary": {
       "forbidden": ["Spine", "spine"],
       "scope": ["SPEL FULL", "MGEF FULL", "QUST FULL", "descriptions", "Active Effects", "MCM", "Prisma", "Survey", "journal", "current player and test documentation"],
