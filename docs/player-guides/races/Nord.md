@@ -4,16 +4,11 @@
 
 Nords carry two overlapping religious languages and rarely lose sleep over it. The Old Ways honor Kyne, Shor, Tsun, Stuhn, Mara, Orkey, Dibella, and Talos. The Nine Divines honor Akatosh, Arkay, Dibella, Julianos, Kynareth, Mara, Stendarr, Zenithar, and Talos. Most Nords recognize both traditions, but Devotion asks which one frames your worship. Only that baseline is active at a time, and both are equally complete.
 
-For a Nord, faith is not a starting package handed to you. It is something your deeds reveal. You do not pick which god you serve. You live - you hunt, you fight, you defy the ban, you build a hearth - and at some point a god notices that the way you live points toward them, and offers to claim you. Until that moment you are a broad worshipper of your whole pantheon, honored by all and beloved by none in particular.
+For a Nord, faith is not a starting package handed to you. It is something your deeds reveal. You do not pick which god you serve. You live - you hunt, you fight, you learn the Voice, you keep the old rites - and at some point a god notices that the way you live points toward them, and offers to claim you. Until that moment you are a broad worshipper of your whole pantheon, honored by all and beloved by none in particular.
 
 The big choice at the start is which pantheon frames your worship: the Old Ways or the Nine Divines. After that, the choice that matters most is one you do not consciously make - it is made for you, by how you actually play.
 
-Both baselines build broad standing from the gods mixed within that tradition.
-Old Ways grants `Old Ways - Seeker/Faithful`; Nine Divines grants `Faith of the
-Holds - Seeker/Faithful`. At 50 piety a god may offer commitment. Accepting
-keeps your piety, sets the broad blessing aside, and begins the focused second
-tier. Hearthkeeping and outdoor rest also build a separate Nord cultural layer,
-but only the first authentic act after each 06:00 dawn advances it.
+Both baselines build broad standing from the gods mixed within that tradition. The Old Ways grant the Old Ways blessing; the Nine Divines grant Faith of the Holds. At 50 piety a god may offer commitment. Accepting keeps your piety, sets the broad blessing aside, and begins that god's focused blessing.
 
 ## Your Gods
 
@@ -28,15 +23,15 @@ If you start on the Old Ways, these are the gods who can claim you:
 - **Orkey** - the old death-god, met through proper burial, crypt duty, and respect for the dead.
 - **Dibella** - the goddess of beauty, affection, and the life of the hall.
 
-If you start on the Nine Divines, you can be claimed by **Akatosh**, **Mara**, **Arkay**, **Stendarr**, **Zenithar**, **Dibella**, **Julianos**, or **Kynareth** - and Talos remains reachable in either pantheon. A Nord under the Divines still lives like a Nord: holds, weather, household duty, death rites, honor, and Talos pressure, just wearing temple names instead of old mythic ones.
+If you start on the Nine Divines, you can be claimed by **Akatosh**, **Mara**, **Arkay**, **Stendarr**, **Zenithar**, **Dibella**, **Julianos**, or **Kynareth** - and Talos remains reachable in either pantheon. A Nord under the Divines still lives like a Nord: holds, weather, honor, death rites, and hard work, just wearing temple names instead of old mythic ones.
 
-A few gods are off the table for Nords by design: Alduin (feared, not worshipped) and Jhunal (forgotten by the Fourth Era). Foreign gods and the Daedric Princes are not part of normal Nord worship. The one Daedric road open to you is Hircine, and it opens only through the curse of lycanthropy - see "If You Are Cursed" below.
+A few gods are off the table for Nords by design: Alduin (feared, not worshipped) and Jhunal (forgotten by the Fourth Era). Foreign gods and the Daedric Princes are not part of normal Nord worship.
 
 ## Getting Started
 
 At the very start you set your **pantheon baseline**: Old Ways or Nine Divines. This is a framing choice. It decides which gods can notice you and what names and stories your worship wears. The underlying way devotion works is the same either way - only the roster and the flavor change.
 
-- **Old Ways** points you at Kyne, Shor, Tsun, Stuhn, Mara, Orkey, Dibella, and Talos. This is the mythic, hold-born, ancestors-and-Sovngarde frame. It leans into weather, the hunt, honorable combat, household duty, death order, and quiet defiance of the Talos ban as ancestral identity.
+- **Old Ways** points you at Kyne, Shor, Tsun, Stuhn, Mara, Orkey, Dibella, and Talos. This is the mythic, hold-born, ancestors-and-Sovngarde frame. It leans into weather, the hunt, honorable combat, and the order owed to the dead.
 - **Nine Divines** points you at the eight Imperial Divines plus Talos. It is the more temple-readable frame, but it still plays like a Nord - the difference is moral and verbal more than mechanical. Here, carrying Talos in your heart is a contradiction held inside a public Divine faith.
 
 You do not commit to a single god at the start. You begin as a **broad worshipper** of your chosen pantheon. You earn devotion across several gods at once, and that broad worship is its own honored path - but it caps you at the Devoted tier. To reach Champion, you must commit to one god when they offer to claim you. That offer is the heart of the Nord experience, and it is covered under Unique Mechanics.
@@ -45,140 +40,105 @@ For how the tiers, the piety bar, and the panels work in general, see the How De
 
 ## How You Gain Piety
 
-<!-- Review tags (strip before player release, along with the REVIEW SCAFFOLDING block below):
-     [WIRED]  = fires organically in normal play now (hook named)
-     [QUEST]  = fires only from a specific vanilla quest stage (via the quest-reaction matrix)
-     [PARTIAL]= organic but narrowly gated (patron/pantheon state, property-based call, active-deity gate)
-     [STUB]   = only reachable via a dev-only signal activator or the debug MCM; not organic
-     [INERT]  = a CSV/matrix row exists but does not fire organically
-     Deltas from PDV_DeityLikesDislikes.csv (day-to-day) and PDV_Deity_*.psc DELTA_*/SIGNAL_* (curated). -->
-
 Nord worship is led by deeds, not by kneeling at shrines. Variety matters far more than repetition - doing the same deed over and over earns less each time, and each god's daily devotion is capped at roughly 4.3 piety per day. Lead with these:
 
-- **Hunt and fight honorably.** Killing a worthy, armed foe in fair combat pleases Shor, Tsun, and Stuhn. A genuine hunt - killing an animal without a sneak attack - is Kyne's deed (and Shor's). This is the most reliable Nord road to devotion. `[WIRED: Story Manager kill event -> HandleStoryKillActor classifies the victim -> CSV kill-hostile-humanoid (2): Shor +0.5, Tsun +0.75, Stuhn +0.5, Talos +0.5, Kyne +0.5. Kyne kill-hostile-beast (1) is a small penalty (-0.5), not a gain; there is no organic "clean animal hunt" reward hook.]`
-- **Learn and use the Thu'um.** Learning a Word of Power honors Talos, Kyne, Shor, Tsun, and (in the Divines frame) Julianos and Kynareth. Talos and Kynareth especially treasure it - the Voice is the warrior-god's mastery and the wind given form. `[WIRED: learn-word-of-power (343) via Story Manager new-voice-power -> HandleStoryNewVoicePower -> CSV Talos +1.0, Kyne +1.0, Kynareth +1.0, Julianos +0.75, Tsun +0.25, Shor +0.5. Using a shout also scores via OnShoutAttack -> HandleShoutAttack, but that path is property-based: Kyne DELTA_SHOUT_ATTACK +0.35 and Talos +0.5 only (the CSV shout-attack rows are NOT read).]`
-- **Defy the Talos ban.** Helping a Talos worshipper, activating a hidden Talos shrine, or refusing to report the faithful are among the strongest Nord deeds. Only costly, faithful defiance counts - ordinary anti-Thalmor violence or plain Civil War preference does not. `[STUB: HandleTalosShrineDefiance -> Talos SIGNAL_SHRINE_DEFIANCE exists but is reached only via the dev-only PDV_EventSignalActivator RouteTalosShrineDefiance and the debug MCM (PDV_MCM 2543). No organic shrine-activate / help-worshipper / refuse-to-report hook fires it. There is no Nord/Talos defiance ref in PDV_FinalPlacementManifest.json.]`
-- **Slay dragons.** Felling a dragon is a major deed for Talos, Shor, and Tsun - the worthiest trial and the conqueror's supreme glory. `[WIRED: kill-dragon (302) via HandleStoryKillActor (ActorTypeDragon classification) -> CSV Talos +1.5, Kyne +1.0, Shor +1.0, Tsun +0.75.]`
-- **Rest under the open sky.** Sleeping outdoors, not in an inn or a house, pleases Kyne, Kynareth, Shor, and Tsun. Genuine open-sky rest only - menu naps and indoor beds do not count. `[WIRED: OnSleepStop -> RouteGenericAction(EVT_REST_UNDER_OPEN_SKY) when slept outside -> CSV rest-under-open-sky (313): Kyne +0.5, Kynareth +0.75, Shor +0.25, Tsun +0.25. Note: sleeping at an interior "hearth" is a SEPARATE Shor ancestral-rest signal, not open-sky.]`
-- **Tend the dead and the living.** Putting the restless undead to rest honors Arkay, Shor, Tsun, and Stuhn. Healing or curing others honors Mara, Stendarr, Stuhn, and Arkay. Completing a Hall of the Dead or burial quest is a strong one-time deed for Arkay. `[WIRED: kill-undead (300) via HandleStoryKillActor -> CSV Arkay +0.5, Shor +0.5, Tsun +0.5, Stuhn +0.25, Kyne +0.5, Stendarr +0.5. heal-or-cure-npc (350): Mara +0.75, Stendarr +0.5, Stuhn +0.75, Arkay +0.5, Kyne +0.25, Dibella +0.25, Tsun +0.25. The burial/Hall-of-the-Dead one-time deed is QUEST-only, see the review block.]`
-- **Build a hearth and defend a hold.** Marriage, investing in a home, freeing prisoners, and aiding a hold are Mara's and Stuhn's deeds - meaningful community defense, not generic chores. `[QUEST: no organic marriage/home-invest/free-prisoner/aid-hold day-to-day hook exists in the likes table. These reach Nord play only through the quest-reaction matrix (e.g. Message to Whiterun for Talos/Kyne, Pieces of the Past / Waking Nightmare mercy for Stuhn). The interior "hearth-rest" that fires organically (HandleNordSleepEvents / HandleNordLocationChange) feeds Shor's ancestral-rest signal, not a Mara/Stuhn hold reward.]`
-- **Do honest work and learn.** Smithing, enchanting, mining, and brewing of real quality please Zenithar; reading skill books, spell tomes, and lore please Julianos and Dibella. Clearing a bounty by serving your time pleases Stendarr, Mara, and Zenithar. `[WIRED: CSV Zenithar smith-item (330) +0.5, enchant-item (331) +0.5, brew-potion (332) +0.25, cook-meal (333) +0.25; Julianos read-skill-book (340) +0.5, read-spell-tome (341) +0.5, read-lore-book (342) +0.5, increase-skill (344) +0.25; Dibella smith/enchant/lore +0.25-0.5. clear-bounty-serve-time (351): Stendarr +0.75, Mara +0.5, Zenithar +0.5. No dedicated "mining" event; mining is not in the table.]`
+- **Fight honorably.** Killing a worthy, armed foe in fair combat pleases Shor, Tsun, Stuhn, Kyne, and Talos. This is the most reliable Nord road to devotion, and it costs you nothing but the fight.
+- **Slay dragons.** Felling a dragon is a major deed for Talos, Shor, Tsun, and Kyne - the worthiest trial and the conqueror's supreme glory.
+- **Learn the Thu'um.** Learning a Word of Power honors Talos, Kyne, Shor, Tsun, and (in the Divines frame) Julianos and Kynareth. Talos and Kynareth especially treasure it - the Voice is the warrior-god's mastery and the wind given form. Using a shout in earnest is noticed too, but only by Kyne and Talos; the other gods care that you learned it, not that you spent it.
+- **Rest under the open sky.** Sleeping outdoors, not in an inn or a house, pleases Kyne, Kynareth, Shor, and Tsun. Genuine open-sky rest only - a bed under a roof does not count.
+- **Put the restless dead to rest.** Destroying the walking undead honors Arkay, Shor, Tsun, Stuhn, Kyne, and Stendarr. The crypts of Skyrim are full of work no one else will do.
+- **Heal and mend.** Curing or healing another person honors Mara, Stendarr, Stuhn, Arkay, Kyne, Dibella, and Tsun.
+- **Do honest work and learn.** Smithing, enchanting, brewing, and cooking of real quality please Zenithar; reading skill books, spell tomes, and lore, and raising a skill, please Julianos and Dibella. Clearing a bounty by serving your time pleases Stendarr, Mara, and Zenithar.
+- **Answer the great quests.** Some of your standing is not a daily habit at all - it is earned once, in the moments that matter: taking the Voice at High Hrothgar, warning a hold before the war reaches it, sparing a beaten man who expected to die. See "Quests That Move Your Standing" below for what the gods are watching.
 
 ## How You Lose Piety
 
 Nord loss is rarely a hammer-blow. Most of it is drift and distance.
 
-- **Dislikes.** The clearest sin across nearly every Nord god is **murdering the defenseless** - it bars the door to Sovngarde for Shor, Tsun, and Stuhn (Stuhn reacts hardest of all), and offends Mara, Stendarr, and Julianos. **Raising the dead** angers Arkay, Shor, Tsun, Stuhn, Stendarr, Kynareth, and Dibella. **Theft, trespass, and picking owned locks** offend Zenithar, Stuhn, Stendarr, Mara, and Julianos. Accepting Daedric artifacts repels Stendarr, Kynareth, Tsun, and Arkay. `[WIRED: CSV dislikes - murder-defenseless (304): Stuhn -2.0, Shor/Tsun/Mara/Julianos -1.5, Kyne/Stendarr/Zenithar/Kynareth/Dibella/Arkay -1.0, Talos -0.75. raise-undead (365): Arkay -1.5, Stendarr -1.5, Shor/Tsun/Stuhn/Mara/Kynareth -1.0, Dibella -0.75. steal-item (362): Zenithar/Stendarr -0.75, Stuhn -0.75, Mara/Julianos/Talos/Shor -0.5. pick-owned-lock (360): Zenithar/Stuhn -0.5. trespass (361): Zenithar/Stendarr/Julianos -0.25. accept-daedric-artifact (368): Stendarr/Kynareth/Tsun/Arkay/Kynareth -0.75 to -1.0, Zenithar -0.75. assault-innocent (364) also offends Mara/Stendarr/Arkay/Julianos/Dibella/Shor/Tsun/Talos. All fire via the generic event routers (OnItemRemoved/OnObjectEquipped/HandleStoryKillActor/lockpick/trespass).]`
-- **Talos creed.** If Talos has claimed you and then you bend the knee - reporting a worshipper, surrendering a hidden shrine, or complying with the ban - your devotion drops. Openly aiding the Thalmor against the faith is the worst betrayal of all. `[STUB: the counterpart to the defiance gain - there is no organic report-worshipper / surrender-shrine / comply-with-ban hook. The Talos defiance lane (SIGNAL_SHRINE_DEFIANCE) is only reachable dev-only/MCM, so its betrayal inverse has no organic trigger either. Nord has no Concordat reputation bar (that is Imperial-only).]`
-- **Kyne's creed.** Kyne does not abide needless slaughter of her creatures. Wanton killing of beasts cools her favor. `[WIRED: CSV kill-hostile-beast (1) Kyne -0.5, capped 2/day (softened for self-defense fairness) via HandleStoryKillActor. This is the only "wanton beast" penalty; there is no separate non-hostile animal-slaughter hook.]`
-- **Neglect (a god growing quiet).** Ignore a god and they grow distant rather than angry. Kyne's neglect is the most tangible: the weather stops feeling like it is on your side, animals do not settle near you, and your stamina recovers a little more slowly at night until you return to the open sky. For Talos, the shouts start to feel like mere technique. For the rest, the small graces simply dry up and the ancestors go quiet. `[PARTIAL: the neglect flag sets when a god's piety lapses, but the FELT neglect spells only apply once that god has CLAIMED you - SyncKyneNeglectSpell is gated to IsNeglectFlagActive(PDV_Kyne) && _activeDeity == PDV_Kyne, and the per-patron Shor/Tsun/Stuhn/Talos neglect spells are each gated to _activeDeity == that god. A broad worshipper who never committed feels no neglect debuff.]`
-- **Natural drift.** If you stop living the way your patron expected - a Kyne Champion who moves to a city and never goes outside again - that bond slowly fades from real to formal, and your tier can slip back down. `[WIRED: passive decay lowers idle piety over time per deity; tier can slip as piety falls below a threshold.]`
-- **The broad-worship cap.** Honoring your whole pantheon keeps you at Devoted. That is not a penalty - it is the natural ceiling of breadth. Reaching Champion simply requires committing to one god. `[WIRED: broad worship caps at Devoted until a patron offer is accepted.]`
+- **Murdering the defenseless.** The clearest sin across nearly every Nord god. It bars the door to Sovngarde for Shor, Tsun, and Stuhn - Stuhn reacts hardest of all - and it offends Mara, Stendarr, Julianos, Kyne, Zenithar, Kynareth, Dibella, Arkay, and even Talos. Beating and assaulting the innocent draws the same disgust in smaller measure.
+- **Raising the dead.** Reanimating a corpse angers Arkay and Stendarr most, and offends Shor, Tsun, Stuhn, Mara, Kynareth, and Dibella.
+- **Theft, trespass, and picking owned locks.** These offend Zenithar and Stuhn most, and cool Stendarr, Mara, Julianos, Talos, and Shor.
+- **Daedric bargains.** Accepting a Daedric artifact repels Stendarr, Kynareth, Tsun, Arkay, and Zenithar.
+- **Kyne's creed.** Kyne does not abide the slaughter of her creatures. Killing beasts cools her favor - she forgives the first couple each day, since a Nord in the wild must sometimes defend himself, but a trail of carcasses is a trail she remembers.
+- **Neglect once you are claimed.** Ignore the god who claimed you and they grow distant rather than angry, and you feel it. Kyne's neglect is the most tangible: the weather stops feeling like it is on your side. For Talos, the shouts start to feel like mere technique. Shor, Tsun, and Stuhn each withdraw their own grace. A broad worshipper who has never accepted an offer feels no such chill - neglect bites only after a bond exists to be neglected.
+- **Natural drift.** If you stop living the way your patron expected - a Kyne Champion who moves to a city and never goes outside again - that bond slowly fades from real to formal, and your tier can slip back down.
+- **The broad-worship cap.** Honoring your whole pantheon keeps you at Devoted. That is not a penalty - it is the natural ceiling of breadth. Reaching Champion simply requires committing to one god.
 
-Nord has no formal reputation meter the way Imperials carry a Concordat standing. Your defiance of the Talos ban is tracked as individual deeds, not a sliding political bar. `[NOTE: this is literally true - there is no Nord Concordat track; but it undersells the gap. The "defiance deed" the copy leans on is not organically trackable at all (STUB), so in normal play Talos-defiance piety currently comes only from quest-matrix rows, not from any defiance act you perform freely.]`
+Nord has no formal reputation meter the way Imperials carry a Concordat standing. Your standing with each god is the sum of your deeds, not a sliding political bar.
 
-<!-- REVIEW SCAFFOLDING - strip before player release -->
+## Quests That Move Your Standing
 
-### Quests That Move Your Standing
-
-Quest-reaction rows for the Nord gods, pulled from `PDV_QuestReactionMatrix_Full.csv` and consumed at runtime by `ApplyQuestReaction` -> `ApplyDeityReaction` in `PDV__ManagerQuest.psc`. Hand-authored rows (magnitude `small` or `milestone` with a real UESP/quest citation) are promoted and fire when the quest is on the watch list; "echo" rows carry a "cross-gen candidate ... reviewed" citation and are **not** promoted (INERT).
+Some deeds are too large to be a habit. The gods watch the great quests of Skyrim, and a few of them move your standing the moment you finish.
 
 **Kyne**
 
-| Quest | Stage | Deed | Valence/Intensity/Mag | Status |
-|-------|-------|------|-----------------------|--------|
-| Dragon Rising (MQ104) | 160 | Killed Mirmulnir, absorbed first dragon soul | + / S / small | WIRED |
-| The Way of the Voice (MQ105) | 160 | Took up the Voice at High Hrothgar | + / S / small | WIRED |
-| A Blade in the Dark (MQ106) | 200 | Slew Sahloknir at Kynesgrove | + / S / small | WIRED |
-| Alduin's Bane (MQ206) | 220 | Drove off Alduin with Dragonrend | + / S / small | WIRED |
-| Dragonslayer (MQ305) | 200 | Destroyed Alduin | + / S / small | WIRED |
-| Message to Whiterun (CW03) | 16 | Warned Whiterun, readied the kin-hold | + / m / small | WIRED |
-
-Plus 16 echo rows (prove_by_struggle / kill_honorable across Companions, Civil War, Dark Brotherhood, Bleak Falls, etc.) flagged REVIEW -> INERT.
+| Quest | What you did | Effect |
+|-------|--------------|--------|
+| Dragon Rising | Killed Mirmulnir, absorbed your first dragon soul | Helps (small) |
+| The Way of the Voice | Took up the Voice at High Hrothgar | Helps (small) |
+| A Blade in the Dark | Slew Sahloknir at Kynesgrove | Helps (small) |
+| Alduin's Bane | Drove off Alduin with Dragonrend | Helps (small) |
+| Dragonslayer | Destroyed Alduin | Helps (small) |
+| Message to Whiterun | Warned Whiterun, readied the kin-hold | Helps (small) |
 
 **Talos**
 
-| Quest | Stage | Deed | Valence/Intensity/Mag | Status |
-|-------|-------|------|-----------------------|--------|
-| Joining the Stormcloaks | 160/200 | Took the oath, joined the Sons of Skyrim | + / C / milestone | WIRED |
-| The Jagged Crown | 30/200 | Drove the Empire out, delivered the Crown to Ulfric | + / C / milestone | WIRED |
-| Message to Whiterun (CW03) | 100/240 | War on Whiterun (Stormcloak completion) | + / C / milestone | WIRED |
-| Take Up Arms (C00) | 20 | Trial of arms with Vilkas | + / m / small | WIRED |
-| Proving Honor (C01) | 200 | Earned a place by judged valor | + / S / small | WIRED |
-| The Way of the Voice (MQ105) | 160 | Mastered the new Voice powers | + / S / small | WIRED |
-| The Horn of Jurgen Windcaller | 60 | Greeted formally as Dragonborn | + / S / small | WIRED |
-| A Blade in the Dark (MQ106) | 200 | Killed the dragon, absorbed its power | + / S / small | WIRED |
-| Sovngarde (MQ305) | 200 | Reached the Hall of Heroes | + / S / small | WIRED |
-| Joining the Legion | 1 | Cleared Fort Hraggstad | + / S / small | WIRED |
-| Silver Hand / Blood's Honor / Purity of Revenge (C03/C04/C05) | 200 | Companions valor arc | + / S / small | WIRED |
-| Message to Whiterun (CW03) | 16 | Assisted with the dragon threat | + / m / small | WIRED |
-| Hitting the Books (MG03) | 55 | Freed Orthorn (rescue) | + / m / small | WIRED |
-| Containment (MG05) | 200 | Protected Winterhold | + / m / small | WIRED |
-
-Plus 10 echo rows flagged REVIEW -> INERT.
+| Quest | What you did | Effect |
+|-------|--------------|--------|
+| Joining the Stormcloaks | Took the oath, joined the Sons of Skyrim | Helps (major) |
+| The Jagged Crown | Drove the Empire out, delivered the Crown to Ulfric | Helps (major) |
+| Message to Whiterun | Carried the war to Whiterun for the Stormcloaks | Helps (major) |
+| Take Up Arms | Stood the trial of arms with Vilkas | Helps (small) |
+| Proving Honor | Earned a place by judged valor | Helps (small) |
+| The Way of the Voice | Mastered the new Voice powers | Helps (small) |
+| The Horn of Jurgen Windcaller | Greeted formally as Dragonborn | Helps (small) |
+| A Blade in the Dark | Killed the dragon and absorbed its power | Helps (small) |
+| Sovngarde | Reached the Hall of Heroes | Helps (small) |
+| Joining the Legion | Cleared Fort Hraggstad | Helps (small) |
+| The Silver Hand, Blood's Honor, Purity of Revenge | Saw the Companions' valor arc through | Helps (small) |
+| Message to Whiterun | Answered the dragon threat | Helps (small) |
+| Hitting the Books | Freed Orthorn | Helps (small) |
+| Containment | Protected Winterhold | Helps (small) |
 
 **Shor**
 
-| Quest | Stage | Deed | Valence/Intensity/Mag | Status |
-|-------|-------|------|-----------------------|--------|
-| The Silver Hand (C03) | 200 | Silver Hand stronghold battle | + / C / milestone | WIRED |
-| Blood's Honor (C04) | 200 | Killed the Glenmoril Witches | + / C / milestone | WIRED |
-| Purity of Revenge (C05) | 200 | Avenged Kodlak, ruined the Silver Hand | + / C / milestone | WIRED |
-| A Blade in the Dark (MQ106) | 200 | Killed the dragon at Kynesgrove | + / C / milestone | WIRED |
-| Proving Honor (C01) | 200 | Earned a place by valor | + / S / small | WIRED |
-| Glory of the Dead (C06) | 65 | Defeated the wolf spirit | + / S / small | WIRED |
-| Joining the Legion | 1 | Cleared the bandits | + / C / small | WIRED |
-| (Thalmor assassin, unnamed) | 100 | Killed the armed Thalmor agent | + / C / small | WIRED |
-| To Kill an Empire (DB09) | 50/200 | Treacherous poison kill (-) / return (+) | -/+ / S / small | WIRED |
-| Recipe for Disaster (DB08) | 200 | Treacherous contract kills | - / S / small | WIRED |
-| Hail Sithis! (DB11) | 200 | Treacherous kill | - / S / small | WIRED |
-
-Plus 12 echo rows flagged REVIEW -> INERT.
+| Quest | What you did | Effect |
+|-------|--------------|--------|
+| The Silver Hand | Fought the Silver Hand in their own stronghold | Helps (major) |
+| Blood's Honor | Killed the Glenmoril Witches | Helps (major) |
+| Purity of Revenge | Avenged Kodlak, ruined the Silver Hand | Helps (major) |
+| A Blade in the Dark | Killed the dragon at Kynesgrove | Helps (major) |
+| Proving Honor | Earned a place by valor | Helps (small) |
+| Glory of the Dead | Defeated the wolf spirit | Helps (small) |
+| Joining the Legion | Cleared out the bandits | Helps (small) |
+| Thalmor assassin ambush | Killed the armed Thalmor agent who came for you | Helps (small) |
+| To Kill an Empire | Killed the Emperor's double by poison, then returned | Hurts, then helps (small) |
+| Recipe for Disaster | Carried out a treacherous contract kill | Hurts (small) |
+| Hail Sithis! | Carried out a treacherous kill | Hurts (small) |
 
 **Tsun**
 
-| Quest | Stage | Deed | Valence/Intensity/Mag | Status |
-|-------|-------|------|-----------------------|--------|
-| Proving Honor (C01) | 200 | Retrieved a Wuuthrad fragment, valor judged | + / C / milestone | WIRED |
-| The Way of the Voice (MQ105) | 160 | Passed the trials of the Voice | + / C / milestone | WIRED |
-| The Silver Hand (C03) | 200 | Killed the werewolf hunters | + / S / small | WIRED |
-| Blood's Honor (C04) | 200 | Killed the Glenmoril Witches in battle | + / S / small | WIRED |
-| Purity of Revenge (C05) | 200 | Wiped out the Silver Hand | + / S / small | WIRED |
-| Dragon Rising (MQ104) | 160 | Killed the dragon | + / S / small | WIRED |
-| A Blade in the Dark (MQ106) | 200 | Killed the dragon | + / S / small | WIRED |
-| Sovngarde (MQ305) | 200 | Reached the Hall of Heroes | + / C / small | WIRED |
-
-Plus 12 echo rows flagged REVIEW -> INERT.
+| Quest | What you did | Effect |
+|-------|--------------|--------|
+| Proving Honor | Retrieved a fragment of Wuuthrad, valor judged | Helps (major) |
+| The Way of the Voice | Passed the trials of the Voice | Helps (major) |
+| The Silver Hand | Killed the werewolf hunters | Helps (small) |
+| Blood's Honor | Killed the Glenmoril Witches in open battle | Helps (small) |
+| Purity of Revenge | Wiped out the Silver Hand | Helps (small) |
+| Dragon Rising | Killed the dragon | Helps (small) |
+| A Blade in the Dark | Killed the dragon | Helps (small) |
+| Sovngarde | Reached the Hall of Heroes | Helps (small) |
 
 **Stuhn**
 
-| Quest | Stage | Deed | Valence/Intensity/Mag | Status |
-|-------|-------|------|-----------------------|--------|
-| Bound Until Death (DB05) | 200 | Killed Vittoria Vici (helpless target) | - / C / milestone | WIRED |
-| Pieces of the Past (DA07) | 150 | Refused to kill Silus - mercy to the beaten | + / m / small | WIRED |
-| Waking Nightmare (DA16) | 200 | Let Erandur live - mercy to the yielding | + / m / small | WIRED |
-| Death Incarnate (DB10) | 70 | Finished the doomed Brotherhood remnants | - / S / small | WIRED |
+| Quest | What you did | Effect |
+|-------|--------------|--------|
+| Pieces of the Past | Refused to kill Silus - mercy to the beaten | Helps (small) |
+| Waking Nightmare | Let Erandur live - mercy to the yielding | Helps (small) |
+| Bound Until Death | Killed Vittoria Vici, a helpless target | Hurts (major) |
+| Death Incarnate | Finished the doomed Brotherhood remnants | Hurts (small) |
 
-Plus 14 echo rows flagged REVIEW -> INERT.
-
-**Nine Divines note.** The Nine Divines gods carry their own promoted rows too (Arkay ~11, Stendarr ~22, Mara ~13, Julianos ~8, Dibella ~8, Akatosh ~8, Kynareth ~5, Zenithar ~3 promoted rows, with matching echo tails). These are shared cross-race quest reactions, not Nord-specific hand-authoring, and they fire for a Nord under the Divines exactly as for any other race that can be claimed by those gods.
-
-Caveat: all day-to-day CSV rows in the gain/loss sections above are live only if the generated `LoadRowsForDeity` table has been regenerated and `LIKES_DISLIKES_VERSION` bumped; the matrix rows are live only if the quest is present in `questWatchFormIdsCsv` in the compiled JSON.
-
-### Review Notes
-
-Discrepancies between what the guide/design promises and what actually fires organically (for owner triage):
-
-- **Talos-defiance is the biggest gap.** "Defy the Talos ban" is sold as one of the top three Nord deeds, but there is NO organic hook for it. `HandleTalosShrineDefiance` / Talos `SIGNAL_SHRINE_DEFIANCE` is reachable only from the dev-only `PDV_EventSignalActivator` and the debug MCM. There is no hidden-Talos-shrine placement ref in `PDV_FinalPlacementManifest.json`, no "help a worshipper" hook, and no "refuse to report" hook. In normal play, Talos piety comes from CSV combat/word-of-power/discovery rows and the quest matrix (Stormcloak/Companions/Main Quest), not from any act of defiance you choose. This is the prime remap target for the race.
-- **The "honorable hunt" half of combat is not a reward.** Kyne's only organic animal interaction is a small PENALTY (kill-hostile-beast -0.5). There is no "clean first-arrow animal hunt" gain hook; the honorable-combat gains all come from kill-hostile-humanoid and kill-dragon.
-- **Thu'um-in-use is property-based, not table-based.** Learning a Word of Power reads the CSV normally. USING a shout (OnShoutAttack) is scored only through the hard-coded `DELTA_SHOUT_ATTACK` properties on Kyne (+0.35) and Talos (+0.5); the CSV shout-attack (40) rows are explicitly NOT read. Other gods get nothing from using a shout.
-- **Hearth / hold is quest-only.** "Build a hearth and defend a hold" (marriage, home, freeing prisoners, aiding a hold) has no day-to-day like row. The only organic "hearth" hook is the interior sleep/return signal (`HandleNordSleepEvents` / `HandleNordLocationChange`), which feeds Shor's ancestral-rest substrate, NOT a Mara/Stuhn hold reward. Community-defense credit reaches the player only through the quest matrix.
-- **Neglect is felt only after commitment.** Every Nord neglect debuff (Kyne weather/stamina; the per-patron Shor/Tsun/Stuhn/Talos flat spells) is gated to `_activeDeity == that god`. A broad worshipper who never accepted an offer never feels neglect, so the "shouts feel like technique" / "weather stops helping" copy only applies to a claimed patron.
-- **Canonical cultural route:** Hearth return, hearth sleep, first cooked meal, and completed exterior rest share one daily substrate credit. They do not create a universal Shor award.
-- **Hircine hunt-rite gain is STUB.** The werewolf-curse state penalties fire organically, but the Hircine hunt-rite REWARD lane (`HandleHircineHuntRite`) is dev-only/MCM, same pattern as the Talos defiance lane.
-- **Old Ways vs Nine Divines coverage:** both baselines must have the same complete broad-pool, threshold, decay, and commitment behavior. Their authentic deity routes and reward flavor differ, but neither may rely on a partial fallback resolver.
-
-<!-- END REVIEW SCAFFOLDING -->
+If you walk the Nine Divines, those gods watch their own quests in the same way - Arkay's death rites, Stendarr's mercies, Mara's kindnesses, Julianos' learning, and the rest. Those reactions are shared with every race the Divines can claim, and they land for a Nord exactly as they would for anyone else.
 
 ## Bonuses by Tier
 
@@ -186,43 +146,77 @@ Note: these are current beta values and may be tuned before release.
 
 There are two layers. The **broad layer** is what you get for honoring your whole pantheon. The **focused layer** is what you get once a single god claims you. Broad bonuses are deliberately softer than a committed patron's, and they switch off once you commit.
 
-**Broad worship (Old Ways), caps at Devoted:**
+**Broad worship - Old Ways.** Caps at Devoted.
 
-| Tier | Bonus |
-|------|-------|
-| Seeker | Stamina Regeneration +4% |
-| Devoted | Stamina Regeneration +6%, Frost Resistance +10% |
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Seeker (25) | Old Ways | Fortify Stamina +15 |
+| Devoted (50) | Old Ways | Fortify Stamina +25, Frost Resistance +10% |
 
-(The Nine Divines baseline uses **Faith of the Holds**: Poison Resistance +10% at Seeker, then Poison and Disease Resistance +10% at Faithful.)
+**Broad worship - Nine Divines.** Caps at Devoted.
 
-**Focused patron bonuses (Old Ways gods).** Commitment enters directly at the Devoted/T2 effect at 50; the old Seeker records remain compatibility-only and are never granted. Champion begins at 85.
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Seeker (25) | Faith of the Holds | Poison Resistance +10% |
+| Devoted (50) | Faith of the Holds | Poison Resistance +10%, Disease Resistance +10% |
 
-- **Kyne** - T2: Stamina Regen +10%, Frost Resist +10%. Champion: Stamina Regen +20%, Frost Resist +25%, plus "The Storm Answers."
-- **Shor** - T2: Health Regen +15%, One-Handed +8. Champion: Health Regen +27%, One-Handed +18, Two-Handed +10, plus "Sovngarde Looks Back" (this capstone carries the Nord's single last-stand save).
-- **Tsun** - T2: Stamina Regen +10%, Block +10. Champion: Stamina Regen +20%, Block +22, Armor +50, plus "The Shield-Thane's Trial."
-- **Stuhn** - T2: Armor +30, Block +8. Champion: Armor +50, Block +18, One-Handed +8, plus "Just Spoils, Honored Bonds."
-- **Talos** (reachable in either pantheon) - T2: Armor +30, One-Handed +8. Champion: Armor +50, One-Handed +20, plus "Triumph of Faithful Defiance." Reached only through costly faithful defiance - compliance never builds it.
+**Focused patrons (Old Ways gods).** A god only offers to claim you at 50 piety, so a patron's blessing begins at its Devoted step - there is no Seeker step for a patron. Champion opens at 85. Below 50, the blessing you carry is the broad one above.
 
-**Focused patron bonuses (Nine Divines).** Each eligible Divine likewise begins at its authored T2 effect at 50 and reaches its Champion capstone at 85. Kynareth leans into stamina and resistance, Mara into restoration, Stendarr into block and armor, and Zenithar into carrying capacity and craft. Focused T1 is never granted.
+**Kyne** - the wind at your back and the cold turned aside.
+
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Devoted (50) | Kyne's Sky | Fortify Stamina +25, Frost Resistance +10% |
+| Champion (85) | Kyne's Breath | Fortify Stamina +40, Frost Resistance +25% |
+
+**Shor** - the king of the mead-hall lends you the endurance to earn your seat.
+
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Devoted (50) | Shor's Favor | Maximum Health +20, One-Handed +8 |
+| Champion (85) | Shor's Hall | Maximum Health +30, One-Handed +18, Two-Handed +10 |
+
+**Tsun** - the shield-thane teaches you to outlast the trial.
+
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Devoted (50) | Tsun's Trial | Fortify Stamina +25, Block +10 |
+| Champion (85) | Tsun's Vigil | Fortify Stamina +40, Block +22, Armor +50 |
+
+**Stuhn** - the shield-god hardens what stands between you and the blow.
+
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Devoted (50) | Stuhn's Ward | Armor +30, Block +8 |
+| Champion (85) | Stuhn's Bulwark | Armor +50, Block +18, One-Handed +8 |
+
+**Talos** - reachable in either pantheon; the conqueror's own resolve.
+
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Devoted (50) | Talos's Resolve | Armor +30, One-Handed +8 |
+| Champion (85) | Talos's Triumph | Armor +50, One-Handed +20 |
+
+**Focused patrons (Nine Divines).** Each eligible Divine likewise begins at its Devoted blessing when it claims you and reaches its Champion blessing at 85. Kynareth leans into stamina and resistance, Mara into restoration, Stendarr into warding and armor, and Zenithar into carrying capacity and craft.
 
 ## Unique Mechanics
 
-**The offer is the whole point.** No Nord chooses their patron from a menu. You worship broadly, you live a certain way, and the game watches. When you have built real, sustained devotion toward one god - reaching the Devoted threshold, with that god seeing meaningful activity on at least two separate days in the past week - that god may approach you at dawn and offer to claim you. The god that shows up is the one that matches how you actually played: hunt and camp and shout, and Kyne comes; fight for the cause and defy the ban, and Talos comes; build a home and mend the broken, and Mara comes.
+**The offer is the whole point.** No Nord chooses their patron from a menu. You worship broadly, you live a certain way, and the game watches. When you have built real, sustained devotion toward one god - reaching the Devoted threshold, with that god seeing meaningful activity on at least two separate days in the past week - that god may approach you at dawn and offer to claim you. The god that shows up is the one that matches how you actually played: hunt and camp and shout, and Kyne comes; fight for the cause and master the Voice, and Talos comes; mend the broken and keep your bonds, and Mara comes.
 
-**You can say "Not yet."** Declining never costs you piety. It only sets a cooldown before that god offers again (seven days the first time, fourteen after). Broad worship continues, other qualifying gods can still step forward, and your play can drift toward someone new. A Nord who refuses Kyne and then turns to the forge may find Zenithar knocking instead.
+**You can say "Not yet."** Declining never costs you piety. It only sets a cooldown before that god offers again - seven days the first time, fourteen after. Broad worship continues, other qualifying gods can still step forward, and your play can drift toward someone new. A Nord who refuses Kyne and then turns to the forge may find Zenithar knocking instead.
 
-**Commitment is a living bond, not a brand.** When you accept, every god keeps the devotion you already built; the broad boon is suppressed and the chosen god's focused Devoted blessing becomes active. Champion opens at 85. If that patron falls below 50, commitment remains but its blessing pauses until recovery. This is the Nord signature: not a rule imposed on you, but the slow truth of who you turn out to be.
+**Commitment is a living bond, not a brand.** When you accept, every god keeps the devotion you already built; the broad boon is set aside and the chosen god's focused Devoted blessing becomes active. Champion opens at 85. If that patron falls below 50, the commitment remains but its blessing pauses until you recover. This is the Nord signature: not a rule imposed on you, but the slow truth of who you turn out to be.
 
 ## If You Are Cursed (Vampire or Werewolf)
 
-**Werewolf - the Hircine road.** The beast-blood opens a real Daedric path under Hircine, with the Hunting Grounds set against Sovngarde. While you are transformed or deep in the werewolf arc, your gains toward Shor, Tsun, and Stuhn are reduced - their honored dead and the Hunting Grounds claim the same soul. Kyne is not punished, but your deeds tilt from storm toward hunt. There is a way back: curing or renouncing the curse begins your recovery, though a readable "hunt-residue" lingers until that recovery fully advances. `[WIRED: OnLycanthropyStateChanged -> RouteCurseRefresh drives the curse state; the werewolf onset message and Shor/Tsun/Stuhn reduction fire from the curse-state service. The separate Hircine hunt-rite GAIN (HandleHircineHuntRite) is STUB - dev-only activator / MCM only, no organic transform-kill hook.]`
+**Werewolf - the beast-blood.** Hircine's gift sets the Hunting Grounds against Sovngarde, and the honored dead will not share a soul with the hunt. While the curse is on you, your gains toward Shor, Tsun, and Stuhn are reduced. Kyne is not punished - your deeds simply tilt from storm toward hunt. There is a way back: curing or renouncing the curse begins your recovery, though a readable trace of the hunt lingers until that recovery fully advances.
 
-**Vampire - the road to Sovngarde closes.** Vampirism severs your claim to the mead-hall. While the curse holds, your Nord patron offers and favors are suppressed, your standing tells you plainly that Sovngarde is shut to you, and Kyne, Mara, and Shor's path all weaken. Curing the disease restores your access - but it leaves a permanent scar, a lowered ceiling that reflects the rupture you suffered. Your earned piety is not wiped; the door simply never opens quite as wide again. `[WIRED: OnVampirismStateChanged -> RouteCurseRefresh; vampire onset suppresses Nord patron offers/favors and shows the "Sovngarde is closed while the thirst remains" standing message. Cure restores access with a lowered ceiling scar.]`
+**Vampire - the road to Sovngarde closes.** Vampirism severs your claim to the mead-hall. While the curse holds, your Nord patron offers and favors are suppressed, your standing tells you plainly that Sovngarde is shut to you, and Kyne, Mara, and Shor's path all weaken. Curing the disease restores your access - but it leaves a permanent scar, a lowered ceiling that reflects the rupture you suffered. Your earned piety is not wiped; the door simply never opens quite as wide again.
 
 ## Quick Reference
 
 - **Gods (Old Ways):** Kyne, Shor, Tsun, Stuhn, Mara, Orkey, Dibella, Talos. **(Nine Divines):** Akatosh, Arkay, Dibella, Julianos, Kynareth, Mara, Stendarr, Zenithar, Talos.
 - **Starting choice:** Old Ways or Nine Divines pantheon baseline; broad worship first, then a god offers to claim you.
-- **Top 3 ways to gain:** honorable combat and the hunt; learning and using the Thu'um; costly defiance of the Talos ban (plus open-sky rest, death rites, hearth and hold for the right gods).
-- **Main ways to lose:** murdering the defenseless and raising the dead; betraying the Talos faith once committed; theft and Daedric bargains; neglect and natural drift; the Devoted cap on broad worship.
+- **Top 3 ways to gain:** honorable combat and dragon-slaying; learning the Thu'um; resting under the open sky and putting the restless dead down (plus healing, honest craft, and the great quests for the right gods).
+- **Main ways to lose:** murdering the defenseless and raising the dead; theft and Daedric bargains; slaughtering Kyne's beasts; neglect and natural drift once a god has claimed you; the Devoted cap on broad worship.
 - **Rough days to Champion:** about 30 to 45 days of normal play, roughly 20 if you focus hard on one god - and you cannot reach it at all until you accept a patron's offer.

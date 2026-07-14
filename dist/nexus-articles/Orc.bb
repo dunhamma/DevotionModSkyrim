@@ -1,0 +1,193 @@
+[size=6][b]Orc - The code is carried, not prayed[/b][/size]
+
+[size=5][b]Overview[/b][/size]
+
+Most races in Devotion pray, give offerings, and visit shrines. Orcs do none of that. You serve one god, Malacath, and Malacath does not want your prayers. He watches. He watches whether you are strong, whether you keep your oaths, whether you provide for your people, and whether the things you make are worthy. His favor is earned through how you live, and it is withheld when how you live falls short.
+
+This is the most demanding faith in the mod, and that is on purpose. You cannot donate to a temple and call it done. You cannot stand at a shrine and feel like you did the work. The only thing Malacath counts is the life you are actually living: the quality of what you forge, the weight of the oaths you keep, and the strength you prove when something tests it.
+
+The big question for an Orc is not which god to follow. It is always Malacath. The question is how you carry his code, given the life you are living. There are three ways: as a Stronghold Orc with your full people behind you, as a City Orc holding the code alone in mixed society, or as a Legion or Exile Orc keeping faith under foreign discipline. The world watches your conduct and confirms which one you are actually living. (For the basics of piety, tiers, and the Devotion panel, see the How Devotion Works primer.)
+
+[size=5][b]Your Gods[/b][/size]
+
+[list]
+[*][b]Malacath[/b] - The Code-Keeper. The god of the spurned, the outcast, and the abandoned. He does not receive prayers. He observes strength, oath-keeping, provision, and worthy craft, and he counts the life you actually lead.
+[/list]
+
+There is one more name that matters to Orcs, though it is not a path you walk in normal play:
+
+[list]
+[*][b]Trinimac[/b] - The fallen god behind Orc identity. Lore says Malacath is Trinimac transformed. In this mod Trinimac is a rare ideological pressure tied to Orc and high-elf orthodoxy, not a steady source of rewards. You will not build devotion to Trinimac the way you build it to Malacath.
+[/list]
+
+Foreign gods and the Daedric Princes are not normal Orc worship. An Orc keeps Malacath's code; chasing other altars is not the Orc path, and the mod does not reward it for this race.
+
+[size=5][b]Getting Started[/b][/size]
+
+You do not pick a god. You carry Malacath's code in one of three life-modes. You can declare which one you intend during setup or later in the MCM menu, but a declaration is only intent. The world has to confirm it through your conduct. If you are not currently proven into a mode, you default to City Orc until your actions earn something else.
+
+[list]
+[*][b]Stronghold Orc[/b] - The full life. The forge serves your people, the chief enforces the code, the shaman reads Malacath's will, and the whole structure of Orc life confirms your choices. This is the fastest mode and reaches its peak the steadiest. You earn it by keeping company with the strongholds: spending real time inside them, and above all by resolving a stronghold crisis in your people's favor. Defending Largashbur through The Cursed Tribe, which ends with you named Blood-Kin, moves you into this mode on the spot. Short of that, a single visit will not do it; the world wants to see the pattern.
+[/list]
+
+[list]
+[*][b]City Orc[/b] - The same code, carried without the structure that makes it easy. You still keep your oaths, still do quality work, still hold your dignity, but you do it alone, in a society that does not understand or reward any of it. This is the default if nothing else is confirmed, and it is slower than Stronghold. The trade is resilience: Malacath has to see the code himself, because no chief or shaman is there to vouch for you.
+[/list]
+
+[list]
+[*][b]Legion / Exile Orc[/b] - Honor under foreign discipline. The contract is the oath. The endurance is the strength. You carry Malacath's code privately while you serve in someone else's army or institution. This is the slowest and heaviest mode, and it is also the one most Orcs in Skyrim actually live. It is meant to feel like a complete devotional life, not a lesser one. You earn it through real, completed, pressure-bearing service, not by signing on. Joining an army is a formality; hauling the Jagged Crown out of Korvanjund, or seeing the civil war through to its end under the Legion, is service.
+[/list]
+
+Switching modes is deliberate and limited. A clear, major moment, such as being named Blood-Kin or finishing hard service, can move you right away. Otherwise the world wants to see two qualifying acts on separate days within a week before it shifts you, and it settles changes at dawn. After a switch, you are locked from drifting again for three days. Walking into a city does not cost you Stronghold standing, and quitting a faction does not free you from Exile; mode is about the life you are confirmed to be living, not your last errand.
+
+[size=5][b]How You Gain Piety[/b][/size]
+
+Malacath only counts what you actually do. Lead with the deeds your mode is built around, and keep variety: repeating the exact same deed earns less each time, so a range of worthy acts always beats grinding one.
+
+[list]
+[*][b]Forge worthy work (the Orc's prayer).[/b] Making things is the first and primary Orc devotional language, and every piece you bring off a forge or workbench is counted. It is counted twice, in a sense: once as work worth doing, and once as the code upheld. Mining ore and flipping goods to a vendor are not devotion; the making is. And the anti-farm limit means hammering out the same trinket a hundred times will not carry you.
+[/list]
+
+[list]
+[*][b]Prove strength in a real fight.[/b] Putting down a hostile enemy is noticed. Cutting down a Daedra is worth more than an ordinary foe, and felling a dragon is the truest proof of strength there is. There is no credit in slaughtering the harmless, and repeated easy kills tail off fast.
+[/list]
+
+[list]
+[*][b]Keep your oaths and finish what you committed to.[/b] Swearing a binding oath and honoring it, and winning your place by a judged trial, are devotion. The harder it was to honor, the more it counts. The quests Malacath is watching for are listed below.
+[/list]
+
+[list]
+[*][b](Stronghold) Answer the stronghold.[/b] Time spent in the strongholds themselves is the steady act. The great one is the crisis: defending Largashbur, besting Yamarz and lifting the curse in The Cursed Tribe names you Blood-Kin, and it is the single largest thing an Orc can do for Malacath in Skyrim.
+[/list]
+
+[list]
+[*][b](City) Hold your dignity and make a place of your own.[/b] The City Orc proves the code where nobody is minding it. Winning a hold's trust by doing its thane work, and making a home genuinely your own in a city, are the moments Malacath counts. They are authored moments, not ambient ones: the credit comes when the work is actually finished, not when you grumble your way through a market.
+[/list]
+
+[list]
+[*][b](Legion / Exile) Complete hard service.[/b] Finishing a pressure-bearing service contract counts. Recovering the Jagged Crown and carrying the Legion's war through to its end are the acts that mark you as a man keeping faith under someone else's discipline.
+[/list]
+
+[list]
+[*][b]Read the rare worthy texts, and stand where Malacath's people stand.[/b] Approved Orc texts register a little, and they are rare. Standing at each of the four strongholds (Dushnikh Yal, Mor Khazgur, Narzulbur, Largashbur) is recognized once each, with a milestone for reaching all four. Sleeping rough at a place you have made your own, rather than paying for a bed, also earns a small note.
+[/list]
+
+A few caps to know: each deed has an anti-farm limit so you cannot loop it for easy piety, and your gain from any single god is capped at roughly 4.3 per day. Only one temporary favor blessing can be active at a time.
+
+[size=5][b]How You Lose Piety[/b][/size]
+
+[list]
+[*][b]Cowardice and weakness.[/b] Stealing is the coward's path the honest outcast scorns. Striking or killing the defenseless is weakness Malacath despises. Both lose you piety.
+[/list]
+
+[list]
+[*][b]Soft comfort.[/b] Sleeping in a warm inn bed loses a little; the exile is meant to scorn the easy comfort.
+[/list]
+
+[list]
+[*][b]Turning your back on the road you took.[/b] If you have been living the Legion or Exile life and you choose to walk away from it, Malacath counts that as faith broken with the people whose service you shared. This is the cost of a decision you make, not of a bad week; letting a life quietly lapse is a different thing, and it is handled below.
+[/list]
+
+[list]
+[*][b]Neglect (the forge goes quiet).[/b] If several days pass without a single act your mode is built on - no time in the strongholds, no service or oath brought home, no return to the hearth you hold, no reading of Malacath's texts - Malacath simply stops watching. This is not punishment, it is absence. A standing penalty called "The Code Goes Unkept" sets in, lowering your armor rating by 5 until you return to worthy work, service, or kin. It clears the moment you start carrying the code again.
+[/list]
+
+[list]
+[*][b]Natural drift.[/b] Piety also fades slowly over time if you do nothing to maintain it, the same for every Orc mode. An exile holding the code alone does not get to decay slower than a stronghold Orc with a whole community behind them.
+[/list]
+
+[list]
+[*][b]The broad-worship cap.[/b] If you spread yourself thin instead of committing, your standing is held back. Reaching Champion requires committing fully to Malacath through one life-mode; broad, uncommitted devotion stops short of the top.
+[/list]
+
+There is no separate reputation meter to manage for Orcs. The thing the world is reading is your life-mode and whether you are living it. A Stronghold Orc who drifts to the city without keeping the code is not betraying anyone; he is just becoming someone who used to be a Stronghold Orc, and the difference shows.
+
+[size=5][b]Quests That Move Your Standing[/b][/size]
+
+Malacath does not care about most of what Skyrim asks of you. These are the moments he is watching for. Every one of them helps; there is nothing here that costs you standing, because a quest well finished is exactly what the code asks.
+
+[list]
+[*][b]The Cursed Tribe[/b] [i]Defended Largashbur, bested Yamarz, lifted the curse, and were named Blood-Kin[/i] - Large gain (also confirms the Stronghold life)
+[*][b]The Cursed Tribe (ghost-curse resolution)[/b] [i]Lifted the curse hanging over Largashbur[/i] - Small gain
+[*][b]Joining the Legion[/b] [i]Swore the binding Imperial oath[/i] - Large gain
+[*][b]Joining the Legion[/b] [i]Cleared Fort Hraggstad in open battle[/i] - Small gain
+[*][b]Joining the Stormcloaks[/b] [i]Swore the binding Stormcloak oath[/i] - Large gain
+[*][b]Joining the Stormcloaks[/b] [i]Slew the Ice Wraith in proving combat[/i] - Small gain
+[*][b]Proving Honor[/b] [i]Won your place by a judged trial of valor[/i] - Small gain
+[*][b]Message to Whiterun[/b] [i]Defended Whiterun from the dragon[/i] - Small gain
+[*][b]Death Incarnate[/b] [i]Defended home and kin in open battle[/i] - Small gain
+[*][b]Dragon Rising[/b] [i]Slew the dragon at the western watchtower[/i] - Small gain
+[*][b]A Blade in the Dark[/b] [i]Slew Sahloknir in open battle[/i] - Small gain
+[/list]
+
+[size=5][b]Bonuses by Tier[/b][/size]
+
+Note: these are current beta values and may be tuned before release.
+
+Your standing climbs from None to Seeker (at 25 piety), to Devoted (at 50), to Champion (at 85). The number you need is the same in every mode. What changes is the pace: Stronghold reaches the top the fastest, City takes longer, and Legion/Exile takes the longest. That is by design. The rewards themselves are equalized, so City and Legion/Exile are complete devotional lives, not weaker ones, and every mode ends at the same peak.
+
+There is also a broad blessing that holds before you have locked into a mode, or if you stay uncommitted. It is gentler than your mode's blessings and steps aside once a mode blessing is active.
+
+[b]Malacath's Regard[/b] - the broad blessing, held in any mode:
+
+[list]
+[*][b]Seeker (25)[/b] - Armor +15
+[*][b]Devoted (50)[/b] - Armor +30, Maximum Health +20
+[/list]
+
+Champion is not available to broad, uncommitted worship; you must commit to a life-mode to reach it.
+
+[b]The Stronghold Orc[/b] - forge, kin, and proven war-gear:
+
+[list]
+[*][b]Seeker (25)[/b] [i]Forge-Worthy[/i] - Smithing +5
+[*][b]Devoted (50)[/b] [i]Forge-Worthy[/i] - Smithing +13, Heavy Armor +8
+[*][b]Champion (85)[/b] [i]Blood-Kin of the Forge[/i] - Smithing +23, Heavy Armor +20, Armor +50
+[/list]
+
+[b]The City Orc[/b] - private fidelity and dignity held under pressure:
+
+[list]
+[*][b]Seeker (25)[/b] [i]Private Fidelity[/i] - Restoration +5
+[*][b]Devoted (50)[/b] [i]Private Fidelity[/i] - Restoration +13, Speech +8
+[*][b]Champion (85)[/b] [i]Self-Made Belonging[/i] - Restoration +23, Speech +20, Block +5, Armor +50
+[/list]
+
+[b]The Legion Exile[/b] - foreign discipline and the arm that carries the code:
+
+[list]
+[*][b]Seeker (25)[/b] [i]Foreign Discipline[/i] - One-Handed +5
+[*][b]Devoted (50)[/b] [i]Foreign Discipline[/i] - One-Handed +13, Block +8
+[*][b]Champion (85)[/b] [i]Burden Carried Home[/i] - One-Handed +23, Block +20, Fortify Stamina +15, Armor +50
+[/list]
+
+Note that all three Champion blessings carry the same +50 armor, so whichever life you live, you reach the same hardened peak.
+
+[size=5][b]Unique Mechanics[/b][/size]
+
+[b]One god, three lives.[/b] Most races choose a patron. You always have Malacath; what you choose, in effect, is how you live for him. Your life-mode quietly decides which acts feed your devotion and how fast it grows, and the world can challenge or confirm the mode you declared. This is the heart of the Orc experience.
+
+[b]The Trial of Iron.[/b] At the place you have made your own, you can undertake the Trial of Iron and choose a single discipline: the Hammer (Smithing +5), the Shield (Armor +5), the Tusk (Unarmed Damage +5), or the Yoke (Carry Weight +15). Only one can be active at a time, and choosing again swaps it. It has a cooldown of about a week, and saying "Not yet" does not waste that cooldown. If your standing in your mode collapses, the trial's gift fades at the next dawn and returns on its own when you recover. It lives at the forge on purpose, because Malacath's language is conduct, not prayer.
+
+[b]The Code Holds.[/b] Survive a fight after dropping to near death without fleeing the area and health floods back into you, a hard reminder that you held. At Devoted and above, the surge is stronger and brings your stamina back with it.
+
+[b]A hearth held by choice.[/b] Rest somewhere and you can hold that place as yours: a home, a forge, a room, the roof the code stands under. Come back and rest there again and Malacath marks the return, and that return counts as living your mode - it keeps the code from going unkept the same way a stronghold or a completed service would. Just passing through does not count; the hearth is held by returning to it. For a City Orc this reads as belonging you built; for an Exile, as a burden you carried home.
+
+[b]The Four Holds.[/b] Stand at each of the four Orc strongholds and each is counted once. Reach all four and a milestone marks it. For a City or Exile Orc, far from any stronghold, this is belonging that reaches across distance.
+
+[size=5][b]If You Are Cursed (Vampire or Werewolf)[/b][/size]
+
+[list]
+[*][b]Vampire[/b] - Belonging collapses. Vampirism is the opposite of everything Malacath values: strength through discipline, not feeding on others. The strongholds reject you, and your devotion to Malacath goes hollow and stops paying out, because the code needs a living Orc and you are no longer fully that. There is no Orc faith that replaces it while the curse holds. Curing the vampirism returns you to the test.
+[*][b]Werewolf[/b] - Conditionally accepted, if you prove yourself. Malacath judges the wolf by the same code as the smith: is it strong, does it endure, does it serve the people or destroy them? A disciplined beast with strength clearly in command can be tolerated, even in some stronghold contexts. It is not a free buff; it is a demanding test you stay under. Taking the beast blood cools his regard once, and it costs you piety when it happens. Carry the curse with strength and discipline and the code can still hold; let it pull you off the code and it will read as neglect.
+[/list]
+
+[size=5][b]Quick Reference[/b][/size]
+
+[list]
+[*][b]Gods:[/b] Malacath only. (Trinimac is rare lore pressure, not a worship path. Other gods and Daedra are not the Orc way.)
+[*][b]Starting choice:[/b] No god to pick. You carry Malacath's code in one of three life-modes: Stronghold (fastest), City (slower, the default), or Legion / Exile (slowest). Declare your intent, but conduct confirms it.
+[*][b]Top 3 ways to gain:[/b] Make worthy things at the forge; prove strength against real enemies, above all dragons and Daedra; swear oaths and honor them (plus your mode's own acts: time in the strongholds, a hold's thane work and a home made yours, or hard service completed).
+[*][b]Main ways to lose:[/b] Stealing and striking the defenseless; the soft comfort of an inn bed; walking away from the service life you took up; neglect (the forge goes quiet); slow natural drift; spreading thin instead of committing.
+[*][b]Rough time to Champion:[/b] About 30 to 45 days of normal play, faster if you focus hard. Stronghold is the quickest; City takes longer; Legion / Exile is the longest by design.
+[/list]
