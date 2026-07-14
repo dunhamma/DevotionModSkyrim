@@ -1,6 +1,6 @@
 # PDV P2 FormList ESP-Truth Ledger
 
-**Generated:** 2026-07-13 by `tools/pdv_p2_formlist_esp_audit.mjs` (reads the deployed Devotion.esp via mutagen-bridge.exe)
+**Generated:** 2026-07-14 by `tools/pdv_p2_formlist_esp_audit.mjs` (reads the deployed Devotion.esp via mutagen-bridge.exe)
 
 This audit is the server-independent counterpart to `pdv_signal_e2e_gate.mjs`. It reads the true FormList population (`Items` field) straight from `Devotion.esp` and fails on empty-but-routed lists, on ledger drift (a ledger calls a surface shell/unverified while the ESP proves it populated), and on manifest approved fills missing from the live ESP.
 

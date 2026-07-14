@@ -1,6 +1,6 @@
 # PDV Signal-Floor Ledger
 
-**Generated:** 2026-07-13 by `tools/pdv_signal_floor_audit.mjs` (read-only audit)
+**Generated:** 2026-07-14 by `tools/pdv_signal_floor_audit.mjs` (read-only audit)
 
 Per-PATH signal-type floor across 35 race-forked paths + 16 Daedric Princes. A path's _types_ are the DISTINCT signal-types it can surface; _renewable_ are the distinct renewable types (`harvest`, `weather`, `day-to-day`, `faucet`). One-shot types are `book`, `quest-stage`, `quest-reaction`, `spell-learned`.
 

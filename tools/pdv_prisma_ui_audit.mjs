@@ -1507,6 +1507,30 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   }
 
   if (
+    !managerForBroadLane.includes('return "distant"') ||
+    !managerForBroadLane.includes('return "dormant"') ||
+    !app.includes("const relationDisplayText = (displayItem) =>") ||
+    !app.includes("const relationName = text(displayItem.listTitle || displayItem.label, \"\").trim();") ||
+    !app.includes("const displayState = rawState ? rawState.charAt(0).toUpperCase() + rawState.slice(1) : \"\";") ||
+    !app.includes("if (relationName && displayState) return `${relationName}: ${displayState}`;") ||
+    !app.includes(": relationDisplayText(displayItem);")
+  ) {
+    fail("Argonian relation states must keep Survey's grammatical lower case while the focused panel renders named, capitalized relation values.", DEVOTION_PRISMA_VIEW);
+  } else {
+    pass("Argonian focused-panel relations preserve their names and use capitalized display values without changing Survey prose.", DEVOTION_PRISMA_VIEW);
+  }
+
+  if (
+    !app.includes('appendSvg(svg, "path", { d: "M39 100 V78", class: "instrument-outline" });') ||
+    !app.includes('appendSvg(svg, "path", { d: "M29 78 A10 10 0 0 1 49 78", class: fill });') ||
+    app.includes('M27 78 Q39 54 51 78 Q46 94 39 102 Q32 94 27 78 Z')
+  ) {
+    fail("Argonian cultural practice must use the Hist root-and-river mark, not the retired generic droplet, in the focused instrument.", DEVOTION_PRISMA_VIEW);
+  } else {
+    pass("Argonian cultural practice uses the Hist root-and-river mark in the focused instrument.", DEVOTION_PRISMA_VIEW);
+  }
+
+  if (
     !app.includes('if (kind === "broad")') ||
     !app.includes('instData.standing !== undefined') ||
     !app.includes('{ label: "Faithful", value: 50 }') ||

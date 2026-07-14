@@ -406,23 +406,33 @@ the blind spot visible instead of fatal. (Ratified 2026-06-10; see
 
 `Skyrim.esm`, `Update.esm`, `Dawnguard.esm`, `HearthFires.esm`, `Dragonborn.esm` — never edit directly. All overrides are made in `Devotion.esp` or a race module ESP. This is not a guideline; it's how the mod composes with everyone else's load order.
 
-### 6.2 Profile discipline
+### 6.2 Plugin work goes through houseCARL directly
+
+All Skyrim plugin record reads, writes, and verification use the `housecarl_*` MCP tools directly. Do not route through, extend, or rebuild a local wrapper, adapter, bridge, capability matrix, or authoring helper — and do not build new ones. houseCARL is both the writer and the reader: its default lane writes to a new plugin, leaving originals untouched, and verification is a `housecarl_read_record` / `housecarl_cross_plugin_query` readback in the same session. That readback **is** the proof; there is no adapter or proof-ledger step in between.
+
+The legacy authoring layer (`pdv_author.mjs`, `creation-authoring`, all `pdv-*-author`) is retired and deleted from disk. A second, unverified local writer adds risk, not safety — that was the lesson, and it is why the dry-run/backup/proof-ledger pattern must not be recreated. If a doc still tells you to run one of those helpers, the doc is stale.
+
+Before accepting that a houseCARL limitation blocks a task, **reproduce it with a direct call on the current version** and read the actual error. A locally recorded "known issue" is not evidence; only a reproduced, current-version failure is. Full rule and the list of stale beliefs: `AGENTS.md` → "houseCARL v1.7+ Direct Plugin Work Rule".
+
+The one sanctioned programmatic path is the read-only gate scripts (`pdv_housecarl_p2_readback.mjs`, `pdv_pantheon_*_readback.mjs`, via `tools/lib/pdv_housecarl_stdio.mjs`), which speak houseCARL's own MCP protocol for deterministic gates and never write.
+
+### 6.3 Profile discipline
 
 `Devotion Dev` (inside the Anvil MO2 instance) is the active iteration profile. Keep it minimal — Skyrim/DLC, SKSE, SkyUI, and PDV plugins only — so unexpected behavior can be attributed to PDV rather than another mod. A clean ship-verification profile (`PDV_Testing` or similar) is recommended before any public release; for personal/internal use the dev profile is sufficient. The normal play profile is never touched by PDV files.
 
-### 6.3 No external file changes without an MO2 refresh
+### 6.4 No external file changes without an MO2 refresh
 
 If files in MO2-managed mod folders change via Bash, an external editor, or any path other than MO2 itself, MO2 may not detect them until F5. Prefer MO2-aware paths (writing through CK, writing through VS Code's configured output dir into a registered mod folder, etc.). After any external change, refresh MO2 before launching CK or the game.
 
-### 6.4 Compile cleanly
+### 6.5 Compile cleanly
 
 Treat Papyrus warnings as errors during dev. A `.psc` that compiles with warnings ships warnings. Many warnings are real (unused property, mismatched cast, suspicious comparison) — fix them at authoring time.
 
-### 6.5 Search before removal
+### 6.6 Search before removal
 
 Before removing a Papyrus function, property, magic string, or shared block, recursively search the whole active source tree for every symbol it defines or relies on. Papyrus compile failures from half-removed shared flags often surface far from the actual deletion.
 
-### 6.6 Clean stale record references when retiring surfaces
+### 6.7 Clean stale record references when retiring surfaces
 
 When removing or retiring script properties, proof activators, placed references,
 helper records, FormList entries, or other CK/ESP surfaces, cleanup is part of
@@ -436,11 +446,11 @@ or helper check that fails if the record returns. A one-off xEdit/houseCARL
 cleanup is not enough when the same stale record could be recreated by an
 authoring helper or preserved by a manifest.
 
-### 6.7 Strip debug before release
+### 6.8 Strip debug before release
 
 Trace messages and the debug spell are dev tools. Either remove them or gate them behind a `bDebugMode` global in MCM before any public release. A player's `Papyrus.0.log` filling with `[PDV]` traces is a defect, not a feature.
 
-### 6.8 Keep script source pure ASCII
+### 6.9 Keep script source pure ASCII
 
 `.psc` source -- code and comments alike -- must be pure ASCII (every code point `<= 0x7F`). Smart punctuation (em/en dashes, curly quotes, ellipsis, arrows) and stray UTF-8 BOMs are the root cause of the mojibake the coding agent keeps finding: each is valid UTF-8 until a Windows-1252-assuming tool round-trips it into garbled lead-byte sequences. Author comments with straight quotes, `--`, `...`, and `->` instead.
 

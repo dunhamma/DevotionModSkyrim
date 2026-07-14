@@ -1,11 +1,11 @@
 {
   "status": "RED",
-  "mode": "run",
+  "mode": "read",
   "strictStale": false,
   "counts": {
-    "PASS": 10,
+    "PASS": 11,
     "STALE": 1,
-    "RED": 10
+    "RED": 9
   },
   "rows": [
     {
@@ -24,7 +24,7 @@
       "category": "machine-gate",
       "title": "All 16 Skyrim-present Princes pass the Daedric beta-display gate",
       "status": "PASS",
-      "detail": "--run tools/pdv_daedric_beta_gate.mjs --json: exit 0",
+      "detail": "exit 0",
       "closes": "Record the missing slot evidence in PDV_DaedricRuntimeEvidenceLedger.json via pdv_daedric_evidence_intake.mjs.",
       "drift": false
     },
@@ -34,7 +34,7 @@
       "category": "machine-gate",
       "title": "Strict beta-readiness audit passes (authority/readback/runtime/manual buckets)",
       "status": "PASS",
-      "detail": "--run tools/pdv_beta_readiness_audit.mjs --strict: exit 0",
+      "detail": "pattern matched 1x (min 1)",
       "closes": "Fix the blocker named by pdv_beta_readiness_audit.mjs --strict, then re-run.",
       "drift": false
     },
@@ -44,7 +44,7 @@
       "category": "machine-gate",
       "title": "Shared substrate 7/19-day pacing contract passes",
       "status": "PASS",
-      "detail": "--run tools/pdv_substrate_pacing_audit.mjs --json: exit 0",
+      "detail": "last observed PASS 2026-07-14T09:33:18.643Z",
       "closes": "Fix the failing contract/source assertion and rerun the substrate pacing audit.",
       "drift": false
     },
@@ -54,7 +54,7 @@
       "category": "machine-gate",
       "title": "Imperial and Nord broad-pantheon parity contract passes",
       "status": "PASS",
-      "detail": "--run tools/pdv_broad_pantheon_audit.mjs --json: exit 0",
+      "detail": "last observed PASS 2026-07-14T09:33:18.716Z",
       "closes": "Fix the failing contract/source assertion and rerun the broad-pantheon audit.",
       "drift": false
     },
@@ -64,7 +64,7 @@
       "category": "runtime-gate",
       "title": "Pantheon and substrate adversarial runtime evidence is complete",
       "status": "RED",
-      "detail": "--run tools/pdv_pantheon_substrate_runtime_evidence_check.mjs --strict: exit 1",
+      "detail": "unknown passRule 'tool-owned' (fail-closed)",
       "closes": "Run PS-A1 through PS-A12 from the co-test runbook on a fresh post-build QASmoke save and attach the required runtime, organic-route, manual-surface, and save/load evidence references.",
       "drift": false
     },
@@ -74,8 +74,8 @@
       "category": "machine-gate",
       "title": "Default framework verifier is clean (FAIL=0)",
       "status": "PASS",
-      "detail": "--run tools/pdv_verify.mjs: exit 0",
-      "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run (or pdv_verify.mjs directly) with the houseCARL bridge live.",
+      "detail": "last observed PASS 2026-07-14T09:34:43.132Z",
+      "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run (or pdv_verify.mjs directly). Runs headless: the retired Anvil HTTP MCP bridge (127.0.0.1:27016) is NOT required, and pdv_verify's MO2-MCP-server check is informational only (it never fails on a down bridge).",
       "drift": false
     },
     {
@@ -84,7 +84,7 @@
       "category": "machine-gate",
       "title": "Content verifier is clean (FAIL=0, WARN=0)",
       "status": "PASS",
-      "detail": "--run tools/pdv_content_verify.mjs: exit 0",
+      "detail": "last observed PASS 2026-07-14T09:34:43.210Z",
       "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run (or pdv_content_verify.mjs directly).",
       "drift": false
     },
@@ -94,9 +94,9 @@
       "category": "machine-gate",
       "title": "Integrity harness gates pass (e2e signal gate, deity chain, eligibility coverage)",
       "status": "RED",
-      "detail": "--run tools/pdv_integrity_harness.mjs: exit 1",
-      "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-AUDIT-INTEGRITY with the Anvil MCP bridge live (127.0.0.1:27016) so the harness signal_e2e_gate can confirm dispatch; a passing --run stamps fresh. Read mode then trusts the stamp until @managerLive/@managerDeployed drift, rather than re-reading the volatile PDV_IntegrityHarnessLedger.md (which flips to FAIL on any headless harness run with the bridge down).",
-      "drift": false
+      "detail": "evidence voided by source drift - last observed PASS 2026-07-13T16:25:36.167Z; drift since 2026-07-13T16:25:36.167Z: @managerLive, @managerDeployed",
+      "closes": "This is a ROLLUP, not a bridge problem. The retired Anvil HTTP MCP bridge (127.0.0.1:27016) is NOT required: the harness runs headless and signal_e2e_gate passes bridge-down (39 GREEN / 0 RED, verified 2026-07-14); its mcp_liveness check is informational only. The one failing sub-check is pantheon_substrate_runtime, so this criterion closes when PS-A1..PS-A12 runtime evidence is recorded in PDV_PantheonSubstrateRuntimeEvidenceLedger.json - i.e. the SAME work as C-RUNTIME-PANTHEON-SUBSTRATE, not extra work and not something a recert can clear. Re-stamp with node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-AUDIT-INTEGRITY once those cards land.",
+      "drift": true
     },
     {
       "id": "C-EXPMODE-BUILD",
@@ -104,7 +104,7 @@
       "category": "machine-gate",
       "title": "Experience Mode is built (PDV_ModePreset, PDV_GLO_Mode, MCM surfacing, manager scalars, ActionRouter handling, verifier readback)",
       "status": "PASS",
-      "detail": "--run tools/pdv_verify.mjs --strict-experience-mode: exit 0",
+      "detail": "last observed PASS 2026-07-14T09:38:15.389Z",
       "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-EXPMODE-BUILD (strict experience-mode verifier).",
       "drift": false
     },
@@ -144,7 +144,7 @@
       "category": "machine-gate",
       "title": "Final-world proof (re-scoped 2026-07-07): every immersive hook proven at its real in-world context; every ESP PDV_REFR classified (QASmoke activators are permanent debug senders)",
       "status": "RED",
-      "detail": "--run tools/pdv_placement_gate.mjs --json: exit 1",
+      "detail": "status = \"FAIL\", need \"PASS\"",
       "closes": "Record the pending in-world hook proofs in PDV_InWorldHookProofLedger.json (fold into the matching race sittings), then re-run pdv_placement_gate.mjs.",
       "drift": false
     },
@@ -164,7 +164,7 @@
       "category": "machine-gate",
       "title": "Pacing economy simulation in band for all races (dawn clamp + Champion-time bands)",
       "status": "PASS",
-      "detail": "--run tools/pdv_pacing_sim.mjs --json: exit 0",
+      "detail": "status = \"PASS\"",
       "closes": "Re-tune the authored piety tables for any race outside the bands, then re-run pdv_pacing_sim.mjs.",
       "drift": false
     },
@@ -184,7 +184,7 @@
       "category": "machine-gate",
       "title": "Felt-effect machine trace exhaustive and green (every declared effect: declared, wired, dispatched, record exists, magnitude matches)",
       "status": "PASS",
-      "detail": "--run tools/pdv_felt_trace_audit.mjs --json: exit 0",
+      "detail": "status = \"PASS\"",
       "closes": "Fix the broken link named in PDV_FeltTraceLedger.md (wiring, dispatch, missing record, or magnitude mismatch), then re-run.",
       "drift": false
     },
@@ -203,8 +203,8 @@
       "lane": "dislike-consequence",
       "category": "machine-gate",
       "title": "Minor dislike-consequence overlay built: every deity dislike lane carries a small felt domain sting beyond piety loss",
-      "status": "RED",
-      "detail": "--run tools/pdv_dislike_consequence_audit.mjs --strict-dislike-consequence: exit 1",
+      "status": "PASS",
+      "detail": "last observed PASS 2026-07-14T09:47:06.727Z",
       "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-DISLIKE-DEBUFF-BUILD (strict dislike-consequence audit: 14 domain spells, dispatch wiring, 3-domain cap, live ESP readback). Per-domain stings prove through C-FELT-FAMILY during the race sittings.",
       "drift": false
     },
@@ -224,7 +224,7 @@
       "category": "rollup",
       "title": "1.0 ship gate: every non-post-1.0 criterion passes",
       "status": "RED",
-      "detail": "10 PASS / 1 STALE / 10 RED",
+      "detail": "11 PASS / 1 STALE / 9 RED",
       "closes": "Burn the RED criteria above.",
       "drift": false
     }

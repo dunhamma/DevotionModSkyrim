@@ -151,9 +151,11 @@ Use that one fresh QASmoke save and keep the proof buckets separate:
    the next three devotional days before becoming eligible again.
 10. Equip and cast the real Khajiit lesser power `Observe the Moons` outdoors
     from 20:00-05:00, out of combat, unmounted, and not swimming. Stay within
-    128 units for five seconds. Confirm one of the current presiding god's four
-    messages, no immediate repeat, substrate +4 and raw piety +0.4 only on the
-    first valid rite that day, and informational-only later casts. Repeat once
+    128 units for two seconds. Confirm that selecting it in the shared Power
+    slot replaces Survey Devotion, one non-blocking Prisma contemplation appears, and its
+    first valid rite enters the Book of Days. Confirm no immediate repeat,
+    substrate +4 and raw piety +0.4 only on the first valid rite that day, and
+    informational-only later casts. Repeat once
     with combat, a cell change, or excess movement to prove abort behavior.
 11. Capture Active Effects, Survey, Prisma, Book of Days, save/load, wrong-origin
     silence, and stack legibility. Player-facing surfaces must contain no
@@ -186,6 +188,38 @@ family-name mismatches, exact removal of the rogue Khajiit source
 These are backend/static and readback results only. PS-A1 through PS-A12 remain
 open until this sitting records runtime-route and manual/display evidence in
 the structured ledger.
+
+### Observe the Moons power-slot retest (2026-07-14)
+
+Tester-confirmed focused runtime/manual PASS after the Voice-slot repair:
+
+- Survey Devotion selected from Magic > Powers without a left/right-hand prompt
+  and fired from the normal Power/Shout key.
+- Observe the Moons selected through the same menu without a hand prompt,
+  replaced Survey in the shared Power slot, and left the equipped hand loadout
+  unchanged.
+- In a valid outdoor night context, Observe completed its two-second rite and
+  delivered the non-blocking Prisma contemplation; the first valid daily rite
+  also appeared in the Book of Days.
+- Selecting Survey again replaced Observe normally.
+
+This focused result closes the reported selection/presentation regression. It
+does not promote PS-A1 through PS-A12.
+
+### PS-A12 evidence closure and Argonian panel correction (2026-07-14)
+
+PS-A12 is now closed in `PDV_PantheonSubstrateRuntimeEvidenceLedger.json`.
+The live Papyrus log records the real sustained-water ingress at 19:46:39:
+Argonian cultural practice accepted its one `near_water` daily credit for
+`+4`, entered `Root Memory`, made one Hist piety award, and emitted the exact
+near-water route marker. Tester-confirmed zero/one display proof showed the
+zero boundary as `Practice quiet` at `0.00 cultural practice`, then the
+expected `Root Memory` Prisma transition at the real ingress. The same zero
+panel inspection found that the focused relation list was emitting Survey's
+lower-case prose tokens directly. Prisma now preserves the relation names,
+capitalizes only the displayed state values, and uses the Hist root-and-river
+mark instead of the generic cultural droplet. This visual correction has
+static/readback proof only until the next relaunch/reopen confirms it.
 
 Run these targeted cards during the same sitting. They close bypasses found by
 the independent call-graph and presentation refuters; backend/static checks now

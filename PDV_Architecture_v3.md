@@ -46,6 +46,15 @@ record" wording only. Organic ingress, save/load, player-visible boundaries,
 and feel remain open under PS-A1 through PS-A12 and cannot be inferred from
 machine/readback proof.
 
+Focused 2026-07-14 runtime/manual addendum: the tester confirmed that Survey
+Devotion and Observe the Moons both select from Magic > Powers without a
+left/right-hand prompt, replace one another in the shared Power slot, preserve
+the equipped hand loadout, and fire from the normal Power/Shout key. Observe
+the Moons completed its two-second rite and delivered the non-blocking Prisma
+contemplation; the first valid daily rite also appeared in the Book of Days.
+This closes the focused power-selection, Prisma presentation, and journal-entry
+defect. PS-A1 through PS-A12 remain governed by the structured co-test ledger.
+
 Current v3.96 addendum: the signal-floor readback/faucet tranche has landed at
 source/compile/readback level. `tools/pdv_extract_quest_stage_readback.mjs` now
 pins the missing exact-source quest readbacks for MS01/MS02/DBDestroy, Purity,
@@ -1186,8 +1195,8 @@ EndFunction
 **Phase behavior:**
 - Each phase identifies one presiding god: Khenarthi, Azurah, Baan Dar, Rajhin, or Alkosh.
 - `Observe the Moons` is valid outdoors from 20:00 to 05:00 while out of combat, unmounted, and not swimming.
-- One delayed check after five seconds aborts on combat, cell change, or movement over 128 units; there is no continuous polling.
-- Twenty authored messages provide four contemplations per god without immediate repetition.
+- One delayed check after two seconds aborts on combat, cell change, or movement over 128 units; there is no continuous polling.
+- Twenty authored contemplations provide four per god without immediate repetition through a non-blocking Prisma toast. The first rite each devotional day also enters the Book of Days, and the power shares the selectable Power slot with Survey Devotion rather than a casting hand.
 - The first valid rite per devotional day may claim the shared `+4` substrate credit and awards raw presiding-god piety `+0.4` without changing behavior-led focus weight. Later rites are informational.
 
 ---
@@ -2100,39 +2109,19 @@ Pattern Proving still decides the first real content behavior per subsystem.
 7. Update verifier expected-records.
 8. In-game smoke test on a clean save.
 
-This is mostly the same pipeline as Phase 6's Talos/Auri-El work. The big lever for reducing per-deity friction is matrix-driven `pdv_author.mjs` overlay-patch generation and one excellent proven pattern per subsystem; v3 expands `pdv_author.mjs` to support:
+This is mostly the same pipeline as Phase 6's Talos/Auri-El work. The big lever for reducing per-deity friction is direct record authoring through the `housecarl_*` MCP tools plus one excellent proven pattern per subsystem.
 
-- Stance row authoring (already partially supported).
-- Rivalry array authoring (currently manual CK).
-- Contextual-favor ability spell + magic effect record creation (currently fully manual).
-- FormList membership (already supported).
+**Current tool reality (2026-07-14).** Record authoring is houseCARL, called directly. There is no local authoring bridge, adapter, or capability matrix, and none is to be rebuilt. houseCARL reads and writes every record type Mutagen models, by construction -- including the work this section previously listed as blocked:
 
-Current tool reality: `pdv_author.mjs` now treats VMAD array work as a
-first-class planning/reporting boundary instead of a vague unsupported note.
-When a tracked manifest asks for `IntArray`, `FloatArray`, `StringArray`, or
-`ObjectArray` work, the helper emits an explicit manual follow-up packet with
-the target record, script/property, intended payload, and verifier readback
-expectation. Array writes themselves remain manual CK/xEdit work until the
-Mutagen bridge can emit them safely.
+- Stance row authoring.
+- Rivalry **array** authoring (VMAD `IntArray` / `FloatArray` / `StringArray` / `ObjectArray`). The old "array writes remain manual CK/xEdit work until the Mutagen bridge can emit them" limitation belonged to the retired `pdv_author.mjs`; it does not apply to houseCARL.
+- Contextual-favor ability `SPEL` + `MGEF` record creation.
+- FormList membership.
+- Dialogue (`DLBR` / `DIAL` / `INFO`) and SEQ. The retired `creation-authoring` `dialogue-v1` proof lane and its fail-closed capability gate described the bridge's limits, not houseCARL's.
 
-CKRA / `tools\creation-authoring` now proves one generated-record path:
-`glob.duplicate_create` for GLOB records in a disposable generated plugin. The
-proof chain is CK-owned Object Window duplicate replay, active-plugin-owned
-duplicate identity, guarded FNAM/FLTV mutation, CK UI save, direct saved-ESP
-readback, strict proof ledger, and capability-matrix promotion. Treat this as a
-narrow GLOB authoring capability and a pattern for future family proofs, not as
-generic record creation. The remaining hardening boundary is also a user
-experience boundary: the current proof still depends on the Object Window
-source row/focus/context-menu path matching the explicit source guard.
+The default write lane emits a **new** patch plugin, leaving `Devotion.esp` untouched; the in-place lane is explicit and consented. Verification is a `housecarl_read_record` / `housecarl_cross_plugin_query` readback in the same session -- that readback is the proof, with no proof-ledger or capability-promotion step in between.
 
-For dialogue, `tools\creation-authoring` now carries a reusable `dialogue-v1`
-proof lane. It can scaffold branch/topic/INFO/SEQ manifest intent and verify
-CK-authored `DLBR`, `DIAL`, and unnamed `INFO` readback by topic, speaker,
-response, and conditions. This remains proof infrastructure for the planned V2
-recognition track, not V1 content promotion and not generated dialogue creation
-support. Strict mode must still fail closed until native CK-owned graph
-mutation, active-plugin save, MO2 readback, verifier proof, and command
-evidence all exist for the target operation.
+If a record operation appears unsupported, **reproduce it with a direct `housecarl_*` call on the current version and read the actual error** before recording it as a limitation. Stale limitations recorded during the bridge era (archived under `_retired/bridge-era-2026-07-14/`) are not evidence. See `AGENTS.md` -> "houseCARL v1.7+ Direct Plugin Work Rule".
 
 ### 17.2 Add-a-substrate workflow
 

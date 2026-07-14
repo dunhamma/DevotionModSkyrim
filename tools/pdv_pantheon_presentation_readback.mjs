@@ -121,7 +121,7 @@ async function main() {
 
   const moonIds = Array.from({ length: 20 }, (_, index) => `${(0x716c8 + index).toString(16).toUpperCase().padStart(6, "0")}:Devotion.esp`);
   const [moonRecordsResult, moonMessagesResult, managerResult] = await Promise.all([
-    callHousecarl("housecarl_batch_record_detail", { formids: ["0716C6:Devotion.esp", "0716C7:Devotion.esp", "0716DC:Devotion.esp"], fields: ["EditorID", "Name", "Effects", "Items"], depth: 4, max_chars: 60_000 }),
+    callHousecarl("housecarl_batch_record_detail", { formids: ["0716C6:Devotion.esp", "0716C7:Devotion.esp", "0716DC:Devotion.esp", "070523:Devotion.esp", "070524:Devotion.esp"], fields: ["EditorID", "Name", "Effects", "Items", "Type", "TargetType", "CastType", "EquipmentType", "Flags"], depth: 4, max_chars: 60_000 }),
     callHousecarl("housecarl_batch_record_detail", { formids: moonIds, fields: ["EditorID", "Name", "Description"], depth: 2, max_chars: 100_000 }),
     callHousecarl("housecarl_read_record", { formid: "00C325:Devotion.esp", fields: ["VirtualMachineAdapter.Scripts[0].Properties[494]", "VirtualMachineAdapter.Scripts[0].Properties[495]"], depth: 3, max_chars: 20_000 }),
   ]);
@@ -130,10 +130,21 @@ async function main() {
   const actualMoonIds = formIds(moonList, /Items\[\d+\]\s*=\s*([0-9A-Fa-f]{6}:[^\s\r\n]+)/g);
   if (JSON.stringify(actualMoonIds.map(norm)) === JSON.stringify(moonIds.map(norm))) pass("Observe the Moons records", "The ordered contemplation FormList contains the exact 20 messages.");
   else fail("Observe the Moons records", "The ordered contemplation FormList is missing, reordered, or contains extra messages.");
-  const moonSpell = blocks(moonText, "Spell")[0] || "";
-  const moonEffect = blocks(moonText, "MagicEffect")[0] || "";
+  const moonSpell = blocks(moonText, "Spell").find((block) => block.includes("formid=0716C7:Devotion.esp")) || "";
+  const moonEffect = blocks(moonText, "MagicEffect").find((block) => block.includes("formid=0716C6:Devotion.esp")) || "";
+  const surveySpell = blocks(moonText, "Spell").find((block) => block.includes("formid=070524:Devotion.esp")) || "";
+  const surveyEffect = blocks(moonText, "MagicEffect").find((block) => block.includes("formid=070523:Devotion.esp")) || "";
   if (field(moonSpell, "Name") === "Observe the Moons" && field(moonEffect, "Name") === "Observe the Moons" && moonSpell.includes("0716C6:Devotion.esp")) pass("Observe the Moons records", "Power and child effect names match and the power points at the effect.");
   else fail("Observe the Moons records", "Power/effect record family is not wired or named consistently.");
+  const voicePowerContract = (spellBlock) => field(spellBlock, "Type") === "LesserPower"
+    && field(spellBlock, "TargetType") === "Self"
+    && field(spellBlock, "CastType") === "FireAndForget"
+    && norm(field(spellBlock, "EquipmentType")) === norm("025BEE:Skyrim.esm");
+  const powerMatchesSurvey = voicePowerContract(moonSpell)
+    && voicePowerContract(surveySpell)
+    && field(moonEffect, "Flags") === field(surveyEffect, "Flags");
+  if (powerMatchesSurvey) pass("Observe the Moons power input", "Observe the Moons and Survey Devotion are self-targeted Lesser Powers bound to Skyrim's Voice slot with matching child-effect flags.");
+  else fail("Observe the Moons power input", "Observe the Moons and Survey Devotion must both use Skyrim's Voice equipment type (025BEE), never EitherHand, and retain matching child-effect flags.");
   const managerProperties = scriptPropertyMap(extractHousecarlText(managerResult), 0);
   const moonBindings = new Map([
     ["PDV_Power_Khajiit_ObserveMoons", "0716C7:Devotion.esp"],

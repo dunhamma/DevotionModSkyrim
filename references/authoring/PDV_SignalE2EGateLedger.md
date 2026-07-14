@@ -6,17 +6,17 @@ GREEN requires every proof column to PASS. RED means at least one FAIL. INCOMPLE
 SKIP is used only for live-ESP checks when the Anvil MCP liveness probe is down.
 
 Summary: GREEN=39
-MCP: PASS - Server live, profile Devotion Dev.
+MCP: SKIP - MCP server not reachable at http://127.0.0.1:27016/mcp (ECONNREFUSED). Open D:\Wabbajack\modlists\Anvil\Anvil.exe, then use MO2 Tools > Start/Stop MCP Server. Restart Codex if mo2_* tools remain invisible after starting the server.
 
 ## Helper Invocations
 
-- mcp: PASS (exit 0) - node tools/pdv_mcp_check.mjs --json - Server live, profile Devotion Dev.
+- mcp: SKIP (exit 1) - node tools/pdv_mcp_check.mjs --json - MCP server not reachable at http://127.0.0.1:27016/mcp (ECONNREFUSED). Open D:\Wabbajack\modlists\Anvil\Anvil.exe, then use MO2 Tools > Start/Stop MCP Server. Restart Codex if mo2_* tools remain invisible after starting the server.
 - routeEntries: PASS (exit 0) - built-in static validation - Route-entry validation is built into this gate's manifest and source checks.
 - exactStageGates: PASS (exit 0) - built-in static validation - Exact-stage validation is built into this gate's route and manifest checks.
 - formLists: PASS (exit 0) - node tools/pdv_housecarl_p2_readback.mjs --check-formlists - PASS
 - aliasProperties: PASS (exit 0) - node tools/pdv_housecarl_p2_readback.mjs --check-alias-properties - PASS
 - sourceFill: PASS (exit 0) - node tools/pdv_housecarl_p2_readback.mjs --check-source-fill - PASS
-- completenessAudit: PASS (exit 0) - node tools/pdv_completeness_audit.mjs --json - Completeness audit PASS; source indexed 1961 functions, 91 signal consts.
+- completenessAudit: FAIL (exit 1) - node tools/pdv_completeness_audit.mjs --json --skip-esp - Completeness audit FAIL; source indexed 1963 functions, 91 signal consts.
 
 ## Column Counts
 

@@ -6,7 +6,7 @@ Overall: **FAIL** (FAIL iff a gate check fails or a check errors; findings-style
 
 | Check | Role | Status | Detail |
 |---|---|---|---|
-| mcp_liveness | proof | OK | live |
+| mcp_liveness | proof | NONZERO | down |
 | signal_e2e_gate | gate | PASS | 39 GREEN / 0 RED; parity PASS |
 | signal_floor | findings | OK | see PDV_SignalFloorLedger |
 | p2_formlist_esp | findings | OK | 39/39 populated; 0 empty; drift 0; fill-missing 0; fails 0 |
@@ -15,9 +15,9 @@ Overall: **FAIL** (FAIL iff a gate check fails or a check errors; findings-style
 | completeness | findings | OK | PASS; PASS=362 NEEDS-MANUAL=292 GAP-REVIEW=53 FUTURE=59 WAIVED=2 |
 | deity_chain | gate | PASS | 0 blockers (0 resolution / 0 reachability) |
 | eligibility_reward_coverage | gate | PASS | 150 rows; 0 failures |
-| substrate_pacing | gate | PASS | PASS; 116 assertions |
+| substrate_pacing | gate | PASS | PASS; 119 assertions |
 | broad_pantheon | gate | PASS | PASS; 95 assertions |
 | pantheon_record_readback | gate | PASS | PASS; 89 assertions; 0 failures |
-| pantheon_presentation_readback | gate | PASS | PASS; 81 assertions; 0 failures |
+| pantheon_presentation_readback | gate | PASS | PASS; 82 assertions; 0 failures |
 | pantheon_substrate_runtime | gate | FAIL | FAIL; 0/12 cards; 30 open buckets |
 

@@ -314,17 +314,34 @@ export function evaluate({ contract, baseSource, managerSource, concreteSources,
   const moonRite = bodyFor(managerSource, "CompleteKhajiitMoonObservation");
   const moonBegin = bodyFor(managerSource, "BeginKhajiitMoonObservation");
   const moonComplete = bodyFor(managerSource, "ProcessPendingKhajiitMoonObservation");
+  const moonPower = bodyFor(managerSource, "EnsureKhajiitObserveMoonsPower");
+  const surveyPower = bodyFor(managerSource, "EnsureSurveyDevotionPower");
+  const moonPresentation = bodyFor(managerSource, "ShowKhajiitMoonContemplation");
   const sacredWater = bodyFor(managerSource, "AwardArgonianSacredWater");
   const sapVision = bodyFor(managerSource, "HandleArgonianSapVision");
   const dunmerPortable = bodyFor(managerSource, "HandleDunmerPortableShrinePrayer");
   const dunmerHome = bodyFor(managerSource, "HandleDunmerPlayerHomeBonus");
   add(/ReadZeroReservedDevotionalDayStamp/i.test(nearWater) && /WriteZeroReservedDevotionalDayStamp/i.test(nearWater) && /GetDevotionalDay\s*\(\s*\)\s*\+\s*2/i.test(nearWater), "source.day-zero.argonian-water", "Argonian water credit must use the zero-reserved +2 devotional-day stamp");
   add(/ReadZeroReservedDevotionalDayStamp/i.test(moonRite) && /WriteZeroReservedDevotionalDayStamp/i.test(moonRite) && /GetDevotionalDay\s*\(\s*\)\s*\+\s*2/i.test(moonRite), "source.day-zero.khajiit-moon-piety", "Khajiit moon piety must use the zero-reserved +2 devotional-day stamp");
-  add(/observationToken\s*=\s*PDV_Manager\.BeginKhajiitMoonObservation\s*\(\s*akTarget\s*\)/i.test(observeMoonsSource)
-    && /observationToken\s*>\s*0[\s\S]*Utility\.Wait\s*\(\s*5\.0\s*\)[\s\S]*ProcessPendingKhajiitMoonObservation\s*\(\s*observationToken\s*\)/i.test(observeMoonsSource)
+  add(/observationToken\s*=\s*PDV_Manager\.BeginKhajiitMoonObservation\s*\(\s*(?:akTarget|playerActor)\s*\)/i.test(observeMoonsSource)
+    && /observationToken\s*>\s*0[\s\S]*Utility\.Wait\s*\(\s*2\.0\s*\)[\s\S]*ProcessPendingKhajiitMoonObservation\s*\(\s*observationToken\s*\)/i.test(observeMoonsSource)
     && /_khajiitMoonObservationGeneration\s*\+=\s*1/i.test(moonBegin)
     && /observationToken\s*!=\s*_khajiitMoonObservationGeneration/i.test(moonComplete)
-    && /_khajiitMoonObservationPending\s*=\s*False/i.test(moonComplete), "source.khajiit-moon-token", "Observe the Moons must complete exactly one delayed generation token and reject stale completions");
+    && /_khajiitMoonObservationPending\s*=\s*False/i.test(moonComplete)
+    && /<\s*2\.0/i.test(moonComplete), "source.khajiit-moon-token", "Observe the Moons must complete exactly one two-second delayed generation token and reject stale completions");
+  add(/PDV\.Khajiit\.ObserveMoons\.PowerSlotVersion/i.test(moonPower)
+    && /PowerSlotVersion"\)\s*<\s*3/i.test(moonPower)
+    && /PowerSlotVersion"\s*,\s*3\s*\)/i.test(moonPower)
+    && /UnequipSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons\s*,\s*0\s*\)/i.test(moonPower)
+    && /UnequipSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons\s*,\s*1\s*\)/i.test(moonPower)
+    && !/\bEquipSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons\s*,\s*2\s*\)/i.test(moonPower), "source.khajiit-moon-power-slot", "Observe the Moons must clear stale hand equips without changing the player's selected lesser power");
+  add(/AddSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons/i.test(moonPower)
+    && /AddSpell\s*\(\s*PDV_SPEL_SurveyDevotion/i.test(surveyPower)
+    && !/\bEquipSpell\s*\(/i.test(moonPower)
+    && !/\bEquipSpell\s*\(/i.test(surveyPower), "source.shared-lesser-power-selection", "Survey Devotion and Observe the Moons must be granted-only peer lesser powers; Papyrus must not attempt to select either through a hand-only EquipSpell call");
+  add(/SendPrismaToast\s*\(/i.test(moonPresentation)
+    && /AppendBookOfDaysEntry\s*\(/i.test(moonPresentation)
+    && !/\.Show\s*\(/i.test(moonPresentation), "source.khajiit-moon-prisma", "Moon contemplations must use non-blocking Prisma plus one first-rite Book of Days entry, never a vanilla MessageBox");
   add(/_dunmerHomePrayerContext\s*=\s*True/i.test(dunmerPortable) && /!_dunmerHomePrayerContext/i.test(dunmerHome) && /IsPlayerAtDunmerDeclaredHome/i.test(dunmerHome) && /requires_paired_home_prayer/i.test(dunmerHome), "source.dunmer-home-paired", "home prayer must require the paired portable-prayer context and declared home");
   add((dunmerSource.match(/TryAwardSubstrateDayCredit\([^\r\n]*normalizedMultiplier/gi) ?? []).length >= 2, "source.dunmer-curse-weight", "Dunmer portable and home prayer must preserve the explicit curse weight into daily credit");
   add(/RecordCulturalPractice/i.test(sacredWater) && /AwardCuratedSignalScaled\s*\(\s*PDV_Hist/i.test(sacredWater), "source.argonian-sacred-water-piety", "sacred water must grant cultural credit and Hist piety exactly once");

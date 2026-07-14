@@ -2932,8 +2932,7 @@ class Verifier {
     this.checkSourceContains("Phase 18 manager source", "PDV__ManagerQuest", [
       "Spell Property PDV_SPEL_SurveyDevotion Auto",
       "Function EnsureSurveyDevotionPower()",
-      "GetEquippedShout() == None",
-      "EquipSpell(PDV_SPEL_SurveyDevotion, 2)",
+      "playerRef.AddSpell(PDV_SPEL_SurveyDevotion, False)",
       "String Function GetSurveyDevotionText()",
       "Bool Function IsNordVampireSuppressed()",
       "PDV.Nord.VampireScar",
@@ -2990,10 +2989,12 @@ class Verifier {
     const detail = this.recordDetails.get("PDV_SPEL_SurveyDevotion");
     const effects = detail?.fields?.Effects || [];
     const hasEffect = effects.some((effect) => formidToEdid(effect.BaseEffect, this.recordsByEdid) === "PDV_MGEF_SurveyDevotion");
-    if (hasEffect && detail?.fields?.Type === "LesserPower") {
-      this.pass("Phase 18 Survey spell", "PDV_SPEL_SurveyDevotion is a LesserPower using PDV_MGEF_SurveyDevotion.", PDV_ESP);
+    const equipmentType = detail?.fields?.EquipmentType || "missing";
+    const usesVoiceSlot = String(equipmentType).toLowerCase() === "skyrim.esm:025bee";
+    if (hasEffect && detail?.fields?.Type === "LesserPower" && usesVoiceSlot) {
+      this.pass("Phase 18 Survey spell", "PDV_SPEL_SurveyDevotion is a Voice-slot LesserPower using PDV_MGEF_SurveyDevotion.", PDV_ESP);
     } else {
-      this.phase18Gap("Phase 18 Survey spell", `Survey spell readback mismatch: type=${detail?.fields?.Type || "missing"}, effect=${hasEffect}.`, PDV_ESP);
+      this.phase18Gap("Phase 18 Survey spell", `Survey spell readback mismatch: type=${detail?.fields?.Type || "missing"}, equipmentType=${equipmentType}, effect=${hasEffect}.`, PDV_ESP);
     }
   }
 

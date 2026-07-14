@@ -8,8 +8,9 @@ Because of that, your devotion is always running quietly in the background from 
 
 Only the first authentic lunar-road act after each 06:00 dawn advances the
 cultural layer. `Observe the Moons` is a Khajiit lesser power used outdoors at
-night. Remain still and safe for five seconds and the current presiding god may
-offer a contemplation. The first successful observance that day can advance the
+night. Remain still and safe for two seconds and the current presiding god may
+offer a non-blocking contemplation. It shares the Power slot with Survey
+Devotion, so selecting either one replaces the other. The first successful observance that day can advance the
 Lattice and gently honor that god; later observances remain meaningful but give
 no extra standing.
 
@@ -56,7 +57,7 @@ but only the first qualifying act after each 06:00 dawn advances the Lattice.
 Lead with the road life. The most common and important ways to earn piety:
 
 - **Rest outdoors**, not in an inn or house. This is the core road-home practice. It may claim the day's one cultural credit; any god piety from the rest remains act-specific.
-- **Observe the Moons** outdoors at night. Stay still, safe, unmounted, and out of the water for five seconds to receive a contemplation from the presiding god.
+- **Observe the Moons** outdoors at night. Stay still, safe, unmounted, and out of the water for two seconds to receive a contemplation from the presiding god. It shares the Power slot with Survey Devotion; select whichever one you intend to use.
 - **Defend a caravan through an approved event.** Community defense can claim the cultural day without turning ordinary trade into a repeatable faucet.
 - **Live a focus god's story.** Approved Baan Dar reversals, notable Rajhin thefts, Alkosh dragon/Word milestones, lunar books, and exact quests can all sustain the Lattice.
 
@@ -161,7 +162,7 @@ Caveat: all day-to-day CSV rows in the gain/loss sections above are live only if
 Discrepancies between what the guide/design promises and what actually fires (for owner triage):
 
 - **Superseded audit:** The old road-anchor and book-only moon routes are no longer design authority. Normal play requires completed outdoor rest and the `Observe the Moons` power; anchors and circuits remain migration/test-only concepts.
-- **Moon-phase bonus and observance are both wired.** The real Skyrim moon drives the phase blessing. The `Observe the Moons` lesser power supplies the organic five-second rite, while curated lunar books and exact quests are cultural substitutes; only the first valid act that day advances the substrate.
+- **Moon-phase bonus and observance are both wired.** The real Skyrim moon drives the phase blessing. The `Observe the Moons` lesser power supplies the organic two-second rite and a non-blocking Prisma contemplation; its first valid rite each day also enters the Book of Days. Curated lunar books and exact quests are cultural substitutes; only the first valid act that day advances the substrate.
 - **Silent emergence and road life are wired.** Focus emphasis remains behavioral through CSV/curated signals and quest reactions. Any completed outdoor rest can claim road-home practice without an anchor or circuit, while caravan defense, reversals, notable thefts, dragon/Word milestones, books, and quests supply finite alternatives.
 - **Baan Dar and Alkosh have the strongest organic curated lanes.** Outnumbered-win and near-fatal reversal (Baan Dar) and named/generic dragon kills (Alkosh) fire from real combat/kill events for originRace 6. Rajhin's elegant-theft beat (notable-target or >=200-gold sneak-lift) is also organic.
 - **Anti-creed curated signals are mostly STUB.** Azurah desecration (703), Khenarthi caravan-harm (604), Rajhin botched-theft, and Baan Dar betrayal route only from the dev-only activator. The undead/murder/assault CSV dislike rows are the organic loss path; Alkosh chaos-aid (Paarthurnax kill) is the one organic anti-creed beat.

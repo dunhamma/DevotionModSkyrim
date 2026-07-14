@@ -430,6 +430,17 @@
     return String(value);
   };
 
+  // Survey uses lower-case relation states inside complete sentences. The panel
+  // is a label/value surface instead, so retain the relation name and promote
+  // only the first display character here rather than changing shared prose.
+  const relationDisplayText = (displayItem) => {
+    const relationName = text(displayItem.listTitle || displayItem.label, "").trim();
+    const rawState = text(displayItem.listText || displayItem.text || displayItem.message, "").trim();
+    const displayState = rawState ? rawState.charAt(0).toUpperCase() + rawState.slice(1) : "";
+    if (relationName && displayState) return `${relationName}: ${displayState}`;
+    return displayState || relationName;
+  };
+
   const symbolDisplayNames = Object.fromEntries(gallerySymbols);
 
   const displayName = (value, fallback = "") => {
@@ -620,7 +631,14 @@
       });
     });
     appendSvg(svg, "circle", { cx: "39", cy: "75", r: "24", class: "instrument-outline" });
-    appendSvg(svg, "path", { d: "M27 78 Q39 54 51 78 Q46 94 39 102 Q32 94 27 78 Z", class: fill });
+    // Reuse the Hist root-and-river language in the cultural gauge. The old
+    // generic droplet read as an unrelated fallback mark at small panel scale.
+    appendSvg(svg, "path", { d: "M39 100 V78", class: "instrument-outline" });
+    appendSvg(svg, "path", { d: "M39 100 C33 100 29 97 27 93", class: "instrument-outline" });
+    appendSvg(svg, "path", { d: "M39 100 C45 100 49 97 51 93", class: "instrument-outline" });
+    appendSvg(svg, "path", { d: "M29 78 A10 10 0 0 1 49 78", class: fill });
+    appendSvg(svg, "path", { d: "M32 82 A7 7 0 0 1 46 82", class: "instrument-outline" });
+    appendSvg(svg, "circle", { cx: "39", cy: "70", r: "2.5", class: fill });
   });
 
   const renderLunarInstrument = (slot, inst = {}) => {
@@ -1664,7 +1682,7 @@
       li.className = `relation-item${tone ? ` is-${tone}` : ""}`;
       li.textContent = typeof displayItem === "string"
         ? displayItem
-        : text(displayItem.listText || displayItem.text || displayItem.label || displayItem.message, "");
+        : relationDisplayText(displayItem);
       list.appendChild(li);
     });
     nodes.relations.appendChild(list);

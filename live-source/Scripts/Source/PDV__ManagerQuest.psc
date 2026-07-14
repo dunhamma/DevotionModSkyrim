@@ -6782,7 +6782,7 @@ EndFunction
 
 Function HandleKhajiitMoonObservance(Int phaseIndex, String reason)
     ; Compatibility ingress is intentionally inert. Only the validated
-    ; five-second Observe the Moons power may award observance credit.
+    ; two-second Observe the Moons power may award observance credit.
     Trace(2, "Legacy moon observance ignored: " + reason)
 EndFunction
 
@@ -6806,6 +6806,21 @@ Function EnsureKhajiitObserveMoonsPower()
     if IsKhajiitOrigin()
         if !playerRef.HasSpell(PDV_Power_Khajiit_ObserveMoons)
             playerRef.AddSpell(PDV_Power_Khajiit_ObserveMoons, False)
+        endIf
+        ; One-time migration: clear an obsolete hand assignment without
+        ; changing the player's selected lesser power. Observe the Moons and
+        ; Survey Devotion are peers in the same Power slot; selecting either in
+        ; the Magic menu replaces the other in the ordinary Skyrim way.
+        ; V3 must rerun after the SPEL moved from EitherHand to Voice. A save
+        ; may have stamped V2, then selected the old record into a hand again.
+        if StorageUtil.GetIntValue(None, "PDV.Khajiit.ObserveMoons.PowerSlotVersion") < 3
+            if playerRef.GetEquippedSpell(0) == PDV_Power_Khajiit_ObserveMoons
+                playerRef.UnequipSpell(PDV_Power_Khajiit_ObserveMoons, 0)
+            endIf
+            if playerRef.GetEquippedSpell(1) == PDV_Power_Khajiit_ObserveMoons
+                playerRef.UnequipSpell(PDV_Power_Khajiit_ObserveMoons, 1)
+            endIf
+            StorageUtil.SetIntValue(None, "PDV.Khajiit.ObserveMoons.PowerSlotVersion", 3)
         endIf
     elseIf playerRef.HasSpell(PDV_Power_Khajiit_ObserveMoons)
         playerRef.RemoveSpell(PDV_Power_Khajiit_ObserveMoons)
@@ -6849,7 +6864,7 @@ Function ProcessPendingKhajiitMoonObservation(Int observationToken)
         Trace(1, "[PDV][MOON_RITE] rejected completion: stale_token=" + observationToken)
         return
     endIf
-    if Utility.GetCurrentRealTime() - _khajiitMoonObservationStartRealTime < 5.0
+    if Utility.GetCurrentRealTime() - _khajiitMoonObservationStartRealTime < 2.0
         StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastReject", "delay_incomplete")
         Trace(1, "[PDV][MOON_RITE] rejected completion: delay_incomplete token=" + observationToken)
         return
@@ -6902,18 +6917,23 @@ Function CompleteKhajiitMoonObservation(Actor playerRef)
         metricAfter = PDV_KhajiitLunarSubstrate.GetMetric()
     endIf
 
+    Bool firstRiteToday = False
     Int todayStamp = GetDevotionalDay() + 2
     if ReadZeroReservedDevotionalDayStamp("PDV.Khajiit.MoonRite.PietyDay") != todayStamp
+        firstRiteToday = True
         WriteZeroReservedDevotionalDayStamp("PDV.Khajiit.MoonRite.PietyDay")
         PDV_DeityBase presidingDeity = GetKhajiitEmphasisDeity(focusValue)
         if presidingDeity
             AwardPietyInternal(presidingDeity, 0.4, True, "observe_moons_power")
         endIf
         StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
-        SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, metricAfter - metricBefore, "The moons marked this observance.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
+        ; Preserve the common actual-delta accounting path without emitting a
+        ; second toast or Book entry; the authored contemplation below owns
+        ; this rite's single player-facing presentation.
+        SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, metricAfter - metricBefore, "", "lunar", GetKhajiitLunarTierLabel(tierAfter), False)
     endIf
 
-    ShowKhajiitMoonContemplation(focusValue)
+    ShowKhajiitMoonContemplation(focusValue, firstRiteToday)
     StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastPhase", phaseIndex)
     StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastFocus", focusValue)
     StorageUtil.SetFloatValue(None, "PDV.Khajiit.MoonRite.LastSuccessTime", Utility.GetCurrentGameTime())
@@ -6921,8 +6941,8 @@ Function CompleteKhajiitMoonObservation(Actor playerRef)
     RequestPanelRefresh()
 EndFunction
 
-Function ShowKhajiitMoonContemplation(Int focusValue)
-    if !PDV_FLST_KhajiitMoonContemplations || focusValue < KHAJIIT_FOCUS_KHENARTHI || focusValue > KHAJIIT_FOCUS_ALKOSH
+Function ShowKhajiitMoonContemplation(Int focusValue, Bool firstRiteToday)
+    if focusValue < KHAJIIT_FOCUS_KHENARTHI || focusValue > KHAJIIT_FOCUS_ALKOSH
         return
     endIf
     Int localIndex = Utility.RandomInt(0, 3)
@@ -6932,11 +6952,103 @@ Function ShowKhajiitMoonContemplation(Int focusValue)
         localIndex = (localIndex + 1) % 4
         messageIndex = ((focusValue - 1) * 4) + localIndex
     endIf
-    Message contemplation = PDV_FLST_KhajiitMoonContemplations.GetAt(messageIndex) as Message
-    if contemplation
-        contemplation.Show()
-        StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastMessage", messageIndex)
+
+    ; The authored Message records remain in the compatibility packet, but a
+    ; normal moon rite belongs on the non-blocking Prisma surface, not in a
+    ; hand-cast MessageBox. The same title/body pair is preserved below.
+    String titleText = GetKhajiitMoonContemplationTitle(messageIndex)
+    String bodyText = GetKhajiitMoonContemplationText(messageIndex)
+    SendPrismaToast(GetKhajiitFocusSymbol(focusValue), "good", titleText, bodyText)
+    if firstRiteToday
+        AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", GetKhajiitFocusSymbol(focusValue), False, 1, titleText)
     endIf
+    StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastMessage", messageIndex)
+EndFunction
+
+String Function GetKhajiitMoonContemplationTitle(Int messageIndex)
+    if messageIndex == 0
+        return "The Road Breathes"
+    elseIf messageIndex == 1
+        return "A Windward Home"
+    elseIf messageIndex == 2
+        return "The Open Mile"
+    elseIf messageIndex == 3
+        return "Breath Between Steps"
+    elseIf messageIndex == 4
+        return "Twilight's Mirror"
+    elseIf messageIndex == 5
+        return "A Name at Dusk"
+    elseIf messageIndex == 6
+        return "Shadow With Shape"
+    elseIf messageIndex == 7
+        return "The Liminal Hour"
+    elseIf messageIndex == 8
+        return "The Unlatched Gate"
+    elseIf messageIndex == 9
+        return "Luck Turned Sideways"
+    elseIf messageIndex == 10
+        return "The Laughing Escape"
+    elseIf messageIndex == 11
+        return "Clever Hands, Clear Debt"
+    elseIf messageIndex == 12
+        return "A Secret Kept"
+    elseIf messageIndex == 13
+        return "The Audacious Step"
+    elseIf messageIndex == 14
+        return "Limits in Silver"
+    elseIf messageIndex == 15
+        return "The Purring Question"
+    elseIf messageIndex == 16
+        return "The Ordered Sky"
+    elseIf messageIndex == 17
+        return "A Dragon's Measure"
+    elseIf messageIndex == 18
+        return "The Hour Unbroken"
+    endIf
+    return "Duty Beneath the Moons"
+EndFunction
+
+String Function GetKhajiitMoonContemplationText(Int messageIndex)
+    if messageIndex == 0
+        return "The wind crosses your whiskers like a road remembered. Khenarthi asks where you will return when the path grows quiet."
+    elseIf messageIndex == 1
+        return "Cloud and branch lean the same way tonight. Khenarthi teaches that a home may be carried without being abandoned."
+    elseIf messageIndex == 2
+        return "The sky leaves no walls around you. Khenarthi's road is freedom joined to the duty to return."
+    elseIf messageIndex == 3
+        return "For a moment, the wind stills. The pause belongs to Khenarthi as surely as the journey."
+    elseIf messageIndex == 4
+        return "Moonlight divides shadow from darkness. Azurah asks which parts of yourself you hide, and which you keep."
+    elseIf messageIndex == 5
+        return "The night changes every color without erasing it. Azurah keeps identity through every crossing."
+    elseIf messageIndex == 6
+        return "Your shadow lengthens beneath the moons. Azurah teaches that shadow can reveal the form that casts it."
+    elseIf messageIndex == 7
+        return "Neither day nor deepest night claims this hour. Azurah watches over the self made between worlds."
+    elseIf messageIndex == 8
+        return "A narrow opening is still an opening. Baan Dar favors the wit that finds a way without surrendering the self."
+    elseIf messageIndex == 9
+        return "The moons make familiar stones look strange. Baan Dar reminds you that reversal begins by seeing another angle."
+    elseIf messageIndex == 10
+        return "A distant night sound might be danger or laughter. Baan Dar prizes the survivor who can tell, then act."
+    elseIf messageIndex == 11
+        return "The road offers many exits. Baan Dar asks whether your cleverness frees only you, or those beside you."
+    elseIf messageIndex == 12
+        return "Moonlight reaches most places, but not all. Rajhin asks whether a secret is power, burden, or both."
+    elseIf messageIndex == 13
+        return "The next step lies beyond certainty. Rajhin honors audacity that knows the line it chooses to cross."
+    elseIf messageIndex == 14
+        return "The moons draw bright borders around the dark. Rajhin teaches that limits are clearest to those tempted to test them."
+    elseIf messageIndex == 15
+        return "Night keeps its answers close. Rajhin leaves you a question whose value lies in what you dare not say."
+    elseIf messageIndex == 16
+        return "The moons keep their courses without hurry. Alkosh teaches that order is not stillness, but motion kept true."
+    elseIf messageIndex == 17
+        return "Time stretches above you like a dragon's shadow. Alkosh asks what duty can survive both fear and glory."
+    elseIf messageIndex == 18
+        return "This moment will not return, yet it belongs to every moment after it. Alkosh keeps consequence within time."
+    endIf
+    return "The sky is vast, but each light holds its place. Alkosh reminds you that duty gives freedom a shape."
 EndFunction
 
 Function HandleKhajiitRoadHome(String reason)
@@ -18350,27 +18462,29 @@ Bool Function SendPrismaSubstrateToast(String substrate, String phase, String co
     return SendPrismaToastPayloadOrFallback(j, fallbackTitle, context, allowFallback)
 EndFunction
 
-Function SendPrismaSubstrateProgress(String substrate, Int tierBefore, Int tierAfter, Float grantedMetric, String context, String symbolName, String stateLabel)
+Function SendPrismaSubstrateProgress(String substrate, Int tierBefore, Int tierAfter, Float grantedMetric, String context, String symbolName, String stateLabel, Bool surfacePresentation = True)
     ; Presentation follows the actual daily-credit result, never a route's
     ; repeat multiplier. Same-day, duplicate, and capped acts therefore stay
     ; silent on substrate toasts and Book entries.
     if grantedMetric <= 0.0
         return
     endIf
-    if tierAfter > tierBefore
-        SendPrismaSubstrateToast(substrate, "deepen", context, symbolName, stateLabel)
-    elseIf tierAfter < tierBefore
-        SendPrismaSubstrateToast(substrate, "thin", context, symbolName, stateLabel)
-    else
-        SendPrismaSubstrateToast(substrate, "act", context, symbolName, stateLabel)
-    endIf
-
-    if context != "" && tierAfter >= tierBefore
-        String entryText = context
-        if stateLabel != ""
-            entryText = stateLabel + ": " + context
+    if surfacePresentation
+        if tierAfter > tierBefore
+            SendPrismaSubstrateToast(substrate, "deepen", context, symbolName, stateLabel)
+        elseIf tierAfter < tierBefore
+            SendPrismaSubstrateToast(substrate, "thin", context, symbolName, stateLabel)
+        else
+            SendPrismaSubstrateToast(substrate, "act", context, symbolName, stateLabel)
         endIf
-        AppendBookOfDaysEntry(entryText, Utility.GetCurrentGameTime() as Int, "substrate.act", symbolName, False)
+
+        if context != "" && tierAfter >= tierBefore
+            String entryText = context
+            if stateLabel != ""
+                entryText = stateLabel + ": " + context
+            endIf
+            AppendBookOfDaysEntry(entryText, Utility.GetCurrentGameTime() as Int, "substrate.act", symbolName, False)
+        endIf
     endIf
 EndFunction
 
@@ -22501,9 +22615,6 @@ Function EnsureSurveyDevotionPower()
         playerRef.AddSpell(PDV_SPEL_SurveyDevotion, False)
     endIf
 
-    if playerRef.GetEquippedSpell(2) == None && playerRef.GetEquippedShout() == None
-        playerRef.EquipSpell(PDV_SPEL_SurveyDevotion, 2)
-    endIf
 EndFunction
 
 Function EnsureDunmerAncestralUrn()

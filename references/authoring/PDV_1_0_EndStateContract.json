@@ -163,7 +163,7 @@
         "sources": ["@managerLive", "@managerDeployed", "@espDeployed"],
         "onDrift": "FAIL"
       },
-      "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run (or pdv_verify.mjs directly) with the houseCARL bridge live.",
+      "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run (or pdv_verify.mjs directly). Runs headless: the retired Anvil HTTP MCP bridge (127.0.0.1:27016) is NOT required, and pdv_verify's MO2-MCP-server check is informational only (it never fails on a down bridge).",
       "post10": false
     },
     {
@@ -203,7 +203,7 @@
         "sources": ["@managerLive", "@managerDeployed"],
         "onDrift": "FAIL"
       },
-      "closes": "Run node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-AUDIT-INTEGRITY with the Anvil MCP bridge live (127.0.0.1:27016) so the harness signal_e2e_gate can confirm dispatch; a passing --run stamps fresh. Read mode then trusts the stamp until @managerLive/@managerDeployed drift, rather than re-reading the volatile PDV_IntegrityHarnessLedger.md (which flips to FAIL on any headless harness run with the bridge down).",
+      "closes": "This is a ROLLUP, not a bridge problem. The retired Anvil HTTP MCP bridge (127.0.0.1:27016) is NOT required: the harness runs headless and signal_e2e_gate passes bridge-down (39 GREEN / 0 RED, verified 2026-07-14); its mcp_liveness check is informational only. The one failing sub-check is pantheon_substrate_runtime, so this criterion closes when PS-A1..PS-A12 runtime evidence is recorded in PDV_PantheonSubstrateRuntimeEvidenceLedger.json - i.e. the SAME work as C-RUNTIME-PANTHEON-SUBSTRATE, not extra work and not something a recert can clear. Re-stamp with node .\\tools\\pdv_1_0_endstate_gate.mjs --run --only C-AUDIT-INTEGRITY once those cards land.",
       "post10": false
     },
     {

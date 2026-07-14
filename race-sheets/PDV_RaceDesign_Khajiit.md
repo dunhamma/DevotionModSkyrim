@@ -1,5 +1,5 @@
 # PDV Race Design — Khajiit
-**Last updated:** 2026-06-12
+**Last updated:** 2026-07-14
 **Implementation status:** LOCKED (lunar substrate, focused emphasis, outdoor road-home practice, Observe the Moons, curse posture, and launch hook scope)
 **Status:** Implementation locked for 1.0 experience shape; reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.6)
@@ -17,10 +17,13 @@ Alkosh milestone, or curated lunar source in each 06:00 devotional day grants
 generic theft or stealth do not qualify. The substrate does not decay.
 
 `Observe the Moons` is a Khajiit-only lesser power used outdoors from 20:00 to
-05:00. It resolves once after five still, uninterrupted seconds and shows one
-of four observations for the current presiding god. The first valid rite that
-day may grant the substrate credit and raw presiding-god piety `+0.4`; later
-casts are informational. `references/authoring/PDV_SubstratePacingContracts.json`
+05:00. It resolves once after two still, uninterrupted seconds in the shared
+Power slot. Selecting it replaces Survey Devotion in the ordinary Magic-menu
+way, but origin setup never changes the selected power. Its contemplation
+appears as a non-blocking Prisma toast; the first valid rite that day also
+enters the Book of Days, grants substrate credit, and raw
+presiding-god piety `+0.4`. Later casts are informational.
+`references/authoring/PDV_SubstratePacingContracts.json`
 is authoritative.
 
 ## Religious Identity

@@ -79,10 +79,15 @@ so no build/red bars remain — every lane is play-or-package. Rendered as
 `devotion_projection_to_oneoh_2026_07_09`:
 
 ```js
-// indexAxis:'y'; sorted descending; total ~6 sessions (2026-07-12):
-var labels=['felt-family sweep (71 net families)','ARR compat packet','Bordello compat (2 build-targets, 6 lists)','requiem track B (Authoria)'];
-var effort=[2.5,1.5,1,1];
-var fill=['#378ADD','#888780','#888780','#378ADD']; // blue=in-game test, gray=packaging
+// indexAxis:'y'; sorted descending; total ~7.5 sessions (2026-07-14, PS-A lane added):
+var labels=['felt-family sweep (58 open)','PS-A adversarial (12 cards / 30 buckets)','ARR compat packet','requiem track B (Authoria)','Bordello compat (2 build-targets)'];
+var effort=[2.5,1.5,1.5,1,1];
+var fill=['#378ADD','#D4537E','#888780','#378ADD','#888780']; // blue=in-game test, pink=NEW adversarial, gray=packaging
+// 2026-07-14: felt 93/151 (62%). NEW PS-A lane (pink) = 12 pantheon/substrate adversarial
+// cards, 0/30 runtime+manual buckets, from an independent refutation that killed 4 backend
+// defects; backend all PASS. Widget went ~6 -> ~7.5 (scope ADDED, not burned). 07-13 Requiem
+// M/S regen->Fortify conversion: 61 done felt families' effects changed -> owner ruling
+// "keep-as-done + note drift", C-REQUIEM-TRACKB re-proves. Experience Mode 2/2 CLOSED.
 // OWNER CORRECTION 2026-07-12: C-COMPAT-BORDELLO's 6 lists (JOJ/TOT/HOH/MOM/DoD/VOV)
 // collapse to 2 real build-targets -- DoD-base and JOJ-base -- which SHARE the
 // religion-removal set. Packaging WORK is 2 passes, ~1 session, not 6. The gate still

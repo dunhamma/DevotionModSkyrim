@@ -11,13 +11,48 @@ decision history. Claude defers to it.
 1. Read `AGENTS.md` at the start of every session for current project state.
 2. Do not rely on this file for build status; it is only a Claude entrypoint.
 3. Do not overwrite or update `AGENTS.md` unless the user explicitly asks.
-4. Do not edit toolchain scripts (`tools/pdv_compile.mjs`,
-   `tools/pdv_verify.mjs`, `tools/pdv_author.mjs`) unless asked.
-5. Do not touch skill files (`pdv-doc-sync.skill`, `pdv-papyrus-ck.skill`,
+4. All Skyrim plugin reads, writes, and verification go through the
+   `housecarl_*` MCP tools directly. The legacy bridge tooling is retired --
+   see "Skyrim Plugin Work" below.
+5. Do not edit toolchain scripts (`tools/pdv_compile.mjs`,
+   `tools/pdv_verify.mjs`) unless asked.
+6. Do not touch skill files (`pdv-doc-sync.skill`, `pdv-papyrus-ck.skill`,
    `skills/`) unless asked.
-6. Before writing or modifying `.psc` files, read the Papyrus guidance in
+7. Before writing or modifying `.psc` files, read the Papyrus guidance in
    `AGENTS.md` and `references/PAPYRUS_KNOWLEDGE_INTAKE.md`.
-7. Prefer scoped changes. Avoid unrelated doc rewrites or broad cleanup.
+8. Prefer scoped changes. Avoid unrelated doc rewrites or broad cleanup.
+
+---
+
+## Skyrim Plugin Work
+
+For **all** plugin work -- reading records, resolving load-order winners,
+creating or editing records, patching, merging, verification -- call the
+`housecarl_*` MCP tools directly. Do not route through, re-implement, or build
+a local wrapper, adapter, capability matrix, or authoring helper.
+
+houseCARL is both the writer and the reader. Verification is a direct
+`housecarl_read_record` / `housecarl_cross_plugin_query` readback after the
+write. That readback **is** the proof -- there is no adapter or proof-ledger
+step in between.
+
+The retired layer is gone from disk (`tools/pdv_author.mjs`, `tools/creation-*`,
+and every `tools/pdv-*-author` helper; preserved only in
+`tools/pdv-authoring-trees-retired-2026-07-13.zip`). Do not resurrect it, extend
+it, or copy its dry-run/backup/proof-ledger pattern into new work. If a doc
+still tells you to run one of those helpers, the doc is stale -- treat this rule
+as authoritative and flag the drift.
+
+If a task looks blocked by a houseCARL limitation, **reproduce it with a direct
+`housecarl_*` call on the current version first** and read the actual error. Do
+not trust a locally recorded "known issue" without reproducing it; only a
+reproduced, current-version failure is real.
+
+The one sanctioned programmatic path is the read-only gate scripts
+(`tools/pdv_housecarl_p2_readback.mjs`, `tools/pdv_pantheon_*_readback.mjs`,
+via `tools/lib/pdv_housecarl_stdio.mjs`). They speak houseCARL's own MCP
+protocol for deterministic CI-style gates. They are not a bridge, and they never
+write.
 
 ---
 

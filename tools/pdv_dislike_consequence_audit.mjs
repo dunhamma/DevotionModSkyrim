@@ -7,9 +7,15 @@
  *   - every deity/prince with a negative likes/dislikes row maps to a domain
  *   - abs(delta) <= 0.5 remains no-sting, >0.5 creates an eligible sting band
  *   - manager/router source uses the likes/dislikes event-context entrypoint
- *   - live ESP record/VMAD readback passes through pdv-dislike-consequence-author
+ *   - live ESP readback of all 14 SPEL + 14 MGEF records, read straight out of the
+ *     deployed Devotion.esp via the standalone mutagen-bridge (name/source label,
+ *     description, actor value, magnitude, duration, and the SPEL -> MGEF link)
+ *
+ * The readback is fail-closed: if the bridge or the ESP cannot be read we FAIL
+ * rather than silently pass a build we never inspected.
  *
  * Flags: --strict-dislike-consequence, --self-test, --json
+ * Env:   PDV_ANVIL_ROOT, PDV_ESP, PDV_MUTAGEN_BRIDGE (path overrides)
  */
 
 import { spawnSync } from "node:child_process";
@@ -24,7 +30,34 @@ const DEITY_CSV = path.join(AUTH, "PDV_DeityLikesDislikes.csv");
 const MANAGER = path.join(ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
 const ROUTER = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_ActionRouter.psc");
 const EVENT_BUS = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_EventBus.psc");
-const AUTHOR_PROJECT = path.join(ROOT, "tools", "pdv-dislike-consequence-author", "PdvDislikeConsequenceAuthor.csproj");
+// Deployed-ESP readback. The retired pdv-dislike-consequence-author helper is gone;
+// records are read directly from Devotion.esp through the standalone mutagen-bridge,
+// which does not depend on the retired Anvil HTTP MCP server.
+const ANVIL_ROOT = toPosix(process.env.PDV_ANVIL_ROOT ?? "D:/Wabbajack/modlists/Anvil");
+const PDV_ESP = toPosix(process.env.PDV_ESP ?? path.join(ANVIL_ROOT, "mods", "Devotion", "Devotion.esp"));
+const MUTAGEN_BRIDGE = toPosix(
+  process.env.PDV_MUTAGEN_BRIDGE
+    ?? path.join(ANVIL_ROOT, "plugins", "Anvilmo2_mcp", "tools", "mutagen-bridge", "mutagen-bridge.exe"),
+);
+const MUTAGEN_BRIDGE_MAX_BUFFER = 128 * 1024 * 1024;
+const SECONDS_PER_HOUR = 3600;
+
+// PDV specs carry the Papyrus/CK actor-value vocabulary; Mutagen (and so the ESP
+// readback) uses its own enum names. Same alias table as pdv_phase2_reward_readback_audit.
+const ACTOR_VALUE_ALIASES = new Map([
+  ["Speechcraft", "Speech"],
+  ["BlockSkill", "Block"],
+  ["Marksman", "Archery"],
+  ["ResistPoison", "PoisonResist"],
+]);
+
+function normalizeActorValue(actorValue) {
+  return ACTOR_VALUE_ALIASES.get(actorValue) ?? actorValue;
+}
+
+function toPosix(p) {
+  return String(p).replace(/\\/g, "/");
+}
 
 const flags = new Set(process.argv.slice(2));
 const findings = [];
@@ -191,17 +224,148 @@ function validateSourceGates(spec) {
   }
 }
 
-function validateLiveReadback() {
-  const result = spawnSync("dotnet", ["run", "--project", AUTHOR_PROJECT, "--", "--check"], {
-    cwd: ROOT,
+function bridge(request, timeoutMs = 120_000) {
+  const result = spawnSync(MUTAGEN_BRIDGE, {
+    input: JSON.stringify(request),
     encoding: "utf8",
-    timeout: 120_000,
+    timeout: timeoutMs,
+    maxBuffer: MUTAGEN_BRIDGE_MAX_BUFFER,
     windowsHide: true,
   });
-  if (result.status === 0) {
-    pass("live ESP readback", "pdv-dislike-consequence-author --check PASS.", AUTHOR_PROJECT);
-  } else {
-    fail("live ESP readback", `${result.stderr || ""}\n${result.stdout || ""}`.trim(), AUTHOR_PROJECT);
+  if (result.error) throw result.error;
+  const stdout = (result.stdout || "").trim();
+  if (!stdout) throw new Error(`mutagen-bridge returned no output: ${(result.stderr || "").trim()}`);
+  try {
+    return JSON.parse(stdout);
+  } catch {
+    throw new Error(`mutagen-bridge returned invalid JSON: ${stdout.slice(0, 400)}`);
+  }
+}
+
+// Compare a live ESP field against the spec. Missing spec value => not asserted.
+function expectField(check, editorId, field, actual, expected) {
+  if (expected === undefined || expected === null) return true;
+  if (String(actual) === String(expected)) return true;
+  fail(check, `${editorId}.${field}: ESP has "${actual}", spec expects "${expected}".`, PDV_ESP);
+  return false;
+}
+
+function validateLiveReadback(spec) {
+  const check = "live ESP readback";
+
+  if (!fs.existsSync(MUTAGEN_BRIDGE)) {
+    fail(check, `mutagen-bridge.exe not found at ${MUTAGEN_BRIDGE}. Cannot read the deployed ESP.`, MUTAGEN_BRIDGE);
+    return;
+  }
+  if (!fs.existsSync(PDV_ESP)) {
+    fail(check, `Devotion.esp not found at ${PDV_ESP}.`, PDV_ESP);
+    return;
+  }
+
+  let records;
+  try {
+    const scan = bridge({ command: "scan", plugins: [PDV_ESP] });
+    records = scan.plugins?.[0]?.records ?? [];
+  } catch (err) {
+    fail(check, `ESP scan failed: ${err.message}`, PDV_ESP);
+    return;
+  }
+  if (!records.length) {
+    fail(check, "ESP scan returned no records.", PDV_ESP);
+    return;
+  }
+
+  const formidByEdid = new Map();
+  for (const r of records) if (r.edid) formidByEdid.set(r.edid, r.formid);
+
+  // Collect every declared record, and fail loudly on any that the ESP does not carry.
+  const wanted = [];
+  for (const domain of spec.domains ?? []) {
+    for (const band of ["light", "sharp"]) {
+      const b = domain[band];
+      if (!b) continue;
+      wanted.push({ domain, band, spec: b, kind: "SPEL", editorId: b.spellEditorId });
+      wanted.push({ domain, band, spec: b, kind: "MGEF", editorId: b.magicEffectEditorId });
+    }
+  }
+
+  const missing = wanted.filter((w) => w.editorId && !formidByEdid.has(w.editorId));
+  if (missing.length) {
+    fail(check, `Missing from deployed ESP: ${missing.map((m) => m.editorId).join(", ")}.`, PDV_ESP);
+    return;
+  }
+
+  let detailByEdid;
+  try {
+    const detail = bridge({
+      command: "read_records",
+      max_depth: 6,
+      records: wanted.map((w) => ({ plugin_path: PDV_ESP, formid: formidByEdid.get(w.editorId) })),
+    });
+    detailByEdid = new Map();
+    for (const r of detail.records ?? []) {
+      if (r.editor_id && r.success && r.fields) detailByEdid.set(r.editor_id, r.fields);
+    }
+  } catch (err) {
+    fail(check, `ESP record read failed: ${err.message}`, PDV_ESP);
+    return;
+  }
+
+  let ok = 0;
+  for (const w of wanted) {
+    const f = detailByEdid.get(w.editorId);
+    if (!f) {
+      fail(check, `${w.editorId}: record read returned no fields.`, PDV_ESP);
+      continue;
+    }
+
+    let good = true;
+    if (w.kind === "MGEF") {
+      // The MGEF Name is the named debuff the player sees in Active Effects.
+      good = expectField(check, w.editorId, "Name", f.Name, w.spec.displayName) && good;
+      good = expectField(check, w.editorId, "Description", f.Description, w.spec.description) && good;
+      good = expectField(
+        check,
+        w.editorId,
+        "Archetype.ActorValue",
+        normalizeActorValue(f.Archetype?.ActorValue),
+        normalizeActorValue(w.domain.actorValue),
+      ) && good;
+      if (!String(f.Flags ?? "").includes("Detrimental")) {
+        fail(check, `${w.editorId}.Flags: missing Detrimental (got "${f.Flags}").`, PDV_ESP);
+        good = false;
+      }
+    } else {
+      // The SPEL Name is the Active-Effects SOURCE label ("Favor Slips").
+      good = expectField(check, w.editorId, "Name", f.Name, w.spec.sourceDisplayName) && good;
+      good = expectField(check, w.editorId, "Description", f.Description, w.spec.description) && good;
+
+      const effect = Array.isArray(f.Effects) ? f.Effects[0] : null;
+      if (!effect) {
+        fail(check, `${w.editorId}: no magic effect on the spell.`, PDV_ESP);
+        good = false;
+      } else {
+        // The spell must point at its own domain/band magic effect.
+        const expectedMgef = formidByEdid.get(w.spec.magicEffectEditorId);
+        good = expectField(check, w.editorId, "Effects[0].BaseEffect", effect.BaseEffect, expectedMgef) && good;
+        good = expectField(check, w.editorId, "Effects[0].Magnitude", effect.Data?.Magnitude, w.spec.magnitude) && good;
+        const expectedDuration = w.spec.durationHours == null
+          ? null
+          : w.spec.durationHours * SECONDS_PER_HOUR;
+        good = expectField(check, w.editorId, "Effects[0].Duration", effect.Data?.Duration, expectedDuration) && good;
+      }
+    }
+    if (good) ok++;
+  }
+
+  if (ok === wanted.length) {
+    pass(
+      check,
+      `All ${wanted.length} disfavor records readback clean from the deployed ESP `
+        + `(${wanted.length / 2} spells + ${wanted.length / 2} magic effects; name/source label, `
+        + `description, actor value, magnitude, duration, and spell->effect link).`,
+      PDV_ESP,
+    );
   }
 }
 
@@ -210,7 +374,7 @@ function runAudit() {
   validateSpec(spec);
   validateCsvThresholds(spec);
   validateSourceGates(spec);
-  validateLiveReadback();
+  validateLiveReadback(spec);
 }
 
 function selfTest() {

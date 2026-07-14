@@ -255,7 +255,8 @@
         "form": "Khajiit-only lesser power",
         "validHours": "20:00-05:00",
         "requires": ["exterior", "out of combat", "unmounted", "not swimming"],
-        "resolution": "One check after five seconds; abort on combat, cell change, or movement over 128 units; no continuous polling.",
+        "resolution": "One check after two seconds; abort on combat, cell change, or movement over 128 units; no continuous polling.",
+        "presentation": "Observe the Moons and Survey Devotion are peer lesser powers in the shared Power slot; selecting either replaces the other, but origin setup never changes the player's selection. Both are granted through AddSpell only: vanilla EquipSpell is hand-only and must never be used to select either power. The non-blocking Prisma toast presents the authored contemplation; the first valid rite each devotional day also enters the Book of Days.",
         "messages": {
           "count": 20,
           "perGod": 4,
@@ -263,7 +264,7 @@
           "noImmediateRepeat": true
         },
         "firstSuccessPerDevotionalDay": { "substrateCredit": 4.0, "presidingGodRawPiety": 0.4, "focusWeight": 0.0 },
-        "laterSuccessSameDay": "Informational only."
+        "laterSuccessSameDay": "Informational-only non-blocking Prisma contemplation; it creates no Book of Days entry."
       },
       "representativeSevenDayItinerary": ["completed outdoor rest", "Observe the Moons", "caravan defense", "completed outdoor rest", "Baan Dar reversal", "Observe the Moons", "Alkosh dragon or Word milestone"],
       "decay": { "enabled": false },

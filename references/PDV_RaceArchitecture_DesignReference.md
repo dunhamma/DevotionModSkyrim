@@ -1874,7 +1874,7 @@ Rationale:
 - If no deity has a clear lead, the Khajiit remains in broad lunar Faithful state; balanced worship is complete and valid, not an error state
 - Any completed outdoor rest is road-home practice; the road itself is home
 - No designated anchor, circuit, elapsed-distance rule, or repeated-place rejection belongs to normal play
-- `Observe the Moons` is valid outdoors from 20:00 to 05:00, resolves after one five-second stillness check, and awards only the first valid rite each devotional day
+- `Observe the Moons` is valid outdoors from 20:00 to 05:00, resolves after one two-second stillness check, shares the selectable lesser-power slot with Survey Devotion, and awards only the first valid rite each devotional day; its contemplation is a non-blocking Prisma toast and the first rite enters the Book of Days
 - Add `PDV_State_KhajiitLunarPosture` for curse and shadow pressure, using exact enum values `Normal = 0`, `Strained = 1`, `Corrupted = 2`, and `ShadowDrift = 3`
 - Active vampirism sets `PDV_State_KhajiitLunarPosture = Corrupted`; the Lattice still holds the character, but caravan/community belonging and ordinary lunar rewards weaken
 - Active lycanthropy sets `PDV_State_KhajiitLunarPosture = Strained`; Hircine adds a competing shape, but Khajiit identity remains recognizably Khajiit
