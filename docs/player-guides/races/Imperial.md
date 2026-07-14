@@ -4,11 +4,11 @@
 
 Imperials carry the Nine Divines, the official, public, lawful religion of the Empire. For most races faith is a personal thing. For an Imperial it is also civic: your religion is tied to your role as a citizen of the order that the Empire built. You honor the gods through public duty, honest work, mercy, lawful burial, and standing for order in a province torn by war.
 
-There is no setup choice and no patron to pick at the start. Broad worship of the Divines begins with you. Acts that genuinely honor one of the gods build `The Divines' Regard`; ordinary civic standing alone does not. Talos joins that shared worship only after you have taken a real Talos stance. If you later accept one god as patron, the broad blessing steps aside while your focused blessing begins at its second tier.
+There is no setup choice and no patron to pick at the start. Broad worship of the Divines begins with you. Acts that genuinely honor one of the gods build **The Divines' Regard**; ordinary civic standing alone does not. Talos joins that shared worship only after you have taken a real Talos stance. If you later accept one god as patron, the broad blessing steps aside and your focused blessing takes over.
 
-Your civic practice is a separate, quieter layer. The first meaningful civic or religious act after each 06:00 dawn advances it; repeating other qualifying acts that day does not speed it up. Prayer, honest Smithing, Enchanting or Alchemy work, public service, mercy, burial duty, and lawful protection can count. Sleeping does not.
+Your civic practice is a separate, quieter layer, tracked as **Civic Steadiness**. The first meaningful civic or religious act after each dawn advances it; repeating other qualifying acts that day does not speed it up. Prayer, a completed piece of honest craft, and a real public-duty outcome all count, and they share the same single daily credit. Sleeping does not count.
 
-The thing that makes Imperial faith different from every other race is the shadow of the White-Gold Concordat. Talos, the god who unified the Empire, is banned by treaty. Every choice you make about that ban quietly shifts where you stand, and that standing decides how freely you can honor Talos at all. You can comply with the ban, defy it in secret, or defy it openly, and the religion notices.
+The thing that makes Imperial faith different from every other race is the shadow of the White-Gold Concordat. Talos, the god who unified the Empire, is banned by treaty. Where you stand on that ban decides how freely you can honor Talos at all. You can comply with it, keep the old faith in private, or defy it in the open, and the religion notices.
 
 ## Your Gods
 
@@ -24,142 +24,239 @@ Your pantheon is the Nine Divines, all of them native to you:
 - **Julianos** - the god of wisdom, logic, lore, and lawful justice.
 - **Dibella** - the goddess of beauty, art, and grace.
 
-Foreign gods and the sixteen Daedric Princes are not part of Imperial civic religion. The Divines are your frame. Bargaining with a Daedric Prince or taking a Daedric artifact actively offends most of the Divines (Akatosh, Arkay, Stendarr, and others all read it as a betrayal). If you walk a Daedric path you are stepping outside the civic faith, not adding to it.
+Foreign gods and the sixteen Daedric Princes are not part of Imperial civic religion. The Divines are your frame. Bargaining with a Daedric Prince or taking a Daedric artifact actively offends most of the Divines - Akatosh, Arkay, Stendarr, and others all read it as a betrayal. If you walk a Daedric path you are stepping outside the civic faith, not adding to it.
 
 ## Getting Started
 
 There is no opening choice to make. As an Imperial you begin already practicing the broad Nine Divines, honoring the whole pantheon at once through ordinary civic life. You do not have to do anything to turn this on.
 
-What is always running, from the very first day, is the Concordat. Think of it as a hidden standing meter that tracks your relationship with the Talos ban. It starts neutral (called Uncommitted) and slides toward compliance or defiance based on the big political choices you make in the world. You do not set it at character creation; you build it through play. See the "How You Lose Piety" section below for how it moves and what it does.
+The Concordat standing runs from day one. Think of it as a hidden meter that tracks your relationship with the Talos ban. It starts neutral - the Uncommitted band - and moves only when you take a genuinely costly position on the ban itself, not when you simply pick a side in the war. See "How You Lose Piety" for the bands and what they do.
 
-Later, once your faith is deep enough, a single god may offer to take you on as their own. Accepting that offer commits you to one patron and opens the deepest tier of rewards. Until then you remain a broad worshipper, and broad worship has a ceiling (see "How You Lose Piety"). For how patron offers work in general, see the How Devotion Works primer.
+Later, once your faith is deep enough, a single god may offer to take you on as their own. Accepting that offer commits you to one patron and opens the road to Champion. Until then you remain a broad worshipper, and broad worship caps at Devoted. For how patron offers work in general, see the How Devotion Works primer.
 
 ## How You Gain Piety
 
-<!-- Review tags (strip before player release, along with the REVIEW SCAFFOLDING block below):
-     [WIRED]  = fires organically in normal play now (hook named)
-     [QUEST]  = fires only from a specific vanilla quest stage (via a P2 quest-source FormList or the quest-reaction matrix)
-     [PARTIAL]= organic but narrowly gated (Concordat band, book-source, dawn-halt, patron-state)
-     [STUB]   = only reachable via a dev-only signal activator or the debug MCM; not organic
-     [INERT]  = a CSV/matrix row exists but does not fire organically
-     Day-to-day deltas from PDV_DeityLikesDislikes.csv; curated deltas from PDV_Deity_*.psc DELTA_*.
-     NOTE ON "CIVIC SERVICE": the Imperial civic-family signals (public service, mercy, lawful
-     order, honest work, death duty) do NOT fire from generic civic acts. They fire from a
-     small, hand-picked set of vanilla QUEST STAGES filled into PDV_FLST_P2_Imperial*Sources
-     (commit 91a3cc80, live-ESP). The domain gods still earn day-to-day from the CSV rows below. -->
+Piety is tracked separately for each god, and your daily gain with any single god is capped at about 4.3 per god per day. Variety matters far more than repetition: doing the same deed over and over earns less each time, so spread your devotion across honest, civic acts. These are the main ways an Imperial earns favor:
 
-Piety is tracked separately for each god, and your daily gain with any single god is capped (about 4.3 per god per day). Variety matters far more than repetition: doing the same deed over and over earns less each time, so spread your devotion across honest, civic acts. These are the main ways an Imperial earns favor:
-
-- **Tend the dead properly (Arkay).** Clear a necromancer's operation, put restless undead to rest, complete a Hall of the Dead or burial quest. This is one of the cleanest, strongest ways to earn favor in the whole game. `[WIRED (day-to-day): CSV Arkay kill-undead (300, ActorTypeUndead) +0.5, heal-or-cure-npc (350) +0.5, read-lore-book (342) +0.25.] [QUEST (the civic "death duty" beat): only Laid to Rest (MS14) stage 200 fires the Arkay SIGNAL_DEATH_DUTY via PDV_FLST_P2_ImperialDeathDutySources. Generic undead-clearing earns the CSV +0.5, not the curated death-duty pulse.]`
-- **Show mercy and restraint (Stendarr, Mara).** Spare a surrendering enemy, heal or cure a hurt person, answer for a crime and serve your time rather than running from it. Meaningful mercy under real pressure counts; idly paying off a small bounty does not. `[WIRED (day-to-day): CSV Mara heal-or-cure-npc (350) +0.75, clear-bounty-serve-time (351) +0.5; Stendarr heal-or-cure-npc (350) +0.5, clear-bounty-serve-time (351) +0.75; Zenithar clear-bounty-serve-time (351) +0.5. "Serve your time" (351) fires if the serve-time event is emitted. There is no organic "spare a surrendering enemy" hook.] [QUEST (the civic "mercy" beat): only In My Time of Need (MS08) stage 200 (Saadia-aid branch) fires Mara SIGNAL_MERCY via PDV_FLST_P2_ImperialMercySources.]`
-- **Heal and care for people (Mara, Stendarr, Akatosh).** Mending suffering, restoring a family or community, and other deity-authentic care can build those gods. Sleeping never advances Civic Steadiness and never creates hidden Talos piety.
-- **Do honest work and fair trade (Zenithar).** Smithing, enchanting, brewing, mining and woodcutting, selling goods you came by honestly. Win by labor, not by plunder. `[WIRED (day-to-day): CSV Zenithar smith-item (330) +0.5, enchant-item (331) +0.5, brew-potion (332) +0.25, cook-meal (333) +0.25, increase-skill (344) +0.25.] [QUEST (the civic "honest work" beat): only The Golden Claw (MS13) stage 100 (returned to Lucan) or 110 (to Camilla) fires Zenithar SIGNAL_HONEST_WORK via PDV_FLST_P2_ImperialHonestWorkSources. Day-to-day crafting is the CSV rows, not the curated pulse.]`
-- **Study and master your craft (Julianos, Dibella, Akatosh).** Read skill books, spell tomes, and lore; improve your skills through patient practice. `[WIRED (day-to-day): CSV Julianos read-skill-book (340) +0.5, read-spell-tome (341) +0.5, read-lore-book (342) +0.5, learn-word-of-power (343) +0.75, increase-skill (344) +0.25, enchant-item (331) +0.25; Dibella read-lore-book (342) +0.25, enchant-item (331) +0.5, smith-item (330) +0.25, increase-skill (344) +0.25; Akatosh increase-skill (344) +0.25, learn-word-of-power (343) +0.75.]`
-- **Serve lawful order and the public (Akatosh, Talos).** Complete Legion public-service beats, aid a hold, resolve disputes lawfully, slay dragons with real intent. Concrete order-preserving acts earn favor; merely belonging to a faction does not. `[QUEST (the civic "public service" beat): only Bleak Falls Barrow (MQ103) stage 190 and the Imperial Jagged Crown (CW02A) stage 200 fire Akatosh SIGNAL_CIVIC_SERVICE via PDV_FLST_P2_Imperial(Civic/PublicService)Sources. "Lawful order" (Stendarr SIGNAL_LAWFUL_ORDER) fires only from In My Time of Need (MS08) stage 201 (Alik'r-justice branch). Faction membership never routes these.] [WIRED (day-to-day, Akatosh only): CSV kill-undead (300) +0.5, rest-under-open-sky (313) +0.25. Slaying a dragon is a Talos CSV +1.5 but an Akatosh CSV -0.75 (fraught reverence, not glory).]`
-- **Walk the open land and learn a Shout (Kynareth, Talos, Akatosh).** Rest under the open sky, discover new places, learn a Word of Power. The Thu'um is sacred to several of your gods. `[WIRED (day-to-day): CSV Kynareth rest-under-open-sky (313) +0.75, discover-location (345) +0.5, learn-word-of-power (343) +1.0, brew-potion (332) +0.25, harvest-ingredient (334) +0.25; Talos learn-word-of-power (343) +1.0, discover-location (345) +0.5; Akatosh learn-word-of-power (343) +0.75, rest-under-open-sky (313) +0.25. Talos CSV rows are scaled ~0.4x for an Imperial (FOREIGN stance).]`
-- **Faithful defiance of the Talos ban (Talos only).** Activate a hidden Talos shrine, help a Talos worshipper escape the Thalmor, refuse to report the faithful. Talos favor comes ONLY from genuine, costly defiance. Generic rebellion, plain anti-Thalmor violence, or simply complying with the ban never earns Talos any favor. `[PARTIAL (public Talos pressure): reading "The Talos Mistake" (Book2ReligiousTalosWorship 0ED04D), one-shot, fires Talos SIGNAL_DEFIANCE_MILESTONE via OnBookRead -> PDV_FLST_P2_ImperialPublicTalosSources.] [QUEST (private Talos pressure): only Diplomatic Immunity (MQ201) stage 250 fires Talos SIGNAL_SHRINE_DEFIANCE via PDV_FLST_P2_ImperialPrivateTalosSources.] [STUB (the "hidden Talos shrine" activation the copy leads with): HandleTalosShrineDefiance routes only from the dev-only PDV_EventSignalActivator (135) and the debug MCM - there is no placed hidden-shrine object in PDV_FinalPlacementManifest. "Help a worshipper escape" and "refuse to report" exist only as Concordat pressure deltas (see below), not as Talos piety hooks.] Also, when Talos is your active patron, a hand-picked civic beat (Book of Love / T02 stage 200) fires his SIGNAL_PATRON_CIVIC_FAVOR via PDV_FLST_P2_ImperialPatronCivicSources. [QUEST]`
+- **Tend the dead properly (Arkay).** Put restless undead back in the ground, heal or cure the sick and wounded, read the old lore. Clearing a vampire coven or a necromancer's operation is one of the cleanest, strongest ways to earn favor in the whole game.
+- **Show mercy and restraint (Mara, Stendarr, Zenithar).** Heal or cure a hurt person. Answer for a crime and serve your time rather than buying your way out of it. Meaningful mercy under real pressure counts; idly paying off a small bounty does not.
+- **Do honest work and fair trade (Zenithar).** Smithing, enchanting, brewing, cooking, and the patient improvement of a skill. Win by labor, not by plunder.
+- **Study and master your craft (Julianos, Dibella, Akatosh).** Read skill books, spell tomes, and lore. Learn a Word of Power. Improve your skills through patient practice.
+- **Serve the Empire at the decisive moments (Akatosh, Stendarr, Zenithar, Mara).** Civic favor is not earned by wearing a uniform, walking a patrol, or belonging to a faction. It is earned at the landmark deeds where the civic order actually holds or fails - the errand that saves a town, the crown recovered for the Legion, the burial duty done properly. The quests that carry these beats are listed below.
+- **Walk the open land and learn a Shout (Kynareth, Talos, Akatosh).** Rest under the open sky, discover new places, learn a Word of Power. The Thu'um is sacred to several of your gods. Kynareth also notices herbs gathered and potions brewed.
+- **Keep the old faith under the ban (Talos).** Talos favor comes only from genuine, costly acts against the ban. Reading the Thalmor's own tract on the subject, "The Talos Mistake", is enough to make you take a public position on it once. Walking into the Thalmor Embassy and walking out again is the private version of the same defiance. Generic rebellion, plain anti-Thalmor violence, and simply complying with the ban never earn Talos any favor. Note that Talos answers an Imperial far more faintly than he answers a Nord - the Empire's own treaty stands between you.
 
 ## How You Lose Piety
 
-- **Acts your gods despise.** Murdering the defenseless, assaulting the innocent, raising the dead, theft and trespass, and taking Daedric artifacts all cost piety. Necromancy is the gravest sin against Arkay, Stendarr, and Kynareth; cruelty to the helpless offends Mara, Stendarr, and Julianos most of all. `[WIRED: CSV dislikes - raise-undead (365): Arkay -1.5, Stendarr -1.5, Kynareth -1.0, Akatosh -1.0, Mara -1.0, Dibella -0.75; murder-defenseless (304): Mara -1.5, Stendarr -1.5, Julianos -1.5, Arkay -1.0, Dibella -1.0, Kynareth -1.0, Zenithar -1.0; assault-innocent (364): Mara -1.0, Stendarr -1.0, Arkay -1.0, Julianos -0.75, Dibella -0.5; accept-daedric-artifact (368): Stendarr -1.0, Kynareth -1.0, Arkay -1.0, Zenithar -0.75; steal-item (362): Zenithar -1.0, Stendarr -0.75, Mara -0.5, Julianos -0.5, Talos -0.5(x0.4); trespass (361): Stendarr/Zenithar/Julianos -0.25.]`
-- **Neglect (a god growing quiet).** If you stop feeding civic practice through death rites, mercy, public service, prayer, or honest work, the faith goes hollow. After three idle days Civic Steadiness loses one point each dawn toward its normal floor.
-- **Natural drift.** Piety you do not maintain slowly settles. Steady, varied devotion keeps your standing where you want it. `[WIRED: passive per-deity decay (~-0.5/day per god).]`
-- **The broad-worship cap.** Honoring the Divines broadly is civic and normal, but `The Divines' Regard` caps at Faithful. The shared pool reaches Seeker at 25 and Faithful at 50. Champion requires commitment to a single god.
-- **The Concordat track (your reputation with the Talos ban).** This is the Imperial's signature mechanic, and it is always running. Every major political choice shifts a hidden meter between five bands: `[PARTIAL: PDV_ConcordatStandingTrack (-100..+100, 5 states) modifies Talos gain/decay (GainModifyingTrack/DecayModifyingTrack) and gates his offer; it is a reputation track, not a piety buff. It only moves when ApplyImperialConcordatAction is called - see the wiring note in the review block for which of the listed acts actually have organic callers.]`
+- **Acts your gods despise.** Raising the dead, murdering the defenseless, assaulting the innocent, theft, trespass, and taking a Daedric artifact all cost piety. Necromancy is the gravest sin against Arkay, Stendarr, and Kynareth; cruelty to the helpless offends Mara, Stendarr, and Julianos most of all; theft is Zenithar's own wound.
+- **Killing dragons for sport.** Talos counts a slain dragon as a victory. Akatosh does not - to him a dragon is kin, and casual dragon-hunting costs you his favor even as it wins Talos's. The great confrontations of the main quest are the exception: those he honors.
+- **Neglect.** If you stop feeding your civic practice through prayer, honest craft, and real public duty, it goes hollow. After three idle days Civic Steadiness loses one point each dawn until it settles back to its floor.
+- **Natural drift.** Piety you do not maintain slowly settles. Steady, varied devotion keeps your standing where you want it.
+- **The broad-worship cap.** Honoring the Divines broadly is civic and normal, but The Divines' Regard reaches Seeker at 25 pool standing and stops at Devoted at 50. Champion requires commitment to a single god.
+- **The Concordat standing.** This is the Imperial's signature mechanic, and it is always running. It sits in one of five bands, and it governs how freely Talos answers you and whether he will ever offer to take you as his own:
   - **Open Defiant** - you defy the ban in the open; the Thalmor hunt you, and your Talos devotion comes most freely.
   - **Private Defiant** - you keep the old faith in secret; the Thalmor are suspicious but Talos still answers strongly.
   - **Uncommitted** - the wide, neutral middle; Talos answers normally and the Thalmor leave you alone.
   - **Public Compliant** - you observe the ban publicly; the Thalmor are friendly, but Talos answers far less freely.
   - **Concordat Enforcer** - you enforce the ban; the Thalmor are allies, and Talos is all but closed to you.
 
-  Acts that push you toward defiance: finding a hidden Talos shrine (-15), helping a worshipper escape the Thalmor (-15), siding with the Stormcloaks (-20), refusing to report the faithful (-5). Acts that push you toward compliance: reporting a Talos worshipper (+15), attacking one (+15), siding with the Legion (+10), escorting a Thalmor prisoner (+10), publicly observing the ban (+5). `[PARTIAL/STUB: the pressure VALUES are live in GetImperialConcordatPressureForAction (hidden_talos_shrine -15, help_talos_worshipper_escape -15, side_with_stormcloaks -20, refuse_report_talos_worshipper -5, public_observe_talos_ban +5, report/attack_talos_worshipper +15, kill_thalmor_justiciar_unprovoked -10). But most have NO organic caller. The two ApplyImperialConcordatAction call sites that actually fire are: (1) the "hidden Talos shrine" defiance, which routes only from the dev-only activator / debug MCM (STUB); (2) killing a Thalmor Justiciar unprovoked, which fires organically off an Altmer-alignment kill signal (-10). Stormcloak/Legion siding, reporting/attacking a worshipper, escorting a prisoner, and public observance are NOT organically wired to the track today - they are design deltas awaiting quest-stage hooks.]`
+  What moves it: killing a Thalmor Justiciar who had not raised a hand against you pushes you toward defiance, and accepting Talos as your patron moves a compliant Imperial at least as far as Private Defiant. Short of that, the standing holds where it is. Picking a side in the civil war does not by itself move it.
+- **Vampirism halts the civic faith.** Becoming a vampire freezes your positive Nine Divines piety at each dawn until you are cured. Losses still land while you are halted, so a vampire can only fall. Werewolves are not halted; see below.
 
-  The track does more than gate Talos. At the extremes it bleeds into two other gods: a hard-line Enforcer who enabled the worst of the war finds Arkay and Stendarr harder to please (the civic religion judges its own failures), while an open resister finds Stendarr easier, reading active resistance as a merciful act. `[PARTIAL: the extreme-band cross-god bleed is a design promise; the live track only clamps to a raw value and gates Talos gain/offers. Verify the Arkay/Stendarr modifiers are actually applied at the extremes before promoting this to WIRED.]`
+## Quests That Move Your Standing
 
-- **Vampirism halts the civic faith (curse).** Becoming a vampire freezes positive Nine Divines piety at dawn until you are cured. `[WIRED: ApplyImperialCurseHandlers sets PDV.Imperial.VampireHalt=1 on vampire onset; GetImperialCurseGainMultiplier returns 0.0 while halted, multiplied into clampedToday at the DAWN rollover (only when clampedToday > 0.0 - so LOSSES still apply). Cure clears the halt but PDV.Imperial.VampireHistory stays set as a permanent scar. Werewolf does NOT halt (multiplier stays 1.0); the "reduced effect" is narrative posture, not a piety multiplier.]`
+Some quests speak directly to one of your gods, and finishing them - or finishing them a particular way - moves your standing with that god on the spot. These are the ones an Imperial is most likely to meet. Several are the same quest with two different endings, and the ending is what the god judges.
 
-<!-- REVIEW SCAFFOLDING - strip before player release -->
+Gains marked "Helps a lot" are milestones: they land far harder than an ordinary day's devotion.
 
-### Quests That Move Your Standing
+**Akatosh**
 
-Two runtime systems move Imperial standing off quests:
+| Quest | What you did | Effect |
+|-------|--------------|--------|
+| Bleak Falls Barrow | Recovered the Dragonstone and put the Empire's first answer to the dragons in motion | Helps |
+| Dragon Rising | Killed Mirmulnir at the Western Watchtower and took up the burden of being Dragonborn | Helps |
+| A Blade in the Dark | Slew Sahloknir, raised against the order of time | Helps |
+| Dragonslayer | Destroyed Alduin and restored the covenant of time | Helps |
+| The Jagged Crown | Recovered the crown for the Imperial Legion, preserving the Empire | Helps |
+| Joining the Stormcloaks | Swore the oath of fealty to the rebellion | Helps |
 
-1. **P2 quest-source FormLists** (`PDV_FLST_P2_Imperial*Sources`): a small, hand-picked set of vanilla quest stages that fire the Imperial *curated* civic/Talos signals through `OnQuestStageChange` -> `ShouldRouteP2QuestStage` -> `RouteImperial*` -> the manager handlers. These are the ONLY organic source of the civic-family signals (there is no "do a civic act" hook). Filled live-ESP in commit `91a3cc80`, houseCARL stage-verified.
+**Talos**
 
-| Family / signal | Quest (stage) | Deity signal | Notes |
-|-----------------|---------------|--------------|-------|
-| Public service | Bleak Falls Barrow MQ103 (190); Imperial Jagged Crown CW02A (200) | Akatosh SIGNAL_CIVIC_SERVICE | Rejects generic Legion membership/patrol |
-| Mercy | In My Time of Need MS08 (200, Saadia-aid) | Mara SIGNAL_MERCY | Mutually exclusive with the lawful-order branch |
-| Lawful order | In My Time of Need MS08 (201, Alik'r-justice) | Stendarr SIGNAL_LAWFUL_ORDER | Same quest, opposite branch |
-| Honest work | The Golden Claw MS13 (100 Lucan / 110 Camilla) | Zenithar SIGNAL_HONEST_WORK | One-shot; either return branch |
-| Death duty | Laid to Rest MS14 (200) | Arkay SIGNAL_DEATH_DUTY | Anti-undead civic beat |
-| Private Talos | Diplomatic Immunity MQ201 (250) | Talos SIGNAL_SHRINE_DEFIANCE (private) | Also a Concordat pressure point elsewhere |
-| Public Talos | "The Talos Mistake" book (OnBookRead, one-shot) | Talos SIGNAL_DEFIANCE_MILESTONE (public) | Book-read, not a quest stage |
-| Patron civic | The Book of Love T02 (200) | active patron's SIGNAL_PATRON_CIVIC_FAVOR | Only fires while that god is your patron |
+| Quest | What you did | Effect |
+|-------|--------------|--------|
+| Diplomatic Immunity | Walked into the Thalmor Embassy and walked out again | Helps |
+| "The Talos Mistake" | Read the Thalmor's own tract on the ban and took a public position on it (once) | Helps |
+| The Way of the Voice | Mastered the Voice through the Greybeards' trials | Helps |
+| The Horn of Jurgen Windcaller | Completed the Greybeards' final trial | Helps |
+| A Blade in the Dark | Slew the dragon Sahloknir in open battle | Helps |
+| Sovngarde | Stood with the three legendary heroes of Sovngarde | Helps |
+| Take Up Arms | Sparred with Vilkas in a one-on-one trial of arms | Helps |
+| Proving Honor | Won your place among the Companions by judged trial | Helps |
+| Message to Whiterun | Protected Whiterun's people from the dragon | Helps |
+| Joining the Stormcloaks | Took the Stormcloak oath | Helps a lot |
+| The Jagged Crown | Recovered the crown for the Stormcloaks, to drive the Empire out of Skyrim | Helps a lot |
+| Message to Whiterun | Carried Ulfric's war to Whiterun against the Empire's ally | Helps a lot |
 
-2. **Quest-reaction matrix** (`PDV_QuestReactionMatrix_Full.csv` -> `ApplyQuestReaction` -> `ApplyDeityReaction`): deity-keyed (not race-keyed), so these promoted rows also reach an Imperial who worships that god, when the quest is on the watch list. Promoted rows carry real UESP / "owner ruling" citations; "cross-gen candidate ... REVIEW before promotion" rows are echo -> INERT. Counts below.
+Remember that Talos answers an Imperial faintly. These are real gains, but they land at a fraction of what a Nord would feel.
 
-**Akatosh** (6 promoted / 8 echo): dragon kills MQ104 s160, MQ106 s200, MQ206 s220, MQ305 s200 (kill_honorable_combat); CW02A s30/80 serve-empire-order; CW01B oath (Stormcloak, +).
-**Mara** (5 / 23): The Heart of Dibella T01 s200 (protect the weak); The Book of Love t02 s200 (+C milestone, marriage/family); DA03 s200, DA07 s150, DA11 s250 (mercy-spare).
-**Arkay** (7 / 4): Glory of the Dead C06 s65 (cure undeath) + s200 (honor the dead, +C milestone); Jagged Crown CW02A/B s72 (slay undead); Laid to Rest MS14 s200 (+C milestone); Book of Love t02 s200; DA01 s110 necromancy (-).
-**Stendarr** (8 / 16): protect-the-weak (CW03 s16, T01 s200, MS14 s200); slay-undead (CW02A/B s72); mercy-spare (DA07 s150, DA11 s250); DA01 s100 reject-Molag.
-**Zenithar** (1 / 3): Kolskeggr Mine reclaim (FreeformKolskeggrA s200, honest_labor_trade, +C milestone). Thin on matrix; Zenithar earns mostly day-to-day CSV craft.
-**Dibella** (3 / 19): Pantea's Flute (BardsCollegeFlute s40); Tending the Flames MS05 s300; Heart of Dibella T01 s200.
-**Julianos** (4 / 6): College arc MG01 s200, MG02 s200, MG07 s200, MG08 s200 (disciplined_study; MG08 +C milestone).
-**Kynareth** (3 / 9): Message to Whiterun CW03 s16; Blessings of Nature T03 s200 (+C milestone, restore Gildergreen); Heart of Dibella T01 s200.
-**Talos** (9 / 14): heavily Nord/Stormcloak-coded - Companions trials C00 s20/C01 s200 (prove_by_struggle); CW01B/CW02B/CW03 defy_tyranny_talos (+C milestones); Voice mastery MQ105 s160, MQ105U s60, MQ304 s200; MQ106 s200. For an Imperial these fire at ~0.4x (Talos FOREIGN stance) via ApplyDeityReaction.
+**Mara**
 
-Caveat: CSV day-to-day rows are live only if `LoadRowsForDeity` was regenerated and `LIKES_DISLIKES_VERSION` bumped; matrix rows are live only if the quest is in `questWatchFormIdsCsv` in the compiled JSON; the P2 quest-source rows are live only because commit `91a3cc80` wrote the FormLists into Devotion.esp (reconcile gate PASS).
+| Quest | What you did | Effect |
+|-------|--------------|--------|
+| In My Time of Need | Helped Saadia against the Alik'r | Helps |
+| The Heart of Dibella | Saved the kidnapped Sybil child | Helps |
+| A Daedra's Best Friend | Spared loyal Barbas and reunited him with his master | Helps |
+| The Taste of Death | Rejected Namira's feast and protected Verulus from the cannibals | Helps |
+| The Book of Love | Reunited three estranged couples for the Temple of Mara | Helps a lot |
+| A Daedra's Best Friend | Killed the loyal, helpless companion | Hurts |
+| The Taste of Death | Fed on Verulus | Hurts |
 
-### Review Notes
+**Arkay**
 
-Discrepancies between what the guide/design promises and what actually fires (for owner triage):
+| Quest | What you did | Effect |
+|-------|--------------|--------|
+| Glory of the Dead | Cured Kodlak of the lycanthropic taint and cleansed his soul | Helps |
+| The Jagged Crown | Destroyed the draugr defending Korvanjund (either side) | Helps |
+| The Book of Love | Helped the spirits of two war-dead lovers find each other and rest | Helps |
+| Laid to Rest | Destroyed the master vampire Movarth and the coven preying on Morthal | Helps a lot |
+| Glory of the Dead | Honored the fallen Harbinger with funeral rites and passage to Sovngarde | Helps a lot |
+| The Black Star | Made the Black Star, a trap for mortal souls | Hurts |
 
-- **Civic practice is act-based and daily locked.** Prayer, first completed Smithing/Enchanting/Alchemy work, and exact public-duty outcomes share one daily cultural credit. Quest milestones remain useful substitutes rather than the only route.
-- **Divine regard keys off piety signals, not civic counts.** The broad pool sees one signed result from each logical devotional act even if that act produces several deity reactions.
-- **Talos is thin and gated.** Talos is largely absent from the generic Imperial likes (Concordat stance-1, tolerated); his CSV rows are combat/conqueror-flavored (learn-word-of-power, discover-location, kill-hostile-humanoid, kill-dragon) and scale ~0.4x for an Imperial. Organic Talos-defiance piety = the "Talos Mistake" book (public, one-shot) + MQ201 s250 (private). The guide-lead "activate a hidden Talos shrine" is STUB - `HandleTalosShrineDefiance` has only a dev-only activator + MCM caller, and `PDV_FinalPlacementManifest.json` places no hidden-shrine object. "Help a worshipper escape" / "refuse to report" are Concordat deltas with no organic caller, not Talos piety hooks.
-- **Concordat track: values live, callers mostly missing.** All eight pressure deltas exist in `GetImperialConcordatPressureForAction`, but only two `ApplyImperialConcordatAction` call sites fire organically: hidden_talos_shrine (dev-only/MCM -> STUB) and kill_thalmor_justiciar_unprovoked (-10, off the Altmer-alignment kill signal). Stormcloak/Legion siding, reporting/attacking a worshipper, escorting a Thalmor prisoner, and public observance have no organic caller yet. The track gates Talos gain/offers and clamps a raw value; the extreme-band Arkay/Stendarr cross-god bleed described in the guide is unverified in live code.
-- **Vampire civic-halt is real and dawn-scoped.** `VampireHalt` -> `GetImperialCurseGainMultiplier` 0.0x is applied to `clampedToday` at the dawn rollover, and only when the day's net is positive - so an Imperial can still LOSE piety while halted, and earn-then-cure-before-dawn does not slip past it. Cure clears the halt; `VampireHistory` scar persists. Werewolf is narrative-only (no multiplier).
-- **Rewards note:** Akatosh/Julianos/Kynareth Imperial reward capstones are regeneration-rate effects (~0 under Requiem) - a known reward-feel gap flagged in-source, not a piety issue.
+**Stendarr**
 
-<!-- END REVIEW SCAFFOLDING -->
+| Quest | What you did | Effect |
+|-------|--------------|--------|
+| In My Time of Need | Sided with the Alik'r and saw lawful justice done | Helps |
+| Message to Whiterun | Shielded the townsfolk of Whiterun from the dragon | Helps |
+| The Jagged Crown | Destroyed the risen dead in Korvanjund (either side) | Helps |
+| The Black Star | Cleansed Azura's Star instead of corrupting it | Helps |
+| Pieces of the Past | Spared Silus and rejected the bargain | Helps |
+| The Taste of Death | Killed Eola and saved Verulus from the cannibals | Helps |
+| The Heart of Dibella | Rescued Fjotra from the Forsworn and restored her to the temple | Helps a lot |
+| Laid to Rest | Saved Morthal from the vampires' blood farm and avenged the murdered child | Helps a lot |
+| Pieces of the Past | Murdered the unarmed man who hired you | Hurts |
+| The Taste of Death | Murdered and cannibalized the priest | Hurts |
+
+**Zenithar**
+
+| Quest | What you did | Effect |
+|-------|--------------|--------|
+| The Golden Claw | Returned the claw to its owner instead of keeping it | Helps |
+| Kolskeggr Mine | Drove the Forsworn out so the miners could go back to honest work | Helps a lot |
+
+**Julianos**
+
+| Quest | What you did | Effect |
+|-------|--------------|--------|
+| First Lessons | Entered the College and took up disciplined study | Helps |
+| Under Saarthal | Recovered the buried knowledge beneath Saarthal | Helps |
+| The Staff of Magnus | Claimed the Staff of Magnus from Labyrinthian | Helps |
+| The Eye of Magnus | Contained the Eye and preserved what could be known of it | Helps a lot |
+
+**Kynareth**
+
+| Quest | What you did | Effect |
+|-------|--------------|--------|
+| Message to Whiterun | Protected Whiterun's people from the dragon | Helps |
+| The Heart of Dibella | Sheltered an innocent from harm | Helps |
+| The Blessings of Nature | Restored the Gildergreen | Helps a lot |
+| The Blessings of Nature | Tapped the Eldergleam with Nettlebane, wounding the sacred tree | Hurts |
+
+**Dibella**
+
+| Quest | What you did | Effect |
+|-------|--------------|--------|
+| Pantea's Flute | Returned Pantea's flute to the Bards College in Solitude | Helps |
+| Tending the Flames | Restored King Olaf's Verse and was inducted into the Bards College | Helps |
+| The Heart of Dibella | Cared for the rescued Sybil child and restored her to Dibella's temple | Helps |
+
+One more, for the committed: once you have a patron, completing The Book of Love reads as public devotion done in that god's name, and your patron - whichever of the Nine it is - takes note.
 
 ## Bonuses by Tier
 
-Note: these are current beta values and may be tuned before release.
+Each god's blessing deepens as your standing with them crosses 25 (Seeker), 50 (Devoted), and 85 (Champion). Higher tiers keep everything the lower tiers gave you.
 
-Broad worship reaches Seeker at 25 pool standing and Faithful at 50. A focused patron begins directly at T2 when accepted at deity piety 50 and reaches Champion at 85; focused T1 records are compatibility artifacts and are never granted.
+A patron only offers to claim you at 50 piety, so a patron's blessing begins at its Devoted step - there is no Seeker step for a patron. Until you commit, the blessing you carry is the broad one below.
 
-**Broad Divines (active before commitment, capped at Faithful):**
+**Broad worship: The Divines' Regard.** Active before you commit to anyone, and capped at Devoted. It is deliberately softer than a patron's favor - the whole pantheon's regard, spread thin.
 
-| Tier | What you gain |
-|------|----------------|
-| Seeker | Poison Resistance +10% |
-| Faithful | Poison Resistance +10%, Disease Resistance +10% |
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Seeker (25) | The Divines' Regard | Poison Resistance +10% |
+| Devoted (50) | The Divines' Regard | Poison Resistance +10%, Disease Resistance +10% |
 
-Broad worship deliberately stays softer than a committed patron, and it stops at Devoted. To go further, commit to one god below.
+Accepting a patron suppresses the broad boon and replaces it with that god's own. Champion belongs to commitment; broad worship cannot reach it.
 
-**Focused patron (T2 and Champion, by god).** Acceptance suppresses the broad boon and grants T2 at 50. Champion values are the 85-point capstone.
+**Akatosh.** The steady discipline of time, given back as depth of mind.
 
-| Patron god | T2 at 50 | Champion (peak) |
-|------------|--------|------------------|
-| Akatosh | Magicka +25, Magic Resistance +5% | Magicka +40, Magic Resistance +15% |
-| Mara | Restoration +13, Magic Resistance +5% | Restoration +23, Health Regeneration +15% |
-| Arkay | Disease Resistance +15%, Health +20 | Disease Resistance +27%, Health +30 |
-| Stendarr | Block +13, Armor +30 | Block +25, Armor +50 |
-| Zenithar | Carry Weight +65, Speech +8 | Carry Weight +120, Speech +20 |
-| Dibella | Speech +13, Magicka +15 | Speech +25, Magicka +40 |
-| Julianos | Magicka +25, Magic Resistance +5% | Magicka +40, Magic Resistance +15% |
-| Kynareth | Stamina +25, Magic Resistance +5% | Stamina +40, Magic Resistance +13% |
-| Talos | Armor +30, One-Handed +8 | Armor +50, One-Handed +20 |
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Devoted (50) | Akatosh's Covenant | Fortify Magicka +25, Magic Resistance +5% |
+| Champion (85) | Akatosh's Endurance | Fortify Magicka +40, Magic Resistance +15% |
 
-Talos is special: his blessings are reached only through faithful defiance and are gated by your Concordat standing. You cannot become a Talos Champion while publicly enforcing the ban unless a fresh, costly act of defiance breaks that pattern first.
+**Mara.** Mercy shown becomes mercy you can give.
+
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Devoted (50) | Mara's Mercy | Restoration +13, Resist Magic +5% |
+| Champion (85) | Mara's Compassion | Restoration +23, Resist Magic +15% |
+
+**Arkay.** The keeper of the cycle makes your own body harder to corrupt.
+
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Devoted (50) | Arkay's Vigil | Disease Resistance +15%, Maximum Health +20 |
+| Champion (85) | Arkay's Ward | Disease Resistance +27%, Maximum Health +30 |
+
+**Stendarr.** Restraint made into a wall you can stand behind.
+
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Devoted (50) | Stendarr's Aegis | Block +13, Armor +30 |
+| Champion (85) | Stendarr's Bulwark | Block +25, Armor +50 |
+
+**Zenithar.** Honest labor pays, and it pays in what a working man actually needs.
+
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Devoted (50) | Zenithar's Trade | Carry Weight +65, Speech +8 |
+| Champion (85) | Zenithar's Prosperity | Carry Weight +120, Speech +20 |
+
+**Dibella.** Grace in the room, and the wit to use it.
+
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Devoted (50) | Dibella's Grace | Speech +13, Fortify Magicka +15 |
+| Champion (85) | Dibella's Inspiration | Speech +25, Fortify Magicka +40 |
+
+**Julianos.** Patient study, returned as a deeper well to draw from.
+
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Devoted (50) | Julianos's Wisdom | Fortify Magicka +25, Magic Resistance +5% |
+| Champion (85) | Julianos's Insight | Fortify Magicka +40, Magic Resistance +15% |
+
+**Kynareth.** The open air keeps you moving longer than the road should allow.
+
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Devoted (50) | Kynareth's Breath | Fortify Stamina +25, Magic Resistance +5% |
+| Champion (85) | Kynareth's Sky | Fortify Stamina +40, Magic Resistance +13% |
+
+**Talos.** The Hero-God arms the man who kept faith with him anyway.
+
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Devoted (50) | Talos's Resolve | Armor +30, One-Handed +8 |
+| Champion (85) | Talos's Triumph | Armor +50, One-Handed +20 |
+
+Talos is special: his blessings are reached only through faithful defiance, and they are gated by your Concordat standing. You cannot become a Talos Champion while publicly enforcing the ban unless a fresh, costly act of defiance breaks that pattern first.
 
 ## Unique Mechanics
 
-**The Concordat is always running.** No other race carries anything like it. You cannot be religiously neutral about Talos. Your standing accumulates from the civil war, from how you treat Talos worshippers, and from how you answer the Thalmor. This means the very same Champion can mean two opposite things: a Stendarr Champion at Open Defiant chose mercy in a world that demanded persecution, and the god knows the cost; an Akatosh Champion at full compliance kept civic order and steady faith through upheaval. The mod is built to recognize which arc you actually lived.
+**The Concordat is always running.** No other race carries anything like it. You cannot be religiously neutral about Talos. Your standing on the ban decides how freely he answers you and whether he will ever claim you, and it holds steady until you do something that genuinely costs you. This means the very same Champion can mean two opposite things: a Stendarr Champion at Open Defiant chose mercy in a world that demanded persecution, and the god knows the cost; an Akatosh Champion at full compliance kept civic order and steady faith through upheaval. The mod is built to recognize which arc you actually lived.
 
-**Public versus private faith.** Because your religion is civic, it has a public face and a private one. You can comply with the ban in the open while quietly keeping the old faith (the Private Defiant band). That double life is a real, supported way to play, not a loophole.
+**Public versus private faith.** Because your religion is civic, it has a public face and a private one. You can comply with the ban in the open while quietly keeping the old faith - that is the Private Defiant band. The double life is a real, supported way to play, not a loophole.
 
 **The Talos commitment gate.** Wanting Talos as your patron while sitting at Public Compliant or Concordat Enforcer is normally blocked. A fresh, costly act of defiance can open the door, and accepting Talos then immediately moves a compliant Imperial at least into Private Defiant. You cannot accept Talos and remain publicly compliant; the faith makes you choose.
 
@@ -167,13 +264,13 @@ Talos is special: his blessings are reached only through faithful defiance and a
 
 | Curse | What happens to your faith |
 |-------|----------------------------|
-| Vampire | Your Divine devotion does not weaken; it stops completely. Imperial religion is civic infrastructure, and vampirism ejects you from that frame entirely. The Concordat no longer matters religiously. While you are a vampire, only a dark survival reading remains. There is a way back: curing the vampirism lets your faith resume, but it restarts from a lowered floor with no automatic return to your old tier. The re-entry itself becomes a meaningful late-game story. |
-| Werewolf | Your Nine Divines devotion continues, but at reduced effect. No Imperial path to Hircine opens; he is an intrusion into Imperial life, not a home. Your civic-facing devotion weighs much less, and the practical result is that you become theologically homeless rather than newly belonging. |
+| Vampire | Your Divine devotion does not weaken - it stops. Each dawn, whatever piety you earned that day is set aside and nothing is credited. What you lost still counts, so a vampire can only fall. Imperial religion is civic infrastructure, and vampirism ejects you from that frame entirely; the Concordat no longer matters religiously. Curing the vampirism lifts the freeze and lets your faith resume, but the Divines do not forget what you were. The re-entry becomes a meaningful late-game story of its own. |
+| Werewolf | Your Nine Divines devotion continues, and it continues at full strength - the beast blood does not close the temple doors. What it does is leave you nowhere else to go. No Imperial path to Hircine opens; he is an intrusion into Imperial life, not a home. The practical result is that you become theologically homeless rather than newly belonging. |
 
 ## Quick Reference
 
 - **Gods:** The Nine Divines - Akatosh, Talos, Kynareth, Mara, Zenithar, Arkay, Stendarr, Julianos, Dibella.
-- **Starting choice:** None. Broad civic worship of all Nine is always on; the Concordat standing track runs from day one.
-- **Top 3 ways to gain:** Tend the dead and clear necromancers (Arkay); show real mercy and restraint (Stendarr, Mara); do honest work and lawful public service (Zenithar, Akatosh).
-- **Main ways to lose:** Cruelty to the helpless, necromancy and Daedric dealings, neglecting civic duty, the broad-worship cap at Devoted, and a Concordat standing that closes off Talos.
-- **Rough days to Champion:** About 30 to 45 days of normal play (one or two devotional acts a day), or around 20 days if you focus hard on a single god. Remember: Champion requires committing to one patron; broad worship alone caps at Devoted.
+- **Starting choice:** None. Broad civic worship of all Nine is always on; the Concordat standing runs from day one.
+- **Top 3 ways to gain:** Put the restless dead back in the ground and clear the covens (Arkay); heal, cure, and answer for your own crimes (Mara, Stendarr); do honest work at the forge, the enchanter, and the alchemy bench (Zenithar).
+- **Main ways to lose:** Cruelty to the helpless, necromancy and Daedric dealings, theft, letting your civic practice go idle, the broad-worship cap at Devoted, and a Concordat standing that closes off Talos.
+- **Rough days to Champion:** About 30 to 45 days of normal play at one or two devotional acts a day, or around 20 days if you focus hard on a single god. Remember that Champion requires committing to one patron; broad worship alone caps at Devoted.

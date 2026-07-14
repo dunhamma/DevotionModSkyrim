@@ -158,15 +158,23 @@ Note: these are current beta values and may be tuned before release.
 dependable, passive sign that devotion matters. It is modest by design - the
 mod is meant to enrich your character's life, not to outclass perk overhauls
 or major combat mods - but it grows as you climb. As an example, a Nord who
-commits to Kyne, the storm-mother, gains faster stamina recovery as a Seeker
-(+5%), then deeper recovery plus frost resistance as a Devoted (+10% stamina
-regeneration, +10% frost resistance), and at Champion the wind is genuinely at
-their back (+20% stamina regeneration, +25% frost resistance). Every god's
-blessing fits that god's domain - a Mara worshipper mends and heals, a
+commits to Kyne, the storm-mother, carries her weather in his lungs as a
+Devoted (Fortify Stamina +25, Frost Resistance +10%), and at Champion the wind
+is genuinely at his back (Fortify Stamina +40, Frost Resistance +25%). Every
+god's blessing fits that god's domain - a Mara worshipper mends and heals, a
 Stendarr worshipper guards and wards, a Zenithar worshipper carries more and
 trades better. Each blessing stays modest enough to sit comfortably alongside
 a large mod list. The exact effects differ by god and race; your race guide
 gives the specifics for your people.
+
+Note that a patron's own blessing begins at the Devoted step. Before you commit
+to a god, the blessing you carry is your people's broad one - the Old Ways for a
+Nord, the Green Way or a Breton tradition, the Lunar Lattice for a Khajiit - and
+that one does start at Seeker.
+
+Devotion states its bonuses as flat pools rather than percentage regeneration
+rates, so they stay meaningful under overhauls like Requiem that switch off
+passive regeneration entirely.
 
 **2. The one-at-a-time "favor."** A favor is a stronger, temporary blessing a
 god grants in a fitting moment - when the right religious context is truly

@@ -6,14 +6,9 @@ You are Saxhleel, and you do not worship the way other races do. There is no tem
 
 The trouble is that you are in Skyrim, hundreds of miles from the marsh. The connection to the Hist is not broken, but it is stretched thin, and it keeps thinning a little more every day you spend among the dry stone of the north. So your faith is not about gathering favor. It is about maintaining a bond against a steady current, and about rebuilding who you are from the inside while you are far from home.
 
-There is no startup choice for an Argonian. Your cultural practice is one quiet foundation, while Hist, People, and Void are three separate relationships. Hist remains part of who you are. People and Void can each become the stronger active emphasis, but never both at once. Hist practice can honor the Hist; community life changes your People relationship without inventing a god; Void practice can honor Sithis only after that relationship has awakened.
+There is no startup choice for an Argonian. Your cultural practice is one quiet foundation, while Hist, People, and Void are three separate relationships. Hist remains part of who you are. People and Void can each become the stronger active emphasis, but never both at once.
 
-Only the first authentic cultural act after each 06:00 dawn advances the shared
-foundation. Sustained natural-water practice, Hist Sap from an exact source,
-returning to your chosen bed, cooking a meal, helping your community, or an
-awakened Void rite can count. Brief generic swimming and repeated Sap use do
-not. There is no separate second Hist blessing family; your cultural foundation
-can sit beside only one People-or-Void emphasis.
+Only the first honest act of practice after each dawn advances that foundation. Swimming in open water, resting at the bed you have made your own, cooking a meal, reading what your people carry with them, taking Hist sap, or an awakened rite of the Void can all count. Doing the same thing twice in one day does not count twice.
 
 ## Your Gods
 
@@ -21,146 +16,120 @@ Argonians do not have a roster of gods so much as a set of connections. There ar
 
 - **The Hist** - Not a deity you serve, but the soul-tree bond that defines you. It is always primary. In Skyrim it is distant, and keeping it close is the heart of your devotion.
 - **Your People** - The living Argonian community in exile: the Assemblage in Windhelm, the dockworkers in Riften, and any named Saxhleel you stand beside. When the Hist cannot reach you, your people hold you together.
-- **Sithis and the Void** - The primordial void of change, death, and unmaking. Every Argonian carries a quiet awareness of it. It only becomes a real, active force in your devotion if you embrace it through deep Dark Brotherhood involvement and honest death-facing choices.
+- **Sithis and the Void** - The primordial void of change, death, and unmaking. Every Argonian carries a quiet awareness of it. It only becomes a real, active force in your devotion if you embrace it through deep Dark Brotherhood involvement.
 
 Foreign gods and the Daedric Princes are not part of the Argonian path. The mod treats you as Saxhleel first. You honor the Hist, your people, and the Void, and those three are what your standing is built from. (For how devotion works across all races, see the How Devotion Works primer.)
 
 ## Getting Started
 
-You make no choice at the start. There is no menu asking you to pick a patron.
-Your cultural practice and three relation ledgers begin together, but they are
-not one composite and they do not produce three simultaneous reward families.
+You make no choice at the start. There is no menu asking you to pick a patron. Your practice and your three relationships begin together, and they do not produce three simultaneous sets of blessings.
 
-What you should do early is set your **bed of choice**. Three qualifying sleeps in the same cell declare that one community anchor; the twelfth qualifying sleep establishes Rooted Rest. A return or sleep at the declared bed can claim the first cultural-practice credit of a new devotional day and changes the People relationship only. Repeated sleep on the same day cannot add more cultural standing.
+The first thing to do is get in the water. Swim in a river, a lake, or a swamp, out under the open sky, and stay in it. A few seconds of real swimming is enough - it is not a dip you can tap and leave. This is the single most reliable way an Argonian maintains the Hist, and it is available from the first hour of the game.
 
-Beyond the bed, the early game is about getting into the habit of maintenance: seek out water, rest near it, and look for the small exile communities. The Hist starts distant by design. You begin inside absence, not abundance, and your progress is about closing that distance one act at a time.
+The second thing to do is set your **bed of choice**. Sleep in the same bed three times and that place is declared your anchor. Returning to it afterward feeds your People bond and can claim the day's practice. Sleep there twelve times and the rest itself becomes something more.
+
+Beyond that, the early game is about habit: seek out water, rest where you belong, and look for the small exile communities. The Hist starts distant by design. You begin inside absence, not abundance, and your progress is about closing that distance one act at a time.
 
 ## How You Gain Piety
 
-<!-- Review tags (strip before player release, along with the REVIEW SCAFFOLDING block below):
-     [WIRED]  = fires organically in normal play now (hook named)
-     [QUEST]  = fires only from a specific vanilla quest stage (via the quest-reaction matrix)
-     [PARTIAL]= organic but narrowly gated (layer state, cadence, condition, property-based call)
-     [STUB]   = only reachable via a dev-only signal activator or the debug MCM; not organic
-     [INERT]  = a CSV/matrix row exists but does not fire organically
-     CulturalPractice is separate from Hist/People/Void. Deity piety is act-specific.
-     Day-to-day deltas from PDV_DeityLikesDislikes.csv; curated deltas from PDV_Deity_*.psc DELTA_*. -->
+Your devotional acts feed whichever connection they belong to. The most common and important ways to earn:
 
-Your devotional acts feed whichever layer they belong to. The most common and important ways to earn:
-
-- **Rest and reflect near water.** Sustained natural-water swimming, wading, rest, or an exact sacred-water reflection can maintain the Hist and claim the cultural day. A brief generic swimming check does not.
-- **Spend time in swamps and wetlands.** Meaningful interaction with natural water is the Black Marsh proxy; merely crossing a polling state is not.
-- **Return to your bed of choice.** A qualifying return feeds People relation and may claim the day's cultural credit. It never invents Hist piety.
-- **Help your people.** Aiding a named Argonian, supporting the Windhelm Assemblage, or helping at the Riften Docks builds your People layer. Windhelm Assemblage acts carry extra weight because that is the primary Argonian community in Skyrim. Protecting a Saxhleel from violence counts too. `[PARTIAL: HandleArgonianPeopleSupport fires organically from (a) reading/using an immersive P2 community source on PDV_FLST_P2_ArgonianCommunitySources, and (b) the Derkeethus rescue quest stage (Extraction/DisrRelief, formid 486218 s200). It is NOT a generic "help any Argonian / help the Assemblage" hook - only the curated P2 community forms and that one quest stage feed it. "Protecting a Saxhleel from violence" has no organic combat hook. Near-water maintenance also nudges People when People is your active focus.]`
-- **Live the Hist's quiet values.** The Hist responds to small acts of rootedness and care: resting under the open sky, cooking and sharing a meal, brewing potions, harvesting living ingredients, and tending or curing the hurt. These honor the sap that gives the People life. `[WIRED: shared CSV rows keyed "The Hist" (blank originGate, so they score whenever the Hist is a scored deity): rest-under-open-sky (313) +0.5, sleep-in-bed (314) +0.25, heal-or-cure-npc (350) +0.75, cook-meal (333) +0.25, brew-potion (332) +0.5, harvest-ingredient (334) +0.5. Plus one Argonian-gated row tend-the-hist (334, originGate "Argonian") +0.25 - note eventId 334 is dual-mapped, so a harvest scores both the +0.5 and the +0.25 for an Argonian.]`
-- **Face the Void honestly (Sithis path).** Joining the Dark Brotherhood, completing its contracts, and choosing death-acknowledging moments raise your awareness of Sithis. This layer stays dormant until you have given it several strong signals - one join is not enough. `[PARTIAL + QUEST: the Void RISES organically two ways. (1) Dark Brotherhood quest stages feed it: DB01 s200 and DB11 s200 route RouteArgonianSithisAcknowledgment -> HandleArgonianVoidSignal (RecordVoidSignalScaled +2.0 substrate); the broader DB contract chain (DB03/DB05-DB10) scores the Sithis deity itself via the quest matrix (see review block). (2) Immersive Sithis P2 source reads on PDV_FLST_P2_ArgonianSithisSources also route it. The substrate gates real Sithis credit behind IsVoidFullyActive() (>=3 separate Void signals), so a single DB act does nothing until the threshold is met. Sithis CSV like-rows (murder-defenseless +1.0, assault-innocent +0.5, kill-dragon +1.0, pick-owned-lock +0.5, trespass +0.25) are WIRED for anyone worshipping Sithis but only matter once the Void is active.]`
+- **Swim in open water.** This is the centerpiece of the Argonian path, and it is the one thing no other race has. Get into a river, lake, or swamp under the open sky and stay in it for a few seconds. That maintains the Hist and can claim the day's practice. It counts once per day - the water is a floor you keep, not a pool you farm. Standing on the bank of a swamp does nothing; you have to be in the water.
+- **Find the waters that remember.** A handful of places in Skyrim hold water the Hist still reaches through. Coming upon one for the first time is worth more than an ordinary swim, and each of them can only be found once.
+- **Return to your bed of choice.** Once you have declared an anchor by sleeping in the same bed three times, coming back to it feeds your People bond and can claim the day's practice. Returning twice in one day earns nothing extra.
+- **Take Hist sap.** Sleeping Tree Sap brushes the Hist once, and only once, in a whole lifetime. Argonian Hist sap, if you carry any, maintains the bond whenever you use it.
+- **Live the Hist's quiet values.** The Hist responds to small acts of rootedness and care: sleeping under the open sky, cooking and sharing a meal, brewing potions, harvesting living ingredients, and tending or curing the hurt. These honor the sap that gives the People life, and they are the steadiest day-to-day earning an Argonian has.
+- **Stand with your people.** Your People bond grows when you read and handle what the exile community keeps for itself - their own writings and belongings, found where Saxhleel gather. It also grows when you pull a fellow Argonian out of real danger; Derkeethus, held by the Falmer beneath Darkwater Crossing, is the clearest example in Skyrim. This bond is narrow on purpose. There is no credit for merely being polite to an Argonian.
+- **Face the Void.** Joining the Dark Brotherhood and carrying its contracts through to the end raises your awareness of Sithis, as does reading what the Void's servants leave behind. This connection stays asleep until you have given it several separate, serious signals - one killing is not enough. Once it wakes, the deeds Sithis favors begin to count for you: killing without mercy, slipping a lock that is not yours, walking where you are not welcome. Be warned that most of those same deeds cost you with the Hist.
 
 Two reminders that apply to every Argonian act. First, repeating the exact same deed earns less each time, so variety matters far more than grinding. Second, daily gain toward any one connection is capped (around 4.3 per day), so you cannot rush it in a single session.
 
-One quiet extra: drinking or equipping Sleeping Tree Sap brushes the Hist once, ever. `[WIRED: OnObjectEquipped on dunSleepingTreeCampSap (0x000AED90) -> RouteArgonianSapVision -> HandleArgonianSapVision, a one-shot +1.0 Hist relation. The Hist-Sap token/potion items (PDV_ALCH_ArgonianHistSap) also route HistMaintenance when used.]`
-
 ## How You Lose Piety
 
-- **Acts the Hist dislikes.** The Hist recoils from anything that severs a soul from its root: murdering the defenseless, assaulting the harmless, raising the undead (denying a soul its return to the Hist), and binding souls into enchanted items all cost you. These are the deeds most at odds with being Saxhleel. `[WIRED: shared CSV dislikes keyed "The Hist" (blank originGate): murder-defenseless (304) -1.0, assault-innocent (364) -0.5, raise-undead (365, ActorTypeUndead) -0.75, enchant-item (331) -0.25.]`
-- **Hist distance (natural drift).** This is the signature Argonian pressure. The Hist is always slightly harder to reach in Skyrim than in Black Marsh. If you go three in-game days with no valid Hist-maintenance act, the connection begins to thin at dawn, losing a little each day. It will not crash to nothing - there is a floor it will not drop below while you are uncursed - but you will feel it weaken if you ignore water and rest for too long. `[WIRED: ProcessHistDistanceDawn (called each dawn via RunDawnRefreshArgonianHist) - grace HistDawnGraceDays = 3, then HistDawnDecay = -1.0/day on the Hist relation, floored at HistNonCurseFloor = 20.0 while uncursed (floor drops to MetricMin while cursed). A maintenance act resets LastMaintenanceDay.]`
-- **Neglect (a layer growing quiet).** Ignoring water and Hist practice lets the relation become Distant and can trigger the one-time abandonment response, but ordinary distance is texture rather than a repeating stat punishment. The `The Hist Silenced` Health penalty is reserved for a curse-driven Silenced or Corrupted posture after grace. People and Void remain independent relation ledgers. `[WIRED: ordinary distance and the Silenced/Corrupted debuff are deliberately separate mechanics.]`
-- **The family cap.** Cultural practice is the quiet foundation. Exactly People or Void may be the active emphasis; a second Hist reward family cannot stack beside them.
-- **Letting the Hist slip while chasing the Void.** Leaning hard into Sithis while you neglect Hist maintenance is treated as a real fault - the marsh feels further away, and your standing with the Hist drops. The Void is meant to steady you, never to replace the Hist. `[WIRED: in HandleArgonianVoidSignal, if IsVoidFullyActive() AND the Hist relation has lapsed to <= HistNonCurseFloor (20.0), EmitHistVoidOverreachMinus fires (Hist SIGNAL_VOID_OVERREACH -6.0). Only lands when the Void is fully active and the Hist is already at/under its floor.]`
+- **Acts the Hist recoils from.** Anything that severs a soul from its root: murdering the defenseless, assaulting the harmless, raising the undead (denying a soul its return to the Hist), and binding souls into enchanted items. These are the deeds most at odds with being Saxhleel.
+- **Hist distance.** This is the signature Argonian pressure. The Hist is always slightly harder to reach in Skyrim than in Black Marsh. Go three days without a single act of maintenance and the connection begins to thin at dawn, losing a little more each day you stay away from it. It will not crash to nothing - while you are uncursed there is a floor it will not fall below - but you will feel it weaken if you ignore water and rest for too long. Any honest act of maintenance resets the clock.
+- **Letting the bond go quiet.** If you let the Hist drift far enough for long enough, it goes Distant, and the marsh answers once - a single, unrepeated response to being abandoned. Ordinary distance is texture, not a punishment that repeats. The Hist only truly falls silent under a curse.
+- **Leaning on the Void while the Hist slips.** Pushing hard into Sithis while your Hist maintenance has lapsed is treated as a real fault. If the Void is fully awake and your Hist bond has already sunk to its floor, the next Void act costs you badly with the Hist. The Void is meant to steady you in exile, never to replace the marsh.
+- **The focus cap.** Your practice is the quiet foundation everything sits on. Beside it, exactly one of People or Void may be your active emphasis. You cannot run both, and there is no third set of blessings waiting.
 
-<!-- REVIEW SCAFFOLDING - strip before player release -->
+## Quests That Move Your Standing
 
-### Quests That Move Your Standing
-
-Quest-reaction rows for the Argonian connections, pulled from `PDV_QuestReactionMatrix_Full.csv` and consumed at runtime by `ApplyQuestReaction` -> `ApplyDeityReaction` in `PDV__ManagerQuest.psc`. Hand-authored rows (with real UESP citations) are promoted and fire when the quest is on the watch list; "echo" rows carry the citation "cross-gen candidate ... REVIEW before promotion" and are **not** promoted (INERT). Note: **your People layer has no deity actor** - it lives entirely on `PDV_Substrate_ArgonianHist` (People relation), so no quest-matrix rows are keyed to it. The only Argonian community quest hook is the Derkeethus rescue stage, wired directly in `PDV_PlayerEvents` (not the matrix). Two Dark Brotherhood stages (DB01 s200, DB11 s200) are also wired directly in `PDV_PlayerEvents` to route the substrate Void signal, in addition to scoring the Sithis deity through the matrix below.
-
-**The Hist**
-
-| Quest | Stage | Deed | Valence/Intensity/Mag | Status |
-|-------|-------|------|-----------------------|--------|
-| (none promoted) | - | - | - | - |
-
-Both Hist rows are echo -> INERT: The Blessings of Nature (T03) s200 "Restored the Gildergreen" (honor_the_wild, +/m) and T03 s100 "Tapped the Eldergleam with Nettlebane" (defile_nature, -/m). Both flagged "REVIEW before promotion." The Hist earns from quests only through its shared CSV like/dislike rows (above), not the matrix.
+Some of Skyrim's own quests are read as devotional acts. For an Argonian these all sit on the Void side of the ledger - the Hist and your People are earned in the world, not on a quest board.
 
 **Sithis**
 
-| Quest | Stage | Deed | Valence/Intensity/Mag | Status |
-|-------|-------|------|-----------------------|--------|
-| Innocence Lost (DB01) | 200 | Killed Grelod the Kind in cold blood | + / S / small | WIRED (also routes substrate Void signal) |
-| With Friends Like These... (DB02) | 200 | Initiation kill to enter the Sanctuary | + / S / small | WIRED |
-| Mourning Never Comes (DB03) | 200 | Completed the first paid contract (Alain Dufont) | + / C / milestone | WIRED |
-| Bound Until Death (DB05) | 200 | Assassinated Vittoria Vici at her wedding | + / C / milestone | WIRED |
-| Breaching Security (DB06) | 200 | Killed and framed Gaius Maro | + / C / milestone | WIRED |
-| The Cure for Madness (DB07) | 200 | Hunted and killed Cicero | + / C / milestone | WIRED |
-| Recipe for Disaster (DB08) | 200 | Assassinated the Gourmet | + / C / milestone | WIRED |
-| To Kill an Empire (DB09) | 50 | Killed the decoy Emperor | + / C / small | WIRED |
-| Death Incarnate (DB10) | 70 | Killed the betrayer Astrid | + / S / small | WIRED |
-| Hail Sithis! (DB11) | 200 | Assassinated Emperor Titus Mede II | + / C / milestone | WIRED (also routes substrate Void signal) |
+| Quest | What you did | Effect |
+|-------|--------------|--------|
+| Innocence Lost | Killed Grelod the Kind in cold blood | Helps a little |
+| With Friends Like These... | Made the initiation kill to enter the Sanctuary | Helps a little |
+| Mourning Never Comes | Completed the first paid contract | Helps a great deal |
+| Bound Until Death | Assassinated Vittoria Vici at her wedding | Helps a great deal |
+| Breaching Security | Killed and framed Gaius Maro | Helps a great deal |
+| The Cure for Madness | Hunted and killed Cicero | Helps a great deal |
+| Recipe for Disaster | Assassinated the Gourmet | Helps a great deal |
+| To Kill an Empire | Killed the decoy Emperor | Helps a little |
+| Death Incarnate | Killed Astrid, the betrayer | Helps a little |
+| Hail Sithis! | Assassinated Emperor Titus Mede II | Helps a great deal |
 
-Plus 1 echo row (DB04a The Silence Has Been Broken, assassination_contract) flagged REVIEW -> INERT. Note: these matrix rows score the **Sithis deity**; the substrate `IsVoidFullyActive()` gate (>=3 separate Void signals) still governs whether that Sithis credit and the Void reward tier actually surface for you.
-
-Caveat: all day-to-day CSV rows in the gain/loss sections above are live only if the generated `LoadRowsForDeity` table has been regenerated and `LIKES_DISLIKES_VERSION` bumped; the matrix rows are live only if the quest is present in `questWatchFormIdsCsv` in the compiled JSON.
-
-### Review Notes
-
-Discrepancies between what the guide/design promises and what actually fires (for owner triage):
-
-- **Water practice is duration-gated.** Sustained exterior swimming can maintain the Hist and claim the shared cultural day; a brief generic swim is rejected. Exact sacred-water reflection sources provide the authored shore-side alternative.
-- **Wetland scenery alone is not a signal.** Entering a swamp cell does nothing until the player completes sustained water practice or an exact reflection source.
-- **Bed-of-choice is genuinely wired** through `OnSleepStop` (declare after 3 same-cell sleeps, then return-credit + Rooted Rest at 12 sleeps). This is the most solidly organic People/Hist act.
-- **The People layer is the thinnest.** It has no deity actor and no generic "help an Argonian / aid the Assemblage / protect a Saxhleel" hook. Organic People credit comes only from: (a) curated P2 community source reads (`PDV_FLST_P2_ArgonianCommunitySources`), (b) the single Derkeethus rescue quest stage (486218 s200), and (c) a spillover nudge from near-water maintenance when People is already your active focus. The Windhelm Assemblage and Riften Docks, named in the copy as core, have no dedicated hook. Prime remap target.
-- **The Void is better wired than the design's "deep DB involvement" language implies a stub.** DB01 s200 and DB11 s200 route the substrate Void signal directly; the full DB contract chain (DB03/DB05-DB10) scores the Sithis deity through the matrix; and P2 Sithis source reads also feed it. The `IsVoidFullyActive()` threshold (3+ separate Void signals) is real and correctly makes a single DB act inert until the layer wakes.
-- **The Hist Silenced vs. ordinary distance.** Ordinary Hist distance decays the relation and can fire a one-time abandonment response. The `The Hist Silenced` spell applies only on posture SILENCED (vampire) or CORRUPTED (Molag Bal domination), so its name now states the actual mechanical gate.
-- **The dev-only signal activators** (Devotion.esp:071023 HistMaintenance, 071024 PeopleSupport, 071025 Void, 071026 BedOfChoice) exist but the manifest `reason` fields confirm the intended organic routes are the Hist book/sap/near-water/bed-of-choice states above - i.e. these lanes are NOT pure stubs like the Bosmer/Khajiit signature acts; they have real (if narrow) organic callers. The debug MCM can also drive all four plus `HandleArgonianPeopleSupport("mcm")`.
-
-<!-- END REVIEW SCAFFOLDING -->
+Remember that none of this reaches Sithis until the Void has actually woken. Until you have given it several separate, serious signals, the contracts pile up unanswered.
 
 ## Bonuses by Tier
 
 Note: these are current beta values and may be tuned before release.
 
-Your cultural-practice foundation is separate from every relation ledger. It is absent at 0, begins as **Root Memory** at 1, deepens into **River-Kept Practice** at 25, and becomes **Rooted Adaptation** at 75. Only the first authentic act after each 06:00 dawn adds 4, so continuous practice reaches the middle tier on day 7 and the high tier on day 19.
+**Your cultural practice (always on, and it deepens as you keep it):**
 
-**Always-on Hist identity (deepens as your bond grows):**
+Only the first honest act of practice after each dawn advances this, so it is a slow, steady climb rather than something you can chase in an afternoon. At a normal pace you reach the middle state in about a week and the deepest state in about three.
 
-| Bond strength | What you gain |
-|---|---|
-| Early bond | Resist magic +5% |
-| Mid bond | Resist magic +5%, plus health regenerates +6% faster near water, plus resist poison +10% |
-| Deep bond | Resist magic +5%, health regenerates +15% faster near water, resist poison +22%, and your claws carry the marsh's strength (+12 unarmed damage) |
+| Practice | State | What you gain |
+|---|---|---|
+| First act | Root Memory | Magic resistance +5% |
+| Sustained | River-Kept Practice | Magic resistance +5%, poison resistance +10%, and near water your Maximum Health rises +20 |
+| Deep | Rooted Adaptation | Magic resistance +5%, poison resistance +22%, and near water your Maximum Health rises +30 |
 
-There is no separate Hist Communion reward family. Its old records are retained only for save compatibility and are never granted. Hist remains an independent relation/posture ledger; People or awakened Void may supply the one active relation emphasis beside the cultural foundation.
+The health only holds while you are in or near water. That is the point: for an Argonian in Skyrim, strength is a thing you return to, not a thing you carry.
 
-**People focus (your community is your armor) - this is the path to Champion:**
+There is no separate Hist blessing family. The Hist is what you maintain, not a ladder you climb - it gives through the practice above, and the two focused paths below are where your standing turns into power.
 
-- **Seeker (Kin):** Carry weight +25.
-- **Devoted (Family):** Carry weight +25, resist poison +8%, health regenerates +5% faster.
-- **Champion (Pillar):** Carry weight +50, resist poison +8%, health regenerates +13% faster, resist magic +5%. You are a pillar of the people you gathered, and the exile network recognizes you as someone who kept the community alive.
+**People focus - your community is your armor. This is the strongest path an Argonian has:**
 
-**Sithis / Void focus (high-threshold extra, unlocks only after you have given the Void several strong signals):**
+| Tier | Blessing | What you gain |
+|---|---|---|
+| Seeker (25) | Chosen People - Kin | Carry Weight +25 |
+| Devoted (50) | Chosen People - Family | You carry 25 more weight, poison resistance rises 8%, and Maximum Health +10 |
+| Champion (85) | Chosen People - Pillar | You carry 50 more weight, poison resistance rises 8%, Maximum Health +20, and magic finds less purchase (5%) |
 
-- **Seeker (Faced):** Sneak +4.
-- **Devoted (Marked):** Sneak +10, resist poison +5%, unarmed damage +10.
-- **Champion (Void-Held):** Stamina returns +10% faster, and near death (below one-fifth health) the Void lends a brief surge of +50% stamina regeneration for 10 seconds, once per day. Sithis holds those who faced the Void unflinching.
+At Champion you are a pillar of the people you gathered, and the exile network knows you as the one who kept the community alive.
 
-The Void rewards are deliberately kept weaker than the People focus. The Void is there to steady you in exile, not to become your best path. The shared Seeker tier across these focuses is summarized in the lists above; you do not stack two focuses - you run the one you commit to.
+**Sithis and the Void - a high-threshold path that opens only after the Void has truly woken:**
+
+| Tier | Blessing | What you gain |
+|---|---|---|
+| Seeker (25) | Void Distance - Faced | Sneak +4 |
+| Devoted (50) | Void Distance - Marked | Sneak +10, poison resistance rises 5%, and your bare strikes carry the Void's weight (+10 unarmed) |
+| Champion (85) | Void-Held | Your Maximum Stamina rises +25, your bare strikes carry the Void's weight (+12 unarmed), and near death the Void can lend a brief surge |
+
+The Void rewards are deliberately kept below the People path. Sithis is there to steady you in exile, not to become your best road. You run one focus or the other, never both.
 
 ## Unique Mechanics
 
-**Hist distance.** This is the one thing that makes an Argonian feel different from every other race. Your connection is not something you build up and bank; it is something you maintain against a slow, constant fade. Skip water and rest for too long and the Hist thins. Stay near water, rest, and reflect, and you hold it. It is maintenance against a current, not a checklist - gentle, but always present. Other races accumulate; you sustain.
+**Hist distance.** This is the one thing that makes an Argonian feel different from every other race. Your connection is not something you build up and bank; it is something you maintain against a slow, constant fade. Skip water and rest for too long and the Hist thins. Get in the water, come home to your bed, and you hold it. It is maintenance against a current, not a checklist - gentle, but always present. Other races accumulate; you sustain.
 
-**Three layers, no single right answer.** A water-bound, solitary Argonian who rarely sees other Saxhleel is a completely different character from a Windhelm-Assemblage Argonian who never seeks the marsh's echo, and both are valid. Your standing is the story of which part of yourself you chose to keep alive in exile. Your people can buffer a thinning Hist bond, and the Void can steady you when both feel far - but nothing fully replaces the Hist.
+**Water is the whole answer.** No other race in this mod earns anything from swimming. You do. A river crossing is a devotional act for you and a wet inconvenience for everyone else, and that is exactly how it should feel.
+
+**Three connections, no single right answer.** A water-bound, solitary Argonian who rarely sees another Saxhleel is a completely different character from a Windhelm Argonian who never seeks the marsh's echo, and both are valid. Your standing is the story of which part of yourself you chose to keep alive in exile. Your people can buffer a thinning Hist bond, and the Void can steady you when both feel far - but nothing fully replaces the Hist.
 
 ## If You Are Cursed (Vampire or Werewolf)
 
 | Curse | What happens to your faith | A way back? |
 |---|---|---|
-| **Vampirism** | This is the deepest grief in the mod for an Argonian. All three layers are compromised at once. The Hist falls silent toward your undead self - the soul is no longer going where it is meant to go - and your community belonging becomes dangerous or impossible. The Void grows more available, but Sithis does not celebrate what you have become; it only acknowledges it. You are, in a real sense, spiritually homeless. | Curing the vampirism is the only path that lifts the silence. Until then the Hist cannot reach you, and its absence is felt mechanically as well as in the world's tone. `[WIRED: curseState 2 forces Hist posture SILENCED (RefreshHistPosture), which drops the dawn-decay floor to MetricMin (the relation can now bleed all the way down) and makes IsArgonianHistNeglected() true past grace, applying PDV_SPEL_Neglect_ArgonianHist. Molag Bal domination pressure on top escalates SILENCED to CORRUPTED (-8.0 corruption minus).]` |
-| **Lycanthropy** | Serious strain, but not annihilation. The werewolf shape stresses your Hist bond and makes it harder to maintain, but the Hist is used to Argonians changing, so the beast-shape does not cut you off the way undeath does. Your community can still recognize you, even if the change is uncomfortable. | Far more recoverable than vampirism. Keep up your Hist maintenance and community ties and your identity holds. Curing the lycanthropy clears the strain entirely. `[WIRED: curseState 1 sets Hist posture STRAINED (a flavor/posture state, not the SILENCED debuff gate) - the werewolf does NOT trip IsArgonianHistNeglected() or the neglect spell, matching the copy's "strain, not annihilation."]` |
+| **Vampirism** | This is the deepest grief in the mod for an Argonian. All three connections are compromised at once. The Hist falls silent toward your undead self - the soul is no longer going where it is meant to go - and your community belonging becomes dangerous or impossible. The Void grows more available, but Sithis does not celebrate what you have become; it only acknowledges it. You are, in a real sense, spiritually homeless. | Curing the vampirism is the only path that lifts the silence. Until then the Hist cannot reach you, the floor beneath your bond gives way, and it can bleed all the way down. If Molag Bal gets his grip on you on top of that, the silence turns to something worse. |
+| **Lycanthropy** | Serious strain, but not annihilation. The werewolf shape stresses your Hist bond and makes it harder to maintain, but the Hist is used to Argonians changing, so the beast-shape does not cut you off the way undeath does. Your community can still recognize you, even if the change is uncomfortable. | Far more recoverable than vampirism. Keep up your Hist maintenance and your community ties and your identity holds. Curing the lycanthropy clears the strain entirely. |
 
 ## Quick Reference
 
-- **Gods:** The Hist (your soul-tree bond, always primary), your People (Windhelm and Riften exile communities), and Sithis / the Void (rises only through deep Dark Brotherhood involvement).
-- **Starting choice:** None. Cultural practice begins with separate Hist, People, and Void relation ledgers. Set a bed of choice early if People is central to your character.
-- **Top 3 ways to gain:** Rest and reflect near water (Hist), help your people / support the Windhelm Assemblage (People), return to your bed of choice on its cadence (People). Honest Dark Brotherhood and death-facing acts feed the Void.
-- **Main ways to lose:** Hist distance from neglecting water and rest (3-day grace, then a slow dawn fade to a floor), acts that sever soul from root (murder, raising undead, soul-trapping), isolation from your people, leaning into the Void while the Hist slips, and the broad-worship cap.
-- **Rough days to Champion:** About 30 to 45 days of normal play (one or two devotional acts a day), or roughly 20 days if you commit hard to a single layer. Broad, balanced play caps you at Devoted; Champion requires committing to one connection.
+- **Gods:** The Hist (your soul-tree bond, always primary), your People (the exile communities of Windhelm and Riften), and Sithis and the Void (which rise only through deep Dark Brotherhood involvement).
+- **Starting choice:** None. Your practice begins alongside separate Hist, People, and Void bonds. Declare a bed of choice early if community is central to your character.
+- **Top ways to gain:** Swim in open water (Hist). Return to your bed of choice (People). Cook, brew, harvest, heal, and sleep under the open sky (Hist). Dark Brotherhood work feeds the Void, once the Void is awake.
+- **Main ways to lose:** Hist distance from ignoring water and rest (three days of grace, then a slow fade at each dawn down to a floor), acts that sever a soul from its root (murder, raising the undead, soul-trapping), leaning on the Void while the Hist slips, and the focus cap.
+- **Rough days to Champion:** About 30 to 45 days of normal play at one or two devotional acts a day, or roughly 20 days if you commit hard to a single connection. Broad, balanced play caps you at Devoted; Champion requires committing to one.
