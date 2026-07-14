@@ -6169,11 +6169,14 @@ class Verifier {
       "\"PDV.Substrate.NordAncestor.HearthReturnCount\"",
       "String Function GetPilotSummary()",
     ]);
+    // 2026-07-15 contract descope (owner-approved): the Shor deity-pulse spine was
+    // removed by the pantheon-parity ruling (652a5fe3 + the fix pass); substrate is
+    // piety-neutral. DELTA float retained for save safety.
     this.checkSourceContains("Nord spine Shor source", "PDV_Deity_Shor", [
-      "SIGNAL_ANCESTOR_SPINE = 2903",
       "DELTA_ANCESTOR_SPINE = 1.0",
-      "signalType == SIGNAL_ANCESTOR_SPINE",
-      "return DELTA_ANCESTOR_SPINE",
+    ]);
+    this.checkSourceLacks("Nord spine Shor source", "PDV_Deity_Shor", [
+      "SIGNAL_ANCESTOR_SPINE",
     ]);
     this.checkSourceContains("Nord spine manager source", "PDV__ManagerQuest", [
       "PDV_Substrate_NordAncestor Property PDV_NordAncestorSubstrate Auto",
@@ -6188,7 +6191,6 @@ class Verifier {
       "PDV_NordAncestorSubstrate.RecordAncestorStandingScaled(multiplier, reason)",
       "PDV_NordAncestorSubstrate.RecordAncestralRestScaled(multiplier, reason)",
       "PDV_NordAncestorSubstrate.RecordHearthReturnScaled(multiplier, reason)",
-      "PDV_Shor.SIGNAL_ANCESTOR_SPINE",
       "\"PDV.Nord.AncestralStanding\"",
       "\"PDV.Nord.AncestralRestCount\"",
       "\"PDV.Nord.HearthReturnCount\"",
@@ -6197,6 +6199,13 @@ class Verifier {
       "PDV_Notif_Nord_Kyne_ChampionAmbient_Storm",
       "Function SyncNordAncestorSubstrate(Actor playerRef, Bool isNord)",
       "String Function GetNordAncestorSummary()",
+    ]);
+    // Guard the pantheon-parity removal: no converted spine may pulse its deity again.
+    this.checkSourceLacks("Nord spine manager source", "PDV__ManagerQuest", [
+      "PDV_Shor.SIGNAL_ANCESTOR_SPINE",
+      "PDV_Talos.SIGNAL_ANCESTOR_SPINE",
+      "PDV_AuriEl.SIGNAL_ANCESTOR_SPINE",
+      "PDV_Magnus.SIGNAL_ANCESTOR_SPINE",
     ]);
     this.checkSourceContains("Nord spine location router source", "PDV_ActionRouter", [
       "PDV_Manager.HandleNordLocationChange(akNewLocation)",
@@ -6627,11 +6636,12 @@ class Verifier {
   }
 
   checkAltmerSpineParityBuild() {
+    // 2026-07-15 contract descope: Auri-El deity-pulse spine removed by design.
     this.checkSourceContains("Altmer spine Auri-El source", "PDV_Deity_AuriEl", [
-      "SIGNAL_ANCESTOR_SPINE = 203",
       "DELTA_ANCESTOR_SPINE = 1.0",
-      "signalType == SIGNAL_ANCESTOR_SPINE",
-      "return 1.0",
+    ]);
+    this.checkSourceLacks("Altmer spine Auri-El source", "PDV_Deity_AuriEl", [
+      "SIGNAL_ANCESTOR_SPINE",
     ]);
     this.checkSourceContains("Altmer spine substrate source", "PDV_Substrate_AltmerAncestor", [
       "Scriptname PDV_Substrate_AltmerAncestor extends PDV_SubstrateBase",
@@ -6643,7 +6653,6 @@ class Verifier {
     this.checkSourceContains("Altmer spine manager source", "PDV__ManagerQuest", [
       "PDV_Substrate_AltmerAncestor Property PDV_AltmerAncestorSubstrate Auto",
       "Function AwardAltmerAncestorSpinePulse(Float multiplier, String reason)",
-      "PDV_AuriEl.SIGNAL_ANCESTOR_SPINE",
       "\"PDV.Altmer.AncestralStanding\"",
       "AwardAltmerAncestorSpinePulse(multiplier, reason)",
       "Function SyncAltmerAncestorSubstrate(Actor playerRef, Bool isAltmer)",
@@ -6761,11 +6770,13 @@ class Verifier {
   }
 
   checkBretonSpineParityBuild() {
+    // 2026-07-15 contract descope: Magnus deity-pulse spine removed by design
+    // (Breton substrate retired 7368c87f; const/branch cut by the fix pass).
     this.checkSourceContains("Breton spine Magnus source", "PDV_Deity_Magnus", [
-      "SIGNAL_ANCESTOR_SPINE = 1807",
       "DELTA_ANCESTOR_SPINE = 1.0",
-      "signalType == SIGNAL_ANCESTOR_SPINE",
-      "return DELTA_ANCESTOR_SPINE",
+    ]);
+    this.checkSourceLacks("Breton spine Magnus source", "PDV_Deity_Magnus", [
+      "SIGNAL_ANCESTOR_SPINE",
     ]);
     this.checkSourceContains("Breton spine substrate source", "PDV_Substrate_BretonAncestor", [
       "Scriptname PDV_Substrate_BretonAncestor extends PDV_SubstrateBase",
@@ -6843,11 +6854,12 @@ class Verifier {
   }
 
   checkImperialSpineParityBuild() {
+    // 2026-07-15 contract descope: Talos deity-pulse spine removed by design.
     this.checkSourceContains("Imperial spine Talos source", "PDV_Deity_Talos", [
-      "SIGNAL_ANCESTOR_SPINE = 104",
       "DELTA_ANCESTOR_SPINE = 1.0",
-      "signalType == SIGNAL_ANCESTOR_SPINE",
-      "return DELTA_ANCESTOR_SPINE",
+    ]);
+    this.checkSourceLacks("Imperial spine Talos source", "PDV_Deity_Talos", [
+      "SIGNAL_ANCESTOR_SPINE",
     ]);
     this.checkSourceContains("Imperial spine substrate source", "PDV_Substrate_ImperialAncestor", [
       "Scriptname PDV_Substrate_ImperialAncestor extends PDV_SubstrateBase",
@@ -6859,7 +6871,6 @@ class Verifier {
     this.checkSourceContains("Imperial spine manager source", "PDV__ManagerQuest", [
       "PDV_Substrate_ImperialAncestor Property PDV_ImperialAncestorSubstrate Auto",
       "Function AwardImperialAncestorSpinePulse(Float multiplier, String reason)",
-      "PDV_Talos.SIGNAL_ANCESTOR_SPINE",
       "\"PDV.Imperial.AncestralStanding\"",
       "AwardImperialAncestorSpinePulse(multiplier, reason)",
       "Function SyncImperialAncestorSubstrate(Actor playerRef, Bool isImperial)",
@@ -9628,6 +9639,28 @@ class Verifier {
       "Function SyncNordPatronNeglectSpells()",
       "String Function GetNeglectSummary()",
     ], this.neglectDecayGap.bind(this));
+  }
+
+  // Inverse of checkSourceContains: each snippet must be ABSENT from the script.
+  // Used where a ratified design change REMOVED code and the gate now guards the
+  // removal (owner-approved contract descope 2026-07-15, same pattern as the
+  // Phase 18 dialogue v1-removal posture).
+  checkSourceLacks(checkName, scriptName, snippets, gapFn = null) {
+    const reportGap = gapFn || this.fail.bind(this);
+    const source = path.join(DEVOTION_SOURCE, `${scriptName}.psc`);
+    if (!exists(source)) {
+      reportGap(checkName, `${scriptName}.psc is missing.`, source);
+      return;
+    }
+
+    const text = fs.readFileSync(source, "utf8");
+    for (const snippet of snippets) {
+      if (text.includes(snippet)) {
+        reportGap(checkName, `${scriptName}.psc still contains ${snippet}, which the ratified design removed; reintroduction is a regression.`, source);
+      } else {
+        this.pass(checkName, `${scriptName}.psc lacks ${snippet} (removed by design).`, source);
+      }
+    }
   }
 
   checkSourceContains(checkName, scriptName, snippets, gapFn = null) {
