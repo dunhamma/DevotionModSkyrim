@@ -1,6 +1,6 @@
 {
   "schema": "pdv.1-0.freshness-stamps.v1",
-  "updated": "2026-07-14T10:06:52.376Z",
+  "updated": "2026-07-15T03:34:32.887Z",
   "stamps": {
     "C-RACE-RUBRIC": {
       "observedAt": "2026-07-07T09:22:07.856Z",
@@ -11,7 +11,7 @@
       }
     },
     "C-PRINCE-GATE": {
-      "observedAt": "2026-07-14T10:06:52.320Z",
+      "observedAt": "2026-07-15T03:34:32.837Z",
       "result": "PASS",
       "sourceHashes": {
         "references/authoring/PDV_DaedricPrinceRecordContracts.json": "8da722675e3a257d06d90c3d34cf32f961838055b57363b6824aad5d7cf1d62a"
@@ -85,7 +85,7 @@
       }
     },
     "C-EXPMODE-SMOKE": {
-      "observedAt": "2026-07-14T10:06:52.333Z",
+      "observedAt": "2026-07-15T03:34:32.850Z",
       "result": "PASS",
       "sourceHashes": {}
     },

@@ -303,9 +303,10 @@ Event OnBookRead(Book akBook)
     ; piety again. Marked only after the bus check so a dropped event cannot burn
     ; the book's single credit.
     Bool firstRead = MarkGenericBookRead(akBook as Form)
-    PDV_EventBusService.BeginLogicalDevotionalAct("book_" + akBook.GetFormID())
-    RouteGenericBookRead(akBook, firstRead)
-    RouteP2ImmersiveSource(akBook as Form, "po3_book")
+    String logicalEventId = "book_" + akBook.GetFormID()
+    PDV_EventBusService.BeginLogicalDevotionalAct(logicalEventId)
+    RouteGenericBookRead(akBook, firstRead, logicalEventId)
+    RouteP2ImmersiveSource(akBook as Form, "po3_book", logicalEventId)
     RouteQuestReactionBookFaucet(akBook as Form, firstRead)
     ; Altmer "read banned texts": The Talos Mistake (Skyrim.esm:000ED04D) pushes the
     ; ThalmorAlignment track toward the heterodox pole. Manager enforces origin + one-shot.
@@ -321,10 +322,14 @@ EndEvent
 
 Event OnItemHarvested(Form akProduce)
     if PDV_EventBusService
-        PDV_EventBusService.BeginLogicalDevotionalAct("harvest_" + akProduce.GetFormID())
+        String logicalEventId = "harvest_" + akProduce.GetFormID()
+        PDV_EventBusService.BeginLogicalDevotionalAct(logicalEventId)
+        RouteGenericAction(EVT_HARVEST_INGREDIENT, GetActorRef() as Form, akProduce, logicalEventId)
+        RouteP2ImmersiveSource(akProduce, "po3_harvest", logicalEventId)
+    else
+        RouteGenericAction(EVT_HARVEST_INGREDIENT, GetActorRef() as Form, akProduce)
+        RouteP2ImmersiveSource(akProduce, "po3_harvest")
     endIf
-    RouteGenericAction(EVT_HARVEST_INGREDIENT, GetActorRef() as Form, akProduce)
-    RouteP2ImmersiveSource(akProduce, "po3_harvest")
     if PDV_EventBusService
         PDV_EventBusService.FlushLogicalDevotionalAct()
     endIf
@@ -336,10 +341,14 @@ EndEvent
 
 Event OnQuestStageChange(Quest akQuest, Int aiNewStage)
     if PDV_EventBusService && akQuest
-        PDV_EventBusService.BeginLogicalDevotionalAct("quest_" + akQuest.GetFormID() + "_" + aiNewStage)
+        String logicalEventId = "quest_" + akQuest.GetFormID() + "_" + aiNewStage
+        PDV_EventBusService.BeginLogicalDevotionalAct(logicalEventId)
+        RouteP2ImmersiveQuestStage(akQuest, aiNewStage, logicalEventId)
+        RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)
+    else
+        RouteP2ImmersiveQuestStage(akQuest, aiNewStage)
+        RouteQuestReactionStage(akQuest, aiNewStage)
     endIf
-    RouteP2ImmersiveQuestStage(akQuest, aiNewStage)
-    RouteQuestReactionStage(akQuest, aiNewStage)
     RoutePaarthurnaxSpareQuestStage(akQuest, aiNewStage)
     RouteCuratedMilestoneQuestStage(akQuest, aiNewStage)
     if PDV_EventBusService && akQuest
@@ -448,7 +457,7 @@ Event OnHitEx(ObjectReference akAggressor, Form akSource, Projectile akProjectil
     RouteQuestReactionBlockedHitFaucet()
 EndEvent
 
-Function RouteGenericBookRead(Book akBook, Bool firstRead)
+Function RouteGenericBookRead(Book akBook, Bool firstRead, String logicalEventId = "")
     if !akBook
         return
     endIf
@@ -459,21 +468,21 @@ Function RouteGenericBookRead(Book akBook, Bool firstRead)
     endIf
 
     if HasListedForm(PDV_FLST_FaucetSkillBooks, akBook as Form)
-        RouteGenericAction(EVT_READ_SKILL_BOOK, GetActorRef() as Form, akBook as Form)
+        RouteGenericAction(EVT_READ_SKILL_BOOK, GetActorRef() as Form, akBook as Form, logicalEventId)
     elseIf HasListedForm(PDV_FLST_FaucetSpellTomes, akBook as Form)
-        RouteGenericAction(EVT_READ_SPELL_TOME, GetActorRef() as Form, akBook as Form)
+        RouteGenericAction(EVT_READ_SPELL_TOME, GetActorRef() as Form, akBook as Form, logicalEventId)
     else
-        RouteGenericAction(EVT_READ_LORE_BOOK, GetActorRef() as Form, akBook as Form)
+        RouteGenericAction(EVT_READ_LORE_BOOK, GetActorRef() as Form, akBook as Form, logicalEventId)
     endIf
 EndFunction
 
-Function RouteGenericAction(Int eventType, Form actorForm, Form targetForm)
+Function RouteGenericAction(Int eventType, Form actorForm, Form targetForm, String logicalEventId = "")
     if !PDV_EventBusService
         Trace(1, "Generic faucet event skipped: PDV_EventBusService not assigned.")
         return
     endIf
 
-    PDV_EventBusService.RouteAction(eventType, actorForm, targetForm)
+    PDV_EventBusService.RouteAction(eventType, actorForm, targetForm, logicalEventId)
 EndFunction
 
 Function RouteBosmerGreenPactFood(Form baseObject)
@@ -1312,7 +1321,7 @@ Bool Function IsCaravanLeaderLoadedNear(ObjectReference leaderRef, Actor playerR
     return leaderRef.GetDistance(playerRef) <= 2048.0
 EndFunction
 
-Function RouteP2ImmersiveSource(Form sourceForm, String sourceKind)
+Function RouteP2ImmersiveSource(Form sourceForm, String sourceKind, String parentLogicalEventId = "")
     if GetOriginRaceValue() < 0
         EnsureOriginInitialized()
     endIf
@@ -1327,7 +1336,13 @@ Function RouteP2ImmersiveSource(Form sourceForm, String sourceKind)
         return
     endIf
 
-    PDV_EventBusService.BeginLogicalDevotionalAct(sourceKind + "_" + sourceForm.GetFormID())
+    Bool joinedParentEvent = False
+    if parentLogicalEventId != ""
+        joinedParentEvent = PDV_EventBusService.JoinLogicalDevotionalAct(parentLogicalEventId)
+    endIf
+    if !joinedParentEvent
+        PDV_EventBusService.BeginLogicalDevotionalAct(sourceKind + "_" + sourceForm.GetFormID())
+    endIf
 
     if ShouldRouteP2Source(PDV_FLST_P2_BretonKnightsRoadSources, sourceForm, "breton_knights_road", sourceKind)
         PDV_EventBusService.RouteBretonTraditionChoice(0, sourceKind + "_breton_knights_road")
@@ -1462,7 +1477,7 @@ Function RouteP2ImmersiveSource(Form sourceForm, String sourceKind)
     PDV_EventBusService.FlushLogicalDevotionalAct()
 EndFunction
 
-Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)
+Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage, String parentLogicalEventId = "")
     if GetOriginRaceValue() < 0
         EnsureOriginInitialized()
     endIf
@@ -1477,7 +1492,13 @@ Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)
         return
     endIf
 
-    PDV_EventBusService.BeginLogicalDevotionalAct("p2_quest_" + sourceQuest.GetFormID() + "_" + newStage)
+    Bool joinedParentEvent = False
+    if parentLogicalEventId != ""
+        joinedParentEvent = PDV_EventBusService.JoinLogicalDevotionalAct(parentLogicalEventId)
+    endIf
+    if !joinedParentEvent
+        PDV_EventBusService.BeginLogicalDevotionalAct("p2_quest_" + sourceQuest.GetFormID() + "_" + newStage)
+    endIf
 
     if ShouldRouteP2QuestStage(PDV_FLST_P2_NordOldWaysSources, sourceQuest, 155916, 160, "nord_mq104_old_ways", newStage)
         PDV_EventBusService.RouteNordOldWaysState("po3_queststage_nord_mq104_old_ordeal")
@@ -1744,12 +1765,12 @@ Bool Function IsPlayerInImperialFaction()
     return playerActor.IsInFaction(imperialFactionRef)
 EndFunction
 
-Function RouteQuestReactionStage(Quest sourceQuest, Int newStage)
+Function RouteQuestReactionStage(Quest sourceQuest, Int newStage, String logicalEventId = "")
     if !sourceQuest || !PDV_EventBusService
         return
     endIf
 
-    PDV_EventBusService.RouteQuestReaction(sourceQuest, newStage)
+    PDV_EventBusService.RouteQuestReaction(sourceQuest, newStage, logicalEventId)
 EndFunction
 
 Function RouteQuestReactionBookFaucet(Form sourceForm, Bool firstRead)

@@ -21,6 +21,13 @@ Function BeginLogicalDevotionalAct(String logicalEventId)
     endIf
 EndFunction
 
+Bool Function JoinLogicalDevotionalAct(String logicalEventId)
+    if PDV_Manager
+        return PDV_Manager.JoinBroadPantheonEvent(logicalEventId)
+    endIf
+    return False
+EndFunction
+
 Function FlushLogicalDevotionalAct()
     if PDV_Manager
         PDV_Manager.FlushBroadPantheonEvent()
@@ -33,8 +40,8 @@ Function RouteDunmerHonorableVictory(Form victimForm)
     endIf
 EndFunction
 
-Function RouteAction(Int eventType, Form actorRef, Form targetRef)
-    RouteActionWithAttribution(eventType, GetDirectPlayerAttribution(), actorRef, targetRef)
+Function RouteAction(Int eventType, Form actorRef, Form targetRef, String logicalEventId = "")
+    RouteActionWithAttribution(eventType, GetDirectPlayerAttribution(), actorRef, targetRef, logicalEventId)
 EndFunction
 
 Function RouteConcordatPressure(Bool isCompliance)
@@ -122,13 +129,13 @@ Function RouteCurseStateRefresh(String reason)
     Trace(2, "RouteCurseStateRefresh complete: " + reason)
 EndFunction
 
-Function RouteQuestReaction(Quest sourceQuest, Int stageValue)
+Function RouteQuestReaction(Quest sourceQuest, Int stageValue, String logicalEventId = "")
     if !PDV_Manager
         Trace(1, "RouteQuestReaction skipped: PDV_Manager not assigned.")
         return
     endIf
 
-    PDV_Manager.ApplyQuestReaction(sourceQuest, stageValue)
+    PDV_Manager.ApplyQuestReaction(sourceQuest, stageValue, logicalEventId)
     Trace(2, "RouteQuestReaction complete: stage " + stageValue)
 EndFunction
 
@@ -1514,7 +1521,7 @@ Function RouteDaedricGenericSilenceProbe(String sourceId)
     Trace(2, "RouteDaedricGenericSilenceProbe complete: " + eventType)
 EndFunction
 
-Function RouteActionWithAttribution(Int eventType, Int attributionType, Form actorRef, Form targetRef)
+Function RouteActionWithAttribution(Int eventType, Int attributionType, Form actorRef, Form targetRef, String logicalEventId = "")
     if eventType == GetNoneEvent()
         return
     endIf
@@ -1556,7 +1563,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     Int scoredCount = 0
 
     PDV_Manager.HandleBretonActionPracticeSignal(eventType, GetEventReason(eventType))
-    PDV_Manager.BeginLikesDislikesSurface(eventType)
+    PDV_Manager.BeginLikesDislikesSurface(eventType, logicalEventId)
     while i < count
         PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
         if deity

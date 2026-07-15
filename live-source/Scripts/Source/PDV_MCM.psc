@@ -192,6 +192,7 @@ Int _oidPacingBroadFanout = -1
 Int _oidPacingBroadScratchPositive = -1
 Int _oidPacingBroadScratchNegative = -1
 Int _oidPacingBroadMigration = -1
+Int _oidPacingBroadCatchup = -1
 Int _oidPacingNordBaseline = -1
 Int _oidPacingNordBaselineApply = -1
 Int _oidPacingPatronStatus = -1
@@ -368,6 +369,8 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Stages deliberately excessive signed scratch. Wait through a real 06:00 dawn and confirm the selected pool folds no more than +4.3 or -4.3. This control does not advance time.")
     elseIf a_option == _oidPacingBroadMigration
         SetInfoText("Destructive throwaway-save fixture. Runs the real migration twice: Imperial count 3 to 25, Old Ways count 6 to 50, and eligible Nine Divines from the highest god only. Reload the clean QASmoke save afterward.")
+    elseIf a_option == _oidPacingBroadCatchup
+        SetInfoText("PS-A11 throwaway-save control. After one real positive act has folded and this pool is suppressed, runs the real catch-up routine through five days after its recorded gain. It does not change Skyrim time.")
     elseIf a_option == _oidPacingNordBaseline
         SetInfoText("Cycles the Nord broad baseline between Old Ways and Nine Divines. Only the selected baseline may gain or grant its broad boon.")
     elseIf a_option == _oidPacingNordBaselineApply
@@ -771,6 +774,11 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidPacingBroadMigration
         DebugRunBroadPantheonMigrationFixture()
+        return
+    endIf
+
+    if a_option == _oidPacingBroadCatchup
+        DebugRunBroadPantheonCatchupForPacing()
         return
     endIf
 
@@ -2336,6 +2344,7 @@ Function BuildPacingPantheonsPage()
     _oidPacingBroadScratchPositive = AddTextOption("Prime +100 scratch", "Real dawn caps +4.3", OPTION_FLAG_NONE)
     _oidPacingBroadScratchNegative = AddTextOption("Prime -100 scratch", "Real dawn caps -4.3", OPTION_FLAG_NONE)
     _oidPacingBroadMigration = AddTextOption("Run migration fixture", "Destructive: throwaway save", OPTION_FLAG_NONE)
+    _oidPacingBroadCatchup = AddTextOption("PS-A11 catch-up", "Suppressed pool: gain day +5", OPTION_FLAG_NONE)
 
     AddEmptyOption()
     AddHeaderOption("Nord baseline", OPTION_FLAG_NONE)
@@ -2507,6 +2516,13 @@ EndFunction
 Function DebugRunBroadPantheonMigrationFixture()
     if EnsureManagerBinding("pacing_broad_migration")
         ShowMessage(PDV_Manager.DebugRunBroadPantheonMigrationFixture(), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+Function DebugRunBroadPantheonCatchupForPacing()
+    if EnsureManagerBinding("pacing_broad_catchup")
+        ShowMessage(PDV_Manager.DebugRunBroadPantheonCatchupForPacing(_selectedBroadPantheonPool), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction

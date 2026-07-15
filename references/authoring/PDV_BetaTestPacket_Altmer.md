@@ -11,6 +11,16 @@ the first-tier reward display boundary.
 
 ## Result
 
+2026-07-15 presentation regression:
+
+- Tester confirmed all three approved sources again produced their P2 toast and
+  Book of Days acknowledgement.
+- The first two books also surfaced an accepted, distinct generic-book-lane
+  toast; this is not a duplicate P2 acknowledgement.
+- `Papyrus.0.log` records `P2 book notice surfaced:` for Auri-El, Magnus, and
+  Xarxes plus all three exact route-complete markers. The focused runtime
+  checker passes.
+
 2026-06-06:
 
 - Tester confirmed Altmer passed all Auri-El/Magnus/Xarxes book checks and

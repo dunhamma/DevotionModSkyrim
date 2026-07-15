@@ -1065,6 +1065,18 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   lane; Stuhn's two for the pantheon-parity focusable-patron build; Trinimac orthodoxy for
   the Orthodox Champion lane. Leki/Malacath wires were owner-ruled KEPT despite the
   Nexus-final guide cutting their copy — restore the copy when the wires land.
+- **[2026-07-15] - PS-A11 broad catch-up uses an explicit synthetic target, never `GameDaysPassed`:**
+  `PDV__ManagerQuest.GetDevotionalDay()` derives from `Utility.GetCurrentGameTime()`, so setting the
+  console global `GameDaysPassed` cannot exercise broad-pool dawn or catch-up behavior. The old PS-A11
+  instruction therefore produced no test signal, not a decay failure. The Pacing MCM now exposes the
+  throwaway-save-only `PS-A11 catch-up` control. It requires a real folded positive gain, zero pending
+  scratch, and a suppressed selected pool, then calls the production
+  `ProcessBroadPantheonThroughDay(...)` through `lastGainDay + 5` without changing Skyrim time. This
+  yields exactly two grace days followed by three `-0.1` ticks (for example, `2.64 -> 2.34`) and records
+  `[PDV][PS-A11]`; repeating the same target is idempotent. The broad-pantheon audit statically guards
+  the manager preconditions, production call, and MCM surface. Source/compile/verifier proof is clean;
+  PS-A11 runtime and save/load evidence remains open.
+
 - **[2026-07-15] - Ledger-authority consolidation: regenerable reports leave git:** Ratified four
   artifact classes (PDV_STANDARDS.md section 5.3): hand-authored authorities, evidence stores, and
   machine-read pipeline state stay committed; regenerable pure-report ledgers are gitignored and
@@ -1080,6 +1092,131 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   fresh clone regenerates each by running its tool. Rule forward: a file named in contract
   freshness.sources or evidence.read must be committed; a new pure-report tool adds its .gitignore
   line in the same commit that adds the tool. (Ledger-authority consolidation, 2026-07-15)
+- **[2026-07-15] - Explicit P2 book reads and ambient progress have separate
+  presentation/scope contracts:** `SurfaceP2BookReadNotice` validates real
+  `po3_book` provenance and bypasses setup-quiet presentation so its toast and
+  Book of Days acknowledgement cannot be lost; `SurfaceP2AmbientProgressNotice`
+  is reserved for the Altmer/Breton sleep paths and remains quiet during setup.
+  Nested book, harvest, and quest-stage receivers now carry the root Logical
+  Devotional Act identity into P2, generic action, likes/dislikes, and
+  quest-reaction work, joining only an exact match. This prevents the normal
+  self-deadlock that produced `BROAD_SCOPE_ABORT` without weakening the guard
+  against truly concurrent event stacks. `pdv_prisma_ui_audit.mjs` and
+  `pdv_broad_pantheon_audit.mjs` enforce the two contracts; runtime/manual
+  proof remains required. Follow-up Breton runtime diagnosis found that the
+  Hidden Art handler incorrectly gated an approved book acknowledgement on
+  daily `practiceAwarded`; a mechanical cap must never suppress that book's
+  toast/Book-of-Days record. `pdv_prisma_ui_audit.mjs` now rejects that coupling
+  and `pdv_phase20_runtime_check.mjs --track p2-books --race breton
+  --strict-manager` requires all three distinct Breton acknowledgement traces.
+  The 2026-07-15 fresh Breton retest passed those markers plus three visual
+  toasts/Book-of-Days entries with no broad-scope abort or mismatch. The
+  cap-dependent `Breton tradition choice routed` trace is not an assertion:
+  it is not emitted after a full practice cap. The same-day Imperial regression
+  then passed the former nested book and quest collision shapes: `The Talos
+  Mistake` produced its two distinct-lane notices, MQ103 stage 190 produced
+  civic-service plus combined quest-reaction acknowledgement, and the fresh
+  log has `RouteImperialTalosPressure complete: 141`,
+  `RouteImperialCivicService complete: 140`, and `RouteQuestReaction complete:
+  stage 190` with neither broad-scope marker. Re-reading the Talos book logs
+  both generic and P2 source repeat suppression and produces no presentation;
+  book credit is once per source per save. The same interface then passed a
+  three-book Altmer regression: Auri-El, Magnus, and Xarxes each logged their
+  exact P2 route and book-notice trace and each rendered a toast plus Book of
+  Days acknowledgement. Two generic-book-lane toasts also appeared and are
+  accepted as separate player actions, not duplicate P2 acknowledgement. A
+  controlled standalone MCM root (`MQ302 300`) then produced one combined
+  acknowledgement and logged four applied reaction cells with no scope marker.
+  After returning to broad worship and resetting the Imperial pool, that root
+  awarded Mara, Stendarr, and Akatosh `+4` each; the live pool readout showed
+  `active=TRUE`, `scratch=4.000000`, and `lastEvent=quest_284963|300`. This
+  proves strongest-positive aggregation for the scoped regression, not overall
+  beta readiness.
+
+- **[2026-07-15] — Broad-band vocabulary applies to every broad-lane blessing family:** The
+  ratified `Distant/Observant/Faithful` public bands (BroadPantheonContracts
+  `playerFacingBands`) govern ALL broad-lane reward records, not only the three pool
+  families — including Dunmer Reclamation (its `tierCap: Devoted` spec exception is
+  revoked) and the retired Argonian Hist records on paper. Rationale: the Reclamation
+  grant gate is unambiguously broad (`PATRON_STATE_BROAD`, caps at 50); a lone "Devoted"
+  on a lane with no Champion rung tells a maxed player they are mid-ladder. Executed
+  2026-07-15: six ESP renames (Bosmer/Breton/Orc/Redguard broad T1 "- Seeker" ->
+  "- Observant"; Dunmer T1 -> "- Observant", T2 -> "- Faithful") with houseCARL readback
+  proof + six spec realignments. Gate gap noted: no audit yet validates SPEL tier words
+  against the bands (the naming audit covers child MGEFs only).
+- **[2026-07-15] — Curated signals feeding broad pools is INTENDED; the guard is trigger
+  rarity:** `AwardPietyInternal` auto-opening a broad-pantheon scope (so any curated award
+  on a pool-eligible deity feeds the pool's strongest-delta-per-event) matches the pool
+  contracts' own wording and stays. Rationale: award-path surgery would change behavior for
+  all 86 wired signals. Consequence: a curated signal on a pool-eligible deity may only
+  wire with a genuinely RARE detector — `Tsun.SIGNAL_ADVERSITY_SURVIVED` must key on
+  near-fatal reversal, not ordinary hard fights.
+- **[2026-07-15] — Talos protect-worshipper favor is wireable via authored rescue routes:**
+  The `PDV_TargetEndStates_1.0.md` "never generic rebellion or plain anti-Thalmor violence"
+  rule OVERSTATED the design: rescuing/protecting a Talos worshipper counts as authored
+  faithful defiance even when Thalmor die in the doing; plain Thalmor-killing still earns
+  nothing. `Talos.SIGNAL_PROTECT_WORSHIPPER` wires via quest-stage rescue beats (e.g. MS08
+  routes exist; MS09-class rescue stages), one-shot latched. TargetEndStates wording amended
+  same day.
+- **[2026-07-15] — Malacath/Tu'whacca/Azura deity pulses from substrate-adjacent contexts
+  are AUTHENTIC god lanes, not unfinished pantheon parity:** Orc life-mode, Ash'abah
+  named-undead burden, and Dunmer twilight-window pulses are act-specific and theologically
+  owned — unlike the four converted passive spines (Nord/Imperial/Altmer/Breton). Ratified
+  so no future session "finishes" the parity by converting them. Rationale: the parity
+  ruling was about passive daily credit inventing deity piety; these three fire on
+  deliberate acts through their gods' own lanes.
+- **[2026-07-15] — Khajiit Champion signature moments are POST-1.0 (owner correction):**
+  The four stat-only capstone moments (Khenarthi wind-speed, Azurah spell-ward, Rajhin
+  shadow-slip, Alkosh dragon-stagger) were mis-recorded as "defer to a design session";
+  the owner's ruling is post-1.0 by design — now entered in `PDV_V2_Backlog.md` and OFF
+  the 1.0 issue list. Guides already de-promise them, so V1 copy is honest; Baan Dar's
+  shipped cheat-death holds Khajiit's one-save-per-race slot, so the V2 designs must be
+  non-save mechanics. The remaining 1.0 issue candidates are only the two pre-existing
+  stale-gate-contract items (14 spine-source verify contracts; remap-adversary Breton
+  hidden-art-champion assert).
+- **[2026-07-15] — True-bug fix pass EXECUTED (scoped ManagerQuest pass + records + gate descope):**
+  All phases of `PDV_HO_ScopedManagerPass_2026-07-15.md` landed in one session. Records:
+  Akatosh's Endurance re-authored (Maximum Health +30 + Magic Resist +15) at Imperial AND
+  Breton layers (was a Julianos duplicate at both); HearthHeld converted to flat Fortify
+  Stamina +15. Papyrus (compile 0/0, MCM refreshed): 21 signal cuts (phrase->branch->const,
+  DELTA floats retained for save safety), 8 wires (Tu'whacca re-entry on first mortal sect
+  act; Magnus/Xarxes active-patron heritage-memory dawn pulse; Trinimac orthodox pressure;
+  Leki duel + Tsun near-fatal adversity via combat sessions widened to Nord(0)/Redguard(9);
+  Talos protect-worshipper via MS09 s201 rescue; Malacath exile-return latch), Altmer
+  crisis exit (3 rite-evidence-days -> REASSERTING -> 2-day lockout -> SCARRED_RESOLVED at
+  dawn; 7-day heterodox acceptance below alignment 0), Orc stronghold forge routed from
+  Story Manager craft, +2 once/day orthodox-rite alignment mover (dead +15/+20 keys
+  deleted), medallion tier labels to canon (Seeker/Distant). Gates: dispatch coverage
+  102/94/8/8 PASS (ledger holds only the 8 wire-later entries); naming audit PASS; strict
+  Phase 18 34->14 via the approved dialogue descope (assert-ABSENT posture in pdv_verify +
+  manifest status v1-removed-voiced-v2). KNOWN PRE-EXISTING (stash-proven on pristine
+  main, NOT this pass): 14 stale spine-source verify contracts (DESCOPED same day with
+  owner sign-off — checkSourceLacks absence-guards; strict gate 0 FAIL / 4142 PASS) +
+  the remap adversary breton-hidden-art-champion assert (still owed a
+  stale-assert-vs-real-gap verdict). Guides:
+  Leki/Malacath/Talos beats restored, boon tables respliced, BBCode gate clean; the
+  tables tool's Observant/Faithful "retired-word" lint retired (inverted by the band
+  ratification). Runtime proof owed: RC1 + RC7-RC15 (co-test runbook).
+- **[2026-07-15] — Nord Phase 18 dialogue quartet reclassified: V1 removal, not debt:**
+  The four absent Froki/Heimskr/Andurs/Aela chains (20 strict Phase 18/Nord failures)
+  are the PLANNED V1 build action from `PDV_V2_Backlog.md` ("First V2 step is actually a
+  V1 removal... Re-add voiced in V2"), owner-confirmed — the 07-14 "pre-existing debt"
+  classification below is superseded. The real defect is stale gate expectations:
+  `pdv_verify.mjs` `PHASE18_NORD_DIALOGUE_CONTRACTS` still asserts the removed records.
+  Descoping those contracts to V2-expected-absent is queued in the fix plan as a rule-5
+  toolchain edit; **owner sign-off GRANTED 2026-07-15** (execute in fix-pass P3 with
+  before/after strict-gate proof). Rationale: a strict gate asserting deliberately
+  removed content trains people to ignore red gates. Same-day rulings: Akatosh's
+  Endurance re-authors to Fortify Health +30 + Magic Resist +15 at both Imperial and
+  Breton layers (Julianos's Insight keeps the Magicka block); GitHub issue filing is
+  HELD until after the fix pass lands (Part D D3 stays the internal tracker).
+- **[2026-07-15] — Reserved-signal ledger disposition (37 = 21 cut / 8 wire-now / 8
+  wire-later):** Every `tools/pdv_reserved_signals.json` entry now carries
+  decision/owner/expires per PDV_STANDARDS 5.2. Cuts and near-term wires belong to the
+  scoped ManagerQuest pass; Syrabane's five stay reserved for the BC-0153 beta warding
+  lane; Stuhn's two for the pantheon-parity focusable-patron build; Trinimac orthodoxy for
+  the Orthodox Champion lane. Leki/Malacath wires were owner-ruled KEPT despite the
+  Nexus-final guide cutting their copy — restore the copy when the wires land.
 - **Pantheon/substrate machine closeout ratified (2026-07-14 AEST; runtime/manual proof open):** Imperial Divines, Nord Old Ways, and Nord Nine Divines use separate manager-owned broad pools, each fed once per logical devotional act; Nord baselines are fully mirrored in thresholds, decay, offers, and two-tier broad rewards. The six active substrates use one piety-neutral +4 daily devotional credit, reaching 25 on day 7 and 75 on day 19; Argonian cultural practice is independent of Hist/People/Void relations. Direct houseCARL refutation proves exact P2 source membership, both Observe-the-Moons manager VMAD bindings, the ordered 20-message lunar packet, the six active substrate quests, and zero winning plugin Name/Description fields containing `Spine`. Active Effects have one durable presentation rule: the parent `PDV_Bless_*` spell shows the family and public tier, while every child MGEF shows the concise mechanical effect (or a distinct scripted-effect name). `pdv_active_effect_naming_audit.mjs` reads every 241 parent spells / 392 child effects and is now part of `pdv_verify`; a parent-name duplication is a regression. Focused commitment below 50 remains committed but displays as `Wavering`; the Book shows the deity name rather than a redundant `Focus` suffix. Presence-only FormList checks are insufficient: approved receiver lists must fail on unexpected members. Papyrus property declarations are not VMAD proof and every new object property must be read back from the live winning record. Late refutation also closed same-day negative-scratch decay, Argonian bed/Hist-maintenance clock, stale Nord Survey counter, and per-substrate rejected-event telemetry gaps. These results do not credit PS-A1 through PS-A12; organic ingress, save/load, and player-surface evidence remain a separate in-game sitting.
 
 - **Pantheon parity and shared substrate pacing implemented (2026-07-13 AEST; runtime/manual proof open):** Imperial Divines, Nord Old Ways, and Nord Nine Divines now use manager-owned signed broad-pantheon pools with `25/50` thresholds, a `50` cap, strongest-positive/otherwise-most-severe-negative logical-event aggregation, and two-day-grace suppressed-pool decay. Imperial Talos remains locked until explicit Talos practice or defiance; Nord activates exactly one baseline. Broad patron acceptance preserves deity piety, suppresses the broad boon, and focused Imperial/Nord families grant only T2 at `50-84` and T3 at `85+`, suspending below 50 without erasing commitment. The new Nord public-Divines family is `Faith of the Holds`; Imperial `The Divines' Regard` is Poison Resistance +10% then Poison and Disease Resistance +10%. All six active substrates now share one origin-validated 06:00-to-06:00 daily credit of `+4`, thresholds `1/25/75`, cap `75`, and no same-day cross-route bypass, yielding 28 on day 7 and 75 on day 19 in an uncursed normal run. Argonian cultural practice is separate from Hist/People/Void relations and Hist Communion is retired; Khajiit road-home no longer needs anchors and `Observe the Moons` is the authored nightly rite; generic Imperial and Khajiit sleep routes are retired. Breton compatibility substrate records retain save IDs but are removed from active substrate FormLists. Player-visible `Spine` naming is retired while EditorIDs, scripts, properties, and StorageUtil keys remain unchanged. Authority/static/compile/direct-record readback are the current proof boundary; organic route, player-surface, save/load, and feel evidence remain open in the co-test runbook.

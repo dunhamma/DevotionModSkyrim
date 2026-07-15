@@ -368,8 +368,8 @@ Function HandleStoryAssaultActor(ObjectReference akVictim, ObjectReference akAtt
     RouteActionWithAttribution(EVT_ASSAULT_INNOCENT, ATTR_DIRECT_PLAYER, akAttacker as Form, victimActor as Form)
 EndFunction
 
-Function RouteBookRead(Book akBook)
-    RouteActionWithAttribution(ClassifyBook(akBook), ATTR_DIRECT_PLAYER, GetPlayerActor() as Form, akBook as Form)
+Function RouteBookRead(Book akBook, String logicalEventId = "")
+    RouteActionWithAttribution(ClassifyBook(akBook), ATTR_DIRECT_PLAYER, GetPlayerActor() as Form, akBook as Form, logicalEventId)
 EndFunction
 
 Function RouteHarvestIngredient(Form akProduce)
@@ -396,14 +396,14 @@ EndFunction
 ; ROUTING
 ; =======================================================================
 
-Function RouteAction(Int eventType, Form actorRef, Form targetRef)
-    RouteActionWithAttribution(eventType, ATTR_DIRECT_PLAYER, actorRef, targetRef)
+Function RouteAction(Int eventType, Form actorRef, Form targetRef, String logicalEventId = "")
+    RouteActionWithAttribution(eventType, ATTR_DIRECT_PLAYER, actorRef, targetRef, logicalEventId)
 EndFunction
 
-Function RouteActionWithAttribution(Int eventType, Int attributionType, Form actorRef, Form targetRef)
+Function RouteActionWithAttribution(Int eventType, Int attributionType, Form actorRef, Form targetRef, String logicalEventId = "")
     PDV_EventBus eventBus = GetEventBus()
     if eventBus
-        eventBus.RouteActionWithAttribution(eventType, attributionType, actorRef, targetRef)
+        eventBus.RouteActionWithAttribution(eventType, attributionType, actorRef, targetRef, logicalEventId)
         return
     endIf
 
@@ -433,7 +433,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     Int scoredCount = 0
 
     PDV_Manager.HandleBretonActionPracticeSignal(eventType, GetEventReason(eventType))
-    PDV_Manager.BeginLikesDislikesSurface(eventType)
+    PDV_Manager.BeginLikesDislikesSurface(eventType, logicalEventId)
     while i < count
         PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
         if deity

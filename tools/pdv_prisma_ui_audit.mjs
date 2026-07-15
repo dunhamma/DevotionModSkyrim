@@ -908,7 +908,12 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     const onUpdateBlock = eventBlock(manager, "OnUpdate");
     const startupBlock = functionBlock(manager, "SendPrismaStartupPayload");
     const medallionBlock = functionBlock(manager, "SendPrismaMedallionPayload");
-    const p2BookNoticeBlock = functionBlock(manager, "ShowP2BookNotice");
+    const p2BookNoticeBlock = functionBlock(manager, "SurfaceP2BookReadNotice");
+    const p2AmbientNoticeBlock = functionBlock(manager, "SurfaceP2AmbientProgressNotice");
+    const p2DeliveryBlock = functionBlock(manager, "SurfaceP2Acknowledgement");
+    const altmerSleepBlock = functionBlock(manager, "HandleAltmerSleepEvents");
+    const bretonSleepBlock = functionBlock(manager, "HandleBretonSleepEvents");
+    const bretonHiddenArtBlock = functionBlock(manager, "HandleBretonHiddenArtExposure");
     const overlaySenderFunctions = functionNamesContaining(manager, "PDV_PrismaBridge.SendOverlayJson(");
     const focusedSenderFunctions = functionNamesContaining(manager, "PDV_PrismaBridge.SendJson(");
 
@@ -1045,12 +1050,37 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     }
 
     if (
-      !p2BookNoticeBlock.includes("SendPrismaToast(") ||
-      !p2BookNoticeBlock.includes("AppendBookOfDaysEntry(")
+      !p2BookNoticeBlock.includes("IsP2BookNoticeReason(reason)") ||
+      !p2BookNoticeBlock.includes("SurfaceP2Acknowledgement(") ||
+      !p2DeliveryBlock.includes("SendPrismaToast(\"journal\", \"good\", titleText, messageText, True, allowDuringRaceSetup)") ||
+      !p2DeliveryBlock.includes("AppendBookOfDaysEntry(messageText")
     ) {
-      fail("Accepted P2 book notices must feed both Prisma toast and Book of Days chronicle.", managerPath);
+      fail("Accepted P2 book notices must validate book provenance and feed both Prisma toast and Book of Days through the shared delivery module.", managerPath);
     } else {
-      pass("Accepted P2 book notices feed both Prisma toast and Book of Days chronicle.", managerPath);
+      pass("Accepted P2 book notices validate provenance and feed both Prisma toast and Book of Days chronicle.", managerPath);
+    }
+
+    if (
+      !p2BookNoticeBlock.includes('True, "P2 book notice surfaced: "') ||
+      !p2AmbientNoticeBlock.includes('False, "P2 ambient notice surfaced: "') ||
+      !altmerSleepBlock.includes("SurfaceP2AmbientProgressNotice(") ||
+      !bretonSleepBlock.includes("SurfaceP2AmbientProgressNotice(") ||
+      altmerSleepBlock.includes("SurfaceP2BookReadNotice(") ||
+      bretonSleepBlock.includes("SurfaceP2BookReadNotice(")
+    ) {
+      fail("P2 book reads must bypass setup quiet presentation, while Altmer and Breton sleep progress must use the quiet-respecting ambient notice interface.", managerPath);
+    } else {
+      pass("P2 book reads and sleep progress use distinct quiet-presentation interfaces.", managerPath);
+    }
+
+    if (
+      !bretonHiddenArtBlock.includes("Bool practiceAwarded = AwardBretonPracticePulse(") ||
+      !bretonHiddenArtBlock.includes("SurfaceP2BookReadNotice(reason, GetBretonHiddenArtNoticeTitle(reason), GetBretonHiddenArtNoticeText(reason))") ||
+      /if\s+practiceAwarded\s*\r?\n\s*SurfaceP2BookReadNotice\(/.test(bretonHiddenArtBlock)
+    ) {
+      fail("Approved Breton Hidden Art P2 books must acknowledge every unique read; the daily practice cap may reduce mechanics but must not suppress toast or Book of Days delivery.", managerPath);
+    } else {
+      pass("Breton Hidden Art P2 book acknowledgements are independent of daily practice credit.", managerPath);
     }
 
     verifyJournalToneContract(manager, managerPath);
@@ -1655,8 +1685,8 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   const nordStateBody = functionBlock(managerForBroadLane, "HandleNordOldWaysState");
   if (
     !nordStateBody.includes("GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES") ||
-    !nordStateBody.includes('ShowP2BookNotice(reason, "Faith of the Holds"') ||
-    !nordStateBody.includes('ShowP2BookNotice(reason, "The Old Ways"')
+    !nordStateBody.includes('SurfaceP2BookReadNotice(reason, "Faith of the Holds"') ||
+    !nordStateBody.includes('SurfaceP2BookReadNotice(reason, "The Old Ways"')
   ) {
     fail("Nord broad-state notices must title Nine Divines as Faith of the Holds and Old Ways as The Old Ways.", managerPath);
   } else {
@@ -1701,14 +1731,17 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
     pass("Renamed substrate producers pass exact current tier labels into Prisma and Book of Days presentation.", managerPath);
   }
 
+  const orcMalacathConduct = functionBlock(managerForBroadLane, "HandleOrcMalacathConduct");
+  const redguardAncestorSpine = functionBlock(managerForBroadLane, "HandleRedguardAncestorSpine");
+  const p2Acknowledgement = functionBlock(managerForBroadLane, "SurfaceP2Acknowledgement");
   if (
-    !managerForBroadLane.includes('AppendBookOfDaysEntry("The code was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)') ||
-    !managerForBroadLane.includes('AppendBookOfDaysEntry("The Yokudan path was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "sect", False)') ||
-    !managerForBroadLane.includes('return "public civic service"')
+    !orcMalacathConduct.includes('SurfaceP2BookReadNotice(reason, "The Code of Malacath", "Malacath weighs your conduct against it.")') ||
+    !redguardAncestorSpine.includes('SurfaceP2BookReadNotice(reason, "The Yokudan dead", "The ancestor-line stands straighter in you.")') ||
+    !p2Acknowledgement.includes('AppendBookOfDaysEntry(messageText')
   ) {
-    fail("Reason-bearing substrate acts must feed both Prisma toast/ledger and the Book of Days chronicle.", managerPath);
+    fail("Reason-bearing substrate acts must route their Prisma acknowledgement through the paired Book of Days chronicle interface.", managerPath);
   } else {
-    pass("Reason-bearing substrate acts feed both Prisma toast/ledger and the Book of Days chronicle.", managerPath);
+    pass("Reason-bearing substrate acts route their Prisma acknowledgement through the paired Book of Days chronicle interface.", managerPath);
   }
 
   const reservedSignalSurfaceCases = [

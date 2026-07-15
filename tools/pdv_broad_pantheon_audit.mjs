@@ -8,7 +8,10 @@ import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CONTRACT_PATH = path.join(ROOT, "references", "authoring", "PDV_BroadPantheonContracts.json");
 const MANAGER_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
+const MCM_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_MCM.psc");
 const PLAYER_EVENTS_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_PlayerEvents.psc");
+const EVENT_BUS_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_EventBus.psc");
+const ACTION_ROUTER_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_ActionRouter.psc");
 const DEITY_BASE_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_DeityBase.psc");
 const RUNTIME_LEDGER_PATH = path.join(ROOT, "references", "authoring", "PDV_PantheonSubstrateRuntimeEvidenceLedger.json");
 const flags = new Set(process.argv.slice(2));
@@ -29,6 +32,14 @@ function bodyFor(source, functionName) {
   const tail = source.slice(start);
   const end = tail.search(/\n\s*EndFunction\b/i);
   return end >= 0 ? tail.slice(0, end + 12) : tail;
+}
+
+function eventBodyFor(source, eventName) {
+  const start = source.search(new RegExp(`Event\\s+${eventName}\\s*\\(`, "i"));
+  if (start < 0) return "";
+  const tail = source.slice(start);
+  const end = tail.search(/\n\s*EndEvent\b/i);
+  return end >= 0 ? tail.slice(0, end + 10) : tail;
 }
 
 function hasNumber(source, label, expected) {
@@ -73,7 +84,7 @@ export function settleReturningBroadAct(value, scratch, currentDay, lastProcesse
   return foldSignedScratch(Math.max(0, value - pastDecayDays * 0.1), scratch);
 }
 
-export function evaluate({ contract, managerSource, playerEventsSource, deityBaseSource }) {
+export function evaluate({ contract, managerSource, playerEventsSource, eventBusSource, actionRouterSource, deityBaseSource, mcmSource = "" }) {
   const findings = [];
   const add = (ok, id, detail) => findings.push({ status: ok ? "PASS" : "FAIL", id, detail });
   const shared = contract.shared ?? {};
@@ -143,6 +154,7 @@ export function evaluate({ contract, managerSource, playerEventsSource, deityBas
   add(hasNumber(managerSource, "PIETY_DAILY_MAX_DELTA", 4.3), "source.signed-daily-cap", "manager must retain the signed 4.3 daily cap");
 
   const begin = bodyFor(managerSource, "BeginBroadPantheonEvent");
+  const join = bodyFor(managerSource, "JoinBroadPantheonEvent");
   const accumulate = bodyFor(managerSource, "AccumulateBroadPantheonDelta");
   const flush = bodyFor(managerSource, "FlushBroadPantheonEvent");
   const dawn = bodyFor(managerSource, "ProcessBroadPantheonDawn");
@@ -153,6 +165,7 @@ export function evaluate({ contract, managerSource, playerEventsSource, deityBas
   add(/Float\s+Function\s+AwardPietyInternal\s*\(/i.test(managerSource), "source.applied-delta-return", "AwardPietyInternal must return the post-pipeline applied Float delta");
   add(Boolean(begin), "source.begin-event", "BeginBroadPantheonEvent must exist");
   add(/while\s+_broadPantheonEventDepth\s*>\s*0/i.test(begin) && /_broadPantheonEventId\s*!=\s*logicalEventId/i.test(begin) && /WaitMenuMode/i.test(begin) && /BROAD_SCOPE_ABORT/i.test(begin), "source.concurrent-event-serialization", "independent Papyrus stacks must serialize broad logical events and fail closed on a stalled owner");
+  add(/_broadPantheonEventId\s*!=\s*logicalEventId/i.test(join) && /BROAD_SCOPE_MISMATCH/i.test(join) && !/ClearBroadPantheonEventScope/i.test(join), "source.nested-event-join", "nested receivers must join only the matching logical-event identity without clearing a concurrent root scope");
   add(Boolean(accumulate), "source.accumulate-event", "AccumulateBroadPantheonDelta must exist");
   add(Boolean(flush), "source.flush-event", "FlushBroadPantheonEvent must exist");
   add(Boolean(dawn), "source.dawn-fold", "ProcessBroadPantheonDawn must exist");
@@ -172,6 +185,21 @@ export function evaluate({ contract, managerSource, playerEventsSource, deityBas
   add(/PATRON_STATE_BROAD/i.test(sync) && /25(?:\.0+)?|BROAD_PANTHEON_SEEKER_THRESHOLD/i.test(sync) && /50(?:\.0+)?|BROAD_PANTHEON_FAITHFUL_THRESHOLD/i.test(sync), "source.two-tier-sync", "broad reward sync must resolve highest-slot-only 25/50 tiers");
 
   add(/BeginLogicalDevotionalAct/i.test(playerEventsSource) && /FlushLogicalDevotionalAct/i.test(playerEventsSource), "source.player-event-scopes", "book, quest-stage, and P2 fan-out receivers must use logical devotional-act scopes");
+  const onBookRead = eventBodyFor(playerEventsSource, "OnBookRead");
+  const onQuestStageChange = eventBodyFor(playerEventsSource, "OnQuestStageChange");
+  const p2Source = bodyFor(playerEventsSource, "RouteP2ImmersiveSource");
+  const p2QuestStage = bodyFor(playerEventsSource, "RouteP2ImmersiveQuestStage");
+  const genericAction = bodyFor(playerEventsSource, "RouteGenericAction");
+  const questReactionStage = bodyFor(playerEventsSource, "RouteQuestReactionStage");
+  const eventBusAction = bodyFor(eventBusSource, "RouteActionWithAttribution");
+  const eventBusQuest = bodyFor(eventBusSource, "RouteQuestReaction");
+  const routerAction = bodyFor(actionRouterSource, "RouteActionWithAttribution");
+  add(/String\s+logicalEventId\s*=\s*"book_"/i.test(onBookRead) && /RouteGenericBookRead\s*\([^\r\n]*logicalEventId/i.test(onBookRead) && /RouteP2ImmersiveSource\s*\([^\r\n]*logicalEventId/i.test(onBookRead), "source.book-parent-identity", "book scoring and P2 source routing must inherit one book logical-event identity");
+  add(/String\s+logicalEventId\s*=\s*"quest_"/i.test(onQuestStageChange) && /RouteP2ImmersiveQuestStage\s*\([^\r\n]*logicalEventId/i.test(onQuestStageChange) && /RouteQuestReactionStage\s*\([^\r\n]*logicalEventId/i.test(onQuestStageChange), "source.quest-parent-identity", "P2 and quest-reaction receivers must inherit one quest-stage logical-event identity");
+  add(/JoinLogicalDevotionalAct\s*\(\s*parentLogicalEventId\s*\)/i.test(p2Source) && /JoinLogicalDevotionalAct\s*\(\s*parentLogicalEventId\s*\)/i.test(p2QuestStage) && /if\s*!joinedParentEvent/i.test(p2Source) && /if\s*!joinedParentEvent/i.test(p2QuestStage), "source.p2-nested-join", "P2 source and quest-stage receivers must join a supplied parent identity and create roots only when standalone");
+  add(/String\s+logicalEventId\s*=\s*""/i.test(genericAction) && /RouteAction\s*\([^\r\n]*logicalEventId/i.test(genericAction) && /BeginLikesDislikesSurface\s*\(\s*eventType\s*,\s*logicalEventId\s*\)/i.test(eventBusAction), "source.action-parent-identity", "generic action scoring must pass a supplied parent identity into the likes/dislikes surface");
+  add(/String\s+logicalEventId\s*=\s*""/i.test(questReactionStage) && /RouteQuestReaction\s*\([^\r\n]*logicalEventId/i.test(questReactionStage) && /ApplyQuestReaction\s*\([^\r\n]*logicalEventId/i.test(eventBusQuest), "source.quest-reaction-parent-identity", "quest reaction routing must pass a supplied parent identity into the manager");
+  add(/String\s+logicalEventId\s*=\s*""/i.test(routerAction) && /RouteActionWithAttribution\s*\([^\r\n]*logicalEventId/i.test(routerAction) && /BeginLikesDislikesSurface\s*\(\s*eventType\s*,\s*logicalEventId\s*\)/i.test(routerAction), "source.router-parent-identity", "fallback action routing must preserve a supplied parent identity");
   const shrinePrayer = bodyFor(managerSource, "HandleShrinePrayer");
   const shoutAttack = bodyFor(managerSource, "HandleShoutAttack");
   add(/BeginBroadPantheonEvent/i.test(shrinePrayer) && /FlushBroadPantheonEvent/i.test(shrinePrayer), "source.shrine-event-scope", "multi-deity shrine prayer must aggregate inside one logical broad event");
@@ -198,6 +226,7 @@ export function evaluate({ contract, managerSource, playerEventsSource, deityBas
   add(/GetDevotionalDay\(\)\s*\+\s*2/i.test(questCapBody), "source.quest-cap-day-zero", "quest reaction daily cap must reserve zero with day+2 encoding");
   add(/ShouldSyncLegacyPatronBoons/i.test(deityBaseSource) && /RACE_NORD|RACE_IMPERIAL/i.test(deityBaseSource) && /return\s+False/i.test(deityBaseSource), "source.legacy-focused-t1-suppressed", "Nord and Imperial deity records must not transiently grant legacy focused T1");
   const migrationFixture = bodyFor(managerSource, "DebugRunBroadPantheonMigrationFixture");
+  const pacingCatchup = bodyFor(managerSource, "DebugRunBroadPantheonCatchupForPacing");
   const productionWithoutMigrationFixture = managerSource.replace(migrationFixture, "");
   add(!/(?:Adjust|Set)IntValue\s*\([^\r\n]*PDV\.Imperial\.CivicServiceCount/i.test(productionWithoutMigrationFixture)
     && /SetIntValue\s*\([^\r\n]*PDV\.Imperial\.CivicServiceCount[^\r\n]*3/i.test(migrationFixture), "source.frozen-imperial-counter", "Imperial civic service count must be frozen outside the explicit throwaway-save migration fixture");
@@ -236,6 +265,13 @@ export function evaluate({ contract, managerSource, playerEventsSource, deityBas
   add(/GetPacingPatronCandidate/i.test(pacingOffer) && /COMMITMENT_OFFER_THRESHOLD/i.test(pacingOffer) && /DebugSeedCommitmentSignalDaysByIndex/i.test(pacingOffer) && /PendingDeityIndex/i.test(pacingOffer) && /DeclinedAt/i.test(pacingOffer), "source.pacing-controlled-offer", "Pacing MCM must create a deterministic baseline-eligible 50-piety pending offer on a clean save");
   add(/PDV\.Piety[^\r\n]*49\.0/i.test(pacingLapse) && /SyncFirstTierRaceRewardRuntime/i.test(pacingLapse), "source.pacing-lapse-49", "Pacing MCM must expose a separate 49-piety lapse boundary and resynchronize focused rewards");
   add(/PDV\.Piety[^\r\n]*50\.0/i.test(pacingRecover) && /SyncFirstTierRaceRewardRuntime/i.test(pacingRecover), "source.pacing-recover-50", "Pacing MCM must expose a separate 50-piety recovery boundary and resynchronize focused rewards");
+  add(/lastGainDay\s*\+\s*5/i.test(pacingCatchup)
+    && /GetBroadPantheonScratch\s*\(\s*poolId\s*\)\s*!=\s*0\.0/i.test(pacingCatchup)
+    && /GetActiveBroadPantheonPoolId\s*\(\s*\)\s*==\s*poolId/i.test(pacingCatchup)
+    && /ProcessBroadPantheonThroughDay\s*\(\s*poolId\s*,\s*targetDay\s*,\s*signedCap\s*,\s*"mcm_ps_a11_catchup"/i.test(pacingCatchup), "source.ps-a11-production-catchup", "PS-A11 must require a suppressed, settled, real-gain pool and exercise the production catch-up routine through gain day +5");
+  add(/_oidPacingBroadCatchup/i.test(mcmSource)
+    && /DebugRunBroadPantheonCatchupForPacing\s*\(\s*\)/i.test(mcmSource)
+    && /PDV_Manager\.DebugRunBroadPantheonCatchupForPacing\s*\(\s*_selectedBroadPantheonPool\s*\)/i.test(mcmSource), "source.ps-a11-mcm-control", "Pacing MCM must expose the PS-A11 production catch-up control for the selected broad pool");
 
   return { status: findings.some((item) => item.status === "FAIL") ? "FAIL" : "PASS", findings };
 }
@@ -279,8 +315,11 @@ function main() {
   }
   const managerSource = fs.existsSync(MANAGER_PATH) ? fs.readFileSync(MANAGER_PATH, "utf8") : "";
   const playerEventsSource = fs.existsSync(PLAYER_EVENTS_PATH) ? fs.readFileSync(PLAYER_EVENTS_PATH, "utf8") : "";
+  const eventBusSource = fs.existsSync(EVENT_BUS_PATH) ? fs.readFileSync(EVENT_BUS_PATH, "utf8") : "";
+  const actionRouterSource = fs.existsSync(ACTION_ROUTER_PATH) ? fs.readFileSync(ACTION_ROUTER_PATH, "utf8") : "";
   const deityBaseSource = fs.existsSync(DEITY_BASE_PATH) ? fs.readFileSync(DEITY_BASE_PATH, "utf8") : "";
-  const result = evaluate({ contract, managerSource, playerEventsSource, deityBaseSource });
+  const mcmSource = fs.existsSync(MCM_PATH) ? fs.readFileSync(MCM_PATH, "utf8") : "";
+  const result = evaluate({ contract, managerSource, playerEventsSource, eventBusSource, actionRouterSource, deityBaseSource, mcmSource });
   const report = { schema: "pdv.broad-pantheon-audit.v1", contract: path.relative(ROOT, CONTRACT_PATH).replaceAll("\\", "/"), ...result };
   if (flags.has("--json")) console.log(JSON.stringify(report, null, 2));
   else {

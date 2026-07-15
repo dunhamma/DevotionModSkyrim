@@ -15,6 +15,29 @@ DruidicStanding, or curse/Daedric rupture by itself.
 - Green Way/Y'ffre 365/364 dislike price: runtime passed. 365 shows `Order sours for a while.` / `Favor Slips`; 364 applies the smaller piety loss. One Book of Days line across both debug dislikes is expected because the identical same-day loss line de-dupes.
 - Green Way hunt 303: still open. Prove through the non-hostile animal kill/action route; `DebugFireDislike` correctly reports no row because 303 is a positive like.
 - Book-read guard: partial runtime only. Lore and skill same-book repeat skips passed; spell-tome repeat, Azura/Hermaeus Mora unread-faucet behavior, and Altmer Talos Mistake non-regression still need explicit capture.
+- 2026-07-15 P2 book-notice repair: the three accepted Hidden Art books all
+  completed their route and awarded practice/piety, but only the first produced
+  a toast and Book of Days entry. `SurfaceP2BookReadNotice` now keeps a real
+  player-initiated `po3_book` read visible through a startup/setup quiet scope,
+  while the two sleep-progress notices use a separate quiet-respecting interface.
+  The event receiver also preserves the parent Logical Devotional Act identity,
+  so a book's generic scoring and P2 route no longer trigger
+  `BROAD_SCOPE_ABORT`. Follow-up runtime evidence proved the remaining defect:
+  the Hidden Art handler only called the acknowledgement when the daily
+  practice pulse credited. It now acknowledges every approved unique P2 book,
+  even after the practice cap; Manager and MCM compiled with 0 errors and 0
+  warnings and their deployed PEX files are fresh. Re-run the three-book route
+  on a fresh main-menu/QASmoke save after a full Skyrim relaunch; require three
+  distinct notices/entries, no
+  `BROAD_SCOPE_ABORT`, and all three exact `P2 book notice surfaced:` traces
+  before replacing the failed manual result.
+- 2026-07-15 retest: PASS. Fresh `Papyrus.0.log` contains all three accepted
+  Hidden Art routes and `P2 book notice surfaced:` traces (Hagraven lore,
+  A witch's note, Reach-mad whispers), with no `BROAD_SCOPE_ABORT` or
+  `BROAD_SCOPE_MISMATCH`. Tester confirmed the three toasts and distinct Book
+  of Days entries. The strict checker no longer requires the cap-dependent
+  `Breton tradition choice routed` trace; the route-complete and three
+  acknowledgement markers are the contract.
 
 ## Preflight
 
@@ -60,6 +83,9 @@ Expected log markers:
 ```text
 RouteBretonTraditionChoice complete: 120 tradition 1
 RouteBretonHiddenArtExposure complete:
+P2 book notice surfaced: Hagraven lore
+P2 book notice surfaced: A witch's note
+P2 book notice surfaced: Reach-mad whispers
 ```
 
 ## Edge Build - Daedric Or Curse Rupture

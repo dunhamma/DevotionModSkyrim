@@ -447,6 +447,16 @@ fail while the PS-A1 through PS-A12 evidence cards are open. Use a fresh
 main-menu `coc qasmoke` save after deployment; a static/readback pass does not
 prove old save instances, route delivery, or player-visible behavior.
 
+PS-A11 is the one controlled exception to a real-time wait: `GetDevotionalDay()`
+reads `Utility.GetCurrentGameTime()`, so `set GameDaysPassed ...` cannot test
+its catch-up path. After one real positive pool fold, zero scratch, and
+suppression of that pool, use Pacing's throwaway-save-only `PS-A11 catch-up`
+control. It calls the production `ProcessBroadPantheonThroughDay(...)` through
+five days after the recorded gain without mutating game time; the expected
+result is two grace days then three `-0.1` ticks. Save/reload and invoke the
+same control again to prove idempotence. This controlled route does not fill
+organic-route evidence.
+
 For Daedric Prince CAT-6 work, regenerate `references\authoring\PDV_DaedricPrinceRecordContracts.json` with `tools\pdv_generate_daedric_contract.mjs` before authoring. That contract is the record source of truth; author the ESP packet from it with the `housecarl_*` MCP tools and verify each write with a `housecarl_read_record` readback. The packet covers all sixteen Skyrim-present Princes: per-Prince records, base/concrete `PDV_DaedricPathBase` VMAD wiring, stigma globals, arrays, `PDV_FLST_DaedricPaths_All` membership, manager FormList wiring, the QASmoke proof sender ACTI/REFR packet, and all sixteen exact organic quest-stage source FormLists. This is still a record/readback gate only; controlled in-game display proof and live-source proof are required before calling a Prince beta-display ready.
 
 For design-first thin-Prince artifact faucets, keep the scope to low-risk equip events unless a richer artifact-use support path has been designed. The artifact faucet FormLists for Molag Bal, Hircine, Meridia, Sheogorath, Mehrunes Dagon, and Nocturnal are authored and read back with the `housecarl_*` MCP tools; `tools\pdv_quest_matrix_compile.mjs --check` must report the matching Part D faucet count before live JSON write. This is machine/readback proof only until in-game artifact-equip smoke and wrong-origin silence are captured.

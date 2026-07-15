@@ -296,9 +296,11 @@ const P2_BOOK_RACES = [
         required: [
           "RouteBretonTraditionChoice complete: 120 tradition 1",
           "RouteBretonHiddenArtExposure complete:",
+          "P2 book notice surfaced: Hagraven lore",
+          "P2 book notice surfaced: A witch's note",
+          "P2 book notice surfaced: Reach-mad whispers",
         ],
         optional: [
-          "Breton tradition choice routed: eventbus_120_po3_book_breton_hidden_art",
           "Breton Hidden Art exposure routed: eventbus_122_po3_book_breton_hidden_art",
         ],
       },
@@ -605,7 +607,7 @@ function checkLog(logText, options) {
     track: options.track,
     race: options.race,
     strictManager: options.strictManager,
-    note: "Route-marker proof only. Survey/status, immersion feel, negative hooks, and anti-farm behavior still require the runtime runbook.",
+    note: "Runtime-marker proof only. P2 acknowledgement markers prove the manager attempted toast and Book of Days delivery, not that either player surface rendered correctly. Survey/status, immersion feel, negative hooks, and anti-farm behavior still require the runtime runbook.",
     races,
   };
 }

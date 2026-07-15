@@ -1559,7 +1559,7 @@ String Function ResolveQuestReactionCellFile(String cellPrefix)
     return ""
 EndFunction
 
-Function ApplyQuestReaction(Quest sourceQuest, Int stageValue)
+Function ApplyQuestReaction(Quest sourceQuest, Int stageValue, String parentLogicalEventId = "")
     if !sourceQuest
         return
     endIf
@@ -1584,7 +1584,13 @@ Function ApplyQuestReaction(Quest sourceQuest, Int stageValue)
         return
     endIf
 
-    BeginBroadPantheonEvent("quest_" + reactionKey)
+    Bool joinedParentEvent = False
+    if parentLogicalEventId != ""
+        joinedParentEvent = JoinBroadPantheonEvent(parentLogicalEventId)
+    endIf
+    if !joinedParentEvent
+        BeginBroadPantheonEvent("quest_" + reactionKey)
+    endIf
     ResetQuestReactionSurface()
     Int i = 0
     while i < cellCount
@@ -2007,8 +2013,14 @@ Function ResetLikesDislikesSurface()
     _ldSurfBestNegSymbol = ""
 EndFunction
 
-Function BeginLikesDislikesSurface(Int eventType)
-    BeginBroadPantheonEvent("likes_dislikes_" + eventType + "_" + Utility.GetCurrentGameTime())
+Function BeginLikesDislikesSurface(Int eventType, String parentLogicalEventId = "")
+    Bool joinedParentEvent = False
+    if parentLogicalEventId != ""
+        joinedParentEvent = JoinBroadPantheonEvent(parentLogicalEventId)
+    endIf
+    if !joinedParentEvent
+        BeginBroadPantheonEvent("likes_dislikes_" + eventType + "_" + Utility.GetCurrentGameTime())
+    endIf
     if !ShouldSurfaceLikesDislikesEvent(eventType)
         return
     endIf
@@ -2473,8 +2485,8 @@ Function ShowToastFallbackNotification(String titleText, String messageText)
     endIf
 EndFunction
 
-Bool Function SendPrismaToastPayloadOrFallback(String payload, String fallbackTitle, String fallbackMessage, Bool allowFallback = True)
-    if IsRaceSetupQuietPresentationActive()
+Bool Function SendPrismaToastPayloadOrFallback(String payload, String fallbackTitle, String fallbackMessage, Bool allowFallback = True, Bool allowDuringRaceSetup = False)
+    if IsRaceSetupQuietPresentationActive() && !allowDuringRaceSetup
         return False
     endIf
 
@@ -2512,9 +2524,9 @@ String Function BuildPrismaEventFallbackText(String eventName, String deityName,
     return ""
 EndFunction
 
-Bool Function SendPrismaToast(String symbolName, String tone, String titleText, String messageText, Bool allowFallback = True)
+Bool Function SendPrismaToast(String symbolName, String tone, String titleText, String messageText, Bool allowFallback = True, Bool allowDuringRaceSetup = False)
     String payload = "{\"mode\":\"toast\",\"toast\":{\"symbol\":\"" + JsonSafeString(symbolName) + "\",\"tone\":\"" + JsonSafeString(tone) + "\",\"title\":\"" + JsonSafeString(titleText) + "\",\"message\":\"" + JsonSafeString(messageText) + "\"}}"
-    return SendPrismaToastPayloadOrFallback(payload, titleText, messageText, allowFallback)
+    return SendPrismaToastPayloadOrFallback(payload, titleText, messageText, allowFallback, allowDuringRaceSetup)
 EndFunction
 
 Bool Function SendPrismaEventToast(String eventName, PDV_DeityBase deity, String context, String tierLabel, String rival, Bool allowFallback = True)
@@ -3644,13 +3656,33 @@ String Function AppendJsonItem(String accum, String item)
     return accum + "," + item
 EndFunction
 
+; Compatibility wrapper for any older compiled caller. New book routes call the
+; explicit book-read interface below; ambient progress must not use this path.
 Function ShowP2BookNotice(String reason, String titleText, String messageText)
+    SurfaceP2BookReadNotice(reason, titleText, messageText)
+EndFunction
+
+; A real P2 book read is an explicit player acknowledgement. It remains visible
+; through a setup-quiet scope, unlike ambient progress produced during setup.
+Function SurfaceP2BookReadNotice(String reason, String titleText, String messageText)
     if !IsP2BookNoticeReason(reason)
         return
     endIf
+    SurfaceP2Acknowledgement(titleText, messageText, True, "P2 book notice surfaced: ")
+EndFunction
 
-    SendPrismaToast("journal", "good", titleText, messageText)
-    AppendBookOfDaysEntry(messageText, Utility.GetCurrentGameTime() as Int, "favor.act", "journal", False, 1, titleText)
+; Ambient progression may be caused by sleep or automated state reconciliation.
+; It uses the same paired delivery but respects the startup quiet scope.
+Function SurfaceP2AmbientProgressNotice(String titleText, String messageText)
+    SurfaceP2Acknowledgement(titleText, messageText, False, "P2 ambient notice surfaced: ")
+EndFunction
+
+; Private delivery module. Callers choose the semantic interface above instead
+; of carrying quiet-presentation policy through every producer.
+Function SurfaceP2Acknowledgement(String titleText, String messageText, Bool allowDuringRaceSetup, String tracePrefix)
+    SendPrismaToast("journal", "good", titleText, messageText, True, allowDuringRaceSetup)
+    AppendBookOfDaysEntry(messageText, Utility.GetCurrentGameTime() as Int, "favor.act", "journal", False, 1, titleText, allowDuringRaceSetup)
+    Trace(2, tracePrefix + titleText)
 EndFunction
 
 Bool Function IsP2BookNoticeReason(String reason)
@@ -5172,7 +5204,7 @@ Function HandleAltmerSleepEvents(Actor playerRef, String reason)
     if _activeDeity == PDV_Magnus && PDV_Magnus
         AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier)
     endIf
-    ShowP2BookNotice("po3_book_altmer_sleep_dream", "Aldmeri dream", "The old line keeps its shape through rest.")
+    SurfaceP2AmbientProgressNotice("Aldmeri dream", "The old line keeps its shape through rest.")
 EndFunction
 
 Function HandleImperialSleepEvents(Actor playerRef, String reason)
@@ -5198,7 +5230,7 @@ Function HandleBretonSleepEvents(Actor playerRef, String reason)
         AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
     endIf
     AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_RENEWABLE_POINTS, "event_314", "sleep_in_bed_" + reason)
-    ShowP2BookNotice("po3_book_breton_sleep_reflection", "Hidden reflection", "Rest gives the Hidden Art a hearth-kept shape.")
+    SurfaceP2AmbientProgressNotice("Hidden reflection", "Rest gives the Hidden Art a hearth-kept shape.")
 EndFunction
 
 ; Mara's Mercy scripted heal-on-rest was retired 2026-07-06. It was the second
@@ -7769,7 +7801,7 @@ Function HandleArgonianHistMaintenance(String reason)
     StorageUtil.AdjustIntValue(None, "PDV.Argonian.HistSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Argonian.LastHistSourceReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
-    ShowP2BookNotice(reason, "The Hist remembers", "The reading carries the smell of home.")
+    SurfaceP2BookReadNotice(reason, "The Hist remembers", "The reading carries the smell of home.")
     SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The Hist memory stirred.", "journal", GetArgonianCulturalPracticeLabel())
     RequestPanelRefresh()
     Trace(2, "Argonian Hist maintenance routed with multiplier " + multiplier)
@@ -8069,7 +8101,7 @@ Function HandleOrcMalacathConduct(Int modeValue, String reason)
     StorageUtil.AdjustFloatValue(None, "PDV.Orc.MalacathConduct", multiplier)
     StorageUtil.AdjustIntValue(None, "PDV.Orc.MalacathSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Orc.LastMalacathSourceReason", reason)
-    ShowP2BookNotice(reason, "The Code of Malacath", "Malacath weighs your conduct against it.")
+    SurfaceP2BookReadNotice(reason, "The Code of Malacath", "Malacath weighs your conduct against it.")
     Trace(2, "Orc Malacath conduct routed with multiplier " + multiplier)
 EndFunction
 
@@ -8864,7 +8896,7 @@ Function HandleRedguardAncestorSpine(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardAncestorSpine")
     RecordRedguardAncestorSpinePulse(multiplier, reason)
-    ShowP2BookNotice(reason, "The Yokudan dead", "The ancestor-line stands straighter in you.")
+    SurfaceP2BookReadNotice(reason, "The Yokudan dead", "The ancestor-line stands straighter in you.")
     Trace(2, "Redguard ancestor spine routed with multiplier " + multiplier)
 EndFunction
 
@@ -9828,9 +9860,9 @@ Function HandleAltmerDawnSteadiness(String reason)
     RecordAltmerCrisisReassertEvidence("dawn_steadiness_" + reason)
     AwardActiveAltmerHeritageMemorySignal()
     if reason == "eventbus_p2_altmer_auriel_po3_book_altmer_auriel"
-        ShowP2BookNotice(reason, "Auri-El's dawn", "The morning rite settles deeper.")
+        SurfaceP2BookReadNotice(reason, "Auri-El's dawn", "The morning rite settles deeper.")
     elseIf reason == "eventbus_p2_altmer_magnus_po3_book_altmer_magnus"
-        ShowP2BookNotice(reason, "The road of Magnus", "The discipline of light holds you to the dawn.")
+        SurfaceP2BookReadNotice(reason, "The road of Magnus", "The discipline of light holds you to the dawn.")
     endIf
 EndFunction
 
@@ -9861,7 +9893,7 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
         ApplyAltmerAlignmentAction("orthodox_rite", "rite_" + reason)
     endIf
     RecordAltmerCrisisReassertEvidence("orthodox_cost_" + reason)
-    ShowP2BookNotice(reason, "The scribe Xarxes", "The old orthodoxy asks more of you.")
+    SurfaceP2BookReadNotice(reason, "The scribe Xarxes", "The old orthodoxy asks more of you.")
 EndFunction
 
 Function AwardAltmerDawnSignal(String reason, Float multiplier)
@@ -12161,6 +12193,15 @@ Function BeginBroadPantheonEvent(String logicalEventId)
         _broadPantheonWorstNegative = 0.0
     endIf
     _broadPantheonEventDepth += 1
+EndFunction
+
+Bool Function JoinBroadPantheonEvent(String logicalEventId)
+    if logicalEventId == "" || _broadPantheonEventDepth <= 0 || _broadPantheonEventId != logicalEventId
+        Trace(1, "[PDV][BROAD_SCOPE_MISMATCH] cannot join " + logicalEventId + " while " + _broadPantheonEventId + " is active")
+        return False
+    endIf
+    _broadPantheonEventDepth += 1
+    return True
 EndFunction
 
 Function AccumulateBroadPantheonDelta(PDV_DeityBase deity, Float appliedDelta)
@@ -17297,6 +17338,46 @@ String Function DebugPrimeBroadPantheonScratch(Int poolIndex, Float scratchValue
     return DebugGetBroadPantheonSummary(poolIndex) + " | Wait through real dawn; expected signed fold cap is 4.3."
 EndFunction
 
+String Function DebugRunBroadPantheonCatchupForPacing(Int poolIndex)
+    ; PS-A11 uses this only after a real act has folded at a real dawn.  It
+    ; drives the production catch-up routine through five days after that
+    ; recorded gain without mutating Skyrim's clock or GameDaysPassed.
+    String poolId = GetBroadPantheonPoolIdByDebugIndex(poolIndex)
+    if poolId == ""
+        return "No broad pantheon pool selected."
+    endIf
+    if GetBroadPantheonStanding(poolId) <= 0.0
+        return "PS-A11 needs standing from one real folded positive act first."
+    endIf
+    if GetBroadPantheonScratch(poolId) != 0.0
+        return "PS-A11 needs zero pending scratch. Fold or clear the pool first."
+    endIf
+    if GetActiveBroadPantheonPoolId() == poolId
+        return "PS-A11 needs this pool suppressed. Switch to another broad pool or focused worship first."
+    endIf
+
+    Int lastGainStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(poolId))
+    if lastGainStamp <= 0
+        return "PS-A11 needs a recorded positive gain day from the real fold."
+    endIf
+    Int lastGainDay = lastGainStamp - 2
+    Int targetDay = lastGainDay + 5
+    Int processedStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonLastProcessedDayKey(poolId))
+    Int lastProcessedDay = processedStamp - 2
+    if targetDay <= lastProcessedDay
+        return DebugGetBroadPantheonSummary(poolIndex) + " | PS-A11 target already processed; repeat is idempotent."
+    endIf
+
+    Float signedCap = PIETY_DAILY_MAX_DELTA
+    if PDV_ModePresetRef
+        signedCap = signedCap * PDV_ModePresetRef.DailyCapScalar()
+    endIf
+    ProcessBroadPantheonThroughDay(poolId, targetDay, signedCap, "mcm_ps_a11_catchup")
+    SyncBroadPantheonRewards(Game.GetPlayer())
+    Trace(1, "[PDV][PS-A11] forced catch-up pool=" + poolId + " lastGainDay=" + lastGainDay + " through=" + targetDay + " standing=" + GetBroadPantheonStanding(poolId))
+    return DebugGetBroadPantheonSummary(poolIndex) + " | PS-A11 processed through gain day +5; expected two grace days then 0.1/day."
+EndFunction
+
 String Function DebugRunBroadPantheonMigrationFixture()
     ; This deliberately exercises the real migration and is confined to the
     ; clearly-labelled throwaway-save MCM control.
@@ -20422,9 +20503,9 @@ Function HandleBretonHiddenArtExposure(String reason)
         MaybeRecordBretonCrossTraditionPressure(BRETON_TRADITION_HIDDEN_ART, "handler_hidden_art_exposure", reason)
     endIf
     AwardBretonAncestorSpinePulse(multiplier, reason)
-    if practiceAwarded
-        ShowP2BookNotice(reason, GetBretonHiddenArtNoticeTitle(reason), GetBretonHiddenArtNoticeText(reason))
-    endIf
+    ; An approved P2 book is a distinct player acknowledgement even when the
+    ; daily practice cap has already reduced its mechanical credit.
+    SurfaceP2BookReadNotice(reason, GetBretonHiddenArtNoticeTitle(reason), GetBretonHiddenArtNoticeText(reason))
     Trace(2, "Breton Hidden Art exposure routed: " + reason)
 EndFunction
 
@@ -20495,11 +20576,11 @@ Function HandleDunmerReclamationFocus(Int focusValue, String reason)
     StorageUtil.SetStringValue(None, "PDV.Dunmer.LastReclamationReason", reason)
     AwardDunmerReclamationFocusSignal(focusValue, layerWeight)
     if focusValue == 0
-        ShowP2BookNotice(reason, "Azura's twilight", "The Reclamation turns toward her.")
+        SurfaceP2BookReadNotice(reason, "Azura's twilight", "The Reclamation turns toward her.")
     elseIf focusValue == 1
-        ShowP2BookNotice(reason, "Boethiah's proving", "The Reclamation turns toward struggle.")
+        SurfaceP2BookReadNotice(reason, "Boethiah's proving", "The Reclamation turns toward struggle.")
     else
-        ShowP2BookNotice(reason, "Mephala's web", "The Reclamation turns toward secrets.")
+        SurfaceP2BookReadNotice(reason, "Mephala's web", "The Reclamation turns toward secrets.")
     endIf
     Trace(2, "Dunmer Reclamation focus routed: " + reason + " weight " + layerWeight)
 EndFunction
@@ -20914,7 +20995,7 @@ Function HandleImperialTalosPressure(Bool isPrivate, String reason)
 
     StorageUtil.SetStringValue(None, "PDV.Imperial.LastTalosPressureReason", reason)
     AwardImperialAncestorSpinePulse(multiplier, reason)
-    ShowP2BookNotice(reason, "The name of Talos", "The question of the Ninth presses harder.")
+    SurfaceP2BookReadNotice(reason, "The name of Talos", "The question of the Ninth presses harder.")
     Trace(2, "Imperial Talos pressure routed: " + reason)
 EndFunction
 
@@ -21101,9 +21182,9 @@ Function HandleNordOldWaysState(String reason)
 
     if RouteNordFamily(reason, "PDV.Nord.OldWaysContextCount", "PDV.Nord.LastOldWaysReason", "PDV.Nord.LastOldWaysSignalTime", "Nord Old Ways state")
         if GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
-            ShowP2BookNotice(reason, "Faith of the Holds", "The Divines honored in the holds stand nearer.")
+            SurfaceP2BookReadNotice(reason, "Faith of the Holds", "The Divines honored in the holds stand nearer.")
         else
-            ShowP2BookNotice(reason, "The Old Ways", "The elder gods of the Nords stand nearer.")
+            SurfaceP2BookReadNotice(reason, "The Old Ways", "The elder gods of the Nords stand nearer.")
         endIf
     endIf
 EndFunction
@@ -21124,7 +21205,7 @@ Function HandleNordHircineArkayEdge(String reason)
     endIf
 
     if RouteNordFamily(reason, "PDV.Nord.HircineArkayEdgeCount", "PDV.Nord.LastHircineArkayReason", "PDV.Nord.LastHircineArkaySignalTime", "Nord Hircine/Arkay edge")
-        ShowP2BookNotice(reason, "Hunt and grave", "Beast and rest blur at the edges.")
+        SurfaceP2BookReadNotice(reason, "Hunt and grave", "Beast and rest blur at the edges.")
     endIf
 EndFunction
 

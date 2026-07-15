@@ -1,12 +1,32 @@
 # PDV Beta Test Packet - Imperial
 
 Created: 2026-06-06
-Status: ready to run - public Talos book packet; civic service edge pending
+Status: partial pass - public Talos book, once-per-source suppression, and
+MQ103 civic-service/quest-reaction edge passed 2026-07-15; packet negatives,
+Survey, and reward/stack checks remain separate
 Mode: console-assisted beta-feel packet
 
 This packet starts Imperial beta-feel proof from the approved public Talos book
-source. It does not prove civic service, public/private ConcordatStanding,
-faction rejection, or focused patron civic acts by itself.
+source. The 2026-07-15 broad-scope smoke additionally proved the MQ103
+civic-service route and its nested quest-reaction route. It does not prove
+public/private ConcordatStanding, faction rejection, focused patron civic acts,
+or the remaining packet checks.
+
+## Current Result (2026-07-15)
+
+- `The Talos Mistake` produced its two expected distinct-lane player notices.
+- `setstage 000D0800 190` produced the civic-service and combined
+  quest-reaction acknowledgement.
+- Papyrus recorded `RouteImperialTalosPressure complete: 141`,
+  `RouteImperialCivicService complete: 140`, and
+  `RouteQuestReaction complete: stage 190`, with no broad-scope abort or
+  mismatch marker in the fresh log.
+- Re-reading `The Talos Mistake` produced no player-facing acknowledgement;
+  the log confirms both generic and `imperial_public_talos` P2 repeat
+  suppression.
+
+This is runtime-route and manual-player-surface proof for those three cards,
+not a full Imperial beta-feel or release claim.
 
 ## Preflight
 
