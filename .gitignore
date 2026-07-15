@@ -67,3 +67,36 @@ backups/
 # Retired tool-tree archives -- kept LOCAL only (too large for GitHub, and the
 # deleted source is already recoverable from pre-retirement git history)
 tools/*retired*.zip
+
+# === Ledger-authority consolidation (added 2026-07-15) ===
+# Regenerable pure-report ledgers: written by their gate/audit tool, read by
+# no tool and no contract. Kept on disk, regenerated on demand, never
+# committed. Policy: PDV_STANDARDS.md section 5.3. Explicit paths on purpose:
+# a *Ledger* wildcard would also match hand-authored, evidence, and
+# pipeline-state keepers.
+references/authoring/PDV_1_0_EndStateBurndown.md
+references/authoring/PDV_1_0_EndStateBurndown.json
+references/authoring/PDV_SignalFloorSmokeLedger.md
+references/authoring/PDV_SignalFloorSmokeLedger.json
+references/authoring/PDV_SpeccedMinusLedger.md
+references/authoring/PDV_SpeccedMinusLedger.csv
+references/authoring/PDV_SpineStackScoreLedger.md
+references/authoring/PDV_SpineStackScoreLedger.csv
+references/authoring/PDV_AntiFarmSweepLedger.md
+references/authoring/PDV_EligibilityRewardCoverageLedger.md
+references/authoring/PDV_EligibilityRewardCoverageLedger.csv
+references/authoring/PDV_RewardRuntimeOrderLintLedger.md
+references/authoring/PDV_RewardRuntimeOrderLintLedger.csv
+references/authoring/PDV_IntegrityHarnessLedger.md
+references/authoring/PDV_LedgerCoverageLedger.md
+references/authoring/PDV_CompletenessGapLedger.md
+references/authoring/PDV_CompletenessGapLedger.csv
+# Generated human-facing twins; the machine-read .csv/.json sibling of each
+# stays committed as pipeline state:
+references/authoring/PDV_SignalE2EGateLedger.md
+references/authoring/PDV_SignalFloorLedger.md
+references/authoring/PDV_P2FormListEspLedger.md
+references/authoring/PDV_FeltTraceLedger.md
+references/authoring/PDV_FeltTraceLedger.csv
+references/authoring/PDV_PacingSimLedger.md
+references/authoring/PDV_FinalPlacementLedger.md
