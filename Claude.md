@@ -62,6 +62,7 @@ write.
 |------|-------|
 | Current build status, file map, decisions | `AGENTS.md` |
 | Operating rules and doc hygiene | `PDV_STANDARDS.md` |
+| Which ledgers are committed vs regenerated on demand | `PDV_STANDARDS.md` section 5.3 |
 | Dev environment, tooling, naming conventions | `PDV_MOD_SETUP.md` |
 | Proven v2 architecture baseline | `PDV_Architecture_v2.md` |
 | Forward v3 roadmap and architecture | `PDV_Architecture_v3.md` |
