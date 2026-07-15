@@ -39,6 +39,15 @@ Implementation truth:
 - `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source\*.psc`
 - `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\*.pex`
 
+Ledger-authority rule (PDV_STANDARDS.md section 5.3):
+- Status claims cite the contract plus a fresh gate run (for example
+  `node tools/pdv_1_0_endstate_gate.mjs`), never a committed copy of a
+  generated report.
+- Regenerable report ledgers (the end-state burndown, generated `.md` twins of
+  pipeline `.csv`/`.json` files) are gitignored on purpose. Never `git add`
+  one, and never treat its absence from git as drift to fix -- if it is
+  missing on disk, run its tool.
+
 Do not use `CLAUDE.md` as canonical. This project now treats `AGENTS.md` as
 the living context source.
 

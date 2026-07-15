@@ -34,12 +34,14 @@ Do not convert one proof type into another. The external beta-feel claim still
 requires all ten races plus all sixteen Skyrim-present Daedric Princes in the
 readiness evidence.
 
-## Authority Note (2026-07-09)
+## Authority Note (2026-07-09, updated 2026-07-15)
 
-Ship truth now lives in `PDV_1_0_EndStateContract.json` + the generated
-`PDV_1_0_EndStateBurndown.md` (`node .\tools\pdv_1_0_endstate_gate.mjs`). This
-document remains the narrative beta-feel burn; where the two disagree, the
-contract gate wins.
+Ship truth lives in `PDV_1_0_EndStateContract.json` plus a fresh gate run
+(`node .\tools\pdv_1_0_endstate_gate.mjs`). The generated
+`PDV_1_0_EndStateBurndown.md` is that run's on-demand rendering; as of
+2026-07-15 it is no longer committed (regenerate it with the gate command --
+see PDV_STANDARDS.md section 5.3). This document remains the narrative
+beta-feel burn; where the two disagree, the contract gate wins.
 
 2026-07-10 co-test note: use
 `references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md` as the single
