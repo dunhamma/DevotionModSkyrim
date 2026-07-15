@@ -4665,7 +4665,7 @@ Function HandleSubstrateActionEvent(Int eventType, String reason)
             Float metricBefore = PDV_AltmerAncestorSubstrate.GetMetric()
             Int tierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
             PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, "enchantment_" + reason)
-            SendPrismaSubstrateProgress("altmer-heritage", tierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore, "Successful enchantment reinforced ordered practice.", "journal", GetAltmerHeritageTierName())
+            SendPrismaSubstrateProgress("altmer-heritage", tierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore, "Heritage: Enchanting reminds you of the way things are meant to be.", "journal", GetAltmerHeritageTierName())
         endIf
     endIf
 EndFunction
