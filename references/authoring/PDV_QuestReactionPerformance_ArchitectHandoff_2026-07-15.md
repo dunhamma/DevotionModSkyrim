@@ -240,5 +240,41 @@ Proof loop (unchanged from "Recommended next proof loop" above):
    materially below the prior ~23 s (target 2-3 s). Prove MQ106 through one
    organic safe quest-stage route after the controlled sweep.
 
-Current state: Tier 1 shipped and static/Prisma/BoD/signal gates are green;
-runtime latency remains unproven and is the sole remaining gate.
+### Runtime result (2026-07-16) and ship decision
+
+Fresh-process sweep captured (Papyrus.0.log 07:22, four ENQUEUE at 07:22:06):
+
+| job | key | cache | START->COMPLETE | elapsed (from enqueue) |
+| --- | --- | --- | --- | --- |
+| qr_1 | 210731\|150 | cold | 17 s | 22.360 s |
+| qr_2 | 148154\|160 | warm | 8 s | 30.544 s |
+| qr_3 | 207142\|200 | warm | 6 s | 37.270 s |
+| qr_4 | 221587\|220 | warm | 12 s | 49.454 s |
+
+- **Queue mechanics PASS:** four jobs enqueued -> started -> completed in FIFO
+  order, no overflow, no coalesce, every started job completed.
+- **VM freeze adjudicated non-PDV:** the checker's only FAIL (`vm-freeze@9`) is
+  the startup freeze at 07:21:13 -> thaw 07:21:21, fully resolved 45 s before the
+  sweep enqueued. It is the known startup artifact, not queue-attributable.
+- **Cache confirmed working:** cold qr_1 pays the FormList-scan populate (~17 s
+  processing); warm qr_2/qr_3 drop to 6-8 s. The name->deity map persists all
+  session, so only the session's first quest is cold.
+- **Latency target NOT met by Tier 1 alone:** qr_1 elapsed 22.36 s ~= the pre-fix
+  23.17 s. As predicted, toast latency is tick-count x per-`OnUpdate` scheduling
+  bound (~0.7-1 s/tick here, right after a heavy load), which caching does not
+  reduce. The 30-49 s job totals are a 4-job serial-backlog artifact of the
+  stress sweep, not organic single-quest latency.
+
+**Decision (owner, 2026-07-16): SHIP Tier 1 in 1.0; defer the latency reduction
+(Tier 2) to V2 for planned investigation and implementation.** Tier 1 meets the
+primary coexistence goal (no per-tick compute burst; smooth frames) and speeds
+repeat quests; the residual toast latency is the intended good-citizen cost of
+the bounded worker. Tier 2 (raise `CELLS_PER_TICK` + hard row-scan ceiling)
+changes the reserved two-cell contract and is filed at
+`references/authoring/PDV_V2_Backlog.md` Section 7, whose first step is a
+calm-VM organic single-quest measurement.
+
+Current state: **RESOLVED for 1.0.** Tier 1 shipped (commit e2af2307); static /
+Prisma / Book of Days / signal gates green; runtime sweep proves correct bounded
+delivery with the VM freeze adjudicated non-PDV. Latency reduction is V2 backlog,
+not a 1.0 gate.

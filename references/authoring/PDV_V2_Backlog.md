@@ -200,7 +200,53 @@ outdoor activator, or a scripted open-sky action. Then define the anti-farm rule
 and whether any passive weather readback remains only as context after the
 player performs the ritual.
 
-## 6. Triage note
+## 6. Quest-reaction toast latency reduction (Tier 2)
+
+**Decision:** 2026-07-16. Ship Tier 1 (the deity-resolver cache) in 1.0 and
+defer the latency reduction to V2 as a planned investigation + implementation.
+Owner decision after the runtime proof; full record in
+`references/authoring/PDV_QuestReactionPerformance_ArchitectHandoff_2026-07-15.md`.
+
+**What it is:** The bounded quest-reaction worker applies at most two matrix
+cells per `RegisterForSingleUpdate(0.1)`. Under a heavy modlist VM the updates
+land ~0.7-1 s apart, so a full 45-cell universal quest's toast lands ~15-22 s
+after the quest fires -- tick-count x scheduling bound, not compute bound. Tier 2
+raises `QUEST_REACTION_QUEUE_CELLS_PER_TICK` (2 -> ~6-8) and adds a hard per-tick
+row-scan ceiling, cutting tick count so the first toast lands in the low single
+digits while keeping per-tick synchronous work bounded.
+
+**Why V2, not V1:** Tier 1 already meets the primary goal (safe coexistence --
+no per-tick compute burst, smooth frames) and speeds repeat quests via the
+session-persistent name->deity cache (cold first quest ~22 s, warm ~6-8 s
+processing). The residual latency is the intended good-citizen cost of the
+bounded worker. Tier 2 changes the reserved "2 cells / 0.1 s" contract, so it
+needs deliberate owner sign-off plus a lockstep audit-constant update, and it
+wants a calm-VM organic single-quest measurement first -- none of which is
+V1-critical.
+
+**What exists today:**
+- Tier 1 shipped: `GetQuestReactionDeity` StorageUtil name->form cache (key
+  `PDV.QR.DeityCache.<name>`), committed in e2af2307. Audit-neutral.
+- Static/Prisma/BoD/signal gates green; runtime sweep 2026-07-16 proves correct
+  bounded FIFO delivery (VM-freeze marker adjudicated non-PDV startup artifact).
+- Tooling: `tools/pdv_quest_reaction_performance_audit.mjs` (static contract) and
+  `tools/pdv_quest_reaction_runtime_check.mjs` (log-marker runtime check).
+- Option B (ingress compaction) was considered and rejected (relocates the
+  resolve burst to the quest-fire instant + save/load serialization risk).
+
+**First V2 step:** Measure one organic single-quest completion mid-session (calm
+VM, not right after load) for the true single-job toast latency, and add
+aggregate job-level timing (runnable / cheap-skipped / meta counts + finalisation
+ms -- NOT per-cell level-3 traces) to decompose ingress vs tick count. If still
+tick-bound, raise `QUEST_REACTION_QUEUE_CELLS_PER_TICK` 2 -> ~6-8 and add the
+hard row-scan ceiling, updating the audit constants (`manager.cells-per-tick` +
+a new ceiling assertion) in lockstep; re-run the runtime checker to confirm
+`qr_1` in the low single digits, no overflow, one toast + Book of Days entry per
+job.
+
+---
+
+## 7. Triage note
 
 After 1.0 ships, convert this stub into a real V2 roadmap: group the voiced
 dialogue work into a single CAT-style content lane (draft -> ratify -> voice ->
