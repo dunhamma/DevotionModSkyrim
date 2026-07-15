@@ -39,40 +39,60 @@
       }
     },
     "Altmer-AuriEl|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Altmer-AuriEl",
       "class": "boon",
       "race": "Altmer",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-15 co-test: tester confirmed Auri-El boon felt in Active Effects. Papyrus.0.log shows Auri-El patron start (23:29:43), tier change 0 -> 2, and Race reward added: Altmer Auri-El T2 (23:30:32).",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Altmer",
+        "slot": "Altmer-AuriEl|boon",
+        "matched": "Race reward added: Altmer Auri-El T2"
+      }
     },
     "Altmer-CurseState|curse": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Altmer-CurseState",
       "class": "curse",
       "race": "Altmer",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-15 co-test: tester confirmed Altmer curse-state (werewolf hard-halt) felt. Papyrus.0.log shows Curse transition 0 -> 1 (mcm_force_werewolf), Contextual favor cleared (altmer_werewolf), and Diegetic dispatch CURSE.Werewolf.onset (23:39:22).",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Altmer",
+        "slot": "Altmer-CurseState|curse",
+        "matched": "Curse transition 0 -> 1 (mcm_force_werewolf) + altmer_werewolf favor cleared"
+      }
     },
     "Altmer-Magnus|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Altmer-Magnus",
       "class": "boon",
       "race": "Altmer",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-15 co-test: tester confirmed Magnus boon felt in Active Effects. Papyrus.0.log shows Magnus tier change 0 -> 2 (23:34:19) and Race reward added: Altmer Magnus T2 (23:34:20).",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Altmer",
+        "slot": "Altmer-Magnus|boon",
+        "matched": "Race reward added: Altmer Magnus T2"
+      }
     },
     "Altmer-Orthodox|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Altmer-Orthodox",
       "class": "boon",
       "race": "Altmer",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-15 co-test: tester confirmed Altmer Orthodox broad boon felt in Active Effects. Papyrus.0.log shows the Altmer Orthodox broad floor grant (Race reward added: Altmer T1 = PDV_Bless_Altmer_Orthodox_T1) present across the active-patron sync.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Altmer",
+        "slot": "Altmer-Orthodox|boon",
+        "matched": "Race reward added: Altmer T1 (Altmer Orthodox broad floor) + tester Active Effects confirmation"
+      }
     },
     "Altmer-Syrabane|boon": {
       "status": "pending",
@@ -84,31 +104,46 @@
       "creditedFrom": null
     },
     "Altmer-Trinimac|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Altmer-Trinimac",
       "class": "boon",
       "race": "Altmer",
       "expected": "Feel one boon effect of lane Altmer-Trinimac in game (e.g. Trinimac's Charge - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-15 co-test: tester confirmed Trinimac boon felt in Active Effects. Papyrus.0.log shows Trinimac tier change 0 -> 2 (23:32:53) and Race reward added: Altmer Trinimac T2 (23:32:55).",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Altmer",
+        "slot": "Altmer-Trinimac|boon",
+        "matched": "Race reward added: Altmer Trinimac T2"
+      }
     },
     "Altmer-VampireExiledPath|curse": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Altmer-VampireExiledPath",
       "class": "curse",
       "race": "Altmer",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-15 co-test: tester confirmed Altmer vampire exiled-path curse felt (Active Effect). Papyrus.0.log shows Curse transition 1 -> 2 (mcm_force_vampire), Contextual favor cleared (altmer_vampire), and Diegetic dispatch CURSE.Vampire.shift (23:40:01). Curse Active Effect passed; the separate missing Book-of-Days entry for the werewolf->vampire shift (curse.shift had no journal line) was fixed in commit e2af2307 and awaits a relaunch recheck.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Altmer",
+        "slot": "Altmer-VampireExiledPath|curse",
+        "matched": "Curse transition 1 -> 2 (mcm_force_vampire) + altmer_vampire favor cleared"
+      }
     },
     "Altmer-Xarxes|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Altmer-Xarxes",
       "class": "boon",
       "race": "Altmer",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-15 co-test: tester confirmed Xarxes boon felt in Active Effects. Papyrus.0.log shows Xarxes tier change 0 -> 2 (23:34:56) and Race reward added: Altmer Xarxes T2 (23:34:58).",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Altmer",
+        "slot": "Altmer-Xarxes|boon",
+        "matched": "Race reward added: Altmer Xarxes T2"
+      }
     },
     "Argonian-Hist|boon": {
       "status": "pending",
@@ -170,13 +205,18 @@
       }
     },
     "Auriel|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Auriel",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-15 co-test: tester confirmed Auri-El price loss surface. Papyrus.0.log shows Disfavor sting applied Auri-El -> OrderTradeLore sharp, AwardPiety Auri-El raw -1.500000, and DebugFireDislike: Auri-El event 304 delta -1.500000 (23:31:36).",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Altmer",
+        "slot": "Auriel|price",
+        "matched": "DebugFireDislike: Auri-El event 304 delta -1.500000"
+      }
     },
     "Azurah|price": {
       "status": "evidence-recorded",
@@ -1752,13 +1792,18 @@
       "creditedFrom": null
     },
     "Xarxes|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Xarxes",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-15 co-test: tester confirmed Xarxes price loss surface. Papyrus.0.log shows AwardPiety Xarxes raw -0.500000, Debug dislike surface flushed Xarxes event 368, and DebugFireDislike: Xarxes event 368 delta -0.500000 (23:35:42).",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Altmer",
+        "slot": "Xarxes|price",
+        "matched": "DebugFireDislike: Xarxes event 368 delta -0.500000"
+      }
     },
     "Yffre|price": {
       "status": "pending",
@@ -1791,7 +1836,7 @@
       }
     }
   },
-  "updated": "2026-07-12",
+  "updated": "2026-07-16",
   "audits": [
     {
       "date": "2026-07-09",

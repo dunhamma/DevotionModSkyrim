@@ -396,9 +396,10 @@ handlers:
 After the strict gate passes, use the **Signal-floor smoke** MCM harness on a
 fresh disposable save. Never force these vanilla main-quest stages with
 `setstage` from QASmoke: `MQ106` stage 200 is a shutdown stage and can freeze an
-out-of-context save. The controlled cards call `ApplyQuestReaction` directly,
-so they prove the manager, Prisma, and Book of Days surfaces without mutating a
-vanilla quest. They do **not** prove `OnQuestStageChange` delivery.
+out-of-context save. The controlled cards enqueue `ApplyQuestReaction` through
+the manager, so they prove the worker, manager, Prisma, and Book of Days
+surfaces without mutating a vanilla quest. They do **not** prove
+`OnQuestStageChange` delivery.
 
 1. Select **T11: MQ106 200 - Syrabane**: Syrabane resolves and its newly covered
    row lands with its explicit Prisma glyph.
@@ -413,6 +414,30 @@ vanilla quest. They do **not** prove `OnQuestStageChange` delivery.
    one organic kill and one organic spare. The Book of Days must list every
    reachable landed god, the toast must show only the strongest reactor, and
    repeat plus kill-then-spare suppression must survive save/load.
+
+### Quest-Reaction Performance Sweep (2026-07-15; runtime proof pending)
+
+Use a new disposable save after a full Skyrim relaunch. In **Debug: State &
+Rewards**, confirm `Quest reaction queue` reads `idle`, open the Book of Days
+once and close it, then select **Run performance sweep**. It queues MQ101 150,
+MQ105 160, MQ106 200, and MQ206 220 through the manager only; it never calls
+vanilla `setstage`. Keep moving/opening ordinary menus while it drains. Each
+job must emit one level-1 `[PDV][QR_QUEUE] ENQUEUE`, `START`, and `COMPLETE`
+marker in FIFO order; there must be no VM-freeze or `BROAD_SCOPE_ABORT` marker.
+Each job finalises with one coherent toast and Book of Days beat. If the Book
+was already open, close and reopen it after completion: its Prisma overlay does
+not live-refresh an existing payload.
+
+After leaving Skyrim, run:
+
+```powershell
+node .\tools\pdv_quest_reaction_runtime_check.mjs --expected-sequence '210731|150,148154|160,207142|200,221587|220'
+```
+
+Record the checker result, queue lifecycle lines, one screenshot of a final
+toast/Book entry, and a save/load during the MQ106 job. The checker proves route
+and queue safety only; Book visibility, exact piety, and an organic safe-stage
+smoke remain distinct evidence.
 
 ## In-Game Setup
 
@@ -617,13 +642,13 @@ node .\tools\pdv_1_0_endstate_gate.mjs
 
 ## Felt-Family Race Sittings (deduplicated plan)
 
-REGENERATED 2026-07-15 from the live `PDV_FeltFamilyEvidenceLedger.json`: shows only the **58 remaining** families (the 93 already proven are recorded in the ledger -- the authority -- not re-listed here). Each shared price/sting is assigned to a single sitting, so working these proves every remaining family once.
+REGENERATED 2026-07-16 from the live `PDV_FeltFamilyEvidenceLedger.json`: shows only the **49 remaining** families (the 102 already proven are recorded in the ledger -- the authority -- not re-listed here). Each shared price/sting is assigned to a single sitting, so working these proves every remaining family once.
 
 **Per-sitting flow (matters for speed):** prime the **neglect-eligible** state FIRST via the debug MCM, work every other row while a dawn passes, advance one dawn, then read the neglect debuff LAST. Neglect is the only dawn-gated class, so this hides its wait behind the rest of the sitting.
 
 | # | Sitting | Origin idx | Remaining | Note |
 |---|---|---|---|---|
-| 1 | Altmer | 3 | 11 |  |
+| 1 | Altmer | 3 | 2 | Syrabane boon + neglect only (9 recorded 2026-07-15) |
 | 2 | Orc | 8 | 10 |  |
 | 3 | Dunmer | 5 | 9 |  |
 | 4 | Argonian | 7 | 8 |  |
@@ -632,28 +657,17 @@ REGENERATED 2026-07-15 from the live `PDV_FeltFamilyEvidenceLedger.json`: shows 
 | 7 | Breton | 2 | 4 |  |
 | 8 | Khajiit | 6 | 3 | quick straggler |
 
-### 1. Altmer sitting (11 left) - `set PDV_GLO_OriginRace to 3`
+### 1. Altmer sitting (2 left) - `set PDV_GLO_OriginRace to 3`
 
 Flow: prime neglect-eligible FIRST, then work the rows below; advance one dawn; read the neglect debuff last.
 
+2026-07-15 co-test recorded 9 of the 11 rows (5 boons, 2 prices, 2 curses). Two remain.
+
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [ ] `Altmer-AuriEl|boon`  (e.g. Auri-El's Dawn - Seeker)
-- [ ] `Altmer-Magnus|boon`  (e.g. Magnus's Arts - Seeker)
-- [ ] `Altmer-Orthodox|boon`  (e.g. Altmer Orthodox Steadiness)
-- [ ] `Altmer-Syrabane|boon`  (e.g. Syrabane's Guard - Seeker)
-- [ ] `Altmer-Trinimac|boon`  (e.g. Trinimac's Charge - Seeker)
-- [ ] `Altmer-Xarxes|boon`  (e.g. Xarxes's Record - Seeker)
-
-**curse** - prime the curse state via debug MCM, read the curse effect in Active Effects:
-- [ ] `Altmer-CurseState|curse`
-- [ ] `Altmer-VampireExiledPath|curse`
-
-**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row):
-- [ ] `Auriel|price`  (e.g. murder-defenseless)
-- [ ] `Xarxes|price`  (e.g. accept-daedric-artifact)
+- [ ] `Altmer-Syrabane|boon`  (e.g. Syrabane's Guard - Seeker) -- RETEST on an IDLE quest-reaction queue. The 2026-07-15 attempt missed the T2 grant (no `Race reward added: Altmer Syrabane T2` line) while the MQ106-200 Syrabane quest reaction was still draining from a performance sweep. ESP bindings verified correct; confirm `Quest reaction queue` reads idle first.
 
 **neglect** - read the neglect debuff in Active Effects (see Flow note -- prime it FIRST, read it LAST):
-- [ ] `Neglect-Altmer|neglect`  (e.g. The Dawn Withheld)
+- [ ] `Neglect-Altmer|neglect`  (e.g. The Dawn Withheld) -- clear the curse to human baseline (`Curse none`) first; an active werewolf/vampire curse suppresses Altmer favor, so neglect will not flag while cursed.
 
 ### 2. Orc sitting (10 left) - `set PDV_GLO_OriginRace to 8`
 
@@ -962,7 +976,7 @@ These are the practical closeout lanes this runbook feeds:
 | Criterion | How testing closes it | Evidence sink |
 |---|---|---|
 | C-RACE-RUBRIC | Re-run the race beta-feel packet for any race whose ledger verdict regresses below Pass (currently STALE from source drift) | Per-race beta-feel packet ledgers |
-| C-FELT-FAMILY | Work the checklists in **Felt-Family Race Sittings (deduplicated plan)** above - 58 remaining families (2026-07-15, regenerated from live ledger), each proven once | `PDV_FeltFamilyEvidenceLedger.json` |
+| C-FELT-FAMILY | Work the checklists in **Felt-Family Race Sittings (deduplicated plan)** above - 49 remaining families (2026-07-16, regenerated from live ledger), each proven once | `PDV_FeltFamilyEvidenceLedger.json` |
 | C-DISLIKE-DEBUFF-TUNING | Dedicated anti-stack/Requiem-felt sitting | `PDV_1_0_ManualSignoffLedger.json` (`dislikeStackTuning`) |
 | C-PACING-SIGNOFF | One dated real-play pacing sign-off per race | `PDV_PacingSignoffLedger.json` |
 | C-PLACEMENT-FINAL | Pending in-world hook proofs folded into race sittings | `PDV_InWorldHookProofLedger.json` |
