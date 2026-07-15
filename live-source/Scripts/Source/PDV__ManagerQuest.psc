@@ -46,6 +46,7 @@ String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/
 ; List-patch second channel (e.g. Authoria/ARR). Cells are read from whichever
 ; channel owns the (form|stage) key; shared stance/value tables stay on core.
 String Property QUEST_REACTION_MATRIX_FILE_ARR = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR" AutoReadOnly
+PDV_QuestReactionWorker Property PDV_QuestReactionWorkerService Auto
 
 PDV_Deity_Kyne Property PDV_Kyne Auto
 PDV_Deity_Talos Property PDV_Talos Auto
@@ -795,6 +796,13 @@ Float Property DebugValue = 0.0 Auto
 Int Property DebugSignalType = 0 Auto
 Int Property EVT_SHOUT_ATTACK = 40 AutoReadOnly
 Float Property SHOUT_DUPLICATE_WINDOW_DAYS = 0.00001 AutoReadOnly
+; PO3 can deliver the same watched quest stage more than once while the stage
+; is resolving. Keep the debounce keyed to the exact matrix cell so a duplicate
+; callback cannot award piety, a meta faucet, or a broad-pantheon fold twice.
+Float Property QUEST_REACTION_DUPLICATE_WINDOW_DAYS = 0.02 AutoReadOnly
+Int Property QUEST_REACTION_QUEUE_MAX_PENDING = 128 AutoReadOnly
+Int Property QUEST_REACTION_QUEUE_CELLS_PER_TICK = 2 AutoReadOnly
+Float Property QUEST_REACTION_QUEUE_TICK_SECONDS = 0.1 AutoReadOnly
 
 String Property SHOUT_DUPLICATE_KEY = "PDV.ShoutAttack.LastTime" AutoReadOnly
 Int _shoutRefreshTicks = 0
@@ -816,6 +824,26 @@ String _qrSurfBestNegName = ""
 String _qrSurfBestPosSymbol = ""
 String _qrSurfBestNegSymbol = ""
 Bool _qrSurfMilestone = False
+; The bounded worker owns these separate accumulators. They never borrow the
+; global broad-pantheon scope, so a long quest fan-out cannot block another
+; manager event or merge its player-facing acknowledgement.
+Bool _qrQueueTransactionActive = False
+Bool _qrQueueNeedsCurseRefresh = False
+Bool _qrQueueNeedsBretonRewardSync = False
+String _qrQueueSurfPosNamesCsv = ""
+String _qrQueueSurfNegNamesCsv = ""
+Int _qrQueueSurfPosCount = 0
+Int _qrQueueSurfNegCount = 0
+Float _qrQueueSurfBestPosAmount = 0.0
+Float _qrQueueSurfBestNegAmount = 0.0
+String _qrQueueSurfBestPosName = ""
+String _qrQueueSurfBestNegName = ""
+String _qrQueueSurfBestPosSymbol = ""
+String _qrQueueSurfBestNegSymbol = ""
+Bool _qrQueueSurfMilestone = False
+String _qrQueueBroadPool = ""
+Float _qrQueueBroadBestPositive = 0.0
+Float _qrQueueBroadWorstNegative = 0.0
 ; Likes/dislikes smoke surface accumulator (2026-07-11): event 303 and 366
 ; should score through the generic action router but still leave one visible
 ; toast + Book of Days beat for the whole fan-out.
@@ -1560,6 +1588,14 @@ String Function ResolveQuestReactionCellFile(String cellPrefix)
 EndFunction
 
 Function ApplyQuestReaction(Quest sourceQuest, Int stageValue, String parentLogicalEventId = "")
+    QueueQuestReactionJob(sourceQuest, stageValue, parentLogicalEventId)
+EndFunction
+
+; Matrix-backed quest stages are intentionally asynchronous. Event receivers only
+; snapshot immutable cell data and return; the dedicated worker applies two cells
+; per tick. This protects shared modlists from a 45-cell quest fan-out monopolising
+; the Papyrus VM while preserving one logical reaction and one final surface.
+Function QueueQuestReactionJob(Quest sourceQuest, Int stageValue, String parentLogicalEventId = "")
     if !sourceQuest
         return
     endIf
@@ -1580,35 +1616,323 @@ Function ApplyQuestReaction(Quest sourceQuest, Int stageValue, String parentLogi
     String[] magnitudes = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, cellPrefix + "magnitudesCsv"), "|")
     String[] sourceTags = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, cellPrefix + "tagsCsv"), "|")
     Int cellCount = deityNames.Length
-    if cellCount <= 0
+    if cellCount <= 0 || cellCount != valences.Length || cellCount != intensities.Length || cellCount != magnitudes.Length || cellCount != sourceTags.Length
+        TraceQuestReactionQueue("REJECT malformed reaction " + reactionKey)
         return
     endIf
 
-    Bool joinedParentEvent = False
-    if parentLogicalEventId != ""
-        joinedParentEvent = JoinBroadPantheonEvent(parentLogicalEventId)
+    if IsQuestReactionQueued(reactionKey)
+        TraceQuestReactionQueue("COALESCE queued " + reactionKey)
+        return
     endIf
-    if !joinedParentEvent
-        BeginBroadPantheonEvent("quest_" + reactionKey)
+    if StorageUtil.StringListCount(None, "PDV.QR.Queue.JobIds") >= QUEST_REACTION_QUEUE_MAX_PENDING
+        TraceQuestReactionQueue("OVERFLOW rejected " + reactionKey + " pending=" + StorageUtil.StringListCount(None, "PDV.QR.Queue.JobIds"))
+        return
     endIf
-    ResetQuestReactionSurface()
-    Int i = 0
-    while i < cellCount
-        if i < valences.Length && i < intensities.Length && i < magnitudes.Length && i < sourceTags.Length
-            ApplyDeityReaction(deityNames[i], valences[i], intensities[i], magnitudes[i], sourceTags[i], False, sourceQuest as Form)
-        endIf
-        i += 1
-    endWhile
-    FlushQuestReactionSurface()
+    if ShouldSuppressDuplicateQuestReaction(reactionKey)
+        TraceQuestReactionQueue("COALESCE recent " + reactionKey)
+        return
+    endIf
+
+    Int sequence = StorageUtil.AdjustIntValue(None, "PDV.QR.Queue.Sequence", 1)
+    String jobId = "qr_" + sequence
+    String prefix = "PDV.QR.Job." + jobId + "."
+    StorageUtil.StringListAdd(None, "PDV.QR.Queue.JobIds", jobId, True)
+    StorageUtil.FormListAdd(None, "PDV.QR.Queue.SourceForms", sourceQuest as Form, True)
+    StorageUtil.SetStringValue(None, prefix + "ReactionKey", reactionKey)
+    StorageUtil.SetStringValue(None, prefix + "ParentLogicalEventId", parentLogicalEventId)
+    StorageUtil.SetStringValue(None, prefix + "DeitiesCsv", deitiesCsv)
+    StorageUtil.SetStringValue(None, prefix + "ValencesCsv", JsonUtil.GetStringValue(matrixFile, cellPrefix + "valencesCsv"))
+    StorageUtil.SetStringValue(None, prefix + "IntensitiesCsv", JsonUtil.GetStringValue(matrixFile, cellPrefix + "intensitiesCsv"))
+    StorageUtil.SetStringValue(None, prefix + "MagnitudesCsv", JsonUtil.GetStringValue(matrixFile, cellPrefix + "magnitudesCsv"))
+    StorageUtil.SetStringValue(None, prefix + "TagsCsv", JsonUtil.GetStringValue(matrixFile, cellPrefix + "tagsCsv"))
+    StorageUtil.SetStringValue(None, prefix + "MatrixFile", matrixFile)
+    StorageUtil.SetStringValue(None, prefix + "CellPrefix", cellPrefix)
+    StorageUtil.SetIntValue(None, prefix + "CellCount", cellCount)
+    StorageUtil.SetIntValue(None, prefix + "CellIndex", 0)
+    StorageUtil.SetIntValue(None, prefix + "MetaIndex", 0)
+    StorageUtil.SetIntValue(None, prefix + "MetaPrepared", 0)
+    StorageUtil.SetIntValue(None, prefix + "MetaEligible", 0)
+    StorageUtil.SetIntValue(None, prefix + "MetaWheelHit", 0)
+    StorageUtil.SetFloatValue(None, prefix + "EnqueuedRealTime", Utility.GetCurrentRealTime())
+
+    ; Snapshot all matrix-derived meta flags at ingress. Timing-sensitive player
+    ; state is intentionally evaluated at enqueue so a backlog cannot rewrite a
+    ; quest's meaning after the player has moved on.
+    StorageUtil.SetIntValue(None, prefix + "MetaGold", JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.gold"))
+    StorageUtil.SetIntValue(None, prefix + "MetaMageAid", JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.mageAid"))
+    StorageUtil.SetIntValue(None, prefix + "MetaTwilight", BoolToInt(IsQuestReactionTwilightWindow()))
+    StorageUtil.SetIntValue(None, prefix + "MetaNight", BoolToInt(IsQuestReactionNightWindow()))
+    StorageUtil.SetIntValue(None, prefix + "MetaNocturnalTheft", BoolToInt(StorageUtil.GetFloatValue(None, "PDV.Meta.LastTheftTime") > StorageUtil.GetFloatValue(None, "PDV.Meta.LastFulfillTime")))
+    StorageUtil.SetIntValue(None, prefix + "MetaOutdoors", BoolToInt(IsPlayerOutdoorsForQuestReaction()))
+    StorageUtil.SetIntValue(None, prefix + "MetaSkipZen", JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Z'en"))
+    StorageUtil.SetIntValue(None, prefix + "MetaSkipJulianos", JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Julianos"))
+    StorageUtil.SetIntValue(None, prefix + "MetaSkipAzura", JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Azura"))
+    StorageUtil.SetIntValue(None, prefix + "MetaSkipNocturnal", JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Nocturnal"))
+    StorageUtil.SetIntValue(None, prefix + "MetaSkipKhenarthi", JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Khenarthi"))
+    StorageUtil.SetIntValue(None, prefix + "MetaSkipAkatosh", JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Akatosh"))
+    StorageUtil.SetIntValue(None, prefix + "MetaSkipXarxes", JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Xarxes"))
+    StorageUtil.SetFloatValue(None, prefix + "QueuedGameTime", Utility.GetCurrentGameTime())
 
     StorageUtil.SetStringValue(None, "PDV.QuestReaction.LastKey", reactionKey)
     StorageUtil.SetIntValue(None, "PDV.QuestReaction.LastCellCount", cellCount)
+    TraceQuestReactionQueue("ENQUEUE " + jobId + " key=" + reactionKey + " cells=" + cellCount + " pending=" + StorageUtil.StringListCount(None, "PDV.QR.Queue.JobIds"))
+    if PDV_QuestReactionWorkerService
+        PDV_QuestReactionWorkerService.EnsureQuestReactionQueueRunning()
+    endIf
+EndFunction
+
+Bool Function HasQueuedQuestReactionJobs()
+    return StorageUtil.StringListCount(None, "PDV.QR.Queue.JobIds") > 0
+EndFunction
+
+String Function GetQuestReactionQueueStatus()
+    Int pending = StorageUtil.StringListCount(None, "PDV.QR.Queue.JobIds")
+    if pending <= 0
+        return "idle"
+    endIf
+    String jobId = StorageUtil.StringListGet(None, "PDV.QR.Queue.JobIds", 0)
+    String prefix = "PDV.QR.Job." + jobId + "."
+    return "pending=" + pending + " key=" + StorageUtil.GetStringValue(None, prefix + "ReactionKey") + " cells=" + StorageUtil.GetIntValue(None, prefix + "CellIndex") + "/" + StorageUtil.GetIntValue(None, prefix + "CellCount")
+EndFunction
+
+Function TraceQuestReactionQueue(String text)
     if GetDebugLevel() >= 1
-        Debug.Trace("[PDV] QuestReaction: " + reactionKey + " applied " + cellCount + " cells.")
+        Debug.Trace("[PDV][QR_QUEUE] " + text)
+    endIf
+EndFunction
+
+Bool Function IsQuestReactionQueued(String reactionKey)
+    Int i = 0
+    Int count = StorageUtil.StringListCount(None, "PDV.QR.Queue.JobIds")
+    while i < count
+        String jobId = StorageUtil.StringListGet(None, "PDV.QR.Queue.JobIds", i)
+        if StorageUtil.GetStringValue(None, "PDV.QR.Job." + jobId + ".ReactionKey") == reactionKey
+            return True
+        endIf
+        i += 1
+    endWhile
+    return False
+EndFunction
+
+Bool Function IsQuestReactionTwilightWindow()
+    Float nowTime = Utility.GetCurrentGameTime()
+    Float hourOfDay = (nowTime - ((nowTime as Int) as Float)) * 24.0
+    return (hourOfDay >= 5.0 && hourOfDay < 7.0) || (hourOfDay >= 17.0 && hourOfDay < 19.0)
+EndFunction
+
+Bool Function IsQuestReactionNightWindow()
+    Float nowTime = Utility.GetCurrentGameTime()
+    Float hourOfDay = (nowTime - ((nowTime as Int) as Float)) * 24.0
+    return hourOfDay >= 20.0 || hourOfDay < 6.0
+EndFunction
+
+Bool Function IsPlayerOutdoorsForQuestReaction()
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return False
+    endIf
+    Cell parentCell = playerRef.GetParentCell()
+    return parentCell && !parentCell.IsInterior()
+EndFunction
+
+; Called only by PDV_QuestReactionWorker. It never waits and it never opens a
+; broad-pantheon scope. The return value tells the worker whether it should
+; schedule another short single update.
+Bool Function ProcessQuestReactionQueueSlice()
+    if !HasQueuedQuestReactionJobs()
+        return False
     endIf
 
-    EvaluateQuestMetaFaucets(sourceQuest, reactionKey, cellPrefix, matrixFile)
-    FlushBroadPantheonEvent()
+    String jobId = StorageUtil.StringListGet(None, "PDV.QR.Queue.JobIds", 0)
+    String prefix = "PDV.QR.Job." + jobId + "."
+    Int cellCount = StorageUtil.GetIntValue(None, prefix + "CellCount")
+    Int cellIndex = StorageUtil.GetIntValue(None, prefix + "CellIndex")
+    if cellCount <= 0 || cellIndex < 0 || cellIndex > cellCount
+        TraceQuestReactionQueue("REJECT corrupt " + jobId)
+        RemoveQueuedQuestReactionJob()
+        return HasQueuedQuestReactionJobs()
+    endIf
+
+    if cellIndex == 0
+        ResetQueuedQuestReactionSurface()
+        _qrQueueNeedsCurseRefresh = False
+        _qrQueueNeedsBretonRewardSync = False
+        _qrQueueBroadPool = GetActiveBroadPantheonPoolId()
+        _qrQueueBroadBestPositive = 0.0
+        _qrQueueBroadWorstNegative = 0.0
+        TraceQuestReactionQueue("START " + jobId + " key=" + StorageUtil.GetStringValue(None, prefix + "ReactionKey") + " cells=" + cellCount)
+    endIf
+
+    String[] deities = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "DeitiesCsv"), "|")
+    String[] valences = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "ValencesCsv"), "|")
+    String[] intensities = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "IntensitiesCsv"), "|")
+    String[] magnitudes = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "MagnitudesCsv"), "|")
+    String[] tags = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "TagsCsv"), "|")
+    if deities.Length != cellCount || valences.Length != cellCount || intensities.Length != cellCount || magnitudes.Length != cellCount || tags.Length != cellCount
+        TraceQuestReactionQueue("REJECT snapshot mismatch " + jobId)
+        RemoveQueuedQuestReactionJob()
+        return HasQueuedQuestReactionJobs()
+    endIf
+
+    Form sourceForm = StorageUtil.FormListGet(None, "PDV.QR.Queue.SourceForms", 0)
+    Int processed = 0
+    _qrQueueTransactionActive = True
+    Bool sliceOpen = True
+    while sliceOpen && cellIndex < cellCount
+        if IsQueuedQuestReactionCellCheapSkip(deities[cellIndex], valences[cellIndex], intensities[cellIndex], magnitudes[cellIndex])
+            cellIndex += 1
+        elseIf processed < QUEST_REACTION_QUEUE_CELLS_PER_TICK
+            ApplyDeityReaction(deities[cellIndex], valences[cellIndex], intensities[cellIndex], magnitudes[cellIndex], tags[cellIndex], False, sourceForm)
+            cellIndex += 1
+            processed += 1
+        else
+            sliceOpen = False
+        endIf
+    endWhile
+    _qrQueueTransactionActive = False
+    StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)
+
+    if cellIndex < cellCount
+        return True
+    endIf
+
+    ; Meta lanes use the same two-reaction budget as base cells. This matters on
+    ; sparse matrix routes: a small base fan-out can still carry several meta
+    ; acknowledgements, and none may turn a worker tick back into a burst.
+    Int metaIndex = StorageUtil.GetIntValue(None, prefix + "MetaIndex")
+    if metaIndex < 7
+        _qrQueueTransactionActive = True
+        metaIndex = ProcessQueuedQuestReactionMetaSlice(sourceForm as Quest, prefix, metaIndex)
+        _qrQueueTransactionActive = False
+        StorageUtil.SetIntValue(None, prefix + "MetaIndex", metaIndex)
+        if metaIndex < 7
+            return True
+        endIf
+    endIf
+
+    ; The queue owns all finalisation. It happens once, after both the base and
+    ; meta snapshots have drained, so no intermediate toast or panel refresh can
+    ; leak into another manager event.
+    FlushQueuedQuestReactionSurface()
+    CommitQueuedQuestReactionBroad(StorageUtil.GetStringValue(None, prefix + "ReactionKey"))
+    if _qrQueueNeedsCurseRefresh
+        HandleCurseStateRefresh("quest_reaction_queue")
+    endIf
+    if _qrQueueNeedsBretonRewardSync
+        SyncFirstTierRaceRewardRuntime()
+    endIf
+    RequestPanelRefresh()
+
+    Float elapsed = Utility.GetCurrentRealTime() - StorageUtil.GetFloatValue(None, prefix + "EnqueuedRealTime")
+    StorageUtil.SetStringValue(None, "PDV.QuestReaction.LastKey", StorageUtil.GetStringValue(None, prefix + "ReactionKey"))
+    StorageUtil.SetIntValue(None, "PDV.QuestReaction.LastCellCount", cellCount)
+    TraceQuestReactionQueue("COMPLETE " + jobId + " key=" + StorageUtil.GetStringValue(None, prefix + "ReactionKey") + " cells=" + cellCount + " elapsed=" + elapsed)
+    RemoveQueuedQuestReactionJob()
+    return HasQueuedQuestReactionJobs()
+EndFunction
+
+Function RemoveQueuedQuestReactionJob()
+    if !HasQueuedQuestReactionJobs()
+        return
+    endIf
+    String jobId = StorageUtil.StringListGet(None, "PDV.QR.Queue.JobIds", 0)
+    String prefix = "PDV.QR.Job." + jobId + "."
+    StorageUtil.StringListRemoveAt(None, "PDV.QR.Queue.JobIds", 0)
+    StorageUtil.FormListRemoveAt(None, "PDV.QR.Queue.SourceForms", 0)
+    StorageUtil.SetStringValue(None, prefix + "ReactionKey", "")
+    StorageUtil.SetStringValue(None, prefix + "DeitiesCsv", "")
+    StorageUtil.SetStringValue(None, prefix + "ValencesCsv", "")
+    StorageUtil.SetStringValue(None, prefix + "IntensitiesCsv", "")
+    StorageUtil.SetStringValue(None, prefix + "MagnitudesCsv", "")
+    StorageUtil.SetStringValue(None, prefix + "TagsCsv", "")
+EndFunction
+
+Int Function ProcessQueuedQuestReactionMetaSlice(Quest sourceQuest, String prefix, Int metaIndex)
+    ; Seven deterministic slots: Z'en, Julianos, Azura, Nocturnal, Khenarthi,
+    ; Akatosh, Xarxes. Each consumes one bounded work slot whether or not its
+    ; snapshot condition awards piety, keeping a saved job deterministic.
+    if StorageUtil.GetIntValue(None, prefix + "MetaPrepared") != 1
+        StorageUtil.SetIntValue(None, prefix + "MetaPrepared", 1)
+        String[] keyParts = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "ReactionKey"), "|")
+        if sourceQuest && keyParts.Length > 0
+            String doneKey = "PDV.Meta.Done." + keyParts[0]
+            if StorageUtil.GetIntValue(None, doneKey) != 1
+                StorageUtil.SetIntValue(None, doneKey, 1)
+                StorageUtil.SetIntValue(None, prefix + "MetaEligible", 1)
+            endIf
+        endIf
+    endIf
+
+    Int processed = 0
+    Form questForm = sourceQuest as Form
+    while processed < QUEST_REACTION_QUEUE_CELLS_PER_TICK && metaIndex < 7
+        if StorageUtil.GetIntValue(None, prefix + "MetaEligible") == 1
+            if metaIndex == 0
+                if StorageUtil.GetIntValue(None, prefix + "MetaGold") == 1 && StorageUtil.GetIntValue(None, prefix + "MetaSkipZen") != 1
+                    ApplyDeityReaction("Z'en", "+", "zen", "meta", "meta_zen_wage", False, questForm)
+                endIf
+            elseIf metaIndex == 1
+                if StorageUtil.GetIntValue(None, prefix + "MetaMageAid") == 1 && StorageUtil.GetIntValue(None, prefix + "MetaSkipJulianos") != 1
+                    ApplyDeityReaction("Julianos", "+", "julianos", "meta", "meta_julianos_wisdom", False, questForm)
+                endIf
+            elseIf metaIndex == 2
+                if (StorageUtil.GetIntValue(None, prefix + "MetaMageAid") == 1 || StorageUtil.GetIntValue(None, prefix + "MetaTwilight") == 1) && StorageUtil.GetIntValue(None, prefix + "MetaSkipAzura") != 1
+                    ApplyDeityReaction("Azura", "+", "azura", "meta", "meta_azura_threshold", False, questForm)
+                endIf
+            elseIf metaIndex == 3
+                if StorageUtil.GetIntValue(None, prefix + "MetaSkipNocturnal") != 1 && StorageUtil.GetIntValue(None, prefix + "MetaNocturnalTheft") == 1
+                    ApplyDeityReaction("Nocturnal", "+", "nocturnalTheft", "meta", "meta_nocturnal_herway", False, questForm)
+                elseIf StorageUtil.GetIntValue(None, prefix + "MetaSkipNocturnal") != 1 && StorageUtil.GetIntValue(None, prefix + "MetaNight") == 1
+                    ApplyDeityReaction("Nocturnal", "+", "nocturnalNight", "meta", "meta_nocturnal_dark", False, questForm)
+                endIf
+            elseIf metaIndex == 4
+                if StorageUtil.GetIntValue(None, prefix + "MetaOutdoors") == 1 && StorageUtil.GetIntValue(None, prefix + "MetaSkipKhenarthi") != 1
+                    ApplyDeityReaction("Khenarthi", "+", "khenarthi", "meta", "meta_khenarthi_road", False, questForm)
+                endIf
+            elseIf metaIndex == 5
+                Int wheelCount = StorageUtil.AdjustIntValue(None, "PDV.Meta.QuestCount", 1)
+                if wheelCount > 0 && wheelCount % 10 == 0
+                    StorageUtil.SetIntValue(None, prefix + "MetaWheelHit", 1)
+                    if StorageUtil.GetIntValue(None, prefix + "MetaSkipAkatosh") != 1
+                        ApplyDeityReaction("Akatosh", "+", "wheel", "meta", "meta_akatosh_wheel", False, questForm)
+                    endIf
+                endIf
+            elseIf metaIndex == 6
+                if StorageUtil.GetIntValue(None, prefix + "MetaWheelHit") == 1 && StorageUtil.GetIntValue(None, prefix + "MetaSkipXarxes") != 1
+                    ApplyDeityReaction("Xarxes", "+", "wheel", "meta", "meta_xarxes_record", False, questForm)
+                endIf
+            endIf
+        endIf
+        metaIndex += 1
+        processed += 1
+    endWhile
+
+    if metaIndex >= 7 && StorageUtil.GetIntValue(None, prefix + "MetaEligible") == 1
+        StorageUtil.SetFloatValue(None, "PDV.Meta.LastFulfillTime", StorageUtil.GetFloatValue(None, prefix + "QueuedGameTime"))
+    endIf
+    return metaIndex
+EndFunction
+
+Bool Function ShouldSuppressDuplicateQuestReaction(String reactionKey)
+    if reactionKey == ""
+        return False
+    endIf
+
+    String timeKey = "PDV.QuestReaction.LastAppliedTime." + reactionKey
+    String seenKey = "PDV.QuestReaction.LastAppliedSeen." + reactionKey
+    Float nowTime = Utility.GetCurrentGameTime()
+    if StorageUtil.GetIntValue(None, seenKey) == 1
+        Float priorTime = StorageUtil.GetFloatValue(None, timeKey)
+        Float elapsed = nowTime - priorTime
+        if elapsed >= 0.0 && elapsed < QUEST_REACTION_DUPLICATE_WINDOW_DAYS
+            return True
+        endIf
+    endIf
+
+    StorageUtil.SetFloatValue(None, timeKey, nowTime)
+    StorageUtil.SetIntValue(None, seenKey, 1)
+    return False
 EndFunction
 
 Function EvaluateQuestMetaFaucets(Quest sourceQuest, String reactionKey, String cellPrefix, String matrixFile)
@@ -1747,6 +2071,31 @@ Function TryNamiraFeedHeal()
     Trace(2, "Namira feed-heal fired tier=" + namiraTier + " mult=" + feedMultiplier + " health=" + feedHeal + " stamina=" + feedStamina)
 EndFunction
 
+Bool Function IsQueuedQuestReactionCellCheapSkip(String deityName, String valence, String intensity, String magnitude)
+    PDV_DeityBase deity = GetQuestReactionDeity(deityName)
+    if !deity
+        return True
+    endIf
+
+    Float amount = GetQuestReactionBaseValue(magnitude, intensity)
+    if amount == 0.0
+        return True
+    endIf
+    if valence == "-"
+        amount = amount * -1.0
+    endIf
+
+    String stance = GetQuestReactionStance(deityName, deity)
+    if stance == "CURSE"
+        return False
+    endIf
+    if stance == "TABOO" || stance == "HOSTILE" || stance == "FOREIGN" || stance == "TOLERATED"
+        return !IsQuestReactionDeityReachable(deity)
+    endIf
+
+    return False
+EndFunction
+
 Function ApplyDeityReaction(String deityName, String valence, String intensity, String magnitude, String sourceTag, Bool isFaucet, Form sourceForm)
     PDV_DeityBase deity = GetQuestReactionDeity(deityName)
     if !deity
@@ -1775,8 +2124,12 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
     String stance = GetQuestReactionStance(deityName, deity)
     if stance == "CURSE"
         StorageUtil.SetStringValue(None, "PDV.QuestReaction.LastCurse", deityName + "." + sourceTag)
-        HandleCurseStateRefresh("quest_reaction_" + deityName)
-        if GetDebugLevel() >= 1
+        if _qrQueueTransactionActive
+            _qrQueueNeedsCurseRefresh = True
+        else
+            HandleCurseStateRefresh("quest_reaction_" + deityName)
+        endIf
+        if GetDebugLevel() >= 3 || (!_qrQueueTransactionActive && GetDebugLevel() >= 1)
             Debug.Trace("[PDV] QuestReaction curse routed: " + deityName + " " + sourceTag)
         endIf
         return
@@ -1784,7 +2137,7 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
 
     if stance == "TABOO" || stance == "HOSTILE"
         if !IsQuestReactionDeityReachable(deity)
-            if GetDebugLevel() >= 2
+            if GetDebugLevel() >= 3
                 Debug.Trace("[PDV] QuestReaction skipped unreachable taboo/hostile deity: " + deityName + " " + sourceTag)
             endIf
             return
@@ -1821,7 +2174,7 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
     ; their reduced-rate award below.
     if stance == "FOREIGN" || stance == "TOLERATED"
         if !IsQuestReactionDeityReachable(deity)
-            if GetDebugLevel() >= 2
+            if GetDebugLevel() >= 3
                 Debug.Trace("[PDV] QuestReaction skipped unreachable foreign deity: " + deityName + " " + sourceTag)
             endIf
             return
@@ -1894,6 +2247,10 @@ Function ResetQuestReactionSurface()
 EndFunction
 
 Function AccumulateQuestReactionSurface(PDV_DeityBase deity, Float amount, String magnitude)
+    if _qrQueueTransactionActive
+        AccumulateQueuedQuestReactionSurface(deity, amount, magnitude)
+        return
+    endIf
     if !deity || amount == 0.0
         return
     endIf
@@ -1949,6 +2306,10 @@ String Function JoinQuestSurfaceNames(String namesCsv)
 EndFunction
 
 Function FlushQuestReactionSurface()
+    if _qrQueueTransactionActive
+        FlushQueuedQuestReactionSurface()
+        return
+    endIf
     if _qrSurfPosCount == 0 && _qrSurfNegCount == 0
         return
     endIf
@@ -1993,6 +2354,96 @@ Function FlushQuestReactionSurface()
     endIf
 
     ResetQuestReactionSurface()
+EndFunction
+
+Function ResetQueuedQuestReactionSurface()
+    _qrQueueSurfPosNamesCsv = ""
+    _qrQueueSurfNegNamesCsv = ""
+    _qrQueueSurfPosCount = 0
+    _qrQueueSurfNegCount = 0
+    _qrQueueSurfBestPosAmount = 0.0
+    _qrQueueSurfBestNegAmount = 0.0
+    _qrQueueSurfBestPosName = ""
+    _qrQueueSurfBestNegName = ""
+    _qrQueueSurfBestPosSymbol = ""
+    _qrQueueSurfBestNegSymbol = ""
+    _qrQueueSurfMilestone = False
+EndFunction
+
+Function AccumulateQueuedQuestReactionSurface(PDV_DeityBase deity, Float amount, String magnitude)
+    if !deity || amount == 0.0
+        return
+    endIf
+    String deityName = GetPublicDeityDisplayName(deity)
+    if magnitude == "milestone"
+        _qrQueueSurfMilestone = True
+    endIf
+    if amount > 0.0
+        if _qrQueueSurfPosNamesCsv != ""
+            _qrQueueSurfPosNamesCsv = _qrQueueSurfPosNamesCsv + "|"
+        endIf
+        _qrQueueSurfPosNamesCsv = _qrQueueSurfPosNamesCsv + deityName
+        _qrQueueSurfPosCount += 1
+        if amount > _qrQueueSurfBestPosAmount
+            _qrQueueSurfBestPosAmount = amount
+            _qrQueueSurfBestPosName = deityName
+            _qrQueueSurfBestPosSymbol = GetPrismaSymbolForDeity(deity)
+        endIf
+    else
+        if _qrQueueSurfNegNamesCsv != ""
+            _qrQueueSurfNegNamesCsv = _qrQueueSurfNegNamesCsv + "|"
+        endIf
+        _qrQueueSurfNegNamesCsv = _qrQueueSurfNegNamesCsv + deityName
+        _qrQueueSurfNegCount += 1
+        if amount < _qrQueueSurfBestNegAmount
+            _qrQueueSurfBestNegAmount = amount
+            _qrQueueSurfBestNegName = deityName
+            _qrQueueSurfBestNegSymbol = GetPrismaSymbolForDeity(deity)
+        endIf
+    endIf
+EndFunction
+
+Function FlushQueuedQuestReactionSurface()
+    if _qrQueueSurfPosCount == 0 && _qrQueueSurfNegCount == 0
+        return
+    endIf
+    Int nowDay = Utility.GetCurrentGameTime() as Int
+    Int bodMagnitude = 1
+    if _qrQueueSurfMilestone
+        bodMagnitude = 2
+    endIf
+    if _qrQueueSurfNegCount == 0
+        String posMsg = _qrQueueSurfBestPosName + " marks your deed."
+        if _qrQueueSurfPosCount == 2
+            posMsg = _qrQueueSurfBestPosName + " and 1 other mark your deed."
+        elseIf _qrQueueSurfPosCount > 2
+            posMsg = _qrQueueSurfBestPosName + " and " + (_qrQueueSurfPosCount - 1) + " others mark your deed."
+        endIf
+        SendPrismaToast(_qrQueueSurfBestPosSymbol, "good", "A deed marked", posMsg)
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed.", nowDay, "favor.act", _qrQueueSurfBestPosSymbol, False, bodMagnitude, "A deed marked")
+    elseIf _qrQueueSurfPosCount == 0
+        String negMsg = _qrQueueSurfBestNegName + " takes offense at your deed."
+        if _qrQueueSurfNegCount == 2
+            negMsg = _qrQueueSurfBestNegName + " and 1 other take offense at your deed."
+        elseIf _qrQueueSurfNegCount > 2
+            negMsg = _qrQueueSurfBestNegName + " and " + (_qrQueueSurfNegCount - 1) + " others take offense at your deed."
+        endIf
+        SendPrismaToast(_qrQueueSurfBestNegSymbol, "warning", "A deed ill-received", negMsg)
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense at your deed.", nowDay, "favor.loss", _qrQueueSurfBestNegSymbol, False, bodMagnitude, "A deed ill-received")
+    else
+        Bool positiveLeads = _qrQueueSurfBestPosAmount >= (_qrQueueSurfBestNegAmount * -1.0)
+        String mixedTone = "good"
+        String mixedSymbol = _qrQueueSurfBestPosSymbol
+        String mixedBodTone = "favor.act"
+        if !positiveLeads
+            mixedTone = "warning"
+            mixedSymbol = _qrQueueSurfBestNegSymbol
+            mixedBodTone = "favor.loss"
+        endIf
+        SendPrismaToast(mixedSymbol, mixedTone, "A deed weighed", _qrQueueSurfBestPosName + " marks your deed; " + _qrQueueSurfBestNegName + " takes offense.")
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed; " + JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, bodMagnitude, "A deed weighed")
+    endIf
+    ResetQueuedQuestReactionSurface()
 EndFunction
 
 Bool Function ShouldSurfaceLikesDislikesEvent(Int eventType)
@@ -2065,6 +2516,15 @@ Function AccumulateLikesDislikesSurface(PDV_DeityBase deity, Float amount, Int e
 EndFunction
 
 Function FlushLikesDislikesSurface(Int eventType)
+    ; Altmer lore reads receive a dedicated sacred-text acknowledgement when a
+    ; curated source applies. Keep the generic piety fan-out real, but do not
+    ; let its catch-all surface compete with that specific moment.
+    if IsAltmerOrigin() && eventType == 342
+        ResetLikesDislikesSurface()
+        FlushBroadPantheonEvent()
+        return
+    endIf
+
     if !ShouldSurfaceLikesDislikesEvent(eventType)
         FlushBroadPantheonEvent()
         return
@@ -2345,26 +2805,39 @@ Float Function GetKhajiitLunarAlignmentMultiplier(PDV_DeityBase deity)
 EndFunction
 
 PDV_DeityBase Function GetQuestReactionDeity(String deityName)
-    PDV_DeityBase deity = GetDeityByName(deityName)
-    if deity
-        return deity
-    endIf
-
-    if !PDV_FLST_DaedricPaths_All
+    ; Per-cell quest-reaction hot path. Resolution was an O(deities) FormList
+    ; scan (plus a Daedric-path scan on a name miss) run once per cell -- twice
+    ; for a runnable cell (cheap-skip check then ApplyDeityReaction). The
+    ; name->deity mapping is static for the session, so cache the resolved form
+    ; in a StorageUtil map keyed by name. Only non-None results are cached, so a
+    ; name whose owning form is not loaded yet keeps re-scanning until it hits.
+    if deityName == ""
         return None
     endIf
 
-    Int i = 0
-    Int count = PDV_FLST_DaedricPaths_All.GetSize()
-    while i < count
-        PDV_DeityBase path = PDV_FLST_DaedricPaths_All.GetAt(i) as PDV_DeityBase
-        if path && IsQuestReactionNameMatch(path.DeityName, deityName)
-            return path
-        endIf
-        i += 1
-    endWhile
+    Form cachedForm = StorageUtil.GetFormValue(None, "PDV.QR.DeityCache." + deityName)
+    PDV_DeityBase cachedDeity = cachedForm as PDV_DeityBase
+    if cachedDeity
+        return cachedDeity
+    endIf
 
-    return None
+    PDV_DeityBase deity = GetDeityByName(deityName)
+    if !deity && PDV_FLST_DaedricPaths_All
+        Int i = 0
+        Int count = PDV_FLST_DaedricPaths_All.GetSize()
+        while i < count && !deity
+            PDV_DeityBase path = PDV_FLST_DaedricPaths_All.GetAt(i) as PDV_DeityBase
+            if path && IsQuestReactionNameMatch(path.DeityName, deityName)
+                deity = path
+            endIf
+            i += 1
+        endWhile
+    endIf
+
+    if deity
+        StorageUtil.SetFormValue(None, "PDV.QR.DeityCache." + deityName, deity)
+    endIf
+    return deity
 EndFunction
 
 Bool Function IsQuestReactionNameMatch(String recordName, String requestedName)
@@ -2431,9 +2904,11 @@ Function ApplyQuestReactionPiety(PDV_DeityBase deity, Float amount, String reaso
 
     AwardPiety(deity, amount, reason)
     StorageUtil.SetStringValue(deityForm, "PDV.QuestReaction.LastReason", reason)
-    RequestPanelRefresh()
+    if !_qrQueueTransactionActive
+        RequestPanelRefresh()
+    endIf
 
-    if GetDebugLevel() >= 1
+    if GetDebugLevel() >= 3 || (!_qrQueueTransactionActive && GetDebugLevel() >= 1)
         Debug.Trace("[PDV] QuestReaction piety: " + deity.DeityName + " " + amount + " (" + reason + ")")
     endIf
 EndFunction
@@ -2683,9 +3158,20 @@ EndFunction
 ; expanded by the race routing helpers (see RouteRaceSetupJournal).
 String Function ResolveTransitionJournalLine(String eventClass, String surfaceKey, String direction, Int deityIndex)
     String toneKey = eventClass + "." + direction
+    ; A curse SHIFT (e.g. werewolf -> vampire) reads, for the incoming curse, like that
+    ; curse's onset. Reuse the onset frame so the shift still earns a Book of Days entry;
+    ; previously curse.shift had no journal line, so a vampire reached from werewolf
+    ; chronicled nothing while a fresh vampire onset did.
+    String directorToneKey = toneKey
+    if eventClass == "curse" && direction == "shift"
+        directorToneKey = "curse.onset"
+    endIf
     if PDV_DiegeticDirectorService && !(eventClass == "tier" && direction == "reach")
-        String bespoke = PDV_DiegeticDirectorService.ResolveJournalLine(deityIndex, toneKey)
+        String bespoke = PDV_DiegeticDirectorService.ResolveJournalLine(deityIndex, directorToneKey)
         if bespoke != ""
+            if eventClass == "curse"
+                return AppendCurseConsequenceLine(bespoke, direction, surfaceKey)
+            endIf
             return bespoke
         endIf
     endIf
@@ -2699,7 +3185,9 @@ String Function ResolveTransitionJournalLine(String eventClass, String surfaceKe
     elseIf eventClass == "tier" && direction == "reach"
         return BuildTierReachJournalLine(surfaceKey, deityIndex)
     elseIf eventClass == "curse" && direction == "onset"
-        return "A curse changes the shape of devotion."
+        return AppendCurseConsequenceLine("A curse changes the shape of devotion.", direction, surfaceKey)
+    elseIf eventClass == "curse" && direction == "shift"
+        return AppendCurseConsequenceLine("A curse gives way to a new shape.", direction, surfaceKey)
     elseIf eventClass == "curse" && direction == "cure"
         return "The curse lifts, and devotion may answer again."
     elseIf eventClass == "neglect" && direction == "drop"
@@ -2710,6 +3198,26 @@ String Function ResolveTransitionJournalLine(String eventClass, String surfaceKe
         return "You crossed " + GetJournalDeityName(deityIndex) + "'s creed, and the path recoils."
     endIf
     return ""
+EndFunction
+
+; Append the crisp race/curse consequence line the curse toast shows onto the Book of
+; Days frame, so the chronicle names werewolf vs vampire specifically instead of only the
+; shared frame (e.g. the Altmer "divided self" onset line). Reuses the authored
+; GetCurseContextForRace toast copy -- no new strings -- treating a shift into a curse like
+; that curse's onset, and de-dups so a frame already carrying the line is left unchanged.
+String Function AppendCurseConsequenceLine(String baseLine, String direction, String curseType)
+    String phase = direction
+    if direction == "shift"
+        phase = "onset"
+    endIf
+    String consequence = GetCurseContextForRace(phase, curseType)
+    if consequence == ""
+        return baseLine
+    endIf
+    if StringUtil.Find(baseLine, consequence) >= 0
+        return baseLine
+    endIf
+    return baseLine + " " + consequence
 EndFunction
 
 String Function BuildTierReachJournalLine(String surfaceKey, Int deityIndex)
@@ -3921,7 +4429,7 @@ String Function DebugReloadQuestMatrix()
 EndFunction
 
 Int Function DebugGetSignalFloorSmokeScenarioCount()
-    return 12
+    return 15
 EndFunction
 
 String Function DebugGetSignalFloorSmokeLabel(Int scenarioIndex)
@@ -3951,6 +4459,12 @@ String Function DebugGetSignalFloorSmokeLabel(Int scenarioIndex)
         return "Paarthurnax kill"
     elseIf scenarioIndex == 12
         return "Paarthurnax spare"
+    elseIf scenarioIndex == 13
+        return "T11: MQ101 150"
+    elseIf scenarioIndex == 14
+        return "T11: MQ105 160"
+    elseIf scenarioIndex == 15
+        return "T11: MQ106 200 - Syrabane"
     endIf
     return "Unknown"
 EndFunction
@@ -3989,6 +4503,12 @@ String Function DebugRunSignalFloorSmokeScenario(Int scenarioIndex)
         return DebugRouteSignalFloorPaarthurnaxKill()
     elseIf scenarioIndex == 12
         return DebugRouteSignalFloorPaarthurnaxSpare()
+    elseIf scenarioIndex == 13
+        return DebugRouteSignalFloorQuest(0x0003372B, "Skyrim.esm", 150, label)
+    elseIf scenarioIndex == 14
+        return DebugRouteSignalFloorQuest(0x000242BA, "Skyrim.esm", 160, label)
+    elseIf scenarioIndex == 15
+        return DebugRouteSignalFloorQuest(0x00032926, "Skyrim.esm", 200, label)
     endIf
 
     return "Unknown signal-floor smoke scenario."
@@ -4002,11 +4522,28 @@ String Function DebugRouteSignalFloorQuest(Int questFormId, String pluginName, I
         return label + ": quest not found in " + pluginName + "."
     endIf
 
-    ApplyQuestReaction(sourceQuest, stageValue)
+    QueueQuestReactionJob(sourceQuest, stageValue)
     String reactionKey = StorageUtil.GetStringValue(None, "PDV.QuestReaction.LastKey")
     Int count = StorageUtil.GetIntValue(None, "PDV.QuestReaction.LastCellCount")
-    Trace(1, "SignalFloorSmoke quest routed: " + label + " key " + reactionKey + " cells " + count)
-    return label + ": routed " + reactionKey + " (" + count + " cells). Controlled backend route only; run organic smoke for route and display proof."
+    Trace(1, "SignalFloorSmoke quest queued: " + label + " key " + reactionKey + " cells " + count)
+    return label + ": queued " + reactionKey + " (" + count + " cells). Wait for QR_QUEUE COMPLETE, then reopen Book of Days if it was already open. Controlled manager/display route only; organic quest-stage delivery remains open."
+EndFunction
+
+String Function DebugQueueQuestReactionPerformanceSweep()
+    DebugReloadQuestMatrix()
+    Quest mq101 = Game.GetFormFromFile(0x0003372B, "Skyrim.esm") as Quest
+    Quest mq105 = Game.GetFormFromFile(0x000242BA, "Skyrim.esm") as Quest
+    Quest mq106 = Game.GetFormFromFile(0x00032926, "Skyrim.esm") as Quest
+    Quest mq206 = Game.GetFormFromFile(0x00036193, "Skyrim.esm") as Quest
+    if !mq101 || !mq105 || !mq106 || !mq206
+        return "Quest Reaction Performance Sweep could not resolve all vanilla quests."
+    endIf
+    QueueQuestReactionJob(mq101, 150, "debug_qr_perf_mq101")
+    QueueQuestReactionJob(mq105, 160, "debug_qr_perf_mq105")
+    QueueQuestReactionJob(mq106, 200, "debug_qr_perf_mq106")
+    QueueQuestReactionJob(mq206, 220, "debug_qr_perf_mq206")
+    TraceQuestReactionQueue("SWEEP " + GetQuestReactionQueueStatus())
+    return "Quest Reaction Performance Sweep queued. Do not close the game; wait for QR_QUEUE COMPLETE markers. Reopen Book of Days afterwards if it was already open."
 EndFunction
 
 String Function DebugRouteSignalFloorCryptClear()
@@ -4665,7 +5202,7 @@ Function HandleSubstrateActionEvent(Int eventType, String reason)
             Float metricBefore = PDV_AltmerAncestorSubstrate.GetMetric()
             Int tierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
             PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, "enchantment_" + reason)
-            SendPrismaSubstrateProgress("altmer-heritage", tierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore, "Heritage: Enchanting reminds you of the way things are meant to be.", "journal", GetAltmerHeritageTierName())
+            SendPrismaSubstrateProgress("altmer-heritage", tierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore, "", "auri-el", GetAltmerHeritageTierName())
         endIf
     endIf
 EndFunction
@@ -5204,7 +5741,7 @@ Function HandleAltmerSleepEvents(Actor playerRef, String reason)
     if _activeDeity == PDV_Magnus && PDV_Magnus
         AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier)
     endIf
-    SurfaceP2AmbientProgressNotice("Aldmeri dream", "The old line keeps its shape through rest.")
+    AppendBookOfDaysEntry("An Aldmeri dream settles your ancestral inheritance.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Aldmeri dream")
 EndFunction
 
 Function HandleImperialSleepEvents(Actor playerRef, String reason)
@@ -7516,12 +8053,26 @@ Function HandlePaarthurnaxKill(Form sourceForm, String reason)
     ApplyPaarthurnaxKillReaction("Stendarr", "C", sourceForm)
     ApplyPaarthurnaxKillReaction("Stuhn", "C", sourceForm)
     ApplyPaarthurnaxKillReaction("Mara", "S", sourceForm)
+    ; 2026-07-15 full-pantheon expansion: the dragon of the covenant, repentant,
+    ; slain at the Blades' demand -- the time-and-order gods mourn it, the
+    ; treachery-and-dominion Princes savor it.
+    ApplyPaarthurnaxKillReaction("Akatosh", "S", sourceForm)
+    ApplyPaarthurnaxKillReaction("Alkosh", "S", sourceForm)
+    ApplyPaarthurnaxKillReaction("Talos", "m", sourceForm)
+    ApplyPaarthurnaxKillReaction("Julianos", "m", sourceForm)
+    ApplyPaarthurnaxKillReaction("Auri-El", "m", sourceForm)
+    ApplyPaarthurnaxKillReaction("Khenarthi", "m", sourceForm)
+    ApplyPaarthurnaxKillReaction("Kynareth", "m", sourceForm)
+    ApplyPaarthurnaxKillReaction("Boethiah", "S", sourceForm, "+")
+    ApplyPaarthurnaxKillReaction("Hircine", "S", sourceForm, "+")
+    ApplyPaarthurnaxKillReaction("Molag Bal", "m", sourceForm, "+")
+    ApplyPaarthurnaxKillReaction("Mehrunes Dagon", "m", sourceForm, "+")
     FlushQuestReactionSurface()
     Trace(2, "Paarthurnax kill fork routed (" + reason + ")")
 EndFunction
 
-Function ApplyPaarthurnaxKillReaction(String deityName, String intensity, Form sourceForm)
-    ApplyDeityReaction(deityName, "-", intensity, "small", "paarthurnax_kill", False, sourceForm)
+Function ApplyPaarthurnaxKillReaction(String deityName, String intensity, Form sourceForm, String valence = "-")
+    ApplyDeityReaction(deityName, valence, intensity, "small", "paarthurnax_kill", False, sourceForm)
 EndFunction
 
 Function HandlePaarthurnaxSpare(Form sourceForm, String reason)
@@ -7543,12 +8094,22 @@ Function HandlePaarthurnaxSpare(Form sourceForm, String reason)
     ApplyPaarthurnaxSpareReaction("Stendarr", "C", sourceForm)
     ApplyPaarthurnaxSpareReaction("Mara", "S", sourceForm)
     ApplyPaarthurnaxSpareReaction("Kyne", "m", sourceForm)
+    ; 2026-07-15 full-pantheon expansion: mercy for the repentant dragon honors
+    ; the time-and-order gods; the treachery-and-dominion Princes read it as
+    ; weakness.
+    ApplyPaarthurnaxSpareReaction("Akatosh", "S", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Talos", "m", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Alkosh", "m", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Auri-El", "m", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Kynareth", "m", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Boethiah", "m", sourceForm, "-")
+    ApplyPaarthurnaxSpareReaction("Molag Bal", "m", sourceForm, "-")
     FlushQuestReactionSurface()
     Trace(2, "Paarthurnax spare fork routed (" + reason + ")")
 EndFunction
 
-Function ApplyPaarthurnaxSpareReaction(String deityName, String intensity, Form sourceForm)
-    ApplyDeityReaction(deityName, "+", intensity, "small", "paarthurnax_spare", False, sourceForm)
+Function ApplyPaarthurnaxSpareReaction(String deityName, String intensity, Form sourceForm, String valence = "+")
+    ApplyDeityReaction(deityName, valence, intensity, "small", "paarthurnax_spare", False, sourceForm)
 EndFunction
 
 Function HandleKhajiitBaanDarBetrayal(String reason)
@@ -8730,7 +9291,11 @@ Function ApplyUndeadCryptClearReaction(String deityName, String intensity, Locat
     String stance = GetQuestReactionStance(deityName, deity)
     if stance == "CURSE"
         StorageUtil.SetStringValue(None, "PDV.QuestReaction.LastCurse", deityName + "." + sourceTag)
-        HandleCurseStateRefresh("quest_reaction_" + deityName)
+        if _qrQueueTransactionActive
+            _qrQueueNeedsCurseRefresh = True
+        else
+            HandleCurseStateRefresh("quest_reaction_" + deityName)
+        endIf
         if GetDebugLevel() >= 1
             Debug.Trace("[PDV] UndeadCryptClear curse routed: " + deityName)
         endIf
@@ -9751,15 +10316,15 @@ EndFunction
 ; open move the line to REASSERTING; a two-day lockout then settles it
 ; SCARRED_RESOLVED at dawn. Living with it instead: after seven open days on the
 ; heterodox side of the alignment track, the crisis settles on its own.
-Function RecordAltmerCrisisReassertEvidence(String reason)
+Bool Function RecordAltmerCrisisReassertEvidence(String reason)
     Int crisisState = GetAltmerCrisisState()
     if crisisState != ALTMER_CRISIS_DISSONANT && crisisState != ALTMER_CRISIS_QUESTIONING
-        return
+        return False
     endIf
 
     Int todayStamp = (Utility.GetCurrentGameTime() as Int) + 1
     if StorageUtil.GetIntValue(None, "PDV.Altmer.CrisisEvidence.Day") == todayStamp
-        return
+        return False
     endIf
     StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisEvidence.Day", todayStamp)
 
@@ -9771,7 +10336,9 @@ Function RecordAltmerCrisisReassertEvidence(String reason)
         StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisEvidence.Days", 0)
         StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisEvidence.Day", 0)
         ResolveAltmerCrisis(true, "orthodoxy_reasserted_" + reason)
+        return True
     endIf
+    return False
 EndFunction
 
 Function EvaluateAltmerCrisisAtDawn()
@@ -9857,11 +10424,11 @@ Function HandleAltmerDawnSteadiness(String reason)
     if ConsumeOncePerDaySignal("PDV.Signal.AltmerAlignmentRite")
         ApplyAltmerAlignmentAction("orthodox_rite", "rite_" + reason)
     endIf
-    RecordAltmerCrisisReassertEvidence("dawn_steadiness_" + reason)
+    Bool crisisTransitioned = RecordAltmerCrisisReassertEvidence("dawn_steadiness_" + reason)
     AwardActiveAltmerHeritageMemorySignal()
-    if reason == "eventbus_p2_altmer_auriel_po3_book_altmer_auriel"
+    if !crisisTransitioned && reason == "eventbus_p2_altmer_auriel_po3_book_altmer_auriel"
         SurfaceP2BookReadNotice(reason, "Auri-El's dawn", "The morning rite settles deeper.")
-    elseIf reason == "eventbus_p2_altmer_magnus_po3_book_altmer_magnus"
+    elseIf !crisisTransitioned && reason == "eventbus_p2_altmer_magnus_po3_book_altmer_magnus"
         SurfaceP2BookReadNotice(reason, "The road of Magnus", "The discipline of light holds you to the dawn.")
     endIf
 EndFunction
@@ -9887,13 +10454,17 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
     endIf
     if PDV_Trinimac && ConsumeOncePerDaySignal("PDV.Signal.TrinimacOrthodoxPressure")
         AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_ALTMER_ORTHODOX_PRESSURE, None, 1.0)
-        SurfaceReservedSignal(PDV_Trinimac, "Orthodoxy upheld", "marks costly enforcement of the old order.")
+        if !IsP2BookNoticeReason(reason)
+            SurfaceReservedSignal(PDV_Trinimac, "Orthodoxy upheld", "marks a costly defense of ancestral doctrine.")
+        endIf
     endIf
     if ConsumeOncePerDaySignal("PDV.Signal.AltmerAlignmentRite")
         ApplyAltmerAlignmentAction("orthodox_rite", "rite_" + reason)
     endIf
-    RecordAltmerCrisisReassertEvidence("orthodox_cost_" + reason)
-    SurfaceP2BookReadNotice(reason, "The scribe Xarxes", "The old orthodoxy asks more of you.")
+    Bool crisisTransitioned = RecordAltmerCrisisReassertEvidence("orthodox_cost_" + reason)
+    if !crisisTransitioned
+        SurfaceP2BookReadNotice(reason, "The scribe Xarxes", "The ancestral record asks more of you.")
+    endIf
 EndFunction
 
 Function AwardAltmerDawnSignal(String reason, Float multiplier)
@@ -9966,7 +10537,7 @@ Function AwardAltmerAncestorSpinePulse(Float multiplier, String reason)
         tierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
         PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(multiplier, reason)
         Int tierAfter = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
-        SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore, "The old line holds its shape.", "journal", GetAltmerHeritageTierName())
+        SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore, "", "auri-el", GetAltmerHeritageTierName())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Altmer.AncestralStanding", multiplier)
@@ -10079,9 +10650,60 @@ Function SetAltmerCrisisState(Int stateValue, String reason)
     if oldState != stateValue
         Trace(1, "Altmer crisis state " + GetAltmerCrisisStateLabelForValue(oldState) + " -> " + GetAltmerCrisisStateLabelForValue(stateValue) + " (" + reason + ")")
         if stateValue != ALTMER_CRISIS_NONE
-            SendPrismaShiftToast("The old line turns: " + GetAltmerCrisisStateLabelForValue(stateValue) + ".", "", "auri-el")
+            String crisisHeadline = GetAltmerCrisisHeadline(stateValue)
+            String crisisLine = GetAltmerCrisisJournalLine(stateValue)
+            String crisisTone = GetAltmerCrisisJournalTone(stateValue)
+            SendPrismaShiftToast(crisisHeadline, crisisLine, "auri-el")
+            AppendBookOfDaysEntry(crisisLine, Utility.GetCurrentGameTime() as Int, crisisTone, "auri-el", True, 3, crisisHeadline)
+            RequestPanelRefresh()
         endIf
     endIf
+EndFunction
+
+String Function GetAltmerCrisisHeadline(Int stateValue)
+    if stateValue == ALTMER_CRISIS_DISSONANT
+        return "Auri-El's path is shaken"
+    elseIf stateValue == ALTMER_CRISIS_QUESTIONING
+        return "A question takes root"
+    elseIf stateValue == ALTMER_CRISIS_REASSERTING
+        return "You return to Auri-El's path"
+    elseIf stateValue == ALTMER_CRISIS_SCARRED_RESOLVED
+        return "Auri-El's path holds"
+    endIf
+
+    return "A turning"
+EndFunction
+
+String Function GetAltmerCrisisJournalLine(Int stateValue)
+    Int crisisSource = StorageUtil.GetIntValue(None, "PDV.Altmer.CrisisSource")
+    if stateValue == ALTMER_CRISIS_DISSONANT
+        if crisisSource == ALTMER_CRISIS_SOURCE_DRAGONBORN
+            return "The Dragonborn's claim unsettles your place on Auri-El's path."
+        elseIf crisisSource == ALTMER_CRISIS_SOURCE_SOVNGARDE
+            return "What you witnessed in Sovngarde unsettles Auri-El's path."
+        endIf
+        return "Auri-El's path no longer sits easily within you."
+    elseIf stateValue == ALTMER_CRISIS_QUESTIONING
+        if crisisSource == ALTMER_CRISIS_SOURCE_TALOS
+            return "Talos's claim has opened a question Auri-El's path cannot ignore."
+        elseIf crisisSource == ALTMER_CRISIS_SOURCE_COMPANIONS
+            return "The Companions' claim has opened a question Auri-El's path cannot ignore."
+        endIf
+        return "A question has opened between you and Auri-El's path."
+    elseIf stateValue == ALTMER_CRISIS_REASSERTING
+        return "Three days of disciplined practice steady you on Auri-El's path."
+    elseIf stateValue == ALTMER_CRISIS_SCARRED_RESOLVED
+        return "The crisis has settled. Its scar remains, but you keep Auri-El's path."
+    endIf
+
+    return "Auri-El's path turns within you."
+EndFunction
+
+String Function GetAltmerCrisisJournalTone(Int stateValue)
+    if stateValue == ALTMER_CRISIS_REASSERTING || stateValue == ALTMER_CRISIS_SCARRED_RESOLVED
+        return "crisis.resolve"
+    endIf
+    return "crisis.onset"
 EndFunction
 
 String Function GetAltmerCrisisStateLabel()
@@ -11389,7 +12011,7 @@ String Function BuildModeChangeLine(String modeLabel)
     elseIf originRace == ORIGIN_KHAJIIT
         return "The moons mark a turning in your road: " + modeLabel + "."
     elseIf originRace == ORIGIN_ALTMER
-        return "The old line records a turn in your discipline: " + modeLabel + "."
+        return "The ancestral record marks a turn in your discipline: " + modeLabel + "."
     elseIf originRace == ORIGIN_IMPERIAL
         return BuildImperialConcordatBookLine(modeLabel)
     elseIf originRace == ORIGIN_BRETON
@@ -12226,6 +12848,45 @@ Function AccumulateBroadPantheonDelta(PDV_DeityBase deity, Float appliedDelta)
     endIf
 EndFunction
 
+Function AccumulateQueuedQuestReactionBroadDelta(PDV_DeityBase deity, Float appliedDelta)
+    if _qrQueueBroadPool == "" || !deity || !IsDeityEligibleForBroadPantheon(deity, _qrQueueBroadPool)
+        return
+    endIf
+    if appliedDelta > 0.0 && appliedDelta > _qrQueueBroadBestPositive
+        _qrQueueBroadBestPositive = appliedDelta
+    elseIf appliedDelta < 0.0 && appliedDelta < _qrQueueBroadWorstNegative
+        _qrQueueBroadWorstNegative = appliedDelta
+    endIf
+EndFunction
+
+Function CommitQueuedQuestReactionBroad(String reactionKey)
+    Float chosenDelta = 0.0
+    if _qrQueueBroadBestPositive > 0.0
+        chosenDelta = _qrQueueBroadBestPositive
+    elseIf _qrQueueBroadWorstNegative < 0.0
+        chosenDelta = _qrQueueBroadWorstNegative
+    endIf
+    if _qrQueueBroadPool != "" && chosenDelta != 0.0
+        Float nowTime = Utility.GetCurrentGameTime()
+        if !IsRecentBroadPantheonEventDuplicate(_qrQueueBroadPool, "quest_" + reactionKey, nowTime)
+            CatchUpBroadPantheonDecayBeforeCurrentDay(_qrQueueBroadPool)
+            if GetBroadPantheonScratch(_qrQueueBroadPool) == 0.0
+                WriteZeroReservedDevotionalDayStamp(GetBroadPantheonScratchDayKey(_qrQueueBroadPool))
+            endIf
+            StorageUtil.AdjustFloatValue(None, GetBroadPantheonScratchKey(_qrQueueBroadPool), chosenDelta)
+            StorageUtil.SetStringValue(None, GetBroadPantheonLastEventKey(_qrQueueBroadPool), "quest_" + reactionKey)
+            StorageUtil.SetFloatValue(None, GetBroadPantheonLastEventTimeKey(_qrQueueBroadPool), nowTime)
+            RememberBroadPantheonEvent(_qrQueueBroadPool, "quest_" + reactionKey, nowTime)
+            if chosenDelta > 0.0
+                WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(_qrQueueBroadPool))
+            endIf
+        endIf
+    endIf
+    _qrQueueBroadPool = ""
+    _qrQueueBroadBestPositive = 0.0
+    _qrQueueBroadWorstNegative = 0.0
+EndFunction
+
 Function FlushBroadPantheonEvent()
     if _broadPantheonEventDepth > 1
         _broadPantheonEventDepth -= 1
@@ -12611,7 +13272,8 @@ Bool Function IsImperialVampireStateActive()
 EndFunction
 
 Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry, String reason = "")
-    Bool ownsBroadEvent = _broadPantheonEventDepth == 0
+    Bool queuedQuestReaction = _qrQueueTransactionActive
+    Bool ownsBroadEvent = !queuedQuestReaction && _broadPantheonEventDepth == 0
     if ownsBroadEvent
         _broadPantheonSelfEventSequence += 1
         if _broadPantheonSelfEventSequence <= 0
@@ -12638,7 +13300,11 @@ Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowR
 
     Int stance = deity.GetStanceForPlayer()
     Float appliedAmount = RunGainPipeline(deity, amount, stance)
-    AccumulateBroadPantheonDelta(deity, appliedAmount)
+    if queuedQuestReaction
+        AccumulateQueuedQuestReactionBroadDelta(deity, appliedAmount)
+    else
+        AccumulateBroadPantheonDelta(deity, appliedAmount)
+    endIf
 
     StorageUtil.AdjustFloatValue(deityForm, "PDV.PietyToday", appliedAmount)
     if appliedAmount != 0.0
@@ -12661,7 +13327,7 @@ Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowR
         RecordDeityDriver(deity, reason, appliedAmount)
     endIf
 
-    if GetDebugLevel() >= 2
+    if GetDebugLevel() >= 2 && !queuedQuestReaction
         Debug.Trace("[PDV] AwardPiety: " + deity.DeityName + " raw " + amount + ", applied " + appliedAmount + ", stance " + stance + ", today=" + StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday"))
     endIf
 
@@ -12673,7 +13339,7 @@ Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowR
         ApplyRivalryPenalties(deity, appliedAmount)
     endIf
 
-    if appliedAmount != 0.0
+    if appliedAmount != 0.0 && !queuedQuestReaction
         RequestPanelRefresh()
     endIf
     if ownsBroadEvent
@@ -18758,6 +19424,15 @@ Function SendPrismaSubstrateProgress(String substrate, Int tierBefore, Int tierA
     if grantedMetric <= 0.0
         return
     endIf
+    ; Altmer heritage is a slow cultural foundation, not an interruption on
+    ; every qualifying act. Record only named tier crossings in the Book of
+    ; Days; book and crisis routes own their own presentation.
+    if substrate == "altmer-heritage"
+        if tierAfter > tierBefore
+            AppendBookOfDaysEntry(GetAltmerHeritageTierJournalLine(tierAfter), Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 2, "Ancestral inheritance deepens")
+        endIf
+        return
+    endIf
     if surfacePresentation
         if tierAfter > tierBefore
             SendPrismaSubstrateToast(substrate, "deepen", context, symbolName, stateLabel)
@@ -20411,8 +21086,12 @@ Bool Function AwardBretonPracticePulse(Int traditionValue, Int requestedPoints, 
     endIf
 
     StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
-    SyncFirstTierRaceRewardRuntime()
-    RequestPanelRefresh()
+    if _qrQueueTransactionActive
+        _qrQueueNeedsBretonRewardSync = True
+    else
+        SyncFirstTierRaceRewardRuntime()
+        RequestPanelRefresh()
+    endIf
     Trace(2, "Breton practice pulse " + traditionValue + " +" + appliedPoints + " from " + sourceKey + ": " + reason)
     return True
 EndFunction
@@ -20444,8 +21123,12 @@ Bool Function DamageBretonPracticePressure(Int traditionValue, Int damageDelta, 
     endIf
 
     StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
-    SyncFirstTierRaceRewardRuntime()
-    RequestPanelRefresh()
+    if _qrQueueTransactionActive
+        _qrQueueNeedsBretonRewardSync = True
+    else
+        SyncFirstTierRaceRewardRuntime()
+        RequestPanelRefresh()
+    endIf
     Trace(2, "Breton practice pressure " + traditionValue + " from " + sourceKey + ": " + reason)
     return True
 EndFunction
@@ -22088,6 +22771,12 @@ String Function JournalToneToTitle(String toneKey)
     if toneKey == "curse.cure"
         return "The curse lifts"
     endIf
+    if toneKey == "crisis.onset"
+        return "Auri-El's path is shaken"
+    endIf
+    if toneKey == "crisis.resolve"
+        return "Auri-El's path holds"
+    endIf
     if toneKey == "neglect.drop"
         return "Silence grows"
     endIf
@@ -22137,6 +22826,9 @@ String Function JournalToneToValence(String toneKey)
     if toneKey == "curse.cure"
         return "good"
     endIf
+    if toneKey == "crisis.resolve"
+        return "good"
+    endIf
     if toneKey == "neglect.recover"
         return "good"
     endIf
@@ -22156,6 +22848,9 @@ String Function JournalToneToValence(String toneKey)
         return "warning"
     endIf
     if toneKey == "curse.onset"
+        return "warning"
+    endIf
+    if toneKey == "crisis.onset"
         return "warning"
     endIf
     if toneKey == "neglect.drop"
@@ -23506,6 +24201,17 @@ String Function GetAltmerHeritageTierName()
         return "Ordered Heritage"
     endIf
     return "Heritage quiet"
+EndFunction
+
+String Function GetAltmerHeritageTierJournalLine(Int tierValue)
+    if tierValue >= TIER_CHAMPION
+        return "Your ancestral inheritance is visible in all you do."
+    elseIf tierValue >= TIER_DEVOTED
+        return "Your ancestral inheritance is practiced, not merely inherited."
+    elseIf tierValue >= TIER_SEEKER
+        return "Your ancestral inheritance begins to take shape in you."
+    endIf
+    return "Your ancestral inheritance gathers quietly."
 EndFunction
 
 String Function GetAltmerAlignmentSurveyBaseText()
