@@ -140,12 +140,16 @@ path-deepening proof remain open (see "Remaining 1.0 Distance" below).
 
 As of 2026-07-07, binary 1.0 ship-gate truth lives in the machine-checkable
 contract `references/authoring/PDV_1_0_EndStateContract.json` (human companion:
-`references/authoring/PDV_1_0_EndStateContract.md`). Run
-`node .\tools\pdv_1_0_endstate_gate.mjs` to regenerate
+`references/authoring/PDV_1_0_EndStateContract.md`). Authority is the contract
+plus a fresh gate run: `node .\tools\pdv_1_0_endstate_gate.mjs` regenerates
 `references/authoring/PDV_1_0_EndStateBurndown.md`, the single cross-check of
-contract criteria vs recorded testing evidence. This document remains the
-design and product-feel authority; when this prose and the contract disagree
-about whether 1.0 is done, the contract wins and this prose should be fixed.
+contract criteria vs recorded testing evidence. As of 2026-07-15 the burndown
+md/json are on-demand renderings and are no longer committed (they are
+gitignored; regenerate them with the gate command -- see PDV_STANDARDS.md
+section 5.3). Never cite a burndown copy as status; cite a fresh run. This
+document remains the design and product-feel authority; when this prose and
+the contract disagree about whether 1.0 is done, the contract wins and this
+prose should be fixed.
 
 Acceptance (gate ids refer to contract criteria):
 
