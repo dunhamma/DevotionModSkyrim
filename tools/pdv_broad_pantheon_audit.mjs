@@ -235,8 +235,12 @@ export function evaluate({ contract, managerSource, playerEventsSource, eventBus
   const legacyBroadSeed = bodyFor(managerSource, "DebugSeedBroadLane");
   add(/SetBroadPantheonStanding\s*\(\s*BROAD_PANTHEON_IMPERIAL\s*,\s*BROAD_PANTHEON_FAITHFUL_THRESHOLD/i.test(legacyBroadSeed), "source.debug-imperial-pool-seed", "the legacy MCM broad-lane seed must write ImperialDivines standing 50, not a frozen counter");
   const awardPiety = bodyFor(managerSource, "AwardPietyInternal");
-  add(/ownsBroadEvent\s*=\s*_broadPantheonEventDepth\s*==\s*0/i.test(awardPiety)
+  add(/queuedQuestReaction\s*=\s*_qrQueueTransactionActive/i.test(awardPiety)
+    && /ownsBroadEvent\s*=\s*!queuedQuestReaction\s*&&\s*_broadPantheonEventDepth\s*==\s*0/i.test(awardPiety)
     && /_broadPantheonSelfEventSequence\s*\+=\s*1/i.test(awardPiety)
+    && /if\s+_broadPantheonSelfEventSequence\s*<=\s*0/i.test(awardPiety)
+    && /String\s+eventLabel\s*=\s*reason/i.test(awardPiety)
+    && /eventLabel\s*=\s*"piety"/i.test(awardPiety)
     && /BeginBroadPantheonEvent\s*\(\s*eventLabel\s*\+\s*"_auto_"\s*\+\s*_broadPantheonSelfEventSequence/i.test(awardPiety), "source.unique-self-owned-events", "every unscoped piety award must create a unique manager-owned broad event identity");
   add(/IsRecentBroadPantheonEventDuplicate/i.test(flush) && /RememberBroadPantheonEvent/i.test(flush) && /StringListCount\s*\([^\r\n]*>=\s*8/i.test(managerSource), "source.recent-event-ring", "logical-event dedupe must retain a bounded recent-ID ring so immediate A/B/A fan-out cannot multiply the pool delta");
   const resetPool = bodyFor(managerSource, "ResetBroadPantheonPool");
