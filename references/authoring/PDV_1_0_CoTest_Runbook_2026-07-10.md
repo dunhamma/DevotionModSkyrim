@@ -171,9 +171,11 @@ Use that one fresh QASmoke save and keep the proof buckets separate:
     `PDV_PantheonSubstrateRuntimeEvidenceLedger.json`. A required bucket may be
     `PASS` only with its exact local timestamp and at least one concrete
     `evidenceRefs` entry (screenshot path, Papyrus log plus unique marker/line,
-    or the timestamped co-test transcript section). Run the checker after every
-    card. Chat observations, machine readback, and unreferenced prose never
-    promote a bucket.
+    or the timestamped co-test transcript section). Before the next game
+    session can rotate the Papyrus log or clear a clipboard image, retain each
+    credited source in `evidence/PDV_PantheonSubstrate_CoTest_2026-07-15.md`.
+    Run the checker after every card. Chat observations, machine readback, and
+    unreferenced prose never promote a bucket.
 
 ### Pantheon/substrate adversarial addendum (2026-07-14)
 
@@ -236,7 +238,7 @@ promote a prose checkbox or chat observation without updating that ledger.
 
 | # | Scenario | Steps | Expected | Evidence to capture |
 |---:|---|---|---|---|
-| PS-A1 | Reserved-zero day stamps and first dawn | From the fresh main-menu `coc qasmoke` start, immediately run `set gamehour to 4` before making the card save (04:00 is inside the moon rite's pre-05:00 window). At Debug Level 2, exercise the Argonian sustained-water route, the real Khajiit moon rite, exact quest reaction `setstage DLC2SV01 200`, Imperial broad fan-out `setstage MQ302 300`, and the Argonian Sithis-negative latch `setstage DBDestroy 200` on clean origin/pool controls. Save/reload before 06:00, then use a real wait across 06:00 and repeat the relevant checks. Let the normal dawn exercise the Altmer and broad-grace latches. | Devotional day `-1`/encoded stamp `1` before 06:00 and day `0`/stamp `2` after 06:00 remain distinct, and the first 06:00 auto-dawn runs. Water, moon, quest-faucet, Altmer dawn, disfavor, and broad-grace latches never mistake day zero for unset state. | Status day/stamp, first-dawn trace, metric/piety/pool deltas, save/reload result, and exact log markers for each named latch. |
+| PS-A1 | Reserved-zero day stamps and first dawn | From the fresh main-menu `coc qasmoke` start, immediately run `set gamehour to 4` before making the card save (04:00 is inside the moon rite's pre-05:00 window). At Debug Level 2, exercise the Argonian sustained-water route, the real Khajiit moon rite, exact quest reaction `setstage DLC2SV01 200`, Imperial broad fan-out `setstage MQ302 300`, and the Argonian Sithis-negative latch `setstage DBDestroy 200` once on clean origin/pool controls. Save/reload before 06:00, then use a real wait across 06:00 and repeat the relevant checks. Let the normal dawn exercise the Altmer and broad-grace latches. | Devotional day `-1`/encoded stamp `1` before 06:00 and day `0`/stamp `2` after 06:00 remain distinct, and the first 06:00 auto-dawn runs. Water, moon, quest-faucet, Altmer dawn, disfavor, and broad-grace latches never mistake day zero for unset state. DBDestroy applies Sithis raw `-18` once; any re-entrant callback is suppressed before piety or meta-faucets. | Status day/stamp, first-dawn trace, metric/piety/pool deltas, save/reload result, and exact log markers for each named latch. For DBDestroy, capture one raw Sithis `-18`, one `603387|200 applied` marker, and any `Quest reaction duplicate suppressed (603387|200)` marker with no second raw piety. |
 | PS-A2 | Dunmer paired home prayer | Apply Dunmer origin, `coc RiverwoodSleepingGiantInn`, sleep once in its interior bed, and accept the first Ancestral Hearth prompt to declare that cell. Obtain the real `PDV_MISC_DunmerAncestralUrn` using `help "PDV_MISC_DunmerAncestralUrn" 4` plus `player.additem <returned FormID> 1`. On a clean normal-form devotional day, use the pacing page's Dunmer `Rejected probe` to invoke home-only without prayer, then click the urn under **Miscellaneous** while still in the declared cell. For the werewolf exception, use a separate fresh devotional day (or clean reset that also clears the daily-credit stamp), select `Curse werewolf` before clicking the real urn, and perform the route once. Never test +2 after a normal +4 has already spent the same day. | Home-only awards zero. Paired home prayer grants one cultural day credit, never a second +8 or second piety pulse. The explicit werewolf half-weight exception grants +2 on its own fresh day, not +4. | Accepted/rejected source, metric before/after, encoded daily-credit stamp, Azura piety before/after, Book/toast count, and the real urn route marker. |
 | PS-A3 | Argonian water and sap dual truth | Apply Argonian origin. On one devotional day, `coc Riverwood`, enter exterior water deep enough for `IsSwimming`, and remain continuously swimming for at least 10 real seconds; capture `Argonian near-water Hist maintenance routed`. After a real 06:00 boundary, run `player.additem 000AED90 1` and consume the Sleeping Tree Sap; capture `Sleeping Tree Sap vision fired`. Repeat each route once without resetting its anti-farm state. | Each act may claim cultural +4 exactly once and awards Hist piety exactly once. Hist, People, and Void relation ledgers remain independent; no Hist Communion boon appears. Same-day/repeated attempts remain silent. | Metric, Hist piety, all three relation values, the two exact log markers, Active Effects, and repeat silence. |
 | PS-A4 | Multi-deity event aggregation | From a clean Imperial broad-state control, run the real exact quest-matrix production event `setstage MQ302 300`, which routes Mara, Stendarr, and Akatosh for Imperial. Separately reset and run the signed fan-out fixture, including positive, negative, mixed rivalry, and the `Prime +100 scratch` / `Prime -100 scratch` controls. Cross 06:00 with real waits for each cap case. | Deities retain their individual signed piety. The pool receives one logical-event delta only: strongest applied positive, or strongest negative if no positive. The real production fan-out and synthetic fixture agree; the daily fold clamps at +/-4.3. | Per-deity deltas; `MQ302|300` route marker; pool standing, scratch, last event, encoded event stamp, last gain day, last processed day; final real-dawn folds; one Book/toast beat. |
@@ -250,6 +252,17 @@ For PS-A4's negative-cap fixture, judge the cap from the `BROAD_CATCHUP applied=
 | PS-A10 | Exact substrate copy | Trigger one accepted substrate act for Imperial, Altmer, and Argonian, then inspect toast, Book of Days, Survey, panel, and Active Effects. | Exact public families are `Civic Steadiness`, `Ordered Heritage`, and `Root Memory`/the current Argonian tier. No raw token, generic fallback, or player-visible `Spine` appears. | Screenshots plus text transcription from every surface. |
 | PS-A11 | Broad decay catch-up | Begin from a clean broad-state control with zero pending scratch. Give the soon-to-be-suppressed pool standing through one real eligible positive act and a real 06:00 fold; record standing, last gain day, last processed day, and encoded stamps. Suppress it. In Pacing, select that pool and use `PS-A11 catch-up`; it invokes the production catch-up routine through five days after the recorded gain without changing Skyrim time. Save/reload, select the same control again, then use `Run dawn pass` while the game day is unchanged. | Two full grace days apply, then days 3-5 after the recorded gain deduct 0.1 each in one idempotent catch-up. No pending scratch can masquerade as a late gain. Repeating the target or processing the unchanged game day deducts zero; standing never falls below 0. | Before/after broad status with standing, scratch, processed/gain day and encoded stamps; one `[PDV][PS-A11]` plus one `[PDV][BROAD_CATCHUP]` trace; save/reload; repeat-control and unchanged-day checks. |
 | PS-A12 | Argonian zero/one Book boundary | Apply Argonian origin, reset its cultural metric/pacing state to 0, close all Prisma surfaces, and cold-open the panel and Book of Days. On a fresh devotional day, use the real Riverwood sustained-swim ingress from PS-A3 (at least 10 continuous real seconds) to reach 4; do not use the MCM approved-source trigger for the organic bucket. Close and cold-open both surfaces again. | At 0 both surfaces say `Practice quiet`, show no Root Memory boon, and render an empty 1/25/75 gauge. At 4 they say `Root Memory`, show only its low-tier boon, and retain independent Hist/People/Void relations. | Cold-open screenshots at 0 and 4, exact near-water route marker, Active Effects, relation values, and no stale piety gauge. |
+
+### PS-A1 closure (2026-07-15)
+
+PS-A1 is closed in `PDV_PantheonSubstrateRuntimeEvidenceLedger.json`. The
+tester-confirmed remaining sequence covered reserved-zero day 0, the first dawn,
+and save/load. A zero-activity dawn is intentionally presentation-silent: no
+accepted event or pending scratch means no toast and no Book of Days digest. The
+earlier local Papyrus inspection used the wrong rotated log path and is not used
+as contrary evidence; the retained evidence file records the tester confirmation
+separately from the retained DBDestroy duplicate-suppression trace. This closes
+PS-A1 only; it is not a broader beta-readiness claim.
 
 ### PS-A9 display closure (2026-07-14)
 
@@ -302,6 +315,7 @@ For a signal-floor/remap-specific sitting, add:
 
 ```powershell
 node .\tools\pdv_quest_tranche_merge.mjs
+node .\tools\pdv_main_quest_full_coverage_audit.mjs --json
 node .\tools\pdv_quest_matrix_compile.mjs --check --json
 node .\tools\pdv_quest_matrix_compile.mjs --papyrusutil-check --json
 node .\tools\pdv_deity_signal_remap_adversary_check.mjs
@@ -322,16 +336,14 @@ before running the reserved-signal smoke cards below.
 Expected backend state before in-game smoke:
 
 - `pdv_verify`: FAIL=0. The known medallion glyph fallback warning is allowed.
-- Quest matrix after the 2026-07-12 matrix-freshness package: **1055 rows, 168
-  quest keys, 134 watched quests, 26 faucet acts.** (The earlier 1057/169/135
-  prediction was wrong: Package B found tranche10's `MQ105Ustengrav` rows were
-  silently DROPPED at compile because the key drifted from the established
-  `MQ105U` manual-FormID mapping. Normalizing the key surfaced a duplicate Kyne
-  prove_by_struggle row already authored by tranche7, which was removed; the
-  tranche10 Akatosh keep_oath row now deploys. Net: -1 row vs the old 1056, and
-  the Horn-trial cell finally carries its tranche10 credit.) If the tools report
-  1056 / 168 / 134, the MQ105U fix is not merged; regen with
-  `pdv_quest_tranche_merge` + `pdv_quest_matrix_compile`.
+- Quest matrix post-T11 deployed state: **1978 cells, 172 quest-stage keys, 134 watched
+  quests, 26 faucet acts.** T11 contributes **951 rows** and closes the locked
+  main-quest contract at **45 runtime identities x 25 exact beats = 1125 cells**.
+  The 134-watch count stays flat because every T11 quest was already registered;
+  `PDV_PlayerEvents` now reads that roster by indexed
+  `JsonUtil.StringListCount`/`StringListGet`, never a 128-capped materialized
+  Papyrus array. If the strict audit does not report these exact values, stop:
+  the authored tranche, generated Full matrix, or deployed JSON is stale.
 - `pdv_deity_signal_remap_adversary_check`: PASS. Its
   `potentialOffRosterHostileSurfaces` count is expected to remain nonzero
   because the source guard, not row deletion, owns that cross-origin policy.
@@ -343,6 +355,64 @@ Expected backend state before in-game smoke:
 - Reserved-signal package: `pdv_signal_e2e_gate.mjs` PASS and
   `pdv_verify --strict-curated-signal-dispatch` FAIL=0. The four built signals
   burn from the reserved list, and Khenarthi `OPEN_ROAD` burns by removal.
+
+### T11 main-quest full-coverage gate and co-test boundary (2026-07-15)
+
+Machine authority is
+`references/authoring/PDV_MainQuestFullCoverageContract.json`. Run this exact
+static/generated-readback gate after tranche merge and JSON regeneration:
+
+```powershell
+node .\tools\pdv_main_quest_full_coverage_audit.mjs --json
+```
+
+The required PASS state is 45 identities, 25 exact main-quest beats, 1125
+main-quest cells, 951 T11 rows, 1978 whole-matrix cells, 172 keys, 134 watches,
+26 faucets, indexed registration, zero approved silences, the exact Paarthurnax
+rosters below, and explicit Prisma symbols plus rendered glyphs for all 45
+contracted identities (no generic journal-icon fallback). This gate proves
+authority, authored/static coverage, generated-matrix readback, integer stages,
+uniqueness, source-shape, and the static Prisma producer-to-glyph contract only.
+It does **not** prove quest-stage delivery in Skyrim, stance modulation, Book of
+Days aggregation, strongest-only toast behavior, actual overlay rendering,
+save/load latches, or player-facing feel.
+
+The five probes below are consumed by the fail-closed 1.0 criterion
+`C-MAIN-QUEST-FULL-COVERAGE-RUNTIME`. Record them under
+`groups.mainQuestFullCoverageRuntime` in
+`references/authoring/PDV_1_0_ManualSignoffLedger.json`; only
+`evidence-recorded` closes a slot. Pre-T11 Paarthurnax waivers do not satisfy the
+expanded 17/11 roster proof.
+
+Paarthurnax remains outside the watched matrix and uses static one-shot manager
+handlers:
+
+- **Kill, 17 reactions:** losses Shor S, Tsun S, Kyne S, Stendarr C, Stuhn C,
+  Mara S, Akatosh S, Alkosh S, Talos m, Julianos m, Auri-El m, Khenarthi m,
+  Kynareth m; gains Boethiah S, Hircine S, Molag Bal m, Mehrunes Dagon m.
+- **Spare, 11 reactions:** gains Stuhn C, Stendarr C, Mara S, Kyne m, Akatosh S,
+  Talos m, Alkosh m, Auri-El m, Kynareth m; losses Boethiah m, Molag Bal m.
+
+After the strict gate passes, use the **Signal-floor smoke** MCM harness on a
+fresh disposable save. Never force these vanilla main-quest stages with
+`setstage` from QASmoke: `MQ106` stage 200 is a shutdown stage and can freeze an
+out-of-context save. The controlled cards call `ApplyQuestReaction` directly,
+so they prove the manager, Prisma, and Book of Days surfaces without mutating a
+vanilla quest. They do **not** prove `OnQuestStageChange` delivery.
+
+1. Select **T11: MQ106 200 - Syrabane**: Syrabane resolves and its newly covered
+   row lands with its explicit Prisma glyph.
+2. Select **MQ206 220**: Peryite gains and Mehrunes Dagon loses on the same
+   logical event.
+3. Select **T11: MQ101 150**: Sheogorath resolves through the runtime `Sheo`
+   alias and does not silently drop.
+4. Select **T11: MQ105 160**: verify the existing paired-equity anchor lands as
+   Kynareth C+ milestone with Kyne S+ stepped down. Do not invent or promote a
+   new Kyne-C cell for this probe.
+5. Run MCM debug Paarthurnax kill and spare from clean latch state, then capture
+   one organic kill and one organic spare. The Book of Days must list every
+   reachable landed god, the toast must show only the strongest reactor, and
+   repeat plus kill-then-spare suppression must survive save/load.
 
 ## In-Game Setup
 
@@ -403,10 +473,11 @@ signal-floor smoke state is open at runtime:
    Cards 2, 3, 4, 5, and 7 have passed after retest; continue with the next
    open card.
 4. **Race sittings for 1.0.** Work the **Felt-Family Race Sittings
-   (deduplicated plan)** section below - ten checklist sittings that prove every
-   pending felt family (107 at snapshot) ONCE each (the raw `--sitting <Race>`
-   sheets repeat shared price/sting families across races; the plan assigns each
-   to a single sitting). Each race sitting feeds C-FELT-FAMILY, C-PACING-SIGNOFF, and
+   (deduplicated plan)** section below - checklist sittings that prove every
+   remaining felt family (58 as of 2026-07-15, regenerated from the live ledger)
+   ONCE each (the raw `--sitting <Race>` sheets repeat shared price/sting families
+   across races; the plan assigns each to a single sitting, neglect-first per
+   sitting). Each race sitting feeds C-FELT-FAMILY, C-PACING-SIGNOFF, and
    C-PLACEMENT-FINAL. If a race's beta-feel verdict has regressed, re-run its
    beta-feel packet during the same sitting to clear the C-RACE-RUBRIC stale
    state. (`--sitting <Race>` is still useful for a live single-race regen, but it
@@ -437,7 +508,7 @@ For every card, capture:
 | 1 | Quest fan-out and aggregation | `setstage DLC2SV01 200`; controlled MCM index 1 is allowed for route smoke | Hist, Y'ffre, and Syrabane rows exist; visible landed deities are origin-roster gated (Altmer: Y'ffre + Syrabane, Argonian: Hist) | One toast, one Book of Days line naming landed deities, coherent Survey/status |
 | 1 note | 2026-07-12 Altmer live proof | `setstage DLC2SV01 200` after `PDV_GLO_OriginRace = 3` | `Y'ffre` and Syrabane landed; The Hist skipped as foreign; `105290|200` completed. | Tester confirmed visible Y'ffre spelling with apostrophe; this also closes RM2. |
 | 2 | Main-quest death gods and Dagon correction | `setstage MQ305 200`; controlled MCM index 2 | Arkay and Tu'whacca milestone gains, Khenarthi gain, Mehrunes Dagon loss | Dagon is a loss; reachable gods only; repeat after save/load does not stack |
-| 3 | Main-quest lore gods | `setstage MQ206 220`; controlled MCM index 3 | Source rows include Julianos, Hermaeus Mora, Magnus, Xarxes, and Dagon; Altmer display is roster-gated: Magnus/Xarxes visible, Dagon loss visible, no Shor/Talos/Nord combat fan-out | Lore gains visible where reachable; Dagon correction remains negative; no stale Nord fan-out |
+| 3 | Main-quest lore gods | Controlled MCM **MQ206 220**; do not force the vanilla stage from QASmoke | Source rows include Julianos, Hermaeus Mora, Magnus, Xarxes, and Dagon; Altmer display is roster-gated: Magnus/Xarxes visible, Dagon loss visible, no Shor/Talos/Nord combat fan-out | Lore gains visible where reachable; Dagon correction remains negative; no stale Nord fan-out |
 | 4 | Sithis strongest negative | `setstage DBDestroy 200`; controlled MCM index 4 | Split-origin proof: Argonian shows the Sithis milestone loss; Nord or Breton shows the Stendarr/Talos gains | Argonian Sithis loss is strongest negative; Nord/Breton Stendarr/Talos gains are visible |
 | 5 | Zenithar milestone | `setstage MS10 100`; controlled MCM index 5 | Split-origin proof: Nord/Imperial/Breton shows the Zenithar milestone gain; Bosmer shows the Z'en small gain | Zenithar and Z'en gains are visible where reachable |
 | 6 | Hircine cure dislike | Controlled MCM index 6 for this sitting. Organic proof requires an active Companions `CR13` Farkas/Vilkas Purity quest; a generic werewolf save plus `setstage CR13 200` is not reliable. | Hircine loss plus Y'ffre gain | Controlled route/display proof now; organic CR13 proof remains separate unless the save is already on the active cure quest |
@@ -449,10 +520,10 @@ For every card, capture:
 | 9 note | 2026-07-12 Nord controlled proof | MCM Signal-floor smoke `Likes/dislikes v15` after `PDV_GLO_OriginRace = 0` | Runtime loaded likes/dislikes table version 16, fired Kyne event 303 and Arkay event 366, and completed the controlled debug route. | Tester confirmed visible proof passed. UI cleanup queued: because this debug button fires two separate event types, it currently produces two event-scoped toasts/Book-of-Days lines; decide whether the debug scenario should instead batch them into one summary surface. |
 | 10 | Green Way behavior | Bosmer Old Contract: visit sacred site, then consume plant food; controlled MCM index 10 only for route smoke | Y'ffre site gain and plant-consumption loss | Plant proof must use real item consumption; debug route is not enough |
 | 10 note | 2026-07-12 Bosmer controlled proof | MCM Signal-floor smoke `Green Way` after `PDV_GLO_OriginRace = 4` | Bosmer nature-site evidence recorded, Y'ffre green site remembered, Green Pact compliance dropped, and Y'ffre received the plant-violation loss. | Tester confirmed controlled surfaces passed; organic plant-food proof remains separate. |
-| 11 | Paarthurnax kill fork | Reachable listed-god race, Nord recommended; kill Paarthurnax; controlled MCM index 11 only for route smoke | Shor/Tsun/Kyne/Stendarr/Stuhn/Mara reactions; Khajiit keeps Alkosh chaos-aid case | Repeat after save/load is blocked |
-| 11 note | Prior controlled proof, do not rerun by default | 2026-07-11 generated ledger/manual evidence records controlled MCM Card 11 proof. | Shor, Tsun, Kyne, Stendarr, Stuhn, and Mara reactions landed, followed by `SignalFloorSmoke Paarthurnax kill debug routed`. | Organic kill, repeat-after-load, and Khajiit organic display remain backlog/waived, not current-sitting requirements. |
-| 12 | Paarthurnax spare fork | Paarthurnax alive and neither latch set; complete/load `MQ305` stage 200; controlled MCM index 12 only for route smoke | Stuhn/Stendarr/Mara/Kyne gains once | If kill latch already fired, spare remains silent |
-| 12 note | Prior controlled proof, do not rerun by default | 2026-07-11 generated ledger/manual evidence records controlled MCM Card 12 proof. | Stuhn, Stendarr, Mara, and Kyne reactions landed, followed by `SignalFloorSmoke Paarthurnax spare debug routed`. | Organic spare/latch proof remains backlog/waived, not a current-sitting requirement. |
+| 11 | Paarthurnax kill fork | Reachable listed-god race; controlled MCM index 11 for route smoke, then one organic kill on clean latch state | Exact 17: losses Shor S, Tsun S, Kyne S, Stendarr C, Stuhn C, Mara S, Akatosh S, Alkosh S, Talos m, Julianos m, Auri-El m, Khenarthi m, Kynareth m; gains Boethiah S, Hircine S, Molag Bal m, Mehrunes Dagon m | Book lists every reachable landed god; strongest-only toast; repeat after save/load is blocked |
+| 11 note | Prior controlled proof covers the old subset only | 2026-07-11 evidence proves Shor, Tsun, Kyne, Stendarr, Stuhn, and Mara landed before the 2026-07-15 expansion. | That evidence must not be promoted to proof of the new 17-reaction roster. | Expanded controlled route plus one organic kill and save/load suppression remain open. |
+| 12 | Paarthurnax spare fork | Paarthurnax alive and neither latch set; controlled MCM index 12 for route smoke, then one organic spare/`MQ305` stage-200 catchup on clean state | Exact 11: gains Stuhn C, Stendarr C, Mara S, Kyne m, Akatosh S, Talos m, Alkosh m, Auri-El m, Kynareth m; losses Boethiah m and Molag Bal m | Book lists every reachable landed god; strongest-only toast; repeat and kill-then-spare latches hold across save/load |
+| 12 note | Prior controlled proof covers the old subset only | 2026-07-11 evidence proves Stuhn, Stendarr, Mara, and Kyne landed before the 2026-07-15 expansion. | That evidence must not be promoted to proof of the new 11-reaction roster. | Expanded controlled route plus one organic spare and latch persistence remain open. |
 | 13 | Borderline prove-or-drop rows | Review `DA14Start` s70, `DLC2RRFavor01` s200, `T03` s105, HearthFires adoption stages | Decide prove, revise, or drop | Manual review only; no generated runtime marker expected |
 
 ## Prisma Panel Regression Card
@@ -546,227 +617,24 @@ node .\tools\pdv_1_0_endstate_gate.mjs
 
 ## Felt-Family Race Sittings (deduplicated plan)
 
-RE-OPEN NOTE (2026-07-13): the project-wide Magicka/Stamina regen -> Fortify
-max-pool conversion (`PDV_RequiemMagickaStaminaConversion_BuildSpec_2026-07-13.md`)
-INVALIDATES any already-recorded `boon` felt-proof whose observed effect was a
-Magicka/Stamina (or the 2 Argonian Health-substrate) REGEN bar - the effect is now
-a flat pool MAX, so the expected Active-Effects observation changed from "regen
-faster" to "Maximum Magicka/Stamina/Health rises by the Fortify amount." Before
-crediting a `boon` tick for an M/S-reward family, re-prove it under Requiem as a
-pool-MAX effect (see `PDV_RequiemSmokeTest_Tracker.md` Sweep C). Known
-already-recorded proofs to re-open: Bosmer (BetaTestPacket L643), Breton Magnus
-champion (BetaTestPacket L13), Argonian Rooted-Rest, Redguard Tu'whacca. The
-Fortify magnitudes are PROVISIONAL - this sitting doubles as the tuning pass.
+REGENERATED 2026-07-15 from the live `PDV_FeltFamilyEvidenceLedger.json`: shows only the **58 remaining** families (the 93 already proven are recorded in the ledger -- the authority -- not re-listed here). Each shared price/sting is assigned to a single sitting, so working these proves every remaining family once.
 
-ADDENDUM 2026-07-13 (variety-batch live converts): three variety-batch rewards had
-their LIVE `Devotion.esp` MGEFs converted RateMult -> Fortify in the 2026-07-13
-closeout and need FIRST-TIME felt proof (not a re-proof): Argonian
-`PDV_SPEL_ArgonianAdapt_Sap` (Fortify Magicka +10) and `PDV_SPEL_ArgonianAdapt_Marsh`
-(Fortify Stamina +15), and Bosmer `PDV_SPEL_BosmerNaming_Wanderer` (Fortify Stamina
-+15). These are NOT tracked in `PDV_FeltFamilyEvidenceLedger.json` (the felt registry
-generator reads only race `RewardRecords` specs), so they will NOT appear in the race
-sittings below - prove them via `PDV_RequiemSmokeTest_Tracker.md` Sweep C card **C13**
-and sink the result into the `requiemTrackB.sweepC` slot of
-`PDV_1_0_ManualSignoffLedger.json`. Khajiit Lunar T1 was already Fortify +15 (not a gap).
+**Per-sitting flow (matters for speed):** prime the **neglect-eligible** state FIRST via the debug MCM, work every other row while a dawn passes, advance one dawn, then read the neglect debuff LAST. Neglect is the only dawn-gated class, so this hides its wait behind the rest of the sitting.
 
-SNAPSHOT of `PDV_FeltFamilyEvidenceLedger.json` as of 2026-07-11 (107 pending families). This is a generated point-in-time bundle; if the ledger grows or credits land, regenerate it. Each family is proven ONCE: every shared price/sting is assigned to a single race sitting whose native gods exercise it, so running these ten sittings proves all 107 with zero re-tests (the raw per-race `--sitting` sheets repeat shared families across races). Sink every observation into `PDV_FeltFamilyEvidenceLedger.json`; close each sitting with the race pacing sign-off in `PDV_PacingSignoffLedger.json` (C-PACING-SIGNOFF) and any in-world hook proof (C-PLACEMENT-FINAL).
-
-| # | Sitting | Origin idx | Families | Running total |
+| # | Sitting | Origin idx | Remaining | Note |
 |---|---|---|---|---|
-| 1 | Nord | 0 | 13 | 13 |
-| 2 | Imperial | 1 | 13 | 26 |
-| 3 | Breton | 2 | 12 | 38 |
-| 4 | Khajiit | 6 | 12 | 50 |
-| 5 | Altmer | 3 | 11 | 61 |
-| 6 | Orc | 8 | 11 | 72 |
-| 7 | Redguard | 9 | 10 | 82 |
-| 8 | Dunmer | 5 | 9 | 91 |
-| 9 | Bosmer | 4 | 8 | 99 |
-| 10 | Argonian | 7 | 8 | 107 |
+| 1 | Altmer | 3 | 11 |  |
+| 2 | Orc | 8 | 10 |  |
+| 3 | Dunmer | 5 | 9 |  |
+| 4 | Argonian | 7 | 8 |  |
+| 5 | Redguard | 9 | 8 |  |
+| 6 | Bosmer | 4 | 5 |  |
+| 7 | Breton | 2 | 4 |  |
+| 8 | Khajiit | 6 | 3 | quick straggler |
 
-### 1. Nord sitting (13 families) - `set PDV_GLO_OriginRace to 0`
+### 1. Altmer sitting (11 left) - `set PDV_GLO_OriginRace to 3`
 
-**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [x] `Nord-Kyne|boon`  (e.g. Kyne's Sky - Seeker)
-- [x] `Nord-OldWays|boon`  (e.g. Old Ways - Observant)
-- [x] `Nord-Shor|boon`  (e.g. Shor's Favor - Seeker)
-- [x] `Nord-Stuhn|boon`  (e.g. Stuhn's Ward - Seeker)
-- [x] `Nord-Talos|boon`  (e.g. Talos's Resolve - Seeker)
-- [x] `Nord-Tsun|boon`  (e.g. Tsun's Trial - Seeker)
-
-**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
-- [x] `Neglect-Kyne|neglect`  (e.g. The Weather Stops Cooperating)
-
-**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
-- [x] `Dibella|price`  (e.g. murder-defenseless)
-- [x] `Kyne|price`  (e.g. kill-hostile-beast)
-- [x] `Shor|price`  (e.g. murder-defenseless)
-- [x] `Stuhn|price`  (e.g. murder-defenseless)
-- [x] `Talos|price`  (e.g. murder-defenseless)
-- [x] `Tsun|price`  (e.g. murder-defenseless)
-
-### 2. Imperial sitting (13 families) - `set PDV_GLO_OriginRace to 1`
-
-**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [x] `Imperial-Akatosh|boon`  (e.g. Akatosh's Covenant - Seeker)
-- [x] `Imperial-Arkay|boon`  (e.g. Arkay's Vigil - Seeker)
-- [x] `Imperial-Civic|boon`  (e.g. The Divines' Regard - Observant)
-- [x] `Imperial-Dibella|boon`  (e.g. Dibella's Grace - Seeker)
-- [x] `Imperial-Julianos|boon`  (e.g. Julianos's Wisdom - Seeker)
-- [x] `Imperial-Kynareth|boon`  (e.g. Kynareth's Breath - Seeker)
-- [x] `Imperial-Mara|boon`  (e.g. Mara's Mercy - Seeker)
-- [x] `Imperial-Stendarr|boon`  (e.g. Stendarr's Mercy - Seeker)
-- [x] `Imperial-Talos|boon`  (e.g. Talos's Resolve - Seeker)
-- [x] `Imperial-Zenithar|boon`  (e.g. Zenithar's Trade - Seeker)
-
-**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
-- [x] `Neglect-Imperial|neglect`  (e.g. The Divines Grow Distant)
-
-**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
-- [x] `Kynareth|price`  (e.g. raise-undead)
-- [x] `Stendarr|price`  (e.g. murder-defenseless)
-
-### 3. Breton sitting (active runtime checklist; generic Tradition lane retired) - `set PDV_GLO_OriginRace to 2`
-
-Build note, 2026-07-12: the Breton **two-axis split** is now landed and ready
-for in-game smoke. Authority: `PDV_BretonTwoAxis_BuildSpec_2026-07-12.md`.
-Tradition T1/T2 now lights from weighted practice points
-(`KnightlyVowCount` / `HiddenArtCount` / `GreenWayCount`), not pooled deity
-piety. Patron championing is orthogonal over the 11-god Breton roster plus
-Daedric-via-20C. Resonant Champion patrons unlock the active tradition T3;
-non-resonant Champion patrons grant the modest
-`PDV_Bless_Breton_PatronChampion` beside the practiced tradition.
-
-Run BX1-BX7 below for the current build. B1/B1a/B3 remain historical proof for
-the superseded pool-gated build and should not be used as two-axis proof. The
-old Breton ancestor substrate and generic `Tradition's Footing` lane remain
-retired at runtime.
-
-**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [x] `Breton-GreenWay|boon`  (`Green Way - Seeker`; organic mixed-source practice pass 2026-07-13)
-- [ ] `Breton-HiddenArt|boon`  (e.g. Hidden Art - Seeker)
-- [x] `Breton-KnightsRoad|boon`  (e.g. Knight's Vow - Seeker; B1/B1a passed 2026-07-12)
-- [ ] `Breton-PatronChampion|boon`  (e.g. Patron's Mark - Champion; BX1)
-- [x] `Breton-Tradition|boon` is N/A - the generic Tradition's Footing lane is retired; absence confirmed via B3 on 2026-07-12.
-
-**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
-- [ ] `Neglect-Breton|neglect`  (e.g. The Tradition Grows Distant)
-
-**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
-- [x] `Akatosh|price`  (e.g. kill-dragon)
-- [x] `Arkay|price`  (e.g. raise-undead)
-- [ ] `CreedLoss-Breton|price`  (e.g. The Vow Broken)
-- [x] `Julianos|price`  (e.g. murder-defenseless)
-- [ ] `Magnus|price`  (e.g. raise-undead)
-- [x] `Mara|price`  (e.g. murder-defenseless)
-
-**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects and confirm the source label says `Favor Slips`:
-- [x] `Disfavor-MercyProtection|disfavor-sting`  (e.g. Mercy withdraws for a while.)
-
-### 4. Khajiit sitting (12 families) - `set PDV_GLO_OriginRace to 6`
-
-Runtime note, 2026-07-12: Initial Khajiit setup pass succeeded through origin
-6, moon observance, road-home cadence, and Survey/status display. Tester found
-the Survey correct but too paragraph-heavy. Source hotfix compacted
-`GetKhajiitSurveyText()` to present-state lines only (`Lunar Lattice`, standing,
-moon practice, road home, and current moon phase) and removed the past-tense
-"lunar source read" sentence from Survey because accepted P2 book notices already
-feed Book of Days. Compile 0/0 for `PDV__ManagerQuest` and `PDV_MCM`; verifier
-FAIL=0 WARN=1; Prisma UI audit PASS 89. Manual retest of the new copy is owed
-after a full Skyrim relaunch. Do not mark the reward-family rows below complete
-until their Active Effects / Book of Days / toast surfaces are explicitly read.
-2026-07-12 Baan Dar focused-emergence pass recorded: tester confirmed the
-remaining Baan Dar steps passed as expected, covering the focused Seeker boon
-surface and no-offer/no-wrong-focus expectations for `Khajiit-BaanDar|boon`.
-2026-07-12 Rajhin focused-emergence pass recorded: tester confirmed
-`Khajiit focus -> Rajhin` swaps the active focused boon as soon as target piety
-is applied in the debug harness; no dawn pass is needed for this controlled
-focus-swap proof.
-2026-07-12 Alkosh focused-emergence pass recorded: tester confirmed
-`Khajiit focus -> Alkosh` plus Alkosh target piety produced the expected focused
-boon swap, with no commitment offer or wrong-focus reward stack.
-2026-07-12 Azurah and Khenarthi focused-emergence passes recorded: tester
-confirmed both remaining focused boon families passed through the behavior-button
-paths (moon observance for Azurah, road-home cadence for Khenarthi), not debug
-patron override.
-Post-build reserved-signal note: when the 2026-07-12 reserved-signal package
-lands, fold Khenarthi `CARAVAN_AID` and Rajhin `LEGEND_MADE` manual-display
-proof into this Khajiit sitting if those gods are reachable on the test save.
-The reserved-signal section owns backend/static and runtime-route proof; this
-race sitting owns visible Khajiit-facing readability. Phase-blessing and
-substrate LOW/HIGH band cards remain separate pending additions.
-
-**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [x] `Khajiit-Alkosh|boon`  (e.g. Alkosh's Order - Seeker; focused-emergence pass 2026-07-12)
-- [x] `Khajiit-Azurah|boon`  (e.g. Azurah's Twilight - Seeker; behavior-button focus pass 2026-07-12)
-- [x] `Khajiit-BaanDar|boon`  (e.g. Baan Dar's Guile - Seeker; focused-emergence pass 2026-07-12)
-- [x] `Khajiit-Khenarthi|boon`  (e.g. Khenarthi's Road - Seeker; behavior-button focus pass 2026-07-12)
-- [x] `Khajiit-Rajhin|boon`  (e.g. Rajhin's Shadow - Seeker; immediate focus-swap pass 2026-07-12)
-
-**substrate-favor** - prime the substrate/context state, read the effect in Active Effects:
-- [ ] `Khajiit-Lunar|substrate-favor`  (e.g. Khajiit Lunar Road)
-- [x] `Khajiit-Substrate|substrate-favor`  (e.g. Lunar Hardiness; observed during prior Khajiit pushes 2026-07-12)
-
-2026-07-12 hotfix note: tester saw Lunar Hardiness but not Khajiit Lunar Road.
-`PDV_Bless_Khajiit_Lunar_T1` is the Khajiit substrate Mid slot, but the generic
-first-tier race-reward sync was still managing that shared spell and could strip
-it after substrate grant. `PDV__ManagerQuest.psc` now leaves Khajiit Lunar_T1 to
-`PDV_Substrate_KhajiitLunar`; `tools/pdv_reward_runtime_order_lint.mjs` now
-fails on substrate-owner violations, and `PDV_SubstrateBase.psc` reconciles
-unchanged tiers so a stripped Mid boon can re-add on the next substrate signal.
-Retest before checking `Khajiit-Lunar|substrate-favor`.
-
-2026-07-13 NIGHT GATE REMOVED: the 07-13 "no substrate effects at tier 2" report
-was NOT a strip regression - Lunar Road (and Lunar Attunement T3) were night-gated
-(`GetCurrentTime >= 19 OR <= 7`) on every effect, and the highest-slot-only design
-strips always-on Lunar Hardiness at tier 2, so a daytime tier-2 Khajiit showed an
-empty list while the grant worked correctly (4-agent deep dive; grant/strip/display
-hypotheses all ruled out). Owner decision: all lunar substrate boons are now ALWAYS
-ACTIVE. ESP conditions removed from 07103F + 071081 (backup
-`Backups\phase20-race-rewards\Devotion.esp.20260713-201006.bak`), descriptions
-de-nighted, spec/contracts/CAT-6 manifest/race-manifest/pdv_verify updated, SEQ
-regenerated; verifier FAIL=0 WARN=1 (allowed glyph), phase2 readback PASS=1482.
-Retest is now time-of-day independent: at tier 2 read `Khajiit Lunar Road`
-(Fortify Stamina +15, Disease Resistance +15%) in Active Effects.
-
-2026-07-13 LUNAR METRIC BUDGET ADDED (pacing): the lunar substrate metric now
-draws from a shared daily budget of 4.0 across BOTH lanes (moon observance +1,
-road-home +2), mirroring the Breton practice-point budget. This replaces the old
-per-lane geometric decay for METRIC pacing (the decay still governs the
-piety/focus side). Earliest tier 2 (metric 25) = day 7; tier 3 (metric 75) =
-day 19. Manager + MCM compile 0/0; verifier FAIL=0; 5-agent adversarial review
-shipReady, no confirmed bugs (one accepted same-frame overshoot RISK shared with
-the Breton budget). Four new MCM Debug: Daedric & Curse -> Race signals controls:
-`Seed lunar metric 25` / `Seed lunar metric 75` (boundary seeds, bypass budget),
-`Reset lunar substrate`, `Show lunar budget`. Run the Lunar Budget smoke card
-below before crediting `Khajiit-Lunar|substrate-favor` pacing.
-
-### Khajiit Lunar Budget Smoke Card (2026-07-13)
-
-Origin 6, DebugLevel 2. Controls on `Debug: Daedric & Curse` (seed/reset/show) and
-`Debug: State & Rewards` behavior buttons (moon observance / road-home). Capture
-`Show lunar budget` before/after each step and the `metric` from Show pattern summary.
-
-| # | Step | Expected |
-|---:|---|---|
-| LB1 | On the tester save (metric 26.29, tier 2), fire ONE moon observance | metric -> 27.29 (grant 1.0, NOT old 4.0); Show budget spent 1.0 / remaining 3.0 |
-| LB2 | Drive spent to 3.0 (mix moon/road), then one road-home | grants exactly 1.0 (clamped from 2.0 request); Show budget spent 4.0 / remaining 0.0 |
-| LB3 | With 0 remaining, fire another moon observance | metric UNCHANGED; LastPhase/ObservanceCount still advance; piety/focus still awards; budget-exhausted trace at level 2 |
-| LB4 | Sleep/wait past midnight (and once across a multi-day skip) | Show budget re-arms spent 0.0 / remaining 4.0; next event grants normally (no day-0 suppression) |
-| LB5 | `Reset lunar substrate`, then one moon event same day | metric 0 -> tier 1; then grant 1.0 from a fresh 4.0 pool (sentinel -1 re-arm mid-day works) |
-| LB6 | `Seed lunar metric 25`, then `Seed lunar metric 75` | tier 2 then tier 3 with boon sync; seeding does NOT touch the spent pool (bypass by design) |
-| LB7 | Same-frame collision probe (accepted RISK): pre-load spent 3.0, take a load-door/fast-travel that trips both lunar ingresses | overshoot up to +1 beyond cap = known Breton-pattern behavior; larger overshoot or corrupted spent = file a bug |
-
-**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
-- [ ] `Neglect-KhajiitLunar|neglect`  (e.g. The Moons Withdrawn)
-
-**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
-- [x] `Alkosh|price`  (murder-defenseless 304, -1.0; sting MoonLuckShadow; 2026-07-13)
-- [x] `Azurah|price`  (murder-defenseless 304, -0.75; sting MoonLuckShadow; routes to PDV_Azura; 2026-07-13)
-- [x] `Khenarthi|price`  (raise-undead 365, -0.75; sting SkyStormHunt; debug bypasses ActorTypeUndead gate - organic proof still owed; 2026-07-13)
-- [x] `Rajhin|price`  (murder-defenseless 304, -0.75; sting MoonLuckShadow; 2026-07-13)
-
-### 5. Altmer sitting (11 families) - `set PDV_GLO_OriginRace to 3`
+Flow: prime neglect-eligible FIRST, then work the rows below; advance one dawn; read the neglect debuff last.
 
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
 - [ ] `Altmer-AuriEl|boon`  (e.g. Auri-El's Dawn - Seeker)
@@ -780,14 +648,16 @@ Origin 6, DebugLevel 2. Controls on `Debug: Daedric & Curse` (seed/reset/show) a
 - [ ] `Altmer-CurseState|curse`
 - [ ] `Altmer-VampireExiledPath|curse`
 
-**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
-- [ ] `Neglect-Altmer|neglect`  (e.g. The Dawn Withheld)
-
-**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row):
 - [ ] `Auriel|price`  (e.g. murder-defenseless)
 - [ ] `Xarxes|price`  (e.g. accept-daedric-artifact)
 
-### 6. Orc sitting (11 families) - `set PDV_GLO_OriginRace to 8`
+**neglect** - read the neglect debuff in Active Effects (see Flow note -- prime it FIRST, read it LAST):
+- [ ] `Neglect-Altmer|neglect`  (e.g. The Dawn Withheld)
+
+### 2. Orc sitting (10 left) - `set PDV_GLO_OriginRace to 8`
+
+Flow: prime neglect-eligible FIRST, then work the rows below; advance one dawn; read the neglect debuff last.
 
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
 - [ ] `Orc-City|boon`  (e.g. Private Fidelity - Seeker)
@@ -798,37 +668,16 @@ Origin 6, DebugLevel 2. Controls on `Debug: Daedric & Curse` (seed/reset/show) a
 - [ ] `Orc-supportSpells|boon`  (e.g. The Code Holds)
 - [ ] `OrcCodeHolds|boon`  (e.g. The Code Holds - Devoted)
 
-**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
-- [ ] `Neglect-Orc|neglect`  (e.g. The Code Goes Unkept)
-
-**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row):
 - [ ] `Malacath|price`  (e.g. steal-item)
 - [ ] `Trinimac|price`  (e.g. accept-daedric-artifact)
 
-**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects and confirm the source label says `Favor Slips`:
-- [x] `Disfavor-WarHonor|disfavor-sting`  (e.g. Honor recoils for a while.)
+**neglect** - read the neglect debuff in Active Effects (see Flow note -- prime it FIRST, read it LAST):
+- [ ] `Neglect-Orc|neglect`  (e.g. The Code Goes Unkept)
 
-### 7. Redguard sitting (10 families) - `set PDV_GLO_OriginRace to 9`
+### 3. Dunmer sitting (9 left) - `set PDV_GLO_OriginRace to 5`
 
-**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [ ] `Redguard-AncestorsRegard|boon`  (e.g. Ancestors' Regard - Seeker)
-- [ ] `Redguard-HoonDing|boon`  (e.g. HoonDing's Way - Seeker)
-- [ ] `Redguard-Leki|boon`  (e.g. Leki's Sword-Song - Seeker)
-- [ ] `Redguard-Tuwhacca|boon`  (e.g. Tu'whacca's Ward - Seeker)
-
-**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
-- [ ] `Neglect-Redguard|neglect`  (e.g. Ancestors at a Distance)
-
-**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
-- [ ] `HoonDing|price`  (e.g. murder-defenseless)
-- [ ] `Leki|price`  (e.g. murder-defenseless)
-- [ ] `Tuwhacca|price`  (e.g. raise-undead)
-
-**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects and confirm the source label says `Favor Slips`:
-- [x] `Disfavor-DeathAncestors|disfavor-sting`  (e.g. Rest grows uneasy for a while.)
-- [x] `Disfavor-SkyStormHunt|disfavor-sting`  (e.g. Weather turns cold for a while.)
-
-### 8. Dunmer sitting (9 families) - `set PDV_GLO_OriginRace to 5`
+Flow: prime neglect-eligible FIRST, then work the rows below; advance one dawn; read the neglect debuff last.
 
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
 - [ ] `Dunmer-Azura|boon`  (e.g. Azura's Twilight - Seeker)
@@ -839,46 +688,22 @@ Origin 6, DebugLevel 2. Controls on `Debug: Daedric & Curse` (seed/reset/show) a
 **substrate-favor** - prime the substrate/context state, read the effect in Active Effects:
 - [ ] `Dunmer-Substrate|substrate-favor`  (e.g. Dunmer Ancestor's Steadiness)
 
-**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
-- [ ] `Neglect-Dunmer|neglect`  (e.g. The Ancestors' Silence)
-
-**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row):
 - [ ] `Boethiah|price`  (e.g. heal-or-cure-npc)
 - [ ] `Mephala|price`  (e.g. kill-hostile-humanoid)
 
-**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects and confirm the source label says `Favor Slips`:
+**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects:
 - [ ] `Disfavor-VoidSecrets|disfavor-sting`  (e.g. Unease clings for a while.)
 
-### 9. Bosmer sitting (8 families) - `set PDV_GLO_OriginRace to 4`
+**neglect** - read the neglect debuff in Active Effects (see Flow note -- prime it FIRST, read it LAST):
+- [ ] `Neglect-Dunmer|neglect`  (e.g. The Ancestors' Silence)
 
-Also-in-this-origin (NOT a felt-family row; sink to `requiemTrackB.sweepC`, see the
-Sweep C addendum above): while on Bosmer, run Sweep C **C13** for
-`PDV_SPEL_BosmerNaming_Wanderer` (Fortify Stamina +15) - confirm Max Stamina rises in
-Active Effects when the Naming "Wanderer" told-self ability is granted.
+### 4. Argonian sitting (8 left) - `set PDV_GLO_OriginRace to 7`
 
-**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [ ] `Bosmer-BanditRoad|boon`  (e.g. Bandit Road - Seeker)
-- [ ] `Bosmer-Exchange|boon`  (e.g. The Exchange - Seeker)
-- [ ] `Bosmer-LivingStory|boon`  (e.g. Living Story - Seeker)
-
-**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
-- [ ] `BaanDar|price`  (e.g. murder-defenseless)
-- [ ] `Yffre|price`  (e.g. raise-undead)
-- [ ] `Zen|price`  (e.g. steal-item)
-
-**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects and confirm the source label says `Favor Slips`:
-- [ ] `Disfavor-MoonLuckShadow|disfavor-sting`  (e.g. Fortune slips for a while.)
-- [ ] `Disfavor-OrderTradeLore|disfavor-sting`  (e.g. Order sours for a while.)
-
-### 10. Argonian sitting (7 active families) - `set PDV_GLO_OriginRace to 7`
-
-Also-in-this-origin (NOT felt-family rows; sink to `requiemTrackB.sweepC`, see the
-Sweep C addendum above): while on Argonian, run Sweep C **C13** for the two Adapt
-converts - `PDV_SPEL_ArgonianAdapt_Sap` (Fortify Magicka +10) and
-`PDV_SPEL_ArgonianAdapt_Marsh` (Fortify Stamina +15) - confirm Max Magicka / Max
-Stamina rise in Active Effects when the Sacred-Waters adapt abilities are granted.
+Flow: prime neglect-eligible FIRST, then work the rows below; advance one dawn; read the neglect debuff last.
 
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
+- [ ] `Argonian-Hist|boon`  (e.g. Retired Argonian Relation - Faithful)
 - [ ] `Argonian-People|boon`  (e.g. Chosen People - Kin)
 - [ ] `Argonian-Sithis|boon`  (e.g. Void Distance - Faced)
 - [ ] `Argonian-supportSpells|boon`  (e.g. Void-Held Surge)
@@ -886,12 +711,68 @@ Stamina rise in Active Effects when the Sacred-Waters adapt abilities are grante
 **substrate-favor** - prime the substrate/context state, read the effect in Active Effects:
 - [ ] `Argonian-Substrate|substrate-favor`  (e.g. Root Memory)
 
-**neglect** - Prime neglect eligible, run a dawn, read the neglect debuff in Active Effects:
-- [ ] `Neglect-ArgonianHist|neglect`  (e.g. The Hist Silenced; curse posture only)
-
-**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row) - or read the price effect in Active Effects where one exists:
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row):
 - [ ] `Sithis|price`  (e.g. raise-undead)
 - [ ] `TheHist|price`  (e.g. murder-defenseless)
+
+**neglect** - read the neglect debuff in Active Effects (see Flow note -- prime it FIRST, read it LAST):
+- [ ] `Neglect-ArgonianHist|neglect`  (e.g. The Hist Silenced)
+
+### 5. Redguard sitting (8 left) - `set PDV_GLO_OriginRace to 9`
+
+Flow: prime neglect-eligible FIRST, then work the rows below; advance one dawn; read the neglect debuff last.
+
+**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
+- [ ] `Redguard-AncestorSpine|boon`  (e.g. Ancestor Spine - Seeker)
+- [ ] `Redguard-HoonDing|boon`  (e.g. HoonDing's Way - Seeker)
+- [ ] `Redguard-Leki|boon`  (e.g. Leki's Sword-Song - Seeker)
+- [ ] `Redguard-Tuwhacca|boon`  (e.g. Tu'whacca's Ward - Seeker)
+
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row):
+- [ ] `HoonDing|price`  (e.g. murder-defenseless)
+- [ ] `Leki|price`  (e.g. murder-defenseless)
+- [ ] `Tuwhacca|price`  (e.g. raise-undead)
+
+**neglect** - read the neglect debuff in Active Effects (see Flow note -- prime it FIRST, read it LAST):
+- [ ] `Neglect-Redguard|neglect`  (e.g. Ancestors at a Distance)
+
+### 6. Bosmer sitting (5 left) - `set PDV_GLO_OriginRace to 4`
+
+**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
+- [ ] `Bosmer-BanditRoad|boon`  (e.g. Bandit Road - Seeker)
+- [ ] `Bosmer-Exchange|boon`  (e.g. The Exchange - Seeker)
+- [ ] `Bosmer-LivingStory|boon`  (e.g. Living Story - Seeker)
+
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row):
+- [ ] `BaanDar|price`  (e.g. murder-defenseless)
+- [ ] `Zen|price`  (e.g. steal-item)
+
+### 7. Breton sitting (4 left) - `set PDV_GLO_OriginRace to 2`
+
+Flow: prime neglect-eligible FIRST, then work the rows below; advance one dawn; read the neglect debuff last.
+
+**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
+- [ ] `Breton-PatronChampion|boon`
+
+**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row):
+- [ ] `Magnus|price`  (e.g. raise-undead)
+- [ ] `Yffre|price`  (e.g. raise-undead)
+
+**neglect** - read the neglect debuff in Active Effects (see Flow note -- prime it FIRST, read it LAST):
+- [ ] `Neglect-Breton|neglect`  (e.g. The Tradition Grows Distant)
+
+### 8. Khajiit sitting (3 left) - `set PDV_GLO_OriginRace to 6` -- QUICK straggler
+
+Flow: prime neglect-eligible FIRST, then work the rows below; advance one dawn; read the neglect debuff last.
+
+**substrate-favor** - prime the substrate/context state, read the effect in Active Effects:
+- [ ] `Khajiit-Lunar|substrate-favor`  (e.g. Khajiit Lunar Road)
+
+**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects:
+- [ ] `Disfavor-MoonLuckShadow|disfavor-sting`  (e.g. Fortune slips for a while.)
+
+**neglect** - read the neglect debuff in Active Effects (see Flow note -- prime it FIRST, read it LAST):
+- [ ] `Neglect-KhajiitLunar|neglect`  (e.g. The Moons Withdrawn)
 
 
 ## Co-Test Defects / Follow-Ups
@@ -1081,7 +962,7 @@ These are the practical closeout lanes this runbook feeds:
 | Criterion | How testing closes it | Evidence sink |
 |---|---|---|
 | C-RACE-RUBRIC | Re-run the race beta-feel packet for any race whose ledger verdict regresses below Pass (currently STALE from source drift) | Per-race beta-feel packet ledgers |
-| C-FELT-FAMILY | Work the ten checklists in **Felt-Family Race Sittings (deduplicated plan)** above - every pending family (107 at snapshot), each proven once | `PDV_FeltFamilyEvidenceLedger.json` |
+| C-FELT-FAMILY | Work the checklists in **Felt-Family Race Sittings (deduplicated plan)** above - 58 remaining families (2026-07-15, regenerated from live ledger), each proven once | `PDV_FeltFamilyEvidenceLedger.json` |
 | C-DISLIKE-DEBUFF-TUNING | Dedicated anti-stack/Requiem-felt sitting | `PDV_1_0_ManualSignoffLedger.json` (`dislikeStackTuning`) |
 | C-PACING-SIGNOFF | One dated real-play pacing sign-off per race | `PDV_PacingSignoffLedger.json` |
 | C-PLACEMENT-FINAL | Pending in-world hook proofs folded into race sittings | `PDV_InWorldHookProofLedger.json` |
