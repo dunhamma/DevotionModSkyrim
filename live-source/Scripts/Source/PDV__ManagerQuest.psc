@@ -9933,7 +9933,14 @@ Function HandleAltmerMagicSkillIncrease(String skillName)
 
     ; Every real increase in one of the six magic skills may claim today's
     ; substrate credit; milestone piety remains a separate finite signal.
-    AwardAltmerAncestorSpinePulse(1.0, "magic_skill_increase_" + skillName)
+    ; Enchanting is excluded: it only levels inside the enchanter menu, where
+    ; this mid-menu pulse's toast is lost and it consumes today's daily credit
+    ; before the post-menu enchant-item event (331) can surface the act-specific
+    ; substrate toast. Let event 331 own the enchant credit; this pulse still
+    ; covers the other five magic skills.
+    if skillName != "Enchanting"
+        AwardAltmerAncestorSpinePulse(1.0, "magic_skill_increase_" + skillName)
+    endIf
 
     awardedCount += TryAwardAltmerMagicMilestone(skillName, skillValue, 25)
     awardedCount += TryAwardAltmerMagicMilestone(skillName, skillValue, 50)
