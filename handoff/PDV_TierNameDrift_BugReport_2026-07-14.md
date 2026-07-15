@@ -595,5 +595,12 @@ NEW candidates surfaced by the pass, pre-existing and stash-proven not-this-pass
 (a) 14 stale spine-source verify contracts — **DESCOPED 2026-07-15 (owner sign-off):**
 converted to retained-DELTA presence + deity-pulse ABSENCE guards; strict Phase 18/Nord
 gate now fully clean (34 -> 14 -> 0 FAIL, 4142 PASS); (b) the remap adversary
-breton-hidden-art-champion assert — still open, needs a stale-assert-vs-real-gap verdict.
-Recommended 1.0 issue list if filing now: ONLY item (b).
+breton-hidden-art-champion assert — **VERDICT DELIVERED 2026-07-15: STALE ASSERT, code
+live and correct.** The daedric-pact champion sourcing was refactored into
+`GetBretonChampionSource` (Hidden Art + Champion-tier pact -> pact sources the capstone;
+any other tradition -> None, so no leak into Knight's Road/Green Way); the assert greped
+seven function bodies that no longer contain the moved code. Contract refreshed (helper
+added to the body list; dead `championSource = activePact` token swapped for the live
+`return activePact` + `return PDV_Bless_Breton_HiddenArt_T3` pair); adversary gate now
+PASS with zero failures. **The 1.0 issue list from this audit cycle is EMPTY** — every
+gate in the project is green; what remains is runtime proof (RC cards).
