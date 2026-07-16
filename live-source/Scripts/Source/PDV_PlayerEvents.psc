@@ -146,9 +146,25 @@ ObjectReference PDV_CaravanLeaderRisaad = None
 ObjectReference PDV_CaravanLeaderAhkari = None
 ObjectReference PDV_CaravanLeaderMadran = None
 
+Bool PDV_BardFormsResolved = false
+Bool PDV_BardPollActive = false
+GlobalVariable PDV_BardIsPlaying = None
+FormList PDV_BardTavernCounts = None
+GlobalVariable PDV_BardGameDaysPassed = None
+GlobalVariable PDV_BardSgtLute = None
+GlobalVariable PDV_BardSgtFlute = None
+GlobalVariable PDV_BardSgtDrum = None
+GlobalVariable PDV_BardSgtOvation = None
+Float PDV_BardLastLute = 0.0
+Float PDV_BardLastFlute = 0.0
+Float PDV_BardLastDrum = 0.0
+Int PDV_BardLastPlaying = 0
+Float PDV_BardLastRouteRealTime = -100.0
+
 Event OnInit()
     PDV_OriginQueuedThisLoad = false
     RegisterForPlayerEvents()
+    StartBardPerformancePoll()
     QueueOriginInitialization()
     RouteCurseRefresh("alias_init")
     Trace(2, "Player alias initialized.")
@@ -157,6 +173,7 @@ EndEvent
 Event OnPlayerLoadGame()
     PDV_OriginQueuedThisLoad = false
     RegisterForPlayerEvents()
+    StartBardPerformancePoll()
     QueueOriginInitialization()
     RouteCurseRefresh("load")
     RoutePaarthurnaxSpareLoadCheck()
@@ -164,9 +181,14 @@ Event OnPlayerLoadGame()
 EndEvent
 
 Event OnUpdate()
-    ; The single-update timer is shared: the combat poll re-registers at 4s while a
-    ; session is open, and the origin retry below re-registers at 2s while origin is
-    ; unresolved. Origin runs last so its shorter delay wins when both are active.
+    ; The single-update timer is shared: the bard poll re-registers at 5s while any
+    ; bard mod is present, the combat poll at 4s while a session is open, and the
+    ; origin retry below at 2s while origin is unresolved. They run shortest-last so
+    ; the tightest cadence wins whenever those systems are active.
+    if PDV_BardPollActive
+        BardPerformancePollTick()
+    endIf
+
     if PDV_CombatSessionActive
         CombatPollTick()
     endIf
@@ -2363,4 +2385,157 @@ Function Trace(Int level, String traceText)
     if GetDebugLevel() >= level
         Debug.Trace("[PDV] PlayerEvents: " + traceText)
     endIf
+EndFunction
+
+Function StartBardPerformancePoll()
+    ResolveBardPerformanceForms()
+    if !PDV_BardPollActive
+        return
+    endIf
+
+    PDV_BardLastLute = GetBardGlobalValue(PDV_BardSgtLute)
+    PDV_BardLastFlute = GetBardGlobalValue(PDV_BardSgtFlute)
+    PDV_BardLastDrum = GetBardGlobalValue(PDV_BardSgtDrum)
+    PDV_BardLastPlaying = GetBardGlobalValue(PDV_BardIsPlaying) as Int
+    SyncBardTavernCounts()
+    RegisterForSingleUpdate(5.0)
+EndFunction
+
+Function ResolveBardPerformanceForms()
+    ; Re-resolve once per load. Missing plugins simply return None.
+    PDV_BardIsPlaying = Game.GetFormFromFile(0x00051223, "BecomeABard.esp") as GlobalVariable
+    PDV_BardTavernCounts = Game.GetFormFromFile(0x00065073, "BecomeABard.esp") as FormList
+    PDV_BardGameDaysPassed = Game.GetFormFromFile(0x00000038, "Skyrim.esm") as GlobalVariable
+    PDV_BardSgtLute = Game.GetFormFromFile(0x00000D62, "SkyrimsGotTalent-Bards.esp") as GlobalVariable
+    PDV_BardSgtFlute = Game.GetFormFromFile(0x00000D61, "SkyrimsGotTalent-Bards.esp") as GlobalVariable
+    PDV_BardSgtDrum = Game.GetFormFromFile(0x00000D63, "SkyrimsGotTalent-Bards.esp") as GlobalVariable
+    PDV_BardSgtOvation = Game.GetFormFromFile(0x0000E0CA, "SkyrimsGotTalent-Bards.esp") as GlobalVariable
+    PDV_BardFormsResolved = true
+    PDV_BardPollActive = PDV_BardIsPlaying || PDV_BardSgtLute || PDV_BardSgtFlute || PDV_BardSgtDrum
+EndFunction
+
+Function BardPerformancePollTick()
+    Float currentLute = GetBardGlobalValue(PDV_BardSgtLute)
+    Float currentFlute = GetBardGlobalValue(PDV_BardSgtFlute)
+    Float currentDrum = GetBardGlobalValue(PDV_BardSgtDrum)
+    Int currentPlaying = GetBardGlobalValue(PDV_BardIsPlaying) as Int
+
+    Float expertiseDelta = (currentLute - PDV_BardLastLute) + (currentFlute - PDV_BardLastFlute) + (currentDrum - PDV_BardLastDrum)
+    Bool performanceEnded = PDV_BardLastPlaying > 0 && currentPlaying <= 0
+
+    PDV_BardLastLute = currentLute
+    PDV_BardLastFlute = currentFlute
+    PDV_BardLastDrum = currentDrum
+    PDV_BardLastPlaying = currentPlaying
+
+    Form tavernContext = None
+    Bool tavernCountChanged = false
+    Bool tavernEligible = true
+    if performanceEnded && PDV_BardTavernCounts
+        tavernContext = ConsumeBardTavernCountIncrease()
+        tavernCountChanged = tavernContext != None
+        if tavernCountChanged
+            tavernEligible = MarkBardTavernDay(tavernContext)
+        endIf
+    endIf
+
+    if (expertiseDelta > 0.0 || performanceEnded) && tavernEligible
+        Int qualityDelta = expertiseDelta as Int
+        if qualityDelta < 1
+            qualityDelta = 1
+        elseIf qualityDelta > 8
+            qualityDelta = 8
+        endIf
+
+        Float nowRealTime = Utility.GetCurrentRealTime()
+        if nowRealTime - PDV_BardLastRouteRealTime >= 12.0
+            Bool receivedOvation = GetBardGlobalValue(PDV_BardSgtOvation) > 0.0
+            Form contextForm = tavernContext
+            if !contextForm
+                contextForm = GetBardExpertiseContext(currentLute, currentFlute, currentDrum)
+            endIf
+            if !contextForm
+                contextForm = PDV_BardIsPlaying as Form
+            endIf
+            if PDV_EventBusService
+                PDV_EventBusService.RouteBardPerformance(qualityDelta, receivedOvation, contextForm)
+                PDV_BardLastRouteRealTime = nowRealTime
+            endIf
+        endIf
+    elseIf tavernCountChanged && !tavernEligible
+        Trace(3, "Bard performance blocked by per-tavern daily cap.")
+    endIf
+
+    RegisterForSingleUpdate(5.0)
+EndFunction
+
+Float Function GetBardGlobalValue(GlobalVariable sourceGlobal)
+    if sourceGlobal
+        return sourceGlobal.GetValue()
+    endIf
+    return 0.0
+EndFunction
+
+Form Function GetBardExpertiseContext(Float currentLute, Float currentFlute, Float currentDrum)
+    if currentLute >= currentFlute && currentLute >= currentDrum && PDV_BardSgtLute
+        return PDV_BardSgtLute as Form
+    elseIf currentFlute >= currentDrum && PDV_BardSgtFlute
+        return PDV_BardSgtFlute as Form
+    elseIf PDV_BardSgtDrum
+        return PDV_BardSgtDrum as Form
+    endIf
+    return None
+EndFunction
+
+Function SyncBardTavernCounts()
+    if !PDV_BardTavernCounts
+        return
+    endIf
+
+    Int index = 0
+    Int count = PDV_BardTavernCounts.GetSize()
+    while index < count
+        GlobalVariable countGlobal = PDV_BardTavernCounts.GetAt(index) as GlobalVariable
+        if countGlobal
+            StorageUtil.SetFloatValue(None, "PDV.BardTavern.LastCount." + countGlobal.GetFormID(), countGlobal.GetValue())
+        endIf
+        index += 1
+    endWhile
+EndFunction
+
+Form Function ConsumeBardTavernCountIncrease()
+    Int index = 0
+    Int count = PDV_BardTavernCounts.GetSize()
+    Form changedTavern = None
+    while index < count
+        GlobalVariable countGlobal = PDV_BardTavernCounts.GetAt(index) as GlobalVariable
+        if countGlobal
+            String countKey = "PDV.BardTavern.LastCount." + countGlobal.GetFormID()
+            Float previousCount = StorageUtil.GetFloatValue(None, countKey, countGlobal.GetValue())
+            Float currentCount = countGlobal.GetValue()
+            if currentCount > previousCount && !changedTavern
+                changedTavern = countGlobal as Form
+            endIf
+            StorageUtil.SetFloatValue(None, countKey, currentCount)
+        endIf
+        index += 1
+    endWhile
+    return changedTavern
+EndFunction
+
+Bool Function MarkBardTavernDay(Form tavernContext)
+    if !tavernContext
+        return true
+    endIf
+
+    Int dayStamp = 0
+    if PDV_BardGameDaysPassed
+        dayStamp = PDV_BardGameDaysPassed.GetValue() as Int
+    endIf
+    String dayKey = "PDV.BardTavern.Day." + tavernContext.GetFormID()
+    if StorageUtil.GetIntValue(None, dayKey, -1) == dayStamp
+        return false
+    endIf
+    StorageUtil.SetIntValue(None, dayKey, dayStamp)
+    return true
 EndFunction

@@ -149,6 +149,16 @@ Function RouteQuestReactionFaucet(String faucetKey, Form sourceForm)
     Trace(2, "RouteQuestReactionFaucet complete: " + faucetKey)
 EndFunction
 
+Function RouteBardPerformance(Int qualityDelta, Bool receivedOvation, Form contextForm)
+    if !PDV_Manager
+        Trace(1, "RouteBardPerformance skipped: PDV_Manager not assigned.")
+        return
+    endIf
+
+    PDV_Manager.HandleBardPerformance(qualityDelta, receivedOvation, contextForm)
+    Trace(2, "RouteBardPerformance complete: quality " + qualityDelta)
+EndFunction
+
 Function RouteGreenPactViolation()
     PDV_EventTypes eventTypes = GetEventTypes()
     if !PDV_Manager
