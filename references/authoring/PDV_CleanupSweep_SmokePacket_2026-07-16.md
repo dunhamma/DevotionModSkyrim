@@ -5,9 +5,15 @@
 `PDV_1_0_CoTest_Runbook_2026-07-10.md` is still the sheet for those.
 
 **Artifact under test:** `dist/Devotion-1.0-rc1-20260716.zip`
-SHA256 `BD99DCC55EF848E6D1F7168039F54ED501A5E9874D081C8987CD1042B4194F5E`
+SHA256 `9140A08933BE8386A7989D24497120CDA6D2CC50B7AD08B7927938161793D8CF`
 (216 entries, 7.6 MB). **This zip already contains every change below** -- it was
 built after the recompile. See "Repackaging" at the bottom before rebuilding.
+
+> **Run 2026-07-17: ALL FIVE PASS.** Tests 1-4 passed at the keyboard; Test 5
+> passed by bytecode probe (see below). One real bug surfaced during the run and
+> is fixed: Book of Days rendered the internal token `OldContract` instead of
+> `Old Contract` -- that fix is what produced the SHA256 above, superseding
+> `BD99DCC5...`. Nothing here closes any of the ten in-world gate buckets.
 
 **What changed and therefore what can break:**
 
@@ -159,11 +165,39 @@ A1 deleted a Prisma caller. The bridge itself was untouched, but prove it.
 ## Test 5 -- Phase 0 is gone and nothing misses it
 
 1. Console: `setpqv PDV__ManagerQuest DebugPrismaChoiceGo 1`
-   **Expected: an error / unknown variable.** The property is deleted. If this
-   *works*, the live `.pex` is stale against the shipped source.
+   **Expected: an error in the CONSOLE OUTPUT.** The property is deleted.
+   **Read the console, not the screen.** `setpqv` reports a bad property to the
+   console, *never* as an in-game notification -- so seeing nothing on screen is
+   what PASS looks like. Do not read on-screen silence as "the command worked".
+   (Even on the old build it never notified instantly: it set a flag, and the
+   next 1s tick opened the choice panel.)
 2. Play normally for a few minutes. **No** "PDV Phase 0:" notifications should
    ever appear (they cannot -- the code is gone).
 3. Papyrus log: no new errors referencing `Phase0PrismaChoiceTick`.
+
+**Faster and unambiguous -- prove it from the bytecode.** Needs no game and
+cannot be misread:
+
+```
+node -e '
+const fs=require("fs");
+const p=fs.readFileSync("D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/PDV__ManagerQuest.pex");
+const hit=s=>p.includes(Buffer.from(s,"latin1"));
+for (const s of ["DebugSeedAdaptDueNow","Old Contract"])
+  console.log((hit(s)?"PRESENT ":"absent  ")+s+"   <- control, MUST be PRESENT");
+for (const s of ["DebugPrismaChoiceGo","Phase0PrismaChoiceTick","phase0_test","PDV Phase 0:"])
+  console.log((hit(s)?"PRESENT <-- STALE .pex":"absent  ")+s);
+'
+```
+
+PASS = both controls PRESENT **and** all four Phase 0 strings absent. **Keep the
+controls.** A broken probe prints "absent" for everything and looks exactly like
+a pass -- which is what happened on the first attempt here, using `strings` (not
+installed on this box; `2>/dev/null` hid the failure). Only the controls caught it.
+
+**Result 2026-07-17: PASS.** Controls PRESENT, all four Phase 0 strings absent.
+`setpqv` errored to the console, and no notice is physically possible because the
+notification text is not in the bytecode either.
 
 **Guardrail:** deleting Phase 0 must change nothing player-visible. If a Prisma
 **choice-panel** regression appears, that means the choice channel had a

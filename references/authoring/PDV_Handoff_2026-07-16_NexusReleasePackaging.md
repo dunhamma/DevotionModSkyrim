@@ -7,7 +7,12 @@ run. This doc is a snapshot of that run, not a competing authority.
 ## What was built
 
 `dist/Devotion-1.0-rc1-20260716.zip` -- 7.6 MB, 216 entries, SHA256
-`BD99DCC55EF848E6D1F7168039F54ED501A5E9874D081C8987CD1042B4194F5E`.
+`9140A08933BE8386A7989D24497120CDA6D2CC50B7AD08B7927938161793D8CF`.
+(Supersedes `BD99DCC5...` -- the same package before the Bosmer path-label fix
+below forced a recompile; both supersede the leaking `A72E63D3...`. Re-derive the
+true hash at any time with
+`node tools/pdv_package_release.mjs --verify dist/Devotion-1.0-rc1-20260716.zip`
+rather than trusting this line.)
 
 Clean deployable of live `mods/Devotion` with a **Data-relative root** (installs
 via mod manager with no "set data directory" step), plus `README.txt` and
@@ -157,6 +162,30 @@ Two mirror/gate defects fixed, neither ever affecting the game:
 **Git.** 42 lines of shipped behavior (per-mod quest-reaction patch channels in
 `PDV_PlayerEvents` + the manager's channel resolver) were compiled into the
 shipped `.pex` but uncommitted. Committed as `a11fc0c`.
+
+**Bosmer path label (found in smoke, fixed).** Book of Days rendered
+`You've chosen your road: OldContract.` -- the raw PascalCase StateTrack token.
+`GetBosmerPathLabel()` returned the ESP's internal `StateLabels` entry, and all
+eleven of its callers are player surfaces, so the token leaked everywhere: also
+`Your road through the Green is the OldContract.`, the Prisma shift toast, and
+the Survey line. Mapped state -> authored guide copy in that one function
+(Old Contract / Living Story / Bandit Road / Exchange -- the article stays in the
+prose, so "The Exchange" would have rendered "is the The Exchange.").
+
+Fixed in Papyrus, **not** in the ESP's `StateLabels`: VMAD properties bake at
+first init so a data edit would not reach existing saves, and the internal token
+is still wanted -- `pdv_phase20_runtime_check` greps it in Trace markers, and
+`GetBosmerSummary()` uses it deliberately in the MCM's debug `key=value;` readout.
+Safe to change in place: nothing string-compares the label, `app.js` does not
+match the path token, and the chronicle gates assert only the prose prefix ahead
+of the label. This recompile produced the current SHA256.
+
+**Smoke results (2026-07-17).** Disfavor 10s-cadence clear, favor 1s
+reactivity, startup choice, and the Prisma hotkeys all PASS -- see
+`PDV_CleanupSweep_SmokePacket_2026-07-16.md`. Test 5 (Phase 0 removed) PASS,
+proven from the bytecode: `DebugPrismaChoiceGo`, `Phase0PrismaChoiceTick`,
+`phase0_test`, and `PDV Phase 0:` are all absent from the live
+`PDV__ManagerQuest.pex` while control strings are present.
 
 ## Open proof debt
 
