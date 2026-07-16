@@ -8073,7 +8073,9 @@ Function HandlePaarthurnaxKill(Form sourceForm, String reason)
     ; slain at the Blades' demand -- the time-and-order gods mourn it, the
     ; treachery-and-dominion Princes savor it.
     ApplyPaarthurnaxKillReaction("Akatosh", "S", sourceForm)
-    ApplyPaarthurnaxKillReaction("Alkosh", "S", sourceForm)
+    ; Alkosh is deliberately absent here: the kill path already routes
+    ; RouteKhajiitAlkoshChaosAid for Khajiit players (PDV_PlayerEvents), and Alkosh is
+    ; reachable to no one else, so a row here would only double-penalize a Khajiit.
     ApplyPaarthurnaxKillReaction("Talos", "m", sourceForm)
     ApplyPaarthurnaxKillReaction("Julianos", "m", sourceForm)
     ApplyPaarthurnaxKillReaction("Auri-El", "m", sourceForm)
