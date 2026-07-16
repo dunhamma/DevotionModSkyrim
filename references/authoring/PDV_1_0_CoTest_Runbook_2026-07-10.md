@@ -387,9 +387,14 @@ expanded 17/11 roster proof.
 Paarthurnax remains outside the watched matrix and uses static one-shot manager
 handlers:
 
-- **Kill, 17 reactions:** losses Shor S, Tsun S, Kyne S, Stendarr C, Stuhn C,
-  Mara S, Akatosh S, Alkosh S, Talos m, Julianos m, Auri-El m, Khenarthi m,
-  Kynareth m; gains Boethiah S, Hircine S, Molag Bal m, Mehrunes Dagon m.
+- **Kill, 16 reactions:** losses Shor S, Tsun S, Kyne S, Stendarr C, Stuhn C,
+  Mara S, Akatosh S, Talos m, Julianos m, Auri-El m, Khenarthi m, Kynareth m;
+  gains Boethiah S, Hircine S, Molag Bal m, Mehrunes Dagon m.
+  **Alkosh is deliberately absent (16, not the 17 this section listed until
+  2026-07-16).** The kill path already routes `RouteKhajiitAlkoshChaosAid` for
+  Khajiit players, so an Alkosh row here penalised a Khajiit twice and bought
+  nothing for anyone else. Do not re-add him to close a roster-drift FAIL; he
+  correctly remains on the spare roster, which has no competing route.
 - **Spare, 11 reactions:** gains Stuhn C, Stendarr C, Mara S, Kyne m, Akatosh S,
   Talos m, Alkosh m, Auri-El m, Kynareth m; losses Boethiah m, Molag Bal m.
 
@@ -497,7 +502,22 @@ signal-floor smoke state is open at runtime:
    matrix expansion, Book of Days aggregation, and the risky organic routes.
    Cards 2, 3, 4, 5, and 7 have passed after retest; continue with the next
    open card.
-4. **Race sittings for 1.0.** Work the **Felt-Family Race Sittings
+4. **Main-quest full coverage runtime (T11).** The newest content and the least
+   proven: 951 T11 rows landed 2026-07-15 and every deity now reacts to all 19
+   main-quest records, but nothing has been seen in Skyrim. Static first --
+   `node .\tools\pdv_main_quest_full_coverage_audit.mjs --json` must PASS (19
+   assertions) -- then run the five probes in **T11 main-quest full-coverage gate
+   and co-test boundary (2026-07-15)** above and record them under
+   `groups.mainQuestFullCoverageRuntime` in `PDV_1_0_ManualSignoffLedger.json`.
+   They feed the fail-closed `C-MAIN-QUEST-FULL-COVERAGE-RUNTIME` criterion.
+   Slotted here because it shares the signal-floor MCM harness from step 3 (same
+   save, same sitting) and because an RC is being packaged against content whose
+   only evidence is static. **Never `setstage` these vanilla stages** - MQ106 200
+   is a shutdown stage and can freeze an out-of-context save; use the manager
+   routes. The one runtime fact already banked: the indexed registration rewrite
+   is proven live (`133 of 134` on 2026-07-16; the single skip is the Gray Cowl
+   CC plugin, which is absent from this profile and is a designed graceful skip).
+5. **Race sittings for 1.0.** Work the **Felt-Family Race Sittings
    (deduplicated plan)** section below - checklist sittings that prove every
    remaining felt family (58 as of 2026-07-15, regenerated from the live ledger)
    ONCE each (the raw `--sitting <Race>` sheets repeat shared price/sting families
@@ -507,7 +527,7 @@ signal-floor smoke state is open at runtime:
    beta-feel packet during the same sitting to clear the C-RACE-RUBRIC stale
    state. (`--sitting <Race>` is still useful for a live single-race regen, but it
    re-lists shared families the plan has already assigned elsewhere.)
-5. **Cross-cutting 1.0 smoke.** Experience Mode two-mode smoke, Requiem Track B,
+6. **Cross-cutting 1.0 smoke.** Experience Mode two-mode smoke, Requiem Track B,
    dislike anti-stack under Requiem, ARR acceptance, and Bordello compatibility
    packaging.
 

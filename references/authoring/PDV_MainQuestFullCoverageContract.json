@@ -54,6 +54,15 @@
     "faucetActs": 26
   },
   "paarthurnax": {
+    "_killRosterNote": [
+      "Alkosh is deliberately ABSENT from the kill roster (16 reactions, not 17) as of 2026-07-16.",
+      "The kill path in PDV_PlayerEvents already routes RouteKhajiitAlkoshChaosAid for Khajiit",
+      "players, which awards Alkosh's SIGNAL_CHAOS_AID for the same act. An Alkosh row here",
+      "therefore penalised a Khajiit TWICE, and bought nothing for anyone else -- Alkosh is",
+      "reachable to no other origin, so the reachability gate drops the row.",
+      "Do NOT re-add Alkosh to close a roster-drift FAIL. Alkosh correctly REMAINS on the spare",
+      "roster below, which has no competing route."
+    ],
     "kill": [
       { "deity": "Shor", "intensity": "S", "valence": "-" },
       { "deity": "Tsun", "intensity": "S", "valence": "-" },
@@ -62,7 +71,6 @@
       { "deity": "Stuhn", "intensity": "C", "valence": "-" },
       { "deity": "Mara", "intensity": "S", "valence": "-" },
       { "deity": "Akatosh", "intensity": "S", "valence": "-" },
-      { "deity": "Alkosh", "intensity": "S", "valence": "-" },
       { "deity": "Talos", "intensity": "m", "valence": "-" },
       { "deity": "Julianos", "intensity": "m", "valence": "-" },
       { "deity": "Auri-El", "intensity": "m", "valence": "-" },
