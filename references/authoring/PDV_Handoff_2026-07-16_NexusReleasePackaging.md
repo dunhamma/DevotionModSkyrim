@@ -1,0 +1,163 @@
+# Handoff -- Nexus Release Packaging + 1.0 Gate State (2026-07-16)
+
+**Owner:** packaging / release-claim boundary
+**Authority:** `PDV_1_0_EndStateContract.json` + a fresh `pdv_1_0_endstate_gate.mjs`
+run. This doc is a snapshot of that run, not a competing authority.
+
+## What was built
+
+`dist/Devotion-1.0-rc1-20260716.zip` -- 7.6 MB, 216 entries, SHA256
+`BD99DCC55EF848E6D1F7168039F54ED501A5E9874D081C8987CD1042B4194F5E`.
+
+Clean deployable of live `mods/Devotion` with a **Data-relative root** (installs
+via mod manager with no "set data directory" step), plus `README.txt` and
+`CHANGELOG.txt`. Contents: `Devotion.esp`, 96 `.pex`, 96 `.psc` (source, under
+`Scripts/Source/`), `Seq/Devotion.seq`, SKSE bridge DLL + StorageUtil data,
+PrismaUI views, meshes, textures, dialogue views, `Credits.txt`.
+
+Excluded: `Backups/`, ~50 `.seq` backups, the `.esp.bak-*` snapshots, bridge
+`.pdb`, `.bak` JSON, `.orig` source, `meta.ini`.
+
+> **Correction (2026-07-16).** The original build of this zip was 217 entries /
+> 7.7 MB / SHA256 `A72E63D3...` and this section claimed "Verified zero leakage
+> by direct zip inspection." **That claim was false.** The archive shipped
+> `Scripts/Source/PDV__ManagerQuest.psc.orig` -- 876 KB of stale, md5-mismatched
+> manager source, ~11% of the download. The hand-run exclusion matched `.bak-*`
+> and never covered `.orig`.
+>
+> Root cause: the exclusions existed only in a shell invocation, not in the repo.
+> Fixed three ways -- the six stale `.bak`/`.orig` files were deleted from live
+> `Scripts/Source` (~2.7 MB); packaging now runs through
+> `tools/pdv_package_release.mjs`, which builds from a filtered staging tree so
+> an excluded file cannot reach the archive, then re-scans the finished zip and
+> fails on any leak; and `README.txt`/`CHANGELOG.txt` -- which previously existed
+> **only inside the zip** and were unversioned -- now live in
+> `dist/release-meta/`.
+>
+> Rebuild and re-verify with:
+> ```
+> node tools/pdv_package_release.mjs --version 1.0-rc1 --date 20260716
+> node tools/pdv_package_release.mjs --verify dist/Devotion-1.0-rc1-20260716.zip
+> ```
+> The SHA256 above is the corrected build. It also carries the recompiled
+> manager/MCM bytecode from the same-day Papyrus cleanup, so it supersedes
+> `A72E63D3...` on content as well as on leakage.
+
+**Versioned `1.0-rc1`, NOT 1.0** -- see gate state below. The bits are
+release-quality; the *claim* is not yet earned. Renaming the file is a one-line
+change once the gate greens.
+
+## Gate state
+
+Read-mode: **2 PASS / 1 STALE / 20 RED**. After `--run` re-green:
+**12 PASS / 1 STALE / 10 RED**. Most REDs were drift-voided machine proofs
+(the `.pex`/ESP moved after evidence was recorded), not breakage.
+
+### Remaining 10 RED -- all need in-world proof
+
+| Criterion | Open |
+|---|---|
+| C-FELT-FAMILY | 25/151 slots (Argonian boons, BaanDar/Boethiah price, Bosmer, ...) |
+| C-PACING-SIGNOFF | 9/10 races (all but one) |
+| C-COMPAT-BORDELLO | 6/6 (JOJ, TOT, HOH, MOM, DoD, VOV) |
+| C-COMPAT-ARR | 1/1 (arrAcceptedPackage) |
+| C-REQUIEM-TRACKB | 4/4 sweeps |
+| C-MAIN-QUEST-FULL-COVERAGE-RUNTIME | 5/5 slots |
+| C-PLACEMENT-FINAL | 10 hooks pending in-world proof (73 PASS) |
+| C-DISLIKE-DEBUFF-TUNING | 1/1 (antiStackRequiemFelt) |
+| C-AUDIT-BETA-STRICT | meta-gate; fails closed while the above are open |
+| C-EXPMODE-BUILD | **stale contract, see below** |
+
+None of these is a code defect. They are play-time evidence buckets, and per
+[[felt-family-retrocredit-exhausted]] they cannot be retro-credited from specs.
+
+## Two drift findings (not fixed here)
+
+1. **C-EXPMODE-BUILD is a stale gate contract, not missing work.**
+   `pdv_verify.mjs --strict-experience-mode` fails on `PDV_MCM.psc` missing
+   `String Property PAGE_MODE = "Experience Mode"` and `Function BuildModePage()`.
+   Per CHANGELOG 2026-07-16 the Experience Mode **tab was deliberately removed**
+   and folded into Settings; `ToggleExperienceMode()` and the Path label both
+   still PASS. The verifier is checking for a page that was intentionally
+   deleted. Toolchain edits are out of scope without an explicit ask
+   (Claude.md rule 5) -- **the gate expectation needs updating to match the
+   shipped Settings-tab design.** Until then C-EXPMODE-BUILD reds the rollup for
+   a wrong reason. Updates [[experience-mode-designed-not-built]].
+
+2. **SEQ freshness WARN is a false alarm.** `pdv_verify.mjs` warns the SEQ is
+   older than the ESP. Regenerated it via `housecarl_write_seq` and diffed:
+   **byte-identical**, 42 start-game-enabled quests both sides. The ESP was
+   touched later without adding an SGE quest. No action needed; the WARN is an
+   mtime artifact, not a start-failure risk.
+
+## Incidental fix
+
+`PDV_ActionRouter.pex` was stale against its source in the live folder;
+recompiled clean (0 errors / 0 warnings) so shipped bytecode matches shipped
+source. This is also what drift-voided several machine gates -- expect a
+re-green to be needed after any recompile.
+
+## Pre-release cleanup sweep (2026-07-16, later same day)
+
+A review pass landed the following. All machine gates re-green after; the ten
+in-world REDs are untouched and still require a tester.
+
+**Papyrus (`/papyrus-optimization`).** The 1s manager tick is a
+`RegisterForSingleUpdate` chain -- correct idiom, no queue stacking, no freeze
+risk -- but it never exits and three consumers kept paying after self-disabling.
+Fixed: deleted `Phase0PrismaChoiceTick` (self-described throwaway Phase 0 debug
+code polling StorageUtil every second in a release build; fully self-contained,
+no MCM or gate caller); hoisted `EnsureUnifiedStartupChoice`'s completion flag
+ahead of its `GetPlayerOriginRaceIndex()` call; folded `UpdateDisfavorStingRuntime`
+into the existing 10s `_shoutRefreshTicks` throttle. Disfavor expiry is compared
+against **game** time, so at timescale 20 a 10s cadence is ~3 game-minutes of
+granularity on a game-hours debuff. `UpdateContextualFavorRuntime` deliberately
+stays at 1s -- it re-checks eligibility and must react when the player leaves the
+triggering context. Deleting Phase 0 leaves `ShowChoice`/`ConsumePendingChoice`/
+`SupportsChoice` without a Papyrus caller; that is intentional (retained bridge
+capability, see `PDV_PrismaChoicePanel_CapabilityPlan.md`) -- do not remove them.
+
+**Prisma.** The layer was already clean: one view, repo/live md5-identical across
+`app.js`/`styles.css`/`index.html`/DLL, no orphan views, no broken `CreateView`
+paths, no JS/native interop mismatches, cold-view focus trap correctly deferred.
+Two mirror/gate defects fixed, neither ever affecting the game:
+- `native/DevotionPrismaBridge/mod/Scripts/Source/PDV_PrismaBridge.psc` was
+  missing `IsPanelVisible`, which C++ registers and `PDV_MCM.psc` calls -- a
+  repo-side **compile break** that no gate caught, because every audit read the
+  live copy. Declaration restored, and `pdv_prisma_ui_audit.mjs` now checks
+  repo/live bridge parity plus "every C++-registered native is declared."
+  The parity check normalizes line endings: the repo mirror is CRLF and live is
+  mixed CRLF/LF, so a raw byte hash would false-fail on identical text.
+- `pdv_prisma_to_oneoh_audit.mjs` asserted retired Altmer copy ("The old line
+  turns: ...") that ships nowhere. The real implementation is strictly better
+  (authored headline/line/tone + paired Book of Days entry). Retargeted at what
+  ships; the audit now reads PASS=76 FAIL=0 (was 74/1).
+
+**Git.** 42 lines of shipped behavior (per-mod quest-reaction patch channels in
+`PDV_PlayerEvents` + the manager's channel resolver) were compiled into the
+shipped `.pex` but uncommitted. Committed as `a11fc0c`.
+
+## Open proof debt
+
+Packaging success is not gameplay proof. What is proven here:
+
+- **Package shape** -- direct zip inspection.
+- **`.pex` freshness** -- all 96 verified against source.
+- **Machine/readback gates** -- 12 PASS on a fresh `--run`.
+
+What is NOT proven and blocks the 1.0 claim: every row in the RED table above.
+All require a tester at a keyboard. No amount of tool running closes them.
+
+## Next
+
+**Work breakdown for the 10 RED: `PDV_1_0_UntestedBacklog_2026-07-16.md`**
+(owner decision 2026-07-16: track the untested work, do NOT waive it -- every
+criterion stays `post10: false`, the gate stays RED and keeps meaning what it
+says).
+
+1. Decide the C-EXPMODE-BUILD contract fix (gate expectation vs shipped design).
+2. Burn the in-world buckets -- `PDV_1_0_CoTest_Runbook_2026-07-10.md` is the
+   operator sheet; record into the structured ledgers the burndown names.
+3. Re-run `pdv_1_0_endstate_gate.mjs --run` **after** the last recompile, not
+   before, or drift voids the machine PASSes again.
+4. Only then rename `1.0-rc1` -> `1.0` and cut the Nexus upload.

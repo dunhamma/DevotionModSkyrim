@@ -7,3 +7,11 @@ native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/styles.css text eol=lf
 # and no rule here, git rewrites these to CRLF on checkout and every guide then
 # reports a false "stale". Pin them so the gate compares like with like.
 dist/nexus-articles/*.bb text eol=lf
+
+# Release notes are copied verbatim into the release zip by
+# tools/pdv_package_release.mjs, and the handoff publishes that zip's SHA256.
+# Any line-ending rewrite on checkout would change the artifact's bytes and make
+# the published hash unreproducible on another machine, so store these exactly as
+# they ship (README is LF, CHANGELOG is CRLF) rather than normalizing either.
+dist/release-meta/README.txt -text
+dist/release-meta/CHANGELOG.txt -text

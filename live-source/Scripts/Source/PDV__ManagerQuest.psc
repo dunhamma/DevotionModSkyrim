@@ -228,12 +228,6 @@ Int Property DebugSeedDeclareHomeNow Auto Hidden
 Int Property DebugSeedBedCount Auto Hidden
 Int Property DebugSeedArgWatersCount Auto Hidden
 Int Property DebugSeedAdaptDueNow Auto Hidden
-; Phase 0 Prisma choice-panel proof trigger (SetPQV path, like the seeds above):
-;   setpqv PDV__ManagerQuest DebugPrismaChoiceGo 1
-; The OnUpdate tick opens a throwaway 2-option Prisma choice (non-modal) and
-; reports the pick (or Esc cancel) via a top-left notification. Debug-only; proves
-; the JS->C++ return channel before any rite/manager wiring.
-Int Property DebugPrismaChoiceGo Auto Hidden
 Spell Property PDV_Bless_Argonian_Sithis_T1 Auto
 Spell Property PDV_Bless_Argonian_Sithis_T2 Auto
 Spell Property PDV_Bless_Argonian_Sithis_T3 Auto
@@ -915,12 +909,15 @@ Event OnInit()
 EndEvent
 
 Event OnUpdate()
-    ; Time-sensitive every tick: contextual-favor expiry must clear promptly, and
-    ; the one-time unified startup choice must fire promptly once the origin
-    ; resolves (it self-disables via a StorageUtil flag after it completes).
+    ; Time-sensitive every tick: contextual favor re-checks eligibility and
+    ; re-applies itself, so it must react the moment the player leaves the
+    ; triggering context. The one-time unified startup choice must fire promptly
+    ; once the origin resolves (it self-disables via a StorageUtil flag after it
+    ; completes, and checks that flag before any other work).
+    ; Disfavor is NOT here: it only clears on a game-time expiry, so it rides the
+    ; 10s cadence below -- see the note on that block.
     EnsureUnifiedStartupChoice()
     UpdateContextualFavorRuntime()
-    UpdateDisfavorStingRuntime()
     if !_diegeticLoadHandled
         HandleDiegeticLoad("update")
     endIf
@@ -938,9 +935,14 @@ Event OnUpdate()
     ; changes second-to-second (it is also performed once in OnInit). Re-confirm
     ; it on the slower 10s cadence already used by the shout-signal refresh
     ; instead of every tick, to cut redundant per-tick cross-script external
-    ; calls (~10x fewer). Favor expiry above stays at the 1s tick.
+    ; calls (~10x fewer). Contextual favor above stays at the 1s tick.
+    ; The disfavor sweep rides this cadence too: ClearDisfavorIfExpired compares
+    ; against Utility.GetCurrentGameTime(), so at the default timescale 20 a 10s
+    ; real-time cadence is ~3 game-minutes of granularity on a sting that lasts
+    ; game-hours -- imperceptible, and it drops ~6 StorageUtil reads/sec at idle.
     _shoutRefreshTicks += 1
     if _shoutRefreshTicks >= 10
+        UpdateDisfavorStingRuntime()
         EnsurePhase8RuntimeWiring()
         EnsureAkatoshRuntimeIdentity()
         EnsureCanonicalDeityDisplayNames()
@@ -1047,65 +1049,8 @@ Event OnUpdate()
         endIf
     endIf
 
-    Phase0PrismaChoiceTick()
-
     RegisterForSingleUpdate(1.0)
 EndEvent
-
-; --- Phase 0 Prisma choice-panel round-trip proof (throwaway) ----------------
-; Trigger: setpqv PDV__ManagerQuest DebugPrismaChoiceGo 1 (fresh launch after the
-; DLL + PDV_PrismaBridge.pex + app.js are in place). Presents a 2-option grid via
-; the Prisma choice channel (non-modal: pauseGame=false so this tick keeps running
-; as a watchdog). The pick polls back on a later tick; ESC/cancel returns -1; a
-; ~20s watchdog force-releases a stuck panel. Proves the return channel + escape
-; before any rite/manager flow. Not gated by AllowPrismaBlockingSurfaces -- debug.
-Function Phase0PrismaChoiceTick()
-    if DebugPrismaChoiceGo != 0
-        DebugPrismaChoiceGo = 0
-        if !PDV_PrismaBridge.IsAvailable() || !PDV_PrismaBridge.SupportsChoice()
-            Debug.Notification("PDV Phase 0: Prisma choice channel unavailable (rebuild the DLL). No round trip.")
-            StorageUtil.SetStringValue(None, "PDV.Phase0Choice.Pending", "")
-            return
-        endIf
-        String optionsJson = "{\"choice\":{\"menu\":\"phase0_test\",\"title\":\"Phase 0 round-trip test\",\"prompt\":\"Pick an option, or press Esc to cancel.\",\"options\":[{\"index\":0,\"label\":\"Option A\"},{\"index\":1,\"label\":\"Option B\"}]}}"
-        ; pauseGame=false on purpose: a paused game freezes this 1s OnUpdate
-        ; watchdog, so a modal trap would be unrecoverable. Phase 0 stays non-modal.
-        if PDV_PrismaBridge.ShowChoice("phase0_test", optionsJson, false)
-            StorageUtil.SetStringValue(None, "PDV.Phase0Choice.Pending", "phase0_test")
-            StorageUtil.SetIntValue(None, "PDV.Phase0Choice.Ticks", 0)
-        else
-            Debug.Notification("PDV Phase 0: ShowChoice failed to open the panel.")
-            StorageUtil.SetStringValue(None, "PDV.Phase0Choice.Pending", "")
-        endIf
-        return
-    endIf
-
-    String pendingMenu = StorageUtil.GetStringValue(None, "PDV.Phase0Choice.Pending")
-    if pendingMenu == ""
-        return
-    endIf
-    Int status = PDV_PrismaBridge.ConsumePendingChoice(pendingMenu)
-    if status == -2
-        ; Watchdog: force-release if no pick within ~20 ticks (~20s) so a stuck
-        ; panel never strands the player. Only effective because pauseGame=false.
-        Int ticks = StorageUtil.GetIntValue(None, "PDV.Phase0Choice.Ticks") + 1
-        StorageUtil.SetIntValue(None, "PDV.Phase0Choice.Ticks", ticks)
-        if ticks >= 20
-            PDV_PrismaBridge.CancelChoice()
-            StorageUtil.SetStringValue(None, "PDV.Phase0Choice.Pending", "")
-            Debug.Notification("PDV Phase 0: watchdog forced unfocus after timeout.")
-        endIf
-        return
-    endIf
-    StorageUtil.SetStringValue(None, "PDV.Phase0Choice.Pending", "")
-    if status == -1
-        Debug.Notification("PDV Phase 0: CANCELLED (Esc/cancel round trip OK).")
-    elseIf status >= 0
-        Debug.Notification("PDV Phase 0: picked option " + status + " (round trip OK).")
-    else
-        Debug.Notification("PDV Phase 0: no result (status " + status + ").")
-    endIf
-EndFunction
 
 Function EnsurePhase8RuntimeWiring()
     if !PDV_Talos || !PDV_ConcordatStandingTrack
@@ -20654,12 +20599,15 @@ Bool Function IsArgonianOrigin()
 EndFunction
 
 Function EnsureUnifiedStartupChoice()
-    Int originRace = GetPlayerOriginRaceIndex()
-    if originRace < 0
+    ; Self-disable flag first: this runs on the 1s tick, and once startup has
+    ; completed it stays complete forever, so check the cheap StorageUtil flag
+    ; before paying the GetPlayerOriginRaceIndex() cross-script call.
+    if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") == 1
         return
     endIf
 
-    if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") == 1
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace < 0
         return
     endIf
 

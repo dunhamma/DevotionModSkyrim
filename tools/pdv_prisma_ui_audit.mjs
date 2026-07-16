@@ -19,6 +19,8 @@ const REPO_PRISMA_APP = path.join(REPO_PRISMA_VIEW_DIR, "app.js");
 const REPO_PRISMA_STYLE = path.join(REPO_PRISMA_VIEW_DIR, "styles.css");
 const REPO_PRISMA_INDEX = path.join(REPO_PRISMA_VIEW_DIR, "index.html");
 const REPO_MANAGER_SOURCE = path.join(REPO_ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
+const BRIDGE_PSC_LIVE = path.join(DEVOTION_SOURCE, "PDV_PrismaBridge.psc");
+const BRIDGE_PSC_REPO = path.join(REPO_ROOT, "native", "DevotionPrismaBridge", "mod", "Scripts", "Source", "PDV_PrismaBridge.psc");
 
 function fail(message, source = "") {
   failures.push({ message, source });
@@ -38,6 +40,83 @@ function exists(filePath) {
 
 function mtime(filePath) {
   return fs.statSync(filePath).mtimeMs;
+}
+
+// Hash of content with line endings normalized. The repo bridge mirror is CRLF
+// while the live copy has mixed CRLF/LF, so a raw byte hash reports drift on two
+// files that are textually identical -- a false FAIL on exactly the check that is
+// supposed to catch real drift. Compare what the compiler sees: the text.
+function normalizedHash(filePath) {
+  const text = read(filePath).replace(/\r\n/g, "\n");
+  return crypto.createHash("sha256").update(text, "utf8").digest("hex");
+}
+
+// The repo bridge mirror is what anyone building the DLL compiles against, but
+// every other check in this audit reads the LIVE tree. That gap let the mirror
+// sit two commits behind live (missing IsPanelVisible, which PDV_MCM.psc calls)
+// without any gate noticing. Compare the two directly.
+function requireBridgeSourceParity() {
+  if (!exists(BRIDGE_PSC_LIVE)) {
+    fail("Live PDV_PrismaBridge.psc is missing.", BRIDGE_PSC_LIVE);
+    return;
+  }
+  if (!exists(BRIDGE_PSC_REPO)) {
+    fail("Repository PDV_PrismaBridge.psc mirror is missing.", BRIDGE_PSC_REPO);
+    return;
+  }
+
+  if (normalizedHash(BRIDGE_PSC_LIVE) !== normalizedHash(BRIDGE_PSC_REPO)) {
+    const liveDecls = declaredBridgeNatives(BRIDGE_PSC_LIVE);
+    const repoDecls = declaredBridgeNatives(BRIDGE_PSC_REPO);
+    const missing = liveDecls.filter((name) => !repoDecls.includes(name));
+    const extra = repoDecls.filter((name) => !liveDecls.includes(name));
+    const detail = [
+      missing.length ? `missing from repo mirror: ${missing.join(", ")}` : "",
+      extra.length ? `present only in repo mirror: ${extra.join(", ")}` : "",
+    ].filter(Boolean).join("; ");
+    fail(
+      `PDV_PrismaBridge.psc repo mirror drifted from live${detail ? ` (${detail})` : ""}. Anyone compiling from the repo tree will not match the shipped bridge.`,
+      BRIDGE_PSC_REPO,
+    );
+    return;
+  }
+
+  pass(
+    `PDV_PrismaBridge.psc repo mirror matches live (${declaredBridgeNatives(BRIDGE_PSC_LIVE).length} native declarations).`,
+    BRIDGE_PSC_REPO,
+  );
+}
+
+function declaredBridgeNatives(filePath) {
+  return [...read(filePath).matchAll(/^\s*\w+\s+Function\s+(\w+)\s*\(.*\)\s+Global\s+Native/gim)].map((m) => m[1]);
+}
+
+// Every native the C++ registers on PDV_PrismaBridge must be declared in the
+// .psc, or the call is a compile error rather than a runtime miss.
+function requireBridgeNativesDeclared() {
+  if (!exists(NATIVE_BRIDGE_SOURCE) || !exists(BRIDGE_PSC_LIVE)) {
+    return;
+  }
+
+  const registered = [...read(NATIVE_BRIDGE_SOURCE).matchAll(/RegisterFunction\s*(?:<[^>]*>)?\s*\(\s*"(\w+)"/g)].map((m) => m[1]);
+  if (!registered.length) {
+    fail("Could not parse any RegisterFunction calls from the native bridge; the declaration check would silently pass.", NATIVE_BRIDGE_SOURCE);
+    return;
+  }
+
+  const declared = declaredBridgeNatives(BRIDGE_PSC_LIVE);
+  const undeclared = [...new Set(registered)].filter((name) => !declared.includes(name));
+  if (undeclared.length) {
+    fail(
+      `C++ registers PDV_PrismaBridge natives with no Papyrus declaration: ${undeclared.join(", ")}.`,
+      BRIDGE_PSC_LIVE,
+    );
+  } else {
+    pass(
+      `All ${new Set(registered).size} C++-registered PDV_PrismaBridge natives are declared in Papyrus.`,
+      BRIDGE_PSC_LIVE,
+    );
+  }
 }
 
 function isoMtime(filePath) {
@@ -1826,6 +1905,8 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
 
 verifyJournalBytecodeFreshness();
 verifyPrismaAssetCacheContract();
+requireBridgeSourceParity();
+requireBridgeNativesDeclared();
 verifyParityRegistryContracts(path.join(REPO_ROOT, "references", "authoring", "PDV_PrismaParityRegistry.csv"));
 
 for (const item of passes) {
