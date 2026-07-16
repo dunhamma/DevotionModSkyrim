@@ -95,13 +95,18 @@
       }
     },
     "Altmer-Syrabane|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Altmer-Syrabane",
       "class": "boon",
       "race": "Altmer",
       "expected": "Feel one boon effect of lane Altmer-Syrabane in game (e.g. Syrabane's Guard - Seeker) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS. Syrabane boon granted after selecting Syrabane, applying target piety to reach tier, and setting Debug patron override (active committed patron). Initial attempt (piety/tier only, no patron override) fired the diegetic tier.Syrabane Devoted.Reach toast but SyncAltmerRewardFamily gate isActive=false so the spell never granted; adding the patron override granted it. Root cause was patron-not-committed, not the 2026-07-15 quest-reaction-queue race (queue was idle this session).",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Altmer",
+        "slot": "Altmer-Syrabane|boon",
+        "matched": "Race reward added: Altmer Syrabane (granted after patron override); tier.Syrabane Devoted.Reach diegetic dispatch"
+      }
     },
     "Altmer-Trinimac|boon": {
       "status": "evidence-recorded",
@@ -864,13 +869,18 @@
       }
     },
     "Disfavor-MoonLuckShadow|disfavor-sting": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Disfavor-MoonLuckShadow",
       "class": "disfavor-sting",
       "race": null,
       "expected": "Feel one disfavor-sting effect of lane Disfavor-MoonLuckShadow in game (e.g. Fortune slips for a while.) and record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS. Cycled disfavor domain to MoonLuckShadow via Cycle disfavor domain, set band via Cycle disfavor band, hit Apply domain sting (DebugApplyDomainSting). Fortune slips for a while. confirmed in Active Effects.",
+      "creditedFrom": {
+        "ledger": "co-test chat",
+        "race": "Khajiit",
+        "slot": "Disfavor-MoonLuckShadow|disfavor-sting",
+        "matched": "Apply domain sting -> Fortune slips for a while. in Active Effects"
+      }
     },
     "Disfavor-OrderTradeLore|disfavor-sting": {
       "status": "evidence-recorded",
@@ -1022,13 +1032,18 @@
       }
     },
     "HoonDing|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "HoonDing",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test (origin 9): tester confirmed HoonDing price loss surface via Fire dislike vs selected deity, event 304 (murder-defenseless).",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": null,
+        "slot": "HoonDing|price",
+        "matched": "co-test: DebugFireDislike HoonDing event 304"
+      }
     },
     "Imperial-Akatosh|boon": {
       "status": "evidence-recorded",
@@ -1241,13 +1256,18 @@
       }
     },
     "Khajiit-Lunar|substrate-favor": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Khajiit-Lunar",
       "class": "substrate-favor",
       "race": "Khajiit",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "2026-07-12 co-test: tester reported Lunar Hardiness appeared but Khajiit Lunar Road had not surfaced. Backend fixed so generic first-tier reward sync no longer manages PDV_Bless_Khajiit_Lunar_T1, reward runtime-order lint now fails on substrate-owner violations, and PDV_SubstrateBase reconciles unchanged tiers so a stripped Mid boon can re-add on the next substrate signal. Runtime/manual Active Effects proof remains owed.",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS. Khajiit Lunar Road substrate-favor confirmed in Active Effects after Seed lunar metric 25 (direct boundary seed via DebugSetKhajiitLunarMetric, bypasses the daily metric-budget anti-farm cap). Organic Moon Observance button was already budget-exhausted for the day and silently no-op-ed; the seed buttons are the reliable proof path regardless of budget state.",
+      "creditedFrom": {
+        "ledger": "co-test chat",
+        "race": "Khajiit",
+        "slot": "Khajiit-Lunar|substrate-favor",
+        "matched": "Lunar metric set to 25.00; tier 2 debug confirmation + Khajiit Lunar Road in Active Effects"
+      }
     },
     "Khajiit-Rajhin|boon": {
       "status": "evidence-recorded",
@@ -1320,22 +1340,32 @@
       }
     },
     "Leki|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Leki",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test (origin 9): tester confirmed Leki price loss surface via Fire dislike vs selected deity, event 304 (murder-defenseless).",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": null,
+        "slot": "Leki|price",
+        "matched": "co-test: DebugFireDislike Leki event 304"
+      }
     },
     "Magnus|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Magnus",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS. Fired raise-undead (event 365) against Magnus via debug dislike harness. Papyrus.0.log 01:02:59PM confirms AwardPiety Magnus raw -0.75/applied -0.75 and Debug dislike surface flushed: Magnus event 365. Loss surface confirmed via debug dislike summary; no debuff expected for price class in V1.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Breton",
+        "slot": "Magnus|price",
+        "matched": "DebugFireDislike: Magnus event 365 delta -0.750000"
+      }
     },
     "Malacath|price": {
       "status": "pending",
@@ -1370,13 +1400,18 @@
       "creditedFrom": null
     },
     "Neglect-Altmer|neglect": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Neglect-Altmer",
       "class": "neglect",
       "race": "Altmer",
       "expected": "Felt-mechanic bar: prime neglect-eligible via the debug MCM, pass a dawn, and record the neglect debuff observed in Active Effects plus how it feels.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS. The Dawn Withheld neglect debuff observed in Active Effects. Flow: set Curse none, set origin Altmer, waited 3 in-game days (fresh loading-space save started under game-day 3, so the 3-day grace could not be exceeded until the clock advanced), then Prime race-lane neglect. DebugPrimeRaceLaneNeglect backdates PDV.Altmer.Favor.LastGameTime and re-runs SyncFirstTierRaceRewardRuntime -> SyncAltmerNeglectSpell(IsAltmerCoherenceNeglected()) immediately; no separate decay/dawn pass needed once the game clock is past day 3.",
+      "creditedFrom": {
+        "ledger": "co-test chat",
+        "race": "Altmer",
+        "slot": "Neglect-Altmer|neglect",
+        "matched": "The Dawn Withheld in Active Effects after 3-day lapse + Prime race-lane neglect"
+      }
     },
     "Neglect-ArgonianHist|neglect": {
       "status": "pending",
@@ -1402,13 +1437,18 @@
       }
     },
     "Neglect-Breton|neglect": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Neglect-Breton",
       "class": "neglect",
       "race": "Breton",
       "expected": "Felt-mechanic bar: prime neglect-eligible via the debug MCM, pass a dawn, and record the neglect debuff observed in Active Effects plus how it feels.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS. Prime race-lane neglect clicked; Papyrus.0.log 01:05:35PM confirms DebugPrimeRaceLaneNeglect: backdated Breton Tradition source and re-synced. The Tradition Grows Distant confirmed in Active Effects.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Breton",
+        "slot": "Neglect-Breton|neglect",
+        "matched": "DebugPrimeRaceLaneNeglect: backdated Breton Tradition source and re-synced."
+      }
     },
     "Neglect-Dunmer|neglect": {
       "status": "pending",
@@ -1434,13 +1474,18 @@
       }
     },
     "Neglect-KhajiitLunar|neglect": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Neglect-KhajiitLunar",
       "class": "neglect",
       "race": "Khajiit",
       "expected": "Felt-mechanic bar: prime neglect-eligible via the debug MCM, pass a dawn, and record the neglect debuff observed in Active Effects plus how it feels.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS. Curse none set, Prime race-lane neglect clicked (backdates PDV.Khajiit.LastLunarSourceTime, re-syncs immediately). The Moons Withdrawn confirmed in Active Effects.",
+      "creditedFrom": {
+        "ledger": "co-test chat",
+        "race": "Khajiit",
+        "slot": "Neglect-KhajiitLunar|neglect",
+        "matched": "Prime race-lane neglect -> The Moons Withdrawn in Active Effects"
+      }
     },
     "Neglect-Kyne|neglect": {
       "status": "evidence-recorded",
@@ -1466,13 +1511,18 @@
       "creditedFrom": null
     },
     "Neglect-Redguard|neglect": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Neglect-Redguard",
       "class": "neglect",
       "race": "Redguard",
       "expected": "Felt-mechanic bar: prime neglect-eligible via the debug MCM, pass a dawn, and record the neglect debuff observed in Active Effects plus how it feels.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test (origin 9, Curse none): Redguard ancestor-distance neglect ('Ancestors at a Distance') felt via the new Prime race-lane neglect primer AFTER the clamp fix (commit d681d1d -- the raw now-10 backdate went negative on an early save and the lastSource<=0 guard silently defeated it). Papyrus.0.log shows DebugPrimeRaceLaneNeglect backdated the Redguard ancestor-distance source (13:19:19) and, on re-sync, 'Redguard death-duty abandonment routed: redguard_ancestor_distance_neglect multiplier=1.000000' (13:20:37) when SyncRedguardNeglectSpell added PDV_SPEL_Neglect_Redguard.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Redguard",
+        "slot": "Neglect-Redguard|neglect",
+        "matched": "Redguard death-duty abandonment routed: redguard_ancestor_distance_neglect multiplier=1.000000"
+      }
     },
     "Nord-Kyne|boon": {
       "status": "evidence-recorded",
@@ -1636,13 +1686,18 @@
       }
     },
     "Redguard-AncestorSpine|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Redguard-AncestorSpine",
       "class": "boon",
       "race": "Redguard",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test (origin 9): the sect spine IS the Redguard ancestor layer after option-2 descope of the generic 'Ancestors' Regard' floor. Tester confirmed the sect spine felt in Active Effects (Forebear's Road: Speech +10, Fortify Stamina +10). Papyrus.0.log shows Race reward added: Redguard Spine Forebear (13:19:19). Crown/Ash'abah spines differentiated with distinct lore-specific effects (Crown's Form Block+10/OneHanded+5; Ash'abah Duty Weapon Damage+10%/Disease Resist+20%/Speech-5).",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Redguard",
+        "slot": "Redguard-AncestorSpine|boon",
+        "matched": "Race reward added: Redguard Spine Forebear"
+      }
     },
     "Redguard-FarShoresToken|boon": {
       "status": "retro-credited",
@@ -1659,31 +1714,46 @@
       }
     },
     "Redguard-HoonDing|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Redguard-HoonDing",
       "class": "boon",
       "race": "Redguard",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test (origin 9): tester confirmed HoonDing boon felt in Active Effects (HoonDing's Way - Devoted) via Debug patron override + piety 50.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Redguard",
+        "slot": "Redguard-HoonDing|boon",
+        "matched": "co-test: HoonDing's Way - Devoted felt in Active Effects"
+      }
     },
     "Redguard-Leki|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Redguard-Leki",
       "class": "boon",
       "race": "Redguard",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test (origin 9): tester confirmed Leki boon felt (Leki's Sword-Song - Devoted). Description reworded from the incorrect 'ataxia' (a disease) to 'Leki's precision lives in your blade' and re-confirmed.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Redguard",
+        "slot": "Redguard-Leki|boon",
+        "matched": "co-test: Leki's Sword-Song - Devoted felt in Active Effects"
+      }
     },
     "Redguard-Tuwhacca|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Redguard-Tuwhacca",
       "class": "boon",
       "race": "Redguard",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test (origin 9): tester confirmed Tu'whacca boon felt (Tu'whacca's Ward - Devoted; screenshot). Death-rite tooltip copy reworded (dev-jargon parenthetical removed) and re-confirmed.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Redguard",
+        "slot": "Redguard-Tuwhacca|boon",
+        "matched": "co-test: Tu'whacca's Ward - Devoted felt in Active Effects"
+      }
     },
     "Shor|price": {
       "status": "evidence-recorded",
@@ -1783,13 +1853,18 @@
       }
     },
     "Tuwhacca|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Tuwhacca",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test (origin 9): tester confirmed Tu'whacca price loss surface via Fire dislike vs selected deity, event 365 (raise-undead).",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": null,
+        "slot": "Tuwhacca|price",
+        "matched": "co-test: DebugFireDislike Tu'whacca event 365"
+      }
     },
     "Xarxes|price": {
       "status": "evidence-recorded",
@@ -1806,13 +1881,18 @@
       }
     },
     "Yffre|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Yffre",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS. Fired raise-undead (event 365) against Y'ffre via debug dislike harness. Papyrus.0.log 01:04:51-52PM confirms AwardPiety Y'ffre raw -1.0/applied -1.0 and Debug dislike surface flushed: Y'ffre event 365. Matches the 2026-07-12 B4 card magnitude (-1.0 for raise-undead), reproduced fresh on current build rather than retro-credited.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Breton",
+        "slot": "Yffre|price",
+        "matched": "DebugFireDislike: Y'ffre event 365 delta -1.000000"
+      }
     },
     "Zen|price": {
       "status": "pending",
