@@ -1,3 +1,9 @@
 native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/app.js text eol=lf
 native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/index.html text eol=lf
 native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/styles.css text eol=lf
+
+# Generated Nexus BBCode. pdv_guide_bbcode.mjs writes LF and its --check gate
+# byte-compares what it would write against what is on disk; with autocrlf=true
+# and no rule here, git rewrites these to CRLF on checkout and every guide then
+# reports a false "stale". Pin them so the gate compares like with like.
+dist/nexus-articles/*.bb text eol=lf

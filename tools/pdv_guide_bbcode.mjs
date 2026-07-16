@@ -24,6 +24,8 @@ const OUT_DIR = path.join(ROOT, 'dist', 'nexus-articles');
 
 const RACES = ['Altmer', 'Argonian', 'Bosmer', 'Breton', 'Dunmer', 'Imperial', 'Khajiit', 'Nord', 'Orc', 'Redguard'];
 
+const normalizeEol = (s) => s.replace(/\r\n/g, '\n');
+
 /** Inline Markdown -> BBCode. Order matters: bold before italic so ** is not eaten by *. */
 function inline(text) {
   return text
@@ -138,7 +140,9 @@ for (const race of RACES) {
     if (!fs.existsSync(outPath)) {
       failed++;
       console.error(`FAIL ${race}: generated BBCode is missing (${path.relative(ROOT, outPath)})`);
-    } else if (fs.readFileSync(outPath, 'utf8') !== text) {
+      // Compare on content, not bytes: a checkout under core.autocrlf can hand us
+      // CRLF while we always write LF, and that must not read as a stale artifact.
+    } else if (normalizeEol(fs.readFileSync(outPath, 'utf8')) !== normalizeEol(text)) {
       failed++;
       console.error(`FAIL ${race}: generated BBCode is stale (${path.relative(ROOT, outPath)})`);
     }
