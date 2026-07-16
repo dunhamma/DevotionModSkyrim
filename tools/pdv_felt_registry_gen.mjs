@@ -94,9 +94,18 @@ const IGNORE_KEYS = new Set([
 const flags = new Set(process.argv.slice(2));
 
 function loadJson(rel) { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), "utf8")); }
+// Hash CONTENT, not checkout mode. core.autocrlf=true leaves these sources CRLF
+// on Windows and LF on Linux/CI, so a raw-byte hash tracks the checkout rather
+// than the file. Normalize line endings (and trailing whitespace / final
+// newline) so the value is identical on every platform.
 function sha(rel) {
-  try { return crypto.createHash("sha256").update(fs.readFileSync(path.join(ROOT, rel))).digest("hex").slice(0, 16); }
-  catch { return "absent"; }
+  try {
+    const text = fs.readFileSync(path.join(ROOT, rel), "utf8")
+      .replace(/\r\n?/g, "\n")
+      .replace(/[ \t]+$/gm, "")
+      .replace(/\n*$/, "\n");
+    return crypto.createHash("sha256").update(text, "utf8").digest("hex").slice(0, 16);
+  } catch { return "absent"; }
 }
 
 function isEffectCandidate(obj, allowMessages) {
