@@ -31,11 +31,13 @@ is the same, the shrine object differs.
 ## Tests
 
 ### D1 -- pre-pact "a Prince takes notice"  [Tester] [R]+[M]
-- **Do:** pick a Prince you have NOT committed to. MCM Debug -> push its stored piety to about **half of
-  Seeker** (a pre-pact build), while you have no active patron/pact. Open the **Ledger**.
-- **See:** the Prince shows as a **"watching"** row in the Ledger (pre-pact visible -- this used to be
-  invisible), and once it crosses the notice threshold a **Book of Days** entry fires *"The world tilts
-  toward {Prince}."* It fires **once** (won't spam).
+- **Do:** pick a Prince you have NOT committed to. MCM Debug -> push its stored piety across the bands
+  (aim for ~19, then 20, then 25) while you have no active patron/pact. Open the **Ledger** and **Book
+  of Days**.
+- **See:** below **20** the Prince is fully silent -- no toast, no Book of Days line, no Ledger row (piety
+  still accrues underneath). Crossing **20** fires ONE beat: a **Book of Days** entry *"{Prince} has taken
+  notice of you."* + a soft **toast** + a **"watching"** row in the Ledger. It fires **once** (won't spam).
+  Quest **reactions** for the Prince stay out of Book of Days until it reaches **Seeker (25)**.
 - **Record:** ___
 
 ### D2 -- shrine prayer (daily)  [Tester] [R]+[M]

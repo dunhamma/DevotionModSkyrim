@@ -1,7 +1,7 @@
 {
   "schema": "pdv.1-0.endstate-contract.v1",
   "title": "PDV 1.0 End State Contract",
-  "updated": "2026-07-13",
+  "updated": "2026-07-15",
   "designAuthority": "PDV_TargetEndStates_1.0.md",
   "gateTool": "tools/pdv_1_0_endstate_gate.mjs",
   "stampFile": "references/authoring/PDV_1_0_FreshnessStamps.json",
@@ -455,6 +455,59 @@
         "onDrift": "STALE"
       },
       "closes": "In a dedicated sitting, confirm the 32-source disfavor stack stays legible under Requiem alongside neglect and prince prices (no over-stack, stings fade, ordinary play unstung), and record the sign-off.",
+      "post10": false
+    },
+    {
+      "id": "C-MAIN-QUEST-FULL-COVERAGE",
+      "title": "Main quest full coverage: all 45 runtime deity identities judge all 25 exact Helgen-to-Alduin beats",
+      "category": "machine-gate",
+      "lane": "quest-reactions",
+      "evidence": {
+        "read": { "kind": "stamp-only" },
+        "run": {
+          "tool": ["tools/pdv_main_quest_full_coverage_audit.mjs", "--json"],
+          "passRule": "exit-zero"
+        }
+      },
+      "freshness": {
+        "sources": [
+          "references/authoring/PDV_MainQuestFullCoverageContract.json",
+          "references/authoring/PDV_QuestReactionMatrix_Tranche11_MainQuestFullCoverage.csv",
+          "references/authoring/PDV_QuestReactionMatrix_Full.csv",
+          "live-source/Scripts/Source/PDV__ManagerQuest.psc",
+          "live-source/Scripts/Source/PDV_PlayerEvents.psc"
+        ],
+        "onDrift": "FAIL"
+      },
+      "closes": "Keep the 1125-cell main-quest contract, the 17/11 Paarthurnax choice rosters, exact integer stages, and indexed 134-watch registration green; runtime and player-facing proof remain separate evidence buckets.",
+      "post10": false
+    },
+    {
+      "id": "C-MAIN-QUEST-FULL-COVERAGE-RUNTIME",
+      "title": "Main quest full coverage: representative runtime, display, and Paarthurnax latch proof recorded",
+      "category": "evidence-gate",
+      "lane": "quest-reactions",
+      "evidence": {
+        "read": {
+          "kind": "manual-slots",
+          "ledger": "references/authoring/PDV_1_0_ManualSignoffLedger.json",
+          "passRule": "slots-all-pass",
+          "params": {
+            "group": "mainQuestFullCoverageRuntime",
+            "passStatuses": ["evidence-recorded"]
+          }
+        }
+      },
+      "freshness": {
+        "sources": [
+          "references/authoring/PDV_MainQuestFullCoverageContract.json",
+          "references/authoring/PDV_QuestReactionMatrix_Full.csv",
+          "live-source/Scripts/Source/PDV__ManagerQuest.psc",
+          "live-source/Scripts/Source/PDV_PlayerEvents.psc"
+        ],
+        "onDrift": "STALE"
+      },
+      "closes": "Run the five representative probes in the co-test runbook and record route, Book of Days, toast, Survey/status, repeat, and save/load evidence in PDV_1_0_ManualSignoffLedger.json. Pre-T11 Paarthurnax waivers do not close the expanded-roster slot.",
       "post10": false
     },
     {

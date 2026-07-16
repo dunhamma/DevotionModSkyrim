@@ -270,7 +270,11 @@ function main() {
   const editorIdByDecimal = new Map();
   for (const row of matrixRows) {
     const editorId = row.editor_id?.trim();
-    const stage = Number.parseInt(row.outcome_stage, 10);
+    const stageText = row.outcome_stage?.trim() ?? "";
+    if (!/^\d+$/.test(stageText)) {
+      throw new Error(`Invalid outcome_stage for ${editorId}: ${row.outcome_stage}; expected one exact integer stage`);
+    }
+    const stage = Number.parseInt(stageText, 10);
     // ARR/list-patch rows may carry an explicit PLUGIN:HEX formid (modded quests
     // absent from the vanilla readback). When present it resolves directly,
     // keeping third-party FormIDs out of MANUAL_QUEST_FORMIDS / the readback CSV.
@@ -279,10 +283,6 @@ function main() {
     if (!resolved) {
       throw new Error(`No quest readback FormID for editor_id=${editorId}`);
     }
-    if (!Number.isFinite(stage)) {
-      throw new Error(`Invalid outcome_stage for ${editorId}: ${row.outcome_stage}`);
-    }
-
     const key = `${resolved.decimal}|${stage}`;
     if (!questKeySet.has(key)) {
       questKeySet.add(key);

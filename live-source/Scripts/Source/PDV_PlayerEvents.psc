@@ -1177,24 +1177,41 @@ Function RegisterQuestReactionMatrixFile(String matrixFile, String label)
 
     ReloadQuestReactionMatrixJsonFile(matrixFile)
 
+    ; The watch list has outgrown the 128-element Papyrus array ceiling, and a
+    ; truncated array here silently unhooks every quest past the cap. Read the
+    ; list by index so no full array is ever materialized.
     Int sourceIndex = 0
-    String[] formIds = JsonUtil.StringListToArray(matrixFile, "questWatchFormIds")
-    String[] plugins = JsonUtil.StringListToArray(matrixFile, "questWatchPlugins")
-    if formIds.Length <= 0
-        formIds = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, "questWatchFormIdsCsv"), ",")
-        plugins = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, "questWatchPluginsCsv"), ",")
+    Int registeredCount = 0
+    Int sourceCount = JsonUtil.StringListCount(matrixFile, "questWatchFormIds")
+    if sourceCount > 0
+        while sourceIndex < sourceCount
+            String entryFormId = JsonUtil.StringListGet(matrixFile, "questWatchFormIds", sourceIndex)
+            String entryPlugin = JsonUtil.StringListGet(matrixFile, "questWatchPlugins", sourceIndex)
+            Quest sourceQuest = GetQuestReactionRuntimeFormFromEntry(entryFormId, entryPlugin) as Quest
+            if sourceQuest
+                PO3_Events_Alias.RegisterForQuestStage(Self, sourceQuest)
+                StorageUtil.SetIntValue(None, "PDV.QuestReaction.LocalFormId." + sourceQuest.GetFormID(), entryFormId as Int)
+                registeredCount += 1
+            endIf
+            sourceIndex += 1
+        endWhile
+    else
+        String[] formIds = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, "questWatchFormIdsCsv"), ",")
+        String[] plugins = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, "questWatchPluginsCsv"), ",")
+        sourceCount = formIds.Length
+        while sourceIndex < sourceCount
+            Quest sourceQuest = GetQuestReactionRuntimeFormFromCsv(formIds, plugins, sourceIndex) as Quest
+            if sourceQuest
+                PO3_Events_Alias.RegisterForQuestStage(Self, sourceQuest)
+                StorageUtil.SetIntValue(None, "PDV.QuestReaction.LocalFormId." + sourceQuest.GetFormID(), formIds[sourceIndex] as Int)
+                registeredCount += 1
+            endIf
+            sourceIndex += 1
+        endWhile
+        Trace(1, "Quest reaction matrix used the CSV fallback (" + label + "); a split this size can truncate at the array cap.")
     endIf
-    Int sourceCount = formIds.Length
-    while sourceIndex < sourceCount
-        Quest sourceQuest = GetQuestReactionRuntimeFormFromCsv(formIds, plugins, sourceIndex) as Quest
-        if sourceQuest
-            PO3_Events_Alias.RegisterForQuestStage(Self, sourceQuest)
-            StorageUtil.SetIntValue(None, "PDV.QuestReaction.LocalFormId." + sourceQuest.GetFormID(), formIds[sourceIndex] as Int)
-        endIf
-        sourceIndex += 1
-    endWhile
 
-    Trace(2, "Quest reaction matrix hooks refreshed (" + label + "): " + sourceCount + " quest entries.")
+    Trace(2, "Quest reaction matrix hooks refreshed (" + label + "): " + registeredCount + " of " + sourceCount + " quest entries registered.")
 EndFunction
 
 Function RegisterQuestStageList(FormList sourceList)
@@ -1935,8 +1952,11 @@ Form Function GetQuestReactionRuntimeFormFromCsv(String[] formIds, String[] plug
         return None
     endIf
 
-    Int localFormId = formIds[entryIndex] as Int
-    String pluginName = plugins[entryIndex]
+    return GetQuestReactionRuntimeFormFromEntry(formIds[entryIndex], plugins[entryIndex])
+EndFunction
+
+Form Function GetQuestReactionRuntimeFormFromEntry(String formIdString, String pluginName)
+    Int localFormId = formIdString as Int
     if localFormId <= 0 || pluginName == ""
         return None
     endIf

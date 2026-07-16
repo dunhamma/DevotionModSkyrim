@@ -164,6 +164,12 @@ Acceptance (gate ids refer to contract criteria):
   exit/residue, hook source, implementation status, verifier status, runtime
   proof status, and player-facing feedback. (gates: C-AUDIT-BETA-STRICT,
   C-AUDIT-VERIFY)
+- Every runtime deity identity judges every contracted Helgen-to-Alduin turning point:
+  45 identities x 25 exact stages = 1125 cells, with no approved silences. The
+  Paarthurnax choice remains a separate 17-kill / 11-spare fork. This is a
+  static/generated-readback acceptance criterion; expanded runtime and display proof is
+  a separate fail-closed ship criterion. (gates: C-MAIN-QUEST-FULL-COVERAGE,
+  C-MAIN-QUEST-FULL-COVERAGE-RUNTIME)
 - Race runtime slices with parity risk have implementation-costing manifests
   before source or CK work: state surfaces, accepted hooks, rejected hooks,
   immersion proof, player surfacing, verifier gate, and runtime proof route.

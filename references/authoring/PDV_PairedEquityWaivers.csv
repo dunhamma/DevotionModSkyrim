@@ -8,12 +8,12 @@ sky_storm_nature,MQ105,160,Kynareth,prove_by_struggle is not in Kynareth's profi
 sky_storm_nature,MQ106,200,Kynareth,kill_honorable_combat is not in Kynareth's profile (sky/nature goddess, not battle); dragon kills route to Kyne/Akatosh/Alkosh
 sky_storm_nature,MQ206,220,Kynareth,kill_honorable_combat is not in Kynareth's profile; see MQ106
 sky_storm_nature,MQ305,200,Kynareth,kill_honorable_combat is not in Kynareth's profile; see MQ106
-time_dragon,CW01A,160/200,Auri-El,serve_empire_order/keep_oath are not in Auri-El's profile; mortal Imperial enlistment is not the ascendant elven order
-time_dragon,CW01B,160/200,Auri-El,keep_oath is not in Auri-El's profile; a Stormcloak oath is doubly foreign to the Aldmeri soul-god
-time_dragon,CW01B,160/200,Alkosh,keep_oath is not in Alkosh's profile (cosmic order/anti-chaos, not personal oaths); his rare civic surface is the Imperial-order cells he already holds
-time_dragon,CW02A,30/80,Auri-El,serve_empire_order is not in Auri-El's profile; mortal politics below his ascendant-order concern
-time_dragon,CW03,50/210,Auri-El,serve_empire_order is not in Auri-El's profile
-time_dragon,CW03,50/210,Alkosh,serve_empire_order present in profile but at m for COSMIC order; mortal Skyrim civil-war escalation is below his threshold and his two existing Imperial-side civic cells already cover the rare surface (avoid diluting the dragon-king into a war-politics god)
+time_dragon,CW01A,160,Auri-El,serve_empire_order/keep_oath are not in Auri-El's profile; mortal Imperial enlistment is not the ascendant elven order
+time_dragon,CW01B,160,Auri-El,keep_oath is not in Auri-El's profile; a Stormcloak oath is doubly foreign to the Aldmeri soul-god
+time_dragon,CW01B,160,Alkosh,keep_oath is not in Alkosh's profile (cosmic order/anti-chaos, not personal oaths); his rare civic surface is the Imperial-order cells he already holds
+time_dragon,CW02A,200,Auri-El,serve_empire_order is not in Auri-El's profile; mortal politics below his ascendant-order concern
+time_dragon,CW03,50,Auri-El,serve_empire_order is not in Auri-El's profile
+time_dragon,CW03,50,Alkosh,serve_empire_order present in profile but at m for COSMIC order; mortal Skyrim civil-war escalation is below his threshold and his two existing Imperial-side civic cells already cover the rare surface (avoid diluting the dragon-king into a war-politics god)
 time_dragon,DA07,100,Alkosh,serve_a_daedra:dagon is not in Alkosh's profile (only sow_chaos_madness C); Akatosh's serve_a_daedra:* line carries the anti-Dagon reading
 time_dragon,MQ104,160,Auri-El,Auri-El reacts to the time-order CLIMAX (Alduin unmade, authored MQ206/MQ305), not to every wild dragon; Mirmulnir at the Watchtower is mortal dragon-war, peripheral to his ascendant path
 time_dragon,MQ106,200,Auri-El,see MQ104; Sahloknir is a raised wild dragon, not the cosmic time-climax Auri-El answers to

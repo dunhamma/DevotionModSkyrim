@@ -11,20 +11,59 @@ const files = [
   "references/authoring/PDV_QuestReactionMatrix_Tranche8_PoolExpansion.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche9_DeitySignalRemap.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche10_SignalFloor.csv",
+  "references/authoring/PDV_QuestReactionMatrix_Tranche11_MainQuestFullCoverage.csv",
 ];
 let hdr = null;
-const body = [];
+const rawBody = [];
 for (const f of files) {
   const l = fs.readFileSync(f, "utf8").split(/\r?\n/).filter((x) => x.trim());
   if (!hdr) hdr = l[0];
   else if (l[0] !== hdr) { console.error("HEADER MISMATCH in " + f); process.exit(1); }
-  body.push(...l.slice(1));
+  rawBody.push(...l.slice(1));
+}
+function cells(line) {
+  const out = [];
+  let cur = "", q = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (q && ch === Q && line[i + 1] === Q) { cur += Q; i++; }
+    else if (ch === Q) q = !q;
+    else if (ch === "," && !q) { out.push(cur); cur = ""; }
+    else cur += ch;
+  }
+  out.push(cur);
+  return out;
+}
+const rank = (row) => (row[8] === "milestone" ? 100 : 0) + ({ C: 30, S: 20, m: 10 }[row[7]] ?? 0);
+const byCell = new Map();
+for (let i = 0; i < rawBody.length; i++) {
+  const row = cells(rawBody[i]);
+  const key = `${row[0]}|${row[2]}|${row[5]}`;
+  if (!byCell.has(key)) byCell.set(key, []);
+  byCell.get(key).push({ line: rawBody[i], row, order: i });
+}
+const body = [];
+let duplicateRowsRemoved = 0;
+for (const [key, entries] of byCell) {
+  let candidates = entries;
+  const valences = new Set(entries.map((entry) => entry.row[6]));
+  if (valences.size > 1) {
+    if (key === "T03|100|Kynareth" || key === "T03|100|Y'ffre") {
+      candidates = entries.filter((entry) => entry.row[6] === "-");
+    } else {
+      console.error(`CONFLICTING VALENCE for ${key}`);
+      process.exit(1);
+    }
+  }
+  candidates.sort((a, b) => rank(b.row) - rank(a.row) || a.order - b.order);
+  body.push(candidates[0].line);
+  duplicateRowsRemoved += entries.length - 1;
 }
 function eid(line) { let cur = "", q = false; for (const ch of line) { if (ch === Q) q = !q; else if (ch === "," && !q) return cur; else cur += ch; } return cur; }
 const idx = body.map((line, i) => [line, i]);
 idx.sort((a, b) => { const ea = eid(a[0]).toLowerCase(), eb = eid(b[0]).toLowerCase(); return ea < eb ? -1 : ea > eb ? 1 : a[1] - b[1]; });
 fs.writeFileSync("references/authoring/PDV_QuestReactionMatrix_Full.csv", [hdr, ...idx.map((x) => x[0])].join("\r\n") + "\r\n");
-console.log("Wrote Full.csv:", body.length, "cells (T1+T2+T3)");
+console.log("Wrote Full.csv:", body.length, `cells (${duplicateRowsRemoved} duplicate rows resolved by canonical merge)`);
 function parse(f) { const t = fs.readFileSync(f, "utf8").split(/\r?\n/).filter((x) => x.trim()); t.shift(); return t.map((line) => { const c = []; let cur = "", q = false; for (const ch of line) { if (ch === Q) q = !q; else if (ch === "," && !q) { c.push(cur); cur = ""; } else cur += ch; } c.push(cur); return c; }); }
 const r = parse("references/authoring/PDV_QuestReactionMatrix_Full.csv");
 const d = {};

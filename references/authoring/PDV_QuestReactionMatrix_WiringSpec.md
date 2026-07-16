@@ -1,8 +1,10 @@
 # PDV Quest-Reaction Matrix - Wiring Spec (Codex handoff)
 
 **Created:** 2026-06-08 - **Author of design:** Claude - **Implementer:** Codex
-**Status:** Design FROZEN. This spec is the implementation contract - build against
-it; do not re-derive the matrix or the theology.
+**Status:** Design FROZEN. T11 full-main-quest coverage is merged and the strict
+static/generated-readback/UI-symbol audit is green: all 45 identities have an explicit
+Prisma symbol and rendered glyph, with no journal-icon fallback. Runtime-route and
+player-facing proof remain separate and open.
 
 ---
 
@@ -13,9 +15,16 @@ tells Codex how to wire them into the live mod. The judgment work (which god rea
 valence, intensity, magnitude) is DONE and must not be re-litigated - it is data now.
 
 **Frozen input artifacts (source of truth, do not edit for wiring):**
-- `references/authoring/PDV_QuestReactionMatrix_Full.csv` - generated matrix, currently
-  1013 cells / 124 watched quests / 45 deity names after the 2026-07-09 signal-floor readback/faucet tranche. Schema:
+- `references/authoring/PDV_QuestReactionMatrix_Full.csv` - generated matrix. The
+  current post-T11 surface is **1978 cells / 172 quest-stage keys / 134 watched quests / 45
+  deity names**. Schema:
   `editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation`
+- `references/authoring/PDV_QuestReactionMatrix_Tranche11_MainQuestFullCoverage.csv`
+  - **951 new rows** completing the main-quest contract.
+- `references/authoring/PDV_MainQuestFullCoverageContract.json` - machine authority:
+  **45 identities x 25 exact beats = 1125 main-quest cells**, with no approved
+  silences. `MQPaarthurnax` remains outside the matrix because its spare branch has
+  no usable quest-stage completion; the static fork rosters below own that choice.
 - `references/authoring/PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv` - 26
   compiled repeatable/activity faucet acts. Schema:
   `deity,act,trigger_detection,act_tag,valence,intensity,magnitude,anti_farm_cap,buildability,notes`
@@ -37,7 +46,7 @@ a new one.**
 
 Confirmed by user 2026-06-08. The matrix and faucets are loaded at runtime from JSON
 (PapyrusUtil `JsonUtil` or JContainers - implementer's choice; PDV already depends on
-PapyrusUtil/StorageUtil). Rationale: scales to the current 1013 cells without FormList sprawl;
+PapyrusUtil/StorageUtil). Rationale: scales to the post-T11 1978 cells without FormList sprawl;
 keeps the CSVs as source of truth; and **milestone/small numeric VALUES live in the
 JSON value-table - the single "tune-later" lever** (per memory `piety-pacing-model`
 and `quest-reaction-matrix-calibration`: counts frozen, value tuned here).
@@ -45,8 +54,8 @@ and `quest-reaction-matrix-calibration`: counts frozen, value tuned here).
 REJECTED: ESP-FormList-baked (matches existing P2 style but bloats the ESP and makes
 the per-cell tuning painful).
 
-NOTE: detection still uses a watch-FormList of the 124 Quest forms (that is the
-registration surface, not the cell store). Only the cell DATA moves to JSON.
+NOTE: detection uses the JSON watch roster of 134 Quest forms (that is the
+registration surface, not the cell store). Only the cell DATA lives in JSON.
 
 ---
 
@@ -81,9 +90,11 @@ Build `tools/pdv_quest_matrix_compile.mjs` (read-only over the CSVs; emits JSON)
 
 ## 3. Workstream 2 -- quest-reaction receiver (EXTEND proven path)
 
-- Author a watch-FormList `PDV_FLST_QuestReaction_Watch` containing all 124 matrix
-  Quest forms. Register it through the existing `RegisterQuestStageList` pattern in
-  `PDV_PlayerEvents` (additive -- leave the P2 route FormLists intact).
+- `PDV_PlayerEvents.RegisterQuestReactionMatrixFile` registers all 134 matrix Quest
+  forms directly from `questWatchFormIds` / `questWatchPlugins` with indexed
+  `JsonUtil.StringListCount` + `JsonUtil.StringListGet`. It must never materialize
+  the watch roster with `StringListToArray`: Papyrus arrays cap at 128 and would
+  silently unhook the tail. The trace must report both source and registered counts.
 - In `OnQuestStageChange(Quest akQuest, Int aiNewStage)`, after the existing P2 route
   check, call a new manager entry: `PDV__ManagerQuest.ApplyQuestReaction(akQuest,
   aiNewStage)`.
@@ -127,7 +138,7 @@ Function ApplyDeityReaction(String deity, String valence, String intensity, \
 
 ## 5. Workstream 4 -- faucet hooks + records
 
-15 acts in the faucets CSV. Detection mostly reuses PO3-events-on-alias already in
+26 compiled acts in the faucets CSV. Detection mostly reuses PO3-events-on-alias already in
 `PDV_PlayerEvents`:
 
 | Hook | Mechanism | Records to author |
@@ -156,18 +167,62 @@ cover those two gods meanwhile.
 
 ## 6. Verification gates (per pdv-proof-boundary)
 
-1. `node tools/pdv_compile.mjs` -- 0 error / 0 warning.
-2. `node tools/pdv_verify.mjs` -- FAIL=0 (records, FLST membership, SGE/SEQ, manager
+1. Strict T11 static/generated-readback audit:
+   `node .\tools\pdv_main_quest_full_coverage_audit.mjs --json`. It must report
+   45 identities, 25 beats, 1125 covered main-quest cells, 951 T11 rows,
+   1978 whole-matrix cells, 172 keys, 134 watches, 26 faucets, indexed
+   registration, exact 17-kill / 11-spare rosters, and 45/45 explicit Prisma
+   producer symbols with rendered glyphs. A PASS proves authored, generated/readback,
+   and static UI-contract state only; it does not prove in-game overlay rendering.
+2. `node tools/pdv_compile.mjs` -- 0 error / 0 warning.
+3. `node tools/pdv_verify.mjs` -- FAIL=0 (records, FLST membership, SGE/SEQ, manager
    property wiring for the new receiver + faucet FormLists).
-3. JSON load self-test: manager logs cell-count + faucet-count on init.
-4. QASmoke route proof: fire a representative quest-stage per family
+4. JSON load self-test: manager logs cell-count + faucet-count on init.
+5. QASmoke route proof: fire a representative quest-stage per family
    (e.g. MQ104 s160 Shor+, DA11 s100 Namira+/Stendarr-, TG09 Nocturnal+) and confirm
    the right per-deity stance-modulated pulse in `Logs\Script\Papyrus.0.log`.
-5. Faucet smoke: one act per god (drink -> Sanguine; equip Masque -> Clavicus; give
+6. Faucet smoke: one act per god (drink -> Sanguine; equip Masque -> Clavicus; give
    beggar gold -> Dibella; read Black Book -> Mora) with the 1/dawn cap proven
    (second same-day fire = no increase).
-6. Negative check: a stance-TABOO approving act yields stigma, not gain (e.g. Orc
+7. Negative check: a stance-TABOO approving act yields stigma, not gain (e.g. Orc
    pleasing Boethiah).
+
+### 6.1 Paarthurnax static rosters
+
+These are one-shot manager handlers, not matrix cells. The kill roster is 17:
+
+- Loss: Shor S, Tsun S, Kyne S, Stendarr C, Stuhn C, Mara S, Akatosh S,
+  Alkosh S, Talos m, Julianos m, Auri-El m, Khenarthi m, Kynareth m.
+- Gain: Boethiah S, Hircine S, Molag Bal m, Mehrunes Dagon m.
+
+The spare roster is 11:
+
+- Gain: Stuhn C, Stendarr C, Mara S, Kyne m, Akatosh S, Talos m, Alkosh m,
+  Auri-El m, Kynareth m.
+- Loss: Boethiah m, Molag Bal m.
+
+### 6.2 Required T11 runtime/manual probes
+
+These probes begin only after the strict audit passes. Route traces prove delivery;
+Book of Days, toast, Survey/status, save/load, and polarity observations are manual
+player-facing evidence and must be recorded separately. They are a fail-closed 1.0 ship
+criterion: `C-MAIN-QUEST-FULL-COVERAGE-RUNTIME` reads the five pending slots in
+`PDV_1_0_ManualSignoffLedger.json`; only `evidence-recorded` closes them.
+
+1. MCM Signal-floor smoke **T11: MQ106 200 - Syrabane**: confirm the new Syrabane
+   profile resolves and its row lands. Do not force vanilla `MQ106` stage 200 from
+   QASmoke; it is a shutdown stage.
+2. MCM Signal-floor smoke **MQ206 220**: confirm Peryite gains while Mehrunes Dagon
+   loses on the same event.
+3. MCM Signal-floor smoke **T11: MQ101 150**: confirm Sheogorath resolves through
+   the runtime `Sheo` alias and lands rather than silently dropping.
+4. MCM Signal-floor smoke **T11: MQ105 160**: confirm the existing paired-equity
+   anchor lands as Kynareth C+ milestone with Kyne S+ stepped down. Do not invent
+   or promote a new Kyne-C cell for this probe.
+5. Run MCM debug Paarthurnax kill and spare on clean latch state, then obtain one
+   organic kill and one organic spare proof. Confirm the Book of Days lists every
+   reachable landed god while the toast shows the strongest reactor only; prove
+   repeat and kill-then-spare latch suppression across save/load.
 
 ---
 
@@ -180,6 +235,7 @@ cover those two gods meanwhile.
   `quest-reaction-matrix-calibration`).
 - **Parked engine fixes** (auto-dawn + Dunmer prayer cap) must be in-game-proven
   before/with this -- the faucet caps reuse that day-stamp pattern.
-- **Possible small follow-up:** Y'ffre/Z'en/Khenarthi have deity scripts but no matrix
-  cells yet (e.g. Blessings-of-Nature peaceful branch -> Y'ffre `honor_the_wild`).
-  Optional coverage, non-blocking.
+- **Proof boundary:** a green T11 audit is authority/static/generated-readback proof.
+  It is not quest-stage runtime delivery, stance behavior, Book-of-Days aggregation,
+  strongest-only toast behavior, save/load latch proof, or player-facing sign-off. The
+  separate runtime criterion remains RED until the five probes above are recorded.

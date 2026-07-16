@@ -244,6 +244,7 @@
       ]
     },
     "paarthurnax_kill": {
+      "evidenceRevision": "pre-t11-6-kill-4-spare-v1",
       "status": "not-applicable",
       "origin": "owner waiver",
       "route": "controlled MCM signal-floor scenario 11 proved; organic kill not run",
@@ -267,11 +268,12 @@
         }
       },
       "notes": [
-        "Do not claim organic Paarthurnax kill proof from this slot. Controlled route proof and owner waiver are sufficient for this signal-floor closeout.",
+        "Do not claim organic Paarthurnax kill proof from this slot. Controlled route proof and owner waiver applied only to the pre-T11 6-kill roster and do not satisfy the current expanded-roster gate.",
         "See PDV_SignalFloorSmokePersonalBacklog_2026-07-11.md if bug reports arrive."
       ]
     },
     "paarthurnax_spare": {
+      "evidenceRevision": "pre-t11-6-kill-4-spare-v1",
       "status": "not-applicable",
       "origin": "owner waiver",
       "route": "controlled MCM signal-floor scenario 12 proved; organic spare/latch checks not run",
@@ -291,7 +293,7 @@
         }
       },
       "notes": [
-        "Do not claim organic Paarthurnax spare/latch proof from this slot. Controlled route proof and owner waiver are sufficient for this signal-floor closeout.",
+        "Do not claim organic Paarthurnax spare/latch proof from this slot. Controlled route proof and owner waiver applied only to the pre-T11 4-spare roster and do not satisfy the current expanded-roster gate.",
         "See PDV_SignalFloorSmokePersonalBacklog_2026-07-11.md if bug reports arrive."
       ]
     },

@@ -1202,7 +1202,12 @@ function evaluateKillClassification() {
 function evaluateOptionalPluginResolution() {
   const playerEventsText = fs.readFileSync(PLAYER_EVENTS_PATH, "utf8");
   const functions = buildFunctionMap(playerEventsText);
-  const resolver = functions.get("GetQuestReactionRuntimeFormFromCsv") || "";
+  // 2026-07-15: the guard moved into the scalar resolver
+  // GetQuestReactionRuntimeFormFromEntry (the 128-cap registration rework);
+  // the array wrapper GetQuestReactionRuntimeFormFromCsv must delegate to it
+  // so there is exactly one guarded lookup path.
+  const resolver = functions.get("GetQuestReactionRuntimeFormFromEntry") || "";
+  const wrapper = functions.get("GetQuestReactionRuntimeFormFromCsv") || "";
   const failures = [];
   const modGuard = resolver.indexOf("Game.GetModByName(pluginName) == 255");
   const formLookup = resolver.indexOf("Game.GetFormFromFile(localFormId, pluginName)");
@@ -1212,6 +1217,12 @@ function evaluateOptionalPluginResolution() {
   }
   if (formLookup < 0 || modGuard > formLookup) {
     failures.push("Quest-reaction runtime form resolution must check plugin presence before GetFormFromFile.");
+  }
+  if (wrapper.indexOf("GetQuestReactionRuntimeFormFromEntry(") < 0) {
+    failures.push("Quest-reaction CSV resolver must delegate to the guarded scalar resolver.");
+  }
+  if (wrapper.indexOf("Game.GetFormFromFile(") >= 0) {
+    failures.push("Quest-reaction CSV resolver must not call GetFormFromFile directly.");
   }
 
   return { failures, ok: failures.length === 0 };

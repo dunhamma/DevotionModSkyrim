@@ -1,5 +1,7 @@
 # HO: Daedric Surfacing -- Survey + Book of Days (Codex Handoff, 2026-06-25)
 
+> **Superseded in part 2026-07-16.** This handoff's pre-pact notice ("The world tilts toward <Prince>" at ~half the Seeker threshold) shipped, then was retuned: the pre-pact notice now fires at piety **20** as the single beat *"<Prince> has taken notice of you."* (+ toast + "watching" badge), and Daedric quest reactions stay out of Book of Days until the Prince reaches Seeker (25). See `PDV_RunSheet_Daedric_V1.md` D1 for the current tester-facing behavior.
+
 > **D2 CLOSED 2026-06-29 (verify-first pass).** All residual seams are built in
 > the live manager and machine-accepted (commit `3153d8e`, adversarial pass R1-R5
 > PASS): Seam 1.2 pre-pact notice (`ProcessPendingDaedricPrePactNotices`, "The

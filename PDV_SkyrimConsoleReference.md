@@ -34,6 +34,29 @@ Commands most relevant to this project, confirmed working:
 
 ---
 
+## Developer / Debug Menu Unlock (owner-only)
+
+The 1.0 MCM ships with only two player-facing tabs (**Player** and
+**Settings**). The four debug tabs (Status, Debug:
+State & Rewards, Debug: Daedric & Curse, Debug: Pacing & Pantheons) are hidden
+entirely on a shipped copy — not even a locked stub renders, and there is no
+in-game toggle a player could find.
+
+To reveal the debug tabs in your own copy, raise the trace-verbosity global from
+the console, then close and reopen the MCM:
+
+| Command | Effect |
+|---|---|
+| `set PDV_GLO_DebugLevel to 3` | Unlock the four debug tabs (also enables verbose PDV tracing) |
+| `set PDV_GLO_DebugLevel to 0` | Re-hide the debug tabs |
+| `GetGlobalValue PDV_GLO_DebugLevel` | Check the current level |
+
+Any value `>= 1` unlocks the tabs; `3` is the max trace verbosity. The MCM reads
+its page list when the menu opens, so after changing the global you must **exit
+and reopen the MCM** (or reload a save) for the tabs to appear or disappear.
+
+---
+
 ## Toggle Commands
 
 | Command | Effect | Notes |

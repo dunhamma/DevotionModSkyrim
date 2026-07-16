@@ -1063,14 +1063,15 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     if (
       !p2BookNoticeBlock.includes('True, "P2 book notice surfaced: "') ||
       !p2AmbientNoticeBlock.includes('False, "P2 ambient notice surfaced: "') ||
-      !altmerSleepBlock.includes("SurfaceP2AmbientProgressNotice(") ||
+      !altmerSleepBlock.includes('AppendBookOfDaysEntry("An Aldmeri dream settles your ancestral inheritance."') ||
       !bretonSleepBlock.includes("SurfaceP2AmbientProgressNotice(") ||
+      altmerSleepBlock.includes("SurfaceP2AmbientProgressNotice(") ||
       altmerSleepBlock.includes("SurfaceP2BookReadNotice(") ||
       bretonSleepBlock.includes("SurfaceP2BookReadNotice(")
     ) {
-      fail("P2 book reads must bypass setup quiet presentation, while Altmer and Breton sleep progress must use the quiet-respecting ambient notice interface.", managerPath);
+      fail("P2 book reads must bypass setup quiet presentation; Altmer sleep logs one quiet Book of Days dream while Breton sleep keeps the quiet-respecting ambient notice.", managerPath);
     } else {
-      pass("P2 book reads and sleep progress use distinct quiet-presentation interfaces.", managerPath);
+      pass("P2 book reads, quiet Altmer dreams, and Breton ambient sleep progress use their intended distinct presentation paths.", managerPath);
     }
 
     if (
@@ -1675,11 +1676,14 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   const renamedFamilyLines = managerForBroadLane.split(/\r?\n/).filter((line) =>
     /SendPrismaSubstrateProgress\("(?:imperial-civic|altmer-heritage|argonian-practice)"/.test(line)
   );
-  const nonNeutralRenamedFamilyLines = renamedFamilyLines.filter((line) => !line.includes(', "journal",'));
-  if (renamedFamilyLines.length === 0 || nonNeutralRenamedFamilyLines.length > 0) {
-    fail(`Imperial civic, Altmer heritage, and Argonian practice progress must use a neutral journal symbol; found ${nonNeutralRenamedFamilyLines.length} non-neutral producer(s).`, managerPath);
+  const neutralRenamedFamilyLines = renamedFamilyLines.filter((line) => !line.includes('"altmer-heritage"'));
+  const nonNeutralRenamedFamilyLines = neutralRenamedFamilyLines.filter((line) => !line.includes(', "journal",'));
+  const altmerHeritageLines = renamedFamilyLines.filter((line) => line.includes('"altmer-heritage"'));
+  const misroutedAltmerHeritageLines = altmerHeritageLines.filter((line) => !line.includes(', "auri-el",'));
+  if (renamedFamilyLines.length === 0 || altmerHeritageLines.length === 0 || nonNeutralRenamedFamilyLines.length > 0 || misroutedAltmerHeritageLines.length > 0) {
+    fail(`Imperial civic and Argonian practice progress must use a neutral journal symbol, while quiet Altmer heritage must retain Auri-El's Book of Days symbol; found ${nonNeutralRenamedFamilyLines.length} neutral-family and ${misroutedAltmerHeritageLines.length} Altmer producer mismatch(es).`, managerPath);
   } else {
-    pass(`All ${renamedFamilyLines.length} renamed-family progress producers use the neutral journal symbol.`, managerPath);
+    pass(`Renamed substrate producers use neutral symbols where surfaced and Auri-El's symbol for quiet Altmer heritage milestones.`, managerPath);
   }
 
   const nordStateBody = functionBlock(managerForBroadLane, "HandleNordOldWaysState");
@@ -1723,12 +1727,12 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
     !managerForBroadLane.includes("String Function GetAltmerHeritageTierName()") ||
     !managerForBroadLane.includes("String Function GetArgonianCulturalPracticeLabel()") ||
     !managerForBroadLane.includes('"journal", GetImperialCivicTierName())') ||
-    !managerForBroadLane.includes('"journal", GetAltmerHeritageTierName())') ||
+    !managerForBroadLane.includes('GetAltmerHeritageTierJournalLine(tierAfter)') ||
     !managerForBroadLane.includes('"journal", GetArgonianCulturalPracticeLabel())')
   ) {
-    fail("Renamed substrate producers must pass their exact current tier label into Prisma and Book of Days presentation.", managerPath);
+    fail("Renamed substrate producers must pass exact current tier labels where surfaced, while quiet Altmer heritage must write its dedicated milestone journal copy.", managerPath);
   } else {
-    pass("Renamed substrate producers pass exact current tier labels into Prisma and Book of Days presentation.", managerPath);
+    pass("Renamed substrate producers keep exact tier labels where surfaced and dedicated Altmer milestone copy where intentionally quiet.", managerPath);
   }
 
   const orcMalacathConduct = functionBlock(managerForBroadLane, "HandleOrcMalacathConduct");

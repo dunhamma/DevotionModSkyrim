@@ -32,6 +32,7 @@ const PAPYRUS_LOG = getArg("--log") ?? "C:/Users/Admin/Documents/My Games/Skyrim
 const MANUAL_LEDGER = getArg("--manual-ledger") ?? path.join(AUTH, "PDV_SignalFloorSmokeManualEvidence.json");
 const OUT_MD = path.join(AUTH, "PDV_SignalFloorSmokeLedger.md");
 const OUT_JSON = path.join(AUTH, "PDV_SignalFloorSmokeLedger.json");
+const MAIN_QUEST_CONTRACT = readJson(path.join(AUTH, "PDV_MainQuestFullCoverageContract.json"));
 
 const files = {
   manager: path.join(SOURCE, "PDV__ManagerQuest.psc"),
@@ -137,6 +138,13 @@ function checkGlobalContracts(scenarios, matrixRows, likesRows, faucetRows, runt
 
   assert("Debug MCM signal-floor section", sourceText.mcm.includes("Signal-floor smoke") && sourceText.mcm.includes("Run signal-floor smoke"), "Debug MCM exposes the signal-floor smoke section.", "Debug MCM does not expose the signal-floor smoke section.");
   assert("manager debug harness", manager.includes("Function DebugRunSignalFloorSmokeScenario") && manager.includes("Function DebugGetSignalFloorSmokeLabel"), "Manager exposes signal-floor debug harness functions.", "Manager signal-floor debug harness functions are missing.");
+
+  const questReactionBody = functionBody(manager, "QueueQuestReactionJob");
+  const questReactionDuplicateBody = functionBody(manager, "ShouldSuppressDuplicateQuestReaction");
+  const guardCall = "ShouldSuppressDuplicateQuestReaction(reactionKey)";
+  const guardBeforeApply = questReactionBody.indexOf(guardCall) >= 0
+    && questReactionBody.indexOf(guardCall) < questReactionBody.indexOf("StorageUtil.StringListAdd(None, \"PDV.QR.Queue.JobIds\"");
+  assert("quest-stage duplicate guard", guardBeforeApply && questReactionDuplicateBody.includes("PDV.QuestReaction.LastAppliedTime.") && questReactionDuplicateBody.includes("QUEST_REACTION_DUPLICATE_WINDOW_DAYS"), "Quest-stage reactions debounce duplicate deliveries before queue ingress, piety, or pantheon fold.", "Quest-stage reactions lack a keyed pre-queue duplicate guard.");
 }
 
 function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, papyrusLog, manualEvidence, expected) {
@@ -170,8 +178,10 @@ function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, pap
       for (const expected of scenario.expectedRows ?? []) {
         ok(`runtime deity ${expected.deity}`, runtimeDeities.split("|").includes(expected.deity), `${expected.deity} is in runtime JSON.`, `${expected.deity} is missing from runtime JSON.`);
       }
-      const marker = `QuestReaction: ${runtimeKey} applied`;
-      add(papyrusLog.includes(marker) ? "PASS" : "OPEN", "runtime marker", papyrusLog.includes(marker) ? `Papyrus log contains ${marker}.` : `No current Papyrus log marker for ${marker}.`);
+      const legacyMarker = `QuestReaction: ${runtimeKey} applied`;
+      const queueMarker = new RegExp(`\\[PDV\\]\\[QR_QUEUE\\] COMPLETE[^\\r\\n]*\\bkey=${escapeRegex(runtimeKey)}\\b`, "i");
+      const hasRuntimeMarker = papyrusLog.includes(legacyMarker) || queueMarker.test(papyrusLog);
+      add(hasRuntimeMarker ? "PASS" : "OPEN", "runtime marker", hasRuntimeMarker ? `Papyrus log contains a completed reaction marker for ${runtimeKey}.` : `No current Papyrus log marker for ${legacyMarker} or QR_QUEUE COMPLETE key=${runtimeKey}.`);
       for (const expected of scenario.expectedRows ?? []) {
         const unknownMarker = `QuestReaction skipped unknown deity: ${expected.deity}`;
         ok(`runtime deity resolved ${expected.deity}`, !papyrusLog.includes(unknownMarker), `${expected.deity} was not skipped as unknown in the Papyrus log.`, `${expected.deity} was skipped as an unknown deity in the Papyrus log.`);
@@ -213,13 +223,19 @@ function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, pap
       const reactionBody = functionBody(sourceText.manager, "ApplyPaarthurnaxKillReaction");
       ok("paarthurnax kill surface reset", killBody.includes("ResetQuestReactionSurface()"), "Paarthurnax kill resets the quest-reaction surface before fanout.", "Paarthurnax kill fanout does not reset the quest-reaction surface.");
       ok("paarthurnax kill surface flush", killBody.includes("FlushQuestReactionSurface()"), "Paarthurnax kill flushes one aggregated quest-reaction surface after fanout.", "Paarthurnax kill fanout does not flush the quest-reaction surface.");
-      ok("paarthurnax kill non-faucet surface", reactionBody.includes('ApplyDeityReaction(deityName, "-", intensity, "small", "paarthurnax_kill", False, sourceForm)'), "Paarthurnax kill reactions use the surfaced quest-reaction path.", "Paarthurnax kill reactions still use a quiet/faucet path.");
+      ok("paarthurnax kill non-faucet surface", reactionBody.includes('ApplyDeityReaction(deityName, valence, intensity, "small", "paarthurnax_kill", False, sourceForm)') && reactionBody.includes('String valence = "-"'), "Paarthurnax kill reactions use the surfaced quest-reaction path with an explicit default loss valence.", "Paarthurnax kill reactions do not preserve the surfaced default-loss path.");
+      const roster = readPaarthurnaxRoster(killBody, "Kill", "-");
+      const expectedRoster = MAIN_QUEST_CONTRACT.paarthurnax.kill;
+      ok("paarthurnax kill exact roster", sameRoster(roster, expectedRoster), `Paarthurnax kill roster matches all ${expectedRoster.length} contracted reactions.`, `Paarthurnax kill roster drift: actual ${roster.length}, expected ${expectedRoster.length}.`);
     } else if (scenario.id === "paarthurnax_spare") {
       const spareBody = functionBody(sourceText.manager, "HandlePaarthurnaxSpare");
       const reactionBody = functionBody(sourceText.manager, "ApplyPaarthurnaxSpareReaction");
       ok("paarthurnax spare surface reset", spareBody.includes("ResetQuestReactionSurface()"), "Paarthurnax spare resets the quest-reaction surface before fanout.", "Paarthurnax spare fanout does not reset the quest-reaction surface.");
       ok("paarthurnax spare surface flush", spareBody.includes("FlushQuestReactionSurface()"), "Paarthurnax spare flushes one aggregated quest-reaction surface after fanout.", "Paarthurnax spare fanout does not flush the quest-reaction surface.");
-      ok("paarthurnax spare non-faucet surface", reactionBody.includes('ApplyDeityReaction(deityName, "+", intensity, "small", "paarthurnax_spare", False, sourceForm)'), "Paarthurnax spare reactions use the surfaced quest-reaction path.", "Paarthurnax spare reactions still use a quiet/faucet path.");
+      ok("paarthurnax spare non-faucet surface", reactionBody.includes('ApplyDeityReaction(deityName, valence, intensity, "small", "paarthurnax_spare", False, sourceForm)') && reactionBody.includes('String valence = "+"'), "Paarthurnax spare reactions use the surfaced quest-reaction path with an explicit default gain valence.", "Paarthurnax spare reactions do not preserve the surfaced default-gain path.");
+      const roster = readPaarthurnaxRoster(spareBody, "Spare", "+");
+      const expectedRoster = MAIN_QUEST_CONTRACT.paarthurnax.spare;
+      ok("paarthurnax spare exact roster", sameRoster(roster, expectedRoster), `Paarthurnax spare roster matches all ${expectedRoster.length} contracted reactions.`, `Paarthurnax spare roster drift: actual ${roster.length}, expected ${expectedRoster.length}.`);
     }
     const markerNeedle = scenario.id === "crypt_clear_undead"
       ? "Undead crypt clear fired"
@@ -248,10 +264,15 @@ function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, pap
   }
 
   const manualRecord = manualEvidence?.scenarios?.[scenario.id] ?? null;
+  const manualEvidenceRevisionCurrent = !scenario.manualEvidenceRevision
+    || manualRecord?.evidenceRevision === scenario.manualEvidenceRevision;
   const manualOpen = [];
   for (const check of scenario.manualChecks ?? []) {
     const record = manualRecord?.checks?.[check];
-    if (record?.status === "evidence-recorded") {
+    if (!manualEvidenceRevisionCurrent) {
+      manualOpen.push(check);
+      add("OPEN", `manual ${check}`, `${check}: evidence revision ${manualRecord?.evidenceRevision ?? "(missing)"} does not match required ${scenario.manualEvidenceRevision}.`);
+    } else if (record?.status === "evidence-recorded") {
       add("PASS", `manual ${check}`, record.note ? `${check}: ${record.note}` : `${check}: evidence recorded.`);
     } else if (record?.status === "not-applicable") {
       add("PASS", `manual ${check}`, record.note ? `${check}: not applicable - ${record.note}` : `${check}: not applicable.`);
@@ -274,6 +295,8 @@ function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, pap
     manualChecks: scenario.manualChecks ?? [],
     manualChecksOpen: manualOpen,
     manualEvidence: manualRecord ? {
+      evidenceRevision: manualRecord.evidenceRevision ?? "",
+      requiredEvidenceRevision: scenario.manualEvidenceRevision ?? "",
       status: manualRecord.status ?? "unknown",
       route: manualRecord.route ?? "",
       origin: manualRecord.origin ?? "",
@@ -377,6 +400,25 @@ function functionBody(source, name) {
   if (start < 0) return "";
   const end = source.indexOf("EndFunction", start);
   return end < 0 ? source.slice(start) : source.slice(start, end + "EndFunction".length);
+}
+
+function escapeRegex(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function readPaarthurnaxRoster(body, lane, defaultValence) {
+  const rows = [];
+  const re = new RegExp(`ApplyPaarthurnax${lane}Reaction\\(\"([^\"]+)\", \"(C|S|m)\", sourceForm(?:, \"([+-])\")?\\)`, "g");
+  let match;
+  while ((match = re.exec(body))) rows.push({ deity: match[1], intensity: match[2], valence: match[3] ?? defaultValence });
+  return rows;
+}
+
+function sameRoster(actual, expected) {
+  const key = (row) => `${row.deity}|${row.intensity}|${row.valence}`;
+  const left = actual.map(key).sort();
+  const right = expected.map(key).sort();
+  return left.length === right.length && left.every((entry, index) => entry === right[index]);
 }
 
 function readCsv(file) {

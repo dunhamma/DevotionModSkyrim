@@ -49,7 +49,7 @@ const OUT_MD = path.join(ROOT, "references", "authoring", "PDV_PairedDeityEquity
 const OUT_CSV = path.join(ROOT, "references", "authoring", "PDV_PairedDeityEquityAudit.csv");
 const DEITY_SCRIPT_DIR = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source";
 
-// The 32 record deities (PDV_Deity_*.psc / PDV_FLST_AllDeities). matrixName is
+// The 33 record deities (PDV_Deity_*.psc / PDV_FLST_AllDeities). matrixName is
 // the literal the quest-reaction CSVs use; bakedName is the VMAD DeityName the
 // record carries at runtime (from the PDV_*RewardRecords.spec.json files plus
 // the ManagerQuest Ensure*RuntimeIdentity migrations). Where they differ the
@@ -79,6 +79,7 @@ const RECORD_DEITIES = [
   { matrixName: "Sithis", bakedName: "Sithis", races: ["Argonian"] },
   { matrixName: "Stendarr", bakedName: "Stendarr", races: ["Imperial", "Nord", "Breton"] },
   { matrixName: "Stuhn", bakedName: "Stuhn", races: ["Nord"] },
+  { matrixName: "Syrabane", bakedName: "Syrabane", races: ["Altmer"] },
   { matrixName: "Talos", bakedName: "Talos", races: ["Nord", "Imperial"] },
   { matrixName: "Trinimac", bakedName: "Trinimac", races: ["Orc", "Altmer"], note: "pressure-only by design (R5); thin coverage intentional" },
   { matrixName: "Tsun", bakedName: "Tsun", races: ["Nord"] },
@@ -490,7 +491,7 @@ function writeMd(ctx) {
   lines.push("");
   lines.push(mdTable(
     ["Deity", "Races", "Gain (milestones)", "Loss (milestones)", "Faucets", "Ambient", "Curated", "Substrate", "Verdict"],
-    channelRows.map((r) => [r.deity, r.races, r.matrixGain, r.matrixLoss, r.faucets, r.ambient, r.curated, r.substrate, r.verdict + (r.note ? ` — ${r.note}` : "")]),
+    channelRows.map((r) => [r.deity, r.races, r.matrixGain, r.matrixLoss, r.faucets, r.ambient, r.curated, r.substrate, r.verdict + (r.note ? ` -- ${r.note}` : "")]),
   ));
   lines.push("");
 

@@ -17,7 +17,8 @@ const MO2_ROOT = normalizePath(getArg("--mo2") ?? "D:/Wabbajack/modlists/ARR");
 const PROFILE_NAME = getArg("--profile") ?? readSelectedProfile(MO2_ROOT);
 const PROFILE_DIR = PROFILE_NAME ? path.join(MO2_ROOT, "profiles", PROFILE_NAME) : null;
 const JSON_OUTPUT = args.includes("--json");
-const EXPECTED_CORE_WATCHED = Number.parseInt(getArg("--expected-core") ?? "73", 10);
+const CORE_ONLY = args.includes("--core-only");
+const EXPECTED_CORE_WATCHED = Number.parseInt(getArg("--expected-core") ?? "134", 10);
 const EXPECTED_ARR_WATCHED = Number.parseInt(getArg("--expected-arr") ?? "20", 10);
 const CORE_MOD = getArg("--core-mod") ?? "Devotion";
 const COMPAT_MOD = getArg("--compat-mod") ?? "Devotion - Authoria ARR Compatibility";
@@ -189,7 +190,7 @@ function checkModlist() {
   }
 
   requireEnabledMod(enabled, CORE_MOD);
-  requireEnabledMod(enabled, COMPAT_MOD);
+  if (!CORE_ONLY) requireEnabledMod(enabled, COMPAT_MOD);
   requireDisabledMod(lines, "PDV_AuthoriaARR_Compatibility");
   requireDisabledMod(lines, "PDV_Authoria_FirstLook");
   requireDisabledMod(lines, "Devotion - PlayerDevotion Local Test");
@@ -212,6 +213,7 @@ function checkPluginOrder() {
 
   if (devotion === -1) fail("Plugin active", "Devotion.esp is not active.", pluginsPath);
   else pass("Plugin active", "Devotion.esp is active.", pluginsPath);
+  if (CORE_ONLY) return;
   if (compat === -1) fail("Plugin active", "PDV_AuthoriaARR_Compatibility.esp is not active.", pluginsPath);
   else pass("Plugin active", "PDV_AuthoriaARR_Compatibility.esp is active.", pluginsPath);
 
@@ -228,10 +230,13 @@ function checkPluginOrder() {
 function checkKnownMatrixFiles(enabledMods) {
   const candidates = [
     path.join(MO2_ROOT, "mods", CORE_MOD, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix.json"),
-    path.join(MO2_ROOT, "mods", COMPAT_MOD, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix_ARR.json"),
     path.join(MO2_ROOT, "overwrite", "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix.json"),
-    path.join(MO2_ROOT, "overwrite", "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix_ARR.json"),
   ];
+
+  if (!CORE_ONLY) {
+    candidates.push(path.join(MO2_ROOT, "mods", COMPAT_MOD, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix_ARR.json"));
+    candidates.push(path.join(MO2_ROOT, "overwrite", "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix_ARR.json"));
+  }
 
   for (const staleMod of ["PDV_AuthoriaARR_Compatibility", "PDV_Authoria_FirstLook", "Devotion - PlayerDevotion Local Test"]) {
     candidates.push(path.join(MO2_ROOT, "mods", staleMod, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix.json"));

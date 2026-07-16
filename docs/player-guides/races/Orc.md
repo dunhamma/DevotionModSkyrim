@@ -68,6 +68,8 @@ There is no separate reputation meter to manage for Orcs. The thing the world is
 
 ## Quests That Move Your Standing
 
+Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
+
 Malacath does not care about most of what Skyrim asks of you. These are the moments he is watching for. Every one of them helps; there is nothing here that costs you standing, because a quest well finished is exactly what the code asks.
 
 | Quest | What you did | Effect |

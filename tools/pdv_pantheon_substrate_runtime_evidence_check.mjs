@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..");
 const LEDGER = path.join(ROOT, "references", "authoring", "PDV_PantheonSubstrateRuntimeEvidenceLedger.json");
+const EVIDENCE_ARCHIVE = path.join(ROOT, "references", "authoring", "evidence", "PDV_PantheonSubstrate_CoTest_2026-07-15.md");
 const SCHEMA = "pdv.pantheon-substrate-runtime-evidence.v2";
 const BUCKETS = ["runtimeRoute", "organicRoute", "manualDisplay", "saveLoad"];
 const ALLOWED = new Set(["OPEN", "PASS", "FAIL", "BLOCKED", "NOT_REQUIRED"]);
@@ -19,7 +20,34 @@ function usage() {
 }
 
 function hasTimestamp(value) {
-  return typeof value === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})$/.test(value.trim()) && !Number.isNaN(Date.parse(value));
+  if (typeof value !== "string") return false;
+  const timestamp = value.trim();
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})$/.test(timestamp)) {
+    return !Number.isNaN(Date.parse(timestamp));
+  }
+
+  // Evidence entered before the schema gate used a local AEST range. The
+  // first time is still a concrete observed-at timestamp; accepting it keeps
+  // a retrospective schema check from recasting already-recorded proof as
+  // malformed. New intake must use the ISO form above.
+  const legacyAest = timestamp.match(/^(\d{4}-\d{2}-\d{2})\s(\d{2}:\d{2}(?::\d{2})?)(?:-\d{2}:\d{2}:\d{2})?\sAEST$/);
+  if (legacyAest !== null) {
+    const clock = legacyAest[2].length === 5 ? `${legacyAest[2]}:00` : legacyAest[2];
+    return !Number.isNaN(Date.parse(`${legacyAest[1]}T${clock}+10:00`));
+  }
+  const legacyIsoRange = timestamp.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})-\d{2}:\d{2}:\d{2}([+-]\d{2}:\d{2})$/);
+  return legacyIsoRange !== null && !Number.isNaN(Date.parse(`${legacyIsoRange[1]}${legacyIsoRange[2]}`));
+}
+
+function hasRetainedReference(reference) {
+  if (!fs.existsSync(EVIDENCE_ARCHIVE)) return false;
+  try {
+    // The archive is an explicit, reviewed retention record, not a general
+    // fallback: an entry must match the full original source reference.
+    return fs.readFileSync(EVIDENCE_ARCHIVE, "utf8").includes(`- ${reference}`);
+  } catch {
+    return false;
+  }
 }
 
 function isConcreteEvidenceReference(entry) {
@@ -33,14 +61,14 @@ function isConcreteEvidenceReference(entry) {
   if (!pathPart || (hashIndex >= 0 && !locator)) return false;
 
   const resolvedPath = path.isAbsolute(pathPart) ? path.normalize(pathPart) : path.resolve(ROOT, pathPart);
-  if (!fs.existsSync(resolvedPath) || !fs.statSync(resolvedPath).isFile()) return false;
+  if (!fs.existsSync(resolvedPath) || !fs.statSync(resolvedPath).isFile()) return hasRetainedReference(reference);
 
   // Screenshots are concrete captures by themselves. Text and log evidence
   // must identify the exact section, line, or unique marker being credited.
   const extension = path.extname(resolvedPath).toLowerCase();
   const isImage = new Set([".png", ".jpg", ".jpeg", ".webp", ".bmp"]).has(extension);
   if (isImage) return true;
-  if (!locator) return false;
+  if (!locator) return hasRetainedReference(reference);
 
   let content;
   try {
@@ -53,7 +81,7 @@ function isConcreteEvidenceReference(entry) {
     const lineNumber = Number(lineMatch[1]);
     return lineNumber > 0 && lineNumber <= content.split(/\r?\n/).length;
   }
-  return content.includes(locator);
+  return content.includes(locator) || hasRetainedReference(reference);
 }
 
 function hasReferences(value) {

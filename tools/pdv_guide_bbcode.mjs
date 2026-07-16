@@ -133,7 +133,18 @@ for (const race of RACES) {
   } else {
     console.log(`ok   ${race}  (${text.length} chars)`);
   }
-  if (!check) fs.writeFileSync(path.join(OUT_DIR, `${race}.bb`), text, 'utf8');
+  const outPath = path.join(OUT_DIR, `${race}.bb`);
+  if (check) {
+    if (!fs.existsSync(outPath)) {
+      failed++;
+      console.error(`FAIL ${race}: generated BBCode is missing (${path.relative(ROOT, outPath)})`);
+    } else if (fs.readFileSync(outPath, 'utf8') !== text) {
+      failed++;
+      console.error(`FAIL ${race}: generated BBCode is stale (${path.relative(ROOT, outPath)})`);
+    }
+  } else {
+    fs.writeFileSync(outPath, text, 'utf8');
+  }
 }
 
 if (failed) {

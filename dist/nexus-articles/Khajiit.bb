@@ -80,6 +80,8 @@ The Khajiit carry no formal reputation track - no faction standing that swings f
 
 [size=5][b]Quests That Move Your Standing[/b][/size]
 
+Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
+
 Some quests are read by your gods as deeds, and they move your standing the moment you finish that part of the story.
 
 [b]Khenarthi[/b]

@@ -135,7 +135,7 @@ deploying. Diff the two copies before deciding any item is open.
 | 7 | Khajiit Champion pin (`headline=true`) | `:10637` | `SurfaceTransition("tier", deity.DeityName + " " + GetTierStandingLabel(TIER_CHAMPION), "reach", ..., false, true)` at `:11575` -- headline=true + band suffix | **DONE** |
 | 8 | Orc lapse-to-City toast | route `:5904` via `ApplyOrcLifeModeSwitch` | dawn lapse routes `ApplyOrcLifeModeSwitch(ORC_LIFE_MODE_CITY, "orc_dawn_lapse_to_city")` at `:6327` (surfaces chronicle + toast) | **DONE** |
 | 9 | New-pact Daedric toast | `:2896` | `SendPrismaEventToast("shift", path, path.DeityName + " claims your devotion.", ...)` at `:3167` | **DONE** |
-| 10 | Altmer crisis-state toast | `:7417` | `SendPrismaShiftToast("The old line turns: " + GetAltmerCrisisStateLabelForValue(...), ...)` at `:7874` | **DONE** |
+| 10 | Altmer crisis-state toast | state-specific helper | `SetAltmerCrisisState` uses `GetAltmerCrisisHeadline` / `GetAltmerCrisisJournalLine`: Auri-El's path is shaken, return to Auri-El's path, or Auri-El's path holds | **DONE** |
 | R | RETIRE drift.warn dead branch | `:1773-1774` + tones | NO `drift.warn` / `eventClass == "drift"` / `SurfaceTransition("drift")` matches anywhere | **already RETIRED** |
 | -- | 6f overlay toast | DECLINED per R1 | n/a | no action |
 

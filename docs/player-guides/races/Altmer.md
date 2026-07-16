@@ -8,7 +8,7 @@ The trouble is that Skyrim is Lorkhan's world. Altmer doctrine holds that mortal
 
 At the start you pick a faction lean: how you relate to Thalmor orthodoxy. That choice sets a coherence track that colors the rest of your play. Above it all, Auri-El's dawn is always with you, no matter which path you walk. If this is your first Devotion character, read the How Devotion Works primer first, then come back here.
 
-Your ordered heritage advances at a deliberate daily pace. Only the first qualifying act after each 06:00 dawn counts: ordered rest after resolving the rite, disciplined magical study, a completed enchantment, an Auri-El rite, or an exact heritage milestone. Passive dawn does not advance it. Its visible stages are Ordered Heritage, Disciplined Heritage, and Exemplar Heritage.
+Your ancestral inheritance advances at a deliberate daily pace. Only the first qualifying act after each 06:00 dawn counts: ordered rest after resolving the rite, disciplined magical study, a completed enchantment, an Auri-El rite, or an exact heritage milestone. Passive dawn does not advance it. Its visible stages are Ordered Heritage, Disciplined Heritage, and Exemplar Heritage. Those are mechanical tier names, not a claim about the Thalmor or a single political faction.
 
 ## Your Gods
 
@@ -48,7 +48,7 @@ Auri-El is always with you, so returning to the sacred texts is your steady foun
 Two more sources worth naming:
 
 - **Enforce the orthodox line, at a cost.** Taking a hard, costly stand for ancestral order - the kind of enforcement most would flinch from - honors Trinimac, the unbroken warrior-god. This is his path, and it is deliberately demanding: it counts once a day, and only when the stand actually costs you something.
-- **Ordered dreams while you rest.** Rest after resolving the rite decision can advance Ordered Heritage once for the devotional day. Magnus piety is separate and requires a Magnus-authentic act. If you have committed to Magnus or Xarxes, that same rest also carries a quiet dawn pulse of shared memory to your patron.
+- **Ordered dreams while you rest.** Rest after resolving the rite decision can advance your ancestral inheritance once for the devotional day. Magnus piety is separate and requires a Magnus-authentic act. If you have committed to Magnus or Xarxes, that same rest also carries a quiet dawn pulse of shared memory to your patron.
 - **Disciplined heritage.** Magical cultivation, a completed enchantment, an Auri-El rite, or an exact heritage milestone can claim the same daily cultural credit. Passive dawn does not.
 - **A declined discipline rite stays quiet briefly.** Choosing "Not yet" does not spend the seven-day accepted-rite cooldown or choose a discipline, but it suppresses the same prompt for three devotional days, so ordinary rest does not reopen it every night.
 
@@ -67,6 +67,8 @@ Note that several acts an Altmer might expect to matter earn nothing by design, 
 Note the broad-worship rule that applies to every race: honoring several gods at once keeps you capped at Devoted. To reach Champion you must commit to a single god.
 
 ## Quests That Move Your Standing
+
+Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
 
 Some of Skyrim's quests land squarely on Altmer theology. These are the ones your gods notice.
 

@@ -1,13 +1,43 @@
 {
   "schema": "pdv.1-0.manual-signoff-ledger.v1",
   "updated": "2026-07-11",
-  "purpose": "Structured intake ledger for the human-observed 1.0 ship-gate evidence that no machine audit can produce: Experience Mode smoke, compatibility acceptance, and Requiem Track B felt sweeps. Read by tools/pdv_1_0_endstate_gate.mjs.",
+  "purpose": "Structured intake ledger for the human-observed 1.0 ship-gate evidence that no machine audit can produce: main-quest full-coverage runtime/display probes, Experience Mode smoke, compatibility acceptance, and Requiem Track B felt sweeps. Read by tools/pdv_1_0_endstate_gate.mjs.",
   "rules": {
     "allowedSlotStatuses": ["pending", "not-applicable", "evidence-recorded"],
     "slotShape": "status / expected / note (dated ISO entries, newest last)",
     "recordingRule": "Record evidence only after the observation actually happened in game or the maintainer acceptance actually arrived. Never pre-fill."
   },
   "groups": {
+    "mainQuestFullCoverageRuntime": {
+      "criterion": "C-MAIN-QUEST-FULL-COVERAGE-RUNTIME",
+      "slots": {
+        "mq106SyrabaneRouteAndDisplay": {
+          "status": "pending",
+          "expected": "On clean state, setstage MQ106 200 lands the reachable Syrabane row; capture the Papyrus route marker separately from Book of Days, strongest-only toast, and Survey/status evidence.",
+          "note": ""
+        },
+        "mq206MixedValenceRouteAndDisplay": {
+          "status": "pending",
+          "expected": "On clean state, setstage MQ206 220 lands reachable Peryite gain and Mehrunes Dagon loss in one logical event; capture route, aggregated Book entry, strongest-only toast, and repeat behavior.",
+          "note": ""
+        },
+        "mq101SheogorathAliasRouteAndDisplay": {
+          "status": "pending",
+          "expected": "On clean state, setstage MQ101 150 resolves Sheogorath through the runtime Sheo alias without a silent drop; capture route and player-facing surfaces.",
+          "note": ""
+        },
+        "mq105PairedEquityRouteAndDisplay": {
+          "status": "pending",
+          "expected": "On clean state, setstage MQ105 160 lands Kynareth C+ milestone and Kyne S+ stepdown; capture route and player-facing surfaces without inventing a Kyne-C cell.",
+          "note": ""
+        },
+        "paarthurnaxExpandedForksAndLatches": {
+          "status": "pending",
+          "expected": "From clean latch states, prove the expanded 17-kill and 11-spare Paarthurnax rosters through MCM debug and one organic route each; Book of Days lists every reachable landed god, toast shows only the strongest reactor, and repeat plus kill-then-spare suppression survive save/load.",
+          "note": "The pre-T11 6-kill/4-spare controlled proof and owner waivers do not satisfy this slot."
+        }
+      }
+    },
     "experienceModeSmoke": {
       "criterion": "C-EXPMODE-SMOKE",
       "slots": {

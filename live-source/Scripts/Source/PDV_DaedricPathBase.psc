@@ -40,6 +40,12 @@ String Property DAEDRIC_LIVE_SPELLS_KEY = "PDV.Daedric.LivePactSpells" AutoReadO
 String Property DAEDRIC_PREPACT_NOTICE_QUEUE_KEY = "PDV.Daedric.PendingPrePactNotices" AutoReadOnly
 String Property DAEDRIC_PREPACT_NOTICE_SHOWN_KEY = "PDV.Daedric.PrePactNoticeShown" AutoReadOnly
 
+; Pre-pact "a Prince has taken notice" surface (Book of Days line + soft toast + panel
+; badge) fires once a still-uncommitted Prince reaches this piety; below it the Prince
+; accrues piety in silence. Quest reactions surface separately, only once the Prince
+; reaches Seeker (ThresholdSeeker, 25).
+Float Property DAEDRIC_PREPACT_NOTICE_PIETY = 20.0 AutoReadOnly
+
 Function OnTierChange(Int oldTier, Int newTier)
     if newTier > 0
         ; Advancing (or re-granting at a tier) makes THIS Prince the active pact.
@@ -291,7 +297,11 @@ Function AddStigma(Float amount, String reason)
     endIf
 
     StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Daedric.Stigma", newStigma)
-    TraceDaedric(2, "Stigma " + newStigma + " (" + reason + ")")
+    Int traceLevel = 2
+    if StringUtil.Find(reason, "quest_reaction_") == 0
+        traceLevel = 3
+    endIf
+    TraceDaedric(traceLevel, "Stigma " + newStigma + " (" + reason + ")")
 EndFunction
 
 Function DebugForceStigma(Float amount, String reason)
@@ -377,20 +387,16 @@ Function AdjustStoredPiety(Float amount, String reason)
 EndFunction
 
 Function UpdatePrePactNoticeState(Float priorPiety, Float normalizedPiety, Int tierValue)
-    Float noticeThreshold = ThresholdSeeker * 0.5
+    Float noticeThreshold = DAEDRIC_PREPACT_NOTICE_PIETY
     Form deityForm = GetDeityForm()
 
-    ; Watching-onset chronicle latch. The manager writes a NAMED Book of Days line
-    ; ("<Prince> has taken an interest in you.") the first time this Prince crosses
-    ; above zero piety while still pre-pact. Clear it here the moment the Prince leaves
-    ; the watching state -- either it commits to a pact (tier gained) or its interest
-    ; lapses back to nothing -- so a later re-entry into watching chronicles afresh.
-    ; Kept distinct from the half-Seeker "world tilts" pressure latch below: watching
-    ; ends only at zero, not merely at a dip under the pressure threshold.
-    if tierValue > TIER_NONE || normalizedPiety <= 0.0
-        StorageUtil.SetIntValue(deityForm, "PDV.Daedric.WatchingChronicled", 0)
-    endIf
-
+    ; Pre-pact "taken notice" latch -- the single pre-pact surface. The manager writes a
+    ; NAMED Book of Days line ("<Prince> has taken notice of you.") + a soft toast the
+    ; first time this Prince crosses the notice threshold while still uncommitted. Clear
+    ; it whenever the Prince leaves the pre-notice state -- it commits (tier gained) or
+    ; its piety dips back under the threshold -- so a genuine re-crossing chronicles
+    ; afresh. This fires from ANY piety source (live signals or quest reactions), which
+    ; is why it lives on the path-piety seam rather than the signal funnel.
     if tierValue > TIER_NONE || normalizedPiety < noticeThreshold
         StorageUtil.SetIntValue(deityForm, DAEDRIC_PREPACT_NOTICE_SHOWN_KEY, 0)
         return

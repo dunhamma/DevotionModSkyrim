@@ -65,6 +65,8 @@ Piety is tracked separately for each god, and your daily gain with any single go
 
 ## Quests That Move Your Standing
 
+Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
+
 Some quests speak directly to one of your gods, and finishing them - or finishing them a particular way - moves your standing with that god on the spot. These are the ones an Imperial is most likely to meet. Several are the same quest with two different endings, and the ending is what the god judges.
 
 Gains marked "Helps a lot" are milestones: they land far harder than an ordinary day's devotion.

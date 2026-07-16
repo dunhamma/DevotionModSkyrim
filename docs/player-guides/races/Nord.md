@@ -69,6 +69,8 @@ Nord has no formal reputation meter the way Imperials carry a Concordat standing
 
 ## Quests That Move Your Standing
 
+Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
+
 Some deeds are too large to be a habit. The gods watch the great quests of Skyrim, and a few of them move your standing the moment you finish.
 
 **Kyne**

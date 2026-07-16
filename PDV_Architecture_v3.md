@@ -1,6 +1,6 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-07-15 AEST (v3.100 - true-bug fix pass + curated-signal adjudication closeout)
+Last revised: 2026-07-15 AEST (v3.102 - main-quest runtime proof gate)
 Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, Phase 17 decay, Phase 18A/B player status/Nord pilot, Phase 19 live generated patch closeout, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are proven/closed at their required gates. Phase 20 now owns the full-roster 1.0 content target: every locked race-architecture god and all sixteen Skyrim-present Daedric Prince surfaces must be content-ready for every race, with `references/authoring/PDV_DeityCoverageMatrix.json` and `--strict-phase20-roster` as the roster authority gate. The first Altmer Phase 20 runtime lane is source-scaffolded, compile-verified, crisis-record-wired, has the first two Altmer favor spell records wired, has four Altmer ACTI trigger proof base records wired for crisis, Lorkhan pressure, dawn steadiness, and orthodox cost, and now has Altmer Exiled vampire / werewolf halt manager source plus three `MESG` records wired to `PDV__ManagerQuest`; its four QASmoke proof references read back cleanly. Argonian, Orc, Redguard, Bosmer, and Khajiit have also crossed into source/record-wired proof slices, and all 30 Phase 20 proof references are now QASmoke-placed with helper/readback proof. Runtime proof and final immersive world placement remain open; `tools/pdv_phase20_runtime_check.mjs` and `references/authoring/PDV_Phase20_QASmokeRuntimeProof_Runbook.md` define the counted route-log, Survey/status, immersion, negative-hook, and anti-farm proof lane. `references/authoring/PDV_PreBetaRaceScalingSpine.md` and `PDV_PreBetaRaceGateLedger.md` now define the internal pre-beta scaling spine and all-race evidence ledger: Altmer active spine, Khajiit first contrast, Argonian second contrast, Orc / Redguard / Bosmer P1 packets, and Breton / Dunmer / Imperial / Nord P2 audit-only packets. The race gameplay audit now treats immersion as an explicit reward-budget axis, and `--strict-phase20-race-costing` enforces `immersionProof` blocks for all Phase 20 race-costing manifests. The current Phase 20 Altmer/race-costing gate is clean again after content-lock row reconciliation; the remaining warning is the existing unnamed CK-authored INFO record class. Phase 21 is the Authoria-first compatibility package lane because compatibility testing must wait until the mod's full content surface is stable enough to test against modlists.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, the historical Not Yet / Refuse / Accept branches, and accepted-patron persistence; current source supersedes the old 7/14-day reoffer cooldown with one offer per qualification, lapse-and-rebuild reoffer, and per-deity terminal refusal. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. Phase 17 runtime proof now covers grace, eligible decay, same-day guard, broad-worship reduced decay, active-patron skip, non-patron drift, and Devoted/Champion floors. Phase 18 runtime proof now covers the Player page, Developer Options persistence, Survey broad/focused states, Hircine/werewolf tension, vampire suppression/cure scar, save/load persistence, and positive/negative dialogue availability for Froki, Heimskr, Andurs, and Aela. The current combined Phase 18/Nord/Phase 19 strict gate is clean at `PASS=1208, INFO=28`, with no `FAIL`, `WARN`, or `TODO`. Authoring infrastructure has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, a reusable dialogue-v1 manifest/readback proof lane for CK-authored dialogue scaffolding, and an active generated classification patch for approved core vanilla/DLC rules; this does not broaden generated dialogue or generic gameplay authoring support.
 
 Current v3.100 addendum: the 2026-07-14 bug-report cluster is adjudicated and its
@@ -82,8 +82,8 @@ Current v3.96 addendum: the signal-floor readback/faucet tranche has landed at
 source/compile/readback level. `tools/pdv_extract_quest_stage_readback.mjs` now
 pins the missing exact-source quest readbacks for MS01/MS02/DBDestroy, Purity,
 Totems, MS10, MS05, T01/t02, marriage, mine-favor, and T03 rows, producing 778
-quest-stage readback rows and a quest-reaction runtime matrix of 1071 cells /
-169 quest keys / 135 watched quests / 45 deity names. Part D now has 26 compiled faucet acts:
+quest-stage readback rows and a quest-reaction runtime matrix of 1978 cells /
+172 quest keys / 134 watched quests / 45 deity names. Part D has 26 compiled faucet acts:
 Sanguine skooma/Sleeping Tree Sap and Sheogorath Wabbajack staff-fire are routed
 in `PDV_PlayerEvents`, with compiler cap aliases preserving the shared alcohol
 and carry-Wabbajack daily caps. `argonian_people` is registry-marked expected-N/A
@@ -129,7 +129,7 @@ Namira passive-zero/Health+Stamina feed copy. Proof is compile/readback only;
 runtime/manual Nord, Redguard, HoonDing, Shor, and Namira checks remain open.
 
 Current v3.94 addendum: the deity signal remap source/readback tranche is landed.
-The quest-reaction matrix now has 1071 cells / 169 quest keys / 135 watched quests / 45 deity names
+The quest-reaction matrix now has 1978 cells / 172 quest keys / 134 watched quests / 45 deity names
 after `PDV_QuestReactionMatrix_Tranche9_DeitySignalRemap.csv`; Syrabane is an
 Altmer roster-visible focus with eight approved College/warding/plague/hostile
 magic rows, Altmer Syrabane/Trinimac and Breton active-tradition formal offers
@@ -144,7 +144,7 @@ frozen as checked-in data (new Section 5.8). It is a curated one-time table of v
 quest-outcome -> per-deity piety reactions (gain/loss, small/milestone) plus thin-god
 repeatable faucets, modulated by race-stance at wiring time. Artifacts:
 `references/authoring/PDV_QuestReactionMatrix.md` (Parts A-E), `..._Full.csv`
-(now 1071 cells / 169 quest keys / 135 watched quests / 45 deity names, GENERATED from tranches via
+(now 1978 cells / 172 quest keys / 134 watched quests / 45 deity names, GENERATED from tranches via
 `tools/pdv_quest_tranche_merge.mjs`), `..._PartD_ThinGodFaucets.csv` (26 compiled
 faucet acts after the design-first Prince artifact/use faucets), and the Codex handoff
 `..._WiringSpec.md`. Calibration is LOCKED (counts frozen; pacing
@@ -772,10 +772,19 @@ Books, etc.) = the small day-to-day signals; (3) artifact one-shots + faction-jo
 in the quest tranches; (4) a generic moral-fallback is a wiring rule. The locked act-tag
 vocabulary gained `aesthetic_devotion` (2026-06-08) so Dibella's domain has a primitive.
 
-**Data (frozen).** `PDV_QuestReactionMatrix_Full.csv` = 1071 cells / 169 quest keys / 135
-watched quests / 45 deity names after the 2026-07-09 signal-floor master closeout, GENERATED from source tranches by
+**Data (frozen).** `PDV_QuestReactionMatrix_Full.csv` = 1978 cells / 172 quest keys / 134
+watched quests / 45 deity names after the 2026-07-15 Tranche 11 full-main-quest pass, GENERATED from source tranches by
 `tools/pdv_quest_tranche_merge.mjs` (do not hand-edit Full).
 `PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv` = 26 compiled faucet acts.
+The Helgen-to-Alduin slice is a separate fail-closed contract: 45 identities x 25 exact
+stages = 1125 cells across 19 quest records, with zero approved silences. T11 contributes
+951 of those cells. `MQPaarthurnax` remains outside the matrix and uses exact 17-kill / 11-spare
+Papyrus fork rosters because its spare branch has no dependable quest-stage completion.
+Static coverage closes `C-MAIN-QUEST-FULL-COVERAGE`, including 45/45 explicit Prisma
+producer symbols and rendered UI glyphs without a journal-icon fallback; the separate fail-closed
+`C-MAIN-QUEST-FULL-COVERAGE-RUNTIME` criterion consumes five evidence-only co-test slots
+for representative delivery/display, alias resolution, mixed polarity, paired equity, and
+expanded Paarthurnax save/load latches. Older 6-kill/4-spare waivers are not current proof.
 
 **Detection (proven, reused).** Quest stages via PO3 `RegisterForQuestStage` ->
 `OnQuestStageChange` in `PDV_PlayerEvents` (already live for the Altmer MQ104-s160 P2
@@ -796,9 +805,10 @@ one quest; 42/49 milestone-quests give <=2). See AGENTS.md Decisions Log 2026-06
 memory `quest-reaction-matrix-calibration`.
 
 **Data representation decision.** JSON-config (PapyrusUtil/JContainers), NOT
-ESP-FormList-baked - scales to the current 1071 cells without FormList sprawl, keeps the
+ESP-FormList-baked - scales to the current 1978 cells without FormList sprawl, keeps the
 CSVs authoritative, and puts the tune-later values in one place. (Detection still uses a
-watch-FormList of the 135 watched quests.)
+watch set of 134 quests. Since that exceeds Papyrus's 128-element declared-array ceiling,
+registration reads the PapyrusUtil string lists by indexed `StringListCount` / `StringListGet`.)
 
 **Status.** Design FROZEN. Core source/readback wiring is live through
 `PDV_PlayerEvents`, `PDV__ManagerQuest.ApplyDeityReaction`, StorageUtil JSON, and the
@@ -808,8 +818,13 @@ design-first Prince artifact faucets now have narrow equip-event wiring through
 FormLists with direct-ESP readback proof. Deferred triggers:
 Clavicus quest-persuade fragments, Dibella perform/art (no clean vanilla hook),
 full staff-use beyond the curated Sanguine/Vaermina/Sheogorath spell-form routes,
-hit-detection-only artifact semantics, disease polling, and Skeleton Key semantics. Possible
-follow-up: Y'ffre/Z'en/Khenarthi have deity scripts but no matrix cells yet.
+hit-detection-only artifact semantics, disease polling, and Skeleton Key semantics.
+
+The 2026-07-15 main-quest static/generated-readback gate is green at 1125/1125 required
+cells, 17/17 kill reactions, 11/11 spare reactions, and indexed registration. That proof
+does not promote old pre-expansion runtime evidence: representative main-quest delivery,
+Book of Days ledger-all, toast-loudest, alias handling, and Paarthurnax latch behavior must
+be observed again on the expanded build.
 
 ---
 

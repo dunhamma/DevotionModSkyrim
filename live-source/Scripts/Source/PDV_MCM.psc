@@ -42,8 +42,7 @@ Float Property SIGNAL_TYPE_MIN = 0.0 AutoReadOnly
 Float Property SIGNAL_TYPE_MAX = 999.0 AutoReadOnly
 
 String Property PAGE_PLAYER = "Player" AutoReadOnly
-String Property PAGE_COMPAT = "Compatibility" AutoReadOnly
-String Property PAGE_MODE = "Experience Mode" AutoReadOnly
+String Property PAGE_COMPAT = "Settings" AutoReadOnly
 String Property PAGE_STATUS = "Status" AutoReadOnly
 String Property PAGE_DEBUG = "Debug: State & Rewards" AutoReadOnly
 String Property PAGE_DEBUG2 = "Debug: Daedric & Curse" AutoReadOnly
@@ -52,7 +51,6 @@ String Property PAGE_PACING = "Debug: Pacing & Pantheons" AutoReadOnly
 Int _oidSurveyDevotion = -1
 Int _oidExportReport = -1
 Int _oidModeToggle = -1
-Int _oidDeveloperOptions = -1
 Int _oidSelectedDeity = -1
 Int _oidDebugPatronOverride = -1
 Int _oidDebugClearPatron = -1
@@ -87,6 +85,8 @@ Int _oidRunScaffoldApiSmoke = -1
 Int _oidReloadQuestMatrix = -1
 Int _oidSignalFloorScenario = -1
 Int _oidSignalFloorRun = -1
+Int _oidQuestReactionQueueStatus = -1
+Int _oidQuestReactionPerformanceSweep = -1
 Int _oidDiegeticD1 = -1
 Int _oidShowPatternSummary = -1
 Int _oidConcordatDefiance = -1
@@ -157,6 +157,7 @@ Bool _patternActionPromptOpen = False
 Int _oidForceSelectedPatron = -1
 Int _oidPrimeNeglectEligible = -1
 Int _oidNeglectRunPass = -1
+Int _oidPrimeRaceLaneNeglect = -1
 Int _oidDecayPrimeGrace = -1
 Int _oidDecayPrimeEligible = -1
 Int _oidDecayRunPass = -1
@@ -165,6 +166,8 @@ Int _oidShowDecaySummary = -1
 Int _oidCompatRaceMapping = -1
 Int _oidCompatSurvival = -1
 Int _oidCompatCC = -1
+Int _oidInGameEffects = -1
+Int _oidNotifications = -1
 Int _oidReDetectOrigin = -1
 Int _oidOpenJournalNow = -1
 Int _oidJournalHotkey = -1
@@ -243,12 +246,22 @@ Function OnGameReload()
     ; A load recreates the Prisma view closed, so the journal-open toggle must start
     ; closed or the first hotkey press would "close" an already-closed book.
     StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
+    ApplyInGameEffectsPreference()
     Parent.OnGameReload()
 EndFunction
 
 Function OnConfigInit()
     InitializePages()
     RegisterJournalHotkey()
+    ApplyInGameEffectsPreference()
+EndFunction
+
+Function ApplyInGameEffectsPreference()
+    ; Re-assert the player's In-Game Effects choice on load so the D1 diegetic layer
+    ; matches the saved preference (default on) regardless of the baked ESP flag.
+    if EnsureManagerBinding("apply_ingame_effects")
+        PDV_Manager.ApplyInGameEffectsPreference()
+    endIf
 EndFunction
 
 Function RegisterJournalHotkey()
@@ -274,6 +287,9 @@ Function OnPageReset(String a_page)
     InitializePages()
     EnsureManagerBinding("page_reset_" + a_page)
     _oidModeToggle = -1
+    ; Uninstall now lives on the Player page; reset per page so a stale OID from a
+    ; prior page build cannot collide with another control's OID on the dev pages.
+    _oidPrepareUninstall = -1
 
     if a_page == "" || a_page == PAGE_PLAYER
         BuildPlayerPage()
@@ -282,11 +298,6 @@ Function OnPageReset(String a_page)
 
     if a_page == PAGE_COMPAT
         BuildCompatPage()
-        return
-    endIf
-
-    if a_page == PAGE_MODE
-        BuildModePage()
         return
     endIf
 
@@ -339,10 +350,12 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Let an installed survival mod's hardship gently modulate devotion. It never creates piety alone.")
     elseIf a_option == _oidCompatCC
         SetInfoText("Let supported AE and Creation Club content add small optional devotion signals. No CC plugin is required.")
+    elseIf a_option == _oidInGameEffects
+        SetInfoText("On-screen devotion cues: screen effects, sounds, and music stingers when your standing shifts. Turn off for a quieter, effects-free experience. The Book of Days journal still records everything.")
+    elseIf a_option == _oidNotifications
+        SetInfoText("Corner toast messages when your devotion changes. Turn off to play with no pop-up notifications. The Book of Days journal still records everything.")
     elseIf a_option == _oidModeToggle
-        SetInfoText("Switches between the authored Pilgrim's Path and the gentler Wayfarer's Path for future devotion events.")
-    elseIf a_option == _oidDeveloperOptions
-        SetInfoText("Shows the development Status and Debug pages for testing.")
+        SetInfoText("Switches between the authored Pilgrim's Path and the gentler Wayfarer's Path for non-survival players.")
     elseIf a_option == _oidPacingSubstrateOrigin
         SetInfoText("Cycles the substrate pacing target through Imperial, Dunmer, Argonian, Nord, Altmer, and Khajiit.")
     elseIf a_option == _oidPacingSubstrateOriginApply
@@ -456,7 +469,11 @@ Function OnOptionHighlight(Int a_option)
     elseIf a_option == _oidSignalFloorScenario
         SetInfoText("Cycles the controlled signal-floor smoke scenario. These routes are backend proof only; organic smoke still proves runtime route and display behavior.")
     elseIf a_option == _oidSignalFloorRun
-        SetInfoText("Runs the selected signal-floor backend route through the manager debug harness. Record runtime and manual proof separately in the smoke ledger.")
+        SetInfoText("Runs the selected controlled manager route. It can prove the manager, Prisma, and Book of Days surfaces, but not organic quest-stage delivery.")
+    elseIf a_option == _oidQuestReactionQueueStatus
+        SetInfoText("Read-only worker queue state. A queued quest reaction processes two cells every 0.1 seconds and finishes with one toast and one Book of Days entry.")
+    elseIf a_option == _oidQuestReactionPerformanceSweep
+        SetInfoText("Queues MQ101, MQ105, MQ106, and MQ206 through the manager only. Use a disposable save; wait for QR_QUEUE COMPLETE markers, then reopen Book of Days if it was already open.")
     elseIf a_option == _oidDiegeticD1
         SetInfoText("Runtime toggle for the D1 diegetic surfaces (screen, sound, music). Default off; flip on to preview and tune on the current save, then bake D1Enabled into the ESP to ship.")
     elseIf a_option == _oidShowPatternSummary
@@ -595,6 +612,8 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("One-click neglect setup (no modal): forces the selected deity active AND drops its piety to 0 so it is neglect-eligible. Then click Run neglect pass and check Active Effects.")
     elseIf a_option == _oidNeglectRunPass
         SetInfoText("Runs only the neglect/spell-layer selection pass without the rest of dawn.")
+    elseIf a_option == _oidPrimeRaceLaneNeglect
+        SetInfoText("Backdates the CURRENT origin's race-lane neglect source (Altmer/Redguard/Breton/Orc/Khajiit) past its grace window and re-syncs, so the race neglect debuff applies with no multi-day wait. Ensure Curse none first.")
     elseIf a_option == _oidDecayPrimeGrace
         SetInfoText("Primes the selected deity inside the decay grace window at 20 piety.")
     elseIf a_option == _oidDecayPrimeEligible
@@ -638,19 +657,13 @@ Function OnOptionSelect(Int a_option)
         if EnsureManagerBinding("export_report")
             String reportFile = PDV_Manager.ExportDevotionReport()
             if reportFile != ""
-                ShowMessage("Devotion report saved as '" + reportFile + "' in your Skyrim game folder (same folder as SkyrimSE.exe). Attach that file to your bug report. If you cannot find it, search your PC for " + reportFile + ".", False, "$OK", "")
+                ShowMessage("Devotion report saved as '" + reportFile + "' in your Skyrim game folder (same folder as SkyrimSE.exe). Attach that file to your bug report. If you cannot find it, search your PC for " + reportFile + ". For a crash or a hard-to-repro bug, also attach your Papyrus log (Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log); the report file lists the exact path.", False, "$OK", "")
             else
                 ShowMessage("Could not write the report file. PapyrusUtil may be missing or the folder is read-only.", False, "$OK", "")
             endIf
         else
             ShowMessage("Devotion is still starting up. Wait a moment and try again.", False, "$OK", "")
         endIf
-        return
-    endIf
-
-    if a_option == _oidDeveloperOptions
-        ToggleDeveloperOptions()
-        ForcePageReset()
         return
     endIf
 
@@ -870,6 +883,22 @@ Function OnOptionSelect(Int a_option)
         return
     endIf
 
+    if a_option == _oidInGameEffects
+        if EnsureManagerBinding("toggle_ingame_effects")
+            PDV_Manager.SetInGameEffectsEnabled(!PDV_Manager.InGameEffectsEnabled())
+        endIf
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidNotifications
+        if EnsureManagerBinding("toggle_notifications")
+            PDV_Manager.SetNotificationsEnabled(!PDV_Manager.NotificationsEnabled())
+        endIf
+        ForcePageReset()
+        return
+    endIf
+
     if a_option == _oidSelectedDeity
         CycleSelectedDeity()
         ForcePageReset()
@@ -1064,6 +1093,16 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidSignalFloorRun
         RunSignalFloorSmokeScenario()
+        return
+    endIf
+
+    if a_option == _oidQuestReactionQueueStatus
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidQuestReactionPerformanceSweep
+        RunQuestReactionPerformanceSweep()
         return
     endIf
 
@@ -1517,6 +1556,17 @@ Function OnOptionSelect(Int a_option)
         return
     endIf
 
+    if a_option == _oidPrimeRaceLaneNeglect
+        PDV__ManagerQuest raceLaneNeglectManager = GetManagerService()
+        if raceLaneNeglectManager
+            raceLaneNeglectManager.DebugPrimeRaceLaneNeglect()
+            ForcePageReset()
+        else
+            Debug.Notification("PDV: manager is not assigned.")
+        endIf
+        return
+    endIf
+
     if a_option == _oidDecayPrimeGrace
         PDV__ManagerQuest decayGraceManager = GetManagerService()
         PDV_DeityBase decayGraceDeity = GetSelectedDeity()
@@ -1800,11 +1850,6 @@ Function BuildPlayerPage()
     endIf
 
     SetCursorPosition(1)
-    AddHeaderOption("Options", OPTION_FLAG_NONE)
-    _oidDeveloperOptions = AddTextOption("Developer Options", GetDeveloperPageStateLabel(), OPTION_FLAG_NONE)
-    AddTextOption("Status page", GetDeveloperPageStateLabel(), OPTION_FLAG_DISABLED)
-    AddTextOption("Debug page", GetDeveloperPageStateLabel(), OPTION_FLAG_DISABLED)
-
     AddHeaderOption("Book of Days", OPTION_FLAG_NONE)
     _oidOpenJournalNow = AddTextOption("Open Book of Days", "Open now", OPTION_FLAG_NONE)
     Int currentJournalKey = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Hotkey", -1)
@@ -1812,7 +1857,18 @@ Function BuildPlayerPage()
     Int currentPanelKey = StorageUtil.GetIntValue(None, "PDV.Panel.Hotkey", -1)
     _oidPanelHotkey = AddKeyMapOption("Open Devotion panel", currentPanelKey, OPTION_FLAG_NONE)
 
+    AddHeaderOption("Maintenance", OPTION_FLAG_NONE)
+    AddTextOption("Version", GetBuildVersionLabel(), OPTION_FLAG_DISABLED)
+    _oidPrepareUninstall = AddTextOption("Prepare for uninstall", "Save first", OPTION_FLAG_NONE)
+
     SetCursorFillMode(LEFT_TO_RIGHT)
+EndFunction
+
+String Function GetBuildVersionLabel()
+    if PDV_Manager
+        return PDV_Manager.GetBuildVersion()
+    endIf
+    return "Unknown"
 EndFunction
 
 String Function GetPlayerPageSummaryLine()
@@ -1867,31 +1923,14 @@ EndFunction
 
 Function BuildCompatPage()
     EnsureManagerBinding("build_compat_page")
+    Bool devMode = DeveloperOptionsEnabled()
+    ; Reset the mapping toggle OID so a stale value can't collide with another
+    ; control's OID on the shipped page, where the toggle is not rendered.
+    _oidCompatRaceMapping = -1
+
     SetCursorFillMode(TOP_TO_BOTTOM)
     SetCursorPosition(0)
-    AddHeaderOption("Custom Race", OPTION_FLAG_NONE)
-    _oidCompatRaceMapping = AddTextOption("Custom race mapping", OnOffLabel(CustomRaceMappingEnabled()), OPTION_FLAG_NONE)
-    AddTextOption("Detected", GetCompatRaceReadout(), OPTION_FLAG_DISABLED)
-    _oidReDetectOrigin = AddTextOption("Re-detect origin", "Run now", OPTION_FLAG_NONE)
-    AddTextOption("Temporary forms", "Defer origin capture", OPTION_FLAG_DISABLED)
-
-    SetCursorPosition(1)
-    AddHeaderOption("Survival Context", OPTION_FLAG_NONE)
-    _oidCompatSurvival = AddTextOption("Survival integration", OnOffLabel(SurvivalContextEnabled()), OPTION_FLAG_NONE)
-    AddTextOption("Status", GetCompatSurvivalReadout(), OPTION_FLAG_DISABLED)
-    AddHeaderOption("AE / Creation Club", OPTION_FLAG_NONE)
-    AddTextOption("AE/CC content", "Encouraged optional", OPTION_FLAG_DISABLED)
-    _oidCompatCC = AddTextOption("CC integration", OnOffLabel(CCContentEnabled()), OPTION_FLAG_NONE)
-    AddTextOption("Detected", GetCompatCCReadout(), OPTION_FLAG_DISABLED)
-
-    SetCursorFillMode(LEFT_TO_RIGHT)
-EndFunction
-
-Function BuildModePage()
-    EnsureManagerBinding("build_mode_page")
-    SetCursorFillMode(TOP_TO_BOTTOM)
-    SetCursorPosition(0)
-    AddHeaderOption("Devotional path", OPTION_FLAG_NONE)
+    AddHeaderOption("Devotional Path", OPTION_FLAG_NONE)
     if PDV_ModePresetRef
         _oidModeToggle = AddTextOption("Current path", PDV_ModePresetRef.GetModeLabel(), OPTION_FLAG_NONE)
     else
@@ -1899,12 +1938,42 @@ Function BuildModePage()
         AddTextOption("Current path", "Unavailable", OPTION_FLAG_DISABLED)
     endIf
 
+    AddHeaderOption("Presentation", OPTION_FLAG_NONE)
+    if PDV_Manager
+        _oidInGameEffects = AddTextOption("In-Game Effects", OnOffLabel(PDV_Manager.InGameEffectsEnabled()), OPTION_FLAG_NONE)
+        _oidNotifications = AddTextOption("Notifications", OnOffLabel(PDV_Manager.NotificationsEnabled()), OPTION_FLAG_NONE)
+    else
+        _oidInGameEffects = -1
+        _oidNotifications = -1
+        AddTextOption("In-Game Effects", "Unavailable", OPTION_FLAG_DISABLED)
+        AddTextOption("Notifications", "Unavailable", OPTION_FLAG_DISABLED)
+    endIf
+
+    AddHeaderOption("Custom Race", OPTION_FLAG_NONE)
+    ; Custom race mapping stays ON by default and is not a shipped choice; the
+    ; toggle only appears when Developer Options are unlocked. Players keep the
+    ; Detected readout and Re-detect origin as recovery tools.
+    if devMode
+        _oidCompatRaceMapping = AddTextOption("Custom race mapping", OnOffLabel(CustomRaceMappingEnabled()), OPTION_FLAG_NONE)
+    endIf
+    AddTextOption("Detected", GetCompatRaceReadout(), OPTION_FLAG_DISABLED)
+    _oidReDetectOrigin = AddTextOption("Re-detect origin", "Run now", OPTION_FLAG_NONE)
+    AddTextOption("Temporary forms", "Defer origin capture", OPTION_FLAG_DISABLED)
+
     SetCursorPosition(1)
-    AddHeaderOption("What changes", OPTION_FLAG_NONE)
-    AddTextOption("Piety gain rate", GetExperienceModeGainLabel(), OPTION_FLAG_DISABLED)
-    AddTextOption("Daily ceilings", GetExperienceModeCeilingLabel(), OPTION_FLAG_DISABLED)
-    AddTextOption("Neglect decay", GetExperienceModeDecayLabel(), OPTION_FLAG_DISABLED)
-    AddTextOption("Everyday work", GetExperienceModeCheapLabel(), OPTION_FLAG_DISABLED)
+    AddHeaderOption("Survival Context", OPTION_FLAG_NONE)
+    _oidCompatSurvival = AddTextOption("Survival integration", OnOffLabel(SurvivalContextEnabled()), OPTION_FLAG_NONE)
+    if devMode
+        AddTextOption("Status", GetCompatSurvivalReadout(), OPTION_FLAG_DISABLED)
+    endIf
+    AddHeaderOption("AE / Creation Club", OPTION_FLAG_NONE)
+    if devMode
+        AddTextOption("AE/CC content", "Encouraged optional", OPTION_FLAG_DISABLED)
+    endIf
+    _oidCompatCC = AddTextOption("CC integration", OnOffLabel(CCContentEnabled()), OPTION_FLAG_NONE)
+    if devMode
+        AddTextOption("Detected", GetCompatCCReadout(), OPTION_FLAG_DISABLED)
+    endIf
 
     SetCursorFillMode(LEFT_TO_RIGHT)
 EndFunction
@@ -1914,38 +1983,6 @@ String Function GetExperienceModeLabel()
         return PDV_ModePresetRef.GetModeLabel()
     endIf
     return "Pilgrim's Path"
-EndFunction
-
-String Function GetExperienceModeGainLabel()
-    if IsWayfarerPath()
-        return "Generous (1.25x)"
-    endIf
-    return "Strict (1.0x)"
-EndFunction
-
-String Function GetExperienceModeCeilingLabel()
-    if IsWayfarerPath()
-        return "Wider (1.5x)"
-    endIf
-    return "Authored (1.0x)"
-EndFunction
-
-String Function GetExperienceModeDecayLabel()
-    if IsWayfarerPath()
-        return "Gentler (0.5x)"
-    endIf
-    return "Full neglect"
-EndFunction
-
-String Function GetExperienceModeCheapLabel()
-    if IsWayfarerPath()
-        return "Akatosh level-up"
-    endIf
-    return "Rejected"
-EndFunction
-
-Bool Function IsWayfarerPath()
-    return PDV_ModePresetRef && PDV_ModePresetRef.GetMode() == 1
 EndFunction
 
 Function ToggleExperienceMode()
@@ -2158,7 +2195,6 @@ Function BuildStatePage()
 
     AddEmptyOption()
     AddHeaderOption("Actions", OPTION_FLAG_NONE)
-    _oidPrepareUninstall = AddTextOption("Prepare for uninstall", "Strip + stop", OPTION_FLAG_NONE)
     _oidRunDawn = AddTextOption("Run dawn pass", "Consolidate scratch", OPTION_FLAG_NONE)
     _oidShowPatternSummary = AddTextOption("Show pattern summary", "Paged readout", OPTION_FLAG_NONE)
     _oidShowPietyMap = AddTextOption("Show piety map", "Message", OPTION_FLAG_NONE)
@@ -2170,6 +2206,8 @@ Function BuildStatePage()
     AddHeaderOption("Signal-floor smoke", OPTION_FLAG_NONE)
     _oidSignalFloorScenario = AddTextOption("Selected smoke", GetSignalFloorScenarioLabel(), OPTION_FLAG_NONE)
     _oidSignalFloorRun = AddTextOption("Run signal-floor smoke", "Controlled route", OPTION_FLAG_NONE)
+    _oidQuestReactionQueueStatus = AddTextOption("Quest reaction queue", GetQuestReactionQueueStatusLabel(), OPTION_FLAG_NONE)
+    _oidQuestReactionPerformanceSweep = AddTextOption("Run performance sweep", "Disposable save", OPTION_FLAG_NONE)
     _oidDiegeticD1 = AddTextOption("Diegetic surfaces (D1)", DiegeticD1Label(), OPTION_FLAG_NONE)
 
     ; --- Right column: race focus/state setters + favor ---
@@ -2288,6 +2326,7 @@ Function BuildDaedricPage()
     _oidForceSelectedPatron = AddTextOption("Force selected patron", "Focused", OPTION_FLAG_NONE)
     _oidPrimeNeglectEligible = AddTextOption("Prime neglect eligible", "Active + piety 0", OPTION_FLAG_NONE)
     _oidNeglectRunPass = AddTextOption("Run neglect pass", "Targeted", OPTION_FLAG_NONE)
+    _oidPrimeRaceLaneNeglect = AddTextOption("Prime race-lane neglect", "Backdate source", OPTION_FLAG_NONE)
     _oidDecayPrimeGrace = AddTextOption("Prime decay grace", "Proof", OPTION_FLAG_NONE)
     _oidDecayPrimeEligible = AddTextOption("Prime decay eligible", "Proof", OPTION_FLAG_NONE)
     _oidDecayRunPass = AddTextOption("Run decay pass", "Targeted", OPTION_FLAG_NONE)
@@ -2379,15 +2418,25 @@ EndFunction
 
 Function InitializePages()
     ModName = "Devotion"
-    String[] configuredPages = new String[7]
-    configuredPages[0] = PAGE_PLAYER
-    configuredPages[1] = PAGE_COMPAT
-    configuredPages[2] = PAGE_MODE
-    configuredPages[3] = PAGE_STATUS
-    configuredPages[4] = PAGE_DEBUG
-    configuredPages[5] = PAGE_DEBUG2
-    configuredPages[6] = PAGE_PACING
-    Pages = configuredPages
+
+    ; Players see only the three user-facing tabs. The four dev tabs are appended
+    ; only when the owner has unlocked Developer Options from the console, so a
+    ; shipped copy never renders a debug tab at all (not even a locked stub).
+    if DeveloperOptionsEnabled()
+        String[] devPages = new String[6]
+        devPages[0] = PAGE_PLAYER
+        devPages[1] = PAGE_COMPAT
+        devPages[2] = PAGE_STATUS
+        devPages[3] = PAGE_DEBUG
+        devPages[4] = PAGE_DEBUG2
+        devPages[5] = PAGE_PACING
+        Pages = devPages
+    else
+        String[] userPages = new String[2]
+        userPages[0] = PAGE_PLAYER
+        userPages[1] = PAGE_COMPAT
+        Pages = userPages
+    endIf
 EndFunction
 
 String Function GetSubstratePacingOriginLabel()
@@ -2667,8 +2716,26 @@ Function RunSignalFloorSmokeScenario()
     endIf
 
     String label = PDV_Manager.DebugGetSignalFloorSmokeLabel(_selectedSignalFloorScenario)
-    if ShowMessage("Run controlled signal-floor smoke scenario: " + label + "? This is backend proof only; organic route and display checks remain separate.", True, "$Yes", "$No")
+    if ShowMessage("Run controlled signal-floor smoke scenario: " + label + "? Capture Prisma and Book of Days separately. Organic quest-stage delivery remains open.", True, "$Yes", "$No")
         ShowMessage(PDV_Manager.DebugRunSignalFloorSmokeScenario(_selectedSignalFloorScenario), False, "$OK", "")
+        ForcePageReset()
+    endIf
+EndFunction
+
+String Function GetQuestReactionQueueStatusLabel()
+    if PDV_Manager
+        return PDV_Manager.GetQuestReactionQueueStatus()
+    endIf
+    return "Unavailable"
+EndFunction
+
+Function RunQuestReactionPerformanceSweep()
+    if !EnsureManagerBinding("quest_reaction_performance_sweep")
+        ShowMessage("Devotion is still starting up.", False, "$OK", "")
+        return
+    endIf
+    if ShowMessage("Queue the controlled Quest Reaction Performance Sweep? It changes piety/state on this save. Capture Prisma and Book of Days separately; reopen Book of Days after completion if it was already open.", True, "$Yes", "$No")
+        ShowMessage(PDV_Manager.DebugQueueQuestReactionPerformanceSweep(), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
@@ -3058,15 +3125,14 @@ Function DebugRouteDaedricGenericProbe()
 EndFunction
 
 Bool Function DeveloperOptionsEnabled()
-    return StorageUtil.GetIntValue(None, "PDV.UI.DeveloperOptions") == 1
-EndFunction
-
-Function ToggleDeveloperOptions()
-    if DeveloperOptionsEnabled()
-        StorageUtil.SetIntValue(None, "PDV.UI.DeveloperOptions", 0)
-    else
-        StorageUtil.SetIntValue(None, "PDV.UI.DeveloperOptions", 1)
+    ; Owner-only debug unlock. Raise the existing trace-verbosity global from the
+    ; console ("set PDV_GLO_DebugLevel to 3") to reveal the dev tabs; set it back
+    ; to 0 to hide them again. Reusing this global keeps a single build with no
+    ; discoverable in-game toggle for players.
+    if !PDV_GLO_DebugLevel
+        return False
     endIf
+    return PDV_GLO_DebugLevel.GetValueInt() >= 1
 EndFunction
 
 String Function GetDeveloperPageStateLabel()

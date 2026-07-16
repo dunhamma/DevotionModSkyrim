@@ -86,10 +86,11 @@ Work Rule".
 | `tools/pdv_pantheon_presentation_readback.mjs` | Direct houseCARL broad reward, active-substrate, Observe-the-Moons, manager VMAD, and player-visible `Spine` readback |
 | `tools/pdv_active_effect_naming_audit.mjs` | Direct houseCARL audit of every `PDV_Bless_*` parent spell and child MGEF; parent spells use family/tier headings while child effects use concise mechanical or distinct scripted-effect labels |
 | `tools/pdv_guide_tables_gen.mjs` | Regenerates race-guide bonus tables from the reward spec JSONs and prints them to STDOUT -- it does NOT edit the guide `.md` files; guide tables are hand-spliced from its output. Its old Observant/Faithful "retired-word" lint was retired 2026-07-15 (those are the ratified broad bands); a per-family vocabulary gate is the tracked follow-up. |
+| `tools/pdv_main_quest_full_coverage_audit.mjs` | Fail-closed static/generated-readback gate for the 2026-07-15 main-quest contract: 45 identities x 25 exact stages, 951 T11 rows, 1978-cell compiled matrix, strict integer stages, no `echo`, exact 17/11 Paarthurnax rosters, and indexed 134-watch registration. A PASS is not in-game route/display proof. |
 | `tools/pdv_guide_bbcode.mjs` | Emits `dist/nexus-articles/*.bb` from the 10 race guides and hard-fails on surviving review tags, HTML comments, or non-ASCII -- the Nexus release gate. Run after ANY guide edit. |
 | `tools/pdv_substrate_pacing_audit.mjs` | Strict source/contract audit for the six paced substrates: one +4 devotional credit per 06:00 day, timing maths, authentic-route ownership, curse exceptions, decay, and player-copy exclusions |
 | `tools/pdv_broad_pantheon_audit.mjs` | Strict source/contract audit for Imperial, Nord Old Ways, and Nord Nine Divines pools: signed logical-event aggregation, active-baseline gating, grace/decay, migration, and T2 patron transition |
-| `tools/pdv_pantheon_substrate_runtime_evidence_check.mjs` | Fail-closed runtime/manual evidence checker for the 12 pantheon/substrate co-test cards; a static pass never closes an evidence bucket |
+| `tools/pdv_pantheon_substrate_runtime_evidence_check.mjs` | Fail-closed runtime/manual evidence checker for the 12 pantheon/substrate co-test cards; a static pass never closes an evidence bucket, and rotating Papyrus/temporary captures need an exact retained reference in the committed pantheon co-test evidence store |
 | `tools/pdv_patch.mjs` | Offline patcher for classification/distribution manifests and generated patch review/live artifacts |
 | `tools/pdv_content_verify.mjs` | Read-only verifier for the race/Daedric content manifests plus Phase 20 roster coverage (ASCII, budgets, slot IDs, voice, full roster gate) |
 | `tools/pdv_formal_offer_check.mjs` | Read-only verifier for the formal-offer scale-out spec, live manager eligibility/source flow, no-offer race exclusions, quiet-emergence cues, and delegated ESP/property readback |
@@ -560,7 +561,9 @@ Phase 10 Dunmer substrate proof-graduation is closed as of 2026-05-24. The count
 
 `tools\pdv_quest_matrix_compile.mjs` compiles the frozen quest-reaction matrix, Part D faucet CSV, stance matrices, quest-stage readback, and the narrow manual quest FormID fallback into `D:\Wabbajack\modlists\Anvil\mods\Devotion\SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionMatrix.json`. Run `node .\tools\pdv_quest_matrix_compile.mjs --check` before writing live JSON, then compile `PDV_EventBus`, `PDV_PlayerEvents`, and `PDV__ManagerQuest` after receiver/manager source edits.
 
-Current remap note (2026-07-09; co-test runbook added 2026-07-10): source tranches plus the signal-floor master closeout compile to 1071 cells / 169 quest keys / 135 watched quests / 45 deity names / 26 faucet acts. Use `node .\tools\pdv_quest_tranche_merge.mjs`, then `node .\tools\pdv_quest_matrix_compile.mjs --check --json`, then the formal-offer/remap/signal-floor gates before claiming source/readback readiness. For the representative smoke set, run `node .\tools\pdv_signal_floor_smoke_gate.mjs --check --json`; use `--write-ledger` to regenerate `PDV_SignalFloorSmokeLedger.{md,json}` after source, runtime JSON, or Papyrus log evidence changes. The Debug: State & Rewards MCM page has a `Signal-floor smoke` controlled route selector backed by `PDV__ManagerQuest.DebugRunSignalFloorSmokeScenario`, but those routes remain backend/log convenience only. Green source/readback gates still do not prove runtime-route, Active Effects, Book of Days, Survey/status, Prisma/notification, save/load stack behavior, or new skooma/staff-fire/Paarthurnax/crypt-clear behavior; use `references\authoring\PDV_SignalFloor_MasterHandoff_2026-07-09.md` for authority and `references\authoring\PDV_1_0_CoTest_Runbook_2026-07-10.md` for live tester/Codex steps.
+Current remap note (main-quest expansion 2026-07-15): source tranches through T11 compile to 1978 cells / 172 quest keys / 134 watched quests / 45 deity names / 26 faucet acts. Use `node .\tools\pdv_quest_tranche_merge.mjs`, then `node .\tools\pdv_main_quest_full_coverage_audit.mjs --json`, then the formal-offer/remap/signal-floor gates before claiming source/readback readiness. For the representative smoke set, run `node .\tools\pdv_signal_floor_smoke_gate.mjs --json`; use `--write-ledger` to regenerate `PDV_SignalFloorSmokeLedger.{md,json}` after source, runtime JSON, or Papyrus log evidence changes. The Debug: State & Rewards MCM page has a `Signal-floor smoke` controlled route selector backed by `PDV__ManagerQuest.DebugRunSignalFloorSmokeScenario`, but those routes remain backend/log convenience only. Green source/readback gates still do not prove runtime-route, Active Effects, Book of Days, Survey/status, Prisma/notification, save/load stack behavior, or the expanded Paarthurnax/main-quest surface; use `references\authoring\PDV_1_0_CoTest_Runbook_2026-07-10.md` for live tester/Codex steps.
+
+Quest-reaction delivery is bounded by the Start-Game-Enabled `PDV_QuestReactionWorker` quest. `ApplyQuestReaction` snapshots and enqueues one logical stage reaction; the worker resumes saved jobs and applies at most two base or meta reaction work items every `0.1` seconds, then performs one aggregate, curse/reward reconciliation, panel refresh, toast, and Book of Days beat. The Papyrus optimisation audit classified the former synchronous fan-out as **broken** (a 45-cell stage could monopolise the VM), repeated per-cell traces/finalisation as **suboptimal**, and the EventBus/PlayerEvents event-driven ingress as **clean**. Run `node .\tools\pdv_quest_reaction_performance_audit.mjs` for the source contract and `node .\tools\pdv_quest_reaction_runtime_check.mjs` after a live sweep. The performance MCM control deliberately queues MQ101/105/106/206 through manager routes only; never use `setstage MQ106 200` on a test save. Runtime proof still requires a fresh Skyrim relaunch, queue lifecycle log, one visible final toast/Book beat per job, and a save/load resume check.
 
 `tools\pdv_skyrim_refs_bridge.mjs` is a read-only lookup bridge into the neutral `dunhamma/SkyrimGamePlayReferences` repo. Set `SKYRIM_GAMEPLAY_REFERENCES_ROOT` when the clone is not under `scratch\SkyrimGamePlayReferences`. Use it to list or search broad reference tables such as reverse keywords, faction relationships, condition-bearing effects, cells, containers/furniture, enchantments, leveled lists, FormLists, shouts, and worldspaces. It does not copy data into PDV or replace local xEdit/CK verification. Bridge rules live in `references\vanilla-gameplay\PDV_SkyrimGamePlayReferences_Bridge.md`.
 
@@ -1095,6 +1098,40 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 ---
 
 ## Notes / Decisions Log
+
+**2026-07-15 AEST - Altmer notification and terminology consolidation:** Altmer P2 sacred-book
+actions now surface one specific player-facing outcome: the generic lore fan-out remains
+mechanically active but is presentation-silent, and the Trinimac reserved-signal surface is also
+suppressed for P2 book reasons. A crisis transition takes precedence over the ordinary book
+notice. Heritage progress is intentionally quiet except for a concise Book of Days entry when it
+crosses a tier; the tier labels remain `Ordered Heritage`, `Disciplined Heritage`, and `Exemplar
+Heritage`, while prose calls the underlying practice `ancestral inheritance`. Crisis copy names
+`Auri-El's path` instead of an ambiguous old order. The shared Prisma substrate fallback is now
+neutral grammar. Live manager/UI sources were synchronized; `PDV__ManagerQuest` and `PDV_MCM`
+compiled 0 errors/0 warnings; `pdv_prisma_ui_audit.mjs` passed 121 checks after its policy contract
+and cache key were updated. This is source/UI/bytecode proof only: no broad retest was requested,
+and fresh in-game presentation confirmation remains open.
+
+**2026-07-15 AEST - Main-quest full-pantheon coverage:** The complete Helgen-to-Alduin
+chain is now authored as 1125 unique deity-stage reactions: 45 runtime identities across
+25 exact stages on 19 quest records, with zero approved silences. T11 contributes 951 rows;
+the canonical/runtime matrix is 1978 cells / 172 keys / 134 watches / 26 faucets. Stage
+fields are strict integers and the retired `echo` tier is forbidden. `MQPaarthurnax` remains
+outside the stage matrix; its live fork has exact 17-kill and 11-spare rosters. The watch
+loader now reads PapyrusUtil lists by index so the 134 entries never cross the 128-element
+Papyrus array boundary. `PDV_PlayerEvents`, `PDV__ManagerQuest`, and the companion `PDV_MCM`
+compiled 0/0; Anvil and ARR core/extension JSONs were refreshed. Static/generated-readback
+proof is green through `pdv_main_quest_full_coverage_audit.mjs`, including an explicit
+45/45 Prisma producer-and-rendered-glyph contract with no journal-icon fallback; the
+updated cache-busted Prisma view is deployed to both Anvil and ARR. Representative in-game
+route, ledger-all/toast-loudest, actual overlay rendering, alias, save/load, and expanded
+Paarthurnax proof remains open and fail-closed under `C-MAIN-QUEST-FULL-COVERAGE-RUNTIME` until the five
+`mainQuestFullCoverageRuntime` ledger slots are evidence-recorded. Pre-T11 6-kill/4-spare
+Paarthurnax waivers are revision-stamped historical evidence, not current 17/11 proof.
+For controlled T11 display testing, use the Signal-floor MCM cards `MQ206 220`,
+`T11: MQ101 150`, `T11: MQ105 160`, and `T11: MQ106 200 - Syrabane`; they call
+the manager reaction path without mutating vanilla quests. Do not run these vanilla
+main-quest stages with `setstage` from QASmoke: `MQ106` stage 200 is a shutdown stage.
 
 **2026-07-13 AEST - Breton architecture audit and Hidden Art layered-pact repair:** Runtime co-test passed Book of Days, the Hidden Art Champion route, Prince boon, price waiver, current-pool preservation, and the controlled Mora Champion offer. Breton same-family Champion records are cumulative absolute totals and replace T2, while a distinct patron boon remains beside the lane reward. Hidden Art waives the integrated Prince price and duplicate stigma; non-Hidden-Art pacts still carry their ordinary price. Mora's tuned Champion boon is `+20 Alteration; +20 Magicka`. The new Magicka effect and all 18 Daedric Health/Magicka/Stamina price effects use `PeakValueModifier` plus `Recover`, so they alter the reversible maximum pool rather than continuously draining the current pool. Survey uses one sentence: `Your pact with Hermaeus Mora has opened Hidden Art - Champion.` The manager suppresses waived price copy, presents the combined boon mechanic, and no longer resends a successful milestone toast after the native bridge has queued it.
 

@@ -68,8 +68,8 @@ Khajiit/Dunmer/Imperial/Altmer bespoke functions) + the named toast site.
     - **Khajiit lunar-posture chronicle** (P1, R2; severe only) -- direct `AppendBookOfDaysEntry` at `:5342`.
       Draft: Corrupted -> `The moons curdled over your road. A corruption is on you now.`;
       ShadowDrift -> `You slipped into the moons' shadow. The dark road has you.`
-    - **Altmer crisis-state toast** (P2, R3) -- `SendPrismaShiftToast` at `:7417`.
-      Draft (provisional labels): `The old line strains: {crisis}.`
+    - **Altmer crisis-state toast** (P2, R3) -- state-specific crisis copy: `Auri-El's path is shaken`,
+      `You return to Auri-El's path`, and `Auri-El's path holds`.
 
 ---
 

@@ -69,6 +69,8 @@ On every path, two things still hold. Standing in one of the old green places - 
 
 ## Quests That Move Your Standing
 
+Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
+
 Some of Skyrim's own quests land squarely on a Bosmer god's ledger. These fire from the quest itself, on top of your day-to-day deeds.
 
 **Y'ffre**

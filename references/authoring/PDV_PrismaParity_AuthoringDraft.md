@@ -120,9 +120,8 @@ LOCKED -- epithet style (`{Prince}'s {epithet}`).
 ## 14. Altmer crisis-state toast  (P2, R3; SendPrismaShiftToast at :7417)
 Labels (from `GetAltmerCrisisStateLabelForValue`): **Dissonant / Questioning / Reasserting / Scarred resolved**
 (None = no crisis). Fire on a transition INTO a crisis state; the clear-to-None can stay silent or use a resolved line.
-Verb is `turns` (state-neutral shift), since "strains" only fit the worsening states, not Reasserting/Scarred-resolved.
-
-- toast: `The old line turns: {crisis}.`
+Use state-specific Auri-El copy rather than a generic label: `Auri-El's path is shaken` for Dissonant,
+`You return to Auri-El's path` for Reasserting, and `Auri-El's path holds` for Scarred resolved.
 
 ---
 

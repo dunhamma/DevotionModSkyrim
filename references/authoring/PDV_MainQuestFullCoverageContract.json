@@ -1,0 +1,90 @@
+{
+  "schema": "pdv.main-quest-full-coverage.v1",
+  "updated": "2026-07-15",
+  "authority": "All nineteen Skyrim main-quest records from Helgen through Alduin's defeat are judged at twenty-five exact stages by every runtime deity identity.",
+  "deities": [
+    "Akatosh", "Alkosh", "Arkay", "Auri-El", "Azura", "Baan Dar", "Boethiah", "Clavicus Vile", "Dibella", "Hermaeus Mora",
+    "Hircine", "HoonDing", "Julianos", "Khenarthi", "Kynareth", "Kyne", "Leki", "Magnus", "Malacath", "Mara",
+    "Mehrunes Dagon", "Mephala", "Meridia", "Molag Bal", "Namira", "Nocturnal", "Peryite", "Rajhin", "Sanguine", "Sheogorath",
+    "Shor", "Sithis", "Stendarr", "Stuhn", "Syrabane", "Talos", "The Hist", "Trinimac", "Tsun", "Tu'whacca",
+    "Vaermina", "Xarxes", "Y'ffre", "Z'en", "Zenithar"
+  ],
+  "questRecords": [
+    "MQ101", "MQ102", "MQ103", "MQ104", "MQ105", "MQ105U", "MQ106",
+    "MQ201Malborn", "MQ201", "MQ202", "MQ203", "MQ204", "MQ205", "MQ206",
+    "MQ301", "MQ302", "MQ303", "MQ304", "MQ305"
+  ],
+  "beats": [
+    { "act": "I", "editorId": "MQ101", "stage": 150 },
+    { "act": "I", "editorId": "MQ102", "stage": 160 },
+    { "act": "I", "editorId": "MQ103", "stage": 190 },
+    { "act": "I", "editorId": "MQ104", "stage": 90 },
+    { "act": "I", "editorId": "MQ104", "stage": 160 },
+    { "act": "I", "editorId": "MQ105", "stage": 160 },
+    { "act": "I", "editorId": "MQ105U", "stage": 60 },
+    { "act": "I", "editorId": "MQ106", "stage": 200 },
+    { "act": "II", "editorId": "MQ201Malborn", "stage": 100 },
+    { "act": "II", "editorId": "MQ201", "stage": 250 },
+    { "act": "II", "editorId": "MQ202", "stage": 180 },
+    { "act": "II", "editorId": "MQ203", "stage": 280 },
+    { "act": "II", "editorId": "MQ204", "stage": 200 },
+    { "act": "II", "editorId": "MQ205", "stage": 100 },
+    { "act": "II", "editorId": "MQ206", "stage": 100 },
+    { "act": "II", "editorId": "MQ206", "stage": 220 },
+    { "act": "III", "editorId": "MQ301", "stage": 240 },
+    { "act": "III", "editorId": "MQ302", "stage": 300 },
+    { "act": "III", "editorId": "MQ302", "stage": 310 },
+    { "act": "III", "editorId": "MQ302", "stage": 350 },
+    { "act": "III", "editorId": "MQ303", "stage": 100 },
+    { "act": "III", "editorId": "MQ303", "stage": 300 },
+    { "act": "III", "editorId": "MQ304", "stage": 50 },
+    { "act": "III", "editorId": "MQ304", "stage": 200 },
+    { "act": "III", "editorId": "MQ305", "stage": 200 }
+  ],
+  "approvedSilences": [],
+  "excludedQuestRecords": ["MQPaarthurnax"],
+  "expected": {
+    "deities": 45,
+    "beats": 25,
+    "coverageCells": 1125,
+    "tranche11Rows": 951,
+    "matrixCells": 1978,
+    "questKeys": 172,
+    "watchedQuests": 134,
+    "faucetActs": 26
+  },
+  "paarthurnax": {
+    "kill": [
+      { "deity": "Shor", "intensity": "S", "valence": "-" },
+      { "deity": "Tsun", "intensity": "S", "valence": "-" },
+      { "deity": "Kyne", "intensity": "S", "valence": "-" },
+      { "deity": "Stendarr", "intensity": "C", "valence": "-" },
+      { "deity": "Stuhn", "intensity": "C", "valence": "-" },
+      { "deity": "Mara", "intensity": "S", "valence": "-" },
+      { "deity": "Akatosh", "intensity": "S", "valence": "-" },
+      { "deity": "Alkosh", "intensity": "S", "valence": "-" },
+      { "deity": "Talos", "intensity": "m", "valence": "-" },
+      { "deity": "Julianos", "intensity": "m", "valence": "-" },
+      { "deity": "Auri-El", "intensity": "m", "valence": "-" },
+      { "deity": "Khenarthi", "intensity": "m", "valence": "-" },
+      { "deity": "Kynareth", "intensity": "m", "valence": "-" },
+      { "deity": "Boethiah", "intensity": "S", "valence": "+" },
+      { "deity": "Hircine", "intensity": "S", "valence": "+" },
+      { "deity": "Molag Bal", "intensity": "m", "valence": "+" },
+      { "deity": "Mehrunes Dagon", "intensity": "m", "valence": "+" }
+    ],
+    "spare": [
+      { "deity": "Stuhn", "intensity": "C", "valence": "+" },
+      { "deity": "Stendarr", "intensity": "C", "valence": "+" },
+      { "deity": "Mara", "intensity": "S", "valence": "+" },
+      { "deity": "Kyne", "intensity": "m", "valence": "+" },
+      { "deity": "Akatosh", "intensity": "S", "valence": "+" },
+      { "deity": "Talos", "intensity": "m", "valence": "+" },
+      { "deity": "Alkosh", "intensity": "m", "valence": "+" },
+      { "deity": "Auri-El", "intensity": "m", "valence": "+" },
+      { "deity": "Kynareth", "intensity": "m", "valence": "+" },
+      { "deity": "Boethiah", "intensity": "m", "valence": "-" },
+      { "deity": "Molag Bal", "intensity": "m", "valence": "-" }
+    ]
+  }
+}

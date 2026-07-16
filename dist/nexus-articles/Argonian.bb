@@ -60,6 +60,8 @@ Two reminders that apply to every Argonian act. First, repeating the exact same 
 
 [size=5][b]Quests That Move Your Standing[/b][/size]
 
+Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
+
 Some of Skyrim's own quests are read as devotional acts. For an Argonian these all sit on the Void side of the ledger - the Hist and your People are earned in the world, not on a quest board.
 
 [b]Sithis[/b]

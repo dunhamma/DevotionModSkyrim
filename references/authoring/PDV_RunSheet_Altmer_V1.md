@@ -92,8 +92,9 @@ regardless of load order). Only the preflight changes:
 ### Slot 4d -- crisis-state toast (new Prisma beat)  [Tester] [R]+[M]
 - **Do:** apply Lorkhan / Dragonborn-identity pressure to enter a crisis (MCM Debug -> seed Lorkhan pressure or
   Dragonborn crisis). Crisis labels: **Dissonant / Questioning / Reasserting / Scarred resolved** (None = no crisis).
-- **See:** a **toast** on the transition INTO a crisis state -- *"The old line turns: {crisis}."* The crisis is also
-  recorded in the **Book of Days** at the next dawn snapshot and named in Survey.
+- **See:** one state-specific **toast** on the transition: *"Auri-El's path is shaken"* when the crisis begins,
+  *"You return to Auri-El's path"* when disciplined reassertion begins, or *"Auri-El's path holds"* when it
+  resolves. The same transition is recorded in the **Book of Days** and named in Survey.
 - **Note:** the toast fires only on entering/changing a crisis state. **Clearing back to None is silent** (no toast) -- that is correct, not a FAIL.
 - **Record:** ___
 
@@ -129,7 +130,7 @@ regardless of load order). Only the preflight changes:
 | Beat | Toast | Book of Days | Ledger | How to trigger |
 |---|---|---|---|---|
 | tier Seeker/Devoted/Champion | Y | Y (pinned Champion) | N | Force Auri-El piety + Run Dawn |
-| Auri-El substrate / heritage act | Y | N | **Y (driver)** | sleep dreams / magic milestones (organic) |
+| Auri-El substrate / heritage act | N (tier crossings only) | N (tier crossings only) | **Y (driver)** | sleep dreams / magic milestones (organic) |
 | offer.accept | **Y** | **Y (pinned)** | N | formal offer -> accept |
 | offer.refuse | **Y** | **Y (pinned)** | N | formal offer -> refuse |
 | Thalmor-alignment band | **Y** | **Y** | N | cross a committed alignment band |

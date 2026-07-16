@@ -3,7 +3,7 @@
 //
 // Crosses every already-tagged quest OUTCOME (tranche CSV rows) against every Part B
 // deity value-profile in PDV_QuestReactionMatrix.md and emits CANDIDATE cells for
-// (deity, quest, stage) pairs that do not exist yet. Candidates are magnitude "echo"
+// (deity, quest, stage) pairs that do not exist yet. Candidates are magnitude "small"
 // (the cheap breadth tier) with the profile intensity stepped one down, per the
 // Tranche-5 aspect-parity precedent. Output is a REVIEW slate, not a tranche: nothing
 // is merged or compiled by this tool.
@@ -85,7 +85,12 @@ function csvEscape(value) {
 // `<self>` prince self-references are skipped (owned by the Daedric 20C layer).
 export function parsePartB(mdText) {
   const profiles = new Map(); // canon name -> { approve: Map(tag->intensity), disapprove: Map }
-  const lines = mdText.split(/\r?\n/);
+  const partBStart = mdText.search(/^## Part B\b/m);
+  const partCEnd = mdText.search(/^## Part C\b/m);
+  const partBText = partBStart >= 0
+    ? mdText.slice(partBStart, partCEnd > partBStart ? partCEnd : undefined)
+    : mdText;
+  const lines = partBText.split(/\r?\n/);
   let current = null;
   const header = /^\*\*([^*]+)\*\*\s+(?:—|--|-)\s/;
   const tagRe = /`([a-z_':*<>a-z0-9]+)`\((C|S|m)(?:[,)])/g;
@@ -184,7 +189,7 @@ export function crossGenerate(profiles, outcomes, existingPairs) {
       candidates.push({
         editorId: o.editorId, questName: o.questName, stage: o.stage, outcome: o.outcome,
         tag: srcTag, deity, valence,
-        intensity: STEP_DOWN.get(srcIntensity), magnitude: "echo",
+        intensity: STEP_DOWN.get(srcIntensity), magnitude: "small",
         citation: `cross-gen candidate: ${srcTag}(${srcIntensity}) from the ${deity} Part B profile, stepped down; REVIEW before promotion`,
       });
     }
@@ -205,7 +210,7 @@ function selfTest() {
   const outcomes = new Map([["Q1|10", { editorId: "Q1", questName: "Test Quest", stage: "10", outcome: "slew undead", tags: new Set(["slay_undead"]) }]]);
   const { candidates } = crossGenerate(profiles, outcomes, new Set());
   const c = candidates.find(x => x.deity === "Testgod");
-  if (!c || c.valence !== "+" || c.intensity !== "S" || c.magnitude !== "echo") throw new Error("self-test: candidate shape wrong: " + JSON.stringify(c));
+  if (!c || c.valence !== "+" || c.intensity !== "S" || c.magnitude !== "small") throw new Error("self-test: candidate shape wrong: " + JSON.stringify(c));
   const { candidates: deduped } = crossGenerate(profiles, outcomes, new Set(["Testgod|Q1|10"]));
   if (deduped.some(x => x.deity === "Testgod")) throw new Error("self-test: dedupe failed");
   console.log("self-test PASS");
@@ -256,4 +261,5 @@ function main() {
   console.log("wrote generated/PDV_QuestCrossGen_{Candidates,Conflicts}.csv + Summary.md");
 }
 
-main();
+const invokedPath = process.argv[1] ? path.resolve(process.argv[1]) : "";
+if (invokedPath === fileURLToPath(import.meta.url)) main();

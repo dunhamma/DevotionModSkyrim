@@ -64,6 +64,8 @@ There is no separate reputation meter for Redguards. Your sect is your standing,
 
 ## Quests That Move Your Standing
 
+Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
+
 These are not Redguard quests - they are the ordinary business of Skyrim, seen through Yokudan eyes. Your gods are watching how you handle the dead, the breakthrough, and the blade.
 
 **Tu'whacca** (death duty, the soul-keeper)

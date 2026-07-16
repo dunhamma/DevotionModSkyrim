@@ -4,8 +4,8 @@
   "proofBoundary": "These scenarios define backend, runtime-route, and manual-display evidence separately. Backend PASS does not prove in-game firing, Book of Days display, Survey/status clarity, duplicate suppression, wrong-origin silence, or save/load stack behavior.",
   "expected": {
     "likesDislikesVersion": 16,
-    "questCells": 1055,
-    "questKeys": 168,
+    "questCells": 1978,
+    "questKeys": 172,
     "watchedQuests": 134,
     "faucetActs": 26
   },
@@ -39,7 +39,7 @@
     },
     {
       "id": "quest_mq206_220_lore_gods",
-      "title": "Main-quest lore gods",
+      "title": "Main-quest lore gods plus full-pantheon expansion",
       "bucket": "backend-static;runtime-route;manual-display",
       "trigger": { "type": "quest-stage", "editorId": "MQ206", "plugin": "Skyrim.esm", "formId": "036193", "stage": 220 },
       "expectedRows": [
@@ -49,9 +49,42 @@
         { "deity": "Xarxes", "valence": "+", "intensity": "S", "magnitude": "small", "actTagIncludes": "disciplined_study" },
         { "deity": "Mehrunes Dagon", "valence": "-", "intensity": "m", "magnitude": "small", "actTagIncludes": "serve_empire_order" }
       ],
-      "exactRows": true,
-      "manualChecks": [ "lore gains are visible where reachable", "Dagon correction is a loss", "no Shor/Talos/Nord combat fan-out" ],
+      "manualChecks": [ "all reachable lore-god gains are visible", "Dagon correction remains a loss", "Book of Days records the expanded reachable pantheon while toast remains strongest-only" ],
       "debugMcmScenario": 3
+    },
+    {
+      "id": "t11_mq101_150_sheogorath_alias",
+      "title": "T11 safe controlled probe: Sheogorath alias",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "trigger": { "type": "quest-stage", "editorId": "MQ101", "plugin": "Skyrim.esm", "formId": "03372B", "stage": 150 },
+      "expectedRows": [
+        { "deity": "Sheogorath", "valence": "+", "intensity": "C", "magnitude": "small", "actTagIncludes": "sow_chaos_madness" }
+      ],
+      "manualChecks": [ "run on a disposable test save", "Sheogorath resolves through the runtime alias", "Prisma renders Sheogorath's glyph rather than the journal fallback", "Book of Days and strongest-only toast are captured separately", "organic MQ101 delivery remains open" ],
+      "debugMcmScenario": 13
+    },
+    {
+      "id": "t11_mq105_160_paired_equity",
+      "title": "T11 safe controlled probe: Kynareth and Kyne paired-equity anchor",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "trigger": { "type": "quest-stage", "editorId": "MQ105", "plugin": "Skyrim.esm", "formId": "0242BA", "stage": 160 },
+      "expectedRows": [
+        { "deity": "Kynareth", "valence": "+", "intensity": "C", "magnitude": "milestone", "actTagIncludes": "honor_the_wild" },
+        { "deity": "Kyne", "valence": "+", "intensity": "S", "magnitude": "small", "actTagIncludes": "prove_by_struggle" }
+      ],
+      "manualChecks": [ "run on a disposable test save", "capture native-roster surfaces separately for Kynareth and Kyne", "do not invent a Kyne-C cell", "organic MQ105 delivery remains open" ],
+      "debugMcmScenario": 14
+    },
+    {
+      "id": "t11_mq106_200_syrabane",
+      "title": "T11 safe controlled probe: Syrabane",
+      "bucket": "backend-static;runtime-route;manual-display",
+      "trigger": { "type": "quest-stage", "editorId": "MQ106", "plugin": "Skyrim.esm", "formId": "032926", "stage": 200 },
+      "expectedRows": [
+        { "deity": "Syrabane", "valence": "+", "intensity": "C", "magnitude": "milestone", "actTagIncludes": "protect_the_weak" }
+      ],
+      "manualChecks": [ "run on a disposable test save", "Syrabane's explicit Prisma glyph renders rather than the journal fallback", "capture Book of Days and strongest-only toast separately", "do not call vanilla SetStage; organic MQ106 delivery remains open" ],
+      "debugMcmScenario": 15
     },
     {
       "id": "quest_dbdestroy_200_sithis",
@@ -158,6 +191,7 @@
       "id": "paarthurnax_kill",
       "title": "Paarthurnax kill fork",
       "bucket": "backend-static;runtime-route;manual-display",
+      "manualEvidenceRevision": "t11-main-quest-full-coverage-v1",
       "trigger": { "type": "special-route", "route": "paarthurnax-kill" },
       "expectedFunctions": [
         "RoutePaarthurnaxKill(akVictim as Form)",
@@ -178,6 +212,7 @@
       "id": "paarthurnax_spare",
       "title": "Paarthurnax spare fork",
       "bucket": "backend-static;runtime-route;manual-display",
+      "manualEvidenceRevision": "t11-main-quest-full-coverage-v1",
       "trigger": { "type": "special-route", "route": "paarthurnax-spare" },
       "expectedFunctions": [
         "RoutePaarthurnaxSpareQuestStage",

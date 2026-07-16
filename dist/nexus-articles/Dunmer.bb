@@ -75,6 +75,8 @@ The ancestors themselves take nothing from you for absence. Ignore the rites and
 
 [size=5][b]Quests That Move Your Standing[/b][/size]
 
+Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
+
 Some quests speak louder than any daily habit. These are the ones the Reclamations notice.
 
 [b]Azura[/b]

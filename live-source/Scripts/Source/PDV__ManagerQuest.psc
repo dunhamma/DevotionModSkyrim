@@ -580,6 +580,10 @@ Int Property TIER_SEEKER = 1 AutoReadOnly
 Int Property TIER_DEVOTED = 2 AutoReadOnly
 Int Property TIER_CHAMPION = 3 AutoReadOnly
 
+; Human-facing release stamp for the MCM Version readout and bug-report export.
+; Bump on every public build so an attached report is orderable by build.
+String Property PDV_BUILD_VERSION = "1.0.0" AutoReadOnly
+
 Int Property FRAMEWORK_SCHEMA_VERSION = 3 AutoReadOnly
 Int Property PATRON_STATE_UNSET = 0 AutoReadOnly
 Int Property PATRON_STATE_BROAD = 1 AutoReadOnly
@@ -2247,6 +2251,15 @@ Function ResetQuestReactionSurface()
 EndFunction
 
 Function AccumulateQuestReactionSurface(PDV_DeityBase deity, Float amount, String magnitude)
+    ; A Daedric Prince stays out of Book-of-Days reaction surfaces (and their paired
+    ; toast) until it reaches Seeker (25 piety); a still-uncommitted Prince below that
+    ; only ever surfaces through the one pre-pact "taken notice" beat. Piety is still
+    ; awarded upstream -- this gates DISPLAY only. Off-roster Aedric gods are already
+    ; dropped by the reachability gate, so this leaves race-aligned gods untouched.
+    PDV_DaedricPathBase daedricSurfacePath = deity as PDV_DaedricPathBase
+    if daedricSurfacePath && daedricSurfacePath.GetStoredTier() < TIER_SEEKER
+        return
+    endIf
     if _qrQueueTransactionActive
         AccumulateQueuedQuestReactionSurface(deity, amount, magnitude)
         return
@@ -2965,6 +2978,12 @@ Bool Function SendPrismaToastPayloadOrFallback(String payload, String fallbackTi
         return False
     endIf
 
+    ; Player Notifications preference: when off, suppress the toast but leave the
+    ; Book of Days ledger (a separate call path) untouched.
+    if !NotificationsEnabled()
+        return False
+    endIf
+
     Bool sent = False
     if PDV_PrismaBridge.IsAvailable()
         sent = PDV_PrismaBridge.SendOverlayJson(payload)
@@ -3096,6 +3115,47 @@ EndFunction
 Function DebugSetDiegeticD1Enabled(Bool enabled)
     if PDV_DiegeticDirectorService
         PDV_DiegeticDirectorService.D1Enabled = enabled
+    endIf
+EndFunction
+
+; Player-facing "In-Game Effects" preference (the D1 diegetic layer: screen, sound,
+; music cues). Persists the choice in StorageUtil, default ON, and drives the
+; director's D1Enabled. ApplyInGameEffectsPreference() is called on game load so the
+; choice survives saves regardless of the baked ESP flag.
+Bool Function InGameEffectsEnabled()
+    return StorageUtil.GetIntValue(None, "PDV.UI.InGameEffects", 1) != 0
+EndFunction
+
+Function SetInGameEffectsEnabled(Bool enabled)
+    if enabled
+        StorageUtil.SetIntValue(None, "PDV.UI.InGameEffects", 1)
+    else
+        StorageUtil.SetIntValue(None, "PDV.UI.InGameEffects", 0)
+    endIf
+    if PDV_DiegeticDirectorService
+        PDV_DiegeticDirectorService.D1Enabled = enabled
+    endIf
+EndFunction
+
+Function ApplyInGameEffectsPreference()
+    if PDV_DiegeticDirectorService
+        PDV_DiegeticDirectorService.D1Enabled = InGameEffectsEnabled()
+    endIf
+EndFunction
+
+; Player-facing "Notifications" preference. Default ON. When OFF, on-screen toasts
+; are suppressed at the shared chokepoint (and in the ethnic notification wrappers)
+; while the Book of Days journal still records everything. Interactive choice
+; prompts are never gated by this.
+Bool Function NotificationsEnabled()
+    return StorageUtil.GetIntValue(None, "PDV.UI.NotificationsEnabled", 1) != 0
+EndFunction
+
+Function SetNotificationsEnabled(Bool enabled)
+    if enabled
+        StorageUtil.SetIntValue(None, "PDV.UI.NotificationsEnabled", 1)
+    else
+        StorageUtil.SetIntValue(None, "PDV.UI.NotificationsEnabled", 0)
     endIf
 EndFunction
 
@@ -4311,60 +4371,15 @@ Function HandleDaedricPrinceSignal(Int pathIndex, String sourceId)
     ; gain/cost beat lands for every Prince organically, not just Hircine's bespoke
     ; hunt rite. The MCM debug page already surfaces all phases per selected Prince.
     ShowDaedricMilestonePresentation(path, tierBefore, tierAfter, False)
-    ; Pre-pact "watching" onset. If this signal established interest without a
-    ; commitment (still tier 0, piety now above zero), chronicle a NAMED Book of Days
-    ; line + one soft cue so a Book-of-Days-only player learns WHICH Prince is watching
-    ; -- panel-badge parity for the same pre-pact state. A tier gain is a commitment and
-    ; is surfaced by ShowDaedricMilestonePresentation above, so this stays silent then.
-    MaybeChronicleDaedricWatchingOnset(path, pathIndex, path.GetStoredPiety(), tierAfter)
+    ; Pre-pact "taken notice" surfacing is owned by the source-agnostic path-piety seam
+    ; (PDV_DaedricPathBase.UpdatePrePactNoticeState queues the crossing;
+    ; ProcessPendingDaedricPrePactNotices drains it), so a Prince chronicles the first
+    ; time it crosses the notice threshold from ANY piety source -- not only live signals
+    ; -- and never below it. A tier gain is a commitment, surfaced above.
     RequestPanelRefresh()
 
     if GetDebugLevel() >= 2
         Debug.Trace("[PDV] Daedric live signal: " + path.DeityName + " index " + pathIndex + " source " + sourceId)
-    endIf
-EndFunction
-
-; One-shot NAMED pre-pact chronicle: fires the first time a Prince enters the "watching"
-; state (tier 0 with piety above zero -- the same state the panel surfaces as a badge).
-; Latched per Prince via "PDV.Daedric.WatchingChronicled" on the deity form; the latch is
-; reset in PDV_DaedricPathBase.UpdatePrePactNoticeState the moment interest lapses to
-; nothing or the Prince commits, so a genuine re-entry into watching chronicles again.
-; Repeated sub-threshold signals that merely deepen an existing watch stay silent.
-Function MaybeChronicleDaedricWatchingOnset(PDV_DaedricPathBase path, Int pathIndex, Float pietyAfter, Int tierAfter)
-    if !path
-        return
-    endIf
-    ; Only pre-pact watching chronicles here; a tier gain is a pact (milestone surface),
-    ; and a signal that left the Prince at the zero floor is not yet watching.
-    if tierAfter > TIER_NONE || pietyAfter <= 0.0
-        return
-    endIf
-
-    Form deityForm = path.GetDeityForm()
-    if StorageUtil.GetIntValue(deityForm, "PDV.Daedric.WatchingChronicled") == 1
-        return
-    endIf
-    StorageUtil.SetIntValue(deityForm, "PDV.Daedric.WatchingChronicled", 1)
-
-    String symbolName = GetPrismaSymbolForDeity(path)
-    if symbolName == "journal"
-        symbolName = "daedric"
-    endIf
-
-    ; Neutral/curiosity onset, unpinned (a soft interest, not a milestone). Names the
-    ; Prince using the path's player-facing name (AppendBookOfDaysEntry normalizes it).
-    ; The deeper "The world tilts toward <Prince>." pressure beat still fires later once
-    ; piety crosses the half-Seeker threshold.
-    AppendBookOfDaysEntry(path.DeityName + " has taken an interest in you.", Utility.GetCurrentGameTime() as Int, "daedric.pressure", symbolName, False, 1, "A Prince takes interest")
-
-    ; Single soft transient cue that NAMES the Prince (the prior watching popup did not).
-    ; One-shot alongside the journal line above -- never per-signal. The "watching" phase
-    ; falls through to the Daedric toast defaults ("<Prince> takes note"), so no view
-    ; change is needed; the context line carries the soft framing.
-    SendPrismaDaedricToast(path.DeityName, "watching", "An interest taken, not yet a pact.", symbolName)
-
-    if GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Daedric watching onset chronicled: " + path.DeityName + " index " + pathIndex)
     endIf
 EndFunction
 
@@ -4712,7 +4727,9 @@ PDV_DaedricPathBase Function GetTopPrePactDaedricPath()
         PDV_DaedricPathBase path = GetDaedricPathAtListIndex(i)
         if path && path.GetStoredTier() == TIER_NONE
             Float piety = path.GetStoredPiety()
-            if piety > topPiety
+            ; Only a Prince past the pre-pact notice threshold surfaces (panel "watching"
+            ; badge + the "taken notice" beat). Below it, the Prince accrues in silence.
+            if piety > topPiety && piety >= path.DAEDRIC_PREPACT_NOTICE_PIETY
                 topPiety = piety
                 topPath = path
             endIf
@@ -4815,11 +4832,19 @@ Function ProcessPendingDaedricPrePactNotices()
         return
     endIf
 
-    if topPath.GetStoredTier() != TIER_NONE || topPath.GetStoredPiety() <= 0.0
+    if topPath.GetStoredTier() != TIER_NONE || topPath.GetStoredPiety() < topPath.DAEDRIC_PREPACT_NOTICE_PIETY
         return
     endIf
 
-    AppendBookOfDaysEntry("The world tilts toward " + topPath.DeityName + ".", Utility.GetCurrentGameTime() as Int, "daedric.pressure", "daedric", false)
+    String symbolName = GetPrismaSymbolForDeity(topPath)
+    if symbolName == "journal"
+        symbolName = "daedric"
+    endIf
+    ; The single pre-pact beat: the first time a still-uncommitted Prince crosses the
+    ; notice threshold, name it in Book of Days and fire one soft toast. Quest reactions
+    ; stay silent until the Prince reaches Seeker (see AccumulateQuestReactionSurface).
+    AppendBookOfDaysEntry(topPath.DeityName + " has taken notice of you.", Utility.GetCurrentGameTime() as Int, "daedric.pressure", symbolName, False, 1, "A Prince takes notice")
+    SendPrismaDaedricToast(topPath.DeityName, "watching", "An interest taken, not yet a pact.", symbolName)
     StorageUtil.SetIntValue(topForm, "PDV.Daedric.PrePactNoticeShown", 1)
 EndFunction
 
@@ -15879,6 +15904,12 @@ Function SyncRedguardRewards(Actor playerRef)
     Bool isRedguard = GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
     Int sectValue = GetActiveRedguardSpineSect()
     SyncRedguardSpineBoon(playerRef, isRedguard, sectValue)
+    ; Option 2 (2026-07-16): the generic ancestor FLOOR (AncestorSpine_T1, "Ancestors' Regard -
+    ; Observant") is descoped -- the sect spine (SyncRedguardSpineBoon) is the always-on ancestor
+    ; layer. Broad progression is KEPT (owner ruling 2026-07-16): AncestorSpine_T2 remains the
+    ; broad-worship Faithful reward, so a broad Redguard at 6+ ancestor-spine sources gains
+    ; "Ancestors' Regard - Faithful" on top of the sect spine. Focused patrons stay broad-state gated
+    ; out of T2, so they carry only their sect spine.
     Bool broadFaithful = isRedguard && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Redguard.AncestorSpineSourceCount") >= 6
     SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_AncestorSpine_T2, broadFaithful, "Redguard AncestorSpine T2")
 
@@ -16677,7 +16708,11 @@ Spell Function GetFirstTierRaceRewardSpellForOrigin()
     elseIf originRace == ORIGIN_ORC
         return PDV_Bless_Orc_Malacath_T1
     elseIf originRace == ORIGIN_REDGUARD
-        return PDV_Bless_Redguard_AncestorSpine_T1
+        ; Redguard has no generic ancestor floor: the sect spine (Crown/Forebear/Ash'abah via
+        ; SyncRedguardSpineBoon) is the sole ancestor layer (option 2, 2026-07-16). Returning None
+        ; makes the generic-floor loop strip any legacy "Ancestors' Regard" (AncestorSpine_T1) and
+        ; never re-grant it, so a sect member carries only their sect spine.
+        return None
     endIf
 
     return None
@@ -18363,6 +18398,42 @@ EndFunction
 
 Function DebugExpireActiveFavor()
     ClearActiveFavor("mcm")
+EndFunction
+
+; Debug: make the CURRENT origin's race-lane neglect eligible immediately by backdating its
+; source-lapse timestamp well past the grace window, then re-syncing so the neglect debuff applies
+; without a multi-day real wait. This exists because the source timestamp that the Is<Race>Neglected
+; checks read (e.g. PDV.Altmer.Favor.LastGameTime) is only written by an organic favor act -- the
+; "Trigger selected favor" debug applies the temporary favor spell but never records that source, so
+; there was previously no way to prime a race-lane neglect. Covers the timestamp-lapse lanes; the
+; curse/Hist/substrate lanes (Dunmer, Argonian, Imperial) use their own mechanisms and are not primed
+; here. Ensure Curse none first (an active curse suppresses several lanes).
+Function DebugPrimeRaceLaneNeglect()
+    Int origin = GetPlayerOriginRaceIndex()
+    Float lapsed = Utility.GetCurrentGameTime() - 10.0
+    String laneLabel = ""
+    if origin == ORIGIN_ALTMER
+        StorageUtil.SetFloatValue(None, "PDV.Altmer.Favor.LastGameTime", lapsed)
+        laneLabel = "Altmer coherence"
+    elseIf origin == ORIGIN_REDGUARD
+        StorageUtil.SetFloatValue(None, "PDV.Redguard.LastSectSignalTime", lapsed)
+        laneLabel = "Redguard ancestor-distance"
+    elseIf origin == ORIGIN_BRETON
+        StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", lapsed)
+        laneLabel = "Breton tradition"
+    elseIf origin == ORIGIN_ORC
+        StorageUtil.SetFloatValue(None, "PDV.Orc.LastLifeModeSignalTime", lapsed)
+        laneLabel = "Orc code"
+    elseIf origin == ORIGIN_KHAJIIT
+        StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", lapsed)
+        laneLabel = "Khajiit lunar"
+    else
+        Debug.Notification("PDV: race-lane neglect prime not wired for this origin (Dunmer/Argonian/Imperial use curse/Hist/substrate).")
+        return
+    endIf
+    SyncFirstTierRaceRewardRuntime()
+    Debug.Notification("PDV: primed " + laneLabel + " neglect. Ensure Curse none, then check Active Effects.")
+    Trace(1, "DebugPrimeRaceLaneNeglect: backdated " + laneLabel + " source and re-synced.")
 EndFunction
 
 String Function GetSelectedContextualFavorLaneLabel()
@@ -20464,6 +20535,10 @@ Function ShowNordMessage(Message messageRecord, String fallbackText, Bool suppre
 EndFunction
 
 Function ShowNordNotification(Message messageRecord, String fallbackText)
+    if !NotificationsEnabled()
+        return
+    endIf
+
     if messageRecord
         messageRecord.Show()
         return
@@ -20473,6 +20548,10 @@ Function ShowNordNotification(Message messageRecord, String fallbackText)
 EndFunction
 
 Function ShowRedguardNotification(Message messageRecord, String fallbackText)
+    if !NotificationsEnabled()
+        return
+    endIf
+
     if messageRecord
         messageRecord.Show()
         return
@@ -20482,6 +20561,10 @@ Function ShowRedguardNotification(Message messageRecord, String fallbackText)
 EndFunction
 
 Function ShowOrcNotification(Message messageRecord, String fallbackText)
+    if !NotificationsEnabled()
+        return
+    endIf
+
     if messageRecord
         messageRecord.Show()
         return
@@ -23667,6 +23750,31 @@ EndFunction
 ; Builds a full dev-facing devotion snapshot and writes it to a text file so
 ; beta testers can attach one file to a bug report instead of digging for logs
 ; or numbers. Returns the written filename, or "" if the write failed.
+String Function GetBuildVersion()
+    return PDV_BUILD_VERSION
+EndFunction
+
+String Function OnOffForReport(Int v)
+    if v != 0
+        return "On"
+    endIf
+    return "Off"
+EndFunction
+
+String Function GetExperienceModeLabelForReport()
+    if PDV_ModePresetRef
+        return PDV_ModePresetRef.GetModeLabel()
+    endIf
+    return "Pilgrim's Path"
+EndFunction
+
+String Function PendingFormLabelForReport(String storageKey)
+    if StorageUtil.GetFormValue(None, storageKey) != None
+        return "set"
+    endIf
+    return "none"
+EndFunction
+
 String Function ExportDevotionReport()
     String nl = "\n"
     Int originRace = GetPlayerOriginRaceIndex()
@@ -23676,11 +23784,20 @@ String Function ExportDevotionReport()
     report = report + nl + "Generated in-game. Attach this file to your report."
     report = report + nl
     report = report + nl + "-- Versions --"
+    report = report + nl + "Devotion build: " + PDV_BUILD_VERSION
     report = report + nl + "Framework schema: " + FRAMEWORK_SCHEMA_VERSION
     report = report + nl + "Likes/dislikes: " + LIKES_DISLIKES_VERSION
     report = report + nl + "Prince LD: " + PRINCE_LD_VERSION
     report = report + nl + "Daedric pact: " + DAEDRIC_PACT_VERSION
+    report = report + nl + "PapyrusUtil: " + PapyrusUtil.GetVersion()
     report = report + nl + "In-game day: " + (gameDay as Int)
+    report = report + nl
+    report = report + nl + "-- Environment --"
+    report = report + nl + "Experience Mode: " + GetExperienceModeLabelForReport()
+    report = report + nl + "Custom race mapping: " + OnOffForReport(StorageUtil.GetIntValue(None, "PDV.Compat.CustomRaceMapping", 1))
+    report = report + nl + "Origin detect: " + DebugGetOriginDiagnostic()
+    report = report + nl + "Survival integration: " + OnOffForReport(StorageUtil.GetIntValue(None, "PDV.Compat.SurvivalContextEnabled", 1))
+    report = report + nl + "CC integration: " + OnOffForReport(StorageUtil.GetIntValue(None, "PDV.Compat.CCContentEnabled", 1))
     report = report + nl
     report = report + nl + "-- Summary --"
     report = report + nl + "Race: " + GetOriginRaceLabel(originRace) + " (index " + originRace + ")"
@@ -23709,6 +23826,20 @@ String Function ExportDevotionReport()
         i += 1
     endWhile
 
+    report = report + nl
+    report = report + nl + "-- Diagnostics --"
+    report = report + nl + "Breton tradition: " + StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1)
+    report = report + nl + "Daedric pending lapse: " + PendingFormLabelForReport("PDV.Daedric.PendingLapse")
+    report = report + nl + "Daedric pending activation: " + PendingFormLabelForReport("PDV.Daedric.PendingActivation")
+    report = report + nl + "Last diegetic dispatch: " + StorageUtil.GetStringValue(None, "PDV.Diegetic.LastDispatch", "none")
+    report = report + nl + "Last diegetic tone: " + StorageUtil.GetStringValue(None, "PDV.Diegetic.LastTone", "none")
+    report = report + nl + "Last diegetic skipped: " + StorageUtil.GetStringValue(None, "PDV.Diegetic.LastSkipped", "none")
+    report = report + nl
+    report = report + nl + "-- Logs (for deeper diagnosis) --"
+    report = report + nl + "If asked, also attach the Papyrus log and any SKSE crash log:"
+    report = report + nl + "Papyrus: Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    report = report + nl + "SKSE crash: Documents\\My Games\\Skyrim Special Edition\\SKSE\\crash-*.log"
+    report = report + nl + "Papyrus logging is OFF by default; the beta guide explains how to turn it on."
     report = report + nl
     report = report + nl + "=== End of report ==="
 
@@ -24514,6 +24645,7 @@ String Function GetRedguardSurveySectText()
         return "You keep the Crown way: orthodox Yokudan practice carried intact in exile. Standing: " + standing + ". The ancestors are strong at your back."
     elseIf sectValue == REDGUARD_SECT_ASHABAH
         String ashText = "You keep the Ash'abah duty: the unclean dead are your charge. Standing: " + standing + ". Tu'whacca honors the burden few will."
+        ashText = ashText + " The duty hardens you against death and plague, but it cools your welcome among the living (Speech -5)."
         Int stigma = StorageUtil.GetIntValue(None, "PDV.Redguard.AshAbahStigma", 0)
         if stigma >= 3
             ashText = ashText + " You are " + GetAshAbahStigmaLabel() + ": the clean turn their faces, and the living keep their distance from the death-handler."

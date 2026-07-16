@@ -132,6 +132,8 @@ Your hidden measure is the big one, and it differs by tradition:
 
 [size=5][b]Quests That Move Your Standing[/b][/size]
 
+Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
+
 Some quests are scored directly. These are the ones your tradition's gods watch most closely.
 
 [b]Knight's Road - Stendarr[/b]

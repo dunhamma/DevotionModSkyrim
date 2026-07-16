@@ -80,6 +80,8 @@ Note the broad-worship rule that applies to every race: honoring several gods at
 
 [size=5][b]Quests That Move Your Standing[/b][/size]
 
+Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
+
 Some of Skyrim's quests land squarely on Altmer theology. These are the ones your gods notice.
 
 [b]The great collisions[/b]

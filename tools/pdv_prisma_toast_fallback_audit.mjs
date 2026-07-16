@@ -211,12 +211,24 @@ function verifyBookNotice(manager, filePath, pass, fail) {
     pass("ShowP2BookNotice", "No direct top-left notification is present.", filePath);
   }
 
-  const guardIndex = block.indexOf("if !IsP2BookNoticeReason(reason)");
-  const sendIndex = block.indexOf("SendPrismaToast(");
-  if (guardIndex >= 0 && sendIndex > guardIndex) {
-    pass("ShowP2BookNotice book guard", "Book notice send is gated by IsP2BookNoticeReason(reason).", filePath);
+  const surfaceBlock = functionBlock(manager, "SurfaceP2BookReadNotice");
+  if (!surfaceBlock) {
+    fail("P2 book-read surface", "SurfaceP2BookReadNotice is missing.", filePath);
+    return;
+  }
+
+  if (!block.includes("SurfaceP2BookReadNotice(reason, titleText, messageText)")) {
+    fail("ShowP2BookNotice delegation", "Compatibility wrapper must delegate to SurfaceP2BookReadNotice.", filePath);
   } else {
-    fail("ShowP2BookNotice book guard", "ShowP2BookNotice must gate sends with IsP2BookNoticeReason(reason).", filePath);
+    pass("ShowP2BookNotice delegation", "Compatibility wrapper delegates to the explicit book-read surface.", filePath);
+  }
+
+  const guardIndex = surfaceBlock.indexOf("if !IsP2BookNoticeReason(reason)");
+  const sendIndex = surfaceBlock.indexOf("SurfaceP2Acknowledgement(");
+  if (guardIndex >= 0 && sendIndex > guardIndex) {
+    pass("ShowP2BookNotice book guard", "Explicit book-read surface is gated by IsP2BookNoticeReason(reason).", filePath);
+  } else {
+    fail("ShowP2BookNotice book guard", "SurfaceP2BookReadNotice must gate delivery with IsP2BookNoticeReason(reason).", filePath);
   }
 
   const reasonBlock = functionBlock(manager, "IsP2BookNoticeReason");
@@ -256,7 +268,7 @@ function verifyNoToastPanelOrJournalSideEffect(manager, filePath, pass, fail) {
 
 function verifyNordBookRoute({ manager, playerEvents, eventBus, manifest }, paths, pass, fail) {
   const onBookRead = eventBlock(playerEvents, "OnBookRead");
-  if (onBookRead.includes('RouteP2ImmersiveSource(akBook as Form, "po3_book")')) {
+  if (/RouteP2ImmersiveSource\(akBook as Form,\s*"po3_book"(?:,\s*logicalEventId)?\)/.test(onBookRead)) {
     pass("Book read event route", "OnBookRead routes books into the P2 immersive source path.", paths.playerEventsPath);
   } else {
     fail("Book read event route", "OnBookRead must call RouteP2ImmersiveSource(akBook as Form, \"po3_book\").", paths.playerEventsPath);
@@ -282,12 +294,12 @@ function verifyNordBookRoute({ manager, playerEvents, eventBus, manifest }, path
 
   const managerHandler = functionBlock(manager, "HandleNordOldWaysState");
   if (
-    managerHandler.includes('ShowP2BookNotice(reason, "The Old Ways"') &&
+    managerHandler.includes('SurfaceP2BookReadNotice(reason, "The Old Ways"') &&
     managerHandler.includes("RouteNordFamily(reason")
   ) {
-    pass("Nord Old Ways manager surface", "Manager surfaces the approved Nord book route through ShowP2BookNotice.", paths.managerPath);
+    pass("Nord Old Ways manager surface", "Manager surfaces the approved Nord book route through SurfaceP2BookReadNotice.", paths.managerPath);
   } else {
-    fail("Nord Old Ways manager surface", "HandleNordOldWaysState must route accepted Nord Old Ways reasons to ShowP2BookNotice.", paths.managerPath);
+    fail("Nord Old Ways manager surface", "HandleNordOldWaysState must route accepted Nord Old Ways reasons to SurfaceP2BookReadNotice.", paths.managerPath);
   }
 
   const nordEntry = findManifestSource(manifest, "PDV_FLST_P2_NordOldWaysSources", "Skyrim.esm:0ED161", "Book1CheapNordsArise");
@@ -338,6 +350,9 @@ function runSelfTests(pass, fail) {
     "return SendPrismaToastPayloadOrFallback(j, princeName, flavorText, allowFallback)",
     "EndFunction",
     "Function ShowP2BookNotice(String reason, String titleText, String messageText)",
+    "SurfaceP2BookReadNotice(reason, titleText, messageText)",
+    "EndFunction",
+    "Function SurfaceP2BookReadNotice(String reason, String titleText, String messageText)",
     "if !IsP2BookNoticeReason(reason)",
     "return",
     "endIf",
@@ -381,7 +396,7 @@ function runSelfTests(pass, fail) {
       name: "removing RouteP2ImmersiveSource from OnBookRead",
       run: () => {
         const findings = collect((p, f) => verifyNordBookRoute({
-          manager: minimalManager + '\nFunction HandleNordOldWaysState(String reason)\nif RouteNordFamily(reason, "x", "y", "z", "Nord Old Ways state")\nShowP2BookNotice(reason, "The Old Ways", "x")\nendIf\nEndFunction',
+          manager: minimalManager + '\nFunction HandleNordOldWaysState(String reason)\nif RouteNordFamily(reason, "x", "y", "z", "Nord Old Ways state")\nSurfaceP2BookReadNotice(reason, "The Old Ways", "x")\nendIf\nEndFunction',
           playerEvents: minimalPlayerEvents.replace('RouteP2ImmersiveSource(akBook as Form, "po3_book")', ""),
           eventBus: minimalEventBus,
           manifest: minimalManifest
@@ -394,7 +409,7 @@ function runSelfTests(pass, fail) {
       run: () => {
         const bad = minimalManager.replace('SendPrismaToast("journal", "good", titleText, messageText)', "Debug.Notification(titleText + messageText)");
         const findings = collect((p, f) => verifyBookNotice(bad, "", p, f));
-        return findings.some((finding) => finding.status === "FAIL" && finding.check === "ShowP2BookNotice");
+        return findings.some((finding) => finding.status === "FAIL" && finding.check.startsWith("ShowP2BookNotice"));
       }
     },
     {

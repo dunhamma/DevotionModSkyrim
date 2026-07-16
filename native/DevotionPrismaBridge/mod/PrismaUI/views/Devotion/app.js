@@ -32,6 +32,18 @@
     ["azura", "Azurah"],
     ["boethiah", "Boethiah"],
     ["mephala", "Mephala"],
+    ["clavicus-vile", "Clavicus Vile"],
+    ["hermaeus-mora", "Hermaeus Mora"],
+    ["hircine", "Hircine"],
+    ["mehrunes-dagon", "Mehrunes Dagon"],
+    ["meridia", "Meridia"],
+    ["molag-bal", "Molag Bal"],
+    ["namira", "Namira"],
+    ["nocturnal", "Nocturnal"],
+    ["peryite", "Peryite"],
+    ["sanguine", "Sanguine"],
+    ["sheogorath", "Sheogorath"],
+    ["vaermina", "Vaermina"],
     ["shor", "Shor"],
     ["tsun", "Tsun"],
     ["stuhn", "Stuhn"],
@@ -181,6 +193,63 @@
     azura: [
       ["path", { d: "M24 6 L27 18 L39 14 L30 23 L42 28 L29 28 L33 40 L24 31 L15 40 L19 28 L6 28 L18 23 L9 14 L21 18 Z" }],
       ["path", { d: "M10 34 A14 14 0 0 0 38 34", class: "symbol-thin" }],
+    ],
+    "clavicus-vile": [
+      ["path", { d: "M14 10 H34 V38 H14 Z" }],
+      ["path", { d: "M19 17 H29 M19 23 H29 M19 29 H25", class: "symbol-thin" }],
+      ["path", { d: "M31 31 L37 37 M37 31 L31 37" }],
+    ],
+    "hermaeus-mora": [
+      ["path", { d: "M10 24 C14 12 34 12 38 24 C34 36 14 36 10 24 Z" }],
+      ["circle", { cx: "24", cy: "24", r: "5" }],
+      ["path", { d: "M13 34 C17 30 19 39 24 34 C29 29 32 38 36 33", class: "symbol-thin" }],
+    ],
+    hircine: [
+      ["path", { d: "M16 39 V25 C11 21 10 14 14 9 M32 39 V25 C37 21 38 14 34 9" }],
+      ["path", { d: "M14 15 L9 12 M14 20 L8 20 M34 15 L39 12 M34 20 L40 20" }],
+      ["path", { d: "M19 30 L24 36 L29 30", class: "symbol-thin" }],
+    ],
+    "mehrunes-dagon": [
+      ["path", { d: "M24 7 L39 37 H9 Z" }],
+      ["path", { d: "M24 16 C20 22 28 24 23 31 C29 28 31 23 27 18", class: "symbol-thin" }],
+    ],
+    meridia: [
+      ["circle", { cx: "24", cy: "24", r: "7" }],
+      ["path", { d: "M24 7 V13 M24 35 V41 M7 24 H13 M35 24 H41 M12 12 L16 16 M32 32 L36 36 M36 12 L32 16 M16 32 L12 36" }],
+    ],
+    "molag-bal": [
+      ["path", { d: "M24 8 V40 M16 15 H32 M16 40 H32" }],
+      ["path", { d: "M15 15 L10 22 L15 29 M33 15 L38 22 L33 29" }],
+      ["path", { d: "M20 23 H28", class: "symbol-thin" }],
+    ],
+    namira: [
+      ["path", { d: "M24 9 C13 9 11 20 18 23 C11 27 15 39 24 36 C33 39 37 27 30 23 C37 20 35 9 24 9 Z" }],
+      ["path", { d: "M18 18 C22 15 26 15 30 18 M18 29 C22 32 26 32 30 29", class: "symbol-thin" }],
+    ],
+    nocturnal: [
+      ["path", { d: "M31 8 A16 16 0 1 0 31 40 A12 16 0 1 1 31 8 Z" }],
+      ["path", { d: "M17 28 L24 21 L31 28 M21 28 V34 H27 V28", class: "symbol-thin" }],
+    ],
+    peryite: [
+      ["circle", { cx: "24", cy: "24", r: "14" }],
+      ["path", { d: "M15 26 C18 16 31 17 31 25 C31 31 24 34 20 30 C18 28 20 25 23 26", class: "symbol-thin" }],
+      ["circle", { cx: "28", cy: "22", r: "1.5" }],
+    ],
+    sanguine: [
+      ["path", { d: "M14 10 H34 V19 C34 25 30 29 24 29 C18 29 14 25 14 19 Z" }],
+      ["path", { d: "M24 29 V38 M18 38 H30", class: "symbol-thin" }],
+      ["path", { d: "M18 15 H30" }],
+    ],
+    sheogorath: [
+      ["path", { d: "M24 8 C15 8 13 18 20 21 C11 25 16 39 24 35 C32 39 37 25 28 21 C35 18 33 8 24 8 Z" }],
+      ["circle", { cx: "19", cy: "20", r: "1.6" }],
+      ["circle", { cx: "29", cy: "20", r: "1.6" }],
+      ["path", { d: "M19 29 C22 32 26 26 30 29", class: "symbol-thin" }],
+    ],
+    vaermina: [
+      ["path", { d: "M9 24 C14 13 34 13 39 24 C34 35 14 35 9 24 Z" }],
+      ["path", { d: "M17 24 C20 20 28 20 31 24 C28 28 20 28 17 24", class: "symbol-thin" }],
+      ["path", { d: "M14 13 L18 9 M34 13 L30 9" }],
     ],
     boethiah: [
       ["path", { d: "M24 42 V12" }],
@@ -1002,20 +1071,18 @@
       tone: (payload) => (text(payload.phase, "") === "thin" ? "warning" : "good"),
       symbol: (payload) => text(payload.symbol, "journal"),
       title: (payload) => {
-        const name = substrateName(payload);
         const phase = text(payload.phase, "");
-        if (phase === "deepen") return `${name} deepen`;
-        if (phase === "thin") return `${name} thin`;
-        return `${name} answer`;
+        if (phase === "deepen") return "A practice deepens";
+        if (phase === "thin") return "A practice thins";
+        return "A practice is marked";
       },
       message: (payload) => {
         const context = contextName(payload);
         if (context) return context;
-        const name = substrateName(payload);
         const phase = text(payload.phase, "");
-        if (phase === "deepen") return `${name} hold you more strongly now.`;
-        if (phase === "thin") return `${name} are slipping from you.`;
-        return `${name} marked what you did.`;
+        if (phase === "deepen") return "Your practice takes deeper root.";
+        if (phase === "thin") return "Your practice has begun to thin.";
+        return "Your practice records the act.";
       },
       listTitle: (payload) => {
         const stateText = text(payload.state, "");
@@ -1025,8 +1092,8 @@
         const context = contextName(payload);
         if (context) return context;
         return text(payload.phase, "") === "thin"
-          ? `${substrateName(payload)} need tending.`
-          : `${substrateName(payload)} are with you.`;
+          ? "Your practice needs tending."
+          : "Your practice records the act.";
       },
     },
   };

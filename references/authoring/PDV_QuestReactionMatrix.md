@@ -247,6 +247,19 @@ to most gods).
 - disapprove: `serve_a_daedra:boethiah`(C), `break_oath_betray`(S)
 - anchor: Once-greatest Elven god; devoured by Boethiah. (UESP: Trinimac)
 
+**Syrabane** -- the Apprentices' God, wards and protective magic, mage-mercy.
+  (Profile added 2026-07-15 for the T11 main-quest full-coverage pass; codifies
+  the valences his 18 live T9/T10 rows already use -- he was the one record deity
+  authored row-by-row without a Part B profile, which made him invisible to
+  cross-gen.)
+- approve: `protect_the_weak`(C, *the warding god: shields raised over the
+  defenseless*), `disciplined_study`(C), `heal_comfort`(m),
+  `destroy_reject_daedra:*`(m, *wards against the invaders*)
+- disapprove: `necromancy`(S), `reckless_magic`(S)
+- indifferent: trade, romance, the hunt.
+- anchor: Apprentices' God, ally-god of the mages; his ring warded the faithful
+  through the Thrassian plague. (UESP: Syrabane)
+
 ### Bosmer
 
 **Y'ffre** — the Storyteller, the Green Pact, the forest's law.
@@ -321,7 +334,7 @@ to most gods).
 
 **Sithis** — the Void, the original night, death-as-change, the Brotherhood.
 - approve: `assassination_contract`(C), `murder_treacherous`(S), `embrace... void`(m)
-- disapprove: (Sithis judges little; emptiness) — `cowardice`(m, *failed the contract*), `break_oath_betray`(C, *destroying/betraying the Night Mother's family is the one act the Void does not forgive. Added 2026-07-09.*)
+- disapprove: (Sithis judges little; emptiness) -- `cowardice`(m, *failed the contract*), `break_oath_betray`(C, *destroying/betraying the Night Mother's family is the one act the Void does not forgive. Added 2026-07-09.*), `uphold_law_justice`(m, *owner ruling 2026-07-15: Alduin IS unmaking incarnate -- the world's unmaking denied at Dragonslayer is a small offense to the Void. Backs the T11 MQ305 flip.*)
 - anchor: The Void; Sithis/Padomay. (UESP: Sithis). High-threshold tertiary.
 
 ### Daedric Princes (Part B-2)
@@ -381,8 +394,11 @@ above (cross-referenced, not duplicated).
 - anchor: Madgod; the Wabbajack; the Mind of Madness. (UESP: Sheogorath)
 
 **Namira** — cannibalism, the repulsive, the spurned, decay. (very narrow)
-- approve: `cannibalism`(C), `desecrate_the_dead`(S)
-- disapprove: (none meaningful)
+- approve: `cannibalism`(C), `desecrate_the_dead`(S), `sow_chaos_madness`(m, *ruin
+  and the world's decay please the Lady of Decay -- Helgen burning is her kind of
+  feast. Added 2026-07-15 to back the T11 main-quest flips.*)
+- disapprove: `uphold_law_justice`(m, *the world's great decay averted/order
+  preserved reads as denial of her domain. Added 2026-07-15 for T11.*)
 - anchor: Lady of Decay; The Taste of Death. (UESP: Namira). THIN -> Part D.
 
 **Sanguine** — indulgence, revelry, debauchery, temptation.
@@ -401,8 +417,11 @@ above (cross-referenced, not duplicated).
 - anchor: Taskmaster; The Only Cure. (UESP: Peryite). THIN -> Part D.
 
 **Vaermina** — nightmares, dreams, terror, stolen memory.
-- approve: `forbidden_knowledge`(m, *dream/memory secrets*), `murder_treacherous`(m, *terror*), `serve_a_daedra:vaermina`(C)
-- disapprove: (none meaningful)
+- approve: `forbidden_knowledge`(m, *dream/memory secrets*), `murder_treacherous`(m, *terror*), `serve_a_daedra:vaermina`(C), `sow_chaos_madness`(m, *waking terror
+  spreading across a province feeds her -- the dragon panic is a gift. Added
+  2026-07-15 to back the T11 main-quest flips.*)
+- disapprove: `uphold_law_justice`(m, *the great nightmare ended; the province
+  sleeps soundly again. Added 2026-07-15 for T11.*)
 - anchor: Mistress of Dreams; Waking Nightmare. (UESP: Vaermina). THIN -> Part D.
 
 ---
