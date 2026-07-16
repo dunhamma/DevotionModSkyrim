@@ -1524,6 +1524,36 @@ Function AwardPietyFromLikesDislikes(PDV_DeityBase deity, Float amount, Int even
     endIf
 EndFunction
 
+; Authoria bard-performance signal. Quality is the SGT expertise delta (1-8);
+; Become a Bard-only performances enter at quality 1. The daily repeat
+; multiplier is the global devotional anti-farm budget, while PlayerEvents
+; separately enforces one award per tavern per devotional day.
+Function HandleBardPerformance(Int qualityDelta, Bool receivedOvation, Form contextForm)
+    if !PDV_Dibella
+        return
+    endIf
+
+    if qualityDelta < 1
+        qualityDelta = 1
+    elseIf qualityDelta > 8
+        qualityDelta = 8
+    endIf
+
+    Float repeatMultiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BardPerformance")
+    if repeatMultiplier <= 0.0
+        Trace(2, "Bard performance decayed out for today; no Dibella award.")
+        return
+    endIf
+
+    Float qualityMultiplier = 0.75 + (qualityDelta as Float * 0.125)
+    if receivedOvation
+        qualityMultiplier += 0.25
+    endIf
+
+    AwardCuratedSignalScaled(PDV_Dibella, PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR, contextForm, repeatMultiplier * qualityMultiplier)
+    Trace(2, "Bard performance routed quality=" + qualityDelta + " ovation=" + receivedOvation + " multiplier=" + (repeatMultiplier * qualityMultiplier))
+EndFunction
+
 String Function ResolveQuestReactionCellFile(String cellPrefix)
     ; Return the matrix channel that owns this (form|stage) cell: core first, then
     ; the legacy ARR channel, then the per-mod patch channels cached at
@@ -24438,9 +24468,33 @@ String Function GetBosmerSurveyText()
     return text
 EndFunction
 
+; Player-facing path name. PDV_BosmerPathTrack's StateLabels are internal PascalCase
+; tokens ("OldContract"), and EVERY caller of this function is a player surface --
+; Book of Days, Prisma toast, Survey, panel payload -- so the token was reaching the
+; player as one word. Map to the authored guide copy here instead. The article stays
+; in the prose ("...is the Old Contract.") and out of the label, so "Exchange" is
+; correct and "The Exchange" would render "is the The Exchange."
+String Function GetBosmerPathDisplayLabelAt(Int pathState)
+    if pathState == BOSMER_PATH_OLD_CONTRACT
+        return "Old Contract"
+    elseIf pathState == BOSMER_PATH_LIVING_STORY
+        return "Living Story"
+    elseIf pathState == BOSMER_PATH_EXCHANGE
+        return "Exchange"
+    elseIf pathState == BOSMER_PATH_BANDIT_ROAD
+        return "Bandit Road"
+    endIf
+
+    return "Unsettled"
+EndFunction
+
 String Function GetBosmerPathLabel()
     if PDV_BosmerPathTrack
-        return PDV_BosmerPathTrack.GetStateLabel()
+        Int pathState = PDV_BosmerPathTrack.GetCurrentState()
+        if pathState < BOSMER_PATH_OLD_CONTRACT || pathState > BOSMER_PATH_BANDIT_ROAD
+            return "Unsettled"
+        endIf
+        return GetBosmerPathDisplayLabelAt(pathState)
     endIf
 
     return "Unsettled"
