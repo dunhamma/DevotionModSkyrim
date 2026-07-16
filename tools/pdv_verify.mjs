@@ -1428,6 +1428,12 @@ class Verifier {
       ["Pantheon and substrate record readback", "pdv_pantheon_record_readback.mjs"],
       ["Pantheon presentation record readback", "pdv_pantheon_presentation_readback.mjs"],
       ["Active-effect naming convention", "pdv_active_effect_naming_audit.mjs"],
+      // Bounded quest-reaction delivery, including the direct-fan-out registry
+      // (tools/pdv_qr_direct_fanout.json). Default-on with no opt-in flag, per the
+      // 2026-07-07 declaration-gate ruling: an opt-in flag nobody passes is how a
+      // whole class hides. This gate is why a synchronous burst outside the worker
+      // queue can no longer pass review unregistered.
+      ["Quest-reaction performance contract", "pdv_quest_reaction_performance_audit.mjs"],
     ];
     for (const [label, script] of audits) {
       const toolPath = path.join(__dirname, script);
