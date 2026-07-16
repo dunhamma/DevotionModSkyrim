@@ -1,0 +1,43 @@
+{
+  "_comment": [
+    "Registry of functions that apply quest reactions SYNCHRONOUSLY, outside the bounded worker queue.",
+    "",
+    "The 2026-07-15 performance pass made reaction delivery bounded: ApplyQuestReaction is ingress-only",
+    "(snapshot -> FIFO -> return) and PDV_QuestReactionWorker drains QUEST_REACTION_QUEUE_CELLS_PER_TICK",
+    "applied cells per 0.1s slice. Every check in pdv_quest_reaction_performance_audit.mjs anchored on that",
+    "queue and reasoned forward, so a function calling ApplyDeityReaction directly in a straight line was",
+    "structurally invisible to the gate -- the same 'audit anchored on one side' shape as the curated-signal",
+    "dispatch-coverage gap (see tools/pdv_reserved_signals.json).",
+    "",
+    "Rules enforced by the audit's fanout.* checks:",
+    "  - A function applying more than 'budget' reactions synchronously MUST be listed here, or FAIL.",
+    "  - Listed but now applying MORE than its maxApplications = FAIL (someone grew a burst silently).",
+    "  - Listed but no longer a fan-out (removed, queued, or trimmed under budget) = FAIL (anti-rot;",
+    "    delete the line when you fix the function).",
+    "",
+    "Listing something here is a documented, owner-accepted exception -- not a licence to grow it.",
+    "Burn entries down by routing the work through the queue or trimming the roster."
+  ],
+  "budget": 2,
+  "budgetSource": "QUEST_REACTION_QUEUE_CELLS_PER_TICK in PDV__ManagerQuest.psc",
+  "fanouts": {
+    "HandlePaarthurnaxKill": {
+      "maxApplications": 16,
+      "date": "2026-07-16",
+      "reason": "The Paarthurnax kill/spare choice is a hand-rolled fork, not a matrix cell, because the spare branch never advances a quest stage and the kill can happen outside the quest path. There is no quest|stage key to enqueue against.",
+      "whyAccepted": "Owner decision 2026-07-16. Latched once per save (PDV.Paarthurnax.KillSeen), fires on a dragon kill where a brief hitch is masked, and the roster is never fully applied in practice: ApplyDeityReaction returns early on the reachability check, so an out-of-roster face costs a cheap lookup rather than an application. A Khajiit reaches Khenarthi plus the four Daedric paths and drops the rest."
+    },
+    "HandlePaarthurnaxSpare": {
+      "maxApplications": 11,
+      "date": "2026-07-16",
+      "reason": "Same fork as HandlePaarthurnaxKill; the spare branch is latched via PDV.Paarthurnax.SpareSeen and fires from the main-quest closeout with Paarthurnax alive.",
+      "whyAccepted": "Owner decision 2026-07-16. Same reachability argument as the kill fork."
+    },
+    "EvaluateQuestMetaFaucets": {
+      "maxApplications": 8,
+      "date": "2026-07-16",
+      "reason": "DEAD CODE: zero callers anywhere in live-source. Superseded by ProcessQueuedQuestReactionMetaSlice, which does the same meta-faucet work inside the bounded queue slice.",
+      "whyAccepted": "Not accepted -- registered only so the gate is honest about what exists. It cannot cost runtime today (nothing calls it), but it is a landmine: a future caller would reintroduce an 8-application synchronous burst. Remove the function and delete this entry; the anti-rot check will confirm."
+    }
+  }
+}

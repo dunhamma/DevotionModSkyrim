@@ -18,6 +18,7 @@ const DAEDRIC_PATH_BASE_PATH = path.join(ROOT, "live-source", "Scripts", "Source
 const EVENT_BUS_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_EventBus.psc");
 const PLAYER_EVENTS_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_PlayerEvents.psc");
 const MCM_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_MCM.psc");
+const FANOUT_LEDGER_PATH = path.join(ROOT, "tools", "pdv_qr_direct_fanout.json");
 
 const args = new Set(process.argv.slice(2));
 const JSON_OUTPUT = args.has("--json");
@@ -52,7 +53,100 @@ function add(findings, ok, id, detail) {
   findings.push({ status: ok ? "PASS" : "FAIL", id, detail });
 }
 
-export function evaluate({ managerSource, workerSource, daedricPathBaseSource = "", eventBusSource = "", playerEventsSource = "", mcmSource = "" }) {
+/* --- direct fan-out analysis -------------------------------------------------
+ * Every other check here anchors on the queue (enqueue -> slice -> worker) and
+ * reasons forward, so a function that calls ApplyDeityReaction directly in a
+ * straight line was invisible to this gate. These helpers anchor on the OTHER
+ * side -- who applies reactions -- and prove each unbounded burst is registered.
+ */
+
+const QUEUE_BOUNDED_FUNCTIONS = new Set(["ProcessQuestReactionQueueSlice", "ProcessQueuedQuestReactionMetaSlice"]);
+const APPLY_FN = "ApplyDeityReaction";
+
+function escapeRe(text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function countCalls(body, functionName) {
+  return (body.match(new RegExp(`\\b${escapeRe(functionName)}\\s*\\(`, "gi")) || []).length;
+}
+
+/** Map every Function/Event in a Papyrus source to its body text. */
+export function parseFunctions(source) {
+  const bodies = new Map();
+  let current = null;
+  let lines = [];
+  for (const line of source.split(/\r?\n/)) {
+    const start = line.match(/^\s*(?:[A-Za-z_[\]]+\s+)?(?:Function|Event)\s+([A-Za-z_0-9]+)\s*\(/i);
+    if (start && current === null) { current = start[1]; lines = []; continue; }
+    if (current !== null && /^\s*End(?:Function|Event)\b/i.test(line)) { bodies.set(current, lines.join("\n")); current = null; continue; }
+    if (current !== null) lines.push(line);
+  }
+  if (current !== null) bodies.set(current, lines.join("\n"));
+  return bodies;
+}
+
+/** Count synchronous reaction applications per function, resolving thin wrappers.
+ *  A thin wrapper is a function whose entire job is one ApplyDeityReaction call
+ *  (detected, not hardcoded, so renaming a helper cannot slip past the gate). */
+export function analyzeDirectFanout(managerSource, ledger) {
+  const bodies = parseFunctions(managerSource);
+  const budget = Number(ledger?.budget ?? 2);
+
+  const thinWrappers = [];
+  for (const [name, body] of bodies) {
+    if (name === APPLY_FN) continue;
+    if (countCalls(body, APPLY_FN) !== 1) continue;
+    const statements = body.split(/\r?\n/).map((s) => s.trim()).filter((s) => s && !s.startsWith(";"));
+    if (statements.length <= 4) thinWrappers.push(name);
+  }
+
+  const bursts = new Map();
+  for (const [name, body] of bodies) {
+    if (name === APPLY_FN) continue;
+    let applications = countCalls(body, APPLY_FN);
+    for (const wrapper of thinWrappers) if (wrapper !== name) applications += countCalls(body, wrapper);
+    if (applications > 0) bursts.set(name, applications);
+  }
+
+  const fanouts = [];
+  for (const [name, applications] of bursts) {
+    if (QUEUE_BOUNDED_FUNCTIONS.has(name)) continue; // bounded by CELLS_PER_TICK; proven by manager.bounded-* checks
+    if (thinWrappers.includes(name)) continue; // applies exactly one
+    if (applications <= budget) continue;
+    fanouts.push({ name, applications });
+  }
+  return { budget, thinWrappers, fanouts };
+}
+
+export function evaluateDirectFanout(managerSource, ledger) {
+  const findings = [];
+  const registry = ledger?.fanouts ?? {};
+  const { budget, fanouts } = analyzeDirectFanout(managerSource, ledger);
+
+  const unregistered = fanouts.filter((f) => !registry[f.name]);
+  add(findings, unregistered.length === 0, "fanout.registered",
+    unregistered.length
+      ? `Unregistered synchronous fan-out (>${budget} applications outside the queue): ${unregistered.map((f) => `${f.name} (${f.applications})`).join(", ")}. Route it through ApplyQuestReaction ingress or register it in tools/pdv_qr_direct_fanout.json.`
+      : `Every synchronous fan-out above the ${budget}-application budget is registered in tools/pdv_qr_direct_fanout.json.`);
+
+  const overBudget = fanouts.filter((f) => registry[f.name] && f.applications > Number(registry[f.name].maxApplications));
+  add(findings, overBudget.length === 0, "fanout.within-recorded-budget",
+    overBudget.length
+      ? `Fan-out grew beyond its recorded budget: ${overBudget.map((f) => `${f.name} ${f.applications} > ${registry[f.name].maxApplications}`).join(", ")}.`
+      : "No registered fan-out applies more reactions than its recorded maximum.");
+
+  const live = new Set(fanouts.map((f) => f.name));
+  const stale = Object.keys(registry).filter((name) => !live.has(name));
+  add(findings, stale.length === 0, "fanout.no-stale-registry",
+    stale.length
+      ? `Registry lists functions that are no longer unbounded fan-outs: ${stale.join(", ")}. Delete the entry.`
+      : "Every registry entry still describes a real fan-out.");
+
+  return findings;
+}
+
+export function evaluate({ managerSource, workerSource, daedricPathBaseSource = "", eventBusSource = "", playerEventsSource = "", mcmSource = "", fanoutLedger = null }) {
   const findings = [];
   const queue = bodyFor(managerSource, "QueueQuestReactionJob");
   const slice = bodyFor(managerSource, "ProcessQuestReactionQueueSlice");
@@ -133,6 +227,8 @@ export function evaluate({ managerSource, workerSource, daedricPathBaseSource = 
     && !/ProcessQuestReactionQueueSlice\s*\(/i.test(sources)
     && !/QueueQuestReactionJob\s*\(/i.test(eventBusSource + "\n" + playerEventsSource);
   add(findings, routingUsesIngress, "route.integration", "EventBus/PlayerEvents/MCM route multi-cell quest reactions through ApplyQuestReaction ingress, never a direct slice.");
+
+  findings.push(...evaluateDirectFanout(managerSource, fanoutLedger));
 
   return {
     status: findings.some((finding) => finding.status === "FAIL") ? "FAIL" : "PASS",
@@ -261,13 +357,65 @@ EndFunction`;
   return { manager, worker, daedricPathBase, routes };
 }
 
+/** The fan-out checks must be provably non-vacuous: a rogue burst has to FAIL,
+ *  a registered one has to PASS, and a stale entry has to FAIL. */
+function fanoutSelfTest() {
+  const results = [];
+  const rogue = `
+Function HandleSomeFork()
+  ApplyDeityReaction("Shor")
+  ApplyDeityReaction("Kyne")
+  ApplyDeityReaction("Mara")
+EndFunction
+Function ApplyDeityReaction(String deityName)
+EndFunction`;
+  const emptyLedger = { budget: 2, fanouts: {} };
+  const caught = evaluateDirectFanout(rogue, emptyLedger).find((f) => f.id === "fanout.registered");
+  results.push(["unregistered 3-call burst FAILs", caught.status === "FAIL"]);
+
+  const registered = { budget: 2, fanouts: { HandleSomeFork: { maxApplications: 3, reason: "test" } } };
+  const allowed = evaluateDirectFanout(rogue, registered).find((f) => f.id === "fanout.registered");
+  results.push(["registered burst PASSes", allowed.status === "PASS"]);
+
+  const tight = { budget: 2, fanouts: { HandleSomeFork: { maxApplications: 2, reason: "test" } } };
+  const grew = evaluateDirectFanout(rogue, tight).find((f) => f.id === "fanout.within-recorded-budget");
+  results.push(["burst over its recorded budget FAILs", grew.status === "FAIL"]);
+
+  const stale = { budget: 2, fanouts: { HandleSomeFork: { maxApplications: 3 }, GoneAway: { maxApplications: 9 } } };
+  const rot = evaluateDirectFanout(rogue, stale).find((f) => f.id === "fanout.no-stale-registry");
+  results.push(["stale registry entry FAILs", rot.status === "FAIL"]);
+
+  // A thin wrapper called many times must be counted through, not hidden.
+  const wrapped = `
+Function HandleWrappedFork()
+  ApplyOne("Shor")
+  ApplyOne("Kyne")
+  ApplyOne("Mara")
+EndFunction
+Function ApplyOne(String deityName)
+  ApplyDeityReaction(deityName)
+EndFunction
+Function ApplyDeityReaction(String deityName)
+EndFunction`;
+  const throughWrapper = evaluateDirectFanout(wrapped, emptyLedger).find((f) => f.id === "fanout.registered");
+  results.push(["burst via a thin wrapper is counted", throughWrapper.status === "FAIL"]);
+
+  return results;
+}
+
 function main() {
   if (args.has("--self-test")) {
     const sample = syntheticSources();
-    const report = evaluate({ managerSource: sample.manager, workerSource: sample.worker, daedricPathBaseSource: sample.daedricPathBase, eventBusSource: sample.routes, playerEventsSource: sample.routes, mcmSource: sample.routes });
-    if (JSON_OUTPUT) console.log(JSON.stringify(report, null, 2));
-    else console.log(`PDV quest-reaction performance audit self-test: ${report.status}`);
-    return report.status === "PASS" ? 0 : 1;
+    const report = evaluate({ managerSource: sample.manager, workerSource: sample.worker, daedricPathBaseSource: sample.daedricPathBase, eventBusSource: sample.routes, playerEventsSource: sample.routes, mcmSource: sample.routes, fanoutLedger: { budget: 2, fanouts: {} } });
+    const fanoutCases = fanoutSelfTest();
+    const fanoutOk = fanoutCases.every(([, ok]) => ok);
+    const status = report.status === "PASS" && fanoutOk ? "PASS" : "FAIL";
+    if (JSON_OUTPUT) console.log(JSON.stringify({ ...report, status, fanoutSelfTest: fanoutCases.map(([name, ok]) => ({ name, status: ok ? "PASS" : "FAIL" })) }, null, 2));
+    else {
+      console.log(`PDV quest-reaction performance audit self-test: ${status}`);
+      for (const [name, ok] of fanoutCases) console.log(`  [${ok ? "PASS" : "FAIL"}] fanout self-test: ${name}`);
+    }
+    return status === "PASS" ? 0 : 1;
   }
 
   const report = evaluate({
@@ -277,6 +425,7 @@ function main() {
     eventBusSource: fs.readFileSync(EVENT_BUS_PATH, "utf8"),
     playerEventsSource: fs.readFileSync(PLAYER_EVENTS_PATH, "utf8"),
     mcmSource: fs.readFileSync(MCM_PATH, "utf8"),
+    fanoutLedger: JSON.parse(fs.readFileSync(FANOUT_LEDGER_PATH, "utf8")),
   });
   if (JSON_OUTPUT) console.log(JSON.stringify(report, null, 2));
   else {
