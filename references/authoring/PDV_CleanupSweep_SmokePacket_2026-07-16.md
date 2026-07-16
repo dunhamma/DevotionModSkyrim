@@ -56,11 +56,22 @@ set timescale to 200      ; 1 game-hour ~= 18 real seconds
 A light sting now expires ~36 real seconds after firing. **Restore
 `set timescale to 20` when done.**
 
-1. **Cycle disfavor band** -> set to the **light** band.
-2. **Cycle disfavor domain** -> pick any domain.
-3. **Fire dislike vs selected deity** -> fires the sting.
-4. **Show active disfavor** -> confirm the sting is listed and the debuff is on
-   your Active Effects.
+All four controls are on **Debug: State & Rewards**, **left column**, under the
+**"Disfavor (dislikes)"** header.
+
+1. **Cycle disfavor band** -> set the label to **Light**.
+2. **Cycle disfavor domain** -> pick any domain (1 Sky/Storm/Hunt .. 7 Void/Secrets).
+3. **Apply domain sting** -> fires it.
+   **Use this button, NOT "Fire dislike vs selected deity".** The two cyclers
+   above feed *this* button only. "Apply domain sting" is the direct-seed path:
+   it adds the selected domain+band spell with a real expiry and **bypasses the
+   standing/repeat/cap gates**, which is exactly what an expiry test wants.
+   "Fire dislike" is the organic dispatch and needs **Target piety >= 25** to pass
+   the standing gate -- below that you get the piety loss and **no sting at all**,
+   and it ignores your band/domain selection. It would look like a failure when
+   nothing is wrong.
+4. **Show active disfavor** -> confirm the sting is listed with its band and
+   **remaining game-minutes**, and that the debuff is on your Active Effects.
 5. Wait out the ~36s expiry, then keep watching for another ~15s.
 6. **Show active disfavor** -> the sting must be **gone**, and the spell removed
    from Active Effects.
@@ -75,11 +86,20 @@ A light sting now expires ~36 real seconds after firing. **Restore
 > timescale 200 you are testing under, the same 10s is ~33 game-minutes -- so this
 > test is *harsher* than live play. If it passes here it passes at 20.
 
-7. **Anti-stack burst (4 domains)** -> confirm the cap still holds at 3, and that
-   all stings clear after expiry. (Regression check: the sweep now clears up to 3
-   domains in a single 10s pass rather than spread across ticks.)
-8. **Clear active disfavor** -> confirm force-clear is still immediate (this path
-   does not go through the sweep and must **not** have gained a 10s lag).
+7. **Anti-stack burst (4 domains)** -> clears disfavor, then fires four
+   distinct-domain stings. Confirm the cap holds at **3 active with the 4th
+   suppressed**, and that all three clear after expiry. (Regression check: the
+   sweep now clears up to 3 domains in a single 10s pass rather than spread
+   across ticks.)
+8. **Clear active disfavor** -> confirm force-clear is still **immediate**. This
+   path does not go through the sweep and must **not** have gained a 10s lag.
+
+**Optional organic cross-check.** To exercise the real dispatch rather than the
+direct seed: set **Target piety** to >= 25, **Apply target piety**, set a
+**Dislike event ID** the selected deity actually has a row for (the "Fire dislike"
+label tells you), then **Fire dislike vs selected deity**. This ignores the
+band/domain cyclers and picks the domain from the dislike row. Not required for
+A3 -- the direct seed already proves the sweep.
 
 ---
 
