@@ -94,6 +94,7 @@ ActorBase Property Paarthurnax Auto
 Int Property MQ305_FORM_ID = 0x00046EF2 AutoReadOnly
 String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
 String Property QUEST_REACTION_MATRIX_FILE_ARR = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR" AutoReadOnly
+String Property QUEST_REACTION_CHANNEL_FOLDER = "../StorageUtilData/PlayerDevotion/Channels" AutoReadOnly
 
 String Property MOD_EVENT_CONCORDAT_COMPLIANCE = "PDV.ConcordatCompliance" AutoReadOnly
 String Property MOD_EVENT_CONCORDAT_DEFIANCE = "PDV.ConcordatDefiance" AutoReadOnly
@@ -1174,6 +1175,35 @@ Function RegisterQuestReactionMatrix()
     if JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE_ARR)
         RegisterQuestReactionMatrixFile(QUEST_REACTION_MATRIX_FILE_ARR, "ARR")
     endIf
+    RegisterQuestReactionChannelFolder()
+EndFunction
+
+Function RegisterQuestReactionChannelFolder()
+    ; Per-mod patch channels: every JSON dropped in the Channels folder is a
+    ; matrix file. The discovered list is cached in StorageUtil so the manager's
+    ; cell resolver never pays a folder scan on the reaction hot path.
+    StorageUtil.StringListClear(None, "PDV.QR.ChannelFiles")
+    String[] channelNames = JsonUtil.JsonInFolder(QUEST_REACTION_CHANNEL_FOLDER)
+    if !channelNames
+        Trace(2, "Quest reaction channel folder empty or absent; no per-mod channels registered.")
+        return
+    endIf
+
+    Int channelIndex = 0
+    while channelIndex < channelNames.Length
+        String channelName = channelNames[channelIndex]
+        if channelName != ""
+            String channelFile = QUEST_REACTION_CHANNEL_FOLDER + "/" + channelName
+            if JsonUtil.JsonExists(channelFile)
+                RegisterQuestReactionMatrixFile(channelFile, channelName)
+                StorageUtil.StringListAdd(None, "PDV.QR.ChannelFiles", channelFile, False)
+            else
+                Trace(1, "Quest reaction channel listed but unreadable: " + channelFile)
+            endIf
+        endIf
+        channelIndex += 1
+    endWhile
+    Trace(2, "Quest reaction channels registered: " + StorageUtil.StringListCount(None, "PDV.QR.ChannelFiles") + ".")
 EndFunction
 
 Function RegisterQuestReactionMatrixFile(String matrixFile, String label)

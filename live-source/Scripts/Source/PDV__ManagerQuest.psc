@@ -1581,13 +1581,24 @@ EndFunction
 
 String Function ResolveQuestReactionCellFile(String cellPrefix)
     ; Return the matrix channel that owns this (form|stage) cell: core first, then
-    ; any list-patch channel. Returns "" when no channel has the cell.
+    ; the legacy ARR channel, then the per-mod patch channels cached at
+    ; registration (PDV.QR.ChannelFiles). First hit wins. Returns "" when no
+    ; channel has the cell.
     if JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, cellPrefix + "deitiesCsv") != ""
         return QUEST_REACTION_MATRIX_FILE
     endIf
     if JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE_ARR) && JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE_ARR, cellPrefix + "deitiesCsv") != ""
         return QUEST_REACTION_MATRIX_FILE_ARR
     endIf
+    Int channelIndex = 0
+    Int channelCount = StorageUtil.StringListCount(None, "PDV.QR.ChannelFiles")
+    while channelIndex < channelCount
+        String channelFile = StorageUtil.StringListGet(None, "PDV.QR.ChannelFiles", channelIndex)
+        if channelFile != "" && JsonUtil.GetStringValue(channelFile, cellPrefix + "deitiesCsv") != ""
+            return channelFile
+        endIf
+        channelIndex += 1
+    endWhile
     return ""
 EndFunction
 
