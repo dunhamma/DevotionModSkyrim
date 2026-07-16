@@ -53,6 +53,27 @@ Read-mode: **2 PASS / 1 STALE / 20 RED**. After `--run` re-green:
 **12 PASS / 1 STALE / 10 RED**. Most REDs were drift-voided machine proofs
 (the `.pex`/ESP moved after evidence was recorded), not breakage.
 
+> **Re-run after the cleanup sweep (2026-07-16 21:40):**
+> **11 PASS / 1 STALE / 11 RED.** The ten below are unchanged. The extra RED is
+> `C-MAIN-QUEST-FULL-COVERAGE`, and it is **not** from the sweep and **not** a
+> code defect -- it is a concurrent session's in-flight authoring:
+>
+> `PDV_MainQuestFullCoverageContract.json` expects `matrixCells: 1978` /
+> `questKeys: 172`; the live compiler reports **1982 / 173**. Four new DB01
+> "Innocence Lost" rows (stage 198, the report-Grelod non-murder resolution,
+> stamped `ruled 2026-07-16` / `RUNTIME-VERIFY`) were written to
+> `PDV_QuestReactionMatrix_Full.csv` at 21:18 and the runtime JSON regenerated at
+> 21:20. 1978+4 = 1982 and 172+1 = 173 (DB01 is a new quest key) -- the arithmetic
+> accounts for the delta exactly. The contract's expected counts have not been
+> bumped yet.
+>
+> Left untouched deliberately: those rows are uncommitted and mid-edit, so
+> recompiling the matrix or bumping the contract here would stomp live work. The
+> owner of the DB01 tranche should bump `expected` and re-run the gate. Every
+> other machine gate is green: `pdv_prisma_ui_audit` 123 checks,
+> `pdv_prisma_to_oneoh_audit` PASS=76 FAIL=0, ASCII guard clean, all 96 `.pex`
+> fresh, zero packaging leakage.
+
 ### Remaining 10 RED -- all need in-world proof
 
 | Criterion | Open |
