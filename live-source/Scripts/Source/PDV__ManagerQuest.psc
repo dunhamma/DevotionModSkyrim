@@ -18410,7 +18410,14 @@ EndFunction
 ; here. Ensure Curse none first (an active curse suppresses several lanes).
 Function DebugPrimeRaceLaneNeglect()
     Int origin = GetPlayerOriginRaceIndex()
+    ; Clamp to a tiny positive epsilon rather than letting this go <= 0.0 on any save whose
+    ; clock hasn't reached day 10 yet -- every Is<Race>Neglected check guards lastSource <= 0.0
+    ; as its "never set" sentinel, so a negative/zero backdate silently defeats the whole prime
+    ; (bug found 2026-07-16: Redguard neglect never fired on an early save for exactly this reason).
     Float lapsed = Utility.GetCurrentGameTime() - 10.0
+    if lapsed <= 0.0
+        lapsed = 0.01
+    endIf
     String laneLabel = ""
     if origin == ORIGIN_ALTMER
         StorageUtil.SetFloatValue(None, "PDV.Altmer.Favor.LastGameTime", lapsed)
