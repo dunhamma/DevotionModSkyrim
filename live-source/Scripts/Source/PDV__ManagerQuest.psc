@@ -9848,21 +9848,21 @@ Function MaybeShowRedguardChampionEntry(Int sectValue)
     endIf
 
     if sectValue == REDGUARD_SECT_CROWN
-        if PDV_Tuwhacca && GetTier(PDV_Tuwhacca) >= TIER_DEVOTED
+        if PDV_Tuwhacca && GetTier(PDV_Tuwhacca) >= TIER_CHAMPION
             ShowRedguardMessage(PDV_Msg_Redguard_ChampionEntry_Crown, "The Crown way has become more than memory. It is a public shape of your devotion.", False)
             AppendBookOfDaysEntry("The Crown way is more than memory in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
             SendPrismaShiftToast("The Crown way, made public.", "More than memory now -- a public shape of your devotion.", "sect")
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     elseIf sectValue == REDGUARD_SECT_FOREBEAR
-        if PDV_HoonDing && GetTier(PDV_HoonDing) >= TIER_DEVOTED
+        if PDV_HoonDing && GetTier(PDV_HoonDing) >= TIER_CHAMPION
             ShowRedguardMessage(PDV_Msg_Redguard_ChampionEntry_Forebear, "The Forebear way has become more than adaptation. It is a public shape of your devotion.", False)
             AppendBookOfDaysEntry("The Forebear way is more than adaptation in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
             SendPrismaShiftToast("The Forebear way, made public.", "More than adaptation now -- a public shape of your devotion.", "sect")
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     elseIf sectValue == REDGUARD_SECT_ASHABAH
-        if PDV_Tuwhacca && GetTier(PDV_Tuwhacca) >= TIER_DEVOTED
+        if PDV_Tuwhacca && GetTier(PDV_Tuwhacca) >= TIER_CHAMPION
             ShowRedguardMessage(PDV_Msg_Redguard_ChampionEntry_AshAbah, "The Ash'abah duty has become more than necessity. It is a public shape of your devotion.", False)
             AppendBookOfDaysEntry("The Ash'abah duty is more than necessity in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
             SendPrismaShiftToast("The Ash'abah duty, made public.", "More than necessity now -- a public shape of your devotion.", "sect")
