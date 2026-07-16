@@ -1675,13 +1675,18 @@
       }
     },
     "Orc-supportSpells|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Orc-supportSpells",
       "class": "boon",
       "race": "Orc",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS after TWO same-session fixes. (1) Code Holds moved from combat-exit to mid-fight firing off the below-health gate (Baan Dar model), magnitudes unchanged. (2) Regression fix: the alias hit-event registration had been narrowed to aiBlockFilter=1 (blocked hits only) for the Stuhn blocked-hit faucet, which silently cut off the take-a-hit combat-session-open path -- so no combat session ever opened for a non-blocking player and NO near-death payload (Orc Code Holds, Bosmer Baan Dar Gap, Argonian Sithis burst) could fire. Registration unfiltered to aiBlockFilter=-1; the handler already self-discriminates blocked hits internally. Papyrus.0.log 05:29:35-54PM proves the full chain: combat session opened for origin 8 -> below-health gate detected (Hit) -> Orc Code Holds fired, same second, mid-fight. Malacath Seeker, +40 Health on the HP bar (no Active Effect by design).",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Orc",
+        "slot": "Orc-supportSpells|boon",
+        "matched": "PDV combat session opened for origin 8. -> Player below-health gate detected for origin 8 (Hit). -> Orc Code Holds fired."
+      }
     },
     "Orc-TrialOfIron|boon": {
       "status": "evidence-recorded",

@@ -1124,7 +1124,14 @@ Function RegisterQuestReactionFaucetEvents()
     RegisterQuestReactionEffectList("faucetEffectForms.Namira.cannibalism")
     RegisterQuestReactionEffectList("faucetEffectForms.Dibella.charity")
     PO3_Events_Alias.UnregisterForAllHitEventsEx(Self)
-    PO3_Events_Alias.RegisterForHitEventEx(Self, akAggressorFilter = None, akSourceFilter = None, akProjectileFilter = None, aiPowerFilter = -1, aiSneakFilter = -1, aiBashFilter = -1, aiBlockFilter = 1, abMatch = True)
+    ; Unfiltered on the block axis (2026-07-16 regression fix): OnHitEx opens the
+    ; combat session + samples health on ANY hit taken (the near-death gate for
+    ; Orc Code Holds / Bosmer Baan Dar Gap / Argonian Sithis burst depends on it),
+    ; then self-discriminates blocked hits for the Stuhn faucet via abHitBlocked.
+    ; A previous aiBlockFilter=1 narrowing served the blocked-hit faucet but
+    ; silently cut off the take-a-hit session-open path, so a non-blocking player
+    ; never opened a combat session and no near-death payload could ever fire.
+    PO3_Events_Alias.RegisterForHitEventEx(Self, akAggressorFilter = None, akSourceFilter = None, akProjectileFilter = None, aiPowerFilter = -1, aiSneakFilter = -1, aiBashFilter = -1, aiBlockFilter = -1, abMatch = True)
 EndFunction
 
 Function RegisterQuestReactionEffectList(String listKey)
