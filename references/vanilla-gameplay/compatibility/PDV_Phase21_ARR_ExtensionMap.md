@@ -1,8 +1,10 @@
 # PDV Phase 21 — Authoria/ARR Extension Map
 
 Status: living implementation artifact for the ARR extension + compat-closeout patch
-(branch `feature/arr-extension-and-compat-closeout`). Companion to the approved plan and to
-`PDV_Phase21_ARR_ConflictDossier.md` (the replacement/compat slice). This file owns the
+(branch `feature/arr-extension-and-compat-closeout`). Companion to the approved plan. The old
+`PDV_Phase21_ARR_ConflictDossier.md` (Archon-era replacement/compat slice) was DELETED 2026-07-16 —
+superseded by `PDV_Phase21_ARRTest_ModReview_2026-07-16.md` (Archon is gone from the current list).
+This file owns the
 **extension** angle: lighting up new devotion signals from the list's extra content.
 
 Architecture (locked): **tiered** — vanilla + Creation Club hooks → CORE PDV matrix; third-party

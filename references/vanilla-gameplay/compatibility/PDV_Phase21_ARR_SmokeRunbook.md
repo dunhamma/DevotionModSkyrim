@@ -13,8 +13,11 @@ Object Swapper turns the man_DaedricShrines statues into clickable PDV prayer ac
 to the Prince once per day.
 
 ## Prereqs
-- ARR instance `D:\Wabbajack\modlists\ARR`, profile **PDV Test** (Archon family disabled, Devotion
-  active before Requiem). This is the profile the compat work used.
+- ARR instance: the June pass used `D:\Wabbajack\modlists\ARR`, profile **PDV Test** (Archon family
+  disabled, Devotion active before Requiem). SUPERSEDED 2026-07-16: the current target is
+  `D:\Wabbajack\modlists\ARR Test`, which no longer ships Archon at all (no removal needed) — see
+  `PDV_Phase21_ARRTest_ModReview_2026-07-16.md`. Devotion still loads before Requiem's winners
+  it must override (verify with houseCARL before smoking).
 - PDV debug level **2** (MCM -> Devotion dev page) so both traces emit.
 - Papyrus logging on; log at `...\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log`.
 

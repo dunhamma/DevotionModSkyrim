@@ -1,0 +1,2 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation,formid
+SMBMainQuest,Whispers of the Depths,45,Offered condolences to the old sailor for all he had lost,"show_compassion,comfort_the_grieving",Mara,+,m,small,"Tier A dialogue INFO 00007B:Slays-Many-Beasts Quest Mod.esp; PDV dialogue-hook stage s45 added by PDV_Patch_SlaysManyBeasts.esp; ruled 2026-07-16; RUNTIME-VERIFY",Slays-Many-Beasts Quest Mod.esp:000001

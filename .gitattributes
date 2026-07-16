@@ -15,3 +15,16 @@ dist/nexus-articles/*.bb text eol=lf
 # they ship (README is LF, CHANGELOG is CRLF) rather than normalizing either.
 dist/release-meta/README.txt -text
 dist/release-meta/CHANGELOG.txt -text
+
+# Devotion quest-mod patch FOMOD. The package ships plugins (.esp) and compiled
+# scripts (.pex) as raw bytes, and the handoff publishes the zip's SHA256. Git's
+# binary heuristic would probably spare them, but "probably" corrupts a plugin
+# silently when it misfires, so state it. The text members are pinned LF so a zip
+# rebuilt from a fresh checkout reproduces the published hash on any machine.
+dist/PDV_QuestModPatches_FOMOD/**/*.esp -text
+dist/PDV_QuestModPatches_FOMOD/**/*.pex -text
+dist/PDV_QuestModPatches_FOMOD_*.zip -text
+dist/PDV_QuestModPatches_FOMOD/**/*.json text eol=lf
+dist/PDV_QuestModPatches_FOMOD/**/*.xml text eol=lf
+dist/PDV_QuestModPatches_FOMOD/**/*.psc text eol=lf
+dist/PDV_QuestModPatches_FOMOD/**/*.md text eol=lf
