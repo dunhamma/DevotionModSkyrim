@@ -353,13 +353,18 @@
       }
     },
     "Breton-PatronChampion|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Breton-PatronChampion",
       "class": "boon",
       "race": "Breton",
       "expected": "Unified Breton Champion proof: with a practiced tradition at T2, take a patron to Champion and observe that patron's own named Champion boon beside the tradition. Swap patrons and verify the old Champion boon strips; no generic Patron's Mark or third stack survives.",
-      "note": "Updated 2026-07-13 for the unified patron-Champion model. The ledger key is retained for compatibility, but the generic Patron's Mark family is retired; BUC1-BUC3 prove the replacement one-patron-one-signature-boon routing class.",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS. Green Way tradition seeded to Devoted (50 practice, Apply practice target). Mara taken to Champion (85 piety, Debug patron override): Papyrus.0.log 01:24:02-03PM confirms Mara tier change 0->3, Race reward added: Breton Champion Mara, tier-reach surface suppressed for Breton resonant Champion (Mara is Green Way-resonant per IsDeityResonantWithBretonTradition, along with Kynareth/Dibella), tradition presentation owns the through-the-Green-Way toast. Green Way T2 confirmed to remain (Mara champion spell != GreenWay_T3, so IsBretonPracticeTierReplacedByChampion is false). Swap to Arkay (non-resonant, 01:26:07-12PM) confirms clean exclusivity: Race reward removed: Breton Champion Mara then Race reward added: Breton Champion Arkay, no stacking, no generic Patron Mark leftover.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Breton",
+        "slot": "Breton-PatronChampion|boon",
+        "matched": "Race reward added: Breton Champion Mara -> Race reward removed: Breton Champion Mara -> Race reward added: Breton Champion Arkay"
+      }
     },
     "Breton-Tradition|boon": {
       "status": "not-applicable",
@@ -1368,13 +1373,18 @@
       }
     },
     "Malacath|price": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Malacath",
       "class": "price",
       "race": null,
       "expected": "Loss-surfacing bar (agreed 2026-07-07): commit one displeasing act for this lane (debug-primed state OK) and record the visible loss surface (toast, Book of Days beat, or panel Ledger row). No debuff exists for piety-loss dislikes in V1 (minor dislike consequences deferred to V2, priority).",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS. Fired steal-item (event 362) against Malacath as active patron. Papyrus.0.log 04:32:34PM confirms AwardPiety Malacath raw -0.25/applied -0.25 + Debug dislike surface flushed: Malacath event 362. NO debuff is expected or required: -0.25 is below DISFAVOR_LIGHT_MIN_DELTA (0.5), so the WAR_HONOR disfavor sting correctly declines to fire on a small dislike. Loss-surface is the V1 contract bar for price rows and it was met.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Orc",
+        "slot": "Malacath|price",
+        "matched": "DebugFireDislike: Malacath event 362 delta -0.250000"
+      }
     },
     "Mara|price": {
       "status": "evidence-recorded",
@@ -1609,40 +1619,60 @@
       }
     },
     "Orc-City|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Orc-City",
       "class": "boon",
       "race": "Orc",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS. Malacath active patron + Orc -> City life-mode (default mode, never lapses). Private Fidelity - Seeker confirmed in Active Effects alongside the always-on Code-Held City Spine boon. RENAME NOTE (same session, after this proof): the boon display names were reworded (Forge-Worthy -> Hold-Forged; Code-Held - <Mode> -> Hold-Sworn/Hearth-Sworn/Legion-Sworn). The grant/feel proof above is unaffected -- only the display string changed; expect the new names in Active Effects on the next launch.",
+      "creditedFrom": {
+        "ledger": "co-test chat",
+        "race": "Orc",
+        "slot": "Orc-City|boon",
+        "matched": "Private Fidelity - Seeker in Active Effects"
+      }
     },
     "Orc-LegionExile|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Orc-LegionExile",
       "class": "boon",
       "race": "Orc",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS. Orc -> Legion-Exile then re-Apply Malacath target piety to force SyncOrcRewards (life-mode debug button does not self-resync). Papyrus.0.log 04:02:28PM confirms Race reward added: Orc Spine LegionExile + Orc legionexile T1 (Foreign Discipline - Seeker); the 03:56 SetState-with-no-reward earlier confirms the re-sync was required. Read before any dawn pass (dawn lapses a debug-set non-City mode back to City). RENAME NOTE (same session, after this proof): the boon display names were reworded (Forge-Worthy -> Hold-Forged; Code-Held - <Mode> -> Hold-Sworn/Hearth-Sworn/Legion-Sworn). The grant/feel proof above is unaffected -- only the display string changed; expect the new names in Active Effects on the next launch.",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Orc",
+        "slot": "Orc-LegionExile|boon",
+        "matched": "Race reward added: Orc Spine LegionExile + Orc legionexile T1"
+      }
     },
     "Orc-Malacath|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Orc-Malacath",
       "class": "boon",
       "race": "Orc",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS. Malacath at Seeker (25 piety, Debug patron override). Active Effects confirmed Malacath's Regard - Observant (first-tier broad floor label, IsFirstTierRaceRewardEligible via active patron path).",
+      "creditedFrom": {
+        "ledger": "co-test chat (screenshot)",
+        "race": "Orc",
+        "slot": "Orc-Malacath|boon",
+        "matched": "Malacath's Regard - Observant in Active Effects"
+      }
     },
     "Orc-Stronghold|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Orc-Stronghold",
       "class": "boon",
       "race": "Orc",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS. Malacath active patron Seeker + Orc -> Stronghold life-mode. Active Effects confirmed Forge-Worthy - Seeker (SyncOrcRewardFamily patron-tier boon, PDV_Bless_Orc_Stronghold_T1), alongside the separate always-on Code-Held - Stronghold Spine boon (SyncOrcSpineBoon, gated only on life-mode, no patron/tier required) -- two independent reward layers stacking by design, not a bug. RENAME NOTE (same session, after this proof): the boon display names were reworded (Forge-Worthy -> Hold-Forged; Code-Held - <Mode> -> Hold-Sworn/Hearth-Sworn/Legion-Sworn). The grant/feel proof above is unaffected -- only the display string changed; expect the new names in Active Effects on the next launch.",
+      "creditedFrom": {
+        "ledger": "co-test chat (screenshot)",
+        "race": "Orc",
+        "slot": "Orc-Stronghold|boon",
+        "matched": "Forge-Worthy - Seeker in Active Effects"
+      }
     },
     "Orc-supportSpells|boon": {
       "status": "pending",
@@ -1654,13 +1684,18 @@
       "creditedFrom": null
     },
     "Orc-TrialOfIron|boon": {
-      "status": "pending",
+      "status": "evidence-recorded",
       "lane": "Orc-TrialOfIron",
       "class": "boon",
       "race": "Orc",
       "expected": "Debug-primed felt proof (agreed 2026-07-07): prime state via the debug MCM, observe one live effect of this family in Active Effects/gameplay, record what was observed.",
-      "note": "",
-      "creditedFrom": null
+      "note": "2026-07-16 co-test: PASS. Slept 3 in-game days at the same interior bed to declare the hearth cell (Papyrus.0.log 04:19:46PM: Orc hearth-rest cell declared: eventbus_sleep), then a 4th sleep popped the Trial of Iron menu; chose Tusk. Log 04:21:09PM: Orc Trial of Iron discipline applied: 0 (index 0 = PDV_SPEL_Orc_TrialOfIron_Tusk). Confirms the organic sleep-rite path end-to-end (3-day declare + 4th-sleep trigger, no debug shortcut exists).",
+      "creditedFrom": {
+        "ledger": "co-test chat + Papyrus.0.log",
+        "race": "Orc",
+        "slot": "Orc-TrialOfIron|boon",
+        "matched": "Orc Trial of Iron discipline applied: 0 (Tusk)"
+      }
     },
     "OrcCodeHolds|boon": {
       "status": "pending",

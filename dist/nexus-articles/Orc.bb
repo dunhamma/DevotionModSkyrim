@@ -142,17 +142,17 @@ Champion is not available to broad, uncommitted worship; you must commit to a li
 [b]The Stronghold Orc[/b] - forge, kin, and proven war-gear:
 
 [list]
-[*][b]Seeker (25)[/b] [i]Forge-Worthy[/i] - Smithing +5
-[*][b]Devoted (50)[/b] [i]Forge-Worthy[/i] - Smithing +13, Heavy Armor +8
-[*][b]Champion (85)[/b] [i]Blood-Kin of the Forge[/i] - Smithing +23, Heavy Armor +20, Armor +50
+[*][b]Seeker (25)[/b] [i]Hold-Forged[/i] - Smithing +5
+[*][b]Devoted (50)[/b] [i]Hold-Forged[/i] - Smithing +13, Two-Handed +8
+[*][b]Champion (85)[/b] [i]Blood-Kin of the Forge[/i] - Smithing +23, Two-Handed +20, Armor +50
 [/list]
 
 [b]The City Orc[/b] - private fidelity and dignity held under pressure:
 
 [list]
-[*][b]Seeker (25)[/b] [i]Private Fidelity[/i] - Restoration +5
-[*][b]Devoted (50)[/b] [i]Private Fidelity[/i] - Restoration +13, Speech +8
-[*][b]Champion (85)[/b] [i]Self-Made Belonging[/i] - Restoration +23, Speech +20, Block +5, Armor +50
+[*][b]Seeker (25)[/b] [i]Private Fidelity[/i] - Speech +5
+[*][b]Devoted (50)[/b] [i]Private Fidelity[/i] - Speech +13, Restoration +8
+[*][b]Champion (85)[/b] [i]Self-Made Belonging[/i] - Speech +23, Restoration +20, Block +5, Armor +50
 [/list]
 
 [b]The Legion Exile[/b] - foreign discipline and the arm that carries the code:

@@ -642,52 +642,62 @@ node .\tools\pdv_1_0_endstate_gate.mjs
 
 ## Felt-Family Race Sittings (deduplicated plan)
 
-REGENERATED 2026-07-16 from the live `PDV_FeltFamilyEvidenceLedger.json`: shows only the **49 remaining** families (the 102 already proven are recorded in the ledger -- the authority -- not re-listed here). Each shared price/sting is assigned to a single sitting, so working these proves every remaining family once.
+REGENERATED 2026-07-16 from the live `PDV_FeltFamilyEvidenceLedger.json`: originally showed the **49 remaining** families (the 102 already proven were recorded in the ledger -- the authority -- and not re-listed here). Each shared price/sting is assigned to a single sitting, so working these proves every remaining family once.
+
+UPDATE 2026-07-16 (evening co-test, two concurrent sessions): Altmer, Khajiit, and Breton closed in this session; Redguard closed in a parallel session. **32 remaining** across Orc/Dunmer/Argonian/Bosmer. Checkboxes below reflect the ledger as of this update.
 
 **Per-sitting flow (matters for speed):** prime the **neglect-eligible** state FIRST via the debug MCM, work every other row while a dawn passes, advance one dawn, then read the neglect debuff LAST. Neglect is the only dawn-gated class, so this hides its wait behind the rest of the sitting.
 
 | # | Sitting | Origin idx | Remaining | Note |
 |---|---|---|---|---|
-| 1 | Altmer | 3 | 2 | Syrabane boon + neglect only (9 recorded 2026-07-15) |
+| 1 | Altmer | 3 | 0 | CLOSED 2026-07-16 |
 | 2 | Orc | 8 | 10 |  |
 | 3 | Dunmer | 5 | 9 |  |
 | 4 | Argonian | 7 | 8 |  |
-| 5 | Redguard | 9 | 8 |  |
+| 5 | Redguard | 9 | 0 | CLOSED 2026-07-16 (parallel session) |
 | 6 | Bosmer | 4 | 5 |  |
-| 7 | Breton | 2 | 4 |  |
-| 8 | Khajiit | 6 | 3 | quick straggler |
+| 7 | Breton | 2 | 0 | CLOSED 2026-07-16 |
+| 8 | Khajiit | 6 | 0 | CLOSED 2026-07-16, quick straggler |
 
-### 1. Altmer sitting (2 left) - `set PDV_GLO_OriginRace to 3`
+### 1. Altmer sitting (CLOSED 2026-07-16) - `set PDV_GLO_OriginRace to 3`
 
-Flow: prime neglect-eligible FIRST, then work the rows below; advance one dawn; read the neglect debuff last.
+2026-07-15 co-test recorded 9 of the 11 rows (5 boons, 2 prices, 2 curses). Both remaining rows closed 2026-07-16:
 
-2026-07-15 co-test recorded 9 of the 11 rows (5 boons, 2 prices, 2 curses). Two remain.
+**boon**:
+- [x] `Altmer-Syrabane|boon` -- PASS. Root cause of the 2026-07-15 miss was NOT the quest-reaction queue race; it was that piety/tier alone doesn't grant a patron-family boon (`SyncAltmerRewardFamily` gates on active COMMITTED patron, not just tier). Fix: apply target piety to tier, then also click `Debug patron override`. See [[patron-family-boon-needs-patron-override]].
 
-**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [ ] `Altmer-Syrabane|boon`  (e.g. Syrabane's Guard - Seeker) -- RETEST on an IDLE quest-reaction queue. The 2026-07-15 attempt missed the T2 grant (no `Race reward added: Altmer Syrabane T2` line) while the MQ106-200 Syrabane quest reaction was still draining from a performance sweep. ESP bindings verified correct; confirm `Quest reaction queue` reads idle first.
+**neglect**:
+- [x] `Neglect-Altmer|neglect` -- PASS ("The Dawn Withheld"). Curse none, waited 3 in-game days (fresh save was under the 3-day grace window), then `Prime race-lane neglect`. No separate decay pass needed -- the prime button re-syncs immediately once the clock has passed the grace window.
 
-**neglect** - read the neglect debuff in Active Effects (see Flow note -- prime it FIRST, read it LAST):
-- [ ] `Neglect-Altmer|neglect`  (e.g. The Dawn Withheld) -- clear the curse to human baseline (`Curse none`) first; an active werewolf/vampire curse suppresses Altmer favor, so neglect will not flag while cursed.
+**price** - REASSIGNED HERE 2026-07-16 from the Orc sitting (Trinimac is TABOO for Orc, NATIVE for Altmer):
+- [ ] `Trinimac|price` (accept-daedric-artifact, dislike event 368) -- `set PDV_GLO_OriginRace to 3`; Selected deity -> Trinimac; Target piety 25+ then Apply target piety (`HasDisfavorStanding` needs active patron OR piety >= 25, else the sting silently skips); Fire dislike vs selected deity with event 368. Expect piety -2.0 + loss surface. BONUS: -2.0 exceeds `DISFAVOR_SHARP_MIN_DELTA` (1.0) and Trinimac maps to the WAR_HONOR domain, so this should ALSO apply the sharp War/Honor disfavor debuff (~4 in-game hours) -- the only remaining price row that produces a felt debuff.
 
 ### 2. Orc sitting (10 left) - `set PDV_GLO_OriginRace to 8`
 
 Flow: prime neglect-eligible FIRST, then work the rows below; advance one dawn; read the neglect debuff last.
 
+> **GOTCHA (2026-07-16) -- Orc life-mode debug switches do NOT survive a dawn, and do NOT self-resync.** The `Orc -> City/Stronghold/Legion-Exile` MCM buttons call `DebugSetOrcLifeMode`, which sets the state but does NOT re-run the reward sync -- so the previous mode's Spine effect lingers in Active Effects until something else re-syncs. WORSE: a debug-set non-City mode records ZERO "evidence days", so the next `EvaluateOrcLifeModeAtDawn` (manager ~line 8841) lapses it straight back to City via `ApplyOrcLifeModeSwitch(City)`, which pops the **City shift toast** and reverts the effect. Symptom seen in co-test: clicking Legion-Exile popped the City toast and the exile effect never appeared.
+> **To prove Stronghold / Legion-Exile boons:** (1) click the life-mode button, (2) immediately click **Apply target piety** on Malacath again -- `DebugForceSetPietyByIndex` calls `SyncFirstTierRaceRewardRuntime` (manager line 12570), which re-runs `SyncOrcRewards` without a dawn -- (3) read Active Effects IMMEDIATELY, and (4) do NOT run a dawn pass while proving these two modes. City is the default and never lapses, so it reads fine without this.
+> **For Orc neglect specifically:** use **Prime race-lane neglect** (re-syncs immediately, no dawn needed) instead of the "advance one dawn" flow above -- that avoids running any dawn that would clobber a debug-set Stronghold/Legion-Exile mode mid-sitting.
+> Optional post-1.0 debug-ergonomics fix (not blocking): make `DebugSetOrcLifeMode` record evidence days + call `SyncFirstTierRaceRewardRuntime` so the button is self-sufficient.
+
 **boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [ ] `Orc-City|boon`  (e.g. Private Fidelity - Seeker)
-- [ ] `Orc-LegionExile|boon`  (e.g. Foreign Discipline - Seeker)
-- [ ] `Orc-Malacath|boon`  (e.g. Malacath's Regard - Seeker)
-- [ ] `Orc-Stronghold|boon`  (e.g. Forge-Worthy - Seeker)
-- [ ] `Orc-TrialOfIron|boon`  (e.g. Trial of Iron - Tusk)
-- [ ] `Orc-supportSpells|boon`  (e.g. The Code Holds)
-- [ ] `OrcCodeHolds|boon`  (e.g. The Code Holds - Devoted)
+- [x] `Orc-City|boon`  (Private Fidelity - Seeker) -- PASS 2026-07-16
+- [x] `Orc-LegionExile|boon`  (Foreign Discipline - Seeker) -- PASS 2026-07-16 (via mode + re-Apply target piety; log confirms Spine + T1 added at 04:02:28)
+- [x] `Orc-Malacath|boon`  (Malacath's Regard - Observant) -- PASS 2026-07-16
+- [x] `Orc-Stronghold|boon`  (Hold-Forged - Seeker) -- PASS 2026-07-16 (two layers: the always-on Hold-Sworn Stronghold Spine boon + the patron-tier Hold-Forged boon; both by design). NOTE: proven under the pre-rename names (Code-Held / Forge-Worthy); the display strings were reworded later the same session, grant/feel proof unaffected.
+- [x] `Orc-TrialOfIron|boon`  (Trial of Iron - Tusk) -- PASS 2026-07-16 (hearth declared 04:19:46, discipline applied 04:21:09, index 0=Tusk). NOT a debug button, and NOT a two-sleep declare. `TryDeclareRestCell` needs **3 sleeps on 3 different in-game days at the SAME interior bed** (once-per-day guard: same-day repeats don't count; a different bed resets the candidate count) to DECLARE the hearth cell, THEN a **4th sleep** at that bed pops the Trial of Iron menu (Tusk/Shield/Hammer/Yoke). Sleep ~24h each time so the day-number ticks. No tier/mode/patron gate on the Trial. Sleeping is fine to interleave; do NOT use the dawn-pass button between (life-mode lapse trap).
+- [ ] `Orc-supportSpells|boon`  (e.g. The Code Holds) -- NOT a debug button. CHANGED 2026-07-16: now fires MID-FIGHT the instant HP drops below 20% in combat (Baan Dar model), NOT on combat exit. Drop below 20% and hold ~4s for the combat poll to catch it; the +40 Health fires while you are still fighting. ONLY observable is the HP bar (no Active Effect, display-honesty fix). Requires a full Skyrim relaunch to load the recompiled manager.
+- [ ] `OrcCodeHolds|boon`  (e.g. The Code Holds - Devoted) -- as above at Malacath Devoted; expect Health +60 AND Stamina +30, mid-fight
 
 **price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row):
-- [ ] `Malacath|price`  (e.g. steal-item)
-- [ ] `Trinimac|price`  (e.g. accept-daedric-artifact)
+- [x] `Malacath|price`  (steal-item, dislike event 362) -- PASS 2026-07-16. No debuff fires and none is required: -0.25 is below the `DISFAVOR_LIGHT_MIN_DELTA` (0.5) sting floor, so the WAR_HONOR sting correctly declines. Loss-surface is the V1 bar.
+- [ ] `Trinimac|price`  (accept-daedric-artifact, dislike event 368) -- **MIS-ASSIGNED TO THIS SITTING; PROVE ON ALTMER (origin 3), NOT ORC.** ESP readback of `PDV_Deity_Trinimac` (071127:Devotion.esp) shows `Stance_Orc = 2` (TABOO) and `Stance_Altmer = 0` (NATIVE), both explicitly authored. `IsGenericLikesDislikesDeityReachable` requires NATIVE, so an Orc can NEVER reach Trinimac via generic dislikes -- the 2026-07-16 attempt correctly logged `DebugFireDislike: Trinimac is not reachable in the current origin/baseline.` twice. This is intended theology (Trinimac was unmade into Malacath; venerating him is apostasy for an Orc), not a wiring gap. See the Trinimac note under the Altmer sitting.
 
-**neglect** - read the neglect debuff in Active Effects (see Flow note -- prime it FIRST, read it LAST):
-- [ ] `Neglect-Orc|neglect`  (e.g. The Code Goes Unkept)
+> **GOTCHA (2026-07-16) -- price rows are STANCE-GATED, and the felt-sitting dedup assigner does not check stance.** A `<Deity>|price` row can only be proven from an origin where that deity's `Stance_<Race>` is `0` (NATIVE). If a dislike fire logs `... is not reachable in the current origin/baseline.`, the row is assigned to the wrong sitting -- check the deity's stance via houseCARL (`housecarl_read_record` on its `PDV_Deity_*` QUST, `VirtualMachineAdapter.Scripts[0].Properties`) before filing a defect. `Trinimac|price` is the known case (Orc=TABOO, Altmer=NATIVE). Note `PDV_DeityBase` defaults every stance to `1` (FOREIGN), so an UNWIRED stance also reads unreachable -- distinguish "deliberately TABOO/FOREIGN" (Flags=Edited, authored) from "never wired".
+
+**neglect** - read the neglect debuff in Active Effects:
+- [ ] `Neglect-Orc|neglect`  (e.g. The Code Goes Unkept) -- use Prime race-lane neglect (NO dawn); see life-mode GOTCHA above
 
 ### 3. Dunmer sitting (9 left) - `set PDV_GLO_OriginRace to 5`
 
@@ -732,23 +742,23 @@ Flow: prime neglect-eligible FIRST, then work the rows below; advance one dawn; 
 **neglect** - read the neglect debuff in Active Effects (see Flow note -- prime it FIRST, read it LAST):
 - [ ] `Neglect-ArgonianHist|neglect`  (e.g. The Hist Silenced)
 
-### 5. Redguard sitting (8 left) - `set PDV_GLO_OriginRace to 9`
+### 5. Redguard sitting (CLOSED 2026-07-16, parallel session) - `set PDV_GLO_OriginRace to 9`
 
-Flow: prime neglect-eligible FIRST, then work the rows below; advance one dawn; read the neglect debuff last.
+Closed concurrently in a parallel co-test session (2026-07-16). All 8 rows confirmed `evidence-recorded` in `PDV_FeltFamilyEvidenceLedger.json`; see that ledger for per-row notes/log evidence, not re-transcribed here.
 
-**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [ ] `Redguard-AncestorSpine|boon`  (e.g. Ancestor Spine - Seeker)
-- [ ] `Redguard-HoonDing|boon`  (e.g. HoonDing's Way - Seeker)
-- [ ] `Redguard-Leki|boon`  (e.g. Leki's Sword-Song - Seeker)
-- [ ] `Redguard-Tuwhacca|boon`  (e.g. Tu'whacca's Ward - Seeker)
+**boon**:
+- [x] `Redguard-AncestorSpine|boon`
+- [x] `Redguard-HoonDing|boon`
+- [x] `Redguard-Leki|boon`
+- [x] `Redguard-Tuwhacca|boon`
 
-**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row):
-- [ ] `HoonDing|price`  (e.g. murder-defenseless)
-- [ ] `Leki|price`  (e.g. murder-defenseless)
-- [ ] `Tuwhacca|price`  (e.g. raise-undead)
+**price**:
+- [x] `HoonDing|price`
+- [x] `Leki|price`
+- [x] `Tuwhacca|price`
 
-**neglect** - read the neglect debuff in Active Effects (see Flow note -- prime it FIRST, read it LAST):
-- [ ] `Neglect-Redguard|neglect`  (e.g. Ancestors at a Distance)
+**neglect**:
+- [x] `Neglect-Redguard|neglect`
 
 ### 6. Bosmer sitting (5 left) - `set PDV_GLO_OriginRace to 4`
 
@@ -761,32 +771,28 @@ Flow: prime neglect-eligible FIRST, then work the rows below; advance one dawn; 
 - [ ] `BaanDar|price`  (e.g. murder-defenseless)
 - [ ] `Zen|price`  (e.g. steal-item)
 
-### 7. Breton sitting (4 left) - `set PDV_GLO_OriginRace to 2`
+### 7. Breton sitting (CLOSED 2026-07-16) - `set PDV_GLO_OriginRace to 2`
 
-Flow: prime neglect-eligible FIRST, then work the rows below; advance one dawn; read the neglect debuff last.
+**boon**:
+- [x] `Breton-PatronChampion|boon` -- PASS. Green Way tradition seeded to Devoted (Apply practice target 50); Mara taken to Champion (patron override) granted "Breton Champion Mara" beside Green Way T2 untouched (Mara is Green Way-resonant per `IsDeityResonantWithBretonTradition`, so the tier-reach toast is suppressed in favor of the tradition-presentation "through the Green Way" line, but her champion spell != GreenWay_T3 so T2 is not replaced). Swap to Arkay (non-resonant) confirmed clean exclusivity: `Race reward removed: Breton Champion Mara` then `Race reward added: Breton Champion Arkay`, no stacking.
 
-**boon** - prime the tier state via debug MCM, read one effect in Active Effects:
-- [ ] `Breton-PatronChampion|boon`
+**price**:
+- [x] `Magnus|price` -- PASS (raise-undead event 365, Papyrus log confirms AwardPiety Magnus -0.75 + debug dislike surface flush)
+- [x] `Yffre|price` -- PASS (raise-undead event 365, AwardPiety Y'ffre -1.0 + debug dislike surface flush)
 
-**price** - commit one displeasing act for the lane, record the loss surface (toast / Book of Days / Ledger row):
-- [ ] `Magnus|price`  (e.g. raise-undead)
-- [ ] `Yffre|price`  (e.g. raise-undead)
+**neglect**:
+- [x] `Neglect-Breton|neglect` -- PASS ("The Tradition Grows Distant"). Curse none, `Prime race-lane neglect` (backdates `PDV.Breton.LastTraditionSignalTime`), no dawn wait needed.
 
-**neglect** - read the neglect debuff in Active Effects (see Flow note -- prime it FIRST, read it LAST):
-- [ ] `Neglect-Breton|neglect`  (e.g. The Tradition Grows Distant)
+### 8. Khajiit sitting (CLOSED 2026-07-16) - `set PDV_GLO_OriginRace to 6` -- quick straggler
 
-### 8. Khajiit sitting (3 left) - `set PDV_GLO_OriginRace to 6` -- QUICK straggler
+**substrate-favor**:
+- [x] `Khajiit-Lunar|substrate-favor` -- PASS ("Khajiit Lunar Road"). NOTE: the organic "Khajiit moon observance" button shares the daily anti-farm metric budget and silently no-ops once spent; use the direct-seed buttons ("Seed lunar metric 25/75") for felt-family proof -- they explicitly bypass the budget. See [[organic-debug-buttons-share-daily-budget]].
 
-Flow: prime neglect-eligible FIRST, then work the rows below; advance one dawn; read the neglect debuff last.
+**disfavor-sting**:
+- [x] `Disfavor-MoonLuckShadow|disfavor-sting` -- PASS ("Fortune slips for a while.")
 
-**substrate-favor** - prime the substrate/context state, read the effect in Active Effects:
-- [ ] `Khajiit-Lunar|substrate-favor`  (e.g. Khajiit Lunar Road)
-
-**disfavor-sting** - cycle domain + set band, hit apply-domain-sting, read the named debuff in Active Effects:
-- [ ] `Disfavor-MoonLuckShadow|disfavor-sting`  (e.g. Fortune slips for a while.)
-
-**neglect** - read the neglect debuff in Active Effects (see Flow note -- prime it FIRST, read it LAST):
-- [ ] `Neglect-KhajiitLunar|neglect`  (e.g. The Moons Withdrawn)
+**neglect**:
+- [x] `Neglect-KhajiitLunar|neglect` -- PASS ("The Moons Withdrawn"), `Prime race-lane neglect`.
 
 
 ## Co-Test Defects / Follow-Ups

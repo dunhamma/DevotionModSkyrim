@@ -107,17 +107,17 @@ Champion is not available to broad, uncommitted worship; you must commit to a li
 
 | Tier | Blessing | What you gain |
 |------|----------|---------------|
-| Seeker (25) | Forge-Worthy | Smithing +5 |
-| Devoted (50) | Forge-Worthy | Smithing +13, Heavy Armor +8 |
-| Champion (85) | Blood-Kin of the Forge | Smithing +23, Heavy Armor +20, Armor +50 |
+| Seeker (25) | Hold-Forged | Smithing +5 |
+| Devoted (50) | Hold-Forged | Smithing +13, Two-Handed +8 |
+| Champion (85) | Blood-Kin of the Forge | Smithing +23, Two-Handed +20, Armor +50 |
 
 **The City Orc** - private fidelity and dignity held under pressure:
 
 | Tier | Blessing | What you gain |
 |------|----------|---------------|
-| Seeker (25) | Private Fidelity | Restoration +5 |
-| Devoted (50) | Private Fidelity | Restoration +13, Speech +8 |
-| Champion (85) | Self-Made Belonging | Restoration +23, Speech +20, Block +5, Armor +50 |
+| Seeker (25) | Private Fidelity | Speech +5 |
+| Devoted (50) | Private Fidelity | Speech +13, Restoration +8 |
+| Champion (85) | Self-Made Belonging | Speech +23, Restoration +20, Block +5, Armor +50 |
 
 **The Legion Exile** - foreign discipline and the arm that carries the code:
 

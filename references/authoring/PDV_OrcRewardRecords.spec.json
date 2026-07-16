@@ -76,7 +76,7 @@
         "magnitude": -5
       }
     ],
-    "playerFacingText": "You have not kept Malacath's code. Your guard feels thin; your armor rating drops by 5 until you return to worthy work, service, or kin.",
+    "playerFacingText": "The Code goes unkept. Your guard feels thin; armor drops by 5 until you return to worthy work, service, or kin.",
     "designNote": "GENTLE drift neglect (single small negative), distinct from creed-violation loss. Bite is reserved for code-rupture / curse posture (see creedViolationLoss). Neglect fires only after sustained absence of any life-mode-appropriate act (quality forge / city quality-labor or dignity / Legion service), not from a single missed day. Removed on return to worthy work. One neglect spell only (no per-life-mode neglect)."
   },
   "creedViolationLoss": {
@@ -156,7 +156,7 @@
       "gate": "focused life-mode family; state-gated on PDV_State_OrcLifeMode=Stronghold(1) + Malacath piety tier within mode; one active life mode (R7). Theme: forge / blood-kin / community (smithing + heavy-armor). Faucet is QUALITY forge only.",
       "antiFarm": "Quality/value/context/commission threshold on forge acts + daily repeat multiplier (ConsumeDailyRepeatMultiplier 0.7^n on the substrate-style path). Raw craft count, ore mining, vendor sales, and forge spam are REJECTED.",
       "spellEditorId": "PDV_Bless_Orc_Stronghold_T1",
-      "displayName": "Forge-Worthy - Seeker",
+      "displayName": "Hold-Forged - Seeker",
       "effects": [
         {
           "actorValue": "Smithing",
@@ -174,7 +174,7 @@
       "gate": "focused life-mode family; state-gated Stronghold(1); active mode.",
       "antiFarm": "Quality/value/context threshold + daily repeat multiplier; no raw craft loop.",
       "spellEditorId": "PDV_Bless_Orc_Stronghold_T2",
-      "displayName": "Forge-Worthy - Devoted",
+      "displayName": "Hold-Forged - Devoted",
       "effects": [
         {
           "actorValue": "Smithing",
@@ -182,12 +182,14 @@
           "effectName": "Smithing"
         },
         {
-          "actorValue": "HeavyArmor",
+          "magicEffectEditorId": "PDV_MGEF_Orc_Stronghold_T2_TwoHanded",
+          "actorValue": "TwoHanded",
           "magnitude": 8,
-          "effectName": "Heavy Armor"
+          "effectName": "Two-Handed"
         }
       ],
-      "playerFacingText": "Worthy work and worthy war-gear. Smithing +13, Heavy Armor +8."
+      "playerFacingText": "The forge does not lie: what you make, you become. Smithing +13, Two-Handed +8.",
+      "designNote": "2026-07-16: HeavyArmor swapped to TwoHanded (weapon skill, not armor skill) per user request -- Stronghold's armor payoff already lives in the T3 DamageResist capstone, so T2 now carries a pure weapon/craft pairing (Smithing + Two-Handed)."
     },
     {
       "emphasis": "Stronghold",
@@ -205,9 +207,10 @@
           "effectName": "Smithing"
         },
         {
-          "actorValue": "HeavyArmor",
+          "magicEffectEditorId": "PDV_MGEF_Orc_Stronghold_T3_TwoHanded",
+          "actorValue": "TwoHanded",
           "magnitude": 20,
-          "effectName": "Heavy Armor"
+          "effectName": "Two-Handed"
         },
         {
           "actorValue": "DamageResist",
@@ -215,7 +218,7 @@
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "The stronghold counts you blood-kin and the forge answers. Smithing +23, Heavy Armor +20, Armor +50.",
+      "playerFacingText": "The stronghold counts you blood-kin and the forge answers. Smithing +23, Two-Handed +20, Armor +50.",
       "signature": "Stronghold belonging at its highest: forge-as-rite plus kin-recognized resilience. Stronghold is the STEADIEST life mode (full code infrastructure: forge, shrine, chief, shaman, Blood-Kin). Champion Survey text is the V1 recognition surface."
     },
     {
@@ -229,12 +232,14 @@
       "displayName": "Private Fidelity - Seeker",
       "effects": [
         {
-          "actorValue": "Restoration",
+          "magicEffectEditorId": "PDV_MGEF_Orc_City_T1_Speech",
+          "actorValue": "Speech",
           "magnitude": 5,
-          "effectName": "Restoration"
+          "effectName": "Speech"
         }
       ],
-      "playerFacingText": "You keep the code where no stronghold can see it. Restoration +5."
+      "playerFacingText": "You keep the code where no stronghold can see it. Speech +5.",
+      "designNote": "2026-07-16: Speech (Speechcraft) promoted to City's lead stat starting at T1 per user request (was Restoration); Restoration now enters as the secondary stat at T2."
     },
     {
       "emphasis": "City",
@@ -247,18 +252,19 @@
       "displayName": "Private Fidelity - Devoted",
       "effects": [
         {
-          "actorValue": "Restoration",
+          "magicEffectEditorId": "PDV_MGEF_Orc_City_T2_Speech",
+          "actorValue": "Speech",
           "magnitude": 13,
-          "effectName": "Restoration"
+          "effectName": "Speech"
         },
         {
-          "magicEffectEditorId": "PDV_MGEF_Orc_City_T2_Speech",
-          "actorValue": "Speechcraft",
+          "magicEffectEditorId": "PDV_MGEF_Orc_City_T2_Restoration",
+          "actorValue": "Restoration",
           "magnitude": 8,
-          "effectName": "Speech"
+          "effectName": "Restoration"
         }
       ],
-      "playerFacingText": "Dignity held under pressure is its own kind of strength. Restoration +13, Speech +8."
+      "playerFacingText": "Imperial law watches; the Code answers to no one else. Speech +13, Restoration +8."
     },
     {
       "emphasis": "City",
@@ -271,15 +277,16 @@
       "displayName": "Self-Made Belonging - Champion",
       "effects": [
         {
-          "actorValue": "Restoration",
+          "magicEffectEditorId": "PDV_MGEF_Orc_City_T3_Speech",
+          "actorValue": "Speech",
           "magnitude": 23,
-          "effectName": "Restoration"
+          "effectName": "Speech"
         },
         {
-          "magicEffectEditorId": "PDV_MGEF_Orc_City_T3_Speech",
-          "actorValue": "Speechcraft",
+          "magicEffectEditorId": "PDV_MGEF_Orc_City_T3_Restoration",
+          "actorValue": "Restoration",
           "magnitude": 20,
-          "effectName": "Speech"
+          "effectName": "Restoration"
         },
         {
           "magicEffectEditorId": "PDV_MGEF_Orc_City_T3_BlockSkill",
@@ -294,7 +301,7 @@
           "effectName": "Armor"
         }
       ],
-      "playerFacingText": "You built belonging outside the hold and kept the code doing it. Restoration +23, Speech +20, Block +5, Armor +50.",
+      "playerFacingText": "You built belonging outside the hold and kept the code doing it. Speech +23, Restoration +20, Block +5, Armor +50.",
       "signature": "City life at its highest: private fidelity, dignity under pressure, and a community built by your own hand outside any stronghold. EQUAL felt value to Stronghold T3 (sharper situational, not a failed Stronghold). Champion Survey text is the V1 recognition surface."
     },
     {

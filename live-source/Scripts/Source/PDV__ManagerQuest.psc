@@ -6824,11 +6824,13 @@ EndFunction
 Function HandlePlayerBelowHealthGate(Actor playerRef)
     TryBosmerBaanDarGap(playerRef)
     TryArgonianSithisNearDeathBurst(playerRef)
-    MarkOrcCodeHoldsPending(playerRef)
+    TryOrcCodeHolds(playerRef)
 EndFunction
 
 Function HandlePlayerBelowHealthSurvived(Actor playerRef)
-    TryOrcCodeHolds(playerRef)
+    ; Orc Code Holds now fires mid-fight from HandlePlayerBelowHealthGate (Baan Dar
+    ; model), so the combat-exit survival path is intentionally a no-op. Left routed
+    ; from the player alias for origin 8 without behavior.
 EndFunction
 
 ; Baan Dar Opens the Gap (Bandit Road signature, once/day). Called from the
@@ -6888,27 +6890,13 @@ Function TryArgonianSithisNearDeathBurst(Actor playerRef)
     Trace(2, "Argonian Sithis near-death burst fired.")
 EndFunction
 
-Function MarkOrcCodeHoldsPending(Actor playerRef)
+Function TryOrcCodeHolds(Actor playerRef)
     if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_ORC
         return
     endIf
     if !playerRef.IsInCombat() || (!PDV_SPEL_OrcCodeHolds && !PDV_SPEL_OrcCodeHolds_Devoted)
         return
     endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Orc.CodeHolds.Pending", 1)
-    Trace(2, "Orc Code Holds pending after below-health gate.")
-EndFunction
-
-Function TryOrcCodeHolds(Actor playerRef)
-    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_ORC
-        StorageUtil.SetIntValue(None, "PDV.Orc.CodeHolds.Pending", 0)
-        return
-    endIf
-    if StorageUtil.GetIntValue(None, "PDV.Orc.CodeHolds.Pending") != 1
-        return
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.Orc.CodeHolds.Pending", 0)
 
     Int malacathTier = TIER_NONE
     if PDV_Malacath
@@ -6918,9 +6906,12 @@ Function TryOrcCodeHolds(Actor playerRef)
         return
     endIf
 
-    ; The Code Holds is a near-death survival pulse. Its old HealRate spell is not
-    ; cast because Requiem swallows rate-mult healing on a near-zero base; the
-    ; actual health save is a flat RestoreActorValue. Requiem-proof.
+    ; The Code Holds is a near-death clutch save. It fires mid-fight the instant
+    ; health drops past the below-health gate (Baan Dar Opens the Gap model), not on
+    ; combat exit -- so it can actually save the player. The player alias routes the
+    ; gate once per combat session, which caps it to one save per fight. Its old
+    ; HealRate spell is not cast because Requiem swallows rate-mult healing on a
+    ; near-zero base; the actual health save is a flat RestoreActorValue. Requiem-proof.
     if malacathTier >= TIER_DEVOTED && PDV_SPEL_OrcCodeHolds_Devoted
         playerRef.RestoreActorValue("Stamina", 30.0)
         playerRef.RestoreActorValue("Health", 60.0)
@@ -8993,7 +8984,14 @@ Function MaybeShowOrcHearthHeldNotice(String reason)
     if StorageUtil.GetIntValue(None, "PDV.Orc.HearthHeldDeclared") == 0
         StorageUtil.SetIntValue(None, "PDV.Orc.HearthHeldDeclared", 1)
         StorageUtil.SetStringValue(None, "PDV.Orc.LastHearthHeldDeclareReason", reason)
-        ShowOrcNotification(PDV_Notif_Orc_HearthHeld_Declare, "A hearth held by choice is declared. The code has a place to stand.")
+        ; Declaring a hearth is a once-ever moment (the flag above guards it), so it
+        ; earns a toast plus a permanent Book of Days beat rather than a transient
+        ; corner notice. The toast honours the Notifications preference at the shared
+        ; chokepoint while the Book entry always logs. PDV_Notif_Orc_HearthHeld_Declare
+        ; is deliberately no longer shown here (it would double the surface); the
+        ; record stays in the ESP, orphaned, with its text kept in sync.
+        SendPrismaToast("malacath", "good", "A hearth held", "You claim this hearth as your own, and swear to hold it.")
+        AppendBookOfDaysEntry("You claim this hearth as your own, and swear to hold it.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
         return
     endIf
 

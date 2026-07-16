@@ -279,7 +279,7 @@
     }
   },
   "otherVisibleNameMigrations": {
-    "Orc": ["Code-Held - City", "Code-Held - Stronghold", "Code-Held - Legion Exile"],
+    "Orc": ["Hearth-Sworn - City", "Hold-Sworn - Stronghold", "Legion-Sworn - Legion Exile"],
     "RedguardBroad": ["Ancestors' Regard - Seeker", "Ancestors' Regard - Faithful"],
     "RedguardModes": ["Crown's Form", "Forebear's Road", "Ash'abah Duty"]
   }

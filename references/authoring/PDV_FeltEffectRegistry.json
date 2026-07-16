@@ -2,20 +2,20 @@
   "schema": "pdv.felt-effect-registry.v1",
   "sourceHashes": {
     "references/authoring/PDV_AltmerRewardRecords.spec.json": "91fbebdda0236b33",
-    "references/authoring/PDV_ArgonianRewardRecords.spec.json": "8c261c055f495a16",
-    "references/authoring/PDV_BosmerRewardRecords.spec.json": "f69efeffafb13184",
-    "references/authoring/PDV_BretonRewardRecords.spec.json": "dfb8708bbb0c4aca",
-    "references/authoring/PDV_DunmerRewardRecords.spec.json": "d9fd2b5efb4fb379",
-    "references/authoring/PDV_ImperialRewardRecords.spec.json": "47149d1ea6554bd8",
-    "references/authoring/PDV_KhajiitRewardRecords.spec.json": "7f4843d2a6b08fe7",
-    "references/authoring/PDV_NordRewardRecords.spec.json": "99b2f9ea6290aaa4",
-    "references/authoring/PDV_OrcRewardRecords.spec.json": "9881565183122c1c",
-    "references/authoring/PDV_RedguardRewardRecords.spec.json": "05297e252197dd86",
+    "references/authoring/PDV_ArgonianRewardRecords.spec.json": "594c6066a8dd61ae",
+    "references/authoring/PDV_BosmerRewardRecords.spec.json": "4c6397ad19ce3a09",
+    "references/authoring/PDV_BretonRewardRecords.spec.json": "aa64f0034cea5b83",
+    "references/authoring/PDV_DunmerRewardRecords.spec.json": "4403886a86375ac5",
+    "references/authoring/PDV_ImperialRewardRecords.spec.json": "5f5030a988290d6e",
+    "references/authoring/PDV_KhajiitRewardRecords.spec.json": "bd5e855e82b5bcc0",
+    "references/authoring/PDV_NordRewardRecords.spec.json": "3808d79c1e2c32f0",
+    "references/authoring/PDV_OrcRewardRecords.spec.json": "9423683e60be0393",
+    "references/authoring/PDV_RedguardRewardRecords.spec.json": "0aa89e4d3e23b960",
     "references/authoring/PDV_DaedricPrinceRecordContracts.json": "8da722675e3a257d",
     "references/authoring/PDV_DeityLikesDislikes.csv": "9d7ec050e632024d",
     "references/authoring/PDV_DeityLikesDislikes_Princes_V2.csv": "93b6474ad6c56304",
     "references/authoring/PDV_DislikeConsequenceRecords.spec.json": "430b071b6bf66d6d",
-    "live-source/Scripts/Source/PDV__ManagerQuest.psc": "3f783a75b095900c"
+    "live-source/Scripts/Source/PDV__ManagerQuest.psc": "6146e9669714c94d"
   },
   "counts": {
     "effects": 517,
@@ -698,7 +698,7 @@
       "race": "Argonian",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_ArgonianRewardRecords.spec.json $.emphasisRewards[0]",
-      "displayName": "Retired Argonian Relation - Faithful",
+      "displayName": "Hist Communion - Observant",
       "tier": "T1",
       "wiringProperty": null,
       "expected": {
@@ -722,7 +722,7 @@
       "race": "Argonian",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_ArgonianRewardRecords.spec.json $.emphasisRewards[1]",
-      "displayName": "Retired Argonian Relation - Devoted",
+      "displayName": "Hist Communion - Faithful",
       "tier": "T2",
       "wiringProperty": null,
       "expected": {
@@ -1017,7 +1017,7 @@
       "race": "Bosmer",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_BosmerRewardRecords.spec.json $.emphasisRewards[0]",
-      "displayName": "Y'ffre's Weave - Seeker",
+      "displayName": "Y'ffre's Weave - Observant",
       "tier": "T1",
       "wiringProperty": null,
       "expected": {
@@ -1447,7 +1447,7 @@
       "race": "Breton",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_BretonRewardRecords.spec.json $.emphasisRewards[0]",
-      "displayName": "Tradition's Footing - Seeker",
+      "displayName": "Tradition's Footing - Observant",
       "tier": "T1",
       "wiringProperty": null,
       "expected": {
@@ -1828,8 +1828,8 @@
         ],
         "effects": [
           {
-            "actorValue": "Magicka",
-            "magnitude": 40,
+            "actorValue": "Health",
+            "magnitude": 30,
             "duration": null
           },
           {
@@ -2229,7 +2229,7 @@
       "race": "Dunmer",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_DunmerRewardRecords.spec.json $.emphasisRewards[0]",
-      "displayName": "Reclamation Communion - Faithful",
+      "displayName": "Reclamation Communion - Observant",
       "tier": "T1",
       "wiringProperty": null,
       "expected": {
@@ -2253,7 +2253,7 @@
       "race": "Dunmer",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_DunmerRewardRecords.spec.json $.emphasisRewards[1]",
-      "displayName": "Reclamation Communion - Devoted",
+      "displayName": "Reclamation Communion - Faithful",
       "tier": "T2",
       "wiringProperty": null,
       "expected": {
@@ -2667,8 +2667,8 @@
         ],
         "effects": [
           {
-            "actorValue": "Magicka",
-            "magnitude": 40,
+            "actorValue": "Health",
+            "magnitude": 30,
             "duration": null
           },
           {
@@ -4463,7 +4463,7 @@
       "race": "Orc",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_OrcRewardRecords.spec.json $.emphasisRewards[0]",
-      "displayName": "Malacath's Regard - Seeker",
+      "displayName": "Malacath's Regard - Observant",
       "tier": "T1",
       "wiringProperty": null,
       "expected": {
@@ -4516,7 +4516,7 @@
       "race": "Orc",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_OrcRewardRecords.spec.json $.emphasisRewards[2]",
-      "displayName": "Forge-Worthy - Seeker",
+      "displayName": "Hold-Forged - Seeker",
       "tier": "T1",
       "wiringProperty": null,
       "expected": {
@@ -4540,7 +4540,7 @@
       "race": "Orc",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_OrcRewardRecords.spec.json $.emphasisRewards[3]",
-      "displayName": "Forge-Worthy - Devoted",
+      "displayName": "Hold-Forged - Devoted",
       "tier": "T2",
       "wiringProperty": null,
       "expected": {
@@ -4554,7 +4554,7 @@
             "duration": null
           },
           {
-            "actorValue": "HeavyArmor",
+            "actorValue": "TwoHanded",
             "magnitude": 8,
             "duration": null
           }
@@ -4583,7 +4583,7 @@
             "duration": null
           },
           {
-            "actorValue": "HeavyArmor",
+            "actorValue": "TwoHanded",
             "magnitude": 20,
             "duration": null
           },
@@ -4612,7 +4612,7 @@
         ],
         "effects": [
           {
-            "actorValue": "Restoration",
+            "actorValue": "Speech",
             "magnitude": 5,
             "duration": null
           }
@@ -4636,12 +4636,12 @@
         ],
         "effects": [
           {
-            "actorValue": "Restoration",
+            "actorValue": "Speech",
             "magnitude": 13,
             "duration": null
           },
           {
-            "actorValue": "Speechcraft",
+            "actorValue": "Restoration",
             "magnitude": 8,
             "duration": null
           }
@@ -4665,12 +4665,12 @@
         ],
         "effects": [
           {
-            "actorValue": "Restoration",
+            "actorValue": "Speech",
             "magnitude": 23,
             "duration": null
           },
           {
-            "actorValue": "Speechcraft",
+            "actorValue": "Restoration",
             "magnitude": 20,
             "duration": null
           },
@@ -4945,8 +4945,8 @@
         ],
         "effects": [
           {
-            "actorValue": "StaminaRateMult",
-            "magnitude": 5,
+            "actorValue": "Stamina",
+            "magnitude": 15,
             "duration": 600
           }
         ]
@@ -5008,7 +5008,7 @@
       "race": "Redguard",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_RedguardRewardRecords.spec.json $.emphasisRewards[0]",
-      "displayName": "Ancestor Spine - Seeker",
+      "displayName": "Ancestors' Regard - Observant",
       "tier": "T1",
       "wiringProperty": null,
       "expected": {
@@ -5032,7 +5032,7 @@
       "race": "Redguard",
       "origin": "race-spec",
       "declaredIn": "references/authoring/PDV_RedguardRewardRecords.spec.json $.emphasisRewards[1]",
-      "displayName": "Ancestor Spine - Faithful",
+      "displayName": "Ancestors' Regard - Faithful",
       "tier": "T2",
       "wiringProperty": null,
       "expected": {
@@ -13476,5 +13476,5 @@
     }
   ],
   "orphans": [],
-  "updated": "2026-07-13"
+  "updated": "2026-07-16"
 }
