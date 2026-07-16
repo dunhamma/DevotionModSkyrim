@@ -1524,6 +1524,36 @@ Function AwardPietyFromLikesDislikes(PDV_DeityBase deity, Float amount, Int even
     endIf
 EndFunction
 
+; Authoria bard-performance signal. Quality is the SGT expertise delta (1-8);
+; Become a Bard-only performances enter at quality 1. The daily repeat
+; multiplier is the global devotional anti-farm budget, while PlayerEvents
+; separately enforces one award per tavern per devotional day.
+Function HandleBardPerformance(Int qualityDelta, Bool receivedOvation, Form contextForm)
+    if !PDV_Dibella
+        return
+    endIf
+
+    if qualityDelta < 1
+        qualityDelta = 1
+    elseIf qualityDelta > 8
+        qualityDelta = 8
+    endIf
+
+    Float repeatMultiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BardPerformance")
+    if repeatMultiplier <= 0.0
+        Trace(2, "Bard performance decayed out for today; no Dibella award.")
+        return
+    endIf
+
+    Float qualityMultiplier = 0.75 + (qualityDelta as Float * 0.125)
+    if receivedOvation
+        qualityMultiplier += 0.25
+    endIf
+
+    AwardCuratedSignalScaled(PDV_Dibella, PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR, contextForm, repeatMultiplier * qualityMultiplier)
+    Trace(2, "Bard performance routed quality=" + qualityDelta + " ovation=" + receivedOvation + " multiplier=" + (repeatMultiplier * qualityMultiplier))
+EndFunction
+
 String Function ResolveQuestReactionCellFile(String cellPrefix)
     ; Return the matrix channel that owns this (form|stage) cell: core first, then
     ; the legacy ARR channel, then the per-mod patch channels cached at
