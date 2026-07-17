@@ -1,4 +1,4 @@
-# The Daedric Princes
+﻿# The Daedric Princes
 
 In Devotion, your character builds a religious life through the deeds they do, the god they honor, and the world they move through. Most of that life points toward the safe, ordinary gods of your people. This guide is about the other road: the sixteen Daedric Princes, the powerful and dangerous spirits you can deal with no matter what race you are.
 
@@ -38,6 +38,139 @@ These are the sixteen Princes you can reach in Skyrim. Each rewards a different 
 - **Clavicus Vile** - the bargain and the wish. He rewards the deal struck, power claimed by terms rather than toil, and the loophole. He prefers a bargain to honest work or simple theft.
 - **Peryite** - plague, order, and the lowest task. He favors patient humble labor kept in its proper place, and the bearing of disease. Curing affliction undoes the order he imposes.
 - **Vaermina** - dreams, nightmares, and stolen memory. She visits the sleeper, harvests the dream, and feeds on fear and forbidden lore.
+
+## Boon and Price by Tier
+
+Every pact gives a boon and takes a price, and both deepen as you rise. These are the same figures you see in your Active Effects once a pact is active. They are current beta values and may be tuned before release.
+
+**Azura**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | Magic resistance +10% | Stamina regeneration -5% |
+| Devoted | Magic resistance +15% | Stamina regeneration -10% |
+| Champion | Magic resistance +20% | Stamina regeneration -15% |
+
+**Boethiah**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | One-Handed +10 | Speech -8 |
+| Devoted | One-Handed +15 | Speech -12 |
+| Champion | One-Handed +20 | Speech -15 |
+
+**Mephala**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | Sneak +10 | Speech -8 |
+| Devoted | Sneak +15 | Speech -12 |
+| Champion | Sneak +20 | Speech -15 |
+
+**Malacath**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | Armor rating +10 | Movement Speed -3% |
+| Devoted | Armor rating +15 | Movement Speed -5% |
+| Champion | Armor rating +20 | Movement Speed -8% |
+
+**Meridia**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | Restoration +10 | Illusion -8 |
+| Devoted | Restoration +15 | Illusion -12 |
+| Champion | Restoration +20 | Illusion -15 |
+
+**Hircine**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | Stamina regeneration +10% | Speech -8 |
+| Devoted | Stamina regeneration +15% | Speech -12 |
+| Champion | Stamina regeneration +20% | Speech -15 |
+
+**Molag Bal**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | Illusion +10 | Restoration -8 |
+| Devoted | Illusion +15 | Restoration -12 |
+| Champion | Illusion +20 | Restoration -15 |
+
+**Nocturnal**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | Lockpicking +10 | Carry Weight -15 |
+| Devoted | Lockpicking +15 | Carry Weight -25 |
+| Champion | Lockpicking +20 | Carry Weight -35 |
+
+**Hermaeus Mora**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | Alteration +10 | Stamina regeneration -5% |
+| Devoted | Alteration +15 | Stamina regeneration -10% |
+| Champion | Alteration +20 | Stamina regeneration -15% |
+
+**Mehrunes Dagon**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | Attack damage +5% | Armor rating -5 |
+| Devoted | Attack damage +8% | Armor rating -10 |
+| Champion | Attack damage +12% | Armor rating -15 |
+
+**Sheogorath**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | Magicka regeneration +10% | Restoration -8 |
+| Devoted | Magicka regeneration +15% | Restoration -12 |
+| Champion | Magicka regeneration +20% | Restoration -15 |
+
+**Namira**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | Health regeneration +10% | Speech -8 |
+| Devoted | Health regeneration +15% | Speech -12 |
+| Champion | Health regeneration +20% | Speech -15 |
+
+**Sanguine**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | Speech +10 | Magicka regeneration -5% |
+| Devoted | Speech +15 | Magicka regeneration -10% |
+| Champion | Speech +20 | Magicka regeneration -15% |
+
+**Clavicus Vile**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | Carry Weight +25 | Magicka regeneration -5% |
+| Devoted | Carry Weight +50 | Magicka regeneration -10% |
+| Champion | Carry Weight +75 | Magicka regeneration -15% |
+
+**Peryite**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | Disease resistance +25% | Stamina regeneration -5% |
+| Devoted | Disease resistance +50% | Stamina regeneration -10% |
+| Champion | Disease resistance +75% | Stamina regeneration -15% |
+
+**Vaermina**
+
+| Tier | Boon | Price |
+|------|------|-------|
+| Seeker | Illusion +10 | Health regeneration -5% |
+| Devoted | Illusion +15 | Health regeneration -10% |
+| Champion | Illusion +20 | Health regeneration -15% |
+
 
 ## How a Pact Works
 

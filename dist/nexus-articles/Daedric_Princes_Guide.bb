@@ -1,4 +1,4 @@
-[size=6][b]The Daedric Princes[/b][/size]
+# The Daedric Princes
 
 In Devotion, your character builds a religious life through the deeds they do, the god they honor, and the world they move through. Most of that life points toward the safe, ordinary gods of your people. This guide is about the other road: the sixteen Daedric Princes, the powerful and dangerous spirits you can deal with no matter what race you are.
 
@@ -41,6 +41,138 @@ These are the sixteen Princes you can reach in Skyrim. Each rewards a different 
 [*][b]Clavicus Vile[/b] - the bargain and the wish. He rewards the deal struck, power claimed by terms rather than toil, and the loophole. He prefers a bargain to honest work or simple theft.
 [*][b]Peryite[/b] - plague, order, and the lowest task. He favors patient humble labor kept in its proper place, and the bearing of disease. Curing affliction undoes the order he imposes.
 [*][b]Vaermina[/b] - dreams, nightmares, and stolen memory. She visits the sleeper, harvests the dream, and feeds on fear and forbidden lore.
+[/list]
+
+[size=5][b]Boon and Price by Tier[/b][/size]
+
+Every pact gives a boon and takes a price, and both deepen as you rise. These are the same figures you see in your Active Effects once a pact is active. They are current beta values and may be tuned before release.
+
+[b]Azura[/b]
+
+[list]
+[*][b]Seeker[/b] [i]Magic resistance +10%[/i] - Stamina regeneration -5%
+[*][b]Devoted[/b] [i]Magic resistance +15%[/i] - Stamina regeneration -10%
+[*][b]Champion[/b] [i]Magic resistance +20%[/i] - Stamina regeneration -15%
+[/list]
+
+[b]Boethiah[/b]
+
+[list]
+[*][b]Seeker[/b] [i]One-Handed +10[/i] - Speech -8
+[*][b]Devoted[/b] [i]One-Handed +15[/i] - Speech -12
+[*][b]Champion[/b] [i]One-Handed +20[/i] - Speech -15
+[/list]
+
+[b]Mephala[/b]
+
+[list]
+[*][b]Seeker[/b] [i]Sneak +10[/i] - Speech -8
+[*][b]Devoted[/b] [i]Sneak +15[/i] - Speech -12
+[*][b]Champion[/b] [i]Sneak +20[/i] - Speech -15
+[/list]
+
+[b]Malacath[/b]
+
+[list]
+[*][b]Seeker[/b] [i]Armor rating +10[/i] - Movement Speed -3%
+[*][b]Devoted[/b] [i]Armor rating +15[/i] - Movement Speed -5%
+[*][b]Champion[/b] [i]Armor rating +20[/i] - Movement Speed -8%
+[/list]
+
+[b]Meridia[/b]
+
+[list]
+[*][b]Seeker[/b] [i]Restoration +10[/i] - Illusion -8
+[*][b]Devoted[/b] [i]Restoration +15[/i] - Illusion -12
+[*][b]Champion[/b] [i]Restoration +20[/i] - Illusion -15
+[/list]
+
+[b]Hircine[/b]
+
+[list]
+[*][b]Seeker[/b] [i]Stamina regeneration +10%[/i] - Speech -8
+[*][b]Devoted[/b] [i]Stamina regeneration +15%[/i] - Speech -12
+[*][b]Champion[/b] [i]Stamina regeneration +20%[/i] - Speech -15
+[/list]
+
+[b]Molag Bal[/b]
+
+[list]
+[*][b]Seeker[/b] [i]Illusion +10[/i] - Restoration -8
+[*][b]Devoted[/b] [i]Illusion +15[/i] - Restoration -12
+[*][b]Champion[/b] [i]Illusion +20[/i] - Restoration -15
+[/list]
+
+[b]Nocturnal[/b]
+
+[list]
+[*][b]Seeker[/b] [i]Lockpicking +10[/i] - Carry Weight -15
+[*][b]Devoted[/b] [i]Lockpicking +15[/i] - Carry Weight -25
+[*][b]Champion[/b] [i]Lockpicking +20[/i] - Carry Weight -35
+[/list]
+
+[b]Hermaeus Mora[/b]
+
+[list]
+[*][b]Seeker[/b] [i]Alteration +10[/i] - Stamina regeneration -5%
+[*][b]Devoted[/b] [i]Alteration +15[/i] - Stamina regeneration -10%
+[*][b]Champion[/b] [i]Alteration +20[/i] - Stamina regeneration -15%
+[/list]
+
+[b]Mehrunes Dagon[/b]
+
+[list]
+[*][b]Seeker[/b] [i]Attack damage +5%[/i] - Armor rating -5
+[*][b]Devoted[/b] [i]Attack damage +8%[/i] - Armor rating -10
+[*][b]Champion[/b] [i]Attack damage +12%[/i] - Armor rating -15
+[/list]
+
+[b]Sheogorath[/b]
+
+[list]
+[*][b]Seeker[/b] [i]Magicka regeneration +10%[/i] - Restoration -8
+[*][b]Devoted[/b] [i]Magicka regeneration +15%[/i] - Restoration -12
+[*][b]Champion[/b] [i]Magicka regeneration +20%[/i] - Restoration -15
+[/list]
+
+[b]Namira[/b]
+
+[list]
+[*][b]Seeker[/b] [i]Health regeneration +10%[/i] - Speech -8
+[*][b]Devoted[/b] [i]Health regeneration +15%[/i] - Speech -12
+[*][b]Champion[/b] [i]Health regeneration +20%[/i] - Speech -15
+[/list]
+
+[b]Sanguine[/b]
+
+[list]
+[*][b]Seeker[/b] [i]Speech +10[/i] - Magicka regeneration -5%
+[*][b]Devoted[/b] [i]Speech +15[/i] - Magicka regeneration -10%
+[*][b]Champion[/b] [i]Speech +20[/i] - Magicka regeneration -15%
+[/list]
+
+[b]Clavicus Vile[/b]
+
+[list]
+[*][b]Seeker[/b] [i]Carry Weight +25[/i] - Magicka regeneration -5%
+[*][b]Devoted[/b] [i]Carry Weight +50[/i] - Magicka regeneration -10%
+[*][b]Champion[/b] [i]Carry Weight +75[/i] - Magicka regeneration -15%
+[/list]
+
+[b]Peryite[/b]
+
+[list]
+[*][b]Seeker[/b] [i]Disease resistance +25%[/i] - Stamina regeneration -5%
+[*][b]Devoted[/b] [i]Disease resistance +50%[/i] - Stamina regeneration -10%
+[*][b]Champion[/b] [i]Disease resistance +75%[/i] - Stamina regeneration -15%
+[/list]
+
+[b]Vaermina[/b]
+
+[list]
+[*][b]Seeker[/b] [i]Illusion +10[/i] - Health regeneration -5%
+[*][b]Devoted[/b] [i]Illusion +15[/i] - Health regeneration -10%
+[*][b]Champion[/b] [i]Illusion +20[/i] - Health regeneration -15%
 [/list]
 
 [size=5][b]How a Pact Works[/b][/size]
