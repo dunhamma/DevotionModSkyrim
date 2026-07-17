@@ -2,6 +2,13 @@ native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/app.js text eol=lf
 native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/index.html text eol=lf
 native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/styles.css text eol=lf
 
+# The tracked Papyrus mirror. pdv_compile.mjs's drift guard compares each of
+# these against the shared MO2 live tree before compiling; with autocrlf=true and
+# no pin, a fresh checkout could resolve to CRLF while the live tree is LF (or the
+# reverse) and the guard would report false drift. Pin LF so the checkout side is
+# deterministic; the guard also normalizes line endings as the second layer.
+live-source/Scripts/Source/*.psc text eol=lf
+
 # Generated Nexus BBCode. pdv_guide_bbcode.mjs writes LF and its --check gate
 # byte-compares what it would write against what is on disk; with autocrlf=true
 # and no rule here, git rewrites these to CRLF on checkout and every guide then
