@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 // pdv_guide_bbcode.mjs
 //
-// Converts the finished player race guides (docs/player-guides/races/*.md) into
-// Nexus-Mods-ready BBCode at dist/nexus-articles/*.bb, for pasting straight into
-// a Nexus article or mod description.
+// Converts the finished player guides into Nexus-Mods-ready BBCode at
+// dist/nexus-articles/*.bb, for pasting straight into a Nexus article or mod
+// description. Sources: the ten race guides (docs/player-guides/races/*.md) plus
+// the non-race guides listed in DOCS (the mod page description).
 //
 // Why not just paste the Markdown: Nexus's editor speaks BBCode, and its BBCode
 // dialect has NO table tag. A Markdown table pasted into Nexus renders as a wall
@@ -11,7 +12,7 @@
 // supported everywhere and more readable on a narrow mod page.
 //
 // Usage:
-//   node tools/pdv_guide_bbcode.mjs            # convert all 10 races
+//   node tools/pdv_guide_bbcode.mjs            # convert every guide
 //   node tools/pdv_guide_bbcode.mjs --check    # verify only; non-zero exit on problems
 
 import fs from 'node:fs';
@@ -19,10 +20,22 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
-const SRC_DIR = path.join(ROOT, 'docs', 'player-guides', 'races');
+const GUIDES_DIR = path.join(ROOT, 'docs', 'player-guides');
+const SRC_DIR = path.join(GUIDES_DIR, 'races');
 const OUT_DIR = path.join(ROOT, 'dist', 'nexus-articles');
 
 const RACES = ['Altmer', 'Argonian', 'Bosmer', 'Breton', 'Dunmer', 'Imperial', 'Khajiit', 'Nord', 'Orc', 'Redguard'];
+
+// Guides that are not per-race but ship through the same converter and the same
+// gate. The mod page description is one of these: Nexus speaks the same BBCode
+// for a description as for an article, so it gets the same staleness/ASCII/
+// review-tag checks instead of being hand-maintained and drifting unwatched.
+const DOCS = [{ name: 'ModPage', src: path.join(GUIDES_DIR, 'Nexus_ModPage.md') }];
+
+const TARGETS = [
+  ...RACES.map((race) => ({ name: race, src: path.join(SRC_DIR, `${race}.md`) })),
+  ...DOCS,
+];
 
 const normalizeEol = (s) => s.replace(/\r\n/g, '\n');
 
@@ -99,6 +112,17 @@ function convert(markdown) {
       }
       out.push('[/list]');
       continue;
+    }
+    // Numbered runs -- [list=1] is the ordered list Nexus renders. Without this
+    // the digits survive as literal text in an unstyled paragraph.
+    else if (/^\s*\d+\.\s+/.test(line)) {
+      out.push('[list=1]');
+      while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) {
+        out.push(`[*]${inline(lines[i].replace(/^\s*\d+\.\s+/, ''))}`);
+        i++;
+      }
+      out.push('[/list]');
+      continue;
     } else if (/^---+\s*$/.test(line)) out.push('[line]');
     else out.push(inline(line));
 
@@ -114,10 +138,9 @@ const check = process.argv.includes('--check');
 if (!check) fs.mkdirSync(OUT_DIR, { recursive: true });
 
 let failed = 0;
-for (const race of RACES) {
-  const src = path.join(SRC_DIR, `${race}.md`);
+for (const { name: race, src } of TARGETS) {
   if (!fs.existsSync(src)) {
-    console.error(`MISSING ${race}.md`);
+    console.error(`MISSING ${path.relative(ROOT, src)}`);
     failed++;
     continue;
   }
@@ -155,4 +178,4 @@ if (failed) {
   console.error(`\n${failed} guide(s) not clean.`);
   process.exit(1);
 }
-console.log(`\nAll ${RACES.length} guides clean${check ? '' : ` -> ${path.relative(ROOT, OUT_DIR)}`}.`);
+console.log(`\nAll ${TARGETS.length} guides clean${check ? '' : ` -> ${path.relative(ROOT, OUT_DIR)}`}.`);

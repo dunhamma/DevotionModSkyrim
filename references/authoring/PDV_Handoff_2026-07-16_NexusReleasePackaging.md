@@ -6,13 +6,31 @@ run. This doc is a snapshot of that run, not a competing authority.
 
 ## What was built
 
-`dist/Devotion-1.0-rc1-20260716.zip` -- 7.6 MB, 216 entries, SHA256
+`dist/Devotion-1.0.0.zip` -- 7.6 MB, 216 entries, SHA256
 `9140A08933BE8386A7989D24497120CDA6D2CC50B7AD08B7927938161793D8CF`.
 (Supersedes `BD99DCC5...` -- the same package before the Bosmer path-label fix
 below forced a recompile; both supersede the leaking `A72E63D3...`. Re-derive the
 true hash at any time with
-`node tools/pdv_package_release.mjs --verify dist/Devotion-1.0-rc1-20260716.zip`
+`node tools/pdv_package_release.mjs --verify dist/Devotion-1.0.0.zip`
 rather than trusting this line.)
+
+> **Renamed to `Devotion-1.0.0.zip` by the owner, 2026-07-17. This is the
+> official distribute file.** Pure rename -- byte-identical to the
+> `Devotion-1.0-rc1-20260717.zip` build, same SHA256, re-verified PASS after the
+> rename. The `1.0-rc1` filename is retired; any doc still naming it is stale --
+> including `PDV_CleanupSweep_SmokePacket_2026-07-16.md`, whose "Artifact under
+> test" names a file no longer on disk.
+>
+> The owner is shipping this as **1.0** while the end-state gate reads 11 RED.
+> That is an owner release-claim decision, not a gate pass. The criteria and
+> their `post10: false` flags are unchanged and the open work is still tracked in
+> `PDV_1_0_UntestedBacklog_2026-07-16.md` -- do not read the `1.0.0` filename
+> back as evidence that the gate greened.
+>
+> Not the distribute file: `dist/Devotion.Beta1.0.zip` is the retired friend
+> pack (top-level `Devotion\` wrapper, carries the 876 KB
+> `PDV__ManagerQuest.psc.orig` leak, and a README telling readers not to
+> redistribute). Never upload it.
 
 Clean deployable of live `mods/Devotion` with a **Data-relative root** (installs
 via mod manager with no "set data directory" step), plus `README.txt` and
