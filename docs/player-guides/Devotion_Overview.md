@@ -76,10 +76,9 @@ Every race plays its own faith. Start with your character's race below, then rea
 - **Address Library for SKSE Plugins** - lets the SKSE plugins load on your game version.
 - **SkyUI** - provides the in-game MCM, where you set the panel hotkey and reach settings.
 
-The in-game Devotion panel ships with the mod; you do not need anything extra for it.
-
 ### Recommended (optional)
 
+- **Prisma UI** - the interface framework the in-game Devotion panel is drawn with. Devotion ships the panel's own views and its bridge, but not the framework itself. Without Prisma UI the mod plays normally and the MCM still reports your standing; you simply do not get the Devotion panel, its Book of Days journal view, or its toasts.
 - **A survival or needs mod** - Skyrim's built-in Survival Mode, Frostfall, or Sunhelm all work. Devotion plays fully without one, but several outdoor, weather, and rest blessings are felt more keenly when cold, exposure, and hunger actually matter, because there is more for your faith to push against. A survival mod only ever shapes how rewards feel; it never changes how piety is earned.
 
 ### Compatibility
@@ -89,7 +88,7 @@ The in-game Devotion panel ships with the mod; you do not need anything extra fo
 
 ## Getting Started
 
-Install the requirements above, add Devotion, and start or continue a game. For setup help and your first steps, see the FAQ and Quick Start article. To understand what the gods are actually watching and how standing grows, read the How Devotion Works primer, then dive into your race's guide.
+Install the requirements above, add Devotion, and start a new game. Devotion needs a save that has never had it installed; adding it partway through a playthrough is not supported. For setup help and your first steps, see the FAQ and Quick Start article. To understand what the gods are actually watching and how standing grows, read the How Devotion Works primer, then dive into your race's guide.
 
 ## A Note on Scope
 

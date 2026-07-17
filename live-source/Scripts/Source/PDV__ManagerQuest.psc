@@ -24468,9 +24468,33 @@ String Function GetBosmerSurveyText()
     return text
 EndFunction
 
+; Player-facing path name. PDV_BosmerPathTrack's StateLabels are internal PascalCase
+; tokens ("OldContract"), and EVERY caller of this function is a player surface --
+; Book of Days, Prisma toast, Survey, panel payload -- so the token was reaching the
+; player as one word. Map to the authored guide copy here instead. The article stays
+; in the prose ("...is the Old Contract.") and out of the label, so "Exchange" is
+; correct and "The Exchange" would render "is the The Exchange."
+String Function GetBosmerPathDisplayLabelAt(Int pathState)
+    if pathState == BOSMER_PATH_OLD_CONTRACT
+        return "Old Contract"
+    elseIf pathState == BOSMER_PATH_LIVING_STORY
+        return "Living Story"
+    elseIf pathState == BOSMER_PATH_EXCHANGE
+        return "Exchange"
+    elseIf pathState == BOSMER_PATH_BANDIT_ROAD
+        return "Bandit Road"
+    endIf
+
+    return "Unsettled"
+EndFunction
+
 String Function GetBosmerPathLabel()
     if PDV_BosmerPathTrack
-        return PDV_BosmerPathTrack.GetStateLabel()
+        Int pathState = PDV_BosmerPathTrack.GetCurrentState()
+        if pathState < BOSMER_PATH_OLD_CONTRACT || pathState > BOSMER_PATH_BANDIT_ROAD
+            return "Unsettled"
+        endIf
+        return GetBosmerPathDisplayLabelAt(pathState)
     endIf
 
     return "Unsettled"
