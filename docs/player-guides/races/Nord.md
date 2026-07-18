@@ -20,7 +20,18 @@ If you start on the Old Ways, these are the gods who can claim you:
 - **Orkey** - the old death-god, met through proper burial, crypt duty, and respect for the dead.
 - **Dibella** - the goddess of beauty, affection, and the life of the hall.
 
-If you start on the Nine Divines, you can be claimed by **Akatosh**, **Mara**, **Arkay**, **Stendarr**, **Zenithar**, **Dibella**, **Julianos**, or **Kynareth** - and Talos remains reachable in either pantheon. A Nord under the Divines still lives like a Nord: holds, weather, honor, death rites, and hard work, just wearing temple names instead of old mythic ones.
+If you start on the Nine Divines, these are the gods who can claim you:
+
+- **Akatosh** - the Dragon God of time and order; patient discipline and oaths kept.
+- **Mara** - the hearth-mother under a temple name; care, family, and bonds held.
+- **Arkay** - keeper of the cycle; proper burial and the enemy of necromancy.
+- **Stendarr** - mercy, righteous rule, and restraint toward a beaten foe.
+- **Zenithar** - honest work and fair trade; the labour a hold runs on.
+- **Dibella** - beauty, art, and the life of the hall.
+- **Julianos** - wisdom, lore, and disciplined study.
+- **Kynareth** - the sky and the wild; the open road and the gathered herb.
+
+Talos remains reachable in either pantheon. A Nord under the Divines still lives like a Nord: holds, weather, honor, death rites, and hard work, just wearing temple names instead of old mythic ones.
 
 A few gods are off the table for Nords by design: Alduin (feared, not worshipped) and Jhunal (forgotten by the Fourth Era). Foreign gods and the Daedric Princes are not part of normal Nord worship.
 
@@ -37,7 +48,7 @@ For how the tiers, the piety bar, and the Book of Days work in general, see the 
 
 ## How You Gain Piety
 
-Live the Old Ways: hunt and camp, keep the hearth and honor your bonds, tend the dead, master the Voice, and answer the great quests.
+Live your pantheon. On the **Old Ways**: hunt and camp, keep the hearth and honor your bonds, tend the dead, master the Voice, and answer the great quests. Under the **Nine**: the same Nord life read through temple names - mercy and household duty, honest craft and fair trade, proper burial and the war on necromancy, the open road, and patient study. Either way, Talos is honored by defiance, never by compliance.
 
 ## How You Lose Piety
 
@@ -73,7 +84,7 @@ The broad lanes cap at Devoted. A patron's own blessing begins at Devoted - ther
 **Beyond the offer, how you earn:**
 
 - **A hearth you keep** - the first place you sleep indoors becomes your hearth; rest there and return to it to deepen your ancestor standing, dawn by dawn.
-- **Favors of the Old Ways** - in fitting moments (an open-sky rest, a storm road, a hard hunt, defending the hearth, honoring the dead) a god grants a short-lived favor; only one is active at a time. A dedicated Kyne favor unlocks only once Kyne is your Champion.
+- **Favors of your pantheon** - in fitting moments a god grants a short-lived favor; only one is active at a time. The **Old Ways** lane answers the sky-road, a hard ordeal, hearth-and-hold defense, the quiet owed the dead, and hidden Talos defiance. The **Nine Divines** lane mirrors it: Kynareth's road grace, household and mercy, proper death and the war on necromancy, honest work and learned craft, and Talos pressure held inside the Nine. A dedicated Kyne favor unlocks only once Kyne is your Champion.
 - **Tsun** marks a severe fight survived to its end.
 
 ## If You Are Cursed (Vampire or Werewolf)
@@ -86,6 +97,6 @@ The broad lanes cap at Devoted. A patron's own blessing begins at Devoted - ther
 
 - **Gods (Old Ways):** Kyne, Shor, Tsun, Stuhn, Mara, Orkey, Dibella, Talos. **(Nine Divines):** Akatosh, Arkay, Dibella, Julianos, Kynareth, Mara, Stendarr, Zenithar, Talos.
 - **Starting choice:** Old Ways or Nine Divines pantheon baseline; broad worship first, then a god offers to claim you.
-- **Top 3 ways to gain:** honorable combat and dragon-slaying; learning the Thu'um; resting under the open sky and putting the restless dead down (plus healing, honest craft, and the great quests for the right gods).
+- **Top 3 ways to gain:** honorable combat and dragon-slaying; learning the Thu'um; resting under the open sky and putting the restless dead down. Under the Nine, mercy, honest craft, and proper burial carry the same weight.
 - **Main ways to lose:** murdering the defenseless and raising the dead; theft and Daedric bargains; slaughtering Kyne's beasts; neglect and natural drift once a god has claimed you; the Devoted cap on broad worship.
 - **Rough days to Champion:** about 30 to 45 days of normal play, roughly 20 if you focus hard on one god - and you cannot reach it at all until you accept a patron's offer.
