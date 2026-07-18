@@ -56,7 +56,7 @@ The Orthodox foundation is your always-on broad blessing (caps at Devoted); a fo
 - **Xarxes** - Seeker: Restoration +5; Devoted: Restoration +13, Fortify Magicka +25; Champion: Restoration +25, Fortify Magicka +40
 - **Syrabane** - Seeker: Restoration +5; Devoted: Restoration +13, Magic Resistance +8%; Champion: Restoration +25, Magic Resistance +20%
 
-The Altmer have **no scripted Champion power** - each patron's Champion tier is a strong passive, and the reward is the recognition itself: your standing reads back in the Devotion panel and Survey text as the god names you at last.
+The Altmer have **no scripted Champion power** - each patron's Champion tier is a strong passive, and the reward is the recognition itself: your standing reads back in the Book of Days and Survey text as the god names you at last.
 
 ## Unique Mechanics
 

@@ -6,7 +6,7 @@ Most races in Devotion pray, give offerings, and visit shrines. Orcs do none of 
 
 This is the most demanding faith in the mod, and that is on purpose. You cannot donate to a temple and call it done. You cannot stand at a shrine and feel like you did the work. The only thing Malacath counts is the life you are actually living: the quality of what you forge, the weight of the oaths you keep, and the strength you prove when something tests it.
 
-The big question for an Orc is not which god to follow. It is always Malacath. The question is how you carry his code, given the life you are living. There are three ways: as a Stronghold Orc with your full people behind you, as a City Orc holding the code alone in mixed society, or as a Legion or Exile Orc keeping faith under foreign discipline. The world watches your conduct and confirms which one you are actually living. (For the basics of piety, tiers, and the Devotion panel, see the How Devotion Works primer.)
+The big question for an Orc is not which god to follow. It is always Malacath. The question is how you carry his code, given the life you are living. There are three ways: as a Stronghold Orc with your full people behind you, as a City Orc holding the code alone in mixed society, or as a Legion or Exile Orc keeping faith under foreign discipline. The world watches your conduct and confirms which one you are actually living. (For the basics of piety, tiers, and the Book of Days, see the How Devotion Works primer.)
 
 [size=5][b]Your Gods[/b][/size]
 

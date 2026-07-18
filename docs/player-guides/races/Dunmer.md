@@ -27,7 +27,7 @@ There is no startup menu for a Dunmer. The moment you begin, both layers are alr
 
 To reach Champion you must let one Reclamation come forward as your focus. As your deeds lean toward one of the three, that god takes notice and offers to claim you, much as a patron does for other races. Only the Reclamation you focus grants its full set of blessings; the other two recede to broad acknowledgment.
 
-For how tiers, the piety bar, and the panels work in general, see the How Devotion Works primer.
+For how tiers, the piety bar, and the Book of Days work in general, see the How Devotion Works primer.
 
 ## How You Gain Piety
 

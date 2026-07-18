@@ -62,7 +62,7 @@ The Orthodox foundation is your always-on broad blessing (caps at Devoted); a fo
 [*][b]Syrabane[/b] - Seeker: Restoration +5; Devoted: Restoration +13, Magic Resistance +8%; Champion: Restoration +25, Magic Resistance +20%
 [/list]
 
-The Altmer have [b]no scripted Champion power[/b] - each patron's Champion tier is a strong passive, and the reward is the recognition itself: your standing reads back in the Devotion panel and Survey text as the god names you at last.
+The Altmer have [b]no scripted Champion power[/b] - each patron's Champion tier is a strong passive, and the reward is the recognition itself: your standing reads back in the Book of Days and Survey text as the god names you at last.
 
 [size=5][b]Unique Mechanics[/b][/size]
 

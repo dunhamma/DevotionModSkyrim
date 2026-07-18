@@ -102,8 +102,9 @@ Vampirism and lycanthropy are not just gameplay states here - they are spiritual
 You are never left guessing:
 
 [list]
-[*][b]The Devotion panel[/b] - your main window: [i]Patron[/i] (your gods and standing), [i]Today[/i] (the day's devotional acts), and [i]Book of Days[/i] (a running journal of your faith over time).
-[*][b]The MCM menu[/b] - settings and status.
+[*][b]The Book of Days[/b] - your main window into your devotion: a running journal of your faith over time, so you can look back on how you got here, which god took note, and why.
+[*][b]The Devotion panel[/b] - a live dashboard for the moment: [i]Patron[/i] (your gods and current standing) and [i]Today[/i] (the day's devotional acts). A quick alternative to the journal.
+[*][b]The MCM menu[/b] - reports your standing too, and is the fallback if you play without the panel.
 [*][b]Notification toasts[/b] - short messages at meaningful moments: a tier reached, a favor granted, a god going quiet.
 [/list]
 

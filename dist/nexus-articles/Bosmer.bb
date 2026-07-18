@@ -98,4 +98,4 @@ Neither curse is permanent if you seek a cure, but the Old Contract is the path 
 [*][b]Rough days to Champion:[/b] About 30 to 45 days of normal play, around 20 if you focus - and only by committing to a single path.
 [/list]
 
-See the How Devotion Works primer for the shared rules on tiers, daily caps, and reading your standing in the Devotion panel, the MCM menu, and the Book of Days journal.
+See the How Devotion Works primer for the shared rules on tiers, daily caps, and reading your standing in the Book of Days (with the Devotion panel and MCM menu as alternatives).

@@ -37,7 +37,7 @@ At the very start you set your [b]pantheon baseline[/b]: Old Ways or Nine Divine
 
 You do not commit to a single god at the start. You begin as a [b]broad worshipper[/b] of your chosen pantheon. You earn devotion across several gods at once, and that broad worship is its own honored path - but it caps you at the Devoted tier. To reach Champion, you must commit to one god when they offer to claim you. That offer is the heart of the Nord experience, and it is covered under Unique Mechanics.
 
-For how the tiers, the piety bar, and the panels work in general, see the How Devotion Works primer.
+For how the tiers, the piety bar, and the Book of Days work in general, see the How Devotion Works primer.
 
 [size=5][b]How You Gain Piety[/b][/size]
 

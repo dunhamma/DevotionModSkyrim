@@ -88,4 +88,4 @@ Neither curse is permanent if you seek a cure, but the Old Contract is the path 
 - **Main ways to lose:** Acts your god dislikes, neglect once a god falls to 10 or below (maximum Stamina -10), spreading yourself thin (capped at Devoted), and on the Old Contract, eating plant food.
 - **Rough days to Champion:** About 30 to 45 days of normal play, around 20 if you focus - and only by committing to a single path.
 
-See the How Devotion Works primer for the shared rules on tiers, daily caps, and reading your standing in the Devotion panel, the MCM menu, and the Book of Days journal.
+See the How Devotion Works primer for the shared rules on tiers, daily caps, and reading your standing in the Book of Days (with the Devotion panel and MCM menu as alternatives).
