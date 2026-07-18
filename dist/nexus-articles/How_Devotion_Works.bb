@@ -156,6 +156,32 @@ open to you, and your standing earns access that a stranger to the faith never
 gets. Recognition is about being known. It is the part of the Champion tier
 that should feel like the god noticed who you were before you knew it mattered.
 
+[size=5][b]Champion Special Powers[/b][/size]
+
+Champion is the top of the bar, and for most gods it is a strong passive
+blessing - its "special" is the recognition itself. But a few Champions carry a
+scripted power on top of the stats, almost always a once-a-day near-death save.
+There is at most [b]one such save per race[/b], and it is the rarest, most dramatic
+thing devotion can do for you. Each one below is verified against the shipped
+records; every other Champion tier is passive.
+
+[list]
+[*][b]Khajiit[/b] [i]Baan Dar[/i] - Baan Dar Remembers - Once per day, when a blow would drop you (health falls to a fifth or lower), Baan Dar slips you out of death's hand - you are put back on your feet instead of dying. Khajiit's single cheat-death.
+[*][b]Nord[/b] [i]Shor[/i] - Shor Remembers - Once per day, a killing blow becomes a last stand - Shor pulls you back from the edge and you survive it. Nord's single cheat-death.
+[*][b]Redguard[/b] [i]HoonDing[/i] - HoonDing Makes Way - Once per day, a lethal blow is refused - HoonDing opens the road back from the edge and you keep your feet. Redguard's single cheat-death.
+[*][b]Redguard[/b] [i]Tu'whacca[/i] - Death-rite restoration - From Devoted upward, keeping a death-rite - putting the restless dead to rest, or carrying a Far Shores token - restores a flat measure of health once a day: about 30 at Devoted, 50 at Champion. A flat restore, so it is felt even under Requiem. A heal, not a cheat-death, so it does not count as the race's save.
+[*][b]Dunmer[/b] [i]The Ancestors[/i] - The Ancestors Watch - Armed by keeping the home prayer (pray at your ancestral urn or hearth). For that day, if you are brought to the brink, once the ancestors pull you back. Disarmed at dawn, so it is re-earned daily. Dunmer's single cheat-death.
+[*][b]Bosmer[/b] [i]Baan Dar (Bandit Road)[/i] - Baan Dar Opens the Gap - On the Bandit Road, once a day a killing blow becomes an opening - you slip it and break away. Bosmer's single cheat-death.
+[*][b]Argonian[/b] [i]Sithis (the Void)[/i] - Void near-death surge - While the Void is your active focus, once a day near death the Nothing lends a brief surge - a burst of stamina and momentum to fight your way clear.
+[*][b]Orc[/b] [i]Malacath (any focus)[/i] - The Code Holds - With Malacath's regard, once in a fight when near death the Code holds - a flat burst of health (more at Devoted and up) keeps you standing.
+[/list]
+
+Altmer, Breton, and Imperial have no scripted power: every one of their Champion
+tiers is a strong passive. A cheat-death fires at most once a day (the Orc's
+holds once per fight) and only when your health has already dropped to a fifth or
+less - it will not save you from a single overwhelming hit that skips that window.
+Your race guide lists the exact per-tier blessings for your people.
+
 [size=5][b]When a God Goes Quiet (Neglect)[/b][/size]
 
 If you drift away from a god - stop doing the things that god cares about for a
