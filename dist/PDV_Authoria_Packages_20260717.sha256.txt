@@ -1,0 +1,8 @@
+Devotion quest-mod patch packages -- 2026-07-17
+
+ZIP entries use forward-slash separators per APPNOTE 4.4.17.1.
+Text members are stored LF (see .gitattributes), so rebuilding either zip from
+a fresh checkout reproduces these hashes on any machine.
+
+SHA256  BA61F5E9E99460D4768518E8EAA527CF9A48A224961CB071AEC67C054F1A0302  Devotion_Authoria_CompatibilityNOFOMOD_20260717.zip
+SHA256  403FF221DBFAEC4775576BC59427950B2CB28B78EB3DEEFEFD14EC3973202E61  PDV_QuestModPatches_FOMOD_20260717.zip

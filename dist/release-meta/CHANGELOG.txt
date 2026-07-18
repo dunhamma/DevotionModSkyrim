@@ -17,6 +17,15 @@ folder; this file records what changed, not the full source.
   nothing. It is now a flat **Fortify Health + Fortify Stamina** (+25/+40/+50 per
   tier, provisional) that Requiem honors.
 
+## 2026-07-17
+
+- **Fixed: Bosmer path name showed an internal code label.** Book of Days, the
+  devotion toast, and the Survey displayed the raw path token (`OldContract`,
+  `LivingStory`, `BanditRoad`) instead of the proper name — **Old Contract**,
+  **Living Story**, **Bandit Road**, or **Exchange**. The correct name now shows
+  everywhere the Bosmer path is surfaced. (The fix is included in the 1.0.0
+  build; this note was added afterward.)
+
 ## 2026-07-16
 
 - **Changed: MCM is now players-only by default.** The four developer tabs

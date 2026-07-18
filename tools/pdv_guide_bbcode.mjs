@@ -30,7 +30,12 @@ const RACES = ['Altmer', 'Argonian', 'Bosmer', 'Breton', 'Dunmer', 'Imperial', '
 // gate. The mod page description is one of these: Nexus speaks the same BBCode
 // for a description as for an article, so it gets the same staleness/ASCII/
 // review-tag checks instead of being hand-maintained and drifting unwatched.
-const DOCS = [{ name: 'ModPage', src: path.join(GUIDES_DIR, 'Nexus_ModPage.md') }];
+const DOCS = [
+  { name: 'ModPage', src: path.join(GUIDES_DIR, 'Nexus_ModPage.md') },
+  { name: 'Daedric_Princes_Guide', src: path.join(GUIDES_DIR, 'Daedric_Princes_Guide.md') },
+  { name: 'How_Devotion_Works', src: path.join(GUIDES_DIR, 'How_Devotion_Works.md') },
+  { name: 'FAQ_and_Quick_Start', src: path.join(GUIDES_DIR, 'FAQ_and_Quick_Start.md') },
+];
 
 const TARGETS = [
   ...RACES.map((race) => ({ name: race, src: path.join(SRC_DIR, `${race}.md`) })),

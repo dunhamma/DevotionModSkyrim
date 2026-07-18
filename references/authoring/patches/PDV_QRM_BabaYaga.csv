@@ -1,0 +1,2 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation,formid
+ksws03_main_quest,Baba Yaga and the Labyrinth,600,Rescued the witch from the Black Stone Labyrinth,protect_the_weak,Mara,+,m,small,"Tier A stage log s600 'I rescued her from The Black Stone Labyrinth'; terminal lacks CompleteQuest flag; no Hircine/Namira basis found in-quest; ruled 2026-07-16; RUNTIME-VERIFY",ksws03_quest.esp:000AA2

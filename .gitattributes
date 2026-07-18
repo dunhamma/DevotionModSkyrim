@@ -2,6 +2,13 @@ native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/app.js text eol=lf
 native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/index.html text eol=lf
 native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/styles.css text eol=lf
 
+# The tracked Papyrus mirror. pdv_compile.mjs's drift guard compares each of
+# these against the shared MO2 live tree before compiling; with autocrlf=true and
+# no pin, a fresh checkout could resolve to CRLF while the live tree is LF (or the
+# reverse) and the guard would report false drift. Pin LF so the checkout side is
+# deterministic; the guard also normalizes line endings as the second layer.
+live-source/Scripts/Source/*.psc text eol=lf
+
 # Generated Nexus BBCode. pdv_guide_bbcode.mjs writes LF and its --check gate
 # byte-compares what it would write against what is on disk; with autocrlf=true
 # and no rule here, git rewrites these to CRLF on checkout and every guide then
@@ -15,3 +22,26 @@ dist/nexus-articles/*.bb text eol=lf
 # they ship (README is LF, CHANGELOG is CRLF) rather than normalizing either.
 dist/release-meta/README.txt -text
 dist/release-meta/CHANGELOG.txt -text
+
+# Devotion quest-mod patch FOMOD. The package ships plugins (.esp) and compiled
+# scripts (.pex) as raw bytes, and the handoff publishes the zip's SHA256. Git's
+# binary heuristic would probably spare them, but "probably" corrupts a plugin
+# silently when it misfires, so state it. The text members are pinned LF so a zip
+# rebuilt from a fresh checkout reproduces the published hash on any machine.
+dist/PDV_QuestModPatches_FOMOD/**/*.esp -text
+dist/PDV_QuestModPatches_FOMOD/**/*.pex -text
+dist/PDV_QuestModPatches_FOMOD_*.zip -text
+dist/PDV_QuestModPatches_FOMOD/**/*.json text eol=lf
+dist/PDV_QuestModPatches_FOMOD/**/*.xml text eol=lf
+dist/PDV_QuestModPatches_FOMOD/**/*.psc text eol=lf
+dist/PDV_QuestModPatches_FOMOD/**/*.md text eol=lf
+dist/PDV_QuestModPatches_FOMOD/**/*.ini text eol=lf
+# Authoria all-in-one package. Same reasoning as the FOMOD block above: the ESP
+# and compiled scripts are bytes, and the handoff publishes the zip's SHA256.
+dist/PDV_Patch_Authoria_AllInOne/**/*.esp -text
+dist/PDV_Patch_Authoria_AllInOne/**/*.pex -text
+dist/Devotion_Authoria_Compatibility*.zip -text
+dist/PDV_Patch_Authoria_AllInOne/**/*.json text eol=lf
+dist/PDV_Patch_Authoria_AllInOne/**/*.psc text eol=lf
+dist/PDV_Patch_Authoria_AllInOne/**/*.md text eol=lf
+dist/PDV_Patch_Authoria_AllInOne/**/*.ini text eol=lf

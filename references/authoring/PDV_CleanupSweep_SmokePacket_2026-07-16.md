@@ -209,11 +209,58 @@ planned choice panel. `CancelChoice` keeps its caller in
 
 ---
 
+## Test 6 -- Bard performance award (Dibella) -- OWED, NOT RUNNABLE ON ANVIL
+
+Not part of the cleanup sweep. A separate feature (`feat(bard)`, commit on
+`feat/arr-quest-mod-patches`) that landed in the live tree **before** this RC was
+packaged, so it **is inside the zip** -- and its own commit says machine-proof
+only, **no performance has ever been played**. First-run coverage is owed. Listed
+here because it ships in the artifact you are testing, not because the sweep
+touched it.
+
+**You cannot test this on the Anvil list.** It hooks two mods that Anvil does not
+have -- **Become a Bard** and **Skyrim's Got Talent - Bards**. Every bard form is
+resolved with `GetFormFromFile`; with the plugins absent they return `None`,
+`PDV_BardPollActive` stays false, and the 5s poll never starts. That is also the
+proof it is inert in this RC for anyone without both mods -- **zero cost, zero
+risk on a load order that lacks them.** There is no MCM button and no console
+shortcut: the award is driven purely by those mods' globals, so a real
+performance on a load order that has them is the only way to exercise it.
+
+**To actually prove it (separate load order):**
+
+1. Add **Become a Bard** + **Skyrim's Got Talent - Bards**, both active.
+2. Note Dibella's piety (MCM -> Debug: State & Rewards -> **Show piety map**, or
+   the Survey). Set debug level >= 2 so the `Bard performance routed ...` trace
+   prints.
+3. Perform a full song at a tavern via Become a Bard; aim for an ovation.
+4. Within ~5-10s of the song ending, expect a **Dibella civic-favor award** --
+   piety ticks up. Award scales with SGT expertise (quality 1-8 -> x0.875..x1.75),
+   +0.25 for an ovation, then Devotion's daily repeat decay.
+5. **Anti-farm, same tavern:** perform again at the *same* inn the same day ->
+   **no** second award (one per tavern per devotional day, off Become a Bard's
+   own 25 per-tavern counters).
+6. **Anti-farm, different tavern:** travel to another inn, perform -> awards
+   again, until the manager's global daily budget is spent.
+7. **Debounce:** two performances <12s apart pay once, not twice.
+
+**PASS:** award fires once per qualifying performance, scales with quality/ovation,
+and both anti-farm layers hold. **FAIL:** no award with the mods present, an award
+with them absent, or either cap leaking.
+
+**Papyrus-log fallback (no game math needed):** with debug level >= 2, one
+`Bard performance routed quality=<q> ovation=<bool> multiplier=<m>` trace per
+awarded performance, and none when the two mods are absent.
+
+---
+
 ## Repackaging
 
-**If all five tests pass: do not repackage.** `Devotion-1.0-rc1-20260716.zip`
-(`BD99DCC5...`) already contains the recompiled `.pex` and cleaned source. It is
-the artifact. Rebuilding it changes nothing but the mtime.
+**If Tests 1-5 pass: do not repackage.** `Devotion-1.0-rc1-20260716.zip`
+(`9140A089...`) already contains the recompiled `.pex` and cleaned source. It is
+the artifact. Rebuilding it changes nothing but the mtime. (Test 6 is owed proof
+for a feature already in the zip; passing or deferring it does not change the
+bits, so it never triggers a repackage on its own.)
 
 **Only repackage if a test fails and you change code.** Then, in this order --
 getting it wrong drift-voids the machine gates:
