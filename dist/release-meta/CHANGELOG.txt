@@ -3,6 +3,28 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
+## 1.0.2 — 2026-07-18
+
+- **Fixed (properly this time): crash to desktop when tempering or crafting.**
+  The 1.0.1 fix repaired a real problem but not this one — the crash was
+  reproduced on 1.0.1 with that repair in place. The actual cause is in the
+  game engine's own delivery of the built-in "Craft Item" event: it can fault
+  while handing the event to a listening script, most reliably when tempering
+  repeatedly at a grindstone. Devotion no longer uses that path at all.
+  Crafting is now detected through powerofthree's Papyrus Extender (already a
+  requirement), which reports the same information without touching the
+  crash-prone engine path. Confirmed fixed by the original reporter on the save
+  that was crashing. No new game required.
+- All crafting still earns piety exactly as before — tempering, smithing,
+  cooking, enchanting, and alchemy are unchanged in what they award and which
+  gods notice.
+- **Fixed: a harvest could silently go uncredited.** If the game reported a
+  harvested plant with no item attached, the handler stopped early and the
+  harvest earned nothing. It now fails cleanly instead.
+- Internal: the in-game version readout was stuck at "1.0.0" through the 1.0.1
+  release, so the MCM could not tell builds apart. It now tracks the real
+  version, and the release tooling refuses to build a mismatched package.
+
 ## 1.0.1 — 2026-07-18
 
 - **Fixed: crash to desktop when cooking or tempering.** Devotion's "Craft Item"
