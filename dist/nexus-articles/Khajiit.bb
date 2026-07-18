@@ -42,41 +42,11 @@ You do not set a sacred shrine or a road-home anchor. Finishing an uninterrupted
 
 [size=5][b]How You Gain Piety[/b][/size]
 
-Lead with the road life. The most common and important ways to earn piety:
-
-[list]
-[*][b]Rest outdoors[/b], not in an inn or a house. Finish an uninterrupted sleep in the open and it counts as coming home to the road. It may claim the day's one Lattice credit, and Khenarthi, Azurah, Baan Dar, and Rajhin all take note of a night spent under the sky.
-[*][b]Observe the Moons[/b] outdoors after dark. Stay out of combat, off your mount, and out of the water, hold still for two seconds, and the presiding god of the current phase answers you. The first observance each day honors that god and deepens the Lattice.
-[*][b]Defend a caravan.[/b] Kill something hostile near a Khajiit caravan's camp while its leader still lives and Khenarthi counts it as standing between the road and its dangers. This can only be claimed once a day, so ordinary skirmishing near a camp will not farm it.
-[*][b]Live a focus god's story.[/b] Baan Dar's reversals, Rajhin's notable thefts, Alkosh's dragon and Word-of-Power milestones, the lunar books you can find and read, and a handful of exact quests all sustain the Lattice.
-[/list]
-
-Then the focus-specific deeds, which steer who emerges as your patron:
-
-[list]
-[*][b]Khenarthi:[/b] discover new locations, rest under the open sky, heal or cure people, free trapped souls by putting down the undead, guide great souls to rest by slaying dragons, and learn Words of Power - the Voice is her breath given shape. Defending a caravan is hers as well.
-[*][b]Azurah:[/b] show mercy by healing or curing the cursed and outcast, read lore and prophecy, enchant items (soul-work honors her), learn Words of Power, discover new places, destroy the undead, rest under the open sky, and complete the Azura's Star quest - that quest is the single strongest Khajiit piety event there is. She is also the one god who is glad to see you bearing a Daedric gift, because her Star is one.
-[*][b]Baan Dar:[/b] pick owned locks, take what survival demands, trespass and walk every road there is, sharpen your skills, and rest rough under the open sky. His two great beats are earned in a fight gone wrong: win a battle you were badly losing - three or more enemies down, or a much stronger foe put down, after your health dipped below half - and he notices, at most once a day. Claw your way back from under a tenth of your health and still take a kill, and he counts it as an improbable reversal, at most once a week.
-[*][b]Rajhin:[/b] steal and pickpocket while sneaking and undetected, pick owned locks, trespass through thresholds, and find the hidden ways. The story-worthy theft is the one that matters most: lift something from a notable mark, or take anything worth 200 gold or more, unseen and in stealth. The same mark will not pay out again for a week. Petty theft stays too small to matter.
-[*][b]Alkosh:[/b] defeat dragons, drive back chaos by killing the undead and the Daedra, learn Words of Power as ordered dominion, read the chronicles of the ages, and train your skills as disciplined mastery. Named dragons are the great moments, and each named dragon counts only the first time you fell it. Ordinary dragons register more faintly, no more than once a week.
-[/list]
-
-Remember that piety is tracked separately for each god, daily gain is capped at about 4.3 per god per day, and repeating the exact same deed earns less each time. Variety across these acts matters far more than grinding one of them.
-
-Beyond the road life itself, certain lunar books you can find and read - and two moments in the world's own story, the first dragon slain at the western watchtower and the reclaiming of Azura's Star - also feed the Lattice.
+Live the road: sleep under the open sky, observe the moons after dark, defend the caravans, and follow your focus god's deeds.
 
 [size=5][b]How You Lose Piety[/b][/size]
 
-Your standing is rarely in sharp danger - the Lattice does not collapse easily - but it can thin and slip in several ways:
-
-[list]
-[*][b]Dislikes.[/b] Each god turns away from acts against their nature. Killing the helpless offends every one of the five. Raising the undead is a grave sin to Azurah above all, and to Khenarthi and Alkosh, who guide or order souls toward their proper rest. Preying on the innocent offends Azurah most, and Rajhin and Alkosh besides. Alkosh is further offended by trespass and by bearing a Daedric Prince's gift, and he reads the killing of Paarthurnax as siding with chaos. Rajhin scorns even the soft comfort of a bought inn bed. Baan Dar, the pariah, sours at settled honest smithing and at paying off your bounty to the law that cast you out. Feeding as a vampire offends Khenarthi, Azurah, and Rajhin.
-[*][b]Neglect (the moons withdrawing).[/b] This is the main Khajiit risk. Go three days without a single lunar act - no night under the open sky, no observance of the moons, no caravan defended, no lunar book, no deed of your focus god - and the moons withdraw. It is not urgent or harsh; it is a slow thinning, "less held, less known, less real." While it lasts, your Maximum Stamina is reduced by 10 at night. Any one true lunar act lifts it.
-[*][b]Focus drifting back to broad.[/b] If a god was emerging as your focus and you stop doing the things that drew them, your balance simply slides back toward broad worship. The god does not punish you; they just stop sending wind.
-[*][b]The broad-worship cap.[/b] Honoring several gods at once is valid and complete, but it caps you at the Devoted tier. Reaching Champion requires letting one single god clearly lead.
-[/list]
-
-The Khajiit carry no formal reputation track - no faction standing that swings for or against you. Your standing is simply how well you have kept the road and the moons.
+You slip by acting against a god's nature - killing the helpless, raising the undead, or feeding as a vampire - and by neglect (three days with no lunar act), by letting your focus drift back to broad, and by the broad-worship cap at Devoted.
 
 [size=5][b]Quests That Move Your Standing[/b][/size]
 

@@ -37,49 +37,11 @@ First-run choice is free. Switching later is not a casual toggle - the world has
 
 [size=5][b]How You Gain Piety[/b][/size]
 
-Remember that piety is tracked separately for each god, daily gains are capped (about 4.3 per god per day), and repeating the exact same deed earns less each time. Variety beats grinding. Your main earning deeds depend on your path:
-
-[b]Old Contract (Y'ffre)[/b]
-
-[list]
-[*]Eating meat and other animal-sourced food, and keeping plant food out of your diet entirely. This is the covenant in its plainest form, and it is the steadiest way to keep Y'ffre close.
-[*]Putting down the undead. Returning a walking corpse to stillness restores the natural cycle the Pact exists to protect.
-[/list]
-
-[b]Living Story (Y'ffre)[/b]
-
-[list]
-[*]Healing or curing the hurt. Mending a life is how the Story goes on.
-[*]Reading the old lore and songs of the world.
-[/list]
-
-[b]The Exchange (Z'en)[/b]
-
-[list]
-[*]Honest labor at a forge, a cookpot, or an alchemy bench - smithing, cooking, brewing, and enchanting all repay the world its due.
-[*]Studying a trade and getting better at it, whether from a skill book or from practice.
-[/list]
-
-[b]The Bandit Road (Baan Dar)[/b]
-
-[list]
-[*]Sleeping outdoors under the open sky instead of paying for a bed.
-[*]Picking a lock that is not yours, lifting what is not yours, and slipping into places you were never invited. The trickster opens every door.
-[*]Discovering new places and sharpening your skills. The survivor walks every road and adapts.
-[*]Coming back from the brink. When a fight drives you below a fifth of your health, Baan Dar opens a gap - you get a burst of speed to take it, and the near-miss itself earns his regard. This happens at most once a day, and only on this path.
-[/list]
-
-On every path, two things still hold. Standing in one of the old green places - a grove, a standing stone, an outdoor sanctuary where the world still sings - is worth piety to whichever god you follow. There are six green-song sites, and each one answers you exactly once; find all six and the Story names you a part of it. And the shared Green Pact memory means animal-sourced food gives a small bonus even when you are not on the Old Contract.
+Live your path - the respectful hunt for the Old Contract, story and mending for Living Story, honored debts for the Exchange, survival for the Bandit Road.
 
 [size=5][b]How You Lose Piety[/b][/size]
 
-[list]
-[*][b]Dislikes.[/b] Each god turns away from acts that offend it. Y'ffre dislikes raising the undead, shaping dead matter through smithing and enchanting, and harming the innocent. Z'en dislikes theft - a debt taken and never paid - along with breaking into property and killing those who owe nothing. Baan Dar, fittingly, dislikes the clumsy murder of the defenseless and the settled smith's honest trade; the road owes nothing to comfort. Note that Z'en and Baan Dar pull in opposite directions on theft: what the Bandit God rewards, the Keeper of the Ledger counts as a debt unpaid.
-[*][b]Neglect ("The Path Goes Quiet").[/b] If you stop walking your path, your god grows quiet. For a Bosmer this only begins once a god's piety has fallen to 10 or below and that god is among your lowest - a gentle drift, not a punishment. Your maximum Stamina drops by 10 until you walk the path again. (Note this line is lower than most races; your path forgives a longer silence before it fades.)
-[*][b]Natural drift.[/b] Piety eases downward over time if you never feed it. Quiet weeks cool any god.
-[*][b]The broad-worship cap.[/b] If you spread yourself thin and never commit, you are capped at Devoted. Reaching Champion requires committing fully to a single path and its god.
-[*][b]The Old Contract penalty (this path only).[/b] On the Old Contract, eating plant food is a real loss, not a slip. Y'ffre's regard cools and the Pact tightens against you. The other three paths get the Green Pact's gentle bonus but never this penalty.
-[/list]
+You lose standing by over-working matter and raising the undead against Y'ffre, by leaving debts unpaid against Z'en, and by drift and the broad-worship cap - and the orthodox Old Contract can make abandonment permanent.
 
 [size=5][b]Quests That Move Your Standing[/b][/size]
 

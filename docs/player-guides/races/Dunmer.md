@@ -34,34 +34,11 @@ For how tiers, the piety bar, and the panels work in general, see the How Devoti
 
 ## How You Gain Piety
 
-Dunmer devotion is fed from two streams: quiet ancestor upkeep, and pointed acts that please a Reclamation. Variety matters - repeating the same deed earns less each time, and each god is capped at roughly 4.3 piety a day.
-
-**Keeping the ancestors:**
-
-- **Pray over the urn.** Open your inventory, find the ancestral urn in the Miscellaneous tab, and use it. The first genuine act of practice after each dawn deepens the ancestor bond, and the prayer also carries a matching pulse of piety to whichever Reclamation the moment belongs to.
-- **Pray at dawn or at dusk.** A prayer made in the hours around sunrise or sunset becomes a twilight rite, and Azura answers it directly. It counts once per window per day, so a dawn prayer and a dusk prayer are not the same offering.
-- **Keep the rite at your own hearth.** Sleep somewhere and the game asks whether that place is your ancestor home. Pray with the urn there and the bond deepens faster than it does on the road, and the dead keep watch over you until the next dawn - once in that time, if a blow would bring you down, they steady you. Praying at home does not add a second pulse of Reclamation piety; it is the ancestor layer that answers, not the gods above it.
-- **Win a victory the dead can be proud of.** A clean kill counts toward the bond, but the ancestors are exacting about what "clean" means: it must be your own killing blow, against a foe already hostile to you, at least your equal in level, in a fight you did not open or finish from the shadows. An ambush, a murder, or a brawl you picked yourself earns nothing here.
-
-**Pleasing a Reclamation** (the real path to Champion):
-
-- **Azura** favors the threshold and the truth. She answers when you heal or cure someone, learn a word of power, discover a place no one told you about, enchant an item, put the undead back in the ground, sleep under the open sky, and above all when you keep her twilight rites. The Black Star is her own affair, and how you settle it matters more than anything else you can do for her.
-- **Boethiah** favors the trial. She answers when you better yourself - a skill raised the hard way - when you cut down an enemy who could fight back, when you win a brawl that was fairly offered and fairly settled, when you learn a word of power, and when you take what is not yours by lock or by hand. She smiles on culling the unworthy, and disdains soft comfort.
-- **Mephala** favors the unseen. She answers to the picked lock, the lifted purse, the door you were never meant to walk through, the blade nobody saw coming, and to lore read in quiet. Where Boethiah wants the fight won, Mephala wants it never to have happened at all.
-
-Reading a genuinely sacred or ancestral book is among the strongest single deeds available to you. Certain writings on Azura and on Boethiah do more than teach: they turn your face toward that god, and they carry that god's own weight of piety with them. Ordinary crime and ordinary combat still score, but they score small - a lifetime of them will not make you a Champion.
-
-Note that the three do not agree. The same act can please one and offend another - mending a wound is dear to Azura and contemptible to Boethiah and Mephala both. That tension is the point. Once you focus a Reclamation, you will find your daily habits quietly rearranging themselves around her creed.
+Keep the ancestor rites and honor your Reclamation - Azura's foresight, Boethiah's proving, or Mephala's secrets.
 
 ## How You Lose Piety
 
-Dunmer loss is rarely loud. It is mostly distance, with a few sharp betrayals.
-
-- **Each Reclamation keeps her own creed.** Boethiah scorns coddling the weak, soft beds, and domestic ease - they deny the test of struggle, so healing a wound, sleeping at an inn, or cooking a meal all cost you with her. Mephala dislikes the open charge and the open mending: killing a hostile in a straight fight, healing someone, or sleeping under the open sky all undo the secrecy she weaves. Azura recoils from murder of the defenseless, from assaulting an innocent, and most of all from raising the dead.
-- **Turning to a foreign Daedra.** Dealing with a Prince outside the Reclamations is a real deviation, and it is the worst of the ordinary losses. In practice it arrives in specific moments, not as a blanket rule: defying Azura over her own Star is the clearest of them, and certain forbidden writings will do it too. The price settles in when you next sleep at home, where the dead can see what you have done. Be clear about what this is not: simply accepting or carrying a Daedric artifact is not itself the betrayal. Boethiah and Mephala both approve of a Prince's gift taken by a strong hand.
-- **The broad-worship cap.** Acknowledging all three Reclamations equally keeps you at Devoted. That is the natural ceiling of breadth; Champion simply asks you to commit to one.
-
-The ancestors themselves take nothing from you for absence. Ignore the rites and they do not rage - they grow thin and quiet, and wait. Skyrim has no tombs and no House shrines, and the mod will not punish you for that.
+Raising the undead is the core sin against the Dunmer dead; killing the helpless costs you broadly, and the ancestors' silence only bites as a debuff while a curse holds it.
 
 ## Quests That Move Your Standing
 

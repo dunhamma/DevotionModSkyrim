@@ -44,36 +44,11 @@ For how the tiers, the piety bar, and the panels work in general, see the How De
 
 [size=5][b]How You Gain Piety[/b][/size]
 
-Nord worship is led by deeds, not by kneeling at shrines. Variety matters far more than repetition - doing the same deed over and over earns less each time, and each god's daily devotion is capped at roughly 4.3 piety per day. Lead with these:
-
-[list]
-[*][b]Fight honorably.[/b] Killing a worthy, armed foe in fair combat pleases Shor, Tsun, Stuhn, Kyne, and Talos. This is the most reliable Nord road to devotion, and it costs you nothing but the fight.
-[*][b]Slay dragons.[/b] Felling a dragon is a major deed for Talos, Shor, Tsun, and Kyne - the worthiest trial and the conqueror's supreme glory.
-[*][b]Carry one of the faithful out of Thalmor hands.[/b] Freeing a countryman the Thalmor took is faithful defiance of the first order, and Talos marks it once, deeply. The killing it takes to do it earns nothing on its own; the rescue is the deed.
-[*][b]Learn the Thu'um.[/b] Learning a Word of Power honors Talos, Kyne, Shor, Tsun, and (in the Divines frame) Julianos and Kynareth. Talos and Kynareth especially treasure it - the Voice is the warrior-god's mastery and the wind given form. Using a shout in earnest is noticed too, but only by Kyne and Talos; the other gods care that you learned it, not that you spent it.
-[*][b]Rest under the open sky.[/b] Sleeping outdoors, not in an inn or a house, pleases Kyne, Kynareth, Shor, and Tsun. Genuine open-sky rest only - a bed under a roof does not count.
-[*][b]Put the restless dead to rest.[/b] Destroying the walking undead honors Arkay, Shor, Tsun, Stuhn, Kyne, and Stendarr. The crypts of Skyrim are full of work no one else will do.
-[*][b]Heal and mend.[/b] Curing or healing another person honors Mara, Stendarr, Stuhn, Arkay, Kyne, Dibella, and Tsun.
-[*][b]Do honest work and learn.[/b] Smithing, enchanting, brewing, and cooking of real quality please Zenithar; reading skill books, spell tomes, and lore, and raising a skill, please Julianos and Dibella. Clearing a bounty by serving your time pleases Stendarr, Mara, and Zenithar.
-[*][b]Answer the great quests.[/b] Some of your standing is not a daily habit at all - it is earned once, in the moments that matter: taking the Voice at High Hrothgar, warning a hold before the war reaches it, sparing a beaten man who expected to die. See "Quests That Move Your Standing" below for what the gods are watching.
-[/list]
+Live the Old Ways: hunt and camp, keep the hearth and honor your bonds, tend the dead, master the Voice, and answer the great quests.
 
 [size=5][b]How You Lose Piety[/b][/size]
 
-Nord loss is rarely a hammer-blow. Most of it is drift and distance.
-
-[list]
-[*][b]Murdering the defenseless.[/b] The clearest sin across nearly every Nord god. It bars the door to Sovngarde for Shor, Tsun, and Stuhn - Stuhn reacts hardest of all - and it offends Mara, Stendarr, Julianos, Kyne, Zenithar, Kynareth, Dibella, Arkay, and even Talos. Beating and assaulting the innocent draws the same disgust in smaller measure.
-[*][b]Raising the dead.[/b] Reanimating a corpse angers Arkay and Stendarr most, and offends Shor, Tsun, Stuhn, Mara, Kynareth, and Dibella.
-[*][b]Theft, trespass, and picking owned locks.[/b] These offend Zenithar and Stuhn most, and cool Stendarr, Mara, Julianos, Talos, and Shor.
-[*][b]Daedric bargains.[/b] Accepting a Daedric artifact repels Stendarr, Kynareth, Tsun, Arkay, and Zenithar.
-[*][b]Kyne's creed.[/b] Kyne does not abide the slaughter of her creatures. Killing beasts cools her favor - she forgives the first couple each day, since a Nord in the wild must sometimes defend himself, but a trail of carcasses is a trail she remembers.
-[*][b]Neglect once you are claimed.[/b] Ignore the god who claimed you and they grow distant rather than angry, and you feel it. Kyne's neglect is the most tangible: the weather stops feeling like it is on your side. For Talos, the shouts start to feel like mere technique. Shor, Tsun, and Stuhn each withdraw their own grace. A broad worshipper who has never accepted an offer feels no such chill - neglect bites only after a bond exists to be neglected.
-[*][b]Natural drift.[/b] If you stop living the way your patron expected - a Kyne Champion who moves to a city and never goes outside again - that bond slowly fades from real to formal, and your tier can slip back down.
-[*][b]The broad-worship cap.[/b] Honoring your whole pantheon keeps you at Devoted. That is not a penalty - it is the natural ceiling of breadth. Reaching Champion simply requires committing to one god.
-[/list]
-
-Nord has no formal reputation meter the way Imperials carry a Concordat standing. Your standing with each god is the sum of your deeds, not a sliding political bar.
+You lose standing by murdering the defenseless (Stuhn abhors it most), raising the undead, and theft, and by neglect once a god has claimed you, natural drift, and the broad-worship cap at Devoted.
 
 [size=5][b]Quests That Move Your Standing[/b][/size]
 

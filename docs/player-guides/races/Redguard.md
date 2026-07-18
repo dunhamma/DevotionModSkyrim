@@ -38,29 +38,11 @@ You can change sect later, but not casually. Moving between Crown and Forebear n
 
 ## How You Gain Piety
 
-Piety is tracked separately for each god, daily gain per god is capped at about 4.3, and repeating the exact same deed earns less each time. Variety matters far more than grinding.
-
-Your ways to earn:
-
-- **Defeat the undead** - draugr, skeletons, ghosts. Ending the restless dead so they reach the Far Shores. This is the bread and butter of Tu'whacca devotion and of the ancestor layer. Daily capped; quality over quantity.
-- **Put down a great burden** - a named undead lord or a named necromancer. These are the deeds that mark you as Ash'abah, and they pay far more than routine kills. Rank-and-file draugr and hedge-necromancers do not count as burdens.
-- **Clear a draugr tomb** - finishing a notable barrow, boss included. Counts once per tomb, not per visit. It feeds both your death duty and your ancestral regard.
-- **Make a way** (HoonDing) - bring down a dragon, or one of a short list of great adversaries, while HoonDing is your chosen patron. This is rare on purpose, and it is capped to one such moment per week. HoonDing does not notice ordinary victories, and he will not notice these ones either unless he is the god you have committed to.
-- **Keep the sword-song** (Leki) - forge a true blade, sharpen your martial skill, study a book of arms, learn a word of power, or bring down a dragon. Leki cares about the discipline behind the blade. Simply winning fights does not feed her.
-- **Win honorable single combat** (Leki) - meet a worthy foe in the open, no sneak opener, and fight it through to the end. Leki honors the duel itself, not the corpse count; repeated duels in one day mean less and less to her.
-- **Honor the ancestors** - read the approved book of your people's arms, the *Manual of Mixed Unit Tactics*, or take your rest where the dead are properly honored. This lane needs no patron and no sect; it is always open to you.
+Put the restless dead to rest - clear draugr tombs, end necromancers and named undead lords - keep Leki's sword-discipline, and honor the ancestors.
 
 ## How You Lose Piety
 
-You can lose ground through offenses, through neglect, through natural drift, and by spreading yourself too thin. Here is what to watch for:
-
-- **Offenses.** Raising the undead is the worst thing a Redguard can do - it chains souls back from the Far Shores, and it offends Tu'whacca and HoonDing both. Killing the defenseless shames all three of your gods. Assaulting those who cannot answer in kind, and stealing, have no place in Leki's discipline. Accepting a Daedric artifact binds a soul away from its proper passage and turns Tu'whacca's face from you. HoonDing also takes a dim view of soft nights bought in an inn.
-- **Neglect (a god growing quiet).** Ignore the work and your gods do not punish you - they simply grow distant. The ancestors feel far away and the road feels colder; this shows up as a drop in your magic resistance until you take up the death duty again. Tu'whacca is still there - you are just not doing the work he needs done.
-- **The abandoned death duty.** When the ancestors have been distant long enough, Tu'whacca reads it as a duty set down, and takes a hard, one-time cut from his own piety on top of the neglect. This is the sharpest loss on the Redguard road, and it is entirely in your hands to avoid.
-- **Natural drift.** If you stop earning with a god, that god's piety slowly settles back over time. This is gentle - it keeps your standing honest, not punishing.
-- **The broad-worship cap.** Honoring your sect broadly, across many Yokudan gods, can only carry you to Devoted. To reach Champion you must commit to a single focused god - Tu'whacca, HoonDing, or Leki. While you are committed, your broad ancestor blessing steps aside so the focused god's gifts can lead.
-
-There is no separate reputation meter for Redguards. Your sect is your standing, and it changes only through credible deeds, not drift.
+Raising the undead is the gravest Redguard sin; killing the defenseless, theft, and accepting Daedric artifacts also cost you, as does letting the death-duty lapse, which brings Tu'whacca's own judgment on top of neglect.
 
 ## Quests That Move Your Standing
 

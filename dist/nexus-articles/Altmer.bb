@@ -44,39 +44,11 @@ The track has one hard bite on your faith: it scales the Lorkhan pressure. The h
 
 [size=5][b]How You Gain Piety[/b][/size]
 
-Auri-El is always with you, so returning to the sacred texts is your steady foundation. From there, leaning into study and the arcane arts is the Altmer way. Lead with these:
-
-[list]
-[*][b]Read the sacred texts.[/b] The great books of your ancestors are where the dawn actually reaches you. The first time you read a given sacred text it lands with real weight: the works of Auri-El renew the dawn itself, works of arcane theory feed Magnus, and works of lineage and record feed Xarxes. This is also the practice that keeps you out of neglect - see below.
-[*][b]Study with discipline.[/b] Ordinary reading feeds your scholar gods too, in smaller measure. Spell tomes please Magnus; lore and skill books please Xarxes and Auri-El.
-[*][b]Reach a magic milestone with restraint.[/b] Advancing a school of magic as a marker of mastery, rather than casting the same spell over and over, honors Magnus. Each school rewards you as you cross into real competence, mastery, and beyond - Alteration, Conjuration, Destruction, Enchanting, Illusion, and Restoration all count. This is finite, study-framed progress, not button-mashing: each threshold pays once.
-[*][b]Advance with discipline.[/b] Mastering a skill, completing an enchantment, learning a Word of Power, brewing a potion, putting down the undead, healing or curing someone, resting under the open sky: these all read as disciplined self-perfection toward the ascent.
-[/list]
-
-Two more sources worth naming:
-
-[list]
-[*][b]Enforce the orthodox line, at a cost.[/b] Taking a hard, costly stand for ancestral order - the kind of enforcement most would flinch from - honors Trinimac, the unbroken warrior-god. This is his path, and it is deliberately demanding: it counts once a day, and only when the stand actually costs you something.
-[*][b]Ordered dreams while you rest.[/b] Rest after resolving the rite decision can advance your ancestral inheritance once for the devotional day. Magnus piety is separate and requires a Magnus-authentic act. If you have committed to Magnus or Xarxes, that same rest also carries a quiet dawn pulse of shared memory to your patron.
-[*][b]Disciplined heritage.[/b] Magical cultivation, a completed enchantment, an Auri-El rite, or an exact heritage milestone can claim the same daily cultural credit. Passive dawn does not.
-[*][b]A declined discipline rite stays quiet briefly.[/b] Choosing "Not yet" does not spend the seven-day accepted-rite cooldown or choose a discipline, but it suppresses the same prompt for three devotional days, so ordinary rest does not reopen it every night.
-[/list]
-
-Remember that piety is tracked separately for each god, daily gain is capped at about 4.3 per god per day, and repeating the exact same deed earns less each time. Variety and meaning matter far more than grinding.
-
-Note that several acts an Altmer might expect to matter earn nothing by design, and are explicitly rejected: ordinary travel, generic spellcasting, generic College membership, generic helping, generic anti-Thalmor violence, repeated Dragonborn identity, and the vampire-power route. These neither earn nor cost.
+Keep the ancestral order: study the disciplined arts, honor Auri-El's dawn, and hold to your patron's road.
 
 [size=5][b]How You Lose Piety[/b][/size]
 
-[list]
-[*][b]Dislikes.[/b] Your gods recoil from base acts. Murdering the defenseless drags the soul down from its ascent - a large hit for Auri-El, and Xarxes strikes the name from the record as well. Necromancy and raising the dead invert the whole Apotheosis project and offend all three gods. Assaulting the innocent costs you. And accepting a Daedric artifact offends every Altmer god, because the Daedra are lesser spirits beneath the light.
-[*][b]Lorkhan pressure.[/b] This is the signature Altmer cost. It fires only on specific, enormous choices, never on ordinary life. Three moments carry it: being declared Dragonborn, walking into Sovngarde, and taking the Companions' beast-blood fork. Certain forbidden texts carry it as well. Your faction lean scales how hard these land: Orthodox feels them at full force, Psijic feels them softened.
-[*][b]Crisis of faith.[/b] Those same three collisions do not just deduct piety. They open a crisis: a flavored state of dissonance, and while it holds, the discipline boon you have earned goes quiet. A crisis never strips your patron away, and every one of your ordinary earns keeps working while it is unresolved. There are two ways back, and both close it for good. You can reassert your orthodoxy: keep to disciplined, orthodox practice across three devotional days, and after a short settling your discipline returns - scarred but whole, and the mod tells you plainly that your coherence holds again. Or you can live through it: carry the dissonance for about a week without renouncing your path, and it resolves on its own, leaving the same scar. Either way the boon comes back. What never happens is a crisis that simply sits open forever.
-[*][b]Neglect.[/b] Your practice is measured from your last return to the sacred texts. Let roughly three days pass without one and the dawn is withheld: your maximum Magicka drops by 10 until you come back to the texts and the ancestral order. Note that this is the one thing day-to-day study and skill milestones will not do for you - only a sacred reading resets the clock. For Altmer, neglect is really inconsistency: an Orthodox who drifts toward the middle, or a Psijic who stops cultivating, feels not punished but increasingly undefined, as their old advantages stop landing as hard.
-[*][b]The Thalmor Alignment track.[/b] This is your coherence meter, and it is plainly readable in your standing. It is not piety, and it never deducts any; its bite is that it scales the Lorkhan pressure against you. There is no generic broad-worship path for Altmer; staying coherent with your chosen stance is what organizes your faith instead.
-[/list]
-
-Note the broad-worship rule that applies to every race: honoring several gods at once keeps you capped at Devoted. To reach Champion you must commit to a single god.
+You lose standing by accepting a Daedric artifact (Trinimac abhors it most), by raising the undead and killing the helpless, and by neglect, drift, and the broad-worship cap at Devoted.
 
 [size=5][b]Quests That Move Your Standing[/b][/size]
 

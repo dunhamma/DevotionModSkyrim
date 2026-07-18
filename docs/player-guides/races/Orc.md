@@ -32,39 +32,11 @@ Switching modes is deliberate and limited. A clear, major moment, such as being 
 
 ## How You Gain Piety
 
-Malacath only counts what you actually do. Lead with the deeds your mode is built around, and keep variety: repeating the exact same deed earns less each time, so a range of worthy acts always beats grinding one.
-
-- **Forge worthy work (the Orc's prayer).** Making things is the first and primary Orc devotional language, and every piece you bring off a forge or workbench is counted. It is counted twice, in a sense: once as work worth doing, and once as the code upheld. Mining ore and flipping goods to a vendor are not devotion; the making is. And the anti-farm limit means hammering out the same trinket a hundred times will not carry you.
-
-- **Prove strength in a real fight.** Putting down a hostile enemy is noticed. Cutting down a Daedra is worth more than an ordinary foe, and felling a dragon is the truest proof of strength there is. There is no credit in slaughtering the harmless, and repeated easy kills tail off fast.
-
-- **Keep your oaths and finish what you committed to.** Swearing a binding oath and honoring it, and winning your place by a judged trial, are devotion. The harder it was to honor, the more it counts. The quests Malacath is watching for are listed below.
-
-- **(Stronghold) Answer the stronghold.** Time spent in the strongholds themselves is the steady act. The great one is the crisis: defending Largashbur, besting Yamarz and lifting the curse in The Cursed Tribe names you Blood-Kin, and it is the single largest thing an Orc can do for Malacath in Skyrim.
-
-- **(City) Hold your dignity and make a place of your own.** The City Orc proves the code where nobody is minding it. Winning a hold's trust by doing its thane work, and making a home genuinely your own in a city, are the moments Malacath counts. They are authored moments, not ambient ones: the credit comes when the work is actually finished, not when you grumble your way through a market.
-
-- **(Legion / Exile) Complete hard service.** Finishing a pressure-bearing service contract counts. Recovering the Jagged Crown and carrying the Legion's war through to its end are the acts that mark you as a man keeping faith under someone else's discipline.
-
-- **Read the rare worthy texts, and stand where Malacath's people stand.** Approved Orc texts register a little, and they are rare. Standing at each of the four strongholds (Dushnikh Yal, Mor Khazgur, Narzulbur, Largashbur) is recognized once each, with a milestone for reaching all four. Sleeping rough at a place you have made your own, rather than paying for a bed, also earns a small note.
-
-A few caps to know: each deed has an anti-farm limit so you cannot loop it for easy piety, and your gain from any single god is capped at roughly 4.3 per day. Only one temporary favor blessing can be active at a time.
+Keep the Code in your life-mode: the forge and kin in the Stronghold, private dignity in the City, hard discipline in the Legion.
 
 ## How You Lose Piety
 
-- **Cowardice and weakness.** Stealing is the coward's path the honest outcast scorns. Striking or killing the defenseless is weakness Malacath despises. Both lose you piety.
-
-- **Soft comfort.** Sleeping in a warm inn bed loses a little; the exile is meant to scorn the easy comfort.
-
-- **Turning your back on the road you took.** If you have been living the Legion or Exile life and you choose to walk away from it, Malacath counts that as faith broken with the people whose service you shared. This is the cost of a decision you make, not of a bad week; letting a life quietly lapse is a different thing, and it is handled below.
-
-- **Neglect (the forge goes quiet).** If several days pass without a single act your mode is built on - no time in the strongholds, no service or oath brought home, no return to the hearth you hold, no reading of Malacath's texts - Malacath simply stops watching. This is not punishment, it is absence. A standing penalty called "The Code Goes Unkept" sets in, lowering your armor rating by 5 until you return to worthy work, service, or kin. It clears the moment you start carrying the code again.
-
-- **Natural drift.** Piety also fades slowly over time if you do nothing to maintain it, the same for every Orc mode. An exile holding the code alone does not get to decay slower than a stronghold Orc with a whole community behind them.
-
-- **The broad-worship cap.** If you spread yourself thin instead of committing, your standing is held back. Reaching Champion requires committing fully to Malacath through one life-mode; broad, uncommitted devotion stops short of the top.
-
-There is no separate reputation meter to manage for Orcs. The thing the world is reading is your life-mode and whether you are living it. A Stronghold Orc who drifts to the city without keeping the code is not betraying anyone; he is just becoming someone who used to be a Stronghold Orc, and the difference shows.
+You lose standing by weakness against the Code - murdering the helpless, assaulting the innocent, breaking faith with kin - and by neglect, drift, and the broad-worship cap at Devoted.
 
 ## Quests That Move Your Standing
 

@@ -38,35 +38,11 @@ Later, once your faith is deep enough, a single god may offer to take you on as 
 
 [size=5][b]How You Gain Piety[/b][/size]
 
-Piety is tracked separately for each god, and your daily gain with any single god is capped at about 4.3 per god per day. Variety matters far more than repetition: doing the same deed over and over earns less each time, so spread your devotion across honest, civic acts. These are the main ways an Imperial earns favor:
-
-[list]
-[*][b]Tend the dead properly (Arkay).[/b] Put restless undead back in the ground, heal or cure the sick and wounded, read the old lore. Clearing a vampire coven or a necromancer's operation is one of the cleanest, strongest ways to earn favor in the whole game.
-[*][b]Show mercy and restraint (Mara, Stendarr, Zenithar).[/b] Heal or cure a hurt person. Answer for a crime and serve your time rather than buying your way out of it. Meaningful mercy under real pressure counts; idly paying off a small bounty does not.
-[*][b]Do honest work and fair trade (Zenithar).[/b] Smithing, enchanting, brewing, cooking, and the patient improvement of a skill. Win by labor, not by plunder.
-[*][b]Study and master your craft (Julianos, Dibella, Akatosh).[/b] Read skill books, spell tomes, and lore. Learn a Word of Power. Improve your skills through patient practice.
-[*][b]Serve the Empire at the decisive moments (Akatosh, Stendarr, Zenithar, Mara).[/b] Civic favor is not earned by wearing a uniform, walking a patrol, or belonging to a faction. It is earned at the landmark deeds where the civic order actually holds or fails - the errand that saves a town, the crown recovered for the Legion, the burial duty done properly. The quests that carry these beats are listed below.
-[*][b]Walk the open land and learn a Shout (Kynareth, Talos, Akatosh).[/b] Rest under the open sky, discover new places, learn a Word of Power. The Thu'um is sacred to several of your gods. Kynareth also notices herbs gathered and potions brewed.
-[*][b]Keep the old faith under the ban (Talos).[/b] Talos favor comes only from genuine, costly acts against the ban. Reading the Thalmor's own tract on the subject, "The Talos Mistake", is enough to make you take a public position on it once. Walking into the Thalmor Embassy and walking out again is the private version of the same defiance. Carrying one of the Talos faithful out of Thalmor hands is the same defiance made flesh - Talos marks that rescue once, and the killing it takes earns nothing on its own. Generic rebellion, plain anti-Thalmor violence, and simply complying with the ban never earn Talos any favor. Note that Talos answers an Imperial far more faintly than he answers a Nord - the Empire's own treaty stands between you.
-[/list]
+Serve the civic faith: tend the dead, show mercy and restraint, do honest work, study your craft, and - for Talos - keep the old faith under the ban.
 
 [size=5][b]How You Lose Piety[/b][/size]
 
-[list]
-[*][b]Acts your gods despise.[/b] Raising the dead, murdering the defenseless, assaulting the innocent, theft, trespass, and taking a Daedric artifact all cost piety. Necromancy is the gravest sin against Arkay, Stendarr, and Kynareth; cruelty to the helpless offends Mara, Stendarr, and Julianos most of all; theft is Zenithar's own wound.
-[*][b]Killing dragons for sport.[/b] Talos counts a slain dragon as a victory. Akatosh does not - to him a dragon is kin, and casual dragon-hunting costs you his favor even as it wins Talos's. The great confrontations of the main quest are the exception: those he honors.
-[*][b]Neglect.[/b] If you stop feeding your civic practice through prayer, honest craft, and real public duty, it goes hollow. After three idle days Civic Steadiness loses one point each dawn until it settles back to its floor.
-[*][b]Natural drift.[/b] Piety you do not maintain slowly settles. Steady, varied devotion keeps your standing where you want it.
-[*][b]The broad-worship cap.[/b] Honoring the Divines broadly is civic and normal, but The Divines' Regard reaches Seeker at 25 pool standing and stops at Devoted at 50. Champion requires commitment to a single god.
-[*][b]The Concordat standing.[/b] This is the Imperial's signature mechanic, and it is always running. It sits in one of five bands, and it governs how freely Talos answers you and whether he will ever offer to take you as his own:
-[*][b]Open Defiant[/b] - you defy the ban in the open; the Thalmor hunt you, and your Talos devotion comes most freely.
-[*][b]Private Defiant[/b] - you keep the old faith in secret; the Thalmor are suspicious but Talos still answers strongly.
-[*][b]Uncommitted[/b] - the wide, neutral middle; Talos answers normally and the Thalmor leave you alone.
-[*][b]Public Compliant[/b] - you observe the ban publicly; the Thalmor are friendly, but Talos answers far less freely.
-[*][b]Concordat Enforcer[/b] - you enforce the ban; the Thalmor are allies, and Talos is all but closed to you.
-[*][b]What moves it:[/b] killing a Thalmor Justiciar who had not raised a hand against you pushes you toward defiance, and accepting Talos as your patron moves a compliant Imperial at least as far as Private Defiant. Short of that, the standing holds where it is. Picking a side in the civil war does not by itself move it.
-[*][b]Vampirism halts the civic faith.[/b] Becoming a vampire freezes your positive Nine Divines piety at each dawn until you are cured. Losses still land while you are halted, so a vampire can only fall. Werewolves are not halted; see below.
-[/list]
+You lose standing by necromancy, killing the defenseless, and accepting Daedric artifacts, by neglect and drift, and - for Talos - by publicly enforcing the Concordat rather than defying it.
 
 [size=5][b]Quests That Move Your Standing[/b][/size]
 

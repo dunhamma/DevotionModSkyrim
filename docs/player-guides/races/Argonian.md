@@ -32,25 +32,11 @@ Beyond that, the early game is about habit: seek out water, rest where you belon
 
 ## How You Gain Piety
 
-Your devotional acts feed whichever connection they belong to. The most common and important ways to earn:
-
-- **Swim in open water.** This is the centerpiece of the Argonian path, and it is the one thing no other race has. Get into a river, lake, or swamp under the open sky and stay in it for a few seconds. That maintains the Hist and can claim the day's practice. It counts once per day - the water is a floor you keep, not a pool you farm. Standing on the bank of a swamp does nothing; you have to be in the water.
-- **Find the waters that remember.** A handful of places in Skyrim hold water the Hist still reaches through. Coming upon one for the first time is worth more than an ordinary swim, and each of them can only be found once.
-- **Return to your bed of choice.** Once you have declared an anchor by sleeping in the same bed three times, coming back to it feeds your People bond and can claim the day's practice. Returning twice in one day earns nothing extra.
-- **Take Hist sap.** Sleeping Tree Sap brushes the Hist once, and only once, in a whole lifetime. Argonian Hist sap, if you carry any, maintains the bond whenever you use it.
-- **Live the Hist's quiet values.** The Hist responds to small acts of rootedness and care: sleeping under the open sky, cooking and sharing a meal, brewing potions, harvesting living ingredients, and tending or curing the hurt. These honor the sap that gives the People life, and they are the steadiest day-to-day earning an Argonian has.
-- **Stand with your people.** Your People bond grows when you read and handle what the exile community keeps for itself - their own writings and belongings, found where Saxhleel gather. It also grows when you pull a fellow Argonian out of real danger; Derkeethus, held by the Falmer beneath Darkwater Crossing, is the clearest example in Skyrim. This bond is narrow on purpose. There is no credit for merely being polite to an Argonian.
-- **Face the Void.** Joining the Dark Brotherhood and carrying its contracts through to the end raises your awareness of Sithis, as does reading what the Void's servants leave behind. This connection stays asleep until you have given it several separate, serious signals - one killing is not enough. Once it wakes, the deeds Sithis favors begin to count for you: killing without mercy, slipping a lock that is not yours, walking where you are not welcome. Be warned that most of those same deeds cost you with the Hist.
-
-Two reminders that apply to every Argonian act. First, repeating the exact same deed earns less each time, so variety matters far more than grinding. Second, daily gain toward any one connection is capped (around 4.3 per day), so you cannot rush it in a single session.
+Keep the daily Hist practice and defend your kin, then follow your path: community for the People, the feral Void edge for Sithis.
 
 ## How You Lose Piety
 
-- **Acts the Hist recoils from.** Anything that severs a soul from its root: murdering the defenseless, assaulting the harmless, raising the undead (denying a soul its return to the Hist), and binding souls into enchanted items. These are the deeds most at odds with being Saxhleel.
-- **Hist distance.** This is the signature Argonian pressure. The Hist is always slightly harder to reach in Skyrim than in Black Marsh. Go three days without a single act of maintenance and the connection begins to thin at dawn, losing a little more each day you stay away from it. It will not crash to nothing - while you are uncursed there is a floor it will not fall below - but you will feel it weaken if you ignore water and rest for too long. Any honest act of maintenance resets the clock.
-- **Letting the bond go quiet.** If you let the Hist drift far enough for long enough, it goes Distant, and the marsh answers once - a single, unrepeated response to being abandoned. Ordinary distance is texture, not a punishment that repeats. The Hist only truly falls silent under a curse.
-- **Leaning on the Void while the Hist slips.** Pushing hard into Sithis while your Hist maintenance has lapsed is treated as a real fault. If the Void is fully awake and your Hist bond has already sunk to its floor, the next Void act costs you badly with the Hist. The Void is meant to steady you in exile, never to replace the marsh.
-- **The focus cap.** Your practice is the quiet foundation everything sits on. Beside it, exactly one of People or Void may be your active emphasis. You cannot run both, and there is no third set of blessings waiting.
+You lose standing by killing the helpless, raising the undead, and - for the Void - settled comfort and mercy; the Hist's silence only bites as a debuff while a curse holds it.
 
 ## Quests That Move Your Standing
 
