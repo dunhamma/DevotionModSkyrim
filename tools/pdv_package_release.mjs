@@ -139,6 +139,61 @@ function verifyArchive(zipPath) {
   return entries.length;
 }
 
+// Release gate: the zip's --version must match what the mod itself reports.
+// Why this exists: 1.0.1 shipped with PDV_BUILD_VERSION still reading "1.0.0",
+// so the MCM could not distinguish builds and a crash-log triage burned a full
+// session on "which build was this?". The version lives in ONE place
+// (PDV__ManagerQuest.psc); this gate makes source, compiled pex, and zip name
+// agree before a byte is staged.
+function verifyBuildVersion(version) {
+  const sourcePath = path.join(MOD_ROOT, "Scripts", "Source", "PDV__ManagerQuest.psc");
+  if (!fs.existsSync(sourcePath)) {
+    fail(`Version gate: manager source not found: ${sourcePath}`);
+  }
+  const source = fs.readFileSync(sourcePath, "utf8");
+  const match = source.match(/PDV_BUILD_VERSION\s*=\s*"([^"]*)"/);
+  if (!match) {
+    fail(`Version gate: PDV_BUILD_VERSION constant not found in ${sourcePath}`);
+  }
+  if (match[1] !== version) {
+    fail(
+      `Version gate: --version ${version} but PDV__ManagerQuest.psc declares "${match[1]}". ` +
+        `Update PDV_BUILD_VERSION in the live source, recompile (node tools/pdv_compile.mjs ` +
+        `--script PDV__ManagerQuest, then PDV_MCM), and repackage.`,
+    );
+  }
+  const pexPath = path.join(MOD_ROOT, "Scripts", "PDV__ManagerQuest.pex");
+  if (!fs.existsSync(pexPath)) {
+    fail(`Version gate: compiled manager not found: ${pexPath}`);
+  }
+  if (!fs.readFileSync(pexPath).includes(Buffer.from(version, "utf8"))) {
+    fail(
+      `Version gate: PDV__ManagerQuest.pex does not contain "${version}" -- the source was ` +
+        `bumped but not recompiled. Run node tools/pdv_compile.mjs --script PDV__ManagerQuest ` +
+        `(and PDV_MCM), then repackage.`,
+    );
+  }
+  console.log(`[PASS] Version gate: source + pex + zip all declare ${version}.`);
+}
+
+// Release gate: the ESP must carry ANAM on every Story Manager receiver (the
+// issue #17 record repair). A re-authoring pass that drops it would resurrect
+// a malformed-record class silently; the checker is cheap, so run it per build.
+function verifyReceiverAnam() {
+  const checker = path.join(REPO_ROOT, "tools", "pdv_fix_receiver_anam.mjs");
+  const esp = path.join(MOD_ROOT, "Devotion.esp");
+  let output = "";
+  try {
+    output = execFileSync(process.execPath, [checker, esp, "--dry"], { encoding: "utf8" });
+  } catch (error) {
+    fail(`ANAM gate: checker failed: ${error.message}`);
+  }
+  if (/patching \(adding/i.test(output)) {
+    fail(`ANAM gate: receiver quest(s) are missing ANAM. Run pdv_fix_receiver_anam.mjs on the live ESP before packaging.`);
+  }
+  console.log(`[PASS] ANAM gate: all Story Manager receivers carry ANAM.`);
+}
+
 const args = parseArgs(process.argv.slice(2));
 
 if (args.verify) {
@@ -153,6 +208,9 @@ if (args.verify) {
 if (!fs.existsSync(MOD_ROOT)) {
   fail(`Live mod folder not found: ${MOD_ROOT} (set PDV_MOD_PATH to override).`);
 }
+
+verifyBuildVersion(args.version);
+verifyReceiverAnam();
 
 const stamp = args.date || new Date().toISOString().slice(0, 10).replace(/-/g, "");
 const zipName = `Devotion-${args.version}-${stamp}.zip`;

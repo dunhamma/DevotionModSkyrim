@@ -843,6 +843,11 @@ const GENERIC_FAUCET_STORY_MANAGER_NODES = [
     receiverQuest: "PDV__SM_CraftItem",
     parent: "Skyrim.esm:039D86",
     previousSibling: "Skyrim.esm:04F593",
+    // Issue #17 round 2 (2026-07-18): the Craft Item Story Manager path is
+    // retired -- crafting is delivered by po3 OnItemCrafted on
+    // PDV_PlayerEvents instead. The node must stay EMPTY; re-attaching the
+    // quest reintroduces the tempering CTD.
+    detachedByDesign: true,
   },
   {
     eventName: "New Voice Power",
@@ -8691,12 +8696,24 @@ class Verifier {
         failures.push(`QuestFlags are ${fields.QuestFlags || "(missing)"}, expected SharesEvent`);
       }
       const quests = Array.isArray(fields.Quests) ? fields.Quests : [];
-      if (!quests.some((quest) => quest?.Quest === receiver.formid)) {
+      if (node.detachedByDesign) {
+        // The receiver quest must NOT ride this node (issue #17 round 2:
+        // re-attaching PDV__SM_CraftItem reintroduces the tempering CTD).
+        if (quests.length !== 0) {
+          failures.push(`node must be empty (detached by design) but carries ${quests.length} quest(s)`);
+        }
+      } else if (!quests.some((quest) => quest?.Quest === receiver.formid)) {
         failures.push(`quest target does not include ${node.receiverQuest} (${receiver.formid})`);
       }
 
       if (failures.length) {
         this.fail("Generic faucet Story Manager node", `${node.nodeEdid}: ${failures.join("; ")}.`, PDV_ESP);
+      } else if (node.detachedByDesign) {
+        this.pass(
+          "Generic faucet Story Manager node",
+          `${node.nodeEdid} is empty by design (${node.eventName} delivered via po3 OnItemCrafted, not the Story Manager).`,
+          PDV_ESP,
+        );
       } else {
         const eventRootSuffix = node.eventRoot ? ` via ${node.eventRoot.edid}` : "";
         this.pass(
