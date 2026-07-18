@@ -131,51 +131,19 @@ Some quests are read by your gods as deeds, and they move your standing the mome
 
 ## Bonuses by Tier
 
-Note: these are current beta values and may be tuned before release.
+Your standing pays off in two layers: the always-on Lunar Lattice beneath everything, and the gifts of whichever focus god has risen to lead you. Only the highest tier you have reached is active in each - the tiers do not stack.
 
-Focused deity tiers are **Seeker** (25 piety), **Devoted** (50), and **Champion** (85). The Lattice beneath them runs on its own track: absent at 0, stirring at 1, deepening at 25, and reaching its full form at 75. Only the deepest stage you have reached is active.
+The Lattice keeps you quietly hardy from your first moment in the world: the moons hold disease at bay, and as your bond deepens it adds stamina and a little magic besides. Above it, each focus god grows through **Seeker** (25 piety), **Devoted** (50), and **Champion** (85), and each carries its own flavour:
 
-Each focus god has its own Seeker, Devoted, and Champion blessing. Only the highest tier you have reached for your leading god is active.
+- **Khenarthi** puts the road at your back - stamina and carrying strength, and at Champion a little more speed, the wind behind you.
+- **Azurah** deepens twilight and foresight - magicka, and a growing ward against magic.
+- **Baan Dar** hardens the survivor - armor, health, and clawed unarmed strength.
+- **Rajhin** sharpens the unseen hand - sneak, lockpicking, and pickpocketing.
+- **Alkosh** holds the line against chaos - fire resistance, and at the top a broad ward against magic.
 
-**Khenarthi** - the road at your back.
+**Baan Dar's Champion gift is the one Khajiit special power.** At his Champion tier the blessing "Baan Dar Remembers" rides on top of the stats: once a day, when a blow would drop you, the Bandit God slips you out of death's hand and puts you back on your feet. It is the single improbable reversal the moons allow you - the survivor who should not have survived, made literal. Every other focus god's Champion tier is a strong passive whose real reward is the recognition itself: the moon has named you.
 
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker (25) | Khenarthi's Road | Fortify Stamina +15 |
-| Devoted (50) | Khenarthi's Road | Fortify Stamina +25, Carry Weight +30 |
-| Champion (85) | Khenarthi's Wind | Fortify Stamina +40, Carry Weight +80, Movement Speed +3% |
-
-**Azurah** - twilight, mercy, and foresight.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker (25) | Azurah's Twilight | Fortify Magicka +15 |
-| Devoted (50) | Azurah's Twilight | Fortify Magicka +25, Magic Resistance +5% |
-| Champion (85) | Azurah's Sight | Fortify Magicka +40, Magic Resistance +15% |
-
-**Baan Dar** - the survivor who should not have survived.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker (25) | Baan Dar's Guile | Armor +15 |
-| Devoted (50) | Baan Dar's Guile | Armor +30, Maximum Health +20 |
-| Champion (85) | Baan Dar's Luck | Armor +50, Maximum Health +30, Unarmed Damage +10 |
-
-**Rajhin** - the hand that is never seen.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker (25) | Rajhin's Shadow | Sneak +5 |
-| Devoted (50) | Rajhin's Shadow | Sneak +13, Lockpicking +10 |
-| Champion (85) | Rajhin's Grace | Sneak +25, Lockpicking +25, Pickpocket +15, Unarmed Damage +10 |
-
-**Alkosh** - order held against chaos.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker (25) | Alkosh's Order | Fire Resistance +5% |
-| Devoted (50) | Alkosh's Order | Fire Resistance +13%, Magic Resistance +5% |
-| Champion (85) | Alkosh's Roar | Fire Resistance +25%, Magic Resistance +20% |
+For the exact per-tier stat values and the Lattice slots, see the Blessings and Penalties reference.
 
 ## Unique Mechanics
 

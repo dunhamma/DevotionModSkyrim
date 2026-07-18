@@ -20,26 +20,11 @@ eyes.
 A few things are true about piety, and everything else follows from them:
 
 [list]
-[*][b]Piety is tracked separately for every god.[/b] You can be a stranger to
+[*][b]Piety is tracked separately for every god.[/b] You can be a stranger to Mara and a near-Champion of Talos at the same time. Honoring one god does not fill some shared meter; each relationship is its own.
+[*][b]Each god's piety runs from 0 to 85.[/b] That is the whole bar. When you open the Devotion panel and see a god's bar filling up, it is filling from 0 toward 85.
+[*][b]You earn piety with a god by doing the things that god cares about.[/b] A god of the hunt notices you hunting. A god of mercy notices you sparing a beaten enemy. A god of the dead notices you tending graves and putting down the walking dead. The race guides tell you which deeds matter to which gods.
+[*][b]There is a daily limit.[/b] You can raise a single god's piety by only about 4.3 points per day, no matter how much you do. This is deliberate. Faith is built over time, not crammed into one afternoon.
 [/list]
-  Mara and a near-Champion of Talos at the same time. Honoring one god does
-  not fill some shared meter; each relationship is its own.
-[list]
-[*][b]Each god's piety runs from 0 to 85.[/b] That is the whole bar. When you open
-[/list]
-  the Devotion panel and see a god's bar filling up, it is filling from 0
-  toward 85.
-[list]
-[*][b]You earn piety with a god by doing the things that god cares about.[/b] A god
-[/list]
-  of the hunt notices you hunting. A god of mercy notices you sparing a beaten
-  enemy. A god of the dead notices you tending graves and putting down the
-  walking dead. The race guides tell you which deeds matter to which gods.
-[list]
-[*][b]There is a daily limit.[/b] You can raise a single god's piety by only about
-[/list]
-  4.3 points per day, no matter how much you do. This is deliberate. Faith is
-  built over time, not crammed into one afternoon.
 
 Because of that daily cap, reaching the top of the bar is a journey of days,
 not a grind of repeated clicks. With normal play (one or two devotional acts a
@@ -54,20 +39,10 @@ tier deepens the relationship.
 
 [list]
 [*][b]None[/b] - Below 25 piety. The god has not particularly noticed you yet.
-[*][b]Seeker[/b] - Reached at 25 piety. The god has taken note of how you live.
+[*][b]Seeker[/b] - Reached at 25 piety. The god has taken note of how you live. Your first small, steady blessing begins.
+[*][b]Devoted[/b] - Reached at 50 piety. A stable, real relationship. Your main everyday blessing settles in, and you have access to more of the god's favor in the right moments.
+[*][b]Champion[/b] - Reached at 85 piety, the top of the bar. The rarest and strongest tier. This is full recognition, and it is meant to feel exceptional. Many ordinary playthroughs may never reach it, and that is by design.
 [/list]
-  Your first small, steady blessing begins.
-[list]
-[*][b]Devoted[/b] - Reached at 50 piety. A stable, real relationship. Your main
-[/list]
-  everyday blessing settles in, and you have access to more of the god's favor
-  in the right moments.
-[list]
-[*][b]Champion[/b] - Reached at 85 piety, the top of the bar. The rarest and
-[/list]
-  strongest tier. This is full recognition, and it is meant to feel
-  exceptional. Many ordinary playthroughs may never reach it, and that is by
-  design.
 
 Reaching a higher tier always keeps what the lower tiers gave you. A Champion
 still carries everything the Seeker and Devoted relationship granted, plus the
@@ -79,33 +54,12 @@ Piety comes from several sources at once. You do not have to chase all of
 them. Living your character honestly is usually enough.
 
 [list]
-[*][b]Everyday deeds your god likes.[/b] The ordinary things you do that line up
+[*][b]Everyday deeds your god likes.[/b] The ordinary things you do that line up with a god's domain. These are the bread and butter of devotion, and they are the main reason the daily cap exists.
+[*][b]Bigger curated moments.[/b] Certain quests, shrine visits, defending the faithful, putting down a great threat, completing a meaningful rite. These weigh more heavily than a routine deed because they clearly show the god who you are.
+[*][b]Occasional one-off devotional acts.[/b] Specific, deliberate acts of worship that come up now and then, fitting to the god or to your people.
+[*][b]Favors.[/b] In a fitting moment, a god may grant you a temporary blessing - a "favor." More on these below; they are help, not a piety source you control.
+[*][b]Your people's ever-present layer.[/b] Some races carry a quiet, always-on background of faith tied to who they are. A Dunmer's ancestors are always near. A Khajiit lives inside the Lunar Lattice from birth. An Argonian's bond to the Hist is part of their very being. For those races, this layer hums along underneath everything else. Your race guide explains whether your people have one.
 [/list]
-  with a god's domain. These are the bread and butter of devotion, and they
-  are the main reason the daily cap exists.
-[list]
-[*][b]Bigger curated moments.[/b] Certain quests, shrine visits, defending the
-[/list]
-  faithful, putting down a great threat, completing a meaningful rite. These
-  weigh more heavily than a routine deed because they clearly show the god
-  who you are.
-[list]
-[*][b]Occasional one-off devotional acts.[/b] Specific, deliberate acts of worship
-[/list]
-  that come up now and then, fitting to the god or to your people.
-[list]
-[*][b]Favors.[/b] In a fitting moment, a god may grant you a temporary blessing -
-[/list]
-  a "favor." More on these below; they are help, not a piety source you
-  control.
-[list]
-[*][b]Your people's ever-present layer.[/b] Some races carry a quiet, always-on
-[/list]
-  background of faith tied to who they are. A Dunmer's ancestors are always
-  near. A Khajiit lives inside the Lunar Lattice from birth. An Argonian's
-  bond to the Hist is part of their very being. For those races, this layer
-  hums along underneath everything else. Your race guide explains whether your
-  people have one.
 
 [b]The single most important rule of earning piety: variety beats grinding.[/b]
 Repeating the exact same deed earns less and less each time you do it. Killing
@@ -120,31 +74,11 @@ Faith can fade or be spent, but the mod is built so that you do not casually
 crumble.
 
 [list]
-[*][b]Deeds your god dislikes.[/b] Acting against a god's values costs you with
+[*][b]Deeds your god dislikes.[/b] Acting against a god's values costs you with that god. A god of mercy frowns on needless slaughter. A god of the dead turns away from necromancy. These are real losses, but they are tied to meaningful acts, not to ordinary play.
+[*][b]Neglect and natural drift.[/b] If you simply stop paying attention to a god for a long stretch, the relationship slowly cools on its own. This is gentle drift, not a slap. It is covered more fully in "When a God Goes Quiet" below.
+[*][b]Your tiers are protected.[/b] Reaching a tier is an achievement, and the mod treats it like one. Once you have earned Seeker, Devoted, or Champion standing with a god, you do not tumble back down it over a couple of missed days. The relationship can weaken if you truly abandon it, but the floors beneath your earned tiers hold. You will not lose hard-won Champion standing to a quiet week.
+[*][b]The broad-worship cap.[/b] If you spread your faith across several gods at once rather than committing to one, you are capped at Devoted. This is not a penalty so much as a fact of breadth: you can be a fine, well-rounded worshipper of many gods and reach a stable Devoted standing, but you cannot become any single god's Champion that way. Champion belongs to commitment.
 [/list]
-  that god. A god of mercy frowns on needless slaughter. A god of the dead
-  turns away from necromancy. These are real losses, but they are tied to
-  meaningful acts, not to ordinary play.
-[list]
-[*][b]Neglect and natural drift.[/b] If you simply stop paying attention to a god
-[/list]
-  for a long stretch, the relationship slowly cools on its own. This is gentle
-  drift, not a slap. It is covered more fully in "When a God Goes Quiet" below.
-[list]
-[*][b]Your tiers are protected.[/b] Reaching a tier is an achievement, and the mod
-[/list]
-  treats it like one. Once you have earned Seeker, Devoted, or Champion
-  standing with a god, you do not tumble back down it over a couple of missed
-  days. The relationship can weaken if you truly abandon it, but the floors
-  beneath your earned tiers hold. You will not lose hard-won Champion standing
-  to a quiet week.
-[list]
-[*][b]The broad-worship cap.[/b] If you spread your faith across several gods at
-[/list]
-  once rather than committing to one, you are capped at Devoted. This is not a
-  penalty so much as a fact of breadth: you can be a fine, well-rounded
-  worshipper of many gods and reach a stable Devoted standing, but you cannot
-  become any single god's Champion that way. Champion belongs to commitment.
 
 [size=5][b]Patrons and Commitment[/b][/size]
 
@@ -152,20 +86,9 @@ This is the choice at the heart of the mod: do you honor many gods, or commit
 to one?
 
 [list]
-[*][b]Honoring many gods (broad worship).[/b] This is a complete and culturally
+[*][b]Honoring many gods (broad worship).[/b] This is a complete and culturally normal way to play for the races whose traditions allow it. You keep a rounded relationship with a whole pantheon, you get a blended set of blessings, and you cap at Devoted. Nothing about this is a failure state. It is a valid devotional life - "acknowledged by the gods, beloved by none specifically."
+[*][b]Committing to one god.[/b] When you have built enough standing and a god has seen enough of who you are, that god may come to claim you. This commitment is what unlocks the road to Champion. A focused patron gives you that god's full, sharper blessings rather than the softer blended ones, and only a focused patron can ever reach the top of the bar.
 [/list]
-  normal way to play for the races whose traditions allow it. You keep a
-  rounded relationship with a whole pantheon, you get a blended set of
-  blessings, and you cap at Devoted. Nothing about this is a failure state. It
-  is a valid devotional life - "acknowledged by the gods, beloved by none
-  specifically."
-[list]
-[*][b]Committing to one god.[/b] When you have built enough standing and a god has
-[/list]
-  seen enough of who you are, that god may come to claim you. This commitment
-  is what unlocks the road to Champion. A focused patron gives you that god's
-  full, sharper blessings rather than the softer blended ones, and only a
-  focused patron can ever reach the top of the bar.
 
 [b]How a god comes to claim you[/b] depends on your race, and the details live in
 your race guide. For most races, it works like this: you worship broadly, you
@@ -280,32 +203,10 @@ You are never left guessing where you stand. The mod shows you in several
 places:
 
 [list]
-[*][b]The Devotion panel.[/b] Your main window into your religious life. It has a
+[*][b]The Devotion panel.[/b] Your main window into your religious life. It has a few views: [i]Patron[/i] (who your gods are, your standing with them, and your committed patron if you have one), [i]Today[/i] (the devotional acts you have done and how the day is shaping your faith), and [i]Book of Days[/i] (a running journal of your devotional life over time, so you can look back on the arc of your faith rather than just the present moment).
+[*][b]The MCM menu.[/b] The mod's settings and status menu, where you can check details and adjust options.
+[*][b]Notification toasts.[/b] Short messages that pop up at meaningful moments - a tier reached, a favor granted, a god going quiet, a curse straining your faith. These are how the mod taps you on the shoulder during play without pulling you out of the game.
 [/list]
-  few views:
-[list]
-[*][i]Patron[/i] - who your gods are, your standing with them, and your committed
-[/list]
-    patron if you have one.
-[list]
-[*][i]Today[/i] - what has happened today: the devotional acts you have done and
-[/list]
-    how the day is shaping your faith.
-[list]
-[*][i]Book of Days[/i] - a running journal of your devotional life over time, so
-[/list]
-    you can look back on the arc of your faith rather than just the present
-    moment.
-[list]
-[*][b]The MCM menu.[/b] The mod's settings and status menu, where you can check
-[/list]
-  details and adjust options.
-[list]
-[*][b]Notification toasts.[/b] Short messages that pop up at meaningful moments - a
-[/list]
-  tier reached, a favor granted, a god going quiet, a curse straining your
-  faith. These are how the mod taps you on the shoulder during play without
-  pulling you out of the game.
 
 Between these, you can always see who is watching you, how close you are to
 them, and what your devotion has earned. For everything specific to your

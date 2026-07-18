@@ -35,6 +35,7 @@ const DOCS = [
   { name: 'Daedric_Princes_Guide', src: path.join(GUIDES_DIR, 'Daedric_Princes_Guide.md') },
   { name: 'How_Devotion_Works', src: path.join(GUIDES_DIR, 'How_Devotion_Works.md') },
   { name: 'FAQ_and_Quick_Start', src: path.join(GUIDES_DIR, 'FAQ_and_Quick_Start.md') },
+  { name: 'Blessings_and_Penalties', src: path.join(GUIDES_DIR, 'Blessings_and_Penalties.md') },
 ];
 
 const TARGETS = [

@@ -132,48 +132,21 @@ The College arc is Magnus's strongest lane by far. If Magnus is your patron, it 
 
 [size=5][b]Bonuses by Tier[/b][/size]
 
-Your reward comes in two layers. The [b]Orthodox foundation[/b] is your always-on, broad-coherence reward; it caps at Devoted and goes quiet once you commit to a single patron. Then each focused patron carries its own three-tier set that climbs all the way to Champion. Reaching Seeker is 25 piety, Devoted is 50, and Champion is 85.
+Your reward comes in two layers. The always-on [b]Orthodox foundation[/b] is your broad-coherence reward - a ward of magicka and resistance that caps at Devoted and steps aside once you commit to a single patron. Each focused patron then carries its own ladder from [b]Seeker[/b] (25 piety) through [b]Devoted[/b] (50) to [b]Champion[/b] (85). Only the highest tier you have reached is active.
 
-[b]Orthodox foundation[/b] - you keep to the ancestral order. Broad coherence, caps at Devoted.
-
-[list]
-[*][b]Seeker (25)[/b] - Fortify Magicka +15
-[*][b]Devoted (50)[/b] - Fortify Magicka +25, Magic Resistance +5%
-[/list]
-
-[b]Auri-El's Dawn[/b] - the road back, open to every faction.
+Each patron leans a different way:
 
 [list]
-[*][b]Seeker (25)[/b] [i]Auri-El's Dawn[/i] - Fortify Magicka +15
-[*][b]Devoted (50)[/b] [i]Auri-El's Dawn[/i] - Fortify Magicka +25, Magic Resistance +6%
-[*][b]Champion (85)[/b] [i]Auri-El's Return[/i] - Fortify Magicka +40, Magic Resistance +16%
+[*][b]Auri-El[/b] - the road back, open to every faction - deepens magicka and a ward against magic.
+[*][b]Magnus[/b] - the architect's discipline - sharpens Alteration and swells your magicka.
+[*][b]Xarxes[/b] - the ageless ledger - rewards Restoration and magicka.
+[*][b]Syrabane[/b] - the warder - pairs Restoration with a strong ward against magic.
+[*][b]Trinimac[/b] - the warrior-god's orthodox strength - hardens your sword-arm and armor, for those who take the hardest road.
 [/list]
 
-[b]Magnus's Arts[/b] - the architect's discipline.
+The Altmer have [b]no scripted Champion power[/b] - each patron's Champion tier is a strong passive, and the reward is the recognition itself. Your standing reads back in the Devotion panel and Survey text: Auri-El names you as one who kept the Dawn foundation through everything; Magnus names you a true student of the arts; Xarxes writes your name into the long ledger; Syrabane counts you among the warded; Trinimac names you unbroken.
 
-[list]
-[*][b]Seeker (25)[/b] [i]Magnus's Arts[/i] - Alteration +5
-[*][b]Devoted (50)[/b] [i]Magnus's Arts[/i] - Alteration +13, Fortify Magicka +25
-[*][b]Champion (85)[/b] [i]Magnus's Aperture[/i] - Alteration +25, Fortify Magicka +40
-[/list]
-
-[b]Xarxes's Record[/b] - the ageless ledger.
-
-[list]
-[*][b]Seeker (25)[/b] [i]Xarxes's Record[/i] - Restoration +5
-[*][b]Devoted (50)[/b] [i]Xarxes's Record[/i] - Restoration +13, Fortify Magicka +25
-[*][b]Champion (85)[/b] [i]Xarxes's Ledger[/i] - Restoration +25, Fortify Magicka +40
-[/list]
-
-[b]Trinimac's Charge[/b] - the warrior-god's orthodox strength, for those who take the hardest road.
-
-[list]
-[*][b]Seeker (25)[/b] [i]Trinimac's Charge[/i] - One-Handed +5
-[*][b]Devoted (50)[/b] [i]Trinimac's Charge[/i] - One-Handed +13, Armor +15
-[*][b]Champion (85)[/b] [i]Trinimac's Defense[/i] - One-Handed +25, Armor +50
-[/list]
-
-At Champion, your standing also reads back in the Devotion panel and Survey text. Auri-El names you as one who kept the Dawn foundation through everything; Magnus names you a true student of the arts; Xarxes writes your name into the long ledger; Trinimac names you unbroken.
+For the exact per-tier stat values, see the Blessings and Penalties reference.
 
 [size=5][b]Unique Mechanics[/b][/size]
 

@@ -121,50 +121,22 @@ Note that Dampened Spirits cuts both ways: the same prank that delights Baan Dar
 
 [size=5][b]Bonuses by Tier[/b][/size]
 
-Devotion tiers go None, then [b]Seeker[/b] (25 piety), [b]Devoted[/b] (50 piety), then [b]Champion[/b] (85 piety). Your bonuses depend on your path, and each path's gifts grow at every tier.
+Devotion tiers go None, then [b]Seeker[/b] (25 piety), [b]Devoted[/b] (50), then [b]Champion[/b] (85). Your bonuses depend on your path, and each grows at every tier. Only the highest tier you have reached is active.
 
-[b]Old Contract (Y'ffre) - the sharpest hunter, the heaviest burden[/b]
-
-[list]
-[*][b]Seeker[/b] [i]Old Contract[/i] - Archery +5
-[*][b]Devoted[/b] [i]Old Contract[/i] - Archery +13, Sneak +10
-[*][b]Champion[/b] [i]Old Contract - Keeper of the Pact[/i] - Archery +25, Sneak +22, Poison Resistance +10%
-[/list]
-
-[b]Living Story (Y'ffre) - the storyteller and mender[/b]
+Each of the four paths rewards a different life:
 
 [list]
-[*][b]Seeker[/b] [i]Living Story[/i] - Speech +5
-[*][b]Devoted[/b] [i]Living Story[/i] - Speech +13, Maximum Health +20
-[*][b]Champion[/b] [i]Living Story - Story-Keeper[/i] - Speech +25, Maximum Health +30, Fortify Magicka +15
+[*][b]Old Contract (Y'ffre)[/b] - the sharpest hunter and the heaviest burden - grows archery, sneaking, and poison resistance.
+[*][b]Living Story (Y'ffre)[/b] - the storyteller and mender - grows speech, health, and a little magicka.
+[*][b]The Exchange (Z'en)[/b] - the keeper of the ledger - grows speech, carrying strength, and armor.
+[*][b]The Bandit Road (Baan Dar)[/b] - the survivor - grows armor, health, and sneaking.
 [/list]
 
-[b]The Exchange (Z'en) - the keeper of the ledger[/b]
+If you worship broadly without ever committing, [b]Y'ffre's Weave[/b] grants a softer woodland blessing (stamina and a little stealth). It is weaker than any committed path, stops at Devoted, and switches off once you commit.
 
-[list]
-[*][b]Seeker[/b] [i]The Exchange[/i] - Speech +5
-[*][b]Devoted[/b] [i]The Exchange[/i] - Speech +13, Carry Weight +30
-[*][b]Champion[/b] [i]The Exchange - Z'en's Reckoning[/i] - Speech +25, Carry Weight +80, Armor +50
-[/list]
+[b]The Bandit Road carries the one Bosmer special power.[/b] On that path, "Baan Dar Opens the Gap": once a day, a killing blow that should end you becomes an opening instead - you slip it and break away, with a moment's luck at your back. The other three paths' Champion tiers are strong passives whose reward is the recognition itself.
 
-[b]The Bandit Road (Baan Dar) - the survivor[/b]
-
-[list]
-[*][b]Seeker[/b] [i]Bandit Road[/i] - Armor +15
-[*][b]Devoted[/b] [i]Bandit Road[/i] - Armor +30, Maximum Health +20
-[*][b]Champion[/b] [i]Bandit Road - Baan Dar's Luck[/i] - Armor +50, Maximum Health +30, Sneak +10
-[/list]
-
-[b]No commitment - the woodland blessing[/b]
-
-If you worship broadly without ever committing to a path, Y'ffre still grants you a softer woodland blessing. It is always weaker than a committed path, it stops at Devoted, and it switches off entirely once you commit.
-
-[list]
-[*][b]Seeker[/b] [i]Y'ffre's Weave[/i] - Fortify Stamina +15
-[*][b]Devoted[/b] [i]Y'ffre's Weave[/i] - Fortify Stamina +25, Sneak +8
-[/list]
-
-Reaching Champion takes roughly 30 to 45 days of normal play (one or two devotional acts a day), or about 20 days if you focus hard. Bosmer progress can feel a touch slower than some races because the paths reward bursts of meaningful action rather than constant small acts.
+Reaching Champion takes roughly 30 to 45 days of normal play, or about 20 if you focus hard - Bosmer progress can feel a touch slower, because the paths reward bursts of meaningful action rather than constant small acts. For the exact per-tier stat values, see the Blessings and Penalties reference.
 
 [size=5][b]Unique Mechanics[/b][/size]
 

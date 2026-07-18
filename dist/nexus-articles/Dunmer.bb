@@ -124,49 +124,21 @@ The three artifact quests - The Black Star, Boethiah's Calling, and The Whisperi
 
 [size=5][b]Bonuses by Tier[/b][/size]
 
-Note: these are current beta values and may be tuned before release.
+Two reward families run together: the always-yours [b]ancestor bond[/b], and the [b]Reclamation[/b] blessings (broad first, then your one focused god). Only the highest bond or tier you have reached is active - the wards do not stack.
 
-Two reward families run together: the always-yours [b]ancestor bond[/b], and the [b]Reclamation[/b] blessings (broad first, then your one focused god).
+[b]The ancestor bond[/b] deepens as you keep the rites: nothing while the dead are neglected, then a growing ward against magic - beginning, steady, and strong. The panels name its strength.
 
-[b]The ancestor bond[/b] (the panels name its strength; the ward replaces itself as the bond deepens, it does not stack):
-
-[list]
-[*][b]Quiet[/b] - Nothing yet - the dead are there, but you have not kept the rites
-[*][b]Beginning[/b] - Magic Resistance +3%
-[*][b]Steady[/b] - Magic Resistance +9%
-[*][b]Strong[/b] - Magic Resistance +20%
-[/list]
-
-[b]Broad Reclamation worship[/b] (all three at once - caps at Devoted):
+[b]Reclamation worship[/b] climbs from [b]Seeker[/b] (25 piety) through [b]Devoted[/b] (50) to [b]Champion[/b] (85). Broad worship of all three caps at Devoted; a single focused god carries you to Champion:
 
 [list]
-[*][b]Seeker (25)[/b] [i]Reclamation Communion[/i] - Magic Resistance +5%
-[*][b]Devoted (50)[/b] [i]Reclamation Communion[/i] - Magic Resistance +8%, Fortify Magicka +15
+[*][b]Azura[/b] - twilight sharpens your sight, and your Destruction strikes true - magicka and Destruction.
+[*][b]Boethiah[/b] - struggle tempers the arm, and the strong prevail - one-handed skill and armor.
+[*][b]Mephala[/b] - you learn to move along the unseen threads - sneaking and Illusion.
 [/list]
 
-[b]Azura, focused[/b] - twilight sharpens your sight, and your destruction strikes true.
+[b]The ancestral home carries the one Dunmer special power.[/b] Keep the home prayer - pray at your ancestral urn or hearth - and you arm "The Ancestors Watch" for the day: if you are brought to the brink, once, the dead reach through and pull you back. It lasts only until dawn, so each day's protection must be earned again with a fresh prayer. It does not belong to any one Reclamation god - it is the oldest part of your faith. Each focused god's Champion tier is otherwise a strong passive whose reward is the recognition itself.
 
-[list]
-[*][b]Seeker (25)[/b] [i]Azura's Twilight[/i] - Fortify Magicka +15
-[*][b]Devoted (50)[/b] [i]Azura's Foresight[/i] - Fortify Magicka +25, Destruction +10
-[*][b]Champion (85)[/b] [i]Azura's Star[/i] - Fortify Magicka +40, Destruction +25
-[/list]
-
-[b]Boethiah, focused[/b] - struggle tempers the arm, and the strong prevail.
-
-[list]
-[*][b]Seeker (25)[/b] [i]Boethiah's Struggle[/i] - One-Handed +5
-[*][b]Devoted (50)[/b] [i]Boethiah's Strength[/i] - One-Handed +13, Armor +30
-[*][b]Champion (85)[/b] [i]Boethiah's Proving[/i] - One-Handed +25, Armor +50
-[/list]
-
-[b]Mephala, focused[/b] - you learn to move along the unseen threads.
-
-[list]
-[*][b]Seeker (25)[/b] [i]Mephala's Web[/i] - Sneak +5
-[*][b]Devoted (50)[/b] [i]Mephala's Secrets[/i] - Sneak +13, Illusion +10
-[*][b]Champion (85)[/b] [i]Mephala's Whisper[/i] - Sneak +25, Illusion +25
-[/list]
+For the exact per-tier stat values and the ancestor slots, see the Blessings and Penalties reference.
 
 [size=5][b]Unique Mechanics[/b][/size]
 

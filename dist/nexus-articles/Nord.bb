@@ -153,62 +153,22 @@ If you walk the Nine Divines, those gods watch their own quests in the same way 
 
 [size=5][b]Bonuses by Tier[/b][/size]
 
-Note: these are current beta values and may be tuned before release.
+There are two layers. The [b]broad layer[/b] is what you get for honoring your whole pantheon; it caps at Devoted and is deliberately softer than a committed patron's. The [b]focused layer[/b] is what a single god gives once they claim you, and it switches the broad boon off. Only the highest tier you have reached is active - the tiers do not stack.
 
-There are two layers. The [b]broad layer[/b] is what you get for honoring your whole pantheon. The [b]focused layer[/b] is what you get once a single god claims you. Broad bonuses are deliberately softer than a committed patron's, and they switch off once you commit.
-
-[b]Broad worship - Old Ways.[/b] Caps at Devoted.
+Because a god only offers to claim you at 50 piety, a [b]patron's blessing begins at its Devoted step - there is no Seeker step for a patron[/b], and Champion opens at 85. Below 50 you carry the broad blessing instead.
 
 [list]
-[*][b]Seeker (25)[/b] [i]Old Ways[/i] - Fortify Stamina +15
-[*][b]Devoted (50)[/b] [i]Old Ways[/i] - Fortify Stamina +25, Frost Resistance +10%
+[*][b]Broad Old Ways[/b] hardens you for the road and the cold - stamina and frost resistance.
+[*][b]Broad Nine Divines[/b] ("Faith of the Holds") wards you against poison and disease.
+[*][b]Kyne[/b] gives the wind at your back - stamina and frost resistance, deeper than the broad version.
+[*][b]Shor[/b] lends the endurance to earn your seat in the mead-hall - health and martial strength.
+[*][b]Tsun[/b] teaches you to outlast the trial - stamina, blocking, and armor.
+[*][b]Stuhn[/b] hardens what stands between you and the blow - armor and blocking.
+[*][b]Talos[/b] (reachable in either pantheon) grants the conqueror's resolve - armor and the sword-arm.
+[*]Among the [b]Nine Divines[/b] patrons, Kynareth leans into stamina and resistance, Mara into restoration, Stendarr into warding and armor, and Zenithar into carrying capacity and craft.
 [/list]
 
-[b]Broad worship - Nine Divines.[/b] Caps at Devoted.
-
-[list]
-[*][b]Seeker (25)[/b] [i]Faith of the Holds[/i] - Poison Resistance +10%
-[*][b]Devoted (50)[/b] [i]Faith of the Holds[/i] - Poison Resistance +10%, Disease Resistance +10%
-[/list]
-
-[b]Focused patrons (Old Ways gods).[/b] A god only offers to claim you at 50 piety, so a patron's blessing begins at its Devoted step - there is no Seeker step for a patron. Champion opens at 85. Below 50, the blessing you carry is the broad one above.
-
-[b]Kyne[/b] - the wind at your back and the cold turned aside.
-
-[list]
-[*][b]Devoted (50)[/b] [i]Kyne's Sky[/i] - Fortify Stamina +25, Frost Resistance +10%
-[*][b]Champion (85)[/b] [i]Kyne's Breath[/i] - Fortify Stamina +40, Frost Resistance +25%
-[/list]
-
-[b]Shor[/b] - the king of the mead-hall lends you the endurance to earn your seat.
-
-[list]
-[*][b]Devoted (50)[/b] [i]Shor's Favor[/i] - Maximum Health +20, One-Handed +8
-[*][b]Champion (85)[/b] [i]Shor's Hall[/i] - Maximum Health +30, One-Handed +18, Two-Handed +10
-[/list]
-
-[b]Tsun[/b] - the shield-thane teaches you to outlast the trial.
-
-[list]
-[*][b]Devoted (50)[/b] [i]Tsun's Trial[/i] - Fortify Stamina +25, Block +10
-[*][b]Champion (85)[/b] [i]Tsun's Vigil[/i] - Fortify Stamina +40, Block +22, Armor +50
-[/list]
-
-[b]Stuhn[/b] - the shield-god hardens what stands between you and the blow.
-
-[list]
-[*][b]Devoted (50)[/b] [i]Stuhn's Ward[/i] - Armor +30, Block +8
-[*][b]Champion (85)[/b] [i]Stuhn's Bulwark[/i] - Armor +50, Block +18, One-Handed +8
-[/list]
-
-[b]Talos[/b] - reachable in either pantheon; the conqueror's own resolve.
-
-[list]
-[*][b]Devoted (50)[/b] [i]Talos's Resolve[/i] - Armor +30, One-Handed +8
-[*][b]Champion (85)[/b] [i]Talos's Triumph[/i] - Armor +50, One-Handed +20
-[/list]
-
-[b]Focused patrons (Nine Divines).[/b] Each eligible Divine likewise begins at its Devoted blessing when it claims you and reaches its Champion blessing at 85. Kynareth leans into stamina and resistance, Mara into restoration, Stendarr into warding and armor, and Zenithar into carrying capacity and craft.
+[b]Shor's Champion gift is the one Nord special power.[/b] At Shor's Champion tier the blessing "Shor Remembers" rides on top of the stats: once a day, a killing blow becomes a last stand, and Shor pulls you back from the edge instead of letting you fall - a seat in the hall of valor, earned but not yet taken. Every other patron's Champion tier is a strong passive whose real reward is the recognition itself: the god has claimed you.
 
 [size=5][b]Unique Mechanics[/b][/size]
 

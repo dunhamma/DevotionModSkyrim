@@ -64,10 +64,7 @@ Piety is tracked separately for each god, and your daily gain with any single go
 [*][b]Uncommitted[/b] - the wide, neutral middle; Talos answers normally and the Thalmor leave you alone.
 [*][b]Public Compliant[/b] - you observe the ban publicly; the Thalmor are friendly, but Talos answers far less freely.
 [*][b]Concordat Enforcer[/b] - you enforce the ban; the Thalmor are allies, and Talos is all but closed to you.
-[/list]
-
-  What moves it: killing a Thalmor Justiciar who had not raised a hand against you pushes you toward defiance, and accepting Talos as your patron moves a compliant Imperial at least as far as Private Defiant. Short of that, the standing holds where it is. Picking a side in the civil war does not by itself move it.
-[list]
+[*][b]What moves it:[/b] killing a Thalmor Justiciar who had not raised a hand against you pushes you toward defiance, and accepting Talos as your patron moves a compliant Imperial at least as far as Private Defiant. Short of that, the standing holds where it is. Picking a side in the civil war does not by itself move it.
 [*][b]Vampirism halts the civic faith.[/b] Becoming a vampire freezes your positive Nine Divines piety at each dawn until you are cured. Losses still land while you are halted, so a vampire can only fall. Werewolves are not halted; see below.
 [/list]
 
@@ -184,83 +181,27 @@ One more, for the committed: once you have a patron, completing The Book of Love
 
 [size=5][b]Bonuses by Tier[/b][/size]
 
-Each god's blessing deepens as your standing with them crosses 25 (Seeker), 50 (Devoted), and 85 (Champion). Higher tiers keep everything the lower tiers gave you.
+Each god's blessing deepens as your standing with them crosses [b]Seeker[/b] (25), [b]Devoted[/b] (50), and [b]Champion[/b] (85); only the highest tier you have reached is active. Because a patron only offers to claim you at 50 piety, a [b]patron's blessing begins at its Devoted step - there is no Seeker step for a patron[/b]. Until you commit, you carry the broad blessing below.
 
-A patron only offers to claim you at 50 piety, so a patron's blessing begins at its Devoted step - there is no Seeker step for a patron. Until you commit, the blessing you carry is the broad one below.
+[b]Broad worship - The Divines' Regard.[/b] Active before you commit, capped at Devoted, and deliberately softer than a patron's favor - the whole pantheon's regard, spread thin as poison and disease resistance. Committing to a patron suppresses it and replaces it with that god's own; Champion belongs only to commitment.
 
-[b]Broad worship: The Divines' Regard.[/b] Active before you commit to anyone, and capped at Devoted. It is deliberately softer than a patron's favor - the whole pantheon's regard, spread thin.
-
-[list]
-[*][b]Seeker (25)[/b] [i]The Divines' Regard[/i] - Poison Resistance +10%
-[*][b]Devoted (50)[/b] [i]The Divines' Regard[/i] - Poison Resistance +10%, Disease Resistance +10%
-[/list]
-
-Accepting a patron suppresses the broad boon and replaces it with that god's own. Champion belongs to commitment; broad worship cannot reach it.
-
-[b]Akatosh.[/b] The steady discipline of time, given back as endurance.
+Each Divine leans a different way at Devoted and Champion:
 
 [list]
-[*][b]Devoted (50)[/b] [i]Akatosh's Covenant[/i] - Fortify Magicka +25, Magic Resistance +5%
-[*][b]Champion (85)[/b] [i]Akatosh's Endurance[/i] - Maximum Health +30, Magic Resistance +15%
+[*][b]Akatosh[/b] - the discipline of time given back as endurance - magicka, resistance, and health.
+[*][b]Mara[/b] - mercy shown becomes mercy you can give - Restoration and a ward against magic.
+[*][b]Arkay[/b] - the keeper of the cycle - disease resistance and health, a body harder to corrupt.
+[*][b]Stendarr[/b] - restraint made a wall - blocking and armor.
+[*][b]Zenithar[/b] - honest labor - carrying strength and persuasion.
+[*][b]Dibella[/b] - grace and wit - persuasion and magicka.
+[*][b]Julianos[/b] - patient study - magicka and a ward against magic.
+[*][b]Kynareth[/b] - the open air - stamina and resistance.
+[*][b]Talos[/b] - the Hero-God's own resolve - armor and the sword-arm. His blessings are reached only through faithful defiance and are gated by your Concordat standing: you cannot become a Talos Champion while publicly enforcing the ban unless a fresh, costly act of defiance breaks that pattern first.
 [/list]
 
-[b]Mara.[/b] Mercy shown becomes mercy you can give.
+The Imperials have [b]no scripted Champion power[/b] - each Divine's Champion tier is a strong passive, and the reward is the recognition itself: the god you kept faith with names you at last.
 
-[list]
-[*][b]Devoted (50)[/b] [i]Mara's Mercy[/i] - Restoration +13, Resist Magic +5%
-[*][b]Champion (85)[/b] [i]Mara's Compassion[/i] - Restoration +23, Resist Magic +15%
-[/list]
-
-[b]Arkay.[/b] The keeper of the cycle makes your own body harder to corrupt.
-
-[list]
-[*][b]Devoted (50)[/b] [i]Arkay's Vigil[/i] - Disease Resistance +15%, Maximum Health +20
-[*][b]Champion (85)[/b] [i]Arkay's Ward[/i] - Disease Resistance +27%, Maximum Health +30
-[/list]
-
-[b]Stendarr.[/b] Restraint made into a wall you can stand behind.
-
-[list]
-[*][b]Devoted (50)[/b] [i]Stendarr's Aegis[/i] - Block +13, Armor +30
-[*][b]Champion (85)[/b] [i]Stendarr's Bulwark[/i] - Block +25, Armor +50
-[/list]
-
-[b]Zenithar.[/b] Honest labor pays, and it pays in what a working man actually needs.
-
-[list]
-[*][b]Devoted (50)[/b] [i]Zenithar's Trade[/i] - Carry Weight +65, Speech +8
-[*][b]Champion (85)[/b] [i]Zenithar's Prosperity[/i] - Carry Weight +120, Speech +20
-[/list]
-
-[b]Dibella.[/b] Grace in the room, and the wit to use it.
-
-[list]
-[*][b]Devoted (50)[/b] [i]Dibella's Grace[/i] - Speech +13, Fortify Magicka +15
-[*][b]Champion (85)[/b] [i]Dibella's Inspiration[/i] - Speech +25, Fortify Magicka +40
-[/list]
-
-[b]Julianos.[/b] Patient study, returned as a deeper well to draw from.
-
-[list]
-[*][b]Devoted (50)[/b] [i]Julianos's Wisdom[/i] - Fortify Magicka +25, Magic Resistance +5%
-[*][b]Champion (85)[/b] [i]Julianos's Insight[/i] - Fortify Magicka +40, Magic Resistance +15%
-[/list]
-
-[b]Kynareth.[/b] The open air keeps you moving longer than the road should allow.
-
-[list]
-[*][b]Devoted (50)[/b] [i]Kynareth's Breath[/i] - Fortify Stamina +25, Magic Resistance +5%
-[*][b]Champion (85)[/b] [i]Kynareth's Sky[/i] - Fortify Stamina +40, Magic Resistance +13%
-[/list]
-
-[b]Talos.[/b] The Hero-God arms the man who kept faith with him anyway.
-
-[list]
-[*][b]Devoted (50)[/b] [i]Talos's Resolve[/i] - Armor +30, One-Handed +8
-[*][b]Champion (85)[/b] [i]Talos's Triumph[/i] - Armor +50, One-Handed +20
-[/list]
-
-Talos is special: his blessings are reached only through faithful defiance, and they are gated by your Concordat standing. You cannot become a Talos Champion while publicly enforcing the ban unless a fresh, costly act of defiance breaks that pattern first.
+For the exact per-tier stat values, see the Blessings and Penalties reference.
 
 [size=5][b]Unique Mechanics[/b][/size]
 

@@ -83,41 +83,20 @@ Remember that none of this reaches Sithis until the Void has actually woken. Unt
 
 [size=5][b]Bonuses by Tier[/b][/size]
 
-Note: these are current beta values and may be tuned before release.
+Your reward comes in two layers: the always-on Hist practice beneath everything, and whichever focused path you follow. Only the highest tier you have reached is active.
 
-[b]Your cultural practice (always on, and it deepens as you keep it):[/b]
+[b]Your cultural practice deepens as you keep it.[/b] Only the first honest act of practice after each dawn advances it, so it is a slow, steady climb - the middle state in about a week, the deepest in about three. It gives a standing ward against magic, and near water it steadies you into real, if temporary, health. That is the point: for an Argonian in Skyrim, strength is a thing you return to, not a thing you carry. There is no separate Hist blessing ladder - the Hist is what you maintain, and the two focused paths below are where your standing turns into power.
 
-Only the first honest act of practice after each dawn advances this, so it is a slow, steady climb rather than something you can chase in an afternoon. At a normal pace you reach the middle state in about a week and the deepest state in about three.
-
-[list]
-[*][b]First act[/b] [i]Root Memory[/i] - Magic resistance +5%
-[*][b]Sustained[/b] [i]River-Kept Practice[/i] - Magic resistance +5%, poison resistance +10%, and near water your Maximum Health rises +20
-[*][b]Deep[/b] [i]Rooted Adaptation[/i] - Magic resistance +5%, poison resistance +22%, and near water your Maximum Health rises +30
-[/list]
-
-The health only holds while you are in or near water. That is the point: for an Argonian in Skyrim, strength is a thing you return to, not a thing you carry.
-
-There is no separate Hist blessing family. The Hist is what you maintain, not a ladder you climb - it gives through the practice above, and the two focused paths below are where your standing turns into power.
-
-[b]People focus - your community is your armor. This is the strongest path an Argonian has:[/b]
+The two focused paths (you run one or the other, never both):
 
 [list]
-[*][b]Seeker (25)[/b] [i]Chosen People - Kin[/i] - Carry Weight +25
-[*][b]Devoted (50)[/b] [i]Chosen People - Family[/i] - You carry 25 more weight, poison resistance rises 8%, and Maximum Health +10
-[*][b]Champion (85)[/b] [i]Chosen People - Pillar[/i] - You carry 50 more weight, poison resistance rises 8%, Maximum Health +20, and magic finds less purchase (5%)
+[*][b]People[/b] - your community is your armor, and the strongest path an Argonian has. It grows carrying strength, poison resistance, and health, and at Champion adds a ward against magic; at the top you are a pillar of the people you gathered.
+[*][b]Sithis and the Void[/b] - a high-threshold path that opens only after the Void has truly woken. It sharpens sneaking and lends your bare strikes the Void's weight (an Argonian fights with tail, teeth, and raw might, not claws). It is deliberately kept below the People path - the Void steadies you in exile, it does not become your best road.
 [/list]
 
-At Champion you are a pillar of the people you gathered, and the exile network knows you as the one who kept the community alive.
+[b]The Void carries the one Argonian special power.[/b] While the Void is your active focus, once a day near death the Nothing lends you a brief surge - a burst of stamina and momentum to fight your way clear of a blow that should have ended you. The People path's Champion tier is a strong passive whose reward is the recognition: the exile network knows you as the one who kept the community alive.
 
-[b]Sithis and the Void - a high-threshold path that opens only after the Void has truly woken:[/b]
-
-[list]
-[*][b]Seeker (25)[/b] [i]Void Distance - Faced[/i] - Sneak +4
-[*][b]Devoted (50)[/b] [i]Void Distance - Marked[/i] - Sneak +10, poison resistance rises 5%, and your bare strikes carry the Void's weight (+10 unarmed)
-[*][b]Champion (85)[/b] [i]Void-Held[/i] - Your Maximum Stamina rises +25, your bare strikes carry the Void's weight (+12 unarmed), and near death the Void can lend a brief surge
-[/list]
-
-The Void rewards are deliberately kept below the People path. Sithis is there to steady you in exile, not to become your best road. You run one focus or the other, never both.
+For the exact per-tier stat values and the Hist slots, see the Blessings and Penalties reference.
 
 [size=5][b]Unique Mechanics[/b][/size]
 
