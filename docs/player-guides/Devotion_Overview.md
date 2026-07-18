@@ -83,7 +83,7 @@ Every race plays its own faith. Start with your character's race below, then rea
 
 ### Compatibility
 
-- **Devotion replaces other religion systems.** Run it instead of another deity-worship or religion overhaul (for example, Wintersun), not alongside one. Stacking two religion systems is not supported.
+- **Devotion replaces other religion systems.** Run it instead of another deity-worship or religion overhaul, not alongside one. Stacking two religion systems is not supported.
 - **It respects your load order** and is balanced with Requiem's scale in mind. List-specific compatibility patches for major overhaul setups are in development; if you run a heavy overhaul or modlist, check the compatibility notes for your setup before installing.
 
 ## Getting Started
