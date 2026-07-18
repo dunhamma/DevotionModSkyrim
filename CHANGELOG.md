@@ -3,6 +3,17 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
+## 2026-07-18
+
+- **Fixed: Namira's Daedric boon now works under Requiem.** Namira's Seeker/
+  Devoted/Champion boon was a `HealRateMult` (health-regen-rate multiplier),
+  which does nothing under Requiem — base health regen is ~0, so a rate multiplier
+  multiplies nothing. It is now a flat **Fortify Health + Fortify Stamina**
+  (+25/+40/+50 per tier, provisional), which Requiem honors. Namira was the only
+  Daedric prince still carrying a Requiem-swallowed regen-rate boon; the rest were
+  already converted. (Requires regenerating the Daedric boon records from the
+  updated contract source and an in-game check.)
+
 ## 2026-07-16
 
 - **Changed: MCM is now players-only by default.** The four developer tabs
