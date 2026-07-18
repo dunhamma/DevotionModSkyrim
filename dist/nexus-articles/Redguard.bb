@@ -71,7 +71,9 @@ Two things make a Redguard feel different from any other race.
 
 [b]Death is your domain.[/b] Where other adventurers see a draugr crypt as loot, you see souls out of place and a duty to set them right. The ancestor reverence layer is always watching how you treat the dead. Clearing tombs, ending necromancers, and putting the restless dead back where they belong are not side content for you - they are the core of your faith, and they pay piety to Tu'whacca and your ancestors in a way they pay no other race. The Ash'abah sect leans all the way into this: you carry the impurity others will not touch, and Tu'whacca honors a burden your own people will not even thank you for.
 
-[b]HoonDing cannot be farmed.[/b] The Make Way God only appears when the way truly has to be made, and only for the god you have actually committed to. Ordinary victories are nothing to him. Bring down a dragon, or one of the few adversaries who should have ended you, while he is your patron - and he will not do it more than once a week. If you play it safe and avoid the hard fights, HoonDing simply will not notice you. That is the correct friction: the make-way moment has to be real.
+[b]HoonDing cannot be farmed.[/b] The Make Way God only appears when the way truly has to be made, and only for the god you have actually committed to. Ordinary victories are nothing to him. Bring down a dragon, or one of a few great adversaries, while he is your patron, and he counts it as a way made. Every genuine make-way registers; only farming dragons in a single day dulls the reward. If you play it safe and avoid the hard fights, HoonDing simply will not notice you. That is the correct friction: the make-way moment has to be real.
+
+[b]Your ancestral rest and the Remembering.[/b] The first place you sleep becomes a rest cell that remembers the old line; return there for a daily ancestor blessing. At that rest, sleep may also offer you an observance to carry - the Blade, the Road, the Rest, or the Harvest - one at a time, offered about once a week.
 
 [size=5][b]If You Are Cursed (Vampire or Werewolf)[/b][/size]
 

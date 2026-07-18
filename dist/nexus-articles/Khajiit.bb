@@ -72,6 +72,8 @@ Two things make the Khajiit feel different from every other race:
 
 [b]The road as home and the moon cycle.[/b] Any completed rest under the open sky is road-home practice; there are no anchors to set. The visible moon turns through its cycle, each phase belongs to one of your five gods, and Observe the Moons lets you deliberately acknowledge the god presiding over it. Once that god is at Devoted, their phase grants a small extra bonus while it hangs in the sky.
 
+[b]One more Alkosh path.[/b] Beyond dragons and order, every new Word of Power you learn nudges Alkosh at the next dawn - the Voice is dragon-order made audible.
+
 [size=5][b]If You Are Cursed (Vampire or Werewolf)[/b][/size]
 
 For the Khajiit, identity is cosmological and biological at once, so a curse strains your belonging rather than erasing it. The moons do not disown you, but the community can.

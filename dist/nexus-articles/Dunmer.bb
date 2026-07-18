@@ -69,6 +69,8 @@ The ancestor bond runs always-on; Reclamation worship is the broad devotion (cap
 
 [b]The three pull against each other.[/b] Azura, Boethiah, and Mephala do not want the same Dunmer. Broad worship is comfortable and it stops at Devoted. Committing to one means accepting that the other two will find your new habits distasteful - and that is precisely why a focused Reclamation feels like a decision rather than a grind.
 
+[b]Pray in the twilight.[/b] A rite performed in the windows around dawn or dusk earns Azura's particular favor - once per window, a distinct beat on top of the ordinary urn-prayer.
+
 [size=5][b]If You Are Cursed (Vampire or Werewolf)[/b][/size]
 
 [b]Vampire - the ancestors fall silent.[/b] This is one of the most striking moments in the mod. To the honored dead, undeath is a wound in the cycle, and they will not speak to what you have become. Your ancestor bond goes silent: the urn stops answering, the rites score nothing, and the dead withdraw their strength - your Maximum Magicka is reduced by 10 for as long as the silence holds. Curing the vampirism restores the connection and lifts the penalty, but the ancestors remember the silence, and a permanent scar remains. With the ancestors muted, Boethiah and Mephala draw closer, and the road to Molag Bal opens, but none of that fills the hollow where your dead used to be.

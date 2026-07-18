@@ -69,6 +69,12 @@ The broad lanes cap at Devoted. A patron's own blessing begins at Devoted - ther
 
 **Commitment is a living bond, not a brand.** When you accept, every god keeps the devotion you already built; the broad boon is set aside and the chosen god's focused Devoted blessing becomes active. Champion opens at 85. If that patron falls below 50, the commitment remains but its blessing pauses until you recover. This is the Nord signature: not a rule imposed on you, but the slow truth of who you turn out to be.
 
+**Beyond the offer, how you earn:**
+
+- **A hearth you keep** - the first place you sleep indoors becomes your hearth; rest there and return to it to deepen your ancestor standing, dawn by dawn.
+- **Favors of the Old Ways** - in fitting moments (an open-sky rest, a storm road, a hard hunt, defending the hearth, honoring the dead) a god grants a short-lived favor; only one is active at a time. A dedicated Kyne favor unlocks only once Kyne is your Champion.
+- **Tsun** marks a severe fight survived to its end.
+
 ## If You Are Cursed (Vampire or Werewolf)
 
 **Werewolf - the beast-blood.** Hircine's gift sets the Hunting Grounds against Sovngarde, and the honored dead will not share a soul with the hunt. While the curse is on you, your gains toward Shor, Tsun, and Stuhn are reduced. Kyne is not punished - your deeds simply tilt from storm toward hunt. There is a way back: curing or renouncing the curse begins your recovery, though a readable trace of the hunt lingers until that recovery fully advances.

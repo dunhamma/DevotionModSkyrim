@@ -71,6 +71,13 @@ Y'ffre's Weave is the broad woodland blessing (caps at Devoted); a committed pat
 
 [b]Path-specific moments.[/b] Each path has its own small living beats. The Exchange can settle the scales once a day: after a deed that squares an account, the bargains fall your way for a while. The Bandit Road grants that burst of speed when a fight drives you low and you need a way out. And any path can earn a temporary told-self blessing through a quiet naming rite - Hunter, Speaker, Wanderer, or Keeper - though only one such favor can ever be active at a time across all your gods.
 
+[b]Places and homes that answer:[/b]
+
+[list]
+[*][b]The Songs of the Green[/b] - six green places across Skyrim (the great trees and the standing stones) each answer once, with a vision, when you reach them; knowing all six is a milestone. The Ancestor Glade and the All-Maker stones feed a Y'ffre life besides.
+[*][b]The Hearth of the Telling (Living Story)[/b] - declare a hearth by sleeping there, then return to it after discovering three or more new places, and the telling settles into a lasting blessing (Tale Carried).
+[/list]
+
 [size=5][b]If You Are Cursed (Vampire or Werewolf)[/b][/size]
 
 [list]

@@ -82,6 +82,12 @@ The second is that something is keeping score behind the standard piety bar: you
 
 A knight who lets his honor fall finds his vow strained, and then finds himself cast out. A witch whose cover breaks finds her art turning against her hands - and finds the Princes suddenly very interested in her. A druid who takes the beast-blood finds the covenant closed until the blood is cleaned out. This is the heart of playing a Breton: you manage your public face alongside your actual practice.
 
+**How the three measures work:**
+
+- **Knightly Vow** starts full; practice restores it, dishonorable acts cut it. Let it fall to about a third and your gifts strain; near zero you are cast out until you repair it.
+- **Witchcraft Exposure** starts at nothing and rises with occult practice and misdeeds alike, easing a little each day you keep a low profile. Let it max out and the art turns on you - but a blown cover is also what makes the Daedric Princes offer you their hand.
+- **Druidic Standing** sits in the middle and frays a little each day you keep no outdoor observance. It never pays a bonus of its own - it only sets what the Green Way costs you - and the beast-blood closes the covenant outright until it is cured.
+
 ## If You Are Cursed (Vampire or Werewolf)
 
 What happens to your faith depends on your tradition, and the werewolf curse on the Green Way bites hardest of all.

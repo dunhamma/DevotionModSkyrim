@@ -57,6 +57,15 @@ The Hist practice runs always-on beneath everything; your two focused paths turn
 
 **Three connections, no single right answer.** A water-bound, solitary Argonian who rarely sees another Saxhleel is a completely different character from a Windhelm Argonian who never seeks the marsh's echo, and both are valid. Your standing is the story of which part of yourself you chose to keep alive in exile. Your people can buffer a thinning Hist bond, and the Void can steady you when both feel far - but nothing fully replaces the Hist.
 
+**How and where the Hist reaches you:**
+
+- **Swim in open water** - a few seconds of real swimming outdoors, once a day, maintains your Hist bond. No other race earns anything from swimming.
+- **Strength returns near water** - your River-Kept and Rooted adaptations grant Maximum Health only while you are in or near water.
+- **Claim a bed** - sleep in the same place across a few days and you can make it your home; return to it to feed the People bond, and after many stays the rest itself restores you (Rooted Rest).
+- **The Hist Adaptation Rite** - once your practice runs deep and a slow inner clock has matured, sleeping at your home or at a sacred-water site offers a permanent change to your body: keener claws, tougher skin, potent sap, or marsh-born resilience. One choice, kept for good.
+- **Waters that remember** - six sacred waters across Skyrim each answer once, with a vision, when you find them; knowing all six is a milestone. Drinking Sleeping Tree Sap stirs the Hist once, as well.
+- **The Void's edge (Sithis focus)** - a sneaking kill briefly leaves you unseen (Shadowscale Veil), and near death the Void lends a surge of stamina to fight your way clear.
+
 ## If You Are Cursed (Vampire or Werewolf)
 
 | Curse | What happens to your faith | A way back? |

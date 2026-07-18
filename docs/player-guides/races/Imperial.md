@@ -68,6 +68,11 @@ The Imperials have **no scripted Champion power** - each Divine's Champion tier 
 
 **The Talos commitment gate.** Wanting Talos as your patron while sitting at Public Compliant or Concordat Enforcer is normally blocked. A fresh, costly act of defiance can open the door, and accepting Talos then immediately moves a compliant Imperial at least into Private Defiant. You cannot accept Talos and remain publicly compliant; the faith makes you choose.
 
+**Beyond the Concordat, how you earn:**
+
+- **Civic Steadiness** - a quiet, always-on civic standing that deepens with the first civic or religious act of each day: prayer, honest craft at a forge, enchanter, or altar, or a real public-duty outcome. It climbs from Civic Steadiness to Civic Discipline to Civic Exemplar, and grows distant after about three idle days.
+- **What moves the Concordat** - it holds until a costly Talos-stance act. Hidden shrines, sheltering a Talos worshipper, refusing to report one, or siding with the Stormcloaks push you toward defiance; reporting or attacking a worshipper, or observing the ban in public, push you toward compliance.
+
 ## If You Are Cursed (Vampire or Werewolf)
 
 | Curse | What happens to your faith |

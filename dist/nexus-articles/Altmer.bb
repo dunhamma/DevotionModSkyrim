@@ -70,6 +70,13 @@ The Altmer have [b]no scripted Champion power[/b] - each patron's Champion tier 
 
 [b]Coherence over volume.[/b] Most races reward you for piling up devotion. Altmer rewards you for holding a shape. Your alignment and your patron focus want to point the same direction, and because heresy slides the alignment toward heterodoxy while orthodox rites only nudge it back slowly, holding an orthodox line means refusing what would pull you off it. Because broad worship caps you at Devoted, and because the great mortal-world moments keep taking their cut, an Altmer who engaged carelessly with Skyrim's content will plateau at Devoted and struggle to push into Champion. Reaching Champion as an Altmer is the strongest statement in the mod: you navigated recurring pressure, kept your devotion positive, and held faith anyway.
 
+[b]How and where you earn (beyond the alignment track):[/b]
+
+[list]
+[*][b]The always-on heritage[/b] deepens through disciplined acts - enchanting and craft, an Auri-El shrine rite, and an ancestral dream when you sleep - advancing your heritage standing (Ordered, then Exemplar) even with no patron.
+[*][b]The Discipline of Return[/b] - when you sleep, Auri-El may offer you a school to master: choose Alteration, Destruction, Illusion, or Restoration and carry that discipline. One at a time, offered about once a week; declining costs nothing.
+[/list]
+
 [size=5][b]If You Are Cursed (Vampire or Werewolf)[/b][/size]
 
 [list]
