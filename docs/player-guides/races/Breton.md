@@ -18,6 +18,7 @@ Knight's Road gods (the Divines and their kin):
 - Akatosh - the Dragon God of time and order; patron of dragonslayers and the keeping of oaths.
 - Mara - goddess of love, family, and community.
 - Arkay - keeper of the cycle of life and death; enemy of the undead.
+- Talos - the Hero-God of Man; a Breton on the Knight's Road can honor him and take him as patron.
 - Julianos, Zenithar, Kynareth, and Dibella can all receive Knight's Road devotion as well.
 
 Hidden Art gods (occult and arcane):
@@ -31,7 +32,7 @@ Green Way gods (the old nature covenant):
 - Y'ffre - the Storyteller, the first and oldest god of the forest. The heart of the Green Way, and the god who answers your covenant work.
 - Kynareth - goddess of the sky and the wild; she honors the open air and the gathered herb.
 - Magnus - the elder mage-god, tied to Alteration and rare arcane lore.
-- Phynaster - an elven ancestor-hero, honored through appreciation of elven heritage and craft.
+- Phynaster - an elven ancestor-hero, honored in Breton lore through appreciation of elven heritage and craft, though he is not a patron you can commit to.
 
 Foreign gods and the Daedric Princes are not approached freely. Normal patron offers come only from the tradition you chose. There is no casual god-hopping.
 
@@ -106,7 +107,7 @@ Werewolf:
 
 ## Quick Reference
 
-- Gods: Knight's Road - Stendarr, Akatosh, Mara, Arkay (and Julianos, Zenithar, Kynareth, Dibella). Hidden Art - Magnus and Julianos, plus the Daedric Princes (Hermaeus Mora, Hircine, Namira, Nocturnal). Green Way - Y'ffre, Kynareth, Magnus, Phynaster.
+- Gods: Knight's Road - Stendarr, Akatosh, Mara, Arkay, Talos (and Julianos, Zenithar, Kynareth, Dibella). Hidden Art - Magnus and Julianos, plus the Daedric Princes (Hermaeus Mora, Hircine, Namira, Nocturnal). Green Way - Y'ffre, Kynareth, Magnus (Phynaster is honored but not a patron).
 - Starting choice: pick one tradition - Knight's Road, Hidden Art, or Green Way. Required, no fallback, and locked for the playthrough.
 - Top ways to gain: (Knight's Road) put down the undead and the Daedra, heal and cure the hurt, serve your bounty, study for Julianos. (Hidden Art) read the three forbidden texts, learn the master spells, keep up the quiet study, serve a Prince. (Green Way) gather the covenant's four harvests, sleep under the open sky, hunt and cook with respect.
 - Main ways to lose: harming the innocent and raising the undead; theft and Daedric bargains (for the Divines); letting five days pass without practicing your tradition; honoring several gods at once, which holds you at Devoted; and your hidden measure - a fallen vow, a blown cover, or the beast-blood - costing you your standing or your blessings.
