@@ -33,6 +33,8 @@ const RACES = ['Altmer', 'Argonian', 'Bosmer', 'Breton', 'Dunmer', 'Imperial', '
 const DOCS = [
   { name: 'ModPage', src: path.join(GUIDES_DIR, 'Nexus_ModPage.md') },
   { name: 'Daedric_Princes_Guide', src: path.join(GUIDES_DIR, 'Daedric_Princes_Guide.md') },
+  { name: 'How_Devotion_Works', src: path.join(GUIDES_DIR, 'How_Devotion_Works.md') },
+  { name: 'FAQ_and_Quick_Start', src: path.join(GUIDES_DIR, 'FAQ_and_Quick_Start.md') },
 ];
 
 const TARGETS = [

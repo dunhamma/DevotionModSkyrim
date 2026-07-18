@@ -104,6 +104,27 @@ on its own; settle them at the keyboard.
   `+1.5` against Akatosh `-0.75`). The owner has hand-edited their ship copy, so
   this does **not** block the page.
 
+- **Nine of sixteen Daedric pacts have a Requiem-inert boon or price.** (found
+  2026-07-17 while tabling the boon/price data.)
+  `PDV_DaedricBoonPriceReviewSheet.csv` gives these effects as **percentage
+  regeneration**, which is exactly the effect class Requiem switches off -- the
+  mod's own stated reason (`Devotion_Overview.md`) for using flat pools
+  everywhere else. So on Pilgrim's Path (authored for Requiem), these silently
+  do nothing:
+  - **Prices that vanish** (pact becomes cost-free): Azura, Vaermina, Sanguine,
+    Clavicus Vile, Hermaeus Mora, Peryite -- all a `Stamina/Magicka regeneration
+    -N%` price.
+  - **Boons that vanish** (pact gives nothing at that slot): Sheogorath, Namira,
+    Hircine.
+
+  This is the same "flat Restore, not rate" pattern already fixed for the race
+  rewards ([[requiem-proof-heal-flat-restore-not-rate]]); the Daedric boon/price
+  layer was not swept. It intersects the felt-family gate, whose OPEN list
+  already carries several Daedric prices. Not a copy bug and not a page blocker
+  -- the numbers are correctly tabled from the sheet; the sheet's effect *type*
+  is the issue. Convert the regen effects to flat pool changes (or accept them as
+  vanilla-only and say so), then re-check under Requiem.
+
 ## D. Packaging / external
 
 - **C-COMPAT-BORDELLO** -- 6 sign-off slots (JOJ, TOT, HOH, MOM, DoD, VOV), but
