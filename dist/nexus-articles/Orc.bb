@@ -124,21 +124,48 @@ Malacath does not care about most of what Skyrim asks of you. These are the mome
 
 [size=5][b]Bonuses by Tier[/b][/size]
 
-Your standing climbs from None to [b]Seeker[/b] (25 piety) to [b]Devoted[/b] (50) to [b]Champion[/b] (85); only the highest tier you have reached is active. The number is the same in every life-mode - what changes is pace: Stronghold reaches the top fastest, City takes longer, Legion/Exile longest. That is by design; the rewards are equalized, so City and Legion/Exile are complete devotional lives, not weaker ones, and all three end at the same hardened peak (each Champion carries the same +50 armor).
+Note: these are current beta values and may be tuned before release.
 
-Before you lock into a mode, [b]Malacath's Regard[/b] is the broad blessing - armor and health, held in any mode and gentler than a mode's own. It steps aside once a mode blessing is active and caps at Devoted; Champion belongs only to a committed life-mode.
+Your standing climbs from None to Seeker (at 25 piety), to Devoted (at 50), to Champion (at 85). The number you need is the same in every mode. What changes is the pace: Stronghold reaches the top the fastest, City takes longer, and Legion/Exile takes the longest. That is by design. The rewards themselves are equalized, so City and Legion/Exile are complete devotional lives, not weaker ones, and every mode ends at the same peak.
 
-Each mode rewards a different Orcish life:
+There is also a broad blessing that holds before you have locked into a mode, or if you stay uncommitted. It is gentler than your mode's blessings and steps aside once a mode blessing is active.
+
+[b]Malacath's Regard[/b] - the broad blessing, held in any mode:
 
 [list]
-[*][b]Stronghold (Hold-Forged)[/b] - forge, kin, and proven war-gear - smithing, two-handed strength, and armor.
-[*][b]City (Private Fidelity)[/b] - dignity held under pressure - persuasion, Restoration, blocking, and armor.
-[*][b]Legion / Exile (Foreign Discipline)[/b] - the arm that carries the code home - one-handed skill, blocking, stamina, and armor.
+[*][b]Seeker (25)[/b] - Armor +15
+[*][b]Devoted (50)[/b] - Armor +30, Maximum Health +20
 [/list]
 
-[b]Malacath carries the one Orc special power, and it holds in every mode.[/b] With any focused Malacath standing, "The Code Holds": once in a fight, when a blow drops you near death, the Code holds and a flat burst of health keeps you standing - stronger once you reach Devoted. It is not a stat you read on a sheet; it is the moment the Code refuses to let you fall.
+Champion is not available to broad, uncommitted worship; you must commit to a life-mode to reach it.
 
-For the exact per-tier stat values, see the Blessings and Penalties reference.
+[b]The Stronghold Orc[/b] - forge, kin, and proven war-gear:
+
+[list]
+[*][b]Seeker (25)[/b] [i]Hold-Forged[/i] - Smithing +5
+[*][b]Devoted (50)[/b] [i]Hold-Forged[/i] - Smithing +13, Two-Handed +8
+[*][b]Champion (85)[/b] [i]Blood-Kin of the Forge[/i] - Smithing +23, Two-Handed +20, Armor +50
+[/list]
+
+[b]The City Orc[/b] - private fidelity and dignity held under pressure:
+
+[list]
+[*][b]Seeker (25)[/b] [i]Private Fidelity[/i] - Speech +5
+[*][b]Devoted (50)[/b] [i]Private Fidelity[/i] - Speech +13, Restoration +8
+[*][b]Champion (85)[/b] [i]Self-Made Belonging[/i] - Speech +23, Restoration +20, Block +5, Armor +50
+[/list]
+
+[b]The Legion Exile[/b] - foreign discipline and the arm that carries the code:
+
+[list]
+[*][b]Seeker (25)[/b] [i]Foreign Discipline[/i] - One-Handed +5
+[*][b]Devoted (50)[/b] [i]Foreign Discipline[/i] - One-Handed +13, Block +8
+[*][b]Champion (85)[/b] [i]Burden Carried Home[/i] - One-Handed +23, Block +20, Fortify Stamina +15, Armor +50
+[/list]
+
+Note that all three Champion blessings carry the same +50 armor, so whichever life you live, you reach the same hardened peak.
+
+[b]Malacath carries the one Orc special power, and it holds in every mode.[/b] With any focused Malacath standing, "The Code Holds": once in a fight, when a blow drops you near death, the Code holds and a flat burst of health keeps you standing - stronger once you reach Devoted. It is the moment the Code refuses to let you fall.
 
 [size=5][b]Unique Mechanics[/b][/size]
 

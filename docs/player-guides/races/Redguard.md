@@ -111,19 +111,48 @@ These are not Redguard quests - they are the ordinary business of Skyrim, seen t
 
 ## Bonuses by Tier
 
-Your gifts grow as you climb from **Seeker** (25 piety) to **Devoted** (50) to **Champion** (85). Only the highest tier you have reached is active - the tiers do not stack.
+Each god's gifts grow as you climb from Seeker (25 piety) to Devoted (50) to Champion (85). Values may be tuned in later updates.
 
-Beneath any focused god sits the always-on **Ancestor Spine**, shared across all sects and capped at Devoted: a steady ward against magic, and armor besides as it deepens. It steps aside while a focused god leads, because the focused god's gifts are stronger.
+**Ancestor Spine** - the always-on blessing of your ancestors. It is shared across all sects and caps at Devoted.
 
-Each of the three focusable gods carries its own flavour:
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Seeker (25) | Ancestor Spine | Magic Resistance +3% |
+| Devoted (50) | Ancestor Spine | Magic Resistance +5%, Armor +30 |
 
-- **Tu'whacca**, the soul-keeper (best fit for Crown and Ash'abah), wards you against magic. From Devoted his gift also carries a **special power**: whenever you keep a death-rite - putting the restless dead to rest, or carrying a Far Shores token - he restores a flat measure of your health, once a day, larger at Champion. It is a true heal, not a rate bonus, so you feel it even under Requiem: the Far Shores kept open for you and yours.
-- **HoonDing**, the way made (best fit for Forebear), sharpens your sword-arm and quickens your step. His **Champion gift is Redguard's one cheat-death**: "HoonDing Makes Way" - once a day, a lethal blow is refused and the god opens the road back from the edge. He does not do it twice in a day, and only for the god you have truly committed to.
-- **Leki**, the sword-song (best fit for Crown and Forebear), rewards the honed blade - one-handed skill and, higher up, a growing edge of critical bite.
+This blessing steps aside while you have a focused god, because the focused god's gifts are stronger.
 
-Tu'whacca's death-rite heal and HoonDing's make-way save are the two Redguard special powers; Leki's Champion tier is a strong passive whose reward is the recognition itself. Remember that only one temporary favor blessing can be active at a time across all your gods.
+**Tu'whacca** - the soul-keeper's ward. The best fit for Crown and Ash'abah.
 
-For the exact per-tier stat values, see the Blessings and Penalties reference.
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Seeker (25) | Tu'whacca's Ward | Magic Resistance +5% |
+| Devoted (50) | Tu'whacca's Ward | Magic Resistance +10%, and the kept death-rite restores your health (event-driven, flat restore - felt under Requiem) |
+| Champion (85) | Tu'whacca's Far Shores | Magic Resistance +20%, and the kept death-rite restores your health in full measure (event-driven, flat restore - felt under Requiem) |
+
+At Champion, Tu'whacca keeps the way to the Far Shores open for you and yours.
+
+**HoonDing** - the way made. The best fit for Forebear.
+
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Seeker (25) | HoonDing's Way | One-Handed +5 |
+| Devoted (50) | HoonDing's Way | One-Handed +13, Movement Speed +3% |
+| Champion (85) | HoonDing's Way Made | One-Handed +25, Movement Speed +6 |
+
+**Leki** - the sword-song. The best fit for Crown and Forebear.
+
+| Tier | Blessing | What you get |
+|------|----------|--------------|
+| Seeker (25) | Leki's Sword-Song | One-Handed +5 |
+| Devoted (50) | Leki's Sword-Song | One-Handed +13, Critical Chance +5% |
+| Champion (85) | Leki's Spirit Sword | One-Handed +25, Critical Chance +13% |
+
+At Champion, the Spirit Sword sings through your hand.
+
+Remember that only one temporary favor blessing can be active at a time across all your gods.
+
+**Two Redguard Champions carry a special power.** Tu'whacca's death-rite restoration (from Devoted, shown above) restores a flat measure of your health once a day when you keep a death-rite - a true heal, felt even under Requiem. And at HoonDing's Champion tier, "HoonDing Makes Way": once a day a lethal blow is refused and the god opens the road back from the edge - Redguard's one cheat-death. Leki's Champion tier is a strong passive whose reward is the recognition itself.
 
 ## Unique Mechanics
 

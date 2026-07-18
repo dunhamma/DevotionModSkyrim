@@ -181,19 +181,51 @@ Your tradition's other gods watch quests too. Arkay marks the dead honored and t
 
 [size=5][b]Bonuses by Tier[/b][/size]
 
-Your tradition is your blessing, and it arrives in two halves. [b]Seeker[/b] (25 piety) and [b]Devoted[/b] (50) come from practicing your tradition broadly - honoring any of its gods advances the same family. [b]Champion[/b] (85) is different: it comes only when one god of your tradition reaches Champion and stands as your patron, and that god brings a capstone of their own. Only your chosen tradition's family pays; the other two stay dormant, and only one temporary favor blessing is ever active at a time.
+These are current beta values and may be tuned before release.
 
-The three traditions grow their own way through Seeker and Devoted:
+Your tradition is your blessing, and it arrives in two halves. Seeker and Devoted come from practicing your tradition broadly - honoring any of its gods advances the same family. Champion is different: it comes only when one god of your tradition reaches Champion and stands as your patron, and that god brings a capstone of their own. Only your chosen tradition's family pays; the other two stay dormant. As always, only one temporary favor blessing can be active at a time across all your gods.
+
+Knight's Road:
 
 [list]
-[*][b]Knight's Road[/b] - the vow and the shield - blocking and a ward against magic.
-[*][b]Hidden Art[/b] - the discreet mage's craft - Conjuration and Illusion.
-[*][b]Green Way[/b] - the wild covenant - stamina and Restoration.
+[*][b]Seeker (25)[/b] [i]Knight's Vow[/i] - Block +5
+[*][b]Devoted (50)[/b] [i]Knight's Aegis[/i] - Block +13, Magic Resistance +8%
 [/list]
 
-[b]Champion belongs to your patron.[/b] Whichever god of your tradition you carry to the top brings their own capstone: Stendarr crowns the Knight's Road, Y'ffre the Green Way, and a Daedric Prince the Hidden Art - those three replace your Devoted blessing. Any other eligible god (Mara, Arkay, Akatosh, Julianos, Kynareth, Dibella, Zenithar, Talos, or Magnus) grants a boon that sits beside your Devoted blessing, so you carry both. These capstones are shared copies of the same gods' Imperial and Altmer boons.
+Hidden Art:
 
-The Bretons have [b]no scripted Champion power[/b] - every capstone is a strong passive, and the reward is the recognition itself. For the exact per-patron capstone values, see the Blessings and Penalties reference.
+[list]
+[*][b]Seeker (25)[/b] [i]Hidden Art[/i] - Conjuration +6
+[*][b]Devoted (50)[/b] [i]Hidden Art[/i] - Conjuration +15, Illusion +9
+[/list]
+
+Green Way:
+
+[list]
+[*][b]Seeker (25)[/b] [i]Green Way[/i] - Fortify Stamina +15
+[*][b]Devoted (50)[/b] [i]Green Way[/i] - Fortify Stamina +25, Restoration +8
+[/list]
+
+Champion (85) belongs to your patron. Whichever god of your tradition you carry to the top brings their own boon, and only one is ever active:
+
+[list]
+[*][b]Stendarr[/b] [i]Knight's Bulwark[/i] - Block +25, Magic Resistance +18%, Armor +50
+[*][b]Y'ffre[/b] [i]Green Way[/i] - Fortify Stamina +40, Restoration +18, Maximum Health +20
+[*][b]A Daedric Prince (Hidden Art)[/b] [i]Hidden Art[/i] - Conjuration +27, Illusion +21, Fortify Magicka +25
+[*][b]Mara[/b] [i]Mara's Compassion[/i] - Restoration +23, Magic Resistance +15%
+[*][b]Arkay[/b] [i]Arkay's Ward[/i] - Disease Resistance +27%, Maximum Health +30
+[*][b]Akatosh[/b] [i]Akatosh's Endurance[/i] - Maximum Health +30, Magic Resistance +15%
+[*][b]Julianos[/b] [i]Julianos's Insight[/i] - Fortify Magicka +40, Magic Resistance +15%
+[*][b]Kynareth[/b] [i]Kynareth's Sky[/i] - Fortify Stamina +40, Magic Resistance +13%
+[*][b]Dibella[/b] [i]Dibella's Inspiration[/i] - Speech +25, Fortify Magicka +40
+[*][b]Zenithar[/b] [i]Zenithar's Prosperity[/i] - Carry Weight +120, Speech +20
+[*][b]Talos[/b] [i]Talos's Triumph[/i] - Armor +50, One-Handed +20
+[*][b]Magnus[/b] [i]Magnus's Aperture[/i] - Alteration +25, Fortify Magicka +40
+[/list]
+
+Stendarr's capstone is the Knight's Road's own, Y'ffre's is the Green Way's own, and a Daedric patron crowns the Hidden Art. Those three replace your Devoted blessing rather than stacking on it - the totals above already include everything you had. Any other patron's boon sits beside your Devoted blessing, so you carry both.
+
+The Bretons have [b]no scripted Champion power[/b] - every capstone is a strong passive, and the reward is the recognition itself.
 
 [size=5][b]Unique Mechanics[/b][/size]
 
