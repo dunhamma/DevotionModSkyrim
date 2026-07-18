@@ -576,7 +576,7 @@ Int Property TIER_CHAMPION = 3 AutoReadOnly
 
 ; Human-facing release stamp for the MCM Version readout and bug-report export.
 ; Bump on every public build so an attached report is orderable by build.
-String Property PDV_BUILD_VERSION = "1.0.2-test1" AutoReadOnly
+String Property PDV_BUILD_VERSION = "1.0.2" AutoReadOnly
 
 Int Property FRAMEWORK_SCHEMA_VERSION = 3 AutoReadOnly
 Int Property PATRON_STATE_UNSET = 0 AutoReadOnly
