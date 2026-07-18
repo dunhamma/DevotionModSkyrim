@@ -5,9 +5,6 @@
 Imperials carry the Nine Divines, the official, public, lawful religion of the Empire. For most races faith is a personal thing. For an Imperial it is also civic: your religion is tied to your role as a citizen of the order that the Empire built. You honor the gods through public duty, honest work, mercy, lawful burial, and standing for order in a province torn by war.
 
 There is no setup choice and no patron to pick at the start. Broad worship of the Divines begins with you. Acts that genuinely honor one of the gods build **The Divines' Regard**; ordinary civic standing alone does not. Talos joins that shared worship only after you have taken a real Talos stance. If you later accept one god as patron, the broad blessing steps aside and your focused blessing takes over.
-
-Your civic practice is a separate, quieter layer, tracked as **Civic Steadiness**. The first meaningful civic or religious act after each dawn advances it; repeating other qualifying acts that day does not speed it up. Prayer, a completed piece of honest craft, and a real public-duty outcome all count, and they share the same single daily credit. Sleeping does not count.
-
 The thing that makes Imperial faith different from every other race is the shadow of the White-Gold Concordat. Talos, the god who unified the Empire, is banned by treaty. Where you stand on that ban decides how freely you can honor Talos at all. You can comply with it, keep the old faith in private, or defy it in the open, and the religion notices.
 
 ## Your Gods

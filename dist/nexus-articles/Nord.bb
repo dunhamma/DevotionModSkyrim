@@ -7,9 +7,6 @@ Nords carry two overlapping religious languages and rarely lose sleep over it. T
 For a Nord, faith is not a starting package handed to you. It is something your deeds reveal. You do not pick which god you serve. You live - you hunt, you fight, you learn the Voice, you keep the old rites - and at some point a god notices that the way you live points toward them, and offers to claim you. Until that moment you are a broad worshipper of your whole pantheon, honored by all and beloved by none in particular.
 
 The big choice at the start is which pantheon frames your worship: the Old Ways or the Nine Divines. After that, the choice that matters most is one you do not consciously make - it is made for you, by how you actually play.
-
-Both baselines build broad standing from the gods mixed within that tradition. The Old Ways grant the Old Ways blessing; the Nine Divines grant Faith of the Holds. At 50 piety a god may offer commitment. Accepting keeps your piety, sets the broad blessing aside, and begins that god's focused blessing.
-
 [size=5][b]Your Gods[/b][/size]
 
 If you start on the Old Ways, these are the gods who can claim you:

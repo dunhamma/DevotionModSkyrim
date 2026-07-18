@@ -7,9 +7,6 @@ Dunmer faith is not a single choice but a set of layers you carry at once. Under
 Above the ancestors stand the Reclamations - Azura, Boethiah, and Mephala. These are the Good Daedra of the Dunmer, the three who guided the people after the old Tribunal fell silent. You acknowledge all three as a matter of course, and in time you may come to favor one above the others. That focus does not replace the ancestors; it sits on top of them, a second layer of devotion laid over the first.
 
 You make no starting choice as a Dunmer. The layers are simply how your people believe. What unfolds over a playthrough is which Reclamation, if any, comes to claim you as their own.
-
-The ancestor bond grows deliberately. Only the first true act of practice after each dawn deepens it: a prayer over your ancestral urn, a rite kept at your own hearth, or a victory the dead can be proud of. Keep it and it strengthens. Neglect it and it simply goes quiet - it does not bleed away while you are off adventuring.
-
 ## Your Gods
 
 Your devotion has two faces: the ever-present ancestors, and the three Reclamations above them.

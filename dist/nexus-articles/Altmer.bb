@@ -7,9 +7,6 @@ For the Altmer, faith is not comfort. It is a project. Their highest ancestor, A
 The trouble is that Skyrim is Lorkhan's world. Altmer doctrine holds that mortal continuity - marriage, a home, a hearth, the mortal hero's afterlife, the beast-blood - is a concession to the thing that broke them. Ordinary life is fine, and Devotion never taxes it. Traveling, doing quests, sleeping indoors, having friends: none of that costs you anything. But a few specific, enormous choices carry a real theological price. Devotion calls this the Lorkhan pressure, and it is what makes Altmer the most demanding faith in the mod.
 
 At the start you pick a faction lean: how you relate to Thalmor orthodoxy. That choice sets a coherence track that colors the rest of your play. Above it all, Auri-El's dawn is always with you, no matter which path you walk. If this is your first Devotion character, read the How Devotion Works primer first, then come back here.
-
-Your ancestral inheritance advances at a deliberate daily pace. Only the first qualifying act after each 06:00 dawn counts: ordered rest after resolving the rite, disciplined magical study, a completed enchantment, an Auri-El rite, or an exact heritage milestone. Passive dawn does not advance it. Its visible stages are Ordered Heritage, Disciplined Heritage, and Exemplar Heritage. Those are mechanical tier names, not a claim about the Thalmor or a single political faction.
-
 [size=5][b]Your Gods[/b][/size]
 
 The Altmer honor the Aldmeri ancestor-spirits, the et'Ada who once were divine. Your patron options are:

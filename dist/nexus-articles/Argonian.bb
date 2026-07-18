@@ -7,9 +7,6 @@ You are Saxhleel, and you do not worship the way other races do. There is no tem
 The trouble is that you are in Skyrim, hundreds of miles from the marsh. The connection to the Hist is not broken, but it is stretched thin, and it keeps thinning a little more every day you spend among the dry stone of the north. So your faith is not about gathering favor. It is about maintaining a bond against a steady current, and about rebuilding who you are from the inside while you are far from home.
 
 There is no startup choice for an Argonian. Your cultural practice is one quiet foundation, while Hist, People, and Void are three separate relationships. Hist remains part of who you are. People and Void can each become the stronger active emphasis, but never both at once.
-
-Only the first honest act of practice after each dawn advances that foundation. Swimming in open water, resting at the bed you have made your own, cooking a meal, reading what your people carry with them, taking Hist sap, or an awakened rite of the Void can all count. Doing the same thing twice in one day does not count twice.
-
 [size=5][b]Your Gods[/b][/size]
 
 Argonians do not have a roster of gods so much as a set of connections. There are really three:
