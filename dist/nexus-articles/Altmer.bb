@@ -16,13 +16,11 @@ The Altmer honor the Aldmeri ancestor-spirits, the et'Ada who once were divine. 
 [*][b]Auri-El[/b] - the supreme ancestor, god of time, the one who walked the road back first. He is your foundation and is always with you, whatever else you do.
 [*][b]Magnus[/b] - the architect of magic, who fled the world and left an aperture behind. The god of disciplined study and the arcane arts.
 [*][b]Xarxes[/b] - the ageless scribe of Auri-El, keeper of lineage, lore, and the long record of all that was.
-[/list]
-
-[list]
 [*][b]Trinimac[/b] - the unbroken warrior-god, the spirit of civilization defended by force. He stands behind the most orthodox, enforcement-minded path, and you can commit to him if you are willing to pay for that stance; his is the hardest Altmer road to walk.
+[*][b]Syrabane[/b] - the Apprentice-God of wards and protective magic. A narrower focused path, open to those who lean into warding, protection, and aiding apprentices and the College.
 [/list]
 
-One more figure shapes Altmer faith without being a patron you can commit to. [b]Syrabane[/b], the Apprentice-God of wards and protective magic, is honored in Altmer lore but has no path you can walk in play yet. And foreign gods matter mostly as pressure: anything tied to [b]Lorkhan[/b], [b]Shor[/b], [b]Talos[/b], or the Nordic divine frame works against your coherence rather than for it.
+Foreign gods matter mostly as pressure: anything tied to [b]Lorkhan[/b], [b]Shor[/b], [b]Talos[/b], or the Nordic divine frame works against your coherence rather than for it.
 
 The Daedric Princes are the oldest forbidden ground. Consorting with Daedra breaks the most ancient Altmer religious law. The Princes can still be approached through the mod's shared Daedric path, but for an Altmer that is a rupture, not devotion.
 
@@ -82,7 +80,7 @@ The Altmer have [b]no scripted Champion power[/b] - each patron's Champion tier 
 [size=5][b]Quick Reference[/b][/size]
 
 [list]
-[*][b]Gods:[/b] Auri-El (foundation, always on), Magnus, Xarxes, and Trinimac (the hard orthodox road); Daedra forbidden.
+[*][b]Gods:[/b] Auri-El (foundation, always on), Magnus, Xarxes, Trinimac (the hard orthodox road), and Syrabane (wards and protection); Daedra forbidden.
 [*][b]Starting choice:[/b] None - you begin a broad Orthodox worshipper. Your Thalmor Alignment (a Concordat-style standing across five bands) starts Uncommitted and moves with your deeds.
 [*][b]Top 3 ways to gain:[/b] Read the sacred texts (Auri-El, Magnus, Xarxes); study widely, spell tomes and lore alike (Magnus, Xarxes); reach magic milestones with restraint (Magnus).
 [*][b]Main ways to lose:[/b] Lorkhan pressure from the great mortal-world moments (being declared Dragonborn, Sovngarde, the Companions' beast-blood fork); accepting Daedric artifacts; murder and necromancy; neglect, if you stay away from the sacred texts too long.
