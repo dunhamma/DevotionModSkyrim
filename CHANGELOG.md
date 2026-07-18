@@ -5,18 +5,15 @@ folder; this file records what changed, not the full source.
 
 ## 2026-07-18
 
-- **Fixed: Daedric prince regen boons/prices that did nothing under Requiem.**
-  Nine princes shipped with regen-*rate* actor values (`HealRateMult` /
-  `MagickaRateMult` / `StaminaRateMult`), which Requiem swallows — base regen is
-  ~0, so a rate multiplier multiplies nothing. The curated contract had already
-  been converted to flat effects, but the **deployed ESP was never regenerated**,
-  so the stale rate-mults were still live in-game. Affected: **boons** — Namira
-  (health), Sheogorath (magicka), Hircine (stamina); **prices** — Azura, Mora,
-  Peryite (stamina), Sanguine, Vile (magicka), Vaermina (health). Namira's boon is
-  additionally re-authored as flat **Fortify Health + Fortify Stamina**
-  (+25/+40/+50 per tier, provisional). Fix = regenerate the Daedric records from
-  the contract (`pdv-daedric-author`); verify with `pdv_audit_daedric_regen.mjs`
-  and an in-game check under Requiem.
+- **Fixed: Namira's Daedric boon did nothing under Requiem.** It used
+  `HealRateMult` (health-regen-*rate*), which Requiem swallows — base regen is ~0,
+  so a rate multiplier multiplies nothing. Namira was the last regen-rate holdout
+  among the Daedric boons (the other princes were already flat in the shipped
+  plugin). Re-authored as flat **Fortify Health + Fortify Stamina** (+25/+40/+50
+  per tier, provisional) and deployed via `pdv-daedric-author`; verified in the
+  live ESP (`pdv_audit_daedric_regen.mjs` clean, both effects present via
+  `pdv_show_daedric_boon.mjs`). New tools also let any deployed plugin be checked
+  for Requiem-swallowed regen-rate actor values without the Creation Kit / xEdit.
 
 ## 2026-07-16
 
