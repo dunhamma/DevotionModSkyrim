@@ -18,6 +18,14 @@ Event OnStoryChangeLocation(ObjectReference akActor, Location akOldLocation, Loc
 EndEvent
 
 Function FinishReceiver()
+    ; Defer teardown out of the story-event frame (issue #17 CTD class):
+    ; Stop()/Reset() inside the story-event handler re-inits alias
+    ; bookkeeping while the engine may still be marshalling a queued
+    ; story event on the quest job thread.
+    RegisterForSingleUpdate(0.1)
+EndFunction
+
+Event OnUpdate()
     Stop()
     Reset()
-EndFunction
+EndEvent
