@@ -34,18 +34,25 @@ status, package shape, smoke, and public claims live in
 
 Phase 21 priority: P0.
 
-Posture: first full package lane. The local `D:\Wabbajack\modlists\ARR`
-install and selected `ARSE` profile are initial evidence only; patch
-development must refresh against the Authoria authors' current list.
+Posture: first full package lane. Current evidence basis is the updated
+`D:\Wabbajack\modlists\ARR Test` instance (reviewed 2026-07-16); the June
+2026 `D:\Wabbajack\modlists\ARR` pass and its Archon-era conflict dossier
+are superseded and deleted. See
+`PDV_Phase21_ARRTest_ModReview_2026-07-16.md` for the current review and
+to-do list.
 
-Known overlap families from the local pass:
+Known overlap families from the 2026-07-16 pass:
 
-- Requiem stack and RFTI output.
-- Archon religion layer to replace.
+- Requiem stack and RFTI output (all 14 shrine-blessing SPELs resolve to
+  Requiem.esp; Devotion's neutralization manifest applies unchanged).
+- NO active religion overhaul to replace: Archon is gone from the list;
+  Apostasy Framework is a modder's resource (custom AVs/keywords), coexists.
 - Frostfall, SunHelm, Campfire, and Survival Mode context.
-- Vampire/werewolf support and feeding-related plugins.
-- Daedric shrine surfaces, Vigilant/Glenmoril/Unslaad/LOTD-style quest and
-  newland content, and major shrine/statue/worldspace additions.
+- Vampire/werewolf support (Sacrilege, Manbeast, Requiem VampireCollection)
+  and feeding-related plugins.
+- Daedric shrine surfaces, quest expansions overriding hooked vanilla DA
+  quests, new-land quest content, bard/performance activity mods, and major
+  shrine/statue/worldspace additions.
 
 Likely PDV route:
 

@@ -1,0 +1,3 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation,formid
+PMAradellQuest,Before the End,5,Stayed with the condemned man Aradell until his execution,comfort_the_dying,Mara,+,m,small,"Tier A stage log s5 'Didn't leave him'; Tier C Nexus 142238 (themes of guilt, remorse and death); no CompleteQuest flag on any stage; ruled 2026-07-16; RUNTIME-VERIFY",PrisonerMod.esp:000007
+PMAradellQuest,Before the End,5,Stayed with the condemned man Aradell until his execution,dignity_in_death,Arkay,+,S,small,"Tier A stage log s5 'Didn't leave him'; Tier C Nexus 142238 (themes of guilt, remorse and death); no CompleteQuest flag on any stage; ruled 2026-07-16; RUNTIME-VERIFY",PrisonerMod.esp:000007
