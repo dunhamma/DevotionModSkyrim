@@ -68,8 +68,10 @@ The broad lanes cap at Devoted. A patron's own blessing begins at Devoted - ther
 - **Shor** - Devoted: Maximum Health +20, One-Handed +8; Champion: Maximum Health +30, One-Handed +18, Two-Handed +10
 - **Tsun** - Devoted: Fortify Stamina +25, Block +10; Champion: Fortify Stamina +40, Block +22, Armor +50
 - **Stuhn** - Devoted: Armor +30, Block +8; Champion: Armor +50, Block +18, One-Handed +8
+- **Orkey** (Old Ways) - Devoted: Disease Resistance +15%, Maximum Health +20; Champion: Disease Resistance +27%, Maximum Health +30
 - **Talos** - Devoted: Armor +30, One-Handed +8; Champion: Armor +50, One-Handed +20
-- **A Nine Divines patron** (Akatosh, Mara, Arkay, Stendarr, Zenithar, Dibella, Julianos, or Kynareth) - if you walk the Nine and one of them claims you, you carry that god's Divine boon, exactly as an Imperial would; the Imperial guide lists its tiers.
+- **Mara and Dibella** - reachable in either pantheon; they grant the shared Divine boons, and the Imperial guide lists their tiers.
+- **The remaining Divines** (Akatosh, Arkay, Stendarr, Zenithar, Julianos, Kynareth) - under the Nine only, also on the shared Divine boons. Arkay and Orkey are one god under two names: on the Old Ways he grants the Orkey blessing above, under the Nine the Imperial Arkay one.
 
 **Shor's Champion gift is the one Nord special power.** At Shor's Champion tier the blessing "Shor Remembers" rides on top of the stats: once a day, a killing blow becomes a last stand, and Shor pulls you back from the edge instead of letting you fall. Every other patron's Champion tier is a strong passive whose reward is the recognition itself.
 
