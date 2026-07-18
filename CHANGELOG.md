@@ -5,14 +5,18 @@ folder; this file records what changed, not the full source.
 
 ## 2026-07-18
 
-- **Fixed: Namira's Daedric boon now works under Requiem.** Namira's Seeker/
-  Devoted/Champion boon was a `HealRateMult` (health-regen-rate multiplier),
-  which does nothing under Requiem — base health regen is ~0, so a rate multiplier
-  multiplies nothing. It is now a flat **Fortify Health + Fortify Stamina**
-  (+25/+40/+50 per tier, provisional), which Requiem honors. Namira was the only
-  Daedric prince still carrying a Requiem-swallowed regen-rate boon; the rest were
-  already converted. (Requires regenerating the Daedric boon records from the
-  updated contract source and an in-game check.)
+- **Fixed: Daedric prince regen boons/prices that did nothing under Requiem.**
+  Nine princes shipped with regen-*rate* actor values (`HealRateMult` /
+  `MagickaRateMult` / `StaminaRateMult`), which Requiem swallows — base regen is
+  ~0, so a rate multiplier multiplies nothing. The curated contract had already
+  been converted to flat effects, but the **deployed ESP was never regenerated**,
+  so the stale rate-mults were still live in-game. Affected: **boons** — Namira
+  (health), Sheogorath (magicka), Hircine (stamina); **prices** — Azura, Mora,
+  Peryite (stamina), Sanguine, Vile (magicka), Vaermina (health). Namira's boon is
+  additionally re-authored as flat **Fortify Health + Fortify Stamina**
+  (+25/+40/+50 per tier, provisional). Fix = regenerate the Daedric records from
+  the contract (`pdv-daedric-author`); verify with `pdv_audit_daedric_regen.mjs`
+  and an in-game check under Requiem.
 
 ## 2026-07-16
 
