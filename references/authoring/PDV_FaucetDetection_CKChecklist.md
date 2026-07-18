@@ -108,10 +108,12 @@ dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2Receiver
 The helper creates/checks each QUST as **not Start Game Enabled**, attaches its matching script, and sets `PDV_Router` to `PDV_ActionRouter`.
 
 > **CTD FIX (issue #17):** the receiver-author pass historically emitted these QUSTs **without the `ANAM` (Next Alias ID) subrecord** that the CK writes for every quest. The malformed record makes the engine deref an invalid handle while marshalling a Story Manager event (`SkyrimSE.exe+04CF782`, via `StoryEventArguments`/`TESQuestInitEvent`) → **crash on cooking/tempering** (the Craft Item receiver). The author pass MUST set `Quest.NextAliasID = 0` on every receiver it creates. To repair an already-built plugin, run `tools/pdv_fix_receiver_anam.mjs` (pure Node) or `tools/pdv-fix-receiver-anam-mutagen` (Mutagen). The working `PDV__SM_KillActor` receiver is the reference — it carries `ANAM = 0`; the `0714xx` batch receivers did not.
+>
+> **CTD FIX round 2 (issue #17, reproduced on 1.0.1 WITH ANAM present):** the ANAM repair did not stop the tempering crash — the fault is in the engine's `StoryEventArguments` marshalling itself when it delivers `OnStoryCraftItem` args to a freshly started receiver (vanilla quests consume Craft Item via aliases; a marshalled-args Papyrus subscriber is what crashes). The fix retires the Craft Item Story Manager path entirely: `PDV__SM_CraftItemNode` is now an **empty node** (quest detached, record kept for save safety), and crafting is delivered by po3 Papyrus Extender's `OnItemCrafted` on the `PDV_PlayerEvents` player alias, which forwards the identical `(akBench, akLocation, akCreatedItem)` payload to `PDV_ActionRouter.HandleStoryCraftItem`. Do NOT re-attach `PDV__SM_CraftItem` to its node in any future receiver-author pass. All receivers also now defer `Stop()`/`Reset()` to `OnUpdate` instead of tearing down inside the story-event frame, and the tool-authored QUSTs carry CK-parity `Event` codes (KILL/NVPE/SKIL/CLOC/ASSU/AIPL) and `Priority = 60`.
 
 | Receiver QUST | Event | Router event IDs |
 |---|---|---|
-| `PDV__SM_CraftItem` | Craft Item | `330/331/332/333` |
+| `PDV__SM_CraftItem` | Craft Item — **RETIRED from Story Manager; delivered via po3 `OnItemCrafted` on `PDV_PlayerEvents`** | `330/331/332/333` |
 | `PDV__SM_NewVoicePower` | New Voice Power | `343` |
 | `PDV__SM_IncreaseSkill` | Increase Skill | `344` |
 | `PDV__SM_ChangeLocation` | Change Location | `345` |
@@ -129,7 +131,7 @@ dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2Receiver
 
 Readback-clean nodes:
 
-- `PDV__SM_CraftItemNode` -> `PDV__SM_CraftItem`, parent `Skyrim.esm:039D86`, previous sibling `Skyrim.esm:04F593`
+- `PDV__SM_CraftItemNode` -> **(empty by design since the issue #17 round-2 fix; do not re-attach)**, parent `Skyrim.esm:039D86`, previous sibling `Skyrim.esm:04F593`
 - `PDV__SM_NewVoicePowerNode` -> `PDV__SM_NewVoicePower`, parent `Skyrim.esm:02D389`, previous sibling `Skyrim.esm:02D38A`
 - `PDV__SM_IncreaseSkillNode` -> `PDV__SM_IncreaseSkill`, parent `Skyrim.esm:02D386`, previous sibling `Skyrim.esm:02D387`
 - `PDV__SM_ChangeLocationNode` -> `PDV__SM_ChangeLocation`, parent `Skyrim.esm:01320E`, previous sibling `Skyrim.esm:0A39C6`

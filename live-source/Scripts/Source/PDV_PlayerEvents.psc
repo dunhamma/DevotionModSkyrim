@@ -13,6 +13,7 @@ Scriptname PDV_PlayerEvents extends ReferenceAlias
 
 PDV_EventBus Property PDV_EventBusService Auto
 PDV_Origin Property PDV_OriginQuest Auto
+PDV_ActionRouter Property PDV_RouterService Auto
 GlobalVariable Property PDV_GLO_DebugLevel Auto
 
 FormList Property PDV_FLST_P2_BretonKnightsRoadSources Auto
@@ -360,6 +361,22 @@ EndEvent
 
 Event OnWeatherChange(Weather akOldWeather, Weather akNewWeather)
     RouteP2ImmersiveSource(akNewWeather as Form, "po3_weather")
+EndEvent
+
+Event OnItemCrafted(ObjectReference akBench, Location akLocation, Form akCreatedItem)
+    ; SKSE-delivered crafting signal (po3 Papyrus Extender). Replaces the
+    ; Story Manager Craft Item receiver (PDV__SM_CraftItem): the engine's
+    ; native StoryEventArguments marshalling for that event CTDs on
+    ; tempering (issue #17, reproduced on 1.0.1), so the quest is detached
+    ; from its Story Manager node and crafting arrives here instead.
+    if !PDV_RouterService
+        ResolveRouterService()
+    endIf
+    if !PDV_RouterService
+        Trace(1, "Item crafted skipped: PDV_RouterService not assigned.")
+        return
+    endIf
+    PDV_RouterService.HandleStoryCraftItem(akBench, akLocation, akCreatedItem)
 EndEvent
 
 Event OnQuestStageChange(Quest akQuest, Int aiNewStage)
@@ -1038,6 +1055,19 @@ Function RegisterForShoutSignals()
     Trace(2, "Shout hooks refreshed.")
 EndFunction
 
+Function ResolveRouterService()
+    ; Existing saves baked this script's VMAD before PDV_RouterService was
+    ; added, so the CK fill reads None there. Resolve once from the plugin
+    ; on the load path instead; new saves get the CK-filled property.
+    if !PDV_RouterService
+        Quest routerQuest = Game.GetFormFromFile(0x000296FA, "Devotion.esp") as Quest
+        PDV_RouterService = routerQuest as PDV_ActionRouter
+        if PDV_RouterService
+            Trace(2, "Router service resolved from plugin for pre-existing save.")
+        endIf
+    endIf
+EndFunction
+
 Function RegisterForLevelSignals()
     PO3_Events_Alias.RegisterForLevelIncrease(Self)
     Trace(2, "Level-up hooks refreshed.")
@@ -1057,6 +1087,8 @@ Function RegisterForP2ImmersiveSignals()
     PO3_Events_Alias.RegisterForItemHarvested(Self)
     PO3_Events_Alias.RegisterForWeatherChange(Self)
     PO3_Events_Alias.RegisterForActorKilled(Self)
+    PO3_Events_Alias.RegisterForItemCrafted(Self)
+    ResolveRouterService()
     RegisterQuestStageList(PDV_FLST_P2_BretonKnightsRoadSources)
     RegisterQuestStageList(PDV_FLST_P2_BretonHiddenArtSources)
     RegisterQuestStageList(PDV_FLST_P2_BretonGreenWaySources)
