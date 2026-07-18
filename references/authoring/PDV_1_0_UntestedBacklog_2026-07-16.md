@@ -104,7 +104,7 @@ on its own; settle them at the keyboard.
   `+1.5` against Akatosh `-0.75`). The owner has hand-edited their ship copy, so
   this does **not** block the page.
 
-- **Nine of sixteen Daedric pacts have a Requiem-inert boon or price.** (found
+- **✅ RESOLVED (2026-07-18, shipped in 1.0.1) — Nine of sixteen Daedric pacts have a Requiem-inert boon or price.** (found
   2026-07-17 while tabling the boon/price data.)
   `PDV_DaedricBoonPriceReviewSheet.csv` gives these effects as **percentage
   regeneration**, which is exactly the effect class Requiem switches off -- the
@@ -124,6 +124,15 @@ on its own; settle them at the keyboard.
   -- the numbers are correctly tabled from the sheet; the sheet's effect *type*
   is the issue. Convert the regen effects to flat pool changes (or accept them as
   vanilla-only and say so), then re-check under Requiem.
+
+  **Resolution (2026-07-18, shipped in 1.0.1):** all nine converted to flat
+  effects and verified against the live ESP. Namira's boon was the last live
+  holdout — Sheogorath/Hircine boons and the six prices had already been
+  re-authored to flat — and is now flat Fortify Health + Fortify Stamina. Running
+  `tools/pdv_audit_daedric_regen.mjs` on the deployed `Devotion.esp` reports
+  CLEAN (0 regen-rate boons, 0 prices). NOTE: the separate Breton/Imperial
+  unified-champion RateMult boons (Akatosh/Julianos/Kynareth/Magnus T3) are still
+  Requiem-inert and remain OPEN under the "global Requiem pass."
 
 ## D. Packaging / external
 
