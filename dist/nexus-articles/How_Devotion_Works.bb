@@ -1,10 +1,6 @@
 [size=6][b]How Devotion Works[/b][/size]
 
-Devotion is a mod about your character's religious life. The gods of Tamriel
-notice how you actually play and answer back: small blessings, the occasional
-moment of grace, and in time real recognition. This page explains the systems
-once so the race guides can stay short - read it first, then your race's guide
-for what makes your people specific.
+Devotion is a mod about your character's religious life. The gods of Tamriel notice how you actually play and answer back: small blessings, the occasional moment of grace, and in time real recognition. This page explains the systems once so the race guides can stay short - read it first, then your race's guide for what makes your people specific.
 
 [size=5][b]Piety[/b][/size]
 
@@ -17,13 +13,11 @@ Piety is how close you are to a god - standing, faith, or favor in that god's ey
 [*][b]Capped at about 4.3 a day[/b] with any one god, no matter how much you do - faith is built over time, not crammed into an afternoon.
 [/list]
 
-Because of that cap, carrying a god to the top takes roughly 30 to 45 days of
-normal play, or about 20 if you focus hard. It is meant to feel earned.
+Because of that cap, carrying a god to the top takes roughly 30 to 45 days of normal play, or about 20 if you focus hard. It is meant to feel earned.
 
 [size=5][b]The Three Tiers[/b][/size]
 
-As piety climbs you cross thresholds, and each tier keeps everything the lower
-ones gave:
+As piety climbs you cross thresholds, and each tier keeps everything the lower ones gave:
 
 [list]
 [*][b]None[/b] - below 25. The god has not noticed you yet.
@@ -34,8 +28,7 @@ ones gave:
 
 [size=5][b]How You Earn Piety[/b][/size]
 
-Piety comes from several sources at once - you do not have to chase all of them.
-Living your character honestly is usually enough.
+Piety comes from several sources at once - you do not have to chase all of them. Living your character honestly is usually enough.
 
 [list]
 [*][b]Everyday deeds your god likes[/b] - the bread and butter of devotion.
@@ -45,9 +38,7 @@ Living your character honestly is usually enough.
 [*][b]Your people's always-on layer[/b] - some races carry a quiet background of faith: a Dunmer's ancestors, the Khajiit Lunar Lattice, an Argonian's bond to the Hist. Your race guide says whether yours have one.
 [/list]
 
-[b]The one rule that matters most: variety beats grinding.[/b] Repeating the same
-deed earns less each time. A god is not impressed by a loop; it is impressed by
-a life.
+[b]The one rule that matters most: variety beats grinding.[/b] Repeating the same deed earns less each time. A god is not impressed by a loop; it is impressed by a life.
 
 [size=5][b]How You Lose Piety[/b][/size]
 
@@ -69,43 +60,21 @@ The choice at the heart of the mod: honor many gods, or commit to one?
 [*][b]Committing to one god[/b] unlocks the road to Champion, with that god's fuller, sharper blessings.
 [/list]
 
-For most races a god whose domain matches how you play eventually offers to claim
-you; you can accept, or say "not yet" at no cost. You do not pick from a menu -
-you live, and the right god finds you. A few races differ (Khajiit are claimed
-silently; others choose a path up front - your race guide says which). Once you
-accept, the bond is stable: other gods stop trying, and neglect can strain it but
-never silently swaps your patron.
+For most races a god whose domain matches how you play eventually offers to claim you; you can accept, or say "not yet" at no cost. You do not pick from a menu - you live, and the right god finds you. A few races differ (Khajiit are claimed silently; others choose a path up front - your race guide says which). Once you accept, the bond is stable: other gods stop trying, and neglect can strain it but never silently swaps your patron.
 
 [size=5][b]Rewards Explained[/b][/size]
 
-Rewards come in three layers, and a Champion enjoys all three at once. (Values are
-current beta and may be tuned.)
+Rewards come in three layers, and a Champion enjoys all three at once. (Values are current beta and may be tuned.)
 
-[b]1. An always-on blessing that grows each tier.[/b] Modest by design - meant to
-enrich your character, not outclass combat overhauls - and fitted to the god's
-domain (a Mara worshipper mends, a Stendarr worshipper wards, a Zenithar
-worshipper carries and trades). A patron's own blessing begins at Devoted; before
-you commit you carry your people's broad blessing, which starts at Seeker. Bonuses
-are stated as flat pools, not regeneration rates, so they stay meaningful under
-overhauls like Requiem.
+[b]1. An always-on blessing that grows each tier.[/b] Modest by design - meant to enrich your character, not outclass combat overhauls - and fitted to the god's domain (a Mara worshipper mends, a Stendarr worshipper wards, a Zenithar worshipper carries and trades). A patron's own blessing begins at Devoted; before you commit you carry your people's broad blessing, which starts at Seeker. Bonuses are stated as flat pools, not regeneration rates, so they stay meaningful under overhauls like Requiem.
 
-[b]2. The one-at-a-time favor.[/b] A stronger, temporary blessing a god grants when
-the right religious moment is present - steadying a hard fight, blessing a
-death-rite, carrying you through a sacred place. Favors are automatic, and **only
-one can be active at a time across all gods**, so it feels like a moment of grace
-rather than a pile of buffs.
+[b]2. The one-at-a-time favor.[/b] A stronger, temporary blessing a god grants when the right religious moment is present - steadying a hard fight, blessing a death-rite, carrying you through a sacred place. Favors are automatic, and [b]only one can be active at a time across all gods[/b], so it feels like a moment of grace rather than a pile of buffs.
 
-[b]3. Recognition.[/b] The least mechanical and often most satisfying layer: the
-religious and cultural world begins to treat you differently, and your standing
-opens access a stranger to the faith never gets. It is the part of Champion that
-feels like the god noticed who you were before you knew it mattered.
+[b]3. Recognition.[/b] The least mechanical and often most satisfying layer: the religious and cultural world begins to treat you differently, and your standing opens access a stranger to the faith never gets. It is the part of Champion that feels like the god noticed who you were before you knew it mattered.
 
 [size=5][b]Champion Special Powers[/b][/size]
 
-Champion is the top of the bar, and for most gods it is a strong passive - its
-"special" is the recognition itself. But a few Champions carry a scripted power on
-top, almost always a once-a-day near-death save. There is at most **one save per
-race**, verified against the shipped records:
+Champion is the top of the bar, and for most gods it is a strong passive - its "special" is the recognition itself. But a few Champions carry a scripted power on top, almost always a once-a-day near-death save. There is at most [b]one save per race[/b], verified against the shipped records:
 
 [list]
 [*][b]Khajiit[/b] [i]Baan Dar[/i] - Baan Dar Remembers - Once per day, when a blow would drop you (health falls to a fifth or lower), Baan Dar slips you out of death's hand - you are put back on your feet instead of dying. Khajiit's single cheat-death.
@@ -118,29 +87,15 @@ race**, verified against the shipped records:
 [*][b]Orc[/b] [i]Malacath (any focus)[/i] - The Code Holds - With Malacath's regard, once in a fight when near death the Code holds - a flat burst of health (more at Devoted and up) keeps you standing.
 [/list]
 
-Altmer, Breton, and Imperial have no scripted power - every Champion tier is a
-strong passive. A save fires at most once a day (the Orc's once per fight) and
-only when your health has already dropped to a fifth or less. Your race guide
-lists the exact per-tier blessings for your people.
+Altmer, Breton, and Imperial have no scripted power - every Champion tier is a strong passive. A save fires at most once a day (the Orc's once per fight) and only when your health has already dropped to a fifth or less. Your race guide lists the exact per-tier blessings for your people.
 
 [size=5][b]When a God Goes Quiet (Neglect)[/b][/size]
 
-Drift away from a god and the relationship goes quiet. Neglect is the **absence
-of attention, not a punishment** - the small graces simply stop and the blessing
-feels distant. For a Nord drifting from Kyne the weather stops feeling like it is
-on your side; for a Dunmer the ancestors go quiet. It lifts the moment you return.
-(One exception: the orthodox Bosmer Old Contract can make abandonment permanent -
-your race guide warns you.)
+Drift away from a god and the relationship goes quiet. Neglect is the [b]absence of attention, not a punishment[/b] - the small graces simply stop and the blessing feels distant. For a Nord drifting from Kyne the weather stops feeling like it is on your side; for a Dunmer the ancestors go quiet. It lifts the moment you return. (One exception: the orthodox Bosmer Old Contract can make abandonment permanent - your race guide warns you.)
 
 [size=5][b]Curses (Vampirism and Lycanthropy)[/b][/size]
 
-Vampirism and lycanthropy are not just gameplay states here - they are spiritual
-conditions that strain or break faith, closing certain gods to you or souring
-warm relationships. Vampirism in particular cuts hard against gods of mortality
-and the honored dead. The consequences vary sharply by race - total collapse for
-one, a carryable strain for another - and curing usually begins the road back,
-though some races keep a scar. **What a curse means for you depends entirely on
-your race - see your race guide.**
+Vampirism and lycanthropy are not just gameplay states here - they are spiritual conditions that strain or break faith, closing certain gods to you or souring warm relationships. Vampirism in particular cuts hard against gods of mortality and the honored dead. The consequences vary sharply by race - total collapse for one, a carryable strain for another - and curing usually begins the road back, though some races keep a scar. [b]What a curse means for you depends entirely on your race - see your race guide.[/b]
 
 [size=5][b]Reading Your Standing In Game[/b][/size]
 
@@ -152,5 +107,4 @@ You are never left guessing:
 [*][b]Notification toasts[/b] - short messages at meaningful moments: a tier reached, a favor granted, a god going quiet.
 [/list]
 
-For everything specific to your people - gods, deeds, commitment, curses - turn to
-your race guide.
+For everything specific to your people - gods, deeds, commitment, curses - turn to your race guide.
