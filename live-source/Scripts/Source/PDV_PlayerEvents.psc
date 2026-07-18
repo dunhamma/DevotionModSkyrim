@@ -345,6 +345,14 @@ Event OnSpellLearned(Spell akSpell)
 EndEvent
 
 Event OnItemHarvested(Form akProduce)
+    ; Guard the payload before dereferencing it. A None produce aborts the
+    ; handler mid-way in Papyrus (logged, not a CTD) and silently drops the
+    ; harvest credit, so fail fast and say why instead.
+    if !akProduce
+        Trace(1, "Harvest skipped: produce form was None.")
+        return
+    endIf
+
     if PDV_EventBusService
         String logicalEventId = "harvest_" + akProduce.GetFormID()
         PDV_EventBusService.BeginLogicalDevotionalAct(logicalEventId)
@@ -376,6 +384,20 @@ Event OnItemCrafted(ObjectReference akBench, Location akLocation, Form akCreated
         Trace(1, "Item crafted skipped: PDV_RouterService not assigned.")
         return
     endIf
+
+    ; Level-1 trace on purpose: this is the proof line for the issue #17
+    ; retest. createdItem=0 distinguishes a temper (nothing created) from a
+    ; creation, which is exactly the case po3 delivery has to be checked for.
+    Int createdId = 0
+    if akCreatedItem
+        createdId = akCreatedItem.GetFormID()
+    endIf
+    Int benchId = 0
+    if akBench
+        benchId = akBench.GetFormID()
+    endIf
+    Trace(1, "Item crafted: bench=" + benchId + ", createdItem=" + createdId + ".")
+
     PDV_RouterService.HandleStoryCraftItem(akBench, akLocation, akCreatedItem)
 EndEvent
 
