@@ -34,12 +34,16 @@ INSTALLING
 
   Load order:
     Place Devotion.esp by hand rather than letting LOOT decide.
-    Late in the order is correct. If you run a Wintersun-style
-    religion overhaul, Devotion takes that slot instead -- they
+    Late in the order is correct. If you run another religion or
+    worship overhaul, Devotion takes that slot instead -- they
     are not designed to run together.
 
   Start a NEW game, or a save that has never had Devotion
   installed. Adding it mid-playthrough is not supported.
+
+  Updating from an earlier Devotion version is save-safe: install
+  over the old files on your existing Devotion save -- no new game
+  needed.
 
 
 UNINSTALLING
