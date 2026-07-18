@@ -1,4 +1,23 @@
 #!/usr/bin/env node
+/*
+ * ============================ STALE — DO NOT BLIND-RUN ============================
+ * The committed `references/authoring/PDV_DaedricPrinceRecordContracts.json` is now
+ * HAND-CURATED and diverges from this generator: post-generation it received the
+ * Requiem regen audit, the boon/price rebalance, and extra per-prince effects
+ * (e.g. Dagon AttackDamageMult, Sheo/Mora flats) that this script does not produce.
+ *
+ * The JSON is the source of truth. Re-running this generator WILL overwrite it and
+ * revert those fixes. In particular it previously emitted `HealRateMult` /
+ * `MagickaRateMult` / `StaminaRateMult` boons and prices, which do nothing under
+ * Requiem (base regen ~0, so a rate-mult multiplies nothing). Those AVs have been
+ * converted here to the flat Fortify of the same resource (Health/Magicka/Stamina),
+ * but magnitudes and several exact AV choices still will NOT match the curated JSON.
+ *
+ * Before ever regenerating: reconcile this script with the curated JSON first, then
+ * re-apply the Requiem regen audit. See issue for the Namira fix (Fortify Health +
+ * Fortify Stamina, replacing the swallowed HealRateMult boon).
+ * =================================================================================
+ */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -14,22 +33,22 @@ const RACE_ORDER_MATRIX = ["Nord", "Imperial", "Breton", "Dunmer", "Altmer", "Kh
 const RACE_ORDER_PDV = ["Nord", "Imperial", "Breton", "Altmer", "Bosmer", "Dunmer", "Khajiit", "Argonian", "Orc", "Redguard"];
 
 const PRINCE_META = {
-  Azura: { displayName: "Azura", aliases: ["Azura / Azurah"], batch: 0, mechanics: ["ResistMagic", "MagickaRateMult"], price: ["StaminaRateMult"], stigmaClass: "Standard" },
+  Azura: { displayName: "Azura", aliases: ["Azura / Azurah"], batch: 0, mechanics: ["ResistMagic", "Magicka"], price: ["Stamina"], stigmaClass: "Standard" },
   Boethiah: { displayName: "Boethiah", aliases: ["Boethiah / Boethra"], batch: "pilot", mechanics: ["OneHanded", "DamageResist"], price: ["Speechcraft"], stigmaClass: "Standard" },
   Mephala: { displayName: "Mephala", aliases: ["Mephala / Mafala"], batch: 1, mechanics: ["Sneak", "Pickpocket"], price: ["Speechcraft"], stigmaClass: "Standard" },
   Malacath: { displayName: "Malacath", aliases: ["Malacath / Mauloch"], batch: 1, mechanics: ["DamageResist", "TwoHanded"], price: ["SpeedMult"], stigmaClass: "Standard" },
   Meridia: { displayName: "Meridia", aliases: ["Meridia"], batch: 0, mechanics: ["Restoration", "ResistDisease"], price: ["Illusion"], stigmaClass: "Tolerated" },
   Nocturnal: { displayName: "Nocturnal", aliases: ["Nocturnal"], batch: 2, mechanics: ["Sneak", "Lockpicking"], price: ["Restoration"], stigmaClass: "Standard" },
-  Mora: { displayName: "Hermaeus Mora", aliases: ["Hermaeus Mora"], batch: 2, mechanics: ["Alteration", "MagickaRateMult"], price: ["StaminaRateMult"], stigmaClass: "Standard" },
+  Mora: { displayName: "Hermaeus Mora", aliases: ["Hermaeus Mora"], batch: 2, mechanics: ["Alteration", "Magicka"], price: ["Stamina"], stigmaClass: "Standard" },
   Dagon: { displayName: "Mehrunes Dagon", aliases: ["Mehrunes Dagon"], batch: 2, mechanics: ["Destruction", "OneHanded"], price: ["DamageResist"], stigmaClass: "High-rupture" },
-  Sheo: { displayName: "Sheogorath", aliases: ["Sheogorath"], batch: 2, mechanics: ["Illusion", "MagickaRateMult"], price: ["Restoration"], stigmaClass: "Standard" },
-  Vile: { displayName: "Clavicus Vile", aliases: ["Clavicus Vile"], batch: 2, mechanics: ["Speechcraft", "CarryWeight"], price: ["MagickaRateMult"], stigmaClass: "Standard" },
-  Vaermina: { displayName: "Vaermina", aliases: ["Vaermina"], batch: 0, mechanics: ["Illusion", "Sneak"], price: ["HealRateMult"], stigmaClass: "Standard" },
-  Sanguine: { displayName: "Sanguine", aliases: ["Sanguine / Sangiin"], batch: 2, mechanics: ["StaminaRateMult", "Speechcraft"], price: ["MagickaRateMult"], stigmaClass: "Standard" },
-  Namira: { displayName: "Namira", aliases: ["Namira / Namiira"], batch: 2, mechanics: ["Sneak", "HealRateMult"], price: ["Speechcraft"], stigmaClass: "Standard" },
-  Peryite: { displayName: "Peryite", aliases: ["Peryite"], batch: 3, mechanics: ["ResistDisease", "HealRateMult"], price: ["StaminaRateMult"], stigmaClass: "Tolerated" },
-  Hircine: { displayName: "Hircine", aliases: ["Hircine"], batch: 3, mechanics: ["StaminaRateMult", "Sneak"], price: ["HealRateMult"], stigmaClass: "Curse-access", existingScript: true },
-  Molag: { displayName: "Molag Bal", aliases: ["Molag Bal"], batch: 0, mechanics: ["Speechcraft", "Illusion"], price: ["HealRateMult"], stigmaClass: "Curse-access" },
+  Sheo: { displayName: "Sheogorath", aliases: ["Sheogorath"], batch: 2, mechanics: ["Illusion", "Magicka"], price: ["Restoration"], stigmaClass: "Standard" },
+  Vile: { displayName: "Clavicus Vile", aliases: ["Clavicus Vile"], batch: 2, mechanics: ["Speechcraft", "CarryWeight"], price: ["Magicka"], stigmaClass: "Standard" },
+  Vaermina: { displayName: "Vaermina", aliases: ["Vaermina"], batch: 0, mechanics: ["Illusion", "Sneak"], price: ["Health"], stigmaClass: "Standard" },
+  Sanguine: { displayName: "Sanguine", aliases: ["Sanguine / Sangiin"], batch: 2, mechanics: ["Stamina", "Speechcraft"], price: ["Magicka"], stigmaClass: "Standard" },
+  Namira: { displayName: "Namira", aliases: ["Namira / Namiira"], batch: 2, mechanics: ["Sneak", "Health"], price: ["Speechcraft"], stigmaClass: "Standard" },
+  Peryite: { displayName: "Peryite", aliases: ["Peryite"], batch: 3, mechanics: ["ResistDisease", "Health"], price: ["Stamina"], stigmaClass: "Tolerated" },
+  Hircine: { displayName: "Hircine", aliases: ["Hircine"], batch: 3, mechanics: ["Stamina", "Sneak"], price: ["Health"], stigmaClass: "Curse-access", existingScript: true },
+  Molag: { displayName: "Molag Bal", aliases: ["Molag Bal"], batch: 0, mechanics: ["Speechcraft", "Illusion"], price: ["Health"], stigmaClass: "Curse-access" },
 };
 
 const STATE_VALUE = { Native: 0, Legible: 1, Foreign: 2, Tolerated: 3, Taboo: 4, Hostile: 5, Curse: 6 };

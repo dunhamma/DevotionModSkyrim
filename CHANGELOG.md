@@ -3,6 +3,21 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
+## 1.0.1 — 2026-07-18
+
+- **Fixed: crash to desktop when cooking or tempering.** Devotion's "Craft Item"
+  Story Manager receiver quests were missing the `ANAM` (Next Alias ID) field the
+  Creation Kit writes for every quest. The malformed record could make the game
+  dereference an invalid handle while delivering the craft event, crashing to
+  desktop — most reliably when cooking at a pot or tempering at a grindstone or
+  workbench. All receiver quests now carry `ANAM`. No new game required.
+- **Fixed: Namira's boon did nothing under Requiem.** Namira's Seeker/Devoted/
+  Champion boon granted a health-regeneration *rate* multiplier (`HealRateMult`),
+  which Requiem effectively disables — base regen is ~0, so a rate multiplier
+  multiplies nothing. It is now a flat **Fortify Health + Fortify Stamina**
+  (+25/+40/+50 per tier, provisional) that Requiem honors. Namira was the last
+  regen-rate holdout among the Daedric boons.
+
 ## 2026-07-16
 
 - **Changed: MCM is now players-only by default.** The four developer tabs

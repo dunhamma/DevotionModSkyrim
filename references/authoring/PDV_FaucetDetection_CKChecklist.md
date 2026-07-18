@@ -107,6 +107,8 @@ dotnet run --project .\tools\pdv-phase20-p2-receiver-author\PdvPhase20P2Receiver
 
 The helper creates/checks each QUST as **not Start Game Enabled**, attaches its matching script, and sets `PDV_Router` to `PDV_ActionRouter`.
 
+> **CTD FIX (issue #17):** the receiver-author pass historically emitted these QUSTs **without the `ANAM` (Next Alias ID) subrecord** that the CK writes for every quest. The malformed record makes the engine deref an invalid handle while marshalling a Story Manager event (`SkyrimSE.exe+04CF782`, via `StoryEventArguments`/`TESQuestInitEvent`) → **crash on cooking/tempering** (the Craft Item receiver). The author pass MUST set `Quest.NextAliasID = 0` on every receiver it creates. To repair an already-built plugin, run `tools/pdv_fix_receiver_anam.mjs` (pure Node) or `tools/pdv-fix-receiver-anam-mutagen` (Mutagen). The working `PDV__SM_KillActor` receiver is the reference — it carries `ANAM = 0`; the `0714xx` batch receivers did not.
+
 | Receiver QUST | Event | Router event IDs |
 |---|---|---|
 | `PDV__SM_CraftItem` | Craft Item | `330/331/332/333` |

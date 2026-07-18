@@ -2747,14 +2747,24 @@
           "spellEditorId": "PDV_Bless_Daedric_Namira_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Seeker",
           "displayName": "Namira Boon - Seeker",
-          "playerFacingText": "Namira's reviled hunger sustains you. Feeding on the dead restores Health and Stamina.",
+          "playerFacingText": "Namira's reviled hunger hardens the body against want. Boon: Fortify Health +25, Fortify Stamina +25.",
           "property": "Boon_Seeker",
           "effects": [
             {
-              "actorValue": "HealRateMult",
-              "magnitude": 0,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Seeker",
+              "actorValue": "Health",
+              "magnitude": 25,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Health"
+            },
+            {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Seeker_Stamina",
+              "actorValue": "Stamina",
+              "magnitude": 25,
+              "area": 0,
+              "duration": 0,
+              "effectName": "Fortify Stamina"
             }
           ]
         },
@@ -2762,14 +2772,24 @@
           "spellEditorId": "PDV_Bless_Daedric_Namira_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Devoted",
           "displayName": "Namira Boon - Devoted",
-          "playerFacingText": "Namira's reviled hunger sustains you. Feeding on the dead restores Health and Stamina.",
+          "playerFacingText": "Namira's reviled hunger hardens the body against want. Boon: Fortify Health +40, Fortify Stamina +40.",
           "property": "Boon_Devoted",
           "effects": [
             {
-              "actorValue": "HealRateMult",
-              "magnitude": 0,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Devoted",
+              "actorValue": "Health",
+              "magnitude": 40,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Health"
+            },
+            {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Devoted_Stamina",
+              "actorValue": "Stamina",
+              "magnitude": 40,
+              "area": 0,
+              "duration": 0,
+              "effectName": "Fortify Stamina"
             }
           ]
         },
@@ -2777,14 +2797,24 @@
           "spellEditorId": "PDV_Bless_Daedric_Namira_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Champion",
           "displayName": "Namira Boon - Champion",
-          "playerFacingText": "Namira's reviled hunger sustains you. Feeding on the dead restores Health and Stamina.",
+          "playerFacingText": "Namira's reviled hunger hardens the body against want. Boon: Fortify Health +50, Fortify Stamina +50.",
           "property": "Boon_Champion",
           "effects": [
             {
-              "actorValue": "HealRateMult",
-              "magnitude": 0,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Champion",
+              "actorValue": "Health",
+              "magnitude": 50,
               "area": 0,
-              "duration": 0
+              "duration": 0,
+              "effectName": "Fortify Health"
+            },
+            {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Champion_Stamina",
+              "actorValue": "Stamina",
+              "magnitude": 50,
+              "area": 0,
+              "duration": 0,
+              "effectName": "Fortify Stamina"
             }
           ]
         }
