@@ -65,98 +65,17 @@ The ancestors themselves take nothing from you for absence. Ignore the rites and
 
 ## Quests That Move Your Standing
 
-Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
-
-Some quests speak louder than any daily habit. These are the ones the Reclamations notice.
-
-**Azura**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| The Black Star | Cleansed Azura's Star and returned it to her | Large gain |
-| The Black Star | Defied Azura and gave the Star to Nelacar | Large loss |
-| Glory of the Dead | Cured Kodlak of the beast-taint | Modest gain |
-| The Jagged Crown | Destroyed the undead of Korvanjund | Modest gain |
-| The Break of Dawn | Cleansed Meridia's temple of undeath | Modest gain |
-| Serana's Cure | Cured Serana's vampirism | Modest gain |
-| Impatience of a Saint | Honored the dead | Modest gain |
-
-**Boethiah**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Boethiah's Calling | Made the sacrifice, won the champion's duel, took the Ebony Mail | Large gain |
-| Boethiah's Bidding | Assassinated the Jarl by guile | Modest gain |
-| Proving Honor | Won your place by a judged trial of valor | Large gain |
-| Take Up Arms | Sparred with Vilkas as a trial of arms | Modest gain |
-| Joining the Stormcloaks | Proved your worth through a martial trial | Modest gain |
-| The Way of the Voice | Proved your worth to the Greybeards | Large gain |
-| The Horn of Jurgen Windcaller | Retrieved the Horn through trial | Large gain |
-| Alduin's Bane | Broke the world-ending dragon | Large gain |
-| Diplomatic Immunity | Infiltrated by nerve and reversal | Modest gain |
-| The Dark Brotherhood questline | Assorted trials and killings | Modest gain, repeatedly |
-
-**Mephala**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| The Whispering Door | Claimed the Ebony Blade by slaying those close to you | Large gain |
-| A Chance Arrangement | Framed Brand-Shei | Large gain |
-| Dampened Spirits | Worked deceit against the brewer | Large gain |
-| Scoundrel's Folly | Deceit and infiltration | Modest gain |
-| Diplomatic Immunity | Artful infiltration | Large gain |
-| Delayed Burial | Deceived the guard about Cicero | Large gain |
-| Boethiah's Calling | Sacrifice by guile | Modest gain |
-| Boethiah's Bidding | Assassinated a lawful ruler | Modest gain |
-| The Dark Brotherhood questline | Secret killings and infiltration | Modest gain, repeatedly |
-
-The three artifact quests - The Black Star, Boethiah's Calling, and The Whispering Door - do more than move a number. Each one turns your face toward that Reclamation and can begin the focus that carries you to Champion.
+Many of Skyrim's main-quest and faction milestones are read as deeds by your gods, and they move your standing the moment you finish them - a milestone honored, or an offense committed. You do not need to seek them out: play the story and your gods judge its turning points through their own values. As each one lands, the Book of Days and a toast tell you which god took note and why.
 
 ## Bonuses by Tier
 
-Note: these are current beta values and may be tuned before release.
+The ancestor bond runs always-on; Reclamation worship is the broad devotion (caps at Devoted) and a focused god carries you to Champion. Each grows through Seeker (25), Devoted (50), and Champion (85), and only the highest tier you have reached is active.
 
-Two reward families run together: the always-yours **ancestor bond**, and the **Reclamation** blessings (broad first, then your one focused god).
-
-**The ancestor bond** (the panels name its strength; the ward replaces itself as the bond deepens, it does not stack):
-
-| Bond | What you get |
-|------|--------------|
-| Quiet | Nothing yet - the dead are there, but you have not kept the rites |
-| Beginning | Magic Resistance +3% |
-| Steady | Magic Resistance +9% |
-| Strong | Magic Resistance +20% |
-
-**Broad Reclamation worship** (all three at once - caps at Devoted):
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker (25) | Reclamation Communion | Magic Resistance +5% |
-| Devoted (50) | Reclamation Communion | Magic Resistance +8%, Fortify Magicka +15 |
-
-**Azura, focused** - twilight sharpens your sight, and your destruction strikes true.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker (25) | Azura's Twilight | Fortify Magicka +15 |
-| Devoted (50) | Azura's Foresight | Fortify Magicka +25, Destruction +10 |
-| Champion (85) | Azura's Star | Fortify Magicka +40, Destruction +25 |
-
-**Boethiah, focused** - struggle tempers the arm, and the strong prevail.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker (25) | Boethiah's Struggle | One-Handed +5 |
-| Devoted (50) | Boethiah's Strength | One-Handed +13, Armor +30 |
-| Champion (85) | Boethiah's Proving | One-Handed +25, Armor +50 |
-
-**Mephala, focused** - you learn to move along the unseen threads.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker (25) | Mephala's Web | Sneak +5 |
-| Devoted (50) | Mephala's Secrets | Sneak +13, Illusion +10 |
-| Champion (85) | Mephala's Whisper | Sneak +25, Illusion +25 |
+- **Ancestor bond (always-on)** - Beginning: Magic Resistance +3%; Steady: Magic Resistance +9%; Strong: Magic Resistance +20%
+- **Reclamation Communion (broad)** - Seeker: Magic Resistance +5%; Devoted: Magic Resistance +8%, Fortify Magicka +15
+- **Azura** - Seeker: Fortify Magicka +15; Devoted: Fortify Magicka +25, Destruction +10; Champion: Fortify Magicka +40, Destruction +25
+- **Boethiah** - Seeker: One-Handed +5; Devoted: One-Handed +13, Armor +30; Champion: One-Handed +25, Armor +50
+- **Mephala** - Seeker: Sneak +5; Devoted: Sneak +13, Illusion +10; Champion: Sneak +25, Illusion +25
 
 **The ancestral home carries the one Dunmer special power.** Keep the home prayer - pray at your ancestral urn or hearth - and you arm "The Ancestors Watch" for the day: if you are brought to the brink, once, the dead reach through and pull you back. It lasts only until dawn, so each day's protection is earned again with a fresh prayer, and it belongs to no single Reclamation god. Each focused god's Champion tier is otherwise a strong passive whose reward is the recognition itself.
 

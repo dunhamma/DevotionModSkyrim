@@ -69,88 +69,17 @@ On every path, two things still hold. Standing in one of the old green places - 
 
 ## Quests That Move Your Standing
 
-Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
-
-Some of Skyrim's own quests land squarely on a Bosmer god's ledger. These fire from the quest itself, on top of your day-to-day deeds.
-
-**Y'ffre**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Kyne's Sacred Trials | Hunted with respect, under the forest's law | Gain (small) |
-| The Blessings of Nature | Restored the Gildergreen | Gain (small) |
-| The Blessings of Nature | Tapped the Eldergleam with Nettlebane | Loss (small) |
-
-**Z'en**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Kolskeggr Mine | Restored the mine to honest labor | Gain (small) |
-| Recipe for Disaster | Stole the Writ of Passage | Loss (small) |
-| A Chance Arrangement | Framed an innocent man | Loss (small) |
-| Taking Care of Business | Extorted shopkeepers | Loss (small) |
-| Loud and Clear | Burgled Goldenglow Estate | Loss (small) |
-| Dampened Spirits | Ruined an honest brewer | Loss (small) |
-| Hard Answers | Stole and forged a dead man's journal | Loss (small) |
-
-**Baan Dar**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Delayed Burial | Lied to the guard to cover for Cicero | Gain (large) |
-| Diplomatic Immunity | Walked into the Thalmor's own house and out again | Gain (large) |
-| Dampened Spirits | Toppled a rich man's table with a prank | Gain (small) |
-| Scoundrel's Folly | Slipped through the strong men's halls | Gain (small) |
-| Blindsighted | Robbed the betrayer Mercer Frey | Gain (small) |
-
-Note that Dampened Spirits cuts both ways: the same prank that delights Baan Dar puts an honest brewer out of work, and Z'en does not forget it.
+Many of Skyrim's main-quest and faction milestones are read as deeds by your gods, and they move your standing the moment you finish them - a milestone honored, or an offense committed. You do not need to seek them out: play the story and your gods judge its turning points through their own values. As each one lands, the Book of Days and a toast tell you which god took note and why.
 
 ## Bonuses by Tier
 
-Devotion tiers go None, then **Seeker** (25 piety), **Devoted** (50 piety), then **Champion** (85 piety). Your bonuses depend on your path, and each path's gifts grow at every tier.
+Y'ffre's Weave is the broad woodland blessing (caps at Devoted); a committed path carries you to Champion. Each grows through Seeker (25), Devoted (50), and Champion (85), and only the highest tier you have reached is active.
 
-**Old Contract (Y'ffre) - the sharpest hunter, the heaviest burden**
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker | Old Contract | Archery +5 |
-| Devoted | Old Contract | Archery +13, Sneak +10 |
-| Champion | Old Contract - Keeper of the Pact | Archery +25, Sneak +22, Poison Resistance +10% |
-
-**Living Story (Y'ffre) - the storyteller and mender**
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker | Living Story | Speech +5 |
-| Devoted | Living Story | Speech +13, Maximum Health +20 |
-| Champion | Living Story - Story-Keeper | Speech +25, Maximum Health +30, Fortify Magicka +15 |
-
-**The Exchange (Z'en) - the keeper of the ledger**
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker | The Exchange | Speech +5 |
-| Devoted | The Exchange | Speech +13, Carry Weight +30 |
-| Champion | The Exchange - Z'en's Reckoning | Speech +25, Carry Weight +80, Armor +50 |
-
-**The Bandit Road (Baan Dar) - the survivor**
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker | Bandit Road | Armor +15 |
-| Devoted | Bandit Road | Armor +30, Maximum Health +20 |
-| Champion | Bandit Road - Baan Dar's Luck | Armor +50, Maximum Health +30, Sneak +10 |
-
-**No commitment - the woodland blessing**
-
-If you worship broadly without ever committing to a path, Y'ffre still grants you a softer woodland blessing. It is always weaker than a committed path, it stops at Devoted, and it switches off entirely once you commit.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker | Y'ffre's Weave | Fortify Stamina +15 |
-| Devoted | Y'ffre's Weave | Fortify Stamina +25, Sneak +8 |
-
-Reaching Champion takes roughly 30 to 45 days of normal play (one or two devotional acts a day), or about 20 days if you focus hard. Bosmer progress can feel a touch slower than some races because the paths reward bursts of meaningful action rather than constant small acts.
+- **Y'ffre's Weave (broad)** - Seeker: Fortify Stamina +15; Devoted: Fortify Stamina +25, Sneak +8
+- **Old Contract** - Seeker: Archery +5; Devoted: Archery +13, Sneak +10; Champion: Archery +25, Sneak +22, Poison Resistance +10%
+- **Living Story** - Seeker: Speech +5; Devoted: Speech +13, Maximum Health +20; Champion: Speech +25, Maximum Health +30, Fortify Magicka +15
+- **The Exchange** - Seeker: Speech +5; Devoted: Speech +13, Carry Weight +30; Champion: Speech +25, Carry Weight +80, Armor +50
+- **Bandit Road** - Seeker: Armor +15; Devoted: Armor +30, Maximum Health +20; Champion: Armor +50, Maximum Health +30, Sneak +10
 
 **The Bandit Road carries the one Bosmer special power.** On that path, "Baan Dar Opens the Gap": once a day, a killing blow that should end you becomes an opening instead - you slip it and break away, with a moment's luck at your back. The other three paths' Champion tiers are strong passives whose reward is the recognition itself.
 

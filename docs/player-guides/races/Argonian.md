@@ -54,64 +54,15 @@ Two reminders that apply to every Argonian act. First, repeating the exact same 
 
 ## Quests That Move Your Standing
 
-Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
-
-Some of Skyrim's own quests are read as devotional acts. For an Argonian these all sit on the Void side of the ledger - the Hist and your People are earned in the world, not on a quest board.
-
-**Sithis**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Innocence Lost | Killed Grelod the Kind in cold blood | Helps a little |
-| With Friends Like These... | Made the initiation kill to enter the Sanctuary | Helps a little |
-| Mourning Never Comes | Completed the first paid contract | Helps a great deal |
-| Bound Until Death | Assassinated Vittoria Vici at her wedding | Helps a great deal |
-| Breaching Security | Killed and framed Gaius Maro | Helps a great deal |
-| The Cure for Madness | Hunted and killed Cicero | Helps a great deal |
-| Recipe for Disaster | Assassinated the Gourmet | Helps a great deal |
-| To Kill an Empire | Killed the decoy Emperor | Helps a little |
-| Death Incarnate | Killed Astrid, the betrayer | Helps a little |
-| Hail Sithis! | Assassinated Emperor Titus Mede II | Helps a great deal |
-
-Remember that none of this reaches Sithis until the Void has actually woken. Until you have given it several separate, serious signals, the contracts pile up unanswered.
+Many of Skyrim's main-quest and faction milestones are read as deeds by your gods, and they move your standing the moment you finish them - a milestone honored, or an offense committed. You do not need to seek them out: play the story and your gods judge its turning points through their own values. As each one lands, the Book of Days and a toast tell you which god took note and why.
 
 ## Bonuses by Tier
 
-Note: these are current beta values and may be tuned before release.
+The Hist practice runs always-on beneath everything; your two focused paths turn standing into power. Each grows through Seeker (25), Devoted (50), and Champion (85), and only the highest tier you have reached is active. You run one focused path or the other, never both.
 
-**Your cultural practice (always on, and it deepens as you keep it):**
-
-Only the first honest act of practice after each dawn advances this, so it is a slow, steady climb rather than something you can chase in an afternoon. At a normal pace you reach the middle state in about a week and the deepest state in about three.
-
-| Practice | State | What you gain |
-|---|---|---|
-| First act | Root Memory | Magic resistance +5% |
-| Sustained | River-Kept Practice | Magic resistance +5%, poison resistance +10%, and near water your Maximum Health rises +20 |
-| Deep | Rooted Adaptation | Magic resistance +5%, poison resistance +22%, and near water your Maximum Health rises +30 |
-
-The health only holds while you are in or near water. That is the point: for an Argonian in Skyrim, strength is a thing you return to, not a thing you carry.
-
-There is no separate Hist blessing family. The Hist is what you maintain, not a ladder you climb - it gives through the practice above, and the two focused paths below are where your standing turns into power.
-
-**People focus - your community is your armor. This is the strongest path an Argonian has:**
-
-| Tier | Blessing | What you gain |
-|---|---|---|
-| Seeker (25) | Chosen People - Kin | Carry Weight +25 |
-| Devoted (50) | Chosen People - Family | You carry 25 more weight, poison resistance rises 8%, and Maximum Health +10 |
-| Champion (85) | Chosen People - Pillar | You carry 50 more weight, poison resistance rises 8%, Maximum Health +20, and magic finds less purchase (5%) |
-
-At Champion you are a pillar of the people you gathered, and the exile network knows you as the one who kept the community alive.
-
-**Sithis and the Void - a high-threshold path that opens only after the Void has truly woken:**
-
-| Tier | Blessing | What you gain |
-|---|---|---|
-| Seeker (25) | Void Distance - Faced | Sneak +4 |
-| Devoted (50) | Void Distance - Marked | Sneak +10, poison resistance rises 5%, and your bare strikes carry the Void's weight (+10 unarmed) |
-| Champion (85) | Void-Held | Your Maximum Stamina rises +25, your bare strikes carry the Void's weight (+12 unarmed), and near death the Void can lend a brief surge |
-
-The Void rewards are deliberately kept below the People path. Sithis is there to steady you in exile, not to become your best road. You run one focus or the other, never both.
+- **Hist practice (always-on)** - First act: Magic Resistance +5%; Sustained: Magic Resistance +5%, Poison Resistance +10%, near water Maximum Health +20; Deep: Magic Resistance +5%, Poison Resistance +22%, near water Maximum Health +30
+- **People (kin)** - Seeker: Carry Weight +25; Devoted: You carry 25 more weight, poison resistance rises 8%, and Maximum Health +10; Champion: You carry 50 more weight, poison resistance rises 8%, Maximum Health +20, and magic finds less purchase (5%)
+- **Sithis (the Void)** - Seeker: Sneak +4; Devoted: Sneak +10, poison resistance rises 5%, and your bare strikes carry the Void's weight (+10 unarmed); Champion: Your Maximum Stamina rises +25, your bare strikes carry the Void's weight (+12 unarmed), and near death the Void can lend a brief surge
 
 **The Void carries the one Argonian special power.** While the Void is your active focus, once a day near death the Nothing lends you a brief surge - a burst of stamina and momentum to fight clear of a blow that should have ended you. The People path's Champion tier is a strong passive whose reward is the recognition: the exile network knows you as the one who kept the community alive.
 

@@ -68,66 +68,16 @@ There is no separate reputation meter to manage for Orcs. The thing the world is
 
 ## Quests That Move Your Standing
 
-Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
-
-Malacath does not care about most of what Skyrim asks of you. These are the moments he is watching for. Every one of them helps; there is nothing here that costs you standing, because a quest well finished is exactly what the code asks.
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| The Cursed Tribe | Defended Largashbur, bested Yamarz, lifted the curse, and were named Blood-Kin | Large gain (also confirms the Stronghold life) |
-| The Cursed Tribe (ghost-curse resolution) | Lifted the curse hanging over Largashbur | Small gain |
-| Joining the Legion | Swore the binding Imperial oath | Large gain |
-| Joining the Legion | Cleared Fort Hraggstad in open battle | Small gain |
-| Joining the Stormcloaks | Swore the binding Stormcloak oath | Large gain |
-| Joining the Stormcloaks | Slew the Ice Wraith in proving combat | Small gain |
-| Proving Honor | Won your place by a judged trial of valor | Small gain |
-| Message to Whiterun | Defended Whiterun from the dragon | Small gain |
-| Death Incarnate | Defended home and kin in open battle | Small gain |
-| Dragon Rising | Slew the dragon at the western watchtower | Small gain |
-| A Blade in the Dark | Slew Sahloknir in open battle | Small gain |
+Many of Skyrim's main-quest and faction milestones are read as deeds by your gods, and they move your standing the moment you finish them - a milestone honored, or an offense committed. You do not need to seek them out: play the story and your gods judge its turning points through their own values. As each one lands, the Book of Days and a toast tell you which god took note and why.
 
 ## Bonuses by Tier
 
-Note: these are current beta values and may be tuned before release.
+Malacath's Regard is the broad blessing (caps at Devoted); a committed life-mode carries you to Champion. All three modes reach the same peak. Only the highest tier you have reached is active.
 
-Your standing climbs from None to Seeker (at 25 piety), to Devoted (at 50), to Champion (at 85). The number you need is the same in every mode. What changes is the pace: Stronghold reaches the top the fastest, City takes longer, and Legion/Exile takes the longest. That is by design. The rewards themselves are equalized, so City and Legion/Exile are complete devotional lives, not weaker ones, and every mode ends at the same peak.
-
-There is also a broad blessing that holds before you have locked into a mode, or if you stay uncommitted. It is gentler than your mode's blessings and steps aside once a mode blessing is active.
-
-**Malacath's Regard** - the broad blessing, held in any mode:
-
-| Tier | What you gain |
-|------|---------------|
-| Seeker (25) | Armor +15 |
-| Devoted (50) | Armor +30, Maximum Health +20 |
-
-Champion is not available to broad, uncommitted worship; you must commit to a life-mode to reach it.
-
-**The Stronghold Orc** - forge, kin, and proven war-gear:
-
-| Tier | Blessing | What you gain |
-|------|----------|---------------|
-| Seeker (25) | Hold-Forged | Smithing +5 |
-| Devoted (50) | Hold-Forged | Smithing +13, Two-Handed +8 |
-| Champion (85) | Blood-Kin of the Forge | Smithing +23, Two-Handed +20, Armor +50 |
-
-**The City Orc** - private fidelity and dignity held under pressure:
-
-| Tier | Blessing | What you gain |
-|------|----------|---------------|
-| Seeker (25) | Private Fidelity | Speech +5 |
-| Devoted (50) | Private Fidelity | Speech +13, Restoration +8 |
-| Champion (85) | Self-Made Belonging | Speech +23, Restoration +20, Block +5, Armor +50 |
-
-**The Legion Exile** - foreign discipline and the arm that carries the code:
-
-| Tier | Blessing | What you gain |
-|------|----------|---------------|
-| Seeker (25) | Foreign Discipline | One-Handed +5 |
-| Devoted (50) | Foreign Discipline | One-Handed +13, Block +8 |
-| Champion (85) | Burden Carried Home | One-Handed +23, Block +20, Fortify Stamina +15, Armor +50 |
-
-Note that all three Champion blessings carry the same +50 armor, so whichever life you live, you reach the same hardened peak.
+- **Malacath's Regard (broad)** - Seeker: Armor +15; Devoted: Armor +30, Maximum Health +20
+- **Stronghold (Hold-Forged)** - Seeker: Smithing +5; Devoted: Smithing +13, Two-Handed +8; Champion: Smithing +23, Two-Handed +20, Armor +50
+- **City (Private Fidelity)** - Seeker: Speech +5; Devoted: Speech +13, Restoration +8; Champion: Speech +23, Restoration +20, Block +5, Armor +50
+- **Legion / Exile (Foreign Discipline)** - Seeker: One-Handed +5; Devoted: One-Handed +13, Block +8; Champion: One-Handed +23, Block +20, Fortify Stamina +15, Armor +50
 
 **Malacath carries the one Orc special power, and it holds in every mode.** With any focused Malacath standing, "The Code Holds": once in a fight, when a blow drops you near death, the Code holds and a flat burst of health keeps you standing - stronger once you reach Devoted. It is the moment the Code refuses to let you fall.
 

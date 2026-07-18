@@ -80,111 +80,19 @@ The Khajiit carry no formal reputation track - no faction standing that swings f
 
 [size=5][b]Quests That Move Your Standing[/b][/size]
 
-Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
-
-Some quests are read by your gods as deeds, and they move your standing the moment you finish that part of the story.
-
-[b]Khenarthi[/b]
-
-[list]
-[*][b]The Book of Love[/b] [i]Honored the dead and laid a soul to rest[/i] - Helps (small)
-[*][b]The Blessings of Nature[/b] [i]Restored the Gildergreen[/i] - Helps (small)
-[/list]
-
-[b]Azurah[/b]
-
-[list]
-[*][b]The Black Star[/b] [i]Served Azura and reclaimed her Star[/i] - Helps (milestone - the strongest Khajiit event there is)
-[*][b]The Black Star[/b] [i]Defied Azura and gave the Star to Nelacar[/i] - Hurts (small)
-[*][b]Glory of the Dead[/b] [i]Cured Kodlak of the beast-taint[/i] - Helps (small)
-[*][b]Serana's Cure[/b] [i]Cured Serana's vampirism[/i] - Helps (small)
-[*][b]The Jagged Crown[/b] [i]Put down the crypt undead[/i] - Helps (small)
-[*][b]The Break of Dawn[/b] [i]Cleansed Meridia's temple of undeath[/i] - Helps (small)
-[*][b]Impatience of a Saint[/b] [i]Honored the dead[/i] - Helps (small)
-[/list]
-
-[b]Baan Dar[/b]
-
-[list]
-[*][b]Delayed Burial[/b] [i]Lied to the guard about Cicero[/i] - Helps (milestone)
-[*][b]Diplomatic Immunity[/b] [i]Walked into the Thalmor's own house and walked back out[/i] - Helps (milestone)
-[*][b]Dampened Spirits[/b] [i]Played a pariah's prank on a rich brewer[/i] - Helps (small)
-[*][b]Scoundrel's Folly[/b] [i]Slipped through the strong men's halls[/i] - Helps (small)
-[*][b]Blindsighted[/b] [i]Robbed the betrayer Mercer[/i] - Helps (small)
-[/list]
-
-[b]Rajhin[/b]
-
-[list]
-[*][b]Taking Care of Business[/b] [i]Leaned on the shopkeepers[/i] - Helps (milestone)
-[*][b]Loud and Clear[/b] [i]Burgled Goldenglow[/i] - Helps (milestone)
-[*][b]Hard Answers[/b] [i]Lifted and forged Gallus's journal[/i] - Helps (milestone)
-[*][b]The Pursuit[/b] [i]Broke into Mercer's house[/i] - Helps (milestone)
-[*][b]A Chance Arrangement[/b] [i]Framed Brand-Shei[/i] - Helps (small)
-[*][b]Blindsighted[/b] [i]Robbed Mercer[/i] - Helps (small)
-[*][b]Diplomatic Immunity[/b] [i]Artful infiltration[/i] - Helps (small)
-[*][b]Delayed Burial[/b] [i]Deceived the guard[/i] - Helps (small)
-[*][b]Dampened Spirits[/b] [i]Deceit against the brewer[/i] - Helps (small)
-[*][b]Scoundrel's Folly[/b] [i]Deceit and infiltration[/i] - Helps (small)
-[/list]
-
-[b]Alkosh[/b]
-
-[list]
-[*][b]Dragonslayer[/b] [i]Slew Alduin, the world-ending dragon[/i] - Helps (small)
-[*][b]Alduin's Bane[/b] [i]Broke the named chaos-dragon[/i] - Helps (small)
-[*][b]A Blade in the Dark[/b] [i]Slew Sahloknir in honorable combat[/i] - Helps (small)
-[*][b]Dragon Rising[/b] [i]Slew Mirmulnir (this also feeds the Lattice)[/i] - Helps (small)
-[*][b]Joining the Legion[/b] [i]Served Imperial order[/i] - Helps (small)
-[*][b]The Jagged Crown[/b] [i]Served Imperial order[/i] - Helps (small)
-[/list]
+Many of Skyrim's main-quest and faction milestones are read as deeds by your gods, and they move your standing the moment you finish them - a milestone honored, or an offense committed. You do not need to seek them out: play the story and your gods judge its turning points through their own values. As each one lands, the Book of Days and a toast tell you which god took note and why.
 
 [size=5][b]Bonuses by Tier[/b][/size]
 
-Note: these are current beta values and may be tuned before release.
-
-Focused deity tiers are [b]Seeker[/b] (25 piety), [b]Devoted[/b] (50), and [b]Champion[/b] (85). The Lattice beneath them runs on its own track: absent at 0, stirring at 1, deepening at 25, and reaching its full form at 75. Only the deepest stage you have reached is active.
-
-Each focus god has its own Seeker, Devoted, and Champion blessing. Only the highest tier you have reached for your leading god is active.
-
-[b]Khenarthi[/b] - the road at your back.
+The Lunar Lattice runs always-on beneath your focus gods. Each focus god grows through Seeker (25), Devoted (50), and Champion (85), and only the highest tier you have reached is active.
 
 [list]
-[*][b]Seeker (25)[/b] [i]Khenarthi's Road[/i] - Fortify Stamina +15
-[*][b]Devoted (50)[/b] [i]Khenarthi's Road[/i] - Fortify Stamina +25, Carry Weight +30
-[*][b]Champion (85)[/b] [i]Khenarthi's Wind[/i] - Fortify Stamina +40, Carry Weight +80, Movement Speed +3%
-[/list]
-
-[b]Azurah[/b] - twilight, mercy, and foresight.
-
-[list]
-[*][b]Seeker (25)[/b] [i]Azurah's Twilight[/i] - Fortify Magicka +15
-[*][b]Devoted (50)[/b] [i]Azurah's Twilight[/i] - Fortify Magicka +25, Magic Resistance +5%
-[*][b]Champion (85)[/b] [i]Azurah's Sight[/i] - Fortify Magicka +40, Magic Resistance +15%
-[/list]
-
-[b]Baan Dar[/b] - the survivor who should not have survived.
-
-[list]
-[*][b]Seeker (25)[/b] [i]Baan Dar's Guile[/i] - Armor +15
-[*][b]Devoted (50)[/b] [i]Baan Dar's Guile[/i] - Armor +30, Maximum Health +20
-[*][b]Champion (85)[/b] [i]Baan Dar's Luck[/i] - Armor +50, Maximum Health +30, Unarmed Damage +10
-[/list]
-
-[b]Rajhin[/b] - the hand that is never seen.
-
-[list]
-[*][b]Seeker (25)[/b] [i]Rajhin's Shadow[/i] - Sneak +5
-[*][b]Devoted (50)[/b] [i]Rajhin's Shadow[/i] - Sneak +13, Lockpicking +10
-[*][b]Champion (85)[/b] [i]Rajhin's Grace[/i] - Sneak +25, Lockpicking +25, Pickpocket +15, Unarmed Damage +10
-[/list]
-
-[b]Alkosh[/b] - order held against chaos.
-
-[list]
-[*][b]Seeker (25)[/b] [i]Alkosh's Order[/i] - Fire Resistance +5%
-[*][b]Devoted (50)[/b] [i]Alkosh's Order[/i] - Fire Resistance +13%, Magic Resistance +5%
-[*][b]Champion (85)[/b] [i]Alkosh's Roar[/i] - Fire Resistance +25%, Magic Resistance +20%
+[*][b]Lunar Lattice (always-on)[/b] - Always: Disease Resistance +5%; Mid: Fortify Stamina +15, Disease Resistance +15%; High: Fortify Stamina +25, Disease Resistance +30%, Fortify Magicka +15
+[*][b]Khenarthi[/b] - Seeker: Fortify Stamina +15; Devoted: Fortify Stamina +25, Carry Weight +30; Champion: Fortify Stamina +40, Carry Weight +80, Movement Speed +3%
+[*][b]Azurah[/b] - Seeker: Fortify Magicka +15; Devoted: Fortify Magicka +25, Magic Resistance +5%; Champion: Fortify Magicka +40, Magic Resistance +15%
+[*][b]Baan Dar[/b] - Seeker: Armor +15; Devoted: Armor +30, Maximum Health +20; Champion: Armor +50, Maximum Health +30, Unarmed Damage +10
+[*][b]Rajhin[/b] - Seeker: Sneak +5; Devoted: Sneak +13, Lockpicking +10; Champion: Sneak +25, Lockpicking +25, Pickpocket +15, Unarmed Damage +10
+[*][b]Alkosh[/b] - Seeker: Fire Resistance +5%; Devoted: Fire Resistance +13%, Magic Resistance +5%; Champion: Fire Resistance +25%, Magic Resistance +20%
 [/list]
 
 [b]Baan Dar's Champion gift is the one Khajiit special power.[/b] At his Champion tier the blessing "Baan Dar Remembers" rides on top of the stats: once a day, when a blow would drop you, the Bandit God slips you out of death's hand and puts you back on your feet - the survivor who should not have survived, made literal. Every other focus god's Champion tier is a strong passive whose reward is the recognition itself: the moon has named you.

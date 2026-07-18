@@ -104,98 +104,16 @@ Your hidden measure is the big one, and it differs by tradition:
 
 ## Quests That Move Your Standing
 
-Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
-
-Some quests are scored directly. These are the ones your tradition's gods watch most closely.
-
-**Knight's Road - Stendarr**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Message to Whiterun | Brought the Jarl word of the dragon and stood with Whiterun | Small gain |
-| The Jagged Crown | Cleared the crypt and put its draugr down | Small gain |
-| Pieces of the Past | Refused Mehrunes Dagon and kept to the lawful road | Small gain |
-| The Break of Dawn | Cleansed Meridia's temple of undeath | Small gain |
-| The House of Horrors | Sided with the Vigilant and destroyed Molag Bal's altar | Small gain |
-| The Only Cure | Destroyed the altar rather than serve the plague | Small gain |
-| Daedric pacts and Dark Brotherhood contracts | Served a Prince, or killed by treachery for coin | Loss |
-
-**Hidden Art - Julianos**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Discerning the Transmundane | Pursued a forbidden truth to its end | Small gain |
-| First Lessons | Began disciplined study at the College | Small gain |
-| Under Saarthal | Made a scholar's discovery beneath the ruin | Small gain |
-| Hitting the Books | Recovered the lost books from Fellglow Keep | Small gain |
-| Good Intentions | Consulted the Augur and took the scholar's path | Small gain |
-| Revealing the Unseen | Attuned the focusing crystal | Small gain |
-| The Staff of Magnus | Recovered the Staff through scholarship | Small gain |
-| The Eye of Magnus | Resolved the crisis of the Eye | Large gain |
-
-**Green Way - Y'ffre**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Kyne's Sacred Trials | Took the great beasts in a hunt done rightly | Small gain |
-
-**Green Way - Kynareth**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Message to Whiterun | Answered the dragon threat at Whiterun's door | Small gain |
-| Hitting the Books | Found Orthorn and brought him out alive | Small gain |
-| Containment | Shielded Winterhold from what the College let loose | Small gain |
-| Dragon Rising | Brought reinforcements to the watchtower | Small gain |
-| The Heart of Dibella | Rescued Fjotra from the Forsworn | Small gain |
-
-Your tradition's other gods watch quests too. Arkay marks the dead honored and the undead put down, Mara marks mercy and family kept whole, Akatosh marks dragons slain and oaths kept, and Magnus follows the whole College of Winterhold arc from first lesson to last.
+Many of Skyrim's main-quest and faction milestones are read as deeds by your gods, and they move your standing the moment you finish them - a milestone honored, or an offense committed. You do not need to seek them out: play the story and your gods judge its turning points through their own values. As each one lands, the Book of Days and a toast tell you which god took note and why.
 
 ## Bonuses by Tier
 
-These are current beta values and may be tuned before release.
+The three tradition ladders grow through Seeker (25) and Devoted (50); Champion (85) comes from the one god of your tradition you carry to the top. Only your chosen tradition's family is active.
 
-Your tradition is your blessing, and it arrives in two halves. Seeker and Devoted come from practicing your tradition broadly - honoring any of its gods advances the same family. Champion is different: it comes only when one god of your tradition reaches Champion and stands as your patron, and that god brings a capstone of their own. Only your chosen tradition's family pays; the other two stay dormant. As always, only one temporary favor blessing can be active at a time across all your gods.
-
-Knight's Road:
-
-| Tier | Blessing | What you gain |
-|------|----------|---------------|
-| Seeker (25) | Knight's Vow | Block +5 |
-| Devoted (50) | Knight's Aegis | Block +13, Magic Resistance +8% |
-
-Hidden Art:
-
-| Tier | Blessing | What you gain |
-|------|----------|---------------|
-| Seeker (25) | Hidden Art | Conjuration +6 |
-| Devoted (50) | Hidden Art | Conjuration +15, Illusion +9 |
-
-Green Way:
-
-| Tier | Blessing | What you gain |
-|------|----------|---------------|
-| Seeker (25) | Green Way | Fortify Stamina +15 |
-| Devoted (50) | Green Way | Fortify Stamina +25, Restoration +8 |
-
-Champion (85) belongs to your patron. Whichever god of your tradition you carry to the top brings their own boon, and only one is ever active:
-
-| Your patron | Blessing | What you gain |
-|-------------|----------|---------------|
-| Stendarr | Knight's Bulwark | Block +25, Magic Resistance +18%, Armor +50 |
-| Y'ffre | Green Way | Fortify Stamina +40, Restoration +18, Maximum Health +20 |
-| A Daedric Prince (Hidden Art) | Hidden Art | Conjuration +27, Illusion +21, Fortify Magicka +25 |
-| Mara | Mara's Compassion | Restoration +23, Magic Resistance +15% |
-| Arkay | Arkay's Ward | Disease Resistance +27%, Maximum Health +30 |
-| Akatosh | Akatosh's Endurance | Maximum Health +30, Magic Resistance +15% |
-| Julianos | Julianos's Insight | Fortify Magicka +40, Magic Resistance +15% |
-| Kynareth | Kynareth's Sky | Fortify Stamina +40, Magic Resistance +13% |
-| Dibella | Dibella's Inspiration | Speech +25, Fortify Magicka +40 |
-| Zenithar | Zenithar's Prosperity | Carry Weight +120, Speech +20 |
-| Talos | Talos's Triumph | Armor +50, One-Handed +20 |
-| Magnus | Magnus's Aperture | Alteration +25, Fortify Magicka +40 |
-
-Stendarr's capstone is the Knight's Road's own, Y'ffre's is the Green Way's own, and a Daedric patron crowns the Hidden Art. Those three replace your Devoted blessing rather than stacking on it - the totals above already include everything you had. Any other patron's boon sits beside your Devoted blessing, so you carry both.
+- **Knight's Road** - Seeker: Block +5; Devoted: Block +13, Magic Resistance +8%; Champion: Block +25, Magic Resistance +18%, Armor +50
+- **Hidden Art** - Seeker: Conjuration +6; Devoted: Conjuration +15, Illusion +9; Champion: Conjuration +27, Illusion +21, Fortify Magicka +25
+- **Green Way** - Seeker: Fortify Stamina +15; Devoted: Fortify Stamina +25, Restoration +8; Champion: Fortify Stamina +40, Restoration +18, Maximum Health +20
+- **Champion (by your patron god)** - Mara: Restoration +23, Resist Magic +15%; Arkay: Disease Resistance +27%, Health +30; Akatosh: Maximum Health +30, Magic Resistance +15%; Julianos: Fortify Magicka +40, Magic Resistance +15%; Kynareth: Fortify Stamina +40, Magic Resistance +13%; Dibella: Speech +25, Fortify Magicka +40; Zenithar: Carry Weight +120, Speech +20; Talos: Armor +50, One-Handed +20; Magnus: Alteration +25, Fortify Magicka +40
 
 The Bretons have **no scripted Champion power** - every capstone is a strong passive, and the reward is the recognition itself.
 

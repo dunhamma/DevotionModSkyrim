@@ -69,138 +69,19 @@ Nord has no formal reputation meter the way Imperials carry a Concordat standing
 
 ## Quests That Move Your Standing
 
-Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
-
-Some deeds are too large to be a habit. The gods watch the great quests of Skyrim, and a few of them move your standing the moment you finish.
-
-**Kyne**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Dragon Rising | Killed Mirmulnir, absorbed your first dragon soul | Helps (small) |
-| The Way of the Voice | Took up the Voice at High Hrothgar | Helps (small) |
-| A Blade in the Dark | Slew Sahloknir at Kynesgrove | Helps (small) |
-| Alduin's Bane | Drove off Alduin with Dragonrend | Helps (small) |
-| Dragonslayer | Destroyed Alduin | Helps (small) |
-| Message to Whiterun | Warned Whiterun, readied the kin-hold | Helps (small) |
-
-**Talos**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Joining the Stormcloaks | Took the oath, joined the Sons of Skyrim | Helps (major) |
-| The Jagged Crown | Drove the Empire out, delivered the Crown to Ulfric | Helps (major) |
-| Message to Whiterun | Carried the war to Whiterun for the Stormcloaks | Helps (major) |
-| Take Up Arms | Stood the trial of arms with Vilkas | Helps (small) |
-| Proving Honor | Earned a place by judged valor | Helps (small) |
-| The Way of the Voice | Mastered the new Voice powers | Helps (small) |
-| The Horn of Jurgen Windcaller | Greeted formally as Dragonborn | Helps (small) |
-| A Blade in the Dark | Killed the dragon and absorbed its power | Helps (small) |
-| Sovngarde | Reached the Hall of Heroes | Helps (small) |
-| Joining the Legion | Cleared Fort Hraggstad | Helps (small) |
-| The Silver Hand, Blood's Honor, Purity of Revenge | Saw the Companions' valor arc through | Helps (small) |
-| Message to Whiterun | Answered the dragon threat | Helps (small) |
-| Hitting the Books | Freed Orthorn | Helps (small) |
-| Containment | Protected Winterhold | Helps (small) |
-
-**Shor**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| The Silver Hand | Fought the Silver Hand in their own stronghold | Helps (major) |
-| Blood's Honor | Killed the Glenmoril Witches | Helps (major) |
-| Purity of Revenge | Avenged Kodlak, ruined the Silver Hand | Helps (major) |
-| A Blade in the Dark | Killed the dragon at Kynesgrove | Helps (major) |
-| Proving Honor | Earned a place by valor | Helps (small) |
-| Glory of the Dead | Defeated the wolf spirit | Helps (small) |
-| Joining the Legion | Cleared out the bandits | Helps (small) |
-| Thalmor assassin ambush | Killed the armed Thalmor agent who came for you | Helps (small) |
-| To Kill an Empire | Killed the Emperor's double by poison, then returned | Hurts, then helps (small) |
-| Recipe for Disaster | Carried out a treacherous contract kill | Hurts (small) |
-| Hail Sithis! | Carried out a treacherous kill | Hurts (small) |
-
-**Tsun**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Proving Honor | Retrieved a fragment of Wuuthrad, valor judged | Helps (major) |
-| The Way of the Voice | Passed the trials of the Voice | Helps (major) |
-| The Silver Hand | Killed the werewolf hunters | Helps (small) |
-| Blood's Honor | Killed the Glenmoril Witches in open battle | Helps (small) |
-| Purity of Revenge | Wiped out the Silver Hand | Helps (small) |
-| Dragon Rising | Killed the dragon | Helps (small) |
-| A Blade in the Dark | Killed the dragon | Helps (small) |
-| Sovngarde | Reached the Hall of Heroes | Helps (small) |
-
-**Stuhn**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Pieces of the Past | Refused to kill Silus - mercy to the beaten | Helps (small) |
-| Waking Nightmare | Let Erandur live - mercy to the yielding | Helps (small) |
-| Bound Until Death | Killed Vittoria Vici, a helpless target | Hurts (major) |
-| Death Incarnate | Finished the doomed Brotherhood remnants | Hurts (small) |
-
-If you walk the Nine Divines, those gods watch their own quests in the same way - Arkay's death rites, Stendarr's mercies, Mara's kindnesses, Julianos' learning, and the rest. Those reactions are shared with every race the Divines can claim, and they land for a Nord exactly as they would for anyone else.
+Many of Skyrim's main-quest and faction milestones are read as deeds by your gods, and they move your standing the moment you finish them - a milestone honored, or an offense committed. You do not need to seek them out: play the story and your gods judge its turning points through their own values. As each one lands, the Book of Days and a toast tell you which god took note and why.
 
 ## Bonuses by Tier
 
-Note: these are current beta values and may be tuned before release.
+The broad lanes cap at Devoted. A patron's own blessing begins at Devoted - there is no Seeker step for a patron - and reaches Champion at 85. Only the highest tier you have reached is active.
 
-There are two layers. The **broad layer** is what you get for honoring your whole pantheon. The **focused layer** is what you get once a single god claims you. Broad bonuses are deliberately softer than a committed patron's, and they switch off once you commit.
-
-**Broad worship - Old Ways.** Caps at Devoted.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker (25) | Old Ways | Fortify Stamina +15 |
-| Devoted (50) | Old Ways | Fortify Stamina +25, Frost Resistance +10% |
-
-**Broad worship - Nine Divines.** Caps at Devoted.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker (25) | Faith of the Holds | Poison Resistance +10% |
-| Devoted (50) | Faith of the Holds | Poison Resistance +10%, Disease Resistance +10% |
-
-**Focused patrons (Old Ways gods).** A god only offers to claim you at 50 piety, so a patron's blessing begins at its Devoted step - there is no Seeker step for a patron. Champion opens at 85. Below 50, the blessing you carry is the broad one above.
-
-**Kyne** - the wind at your back and the cold turned aside.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Devoted (50) | Kyne's Sky | Fortify Stamina +25, Frost Resistance +10% |
-| Champion (85) | Kyne's Breath | Fortify Stamina +40, Frost Resistance +25% |
-
-**Shor** - the king of the mead-hall lends you the endurance to earn your seat.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Devoted (50) | Shor's Favor | Maximum Health +20, One-Handed +8 |
-| Champion (85) | Shor's Hall | Maximum Health +30, One-Handed +18, Two-Handed +10 |
-
-**Tsun** - the shield-thane teaches you to outlast the trial.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Devoted (50) | Tsun's Trial | Fortify Stamina +25, Block +10 |
-| Champion (85) | Tsun's Vigil | Fortify Stamina +40, Block +22, Armor +50 |
-
-**Stuhn** - the shield-god hardens what stands between you and the blow.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Devoted (50) | Stuhn's Ward | Armor +30, Block +8 |
-| Champion (85) | Stuhn's Bulwark | Armor +50, Block +18, One-Handed +8 |
-
-**Talos** - reachable in either pantheon; the conqueror's own resolve.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Devoted (50) | Talos's Resolve | Armor +30, One-Handed +8 |
-| Champion (85) | Talos's Triumph | Armor +50, One-Handed +20 |
-
-**Focused patrons (Nine Divines).** Each eligible Divine likewise begins at its Devoted blessing when it claims you and reaches its Champion blessing at 85. Kynareth leans into stamina and resistance, Mara into restoration, Stendarr into warding and armor, and Zenithar into carrying capacity and craft.
+- **Old Ways (broad)** - Seeker: Fortify Stamina +15; Devoted: Fortify Stamina +25, Frost Resistance +10%
+- **Faith of the Holds (broad)** - Seeker: Poison Resistance +10%; Devoted: Poison Resistance +10%, Disease Resistance +10%
+- **Kyne** - Devoted: Fortify Stamina +25, Frost Resistance +10%; Champion: Fortify Stamina +40, Frost Resistance +25%
+- **Shor** - Devoted: Maximum Health +20, One-Handed +8; Champion: Maximum Health +30, One-Handed +18, Two-Handed +10
+- **Tsun** - Devoted: Fortify Stamina +25, Block +10; Champion: Fortify Stamina +40, Block +22, Armor +50
+- **Stuhn** - Devoted: Armor +30, Block +8; Champion: Armor +50, Block +18, One-Handed +8
+- **Talos** - Devoted: Armor +30, One-Handed +8; Champion: Armor +50, One-Handed +20
 
 **Shor's Champion gift is the one Nord special power.** At Shor's Champion tier the blessing "Shor Remembers" rides on top of the stats: once a day, a killing blow becomes a last stand, and Shor pulls you back from the edge instead of letting you fall. Every other patron's Champion tier is a strong passive whose reward is the recognition itself.
 

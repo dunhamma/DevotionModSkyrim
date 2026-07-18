@@ -132,98 +132,18 @@ Your hidden measure is the big one, and it differs by tradition:
 
 [size=5][b]Quests That Move Your Standing[/b][/size]
 
-Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
-
-Some quests are scored directly. These are the ones your tradition's gods watch most closely.
-
-[b]Knight's Road - Stendarr[/b]
-
-[list]
-[*][b]Message to Whiterun[/b] [i]Brought the Jarl word of the dragon and stood with Whiterun[/i] - Small gain
-[*][b]The Jagged Crown[/b] [i]Cleared the crypt and put its draugr down[/i] - Small gain
-[*][b]Pieces of the Past[/b] [i]Refused Mehrunes Dagon and kept to the lawful road[/i] - Small gain
-[*][b]The Break of Dawn[/b] [i]Cleansed Meridia's temple of undeath[/i] - Small gain
-[*][b]The House of Horrors[/b] [i]Sided with the Vigilant and destroyed Molag Bal's altar[/i] - Small gain
-[*][b]The Only Cure[/b] [i]Destroyed the altar rather than serve the plague[/i] - Small gain
-[*][b]Daedric pacts and Dark Brotherhood contracts[/b] [i]Served a Prince, or killed by treachery for coin[/i] - Loss
-[/list]
-
-[b]Hidden Art - Julianos[/b]
-
-[list]
-[*][b]Discerning the Transmundane[/b] [i]Pursued a forbidden truth to its end[/i] - Small gain
-[*][b]First Lessons[/b] [i]Began disciplined study at the College[/i] - Small gain
-[*][b]Under Saarthal[/b] [i]Made a scholar's discovery beneath the ruin[/i] - Small gain
-[*][b]Hitting the Books[/b] [i]Recovered the lost books from Fellglow Keep[/i] - Small gain
-[*][b]Good Intentions[/b] [i]Consulted the Augur and took the scholar's path[/i] - Small gain
-[*][b]Revealing the Unseen[/b] [i]Attuned the focusing crystal[/i] - Small gain
-[*][b]The Staff of Magnus[/b] [i]Recovered the Staff through scholarship[/i] - Small gain
-[*][b]The Eye of Magnus[/b] [i]Resolved the crisis of the Eye[/i] - Large gain
-[/list]
-
-[b]Green Way - Y'ffre[/b]
-
-[list]
-[*][b]Kyne's Sacred Trials[/b] [i]Took the great beasts in a hunt done rightly[/i] - Small gain
-[/list]
-
-[b]Green Way - Kynareth[/b]
-
-[list]
-[*][b]Message to Whiterun[/b] [i]Answered the dragon threat at Whiterun's door[/i] - Small gain
-[*][b]Hitting the Books[/b] [i]Found Orthorn and brought him out alive[/i] - Small gain
-[*][b]Containment[/b] [i]Shielded Winterhold from what the College let loose[/i] - Small gain
-[*][b]Dragon Rising[/b] [i]Brought reinforcements to the watchtower[/i] - Small gain
-[*][b]The Heart of Dibella[/b] [i]Rescued Fjotra from the Forsworn[/i] - Small gain
-[/list]
-
-Your tradition's other gods watch quests too. Arkay marks the dead honored and the undead put down, Mara marks mercy and family kept whole, Akatosh marks dragons slain and oaths kept, and Magnus follows the whole College of Winterhold arc from first lesson to last.
+Many of Skyrim's main-quest and faction milestones are read as deeds by your gods, and they move your standing the moment you finish them - a milestone honored, or an offense committed. You do not need to seek them out: play the story and your gods judge its turning points through their own values. As each one lands, the Book of Days and a toast tell you which god took note and why.
 
 [size=5][b]Bonuses by Tier[/b][/size]
 
-These are current beta values and may be tuned before release.
-
-Your tradition is your blessing, and it arrives in two halves. Seeker and Devoted come from practicing your tradition broadly - honoring any of its gods advances the same family. Champion is different: it comes only when one god of your tradition reaches Champion and stands as your patron, and that god brings a capstone of their own. Only your chosen tradition's family pays; the other two stay dormant. As always, only one temporary favor blessing can be active at a time across all your gods.
-
-Knight's Road:
+The three tradition ladders grow through Seeker (25) and Devoted (50); Champion (85) comes from the one god of your tradition you carry to the top. Only your chosen tradition's family is active.
 
 [list]
-[*][b]Seeker (25)[/b] [i]Knight's Vow[/i] - Block +5
-[*][b]Devoted (50)[/b] [i]Knight's Aegis[/i] - Block +13, Magic Resistance +8%
+[*][b]Knight's Road[/b] - Seeker: Block +5; Devoted: Block +13, Magic Resistance +8%; Champion: Block +25, Magic Resistance +18%, Armor +50
+[*][b]Hidden Art[/b] - Seeker: Conjuration +6; Devoted: Conjuration +15, Illusion +9; Champion: Conjuration +27, Illusion +21, Fortify Magicka +25
+[*][b]Green Way[/b] - Seeker: Fortify Stamina +15; Devoted: Fortify Stamina +25, Restoration +8; Champion: Fortify Stamina +40, Restoration +18, Maximum Health +20
+[*][b]Champion (by your patron god)[/b] - Mara: Restoration +23, Resist Magic +15%; Arkay: Disease Resistance +27%, Health +30; Akatosh: Maximum Health +30, Magic Resistance +15%; Julianos: Fortify Magicka +40, Magic Resistance +15%; Kynareth: Fortify Stamina +40, Magic Resistance +13%; Dibella: Speech +25, Fortify Magicka +40; Zenithar: Carry Weight +120, Speech +20; Talos: Armor +50, One-Handed +20; Magnus: Alteration +25, Fortify Magicka +40
 [/list]
-
-Hidden Art:
-
-[list]
-[*][b]Seeker (25)[/b] [i]Hidden Art[/i] - Conjuration +6
-[*][b]Devoted (50)[/b] [i]Hidden Art[/i] - Conjuration +15, Illusion +9
-[/list]
-
-Green Way:
-
-[list]
-[*][b]Seeker (25)[/b] [i]Green Way[/i] - Fortify Stamina +15
-[*][b]Devoted (50)[/b] [i]Green Way[/i] - Fortify Stamina +25, Restoration +8
-[/list]
-
-Champion (85) belongs to your patron. Whichever god of your tradition you carry to the top brings their own boon, and only one is ever active:
-
-[list]
-[*][b]Stendarr[/b] [i]Knight's Bulwark[/i] - Block +25, Magic Resistance +18%, Armor +50
-[*][b]Y'ffre[/b] [i]Green Way[/i] - Fortify Stamina +40, Restoration +18, Maximum Health +20
-[*][b]A Daedric Prince (Hidden Art)[/b] [i]Hidden Art[/i] - Conjuration +27, Illusion +21, Fortify Magicka +25
-[*][b]Mara[/b] [i]Mara's Compassion[/i] - Restoration +23, Magic Resistance +15%
-[*][b]Arkay[/b] [i]Arkay's Ward[/i] - Disease Resistance +27%, Maximum Health +30
-[*][b]Akatosh[/b] [i]Akatosh's Endurance[/i] - Maximum Health +30, Magic Resistance +15%
-[*][b]Julianos[/b] [i]Julianos's Insight[/i] - Fortify Magicka +40, Magic Resistance +15%
-[*][b]Kynareth[/b] [i]Kynareth's Sky[/i] - Fortify Stamina +40, Magic Resistance +13%
-[*][b]Dibella[/b] [i]Dibella's Inspiration[/i] - Speech +25, Fortify Magicka +40
-[*][b]Zenithar[/b] [i]Zenithar's Prosperity[/i] - Carry Weight +120, Speech +20
-[*][b]Talos[/b] [i]Talos's Triumph[/i] - Armor +50, One-Handed +20
-[*][b]Magnus[/b] [i]Magnus's Aperture[/i] - Alteration +25, Fortify Magicka +40
-[/list]
-
-Stendarr's capstone is the Knight's Road's own, Y'ffre's is the Green Way's own, and a Daedric patron crowns the Hidden Art. Those three replace your Devoted blessing rather than stacking on it - the totals above already include everything you had. Any other patron's boon sits beside your Devoted blessing, so you carry both.
 
 The Bretons have [b]no scripted Champion power[/b] - every capstone is a strong passive, and the reward is the recognition itself.
 

@@ -80,100 +80,20 @@ Note the broad-worship rule that applies to every race: honoring several gods at
 
 [size=5][b]Quests That Move Your Standing[/b][/size]
 
-Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
-
-Some of Skyrim's quests land squarely on Altmer theology. These are the ones your gods notice.
-
-[b]The great collisions[/b]
-
-These are the Lorkhan moments. Each one costs you piety with your active god and opens a crisis.
-
-[list]
-[*][b]Dragon Rising[/b] [i]Slew Mirmulnir and were declared Dragonborn - the signature Lorkhan crisis[/i] - Hurts - large
-[*][b]Sovngarde[/b] [i]Entered Shor's mortal-hero afterlife[/i] - Hurts - large
-[*][b]Proving Honor[/b] [i]Took the Companions' beast-blood fork[/i] - Hurts - large
-[*][b]The Eye of Magnus[/b] [i]Kept disciplined custody of the Eye[/i] - Helps Magnus
-[/list]
-
-[b]Auri-El[/b]
-
-[list]
-[*][b]Glory of the Dead[/b] [i]Honored the fallen with rites[/i] - Helps - small
-[*][b]Alduin's Bane[/b] [i]Turned back the devourer of elven time[/i] - Helps - small
-[*][b]Dragonslayer[/b] [i]The World-Eater unmade, order upheld[/i] - Helps - small
-[*][b]The Way of the Voice[/b] [i]Disciplined mastery of the Voice[/i] - Helps - small
-[*][b]The Horn of Jurgen Windcaller[/b] [i]Passed the Greybeards' final trial[/i] - Helps - small
-[/list]
-
-[b]Magnus[/b]
-
-[list]
-[*][b]Discerning the Transmundane[/b] [i]Recovered lost arcane knowledge[/i] - Helps - small
-[*][b]First Lessons[/b] [i]Entered the College and took up disciplined study[/i] - Helps - small
-[*][b]Under Saarthal[/b] [i]Recovered buried knowledge[/i] - Helps - small
-[*][b]Hitting the Books[/b] [i]Recovered the stolen Fellglow books[/i] - Helps - small
-[*][b]Good Intentions[/b] [i]Heeded the Augur[/i] - Helps - small
-[*][b]Revealing the Unseen[/b] [i]Revealed the Staff at the Oculory[/i] - Helps - small
-[*][b]The Staff of Magnus[/b] [i]Recovered the Staff[/i] - Helps - milestone
-[*][b]The Eye of Magnus[/b] [i]Contained the Eye and were named Arch-Mage[/i] - Helps - milestone
-[/list]
-
-The College arc is Magnus's strongest lane by far. If Magnus is your patron, it is the spine of your playthrough.
-
-[b]Xarxes[/b]
-
-[list]
-[*][b]Glory of the Dead[/b] [i]Honored the fallen Harbinger[/i] - Helps - milestone
-[*][b]The College of Winterhold arc (First Lessons through The Staff of Magnus)[/b] [i]Knowledge recovered into the ledger[/i] - Helps - small
-[*][b]The Way of the Voice[/b] [i]Disciplined study of the Words[/i] - Helps - small
-[*][b]The Book of Love[/b] [i]Entered two reunited souls into the ledger[/i] - Helps - small
-[*][b]The Taste of Death[/b] [i]Defiled the recorded dead[/i] - Hurts - small
-[/list]
+Many of Skyrim's main-quest and faction milestones are read as deeds by your gods, and they move your standing the moment you finish them - a milestone honored, or an offense committed. You do not need to seek them out: play the story and your gods judge its turning points through their own values. As each one lands, the Book of Days and a toast tell you which god took note and why.
 
 [size=5][b]Bonuses by Tier[/b][/size]
 
-Your reward comes in two layers. The [b]Orthodox foundation[/b] is your always-on, broad-coherence reward; it caps at Devoted and goes quiet once you commit to a single patron. Then each focused patron carries its own three-tier set that climbs all the way to Champion. Reaching Seeker is 25 piety, Devoted is 50, and Champion is 85.
-
-[b]Orthodox foundation[/b] - you keep to the ancestral order. Broad coherence, caps at Devoted.
+The Orthodox foundation is your always-on broad blessing (caps at Devoted); a focused patron carries you to Champion. Each family grows through Seeker (25), Devoted (50), and Champion (85), and only the highest tier you have reached is active.
 
 [list]
-[*][b]Seeker (25)[/b] - Fortify Magicka +15
-[*][b]Devoted (50)[/b] - Fortify Magicka +25, Magic Resistance +5%
+[*][b]Orthodox foundation (broad)[/b] - Seeker: Fortify Magicka +15; Devoted: Fortify Magicka +25, Magic Resistance +5%
+[*][b]Auri-El[/b] - Seeker: Fortify Magicka +15; Devoted: Fortify Magicka +25, Magic Resistance +6%; Champion: Fortify Magicka +40, Magic Resistance +16%
+[*][b]Magnus[/b] - Seeker: Alteration +5; Devoted: Alteration +13, Fortify Magicka +25; Champion: Alteration +25, Fortify Magicka +40
+[*][b]Trinimac[/b] - Seeker: One-Handed +5; Devoted: One-Handed +13, Armor +15; Champion: One-Handed +25, Armor +50
+[*][b]Xarxes[/b] - Seeker: Restoration +5; Devoted: Restoration +13, Fortify Magicka +25; Champion: Restoration +25, Fortify Magicka +40
+[*][b]Syrabane[/b] - Seeker: Restoration +5; Devoted: Restoration +13, Magic Resistance +8%; Champion: Restoration +25, Magic Resistance +20%
 [/list]
-
-[b]Auri-El's Dawn[/b] - the road back, open to every faction.
-
-[list]
-[*][b]Seeker (25)[/b] [i]Auri-El's Dawn[/i] - Fortify Magicka +15
-[*][b]Devoted (50)[/b] [i]Auri-El's Dawn[/i] - Fortify Magicka +25, Magic Resistance +6%
-[*][b]Champion (85)[/b] [i]Auri-El's Return[/i] - Fortify Magicka +40, Magic Resistance +16%
-[/list]
-
-[b]Magnus's Arts[/b] - the architect's discipline.
-
-[list]
-[*][b]Seeker (25)[/b] [i]Magnus's Arts[/i] - Alteration +5
-[*][b]Devoted (50)[/b] [i]Magnus's Arts[/i] - Alteration +13, Fortify Magicka +25
-[*][b]Champion (85)[/b] [i]Magnus's Aperture[/i] - Alteration +25, Fortify Magicka +40
-[/list]
-
-[b]Xarxes's Record[/b] - the ageless ledger.
-
-[list]
-[*][b]Seeker (25)[/b] [i]Xarxes's Record[/i] - Restoration +5
-[*][b]Devoted (50)[/b] [i]Xarxes's Record[/i] - Restoration +13, Fortify Magicka +25
-[*][b]Champion (85)[/b] [i]Xarxes's Ledger[/i] - Restoration +25, Fortify Magicka +40
-[/list]
-
-[b]Trinimac's Charge[/b] - the warrior-god's orthodox strength, for those who take the hardest road.
-
-[list]
-[*][b]Seeker (25)[/b] [i]Trinimac's Charge[/i] - One-Handed +5
-[*][b]Devoted (50)[/b] [i]Trinimac's Charge[/i] - One-Handed +13, Armor +15
-[*][b]Champion (85)[/b] [i]Trinimac's Defense[/i] - One-Handed +25, Armor +50
-[/list]
-
-At Champion, your standing also reads back in the Devotion panel and Survey text. Auri-El names you as one who kept the Dawn foundation through everything; Magnus names you a true student of the arts; Xarxes writes your name into the long ledger; Trinimac names you unbroken.
 
 The Altmer have [b]no scripted Champion power[/b] - each patron's Champion tier is a strong passive, and the reward is the recognition itself: your standing reads back in the Devotion panel and Survey text as the god names you at last.
 

@@ -64,194 +64,22 @@ Piety is tracked separately for each god, and your daily gain with any single go
 
 ## Quests That Move Your Standing
 
-Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
-
-Some quests speak directly to one of your gods, and finishing them - or finishing them a particular way - moves your standing with that god on the spot. These are the ones an Imperial is most likely to meet. Several are the same quest with two different endings, and the ending is what the god judges.
-
-Gains marked "Helps a lot" are milestones: they land far harder than an ordinary day's devotion.
-
-**Akatosh**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Bleak Falls Barrow | Recovered the Dragonstone and put the Empire's first answer to the dragons in motion | Helps |
-| Dragon Rising | Killed Mirmulnir at the Western Watchtower and took up the burden of being Dragonborn | Helps |
-| A Blade in the Dark | Slew Sahloknir, raised against the order of time | Helps |
-| Dragonslayer | Destroyed Alduin and restored the covenant of time | Helps |
-| The Jagged Crown | Recovered the crown for the Imperial Legion, preserving the Empire | Helps |
-| Joining the Stormcloaks | Swore the oath of fealty to the rebellion | Helps |
-
-**Talos**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Diplomatic Immunity | Walked into the Thalmor Embassy and walked out again | Helps |
-| "The Talos Mistake" | Read the Thalmor's own tract on the ban and took a public position on it (once) | Helps |
-| The Way of the Voice | Mastered the Voice through the Greybeards' trials | Helps |
-| The Horn of Jurgen Windcaller | Completed the Greybeards' final trial | Helps |
-| A Blade in the Dark | Slew the dragon Sahloknir in open battle | Helps |
-| Sovngarde | Stood with the three legendary heroes of Sovngarde | Helps |
-| Take Up Arms | Sparred with Vilkas in a one-on-one trial of arms | Helps |
-| Proving Honor | Won your place among the Companions by judged trial | Helps |
-| Message to Whiterun | Protected Whiterun's people from the dragon | Helps |
-| Joining the Stormcloaks | Took the Stormcloak oath | Helps a lot |
-| The Jagged Crown | Recovered the crown for the Stormcloaks, to drive the Empire out of Skyrim | Helps a lot |
-| Message to Whiterun | Carried Ulfric's war to Whiterun against the Empire's ally | Helps a lot |
-
-Remember that Talos answers an Imperial faintly. These are real gains, but they land at a fraction of what a Nord would feel.
-
-**Mara**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| In My Time of Need | Helped Saadia against the Alik'r | Helps |
-| The Heart of Dibella | Saved the kidnapped Sybil child | Helps |
-| A Daedra's Best Friend | Spared loyal Barbas and reunited him with his master | Helps |
-| The Taste of Death | Rejected Namira's feast and protected Verulus from the cannibals | Helps |
-| The Book of Love | Reunited three estranged couples for the Temple of Mara | Helps a lot |
-| A Daedra's Best Friend | Killed the loyal, helpless companion | Hurts |
-| The Taste of Death | Fed on Verulus | Hurts |
-
-**Arkay**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Glory of the Dead | Cured Kodlak of the lycanthropic taint and cleansed his soul | Helps |
-| The Jagged Crown | Destroyed the draugr defending Korvanjund (either side) | Helps |
-| The Book of Love | Helped the spirits of two war-dead lovers find each other and rest | Helps |
-| Laid to Rest | Destroyed the master vampire Movarth and the coven preying on Morthal | Helps a lot |
-| Glory of the Dead | Honored the fallen Harbinger with funeral rites and passage to Sovngarde | Helps a lot |
-| The Black Star | Made the Black Star, a trap for mortal souls | Hurts |
-
-**Stendarr**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| In My Time of Need | Sided with the Alik'r and saw lawful justice done | Helps |
-| Message to Whiterun | Shielded the townsfolk of Whiterun from the dragon | Helps |
-| The Jagged Crown | Destroyed the risen dead in Korvanjund (either side) | Helps |
-| The Black Star | Cleansed Azura's Star instead of corrupting it | Helps |
-| Pieces of the Past | Spared Silus and rejected the bargain | Helps |
-| The Taste of Death | Killed Eola and saved Verulus from the cannibals | Helps |
-| The Heart of Dibella | Rescued Fjotra from the Forsworn and restored her to the temple | Helps a lot |
-| Laid to Rest | Saved Morthal from the vampires' blood farm and avenged the murdered child | Helps a lot |
-| Pieces of the Past | Murdered the unarmed man who hired you | Hurts |
-| The Taste of Death | Murdered and cannibalized the priest | Hurts |
-
-**Zenithar**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| The Golden Claw | Returned the claw to its owner instead of keeping it | Helps |
-| Kolskeggr Mine | Drove the Forsworn out so the miners could go back to honest work | Helps a lot |
-
-**Julianos**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| First Lessons | Entered the College and took up disciplined study | Helps |
-| Under Saarthal | Recovered the buried knowledge beneath Saarthal | Helps |
-| The Staff of Magnus | Claimed the Staff of Magnus from Labyrinthian | Helps |
-| The Eye of Magnus | Contained the Eye and preserved what could be known of it | Helps a lot |
-
-**Kynareth**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Message to Whiterun | Protected Whiterun's people from the dragon | Helps |
-| The Heart of Dibella | Sheltered an innocent from harm | Helps |
-| The Blessings of Nature | Restored the Gildergreen | Helps a lot |
-| The Blessings of Nature | Tapped the Eldergleam with Nettlebane, wounding the sacred tree | Hurts |
-
-**Dibella**
-
-| Quest | What you did | Effect |
-|-------|--------------|--------|
-| Pantea's Flute | Returned Pantea's flute to the Bards College in Solitude | Helps |
-| Tending the Flames | Restored King Olaf's Verse and was inducted into the Bards College | Helps |
-| The Heart of Dibella | Cared for the rescued Sybil child and restored her to Dibella's temple | Helps |
-
-One more, for the committed: once you have a patron, completing The Book of Love reads as public devotion done in that god's name, and your patron - whichever of the Nine it is - takes note.
+Many of Skyrim's main-quest and faction milestones are read as deeds by your gods, and they move your standing the moment you finish them - a milestone honored, or an offense committed. You do not need to seek them out: play the story and your gods judge its turning points through their own values. As each one lands, the Book of Days and a toast tell you which god took note and why.
 
 ## Bonuses by Tier
 
-Each god's blessing deepens as your standing with them crosses 25 (Seeker), 50 (Devoted), and 85 (Champion). Higher tiers keep everything the lower tiers gave you.
+The Divines' Regard is the broad blessing (caps at Devoted). Because a patron only claims you at 50 piety, a patron's own blessing begins at Devoted - there is no Seeker step for a patron - and reaches Champion at 85. Only the highest tier you have reached is active.
 
-A patron only offers to claim you at 50 piety, so a patron's blessing begins at its Devoted step - there is no Seeker step for a patron. Until you commit, the blessing you carry is the broad one below.
-
-**Broad worship: The Divines' Regard.** Active before you commit to anyone, and capped at Devoted. It is deliberately softer than a patron's favor - the whole pantheon's regard, spread thin.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Seeker (25) | The Divines' Regard | Poison Resistance +10% |
-| Devoted (50) | The Divines' Regard | Poison Resistance +10%, Disease Resistance +10% |
-
-Accepting a patron suppresses the broad boon and replaces it with that god's own. Champion belongs to commitment; broad worship cannot reach it.
-
-**Akatosh.** The steady discipline of time, given back as endurance.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Devoted (50) | Akatosh's Covenant | Fortify Magicka +25, Magic Resistance +5% |
-| Champion (85) | Akatosh's Endurance | Maximum Health +30, Magic Resistance +15% |
-
-**Mara.** Mercy shown becomes mercy you can give.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Devoted (50) | Mara's Mercy | Restoration +13, Resist Magic +5% |
-| Champion (85) | Mara's Compassion | Restoration +23, Resist Magic +15% |
-
-**Arkay.** The keeper of the cycle makes your own body harder to corrupt.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Devoted (50) | Arkay's Vigil | Disease Resistance +15%, Maximum Health +20 |
-| Champion (85) | Arkay's Ward | Disease Resistance +27%, Maximum Health +30 |
-
-**Stendarr.** Restraint made into a wall you can stand behind.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Devoted (50) | Stendarr's Aegis | Block +13, Armor +30 |
-| Champion (85) | Stendarr's Bulwark | Block +25, Armor +50 |
-
-**Zenithar.** Honest labor pays, and it pays in what a working man actually needs.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Devoted (50) | Zenithar's Trade | Carry Weight +65, Speech +8 |
-| Champion (85) | Zenithar's Prosperity | Carry Weight +120, Speech +20 |
-
-**Dibella.** Grace in the room, and the wit to use it.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Devoted (50) | Dibella's Grace | Speech +13, Fortify Magicka +15 |
-| Champion (85) | Dibella's Inspiration | Speech +25, Fortify Magicka +40 |
-
-**Julianos.** Patient study, returned as a deeper well to draw from.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Devoted (50) | Julianos's Wisdom | Fortify Magicka +25, Magic Resistance +5% |
-| Champion (85) | Julianos's Insight | Fortify Magicka +40, Magic Resistance +15% |
-
-**Kynareth.** The open air keeps you moving longer than the road should allow.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Devoted (50) | Kynareth's Breath | Fortify Stamina +25, Magic Resistance +5% |
-| Champion (85) | Kynareth's Sky | Fortify Stamina +40, Magic Resistance +13% |
-
-**Talos.** The Hero-God arms the man who kept faith with him anyway.
-
-| Tier | Blessing | What you get |
-|------|----------|--------------|
-| Devoted (50) | Talos's Resolve | Armor +30, One-Handed +8 |
-| Champion (85) | Talos's Triumph | Armor +50, One-Handed +20 |
-
-Talos is special: his blessings are reached only through faithful defiance, and they are gated by your Concordat standing. You cannot become a Talos Champion while publicly enforcing the ban unless a fresh, costly act of defiance breaks that pattern first.
+- **The Divines' Regard (broad)** - Seeker: Poison Resistance +10%; Devoted: Poison Resistance +10%, Disease Resistance +10%
+- **Akatosh** - Devoted: Fortify Magicka +25, Magic Resistance +5%; Champion: Maximum Health +30, Magic Resistance +15%
+- **Mara** - Devoted: Restoration +13, Resist Magic +5%; Champion: Restoration +23, Resist Magic +15%
+- **Arkay** - Devoted: Disease Resistance +15%, Maximum Health +20; Champion: Disease Resistance +27%, Maximum Health +30
+- **Stendarr** - Devoted: Block +13, Armor +30; Champion: Block +25, Armor +50
+- **Zenithar** - Devoted: Carry Weight +65, Speech +8; Champion: Carry Weight +120, Speech +20
+- **Dibella** - Devoted: Speech +13, Fortify Magicka +15; Champion: Speech +25, Fortify Magicka +40
+- **Julianos** - Devoted: Fortify Magicka +25, Magic Resistance +5%; Champion: Fortify Magicka +40, Magic Resistance +15%
+- **Kynareth** - Devoted: Fortify Stamina +25, Magic Resistance +5%; Champion: Fortify Stamina +40, Magic Resistance +13%
+- **Talos** - Devoted: Armor +30, One-Handed +8; Champion: Armor +50, One-Handed +20
 
 The Imperials have **no scripted Champion power** - each Divine's Champion tier is a strong passive, and the reward is the recognition itself: the god you kept faith with names you at last.
 

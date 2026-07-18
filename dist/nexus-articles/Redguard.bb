@@ -72,95 +72,20 @@ There is no separate reputation meter for Redguards. Your sect is your standing,
 
 [size=5][b]Quests That Move Your Standing[/b][/size]
 
-Follow the main quest from Helgen to Alduin's defeat, and every god available to your race will judge its turning points through their own values.
-
-These are not Redguard quests - they are the ordinary business of Skyrim, seen through Yokudan eyes. Your gods are watching how you handle the dead, the breakthrough, and the blade.
-
-[b]Tu'whacca[/b] (death duty, the soul-keeper)
-
-[list]
-[*][b]Glory of the Dead[/b] [i]Cured Kodlak's beast-taint[/i] - Helps - small
-[*][b]Glory of the Dead[/b] [i]Gave him funeral rites and passage to Sovngarde[/i] - Helps - milestone
-[*][b]The Jagged Crown[/b] [i]Destroyed the draugr of Korvanjund[/i] - Helps - small
-[*][b]The Black Star[/b] [i]Bound souls into the corrupted Star[/i] - Hurts - small
-[*][b]The Break of Dawn[/b] [i]Destroyed the necromancer Malkoran[/i] - Helps - small
-[*][b]The Taste of Death[/b] [i]Desecrated the honored dead at Namira's table[/i] - Hurts - small
-[*][b]The Staff of Magnus[/b] [i]Laid the risen dead of Labyrinthian low[/i] - Helps - small
-[*][b]Laid to Rest[/b] [i]Destroyed the risen dead[/i] - Helps - small
-[*][b]The Book of Love[/b] [i]Guided two long-dead souls to rest[/i] - Helps - small
-[/list]
-
-[b]HoonDing[/b] (make-way, prove by struggle)
-
-[list]
-[*][b]Proving Honor[/b] [i]Won my place by a judged trial[/i] - Helps - milestone
-[*][b]Message to Whiterun[/b] [i]Held the line at Whiterun against the dragon[/i] - Helps - small
-[*][b]Dragon Rising[/b] [i]Defended Whiterun and slew the watchtower dragon[/i] - Helps - small
-[*][b]The Way of the Voice[/b] [i]Passed the Greybeards' trials[/i] - Helps - milestone
-[*][b]The Horn of Jurgen Windcaller[/b] [i]Completed the Greybeards' final trial[/i] - Helps - milestone
-[*][b]A Blade in the Dark[/b] [i]Slew Sahloknir in open battle[/i] - Helps - small
-[*][b]Alduin's Bane[/b] [i]Made way against the World-Eater[/i] - Helps - milestone
-[*][b]The World-Eater's Eyrie[/b] [i]Pressed on against Alduin's escape[/i] - Helps - small
-[*][b]Sovngarde[/b] [i]Crossed the devouring mist to Shor's hall[/i] - Helps - small
-[*][b]Dragonslayer[/b] [i]Defeated Alduin against impossible odds[/i] - Helps - milestone
-[/list]
-
-[b]Leki[/b] (sword-song, honorable conduct)
-
-[list]
-[*][b]Take Up Arms[/b] [i]Faced Vilkas one-on-one in a trial of arms[/i] - Helps - small
-[*][b]Innocence Lost[/b] [i]Cold-blooded murder of Grelod[/i] - Hurts - small
-[*][b]With Friends Like These[/b] [i]Murdered a bound captive[/i] - Hurts - small
-[*][b]Bound Until Death[/b] [i]Murder of the defenseless bride[/i] - Hurts - small
-[*][b]Dragon Rising[/b] [i]Slew the watchtower dragon in open battle[/i] - Helps - small
-[*][b]A Blade in the Dark[/b] [i]Slew Sahloknir in open battle[/i] - Helps - small
-[*][b]Alduin's Bane[/b] [i]Met Alduin in worthy single combat[/i] - Helps - small
-[/list]
+Many of Skyrim's main-quest and faction milestones are read as deeds by your gods, and they move your standing the moment you finish them - a milestone honored, or an offense committed. You do not need to seek them out: play the story and your gods judge its turning points through their own values. As each one lands, the Book of Days and a toast tell you which god took note and why.
 
 [size=5][b]Bonuses by Tier[/b][/size]
 
-Each god's gifts grow as you climb from Seeker (25 piety) to Devoted (50) to Champion (85). Values may be tuned in later updates.
-
-[b]Ancestor Spine[/b] - the always-on blessing of your ancestors. It is shared across all sects and caps at Devoted.
+The Ancestor Spine is your always-on broad blessing (caps at Devoted); a focused god carries you to Champion. Each grows through Seeker (25), Devoted (50), and Champion (85), and only the highest tier you have reached is active.
 
 [list]
-[*][b]Seeker (25)[/b] [i]Ancestor Spine[/i] - Magic Resistance +3%
-[*][b]Devoted (50)[/b] [i]Ancestor Spine[/i] - Magic Resistance +5%, Armor +30
+[*][b]Ancestor Spine (broad)[/b] - Seeker: Magic Resistance +3%; Devoted: Magic Resistance +5%, Armor +30
+[*][b]Tu'whacca[/b] - Seeker: Magic Resistance +5%; Devoted: Magic Resistance +10%, and the kept death-rite restores your health (event-driven, flat restore -- felt under Requiem); Champion: Magic Resistance +20%, and the kept death-rite restores your health in full measure (event-driven, flat restore -- felt under Requiem)
+[*][b]HoonDing[/b] - Seeker: One-Handed +5; Devoted: One-Handed +13, Movement Speed +3%; Champion: One-Handed +25, Movement Speed +6
+[*][b]Leki[/b] - Seeker: One-Handed +5; Devoted: One-Handed +13, Critical Chance +5%; Champion: One-Handed +25, Critical Chance +13%
 [/list]
 
-This blessing steps aside while you have a focused god, because the focused god's gifts are stronger.
-
-[b]Tu'whacca[/b] - the soul-keeper's ward. The best fit for Crown and Ash'abah.
-
-[list]
-[*][b]Seeker (25)[/b] [i]Tu'whacca's Ward[/i] - Magic Resistance +5%
-[*][b]Devoted (50)[/b] [i]Tu'whacca's Ward[/i] - Magic Resistance +10%, and the kept death-rite restores your health (event-driven, flat restore - felt under Requiem)
-[*][b]Champion (85)[/b] [i]Tu'whacca's Far Shores[/i] - Magic Resistance +20%, and the kept death-rite restores your health in full measure (event-driven, flat restore - felt under Requiem)
-[/list]
-
-At Champion, Tu'whacca keeps the way to the Far Shores open for you and yours.
-
-[b]HoonDing[/b] - the way made. The best fit for Forebear.
-
-[list]
-[*][b]Seeker (25)[/b] [i]HoonDing's Way[/i] - One-Handed +5
-[*][b]Devoted (50)[/b] [i]HoonDing's Way[/i] - One-Handed +13, Movement Speed +3%
-[*][b]Champion (85)[/b] [i]HoonDing's Way Made[/i] - One-Handed +25, Movement Speed +6
-[/list]
-
-[b]Leki[/b] - the sword-song. The best fit for Crown and Forebear.
-
-[list]
-[*][b]Seeker (25)[/b] [i]Leki's Sword-Song[/i] - One-Handed +5
-[*][b]Devoted (50)[/b] [i]Leki's Sword-Song[/i] - One-Handed +13, Critical Chance +5%
-[*][b]Champion (85)[/b] [i]Leki's Spirit Sword[/i] - One-Handed +25, Critical Chance +13%
-[/list]
-
-At Champion, the Spirit Sword sings through your hand.
-
-Remember that only one temporary favor blessing can be active at a time across all your gods.
-
-[b]Two Redguard Champions carry a special power.[/b] Tu'whacca's death-rite restoration (from Devoted, shown above) restores a flat measure of your health once a day when you keep a death-rite - a true heal, felt even under Requiem. And at HoonDing's Champion tier, "HoonDing Makes Way": once a day a lethal blow is refused and the god opens the road back from the edge - Redguard's one cheat-death. Leki's Champion tier is a strong passive whose reward is the recognition itself.
+[b]Two Redguard Champions carry a special power.[/b] Tu'whacca's death-rite restoration (from Devoted) restores a flat measure of your health once a day when you keep a death-rite - a true heal, felt even under Requiem. And at HoonDing's Champion tier, "HoonDing Makes Way": once a day a lethal blow is refused and the god opens the road back from the edge - Redguard's one cheat-death. Leki's Champion tier is a strong passive whose reward is the recognition itself.
 
 [size=5][b]Unique Mechanics[/b][/size]
 
