@@ -1466,8 +1466,9 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   }
 
   if (
-    !app.includes("const MIN_TOAST_DURATION_MS = 1800;") ||
-    !app.includes("const DEFAULT_TOAST_DURATION_MS = 5600;") ||
+    // 1.0.3: toast lifetimes lengthened for 4K / sentence-length readability (was 1800 / 5600).
+    !app.includes("const MIN_TOAST_DURATION_MS = 3600;") ||
+    !app.includes("const DEFAULT_TOAST_DURATION_MS = 8000;") ||
     !app.includes("Math.max(MIN_TOAST_DURATION_MS, numberOrZero(copy.duration) || DEFAULT_TOAST_DURATION_MS)")
   ) {
     fail("Prisma toast default lifetime must be explicit and long enough for sentence-length gameplay toasts.", DEVOTION_PRISMA_VIEW);

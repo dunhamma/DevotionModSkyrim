@@ -3,6 +3,40 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
+## 1.0.3 — 2026-07-25
+
+- **Fixed: runaway stat drift (save-corrupting).** Devotion applies its neglect,
+  disfavor, pact-price, and blessing effects as toggled abilities, but 418 of its
+  422 value-modifier magic effects were missing the engine's `Recover` flag.
+  Without it, each application baked the actor-value change in permanently and did
+  NOT revert it on removal — so every on/off cycle shifted the stat further, for
+  the life of the save. Negative effects drifted stats ever more negative (two
+  users reported e.g. -22131% Magic Resistance and -5000 armor rating); positive
+  effects drifted stats invisibly upward. All value-modifier effects now carry
+  `Recover`, so removal reverts cleanly and the drift stops. No new game required.
+  - **Curing an already-affected save:** the flag stops further drift, but stat
+    residue already baked into an old save stays until you correct it. Devotion is
+    the only thing driving these values to extremes, so with no Devotion penalty
+    currently active, open the console, read the value, then add the residue back.
+    Use YOUR reading, not these numbers: `player.getav ResistMagic` — if it shows a
+    large negative like -22131, `player.modav ResistMagic 22131`; likewise
+    `player.getav DamageResist` — `player.modav DamageResist <the shown amount>`.
+    Re-check with `getav`, and repeat for any other value that looks out of range.
+- **Fixed: dungeon music in safe interiors while cursed.** For a player under a
+  lycanthropy or vampirism "curse", Devotion added a global music track — built
+  from Skyrim's dungeon music — that overrode the normal music everywhere,
+  including inns, homes, and temples, until the curse was cured. The persistent
+  override is removed; the curse now plays a single short sting at the moment it
+  takes hold or lifts. Saves stuck with the dungeon music clear themselves
+  automatically on the next load.
+- **Fixed: garbled Redguard "Remembering" message.** The observance-choice message
+  contained bare `%` characters the game misread as format codes, logging a
+  warning and mangling the line. Reworded to display cleanly.
+- **Improved: larger, longer-lasting corner notifications on high-res displays.**
+  The bottom-right toast pop-ups are enlarged on 1440p and 4K screens (they were
+  rendering at roughly half physical size on a 4K overlay) and stay on screen a
+  little longer so there is time to read them. 1080p and below are unchanged.
+
 ## 1.0.1 — 2026-07-18
 
 - **Fixed: crash to desktop when cooking or tempering.** Devotion's "Craft Item"

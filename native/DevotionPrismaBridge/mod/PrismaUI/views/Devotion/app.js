@@ -2209,8 +2209,8 @@
     }
   };
 
-  const MIN_TOAST_DURATION_MS = 1800;
-  const DEFAULT_TOAST_DURATION_MS = 5600;
+  const MIN_TOAST_DURATION_MS = 3600;
+  const DEFAULT_TOAST_DURATION_MS = 8000;
 
   const showToast = (toastPayload = {}) => {
     const copy = resolveEventPayload(toastPayload);
