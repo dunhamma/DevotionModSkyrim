@@ -36,6 +36,21 @@ folder; this file records what changed, not the full source.
   The bottom-right toast pop-ups are enlarged on 1440p and 4K screens (they were
   rendering at roughly half physical size on a 4K overlay) and stay on screen a
   little longer so there is time to read them. 1080p and below are unchanged.
+- **Fixed: Daedric pact prices and pool boons did nothing.** The maximum-pool
+  parts of every Daedric pact — the Health/Magicka/Stamina "price" (Azura,
+  Vaermina, Sanguine, Clavicus Vile, Hermaeus Mora, Peryite) and the pool "boon"
+  (Sheogorath, Namira, Hircine) — were authored as current-value modifiers the
+  game regenerates away (and the pact wrapper restored immediately), so they
+  imposed and granted nothing. They now correctly raise/lower your **maximum**
+  pool, so pacts have the felt cost and benefit they describe. The skill, combat,
+  and resistance boons were already working and are unchanged.
+- **Fixed: Hermaeus Mora's Champion boon was mis-wired.** Its two effects both
+  pointed at the same Magicka effect, so a Mora Champion got doubled Magicka and
+  no Alteration. It now grants the contracted **Alteration +20 and Fortify
+  Magicka +20**.
+- **Changed: cleaned up Daedric path scripting.** Removed a redundant duplicate
+  script attached to all 16 Daedric-path quests (the concrete script already
+  inherits the base). No player-facing change; a fresh save picks it up.
 
 ## 1.0.1 — 2026-07-18
 
