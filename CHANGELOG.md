@@ -51,6 +51,12 @@ folder; this file records what changed, not the full source.
 - **Changed: cleaned up Daedric path scripting.** Removed a redundant duplicate
   script attached to all 16 Daedric-path quests (the concrete script already
   inherits the base). No player-facing change; a fresh save picks it up.
+- **Improved: curse cures restore instantly, with clearer Redguard vampire-cure
+  wording.** Curing lycanthropy or vampirism now re-applies your reward/neglect
+  layer immediately instead of on the next in-game dawn, so any curse-linked stat
+  penalty lifts at once. The Redguard vampire-cure message now states plainly that
+  the ancestors' protection returns when you take up the death-duty again — it is
+  intentionally withheld until then, not a bug.
 
 ## 1.0.1 — 2026-07-18
 

@@ -19274,6 +19274,11 @@ Function HandleCurseStateTransition(Int oldState, Int newState, String reason)
     ApplyCurseRaceHandlers(oldState, newState, reason)
     _suppressCurseTransitionOutputs = previousSuppress
 
+    ; Re-sync the reward/neglect layer immediately so a curse onset/cure applies or
+    ; reverts the race neglect ability now, instead of waiting for the next dawn/re-sync
+    ; tick. With Recover-flagged neglect MGEFs, cure cleanly restores the actor value.
+    SyncFirstTierRaceRewardRuntime()
+
     Trace(1, "Curse transition " + oldState + " -> " + newState + " (" + reason + ")")
     if suppressOutputs
         Trace(2, "Curse transition surfaced silently during load reconciliation.")
@@ -20448,7 +20453,7 @@ Function ApplyRedguardCurseHandlers(Int oldState, Int newState, String reason)
         StorageUtil.SetIntValue(None, "PDV.Redguard.VampireReentryNeeded", 1)
         StorageUtil.SetIntValue(None, "PDV.Redguard.VampireFeedbackShown", 0)
         if StorageUtil.GetIntValue(None, "PDV.Redguard.VampireCureFeedbackShown") != 1
-            ShowRedguardMessage(PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry, "The thirst is gone. Tu'whacca's re-entry remains to restore the cycle.", suppressModal)
+            ShowRedguardMessage(PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry, "The thirst is gone, but the ancestors' protection stays withheld until you take up the death-duty and re-enter Tu'whacca's cycle.", suppressModal)
             StorageUtil.SetIntValue(None, "PDV.Redguard.VampireCureFeedbackShown", 1)
         endIf
     elseIf oldState == 1
