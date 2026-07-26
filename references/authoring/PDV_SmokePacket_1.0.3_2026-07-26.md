@@ -4,6 +4,29 @@ Run on a **fresh save**, on the rebuilt zip. The Papyrus surface changed
 substantially since the first 1.0.3 packet (the DrHeisen port landed), so this
 supersedes it — re-run the whole thing, not just the new rows.
 
+## Results so far (owner, 2026-07-26)
+
+| Item | Result |
+|---|---|
+| **GATE 1** stat drift / disfavor sting | **PASS** — WarHonor Light: OneHanded −3 on apply, exact baseline on clear, stable across repeats. Confirms both the `Recover` fix and the `Detrimental` + positive-magnitude convention. |
+| **GATE 3** Daedric prices | **PASS** — family repaired (48/48 `Detrimental` + `PowerAffectsMagnitude`, 0 negative magnitudes) and runtime-proven. See `handoff/PDV_AzuraPrice_ActorValueDiagnosis_Handoff_2026-07-26.md`. |
+| **GATE 2** curse music (vampire) | **PASS** — no persistent dungeon bed; interior music continued normally; short sting heard on **both** onset and cure. |
+| GATE 2 instant restore + vampire message | assigned to second tester (her Tests 5 and 6) |
+| GATE 4 4K toasts | size confirmed bigger; **box-width fix landed afterwards** — needs one more glance |
+| Checks 5, 7, 8, 9 | assigned to second tester |
+| Check 6 stat-repair buttons | owner, throwaway save, still open |
+| Probes 10, 11 | still open, observation-only, feed 1.0.4 |
+| Faucet cache (C2) — see below | still open, highest silent-failure risk in the port |
+
+**Faucet cache spot check (not a numbered gate, but the one worth doing).**
+The C2 port replaced a per-call JSON scan with a cache built once at load from a
+hand-transcribed 21-key list; a typo there kills a faucet silently. With debug
+level 3: `player.additem 34C5D 1` (Nord Mead, on Sanguine's `revel_indulge`
+faucet), drink it, then search `Papyrus.0.log` for `RouteQuestReactionFaucet`.
+Either `RouteQuestReactionFaucet complete: Sanguine.revel_indulge` **or**
+`QuestReaction faucet repeat blocked: Sanguine ...` is a pass — both mean the
+form was recognised. Neither line appearing is the failure.
+
 **Setup**
 1. Fresh save, 1.0.3 installed, **restart Skyrim** so the rebuilt `.pex` load.
 2. **Unlock the debug pages** — there is no in-game toggle. In the console:
@@ -49,21 +72,21 @@ now carry positive magnitudes — your 14 disfavor flips, plus the 8 finished
 afterwards: `Neglect_Kyne` 8, `Neglect_Tsun` 15, `Neglect_{Shor,Stuhn,Talos,
 Arkay,Dibella}` 5, and `PDV_Bless_Redguard_Spine_AshAbah` `Effects[2]` 5.
 ⚠ **WarHonor cannot detect this bug class** — it was already positive before the
-flip. To actually exercise it, also run a **Kyne or Talos neglect** case (MCM →
+flip. To actually exercise the disfavor/neglect convention, also run a **Kyne
+or Talos neglect** case (MCM →
 `Prime neglect eligible` / `Run neglect pass` with that patron active) and
-confirm the value moves DOWN. The 60 non-`Detrimental` negative-magnitude spells
-(9 race neglects, 45 Daedric prices, 4 Breton creed losses) are the other valid
-convention and were deliberately left alone.
+confirm the value moves DOWN.
 
-1. `player.getav magicresist` — record the baseline.
-2. MCM debug → **Apply domain sting** → `getav` again (penalty applied).
-3. **Clear active disfavor** → `getav` — must be **exactly** baseline.
-4. Repeat 3–4 times. Pre-1.0.3 each cycle walked further negative.
+**Daedric price repair (2026-07-26):** all 48 price MGEFs now use
+`Detrimental + PowerAffectsMagnitude`, and all 48 carrier spells store the
+positive absolute price magnitude. Their contract values remain negative
+because those values describe the player-facing penalty. Direct readback and
+the standard verifier pass all 48. The GATE 3 Azura and Mephala representative
+runtime sweeps passed on 2026-07-26.
 
-**Also record the DIRECTION in step 2** — this is the open A3 decision:
-- value goes **DOWN** → stings penalize correctly, nothing further to do.
-- value goes **UP** → the `Detrimental` + negative-magnitude pairs are applying
-  as buffs; the ~21-record magnitude flip ships before release.
+Do not use the older generic `magicresist` steps for this gate. The concrete
+WarHonor / `onehanded` route above is the authoritative repeat-cycle proof, and
+its downward direction has already passed.
 
 ## GATE 2 — curse block
 
@@ -83,20 +106,68 @@ werewolf / vampire / none**.
 
 ## GATE 3 — Daedric pacts
 
-- **Prices:** select Azura (or Vaermina/Sanguine/Clavicus/Peryite). Note max
-  Magicka/Health/Stamina. **Force Seeker** → **maximum** pool drops, price shows
-  in Active Effects. Devoted/Champion deepen it. **Force lapse** → exact baseline.
+- **Post-repair Azura tier sweep:** use the same Redguard save. Wait five
+  seconds after load, select **Azura**, then **Reset Prince path**. Close the
+  MCM and record:
+
+  ```text
+  player.getavinfo stamina
+  player.getav stamina
+  ```
+
+  Reopen the MCM and test each tier separately. After every click, close the
+  MCM, confirm the named Azura price in Active Effects, and repeat both console
+  commands:
+
+  1. **Force Seeker** — Stamina is 10 below the Reset baseline.
+  2. **Force Devoted** — Stamina is 20 below the Reset baseline.
+  3. **Force Champion** — Stamina is 30 below the Reset baseline.
+  4. **Force lapse** — Stamina returns exactly to the Reset baseline and the
+     Azura price disappears.
+
+  Compare every tier with the Reset baseline, not with the preceding tier.
+  The Redguard Spine Forebear +10 reward can mask the net modifier: on the
+  proven save, Reset was +10, Seeker netted to 0, Devoted should net to -10,
+  and Champion should net to -20.
+  **PASS 2026-07-26:** all three deltas, named Active Effects, and exact Lapse
+  restoration confirmed.
+- **Post-repair non-resource sweep:** **Reset Prince path**, select
+  **Mephala**, and record `player.getavinfo speechcraft` plus
+  `player.getav speechcraft`. Test Seeker / Devoted / Champion exactly as
+  above. Each tier must show its Mephala price in Active Effects and lower
+  Speech by 8 / 12 / 15 from the Reset baseline. **Force lapse** must restore
+  the exact baseline.
+  **PASS 2026-07-26:** all three deltas, named Active Effects, and exact Lapse
+  restoration confirmed.
+- **Optional second resource family:** repeat with **Vaermina** and Health.
+  Expected deltas from Reset are -8 / -15 / -20.
+- **Redguard masking regression:** after loading a completed Redguard save,
+  wait five seconds, then **Reset Prince path**. Before pressing **Force
+  Seeker**, `Redguard Spine Forebear` must already be present and
+  `player.getavinfo stamina` must expose its +10 modifier. Force Azura Seeker
+  must change that modifier from +10 to 0; it must not be the action that first
+  grants Forebear. Lapse must restore +10.
+  **PASS 2026-07-26:** load reconciliation granted Forebear first; Seeker
+  produced the -10 delta and lapse restored the +10 baseline.
 - **Pool boons:** Sheogorath / Namira / Hircine → force a tier → max pool rises;
   lapse → baseline.
+  No additional 2026-07-26 rerun is required for the price repair: these
+  unchanged positive-boon mechanics are already covered by the existing
+  Daedric runtime ledger.
 - **Mora Champion:** select Hermaeus Mora → **Force Champion** → Active Effects
   must show **Alteration +20 AND Fortify Magicka +20** (was doubled Magicka, no
   Alteration). Confirm `player.getav alteration`.
+  **PASS 2026-07-26:** Alteration +20, maximum Magicka +20, Stamina price -30,
+  correct Active Effects, and tested baselines restored on Lapse.
 - **Reset Prince path** between Princes.
 
 ## GATE 4 — 4K toasts
 
 Trigger any toast. Noticeably larger than 1.0.2 and on screen longer. 1080p
 unchanged (optional to verify).
+
+**PASS 2026-07-26:** owner confirmed the enlarged 4K presentation and longer
+onscreen duration. No repeat is required.
 
 ---
 
@@ -111,9 +182,19 @@ something that used to work.
    Nothing unexpected should fire. (Every option ID is now reset on page build;
    the failure mode this guards against is a click landing on a *different*
    page's handler — including destructive debug ones.)
+
+   **PASS 2026-07-26:** Owner visited all named MCM/debug pages, returned to
+   Player, and exercised familiar controls without cross-page or destructive
+   debug misrouting.
+
 6. **Stat repair buttons (new).** Player → Maintenance → **Check stat damage** —
    read-only, must change nothing. Then **Repair stats** on a **throwaway save**
    only: confirm prompt appears, repair runs, residue readout shows afterwards.
+
+   **DEFERRED 2026-07-26 — not a failure:** The owner does not currently have a
+   suitable damaged-stat test state. Leave this manual-proof slot open for an
+   external tester with a disposable save; continue the owner run at B14.
+
 7. **Shrine prayer still credits (B14).** Pray at a shrine shortly after a load;
    piety should land. The charge is now spent only when the route succeeds, so
    an early prayer must not silently eat the day.
