@@ -21206,6 +21206,8 @@ Function ApplyRedguardInitialChoice(Int sectValue, String reason)
         ShowRedguardSectEntry(normalized)
     endIf
     StorageUtil.SetIntValue(None, "PDV.Redguard.SetupComplete", 1)
+    SyncFirstTierRaceRewardRuntime()
+    RequestPanelRefresh()
     EndRaceSetupQuietPresentation()
 EndFunction
 
@@ -26255,7 +26257,26 @@ Function KickstartIfStalled()
     endIf
     RegisterForSingleUpdate(1.0)
     EnsureQuestReactionQueueRunning()
+    ReconcileRedguardSpineRewardAfterLoad()
     Trace(2, "Lifecycle watchdog: master poll and quest-reaction worker re-armed on load.")
+EndFunction
+
+Function ReconcileRedguardSpineRewardAfterLoad()
+    if GetPlayerOriginRaceIndex() != ORIGIN_REDGUARD
+        return
+    endIf
+    if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1 && StorageUtil.GetIntValue(None, "PDV.Redguard.SetupComplete") != 1
+        return
+    endIf
+
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return
+    endIf
+
+    SyncRedguardSpineBoon(playerRef, True, GetActiveRedguardSpineSect())
+    RequestPanelRefresh()
+    Trace(2, "Redguard spine reward reconciled after player load.")
 EndFunction
 
 ; Manager-side pass-through so a caller never needs the worker handle. The worker's own
