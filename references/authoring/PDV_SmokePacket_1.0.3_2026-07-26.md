@@ -14,14 +14,50 @@ supersedes it — re-run the whole thing, not just the new rows.
 | GATE 2 instant restore + vampire message | assigned to second tester (her Tests 5 and 6) |
 | **GATE 4** 4K toasts | **PASS** — larger text confirmed, and the box now sizes to content with edges still aligned (re-checked after the width fix). |
 | **Faucet cache (C2)** — see below | **PASS** — verified through the full chain, see log evidence below. |
-| Checks 5, 7, 8, 9 | assigned to second tester |
+| **Check 7** shrine prayer (B14) | **Mechanism PASS**, surfacing re-test pending — see note below. |
+| Checks 5, 8, 9 | assigned to second tester |
 | Check 6 stat-repair buttons | owner, throwaway save, still open (optional) |
 | Probes 10, 11 | still open, observation-only, feed 1.0.4 (optional) |
 
 **Owner-side testing is complete.** Every reported defect class 1.0.3 set out to
-fix is now runtime-confirmed. The two remaining owner rows are optional: the
+fix is now runtime-confirmed. The remaining owner rows are optional: the
 stat-repair buttons are a new convenience feature rather than a regression risk,
 and the classification probes are observation-only and feed 1.0.4 either way.
+
+### Check 7 — shrine prayer: what actually happened (2026-07-26)
+
+Reported as "clicked shrine, no toast or Book entry". **Not a regression.** The
+log shows the full B14 chain completing:
+
+```text
+17:43:45  [PDV] Shrine prayer skipped outside origin roster: Kynareth from Kynareth source ...
+17:43:45  [PDV] Shrine prayer skipped outside origin roster: Kyne from Kynareth source ...
+17:43:45  [PDV] Shrine prayer skipped outside origin roster: Khenarthi from Kynareth source ...
+17:43:45  [PDV] EventBus: RouteShrinePrayer complete: Kynareth / Kyne / Khenarthi
+```
+
+The effect fired, the bus resolved, the manager was reached, the route completed
+— so the ported stamp-after-route logic is sound. Nothing surfaced because the
+player was **Redguard** at a **Kynareth** shrine, and
+`IsDashboardDeityInOriginRoster` deliberately withholds piety and journal
+movement for deities outside the player's cultural roster (the source calls
+these "ambient world clicks").
+
+**To finish this check** (origin has since been set to Nord via the misleadingly
+named **Curse proof race** control, whose subtitle is "Rewrite PDV origin"):
+
+- The Nord roster is NOT baseline-gated — it accepts Kyne, Kynareth, Talos,
+  Shor, Tsun, Stuhn, Mara, Akatosh, Arkay, Stendarr, Julianos, Dibella and
+  Zenithar under both Old Ways and Nine Divines.
+- ⚠ **Use a DIFFERENT deity's shrine than the one already prayed at today.** The
+  once-per-day charge is stamped by the magic effect *before* the roster gate is
+  consulted, so that shrine's charge is already spent even though it awarded
+  nothing. Re-praying there returns silently and reads as a second failure.
+- **Khenarthi will still log "skipped outside origin roster"** on a Nord — she is
+  Khajiit-only, and the Kynareth shrine routes all three aspect names. Correct,
+  not a failure.
+
+Expected on a fresh deity's shrine: toast, Book of Days entry, piety.
 
 **Faucet cache spot check — PASSED 2026-07-26.** The C2 port replaced a per-call
 JSON scan with a cache built once at load from a hand-transcribed 21-key list; a

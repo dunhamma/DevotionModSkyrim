@@ -128,6 +128,28 @@ knobs were cut as planned. Their inlining of the `dayKey`/`countKey`/
 `lastFireKey` locals in `PDV_DeityBase` was also restored — the Phase 7 audit
 pins those names.
 
+### New finding — shrine daily charge spent on a prayer that awards nothing
+
+Surfaced while triaging check 7 on 2026-07-26. **Pre-existing, not a 1.0.3
+regression, not fixed.**
+
+`PDV_ShrinePrayerEffect` stamps its once-per-day key as soon as
+`RouteShrinePrayer` reports the route dispatched — which is correct as far as
+B14 goes. But the manager then drops each deity in
+`IsDashboardDeityInOriginRoster` when the deity is outside the player's cultural
+roster, so a player praying at a foreign shrine **burns that shrine's daily
+charge for zero piety, zero toast and zero journal entry**, with no feedback.
+
+This is the same defect class B14 fixed one layer up (charge spent before the
+outcome is known); B14 just moved the boundary from "before routing" to "before
+the roster gate". The honest fix is for the route to report whether any deity
+actually took the award, and stamp only then — i.e. push the Bool return one
+level deeper, through `RouteShrinePrayer` into the manager's per-deity handler.
+
+Worth noting the roster gate itself is intentional and should stay: praying at
+another culture's shrine is an ambient world click, not devotion. The bug is
+only that it costs the player their daily charge.
+
 ### Added to the 1.0.3 smoke packet (two cheap probes, debug level 1–3)
 
 - **Brawl an NPC** — does a brawl punch route `EVT_ASSAULT_INNOCENT`? If yes, gate assault routing behind the vanilla `DGIntimidateQuest` brawl check.
