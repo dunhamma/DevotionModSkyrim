@@ -1,4 +1,32 @@
-# PDV Ancestral-Spine Parity Audit (2026-06-24)
+# PDV Ancestral-Spine Parity Audit (2026-06-24) — RETIRED 2026-07-19
+
+> **RETIRED. Do not cite this document for what ships.** Its central verdict
+> table ("NOT at stacked parity") was disproven against `Devotion.esp` on
+> 2026-07-19 via houseCARL VMAD reads. Substrate work through early-to-mid July
+> landed after this audit and invalidated its per-race conclusions.
+>
+> **Specifically disproven:**
+>
+> | Audit claimed | ESP reality (2026-07-19) |
+> |---|---|
+> | Nord: **THIN**, "no substrate", no always-on boon | `PDV_Substrate_NordAncestor` `07159C` — all 3 slots filled (Ancestor's Steadiness / Regard / Honor) |
+> | Imperial: patron-gated, no unconditional boon | `PDV_Substrate_ImperialAncestor` `0715B6` — all 3 filled; High = Health +15, Stamina +15 |
+> | Breton: patron-gated, no unconditional boon | `PDV_Substrate_BretonAncestor` `0715BD` — all 3 filled; High = Magic Resist +12% |
+> | Altmer: patron-gated, no unconditional boon | `PDV_Substrate_AltmerAncestor` `0715AC` — all 3 filled (Ordered / Disciplined / Exemplar Heritage) |
+> | "only 3 substrate races" | 7 substrate quests ship |
+>
+> `SyncImperialAncestorSubstrate` and its siblings gate on **race only**, not
+> patron state, so these boons ride alongside the patron boon.
+>
+> Not re-verified: the Redguard / Orc / Bosmer rows (those races genuinely have
+> no substrate quest), and the non-boon dimensions (minus stacks, diegetic
+> surfaces, text depth). Treat all of it as unverified rather than false.
+>
+> **Instead:** read the substrate QUST VMAD directly via houseCARL
+> (`cross_plugin_query type=QUST plugins=[Devotion.esp] editorid_contains=Substrate`,
+> then `read_record <quest> fields=[VirtualMachineAdapter.Scripts[0].Properties] depth=3`).
+> The parity *model* in "The parity model — Spine Stack Score" may still be
+> reusable as a scoring frame; its per-race scores are not.
 
 **Source:** workflow `ancestral-spine-audit` (10 parallel Explore agents + synthesis, 1.2M tokens).
 **Scope:** each race's *always-active cultural/ancestral spine* — the layer beneath patron/sect/path
