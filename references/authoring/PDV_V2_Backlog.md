@@ -246,7 +246,135 @@ job.
 
 ---
 
-## 7. Triage note
+## 7. Orc Trinimac apostasy — fourth Orc lane
+
+**Decision:** Owner ruling 2026-07-19 — add a Trinimac apostasy path as a
+**fourth Orc lane**, alongside `Stronghold` / `City` / `Legion-Exile`. An Orc
+who rejects Malacath and reveres Trinimac unfallen.
+
+**This REVERSES a standing lock.** It is not deferred work being picked up; it
+is a deliberate reversal, and it cannot be built until the prior decisions are
+formally retracted. What currently forbids it:
+
+| Authority | What it says |
+|---|---|
+| `PDV_Architecture_v3.md:527` (§3.3, locked 2026-05-16) | "For Orcs, Trinimac remains `TABOO` fringe pressure only, not a normal Orc core path **or fourth Orc lane**." |
+| `PDV_Architecture_v3.md:4404` | Same lock restated in the v3.3 decisions log. |
+| `race-sheets/PDV_RaceDesign_Orc.md:35` | "LOCKED as non-standard… not a core lane." |
+| `references/PDV_RaceArchitecture_DesignReference.md:2409-2429` | Trinimac rule (LOCKED); `:2429` "Do not add Trinimac or another side-god path as an early substitute for Orc depth." |
+| `references/authoring/PDV_BetaContract.csv` BC-0179, BC-0765 | Contract rows forbidding an Orc core Trinimac lane. |
+| `docs/player-guides/races/Orc.md:17,155` | **Shipped player-facing anti-promise:** "You will not build devotion to Trinimac the way you build it to Malacath." |
+
+The last row is the heaviest: it is a published commitment to players, not an
+internal design note. Reversing it is a *change of promise*, and should be
+communicated as such (changelog / mod page), not slipped in.
+
+**Why V2, not V1:** 1.0 has shipped the anti-promise. A fourth lane needs its
+own life-mode state value, reward family, signal routing, offer/apostasy
+mechanic, and neglect handling — the full per-lane stack, not a reskin. It also
+reopens the Malacath-vs-Trinimac theology that §3.3 closed deliberately.
+
+**What already exists (Altmer-side, reusable):**
+
+- `PDV_Deity_Trinimac` QUST `071127` and `PDV_Deity_Trinimac.psc` (51 lines).
+  Header warns "Trinimac must never read as a second Orc reward substrate" —
+  that constraint is what this item overturns.
+- Reward family `PDV_Bless_Altmer_Trinimac_T1/T2/T3` (`07164E`/`071651`/`071654`)
+  + 5 MGEFs (One-Handed, Damage Resist). **Altmer-scoped — an Orc lane needs its
+  own records**, not these.
+- `PDV_Msg_Altmer_Trinimac_Offer` `07163E`; formal offer resolved at
+  `PDV__ManagerQuest.psc:18727`.
+- Signal `2302` `SIGNAL_ALTMER_ORTHODOX_PRESSURE` — dispatched, once-per-day.
+- Signal `2301` `SIGNAL_FALLEN_GOD_ORTHODOXY` — declared + scored + phrase-mapped
+  at `PDV__ManagerQuest.psc:14354`, **never dispatched**. Reserved in
+  `tools/pdv_reserved_signals.json:24-32` as `decision:"wire"`,
+  `owner:"thalmor-orthodox-champion"`, `expires:"2026-08-31"`.
+- 14 likes/dislikes rows in `PDV_DeityLikesDislikes.csv:92-97, 255-259, 336-338`
+  (`:336-338` are `altmer` race-scoped; the rest generic). Note `:95` —
+  accept-daedric-artifact −2.0, "a Daedric prize is the betrayal that unmade him
+  into Malacath" — which is already apostasy-shaped and would carry over.
+- `Race_Orc.md:84` — Boethiah as betrayer-of-Trinimac hostile pressure; the
+  existing Orc-Boethiah rupture (BC-0215) already uses the Trinimac→Malacath
+  narrative and is the natural narrative seam for an apostasy trigger.
+
+**Watch out — vestigial text that is NOT prior planning:** the reserved-signal
+reason string still reads "hook **Orc apostasy** / Altmer orthodoxy routes."
+That phrasing is left over from the 2026-07-06 seeding and was explicitly
+retracted on 2026-07-15 (`PDV_CuratedSignalDispatch_Forensics_2026-07-14.md:312,617`
+— "I read `Orc.md:17`'s anti-promise and missed that the live lane is Altmer").
+Do not treat that string as evidence the Orc lane was ever planned. With this
+item it becomes accurate again, but for a new reason.
+
+**First V2 step:** Get a written owner ruling that retracts the §3.3 lock and
+BC-0179/BC-0765, and decide the player-communication story for reversing the
+Orc guide's anti-promise. Only then design the lane: how apostasy is *triggered*
+(a costly, irreversible act, per the Orc life-mode doctrine that mode changes
+need sustained evidence — not one stray quest), whether it severs Malacath the
+way a Daedric pact severs a patron, and what happens to an apostate's
+Blood-Kin / stronghold access. Nothing should be recorded or scripted before
+that ruling.
+
+---
+
+## 8. ValueModifier effect convention cleanup (negative-magnitude -> positive + Detrimental)
+
+**Decision:** Deferred from the 1.0.3 hotfix (owner call, 2026-07-25). 1.0.3
+added the missing `Recover` flag to all 418 script-toggled ValueModifier magic
+effects (the actual save-corruption fix); the authoring-convention cleanup was
+explicitly deferred here to investigate whether it is worth doing for long-term
+mod hygiene.
+
+**What it is:** Devotion's neglect / disfavor / pact-price penalty effects use
+*negative* magnitude with **no `Detrimental` flag** (e.g. Neglect_Redguard_Magic
+-3 on ResistMagic). Standard authoring is *positive* magnitude + `Detrimental`
+(+ `Hostile` where apt). The effects work correctly today (they lower the stat,
+and with `Recover` they now revert on removal), so this is hygiene, not a bug.
+
+**Why deferred, not in 1.0.3:** It is orthogonal to the `Recover` fix (which
+fully resolves the drift) and carries real downstream risk. `Detrimental`
+reclassifies the effects as "negative", opening them to cure / dispel and
+remove-negative-effect mechanics (Requiem / Authoria shrine cures, cleanse
+potions) that can desync Devotion's `HasSpell`-tracked state; `Hostile` + a
+Resist Value would make the penalty resistable (a silent balance shift); and the
+magnitude sign-flip is a ~400+ SPEL edit that must move in lockstep with the flag
+or it inverts a penalty into a buff. The only upside is cosmetic (correct
+red / debuff colour in the active-effects menu).
+
+**What exists:** All 418 effects now carry `Recover` (1.0.3, ESP-verified:
+`Archetype.Type = ValueModifier AND Flags has Recover` = 422/422). Convention is
+unchanged.
+
+**First V2 step:** Decide whether the red-debuff display correctness is worth the
+cross-mod interaction surface. If yes, do it as an *isolated* pass: flip
+magnitude sign + add `Detrimental` per effect in lockstep, re-verify each AV
+direction, and test cure / dispel + magic-resist interactions under Requiem /
+Authoria before shipping. Ref: bug issue #23.
+
+---
+
+## 9. Diegetic curse-cue and atmosphere follow-ups
+
+**Decision:** Deferred from the 1.0.3 curse-music fix (2026-07-25). 1.0.3 retired
+the persistent curse "music bed" that overrode safe-interior music with vanilla
+dungeon tracks, and repointed the curse onset / cure stings to relevant vanilla
+sounds. The broader diegetic-sound direction and a few related cleanups were
+deferred here.
+
+**Deferred items:**
+
+| Item | What exists today | First V2 step |
+|---|---|---|
+| Short one-shot stings for ALL diegetic tones | 1.0.3 repointed only the curse onset / cure stings (dread -> MAGVampireTransform01SD, release -> MAGAltarsBlessingFireB2D). The other tones (reverent / revelation / absence) still use their prior vanilla magic SFX. | Owner direction: all diegetic cues should be short, relevant one-shot stings at the moment of change. Audition and, if desired, repoint the remaining tone sounds; consider owner-supplied custom audio. |
+| Curse "atmosphere" (if ever re-wanted) | Removed in 1.0.3 (was a global `MusicType.Add()` of dungeon tracks with no location scoping). | Do NOT reintroduce a global music bed. If atmosphere is wanted, use real assets + location-scoped add / remove (never blanket safe interiors), or a short one-shot cue only. |
+| Persistent `PDV_Abil_Shader_Dread` screen shader | The same curse-onset path adds a persistent "dread" screen shader (`EmitScreen`), removed only on cure -- the same "persistent, not one-shot" shape the music bed had. Not reported. | Review whether a persistent screen tint for the whole curse duration is intended; if not, convert to a one-shot / brief cue like the sound. |
+| Stale MCM "Diegetic surfaces (D1) - default off" help text | The `_oidDiegeticD1` info text says D1 is default-off / dev-preview, but the player-facing In-Game Effects preference defaults ON and drives `D1Enabled` true. | Correct the MCM help text (or reconcile the two toggles) so it matches shipped behaviour. |
+| Orphaned `PDV_MUS_CurseBed` MUSC record (07148E) | Unused after 1.0.3 (no code path adds it). Harmless. | Optional cleanup: remove the record, or repurpose it if a scoped atmosphere cue is ever built. |
+
+Ref: bug issue #24.
+
+---
+
+## 10. Triage note
 
 After 1.0 ships, convert this stub into a real V2 roadmap: group the voiced
 dialogue work into a single CAT-style content lane (draft -> ratify -> voice ->

@@ -70,7 +70,10 @@ the 39 curated/reserved signal surfaces dispatch; headless it had been down
 completeness all OK). No code change was needed -- it was purely proof-pending
 on the runtime.
 
-No machine gate is red. The two non-green machine rows are both non-substantive:
+The 2026-07-26 strict recheck now has one red authority gate unrelated to the
+Daedric price repair: the paired-deity equity audit reports 28 open cluster
+gaps, 72 waived gaps, 0 errors, and 5 warnings. The Daedric beta-display gate
+remains `PASS=16`. The older non-green rows remain:
 - **C-PLACEMENT-FINAL (RED)** -- known/expected; in-world hook proofs re-scoped
   2026-07-07 (a9e73e0) to fold into the per-race sittings.
 - **C-RACE-RUBRIC (STALE)** -- race-sheet drift from the remap decisions
@@ -111,6 +114,7 @@ a permanent machine gate rather than a one-off fix:
 | 07-09 | (response lands) | Signal remap WIRED: manager +184 lines, 27 new CSV rows, remap smoke runbook + wiring-gap deep-dive shipped (5f245de); in-game smoke owed |
 | 07-13 | Magicka/Stamina (and Health) regen rewards are INERT under Requiem (Requiem zeroes regen) — a project-wide feltness gap: boons/prices/neglect/near-death "felt" nothing | Project-wide regen->Fortify-pool conversion: 9 races always-on regen + Daedric Prince boons/prices + race neglect/creed-loss penalties + Argonian Sithis near-death (3777608e, 90e5d3e7, 612dfe52, 361cd5e5, c452d9cf); C-REQUIEM-TRACKB re-proves |
 | 07-14 | Independent call-graph + presentation refutation found 4 backend bypasses (broad-scratch self-decay, Argonian bed day-bounding, Sacred Water/Sap shared Hist clock, Nord Survey frozen counter) | Backend fixes landed (all static/readback PASS) + a 12-card PS-A adversarial runtime lane (0/30 buckets) authored to close them with runtime/manual proof |
+| 07-26 | Daedric prices appeared in Active Effects but the older family serialization did not move actor values; Redguard Forebear also masked Azura's first observed delta | All 48 price pairs repaired to semantic-negative / engine-positive serialization, direct readback and verifier clean; Azura three-tier Stamina, Mephala three-tier Speech, and Hermaeus Mora's unique Champion multi-effect regression passed with exact Lapse restoration |
 
 The felt-trace exhaustive gate (441/441 PASS pre-drift) and curated-signal
 parity (107/107) both hold; the remap re-green is repo-side work, not a
@@ -123,8 +127,8 @@ quest-expansion and reachability-gate work (see "Since Dunmer Closeout" below):
 
 | Area | Current state | Evidence |
 | --- | --- | --- |
-| Daedric Princes | **Pass** for current beta-display gate | `node .\tools\pdv_daedric_beta_gate.mjs` -> `PASS=16` |
-| Strict beta-readiness audit | **Pass** | `node .\tools\pdv_beta_readiness_audit.mjs --strict --json` -> `STRICT_GATE_PASS`, `PASS=31`, `WARN=1`, `INFO=2`, blockers `[]` |
+| Daedric Princes | **Pass** for current beta-display gate; 2026-07-26 price repair representative runtime closed | `node .\tools\pdv_daedric_beta_gate.mjs` -> `PASS=16`; all 48 price pairs read back clean, with Azura PeakValueModifier and Mephala ValueModifier three-tier sweeps plus Hermaeus Mora Champion's unique two-effect boon/price passed |
+| Strict beta-readiness audit | **NOT_BETA_READY — unrelated paired-deity authority blocker** | 2026-07-26: `PASS=29`, `FAIL=1`, `WARN=1`, `INFO=3`; sole blocker is `Paired-deity equity audit` with 28 open cluster gaps, 72 waived, 0 errors, and 5 warnings. Daedric price evidence remains green. |
 | Race beta-feel packets | **10 pass for current manual/runtime packets** | Dunmer manual slots were evidence-recorded 2026-07-05 after in-game closeout; strict audit now reads all ten race slots as recorded |
 | Default framework verifier | **Clean; PickLock contract drift reconciled** | `node .\tools\pdv_verify.mjs --json` on 2026-07-05 after the PickLock contract fix -> `FAIL=0, WARN=2, PASS=3512, INFO=68`; `PDV__SM_PickLockNode` now expects retained parent `Devotion.esp:071618` and checks `PDV__SM_PickLockEvent` as a `LockPick` SMEN root under `Skyrim.esm:00005B`. Warnings remain medallion glyph fallback plus SEQ older than the ESP. |
 | Content verifier | **Clean** | `node .\tools\pdv_content_verify.mjs` -> `FAIL=0, WARN=0, PASS=1080, INFO=4` |
