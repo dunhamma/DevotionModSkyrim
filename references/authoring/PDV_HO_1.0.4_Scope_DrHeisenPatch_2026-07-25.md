@@ -103,7 +103,7 @@ item against the live ESP and live source — not taken from the audit.
 | Item | Call | Design |
 |---|---|---|
 | ~~**Altmer Spine**~~ | **NO ACTION** | Already wired AND already tested pre-1.0. My "wire it" call was wrong -- see the correction section below. |
-| **Green Pact food positive** | **WIRE meat + insect ONLY**; fungi/egg stay neutral | Matches the original code's intent (only meat/insect ever routed positives; fungi/egg were debug traces). Halves the curation. Needs the 2 FormLists populated + real KID rules (the shipped `PDV_GreenPact_KID.ini` has **0** non-comment lines) + an anti-farm cap on the piety pulse. |
+| **Green Pact food positive — MEAT DONE 2026-07-26** | Meat wired; insect + KID ini deferred | `PDV_FLST_GreenPact_MeatFoods` (`071235`) populated with 22 vanilla+DLC records (8 animals raw/cooked where they exist, plus chicken/rabbit/pheasant). Code path (`RouteBosmerPactPositive` -> `HandleBosmerPactPositiveSignal`) already lived from the DrHeisen port, unreachable until now. Anti-farm: NO new cap needed — `ConsumeDailyRepeatMultiplier("PDV.Signal.BosmerPactPositive")` already throttles this signal ID across all callers (Green Songs, proper-hunt, forest-kept), meat included. **Not yet runtime-tested** — eat cooked beef/venison as Bosmer, confirm the route fires in the Papyrus log. Insect list still empty (vanilla has ~no edible insects; needs KID rules to reach modded food) and fungi/egg stay neutral per the owner's original call. |
 | **Syrabane award sites** | **WIRE** (5 signals) | Deltas already tuned 1.8–2.2. Design work = deciding what act fires "protective warding", "apprentice aid", etc. Renumber lands in 1.0.3 so the collision dies immediately. |
 
 ### CORRECTION 2026-07-26 — the Altmer Spine was never unwired
