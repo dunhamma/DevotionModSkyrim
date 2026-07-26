@@ -26,6 +26,10 @@ Rows with `abs(baseDelta) <= 0.5` remain piety-loss and surfacing only. This kee
 - Simultaneous cap: at most three domains may be active. If a fourth different domain would fire, it is suppressed.
 - Anti-repeat: a per-deity/per-domain/per-event day key prevents repeat stings from the same transgression on the same devotion day.
 - Expiry: the manager owns expiry by StorageUtil game-time keys and removes the ability when it expires.
+- Timed-ability invariant: all fourteen disfavor MGEFs carry `NoDuration`, and
+  every parent Ability effect has `Duration = 0`. The manager-owned expiry is
+  the only timer; a non-zero record duration can display in Active Effects
+  without applying its ActorValue modifier.
 
 ## Domain Records
 
@@ -40,6 +44,10 @@ Rows with `abs(baseDelta) <= 0.5` remain piety-loss and surfacing only. This kee
 | VoidSecrets | Magicka | -5 | -10 | Secrets, void, sap-memory, and hidden change leave a quiet unease. |
 
 All records are detrimental, self-targeted, flat value modifiers. Regen-rate penalties are deliberately excluded because they are Requiem-fragile and belong to other lanes.
+
+Record serialization: `Detrimental` supplies the penalty behavior, so every
+disfavor spell stores the table's absolute magnitude as a positive number. The
+negative signs in the table and player-facing text describe the gameplay delta.
 
 ## Deity Domain Map
 
