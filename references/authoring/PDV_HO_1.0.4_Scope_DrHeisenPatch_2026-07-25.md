@@ -102,9 +102,43 @@ item against the live ESP and live source — not taken from the audit.
 
 | Item | Call | Design |
 |---|---|---|
-| **Altmer Spine** (3 authored spells: Ordered/Disciplined/Exemplar Heritage, Magicka +10/+20/+30) | **WIRE** | Always-on + substrate ladder, **exclusive** (one held at a time), mirroring the Orc life-mode spine pattern. Altmer origin grants +10; heritage substrate MID swaps to +20; HIGH swaps to +30. Adds **zero** substrates — `PDV_Substrate_AltmerAncestor` already exists and is already fed (`RecordHeritageStandingScaled`). Altmer stays at 1 substrate, inside the 2-per-race ceiling. |
+| ~~**Altmer Spine**~~ | **NO ACTION** | Already wired AND already tested pre-1.0. My "wire it" call was wrong -- see the correction section below. |
 | **Green Pact food positive** | **WIRE meat + insect ONLY**; fungi/egg stay neutral | Matches the original code's intent (only meat/insect ever routed positives; fungi/egg were debug traces). Halves the curation. Needs the 2 FormLists populated + real KID rules (the shipped `PDV_GreenPact_KID.ini` has **0** non-comment lines) + an anti-farm cap on the piety pulse. |
 | **Syrabane award sites** | **WIRE** (5 signals) | Deltas already tuned 1.8–2.2. Design work = deciding what act fires "protective warding", "apprentice aid", etc. Renumber lands in 1.0.3 so the collision dies immediately. |
+
+### CORRECTION 2026-07-26 — the Altmer Spine was never unwired
+
+My grill-session call to "wire the Altmer Spine" was **wrong**, and the design
+I proposed is what already ships. Recorded here so nobody rebuilds it.
+
+The live path runs through the **substrate**, not the manager:
+
+- `PDV_SubstrateBase` declares `Substrate_Always` / `_Mid` / `_High`, and
+  implements the full ladder: `GetExpectedSubstrateBoon(tier)` picks by tier
+  (HIGH -> High, MID -> Mid, LOW -> Always), `SyncSubstrateBoonsToTier()`
+  clears the other two and grants the expected one (highest-slot-only, so
+  Active Effects shows ONE identity boon), and it is called automatically from
+  `RecomputeSubstrateTier` whenever the tier moves.
+- The `PDV_Substrate_AltmerAncestor` record (`0715AC`) **binds all three** to
+  the real spells: `0715A7` Ordered Heritage +10, `0715A9` Disciplined Heritage
+  +20, `0715AB` Exemplar Heritage +30. Thresholds: metric >= 1 / 25 / 75.
+- **Tested pre-1.0 by the owner.** No action needed.
+
+**Why I got it wrong:** I grepped `PDV__ManagerQuest.psc` for
+`PDV_Bless_Altmer_Spine_*`, found only `SyncRaceRewardSpell(..., False, ...)`
+inside the uninstall strip, and concluded "authored but never granted". What I
+had actually found is a SECOND, genuinely dead set of manager properties
+pointing at the same three spells. Two paths to one set of records; I checked
+the dead one. Lesson: for substrate-backed rewards, check the substrate record's
+VMAD before concluding anything is unwired.
+
+**Optional tidy (not required):** the manager's dead
+`PDV_Bless_Altmer_Spine_Always/Mid/High` properties are unbound and referenced
+only by `StripAllPdvSpells`. Harmless — uninstall strips the spine via the
+substrate's own `ClearSubstrateBoons` regardless — but they are what caused this
+misreading. Also worth noting the naming trap: the spell named "Ordered
+Heritage" sits on the `Always` slot, while the substrate's own posture ladder
+calls its MIDDLE state `POSTURE_ORDERED`.
 
 ### Reverted from their patch — do NOT re-apply
 
