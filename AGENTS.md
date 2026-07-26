@@ -102,7 +102,7 @@ If a task appears blocked by a houseCARL limitation, **first reproduce it with a
 | `tools/pdv_skyrim_refs_bridge.mjs` | Read-only bridge into the neutral `SkyrimGamePlayReferences` repo | Querying broad vanilla/DLC reference tables without vendoring them into PDV |
 | `tools/pdv_quest_matrix_compile.mjs` | Quest-reaction matrix runtime JSON compiler | Compiling the frozen quest-reaction CSVs, stance matrices, quest readback, and curated faucet form lists into live PapyrusUtil JSON at `SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix.json`; run `--check` before writing |
 | `tools/pdv_quest_reaction_performance_audit.mjs` | Read-only quest-reaction worker contract audit | Verifying bounded StorageUtil FIFO delivery, no queue waits or cross-update broad scope, deferred finalisation, and worker-only scheduling |
-| `tools/pdv_quest_reaction_runtime_check.mjs` | Read-only quest-reaction queue log checker | Checking QR_QUEUE lifecycle, FIFO/coalescing/completion sequence, durations, overflow, VM-freeze, and broad-scope-abort markers after an in-game sweep |
+| `tools/pdv_quest_reaction_runtime_check.mjs` | Read-only quest-reaction queue log checker | Checking QR_QUEUE lifecycle, FIFO/coalescing/completion sequence, START-to-COMPLETE latency, ingress-build timing, overflow, stack-dump/broad-scope-abort markers, and normal save-load freeze/thaw observations after an in-game sweep |
 | `tools/pdv_signal_floor_smoke_gate.mjs` | Read-only/generated signal-floor smoke gate | Checking the 2026-07-09 signal-floor smoke scenarios against source CSVs, live PapyrusUtil JSON, manager/MCM debug harness tokens, optional Papyrus log markers, and writing `PDV_SignalFloorSmokeLedger.{md,json}` (regenerable report -- on demand, not committed); backend PASS does not replace runtime/manual proof |
 | `references/authoring/PDV_SignalFloorSmokeScenarios_2026-07-09.json` | Signal-floor smoke scenario manifest | Source of truth for the 13 representative smoke cases: quest fan-out, main-quest death/lore gods, Sithis, Zenithar, Hircine cure, Season Unending, crypt clear, LD v15, Green Way, Paarthurnax kill/spare, and borderline prove-or-drop rows |
 | `references/authoring/PDV_SignalFloorSmokeLedger.md` | Generated signal-floor smoke ledger (regenerable report -- on demand, not committed) | Captures backend/static PASS rows, OPEN runtime marker slots, and manual checks still owed for the master signal-floor handoff; regenerate via `pdv_signal_floor_smoke_gate.mjs --write-ledger` |
@@ -982,6 +982,24 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 ---
 
 ## Decisions Log
+
+- **[2026-07-26] - Quest-reaction runtime failure triggers save-compatible ingress compaction:**
+  The fresh 1.0.4 controlled sweep completed MQ101/MQ105/MQ106/MQ206 in exact
+  FIFO order, produced four matching Book of Days entries, and had no overflow,
+  broad-scope abort, stack dump, or PDV-attributable error. It did not meet the
+  two-second target: START-to-COMPLETE timings were approximately 11, 5, 5, and
+  5 seconds. The paired `VM is freezing` -> revert/load -> `VM is thawing`
+  sequence was normal save-load lifecycle, not a queue failure. Per the
+  ship-optimization gate, new jobs now resolve reachability and zero-value rows
+  at ingress, persist only runnable base/meta rows, record source/skipped/meta
+  counts plus ingress-build time, and retain the exact two-reaction/0.1-second
+  worker bound. Saved jobs without the additive `Compacted` key keep the legacy
+  worker-side cheap-skip path; no script, property, or existing persistent
+  variable was renamed or removed. Manager then MCM compiled 0 errors/0
+  warnings; `pdv_verify` passed 4119 checks with the one pre-existing generic
+  faucet TODO, and quest/static/Prisma/Book/ASCII gates passed. Post-compaction
+  fresh-process latency and organic MQ106 remain open, so this is a committed
+  implementation checkpoint rather than runtime-complete proof.
 
 - **[2026-07-15] - Main quest is a full-pantheon authored lane, not sparse keyword coverage:**
   The Helgen-to-Alduin contract is 45 runtime deity identities across 25 exact stages on
