@@ -1,10 +1,13 @@
 # Devotion 1.0.3 — tester instructions
 
 Thanks for helping test! This is an **unreleased build**, so please use a save
-you don't mind losing. Everything below takes about 20 minutes.
+you don't mind losing. Everything below takes about 15 minutes.
 
 You don't need to know anything about the mod. Each test is: press a button,
 read a number, tell me if it did what it says.
+
+Six tests. Tests 5 and 6 use the console — there are copy-paste commands for
+those. The rest are just clicking and watching.
 
 ---
 
@@ -52,34 +55,7 @@ To hide them again when you're done: `set PDV_GLO_DebugLevel to 0`.
 
 ---
 
-## Test 1 — penalties should subtract, not add ⭐ most important
-
-Devotion applies penalties as toggled effects. This checks they subtract the
-right amount and fully undo themselves when removed.
-
-1. Console: `player.getav onehanded` → **write the number down.**
-2. MCM → Devotion → **Debug: State & Rewards** page → scroll to the
-   **Disfavor (dislikes)** section:
-   - Cycle **domain** to `4 WarHonor`
-   - Set **band** to `Light`
-   - Press **Apply domain sting**
-3. Console: `player.getav onehanded` again.
-   - ✅ Expected: **exactly 3 lower** than step 1.
-   - ❌ Report it if it went **up**, or didn't change.
-4. Check **Magic → Active Effects** — you should see *"Honor recoils for a while."*
-5. MCM → **Clear active disfavor**.
-6. Console: `player.getav onehanded` → must be **exactly** your step 1 number.
-7. **Repeat steps 2–6 three or four times.** The number must land on the same
-   value every single time. If it drifts a little further each cycle, that's the
-   bug we're hunting — tell me immediately.
-
-**Then do the same thing again with a different one:** set domain to
-`2 DeathAncestors`, band `Light`, and watch `player.getav destruction`
-(down by 2, back to baseline). Same pass/fail rules.
-
----
-
-## Test 2 — curse music
+## Test 1 — curse music
 
 1. Go inside an inn and listen to the normal music for a few seconds.
 2. MCM → **Debug: State & Rewards** → **Curse werewolf**.
@@ -90,7 +66,7 @@ right amount and fully undo themselves when removed.
 
 ---
 
-## Test 3 — menu safety
+## Test 2 — menu safety
 
 1. Visit each MCM page in turn: **Player → Settings → Status → Debug: State &
    Rewards → Debug: Pacing & Pantheons**.
@@ -102,7 +78,7 @@ right amount and fully undo themselves when removed.
 
 ---
 
-## Test 4 — normal play still works
+## Test 3 — normal play still works
 
 Just play for 10–15 minutes. Kill some bandits, pick a lock, read a book,
 craft something.
@@ -113,7 +89,7 @@ craft something.
 
 ---
 
-## Test 5 — praying at a shrine
+## Test 4 — praying at a shrine
 
 1. Load your save, and within the first minute or so pray at any shrine.
 2. ✅ Expected: you get some acknowledgement (a notification or piety gain).
@@ -121,7 +97,7 @@ craft something.
 
 ---
 
-## Test 6 — curing a curse restores you straight away
+## Test 5 — curing a curse restores you straight away
 
 This checks that when a curse is lifted, the penalty it caused goes away
 **immediately** instead of hours later.
@@ -142,12 +118,12 @@ character, only which set of rules the mod applies:
 
 ---
 
-## Test 7 — the vampire-cure message ⚠ read this one carefully
+## Test 6 — the vampire-cure message ⚠ read this one carefully
 
 This test has a deliberate oddity. Something that looks like a bug here is
 actually the intended design, so please read before reporting.
 
-1. Still in Redguard mode from Test 6. Console: `player.getav magicresist` →
+1. Still in Redguard mode from Test 5. Console: `player.getav magicresist` →
    write the number down.
 2. Press **Curse vampire**, then **Curse refresh**.
 3. Press **Curse none**. A message appears — **please copy down what it says**,
@@ -158,13 +134,13 @@ What to expect:
 
 - ✅ The message should explain that the ancestors' protection comes back when
   you take up the "death-duty" again.
-- ✅ The number **staying 3 lower** is **CORRECT here** — unlike Test 6, a
+- ✅ The number **staying 3 lower** is **CORRECT here** — unlike Test 5, a
   vampire cure is *supposed* to hold the penalty until you do something in-game
   to earn it back. That is the design, not a fault.
 - ❌ Only report a problem if the message is **missing**, is **cut off**, shows
   odd symbols like `%s`, or doesn't mention the protection returning.
 
-When you're finished with Tests 6 and 7: press **Curse none**, then cycle
+When you're finished with Tests 5 and 6: press **Curse none**, then cycle
 **Curse proof race** back to whatever it said originally and press **Apply
 proof race** again.
 
@@ -187,18 +163,28 @@ for repairing damaged old saves and isn't part of this test.
 
 **"Check stat damage"** right next to it is safe — it only reads and reports.
 
+## Please skip entirely
+
+**The Daedric Prince pages** — anything about pacts, Princes, prices or boons
+(`Selected Prince`, `Force Seeker/Devoted/Champion`, `Reset Prince path`). That
+part of the mod is mid-repair right now and is *known* to behave inconsistently,
+so anything you found there would already be on the list. It's being handled
+separately.
+
+Likewise the **Disfavor (dislikes)** controls — that area has already been
+confirmed working, so there's nothing left to learn from it.
+
 ---
 
 ## What to send back
 
 For each test: **pass**, or what went wrong.
 
-For Test 1, please include the actual numbers — your baseline, the value after
-the sting, and the value after clearing, for each repeat. Those numbers are the
-most useful thing in the whole packet.
+For **Test 5** and **Test 6**, please include the actual numbers you read — the
+baseline, and the value after each step. For **Test 6**, also the exact wording
+of the message (a screenshot is perfect).
 
-For Tests 6 and 7, include the numbers too, and for Test 7 the exact wording of
-the message.
+For the rest, a one-line pass/fail is plenty.
 
 If anything crashes or you see a wall of error text, note roughly what you were
 doing at the time.
