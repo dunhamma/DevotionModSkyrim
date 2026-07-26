@@ -3,7 +3,175 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
-## 1.0.3 — 2026-07-25
+## 1.0.3 — 2026-07-26
+
+Thanks to **DrHeisen**, whose independent audit of 1.0.2 found a number of the
+defects below. Where his findings and this build's own fixes overlapped, his
+analysis is credited in the entry.
+
+### Fixed — silent, permanent, or save-damaging
+
+- **Fixed: two observance effects still drifted your stats permanently.** The
+  Redguard "Remembering" road and rest observances (+8% Stamina Regeneration,
+  +5% Health Regeneration) were missing the same `Recover` flag as the effects
+  below, on a different effect type that the first sweep did not cover. Every
+  time an observance turned on and off it shifted the value again, upward,
+  invisibly. Both now revert cleanly. *(Found by DrHeisen.)*
+- **Fixed: Devotion could stop working permanently after a single lost script
+  tick.** Devotion's main heartbeat re-arms itself at the end of each beat, and
+  its owner cannot receive the game's "save loaded" event — so if one beat was
+  ever lost (routine when the script engine is saturated in a heavy load order),
+  dawn processing, pact activation, the startup choice and the reconcile pass
+  all stopped for the rest of the playthrough, with nothing in the log. A
+  watchdog on load now restarts the heartbeat if it has stalled. *(DrHeisen.)*
+- **Fixed: a menu that could not open silently broke the Bosmer Old Contract.**
+  When the game refused to show a choice — because another menu already had the
+  screen — Devotion read the non-answer as an answer. Worst case: a Bosmer's
+  forced reckoning **severed the Old Contract pact with no player input**. Four
+  sleep rites also stamped a three-day "you declined" cooldown, and two of them
+  discarded three nights of progress, for prompts nobody ever saw. A menu that
+  does not appear now changes nothing and simply retries. *(DrHeisen.)*
+- **Fixed: uninstalling left Devotion's effects on your character.** The
+  uninstall strip listed its spells one by one and missed the Altmer Discipline
+  and Redguard Remembering families, plus every Daedric pact boon and price —
+  including **Malacath's speed price**, so an uninstalled long-pact Orc stayed
+  permanently slower. All are now cleared. *(DrHeisen.)*
+- **Fixed: hit detection died whenever the reaction data was missing.** All
+  hit-driven detection — combat sessions and near-death sampling — sat behind a
+  check for a data file it does not use. If that file was missing or corrupt,
+  every near-death rescue (Orc Code Holds, the Bosmer Baan Dar gap, the Argonian
+  Sithis burst) silently stopped working. Hit detection no longer depends on it.
+  *(DrHeisen.)*
+- **Fixed: Azura's likes and dislikes never loaded.** An internal name mismatch
+  (`azurah` against her canonical `Azura`) meant twelve of her reaction rows —
+  including her three strongest dislikes — and her whole per-race stance table
+  were skipped, so Azura could not react to anything you did. Her tables rebuild
+  once automatically on an existing save. *(DrHeisen.)*
+- **Fixed: MCM controls could trigger the wrong action.** Menu option IDs are
+  handed out per page, and Devotion only cleared a few of them between pages, so
+  a leftover ID from an earlier page could match a control on the page you were
+  looking at — including destructive developer controls. Every option ID is now
+  cleared before a page is built. *(DrHeisen.)*
+
+- **Fixed: disfavor stings and several neglect penalties were applying as
+  bonuses.** Twenty-two of Devotion's penalty effects were authored in a
+  self-cancelling form — flagged as detrimental *and* carrying a negative
+  amount, which the engine reads as a negative penalty, i.e. a buff. Every
+  disfavor sting (all seven domains, light and sharp), the Kyne, Shor, Tsun,
+  Stuhn, Talos, Arkay and Dibella neglect penalties, and the Ash'abah spine's
+  Speech cost now carry positive amounts, so they subtract as their names and
+  descriptions say. Race neglect penalties that were never flagged detrimental
+  (Redguard, Imperial, Orc, Dunmer, Altmer, Bosmer, Breton, Argonian, Khajiit),
+  the Daedric pact prices, and the Breton creed losses used the other valid
+  convention all along and are unchanged. *(Convention identified by DrHeisen.)*
+
+### Fixed — awards, caps, and daily timing
+
+- **Fixed: daily caps and cooldowns were spent on awards that never landed.**
+  A cap slot was claimed the moment an award was proposed, before the multipliers
+  that can reduce it to nothing were applied — so a cursed or ineligible
+  character burned their daily allowance earning zero. The cap is now claimed
+  only when piety actually lands. *(DrHeisen.)*
+- **Fixed: shrine prayers and signal activators could eat the day's credit for
+  nothing.** The once-per-day charge was spent before the prayer was routed, so
+  praying early after a load — the usual case — consumed the day and returned
+  no piety and no feedback. The charge is now spent only on a prayer that lands.
+  *(DrHeisen.)*
+- **Fixed: several "once a day" limits used midnight instead of Devotion's dawn.**
+  Devotion's day rolls at 06:00, but a number of daily gates still rolled at
+  midnight, so a limit could reset mid-sleep or be spent twice inside one
+  devotional day. Roughly two dozen daily gates now share the 06:00 day —
+  including the shared anti-farm limits most signals pass through. Journal dates
+  and multi-day countdowns deliberately stay on the calendar day. *(DrHeisen.)*
+- **Fixed: the first in-game day refused some credit outright.** A stored "day"
+  of zero is indistinguishable from game day zero, so on a brand-new save every
+  shrine-prayer credit and the first hearth-rest declaration were refused.
+  *(DrHeisen.)*
+- **Fixed: a near-death rescue could spend its daily charge on a death it did not
+  prevent.** The tier-3 save now confirms you actually survived before the day's
+  charge is spent. The heal still fires either way. *(DrHeisen.)*
+- **Fixed: Orc Code Holds had no daily limit** and now matches its two sibling
+  rescues, with a visible notification when it fires. *(DrHeisen.)*
+- **Fixed: killing a Thalmor who attacked you counted as an unprovoked killing.**
+  The check looked only at whether the victim was a scripted enemy and never at
+  whether they were already hostile, so cutting down a Justiciar patrol that
+  opened fire on you applied the same consequences as an assassination. Choosing
+  to attack a neutral Thalmor still counts as a choice. *(DrHeisen.)*
+- **Fixed: bard performances stopped registering after restarting Skyrim.** An
+  anti-double-award timer measured time since the application launched but was
+  saved to disk, so after a restart it read hours into the future and discarded
+  every performance until the new session ran longer than the old one.
+  *(DrHeisen.)*
+- **Fixed: Auri-El ignored its own tuning values**, returning hardcoded numbers
+  instead. The values are unchanged; they now respond to tuning. *(DrHeisen.)*
+- **Fixed: a Dunmer sleeping several times in one night** was repeatedly offered
+  the "mark a new home" prompt. *(DrHeisen.)*
+
+### Improved — performance and log noise
+
+- **Improved: equipping an item is dramatically cheaper.** Devotion answered
+  "does this item matter?" by re-reading and re-resolving its reaction data from
+  scratch on every check, sixteen times per equip — in a large load order,
+  hundreds of engine lookups and a very large number of plugin-name comparisons
+  **every time you equipped anything**. Every entry is now resolved once when
+  the save loads, and the check costs nothing at runtime. The blocked-hit path,
+  which paid the same cost on every blocked hit, is fixed with it. *(DrHeisen.)*
+- **Improved: every scored action costs far less.** A broadcast action (a kill, a
+  craft, a lockpick, a book) asks all ~34 deities to score it, and about thirty
+  of them have no entry for that event yet still paid for the lookup. Each deity
+  now knows in advance which events it can score. The shortcut fails safe: if it
+  is ever unsure, it falls back to the old full check, so piety can never be
+  silently withheld. *(DrHeisen.)*
+- **Improved: text formatting no longer runs 44 passes over every line.** Every
+  toast, journal line and panel string was rewritten 44 times; 43 of those passes
+  could not change anything. One side effect of the cleanup: authored prose
+  reading "the Hist" mid-sentence is no longer wrongly capitalised. *(DrHeisen.)*
+- **Improved: no more Papyrus log line for every corpse.** Devotion's kill
+  receiver logged unconditionally, whether or not you were debugging. It is now
+  behind the debug setting like every other trace. *(DrHeisen.)*
+- **Improved: quieter background polling.** The bard poll drops to a slower
+  cadence when nothing is happening and returns to full speed the moment a
+  performance starts; location checks sample every three seconds instead of every
+  second; a duplicate-state sweep runs every thirty seconds instead of every ten;
+  and the main heartbeat skips its work while a menu owns the screen. The
+  heartbeat itself stays at one second — the two things that need it are
+  latency-sensitive. *(DrHeisen.)*
+- **Improved: uninstalling no longer leaves thousands of dead entries in your
+  save.** Devotion's quest-reaction queue blanked six keys per finished job and
+  left roughly two dozen behind each time. Finished jobs are now cleared
+  completely, and existing saves get a one-time sweep. *(DrHeisen.)*
+
+### Added
+
+- **Added: "Check stat damage" and "Repair stats"** (MCM → Player → Maintenance).
+  The first is read-only and lists every value still carrying permanent drift
+  from older builds. The second removes Devotion's effects, clears that drift,
+  and re-grants your abilities normally — the automatic cure for the save damage
+  described in the first entry below, replacing the manual console procedure.
+  **Save first.** Note plainly: it also clears permanent modifiers *another* mod
+  placed on those same values — rare, but real. There is no automatic pass;
+  nothing runs unless you press the button. *(Design by DrHeisen.)*
+
+### Changed — internal
+
+- **Changed: removed retired scaffolding.** An early "sacred place" system that
+  was never connected — and whose feature already ships as the Argonian
+  bed-of-choice, the shared hearth-rest declaration, and Khajiit road-homes — is
+  reduced to a stub; twenty-one reward slots pointing at spells that were never
+  created, thirty tuning values nothing read, and sixteen write-only debug keys
+  are removed. No player-facing change.
+- **Changed: Syrabane's curated signal numbers** were renumbered off four IDs
+  that Boethiah already used. Neither deity's behaviour changes today.
+
+### Fixed — messages
+
+- **Fixed: four more malformed messages.** The three Redguard "survey" messages
+  tried to insert your standing using a code the game's message records cannot
+  process, so the line was logged as invalid and displayed wrong; the sentence
+  has been rewritten to read correctly without it. The Bosmer "Naming" message
+  had an unescaped `%`. *(DrHeisen.)*
+
+### Fixed — the original 1.0.3 set (2026-07-25)
 
 - **Fixed: runaway stat drift (save-corrupting).** Devotion applies its neglect,
   disfavor, pact-price, and blessing effects as toggled abilities, but 418 of its
@@ -15,13 +183,13 @@ folder; this file records what changed, not the full source.
   effects drifted stats invisibly upward. All value-modifier effects now carry
   `Recover`, so removal reverts cleanly and the drift stops. No new game required.
   - **Curing an already-affected save:** the flag stops further drift, but stat
-    residue already baked into an old save stays until you correct it. Devotion is
-    the only thing driving these values to extremes, so with no Devotion penalty
-    currently active, open the console, read the value, then add the residue back.
-    Use YOUR reading, not these numbers: `player.getav ResistMagic` — if it shows a
-    large negative like -22131, `player.modav ResistMagic 22131`; likewise
-    `player.getav DamageResist` — `player.modav DamageResist <the shown amount>`.
-    Re-check with `getav`, and repeat for any other value that looks out of range.
+    residue already baked into an old save stays until you clear it. Use
+    **MCM → Devotion → Player → Maintenance → Check stat damage** to see what your
+    save is carrying, then **Repair stats** to clear it (save first). That button
+    replaces the manual console procedure earlier 1.0.3 notes described; if you
+    prefer to do it by hand, read the value with `player.getav ResistMagic` and
+    add the residue back with `player.modav ResistMagic <the amount shown>`,
+    repeating for any other value that looks out of range.
 - **Fixed: dungeon music in safe interiors while cursed.** For a player under a
   lycanthropy or vampirism "curse", Devotion added a global music track — built
   from Skyrim's dungeon music — that overrode the normal music everywhere,

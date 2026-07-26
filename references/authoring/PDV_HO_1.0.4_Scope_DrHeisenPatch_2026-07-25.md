@@ -1,0 +1,145 @@
+# PDV 1.0.4 Scope — DrHeisen Patch Incorporation (2026-07-25)
+
+Source: "Authoria - Devotions Tweaks and Fixes" by DrHeisen
+(`C:\Users\Admin\Downloads\Authoria - Devotions Tweaks and Fixes\`), a 5-pass
+audit patch built against Devotion **1.0.2**. Its CHANGELOG maps every change to
+audit finding IDs (A1-D7) and fix-plan groups. This doc records what the owner
+approved for 1.0.4, what already went into 1.0.3, and what is deferred.
+
+## Standing rule for every port
+
+**Verify-then-port.** Their scripts are 1.0.2-based; our live source has moved
+(1.0.3 curse fixes + Azura fix). NEVER copy their `.psc`/`.pex` files. For each
+item: reproduce the defect in OUR live source first, then port the fix logic by
+hand, then compile + verify. Anything that fails reproduction is dropped and
+flagged back to DrHeisen. Their CHANGELOG is the reference for each fix's
+reasoning and edge cases — read the relevant section before porting.
+
+## Already folded into 1.0.3 (this session — not 1.0.4 work)
+
+- `Recover` on the 2 PeakValueModifier observance effects (`0715CB`/`0715CD`).
+- 4 MESG format-string fixes (`0714E1`/`E2`/`E3` `%s` sentence removed,
+  `0714FF` `%%` escape).
+- Azura fix at the data layer: CSV actor `azurah` -> `azura` + likes/dislikes
+  regen + `LIKES_DISLIKES_VERSION` 16 -> 17 (+ verifier expectation), stances
+  dual-check `"Azura" || "Azurah"`.
+- CONDITIONAL (gated on in-game sting sign check): flip the ~21
+  Detrimental+negative-magnitude self-cancelling pairs.
+
+## 1.0.4 slate — correctness (full, per owner decision)
+
+| ID | Fix | Their pass |
+|---|---|---|
+| A2 | Seed-once guard in `PDV_Origin` (per-load piety wipe on custom-race fallback); recheck re-detects only. CAUTION: `PDV_Origin.psc` live-ahead-of-git drift — reconcile before editing | Pass 2 §1 |
+| B3 | `KickstartIfStalled()` lifecycle watchdog from player alias `OnPlayerLoadGame` (one lost tick currently kills dawn processing forever) | Pass 2 §2 |
+| B16 | `StripAllPdvSpells` gaps: Altmer Discipline + Redguard Remember families + NEW `StripAllDaedricPactSpells()` (Malacath SpeedMult survives uninstall) | Pass 2 §3 |
+| B4 | `Show() < 0` guards on 5 rites — worst: `EvaluateBosmerForcedReckoning` force-severs the Old Contract pact with no player input | Pass 4 §1 |
+| B13 | Day-0 StorageUtil false blocks (shrine-prayer credit, `TryDeclareRestCell`, Dunmer `CandidateDay`) + 26 daily stamps moved to the 06:00 devotional day. Known class: memory `storageutil-day-key-zero-default` | Pass 4 §2 |
+| B7 | Peek/commit split on `ScoreRepeatableAction` (caps/cooldowns burned on zeroed awards) | Pass 4 §2.4.3 |
+| B14 | Once-per-day charges stamped only after a route lands (shrine effect + 2 signal scripts) | Pass 4 §2.4.4 |
+| B12 | Orc Code Holds daily cap (their finding: `Cast()` half of the audit does NOT work — constant-effect ability; toast feedback instead) | Pass 4 §2.4.5 |
+| B2 | Thalmor unprovoked-kill consults `IsHostileKill` (self-defense vs patrols mis-punished) | Pass 4 §5.8.1 |
+| B8 | `RegisterForHitEventEx` above the matrix early-out (missing matrix JSON silently kills all hit detection) | Pass 4 §5.8.2 |
+| B5 | MCM `OnPageReset` clears ALL ~169 `_oid*` (stale oids can hit destructive debug handlers) | Pass 4 §6.9.1 |
+| B17 | `SIGNAL_TYPE_MAX` 999 -> 3200 (debug slider reaches all deities) | Pass 4 §6.9.2 |
+| D5 | Curse smoke re-syncs the None-keyed `PDV.Curse.State` mirror | Pass 4 §6.9.3 |
+| A3 | QR job-key leak: `ClearAllPrefix("PDV.QR.Job.<id>.")` on remove + one-time empty-queue sweep | Pass 4 §7.10.1 |
+| D7 | Khajiit pickpocket bus null-guard | Pass 4 §7.10.3 |
+| B1 | (done in 1.0.3 at data layer — confirm no script-side remnant needed) | Pass 4 §3.5.1 |
+| D2 | AuriEl `ScoreCuratedSignal` returns its DELTA properties, not literals | Pass 4 §3.5.2 |
+| B9 | Bard `PDV_BardLastRouteRealTime` cleared on load (real-time stamp survives relaunch, discards performances for hours) | Pass 5 §3 |
+
+## 1.0.4 slate — save repair (MCM buttons ONLY, per owner decision)
+
+- Adopt "Check stat damage" (read-only residue report) + confirm-gated
+  "Repair stats" (permanent-modifier zero on the enumerated AVs while no PDV
+  ability held, then normal re-sync). NO automatic once-per-save pass.
+- Mechanism: PO3 `GetActorValueModifier(player, 0, av)` reads the permanent
+  slot. Depends on B16 strip completeness. Requires 1.0.3's Recover flags
+  (already shipped) so the re-grant cannot re-bake.
+- Adopt their runtime-AV-name table (record enum != runtime name for 8:
+  ResistMagic->MagicResist, Speech->Speechcraft, Archery->Marksman,
+  ResistFire->FireResist, ResistFrost->FrostResist,
+  ResistDisease->DiseaseResist, CriticalChance->CritChance,
+  SpeechcraftModifier->SpeechcraftMod). A wrong string silently reads 0.
+- Their 33-AV list was derived by querying the ESP's ValueModifier archetypes —
+  re-derive against OUR current ESP, don't copy the list.
+- Copy caveat verbatim into MCM text: repair also clears third-party permanent
+  modifiers on those AVs. Retire the manual console procedure from CHANGELOG
+  once shipped.
+
+## 1.0.4 slate — perf (full, per owner decision)
+
+| ID | Fix | Their pass |
+|---|---|---|
+| C1 | 44-pass string normalizer -> Orkey-only single pass; delete the dead journal-title repair loop; fixes "The Hist" mid-sentence caps | Pass 5 §1 |
+| C2 | Faucet form cache (once per load), delete `HasQuestReactionRuntimeForm`; `GetActorRef()` on blocked-hit path | Pass 5 §2 |
+| C3 | Bard poll two-state 5s live / 15s idle | Pass 5 §3 |
+| C4 | Per-deity participating-event cache in `ScoreFromTable` (fail-open, sealed after rebuild; needs a LIKES_DISLIKES_VERSION bump when it lands) | Pass 5 §4 |
+| D1 | `PDV__SM_KillActor` per-kill trace behind debug level (via router's level); + `ProcessDawn` once-per-session latch, `ExportDevotionReport` gate | Pass 5 §6 |
+| — | Poll cadences: menu early-out first in `OnUpdate` (re-arm BEFORE the early-out return), reconcile split 10s/30s, context probes 1s->3s. Master poll and worker 0.1s stay | Pass 5 §7 |
+
+## Design calls — RESOLVED 2026-07-26 (owner, grill-me session)
+
+**Governing doctrine: WIRE BY DEFAULT; cut only where nothing was ever
+authored, or where the feature demonstrably ships elsewhere.** Verified per
+item against the live ESP and live source — not taken from the audit.
+
+### Ships in 1.0.3 (behavior-neutral or bug-fixing)
+
+| Item | Call | Evidence |
+|---|---|---|
+| SacredPlace subsystem | **CUT** (stub + drop MCM smoke hook; 3 quest records left inert) | Not unwired — **superseded**. All three quests' concepts ship live: `TryArgonianBedOfChoiceSleep` (4 sites), `TryDeclareRestCell` (4), Khajiit road-home (11). Wiring it would give three race lanes two competing home systems. |
+| 21 `PDV_Bless_Nord_<god>` props | **CUT** | `PDV_Bless_Nord_Akatosh_*` and siblings **do not exist in the ESP** (0 records). The properties point at nothing — "truly empty" clause. |
+| 30 DELTA/substrate knobs | **CUT** | Write-only tuning scalars, no reads, no VMAD bindings. No override cost for us (own source). KEEP AuriEl's two (live as of D2) and the same-named knobs that ARE read in other files. |
+| 16 `PDV.Daedric.<Prince>.Renounced` | **CUT** | All 16 writes are inside `DebugRenouncePath()` — **debug-only**, write-only, no readers. No player-facing renunciation feature exists to wire. |
+| Syrabane signal ids | **RENUMBER to 3110+** (block kept) | 4 of 5 ids collide with Boethiah's authored 2001/2002/2003/2005. Highest id in use is 3102, so 3110+ is free. ⚠ MCM `SIGNAL_TYPE_MAX` is now exactly 3200 — keep new ids under it. |
+| 8 unbound T3 `HealSpell` slots | **LEAVE** (not a defect) | Only 3 `*_AvoidDeathHeal` spells exist (BaanDar/Shor/HoonDing). Nothing authored to bind; the `RestoreActorValue` fallback is live and correct. |
+| Retired BOOK urn `071557` | **LEAVE unbound** | Deliberately retired and migrated away by `EnsureDunmerAncestralUrn`; MISC urn `071611` is the live one. Binding it would revive a retired token. |
+| 3 threshold-less `PDV_RepTrack_*` quests | **LEAVE inert** | Nothing to cut — no code points at them. Only 2 RepTrack properties exist (Concordat, ThalmorAlignment, both live); the three same-named Breton systems are live via StorageUtil (10/6/13 refs). Record-side scaffolding only. |
+
+### Deferred to 1.0.4 (new player-facing content — needs balance + in-game proof)
+
+| Item | Call | Design |
+|---|---|---|
+| **Altmer Spine** (3 authored spells: Ordered/Disciplined/Exemplar Heritage, Magicka +10/+20/+30) | **WIRE** | Always-on + substrate ladder, **exclusive** (one held at a time), mirroring the Orc life-mode spine pattern. Altmer origin grants +10; heritage substrate MID swaps to +20; HIGH swaps to +30. Adds **zero** substrates — `PDV_Substrate_AltmerAncestor` already exists and is already fed (`RecordHeritageStandingScaled`). Altmer stays at 1 substrate, inside the 2-per-race ceiling. |
+| **Green Pact food positive** | **WIRE meat + insect ONLY**; fungi/egg stay neutral | Matches the original code's intent (only meat/insect ever routed positives; fungi/egg were debug traces). Halves the curation. Needs the 2 FormLists populated + real KID rules (the shipped `PDV_GreenPact_KID.ini` has **0** non-comment lines) + an anti-farm cap on the piety pulse. |
+| **Syrabane award sites** | **WIRE** (5 signals) | Deltas already tuned 1.8–2.2. Design work = deciding what act fires "protective warding", "apprentice aid", etc. Renumber lands in 1.0.3 so the collision dies immediately. |
+
+### Reverted from their patch — do NOT re-apply
+
+**7.1 broad-pantheon "containment"** (their `BROAD_SCOPE_CONTAIN` rewrite of
+`BeginBroadPantheonEvent`) was applied during the port and then **reverted**:
+`pdv_broad_pantheon_audit` asserts `source.concurrent-event-serialization` —
+distinct logical events must SERIALIZE and a stalled owner must FAIL CLOSED
+(`BROAD_SCOPE_ABORT` + `ClearBroadPantheonEventScope`). Their version instead
+folds a second concurrent act into the live event as a nested depth, so the
+newcomer's deltas are judged against the FIRST act's pool — their own changelog
+calls it "a merge, not a corruption." It is a real contract violation. The
+spin-wait (100 Hz, ≤2 real seconds) is a deliberate correctness cost. Their C5
+"confirmed gone" note is therefore moot for us. Source now carries a comment
+saying so.
+
+Also **not** taken: their cut of `DELTA_ANCESTOR_SPINE` from AuriEl / Magnus /
+Shor / Talos. `pdv_verify` asserts those declarations, and the 1.0.4 Altmer
+Spine wire is what will read them — cutting would have destroyed the intended
+values. (Azura / Malacath / Tu'whacca already return theirs.) The other 26 dead
+knobs were cut as planned. Their inlining of the `dayKey`/`countKey`/
+`lastFireKey` locals in `PDV_DeityBase` was also restored — the Phase 7 audit
+pins those names.
+
+### Added to the 1.0.3 smoke packet (two cheap probes, debug level 1–3)
+
+- **Brawl an NPC** — does a brawl punch route `EVT_ASSAULT_INNOCENT`? If yes, gate assault routing behind the vanilla `DGIntimidateQuest` brawl check.
+- **Kill a hostile wolf** — does it classify combat or non-combat? If non-combat, the engine clears hostility on death and hostility must be latched at combat time (or read off the hit event) instead of queried from the corpse.
+- **B18 (SM receiver `Stop()`/`Reset()` split): NOT touched** — the 0.1 s defer is a documented fix for the issue #17 CTD class. Do not "optimize" it.
+
+## Message for DrHeisen (owner relays)
+
+Their patch on top of Devotion **1.0.3** regresses it: the 1.0.2-based MGEF
+overrides revert the 18 Daedric price effects to ValueModifier (prices inert
+again), and the loose `PDV__ManagerQuest.pex` masks 1.0.3's curse-cure
+instant-restore + Redguard vampire-cure message (and now the Azura fix).
+Recommend: rebase the patch on 1.0.3 once released; as 1.0.4 upstreams the
+slate above, the patch should shrink toward the ARR-specific remainder.
+Their audit is credited in the 1.0.3 CHANGELOG.
