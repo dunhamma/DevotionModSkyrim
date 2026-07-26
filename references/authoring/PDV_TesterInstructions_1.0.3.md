@@ -121,6 +121,55 @@ craft something.
 
 ---
 
+## Test 6 — curing a curse restores you straight away
+
+This checks that when a curse is lifted, the penalty it caused goes away
+**immediately** instead of hours later.
+
+First, put the mod into "Redguard" mode for this test — it doesn't change your
+character, only which set of rules the mod applies:
+
+1. MCM → **Debug: State & Rewards** → find **Curse proof race** and press it
+   until it reads **Redguard**, then press **Apply proof race**.
+2. Console: `player.getav magicresist` → **write the number down.**
+3. Press **Curse werewolf**, then press **Curse refresh**.
+4. Console: `player.getav magicresist`
+   - ✅ Expected: **3 lower** than step 2.
+5. Press **Curse none**, then **immediately** check
+   `player.getav magicresist` — don't wait, don't sleep.
+   - ✅ Expected: back to your step 2 number **right away**.
+   - ❌ Report it if you have to wait or sleep for it to come back.
+
+---
+
+## Test 7 — the vampire-cure message ⚠ read this one carefully
+
+This test has a deliberate oddity. Something that looks like a bug here is
+actually the intended design, so please read before reporting.
+
+1. Still in Redguard mode from Test 6. Console: `player.getav magicresist` →
+   write the number down.
+2. Press **Curse vampire**, then **Curse refresh**.
+3. Press **Curse none**. A message appears — **please copy down what it says**,
+   or screenshot it.
+4. Console: `player.getav magicresist`.
+
+What to expect:
+
+- ✅ The message should explain that the ancestors' protection comes back when
+  you take up the "death-duty" again.
+- ✅ The number **staying 3 lower** is **CORRECT here** — unlike Test 6, a
+  vampire cure is *supposed* to hold the penalty until you do something in-game
+  to earn it back. That is the design, not a fault.
+- ❌ Only report a problem if the message is **missing**, is **cut off**, shows
+  odd symbols like `%s`, or doesn't mention the protection returning.
+
+When you're finished with Tests 6 and 7: press **Curse none**, then cycle
+**Curse proof race** back to whatever it said originally and press **Apply
+proof race** again.
+
+---
+
 ## Optional — only if it applies to you
 
 - **Big monitor (1440p or 4K):** do the corner pop-ups look readable, and stay
@@ -147,6 +196,9 @@ For each test: **pass**, or what went wrong.
 For Test 1, please include the actual numbers — your baseline, the value after
 the sting, and the value after clearing, for each repeat. Those numbers are the
 most useful thing in the whole packet.
+
+For Tests 6 and 7, include the numbers too, and for Test 7 the exact wording of
+the message.
 
 If anything crashes or you see a wall of error text, note roughly what you were
 doing at the time.
