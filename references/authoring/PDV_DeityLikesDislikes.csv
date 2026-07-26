@@ -128,11 +128,11 @@ alkosh,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,undeath defies time's l
 alkosh,343,learn-word-of-power,+,medium,0.75,2,0.5,,,,master the Thu'um as ordered dominion
 alkosh,304,murder-defenseless,-,medium,-1.0,2,0.5,,,,lawless slaughter shatters cosmic order
 alkosh,364,assault-innocent,-,small,-0.5,3,0,,,,chaos against the innocent offends the keeper of order
-azurah,313,rest-under-open-sky,+,small,0.5,3,0,,,,dawn-dusk observance beneath the twin moons
-azurah,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,,mercy shown to the cursed and outcast
-azurah,342,read-lore-book,+,small,0.25,3,0,,,,study of prophecy and the turning of fate
-azurah,343,learn-word-of-power,+,medium,0.75,2,0.5,,,,foresight rewarded; knowing what is to come
-azurah,304,murder-defenseless,-,medium,-0.75,2,0.5,,,,cruelty to the helpless betrays her mercy
+azura,313,rest-under-open-sky,+,small,0.5,3,0,,,,dawn-dusk observance beneath the twin moons
+azura,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,,mercy shown to the cursed and outcast
+azura,342,read-lore-book,+,small,0.25,3,0,,,,study of prophecy and the turning of fate
+azura,343,learn-word-of-power,+,medium,0.75,2,0.5,,,,foresight rewarded; knowing what is to come
+azura,304,murder-defenseless,-,medium,-0.75,2,0.5,,,,cruelty to the helpless betrays her mercy
 Boethiah,2,kill-hostile-humanoid,+,small,0.25,3,0,,,,victory of the worthy through open struggle
 Boethiah,344,increase-skill,+,small,0.5,3,0,,,,strength earned by trial and self-betterment
 Boethiah,304,murder-defenseless,+,medium,0.75,2,0.5,,,,the unworthy culled; rightful murder is her gift
@@ -183,7 +183,7 @@ Y'ffre,364,assault-innocent,-,small,-0.5,3,0,,,,violence against the innocent br
 Z'en,331,enchant-item,+,small,0.25,3,0,,,,skilled craft repays the world its due
 Z'en,360,pick-owned-lock,-,small,-0.25,3,0,,owned,,taking without paying the debt offends the ledger
 alkosh,361,trespass,-,small,-0.25,3,0,,,,breaking lawful bounds offends the keeper of order
-azurah,368,accept-daedric-artifact,+,small,0.5,3,0,,ActorTypeDaedra,,Azurah's Star is a gift rightly borne
+azura,368,accept-daedric-artifact,+,small,0.5,3,0,,ActorTypeDaedra,,Azurah's Star is a gift rightly borne
 The Hist,314,sleep-in-bed,+,small,0.25,1,0,,,,rest near the root and the People restores the sap-bond
 Boethiah,360,pick-owned-lock,+,small,0.25,3,0,,owned,,deceit and intrusion please the Prince of Plots
 Mephala,361,trespass,+,small,0.25,3,0,,,,intrusion into the hidden pleases the Webspinner
@@ -271,11 +271,11 @@ alkosh,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,,necromancy chains 
 alkosh,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,,the order-dragon drives back the chaos that lies outside time
 alkosh,368,accept-daedric-artifact,-,medium,-0.75,2,0.5,,ActorTypeDaedra,,bearing a chaos-lord's gift betrays the keeper of cosmic order
 alkosh,342,read-lore-book,+,small,0.25,3,0,,,,study the chronicles of the ages and the turning of proper time
-azurah,345,discover-location,+,small,0.5,3,0,,,,the Star-Gazer guides the lost and outcast to their path
-azurah,331,enchant-item,+,small,0.5,3,0,,,,soul-work honors her; Azura's Star is the eternal vessel
-azurah,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,the dawn drives back undeath; mercy frees the cursed dead
-azurah,365,raise-undead,-,large,-1.5,1,1.0,,ActorTypeUndead,,necromancy defiles the soul; the gravest sin against Azura
-azurah,364,assault-innocent,-,medium,-1.0,2,0.5,,,,preying on the helpless betrays her mercy to the outcast
+azura,345,discover-location,+,small,0.5,3,0,,,,the Star-Gazer guides the lost and outcast to their path
+azura,331,enchant-item,+,small,0.5,3,0,,,,soul-work honors her; Azura's Star is the eternal vessel
+azura,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,the dawn drives back undeath; mercy frees the cursed dead
+azura,365,raise-undead,-,large,-1.5,1,1.0,,ActorTypeUndead,,necromancy defiles the soul; the gravest sin against Azura
+azura,364,assault-innocent,-,medium,-1.0,2,0.5,,,,preying on the helpless betrays her mercy to the outcast
 Boethiah,1,kill-hostile-beast,+,small,0.25,3,0,,,,trial by tooth and claw; strength proven against the wild
 Boethiah,343,learn-word-of-power,+,small,0.5,3,0,,,,power seized through trial; self-betterment is her doctrine
 Boethiah,362,steal-item,+,small,0.25,3,0,,owned,,the plot rewarded; taking by cunning pleases the Prince of Plots
@@ -358,7 +358,7 @@ Tu'whacca,366,feed-as-vampire,-,large,-1.5,1,1.0,,,,each feeding chains another 
 auri-el,366,feed-as-vampire,-,medium,-1.0,2,0.5,,,,the blood-hunger drags the soul furthest from its ascent to the light
 Dibella,366,feed-as-vampire,-,medium,-0.75,2,0.5,,,,predation on the living body defiles beauty and intimacy alike
 khenarthi,366,feed-as-vampire,-,medium,-0.75,2,0.5,,,,the fed-upon soul is waylaid on the road home she keeps
-azurah,366,feed-as-vampire,-,medium,-1.0,2,0.5,,,,the Bal-corrupted hunger mocks her mercy toward the cursed
+azura,366,feed-as-vampire,-,medium,-1.0,2,0.5,,,,the Bal-corrupted hunger mocks her mercy toward the cursed
 magnus,366,feed-as-vampire,-,small,-0.5,3,0,,,,blood-hunger is corrupted vitality outside the architect's lawful design
 HoonDing,366,feed-as-vampire,-,medium,-0.75,2,0.5,,,,the parasite's hunger halts the sword onward; it makes no way
 rajhin,366,feed-as-vampire,-,small,-0.5,3,0,,,,crude blood-hunger is not the artful cat's elegant taking

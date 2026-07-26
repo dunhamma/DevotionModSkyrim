@@ -23,7 +23,6 @@ Int Property SIGNAL_MERCY = 1301 AutoReadOnly
 Int Property SIGNAL_LAWFUL_ORDER = 1302 AutoReadOnly
 Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1303 AutoReadOnly
 
-Float Property DELTA_CIVIC_SERVICE = 2.0 Auto
 Float Property DELTA_MERCY = 3.0 Auto
 Float Property DELTA_LAWFUL_ORDER = 2.5 Auto
 Float Property DELTA_PATRON_CIVIC_FAVOR = 3.0 Auto

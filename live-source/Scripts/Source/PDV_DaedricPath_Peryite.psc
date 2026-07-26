@@ -69,7 +69,6 @@ EndFunction
 Function DebugRenouncePath()
     ResetDaedricForDebug()
     SetStoredPiety(0.0, "debug_renounce")
-    StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Peryite.Renounced", 1)
     if Msg_Exit
         Msg_Exit.Show()
     endIf

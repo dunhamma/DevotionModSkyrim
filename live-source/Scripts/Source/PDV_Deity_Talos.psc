@@ -25,8 +25,14 @@ Int Property EVT_SHOUT_ATTACK = 40 AutoReadOnly
 Float Property DELTA_SHRINE_DEFIANCE = 3.0 Auto
 Float Property DELTA_PROTECT_WORSHIPPER = 4.0 Auto
 Float Property DELTA_DEFIANCE_MILESTONE = 5.0 Auto
-Float Property DELTA_ANCESTOR_SPINE = 1.0 Auto
 Float Property DELTA_SHOUT_ATTACK = 0.5 Auto
+
+; Contract-declared tuning knob for the ancestral-spine lane (pdv_verify asserts
+; DELTA_ANCESTOR_SPINE = 1.0 on this deity). Currently unread here -- the spine
+; scoring for this lane is specced, not yet wired -- so do NOT "clean it up": the
+; 1.0.4 Altmer Spine wire is what will read it, and deleting it now would throw
+; away the intended value. Azura / Malacath / Tu'whacca already return theirs.
+Float Property DELTA_ANCESTOR_SPINE = 1.0 Auto
 Int Property SHOUT_DAILY_CAP = 2 Auto
 Float Property SHOUT_COOLDOWN_DAYS = 0.0208 Auto
 

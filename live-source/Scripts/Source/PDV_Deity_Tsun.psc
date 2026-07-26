@@ -32,7 +32,6 @@ Int Property SIGNAL_ADVERSITY_SURVIVED = 3001 AutoReadOnly
 
 Float Property DELTA_TRIAL_ENDURED = 2.0 Auto
 Float Property DELTA_ADVERSITY_SURVIVED = 2.5 Auto
-Float Property DELTA_ENDURANCE_VIGIL = 4.0 Auto
 
 Event OnInit()
     if GetDebugLevel() >= 2

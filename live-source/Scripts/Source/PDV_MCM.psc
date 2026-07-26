@@ -23,6 +23,11 @@ FormList Property PDV_FLST_AllDeities Auto
 FormList Property PDV_FLST_RepTracks_All Auto
 FormList Property PDV_FLST_StateTracks_All Auto
 FormList Property PDV_FLST_Substrates_All Auto
+; Inert since the SacredPlace cut (1.0.3): the subsystem is superseded by the live
+; per-race home systems (Argonian bed-of-choice, the shared hearth-rest declaration,
+; Khajiit road-homes), so nothing reads this list any more. Kept declared only because
+; the PDV_MCM record BINDS it - deleting the declaration would log a "property does not
+; exist" warning every load.
 FormList Property PDV_FLST_SacredPlaces_All Auto
 FormList Property PDV_FLST_DaedricPaths_All Auto
 GlobalVariable Property PDV_GLO_ActivePiety Auto
@@ -39,7 +44,11 @@ Float Property PIETY_MAX = 200.0 AutoReadOnly
 Float Property PIETY_TODAY_MIN = -5.0 AutoReadOnly
 Float Property PIETY_TODAY_MAX = 5.0 AutoReadOnly
 Float Property SIGNAL_TYPE_MIN = 0.0 AutoReadOnly
-Float Property SIGNAL_TYPE_MAX = 999.0 AutoReadOnly
+; B17 / fix-plan 9.2: was 999.0, but real curated-signal ids run 101-3102, so the debug
+; slider could reach only about nine of the 34 deities -- everything from Akatosh through
+; Stuhn was unreachable from the tool built to fire it. 3200 clears the whole range with
+; headroom (and is the range fix-plan 5.3 named as free for any future renumbering).
+Float Property SIGNAL_TYPE_MAX = 3200.0 AutoReadOnly
 
 String Property PAGE_PLAYER = "Player" AutoReadOnly
 String Property PAGE_COMPAT = "Settings" AutoReadOnly
@@ -68,6 +77,9 @@ Int _oidAddBretonCurated = -1
 Int _oidShowBretonPractice = -1
 Int _oidResetBretonPractice = -1
 Int _oidPrepareUninstall = -1
+; A1 / fix-plan Group 11.2 -- manual stat repair (MCM-only; no automatic pass).
+Int _oidRepairStats = -1
+Int _oidShowStatResidue = -1
 Int _oidPendingSignalType = -1
 Int _oidApplyCuratedSignal = -1
 Int _oidDisfavorEventId = -1
@@ -284,12 +296,13 @@ Int Function GetVersion()
 EndFunction
 
 Function OnPageReset(String a_page)
+    ; B5 / fix-plan 9.1: FIRST statement, before any page is built. Replaces the two
+    ; hand-picked spot-resets that used to live here (_oidModeToggle,
+    ; _oidPrepareUninstall) -- see ResetAllOptionIds below for why partial coverage
+    ; was never enough.
+    ResetAllOptionIds()
     InitializePages()
     EnsureManagerBinding("page_reset_" + a_page)
-    _oidModeToggle = -1
-    ; Uninstall now lives on the Player page; reset per page so a stale OID from a
-    ; prior page build cannot collide with another control's OID on the dev pages.
-    _oidPrepareUninstall = -1
 
     if a_page == "" || a_page == PAGE_PLAYER
         BuildPlayerPage()
@@ -625,7 +638,11 @@ Function OnOptionHighlight(Int a_option)
     elseIf a_option == _oidShowDecaySummary
         SetInfoText("Shows the selected deity's decay state, rate, floor, and last decay day.")
     elseIf a_option == _oidPrepareUninstall
-        SetInfoText("Best-effort cleanup for a throwaway uninstall save. Save first. A pre-install save is the only fully clean removal.")
+        SetInfoText("Best-effort cleanup for a throwaway uninstall save. Save first. Runs the stat repair first, then strips Devotion's spells, factions and saved data. A pre-install save is the only fully clean removal.")
+    elseIf a_option == _oidShowStatResidue
+        SetInfoText("Read-only. Lists every actor value that still carries a permanent modifier - the drift older Devotion builds baked into this save. Changes nothing.")
+    elseIf a_option == _oidRepairStats
+        SetInfoText("SAVE FIRST. Zeroes the permanent modifier on every actor value Devotion can touch, with no Devotion ability held, then re-grants them. Also clears any permanent modifier ANOTHER mod placed on those same values - rare, but real.")
     elseIf a_option == _oidKhajiitFocusBaanDar || a_option == _oidKhajiitFocusRajhin || a_option == _oidKhajiitFocusAlkosh
         SetInfoText("Forces the Khajiit emergent focus to this moon-path so its tier reward becomes testable. Then force piety and Run Dawn to light the Champion blessing.")
     elseIf a_option == _oidBretonKnightsRoad || a_option == _oidBretonHiddenArt || a_option == _oidBretonGreenWay
@@ -1036,6 +1053,28 @@ Function OnOptionSelect(Int a_option)
             if ShowMessage("Reset the active Breton tradition to zero practice points and clear today's debug budget?", True, "$Yes", "$No")
                 ShowMessage(PDV_Manager.DebugResetBretonPracticePoints(), False, "$OK", "")
                 ForcePageReset()
+            endIf
+        endIf
+        return
+    endIf
+
+    if a_option == _oidShowStatResidue
+        if EnsureManagerBinding("authoria_stat_residue")
+            ShowMessage(PDV_Manager.GetAuthoriaResidueSummary(), False, "$OK", "")
+        else
+            ShowMessage("Devotion is still starting up. Try again in a moment.", False, "$OK", "")
+        endIf
+        return
+    endIf
+
+    if a_option == _oidRepairStats
+        if ShowMessage("Repair Devotion's permanent stat damage? SAVE FIRST. Older Devotion builds applied their penalties and boons as PERMANENT actor-value changes that were never reverted, so a long save drifts thousands of points away from truth. This removes every Devotion ability, zeroes the permanent modifier on the actor values Devotion can touch, then re-grants your abilities normally. It ALSO clears any permanent modifier another mod placed on those same values - rare, but real. Continue?", True, "$Yes", "$No")
+            if EnsureManagerBinding("authoria_stat_repair")
+                PDV_Manager.RunAuthoriaActorValueRepair(True, True)
+                ShowMessage(PDV_Manager.GetAuthoriaResidueSummary(), False, "$OK", "")
+                ForcePageReset()
+            else
+                ShowMessage("Devotion is still starting up. Try again in a moment.", False, "$OK", "")
             endIf
         endIf
         return
@@ -1859,6 +1898,8 @@ Function BuildPlayerPage()
 
     AddHeaderOption("Maintenance", OPTION_FLAG_NONE)
     AddTextOption("Version", GetBuildVersionLabel(), OPTION_FLAG_DISABLED)
+    _oidShowStatResidue = AddTextOption("Check stat damage", "Read now", OPTION_FLAG_NONE)
+    _oidRepairStats = AddTextOption("Repair stats", "Save first", OPTION_FLAG_NONE)
     _oidPrepareUninstall = AddTextOption("Prepare for uninstall", "Save first", OPTION_FLAG_NONE)
 
     SetCursorFillMode(LEFT_TO_RIGHT)
@@ -3730,7 +3771,6 @@ String Function BuildStructuralMapString()
     String output = "Rep=" + GetFormListCount(PDV_FLST_RepTracks_All)
     output = output + "; State=" + GetFormListCount(PDV_FLST_StateTracks_All)
     output = output + "; Substrate=" + GetFormListCount(PDV_FLST_Substrates_All)
-    output = output + "; Sacred=" + GetFormListCount(PDV_FLST_SacredPlaces_All)
     output = output + "; Daedric=" + GetFormListCount(PDV_FLST_DaedricPaths_All)
     output = output + "; Curse=" + GetCurseServiceLabel()
     return output
@@ -3740,7 +3780,6 @@ String Function RunScaffoldApiSmoke()
     String output = RunReputationTrackSmoke()
     output = output + "; " + RunStateTrackSmoke()
     output = output + "; " + RunSubstrateSmoke()
-    output = output + "; " + RunSacredPlaceSmoke()
     output = output + "; " + RunDaedricSmoke()
     output = output + "; " + RunCurseStateSmoke()
     return output
@@ -3797,19 +3836,10 @@ String Function RunSubstrateSmoke()
     return "Substrate ok"
 EndFunction
 
-String Function RunSacredPlaceSmoke()
-    PDV_SacredPlace place = GetFirstSacredPlace()
-    if !place
-        return "Sacred missing"
-    endIf
-
-    Float oldDecay = place.GetMissedVisitDecay()
-    place.DebugForceMissedVisitDecay(oldDecay + 1.0)
-    Float adjustedDecay = place.GetMissedVisitDecay()
-    place.DebugForceMissedVisitDecay(oldDecay)
-    Debug.Trace("[PDV] MCM ScaffoldSmoke: sacred place " + place.PlaceName + " " + oldDecay + " -> " + adjustedDecay + " -> " + place.GetMissedVisitDecay())
-    return "Sacred ok"
-EndFunction
+; RunSacredPlaceSmoke() CUT (1.0.3) along with the rest of the SacredPlace subsystem -
+; it was the only code left in the mod that still reached into PDV_SacredPlace. The
+; feature itself ships live elsewhere (Argonian bed-of-choice, the shared hearth-rest
+; declaration, Khajiit road-homes), so this was smoke-testing a superseded design.
 
 String Function RunDaedricSmoke()
     PDV_DaedricPathBase path = GetFirstDaedricPath()
@@ -3843,6 +3873,15 @@ String Function RunCurseStateSmoke()
     else
         PDV_CurseStateService.SetCurseState(oldState, "mcm_scaffold_restore")
     endIf
+    ; D5 / fix-plan 9.3. This smoke drives curse state through the SERVICE, which owns
+    ; the value on its own form, and never through PDV__ManagerQuest.HandleCurseStateTransition,
+    ; which owns the None-keyed "PDV.Curse.State" mirror the Redguard vampire-reentry gate
+    ; and the diegetic director read. The two could be left disagreeing. Re-sync the mirror
+    ; rather than routing the restore through the transition handler: the state has been put
+    ; back where it started, so nothing should re-fire a curse-onset surface for it.
+    if PDV_Manager
+        PDV_Manager.ResyncCurseStateMirror("mcm_scaffold_restore")
+    endIf
     Debug.Trace("[PDV] MCM ScaffoldSmoke: curse " + oldState + " -> " + adjustedState + " -> " + PDV_CurseStateService.GetCurseState())
     return "Curse ok"
 EndFunction
@@ -3866,13 +3905,6 @@ PDV_SubstrateBase Function GetFirstSubstrate()
         return None
     endIf
     return PDV_FLST_Substrates_All.GetAt(0) as PDV_SubstrateBase
-EndFunction
-
-PDV_SacredPlace Function GetFirstSacredPlace()
-    if !PDV_FLST_SacredPlaces_All || PDV_FLST_SacredPlaces_All.GetSize() <= 0
-        return None
-    endIf
-    return PDV_FLST_SacredPlaces_All.GetAt(0) as PDV_SacredPlace
 EndFunction
 
 PDV_DaedricPathBase Function GetFirstDaedricPath()
@@ -3925,4 +3957,197 @@ Float Function ClampFloat(Float value, Float minValue, Float maxValue)
         return maxValue
     endIf
     return value
+EndFunction
+
+;/ =====================================================================
+    B5 / fix-plan 9.1 -- stale option IDs, the dangerous one
+    ---------------------------------------------------------------------
+    PDV_MCM holds 169 _oid* variables and OnPageReset used to clear exactly
+    two of them. SkyUI hands out option IDs SEQUENTIALLY PER PAGE, so an oid
+    left over from a page visited earlier can numerically equal a live option
+    on the page you are looking at now -- and OnOptionSelect / OnOptionSliderAccept
+    dispatch through one flat, page-blind if-chain of == comparisons, so the
+    FIRST stale match wins and the click lands on the wrong handler. Among the
+    handlers reachable that way are destructive debug ones: ResetDaedricForDebug,
+    DebugRenouncePath, the piety seeds.
+
+    The authors had already met this bug and patched the two symptoms they saw
+    (_oidModeToggle, _oidPrepareUninstall). This generalizes that fix instead of
+    waiting for the next symptom: every _oid* goes back to -1 before a page is
+    rebuilt, so a comparison can only match a control the current page actually
+    registered.
+
+    Generated from this file's own declaration list -- all 169, in name order.
+    If a control is added, add its reset here too.
+   ===================================================================== /;
+Function ResetAllOptionIds()
+    _oidAcceptCommitmentOffer = -1
+    _oidAddBretonCurated = -1
+    _oidAddBretonRenewable = -1
+    _oidApplyBretonPractice = -1
+    _oidApplyCuratedSignal = -1
+    _oidApplyDomainSting = -1
+    _oidApplyPiety = -1
+    _oidApplyPietyToday = -1
+    _oidArgonianPeople = -1
+    _oidArgonianVoid = -1
+    _oidBoethiahHonorableDuel = -1
+    _oidBosmerBanditRoad = -1
+    _oidBosmerBanditRoadSignal = -1
+    _oidBosmerConfirmRite = -1
+    _oidBosmerExchange = -1
+    _oidBosmerExchangeSignal = -1
+    _oidBosmerGreenPactViolation = -1
+    _oidBosmerLivingStory = -1
+    _oidBosmerLivingStorySignal = -1
+    _oidBosmerOldContract = -1
+    _oidBosmerPactPositiveSignal = -1
+    _oidBosmerSeedVariety = -1
+    _oidBretonGreenWay = -1
+    _oidBretonHiddenArt = -1
+    _oidBretonKnightsRoad = -1
+    _oidCommitmentReset = -1
+    _oidCommitmentSeedSignals = -1
+    _oidCompatCC = -1
+    _oidCompatRaceMapping = -1
+    _oidCompatSurvival = -1
+    _oidConcordatCompliance = -1
+    _oidConcordatDefiance = -1
+    _oidConcordatUnlockGate = -1
+    _oidCurseProofRaceApply = -1
+    _oidCurseProofRaceCycle = -1
+    _oidCurseRefreshFromPlayer = -1
+    _oidDaedricChampion = -1
+    _oidDaedricDevoted = -1
+    _oidDaedricGenericProbe = -1
+    _oidDaedricLapse = -1
+    _oidDaedricLiveRoute = -1
+    _oidDaedricReset = -1
+    _oidDaedricRouteAll = -1
+    _oidDaedricSeeker = -1
+    _oidDaedricSelectedPath = -1
+    _oidDaedricShowSummary = -1
+    _oidDaedricSignal = -1
+    _oidDaedricStigma = -1
+    _oidDebugClearPatron = -1
+    _oidDebugLevel = -1
+    _oidDebugPatronOverride = -1
+    _oidDebugResetDeity = -1
+    _oidDebugSetBroadWorship = -1
+    _oidDecayPrimeEligible = -1
+    _oidDecayPrimeGrace = -1
+    _oidDecayRunPass = -1
+    _oidDecayRunProofDays = -1
+    _oidDeclineCommitmentOffer = -1
+    _oidDiegeticD1 = -1
+    _oidDisfavorBandToggle = -1
+    _oidDisfavorBurst = -1
+    _oidDisfavorClear = -1
+    _oidDisfavorDomainCycle = -1
+    _oidDisfavorEventId = -1
+    _oidDisfavorShow = -1
+    _oidDunmerHomeBonus = -1
+    _oidDunmerPrayer = -1
+    _oidEvaluateCommitmentOffer = -1
+    _oidExportReport = -1
+    _oidFavorExpire = -1
+    _oidFavorFamilyCycle = -1
+    _oidFavorLaneCycle = -1
+    _oidFavorTrigger = -1
+    _oidFireDislike = -1
+    _oidForceCurseNone = -1
+    _oidForceCurseVampire = -1
+    _oidForceCurseWerewolf = -1
+    _oidForceSelectedPatron = -1
+    _oidHircineHuntRite = -1
+    _oidHircineRenounce = -1
+    _oidHircineReset = -1
+    _oidInGameEffects = -1
+    _oidJournalHotkey = -1
+    _oidKhajiitCaravanAid = -1
+    _oidKhajiitFocusAlkosh = -1
+    _oidKhajiitFocusBaanDar = -1
+    _oidKhajiitFocusRajhin = -1
+    _oidKhajiitLegendMade = -1
+    _oidKhajiitLunarBudgetShow = -1
+    _oidKhajiitLunarReset = -1
+    _oidKhajiitLunarSeedT2 = -1
+    _oidKhajiitLunarSeedT3 = -1
+    _oidKhajiitMoonObservance = -1
+    _oidKhajiitPostureCycle = -1
+    _oidKhajiitRoadHome = -1
+    _oidMephalaWebWoven = -1
+    _oidModeToggle = -1
+    _oidNeglectRunPass = -1
+    _oidNordNineDivines = -1
+    _oidNordOldWays = -1
+    _oidNotifications = -1
+    _oidOpenJournalNow = -1
+    _oidOrcCity = -1
+    _oidOrcLegionExile = -1
+    _oidOrcStronghold = -1
+    _oidPacingBroadCatchup = -1
+    _oidPacingBroadFanout = -1
+    _oidPacingBroadMigration = -1
+    _oidPacingBroadPool = -1
+    _oidPacingBroadReset = -1
+    _oidPacingBroadScratchNegative = -1
+    _oidPacingBroadScratchPositive = -1
+    _oidPacingBroadSeed24 = -1
+    _oidPacingBroadSeed25 = -1
+    _oidPacingBroadSeed49 = -1
+    _oidPacingBroadSeed50 = -1
+    _oidPacingBroadStatus = -1
+    _oidPacingImperialCure = -1
+    _oidPacingImperialVampire = -1
+    _oidPacingNordBaseline = -1
+    _oidPacingNordBaselineApply = -1
+    _oidPacingPatronAccept = -1
+    _oidPacingPatronLapse = -1
+    _oidPacingPatronOffer = -1
+    _oidPacingPatronRecover = -1
+    _oidPacingPatronStatus = -1
+    _oidPacingSetBroad = -1
+    _oidPacingSubstrateOrigin = -1
+    _oidPacingSubstrateOriginApply = -1
+    _oidPacingSubstrateReset = -1
+    _oidPacingSubstrateSeed0 = -1
+    _oidPacingSubstrateSeed24 = -1
+    _oidPacingSubstrateSeed25 = -1
+    _oidPacingSubstrateSeed74 = -1
+    _oidPacingSubstrateSeed75 = -1
+    _oidPacingSubstrateSource = -1
+    _oidPacingSubstrateStatus = -1
+    _oidPacingSubstrateTrigger = -1
+    _oidPanelHotkey = -1
+    _oidPendingBretonPractice = -1
+    _oidPendingPiety = -1
+    _oidPendingPietyToday = -1
+    _oidPendingSignalType = -1
+    _oidPrepareUninstall = -1
+    _oidPrimeNeglectEligible = -1
+    _oidPrimeRaceLaneNeglect = -1
+    _oidQuestReactionPerformanceSweep = -1
+    _oidQuestReactionQueueStatus = -1
+    _oidReDetectOrigin = -1
+    _oidRefuseCommitmentOffer = -1
+    _oidReloadQuestMatrix = -1
+    _oidRepairStats = -1
+    _oidResetBretonPractice = -1
+    _oidRunDawn = -1
+    _oidRunScaffoldApiSmoke = -1
+    _oidSeedBroadLane = -1
+    _oidSelectedDeity = -1
+    _oidShowBretonPractice = -1
+    _oidShowDecaySummary = -1
+    _oidShowPatternSummary = -1
+    _oidShowPietyMap = -1
+    _oidShowStatResidue = -1
+    _oidShowStructuralMap = -1
+    _oidSignalFloorRun = -1
+    _oidSignalFloorScenario = -1
+    _oidSurveyDevotion = -1
+    _oidTalosBetrayalCompliance = -1
+    _oidTalosBetrayalMajor = -1
+    _oidTalosShrineDefiance = -1
 EndFunction

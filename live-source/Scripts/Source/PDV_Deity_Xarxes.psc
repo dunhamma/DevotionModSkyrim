@@ -18,9 +18,7 @@ Scriptname PDV_Deity_Xarxes extends PDV_DeityBase
 Int Property SIGNAL_LINEAGE_HONORED = 1902 AutoReadOnly     ; honoring ancestry / the ancestral record (curated)
 Int Property SIGNAL_SHARED_PACT_MEMORY = 1904 AutoReadOnly  ; small foundation-keeping pulse to the record
 
-Float Property DELTA_RECORD_KEEPING = 1.8 Auto
 Float Property DELTA_LINEAGE_HONORED = 2.2 Auto
-Float Property DELTA_LEDGER_RESTORED = 3.0 Auto
 Float Property DELTA_SHARED_PACT_MEMORY = 1.0 Auto
 
 Float Function ScoreAction(Int eventType, Form actorRef, Form targetRef)

@@ -10,8 +10,6 @@
 
 Scriptname PDV_Substrate_KhajiitLunar extends PDV_SubstrateBase
 
-Float Property MoonObservanceDelta = 4.0 Auto ; Legacy VMAD compatibility.
-Float Property RoadHomeDelta = 6.0 Auto ; Legacy VMAD compatibility.
 
 Bool Function IsAuthenticSubstrateSource(String sourceId)
     return sourceId == "khajiit_moon" || sourceId == "khajiit_road_home" || sourceId == "khajiit_lunar_source" || sourceId == "khajiit_caravan_defense" || sourceId == "khajiit_baandar_reversal" || sourceId == "khajiit_rajhin_notable_theft" || sourceId == "khajiit_alkosh_milestone"

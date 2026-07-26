@@ -9,9 +9,6 @@
 
 Scriptname PDV_Substrate_NordAncestor extends PDV_SubstrateBase
 
-Float Property AncestorStandingDelta = 5.0 Auto ; Legacy VMAD compatibility.
-Float Property AncestralRestDelta = 3.0 Auto ; Legacy VMAD compatibility.
-Float Property HearthReturnDelta = 2.0 Auto ; Legacy VMAD compatibility.
 Float Property DawnDecay = 1.0 Auto
 Float Property DawnGraceDays = 3.0 Auto
 Float Property NonCurseFloor = 20.0 Auto

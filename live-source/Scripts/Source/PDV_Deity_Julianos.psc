@@ -18,8 +18,6 @@ Scriptname PDV_Deity_Julianos extends PDV_DeityBase
 
 Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1602 AutoReadOnly
 
-Float Property DELTA_CIVIC_SERVICE = 2.0 Auto
-Float Property DELTA_LAWFUL_ORDER = 3.0 Auto
 Float Property DELTA_PATRON_CIVIC_FAVOR = 3.0 Auto
 
 Event OnInit()

@@ -14,8 +14,6 @@ Bool Function IsAuthenticSubstrateSource(String sourceId)
     return sourceId == "dunmer_portable_prayer" || sourceId == "dunmer_home_prayer"
 EndFunction
 
-Float Property PrayerDelta = 5.0 Auto ; Legacy VMAD compatibility.
-Float Property HomeBonusDelta = 8.0 Auto ; Legacy VMAD compatibility.
 
 Function RecordPortableShrinePrayer(String reason)
     RecordPortableShrinePrayerScaled(1.0, reason)

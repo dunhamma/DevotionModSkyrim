@@ -54,7 +54,10 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         return
     endIf
 
-    RouteSignal()
+    ; B14 / fix-plan 4.4: stamp the once-per-day charge only on a route that succeeded.
+    if RouteSignal()
+        StampOncePerDayKey()
+    endIf
 EndEvent
 
 Bool Function CanRouteSignal()
@@ -75,21 +78,37 @@ Bool Function CanRouteSignal()
         endIf
     endIf
 
+    ; B14 / fix-plan 4.4. This used to CONSUME the day's charge here, in the "can I?"
+    ; check, and then RouteSignal could still fall through its unsupported-RouteId else
+    ; branch or hit a null PDV_Manager inside the bus -- charge gone, nothing routed,
+    ; no feedback. It now only TESTS the key; StampOncePerDayKey is called by the event
+    ; handler, and only when RouteSignal reports it actually dispatched.
     if OncePerDayKey != ""
-        Float nowTime = Utility.GetCurrentGameTime()
         Float lastTime = StorageUtil.GetFloatValue(None, OncePerDayKey)
-        if lastTime > 0.0 && (nowTime - lastTime) < 1.0
+        if lastTime > 0.0 && (Utility.GetCurrentGameTime() - lastTime) < 1.0
             Trace(2, "Effect ignored by once-per-day key.")
             return False
         endIf
-
-        StorageUtil.SetFloatValue(None, OncePerDayKey, nowTime)
     endIf
 
     return True
 EndFunction
 
-Function RouteSignal()
+Function StampOncePerDayKey()
+    if OncePerDayKey != ""
+        StorageUtil.SetFloatValue(None, OncePerDayKey, Utility.GetCurrentGameTime())
+    endIf
+EndFunction
+
+Bool Function RouteSignal()
+    ; Every Route* below no-ops when the bus has no PDV_Manager bound, which is exactly
+    ; the early-after-load state that made this charge-burn visible. Fail before the
+    ; charge is spent rather than after.
+    if !PDV_EventBusService.PDV_Manager
+        Trace(1, "Effect skipped: event bus has no manager bound.")
+        return False
+    endIf
+
     if RouteId == ROUTE_DUNMER_PORTABLE_SHRINE
         PDV_EventBusService.RouteDunmerPortableShrinePrayer()
     elseIf RouteId == ROUTE_DUNMER_HOME_BONUS
@@ -142,10 +161,11 @@ Function RouteSignal()
         PDV_EventBusService.RouteDaedricGenericSilenceProbe(GetSignalSourceId())
     else
         Trace(1, "Effect skipped: unsupported RouteId " + RouteId)
-        return
+        return False
     endIf
 
     Trace(2, "Effect routed " + RouteId + " " + TraceLabel)
+    return True
 EndFunction
 
 String Function GetSignalSourceId()

@@ -21,7 +21,6 @@ Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1001 AutoReadOnly
 
 Float Property DELTA_CIVIC_SERVICE = 2.0 Auto
 Float Property DELTA_PATRON_CIVIC_FAVOR = 3.0 Auto
-Float Property DELTA_COVENANT_MILESTONE = 5.0 Auto
 
 Event OnInit()
     if GetDebugLevel() >= 2

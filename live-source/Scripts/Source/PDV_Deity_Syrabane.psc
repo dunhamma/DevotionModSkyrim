@@ -16,11 +16,18 @@
 
 Scriptname PDV_Deity_Syrabane extends PDV_DeityBase
 
-Int Property SIGNAL_PROTECTIVE_WARDING = 2001 AutoReadOnly
-Int Property SIGNAL_APPRENTICE_AID = 2002 AutoReadOnly
-Int Property SIGNAL_CURSE_DISEASE_WARDING = 2003 AutoReadOnly
-Int Property SIGNAL_ANTI_MAGE_SURVIVAL = 2004 AutoReadOnly
-Int Property SIGNAL_MAGICAL_CONTAINMENT = 2005 AutoReadOnly
+; Signal ids renumbered 2001-2005 -> 3110-3114 (1.0.3). Four of the original five
+; collided with PDV_Deity_Boethiah's authored ids (2001 righteous struggle, 2002
+; honorable duel, 2003 shared pact memory, 2005 reclamation abandoned), so a curated
+; signal fired for one could score on the other. The highest id otherwise in use is
+; 3102, and the MCM debug slider's ceiling is 3200, so 3110-3114 is free and reachable.
+; NOTE: these signals still have NO award sites -- authoring them is 1.0.4 work. Until
+; then Syrabane earns through ScoreFromTable / the quest-reaction matrix, as it does now.
+Int Property SIGNAL_PROTECTIVE_WARDING = 3110 AutoReadOnly
+Int Property SIGNAL_APPRENTICE_AID = 3111 AutoReadOnly
+Int Property SIGNAL_CURSE_DISEASE_WARDING = 3112 AutoReadOnly
+Int Property SIGNAL_ANTI_MAGE_SURVIVAL = 3113 AutoReadOnly
+Int Property SIGNAL_MAGICAL_CONTAINMENT = 3114 AutoReadOnly
 
 Float Property DELTA_PROTECTIVE_WARDING = 1.8 Auto
 Float Property DELTA_APPRENTICE_AID = 1.8 Auto

@@ -136,13 +136,133 @@ Bool Function IsNordBaselineNativeForPlayer()
     return False
 EndFunction
 
+;/ =====================================================================
+    12.4 / audit C4 -- the participating-event cache
+    ---------------------------------------------------------------------
+    Every broadcast act (a kill, a skill-up, a craft, a picked lock, a book,
+    a harvest...) fans out over the whole ~34-deity roster in
+    PDV_EventBus.RouteActionWithAttribution, calling ScoreAction -- and so
+    ScoreFromTable -- once per deity. Roughly thirty of those deities have no
+    likes/dislikes row for the event at all, and each of them still paid a
+    "PDV.LD." + eventType string build, the race gate (a GlobalVariable read,
+    and for a Nord player a StorageUtil read plus up to nine String compares),
+    and then one or two StorageUtil.GetFloatValue probes to discover the row it
+    already knew nothing about. On a Nord character that is ~68 native calls and
+    several hundred string compares per event, and kills alone make that hot.
+
+    The fix the fix-plan asked for is a precomputed participating-deity list per
+    event type. This is that list, held from the other end: each deity records
+    which event types it was given a row for, at the moment WriteLD writes them.
+    Membership is then a scan of a ~13-element Int array -- no native call, no
+    string work -- and a non-participating deity leaves ScoreFromTable before it
+    touches anything.
+
+    Correctness properties, in order of importance:
+      - It FAILS OPEN. The cache answers "maybe" unless the manager has sealed it
+        after a complete rebuild, so an old save, an interrupted load, or an
+        overflow all fall back to exactly the old probing behaviour. A stale
+        cache can never silently withhold piety, which is the only failure mode
+        that would matter.
+      - It is rebuilt in lockstep with the rows themselves: ClearRowsForDeity
+        resets it, WriteLD fills it, LoadLikesDislikesTable seals it. There is no
+        path that writes a row without recording it.
+      - LIKES_DISLIKES_VERSION is bumped alongside this so existing saves rebuild
+        the table once, which is what builds and seals the caches for them.
+    Note the cache is keyed on the BASE event type, which is what both the base
+    row and the origin-gated overlay row are written under -- so an origin row
+    can never be missed by the early-out.
+   ===================================================================== /;
+Int Property LD_EVENT_CACHE_MAX = 64 AutoReadOnly
+Bool _ldEventCacheSealed = false
+Bool _ldEventCacheBuilding = false
+Int _ldEventCacheCount = 0
+Int[] _ldEventCache
+
+Function ResetLikesDislikesEventCache()
+    _ldEventCache = Utility.CreateIntArray(LD_EVENT_CACHE_MAX, -1)
+    _ldEventCacheCount = 0
+    _ldEventCacheSealed = false
+    _ldEventCacheBuilding = true
+EndFunction
+
+Function NoteLikesDislikesEvent(Int eventType)
+    ; Not inside a rebuild -- an old save whose table was written before this cache
+    ; existed, or a build already abandoned below. Stay unsealed; the early-out stays
+    ; off and ScoreFromTable probes StorageUtil exactly as it always did.
+    if !_ldEventCacheBuilding
+        return
+    endIf
+
+    Int cacheIndex = 0
+    while cacheIndex < _ldEventCacheCount
+        if _ldEventCache[cacheIndex] == eventType
+            return
+        endIf
+        cacheIndex += 1
+    endWhile
+
+    if _ldEventCacheCount >= LD_EVENT_CACHE_MAX
+        ; More distinct events than the array can hold. Answering "no row" for a real
+        ; row would silently withhold piety, so abandon this deity's cache instead --
+        ; the build is cancelled and can no longer be sealed.
+        _ldEventCacheBuilding = false
+        _ldEventCacheCount = 0
+        return
+    endIf
+
+    _ldEventCache[_ldEventCacheCount] = eventType
+    _ldEventCacheCount += 1
+EndFunction
+
+; Called by the manager only after LoadRowsForDeity has run to completion. A deity with
+; no rows at all seals with count 0 and legitimately answers "no" to everything.
+Function SealLikesDislikesEventCache()
+    if !_ldEventCacheBuilding
+        return
+    endIf
+    _ldEventCacheBuilding = false
+    _ldEventCacheSealed = true
+EndFunction
+
+Bool Function HasLikesDislikesRowForEvent(Int eventType)
+    if !_ldEventCacheSealed
+        return true
+    endIf
+
+    Int cacheIndex = 0
+    while cacheIndex < _ldEventCacheCount
+        if _ldEventCache[cacheIndex] == eventType
+            return true
+        endIf
+        cacheIndex += 1
+    endWhile
+
+    return false
+EndFunction
+
 Float Function ScoreFromTable(Int eventType)
-    Form tableDeityForm = GetDeityForm()
-    String tableKeyPrefix = "PDV.LD." + eventType
+    ; fix-plan 4.3: a scoring round starts clean. Anything still pending here belongs
+    ; to a previous round whose caller never resolved it (a save reloaded mid-round,
+    ; say), and carrying it forward would spend this event's cap slot on that one.
+    DiscardPendingRepeatableActions()
+
+    ; 12.4. The cheapest possible answer first: if this deity was never given a row
+    ; for this event, nothing below can produce a score. Zero native calls, zero
+    ; string work. Fails open when the cache is not sealed (see the block above).
+    if !HasLikesDislikesRowForEvent(eventType)
+        return 0.0
+    endIf
+
     ; Race-eligibility gate: only deities NATIVE to the player's race score generic acts.
     if !IsRaceNativeForPlayer()
         return 0.0
     endIf
+
+    ; 12.4. The key prefix is built AFTER both gates now. It used to be built for all
+    ; ~34 deities on every broadcast event and thrown away by the race gate two lines
+    ; later; a Papyrus string concat allocates and interns, so that was not free.
+    Form tableDeityForm = GetDeityForm()
+    String tableKeyPrefix = "PDV.LD." + eventType
 
     Float score = 0.0
     Float tableDelta = StorageUtil.GetFloatValue(tableDeityForm, tableKeyPrefix + ".D")
@@ -327,7 +447,46 @@ Int Function GetDevotionDayIndex()
     return adjustedDayTime as Int
 EndFunction
 
+;/ =====================================================================
+    B7 / fix-plan 4.3 -- peek/commit split
+    ---------------------------------------------------------------------
+    ScoreRepeatableAction used to COMMIT the Day/Count/LastFire bookkeeping the
+    moment it decided to return a nonzero delta. But the delta is only a proposal:
+    downstream, PDV__ManagerQuest.RunGainPipeline multiplies it by the eligibility,
+    curse, stigma, survival-context, lunar and mode-preset multipliers, any one of
+    which can take the award to exactly 0. Every such case burned a daily cap slot
+    and started a cooldown for piety that never landed -- invisible to the player,
+    and worst on a cursed or ineligible character, who is already earning nothing.
+
+    The split: the peek decides and writes NOTHING; the commit writes. The public
+    entry point keeps its old name and signature, so none of the 34 deity scripts,
+    PDV_Deity_Kyne's shout branch or PDV_DaedricPathBase.ScorePrinceAction change --
+    they queue a pending commit instead of performing one. The caller that knows
+    whether the award actually landed (PDV__ManagerQuest.AwardPietyInternal, which
+    returns the applied amount, and RouteActionToOpenPaths for the Prince lane)
+    resolves the queue with CommitPendingRepeatableActions/DiscardPending...
+
+    Two slots is the true maximum for one scoring round: ScoreFromTable can queue
+    the base row plus one origin-gated row, and every other path queues exactly one.
+    A third queue in the same round can only mean a caller never resolved the last
+    one, so it commits immediately -- degrading to the old behaviour rather than
+    silently dropping anti-farm bookkeeping.
+   ===================================================================== /;
+Int _pendingRepeatEventA = -1
+Int _pendingRepeatEventB = -1
+
 Float Function ScoreRepeatableAction(Int eventType, Float delta, Int dailyCap, Float cooldownDays)
+    Float allowedDelta = PeekRepeatableAction(eventType, delta, dailyCap, cooldownDays)
+    if allowedDelta != 0.0
+        QueueRepeatableCommit(eventType)
+    endIf
+    return allowedDelta
+EndFunction
+
+; Decides only. No StorageUtil writes on any path -- including the stale-day reset,
+; which moved into the commit so a peek on a new day cannot zero the count for an
+; award that then gets multiplied away.
+Float Function PeekRepeatableAction(Int eventType, Float delta, Int dailyCap, Float cooldownDays)
     if delta == 0.0
         return 0.0
     endIf
@@ -342,9 +501,6 @@ Float Function ScoreRepeatableAction(Int eventType, Float delta, Int dailyCap, F
 
     if StorageUtil.GetIntValue(deityForm, dayKey) == currentDay
         currentCount = StorageUtil.GetIntValue(deityForm, countKey)
-    else
-        StorageUtil.SetIntValue(deityForm, dayKey, currentDay)
-        StorageUtil.SetIntValue(deityForm, countKey, 0)
     endIf
 
     if dailyCap > 0 && currentCount >= dailyCap
@@ -354,19 +510,62 @@ Float Function ScoreRepeatableAction(Int eventType, Float delta, Int dailyCap, F
         return 0.0
     endIf
 
-    Float nowTime = Utility.GetCurrentGameTime()
     Float lastFireTime = StorageUtil.GetFloatValue(deityForm, lastFireKey)
-    if cooldownDays > 0.0 && lastFireTime > 0.0 && (nowTime - lastFireTime) < cooldownDays
+    if cooldownDays > 0.0 && lastFireTime > 0.0 && (Utility.GetCurrentGameTime() - lastFireTime) < cooldownDays
         if GetDebugLevel() >= 3
             Debug.Trace("[PDV] " + DeityName + " repeatable event " + eventType + " blocked by cooldown.")
         endIf
         return 0.0
     endIf
 
+    return delta
+EndFunction
+
+; Spends the cap slot and starts the cooldown. Idempotent per call, not per round.
+Function CommitRepeatableAction(Int eventType)
+    Form deityForm = GetDeityForm()
+    String keyPrefix = "PDV.Event." + eventType
+    String dayKey = keyPrefix + ".Day"
+    String countKey = keyPrefix + ".Count"
+    String lastFireKey = keyPrefix + ".LastFire"
+    Int currentDay = GetDevotionDayIndex()
+    Int currentCount = 0
+
+    if StorageUtil.GetIntValue(deityForm, dayKey) == currentDay
+        currentCount = StorageUtil.GetIntValue(deityForm, countKey)
+    endIf
+
     StorageUtil.SetIntValue(deityForm, dayKey, currentDay)
     StorageUtil.SetIntValue(deityForm, countKey, currentCount + 1)
-    StorageUtil.SetFloatValue(deityForm, lastFireKey, nowTime)
-    return delta
+    StorageUtil.SetFloatValue(deityForm, lastFireKey, Utility.GetCurrentGameTime())
+EndFunction
+
+Function QueueRepeatableCommit(Int eventType)
+    if _pendingRepeatEventA < 0
+        _pendingRepeatEventA = eventType
+    elseIf _pendingRepeatEventB < 0
+        _pendingRepeatEventB = eventType
+    else
+        if GetDebugLevel() >= 1
+            Debug.Trace("[PDV] " + DeityName + " repeatable commit queue full at event " + eventType + "; committing inline (a caller left a round unresolved).")
+        endIf
+        CommitRepeatableAction(eventType)
+    endIf
+EndFunction
+
+Function CommitPendingRepeatableActions()
+    if _pendingRepeatEventA >= 0
+        CommitRepeatableAction(_pendingRepeatEventA)
+    endIf
+    if _pendingRepeatEventB >= 0
+        CommitRepeatableAction(_pendingRepeatEventB)
+    endIf
+    DiscardPendingRepeatableActions()
+EndFunction
+
+Function DiscardPendingRepeatableActions()
+    _pendingRepeatEventA = -1
+    _pendingRepeatEventB = -1
 EndFunction
 
 Int Function GetDebugLevel()

@@ -22,7 +22,6 @@ Scriptname PDV_Deity_Arkay extends PDV_DeityBase
 Int Property SIGNAL_DEATH_DUTY = 1201 AutoReadOnly
 Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1202 AutoReadOnly
 
-Float Property DELTA_CIVIC_SERVICE = 2.0 Auto
 Float Property DELTA_DEATH_DUTY = 3.0 Auto
 Float Property DELTA_PATRON_CIVIC_FAVOR = 3.0 Auto
 

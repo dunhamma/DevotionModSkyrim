@@ -366,30 +366,14 @@ Spell Property PDV_Bless_Nord_Stuhn_T3 Auto
 Spell Property PDV_Bless_Nord_Talos_T1 Auto
 Spell Property PDV_Bless_Nord_Talos_T2 Auto
 Spell Property PDV_Bless_Nord_Talos_T3 Auto
-Spell Property PDV_Bless_Nord_Akatosh_T1 Auto
-Spell Property PDV_Bless_Nord_Akatosh_T2 Auto
-Spell Property PDV_Bless_Nord_Akatosh_T3 Auto
-Spell Property PDV_Bless_Nord_Mara_T1 Auto
-Spell Property PDV_Bless_Nord_Mara_T2 Auto
-Spell Property PDV_Bless_Nord_Mara_T3 Auto
+; CUT (1.0.3): the 21 PDV_Bless_Nord_<god> properties for the seven Divines that
+; route through the Imperial spells (Akatosh, Mara, Stendarr, Zenithar, Dibella,
+; Julianos, Kynareth). Verified against the ESP: those spell records DO NOT EXIST --
+; the properties pointed at nothing, and their only reader was the uninstall strip.
+; Kyne/Shor/Tsun/Stuhn/Talos/Arkay/OldWays/NineDivines are live and kept.
 Spell Property PDV_Bless_Nord_Arkay_T1 Auto
 Spell Property PDV_Bless_Nord_Arkay_T2 Auto
 Spell Property PDV_Bless_Nord_Arkay_T3 Auto
-Spell Property PDV_Bless_Nord_Stendarr_T1 Auto
-Spell Property PDV_Bless_Nord_Stendarr_T2 Auto
-Spell Property PDV_Bless_Nord_Stendarr_T3 Auto
-Spell Property PDV_Bless_Nord_Zenithar_T1 Auto
-Spell Property PDV_Bless_Nord_Zenithar_T2 Auto
-Spell Property PDV_Bless_Nord_Zenithar_T3 Auto
-Spell Property PDV_Bless_Nord_Dibella_T1 Auto
-Spell Property PDV_Bless_Nord_Dibella_T2 Auto
-Spell Property PDV_Bless_Nord_Dibella_T3 Auto
-Spell Property PDV_Bless_Nord_Julianos_T1 Auto
-Spell Property PDV_Bless_Nord_Julianos_T2 Auto
-Spell Property PDV_Bless_Nord_Julianos_T3 Auto
-Spell Property PDV_Bless_Nord_Kynareth_T1 Auto
-Spell Property PDV_Bless_Nord_Kynareth_T2 Auto
-Spell Property PDV_Bless_Nord_Kynareth_T3 Auto
 Spell Property PDV_Bless_Orc_Malacath_T1 Auto
 Spell Property PDV_Bless_Orc_Malacath_T2 Auto
 Spell Property PDV_Bless_Orc_Stronghold_T1 Auto
@@ -590,7 +574,12 @@ Float Property DECAY_PER_DAY = 0.5 AutoReadOnly
 Float Property BROAD_WORSHIP_DECAY_MULTIPLIER = 0.2 AutoReadOnly
 Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; Bump when PDV_DeityLikesDislikes.csv OR the stance matrix changes so existing saves reload.
-Int Property LIKES_DISLIKES_VERSION = 16 AutoReadOnly
+; Bumped 16 -> 17 (1.0.3): the Azura CSV-actor fix needs every existing save to reload
+; its likes/dislikes rows and stance matrix, and that same rebuild is what builds and
+; seals every deity's participating-event cache (12.4 / C4 in PDV_DeityBase) -- without
+; it the caches stay unsealed forever on old saves (correct, they fail open, but the
+; broadcast fan-out keeps paying the full per-deity probe the cache exists to remove).
+Int Property LIKES_DISLIKES_VERSION = 17 AutoReadOnly
 Int Property PRINCE_LD_VERSION = 4 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_NONE = 0 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_SKY_STORM_HUNT = 1 AutoReadOnly
@@ -799,11 +788,17 @@ Float Property SHOUT_DUPLICATE_WINDOW_DAYS = 0.00001 AutoReadOnly
 ; callback cannot award piety, a meta faucet, or a broad-pantheon fold twice.
 Float Property QUEST_REACTION_DUPLICATE_WINDOW_DAYS = 0.02 AutoReadOnly
 Int Property QUEST_REACTION_QUEUE_MAX_PENDING = 128 AutoReadOnly
+; A3 / fix-plan 10.1. Bump to re-run the legacy quest-reaction job-key sweep on every
+; existing save (see RunAuthoriaQuestReactionKeySweep).
+Int Property AUTHORIA_QR_KEY_SWEEP_VERSION = 1 AutoReadOnly
 Int Property QUEST_REACTION_QUEUE_CELLS_PER_TICK = 2 AutoReadOnly
 Float Property QUEST_REACTION_QUEUE_TICK_SECONDS = 0.1 AutoReadOnly
 
 String Property SHOUT_DUPLICATE_KEY = "PDV.ShoutAttack.LastTime" AutoReadOnly
 Int _shoutRefreshTicks = 0
+; Pass 5 Task 2. Sub-cadence counter for the location/context probes at the tail of
+; OnUpdate -- they run every third master tick instead of every one.
+Int _contextProbeTicks = 0
 Bool _panelDirty = False
 Bool _suppressAwardFavorToast = False
 Bool _suppressCurseTransitionOutputs = False
@@ -909,6 +904,20 @@ Event OnInit()
 EndEvent
 
 Event OnUpdate()
+    ; Pass 5 Task 2 -- menu early-out. One native call in place of the ~15 StorageUtil and
+    ; global reads below. Nothing this tick does can change while a menu owns the screen,
+    ; and EnsureUnifiedStartupChoice below puts a MessageBox up, which is exactly what must
+    ; not happen over another menu (that is B4's Show() == -1 case, arriving from the other
+    ; side). The re-arm is INSIDE the early-out and comes first: a return that skipped it
+    ; would kill the chain for the rest of the playthrough, which is the B3 defect Pass 2
+    ; fixed. Practical yield is bounded -- RegisterForSingleUpdate is real-time and does not
+    ; tick at all while a pausing menu is open, so this earns its keep on the non-pausing
+    ; ones (dialogue, and the load-screen window) rather than on the inventory.
+    if Utility.IsInMenuMode()
+        RegisterForSingleUpdate(1.0)
+        return
+    endIf
+
     ; Time-sensitive every tick: contextual favor re-checks eligibility and
     ; re-applies itself, so it must react the moment the player leaves the
     ; triggering context. The one-time unified startup choice must fire promptly
@@ -940,9 +949,26 @@ Event OnUpdate()
     ; against Utility.GetCurrentGameTime(), so at the default timescale 20 a 10s
     ; real-time cadence is ~3 game-minutes of granularity on a sting that lasts
     ; game-hours -- imperceptible, and it drops ~6 StorageUtil reads/sec at idle.
+    ; Pass 5 Task 2 -- the reconcile block is now two tiers instead of one.
+    ;
+    ; 10s tier (unchanged): the disfavor sweep. Its cadence has a stated reason --
+    ; ClearDisfavorIfExpired compares against Utility.GetCurrentGameTime(), so at the
+    ; default timescale 20 a 10s real-time cadence is ~3 game-minutes of granularity on a
+    ; sting that lasts game-hours. That reason does not extend to anything else here.
+    ;
+    ; 30s tier (was 10s): the idempotent identity/track/power reconciliations. These are
+    ; paranoia sweeps -- they repair state that nothing at runtime writes, and every one of
+    ; them is also performed in OnInit. The expensive member is
+    ; EnsureCanonicalDeityDisplayNames, which reads a DeityName across the script boundary
+    ; for all ~34 deities and compares each against a literal; at 10s that was ~3.4
+    ; cross-script reads a second forever. Tripling the interval triples the worst-case
+    ; time a genuinely de-synced name, spell or power spends wrong -- from 10 seconds to 30
+    ; -- for state that only de-syncs if a third-party mod strips something behind us.
     _shoutRefreshTicks += 1
-    if _shoutRefreshTicks >= 10
+    if _shoutRefreshTicks % 10 == 0
         UpdateDisfavorStingRuntime()
+    endIf
+    if _shoutRefreshTicks >= 30
         EnsurePhase8RuntimeWiring()
         EnsureAkatoshRuntimeIdentity()
         EnsureCanonicalDeityDisplayNames()
@@ -980,13 +1006,32 @@ Event OnUpdate()
         ProcessDawn()
     endIf
 
-    TryArgonianEldergleamInterior()
-    TryArgonianNearWaterMaintenance()
-    TryBosmerEldergleamInterior()
-    TryBosmerGildergreenProximity()
-    TryBosmerYffreTreeStoneProximity()
-    TryCCSaintsRecognition()
-    TryCCFishingDevotion()
+    ; Pass 5 Task 2 -- the seven location/context probes drop from 1s to 3s.
+    ;
+    ; They ask "is the player standing near the Gildergreen / inside Eldergleam's chamber /
+    ; swimming outdoors / fishing / at a saint's shrine". None of those is an instant: the
+    ; player walks into a 600-unit radius and stays there for many seconds, and the
+    ; Argonian water probe accumulates REAL time rather than counting ticks, so a coarser
+    ; sample changes when its ten seconds are reached by at most one interval, never
+    ; whether. Each probe already opens with a cheap StorageUtil or origin early-out, so
+    ; this is a modest saving -- roughly ten StorageUtil reads a second down to three --
+    ; but it is free, and 1s bought nothing any of them could use.
+    ;
+    ; Deliberately NOT moved off the 1s tick above: EnsureUnifiedStartupChoice (a one-shot
+    ; that must fire promptly the moment origin resolves), UpdateContextualFavorRuntime
+    ; (documented as needing to react the moment the player leaves the triggering context),
+    ; the Daedric presentation/activation/lapse drains, and the dawn rollover check.
+    _contextProbeTicks += 1
+    if _contextProbeTicks >= 3
+        _contextProbeTicks = 0
+        TryArgonianEldergleamInterior()
+        TryArgonianNearWaterMaintenance()
+        TryBosmerEldergleamInterior()
+        TryBosmerGildergreenProximity()
+        TryBosmerYffreTreeStoneProximity()
+        TryCCSaintsRecognition()
+        TryCCFishingDevotion()
+    endIf
 
     if DebugSeedGo != 0
         DebugSeedGo = 0
@@ -1050,6 +1095,11 @@ Event OnUpdate()
     endIf
 
     RegisterForSingleUpdate(1.0)
+
+    ; A3 / fix-plan 10.1: one-time sweep of legacy leaked job keys. Deliberately AFTER
+    ; the re-arm above: a fault inside a latent one-shot must never be able to break
+    ; the poll chain (the B3 failure class).
+    RunAuthoriaQuestReactionKeySweep()
 EndEvent
 
 Function EnsurePhase8RuntimeWiring()
@@ -1822,20 +1872,66 @@ Bool Function ProcessQuestReactionQueueSlice()
     return HasQueuedQuestReactionJobs()
 EndFunction
 
+;/ =====================================================================
+    A3 / fix-plan 10.1 -- ~24 leaked co-save keys per quest reaction
+    ---------------------------------------------------------------------
+    QueueQuestReactionJob writes about thirty keys under a job prefix whose
+    sequence number is monotonic and never reused. This function used to blank
+    six of them to "" -- and a blanked key is still a key: StorageUtil keeps it,
+    and it is still written to the co-save. The other twenty-four (every Int and
+    every Float: CellCount/CellIndex, the seven MetaSkip flags, the meta
+    snapshot, EnqueuedRealTime, QueuedGameTime, ...) were never touched at all.
+    Thousands of quest stages over a long playthrough is real co-save bloat, and
+    it accumulates silently.
+
+    Shape chosen: prefix clear on removal, NOT the fixed slot pool. The fix plan
+    prefers the pool "if the queue's semantics allow it" -- verified, and they do
+    not: QUEST_REACTION_QUEUE_MAX_PENDING is 128, so a qr_0..qr_7 ring would wrap
+    onto a job that is still queued and hand the worker another reaction's cells.
+    A 128-slot pool would be correct but would keep ~3,840 keys resident forever,
+    which is worse than clearing a queue that normally sits at zero.
+
+    One ClearAllPrefix rather than thirty Unset calls: it removes every key under
+    the job prefix whichever function wrote it, so a key added to the enqueue or
+    to a worker slice later cannot silently start leaking again. The trailing dot
+    in the prefix is load-bearing -- it stops "qr_1." from also matching "qr_10.".
+   ===================================================================== /;
+Function ClearQuestReactionJobKeys(String jobId)
+    if jobId == ""
+        return
+    endIf
+    StorageUtil.ClearAllPrefix("PDV.QR.Job." + jobId + ".")
+EndFunction
+
 Function RemoveQueuedQuestReactionJob()
     if !HasQueuedQuestReactionJobs()
         return
     endIf
     String jobId = StorageUtil.StringListGet(None, "PDV.QR.Queue.JobIds", 0)
-    String prefix = "PDV.QR.Job." + jobId + "."
     StorageUtil.StringListRemoveAt(None, "PDV.QR.Queue.JobIds", 0)
     StorageUtil.FormListRemoveAt(None, "PDV.QR.Queue.SourceForms", 0)
-    StorageUtil.SetStringValue(None, prefix + "ReactionKey", "")
-    StorageUtil.SetStringValue(None, prefix + "DeitiesCsv", "")
-    StorageUtil.SetStringValue(None, prefix + "ValencesCsv", "")
-    StorageUtil.SetStringValue(None, prefix + "IntensitiesCsv", "")
-    StorageUtil.SetStringValue(None, prefix + "MagnitudesCsv", "")
-    StorageUtil.SetStringValue(None, prefix + "TagsCsv", "")
+    ; Both REJECT paths in ProcessQuestReactionQueueSlice come through here too, so
+    ; this is the single drain for the completed AND the rejected job.
+    ClearQuestReactionJobKeys(jobId)
+EndFunction
+
+;/ A3 / fix-plan 10.1, second half: the one-time migration. Every job processed
+   before this pass left its ~24 keys behind, so an existing save carries the whole
+   backlog. ClearAllPrefix on the shared "PDV.QR.Job." root removes all of it in one
+   native call -- but ONLY with the queue empty, because a pending job's keys live
+   under that same root and are still needed. If the queue is busy the sweep simply
+   waits for a later tick; the version stamp is not written until it actually runs. /;
+Function RunAuthoriaQuestReactionKeySweep()
+    if StorageUtil.GetIntValue(None, "PDV.Authoria.QRKeySweepVersion") >= AUTHORIA_QR_KEY_SWEEP_VERSION
+        return
+    endIf
+    if HasQueuedQuestReactionJobs()
+        return
+    endIf
+
+    Int clearedKeys = StorageUtil.ClearAllPrefix("PDV.QR.Job.")
+    StorageUtil.SetIntValue(None, "PDV.Authoria.QRKeySweepVersion", AUTHORIA_QR_KEY_SWEEP_VERSION)
+    Trace(1, "[PDV][QR_QUEUE] legacy job-key sweep removed " + clearedKeys + " stale co-save keys.")
 EndFunction
 
 Int Function ProcessQueuedQuestReactionMetaSlice(Quest sourceQuest, String prefix, Int metaIndex)
@@ -2591,20 +2687,29 @@ Bool Function ConsumeShrinePrayerCredit(PDV_DeityBase deity, String sourceId)
         return False
     endIf
 
-    Int today = Utility.GetCurrentGameTime() as Int
+    ; B13 / fix-plan 4.1 -- the day-0 false block. This compared a StorageUtil int that
+    ; DEFAULTS TO 0 against raw game day 0, so on the first in-game day of a new save every
+    ; shrine-prayer credit for every deity was refused. Fixed the way the rest of the tree
+    ; already does it (fix-plan 4.2): the shared 06:00 devotional day in the zero-reserved
+    ; +2 encoding, where the stamp is >= 1 by construction and 0 unambiguously means unset.
+    ; NOT via ReadZeroReservedDevotionalDayStamp: that helper migrates a legacy +1 DEVOTIONAL
+    ; stamp, and the value stored here was a raw wall-clock day. A stale wall-clock day can
+    ; never equal a same-day devotional stamp (it would have to be two days in the future),
+    ; so existing saves migrate silently with no false block and no false grant.
+    Int todayStamp = GetDevotionalDay() + 2
     String deityKey = deity.DeityName
     if deityKey == ""
         deityKey = "" + deity.GetFormID()
     endIf
     String guardKey = "PDV.Signal.ShrinePrayer." + deityKey
-    if StorageUtil.GetIntValue(None, guardKey) == today
+    if StorageUtil.GetIntValue(None, guardKey) == todayStamp
         if GetDebugLevel() >= 2
             Debug.Trace("[PDV] Shrine prayer daily cap blocked " + deityKey + " from " + sourceId)
         endIf
         return False
     endIf
 
-    StorageUtil.SetIntValue(None, guardKey, today)
+    StorageUtil.SetIntValue(None, guardKey, todayStamp)
     return True
 EndFunction
 
@@ -3161,7 +3266,9 @@ Function SurfaceTransition(String eventClass, String surfaceKey, String directio
     ; in surfaceKey so distinct destinations are distinct guards.
     String guard = "PDV.Surfaced." + eventClass + "." + surfaceKey + "." + direction
     if repeatable
-        guard = guard + "." + (Utility.GetCurrentGameTime() as Int)
+        ; fix-plan 4.2: scope the repeatable guard by the devotional day so a transition
+        ; cannot re-surface twice across a midnight the player slept through.
+        guard = guard + "." + (GetDevotionalDay() + 2)
     endIf
     if StorageUtil.GetIntValue(None, guard) == 1
         return
@@ -5254,9 +5361,13 @@ Bool Function TryDeclareRestCell(String keyPrefix, Int sleepCellId)
         return false
     endIf
 
-    Int today = Utility.GetCurrentGameTime() as Int
+    ; fix-plan 4.1 + 4.2. This shared Nord/Orc/Redguard rest-cell declaration compared a
+    ; default-0 CandidateDay against raw game day 0 -- the same day-0 class as B13's shrine
+    ; credit, here silently refusing the first candidacy sleep of a new save. Devotional
+    ; +2 stamp: never 0, and it no longer splits one night's sleep across two days.
+    Int today = GetDevotionalDay() + 2
     Int candidateId = StorageUtil.GetIntValue(None, keyPrefix + ".CandidateFormID")
-    Int candidateDay = StorageUtil.GetIntValue(None, keyPrefix + ".CandidateDay")
+    Int candidateDay = ReadZeroReservedDevotionalDayStamp(keyPrefix + ".CandidateDay")
     Int candidateCount = StorageUtil.GetIntValue(None, keyPrefix + ".CandidateCount")
 
     if candidateId != sleepCellId
@@ -5267,7 +5378,7 @@ Bool Function TryDeclareRestCell(String keyPrefix, Int sleepCellId)
 
     candidateCount += 1
     StorageUtil.SetIntValue(None, keyPrefix + ".CandidateFormID", sleepCellId)
-    StorageUtil.SetIntValue(None, keyPrefix + ".CandidateDay", today)
+    WriteZeroReservedDevotionalDayStamp(keyPrefix + ".CandidateDay")
     StorageUtil.SetIntValue(None, keyPrefix + ".CandidateCount", candidateCount)
 
     if candidateCount < 3
@@ -5639,7 +5750,16 @@ Bool Function TryAltmerDisciplinesRite(Actor playerRef, String reason)
 
     Utility.Wait(0.5)
     Int pressed = PDV_MESG_AltmerDisciplines.Show()
-    if pressed < 0 || pressed > 3
+    ; B4 / fix-plan 3. Show() returns -1 when another menu or message is already up
+    ; (routine right after sleep in a heavy list). That is "not shown", never a choice:
+    ; no decline stamp, no state change, and the caller is told the menu did NOT appear
+    ; so the ancestral dream is not suppressed for a rite that never ran. The rite
+    ; retries at its next natural trigger.
+    if pressed < 0
+        Trace(2, "Altmer Disciplines rite not shown (menu busy); no decline stamped.")
+        return false
+    endIf
+    if pressed > 3
         StorageUtil.SetIntValue(None, "PDV.Alt.Disc.LastDeclineDay", todayStamp)
         return true                 ; "Not yet" -- short prompt cooldown only
     endIf
@@ -5876,6 +5996,13 @@ Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, Stri
 
     Utility.Wait(0.5)
     Int pressed = PDV_MESG_ArgonianMarkBed.Show()
+    ; B4 / fix-plan 3. -1 is "another menu was already up", not a decline. Stamping the
+    ; 3-day suppression AND wiping the 3-sleep candidacy counters on a menu the player
+    ; never saw threw away three nights of progress silently.
+    if pressed < 0
+        Trace(2, "Argonian bed-of-choice menu not shown (menu busy); candidacy kept.")
+        return false
+    endIf
     if pressed == 0
         SetArgonianHome(playerRef, sleepCellId, todayStamp, reason)
         SendPrismaToast("hist", "good", "Place of rest", "The Hist remembers it now.")
@@ -6273,22 +6400,24 @@ Function HandleArgonianShadowscaleKill(Actor playerRef)
         return
     endIf
 
-    Int today = Utility.GetCurrentGameTime() as Int
-    if StorageUtil.GetIntValue(None, "PDV.Shadowscale.LastInvisDay") == today + 1
+    ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
+    if ReadZeroReservedDevotionalDayStamp("PDV.Shadowscale.LastInvisDay") == (GetDevotionalDay() + 2)
         return
     endIf
 
     PDV_SPEL_ArgonianShadowscaleVeil.Cast(playerRef, playerRef)
     SendPrismaSubstrateToast("ArgonianHist", "shadowscale", "The shadow closes over you. The Void hides its own.", "void", PDV_ArgonianHistSubstrate.GetHistPostureLabel())
-    StorageUtil.SetIntValue(None, "PDV.Shadowscale.LastInvisDay", today + 1)
+    WriteZeroReservedDevotionalDayStamp("PDV.Shadowscale.LastInvisDay")
     Trace(2, "Shadowscale veil fired on sneak kill.")
 EndFunction
 
 ; Hist dreams keyed to posture: armed by a posture transition (strong roll),
 ; otherwise a rare ambient murmur. Pure flavor; no piety, no substrate writes.
 Function TryArgonianPostureDream(String reason)
-    Int today = Utility.GetCurrentGameTime() as Int
-    Int lastDreamDay = StorageUtil.GetIntValue(None, "PDV.ArgDream.LastDay")
+    ; fix-plan 4.2: the dream cadence is sleep-triggered, so a raw-midnight day boundary
+    ; crossed mid-sleep was exactly the case that let it fire two nights running.
+    Int today = GetDevotionalDay() + 2
+    Int lastDreamDay = ReadZeroReservedDevotionalDayStamp("PDV.ArgDream.LastDay")
     if lastDreamDay > 0 && (today - lastDreamDay) < 2
         return
     endIf
@@ -6308,7 +6437,7 @@ Function TryArgonianPostureDream(String reason)
     String dreamText = PDV_ArgonianHistSubstrate.GetDreamTextForPosture(posture)
     SendPrismaSubstrateToast("ArgonianHist", "dream", dreamText, "hist", PDV_ArgonianHistSubstrate.GetHistPostureLabel())
     StorageUtil.SetIntValue(None, "PDV.ArgDream.Armed", 0)
-    StorageUtil.SetIntValue(None, "PDV.ArgDream.LastDay", today)
+    WriteZeroReservedDevotionalDayStamp("PDV.ArgDream.LastDay")
     Trace(2, "Argonian posture dream fired (" + PDV_ArgonianHistSubstrate.GetHistPostureLabel() + ", " + reason + ")")
 EndFunction
 
@@ -6346,25 +6475,33 @@ Bool Function TryBosmerHearthSleep(Actor playerRef, Int sleepCellId, String reas
         return false
     endIf
 
-    Int today = Utility.GetCurrentGameTime() as Int
+    ; fix-plan 4.2: the hearth decline cadence is a devotional-day cadence like every
+    ; other sleep rite, not a raw-midnight one -- a midnight crossed mid-sleep must not
+    ; shorten the 3-day re-prompt window. ReadZeroReserved migrates the legacy +1 stamp.
+    Int todayStamp = GetDevotionalDay() + 2
     Int declaredId = StorageUtil.GetIntValue(None, "PDV.BosHearth.DeclaredCell")
     if declaredId == 0
         if !PDV_MESG_BosmerMarkHearth
             return false
         endIf
-        Int declinedDay = StorageUtil.GetIntValue(None, "PDV.BosHearth.DeclineDay")
-        if declinedDay > 0 && (today + 1 - declinedDay) < 3
+        Int declinedDay = ReadZeroReservedDevotionalDayStamp("PDV.BosHearth.DeclineDay")
+        if declinedDay > 0 && (todayStamp - declinedDay) < 3
             return false
         endIf
 
         Utility.Wait(0.5)
         Int pressed = PDV_MESG_BosmerMarkHearth.Show()
+        ; B4 / fix-plan 3. -1 is "not shown" -- no decline stamp, retry next sleep.
+        if pressed < 0
+            Trace(2, "Bosmer hearth menu not shown (menu busy); no decline stamped.")
+            return false
+        endIf
         if pressed == 0
             StorageUtil.SetIntValue(None, "PDV.BosHearth.DeclaredCell", sleepCellId)
             StorageUtil.SetIntValue(None, "PDV.BosHearth.DiscoveryAtLastStay", StorageUtil.GetIntValue(None, "PDV.BosLoc.DiscoveryCount"))
             SendPrismaToast("yffre", "good", "Hearth declared", "This is where your stories come home now.")
         else
-            StorageUtil.SetIntValue(None, "PDV.BosHearth.DeclineDay", today + 1)
+            WriteZeroReservedDevotionalDayStamp("PDV.BosHearth.DeclineDay")
         endIf
         return true
     endIf
@@ -6514,8 +6651,9 @@ EndFunction
 ; rare ambient murmur. Pure flavor; no piety, no state writes beyond the dream
 ; bookkeeping keys.
 Function TryBosmerPathDream(String reason)
-    Int today = Utility.GetCurrentGameTime() as Int
-    Int lastDreamDay = StorageUtil.GetIntValue(None, "PDV.BosDream.LastDay")
+    ; fix-plan 4.2: sleep-triggered cadence -- devotional day, not raw midnight.
+    Int today = GetDevotionalDay() + 2
+    Int lastDreamDay = ReadZeroReservedDevotionalDayStamp("PDV.BosDream.LastDay")
     if lastDreamDay > 0 && (today - lastDreamDay) < 2
         return
     endIf
@@ -6531,7 +6669,7 @@ Function TryBosmerPathDream(String reason)
 
     SendPrismaToast("yffre", "neutral", "Green dream", GetBosmerDreamText(GetBosmerPathState()))
     StorageUtil.SetIntValue(None, "PDV.BosDream.Armed", 0)
-    StorageUtil.SetIntValue(None, "PDV.BosDream.LastDay", today)
+    WriteZeroReservedDevotionalDayStamp("PDV.BosDream.LastDay")
     Trace(2, "Bosmer path dream fired (" + reason + ")")
 EndFunction
 
@@ -6794,13 +6932,13 @@ Function TryBosmerScalesAtRest(Actor playerRef)
         return
     endIf
 
-    Int today = Utility.GetCurrentGameTime() as Int
-    if StorageUtil.GetIntValue(None, "PDV.BosSig.ScalesLastDay") == today + 1
+    ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
+    if ReadZeroReservedDevotionalDayStamp("PDV.BosSig.ScalesLastDay") == (GetDevotionalDay() + 2)
         return
     endIf
 
     PDV_SPEL_BosmerScalesAtRest.Cast(playerRef, playerRef)
-    StorageUtil.SetIntValue(None, "PDV.BosSig.ScalesLastDay", today + 1)
+    WriteZeroReservedDevotionalDayStamp("PDV.BosSig.ScalesLastDay")
     SendPrismaToast("zenithar", "good", "Scales at rest", "The bargains fall your way for a while.")
     Trace(2, "Bosmer Scales at Rest fired.")
 EndFunction
@@ -6832,13 +6970,13 @@ Function TryBosmerBaanDarGap(Actor playerRef)
         return
     endIf
 
-    Int today = Utility.GetCurrentGameTime() as Int
-    if StorageUtil.GetIntValue(None, "PDV.BosSig.GapLastDay") == today + 1
+    ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
+    if ReadZeroReservedDevotionalDayStamp("PDV.BosSig.GapLastDay") == (GetDevotionalDay() + 2)
         return
     endIf
 
     PDV_SPEL_BosmerBaanDarGap.Cast(playerRef, playerRef)
-    StorageUtil.SetIntValue(None, "PDV.BosSig.GapLastDay", today + 1)
+    WriteZeroReservedDevotionalDayStamp("PDV.BosSig.GapLastDay")
     HandleBosmerBanditRoadReversal("baandar_gap_low_health")
     SendPrismaToast("baandar", "good", "Baan Dar opens the gap", "Run.")
     Trace(2, "Bosmer Baan Dar Opens the Gap fired.")
@@ -6861,8 +6999,8 @@ Function TryArgonianSithisNearDeathBurst(Actor playerRef)
         return
     endIf
 
-    Int today = Utility.GetCurrentGameTime() as Int
-    if StorageUtil.GetIntValue(None, "PDV.Argonian.SithisNearDeathLastDay") == today + 1
+    ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
+    if ReadZeroReservedDevotionalDayStamp("PDV.Argonian.SithisNearDeathLastDay") == (GetDevotionalDay() + 2)
         return
     endIf
 
@@ -6871,7 +7009,7 @@ Function TryArgonianSithisNearDeathBurst(Actor playerRef)
     ; Requiem, so pair it with a felt flat stamina restore (TryOrcCodeHolds
     ; pattern) - the Void lends an instant surge you can actually spend.
     playerRef.RestoreActorValue("Stamina", 100.0)
-    StorageUtil.SetIntValue(None, "PDV.Argonian.SithisNearDeathLastDay", today + 1)
+    WriteZeroReservedDevotionalDayStamp("PDV.Argonian.SithisNearDeathLastDay")
     HandleArgonianVoidSignal("near_death_burst")
     Trace(2, "Argonian Sithis near-death burst fired.")
 EndFunction
@@ -6892,10 +7030,19 @@ Function TryOrcCodeHolds(Actor playerRef)
         return
     endIf
 
+    ; B12 / fix-plan 4.5. The rescue latched once per COMBAT SESSION while both siblings
+    ; -- the Bosmer Baan Dar gap and the Argonian Sithis burst, the two other below-health
+    ; payloads fanned from the same HandlePlayerBelowHealthGate -- are once per DAY. An
+    ; uncapped 40-60 HP (+30 stamina) clutch save every fight is a different power budget
+    ; from what the design says it is. Same LastDay guard, same devotional-day encoding.
+    if ReadZeroReservedDevotionalDayStamp("PDV.Orc.CodeHoldsLastDay") == (GetDevotionalDay() + 2)
+        Trace(2, "Orc Code Holds suppressed: already spent this devotional day.")
+        return
+    endIf
+
     ; The Code Holds is a near-death clutch save. It fires mid-fight the instant
     ; health drops past the below-health gate (Baan Dar Opens the Gap model), not on
-    ; combat exit -- so it can actually save the player. The player alias routes the
-    ; gate once per combat session, which caps it to one save per fight. Its old
+    ; combat exit -- so it can actually save the player. Its old
     ; HealRate spell is not cast because Requiem swallows rate-mult healing on a
     ; near-zero base; the actual health save is a flat RestoreActorValue. Requiem-proof.
     if malacathTier >= TIER_DEVOTED && PDV_SPEL_OrcCodeHolds_Devoted
@@ -6904,6 +7051,15 @@ Function TryOrcCodeHolds(Actor playerRef)
     elseIf PDV_SPEL_OrcCodeHolds
         playerRef.RestoreActorValue("Health", 40.0)
     endIf
+    WriteZeroReservedDevotionalDayStamp("PDV.Orc.CodeHoldsLastDay")
+
+    ; B12's second half asked for a Cast() of PDV_SPEL_OrcCodeHolds* "so the rescue has
+    ; feedback". Checked against the records: 071534 and 071536 are both Type=Ability,
+    ; CastType=ConstantEffect, TargetType=Self. A constant-effect ability is applied with
+    ; AddSpell, never cast -- Spell.Cast() on one is an engine no-op, and the author's
+    ; comment above says the HealRate payload is deliberately dead under Requiem anyway.
+    ; So the feedback is delivered the way both siblings deliver theirs: a toast.
+    SendPrismaToast("malacath", "good", "The Code holds", "The Code holds, and so do you.")
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcCodeHolds")
     if multiplier > 0.0
@@ -7264,7 +7420,11 @@ Function HandleDunmerSleepEvents(Actor playerRef, String reason)
     endIf
 
     Int sleepCellId = sleepCell.GetFormID()
-    Int today = Utility.GetCurrentGameTime() as Int
+    ; fix-plan 4.2: the ancestor-home cadence now runs on the shared 06:00 devotional
+    ; day with the same zero-reserved +2 encoding the Argonian bed rite uses, so a
+    ; midnight crossed mid-sleep can no longer shorten the decline window or split one
+    ; night's sleep across two "days". ReadZeroReserved migrates the legacy +1 stamps.
+    Int todayStamp = GetDevotionalDay() + 2
     Int declaredId = StorageUtil.GetIntValue(None, "PDV.DunHome.DeclaredFormID")
     if StorageUtil.GetIntValue(None, "PDV.DunHome.DeclaredFormID") != 0
         if sleepCellId == declaredId && StorageUtil.GetIntValue(None, "PDV.Dunmer.DeviationPriceCount") > 0
@@ -7280,13 +7440,13 @@ Function HandleDunmerSleepEvents(Actor playerRef, String reason)
 
     if !PDV_MESG_DunmerMarkHome
         if declaredId == 0
-            SetDunmerHome(sleepCellId, today, reason)
+            SetDunmerHome(sleepCellId, todayStamp, reason)
         endIf
         return
     endIf
 
-    Int declinedDay = StorageUtil.GetIntValue(None, "PDV.DunHome.DeclineDay")
-    if declinedDay > 0 && (today + 1 - declinedDay) < 3
+    Int declinedDay = ReadZeroReservedDevotionalDayStamp("PDV.DunHome.DeclineDay")
+    if declinedDay > 0 && (todayStamp - declinedDay) < 3
         return
     endIf
 
@@ -7294,14 +7454,19 @@ Function HandleDunmerSleepEvents(Actor playerRef, String reason)
     if declaredId != 0
         Int candidateId = StorageUtil.GetIntValue(None, "PDV.DunHome.CandidateFormID")
         Int candidateCount = StorageUtil.GetIntValue(None, "PDV.DunHome.CandidateCount")
+        Int candidateDay = ReadZeroReservedDevotionalDayStamp("PDV.DunHome.CandidateDay")
+        ; B13 / fix-plan 4.6. CandidateDay was written four times and read zero times, so
+        ; the re-declare counter climbed on EVERY sleep -- sleep three times in one night
+        ; and the "mark a new home" prompt fired instantly. Gate the increment on the day
+        ; actually changing, exactly as TryArgonianBedOfChoiceSleep does.
         if candidateId != sleepCellId
             candidateCount = 1
             StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateFormID", sleepCellId)
-        else
+        elseIf candidateDay != todayStamp
             candidateCount += 1
         endIf
         StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateCount", candidateCount)
-        StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateDay", today + 1)
+        WriteZeroReservedDevotionalDayStamp("PDV.DunHome.CandidateDay")
         shouldPrompt = candidateCount >= 3
     endIf
 
@@ -7311,23 +7476,29 @@ Function HandleDunmerSleepEvents(Actor playerRef, String reason)
 
     Utility.Wait(0.5)
     Int pressed = PDV_MESG_DunmerMarkHome.Show()
+    ; B4 / fix-plan 3. -1 is "another menu was already up", not a decline: no 3-day
+    ; suppression stamp and no wipe of the three-sleep candidacy the player earned.
+    if pressed < 0
+        Trace(2, "Dunmer ancestor-home menu not shown (menu busy); candidacy kept.")
+        return
+    endIf
     if pressed == 0
-        SetDunmerHome(sleepCellId, today, reason)
+        SetDunmerHome(sleepCellId, todayStamp, reason)
     else
-        StorageUtil.SetIntValue(None, "PDV.DunHome.DeclineDay", today + 1)
+        WriteZeroReservedDevotionalDayStamp("PDV.DunHome.DeclineDay")
         StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateFormID", 0)
         StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateCount", 0)
         StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateDay", 0)
     endIf
 EndFunction
 
-Function SetDunmerHome(Int sleepCellId, Int today, String reason)
+Function SetDunmerHome(Int sleepCellId, Int devotionalDayStamp, String reason)
     if sleepCellId == 0
         return
     endIf
 
     StorageUtil.SetIntValue(None, "PDV.DunHome.DeclaredFormID", sleepCellId)
-    StorageUtil.SetIntValue(None, "PDV.DunHome.DeclaredDay", today + 1)
+    StorageUtil.SetIntValue(None, "PDV.DunHome.DeclaredDay", devotionalDayStamp)
     StorageUtil.SetIntValue(None, "PDV.DunHome.DeclineDay", 0)
     StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateFormID", 0)
     StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateCount", 0)
@@ -8929,7 +9100,8 @@ String Function GetOrcFourHoldsFallback(Int holdId)
 EndFunction
 
 Bool Function ConsumeDailyOrcNotice(String noticeKey)
-    Int dayIndex = Utility.GetCurrentGameTime() as Int
+    ; fix-plan 4.2: devotional day, so a notice cannot re-fire at raw midnight.
+    Int dayIndex = GetDevotionalDay() + 2
     String storageKey = "PDV.Orc.Notice." + noticeKey + ".Day"
     if StorageUtil.GetIntValue(None, storageKey, -1) == dayIndex
         return False
@@ -9389,12 +9561,12 @@ Function TryRedguardTuwhaccaDeathRiteHeal(String reason)
         return
     endIf
 
-    Int healDay = (Utility.GetCurrentGameTime() as Int) + 1
-    if StorageUtil.GetIntValue(None, "PDV.Redguard.TuwhaccaDeathRiteHealDay") == healDay
+    ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
+    if ReadZeroReservedDevotionalDayStamp("PDV.Redguard.TuwhaccaDeathRiteHealDay") == (GetDevotionalDay() + 2)
         Trace(2, "Redguard Tu'whacca death-rite heal suppressed (already restored today).")
         return
     endIf
-    StorageUtil.SetIntValue(None, "PDV.Redguard.TuwhaccaDeathRiteHealDay", healDay)
+    WriteZeroReservedDevotionalDayStamp("PDV.Redguard.TuwhaccaDeathRiteHealDay")
 
     Float deathRiteHeal = 30.0
     if tuwhaccaTier >= TIER_CHAMPION
@@ -10333,11 +10505,12 @@ Bool Function RecordAltmerCrisisReassertEvidence(String reason)
         return False
     endIf
 
-    Int todayStamp = (Utility.GetCurrentGameTime() as Int) + 1
-    if StorageUtil.GetIntValue(None, "PDV.Altmer.CrisisEvidence.Day") == todayStamp
+    ; fix-plan 4.2: one evidence day per DEVOTIONAL day -- the crisis resolves on a
+    ; three-day count that dawn processing reads, so it must share dawn's boundary.
+    if ReadZeroReservedDevotionalDayStamp("PDV.Altmer.CrisisEvidence.Day") == (GetDevotionalDay() + 2)
         return False
     endIf
-    StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisEvidence.Day", todayStamp)
+    WriteZeroReservedDevotionalDayStamp("PDV.Altmer.CrisisEvidence.Day")
 
     Int evidenceDays = StorageUtil.GetIntValue(None, "PDV.Altmer.CrisisEvidence.Days") + 1
     StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisEvidence.Days", evidenceDays)
@@ -10396,11 +10569,12 @@ Function AwardActiveAltmerHeritageMemorySignal()
         return
     endIf
 
-    Int heritageMemoryDay = (Utility.GetCurrentGameTime() as Int) + 1
-    if StorageUtil.GetIntValue(None, "PDV.Signal.AltmerHeritageMemory.Day") == heritageMemoryDay
+    ; fix-plan 4.2: the doc-comment above already calls this "once per dawn cycle" --
+    ; it now actually uses the dawn day rather than raw midnight.
+    if ReadZeroReservedDevotionalDayStamp("PDV.Signal.AltmerHeritageMemory.Day") == (GetDevotionalDay() + 2)
         return
     endIf
-    StorageUtil.SetIntValue(None, "PDV.Signal.AltmerHeritageMemory.Day", heritageMemoryDay)
+    WriteZeroReservedDevotionalDayStamp("PDV.Signal.AltmerHeritageMemory.Day")
 
     if _activeDeity == PDV_Magnus && PDV_Magnus
         AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_SHARED_PACT_MEMORY, None, 1.0)
@@ -10985,8 +11159,13 @@ Function LoadLikesDislikesTable()
     while ldIndex < ldCount
         PDV_DeityBase ldDeity = PDV_FLST_AllDeities.GetAt(ldIndex) as PDV_DeityBase
         if ldDeity
+            ; 12.4. Reset -> fill (inside WriteLD) -> seal, in lockstep with the rows
+            ; themselves, so the participating-event cache can never disagree with what
+            ; is actually in StorageUtil. Seal only after LoadRowsForDeity returns.
+            ldDeity.ResetLikesDislikesEventCache()
             ClearRowsForDeity(ldDeity)
             LoadRowsForDeity(ldDeity)
+            ldDeity.SealLikesDislikesEventCache()
             ApplyStancesForDeity(ldDeity)
         endIf
         ldIndex += 1
@@ -10999,6 +11178,11 @@ EndFunction
 Function WriteLD(PDV_DeityBase deity, Int eventType, Float delta, Int dailyCap, Float cooldownDays, Int originGate)
     Form ldForm = deity as Form
     String ldPrefix = "PDV.LD." + eventType
+    ; 12.4. Record the event on the deity's participating-event cache. Deliberately the
+    ; FIRST thing this function does, and outside the origin-gate branch below, so an
+    ; origin-gated overlay row is recorded under the same base event type ScoreFromTable
+    ; tests -- there is no way to write a row without recording it.
+    deity.NoteLikesDislikesEvent(eventType)
     if originGate >= 0
         String originPrefix = ldPrefix + ".O" + originGate
         StorageUtil.SetFloatValue(ldForm, originPrefix + ".D", delta)
@@ -11245,6 +11429,11 @@ Function RouteActionToOpenPaths(Int eventType, Form actorRef, Form targetRef)
         if ropPath
             Float ropDelta = ropPath.ScorePrinceAction(eventType)
             if ropDelta != 0.0
+                ; fix-plan 4.3: the Prince lane applies its deepen delta directly to the
+                ; path's own piety with no gain pipeline in between, so a nonzero delta
+                ; here always lands -- spend the cap slot. (Nothing is queued when the
+                ; delta is zero, so the else side needs no discard.)
+                ropPath.CommitPendingRepeatableActions()
                 ropPath.AdjustStoredPiety(ropDelta, "v2_" + eventType)
                 RefreshArgonianDominationPressureForPath(ropPath, "prince_v2_" + eventType)
                 if GetDebugLevel() >= 2
@@ -11731,7 +11920,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 368, -0.75, 2, 0.5, -1)
         WriteLD(deity, 342, 0.25, 3, 0.0, -1)
         WriteLD(deity, 344, 0.25, 3, 0.0, -1)
-    elseIf ldName == "azurah"
+    elseIf ldName == "azura"
         WriteLD(deity, 313, 0.5, 3, 0.0, -1)
         WriteLD(deity, 350, 0.75, 2, 0.5, -1)
         WriteLD(deity, 342, 0.25, 3, 0.0, -1)
@@ -11896,7 +12085,10 @@ Function ApplyStancesForDeity(PDV_DeityBase deity)
         ApplyStances(deity, 1, 1, 1, 0, 0, 1, 1, 1, 3, 1)
     elseIf sName == "xarxes"
         ApplyStances(deity, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1)
-    elseIf sName == "azurah"
+    ; Azura's stance branch read "azurah" while the canonical runtime name is "Azura"
+    ; (trailing h; Papyrus == is case-insensitive so lowercase alone was never the
+    ; problem), so her per-race stance matrix never applied. Dual-check both spellings.
+    elseIf sName == "Azura" || sName == "Azurah"
         ApplyStances(deity, 2, 2, 1, 2, 1, 0, 0, 1, 2, 1)
     elseIf sName == "Boethiah"
         ApplyStances(deity, 2, 2, 1, 3, 1, 0, 0, 1, 3, 1)
@@ -11929,9 +12121,18 @@ Function ApplyStancesForDeity(PDV_DeityBase deity)
     endIf
 EndFunction
 
+Bool _dawnRosterMissingLogged = false
+
 Function ProcessDawn()
     if !PDV_FLST_AllDeities
-        Debug.Trace("[PDV] ProcessDawn: PDV_FLST_AllDeities not assigned.")
+        ; D1 sweep. This used to log unconditionally on EVERY dawn -- once per in-game day,
+        ; forever, on a broken install. Latched to once per session: the condition is fatal
+        ; and worth a line in the log even with debug off, but it does not change, so
+        ; repeating it daily only buries whatever else the user is trying to read.
+        if !_dawnRosterMissingLogged
+            _dawnRosterMissingLogged = true
+            Debug.Trace("[PDV] ProcessDawn: PDV_FLST_AllDeities not assigned. Dawn processing is disabled for this session.")
+        endIf
         return
     endIf
 
@@ -12408,7 +12609,10 @@ Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)
         return
     endIf
 
-    Int currentDay = nowTime as Int
+    ; fix-plan 4.2: decay is applied BY the dawn pass, so its once-per-day guard must
+    ; use the dawn day. On raw midnight a sleep through 00:00 could let the same dawn
+    ; cycle decay twice (or skip a day) relative to the pass that drives it.
+    Int currentDay = GetDevotionalDay() + 2
     if StorageUtil.GetIntValue(deityForm, "PDV.LastDecayAppliedDay") == currentDay
         return
     endIf
@@ -12582,7 +12786,7 @@ Function DebugPrimeDecayGraceByIndex(Int deityIndex)
     StorageUtil.SetFloatValue(deityForm, "PDV.Piety", 20.0)
     StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
     StorageUtil.SetFloatValue(deityForm, "PDV.LastEventGameTime", nowTime)
-    StorageUtil.SetIntValue(deityForm, "PDV.LastDecayAppliedDay", (nowTime as Int) - 1)
+    StorageUtil.SetIntValue(deityForm, "PDV.LastDecayAppliedDay", GetDevotionalDay() + 1)
     StorageUtil.SetFloatValue(deityForm, "PDV.PassiveDecayFloor", 0.0)
     RecomputeTier(deity)
     Trace(1, "Decay grace primed for " + deity.DeityName + ": " + DebugGetDecaySummaryByIndex(deityIndex))
@@ -12602,7 +12806,7 @@ Function DebugPrimeDecayEligibleByIndex(Int deityIndex)
     StorageUtil.SetFloatValue(deityForm, "PDV.Piety", 20.0)
     StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
     StorageUtil.SetFloatValue(deityForm, "PDV.LastEventGameTime", nowTime - DECAY_GRACE_DAYS - 1.0)
-    StorageUtil.SetIntValue(deityForm, "PDV.LastDecayAppliedDay", (nowTime as Int) - 1)
+    StorageUtil.SetIntValue(deityForm, "PDV.LastDecayAppliedDay", GetDevotionalDay() + 1)
     StorageUtil.SetFloatValue(deityForm, "PDV.PassiveDecayFloor", 0.0)
     RecomputeTier(deity)
     Trace(1, "Decay eligible primed for " + deity.DeityName + ": " + DebugGetDecaySummaryByIndex(deityIndex))
@@ -12731,7 +12935,7 @@ String Function DebugGetBretonPracticeSummary()
 
     Int traditionValue = GetBretonTraditionValue()
     Int practicePoints = GetBretonPracticeCount(traditionValue)
-    Int today = Utility.GetCurrentGameTime() as Int
+    Int today = GetDevotionalDay() + 2
     Int pointDay = StorageUtil.GetIntValue(None, "PDV.Breton.PracticePointDay", -1)
     Int pointsToday = 0
     if pointDay == today
@@ -12749,8 +12953,7 @@ String Function DebugSetBretonPracticePoints(Int practicePoints)
 
     Int traditionValue = GetBretonTraditionValue()
     SetBretonPracticeCount(traditionValue, practicePoints)
-    Int today = Utility.GetCurrentGameTime() as Int
-    StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointDay", today)
+    StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointDay", GetDevotionalDay() + 2)
     StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointsToday", 0)
     SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
@@ -12815,9 +13018,56 @@ Function DebugResetDeityByIndex(Int deityIndex)
     endIf
 EndFunction
 
+;/ =====================================================================
+    B6 / C5 / fix-plan 7.1 -- the scope clobber and the 100 Hz spin
+    ---------------------------------------------------------------------
+    WAS: a second concurrent logical act spin-waited on WaitMenuMode(0.01) -- a
+    100 Hz busy loop -- for up to two real seconds, and then FORCE-CLEARED the
+    first act's live scope and installed its own. Both acts lost: the first
+    thread's remaining Accumulate* calls landed in the second act's scope, and
+    the first thread's Flush then cleared the second act's scope before it had
+    committed. Silent piety mis-attribution whenever two acts landed close
+    together (a quest stage during a book read is the everyday case).
+
+    NOW: no spin, and never a clobber. A second act that arrives while one is
+    live is CONTAINED as a nested depth of the live scope -- the same mechanism
+    JoinBroadPantheonEvent already uses for a declared parent/child act, and
+    which FlushBroadPantheonEvent already unwinds correctly (depth > 1
+    decrements; only the outermost commits). Both acts' deltas aggregate into
+    one broad-lane entry under the outer act's id instead of corrupting each
+    other, and a delta for a deity ineligible for the outer act's pool is
+    dropped by AccumulateBroadPantheonDelta's existing eligibility gate rather
+    than being credited to the wrong pool.
+
+    Why containment and not the fix plan's deferral-queue: deferring means
+    Begin returns WITHOUT the scope while its caller runs on to its paired
+    Accumulate* and Flush -- and Papyrus gives a script no way to tell which
+    stack an Accumulate belongs to, so those deltas would land in the live
+    scope anyway. Routing them correctly means passing the logical event id
+    through every Accumulate call site, which is exactly the per-event keyed
+    scope the fix plan itself set aside as the invasive option. Containment
+    gets the whole benefit of the cheap fix (no spin, no clobber, no lost
+    scope) with none of that reach.
+
+    Removing the spin also has a second-order effect worth recording: the spin
+    was the one latent call on the story-event -> router -> award chain, so
+    that chain is only NOW actually synchronous. See the Pass 4 changelog note
+    on 7.2 for why that still does not make the SM receivers safe to change.
+   ===================================================================== /;
 Function BeginBroadPantheonEvent(String logicalEventId)
     ; Papyrus may schedule independent event stacks on this quest. Do not let a
     ; second logical act borrow the first stack's temporary accumulator.
+    ;
+    ; DELIBERATELY NOT the Authoria 7.1 "containment" rewrite (1.0.3 review). That
+    ; change dropped this wait and instead folded a second concurrent act into the
+    ; live event as a nested depth. It is cheaper -- this is a 100 Hz busy loop for
+    ; up to two real seconds -- but it MERGES two genuinely simultaneous acts into
+    ; one broad-lane entry, and the second act's deltas are then judged against the
+    ; FIRST act's pool. The broad-pantheon contract requires the opposite: distinct
+    ; logical events serialize, and a stalled owner FAILS CLOSED (scope discarded)
+    ; rather than silently absorbing the newcomer. pdv_broad_pantheon_audit asserts
+    ; this shape (source.concurrent-event-serialization); do not "optimize" it away
+    ; without changing the contract first.
     Float waitStarted = Utility.GetCurrentRealTime()
     while _broadPantheonEventDepth > 0 && _broadPantheonEventId != logicalEventId
         Utility.WaitMenuMode(0.01)
@@ -13352,6 +13602,19 @@ Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowR
 
     if appliedAmount != 0.0 && !queuedQuestReaction
         RequestPanelRefresh()
+    endIf
+    ; B7 / fix-plan 4.3. This is the one place that knows whether the proposed delta
+    ; survived RunGainPipeline. PDV_DeityBase.ScoreRepeatableAction now only PEEKS at
+    ; the daily cap and cooldown and queues the bookkeeping; it is spent here, and only
+    ; when piety actually landed. A multiplied-to-zero award (curse, ineligibility,
+    ; stigma, survival context, lunar misalignment, mode preset) no longer burns the
+    ; cap slot and starts the cooldown for nothing. Covers all three ScoreAction
+    ; consumers -- ActionRouter, EventBus and HandleShoutAttack -- because every one of
+    ; them routes its nonzero delta straight into AwardPietyFromLikesDislikes.
+    if appliedAmount != 0.0
+        deity.CommitPendingRepeatableActions()
+    else
+        deity.DiscardPendingRepeatableActions()
     endIf
     if ownsBroadEvent
         FlushBroadPantheonEvent()
@@ -15970,8 +16233,11 @@ Function SyncRedguardNeglectSpell(Bool shouldBeActive)
     endIf
 
     if shouldBeActive
+        ; Pass 5 rubric sweep (carried from Pass 2). This asked the engine the same
+        ; question twice in consecutive lines -- wasActive was computed and then the very
+        ; next line re-ran HasSpell on the same spell and the same actor. Reuse the answer.
         Bool wasActive = playerRef.HasSpell(PDV_SPEL_Neglect_Redguard)
-        if !playerRef.HasSpell(PDV_SPEL_Neglect_Redguard)
+        if !wasActive
             playerRef.AddSpell(PDV_SPEL_Neglect_Redguard, False)
         endIf
         if !wasActive
@@ -16733,6 +16999,12 @@ EndFunction
 Function PrepareForUninstall()
     Actor playerRef = Game.GetPlayer()
 
+    ; A1 / fix-plan 11.2: stripping the abilities does not undo the actor-value drift
+    ; their no-Recover value modifiers baked into the save, so run the stat repair
+    ; FIRST -- it strips the spells itself, corrects what it can, and re-syncs. What it
+    ; leaves behind is reported by the MCM "Repair stats" button.
+    RunAuthoriaActorValueRepair(True, False)
+
     StripAllPdvSpells(playerRef)
 
     if playerRef
@@ -16746,7 +17018,7 @@ Function PrepareForUninstall()
 
     ClearPdvStorageNamespaces()
     UnregisterForUpdate()
-    Debug.MessageBox("Devotion has removed its spells, factions, and most of its saved data. You may now exit to the main menu, remove the mod, and load this save. This is BEST EFFORT and not a guaranteed clean save; some inert leftover data can remain. The only fully clean removal is to load a save made before Devotion was installed.")
+    Debug.MessageBox("Devotion has repaired its permanent stat damage, then removed its spells, factions, and most of its saved data. The stat repair ran FIRST and zeroed the permanent modifier on every actor value Devotion could touch (magic/damage/disease/frost/fire/poison resistance, carry weight, speed, health, magicka, stamina and the weapon, magic and stealth skills) - note this also clears any permanent modifier another mod had placed on those same values, which is rare but real. You may now exit to the main menu, remove the mod, and load this save. This is BEST EFFORT and not a guaranteed clean save; some inert leftover data can remain. The only fully clean removal is to load a save made before Devotion was installed.")
     Self.Stop()
 EndFunction
 
@@ -16944,30 +17216,9 @@ Function StripAllPdvSpells(Actor playerRef)
     SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Talos_T1, False, "PDV_Bless_Nord_Talos_T1")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Talos_T2, False, "PDV_Bless_Nord_Talos_T2")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Talos_T3, False, "PDV_Bless_Nord_Talos_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Akatosh_T1, False, "PDV_Bless_Nord_Akatosh_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Akatosh_T2, False, "PDV_Bless_Nord_Akatosh_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Akatosh_T3, False, "PDV_Bless_Nord_Akatosh_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Mara_T1, False, "PDV_Bless_Nord_Mara_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Mara_T2, False, "PDV_Bless_Nord_Mara_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Mara_T3, False, "PDV_Bless_Nord_Mara_T3")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Arkay_T1, False, "PDV_Bless_Nord_Arkay_T1")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Arkay_T2, False, "PDV_Bless_Nord_Arkay_T2")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Arkay_T3, False, "PDV_Bless_Nord_Arkay_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Stendarr_T1, False, "PDV_Bless_Nord_Stendarr_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Stendarr_T2, False, "PDV_Bless_Nord_Stendarr_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Stendarr_T3, False, "PDV_Bless_Nord_Stendarr_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Zenithar_T1, False, "PDV_Bless_Nord_Zenithar_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Zenithar_T2, False, "PDV_Bless_Nord_Zenithar_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Zenithar_T3, False, "PDV_Bless_Nord_Zenithar_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Dibella_T1, False, "PDV_Bless_Nord_Dibella_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Dibella_T2, False, "PDV_Bless_Nord_Dibella_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Dibella_T3, False, "PDV_Bless_Nord_Dibella_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Julianos_T1, False, "PDV_Bless_Nord_Julianos_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Julianos_T2, False, "PDV_Bless_Nord_Julianos_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Julianos_T3, False, "PDV_Bless_Nord_Julianos_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Kynareth_T1, False, "PDV_Bless_Nord_Kynareth_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Kynareth_T2, False, "PDV_Bless_Nord_Kynareth_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Kynareth_T3, False, "PDV_Bless_Nord_Kynareth_T3")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Malacath_T1, False, "PDV_Bless_Orc_Malacath_T1")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Malacath_T2, False, "PDV_Bless_Orc_Malacath_T2")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Stronghold_T1, False, "PDV_Bless_Orc_Stronghold_T1")
@@ -17006,6 +17257,32 @@ Function StripAllPdvSpells(Actor playerRef)
     SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Leki_T3, False, "PDV_Bless_Redguard_Leki_T3")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_FarShoresToken, False, "PDV_Bless_Redguard_FarShoresToken")
     SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Redguard, False, "PDV_SPEL_Neglect_Redguard")
+
+    ; B16 / fix-plan 11.1: the two observance families this property-by-property strip
+    ; omitted, so an active Discipline of Return or Remembering of Names survived
+    ; uninstall permanently while every sibling family was cleared. Both helpers are
+    ; the same clear-before-add removers the rites themselves use.
+    RemoveAltmerDisciplineSpells(playerRef)
+    RemoveRedguardRememberSpells(playerRef)
+    ; Same defect class, found while fixing B16: the Daedric pact boon + price spells
+    ; are properties on the PDV_DaedricPath_* scripts, not on this manager, so the
+    ; strip above could never reach them. Malacath's price is SpeedMult -- an
+    ; uninstalled long-pact Orc stayed permanently slower.
+    StripAllDaedricPactSpells()
+EndFunction
+
+; Clear every Daedric path's boon + price spells. StripPactSpells is the path base's
+; own remover (ClearAllBoons + ClearPriceSpells), already used by the pact migration.
+Function StripAllDaedricPactSpells()
+    Int i = 0
+    Int count = GetDaedricPathCount()
+    while i < count
+        PDV_DaedricPathBase path = GetDaedricPathAtListIndex(i)
+        if path
+            path.StripPactSpells()
+        endIf
+        i += 1
+    endWhile
 EndFunction
 
 Function MaybeShowChampionRewardPresentation(Actor playerRef, Spell championSpell, Bool hadChampionSpell, Bool wantsChampionSpell, PDV_DeityBase deity, String rewardLabel)
@@ -17604,14 +17881,14 @@ Bool Function HandleTalosBetrayal(Int severity, String sourceReason)
         reason = "nord_" + reason
     endIf
 
-    Int currentDay = (Utility.GetCurrentGameTime() as Int) + 1
+    ; fix-plan 4.2: one betrayal charge per devotional day.
     String dayKey = "PDV.Creed." + reason + ".Day"
-    if StorageUtil.GetIntValue(None, dayKey, 0) == currentDay
+    if ReadZeroReservedDevotionalDayStamp(dayKey) == (GetDevotionalDay() + 2)
         Trace(2, "Talos betrayal suppressed for " + reason + ": already applied today.")
         return False
     endIf
 
-    StorageUtil.SetIntValue(None, dayKey, currentDay)
+    WriteZeroReservedDevotionalDayStamp(dayKey)
     StorageUtil.SetStringValue(None, "PDV.Creed.LastTalosBetrayalReason", reason)
     StorageUtil.SetStringValue(None, "PDV.Creed.LastTalosBetrayalSource", sourceReason)
 
@@ -19291,6 +19568,26 @@ EndFunction
 
 Bool Function IsCurseStateLoadReconciliation(String reason)
     return reason == "eventbus_Load" || reason == "eventbus_alias_init"
+EndFunction
+
+;/ D5 / fix-plan 9.3. Curse state lives in two places: PDV_CurseState keeps the real
+   value on its own form, and HandleCurseStateTransition above mirrors it to the
+   None-keyed "PDV.Curse.State" -- which is what the Redguard vampire-reentry gate and
+   the diegetic director actually read. Anything that sets curse state through the
+   SERVICE without going through the transition handler moves one and not the other.
+   This re-points the mirror at the service's live value without re-firing the race
+   handlers, which is what a caller that has just RESTORED a state wants: the state did
+   not really change, so no onset should be surfaced a second time. /;
+Function ResyncCurseStateMirror(String reason)
+    if !PDV_CurseStateService
+        return
+    endIf
+    Int liveState = PDV_CurseStateService.GetCurseState()
+    if StorageUtil.GetIntValue(None, "PDV.Curse.State") == liveState
+        return
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Curse.State", liveState)
+    Trace(1, "Curse mirror re-synced to " + liveState + " (" + reason + ")")
 EndFunction
 
 ; Derive a typed "curse" Prisma event from an old-to-new curse-state transition.
@@ -20998,12 +21295,12 @@ Function DecayBretonDruidicStandingAtDawn()
         return
     endIf
 
-    ; Once-per-dawn guard, day+1 encoding to dodge the day-0 self-suppression trap.
-    Int today = (Utility.GetCurrentGameTime() as Int) + 1
-    if StorageUtil.GetIntValue(None, "PDV.Breton.DruidicDecayDay") == today
+    ; Once-per-dawn guard. fix-plan 4.2: the day+1 encoding already dodged the day-0
+    ; self-suppression trap, but on the raw-midnight day -- now the actual dawn day.
+    if ReadZeroReservedDevotionalDayStamp("PDV.Breton.DruidicDecayDay") == (GetDevotionalDay() + 2)
         return
     endIf
-    StorageUtil.SetIntValue(None, "PDV.Breton.DruidicDecayDay", today)
+    WriteZeroReservedDevotionalDayStamp("PDV.Breton.DruidicDecayDay")
 
     Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
     if standingValue <= 0
@@ -21111,7 +21408,8 @@ Int Function ConsumeBretonPracticePointBudget(Int requestedPoints)
         return 0
     endIf
 
-    Int today = Utility.GetCurrentGameTime() as Int
+    ; fix-plan 4.2: the practice-point budget is a daily cap; devotional day.
+    Int today = GetDevotionalDay() + 2
     Int budgetDay = StorageUtil.GetIntValue(None, "PDV.Breton.PracticePointDay", -1)
     if budgetDay != today
         StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointDay", today)
@@ -21439,9 +21737,12 @@ Function SurfaceDunmerDeviationPriceNotice()
     String line = "The ash-prayer thins; " + activeName + " marks the wound."
     AppendBookOfDaysEntry(line, today, "creed.drop", symbolName, False, 2, "Reclamation strained")
 
+    ; fix-plan 4.2: one notice per devotional day (the journal line above keeps the
+    ; wall-clock date on purpose -- that is a display timestamp, not a cap).
     String toastKey = "PDV.Toast.DunmerDeviationPrice.Day"
-    if StorageUtil.GetIntValue(None, toastKey, -1) != today
-        StorageUtil.SetIntValue(None, toastKey, today)
+    Int toastDayStamp = GetDevotionalDay() + 2
+    if StorageUtil.GetIntValue(None, toastKey, -1) != toastDayStamp
+        StorageUtil.SetIntValue(None, toastKey, toastDayStamp)
         SendPrismaToast(symbolName, "warning", "Reclamation strained", line)
     endIf
 EndFunction
@@ -21457,7 +21758,8 @@ Bool Function TryAwardDunmerTwilightWindowSignal(String reason)
         return False
     endIf
 
-    Int dayIndex = nowTime as Int
+    ; fix-plan 4.2: one rite per window per devotional day.
+    Int dayIndex = GetDevotionalDay() + 2
     String windowLabel = GetDunmerTwilightWindowLabel(windowValue)
     String dayKey = "PDV.Signal.DunmerTwilight." + windowLabel + ".Day"
     if StorageUtil.GetIntValue(None, dayKey, -1) == dayIndex
@@ -21518,7 +21820,9 @@ Function AwardActiveDunmerReclamationMemorySignal()
     ; home rite share it) banks at most once per dawn cycle, keyed on the same
     ; day-int boundary as the rest of the daily gates. The substrate side keeps its
     ; own 0.7^n decay separately; this stops the pulse from stacking linearly.
-    Int pdvAncestorMemoryDay = Utility.GetCurrentGameTime() as Int
+    ; fix-plan 4.2: the comment above already says "once per dawn cycle" -- it now uses
+    ; the dawn day boundary instead of raw midnight.
+    Int pdvAncestorMemoryDay = GetDevotionalDay() + 2
     if StorageUtil.GetIntValue(None, "PDV.Signal.DunmerAncestorMemory.Day") == pdvAncestorMemoryDay
         return
     endIf
@@ -22610,20 +22914,18 @@ Function RepairBookOfDaysJournalText()
         i += 1
     endWhile
 
-    Int titleCount = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Titles")
-    i = 0
-    while i < titleCount
-        String oldTitle = StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Titles", i)
-        String newTitle = oldTitle
-        if oldTitle == "an act of devotion"
-            newTitle = "An act of devotion"
-        endIf
-        if newTitle != oldTitle
-            StorageUtil.StringListSet(None, "PDV.Diegetic.Journal.Titles", i, newTitle)
-            repaired += 1
-        endIf
-        i += 1
-    endWhile
+    ; 12.1 / fix-plan 5.4 -- the journal-TITLE repair loop that used to sit here was
+    ; provably dead and has been deleted. It read a title, and if it "==" the literal
+    ; "an act of devotion" replaced it with "An act of devotion", then wrote only "if
+    ; newTitle != oldTitle". Papyrus String comparison is CASE-INSENSITIVE, so both the
+    ; match and the guard were case-blind: any title the first test could match, the
+    ; second test then declared unchanged. The loop could never write a single entry --
+    ; it walked the whole title list on every save's first load to do nothing. (The
+    ; shape says it was once a mojibake repair whose "before" literal was lost to the
+    ; same editing accident that flattened the display-name table above.)
+    ;
+    ; The LINE loop above is kept: it is a genuine one-shot migration and, with the new
+    ; normalizer, still rewrites a Nord Old Ways player's stored "Arkay" lines to "Orkey".
 
     StorageUtil.SetIntValue(None, "PDV.BookOfDays.TextRepairVersion", repairVersion)
     if repaired > 0 && GetDebugLevel() >= 1
@@ -22648,57 +22950,36 @@ Bool Function UsesNordOldWaysDeityNames()
     return GetNordPantheonBaselineState() == NORD_BASELINE_OLD_WAYS
 EndFunction
 
+; 12.1 / fix-plan 5.4 (audit C1) -- the single biggest perf win in the mod.
+;
+; This ran 44 sequential ReplaceText passes over EVERY toast, journal line, panel string
+; and deity name. ReplaceText is a per-CHARACTER scan: one StringUtil.GetNthChar plus one
+; string "+=" (each concat re-interns under the engine's global string-table lock) for
+; every character of every pass, plus a StringMatchesAt probe per position. A 100-character
+; journal line therefore cost on the order of 40,000 native calls -- inside the worker tick.
+;
+; 43 of the 44 passes could not change anything. Papyrus String comparison is
+; CASE-INSENSITIVE and StringMatchesAt compares with "!=", so
+; ReplaceText(text, "akatosh", "Akatosh") matches "Akatosh" and writes back "Akatosh".
+; Their only reachable effect was re-casing a name that arrived mis-cased -- and every
+; name arrives from DeityName, which EnsureCanonicalDeityDisplayNames already repairs to
+; the canonical spelling on load. So they were no-ops on the only input they could see.
+;
+; One of them was actively harmful: "the hist" -> "The Hist" also matched authored prose
+; mid-sentence (PDV_Substrate_ArgonianHist's "You hear the Hist as if through deep mud.")
+; and capitalised it to "You hear The Hist...". Dropping the casing passes repairs that
+; line as a side effect.
+;
+; What remains is the one mapping that did real work: Nord Old Ways knows Arkay as Orkey.
+; For a non-Nord player the whole function is now one GlobalVariable read and a return --
+; UsesNordOldWaysDeityNames checks the origin race first and never touches the baseline
+; track. ReplaceText and StringMatchesAt are kept: this pass still needs them.
 String Function NormalizePublicDeityDisplayText(String sourceText)
-    String result = sourceText
-    result = ReplaceText(result, "auri-el", "Auri-El")
-    result = ReplaceText(result, "akatosh", "Akatosh")
-    if UsesNordOldWaysDeityNames()
-        result = ReplaceText(result, "arkay", "Orkey")
-    else
-        result = ReplaceText(result, "arkay", "Arkay")
+    if !UsesNordOldWaysDeityNames()
+        return sourceText
     endIf
-    result = ReplaceText(result, "orkey", "Orkey")
-    result = ReplaceText(result, "dibella", "Dibella")
-    result = ReplaceText(result, "julianos", "Julianos")
-    result = ReplaceText(result, "mara", "Mara")
-    result = ReplaceText(result, "stendarr", "Stendarr")
-    result = ReplaceText(result, "zenithar", "Zenithar")
-    result = ReplaceText(result, "talos", "Talos")
-    result = ReplaceText(result, "kyne", "Kyne")
-    result = ReplaceText(result, "kynareth", "Kynareth")
-    result = ReplaceText(result, "magnus", "Magnus")
-    result = ReplaceText(result, "xarxes", "Xarxes")
-    result = ReplaceText(result, "y'ffre", "Y'ffre")
-    result = ReplaceText(result, "z'en", "Z'en")
-    result = ReplaceText(result, "baan dar", "Baan Dar")
-    result = ReplaceText(result, "azura", "Azura")
-    result = ReplaceText(result, "khenarthi", "Khenarthi")
-    result = ReplaceText(result, "rajhin", "Rajhin")
-    result = ReplaceText(result, "alkosh", "Alkosh")
-    result = ReplaceText(result, "boethiah", "Boethiah")
-    result = ReplaceText(result, "mephala", "Mephala")
-    result = ReplaceText(result, "the hist", "The Hist")
-    result = ReplaceText(result, "sithis", "Sithis")
-    result = ReplaceText(result, "malacath", "Malacath")
-    result = ReplaceText(result, "trinimac", "Trinimac")
-    result = ReplaceText(result, "tu'whacca", "Tu'whacca")
-    result = ReplaceText(result, "hoonding", "HoonDing")
-    result = ReplaceText(result, "leki", "Leki")
-    result = ReplaceText(result, "shor", "Shor")
-    result = ReplaceText(result, "tsun", "Tsun")
-    result = ReplaceText(result, "stuhn", "Stuhn")
-    result = ReplaceText(result, "mehrunes dagon", "Mehrunes Dagon")
-    result = ReplaceText(result, "molag bal", "Molag Bal")
-    result = ReplaceText(result, "sheogorath", "Sheogorath")
-    result = ReplaceText(result, "clavicus vile", "Clavicus Vile")
-    result = ReplaceText(result, "hermaeus mora", "Hermaeus Mora")
-    result = ReplaceText(result, "meridia", "Meridia")
-    result = ReplaceText(result, "vaermina", "Vaermina")
-    result = ReplaceText(result, "namira", "Namira")
-    result = ReplaceText(result, "sanguine", "Sanguine")
-    result = ReplaceText(result, "nocturnal", "Nocturnal")
-    result = ReplaceText(result, "peryite", "Peryite")
-    return result
+
+    return ReplaceText(sourceText, "arkay", "Orkey")
 EndFunction
 
 String Function ReplaceText(String sourceText, String needleText, String replacementText)
@@ -23492,6 +23773,15 @@ Function EvaluateBosmerForcedReckoning()
     endIf
 
     Int choice = PDV_MSG_BosmerReckoning.Show()
+    ; B4 / fix-plan 3 -- the worst of the six. Show() returns -1 whenever another menu or
+    ; message is already up, and -1 fell into the else branch below, FORCE-SEVERING the Old
+    ; Contract pact with no player input whatsoever. Treat it as "not shown": nothing is
+    ; stamped or changed, ApostateDays stays at its 3+ value, and the reckoning re-attempts
+    ; at the next dawn (the three-dawn condition still holds).
+    if choice < 0
+        Trace(1, "Bosmer reckoning not shown (menu busy); pact untouched, retry next dawn.")
+        return
+    endIf
     if choice == 0
         SetBosmerGreenPactCompliance(30, "reckoning_recommit")
         StorageUtil.SetIntValue(None, "PDV.Bosmer.ApostateDays", 0)
@@ -23846,7 +24136,12 @@ String Function ExportDevotionReport()
 
     String fileName = "PDV_DevotionReport.txt"
     Bool wrote = MiscUtil.WriteToFile(fileName, report, False, False)
-    Debug.Trace("[PDV] ExportDevotionReport wrote=" + wrote + " file=" + fileName)
+    ; D1 sweep. Gated like every other PDV trace. Nothing is lost by it: the function
+    ; already returns the filename on success and "" on failure, which is what the MCM
+    ; button surfaces to the user.
+    if GetDebugLevel() >= 1
+        Debug.Trace("[PDV] ExportDevotionReport wrote=" + wrote + " file=" + fileName)
+    endIf
     if wrote
         return fileName
     endIf
@@ -25480,8 +25775,14 @@ Int Function GetKhajiitMoonPhaseFromGameDay(Float gameDay)
     return 8        ; Waxing Gibbous
 EndFunction
 
+; fix-plan 4.2. The two shared anti-farm helpers below are the single busiest "daily"
+; gate in the mod -- dozens of signals route through them. They ran on the raw-midnight
+; day while dawn consolidation runs on the 06:00 devotional day, so a midnight crossed
+; during sleep reset every daily budget BEFORE the dawn pass that reads it. Both now use
+; the same zero-reserved +2 devotional stamp as the rest of the tree; a stamp is >= 1 by
+; construction, so the StorageUtil default of 0 can never collide with a real day.
 Float Function ConsumeDailyRepeatMultiplier(String keyPrefix)
-    Int currentDay = Utility.GetCurrentGameTime() as Int
+    Int currentDay = GetDevotionalDay() + 2
     String dayKey = keyPrefix + ".Day"
     String countKey = keyPrefix + ".Count"
     Int repeatCount = 0
@@ -25505,7 +25806,7 @@ Float Function ConsumeDailyRepeatMultiplier(String keyPrefix)
 EndFunction
 
 Bool Function ConsumeOncePerDaySignal(String keyPrefix)
-    Int currentDay = Utility.GetCurrentGameTime() as Int
+    Int currentDay = GetDevotionalDay() + 2
     String dayKey = keyPrefix + ".Day"
     if StorageUtil.GetIntValue(None, dayKey, -1) == currentDay
         StorageUtil.AdjustIntValue(None, keyPrefix + ".RejectCount", 1)
@@ -25930,4 +26231,308 @@ Int Function ClampInt(Int value, Int minValue, Int maxValue)
         return maxValue
     endIf
     return value
+EndFunction
+
+; ===========================================================================
+; Authoria - Devotions Tweaks and Fixes (Pass 2)
+; B3 / fix-plan Group 2    -- lifecycle watchdog
+; A1 / fix-plan Group 11.2 -- one-shot actor-value repair
+; ===========================================================================
+
+; --- B3: lifecycle watchdog ------------------------------------------------
+; The 1s master poll is a single-update chain re-armed only at the end of its own
+; OnUpdate, and this script and PDV_QuestReactionWorker are Quest scripts, so their
+; OnPlayerLoadGame can never fire (that event is alias-only). One tick lost to a
+; Papyrus stack dump therefore stopped dawn processing, pact activation, the startup
+; choice and the reconcile for the rest of the playthrough. PDV_PlayerEvents is a
+; player ALIAS script and does receive OnPlayerLoadGame; it calls this from there.
+; Re-registering a single update only resets the timer, so this is safe -- and in
+; effect a no-op -- when the chain is already alive.
+Function KickstartIfStalled()
+    if !Self.IsRunning()
+        ; Stopped by PrepareForUninstall. Never resurrect the chain.
+        return
+    endIf
+    RegisterForSingleUpdate(1.0)
+    EnsureQuestReactionQueueRunning()
+    Trace(2, "Lifecycle watchdog: master poll and quest-reaction worker re-armed on load.")
+EndFunction
+
+; Manager-side pass-through so a caller never needs the worker handle. The worker's own
+; EnsureQuestReactionQueueRunning re-arms only when jobs are actually pending, so this
+; never leaves a permanent update registration in the player's save.
+Function EnsureQuestReactionQueueRunning()
+    if PDV_QuestReactionWorkerService
+        PDV_QuestReactionWorkerService.EnsureQuestReactionQueueRunning()
+    endIf
+EndFunction
+
+; --- A1 cure: one-shot actor-value repair ----------------------------------
+; Pass 1 set the Recover flag on all 420 value-modifying magic effects that lacked it,
+; which STOPS further drift. It does not heal what a save already carries: every past
+; application of a no-Recover ValueModifier wrote a PERMANENT actor-value modifier that
+; removing the ability never reverted (-22131 percent Magic Resistance and -5000 armour
+; in the two user reports). This is the cure.
+Int Property AUTHORIA_REPAIR_VERSION = 1 AutoReadOnly
+String Property AUTHORIA_REPAIR_KEY = "PDV.Authoria.RepairVersion" AutoReadOnly
+; PO3 GetActorValueModifier modifier index: 0 = permanent, 1 = temporary, 2 = damage.
+; Devotion's no-Recover modifiers land in the PERMANENT slot; a recovering effect's
+; contribution lives in the temporary slot and is not touched here.
+Int Property AV_MODIFIER_PERMANENT = 0 AutoReadOnly
+; PDV_MGEF_Neglect_Redguard_Magic magnitude ("Ancestors at a Distance", ResistMagic).
+Float Property NEGLECT_REDGUARD_MAGNITUDE = 3.0 AutoReadOnly
+Float Property AUTHORIA_REPAIR_EPSILON = 0.01 AutoReadOnly
+
+; The automatic once-per-save pass was deliberately NOT adopted (owner decision,
+; 1.0.3): the MCM "Check stat damage" / "Repair stats" buttons are the only entry
+; points, so nothing runs unprompted on load.
+
+; zeroPermanentModifiers = False -> the conservative automatic pass: correct only what
+;   Devotion's own persisted counters can account for (see GetAuthoriaCounterResidue),
+;   clamped so it can never over-correct, and log the shortfall.
+; zeroPermanentModifiers = True  -> the MCM "Repair stats" button and the uninstall
+;   path: zero the permanent modifier outright on the listed actor values. This also
+;   clears any permanent modifier a THIRD-PARTY mod placed on those same values.
+Function RunAuthoriaActorValueRepair(Bool zeroPermanentModifiers, Bool resyncAfterwards)
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        Trace(1, "Authoria stat repair skipped: player unavailable.")
+        return
+    endIf
+
+    TraceAuthoriaRepair("START mode=" + GetAuthoriaRepairModeLabel(zeroPermanentModifiers))
+
+    ; 1 - drop every Devotion penalty/boon ability so nothing re-applies mid-repair.
+    ;     StripAllPdvSpells now also covers the two observance families and the Daedric
+    ;     pact boon+price spells (see the B16 fix above).
+    StripAllPdvSpells(playerRef)
+    ; 2 - let the engine settle the removals before any modifier is read. WaitMenuMode,
+    ;     not Wait: the uninstall and MCM callers run with the game paused in a menu,
+    ;     where a plain Utility.Wait would never return.
+    Utility.WaitMenuMode(0.5)
+
+    ; 3 + 4 - correct each actor value Devotion's value modifiers can touch.
+    String[] repairValues = GetAuthoriaRepairActorValues()
+    Int i = 0
+    while i < repairValues.Length
+        RepairOneAuthoriaActorValue(playerRef, repairValues[i], zeroPermanentModifiers)
+        i += 1
+    endWhile
+
+    ; 5 - put the live state back through the normal sync paths.
+    if resyncAfterwards
+        ResyncDevotionSpellsAfterRepair(playerRef)
+    endIf
+
+    StorageUtil.SetIntValue(None, AUTHORIA_REPAIR_KEY, AUTHORIA_REPAIR_VERSION)
+    TraceAuthoriaRepair("DONE")
+EndFunction
+
+String Function GetAuthoriaRepairModeLabel(Bool zeroPermanentModifiers)
+    if zeroPermanentModifiers
+        return "zero-permanent-modifiers"
+    endIf
+    return "counter-reconcile"
+EndFunction
+
+; Every distinct actor value carried by Devotion.esp's 422 ValueModifier magic effects
+; (the 4 whose ActorValue is None are inert and omitted), plus the two PeakValueModifier
+; effects that also lacked Recover -- enumerated from the plugin itself, never guessed.
+; The record enum name and the engine's actor-value NAME differ for eight of them, and
+; only the engine name resolves at runtime:
+;   ResistMagic    -> MagicResist      Speech              -> Speechcraft
+;   Archery        -> Marksman         ResistFire          -> FireResist
+;   ResistFrost    -> FrostResist      ResistDisease       -> DiseaseResist
+;   CriticalChance -> CritChance       SpeechcraftModifier -> SpeechcraftMod
+; Each name was cross-checked against the AVIF (ActorValueInformation) EditorIDs in
+; Skyrim.esm and against real usage across the load order's Papyrus sources.
+String[] Function GetAuthoriaRepairActorValues()
+    String[] avNames = new String[33]
+    avNames[0]  = "MagicResist"          ; 52 effects
+    avNames[1]  = "DamageResist"         ; 45
+    avNames[2]  = "Speechcraft"          ; 40
+    avNames[3]  = "OneHanded"            ; 31
+    avNames[4]  = "Restoration"          ; 29
+    avNames[5]  = "DiseaseResist"        ; 25
+    avNames[6]  = "CarryWeight"          ; 20
+    avNames[7]  = "Sneak"                ; 19
+    avNames[8]  = "Stamina"              ; 17
+    avNames[9]  = "Magicka"              ; 15
+    avNames[10] = "Illusion"             ; 15
+    avNames[11] = "Block"                ; 15
+    avNames[12] = "PoisonResist"         ; 11
+    avNames[13] = "FrostResist"          ; 9
+    avNames[14] = "Health"               ; 9
+    avNames[15] = "UnarmedDamage"        ; 7
+    avNames[16] = "SpeedMult"            ; 7  -- Malacath's price
+    avNames[17] = "Alteration"           ; 7
+    avNames[18] = "StaminaRateMult"      ; 6
+    avNames[19] = "Lockpicking"          ; 5
+    avNames[20] = "Smithing"             ; 4
+    avNames[21] = "FireResist"           ; 4
+    avNames[22] = "Conjuration"          ; 4
+    avNames[23] = "AttackDamageMult"     ; 4
+    avNames[24] = "Marksman"             ; 4
+    avNames[25] = "TwoHanded"            ; 3
+    avNames[26] = "Destruction"          ; 3
+    avNames[27] = "MagickaRateMult"      ; 2
+    avNames[28] = "CritChance"           ; 2
+    avNames[29] = "WeaponSpeedMult"      ; 1
+    avNames[30] = "SpeechcraftMod"       ; 1
+    avNames[31] = "Pickpocket"           ; 1
+    avNames[32] = "HealRateMult"         ; 1
+    return avNames
+EndFunction
+
+Function RepairOneAuthoriaActorValue(Actor playerRef, String avName, Bool zeroPermanentModifiers)
+    Float permBefore = PO3_SKSEFunctions.GetActorValueModifier(playerRef, AV_MODIFIER_PERMANENT, avName)
+    if Math.abs(permBefore) < AUTHORIA_REPAIR_EPSILON
+        return
+    endIf
+
+    Float correction = 0.0
+    if zeroPermanentModifiers
+        correction = 0.0 - permBefore
+    else
+        correction = ClampAuthoriaCorrection(GetAuthoriaCounterResidue(avName), permBefore)
+    endIf
+
+    if Math.abs(correction) < AUTHORIA_REPAIR_EPSILON
+        TraceAuthoriaRepair(avName + ": permanent modifier " + permBefore + " LEFT IN PLACE (no counter-backed correction available; shortfall " + permBefore + ")")
+        return
+    endIf
+
+    playerRef.ModActorValue(avName, correction)
+    Float permAfter = PO3_SKSEFunctions.GetActorValueModifier(playerRef, AV_MODIFIER_PERMANENT, avName)
+    ; Self-check: if the write did not move the permanent modifier toward zero, put it
+    ; back rather than compound an error. An over-correction is worse than the drift.
+    if Math.abs(permAfter) > Math.abs(permBefore)
+        playerRef.ModActorValue(avName, 0.0 - correction)
+        TraceAuthoriaRepair(avName + ": correction " + correction + " REVERTED -- permanent modifier moved " + permBefore + " -> " + permAfter)
+        return
+    endIf
+
+    TraceAuthoriaRepair(avName + ": " + permBefore + " -> " + permAfter + " (applied " + correction + "; shortfall " + permAfter + ")")
+EndFunction
+
+; Never correct past the modifier that is actually present, and never flip its sign.
+Float Function ClampAuthoriaCorrection(Float correction, Float permBefore)
+    if correction > 0.0 && permBefore >= 0.0
+        return 0.0
+    endIf
+    if correction < 0.0 && permBefore <= 0.0
+        return 0.0
+    endIf
+    if Math.abs(correction) > Math.abs(permBefore)
+        return 0.0 - permBefore
+    endIf
+    return correction
+EndFunction
+
+; The ONE cumulative counter in Devotion that increments on a penalty-ability ADD
+; transition: PDV.Redguard.DeathDutyAbandonmentCount, written by
+; EmitRedguardDeathDutyAbandonmentMinus off SyncRedguardNeglectSpell's !wasActive
+; branch. Every other penalty and boon family persists CURRENT state only -- the
+; per-race PDV.Neglect.*SpellActive flags, the disfavor domains' Active/ExpiresAt/Band
+; keys, and PDV.Daedric.LivePactSpells -- so no application HISTORY survives to
+; reconcile from. The counter that does exist is itself origin-gated, Tu'whacca-gated
+; and daily anti-farm gated, so it undercounts the real transitions too. The automatic
+; pass therefore under-corrects by design and logs the shortfall; the MCM
+; "Repair stats" button is the full correction.
+Float Function GetAuthoriaCounterResidue(String avName)
+    if avName == "MagicResist"
+        Int abandonments = StorageUtil.GetIntValue(None, "PDV.Redguard.DeathDutyAbandonmentCount", 0)
+        if abandonments > 0
+            ; Each transition applied -3 ResistMagic permanently; undo that many.
+            return (abandonments as Float) * NEGLECT_REDGUARD_MAGNITUDE
+        endIf
+    endIf
+    return 0.0
+EndFunction
+
+Function ResyncDevotionSpellsAfterRepair(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+
+    ; The re-grants below are a restoration, not a fresh award -- suppress the tier and
+    ; Champion presentations they would otherwise fire.
+    BeginRaceSetupQuietPresentation("authoria_stat_repair")
+
+    ; The normal reward path re-grants every race/patron family and re-applies the
+    ; neglect spells from live state.
+    SyncFirstTierRaceRewardRuntime()
+    UpdateContextualFavorRuntime()
+    UpdateDisfavorStingRuntime()
+    ReapplyActiveDisfavorStings(playerRef)
+    ; The two observance families B16 covers; both self-gate on their stored state.
+    SyncAltmerDisciplines(playerRef)
+    SyncRedguardRemembering(playerRef)
+    ; The live Daedric pact re-grants its boon + price for its stored tier. Idempotent:
+    ; the ActivePact pointer is unchanged, so no PendingActivation breadcrumb is left.
+    PDV_DaedricPathBase livePact = GetActiveDaedricPactPath()
+    if livePact
+        livePact.MakeActiveDaedricPact()
+    endIf
+
+    EndRaceSetupQuietPresentation()
+EndFunction
+
+; UpdateDisfavorStingRuntime only CLEARS expired stings -- nothing re-applies an
+; unexpired one after a strip, so restore each active domain's band spell here.
+Function ReapplyActiveDisfavorStings(Actor playerRef)
+    ReapplyOneDisfavorSting(playerRef, DISFAVOR_DOMAIN_SKY_STORM_HUNT)
+    ReapplyOneDisfavorSting(playerRef, DISFAVOR_DOMAIN_DEATH_ANCESTORS)
+    ReapplyOneDisfavorSting(playerRef, DISFAVOR_DOMAIN_MERCY_PROTECTION)
+    ReapplyOneDisfavorSting(playerRef, DISFAVOR_DOMAIN_WAR_HONOR)
+    ReapplyOneDisfavorSting(playerRef, DISFAVOR_DOMAIN_ORDER_TRADE_LORE)
+    ReapplyOneDisfavorSting(playerRef, DISFAVOR_DOMAIN_MOON_LUCK_SHADOW)
+    ReapplyOneDisfavorSting(playerRef, DISFAVOR_DOMAIN_VOID_SECRETS)
+EndFunction
+
+Function ReapplyOneDisfavorSting(Actor playerRef, Int domainValue)
+    if !playerRef || !IsDisfavorDomainActive(domainValue)
+        return
+    endIf
+
+    Bool sharpBand = StorageUtil.GetStringValue(None, GetDisfavorBandKey(domainValue)) == GetDisfavorBandLabel(True)
+    Spell bandSpell = GetDisfavorSpell(domainValue, sharpBand)
+    if bandSpell && !playerRef.HasSpell(bandSpell)
+        playerRef.AddSpell(bandSpell, False)
+    endIf
+EndFunction
+
+; Reported at debug level 1 so a bug reporter can verify every correction. The
+; per-value lines are the audit trail the fix plan asks for.
+Function TraceAuthoriaRepair(String repairText)
+    if GetDebugLevel() >= 1
+        Debug.Trace("[PDV] Authoria stat repair: " + repairText)
+    endIf
+EndFunction
+
+; Readout for the MCM button: how much permanent modifier is still sitting on the
+; listed actor values right now. Read-only.
+String Function GetAuthoriaResidueSummary()
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return "Player unavailable."
+    endIf
+
+    String summary = ""
+    Int touched = 0
+    String[] repairValues = GetAuthoriaRepairActorValues()
+    Int i = 0
+    while i < repairValues.Length
+        Float perm = PO3_SKSEFunctions.GetActorValueModifier(playerRef, AV_MODIFIER_PERMANENT, repairValues[i])
+        if Math.abs(perm) >= AUTHORIA_REPAIR_EPSILON
+            summary += repairValues[i] + " " + perm + "\n"
+            touched += 1
+        endIf
+        i += 1
+    endWhile
+
+    if touched == 0
+        return "No permanent modifier remains on any actor value Devotion can touch."
+    endIf
+    return "Permanent modifier still present on " + touched + " actor value(s):\n" + summary
 EndFunction
