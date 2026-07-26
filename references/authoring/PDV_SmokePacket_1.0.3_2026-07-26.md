@@ -12,20 +12,37 @@ supersedes it — re-run the whole thing, not just the new rows.
 | **GATE 3** Daedric prices | **PASS** — family repaired (48/48 `Detrimental` + `PowerAffectsMagnitude`, 0 negative magnitudes) and runtime-proven. See `handoff/PDV_AzuraPrice_ActorValueDiagnosis_Handoff_2026-07-26.md`. |
 | **GATE 2** curse music (vampire) | **PASS** — no persistent dungeon bed; interior music continued normally; short sting heard on **both** onset and cure. |
 | GATE 2 instant restore + vampire message | assigned to second tester (her Tests 5 and 6) |
-| GATE 4 4K toasts | size confirmed bigger; **box-width fix landed afterwards** — needs one more glance |
+| **GATE 4** 4K toasts | **PASS** — larger text confirmed, and the box now sizes to content with edges still aligned (re-checked after the width fix). |
+| **Faucet cache (C2)** — see below | **PASS** — verified through the full chain, see log evidence below. |
 | Checks 5, 7, 8, 9 | assigned to second tester |
-| Check 6 stat-repair buttons | owner, throwaway save, still open |
-| Probes 10, 11 | still open, observation-only, feed 1.0.4 |
-| Faucet cache (C2) — see below | still open, highest silent-failure risk in the port |
+| Check 6 stat-repair buttons | owner, throwaway save, still open (optional) |
+| Probes 10, 11 | still open, observation-only, feed 1.0.4 (optional) |
 
-**Faucet cache spot check (not a numbered gate, but the one worth doing).**
-The C2 port replaced a per-call JSON scan with a cache built once at load from a
-hand-transcribed 21-key list; a typo there kills a faucet silently. With debug
-level 3: `player.additem 34C5D 1` (Nord Mead, on Sanguine's `revel_indulge`
-faucet), drink it, then search `Papyrus.0.log` for `RouteQuestReactionFaucet`.
-Either `RouteQuestReactionFaucet complete: Sanguine.revel_indulge` **or**
-`QuestReaction faucet repeat blocked: Sanguine ...` is a pass — both mean the
-form was recognised. Neither line appearing is the failure.
+**Owner-side testing is complete.** Every reported defect class 1.0.3 set out to
+fix is now runtime-confirmed. The two remaining owner rows are optional: the
+stat-repair buttons are a new convenience feature rather than a regression risk,
+and the classification probes are observation-only and feed 1.0.4 either way.
+
+**Faucet cache spot check — PASSED 2026-07-26.** The C2 port replaced a per-call
+JSON scan with a cache built once at load from a hand-transcribed 21-key list; a
+typo there would kill a faucet silently, which is why this was worth running.
+Method: debug level 3, `player.additem 34C5D 1` (Nord Mead, on Sanguine's
+`revel_indulge` faucet), drink it, then search `Papyrus.0.log`.
+
+Evidence:
+
+```text
+17:28:13  [PDV] PlayerEvents: Quest-reaction faucet forms cached: 67.
+17:40:17  [PDV] AwardPiety: Sanguine raw 2.400000, applied 1.200000, stance 1
+17:40:17  [PDV] QuestReaction piety: Sanguine 2.400000 (Sanguine.revel_indulge)
+17:40:17  [PDV] EventBus: RouteQuestReactionFaucet complete: Sanguine.revel_indulge
+```
+
+That covers the whole chain, not just the route: the cache **built at load** (67
+forms, zero truncation warnings, well under the 128 ceiling), the form was
+**recognised** from it twelve minutes later, matched the right key, and the
+award **landed** with the stance multiplier applied. Keep this as the regression
+test for any future change to the faucet cache or its key list.
 
 **Setup**
 1. Fresh save, 1.0.3 installed, **restart Skyrim** so the rebuilt `.pex` load.

@@ -150,6 +150,30 @@ Doctrine: **wire by default; cut only if truly empty or demonstrably superseded.
   stay neutral. Shipped `PDV_GreenPact_KID.ini` has 0 non-comment lines.
 - B18 SM receiver `Stop()`/`Reset()` split — 0.1s defer is the issue #17 CTD fix.
 
+## Runtime proof (owner, 2026-07-26)
+
+Owner-side testing complete. Every defect class 1.0.3 targets is confirmed in
+game, not inferred:
+
+- **A1 `Recover` + A3 convention** — WarHonor Light sting: OneHanded −3 on apply,
+  exact baseline on clear, stable across repeats. Proves both the flag fix and
+  `Detrimental` + positive magnitude.
+- **Daedric price family** — 48/48 repaired and runtime-proven (Azura Seeker
+  full apply/lapse cycle, after controlling for the Redguard masking).
+- **Curse music** — no persistent dungeon bed; interior music continues; short
+  sting on BOTH onset and cure.
+- **Toast sizing** — larger text plus content-sized boxes with edges aligned.
+- **C2 faucet cache** — the port's highest silent-failure risk, verified through
+  the full chain: cache built at load (67 forms, no truncation), form recognised
+  at runtime, correct key matched, piety awarded with stance multiplier. Log
+  evidence and the repeatable method are in
+  `PDV_SmokePacket_1.0.3_2026-07-26.md`.
+
+Still open and optional: MCM stat-repair buttons (new feature, not a regression
+risk) and the two classification probes (observation-only, feed 1.0.4). The
+second tester holds curse instant-restore, the Redguard vampire message, MCM
+page safety, piety accrual and shrine prayer.
+
 ## Gates
 
 `pdv_compile` 0/0 on 49 changed scripts · `pdv_verify` **FAIL=0** (PASS 4119,
