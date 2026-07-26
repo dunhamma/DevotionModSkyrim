@@ -14,15 +14,25 @@ supersedes it — re-run the whole thing, not just the new rows.
 | GATE 2 instant restore + vampire message | assigned to second tester (her Tests 5 and 6) |
 | **GATE 4** 4K toasts | **PASS** — larger text confirmed, and the box now sizes to content with edges still aligned (re-checked after the width fix). |
 | **Faucet cache (C2)** — see below | **PASS** — verified through the full chain, see log evidence below. |
-| **Check 7** shrine prayer (B14) | **Mechanism PASS**, surfacing re-test pending — see note below. |
-| Checks 5, 8, 9 | assigned to second tester |
+| **Check 7** shrine prayer (B14) | **Mechanism PASS** (owner, log-verified). Surfacing covered by the second tester — see note below. |
+| **Checks 5, 8, 9 + curse restore, vampire message** | **PASS** — second tester reported all checks clear, 2026-07-26. |
 | Check 6 stat-repair buttons | owner, throwaway save, still open (optional) |
 | Probes 10, 11 | still open, observation-only, feed 1.0.4 (optional) |
 
-**Owner-side testing is complete.** Every reported defect class 1.0.3 set out to
-fix is now runtime-confirmed. The remaining owner rows are optional: the
-stat-repair buttons are a new convenience feature rather than a regression risk,
-and the classification probes are observation-only and feed 1.0.4 either way.
+**TESTING COMPLETE — 2026-07-26.** Owner ran gates 1–4 plus the faucet cache
+and the shrine mechanism; the second tester ran the six behavioural checks and
+reported all clear. Every reported defect class 1.0.3 set out to fix is
+runtime-confirmed, on both a developer machine and an independent one.
+
+Only optional rows remain, and none is a regression risk: the MCM stat-repair
+buttons (a new convenience feature), and the two classification probes
+(observation-only, feeding 1.0.4 regardless).
+
+⚠ **One thing worth confirming with the second tester**: her shrine check
+counts as the surfacing half of check 7 **only if she actually saw an
+acknowledgement**, which requires her character's race to have matched the
+shrine's deity (see the roster note below). If she read "no toast" as a pass,
+that row is still open. One question to her settles it.
 
 ### Check 7 — shrine prayer: what actually happened (2026-07-26)
 
