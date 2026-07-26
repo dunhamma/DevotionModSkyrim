@@ -6,6 +6,17 @@
   ],
   "generatedAtLocal": "12/06/2026, 17:18:25",
   "sourceOfTruth": "Manifest row EditorIDs and text win over work-order shorthand.",
+  "priceSerialization": {
+    "magicEffectFlags": [
+      "Recover",
+      "Detrimental",
+      "NoDuration",
+      "NoArea",
+      "PowerAffectsMagnitude",
+      "NoHitEffect"
+    ],
+    "storedSpellMagnitude": "Positive absolute value of the semantic negative magnitude; Detrimental supplies the negative gameplay delta."
+  },
   "operationalFormList": "PDV_FLST_DaedricPaths_All",
   "devFormList": "PDV_FLST_DaedricPaths_DevOnly",
   "princeCount": 16,

@@ -258,6 +258,17 @@ function main() {
     ],
     generatedAtLocal: new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney", hour12: false }),
     sourceOfTruth: "Manifest row EditorIDs and text win over work-order shorthand.",
+    priceSerialization: {
+      magicEffectFlags: [
+        "Recover",
+        "Detrimental",
+        "NoDuration",
+        "NoArea",
+        "PowerAffectsMagnitude",
+        "NoHitEffect",
+      ],
+      storedSpellMagnitude: "Positive absolute value of the semantic negative magnitude; Detrimental supplies the negative gameplay delta.",
+    },
     operationalFormList: "PDV_FLST_DaedricPaths_All",
     devFormList: "PDV_FLST_DaedricPaths_DevOnly",
     princeCount: princes.length,
