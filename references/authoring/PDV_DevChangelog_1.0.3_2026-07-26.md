@@ -25,6 +25,31 @@ verify-then-ported into our live source — no `.psc`/`.pex` copied.
     already positive pre-flip — it cannot detect this class. Kyne or Talos
     neglect is the discriminating case.
 
+## Daedric price family — serialization repair (owner, 2026-07-26)
+
+The 1.0.3 archetype fix (`ValueModifier` -> `PeakValueModifier`, so prices hit
+the MAX pool) was necessary but **not sufficient** — the records still applied
+no actor-value modifier in game. Root cause was the same serialization class as
+A3: the engine wants `Detrimental` + a POSITIVE stored magnitude, and these
+constant-effect pool modifiers additionally need `PowerAffectsMagnitude`.
+
+Final state, verified by direct readback: **48/48** `PDV_MGEF_Price_Daedric_*`
+carry `Detrimental`, **48/48** carry `PowerAffectsMagnitude`, and **0** of the
+48 `PDV_Price_Daedric_*` spells retain a negative magnitude.
+
+Runtime-proven by the owner. The diagnosis is in
+`handoff/PDV_AzuraPrice_ActorValueDiagnosis_Handoff_2026-07-26.md`; note that
+doc's "Open" section (higher tiers, family scope) is now CLOSED and its
+"Neglect_Tsun still stores -15" line is stale — A3 flipped it to +15.
+
+⚠ **Masking hazard for anyone re-testing this**: an equal-and-opposite race
+reward can cancel a price in the same observation window. The original false
+negative was Redguard Spine Forebear (+10 Stamina) landing against Azura Seeker
+(-10 Stamina) for a net 0 — because the Forebear boon was being repaired *by*
+the milestone presentation. Establish the post-reward baseline BEFORE forcing a
+tier, and compare the delta, not the net modifier. That masking bug is itself
+fixed (see the Redguard entry below).
+
 ## Data / codegen
 
 - `PDV_DeityLikesDislikes.csv` actor `azurah` → `azura` (B1). The generator keys

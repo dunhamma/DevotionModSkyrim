@@ -165,14 +165,15 @@ for repairing damaged old saves and isn't part of this test.
 
 ## Please skip entirely
 
-**The Daedric Prince pages** — anything about pacts, Princes, prices or boons
-(`Selected Prince`, `Force Seeker/Devoted/Champion`, `Reset Prince path`). That
-part of the mod is mid-repair right now and is *known* to behave inconsistently,
-so anything you found there would already be on the list. It's being handled
-separately.
+Two areas have already been tested and confirmed working, so there's nothing
+left to learn from them — please don't spend your time there:
 
-Likewise the **Disfavor (dislikes)** controls — that area has already been
-confirmed working, so there's nothing left to learn from it.
+- **The Daedric Prince pages** — pacts, Princes, prices and boons
+  (`Selected Prince`, `Force Seeker/Devoted/Champion`, `Reset Prince path`).
+- **The Disfavor (dislikes) controls.**
+
+Everything in the six tests above is genuinely unverified, which is why it's
+what you've got.
 
 ---
 
