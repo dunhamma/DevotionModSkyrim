@@ -33,6 +33,11 @@ build/
 # Generated runtime log snapshots
 generated/runtime-log-snapshots/
 
+# Runtime proof screenshots and substrate capture output from local smoke runs.
+# Kept on disk as session evidence, never committed.
+generated/*.png
+generated/pantheon-substrate-runtime/
+
 # Generated live-mod snapshots from local proof/deploy runs. Older committed
 # snapshots remain tracked; new timestamped snapshots should stay local.
 generated/live-devotion-snapshot/
