@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-26T07:41:04.8711172Z",
+  "postChangeVerifiedAt": "2026-07-26T08:05:09.4916973Z",
+  "profile": "Devotion Dev",
+  "plugin": "Devotion.esp",
+  "active": true,
+  "espSha256": "D82E78A26C4BF2CA89FC124CF3628810AB80C6E6998192CF3389BCB6E38F2DB2",
+  "recordSummary": {
+    "total": 1949,
+    "types": 21,
+    "quests": 99,
+    "magicEffects": 666,
+    "spells": 405,
+    "messages": 490,
+    "placedObjects": 51,
+    "cells": 2
+  },
+  "errors": {
+    "danglingLinks": 0,
+    "missingMasters": 0,
+    "parseFailures": 0
+  },
+  "contestedRecordCount": 33,
+  "criticalRecordWinners": [
+    {
+      "formid": "00C325:Devotion.esp",
+      "editorid": "PDV__ManagerQuest",
+      "winner": "Devotion.esp",
+      "vmadScripts": 1,
+      "vmadScriptName": "PDV__ManagerQuest",
+      "vmadProperties": 499,
+      "vmadAliases": 1
+    },
+    {
+      "formid": "03AFBE:Devotion.esp",
+      "editorid": "PDV_MCM",
+      "winner": "Devotion.esp"
+    },
+    {
+      "formid": "016785:Skyrim.esm",
+      "editorid": "WindhelmTempleofTalos",
+      "winner": "Lux.esp"
+    },
+    {
+      "formid": "032AE7:Skyrim.esm",
+      "editorid": "QASmoke",
+      "winner": "ANV_SynW4ENBPatcher.esp"
+    }
+  ],
+  "cellNestedReferenceRetention": {
+    "verified": true,
+    "details": [
+      "Devotion.esp carries zero nested placed references under its WindhelmTempleofTalos override, so the later Lux parent winner has no Devotion child set to suppress.",
+      "Devotion.esp carries 51 placed-object records under its QASmoke authoring group; direct load-order enumeration resolves all 51 records to Devotion.esp despite the later QASmoke parent winner."
+    ],
+    "placedObjectsEnumerated": 51,
+    "placedObjectsWinningFromDevotion": 51
+  },
+  "vmadValidation": {
+    "scriptedRecords": 183,
+    "unboundAutoProperties": 552,
+    "boundButNullProperties": 0,
+    "unverifiableAttachments": 0,
+    "boundary": "Unbound findings include inherited and runtime-filled properties and are an audit queue, not a clean-binding claim. No VMAD record was changed in this tranche."
+  },
+  "filesystemScriptPairs": {
+    "psc": 96,
+    "pex": 96,
+    "pairNamesExact": true
+  },
+  "assetWinners": {
+    "fontFiles": {
+      "queried": 4,
+      "soleProvider": "Devotion",
+      "winner": "Devotion"
+    },
+    "urnTextures": {
+      "queried": 2,
+      "soleProvider": "Devotion",
+      "winner": "Devotion"
+    }
+  },
+  "proofBoundary": {
+    "closed": [
+      "active load-order presence",
+      "FormLink integrity",
+      "master presence",
+      "record parsing",
+      "contested-record enumeration",
+      "placed-reference winner retention",
+      "VMAD attachment resolvability"
+    ],
+    "open": [
+      "intentional-versus-defective review of 552 unbound Auto properties",
+      "runtime behavior",
+      "manual UI behavior",
+      "navmesh and terrain spatial integrity"
+    ]
+  }
+}

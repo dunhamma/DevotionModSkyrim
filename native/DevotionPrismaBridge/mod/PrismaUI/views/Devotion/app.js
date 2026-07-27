@@ -2211,6 +2211,9 @@
 
   const MIN_TOAST_DURATION_MS = 3600;
   const DEFAULT_TOAST_DURATION_MS = 8000;
+  const MAX_ACTIVE_TOASTS = 8;
+  const MAX_TOASTS_PER_PAYLOAD = 8;
+  const MAX_RECENT_TOAST_KEYS = 32;
 
   const showToast = (toastPayload = {}) => {
     const copy = resolveEventPayload(toastPayload);
@@ -2230,6 +2233,9 @@
         recentToastKeys.delete(key);
       }
     });
+    while (recentToastKeys.size > MAX_RECENT_TOAST_KEYS) {
+      recentToastKeys.delete(recentToastKeys.keys().next().value);
+    }
 
     const toast = document.createElement("section");
     const tone = text(copy.tone, "neutral");
@@ -2256,6 +2262,9 @@
     body.append(title, message);
     toast.append(mark, body);
     nodes.toasts.prepend(toast);
+    while (nodes.toasts.childElementCount > MAX_ACTIVE_TOASTS) {
+      removeToast(nodes.toasts.lastElementChild);
+    }
 
     window.setTimeout(() => removeToast(toast), duration + 700);
   };
@@ -2271,7 +2280,7 @@
       scheduleToast(payload.toast);
     }
 
-    asArray(payload.toasts).forEach((toast, index) => {
+    asArray(payload.toasts).slice(0, MAX_TOASTS_PER_PAYLOAD).forEach((toast, index) => {
       scheduleToast(toast, index * 700);
     });
 
@@ -2315,7 +2324,7 @@
       scheduleToast(payload.toast);
     }
 
-    asArray(payload.toasts).forEach((toast, index) => {
+    asArray(payload.toasts).slice(0, MAX_TOASTS_PER_PAYLOAD).forEach((toast, index) => {
       scheduleToast(toast, index * 700);
     });
 

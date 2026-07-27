@@ -46,6 +46,8 @@ generated/live-devotion-snapshot/
 dist/Rynfri_JoJ_Package/
 dist/Rynfri_JoJ_Package.zip
 dist/Devotion.PreBeta.*.zip
+dist/Devotion-[0-9]*.zip
+dist/Devotion-[0-9]*.zip.proof.json
 
 # Untracked scratch output folders (tracked scratch/ files are unaffected)
 scratch/mcm-anomaly-bsa/
@@ -56,6 +58,11 @@ scratch/book-of-days-proof/
 scratch/prisma-book-preview/
 scratch/incoming-devotion-prisma-*/
 scratch/live-prisma-before-*/
+scratch/ship-optimization-pex/
+scratch/ship-optimization-all-pex/
+scratch/ship-optimization-pdv-verify.*.txt
+references/authoring/PDV_ShipOptimizationLedger.json
+references/authoring/PDV_ShipOptimizationLedger.md
 
 # Untracked loose scratch files
 scratch/apply_ld_regen.mjs

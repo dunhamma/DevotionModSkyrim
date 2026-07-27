@@ -560,7 +560,7 @@ Int Property TIER_CHAMPION = 3 AutoReadOnly
 
 ; Human-facing release stamp for the MCM Version readout and bug-report export.
 ; Bump on every public build so an attached report is orderable by build.
-String Property PDV_BUILD_VERSION = "1.0.3" AutoReadOnly
+String Property PDV_BUILD_VERSION = "1.0.4" AutoReadOnly
 
 Int Property FRAMEWORK_SCHEMA_VERSION = 3 AutoReadOnly
 Int Property PATRON_STATE_UNSET = 0 AutoReadOnly
@@ -799,6 +799,16 @@ Int _shoutRefreshTicks = 0
 ; Pass 5 Task 2. Sub-cadence counter for the location/context probes at the tail of
 ; OnUpdate -- they run every third master tick instead of every one.
 Int _contextProbeTicks = 0
+; 1.0.4 profiling counters. They add no external call to the hot path; one
+; debug-level lookup and trace are performed per 60 timer fires. These markers
+; align PapyrusProfiler/stack-profile windows with the manager's actual lanes
+; before any cadence is changed.
+Int _optimizationTimerFires = 0
+Int _optimizationMenuEarlyOuts = 0
+Int _optimizationHotLaneRuns = 0
+Int _optimizationDisfavorRuns = 0
+Int _optimizationReconcileRuns = 0
+Int _optimizationContextProbeRuns = 0
 Bool _panelDirty = False
 Bool _suppressAwardFavorToast = False
 Bool _suppressCurseTransitionOutputs = False
@@ -904,6 +914,8 @@ Event OnInit()
 EndEvent
 
 Event OnUpdate()
+    _optimizationTimerFires += 1
+
     ; Pass 5 Task 2 -- menu early-out. One native call in place of the ~15 StorageUtil and
     ; global reads below. Nothing this tick does can change while a menu owns the screen,
     ; and EnsureUnifiedStartupChoice below puts a MessageBox up, which is exactly what must
@@ -914,6 +926,8 @@ Event OnUpdate()
     ; tick at all while a pausing menu is open, so this earns its keep on the non-pausing
     ; ones (dialogue, and the load-screen window) rather than on the inventory.
     if Utility.IsInMenuMode()
+        _optimizationMenuEarlyOuts += 1
+        MaybeEmitManagerOptimizationProfile()
         RegisterForSingleUpdate(1.0)
         return
     endIf
@@ -936,6 +950,7 @@ Event OnUpdate()
     ProcessPendingDaedricPrePactNotices()
     DrainHircineRenunciationJournal()
     ProcessDelayedHircineResiduePrismaToasts()
+    _optimizationHotLaneRuns += 1
     if DebugCommand != 0
         RunDebugCommand()
     endIf
@@ -966,9 +981,11 @@ Event OnUpdate()
     ; -- for state that only de-syncs if a third-party mod strips something behind us.
     _shoutRefreshTicks += 1
     if _shoutRefreshTicks % 10 == 0
+        _optimizationDisfavorRuns += 1
         UpdateDisfavorStingRuntime()
     endIf
     if _shoutRefreshTicks >= 30
+        _optimizationReconcileRuns += 1
         EnsurePhase8RuntimeWiring()
         EnsureAkatoshRuntimeIdentity()
         EnsureCanonicalDeityDisplayNames()
@@ -1024,6 +1041,7 @@ Event OnUpdate()
     _contextProbeTicks += 1
     if _contextProbeTicks >= 3
         _contextProbeTicks = 0
+        _optimizationContextProbeRuns += 1
         TryArgonianEldergleamInterior()
         TryArgonianNearWaterMaintenance()
         TryBosmerEldergleamInterior()
@@ -1094,6 +1112,7 @@ Event OnUpdate()
         endIf
     endIf
 
+    MaybeEmitManagerOptimizationProfile()
     RegisterForSingleUpdate(1.0)
 
     ; A3 / fix-plan 10.1: one-time sweep of legacy leaked job keys. Deliberately AFTER
@@ -1101,6 +1120,23 @@ Event OnUpdate()
     ; the poll chain (the B3 failure class).
     RunAuthoriaQuestReactionKeySweep()
 EndEvent
+
+Function MaybeEmitManagerOptimizationProfile()
+    if _optimizationTimerFires < 60
+        return
+    endIf
+
+    if GetDebugLevel() >= 3
+        Debug.Trace("[PDV] OPT_PROFILE manager60 timer=" + _optimizationTimerFires + " menu=" + _optimizationMenuEarlyOuts + " hot=" + _optimizationHotLaneRuns + " disfavor=" + _optimizationDisfavorRuns + " reconcile=" + _optimizationReconcileRuns + " context=" + _optimizationContextProbeRuns)
+    endIf
+
+    _optimizationTimerFires = 0
+    _optimizationMenuEarlyOuts = 0
+    _optimizationHotLaneRuns = 0
+    _optimizationDisfavorRuns = 0
+    _optimizationReconcileRuns = 0
+    _optimizationContextProbeRuns = 0
+EndFunction
 
 Function EnsurePhase8RuntimeWiring()
     if !PDV_Talos || !PDV_ConcordatStandingTrack
@@ -1631,15 +1667,25 @@ Function ApplyQuestReaction(Quest sourceQuest, Int stageValue, String parentLogi
     QueueQuestReactionJob(sourceQuest, stageValue, parentLogicalEventId)
 EndFunction
 
+String Function AppendQuestReactionSnapshotToken(String existingCsv, String nextToken)
+    if existingCsv == ""
+        return nextToken
+    endIf
+    return existingCsv + "|" + nextToken
+EndFunction
+
 ; Matrix-backed quest stages are intentionally asynchronous. Event receivers only
 ; snapshot immutable cell data and return; the dedicated worker applies two cells
-; per tick. This protects shared modlists from a 45-cell quest fan-out monopolising
-; the Papyrus VM while preserving one logical reaction and one final surface.
+; per tick. Ingress persists only rows that can produce work for the snapshotted
+; player state. This protects shared modlists from a 45-cell quest fan-out
+; monopolising the Papyrus VM while preserving one logical reaction and one final
+; surface.
 Function QueueQuestReactionJob(Quest sourceQuest, Int stageValue, String parentLogicalEventId = "")
     if !sourceQuest
         return
     endIf
 
+    Float ingressStartedRealTime = Utility.GetCurrentRealTime()
     Int runtimeFormId = sourceQuest.GetFormID()
     Int matrixFormId = StorageUtil.GetIntValue(None, "PDV.QuestReaction.LocalFormId." + runtimeFormId, runtimeFormId)
     String reactionKey = matrixFormId + "|" + stageValue
@@ -1649,14 +1695,14 @@ Function QueueQuestReactionJob(Quest sourceQuest, Int stageValue, String parentL
         return
     endIf
 
-    String deitiesCsv = JsonUtil.GetStringValue(matrixFile, cellPrefix + "deitiesCsv")
-    String[] deityNames = StringUtil.Split(deitiesCsv, "|")
+    String sourceDeitiesCsv = JsonUtil.GetStringValue(matrixFile, cellPrefix + "deitiesCsv")
+    String[] deityNames = StringUtil.Split(sourceDeitiesCsv, "|")
     String[] valences = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, cellPrefix + "valencesCsv"), "|")
     String[] intensities = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, cellPrefix + "intensitiesCsv"), "|")
     String[] magnitudes = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, cellPrefix + "magnitudesCsv"), "|")
     String[] sourceTags = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, cellPrefix + "tagsCsv"), "|")
-    Int cellCount = deityNames.Length
-    if cellCount <= 0 || cellCount != valences.Length || cellCount != intensities.Length || cellCount != magnitudes.Length || cellCount != sourceTags.Length
+    Int sourceCellCount = deityNames.Length
+    if sourceCellCount <= 0 || sourceCellCount != valences.Length || sourceCellCount != intensities.Length || sourceCellCount != magnitudes.Length || sourceCellCount != sourceTags.Length
         TraceQuestReactionQueue("REJECT malformed reaction " + reactionKey)
         return
     endIf
@@ -1674,6 +1720,131 @@ Function QueueQuestReactionJob(Quest sourceQuest, Int stageValue, String parentL
         return
     endIf
 
+    ; Resolve reachability and zero-value rows once at ingress. The worker must
+    ; never pay the same stance/roster test again for every queued slice.
+    String deitiesCsv = ""
+    String valencesCsv = ""
+    String intensitiesCsv = ""
+    String magnitudesCsv = ""
+    String tagsCsv = ""
+    Int sourceIndex = 0
+    Int cellCount = 0
+    while sourceIndex < sourceCellCount
+        if !IsQueuedQuestReactionCellCheapSkip(deityNames[sourceIndex], valences[sourceIndex], intensities[sourceIndex], magnitudes[sourceIndex])
+            deitiesCsv = AppendQuestReactionSnapshotToken(deitiesCsv, deityNames[sourceIndex])
+            valencesCsv = AppendQuestReactionSnapshotToken(valencesCsv, valences[sourceIndex])
+            intensitiesCsv = AppendQuestReactionSnapshotToken(intensitiesCsv, intensities[sourceIndex])
+            magnitudesCsv = AppendQuestReactionSnapshotToken(magnitudesCsv, magnitudes[sourceIndex])
+            tagsCsv = AppendQuestReactionSnapshotToken(tagsCsv, sourceTags[sourceIndex])
+            cellCount += 1
+        endIf
+        sourceIndex += 1
+    endWhile
+    Int skippedCellCount = sourceCellCount - cellCount
+
+    ; Snapshot the seven legacy meta slots into the same runnable-row stream.
+    ; This removes four no-op worker updates from quests whose meta conditions
+    ; are already spent while preserving base-then-meta application order.
+    Int metaRunnableCount = 0
+    Int metaEligible = 0
+    Int metaGold = JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.gold")
+    Int metaMageAid = JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.mageAid")
+    Int metaTwilight = BoolToInt(IsQuestReactionTwilightWindow())
+    Int metaNight = BoolToInt(IsQuestReactionNightWindow())
+    Int metaNocturnalTheft = BoolToInt(StorageUtil.GetFloatValue(None, "PDV.Meta.LastTheftTime") > StorageUtil.GetFloatValue(None, "PDV.Meta.LastFulfillTime"))
+    Int metaOutdoors = BoolToInt(IsPlayerOutdoorsForQuestReaction())
+    Int metaSkipZen = JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Z'en")
+    Int metaSkipJulianos = JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Julianos")
+    Int metaSkipAzura = JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Azura")
+    Int metaSkipNocturnal = JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Nocturnal")
+    Int metaSkipKhenarthi = JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Khenarthi")
+    Int metaSkipAkatosh = JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Akatosh")
+    Int metaSkipXarxes = JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Xarxes")
+    Int metaWheelHit = 0
+    String metaDoneKey = "PDV.Meta.Done." + matrixFormId
+    if StorageUtil.GetIntValue(None, metaDoneKey) != 1
+        StorageUtil.SetIntValue(None, metaDoneKey, 1)
+        metaEligible = 1
+    endIf
+
+    if metaEligible == 1
+        if metaGold == 1 && metaSkipZen != 1 && !IsQueuedQuestReactionCellCheapSkip("Z'en", "+", "zen", "meta")
+            deitiesCsv = AppendQuestReactionSnapshotToken(deitiesCsv, "Z'en")
+            valencesCsv = AppendQuestReactionSnapshotToken(valencesCsv, "+")
+            intensitiesCsv = AppendQuestReactionSnapshotToken(intensitiesCsv, "zen")
+            magnitudesCsv = AppendQuestReactionSnapshotToken(magnitudesCsv, "meta")
+            tagsCsv = AppendQuestReactionSnapshotToken(tagsCsv, "meta_zen_wage")
+            cellCount += 1
+            metaRunnableCount += 1
+        endIf
+        if metaMageAid == 1 && metaSkipJulianos != 1 && !IsQueuedQuestReactionCellCheapSkip("Julianos", "+", "julianos", "meta")
+            deitiesCsv = AppendQuestReactionSnapshotToken(deitiesCsv, "Julianos")
+            valencesCsv = AppendQuestReactionSnapshotToken(valencesCsv, "+")
+            intensitiesCsv = AppendQuestReactionSnapshotToken(intensitiesCsv, "julianos")
+            magnitudesCsv = AppendQuestReactionSnapshotToken(magnitudesCsv, "meta")
+            tagsCsv = AppendQuestReactionSnapshotToken(tagsCsv, "meta_julianos_wisdom")
+            cellCount += 1
+            metaRunnableCount += 1
+        endIf
+        if (metaMageAid == 1 || metaTwilight == 1) && metaSkipAzura != 1 && !IsQueuedQuestReactionCellCheapSkip("Azura", "+", "azura", "meta")
+            deitiesCsv = AppendQuestReactionSnapshotToken(deitiesCsv, "Azura")
+            valencesCsv = AppendQuestReactionSnapshotToken(valencesCsv, "+")
+            intensitiesCsv = AppendQuestReactionSnapshotToken(intensitiesCsv, "azura")
+            magnitudesCsv = AppendQuestReactionSnapshotToken(magnitudesCsv, "meta")
+            tagsCsv = AppendQuestReactionSnapshotToken(tagsCsv, "meta_azura_threshold")
+            cellCount += 1
+            metaRunnableCount += 1
+        endIf
+        if metaSkipNocturnal != 1 && metaNocturnalTheft == 1 && !IsQueuedQuestReactionCellCheapSkip("Nocturnal", "+", "nocturnalTheft", "meta")
+            deitiesCsv = AppendQuestReactionSnapshotToken(deitiesCsv, "Nocturnal")
+            valencesCsv = AppendQuestReactionSnapshotToken(valencesCsv, "+")
+            intensitiesCsv = AppendQuestReactionSnapshotToken(intensitiesCsv, "nocturnalTheft")
+            magnitudesCsv = AppendQuestReactionSnapshotToken(magnitudesCsv, "meta")
+            tagsCsv = AppendQuestReactionSnapshotToken(tagsCsv, "meta_nocturnal_herway")
+            cellCount += 1
+            metaRunnableCount += 1
+        elseIf metaSkipNocturnal != 1 && metaNight == 1 && !IsQueuedQuestReactionCellCheapSkip("Nocturnal", "+", "nocturnalNight", "meta")
+            deitiesCsv = AppendQuestReactionSnapshotToken(deitiesCsv, "Nocturnal")
+            valencesCsv = AppendQuestReactionSnapshotToken(valencesCsv, "+")
+            intensitiesCsv = AppendQuestReactionSnapshotToken(intensitiesCsv, "nocturnalNight")
+            magnitudesCsv = AppendQuestReactionSnapshotToken(magnitudesCsv, "meta")
+            tagsCsv = AppendQuestReactionSnapshotToken(tagsCsv, "meta_nocturnal_dark")
+            cellCount += 1
+            metaRunnableCount += 1
+        endIf
+        if metaOutdoors == 1 && metaSkipKhenarthi != 1 && !IsQueuedQuestReactionCellCheapSkip("Khenarthi", "+", "khenarthi", "meta")
+            deitiesCsv = AppendQuestReactionSnapshotToken(deitiesCsv, "Khenarthi")
+            valencesCsv = AppendQuestReactionSnapshotToken(valencesCsv, "+")
+            intensitiesCsv = AppendQuestReactionSnapshotToken(intensitiesCsv, "khenarthi")
+            magnitudesCsv = AppendQuestReactionSnapshotToken(magnitudesCsv, "meta")
+            tagsCsv = AppendQuestReactionSnapshotToken(tagsCsv, "meta_khenarthi_road")
+            cellCount += 1
+            metaRunnableCount += 1
+        endIf
+        Int wheelCount = StorageUtil.AdjustIntValue(None, "PDV.Meta.QuestCount", 1)
+        if wheelCount > 0 && wheelCount % 10 == 0
+            metaWheelHit = 1
+            if metaSkipAkatosh != 1 && !IsQueuedQuestReactionCellCheapSkip("Akatosh", "+", "wheel", "meta")
+                deitiesCsv = AppendQuestReactionSnapshotToken(deitiesCsv, "Akatosh")
+                valencesCsv = AppendQuestReactionSnapshotToken(valencesCsv, "+")
+                intensitiesCsv = AppendQuestReactionSnapshotToken(intensitiesCsv, "wheel")
+                magnitudesCsv = AppendQuestReactionSnapshotToken(magnitudesCsv, "meta")
+                tagsCsv = AppendQuestReactionSnapshotToken(tagsCsv, "meta_akatosh_wheel")
+                cellCount += 1
+                metaRunnableCount += 1
+            endIf
+            if metaSkipXarxes != 1 && !IsQueuedQuestReactionCellCheapSkip("Xarxes", "+", "wheel", "meta")
+                deitiesCsv = AppendQuestReactionSnapshotToken(deitiesCsv, "Xarxes")
+                valencesCsv = AppendQuestReactionSnapshotToken(valencesCsv, "+")
+                intensitiesCsv = AppendQuestReactionSnapshotToken(intensitiesCsv, "wheel")
+                magnitudesCsv = AppendQuestReactionSnapshotToken(magnitudesCsv, "meta")
+                tagsCsv = AppendQuestReactionSnapshotToken(tagsCsv, "meta_xarxes_record")
+                cellCount += 1
+                metaRunnableCount += 1
+            endIf
+        endIf
+    endIf
+
     Int sequence = StorageUtil.AdjustIntValue(None, "PDV.QR.Queue.Sequence", 1)
     String jobId = "qr_" + sequence
     String prefix = "PDV.QR.Job." + jobId + "."
@@ -1682,41 +1853,49 @@ Function QueueQuestReactionJob(Quest sourceQuest, Int stageValue, String parentL
     StorageUtil.SetStringValue(None, prefix + "ReactionKey", reactionKey)
     StorageUtil.SetStringValue(None, prefix + "ParentLogicalEventId", parentLogicalEventId)
     StorageUtil.SetStringValue(None, prefix + "DeitiesCsv", deitiesCsv)
-    StorageUtil.SetStringValue(None, prefix + "ValencesCsv", JsonUtil.GetStringValue(matrixFile, cellPrefix + "valencesCsv"))
-    StorageUtil.SetStringValue(None, prefix + "IntensitiesCsv", JsonUtil.GetStringValue(matrixFile, cellPrefix + "intensitiesCsv"))
-    StorageUtil.SetStringValue(None, prefix + "MagnitudesCsv", JsonUtil.GetStringValue(matrixFile, cellPrefix + "magnitudesCsv"))
-    StorageUtil.SetStringValue(None, prefix + "TagsCsv", JsonUtil.GetStringValue(matrixFile, cellPrefix + "tagsCsv"))
+    StorageUtil.SetStringValue(None, prefix + "ValencesCsv", valencesCsv)
+    StorageUtil.SetStringValue(None, prefix + "IntensitiesCsv", intensitiesCsv)
+    StorageUtil.SetStringValue(None, prefix + "MagnitudesCsv", magnitudesCsv)
+    StorageUtil.SetStringValue(None, prefix + "TagsCsv", tagsCsv)
     StorageUtil.SetStringValue(None, prefix + "MatrixFile", matrixFile)
     StorageUtil.SetStringValue(None, prefix + "CellPrefix", cellPrefix)
     StorageUtil.SetIntValue(None, prefix + "CellCount", cellCount)
+    StorageUtil.SetIntValue(None, prefix + "SourceCellCount", sourceCellCount)
+    StorageUtil.SetIntValue(None, prefix + "SkippedCellCount", skippedCellCount)
+    StorageUtil.SetIntValue(None, prefix + "MetaRunnableCount", metaRunnableCount)
+    StorageUtil.SetIntValue(None, prefix + "Compacted", 1)
+    StorageUtil.SetIntValue(None, prefix + "Started", 0)
     StorageUtil.SetIntValue(None, prefix + "CellIndex", 0)
-    StorageUtil.SetIntValue(None, prefix + "MetaIndex", 0)
-    StorageUtil.SetIntValue(None, prefix + "MetaPrepared", 0)
-    StorageUtil.SetIntValue(None, prefix + "MetaEligible", 0)
-    StorageUtil.SetIntValue(None, prefix + "MetaWheelHit", 0)
+    StorageUtil.SetIntValue(None, prefix + "MetaIndex", 7)
+    StorageUtil.SetIntValue(None, prefix + "MetaPrepared", 1)
+    StorageUtil.SetIntValue(None, prefix + "MetaEligible", metaEligible)
+    StorageUtil.SetIntValue(None, prefix + "MetaWheelHit", metaWheelHit)
     StorageUtil.SetFloatValue(None, prefix + "EnqueuedRealTime", Utility.GetCurrentRealTime())
 
     ; Snapshot all matrix-derived meta flags at ingress. Timing-sensitive player
     ; state is intentionally evaluated at enqueue so a backlog cannot rewrite a
     ; quest's meaning after the player has moved on.
-    StorageUtil.SetIntValue(None, prefix + "MetaGold", JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.gold"))
-    StorageUtil.SetIntValue(None, prefix + "MetaMageAid", JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.mageAid"))
-    StorageUtil.SetIntValue(None, prefix + "MetaTwilight", BoolToInt(IsQuestReactionTwilightWindow()))
-    StorageUtil.SetIntValue(None, prefix + "MetaNight", BoolToInt(IsQuestReactionNightWindow()))
-    StorageUtil.SetIntValue(None, prefix + "MetaNocturnalTheft", BoolToInt(StorageUtil.GetFloatValue(None, "PDV.Meta.LastTheftTime") > StorageUtil.GetFloatValue(None, "PDV.Meta.LastFulfillTime")))
-    StorageUtil.SetIntValue(None, prefix + "MetaOutdoors", BoolToInt(IsPlayerOutdoorsForQuestReaction()))
-    StorageUtil.SetIntValue(None, prefix + "MetaSkipZen", JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Z'en"))
-    StorageUtil.SetIntValue(None, prefix + "MetaSkipJulianos", JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Julianos"))
-    StorageUtil.SetIntValue(None, prefix + "MetaSkipAzura", JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Azura"))
-    StorageUtil.SetIntValue(None, prefix + "MetaSkipNocturnal", JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Nocturnal"))
-    StorageUtil.SetIntValue(None, prefix + "MetaSkipKhenarthi", JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Khenarthi"))
-    StorageUtil.SetIntValue(None, prefix + "MetaSkipAkatosh", JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Akatosh"))
-    StorageUtil.SetIntValue(None, prefix + "MetaSkipXarxes", JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Xarxes"))
+    StorageUtil.SetIntValue(None, prefix + "MetaGold", metaGold)
+    StorageUtil.SetIntValue(None, prefix + "MetaMageAid", metaMageAid)
+    StorageUtil.SetIntValue(None, prefix + "MetaTwilight", metaTwilight)
+    StorageUtil.SetIntValue(None, prefix + "MetaNight", metaNight)
+    StorageUtil.SetIntValue(None, prefix + "MetaNocturnalTheft", metaNocturnalTheft)
+    StorageUtil.SetIntValue(None, prefix + "MetaOutdoors", metaOutdoors)
+    StorageUtil.SetIntValue(None, prefix + "MetaSkipZen", metaSkipZen)
+    StorageUtil.SetIntValue(None, prefix + "MetaSkipJulianos", metaSkipJulianos)
+    StorageUtil.SetIntValue(None, prefix + "MetaSkipAzura", metaSkipAzura)
+    StorageUtil.SetIntValue(None, prefix + "MetaSkipNocturnal", metaSkipNocturnal)
+    StorageUtil.SetIntValue(None, prefix + "MetaSkipKhenarthi", metaSkipKhenarthi)
+    StorageUtil.SetIntValue(None, prefix + "MetaSkipAkatosh", metaSkipAkatosh)
+    StorageUtil.SetIntValue(None, prefix + "MetaSkipXarxes", metaSkipXarxes)
     StorageUtil.SetFloatValue(None, prefix + "QueuedGameTime", Utility.GetCurrentGameTime())
+    Float ingressBuildMs = (Utility.GetCurrentRealTime() - ingressStartedRealTime) * 1000.0
+    StorageUtil.SetFloatValue(None, prefix + "IngressBuildMs", ingressBuildMs)
 
     StorageUtil.SetStringValue(None, "PDV.QuestReaction.LastKey", reactionKey)
     StorageUtil.SetIntValue(None, "PDV.QuestReaction.LastCellCount", cellCount)
-    TraceQuestReactionQueue("ENQUEUE " + jobId + " key=" + reactionKey + " cells=" + cellCount + " pending=" + StorageUtil.StringListCount(None, "PDV.QR.Queue.JobIds"))
+    StorageUtil.SetIntValue(None, "PDV.QuestReaction.LastSourceCellCount", sourceCellCount)
+    TraceQuestReactionQueue("ENQUEUE " + jobId + " key=" + reactionKey + " cells=" + cellCount + " sourceCells=" + sourceCellCount + " skipped=" + skippedCellCount + " meta=" + metaRunnableCount + " buildMs=" + ingressBuildMs + " pending=" + StorageUtil.StringListCount(None, "PDV.QR.Queue.JobIds"))
     if PDV_QuestReactionWorkerService
         PDV_QuestReactionWorkerService.EnsureQuestReactionQueueRunning()
     endIf
@@ -1788,31 +1967,40 @@ Bool Function ProcessQuestReactionQueueSlice()
     String prefix = "PDV.QR.Job." + jobId + "."
     Int cellCount = StorageUtil.GetIntValue(None, prefix + "CellCount")
     Int cellIndex = StorageUtil.GetIntValue(None, prefix + "CellIndex")
-    if cellCount <= 0 || cellIndex < 0 || cellIndex > cellCount
+    Bool compactedJob = StorageUtil.GetIntValue(None, prefix + "Compacted") == 1
+    if cellCount < 0 || (!compactedJob && cellCount == 0) || cellIndex < 0 || cellIndex > cellCount
         TraceQuestReactionQueue("REJECT corrupt " + jobId)
         RemoveQueuedQuestReactionJob()
         return HasQueuedQuestReactionJobs()
     endIf
 
-    if cellIndex == 0
+    if StorageUtil.GetIntValue(None, prefix + "Started") != 1
+        StorageUtil.SetIntValue(None, prefix + "Started", 1)
         ResetQueuedQuestReactionSurface()
         _qrQueueNeedsCurseRefresh = False
         _qrQueueNeedsBretonRewardSync = False
         _qrQueueBroadPool = GetActiveBroadPantheonPoolId()
         _qrQueueBroadBestPositive = 0.0
         _qrQueueBroadWorstNegative = 0.0
-        TraceQuestReactionQueue("START " + jobId + " key=" + StorageUtil.GetStringValue(None, prefix + "ReactionKey") + " cells=" + cellCount)
+        TraceQuestReactionQueue("START " + jobId + " key=" + StorageUtil.GetStringValue(None, prefix + "ReactionKey") + " cells=" + cellCount + " sourceCells=" + StorageUtil.GetIntValue(None, prefix + "SourceCellCount") + " skipped=" + StorageUtil.GetIntValue(None, prefix + "SkippedCellCount") + " meta=" + StorageUtil.GetIntValue(None, prefix + "MetaRunnableCount"))
     endIf
 
-    String[] deities = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "DeitiesCsv"), "|")
-    String[] valences = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "ValencesCsv"), "|")
-    String[] intensities = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "IntensitiesCsv"), "|")
-    String[] magnitudes = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "MagnitudesCsv"), "|")
-    String[] tags = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "TagsCsv"), "|")
-    if deities.Length != cellCount || valences.Length != cellCount || intensities.Length != cellCount || magnitudes.Length != cellCount || tags.Length != cellCount
-        TraceQuestReactionQueue("REJECT snapshot mismatch " + jobId)
-        RemoveQueuedQuestReactionJob()
-        return HasQueuedQuestReactionJobs()
+    String[] deities
+    String[] valences
+    String[] intensities
+    String[] magnitudes
+    String[] tags
+    if cellCount > 0
+        deities = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "DeitiesCsv"), "|")
+        valences = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "ValencesCsv"), "|")
+        intensities = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "IntensitiesCsv"), "|")
+        magnitudes = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "MagnitudesCsv"), "|")
+        tags = StringUtil.Split(StorageUtil.GetStringValue(None, prefix + "TagsCsv"), "|")
+        if deities.Length != cellCount || valences.Length != cellCount || intensities.Length != cellCount || magnitudes.Length != cellCount || tags.Length != cellCount
+            TraceQuestReactionQueue("REJECT snapshot mismatch " + jobId)
+            RemoveQueuedQuestReactionJob()
+            return HasQueuedQuestReactionJobs()
+        endIf
     endIf
 
     Form sourceForm = StorageUtil.FormListGet(None, "PDV.QR.Queue.SourceForms", 0)
@@ -1820,7 +2008,7 @@ Bool Function ProcessQuestReactionQueueSlice()
     _qrQueueTransactionActive = True
     Bool sliceOpen = True
     while sliceOpen && cellIndex < cellCount
-        if IsQueuedQuestReactionCellCheapSkip(deities[cellIndex], valences[cellIndex], intensities[cellIndex], magnitudes[cellIndex])
+        if !compactedJob && IsQueuedQuestReactionCellCheapSkip(deities[cellIndex], valences[cellIndex], intensities[cellIndex], magnitudes[cellIndex])
             cellIndex += 1
         elseIf processed < QUEST_REACTION_QUEUE_CELLS_PER_TICK
             ApplyDeityReaction(deities[cellIndex], valences[cellIndex], intensities[cellIndex], magnitudes[cellIndex], tags[cellIndex], False, sourceForm)
@@ -1854,6 +2042,9 @@ Bool Function ProcessQuestReactionQueueSlice()
     ; The queue owns all finalisation. It happens once, after both the base and
     ; meta snapshots have drained, so no intermediate toast or panel refresh can
     ; leak into another manager event.
+    if compactedJob && StorageUtil.GetIntValue(None, prefix + "MetaEligible") == 1
+        StorageUtil.SetFloatValue(None, "PDV.Meta.LastFulfillTime", StorageUtil.GetFloatValue(None, prefix + "QueuedGameTime"))
+    endIf
     FlushQueuedQuestReactionSurface()
     CommitQueuedQuestReactionBroad(StorageUtil.GetStringValue(None, prefix + "ReactionKey"))
     if _qrQueueNeedsCurseRefresh
@@ -1867,7 +2058,7 @@ Bool Function ProcessQuestReactionQueueSlice()
     Float elapsed = Utility.GetCurrentRealTime() - StorageUtil.GetFloatValue(None, prefix + "EnqueuedRealTime")
     StorageUtil.SetStringValue(None, "PDV.QuestReaction.LastKey", StorageUtil.GetStringValue(None, prefix + "ReactionKey"))
     StorageUtil.SetIntValue(None, "PDV.QuestReaction.LastCellCount", cellCount)
-    TraceQuestReactionQueue("COMPLETE " + jobId + " key=" + StorageUtil.GetStringValue(None, prefix + "ReactionKey") + " cells=" + cellCount + " elapsed=" + elapsed)
+    TraceQuestReactionQueue("COMPLETE " + jobId + " key=" + StorageUtil.GetStringValue(None, prefix + "ReactionKey") + " cells=" + cellCount + " sourceCells=" + StorageUtil.GetIntValue(None, prefix + "SourceCellCount") + " skipped=" + StorageUtil.GetIntValue(None, prefix + "SkippedCellCount") + " meta=" + StorageUtil.GetIntValue(None, prefix + "MetaRunnableCount") + " elapsed=" + elapsed)
     RemoveQueuedQuestReactionJob()
     return HasQueuedQuestReactionJobs()
 EndFunction

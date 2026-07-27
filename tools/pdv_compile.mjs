@@ -18,9 +18,16 @@ const PROJECT_ROOT = path.resolve(__dirname, "..");
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
 const STOCK_GAME = path.join(ANVIL_ROOT, "Stock Game");
 const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");
-const DEVOTION_SOURCE = path.join(DEVOTION_MOD, "Scripts", "Source");
-const DEVOTION_PEX = path.join(DEVOTION_MOD, "Scripts");
-const TRACKED_SOURCE = path.join(PROJECT_ROOT, "live-source", "Scripts", "Source");
+// Optional isolated roots let a clean release branch compile candidate source
+// without deploying it into the live 1.0.3 smoke mod. The default remains the
+// established live-mod workflow.
+const DEVOTION_SOURCE =
+  process.env.PDV_COMPILE_SOURCE_ROOT || path.join(DEVOTION_MOD, "Scripts", "Source");
+const DEVOTION_PEX =
+  process.env.PDV_COMPILE_OUTPUT_ROOT || path.join(DEVOTION_MOD, "Scripts");
+const TRACKED_SOURCE =
+  process.env.PDV_TRACKED_SOURCE_ROOT ||
+  path.join(PROJECT_ROOT, "live-source", "Scripts", "Source");
 const SKYUI_HEADERS_SOURCE = path.join(PROJECT_ROOT, "tools", "skyui_compile_shim");
 const COMPILER_EXE = path.join(STOCK_GAME, "Papyrus Compiler", "PapyrusCompiler.exe");
 const ASSEMBLER_EXE = path.join(STOCK_GAME, "Papyrus Compiler", "PapyrusAssembler.exe");

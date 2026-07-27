@@ -165,6 +165,17 @@ Bool PDV_CombatNearFatalFlag = false
 Bool PDV_CombatBelowHealthRouted = false
 Bool PDV_OriginQueuedThisLoad = false
 
+; 1.0.4 scheduler. These are additive, save-compatible variables: each lane
+; owns one real-time deadline, while this script owns one native update
+; registration for the earliest outstanding lane. They are reset on every load
+; because Utility.GetCurrentRealTime() restarts with the process.
+Float PDV_ORIGIN_NEXT_DUE = -1.0
+Float PDV_COMBAT_NEXT_DUE = -1.0
+Float PDV_BARD_NEXT_DUE = -1.0
+Float PDV_UPDATE_ARMED_DUE = -1.0
+Bool PDV_UPDATE_ARMED = false
+Bool PDV_UPDATE_DISPATCHING = false
+
 ; Khajiit caravan-defense detector forms (Khenarthi CARAVAN_AID). Resolved once
 ; per load via GetFormFromFile; script variables so no VMAD property fill is
 ; needed. The three caravan leaders' persistent refs are the proximity anchors.
@@ -199,7 +210,9 @@ Int PDV_BardLastPlaying = 0
 Float PDV_BardLastRouteRealTime = -100.0
 
 Event OnInit()
+    ResetUpdateScheduler()
     PDV_OriginQueuedThisLoad = false
+    PDV_BardFormsResolved = false
     RegisterForPlayerEvents()
     StartBardPerformancePoll()
     QueueOriginInitialization()
@@ -208,7 +221,9 @@ Event OnInit()
 EndEvent
 
 Event OnPlayerLoadGame()
+    ResetUpdateScheduler()
     PDV_OriginQueuedThisLoad = false
+    PDV_BardFormsResolved = false
     RegisterForPlayerEvents()
     StartBardPerformancePoll()
     QueueOriginInitialization()
@@ -244,18 +259,37 @@ Function KickstartDevotionLifecycle()
 EndFunction
 
 Event OnUpdate()
-    ; The single-update timer is shared: the bard poll re-registers at 5s while a
-    ; performance is live and 15s when idle (12.3), the combat poll at 4s while a session
-    ; is open, and the origin retry below at 2s while origin is unresolved. They run
-    ; shortest-last so the tightest cadence wins whenever those systems are active.
-    if PDV_BardPollActive
-        BardPerformancePollTick()
+    ; Consume only lanes whose deadline has arrived, then arm exactly once for
+    ; the earliest deadline left by those lane handlers.
+    PDV_UPDATE_ARMED = false
+    PDV_UPDATE_ARMED_DUE = -1.0
+    PDV_UPDATE_DISPATCHING = true
+    Float nowRealTime = Utility.GetCurrentRealTime()
+
+    if PDV_BARD_NEXT_DUE >= 0.0 && PDV_BARD_NEXT_DUE <= nowRealTime + 0.05
+        PDV_BARD_NEXT_DUE = -1.0
+        if PDV_BardPollActive
+            BardPerformancePollTick()
+        endIf
     endIf
 
-    if PDV_CombatSessionActive
-        CombatPollTick()
+    if PDV_COMBAT_NEXT_DUE >= 0.0 && PDV_COMBAT_NEXT_DUE <= nowRealTime + 0.05
+        PDV_COMBAT_NEXT_DUE = -1.0
+        if PDV_CombatSessionActive
+            CombatPollTick()
+        endIf
     endIf
 
+    if PDV_ORIGIN_NEXT_DUE >= 0.0 && PDV_ORIGIN_NEXT_DUE <= nowRealTime + 0.05
+        PDV_ORIGIN_NEXT_DUE = -1.0
+        OriginPollTick()
+    endIf
+
+    PDV_UPDATE_DISPATCHING = false
+    ArmEarliestDeadline()
+EndEvent
+
+Function OriginPollTick()
     Bool originQueued = PDV_OriginQueuedThisLoad
     if originQueued
         PDV_OriginQueuedThisLoad = false
@@ -269,7 +303,7 @@ Event OnUpdate()
         if originQueued
             PDV_OriginQueuedThisLoad = true
         endIf
-        RegisterForSingleUpdate(2.0)
+        ScheduleOriginDeadline(2.0)
         Trace(2, "Origin capture waiting for playable controls.")
         return
     endIf
@@ -277,14 +311,87 @@ Event OnUpdate()
     EnsureOriginInitialized()
 
     if GetOriginRaceValue() < 0
-        RegisterForSingleUpdate(2.0)
+        ScheduleOriginDeadline(2.0)
         Trace(2, "Origin still unresolved; retry queued.")
     elseIf originQueued
         Trace(2, "Origin re-check completed.")
     else
         Trace(2, "Origin initialization completed.")
     endIf
-EndEvent
+EndFunction
+
+Function ResetUpdateScheduler()
+    UnregisterForUpdate()
+    PDV_ORIGIN_NEXT_DUE = -1.0
+    PDV_COMBAT_NEXT_DUE = -1.0
+    PDV_BARD_NEXT_DUE = -1.0
+    PDV_UPDATE_ARMED_DUE = -1.0
+    PDV_UPDATE_ARMED = false
+    PDV_UPDATE_DISPATCHING = false
+EndFunction
+
+Function ScheduleOriginDeadline(Float delaySeconds)
+    PDV_ORIGIN_NEXT_DUE = Utility.GetCurrentRealTime() + delaySeconds
+    ArmEarliestDeadline()
+EndFunction
+
+Function ScheduleCombatDeadline(Float delaySeconds)
+    PDV_COMBAT_NEXT_DUE = Utility.GetCurrentRealTime() + delaySeconds
+    ArmEarliestDeadline()
+EndFunction
+
+Function ScheduleBardDeadline(Float delaySeconds)
+    PDV_BARD_NEXT_DUE = Utility.GetCurrentRealTime() + delaySeconds
+    ArmEarliestDeadline()
+EndFunction
+
+Float Function GetEarliestPendingDeadline()
+    Float earliest = -1.0
+    if PDV_ORIGIN_NEXT_DUE >= 0.0
+        earliest = PDV_ORIGIN_NEXT_DUE
+    endIf
+    if PDV_COMBAT_NEXT_DUE >= 0.0 && (earliest < 0.0 || PDV_COMBAT_NEXT_DUE < earliest)
+        earliest = PDV_COMBAT_NEXT_DUE
+    endIf
+    if PDV_BARD_NEXT_DUE >= 0.0 && (earliest < 0.0 || PDV_BARD_NEXT_DUE < earliest)
+        earliest = PDV_BARD_NEXT_DUE
+    endIf
+    return earliest
+EndFunction
+
+Function ArmEarliestDeadline()
+    if PDV_UPDATE_DISPATCHING
+        return
+    endIf
+
+    Float earliest = GetEarliestPendingDeadline()
+    if earliest < 0.0
+        if PDV_UPDATE_ARMED
+            UnregisterForUpdate()
+        endIf
+        PDV_UPDATE_ARMED = false
+        PDV_UPDATE_ARMED_DUE = -1.0
+        return
+    endIf
+
+    ; A later lane does not disturb an earlier armed deadline. A newly earlier
+    ; lane explicitly replaces the one native single-update registration.
+    if PDV_UPDATE_ARMED && earliest >= PDV_UPDATE_ARMED_DUE - 0.05
+        return
+    endIf
+
+    if PDV_UPDATE_ARMED
+        UnregisterForUpdate()
+    endIf
+
+    Float delaySeconds = earliest - Utility.GetCurrentRealTime()
+    if delaySeconds < 0.1
+        delaySeconds = 0.1
+    endIf
+    RegisterForSingleUpdate(delaySeconds)
+    PDV_UPDATE_ARMED = true
+    PDV_UPDATE_ARMED_DUE = earliest
+EndFunction
 
 Event OnSleepStart(Float afSleepStartTime, Float afDesiredSleepEndTime)
     Actor playerActor = GetActorRef()
@@ -736,7 +843,7 @@ Function BeginCombatSession()
     PDV_CombatLowHealthFlag = false
     PDV_CombatNearFatalFlag = false
     PDV_CombatBelowHealthRouted = false
-    RegisterForSingleUpdate(4.0)
+    ScheduleCombatDeadline(4.0)
     Trace(2, "PDV combat session opened for origin " + originRace + ".")
 EndFunction
 
@@ -752,7 +859,7 @@ Function CombatPollTick()
     endIf
 
     if playerRef.IsInCombat()
-        RegisterForSingleUpdate(4.0)
+        ScheduleCombatDeadline(4.0)
     else
         ResolveCombatSession("poll_combat_exit")
     endIf
@@ -794,6 +901,8 @@ Function ResolveCombatSession(String reason)
         return
     endIf
     PDV_CombatSessionActive = false
+    PDV_COMBAT_NEXT_DUE = -1.0
+    ArmEarliestDeadline()
 
     Actor playerRef = Game.GetPlayer()
     if !playerRef || playerRef.IsDead()
@@ -2557,7 +2666,7 @@ Function QueueOriginInitialization()
     endIf
 
     PDV_OriginQueuedThisLoad = true
-    RegisterForSingleUpdate(2.0)
+    ScheduleOriginDeadline(2.0)
     Trace(2, "Origin initialization queued after player load.")
 EndFunction
 
@@ -2636,8 +2745,12 @@ Function Trace(Int level, String traceText)
 EndFunction
 
 Function StartBardPerformancePoll()
-    ResolveBardPerformanceForms()
+    if !PDV_BardFormsResolved
+        ResolveBardPerformanceForms()
+    endIf
     if !PDV_BardPollActive
+        PDV_BARD_NEXT_DUE = -1.0
+        ArmEarliestDeadline()
         return
     endIf
 
@@ -2656,18 +2769,32 @@ Function StartBardPerformancePoll()
     PDV_BardLastPlaying = GetBardGlobalValue(PDV_BardIsPlaying) as Int
     PDV_BardQuietTicks = 0
     SyncBardTavernCounts()
-    RegisterForSingleUpdate(BARD_POLL_ACTIVE_INTERVAL)
+    ScheduleBardDeadline(BARD_POLL_ACTIVE_INTERVAL)
 EndFunction
 
 Function ResolveBardPerformanceForms()
-    ; Re-resolve once per load. Missing plugins simply return None.
-    PDV_BardIsPlaying = Game.GetFormFromFile(0x00051223, "BecomeABard.esp") as GlobalVariable
-    PDV_BardTavernCounts = Game.GetFormFromFile(0x00065073, "BecomeABard.esp") as FormList
+    ; Re-resolve and cache once per load. Guard optional plugins before any
+    ; GetFormFromFile call so an absent integration produces no Papyrus error.
+    PDV_BardIsPlaying = None
+    PDV_BardTavernCounts = None
+    PDV_BardSgtLute = None
+    PDV_BardSgtFlute = None
+    PDV_BardSgtDrum = None
+    PDV_BardSgtOvation = None
+
+    if Game.IsPluginInstalled("BecomeABard.esp")
+        PDV_BardIsPlaying = Game.GetFormFromFile(0x00051223, "BecomeABard.esp") as GlobalVariable
+        PDV_BardTavernCounts = Game.GetFormFromFile(0x00065073, "BecomeABard.esp") as FormList
+    endIf
+
     PDV_BardGameDaysPassed = Game.GetFormFromFile(0x00000038, "Skyrim.esm") as GlobalVariable
-    PDV_BardSgtLute = Game.GetFormFromFile(0x00000D62, "SkyrimsGotTalent-Bards.esp") as GlobalVariable
-    PDV_BardSgtFlute = Game.GetFormFromFile(0x00000D61, "SkyrimsGotTalent-Bards.esp") as GlobalVariable
-    PDV_BardSgtDrum = Game.GetFormFromFile(0x00000D63, "SkyrimsGotTalent-Bards.esp") as GlobalVariable
-    PDV_BardSgtOvation = Game.GetFormFromFile(0x0000E0CA, "SkyrimsGotTalent-Bards.esp") as GlobalVariable
+    if Game.IsPluginInstalled("SkyrimsGotTalent-Bards.esp")
+        PDV_BardSgtLute = Game.GetFormFromFile(0x00000D62, "SkyrimsGotTalent-Bards.esp") as GlobalVariable
+        PDV_BardSgtFlute = Game.GetFormFromFile(0x00000D61, "SkyrimsGotTalent-Bards.esp") as GlobalVariable
+        PDV_BardSgtDrum = Game.GetFormFromFile(0x00000D63, "SkyrimsGotTalent-Bards.esp") as GlobalVariable
+        PDV_BardSgtOvation = Game.GetFormFromFile(0x0000E0CA, "SkyrimsGotTalent-Bards.esp") as GlobalVariable
+    endIf
+
     PDV_BardFormsResolved = true
     PDV_BardPollActive = PDV_BardIsPlaying || PDV_BardSgtLute || PDV_BardSgtFlute || PDV_BardSgtDrum
 EndFunction
@@ -2757,9 +2884,9 @@ Function BardPerformancePollTick()
     endIf
 
     if PDV_BardQuietTicks >= BARD_POLL_QUIET_TICKS_TO_IDLE
-        RegisterForSingleUpdate(BARD_POLL_IDLE_INTERVAL)
+        ScheduleBardDeadline(BARD_POLL_IDLE_INTERVAL)
     else
-        RegisterForSingleUpdate(BARD_POLL_ACTIVE_INTERVAL)
+        ScheduleBardDeadline(BARD_POLL_ACTIVE_INTERVAL)
     endIf
 EndFunction
 

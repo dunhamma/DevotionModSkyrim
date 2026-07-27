@@ -175,7 +175,7 @@ export function evaluate({ managerSource, workerSource, daedricPathBaseSource = 
   add(findings, Boolean(hasJobs), "manager.has-work-api", "Manager exposes HasQueuedQuestReactionJobs for worker rearm.");
   add(findings, /StorageUtil\.(?:Set|Adjust|Unset|Clear|StringList|IntList|FloatList)/i.test(queue), "manager.storage-queue", "Manager enqueue path persists queue state through StorageUtil.");
   add(findings, /StorageUtil\.(?:Get|Set|Adjust|Unset|Clear|StringList|IntList|FloatList)/i.test(slice), "manager.storage-slice", "Manager slice reads/writes persisted queue state through StorageUtil.");
-  const snapshotFields = ["ReactionKey", "DeitiesCsv", "ValencesCsv", "IntensitiesCsv", "MagnitudesCsv", "TagsCsv", "CellCount", "CellIndex", "EnqueuedRealTime"];
+  const snapshotFields = ["ReactionKey", "DeitiesCsv", "ValencesCsv", "IntensitiesCsv", "MagnitudesCsv", "TagsCsv", "CellCount", "SourceCellCount", "SkippedCellCount", "Compacted", "Started", "CellIndex", "EnqueuedRealTime", "IngressBuildMs"];
   const missingSnapshotFields = snapshotFields.filter((field) => !queue.includes(`"${field}"`));
   add(findings, missingSnapshotFields.length === 0, "manager.immutable-snapshot", missingSnapshotFields.length ? `Missing persisted queue snapshot fields: ${missingSnapshotFields.join(", ")}.` : "Ingress snapshots reaction cell data and progress before returning to the stage sender.");
   add(findings, !hasWait(queue) && !hasWait(slice), "manager.no-queue-waits", "Queue enqueue/slice paths contain no Wait or WaitMenuMode contention.");
@@ -183,6 +183,11 @@ export function evaluate({ managerSource, workerSource, daedricPathBaseSource = 
   add(findings, /QUEST_REACTION_QUEUE_CELLS_PER_TICK/i.test(slice) && /while\b/i.test(slice), "manager.bounded-slice", "Queue slice loops against the two-cell budget rather than the whole job.");
   add(findings, /IsQueuedQuestReactionCellCheapSkip\s*\(/i.test(slice) && /processed\s*<\s*QUEST_REACTION_QUEUE_CELLS_PER_TICK/i.test(slice) && /cellIndex\s*\+=\s*1/i.test(slice), "manager.fast-skip-noop-cells", "Queued no-op cells can advance without consuming the two-applied-cell budget.");
   add(findings, /Bool\s+Function\s+IsQueuedQuestReactionCellCheapSkip/i.test(managerSource) && /return\s+!\s*IsQuestReactionDeityReachable\s*\(\s*deity\s*\)/i.test(cheapSkip) && /stance\s*==\s*"CURSE"[\s\S]*?return\s+False/i.test(cheapSkip), "manager.fast-skip-preserves-live-cells", "Cheap-skip helper skips unreachable/no-op cells but preserves curse and reachable cells for normal application.");
+  add(findings, /while\s+sourceIndex\s*<\s*sourceCellCount/i.test(queue) && /!\s*IsQueuedQuestReactionCellCheapSkip\s*\(/i.test(queue) && /AppendQuestReactionSnapshotToken\s*\(/i.test(queue), "manager.ingress-compacts-runnable-cells", "Ingress snapshots only base rows capable of producing work.");
+  add(findings, /"Compacted"\s*,\s*1/i.test(queue) && /"SourceCellCount"/i.test(queue) && /"SkippedCellCount"/i.test(queue), "manager.compaction-diagnostics", "Compacted jobs persist their source and skipped-row counts.");
+  add(findings, /"MetaIndex"\s*,\s*7/i.test(queue) && /metaRunnableCount/i.test(queue) && /metaEligible/i.test(queue), "manager.ingress-compacts-meta-cells", "Ingress folds runnable legacy meta rows into the bounded row stream and marks the legacy meta cursor complete.");
+  add(findings, /!\s*compactedJob\s*&&\s*IsQueuedQuestReactionCellCheapSkip\s*\(/i.test(slice), "manager.legacy-job-compatibility", "Already-saved un-compacted jobs retain the worker-side cheap-skip path.");
+  add(findings, /"Started"\s*\)\s*!=\s*1/i.test(slice) && /"Started"\s*,\s*1/i.test(slice), "manager.start-marker-once", "A persisted started flag prevents zero-row compacted jobs from reinitialising on every meta tick.");
   const metaSlice = bodyFor(managerSource, "ProcessQueuedQuestReactionMetaSlice");
   add(findings, /QUEST_REACTION_QUEUE_CELLS_PER_TICK/i.test(metaSlice) && /while\b/i.test(metaSlice), "manager.bounded-meta-slice", "Quest meta lanes consume the same two-work-item budget as base reaction cells.");
   add(findings, /\[PDV\]\[QR_QUEUE\]/i.test(queueTrace) && /GetDebugLevel\s*\(\s*\)\s*>=\s*1/i.test(queueTrace), "manager.marker-helper", "Manager queue trace helper emits the [PDV][QR_QUEUE] prefix at debug level 1.");
@@ -251,19 +256,39 @@ Function QueueQuestReactionJob()
   StorageUtil.SetStringValue(None, "MagnitudesCsv", "x")
   StorageUtil.SetStringValue(None, "TagsCsv", "x")
   StorageUtil.SetIntValue(None, "CellCount", 1)
+  StorageUtil.SetIntValue(None, "SourceCellCount", 2)
+  StorageUtil.SetIntValue(None, "SkippedCellCount", 1)
+  StorageUtil.SetIntValue(None, "Compacted", 1)
+  StorageUtil.SetIntValue(None, "Started", 0)
   StorageUtil.SetIntValue(None, "CellIndex", 0)
+  StorageUtil.SetIntValue(None, "MetaIndex", 7)
   StorageUtil.SetFloatValue(None, "EnqueuedRealTime", 0.0)
+  StorageUtil.SetFloatValue(None, "IngressBuildMs", 0.0)
+  Int sourceIndex = 0
+  Int sourceCellCount = 2
+  Int metaRunnableCount = 0
+  Int metaEligible = 0
+  while sourceIndex < sourceCellCount
+    if !IsQueuedQuestReactionCellCheapSkip()
+      AppendQuestReactionSnapshotToken()
+    endIf
+    sourceIndex += 1
+  endWhile
   TraceQuestReactionQueue("ENQUEUE")
   TraceQuestReactionQueue("COALESCE")
   TraceQuestReactionQueue("OVERFLOW")
 EndFunction
 Function ProcessQuestReactionQueueSlice()
   Int done = 0
+  Bool compactedJob = True
+  if StorageUtil.GetIntValue(None, "Started") != 1
+    StorageUtil.SetIntValue(None, "Started", 1)
+  endIf
   while done < QUEST_REACTION_QUEUE_CELLS_PER_TICK
     StorageUtil.AdjustIntValue(None, "PDV.QR.Queue.Count", 0)
     done += 1
   endWhile
-  if IsQueuedQuestReactionCellCheapSkip()
+  if !compactedJob && IsQueuedQuestReactionCellCheapSkip()
     cellIndex += 1
   elseIf processed < QUEST_REACTION_QUEUE_CELLS_PER_TICK
     cellIndex += 1

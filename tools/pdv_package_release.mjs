@@ -1,33 +1,42 @@
 #!/usr/bin/env node
-// Build a clean, Data-relative Devotion release zip from the live MO2 mod folder.
-//
-// Why this exists: the 1.0-rc1 zip was assembled by hand and shipped
-// Scripts/Source/PDV__ManagerQuest.psc.orig -- 876 KB of stale source, ~11% of
-// the download -- because the exclusions lived in someone's shell history rather
-// than in the repo. This encodes them once. The zip is built from a staged tree
-// that is filtered on the way in, so an excluded file cannot reach the archive
-// even if the pattern list is later edited carelessly.
+// Build and verify the exact, Data-relative PlayerDevotion release payload.
 //
 // Usage:
-//   node tools/pdv_package_release.mjs --version 1.0-rc1
-//   node tools/pdv_package_release.mjs --version 1.0 --date 20260716
-//   node tools/pdv_package_release.mjs --verify dist/Devotion-1.0-rc1-20260716.zip
-//
-// Verification is a re-scan of the finished archive, not a claim about the
-// staging tree: --verify reopens the zip and fails on any excluded pattern.
+//   node tools/pdv_package_release.mjs --preflight --version 1.0.3
+//   node tools/pdv_package_release.mjs --version 1.0.3 --date 20260726
+//   node tools/pdv_package_release.mjs --verify dist/Devotion-1.0.3-20260726.zip
 
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { execFileSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
-const REPO_ROOT = process.cwd();
+const TOOL_DIR = path.dirname(fileURLToPath(import.meta.url));
+const REPO_ROOT = path.resolve(TOOL_DIR, "..");
 const MOD_ROOT = process.env.PDV_MOD_PATH || "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion";
 const DIST_DIR = path.join(REPO_ROOT, "dist");
 const RELEASE_META_DIR = path.join(DIST_DIR, "release-meta");
+const MANIFEST_PATH = path.join(
+  REPO_ROOT,
+  "references",
+  "authoring",
+  "PDV_ReleasePayload.manifest.json",
+);
+const HOUSECARL_PROOF_PATH = path.join(
+  REPO_ROOT,
+  "references",
+  "authoring",
+  "PDV_HousecarlReleaseProof.json",
+);
+const NATIVE_ROOT = path.join(REPO_ROOT, "native", "DevotionPrismaBridge");
+const CANONICAL_PRISMA_ROOT =
+  process.env.PDV_CANONICAL_PRISMA_ROOT || path.join(NATIVE_ROOT, "mod");
 
-// Everything the player needs, Data-relative. Anything not listed never ships.
-const INCLUDE_TOP_LEVEL = [
+// These are candidate release surfaces. The manifest, not this list, decides
+// which files may ship. A new non-excluded file beneath any surface therefore
+// fails as unexpected until the exact manifest is intentionally updated.
+const RELEASE_SURFACES = [
   "Devotion.esp",
   "Credits.txt",
   "DialogueViews",
@@ -39,12 +48,6 @@ const INCLUDE_TOP_LEVEL = [
   "Textures",
 ];
 
-// Loose files added at the archive root from a tracked source, so the release
-// notes are versioned in git rather than surviving only inside a build artifact.
-const RELEASE_META_FILES = ["README.txt", "CHANGELOG.txt"];
-
-// Excluded by pattern, applied to every path segment. `.orig` is the one that
-// leaked into 1.0-rc1; `.bak` covers the timestamped source and ESP snapshots.
 const EXCLUDE_PATTERNS = [
   /\.bak(-|\.|$)/i,
   /\.orig$/i,
@@ -54,50 +57,363 @@ const EXCLUDE_PATTERNS = [
   /live-devotion-backups/i,
   /\.tmp$/i,
   /^Thumbs\.db$/i,
+  /^\.staging$/i,
 ];
-
-function isExcluded(name) {
-  return EXCLUDE_PATTERNS.some((pattern) => pattern.test(name));
-}
 
 function fail(message) {
   console.error(`[FAIL] ${message}`);
   process.exit(1);
 }
 
+function pass(message) {
+  console.log(`[PASS] ${message}`);
+}
+
+function normalizeEntry(value) {
+  return value.replaceAll("\\", "/").replace(/^\.?\//, "");
+}
+
+function isExcludedEntry(relativePath) {
+  return normalizeEntry(relativePath)
+    .split("/")
+    .some((segment) => EXCLUDE_PATTERNS.some((pattern) => pattern.test(segment)));
+}
+
+function sha256(filePath) {
+  return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex").toUpperCase();
+}
+
+function mtime(filePath) {
+  return fs.statSync(filePath).mtimeMs;
+}
+
+function isoMtime(filePath) {
+  return fs.statSync(filePath).mtime.toISOString();
+}
+
+function readJson(filePath, label) {
+  if (!fs.existsSync(filePath)) {
+    fail(`${label} is missing: ${filePath}`);
+  }
+  try {
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch (error) {
+    fail(`${label} is not valid JSON: ${error.message}`);
+  }
+}
+
 function parseArgs(argv) {
-  const args = { version: "1.0-rc1", date: null, verify: null };
-  for (let i = 0; i < argv.length; i += 1) {
-    if (argv[i] === "--version") {
-      args.version = argv[++i];
-    } else if (argv[i] === "--date") {
-      args.date = argv[++i];
-    } else if (argv[i] === "--verify") {
-      args.verify = argv[++i];
+  const args = {
+    version: "1.0-rc1",
+    date: null,
+    verify: null,
+    preflight: false,
+  };
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+    if (arg === "--version") {
+      args.version = argv[++index];
+    } else if (arg === "--date") {
+      args.date = argv[++index];
+    } else if (arg === "--verify") {
+      args.verify = argv[++index];
+    } else if (arg === "--preflight") {
+      args.preflight = true;
+    } else {
+      fail(`Unknown argument: ${arg}`);
     }
   }
   return args;
 }
 
-// Copy a tree, dropping excluded entries. Returns the number of files staged.
-function stageTree(sourceDir, targetDir) {
-  let staged = 0;
-  for (const entry of fs.readdirSync(sourceDir, { withFileTypes: true })) {
-    if (isExcluded(entry.name)) {
-      console.log(`  [skip] ${path.relative(MOD_ROOT, path.join(sourceDir, entry.name))}`);
+function loadManifest() {
+  const manifest = readJson(MANIFEST_PATH, "Release payload manifest");
+  if (manifest.schemaVersion !== 1) {
+    fail(`Unsupported release payload manifest schema: ${manifest.schemaVersion}`);
+  }
+  if (!Array.isArray(manifest.fixedEntries) || !Array.isArray(manifest.sourceScripts)) {
+    fail("Release payload manifest must define fixedEntries and sourceScripts arrays.");
+  }
+  if (manifest.sourceScripts.length !== manifest.scriptPairCount) {
+    fail(
+      `Manifest declares ${manifest.scriptPairCount} script pairs but lists ` +
+        `${manifest.sourceScripts.length} source scripts.`,
+    );
+  }
+
+  const entries = [
+    ...(manifest.releaseMetadata || []),
+    ...manifest.fixedEntries,
+    ...manifest.sourceScripts.map((name) => `Scripts/Source/${name}.psc`),
+  ].map(normalizeEntry);
+  const uniqueEntries = new Set(entries);
+  if (uniqueEntries.size !== entries.length) {
+    const seen = new Set();
+    const duplicates = entries.filter((entry) => {
+      if (seen.has(entry)) return true;
+      seen.add(entry);
+      return false;
+    });
+    fail(`Release payload manifest contains duplicate entries: ${[...new Set(duplicates)].join(", ")}`);
+  }
+  if (entries.length !== manifest.expectedEntryCount) {
+    fail(
+      `Manifest resolves to ${entries.length} entries, expected ${manifest.expectedEntryCount}.`,
+    );
+  }
+
+  const expectedPex = new Set(manifest.sourceScripts.map((name) => `Scripts/${name}.pex`));
+  const listedPex = new Set(
+    manifest.fixedEntries
+      .map(normalizeEntry)
+      .filter((entry) => /^Scripts\/PDV_.*\.pex$/i.test(entry)),
+  );
+  const missingPex = [...expectedPex].filter((entry) => !listedPex.has(entry));
+  const extraPex = [...listedPex].filter((entry) => !expectedPex.has(entry));
+  if (missingPex.length || extraPex.length) {
+    fail(
+      `Manifest PSC/PEX pairs are not exact. Missing PEX: ${missingPex.join(", ") || "none"}; ` +
+        `unpaired PEX: ${extraPex.join(", ") || "none"}.`,
+    );
+  }
+
+  return {
+    ...manifest,
+    entries,
+    entrySet: uniqueEntries,
+    liveEntries: entries.filter((entry) => !(manifest.releaseMetadata || []).includes(entry)),
+  };
+}
+
+function listFilesRecursively(rootPath, prefix) {
+  const files = [];
+  for (const entry of fs.readdirSync(rootPath, { withFileTypes: true })) {
+    const relativePath = normalizeEntry(path.posix.join(prefix, entry.name));
+    if (isExcludedEntry(relativePath)) {
+      console.log(`  [excluded] ${relativePath}`);
       continue;
     }
-    const sourcePath = path.join(sourceDir, entry.name);
-    const targetPath = path.join(targetDir, entry.name);
+    const absolutePath = path.join(rootPath, entry.name);
     if (entry.isDirectory()) {
-      fs.mkdirSync(targetPath, { recursive: true });
-      staged += stageTree(sourcePath, targetPath);
+      files.push(...listFilesRecursively(absolutePath, relativePath));
+    } else if (entry.isFile()) {
+      files.push(relativePath);
     } else {
-      fs.copyFileSync(sourcePath, targetPath);
-      staged += 1;
+      fail(`Unsupported filesystem entry in live release surface: ${absolutePath}`);
     }
   }
-  return staged;
+  return files;
+}
+
+function enumerateLiveReleaseSurface() {
+  const entries = [];
+  for (const surface of RELEASE_SURFACES) {
+    const absolutePath = path.join(MOD_ROOT, surface);
+    if (!fs.existsSync(absolutePath)) {
+      fail(`Required release surface is missing from the live mod: ${surface}`);
+    }
+    const stat = fs.statSync(absolutePath);
+    if (stat.isDirectory()) {
+      entries.push(...listFilesRecursively(absolutePath, normalizeEntry(surface)));
+    } else {
+      entries.push(normalizeEntry(surface));
+    }
+  }
+  return entries.sort();
+}
+
+function verifyExactLivePayload(manifest) {
+  const actual = enumerateLiveReleaseSurface();
+  const actualSet = new Set(actual);
+  const expectedSet = new Set(manifest.liveEntries);
+  const missing = [...expectedSet].filter((entry) => !actualSet.has(entry));
+  const unexpected = [...actualSet].filter((entry) => !expectedSet.has(entry));
+  if (missing.length || unexpected.length) {
+    for (const entry of missing) console.error(`  [MISSING] ${entry}`);
+    for (const entry of unexpected) console.error(`  [UNEXPECTED] ${entry}`);
+    fail(
+      `Live release payload does not match the exact manifest ` +
+        `(${missing.length} missing, ${unexpected.length} unexpected).`,
+    );
+  }
+
+  for (const entry of manifest.releaseMetadata || []) {
+    if (!fs.existsSync(path.join(RELEASE_META_DIR, entry))) {
+      fail(`Required release metadata is missing: ${path.join(RELEASE_META_DIR, entry)}`);
+    }
+  }
+  pass(`Live payload exactly matches the ${manifest.expectedEntryCount}-entry manifest.`);
+}
+
+function requireNewer(outputPath, dependencyPath, label) {
+  if (!fs.existsSync(outputPath)) fail(`${label} output is missing: ${outputPath}`);
+  if (!fs.existsSync(dependencyPath)) fail(`${label} dependency is missing: ${dependencyPath}`);
+  if (mtime(outputPath) <= mtime(dependencyPath)) {
+    fail(
+      `${label} is stale: ${path.basename(outputPath)} ${isoMtime(outputPath)} is not newer than ` +
+        `${path.basename(dependencyPath)} ${isoMtime(dependencyPath)}.`,
+    );
+  }
+}
+
+function verifyAllPapyrusFreshness(manifest) {
+  const sourceRoot = path.join(MOD_ROOT, "Scripts", "Source");
+  const pexRoot = path.join(MOD_ROOT, "Scripts");
+  const hashes = [];
+  for (const scriptName of manifest.sourceScripts) {
+    const pscPath = path.join(sourceRoot, `${scriptName}.psc`);
+    const pexPath = path.join(pexRoot, `${scriptName}.pex`);
+    requireNewer(pexPath, pscPath, `${scriptName} compile freshness`);
+    hashes.push({
+      script: scriptName,
+      pscSha256: sha256(pscPath),
+      pexSha256: sha256(pexPath),
+      pscMtime: isoMtime(pscPath),
+      pexMtime: isoMtime(pexPath),
+    });
+  }
+
+  const managerPsc = path.join(sourceRoot, "PDV__ManagerQuest.psc");
+  const managerPex = path.join(pexRoot, "PDV__ManagerQuest.pex");
+  const mcmPex = path.join(pexRoot, "PDV_MCM.pex");
+  requireNewer(mcmPex, managerPsc, "PDV_MCM manager-source dependency");
+  requireNewer(mcmPex, managerPex, "PDV_MCM manager-bytecode dependency");
+  pass(
+    `${hashes.length} PSC/PEX pairs are complete and fresh; PDV_MCM is newer than manager source and bytecode.`,
+  );
+  return hashes;
+}
+
+function nativeDependencies() {
+  const dependencies = [
+    path.join(NATIVE_ROOT, "xmake.lua"),
+    path.join(NATIVE_ROOT, "xmake-requires.lock"),
+  ];
+  for (const relativeRoot of ["src", "include"]) {
+    const root = path.join(NATIVE_ROOT, relativeRoot);
+    for (const entry of fs.readdirSync(root, { recursive: true, withFileTypes: true })) {
+      if (!entry.isFile()) continue;
+      const entryPath = path.join(entry.parentPath || entry.path, entry.name);
+      if (/\.(c|cc|cpp|cxx|h|hh|hpp|hxx|inl)$/i.test(entry.name)) {
+        dependencies.push(entryPath);
+      }
+    }
+  }
+  return dependencies;
+}
+
+function verifyNativeFreshness() {
+  const dllPath = path.join(MOD_ROOT, "SKSE", "Plugins", "DevotionPrismaBridge.dll");
+  const dependencies = nativeDependencies();
+  for (const dependency of dependencies) {
+    requireNewer(dllPath, dependency, "DevotionPrismaBridge DLL");
+  }
+  pass(`Native DLL is newer than all ${dependencies.length} C++/build dependencies.`);
+}
+
+function verifyPrismaParity(manifest) {
+  const prismaEntries = manifest.liveEntries.filter((entry) => entry.startsWith("PrismaUI/"));
+  for (const entry of prismaEntries) {
+    const livePath = path.join(MOD_ROOT, ...entry.split("/"));
+    const canonicalPath = path.join(CANONICAL_PRISMA_ROOT, ...entry.split("/"));
+    if (!fs.existsSync(canonicalPath)) {
+      fail(`Canonical Prisma asset is missing: ${canonicalPath}`);
+    }
+    if (sha256(livePath) !== sha256(canonicalPath)) {
+      fail(`Live Prisma asset differs from canonical native-mod copy: ${entry}`);
+    }
+  }
+
+  const canonicalView = path.join(CANONICAL_PRISMA_ROOT, "PrismaUI", "views", "Devotion");
+  const appBytes = fs.readFileSync(path.join(canonicalView, "app.js"));
+  const stylesBytes = fs.readFileSync(path.join(canonicalView, "styles.css"));
+  const expectedKey = `pdv-${crypto
+    .createHash("sha256")
+    .update(appBytes)
+    .update(stylesBytes)
+    .digest("hex")
+    .slice(0, 16)}`;
+  const index = fs.readFileSync(path.join(canonicalView, "index.html"), "utf8");
+  const actualKeys = [
+    index.match(/styles\.css\?v=([A-Za-z0-9_-]+)/)?.[1],
+    index.match(/app\.js\?v=([A-Za-z0-9_-]+)/)?.[1],
+  ];
+  if (actualKeys.some((key) => key !== expectedKey)) {
+    fail(
+      `Prisma cache key mismatch: expected ${expectedKey}, found ` +
+        `${actualKeys.map((value) => value || "missing").join(", ")}.`,
+    );
+  }
+  pass(`${prismaEntries.length} Prisma assets match canonical bytes and cache key ${expectedKey}.`);
+}
+
+function verifyHousecarlProof() {
+  const proof = readJson(HOUSECARL_PROOF_PATH, "houseCARL release proof");
+  const espPath = path.join(MOD_ROOT, "Devotion.esp");
+  const currentHash = sha256(espPath);
+  const zeroChecks = ["danglingLinks", "missingMasters", "parseFailures"];
+  if (proof.profile !== "Devotion Dev" || proof.plugin !== "Devotion.esp" || proof.active !== true) {
+    fail("houseCARL proof must show active Devotion.esp in the Devotion Dev profile.");
+  }
+  if (proof.espSha256 !== currentHash) {
+    fail(
+      `houseCARL proof is stale for Devotion.esp (proof ${proof.espSha256 || "missing"}, ` +
+        `live ${currentHash}). Refresh direct houseCARL readback.`,
+    );
+  }
+  for (const key of zeroChecks) {
+    if (proof.errors?.[key] !== 0) {
+      fail(`houseCARL proof ${key} must be zero (found ${proof.errors?.[key] ?? "missing"}).`);
+    }
+  }
+  if (proof.contestedRecordCount !== 33) {
+    fail(`houseCARL proof must account for all 33 contested records.`);
+  }
+  if (proof.cellNestedReferenceRetention?.verified !== true) {
+    fail("houseCARL proof must explicitly verify nested Devotion references in both later-winning CELLs.");
+  }
+  if (!Array.isArray(proof.criticalRecordWinners) || proof.criticalRecordWinners.length === 0) {
+    fail("houseCARL proof must record expected winners for critical records.");
+  }
+  pass("houseCARL proof matches the live ESP and closes structural/readback release gates.");
+}
+
+function verifyBuildVersion(version) {
+  const sourcePath = path.join(MOD_ROOT, "Scripts", "Source", "PDV__ManagerQuest.psc");
+  const pexPath = path.join(MOD_ROOT, "Scripts", "PDV__ManagerQuest.pex");
+  const source = fs.readFileSync(sourcePath, "utf8");
+  const match = source.match(/PDV_BUILD_VERSION\s*=\s*"([^"]*)"/);
+  if (!match) fail(`Version gate: PDV_BUILD_VERSION not found in ${sourcePath}`);
+  if (match[1] !== version) {
+    fail(`Version gate: --version ${version}, but manager source declares ${match[1]}.`);
+  }
+  if (!fs.readFileSync(pexPath).includes(Buffer.from(version, "utf8"))) {
+    fail(`Version gate: manager PEX does not contain ${version}; recompile manager then MCM.`);
+  }
+  pass(`Version gate: manager source, bytecode, and archive label agree on ${version}.`);
+}
+
+function verifyReceiverAnam() {
+  const checker = path.join(REPO_ROOT, "tools", "pdv_fix_receiver_anam.mjs");
+  const esp = path.join(MOD_ROOT, "Devotion.esp");
+  let output = "";
+  try {
+    output = execFileSync(process.execPath, [checker, esp, "--dry"], { encoding: "utf8" });
+  } catch (error) {
+    fail(`ANAM gate checker failed: ${error.message}`);
+  }
+  if (/patching \(adding/i.test(output)) {
+    fail("ANAM gate: one or more Story Manager receivers lack ANAM.");
+  }
+  pass("ANAM gate: every Story Manager receiver carries ANAM.");
+}
+
+function verifySeq() {
+  const seqPath = path.join(MOD_ROOT, "Seq", "Devotion.seq");
+  if (!fs.existsSync(seqPath) || fs.statSync(seqPath).size === 0) {
+    fail(`SEQ gate: missing or empty ${seqPath}`);
+  }
+  pass(`SEQ gate: Devotion.seq is present (${fs.statSync(seqPath).size} bytes).`);
 }
 
 function powershell(script) {
@@ -108,161 +424,152 @@ function powershell(script) {
 }
 
 function zipEntries(zipPath) {
-  const script = `Add-Type -A System.IO.Compression.FileSystem
-$z = [IO.Compression.ZipFile]::OpenRead('${zipPath.replace(/'/g, "''")}')
-$z.Entries | ForEach-Object { $_.FullName }
-$z.Dispose()`;
-  return powershell(script).split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  const escaped = zipPath.replaceAll("'", "''");
+  const script = `Add-Type -AssemblyName System.IO.Compression.FileSystem
+$archive = [IO.Compression.ZipFile]::OpenRead('${escaped}')
+$archive.Entries | ForEach-Object { $_.FullName }
+$archive.Dispose()`;
+  return powershell(script)
+    .split(/\r?\n/)
+    .map((line) => normalizeEntry(line.trim()))
+    .filter(Boolean);
 }
 
-function sha256(filePath) {
-  return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex").toUpperCase();
+function compareExactEntries(actualEntries, expectedEntries, label) {
+  const actualSet = new Set(actualEntries);
+  const expectedSet = new Set(expectedEntries);
+  const missing = [...expectedSet].filter((entry) => !actualSet.has(entry));
+  const unexpected = [...actualSet].filter((entry) => !expectedSet.has(entry));
+  if (actualEntries.length !== actualSet.size) {
+    fail(`${label} contains duplicate paths.`);
+  }
+  if (missing.length || unexpected.length) {
+    for (const entry of missing) console.error(`  [MISSING] ${entry}`);
+    for (const entry of unexpected) console.error(`  [UNEXPECTED] ${entry}`);
+    fail(`${label} differs from manifest (${missing.length} missing, ${unexpected.length} unexpected).`);
+  }
 }
 
-// The archive is the artifact that ships, so verify the archive -- not the
-// staging tree it was built from.
-function verifyArchive(zipPath) {
+function verifyArchive(zipPath, manifest) {
   const entries = zipEntries(zipPath);
-  const leaked = entries.filter((entry) => entry.split(/[\\/]/).some(isExcluded));
+  const leaked = entries.filter(isExcludedEntry);
   if (leaked.length) {
-    for (const entry of leaked) {
-      console.error(`  [LEAK] ${entry}`);
-    }
+    for (const entry of leaked) console.error(`  [LEAK] ${entry}`);
     fail(`${leaked.length} excluded file(s) reached ${path.basename(zipPath)}.`);
   }
-
+  compareExactEntries(entries, manifest.entries, path.basename(zipPath));
   const size = fs.statSync(zipPath).size;
-  console.log(`[PASS] No excluded files in the archive.`);
+  const checksum = sha256(zipPath);
+  pass(`Archive exactly matches the ${manifest.expectedEntryCount}-entry manifest.`);
   console.log(`  entries : ${entries.length}`);
-  console.log(`  size    : ${(size / 1024 / 1024).toFixed(1)} MB`);
-  console.log(`  sha256  : ${sha256(zipPath)}`);
-  return entries.length;
+  console.log(`  size    : ${(size / 1024 / 1024).toFixed(1)} MB (${size} bytes)`);
+  console.log(`  sha256  : ${checksum}`);
+  return { entryCount: entries.length, size, sha256: checksum };
 }
 
-// Release gate: the zip's --version must match what the mod itself reports.
-// Why this exists: 1.0.1 shipped with PDV_BUILD_VERSION still reading "1.0.0",
-// so the MCM could not distinguish builds and a crash-log triage burned a full
-// session on "which build was this?". The version lives in ONE place
-// (PDV__ManagerQuest.psc); this gate makes source, compiled pex, and zip name
-// agree before a byte is staged.
-function verifyBuildVersion(version) {
-  const sourcePath = path.join(MOD_ROOT, "Scripts", "Source", "PDV__ManagerQuest.psc");
-  if (!fs.existsSync(sourcePath)) {
-    fail(`Version gate: manager source not found: ${sourcePath}`);
+function runPreflight(version, manifest) {
+  if (!fs.existsSync(MOD_ROOT)) {
+    fail(`Live mod folder not found: ${MOD_ROOT} (set PDV_MOD_PATH to override).`);
   }
-  const source = fs.readFileSync(sourcePath, "utf8");
-  const match = source.match(/PDV_BUILD_VERSION\s*=\s*"([^"]*)"/);
-  if (!match) {
-    fail(`Version gate: PDV_BUILD_VERSION constant not found in ${sourcePath}`);
-  }
-  if (match[1] !== version) {
-    fail(
-      `Version gate: --version ${version} but PDV__ManagerQuest.psc declares "${match[1]}". ` +
-        `Update PDV_BUILD_VERSION in the live source, recompile (node tools/pdv_compile.mjs ` +
-        `--script PDV__ManagerQuest, then PDV_MCM), and repackage.`,
-    );
-  }
-  const pexPath = path.join(MOD_ROOT, "Scripts", "PDV__ManagerQuest.pex");
-  if (!fs.existsSync(pexPath)) {
-    fail(`Version gate: compiled manager not found: ${pexPath}`);
-  }
-  if (!fs.readFileSync(pexPath).includes(Buffer.from(version, "utf8"))) {
-    fail(
-      `Version gate: PDV__ManagerQuest.pex does not contain "${version}" -- the source was ` +
-        `bumped but not recompiled. Run node tools/pdv_compile.mjs --script PDV__ManagerQuest ` +
-        `(and PDV_MCM), then repackage.`,
-    );
-  }
-  console.log(`[PASS] Version gate: source + pex + zip all declare ${version}.`);
+  verifyExactLivePayload(manifest);
+  const papyrusHashes = verifyAllPapyrusFreshness(manifest);
+  verifyBuildVersion(version);
+  verifyNativeFreshness();
+  verifyPrismaParity(manifest);
+  verifyReceiverAnam();
+  verifySeq();
+  verifyHousecarlProof();
+  return papyrusHashes;
 }
 
-// Release gate: the ESP must carry ANAM on every Story Manager receiver (the
-// issue #17 record repair). A re-authoring pass that drops it would resurrect
-// a malformed-record class silently; the checker is cheap, so run it per build.
-function verifyReceiverAnam() {
-  const checker = path.join(REPO_ROOT, "tools", "pdv_fix_receiver_anam.mjs");
-  const esp = path.join(MOD_ROOT, "Devotion.esp");
-  let output = "";
-  try {
-    output = execFileSync(process.execPath, [checker, esp, "--dry"], { encoding: "utf8" });
-  } catch (error) {
-    fail(`ANAM gate: checker failed: ${error.message}`);
+function sourcePathForEntry(entry, manifest) {
+  if ((manifest.releaseMetadata || []).includes(entry)) {
+    return path.join(RELEASE_META_DIR, ...entry.split("/"));
   }
-  if (/patching \(adding/i.test(output)) {
-    fail(`ANAM gate: receiver quest(s) are missing ANAM. Run pdv_fix_receiver_anam.mjs on the live ESP before packaging.`);
+  return path.join(MOD_ROOT, ...entry.split("/"));
+}
+
+function stageExactPayload(stagingDir, manifest) {
+  for (const entry of manifest.entries) {
+    const sourcePath = sourcePathForEntry(entry, manifest);
+    const targetPath = path.join(stagingDir, ...entry.split("/"));
+    fs.mkdirSync(path.dirname(targetPath), { recursive: true });
+    fs.copyFileSync(sourcePath, targetPath);
   }
-  console.log(`[PASS] ANAM gate: all Story Manager receivers carry ANAM.`);
 }
 
 const args = parseArgs(process.argv.slice(2));
+const manifest = loadManifest();
 
 if (args.verify) {
-  if (!fs.existsSync(args.verify)) {
-    fail(`Archive not found: ${args.verify}`);
-  }
-  console.log(`Verifying ${args.verify}`);
-  verifyArchive(path.resolve(args.verify));
+  const zipPath = path.resolve(args.verify);
+  if (!fs.existsSync(zipPath)) fail(`Archive not found: ${zipPath}`);
+  console.log(`Verifying ${zipPath}`);
+  verifyArchive(zipPath, manifest);
   process.exit(0);
 }
 
-if (!fs.existsSync(MOD_ROOT)) {
-  fail(`Live mod folder not found: ${MOD_ROOT} (set PDV_MOD_PATH to override).`);
+console.log("PDV release preflight");
+console.log(`  source   : ${MOD_ROOT}`);
+console.log(`  manifest : ${MANIFEST_PATH}`);
+console.log("");
+const papyrusHashes = runPreflight(args.version, manifest);
+
+if (args.preflight) {
+  console.log("");
+  console.log(`Preflight complete: ${papyrusHashes.length} script pairs, no archive written.`);
+  process.exit(0);
 }
 
-verifyBuildVersion(args.version);
-verifyReceiverAnam();
-
-const stamp = args.date || new Date().toISOString().slice(0, 10).replace(/-/g, "");
+const stamp = args.date || new Date().toISOString().slice(0, 10).replaceAll("-", "");
 const zipName = `Devotion-${args.version}-${stamp}.zip`;
 const zipPath = path.join(DIST_DIR, zipName);
-const stagingDir = path.join(DIST_DIR, ".staging", `Devotion-${args.version}-${stamp}`);
+const stagingRoot = path.join(DIST_DIR, ".staging");
+const stagingDir = path.join(stagingRoot, `Devotion-${args.version}-${stamp}`);
 
-console.log(`PDV release packager`);
-console.log(`  source  : ${MOD_ROOT}`);
-console.log(`  output  : ${zipPath}`);
 console.log("");
-
-fs.rmSync(path.join(DIST_DIR, ".staging"), { recursive: true, force: true });
+console.log(`Staging ${manifest.entries.length} exact entries...`);
+fs.rmSync(stagingRoot, { recursive: true, force: true });
 fs.mkdirSync(stagingDir, { recursive: true });
+stageExactPayload(stagingDir, manifest);
 
-let staged = 0;
-for (const name of INCLUDE_TOP_LEVEL) {
-  const sourcePath = path.join(MOD_ROOT, name);
-  if (!fs.existsSync(sourcePath)) {
-    fail(`Required release input is missing from the live mod folder: ${name}`);
-  }
-  const targetPath = path.join(stagingDir, name);
-  if (fs.statSync(sourcePath).isDirectory()) {
-    fs.mkdirSync(targetPath, { recursive: true });
-    staged += stageTree(sourcePath, targetPath);
-  } else {
-    fs.copyFileSync(sourcePath, targetPath);
-    staged += 1;
-  }
-}
-
-for (const name of RELEASE_META_FILES) {
-  const sourcePath = path.join(RELEASE_META_DIR, name);
-  if (!fs.existsSync(sourcePath)) {
-    fail(`Release metadata is missing: ${sourcePath}`);
-  }
-  fs.copyFileSync(sourcePath, path.join(stagingDir, name));
-  staged += 1;
-}
-
-console.log("");
-console.log(`Staged ${staged} file(s). Compressing...`);
+const stagedEntries = listFilesRecursively(stagingDir, "");
+compareExactEntries(stagedEntries, manifest.entries, "Staged payload");
 
 fs.rmSync(zipPath, { force: true });
-powershell(`Add-Type -A System.IO.Compression.FileSystem
-[IO.Compression.ZipFile]::CreateFromDirectory('${stagingDir.replace(/'/g, "''")}', '${zipPath.replace(/'/g, "''")}', [IO.Compression.CompressionLevel]::Optimal, $false)`);
-
-fs.rmSync(path.join(DIST_DIR, ".staging"), { recursive: true, force: true });
+const escapedStaging = stagingDir.replaceAll("'", "''");
+const escapedZip = zipPath.replaceAll("'", "''");
+powershell(`Add-Type -AssemblyName System.IO.Compression.FileSystem
+[IO.Compression.ZipFile]::CreateFromDirectory('${escapedStaging}', '${escapedZip}', [IO.Compression.CompressionLevel]::Optimal, $false)`);
+fs.rmSync(stagingRoot, { recursive: true, force: true });
 
 console.log("");
-const entryCount = verifyArchive(zipPath);
-if (entryCount !== staged) {
-  fail(`Archive holds ${entryCount} entries but ${staged} files were staged.`);
-}
+const archive = verifyArchive(zipPath, manifest);
+const receiptPath = `${zipPath}.proof.json`;
+fs.writeFileSync(
+  receiptPath,
+  `${JSON.stringify(
+    {
+      schemaVersion: 1,
+      generatedAt: new Date().toISOString(),
+      archive: path.basename(zipPath),
+      manifest: path.relative(REPO_ROOT, MANIFEST_PATH).replaceAll("\\", "/"),
+      manifestSha256: sha256(MANIFEST_PATH),
+      entryCount: archive.entryCount,
+      sizeBytes: archive.size,
+      sha256: archive.sha256,
+      papyrusPairCount: papyrusHashes.length,
+      proofBoundary: {
+        staticAndPackaging: "passed",
+        housecarlReadback: "passed-for-esp-hash",
+        runtimeAndManual: "not-claimed-by-packager",
+      },
+    },
+    null,
+    2,
+  )}\n`,
+  "utf8",
+);
 console.log("");
 console.log(`Built ${zipName}`);
+console.log(`Proof receipt: ${receiptPath}`);

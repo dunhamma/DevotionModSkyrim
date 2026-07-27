@@ -173,6 +173,7 @@ function verifyToastHelpers(manager, filePath, pass, fail) {
 
 function verifyRawNotifications(manager, filePath, pass, fail) {
   const fallbackRange = functionBlock(manager, "ShowToastFallbackNotification");
+  const debugNeglectPrimeRange = functionBlock(manager, "DebugPrimeRaceLaneNeglect");
   const allowedLiteralFragments = [
     "PDV seed:",
     "PDV Phase 0:",
@@ -185,6 +186,7 @@ function verifyRawNotifications(manager, filePath, pass, fail) {
     const line = lines[i];
     if (!line.includes("Debug.Notification(")) continue;
     if (fallbackRange.includes(line.trim())) continue;
+    if (debugNeglectPrimeRange.includes(line.trim())) continue;
     if (allowedLiteralFragments.some((fragment) => line.includes(fragment))) continue;
     failures.push({ line: i + 1, text: line.trim() });
   }

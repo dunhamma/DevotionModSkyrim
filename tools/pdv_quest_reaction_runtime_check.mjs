@@ -21,6 +21,7 @@ function usage() {
     "Options:",
     "  --log <path>                    Papyrus log path. Defaults to Papyrus.0.log.",
     "  --expected-sequence <key,...>   Require the final enqueue/start/complete key sequence.",
+    "  --max-job-ms <milliseconds>      Fail when START-to-COMPLETE latency exceeds the limit.",
     "  --allow-overflow                 Report (but do not fail on) an explicit overload probe.",
     "  --self-test                      Check an embedded successful synthetic log.",
     "  --json                           Emit JSON.",
@@ -29,7 +30,7 @@ function usage() {
 }
 
 function parseArgs(argv) {
-  const options = { logPath: DEFAULT_LOG, expectedSequence: [], allowOverflow: false, selfTest: false, json: false, help: false };
+  const options = { logPath: DEFAULT_LOG, expectedSequence: [], maxJobMs: null, allowOverflow: false, selfTest: false, json: false, help: false };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === "--log") {
@@ -40,6 +41,12 @@ function parseArgs(argv) {
       if (!raw) throw new Error("--expected-sequence requires a comma-separated list of reaction keys.");
       options.expectedSequence = raw.split(",").map((value) => value.trim()).filter(Boolean);
       if (!options.expectedSequence.length) throw new Error("--expected-sequence must contain at least one reaction key.");
+    } else if (arg === "--max-job-ms") {
+      const raw = argv[++index];
+      options.maxJobMs = Number(raw);
+      if (!raw || !Number.isFinite(options.maxJobMs) || options.maxJobMs <= 0) {
+        throw new Error("--max-job-ms requires a positive number.");
+      }
     } else if (arg === "--allow-overflow") options.allowOverflow = true;
     else if (arg === "--self-test") options.selfTest = true;
     else if (arg === "--json") options.json = true;
@@ -85,6 +92,7 @@ function parseMarker(line, lineNumber) {
     key: token(line, ["key", "reactionKey"]),
     sequence: token(line, ["sequence", "seq"]),
     timestamp: timestampMs(line),
+    buildMs: Number.isFinite(Number(token(line, ["buildMs"]))) ? Number(token(line, ["buildMs"])) : null,
     durationMs: explicitMs && Number.isFinite(Number(explicitMs))
       ? Number(explicitMs)
       : (elapsedSeconds && Number.isFinite(Number(elapsedSeconds)) ? Number(elapsedSeconds) * 1000 : null),
@@ -100,7 +108,7 @@ function suffixMatches(actual, expected) {
 
 function findSafetyFailures(lines) {
   const patterns = [
-    { id: "vm-freeze", pattern: /VM is freezing|VM freeze|freezing suspended stack/i },
+    { id: "stack-dump", pattern: /dumping stack|stack dump|freezing suspended stack/i },
     { id: "broad-scope-abort", pattern: /BROAD_SCOPE_ABORT/i },
   ];
   const failures = [];
@@ -112,11 +120,33 @@ function findSafetyFailures(lines) {
   return failures;
 }
 
+function findVmLifecycleObservations(lines) {
+  const observations = [];
+  let openFreeze = null;
+  for (let index = 0; index < lines.length; index += 1) {
+    const text = lines[index].trim();
+    if (/VM is freezing|VM freeze/i.test(text) && !/freezing suspended stack/i.test(text)) {
+      openFreeze = { line: index + 1, text };
+    } else if (/VM is thawing/i.test(text) && openFreeze) {
+      observations.push({
+        id: "normal-freeze-thaw",
+        line: openFreeze.line,
+        thawLine: index + 1,
+        text: openFreeze.text,
+      });
+      openFreeze = null;
+    }
+  }
+  if (openFreeze) observations.push({ id: "unpaired-vm-freeze", line: openFreeze.line, text: openFreeze.text });
+  return observations;
+}
+
 export function evaluateLog(logText, options = {}) {
   const lines = logText.split(/\r?\n/);
   const markers = lines.map(parseMarker).filter(Boolean);
   const byAction = Object.fromEntries(ACTIONS.map((action) => [action, markers.filter((marker) => marker.action === action)]));
   const safetyFailures = findSafetyFailures(lines);
+  const vmLifecycleObservations = findVmLifecycleObservations(lines);
   const startsByJob = new Map(byAction.START.filter((entry) => entry.job).map((entry) => [entry.job, entry]));
   const enqueueByJob = new Map(byAction.ENQUEUE.filter((entry) => entry.job).map((entry) => [entry.job, entry]));
   const completeByJob = new Map(byAction.COMPLETE.filter((entry) => entry.job).map((entry) => [entry.job, entry]));
@@ -128,9 +158,10 @@ export function evaluateLog(logText, options = {}) {
   const durations = byAction.COMPLETE.map((complete) => {
     const start = complete.job ? startsByJob.get(complete.job) : byAction.START.find((entry) => entry.key === complete.key && entry.line < complete.line);
     const enqueue = complete.job ? enqueueByJob.get(complete.job) : byAction.ENQUEUE.find((entry) => entry.key === complete.key && entry.line < complete.line);
-    const durationMs = complete.durationMs ?? (start?.timestamp != null && complete.timestamp != null ? complete.timestamp - start.timestamp : null);
+    const jobMs = start?.timestamp != null && complete.timestamp != null ? complete.timestamp - start.timestamp : null;
+    const endToEndMs = complete.durationMs ?? (enqueue?.timestamp != null && complete.timestamp != null ? complete.timestamp - enqueue.timestamp : null);
     const ingressMs = enqueue?.timestamp != null && start?.timestamp != null ? start.timestamp - enqueue.timestamp : null;
-    return { job: complete.job, key: complete.key, line: complete.line, durationMs, ingressMs };
+    return { job: complete.job, key: complete.key, line: complete.line, jobMs, endToEndMs, ingressMs, ingressBuildMs: enqueue?.buildMs ?? null };
   });
   const expected = options.expectedSequence ?? [];
   const enqueueKeys = byAction.ENQUEUE.map((entry) => entry.key).filter(Boolean);
@@ -143,8 +174,21 @@ export function evaluateLog(logText, options = {}) {
   add(byAction.START.length > 0, "start-present", "At least one queue job began processing.");
   add(byAction.COMPLETE.length > 0, "complete-present", "At least one queue job completed.");
   add(incomplete.length === 0, "started-jobs-complete", incomplete.length ? `${incomplete.length} started job(s) lack a completion marker.` : "Every started job has a later completion marker.");
-  add(safetyFailures.length === 0, "no-critical-safety-failure", safetyFailures.length ? safetyFailures.map((entry) => `${entry.id}@${entry.line}`).join(", ") : "No VM freeze or BROAD_SCOPE_ABORT marker found.");
+  add(safetyFailures.length === 0, "no-critical-safety-failure", safetyFailures.length ? safetyFailures.map((entry) => `${entry.id}@${entry.line}`).join(", ") : "No stack dump, frozen-stack marker, or BROAD_SCOPE_ABORT found.");
   add(options.allowOverflow || byAction.OVERFLOW.length === 0, "no-overflow", byAction.OVERFLOW.length ? `${byAction.OVERFLOW.length} overflow marker(s) found.` : "No queue overflow marker found.");
+  if (options.maxJobMs != null) {
+    const unavailable = durations.filter((entry) => entry.jobMs == null);
+    const slow = durations.filter((entry) => entry.jobMs != null && entry.jobMs > options.maxJobMs);
+    add(
+      unavailable.length === 0 && slow.length === 0,
+      "job-latency-within-limit",
+      unavailable.length
+        ? `${unavailable.length} completed job(s) lack START-to-COMPLETE timestamps.`
+        : (slow.length
+          ? `${slow.length} job(s) exceeded ${options.maxJobMs} ms: ${slow.map((entry) => `${entry.job || entry.key}=${entry.jobMs}`).join(", ")}.`
+          : `Every completed job finished within ${options.maxJobMs} ms of START.`),
+    );
+  }
   if (expected.length) {
     add(suffixMatches(enqueueKeys, expected), "expected-enqueue-sequence", `Expected final enqueue keys: ${expected.join(" -> ")}; saw ${enqueueKeys.slice(-expected.length).join(" -> ") || "none"}.`);
     add(suffixMatches(startKeys, expected), "expected-start-sequence", `Expected final start keys: ${expected.join(" -> ")}; saw ${startKeys.slice(-expected.length).join(" -> ") || "none"}.`);
@@ -157,6 +201,7 @@ export function evaluateLog(logText, options = {}) {
     checks,
     markerCounts: Object.fromEntries(ACTIONS.map((action) => [action.toLowerCase(), byAction[action].length])),
     safetyFailures,
+    vmLifecycleObservations,
     incomplete: incomplete.map((entry) => ({ job: entry.job, key: entry.key, line: entry.line })),
     durations,
     sequence: { expected, enqueue: enqueueKeys, start: startKeys, complete: completeKeys },
@@ -165,12 +210,17 @@ export function evaluateLog(logText, options = {}) {
 
 function selfTestLog() {
   return [
-    "[07/15/2026 - 11:00:00PM] [PDV][QR_QUEUE] ENQUEUE qr_1 key=207142|200 cells=45 pending=1",
-    "[07/15/2026 - 11:00:00PM] [PDV][QR_QUEUE] ENQUEUE qr_2 key=219947|150 cells=45 pending=2",
+    "[07/15/2026 - 11:00:00PM] [PDV][QR_QUEUE] ENQUEUE qr_1 key=207142|200 cells=45 buildMs=10 pending=1",
+    "[07/15/2026 - 11:00:00PM] [PDV][QR_QUEUE] ENQUEUE qr_2 key=219947|150 cells=45 buildMs=12 pending=2",
+    "[07/15/2026 - 11:00:00PM] VM is freezing...",
+    "[07/15/2026 - 11:00:00PM] VM is frozen",
+    "[07/15/2026 - 11:00:00PM] Reverting game...",
+    "[07/15/2026 - 11:00:01PM] Loading game...",
+    "[07/15/2026 - 11:00:01PM] VM is thawing...",
     "[07/15/2026 - 11:00:01PM] [PDV][QR_QUEUE] START qr_1 key=207142|200 cells=45",
-    "[07/15/2026 - 11:00:03PM] [PDV][QR_QUEUE] COMPLETE qr_1 key=207142|200 cells=45 elapsed=2.0",
+    "[07/15/2026 - 11:00:03PM] [PDV][QR_QUEUE] COMPLETE qr_1 key=207142|200 cells=45 elapsed=3.0",
     "[07/15/2026 - 11:00:03PM] [PDV][QR_QUEUE] START qr_2 key=219947|150 cells=45",
-    "[07/15/2026 - 11:00:04PM] [PDV][QR_QUEUE] COMPLETE qr_2 key=219947|150 cells=45 elapsed=1.0",
+    "[07/15/2026 - 11:00:04PM] [PDV][QR_QUEUE] COMPLETE qr_2 key=219947|150 cells=45 elapsed=4.0",
   ].join(os.EOL);
 }
 
@@ -179,7 +229,7 @@ function printReport(report) {
   for (const check of report.checks) console.log(`[${check.status}] ${check.id}: ${check.detail}`);
   console.log(`Markers: ${Object.entries(report.markerCounts).map(([key, value]) => `${key}=${value}`).join(" ")}`);
   for (const duration of report.durations) {
-    console.log(`Completion: job=${duration.job || "?"} key=${duration.key || "?"} durationMs=${duration.durationMs ?? "unavailable"} ingressMs=${duration.ingressMs ?? "unavailable"}`);
+    console.log(`Completion: job=${duration.job || "?"} key=${duration.key || "?"} jobMs=${duration.jobMs ?? "unavailable"} endToEndMs=${duration.endToEndMs ?? "unavailable"} queueWaitMs=${duration.ingressMs ?? "unavailable"} ingressBuildMs=${duration.ingressBuildMs ?? "unavailable"}`);
   }
   console.log(`Proof boundary: ${report.proofBoundary}`);
 }

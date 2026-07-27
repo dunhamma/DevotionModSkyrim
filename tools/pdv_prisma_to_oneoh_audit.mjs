@@ -14,9 +14,13 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const REPO_SOURCE = path.join(ROOT, "live-source", "Scripts", "Source");
-const LIVE_SOURCE = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source";
+const LIVE_SOURCE =
+  process.env.PDV_AUDIT_LIVE_SOURCE ||
+  "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source";
 const REPO_VIEW = path.join(ROOT, "native", "DevotionPrismaBridge", "mod", "PrismaUI", "views", "Devotion");
-const LIVE_VIEW = "D:/Wabbajack/modlists/Anvil/mods/Devotion/PrismaUI/views/Devotion";
+const LIVE_VIEW =
+  process.env.PDV_AUDIT_LIVE_PRISMA ||
+  "D:/Wabbajack/modlists/Anvil/mods/Devotion/PrismaUI/views/Devotion";
 
 main(process.argv.slice(2));
 
