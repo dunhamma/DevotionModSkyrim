@@ -18,12 +18,27 @@ This is an **unreleased build**. Use a save you don't mind losing.
 3. Start a **new game**.
 4. Console: press **`~`** (left of `1`, above Tab). Type, press **Enter**, press
    **`~`** to close. (Some keyboards: **`` ` ``**.)
-5. The Papyrus log you'll be reading is at:
+5. ⚠ **REQUIRED — turn on Devotion's logging, or the log stays empty.** In the
+   console:
+   ```
+   set PDV_GLO_DebugLevel to 3
+   ```
+   Devotion writes **no** log lines at the default setting, so without this
+   every test below looks like a failure even when it worked. This is a single
+   console command — you do **not** need the debug menu, and no restart is
+   needed. Set it back to `0` when you're finished if you like.
+6. The Papyrus log you'll be reading is at:
    ```
    C:\Users\Admin\Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log
    ```
-   Replace the username with your own. If the folder is empty, Papyrus logging
-   is off — enable it in your INI, or just report what you saw on screen.
+   Replace the username with your own. If the folder is empty or missing,
+   Papyrus logging is off in your INI — enable it, or just report what you saw
+   on screen.
+
+**Sanity check that logging is on:** after setting the debug level, wait a few
+seconds and search the log for `[PDV]`. You should see Devotion lines appearing.
+If you see none at all, stop — the tests below cannot produce a meaningful
+result until that's fixed.
 
 ---
 
@@ -52,6 +67,11 @@ it fails silently — no error, no log line, it just never rewards.
 *Note:* a piety line for Y'ffre may or may not follow, depending on whether a
 related Green Pact trigger already fired that in-game day (they share one daily
 throttle). Its absence is **not** a failure — only the line above matters.
+
+*If you're re-running this test:* the meat reward is capped once per in-game
+day. If you already ate a listed meat today, it won't fire again. Either sleep
+24 in-game hours first, or use a different item from the list —
+`player.additem 0722BD 1` is Venison Chop.
 
 ---
 
