@@ -10,7 +10,6 @@
 
 Scriptname PDV_Substrate_AltmerAncestor extends PDV_SubstrateBase
 
-Float Property HeritageStandingDelta = 5.0 Auto ; Legacy VMAD compatibility.
 Float Property DawnDecay = 1.0 Auto
 Float Property DawnGraceDays = 3.0 Auto
 Float Property NonCurseFloor = 20.0 Auto

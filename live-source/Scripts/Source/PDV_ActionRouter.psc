@@ -136,7 +136,22 @@ Function HandleStoryKillActor(ObjectReference akVictim, ObjectReference akKiller
     ; to the wrong branch -- so an open kill now counts the same as an assassination. Killing a
     ; Thalmor that was already your foe/enemy (rank <= -2: a scripted quest enemy) reads as
     ; self-defense and is excluded.
-    if aiRelationshipRank > -2
+    ;
+    ; B2 / fix-plan 8.1. The gate above was relationship rank ALONE, and hostility was
+    ; never consulted -- though IsHostileKill sits three lines below and answers exactly
+    ; this question. A hostile Thalmor Justiciar patrol has relationship rank 0, so
+    ; killing one that opened fire on you routed the unprovoked branch and applied the
+    ; Altmer-alignment / Concordat consequences with no re-check. In a Requiem list,
+    ; where hostile Thalmor patrols are ordinary road encounters, that mis-punished
+    ; routine self-defense as a chosen heterodox act.
+    ;
+    ; The comment above is kept because its reasoning still holds for the case it was
+    ; written for: open-attacking a NEUTRAL Thalmor makes them hostile mid-fight, and
+    ; that kill should still count as chosen. IsHostileKill distinguishes the two -- it
+    ; returns true for a pre-set enemy (rank <= -2) or a victim that is hostile to the
+    ; player independently of the player's own aggression -- so the player-initiated
+    ; case still routes and the patrol-attacked-first case no longer does.
+    if aiRelationshipRank > -2 && !IsHostileKill(victimActor, playerActor, aiRelationshipRank)
         RouteThalmorUnprovokedKill(victimActor)
     endIf
 

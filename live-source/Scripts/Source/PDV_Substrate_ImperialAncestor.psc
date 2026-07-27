@@ -10,7 +10,6 @@
 
 Scriptname PDV_Substrate_ImperialAncestor extends PDV_SubstrateBase
 
-Float Property CivicStandingDelta = 5.0 Auto ; Legacy VMAD compatibility; daily credit owns metric gain.
 Float Property DawnDecay = 1.0 Auto
 Float Property DawnGraceDays = 3.0 Auto
 Float Property NonCurseFloor = 20.0 Auto

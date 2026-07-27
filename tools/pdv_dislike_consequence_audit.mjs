@@ -9,7 +9,8 @@
  *   - manager/router source uses the likes/dislikes event-context entrypoint
  *   - live ESP readback of all 14 SPEL + 14 MGEF records, read straight out of the
  *     deployed Devotion.esp via the standalone mutagen-bridge (name/source label,
- *     description, actor value, magnitude, duration, and the SPEL -> MGEF link)
+ *     description, actor value, magnitude, zero engine duration, the MGEF
+ *     NoDuration flag, and the SPEL -> MGEF link)
  *
  * The readback is fail-closed: if the bridge or the ESP cannot be read we FAIL
  * rather than silently pass a build we never inspected.
@@ -151,7 +152,9 @@ function validateSpec(spec) {
         if (ids.has(id)) fail("unique editor id", `Duplicate editor id ${id}.`, SPEC);
         ids.add(id);
       }
-      if (!(entry.magnitude < 0)) fail("negative magnitude", `${entry.spellEditorId} magnitude is ${entry.magnitude}.`, SPEC);
+      // The effect is Detrimental, so the stored record magnitude is positive.
+      // The negative gameplay delta is supplied by the detrimental effect type.
+      if (!(entry.magnitude > 0)) fail("positive record magnitude", `${entry.spellEditorId} magnitude is ${entry.magnitude}.`, SPEC);
       if (![2, 4].includes(Number(entry.durationHours))) fail("duration", `${entry.spellEditorId} durationHours is ${entry.durationHours}.`, SPEC);
     }
   }
@@ -335,6 +338,10 @@ function validateLiveReadback(spec) {
         fail(check, `${w.editorId}.Flags: missing Detrimental (got "${f.Flags}").`, PDV_ESP);
         good = false;
       }
+      if (!String(f.Flags ?? "").includes("NoDuration")) {
+        fail(check, `${w.editorId}.Flags: missing NoDuration (got "${f.Flags}").`, PDV_ESP);
+        good = false;
+      }
     } else {
       // The SPEL Name is the Active-Effects SOURCE label ("Favor Slips").
       good = expectField(check, w.editorId, "Name", f.Name, w.spec.sourceDisplayName) && good;
@@ -349,10 +356,10 @@ function validateLiveReadback(spec) {
         const expectedMgef = formidByEdid.get(w.spec.magicEffectEditorId);
         good = expectField(check, w.editorId, "Effects[0].BaseEffect", effect.BaseEffect, expectedMgef) && good;
         good = expectField(check, w.editorId, "Effects[0].Magnitude", effect.Data?.Magnitude, w.spec.magnitude) && good;
-        const expectedDuration = w.spec.durationHours == null
-          ? null
-          : w.spec.durationHours * SECONDS_PER_HOUR;
-        good = expectField(check, w.editorId, "Effects[0].Duration", effect.Data?.Duration, expectedDuration) && good;
+        // The manager owns Light/Sharp expiry through StorageUtil and removes the
+        // Ability at that time. Constant Abilities must keep their engine effect
+        // duration at zero or they can surface without modifying the actor value.
+        good = expectField(check, w.editorId, "Effects[0].Duration", effect.Data?.Duration, 0) && good;
       }
     }
     if (good) ok++;
@@ -363,7 +370,7 @@ function validateLiveReadback(spec) {
       check,
       `All ${wanted.length} disfavor records readback clean from the deployed ESP `
         + `(${wanted.length / 2} spells + ${wanted.length / 2} magic effects; name/source label, `
-        + `description, actor value, magnitude, duration, and spell->effect link).`,
+        + `description, actor value, magnitude, zero engine duration, NoDuration, and spell->effect link).`,
       PDV_ESP,
     );
   }

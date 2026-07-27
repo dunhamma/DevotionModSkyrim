@@ -21,8 +21,13 @@ Int Property SIGNAL_SHARED_PACT_MEMORY = 1804 AutoReadOnly  ; small foundation-k
 
 Float Property DELTA_DISCIPLINED_STUDY = 1.8 Auto
 Float Property DELTA_MAGIC_MILESTONE = 1.5 Auto
-Float Property DELTA_ARCANE_RECOVERY = 3.0 Auto
 Float Property DELTA_SHARED_PACT_MEMORY = 1.0 Auto
+
+; Contract-declared tuning knob for the ancestral-spine lane (pdv_verify asserts
+; DELTA_ANCESTOR_SPINE = 1.0 on this deity). Currently unread here -- the spine
+; scoring for this lane is specced, not yet wired -- so do NOT "clean it up": the
+; 1.0.4 Altmer Spine wire is what will read it, and deleting it now would throw
+; away the intended value. Azura / Malacath / Tu'whacca already return theirs.
 Float Property DELTA_ANCESTOR_SPINE = 1.0 Auto
 
 Float Function ScoreAction(Int eventType, Form actorRef, Form targetRef)

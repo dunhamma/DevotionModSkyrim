@@ -79,7 +79,7 @@ Work Rule".
 | `references/authoring/PDV_Phase20_BetaReadinessRemainder.md` | End-of-tranche beta-readiness handoff separating proven source-fill/readback work from remaining automated, runtime/manual, placement/feel, and tester-handoff blockers |
 | `references/authoring/PDV_RaceGameplayBalanceAudit.md`, `PDV_RaceRewardBudgetLedger.md`, `PDV_RaceEffectReviewLedger.md`, `PDV_RacePlaystyleCoverageLedger.md`, `PDV_RaceImplementationCostingBacklog.md` | Multi-lens race gameplay audit, reward/effect/playstyle/immersion ledgers, and implementation-costing backlog |
 | `tools/pdv_compile.mjs` | PapyrusCompiler wrapper for stale/all/targeted PDV script compiles |
-| `tools/pdv_verify.mjs` | Read-only verifier for Anvil/MO2/ESP/script wiring drift. 2026-07-15: gained `checkSourceLacks` (assert-ABSENT contracts) -- used where a ratified design change REMOVED code and the gate now guards the removal (Phase 18 dialogue quartet via manifest status `v1-removed-voiced-v2`; the four converted deity-spine pulses). Reintroduction of guarded-absent code is a strict FAIL by design. |
+| `tools/pdv_verify.mjs` | Read-only verifier for Anvil/MO2/ESP/script wiring drift. 2026-07-26: the Daedric price gate checks all 48 MGEF/SPEL pairs for exact detrimental flags, effect linkage, positive absolute stored magnitude, and reversible resource-pool archetypes. 2026-07-15: gained `checkSourceLacks` (assert-ABSENT contracts) -- used where a ratified design change REMOVED code and the gate now guards the removal (Phase 18 dialogue quartet via manifest status `v1-removed-voiced-v2`; the four converted deity-spine pulses). Reintroduction of guarded-absent code is a strict FAIL by design. |
 | `tools/pdv-authoring-trees-retired-2026-07-13.zip` | **Retired** Mutagen/CKPE record-author helper trees (`pdv_author.mjs`, `pdv_writer_review.mjs`, `creation-authoring`, `creation-merge-runner`, all `pdv-*-author`) | Forensics only. All plugin record reads/writes/verification now go through the `housecarl_*` MCP tools directly -- see the houseCARL Direct Plugin Work Rule above. Do not restore, extend, or copy the dry-run/backup/proof-ledger pattern. |
 | `tools/pdv_housecarl_p2_readback.mjs` | Direct houseCARL exact readback for P2 receiver FormLists, approved source membership, and player-alias VMAD bindings; unexpected live members fail |
 | `tools/pdv_pantheon_record_readback.mjs` | Direct houseCARL focused Imperial/Nord reward and substrate inherited-property readback |
@@ -1098,6 +1098,23 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 ---
 
 ## Notes / Decisions Log
+
+**2026-07-26 AEST - Daedric price serialization repair and runtime closeout:**
+Daedric price contract magnitudes remain negative as player-facing semantics,
+but every live price MGEF now carries `Recover, Detrimental, NoDuration,
+NoArea, PowerAffectsMagnitude, NoHitEffect` and its carrier SPEL stores the
+positive absolute magnitude. Direct houseCARL authoring repaired all 48 pairs
+atomically after an exact ESP backup; direct readback found 48/48 corrected
+pairs. `PDV_DaedricPrinceRecordContracts.json`, its generator, and
+`pdv_verify.mjs` now own the convention. Post-repair in-game proof passed all
+three Azura Stamina tiers (-10/-20/-30) and all three Mephala Speech tiers
+(-8/-12/-15), including named Active Effects and exact Lapse restoration.
+Papyrus log markers corroborate both tier ladders through 3->0. Hermaeus Mora
+Champion separately passed its unique Alteration +20 / maximum Magicka +20
+boon, Stamina -30 price, Active Effects, and Lapse restoration. This is
+family-wide authority/readback plus representative PeakValueModifier,
+ValueModifier, and multi-effect Champion runtime proof; the other 39 tiers
+were not individually manually exercised.
 
 **2026-07-15 AEST - Altmer notification and terminology consolidation:** Altmer P2 sacred-book
 actions now surface one specific player-facing outcome: the generic lore fan-out remains

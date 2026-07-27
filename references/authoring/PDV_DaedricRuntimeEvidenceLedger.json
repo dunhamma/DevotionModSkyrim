@@ -149,10 +149,10 @@
         },
         "activeEffects": {
           "status": "pass",
-          "updatedAtLocal": "12/06/2026 (in-game test session)",
-          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup Devotion.esp.20260612-203620.bak).",
-          "command": "",
-          "log": ""
+          "updatedAtLocal": "26/07/2026, 3:55:41 pm AEST",
+          "note": "Post-repair three-tier PASS on the Redguard save: after the Forebear +10 Stamina baseline settled, Azura Seeker/Devoted/Champion applied the expected -10/-20/-30 deltas, each named price appeared in Active Effects, and Force Lapse restored the exact baseline. Papyrus log confirms Reset at 15:44:35, tiers 0->1 at 15:44:39 and 1->2 at 15:45:56, Champion replay at 15:47:12, and tier 3->0 at 15:47:44.",
+          "command": "MCM Debug: Azura Reset Prince path -> Force Seeker -> Force Devoted -> Force Champion -> Force Lapse; player.getavinfo stamina and player.getav stamina at each tier",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "summaryMessage": {
           "status": "pass",
@@ -497,10 +497,10 @@
         },
         "activeEffects": {
           "status": "pass",
-          "updatedAtLocal": "12/06/2026 (in-game test session)",
-          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup Devotion.esp.20260612-203620.bak).",
-          "command": "",
-          "log": ""
+          "updatedAtLocal": "26/07/2026, 3:55:41 pm AEST",
+          "note": "Post-repair non-resource three-tier PASS: Mephala Seeker/Devoted/Champion applied the expected Speech -8/-12/-15 deltas from the Reset baseline, each named price appeared in Active Effects, and Force Lapse restored the exact baseline. Papyrus log confirms tier 0->1 at 15:48:50, 1->2 at 15:52:07, Champion replay at 15:52:34, and tier 3->0 at 15:53:51.",
+          "command": "MCM Debug: Mephala Reset Prince path -> Force Seeker -> Force Devoted -> Force Champion -> Force Lapse; player.getavinfo speechcraft and player.getav speechcraft at each tier",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "summaryMessage": {
           "status": "pass",
@@ -1106,10 +1106,10 @@
         },
         "activeEffects": {
           "status": "pass",
-          "updatedAtLocal": "12/06/2026 (in-game test session)",
-          "note": "High-stakes (~2x god-tier) boon/price confirmed in Active Effects, correct per current rebaselined scheme. NOTE: re-verify exact price values on a fresh save after the 2026-06-12 author re-run (backup Devotion.esp.20260612-203620.bak).",
-          "command": "",
-          "log": ""
+          "updatedAtLocal": "26/07/2026, 4:08:21 pm AEST",
+          "note": "Hermaeus Mora Champion post-repair PASS: Active Effects and actor-value checks confirmed the distinct two-effect boon at Alteration +20 and maximum Magicka +20, alongside the contracted Stamina -30 price; Lapse restored the tested baselines. Papyrus log corroborates the Champion replay at 16:07:13, queue processing at 16:07:20, and successful Prisma presentation at 16:07:24.",
+          "command": "MCM Debug: Hermaeus Mora -> Force Champion -> inspect Active Effects; player.getav alteration; player.getavinfo magicka; player.getavinfo stamina; Force Lapse",
+          "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
         },
         "summaryMessage": {
           "status": "pass",
@@ -2908,7 +2908,43 @@
     {
       "at": "13/06/2026",
       "note": "Champion Accept/Decline proper fix (compile 0/0, needs in-game retest): restored the AUTHORED Msg_ChampionEntry and fixed ordering. MCM now seats Champion silently and queues QueueDaedricMilestoneMcmReplay; the manager holds the replay until Utility.IsInMenuMode() is false (menu closed), then ShowTierEntryMessage displays the real authored message + Accept/Decline (Decline -> Devoted + no toast; Accept -> toast). Replaces the earlier plain-text in-menu prompt. Records/wiring were already correct (housecarl-verified MESG 071270)."
+    },
+    {
+      "updatedAtLocal": "26/07/2026, 3:15:28 pm AEST",
+      "prince": "Azura",
+      "slot": "activeEffects",
+      "status": "pass",
+      "note": "2026-07-26 Redguard masking regression PASS: Forebear +10 Stamina was granted by player-load reconciliation before Force Seeker; Azura Seeker then changed the modifier +10 to 0, and Force Lapse restored +10. Papyrus log confirms load reconcile at 15:09:58, tier 0->1 at 15:13:23, and tier 1->0 at 15:14:03, with no Forebear re-grant during Force Seeker.",
+      "command": "MCM Debug: Azura Reset Prince path -> Force Seeker -> Force Lapse; player.getavinfo stamina at each baseline",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "26/07/2026, 3:55:41 pm AEST",
+      "prince": "Azura",
+      "slot": "activeEffects",
+      "status": "pass",
+      "note": "Post-repair three-tier PASS: Seeker/Devoted/Champion applied Stamina -10/-20/-30 from the settled Reset baseline, all named prices appeared, and Lapse restored baseline.",
+      "command": "MCM Debug: Azura Reset -> Seeker -> Devoted -> Champion -> Lapse; getavinfo/getav stamina",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "26/07/2026, 3:55:41 pm AEST",
+      "prince": "Mephala",
+      "slot": "activeEffects",
+      "status": "pass",
+      "note": "Post-repair non-resource three-tier PASS: Seeker/Devoted/Champion applied Speech -8/-12/-15 from Reset, all named prices appeared, and Lapse restored baseline.",
+      "command": "MCM Debug: Mephala Reset -> Seeker -> Devoted -> Champion -> Lapse; getavinfo/getav speechcraft",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
+    },
+    {
+      "updatedAtLocal": "26/07/2026, 4:08:21 pm AEST",
+      "prince": "Mora",
+      "slot": "activeEffects",
+      "status": "pass",
+      "note": "Champion two-effect PASS: Alteration +20, maximum Magicka +20, Stamina price -30, correct Active Effects, and tested baselines restored on Lapse.",
+      "command": "MCM Debug: Hermaeus Mora -> Force Champion -> actor-value and Active Effects checks -> Force Lapse",
+      "log": "C:\\Users\\Admin\\Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log"
     }
   ],
-  "updatedAtLocal": "13/06/2026"
+  "updatedAtLocal": "26/07/2026, 4:08:21 pm AEST"
 }

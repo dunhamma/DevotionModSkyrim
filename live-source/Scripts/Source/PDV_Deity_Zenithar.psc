@@ -19,7 +19,6 @@ Scriptname PDV_Deity_Zenithar extends PDV_DeityBase
 Int Property SIGNAL_HONEST_WORK = 1401 AutoReadOnly
 Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1402 AutoReadOnly
 
-Float Property DELTA_CIVIC_SERVICE = 2.0 Auto
 Float Property DELTA_HONEST_WORK = 3.0 Auto
 Float Property DELTA_PATRON_CIVIC_FAVOR = 3.0 Auto
 

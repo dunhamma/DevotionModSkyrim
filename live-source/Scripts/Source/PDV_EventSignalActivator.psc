@@ -84,7 +84,10 @@ Event OnActivate(ObjectReference akActionRef)
         return
     endIf
 
-    RouteSignal()
+    ; B14 / fix-plan 4.4: stamp the once-per-day charge only on a route that succeeded.
+    if RouteSignal()
+        StampOncePerDayKey()
+    endIf
 EndEvent
 
 Bool Function CanRouteSignal()
@@ -105,21 +108,34 @@ Bool Function CanRouteSignal()
         endIf
     endIf
 
+    ; B14 / fix-plan 4.4. Same defect as PDV_EventSignalEffect: the day's charge was
+    ; consumed inside the "can I?" check, before RouteSignal had a chance to fall through
+    ; its unsupported-RouteId branch or hit a bus with no manager bound. Test here,
+    ; stamp in the event handler, and only on a route that dispatched.
     if OncePerDayKey != ""
-        Float nowTime = Utility.GetCurrentGameTime()
         Float lastTime = StorageUtil.GetFloatValue(None, OncePerDayKey)
-        if lastTime > 0.0 && (nowTime - lastTime) < 1.0
+        if lastTime > 0.0 && (Utility.GetCurrentGameTime() - lastTime) < 1.0
             Trace(2, "Activator ignored by once-per-day key.")
             return False
         endIf
-
-        StorageUtil.SetFloatValue(None, OncePerDayKey, nowTime)
     endIf
 
     return True
 EndFunction
 
-Function RouteSignal()
+Function StampOncePerDayKey()
+    if OncePerDayKey != ""
+        StorageUtil.SetFloatValue(None, OncePerDayKey, Utility.GetCurrentGameTime())
+    endIf
+EndFunction
+
+Bool Function RouteSignal()
+    ; Every Route* below no-ops when the bus has no PDV_Manager bound.
+    if !PDV_EventBusService.PDV_Manager
+        Trace(1, "Activator skipped: event bus has no manager bound.")
+        return False
+    endIf
+
     if RouteId == ROUTE_DUNMER_PORTABLE_SHRINE
         PDV_EventBusService.RouteDunmerPortableShrinePrayer()
     elseIf RouteId == ROUTE_DUNMER_HOME_BONUS
@@ -230,10 +246,11 @@ Function RouteSignal()
         PDV_EventBusService.RouteDaedricShrinePrayer(SignalValue, GetSignalSourceId())
     else
         Trace(1, "Activator skipped: unsupported RouteId " + RouteId)
-        return
+        return False
     endIf
 
     Trace(2, "Activator routed " + RouteId + " " + TraceLabel)
+    return True
 EndFunction
 
 String Function GetSignalSourceId()

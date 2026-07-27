@@ -18,6 +18,12 @@ const expectedProperties = [
   "PDV_Bless_Nord_NineDivines_T2",
 ];
 
+// Appended manager VMAD properties (Nine Divines, Observe-Moons, QuestReaction, etc.)
+// sit beyond houseCARL's bounded generic container expansion. Request an explicit
+// TAIL WINDOW and resolve the ones we need BY NAME (parseProperties maps Name->Object),
+// so the audit survives future property insertions instead of pinning absolute indices.
+const TAIL_SLOTS = Array.from({ length: 11 }, (_, i) => `VirtualMachineAdapter.Scripts[0].Properties[${488 + i}]`);
+
 function normalizeFormKey(value) {
   const match = String(value ?? "").trim().match(/^([0-9A-Fa-f]{6}):(.+)$/);
   return match ? `${match[1].toUpperCase()}:${match[2].toLowerCase()}` : String(value ?? "").trim().toLowerCase();
@@ -62,22 +68,15 @@ async function main() {
   const managerResult = await callHousecarl("housecarl_read_record", {
     formid: "00C325:Devotion.esp", fields: [
       "VirtualMachineAdapter.Scripts[0].Properties",
-      // houseCARL bounds expansion of very large containers. These two
-      // appended properties sit beyond that generic expansion ceiling, so
-      // request their stable slots explicitly as well.
-      "VirtualMachineAdapter.Scripts[0].Properties[496]",
-      "VirtualMachineAdapter.Scripts[0].Properties[497]",
+      ...TAIL_SLOTS,
     ], depth: 3, max_chars: 350_000,
   }, { timeoutMs: 90_000 });
   const managerProperties = parseProperties(extractHousecarlText(managerResult));
   const appendedResult = await callHousecarl("housecarl_batch_record_detail", {
     formids: ["00C325:Devotion.esp"],
-    fields: [
-      "VirtualMachineAdapter.Scripts[0].Properties[496]",
-      "VirtualMachineAdapter.Scripts[0].Properties[497]",
-    ],
+    fields: TAIL_SLOTS,
     depth: 3,
-    max_chars: 20_000,
+    max_chars: 40_000,
   }, { timeoutMs: 90_000 });
   const appendedProperties = parseProperties(extractHousecarlText(appendedResult));
   for (const [name, target] of appendedProperties) managerProperties.set(name, target);

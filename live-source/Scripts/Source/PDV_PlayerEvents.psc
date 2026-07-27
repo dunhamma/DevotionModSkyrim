@@ -111,6 +111,33 @@ Int Property EVT_PICK_OWNED_LOCK = 360 AutoReadOnly
 Int Property EVT_RAISE_UNDEAD = 365 AutoReadOnly
 Int Property EVT_ACCEPT_DAEDRIC_ARTIFACT = 368 AutoReadOnly
 
+; 12.2 / audit C2 -- the resolved faucet-form cache.
+;
+; ShouldRouteQuestReactionFaucet used to answer "is this form in faucet list X?" by
+; re-reading the matrix JSON and re-resolving every entry from scratch, on every call.
+; RouteQuestReactionObjectFaucet asks that question 16 times per EQUIP, over 52 matrix
+; entries, and each entry cost a Game.GetModByName -- a linear scan over the whole plugin
+; list -- plus a Game.GetFormFromFile, on top of a JsonExists, two JsonUtil.GetStringValue
+; reads and two StringUtil.Splits per key. In a large load order that is hundreds of
+; native calls and an enormous number of engine-side plugin-name comparisons for every
+; item the player equips, and the blocked-hit (Peryite) path paid the same shape on every
+; blocked hit -- constant and constant-cost for a shield user.
+;
+; The spell faucet below was already cached correctly at registration; this mirrors it for
+; the object / book / magic-effect / blocked-hit faucets. Every faucet form is resolved
+; ONCE in RegisterQuestReactionFaucetEvents (so once per load, where GetModByName is
+; cheap and correct) into two parallel arrays, and the hot path becomes a script-local
+; scan with ZERO native calls. The Form compare is written first in the && so the string
+; compare only runs on the rare form hit.
+;
+; The array is sized 128 (the Papyrus ceiling) and a truncation is traced rather than
+; swallowed.
+Int Property QUEST_REACTION_FAUCET_CACHE_MAX = 128 AutoReadOnly
+Bool PDV_QuestReactionFaucetCacheReady = false
+Int PDV_QuestReactionFaucetCacheCount = 0
+Form[] PDV_QuestReactionFaucetForms
+String[] PDV_QuestReactionFaucetListKeys
+
 Bool PDV_QuestReactionSpellFaucetCacheReady = false
 Form PDV_QRSpellSanguine0 = None
 Form PDV_QRSpellSanguine1 = None
@@ -147,8 +174,17 @@ ObjectReference PDV_CaravanLeaderRisaad = None
 ObjectReference PDV_CaravanLeaderAhkari = None
 ObjectReference PDV_CaravanLeaderMadran = None
 
+; 12.3 / audit C3. The bard poll's cadence is now two-state: BARD_POLL_ACTIVE_INTERVAL
+; while a performance is live (or just ended), BARD_POLL_IDLE_INTERVAL otherwise, after
+; BARD_POLL_QUIET_TICKS_TO_IDLE consecutive nothing-happened ticks. See
+; BardPerformancePollTick for why this is a cadence change and not a hard event gate.
+Float Property BARD_POLL_ACTIVE_INTERVAL = 5.0 AutoReadOnly
+Float Property BARD_POLL_IDLE_INTERVAL = 15.0 AutoReadOnly
+Int Property BARD_POLL_QUIET_TICKS_TO_IDLE = 2 AutoReadOnly
+
 Bool PDV_BardFormsResolved = false
 Bool PDV_BardPollActive = false
+Int PDV_BardQuietTicks = 0
 GlobalVariable PDV_BardIsPlaying = None
 FormList PDV_BardTavernCounts = None
 GlobalVariable PDV_BardGameDaysPassed = None
@@ -178,14 +214,40 @@ Event OnPlayerLoadGame()
     QueueOriginInitialization()
     RouteCurseRefresh("load")
     RoutePaarthurnaxSpareLoadCheck()
+    KickstartDevotionLifecycle()
     Trace(2, "Player load observed; sleep hooks refreshed.")
 EndEvent
 
+; B3 / fix-plan Group 2. The manager's 1s master poll and the quest-reaction worker are
+; single-update chains, each re-armed ONLY at the end of its own OnUpdate. Both live on
+; Quest scripts, which never receive OnPlayerLoadGame (it is alias-only) -- so the
+; worker's own load-resume handler is dead code and nothing re-kicks the manager. A
+; single tick lost to a Papyrus stack dump (routine under VM saturation in a large list)
+; permanently stopped dawn processing, pact activation, the startup choice and the
+; reconcile for the rest of the playthrough.
+;
+; This alias IS a player alias and does receive the event, so it is the watchdog. Both
+; calls are idempotent: re-registering a single update merely resets the timer.
+Function KickstartDevotionLifecycle()
+    if !PDV_EventBusService
+        Trace(1, "Lifecycle kickstart skipped: PDV_EventBusService not assigned.")
+        return
+    endIf
+
+    PDV__ManagerQuest managerService = PDV_EventBusService.PDV_Manager
+    if !managerService
+        Trace(1, "Lifecycle kickstart skipped: PDV_Manager not assigned on the event bus.")
+        return
+    endIf
+
+    managerService.KickstartIfStalled()
+EndFunction
+
 Event OnUpdate()
-    ; The single-update timer is shared: the bard poll re-registers at 5s while any
-    ; bard mod is present, the combat poll at 4s while a session is open, and the
-    ; origin retry below at 2s while origin is unresolved. They run shortest-last so
-    ; the tightest cadence wins whenever those systems are active.
+    ; The single-update timer is shared: the bard poll re-registers at 5s while a
+    ; performance is live and 15s when idle (12.3), the combat poll at 4s while a session
+    ; is open, and the origin retry below at 2s while origin is unresolved. They run
+    ; shortest-last so the tightest cadence wins whenever those systems are active.
     if PDV_BardPollActive
         BardPerformancePollTick()
     endIf
@@ -781,7 +843,8 @@ Function ResolveCombatSession(String reason)
     ; Outnumbered win: multi-kill or higher-level victim, gated on real adversity
     ; (health dipped below half) so steamroll clears stay silent. One award per day.
     if (PDV_CombatSessionKills >= 3 || PDV_CombatMaxLevelDelta >= 5) && PDV_CombatLowHealthFlag
-        Int dayStamp = (Utility.GetCurrentGameTime() as Int) + 1
+        ; fix-plan 4.2: one outnumbered-win award per devotional day.
+        Int dayStamp = GetDevotionalDayStamp()
         if StorageUtil.GetIntValue(None, "PDV.Khajiit.BaanDar.OutnumberedDay") != dayStamp
             StorageUtil.SetIntValue(None, "PDV.Khajiit.BaanDar.OutnumberedDay", dayStamp)
             PDV_EventBusService.RouteKhajiitBaanDarRoadTrick("organic_outnumbered_win")
@@ -980,6 +1043,16 @@ Event OnItemAdded(Form akBaseItem, Int aiItemCount, ObjectReference akItemRefere
     endIf
 
     if GetOriginRaceValue() != 6
+        return
+    endIf
+
+    ; D7 / fix-plan 10.3. The two Khajiit pickpocket routes below were the only
+    ; PDV_EventBusService call sites in this script with no null guard, so on a save
+    ; where the bus is not yet wired every qualifying pickpocket threw a Papyrus error
+    ; instead of returning quietly. Guarded here, after the cheap origin gate and before
+    ; the expensive detection/value work, matching every other route in this file.
+    if !PDV_EventBusService
+        Trace(1, "Khajiit pickpocket route skipped: PDV_EventBusService not assigned.")
         return
     endIf
 
@@ -1192,14 +1265,21 @@ EndFunction
 
 Function RegisterQuestReactionFaucetEvents()
     CacheQuestReactionSpellFaucetForms()
+    ; 12.2 / audit C2. Resolve every faucet form here, once per load, so no runtime event
+    ; ever pays a Game.GetModByName again. Deliberately placed BEFORE the 8.2 hit-event
+    ; registration and the matrix early-out below: the builder does its own JsonExists
+    ; check and simply produces an empty cache when the matrix is missing, which is
+    ; exactly what the old JSON-reading path returned in that case.
+    CacheQuestReactionFaucetForms()
 
-    if !JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE)
-        return
-    endIf
-
-    PO3_Events_Alias.UnregisterForAllMagicEffectApplyEx(Self)
-    RegisterQuestReactionEffectList("faucetEffectForms.Namira.cannibalism")
-    RegisterQuestReactionEffectList("faucetEffectForms.Dibella.charity")
+    ; B8 / fix-plan 8.2. The hit-event registration used to sit BELOW the JsonExists
+    ; early-out, so a missing or corrupt PDV_QuestReactionMatrix.json silently killed
+    ; ALL hit-driven detection -- combat-session opening and below-health sampling,
+    ; which have nothing whatever to do with the reaction matrix. That in turn silently
+    ; disabled every near-death payload downstream of the gate (Orc Code Holds, the
+    ; Bosmer Baan Dar gap, the Argonian Sithis burst), with no error anywhere. Hit
+    ; registration is matrix-independent, so it is now done FIRST and unconditionally;
+    ; only the two matrix-driven magic-effect lists stay behind the early-out.
     PO3_Events_Alias.UnregisterForAllHitEventsEx(Self)
     ; Unfiltered on the block axis (2026-07-16 regression fix): OnHitEx opens the
     ; combat session + samples health on ANY hit taken (the near-death gate for
@@ -1209,6 +1289,16 @@ Function RegisterQuestReactionFaucetEvents()
     ; silently cut off the take-a-hit session-open path, so a non-blocking player
     ; never opened a combat session and no near-death payload could ever fire.
     PO3_Events_Alias.RegisterForHitEventEx(Self, akAggressorFilter = None, akSourceFilter = None, akProjectileFilter = None, aiPowerFilter = -1, aiSneakFilter = -1, aiBashFilter = -1, aiBlockFilter = -1, abMatch = True)
+
+    ; Matrix-dependent registrations only, from here down.
+    if !JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE)
+        Trace(1, "Quest-reaction matrix missing; magic-effect faucets not registered. Hit-driven detection is unaffected.")
+        return
+    endIf
+
+    PO3_Events_Alias.UnregisterForAllMagicEffectApplyEx(Self)
+    RegisterQuestReactionEffectList("faucetEffectForms.Namira.cannibalism")
+    RegisterQuestReactionEffectList("faucetEffectForms.Dibella.charity")
 EndFunction
 
 Function RegisterQuestReactionEffectList(String listKey)
@@ -1244,6 +1334,72 @@ Function CacheQuestReactionSpellFaucetForms()
     PDV_QRSpellVaermina1 = GetQuestReactionRuntimeForm("faucetSpellForms.Vaermina.serve_a_daedra:vaermina", 1)
     PDV_QRSpellSheogorathFire0 = GetQuestReactionRuntimeForm("faucetSpellForms.Sheogorath.serve_a_daedra:sheogorath_fire", 0)
     PDV_QRSpellSheogorathFire1 = GetQuestReactionRuntimeForm("faucetSpellForms.Sheogorath.serve_a_daedra:sheogorath_fire", 1)
+EndFunction
+
+; 12.2 / audit C2. Resolve every list ShouldRouteQuestReactionFaucet can be asked about
+; into the flat cache. These 21 keys are exactly the non-spell, non-questWatch entries of
+; GetQuestReactionFormIdKey; the three spell lists keep their own dedicated cache above
+; (RouteQuestReactionSpellFaucet compares against them directly and never calls
+; ShouldRouteQuestReactionFaucet), and questWatch is a quest-registration list, not a
+; faucet.
+Function CacheQuestReactionFaucetForms()
+    PDV_QuestReactionFaucetForms = Utility.CreateFormArray(QUEST_REACTION_FAUCET_CACHE_MAX)
+    PDV_QuestReactionFaucetListKeys = Utility.CreateStringArray(QUEST_REACTION_FAUCET_CACHE_MAX)
+    PDV_QuestReactionFaucetCacheCount = 0
+    PDV_QuestReactionFaucetCacheReady = true
+
+    if !JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE)
+        Trace(1, "Quest-reaction matrix missing; faucet form cache left empty (no faucet can match).")
+        return
+    endIf
+
+    CacheQuestReactionFaucetList("faucetForms.Azura.fate_threshold")
+    CacheQuestReactionFaucetList("faucetForms.Hermaeus Mora.forbidden_knowledge")
+    CacheQuestReactionFaucetList("faucetForms.Hermaeus Mora.disciplined_study")
+    CacheQuestReactionFaucetList("faucetForms.Namira.cannibalism")
+    CacheQuestReactionFaucetList("faucetForms.Sanguine.revel_indulge")
+    CacheQuestReactionFaucetList("faucetForms.Sanguine.revel_indulge_skooma")
+    CacheQuestReactionFaucetList("faucetForms.Clavicus Vile.serve_a_daedra:clavicus")
+    CacheQuestReactionFaucetList("faucetForms.Vaermina.serve_a_daedra:vaermina")
+    CacheQuestReactionFaucetList("faucetForms.Boethiah.serve_a_daedra:boethiah")
+    CacheQuestReactionFaucetList("faucetForms.Mephala.serve_a_daedra:mephala")
+    CacheQuestReactionFaucetList("faucetForms.Malacath.serve_a_daedra:malacath")
+    CacheQuestReactionFaucetList("faucetForms.Molag Bal.serve_a_daedra:molag_bal")
+    CacheQuestReactionFaucetList("faucetForms.Hircine.serve_a_daedra:hircine")
+    CacheQuestReactionFaucetList("faucetForms.Meridia.serve_a_daedra:meridia")
+    CacheQuestReactionFaucetList("faucetForms.Sheogorath.serve_a_daedra:sheogorath")
+    CacheQuestReactionFaucetList("faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon")
+    CacheQuestReactionFaucetList("faucetForms.Nocturnal.serve_a_daedra:nocturnal")
+    CacheQuestReactionFaucetList("faucetForms.Peryite.serve_a_daedra:peryite")
+    CacheQuestReactionFaucetList("faucetForms.Dibella.aesthetic_devotion")
+    CacheQuestReactionFaucetList("faucetEffectForms.Namira.cannibalism")
+    CacheQuestReactionFaucetList("faucetEffectForms.Dibella.charity")
+
+    Trace(2, "Quest-reaction faucet forms cached: " + PDV_QuestReactionFaucetCacheCount + ".")
+EndFunction
+
+Function CacheQuestReactionFaucetList(String listKey)
+    String[] formIds = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, GetQuestReactionFormIdCsvKey(listKey)), ",")
+    String[] plugins = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, GetQuestReactionPluginCsvKey(listKey)), ",")
+
+    Int sourceIndex = 0
+    Int sourceCount = formIds.Length
+    while sourceIndex < sourceCount
+        if PDV_QuestReactionFaucetCacheCount >= QUEST_REACTION_FAUCET_CACHE_MAX
+            Trace(1, "Faucet form cache hit its " + QUEST_REACTION_FAUCET_CACHE_MAX + "-entry ceiling; '" + listKey + "' is truncated and will not match.")
+            return
+        endIf
+
+        ; Entries whose plugin is absent resolve to None and are simply not cached --
+        ; the same outcome the old per-event path produced, one load earlier.
+        Form resolvedForm = GetQuestReactionRuntimeFormFromCsv(formIds, plugins, sourceIndex)
+        if resolvedForm
+            PDV_QuestReactionFaucetForms[PDV_QuestReactionFaucetCacheCount] = resolvedForm
+            PDV_QuestReactionFaucetListKeys[PDV_QuestReactionFaucetCacheCount] = listKey
+            PDV_QuestReactionFaucetCacheCount += 1
+        endIf
+        sourceIndex += 1
+    endWhile
 EndFunction
 
 Function RegisterQuestReactionMatrix()
@@ -1908,6 +2064,10 @@ Function RouteQuestReactionBookFaucet(Form sourceForm, Bool firstRead)
         return
     endIf
 
+    if !IsCachedQuestReactionFaucetForm(sourceForm)
+        return
+    endIf
+
     ; The once-per-day faucets only credit unread books; forbidden_knowledge keeps
     ; its own once-ever per-form guard in the manager and routes regardless.
     if firstRead && ShouldRouteQuestReactionFaucet("Azura.fate_threshold", "faucetForms.Azura.fate_threshold", sourceForm)
@@ -1923,6 +2083,12 @@ EndFunction
 
 Function RouteQuestReactionObjectFaucet(Form sourceForm)
     if !sourceForm || !PDV_EventBusService
+        return
+    endIf
+
+    ; 12.2. This runs on EVERY equip. One cache pass decides whether any of the fifteen
+    ; checks below can possibly match; for all ordinary gear it does not, and we leave.
+    if !IsCachedQuestReactionFaucetForm(sourceForm)
         return
     endIf
 
@@ -2027,7 +2193,10 @@ Function RouteQuestReactionBlockedHitFaucet()
         return
     endIf
 
-    Actor playerRef = Game.GetPlayer()
+    ; 12.2. This is the blocked-hit path -- for a Requiem shield user it fires constantly.
+    ; GetActorRef() is the alias's own actor (the player) and is what OnHitEx above already
+    ; uses; Game.GetPlayer() was a second, more expensive way to reach the same reference.
+    Actor playerRef = GetActorRef()
     if !playerRef
         return
     endIf
@@ -2038,20 +2207,54 @@ Function RouteQuestReactionBlockedHitFaucet()
     endIf
 EndFunction
 
+; 12.2 / audit C2. Was: a JsonExists probe, two JSON string reads, two StringUtil.Splits
+; and then a Game.GetModByName (linear over the whole plugin list) + Game.GetFormFromFile
+; PER MATRIX ENTRY -- every time, on every equip, 16 times over. Now: a scan of the cache
+; built once per load, with no native call on the path at all. The Form compare is first
+; in the && so the String compare only ever runs on a genuine form hit.
 Bool Function ShouldRouteQuestReactionFaucet(String faucetKey, String listKey, Form sourceForm)
     if !sourceForm
         return false
     endIf
 
-    if !JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE)
+    if !PDV_QuestReactionFaucetCacheReady
+        CacheQuestReactionFaucetForms()
+    endIf
+
+    Int cacheIndex = 0
+    Int cacheCount = PDV_QuestReactionFaucetCacheCount
+    while cacheIndex < cacheCount
+        if PDV_QuestReactionFaucetForms[cacheIndex] == sourceForm && PDV_QuestReactionFaucetListKeys[cacheIndex] == listKey
+            return true
+        endIf
+        cacheIndex += 1
+    endWhile
+
+    return false
+EndFunction
+
+; 12.2. The cheap early-out for the multi-key faucet routers. Almost every form the
+; player ever equips, reads or is hit by is in NO faucet list, and answering that takes
+; one pass over the cache instead of one pass per key.
+Bool Function IsCachedQuestReactionFaucetForm(Form sourceForm)
+    if !sourceForm
         return false
     endIf
 
-    if !HasQuestReactionRuntimeForm(listKey, sourceForm)
-        return false
+    if !PDV_QuestReactionFaucetCacheReady
+        CacheQuestReactionFaucetForms()
     endIf
 
-    return true
+    Int cacheIndex = 0
+    Int cacheCount = PDV_QuestReactionFaucetCacheCount
+    while cacheIndex < cacheCount
+        if PDV_QuestReactionFaucetForms[cacheIndex] == sourceForm
+            return true
+        endIf
+        cacheIndex += 1
+    endWhile
+
+    return false
 EndFunction
 
 Form Function GetQuestReactionRuntimeForm(String listKey, Int entryIndex)
@@ -2081,29 +2284,18 @@ Form Function GetQuestReactionRuntimeFormFromEntry(String formIdString, String p
     return Game.GetFormFromFile(localFormId, pluginName)
 EndFunction
 
-Bool Function HasQuestReactionRuntimeForm(String listKey, Form sourceForm)
-    if !sourceForm
-        return false
-    endIf
-
-    Int sourceIndex = 0
-    String[] formIds = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, GetQuestReactionFormIdCsvKey(listKey)), ",")
-    String[] plugins = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, GetQuestReactionPluginCsvKey(listKey)), ",")
-    Int sourceCount = formIds.Length
-    while sourceIndex < sourceCount
-        Form resolvedForm = GetQuestReactionRuntimeFormFromCsv(formIds, plugins, sourceIndex)
-        if resolvedForm && resolvedForm == sourceForm
-            return true
-        endIf
-        sourceIndex += 1
-    endWhile
-
-    return false
-EndFunction
+; 12.2 / audit C2 -- HasQuestReactionRuntimeForm used to live here. It re-read and
+; re-resolved a faucet list from the matrix JSON on every single call, which is the whole
+; of C2's cost. Its only caller was ShouldRouteQuestReactionFaucet, which now answers from
+; the cache CacheQuestReactionFaucetForms builds once per load, so the function is deleted
+; rather than left as a second, slower way to ask the same question.
 
 Function ReloadQuestReactionMatrixJson()
     ReloadQuestReactionMatrixJsonFile(QUEST_REACTION_MATRIX_FILE)
     CacheQuestReactionSpellFaucetForms()
+    ; 12.2. The faucet cache is derived from this file, so a reload must rebuild it or the
+    ; runtime would keep answering from the pre-reload matrix.
+    CacheQuestReactionFaucetForms()
 EndFunction
 
 Function ReloadQuestReactionMatrixJsonFile(String matrixFile)
@@ -2288,10 +2480,12 @@ Bool Function MarkP2SourceRoute(Form sourceForm, String routeKey, String sourceK
 
     String baseKey = "PDV.P2Source." + routeKey + "." + sourceForm.GetFormID()
     if sourceKind == "po3_weather" || sourceKind == "po3_harvest"
-        ; Store day+1: StorageUtil int keys default to 0, and game day 0 as Int is
-        ; also 0, so a raw day key would silently suppress every harvest/weather
-        ; route on the first in-game day (storageutil-day-key-zero-default class).
-        Int currentDayMark = (Utility.GetCurrentGameTime() as Int) + 1
+        ; Store a zero-reserved day stamp: StorageUtil int keys default to 0, and game
+        ; day 0 as Int is also 0, so a raw day key would silently suppress every
+        ; harvest/weather route on the first in-game day (storageutil-day-key-zero-default
+        ; class -- the same one B13 hit in ConsumeShrinePrayerCredit). fix-plan 4.2 moves
+        ; it from the raw-midnight day onto the 06:00 devotional day with the shared +2.
+        Int currentDayMark = GetDevotionalDayStamp()
         String dayKey = baseKey + ".Day"
         if StorageUtil.GetIntValue(None, dayKey) == currentDayMark
             return false
@@ -2447,12 +2641,22 @@ Function StartBardPerformancePoll()
         return
     endIf
 
+    ; B9 / fix-plan 12.3. PDV_BardLastRouteRealTime is a 12-second anti-double-route gate
+    ; measured in Utility.GetCurrentRealTime(), which counts seconds since the APPLICATION
+    ; started and therefore resets to 0 on every relaunch -- but the stamp itself persists
+    ; in the save. So a player who performed two hours into a session and then restarted
+    ; Skyrim came back with a stamp of ~7200 against a session clock of ~0, and every
+    ; performance was silently discarded until the new session had been running longer
+    ; than the old one. Clearing the stamp on each load makes the gate mean what it says.
+    PDV_BardLastRouteRealTime = -100.0
+
     PDV_BardLastLute = GetBardGlobalValue(PDV_BardSgtLute)
     PDV_BardLastFlute = GetBardGlobalValue(PDV_BardSgtFlute)
     PDV_BardLastDrum = GetBardGlobalValue(PDV_BardSgtDrum)
     PDV_BardLastPlaying = GetBardGlobalValue(PDV_BardIsPlaying) as Int
+    PDV_BardQuietTicks = 0
     SyncBardTavernCounts()
-    RegisterForSingleUpdate(5.0)
+    RegisterForSingleUpdate(BARD_POLL_ACTIVE_INTERVAL)
 EndFunction
 
 Function ResolveBardPerformanceForms()
@@ -2468,6 +2672,30 @@ Function ResolveBardPerformanceForms()
     PDV_BardPollActive = PDV_BardIsPlaying || PDV_BardSgtLute || PDV_BardSgtFlute || PDV_BardSgtDrum
 EndFunction
 
+; 12.3 / audit C3 -- the eternal 5-second bard poll.
+;
+; It used to run at 5s for the whole playthrough the moment ANY BecomeABard or Skyrim's
+; Got Talent form resolved, whether or not the player ever picked up an instrument.
+;
+; What it is NOT: a hard "start on instrument equip, stop on performance end" gate, which
+; is what the fix plan sketched. Both mods drive performances through their own dialogue
+; and quest machinery, and the only signals this script can see are four GlobalVariables.
+; A hard gate would have to guess which forms count as "an instrument" across two mods; if
+; that guess is wrong the failure is SILENT -- bard piety simply stops being awarded, with
+; nothing in the log. That is the exact class of defect this whole project exists to
+; remove, so trading a real ~1-native-call-per-second cost for it is a bad bargain.
+;
+; What it IS: a two-state cadence. While a performance is live -- IsPlaying set, expertise
+; rising, or the performance just ended -- the poll runs at BARD_POLL_ACTIVE_INTERVAL
+; exactly as before. After BARD_POLL_QUIET_TICKS_TO_IDLE ticks with nothing happening it
+; drops to BARD_POLL_IDLE_INTERVAL, cutting the idle cost to a third.
+;
+; Why nothing can be missed at the idle cadence: the expertise and tavern-count reads are
+; DELTAS against stored values, so a coarse sample loses no magnitude. The one edge-driven
+; signal is performanceEnded (IsPlaying 1 -> 0), and catching it only requires that one
+; idle tick land while IsPlaying is set. Idle period is 15 s against a sung performance
+; that runs a minute or more, so the margin is several-fold, and the first tick that sees
+; the performance immediately restores the 5 s cadence for the end detection itself.
 Function BardPerformancePollTick()
     Float currentLute = GetBardGlobalValue(PDV_BardSgtLute)
     Float currentFlute = GetBardGlobalValue(PDV_BardSgtFlute)
@@ -2520,7 +2748,19 @@ Function BardPerformancePollTick()
         Trace(3, "Bard performance blocked by per-tavern daily cap.")
     endIf
 
-    RegisterForSingleUpdate(5.0)
+    ; 12.3. Anything at all happening this tick holds the fast cadence and resets the
+    ; quiet run; a stretch of genuinely empty ticks drops to the idle cadence.
+    if currentPlaying > 0 || expertiseDelta > 0.0 || performanceEnded || tavernCountChanged
+        PDV_BardQuietTicks = 0
+    else
+        PDV_BardQuietTicks += 1
+    endIf
+
+    if PDV_BardQuietTicks >= BARD_POLL_QUIET_TICKS_TO_IDLE
+        RegisterForSingleUpdate(BARD_POLL_IDLE_INTERVAL)
+    else
+        RegisterForSingleUpdate(BARD_POLL_ACTIVE_INTERVAL)
+    endIf
 EndFunction
 
 Float Function GetBardGlobalValue(GlobalVariable sourceGlobal)
@@ -2582,14 +2822,26 @@ Bool Function MarkBardTavernDay(Form tavernContext)
         return true
     endIf
 
-    Int dayStamp = 0
-    if PDV_BardGameDaysPassed
-        dayStamp = PDV_BardGameDaysPassed.GetValue() as Int
-    endIf
+    ; fix-plan 4.2: GameDaysPassed rolls at raw midnight, but the manager's own comment
+    ; on this gate calls it "one award per tavern per devotional day". Use the devotional
+    ; day so it matches the daily repeat multiplier it is paired with.
+    Int dayStamp = GetDevotionalDayStamp()
     String dayKey = "PDV.BardTavern.Day." + tavernContext.GetFormID()
     if StorageUtil.GetIntValue(None, dayKey, -1) == dayStamp
         return false
     endIf
     StorageUtil.SetIntValue(None, dayKey, dayStamp)
     return true
+EndFunction
+
+; fix-plan 4.2. The 06:00 devotional day in the manager's zero-reserved +2 encoding,
+; kept local because this alias script holds no manager handle at every call site.
+; The dawn offset matches PDV__ManagerQuest.GetDevotionalDay and PDV_DeityBase.
+Int Function GetDevotionalDayStamp()
+    Float shiftedTime = Utility.GetCurrentGameTime() - 0.25
+    Int truncatedDay = shiftedTime as Int
+    if shiftedTime < 0.0 && shiftedTime != (truncatedDay as Float)
+        truncatedDay -= 1
+    endIf
+    return truncatedDay + 2
 EndFunction

@@ -1260,6 +1260,21 @@ h1 {
   color: var(--muted);
 }
 
+/* The stack is a right-anchored CAP, not a fixed width. It used to set `width`,
+   which forced every toast to fill it no matter how little text it carried -- a
+   short line like "Kyne notices." left the rest of the box empty, and the taller
+   the resolution breakpoint the worse it read (at 4K the cap was 680px, so a
+   three-word toast showed roughly an inch of dead space on the right).
+
+   `width: max-content` sizes the stack to its WIDEST current toast, capped by
+   max-width. Toasts then stretch to that shared width (grid's default
+   justify-items: stretch), so their left and right edges stay flush with one
+   another exactly as before -- the stack simply no longer reserves room that
+   nothing is using. Font sizes are unchanged.
+
+   Deliberately NOT per-toast `width: max-content`: that hugs each message
+   individually and gives a ragged left edge down the stack. Alignment is the
+   requirement; removing dead space is the fix. */
 .toast-stack {
   position: fixed;
   right: 28px;
@@ -1267,7 +1282,8 @@ h1 {
   z-index: 50;
   display: grid;
   gap: 10px;
-  width: min(380px, calc(100vw - 48px));
+  width: max-content;
+  max-width: min(380px, calc(100vw - 48px));
   pointer-events: none;
 }
 
@@ -1286,7 +1302,7 @@ h1 {
   opacity: 0;
   transform: translateY(10px);
   animation: toast-in 220ms ease forwards, toast-out 360ms ease forwards;
-  animation-delay: 0ms, var(--toast-life, 5600ms);
+  animation-delay: 0ms, var(--toast-life, 8000ms);
 }
 
 .toast__mark {
@@ -1324,6 +1340,60 @@ h1 {
 
 .toast.is-warning {
   border-color: rgba(201, 121, 104, 0.6);
+}
+
+/* Larger, longer-readable toasts on 1440p/4K. A PrismaUI/CEF overlay renders at the
+   game's native resolution, so min-width targets high-res displays and leaves 1080p
+   (and below) untouched. */
+@media (min-width: 2560px) {
+  .toast-stack {
+    right: 40px;
+    bottom: 44px;
+    gap: 14px;
+    max-width: min(520px, calc(100vw - 72px));
+  }
+  .toast {
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px 20px;
+    border-radius: 10px;
+  }
+  .toast__mark {
+    width: 46px;
+    height: 46px;
+  }
+  .toast__title {
+    font-size: 19px;
+  }
+  .toast__text {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 3200px) {
+  .toast-stack {
+    right: 56px;
+    bottom: 64px;
+    gap: 18px;
+    max-width: min(680px, calc(100vw - 112px));
+  }
+  .toast {
+    grid-template-columns: 60px minmax(0, 1fr);
+    gap: 20px;
+    padding: 22px 26px;
+    border-radius: 12px;
+  }
+  .toast__mark {
+    width: 60px;
+    height: 60px;
+  }
+  .toast__title {
+    font-size: 25px;
+    margin: 0 0 4px;
+  }
+  .toast__text {
+    font-size: 23px;
+  }
 }
 
 .demo-controls {
@@ -1420,7 +1490,7 @@ h1 {
   .toast-stack {
     right: 14px;
     bottom: 14px;
-    width: calc(100vw - 28px);
+    max-width: calc(100vw - 28px);
   }
 
   .startup-modal {

@@ -138,17 +138,15 @@ Function EmitSound(String tone)
 EndFunction
 
 Function EmitMusicState(String stateKey, Bool enable)
+    ; Retired: the curse "music bed" (PDV_MUS_CurseBed) used vanilla dungeon tracks and, via
+    ; MusicType.Add(), overrode ALL location music (including safe interiors) for the entire
+    ; curse. Diegetic curse feedback is now the one-shot sting in EmitSound. This only ever
+    ; tears a bed DOWN (healing older saves that still carry it); it never adds one. The enable
+    ; arg is kept for signature stability and ignored.
     if stateKey == "curse_bed" && PDV_MUS_CurseBed
-        if enable
-            if StorageUtil.GetIntValue(None, "PDV.Diegetic.Music." + stateKey) == 0
-                PDV_MUS_CurseBed.Add()
-                StorageUtil.SetIntValue(None, "PDV.Diegetic.Music." + stateKey, 1)
-            endIf
-        else
-            if StorageUtil.GetIntValue(None, "PDV.Diegetic.Music." + stateKey) == 1
-                PDV_MUS_CurseBed.Remove()
-                StorageUtil.SetIntValue(None, "PDV.Diegetic.Music." + stateKey, 0)
-            endIf
+        if StorageUtil.GetIntValue(None, "PDV.Diegetic.Music." + stateKey) == 1
+            PDV_MUS_CurseBed.Remove()
+            StorageUtil.SetIntValue(None, "PDV.Diegetic.Music." + stateKey, 0)
         endIf
     endIf
 EndFunction
@@ -193,17 +191,17 @@ Function EmitRoutineFavor()
 EndFunction
 
 Function EmitMusicForClass(String eventClass, String direction)
-    if eventClass == "curse" && direction == "onset"
-        EmitMusicState("curse_bed", True)
-    elseIf eventClass == "curse" && direction == "cure"
+    ; Curse music bed retired (see EmitMusicState). Ensure no bed lingers on a curse transition;
+    ; the audible curse cue is the one-shot sting played by EmitSound.
+    if eventClass == "curse"
         EmitMusicState("curse_bed", False)
     endIf
 EndFunction
 
 Function ReassertMusicStates()
-    if StorageUtil.GetIntValue(None, "PDV.Diegetic.Music.curse_bed") == 1
-        EmitMusicState("curse_bed", True)
-    endIf
+    ; Load-time auto-heal: tear down a retired curse music bed left on an older save so the
+    ; dungeon-music-in-safe-interiors bug clears itself without any player action.
+    EmitMusicState("curse_bed", False)
 EndFunction
 
 Function ReassertBodyMarks()

@@ -17,8 +17,6 @@ Scriptname PDV_Deity_Dibella extends PDV_DeityBase
 
 Int Property SIGNAL_PATRON_CIVIC_FAVOR = 1502 AutoReadOnly
 
-Float Property DELTA_CIVIC_SERVICE = 2.0 Auto
-Float Property DELTA_GRACE = 3.0 Auto
 Float Property DELTA_PATRON_CIVIC_FAVOR = 3.0 Auto
 
 Event OnInit()

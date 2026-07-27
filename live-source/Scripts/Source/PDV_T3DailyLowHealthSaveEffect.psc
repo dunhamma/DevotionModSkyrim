@@ -61,7 +61,13 @@ Function TryApplyDailySave(String triggerReason)
 
     Trace(1, "low-health sample key=" + StorageKey + " trigger=" + triggerReason + " percent=" + healthPercent + " threshold=" + TriggerHealthPercent)
 
-    Int currentDay = (Utility.GetCurrentGameTime() as Int) + 1
+    ; B13 / fix-plan 4.2: this used the raw-midnight day while every system that reads a
+    ; "daily" charge runs on the 06:00 devotional day, so the capstone could recharge
+    ; mid-sleep, or be spent twice inside one devotional day. GetDevotionalDayStamp
+    ; below mirrors PDV_DeityBase.GetDevotionDayIndex's dawn offset, plus the same
+    ; zero-reserved +2 the manager uses (the old +1 served the same purpose against a
+    ; StorageUtil default of 0, so an existing stamp is at worst one day stale, once).
+    Int currentDay = GetDevotionalDayStamp()
     Int lastDay = StorageUtil.GetIntValue(watchedActor, StorageKey)
     if lastDay == currentDay
         Trace(1, "daily block key=" + StorageKey + " day=" + currentDay)
@@ -70,6 +76,14 @@ Function TryApplyDailySave(String triggerReason)
 
     if HealSpell != None
         HealSpell.Cast(watchedActor)
+        ; B13 / fix-plan 4.7: OnDying fires when the death is already committed, so the
+        ; heal can land and the actor still die -- and the charge was spent anyway,
+        ; leaving the player with no save for the rest of the day for a rescue that
+        ; never rescued. Confirm survival before spending it.
+        if !ConfirmSaveLanded()
+            Trace(1, "T3 daily low-health save did NOT hold key=" + StorageKey + " trigger=" + triggerReason + "; charge left unspent.")
+            return
+        endIf
         StorageUtil.SetIntValue(watchedActor, StorageKey, currentDay)
         ShowCapstoneNotice(triggerReason)
         Trace(1, "T3 daily low-health save fired key=" + StorageKey + " trigger=" + triggerReason + " day=" + currentDay + " restore=healSpell")
@@ -93,9 +107,40 @@ Function TryApplyDailySave(String triggerReason)
     endIf
 
     watchedActor.RestoreActorValue("Health", restoreAmount)
+    ; fix-plan 4.7, as above: a post-lethal restore must not spend the day's charge.
+    if !ConfirmSaveLanded()
+        Trace(1, "T3 daily low-health save did NOT hold key=" + StorageKey + " trigger=" + triggerReason + "; charge left unspent.")
+        return
+    endIf
     StorageUtil.SetIntValue(watchedActor, StorageKey, currentDay)
     ShowCapstoneNotice(triggerReason)
     Trace(1, "T3 daily low-health save fired key=" + StorageKey + " trigger=" + triggerReason + " day=" + currentDay + " current=" + currentHealth + " percent=" + healthPercent + " restore=" + restoreAmount)
+EndFunction
+
+; fix-plan 4.7. Let the engine settle the heal (and, on the OnDying path, the death)
+; before deciding whether the rescue actually rescued. WaitMenuMode, not Wait: a death
+; can hand control to the load menu, where a plain Wait never returns.
+Bool Function ConfirmSaveLanded()
+    Utility.WaitMenuMode(0.25)
+    if !watchedActor
+        return false
+    endIf
+    if watchedActor.IsDead()
+        return false
+    endIf
+    return watchedActor.GetActorValue("Health") > 0.0
+EndFunction
+
+; The 06:00 devotional day in the manager's zero-reserved +2 encoding. Kept local
+; because an ActiveMagicEffect has no handle on the manager quest; the dawn offset
+; matches PDV_DeityBase.DAWN_DAY_OFFSET and PDV__ManagerQuest.GetDevotionalDay.
+Int Function GetDevotionalDayStamp()
+    Float shiftedTime = Utility.GetCurrentGameTime() - 0.25
+    Int truncatedDay = shiftedTime as Int
+    if shiftedTime < 0.0 && shiftedTime != (truncatedDay as Float)
+        truncatedDay -= 1
+    endIf
+    return truncatedDay + 2
 EndFunction
 
 Function ShowCapstoneNotice(String triggerReason)

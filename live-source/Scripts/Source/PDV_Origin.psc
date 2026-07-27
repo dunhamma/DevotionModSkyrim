@@ -68,6 +68,13 @@ String Property RACEMAP_FILE = "PlayerDevotion/PDV_RaceMap" AutoReadOnly
 String Property TEMPORARY_RACEMAP_FILE = "PlayerDevotion/PDV_TemporaryRaceMap" AutoReadOnly
 String Property RACECOMPAT_PLUGIN = "RaceCompatibility.esm" AutoReadOnly
 
+; An unrecognized race is far more often a transformation mod mid-transform than a
+; genuinely unsupported custom race. The temporary-race map only covers forms we know
+; about by name, so it always lags new mods. Defer a few polls before locking in the
+; Imperial fallback and let the 2s retry catch the player once they revert.
+String Property UNKNOWN_RACE_DEFER_KEY = "PDV.Origin.UnknownRaceDeferCount" AutoReadOnly
+Int Property UNKNOWN_RACE_DEFER_LIMIT = 5 AutoReadOnly
+
 Function InitializeOrigin()
     if !PDV_GLO_OriginRace
         Trace(1, "InitializeOrigin skipped: PDV_GLO_OriginRace not assigned.")
@@ -75,7 +82,8 @@ Function InitializeOrigin()
     endIf
 
     Actor playerActor = GetPlayerActor()
-    if PDV_GLO_OriginRace.GetValueInt() >= 0
+    Bool isRecapture = PDV_GLO_OriginRace.GetValueInt() >= 0
+    if isRecapture
         if playerActor && ShouldRetryOriginCapture()
             Trace(1, "InitializeOrigin retrying: prior result was a custom-race fallback or a manual reset was requested.")
         else
@@ -89,7 +97,7 @@ Function InitializeOrigin()
 
     Int raceIndex = DetectPlayerOriginRaceIndex(playerActor)
     if raceIndex < 0
-        Trace(1, "InitializeOrigin deferred: player race is currently a temporary transformation race.")
+        Trace(1, "InitializeOrigin deferred: player race is not capturable yet (temporary transformation, or an unrecognized race still within its retry window).")
         return
     endIf
 
@@ -102,7 +110,7 @@ Function InitializeOrigin()
     ClearProvisionalNordCapture()
     Trace(1, "Origin race set to " + raceIndex)
 
-    SeedProofSliceDeities(raceIndex)
+    SeedProofSliceDeities(raceIndex, isRecapture)
     EnsureOriginInventoryTokens()
 EndFunction
 
@@ -175,6 +183,7 @@ Int Function DetectPlayerOriginRaceIndex(Actor playerActor)
     Race currentRace = playerActor.GetRace()
     Int raceIndex = DetectRaceIndex(currentRace)
     if raceIndex >= 0
+        ClearUnknownRaceDeferral()
         return raceIndex
     endIf
 
@@ -183,6 +192,7 @@ Int Function DetectPlayerOriginRaceIndex(Actor playerActor)
         Race baseRace = baseRecord.GetRace()
         raceIndex = DetectRaceIndex(baseRace)
         if raceIndex >= 0
+            ClearUnknownRaceDeferral()
             return raceIndex
         endIf
     endIf
@@ -193,13 +203,42 @@ Int Function DetectPlayerOriginRaceIndex(Actor playerActor)
 
     Int resolvedCustomIndex = ResolveCustomRaceIndex(currentRace)
     if resolvedCustomIndex >= 0
+        ClearUnknownRaceDeferral()
         RecordCustomRaceResolved(resolvedCustomIndex)
         return resolvedCustomIndex
+    endIf
+
+    if ShouldDeferUnknownRaceCapture()
+        return RACE_UNKNOWN
     endIf
 
     RecordCustomRaceFallback()
     Trace(1, "DetectPlayerOriginRaceIndex fallback: unsupported race, defaulting to Imperial.")
     return RACE_IMPERIAL
+EndFunction
+
+; Returns true while the unrecognized race still has retries left. Locking origin to
+; Imperial is effectively unrecoverable for the player - it also writes a notification
+; and a pinned Book of Days entry - so an unknown race defers first and only falls back
+; once it has stayed unrecognized across UNKNOWN_RACE_DEFER_LIMIT polls.
+Bool Function ShouldDeferUnknownRaceCapture()
+    Int deferCount = StorageUtil.GetIntValue(None, UNKNOWN_RACE_DEFER_KEY, 0)
+    if deferCount >= UNKNOWN_RACE_DEFER_LIMIT
+        return false
+    endIf
+
+    deferCount += 1
+    StorageUtil.SetIntValue(None, UNKNOWN_RACE_DEFER_KEY, deferCount)
+    Trace(1, "DetectPlayerOriginRaceIndex deferred: unrecognized race, retry " + deferCount + " of " + UNKNOWN_RACE_DEFER_LIMIT + ".")
+    return true
+EndFunction
+
+Function ClearUnknownRaceDeferral()
+    if StorageUtil.GetIntValue(None, UNKNOWN_RACE_DEFER_KEY, 0) == 0
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, UNKNOWN_RACE_DEFER_KEY, 0)
 EndFunction
 
 Int Function DetectRaceIndex(Race playerRace)
@@ -284,14 +323,14 @@ Bool Function MatchesRaceForm(Race playerRace, Int localFormId, String pluginNam
     return false
 EndFunction
 
-Function SeedProofSliceDeities(Int raceIndex)
+Function SeedProofSliceDeities(Int raceIndex, Bool isRecapture = false)
     if StorageUtil.GetIntValue(None, "PDV.CustomRaceFallback") != 1
         StorageUtil.SetIntValue(None, "PDV.CustomRaceFallback", 0)
     endIf
 
-    SeedDeity(PDV_Kyne, GetKyneSeedPiety(raceIndex))
-    SeedDeity(PDV_Talos, GetTalosSeedPiety(raceIndex))
-    SeedDeity(PDV_AuriEl, GetAuriElSeedPiety(raceIndex))
+    SeedDeity(PDV_Kyne, GetKyneSeedPiety(raceIndex), isRecapture)
+    SeedDeity(PDV_Talos, GetTalosSeedPiety(raceIndex), isRecapture)
+    SeedDeity(PDV_AuriEl, GetAuriElSeedPiety(raceIndex), isRecapture)
 EndFunction
 
 Function RecordCustomRaceFallback()
@@ -403,12 +442,27 @@ Bool Function HasProxyKeyword(Race customRace, Int localFormId)
     return false
 EndFunction
 
-Function SeedDeity(PDV_DeityBase deity, Float startPiety)
+; isRecapture guards the destructive case. A first capture seeds exactly as before -
+; hard set, including the tier bookkeeping. A RE-capture (custom-race fallback finally
+; resolving, or a manual MCM re-detect) must not wipe piety the player has since earned,
+; so the seed becomes a floor: it can raise piety to the origin starting value but never
+; lower it, and it leaves the tier bookkeeping alone when it does not raise.
+Function SeedDeity(PDV_DeityBase deity, Float startPiety, Bool isRecapture = false)
     if !deity
         return
     endIf
 
     Form deityForm = deity as Form
+
+    if isRecapture
+        Float currentPiety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety", 0.0)
+        if currentPiety >= startPiety
+            Trace(1, deity.DeityName + " re-seed skipped: holding " + currentPiety + " piety (seed floor " + startPiety + ").")
+            return
+        endIf
+        Trace(1, deity.DeityName + " re-seed raising " + currentPiety + " to floor " + startPiety + ".")
+    endIf
+
     StorageUtil.SetFloatValue(deityForm, "PDV.Piety", startPiety)
     StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
     StorageUtil.SetFloatValue(deityForm, "PDV.Tier", 0.0)

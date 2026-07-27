@@ -35,12 +35,16 @@ Scriptname PDV_Deity_Shor extends PDV_DeityBase
 Int Property SIGNAL_HONORED_DEAD = 2901 AutoReadOnly
 Int Property EVT_KILLED_HOSTILE_HUMANOID_IN_COMBAT = 2 AutoReadOnly
 
-Float Property DELTA_HONORABLE_BATTLE = 2.0 Auto
 Float Property DELTA_HONORED_DEAD = 1.5 Auto
-Float Property DELTA_SOVNGARDE_VALOR = 4.0 Auto
-Float Property DELTA_ANCESTOR_SPINE = 1.0 Auto
 
 Float Property DELTA_HONORABLE_KILL = 0.5 Auto
+
+; Contract-declared tuning knob for the ancestral-spine lane (pdv_verify asserts
+; DELTA_ANCESTOR_SPINE = 1.0 on this deity). Currently unread here -- the spine
+; scoring for this lane is specced, not yet wired -- so do NOT "clean it up": the
+; 1.0.4 Altmer Spine wire is what will read it, and deleting it now would throw
+; away the intended value. Azura / Malacath / Tu'whacca already return theirs.
+Float Property DELTA_ANCESTOR_SPINE = 1.0 Auto
 Int Property HONORABLE_KILL_DAILY_CAP = 4 Auto
 Float Property HONORABLE_KILL_COOLDOWN_DAYS = 0.0104 Auto
 

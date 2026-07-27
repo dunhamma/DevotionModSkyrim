@@ -154,7 +154,7 @@ const PHASE20_RACE_IMPLEMENTATION_MANIFESTS = [
 ];
 const DEITY_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes.csv");
 const PRINCE_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes_Princes_V2.csv");
-const EXPECTED_LIKES_DISLIKES_VERSION = 16;
+const EXPECTED_LIKES_DISLIKES_VERSION = 17;
 const EXPECTED_PRINCE_LD_VERSION = 4;
 const PHASE20_NO_IN_GAME_PROOF_GATES = path.join(
   PROJECT_ROOT,
@@ -8232,40 +8232,94 @@ class Verifier {
     }
     const contractsByQuest = new Map((contracts.princes || []).map((prince) => [prince.questEditorId, prince]));
 
+    const expectedPriceFlags = contracts.priceSerialization?.magicEffectFlags || [];
+    const priceSerializationIssues = [];
+    let priceCount = 0;
     const resourcePools = new Set(["Health", "Magicka", "Stamina"]);
     for (const prince of contracts.princes || []) {
       for (const price of prince.prices || []) {
+        priceCount += 1;
         const effectContract = (price.effects || [])[0];
-        if (!effectContract || !resourcePools.has(effectContract.actorValue)) {
+        if (!effectContract) {
+          priceSerializationIssues.push(`${price.spellEditorId || prince.displayName}: missing primary price-effect contract`);
           continue;
         }
 
         const detail = this.recordDetails.get(price.magicEffectEditorId);
+        const spellDetail = this.recordDetails.get(price.spellEditorId);
         if (!detail) {
-          this.fail("Daedric resource-pool price", `${price.magicEffectEditorId} is missing from ESP detail readback.`, PDV_ESP);
+          priceSerializationIssues.push(`${price.magicEffectEditorId}: missing MGEF readback`);
+          continue;
+        }
+        if (!spellDetail) {
+          priceSerializationIssues.push(`${price.spellEditorId}: missing SPEL readback`);
           continue;
         }
 
         const archetype = detail.fields?.Archetype || {};
         const flags = String(detail.fields?.Flags || "").split(",").map((flag) => flag.trim());
+        const sortedFlags = [...flags].filter(Boolean).sort();
+        const sortedExpectedFlags = [...expectedPriceFlags].sort();
         if (
-          archetype.Type === "PeakValueModifier" &&
-          archetype.ActorValue === effectContract.actorValue &&
-          flags.includes("Recover")
+          sortedExpectedFlags.length === 0 ||
+          sortedFlags.length !== sortedExpectedFlags.length ||
+          sortedFlags.some((flag, index) => flag !== sortedExpectedFlags[index])
         ) {
-          this.pass(
-            "Daedric resource-pool price",
-            `${price.magicEffectEditorId} reversibly modifies maximum ${effectContract.actorValue}.`,
-            PDV_ESP,
-          );
-        } else {
-          this.fail(
-            "Daedric resource-pool price",
-            `${price.magicEffectEditorId} must use PeakValueModifier/${effectContract.actorValue} with Recover; found ${archetype.Type || "missing"}/${archetype.ActorValue || "missing"} flags=${flags.join(",") || "none"}.`,
-            PDV_ESP,
+          priceSerializationIssues.push(
+            `${price.magicEffectEditorId}: flags=${flags.join(",") || "none"} expected=${expectedPriceFlags.join(",") || "missing contract"}`,
           );
         }
+
+        const linkedEffect = (spellDetail.fields?.Effects || []).find(
+          (effect) => formidToEdid(effect.BaseEffect, this.recordsByEdid) === price.magicEffectEditorId,
+        );
+        const storedMagnitude = Number(linkedEffect?.Data?.Magnitude);
+        const expectedStoredMagnitude = Math.abs(Number(effectContract.magnitude));
+        if (!linkedEffect) {
+          priceSerializationIssues.push(`${price.spellEditorId}: does not link ${price.magicEffectEditorId}`);
+        } else if (
+          !Number.isFinite(storedMagnitude) ||
+          !Number.isFinite(expectedStoredMagnitude) ||
+          Math.abs(storedMagnitude - expectedStoredMagnitude) >= 0.001
+        ) {
+          priceSerializationIssues.push(
+            `${price.spellEditorId}: stored magnitude=${linkedEffect?.Data?.Magnitude ?? "missing"} expected=${expectedStoredMagnitude}`,
+          );
+        }
+
+        if (resourcePools.has(effectContract.actorValue)) {
+          if (
+            archetype.Type === "PeakValueModifier" &&
+            archetype.ActorValue === effectContract.actorValue &&
+            flags.includes("Recover")
+          ) {
+            this.pass(
+              "Daedric resource-pool price",
+              `${price.magicEffectEditorId} reversibly modifies maximum ${effectContract.actorValue}.`,
+              PDV_ESP,
+            );
+          } else {
+            this.fail(
+              "Daedric resource-pool price",
+              `${price.magicEffectEditorId} must use PeakValueModifier/${effectContract.actorValue} with Recover; found ${archetype.Type || "missing"}/${archetype.ActorValue || "missing"} flags=${flags.join(",") || "none"}.`,
+              PDV_ESP,
+            );
+          }
+        }
       }
+    }
+    if (priceCount === 48 && priceSerializationIssues.length === 0) {
+      this.pass(
+        "Daedric price serialization",
+        "All 48 price tiers use the contracted detrimental flags and positive absolute stored spell magnitudes.",
+        PDV_ESP,
+      );
+    } else {
+      this.fail(
+        "Daedric price serialization",
+        `Checked ${priceCount}/48 price tiers; ${priceSerializationIssues.length} issue(s): ${priceSerializationIssues.join("; ") || "price count mismatch"}.`,
+        PDV_ESP,
+      );
     }
 
     const mora = (contracts.princes || []).find((prince) => prince.displayName === "Hermaeus Mora");

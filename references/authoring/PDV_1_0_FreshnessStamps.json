@@ -1,6 +1,6 @@
 {
   "schema": "pdv.1-0.freshness-stamps.v1",
-  "updated": "2026-07-15T11:01:11.368Z",
+  "updated": "2026-07-16T11:42:53.334Z",
   "stamps": {
     "C-RACE-RUBRIC": {
       "observedAt": "2026-07-07T09:22:07.856Z",
@@ -11,7 +11,7 @@
       }
     },
     "C-PRINCE-GATE": {
-      "observedAt": "2026-07-15T11:01:11.318Z",
+      "observedAt": "2026-07-16T11:37:45.727Z",
       "result": "PASS",
       "sourceHashes": {
         "references/authoring/PDV_DaedricPrinceRecordContracts.json": "8da722675e3a257d06d90c3d34cf32f961838055b57363b6824aad5d7cf1d62a"
@@ -26,36 +26,36 @@
       }
     },
     "C-AUDIT-CONTENT": {
-      "observedAt": "2026-07-15T10:51:47.622Z",
+      "observedAt": "2026-07-16T11:39:25.958Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "cc7446f3a27a4edd5405f0548b9a260a3ddcafac2e9f428263f0b68a1ab178d6"
+        "@managerLive": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53"
       }
     },
     "C-FELT-TRACE": {
-      "observedAt": "2026-07-15T10:55:23.431Z",
+      "observedAt": "2026-07-16T11:42:51.715Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "cc7446f3a27a4edd5405f0548b9a260a3ddcafac2e9f428263f0b68a1ab178d6",
-        "@managerDeployed": "cc7446f3a27a4edd5405f0548b9a260a3ddcafac2e9f428263f0b68a1ab178d6",
-        "references/authoring/PDV_FeltEffectRegistry.json": "b5a584a568a8130d2cb4e5a3fd43d49b357a47546fcd3574058f2ca0b36a289e"
+        "@managerLive": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53",
+        "@managerDeployed": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53",
+        "references/authoring/PDV_FeltEffectRegistry.json": "d83eed5f0a0b2e88a8c028ddd269a98164d7a72c5f7ece7dea6c601fb936cd88"
       }
     },
     "C-PACING-SIM": {
-      "observedAt": "2026-07-15T10:55:22.618Z",
+      "observedAt": "2026-07-16T11:42:50.935Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "cc7446f3a27a4edd5405f0548b9a260a3ddcafac2e9f428263f0b68a1ab178d6",
-        "@managerDeployed": "cc7446f3a27a4edd5405f0548b9a260a3ddcafac2e9f428263f0b68a1ab178d6"
+        "@managerLive": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53",
+        "@managerDeployed": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53"
       }
     },
     "C-AUDIT-VERIFY": {
-      "observedAt": "2026-07-15T10:51:47.547Z",
+      "observedAt": "2026-07-16T11:39:25.883Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "cc7446f3a27a4edd5405f0548b9a260a3ddcafac2e9f428263f0b68a1ab178d6",
-        "@managerDeployed": "cc7446f3a27a4edd5405f0548b9a260a3ddcafac2e9f428263f0b68a1ab178d6",
-        "@espDeployed": "1f6b11f223fa836a139b561911e3f3f2a50321b4d3ca3d049df2b7a13b119fcc"
+        "@managerLive": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53",
+        "@managerDeployed": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53",
+        "@espDeployed": "008f03344f8325ecb120baae6da340f4b19ad509a4616845c1e1fa961e56d49d"
       }
     },
     "C-EXPMODE-BUILD": {
@@ -68,54 +68,64 @@
       }
     },
     "C-AUDIT-INTEGRITY": {
-      "observedAt": "2026-07-13T16:25:36.167Z",
+      "observedAt": "2026-07-16T11:41:10.665Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "fe70975d7efdeda9be7138d047bac0d61a2f43c1dd933df58a9557ae95052fec",
-        "@managerDeployed": "fe70975d7efdeda9be7138d047bac0d61a2f43c1dd933df58a9557ae95052fec"
+        "@managerLive": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53",
+        "@managerDeployed": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53"
       }
     },
     "C-DISLIKE-DEBUFF-BUILD": {
-      "observedAt": "2026-07-15T10:55:24.940Z",
+      "observedAt": "2026-07-16T11:42:53.146Z",
       "result": "PASS",
       "sourceHashes": {
-        "@managerLive": "cc7446f3a27a4edd5405f0548b9a260a3ddcafac2e9f428263f0b68a1ab178d6",
-        "@managerDeployed": "cc7446f3a27a4edd5405f0548b9a260a3ddcafac2e9f428263f0b68a1ab178d6",
-        "@espDeployed": "1f6b11f223fa836a139b561911e3f3f2a50321b4d3ca3d049df2b7a13b119fcc"
+        "@managerLive": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53",
+        "@managerDeployed": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53",
+        "@espDeployed": "008f03344f8325ecb120baae6da340f4b19ad509a4616845c1e1fa961e56d49d"
       }
     },
     "C-EXPMODE-SMOKE": {
-      "observedAt": "2026-07-15T11:01:11.330Z",
+      "observedAt": "2026-07-16T11:42:50.192Z",
       "result": "PASS",
       "sourceHashes": {}
     },
     "C-AUDIT-SUBSTRATE-PACING": {
-      "observedAt": "2026-07-15T10:50:05.497Z",
+      "observedAt": "2026-07-16T11:37:45.861Z",
       "result": "PASS",
       "sourceHashes": {
-        "references/authoring/PDV_SubstratePacingContracts.json": "88d0a23f171a955ca5d411d55c5f3f79f23d49e8f34bcc2db56844012bd3eff5",
-        "@managerLive": "cc7446f3a27a4edd5405f0548b9a260a3ddcafac2e9f428263f0b68a1ab178d6",
-        "@managerDeployed": "cc7446f3a27a4edd5405f0548b9a260a3ddcafac2e9f428263f0b68a1ab178d6"
+        "references/authoring/PDV_SubstratePacingContracts.json": "b0eecb9196ae6d2b785c9df80361e4a8375c4be7975a68b70bb9565c725a014a",
+        "@managerLive": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53",
+        "@managerDeployed": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53"
       }
     },
     "C-AUDIT-BROAD-PANTHEON": {
-      "observedAt": "2026-07-15T10:50:05.563Z",
+      "observedAt": "2026-07-16T11:37:45.927Z",
       "result": "PASS",
       "sourceHashes": {
         "references/authoring/PDV_BroadPantheonContracts.json": "11fda6e01ba3ed513db31312271c4290071f21c3a435a68f68af9c6ad14384e9",
-        "@managerLive": "cc7446f3a27a4edd5405f0548b9a260a3ddcafac2e9f428263f0b68a1ab178d6",
-        "@managerDeployed": "cc7446f3a27a4edd5405f0548b9a260a3ddcafac2e9f428263f0b68a1ab178d6"
+        "@managerLive": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53",
+        "@managerDeployed": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53"
       }
     },
     "C-MAIN-QUEST-FULL-COVERAGE": {
-      "observedAt": "2026-07-15T10:55:25.114Z",
+      "observedAt": "2026-07-16T08:19:06.240Z",
       "result": "PASS",
       "sourceHashes": {
         "references/authoring/PDV_MainQuestFullCoverageContract.json": "fbbdd9ed7fbd197ccae0ec3c87871f2d5b21e22339c0f62697f75492d0107055",
         "references/authoring/PDV_QuestReactionMatrix_Tranche11_MainQuestFullCoverage.csv": "84924935ca31e60e2ea66d6ce1191ddf135364bd339e489d2824b43ce4e9170f",
         "references/authoring/PDV_QuestReactionMatrix_Full.csv": "96398cac4d1d5cf5d603c7fcf67850d91a6ed8de5b09002a59d1c1dcda7161b4",
-        "live-source/Scripts/Source/PDV__ManagerQuest.psc": "cc7446f3a27a4edd5405f0548b9a260a3ddcafac2e9f428263f0b68a1ab178d6",
-        "live-source/Scripts/Source/PDV_PlayerEvents.psc": "b6f9b002682e2aa24c9bd39df77af5d78bd58c77bffc438acb254228201c34cb"
+        "live-source/Scripts/Source/PDV__ManagerQuest.psc": "6146e9669714c94d2e06b2ee2dabec182f7b23712e041963745da2762f1c4bcc",
+        "live-source/Scripts/Source/PDV_PlayerEvents.psc": "094801eeb953e2ff82f75f7b771f008c059dc94d16904a9132d459b972b99010"
+      }
+    },
+    "C-RUNTIME-PANTHEON-SUBSTRATE": {
+      "observedAt": "2026-07-16T11:37:45.977Z",
+      "result": "PASS",
+      "sourceHashes": {
+        "references/authoring/PDV_PantheonSubstrateRuntimeEvidenceLedger.json": "737159d6a7f5e4f7d84f28faffb48addba5ce2b82cdcaa2deaa2df0b87115124",
+        "@managerLive": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53",
+        "@managerDeployed": "967d3caade361e38b7e1e54ba74ffa50f43d8728867d3b29aaccfb2f73d5fa53",
+        "@espDeployed": "008f03344f8325ecb120baae6da340f4b19ad509a4616845c1e1fa961e56d49d"
       }
     }
   }
