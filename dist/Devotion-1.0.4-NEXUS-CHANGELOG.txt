@@ -1,109 +1,136 @@
-[size=4][b]Devotion 1.0.4[/b][/size]
+DEVOTION 1.0.4
 
 First public build since 1.0.2. Combines the unreleased 1.0.3 with further
-fixes. [b]No new game required[/b] unless noted.
+fixes. No new game required.
 
-Thanks to [b]DrHeisen[/b], whose independent audit of 1.0.2 found a number of
-the defects below.
+Thanks to DrHeisen, whose independent audit of 1.0.2 found a number of the
+defects below.
 
-[size=3][b]!! READ THIS IF YOU USE REQUIEM !![/b][/size]
 
-Devotion now ships its own copy of [b]Scripts\TempleBlessingScript.pex[/b].
-Requiem's bugfix packs ship the same file, so in Mod Organizer 2 [b]Devotion
-must sit BELOW them[/b] (below = higher priority = wins). If Devotion loads
-above them, the shrine bug below comes back and [b]nothing will warn you[/b].
+=====================================================================
+READ THIS IF YOU USE REQUIEM
+=====================================================================
 
-To confirm: MO2 [b]Data[/b] tab, find [i]Scripts\TempleBlessingScript.pex[/i],
-it should list [b]Devotion[/b] as the provider.
+Devotion now ships its own copy of Scripts\TempleBlessingScript.pex.
+Requiem's bugfix packs ship the same file, so in Mod Organizer 2 Devotion
+must sit BELOW them (below = higher priority = wins the file). If Devotion
+loads above them the shrine bug below comes back, and nothing will warn you.
 
-[size=3][b]Fixed - save damage[/b][/size]
+To confirm: MO2 "Data" tab, find Scripts\TempleBlessingScript.pex, and it
+should list Devotion as the provider.
 
-[list]
-[*][b]Runaway stat drift (save-corrupting).[/b] 418 of Devotion's 422
-value-modifier effects were missing the engine's Recover flag, so every time a
-neglect, disfavor, pact-price or blessing effect switched on and off it baked
-the change in permanently. Stats drifted further every cycle for the life of
-the save - two users reported -22131% Magic Resistance and -5000 armour. All
-value-modifier effects now revert cleanly.
-[*][b]Curing an already-damaged save:[/b] use MCM > Devotion > Player >
-Maintenance > [b]Check stat damage[/b] to see what your save is carrying, then
-[b]Repair stats[/b] to clear it. Save first. Note it also clears permanent
-modifiers other mods placed on those same values.
-[*][b]Two observance effects still drifted[/b] on a second effect type the
-first sweep missed.
-[*][b]Devotion could stop working permanently[/b] after a single lost script
-tick - dawn processing, pacts, the startup choice and the reconcile pass all
-stopped for the rest of the playthrough with nothing in the log. A watchdog
-now restarts it on load.
-[*][b]Uninstalling left effects on your character[/b], including Malacath's
-speed price, so an uninstalled long-pact Orc stayed permanently slower.
-[/list]
 
-[size=3][b]Fixed - shrines (Requiem users)[/b][/size]
+=====================================================================
+FIXED - SAVE DAMAGE
+=====================================================================
 
-[list]
-[*][b]Praying wiped every buff you were carrying and gave nothing back.[/b]
-Requiem's bugfix packs add a line to the shrine script that dispels ALL your
-active magic effects - potions, fortify effects, enchantments, standing-stone
-powers. Normally invisible, because Requiem's blessing lands right after.
-Devotion deliberately makes shrines grant no blessing (praying moves your
-standing with a god and writes a Book of Days entry; it is not meant to hand
-out stats from whatever overhaul you run), so all that was left was the loss.
-Fixed - praying no longer dispels anything, and still awards piety.
-[*][b]Not a Requiem user?[/b] You never had this. Base Skyrim's script does not
-dispel. The only change for you is that two vanilla "blessing removed /
-blessing received" pop-ups no longer appear - both described something
-Devotion prevents anyway.
-[/list]
+* Runaway stat drift (save-corrupting). 418 of Devotion's 422 value-modifier
+  effects were missing the engine's Recover flag, so every time a neglect,
+  disfavor, pact-price or blessing effect switched on and off it baked the
+  change in permanently. Stats drifted further every cycle for the life of
+  the save - two users reported -22131% Magic Resistance and -5000 armour.
+  All value-modifier effects now revert cleanly.
 
-[size=3][b]Fixed - gods reacting correctly[/b][/size]
+* Repairing an already-damaged save: use MCM > Devotion > Player >
+  Maintenance > "Check stat damage" to see what your save is carrying, then
+  "Repair stats" to clear it. Save first. Note that it also clears permanent
+  modifiers other mods placed on those same values.
 
-[list]
-[*][b]Daedric pact prices and pool boons did nothing.[/b] Every pact's
-Health/Magicka/Stamina price and pool boon was authored so the game undid it
-instantly. They now correctly raise and lower your maximum pool, so pacts have
-the cost and benefit they describe.
-[*][b]Hermaeus Mora's Champion boon was mis-wired[/b] - doubled Magicka and no
-Alteration. Now grants Alteration +20 and Fortify Magicka +20 as contracted.
-[*][b]Disfavor stings and several neglect penalties were applying as bonuses[/b]
-- 22 penalty effects were authored in a self-cancelling form the engine read as
-a buff. They now subtract as their descriptions say.
-[*][b]Azura's likes and dislikes never loaded[/b] - an internal name mismatch
-meant twelve reaction rows and her whole per-race stance table were skipped, so
-she could not react to anything you did.
-[*][b]Killing a Thalmor who attacked you[/b] counted as an unprovoked killing.
-[*][b]A menu that could not open silently broke the Bosmer Old Contract[/b] -
-worst case, a forced reckoning severed the pact with no player input.
-[/list]
+* Two observance effects still drifted, on a second effect type the first
+  sweep missed.
 
-[size=3][b]Added[/b][/size]
+* Devotion could stop working permanently after a single lost script tick.
+  Dawn processing, pacts, the startup choice and the reconcile pass all
+  stopped for the rest of the playthrough, with nothing in the log. A
+  watchdog now restarts it on load.
 
-[list]
-[*][b]Bosmer Green Pact food.[/b] Eating meat now rewards a Wood Elf keeping
-the old pact - 22 vanilla and DLC meats (beef, goat, horse, venison, mammoth,
-horker, boar, ash hopper, chicken, rabbit, pheasant, raw and cooked). Eating
-plants remains the violation, unchanged. The existing daily limit applies, so
-it cannot be farmed.
-[*][b]Requiem food support[/b] - Torn Flesh (Strange Meat without Food and
-Beverages Redone) plus Requiem's skeever, fox, bear, mammoth, sabrecat and
-troll meat, and Wrothgar Tartare. Distributed by keyword, so it does nothing
-if you do not run Requiem.
-[*][b]Check stat damage / Repair stats[/b] buttons - see above.
-[/list]
+* Uninstalling left effects on your character, including Malacath's speed
+  price, so an uninstalled long-pact Orc stayed permanently slower.
 
-[size=3][b]Improved[/b][/size]
 
-[list]
-[*][b]Equipping an item is dramatically cheaper.[/b] Devotion was re-reading and
-re-resolving its reaction data from scratch on every check, sixteen times per
-equip - in a large load order, hundreds of engine lookups every time you
-equipped anything. Now resolved once when the save loads.
-[*][b]Every scored action costs far less.[/b] Each god now knows in advance
-which events it can score, instead of all ~34 paying for the lookup.
-[*][b]Text formatting no longer runs 44 passes over every line[/b] of every
-toast, journal entry and panel string.
-[*][b]No more Papyrus log line for every corpse.[/b]
-[*][b]Larger, longer-lasting notifications on 1440p and 4K[/b], and the toast
-box now sizes itself to the message instead of leaving dead space.
-[*][b]Quieter background polling[/b] throughout.
-[/list]
+=====================================================================
+FIXED - SHRINES (REQUIEM USERS)
+=====================================================================
+
+* Praying wiped every buff you were carrying and gave nothing back.
+  Requiem's bugfix packs add a line to the shrine script that dispels ALL
+  your active magic effects - potions, fortify effects, enchantments,
+  standing-stone powers. Normally that is invisible, because Requiem's
+  blessing lands right afterwards. Devotion deliberately makes shrines grant
+  no blessing (praying moves your standing with a god and writes a Book of
+  Days entry; it is not meant to hand out stats from whatever overhaul you
+  run), so in combination all that was left was the loss. Praying no longer
+  dispels anything, and still awards piety.
+
+* Not a Requiem user? You never had this. Base Skyrim's script does not
+  dispel. The only change for you is that two vanilla pop-ups ("blessing
+  removed" / "blessing received") no longer appear - both described
+  something Devotion prevents anyway.
+
+
+=====================================================================
+FIXED - GODS REACTING CORRECTLY
+=====================================================================
+
+* Daedric pact prices and pool boons did nothing. Every pact's Health,
+  Magicka and Stamina price and pool boon was authored so the game undid it
+  instantly. They now correctly raise and lower your maximum pool, so pacts
+  have the cost and benefit they describe.
+
+* Hermaeus Mora's Champion boon was mis-wired - doubled Magicka and no
+  Alteration. It now grants Alteration +20 and Fortify Magicka +20 as
+  contracted.
+
+* Disfavor stings and several neglect penalties were applying as bonuses.
+  22 penalty effects were authored in a self-cancelling form the engine read
+  as a buff. They now subtract as their descriptions say.
+
+* Azura's likes and dislikes never loaded. An internal name mismatch meant
+  twelve reaction rows and her whole per-race stance table were skipped, so
+  she could not react to anything you did.
+
+* Killing a Thalmor who attacked you counted as an unprovoked killing.
+
+* A menu that could not open silently broke the Bosmer Old Contract - worst
+  case, a forced reckoning severed the pact with no player input.
+
+
+=====================================================================
+ADDED
+=====================================================================
+
+* Bosmer Green Pact food. Eating meat now rewards a Wood Elf keeping the old
+  pact - 22 vanilla and DLC meats (beef, goat, horse, venison, mammoth,
+  horker, boar, ash hopper, chicken, rabbit and pheasant, raw and cooked).
+  Eating plants remains the violation, unchanged. The existing daily limit
+  applies, so it cannot be farmed.
+
+* Requiem food support - Torn Flesh (called Strange Meat without Food and
+  Beverages Redone), plus Requiem's skeever, fox, bear, mammoth, sabrecat
+  and troll meat, and Wrothgar Tartare. Distributed by keyword, so it does
+  nothing at all if you do not run Requiem.
+
+* "Check stat damage" and "Repair stats" buttons - see above.
+
+
+=====================================================================
+IMPROVED
+=====================================================================
+
+* Equipping an item is dramatically cheaper. Devotion was re-reading and
+  re-resolving its reaction data from scratch on every check, sixteen times
+  per equip - in a large load order, hundreds of engine lookups every time
+  you equipped anything. It is now resolved once when the save loads.
+
+* Every scored action costs far less. Each god now knows in advance which
+  events it can score, instead of all 34 paying for the lookup.
+
+* Text formatting no longer runs 44 passes over every line of every toast,
+  journal entry and panel string.
+
+* No more Papyrus log line for every corpse.
+
+* Larger, longer-lasting notifications on 1440p and 4K, and the toast box
+  now sizes itself to the message instead of leaving dead space.
+
+* Quieter background polling throughout.
