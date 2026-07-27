@@ -368,6 +368,19 @@ Strip or gate behind a `bDebugMode` global before any release.
 
 Before claiming a script behaves a certain way, claiming a record is configured a certain way, or recommending a fix:
 
+**Source precedence (governs all of section 4).** Not every source that *sounds* authoritative *is*, and the confident-but-stale ones cause more damage than the obviously-missing ones. In order:
+
+1. **A live readback or a re-run gate.** The only thing that counts as evidence for a claim. Re-running `pdv_verify` takes seconds; a houseCARL readback takes one call.
+2. **The current canonical docs** -- `AGENTS.md`, the architecture docs, the active contracts. Authoritative for rules, decisions, and design constants.
+3. **Session notes, handoffs, dated ledgers, and agent memory.** These are *pointers to where to look*, never evidence. They are timestamped observations that were true once.
+
+Rules that follow from it:
+
+- **Never state a count, version, gate result, or completion status from a remembered or dated source.** Numbers are the most perishable thing in this project -- they move with every ESP edit and every commit. Re-run the gate or read the current doc. If you find yourself about to write "N remain" or "X of Y", stop and go get the number.
+- **A dated doc that contradicts a current doc is stale until proven otherwise**, not a discovery. Check the canonical doc before reporting a regression.
+- **Confirm the houseCARL MO2 instance before any readback that will become a claim.** `housecarl_load_order_status` reports it. houseCARL persists its instance across restarts, so it can silently still be pointed at a compatibility list (ARR, DoD) whose installed `Devotion.esp` is a genuinely different, older file. The failure mode is a plausible, internally consistent, *wrong* answer -- not an error. See section 4.6.
+- **Report findings at the altitude they deserve.** A scare you chased down and disproved is a footnote or nothing; giving it equal billing with a real finding manufactures alarm and buries the thing that actually matters.
+
 ### 4.1 Verify with tools, not with assumptions
 
 | Question | Cheapest way to actually know |
