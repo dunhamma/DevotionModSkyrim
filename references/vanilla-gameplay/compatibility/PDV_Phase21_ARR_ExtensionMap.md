@@ -172,13 +172,26 @@ Core matrix still carries the six promoted Tranche6 compatibility cells. This su
 ## Wave 6 (man_DaedricShrines shrine adapters) — INVESTIGATED, NOT VIABLE as a clean override
 Definitive ACTI scan (2026-06-15): the man_DaedricShrines family is STAT-based (mesh/statue replacers),
 NOT ACTI. Zero of the 16 Princes expose a clean route anchor; the only ACTIs are Nocturnal x2, both
-carrying TempleBlessingScript (PDV must not replace global activator scripts). Jyggalag/Sithis/Kynareth/
+carrying TempleBlessingScript (PDV must not replace global activator scripts [AMENDED 2026-07-27 -
+see the note under this Wave]). Jyggalag/Sithis/Kynareth/
 Mara = STAT only; Mehrunes Dagon = worldspace placement only. Vanilla shrine ACTIs (Azura/Mara/Kynareth/
 Divines) carry TempleBlessingScript and are won by skymojibase.esl, not man_. => A shrine-prayer adapter
 would need EITHER (a) PDV-placed invisible marker ACTIs / trigger volumes at the shrine cell positions
 (new ESP + placement + runtime), OR (b) a location-trigger hook (new PDV_FLST_HolySites + manager
 handler; note coc skips location triggers). Both are ESP/runtime + design decisions — HELD for review.
 No clean data-only adapter exists [SUPERSEDED - see below]. Wave 6 data-only investigation = DONE.
+
+**AMENDMENT (2026-07-27, Devotion 1.0.4):** the parenthetical above ("PDV must not replace global
+activator scripts") no longer states the project rule. Devotion 1.0.4 ships its own compiled
+`Scripts\TempleBlessingScript.pex` to undo the dispel-all-active-effects line Requiem's bugfix packs
+add to shrine activation. The RECORD-level boundary this Wave analysis depends on is unchanged and
+still holds - Devotion writes no shrine `ACTI` override and replaces no script PROPERTY on any
+activator - so the Wave 6 conclusion (no clean data-only adapter) is unaffected. What changed is that
+a loose-file `.pex` override of the vanilla script is now a sanctioned tool, which means: (a) any
+list-author mod shipping its own `TempleBlessingScript.pex` is now a DIRECT file conflict with
+Devotion, resolved by MO2 mod priority, not a plugin-level conflict; and (b) Devotion must sit BELOW
+any such mod in MO2 or the shrine bug returns silently. See the 2026-07-27 entries in `AGENTS.md`
+and `PDV_MOD_SETUP.md`.
 
 SUPERSEDED (2026-06-15): a Base Object Swapper STAT->ACTI base-swap turned out to be the clean
 "PDV-places its own clickable" path the verdict said would be needed. The shrine-prayer feature

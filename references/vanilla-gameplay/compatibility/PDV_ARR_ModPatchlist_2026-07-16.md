@@ -315,6 +315,11 @@ P0 = blocks the Authoria 1.0 gate package; P1 = next tranche; P2 = nice-to-have.
   `PDV_Phase21_ARR_SmokeRunbook.md` (no Archon step anymore).
 - [ ] **TODO-8 (P1, S5):** Verify JS Shrines / CC Survival Disable-Shrine-Menu
   do not reroute shrine activation away from TempleBlessingScript surfaces.
+  **Widened 2026-07-27 (1.0.4):** Devotion now SHIPS its own
+  `Scripts\TempleBlessingScript.pex`, so this check must also enumerate every
+  mod in the list that ships that same filename (Requiem bugfix packs do) and
+  confirm Devotion wins it by MO2 mod priority. A loser here is silent - the
+  shrine dispel-all bug simply returns.
 - [ ] **TODO-9 (P1, curse):** Smoke Sacrilege + Manbeast + Requiem
   VampireCollection state detection (vampire/werewolf theology transitions).
 - [ ] **TODO-10 (P1, startup):** Smoke Devotion init from an Alternate

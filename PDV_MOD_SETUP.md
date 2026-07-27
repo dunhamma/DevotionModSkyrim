@@ -88,6 +88,7 @@ Work Rule".
 | `tools/pdv_guide_tables_gen.mjs` | Regenerates race-guide bonus tables from the reward spec JSONs and prints them to STDOUT -- it does NOT edit the guide `.md` files; guide tables are hand-spliced from its output. Its old Observant/Faithful "retired-word" lint was retired 2026-07-15 (those are the ratified broad bands); a per-family vocabulary gate is the tracked follow-up. |
 | `tools/pdv_main_quest_full_coverage_audit.mjs` | Fail-closed static/generated-readback gate for the 2026-07-15 main-quest contract: 45 identities x 25 exact stages, 951 T11 rows, 1978-cell compiled matrix, strict integer stages, no `echo`, exact 17/11 Paarthurnax rosters, and indexed 134-watch registration. A PASS is not in-game route/display proof. |
 | `tools/pdv_guide_bbcode.mjs` | Emits `dist/nexus-articles/*.bb` from the 10 race guides and hard-fails on surviving review tags, HTML comments, or non-ASCII -- the Nexus release gate. Run after ANY guide edit. |
+| `tools/pdv_package_release.mjs` | Builds the `dist/` release zip from the live Anvil Devotion mod folder -- the ONLY sanctioned path to a public bundle (never hand-roll it; rc1 leaked an 876KB `.orig`). Gates on version, ANAM, and archive contents; those gates are NARROWER than `pdv_verify.mjs`, so a green package run is not a green verify run. |
 | `tools/pdv_substrate_pacing_audit.mjs` | Strict source/contract audit for the six paced substrates: one +4 devotional credit per 06:00 day, timing maths, authentic-route ownership, curse exceptions, decay, and player-copy exclusions |
 | `tools/pdv_broad_pantheon_audit.mjs` | Strict source/contract audit for Imperial, Nord Old Ways, and Nord Nine Divines pools: signed logical-event aggregation, active-baseline gating, grace/decay, migration, and T2 patron transition |
 | `tools/pdv_pantheon_substrate_runtime_evidence_check.mjs` | Fail-closed runtime/manual evidence checker for the 12 pantheon/substrate co-test cards; a static pass never closes an evidence bucket, and rotating Papyrus/temporary captures need an exact retained reference in the committed pantheon co-test evidence store |
@@ -1098,6 +1099,52 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 ---
 
 ## Notes / Decisions Log
+
+**2026-07-27 AEST - 1.0.4 shipped; shrine-script boundary amended and a hard MO2
+priority requirement added:** Devotion 1.0.4 is public (tag `v1.0.4`,
+`Devotion-1.0.4-20260727.zip`). Three things below change how this document's earlier
+entries should be read.
+
+1. **Devotion now ships a loose-file `Scripts\TempleBlessingScript.pex`.** The
+   2026-06-14 and 2026-06-21 shrine-neutralization entries further down state that
+   Devotion "does not replace shrine activator scripts". That wording is SUPERSEDED. The
+   ESP-record half of the boundary is unchanged and still enforced - no shrine `ACTI`
+   override, no script-property replacement, `pdv-shrine-blessing-author`'s
+   no-ACTI-replacement check still applies - but Devotion does now ship a corrected
+   compiled override of the vanilla script itself. Reason: Requiem's bugfix packs add a
+   line dispelling ALL of the player's active magic effects on shrine activation, which is
+   invisible under Requiem alone (its blessing lands right after) but is pure loss under
+   Devotion, which grants no shrine blessing by design.
+   **INSTALL REQUIREMENT: Devotion must sit BELOW (higher priority than) any Requiem
+   bugfix pack in MO2.** Requiem's packs ship the same filename; if Devotion loads above
+   them their copy wins and the bug returns. Nothing errors - the returning bug is the
+   only symptom. Verify in MO2's **Data** tab: `Scripts\TempleBlessingScript.pex` must
+   show `Devotion` as its provider. This is the project's first ordering requirement that
+   is about MOD priority rather than PLUGIN load order, and the two are set in different
+   MO2 panes.
+
+2. **`Recover` on value-modifying MGEFs is now a project-wide authoring invariant.** Any
+   new Devotion MGEF whose archetype modifies an actor value must carry `Recover` before
+   it is written, because Devotion applies its effect families as toggled abilities and
+   the engine otherwise bakes the change in permanently (reported in the field as
+   `-22131%` Magic Resistance and `-5000` armour). Shipped-ESP readback on 2026-07-27:
+   ValueModifier `395/395`, PeakValueModifier `232/232`, `627/627` total. Treat a missing
+   flag as a save-corruption defect. The 2026-07-26 entry immediately below still owns the
+   rest of the Daedric price serialization convention.
+
+3. **Release packaging goes through `tools\pdv_package_release.mjs`, never by hand.** It
+   builds the `dist\` zip from the live Anvil Devotion folder and gates on version, ANAM,
+   and archive contents. Its gates are NARROWER than `pdv_verify.mjs`: a green package run
+   is not a green verify run, and a `pdv_verify` FAIL at package time is usually real
+   record drift rather than a stale audit.
+
+Readback discipline reminder that this session paid for: confirm the active MO2 instance
+with `housecarl_load_order_status` before any readback that will become a status claim.
+houseCARL persists its instance across restarts, so it can still be pointed at
+`D:\Wabbajack\modlists\ARR` from earlier compatibility work and will silently answer from
+that list's older `Devotion.esp` - a plausible, internally consistent, completely wrong
+answer rather than an error. Re-point with
+`housecarl_set_mo2_instance D:\Wabbajack\modlists\Anvil`.
 
 **2026-07-26 AEST - Daedric price serialization repair and runtime closeout:**
 Daedric price contract magnitudes remain negative as player-facing semantics,
