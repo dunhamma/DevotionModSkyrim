@@ -11,17 +11,23 @@ Scriptname TempleBlessingScript extends ObjectReference Conditional
     overriding each Altar*Spell so its ONLY effect is the hidden
     PDV_MGEF_ShrinePrayer_* signal (magnitude 0, HideInUI).
 
-    The stock script defeated half of that intent:
+    REQUIEM's bugfix packs add a line that defeats half of that intent:
 
         (akActionRef As Actor).DispelAllSpells()
 
     DispelAllSpells strips EVERY active magic effect on the actor -- potions,
     fortify buffs, enchantment effects, standing-stone powers, the lot -- not
-    just the previous shrine blessing. In stock Skyrim that cost is hidden,
-    because a real blessing lands immediately afterwards. With Devotion's
-    neutralized spell nothing lands, so praying became pure loss: the player
-    was stripped and given nothing. Reported in testing as "praying dispelled
-    my magic", and it is exactly that.
+    just the previous shrine blessing. On a plain Requiem setup that cost is
+    hidden, because Requiem's blessing lands immediately afterwards. With
+    Devotion's neutralized spell nothing lands, so praying became pure loss:
+    the player was stripped and given nothing. Reported in testing as "praying
+    dispelled my magic", and it is exactly that.
+
+    VERIFIED: this call is NOT vanilla. Base Skyrim's copy of this script
+    (Stock Game\Data\Source\Scripts\TempleBlessingScript.psc) has no dispel at
+    all -- it only casts the blessing and shows the two messages. So the bug
+    was Requiem-only, and the difference between this file and vanilla is the
+    two suppressed messages, nothing more.
 
     WHAT CHANGED, AND WHAT DELIBERATELY DID NOT
 

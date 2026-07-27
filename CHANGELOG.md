@@ -24,17 +24,23 @@ should show **Devotion** as its provider.
 
 ### Fixed — praying at a shrine no longer strips your active effects
 
-- **Fixed: shrines wiped every buff you were carrying and gave nothing back.**
-  The shrine activation script Skyrim (and Requiem's bugfix packs) use begins
-  by dispelling **all** active magic effects on you — not just your previous
-  blessing, but potions, fortify effects, enchantment effects, standing-stone
-  powers, everything. In an ordinary game you barely notice, because a new
-  blessing lands immediately afterwards. Devotion deliberately makes shrines
-  grant no blessing — praying is meant to move your standing with a god and
-  write a line in the Book of Days, not hand out a stat buff from whatever
-  overhaul you're running — so all that was left was the loss. Devotion now
-  ships a corrected version of that script: praying no longer dispels
-  anything, and still awards piety and its journal entry exactly as before.
+- **Fixed (Requiem users): shrines wiped every buff you were carrying and gave
+  nothing back.** Requiem's bugfix packs add a line to the shrine activation
+  script that dispels **all** active magic effects on you — not just your
+  previous blessing, but potions, fortify effects, enchantment effects,
+  standing-stone powers, everything. On its own that is invisible, because
+  Requiem's blessing lands immediately afterwards. Devotion deliberately makes
+  shrines grant no blessing — praying is meant to move your standing with a god
+  and write a line in the Book of Days, not hand out a stat buff from whatever
+  overhaul you are running — so in combination all that was left was the loss.
+  Devotion now ships a corrected script: praying no longer dispels anything,
+  and still awards piety and its journal entry exactly as before.
+  - **This only ever affected Requiem players.** Base Skyrim's version of that
+    script does not dispel, so if you do not run Requiem you never had this
+    bug and nothing about your shrines changes — except that the two vanilla
+    "blessing removed / blessing received" pop-ups no longer appear, since
+    Devotion grants no blessing and both messages were describing something
+    that does not happen.
 
 ### Added — Bosmer Green Pact food
 
