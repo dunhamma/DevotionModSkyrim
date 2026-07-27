@@ -127,14 +127,35 @@ So the split is:
   dependency and no-ops harmlessly when the source mod is absent.
 
 The routing code accepts either path (`FormMatchesListOrKeyword`), so both are
-equally live. First rule shipped:
+equally live. Rule shipped:
 
 ```ini
-Keyword = PDV_KW_GreenPact_Meat|Potion|REQ_Food_GreenPact_TornFlesh
+Keyword = PDV_KW_GreenPact_Meat|Potion|Torn Flesh,Strange Meat,Skeever Meat,Wrothgar Tartare,Fox Meat,Bear Meat,Mammoth Meat,Sabrecat Meat,Troll Meat
 ```
 
-Requiem authored that record explicitly as Green Pact food (note the EditorID),
-so meat is the correct tag: eating it REWARDS a pact-keeping Bosmer.
+⚠ **These match by item NAME, not FormID or EditorID — and that is required,
+not a preference.** For the `Potion` type KID resolves a **Form** filter against
+the item's **magic effects**, not against the item's own FormID (KID v3.5.0
+grammar, filters §2 "type-specific Form filters"). So `0x284894~Requiem.esp`
+would have searched for a food whose *effect* is that record and matched
+nothing. The item-name string channel applies to all types and is the correct
+filter. The first version of this rule used an EditorID and was replaced for
+the same reason.
+
+Name matching is also self-correcting for food classification: if another mod
+adds its own "Bear Meat", tagging it as meat is still right.
+
+**"Torn Flesh" and "Strange Meat" are one record** (`284894:Requiem.esp`) under
+two names — base Requiem calls it Strange Meat, *Food and Beverages Redone*
+renames it to Torn Flesh. Both are listed so the rule holds either way.
+
+Requiem adds 7 further meats beyond the Green-Pact-named one (skeever, fox,
+bear, mammoth, sabrecat, troll, Wrothgar Tartare); all are included, since a
+Bosmer eating any of them is keeping the pact just as much.
+
+**Open inconsistency to settle:** vanilla `FoodCharredSkeeverMeat` was
+deliberately EXCLUDED from the FormList on 2026-07-26 as ambiguous vermin,
+but Requiem's "Skeever Meat" is now tagged here. Pick one and align.
 
 ⚠ The KID ini ships from the live MO2 mod folder and is **not git-tracked**
 (same as `Devotion.esp`). The only tracked copy is a stale one under
