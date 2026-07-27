@@ -103,8 +103,42 @@ item against the live ESP and live source — not taken from the audit.
 | Item | Call | Design |
 |---|---|---|
 | ~~**Altmer Spine**~~ | **NO ACTION** | Already wired AND already tested pre-1.0. My "wire it" call was wrong -- see the correction section below. |
-| **Green Pact food positive — MEAT DONE 2026-07-26** | Meat wired; insect + KID ini deferred | `PDV_FLST_GreenPact_MeatFoods` (`071235`) populated with 22 vanilla+DLC records (8 animals raw/cooked where they exist, plus chicken/rabbit/pheasant). Code path (`RouteBosmerPactPositive` -> `HandleBosmerPactPositiveSignal`) already lived from the DrHeisen port, unreachable until now. Anti-farm: NO new cap needed — `ConsumeDailyRepeatMultiplier("PDV.Signal.BosmerPactPositive")` already throttles this signal ID across all callers (Green Songs, proper-hunt, forest-kept), meat included. **Not yet runtime-tested** — eat cooked beef/venison as Bosmer, confirm the route fires in the Papyrus log. Insect list still empty (vanilla has ~no edible insects; needs KID rules to reach modded food) and fungi/egg stay neutral per the owner's original call. |
+| **Green Pact food positive — MEAT DONE + RUNTIME-PROVEN 2026-07-27** | Meat wired (vanilla FormList + first KID rule); insect deferred | `PDV_FLST_GreenPact_MeatFoods` (`071235`) populated with 22 vanilla+DLC records (8 animals raw/cooked where they exist, plus chicken/rabbit/pheasant). Code path (`RouteBosmerPactPositive` -> `HandleBosmerPactPositiveSignal`) already lived from the DrHeisen port, unreachable until now. Anti-farm: NO new cap needed — `ConsumeDailyRepeatMultiplier("PDV.Signal.BosmerPactPositive")` already throttles this signal ID across all callers (Green Songs, proper-hunt, forest-kept), meat included. **Not yet runtime-tested** — eat cooked beef/venison as Bosmer, confirm the route fires in the Papyrus log. Insect list still empty (vanilla has ~no edible insects; needs KID rules to reach modded food) and fungi/egg stay neutral per the owner's original call. |
 | **Syrabane award sites** | **WIRE** (5 signals) | Deltas already tuned 1.8–2.2. Design work = deciding what act fires "protective warding", "apprentice aid", etc. Renumber lands in 1.0.3 so the collision dies immediately. |
+
+### Green Pact — mod-added food goes through KID, never the FormList
+
+**Standing rule, established 2026-07-27 when Requiem's Torn Flesh was added.**
+
+A FormList entry pointing at another plugin's record makes that plugin a
+**MASTER of Devotion.esp**. Adding `REQ_Food_GreenPact_TornFlesh`
+(`284894:Requiem.esp`, overridden by *Requiem - Food and Beverages Redone.esp*)
+to `PDV_FLST_GreenPact_MeatFoods` would have added Requiem.esp as a master, and
+every user without Requiem would hit a missing-master failure — the plugin
+would not load at all. Devotion.esp's masters are and must stay: Skyrim.esm,
+Dawnguard.esm, HearthFires.esm, Dragonborn.esm.
+
+So the split is:
+
+- **Vanilla + DLC food** -> the `PDV_FLST_GreenPact_*` FormLists (22 meat
+  records as of 2026-07-26).
+- **Everything mod-added** -> `SKSE/Plugins/KeywordItemDistributor/
+  PDV_GreenPact_KID.ini`, which matches by EditorID at runtime with no master
+  dependency and no-ops harmlessly when the source mod is absent.
+
+The routing code accepts either path (`FormMatchesListOrKeyword`), so both are
+equally live. First rule shipped:
+
+```ini
+Keyword = PDV_KW_GreenPact_Meat|Potion|REQ_Food_GreenPact_TornFlesh
+```
+
+Requiem authored that record explicitly as Green Pact food (note the EditorID),
+so meat is the correct tag: eating it REWARDS a pact-keeping Bosmer.
+
+⚠ The KID ini ships from the live MO2 mod folder and is **not git-tracked**
+(same as `Devotion.esp`). The only tracked copy is a stale one under
+`scratch/phase2-live-source/` — do not treat that as authority.
 
 ### CORRECTION 2026-07-26 — the Altmer Spine was never unwired
 
