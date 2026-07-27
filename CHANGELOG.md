@@ -3,11 +3,53 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
-## 1.0.3 — 2026-07-26
+## 1.0.4 — 2026-07-27
+
+Combines everything from the unreleased 1.0.3 with the fixes below, so this is
+the first public build since 1.0.2.
 
 Thanks to **DrHeisen**, whose independent audit of 1.0.2 found a number of the
 defects below. Where his findings and this build's own fixes overlapped, his
 analysis is credited in the entry.
+
+### ⚠ Load order — please read
+
+Devotion now ships its own copy of `TempleBlessingScript.pex` (see the shrine
+fix below). **Devotion must sit BELOW — that is, at higher priority than — any
+Requiem bugfix pack**, because those ship the same file. If Devotion loads
+above them their copy wins, and shrines will strip your active effects again.
+Nothing errors when this is wrong; the returning bug is the only symptom. In
+MO2 you can confirm it under the **Data** tab: `Scripts\TempleBlessingScript.pex`
+should show **Devotion** as its provider.
+
+### Fixed — praying at a shrine no longer strips your active effects
+
+- **Fixed: shrines wiped every buff you were carrying and gave nothing back.**
+  The shrine activation script Skyrim (and Requiem's bugfix packs) use begins
+  by dispelling **all** active magic effects on you — not just your previous
+  blessing, but potions, fortify effects, enchantment effects, standing-stone
+  powers, everything. In an ordinary game you barely notice, because a new
+  blessing lands immediately afterwards. Devotion deliberately makes shrines
+  grant no blessing — praying is meant to move your standing with a god and
+  write a line in the Book of Days, not hand out a stat buff from whatever
+  overhaul you're running — so all that was left was the loss. Devotion now
+  ships a corrected version of that script: praying no longer dispels
+  anything, and still awards piety and its journal entry exactly as before.
+
+### Added — Bosmer Green Pact food
+
+- **Added: eating meat now rewards a Wood Elf keeping the Green Pact.** The
+  reward path existed but had no food attached to it, so nothing a Bosmer ate
+  could ever satisfy it. Twenty-two vanilla and DLC meats now count — beef,
+  goat, horse, venison, mammoth, horker, boar, ash hopper, chicken, rabbit and
+  pheasant, raw and cooked. Eating plants remains the pact **violation** and is
+  unchanged. The existing daily limit that covers the other pact-keeping acts
+  applies here too, so this cannot be farmed.
+- **Added: Requiem food support.** Requiem's own Green Pact item (*Torn Flesh*,
+  called *Strange Meat* without Food and Beverages Redone) counts, along with
+  Requiem's skeever, fox, bear, mammoth, sabrecat and troll meat and Wrothgar
+  Tartare. This is distributed by keyword, so it costs nothing and does nothing
+  if you don't run Requiem.
 
 ### Fixed — silent, permanent, or save-damaging
 
@@ -171,7 +213,7 @@ analysis is credited in the entry.
   has been rewritten to read correctly without it. The Bosmer "Naming" message
   had an unescaped `%`. *(DrHeisen.)*
 
-### Fixed — the original 1.0.3 set (2026-07-25)
+### Fixed — the original 1.0.3 set (2026-07-25, now part of this release)
 
 - **Fixed: runaway stat drift (save-corrupting).** Devotion applies its neglect,
   disfavor, pact-price, and blessing effects as toggled abilities, but 418 of its
