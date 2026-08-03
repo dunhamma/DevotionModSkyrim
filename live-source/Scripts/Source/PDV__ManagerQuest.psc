@@ -88,7 +88,17 @@ PDV_Deity_Kynareth Property PDV_Kynareth Auto
 PDV_Deity_AuriEl Property PDV_AuriEl Auto
 PDV_Deity_Magnus Property PDV_Magnus Auto
 PDV_Deity_Xarxes Property PDV_Xarxes Auto
-PDV_DeityBase Property PDV_Syrabane Auto
+; P9 (2026-08-03): narrowed from PDV_DeityBase to the concrete type, matching every sibling
+; (PDV_Deity_Magnus/Xarxes/Trinimac/AuriEl). Required so his signal constants are referable, and
+; required by tools/pdv_signal_e2e_gate.mjs: its dispatch-coverage regex only recognises an award
+; whose second argument is the deity PROPERTY itself followed by the constant. Assigning the deity
+; to a local variable first compiles fine but reads as UNDISPATCHED to that gate.
+; The property name and its bound object are unchanged.
+;
+; Do NOT write an illustrative deity-dot-constant example in any comment in this file -- the
+; curated-signal PARITY scanner treats such text as a real reference and then fails looking for a
+; deity script that does not exist. That is what happened when this note was first written.
+PDV_Deity_Syrabane Property PDV_Syrabane Auto
 PDV_ReputationTrack Property PDV_ConcordatStandingTrack Auto
 PDV_Substrate_ImperialAncestor Property PDV_ImperialAncestorSubstrate Auto
 PDV_Substrate_BretonAncestor Property PDV_BretonAncestorSubstrate Auto
@@ -579,7 +589,7 @@ Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; seals every deity's participating-event cache (12.4 / C4 in PDV_DeityBase) -- without
 ; it the caches stay unsealed forever on old saves (correct, they fail open, but the
 ; broadcast fan-out keeps paying the full per-deity probe the cache exists to remove).
-Int Property LIKES_DISLIKES_VERSION = 17 AutoReadOnly
+Int Property LIKES_DISLIKES_VERSION = 19 AutoReadOnly
 Int Property PRINCE_LD_VERSION = 4 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_NONE = 0 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_SKY_STORM_HUNT = 1 AutoReadOnly
@@ -599,6 +609,17 @@ Int Property DISFAVOR_MAX_ACTIVE_DOMAINS = 3 AutoReadOnly
 ; co-held patron+Prince, keep higher tier, tie -> Prince).
 Int Property DAEDRIC_PACT_VERSION = 3 AutoReadOnly
 Float Property TIER_DOWN_HYSTERESIS = 5.0 AutoReadOnly
+; --- P10 (2026-08-03): Long Devotion, the post-Champion accrual layer -------------------------
+; The ladder terminated flat at Champion (85) while PIETY_MAX is 200, so 115 points of headroom
+; drove nothing, and MaybeShowChampionRewardPresentation is a hard one-shot -- a Champion who
+; decayed out and re-climbed got total silence.
+; Long Devotion is a DERIVED readout over the EXISTING 85..200 piety headroom. No new currency,
+; no new decay, no new anti-farm doctrine, no new records. The alternative -- a parallel
+; accumulator -- would need a second copy of the whole gain pipeline. Rejected.
+; Marks grant NO SPELL in v1, deliberately: they are recognition plus a decay floor, so the
+; accrual model can be judged before committing to a T4 reward family per race.
+Float Property LONG_DEVOTION_MARK_STEP = 15.0 AutoReadOnly
+Int Property LONG_DEVOTION_MARK_MAX = 7 AutoReadOnly
 Float Property ORC_RATE_MULT_STRONGHOLD = 1.0 AutoReadOnly
 Float Property ORC_RATE_MULT_CITY = 0.75 AutoReadOnly
 Float Property ORC_RATE_MULT_LEGIONEXILE = 0.6 AutoReadOnly
@@ -710,6 +731,14 @@ Int Property ALTMER_CRISIS_DISSONANT = 1 AutoReadOnly
 Int Property ALTMER_CRISIS_QUESTIONING = 2 AutoReadOnly
 Int Property ALTMER_CRISIS_REASSERTING = 3 AutoReadOnly
 Int Property ALTMER_CRISIS_SCARRED_RESOLVED = 4 AutoReadOnly
+; P6 (2026-08-03): in-game days a scar must sit before the crisis arc can re-open.
+; Before this, SetAltmerCrisisState(ALTMER_CRISIS_NONE, ...) was never called ANYWHERE, so the
+; first crisis to resolve ended the arc permanently -- HandleAltmerLorkhanPressure can only open
+; a crisis from state NONE, so Lorkhan pressure lost its teeth for the rest of the playthrough.
+; Re-entry additionally requires a DIFFERENT source: the per-source PDV.Altmer.CrisisSeen.<n>
+; guards are deliberately NOT cleared, which bounds a playthrough to at most one crisis per
+; authored source rather than letting the arc become a loop.
+Float Property ALTMER_CRISIS_REENTRY_DAYS = 30.0 AutoReadOnly
 Int Property ALTMER_LORKHAN_PRESSURE_DIRECT = 1 AutoReadOnly
 Int Property ALTMER_LORKHAN_PRESSURE_SHOR_ADJACENT = 2 AutoReadOnly
 Int Property ALTMER_LORKHAN_PRESSURE_MORTAL_VALIDATION = 3 AutoReadOnly
@@ -5425,7 +5454,7 @@ Bool Function IsBroadWorshipActive()
     return GetPatronState() == PATRON_STATE_BROAD
 EndFunction
 
-Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, String reason)
+Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, Bool hadSleepStartContext, Bool sleepStartedOutside, String reason)
     if wasInterrupted
         Trace(3, "Player sleep stop ignored because sleep was interrupted.")
         return
@@ -5436,42 +5465,44 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, String reas
         return
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
-        Cell khajiitRestCell = playerRef.GetParentCell()
-        if khajiitRestCell && !khajiitRestCell.IsInterior()
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace == ORIGIN_KHAJIIT
+        if !hadSleepStartContext
+            Trace(1, "Khajiit road-home rest skipped: sleep-start context missing.")
+        elseIf sleepStartedOutside
             HandleKhajiitRoadHome("outdoor_rest_" + reason)
         endIf
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN
+    if originRace == ORIGIN_ARGONIAN
         HandleArgonianSleepEvents(playerRef, reason)
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_BOSMER
+    if originRace == ORIGIN_BOSMER
         HandleBosmerSleepEvents(playerRef, reason)
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_BRETON
+    if originRace == ORIGIN_BRETON
         HandleBretonSleepEvents(playerRef, reason)
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
+    if originRace == ORIGIN_DUNMER
         HandleDunmerSleepEvents(playerRef, reason)
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
+    if originRace == ORIGIN_ALTMER
         HandleAltmerSleepEvents(playerRef, reason)
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_NORD
+    if originRace == ORIGIN_NORD
         HandleNordSleepEvents(playerRef, reason)
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_ORC
+    if originRace == ORIGIN_ORC
         HandleOrcSleepEvents(playerRef, reason)
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
+    if originRace == ORIGIN_REDGUARD
         HandleRedguardSleepEvents(playerRef, reason)
     endIf
 EndFunction
@@ -5512,6 +5543,20 @@ Function HandleSubstrateActionEvent(Int eventType, String reason)
             Int tierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
             PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, "enchantment_" + reason)
             SendPrismaSubstrateProgress("altmer-heritage", tierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore, "", "auri-el", GetAltmerHeritageTierName())
+            ; P4 (2026-08-03): Magnus's renewable curated beat. Binding magicka into lawful form is
+            ; his doctrine, it never exhausts, and he already outweighs Xarxes on this row. Hard
+            ; 1.2/day ceiling -- one award regardless of how many items are enchanted.
+            if PDV_Magnus && ConsumeOncePerDaySignal("PDV.Signal.MagnusApertureKept")
+                AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_APERTURE_KEPT, None, 1.0)
+                SurfaceReservedSignal(PDV_Magnus, "The design holds", "marks magicka bound into lawful form.")
+            endIf
+        elseIf eventType == 340 || eventType == 341 || eventType == 342
+            ; P5 (2026-08-03): a STAMP ONLY, deliberately not a substrate feed.
+            ; RunDawnAwardAltmerXarxesRecord reads this at the NEXT dawn to decide whether the
+            ; ledger noticed yesterday. It does NOT call RecordHeritageStandingScaled -- whether
+            ; reading should feed the ancestral spine is P2's decision, not this packet's, and
+            ; quietly widening the substrate here would pre-empt it.
+            StorageUtil.SetIntValue(None, "PDV.Altmer.Xarxes.StudyDay", GetDevotionalDay() + 2)
         endIf
     endIf
 EndFunction
@@ -6060,8 +6105,17 @@ Function HandleAltmerSleepEvents(Actor playerRef, String reason)
     endIf
 
     AwardAltmerAncestorSpinePulse(multiplier, "sleep_dream_" + reason)
-    if _activeDeity == PDV_Magnus && PDV_Magnus
-        AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier)
+    ; P4 (2026-08-03): graded rather than patron-only. This was `_activeDeity == PDV_Magnus`, which
+    ; meant a follower who had not formally committed to Magnus got NOTHING from the sleep lane --
+    ; and since 1802 is finite at 24 lifetime awards and 1804 is patron-only too, that left them
+    ; with no curated income at all. A Seeker-or-better non-patron now gets half. The patron lane
+    ; stays strictly better, so this widens access without flattening the commitment choice.
+    if PDV_Magnus
+        if _activeDeity == PDV_Magnus
+            AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier)
+        elseIf GetTier(PDV_Magnus) >= TIER_SEEKER
+            AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier * 0.5)
+        endIf
     endIf
     AppendBookOfDaysEntry("An Aldmeri dream settles your ancestral inheritance.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Aldmeri dream")
 EndFunction
@@ -7994,12 +8048,29 @@ Function HandleKhajiitRoadHome(String reason)
     Int tierBefore = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
     PDV_KhajiitLunarSubstrate.RecordRoadHomeCadence(reason)
     Int tierAfter = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
+    Float grantedMetric = PDV_KhajiitLunarSubstrate.GetMetric() - metricBefore
     AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_KHENARTHI, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
     if PDV_Khenarthi
         AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_ROAD_HOME, None, multiplier)
     endIf
     StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
-    SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, PDV_KhajiitLunarSubstrate.GetMetric() - metricBefore, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
+
+    ; Road-home recognition owns one presentation per 06:00 devotional cycle,
+    ; independently of the shared lunar +4 budget. If another authentic lunar
+    ; practice already spent that budget, the rest is still acknowledged without
+    ; implying that it granted more substrate progress.
+    String presentationDayKey = "PDV.Khajiit.RoadHome.PresentationDay"
+    Int todayStamp = GetDevotionalDay() + 2
+    if ReadZeroReservedDevotionalDayStamp(presentationDayKey) != todayStamp
+        WriteZeroReservedDevotionalDayStamp(presentationDayKey)
+        if grantedMetric > 0.0
+            SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, grantedMetric, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
+        else
+            String cappedContext = "The road home was remembered. Today's lunar practice was already marked."
+            SendPrismaSubstrateToast("lunar", "act", cappedContext, "lunar", GetKhajiitLunarTierLabel(tierAfter))
+            AppendBookOfDaysEntry(cappedContext, Utility.GetCurrentGameTime() as Int, "substrate.act", "lunar", False)
+        endIf
+    endIf
     NotifyDiegeticRoutineFavor("khajiit_road_home")
     RequestPanelRefresh()
     Trace(2, "Khajiit road-home cadence routed with multiplier " + multiplier)
@@ -10256,27 +10327,31 @@ Function EvaluateKhajiitFocusedEmphasis()
 
     Int bestFocus = KHAJIIT_FOCUS_NONE
     Float bestWeight = 0.0
-    Float nextWeight = 0.0
+    if khenarthi > bestWeight
+        bestFocus = KHAJIIT_FOCUS_KHENARTHI
+        bestWeight = khenarthi
+    endIf
+    if azurah > bestWeight
+        bestFocus = KHAJIIT_FOCUS_AZURAH
+        bestWeight = azurah
+    endIf
+    if baanDar > bestWeight
+        bestFocus = KHAJIIT_FOCUS_BAANDAR
+        bestWeight = baanDar
+    endIf
+    if rajhin > bestWeight
+        bestFocus = KHAJIIT_FOCUS_RAJHIN
+        bestWeight = rajhin
+    endIf
+    if alkosh > bestWeight
+        bestFocus = KHAJIIT_FOCUS_ALKOSH
+        bestWeight = alkosh
+    endIf
 
-    bestFocus = PickKhajiitFocusCandidate(KHAJIIT_FOCUS_KHENARTHI, khenarthi, bestFocus, bestWeight)
-    bestWeight = GetKhajiitFocusWeight(bestFocus)
-    nextWeight = GetKhajiitSecondFocusWeight(bestFocus, khenarthi, azurah, baanDar, rajhin, alkosh)
-
-    bestFocus = PickKhajiitFocusCandidate(KHAJIIT_FOCUS_AZURAH, azurah, bestFocus, bestWeight)
-    bestWeight = GetKhajiitFocusWeight(bestFocus)
-    nextWeight = GetKhajiitSecondFocusWeight(bestFocus, khenarthi, azurah, baanDar, rajhin, alkosh)
-
-    bestFocus = PickKhajiitFocusCandidate(KHAJIIT_FOCUS_BAANDAR, baanDar, bestFocus, bestWeight)
-    bestWeight = GetKhajiitFocusWeight(bestFocus)
-    nextWeight = GetKhajiitSecondFocusWeight(bestFocus, khenarthi, azurah, baanDar, rajhin, alkosh)
-
-    bestFocus = PickKhajiitFocusCandidate(KHAJIIT_FOCUS_RAJHIN, rajhin, bestFocus, bestWeight)
-    bestWeight = GetKhajiitFocusWeight(bestFocus)
-    nextWeight = GetKhajiitSecondFocusWeight(bestFocus, khenarthi, azurah, baanDar, rajhin, alkosh)
-
-    bestFocus = PickKhajiitFocusCandidate(KHAJIIT_FOCUS_ALKOSH, alkosh, bestFocus, bestWeight)
-    bestWeight = GetKhajiitFocusWeight(bestFocus)
-    nextWeight = GetKhajiitSecondFocusWeight(bestFocus, khenarthi, azurah, baanDar, rajhin, alkosh)
+    ; All five weights are already local. Re-reading the current leader from
+    ; StorageUtil after every comparison added five external calls to every
+    ; focus-bearing action without changing the strict-greater tie behavior.
+    Float nextWeight = GetKhajiitSecondFocusWeight(bestFocus, khenarthi, azurah, baanDar, rajhin, alkosh)
 
     if bestWeight < KHAJIIT_FOCUS_THRESHOLD || (bestWeight - nextWeight) < KHAJIIT_FOCUS_LEAD_REQUIRED
         SetKhajiitFocusedEmphasis(KHAJIIT_FOCUS_NONE, "no_clear_lead")
@@ -10683,6 +10758,29 @@ Function ResolveAltmerCrisis(Bool reassertOrthodoxy, String reason)
     endIf
 
     StorageUtil.SetFloatValue(None, "PDV.Altmer.CrisisResolvedAt", Utility.GetCurrentGameTime())
+
+    ; P3 (2026-08-03): the first shipped organic source for Auri-El's
+    ; SIGNAL_ORTHODOXY_AFFIRMATION. Holding the line through a crisis of faith and reasserting
+    ; the orthodoxy IS the costly orthodox act that signal was authored for.
+    ;
+    ; ORDER IS LOAD-BEARING -- this call MUST stay BELOW the SetAltmerCrisisState above.
+    ; HandleAltmerOrthodoxCostlyEnforcement calls RecordAltmerCrisisReassertEvidence, which on its
+    ; third evidence day calls ResolveAltmerCrisis again. That recursion terminates ONLY because
+    ; the state is already REASSERTING by the time it re-enters, so the DISSONANT/QUESTIONING
+    ; guard rejects it immediately. Move this above the state set and it loops.
+    ;
+    ; The handler is curse- and origin-gated internally, and its SurfaceP2BookReadNotice call
+    ; no-ops here because IsP2BookNoticeReason requires a "po3_book" token this reason lacks.
+    if reassertOrthodoxy
+        HandleAltmerOrthodoxCostlyEnforcement("crisis_reasserted_" + reason)
+        ; P7 (2026-08-03): Trinimac's second 2301 source. Reasserting orthodoxy through a crisis is
+        ; his beat as much as Auri-El's. Separate key from the book route's
+        ; ConsumeDailyRepeatMultiplier, so both can land on the same day -- intended: a crisis
+        ; resolution is a rare, heavy moment.
+        if PDV_Trinimac && ConsumeOncePerDaySignal("PDV.Signal.TrinimacCrisisOrthodoxy")
+            AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, 2.0)
+        endIf
+    endIf
 EndFunction
 
 ; --- Altmer crisis exit (2026-07-15, D1#6 fix) ---
@@ -10723,6 +10821,30 @@ Function EvaluateAltmerCrisisAtDawn()
 
     Int crisisState = GetAltmerCrisisState()
     Float nowTime = Utility.GetCurrentGameTime()
+
+    ; P6 (2026-08-03): let a settled scar re-open the arc after ALTMER_CRISIS_REENTRY_DAYS.
+    ; This is the ONLY caller of SetAltmerCrisisState(ALTMER_CRISIS_NONE, ...) in the codebase;
+    ; without it the first resolved crisis permanently disarmed Lorkhan pressure.
+    ;
+    ; Deliberately NOT cleared here: PDV.Altmer.CrisisSeen.<source> (so re-entry needs a
+    ; DIFFERENT authored source -- the arc cannot loop on one beat) and
+    ; PDV.Altmer.VampireExileScar (a curse scar is not a crisis scar and does not heal on a timer).
+    ;
+    ; Setting NONE is intentionally silent: SetAltmerCrisisState only surfaces a toast and
+    ; Book of Days entry when the new state is non-NONE, which is right -- a scar settling is
+    ; the absence of pressure, not an event to announce.
+    if crisisState == ALTMER_CRISIS_SCARRED_RESOLVED
+        Float settledAt = StorageUtil.GetFloatValue(None, "PDV.Altmer.CrisisSettledAt")
+        if settledAt <= 0.0
+            ; Migration: a save that scarred before P6 has no stamp. Start its clock now rather
+            ; than re-opening instantly on the first dawn after the update.
+            StorageUtil.SetFloatValue(None, "PDV.Altmer.CrisisSettledAt", nowTime)
+        elseIf (nowTime - settledAt) >= ALTMER_CRISIS_REENTRY_DAYS
+            SetAltmerCrisisState(ALTMER_CRISIS_NONE, "scar_settled")
+            SyncAltmerDisciplines(Game.GetPlayer())
+        endIf
+        return
+    endIf
 
     if crisisState == ALTMER_CRISIS_REASSERTING
         Float resolvedAt = StorageUtil.GetFloatValue(None, "PDV.Altmer.CrisisResolvedAt")
@@ -10843,6 +10965,112 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
     endIf
 EndFunction
 
+; P7 (2026-08-03). Trinimac's curated book route. Revives SIGNAL_FALLEN_GOD_ORTHODOXY (2301), which
+; had NO award site anywhere -- it was one of the live "wire" entries in tools/pdv_reserved_signals.json.
+;
+; The tail call into HandleAltmerOrthodoxCostlyEnforcement is deliberate and load-bearing for P3:
+; the reason carries "trinimac" and not "xarxes", so AwardAltmerOrthodoxSignal falls through its
+; Xarxes branch and reaches AURI-EL's SIGNAL_ORTHODOXY_AFFIRMATION. That is the second organic
+; source P3 reserved this prefix for. Do not rename the prefix without re-reading that function.
+Function HandleAltmerTrinimacOrthodoxy(String reason)
+    if !IsAltmerOrigin() || !PDV_Trinimac
+        return
+    endIf
+
+    if IsAltmerFavorSuppressedByCurse()
+        RecordAltmerRejectedSurface(reason, "curse_suppressed_altmer_favor")
+        return
+    endIf
+
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.TrinimacFallenGodOrthodoxy")
+    if multiplier > 0.0
+        AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, multiplier)
+    endIf
+    SurfaceP2BookReadNotice(reason, "Trinimac remembered", "The champion's name is spoken as it was, before the defilement.")
+
+    HandleAltmerOrthodoxCostlyEnforcement(reason)
+EndFunction
+
+; P7. Trinimac's renewable beat, and the only band-keyed signal in the mod. ThalmorAlignment
+; otherwise pins at +100 late game with no consumer but a Lorkhan multiplier; this makes the pin
+; mean something. Requires no new detection -- event 2 already fires on hostile-humanoid kills.
+Function HandleAltmerTrinimacCivilizationDefense(String reason)
+    if !IsAltmerOrigin() || !PDV_Trinimac || !PDV_ThalmorAlignmentTrack
+        return
+    endIf
+
+    if IsAltmerFavorSuppressedByCurse()
+        return
+    endIf
+
+    if PDV_ThalmorAlignmentTrack.GetValue() < 70
+        return
+    endIf
+
+    if !ConsumeOncePerDaySignal("PDV.Signal.TrinimacCivilizationDefended")
+        return
+    endIf
+
+    AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_CIVILIZATION_DEFENDED, None, 1.0)
+    SurfaceReservedSignal(PDV_Trinimac, "Civilization held", "marks a foe of the elven project put down.")
+EndFunction
+
+; --- P9 (2026-08-03): Syrabane's four wired signals -------------------------------------------
+; He shipped with FIVE declared signals and ZERO award sites -- a closed ledger whose only income
+; was the quest-reaction matrix. Four are wired here. SIGNAL_APPRENTICE_AID (3111) is deliberately
+; NOT wired: every College-aid hook duplicates quest-reaction rows he already holds on MG01, MG02,
+; MG03, MG05, MG07 and MG08, which would score him twice for one act. See the P9 respec.
+;
+; Every handler below is origin- and curse-gated, and every one caps the piety pulse.
+Bool Function IsSyrabaneSignalEligible()
+    return IsAltmerOrigin() && PDV_Syrabane && !IsAltmerFavorSuppressedByCurse()
+EndFunction
+
+Function HandleAltmerSyrabaneCureWard(String reason)
+    if !IsSyrabaneSignalEligible()
+        return
+    endIf
+    if !ConsumeOncePerDaySignal("PDV.Signal.SyrabaneCureWard")
+        return
+    endIf
+    AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_CURSE_DISEASE_WARDING, None, 1.0)
+    SurfaceReservedSignal(PDV_Syrabane, "The sickness lifts", "marks a curse turned aside before it took root.")
+EndFunction
+
+Function HandleAltmerSyrabaneProtectiveWard(String reason)
+    if !IsSyrabaneSignalEligible()
+        return
+    endIf
+    if !ConsumeOncePerDaySignal("PDV.Signal.SyrabaneProtectiveWarding")
+        return
+    endIf
+    AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING, None, 1.0)
+    SurfaceReservedSignal(PDV_Syrabane, "The ward holds", "marks hostile magic stopped before it landed.")
+EndFunction
+
+; Weekly, not daily -- the detector already gates on a near-fatal mage fight with a kill, so the
+; rarity is the guard. Mirrors the Nord/Tsun and Khajiit/Baan Dar cadence in PDV_PlayerEvents.
+Function HandleAltmerSyrabaneAntiMageSurvival(String reason)
+    if !IsSyrabaneSignalEligible()
+        return
+    endIf
+    AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_ANTI_MAGE_SURVIVAL, None, 1.0)
+    SurfaceReservedSignal(PDV_Syrabane, "Survived the arcane", "marks a mage outlasted when the odds were bad.")
+EndFunction
+
+; The three vanilla ward tomes. Learning a Ward IS magical containment -- the most on-theme source
+; in his lane. One-shot per tome via MarkP2SourceRoute upstream.
+Function HandleAltmerSyrabaneContainment(String reason)
+    if !IsSyrabaneSignalEligible()
+        return
+    endIf
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.SyrabaneMagicalContainment")
+    if multiplier > 0.0
+        AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_MAGICAL_CONTAINMENT, None, multiplier)
+    endIf
+    SurfaceP2BookReadNotice(reason, "The ward learned", "Containment is the first art the apprentice is trusted with.")
+EndFunction
+
 Function AwardAltmerDawnSignal(String reason, Float multiplier)
     if StringContainsToken(reason, "magnus") && PDV_Magnus
         AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
@@ -10854,13 +11082,27 @@ Function AwardAltmerDawnSignal(String reason, Float multiplier)
     endIf
 EndFunction
 
+; The Auri-El arm below was PROVABLY UNREACHABLE in shipped play until 2026-08-03 (packet P3).
+; SIGNAL_ORTHODOXY_AFFIRMATION carries delta 3.0 -- the largest curated delta in the Altmer set --
+; but the only shipped ingress into HandleAltmerOrthodoxCostlyEnforcement was
+; RouteAltmerXarxesLineage, whose reason ALWAYS contains "xarxes", so the Xarxes branch always
+; returned first and Auri-El never scored outside the MCM debug button.
+;
+; TRAP: PDV_EventSignalActivator / PDV_EventSignalEffect make route 53 look reachable in a call
+; graph. Those are QA test harness, never shipped world content -- do not read them as an ingress.
+;
+; The organic sources are ResolveAltmerCrisis (below, live now) and, once P7 lands, the Trinimac
+; book route. That route's reason prefix "eventbus_p2_altmer_trinimac_" is reserved deliberately:
+; it must NOT contain "xarxes" or it routes the award to the wrong god.
 Function AwardAltmerOrthodoxSignal(String reason, Float multiplier)
     if StringContainsToken(reason, "xarxes") && PDV_Xarxes
         AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_LINEAGE_HONORED, None, multiplier)
         return
     endIf
 
-    if PDV_AuriEl
+    ; Hard daily cap. This lane carried only the 0.7^n repeat-decay multiplier and no ceiling, so
+    ; a delta-3.0 signal could pay out repeatedly within one day as soon as a source existed.
+    if PDV_AuriEl && ConsumeOncePerDaySignal("PDV.Signal.AuriElOrthodoxyAffirmation")
         AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_ORTHODOXY_AFFIRMATION, None, multiplier)
     endIf
 EndFunction
@@ -11025,6 +11267,15 @@ Function SetAltmerCrisisState(Int stateValue, String reason)
     endIf
     if oldState != stateValue
         Trace(1, "Altmer crisis state " + GetAltmerCrisisStateLabelForValue(oldState) + " -> " + GetAltmerCrisisStateLabelForValue(stateValue) + " (" + reason + ")")
+        ; P6: stamp when the scar actually forms. This is the single funnel for every state
+        ; change, so it catches BOTH exit paths. Deliberately not reusing
+        ; PDV.Altmer.CrisisResolvedAt: that field means different things on the two paths --
+        ; on the reassert path it marks REASSERTING entry (SCARRED_RESOLVED lands two days
+        ; later and never restamps it), on the lived-through path it marks the settle itself.
+        ; The re-entry clock needs one unambiguous meaning.
+        if stateValue == ALTMER_CRISIS_SCARRED_RESOLVED
+            StorageUtil.SetFloatValue(None, "PDV.Altmer.CrisisSettledAt", Utility.GetCurrentGameTime())
+        endIf
         if stateValue != ALTMER_CRISIS_NONE
             String crisisHeadline = GetAltmerCrisisHeadline(stateValue)
             String crisisLine = GetAltmerCrisisJournalLine(stateValue)
@@ -11199,6 +11450,14 @@ Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
         StorageUtil.SetFloatValue(deityForm, "PDV.Tier", newTier as Float)
         StorageUtil.SetFloatValue(deityForm, "PDV.LastTierChange", Utility.GetCurrentGameTime())
 
+        ; P10 (2026-08-03): a demotion clears the one-shot notice for the tier just LOST, so a
+        ; later re-climb can surface again. Without this, a Champion who decayed to Devoted and
+        ; fought all the way back to 85 got TOTAL SILENCE -- NotifyTierUp's key was already
+        ; burned and never cleared by anything. This fixes it for EVERY race, not just Altmer.
+        if newTier < oldTier
+            StorageUtil.SetIntValue(None, "PDV.TierNoticeShown." + deity.DeityIndex + "." + oldTier, 0)
+        endIf
+
         Bool isFocusedEmphasis = IsKhajiitOrigin() && deity == GetKhajiitEmphasisDeity(GetKhajiitFocusedEmphasis())
 
         ; Reward/mirror hooks fire only for the patron / focused-emphasis deity.
@@ -11237,6 +11496,62 @@ Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
 EndFunction
 
 ; One-shot guard when a tracked deity advances a tier.
+; --- P10: Long Devotion accessors ------------------------------------------------------------
+; Pure derivation over existing piety. Marks land at 100/115/130/145/160/175/190 for a standard
+; 85-threshold deity, capped at LONG_DEVOTION_MARK_MAX so a 200-piety patron cannot run away.
+Int Function GetDevotionMarks(PDV_DeityBase deity)
+    Form deityForm = GetDeityFormOrNone(deity)
+    if !deityForm
+        return 0
+    endIf
+
+    Float piety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
+    if piety < deity.ThresholdChampion
+        return 0
+    endIf
+
+    Int marks = ((piety - deity.ThresholdChampion) / LONG_DEVOTION_MARK_STEP) as Int
+    return ClampInt(marks, 0, LONG_DEVOTION_MARK_MAX)
+EndFunction
+
+; Ratchets MarkHigh (which gates the decay floor) and surfaces each mark exactly once.
+; The ratchet is deliberately one-way: a patron who slips back below a mark keeps the floor they
+; earned, so the floor cannot flap on and off with ordinary decay.
+Function MaybeSurfaceDevotionMark(PDV_DeityBase deity)
+    if !deity || GetTier(deity) < TIER_CHAMPION
+        return
+    endIf
+
+    Int marks = GetDevotionMarks(deity)
+    if marks < 1
+        return
+    endIf
+
+    String highKey = "PDV.LongDevotion.MarkHigh." + deity.DeityIndex
+    if marks > StorageUtil.GetIntValue(None, highKey)
+        StorageUtil.SetIntValue(None, highKey, marks)
+    endIf
+
+    String shownKey = "PDV.LongDevotion.MarkShown." + deity.DeityIndex + "." + marks
+    if StorageUtil.GetIntValue(None, shownKey) == 1
+        return
+    endIf
+    StorageUtil.SetIntValue(None, shownKey, 1)
+
+    String deityName = GetPublicDeityDisplayName(deity)
+    AppendBookOfDaysEntry(deityName + " marks another season of unbroken devotion.", Utility.GetCurrentGameTime() as Int, "tier.reach", GetPrismaSymbolForDeity(deity), True, 2, "Long devotion")
+    Trace(1, "Long Devotion mark " + marks + " surfaced for " + deity.DeityName)
+EndFunction
+
+; Dawn tick. Only the patron / focused-emphasis deity accrues marks -- the same scope the reward
+; and mirror hooks already use, so a broad worshipper's whole pantheon does not each start
+; ratcheting floors.
+Function RunDawnRefreshDevotionMarks()
+    if _activeDeity
+        MaybeSurfaceDevotionMark(_activeDeity)
+    endIf
+EndFunction
+
 Bool Function NotifyTierUp(PDV_DeityBase deity, Int newTier)
     if !deity || newTier <= TIER_NONE
         return False
@@ -11984,7 +12299,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
     elseIf ldName == "auri-el"
         WriteLD(deity, 344, 0.5, 3, 0.0, -1)
         WriteLD(deity, 342, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 313, 0.25, 3, 0.0, -1)
+        WriteLD(deity, 313, 0.35, 3, 0.0, -1)
         WriteLD(deity, 350, 0.75, 2, 0.5, -1)
         WriteLD(deity, 304, -1.5, 1, 1.0, -1)
         WriteLD(deity, 368, -1.0, 2, 0.5, -1)
@@ -11996,7 +12311,6 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
     elseIf ldName == "magnus"
         WriteLD(deity, 341, 0.75, 2, 0.5, -1)
         WriteLD(deity, 331, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
         WriteLD(deity, 342, 0.25, 3, 0.0, -1)
         WriteLD(deity, 332, 0.25, 3, 0.0, -1)
         WriteLD(deity, 365, -0.75, 2, 0.5, -1)
@@ -12010,7 +12324,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 342, 0.75, 2, 0.5, -1)
         WriteLD(deity, 340, 0.5, 3, 0.0, -1)
         WriteLD(deity, 341, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 331, 0.25, 3, 0.0, -1)
+        WriteLD(deity, 331, 0.4, 3, 0.0, -1)
         WriteLD(deity, 343, 0.25, 3, 0.0, -1)
         WriteLD(deity, 368, -0.5, 3, 0.0, -1)
         WriteLD(deity, 344, 0.5, 3, 0.0, -1)
@@ -12220,6 +12534,18 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 315, -0.25, 3, 0.0, -1)
         WriteLD(deity, 365, -0.75, 2, 0.5, -1)
         WriteLD(deity, 366, -0.75, 2, 0.5, -1)
+    elseIf ldName == "Syrabane"
+        WriteLD(deity, 332, 0.5, 3, 0.0, -1)
+        WriteLD(deity, 334, 0.25, 3, 0.0, -1)
+        WriteLD(deity, 341, 0.35, 3, 0.0, -1)
+        WriteLD(deity, 301, 0.5, 3, 0.0, -1)
+        WriteLD(deity, 300, 0.25, 3, 0.5, -1)
+        WriteLD(deity, 342, 0.2, 2, 0.0, -1)
+        WriteLD(deity, 365, -1.25, 1, 1.0, -1)
+        WriteLD(deity, 368, -1.25, 1, 1.0, -1)
+        WriteLD(deity, 304, -1.25, 2, 0.5, -1)
+        WriteLD(deity, 364, -1.0, 2, 0.5, -1)
+        WriteLD(deity, 362, -0.25, 3, 0.0, -1)
     endIf
 EndFunction
 
@@ -12309,6 +12635,15 @@ Function ApplyStancesForDeity(PDV_DeityBase deity)
         ApplyStances(deity, 1, 1, 1, 0, 1, 1, 1, 1, 2, 1)
     elseIf sName == "Z'en"
         ApplyStances(deity, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1)
+    elseIf sName == "Syrabane"
+        ; Added 2026-08-02. Syrabane shipped with NO Stance_* properties at all on
+        ; 07164C:Devotion.esp (4 props where every sibling carries 14), so Stance_Altmer
+        ; fell to the PDV_DeityBase default of 1 = STANCE_FOREIGN. That made
+        ; IsRaceNativeForPlayer() false, which makes ScoreFromTable early-out -- every
+        ; likes/dislikes row for him would have scored 0.0, and his curated signals would
+        ; have landed at the 0.5x foreign multiplier. Values are from
+        ; references/phase4/PDV_StanceMatrix.csv: Altmer NATIVE, all others FOREIGN.
+        ApplyStances(deity, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1)
     endIf
 EndFunction
 
@@ -12329,6 +12664,8 @@ Function ProcessDawn()
 
     EnsureAkatoshRuntimeIdentity()
     RunDawnAwardAltmerAuriElDawn()
+    RunDawnAwardAltmerXarxesRecord()
+    RunDawnRefreshDevotionMarks()
     RunDawnConsolidateScratch()
     ProcessBroadPantheonDawn()
     RunDawnConsolidateDaedricWeek()
@@ -12497,6 +12834,38 @@ Function RunDawnAwardAltmerAuriElDawn()
     StorageUtil.SetIntValue(None, "PDV.Altmer.AuriElDawn.LastDay", dawnDayStamp)
     AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 2.0)
     Trace(2, "Altmer Auri-El dawn acknowledgment routed for devotional day " + (dawnDayStamp - 2))
+EndFunction
+
+; P5 (2026-08-03): Xarxes's renewable curated lane, modelled on the Auri-El dawn above.
+;
+; This is a CADENCE, not an act reward. Xarxes's distinction from Magnus is the record kept over
+; TIME, not the act itself -- so the beat is "you studied yesterday, and the ledger noted it."
+; That shape is renewable forever, is capped at exactly one per devotional day by construction
+; (two independent stamps), and lands under Auri-El's 2.0 so the foundation stays the foundation.
+;
+; Before this, Xarxes was table-only: SIGNAL_LINEAGE_HONORED is bounded by three curated books and
+; SHARED_PACT_MEMORY requires him as the active patron, so a non-patron follower had no curated
+; income whatsoever once those books were read.
+Function RunDawnAwardAltmerXarxesRecord()
+    if !IsAltmerOrigin() || !PDV_Xarxes || IsAltmerFavorSuppressedByCurse()
+        return
+    endIf
+
+    Int dawnDayStamp = GetDevotionalDay() + 2
+    if StorageUtil.GetIntValue(None, "PDV.Altmer.XarxesRecord.LastDay") == dawnDayStamp
+        return
+    endIf
+
+    ; Require study on the PREVIOUS devotional day. Stamps use the zero-reserved day+2
+    ; convention, so yesterday's stamp is exactly today's minus one. A zero here means "never
+    ; studied" and correctly fails this test rather than matching day 0.
+    if StorageUtil.GetIntValue(None, "PDV.Altmer.Xarxes.StudyDay") != (dawnDayStamp - 1)
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.Altmer.XarxesRecord.LastDay", dawnDayStamp)
+    AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_RECORD_KEPT, None, 1.5)
+    Trace(2, "Altmer Xarxes record-kept routed for devotional day " + (dawnDayStamp - 2))
 EndFunction
 
 Function RunDawnConsolidateScratch()
@@ -15234,6 +15603,18 @@ Float Function GetDecayFloorForTier(PDV_DeityBase deity, Int tierValue)
     endIf
 
     if tierValue >= TIER_CHAMPION
+        ; P10 Long Devotion. A deity carried at least one full mark (15 piety) PAST Champion can
+        ; no longer be idled back out of Champion: its decay floor rises from Devoted to Champion.
+        ;
+        ; THIS IS THE ONLY ARM OF P10 THAT TOUCHES EVERY RACE AND DEITY -- hence the per-deity
+        ; MarkHigh gate. A deity never carried past Champion behaves exactly as before, which is
+        ; what the non-Altmer regression test checks. It cannot GRANT anything:
+        ; RefreshPassiveDecayFloorForDeity only ratchets the stored floor upward, and a floor
+        ; bounds decay rather than awarding piety. Worst case if the design is wrong: a
+        ; long-devoted patron stops decaying below 85, which is the intended statement.
+        if StorageUtil.GetIntValue(None, "PDV.LongDevotion.MarkHigh." + deity.DeityIndex) >= 1
+            return deity.ThresholdChampion
+        endIf
         return deity.ThresholdDevoted
     elseIf tierValue >= TIER_DEVOTED
         return deity.ThresholdSeeker
@@ -18399,6 +18780,8 @@ Function ResetSubstratePacingState(Int originValue)
     elseIf originValue == ORIGIN_KHAJIIT && PDV_KhajiitLunarSubstrate
         PDV_KhajiitLunarSubstrate.ResetPilotForDebug()
         ResetDailyRepeatKey("PDV.Signal.KhajiitRoadHome")
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.RoadHome.PresentationDay", 0)
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.RoadHome.PresentationDay.Encoding", 2)
     endIf
 EndFunction
 

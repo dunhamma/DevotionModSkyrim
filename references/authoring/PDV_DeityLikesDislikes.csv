@@ -74,19 +74,18 @@ Stuhn,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,,the dead deserve re
 Stuhn,300,kill-undead,+,small,0.25,3,0,,ActorTypeUndead,,laying the bound dead to rest restores fair order
 auri-el,344,increase-skill,+,small,0.5,3,0,,,,disciplined self-perfection toward ascension
 auri-el,342,read-lore-book,+,small,0.25,3,0,,,,study of the ages befits the supreme ancestor
-auri-el,313,rest-under-open-sky,+,small,0.25,3,0,,,,ascetic restraint under the bare dawn sky
+auri-el,313,rest-under-open-sky,+,small,0.35,3,0,,,,ascetic restraint under the bare dawn sky
 auri-el,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,,the soul's elevation served by mending others
 auri-el,304,murder-defenseless,-,large,-1.5,1,1.0,,,,base slaughter drags the soul down from its ascent
 auri-el,368,accept-daedric-artifact,-,medium,-1.0,2,0.5,,ActorTypeDaedra,,the Daedra are lesser et'Ada beneath the light
 magnus,341,read-spell-tome,+,medium,0.75,2,0.5,,,,the architect of magic rewards the arcane art
 magnus,331,enchant-item,+,small,0.5,3,0,,,,binding magicka into form honors the builder
-magnus,344,increase-skill,+,small,0.25,3,0,,,,steady mastery of higher study
 magnus,342,read-lore-book,+,small,0.25,3,0,,,,the fled architect left his plans for scholars
 magnus,332,brew-potion,+,small,0.25,3,0,,,,the alchemical art is one more craft of the design
 xarxes,342,read-lore-book,+,medium,0.75,2,0.5,,,,the scribe of Auri-El hoards the lore of every age
 xarxes,340,read-skill-book,+,small,0.5,3,0,,,,Xarxes records all knowledge
 xarxes,341,read-spell-tome,+,small,0.5,3,0,,,,the keeper of mysteries favors arcane secrets
-xarxes,331,enchant-item,+,small,0.25,3,0,,,,inscribing power mirrors the ageless scribe
+xarxes,331,enchant-item,+,small,0.4,3,0,,,,inscribing power mirrors the ageless scribe
 xarxes,343,learn-word-of-power,+,small,0.25,3,0,,,,each Word is another secret for his ledger
 xarxes,368,accept-daedric-artifact,-,small,-0.5,3,0,,ActorTypeDaedra,,the scribe keeps no truck with Daedric bargains
 trinimac,301,kill-daedra,+,medium,0.75,2,0.5,,ActorTypeDaedra,,the unbroken warrior stands against the Daedra
@@ -368,3 +367,14 @@ Leki,360,pick-owned-lock,-,small,-0.25,3,0,,owned,,the sword-singer meets the do
 Baan Dar,351,clear-bounty-serve-time,-,small,-0.25,2,0.5,,,,the pariah pays no debt to the law that cast him out
 Stuhn,313,rest-under-open-sky,+,small,0.25,3,0,,,,the shield-god kept the rough war-camps of old Atmora
 alkosh,344,increase-skill,+,small,0.25,3,0,,,,disciplined mastery keeps the proper order of progression
+Syrabane,332,brew-potion,+,small,0.5,3,0,,,,the restorative draught is the apprentice's first true ward
+Syrabane,334,harvest-ingredient,+,small,0.25,3,0,,,,gathering what protects before it is needed
+Syrabane,341,read-spell-tome,+,small,0.35,3,0,,,,the arts studied for shelter rather than for power
+Syrabane,301,kill-daedra,+,small,0.5,3,0,,,,warding mortals from what should not walk among them
+Syrabane,300,kill-undead,+,small,0.25,3,0.5,,ActorTypeUndead,,laying the restless down is protection rather than conquest
+Syrabane,342,read-lore-book,+,small,0.2,2,0,,,,he is no scholar; study serves the ward and nothing else
+Syrabane,365,raise-undead,-,medium,-1.25,1,1.0,,ActorTypeUndead,,binding the dead is the opposite of shelter
+Syrabane,368,accept-daedric-artifact,-,medium,-1.25,1,1.0,,ActorTypeDaedra,,a Daedric bargain is a ward traded away
+Syrabane,304,murder-defenseless,-,medium,-1.25,2,0.5,,,,the defenceless are precisely who the ward exists for
+Syrabane,364,assault-innocent,-,small,-1.0,2,0.5,,,,the apprentices' protector does not raise a hand to the weak
+Syrabane,362,steal-item,-,small,-0.25,3,0,,,,small dishonesty frays the trust protection depends on

@@ -41,6 +41,13 @@ FormList Property PDV_FLST_P2_NordHircineArkaySources Auto
 FormList Property PDV_FLST_P2_AltmerAurielSources Auto
 FormList Property PDV_FLST_P2_AltmerMagnusSources Auto
 FormList Property PDV_FLST_P2_AltmerXarxesSources Auto
+; P7 (2026-08-03). MUST be bound in the CK/ESP to 0716E1:Devotion.esp. An unbound property is None,
+; HasListedForm returns false, and the whole Trinimac book route no-ops SILENTLY -- no error, no trace.
+FormList Property PDV_FLST_P2_AltmerTrinimacSources Auto
+; P9 (2026-08-03). Both MUST be bound in the ESP or their routes no-op silently.
+; Bound: CureEffects -> 0716E2:Devotion.esp, SyrabaneSources -> 0716E3:Devotion.esp.
+FormList Property PDV_FLST_Altmer_Syrabane_CureEffects Auto
+FormList Property PDV_FLST_P2_AltmerSyrabaneSources Auto
 FormList Property PDV_FLST_P2_AltmerLorkhanPenalties Auto
 FormList Property PDV_FLST_P2_ArgonianHistSources Auto
 FormList Property PDV_FLST_P2_ArgonianCommunitySources Auto
@@ -148,6 +155,7 @@ Form PDV_QRSpellSheogorathFire1 = None
 
 Bool PDV_LastSleepStartedOutside = false
 Bool PDV_LastSleptInInn = false
+Bool PDV_HasSleepStartContext = false
 Keyword PDV_KW_LocTypeInn
 ObjectReference PDV_LockpickMenuTargetRef = None
 Bool PDV_LockpickMenuTargetWasLocked = false
@@ -162,6 +170,8 @@ Int PDV_CombatSessionKills = 0
 Int PDV_CombatMaxLevelDelta = 0
 Bool PDV_CombatLowHealthFlag = false
 Bool PDV_CombatNearFatalFlag = false
+; P9 (2026-08-03): set when any spell hits the player during a session (Syrabane 3113).
+Bool PDV_CombatMageThreatFlag = false
 Bool PDV_CombatBelowHealthRouted = false
 Bool PDV_OriginQueuedThisLoad = false
 
@@ -395,9 +405,11 @@ EndFunction
 
 Event OnSleepStart(Float afSleepStartTime, Float afDesiredSleepEndTime)
     Actor playerActor = GetActorRef()
+    PDV_HasSleepStartContext = false
     if playerActor
         PDV_LastSleepStartedOutside = !playerActor.IsInInterior()
         PDV_LastSleptInInn = IsPlayerInInn(playerActor)
+        PDV_HasSleepStartContext = true
     else
         PDV_LastSleepStartedOutside = false
         PDV_LastSleptInInn = false
@@ -407,6 +419,17 @@ Event OnSleepStart(Float afSleepStartTime, Float afDesiredSleepEndTime)
 EndEvent
 
 Event OnSleepStop(Bool abInterrupted)
+    ; Snapshot and clear the start context before any cross-script call can yield.
+    ; A stop event without a matching start must fail closed instead of reusing an
+    ; exterior flag left behind by an earlier sleep.
+    Actor playerActor = GetActorRef()
+    Bool hadSleepStartContext = PDV_HasSleepStartContext
+    Bool sleepStartedOutside = PDV_LastSleepStartedOutside
+    Bool sleptInInn = PDV_LastSleptInInn
+    PDV_HasSleepStartContext = false
+    PDV_LastSleepStartedOutside = false
+    PDV_LastSleptInInn = false
+
     if GetOriginRaceValue() < 0
         EnsureOriginInitialized()
     endIf
@@ -416,20 +439,22 @@ Event OnSleepStop(Bool abInterrupted)
         return
     endIf
 
-    PDV_EventBusService.RouteSleepStop(GetActorRef(), abInterrupted)
+    PDV_EventBusService.RouteSleepStop(playerActor, abInterrupted, hadSleepStartContext, sleepStartedOutside)
 
-    if !abInterrupted
-        if PDV_LastSleepStartedOutside
-            RouteGenericAction(EVT_REST_UNDER_OPEN_SKY, GetActorRef() as Form, None)
+    if !abInterrupted && hadSleepStartContext
+        if sleepStartedOutside
+            RouteGenericAction(EVT_REST_UNDER_OPEN_SKY, playerActor as Form, None)
         else
-            RouteGenericAction(EVT_SLEEP_IN_BED, GetActorRef() as Form, None)
+            RouteGenericAction(EVT_SLEEP_IN_BED, playerActor as Form, None)
             ; The ascetic-creed sleep penalty bites only on paid inn comfort ("slumbering
             ; easy"), not your own bed or a bedroll. Inn sleep also fires EVT_SLEEP_IN_INN so
             ; only the inn-keyed dislike rows score; positive sleep credit stays on EVT_SLEEP_IN_BED.
-            if PDV_LastSleptInInn
-                RouteGenericAction(EVT_SLEEP_IN_INN, GetActorRef() as Form, None)
+            if sleptInInn
+                RouteGenericAction(EVT_SLEEP_IN_INN, playerActor as Form, None)
             endIf
         endIf
+    elseIf !abInterrupted
+        Trace(1, "Player sleep stop had no captured start context; sleep classification skipped.")
     endIf
 EndEvent
 
@@ -637,6 +662,14 @@ Event OnMagicEffectApplyEx(ObjectReference akCaster, MagicEffect akEffect, Form 
     ; OnSpellCast, a caster-side vanilla event - same reliable-direct-hook approach as the
     ; spell-tome OnItemRemoved and lockpick-menu fixes.
     RouteQuestReactionMagicEffectFaucet(akEffect as Form)
+
+    ; P9 (2026-08-03): Syrabane's curse/disease warding (3112). Target-side is exactly right here --
+    ; the note above explains this event only hears effects applied TO the player, which is precisely
+    ; "a cure landed on me". All four listed vanilla effects are TargetType=Self, so they fire on the
+    ; actor being cured. The manager owns the origin, curse and daily gates.
+    if PDV_EventBusService && HasListedForm(PDV_FLST_Altmer_Syrabane_CureEffects, akEffect as Form)
+        PDV_EventBusService.RouteAltmerSyrabaneCureWard("magiceffect")
+    endIf
 EndEvent
 
 Event OnSpellCast(Form akSpell)
@@ -681,11 +714,24 @@ Event OnHitEx(ObjectReference akAggressor, Form akSource, Projectile akProjectil
         endIf
     endIf
 
+    ; P9: mage-threat flag for Syrabane's anti-mage survival (3113). Set on ANY spell hit, blocked
+    ; or not -- surviving a mage is the beat, not blocking one. Reset per session in BeginCombatSession.
+    if akSource as Spell
+        PDV_CombatMageThreatFlag = true
+    endIf
+
     if !abHitBlocked
         return
     endIf
 
     RouteQuestReactionBlockedHitFaucet()
+
+    ; P9: Syrabane's protective warding (3110). Deliberately NOT a cast counter -- his design
+    ; contract rejects "every ward cast". This requires a block that actually stopped MAGIC, so
+    ; akSource must be a Spell; a blocked sword swing is not warding. Zero new records.
+    if PDV_EventBusService && (akSource as Spell)
+        PDV_EventBusService.RouteAltmerSyrabaneProtectiveWard("blocked_spell")
+    endIf
 EndEvent
 
 Function RouteGenericBookRead(Book akBook, Bool firstRead, String logicalEventId = "")
@@ -842,6 +888,7 @@ Function BeginCombatSession()
     PDV_CombatMaxLevelDelta = 0
     PDV_CombatLowHealthFlag = false
     PDV_CombatNearFatalFlag = false
+    PDV_CombatMageThreatFlag = false
     PDV_CombatBelowHealthRouted = false
     ScheduleCombatDeadline(4.0)
     Trace(2, "PDV combat session opened for origin " + originRace + ".")
@@ -870,7 +917,10 @@ Function SampleCombatHealth(Actor playerRef, String reason)
     Float healthPct = playerRef.GetActorValuePercentage("Health")
     if originRace == 4
         TryRoutePlayerBelowHealthGate(playerRef, healthPct, reason)
-    elseIf originRace == 0 || originRace == 6
+    elseIf originRace == 0 || originRace == 3 || originRace == 6
+        ; P9: Altmer uses the FLAG-PAIR shape deliberately. Origins 4/7/8 use
+        ; TryRoutePlayerBelowHealthGate instead; the two are NOT interchangeable, and picking the
+        ; wrong one yields a signal that compiles and never fires.
         if healthPct <= 0.10
             PDV_CombatNearFatalFlag = true
             PDV_CombatLowHealthFlag = true
@@ -919,6 +969,21 @@ Function ResolveCombatSession(String reason)
     ; Nord: Tsun's adversity beat rides the same rare near-fatal reversal shape as
     ; the Khajiit beat below, weekly-capped at the detector per the 2026-07-15
     ; pool-feeding ruling (rarity is the guard, pool feeding is intended).
+    ; P9 (2026-08-03): Syrabane's anti-mage survival (3113), mirroring the Nord/Tsun shape below --
+    ; same weekly-stamp idiom, same near-fatal + kill gate, plus the mage-threat flag so this is
+    ; specifically "survived a mage", not any desperate fight.
+    if originRace == 3
+        if PDV_CombatMageThreatFlag && PDV_CombatLowHealthFlag && PDV_CombatSessionKills >= 1 && PDV_EventBusService
+            Int altmerWeekStamp = ((Utility.GetCurrentGameTime() as Int) / 7) + 1
+            if StorageUtil.GetIntValue(None, "PDV.Altmer.Syrabane.AntiMageWeek") != altmerWeekStamp
+                StorageUtil.SetIntValue(None, "PDV.Altmer.Syrabane.AntiMageWeek", altmerWeekStamp)
+                PDV_EventBusService.RouteAltmerSyrabaneAntiMageSurvival("organic_anti_mage_survival")
+                Trace(1, "Altmer anti-mage survival detected (" + reason + ")")
+            endIf
+        endIf
+        return
+    endIf
+
     if originRace == 0
         if PDV_CombatNearFatalFlag && PDV_CombatSessionKills >= 1 && PDV_EventBusService
             Int nordWeekStamp = ((Utility.GetCurrentGameTime() as Int) / 7) + 1
@@ -1142,7 +1207,8 @@ Bool Function ActorHasInheritedKeyword(Actor actorRef, Keyword keywordRef)
 EndFunction
 
 Bool Function IsCombatSessionOrigin(Int originRace)
-    return originRace == 0 || originRace == 4 || originRace == 5 || originRace == 6 || originRace == 7 || originRace == 8 || originRace == 9
+    ; P9 (2026-08-03): origin 3 (Altmer) added for Syrabane's anti-mage survival beat.
+    return originRace == 0 || originRace == 3 || originRace == 4 || originRace == 5 || originRace == 6 || originRace == 7 || originRace == 8 || originRace == 9
 EndFunction
 
 Event OnItemAdded(Form akBaseItem, Int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
@@ -1819,6 +1885,12 @@ Function RouteP2ImmersiveSource(Form sourceForm, String sourceKind, String paren
     endIf
     if ShouldRouteP2Source(PDV_FLST_P2_AltmerXarxesSources, sourceForm, "altmer_xarxes", sourceKind)
         PDV_EventBusService.RouteAltmerXarxesLineage(sourceKind + "_altmer_xarxes")
+    endIf
+    if ShouldRouteP2Source(PDV_FLST_P2_AltmerTrinimacSources, sourceForm, "altmer_trinimac", sourceKind)
+        PDV_EventBusService.RouteAltmerTrinimacOrthodoxy(sourceKind + "_altmer_trinimac")
+    endIf
+    if ShouldRouteP2Source(PDV_FLST_P2_AltmerSyrabaneSources, sourceForm, "altmer_syrabane", sourceKind)
+        PDV_EventBusService.RouteAltmerSyrabaneContainment(sourceKind + "_altmer_syrabane")
     endIf
     if ShouldRouteP2Source(PDV_FLST_P2_AltmerLorkhanPenalties, sourceForm, "altmer_lorkhan_penalty", sourceKind)
         PDV_EventBusService.RouteAltmerLorkhanPenalty(4, sourceKind + "_altmer_lorkhan_penalty")
@@ -2613,17 +2685,53 @@ Bool Function MarkP2SourceRoute(Form sourceForm, String routeKey, String sourceK
     return true
 EndFunction
 
+; P15 (2026-08-03). In-game days before an already-read book can credit again.
+Float Property BOOK_REREAD_COOLDOWN_DAYS = 30.0 AutoReadOnly
+
+; P15 (2026-08-03): books used to be a ONE-SHOT HARVEST. The `.Seen` flag was set once and never
+; cleared, so a library was consumed rather than practised -- `dailyCap: 3` on read-lore-book
+; actually meant "three different UNREAD books today", a finite world pool masquerading as a
+; faucet. Once a player had read everything, the whole reading lane paid zero forever, which hit
+; the scholar deities (Xarxes, Magnus, Auri-El) hardest and inverted the theology.
+;
+; DEVIATION FROM THE APPROVED SPEC, deliberate and flagged: the plan called for re-reads to credit
+; at 25%. The `firstRead` return here is a pure GATE -- `RouteGenericBookRead` drops the event
+; entirely when it is false, and the actual delta comes from ScoreFromTable much further
+; downstream. Scaling a re-read would mean threading a multiplier through RouteGenericAction, the
+; SHARED router for every event type in the mod. That is far outside this packet's blast radius,
+; so re-reads credit at FULL value and the existing per-row dailyCap plus the global
+; PIETY_DAILY_MAX_DELTA do the balancing: the daily ceiling does not move, only the lane's
+; lifespan. Revisit if playtest shows it is too soft.
+;
+; MarkP2SourceRoute is deliberately untouched -- curated P2 heritage books stay once-ever. Those
+; are authored beats, not practice.
 Bool Function MarkGenericBookRead(Form bookForm)
     if !bookForm
         return false
     endIf
 
-    String seenKey = "PDV.BookRead." + bookForm.GetFormID() + ".Seen"
-    if StorageUtil.GetIntValue(None, seenKey) == 1
+    Float nowTime = Utility.GetCurrentGameTime()
+    String dayKey = "PDV.BookRead." + bookForm.GetFormID() + ".SeenDay"
+    Float seenDay = StorageUtil.GetFloatValue(None, dayKey)
+
+    if seenDay <= 0.0
+        ; Migration: a pre-P15 save carries the old `.Seen` int with no timestamp. Treat that as
+        ; "read just now", NOT as never-read -- otherwise an existing library would all become
+        ; re-creditable at once on the first load after the update.
+        String legacyKey = "PDV.BookRead." + bookForm.GetFormID() + ".Seen"
+        if StorageUtil.GetIntValue(None, legacyKey) == 1
+            StorageUtil.SetFloatValue(None, dayKey, nowTime)
+            return false
+        endIf
+        StorageUtil.SetFloatValue(None, dayKey, nowTime)
+        return true
+    endIf
+
+    if (nowTime - seenDay) < BOOK_REREAD_COOLDOWN_DAYS
         return false
     endIf
 
-    StorageUtil.SetIntValue(None, seenKey, 1)
+    StorageUtil.SetFloatValue(None, dayKey, nowTime)
     return true
 EndFunction
 

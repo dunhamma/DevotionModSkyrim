@@ -242,27 +242,42 @@ If the player would not reasonably understand the theological meaning, do not pe
 ### Tier 3 -- Devoted (primary secondary god committed)
 *This ancestral power recognizes your devotional coherence. Auri-El watches.*
 
+> **IMPLEMENTATION STATUS (audited 2026-08-02 -- read before treating anything below as shipped).**
+> What ships today is five flat passive Abilities with **zero conditions**, verified by ESP readback:
+> `07117D` Auri-El T3 (Fortify Magicka + Resist Magic), `071185` Magnus T3 (Fortify Alteration +
+> Fortify Magicka), `071654` Trinimac T3 (Fortify One-Handed + Armor), `07118D` Xarxes T3 (Fortify
+> Restoration + Fortify Magicka), `07165C` Syrabane T3 (Fortify Restoration + Resist Magic).
+>
+> Every **conditional, timed, or triggered** effect described below is `DESIGN INTENT (not
+> implemented)` and is tagged inline as such. None of them has a MGEF, SPEL, or script arm --
+> `SyncAltmerRewardFamily` has no branch above `TIER_CHAMPION` at all. Do not cite them as status.
+> They are the design brief for a future T4 reward packet; see plan packet P10 (post-Champion
+> "Long Devotion" layer), which deliberately ships recognition and a decay floor **without** granting
+> spells, so this accrual model can be judged before committing to 50+ new records.
+>
+> The recognition-privilege and dialogue-privilege lines below are likewise unbuilt.
+
 **Auri-El focus (available to all factions, always Layer 1):**
-- *Champion moment:* You've maintained Auri-El's foundation through everything. This Champion represents pure theological commitment to return -- the Apotheosis project as a daily practice. Dawn acknowledgment at Tier 3 generates larger piety and a brief magic regen burst. The Lorkhan Adjacency Penalty fires normally -- but an Altmer who has reached Champion while absorbing those penalties has made their statement clearly.
-- *Specific payoff:* Magic regenerates 25% faster during non-combat periods (contemplation of return). Auri-El shrine interactions give maximum blessing. At dawn specifically: magic cost -15% until midday.
+- *Champion moment:* You've maintained Auri-El's foundation through everything. This Champion represents pure theological commitment to return -- the Apotheosis project as a daily practice. The Lorkhan Adjacency Penalty fires normally -- but an Altmer who has reached Champion while absorbing those penalties has made their statement clearly. `DESIGN INTENT (not implemented):` dawn acknowledgment at Tier 3 generating larger piety and a brief magic regen burst -- `AwardAltmerDawnSignal` has no tier-3 branch.
+- *Specific payoff:* Magic regenerates 25% faster during non-combat periods (contemplation of return). Auri-El shrine interactions give maximum blessing. `DESIGN INTENT (not implemented):` at dawn specifically, magic cost -15% until midday -- no timed effect record exists.
 
 **Magnus focus (Psijic-aligned primary):**
-- *Champion moment:* Scholar's Discipline -- the Elder Way made real. Magic regenerates 20% faster in non-combat. College of Winterhold gives maximum recognition privilege (special dialogue, access to restricted texts). After reaching a new magic skill milestone (25/50/75/100), next 24 hours: that school costs 10% less.
-- *Specific payoff:* Alteration and Illusion cost -10% permanently at Champion. Self-cultivation acts (skill books, magical milestones, Psijic-adjacent content like the Order of the Owl questline) generate strong piety. Psijic Tradition players have the most forgiving Lorkhan penalty (0.75x) -- this is the Champion arc that most rewards academic coherence without rigid enforcement.
+- *Champion moment:* Scholar's Discipline -- the Elder Way made real. Magic regenerates 20% faster in non-combat. `DESIGN INTENT (not implemented):` College of Winterhold maximum recognition privilege (special dialogue, restricted-text access); and, after reaching a magic skill milestone (25/50/75/100), that school costing 10% less for 24 hours -- `TryAwardAltmerMagicMilestone` awards piety only, once ever per (skill, threshold).
+- *Specific payoff:* Alteration costs less at Champion (shipped as Fortify Alteration on `071185`). `DESIGN INTENT (not implemented):` the Illusion half of that -10% -- the shipped record carries Alteration and Magicka only. Self-cultivation acts (skill books, magical milestones, Psijic-adjacent content like the Order of the Owl questline) generate strong piety. Psijic Tradition players have the most forgiving Lorkhan penalty (0.75x) -- this is the Champion arc that most rewards academic coherence without rigid enforcement.
 
 **Trinimac focus (Thalmor Devout primary -- requires ThalmorAlignment 70+):**
-- *Champion moment:* Martial virtue made devotional. Trinimac is the god of civilization's defense -- the Champion who reaches this tier has fought in Trinimac's name through the enforcement frame. After completing an enforcement or defense-of-civilization act with ThalmorAlignment above 70, armor rating +15 for one in-game day (Trinimac's martial blessing). Thalmor characters treat you with explicit recognition privilege at this tier.
-- *Specific payoff:* One-handed damage +5% cumulative (Tier 1 + Tier 3). After defeating enemies threatening elven/civilizational interests, brief health regen. Lorkhan penalty at Thalmor Orthodox x1.5 -- this Champion suffers the most from Lorkhan-adjacent content. That tension is intentional.
+- *Champion moment:* Martial virtue made devotional. Trinimac is the god of civilization's defense -- the Champion who reaches this tier has fought in Trinimac's name through the enforcement frame. `DESIGN INTENT (not implemented):` armor rating +15 for one in-game day after an enforcement act above ThalmorAlignment 70, and explicit Thalmor recognition privilege -- no timed effect and no dialogue condition exist. (Plan packet P7 does add a renewable ThalmorAlignment >= 70 signal, but it awards piety, not a timed buff.)
+- *Specific payoff:* One-handed damage and armor at Champion (shipped flat on `071654`). `DESIGN INTENT (not implemented):` the "cumulative Tier 1 + Tier 3" stacking and the post-kill health regen -- T1/T2/T3 are exclusive bands, not cumulative, and there is no on-kill regen record. Lorkhan penalty at Thalmor Orthodox x1.5 -- this Champion suffers the most from Lorkhan-adjacent content. That tension is intentional.
 - *Lore note:* Trinimac is Altmer-native but specialist. Not every Altmer will reach him. He is the god of those who defend the project by force -- the most orthodox-aggressive Champion path.
 - *Offer and gain rule:* Trinimac is a true focused path, not pressure-only. The formal offer requires `ThalmorAlignment >= 70` plus meaningful civilization-defense/enforcement signals. After access, `ThalmorAlignment` continues to weight Trinimac gain and offer readiness, but it remains pressure/access/interpretation and never becomes a third boon track.
 
 **Xarxes focus (ancestry/scholarship, Psijic or Divine Body primary):**
-- *Champion moment:* The records-keeper acknowledges your genealogical fidelity. After completing a quest with significant ancestry, family duty, or genealogical content, 24-hour magic cost reduction. Reading rare tomes (one-time books, particularly lore-heavy volumes) generates strong Xarxes piety. Knowledge of Altmeri heritage acts generate the strongest scoring.
-- *Specific payoff:* Lockpicking and Alteration +5% (Xarxes' domain includes secret knowledge and hidden things). Ancestry-adjacent dialogue privilege in relevant NPC encounters.
+- *Champion moment:* The records-keeper acknowledges your genealogical fidelity. Reading rare tomes generates strong Xarxes piety (shipped: event 342 at 0.75, his highest row). `DESIGN INTENT (not implemented):` a 24-hour magic cost reduction after an ancestry/genealogy quest -- no timed effect record exists. Note also that book reads are permanently one-shot per book form, so "reading rare tomes" is a finite pool, not a renewable practice; plan packets P14-P16 address that.
+- *Specific payoff:* Restoration and Magicka at Champion (shipped flat on `07118D`). `DESIGN INTENT (not implemented):` the Lockpicking/Alteration +5% and the ancestry-adjacent dialogue privilege -- the shipped record carries neither, and no such dialogue condition exists.
 
 **Syrabane focus (magical protection, Psijic or Divine Body primary):**
-- *Champion moment:* The apprentices' protector watches over you. Magic-using enemies deal 15% less damage at Champion. After casting a protective spell (Ward, Oakflesh-line), next non-protection spell cost -10%. College and magical-institution content generates strong piety.
-- *Specific payoff:* Ward spells absorb more (15% bonus to ward strength). Magical institutions treat you with recognition privilege.
+- *Champion moment:* The apprentices' protector watches over you. `DESIGN INTENT (not implemented):` magic-using enemies dealing 15% less damage; and, after casting a protective spell, the next non-protection spell costing 10% less -- the shipped `07165C` carries flat Fortify Restoration + Resist Magic with zero conditions. "College and magical-institution content generates strong piety" is **also unbuilt today**: Syrabane has no likes/dislikes rows at all and all five of his curated signals are unwired, so his only live earn channel is the quest-reaction matrix. Plan packets P1, P8 and P9 close this.
+- *Specific payoff:* Restoration and magic resistance at Champion (shipped flat on `07165C`). `DESIGN INTENT (not implemented):` the 15% ward-strength bonus and the magical-institution recognition privilege.
 - *Offer and gain rule:* Syrabane is a true Altmer focused path, but the launch lane starts narrow. Formal offer and gain require warding, magical protection, apprentice or College aid, curse/disease warding, or anti-mage survival. Generic magic advancement, generic College membership, every ward cast, and raw magic-resistance stacking stay rejected unless the narrow implementation proves too thin.
 
 ## Focused-Deity Launch Hook Posture

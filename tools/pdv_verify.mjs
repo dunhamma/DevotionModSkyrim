@@ -154,8 +154,23 @@ const PHASE20_RACE_IMPLEMENTATION_MANIFESTS = [
 ];
 const DEITY_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes.csv");
 const PRINCE_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes_Princes_V2.csv");
-const EXPECTED_LIKES_DISLIKES_VERSION = 17;
-const EXPECTED_PRINCE_LD_VERSION = 4;
+// LIKES_DISLIKES_VERSION and PRINCE_LD_VERSION are deliberately NOT pinned here.
+//
+// They used to be hardcoded expectations (EXPECTED_LIKES_DISLIKES_VERSION /
+// EXPECTED_PRINCE_LD_VERSION). Every legitimate bump -- and a bump is REQUIRED whenever the
+// likes/dislikes CSV or the stance matrix changes, or the edit is inert on existing saves --
+// turned this gate red until someone remembered to edit this file too. That is a false
+// failure: it reports "the version is not 17" when the version being 18 is the correct and
+// intended state. Found 2026-08-03 during Altmer packet P1 (Syrabane stance repair).
+//
+// checkSmallSignalTables() now READS both values out of the manager source and asserts the
+// invariant that actually matters: the properties exist, are well-formed, and are positive.
+// The save-migration gate in PDV__ManagerQuest reads these properties, so a missing or
+// malformed one is a real defect -- a *changed* one is not.
+//
+// CSV <-> codegen drift is caught separately, by checkGeneratedFunction() below and by
+// tools/pdv_signal_e2e_gate.mjs, which already reads the version this same way
+// (its csvCodegenFreshness check). This makes the two gates consistent.
 const PHASE20_NO_IN_GAME_PROOF_GATES = path.join(
   PROJECT_ROOT,
   "references",
@@ -9885,10 +9900,37 @@ class Verifier {
       stripPrefix: "Daedric:",
     });
 
-    this.checkSourceContains("Small-signal table versions", "PDV__ManagerQuest", [
-      `Int Property LIKES_DISLIKES_VERSION = ${EXPECTED_LIKES_DISLIKES_VERSION} AutoReadOnly`,
-      `Int Property PRINCE_LD_VERSION = ${EXPECTED_PRINCE_LD_VERSION} AutoReadOnly`,
-    ]);
+    // Read, do not pin -- see the note at the top of this file next to the removed
+    // EXPECTED_*_VERSION constants.
+    for (const propName of ["LIKES_DISLIKES_VERSION", "PRINCE_LD_VERSION"]) {
+      const match = sourceText.match(
+        new RegExp(`Int Property\\s+${propName}\\s*=\\s*(\\d+)\\s+AutoReadOnly`),
+      );
+      if (!match) {
+        this.fail(
+          "Small-signal table versions",
+          `PDV__ManagerQuest.psc has no well-formed "Int Property ${propName} = <int> AutoReadOnly". `
+            + "The save-migration gate reads this property; without it, existing saves never reload "
+            + "the table and every CSV edit stays inert in game.",
+          managerSource,
+        );
+        continue;
+      }
+      const value = Number(match[1]);
+      if (!Number.isInteger(value) || value < 1) {
+        this.fail(
+          "Small-signal table versions",
+          `PDV__ManagerQuest.psc ${propName} = ${match[1]}, which is not a positive integer.`,
+          managerSource,
+        );
+        continue;
+      }
+      this.pass(
+        "Small-signal table versions",
+        `PDV__ManagerQuest.psc ${propName} = ${value} (read from source; intentionally not pinned).`,
+        managerSource,
+      );
+    }
     this.checkGeneratedFunction(
       "Small-signal deity table",
       sourceText,
@@ -10078,9 +10120,9 @@ class Verifier {
     const checks = [
       [playerEvents, "PlayerEvents defines inn event 315", "Int Property EVT_SLEEP_IN_INN = 315 AutoReadOnly"],
       [playerEvents, "PlayerEvents captures inn state at sleep start", "PDV_LastSleptInInn = IsPlayerInInn(playerActor)"],
-      [playerEvents, "PlayerEvents always routes normal bed sleep as event 314", "RouteGenericAction(EVT_SLEEP_IN_BED, GetActorRef() as Form, None)"],
-      [playerEvents, "PlayerEvents gates inn-only event 315 on the inn flag", "if PDV_LastSleptInInn"],
-      [playerEvents, "PlayerEvents routes inn sleep as event 315", "RouteGenericAction(EVT_SLEEP_IN_INN, GetActorRef() as Form, None)"],
+      [playerEvents, "PlayerEvents always routes normal bed sleep as event 314", "RouteGenericAction(EVT_SLEEP_IN_BED, playerActor as Form, None)"],
+      [playerEvents, "PlayerEvents gates inn-only event 315 on the captured inn flag", "if sleptInInn"],
+      [playerEvents, "PlayerEvents routes inn sleep as event 315", "RouteGenericAction(EVT_SLEEP_IN_INN, playerActor as Form, None)"],
       [playerEvents, "PlayerEvents resolves vanilla LocTypeInn", 'Game.GetFormFromFile(0x0001CB87, "Skyrim.esm") as Keyword'],
       [playerEvents, "PlayerEvents checks the current location keyword", "return currentLoc.HasKeyword(PDV_KW_LocTypeInn)"],
       [eventBus, "EventBus fans generic events to Prince paths", "PDV_Manager.RouteActionToOpenPaths(eventType, actorRef, targetRef)"],

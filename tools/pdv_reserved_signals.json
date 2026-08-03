@@ -21,64 +21,14 @@
     "decisionNote": "focusable patron lane; detector design owed",
     "decisionDate": "2026-07-15"
   },
-  "PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY": {
-    "reason": "Wave 3: hook Orc apostasy / Altmer orthodoxy routes. Rare-by-design frequency, but must fire.",
-    "deferredBy": "curated-signal wiring audit",
-    "date": "2026-07-06",
-    "decision": "wire",
-    "owner": "thalmor-orthodox-champion",
-    "expires": "2026-08-31",
-    "decisionNote": "ledger: rare-by-design but must fire; Altmer Orthodox Champion lane",
-    "decisionDate": "2026-07-15"
-  },
-  "PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING": {
-    "reason": "Curated signature lane declared+scored in the deity-signal remap but never dispatched (wired-vs-stub class). Wave 3: Altmer Syrabane detector work, or fold into quest-reaction ownership.",
-    "deferredBy": "main-merge dispatch-coverage sweep",
-    "date": "2026-07-12",
-    "decision": "wire",
-    "owner": "BC-0153",
-    "expires": "2026-08-31",
-    "decisionNote": "contracted beta warding lane scaffolding; design detectors with the BC-0153 build",
-    "decisionDate": "2026-07-15"
-  },
   "PDV_Syrabane.SIGNAL_APPRENTICE_AID": {
     "reason": "Same Syrabane signature-lane class: declared+scored, no dispatch. Wave 3.",
     "deferredBy": "main-merge dispatch-coverage sweep",
     "date": "2026-07-12",
-    "decision": "wire",
+    "decision": "retired-not-wired",
     "owner": "BC-0153",
     "expires": "2026-08-31",
-    "decisionNote": "contracted beta warding lane",
-    "decisionDate": "2026-07-15"
-  },
-  "PDV_Syrabane.SIGNAL_CURSE_DISEASE_WARDING": {
-    "reason": "Same Syrabane signature-lane class: declared+scored, no dispatch. Wave 3.",
-    "deferredBy": "main-merge dispatch-coverage sweep",
-    "date": "2026-07-12",
-    "decision": "wire",
-    "owner": "BC-0153",
-    "expires": "2026-08-31",
-    "decisionNote": "contracted beta warding lane",
-    "decisionDate": "2026-07-15"
-  },
-  "PDV_Syrabane.SIGNAL_ANTI_MAGE_SURVIVAL": {
-    "reason": "Same Syrabane signature-lane class: declared+scored, no dispatch. Wave 3.",
-    "deferredBy": "main-merge dispatch-coverage sweep",
-    "date": "2026-07-12",
-    "decision": "wire",
-    "owner": "BC-0153",
-    "expires": "2026-08-31",
-    "decisionNote": "contracted beta warding lane",
-    "decisionDate": "2026-07-15"
-  },
-  "PDV_Syrabane.SIGNAL_MAGICAL_CONTAINMENT": {
-    "reason": "Same Syrabane signature-lane class: declared+scored, no dispatch. Wave 3.",
-    "deferredBy": "main-merge dispatch-coverage sweep",
-    "date": "2026-07-12",
-    "decision": "wire",
-    "owner": "BC-0153",
-    "expires": "2026-08-31",
-    "decisionNote": "contracted beta warding lane",
-    "decisionDate": "2026-07-15"
+    "decisionNote": "P9 2026-08-03: no buildable source. Every College-aid hook duplicates quest-reaction rows Syrabane already holds on MG01/MG02/MG03/MG05/MG07/MG08, which would score him twice for one act. MGRitual01-04 do not exist in vanilla (zero matches in vanilla-quest-stage-readback.csv) and there are no personal-favour quests for Onmund/Brelyna/J'zargo -- they are aliases inside MG01-MG03 only. Constant left DECLARED in PDV_Deity_Syrabane.psc; entry retained here deliberately (deleting an unwired entry is itself a gate FAIL). Revisit if a non-College apprentice-protection hook surfaces.",
+    "decisionDate": "2026-08-03"
   }
 }

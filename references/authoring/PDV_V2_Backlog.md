@@ -374,6 +374,44 @@ Ref: bug issue #24.
 
 ---
 
+## 9b. Origin-gated likes/dislikes rows STACK on the base row (2026-08-03)
+
+Found during the Altmer lane audit. Not an Altmer-only issue — it is a property of
+`ScoreFromTable`, so it applies to every deity that carries an `originGate` row.
+
+**What happens.** `ScoreFromTable` (`PDV_DeityBase.psc`) scores the base (ungated) row, then
+*separately* scores an origin-gated overlay row under an independent key,
+`eventType + 10000 + originRace` (`:290`) — its own daily-cap and cooldown bucket. A gated row is a
+**bonus on top of** the base row, not a replacement for it.
+
+**The consequence, measured.** Magnus is native to both Altmer and Breton (via the Breton Hidden Art
+lane) and carries four `originGate=breton` rows (341, 342, 331, 365). A Breton reading one spell
+tome credits the base row *and* the Breton overlay, in separate buckets:
+
+| | Renewable daily ceiling (raw) |
+|---|---|
+| Magnus as an **Altmer** (the race that owns him) | **4.50** |
+| Magnus as a **Breton** (the race that does not) | **8.20** |
+
+So the race that does not own Magnus has nearly double the renewable ceiling for him, from the same
+physical actions.
+
+**Why it is invisible today, and when it stops being.** Both figures clear the daily clamp
+(`PIETY_DAILY_MAX_DELTA = 4.3`, against a raw threshold of `4.3 / GAIN_RATE_SCALE 1.32 = 3.26`), so
+the excess is wasted overflow and no player can currently feel it. It becomes real the moment either
+`PIETY_DAILY_MAX_DELTA` or `GAIN_RATE_SCALE` is tuned down, or a mode preset lowers
+`DailyCapScalar()`.
+
+**The question for V2.** If Hidden Art is meant to be a *comparable alternate path* to Magnus rather
+than a *strictly better* one, this stacking reads as an oversight rather than design. Decide whether
+origin overlays should stack or replace, then audit every other deity carrying gated rows —
+Trinimac's Altmer overlay on event 2 has the same shape.
+
+**Deliberately not fixed in 1.0.** No player-visible effect at current tuning, and changing overlay
+semantics touches every race at once.
+
+---
+
 ## 10. Triage note
 
 After 1.0 ships, convert this stub into a real V2 roadmap: group the voiced

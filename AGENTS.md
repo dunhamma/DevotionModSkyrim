@@ -249,6 +249,8 @@ Source and compiled output live at `D:\Wabbajack\modlists\Anvil\mods\Devotion\` 
 
 Phase 4 design outputs are mirrored for live reference under `D:\Wabbajack\modlists\Anvil\mods\Devotion\Design\Phase4\`. The tracked source copies remain under `references/phase4/` in this docs workspace.
 
+**Isolated V3 big-update workspace (2026-07-28):** a separate build space exists for large in-progress work that shouldn't disturb the live Devotion Dev compile/playtest state. Git side: branch `feature/v3-big-update`, checked out in its own worktree at `.claude/worktrees/v3-big-update/` (the primary checkout here stays on `main`) -- run a separate Claude/Codex session rooted in that worktree folder for V3 work so branch switches in one session never disturb the other's checked-out files. MO2 side: same Anvil instance throughout, just a separate mod folder `D:\Wabbajack\modlists\Anvil\mods\Devotion-V3Dev\` (a full copy of live `Devotion\`) plus MO2 profile **"Devotion V3 Dev"** (clone of `Devotion Dev`, fresh empty saves), which disables `Devotion` and enables `Devotion-V3Dev` in its place -- both provide a file named `Devotion.esp`, so plugins.txt needed no edit, only the mod toggle. To compile against it, set `PDV_COMPILE_SOURCE_ROOT` / `PDV_COMPILE_OUTPUT_ROOT` to the `Devotion-V3Dev\Scripts\Source` / `Devotion-V3Dev\Scripts` paths before running `pdv_compile.mjs` (the script already supports this override, no toolchain edit needed) -- safe to run concurrently with a normal compile since it's fully env-scoped per terminal. To playtest or run any `housecarl_*` MCP call against it, switch MO2's active profile to "Devotion V3 Dev" first -- houseCARL auto-follows the active profile on its next call, and this is a SINGLE shared toggle for the whole instance, so it is NOT safe to interleave live houseCARL/playtest work on both profiles at once; confirm which profile is active (`housecarl_load_order_status`, no args) before trusting any read tied to a status claim.
+
 Script folder layout (CK toolchain):
 ```
 Devotion\
@@ -905,6 +907,67 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   self-testing, adversarially verify findings, and use **houseCARL for the ESP-reality proof
   layer** (true load-order winner + record detail), gated by MCP liveness and SKIP-not-PASS
   when down. (Cross-cutting-audit doctrine, 2026-06-24; memory [[cross-cutting-audit-doctrine]])
+- **Gates assert invariants, not snapshots of correct values.** A gate that hardcodes an expected
+  value goes red on every legitimate change to that value, and the red says nothing about
+  correctness -- it says someone forgot to edit the gate. `pdv_verify.mjs` used to pin
+  `EXPECTED_LIKES_DISLIKES_VERSION` / `EXPECTED_PRINCE_LD_VERSION`; it now READS both out of
+  `PDV__ManagerQuest.psc` and asserts what actually matters (the property exists, is well-formed,
+  is positive), matching how `pdv_signal_e2e_gate.mjs` already read it. **Bumping
+  `LIKES_DISLIKES_VERSION` no longer requires a verifier edit -- do not re-pin it.** Apply the same
+  test to any new gate: would a correct, intended change make this fail? Then it is pinning, not
+  verifying. (2026-08-03, found during Altmer packet P1)
+- **Snapshot the live mod before any record- or script-writing packet.**
+  `node tools/pdv_snapshot_live.mjs --label <packet>-pre`. `Devotion.esp` lives outside the repo and
+  is NOT git-tracked; the only ESP in git is a 2026-06-15 snapshot ~116KB adrift from live, in a
+  directory that is now gitignored. GitHub Releases are recovery at *release* cadence only -- opaque
+  binaries you cannot diff or roll back per packet. Snapshots land in
+  `generated/live-devotion-backups/` (`.gitignore:10`), which matters because the repo is **PUBLIC**:
+  tracking the dev ESP would publish unreleased records. ~4.7MB / 204 files, sha256-verified;
+  `--restore` auto-snapshots first so a restore is reversible. (2026-08-03)
+- **A gate's verdict is its EXIT CODE or its overall status -- never a grepped sub-field.** The
+  gates already exit non-zero on failure by design (`tools/pdv_signal_e2e_gate.mjs:166`; its header
+  says "exits 1 for every non-GREEN run so CI/pre-commit cannot go falsely green"). **Piping
+  defeats that**: `node tools/pdv_signal_e2e_gate.mjs | grep ...` returns GREP's exit status, so a
+  FAIL is discarded silently while the fields you happened to grep look healthy. Run the gate
+  unpiped and check `$?`, or redirect to a file and read the top-level `status` plus all seven
+  section statuses. Proven 2026-08-03: a packet was signed off on grepped dispatch counts while
+  `sourceFill` was RED -- a new FormList had a `sourceProperties` entry but no `sourceFillEntries`
+  member authority, and it surfaced two packets later by accident. **A gate you have not seen
+  return a verdict has not run.** Do not "fix" this by making gates print louder; they are already
+  correct. (2026-08-03; memory [[gate-verdict-is-exit-code-not-grepped-field]])
+- **A new P2 source FormList needs BOTH manifest entries.** `sourceProperties` (the route
+  declaration) *and* `sourceFillEntries` (per-member `approved-for-fill` authority) in
+  `PDV_Phase20_P2ImmersiveReceivers.manifest.json`. Only the second is checked by
+  `pdv_housecarl_p2_readback.mjs --check-source-fill`; a list with members but no fill authority
+  fails there and nowhere else.
+- **CONFIRM houseCARL's MO2 instance before ANY readback that becomes a claim.** The instance is
+  GLOBAL and PERSISTED (`houseCARL.user.json`, "persists across restarts"), so an agent that points
+  it elsewhere silently redirects every later read for everyone. `Devotion.esp` exists in **both**
+  Anvil and ARR 2.5, so a wrong-instance read does not error -- it returns a DIFFERENT, older record
+  set. Proven 2026-08-03: a P7 verification reported "FormID not present in the load order (3799
+  plugins)" for a record that existed perfectly well; houseCARL had been left on
+  `D:\Wabbajack\modlists\ARR 2.5` profile `KoK R11`. The 3799-plugin count and an
+  `Authoria - Output - *.esp` winner are both tells that you are on ARR, not Anvil (Anvil is ~357
+  plugins, profile `Devotion Dev`). Check with `housecarl_load_order_status` first; restore with
+  `housecarl_set_mo2_instance path="D:\Wabbajack\modlists\Anvil"`. **If you switch the instance for
+  any reason, switch it back and say so in your handback.**
+  (2026-08-03; memory [[compat-reference-instances]])
+- **A `REQ_` EditorID on a `XXXXXX:Skyrim.esm` FormID is a RENAMED vanilla record, not a Requiem
+  addition** — and `editorid_contains=` matches the load-order WINNER's name, so searching a vanilla
+  stem can return **zero matches for a record that plainly exists**. Proven 2026-08-03: the three
+  vanilla ward tomes `SpellTomeLesserWard` (`09E2AE`), `SpellTomeSteadfastWard` (`0A2720`) and
+  `SpellTomeGreaterWard` (`0A2722`) all surface as `REQ_Tome_RestorationN_Ward_ConcSelf` at override
+  depth 4 under `Authoria - Output - Synthesis Gameplay.esp`. Same trap on `AlchCureDisease` ->
+  `REQ_Alch_CureDisease`. Pin the read with `plugin="Skyrim.esm"` to get the true identity.
+  **A null result from ONE EditorID stem is not evidence of absence.** Before writing "no vanilla
+  source exists" into a spec, vary the stem, search by `type=` + a broad stem, or check the defining
+  plugin -- and state which of those you actually did. This was concluded wrongly twice in one
+  session from a single failed query. (2026-08-03; memory [[requiem-renames-vanilla-records-in-queries]])
+- **`live-source/Scripts/Source/` and the MO2 tree are two separate directories, not a junction.**
+  The compiler and `pdv_verify` both read
+  `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source\`. An edit made only in the repo mirror
+  will pass a gate that never saw it -- and did, on 2026-08-03. Copy across and `diff -rq` both
+  trees before calling any Papyrus work done.
 
 **Codex coordination & audit follow-through**
 - At each pause, proactively hand the user ready-to-dispatch **Codex handoff docs** (do NOT ask
@@ -988,6 +1051,20 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 ---
 
 ## Decisions Log
+
+- **[2026-08-03] - Khajiit road-home sleep uses sleep-start context and one presentation per devotional day:**
+  `PDV_PlayerEvents` captures exterior status at `OnSleepStart` and carries it through
+  `PDV_EventBus` to the manager at completed, non-interrupted `OnSleepStop`. The manager
+  must not resample the wake cell: tent and bedroll sleep flows can move the player while
+  waking. Missing start context fails closed. The first completed outdoor rest in each
+  06:00 devotional day receives one toast and one Book of Days entry independently of
+  whether another lunar practice already spent the shared `+4`; in that capped case the
+  copy is `The road home was remembered. Today's lunar practice was already marked.`
+  Later road-home rests in the same cycle create neither surface. Source/static gates,
+  targeted Papyrus compile, Prisma policy, and live-source sync are complete; vanilla
+  exterior-bedroll and Authoria Campfire-tent runtime/manual proof remain open. Papyrus
+  review also locked the local rule to cache engine/cross-script values once per event and
+  reuse already-loaded focus weights instead of repeating StorageUtil reads.
 
 - **[2026-07-27] - Every value-modifying MGEF Devotion defines carries `Recover`; this is
   now a project-wide invariant, not a Daedric-family convention:**
