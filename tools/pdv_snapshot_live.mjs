@@ -23,6 +23,27 @@
     node tools/pdv_snapshot_live.mjs --restore <snapshot-dir-name> --confirm
 
   Restore takes its own auto-snapshot first, so a restore is itself reversible.
+
+  DIFFING A SNAPSHOT -- and the trap in it.
+  These snapshots CAN be compared. `housecarl_diff_record` accepts a full PATH to a plugin that is
+  not in the load order, on either side, so snapshot-vs-snapshot and snapshot-vs-live both work.
+  (`housecarl_read_record` cannot -- it reads load-order truth only and refuses an off-order path,
+  so diff_record is the ONLY way into a snapshot's contents.)
+
+    housecarl_diff_record
+      formid   = "07164C:Devotion.esp"
+      plugin_a = "<repo>/generated/live-devotion-backups/<older>/Devotion.esp"
+      plugin_b = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Devotion.esp"
+
+  BUT: it does NOT detect ADDED list elements. Proven 2026-08-03 -- diffing a quest whose VMAD went
+  from 4 script properties to 14 returned `complete: true, delta_count: 0, truncated: false`. It
+  compares the leaves present on BOTH sides, finds them equal, and calls the comparison complete.
+  A wholly-absent RECORD is handled honestly (it errors); value CHANGES are caught. It is
+  specifically the additive case -- new FormList members, new VMAD properties, new effects, i.e.
+  most PDV record work -- that reads as "identical".
+
+  So: diff snapshots to answer "what was RETUNED", never "what was ADDED". For additions the
+  authority is the write-time verified readback, or a fresh read against the live load order.
 */
 import crypto from "node:crypto";
 import fs from "node:fs";
