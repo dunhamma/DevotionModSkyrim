@@ -924,6 +924,20 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   `generated/live-devotion-backups/` (`.gitignore:10`), which matters because the repo is **PUBLIC**:
   tracking the dev ESP would publish unreleased records. ~4.7MB / 204 files, sha256-verified;
   `--restore` auto-snapshots first so a restore is reversible. (2026-08-03)
+- **An in-place write can SILENTLY REVERT an earlier in-place edit to the same plugin. Re-verify
+  earlier records after every later write.** Confirmed data loss 2026-08-03: packet P1 added 10
+  `Stance_*` VMAD properties to `PDV_Deity_Syrabane` and verified clean (14 read back individually);
+  two packets later the record was back to 4 and everything built on it was silently scoring 0.0.
+  **The only tell was FILE SIZE** -- after P1 `Devotion.esp` was 637,838 bytes; after P7's write,
+  which ADDED a property, it was 637,765. An additive edit cannot shrink a plugin, so P7 rewrote
+  from a **pre-P1 parsed model**, reverting P1 and then applying its own edit. P7's and P9's own
+  edits survived; only the earlier one was lost.
+  Probable trigger: the houseCARL instance was switched away and back between the two writes.
+  **So:** watch the byte count the tool prints on every in-place write; never switch instance
+  mid-session on a plugin you are editing, and if it is switched treat every prior in-place edit to
+  that plugin as SUSPECT; prefer ONE batched call over several sequential ones. Per-write
+  verification is necessary and NOT sufficient -- it only ever proves the record you just touched,
+  at the moment you touched it. (2026-08-03; memory [[inplace-write-silently-reverted-earlier-edit]])
 - **A gate's verdict is its EXIT CODE or its overall status -- never a grepped sub-field.** The
   gates already exit non-zero on failure by design (`tools/pdv_signal_e2e_gate.mjs:166`; its header
   says "exits 1 for every non-GREEN run so CI/pre-commit cannot go falsely green"). **Piping

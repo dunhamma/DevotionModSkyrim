@@ -111,6 +111,8 @@ PDV_Substrate_NordAncestor Property PDV_NordAncestorSubstrate Auto
 PDV_Substrate_DunmerAncestor Property PDV_DunmerAncestorSubstrate Auto
 Book Property PDV_BOOK_DunmerAncestralUrn Auto
 MiscObject Property PDV_MISC_DunmerAncestralUrn Auto
+; P14 (2026-08-04). MUST be bound in the ESP or the focus is never granted and the whole lane is dead.
+MiscObject Property PDV_MISC_AltmerPracticeFocus Auto
 Spell Property PDV_SPEL_Dunmer_AncestorWatch Auto
 Message Property PDV_MESG_DunmerMarkHome Auto
 PDV_Substrate_KhajiitLunar Property PDV_KhajiitLunarSubstrate Auto
@@ -932,6 +934,7 @@ Event OnInit()
     UpdateDisfavorStingRuntime()
     EnsureSurveyDevotionPower()
     EnsureDunmerAncestralUrn()
+    EnsureAltmerPracticeFocus()
     EnsureArgonianHistSapToken()
     if PDV_ArgonianHistSubstrate
         PDV_ArgonianHistSubstrate.MigrateLegacyCompositeMetricOnce()
@@ -1023,6 +1026,7 @@ Event OnUpdate()
         EnsureNordRuntimeWiring()
         EnsureSurveyDevotionPower()
         EnsureDunmerAncestralUrn()
+        EnsureAltmerPracticeFocus()
         EnsureArgonianHistSapToken()
         InitCCContent()
         RegisterManagerShoutSignals()
@@ -5538,24 +5542,52 @@ Function HandleSubstrateActionEvent(Int eventType, String reason)
             SendPrismaSubstrateProgress("ancestor", tierBefore, PDV_NordAncestorSubstrate.GetSubstrateTier(), PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The first cooked meal kept the hearth.", "journal", GetNordAncestorLayerLabel())
         endIf
     elseIf origin == ORIGIN_ALTMER && PDV_AltmerAncestorSubstrate && !IsAltmerFavorSuppressedByCurse()
-        if eventType == 331
+        ; P2 (2026-08-04) widened the spine's feed set, and answers the question P5 deferred:
+        ; YES, ordered study feeds the ancestral spine, as ordered craft already did.
+        ;
+        ; This adds NO income. TryAwardSubstrateDayCredit caps the substrate at ONE +4.0 credit per
+        ; devotional day whatever the source, so extra feeds change only WHICH act can claim the
+        ; day -- which is the whole point. A player is never stuck waiting on one specific chore.
+        ;
+        ; Routed through AwardAltmerAncestorSpinePulse rather than calling
+        ; RecordHeritageStandingScaled inline, so every feed gets the same bookkeeping, the same
+        ; Prisma progress push, and the same per-source Book of Days voice.
+        ; NOTE: these arms deliberately keep their OWN metricBefore / RecordHeritageStandingScaled /
+        ; SendPrismaSubstrateProgress rather than routing through AwardAltmerAncestorSpinePulse.
+        ; Consolidating them reads cleaner but drops the manager's substrate-progress producer count
+        ; below the floor asserted by tools/pdv_substrate_pacing_audit.mjs
+        ; (`source.actual-substrate-delta`, >= 19 producers, each reporting the real post-award
+        ; delta). The shared voice helper below is the part worth factoring out; the per-producer
+        ; delta reporting is intentionally NOT.
+        if eventType == 330 || eventType == 331
+            String craftToken = "smithing_"
+            if eventType == 331
+                craftToken = "enchantment_"
+            endIf
             Float metricBefore = PDV_AltmerAncestorSubstrate.GetMetric()
             Int tierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
-            PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, "enchantment_" + reason)
-            SendPrismaSubstrateProgress("altmer-heritage", tierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore, "", "auri-el", GetAltmerHeritageTierName())
-            ; P4 (2026-08-03): Magnus's renewable curated beat. Binding magicka into lawful form is
-            ; his doctrine, it never exhausts, and he already outweighs Xarxes on this row. Hard
-            ; 1.2/day ceiling -- one award regardless of how many items are enchanted.
-            if PDV_Magnus && ConsumeOncePerDaySignal("PDV.Signal.MagnusApertureKept")
+            PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, craftToken + reason)
+            Float grantedMetric = PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore
+            SendPrismaSubstrateProgress("altmer-heritage", tierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), grantedMetric, "", "auri-el", GetAltmerHeritageTierName())
+            AppendAltmerHeritageVoice(grantedMetric, craftToken + reason)
+
+            ; P4: Magnus's renewable curated beat. Enchanting specifically -- binding magicka into
+            ; lawful form is his doctrine. Hard 1.2/day ceiling regardless of how many items.
+            if eventType == 331 && PDV_Magnus && ConsumeOncePerDaySignal("PDV.Signal.MagnusApertureKept")
                 AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_APERTURE_KEPT, None, 1.0)
                 SurfaceReservedSignal(PDV_Magnus, "The design holds", "marks magicka bound into lawful form.")
             endIf
         elseIf eventType == 340 || eventType == 341 || eventType == 342
-            ; P5 (2026-08-03): a STAMP ONLY, deliberately not a substrate feed.
-            ; RunDawnAwardAltmerXarxesRecord reads this at the NEXT dawn to decide whether the
-            ; ledger noticed yesterday. It does NOT call RecordHeritageStandingScaled -- whether
-            ; reading should feed the ancestral spine is P2's decision, not this packet's, and
-            ; quietly widening the substrate here would pre-empt it.
+            Float studyMetricBefore = PDV_AltmerAncestorSubstrate.GetMetric()
+            Int studyTierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
+            PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, "study_" + reason)
+            Float studyGrantedMetric = PDV_AltmerAncestorSubstrate.GetMetric() - studyMetricBefore
+            SendPrismaSubstrateProgress("altmer-heritage", studyTierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), studyGrantedMetric, "", "auri-el", GetAltmerHeritageTierName())
+            AppendAltmerHeritageVoice(studyGrantedMetric, "study_" + reason)
+
+            ; P5: the Xarxes study stamp. RunDawnAwardAltmerXarxesRecord reads this at the NEXT
+            ; dawn to decide whether the ledger noticed yesterday. Independent of the spine credit
+            ; above -- the stamp records that study HAPPENED, whether or not it claimed the day.
             StorageUtil.SetIntValue(None, "PDV.Altmer.Xarxes.StudyDay", GetDevotionalDay() + 2)
         endIf
     endIf
@@ -6117,7 +6149,10 @@ Function HandleAltmerSleepEvents(Actor playerRef, String reason)
             AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier * 0.5)
         endIf
     endIf
-    AppendBookOfDaysEntry("An Aldmeri dream settles your ancestral inheritance.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Aldmeri dream")
+    ; P2 (2026-08-04): the hardcoded Book of Days line that used to sit here is gone.
+    ; AwardAltmerAncestorSpinePulse now writes it via GetAltmerHeritageSourceLine, gated on the day
+    ; credit actually landing. Keeping it here too would double-log the sleep feed and would report
+    ; a dream on days the credit was already spent.
 EndFunction
 
 Function HandleImperialSleepEvents(Actor playerRef, String reason)
@@ -11026,6 +11061,84 @@ Bool Function IsSyrabaneSignalEligible()
     return IsAltmerOrigin() && PDV_Syrabane && !IsAltmerFavorSuppressedByCurse()
 EndFunction
 
+; --- P14 (2026-08-04): the Altmer practice focus ----------------------------------------------
+; The keystone durability act. Every Altmer lane except Trinimac's was built on a FINITE world pool
+; -- curated books one-shot, Words of Power and map markers bounded, skills capped -- so a
+; scholar-focused player eventually had nothing left to do. This never exhausts and needs no
+; inventory bookkeeping.
+;
+; It also gives P18's dawn an INDOOR path: the outdoor observance is the free version, this is the
+; one you can keep anywhere.
+;
+; Returns the idle kind for the token: 0 = pray, 1 = study.
+Int Function HandleAltmerPracticeFocus(String reason)
+    if !IsAltmerOrigin() || IsAltmerFavorSuppressedByCurse()
+        return 0
+    endIf
+
+    ; ONE cap across every lane, so switching patron cannot buy a second practice in a day.
+    if !ConsumeOncePerDaySignal("PDV.Signal.AltmerPracticeFocus")
+        return GetAltmerPracticeIdleKind()
+    endIf
+
+    ; Claim the substrate day. The spine takes one +4.0 credit per devotional day whatever claims
+    ; it, so this adds no income -- it adds a way to claim the day that works indoors, in a jail
+    ; cell, mid-dungeon, anywhere the outdoor dawn observance cannot reach.
+    AwardAltmerAncestorSpinePulse(1.0, "practice_focus_" + reason)
+
+    ; Then the active lane's own signal. Deliberately routed to the PATRON's lane rather than a
+    ; fixed deity: the point is that practice feeds whatever you actually worship.
+    if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity
+        if _activeDeity == PDV_Magnus && PDV_Magnus
+            AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_APERTURE_KEPT, None, 1.0)
+        elseIf _activeDeity == PDV_Xarxes && PDV_Xarxes
+            AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_RECORD_KEPT, None, 1.0)
+        elseIf _activeDeity == PDV_Trinimac && PDV_Trinimac
+            AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, 1.0)
+        elseIf _activeDeity == PDV_Syrabane && PDV_Syrabane
+            AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING, None, 1.0)
+        elseIf _activeDeity == PDV_AuriEl && PDV_AuriEl
+            AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 1.0)
+        endIf
+    elseIf PDV_AuriEl
+        ; No patron, or broad worship: the foundation takes it. This is the ONLY arm that credits
+        ; Auri-El without him being chosen, and it requires a deliberate act -- unlike the free
+        ; dawn pulse P18 removed.
+        AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 1.0)
+    endIf
+
+    Trace(2, "Altmer practice focus routed (" + reason + ")")
+    return GetAltmerPracticeIdleKind()
+EndFunction
+
+; 0 = prayer pose (foundation and martial lanes), 1 = reading pose (scholar lanes).
+Int Function GetAltmerPracticeIdleKind()
+    if GetPatronState() != PATRON_STATE_ACTIVE || !_activeDeity
+        return 0
+    endIf
+    if _activeDeity == PDV_Magnus || _activeDeity == PDV_Xarxes || _activeDeity == PDV_Syrabane
+        return 1
+    endIf
+    return 0
+EndFunction
+
+; Grants the focus once, mirroring EnsureDunmerAncestralUrn.
+Function EnsureAltmerPracticeFocus()
+    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER || !PDV_MISC_AltmerPracticeFocus
+        return
+    endIf
+
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return
+    endIf
+
+    if playerRef.GetItemCount(PDV_MISC_AltmerPracticeFocus) <= 0
+        playerRef.AddItem(PDV_MISC_AltmerPracticeFocus, 1, True)
+        Trace(2, "Altmer practice focus granted.")
+    endIf
+EndFunction
+
 Function HandleAltmerSyrabaneCureWard(String reason)
     if !IsSyrabaneSignalEligible()
         return
@@ -11150,12 +11263,14 @@ Function AwardAltmerAncestorSpinePulse(Float multiplier, String reason)
     endIf
 
     Int tierBefore = 0
+    Float grantedMetric = 0.0
     if PDV_AltmerAncestorSubstrate
         Float metricBefore = PDV_AltmerAncestorSubstrate.GetMetric()
         tierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
         PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(multiplier, reason)
         Int tierAfter = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
-        SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore, "", "auri-el", GetAltmerHeritageTierName())
+        grantedMetric = PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore
+        SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, grantedMetric, "", "auri-el", GetAltmerHeritageTierName())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Altmer.AncestralStanding", multiplier)
@@ -11163,6 +11278,50 @@ Function AwardAltmerAncestorSpinePulse(Float multiplier, String reason)
     StorageUtil.SetStringValue(None, "PDV.Altmer.LastAncestorSpineReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Altmer.LastAncestorSpineTime", Utility.GetCurrentGameTime())
     Trace(2, "Altmer ancestor spine routed with multiplier " + multiplier)
+
+    ; P2 (2026-08-04): ONE Book of Days line per ACCEPTED day credit, in the voice of whichever act
+    ; claimed the day. Gated on granted > 0.0 because the substrate budget is one credit per
+    ; devotional day -- most calls legitimately grant nothing, and writing a line for a rejected
+    ; credit would report practice that did not land.
+    ;
+    ; Before this, only the sleep feed had a voice (a hardcoded line in HandleAltmerSleepEvents,
+    ; deleted with this change). The shrine rite, enchantment and skill feeds were silent, so three
+    ; of the four renewables produced no felt acknowledgement at all.
+    AppendAltmerHeritageVoice(grantedMetric, reason)
+EndFunction
+
+; P2: shared voice for the ancestral spine. Gated on the day credit ACTUALLY landing -- the
+; substrate budget is one credit per devotional day, so most calls legitimately grant nothing and
+; writing a line for a rejected credit would report practice that never happened.
+Function AppendAltmerHeritageVoice(Float grantedMetric, String reason)
+    if grantedMetric <= 0.0
+        return
+    endIf
+    AppendBookOfDaysEntry(GetAltmerHeritageSourceLine(reason), Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
+EndFunction
+
+; P2: per-source voice for the ancestral spine. The reason prefixes are set by each call site;
+; keep this in sync with them rather than inventing new ones here.
+String Function GetAltmerHeritageSourceLine(String reason)
+    if StringContainsToken(reason, "dawn_observance")
+        return "You met the dawn under open sky, as the ancestral order asks."
+    elseIf StringContainsToken(reason, "auriel_shrine_rite")
+        return "You kept the dawn rite at the shrine, as the ancestors kept it."
+    elseIf StringContainsToken(reason, "sleep_dream")
+        return "An Aldmeri dream settles your ancestral inheritance."
+    elseIf StringContainsToken(reason, "enchantment")
+        return "Magicka bound into lawful form; the discipline holds."
+    elseIf StringContainsToken(reason, "smithing")
+        return "Ordered craft at the forge, in the manner set down for you."
+    elseIf StringContainsToken(reason, "study")
+        return "Ordered study, and the inheritance sits a little straighter."
+    elseIf StringContainsToken(reason, "magic_skill_increase")
+        return "A school mastered further, in the ancestral discipline."
+    elseIf StringContainsToken(reason, "curated_heritage")
+        return "A heritage text read closely; the line is remembered."
+    endIf
+
+    return "Orthodoxy upheld at cost, and the ancestral order holds."
 EndFunction
 
 Function RunDawnRefreshAltmerAncestor()
@@ -12821,8 +12980,27 @@ Function RecordBookOfDaysFedName(String displayName)
     StorageUtil.StringListAdd(None, "PDV.BookOfDays.TodayFed", displayName, False)
 EndFunction
 
+; P18 (2026-08-04) -- THE DAWN NOW BELONGS TO THE SPINE, NOT TO AURI-EL.
+;
+; This used to award +2.0 Auri-El piety gated on origin and curse ONLY: no act, no presence, no
+; shrine. It fired for a sleeping player who did nothing, at net +1.5/day against decay, which
+; carried every Altmer to Auri-El Champion in ~8 weeks of simply existing -- and made him
+; out-rank a committed Trinimac or Syrabane patron on every ranked surface, for free.
+;
+; The owner's design call: keeping the dawn is the ORDERED LIFE every Altmer keeps because they
+; are Altmer, not worship of one god. So it feeds the deity-agnostic ancestral spine. Auri-El
+; keeps his own renewable -- the shrine rite, +2.0/day via AwardShrinePrayerToDeityName, on any
+; vanilla Shrine of Akatosh. That is the right asymmetry: directed worship of a specific god costs
+; you a trip to his shrine; keeping the dawn costs only doing it.
+;
+; This supersedes PDV_RaceDesign_Altmer.md lines 42-43 ("Dawn sun acknowledgment generates piety"),
+; updated in the same change. It does NOT contradict the 2026-07-13 substrate addendum: that
+; forbids "PASSIVE dawn" granting the cultural metric, and explicitly allows an accepted RITE to.
+; An act-gated observance is a rite.
+;
+; Costs no income: the substrate is capped at one +4.0 credit per devotional day whatever claims it.
 Function RunDawnAwardAltmerAuriElDawn()
-    if !IsAltmerOrigin() || !PDV_AuriEl || IsAltmerFavorSuppressedByCurse()
+    if !IsAltmerOrigin() || IsAltmerFavorSuppressedByCurse()
         return
     endIf
 
@@ -12831,9 +13009,21 @@ Function RunDawnAwardAltmerAuriElDawn()
         return
     endIf
 
+    ; THE ACT GATE. The player must actually meet the dawn: outdoors, under the sky, at the turn of
+    ; the day. Sleeping through it indoors is not an observance. P14's practice token will add the
+    ; indoor path for players who keep the rite privately.
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return
+    endIf
+    Cell dawnCell = playerRef.GetParentCell()
+    if !dawnCell || dawnCell.IsInterior()
+        return
+    endIf
+
     StorageUtil.SetIntValue(None, "PDV.Altmer.AuriElDawn.LastDay", dawnDayStamp)
-    AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 2.0)
-    Trace(2, "Altmer Auri-El dawn acknowledgment routed for devotional day " + (dawnDayStamp - 2))
+    AwardAltmerAncestorSpinePulse(1.0, "dawn_observance")
+    Trace(2, "Altmer dawn observance routed to the ancestral spine for devotional day " + (dawnDayStamp - 2))
 EndFunction
 
 ; P5 (2026-08-03): Xarxes's renewable curated lane, modelled on the Auri-El dawn above.

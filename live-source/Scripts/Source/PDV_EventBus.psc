@@ -691,6 +691,17 @@ Function RouteAltmerSyrabaneAntiMageSurvival(String sourceId)
     PDV_Manager.HandleAltmerSyrabaneAntiMageSurvival("eventbus_syrabane_antimage_" + sourceId)
 EndFunction
 
+; P14 (2026-08-04). Returns the idle KIND for the token to play (0 = pray, 1 = study) so the gesture
+; matches the active patron's lane. Returns 0 if the manager is unavailable -- a prayer pose is the
+; safe default. This is the one bus route that returns a value; the token needs the answer inline.
+Int Function RouteAltmerPracticeFocus()
+    if !PDV_Manager
+        Trace(1, "RouteAltmerPracticeFocus skipped: PDV_Manager not assigned.")
+        return 0
+    endIf
+    return PDV_Manager.HandleAltmerPracticeFocus("eventbus_altmer_practice_focus")
+EndFunction
+
 Function RouteAltmerSyrabaneContainment(String sourceId)
     if !PDV_Manager
         Trace(1, "RouteAltmerSyrabaneContainment skipped: PDV_Manager not assigned.")

@@ -19,6 +19,30 @@ Deity piety remains act-specific for Auri-El, Magnus, and Xarxes. Visible tiers
 are `Ordered Heritage`, `Disciplined Heritage`, and `Exemplar Heritage`.
 `references/authoring/PDV_SubstratePacingContracts.json` is authoritative.
 
+## 2026-08-04 Dawn Relocation (P18) -- supersedes the Step 2 line above
+
+**The dawn act now feeds the ancestral spine, not Auri-El's piety.**
+
+It previously awarded +2.0 Auri-El piety gated on origin and curse only -- no act, no presence, no
+shrine. It fired for a sleeping player who did nothing. Against 0.5/day decay that is net +1.5/day
+for free, carrying every Altmer to Auri-El Champion in roughly eight weeks of simply existing, and
+making him out-rank a committed Trinimac or Syrabane patron on every ranked surface.
+
+Keeping the dawn is the **ordered life every Altmer keeps because they are Altmer** -- not worship
+of one god. So it belongs to the deity-agnostic spine. The spine is what you *inherit*; Auri-El is
+what you *climb toward*. Collapsing them would erase the distinction the Apotheosis framing rests on.
+
+- **Act-gated:** the player must be outdoors, under open sky, at the turn of the day. Sleeping
+  through it indoors is not an observance.
+- **No new income:** the substrate takes one +4.0 credit per devotional day whatever claims it.
+- **Auri-El keeps his own renewable:** the shrine rite, +2.0/day at any vanilla Shrine of Akatosh
+  (every one maps to him as secondary prayer deity). Directed worship of a specific god costs a
+  trip to his shrine; keeping the dawn costs only doing it.
+- **Consistent with the 2026-07-13 substrate addendum**, which forbids *passive* dawn granting the
+  cultural metric and explicitly permits an accepted rite to. An act-gated observance is a rite.
+
+---
+
 ## Religious Identity
 
 Altmer religion is a project: the Apotheosis project. Auri-El, the god of time and the supreme Aldmeri ancestor, escaped Mundus -- the mortal plane, the trap. The Altmer want to follow. Every devotional act is a step toward re-achieving the divine nature their ancestors lost when Lorkhan tricked them into creating the mortal world.
@@ -40,7 +64,8 @@ Step 1: Choose faction alignment at setup
   -> Psijic Tradition:  ThalmorAlignment starts at 25 (Old Ways, heterodox)
 
 Step 2: Layer 1 (Auri-El) is always active -- foundation of all Altmer faith
-  Dawn sun acknowledgment generates piety regardless of faction
+  Auri-El's own renewable is the SHRINE RITE (+2.0/day at any vanilla Shrine of Akatosh)
+  The DAWN is not his -- see the P18 note below
 
 Step 3: Aldmeri pantheon breadth (Tier 2 cap)
   ThalmorAlignment shapes which gods score more strongly and which are accessible
