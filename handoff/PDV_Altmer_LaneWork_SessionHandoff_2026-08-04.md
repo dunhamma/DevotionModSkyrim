@@ -139,8 +139,12 @@ snapshots. `tools/pdv_snapshot_live.mjs` is the rollback mechanism.
    ARR 2.5, so a wrong-instance read returns a different, older record set instead of erroring.
 4. **`REQ_` on a `Skyrim.esm` FormID is a RENAMED vanilla record.** A null result from one EditorID
    stem is not evidence of absence — this produced a wrong "no vanilla ward tomes exist" claim.
-5. **`housecarl_diff_record` misses ADDED list elements** — reports `complete: true, delta_count: 0`
-   for a record that gained 10 properties. Use it for "what was retuned", never "what was added".
+5. ~~**`housecarl_diff_record` misses ADDED list elements**~~ — **RETRACTED 2026-08-05.** This was a
+   stale pinned binary: `pdv_housecarl_stdio.mjs` pointed at a houseCARL build that has no
+   `diff_record` at all. On the current build it catches added FormList members and, scoped with
+   `fields=`, enumerates added VMAD properties by name. See
+   `handoff/PDV_SnapshotFingerprinting_Handoff_2026-08-04.md`. The real hazard is narrower: a
+   `fields=` path matching NOTHING returns `complete: true, delta_count: 0` with no error.
 6. **Comments are scanned as code.** Writing an illustrative `SIGNAL_*` or deity-dot-constant
    example in a comment fails `pdv_verify` / the parity gate. Happened twice.
 7. **`live-source/` and the MO2 tree are separate directories**, not a junction. The compiler and
@@ -157,3 +161,6 @@ snapshots. `tools/pdv_snapshot_live.mjs` is the rollback mechanism.
    MISC). Flagged rather than explained: if you see it again, that is a second data point. The
    `--records` fingerprint pass itself never finished (~15 min, killed); a plain snapshot took
    seconds, and the file-level snapshot is the actual rollback. (2026-08-04)
+   **Update 2026-08-05:** `--records` no longer exists -- it was reverted, and the whole approach is
+   superseded by `tools/pdv_esp_diff_sweep.mjs` (see item 5). The +2-byte observation still stands
+   as an unexplained data point; the tool that was running when it happened is simply gone now.
