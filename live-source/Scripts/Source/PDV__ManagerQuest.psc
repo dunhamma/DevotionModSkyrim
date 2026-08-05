@@ -462,6 +462,22 @@ Message Property PDV_Msg_Nord_CurseState_VampireCured Auto
 Message Property PDV_Msg_Altmer_VampireExiledPath_Entry Auto
 Message Property PDV_Msg_Altmer_VampireExiledPath_Recognition Auto
 Message Property PDV_Msg_Altmer_CurseState_WerewolfHardHalt Auto
+; P11 (2026-08-04): the Altmer ambient records. Two Champion variants per deity plus the two
+; deity-agnostic heritage lines. Every one of these MUST be bound in the CK -- an unbound
+; Message property is not a compile error and not a runtime error either; ShowAltmerNotification
+; quietly falls back to a Prisma toast, so a missed binding looks like working software.
+Message Property PDV_Notif_Altmer_AuriEl_ChampionAmbient_Dawn Auto
+Message Property PDV_Notif_Altmer_AuriEl_ChampionAmbient_Return Auto
+Message Property PDV_Notif_Altmer_Magnus_ChampionAmbient_Study Auto
+Message Property PDV_Notif_Altmer_Magnus_ChampionAmbient_ElderWay Auto
+Message Property PDV_Notif_Altmer_Xarxes_ChampionAmbient_Record Auto
+Message Property PDV_Notif_Altmer_Xarxes_ChampionAmbient_Lineage Auto
+Message Property PDV_Notif_Altmer_Trinimac_ChampionAmbient_Watch Auto
+Message Property PDV_Notif_Altmer_Trinimac_ChampionAmbient_Sword Auto
+Message Property PDV_Notif_Altmer_Syrabane_ChampionAmbient_Ward Auto
+Message Property PDV_Notif_Altmer_Syrabane_ChampionAmbient_Guard Auto
+Message Property PDV_Notif_Altmer_General_HeritageExemplar Auto
+Message Property PDV_Notif_Altmer_General_HeritageQuiet Auto
 Message Property PDV_Notif_Redguard_Sect_Crown_Entry Auto
 Message Property PDV_Notif_Redguard_Sect_Forebear_Entry Auto
 Message Property PDV_Notif_Redguard_Sect_AshAbah_Entry Auto
@@ -569,6 +585,11 @@ Int Property TIER_NONE = 0 AutoReadOnly
 Int Property TIER_SEEKER = 1 AutoReadOnly
 Int Property TIER_DEVOTED = 2 AutoReadOnly
 Int Property TIER_CHAMPION = 3 AutoReadOnly
+
+; P11: devotional days between recurring ambient lines, per surfacing deity and for the
+; heritage band. Four is deliberately slow -- this layer exists so a long-held Champion is not
+; met with silence, not to fill the notification area.
+Int Property AMBIENT_CHAMPION_CADENCE_DAYS = 4 AutoReadOnly
 
 ; Human-facing release stamp for the MCM Version readout and bug-report export.
 ; Bump on every public build so an attached report is orderable by build.
@@ -5575,7 +5596,7 @@ Function HandleSubstrateActionEvent(Int eventType, String reason)
             ; lawful form is his doctrine. Hard 1.2/day ceiling regardless of how many items.
             if eventType == 331 && PDV_Magnus && ConsumeOncePerDaySignal("PDV.Signal.MagnusApertureKept")
                 AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_APERTURE_KEPT, None, 1.0)
-                SurfaceReservedSignal(PDV_Magnus, "The design holds", "marks magicka bound into lawful form.")
+                SurfaceReservedSignal(PDV_Magnus, "The design holds", "marks an enchantment made as the art demands.")
             endIf
         elseIf eventType == 340 || eventType == 341 || eventType == 342
             Float studyMetricBefore = PDV_AltmerAncestorSubstrate.GetMetric()
@@ -11021,7 +11042,7 @@ Function HandleAltmerTrinimacOrthodoxy(String reason)
     if multiplier > 0.0
         AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, multiplier)
     endIf
-    SurfaceP2BookReadNotice(reason, "Trinimac remembered", "The champion's name is spoken as it was, before the defilement.")
+    SurfaceP2BookReadNotice(reason, "Trinimac remembered", "He is named as he was, not as he was made.")
 
     HandleAltmerOrthodoxCostlyEnforcement(reason)
 EndFunction
@@ -11047,7 +11068,7 @@ Function HandleAltmerTrinimacCivilizationDefense(String reason)
     endIf
 
     AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_CIVILIZATION_DEFENDED, None, 1.0)
-    SurfaceReservedSignal(PDV_Trinimac, "Civilization held", "marks a foe of the elven project put down.")
+    SurfaceReservedSignal(PDV_Trinimac, "Civilization held", "marks a threat to the ordered world put down.")
 EndFunction
 
 ; --- P9 (2026-08-03): Syrabane's four wired signals -------------------------------------------
@@ -11168,7 +11189,7 @@ Function HandleAltmerSyrabaneAntiMageSurvival(String reason)
         return
     endIf
     AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_ANTI_MAGE_SURVIVAL, None, 1.0)
-    SurfaceReservedSignal(PDV_Syrabane, "Survived the arcane", "marks a mage outlasted when the odds were bad.")
+    SurfaceReservedSignal(PDV_Syrabane, "Arcane duel survived", "marks a hostile mage beaten at his own art.")
 EndFunction
 
 ; The three vanilla ward tomes. Learning a Ward IS magical containment -- the most on-theme source
@@ -11181,7 +11202,7 @@ Function HandleAltmerSyrabaneContainment(String reason)
     if multiplier > 0.0
         AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_MAGICAL_CONTAINMENT, None, multiplier)
     endIf
-    SurfaceP2BookReadNotice(reason, "The ward learned", "Containment is the first art the apprentice is trusted with.")
+    SurfaceP2BookReadNotice(reason, "The first warding", "The apprentice's art is opened to you.")
 EndFunction
 
 Function AwardAltmerDawnSignal(String reason, Float multiplier)
@@ -11304,24 +11325,24 @@ EndFunction
 ; keep this in sync with them rather than inventing new ones here.
 String Function GetAltmerHeritageSourceLine(String reason)
     if StringContainsToken(reason, "dawn_observance")
-        return "You met the dawn under open sky, as the ancestral order asks."
+        return "You met the dawn under open sky. The old order asks no more than this."
     elseIf StringContainsToken(reason, "auriel_shrine_rite")
-        return "You kept the dawn rite at the shrine, as the ancestors kept it."
+        return "You kept the dawn rite at the shrine. What the ancestors kept, you keep."
     elseIf StringContainsToken(reason, "sleep_dream")
-        return "An Aldmeri dream settles your ancestral inheritance."
+        return "An Aldmeri dream found you sleeping. The inheritance settles deeper."
     elseIf StringContainsToken(reason, "enchantment")
-        return "Magicka bound into lawful form; the discipline holds."
+        return "You bound magicka into a lasting shape. The discipline holds."
     elseIf StringContainsToken(reason, "smithing")
-        return "Ordered craft at the forge, in the manner set down for you."
+        return "You worked the forge in the manner set down. Nothing in it is improvised."
     elseIf StringContainsToken(reason, "study")
-        return "Ordered study, and the inheritance sits a little straighter."
+        return "You studied in the ordered way. The inheritance sits a little straighter."
     elseIf StringContainsToken(reason, "magic_skill_increase")
-        return "A school mastered further, in the ancestral discipline."
+        return "You carried a school of magic further. The learning serves the line."
     elseIf StringContainsToken(reason, "curated_heritage")
-        return "A heritage text read closely; the line is remembered."
+        return "You read a heritage text closely. What was written is remembered."
     endIf
 
-    return "Orthodoxy upheld at cost, and the ancestral order holds."
+    return "You upheld the orthodoxy at cost. Doctrine holds because someone pays for it."
 EndFunction
 
 Function RunDawnRefreshAltmerAncestor()
@@ -11698,7 +11719,7 @@ Function MaybeSurfaceDevotionMark(PDV_DeityBase deity)
     StorageUtil.SetIntValue(None, shownKey, 1)
 
     String deityName = GetPublicDeityDisplayName(deity)
-    AppendBookOfDaysEntry(deityName + " marks another season of unbroken devotion.", Utility.GetCurrentGameTime() as Int, "tier.reach", GetPrismaSymbolForDeity(deity), True, 2, "Long devotion")
+    AppendBookOfDaysEntry(deityName + " marks devotion carried well beyond its proving.", Utility.GetCurrentGameTime() as Int, "tier.reach", GetPrismaSymbolForDeity(deity), True, 2, "Long devotion")
     Trace(1, "Long Devotion mark " + marks + " surfaced for " + deity.DeityName)
 EndFunction
 
@@ -12835,6 +12856,7 @@ Function ProcessDawn()
     RunDawnProcessCommitmentOffersNoop()
     RunDawnNotifyNoop()
     RunDawnBookOfDays()
+    RunDawnChampionAmbient()
     SyncKhajiitPhaseBlessing()
     ProcessKhajiitAlkoshWordDrip()
     DisarmDunmerAncestorWatch()
@@ -12859,6 +12881,140 @@ Function RunDawnBookOfDays()
     EmitBookOfDaysBroadLaneTierChange(today)
     if _dawnHadActivity
         AppendBookOfDaysEntry(BuildBookOfDaysDigestLine(), today, "dawn.digest", "journal", False)
+    endIf
+EndFunction
+
+; --- P11 (2026-08-04): the recurring ambient layer -------------------------------------------
+;
+; Until now the mod's ONLY per-deity ambient line was Kyne's, and it lived inside the one-shot
+; Champion reward presentation, so it fired once ever. A player who had held Champion for a year
+; heard nothing further from the god they had held it with -- the late game went quiet exactly
+; where it should have felt most settled.
+;
+; This is a slow dawn heartbeat: one line per surfacing deity every
+; AMBIENT_CHAMPION_CADENCE_DAYS devotional days, alternating between two variants, with the
+; second variant reserved for a deity actually carried PAST Champion so the voice deepens rather
+; than repeating flat.
+;
+; Text only. No piety, no metric, no state change, nothing to farm: the MCM notification toggle
+; gates it and the cadence stamp bounds it.
+Function RunDawnChampionAmbient()
+    if !NotificationsEnabled() || IsRaceSetupQuietPresentationActive()
+        return
+    endIf
+
+    RunDawnChampionDeityAmbient()
+    RunDawnAltmerHeritageAmbient()
+EndFunction
+
+; The surfacing deity is the active patron -- the same scope RunDawnRefreshDevotionMarks uses for
+; Long Devotion marks, so the ambient voice and the mark ladder always agree about whose season is
+; being counted. A worshipper with no patron gets the heritage arm below instead.
+Function RunDawnChampionDeityAmbient()
+    PDV_DeityBase deity = _activeDeity
+    if !deity || GetTier(deity) < TIER_CHAMPION
+        return
+    endIf
+
+    String cadenceKey = "PDV.Ambient.Champion." + deity.DeityIndex + ".Day"
+    Int todayStamp = GetDevotionalDay() + 2
+    Int lastStamp = ReadZeroReservedDevotionalDayStamp(cadenceKey)
+    if lastStamp > 0 && (todayStamp - lastStamp) < AMBIENT_CHAMPION_CADENCE_DAYS
+        return
+    endIf
+
+    ; The deep variant needs a mark actually earned. Without that gate the alternation would show
+    ; the "you have kept this for seasons" line to somebody who reached Champion four days ago.
+    String countKey = "PDV.Ambient.Champion." + deity.DeityIndex + ".Count"
+    Int shown = StorageUtil.GetIntValue(None, countKey)
+    Bool deep = (shown % 2) == 1 && StorageUtil.GetIntValue(None, "PDV.LongDevotion.MarkHigh." + deity.DeityIndex) >= 1
+    if !ShowChampionAmbientForDeity(deity, deep)
+        return
+    endIf
+
+    WriteZeroReservedDevotionalDayStamp(cadenceKey)
+    StorageUtil.SetIntValue(None, countKey, shown + 1)
+    String variantLabel = "standing"
+    if deep
+        variantLabel = "long-devotion"
+    endIf
+    Trace(2, "Champion ambient surfaced for " + deity.DeityName + " (" + variantLabel + ")")
+EndFunction
+
+; Returns False for a deity that ships no ambient records, so the cadence stamp is never spent on
+; a surfacing that did not happen -- a deity given records later starts speaking immediately
+; instead of waiting out a phantom cooldown.
+Bool Function ShowChampionAmbientForDeity(PDV_DeityBase deity, Bool deep)
+    if deity == PDV_AuriEl
+        if deep
+            ShowAltmerNotification(PDV_Notif_Altmer_AuriEl_ChampionAmbient_Return, "The road back is shorter than it was.")
+        else
+            ShowAltmerNotification(PDV_Notif_Altmer_AuriEl_ChampionAmbient_Dawn, "The dawn answers you, and the return feels near.")
+        endIf
+        return True
+    elseIf deity == PDV_Magnus
+        if deep
+            ShowAltmerNotification(PDV_Notif_Altmer_Magnus_ChampionAmbient_ElderWay, "You read the wall as a door now.")
+        else
+            ShowAltmerNotification(PDV_Notif_Altmer_Magnus_ChampionAmbient_Study, "The arts come easily today. The discipline shows.")
+        endIf
+        return True
+    elseIf deity == PDV_Xarxes
+        if deep
+            ShowAltmerNotification(PDV_Notif_Altmer_Xarxes_ChampionAmbient_Lineage, "What you have done is written where it will keep.")
+        else
+            ShowAltmerNotification(PDV_Notif_Altmer_Xarxes_ChampionAmbient_Record, "The record has your name in it now.")
+        endIf
+        return True
+    elseIf deity == PDV_Trinimac
+        if deep
+            ShowAltmerNotification(PDV_Notif_Altmer_Trinimac_ChampionAmbient_Sword, "Trinimac's weight sits easy on your arm now.")
+        else
+            ShowAltmerNotification(PDV_Notif_Altmer_Trinimac_ChampionAmbient_Watch, "The project stands where you have stood.")
+        endIf
+        return True
+    elseIf deity == PDV_Syrabane
+        if deep
+            ShowAltmerNotification(PDV_Notif_Altmer_Syrabane_ChampionAmbient_Guard, "You are warded, and you have stopped noticing.")
+        else
+            ShowAltmerNotification(PDV_Notif_Altmer_Syrabane_ChampionAmbient_Ward, "Something is holding between you and harm.")
+        endIf
+        return True
+    elseIf deity == PDV_Kyne
+        ; Kyne keeps her existing one-shot at the moment of the reach; this is the recurring layer
+        ; on top of it, not a replacement. She ships one ambient record, so both slots speak it.
+        ShowNordNotification(PDV_Notif_Nord_Kyne_ChampionAmbient_Storm, "The wind is blowing your way.")
+        return True
+    endIf
+
+    return False
+EndFunction
+
+; The heritage arm is deity-agnostic: it speaks for the inheritance every Altmer keeps, so it
+; reaches a broad worshipper with no patron at all. The fall line is a one-shot on the transition
+; DOWN rather than a cadence -- a player who slips out of the top band should hear that once, not
+; every fourth day for the rest of the game.
+Function RunDawnAltmerHeritageAmbient()
+    if !IsAltmerOrigin() || !PDV_AltmerAncestorSubstrate || IsAltmerFavorSuppressedByCurse()
+        return
+    endIf
+
+    String highKey = "PDV.Ambient.Heritage.WasHigh"
+    if PDV_AltmerAncestorSubstrate.GetSubstrateTier() >= TIER_CHAMPION
+        StorageUtil.SetIntValue(None, highKey, 1)
+
+        String cadenceKey = "PDV.Ambient.Heritage.Day"
+        Int todayStamp = GetDevotionalDay() + 2
+        Int lastStamp = ReadZeroReservedDevotionalDayStamp(cadenceKey)
+        if lastStamp > 0 && (todayStamp - lastStamp) < AMBIENT_CHAMPION_CADENCE_DAYS
+            return
+        endIf
+
+        WriteZeroReservedDevotionalDayStamp(cadenceKey)
+        ShowAltmerNotification(PDV_Notif_Altmer_General_HeritageExemplar, "The inheritance is whole in you.")
+    elseIf StorageUtil.GetIntValue(None, highKey) == 1
+        StorageUtil.SetIntValue(None, highKey, 0)
+        ShowAltmerNotification(PDV_Notif_Altmer_General_HeritageQuiet, "The inheritance has gone quiet.")
     endIf
 EndFunction
 
@@ -21617,6 +21773,22 @@ Function ShowRedguardNotification(Message messageRecord, String fallbackText)
     endIf
 
     SendPrismaToast("tuwhacca", "neutral", "", fallbackText)
+EndFunction
+
+; P11 (2026-08-04): the Altmer sibling of the Nord/Redguard/Orc notification helpers.
+; The fallback path is the reason every Altmer notification property has to be bound: a None
+; record does not fail, it silently downgrades to a Prisma toast with no title.
+Function ShowAltmerNotification(Message messageRecord, String fallbackText)
+    if !NotificationsEnabled()
+        return
+    endIf
+
+    if messageRecord
+        messageRecord.Show()
+        return
+    endIf
+
+    SendPrismaToast("auri-el", "neutral", "", fallbackText)
 EndFunction
 
 Function ShowOrcNotification(Message messageRecord, String fallbackText)

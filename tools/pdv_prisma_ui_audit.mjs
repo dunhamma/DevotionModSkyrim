@@ -991,6 +991,8 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     const p2AmbientNoticeBlock = functionBlock(manager, "SurfaceP2AmbientProgressNotice");
     const p2DeliveryBlock = functionBlock(manager, "SurfaceP2Acknowledgement");
     const altmerSleepBlock = functionBlock(manager, "HandleAltmerSleepEvents");
+    const altmerHeritageVoiceBlock = functionBlock(manager, "AppendAltmerHeritageVoice");
+    const altmerHeritageSourceLineBlock = functionBlock(manager, "GetAltmerHeritageSourceLine");
     const bretonSleepBlock = functionBlock(manager, "HandleBretonSleepEvents");
     const bretonHiddenArtBlock = functionBlock(manager, "HandleBretonHiddenArtExposure");
     const overlaySenderFunctions = functionNamesContaining(manager, "PDV_PrismaBridge.SendOverlayJson(");
@@ -1139,16 +1141,36 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
       pass("Accepted P2 book notices validate provenance and feed both Prisma toast and Book of Days chronicle.", managerPath);
     }
 
+    // P2 (2026-08-04) moved the Altmer dream line out of HandleAltmerSleepEvents: every ancestral
+    // spine feed now voices through AppendAltmerHeritageVoice, gated on the day credit actually
+    // landing. The invariant is unchanged and still asserted here -- Altmer sleep produces exactly
+    // ONE quiet (unpinned, setup-quiet-respecting) Book of Days dream and never borrows the P2
+    // book/ambient notice paths -- but it is now proven across the sleep block, the shared voice
+    // helper, and the per-source line map rather than against one inline literal.
+    const altmerDreamVoiced =
+      /AwardAltmerAncestorSpinePulse\(\s*multiplier\s*,\s*"sleep_dream_/.test(altmerSleepBlock) &&
+      !altmerSleepBlock.includes("AppendBookOfDaysEntry(") &&
+      /if\s+grantedMetric\s*<=\s*0\.0[\s\S]*?return/.test(altmerHeritageVoiceBlock) &&
+      /AppendBookOfDaysEntry\(GetAltmerHeritageSourceLine\(reason\),[^\r\n]*"auri-el",\s*False\s*,/.test(altmerHeritageVoiceBlock) &&
+      countMatches(altmerHeritageVoiceBlock, /AppendBookOfDaysEntry\(/g) === 1 &&
+      // Assert that the sleep feed HAS its own voiced arm, never what that arm SAYS. The wording
+      // here is owner-editable player copy: an earlier revision of this check pinned the exact
+      // sentence, and a legitimate voice pass on the line turned the gate red while the behaviour
+      // was untouched. A gate that goes red on a copy edit teaches people to ignore it.
+      /StringContainsToken\(reason,\s*"sleep_dream"\)\s*\r?\n\s*return\s+"[^"]+"/.test(altmerHeritageSourceLineBlock);
+
     if (
       !p2BookNoticeBlock.includes('True, "P2 book notice surfaced: "') ||
       !p2AmbientNoticeBlock.includes('False, "P2 ambient notice surfaced: "') ||
-      !altmerSleepBlock.includes('AppendBookOfDaysEntry("An Aldmeri dream settles your ancestral inheritance."') ||
+      !altmerDreamVoiced ||
       !bretonSleepBlock.includes("SurfaceP2AmbientProgressNotice(") ||
       altmerSleepBlock.includes("SurfaceP2AmbientProgressNotice(") ||
       altmerSleepBlock.includes("SurfaceP2BookReadNotice(") ||
+      altmerHeritageVoiceBlock.includes("SurfaceP2AmbientProgressNotice(") ||
+      altmerHeritageVoiceBlock.includes("SurfaceP2BookReadNotice(") ||
       bretonSleepBlock.includes("SurfaceP2BookReadNotice(")
     ) {
-      fail("P2 book reads must bypass setup quiet presentation; Altmer sleep logs one quiet Book of Days dream while Breton sleep keeps the quiet-respecting ambient notice.", managerPath);
+      fail("P2 book reads must bypass setup quiet presentation; Altmer sleep logs one quiet Book of Days dream through the shared heritage voice while Breton sleep keeps the quiet-respecting ambient notice.", managerPath);
     } else {
       pass("P2 book reads, quiet Altmer dreams, and Breton ambient sleep progress use their intended distinct presentation paths.", managerPath);
     }
@@ -1732,10 +1754,29 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
 
   const substrateProgressBody = functionBlock(managerForBroadLane, "SendPrismaSubstrateProgress");
   const substrateProgressCalls = extractCalls(managerForBroadLane, "SendPrismaSubstrateProgress");
-  const staleMetricCalls = substrateProgressCalls.filter((call) =>
-    call.args[3]?.trim() === "multiplier" ||
-    (!call.args[3]?.includes("GetMetric() - metricBefore") && !call.args[3]?.includes("metricAfter - metricBefore"))
-  );
+  const substrateFunctionBlocks = extractFunctionBlocks(managerForBroadLane);
+  const staleMetricCalls = substrateProgressCalls.filter((call) => {
+    const metricArgument = call.args[3]?.trim() ?? "";
+    if (metricArgument.includes("GetMetric() - metricBefore") || metricArgument.includes("metricAfter - metricBefore")) {
+      return false;
+    }
+    // A bare local is acceptable ONLY if the enclosing function actually assigns it the real
+    // post-award delta. This must stay general rather than matching one blessed variable name:
+    // producers legitimately use their own pair (studyGrantedMetric/studyMetricBefore), and
+    // AwardAltmerAncestorSpinePulse pre-declares `Float grantedMetric = 0.0` then assigns it
+    // inside the substrate guard, so the declaration and the assignment are separate lines.
+    // Anything else -- notably a requested `multiplier` -- is still a stale-metric failure.
+    if (/^[A-Za-z_]\w*$/.test(metricArgument)) {
+      const functionName = enclosingFunctionName(substrateFunctionBlocks, call.index);
+      const functionBody = substrateFunctionBlocks.find((item) => item.name === functionName)?.body ?? "";
+      const realDelta = new RegExp(
+        `(?:Float\\s+)?${metricArgument}\\s*=\\s*[A-Za-z0-9_]+\\.GetMetric\\(\\)\\s*-\\s*[A-Za-z0-9_]*metricBefore\\b`,
+        "i",
+      );
+      return !realDelta.test(functionBody);
+    }
+    return true;
+  });
   const creditGuard = substrateProgressBody.indexOf("if grantedMetric <= 0.0");
   const creditReturn = substrateProgressBody.indexOf("return", creditGuard);
   const firstPresentation = Math.min(
@@ -1750,7 +1791,7 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   ) {
     fail(`Substrate presentation must be gated by actual grantedMetric with zero-credit suppression; ${staleMetricCalls.length} producer(s) do not pass a metric delta.`, managerPath);
   } else {
-    pass(`All ${substrateProgressCalls.length} substrate progress producers pass actual metric deltas and zero-credit acts stay silent.`, managerPath);
+    pass(`All ${substrateProgressCalls.length} substrate progress producers pass actual metric deltas and the shared helper suppresses zero-credit presentation.`, managerPath);
   }
 
   const renamedFamilyLines = managerForBroadLane.split(/\r?\n/).filter((line) =>
