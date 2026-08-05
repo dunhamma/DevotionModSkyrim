@@ -56,8 +56,13 @@ The retired layer encoded a picture of houseCARL that is years of releases out o
 | "houseCARL's MO2 parser fails on spaced `key = value` lines in ModOrganizer.ini" | Fixed in current releases. |
 | "houseCARL output must be normalized/parsed by an adapter before it is usable" | You are the intended reader. Call the tool, read the output, act on it. |
 | "Writes are safer through a manifest-driven local author tool with dry-run/backup modes" | houseCARL's default lane already writes to a **new** plugin, leaving originals untouched; the in-place lane is explicit and consented. A second, unverified local writer adds risk, not safety. |
+| "`housecarl_diff_record` misses ADDED list elements -- use it for what was *retuned*, never what was *added*" | **False**, reproduced-disproven 2026-08-05. A FormList that gained a member diffs unscoped and names the addition; a quest whose VMAD went 4 -> 14 script properties enumerates all 10 additions by name when scoped with `fields=`. See `handoff/PDV_SnapshotFingerprinting_Handoff_2026-08-04.md`. |
 
 If a task appears blocked by a houseCARL limitation, **first reproduce it with a direct `housecarl_*` call on the current version** and read the actual error. Do not trust a locally recorded "known issue" without reproducing it. Only a reproduced, current-version failure is worth reporting upstream.
+
+**"Current version" means the binary you are actually calling.** The gate scripts and the MCP tools can resolve to *different houseCARL installs*, and that split is not visible in the output. It is how the diff-record belief above was manufactured: `tools/lib/pdv_housecarl_stdio.mjs` was pinned to the AppData build, which has no `housecarl_diff_record` at all and ignores `format:"json"`, while the MCP tools used the newer `.claude/skills/housecarl/` build. A limitation reproduced through a script is only evidence about that script's binary. The driver now resolves `.claude/skills` first and fails loudly if no server is found; `PDV_HOUSECARL_EXE` overrides.
+
+**Reading git history around this:** commit `817dd39b` ("docs(tools): record that snapshot diffing misses ADDED list elements") records the *false* belief and is public. Its retraction lives in the two handoff docs and in this table, not in that commit, so the commit reads as authoritative in isolation. The fix and the retraction are commit `00279734`.
 
 ---
 
