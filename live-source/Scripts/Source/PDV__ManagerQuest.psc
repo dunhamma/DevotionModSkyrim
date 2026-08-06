@@ -621,7 +621,7 @@ Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; seals every deity's participating-event cache (12.4 / C4 in PDV_DeityBase) -- without
 ; it the caches stay unsealed forever on old saves (correct, they fail open, but the
 ; broadcast fan-out keeps paying the full per-deity probe the cache exists to remove).
-Int Property LIKES_DISLIKES_VERSION = 19 AutoReadOnly
+Int Property LIKES_DISLIKES_VERSION = 20 AutoReadOnly
 Int Property PRINCE_LD_VERSION = 4 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_NONE = 0 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_SKY_STORM_HUNT = 1 AutoReadOnly
@@ -13042,6 +13042,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 301, 0.5, 3, 0.0, -1)
         WriteLD(deity, 300, 0.25, 3, 0.5, -1)
         WriteLD(deity, 342, 0.2, 2, 0.0, -1)
+        WriteLD(deity, 350, 0.75, 2, 0.5, -1)
         WriteLD(deity, 365, -1.25, 1, 1.0, -1)
         WriteLD(deity, 368, -1.25, 1, 1.0, -1)
         WriteLD(deity, 304, -1.25, 2, 0.5, -1)

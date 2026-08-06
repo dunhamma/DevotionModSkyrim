@@ -373,6 +373,7 @@ Syrabane,341,read-spell-tome,+,small,0.35,3,0,,,,the arts studied for shelter ra
 Syrabane,301,kill-daedra,+,small,0.5,3,0,,,,warding mortals from what should not walk among them
 Syrabane,300,kill-undead,+,small,0.25,3,0.5,,ActorTypeUndead,,laying the restless down is protection rather than conquest
 Syrabane,342,read-lore-book,+,small,0.2,2,0,,,,he is no scholar; study serves the ward and nothing else
+Syrabane,350,heal-or-cure-npc,+,medium,0.75,2,0.5,,,,the ward given rather than prepared; his whole office in one act
 Syrabane,365,raise-undead,-,medium,-1.25,1,1.0,,ActorTypeUndead,,binding the dead is the opposite of shelter
 Syrabane,368,accept-daedric-artifact,-,medium,-1.25,1,1.0,,ActorTypeDaedra,,a Daedric bargain is a ward traded away
 Syrabane,304,murder-defenseless,-,medium,-1.25,2,0.5,,,,the defenceless are precisely who the ward exists for

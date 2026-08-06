@@ -109,9 +109,18 @@ catches.
 
 ## Other open items for the owner
 
-- **P10's decay-floor change is the only edit touching every race.** It is gated on a per-deity
-  `MarkHigh` ratchet, but that gate *is* the safety argument. Regression test: a Nord Kyne Champion
-  with `MarkHigh == 0` must still floor at 50 and still lose T3 on idle.
+- **P10's decay-floor change is the only edit touching every race. CLOSED 2026-08-06 by static
+  proof — no in-game run needed.** The argument, in full so it can be re-checked rather than
+  trusted: at Champion tier the floor function reads `if MarkHigh >= 1 -> ThresholdChampion`, else
+  `return deity.ThresholdDevoted`, and that else-branch is the untouched pre-P10 path — P10 only
+  inserted the guarded early return above it. `MarkHigh` cannot be spuriously non-zero:
+  `GetDevotionMarks` returns 0 below Champion, at exactly Champion the marks arithmetic yields 0,
+  and `MaybeSurfaceDevotionMark` returns early below 1 mark, so the ratchet needs a full
+  `LONG_DEVOTION_MARK_STEP` past 85 before it can fire. The key is new in P10, so no existing save
+  carries a legacy value. A sweep of all source for `LongDevotion.MarkHigh` returns exactly three
+  sites: the writer (`:12031`), the decay-floor gate (`:16299`), and P11's ambient variant picker
+  (`:13252`, text-only). There is no third consumer that could route the key back into decay.
+  A Nord Kyne Champion at `MarkHigh == 0` therefore behaves identically to pre-P10 by construction.
 - **3111 `APPRENTICE_AID`** is `retired-not-wired` in `tools/pdv_reserved_signals.json`. Confirm or
   overrule. Held loosely — the "no source exists" conclusion was wrong once already (wards).
 - **Breton/Magnus overlay stacking** is logged as `PDV_V2_Backlog.md` §9b. A Breton out-earns an

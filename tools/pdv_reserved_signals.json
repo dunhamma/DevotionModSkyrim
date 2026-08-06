@@ -25,9 +25,11 @@
     "reason": "Same Syrabane signature-lane class: declared+scored, no dispatch. Wave 3.",
     "deferredBy": "main-merge dispatch-coverage sweep",
     "date": "2026-07-12",
-    "decision": "retired-not-wired",
+    "decision": "retired-not-wired-confirmed",
     "owner": "BC-0153",
-    "expires": "2026-08-31",
+    "expires": null,
+    "confirmedDate": "2026-08-06",
+    "confirmationNote": "CONFIRMED 2026-08-06, expiry cleared. The 2026-08-03 note ruled out College sources; this pass ruled out the rest by sweeping the whole observable act catalogue (PDV_EventTypes 3xx). There is no 'aid a novice mage' trigger outside the Mages Guild questline, and the one adjacent candidate -- heal-or-cure-npc (350) -- is already claimed by Syrabane's protective lane: 3112 CURSE_DISEASE_WARDING is wired and would absorb the cure half, and 350 itself is a data-row event, not a curated-signal home. Constant stays declared and this entry stays put; deleting an unwired entry is itself a gate FAIL. Reopen only if a new emitter creates a non-College apprentice-protection act.",
     "decisionNote": "P9 2026-08-03: no buildable source. Every College-aid hook duplicates quest-reaction rows Syrabane already holds on MG01/MG02/MG03/MG05/MG07/MG08, which would score him twice for one act. MGRitual01-04 do not exist in vanilla (zero matches in vanilla-quest-stage-readback.csv) and there are no personal-favour quests for Onmund/Brelyna/J'zargo -- they are aliases inside MG01-MG03 only. Constant left DECLARED in PDV_Deity_Syrabane.psc; entry retained here deliberately (deleting an unwired entry is itself a gate FAIL). Revisit if a non-College apprentice-protection hook surfaces.",
     "decisionDate": "2026-08-03"
   }
