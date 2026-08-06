@@ -42,20 +42,20 @@ only content in 3739 plugins that can reach Devotion's thin-roster races.
 |---|---|
 | Cherry-picked the stranded `--check` gate | commit `639b7ab8` (cherry-pick of `9591d7dd`) |
 | Tranche-merge gate green | `node tools/pdv_quest_tranche_merge.mjs --check` -> **PASS, exit 0** |
+| T12 canonical merge repaired | commit `e5c6999`; resolved FormID duplicate gate; 2,130 cells; matrix self-test PASS |
 | Wave 1 content inventory (machine inventory only) | `references/vanilla-gameplay/compatibility/PDV_ARR25_ContentInventory_2026-08-06.csv` -- 1,220 retained rows, 657 of 657 in-scope mods; not the broader exhaustive sweep |
+| Exhaustive QUST worklist frozen | `PDV_ARR25_DiscoveryWorklist_2026-08-06.csv` + batch manifest -- 328 mods / 466 plugin paths in 8-10 path batches |
 
-Gate output at handoff time is **2131 cells / 155 quests / 45 deities**. Note this
-moved during the session: it read 1982 cells before Codex merged Tranche 12
-(149 rows) in the working tree. Any doc quoting 1978 / 1982 is stale.
+Current gate output is **2,130 cells / 154 EditorIDs / 45 deities**; compile output is
+231 runtime keys / 154 watched quests. The former 2,131 result contained one duplicate
+runtime cell under two EditorID aliases. Any doc quoting 1,978 / 1,982 / 2,131 as the
+current count is stale.
 
 ### Deliberately NOT done (owner's or Codex's call, not mine)
 
-- **Wiring Tranche 12 into the merge file list.** Codex did this in the working tree
-  mid-session. Left alone deliberately: Authoria work ships as *channels*, which
-  never enter `Full.csv`, so it was never a prerequisite for this workstream.
 - **The stale 1978/172 counts** in `AGENTS.md:216`, `PDV_MOD_SETUP.md:565`,
   `PDV_Architecture_v3.md:139/185`. `Claude.md` rule 3 puts `AGENTS.md` off limits,
-  and the numbers move again with every tranche. Now 2131 / 173+.
+  and the numbers move again with every tranche. Use fresh gate output.
 
 ### Recovery provenance -- Wave 1 complete
 
@@ -238,6 +238,11 @@ The in-scope bucket set was drawn too narrowly. Measured totals:
 - **255 were in scope** and read this session.
 - **328 are OUT of scope and have never been looked at.**
 
+The direct-read contract is now frozen in
+`PDV_ARR25_DiscoveryWorklist_2026-08-06.csv`: Wave A 97 mods / 156 paths, Wave B
+23 / 26, and Wave C 208 / 284. This proves the queue shape, not its completion;
+all batch statuses remain pending until direct houseCARL evidence is checkpointed.
+
 Excluded buckets holding real content, by QUST-bearing mod count:
 
 | Separator | Mods | Why it matters |
@@ -305,18 +310,17 @@ what the player did, not just the one that motivated the row.** The honest limit
 truth -- the ledger's two standing drop reasons are "theology stretch" and
 "double-credit", so widening tags to farm coverage is what gets rows dropped.
 
-A re-tagging pass over the existing 2131 rows would widen deity coverage with no new
+A re-tagging pass over the existing 2,130 rows would widen deity coverage with no new
 content. Worth its own tranche.
 
-### C-6 (P2) -- Open questions carried forward
+### C-6 -- Resolved controls and remaining source check
 
-- **No gate checks reachability.** Nothing fails when a cell names a deity no race can
-  reach (the Trinimac/Orc case). Worth a lint once the inventory shows how common it
-  is. `Claude.md:17` means asking before touching the toolchain.
-- Whether the combined Authoria all-in-one lane or the per-mod FOMOD lane absorbs each
-  new tranche. July rule of thumb: Authoria-guaranteed targets go in the combined ESP;
-  anything an arbitrary load order might lack ships per-mod, because a missing master
-  stops the game loading.
+- `tools/pdv_arr25_inventory_reachability_audit.mjs` is the report-only roster gate.
+  The canonical and reachable columns remain blank until primary semantic review;
+  legacy `candidate_deities` text is migration debt, not authority. The gate parses
+  the live roster function and locks Altmer-reachable / Orc-pressure-only Trinimac.
+- Packaging is settled: Authoria-guaranteed targets enter the combined lane, while
+  arbitrary-load-order support stays per-mod so missing masters cannot block startup.
 - Whether `live-source/Scripts/Source/` is in sync with
   `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source\` before Phase 4 touches
   any `.psc`. Audits read the repo mirror; the compiler reads MO2.
