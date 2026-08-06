@@ -281,6 +281,17 @@ Machine proof: 10/10 channels `--check` PASS; core matrix 1982 cells / 173 keys
 (+4 for DB01 s198); patch records read back from disk. Runtime proof pending
 (TODO-7).
 
+### 2026-08-06 ARR 2.5 Wave 1 inventory recovery
+
+The recovered Wave 1 compatibility inventory is
+`PDV_ARR25_ContentInventory_2026-08-06.csv`: 1,220 retained rows covering 657 of 657
+mods in its original scope, after excluding one literal scratch `placeholder` row.
+Scope equality, natural-record uniqueness, and triage values were reconciled. This is
+machine inventory evidence only; it does **not** claim that the later 328-mod
+QUST-bearing discovery universe has been swept, authored, runtime-tested, or supported.
+The live recovery context and remaining exhaustive-discovery work are recorded in
+`references/authoring/PDV_ARR25_ContentSweep_CodexHandoff_2026-08-06.md`.
+
 Follow-up logged: Sirenroot's Tilael/ghost-encounter beat (FormID range
 03B421-089999) was NOT scanned -- if it holds a spare/banish choice, it is a
 second hook worth adding. The Frissa report branches are tone, not morality --
@@ -294,6 +305,11 @@ P0 = blocks the Authoria 1.0 gate package; P1 = next tranche; P2 = nice-to-have.
   high-confidence table in section 2 (CSV -> `pdv_quest_matrix_compile.mjs`;
   register new FormIDs in `MANUAL_QUEST_FORMIDS`). Runtime-verify flags on
   every row lacking ShutDownStage proof.
+  - [x] **Wave 1 inventory-scope prerequisite (2026-08-06):** 657 of 657 mods in
+    the original bucket scope have an explicit verdict in
+    `PDV_ARR25_ContentInventory_2026-08-06.csv`. This does not complete TODO-1's
+    authoring work or the separate exhaustive discovery of the 328 QUST-bearing mods
+    outside that original scope.
 - [x] **TODO-2 (P0, S1): DONE 2026-07-16.** Innocence Lost QE 198/199/201
   text-verified on the winner; s198 (Grelod imprisoned, not murdered) rowed to
   CORE with the Stendarr/Mara/Stuhn/Molag Bal sweep. 199/201 are her later
