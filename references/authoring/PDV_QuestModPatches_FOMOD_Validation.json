@@ -1,6 +1,6 @@
 {
   "schema": "pdv-quest-patch-fomod-validation.v1",
-  "generatedAt": "2026-08-06T21:10:51.672Z",
+  "generatedAt": "2026-08-06T21:23:24.657Z",
   "status": "PASS",
   "proofBoundary": "Package structure and bytes only. This does not prove runtime routing, player surfaces, semantic correctness, or support status.",
   "packageRoot": "dist/PDV_QuestModPatches_FOMOD",
@@ -12,7 +12,7 @@
   "simulations": [
     {
       "name": "authoria-combined",
-      "installedFiles": 85,
+      "installedFiles": 84,
       "identicalCollisions": [
         "Scripts/PDV_EventBus.pex",
         "Scripts/PDV_PlayerEvents.pex",
@@ -52,8 +52,8 @@
     }
   ],
   "manifest": {
-    "fileCount": 96,
-    "treeSha256": "D3B4CBC52C7E03AD85B3DE86AFE2029567ED3463497B1FA8CF4BE68C63B55517",
+    "fileCount": 95,
+    "treeSha256": "1562DA86E0FE60F141CCF6DEC7D4A1C8B63C796F096B98616AEDE5155BAB31EC",
     "files": [
       {
         "path": "common/_Fragments/OnceWeWereHere/Scripts/PDV_TIF_OWWH_S60.pex",
@@ -442,13 +442,13 @@
       },
       {
         "path": "fomod/ModuleConfig.xml",
-        "size": 35027,
-        "sha256": "6E94FB060F16C4429A43B774759DFEE2AF3075F14F3FEC90B7EA08F36A018D51"
+        "size": 35025,
+        "sha256": "EF19922FFFB5A09F1A2349A0A1F55BA5F467E32FA5E1459A1BA3803AF0859519"
       },
       {
         "path": "plugins/authoria/Docs/PDV Patch - Authoria All-In-One.md",
-        "size": 2198,
-        "sha256": "9AB7971F7804974DB7B62066284FE7CEC2301CE7125B2A16A4BE759C394665E8"
+        "size": 2532,
+        "sha256": "F8337263FF8EE1A520A946F618542CD74C1A84F5021176B27B2D49625FBFD78C"
       },
       {
         "path": "plugins/authoria/Docs/PDV_ARR_Tranche2_Implementation.md",
@@ -461,14 +461,9 @@
         "sha256": "199F123C4BFAFFEF497FD1B31D65558C82F7597753A159F3BD177336F285C2E1"
       },
       {
-        "path": "plugins/authoria/PDV_AuthoriaARR_Compatibility.esp",
-        "size": 5657,
-        "sha256": "5343789D9C680F139FE4552F7C185A6A10196DEE487EE74C6A9316254A90733D"
-      },
-      {
-        "path": "plugins/authoria/PDV_Patch_Authoria_QuestMods.esp",
-        "size": 14002,
-        "sha256": "A607B6D152DE1E7FAC1523D3019FCF52836AF174BE6E234964D21B9FA8BE4BB7"
+        "path": "plugins/authoria/PDV_AuthoriaARR_Combined.esp",
+        "size": 19537,
+        "sha256": "AD44658982243F75D310E632C691794DFE6C4647AB57E54EB3840DFFF43CD509"
       },
       {
         "path": "plugins/authoria/Scripts/PDV__ManagerQuest.pex",
@@ -502,8 +497,8 @@
       },
       {
         "path": "plugins/authoria/SKSE/Plugins/BaseObjectSwapper/PDV_AuthoriaARR_ShrinePrayer_SWAP.ini",
-        "size": 1015,
-        "sha256": "D126E0DC703C1D478F7D03F3EF1A99FC6D462B44141935F0CEF84617689E513F"
+        "size": 949,
+        "sha256": "55F16F2CB85185F6C2505D57DA532B665A7FE03006F77CEBF00A36B937122A88"
       },
       {
         "path": "plugins/authoria/SKSE/Plugins/KeywordItemDistributor/PDV_GreenPact_KID.ini",
@@ -539,9 +534,9 @@
   },
   "archive": {
     "path": "dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip",
-    "entries": 96,
-    "size": 1894239,
-    "sha256": "0E3DDC3447EF2226ECF79DEAD1F8FA58A2A3EA1018D1866594DF9D35B19F9846",
+    "entries": 95,
+    "size": 1894108,
+    "sha256": "73AF39BE83EEEBE8E7D6B047CAD4126BC816E724A92733E5E9E1143284AF92BA",
     "missing": [],
     "extra": []
   },

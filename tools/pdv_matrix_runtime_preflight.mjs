@@ -23,6 +23,7 @@ const EXPECTED_ARR_WATCHED = Number.parseInt(getArg("--expected-arr") ?? "20", 1
 const EXPECTED_CHANNELS = Number.parseInt(getArg("--expected-channels") ?? "0", 10);
 const CORE_MOD = getArg("--core-mod") ?? "Devotion";
 const COMPAT_MOD = getArg("--compat-mod") ?? "Devotion - Authoria ARR Compatibility";
+const COMPAT_PLUGIN = getArg("--compat-plugin") ?? "PDV_AuthoriaARR_Combined.esp";
 const PAPYRUS_LOG = normalizePath(getArg("--log") ?? "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log");
 
 const findings = [];
@@ -224,22 +225,22 @@ function checkPluginOrder() {
     .map((line) => line.startsWith("*") ? line.slice(1) : line);
 
   const devotion = activePlugins.indexOf("Devotion.esp");
-  const compat = activePlugins.indexOf("PDV_AuthoriaARR_Compatibility.esp");
+  const compat = activePlugins.indexOf(COMPAT_PLUGIN);
   const req = activePlugins.indexOf("Requiem for the Indifferent.esp");
 
   if (devotion === -1) fail("Plugin active", "Devotion.esp is not active.", pluginsPath);
   else pass("Plugin active", "Devotion.esp is active.", pluginsPath);
   if (CORE_ONLY) return;
-  if (compat === -1) fail("Plugin active", "PDV_AuthoriaARR_Compatibility.esp is not active.", pluginsPath);
-  else pass("Plugin active", "PDV_AuthoriaARR_Compatibility.esp is active.", pluginsPath);
+  if (compat === -1) fail("Plugin active", `${COMPAT_PLUGIN} is not active.`, pluginsPath);
+  else pass("Plugin active", `${COMPAT_PLUGIN} is active.`, pluginsPath);
 
   if (devotion !== -1 && compat !== -1) {
-    if (devotion < compat) pass("Plugin order", "Devotion.esp loads before PDV_AuthoriaARR_Compatibility.esp.", pluginsPath);
-    else fail("Plugin order", "PDV_AuthoriaARR_Compatibility.esp must load after Devotion.esp.", pluginsPath);
+    if (devotion < compat) pass("Plugin order", `Devotion.esp loads before ${COMPAT_PLUGIN}.`, pluginsPath);
+    else fail("Plugin order", `${COMPAT_PLUGIN} must load after Devotion.esp.`, pluginsPath);
   }
   if (compat !== -1 && req !== -1) {
-    if (compat < req) pass("Plugin order", "PDV_AuthoriaARR_Compatibility.esp loads before Requiem for the Indifferent.esp.", pluginsPath);
-    else fail("Plugin order", "PDV_AuthoriaARR_Compatibility.esp must load before Requiem for the Indifferent.esp.", pluginsPath);
+    if (compat < req) pass("Plugin order", `${COMPAT_PLUGIN} loads before Requiem for the Indifferent.esp.`, pluginsPath);
+    else fail("Plugin order", `${COMPAT_PLUGIN} must load before Requiem for the Indifferent.esp.`, pluginsPath);
   }
 }
 

@@ -77,8 +77,8 @@ check("AFDI excluded entities", manager.includes('artifactKey == "jyggalag"') &&
 
 const shrine = read("dist", "PDV_QuestModPatches_FOMOD", "plugins", "authoria", "SKSE", "Plugins", "BaseObjectSwapper", "PDV_AuthoriaARR_ShrinePrayer_SWAP.ini");
 const shrineRules = shrine.split(/\r?\n/).map((line) => line.trim()).filter((line) => line && !line.startsWith(";") && line.includes("|"));
-check("ARR shrine swap map", shrineRules.length === 11 && shrineRules.every((line) => line.includes("PDV_AuthoriaARR_Compatibility.esp")), `${shrineRules.length} exact prayer-activator mappings are packaged; QASmoke and Jyggalag stay absent`);
-check("ARR shrine prayer ESP", fs.statSync(at("dist", "PDV_QuestModPatches_FOMOD", "plugins", "authoria", "PDV_AuthoriaARR_Compatibility.esp")).size > 0, "the 11 authored route-202 activators ship with the swap file");
+check("ARR shrine swap map", shrineRules.length === 11 && shrineRules.every((line) => line.includes("PDV_AuthoriaARR_Combined.esp")), `${shrineRules.length} exact prayer-activator mappings are packaged; QASmoke and Jyggalag stay absent`);
+check("ARR combined ESP", fs.statSync(at("dist", "PDV_QuestModPatches_FOMOD", "plugins", "authoria", "PDV_AuthoriaARR_Combined.esp")).size > 0, "the 11 route-202 activators and 21 quest/dialogue overrides ship in one ESPFE");
 
 check(
   "Packaged manager source",

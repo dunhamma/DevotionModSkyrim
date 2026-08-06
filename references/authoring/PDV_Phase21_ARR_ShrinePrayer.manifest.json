@@ -1,6 +1,6 @@
 {
   "schema": "pdv.phase21.arr-shrine-prayer.v1",
-  "status": "BUILT: mechanism compiled + 11 ACTI records authored + BOS ini emitted; runtime smoke pending",
+  "status": "BUILT: 11 ACTIs now live in the combined ESPFE; runtime/support evidence remains open",
   "intent": "Make the man_DaedricShrines decorative statues clickable: a once/day prayer that grants a flat +2 piety to that Prince. Requested 2026-06-15.",
   "mechanism": {
     "status": "machine-verified (all 3 scripts compile 0 errors / 0 warnings)",
@@ -45,18 +45,18 @@
     "alreadyCovered": "Nocturnal: the man_ Nocturnal shrine IS clickable and already routes AltarNocturnalSpell, covered by the existing shrine-blessing manifest."
   },
   "authored": {
-    "tool": "tools/pdv-arr-shrineprayer-author (builds 0/0; modeled on pdv-daedric-author)",
-    "esp": "dist/PDV_AuthoriaARR_Compatibility/PDV_AuthoriaARR_Compatibility.esp (ESL-flagged; masters Skyrim.esm + Devotion.esp)",
-    "bosIni": "dist/PDV_AuthoriaARR_Compatibility/PDV_AuthoriaARR_ShrinePrayer_SWAP.ini (11 STAT->ACTI swaps, [Forms] grammar)",
+    "tool": "direct houseCARL authoring/readback; historical helper references are retired",
+    "esp": "dist/PDV_QuestModPatches_FOMOD/plugins/authoria/PDV_AuthoriaARR_Combined.esp (ESPFE; 32 records total: 21 quest/dialogue overrides + 11 shrine-prayer ACTIs; replaces the historical QuestMods and Compatibility donors)",
+    "bosIni": "dist/PDV_QuestModPatches_FOMOD/plugins/authoria/SKSE/Plugins/BaseObjectSwapper/PDV_AuthoriaARR_ShrinePrayer_SWAP.ini (11 STAT->ACTI swaps, [Forms] grammar)",
     "actiFormIds": {
       "Azura": "000800", "Vaermina": "000801", "MolagBal": "000802", "Mephala": "000803",
       "MehrunesDagon": "000804", "Sheogorath": "000805", "Namira": "000806", "Sanguine": "000807", "HermaeusMora": "000808",
       "Hircine": "000809", "Peryite": "00080A"
     },
-    "verified": "Readback confirms all 11: RouteId=202, SignalValue=princeIndex, Model set, PDV_EventBusService=046AF7:Devotion.esp, RequiredOriginRace=-1, OncePerDayKey wired, PDV_GLO_OriginRace/DebugLevel resolved."
+    "verified": "Readback confirms all 11: RouteId=202, SignalValue=princeIndex, Model set, PDV_EventBusService=046AF7:Devotion.esp, RequiredOriginRace=-1, OncePerDayKey wired, PDV_GLO_OriginRace/DebugLevel resolved. Source quest SEQs remain supplied by their masters; the external-reference scan found five unrelated unreadable records."
   },
   "remaining": [
-    "Deploy PDV_AuthoriaARR_Compatibility.esp + the _SWAP.ini into the ARR PDV-test mod, after the recompiled Devotion .pex.",
+    "KoK R11 deployment/readback is complete: the compatibility mod uniquely wins PDV_AuthoriaARR_Combined.esp and the _SWAP.ini; this is static deployment proof only.",
     "Runtime smoke: BOS swaps the statue -> shrine clickable; prayer grants +2 to the Prince; once/day gate holds. Offsite-unverifiable; do at the Wave 2 smoke."
   ]
 }

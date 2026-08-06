@@ -1101,9 +1101,9 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 ## Notes / Decisions Log
 
 **2026-08-07 AEST - ARR 2.5 combined candidate deployment and winner-aware
-preflight:** Installed the 85-file combined FOMOD lane as
+preflight:** Installed the 84-file combined FOMOD lane as
 `D:\Wabbajack\modlists\ARR 2.5\mods\Devotion - Authoria ARR Compatibility`,
-enabled it on `KoK R11`, and activated `PDV_AuthoriaARR_Compatibility.esp`
+enabled it on `KoK R11`, and activated `PDV_AuthoriaARR_Combined.esp`
 after `Devotion.esp` / before `Requiem for the Indifferent.esp`. Profile files
 were backed up to
 `profiles\KoK R11\pdv-arr25-backups\20260807-070513`. Direct houseCARL asset
@@ -1128,9 +1128,9 @@ the read-back 11-ACTI route-202 shrine-prayer ESP/BOS pair. Wyrmstooth placement
 use different base forms and are not covered; Jyggalag remains classify-only;
 hunting is deferred because a truthful route requires a third-party ModEvent after
 the IHA corpse-token write. The validated archive is
-`dist\PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`: 96 members, no missing or
+`dist\PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`: 95 members, no missing or
 extra files, SHA-256
-`0E3DDC3447EF2226ECF79DEAD1F8FA58A2A3EA1018D1866594DF9D35B19F9846`.
+`73AF39BE83EEEBE8E7D6B047CAD4126BC816E724A92733E5E9E1143284AF92BA`.
 Papyrus compile is 0/0 and strict verification is `PASS=4074, TODO=1, INFO=78,
 WARN=1, FAIL=0`. This moves machine/package proof only; ARR 2.5 runtime preflight,
 every structured tester case, and support remain OPEN.

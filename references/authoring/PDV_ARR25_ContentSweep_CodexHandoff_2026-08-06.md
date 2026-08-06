@@ -89,14 +89,16 @@ What landed this session:
   Hunting remains explicitly deferred because the truthful seam requires a
   third-party script event. All non-quest runtime cases remain OPEN.
 - **The cumulative test archive is machine-complete:** 36 FOMOD nodes / 34
-  individual content options / 34 channels / 96 files. Combined Authoria,
+  individual content options / 34 channels / 95 files. Combined Authoria,
   all-individual, and representative-subset simulations pass. Archive membership
-  is exactly 96 entries with no missing/extra files; SHA-256 is
-  `0E3DDC3447EF2226ECF79DEAD1F8FA58A2A3EA1018D1866594DF9D35B19F9846`.
+  is exactly 95 entries with no missing/extra files; SHA-256 is
+  `73AF39BE83EEEBE8E7D6B047CAD4126BC816E724A92733E5E9E1143284AF92BA`.
 - **The combined lane is deployed on ARR 2.5 `KoK R11`:** the enabled mod is
-  `Devotion - Authoria ARR Compatibility`; 85 installed files reproduce the
+  `Devotion - Authoria ARR Compatibility`; 84 installed files reproduce the
   combined FOMOD simulation. houseCARL confirms it wins all three script PEX
-  overrides, both aggregate matrices, the KID/BOS files, and both packaged ESPs.
+  overrides, both aggregate matrices, the KID/BOS files, and the single
+  `PDV_AuthoriaARR_Combined.esp` ESPFE. Its 32 records preserve 21 quest/dialogue
+  overrides and add the 11 shrine ACTIs formerly carried by the second donor.
   The corrected winner-aware preflight passes `31 PASS / 4 INFO / 0 FAIL` with
   `154` core watched quests, `62` ARR watched quests, and `34/34` per-mod
   channels. Profile backups are under
@@ -130,7 +132,7 @@ only content in 3739 plugins that can reach Devotion's thin-roster races.
 | T16 alternate-route authoring and package directory | 58 cells / 7 keys / 2 channels; cumulative 32-channel FOMOD; soft-dependency TG09 201/202 resolver and false-commitment suppression; `PDV_ARR25_T16_Adjudication.md`; runtime/support OPEN |
 | T17 large-content authoring and package directory | 132 new cells / 22 keys / 12 watched quests across LOTD, Bruma, and the expanded Wyrmstooth channel; cumulative 34-channel FOMOD; `PDV_ARR25_T17_Adjudication.md`; runtime/support OPEN |
 | Non-quest renewable closeout | 17 food records applied; Hidden Art 2/2; 30 AFDI globals; bard contract retained; 11 correct prayer swaps; 108 records explicitly deferred; `PDV_ARR25_NonQuest_Adjudication.md`; runtime/support OPEN |
-| Cumulative ARR 2.5 test archive | `dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`; 96 entries; exact tree/archive validation PASS; support remains closed |
+| Cumulative ARR 2.5 test archive | `dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`; 95 entries; exact tree/archive validation PASS; support remains closed |
 
 Current gate output is **2,130 cells / 154 EditorIDs / 45 deities**; compile output is
 231 runtime keys / 154 watched quests. The former 2,131 result contained one duplicate

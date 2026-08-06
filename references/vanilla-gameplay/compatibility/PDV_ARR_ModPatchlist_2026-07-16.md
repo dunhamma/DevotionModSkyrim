@@ -226,10 +226,13 @@ Architecture:
 
 ### Authoria all-in-one lane (added 2026-07-16)
 
-For Authoria specifically, the three dialogue-hook plugins collapse into ONE:
-`PDV_Patch_Authoria_QuestMods.esp` (ESL-flagged, 21 records, masters War's
-Folly + Once We Were Here + Slays-Many-Beasts), shipped with all 9 fragments and
-all 10 channels.
+For Authoria specifically, the current cumulative FOMOD and KoK R11 deployment
+use ONE ESPFE: `PDV_AuthoriaARR_Combined.esp`. It replaces the historical
+`PDV_Patch_Authoria_QuestMods.esp` and `PDV_AuthoriaARR_Compatibility.esp`
+donors and contains 32 records: 21 quest/dialogue overrides plus 11
+shrine-prayer ACTIs. Source quest SEQ files remain supplied by their masters.
+The combined-plugin external-reference scan reported five unrelated unreadable
+records; runtime and support evidence remain open.
 
 Why the individual lane still exists: a patch plugin masters every mod it
 touches, and a missing master stops the game loading -- so a combined plugin is
@@ -250,10 +253,11 @@ multi-`<folder>` entries:
 common/<Mod>/                SKSE/.../Channels/PDV_QRM_<Mod>.json + Docs/PDV Patch - <Mod>.md
 common/_Fragments/<Mod>/     Scripts/*.pex + Scripts/Source/*.psc   (the 3 dialogue-hook mods)
 plugins/individual/<Mod>/    PDV_Patch_<Mod>.esp                    (the 3 dialogue-hook mods)
-plugins/authoria/            PDV_Patch_Authoria_QuestMods.esp + its Docs entry
+plugins/authoria/            PDV_AuthoriaARR_Combined.esp + its Docs entry
 ```
 
-- Authoria option = all 10 `common/<Mod>` + 3 `common/_Fragments/*` + `plugins/authoria`.
+- Authoria option = all 10 `common/<Mod>` + 3 `common/_Fragments/*` + `plugins/authoria`;
+  its single ESPFE is `PDV_AuthoriaARR_Combined.esp`.
 - Individual data-only option = its `common/<Mod>` only.
 - Individual dialogue-hook option = `common/<Mod>` + `common/_Fragments/<Mod>` +
   `plugins/individual/<Mod>`.
@@ -457,10 +461,10 @@ P0 = blocks the Authoria 1.0 gate package; P1 = next tranche; P2 = nice-to-have.
   do not inherit the swaps, so no unproved mappings were added. Jyggalag remains
   classify-only. Runtime prayer and negative-control cases remain OPEN.
 - [x] **TODO-7 (P0, package): MACHINE-COMPLETE 2026-08-06.** The cumulative
-  ARR 2.5 test candidate contains 34 channels, two scoped ESPs, current isolated
+  ARR 2.5 test candidate contains 34 channels, one combined ESPFE, current isolated
   PEX/source, Green Pact KID rules, corrected prayer swaps, full T13-T17 and
   non-quest ledgers, and refreshed README/runbook. FOMOD XML, referenced folders,
-  collisions, Authoria/all-individual/subset simulations, 96 archive members,
+  collisions, Authoria/all-individual/subset simulations, 95 archive members,
   filenames, and checksums pass. Runtime preflight and every tester case remain
   OPEN, so the package is experimental and not supported.
 - [ ] **TODO-8 (P1, S5):** Verify JS Shrines / CC Survival Disable-Shrine-Menu
