@@ -487,6 +487,11 @@ Message Property PDV_Notif_Altmer_Syrabane_ChampionAmbient_Ward Auto
 Message Property PDV_Notif_Altmer_Syrabane_ChampionAmbient_Guard Auto
 Message Property PDV_Notif_Altmer_General_HeritageExemplar Auto
 Message Property PDV_Notif_Altmer_General_HeritageQuiet Auto
+; The calian's two refusal surfaces. Before these the token was silent on both -- a player who
+; clicked it twice in a day, or clicked it while cursed, got no answer at all and could not tell a
+; working item from a broken one.
+Message Property PDV_Notif_Altmer_Calian_AlreadyKept Auto
+Message Property PDV_Notif_Altmer_Calian_Unanswered Auto
 Message Property PDV_Notif_Redguard_Sect_Crown_Entry Auto
 Message Property PDV_Notif_Redguard_Sect_Forebear_Entry Auto
 Message Property PDV_Notif_Redguard_Sect_AshAbah_Entry Auto
@@ -11408,12 +11413,21 @@ EndFunction
 ;
 ; Returns the idle kind for the token: 0 = pray, 1 = study.
 Int Function HandleAltmerPracticeFocus(String reason)
-    if !IsAltmerOrigin() || IsAltmerFavorSuppressedByCurse()
+    ; A non-Altmer holding the calian gets nothing and is told nothing -- it is not their object and
+    ; there is no refusal to explain. The curse case IS explained, because that player owns the
+    ; calian and needs to know the silence is their state and not a broken item.
+    if !IsAltmerOrigin()
+        return 0
+    endIf
+
+    if IsAltmerFavorSuppressedByCurse()
+        ShowAltmerNotification(PDV_Notif_Altmer_Calian_Unanswered, "The calian does not warm to you now.")
         return 0
     endIf
 
     ; ONE cap across every lane, so switching patron cannot buy a second practice in a day.
     if !ConsumeOncePerDaySignal("PDV.Signal.AltmerPracticeFocus")
+        ShowAltmerNotification(PDV_Notif_Altmer_Calian_AlreadyKept, "Your calian is already warm from today's practice.")
         return GetAltmerPracticeIdleKind()
     endIf
 
@@ -11472,6 +11486,20 @@ Function EnsureAltmerPracticeFocus()
     if playerRef.GetItemCount(PDV_MISC_AltmerPracticeFocus) <= 0
         playerRef.AddItem(PDV_MISC_AltmerPracticeFocus, 1, True)
         Trace(2, "Altmer practice focus granted.")
+
+        ; ONCE EVER, on a one-shot key rather than on the grant itself. This function re-grants the
+        ; calian whenever the player does not have one, so hanging the line off AddItem would say
+        ; "you have carried this since you were eighteen" about a replacement acquired a minute ago
+        ; if the player ever dropped or sold it.
+        ;
+        ; Written as a Book of Days entry, not a notification, and allowed during race-setup quiet:
+        ; the grant happens at init, when presentation is suppressed, so a notification would either
+        ; be swallowed or would have to shout over the setup flow. This is backstory being entered
+        ; in the chronicle, which is what the Book of Days is for.
+        if StorageUtil.GetIntValue(None, "PDV.Altmer.Calian.Granted") != 1
+            StorageUtil.SetIntValue(None, "PDV.Altmer.Calian.Granted", 1)
+            AppendBookOfDaysEntry("You have carried this since you were eighteen. A sphere of aetherquartz, given in a chapel by a Curate, and still unbroken.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Your calian", True)
+        endIf
     endIf
 EndFunction
 
