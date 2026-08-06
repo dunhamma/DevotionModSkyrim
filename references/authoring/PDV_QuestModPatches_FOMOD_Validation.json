@@ -1,40 +1,42 @@
 {
   "schema": "pdv-quest-patch-fomod-validation.v1",
-  "generatedAt": "2026-08-06T11:02:04.308Z",
+  "generatedAt": "2026-08-06T11:22:34.886Z",
   "status": "PASS",
   "proofBoundary": "Package structure and bytes only. This does not prove runtime routing, player surfaces, semantic correctness, or support status.",
   "packageRoot": "dist/PDV_QuestModPatches_FOMOD",
   "optionCounts": {
-    "totalPluginNodes": 21,
-    "individualContentOptions": 19,
-    "channelFiles": 19
+    "totalPluginNodes": 26,
+    "individualContentOptions": 24,
+    "channelFiles": 24
   },
   "simulations": [
     {
       "name": "authoria-combined",
-      "installedFiles": 62,
+      "installedFiles": 68,
       "identicalCollisions": []
     },
     {
       "name": "all-individual",
-      "installedFiles": 52,
+      "installedFiles": 58,
       "identicalCollisions": [
         "Docs/PDV_ARR25_T13_RuntimeEvidenceLedger.json",
+        "Docs/PDV_ARR25_T14_RuntimeEvidenceLedger.json",
         "Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md"
       ]
     },
     {
       "name": "representative-subset",
-      "installedFiles": 10,
+      "installedFiles": 7,
       "identicalCollisions": [
         "Docs/PDV_ARR25_T13_RuntimeEvidenceLedger.json",
+        "Docs/PDV_ARR25_T14_RuntimeEvidenceLedger.json",
         "Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md"
       ]
     }
   ],
   "manifest": {
-    "fileCount": 67,
-    "treeSha256": "0009555B20019E8B608E49BD341CCF42A2A2A6905DFDFFAC088D9D70C967F309",
+    "fileCount": 73,
+    "treeSha256": "6292CEF0297F78F02D61AA35A010CB0023C1F6CE7F7DD7D1511A53E5FD94DF53",
     "files": [
       {
         "path": "common/_Fragments/OnceWeWereHere/Scripts/PDV_TIF_OWWH_S60.pex",
@@ -132,9 +134,19 @@
         "sha256": "38C1B56E2891CB8AE2C43CC701A54697D2E5ED98B71CA3DD1E6D709AE10FCC7B"
       },
       {
+        "path": "common/_Runbook/Docs/PDV_ARR25_T14_RuntimeEvidenceLedger.json",
+        "size": 7161,
+        "sha256": "E73D1FC444AA17438E7B6A591581355144A01706BBE591D1D073A9E9271D68CF"
+      },
+      {
         "path": "common/_Runbook/Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md",
-        "size": 13434,
-        "sha256": "9D2B09D7EB5A8744CD245FA240AA6309A78B3F219775AB241FE210D0A1528E91"
+        "size": 14151,
+        "sha256": "6D5E6E9EB27EB0B2CD9D2D973720F41C9DC090259E27B4D125FA00356F9DFE18"
+      },
+      {
+        "path": "common/Auri/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Auri.json",
+        "size": 106603,
+        "sha256": "365C6BB42A8E6AF25D4D8CE1095F186708E375441EA3E82CE48BF9AA5BE93534"
       },
       {
         "path": "common/BabaYaga/Docs/PDV Patch - Baba Yaga and the Labyrinth.md",
@@ -207,6 +219,16 @@
         "sha256": "28967C6BEEBAE436B3365EDFA7134F2EF7F7A5E57147508F8A1A2A7DC357245C"
       },
       {
+        "path": "common/Moonpath/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Moonpath.json",
+        "size": 116539,
+        "sha256": "7B4FB01832F8994172B3E3349976C294EB419AA18D7F94A8B02BF9D8A0A155C1"
+      },
+      {
+        "path": "common/Mrissi/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Mrissi.json",
+        "size": 110362,
+        "sha256": "A50E4BB09D2B7704221C81A160E578ADA6166939C857A84A22344302457EAB90"
+      },
+      {
         "path": "common/OnceWeWereHere/Docs/PDV Patch - Once We Were Here.md",
         "size": 1092,
         "sha256": "8C1B2AE199FCDE50EDB7215FAA67B270E9B8827553E2D481D28D2A21393BCA63"
@@ -257,6 +279,11 @@
         "sha256": "2F21DE2BF236899557FA406A27D17F052DC167D111502152F2DB38674D4CC740"
       },
       {
+        "path": "common/Thogra/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Thogra.json",
+        "size": 114058,
+        "sha256": "C263FA49D84B5EADC5FE30E3E7F69F1D218361747CE41DB2B9E372408DCA4CFA"
+      },
+      {
         "path": "common/WarsFolly/Docs/PDV Patch - War's Folly.md",
         "size": 1047,
         "sha256": "976E064273ED04446BE2E63CB6B9BDBB482D474C7DA05FE6FFC1688D19AE6695"
@@ -282,14 +309,19 @@
         "sha256": "502BA2B18F3373BE7FA9BA34243761CA2475F6E4153FF9788BA5A7F1B1A6D845"
       },
       {
+        "path": "common/Xelzaz/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Xelzaz.json",
+        "size": 110091,
+        "sha256": "93E0E601F89E7F4E11DFDFEE518D18297CCF1DE3C69AC88819CC1A54F9CFAAF7"
+      },
+      {
         "path": "fomod/info.xml",
         "size": 1088,
         "sha256": "BE0BCF93D6A27AF2BDE474A5F04ABA6DA387CEAD078A558CC01E3BC6FA357187"
       },
       {
         "path": "fomod/ModuleConfig.xml",
-        "size": 22255,
-        "sha256": "BDA6DAF369954F9BDB726CD66CD165DA5F40F89AF1F30BBD372764B5EA509445"
+        "size": 26318,
+        "sha256": "7912F82B8B0EF2B58D3555DDCA00B12706876014A22FEA5C341EF2DFF2E72AE1"
       },
       {
         "path": "plugins/authoria/Docs/PDV Patch - Authoria All-In-One.md",

@@ -7,7 +7,7 @@
         <group name="How do you want to install?" type="SelectExactlyOne">
           <plugins order="Explicit">
             <plugin name="Authoria (Requiem Reforged) - All-In-One">
-              <description>One combined ESL-flagged hook plugin for the original dialogue patches, plus all nineteen data channels. Authoria ships every target mod. T13 channels are machine-verified test candidates pending ARR 2.5 runtime evidence.</description>
+              <description>One combined ESL-flagged hook plugin for the original dialogue patches, plus all twenty-four data channels. Authoria ships every target mod. T13-T14 channels are machine-verified test candidates pending ARR 2.5 runtime evidence.</description>
               <files>
                 <folder source="common\Sirenroot" destination="" priority="0" />
                 <folder source="common\_Runbook" destination="" priority="0" />
@@ -29,6 +29,11 @@
                 <folder source="common\HuntForSpectre" destination="" priority="0" />
                 <folder source="common\CallingTheWatchmaker" destination="" priority="0" />
                 <folder source="common\GiftOfSaturalia" destination="" priority="0" />
+                <folder source="common\Thogra" destination="" priority="0" />
+                <folder source="common\Auri" destination="" priority="0" />
+                <folder source="common\Mrissi" destination="" priority="0" />
+                <folder source="common\Xelzaz" destination="" priority="0" />
+                <folder source="common\Moonpath" destination="" priority="0" />
                 <folder source="common\_Fragments\WarsFolly" destination="" priority="0" />
                 <folder source="common\_Fragments\OnceWeWereHere" destination="" priority="0" />
                 <folder source="common\_Fragments\WhispersOfTheDepths" destination="" priority="0" />
@@ -383,6 +388,46 @@
                   <patterns><pattern><dependencies operator="And"><fileDependency file="TheGiftofSaturalia.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns>
                 </dependencyType>
               </typeDescriptor>
+            </plugin>
+            <plugin name="Thogra (T14 experimental)">
+              <description>Data-only blood-oath, betrayal, and two marriage-route channels. The objective-derived Largashbur marriage must be traversed organically.</description>
+              <files>
+                <folder source="common\Thogra" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="DK_Thogra.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+            </plugin>
+            <plugin name="Song of the Green - Auri (T14 experimental)">
+              <description>Data-only channel for Auri's five-grove pilgrimage through Skyrim's beautiful natural sites.</description>
+              <files>
+                <folder source="common\Auri" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="018Auri.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+            </plugin>
+            <plugin name="M'rissi's Tails of Troubles (T14 experimental)">
+              <description>Data-only channels for the proved enslavement, marriage, and kinship outcomes. Unproved chapter routes remain excluded.</description>
+              <files>
+                <folder source="common\Mrissi" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="MrissiTailOfTroubles.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+            </plugin>
+            <plugin name="Xelzaz (T14 experimental)">
+              <description>Data-only channels for crimson Nirnroot research and the proved recipe/spice theft plus mead tasting. Ambiguous routes remain excluded.</description>
+              <files>
+                <folder source="common\Xelzaz" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="BPUFXelzazFollower.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+            </plugin>
+            <plugin name="Moonpath to Elsweyr (T14 experimental)">
+              <description>Data-only channels for the Tenmar journey, Thalmor rebellion, saved/released plague branches, and completed rebel base.</description>
+              <files>
+                <folder source="common\Moonpath" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="moonpath.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
             </plugin>
           </plugins>
         </group>

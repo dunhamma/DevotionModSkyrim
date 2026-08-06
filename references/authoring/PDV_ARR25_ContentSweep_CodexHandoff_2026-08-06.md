@@ -3,7 +3,7 @@
 Date: 2026-08-06
 Branch: `codex/arr25-content-sweep`
 Author: Claude session (Opus 5). Owner-approved plan folded in below.
-Status: **Phase 0, exhaustive QUST-plus-selected-signal discovery, and T13 machine authoring/package gates are complete. T14-T17, renewable implementation, cumulative archive build, and tester proof remain open.**
+Status: **Phase 0, exhaustive QUST-plus-selected-signal discovery, and T13-T14 machine authoring/package gates are complete. T15-T17, renewable implementation, cumulative archive build, and tester proof remain open.**
 
 ---
 
@@ -45,6 +45,13 @@ What landed this session:
   paired-equity has zero unexplained delta, and the 19-channel FOMOD directory
   passes deterministic structure/collision/hash validation. All 14 tester cases
   remain OPEN; this is an experimental test candidate, not supported content.
+- **T14 is machine-complete:** five data-only channels contain 78 cells across
+  15 outcome keys / 12 watched quests. The initial 87-candidate plus one-conflict
+  cross-generation pass was primary-adjudicated to 46 kept suggestions and 22
+  explicit final rejections after three over-broad act aliases were removed.
+  Paired-equity adds zero unexplained open gaps (116 open / 88 waived composite),
+  and the cumulative FOMOD now carries 24 channels. All 15 T14 tester cases remain
+  OPEN; the Largashbur marriage must be traversed organically.
 
 The single most valuable discovery: **follower personal questlines**, which are the
 only content in 3739 plugins that can reach Devotion's thin-roster races.
@@ -66,6 +73,7 @@ only content in 3739 plugins that can reach Devotion's thin-roster races.
 | Non-QUST signature universe frozen | 1,356 mods / 3,001 paths scanned; 614 mods / 1,070 paths admitted to direct signal review; 1,931 paths explicitly outside selected signatures; zero scan read errors |
 | Non-quest signal checkpoints | 107/107 complete batches, 1,070/1,070 plugin paths, 23,902 occurrences -> 18,791 defining records, 123 retained, zero unresolved reads/reviews |
 | T13 authoring and package directory | 95 cells / 14 keys / 9 channels; 19-option FOMOD; `PDV_ARR25_T13_Adjudication.md`; package validation PASS; runtime/support OPEN |
+| T14 thin-roster authoring and package directory | 78 cells / 15 keys / 5 channels; cumulative 24-channel FOMOD; `PDV_ARR25_T14_Adjudication.md`; runtime/support OPEN |
 
 Current gate output is **2,130 cells / 154 EditorIDs / 45 deities**; compile output is
 231 runtime keys / 154 watched quests. The former 2,131 result contained one duplicate
@@ -211,9 +219,9 @@ outcome against every Part B profile and emits a review slate. Then re-measure w
 
 Caution: the refreshed post-T12 core baseline is **116 open cluster gaps / 71
 waived**, not the stale 28/72 report committed before the T12 expansion. T13's
-in-memory composite is 116 open / 81 waived after primary review: zero unexplained
-open-gap delta. The audit now supports repeated `--append-matrix` plus `--no-write`
-for channel tranche comparisons.
+in-memory composite is 116 open / 81 waived; T13+T14 is 116 open / 88 waived after
+primary review. Both have zero unexplained open-gap delta. The audit supports
+repeated `--append-matrix` plus `--no-write` for channel tranche comparisons.
 
 ### Phase 4 -- non-quest lane
 

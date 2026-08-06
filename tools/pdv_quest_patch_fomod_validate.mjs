@@ -147,8 +147,8 @@ if (archivePath) {
   }
 }
 
-if (options.length !== 21) warnings.push(`Expected 21 total <plugin> nodes (2 mode + 19 content); found ${options.length}.`);
-if (channelFiles.length !== 19) warnings.push(`Expected 19 channel JSON files; found ${channelFiles.length}.`);
+if (options.length !== 26) warnings.push(`Expected 26 total <plugin> nodes (2 mode + 24 content); found ${options.length}.`);
+if (channelFiles.length !== 24) warnings.push(`Expected 24 channel JSON files; found ${channelFiles.length}.`);
 
 const receipt = {
   schema: "pdv-quest-patch-fomod-validation.v1",

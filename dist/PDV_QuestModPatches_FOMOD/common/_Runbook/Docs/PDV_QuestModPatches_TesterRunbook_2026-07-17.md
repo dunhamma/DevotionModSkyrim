@@ -209,6 +209,20 @@ prove routing but cannot prove that the nine-shrine progression resolves there
 or that the semantic credit is truthful. The other cases should also be played
 organically before support promotion; controlled stages establish route only.
 
+### T14 thin-roster follower and Elsweyr cases
+
+Use `PDV_ARR25_T14_RuntimeEvidenceLedger.json` as the write-back authority. It
+contains 15 cases covering Thogra, Auri, M'rissi, Xelzaz, and Moonpath. For each
+case record the route marker, exact piety delta, exactly one toast, exactly one
+Book of Days beat, save/load behavior, organic semantic observation, failures,
+and verdict.
+
+`T14-004` (Thogra's Largashbur Orc marriage) is objective-derived and must be
+played through the actual rite. A controlled `setstage DK_ThograMarriageOrc 100`
+can prove routing only; it cannot clear semantic correctness. The five T14
+individual options and combined Authoria lane remain experimental until their
+equivalent cases pass.
+
 ---
 
 ## 5. Bard hook (needs Become a Bard and/or Skyrim's Got Talent)

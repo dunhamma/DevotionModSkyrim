@@ -303,6 +303,24 @@ ledger is `PDV_ARR25_T13_RuntimeEvidenceLedger.json`; all cases are OPEN and the
 Divine Crusader pilgrimage must be traversed organically. No T13 option is
 supported yet.
 
+### 2026-08-06 T14 extension (machine-clean test candidate)
+
+T14 adds five data-only channels: Thogra, Song of the Green (Auri), M'rissi,
+Xelzaz, and Moonpath to Elsweyr. They contain **78 cells across 15 keys / 12
+watched quests** and require no new ESP. M'rissi is present exactly once here.
+
+The cumulative FOMOD now carries 24 data channels. The Authoria combined lane
+installs all guaranteed targets; each new individual option installs only the
+detected mod's channel plus shared runbook. The direct factual dossier is
+`PDV_ARR25_T14_EvidenceDossier.md`, primary rulings are in
+`PDV_ARR25_T14_Adjudication.md`, and all 15 OPEN cases are in
+`PDV_ARR25_T14_RuntimeEvidenceLedger.json`.
+
+Proof boundary: these five options are machine-verified experimental. The
+Largashbur Orc-marriage cells are objective-derived and must be traversed
+organically; controlled `setstage` proves routing only. No T14 option is
+supported yet.
+
 ### 2026-08-06 ARR 2.5 Wave 1 inventory recovery
 
 The recovered Wave 1 compatibility inventory is
