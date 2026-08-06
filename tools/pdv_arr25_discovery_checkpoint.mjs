@@ -196,7 +196,8 @@ function readCheckpointCsv(path) {
 function declaredQuestCount(row) {
   const text = `${row.evidence}\n${row.notes}`;
   for (const pattern of [
-    /direct\s+QUST\s+enumeration(?:\s+complete)?\s*[:=]?\s*(\d+)/i,
+    /(?:direct\s+)?QUST\s+enumeration(?:\s+complete)?\s*[:=]?\s*(\d+)/i,
+    /QUST\s+count\s*[:=]?\s*(\d+)/i,
     /(\d+)\s+QUST\s+direct-enumerated/i,
     /exhaustive\s+QUST\s+enumeration\s*[:=]?\s*(\d+)/i,
   ]) {
