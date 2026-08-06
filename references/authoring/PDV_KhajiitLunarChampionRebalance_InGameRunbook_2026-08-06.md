@@ -3,6 +3,36 @@
 Machine/readback completion does not close these cards. Record screenshots,
 Papyrus markers, Active Effects, and the exact save state used for each result.
 
+## Precondition -- START FROM A FRESH SAVE
+
+Not "record the save state used": **use a new character**. This rebalance added ten properties to
+the `PDV__ManagerQuest` VMAD, and VMAD properties bake at first init -- a save made before they
+existed reads every one of them as `None`.
+
+| Property | What is lost on a stale save |
+|---|---|
+| `PDV_PERK_Khajiit_LatticeResonance` | the resonance perk is never applied |
+| `PDV_SPEL_Khajiit_LatticeResonanceMarker` | the marker that drives the `1.20x` check |
+| `PDV_Power_Khajiit_AzurahPortent` | the lesser power does not exist -- the whole Portent card is unrunnable |
+| `PDV_SPEL_Khajiit_AzurahPortentDetect` | the detection effect behind the category visuals |
+| `PDV_SND_Khajiit_AzurahPortentFizzle` | the same-day fizzle cue |
+| `PDV_MSG_KhajiitFocus_*` (five) | the focus-emergence MessageBox for each deity |
+
+**This fails SILENTLY, and worse than the Altmer equivalent.**
+`GetKhajiitFocusEmergenceMessage` returns the property directly, with no fallback -- so an unbound
+message shows **nothing at all**. The Altmer notification path at least degrades to a visible Prisma
+toast; this degrades to silence. On the "capture exactly one MessageBox, one toast, and one pinned
+Book entry" card that is indistinguishable from a broken feature, and it will be written up as a
+failure that is really a stale save.
+
+All ten were readback-verified in the plugin on 2026-08-06 (VMAD indices 512-521, every `Object`
+non-null and resolving to the intended record). So the wiring is good: **a failure on a genuinely
+fresh save is a real regression and worth chasing**, whereas the same failure on an older save
+proves nothing.
+
+If a fresh character is impossible for a given card, say so on that card's evidence rather than
+letting the result stand unqualified.
+
 ## Outdoor sleep
 
 - Complete one exterior bedroll sleep and one Campfire-tent sleep. Each must
