@@ -6395,6 +6395,9 @@ Function HandleBretonSleepEvents(Actor playerRef, String reason)
     if GetBretonTraditionValue() != BRETON_TRADITION_HIDDEN_ART
         return
     endIf
+    if PDV_Julianos
+        AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+    endIf
     if PDV_Mara
         AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
     endIf
@@ -8888,6 +8891,86 @@ EndFunction
 
 Function ApplyPaarthurnaxSpareReaction(String deityName, String intensity, Form sourceForm, String valence = "+")
     ApplyDeityReaction(deityName, valence, intensity, "small", "paarthurnax_spare", False, sourceForm)
+EndFunction
+
+; ARR 2.5 AFDI artifact-destruction adjudication. The caller has already
+; persisted the once-ever transition. Daedric artifacts displease their owner
+; and satisfy the locked Stendarr/Syrabane destroy-reject profiles. The Black
+; Star is the deliberate exception: destroying the profaned variant vindicates
+; Azura. Auri-El and Sithis are roster-gated direct reactions. Jyggalag remains
+; classification-only, and the Necromancer's Amulet has no Mannimarco target in
+; the current roster, so its rejection is credited only to Arkay and Stendarr.
+Function HandleAFDIArtifactDestroyed(String artifactKey, Form sourceForm)
+    ResetQuestReactionSurface()
+
+    if artifactKey == "black_star"
+        ApplyDeityReaction("Azura", "+", "C", "milestone", "destroy_profane_artifact:black_star", False, sourceForm)
+        ApplyAFDIDestroyRejectApprovals("azura", sourceForm)
+    elseIf artifactKey == "auriel_bow" || artifactKey == "auriel_shield"
+        ApplyDeityReaction("Auri-El", "-", "C", "milestone", "destroy_sacred_artifact:auriel", False, sourceForm)
+    elseIf artifactKey == "sithis"
+        ApplyDeityReaction("Sithis", "-", "C", "milestone", "destroy_sacred_artifact:sithis", False, sourceForm)
+    elseIf artifactKey == "necromancer_amulet"
+        ApplyDeityReaction("Arkay", "+", "S", "small", "destroy_reject_necromancy", False, sourceForm)
+        ApplyDeityReaction("Stendarr", "+", "S", "small", "destroy_reject_necromancy", False, sourceForm)
+    elseIf artifactKey == "jyggalag"
+        Trace(2, "AFDI Jyggalag destruction observed; classify-only, no current deity route.")
+        return
+    else
+        String ownerName = GetAFDIDaedricOwnerName(artifactKey)
+        if ownerName == ""
+            Trace(1, "AFDI destruction skipped unknown artifact key: " + artifactKey)
+            return
+        endIf
+        ApplyDeityReaction(ownerName, "-", "C", "milestone", "destroy_reject_daedra:" + artifactKey, False, sourceForm)
+        ApplyAFDIDestroyRejectApprovals(artifactKey, sourceForm)
+    endIf
+
+    FlushQuestReactionSurface()
+    Trace(2, "AFDI artifact destruction routed: " + artifactKey)
+EndFunction
+
+Function ApplyAFDIDestroyRejectApprovals(String ownerKey, Form sourceForm)
+    String sourceTag = "destroy_reject_daedra:" + ownerKey
+    ApplyDeityReaction("Stendarr", "+", "S", "small", sourceTag, False, sourceForm)
+    ApplyDeityReaction("Syrabane", "+", "m", "small", sourceTag, False, sourceForm)
+EndFunction
+
+String Function GetAFDIDaedricOwnerName(String artifactKey)
+    if artifactKey == "azura"
+        return "Azura"
+    elseIf artifactKey == "clavicus_vile"
+        return "Clavicus Vile"
+    elseIf artifactKey == "hircine"
+        return "Hircine"
+    elseIf artifactKey == "mehrunes_dagon"
+        return "Mehrunes Dagon"
+    elseIf artifactKey == "meridia"
+        return "Meridia"
+    elseIf artifactKey == "molag_bal"
+        return "Molag Bal"
+    elseIf artifactKey == "vaermina"
+        return "Vaermina"
+    elseIf artifactKey == "boethiah"
+        return "Boethiah"
+    elseIf artifactKey == "hermaeus_mora"
+        return "Hermaeus Mora"
+    elseIf artifactKey == "malacath"
+        return "Malacath"
+    elseIf artifactKey == "mephala"
+        return "Mephala"
+    elseIf artifactKey == "namira"
+        return "Namira"
+    elseIf artifactKey == "peryite"
+        return "Peryite"
+    elseIf artifactKey == "sanguine"
+        return "Sanguine"
+    elseIf artifactKey == "sheogorath"
+        return "Sheogorath"
+    elseIf artifactKey == "nocturnal"
+        return "Nocturnal"
+    endIf
+    return ""
 EndFunction
 
 Function HandleKhajiitBaanDarBetrayal(String reason)

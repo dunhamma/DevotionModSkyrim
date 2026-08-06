@@ -182,6 +182,7 @@ Bool PDV_OriginQueuedThisLoad = false
 Float PDV_ORIGIN_NEXT_DUE = -1.0
 Float PDV_COMBAT_NEXT_DUE = -1.0
 Float PDV_BARD_NEXT_DUE = -1.0
+Float PDV_AFDI_NEXT_DUE = -1.0
 Float PDV_UPDATE_ARMED_DUE = -1.0
 Bool PDV_UPDATE_ARMED = false
 Bool PDV_UPDATE_DISPATCHING = false
@@ -219,12 +220,27 @@ Float PDV_BardLastDrum = 0.0
 Int PDV_BardLastPlaying = 0
 Float PDV_BardLastRouteRealTime = -100.0
 
+; ARR 2.5 non-quest lane. Aetherium Forge Destroys Items exposes one latched
+; global per successfully destroyed artifact. Poll those globals through the
+; existing shared scheduler: the source mod emits no event and its activator
+; script is not ours to replace. Version 1 deliberately baselines an existing
+; save without retroactive credit, then routes each later 0 -> 1 transition once.
+Float Property AFDI_POLL_INTERVAL = 15.0 AutoReadOnly
+Int Property AFDI_BASELINE_VERSION = 1 AutoReadOnly
+String Property AFDI_PLUGIN = "Aetherium Forge Destroys Items.esp" AutoReadOnly
+Bool PDV_AFDIPollActive = false
+Bool PDV_AFDIFormsResolved = false
+GlobalVariable[] PDV_AFDIDestroyedGlobals
+String[] PDV_AFDIArtifactKeys
+
 Event OnInit()
     ResetUpdateScheduler()
     PDV_OriginQueuedThisLoad = false
     PDV_BardFormsResolved = false
+    PDV_AFDIFormsResolved = false
     RegisterForPlayerEvents()
     StartBardPerformancePoll()
+    StartAFDIPoll()
     QueueOriginInitialization()
     RouteCurseRefresh("alias_init")
     Trace(2, "Player alias initialized.")
@@ -234,8 +250,10 @@ Event OnPlayerLoadGame()
     ResetUpdateScheduler()
     PDV_OriginQueuedThisLoad = false
     PDV_BardFormsResolved = false
+    PDV_AFDIFormsResolved = false
     RegisterForPlayerEvents()
     StartBardPerformancePoll()
+    StartAFDIPoll()
     QueueOriginInitialization()
     RouteCurseRefresh("load")
     RoutePaarthurnaxSpareLoadCheck()
@@ -280,6 +298,13 @@ Event OnUpdate()
         PDV_BARD_NEXT_DUE = -1.0
         if PDV_BardPollActive
             BardPerformancePollTick()
+        endIf
+    endIf
+
+    if PDV_AFDI_NEXT_DUE >= 0.0 && PDV_AFDI_NEXT_DUE <= nowRealTime + 0.05
+        PDV_AFDI_NEXT_DUE = -1.0
+        if PDV_AFDIPollActive
+            AFDIPollTick()
         endIf
     endIf
 
@@ -335,6 +360,7 @@ Function ResetUpdateScheduler()
     PDV_ORIGIN_NEXT_DUE = -1.0
     PDV_COMBAT_NEXT_DUE = -1.0
     PDV_BARD_NEXT_DUE = -1.0
+    PDV_AFDI_NEXT_DUE = -1.0
     PDV_UPDATE_ARMED_DUE = -1.0
     PDV_UPDATE_ARMED = false
     PDV_UPDATE_DISPATCHING = false
@@ -355,6 +381,11 @@ Function ScheduleBardDeadline(Float delaySeconds)
     ArmEarliestDeadline()
 EndFunction
 
+Function ScheduleAFDIDeadline(Float delaySeconds)
+    PDV_AFDI_NEXT_DUE = Utility.GetCurrentRealTime() + delaySeconds
+    ArmEarliestDeadline()
+EndFunction
+
 Float Function GetEarliestPendingDeadline()
     Float earliest = -1.0
     if PDV_ORIGIN_NEXT_DUE >= 0.0
@@ -365,6 +396,9 @@ Float Function GetEarliestPendingDeadline()
     endIf
     if PDV_BARD_NEXT_DUE >= 0.0 && (earliest < 0.0 || PDV_BARD_NEXT_DUE < earliest)
         earliest = PDV_BARD_NEXT_DUE
+    endIf
+    if PDV_AFDI_NEXT_DUE >= 0.0 && (earliest < 0.0 || PDV_AFDI_NEXT_DUE < earliest)
+        earliest = PDV_AFDI_NEXT_DUE
     endIf
     return earliest
 EndFunction
@@ -3117,4 +3151,121 @@ Int Function GetDevotionalDayStamp()
         truncatedDay -= 1
     endIf
     return truncatedDay + 2
+EndFunction
+
+; AFDI has no ModEvent or resolving quest stage. Its destruction script latches
+; these globals only after the item is consumed successfully, making them the
+; narrowest truthful read surface. Keep the exact local IDs here so no active
+; houseCARL/MO2 instance switch or new ESP dependency is required.
+Function StartAFDIPoll()
+    if Game.GetModByName(AFDI_PLUGIN) == 255
+        PDV_AFDIPollActive = false
+        PDV_AFDI_NEXT_DUE = -1.0
+        ArmEarliestDeadline()
+        return
+    endIf
+
+    ResolveAFDIForms()
+    if !PDV_AFDIFormsResolved
+        PDV_AFDIPollActive = false
+        PDV_AFDI_NEXT_DUE = -1.0
+        ArmEarliestDeadline()
+        Trace(1, "AFDI poll disabled: destruction globals did not resolve.")
+        return
+    endIf
+
+    PDV_AFDIPollActive = true
+    ScheduleAFDIDeadline(2.0)
+EndFunction
+
+Function ResolveAFDIForms()
+    PDV_AFDIFormsResolved = false
+    PDV_AFDIDestroyedGlobals = new GlobalVariable[30]
+    PDV_AFDIArtifactKeys = new String[30]
+
+    SetAFDIEntry(0, 0x000FD4, "azura")
+    SetAFDIEntry(1, 0x000FD5, "black_star")
+    SetAFDIEntry(2, 0x000FD6, "clavicus_vile")
+    SetAFDIEntry(3, 0x000FD7, "hircine")
+    SetAFDIEntry(4, 0x000FD8, "mehrunes_dagon")
+    SetAFDIEntry(5, 0x000FD9, "meridia")
+    SetAFDIEntry(6, 0x000FDA, "molag_bal")
+    SetAFDIEntry(7, 0x000FDB, "vaermina")
+    SetAFDIEntry(8, 0x000FDC, "boethiah")
+    SetAFDIEntry(9, 0x000FDD, "hermaeus_mora")
+    SetAFDIEntry(10, 0x000FE7, "hermaeus_mora")
+    SetAFDIEntry(11, 0x000FE8, "hermaeus_mora")
+    SetAFDIEntry(12, 0x000FE9, "hermaeus_mora")
+    SetAFDIEntry(13, 0x000FEA, "hermaeus_mora")
+    SetAFDIEntry(14, 0x000FEB, "hermaeus_mora")
+    SetAFDIEntry(15, 0x000FEC, "hermaeus_mora")
+    SetAFDIEntry(16, 0x000FED, "hermaeus_mora")
+    SetAFDIEntry(17, 0x000093, "hermaeus_mora")
+    SetAFDIEntry(18, 0x000FDE, "malacath")
+    SetAFDIEntry(19, 0x000FDF, "mephala")
+    SetAFDIEntry(20, 0x000FE0, "namira")
+    SetAFDIEntry(21, 0x000FE1, "peryite")
+    SetAFDIEntry(22, 0x000FE2, "sanguine")
+    SetAFDIEntry(23, 0x000FE3, "sheogorath")
+    SetAFDIEntry(24, 0x000FD3, "nocturnal")
+    SetAFDIEntry(25, 0x000F56, "auriel_bow")
+    SetAFDIEntry(26, 0x000F55, "auriel_shield")
+    SetAFDIEntry(27, 0x0000D9, "jyggalag")
+    SetAFDIEntry(28, 0x000F54, "necromancer_amulet")
+    SetAFDIEntry(29, 0x000110, "sithis")
+
+    Int index = 0
+    while index < PDV_AFDIDestroyedGlobals.Length
+        if !PDV_AFDIDestroyedGlobals[index]
+            Trace(1, "AFDI unresolved destruction global at index " + index)
+            return
+        endIf
+        index += 1
+    endWhile
+    PDV_AFDIFormsResolved = true
+EndFunction
+
+Function SetAFDIEntry(Int index, Int localFormId, String artifactKey)
+    PDV_AFDIDestroyedGlobals[index] = Game.GetFormFromFile(localFormId, AFDI_PLUGIN) as GlobalVariable
+    PDV_AFDIArtifactKeys[index] = artifactKey
+EndFunction
+
+Function AFDIPollTick()
+    if !PDV_AFDIFormsResolved
+        ResolveAFDIForms()
+    endIf
+    if !PDV_AFDIFormsResolved
+        PDV_AFDIPollActive = false
+        return
+    endIf
+
+    String versionKey = "PDV.AFDI.BaselineVersion"
+    Bool baselineOnly = StorageUtil.GetIntValue(None, versionKey, 0) < AFDI_BASELINE_VERSION
+    Int index = 0
+    while index < PDV_AFDIDestroyedGlobals.Length
+        GlobalVariable destroyedGlobal = PDV_AFDIDestroyedGlobals[index]
+        String artifactKey = PDV_AFDIArtifactKeys[index]
+        String seenKey = "PDV.AFDI.Seen." + index
+        Bool destroyed = destroyedGlobal.GetValueInt() > 0
+
+        if baselineOnly
+            if destroyed
+                StorageUtil.SetIntValue(None, seenKey, 1)
+            endIf
+        elseIf destroyed && StorageUtil.GetIntValue(None, seenKey, 0) == 0
+            ; Persist before routing so a failed or overloaded downstream stack
+            ; cannot turn a once-ever artifact into a repeatable award.
+            StorageUtil.SetIntValue(None, seenKey, 1)
+            if PDV_EventBusService
+                PDV_EventBusService.RouteAFDIArtifactDestroyed(artifactKey, destroyedGlobal as Form)
+            endIf
+        endIf
+        index += 1
+    endWhile
+
+    if baselineOnly
+        StorageUtil.SetIntValue(None, versionKey, AFDI_BASELINE_VERSION)
+        Trace(2, "AFDI existing-save baseline captured without retroactive awards.")
+    endIf
+    ScheduleAFDIDeadline(AFDI_POLL_INTERVAL)
 EndFunction

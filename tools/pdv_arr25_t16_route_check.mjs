@@ -15,6 +15,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const LIVE = "D:/Wabbajack/modlists/Anvil/mods/Devotion";
+const PEX_ROOT = path.resolve(ROOT, process.argv.includes("--pex-root") ? process.argv[process.argv.indexOf("--pex-root") + 1] : LIVE);
 const failures = [];
 const passes = [];
 
@@ -140,10 +141,10 @@ requireText("individual Save the Icerunner dependency", xml, '<fileDependency fi
 
 for (const script of ["PDV__ManagerQuest", "PDV_EventBus", "PDV_PlayerEvents"]) {
   requireSame(`Authoria ${script}.psc current`, path.join(ROOT, `live-source/Scripts/Source/${script}.psc`), path.join(P.authoriaScripts, `Source/${script}.psc`));
-  requireSame(`Authoria ${script}.pex current`, path.join(LIVE, `Scripts/${script}.pex`), path.join(P.authoriaScripts, `${script}.pex`));
+  requireSame(`Authoria ${script}.pex current`, path.join(PEX_ROOT, PEX_ROOT === path.resolve(LIVE) ? `Scripts/${script}.pex` : `${script}.pex`), path.join(P.authoriaScripts, `${script}.pex`));
 }
 requireSame("individual TGAE PlayerEvents source current", P.playerSource, path.join(P.tgaeScripts, "Source/PDV_PlayerEvents.psc"));
-requireSame("individual TGAE PlayerEvents bytecode current", path.join(LIVE, "Scripts/PDV_PlayerEvents.pex"), path.join(P.tgaeScripts, "PDV_PlayerEvents.pex"));
+requireSame("individual TGAE PlayerEvents bytecode current", path.join(PEX_ROOT, PEX_ROOT === path.resolve(LIVE) ? "Scripts/PDV_PlayerEvents.pex" : "PDV_PlayerEvents.pex"), path.join(P.tgaeScripts, "PDV_PlayerEvents.pex"));
 
 const result = {
   status: failures.length ? "FAIL" : "PASS",

@@ -277,7 +277,7 @@ assert("breton knights road resonance set", /BRETON_TRADITION_KNIGHTS_ROAD[\s\S]
 assert("breton green way resonance set", /BRETON_TRADITION_GREEN_WAY[\s\S]{0,180}PDV_Yffre[\s\S]{0,80}PDV_Mara[\s\S]{0,80}PDV_Kynareth[\s\S]{0,80}PDV_Dibella/.test(bretonTraditionBody), "Green Way resonance set must include Y'ffre, Mara, Kynareth, and Dibella.");
 assert("breton hidden art resonance set", /BRETON_TRADITION_HIDDEN_ART[\s\S]{0,260}PDV_Magnus[\s\S]{0,80}PDV_Mara[\s\S]{0,80}PDV_Julianos[\s\S]{0,80}PDV_Dibella/.test(bretonTraditionBody) && bretonTraditionBody.includes("PDV_DaedricPathBase"), "Hidden Art resonance set must include Magnus, Mara, Julianos, Dibella, and Daedric paths.");
 const bretonSleepBody = functionBody(manager, "HandleBretonSleepEvents");
-assert("breton hidden art sleep uses mara", bretonSleepBody.includes("PDV_Mara") && !bretonSleepBody.includes("PDV_Julianos"), "Hidden Art sleep reflection must award Mara, not Julianos.");
+assert("breton hidden art sleep uses mara and julianos", bretonSleepBody.includes("PDV_Mara") && bretonSleepBody.includes("PDV_Julianos"), "Hidden Art sleep reflection must preserve Mara and add Julianos as its second direct renewable sink.");
 
 assert("breton offers included", manager.includes("IsBretonOfferEligibleDeity(deity)"), "Formal offer gate does not include Breton eligibility.");
 assert("altmer trinimac offer included", /IsAltmerOfferEligibleDeity[\s\S]*PDV_Trinimac/.test(manager), "Altmer offer eligibility does not include Trinimac.");

@@ -159,6 +159,16 @@ Function RouteBardPerformance(Int qualityDelta, Bool receivedOvation, Form conte
     Trace(2, "RouteBardPerformance complete: quality " + qualityDelta)
 EndFunction
 
+Function RouteAFDIArtifactDestroyed(String artifactKey, Form sourceForm)
+    if !PDV_Manager
+        Trace(1, "RouteAFDIArtifactDestroyed skipped: PDV_Manager not assigned.")
+        return
+    endIf
+
+    PDV_Manager.HandleAFDIArtifactDestroyed(artifactKey, sourceForm)
+    Trace(2, "RouteAFDIArtifactDestroyed complete: " + artifactKey)
+EndFunction
+
 Function RouteGreenPactViolation()
     PDV_EventTypes eventTypes = GetEventTypes()
     if !PDV_Manager

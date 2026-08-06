@@ -33,6 +33,12 @@
       "reason": "Same fork as HandlePaarthurnaxKill; the spare branch is latched via PDV.Paarthurnax.SpareSeen and fires from the main-quest closeout with Paarthurnax alive.",
       "whyAccepted": "Owner decision 2026-07-16. Same reachability argument as the kill fork."
     },
+    "HandleAFDIArtifactDestroyed": {
+      "maxApplications": 6,
+      "date": "2026-08-06",
+      "reason": "AFDI exposes no resolving quest stage or event: PlayerEvents observes a latched successful-destruction global and routes the artifact key directly. The six lexical ApplyDeityReaction call sites are mutually exclusive branches; an ordinary or Black Star route executes at most three, while the Auri-El, Sithis, Necromancer's Amulet, and classify-only branches execute fewer.",
+      "whyAccepted": "Each artifact transition is persisted before routing and can fire once per save. A three-application maximum plus one consolidated surface flush is bounded, and forcing this non-quest signal into the quest-stage FIFO would invent an identity the source mod does not provide. The lexical ceiling is registered so future branch growth fails the audit."
+    },
     "EvaluateQuestMetaFaucets": {
       "maxApplications": 8,
       "date": "2026-07-16",
