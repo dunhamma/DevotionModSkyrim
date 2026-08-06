@@ -380,6 +380,27 @@ branches must be traversed organically because `setstage TG09 200` cannot set
 or prove the ending global; testing must also confirm that no false Nocturnal
 commitment award fires. No T16 option is supported yet.
 
+### 2026-08-06 T17 extension (machine-clean test candidate)
+
+T17 adds data-only channels for Legacy of the Dragonborn and Beyond Skyrim -
+Bruma and extends the existing Wyrmstooth channel. It contributes **132 cells
+across 22 keys / 12 watched quests**: 19/3 from LOTD, 54/8 from Bruma, and 59/11
+new Wyrmstooth cells. Composite/ambiguous branches, linear fetches, generic
+bandit tasks, and textless controller stages remain excluded.
+
+The cumulative FOMOD now carries 34 channels. The combined Authoria lane
+installs all three T17 targets; Legacy and Bruma each receive a new detected
+individual option, while Wyrmstooth remains one option with one expanded JSON.
+No new ESP or hard master is introduced. Direct factual evidence is in
+`PDV_ARR25_T17_EvidenceDossier.md`, primary rulings are in
+`PDV_ARR25_T17_Adjudication.md`, and all 22 OPEN cases are in
+`PDV_ARR25_T17_RuntimeEvidenceLedger.json`.
+
+Proof boundary: these are machine-verified experimental channels. LOTD's Snow
+Elf ghost stage must prove resolving/single-fire behavior, and Wyrmstooth's
+Thalmor task must prove it is not a generic repeatable kill surface. No T17
+option is supported yet.
+
 ### 2026-08-06 ARR 2.5 Wave 1 inventory recovery
 
 The recovered Wave 1 compatibility inventory is

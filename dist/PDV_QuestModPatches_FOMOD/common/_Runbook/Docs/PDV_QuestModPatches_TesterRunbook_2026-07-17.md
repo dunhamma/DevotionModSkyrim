@@ -265,6 +265,25 @@ journal evidence, but each still needs organic observation before support
 promotion. Both T16 individual options and the combined Authoria lane remain
 machine-verified experimental options until their equivalent cases pass.
 
+### T17 large-content cases
+
+Use `PDV_ARR25_T17_RuntimeEvidenceLedger.json` as the write-back authority. It
+contains 22 cases across Legacy of the Dragonborn, Beyond Skyrim - Bruma, and
+Wyrmstooth. Record the route marker, exact piety delta, exactly one toast,
+exactly one Book of Days beat, save/load behavior, organic semantic observation,
+failures, and verdict for every case.
+
+LOTD's Snow Elf ghost (`T17-003`) must prove that stage 398 is a resolving,
+single-fire route. Wyrmstooth's Thalmor task (`T17-022`) must likewise prove it
+is a one-shot task completion rather than a generic or recurring kill surface.
+Controlled `setstage` can establish routing only; it cannot clear those semantic
+and finality requirements.
+
+The Wyrmstooth option now includes its earlier T13 dragon case plus the eleven
+new T17 cases; do not install a second copy of the channel. All three T17 targets
+and the combined Authoria lane remain machine-verified experimental options
+until equivalent organic evidence passes.
+
 ---
 
 ## 5. Bard hook (needs Become a Bard and/or Skyrim's Got Talent)

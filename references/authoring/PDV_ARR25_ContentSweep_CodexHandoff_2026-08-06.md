@@ -3,7 +3,7 @@
 Date: 2026-08-06
 Branch: `codex/arr25-content-sweep`
 Author: Claude session (Opus 5). Owner-approved plan folded in below.
-Status: **Phase 0, exhaustive QUST-plus-selected-signal discovery, T13-T16 machine authoring/package gates, and existing-matrix multi-tag normalization are complete. T17, renewable implementation, cumulative archive build, and tester proof remain open.**
+Status: **Phase 0, exhaustive QUST-plus-selected-signal discovery, T13-T17 machine authoring/package gates, and existing-matrix multi-tag normalization are complete. Renewable implementation, cumulative archive build, and tester proof remain open.**
 
 ---
 
@@ -73,6 +73,13 @@ What landed this session:
   Nocturnal commitment pulse. Paired-equity adds zero unexplained gaps (114 open /
   106 waived across 2,419 cells), and the cumulative FOMOD carries 32 channels.
   All seven tester cases remain OPEN, so both options are experimental.
+- **T17 is machine-complete:** Legacy of the Dragonborn and Bruma add two new
+  data-only channels, while Wyrmstooth's existing T13 channel gains its remaining
+  direct resolving outcomes. T17 contributes 132 cells across 22 keys / 12
+  watched quests. The 80-candidate/two-conflict cross-generation slate was
+  primary-reviewed to 25 keeps and 55 final rejections. Paired-equity adds zero
+  unexplained gaps (114 open / 116 waived across 2,551 cells), and the cumulative
+  FOMOD now carries 34 channels. All 22 tester cases remain OPEN.
 
 The single most valuable discovery: **follower personal questlines**, which are the
 only content in 3739 plugins that can reach Devotion's thin-roster races.
@@ -98,6 +105,7 @@ only content in 3739 plugins that can reach Devotion's thin-roster races.
 | T15 vanilla quest-expansion authoring and package directory | 58 cells / 14 keys / 6 channels; cumulative 30-channel FOMOD; `PDV_ARR25_T15_Adjudication.md`; runtime/support OPEN |
 | Existing-matrix multi-tag normalization | 15 outcome keys normalized; 45 candidates + 3 conflicts primary-reviewed; 0 new cells; paired-equity 114 open / 99 waived (delta -2); `PDV_ARR25_ExistingMatrixMultiTag_Adjudication.md` |
 | T16 alternate-route authoring and package directory | 58 cells / 7 keys / 2 channels; cumulative 32-channel FOMOD; soft-dependency TG09 201/202 resolver and false-commitment suppression; `PDV_ARR25_T16_Adjudication.md`; runtime/support OPEN |
+| T17 large-content authoring and package directory | 132 new cells / 22 keys / 12 watched quests across LOTD, Bruma, and the expanded Wyrmstooth channel; cumulative 34-channel FOMOD; `PDV_ARR25_T17_Adjudication.md`; runtime/support OPEN |
 
 Current gate output is **2,130 cells / 154 EditorIDs / 45 deities**; compile output is
 231 runtime keys / 154 watched quests. The former 2,131 result contained one duplicate

@@ -7,7 +7,7 @@
         <group name="How do you want to install?" type="SelectExactlyOne">
           <plugins order="Explicit">
             <plugin name="Authoria (Requiem Reforged) - All-In-One">
-              <description>One combined ESL-flagged hook plugin for the original dialogue patches, plus all thirty-two data channels. Authoria ships every target mod. T13-T16 channels are machine-verified test candidates pending ARR 2.5 runtime evidence.</description>
+              <description>One combined ESL-flagged hook plugin for the original dialogue patches, plus all thirty-four data channels. Authoria ships every target mod. T13-T17 channels are machine-verified test candidates pending ARR 2.5 runtime evidence.</description>
               <files>
                 <folder source="common\Sirenroot" destination="" priority="0" />
                 <folder source="common\_Runbook" destination="" priority="0" />
@@ -42,6 +42,8 @@
                 <folder source="common\ForswornConspiracyQE" destination="" priority="0" />
                 <folder source="common\TGAlternativeEndings" destination="" priority="0" />
                 <folder source="common\SaveTheIcerunner" destination="" priority="0" />
+                <folder source="common\LegacyOfTheDragonborn" destination="" priority="0" />
+                <folder source="common\BeyondSkyrimBruma" destination="" priority="0" />
                 <folder source="common\_Fragments\WarsFolly" destination="" priority="0" />
                 <folder source="common\_Fragments\OnceWeWereHere" destination="" priority="0" />
                 <folder source="common\_Fragments\WhispersOfTheDepths" destination="" priority="0" />
@@ -500,6 +502,22 @@
                 <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="SaveTheIcerunner.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+            </plugin>
+            <plugin name="Legacy of the Dragonborn (T17 experimental)">
+              <description>Data-only channels for the Trial of Trinimac, ending the Eye of Camlorn's curse, and bringing peace to a Snow Elf ghost. Composite Ezra branches and linear relic fetches are deliberately excluded.</description>
+              <files>
+                <folder source="common\LegacyOfTheDragonborn" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="LegacyoftheDragonborn.esm" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+            </plugin>
+            <plugin name="Beyond Skyrim - Bruma (T17 experimental)">
+              <description>Data-only channels for eight direct Bruma resolutions: smuggling, treacherous murder or generous song restoration, freeing Bjarni, and recovering stolen antiquities.</description>
+              <files>
+                <folder source="common\BeyondSkyrimBruma" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="BSHeartland.esm" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
             </plugin>
           </plugins>
         </group>
