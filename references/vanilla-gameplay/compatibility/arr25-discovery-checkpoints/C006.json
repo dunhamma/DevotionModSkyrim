@@ -15,8 +15,19 @@
     "0c3b371bc2160381",
     "594ca6589f655be0"
   ],
-  "status": "pending",
-  "attempts": 0,
-  "completedInputIds": [],
+  "status": "complete",
+  "attempts": 1,
+  "completedInputIds": [
+    "22c528ee46ec936d",
+    "7d8100355120062e",
+    "4f8b34c6890d27e1",
+    "0332aeccf5871206",
+    "e44b22d0ee756f79",
+    "56ce43583e3d0975",
+    "3b4096bf61521a1b",
+    "c61b2c5696512fb7",
+    "0c3b371bc2160381",
+    "594ca6589f655be0"
+  ],
   "lastError": null
 }
