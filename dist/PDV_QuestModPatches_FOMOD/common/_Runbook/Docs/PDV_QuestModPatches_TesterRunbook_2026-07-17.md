@@ -223,6 +223,26 @@ can prove routing only; it cannot clear semantic correctness. The five T14
 individual options and combined Authoria lane remain experimental until their
 equivalent cases pass.
 
+### T15 vanilla quest-expansion cases
+
+Use `PDV_ARR25_T15_RuntimeEvidenceLedger.json` as the write-back authority. It
+contains 14 cases covering College of Winterhold Quest Expansion, Infiltration,
+Nilheim, The Whispering Door, Paarthurnax, and Forsworn Conspiracy. For every
+case record the route marker, exact piety delta, exactly one toast, exactly one
+Book of Days beat, save/load behavior, organic semantic observation, failures,
+and verdict.
+
+`T15-012` (persuade the Blades and spare Paarthurnax) is objective-derived.
+Stage 75 exposes the choice, but stage 99 is a textless completion. Play the
+persuasion route through the actual quest and observe that it alone reaches the
+scored stage. `setstage MQPaarthurnax 99` may prove routing but cannot clear the
+semantic requirement.
+
+The other 13 outcomes have direct resolving journal evidence, but must still be
+played organically before support promotion. The six T15 individual options
+and the combined Authoria lane remain machine-verified experimental options
+until equivalent case evidence passes.
+
 ---
 
 ## 5. Bard hook (needs Become a Bard and/or Skyrim's Got Talent)

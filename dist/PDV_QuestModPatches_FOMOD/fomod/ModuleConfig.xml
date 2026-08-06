@@ -7,7 +7,7 @@
         <group name="How do you want to install?" type="SelectExactlyOne">
           <plugins order="Explicit">
             <plugin name="Authoria (Requiem Reforged) - All-In-One">
-              <description>One combined ESL-flagged hook plugin for the original dialogue patches, plus all twenty-four data channels. Authoria ships every target mod. T13-T14 channels are machine-verified test candidates pending ARR 2.5 runtime evidence.</description>
+              <description>One combined ESL-flagged hook plugin for the original dialogue patches, plus all thirty data channels. Authoria ships every target mod. T13-T15 channels are machine-verified test candidates pending ARR 2.5 runtime evidence.</description>
               <files>
                 <folder source="common\Sirenroot" destination="" priority="0" />
                 <folder source="common\_Runbook" destination="" priority="0" />
@@ -34,6 +34,12 @@
                 <folder source="common\Mrissi" destination="" priority="0" />
                 <folder source="common\Xelzaz" destination="" priority="0" />
                 <folder source="common\Moonpath" destination="" priority="0" />
+                <folder source="common\CollegeQuestExpansion" destination="" priority="0" />
+                <folder source="common\InfiltrationQE" destination="" priority="0" />
+                <folder source="common\NilheimQE" destination="" priority="0" />
+                <folder source="common\WhisperingDoorQE" destination="" priority="0" />
+                <folder source="common\PaarthurnaxQE" destination="" priority="0" />
+                <folder source="common\ForswornConspiracyQE" destination="" priority="0" />
                 <folder source="common\_Fragments\WarsFolly" destination="" priority="0" />
                 <folder source="common\_Fragments\OnceWeWereHere" destination="" priority="0" />
                 <folder source="common\_Fragments\WhispersOfTheDepths" destination="" priority="0" />
@@ -428,6 +434,54 @@
                 <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="moonpath.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+            </plugin>
+            <plugin name="College of Winterhold - Quest Expansion (T15 experimental)">
+              <description>Data-only channels for seven directly resolving College lessons. The umbrella curriculum completion is excluded to prevent double credit.</description>
+              <files>
+                <folder source="common\CollegeQuestExpansion" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="College Of Winterhold - Quest Expansion.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+            </plugin>
+            <plugin name="Infiltration - Quest Expansion (T15 experimental)">
+              <description>Data-only channel for restoring Treva's Watch to Stalleo and his family.</description>
+              <files>
+                <folder source="common\InfiltrationQE" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="Infiltration - Quest Expansion.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+            </plugin>
+            <plugin name="Nilheim - Misc Quest Expansion (T15 experimental)">
+              <description>Data-only channels for defeating Telrav's double-cross or explicitly extorting him.</description>
+              <files>
+                <folder source="common\NilheimQE" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="Nilheim_MiscQuestExpansion.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+            </plugin>
+            <plugin name="The Whispering Door - Quest Expansion (T15 experimental)">
+              <description>Data-only channel for disposing of Mephala's Ebony Blade so it can cause no further harm.</description>
+              <files>
+                <folder source="common\WhisperingDoorQE" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="The Whispering Door - Quest Expansion.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+            </plugin>
+            <plugin name="Paarthurnax - Quest Expansion (T15 experimental)">
+              <description>Data-only objective-derived channel for persuading the Blades and sparing Paarthurnax. Organic traversal is mandatory.</description>
+              <files>
+                <folder source="common\PaarthurnaxQE" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="PaarthurnaxQuestExpansion.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+            </plugin>
+            <plugin name="Forsworn Conspiracy - Quest Expansion (T15 experimental)">
+              <description>Data-only channels for the trial-by-combat resolution and the separate Madanach mercy route.</description>
+              <files>
+                <folder source="common\ForswornConspiracyQE" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="Forsworn Conspiracy Quest Expansion.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
             </plugin>
           </plugins>
         </group>

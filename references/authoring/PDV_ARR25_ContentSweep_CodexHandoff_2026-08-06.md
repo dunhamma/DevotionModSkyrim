@@ -3,7 +3,7 @@
 Date: 2026-08-06
 Branch: `codex/arr25-content-sweep`
 Author: Claude session (Opus 5). Owner-approved plan folded in below.
-Status: **Phase 0, exhaustive QUST-plus-selected-signal discovery, and T13-T14 machine authoring/package gates are complete. T15-T17, renewable implementation, cumulative archive build, and tester proof remain open.**
+Status: **Phase 0, exhaustive QUST-plus-selected-signal discovery, and T13-T15 machine authoring/package gates are complete. Existing-matrix multi-tagging, T16-T17, renewable implementation, cumulative archive build, and tester proof remain open.**
 
 ---
 
@@ -52,6 +52,12 @@ What landed this session:
   Paired-equity adds zero unexplained open gaps (116 open / 88 waived composite),
   and the cumulative FOMOD now carries 24 channels. All 15 T14 tester cases remain
   OPEN; the Largashbur marriage must be traversed organically.
+- **T15 is machine-complete:** six data-only channels contain 58 cells across
+  14 outcome keys / 13 watched quests. The full final cross-generation slate
+  contains 68 reviewed rejections and zero conflicts. Paired-equity adds zero
+  unexplained open gaps (116 open / 99 waived composite across 2,361 cells),
+  and the cumulative FOMOD now carries 30 channels. All 14 T15 tester cases
+  remain OPEN; the Paarthurnax persuasion route must be traversed organically.
 
 The single most valuable discovery: **follower personal questlines**, which are the
 only content in 3739 plugins that can reach Devotion's thin-roster races.
@@ -74,6 +80,7 @@ only content in 3739 plugins that can reach Devotion's thin-roster races.
 | Non-quest signal checkpoints | 107/107 complete batches, 1,070/1,070 plugin paths, 23,902 occurrences -> 18,791 defining records, 123 retained, zero unresolved reads/reviews |
 | T13 authoring and package directory | 95 cells / 14 keys / 9 channels; 19-option FOMOD; `PDV_ARR25_T13_Adjudication.md`; package validation PASS; runtime/support OPEN |
 | T14 thin-roster authoring and package directory | 78 cells / 15 keys / 5 channels; cumulative 24-channel FOMOD; `PDV_ARR25_T14_Adjudication.md`; runtime/support OPEN |
+| T15 vanilla quest-expansion authoring and package directory | 58 cells / 14 keys / 6 channels; cumulative 30-channel FOMOD; `PDV_ARR25_T15_Adjudication.md`; runtime/support OPEN |
 
 Current gate output is **2,130 cells / 154 EditorIDs / 45 deities**; compile output is
 231 runtime keys / 154 watched quests. The former 2,131 result contained one duplicate

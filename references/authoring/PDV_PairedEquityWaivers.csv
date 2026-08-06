@@ -147,3 +147,14 @@ sky_storm_nature,AnvilDenQuest,150,Kyne,T14 reviewed 2026-08-06: Khenarthi carri
 time_dragon,dk_ThograMain,150,Auri-El,T14 reviewed 2026-08-06: Akatosh reacts to the explicitly fulfilled oath; Auri-El's profile has no generic keep-oath rule and the Orc blood oath has no elven ancestry context
 time_dragon,dk_ThograMain,150,Alkosh,T14 reviewed 2026-08-06: Alkosh is restricted to cosmic order time and named dragons; an Orc blood oath is not Khajiiti order evidence
 labor_commerce,BPUFXelzazMeadQuest,40,Z'en,T14 reviewed 2026-08-06: Zenithar directly rejects the proved recipe and spice thefts; Z'en has no theft rejection and this is not a debt proportionate-redress or exploitation outcome
+sky_storm_nature,MQPaarthurnax,99,Kynareth,T15 reviewed 2026-08-06: Kyne is specific to the hunted Greybeard dragon and Voice context; Kynareth's broad nature aspect does not make this an equivalent rite
+time_dragon,dunTrevasWatchQST,100,Auri-El,T15 reviewed 2026-08-06: Akatosh carries the lawful restoration of a dispossessed family and fort; no elven ancestry or Auri-El-specific order act is present
+time_dragon,dunTrevasWatchQST,100,Alkosh,T15 reviewed 2026-08-06: the fort restoration has no Khajiiti order time or named-dragon context
+death_order,Cow_restoration,25,Xarxes,T15 reviewed 2026-08-06: the lesson demonstrates Restoration against Draugr; it does not evidence Xarxes's ancestry funerary-record or scribe domain
+knowledge_scribe,Cow_Breathing,50,Xarxes,T15 reviewed 2026-08-06: the practical Waterbreathing exercise is magical study but contains no book record or scribe act
+knowledge_scribe,Cow_restoration,25,Xarxes,T15 reviewed 2026-08-06: the practical anti-undead Restoration exercise contains no book record or scribe act
+knowledge_scribe,Cow_Conjuration,25,Xarxes,T15 reviewed 2026-08-06: the practical familiar exercise contains no book record or scribe act
+knowledge_scribe,Cow_Reading,25,Magnus,T15 reviewed 2026-08-06: the source-credibility lesson directly fits Julianos and Xarxes; it does not itself manipulate or study magic under Magnus
+knowledge_scribe,Cow_enchantment,70,Xarxes,T15 reviewed 2026-08-06: the enchanting commission is practical magic craft and trade; it contains no book record or scribe act
+knowledge_scribe,Cow_illusion,25,Xarxes,T15 reviewed 2026-08-06: the practical Illusion exercise contains no book record or scribe act
+knowledge_scribe,Cow_Destruction,20,Xarxes,T15 reviewed 2026-08-06: the practical elemental exercise contains no book record or scribe act

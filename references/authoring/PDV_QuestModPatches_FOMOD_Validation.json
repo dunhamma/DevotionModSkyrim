@@ -1,42 +1,44 @@
 {
   "schema": "pdv-quest-patch-fomod-validation.v1",
-  "generatedAt": "2026-08-06T11:22:34.886Z",
+  "generatedAt": "2026-08-06T11:40:39.308Z",
   "status": "PASS",
   "proofBoundary": "Package structure and bytes only. This does not prove runtime routing, player surfaces, semantic correctness, or support status.",
   "packageRoot": "dist/PDV_QuestModPatches_FOMOD",
   "optionCounts": {
-    "totalPluginNodes": 26,
-    "individualContentOptions": 24,
-    "channelFiles": 24
+    "totalPluginNodes": 32,
+    "individualContentOptions": 30,
+    "channelFiles": 30
   },
   "simulations": [
     {
       "name": "authoria-combined",
-      "installedFiles": 68,
+      "installedFiles": 75,
       "identicalCollisions": []
     },
     {
       "name": "all-individual",
-      "installedFiles": 58,
+      "installedFiles": 65,
       "identicalCollisions": [
         "Docs/PDV_ARR25_T13_RuntimeEvidenceLedger.json",
         "Docs/PDV_ARR25_T14_RuntimeEvidenceLedger.json",
+        "Docs/PDV_ARR25_T15_RuntimeEvidenceLedger.json",
         "Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md"
       ]
     },
     {
       "name": "representative-subset",
-      "installedFiles": 7,
+      "installedFiles": 8,
       "identicalCollisions": [
         "Docs/PDV_ARR25_T13_RuntimeEvidenceLedger.json",
         "Docs/PDV_ARR25_T14_RuntimeEvidenceLedger.json",
+        "Docs/PDV_ARR25_T15_RuntimeEvidenceLedger.json",
         "Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md"
       ]
     }
   ],
   "manifest": {
-    "fileCount": 73,
-    "treeSha256": "6292CEF0297F78F02D61AA35A010CB0023C1F6CE7F7DD7D1511A53E5FD94DF53",
+    "fileCount": 80,
+    "treeSha256": "0A25D90C13476709D6D1C246B8B53842FA8A3C38FB07165C33A526726692EEBD",
     "files": [
       {
         "path": "common/_Fragments/OnceWeWereHere/Scripts/PDV_TIF_OWWH_S60.pex",
@@ -139,9 +141,14 @@
         "sha256": "E73D1FC444AA17438E7B6A591581355144A01706BBE591D1D073A9E9271D68CF"
       },
       {
+        "path": "common/_Runbook/Docs/PDV_ARR25_T15_RuntimeEvidenceLedger.json",
+        "size": 7050,
+        "sha256": "511C6B7D938354B17DE7BED18F7D7E189096F457FB5EBEF8982F3B63ECBB4F52"
+      },
+      {
         "path": "common/_Runbook/Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md",
-        "size": 14151,
-        "sha256": "6D5E6E9EB27EB0B2CD9D2D973720F41C9DC090259E27B4D125FA00356F9DFE18"
+        "size": 15209,
+        "sha256": "4AEC0606685F1C3FFA9B15174EF50CEEC677FEC77D296B8FABD800912DD6B3E5"
       },
       {
         "path": "common/Auri/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Auri.json",
@@ -199,6 +206,11 @@
         "sha256": "FD98782272502C642C9412A0B2C125A4C5453402D6744950288C0F50B20E8DFF"
       },
       {
+        "path": "common/CollegeQuestExpansion/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_CollegeQuestExpansion.json",
+        "size": 122353,
+        "sha256": "3D2D5133109BF42A03989CF16501ED46557F0C94FABD70FAA48A02941AEF0355"
+      },
+      {
         "path": "common/DepthsOfTheSoul/Docs/PDV Patch - Depths of the Soul.md",
         "size": 1027,
         "sha256": "D4DCDAD0F78F368A655571720FBFCDF9127EA5869210DD9E6A65D56E34769490"
@@ -207,6 +219,11 @@
         "path": "common/DepthsOfTheSoul/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_DepthsOfTheSoul.json",
         "size": 106249,
         "sha256": "2D8BC46AEE3C823572201C3F7E342CF89707C8AAB96A82917BAADD5C8A79DCB9"
+      },
+      {
+        "path": "common/ForswornConspiracyQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_ForswornConspiracyQE.json",
+        "size": 108616,
+        "sha256": "DAAD069971D4C54D56FC65DF76EF221AA0D32AE8C9EA81C17E84C429EEF25F38"
       },
       {
         "path": "common/GiftOfSaturalia/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_GiftOfSaturalia.json",
@@ -219,6 +236,11 @@
         "sha256": "28967C6BEEBAE436B3365EDFA7134F2EF7F7A5E57147508F8A1A2A7DC357245C"
       },
       {
+        "path": "common/InfiltrationQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_InfiltrationQE.json",
+        "size": 106896,
+        "sha256": "A025D3248C74E69468F23B7227E0612051B0878D4AC7E7C57A8A5E38671FE1AB"
+      },
+      {
         "path": "common/Moonpath/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Moonpath.json",
         "size": 116539,
         "sha256": "7B4FB01832F8994172B3E3349976C294EB419AA18D7F94A8B02BF9D8A0A155C1"
@@ -229,6 +251,11 @@
         "sha256": "A50E4BB09D2B7704221C81A160E578ADA6166939C857A84A22344302457EAB90"
       },
       {
+        "path": "common/NilheimQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_NilheimQE.json",
+        "size": 108098,
+        "sha256": "A7DB04384D508D70F1D0312D5D867C1591696F80952CA56141A715630C87FF35"
+      },
+      {
         "path": "common/OnceWeWereHere/Docs/PDV Patch - Once We Were Here.md",
         "size": 1092,
         "sha256": "8C1B2AE199FCDE50EDB7215FAA67B270E9B8827553E2D481D28D2A21393BCA63"
@@ -237,6 +264,11 @@
         "path": "common/OnceWeWereHere/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_OnceWeWereHere.json",
         "size": 108733,
         "sha256": "97C3B715D453F73B3350A2AD9E0D5F298E6D4653A5C32BAAE2EA65A2D6206F02"
+      },
+      {
+        "path": "common/PaarthurnaxQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_PaarthurnaxQE.json",
+        "size": 106836,
+        "sha256": "3454D3FCBF9C38F1A75BE0DA5C7A80F2B86AE461B19A626F4ABFA9BF974B6880"
       },
       {
         "path": "common/SiegeAtIcemoth/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_SiegeAtIcemoth.json",
@@ -294,6 +326,11 @@
         "sha256": "506D008B2705CEDB1EB0633118BAA185B1DF82BBCC3CE4A5AB938410040C89B7"
       },
       {
+        "path": "common/WhisperingDoorQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_WhisperingDoorQE.json",
+        "size": 106467,
+        "sha256": "876BD110F5689F8A10ED16B493B47CF4FFA301CCB25012909E06A1A723147BE9"
+      },
+      {
         "path": "common/WhispersOfTheDepths/Docs/PDV Patch - Whispers of the Depths.md",
         "size": 1090,
         "sha256": "DD7D88200FF3BD679E91869DE1469E6DBC63D16CE59D4B244826530797FF9338"
@@ -320,8 +357,8 @@
       },
       {
         "path": "fomod/ModuleConfig.xml",
-        "size": 26318,
-        "sha256": "7912F82B8B0EF2B58D3555DDCA00B12706876014A22FEA5C341EF2DFF2E72AE1"
+        "size": 31384,
+        "sha256": "C3D405417B5A6C720AD5F0C33AAD3F93AA5B2FE91BC4446A984727BDD6C92C7A"
       },
       {
         "path": "plugins/authoria/Docs/PDV Patch - Authoria All-In-One.md",

@@ -321,6 +321,25 @@ Largashbur Orc-marriage cells are objective-derived and must be traversed
 organically; controlled `setstage` proves routing only. No T14 option is
 supported yet.
 
+### 2026-08-06 T15 extension (machine-clean test candidate)
+
+T15 adds six data-only channels for College of Winterhold Quest Expansion,
+Infiltration, Nilheim, The Whispering Door, Paarthurnax, and Forsworn
+Conspiracy. They contain **58 cells across 14 keys / 13 watched quests** and
+require no hook ESP.
+
+The cumulative FOMOD now carries 30 data channels. The combined Authoria lane
+installs all six guaranteed targets; each individual option installs only its
+detected mod's channel and the shared runbook. The direct factual dossier is
+`PDV_ARR25_T15_EvidenceDossier.md`, primary rulings are in
+`PDV_ARR25_T15_Adjudication.md`, and all 14 OPEN cases are in
+`PDV_ARR25_T15_RuntimeEvidenceLedger.json`.
+
+Proof boundary: these options are machine-verified experimental. Paarthurnax
+stage 99 is objective-derived and must be reached organically through the
+persuasion route; controlled `setstage` proves routing only. No T15 option is
+supported yet.
+
 ### 2026-08-06 ARR 2.5 Wave 1 inventory recovery
 
 The recovered Wave 1 compatibility inventory is
