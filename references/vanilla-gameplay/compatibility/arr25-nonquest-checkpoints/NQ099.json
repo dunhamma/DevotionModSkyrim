@@ -15,8 +15,19 @@
     "02f5880169d939c1",
     "10f2b6075c6de9a7"
   ],
-  "status": "pending",
-  "attempts": 0,
-  "completedInputIds": [],
+  "status": "complete",
+  "attempts": 1,
+  "completedInputIds": [
+    "ceabf0bd536b1564",
+    "7a458d634b99bd08",
+    "1cf7c41b39a6259a",
+    "5395baaf284de5e7",
+    "906e1ec5da209ff6",
+    "b74623b2dee0290c",
+    "b56f126df309da31",
+    "7d0f8a8be80e8e3f",
+    "02f5880169d939c1",
+    "10f2b6075c6de9a7"
+  ],
   "lastError": null
 }
