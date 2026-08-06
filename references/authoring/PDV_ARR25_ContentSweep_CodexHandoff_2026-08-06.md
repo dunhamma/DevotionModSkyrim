@@ -3,7 +3,7 @@
 Date: 2026-08-06
 Branch: `codex/arr25-content-sweep`
 Author: Claude session (Opus 5). Owner-approved plan folded in below.
-Status: **Phase 0 and the exhaustive QUST discovery contract are complete. The selected non-quest signal review, tranche authoring, package rebuild, and tester proof remain open.**
+Status: **Phase 0 and the exhaustive QUST-plus-selected-signal discovery contract are complete. Tranche authoring, renewable implementation, package rebuild, and tester proof remain open.**
 
 ---
 
@@ -29,13 +29,17 @@ What landed this session:
   read directly in 48 deterministic checkpoints. Every declared QUST count has a
   matching per-record evidence row; all direct evidence and plugin rollups have a
   primary verdict, with no unresolved read failure or unreviewed checkpoint row.
-- **The reconciled inventory now contains 1,551 rows across 985 distinct mods.**
-  This is exact equality against Wave 1's 657 mods plus the 328 previously uncovered
-  mods. The finite QUST-bearing universe remains 583 mods; the larger inventory count
-  includes explicit no-QUST, asset-only, and other `NO-ROWS` verdicts.
-- **The selected non-quest universe is frozen but not closed:** 614 mods / 1,070
-  plugin paths in 107 batches. Its checkpoint interface is initialized and requires
-  direct signal-candidate enumeration plus primary review before inventory closure.
+- **The reconciled inventory now contains 20,342 rows across 1,284 distinct mods.**
+  The QUST interface remains exact equality against Wave 1's 657 mods plus the 328
+  previously uncovered mods. The selected non-quest pass directly read all 1,070
+  plugin paths, reduced 23,902 reviewed occurrences to 18,791 defining natural
+  records, and retained 123 candidates while recording 18,668 explicit rejections.
+- **The selected non-quest universe is closed:** 614 mods / 1,070 plugin paths in
+  107 complete batches, zero read failures, zero unresolved primary reviews, and
+  exact natural-record equality. The 332 older free-form candidate rows now have a
+  checked-in canonical review ledger; three classify-only/out-of-roster concepts
+  deliberately have no current runtime candidate. Reachability reports no malformed
+  or unknown canonical names and no pending legacy review.
 
 The single most valuable discovery: **follower personal questlines**, which are the
 only content in 3739 plugins that can reach Devotion's thin-roster races.
@@ -51,11 +55,11 @@ only content in 3739 plugins that can reach Devotion's thin-roster races.
 | Cherry-picked the stranded `--check` gate | commit `639b7ab8` (cherry-pick of `9591d7dd`) |
 | Tranche-merge gate green | `node tools/pdv_quest_tranche_merge.mjs --check` -> **PASS, exit 0** |
 | T12 canonical merge repaired | commit `e5c6999`; resolved FormID duplicate gate; 2,130 cells; matrix self-test PASS |
-| Consolidated content inventory (machine inventory only) | `references/vanilla-gameplay/compatibility/PDV_ARR25_ContentInventory_2026-08-06.csv` -- 1,551 retained rows, 985 distinct mods, exact Wave 1 + QUST-gap equality; not tester support proof |
+| Consolidated content inventory (machine inventory only) | `references/vanilla-gameplay/compatibility/PDV_ARR25_ContentInventory_2026-08-06.csv` -- 20,342 rows / 1,284 mods; exact QUST equality plus 18,791 deduplicated selected-signal records; not tester support proof |
 | Exhaustive QUST worklist frozen | `PDV_ARR25_DiscoveryWorklist_2026-08-06.csv` + batch manifest -- 328 mods / 466 plugin paths in 8-10 path batches |
 | Direct-read QUST checkpoints | 48/48 batches complete, 466/466 plugin paths read, zero unresolved errors, zero unreviewed evidence rows; count-equality gate passes |
 | Non-QUST signature universe frozen | 1,356 mods / 3,001 paths scanned; 614 mods / 1,070 paths admitted to direct signal review; 1,931 paths explicitly outside selected signatures; zero scan read errors |
-| Non-quest signal checkpoints | 107 initialized batches covering the admitted 1,070 plugin paths; direct review remains open |
+| Non-quest signal checkpoints | 107/107 complete batches, 1,070/1,070 plugin paths, 23,902 occurrences -> 18,791 defining records, 123 retained, zero unresolved reads/reviews |
 
 Current gate output is **2,130 cells / 154 EditorIDs / 45 deities**; compile output is
 231 runtime keys / 154 watched quests. The former 2,131 result contained one duplicate
@@ -284,6 +288,24 @@ the preserved `arr25-discovery-source/wave1_scope.tsv`; the Wave 1 set differenc
 empty. The appended 328-mod queue is also an exact subset of the consolidated inventory,
 so the combined 985-mod discovery interface has no missing mod verdict.
 
+### C-4b (complete 2026-08-06) -- Selected non-quest closure and canonical interface
+
+All 107 non-quest checkpoints are complete. The closure gate validates checkpoint
+manifests, direct-read status, and primary verdicts, then resolves patch/update
+occurrences to `record-signature|defining-plugin|local-FormID`. The result is 23,902
+occurrences, 18,791 unique natural records, 5,111 duplicate occurrences removed,
+123 retained candidates, and 18,668 explicit `NO-ROWS` records. There are no
+unresolved reads or reviewer states.
+
+The legacy candidate migration is independently frozen in
+`PDV_ARR25_LegacyCandidateCanonicalReview_2026-08-06.csv`: 332 rows / 145 distinct
+phrases reviewed. Current-roster aliases are explicit (for example Azurah -> Azura,
+S'rendarr -> Stendarr, Mauloch -> Malacath); concepts outside the current runtime
+roster remain in the evidence prose but are not invented as reachable deities.
+Jyggalag remains classify-only. The report-only reachability audit passes with
+20,342 rows, 458 rows carrying canonical candidates, zero pending legacy reviews,
+zero unknown names, and zero warnings.
+
 ### C-5 (P1) -- Re-tagging pass over the existing matrix
 
 A finding that needs no new content. Coverage is driven by how many act_tags an
@@ -326,9 +348,9 @@ content. Worth its own tranche.
 ### C-6 -- Resolved controls and remaining source check
 
 - `tools/pdv_arr25_inventory_reachability_audit.mjs` is the report-only roster gate.
-  The canonical and reachable columns remain blank until primary semantic review;
-  legacy `candidate_deities` text is migration debt, not authority. The gate parses
-  the live roster function and locks Altmer-reachable / Orc-pressure-only Trinimac.
+  Canonical candidates now come from explicit primary review rather than parsing
+  legacy prose as authority. The gate parses the live roster function and locks
+  Altmer-reachable / Orc-pressure-only Trinimac.
 - Packaging is settled: Authoria-guaranteed targets enter the combined lane, while
   arbitrary-load-order support stays per-mod so missing masters cannot block startup.
 - Whether `live-source/Scripts/Source/` is in sync with
@@ -392,9 +414,11 @@ since Princes bypass the origin-roster gate.
 
 ### Other non-quest candidates
 
-- **Simple Hunting Overhaul** -- `000D90` KYWD marks a carcass **ruined by overkill**.
-  A directly detectable disrespectful-hunt event: Kyne approves `the_hunt`(C) and
-  disapproves `defile_nature`(C).
+- **Hunter Loot / hunting internals were not promoted as faucets.** Direct record
+  evidence showed the tempting skin/butcher spells are constant-effect self
+  monitoring abilities rather than player-cast actions. Keyword and internal-system
+  records remain useful implementation evidence, but are explicit `NO-ROWS` inputs
+  until an actual routed action surface is proven.
 - **Become a Bard** / **Skyrim's Got Talent** -- confirmed present with the records
   the July spec (TODO-4) already designed against.
 - **Why I Came to Skyrim - Origin Stories** (`The Book of Origins.esp`) -- the player

@@ -242,7 +242,7 @@ function main() {
   for (let i = 0; i < objects.length; i++) {
     const row = objects[i];
     const requested = row.candidate_deities_canonical.split("|").map((v) => v.trim()).filter(Boolean);
-    if (row.candidate_deities.trim() && !requested.length) {
+    if (row.candidate_deities.trim() && !requested.length && !row.notes.includes("[ARR25-CANONICAL-REVIEW:")) {
       legacyCandidateRows.push({ row: i + 2, mod: row.mod, legacy: row.candidate_deities });
     }
     const canonical = [];

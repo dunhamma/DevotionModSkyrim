@@ -1,0 +1,18 @@
+{
+  "schema": "pdv-arr25-nonquest-inventory-closure.v1",
+  "generatedAt": "2026-08-06T10:30:53.059Z",
+  "checkpointBatches": 107,
+  "pluginPaths": 1070,
+  "signalOccurrences": 23902,
+  "uniqueNaturalSignals": 18791,
+  "duplicateOccurrences": 5111,
+  "approvedOccurrences": 125,
+  "approvedUniqueSignals": 123,
+  "rejectedUniqueSignals": 18668,
+  "existingCoveredSignals": 0,
+  "appendedSignals": 18791,
+  "projectedInventoryRows": 20342,
+  "unresolvedReadFailures": 0,
+  "unresolvedPrimaryReviews": 0,
+  "closure": "PASS"
+}
