@@ -22,12 +22,12 @@
     "channels": 34,
     "fomodPluginNodes": 36,
     "packageFiles": 95,
-    "treeSha256": "1562DA86E0FE60F141CCF6DEC7D4A1C8B63C796F096B98616AEDE5155BAB31EC",
+    "treeSha256": "7A1930E7FDC9231AE5AF70955AC79B49D9DE537464847F118ED7589B9D9E58EB",
     "archive": {
       "path": "dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip",
       "entries": 95,
-      "size": 1894108,
-      "sha256": "73AF39BE83EEEBE8E7D6B047CAD4126BC816E724A92733E5E9E1143284AF92BA"
+      "size": 1896568,
+      "sha256": "E11D7B2A90ED0F980DA2394CF63A465167E55730C252EF5FF1EF05A64D0B5C9D"
     },
     "receipt": "references/authoring/PDV_QuestModPatches_FOMOD_Validation.json",
     "testerRunbook": "dist/PDV_QuestModPatches_FOMOD/common/_Runbook/Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md",

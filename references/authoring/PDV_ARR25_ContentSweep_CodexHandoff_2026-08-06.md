@@ -92,7 +92,7 @@ What landed this session:
   individual content options / 34 channels / 95 files. Combined Authoria,
   all-individual, and representative-subset simulations pass. Archive membership
   is exactly 95 entries with no missing/extra files; SHA-256 is
-  `73AF39BE83EEEBE8E7D6B047CAD4126BC816E724A92733E5E9E1143284AF92BA`.
+  `E11D7B2A90ED0F980DA2394CF63A465167E55730C252EF5FF1EF05A64D0B5C9D`.
 - **The combined lane is deployed on ARR 2.5 `KoK R11`:** the enabled mod is
   `Devotion - Authoria ARR Compatibility`; 84 installed files reproduce the
   combined FOMOD simulation. houseCARL confirms it wins all three script PEX

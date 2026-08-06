@@ -7,11 +7,37 @@ with equivalent evidence for every included case.
 ## Install boundary
 
 - Requires Devotion with per-mod channel support.
-- Select only the combined Authoria option for the full ARR list. Do not also
-  select individual mod options.
-- Install below Devotion so these scripts/data win, but do not place source files
-  inside Reqtificator, ParallaxGen, DynDOLOD, Synthesis, TexGen, xLODGen, or NPC
-  Plugin Chooser output. Regenerate tool outputs after source-mod changes.
+- Install the FOMOD through MO2 and select only **Authoria (Requiem Reforged) -
+  All-In-One**. Do not also install individual patch options.
+- Name the installed mod `Devotion - Authoria ARR Compatibility` and place it
+  below Devotion in MO2's left pane so its scripts and data win conflicts.
+- Enable only `PDV_AuthoriaARR_Combined.esp`. Sort it after `Devotion.esp` and
+  before `Requiem for the Indifferent.esp`.
+- Disable the retired `PDV_Patch_Authoria_QuestMods.esp` and
+  `PDV_AuthoriaARR_Compatibility.esp` if they remain from an earlier test.
+- Run Authoria's normal Reqtificator procedure after changing the plugin list.
+- Do not place these source files inside Reqtificator, ParallaxGen, DynDOLOD,
+  Synthesis, TexGen, xLODGen, or NPC Plugin Chooser output mods.
+- Use a new or disposable test save. Updating a save that used either retired
+  donor ESP has not been proven safe.
+
+## First experiment
+
+1. Start ARR and open **Devotion MCM -> Debug: State & Rewards**.
+2. Set **Debug level** to `2`, then choose **Reload quest matrix -> Re-read
+   JSON**.
+3. Wait until Devotion's reward queue is quiet. Confirm the Papyrus log reports
+   154 core watched quests, 62 ARR watched quests, and 34 registered channels.
+4. Travel normally to one supported Daedric shrine statue and pray. Expect one
+   piety change, one notification, and one Book of Days entry. A second prayer
+   on the same day should award nothing.
+5. Complete one patched quest outcome organically, then confirm the expected
+   piety change in Survey and one matching Book of Days entry.
+6. Save, reload, and confirm neither test result repeats by itself.
+
+Report the installed lane, the three registration counts, the tested quest or
+shrine, before/after piety, notification count, Book of Days count, save/load
+result, and any `[PDV]` error lines. Partial reports are useful.
 
 ## Contents
 
@@ -27,8 +53,8 @@ with equivalent evidence for every included case.
   donors, with 32 records total: 21 quest/dialogue overrides and 11 shrine-prayer
   ACTIs. Source quest SEQ files remain supplied by their respective masters.
 - `PDV_AuthoriaARR_ShrinePrayer_SWAP.ini`: the 11 read-back prayer activators
-  route as once-per-day prayer (`202`), not QASmoke commitment (`200`). Jyggalag
-  is absent. Wyrmstooth placements use different base forms and are not claimed.
+  provide once-per-day prayer. Jyggalag is absent. Wyrmstooth placements use
+  different base forms and are not claimed.
 - The combined-plugin external-reference scan found five unrelated unreadable
   records; it did not establish a runtime or support result.
 - `PDV_GreenPact_KID.ini`: exact-name classifications for 14 ARR animal foods

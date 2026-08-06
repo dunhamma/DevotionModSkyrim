@@ -1130,7 +1130,7 @@ hunting is deferred because a truthful route requires a third-party ModEvent aft
 the IHA corpse-token write. The validated archive is
 `dist\PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`: 95 members, no missing or
 extra files, SHA-256
-`73AF39BE83EEEBE8E7D6B047CAD4126BC816E724A92733E5E9E1143284AF92BA`.
+`E11D7B2A90ED0F980DA2394CF63A465167E55730C252EF5FF1EF05A64D0B5C9D`.
 Papyrus compile is 0/0 and strict verification is `PASS=4074, TODO=1, INFO=78,
 WARN=1, FAIL=0`. This moves machine/package proof only; ARR 2.5 runtime preflight,
 every structured tester case, and support remain OPEN.

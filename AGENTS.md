@@ -1076,7 +1076,7 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   2.5 FOMOD and `KoK R11` deployment. Direct houseCARL file read reports 32
   records: 21 quest/dialogue overrides plus 11 shrine ACTIs. The updated archive
   has 95 entries (SHA-256
-  `73AF39BE83EEEBE8E7D6B047CAD4126BC816E724A92733E5E9E1143284AF92BA`),
+  `E11D7B2A90ED0F980DA2394CF63A465167E55730C252EF5FF1EF05A64D0B5C9D`),
   and the combined simulation installs 84 files. Source quest SEQs remain with
   their defining masters; no new SGE quest identity was introduced. Static
   merge/readback and FOMOD proof pass, while runtime, save-compatibility, and
@@ -1104,7 +1104,7 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   enumeration, canonical inventory/reachability, T13-T17 channels, and package
   simulation are complete on `codex/arr25-content-sweep`; the cumulative archive
   is `dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip` (95 entries, SHA-256
-  `73AF39BE83EEEBE8E7D6B047CAD4126BC816E724A92733E5E9E1143284AF92BA`).
+  `E11D7B2A90ED0F980DA2394CF63A465167E55730C252EF5FF1EF05A64D0B5C9D`).
   Non-quest rules locked by the pass: Potion KID classification uses exact item
   names because ALCH form filters target effects; AFDI is observed through its 30
   post-success latched globals with an existing-save no-credit baseline and

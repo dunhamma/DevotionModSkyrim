@@ -12,20 +12,28 @@ ordered cheapest-first.
 
 ## 0. Install
 
-**Authoria players:** install `Devotion_Authoria_Compatibility_<date>.zip`, OR
-run the FOMOD and pick **"Authoria (Requiem Reforged) - All-In-One"**. Do not do
-both - they are the same content and one will just overwrite the other.
+**ARR 2.5 players:** install the current FOMOD in MO2 and pick
+**"Authoria (Requiem Reforged) - All-In-One"**. This installs the single
+`PDV_AuthoriaARR_Combined.esp` ESPFE and every Authoria channel. Do not also
+select or install the individual patch lane.
 
 **Any other load order:** run the FOMOD, pick **"Individual patches"**, and take
 the ones it recommends (it auto-detects which target mods you have).
 
 Both lanes ship script overrides for `PDV_PlayerEvents`, `PDV__ManagerQuest`,
 and `PDV_EventBus`. **These must win** over Devotion's own copies - put the
-patch below Devotion in your mod order. If they lose, everything below silently
+patch below Devotion in MO2's left pane. If they lose, everything below silently
 does nothing.
 
-Any ESP the patch ships is ESL-flagged (no load-order slot) and should sort
-after the mod it patches.
+For ARR, enable only `PDV_AuthoriaARR_Combined.esp` from this packet. It should
+load after `Devotion.esp` and before `Requiem for the Indifferent.esp`. Disable
+the retired `PDV_Patch_Authoria_QuestMods.esp` and
+`PDV_AuthoriaARR_Compatibility.esp` if an older experiment left them installed.
+Do not continue a valuable save that used either retired plugin: save-update
+compatibility has not been established. Use a new or disposable test save.
+
+After changing the plugin list, run Authoria's normal Reqtificator procedure so
+the generated Requiem output reflects the test profile.
 
 ---
 
@@ -77,6 +85,13 @@ Load any save and check the log for these lines:
 
 Also confirm Base Object Swapper loaded `PDV_AuthoriaARR_ShrinePrayer_SWAP.ini`
 (Authoria lane only).
+
+For ARR, also confirm:
+
+- `PDV_AuthoriaARR_Combined.esp` is active;
+- neither retired Authoria donor ESP is active;
+- the reload reports 154 core watched quests, 62 ARR watched quests, and 34
+  registered per-mod channels.
 
 ---
 
