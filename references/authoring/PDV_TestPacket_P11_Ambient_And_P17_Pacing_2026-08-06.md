@@ -44,7 +44,7 @@ proof needs and is not covered here.
 
 **Altmer substrate feeds** (any ONE claims the day): `330` smithing, `331` enchanting,
 `340`/`341`/`342` reading, the outdoor dawn observance, the Auri-El shrine rite, the
-Ancestral Focus token (`0716E4`, works indoors), sleep dream.
+Calian (`0716E4`, works indoors), sleep dream.
 
 ---
 
@@ -61,8 +61,9 @@ half-broken when the records are fine.
 - **Corner notification, no title** -> the MESG record fired. Binding resolved. Working.
 - **Prisma toast** -> the property read `None`. Either a stale save or an unbound property.
 
-If you see a toast, reload before concluding anything. All 12 bindings were readback-verified
-non-null in the plugin on 2026-08-04, so a toast on a fresh save means something regressed since.
+If you see a toast, reload before concluding anything. All 14 bindings were readback-verified
+non-null in the plugin -- the twelve ambient ones on 2026-08-04, the calian's two on 2026-08-06 --
+so a toast on a FRESH save means something regressed since.
 
 Other preconditions:
 
@@ -80,10 +81,11 @@ Other preconditions:
 Cheap, immediate, and it exercises the same binding path everything below depends on -- so if the
 calian lines arrive as corner notifications, the save is not stale and Parts B and C can be trusted.
 
-1. **Open the inventory.** The item reads **Calian**. Look at the model: it carries two glass shells
-   plus a third shape textured from the vanilla Barenziah's jewelry box atlas. **Record whether it
-   renders as a bare sphere or a sphere in/on a wooden box** -- that decides whether the third shape
-   gets stripped in NifSkope. Geometry, so not a houseCARL job.
+1. **Open the inventory.** The item reads **Calian** and should render as a sphere in its box -- the
+   asset as authored, kept deliberately (owner's call, 2026-08-06). Nothing to decide here now; just
+   confirm it renders at all and is not untextured. **An untextured or purple model means the
+   texture paths did not resolve** -- see the packaging note in the lore dive, since the upstream
+   resource ships those paths broken and Devotion works around it.
 2. **Click it.** The practice lands: the idle plays (prayer pose, or a reading pose when the patron
    is Magnus, Xarxes or Syrabane) and the Book of Days takes "You kept the practice where you stood,
    with no shrine and no witness."
@@ -192,7 +194,7 @@ corner, at speed, with the game moving. Specifically:
 
 ## What to bring back
 
-- **Calian:** bare sphere or sphere-in-a-box; whether the repeat-use and curse lines appeared; and
+- **Calian:** whether it rendered textured (not purple); whether the repeat-use and curse lines appeared; and
   whether the granted line fired once on the drop and stayed silent on the second drop
 - Which of the 14 records you actually saw, and whether each arrived as a corner notification or a
   Prisma toast (that distinction is the binding proof)

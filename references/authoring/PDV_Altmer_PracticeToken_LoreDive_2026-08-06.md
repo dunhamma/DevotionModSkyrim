@@ -264,12 +264,22 @@ folder name is inherited from the resource, not chosen.
 **Cleanup available later:** repath the six slots in NifSkope, move the textures under
 `textures\PDV\Clutter\`, and the `MS03 Calians` folder can be deleted. Cosmetic only.
 
-**OPEN -- worth your eyes.** The mesh has THREE shapes: two glass shells (`Box02:10` at scale 1.2 and
-`Box02:0` at 1.3, the second alpha-tested, which is how the translucency is faked) and one
-`BarenziahsJewelryBox:0` textured from the vanilla jewelry-box atlas. That third shape is visible
-(default flags), so the item may render as a sphere in or on a wooden box rather than a bare sphere.
-For a talisman carried on the person a bare sphere is probably wanted. Removing a shape is geometry,
-which houseCARL does not touch -- that is a NifSkope job.
+**RESOLVED 2026-08-06: sphere in a box, kept as authored. Owner's call.** The mesh has THREE shapes,
+and the texture assignments settle what each one is without needing to open it: `BarenziahsJewelryBox:0`
+carries the vanilla jewelry-box atlas plus its normal map, so it IS the box; `Box02:10` (scale 1.2)
+and `Box02:0` (scale 1.3, alpha-tested) both carry the colour texture and the `shinyglass_e`
+cubemap, so they are the sphere -- two shells faking translucency. No shape needs stripping.
+
+Two consequences worth keeping:
+
+- The item is a calian **in its presentation box**, not a bare talisman. That reads well against the
+  source, where the recipient "swore an oath to protect it" and thought "how fragile a thing it is",
+  and it leaves the shatter beat intact.
+- The `_DESC.ini` line describes only the sphere. Harmless -- the sphere is what the box contains --
+  but if the box should be acknowledged, that is a one-line edit to the ini and nothing else.
+
+The mesh also carries two `BSLightingShaderPropertyFloatController` blocks with float data and an
+interpolator: an animated shader value, most likely a slow glow or emissive pulse on the glass.
 
 ### Assets and permissions
 
