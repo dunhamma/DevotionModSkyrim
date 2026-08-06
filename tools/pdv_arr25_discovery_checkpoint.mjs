@@ -77,7 +77,7 @@ function parseArgs(argv) {
   const hasRowReview = Boolean(out.reviewInput || out.reviewEvidence);
   const modes = Number(out.init) + Number(out.check) + Number(out.reviewSummaries) + Number(Boolean(out.status || out.incrementAttempt || out.completed.length || out.error !== undefined || out.clearError)) + Number(Boolean(out.reviewAll)) + Number(hasModReview) + Number(hasRowReview);
   if (modes !== 1) throw new Error("Choose exactly one mode: --init, --check, or a status update");
-  if (out.batch && !/^[ABC]\d{3}$/.test(out.batch)) throw new Error("--batch must look like A001");
+  if (out.batch && !/^(?:[ABC]\d{3}|NQ\d{3})$/.test(out.batch)) throw new Error("--batch must look like A001 or NQ001");
   if (out.status && !STATUSES.has(out.status)) throw new Error(`Invalid --status: ${out.status}`);
   if ((out.status || out.incrementAttempt || out.completed.length || out.error !== undefined || out.clearError) && !out.batch) throw new Error("Status updates require --batch");
   if (out.error !== undefined && out.clearError) throw new Error("Use either --error or --clear-error, not both");
@@ -134,12 +134,16 @@ function readWorklist(path) {
   if (!existsSync(path)) throw new Error(`Worklist not found: ${path}`);
   const rows = parseCsv(readFileSync(path, "utf8"));
   const header = rows.shift();
-  const expected = ["batch_id", "wave", "separator", "mod", "plugin", "plugin_path", "input_id"];
-  if (JSON.stringify(header) !== JSON.stringify(expected)) throw new Error("Worklist header drift");
+  const questHeader = ["batch_id", "wave", "separator", "mod", "plugin", "plugin_path", "input_id"];
+  const signalHeader = ["batch_id", "separator", "mod", "plugin", "plugin_path", "input_id", "selected_signature_counts"];
+  const isQuest = JSON.stringify(header) === JSON.stringify(questHeader);
+  const isSignal = JSON.stringify(header) === JSON.stringify(signalHeader);
+  if (!isQuest && !isSignal) throw new Error("Worklist header drift");
   const out = [];
   for (let i = 0; i < rows.length; i++) {
     if (rows[i].length !== header.length) throw new Error(`Worklist row ${i + 2} has wrong field count`);
     const entry = Object.fromEntries(header.map((key, index) => [key, rows[i][index]]));
+    if (isSignal) entry.wave = "NQ";
     if (!entry.input_id || !entry.batch_id) throw new Error(`Worklist row ${i + 2} is missing identity`);
     out.push(entry);
   }
@@ -150,7 +154,9 @@ function readWorklist(path) {
 function readManifest(path) {
   if (!existsSync(path)) throw new Error(`Batch manifest not found: ${path}`);
   const value = JSON.parse(readFileSync(path, "utf8"));
-  if (value.schema !== "pdv-arr25-discovery-batches.v1" || !Array.isArray(value.batches)) throw new Error("Batch manifest schema drift");
+  const schemas = new Set(["pdv-arr25-discovery-batches.v1", "pdv-arr25-nonquest-signal-batches.v1"]);
+  if (!schemas.has(value.schema) || !Array.isArray(value.batches)) throw new Error("Batch manifest schema drift");
+  for (const batch of value.batches) if (!batch.wave) batch.wave = value.schema.includes("nonquest") ? "NQ" : batch.id[0];
   const batches = new Map(value.batches.map((batch) => [batch.id, batch]));
   if (batches.size !== value.batches.length) throw new Error("Batch manifest has duplicate IDs");
   return batches;
@@ -175,7 +181,7 @@ function initialRows(worklistRows) {
     mod: row.mod, plugin: row.plugin, plugin_path: row.plugin_path,
     evidence_id: "PLUGIN", evidence_kind: "PLUGIN-PENDING", reader_status: "pending",
     record_signature: "", formid: "", editor_id: "", name: "", quest_expansion_classification: "",
-    stage_numbers: "", evidence: "", signal_counts: "", proposed_triage: "",
+    stage_numbers: "", evidence: "", signal_counts: row.selected_signature_counts ?? "", proposed_triage: "",
     proposed_reason: "", notes: "", primary_review_status: "UNREVIEWED",
   }));
 }
