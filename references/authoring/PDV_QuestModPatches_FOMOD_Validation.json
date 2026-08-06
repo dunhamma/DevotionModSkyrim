@@ -1,6 +1,6 @@
 {
   "schema": "pdv-quest-patch-fomod-validation.v1",
-  "generatedAt": "2026-08-06T11:40:39.308Z",
+  "generatedAt": "2026-08-06T12:02:37.939Z",
   "status": "PASS",
   "proofBoundary": "Package structure and bytes only. This does not prove runtime routing, player surfaces, semantic correctness, or support status.",
   "packageRoot": "dist/PDV_QuestModPatches_FOMOD",
@@ -38,7 +38,7 @@
   ],
   "manifest": {
     "fileCount": 80,
-    "treeSha256": "0A25D90C13476709D6D1C246B8B53842FA8A3C38FB07165C33A526726692EEBD",
+    "treeSha256": "E193C9C7220B69CE4D2097594925907BCBEEC9F121D46798547E0BF796404159",
     "files": [
       {
         "path": "common/_Fragments/OnceWeWereHere/Scripts/PDV_TIF_OWWH_S60.pex",
@@ -422,8 +422,8 @@
       },
       {
         "path": "plugins/authoria/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix.json",
-        "size": 614651,
-        "sha256": "1087F16040C69DA6647CC40B73DD124F0EF7A0EEFD3B6D57650B3D5AE282ECCA"
+        "size": 709200,
+        "sha256": "F188D3F71179D5D0F37738AF62A61685BC7829D0616A3C98F8DE0187E9A505A6"
       },
       {
         "path": "plugins/individual/OnceWeWereHere/PDV_Patch_OnceWeWereHere.esp",

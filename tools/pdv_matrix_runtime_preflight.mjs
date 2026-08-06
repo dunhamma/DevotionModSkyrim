@@ -86,11 +86,24 @@ function checkMatrixNameResolution() {
   };
 
   const files = fs.readdirSync(authoringDir).filter((f) => /^PDV_QuestReactionMatrix.*\.csv$/i.test(f));
+  const auxiliarySchemas = new Map([
+    ["PDV_QuestReactionMatrix_OutcomeTagNormalization.csv", ["editor_id", "outcome_stage", "act_tags", "reason"]],
+  ]);
   const unknown = [];
   let cellsChecked = 0;
+  let auxiliaryFilesChecked = 0;
   for (const file of files) {
     const lines = fs.readFileSync(path.join(authoringDir, file), "utf8").split(/\r?\n/).filter((l) => l.trim() !== "");
     const header = parseCsvLine(lines[0] || "").map((h) => h.trim().toLowerCase());
+    const auxiliarySchema = auxiliarySchemas.get(file);
+    if (auxiliarySchema) {
+      if (header.length !== auxiliarySchema.length || header.some((name, index) => name !== auxiliarySchema[index])) {
+        issues.push(`${file}: expected auxiliary header '${auxiliarySchema.join(",")}', got '${header.join(",")}'`);
+      } else {
+        auxiliaryFilesChecked += 1;
+      }
+      continue;
+    }
     const deityCol = header.indexOf("deity");
     if (deityCol < 0) {
       issues.push(`${file}: no 'deity' column found -- header drift`);
@@ -115,6 +128,7 @@ function checkMatrixNameResolution() {
     status: ok ? "PASS" : "FAIL",
     acceptedNames: accepted.size,
     files: files.length,
+    auxiliaryFilesChecked,
     cellsChecked,
     unknownNames: distinctUnknown,
     issues,

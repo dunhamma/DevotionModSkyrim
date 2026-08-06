@@ -11,6 +11,7 @@
 // Usage:
 //   node tools/pdv_quest_cross_gen.mjs            # generate candidates + summary
 //   node tools/pdv_quest_cross_gen.mjs --source <channel.csv> [--source ...] --output-prefix T13
+//   node tools/pdv_quest_cross_gen.mjs --source <matrix.csv> --outcome-key-file <editor_stage.csv> --output-prefix Review
 //   node tools/pdv_quest_cross_gen.mjs --self-test
 //
 // Outputs (generated/, do not hand-edit):
@@ -267,9 +268,21 @@ function main() {
   if (process.argv.includes("--self-test")) { selfTest(); return; }
   const sourceArgs = argValues("--source");
   const outputPrefix = argValue("--output-prefix", "");
+  const outcomeKeyFile = argValue("--outcome-key-file", "");
   if (outputPrefix && !/^[A-Za-z0-9_-]+$/.test(outputPrefix)) throw new Error("--output-prefix must be a simple filename token");
   const profiles = parsePartB(readFileSync(MATRIX_MD, "utf8"));
   const { outcomes, existingPairs } = loadTranches(sourceArgs);
+  if (outcomeKeyFile) {
+    const keyRows = parseCsv(readFileSync(path.resolve(ROOT, outcomeKeyFile), "utf8"));
+    const header = keyRows[0].map((value) => value.trim());
+    const editorIndex = header.indexOf("editor_id");
+    const stageIndex = header.indexOf("outcome_stage");
+    if (editorIndex < 0 || stageIndex < 0) throw new Error("--outcome-key-file requires editor_id and outcome_stage columns");
+    const allowed = new Set(keyRows.slice(1).map((row) => `${(row[editorIndex] || "").trim()}|${(row[stageIndex] || "").trim()}`).filter((key) => key !== "|"));
+    const missing = [...allowed].filter((key) => !outcomes.has(key));
+    if (missing.length) throw new Error(`--outcome-key-file contains unknown outcome key(s): ${missing.join(", ")}`);
+    for (const key of outcomes.keys()) if (!allowed.has(key)) outcomes.delete(key);
+  }
   const { candidates, conflicts } = crossGenerate(profiles, outcomes, existingPairs);
 
   mkdirSync(OUT_DIR, { recursive: true });

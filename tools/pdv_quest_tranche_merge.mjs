@@ -1,6 +1,7 @@
 import fs from "fs";
 const Q = String.fromCharCode(34);
 const QUEST_READBACK_CSV = "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv";
+const OUTCOME_TAG_NORMALIZATION_CSV = "references/authoring/PDV_QuestReactionMatrix_OutcomeTagNormalization.csv";
 // Some historical tranches use the quest's familiar editor ID while the live
 // record has a more specific one. Merge on the resolved FormID so those aliases
 // cannot produce two cells for the same quest-stage-deity at runtime.
@@ -123,6 +124,41 @@ for (const [key, entries] of byCell) {
   candidates.sort((a, b) => rank(b.row) - rank(a.row) || a.order - b.order);
   body.push(candidates[0].line);
   duplicateRowsRemoved += entries.length - 1;
+}
+function csvCell(value) {
+  const text = String(value ?? "");
+  return /[",\r\n]/.test(text) ? `${Q}${text.replaceAll(Q, Q + Q)}${Q}` : text;
+}
+function loadOutcomeTagNormalizations() {
+  const lines = fs.readFileSync(OUTCOME_TAG_NORMALIZATION_CSV, "utf8").split(/\r?\n/).filter((x) => x.trim());
+  const header = cells(lines.shift());
+  const expected = ["editor_id", "outcome_stage", "act_tags", "reason"];
+  if (header.length !== expected.length || header.some((name, index) => name !== expected[index])) {
+    throw new Error(`HEADER MISMATCH in ${OUTCOME_TAG_NORMALIZATION_CSV}`);
+  }
+  const out = new Map();
+  for (const line of lines) {
+    const row = cells(line);
+    const key = `${row[0]}|${row[1]}`;
+    if (!row[0] || !row[1] || !row[2] || !row[3]) throw new Error(`Malformed outcome-tag normalization: ${line}`);
+    if (out.has(key)) throw new Error(`Duplicate outcome-tag normalization: ${key}`);
+    out.set(key, row[2]);
+  }
+  return out;
+}
+const outcomeTagNormalizations = loadOutcomeTagNormalizations();
+const normalizedKeysSeen = new Set();
+for (let index = 0; index < body.length; index++) {
+  const row = cells(body[index]);
+  const key = `${row[0]}|${row[2]}`;
+  const normalizedTags = outcomeTagNormalizations.get(key);
+  if (!normalizedTags) continue;
+  row[4] = normalizedTags;
+  body[index] = row.map(csvCell).join(",");
+  normalizedKeysSeen.add(key);
+}
+for (const key of outcomeTagNormalizations.keys()) {
+  if (!normalizedKeysSeen.has(key)) throw new Error(`Outcome-tag normalization key not found in merged matrix: ${key}`);
 }
 function eid(line) { let cur = "", q = false; for (const ch of line) { if (ch === Q) q = !q; else if (ch === "," && !q) return cur; else cur += ch; } return cur; }
 const idx = body.map((line, i) => [line, i]);

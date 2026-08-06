@@ -340,6 +340,22 @@ stage 99 is objective-derived and must be reached organically through the
 persuasion route; controlled `setstage` proves routing only. No T15 option is
 supported yet.
 
+### 2026-08-06 existing-matrix multi-tag normalization
+
+Fifteen existing core outcome keys had accumulated different truthful act-tag
+subsets across their deity cells. The canonical normalization interface is
+`PDV_QuestReactionMatrix_OutcomeTagNormalization.csv`; the merge gate applies it
+after duplicate resolution and fails on an unknown key. Core remains **2,130
+cells / 231 runtime keys**: no deity reaction, score, or routing key changed.
+
+The bounded cross-generation pass produced 45 candidates and three conflicts.
+Primary review retained no new cells, applying the standing theology-stretch
+and double-credit rules rather than using wider tags to farm coverage. Exact
+rulings are in `PDV_ARR25_ExistingMatrixMultiTag_Adjudication.md`. Correcting
+DB06's stray chaos gloss removes two false paired-equity gaps: the T13-T15
+composite is now 114 open / 99 waived across 2,361 cells. This is machine/source
+consistency proof only and makes no new runtime or support claim.
+
 ### 2026-08-06 ARR 2.5 Wave 1 inventory recovery
 
 The recovered Wave 1 compatibility inventory is
