@@ -32,8 +32,10 @@ function usage() {
   return `Usage:
   node tools/pdv_arr25_discovery_checkpoint.mjs --init [--batch A001]
   node tools/pdv_arr25_discovery_checkpoint.mjs --check [--batch A001]
+  node tools/pdv_arr25_discovery_checkpoint.mjs --review-summaries [--batch A001]
   node tools/pdv_arr25_discovery_checkpoint.mjs --batch A001 --status in_progress [--increment-attempt] [--complete INPUT_ID] [--error TEXT | --clear-error]
   node tools/pdv_arr25_discovery_checkpoint.mjs --batch A001 --review-all APPROVED
+  node tools/pdv_arr25_discovery_checkpoint.mjs --batch A001 --review-mod "Mod Name" --review-status APPROVED --triage DEFER --reason "Primary ruling."
   node tools/pdv_arr25_discovery_checkpoint.mjs --batch A001 --review-input INPUT_ID --review-evidence EVIDENCE_ID --review-status APPROVED [--triage ROWABLE] [--reason TEXT]
 
 --init never overwrites an existing checkpoint.  Reader evidence belongs in the
@@ -42,7 +44,7 @@ tooling or this file's CSV grammar when editing it.`;
 }
 
 function parseArgs(argv) {
-  const out = { worklist: DEFAULT_WORKLIST, manifest: DEFAULT_MANIFEST, dir: DEFAULT_DIR, init: false, check: false, batch: null, status: null, incrementAttempt: false, completed: [], error: undefined, clearError: false, reviewAll: null, reviewInput: null, reviewEvidence: null, reviewStatus: null, reviewTriage: undefined, reviewReason: undefined, reviewName: undefined, reviewStages: undefined, reviewEvidenceText: undefined };
+  const out = { worklist: DEFAULT_WORKLIST, manifest: DEFAULT_MANIFEST, dir: DEFAULT_DIR, init: false, check: false, reviewSummaries: false, batch: null, status: null, incrementAttempt: false, completed: [], error: undefined, clearError: false, reviewAll: null, reviewMod: null, reviewInput: null, reviewEvidence: null, reviewStatus: null, reviewTriage: undefined, reviewReason: undefined, reviewName: undefined, reviewStages: undefined, reviewEvidenceText: undefined };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--worklist") out.worklist = resolve(argv[++i]);
@@ -50,6 +52,7 @@ function parseArgs(argv) {
     else if (arg === "--dir") out.dir = resolve(argv[++i]);
     else if (arg === "--init") out.init = true;
     else if (arg === "--check") out.check = true;
+    else if (arg === "--review-summaries") out.reviewSummaries = true;
     else if (arg === "--batch") out.batch = argv[++i];
     else if (arg === "--status") out.status = argv[++i];
     else if (arg === "--increment-attempt") out.incrementAttempt = true;
@@ -57,6 +60,7 @@ function parseArgs(argv) {
     else if (arg === "--error") out.error = argv[++i];
     else if (arg === "--clear-error") out.clearError = true;
     else if (arg === "--review-all") out.reviewAll = argv[++i];
+    else if (arg === "--review-mod") out.reviewMod = argv[++i];
     else if (arg === "--review-input") out.reviewInput = argv[++i];
     else if (arg === "--review-evidence") out.reviewEvidence = argv[++i];
     else if (arg === "--review-status") out.reviewStatus = argv[++i];
@@ -68,8 +72,10 @@ function parseArgs(argv) {
     else if (arg === "--help" || arg === "-h") { console.log(usage()); process.exit(0); }
     else throw new Error(`Unknown argument: ${arg}`);
   }
-  const hasRowReview = Boolean(out.reviewInput || out.reviewEvidence || out.reviewStatus || out.reviewTriage !== undefined || out.reviewReason !== undefined || out.reviewName !== undefined || out.reviewStages !== undefined || out.reviewEvidenceText !== undefined);
-  const modes = Number(out.init) + Number(out.check) + Number(Boolean(out.status || out.incrementAttempt || out.completed.length || out.error !== undefined || out.clearError)) + Number(Boolean(out.reviewAll)) + Number(hasRowReview);
+  const hasReviewFields = Boolean(out.reviewStatus || out.reviewTriage !== undefined || out.reviewReason !== undefined || out.reviewName !== undefined || out.reviewStages !== undefined || out.reviewEvidenceText !== undefined);
+  const hasModReview = Boolean(out.reviewMod);
+  const hasRowReview = Boolean(out.reviewInput || out.reviewEvidence);
+  const modes = Number(out.init) + Number(out.check) + Number(out.reviewSummaries) + Number(Boolean(out.status || out.incrementAttempt || out.completed.length || out.error !== undefined || out.clearError)) + Number(Boolean(out.reviewAll)) + Number(hasModReview) + Number(hasRowReview);
   if (modes !== 1) throw new Error("Choose exactly one mode: --init, --check, or a status update");
   if (out.batch && !/^[ABC]\d{3}$/.test(out.batch)) throw new Error("--batch must look like A001");
   if (out.status && !STATUSES.has(out.status)) throw new Error(`Invalid --status: ${out.status}`);
@@ -77,9 +83,14 @@ function parseArgs(argv) {
   if (out.error !== undefined && out.clearError) throw new Error("Use either --error or --clear-error, not both");
   if (out.reviewAll && !REVIEW_STATES.has(out.reviewAll)) throw new Error(`Invalid --review-all state: ${out.reviewAll}`);
   if (out.reviewAll && !out.batch) throw new Error("--review-all requires --batch");
+  if (hasModReview && (!out.batch || !out.reviewStatus)) throw new Error("Mod review requires --batch, --review-mod, and --review-status");
+  if (hasModReview && (out.reviewInput || out.reviewEvidence || out.reviewName !== undefined || out.reviewStages !== undefined || out.reviewEvidenceText !== undefined)) {
+    throw new Error("Mod review cannot be combined with row identity or row-only field edits");
+  }
   if (hasRowReview && (!out.batch || !out.reviewInput || !out.reviewEvidence || !out.reviewStatus)) {
     throw new Error("Row review requires --batch, --review-input, --review-evidence, and --review-status");
   }
+  if (hasReviewFields && !hasModReview && !hasRowReview) throw new Error("Review fields require --review-mod or row review identity");
   if (out.reviewStatus && !REVIEW_STATES.has(out.reviewStatus)) throw new Error(`Invalid --review-status state: ${out.reviewStatus}`);
   if (out.reviewTriage !== undefined && !TRIAGES.has(out.reviewTriage)) throw new Error(`Invalid --triage: ${out.reviewTriage}`);
   return out;
@@ -301,6 +312,35 @@ function main() {
     return;
   }
 
+  if (args.reviewSummaries) {
+    let reviewed = 0;
+    for (const batch of chosen) {
+      const { file, rows } = validateCheckpoint(batch, workByBatch.get(batch.id), args.dir);
+      let changed = false;
+      for (const row of rows) {
+        if (!row.evidence_kind.startsWith("PLUGIN-") || row.primary_review_status !== "UNREVIEWED") continue;
+        const children = rows.filter((candidate) => candidate.input_id === row.input_id && !candidate.evidence_kind.startsWith("PLUGIN-"));
+        const unreviewed = children.filter((candidate) => candidate.primary_review_status === "UNREVIEWED");
+        if (unreviewed.length) throw new Error(`${batch.id}: cannot roll up ${row.input_id}; ${unreviewed.length} direct evidence row(s) remain unreviewed`);
+        const triages = new Set(children.map((candidate) => candidate.proposed_triage));
+        const aggregate = triages.has("ROWABLE") ? "ROWABLE" : triages.has("DEFER") ? "DEFER" : "NO-ROWS";
+        row.proposed_triage = aggregate;
+        row.primary_review_status = aggregate === "NO-ROWS" ? "REJECTED" : "APPROVED";
+        row.proposed_reason = children.length
+          ? `Primary-review rollup from ${children.length} reviewed direct evidence row(s); no new semantic decision.`
+          : "Primary-review rollup confirms the direct read contained no QUST evidence rows; non-quest signals remain separate.";
+        reviewed++;
+        changed = true;
+      }
+      if (changed) {
+        writeFileSync(file.csv, renderCsv(rows), "utf8");
+        validateCheckpoint(batch, workByBatch.get(batch.id), args.dir);
+      }
+    }
+    console.log(`PASS: reconciled ${reviewed} plugin summary row(s) from primary-reviewed direct evidence.`);
+    return;
+  }
+
   if (args.reviewAll) {
     const batch = chosen[0];
     const { file, rows } = validateCheckpoint(batch, workByBatch.get(batch.id), args.dir);
@@ -308,6 +348,22 @@ function main() {
     writeFileSync(file.csv, renderCsv(rows), "utf8");
     validateCheckpoint(batch, workByBatch.get(batch.id), args.dir);
     console.log(`PASS: ${batch.id} primary_review_status=${args.reviewAll} for ${rows.length} evidence row(s)`);
+    return;
+  }
+
+  if (args.reviewMod) {
+    const batch = chosen[0];
+    const { file, rows } = validateCheckpoint(batch, workByBatch.get(batch.id), args.dir);
+    const matches = rows.filter((row) => row.mod === args.reviewMod);
+    if (!matches.length) throw new Error(`${batch.id}: no evidence rows found for mod ${JSON.stringify(args.reviewMod)}`);
+    for (const row of matches) {
+      row.primary_review_status = args.reviewStatus;
+      if (args.reviewTriage !== undefined) row.proposed_triage = args.reviewTriage;
+      if (args.reviewReason !== undefined) row.proposed_reason = args.reviewReason;
+    }
+    writeFileSync(file.csv, renderCsv(rows), "utf8");
+    validateCheckpoint(batch, workByBatch.get(batch.id), args.dir);
+    console.log(`PASS: ${batch.id} reviewed ${matches.length} evidence row(s) for ${args.reviewMod} -> ${args.reviewStatus}`);
     return;
   }
 
