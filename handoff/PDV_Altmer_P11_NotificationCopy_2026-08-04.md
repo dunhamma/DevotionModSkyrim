@@ -5,6 +5,30 @@ carrying this copy verbatim, under the EditorIDs specified below; the four wire-
 of this file are done and readback-verified. This file remains the authored string source — edit a
 line here and in the record together.
 
+**Relegibility rewrite 2026-08-05 -- ALL TWELVE lines were replaced.** The tables below carry the
+current text and are synced with the ESP records and the `.psc` fallbacks. The prose commentary
+around them was written for the original lines; where a note describes an earlier line it is marked
+superseded inline.
+
+Why they were replaced: the originals were written as aphorisms. That is the wrong shape for this
+surface. Only the `Description` reaches the player -- `messageRecord.Show()` on a button-less MESG
+renders the message text as a corner notification and never displays `Name` -- so each line gets a
+couple of seconds of peripheral attention and has to carry its whole meaning alone. Lines like "You
+read the wall as a door now." and "What you have done is written where it will keep." depended on
+remembering a Champion-entry MessageBox from hours earlier, or on design vocabulary the player has
+never been taught. The replacements use plain words and concrete images, keep the per-deity tone from
+Section 13.1, and stay inside the 60-character target.
+
+The `Name` fields were realigned to match the rewritten bodies (2026-08-06). They are editor labels
+only -- never shown to the player -- so their job is to tell an editor what the line says, which the
+EditorID already fails to do. The **EditorIDs are unchanged** (`_ElderWay`, `_Lineage`, `_Watch`),
+because they are bound to VMAD properties and the manager's property names; renaming them would mean
+re-binding all twelve. So a couple of slots hold a line their EditorID no longer describes. That is
+the cheaper of the two mismatches and is deliberate.
+
+The consolidated view of the whole lane, including everything outside these twelve, is
+`race-sheets/PDV_AltmerLane_CopySheet.md`.
+
 **Anchored to:** `race-sheets/PDV_RaceContent_Manifest.md` Section 13.1 (tone profiles), 13.3-13.5
 (the authored `PDV_Notif_Altmer_*` prose and its voice/budget rows), Section 3 (voice-by-surface
 matrix), Section 4 (length budgets); `race-sheets/PDV_RaceDesign_Altmer.md` (Religious Identity,
@@ -35,48 +59,53 @@ the same relationship seen from further along, not a louder version of it.
 
 | EditorID | Name | Description | Variant |
 |---|---|---|---|
-| `PDV_Notif_Altmer_AuriEl_ChampionAmbient_Dawn` | Dawn | The dawn answers you, and the return feels near. | A |
-| `PDV_Notif_Altmer_AuriEl_ChampionAmbient_Return` | The Return | The road back is shorter than it was. | B |
+| `PDV_Notif_Altmer_AuriEl_ChampionAmbient_Dawn` | Dawn Answers | The dawn answers you now, as it answered your ancestors. | A |
+| `PDV_Notif_Altmer_AuriEl_ChampionAmbient_Return` | Dawns Counted | You have met every dawn. Auri-El has counted them all. | B |
 
-The A line is the manifest's own authored prose (13.4), reused verbatim.
+*Superseded 2026-08-05:* the A line was the manifest's own authored prose (13.4) reused verbatim.
+It now keeps that line's opening but says what the dawn answering actually means, rather than
+leaning on "the return" -- a phrase the player is never taught.
 
 ### Magnus -- precise, scholarly, the arts as the road out
 
 | EditorID | Name | Description | Variant |
 |---|---|---|---|
-| `PDV_Notif_Altmer_Magnus_ChampionAmbient_Study` | Discipline | The arts come easily today. The discipline shows. | A |
-| `PDV_Notif_Altmer_Magnus_ChampionAmbient_ElderWay` | The Elder Way | You read the wall as a door now. | B |
+| `PDV_Notif_Altmer_Magnus_ChampionAmbient_Study` | Study Shows | The spells come easily today. Your study shows. | A |
+| `PDV_Notif_Altmer_Magnus_ChampionAmbient_ElderWay` | Long Study | Magnus has watched you study for a long time now. | B |
 
 The manifest's Magnus ambient (13.4) is keyed to a **skill milestone**, but P11's ambient arm is a
-4-day dawn cadence tick, so that line does not fit this trigger. Written fresh. The B line echoes the
-authored Magnus Champion entry ("I studied until the wall became a door") deliberately -- it pays off
-a line the player has already read.
+4-day dawn cadence tick, so that line does not fit this trigger. Written fresh.
+
+*Superseded 2026-08-05:* the B line used to echo the Magnus Champion entry ("I studied until the wall
+became a door"). That callback only lands if the player remembers a MessageBox from many hours
+earlier; on its own the line was opaque. The replacement states the same idea plainly.
 
 ### Xarxes -- dry, archival, lineage, what is written
 
 | EditorID | Name | Description | Variant |
 |---|---|---|---|
-| `PDV_Notif_Altmer_Xarxes_ChampionAmbient_Record` | The Record | The record has your name in it now. | A |
-| `PDV_Notif_Altmer_Xarxes_ChampionAmbient_Lineage` | The Lineage | What you have done is written where it will keep. | B |
+| `PDV_Notif_Altmer_Xarxes_ChampionAmbient_Record` | Name Recorded | Xarxes has written your name into the record. | A |
+| `PDV_Notif_Altmer_Xarxes_ChampionAmbient_Lineage` | Life Recorded | Xarxes has kept the record of your whole life. | B |
 
 ### Trinimac -- stern, militant, civilizational, the martial ancestor
 
 | EditorID | Name | Description | Variant |
 |---|---|---|---|
-| `PDV_Notif_Altmer_Trinimac_ChampionAmbient_Watch` | The Watch | The project stands where you have stood. | A |
-| `PDV_Notif_Altmer_Trinimac_ChampionAmbient_Sword` | The Sword | Trinimac's weight sits easy on your arm now. | B |
+| `PDV_Notif_Altmer_Trinimac_ChampionAmbient_Watch` | Line Held | You have held the line, and Trinimac saw it. | A |
+| `PDV_Notif_Altmer_Trinimac_ChampionAmbient_Sword` | Sword Arm | Your sword arm is steady. Trinimac made it so. | B |
 
-"The project" is established player-facing Altmer vocabulary (manifest 13.4, 13.8, 13.12), not design
-jargon. "The *elven* project" is design jargon and is not used here.
-
-The B line pays off the authored Trinimac offer ("Name me, and carry that weight").
+*Superseded 2026-08-05:* both lines used to lean on "the project" -- defensible as manifest
+vocabulary (13.4, 13.8, 13.12), but a word a player reads in its modern sense first. "Trinimac's
+weight sits easily on your arm" also implied an item he never gave you. The replacements name the
+deed and the god directly. "The project" survives in the Trinimac signal title, where the
+surrounding text supplies the sense.
 
 ### Syrabane -- gentle, guardian-toned, shields the one still on the path
 
 | EditorID | Name | Description | Variant |
 |---|---|---|---|
-| `PDV_Notif_Altmer_Syrabane_ChampionAmbient_Ward` | The Ward | Something is holding between you and harm. | A |
-| `PDV_Notif_Altmer_Syrabane_ChampionAmbient_Guard` | The Guard | You are warded, and you have stopped noticing. | B |
+| `PDV_Notif_Altmer_Syrabane_ChampionAmbient_Ward` | Ward Set | Syrabane's ward is on you, quiet and steady. | A |
+| `PDV_Notif_Altmer_Syrabane_ChampionAmbient_Guard` | Long Warded | Syrabane has warded you so long you forget it is there. | B |
 
 The B line is the protection-lane version of long devotion: the ward has become ordinary. It is the
 gentlest possible way to say "this has been true for a long time", which is the whole point of the
@@ -86,16 +115,20 @@ gentlest possible way to say "this has been true for a long time", which is the 
 
 | EditorID | Name | Description | Trigger |
 |---|---|---|---|
-| `PDV_Notif_Altmer_General_HeritageExemplar` | Heritage | The inheritance is whole in you. | substrate tier HIGH, same cadence |
-| `PDV_Notif_Altmer_General_HeritageQuiet` | Heritage Quiet | The inheritance has gone quiet. | once, on a fall from HIGH |
+| `PDV_Notif_Altmer_General_HeritageExemplar` | Old Way Kept | You keep the old Altmer way, and you keep it well. | substrate tier HIGH, same cadence |
+| `PDV_Notif_Altmer_General_HeritageQuiet` | Old Way Slipped | You have let the old Altmer way slip. | once, on a fall from HIGH |
 
 Written as a matched pair against the Nord precedent `PDV_Notif_Nord_General_AncestorsQuiet` / "The
-ancestors are quiet." These name **the inheritance**, never a god -- the spine is deity-agnostic per
-the 2026-08-04 Dawn Relocation note ("the ordered life every Altmer keeps because they are Altmer").
+ancestors are quiet." They name **no god** -- the spine is deity-agnostic per the 2026-08-04 Dawn
+Relocation note ("the ordered life every Altmer keeps because they are Altmer"), so these are the two
+lines a broad worshipper with no patron can still receive.
 
 They deliberately avoid the visible substrate tier words (`Ordered` / `Disciplined` / `Exemplar`
 Heritage), which the player already sees on the substrate readout. Repeating a tier label in an
 ambient line would read as a tier change that has not happened.
+
+*Superseded 2026-08-05:* both lines used to turn on "the inheritance", an abstraction the player is
+never introduced to. They now say "the old Altmer way", which needs no gloss.
 
 ## Downstream wire-in -- DONE 2026-08-04
 

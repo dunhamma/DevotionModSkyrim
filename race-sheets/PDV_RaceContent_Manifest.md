@@ -715,6 +715,24 @@ Narrator voice. HUD notifications. Budget 80 hard / 60 target. Observant and Fai
 
 Champion shapes: **Auri-El** and **Magnus** are `Entry + ambient` (dawn return and skill-milestone are recurring in-fiction beats). **Trinimac**, **Xarxes**, and **Syrabane** are `Entry-only` (their ongoing recognition is dialogue privilege, authored in Section 13.12, not ambient lines). God-voice on entries; player-second-person on ambients.
 
+> **Drift note (2026-08-05) -- the ambient rows below are out of date with the ESP.** Packet P11
+> shipped a recurring Champion-ambient layer on a 4-day dawn cadence, giving **all five** Altmer
+> deities two ambient records each plus two deity-agnostic heritage records -- twelve MESG,
+> `0716E5`-`0716F0`. Two consequences for this table:
+>
+> 1. `PDV_Notif_Altmer_Magnus_ChampionAmbient_Milestone` **does not exist**. The shipped Magnus
+>    records are `_ChampionAmbient_Study` and `_ChampionAmbient_ElderWay`. The milestone trigger this
+>    row assumes was never built; P11's arm is a dawn cadence tick, so the row's prose does not fit
+>    its own trigger, and that prose is narrator-framed in a row labelled Player-2nd.
+> 2. The `Entry-only` shape assigned to Trinimac, Xarxes and Syrabane is superseded -- all three now
+>    ship ambients.
+>
+> Only `PDV_Notif_Altmer_AuriEl_ChampionAmbient_Dawn` (row below) matches a shipped record, and its
+> prose is verbatim-correct. The authored string source for all twelve is
+> `handoff/PDV_Altmer_P11_NotificationCopy_2026-08-04.md`. The same phantom Magnus slot is mirrored
+> in `race-sheets/writer-review/Altmer_Review.csv` and `Altmer_Review.md`. Reconciling the table
+> itself is deferred; this note is the pointer so nobody authors against the phantom slot.
+
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
 | PDV_Msg_Altmer_AuriEl_ChampionEntry | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Altmer "Auri-El focus"; TargetEndStates "Altmer Champion" | One-time on first Auri-El Devoted | Title: "Auri-El's Dawn" Body: "You held the path through a world built to make you forget it. The return is not a doctrine to you; it is a daily practice. Keep walking toward the dawn. I am the dawn." |

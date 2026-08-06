@@ -11042,7 +11042,7 @@ Function HandleAltmerTrinimacOrthodoxy(String reason)
     if multiplier > 0.0
         AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, multiplier)
     endIf
-    SurfaceP2BookReadNotice(reason, "Trinimac remembered", "He is named as he was, not as he was made.")
+    SurfaceP2BookReadNotice(reason, "Trinimac remembered", "Trinimac is named as he was, not as he was made.")
 
     HandleAltmerOrthodoxCostlyEnforcement(reason)
 EndFunction
@@ -11068,7 +11068,7 @@ Function HandleAltmerTrinimacCivilizationDefense(String reason)
     endIf
 
     AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_CIVILIZATION_DEFENDED, None, 1.0)
-    SurfaceReservedSignal(PDV_Trinimac, "Civilization held", "marks a threat to the ordered world put down.")
+    SurfaceReservedSignal(PDV_Trinimac, "The project defended", "marks the ordered world held against a threat.")
 EndFunction
 
 ; --- P9 (2026-08-03): Syrabane's four wired signals -------------------------------------------
@@ -11179,7 +11179,7 @@ Function HandleAltmerSyrabaneProtectiveWard(String reason)
         return
     endIf
     AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING, None, 1.0)
-    SurfaceReservedSignal(PDV_Syrabane, "The ward holds", "marks hostile magic stopped before it landed.")
+    SurfaceReservedSignal(PDV_Syrabane, "The ward holds", "marks hostile magic stopped before it reached you.")
 EndFunction
 
 ; Weekly, not daily -- the detector already gates on a near-fatal mage fight with a kill, so the
@@ -11189,7 +11189,7 @@ Function HandleAltmerSyrabaneAntiMageSurvival(String reason)
         return
     endIf
     AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_ANTI_MAGE_SURVIVAL, None, 1.0)
-    SurfaceReservedSignal(PDV_Syrabane, "Arcane duel survived", "marks a hostile mage beaten at his own art.")
+    SurfaceReservedSignal(PDV_Syrabane, "Arcane duel survived", "marks a hostile mage outlasted and put down.")
 EndFunction
 
 ; The three vanilla ward tomes. Learning a Ward IS magical containment -- the most on-theme source
@@ -11202,7 +11202,7 @@ Function HandleAltmerSyrabaneContainment(String reason)
     if multiplier > 0.0
         AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_MAGICAL_CONTAINMENT, None, multiplier)
     endIf
-    SurfaceP2BookReadNotice(reason, "The first warding", "The apprentice's art is opened to you.")
+    SurfaceP2BookReadNotice(reason, "The first warding", "Syrabane opens the apprentice's art to you.")
 EndFunction
 
 Function AwardAltmerDawnSignal(String reason, Float multiplier)
@@ -11325,24 +11325,30 @@ EndFunction
 ; keep this in sync with them rather than inventing new ones here.
 String Function GetAltmerHeritageSourceLine(String reason)
     if StringContainsToken(reason, "dawn_observance")
-        return "You met the dawn under open sky. The old order asks no more than this."
+        return "You met the dawn under the open sky. The ordered life asks no more than this."
     elseIf StringContainsToken(reason, "auriel_shrine_rite")
-        return "You kept the dawn rite at the shrine. What the ancestors kept, you keep."
+        return "You performed the dawn rite as your ancestors have always done."
     elseIf StringContainsToken(reason, "sleep_dream")
-        return "An Aldmeri dream found you sleeping. The inheritance settles deeper."
+        return "You awoke from a dream about the Aldmeri. It leaves an ache within you as you recall the past."
     elseIf StringContainsToken(reason, "enchantment")
-        return "You bound magicka into a lasting shape. The discipline holds."
+        return "You bound magicka into a lasting shape. The binding holds."
     elseIf StringContainsToken(reason, "smithing")
-        return "You worked the forge in the manner set down. Nothing in it is improvised."
+        return "You worked the forge in the manner set down. The craft is older than you."
     elseIf StringContainsToken(reason, "study")
-        return "You studied in the ordered way. The inheritance sits a little straighter."
+        return "You studied. The quest for knowledge is ingrained in your heritage."
     elseIf StringContainsToken(reason, "magic_skill_increase")
-        return "You carried a school of magic further. The learning serves the line."
+        return "You have deepened your magical skills. You are closer to perfection."
     elseIf StringContainsToken(reason, "curated_heritage")
-        return "You read a heritage text closely. What was written is remembered."
+        return "You read an ancestral text closely. What was written is remembered."
+    elseIf StringContainsToken(reason, "practice_focus")
+        ; P14's focus token composes "practice_focus_" + the EventBus reason, which matches none of
+        ; the arms above -- without this branch the mod's one unlimited daily Altmer act fell to the
+        ; orthodoxy default, which asserts the opposite of a Psijic or Heterodox player's theology.
+        ; Deliberately alignment-neutral, and it says what P14 built the token FOR: it works anywhere.
+        return "You kept the practice where you stood, with no shrine and no witness."
     endIf
 
-    return "You upheld the orthodoxy at cost. Doctrine holds because someone pays for it."
+    return "You upheld the orthodoxy at real cost. Doctrine stands on what it costs you."
 EndFunction
 
 Function RunDawnRefreshAltmerAncestor()
@@ -11719,7 +11725,7 @@ Function MaybeSurfaceDevotionMark(PDV_DeityBase deity)
     StorageUtil.SetIntValue(None, shownKey, 1)
 
     String deityName = GetPublicDeityDisplayName(deity)
-    AppendBookOfDaysEntry(deityName + " marks devotion carried well beyond its proving.", Utility.GetCurrentGameTime() as Int, "tier.reach", GetPrismaSymbolForDeity(deity), True, 2, "Long devotion")
+    AppendBookOfDaysEntry(deityName + " marks devotion held long past the day it was proven.", Utility.GetCurrentGameTime() as Int, "tier.reach", GetPrismaSymbolForDeity(deity), True, 2, "Long devotion")
     Trace(1, "Long Devotion mark " + marks + " surfaced for " + deity.DeityName)
 EndFunction
 
@@ -12947,37 +12953,37 @@ EndFunction
 Bool Function ShowChampionAmbientForDeity(PDV_DeityBase deity, Bool deep)
     if deity == PDV_AuriEl
         if deep
-            ShowAltmerNotification(PDV_Notif_Altmer_AuriEl_ChampionAmbient_Return, "The road back is shorter than it was.")
+            ShowAltmerNotification(PDV_Notif_Altmer_AuriEl_ChampionAmbient_Return, "You have met every dawn. Auri-El has counted them all.")
         else
-            ShowAltmerNotification(PDV_Notif_Altmer_AuriEl_ChampionAmbient_Dawn, "The dawn answers you, and the return feels near.")
+            ShowAltmerNotification(PDV_Notif_Altmer_AuriEl_ChampionAmbient_Dawn, "The dawn answers you now, as it answered your ancestors.")
         endIf
         return True
     elseIf deity == PDV_Magnus
         if deep
-            ShowAltmerNotification(PDV_Notif_Altmer_Magnus_ChampionAmbient_ElderWay, "You read the wall as a door now.")
+            ShowAltmerNotification(PDV_Notif_Altmer_Magnus_ChampionAmbient_ElderWay, "Magnus has watched you study for a long time now.")
         else
-            ShowAltmerNotification(PDV_Notif_Altmer_Magnus_ChampionAmbient_Study, "The arts come easily today. The discipline shows.")
+            ShowAltmerNotification(PDV_Notif_Altmer_Magnus_ChampionAmbient_Study, "The spells come easily today. Your study shows.")
         endIf
         return True
     elseIf deity == PDV_Xarxes
         if deep
-            ShowAltmerNotification(PDV_Notif_Altmer_Xarxes_ChampionAmbient_Lineage, "What you have done is written where it will keep.")
+            ShowAltmerNotification(PDV_Notif_Altmer_Xarxes_ChampionAmbient_Lineage, "Xarxes has kept the record of your whole life.")
         else
-            ShowAltmerNotification(PDV_Notif_Altmer_Xarxes_ChampionAmbient_Record, "The record has your name in it now.")
+            ShowAltmerNotification(PDV_Notif_Altmer_Xarxes_ChampionAmbient_Record, "Xarxes has written your name into the record.")
         endIf
         return True
     elseIf deity == PDV_Trinimac
         if deep
-            ShowAltmerNotification(PDV_Notif_Altmer_Trinimac_ChampionAmbient_Sword, "Trinimac's weight sits easy on your arm now.")
+            ShowAltmerNotification(PDV_Notif_Altmer_Trinimac_ChampionAmbient_Sword, "Your sword arm is steady. Trinimac made it so.")
         else
-            ShowAltmerNotification(PDV_Notif_Altmer_Trinimac_ChampionAmbient_Watch, "The project stands where you have stood.")
+            ShowAltmerNotification(PDV_Notif_Altmer_Trinimac_ChampionAmbient_Watch, "You have held the line, and Trinimac saw it.")
         endIf
         return True
     elseIf deity == PDV_Syrabane
         if deep
-            ShowAltmerNotification(PDV_Notif_Altmer_Syrabane_ChampionAmbient_Guard, "You are warded, and you have stopped noticing.")
+            ShowAltmerNotification(PDV_Notif_Altmer_Syrabane_ChampionAmbient_Guard, "Syrabane has warded you so long you forget it is there.")
         else
-            ShowAltmerNotification(PDV_Notif_Altmer_Syrabane_ChampionAmbient_Ward, "Something is holding between you and harm.")
+            ShowAltmerNotification(PDV_Notif_Altmer_Syrabane_ChampionAmbient_Ward, "Syrabane's ward is on you, quiet and steady.")
         endIf
         return True
     elseIf deity == PDV_Kyne
@@ -13011,10 +13017,10 @@ Function RunDawnAltmerHeritageAmbient()
         endIf
 
         WriteZeroReservedDevotionalDayStamp(cadenceKey)
-        ShowAltmerNotification(PDV_Notif_Altmer_General_HeritageExemplar, "The inheritance is whole in you.")
+        ShowAltmerNotification(PDV_Notif_Altmer_General_HeritageExemplar, "You keep the old Altmer way, and you keep it well.")
     elseIf StorageUtil.GetIntValue(None, highKey) == 1
         StorageUtil.SetIntValue(None, highKey, 0)
-        ShowAltmerNotification(PDV_Notif_Altmer_General_HeritageQuiet, "The inheritance has gone quiet.")
+        ShowAltmerNotification(PDV_Notif_Altmer_General_HeritageQuiet, "You have let the old Altmer way slip.")
     endIf
 EndFunction
 

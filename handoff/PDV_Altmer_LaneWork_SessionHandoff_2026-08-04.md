@@ -65,7 +65,9 @@ kept only as the record of what the draft said. Live wording is in the source.
 - "A heritage text read closely; the line is remembered."
 - "Orthodoxy upheld at cost, and the ancestral order holds."  *(default arm)*
 
-**Signal surfacing** — headline + body pairs:
+**Signal surfacing** — headline + body pairs.
+**Superseded by the 2026-08-05 grammar pass; kept only as the record of what the draft said.**
+Live wording is in the source. Five of these seven changed.
 - Magnus: "The design holds" / "marks magicka bound into lawful form."
 - Trinimac: "Trinimac remembered" / "The champion's name is spoken as it was, before the defilement."
 - Trinimac: "Civilization held" / "marks a foe of the elven project put down."
@@ -75,6 +77,9 @@ kept only as the record of what the draft said. Live wording is in the source.
 - Syrabane: "The ward learned" / "Containment is the first art the apprentice is trusted with."
 
 **Long Devotion (P10):** `"<Deity> marks another season of unbroken devotion."`
+**Superseded twice** — first for over-claiming (marks fire per 15-piety step, so mark 1 announced
+"another season" on day one), then by the 2026-08-05 grammar pass. Live wording is in the source.
+Note this line is **not Altmer**: `MaybeSurfaceDevotionMark` runs for the active patron of any race.
 
 **Item name (ESP `0716E4`):** **"Ordered Focus"** — and its **mesh is a placeholder**, vanilla
 `Dungeons\Mines\Ore\IngotMoonstone.nif`. Moonstone is the elven metal so it reads defensibly, but
@@ -83,6 +88,12 @@ it is a reused ingot; the Dunmer equivalent got a bespoke NIF
 
 **Item name (ESP `0716E4`) reads `Ancestral Focus` in the plugin**, not "Ordered Focus" as recorded
 above. One of the two is wrong; the ESP is what ships.
+
+**Resolved 2026-08-05: `Ancestral Focus` is correct and intended.** The copy pass renamed it because
+"Ordered Focus" collided with the visible substrate tier name `Ordered Heritage`, which made a token
+that works at every tier read as tier-gated. `Ancestral Focus` names the inheritance rather than one
+god (right for a deity-agnostic spine) and parallels the Dunmer `Ancestral Urn`. The "Ordered Focus"
+line above is the stale one. The mesh is still the placeholder ingot.
 
 **P11 runtime proof is open.** Nothing about the ambient layer has been seen in game. The sequence:
 reach Champion with a patron, sleep 4 days -> one notification; 1 more day -> none; 4 more -> the

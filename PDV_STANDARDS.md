@@ -323,6 +323,10 @@ Anything the player will read at any point is a description-engineering surface.
 
 These rules apply to all player-facing surfaces listed in § 3.1. They are the baseline before any writer-review pass. The verifier enforces the two automatable rules (terminal punctuation, contractions); the rest are manual review targets.
 
+> **Section order.** 3.5 is placed before 3.4 in this file. Cite "§ 3.5" for grammar and style; "§ 3.4" is Papyrus trace messages.
+>
+> **Coverage limit.** `tools/pdv_content_verify.mjs` runs these checks over `race-sheets/PDV_RaceContent_Manifest.md` and `PDV_DaedricContent_Manifest.md` only. It does not read the `.psc` sources or the ESP, where most shipped player copy actually lives. A green content-verify is not evidence that shipped copy conforms.
+
 **Name capitalisation.** Always capitalise:
 - Deity and divine names: Kyne, Talos, Mara, Auri-El, Malacath, Hircine, Riddle'Thar.
 - Race names: Nord, Khajiit, Dunmer, Argonian, Orsimer (and Orc as a shorthand).
@@ -335,9 +339,9 @@ Do not capitalise generic nouns: "the hall," "a shrine," "the temple," "a blessi
 
 **Stat notation format.** Mechanical stat changes use numeral + symbol with an explicit sign: "+10%", "-5%", "+15 stamina." Never spell out a stat change: write "+10%" not "ten percent more." Descriptive percentages inside a prose sentence that are not direct stat changes spell out: "five percent of your health." Do not mix conventions in a single string — if the string has a stat line, that line uses the numeral form.
 
-**Terminal punctuation.** Every player-facing string ends with a full stop, exclamation mark, or question mark. No trailing space after the terminal character. The verifier flags missing terminal punctuation as a warning.
+**Terminal punctuation.** Every player-facing *sentence* ends with a full stop, exclamation mark, or question mark. No trailing space after the terminal character. The verifier flags missing terminal punctuation as a warning. **Titles, labels, and MessageBox title fields are exempt** — this rule governs the body, not the heading. `tools/pdv_content_verify.mjs` implements the exemption in code (`checkTerminalPunctuation` is only ever called on body text) and no shipped title in the mod carries a terminal character. Do not "fix" them.
 
-**Tense.** Present tense for active effect descriptions: "Kyne shelters the hunter." Timeless narrative for deity acknowledgment: "Kyne has noticed your steps." Do not switch tenses within a single string.
+**Tense.** Present tense for active effect descriptions: "Kyne shelters the hunter." Timeless narrative for deity acknowledgment: "Kyne has noticed your steps." Do not switch tenses within a single string. **Journal and Book of Days entries are the documented exception:** they may pair a past-tense report of a completed act with a present-tense consequence — "You took up a discipline in the Trial of Iron. The Code is held in iron." That is one narrative frame, not a tense switch. The no-switching rule guards the choice between the two modes above; it does not forbid this shape.
 
 **Contractions.** Do not use modern contractions in any player-facing text. Write "do not" not "don't," "you are" not "you're," "it is" not "it's." The verifier flags known contractions as a warning.
 
