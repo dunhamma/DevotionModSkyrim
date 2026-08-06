@@ -823,6 +823,14 @@ Float Property KHAJIIT_LUNAR_ROAD_METRIC = 2.0 AutoReadOnly
 Float Property KHAJIIT_FOCUS_MATRIX_DELTA = 6.0 AutoReadOnly
 String Property KHAJIIT_MOON_OBSERVATIONS_FILE = "../StorageUtilData/PlayerDevotion/PDV_KhajiitMoonObservations" AutoReadOnly
 Int Property KHAJIIT_MOON_OBSERVATIONS_VERSION = 1 AutoReadOnly
+
+; The Altmer calian's line pool, modelled on the Khajiit moon observations above: JSON data, a
+; version gate, structural validation, no-immediate-repeat, and a compiled fallback if the file is
+; missing or malformed. The calian is the mod's ONLY unlimited daily Altmer act, so its Book of Days
+; line is the one a player sees most often -- a single fixed sentence would wear out fastest here.
+String Property ALTMER_PRACTICE_LINES_FILE = "../StorageUtilData/PlayerDevotion/PDV_AltmerPracticeLines" AutoReadOnly
+Int Property ALTMER_PRACTICE_LINES_VERSION = 2 AutoReadOnly
+Int Property ALTMER_PRACTICE_LINES_COUNT = 20 AutoReadOnly
 Float Property KHAJIIT_LUNAR_NEGLECT_GRACE_DAYS = 3.0 AutoReadOnly
 ; Argonian no-offer reward gating (substrate-relation thresholds + Hist-distance neglect grace).
 Float Property ARGONIAN_HIST_NEGLECT_GRACE_DAYS = 3.0 AutoReadOnly
@@ -11498,7 +11506,11 @@ Function EnsureAltmerPracticeFocus()
         ; in the chronicle, which is what the Book of Days is for.
         if StorageUtil.GetIntValue(None, "PDV.Altmer.Calian.Granted") != 1
             StorageUtil.SetIntValue(None, "PDV.Altmer.Calian.Granted", 1)
-            AppendBookOfDaysEntry("You have carried this since you were eighteen. A sphere of aetherquartz, given in a chapel by a Curate, and still unbroken.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Your calian", True)
+            ; The second sentence is the ONLY discoverability nudge the calian gets. It is a MISC
+            ; item with no quest, no marker and no tutorial, so without a line telling the player it
+            ; is theirs to use, the mod's one unlimited daily Altmer act is a thing that sits in the
+            ; inventory forever. Phrased as the practice, not as a control prompt.
+            AppendBookOfDaysEntry("You have carried this since you were eighteen. A sphere of aetherquartz, given in a chapel by a Curate, and still unbroken. Hold it in your hands when you would remember what you are.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Your calian", True)
         endIf
     endIf
 EndFunction
@@ -11626,15 +11638,25 @@ Function AwardAltmerAncestorSpinePulse(Float multiplier, String reason)
         return
     endIf
 
+    ; TOAST PARITY (owner ruling 2026-08-06). The Book of Days line is resolved FIRST and handed to
+    ; SendPrismaSubstrateProgress as its context, so the toast carries the same sentence the
+    ; chronicle records. This ordering matters for the calian: its line is drawn at random from a
+    ; pool, so resolving it twice would let the toast and the Book entry name different lines for
+    ; one act.
     Int tierBefore = 0
+    Int tierAfter = 0
     Float grantedMetric = 0.0
     if PDV_AltmerAncestorSubstrate
         Float metricBefore = PDV_AltmerAncestorSubstrate.GetMetric()
         tierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
         PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(multiplier, reason)
-        Int tierAfter = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
+        tierAfter = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
         grantedMetric = PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore
-        SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, grantedMetric, "", "auri-el", GetAltmerHeritageTierName())
+    endIf
+
+    String voicedLine = AppendAltmerHeritageVoice(grantedMetric, reason)
+    if PDV_AltmerAncestorSubstrate
+        SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, grantedMetric, voicedLine, "auri-el", GetAltmerHeritageTierName())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Altmer.AncestralStanding", multiplier)
@@ -11643,25 +11665,122 @@ Function AwardAltmerAncestorSpinePulse(Float multiplier, String reason)
     StorageUtil.SetFloatValue(None, "PDV.Altmer.LastAncestorSpineTime", Utility.GetCurrentGameTime())
     Trace(2, "Altmer ancestor spine routed with multiplier " + multiplier)
 
-    ; P2 (2026-08-04): ONE Book of Days line per ACCEPTED day credit, in the voice of whichever act
-    ; claimed the day. Gated on granted > 0.0 because the substrate budget is one credit per
-    ; devotional day -- most calls legitimately grant nothing, and writing a line for a rejected
-    ; credit would report practice that did not land.
-    ;
-    ; Before this, only the sleep feed had a voice (a hardcoded line in HandleAltmerSleepEvents,
-    ; deleted with this change). The shrine rite, enchantment and skill feeds were silent, so three
-    ; of the four renewables produced no felt acknowledgement at all.
-    AppendAltmerHeritageVoice(grantedMetric, reason)
+EndFunction
+
+; The calian's rotating Book of Days line. Same shape as the Khajiit moon observations: validate the
+; JSON, exclude whatever was shown last so the same sentence never lands twice running, and fall
+; back to a compiled line if the file is missing or malformed. A bad JSON must never cost the player
+; their acknowledgement -- the practice still happened.
+; Returns a pool index, or -1 when the JSON cannot be trusted. Records the resolved id so the next
+; call can exclude it -- one pick, one place, so the toast and the Book entry can never disagree
+; about which line was drawn.
+Int Function PickAltmerPracticeIndex()
+    if !IsAltmerPracticeLineJsonValid()
+        return -1
+    endIf
+
+    String lastId = StorageUtil.GetStringValue(None, "PDV.Altmer.PracticeLine.LastId")
+    Int excludedIndex = -1
+    Int i = 0
+    while i < ALTMER_PRACTICE_LINES_COUNT && excludedIndex < 0
+        if JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, ".lines[" + i + "].id", "") == lastId
+            excludedIndex = i
+        endIf
+        i += 1
+    endWhile
+
+    ; Roll across the whole pool, or across one fewer slot and step over the excluded index, so the
+    ; repeat is skipped without biasing any other line's odds.
+    Int poolIndex = Utility.RandomInt(0, ALTMER_PRACTICE_LINES_COUNT - 1)
+    if excludedIndex >= 0
+        poolIndex = Utility.RandomInt(0, ALTMER_PRACTICE_LINES_COUNT - 2)
+        if poolIndex >= excludedIndex
+            poolIndex += 1
+        endIf
+    endIf
+
+    StorageUtil.SetStringValue(None, "PDV.Altmer.PracticeLine.LastId", JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, ".lines[" + poolIndex + "].id", ""))
+    return poolIndex
+EndFunction
+
+String Function GetAltmerPracticeLine()
+    Int poolIndex = PickAltmerPracticeIndex()
+    if poolIndex < 0
+        return "You kept the practice where you stood, with no shrine and no witness."
+    endIf
+
+    String bodyText = JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, ".lines[" + poolIndex + "].body", "")
+    if bodyText == ""
+        return "You kept the practice where you stood, with no shrine and no witness."
+    endIf
+    return bodyText
+EndFunction
+
+Bool Function IsAltmerPracticeLineJsonValid()
+    if !JsonUtil.Load(ALTMER_PRACTICE_LINES_FILE) || !JsonUtil.IsGood(ALTMER_PRACTICE_LINES_FILE)
+        return False
+    endIf
+    if JsonUtil.GetPathIntValue(ALTMER_PRACTICE_LINES_FILE, ".version", -1) != ALTMER_PRACTICE_LINES_VERSION
+        return False
+    endIf
+    if JsonUtil.PathCount(ALTMER_PRACTICE_LINES_FILE, ".lines") != ALTMER_PRACTICE_LINES_COUNT
+        return False
+    endIf
+
+    Int poolIndex = 0
+    while poolIndex < ALTMER_PRACTICE_LINES_COUNT
+        String entryPath = ".lines[" + poolIndex + "]"
+        if JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, entryPath + ".id", "") == "" || JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, entryPath + ".title", "") == "" || JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, entryPath + ".body", "") == ""
+            return False
+        endIf
+        poolIndex += 1
+    endWhile
+    return True
 EndFunction
 
 ; P2: shared voice for the ancestral spine. Gated on the day credit ACTUALLY landing -- the
 ; substrate budget is one credit per devotional day, so most calls legitimately grant nothing and
 ; writing a line for a rejected credit would report practice that never happened.
-Function AppendAltmerHeritageVoice(Float grantedMetric, String reason)
+; Returns the line it wrote, or "" when nothing was written, so the caller can reuse the exact text
+; as the Prisma toast context. One resolution, two surfaces -- the toast and the chronicle can never
+; name different pooled lines for the same act.
+String Function AppendAltmerHeritageVoice(Float grantedMetric, String reason)
     if grantedMetric <= 0.0
-        return
+        return ""
     endIf
-    AppendBookOfDaysEntry(GetAltmerHeritageSourceLine(reason), Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
+    ; The calian owns its own entry because each pooled line carries its OWN title, the way the
+    ; Khajiit moon observations do. Every other spine source shares the one "Ancestral practice"
+    ; heading below.
+    if StringContainsToken(reason, "practice_focus")
+        return AppendAltmerPracticeEntry()
+    endIf
+    String sourceLine = GetAltmerHeritageSourceLine(reason)
+    AppendBookOfDaysEntry(sourceLine, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
+    return sourceLine
+EndFunction
+
+; Resolves one pooled line and writes it with its own title. Kept separate from
+; AppendAltmerHeritageVoice so that function keeps exactly one Book of Days call, which the Prisma
+; UI audit asserts.
+String Function AppendAltmerPracticeEntry()
+    Int poolIndex = PickAltmerPracticeIndex()
+    if poolIndex < 0
+        String fallbackLine = "You kept the practice where you stood, with no shrine and no witness."
+        AppendBookOfDaysEntry(fallbackLine, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
+        return fallbackLine
+    endIf
+
+    String entryPath = ".lines[" + poolIndex + "]"
+    String bodyText = JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, entryPath + ".body", "")
+    String titleText = JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, entryPath + ".title", "")
+    if bodyText == ""
+        bodyText = "You kept the practice where you stood, with no shrine and no witness."
+    endIf
+    if titleText == ""
+        titleText = "Ancestral practice"
+    endIf
+    AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, titleText)
+    return bodyText
 EndFunction
 
 ; P2: per-source voice for the ancestral spine. The reason prefixes are set by each call site;
@@ -11687,8 +11806,9 @@ String Function GetAltmerHeritageSourceLine(String reason)
         ; P14's focus token composes "practice_focus_" + the EventBus reason, which matches none of
         ; the arms above -- without this branch the mod's one unlimited daily Altmer act fell to the
         ; orthodoxy default, which asserts the opposite of a Psijic or Heterodox player's theology.
-        ; Deliberately alignment-neutral, and it says what P14 built the token FOR: it works anywhere.
-        return "You kept the practice where you stood, with no shrine and no witness."
+        ; Every line in the pool is alignment-neutral and names no god, because this act feeds the
+        ; deity-agnostic spine. The old single line is retained as the compiled fallback.
+        return GetAltmerPracticeLine()
     endIf
 
     return "You upheld the orthodoxy at real cost. Doctrine stands on what it costs you."
@@ -21080,10 +21200,23 @@ Function SendPrismaSubstrateProgress(String substrate, Int tierBefore, Int tierA
     if grantedMetric <= 0.0
         return
     endIf
-    ; Altmer heritage is a slow cultural foundation, not an interruption on
-    ; every qualifying act. Record only named tier crossings in the Book of
-    ; Days; book and crisis routes own their own presentation.
+    ; TOAST PARITY, owner ruling 2026-08-06. This branch used to return before any toast, so the
+    ; Altmer spine was the only substrate in the mod that never surfaced one. That came from an
+    ; earlier "slow cultural foundation, not an interruption" note written while depth was still
+    ; being decided, and it was read more strictly than intended: it silenced the toast as well as
+    ; the chatter. Altmer now surfaces like every other race.
+    ;
+    ; It still does NOT fall through to the generic path below, because that path also writes a
+    ; Book of Days entry from the context. AppendAltmerHeritageVoice already owns the per-credit
+    ; line and the tier crossing is handled here, so falling through would double-log every act.
     if substrate == "altmer-heritage"
+        if surfacePresentation
+            if tierAfter > tierBefore
+                SendPrismaSubstrateToast(substrate, "deepen", context, symbolName, stateLabel)
+            else
+                SendPrismaSubstrateToast(substrate, "act", context, symbolName, stateLabel)
+            endIf
+        endIf
         if tierAfter > tierBefore
             AppendBookOfDaysEntry(GetAltmerHeritageTierJournalLine(tierAfter), Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 2, "Ancestral inheritance deepens")
         endIf

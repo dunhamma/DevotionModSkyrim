@@ -1151,7 +1151,11 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
       /AwardAltmerAncestorSpinePulse\(\s*multiplier\s*,\s*"sleep_dream_/.test(altmerSleepBlock) &&
       !altmerSleepBlock.includes("AppendBookOfDaysEntry(") &&
       /if\s+grantedMetric\s*<=\s*0\.0[\s\S]*?return/.test(altmerHeritageVoiceBlock) &&
-      /AppendBookOfDaysEntry\(GetAltmerHeritageSourceLine\(reason\),[^\r\n]*"auri-el",\s*False\s*,/.test(altmerHeritageVoiceBlock) &&
+      // Accepts the source line inline OR via a local, because the helper now RETURNS the line it
+      // wrote so the caller can reuse it as the Prisma toast context (toast parity, 2026-08-06).
+      // The invariant asserted is unchanged: the entry is built from GetAltmerHeritageSourceLine,
+      // carries the auri-el symbol, and is unpinned.
+      /String\s+\w+\s*=\s*GetAltmerHeritageSourceLine\(reason\)[\s\S]*?AppendBookOfDaysEntry\(\w+,[^\r\n]*"auri-el",\s*False\s*,/.test(altmerHeritageVoiceBlock) &&
       countMatches(altmerHeritageVoiceBlock, /AppendBookOfDaysEntry\(/g) === 1 &&
       // Assert that the sleep feed HAS its own voiced arm, never what that arm SAYS. The wording
       // here is owner-editable player copy: an earlier revision of this check pinned the exact
