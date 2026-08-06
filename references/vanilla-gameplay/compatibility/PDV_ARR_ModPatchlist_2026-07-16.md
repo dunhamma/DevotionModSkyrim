@@ -128,7 +128,12 @@ findings that changed the answer:
 - Innocence Lost QE terminals 198/199/201 - Tier A on the winner: s198 is the
   player's merciful act (Grelod imprisoned); 199/201 are her later off-screen
   murder by other hands (NOT the player's act -> no rows). s198 rowed to CORE.
-  SHIPPED (4 rows, `PDV_QuestReactionMatrix_Full.csv`).
+  SHIPPED (4 rows). NOTE 2026-08-06: these were originally hand-appended to the
+  GENERATED `PDV_QuestReactionMatrix_Full.csv`, which no tranche could reproduce
+  -- the next `pdv_quest_tranche_merge` run would have silently dropped all four.
+  They now live in `PDV_QuestReactionMatrix_Reconciliation_2026-08-06.csv` and
+  `pdv_quest_tranche_merge.mjs --check` fails on any recurrence. Never hand-edit
+  Full.csv; add rows to a tranche or reconciliation source.
 
 ### No rows possible (verified)
 - Wildwood Echoes: installed plugin is 24 SNDR (soundscape), zero quests.

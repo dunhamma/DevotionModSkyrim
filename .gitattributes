@@ -45,3 +45,15 @@ dist/PDV_Patch_Authoria_AllInOne/**/*.json text eol=lf
 dist/PDV_Patch_Authoria_AllInOne/**/*.psc text eol=lf
 dist/PDV_Patch_Authoria_AllInOne/**/*.md text eol=lf
 dist/PDV_Patch_Authoria_AllInOne/**/*.ini text eol=lf
+
+
+# Quest-reaction matrix sources. pdv_quest_tranche_merge.mjs --check re-derives
+# Full.csv from the tranche sources and BYTE-compares against what is on disk,
+# and the tool writes CRLF. These blobs are stored LF, so on a checkout that
+# does not convert (Linux/CI, or autocrlf=false) the working tree would be LF
+# and the gate would report drift that does not exist. Pin the WORKING TREE to
+# CRLF on every platform -- blob stays LF, so this is not a rewrite -- and the
+# gate then compares like with like everywhere.
+references/authoring/PDV_QuestReactionMatrix_Full.csv text eol=crlf
+references/authoring/PDV_QuestReactionMatrix_Tranche*.csv text eol=crlf
+references/authoring/PDV_QuestReactionMatrix_Reconciliation_*.csv text eol=crlf

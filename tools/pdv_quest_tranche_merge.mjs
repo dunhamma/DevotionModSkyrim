@@ -12,7 +12,19 @@ const files = [
   "references/authoring/PDV_QuestReactionMatrix_Tranche9_DeitySignalRemap.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche10_SignalFloor.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche11_MainQuestFullCoverage.csv",
+  // Reconciliation source, NOT a content tranche. The Innocence Lost QE s198
+  // rows (ARR patchlist TODO-2, owner-ruled 2026-07-16) were authored straight
+  // into Full.csv and never landed in a tranche, so the merge could not
+  // reproduce them; the next regen would have silently dropped all four. Kept
+  // as its own file so the historical tranches stay the record of what each
+  // authoring pass actually shipped. See --check below.
+  "references/authoring/PDV_QuestReactionMatrix_Reconciliation_2026-08-06.csv",
 ];
+// A gate's verdict is its EXIT CODE. --check re-derives the merge, byte-compares
+// against the on-disk Full.csv, and exits 1 on any drift WITHOUT writing.
+// Callers must branch on the exit status, never on grepped output.
+const checkOnly = process.argv.slice(2).includes("--check");
+const FULL_CSV = "references/authoring/PDV_QuestReactionMatrix_Full.csv";
 let hdr = null;
 const rawBody = [];
 for (const f of files) {
@@ -62,8 +74,43 @@ for (const [key, entries] of byCell) {
 function eid(line) { let cur = "", q = false; for (const ch of line) { if (ch === Q) q = !q; else if (ch === "," && !q) return cur; else cur += ch; } return cur; }
 const idx = body.map((line, i) => [line, i]);
 idx.sort((a, b) => { const ea = eid(a[0]).toLowerCase(), eb = eid(b[0]).toLowerCase(); return ea < eb ? -1 : ea > eb ? 1 : a[1] - b[1]; });
-fs.writeFileSync("references/authoring/PDV_QuestReactionMatrix_Full.csv", [hdr, ...idx.map((x) => x[0])].join("\r\n") + "\r\n");
-console.log("Wrote Full.csv:", body.length, `cells (${duplicateRowsRemoved} duplicate rows resolved by canonical merge)`);
+const rendered = [hdr, ...idx.map((x) => x[0])].join("\r\n") + "\r\n";
+if (checkOnly) {
+  const onDisk = fs.existsSync(FULL_CSV) ? fs.readFileSync(FULL_CSV, "utf8") : null;
+  if (onDisk === rendered) {
+    console.log("PASS: Full.csv reproduces from the tranche sources:", body.length, "cells");
+  } else {
+    // Report the differing KEYS, not a byte offset -- a single reordered row
+    // would otherwise bury the real payload drift under a whole-file diff.
+    const keyOf = (line) => { const c = cells(line); return `${c[0]}|${c[2]}|${c[5]}`; };
+    const derivedMap = new Map(idx.map((x) => [keyOf(x[0]), x[0]]));
+    const diskMap = new Map();
+    if (onDisk !== null) {
+      for (const line of onDisk.split(/\r?\n/).slice(1).filter((x) => x.trim())) diskMap.set(keyOf(line), line);
+    }
+    const onlyDisk = [...diskMap.keys()].filter((k) => !derivedMap.has(k));
+    const onlyDerived = [...derivedMap.keys()].filter((k) => !diskMap.has(k));
+    const changed = [...derivedMap].filter(([k, v]) => diskMap.has(k) && diskMap.get(k) !== v).map(([k]) => k);
+    console.error("FAIL: Full.csv does not reproduce from the tranche sources.");
+    if (onDisk === null) console.error("  " + FULL_CSV + " is missing.");
+    console.error(`  derived ${derivedMap.size} cells | on-disk ${diskMap.size} cells`);
+    for (const k of onlyDisk) console.error("  ONLY IN Full.csv (no tranche produces it): " + k);
+    for (const k of onlyDerived) console.error("  ONLY IN tranches (missing from Full.csv): " + k);
+    for (const k of changed) {
+      console.error("  PAYLOAD DIFFERS: " + k);
+      console.error("    Full.csv : " + diskMap.get(k));
+      console.error("    tranches : " + derivedMap.get(k));
+    }
+    if (!onlyDisk.length && !onlyDerived.length && !changed.length) {
+      console.error("  Cell sets and payloads agree; the difference is row ORDER or line endings.");
+    }
+    console.error("  Re-run without --check to regenerate, or fix the tranche source.");
+    process.exit(1);
+  }
+} else {
+  fs.writeFileSync(FULL_CSV, rendered);
+  console.log("Wrote Full.csv:", body.length, `cells (${duplicateRowsRemoved} duplicate rows resolved by canonical merge)`);
+}
 function parse(f) { const t = fs.readFileSync(f, "utf8").split(/\r?\n/).filter((x) => x.trim()); t.shift(); return t.map((line) => { const c = []; let cur = "", q = false; for (const ch of line) { if (ch === Q) q = !q; else if (ch === "," && !q) { c.push(cur); cur = ""; } else cur += ch; } c.push(cur); return c; }); }
 const r = parse("references/authoring/PDV_QuestReactionMatrix_Full.csv");
 const d = {};
