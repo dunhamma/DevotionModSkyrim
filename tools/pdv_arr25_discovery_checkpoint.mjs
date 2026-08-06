@@ -224,6 +224,12 @@ function declaredQuestCount(row) {
   return null;
 }
 
+function declaredSignalCandidateCount(row) {
+  const text = `${row.evidence}\n${row.notes}`;
+  const match = text.match(/direct\s+signal\s+candidate\s+enumeration\s*[:=]?\s*(\d+)/i);
+  return match ? Number.parseInt(match[1], 10) : null;
+}
+
 function validateCheckpoint(batch, expected, dir) {
   const file = paths(dir, batch.id);
   if (!existsSync(file.csv) || !existsSync(file.json)) throw new Error(`${batch.id}: missing checkpoint CSV or JSON`);
@@ -255,6 +261,15 @@ function validateCheckpoint(batch, expected, dir) {
   }
   for (const id of expectedById.keys()) if (!pluginRows.has(id)) throw new Error(`${batch.id}: ${id} lacks its required PLUGIN evidence row`);
   for (const [id, pluginRow] of pluginRows) {
+    if (pluginRow.wave === "NQ" && pluginRow.reader_status === "read") {
+      const declared = declaredSignalCandidateCount(pluginRow);
+      if (declared === null) throw new Error(`${batch.id}: ${id} lacks a declared direct signal candidate count`);
+      const actual = rows.filter((row) => row.input_id === id && row.evidence_kind === "SIGNAL").length;
+      if (actual !== declared) {
+        throw new Error(`${batch.id}: ${id} declares ${declared} signal candidate(s) but has ${actual} SIGNAL evidence row(s)`);
+      }
+      continue;
+    }
     const declared = declaredQuestCount(pluginRow);
     if (declared === null || pluginRow.reader_status !== "read") continue;
     const actual = rows.filter((row) => row.input_id === id && row.evidence_kind === "QUST").length;
