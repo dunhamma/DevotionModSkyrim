@@ -20,6 +20,7 @@ const JSON_OUTPUT = args.includes("--json");
 const CORE_ONLY = args.includes("--core-only");
 const EXPECTED_CORE_WATCHED = Number.parseInt(getArg("--expected-core") ?? "134", 10);
 const EXPECTED_ARR_WATCHED = Number.parseInt(getArg("--expected-arr") ?? "20", 10);
+const EXPECTED_CHANNELS = Number.parseInt(getArg("--expected-channels") ?? "0", 10);
 const CORE_MOD = getArg("--core-mod") ?? "Devotion";
 const COMPAT_MOD = getArg("--compat-mod") ?? "Devotion - Authoria ARR Compatibility";
 const PAPYRUS_LOG = normalizePath(getArg("--log") ?? "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log");
@@ -140,6 +141,7 @@ function main() {
   const enabledMods = checkModlist();
   checkPluginOrder();
   checkKnownMatrixFiles(enabledMods);
+  checkChannelFiles(enabledMods);
   checkSourceConstants(enabledMods);
   checkPexFiles(enabledMods);
   checkPapyrusLog();
@@ -242,26 +244,48 @@ function checkPluginOrder() {
 }
 
 function checkKnownMatrixFiles(enabledMods) {
-  const candidates = [
-    path.join(MO2_ROOT, "mods", CORE_MOD, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix.json"),
-    path.join(MO2_ROOT, "overwrite", "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix.json"),
+  const relativeFiles = [
+    path.join("SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix.json"),
   ];
-
   if (!CORE_ONLY) {
-    candidates.push(path.join(MO2_ROOT, "mods", COMPAT_MOD, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix_ARR.json"));
-    candidates.push(path.join(MO2_ROOT, "overwrite", "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix_ARR.json"));
+    relativeFiles.push(path.join("SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix_ARR.json"));
   }
 
-  for (const staleMod of ["PDV_AuthoriaARR_Compatibility", "PDV_Authoria_FirstLook", "Devotion - PlayerDevotion Local Test"]) {
-    candidates.push(path.join(MO2_ROOT, "mods", staleMod, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix.json"));
-    candidates.push(path.join(MO2_ROOT, "mods", staleMod, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix_ARR.json"));
+  for (const relativeFile of relativeFiles) {
+    const winner = resolveWinningModFile(relativeFile, enabledMods);
+    if (!winner) {
+      fail("Matrix JSON winner", `${relativeFile} has no active MO2 provider.`, path.join(MO2_ROOT, "mods"));
+      continue;
+    }
+    checkMatrixJson(winner, true);
   }
+}
 
-  for (const filePath of candidates) {
-    if (!exists(filePath)) continue;
-    const modName = getMo2ModName(filePath);
-    const active = modName ? enabledMods.has(modName) : filePath.includes(`${path.sep}overwrite${path.sep}`);
-    checkMatrixJson(filePath, active);
+function checkChannelFiles(enabledMods) {
+  if (CORE_ONLY || EXPECTED_CHANNELS <= 0) return;
+  const relativeDir = path.join("SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "Channels");
+  const compatDir = path.join(MO2_ROOT, "mods", COMPAT_MOD, relativeDir);
+  if (!exists(compatDir)) {
+    fail("Quest reaction channels", `Channels directory is missing from ${COMPAT_MOD}.`, compatDir);
+    return;
+  }
+  const files = fs.readdirSync(compatDir).filter((name) => /^PDV_QRM_.*\.json$/i.test(name)).sort();
+  const invalid = [];
+  const losing = [];
+  for (const name of files) {
+    const packaged = path.join(compatDir, name);
+    try { readJson(packaged); } catch (error) { invalid.push(`${name}: ${error.message}`); }
+    const winner = resolveWinningModFile(path.join(relativeDir, name), enabledMods);
+    if (!winner || path.resolve(winner) !== path.resolve(packaged)) losing.push(name);
+  }
+  if (files.length !== EXPECTED_CHANNELS) {
+    fail("Quest reaction channels", `${files.length} packaged channel(s); expected ${EXPECTED_CHANNELS}.`, compatDir);
+  } else if (invalid.length > 0) {
+    fail("Quest reaction channels", `${invalid.length} invalid JSON channel(s): ${invalid.join("; ")}`, compatDir);
+  } else if (losing.length > 0) {
+    fail("Quest reaction channels", `${losing.length} channel(s) lose MO2 precedence: ${losing.join(", ")}`, compatDir);
+  } else {
+    pass("Quest reaction channels", `${files.length} valid channel(s) are present and win MO2 precedence.`, compatDir);
   }
 }
 
@@ -296,15 +320,14 @@ function checkMatrixJson(filePath, active) {
 }
 
 function checkSourceConstants(enabledMods) {
-  const activeSourceDir = path.join(MO2_ROOT, "mods", CORE_MOD, "Scripts", "Source");
   for (const script of ["PDV__ManagerQuest.psc", "PDV_PlayerEvents.psc"]) {
-    checkQuestMatrixSourcePath(path.join(activeSourceDir, script), "Active source path");
+    checkQuestMatrixSourcePath(resolveWinningModFile(path.join("Scripts", "Source", script), enabledMods), "Active source path");
   }
-  checkShrinePrayerRouteSource(path.join(activeSourceDir, "PDV_EventSignalActivator.psc"), "Active shrine route source");
-  checkShrinePrayerRouteSource(path.join(activeSourceDir, "PDV_EventBus.psc"), "Active shrine route source");
-  checkShrinePrayerRouteSource(path.join(activeSourceDir, "PDV__ManagerQuest.psc"), "Active shrine route source");
-  checkBookOfDaysSource(path.join(activeSourceDir, "PDV__ManagerQuest.psc"), "Active Book of Days source");
-  checkBookOfDaysMcmSource(path.join(activeSourceDir, "PDV_MCM.psc"), "Active Book of Days MCM source");
+  checkShrinePrayerRouteSource(resolveWinningModFile(path.join("Scripts", "Source", "PDV_EventSignalActivator.psc"), enabledMods), "Active shrine route source");
+  checkShrinePrayerRouteSource(resolveWinningModFile(path.join("Scripts", "Source", "PDV_EventBus.psc"), enabledMods), "Active shrine route source");
+  checkShrinePrayerRouteSource(resolveWinningModFile(path.join("Scripts", "Source", "PDV__ManagerQuest.psc"), enabledMods), "Active shrine route source");
+  checkBookOfDaysSource(resolveWinningModFile(path.join("Scripts", "Source", "PDV__ManagerQuest.psc"), enabledMods), "Active Book of Days source");
+  checkBookOfDaysMcmSource(resolveWinningModFile(path.join("Scripts", "Source", "PDV_MCM.psc"), enabledMods), "Active Book of Days MCM source");
 
   const repoSourceDir = path.join(process.cwd(), "live-source", "Scripts", "Source");
   for (const script of ["PDV__ManagerQuest.psc", "PDV_PlayerEvents.psc"]) {
@@ -325,7 +348,7 @@ function checkSourceConstants(enabledMods) {
   }
 
   if (!enabledMods.has(CORE_MOD)) {
-    fail("Source constants", `Cannot trust source constants because ${CORE_MOD} is disabled.`, activeSourceDir);
+    fail("Source constants", `Cannot trust source constants because ${CORE_MOD} is disabled.`, path.join(MO2_ROOT, "mods", CORE_MOD, "Scripts", "Source"));
   }
 }
 
@@ -434,15 +457,31 @@ function checkBookOfDaysMcmSource(filePath, checkName, staleStatus = "FAIL") {
   pass(checkName, `${path.basename(filePath)} opens Chronicle and does not cycle to Ledger.`, filePath);
 }
 
-function checkPexFiles() {
+function checkPexFiles(enabledMods) {
   for (const script of ["PDV__ManagerQuest.pex", "PDV_MCM.pex", "PDV_PlayerEvents.pex", "PDV_EventSignalActivator.pex", "PDV_EventBus.pex"]) {
-    const filePath = path.join(MO2_ROOT, "mods", CORE_MOD, "Scripts", script);
+    const filePath = resolveWinningModFile(path.join("Scripts", script), enabledMods);
     if (!exists(filePath)) {
       fail("PEX present", `${script} is missing.`, filePath);
       continue;
     }
     pass("PEX present", `${script} sha256=${sha256(filePath).slice(0, 16)}.`, filePath);
   }
+}
+
+function resolveWinningModFile(relativePath, enabledMods) {
+  const overwrite = path.join(MO2_ROOT, "overwrite", relativePath);
+  if (exists(overwrite)) return overwrite;
+  const modlistPath = PROFILE_DIR ? path.join(PROFILE_DIR, "modlist.txt") : "";
+  if (!exists(modlistPath)) return null;
+  // MO2 serializes the highest-priority enabled mod first in this profile file.
+  for (const line of readLines(modlistPath)) {
+    if (!line.startsWith("+")) continue;
+    const modName = line.slice(1);
+    if (!enabledMods.has(modName)) continue;
+    const candidate = path.join(MO2_ROOT, "mods", modName, relativePath);
+    if (exists(candidate)) return candidate;
+  }
+  return null;
 }
 
 function checkPapyrusLog() {

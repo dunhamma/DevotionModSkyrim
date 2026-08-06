@@ -1,6 +1,6 @@
 {
   "schema": "pdv-quest-patch-fomod-validation.v1",
-  "generatedAt": "2026-08-06T13:54:41.830Z",
+  "generatedAt": "2026-08-06T21:10:51.672Z",
   "status": "PASS",
   "proofBoundary": "Package structure and bytes only. This does not prove runtime routing, player surfaces, semantic correctness, or support status.",
   "packageRoot": "dist/PDV_QuestModPatches_FOMOD",
@@ -53,7 +53,7 @@
   ],
   "manifest": {
     "fileCount": 96,
-    "treeSha256": "D2E53FB70E4043F5EA26018D3EB8EDF67FBE101867C44288B77E38FACA5CECAA",
+    "treeSha256": "D3B4CBC52C7E03AD85B3DE86AFE2029567ED3463497B1FA8CF4BE68C63B55517",
     "files": [
       {
         "path": "common/_Fragments/OnceWeWereHere/Scripts/PDV_TIF_OWWH_S60.pex",
@@ -182,8 +182,8 @@
       },
       {
         "path": "common/_Runbook/Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md",
-        "size": 19238,
-        "sha256": "FDE4754D2F3243E69BEC79DF830871441299EBD3CE0735B21FE3B7053D9A29AA"
+        "size": 19736,
+        "sha256": "0352469FC18EADA178EE74220DA91C623D8CEDF967C11D5BFE20A6C9AE7F6B57"
       },
       {
         "path": "common/Auri/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Auri.json",
@@ -540,8 +540,8 @@
   "archive": {
     "path": "dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip",
     "entries": 96,
-    "size": 1894015,
-    "sha256": "6B19A9608C984BDC957399F560B016FDC8BA18F2130330A664E6C1DBB401C47A",
+    "size": 1894239,
+    "sha256": "0E3DDC3447EF2226ECF79DEAD1F8FA58A2A3EA1018D1866594DF9D35B19F9846",
     "missing": [],
     "extra": []
   },

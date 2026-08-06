@@ -1100,6 +1100,22 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 ## Notes / Decisions Log
 
+**2026-08-07 AEST - ARR 2.5 combined candidate deployment and winner-aware
+preflight:** Installed the 85-file combined FOMOD lane as
+`D:\Wabbajack\modlists\ARR 2.5\mods\Devotion - Authoria ARR Compatibility`,
+enabled it on `KoK R11`, and activated `PDV_AuthoriaARR_Compatibility.esp`
+after `Devotion.esp` / before `Requiem for the Indifferent.esp`. Profile files
+were backed up to
+`profiles\KoK R11\pdv-arr25-backups\20260807-070513`. Direct houseCARL asset
+readback caught and corrected the MO2 priority direction: this profile's
+`modlist.txt` lists the higher-priority winner first, so the compatibility mod
+must appear above `Devotion - PatchHub` and `Devotion`. The runtime preflight
+now resolves actual MO2 winners instead of inspecting the named core folder,
+and `--expected-channels` verifies the deployed per-mod folder. Current command:
+`node tools\pdv_matrix_runtime_preflight.mjs --mo2 "D:\Wabbajack\modlists\ARR 2.5" --profile "KoK R11" --compat-mod "Devotion - Authoria ARR Compatibility" --expected-core 154 --expected-arr 62 --expected-channels 34 --json`.
+Result: `PASS=31 INFO=4 FAIL=0`; no post-deployment Papyrus registration marker
+exists yet, so runtime and support remain open.
+
 **2026-08-06 AEST - ARR 2.5 exhaustive content/package candidate:** The isolated
 `codex/arr25-content-sweep` worktree closes the finite QUST plus selected non-quest
 inventory, authors T13-T17 as 34 per-mod channels, and packages the safe non-quest
@@ -1114,7 +1130,7 @@ hunting is deferred because a truthful route requires a third-party ModEvent aft
 the IHA corpse-token write. The validated archive is
 `dist\PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`: 96 members, no missing or
 extra files, SHA-256
-`6B19A9608C984BDC957399F560B016FDC8BA18F2130330A664E6C1DBB401C47A`.
+`0E3DDC3447EF2226ECF79DEAD1F8FA58A2A3EA1018D1866594DF9D35B19F9846`.
 Papyrus compile is 0/0 and strict verification is `PASS=4074, TODO=1, INFO=78,
 WARN=1, FAIL=0`. This moves machine/package proof only; ARR 2.5 runtime preflight,
 every structured tester case, and support remain OPEN.

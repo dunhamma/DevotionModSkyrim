@@ -48,6 +48,16 @@ toasts and racing your reading. If toasts are still landing, wait for quiet.
 
 ## 2. Static preflight (2 minutes, no play required)
 
+Before launching Skyrim, run this from the content-sweep worktree:
+
+```
+node tools/pdv_matrix_runtime_preflight.mjs --mo2 "D:\Wabbajack\modlists\ARR 2.5" --profile "KoK R11" --compat-mod "Devotion - Authoria ARR Compatibility" --expected-core 154 --expected-arr 62 --expected-channels 34
+```
+
+This checks the actual MO2-winning matrices, source, PEX files, channel folder,
+and plugin order. A PASS proves deployment shape only; it does not prove that
+Papyrus registered the hooks in a running game.
+
 Load any save and check the log for these lines:
 
 | Expect | Meaning |
@@ -65,7 +75,7 @@ Load any save and check the log for these lines:
   scripts. The patch scripts lost the conflict. Fix mod order first; nothing
   else in this runbook will work.
 
-Also confirm Base Object Swapper loaded `PDV_AuthoriaARR_DaedricShrines_SWAP.ini`
+Also confirm Base Object Swapper loaded `PDV_AuthoriaARR_ShrinePrayer_SWAP.ini`
 (Authoria lane only).
 
 ---

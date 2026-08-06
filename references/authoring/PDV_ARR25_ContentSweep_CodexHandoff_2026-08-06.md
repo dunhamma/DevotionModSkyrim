@@ -3,7 +3,7 @@
 Date: 2026-08-06
 Branch: `codex/arr25-content-sweep`
 Author: Claude session (Opus 5). Owner-approved plan folded in below.
-Status: **The exhaustive QUST-plus-selected-signal sweep, T13-T17 authoring, existing-matrix normalization, safe non-quest renewables, and cumulative machine/package gates are complete. The test archive is built. ARR 2.5 runtime, player-surface, semantic, and support proof remain open.**
+Status: **The exhaustive QUST-plus-selected-signal sweep, T13-T17 authoring, existing-matrix normalization, safe non-quest renewables, cumulative package gates, and ARR 2.5 deployment/readback preflight are complete. The combined test candidate is installed and enabled on `KoK R11`. In-game registration, runtime-route, player-surface, semantic, and support proof remain open.**
 
 ---
 
@@ -92,7 +92,17 @@ What landed this session:
   individual content options / 34 channels / 96 files. Combined Authoria,
   all-individual, and representative-subset simulations pass. Archive membership
   is exactly 96 entries with no missing/extra files; SHA-256 is
-  `6B19A9608C984BDC957399F560B016FDC8BA18F2130330A664E6C1DBB401C47A`.
+  `0E3DDC3447EF2226ECF79DEAD1F8FA58A2A3EA1018D1866594DF9D35B19F9846`.
+- **The combined lane is deployed on ARR 2.5 `KoK R11`:** the enabled mod is
+  `Devotion - Authoria ARR Compatibility`; 85 installed files reproduce the
+  combined FOMOD simulation. houseCARL confirms it wins all three script PEX
+  overrides, both aggregate matrices, the KID/BOS files, and both packaged ESPs.
+  The corrected winner-aware preflight passes `31 PASS / 4 INFO / 0 FAIL` with
+  `154` core watched quests, `62` ARR watched quests, and `34/34` per-mod
+  channels. Profile backups are under
+  `profiles\KoK R11\pdv-arr25-backups\20260807-070513`. The current Papyrus log
+  contains no post-deployment registration markers because Skyrim has not yet
+  been launched for this build.
 
 The single most valuable discovery: **follower personal questlines**, which are the
 only content in 3739 plugins that can reach Devotion's thin-roster races.
@@ -544,9 +554,15 @@ observed in game. The July per-mod patches are still machine-verified only (TODO
 Per `pdv-proof-boundary`, do not describe any of this as tested, supported, or
 beta-ready on green gates alone.
 
-ARR runtime preflight is intentionally not part of discovery/package closure.
-Run it only after installing and enabling the combined candidate on ARR 2.5
-`KoK R11`. Then work through the six bundled T13-T17/non-quest ledgers and return
+ARR deployment/readback preflight passed on 2026-08-07 with:
+
+```
+node tools/pdv_matrix_runtime_preflight.mjs --mo2 "D:\Wabbajack\modlists\ARR 2.5" --profile "KoK R11" --compat-mod "Devotion - Authoria ARR Compatibility" --expected-core 154 --expected-arr 62 --expected-channels 34
+```
+
+This is not in-game registration proof. Launch Skyrim, set Devotion debug level
+2, reload the matrices, and confirm the expected registration markers. Then work
+through the six bundled T13-T17/non-quest ledgers and return
 the route marker, piety readback, exactly-one-toast, exactly-one-Book-beat,
 save/load, organic-semantics, and failure fields. Only equivalent passed cases may
 move an individual option or the combined lane toward support.

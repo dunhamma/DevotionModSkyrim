@@ -1071,13 +1071,27 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 
 ## Decisions Log
 
+- **[2026-08-07] - ARR 2.5 preflight must inspect MO2 winners, not the named
+  core-mod folder:** The combined candidate is installed and enabled on `KoK
+  R11` as `Devotion - Authoria ARR Compatibility`, with reversible profile
+  backups under `profiles\KoK R11\pdv-arr25-backups\20260807-070513`.
+  houseCARL readback proved that ARR's `modlist.txt` serializes the
+  higher-priority winner first: the compatibility mod must appear above both
+  `Devotion - PatchHub` and `Devotion` for its scripts, matrices, KID, and ESP
+  to win. `pdv_matrix_runtime_preflight.mjs` now resolves the winning provider
+  through enabled-mod priority (plus overwrite), checks the optional channel
+  count, and passes the deployed `154` core / `62` ARR / `34` channel contract
+  at `31 PASS / 4 INFO / 0 FAIL`. This advances deployment/readback proof only;
+  the current Papyrus log has no post-deployment registration markers, and all
+  runtime-route, player-surface, semantic, and support proof remains open.
+
 - **[2026-08-06] - ARR 2.5 content sweep is machine-complete but remains an
   experimental test candidate:** The finite scope is every enabled ARR 2.5 mod
   containing QUST plus the selected non-quest signature universe. Direct plugin
   enumeration, canonical inventory/reachability, T13-T17 channels, and package
   simulation are complete on `codex/arr25-content-sweep`; the cumulative archive
   is `dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip` (96 entries, SHA-256
-  `6B19A9608C984BDC957399F560B016FDC8BA18F2130330A664E6C1DBB401C47A`).
+  `0E3DDC3447EF2226ECF79DEAD1F8FA58A2A3EA1018D1866594DF9D35B19F9846`).
   Non-quest rules locked by the pass: Potion KID classification uses exact item
   names because ALCH form filters target effects; AFDI is observed through its 30
   post-success latched globals with an existing-save no-credit baseline and
