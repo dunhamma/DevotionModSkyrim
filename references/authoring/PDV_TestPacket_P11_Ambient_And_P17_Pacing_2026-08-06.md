@@ -23,6 +23,9 @@ proof needs and is not covered here.
 | `0716ED` / `0716EE` | Syrabane `_Ward` / `_Guard` | Syrabane patron, A / B |
 | `0716EF` | `..._General_HeritageExemplar` | heritage band HIGH, any/no patron |
 | `0716F0` | `..._General_HeritageQuiet` | once, on the fall from HIGH |
+| `0716E4` | `PDV_MISC_AltmerPracticeFocus` -- the **Calian** | the token itself; mesh `PDV\Clutter\PDV_AltmerCalian.nif` |
+| `071706` | `..._Calian_AlreadyKept` | the calian used again the same day |
+| `071707` | `..._Calian_Unanswered` | the calian used while the Altmer curse suppresses favour |
 
 **Constants**
 
@@ -48,7 +51,7 @@ Ancestral Focus token (`0716E4`, works indoors), sleep dream.
 ## Preconditions -- read this one first, it can invalidate the whole run
 
 **Use a fresh save, or verify the bindings before trusting a negative result.** P11 added 12
-`Message` properties to the manager quest's VMAD. VMAD properties bake at first init, so a save
+`Message` properties to the manager quest's VMAD, and the calian added 2 more (14 in total). VMAD properties bake at first init, so a save
 made before those properties existed can read them as `None`. `ShowAltmerNotification` does not
 error on `None` -- it falls back to a Prisma toast. On an old save the ambient layer will look
 half-broken when the records are fine.
@@ -72,7 +75,38 @@ Other preconditions:
 
 ---
 
-## Part A -- P11 Champion ambient (the core proof)
+## Part A -- the calian (five minutes, any Altmer save, do this first)
+
+Cheap, immediate, and it exercises the same binding path everything below depends on -- so if the
+calian lines arrive as corner notifications, the save is not stale and Parts B and C can be trusted.
+
+1. **Open the inventory.** The item reads **Calian**. Look at the model: it carries two glass shells
+   plus a third shape textured from the vanilla Barenziah's jewelry box atlas. **Record whether it
+   renders as a bare sphere or a sphere in/on a wooden box** -- that decides whether the third shape
+   gets stripped in NifSkope. Geometry, so not a houseCARL job.
+2. **Click it.** The practice lands: the idle plays (prayer pose, or a reading pose when the patron
+   is Magnus, Xarxes or Syrabane) and the Book of Days takes "You kept the practice where you stood,
+   with no shrine and no witness."
+3. **Click it again the same day.** -> "Your calian is already warm from today's practice." This
+   moment was silent before; a click did nothing visible, so a working item and a broken one looked
+   identical.
+4. **Drop the calian, then re-open the inventory.** It comes back -- `EnsureAltmerPracticeFocus`
+   re-grants whenever the player has none. On a character who already owned one, this is the ONLY
+   way to see the granted line, because the one-shot key was never set: a Book of Days entry, "You
+   have carried this since you were eighteen..."
+5. **Drop it once more.** It returns again and the granted line does NOT repeat. That is the proof
+   the line hangs off `PDV.Altmer.Calian.Granted` rather than the `AddItem` -- without it, a
+   replacement acquired a minute ago would claim you had carried it since you were eighteen.
+6. **Curse arm.** MCM -> Debug: Daedric & Curse -> "Force the curse state to Vampire?", then click
+   the calian -> "The calian does not warm to you now." Restore with "Force the curse state to
+   None?" afterwards. A non-Altmer holding the calian is told nothing, by design: it is not their
+   object and there is no refusal to explain.
+
+**Not testable on Anvil:** the inventory DESCRIPTION only renders where Description Framework is
+installed, which is Authoria/ARR 2.5. That is a separate launch on that list, and the instance must
+be confirmed before any readback that becomes a claim.
+
+## Part B -- P11 Champion ambient (the core proof)
 
 Reach Champion with one Altmer patron. Auri-El or Syrabane are the easiest to read because their
 A-lines are distinctive.
@@ -97,7 +131,7 @@ recurring line (`071525`, "The wind is blowing your way") every 4 days, on top o
 one-shot at the moment of the reach. P11 registered her in the dispatcher. If the Nord one-shot
 stopped firing, that is a regression -- it was supposed to be left intact.
 
-## Part B -- heritage band (deity-agnostic, no patron required)
+## Part C -- heritage band (deity-agnostic, no patron required)
 
 This arm reaches a broad worshipper with no patron at all, so it is worth a separate look.
 
@@ -109,7 +143,7 @@ This arm reaches a broad worshipper with no patron at all, so it is worth a sepa
    A repeat here means `PDV.Ambient.Heritage.WasHigh` is not being cleared.
 4. Under an active Altmer curse, expect silence from this arm entirely.
 
-## Part C -- P17 cadence sizing (observation only, tune afterwards)
+## Part D -- P17 cadence sizing (observation only, tune afterwards)
 
 Do not change numbers during the run. The point is to watch the shared clamp.
 
@@ -131,7 +165,7 @@ site, so a recompile applies it to your existing save immediately. Magnus' 1.2 i
 will NOT move a save already in progress. To A/B Magnus inside this save, retune at the award-site
 multiplier instead of the property.
 
-## Part D -- copy in situ (free, do it while the above runs)
+## Part E -- copy in situ (free, do it while the above runs)
 
 The 2026-08-05 rewrite has only ever been read in a table. Read each line as it appears in the
 corner, at speed, with the game moving. Specifically:
@@ -139,7 +173,7 @@ corner, at speed, with the game moving. Specifically:
 - the Book of Days heritage lines, one per accepted day credit, per source
 - the `practice_focus` arm, which before `029e641c` fell through to the orthodoxy default and was
   the highest-frequency Altmer journal line in the game
-- the 12 ambient lines from Part A
+- the 12 ambient lines from Part B, and the calian's three from Part A
 
 ---
 
@@ -158,7 +192,9 @@ corner, at speed, with the game moving. Specifically:
 
 ## What to bring back
 
-- Which of the 12 records you actually saw, and whether each arrived as a corner notification or a
+- **Calian:** bare sphere or sphere-in-a-box; whether the repeat-use and curse lines appeared; and
+  whether the granted line fired once on the drop and stayed silent on the second drop
+- Which of the 14 records you actually saw, and whether each arrived as a corner notification or a
   Prisma toast (that distinction is the binding proof)
 - The four-day cadence: confirmed, or what it actually did
 - Whether variant B ever appeared, and at what piety
