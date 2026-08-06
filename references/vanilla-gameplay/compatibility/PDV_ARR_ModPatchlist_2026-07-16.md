@@ -368,8 +368,8 @@ the separate Nocturnal +10 commitment route for those two alternate endings.
 
 The cumulative FOMOD now carries 32 data channels. The combined Authoria lane
 installs both channels and the current script set; the individual TGAE option
-installs only its channel and required `PDV_PlayerEvents` source/PEX, while Save
-the Icerunner remains channel-only. The direct factual dossier is
+installs its channel and the dependency-complete PlayerEvents/EventBus/Manager
+source+PEX set, while Save the Icerunner remains channel-only. The direct factual dossier is
 `PDV_ARR25_T16_EvidenceDossier.md`, primary rulings are in
 `PDV_ARR25_T16_Adjudication.md`, the static seam gate is
 `tools/pdv_arr25_t16_route_check.mjs`, and all seven OPEN cases are in
@@ -460,7 +460,7 @@ P0 = blocks the Authoria 1.0 gate package; P1 = next tranche; P2 = nice-to-have.
   ARR 2.5 test candidate contains 34 channels, two scoped ESPs, current isolated
   PEX/source, Green Pact KID rules, corrected prayer swaps, full T13-T17 and
   non-quest ledgers, and refreshed README/runbook. FOMOD XML, referenced folders,
-  collisions, Authoria/all-individual/subset simulations, 92 archive members,
+  collisions, Authoria/all-individual/subset simulations, 96 archive members,
   filenames, and checksums pass. Runtime preflight and every tester case remain
   OPEN, so the package is experimental and not supported.
 - [ ] **TODO-8 (P1, S5):** Verify JS Shrines / CC Survival Disable-Shrine-Menu

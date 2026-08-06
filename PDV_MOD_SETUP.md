@@ -1112,9 +1112,9 @@ the read-back 11-ACTI route-202 shrine-prayer ESP/BOS pair. Wyrmstooth placement
 use different base forms and are not covered; Jyggalag remains classify-only;
 hunting is deferred because a truthful route requires a third-party ModEvent after
 the IHA corpse-token write. The validated archive is
-`dist\PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`: 92 members, no missing or
+`dist\PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`: 96 members, no missing or
 extra files, SHA-256
-`7E93CC59F78F443E8EFA46EAC3D5C052E56EC80C8D30388F08854AD1B4B3E132`.
+`6B19A9608C984BDC957399F560B016FDC8BA18F2130330A664E6C1DBB401C47A`.
 Papyrus compile is 0/0 and strict verification is `PASS=4074, TODO=1, INFO=78,
 WARN=1, FAIL=0`. This moves machine/package proof only; ARR 2.5 runtime preflight,
 every structured tester case, and support remain OPEN.

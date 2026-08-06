@@ -100,12 +100,14 @@ for (const script of ["PDV_PlayerEvents", "PDV_EventBus", "PDV__ManagerQuest"]) 
     "combined-lane PEX matches the isolated compile output",
   );
 }
-check(
-  "TGAE PlayerEvents parity",
-  hash("live-source", "Scripts", "Source", "PDV_PlayerEvents.psc") === hash("dist", "PDV_QuestModPatches_FOMOD", "common", "TGAlternativeEndings", "Scripts", "Source", "PDV_PlayerEvents.psc") &&
-    hash("generated", "arr25-nonquest-pex", "PDV_PlayerEvents.pex") === hash("dist", "PDV_QuestModPatches_FOMOD", "common", "TGAlternativeEndings", "Scripts", "PDV_PlayerEvents.pex"),
-  "the individual TGAE lane retains both the T16 resolver and AFDI scheduler additions",
-);
+for (const script of ["PDV_PlayerEvents", "PDV_EventBus", "PDV__ManagerQuest"]) {
+  check(
+    `TGAE ${script} parity`,
+    hash("live-source", "Scripts", "Source", `${script}.psc`) === hash("dist", "PDV_QuestModPatches_FOMOD", "common", "TGAlternativeEndings", "Scripts", "Source", `${script}.psc`) &&
+      hash("generated", "arr25-nonquest-pex", `${script}.pex`) === hash("dist", "PDV_QuestModPatches_FOMOD", "common", "TGAlternativeEndings", "Scripts", `${script}.pex`),
+    "the individual TGAE script override is dependency-complete",
+  );
+}
 for (const tranche of [13, 14, 15, 16, 17]) {
   const name = `PDV_ARR25_T${tranche}_RuntimeEvidenceLedger.json`;
   check(

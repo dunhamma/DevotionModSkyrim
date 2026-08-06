@@ -143,8 +143,10 @@ for (const script of ["PDV__ManagerQuest", "PDV_EventBus", "PDV_PlayerEvents"]) 
   requireSame(`Authoria ${script}.psc current`, path.join(ROOT, `live-source/Scripts/Source/${script}.psc`), path.join(P.authoriaScripts, `Source/${script}.psc`));
   requireSame(`Authoria ${script}.pex current`, path.join(PEX_ROOT, PEX_ROOT === path.resolve(LIVE) ? `Scripts/${script}.pex` : `${script}.pex`), path.join(P.authoriaScripts, `${script}.pex`));
 }
-requireSame("individual TGAE PlayerEvents source current", P.playerSource, path.join(P.tgaeScripts, "Source/PDV_PlayerEvents.psc"));
-requireSame("individual TGAE PlayerEvents bytecode current", path.join(PEX_ROOT, PEX_ROOT === path.resolve(LIVE) ? "Scripts/PDV_PlayerEvents.pex" : "PDV_PlayerEvents.pex"), path.join(P.tgaeScripts, "PDV_PlayerEvents.pex"));
+for (const script of ["PDV__ManagerQuest", "PDV_EventBus", "PDV_PlayerEvents"]) {
+  requireSame(`individual TGAE ${script} source current`, path.join(ROOT, `live-source/Scripts/Source/${script}.psc`), path.join(P.tgaeScripts, `Source/${script}.psc`));
+  requireSame(`individual TGAE ${script} bytecode current`, path.join(PEX_ROOT, PEX_ROOT === path.resolve(LIVE) ? `Scripts/${script}.pex` : `${script}.pex`), path.join(P.tgaeScripts, `${script}.pex`));
+}
 
 const result = {
   status: failures.length ? "FAIL" : "PASS",

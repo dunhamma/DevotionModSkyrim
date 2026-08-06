@@ -65,8 +65,10 @@ baseline debt.
   globals 2/3 map to 202.
 - The same resolver gates the Nocturnal commitment route, preventing a false
   +10 commitment signal on both alternatives.
-- The individual TGAE option installs only the current PlayerEvents source/PEX
-  and its data channel. Save the Icerunner installs only its channel.
+- The individual TGAE option installs the dependency-complete current
+  PlayerEvents/EventBus/Manager source+PEX set and its data channel. Optional
+  observers remain dormant when their plugins are absent. Save the Icerunner
+  installs only its channel.
 
 ## Proof debt
 

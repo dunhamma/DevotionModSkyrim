@@ -488,7 +488,7 @@
               <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="Forsworn Conspiracy Quest Expansion.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
             </plugin>
             <plugin name="Thieves Guild Alternative Endings (T16 experimental)">
-              <description>Soft-dependent script and data channel that separates TG09's three endings. Vanilla return remains stage 200; freeing the Nightingales and keeping the Skeleton Key route to synthetic stages 201/202 and suppress false Nocturnal commitment.</description>
+              <description>Self-contained soft-dependent script bundle and data channel that separates TG09's three endings. Vanilla return remains stage 200; freeing the Nightingales and keeping the Skeleton Key route to synthetic stages 201/202 and suppress false Nocturnal commitment.</description>
               <files>
                 <folder source="common\TGAlternativeEndings" destination="" priority="0" />
                 <folder source="common\_Runbook" destination="" priority="0" />

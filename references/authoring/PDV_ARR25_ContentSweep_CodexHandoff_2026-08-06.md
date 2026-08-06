@@ -89,10 +89,10 @@ What landed this session:
   Hunting remains explicitly deferred because the truthful seam requires a
   third-party script event. All non-quest runtime cases remain OPEN.
 - **The cumulative test archive is machine-complete:** 36 FOMOD nodes / 34
-  individual content options / 34 channels / 92 files. Combined Authoria,
+  individual content options / 34 channels / 96 files. Combined Authoria,
   all-individual, and representative-subset simulations pass. Archive membership
-  is exactly 92 entries with no missing/extra files; SHA-256 is
-  `7E93CC59F78F443E8EFA46EAC3D5C052E56EC80C8D30388F08854AD1B4B3E132`.
+  is exactly 96 entries with no missing/extra files; SHA-256 is
+  `6B19A9608C984BDC957399F560B016FDC8BA18F2130330A664E6C1DBB401C47A`.
 
 The single most valuable discovery: **follower personal questlines**, which are the
 only content in 3739 plugins that can reach Devotion's thin-roster races.
@@ -120,7 +120,7 @@ only content in 3739 plugins that can reach Devotion's thin-roster races.
 | T16 alternate-route authoring and package directory | 58 cells / 7 keys / 2 channels; cumulative 32-channel FOMOD; soft-dependency TG09 201/202 resolver and false-commitment suppression; `PDV_ARR25_T16_Adjudication.md`; runtime/support OPEN |
 | T17 large-content authoring and package directory | 132 new cells / 22 keys / 12 watched quests across LOTD, Bruma, and the expanded Wyrmstooth channel; cumulative 34-channel FOMOD; `PDV_ARR25_T17_Adjudication.md`; runtime/support OPEN |
 | Non-quest renewable closeout | 17 food records applied; Hidden Art 2/2; 30 AFDI globals; bard contract retained; 11 correct prayer swaps; 108 records explicitly deferred; `PDV_ARR25_NonQuest_Adjudication.md`; runtime/support OPEN |
-| Cumulative ARR 2.5 test archive | `dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`; 92 entries; exact tree/archive validation PASS; support remains closed |
+| Cumulative ARR 2.5 test archive | `dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`; 96 entries; exact tree/archive validation PASS; support remains closed |
 
 Current gate output is **2,130 cells / 154 EditorIDs / 45 deities**; compile output is
 231 runtime keys / 154 watched quests. The former 2,131 result contained one duplicate

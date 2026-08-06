@@ -1076,8 +1076,8 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   containing QUST plus the selected non-quest signature universe. Direct plugin
   enumeration, canonical inventory/reachability, T13-T17 channels, and package
   simulation are complete on `codex/arr25-content-sweep`; the cumulative archive
-  is `dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip` (92 entries, SHA-256
-  `7E93CC59F78F443E8EFA46EAC3D5C052E56EC80C8D30388F08854AD1B4B3E132`).
+  is `dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip` (96 entries, SHA-256
+  `6B19A9608C984BDC957399F560B016FDC8BA18F2130330A664E6C1DBB401C47A`).
   Non-quest rules locked by the pass: Potion KID classification uses exact item
   names because ALCH form filters target effects; AFDI is observed through its 30
   post-success latched globals with an existing-save no-credit baseline and
