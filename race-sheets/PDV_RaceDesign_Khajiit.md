@@ -47,6 +47,11 @@ the presiding-god piety multiplier, and prior Khajiit reward magnitudes.
   indoors or 200 feet outdoors, without crossing loading doors or unloaded
   cells.
 
+`references/authoring/PDV_KhajiitFiveDeityDailySignalAudit_2026-08-06.md` is the
+signal-coverage authority for the five focused deities: per-deity curated and
+likes/dislikes inventory, the repeatable-parity verdict, and the locked specs for
+the moon-rite split and the quest-row expansion.
+
 Runtime and manual proof for these new surfaces remains open until the Khajiit
 in-game matrix is recorded.
 
