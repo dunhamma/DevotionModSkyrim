@@ -1,5 +1,23 @@
 import fs from "fs";
 const Q = String.fromCharCode(34);
+const QUEST_READBACK_CSV = "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv";
+// Some historical tranches use the quest's familiar editor ID while the live
+// record has a more specific one. Merge on the resolved FormID so those aliases
+// cannot produce two cells for the same quest-stage-deity at runtime.
+const MANUAL_QUEST_FORMIDS = {
+  DA10: "Skyrim.esm:022F08",
+  DA13: "Skyrim.esm:08998D",
+  DA06: "Skyrim.esm:03B681",
+  ccBGSSSE020_Quest: "ccbgssse020-graycowl.esl:00080F",
+  dunHunterQST: "Skyrim.esm:018601",
+  FreeformKolskeggrA: "Skyrim.esm:01FD72",
+  MQ105U: "Skyrim.esm:0713DC",
+  MS05: "Skyrim.esm:053511",
+  MS14: "Skyrim.esm:025F3E",
+  T01: "Skyrim.esm:023B6C",
+  t02: "Skyrim.esm:0211D5",
+  T03: "Skyrim.esm:01C48E",
+};
 const files = [
   "references/authoring/PDV_QuestReactionMatrix_Tranche1.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche2.csv",
@@ -12,6 +30,7 @@ const files = [
   "references/authoring/PDV_QuestReactionMatrix_Tranche9_DeitySignalRemap.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche10_SignalFloor.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche11_MainQuestFullCoverage.csv",
+  "references/authoring/PDV_QuestReactionMatrix_Tranche12_KhajiitFiveWealth.csv",
   // Reconciliation source, NOT a content tranche. The Innocence Lost QE s198
   // rows (ARR patchlist TODO-2, owner-ruled 2026-07-16) were authored straight
   // into Full.csv and never landed in a tranche, so the merge could not
@@ -46,11 +65,45 @@ function cells(line) {
   out.push(cur);
   return out;
 }
+function questFormIndex() {
+  const [header, ...body] = fs.readFileSync(QUEST_READBACK_CSV, "utf8").split(/\r?\n/).filter((x) => x.trim());
+  const columns = cells(header);
+  const indexOf = (name) => columns.indexOf(name);
+  const editorId = indexOf("editor_id");
+  const readbackEditorId = indexOf("readback_editor_id");
+  const formId = indexOf("formid");
+  if (editorId < 0 || readbackEditorId < 0 || formId < 0) {
+    throw new Error(`Missing required quest readback columns in ${QUEST_READBACK_CSV}`);
+  }
+  const out = new Map();
+  for (const line of body) {
+    const row = cells(line);
+    const resolved = row[formId]?.trim();
+    if (!resolved) continue;
+    for (const alias of [row[editorId], row[readbackEditorId]]) {
+      const key = alias?.trim();
+      if (key && !out.has(key)) out.set(key, resolved);
+    }
+  }
+  for (const [editor, form] of Object.entries(MANUAL_QUEST_FORMIDS)) {
+    out.set(editor, form);
+  }
+  return out;
+}
+const questForms = questFormIndex();
+function canonicalQuestCellKey(row) {
+  const editorId = row[0]?.trim();
+  const resolvedFormId = questForms.get(editorId);
+  // Preserve the old editor-ID isolation for unresolvable third-party rows;
+  // the compiler remains the authority that rejects any row it cannot route.
+  const quest = resolvedFormId ?? `editor:${editorId}`;
+  return `${quest}|${row[2]}|${row[5]}`;
+}
 const rank = (row) => (row[8] === "milestone" ? 100 : 0) + ({ C: 30, S: 20, m: 10 }[row[7]] ?? 0);
 const byCell = new Map();
 for (let i = 0; i < rawBody.length; i++) {
   const row = cells(rawBody[i]);
-  const key = `${row[0]}|${row[2]}|${row[5]}`;
+  const key = canonicalQuestCellKey(row);
   if (!byCell.has(key)) byCell.set(key, []);
   byCell.get(key).push({ line: rawBody[i], row, order: i });
 }
@@ -60,7 +113,7 @@ for (const [key, entries] of byCell) {
   let candidates = entries;
   const valences = new Set(entries.map((entry) => entry.row[6]));
   if (valences.size > 1) {
-    if (key === "T03|100|Kynareth" || key === "T03|100|Y'ffre") {
+    if (key === "Skyrim.esm:01C48E|100|Kynareth" || key === "Skyrim.esm:01C48E|100|Y'ffre") {
       candidates = entries.filter((entry) => entry.row[6] === "-");
     } else {
       console.error(`CONFLICTING VALENCE for ${key}`);
@@ -82,7 +135,7 @@ if (checkOnly) {
   } else {
     // Report the differing KEYS, not a byte offset -- a single reordered row
     // would otherwise bury the real payload drift under a whole-file diff.
-    const keyOf = (line) => { const c = cells(line); return `${c[0]}|${c[2]}|${c[5]}`; };
+    const keyOf = (line) => canonicalQuestCellKey(cells(line));
     const derivedMap = new Map(idx.map((x) => [keyOf(x[0]), x[0]]));
     const diskMap = new Map();
     if (onDisk !== null) {
