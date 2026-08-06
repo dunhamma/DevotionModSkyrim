@@ -45,7 +45,7 @@ only content in 3739 plugins that can reach Devotion's thin-roster races.
 | T12 canonical merge repaired | commit `e5c6999`; resolved FormID duplicate gate; 2,130 cells; matrix self-test PASS |
 | Wave 1 content inventory (machine inventory only) | `references/vanilla-gameplay/compatibility/PDV_ARR25_ContentInventory_2026-08-06.csv` -- 1,220 retained rows, 657 of 657 in-scope mods; not the broader exhaustive sweep |
 | Exhaustive QUST worklist frozen | `PDV_ARR25_DiscoveryWorklist_2026-08-06.csv` + batch manifest -- 328 mods / 466 plugin paths in 8-10 path batches |
-| Direct-read checkpoints | A001 + A002 factual reads complete (20/466 paths); A002 primary-reviewed and merged into inventory; A001's 569 QUST evidence rows remain primary-review debt |
+| Direct-read checkpoints | A001-A006 factual reads complete (60/466 paths); A002 plus four A003 rows primary-reviewed and merged; the remaining checkpoint evidence stays explicit primary-review debt |
 | Non-QUST signature universe frozen | 1,356 mods / 3,001 paths scanned; 614 mods / 1,070 paths admitted to direct signal review; 1,931 paths explicitly outside selected signatures; zero scan read errors |
 
 Current gate output is **2,130 cells / 154 EditorIDs / 45 deities**; compile output is
@@ -246,11 +246,12 @@ The direct-read contract is now frozen in
 23 / 26, and Wave C 208 / 284. This proves the queue shape, not its completion;
 a batch closes only when direct houseCARL evidence is checkpointed and validated.
 
-Current checkpoint state: A001 and A002 are direct-read complete. A002's ten mods
-have been primary-reviewed, adding nine ROWABLE rows and one approved NO-ROWS
-verdict to the inventory (now 1,230 rows / 667 mods). A001 contains the base-master
-enumeration and six additional Creation Club quest files; its evidence is intentionally
-still `UNREVIEWED`, so it does not yet expand the authoritative inventory.
+Current checkpoint state: A001-A006 are direct-read complete (60 plugin paths).
+A002's ten mods and four named A003 quest rows have been primary-reviewed, adding
+thirteen ROWABLE rows and one approved NO-ROWS verdict to the inventory (now 1,234
+rows / 669 mods). The base-master enumeration, translated-string gaps, duplicate
+cleaned-master reconciliation, and all other checkpoint evidence intentionally remain
+`UNREVIEWED`, so they do not yet expand the authoritative inventory.
 
 Excluded buckets holding real content, by QUST-bearing mod count:
 
