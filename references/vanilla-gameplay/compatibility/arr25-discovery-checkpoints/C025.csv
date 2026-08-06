@@ -1,0 +1,10 @@
+input_id,batch_id,wave,separator,mod,plugin,plugin_path,evidence_id,evidence_kind,reader_status,record_signature,formid,editor_id,name,quest_expansion_classification,stage_numbers,evidence,signal_counts,proposed_triage,proposed_reason,notes,primary_review_status
+1f1c8b171d4508f1,C025,C,Interface - HUD,QuickLoot IE - A QuickLoot EE Fork,QuickLootIE.esp,D:\Wabbajack\modlists\ARR 2.5\mods\QuickLoot IE - A QuickLoot EE Fork\QuickLootIE.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+d8938ed5a8e9aab3,C025,C,Interface - HUD,SkyInteract,SkyInteract.esp,D:\Wabbajack\modlists\ARR 2.5\mods\SkyInteract\SkyInteract.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+5a92e589241a6f3b,C025,C,Interface - HUD,TrueHUD - HUD Additions,TrueHUD.esl,D:\Wabbajack\modlists\ARR 2.5\mods\TrueHUD - HUD Additions\TrueHUD.esl,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+93b42b8411e83294,C025,C,Interface - HUD,Werewolf Transformation Timer - SkyUI Addon,WerewolfTransformationTimer.esp,D:\Wabbajack\modlists\ARR 2.5\mods\Werewolf Transformation Timer - SkyUI Addon\WerewolfTransformationTimer.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+4f69067cfdb70cd6,C025,C,Interface - Racemenu,RaceMenu,RaceMenu.esp,D:\Wabbajack\modlists\ARR 2.5\mods\RaceMenu\RaceMenu.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+220bbaa5e98ec7d0,C025,C,Interface - Racemenu,RaceMenu,RaceMenuPlugin.esp,D:\Wabbajack\modlists\ARR 2.5\mods\RaceMenu\RaceMenuPlugin.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+0c42f3f747038e2f,C025,C,Interface - SkyUI,B612 - little asteroid of useful UI components,b612.esp,D:\Wabbajack\modlists\ARR 2.5\mods\B612 - little asteroid of useful UI components\b612.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+b4c548f3826ea3be,C025,C,Interface - SkyUI,MCM Recorder,McmRecorder.esp,D:\Wabbajack\modlists\ARR 2.5\mods\MCM Recorder\McmRecorder.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+d954069ce5e176ee,C025,C,Interface - SkyUI,moreHUD - AE,AHZmoreHUD.esl,D:\Wabbajack\modlists\ARR 2.5\mods\moreHUD - AE\AHZmoreHUD.esl,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED

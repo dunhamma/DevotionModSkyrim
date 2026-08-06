@@ -1,0 +1,10 @@
+input_id,batch_id,wave,separator,mod,plugin,plugin_path,evidence_id,evidence_kind,reader_status,record_signature,formid,editor_id,name,quest_expansion_classification,stage_numbers,evidence,signal_counts,proposed_triage,proposed_reason,notes,primary_review_status
+1b8db56e3c396ddd,C026,C,Interface - SkyUI,SkyUI,SkyUI_SE.esp,D:\Wabbajack\modlists\ARR 2.5\mods\SkyUI\SkyUI_SE.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+f01d5b52ec495673,C026,C,Interface - UI,Character Menu SE - More Factions,CMSE Thane.esp,D:\Wabbajack\modlists\ARR 2.5\mods\Character Menu SE - More Factions\CMSE Thane.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+a9a7c980e5f6cc9f,C026,C,Interface - UI,Hotkey Reminder,HotkeyReminder.esp,D:\Wabbajack\modlists\ARR 2.5\mods\Hotkey Reminder\HotkeyReminder.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+4547bdd315837428,C026,C,Interface - UI,Hotkey Reminder - Prompt,Hotkey Reminder Prompt.esp,D:\Wabbajack\modlists\ARR 2.5\mods\Hotkey Reminder - Prompt\Hotkey Reminder Prompt.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+786f1d26a3e15056,C026,C,Interface - UI,Oblivion Interaction Icons,empitificator.esp,D:\Wabbajack\modlists\ARR 2.5\mods\Oblivion Interaction Icons\empitificator.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+51ba7f617eec502c,C026,C,Interface - UI,Oblivion Interaction Icons,skymoji.esp,D:\Wabbajack\modlists\ARR 2.5\mods\Oblivion Interaction Icons\skymoji.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+881cd2a4c60b6a5f,C026,C,Interface - UI,Oblivion Interaction Icons,skymojibase.esl,D:\Wabbajack\modlists\ARR 2.5\mods\Oblivion Interaction Icons\skymojibase.esl,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+2ecfff703835ad69,C026,C,Interface - UI,Photo Mode,PhotoMode.esp,D:\Wabbajack\modlists\ARR 2.5\mods\Photo Mode\PhotoMode.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+ecf6d4edfe486991,C026,C,Interface - UI,Quick Item Transfer,Quick Item Transfer.esp,D:\Wabbajack\modlists\ARR 2.5\mods\Quick Item Transfer\Quick Item Transfer.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED

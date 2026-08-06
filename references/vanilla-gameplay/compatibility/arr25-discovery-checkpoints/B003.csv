@@ -1,0 +1,9 @@
+input_id,batch_id,wave,separator,mod,plugin,plugin_path,evidence_id,evidence_kind,reader_status,record_signature,formid,editor_id,name,quest_expansion_classification,stage_numbers,evidence,signal_counts,proposed_triage,proposed_reason,notes,primary_review_status
+ab16d82252177b19,B003,B,Gameplay - Frameworks,Subclasses of Skyrim 2,SubclassesOfSkyrim.esp,D:\Wabbajack\modlists\ARR 2.5\mods\Subclasses of Skyrim 2\SubclassesOfSkyrim.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+813f0fdabdc72b04,B003,B,Gameplay - Frameworks,Trade and Barter,trade & barter.esp,D:\Wabbajack\modlists\ARR 2.5\mods\Trade and Barter\trade & barter.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+e0a14a78bbdf61e6,B003,B,Gameplay - Perks & Leveling,Biggie Traits,Biggie Traits.esp,D:\Wabbajack\modlists\ARR 2.5\mods\Biggie Traits\Biggie Traits.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+3abd0b1b3fd4b217,B003,B,Gameplay - Perks & Leveling,Experience - MCM,Experience.esl,D:\Wabbajack\modlists\ARR 2.5\mods\Experience - MCM\Experience.esl,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+00fc90c1230a7b6e,B003,B,Gameplay - Perks & Leveling,Experience - Thief Experience,Thief Experience.esp,D:\Wabbajack\modlists\ARR 2.5\mods\Experience - Thief Experience\Thief Experience.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+52ce1a1e0b9ec981,B003,B,Gameplay - Perks & Leveling,Sky Signs,SkySigns.esp,D:\Wabbajack\modlists\ARR 2.5\mods\Sky Signs\SkySigns.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+938c703b51fe3403,B003,B,Gameplay - Perks & Leveling,Starting Choices,Starting Choices.esp,D:\Wabbajack\modlists\ARR 2.5\mods\Starting Choices\Starting Choices.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
+6fa9e509b9b679de,B003,B,Gameplay - Perks & Leveling,Unusual Perks of Barenziah,BMW_UPB.esp,D:\Wabbajack\modlists\ARR 2.5\mods\Unusual Perks of Barenziah\BMW_UPB.esp,PLUGIN,PLUGIN-PENDING,pending,,,,,,,,,,,,UNREVIEWED
