@@ -45,6 +45,8 @@ only content in 3739 plugins that can reach Devotion's thin-roster races.
 | T12 canonical merge repaired | commit `e5c6999`; resolved FormID duplicate gate; 2,130 cells; matrix self-test PASS |
 | Wave 1 content inventory (machine inventory only) | `references/vanilla-gameplay/compatibility/PDV_ARR25_ContentInventory_2026-08-06.csv` -- 1,220 retained rows, 657 of 657 in-scope mods; not the broader exhaustive sweep |
 | Exhaustive QUST worklist frozen | `PDV_ARR25_DiscoveryWorklist_2026-08-06.csv` + batch manifest -- 328 mods / 466 plugin paths in 8-10 path batches |
+| Direct-read checkpoints | A001 + A002 factual reads complete (20/466 paths); A002 primary-reviewed and merged into inventory; A001's 569 QUST evidence rows remain primary-review debt |
+| Non-QUST signature universe frozen | 1,356 mods / 3,001 paths scanned; 614 mods / 1,070 paths admitted to direct signal review; 1,931 paths explicitly outside selected signatures; zero scan read errors |
 
 Current gate output is **2,130 cells / 154 EditorIDs / 45 deities**; compile output is
 231 runtime keys / 154 watched quests. The former 2,131 result contained one duplicate
@@ -236,12 +238,19 @@ The in-scope bucket set was drawn too narrowly. Measured totals:
 
 - **583 mods across the modlist carry QUST records.**
 - **255 were in scope** and read this session.
-- **328 are OUT of scope and have never been looked at.**
+- **328 were outside Wave 1.** The frozen queue covers them all; A001/A002 have
+  now directly read the first 17 mods / 20 plugin paths.
 
 The direct-read contract is now frozen in
 `PDV_ARR25_DiscoveryWorklist_2026-08-06.csv`: Wave A 97 mods / 156 paths, Wave B
 23 / 26, and Wave C 208 / 284. This proves the queue shape, not its completion;
-all batch statuses remain pending until direct houseCARL evidence is checkpointed.
+a batch closes only when direct houseCARL evidence is checkpointed and validated.
+
+Current checkpoint state: A001 and A002 are direct-read complete. A002's ten mods
+have been primary-reviewed, adding nine ROWABLE rows and one approved NO-ROWS
+verdict to the inventory (now 1,230 rows / 667 mods). A001 contains the base-master
+enumeration and six additional Creation Club quest files; its evidence is intentionally
+still `UNREVIEWED`, so it does not yet expand the authoritative inventory.
 
 Excluded buckets holding real content, by QUST-bearing mod count:
 

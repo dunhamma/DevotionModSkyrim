@@ -29,4 +29,9 @@ Examples:
 node tools/pdv_arr25_discovery_checkpoint.mjs --init
 node tools/pdv_arr25_discovery_checkpoint.mjs --batch A001 --status in_progress --increment-attempt
 node tools/pdv_arr25_discovery_checkpoint.mjs --check --batch A001
+node tools/pdv_arr25_discovery_checkpoint.mjs --batch A001 --review-input INPUT_ID --review-evidence EVIDENCE_ID --review-status APPROVED --triage ROWABLE --reason "Primary review rationale"
+node tools/pdv_arr25_discovery_checkpoint.mjs --batch A001 --review-all APPROVED
 ```
+
+`--review-all` is a primary-agent closeout action, not a reader shortcut. Use it
+only after every semantic verdict in that batch has actually been adjudicated.

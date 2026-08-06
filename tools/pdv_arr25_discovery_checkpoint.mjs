@@ -33,6 +33,8 @@ function usage() {
   node tools/pdv_arr25_discovery_checkpoint.mjs --init [--batch A001]
   node tools/pdv_arr25_discovery_checkpoint.mjs --check [--batch A001]
   node tools/pdv_arr25_discovery_checkpoint.mjs --batch A001 --status in_progress [--increment-attempt] [--complete INPUT_ID] [--error TEXT | --clear-error]
+  node tools/pdv_arr25_discovery_checkpoint.mjs --batch A001 --review-all APPROVED
+  node tools/pdv_arr25_discovery_checkpoint.mjs --batch A001 --review-input INPUT_ID --review-evidence EVIDENCE_ID --review-status APPROVED [--triage ROWABLE] [--reason TEXT]
 
 --init never overwrites an existing checkpoint.  Reader evidence belongs in the
 batch CSV; it supports multiple QUST/signal rows per plugin. Use robust CSV
@@ -40,7 +42,7 @@ tooling or this file's CSV grammar when editing it.`;
 }
 
 function parseArgs(argv) {
-  const out = { worklist: DEFAULT_WORKLIST, manifest: DEFAULT_MANIFEST, dir: DEFAULT_DIR, init: false, check: false, batch: null, status: null, incrementAttempt: false, completed: [], error: undefined, clearError: false };
+  const out = { worklist: DEFAULT_WORKLIST, manifest: DEFAULT_MANIFEST, dir: DEFAULT_DIR, init: false, check: false, batch: null, status: null, incrementAttempt: false, completed: [], error: undefined, clearError: false, reviewAll: null, reviewInput: null, reviewEvidence: null, reviewStatus: null, reviewTriage: undefined, reviewReason: undefined, reviewName: undefined, reviewStages: undefined, reviewEvidenceText: undefined };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--worklist") out.worklist = resolve(argv[++i]);
@@ -54,15 +56,32 @@ function parseArgs(argv) {
     else if (arg === "--complete") out.completed.push(argv[++i]);
     else if (arg === "--error") out.error = argv[++i];
     else if (arg === "--clear-error") out.clearError = true;
+    else if (arg === "--review-all") out.reviewAll = argv[++i];
+    else if (arg === "--review-input") out.reviewInput = argv[++i];
+    else if (arg === "--review-evidence") out.reviewEvidence = argv[++i];
+    else if (arg === "--review-status") out.reviewStatus = argv[++i];
+    else if (arg === "--triage") out.reviewTriage = argv[++i];
+    else if (arg === "--reason") out.reviewReason = argv[++i];
+    else if (arg === "--name") out.reviewName = argv[++i];
+    else if (arg === "--stages") out.reviewStages = argv[++i];
+    else if (arg === "--evidence") out.reviewEvidenceText = argv[++i];
     else if (arg === "--help" || arg === "-h") { console.log(usage()); process.exit(0); }
     else throw new Error(`Unknown argument: ${arg}`);
   }
-  const modes = Number(out.init) + Number(out.check) + Number(Boolean(out.status || out.incrementAttempt || out.completed.length || out.error !== undefined || out.clearError));
+  const hasRowReview = Boolean(out.reviewInput || out.reviewEvidence || out.reviewStatus || out.reviewTriage !== undefined || out.reviewReason !== undefined || out.reviewName !== undefined || out.reviewStages !== undefined || out.reviewEvidenceText !== undefined);
+  const modes = Number(out.init) + Number(out.check) + Number(Boolean(out.status || out.incrementAttempt || out.completed.length || out.error !== undefined || out.clearError)) + Number(Boolean(out.reviewAll)) + Number(hasRowReview);
   if (modes !== 1) throw new Error("Choose exactly one mode: --init, --check, or a status update");
   if (out.batch && !/^[ABC]\d{3}$/.test(out.batch)) throw new Error("--batch must look like A001");
   if (out.status && !STATUSES.has(out.status)) throw new Error(`Invalid --status: ${out.status}`);
   if ((out.status || out.incrementAttempt || out.completed.length || out.error !== undefined || out.clearError) && !out.batch) throw new Error("Status updates require --batch");
   if (out.error !== undefined && out.clearError) throw new Error("Use either --error or --clear-error, not both");
+  if (out.reviewAll && !REVIEW_STATES.has(out.reviewAll)) throw new Error(`Invalid --review-all state: ${out.reviewAll}`);
+  if (out.reviewAll && !out.batch) throw new Error("--review-all requires --batch");
+  if (hasRowReview && (!out.batch || !out.reviewInput || !out.reviewEvidence || !out.reviewStatus)) {
+    throw new Error("Row review requires --batch, --review-input, --review-evidence, and --review-status");
+  }
+  if (out.reviewStatus && !REVIEW_STATES.has(out.reviewStatus)) throw new Error(`Invalid --review-status state: ${out.reviewStatus}`);
+  if (out.reviewTriage !== undefined && !TRIAGES.has(out.reviewTriage)) throw new Error(`Invalid --triage: ${out.reviewTriage}`);
   return out;
 }
 
@@ -257,6 +276,34 @@ function main() {
       if (state.status === "complete") completed++;
     }
     console.log(`PASS: validated ${chosen.length} checkpoint batch(es); ${completed} complete.`);
+    return;
+  }
+
+  if (args.reviewAll) {
+    const batch = chosen[0];
+    const { file, rows } = validateCheckpoint(batch, workByBatch.get(batch.id), args.dir);
+    for (const row of rows) row.primary_review_status = args.reviewAll;
+    writeFileSync(file.csv, renderCsv(rows), "utf8");
+    validateCheckpoint(batch, workByBatch.get(batch.id), args.dir);
+    console.log(`PASS: ${batch.id} primary_review_status=${args.reviewAll} for ${rows.length} evidence row(s)`);
+    return;
+  }
+
+  if (args.reviewInput) {
+    const batch = chosen[0];
+    const { file, rows } = validateCheckpoint(batch, workByBatch.get(batch.id), args.dir);
+    const matches = rows.filter((row) => row.input_id === args.reviewInput && row.evidence_id === args.reviewEvidence);
+    if (matches.length !== 1) throw new Error(`${batch.id}: expected one review row, found ${matches.length}`);
+    const row = matches[0];
+    row.primary_review_status = args.reviewStatus;
+    if (args.reviewTriage !== undefined) row.proposed_triage = args.reviewTriage;
+    if (args.reviewReason !== undefined) row.proposed_reason = args.reviewReason;
+    if (args.reviewName !== undefined) row.name = args.reviewName;
+    if (args.reviewStages !== undefined) row.stage_numbers = args.reviewStages;
+    if (args.reviewEvidenceText !== undefined) row.evidence = args.reviewEvidenceText;
+    writeFileSync(file.csv, renderCsv(rows), "utf8");
+    validateCheckpoint(batch, workByBatch.get(batch.id), args.dir);
+    console.log(`PASS: ${batch.id} reviewed ${args.reviewInput}/${args.reviewEvidence} -> ${args.reviewStatus}`);
     return;
   }
 
