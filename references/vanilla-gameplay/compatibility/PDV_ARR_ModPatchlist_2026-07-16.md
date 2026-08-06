@@ -356,6 +356,30 @@ DB06's stray chaos gloss removes two false paired-equity gaps: the T13-T15
 composite is now 114 open / 99 waived across 2,361 cells. This is machine/source
 consistency proof only and makes no new runtime or support claim.
 
+### 2026-08-06 T16 extension (machine-clean test candidate)
+
+T16 adds two channels for TG Alternative Endings and Save the Icerunner. They
+contain **58 cells across seven keys / two watched quests**. Save the Icerunner
+is data-only. TG Alternative Endings requires a soft-dependency script payload
+because all three endings complete physical `TG09|200`, which core already owns.
+The resolver preserves vanilla at 200, maps freeing all Nightingales to 201,
+and maps wresting away and keeping the Skeleton Key to 202. It also suppresses
+the separate Nocturnal +10 commitment route for those two alternate endings.
+
+The cumulative FOMOD now carries 32 data channels. The combined Authoria lane
+installs both channels and the current script set; the individual TGAE option
+installs only its channel and required `PDV_PlayerEvents` source/PEX, while Save
+the Icerunner remains channel-only. The direct factual dossier is
+`PDV_ARR25_T16_EvidenceDossier.md`, primary rulings are in
+`PDV_ARR25_T16_Adjudication.md`, the static seam gate is
+`tools/pdv_arr25_t16_route_check.mjs`, and all seven OPEN cases are in
+`PDV_ARR25_T16_RuntimeEvidenceLedger.json`.
+
+Proof boundary: both options are machine-verified experimental. The TG09
+branches must be traversed organically because `setstage TG09 200` cannot set
+or prove the ending global; testing must also confirm that no false Nocturnal
+commitment award fires. No T16 option is supported yet.
+
 ### 2026-08-06 ARR 2.5 Wave 1 inventory recovery
 
 The recovered Wave 1 compatibility inventory is

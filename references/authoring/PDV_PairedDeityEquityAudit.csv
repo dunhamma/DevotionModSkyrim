@@ -36,6 +36,9 @@ sky_storm_nature,AnvilMoonpathQuest,60,By the Light of the Moon,honor_the_wild,K
 sky_storm_nature,AnvilMoonpathQuest,60,By the Light of the Moon,honor_the_wild,Khenarthi(+m/milestone) Kynareth(+S/small),Y'ffre,waived
 sky_storm_nature,AnvilDenQuest,150,Incursion,"defy_tyranny_talos,protect_the_weak",Khenarthi(+S/milestone) Kynareth(+m/small),Kyne,waived
 sky_storm_nature,MQPaarthurnax,99,Paarthurnax,mercy_spare,Kyne(+m/milestone),Kynareth,waived
+sky_storm_nature,MS07,300,Lights Out!,"protect_the_weak,uphold_law_justice",Kynareth(+m/small) Khenarthi(+S/small),Kyne,waived
+sky_storm_nature,MS07,310,Lights Out!,"mercy_spare,protect_the_weak",Kynareth(+m/small) Khenarthi(+S/small),Kyne,waived
+sky_storm_nature,MS07,350,Lights Out!,"uphold_law_justice,protect_the_weak,expose_betray_secret",Khenarthi(+S/small) Kynareth(+m/small),Kyne,waived
 time_dragon,BardsCollegeLute,20,Finn's Lute,uphold_law_justice,Akatosh(+m/small) Alkosh(+m/small),Auri-El,waived
 time_dragon,C00,20,Take Up Arms,kill_honorable_combat,Alkosh(+S/small),Akatosh,
 time_dragon,C00,20,Take Up Arms,kill_honorable_combat,Alkosh(+S/small),Auri-El,
@@ -132,6 +135,10 @@ time_dragon,dk_ThograMain,150,Thogra's Blood Oath,keep_oath,Akatosh(+m/small),Au
 time_dragon,dk_ThograMain,150,Thogra's Blood Oath,keep_oath,Akatosh(+m/small),Alkosh,waived
 time_dragon,dunTrevasWatchQST,100,Infiltration,"protect_the_weak,uphold_law_justice",Akatosh(+m/milestone),Auri-El,waived
 time_dragon,dunTrevasWatchQST,100,Infiltration,"protect_the_weak,uphold_law_justice",Akatosh(+m/milestone),Alkosh,waived
+time_dragon,MS07,300,Lights Out!,"protect_the_weak,uphold_law_justice",Akatosh(+m/small),Auri-El,waived
+time_dragon,MS07,300,Lights Out!,"protect_the_weak,uphold_law_justice",Akatosh(+m/small),Alkosh,waived
+time_dragon,MS07,350,Lights Out!,"uphold_law_justice,protect_the_weak,expose_betray_secret",Akatosh(+S/milestone),Auri-El,waived
+time_dragon,MS07,350,Lights Out!,"uphold_law_justice,protect_the_weak,expose_betray_secret",Akatosh(+S/milestone),Alkosh,waived
 death_order,C06,65,Glory of the Dead,cure_undeath,Arkay(+S/small) Tu'whacca(+m/small),Xarxes,waived
 death_order,CW02A,72,The Jagged Crown,slay_undead,Arkay(+C/small) Tu'whacca(+S/small),Xarxes,waived
 death_order,CW02B,72,The Jagged Crown,slay_undead,Arkay(+C/small) Tu'whacca(+S/small),Xarxes,waived

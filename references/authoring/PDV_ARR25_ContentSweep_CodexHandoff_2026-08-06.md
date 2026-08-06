@@ -3,7 +3,7 @@
 Date: 2026-08-06
 Branch: `codex/arr25-content-sweep`
 Author: Claude session (Opus 5). Owner-approved plan folded in below.
-Status: **Phase 0, exhaustive QUST-plus-selected-signal discovery, T13-T15 machine authoring/package gates, and existing-matrix multi-tag normalization are complete. T16-T17, renewable implementation, cumulative archive build, and tester proof remain open.**
+Status: **Phase 0, exhaustive QUST-plus-selected-signal discovery, T13-T16 machine authoring/package gates, and existing-matrix multi-tag normalization are complete. T17, renewable implementation, cumulative archive build, and tester proof remain open.**
 
 ---
 
@@ -65,6 +65,14 @@ What landed this session:
   not farm coverage. Core remains 2,130 cells / 231 runtime keys. Correcting
   DB06's stray chaos gloss removes two false paired-equity gaps, taking the
   T13-T15 composite from 116 to 114 open gaps without adding a cell.
+- **T16 is machine-complete:** TG Alternative Endings and Save the Icerunner add
+  58 cells across seven outcome keys in two channels. TG09's three physical
+  stage-200 endings are resolved through a soft-dependency script seam: vanilla
+  keeps 200, freeing the Nightingales maps to 201, and keeping the Skeleton Key
+  maps to 202. The alternate routes also suppress TG09's otherwise false +10
+  Nocturnal commitment pulse. Paired-equity adds zero unexplained gaps (114 open /
+  106 waived across 2,419 cells), and the cumulative FOMOD carries 32 channels.
+  All seven tester cases remain OPEN, so both options are experimental.
 
 The single most valuable discovery: **follower personal questlines**, which are the
 only content in 3739 plugins that can reach Devotion's thin-roster races.
@@ -89,6 +97,7 @@ only content in 3739 plugins that can reach Devotion's thin-roster races.
 | T14 thin-roster authoring and package directory | 78 cells / 15 keys / 5 channels; cumulative 24-channel FOMOD; `PDV_ARR25_T14_Adjudication.md`; runtime/support OPEN |
 | T15 vanilla quest-expansion authoring and package directory | 58 cells / 14 keys / 6 channels; cumulative 30-channel FOMOD; `PDV_ARR25_T15_Adjudication.md`; runtime/support OPEN |
 | Existing-matrix multi-tag normalization | 15 outcome keys normalized; 45 candidates + 3 conflicts primary-reviewed; 0 new cells; paired-equity 114 open / 99 waived (delta -2); `PDV_ARR25_ExistingMatrixMultiTag_Adjudication.md` |
+| T16 alternate-route authoring and package directory | 58 cells / 7 keys / 2 channels; cumulative 32-channel FOMOD; soft-dependency TG09 201/202 resolver and false-commitment suppression; `PDV_ARR25_T16_Adjudication.md`; runtime/support OPEN |
 
 Current gate output is **2,130 cells / 154 EditorIDs / 45 deities**; compile output is
 231 runtime keys / 154 watched quests. The former 2,131 result contained one duplicate
@@ -199,7 +208,7 @@ Tranche order:
 | T13 | July high-confidence backlog (`PDV_ARR_ModPatchlist_2026-07-16.md:79-96`) | Namira, Sithis, Hermaeus Mora, Hircine -- Princes, so all 10 races |
 | T14 | **Thin-roster races: follower questlines + Elsweyr** | Orc, Argonian, Bosmer, Khajiit |
 | T15 | Vanilla expansions (CoW QE, Caught Red Handed, Infiltration, Nilheim ...) | Magnus, Julianos, Zenithar, Dibella |
-| T16 | nimwraith alternate routes | Nocturnal, Clavicus Vile, Vaermina, Meridia |
+| T16 | nimwraith alternate routes | Nocturnal, Rajhin, Baan Dar, Clavicus Vile, Stendarr, Stuhn, and truthful paired reactions |
 | T17 | New lands + LOTD | Auri-El, Xarxes, Trinimac, Peryite, Sheogorath |
 
 T14 is promoted ahead of the vanilla expansions because it is the only tranche that

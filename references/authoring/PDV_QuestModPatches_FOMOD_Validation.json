@@ -1,44 +1,49 @@
 {
   "schema": "pdv-quest-patch-fomod-validation.v1",
-  "generatedAt": "2026-08-06T12:02:37.939Z",
+  "generatedAt": "2026-08-06T12:32:39.058Z",
   "status": "PASS",
   "proofBoundary": "Package structure and bytes only. This does not prove runtime routing, player surfaces, semantic correctness, or support status.",
   "packageRoot": "dist/PDV_QuestModPatches_FOMOD",
   "optionCounts": {
-    "totalPluginNodes": 32,
-    "individualContentOptions": 30,
-    "channelFiles": 30
+    "totalPluginNodes": 34,
+    "individualContentOptions": 32,
+    "channelFiles": 32
   },
   "simulations": [
     {
       "name": "authoria-combined",
-      "installedFiles": 75,
-      "identicalCollisions": []
+      "installedFiles": 78,
+      "identicalCollisions": [
+        "Scripts/PDV_PlayerEvents.pex",
+        "Scripts/Source/PDV_PlayerEvents.psc"
+      ]
     },
     {
       "name": "all-individual",
-      "installedFiles": 65,
+      "installedFiles": 70,
       "identicalCollisions": [
         "Docs/PDV_ARR25_T13_RuntimeEvidenceLedger.json",
         "Docs/PDV_ARR25_T14_RuntimeEvidenceLedger.json",
         "Docs/PDV_ARR25_T15_RuntimeEvidenceLedger.json",
+        "Docs/PDV_ARR25_T16_RuntimeEvidenceLedger.json",
         "Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md"
       ]
     },
     {
       "name": "representative-subset",
-      "installedFiles": 8,
+      "installedFiles": 9,
       "identicalCollisions": [
         "Docs/PDV_ARR25_T13_RuntimeEvidenceLedger.json",
         "Docs/PDV_ARR25_T14_RuntimeEvidenceLedger.json",
         "Docs/PDV_ARR25_T15_RuntimeEvidenceLedger.json",
+        "Docs/PDV_ARR25_T16_RuntimeEvidenceLedger.json",
         "Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md"
       ]
     }
   ],
   "manifest": {
-    "fileCount": 80,
-    "treeSha256": "E193C9C7220B69CE4D2097594925907BCBEEC9F121D46798547E0BF796404159",
+    "fileCount": 85,
+    "treeSha256": "FD444218469E9C0BF54159AB23BF1019E41A89472EB8BB87B9F211C590C11457",
     "files": [
       {
         "path": "common/_Fragments/OnceWeWereHere/Scripts/PDV_TIF_OWWH_S60.pex",
@@ -146,9 +151,14 @@
         "sha256": "511C6B7D938354B17DE7BED18F7D7E189096F457FB5EBEF8982F3B63ECBB4F52"
       },
       {
+        "path": "common/_Runbook/Docs/PDV_ARR25_T16_RuntimeEvidenceLedger.json",
+        "size": 4451,
+        "sha256": "DF789BB75602B18EDDC09D695C195FE8EF049B079E974400331F73973380EB2B"
+      },
+      {
         "path": "common/_Runbook/Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md",
-        "size": 15209,
-        "sha256": "4AEC0606685F1C3FFA9B15174EF50CEEC677FEC77D296B8FABD800912DD6B3E5"
+        "size": 16437,
+        "sha256": "331AA8201466F367999C11A109E126456F1BD55F662B3AF933FFC9DEB8DF0688"
       },
       {
         "path": "common/Auri/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Auri.json",
@@ -271,6 +281,11 @@
         "sha256": "3454D3FCBF9C38F1A75BE0DA5C7A80F2B86AE461B19A626F4ABFA9BF974B6880"
       },
       {
+        "path": "common/SaveTheIcerunner/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_SaveTheIcerunner.json",
+        "size": 120164,
+        "sha256": "3D0104052DCFB5740E7A32E60C47CC456D1364EF13D9B06A4036C440871DB0C1"
+      },
+      {
         "path": "common/SiegeAtIcemoth/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_SiegeAtIcemoth.json",
         "size": 110993,
         "sha256": "8D39DCB119E923726753BC5092CB3ACF883BBC68DD88B7F9DF869C7A90793E81"
@@ -289,6 +304,21 @@
         "path": "common/TasteOfDeathAddon/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_TasteOfDeathAddon.json",
         "size": 107907,
         "sha256": "99472385FF6124FBB217F0BF374E82A104A59A46A2E4CE15A9A7B45D5EEF553E"
+      },
+      {
+        "path": "common/TGAlternativeEndings/Scripts/PDV_PlayerEvents.pex",
+        "size": 97884,
+        "sha256": "0877DA024EB31C0D1C6E4168343C44D4BDA6F12F6534C32E6029E9D3A24676DA"
+      },
+      {
+        "path": "common/TGAlternativeEndings/Scripts/Source/PDV_PlayerEvents.psc",
+        "size": 143169,
+        "sha256": "46EDE29FDCCA5D0BF66612D0AD9A9A5BF5C9C486782C02E5DB989AF68E1CB26A"
+      },
+      {
+        "path": "common/TGAlternativeEndings/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_TGAlternativeEndings.json",
+        "size": 113462,
+        "sha256": "A41D77D3DECD352A8FF0662F9D92AC3A23E2EF2886DB4FC3A85DBF35364D5B18"
       },
       {
         "path": "common/TheFrozenHeart/Docs/PDV Patch - The Frozen Heart.md",
@@ -357,8 +387,8 @@
       },
       {
         "path": "fomod/ModuleConfig.xml",
-        "size": 31384,
-        "sha256": "C3D405417B5A6C720AD5F0C33AAD3F93AA5B2FE91BC4446A984727BDD6C92C7A"
+        "size": 33208,
+        "sha256": "A167C15B38E80707E8D7CC4D4C3FCAB727E67FB526D04227E235C317538DD1F3"
       },
       {
         "path": "plugins/authoria/Docs/PDV Patch - Authoria All-In-One.md",
@@ -382,33 +412,33 @@
       },
       {
         "path": "plugins/authoria/Scripts/PDV__ManagerQuest.pex",
-        "size": 909685,
-        "sha256": "F0FAD3F950F971232548A34F8F7420B5D7F4EF3FD9E7E8336919B793E44E1CAC"
+        "size": 957733,
+        "sha256": "427A220147B4B514859FD981D95962AB44C38D906E8D925E2AEC2EE2D216304E"
       },
       {
         "path": "plugins/authoria/Scripts/PDV_EventBus.pex",
-        "size": 54987,
-        "sha256": "2B11386C65390DFF7B756F7C715A6116DA367A7443B5BA5F0CD595C2094675F1"
+        "size": 57115,
+        "sha256": "FDD415A28CE6D9BC106D662B230140A328A7F1EBC5B5D53504026EA7760C1AA4"
       },
       {
         "path": "plugins/authoria/Scripts/PDV_PlayerEvents.pex",
-        "size": 87131,
-        "sha256": "8310944FFD61B55D1F84FB9FA97A95158C775D288B7583B0A47C30C6A40CF72C"
+        "size": 97884,
+        "sha256": "0877DA024EB31C0D1C6E4168343C44D4BDA6F12F6534C32E6029E9D3A24676DA"
       },
       {
         "path": "plugins/authoria/Scripts/Source/PDV__ManagerQuest.psc",
-        "size": 1117197,
-        "sha256": "02B774D63340D27FE805E8DBCDB2293FFC1E6FA6E5C9C472CB3F932FDDD8644E"
+        "size": 1223339,
+        "sha256": "DB573BAEA4B80E736D4D1FCD06FE7BE0A4CC198E140BAD24460896562C5DBA21"
       },
       {
         "path": "plugins/authoria/Scripts/Source/PDV_EventBus.psc",
-        "size": 54652,
-        "sha256": "87DD71974DB74F274C39F483224A87D679A81CFE37F37A440572CE8DB18724A6"
+        "size": 57587,
+        "sha256": "4F147D770619D53FF80D9987F92BC0D740AF6264DFA578FD40518BA7AE2F4A19"
       },
       {
         "path": "plugins/authoria/Scripts/Source/PDV_PlayerEvents.psc",
-        "size": 114016,
-        "sha256": "2A3E5108A38CDD4286D680A45DE4242FDE38E277ADA97FB14107E702910F78E9"
+        "size": 143169,
+        "sha256": "46EDE29FDCCA5D0BF66612D0AD9A9A5BF5C9C486782C02E5DB989AF68E1CB26A"
       },
       {
         "path": "plugins/authoria/SKSE/Plugins/BaseObjectSwapper/PDV_AuthoriaARR_DaedricShrines_SWAP.ini",

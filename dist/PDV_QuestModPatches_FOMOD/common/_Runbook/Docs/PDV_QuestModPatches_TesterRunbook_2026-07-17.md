@@ -243,6 +243,28 @@ played organically before support promotion. The six T15 individual options
 and the combined Authoria lane remain machine-verified experimental options
 until equivalent case evidence passes.
 
+### T16 alternate-route cases
+
+Use `PDV_ARR25_T16_RuntimeEvidenceLedger.json` as the write-back authority. It
+contains seven cases: both TG Alternative Endings branches and five Save the
+Icerunner resolutions. For every case record the route marker, exact piety
+delta, exactly one toast, exactly one Book of Days beat, save/load behavior,
+organic semantic observation, failures, and verdict.
+
+The two TG09 cases must be reached organically. TG Alternative Endings writes
+all three endings to physical stage 200 and distinguishes them with its ending
+global. Ending 1 must emit
+`ARR25 TGAE route: TG09 physical=200 ending=1 matrixStage=201`; endings 2 and 3
+must emit the equivalent `matrixStage=202` trace. Both alternate routes must
+also emit the commitment-suppression trace and must produce **no** separate
+Nocturnal +10 commitment award. A controlled `setstage TG09 200` cannot select
+or semantically prove either branch.
+
+Save the Icerunner stages 300, 310, 320, 330, and 350 have direct resolving
+journal evidence, but each still needs organic observation before support
+promotion. Both T16 individual options and the combined Authoria lane remain
+machine-verified experimental options until their equivalent cases pass.
+
 ---
 
 ## 5. Bard hook (needs Become a Bard and/or Skyrim's Got Talent)

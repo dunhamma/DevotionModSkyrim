@@ -7,7 +7,7 @@
         <group name="How do you want to install?" type="SelectExactlyOne">
           <plugins order="Explicit">
             <plugin name="Authoria (Requiem Reforged) - All-In-One">
-              <description>One combined ESL-flagged hook plugin for the original dialogue patches, plus all thirty data channels. Authoria ships every target mod. T13-T15 channels are machine-verified test candidates pending ARR 2.5 runtime evidence.</description>
+              <description>One combined ESL-flagged hook plugin for the original dialogue patches, plus all thirty-two data channels. Authoria ships every target mod. T13-T16 channels are machine-verified test candidates pending ARR 2.5 runtime evidence.</description>
               <files>
                 <folder source="common\Sirenroot" destination="" priority="0" />
                 <folder source="common\_Runbook" destination="" priority="0" />
@@ -40,6 +40,8 @@
                 <folder source="common\WhisperingDoorQE" destination="" priority="0" />
                 <folder source="common\PaarthurnaxQE" destination="" priority="0" />
                 <folder source="common\ForswornConspiracyQE" destination="" priority="0" />
+                <folder source="common\TGAlternativeEndings" destination="" priority="0" />
+                <folder source="common\SaveTheIcerunner" destination="" priority="0" />
                 <folder source="common\_Fragments\WarsFolly" destination="" priority="0" />
                 <folder source="common\_Fragments\OnceWeWereHere" destination="" priority="0" />
                 <folder source="common\_Fragments\WhispersOfTheDepths" destination="" priority="0" />
@@ -482,6 +484,22 @@
                 <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="Forsworn Conspiracy Quest Expansion.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+            </plugin>
+            <plugin name="Thieves Guild Alternative Endings (T16 experimental)">
+              <description>Soft-dependent script and data channel that separates TG09's three endings. Vanilla return remains stage 200; freeing the Nightingales and keeping the Skeleton Key route to synthetic stages 201/202 and suppress false Nocturnal commitment.</description>
+              <files>
+                <folder source="common\TGAlternativeEndings" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="TG Alternative Endings.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+            </plugin>
+            <plugin name="Save the Icerunner (T16 experimental)">
+              <description>Data-only channels for stopping, persuading, joining, betraying, or lawfully exposing Jaree-Ra's Icerunner wrecking plot.</description>
+              <files>
+                <folder source="common\SaveTheIcerunner" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="SaveTheIcerunner.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
             </plugin>
           </plugins>
         </group>
