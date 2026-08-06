@@ -1,9 +1,9 @@
 # ARR 2.5 Exhaustive Content Sweep -- Codex Handoff
 
 Date: 2026-08-06
-Branch: `codex/khajiit-lunar-champion-rebalance`
+Branch: `codex/arr25-content-sweep`
 Author: Claude session (Opus 5). Owner-approved plan folded in below.
-Status: **Phase 0 complete. Wave 1 of Phase 1 is complete and reconciled. The broader 583-mod QUST discovery contract remains open.**
+Status: **Phase 0 and the exhaustive QUST discovery contract are complete. The selected non-quest signal review, tranche authoring, package rebuild, and tester proof remain open.**
 
 ---
 
@@ -25,9 +25,17 @@ What landed this session:
 - **The API 529 recovery is complete for this wave.** The surviving LOTD and Vanilla
   Expansions shards were recovered and merged; representative `NO-ROWS` results from
   the two post-write-529 shards were re-read directly from absolute ARR plugin paths.
-- **A scope gap was found late and is NOT yet covered: 328 QUST-bearing mods sit
-  outside the in-scope bucket set, including all 55 Creation Club mods** -- which
-  are the highest-priority targets in the existing backlog. See item C-3.
+- **The former 328-mod QUST scope gap is closed.** All 466 queued plugin paths were
+  read directly in 48 deterministic checkpoints. Every declared QUST count has a
+  matching per-record evidence row; all direct evidence and plugin rollups have a
+  primary verdict, with no unresolved read failure or unreviewed checkpoint row.
+- **The reconciled inventory now contains 1,551 rows across 985 distinct mods.**
+  This is exact equality against Wave 1's 657 mods plus the 328 previously uncovered
+  mods. The finite QUST-bearing universe remains 583 mods; the larger inventory count
+  includes explicit no-QUST, asset-only, and other `NO-ROWS` verdicts.
+- **The selected non-quest universe is frozen but not closed:** 614 mods / 1,070
+  plugin paths in 107 batches. Its checkpoint interface is initialized and requires
+  direct signal-candidate enumeration plus primary review before inventory closure.
 
 The single most valuable discovery: **follower personal questlines**, which are the
 only content in 3739 plugins that can reach Devotion's thin-roster races.
@@ -43,10 +51,11 @@ only content in 3739 plugins that can reach Devotion's thin-roster races.
 | Cherry-picked the stranded `--check` gate | commit `639b7ab8` (cherry-pick of `9591d7dd`) |
 | Tranche-merge gate green | `node tools/pdv_quest_tranche_merge.mjs --check` -> **PASS, exit 0** |
 | T12 canonical merge repaired | commit `e5c6999`; resolved FormID duplicate gate; 2,130 cells; matrix self-test PASS |
-| Wave 1 content inventory (machine inventory only) | `references/vanilla-gameplay/compatibility/PDV_ARR25_ContentInventory_2026-08-06.csv` -- 1,220 retained rows, 657 of 657 in-scope mods; not the broader exhaustive sweep |
+| Consolidated content inventory (machine inventory only) | `references/vanilla-gameplay/compatibility/PDV_ARR25_ContentInventory_2026-08-06.csv` -- 1,551 retained rows, 985 distinct mods, exact Wave 1 + QUST-gap equality; not tester support proof |
 | Exhaustive QUST worklist frozen | `PDV_ARR25_DiscoveryWorklist_2026-08-06.csv` + batch manifest -- 328 mods / 466 plugin paths in 8-10 path batches |
-| Direct-read checkpoints | A001-A006 factual reads complete (60/466 paths); A002 plus four A003 rows primary-reviewed and merged; the remaining checkpoint evidence stays explicit primary-review debt |
+| Direct-read QUST checkpoints | 48/48 batches complete, 466/466 plugin paths read, zero unresolved errors, zero unreviewed evidence rows; count-equality gate passes |
 | Non-QUST signature universe frozen | 1,356 mods / 3,001 paths scanned; 614 mods / 1,070 paths admitted to direct signal review; 1,931 paths explicitly outside selected signatures; zero scan read errors |
+| Non-quest signal checkpoints | 107 initialized batches covering the admitted 1,070 plugin paths; direct review remains open |
 
 Current gate output is **2,130 cells / 154 EditorIDs / 45 deities**; compile output is
 231 runtime keys / 154 watched quests. The former 2,131 result contained one duplicate
@@ -232,26 +241,21 @@ Start Room Markers` folder was also confirmed to contain only scripts and `meta.
 with no plugin file. These checks support the recorded `NO-ROWS` strata; they are not
 runtime or semantic proof for a later authoring tranche.
 
-### C-3 (P0) -- Close the scope gap. THIS IS THE BIGGEST OUTSTANDING ITEM.
+### C-3 (complete 2026-08-06) -- Close the QUST scope gap
 
 The in-scope bucket set was drawn too narrowly. Measured totals:
 
 - **583 mods across the modlist carry QUST records.**
 - **255 were in scope** and read this session.
-- **328 were outside Wave 1.** The frozen queue covers them all; A001/A002 have
-  now directly read the first 17 mods / 20 plugin paths.
+- **328 were outside Wave 1.** The frozen queue covered them all.
 
 The direct-read contract is now frozen in
 `PDV_ARR25_DiscoveryWorklist_2026-08-06.csv`: Wave A 97 mods / 156 paths, Wave B
-23 / 26, and Wave C 208 / 284. This proves the queue shape, not its completion;
-a batch closes only when direct houseCARL evidence is checkpointed and validated.
-
-Current checkpoint state: A001-A006 are direct-read complete (60 plugin paths).
-A002's ten mods and four named A003 quest rows have been primary-reviewed, adding
-thirteen ROWABLE rows and one approved NO-ROWS verdict to the inventory (now 1,234
-rows / 669 mods). The base-master enumeration, translated-string gaps, duplicate
-cleaned-master reconciliation, and all other checkpoint evidence intentionally remain
-`UNREVIEWED`, so they do not yet expand the authoritative inventory.
+23 / 26, and Wave C 208 / 284. All 48 batches are now complete: 466/466 absolute
+plugin paths direct-read, every declared QUST count reconciled to per-record evidence,
+zero unresolved errors, and zero unreviewed checkpoint rows. The consolidated
+inventory is 1,551 rows / 985 distinct mods, with an empty set difference against the
+657 Wave 1 mods plus the 328-mod gap queue.
 
 Excluded buckets holding real content, by QUST-bearing mod count:
 
@@ -268,21 +272,17 @@ Excluded buckets holding real content, by QUST-bearing mod count:
 | Gameplay - Ostim Standalone | 24 | probably NO-ROWS, still needs a verdict |
 | Gameplay - Wet and Cold, Essential-*, Interface-*, Animations-*, Visuals-* | ~185 | mostly NO-ROWS, cheap to rule |
 
-Also confirmed out of scope and unread: **Shadow of Skyrim - Nemesis and Alternative
-Death System** (separator `Gameplay - Death Alternative`). Player death is a strong
-devotion signal and this mod owns it.
+Shadow of Skyrim, Creation Club, vampire/werewolf, magic, missives, city/worldspace,
+OStim, framework, interface, visual, and low-yield buckets all now carry an explicit
+primary verdict. This closes factual QUST discovery only; approved `DEFER` rows still
+belong to their T13-T17 or renewable authoring tranche.
 
-Recommendation: run a second discovery wave over `Base Game & Creation Club Files`,
-`Gameplay - Vampire and Werewolf Overhaul`, `Gameplay - Death Alternative`,
-`Gameplay - Magic Mods`, `Gameplay - Missives` and the `City Stuff - *` buckets first
-(~110 mods, high yield), then sweep the remaining ~218 for cheap `NO-ROWS` verdicts.
-
-### C-4 (complete for Wave 1, 2026-08-06) -- Scope-equality reconciliation
+### C-4 (complete 2026-08-06) -- Scope-equality reconciliation
 
 The 657 distinct `mod` values in the consolidated inventory equal the 657 entries in
-the preserved `arr25-discovery-source/wave1_scope.tsv`; the set differences are empty. This closes only the
-Wave 1 inventory-scope prerequisite. It does not close C-3: 328 QUST-bearing mods
-outside that original bucket set still require the exhaustive discovery waves.
+the preserved `arr25-discovery-source/wave1_scope.tsv`; the Wave 1 set differences are
+empty. The appended 328-mod queue is also an exact subset of the consolidated inventory,
+so the combined 985-mod discovery interface has no missing mod verdict.
 
 ### C-5 (P1) -- Re-tagging pass over the existing matrix
 
