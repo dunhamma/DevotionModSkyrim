@@ -193,6 +193,19 @@ function readCheckpointCsv(path) {
   });
 }
 
+function declaredQuestCount(row) {
+  const text = `${row.evidence}\n${row.notes}`;
+  for (const pattern of [
+    /direct\s+QUST\s+enumeration(?:\s+complete)?\s*[:=]?\s*(\d+)/i,
+    /(\d+)\s+QUST\s+direct-enumerated/i,
+    /exhaustive\s+QUST\s+enumeration\s*[:=]?\s*(\d+)/i,
+  ]) {
+    const match = text.match(pattern);
+    if (match) return Number.parseInt(match[1], 10);
+  }
+  return null;
+}
+
 function validateCheckpoint(batch, expected, dir) {
   const file = paths(dir, batch.id);
   if (!existsSync(file.csv) || !existsSync(file.json)) throw new Error(`${batch.id}: missing checkpoint CSV or JSON`);
@@ -223,6 +236,14 @@ function validateCheckpoint(batch, expected, dir) {
     }
   }
   for (const id of expectedById.keys()) if (!pluginRows.has(id)) throw new Error(`${batch.id}: ${id} lacks its required PLUGIN evidence row`);
+  for (const [id, pluginRow] of pluginRows) {
+    const declared = declaredQuestCount(pluginRow);
+    if (declared === null || pluginRow.reader_status !== "read") continue;
+    const actual = rows.filter((row) => row.input_id === id && row.evidence_kind === "QUST").length;
+    if (actual !== declared) {
+      throw new Error(`${batch.id}: ${id} declares ${declared} QUST record(s) but has ${actual} QUST evidence row(s)`);
+    }
+  }
   const state = JSON.parse(readFileSync(file.json, "utf8"));
   if (state.schema !== "pdv-arr25-discovery-checkpoint.v1") throw new Error(`${batch.id}: checkpoint JSON schema drift`);
   if (state.batchId !== batch.id || state.wave !== batch.wave || state.inputHash !== batch.inputHash || JSON.stringify(state.inputIds) !== JSON.stringify(batch.inputIds)) throw new Error(`${batch.id}: checkpoint JSON does not match manifest inputs`);
