@@ -3,7 +3,7 @@
 Date: 2026-08-06
 Branch: `codex/arr25-content-sweep`
 Author: Claude session (Opus 5). Owner-approved plan folded in below.
-Status: **Phase 0, exhaustive QUST-plus-selected-signal discovery, T13-T17 machine authoring/package gates, and existing-matrix multi-tag normalization are complete. Renewable implementation, cumulative archive build, and tester proof remain open.**
+Status: **The exhaustive QUST-plus-selected-signal sweep, T13-T17 authoring, existing-matrix normalization, safe non-quest renewables, and cumulative machine/package gates are complete. The test archive is built. ARR 2.5 runtime, player-surface, semantic, and support proof remain open.**
 
 ---
 
@@ -80,6 +80,19 @@ What landed this session:
   primary-reviewed to 25 keeps and 55 final rejections. Paired-equity adds zero
   unexplained gaps (114 open / 116 waived across 2,551 cells), and the cumulative
   FOMOD now carries 34 channels. All 22 tester cases remain OPEN.
+- **The safe non-quest tranche is machine-complete:** 17 ARR foods are classified
+  through exact-name KID rules; Breton Hidden Art now has its second direct
+  renewable while preserving Mara; AFDI observes 30 successful-destruction
+  globals through a 15-second optional poll with existing-save baseline and
+  once-ever persistence; the existing bard anti-farm lane was verified; and the
+  stale QASmoke shrine swap was replaced by the read-back 11-ACTI prayer package.
+  Hunting remains explicitly deferred because the truthful seam requires a
+  third-party script event. All non-quest runtime cases remain OPEN.
+- **The cumulative test archive is machine-complete:** 36 FOMOD nodes / 34
+  individual content options / 34 channels / 92 files. Combined Authoria,
+  all-individual, and representative-subset simulations pass. Archive membership
+  is exactly 92 entries with no missing/extra files; SHA-256 is
+  `7E93CC59F78F443E8EFA46EAC3D5C052E56EC80C8D30388F08854AD1B4B3E132`.
 
 The single most valuable discovery: **follower personal questlines**, which are the
 only content in 3739 plugins that can reach Devotion's thin-roster races.
@@ -106,6 +119,8 @@ only content in 3739 plugins that can reach Devotion's thin-roster races.
 | Existing-matrix multi-tag normalization | 15 outcome keys normalized; 45 candidates + 3 conflicts primary-reviewed; 0 new cells; paired-equity 114 open / 99 waived (delta -2); `PDV_ARR25_ExistingMatrixMultiTag_Adjudication.md` |
 | T16 alternate-route authoring and package directory | 58 cells / 7 keys / 2 channels; cumulative 32-channel FOMOD; soft-dependency TG09 201/202 resolver and false-commitment suppression; `PDV_ARR25_T16_Adjudication.md`; runtime/support OPEN |
 | T17 large-content authoring and package directory | 132 new cells / 22 keys / 12 watched quests across LOTD, Bruma, and the expanded Wyrmstooth channel; cumulative 34-channel FOMOD; `PDV_ARR25_T17_Adjudication.md`; runtime/support OPEN |
+| Non-quest renewable closeout | 17 food records applied; Hidden Art 2/2; 30 AFDI globals; bard contract retained; 11 correct prayer swaps; 108 records explicitly deferred; `PDV_ARR25_NonQuest_Adjudication.md`; runtime/support OPEN |
+| Cumulative ARR 2.5 test archive | `dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`; 92 entries; exact tree/archive validation PASS; support remains closed |
 
 Current gate output is **2,130 cells / 154 EditorIDs / 45 deities**; compile output is
 231 runtime keys / 154 watched quests. The former 2,131 result contained one duplicate
@@ -514,7 +529,9 @@ node tools/pdv_quest_tranche_merge.mjs --check
 node tools/pdv_quest_matrix_compile.mjs --check --json
 node tools/pdv_quest_matrix_compile.mjs --papyrusutil-check --json
 node tools/pdv_quest_matrix_selftest.mjs
-node tools/pdv_matrix_runtime_preflight.mjs --json
+node tools/pdv_arr25_nonquest_check.mjs
+node tools/pdv_arr25_t16_route_check.mjs --pex-root generated/arr25-nonquest-pex
+node tools/pdv_quest_patch_fomod_validate.mjs --archive dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip
 ```
 
 Then: `pdv_signal_floor_audit.mjs`, `pdv_paired_equity_audit.mjs`,
@@ -526,3 +543,10 @@ objective-derived row ships `RUNTIME-VERIFY` in its citation and stays that way 
 observed in game. The July per-mod patches are still machine-verified only (TODO-7).
 Per `pdv-proof-boundary`, do not describe any of this as tested, supported, or
 beta-ready on green gates alone.
+
+ARR runtime preflight is intentionally not part of discovery/package closure.
+Run it only after installing and enabling the combined candidate on ARR 2.5
+`KoK R11`. Then work through the six bundled T13-T17/non-quest ledgers and return
+the route marker, piety readback, exactly-one-toast, exactly-one-Book-beat,
+save/load, organic-semantics, and failure fields. Only equivalent passed cases may
+move an individual option or the combined lane toward support.

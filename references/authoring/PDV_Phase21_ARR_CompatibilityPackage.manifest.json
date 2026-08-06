@@ -13,6 +13,35 @@
     "releaseGate": "1.0 gate requires accepted Authoria integration/test package.",
     "handoff": "references/authoring/PDV_Phase21_ARR_AuthorHandoff.md"
   },
+  "arr25ContentSweep": {
+    "date": "2026-08-06",
+    "target": "ARR 2.5 KoK R11",
+    "status": "machine-verified-experimental-runtime-open",
+    "worktree": "C:\\Users\\Admin\\Documents\\Devotion Mod Project-arr25-content-sweep",
+    "branch": "codex/arr25-content-sweep",
+    "channels": 34,
+    "fomodPluginNodes": 36,
+    "packageFiles": 92,
+    "treeSha256": "4BCFB0D26485E07A6DE5E026908CB7D578F8CE24CFD6B708F6885DF55CEC05A6",
+    "archive": {
+      "path": "dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip",
+      "entries": 92,
+      "size": 1274567,
+      "sha256": "7E93CC59F78F443E8EFA46EAC3D5C052E56EC80C8D30388F08854AD1B4B3E132"
+    },
+    "receipt": "references/authoring/PDV_QuestModPatches_FOMOD_Validation.json",
+    "testerRunbook": "dist/PDV_QuestModPatches_FOMOD/common/_Runbook/Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md",
+    "runtimeLedgers": [
+      "references/authoring/PDV_ARR25_T13_RuntimeEvidenceLedger.json",
+      "references/authoring/PDV_ARR25_T14_RuntimeEvidenceLedger.json",
+      "references/authoring/PDV_ARR25_T15_RuntimeEvidenceLedger.json",
+      "references/authoring/PDV_ARR25_T16_RuntimeEvidenceLedger.json",
+      "references/authoring/PDV_ARR25_T17_RuntimeEvidenceLedger.json",
+      "references/authoring/PDV_ARR25_NonQuest_RuntimeEvidenceLedger.json"
+    ],
+    "supportClaim": false,
+    "nextGate": "Install the combined lane on ARR 2.5 KoK R11, run runtime preflight, then return equivalent evidence for every OPEN case."
+  },
   "profileState": {
     "backupDir": "D:\\Wabbajack\\modlists\\ARR\\profiles\\Authoria - Requiem Reforged - Main Profile\\pdv-authoria-backups",
     "backupStamp": "20260614-224145",

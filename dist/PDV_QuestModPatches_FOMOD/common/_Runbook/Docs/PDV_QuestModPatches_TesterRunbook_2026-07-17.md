@@ -332,15 +332,50 @@ triggers.
 2. Pray -> that Prince gains piety. Pray again the same day -> **nothing**
    (once/day). Next day -> works again.
 3. Covered: Azura, Vaermina, Molag Bal, Mephala, Mehrunes Dagon, Sheogorath,
-   Namira, Sanguine, Hermaeus Mora, Hircine, Peryite. Plus the Wyrmstooth
-   Nocturnal and Vaermina placements.
+   Namira, Sanguine, Hermaeus Mora, Hircine, Peryite.
 4. **Jyggalag's shrine must award NOTHING** - Devotion has no Jyggalag. Any
    credit there, especially credited to another god, is a bug worth reporting
    loudly.
+5. Wyrmstooth's shrine placements use different base forms and do **not**
+   inherit these swaps. Record what happens, but do not expect prayer credit
+   from this test candidate.
 
 ---
 
-## 7. Lower priority (if you have appetite)
+## 7. Aetherium Forge Destroys Items (Authoria lane)
+
+Use a fresh disposable save and install AFDI. The first load intentionally
+baselines already-destroyed artifacts without paying retroactive credit, so
+perform each destruction only after that load has settled.
+
+1. Destroy one ordinary Daedric artifact. Within 15 seconds expect the owning
+   Prince to lose piety and reachable Stendarr/Syrabane paths to approve. Expect
+   exactly one toast and one Book of Days beat for the whole destruction.
+2. Save/reload and wait at least 15 seconds. The same latched global must not pay
+   again.
+3. Destroy the Black Star. Azura should approve; this must not reuse the benign
+   Azura's Star penalty.
+4. Destroy a Jyggalag artifact. Expect only a classify-only trace: no piety,
+   toast, or Book beat.
+5. Complete the exact case sheet in
+   `PDV_ARR25_NonQuest_RuntimeEvidenceLedger.json`. The 30 globals are separate
+   cases because one bad local ID would otherwise hide behind a successful one.
+
+---
+
+## 8. Green Pact and Breton Hidden Art (Authoria lane)
+
+1. Confirm one listed ARR animal food has the Green Pact meat keyword and does
+   not trigger a plant violation when eaten.
+2. Confirm each Kabu record displayed as `Gourd` receives the plant keyword and
+   follows the existing Green Pact plant-violation route when eaten.
+3. On a Breton Hidden Art character, trigger an ancestral-dream reflection.
+   Confirm Julianos also receives the renewable reflection signal, then repeat
+   within the same devotional day and confirm the shared daily cap holds.
+
+---
+
+## 9. Lower priority (if you have appetite)
 
 - Sacrilege / Manbeast / Requiem VampireCollection state transitions.
 - An Alternate Perspective start with Starting Choices active.
@@ -351,7 +386,7 @@ triggers.
 
 ---
 
-## 8. What to send back
+## 10. What to send back
 
 Even partial is useful:
 
@@ -362,7 +397,9 @@ Even partial is useful:
    Jyggalag. A false award is worse than a missing one.
 4. Any `[PDV]` error, `REJECT`, or `OVERFLOW` line.
 5. For bard: quality numbers seen, and whether the per-tavern cap held.
-6. Papyrus log if anything looks wrong.
+6. For AFDI: artifact/global case ID, baseline state, first-fire delay, and
+   whether reload caused a repeat.
+7. Papyrus log if anything looks wrong.
 
 **Please do not report "it worked" without the log line.** The whole point of
 this pass is that we have machine proof and zero runtime proof - a green

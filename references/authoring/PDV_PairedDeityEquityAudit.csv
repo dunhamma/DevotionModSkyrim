@@ -131,6 +131,9 @@ time_dragon,TG08B,50,Blindsighted,kill_honorable_combat,Alkosh(+m/small),Akatosh
 time_dragon,TG08B,50,Blindsighted,kill_honorable_combat,Alkosh(+m/small),Auri-El,waived
 time_dragon,TG09,200,Darkness Returns,keep_oath,Akatosh(+m/small),Auri-El,
 time_dragon,TG09,200,Darkness Returns,keep_oath,Akatosh(+m/small),Alkosh,
+time_dragon,CYRBrumaMS01,50,Alammu's Veil,"uphold_law_justice,expose_betray_secret",Akatosh(+m/small),Auri-El,waived
+time_dragon,CYRBrumaMS01,50,Alammu's Veil,"uphold_law_justice,expose_betray_secret",Akatosh(+m/small),Alkosh,waived
+time_dragon,CYRBrumaMS07,120,Absent Antiquity,uphold_law_justice,Akatosh(+m/small) Alkosh(+m/small),Auri-El,waived
 time_dragon,ccBGSSSE067_Quest2,1000,The Consequences,"destroy_reject_daedra:mehrunesdagon,kill_honorable_combat,uphold_law_justice",Akatosh(+m/small),Auri-El,waived
 time_dragon,ccBGSSSE067_Quest2,1000,The Consequences,"destroy_reject_daedra:mehrunesdagon,kill_honorable_combat,uphold_law_justice",Akatosh(+m/small),Alkosh,waived
 time_dragon,dunTrevasWatchQST,100,Infiltration,"protect_the_weak,uphold_law_justice",Akatosh(+m/milestone),Auri-El,waived
@@ -143,9 +146,6 @@ time_dragon,dk_ThograMain,150,Thogra's Blood Oath,keep_oath,Akatosh(+m/small),Au
 time_dragon,dk_ThograMain,150,Thogra's Blood Oath,keep_oath,Akatosh(+m/small),Alkosh,waived
 time_dragon,WTBarrowOfTheWyrm,260,Barrow of the Wyrm,"kill_honorable_combat,prove_by_struggle,protect_the_weak",Alkosh(+S/small),Akatosh,waived
 time_dragon,WTBarrowOfTheWyrm,260,Barrow of the Wyrm,"kill_honorable_combat,prove_by_struggle,protect_the_weak",Alkosh(+S/small),Auri-El,waived
-time_dragon,CYRBrumaMS01,50,Alammu's Veil,"uphold_law_justice,expose_betray_secret",Akatosh(+m/small),Auri-El,waived
-time_dragon,CYRBrumaMS01,50,Alammu's Veil,"uphold_law_justice,expose_betray_secret",Akatosh(+m/small),Alkosh,waived
-time_dragon,CYRBrumaMS07,120,Absent Antiquity,uphold_law_justice,Akatosh(+m/small) Alkosh(+m/small),Auri-El,waived
 death_order,C06,65,Glory of the Dead,cure_undeath,Arkay(+S/small) Tu'whacca(+m/small),Xarxes,waived
 death_order,CW02A,72,The Jagged Crown,slay_undead,Arkay(+C/small) Tu'whacca(+S/small),Xarxes,waived
 death_order,CW02B,72,The Jagged Crown,slay_undead,Arkay(+C/small) Tu'whacca(+S/small),Xarxes,waived
@@ -202,8 +202,8 @@ trickster_thief,TG08B,60,Blindsighted,theft_burglary,Rajhin(+C/small),Nocturnal,
 trickster_thief,TG08B,60,Blindsighted,theft_burglary,Rajhin(+C/small),Baan Dar,
 trickster_thief,TG09,10,Darkness Returns,theft_burglary,Rajhin(+C/small),Nocturnal,
 trickster_thief,TG09,10,Darkness Returns,theft_burglary,Rajhin(+C/small),Baan Dar,
-trickster_thief,WTTheNakedNord,50,The Naked Nord,"theft_burglary,exploit_cheat",Nocturnal(+S/small) Rajhin(+S/small),Baan Dar,waived
 trickster_thief,CYRBrumaMS01,150,Alammu's Veil,"theft_burglary,exploit_cheat",Nocturnal(+S/milestone) Rajhin(+S/milestone),Baan Dar,waived
+trickster_thief,WTTheNakedNord,50,The Naked Nord,"theft_burglary,exploit_cheat",Nocturnal(+S/small) Rajhin(+S/small),Baan Dar,waived
 love_marriage,BYOHRelationshipAdoptableOrphanage,200,Adoption (Honorhall),"charity,marriage_family",Dibella(+m/small),Mara,
 love_marriage,BYOHRelationshipAdoption,10,Adoption,marriage_family,Dibella(+m/small),Mara,
 knowledge_scribe,BardsCollegePoeticEdda,200,Collecting the Edda,disciplined_study,Julianos(+S/small) Xarxes(+m/small),Magnus,waived

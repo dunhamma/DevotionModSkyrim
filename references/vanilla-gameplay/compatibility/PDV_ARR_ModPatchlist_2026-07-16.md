@@ -406,10 +406,11 @@ option is supported yet.
 The recovered Wave 1 compatibility inventory is
 `PDV_ARR25_ContentInventory_2026-08-06.csv`: 1,220 retained rows covering 657 of 657
 mods in its original scope, after excluding one literal scratch `placeholder` row.
-Scope equality, natural-record uniqueness, and triage values were reconciled. This is
-machine inventory evidence only; it does **not** claim that the later 328-mod
-QUST-bearing discovery universe has been swept, authored, runtime-tested, or supported.
-The live recovery context and remaining exhaustive-discovery work are recorded in
+Scope equality, natural-record uniqueness, and triage values were reconciled. The
+later 328-mod QUST universe and the selected non-quest signature universe were then
+closed through deterministic checkpoint shards, primary semantic review, and T13-T17
+authoring. This is still machine evidence: runtime and support proof remain OPEN.
+The discovery contract, exact inventory interface, and proof boundary are recorded in
 `references/authoring/PDV_ARR25_ContentSweep_CodexHandoff_2026-08-06.md`.
 
 Follow-up logged: Sirenroot's Tilael/ghost-encounter beat (FormID range
@@ -439,23 +440,29 @@ P0 = blocks the Authoria 1.0 gate package; P1 = next tranche; P2 = nice-to-have.
 - [ ] **TODO-3 (P1, S1):** Row VC01 vampirism-cure completion under Seeking The
   Cure (cure_undeath: +Arkay/Meridia/Mara, -Molag Bal), mirroring the C06
   cure-lane pattern; enumerate the overhaul's stage set first.
-- [ ] **TODO-4 (P0, S3/scripted):** Build the bard performance hook: BSP-style
-  alias poll on SGT expertise deltas + `_LP_BardIsPlaying` edge, per-tavern
-  anti-farm via `_LP_BardTavernCounts`, milestones on BaB tavern/Jarl s100 and
-  the two Bards Reborn college quests. Soft-dependency guards
-  (GetFormFromFile) so it no-ops without the mods. Dibella primary lane.
+- [x] **TODO-4 (P0, S3/scripted): MACHINE-COMPLETE 2026-08-06.** The existing
+  implementation already contains the optional SGT expertise and Become a Bard
+  playing-edge observers, 5/15-second bounded cadence, 12-second double-route
+  guard, per-tavern devotional-day cap, global daily decay, and milestone rows.
+  It is packaged unchanged and statically gated. Bard runtime cases remain OPEN;
+  this check does not claim support.
 - [x] **TODO-5 (P1, S1): DONE 2026-07-16.** All 11 verify-theme-first targets
   verified (mostly Tier A stage text), owner-ruled, and shipped as per-mod
   patches. Superseded text below kept for the original scope note only.
 - [ ] **TODO-5-OLD (superseded):** Run the verify-theme-first list (section 2) --
   stage/log-text readback per quest, then author or drop each.
-- [ ] **TODO-6 (P0, S5):** Re-verify the BOS shrine-prayer swap INI against ARR
-  Test statue records; extend to the Wyrmstooth Daedric-shrine placements and
-  decide Jyggalag (currently no PDV deity -- likely classify-only).
-- [ ] **TODO-7 (P0, package):** Refresh `PDV_AuthoriaARR_Compatibility` package
-  against this instance (masters check, matrix JSON regen, README instance
-  path), then local smoke per the updated
-  `PDV_Phase21_ARR_SmokeRunbook.md` (no Archon step anymore).
+- [x] **TODO-6 (P0, S5): MACHINE-COMPLETE 2026-08-06.** The stale QASmoke-sender
+  swap was removed. The package now carries the read-back 11-ACTI prayer ESP and
+  matching route-202 BOS map. Wyrmstooth placements use different base forms and
+  do not inherit the swaps, so no unproved mappings were added. Jyggalag remains
+  classify-only. Runtime prayer and negative-control cases remain OPEN.
+- [x] **TODO-7 (P0, package): MACHINE-COMPLETE 2026-08-06.** The cumulative
+  ARR 2.5 test candidate contains 34 channels, two scoped ESPs, current isolated
+  PEX/source, Green Pact KID rules, corrected prayer swaps, full T13-T17 and
+  non-quest ledgers, and refreshed README/runbook. FOMOD XML, referenced folders,
+  collisions, Authoria/all-individual/subset simulations, 92 archive members,
+  filenames, and checksums pass. Runtime preflight and every tester case remain
+  OPEN, so the package is experimental and not supported.
 - [ ] **TODO-8 (P1, S5):** Verify JS Shrines / CC Survival Disable-Shrine-Menu
   do not reroute shrine activation away from TempleBlessingScript surfaces.
   **Widened 2026-07-27 (1.0.4):** Devotion now SHIPS its own

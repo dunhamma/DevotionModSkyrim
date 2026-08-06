@@ -194,6 +194,9 @@ Akatosh cluster (deity reference: Auri-El and Alkosh are cultural faces of the t
 | TG08B (Blindsighted) | 50 | kill_honorable_combat | Alkosh(+m/small) | Auri-El | waived |
 | TG09 (Darkness Returns) | 200 | keep_oath | Akatosh(+m/small) | Auri-El | open |
 | TG09 (Darkness Returns) | 200 | keep_oath | Akatosh(+m/small) | Alkosh | open |
+| CYRBrumaMS01 (Alammu's Veil) | 50 | uphold_law_justice,expose_betray_secret | Akatosh(+m/small) | Auri-El | waived |
+| CYRBrumaMS01 (Alammu's Veil) | 50 | uphold_law_justice,expose_betray_secret | Akatosh(+m/small) | Alkosh | waived |
+| CYRBrumaMS07 (Absent Antiquity) | 120 | uphold_law_justice | Akatosh(+m/small) Alkosh(+m/small) | Auri-El | waived |
 | ccBGSSSE067_Quest2 (The Consequences) | 1000 | destroy_reject_daedra:mehrunesdagon,kill_honorable_combat,uphold_law_justice | Akatosh(+m/small) | Auri-El | waived |
 | ccBGSSSE067_Quest2 (The Consequences) | 1000 | destroy_reject_daedra:mehrunesdagon,kill_honorable_combat,uphold_law_justice | Akatosh(+m/small) | Alkosh | waived |
 | dunTrevasWatchQST (Infiltration) | 100 | protect_the_weak,uphold_law_justice | Akatosh(+m/milestone) | Auri-El | waived |
@@ -206,9 +209,6 @@ Akatosh cluster (deity reference: Auri-El and Alkosh are cultural faces of the t
 | dk_ThograMain (Thogra's Blood Oath) | 150 | keep_oath | Akatosh(+m/small) | Alkosh | waived |
 | WTBarrowOfTheWyrm (Barrow of the Wyrm) | 260 | kill_honorable_combat,prove_by_struggle,protect_the_weak | Alkosh(+S/small) | Akatosh | waived |
 | WTBarrowOfTheWyrm (Barrow of the Wyrm) | 260 | kill_honorable_combat,prove_by_struggle,protect_the_weak | Alkosh(+S/small) | Auri-El | waived |
-| CYRBrumaMS01 (Alammu's Veil) | 50 | uphold_law_justice,expose_betray_secret | Akatosh(+m/small) | Auri-El | waived |
-| CYRBrumaMS01 (Alammu's Veil) | 50 | uphold_law_justice,expose_betray_secret | Akatosh(+m/small) | Alkosh | waived |
-| CYRBrumaMS07 (Absent Antiquity) | 120 | uphold_law_justice | Akatosh(+m/small) Alkosh(+m/small) | Auri-El | waived |
 
 ### Death order (Arkay, Tu'whacca, Xarxes) [tag-scoped]
 
@@ -293,8 +293,8 @@ Rajhin is THE Khajiit thief-god and Baan Dar the pariah trickster; Thieves Guild
 | TG08B (Blindsighted) | 60 | theft_burglary | Rajhin(+C/small) | Baan Dar | open |
 | TG09 (Darkness Returns) | 10 | theft_burglary | Rajhin(+C/small) | Nocturnal | open |
 | TG09 (Darkness Returns) | 10 | theft_burglary | Rajhin(+C/small) | Baan Dar | open |
-| WTTheNakedNord (The Naked Nord) | 50 | theft_burglary,exploit_cheat | Nocturnal(+S/small) Rajhin(+S/small) | Baan Dar | waived |
 | CYRBrumaMS01 (Alammu's Veil) | 150 | theft_burglary,exploit_cheat | Nocturnal(+S/milestone) Rajhin(+S/milestone) | Baan Dar | waived |
+| WTTheNakedNord (The Naked Nord) | 50 | theft_burglary,exploit_cheat | Nocturnal(+S/small) Rajhin(+S/small) | Baan Dar | waived |
 
 ### Love / marriage (Mara, Dibella) [tag-scoped]
 

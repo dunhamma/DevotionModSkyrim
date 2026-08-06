@@ -1071,6 +1071,23 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 
 ## Decisions Log
 
+- **[2026-08-06] - ARR 2.5 content sweep is machine-complete but remains an
+  experimental test candidate:** The finite scope is every enabled ARR 2.5 mod
+  containing QUST plus the selected non-quest signature universe. Direct plugin
+  enumeration, canonical inventory/reachability, T13-T17 channels, and package
+  simulation are complete on `codex/arr25-content-sweep`; the cumulative archive
+  is `dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip` (92 entries, SHA-256
+  `7E93CC59F78F443E8EFA46EAC3D5C052E56EC80C8D30388F08854AD1B4B3E132`).
+  Non-quest rules locked by the pass: Potion KID classification uses exact item
+  names because ALCH form filters target effects; AFDI is observed through its 30
+  post-success latched globals with an existing-save no-credit baseline and
+  once-ever persistence; Jyggalag stays classify-only; Wyrmstooth shrine refs do
+  not inherit the ARR statue swaps because their base forms differ; and hunting
+  remains deferred until the third-party animation script emits a truthful
+  per-corpse-action event. Machine, readback, runtime-route, player-surface, and
+  support proof remain separate. No ARR 2.5 option is supported until its full
+  structured tester ledger passes.
+
 - **[2026-08-03] - Khajiit road-home sleep uses sleep-start context and one presentation per devotional day:**
   `PDV_PlayerEvents` captures exterior status at `OnSleepStart` and carries it through
   `PDV_EventBus` to the manager at completed, non-interrupted `OnSleepStop`. The manager

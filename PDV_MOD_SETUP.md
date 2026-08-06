@@ -1100,6 +1100,25 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 ## Notes / Decisions Log
 
+**2026-08-06 AEST - ARR 2.5 exhaustive content/package candidate:** The isolated
+`codex/arr25-content-sweep` worktree closes the finite QUST plus selected non-quest
+inventory, authors T13-T17 as 34 per-mod channels, and packages the safe non-quest
+surface. `PDV_PlayerEvents` now optionally polls AFDI's 30 latched successful-
+destruction globals every 15 real-time seconds through the unified scheduler;
+version 1 baselines existing saves without retroactive credit and persists each
+transition before routing. The package also carries exact-name ARR Green Pact KID
+rules, the existing bounded bard lane, Breton Hidden Art's second renewable, and
+the read-back 11-ACTI route-202 shrine-prayer ESP/BOS pair. Wyrmstooth placements
+use different base forms and are not covered; Jyggalag remains classify-only;
+hunting is deferred because a truthful route requires a third-party ModEvent after
+the IHA corpse-token write. The validated archive is
+`dist\PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`: 92 members, no missing or
+extra files, SHA-256
+`7E93CC59F78F443E8EFA46EAC3D5C052E56EC80C8D30388F08854AD1B4B3E132`.
+Papyrus compile is 0/0 and strict verification is `PASS=4074, TODO=1, INFO=78,
+WARN=1, FAIL=0`. This moves machine/package proof only; ARR 2.5 runtime preflight,
+every structured tester case, and support remain OPEN.
+
 **2026-07-27 AEST - 1.0.4 shipped; shrine-script boundary amended and a hard MO2
 priority requirement added:** Devotion 1.0.4 is public (tag `v1.0.4`,
 `Devotion-1.0.4-20260727.zip`). Three things below change how this document's earlier
