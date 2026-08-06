@@ -1,0 +1,95 @@
+{
+  "schema": "pdv.vmad-audit-waivers.v1",
+  "consumedBy": "tools/pdv_vmad_audit.mjs",
+  "class": "hand-authored authority (PDV_STANDARDS.md 5.3 class 1) -- committed",
+  "purpose": "Absences that are architecturally CORRECT, each with the readback or verifier line that proves it. Without this file the audit re-reports the same disproven scares every run; two independent sweeps have already reported the Altmer spine trio as a bug. A waiver is a claim that needs evidence, not a mute button: every entry cites where the proof lives. Delete an entry the moment its evidence stops holding.",
+  "waivers": [
+    {
+      "script": "PDV__ManagerQuest",
+      "formids": ["00C325:Devotion.esp"],
+      "properties": [
+        "PDV_Bless_Altmer_Spine_Always",
+        "PDV_Bless_Altmer_Spine_Mid",
+        "PDV_Bless_Altmer_Spine_High"
+      ],
+      "reason": "Substrate-owned reward. These three manager declarations are vestigial: their only call sites are inside StripAllPdvSpells (PDV__ManagerQuest.psc:17221-17463), a flat teardown list where every call passes shouldBeActive=False, reached only from PrepareForUninstall and RunAuthoriaActorValueRepair. The live grant lane is PDV_Substrate_AltmerAncestor (0715AC:Devotion.esp), whose VMAD binds Substrate_Always/Mid/High to 0715A7/0715A9/0715AB. Binding the manager copies would create a second owner for a substrate-owned record -- the anti-pattern tools/pdv_reward_runtime_order_lint.mjs:398-403 exists to prevent. Breton, Imperial, Nord and Dunmer carry no manager spine properties at all and their spines work.",
+      "evidence": "tools/pdv_verify.mjs:6697-6699 asserts substrate ownership; references/authoring/PDV_HO_1.0.4_Scope_DrHeisenPatch_2026-07-25.md:170-197 records the same false finding and its correction."
+    },
+    {
+      "script": "PDV_DaedricPath_Azura",
+      "formids": ["071280:Devotion.esp"],
+      "properties": ["Msg_Response_Dunmer"],
+      "reason": "Native-pair omission. The race-response message is the 'you consorted with a Daedra' reaction, which does not apply to a race that worships this Prince natively. PDV_Deity_Azura (071078:Devotion.esp) carries Stance_Dunmer=0 (STANCE_NATIVE) and DeityName='Azurah'; that relationship is handled by the Deity lane, not the Daedric path lane.",
+      "evidence": "Live readback 2026-08-06: PDV_Deity_Azura VMAD Stance_Dunmer=0."
+    },
+    {
+      "script": "PDV_DaedricPath_Boethiah",
+      "formids": ["07125F:Devotion.esp"],
+      "properties": ["Msg_Response_Dunmer"],
+      "reason": "Native-pair omission; see the PDV_DaedricPath_Azura entry for the rule.",
+      "evidence": "Live readback 2026-08-06: PDV_Deity_Boethiah (071149:Devotion.esp) Stance_Dunmer=0."
+    },
+    {
+      "script": "PDV_DaedricPath_Mephala",
+      "formids": ["07123E:Devotion.esp"],
+      "properties": ["Msg_Response_Dunmer"],
+      "reason": "Native-pair omission; see the PDV_DaedricPath_Azura entry for the rule.",
+      "evidence": "Live readback 2026-08-06: PDV_Deity_Mephala (07114A:Devotion.esp) Stance_Dunmer=0."
+    },
+    {
+      "script": "PDV_DaedricPath_Malacath",
+      "formids": ["071303:Devotion.esp"],
+      "properties": ["Msg_Response_Orc"],
+      "reason": "Native-pair omission; see the PDV_DaedricPath_Azura entry for the rule.",
+      "evidence": "Live readback 2026-08-06: PDV_Deity_Malacath (071126:Devotion.esp) Stance_Orc=0."
+    },
+    {
+      "script": "PDV_EventSignalActivator",
+      "formids": ["05B29C:Devotion.esp", "05B29D:Devotion.esp", "05B29E:Devotion.esp"],
+      "properties": ["PlayerREF", "SignalValue", "SignalSourceId"],
+      "reason": "Legacy-generation activators (Dunmer portable shrine, Dunmer private shrine, Hircine hunt rite) whose routes do not consume the unbound properties. SignalValue is passed only by ROUTE_KHAJIIT_MOON_OBSERVANCE and ROUTE_KHAJIIT_ROAD_HOME (PDV_EventSignalActivator.psc:144,146); these three dispatch through RouteDunmerPortableShrinePrayer / RouteDunmerPlayerHomeBonus / RouteHircineHuntRite, which take no argument. SignalSourceId falls back to TraceLabel then 'activator_route_<RouteId>' (:256-266), and PlayerREF falls back to Game.GetPlayer() (:268-274).",
+      "evidence": "PDV_EventSignalActivator.psc:139-157 route dispatch; :256-274 fallbacks. Live readback 2026-08-06."
+    },
+    {
+      "script": "PDV_EventSignalEffect",
+      "properties": ["PlayerREF"],
+      "reason": "Null-guarded with a Game.GetPlayer() fallback, so an unbound PlayerREF changes nothing at runtime.",
+      "evidence": "PDV_EventSignalEffect.psc:184-185."
+    },
+    {
+      "script": "PDV_SurveyDevotionEffect",
+      "properties": ["PlayerREF"],
+      "reason": "Null-guarded with a Game.GetPlayer() fallback, same pattern as PDV_EventSignalEffect.",
+      "evidence": "PDV_SurveyDevotionEffect.psc GetPlayerActor fallback."
+    },
+    {
+      "script": "PDV_DeityBase",
+      "excludeScriptPrefixes": ["PDV_DaedricPath"],
+      "properties": ["Boon_Seeker", "Boon_Devoted", "Boon_Champion"],
+      "reason": "Retired-compatibility records, deliberately never granted on the Aedric thin-shell deities. A patron's blessing begins at Devoted; there is no patron Seeker tier. The SPEL records are kept so old saves do not break, and PDV_DeityBase's boon code is kept as a now-no-op. The exclusion matters: PDV_DaedricPathBase overrides SyncPatronBoonsToTier and grants Boon_* for real (PDV_DaedricPathBase.psc:115-153), so all 16 Prince paths DO bind them and must keep being audited.",
+      "evidence": "PDV_Architecture_v3.md ADR-0005 ('focused T1 records remain save-compatible artifacts but are never granted'); enforcement comment at PDV_DeityBase.psc:410; owner ruling 2026-07-14 in references/authoring/PDV_RaceGuide_NexusFinalPass_2026-07-14.md:91-95, which states verbatim: 'A future audit that flags these as \"unreachable, wire them\" is wrong.' See also references/authoring/PDV_PlayerStateBugs_2026-07-14.md:148 and handoff/PDV_CleanupDebt_Handoff_2026-06-17.md:48-58."
+    },
+    {
+      "script": "PDV_DeityBase",
+      "properties": [
+        "RivalDeities",
+        "RivalMultipliers",
+        "GainModifyingTrack",
+        "GainMultiplierPerTrackState",
+        "DecayModifyingTrack",
+        "DecayMultiplierPerTrackState",
+        "EligibleStateTrack",
+        "EligibleStateValues"
+      ],
+      "reason": "Opt-in per-deity hooks, not a per-deity requirement. Each is absent on the overwhelming majority of the 49-member deity/path population and every read is null-guarded: a deity only carries a ReputationTrack, StateTrack or authored rivalry when its design calls for one. Reporting the absent majority inverts signal and noise.",
+      "evidence": "Detector A family split at time of waiver: present on 1-3 of 49 members."
+    }
+  ],
+  "deliberatelyNotWaived": [
+    {
+      "script": "PDV_DaedricPath_Azura",
+      "property": "Msg_Response_Khajiit",
+      "why": "Open design question, owner ruling pending. PDV_Deity_Azura carries Stance_Khajiit=0, so the native-pair rule would waive it -- but PDV_Deity_Boethiah and PDV_Deity_Mephala are ALSO Stance_Khajiit=0 and their paths DO carry Msg_Response_Khajiit. The rule is 100% consistent for Dunmer and Orc and inconsistent only here, so either Azura is the gap or Boethiah/Mephala carry dead records. Azurah is a major Khajiiti deity, which may warrant treatment different from the other two. Leave it reported until that is settled."
+    }
+  ]
+}
