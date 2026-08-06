@@ -35,7 +35,7 @@ by the per-deity Champion entry (see Devoted/emergence reconciliation below).
 | Breton | Y | Y | Y | Y (druidic) | Y |
 | Dunmer | Y | →Champion | Y | N/A | Y |
 | Imperial | Y | →Champion | Y | Y (Concordat) | Y |
-| Khajiit | Y | Y | Y | N/A (=emergence) | Y |
+| Khajiit | Y | Y (first focus) | Y | Y (automatic focus replacement) | Y |
 | Nord | Y | →Champion | Y | N/A | Y |
 | Orc | Y | Y (life-mode) | Y | Y (life-mode) | Y |
 | Redguard | Y | →Champion | Y | Y (sect) | Y |
@@ -78,7 +78,7 @@ Key = focus deity (or life-mode); direction = `dominant`. One-shot per subject.
 | Race | Emergence surface |
 |------|-------------------|
 | Breton | `PDV_Notif_Breton_FocusEmergence` (focus within tradition) |
-| Khajiit | `PDV_Notif_Khajiit_FocusEmergence` (silent-emergence headline case) |
+| Khajiit | five deity-specific `PDV_MSG_KhajiitFocus_*` MessageBoxes on first automatic focus only, paired with the existing Prisma toast and pinned Book entry |
 | Orc | life-mode entries `PDV_Notif_Orc_LifeMode_{Stronghold,City,LegionExile}_Entry` (also the reorientation surface) |
 | Altmer | `PDV_Notif_Altmer_Focus_DevotedEntry` (Devoted = focus) |
 | Dunmer | `PDV_Notif_Dunmer_Focus_DevotedEntry` (Devoted = focus) |
@@ -116,7 +116,7 @@ Key = destination state; direction = `enter`. Fire on the **confirmed** switch o
 | Imperial | `PDV_Notif_Imperial_Concordat_{Uncommitted,PrivateDefiant,OpenDefiant,PublicCompliant,ConcordatEnforcer}` — see the Talos-gate "state-legible not interrupt" rule in §16.7 and `PDV_DecisionMemo_ImperialComplianceLane.md` |
 | Breton | `PDV_Notif_Breton_DruidicStanding_{Open,Acknowledged,Frayed}` (tradition is start-locked; druidic standing is the only switch) |
 | Altmer / Dunmer / Nord | **N/A** — pantheon/path chosen at start and locked; no mid-game switch (`PDV_Architecture_v3.md:1474` patron-swap deferred) |
-| Khajiit | **N/A** — covered by `emergence` (silent focus shift); no chosen switch |
+| Khajiit | automatic replacement after the new deity satisfies Seeker piety plus the `25 / 15` dominance test; Prisma toast and unpinned Book entry, no repeat popup |
 | Argonian | **N/A** — Hist posture (`PDV_Notif_Argonian_HistPosture_*`) is driven by curse/neglect, already surfaced by those classes; no player-chosen switch |
 
 ## 5. `neglect` — god first crosses a neglect threshold / tier drop (Medium; toast `neglect`)

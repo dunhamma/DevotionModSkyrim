@@ -1448,6 +1448,7 @@ class Verifier {
       ["Pantheon and substrate record readback", "pdv_pantheon_record_readback.mjs"],
       ["Pantheon presentation record readback", "pdv_pantheon_presentation_readback.mjs"],
       ["Active-effect naming convention", "pdv_active_effect_naming_audit.mjs"],
+      ["Khajiit lunar and Champion rebalance contract", "pdv_khajiit_rebalance_audit.mjs"],
       // Bounded quest-reaction delivery, including the direct-fan-out registry
       // (tools/pdv_qr_direct_fanout.json). Default-on with no opt-in flag, per the
       // 2026-07-07 declaration-gate ruling: an opt-in flag nobody passes is how a

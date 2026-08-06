@@ -333,9 +333,8 @@ Spell Property PDV_Bless_Imperial_Talos_T2 Auto
 Spell Property PDV_Bless_Imperial_Talos_T3 Auto
 Spell Property PDV_SPEL_Neglect_Imperial Auto
 Spell Property PDV_Bless_Khajiit_Lunar_T1 Auto
-; Lattice phase blessings: one small (+5 / +5%) god-themed effect per presiding
-; moon phase, active only while that god presides AND the player has cultivated
-; it to Faithful. None-safe until the records are authored.
+; Retired rotating phase-stat spells. Properties remain only for save/FormID
+; compatibility so reconciliation can remove stale instances.
 Spell Property PDV_Bless_Khajiit_Phase_Khenarthi Auto
 Spell Property PDV_Bless_Khajiit_Phase_Azurah Auto
 Spell Property PDV_Bless_Khajiit_Phase_BaanDar Auto
@@ -358,6 +357,16 @@ Spell Property PDV_Bless_Khajiit_Rajhin_T3 Auto
 Spell Property PDV_Bless_Khajiit_Alkosh_T1 Auto
 Spell Property PDV_Bless_Khajiit_Alkosh_T2 Auto
 Spell Property PDV_Bless_Khajiit_Alkosh_T3 Auto
+Perk Property PDV_PERK_Khajiit_LatticeResonance Auto
+Spell Property PDV_SPEL_Khajiit_LatticeResonanceMarker Auto
+Spell Property PDV_Power_Khajiit_AzurahPortent Auto
+Spell Property PDV_SPEL_Khajiit_AzurahPortentDetect Auto
+Sound Property PDV_SND_Khajiit_AzurahPortentFizzle Auto
+Message Property PDV_MSG_KhajiitFocus_Khenarthi Auto
+Message Property PDV_MSG_KhajiitFocus_Azurah Auto
+Message Property PDV_MSG_KhajiitFocus_BaanDar Auto
+Message Property PDV_MSG_KhajiitFocus_Rajhin Auto
+Message Property PDV_MSG_KhajiitFocus_Alkosh Auto
 Spell Property PDV_SPEL_Neglect_KhajiitLunar Auto
 Spell Property PDV_Bless_Nord_OldWays_T1 Auto
 Spell Property PDV_Bless_Nord_OldWays_T2 Auto
@@ -788,7 +797,7 @@ Int Property KHAJIIT_LUNAR_POSTURE_CORRUPTED = 2 AutoReadOnly
 Int Property KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT = 3 AutoReadOnly
 Int Property KHAJIIT_SHADOWDRIFT_EVIDENCE_REQUIRED = 3 AutoReadOnly
 Int Property KHAJIIT_SHADOWDRIFT_EVIDENCE_WINDOW = 7 AutoReadOnly
-Float Property KHAJIIT_FOCUS_THRESHOLD = 50.0 AutoReadOnly
+Float Property KHAJIIT_FOCUS_THRESHOLD = 25.0 AutoReadOnly
 Float Property KHAJIIT_FOCUS_LEAD_REQUIRED = 15.0 AutoReadOnly
 Float Property KHAJIIT_FOCUS_SIGNAL_DELTA = 25.0 AutoReadOnly
 ; Khajiit lunar substrate pacing (owner decision 2026-07-13): the lunar identity
@@ -803,14 +812,12 @@ Float Property KHAJIIT_LUNAR_ROAD_METRIC = 2.0 AutoReadOnly
 ; Focus weight a quest-reaction piety award contributes to the Khajiit focused
 ; emphasis (the matrix->focus bridge). Smaller than a dedicated edge signal so a
 ; single quest cannot lock a focus; a milestone reaction counts double. With
-; THRESHOLD 50 / LEAD 15, this means roughly a full questline (e.g. the Thieves
-; Guild for Rajhin) establishes the lead, not one quest. Behavior-driven focus
+; THRESHOLD 25 / LEAD 15 lets an established behavioral lead emerge once the
+; matching deity has also reached Seeker. Behavior-driven focus
 ; per the LOCKED Khajiit design sheet (moons are the substrate; behavior leads).
 Float Property KHAJIIT_FOCUS_MATRIX_DELTA = 6.0 AutoReadOnly
-; Layer 2: extra piety multiplier toward a Khajiit focus god while the current
-; moon phase aligns to it and that god has reached Faithful (tier 2). Small by
-; design -- the moons favor a cultivated god, they do not replace the work.
-Float Property KHAJIIT_LUNAR_ALIGNMENT_BONUS = 0.10 AutoReadOnly
+String Property KHAJIIT_MOON_OBSERVATIONS_FILE = "../StorageUtilData/PlayerDevotion/PDV_KhajiitMoonObservations" AutoReadOnly
+Int Property KHAJIIT_MOON_OBSERVATIONS_VERSION = 1 AutoReadOnly
 Float Property KHAJIIT_LUNAR_NEGLECT_GRACE_DAYS = 3.0 AutoReadOnly
 ; Argonian no-offer reward gating (substrate-relation thresholds + Hist-distance neglect grace).
 Float Property ARGONIAN_HIST_NEGLECT_GRACE_DAYS = 3.0 AutoReadOnly
@@ -2999,12 +3006,10 @@ Function BridgeKhajiitMatrixFocus(String deityName, String magnitude)
     Trace(2, "Khajiit matrix focus bridge: " + deityName + " focus +" + (base * multiplier))
 EndFunction
 
-; --- Lattice presiding gods ----------------------------------------------------
-; The Lunar Lattice is god-aligned: each of the eight moon phases BELONGS to one
-; of the five moon-path gods as part of Khajiit cosmology. The presiding god is
-; always defined and always shown (flavor); its bonuses (extra piety gain and a
-; small phase blessing) activate only once the player has cultivated that god to
-; Faithful. The mapping lives in one place for easy tuning.
+; --- Gods in strength ----------------------------------------------------------
+; Each of the eight lunar slots names one moon-path god in strength. Matching a
+; Seeker-or-higher focus activates Lattice Resonance; piety is never multiplied.
+; The mapping lives in one place for easy tuning.
 ; Indices match GetKhajiitMoonPhaseFromGameDay (the real visible Skyrim phase).
 Int Function GetLunarPresidingFocus(Int phaseIndex)
     if phaseIndex == 1
@@ -3057,17 +3062,16 @@ Int Function GetCurrentLunarPresidingFocus()
     return GetLunarPresidingFocus(GetKhajiitMoonPhaseFromGameDay(Utility.GetCurrentGameTime()))
 EndFunction
 
-; Returns the presiding focus IF the player has cultivated that god to Faithful
-; (tier 2) or better; KHAJIIT_FOCUS_NONE otherwise. Single source of truth for
-; the gain multiplier, the phase blessing, and the Survey/MCM readout.
+; Compatibility accessor retained for old callers. A god is favored when it is
+; in strength and is also the player's current Seeker-or-higher focus.
 Int Function GetActiveLunarFavoredFocus()
     Int presidingFocus = GetCurrentLunarPresidingFocus()
-    if presidingFocus == KHAJIIT_FOCUS_NONE
+    if presidingFocus == KHAJIIT_FOCUS_NONE || presidingFocus != GetKhajiitFocusedEmphasis()
         return KHAJIIT_FOCUS_NONE
     endIf
 
     PDV_DeityBase deity = GetKhajiitEmphasisDeity(presidingFocus)
-    if !deity || GetTier(deity) < TIER_DEVOTED
+    if !deity || GetPiety(deity) < 25.0
         return KHAJIIT_FOCUS_NONE
     endIf
 
@@ -3091,21 +3095,210 @@ Spell Function GetKhajiitPhaseBlessing(Int focusValue)
     return None
 EndFunction
 
-; Keeps exactly one phase blessing on the player: the presiding god's, and only
-; while that god is Faithful. Re-synced at dawn (a phase lasts ~3.5 days, so the
-; daily pass tracks the cycle closely enough without a dedicated tick).
+; Compatibility cleanup for the retired five rotating stat spells. Their records
+; remain in the plugin for save/FormID stability, but runtime reconciliation always
+; removes them. Lattice Resonance owns the active god-strength mechanic.
 Function SyncKhajiitPhaseBlessing()
     Actor playerRef = Game.GetPlayer()
     if !playerRef
         return
     endIf
 
-    Int favored = GetActiveLunarFavoredFocus()
     Int focusValue = 1
     while focusValue <= 5
-        SyncRaceRewardSpell(playerRef, GetKhajiitPhaseBlessing(focusValue), focusValue == favored, "Khajiit phase blessing " + GetKhajiitFocusLabel(focusValue))
+        SyncRaceRewardSpell(playerRef, GetKhajiitPhaseBlessing(focusValue), False, "retired Khajiit phase blessing " + GetKhajiitFocusLabel(focusValue))
         focusValue += 1
     endWhile
+EndFunction
+
+Bool Function IsKhajiitLatticeResonating()
+    if GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT
+        return False
+    endIf
+    Int focusValue = GetKhajiitFocusedEmphasis()
+    if focusValue == KHAJIIT_FOCUS_NONE || focusValue != GetCurrentLunarPresidingFocus()
+        return False
+    endIf
+    PDV_DeityBase deity = GetKhajiitEmphasisDeity(focusValue)
+    return deity && GetPiety(deity) >= 25.0
+EndFunction
+
+Spell Function GetKhajiitFocusedRewardSpell(Int focusValue, Int tierValue)
+    if focusValue == KHAJIIT_FOCUS_KHENARTHI
+        if tierValue >= TIER_CHAMPION
+            return PDV_Bless_Khajiit_Khenarthi_T3
+        elseIf tierValue == TIER_DEVOTED
+            return PDV_Bless_Khajiit_Khenarthi_T2
+        elseIf tierValue == TIER_SEEKER
+            return PDV_Bless_Khajiit_Khenarthi_T1
+        endIf
+    elseIf focusValue == KHAJIIT_FOCUS_AZURAH
+        if tierValue >= TIER_CHAMPION
+            return PDV_Bless_Khajiit_Azurah_T3
+        elseIf tierValue == TIER_DEVOTED
+            return PDV_Bless_Khajiit_Azurah_T2
+        elseIf tierValue == TIER_SEEKER
+            return PDV_Bless_Khajiit_Azurah_T1
+        endIf
+    elseIf focusValue == KHAJIIT_FOCUS_BAANDAR
+        if tierValue >= TIER_CHAMPION
+            return PDV_Bless_Khajiit_BaanDar_T3
+        elseIf tierValue == TIER_DEVOTED
+            return PDV_Bless_Khajiit_BaanDar_T2
+        elseIf tierValue == TIER_SEEKER
+            return PDV_Bless_Khajiit_BaanDar_T1
+        endIf
+    elseIf focusValue == KHAJIIT_FOCUS_RAJHIN
+        if tierValue >= TIER_CHAMPION
+            return PDV_Bless_Khajiit_Rajhin_T3
+        elseIf tierValue == TIER_DEVOTED
+            return PDV_Bless_Khajiit_Rajhin_T2
+        elseIf tierValue == TIER_SEEKER
+            return PDV_Bless_Khajiit_Rajhin_T1
+        endIf
+    elseIf focusValue == KHAJIIT_FOCUS_ALKOSH
+        if tierValue >= TIER_CHAMPION
+            return PDV_Bless_Khajiit_Alkosh_T3
+        elseIf tierValue == TIER_DEVOTED
+            return PDV_Bless_Khajiit_Alkosh_T2
+        elseIf tierValue == TIER_SEEKER
+            return PDV_Bless_Khajiit_Alkosh_T1
+        endIf
+    endIf
+    return None
+EndFunction
+
+Function RefreshKhajiitFocusedRewardForResonance(Actor playerRef)
+    Int focusValue = GetKhajiitFocusedEmphasis()
+    PDV_DeityBase deity = GetKhajiitEmphasisDeity(focusValue)
+    if !playerRef || !deity
+        return
+    endIf
+    Spell rewardSpell = GetKhajiitFocusedRewardSpell(focusValue, GetTier(deity))
+    if rewardSpell && playerRef.HasSpell(rewardSpell)
+        playerRef.RemoveSpell(rewardSpell)
+        playerRef.AddSpell(rewardSpell, False)
+    endIf
+EndFunction
+
+Function SyncKhajiitLatticeResonance(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+    Bool shouldResonate = IsKhajiitLatticeResonating()
+    Bool wasResonating = StorageUtil.GetIntValue(None, "PDV.Khajiit.LatticeResonating") == 1
+    if shouldResonate
+        if PDV_PERK_Khajiit_LatticeResonance && !playerRef.HasPerk(PDV_PERK_Khajiit_LatticeResonance)
+            playerRef.AddPerk(PDV_PERK_Khajiit_LatticeResonance)
+        endIf
+        if PDV_SPEL_Khajiit_LatticeResonanceMarker && !playerRef.HasSpell(PDV_SPEL_Khajiit_LatticeResonanceMarker)
+            playerRef.AddSpell(PDV_SPEL_Khajiit_LatticeResonanceMarker, False)
+        endIf
+    else
+        if PDV_PERK_Khajiit_LatticeResonance && playerRef.HasPerk(PDV_PERK_Khajiit_LatticeResonance)
+            playerRef.RemovePerk(PDV_PERK_Khajiit_LatticeResonance)
+        endIf
+        if PDV_SPEL_Khajiit_LatticeResonanceMarker && playerRef.HasSpell(PDV_SPEL_Khajiit_LatticeResonanceMarker)
+            playerRef.RemoveSpell(PDV_SPEL_Khajiit_LatticeResonanceMarker)
+        endIf
+    endIf
+    if shouldResonate != wasResonating
+        if shouldResonate
+            StorageUtil.SetIntValue(None, "PDV.Khajiit.LatticeResonating", 1)
+        else
+            StorageUtil.SetIntValue(None, "PDV.Khajiit.LatticeResonating", 0)
+        endIf
+        RefreshKhajiitFocusedRewardForResonance(playerRef)
+        RequestPanelRefresh()
+        Trace(1, "Khajiit Lattice Resonance " + shouldResonate)
+    endIf
+EndFunction
+
+Function SyncKhajiitPortentPower(Actor playerRef)
+    if !playerRef || !PDV_Power_Khajiit_AzurahPortent
+        return
+    endIf
+    PDV_DeityBase focusDeity = GetKhajiitEmphasisDeity(GetKhajiitFocusedEmphasis())
+    Bool shouldHave = GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT && focusDeity == PDV_Azura && GetTier(focusDeity) >= TIER_CHAMPION && playerRef.HasSpell(PDV_Bless_Khajiit_Azurah_T3)
+    SyncRaceRewardSpell(playerRef, PDV_Power_Khajiit_AzurahPortent, shouldHave, "Azurah Portent power")
+EndFunction
+
+Bool Function TryUseKhajiitAzurahPortent(Actor playerRef)
+    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT || GetKhajiitFocusedEmphasis() != KHAJIIT_FOCUS_AZURAH
+        return False
+    endIf
+    if !PDV_Azura || GetTier(PDV_Azura) < TIER_CHAMPION || !PDV_Bless_Khajiit_Azurah_T3 || !playerRef.HasSpell(PDV_Bless_Khajiit_Azurah_T3)
+        SyncKhajiitPortentPower(playerRef)
+        return False
+    endIf
+
+    Int currentDay = GetDevotionalDay() + 2
+    if StorageUtil.GetIntValue(None, "PDV.Khajiit.AzurahPortent.Day") == currentDay
+        if PDV_SND_Khajiit_AzurahPortentFizzle
+            PDV_SND_Khajiit_AzurahPortentFizzle.Play(playerRef)
+        endIf
+        return False
+    endIf
+    if !PDV_SPEL_Khajiit_AzurahPortentDetect
+        return False
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.Khajiit.AzurahPortent.Day", currentDay)
+    PDV_SPEL_Khajiit_AzurahPortentDetect.Cast(playerRef, playerRef)
+    String portentText = "For a moment, living hearts, restless dead, fallen bodies, Daedra, and brass minds declare their places."
+    SendPrismaToast("azurah", "good", "Azurah's Portent", portentText)
+    AppendBookOfDaysEntry(portentText, Utility.GetCurrentGameTime() as Int, "champion.act", "azurah", False, 1, "Azurah's Portent")
+    return True
+EndFunction
+
+Bool Function CanExecuteKhajiitBaanDarRescue(Actor playerRef)
+    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT || GetKhajiitFocusedEmphasis() != KHAJIIT_FOCUS_BAANDAR
+        return False
+    endIf
+    if !PDV_BaanDar || GetTier(PDV_BaanDar) < TIER_CHAMPION || !PDV_Bless_Khajiit_BaanDar_T3
+        return False
+    endIf
+    return playerRef.HasSpell(PDV_Bless_Khajiit_BaanDar_T3)
+EndFunction
+
+Function ScheduleNextKhajiitGodStrengthBoundary()
+    if GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT
+        UnregisterForUpdateGameTime()
+        return
+    endIf
+    Float nowTime = Utility.GetCurrentGameTime()
+    Int currentPhase = GetKhajiitMoonPhaseFromGameDay(nowTime)
+    Int currentBucket = (nowTime + 0.5) as Int
+    Int candidateBucket = currentBucket + 1
+    while candidateBucket < currentBucket + 5 && GetKhajiitMoonPhaseFromGameDay((candidateBucket as Float) - 0.5) == currentPhase
+        candidateBucket += 1
+    endWhile
+    Float hoursUntilBoundary = (((candidateBucket as Float) - 0.5) - nowTime) * 24.0
+    if hoursUntilBoundary < 0.05
+        hoursUntilBoundary = 0.05
+    endIf
+    RegisterForSingleUpdateGameTime(hoursUntilBoundary)
+EndFunction
+
+Event OnUpdateGameTime()
+    Actor playerRef = Game.GetPlayer()
+    SyncKhajiitPhaseBlessing()
+    SyncKhajiitLatticeResonance(playerRef)
+    ScheduleNextKhajiitGodStrengthBoundary()
+EndEvent
+
+Function SyncKhajiitRuntimeState()
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return
+    endIf
+    if GetKhajiitFocusedEmphasis() != KHAJIIT_FOCUS_NONE && StorageUtil.GetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged") == 0
+        ; Existing focused saves are grandfathered without replaying the ceremony.
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged", 1)
+    endIf
+    SyncKhajiitEmphasisRewards(playerRef)
+    SyncKhajiitPhaseBlessing()
+    ScheduleNextKhajiitGodStrengthBoundary()
 EndFunction
 
 ; Dawn drip: each newly learned Word of Power nudges Alkosh emphasis (the dragon
@@ -3143,13 +3336,9 @@ Function ProcessKhajiitAlkoshWordDrip()
     RecordRecentDevotionEvent("Alkosh: " + awarded + " words marked")
 EndFunction
 
-; Gain-pipeline multiplier for the lunar-aligned bonus (1.0 when inactive).
+; Compatibility no-op. God strength modifies the focused reward through Lattice
+; Resonance and never modifies piety gain.
 Float Function GetKhajiitLunarAlignmentMultiplier(PDV_DeityBase deity)
-    Int favored = GetActiveLunarFavoredFocus()
-    if favored != KHAJIIT_FOCUS_NONE && GetKhajiitFocusForDeity(deity) == favored
-        return 1.0 + KHAJIIT_LUNAR_ALIGNMENT_BONUS
-    endIf
-
     return 1.0
 EndFunction
 
@@ -4163,15 +4352,21 @@ String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Floa
     endIf
     if kindText == "lunar"
         Int phase = GetKhajiitMoonPhaseFromGameDay(Utility.GetCurrentGameTime())
-        if PDV_KhajiitLunarSubstrate && PDV_KhajiitLunarSubstrate.GetLastObservedPhase() > 0
-            phase = PDV_KhajiitLunarSubstrate.GetLastObservedPhase()
-        endIf
         Int focus = GetKhajiitFocusedEmphasis()
         String lunarTier = "Quiet"
+        Int substrateTier = 0
         if PDV_KhajiitLunarSubstrate
-            lunarTier = GetKhajiitLunarTierLabel(PDV_KhajiitLunarSubstrate.GetSubstrateTier())
+            substrateTier = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
+            lunarTier = GetKhajiitLunarTierLabel(substrateTier)
         endIf
-        return "{\"phase\":" + phase + ",\"focus\":\"" + JsonSafeString(GetKhajiitFocusLabel(focus)) + "\",\"lunarTier\":\"" + JsonSafeString(lunarTier) + "\"}"
+        String standing = "Lunar Lattice"
+        PDV_DeityBase focusDeity = GetKhajiitEmphasisDeity(focus)
+        if focusDeity
+            standing = GetPublicTierBand(GetTier(focusDeity))
+        endIf
+        String focusLabel = GetKhajiitFocusLabel(focus)
+        String strengthLabel = GetKhajiitFocusLabel(GetLunarPresidingFocus(phase))
+        return "{\"phase\":" + phase + ",\"focus\":\"" + JsonSafeString(focusLabel) + "\",\"lunarTier\":\"" + JsonSafeString(lunarTier) + "\",\"currentFocus\":\"" + JsonSafeString(focusLabel) + "\",\"godInStrength\":\"" + JsonSafeString(strengthLabel) + "\",\"focusStanding\":\"" + JsonSafeString(standing) + "\",\"substrateTier\":" + substrateTier + ",\"resonating\":" + BoolToJson(IsKhajiitLatticeResonating()) + "}"
     elseIf kindText == "cultural"
         Float hist = 0.0
         Float people = 0.0
@@ -7946,7 +8141,8 @@ Bool Function IsValidKhajiitMoonObservationContext(Actor playerRef)
 EndFunction
 
 Function CompleteKhajiitMoonObservation(Actor playerRef)
-    Int phaseIndex = GetKhajiitMoonPhaseFromGameDay(Utility.GetCurrentGameTime())
+    Float nowTime = Utility.GetCurrentGameTime()
+    Int phaseIndex = GetKhajiitMoonPhaseFromGameDay(nowTime)
     Int focusValue = GetLunarPresidingFocus(phaseIndex)
     Int tierBefore = TIER_NONE
     Int tierAfter = TIER_NONE
@@ -7969,7 +8165,7 @@ Function CompleteKhajiitMoonObservation(Actor playerRef)
         if presidingDeity
             AwardPietyInternal(presidingDeity, 0.4, True, "observe_moons_power")
         endIf
-        StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
+        StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", nowTime)
         ; Preserve the common actual-delta accounting path without emitting a
         ; second toast or Book entry; the authored contemplation below owns
         ; this rite's single player-facing presentation.
@@ -7977,9 +8173,10 @@ Function CompleteKhajiitMoonObservation(Actor playerRef)
     endIf
 
     ShowKhajiitMoonContemplation(focusValue, firstRiteToday)
+    SyncKhajiitRuntimeState()
     StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastPhase", phaseIndex)
     StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastFocus", focusValue)
-    StorageUtil.SetFloatValue(None, "PDV.Khajiit.MoonRite.LastSuccessTime", Utility.GetCurrentGameTime())
+    StorageUtil.SetFloatValue(None, "PDV.Khajiit.MoonRite.LastSuccessTime", nowTime)
     Trace(1, "[PDV][MOON_RITE] success phase=" + phaseIndex + " focus=" + focusValue + " metricDelta=" + (metricAfter - metricBefore))
     RequestPanelRefresh()
 EndFunction
@@ -7988,6 +8185,89 @@ Function ShowKhajiitMoonContemplation(Int focusValue, Bool firstRiteToday)
     if focusValue < KHAJIIT_FOCUS_KHENARTHI || focusValue > KHAJIIT_FOCUS_ALKOSH
         return
     endIf
+    if !IsKhajiitMoonObservationJsonValid(focusValue)
+        ShowKhajiitMoonContemplationFallback(focusValue, firstRiteToday)
+        return
+    endIf
+
+    String deityKey = GetKhajiitMoonObservationDeityKey(focusValue)
+    String lastId = StorageUtil.GetStringValue(None, "PDV.Khajiit.MoonRite.LastResolvedId")
+    Int excludedPoolIndex = -1
+    Int i = 0
+    while i < 16 && excludedPoolIndex < 0
+        String candidatePath = "." + deityKey + "[" + i + "].id"
+        if i >= 10
+            candidatePath = ".shared[" + (i - 10) + "].id"
+        endIf
+        if JsonUtil.GetPathStringValue(KHAJIIT_MOON_OBSERVATIONS_FILE, candidatePath, "") == lastId
+            excludedPoolIndex = i
+        endIf
+        i += 1
+    endWhile
+
+    Int poolIndex = Utility.RandomInt(0, 15)
+    if excludedPoolIndex >= 0
+        poolIndex = Utility.RandomInt(0, 14)
+        if poolIndex >= excludedPoolIndex
+            poolIndex += 1
+        endIf
+    endIf
+
+    String entryPath = "." + deityKey + "[" + poolIndex + "]"
+    if poolIndex >= 10
+        entryPath = ".shared[" + (poolIndex - 10) + "]"
+    endIf
+    String resolvedId = JsonUtil.GetPathStringValue(KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".id", "")
+    String titleText = GetKhajiitFocusLabel(focusValue) + " in Strength - " + JsonUtil.GetPathStringValue(KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".title", "")
+    String bodyText = JsonUtil.GetPathStringValue(KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".body", "")
+    SendPrismaToast(GetKhajiitFocusSymbol(focusValue), "good", titleText, bodyText)
+    if firstRiteToday
+        AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", GetKhajiitFocusSymbol(focusValue), False, 1, titleText)
+    endIf
+    StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastResolvedId", resolvedId)
+EndFunction
+
+Bool Function IsKhajiitMoonObservationJsonValid(Int focusValue)
+    String deityKey = GetKhajiitMoonObservationDeityKey(focusValue)
+    if deityKey == "" || !JsonUtil.Load(KHAJIIT_MOON_OBSERVATIONS_FILE) || !JsonUtil.IsGood(KHAJIIT_MOON_OBSERVATIONS_FILE)
+        return False
+    endIf
+    if JsonUtil.GetPathIntValue(KHAJIIT_MOON_OBSERVATIONS_FILE, ".version", -1) != KHAJIIT_MOON_OBSERVATIONS_VERSION
+        return False
+    endIf
+    if JsonUtil.PathCount(KHAJIIT_MOON_OBSERVATIONS_FILE, ".shared") != 6 || JsonUtil.PathCount(KHAJIIT_MOON_OBSERVATIONS_FILE, "." + deityKey) != 10
+        return False
+    endIf
+    Int poolIndex = 0
+    while poolIndex < 16
+        String entryPath = "." + deityKey + "[" + poolIndex + "]"
+        if poolIndex >= 10
+            entryPath = ".shared[" + (poolIndex - 10) + "]"
+        endIf
+        if JsonUtil.GetPathStringValue(KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".id", "") == "" || JsonUtil.GetPathStringValue(KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".title", "") == "" || JsonUtil.GetPathStringValue(KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".body", "") == ""
+            return False
+        endIf
+        poolIndex += 1
+    endWhile
+    return True
+EndFunction
+
+String Function GetKhajiitMoonObservationDeityKey(Int focusValue)
+    if focusValue == KHAJIIT_FOCUS_KHENARTHI
+        return "khenarthi"
+    elseIf focusValue == KHAJIIT_FOCUS_AZURAH
+        return "azurah"
+    elseIf focusValue == KHAJIIT_FOCUS_BAANDAR
+        return "baandar"
+    elseIf focusValue == KHAJIIT_FOCUS_RAJHIN
+        return "rajhin"
+    elseIf focusValue == KHAJIIT_FOCUS_ALKOSH
+        return "alkosh"
+    endIf
+    return ""
+EndFunction
+
+Function ShowKhajiitMoonContemplationFallback(Int focusValue, Bool firstRiteToday)
     Int localIndex = Utility.RandomInt(0, 3)
     Int messageIndex = ((focusValue - 1) * 4) + localIndex
     Int lastIndex = StorageUtil.GetIntValue(None, "PDV.Khajiit.MoonRite.LastMessage", -1)
@@ -7995,17 +8275,14 @@ Function ShowKhajiitMoonContemplation(Int focusValue, Bool firstRiteToday)
         localIndex = (localIndex + 1) % 4
         messageIndex = ((focusValue - 1) * 4) + localIndex
     endIf
-
-    ; The authored Message records remain in the compatibility packet, but a
-    ; normal moon rite belongs on the non-blocking Prisma surface, not in a
-    ; hand-cast MessageBox. The same title/body pair is preserved below.
-    String titleText = GetKhajiitMoonContemplationTitle(messageIndex)
+    String titleText = GetKhajiitFocusLabel(focusValue) + " in Strength - " + GetKhajiitMoonContemplationTitle(messageIndex)
     String bodyText = GetKhajiitMoonContemplationText(messageIndex)
     SendPrismaToast(GetKhajiitFocusSymbol(focusValue), "good", titleText, bodyText)
     if firstRiteToday
         AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", GetKhajiitFocusSymbol(focusValue), False, 1, titleText)
     endIf
     StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastMessage", messageIndex)
+    StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastResolvedId", "fallback_" + messageIndex)
 EndFunction
 
 String Function GetKhajiitMoonContemplationTitle(Int messageIndex)
@@ -8310,8 +8587,11 @@ Float Function RecordKhajiitFocusSignal(Int focusValue, String keyPrefix, String
     StorageUtil.AdjustIntValue(None, keyPrefix + ".CountAll", 1)
     StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
     StorageUtil.SetStringValue(None, "PDV.Khajiit.LastLunarSourceReason", reason)
-    AdjustKhajiitFocusedEmphasis(focusValue, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
+    ; The piety pulse must land before evaluation: focus emergence requires both
+    ; behavioral dominance and actual Seeker piety on this same event.
+    AdjustKhajiitFocusedEmphasis(focusValue, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason, False)
     PulseKhajiitFocusPiety(focusValue, multiplier)
+    EvaluateKhajiitFocusedEmphasis()
     Trace(2, "Khajiit " + label + " routed with multiplier " + multiplier)
     return multiplier
 EndFunction
@@ -10359,7 +10639,7 @@ String Function GetRedguardChampionEntryShownKey(Int sectValue)
     return ""
 EndFunction
 
-Function AdjustKhajiitFocusedEmphasis(Int focusValue, Float amount, String reason)
+Function AdjustKhajiitFocusedEmphasis(Int focusValue, Float amount, String reason, Bool evaluateNow = True)
     if GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT
         return
     endIf
@@ -10370,11 +10650,16 @@ Function AdjustKhajiitFocusedEmphasis(Int focusValue, Float amount, String reaso
 
     String focusKey = GetKhajiitFocusWeightKey(focusValue)
     StorageUtil.AdjustFloatValue(None, focusKey, amount)
-    EvaluateKhajiitFocusedEmphasis()
+    if evaluateNow
+        EvaluateKhajiitFocusedEmphasis()
+    endIf
     Trace(2, "Khajiit focus " + GetKhajiitFocusLabel(focusValue) + " adjusted by " + amount + " (" + reason + ")")
 EndFunction
 
 Function EvaluateKhajiitFocusedEmphasis()
+    if GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT
+        return
+    endIf
     Float khenarthi = GetKhajiitFocusWeight(KHAJIIT_FOCUS_KHENARTHI)
     Float azurah = GetKhajiitFocusWeight(KHAJIIT_FOCUS_AZURAH)
     Float baanDar = GetKhajiitFocusWeight(KHAJIIT_FOCUS_BAANDAR)
@@ -10409,20 +10694,18 @@ Function EvaluateKhajiitFocusedEmphasis()
     ; focus-bearing action without changing the strict-greater tie behavior.
     Float nextWeight = GetKhajiitSecondFocusWeight(bestFocus, khenarthi, azurah, baanDar, rajhin, alkosh)
 
+    ; Once a focus has emerged, a tie, lead loss, or later piety loss does not
+    ; erase it. A replacement must independently satisfy both gates.
     if bestWeight < KHAJIIT_FOCUS_THRESHOLD || (bestWeight - nextWeight) < KHAJIIT_FOCUS_LEAD_REQUIRED
-        SetKhajiitFocusedEmphasis(KHAJIIT_FOCUS_NONE, "no_clear_lead")
+        return
+    endIf
+
+    PDV_DeityBase bestDeity = GetKhajiitEmphasisDeity(bestFocus)
+    if !bestDeity || GetPiety(bestDeity) < 25.0
         return
     endIf
 
     SetKhajiitFocusedEmphasis(bestFocus, "lead")
-EndFunction
-
-Int Function PickKhajiitFocusCandidate(Int candidateFocus, Float candidateWeight, Int currentBest, Float currentBestWeight)
-    if candidateWeight > currentBestWeight
-        return candidateFocus
-    endIf
-
-    return currentBest
 EndFunction
 
 Float Function GetKhajiitSecondFocusWeight(Int bestFocus, Float khenarthi, Float azurah, Float baanDar, Float rajhin, Float alkosh)
@@ -10447,20 +10730,52 @@ EndFunction
 
 Function SetKhajiitFocusedEmphasis(Int focusValue, String reason)
     Int oldFocus = GetKhajiitFocusedEmphasis()
+    if oldFocus != KHAJIIT_FOCUS_NONE && focusValue == KHAJIIT_FOCUS_NONE
+        return
+    endIf
+    if oldFocus == focusValue
+        return
+    endIf
     StorageUtil.SetIntValue(None, "PDV.Khajiit.FocusedEmphasis", focusValue)
     if PDV_GLO_KhajiitFocusedEmphasis
         PDV_GLO_KhajiitFocusedEmphasis.SetValue(focusValue as Float)
     endIf
 
-    if oldFocus != focusValue
-        Trace(1, "Khajiit focused emphasis " + GetKhajiitFocusLabel(oldFocus) + " -> " + GetKhajiitFocusLabel(focusValue) + " (" + reason + ")")
-        SendPrismaShiftToast("Your road turns toward " + GetKhajiitFocusLabel(focusValue) + ".", "", GetKhajiitFocusSymbol(focusValue))
-        PDV_DeityBase focusDeity = GetKhajiitFocusDeity(focusValue)
-        if focusDeity
-            SurfaceTransition("emergence", focusDeity.DeityName, "onset", focusDeity.DeityIndex, "revelation")
+    Trace(1, "Khajiit focused emphasis " + GetKhajiitFocusLabel(oldFocus) + " -> " + GetKhajiitFocusLabel(focusValue) + " (" + reason + ")")
+    String focusText = GetKhajiitFocusShiftText(focusValue)
+    SendPrismaShiftToast("Your road turns toward " + GetKhajiitFocusLabel(focusValue) + ".", focusText, GetKhajiitFocusSymbol(focusValue))
+    Bool firstEmergence = oldFocus == KHAJIIT_FOCUS_NONE && StorageUtil.GetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged") == 0
+    if firstEmergence
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged", 1)
+        Message emergenceMessage = GetKhajiitFocusEmergenceMessage(focusValue)
+        if emergenceMessage
+            emergenceMessage.Show()
+        else
+            Debug.MessageBox(focusText)
         endIf
-        RequestPanelRefresh()
     endIf
+    if firstEmergence
+        AppendBookOfDaysEntry(focusText, Utility.GetCurrentGameTime() as Int, "focus.emergence", GetKhajiitFocusSymbol(focusValue), True, 1, GetKhajiitFocusLabel(focusValue) + " Emerges")
+    else
+        AppendBookOfDaysEntry(focusText, Utility.GetCurrentGameTime() as Int, "reorientation", GetKhajiitFocusSymbol(focusValue), False, 1, "The Road Turns")
+    endIf
+    SyncKhajiitRuntimeState()
+    RequestPanelRefresh()
+EndFunction
+
+Message Function GetKhajiitFocusEmergenceMessage(Int focusValue)
+    if focusValue == KHAJIIT_FOCUS_KHENARTHI
+        return PDV_MSG_KhajiitFocus_Khenarthi
+    elseIf focusValue == KHAJIIT_FOCUS_AZURAH
+        return PDV_MSG_KhajiitFocus_Azurah
+    elseIf focusValue == KHAJIIT_FOCUS_BAANDAR
+        return PDV_MSG_KhajiitFocus_BaanDar
+    elseIf focusValue == KHAJIIT_FOCUS_RAJHIN
+        return PDV_MSG_KhajiitFocus_Rajhin
+    elseIf focusValue == KHAJIIT_FOCUS_ALKOSH
+        return PDV_MSG_KhajiitFocus_Alkosh
+    endIf
+    return None
 EndFunction
 
 Int Function GetKhajiitFocusedEmphasis()
@@ -12854,6 +13169,7 @@ Function ProcessDawn()
     RunDawnRefreshDevotionMarks()
     RunDawnConsolidateScratch()
     ProcessBroadPantheonDawn()
+    EvaluateKhajiitFocusedEmphasis()
     RunDawnConsolidateDaedricWeek()
     RunDawnRefreshTrackStates()
     EvaluateAltmerCrisisAtDawn()
@@ -12863,7 +13179,7 @@ Function ProcessDawn()
     RunDawnNotifyNoop()
     RunDawnBookOfDays()
     RunDawnChampionAmbient()
-    SyncKhajiitPhaseBlessing()
+    SyncKhajiitRuntimeState()
     ProcessKhajiitAlkoshWordDrip()
     DisarmDunmerAncestorWatch()
     RequestPanelRefresh()
@@ -13621,6 +13937,10 @@ Function ForceSetPiety(Float amount)
     Form deityForm = _activeDeity as Form
     StorageUtil.SetFloatValue(deityForm, "PDV.Piety", ClampValue(amount, 0.0, PIETY_MAX))
     RecomputeTier(_activeDeity, False)
+    if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
+        EvaluateKhajiitFocusedEmphasis()
+        SyncKhajiitRuntimeState()
+    endIf
 EndFunction
 
 Function ForceSetActiveDeityByIndex(Int deityIndex)
@@ -13665,6 +13985,9 @@ Function DebugForceSetPietyByIndex(Int deityIndex, Float amount)
     ; Book of Days entry). Only fires on an UP-crossing from a lower tier -- if the deity
     ; is already at/above the target, reset it first, or use the piety-today + dawn path.
     RecomputeTier(deity, True)
+    if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT && GetKhajiitFocusForDeity(deity) != KHAJIIT_FOCUS_NONE
+        EvaluateKhajiitFocusedEmphasis()
+    endIf
     ; Resync the race reward family so a focused/emphasis reward (Khajiit emphasis, an
     ; Imperial/Altmer focused patron, etc.) actually grants on the seed. RecomputeTier only
     ; fires OnTierChange (Boon slots), not SyncFirstTierRaceRewardRuntime -- without this a
@@ -13927,6 +14250,10 @@ Function DebugResetDeityByIndex(Int deityIndex)
     if deity == _activeDeity
         deity.OnTierChange(oldTier, TIER_NONE)
         RefreshPatronMirrors()
+    endIf
+    if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
+        EvaluateKhajiitFocusedEmphasis()
+        SyncKhajiitRuntimeState()
     endIf
 EndFunction
 
@@ -14527,6 +14854,12 @@ Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowR
         deity.CommitPendingRepeatableActions()
     else
         deity.DiscardPendingRepeatableActions()
+    endIf
+    ; A Khajiit focus may already have the required behavioral lead when this
+    ; piety movement crosses Seeker. Evaluate here as well as on weight changes
+    ; so emergence cannot lag until the next unrelated action.
+    if appliedAmount != 0.0 && IsKhajiitOrigin() && GetKhajiitFocusForDeity(deity) != KHAJIIT_FOCUS_NONE
+        EvaluateKhajiitFocusedEmphasis()
     endIf
     if ownsBroadEvent
         FlushBroadPantheonEvent()
@@ -15603,7 +15936,6 @@ Float Function RunGainPipeline(PDV_DeityBase deity, Float amount, Int stance)
         appliedAmount = appliedAmount * GetCurseGainMultiplierNoop(deity)
         appliedAmount = appliedAmount * GetDaedricStigmaGainMultiplierNoop(deity)
         appliedAmount = appliedAmount * GetSurvivalContextGainMultiplier(deity)
-        appliedAmount = appliedAmount * GetKhajiitLunarAlignmentMultiplier(deity)
         if PDV_ModePresetRef
             appliedAmount = appliedAmount * PDV_ModePresetRef.GainMultiplier()
         endIf
@@ -17402,6 +17734,8 @@ Function SyncKhajiitEmphasisRewards(Actor playerRef)
     SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_BAANDAR, activeFocus, activeTier, PDV_BaanDar, PDV_Bless_Khajiit_BaanDar_T1, PDV_Bless_Khajiit_BaanDar_T2, PDV_Bless_Khajiit_BaanDar_T3, "Baan Dar")
     SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_RAJHIN, activeFocus, activeTier, PDV_Rajhin, PDV_Bless_Khajiit_Rajhin_T1, PDV_Bless_Khajiit_Rajhin_T2, PDV_Bless_Khajiit_Rajhin_T3, "Rajhin")
     SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_ALKOSH, activeFocus, activeTier, PDV_Alkosh, PDV_Bless_Khajiit_Alkosh_T1, PDV_Bless_Khajiit_Alkosh_T2, PDV_Bless_Khajiit_Alkosh_T3, "Alkosh")
+    SyncKhajiitLatticeResonance(playerRef)
+    SyncKhajiitPortentPower(playerRef)
 EndFunction
 
 Function SyncKhajiitEmphasisFamily(Actor playerRef, Int thisFocus, Int activeFocus, Int activeTier, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
@@ -19434,6 +19768,7 @@ Function DebugSetKhajiitFocus(Int focusValue)
 
     StorageUtil.SetFloatValue(None, GetKhajiitFocusWeightKey(focusValue), KHAJIIT_FOCUS_THRESHOLD + KHAJIIT_FOCUS_LEAD_REQUIRED + 10.0)
     EvaluateKhajiitFocusedEmphasis()
+    SyncKhajiitRuntimeState()
     EndRaceSetupQuietPresentation()
     Trace(1, "Khajiit focus debug-set to " + GetKhajiitFocusLabel(focusValue))
 EndFunction
@@ -24110,6 +24445,12 @@ String Function JournalToneToTitle(String toneKey)
     if toneKey == "favor.act"
         return "Prayer answered"
     endIf
+    if toneKey == "focus.emergence"
+        return "A road emerges"
+    endIf
+    if toneKey == "champion.act"
+        return "A champion's gift"
+    endIf
     if toneKey == "favor.loss"
         return "A deed ill-received"
     endIf
@@ -24151,6 +24492,12 @@ String Function JournalToneToValence(String toneKey)
         return "good"
     endIf
     if toneKey == "favor.act"
+        return "good"
+    endIf
+    if toneKey == "focus.emergence"
+        return "good"
+    endIf
+    if toneKey == "champion.act"
         return "good"
     endIf
     if toneKey == "favor.loss"
@@ -25630,9 +25977,9 @@ String Function GetKhajiitSurveyText()
     Int presiding = GetCurrentLunarPresidingFocus()
     if presiding > KHAJIIT_FOCUS_NONE
         if GetActiveLunarFavoredFocus() == presiding
-            text = text + " This phase of the Lattice belongs to " + GetKhajiitFocusLabel(presiding) + ", and the moons answer your standing."
+            text = text + " " + GetKhajiitFocusLabel(presiding) + " is in strength, and your focused blessing resonates."
         else
-            text = text + " This phase of the Lattice belongs to " + GetKhajiitFocusLabel(presiding) + "."
+            text = text + " " + GetKhajiitFocusLabel(presiding) + " is in strength."
         endIf
     endIf
 
@@ -25644,9 +25991,8 @@ String Function GetKhajiitSurveyText()
     return text
 EndFunction
 
-; Per-god standing line for the Khajiit moon-paths MCM readout, so the silent
-; focused-emphasis system stays legible. Shows standing, raw piety, and a marker
-; for the leading path and the currently moon-favored path.
+; Per-god standing line for the Khajiit moon-paths MCM readout. Shows standing,
+; raw piety, and markers for the focused path and current god in strength.
 String Function GetKhajiitFocusStandingLine(Int focusValue)
     PDV_DeityBase deity = GetKhajiitEmphasisDeity(focusValue)
     if !deity
@@ -25659,9 +26005,9 @@ String Function GetKhajiitFocusStandingLine(Int focusValue)
     endIf
     if GetCurrentLunarPresidingFocus() == focusValue
         if GetActiveLunarFavoredFocus() == focusValue
-            line = line + " (presiding, favored)"
+            line = line + " (in strength, resonating)"
         else
-            line = line + " (presiding)"
+            line = line + " (in strength)"
         endIf
     endIf
 
@@ -27200,6 +27546,7 @@ Function KickstartIfStalled()
     RegisterForSingleUpdate(1.0)
     EnsureQuestReactionQueueRunning()
     ReconcileRedguardSpineRewardAfterLoad()
+    SyncKhajiitRuntimeState()
     Trace(2, "Lifecycle watchdog: master poll and quest-reaction worker re-armed on load.")
 EndFunction
 

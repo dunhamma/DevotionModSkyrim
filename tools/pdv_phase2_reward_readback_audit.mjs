@@ -95,6 +95,7 @@ const CAPSTONE_FALLBACKS = [
   },
   {
     spellEditorId: "PDV_Bless_Khajiit_BaanDar_T3",
+    scriptName: "PDV_KhajiitBaanDarRescueEffect",
     storageKey: "PDV.Capstone.Khajiit.BaanDarSlip",
     notificationText: "Baan Dar slips you out of death's hand.",
     prismaTitle: "Baan Dar's Luck",
@@ -488,6 +489,7 @@ function main() {
 
   for (const capstone of CAPSTONE_FALLBACKS) {
     const { spellEditorId, storageKey } = capstone;
+    const expectedScriptName = capstone.scriptName || "PDV_T3DailyLowHealthSaveEffect";
     const spellDetail = detailsByEdid.get(spellEditorId);
     // The capstone save effect can sit at ANY effect index -- Khajiit BaanDar T3 orders its three
     // stat effects first and carries PDV_T3DailyLowHealthSaveEffect on its last (AvoidDeath) effect.
@@ -496,7 +498,7 @@ function main() {
     let effectEdid = null;
     for (const effect of spellDetail?.fields?.Effects || []) {
       const candidateEdid = effect?.BaseEffect ? formidToEdid(effect.BaseEffect, recordsByEdid) : null;
-      const candidateScript = candidateEdid ? findScript(detailsByEdid.get(candidateEdid)?.fields, "PDV_T3DailyLowHealthSaveEffect") : null;
+      const candidateScript = candidateEdid ? findScript(detailsByEdid.get(candidateEdid)?.fields, expectedScriptName) : null;
       if (candidateScript) {
         capstoneScript = candidateScript;
         effectEdid = candidateEdid;
@@ -505,9 +507,9 @@ function main() {
     }
     const props = propertyMap(capstoneScript);
     if (capstoneScript) {
-      pass("T3 capstone script", `${effectEdid} carries PDV_T3DailyLowHealthSaveEffect.`);
+      pass("T3 capstone script", `${effectEdid} carries ${expectedScriptName}.`);
     } else {
-      fail("T3 capstone script", `${spellEditorId} has no effect carrying PDV_T3DailyLowHealthSaveEffect.`);
+      fail("T3 capstone script", `${spellEditorId} has no effect carrying ${expectedScriptName}.`);
       continue;
     }
 

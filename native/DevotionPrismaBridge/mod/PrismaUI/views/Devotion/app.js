@@ -712,11 +712,20 @@
 
   const renderLunarInstrument = (slot, inst = {}) => {
     const data = inst.data || {};
-    renderInstrumentFrame(slot, inst, text(data.focus, "Lunar Lattice"), (svg) => {
+    const currentFocus = text(data.currentFocus, text(data.focus, "Lunar Lattice"));
+    const strength = text(data.godInStrength, "Unknown");
+    const standing = text(data.focusStanding, "Lunar Lattice");
+    const substrate = text(data.lunarTier, "Quiet");
+    const resonance = data.resonating ? " - Resonating" : "";
+    const caption = `${currentFocus} - ${standing}; ${strength} in strength; ${substrate}${resonance}`;
+    renderInstrumentFrame(slot, inst, caption, (svg) => {
       const phase = clamp(data.phase || 1, 1, 8);
       const fill = fillClass(inst);
       appendMoonPhase(svg, 118, 80, 30, phase, fill);
       appendMoonPhase(svg, 178, 50, 14, phase, fill);
+      if (data.resonating) {
+        appendSvg(svg, "circle", { cx: "118", cy: "80", r: "39", class: "instrument-star" });
+      }
     });
   };
 

@@ -51,6 +51,9 @@ $Map = @(
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\fonts\IMFellEnglish-Regular.woff2"; Dst = "PrismaUI\views\Devotion\fonts\IMFellEnglish-Regular.woff2" },
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\fonts\OFL-IMFellEnglish.txt"; Dst = "PrismaUI\views\Devotion\fonts\OFL-IMFellEnglish.txt" },
     @{ Src = "live-source\Scripts\Source\PDV__ManagerQuest.psc";             Dst = "Scripts\Source\PDV__ManagerQuest.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_T3DailyLowHealthSaveEffect.psc"; Dst = "Scripts\Source\PDV_T3DailyLowHealthSaveEffect.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_KhajiitAzurahPortentEffect.psc"; Dst = "Scripts\Source\PDV_KhajiitAzurahPortentEffect.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_KhajiitBaanDarRescueEffect.psc"; Dst = "Scripts\Source\PDV_KhajiitBaanDarRescueEffect.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_QuestReactionWorker.psc";       Dst = "Scripts\Source\PDV_QuestReactionWorker.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_Deity_AuriEl.psc";              Dst = "Scripts\Source\PDV_Deity_AuriEl.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_DaedricPathBase.psc";          Dst = "Scripts\Source\PDV_DaedricPathBase.psc" },
@@ -69,7 +72,8 @@ $Map = @(
     @{ Src = "live-source\Scripts\Source\PDV_DeityBase.psc";                 Dst = "Scripts\Source\PDV_DeityBase.psc" },
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap.json";       Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap.json" },
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_TemporaryRaceMap.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_TemporaryRaceMap.json" },
-    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt" }
+    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt" },
+    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_KhajiitMoonObservations.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_KhajiitMoonObservations.json" }
 )
 
 Write-Host "Repo root   : $RepoRoot"

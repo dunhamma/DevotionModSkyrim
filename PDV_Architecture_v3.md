@@ -1267,12 +1267,14 @@ Function RecomputeMoonPhase()
 EndFunction
 ```
 
-**Phase behavior:**
-- Each phase identifies one presiding god: Khenarthi, Azurah, Baan Dar, Rajhin, or Alkosh.
+**God-strength behavior:**
+- The eight slots identify one god in strength: `Alkosh, Azurah, Khenarthi, Rajhin, Rajhin, Baan Dar, Khenarthi, Azurah`.
 - `Observe the Moons` is valid outdoors from 20:00 to 05:00 while out of combat, unmounted, and not swimming.
 - One delayed check after two seconds aborts on combat, cell change, or movement over 128 units; there is no continuous polling.
-- Twenty authored contemplations provide four per god without immediate repetition through a non-blocking Prisma toast. The first rite each devotional day also enters the Book of Days, and the power shares the selectable Power slot with Survey Devotion rather than a casting hand.
-- The first valid rite per devotional day may claim the shared `+4` substrate credit and awards raw presiding-god piety `+0.4` without changing behavior-led focus weight. Later rites are informational.
+- `PDV_KhajiitMoonObservations.json` provides ten lines per god plus six shared lines (56 distinct lines, 80 logical pool memberships), selected uniformly with resolved-ID immediate-repeat prevention. The compiled four-line sets remain the missing-or-invalid-JSON fallback.
+- The first rite each devotional day also enters the Book of Days, and the power shares the selectable Power slot with Survey Devotion rather than a casting hand.
+- The first valid rite per devotional day may claim the shared `+4` substrate credit and awards raw god-in-strength piety `+0.4` without changing behavior-led focus weight. Later rites are informational.
+- Matching a Seeker-or-higher focus to the god in strength activates Lattice Resonance: one perk multiplies keyword-tagged focused numeric spell magnitudes by `1.20`. The retired rotating stat spells and old `+10%` piety multiplier remain inert for compatibility.
 
 ---
 
@@ -2079,9 +2081,9 @@ not narrating every event.
 | Class | Trigger | Level (Section 16.2) | Toast (Section 16.6) | Notes / gap closed |
 |-------|---------|---------------|---------------|--------------------|
 | `tier` | Broad worship first reaches Faithful, then Devoted | Medium (Notification) | `tier` | First-reach one-shot per tier; the "you've reached Faithful" beat is currently absent for every race |
-| `emergence` | A focused patron / emphasis first dominates (incl. the silent-emergence races) | Loud (MessageBox) | `tier` | Closes the Khajiit silent-patron and Argonian Sithis-activation invisibility (`PDV_RaceDesign_Khajiit.md:206`, `PDV_RaceDesign_Argonian.md:139`). Reuses the commitment-offer MessageBox surface |
+| `emergence` | A focused patron / emphasis first dominates | Loud (MessageBox) | `tier` | Khajiit's automatic first focus uses its own deity-specific ceremonial MessageBox plus Prisma toast and pinned Book entry; later automatic reorientation has no popup. Argonian Sithis activation continues to use the shared transition surface. |
 | `curse` | Curse **onset and cure**, per curse type | Loud (MessageBox) | `neglect`/system | Onset already fires (Section 13.3); **cure is the missing half** across races. Coordinates with the D-16 cure-path exit; must not double-fire against race `CurseState` rows |
-| `reorientation` | A confirmed sect / mode / tradition / path / standing switch | Medium, Loud if a major theological reorientation | system | Redguard sect, Orc mode, Bosmer path, Imperial Concordat standing. Fire on the *confirmed* switch only |
+| `reorientation` | A confirmed sect / mode / tradition / path / standing switch, or a newly qualifying Khajiit focus | Medium, Loud if a major theological reorientation | system | Redguard sect, Orc mode, Bosmer path, Imperial Concordat standing, and Khajiit automatic focus replacement. Fire on the *confirmed* switch only; Khajiit uses toast plus unpinned Book entry. |
 | `neglect` | A god first crosses a neglect threshold (tier drop) | Medium (Notification) | `neglect` | Cadence rule below; closes "tiers slip with no explanation" |
 
 **Neglect firing cadence (resolves the Section 14 open).** A neglect notification fires

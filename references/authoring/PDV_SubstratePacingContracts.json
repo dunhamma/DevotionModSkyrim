@@ -2,7 +2,7 @@
   "schema": "pdv.substrate-pacing-contracts.v1",
   "title": "PDV Substrate Pacing Contracts",
   "status": "implemented-static-readback-runtime-manual-proof-open",
-  "updated": "2026-07-13",
+  "updated": "2026-08-06",
   "authority": {
     "architecture": "PDV_Architecture_v3.md",
     "productTarget": "PDV_TargetEndStates_1.0.md",
@@ -234,6 +234,11 @@
       "origin": "Khajiit",
       "internalId": "PDV_Substrate_KhajiitLunar",
       "displayTiers": ["Lunar Hardiness", "Khajiit Lunar Road", "Lunar Attunement"],
+      "exclusiveRewardTiers": {
+        "1-24": ["Disease Resistance +5%"],
+        "25-74": ["Stamina +10", "Disease Resistance +10%"],
+        "75+": ["Stamina +15", "Disease Resistance +15%"]
+      },
       "acceptedRenewableFamilies": [
         "completed outdoor rest as road-home practice",
         "successful Observe the Moons rite",
@@ -258,10 +263,14 @@
         "resolution": "One check after two seconds; abort on combat, cell change, or movement over 128 units; no continuous polling.",
         "presentation": "Observe the Moons and Survey Devotion are peer lesser powers in the shared Power slot; selecting either replaces the other, but origin setup never changes the player's selection. Both are granted through AddSpell only: vanilla EquipSpell is hand-only and must never be used to select either power. The non-blocking Prisma toast presents the authored contemplation; the first valid rite each devotional day also enters the Book of Days.",
         "messages": {
-          "count": 20,
-          "perGod": 4,
+          "jsonPath": "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_KhajiitMoonObservations.json",
+          "distinctCount": 56,
+          "logicalPoolMemberships": 80,
+          "perGod": 10,
+          "shared": 6,
           "gods": ["Khenarthi", "Azurah", "Baan Dar", "Rajhin", "Alkosh"],
-          "noImmediateRepeat": true
+          "noImmediateRepeatByResolvedId": true,
+          "compiledFallback": "The existing four lines per god remain the missing-or-invalid-JSON fallback."
         },
         "firstSuccessPerDevotionalDay": { "substrateCredit": 4.0, "presidingGodRawPiety": 0.4, "focusWeight": 0.0 },
         "laterSuccessSameDay": "Informational-only non-blocking Prisma contemplation; it creates no Book of Days entry."

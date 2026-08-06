@@ -1,73 +1,58 @@
 {
-  "name": "Khajiit Lattice phase blessings",
-  "created": "2026-06-10",
-  "status": "contract-ready; records not yet authored; manager script properties wired None-safe",
-  "designSource": "Merged Lattice model: each of the 8 moon phases BELONGS to one of the five moon-path gods (cosmology, always shown). The presiding god's bonuses activate only once that god reaches Faithful (tier 2): +10% piety gain (script-side, shipped) plus ONE small stat blessing below. Cap rule per user direction 2026-06-10: max +5 flat or +5%. Anti-chore rule from PDV_RaceRewardBudgetLedger.md: phase stays amplification, never required scheduling.",
-  "moonCycle": "Real Skyrim 24-day / 8-phase cycle (GameDaysPassed % 24), replicated from the Creation Kit GetCurrentMoonphase boundaries so the Lattice phase matches the moon the player sees in the sky. NOT the old abstract 28-day counter.",
-  "phaseMap": {
-    "1": { "phase": "full moon", "god": "Alkosh", "phaseTest": "22,23,0" },
-    "2": { "phase": "waning gibbous", "god": "Azurah", "phaseTest": "1-3" },
-    "3": { "phase": "last quarter", "god": "Khenarthi", "phaseTest": "4-6" },
-    "4": { "phase": "waning crescent", "god": "Rajhin", "phaseTest": "7-9" },
-    "5": { "phase": "new moon", "god": "Rajhin", "phaseTest": "10-12" },
-    "6": { "phase": "waxing crescent", "god": "BaanDar", "phaseTest": "13-15" },
-    "7": { "phase": "first quarter", "god": "Khenarthi", "phaseTest": "16-18" },
-    "8": { "phase": "waxing gibbous", "god": "Azurah", "phaseTest": "19-21" }
-  },
-  "records": [
-    {
-      "editorId": "PDV_Bless_Khajiit_Phase_Khenarthi",
-      "spellName": "Lattice Phase: Khenarthi",
-      "effect": "Sprint stamina cost -5%",
-      "mgef": { "archetype": "ValueModifier", "actorValue": "StaminaRateMult", "magnitude": 5.0, "note": "Resolved 2026-06-13 to StaminaRateMult to match the Khenarthi T2 record (PDV_MGEF_Khajiit_Khenarthi_T2_StaminaRateMult, ValueModifier) -- the established sprint-cost surrogate AV." },
-      "description": "Khenarthi presides over these nights. The road asks a little less of you. Stamina Regeneration +5%."
-    },
-    {
-      "editorId": "PDV_Bless_Khajiit_Phase_Azurah",
-      "spellName": "Lattice Phase: Azurah",
-      "effect": "Magicka regen +5%",
-      "mgef": { "archetype": "ValueModifier", "actorValue": "MagickaRateMult", "magnitude": 5.0, "note": "Authored as ValueModifier 2026-06-13 to match the shipped Khajiit rate-mult reward convention (Lunar T1 StaminaRegen + Khenarthi T2 are ValueModifier on *RateMult); not PeakValueModifier." },
-      "description": "Azurah presides over these nights. Twilight gathers a little more readily in you. Magicka Regeneration +5%."
-    },
-    {
-      "editorId": "PDV_Bless_Khajiit_Phase_BaanDar",
-      "spellName": "Lattice Phase: Baan Dar",
-      "effect": "Stamina regen +5%",
-      "mgef": { "archetype": "ValueModifier", "actorValue": "StaminaRateMult", "magnitude": 5.0, "note": "Authored as ValueModifier 2026-06-13 to match the shipped Khajiit rate-mult reward convention; not PeakValueModifier." },
-      "description": "Baan Dar presides over these nights. The pariah's luck keeps your feet under you. Stamina Regeneration +5%."
-    },
-    {
-      "editorId": "PDV_Bless_Khajiit_Phase_Rajhin",
-      "spellName": "Lattice Phase: Rajhin",
-      "effect": "Sneak +5",
-      "mgef": { "archetype": "ValueModifier", "actorValue": "Sneak", "magnitude": 5.0 },
-      "description": "Rajhin presides over these nights. Shadow sits a little closer to your shoulder. Sneak +5."
-    },
-    {
-      "editorId": "PDV_Bless_Khajiit_Phase_Alkosh",
-      "spellName": "Lattice Phase: Alkosh",
-      "effect": "Health +5",
-      "mgef": { "archetype": "ValueModifier", "actorValue": "Health", "magnitude": 5.0 },
-      "description": "Alkosh presides over the full moon. Order holds you a little more firmly together. Health +5."
-    }
+  "name": "Khajiit god-strength and Lattice Resonance",
+  "updated": "2026-08-06",
+  "status": "implemented-static-readback-runtime-manual-proof-open",
+  "publicLanguage": "Name only the current god as being in strength. Do not describe ordinary waxing or waning.",
+  "godStrengthSequence": [
+    "Alkosh",
+    "Azurah",
+    "Khenarthi",
+    "Rajhin",
+    "Rajhin",
+    "Baan Dar",
+    "Khenarthi",
+    "Azurah"
   ],
-  "wiring": {
-    "managerProperties": [
+  "cycle": "Eight slots over Skyrim's 24-day visible lunar cycle, scheduled at the next game-time slot boundary.",
+  "retired": {
+    "phaseStatSpells": [
       "PDV_Bless_Khajiit_Phase_Khenarthi",
       "PDV_Bless_Khajiit_Phase_Azurah",
       "PDV_Bless_Khajiit_Phase_BaanDar",
       "PDV_Bless_Khajiit_Phase_Rajhin",
       "PDV_Bless_Khajiit_Phase_Alkosh"
     ],
-    "managerScriptState": "Spell properties already declared in PDV__ManagerQuest.psc next to PDV_Bless_Khajiit_Lunar_T1; grant/removal owner is SyncKhajiitPhaseBlessing() (called from ProcessDawn), which keeps at most ONE phase blessing active: the presiding god's, only while that god is Faithful. None-safe until these records exist.",
-    "spellType": "ability (constant, no cast), matching the T1 reward pattern",
-    "gating": "No condition records needed: grant/removal is fully script-owned and re-synced at dawn (phase length ~3.5 game days)."
+    "presidingPietyMultiplier": 1.1,
+    "policy": "Keep legacy records for FormID and save compatibility, never grant them, remove lingering instances during reconciliation, and apply no presiding-deity multiplier in the piety pipeline."
   },
-  "balanceNotes": [
-    "One blessing active at a time by construction; never stacks with itself across phases.",
-    "Stacks WITH the T1/T2/T3 reward of the same god by design (phase blessing is the substrate's voice, tier rewards are the god's); both are small.",
-    "Khenarthi/Azurah get two phase windows each (most reachable gods), Alkosh only the full moon (rare by design), Rajhin two dark windows, Baan Dar one.",
-    "Record in PDV_RaceEffectReviewLedger.md as a new Khajiit effect family before beta-feel claims."
-  ],
-  "authoringPath": "Author via the established Mutagen race-reward tooling pattern (mirror PDV_Bless_Khajiit_Lunar_T1: SPEL ability + MGEF per record, then wire the five PDV__ManagerQuest properties). Requires Skyrim/CK to release Devotion.esp."
+  "resonance": {
+    "condition": "Khajiit origin, a focused deity at Seeker or above, and focused deity equals the god in strength.",
+    "keyword": "PDV_KYWD_KhajiitFocusedBlessing",
+    "keywordFormId": "0716F1:Devotion.esp",
+    "coverage": "All fifteen focused blessing spells and no substrate or scripted capstone records.",
+    "perk": "PDV_PERK_Khajiit_LatticeResonance",
+    "perkFormId": "0716FC:Devotion.esp",
+    "entryPoint": "Mod Spell Magnitude; Multiply 1.20; spell has the focused-blessing keyword.",
+    "markerSpell": "PDV_Bless_Khajiit_LatticeResonance",
+    "markerFormId": "0716F4:Devotion.esp",
+    "refresh": "Remove and re-add the current constant-effect focus reward whenever resonance state changes.",
+    "reconcile": [
+      "load",
+      "dawn",
+      "observation completion",
+      "focus or tier change",
+      "next scheduled god-strength boundary"
+    ]
+  },
+  "observations": {
+    "path": "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_KhajiitMoonObservations.json",
+    "schemaVersion": 1,
+    "sharedCount": 6,
+    "deityCount": 5,
+    "perDeityCount": 10,
+    "distinctLineCount": 56,
+    "logicalMembershipCount": 80,
+    "selection": "Uniform random selection from the ten lines for the current god plus the six shared lines, with resolved-ID immediate-repeat rejection across god changes.",
+    "fallback": "Use the existing compiled four-line deity set when the JSON is missing or invalid."
+  }
 }
