@@ -15,8 +15,19 @@
     "afb193508a646835",
     "3a98a0a1c4019f62"
   ],
-  "status": "pending",
-  "attempts": 0,
-  "completedInputIds": [],
+  "status": "complete",
+  "attempts": 1,
+  "completedInputIds": [
+    "e9b9527d0576618e",
+    "5a9a540ec8eb5eea",
+    "4a6b3ac3e880e56f",
+    "d7dd50c10898ac91",
+    "aab8b0a81f6ec3b3",
+    "754e6878395b2930",
+    "32b5468cd0f7eec6",
+    "fff2fdd6296b4808",
+    "afb193508a646835",
+    "3a98a0a1c4019f62"
+  ],
   "lastError": null
 }
