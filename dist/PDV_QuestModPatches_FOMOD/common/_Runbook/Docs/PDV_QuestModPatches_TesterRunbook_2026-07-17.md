@@ -177,6 +177,38 @@ proves the fragments fire.
 Sirenroot s150 (10 gods) and The Rot Below (9) are the best single checks: a big
 fan-out proves the queue drains correctly.
 
+### ARR 2.5 T13 test-candidate cases
+
+These channels are **machine-verified experimental**, not supported. For each
+case, capture the `ENQUEUE` and `START` route markers, the before/after piety
+values, exactly one toast, exactly one Book of Days beat, and behavior after a
+save/load made before the outcome. Values below are the raw cell awards before
+origin-roster gating; an unreachable non-Prince deity must not create dead-state
+piety. Use the structured evidence ledger shipped beside this runbook.
+
+| Case | Quest key | cells | expected raw piety delta |
+|---|---|---:|---|
+| T13-001 | `Wyrmstooth.esp:028F01` s260 | 17 | Kyne +4; Alkosh +4; Talos +4; Baan Dar +2; Boethiah +4; HoonDing +4; Khenarthi +2; Kynareth +2; Leki +2; Malacath +2; Mara +2; Shor +4; Stendarr +4; Stuhn +2; Syrabane +4; Trinimac +2; Tsun +4 |
+| T13-002 | `ccbgssse067-daedinv.esm:19952A` s1000 | 3 | Mehrunes Dagon -18; Stendarr +4; Akatosh +2 |
+| T13-003 | `ccasvsse001-almsivi.esm:0990EF` s100 | 2 | Zenithar +4; Malacath +4 |
+| T13-004 | `ccmtysse001-knightsofthenine.esl:000865` s100 | 9 | Akatosh, Arkay, Dibella, Julianos, Kynareth, Mara, Stendarr, Talos, and Zenithar each +18 |
+| T13-005 | `TasteOfDeath_Addon_Dialogue.esp:000050` s100 | 9 | Namira -2; Stendarr +4; Akatosh, Alkosh, Auri-El, Julianos, Stuhn, Z'en, and Zenithar each +2 |
+| T13-006 | `Siege at Icemoth.esp:5A079F` s30 | 11 | Arkay +18; Meridia +18; Azura +2; Boethiah +4; HoonDing +4; Malacath +2; Shor +4; Stendarr +2; Tsun +4; Tu'whacca +2; Y'ffre +2 |
+| T13-007 | `Siege at Icemoth.esp:59F97E` s20 | 3 | Hermaeus Mora +18; Julianos +2; Magnus +2 |
+| T13-008 | `Hunt for the Spectre.esp:000800` s55 | 6 | Arkay +18; Meridia +18; Azura +2; Stendarr +2; Tu'whacca +2; Y'ffre +2 |
+| T13-009 | `Sithis Mod - Lovecraftian Inspired Quest.esp:000892` s40 | 16 | Sithis +4; Molag Bal +4; Stendarr -6; Stuhn -4; Baan Dar, Dibella, HoonDing, Khenarthi, Kynareth, Kyne, Leki, Mara, Rajhin, Shor, Talos, and Tsun each -2 |
+| T13-010 | `TheGiftofSaturalia.esp:0008AA` s20 | 5 | Mara +18; Stendarr +18; Dibella +2; Stuhn +2; Syrabane +4 |
+| T13-011 | `TheGiftofSaturalia.esp:0008D3` s8 | 2 | Mara +18; Dibella +18 |
+| T13-012 | `TheGiftofSaturalia.esp:000963` s10 | 2 | Mara +18; Dibella +2 |
+| T13-013 | `TheGiftofSaturalia.esp:0009A4` s10 | 4 | Mara +18; Stendarr +18; Dibella +2; Kynareth +2 |
+| T13-014 | `TheGiftofSaturalia.esp:0009D2` s30 | 6 | Mara +18; Stendarr +18; Dibella +18; Y'ffre +4; Stuhn +2; Syrabane +4 |
+
+**T13-004 must be played organically.** The stage-100 row is derived from the
+stage-10 pilgrimage objective and the later completion stage. `setstage` may
+prove routing but cannot prove that the nine-shrine progression resolves there
+or that the semantic credit is truthful. The other cases should also be played
+organically before support promotion; controlled stages establish route only.
+
 ---
 
 ## 5. Bard hook (needs Become a Bard and/or Skyrim's Got Talent)

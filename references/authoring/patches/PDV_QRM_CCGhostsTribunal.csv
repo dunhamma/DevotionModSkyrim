@@ -1,0 +1,3 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation,formid
+ccASVSSE001_QuestE,Trueflame,100,Restored Trueflame in the Dwarven forge,master_craft_forge,Zenithar,+,S,small,"T13 direct raw-file read: s100 CompleteQuest says the unenchanted weapon was restored in the fully operational Dwarven forge; generic craft credit only, not Tribunal worship.",ccasvsse001-almsivi.esm:0990EF
+ccASVSSE001_QuestE,Trueflame,100,Restored Trueflame in the Dwarven forge,master_craft_forge,Malacath,+,S,small,"T13 direct raw-file read: s100 CompleteQuest says the unenchanted weapon was restored in the fully operational Dwarven forge; Malacath master-craft profile is S.",ccasvsse001-almsivi.esm:0990EF

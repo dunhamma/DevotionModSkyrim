@@ -1,0 +1,379 @@
+{
+  "schema": "pdv-quest-patch-fomod-validation.v1",
+  "generatedAt": "2026-08-06T11:02:04.308Z",
+  "status": "PASS",
+  "proofBoundary": "Package structure and bytes only. This does not prove runtime routing, player surfaces, semantic correctness, or support status.",
+  "packageRoot": "dist/PDV_QuestModPatches_FOMOD",
+  "optionCounts": {
+    "totalPluginNodes": 21,
+    "individualContentOptions": 19,
+    "channelFiles": 19
+  },
+  "simulations": [
+    {
+      "name": "authoria-combined",
+      "installedFiles": 62,
+      "identicalCollisions": []
+    },
+    {
+      "name": "all-individual",
+      "installedFiles": 52,
+      "identicalCollisions": [
+        "Docs/PDV_ARR25_T13_RuntimeEvidenceLedger.json",
+        "Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md"
+      ]
+    },
+    {
+      "name": "representative-subset",
+      "installedFiles": 10,
+      "identicalCollisions": [
+        "Docs/PDV_ARR25_T13_RuntimeEvidenceLedger.json",
+        "Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md"
+      ]
+    }
+  ],
+  "manifest": {
+    "fileCount": 67,
+    "treeSha256": "0009555B20019E8B608E49BD341CCF42A2A2A6905DFDFFAC088D9D70C967F309",
+    "files": [
+      {
+        "path": "common/_Fragments/OnceWeWereHere/Scripts/PDV_TIF_OWWH_S60.pex",
+        "size": 724,
+        "sha256": "84EDC659F12C3EE4FFBC3C4CFF2D8F0537D764F4EA8BB88E2BDCE3279466BA26"
+      },
+      {
+        "path": "common/_Fragments/OnceWeWereHere/Scripts/PDV_TIF_OWWH_S61.pex",
+        "size": 724,
+        "sha256": "DDA887CAE9153F4783B8BB71FAEEC425CAE7CFAEB50C209F90CF7A00A9215381"
+      },
+      {
+        "path": "common/_Fragments/OnceWeWereHere/Scripts/Source/PDV_TIF_OWWH_S60.psc",
+        "size": 242,
+        "sha256": "F4EFA94D7CD5282B37B31F2EC4D4669F43E8D9B1817854955EED01C4C5E3547A"
+      },
+      {
+        "path": "common/_Fragments/OnceWeWereHere/Scripts/Source/PDV_TIF_OWWH_S61.psc",
+        "size": 242,
+        "sha256": "AC0AE0848E79181A3D0AFA53AA6D02CDF0AD3206EA0CB446A371485ED1F62C33"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/PDV_TIF_WF_S20.pex",
+        "size": 720,
+        "sha256": "04A4568B907F2F0886A539B490D055468277066BF341CD186643138B4AB29696"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/PDV_TIF_WF_S21.pex",
+        "size": 720,
+        "sha256": "1BD4C4F46B3E9D79AC8CF712D0C01CF47AEB276C4A5CBDA263B878CC875FE1DC"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/PDV_TIF_WF_S22.pex",
+        "size": 720,
+        "sha256": "D7930ECB85ADC716D20AAADBA60579164294F30023F79A8E842B1A780AE6CA80"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/PDV_TIF_WF_S23.pex",
+        "size": 759,
+        "sha256": "A7E0B1AEC8D041867C64EF8BE91BB55967B9583C6115C740D0B6AD189D1612C9"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/PDV_TIF_WF_S24.pex",
+        "size": 759,
+        "sha256": "25EA082571128C5ECF37DED8073882311DC0A6F09F4F5DEE34F58F23546B60DF"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/PDV_TIF_WF_S25.pex",
+        "size": 759,
+        "sha256": "CB077F7B6BB1FB5E45109CE04FDA06FF9585704A6888B5F1BB9F6068ED4271E1"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/Source/PDV_TIF_WF_S20.psc",
+        "size": 240,
+        "sha256": "F572BA89770B3ED4C0EC48078C070912182AA3B69811185A3C73C79244A47945"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/Source/PDV_TIF_WF_S21.psc",
+        "size": 240,
+        "sha256": "2DF1E39EFB7D1C7291E51CEACB814CF79D8316DBC68B852F8AFB082D89BAE859"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/Source/PDV_TIF_WF_S22.psc",
+        "size": 240,
+        "sha256": "DE6329277C1E8F8F95A7F8630C526678C56F7A430156FD226A2AB0226A66BEDD"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/Source/PDV_TIF_WF_S23.psc",
+        "size": 274,
+        "sha256": "4318A8BC8A0E1D5056A51DE149471B1EC6B244F6A5F27D761417FAB912E47ABE"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/Source/PDV_TIF_WF_S24.psc",
+        "size": 274,
+        "sha256": "5A5261B3253CA6A685DA1DD649F57FB2C30D8A5A2380394080FFE38C9FD3B2F3"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/Source/PDV_TIF_WF_S25.psc",
+        "size": 274,
+        "sha256": "4B4F5115955C5FC679E68EF03CE2D2D9682585061F6166D62068122FA0439CE3"
+      },
+      {
+        "path": "common/_Fragments/WhispersOfTheDepths/Scripts/PDV_TIF_SMB_S45.pex",
+        "size": 761,
+        "sha256": "A38763211DEE37297C960B87C5F2C73E376CDB574304FD40BBD363787535C7E2"
+      },
+      {
+        "path": "common/_Fragments/WhispersOfTheDepths/Scripts/Source/PDV_TIF_SMB_S45.psc",
+        "size": 275,
+        "sha256": "9F7F712491C0DADB866FC35073D4CC847C44529D985992E57ACCE798DF810841"
+      },
+      {
+        "path": "common/_Runbook/Docs/PDV_ARR25_T13_RuntimeEvidenceLedger.json",
+        "size": 984,
+        "sha256": "38C1B56E2891CB8AE2C43CC701A54697D2E5ED98B71CA3DD1E6D709AE10FCC7B"
+      },
+      {
+        "path": "common/_Runbook/Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md",
+        "size": 13434,
+        "sha256": "9D2B09D7EB5A8744CD245FA240AA6309A78B3F219775AB241FE210D0A1528E91"
+      },
+      {
+        "path": "common/BabaYaga/Docs/PDV Patch - Baba Yaga and the Labyrinth.md",
+        "size": 1033,
+        "sha256": "67333DAC16C1D44A8542C9839F62FBF154D42A99C1CEA35BCA0C39B63E4BC945"
+      },
+      {
+        "path": "common/BabaYaga/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_BabaYaga.json",
+        "size": 106308,
+        "sha256": "C00273F57CBC78156DDB24EBD8D9875F74EB8D1010A93CB3B6CC290518B18033"
+      },
+      {
+        "path": "common/BarkAndBite/Docs/PDV Patch - Bark and Bite.md",
+        "size": 1019,
+        "sha256": "265DF8DC0B4EC129477B8247677E519497E9711DEB11B183B6D9DC0290F7BB85"
+      },
+      {
+        "path": "common/BarkAndBite/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_BarkAndBite.json",
+        "size": 107699,
+        "sha256": "18CEE4A01B0E187C35F779EBE551123DB9ECC538155B982A099A58D3E5E9CF11"
+      },
+      {
+        "path": "common/BeforeTheEnd/Docs/PDV Patch - Before the End.md",
+        "size": 1009,
+        "sha256": "F32D03B28473E99370BA0EA06E6D8F2D52CADB98B9BC42D4E1C751CC96A5DA5E"
+      },
+      {
+        "path": "common/BeforeTheEnd/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_BeforeTheEnd.json",
+        "size": 106318,
+        "sha256": "0CBE94698AB95EF674A3248FE18BFE927E64398B58CBD13C1163B294D348507D"
+      },
+      {
+        "path": "common/CallingTheWatchmaker/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_CallingTheWatchmaker.json",
+        "size": 109777,
+        "sha256": "F042F1B3EBABBD5AAB4CE547A1BECD5CDEFF2BED721A3620D8CB8C3FBEF4BE59"
+      },
+      {
+        "path": "common/CCDivineCrusader/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_CCDivineCrusader.json",
+        "size": 107838,
+        "sha256": "4CE6C1834BB791C73414DB96E30344F17443A958692721992798EAFE26BE09EE"
+      },
+      {
+        "path": "common/CCGhostsTribunal/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_CCGhostsTribunal.json",
+        "size": 106611,
+        "sha256": "AE2538A918C7B09AF98CDD64CA3F0D850B464CC77308CD41CCE1D764AFBEF41B"
+      },
+      {
+        "path": "common/CCTheCause/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_CCTheCause.json",
+        "size": 107453,
+        "sha256": "FD98782272502C642C9412A0B2C125A4C5453402D6744950288C0F50B20E8DFF"
+      },
+      {
+        "path": "common/DepthsOfTheSoul/Docs/PDV Patch - Depths of the Soul.md",
+        "size": 1027,
+        "sha256": "D4DCDAD0F78F368A655571720FBFCDF9127EA5869210DD9E6A65D56E34769490"
+      },
+      {
+        "path": "common/DepthsOfTheSoul/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_DepthsOfTheSoul.json",
+        "size": 106249,
+        "sha256": "2D8BC46AEE3C823572201C3F7E342CF89707C8AAB96A82917BAADD5C8A79DCB9"
+      },
+      {
+        "path": "common/GiftOfSaturalia/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_GiftOfSaturalia.json",
+        "size": 114397,
+        "sha256": "BE0C357E5691017550A72C333B4BD964144F982EC1265F7FFF837FF1A65D0D45"
+      },
+      {
+        "path": "common/HuntForSpectre/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_HuntForSpectre.json",
+        "size": 107160,
+        "sha256": "28967C6BEEBAE436B3365EDFA7134F2EF7F7A5E57147508F8A1A2A7DC357245C"
+      },
+      {
+        "path": "common/OnceWeWereHere/Docs/PDV Patch - Once We Were Here.md",
+        "size": 1092,
+        "sha256": "8C1B2AE199FCDE50EDB7215FAA67B270E9B8827553E2D481D28D2A21393BCA63"
+      },
+      {
+        "path": "common/OnceWeWereHere/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_OnceWeWereHere.json",
+        "size": 108733,
+        "sha256": "97C3B715D453F73B3350A2AD9E0D5F298E6D4653A5C32BAAE2EA65A2D6206F02"
+      },
+      {
+        "path": "common/SiegeAtIcemoth/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_SiegeAtIcemoth.json",
+        "size": 110993,
+        "sha256": "8D39DCB119E923726753BC5092CB3ACF883BBC68DD88B7F9DF869C7A90793E81"
+      },
+      {
+        "path": "common/Sirenroot/Docs/PDV Patch - Sirenroot.md",
+        "size": 1000,
+        "sha256": "B94DA548C7815E8942370FAFE3965A18642B84CBE7C720023E531B432A87704E"
+      },
+      {
+        "path": "common/Sirenroot/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Sirenroot.json",
+        "size": 108019,
+        "sha256": "AE4DC1049C4F71F928EE83D08D08990FDCA3178132038A21AE5A5CD07EF159E9"
+      },
+      {
+        "path": "common/TasteOfDeathAddon/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_TasteOfDeathAddon.json",
+        "size": 107907,
+        "sha256": "99472385FF6124FBB217F0BF374E82A104A59A46A2E4CE15A9A7B45D5EEF553E"
+      },
+      {
+        "path": "common/TheFrozenHeart/Docs/PDV Patch - The Frozen Heart.md",
+        "size": 1034,
+        "sha256": "B49ACFA52FD3A0DEB8E692FF1FA5B1F4CC6341F352B3325D5AA062FDF2F0053C"
+      },
+      {
+        "path": "common/TheFrozenHeart/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_FrozenHeart.json",
+        "size": 109573,
+        "sha256": "551E82DFF40E7E9514825CF14008DC2F5245B3BB68BD981AB972611749F10295"
+      },
+      {
+        "path": "common/TheRotBelow/Docs/PDV Patch - The Rot Below.md",
+        "size": 1011,
+        "sha256": "49B5963F76D826187C7AEC964358C12E4FD086B517E877ABB12074E56C2A5496"
+      },
+      {
+        "path": "common/TheRotBelow/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_RotBelow.json",
+        "size": 109670,
+        "sha256": "2F21DE2BF236899557FA406A27D17F052DC167D111502152F2DB38674D4CC740"
+      },
+      {
+        "path": "common/WarsFolly/Docs/PDV Patch - War's Folly.md",
+        "size": 1047,
+        "sha256": "976E064273ED04446BE2E63CB6B9BDBB482D474C7DA05FE6FFC1688D19AE6695"
+      },
+      {
+        "path": "common/WarsFolly/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_WarsFolly.json",
+        "size": 112107,
+        "sha256": "506D008B2705CEDB1EB0633118BAA185B1DF82BBCC3CE4A5AB938410040C89B7"
+      },
+      {
+        "path": "common/WhispersOfTheDepths/Docs/PDV Patch - Whispers of the Depths.md",
+        "size": 1090,
+        "sha256": "DD7D88200FF3BD679E91869DE1469E6DBC63D16CE59D4B244826530797FF9338"
+      },
+      {
+        "path": "common/WhispersOfTheDepths/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_SlaysManyBeasts.json",
+        "size": 106396,
+        "sha256": "9A8A740A8ED8EA792FEE6C81786CB9803228FA972E9B06A52CF5A71D6C49E098"
+      },
+      {
+        "path": "common/Wyrmstooth/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Wyrmstooth.json",
+        "size": 110849,
+        "sha256": "502BA2B18F3373BE7FA9BA34243761CA2475F6E4153FF9788BA5A7F1B1A6D845"
+      },
+      {
+        "path": "fomod/info.xml",
+        "size": 1088,
+        "sha256": "BE0BCF93D6A27AF2BDE474A5F04ABA6DA387CEAD078A558CC01E3BC6FA357187"
+      },
+      {
+        "path": "fomod/ModuleConfig.xml",
+        "size": 22255,
+        "sha256": "BDA6DAF369954F9BDB726CD66CD165DA5F40F89AF1F30BBD372764B5EA509445"
+      },
+      {
+        "path": "plugins/authoria/Docs/PDV Patch - Authoria All-In-One.md",
+        "size": 3227,
+        "sha256": "99C9B525A9689EEB2FBB46E76281DC321375EA8CDCA6B90B4C7E088866DC9705"
+      },
+      {
+        "path": "plugins/authoria/Docs/PDV_ARR_Tranche2_Implementation.md",
+        "size": 2347,
+        "sha256": "ED91B363527DDDC584E2D8CC3D555FFFE08EA49715DF5E13E8994204C6DF7CD7"
+      },
+      {
+        "path": "plugins/authoria/Docs/PDV_Phase21_ARR_SmokeRunbook.md",
+        "size": 1702,
+        "sha256": "199F123C4BFAFFEF497FD1B31D65558C82F7597753A159F3BD177336F285C2E1"
+      },
+      {
+        "path": "plugins/authoria/PDV_Patch_Authoria_QuestMods.esp",
+        "size": 14002,
+        "sha256": "A607B6D152DE1E7FAC1523D3019FCF52836AF174BE6E234964D21B9FA8BE4BB7"
+      },
+      {
+        "path": "plugins/authoria/Scripts/PDV__ManagerQuest.pex",
+        "size": 909685,
+        "sha256": "F0FAD3F950F971232548A34F8F7420B5D7F4EF3FD9E7E8336919B793E44E1CAC"
+      },
+      {
+        "path": "plugins/authoria/Scripts/PDV_EventBus.pex",
+        "size": 54987,
+        "sha256": "2B11386C65390DFF7B756F7C715A6116DA367A7443B5BA5F0CD595C2094675F1"
+      },
+      {
+        "path": "plugins/authoria/Scripts/PDV_PlayerEvents.pex",
+        "size": 87131,
+        "sha256": "8310944FFD61B55D1F84FB9FA97A95158C775D288B7583B0A47C30C6A40CF72C"
+      },
+      {
+        "path": "plugins/authoria/Scripts/Source/PDV__ManagerQuest.psc",
+        "size": 1117197,
+        "sha256": "02B774D63340D27FE805E8DBCDB2293FFC1E6FA6E5C9C472CB3F932FDDD8644E"
+      },
+      {
+        "path": "plugins/authoria/Scripts/Source/PDV_EventBus.psc",
+        "size": 54652,
+        "sha256": "87DD71974DB74F274C39F483224A87D679A81CFE37F37A440572CE8DB18724A6"
+      },
+      {
+        "path": "plugins/authoria/Scripts/Source/PDV_PlayerEvents.psc",
+        "size": 114016,
+        "sha256": "2A3E5108A38CDD4286D680A45DE4242FDE38E277ADA97FB14107E702910F78E9"
+      },
+      {
+        "path": "plugins/authoria/SKSE/Plugins/BaseObjectSwapper/PDV_AuthoriaARR_DaedricShrines_SWAP.ini",
+        "size": 1565,
+        "sha256": "56889A2B5C3BE2E601FA32B8513CD22BF986E8FC33182A168E7DD63735183EA2"
+      },
+      {
+        "path": "plugins/authoria/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR.json",
+        "size": 191141,
+        "sha256": "1555ECCFBC323A7F4E2A476530B0057B978A1CD2D20D34C82905ADE45F26916C"
+      },
+      {
+        "path": "plugins/authoria/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix.json",
+        "size": 614651,
+        "sha256": "1087F16040C69DA6647CC40B73DD124F0EF7A0EEFD3B6D57650B3D5AE282ECCA"
+      },
+      {
+        "path": "plugins/individual/OnceWeWereHere/PDV_Patch_OnceWeWereHere.esp",
+        "size": 4160,
+        "sha256": "236A9D32BFBC72B0B2FF2C9ED4C12883247469D67B9A070A649542FD03CFEBD2"
+      },
+      {
+        "path": "plugins/individual/WarsFolly/PDV_Patch_WarsFolly.esp",
+        "size": 7125,
+        "sha256": "BA3EE89196A146EF754EB28503A6B66362B1528DAEA8DF0ED301181DF523D563"
+      },
+      {
+        "path": "plugins/individual/WhispersOfTheDepths/PDV_Patch_SlaysManyBeasts.esp",
+        "size": 3019,
+        "sha256": "0399D1BE91CA9A4DB96C23CC00D7D27DD34B22952A60355A8F1D2441A0E63C34"
+      }
+    ]
+  },
+  "archive": null,
+  "warnings": [],
+  "failures": []
+}

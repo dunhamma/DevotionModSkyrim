@@ -130,3 +130,13 @@ make_way_war,DA02,40,Talos,review-dropped 2026-07-04: theology stretch: Boethiah
 make_way_war,TG05,60,Talos,review-dropped 2026-07-04: theology stretch: passively surviving an ambush during a Thieves Guild internal betrayal is not heroic struggle or defiance of tyranny; orthogonal to Talos's anchor
 hunt_ethics,DA05,100,Kyne,review-dropped 2026-07-04: the_hunt stretch -- this is Hircine's vengeful hunt not Kyne's respectful/sacred hunt
 hunt_ethics,DA05,100,Y'ffre,review-dropped 2026-07-04: theology stretch -- killing Sinding for Hircine (a rival hunt-god) violates the Pact's ethic of restraint; opposite branch s105 kept instead
+sky_storm_nature,ccMTYSSE001_Quest,100,Kyne,T13 reviewed 2026-08-06: the pilgrimage explicitly visits the Nine Divines shrines and therefore names Kynareth's Imperial face; it is not a Kyne rite
+sky_storm_nature,Sat_Dog,10,Kyne,T13 reviewed 2026-08-06: low-stakes animal companionship fits Kynareth's nature/comfort profile; extending it to Kyne was rejected as coverage farming
+time_dragon,WTBarrowOfTheWyrm,260,Akatosh,T13 reviewed 2026-08-06: Alkosh's named-dragon/order-keeping exception is culturally specific; a generic Akatosh battle reaction was rejected
+time_dragon,WTBarrowOfTheWyrm,260,Auri-El,T13 reviewed 2026-08-06: Auri-El's locked dragon exception is Alduin/herald-specific and does not cover Vulthurkrah
+time_dragon,ccBGSSSE067_Quest2,1000,Auri-El,T13 reviewed 2026-08-06: the retained Akatosh cell is an order-restored response to a Dagon incursion; no Auri-El-specific act is evidenced
+time_dragon,ccBGSSSE067_Quest2,1000,Alkosh,T13 reviewed 2026-08-06: the Deadlands escape has no named-dragon or Khajiiti order context; Alkosh parity would be coverage farming
+death_order,HYORdunIcemothQST,30,Xarxes,T13 reviewed 2026-08-06: defeating a necromancer and undead army fits death-cycle gods; it does not evidence Xarxes's ancestry or record-keeping domain
+death_order,HSHuntForSpectreQuest,55,Xarxes,T13 reviewed 2026-08-06: destroying the Spectre fits death-cycle gods; it does not evidence Xarxes's ancestry or record-keeping domain
+labor_commerce,ccASVSSE001_QuestE,100,Z'en,T13 reviewed 2026-08-06: Trueflame's Dwarven-forge restoration is master craft/forge work; no toil bargain or lawful-trade act supports Z'en
+make_way_war,HYORdunIcemothQST,30,Talos,T13 reviewed 2026-08-06: HoonDing's make-way victory applies to ending the undead siege; generic Talos credit for any large battle was rejected

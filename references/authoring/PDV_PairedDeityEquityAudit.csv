@@ -2,7 +2,7 @@ cluster,editor_id,outcome_stage,quest_name,act_tags,credited,missing,waived
 sky_storm_nature,C01,200,Proving Honor,prove_by_struggle,Kyne(+S/small),Kynareth,waived
 sky_storm_nature,C02,200,Brotherhood,prove_by_struggle,Kyne(+m/small),Kynareth,waived
 sky_storm_nature,C03,200,The Silver Hand,kill_honorable_combat,Kyne(+m/small),Kynareth,waived
-sky_storm_nature,C04,200,Blood's Honor,kill_honorable_combat,Kyne(+m/small) Y'ffre(+m/small),Kynareth,waived
+sky_storm_nature,C04,200,Blood's Honor,kill_honorable_combat,Kyne(+m/small) Y'ffre(+m/small) Khenarthi(+m/small),Kynareth,waived
 sky_storm_nature,C05,200,Purity of Revenge,kill_honorable_combat,Kyne(+m/small),Kynareth,waived
 sky_storm_nature,CW01A,1,Joining the Legion,kill_honorable_combat,Kyne(+m/small),Kynareth,waived
 sky_storm_nature,CW01B,1,Joining the Stormcloaks,kill_honorable_combat,Kyne(+m/small),Kynareth,waived
@@ -30,8 +30,16 @@ sky_storm_nature,T01,200,The Heart of Dibella,protect_the_weak,Kynareth(+m/small
 sky_storm_nature,t02,200,The Book of Love,heal_comfort,Khenarthi(+m/small) Kynareth(+m/small),Kyne,waived
 sky_storm_nature,TG08B,50,Blindsighted,kill_honorable_combat,Kyne(+m/small),Kynareth,waived
 time_dragon,BardsCollegeLute,20,Finn's Lute,uphold_law_justice,Akatosh(+m/small) Alkosh(+m/small),Auri-El,waived
+time_dragon,C00,20,Take Up Arms,kill_honorable_combat,Alkosh(+S/small),Akatosh,
+time_dragon,C00,20,Take Up Arms,kill_honorable_combat,Alkosh(+S/small),Auri-El,
+time_dragon,C00,10,Take Up Arms,kill_honorable_combat,Alkosh(+S/small),Akatosh,
+time_dragon,C00,10,Take Up Arms,kill_honorable_combat,Alkosh(+S/small),Auri-El,
 time_dragon,C03,200,The Silver Hand,kill_honorable_combat,Alkosh(+m/small),Akatosh,waived
 time_dragon,C03,200,The Silver Hand,kill_honorable_combat,Alkosh(+m/small),Auri-El,waived
+time_dragon,C04,200,Blood's Honor,kill_honorable_combat,Alkosh(+S/small),Akatosh,
+time_dragon,C04,200,Blood's Honor,kill_honorable_combat,Alkosh(+S/small),Auri-El,
+time_dragon,C05,20,Purity of Revenge,kill_honorable_combat,Alkosh(+S/milestone),Akatosh,
+time_dragon,C05,20,Purity of Revenge,kill_honorable_combat,Alkosh(+S/milestone),Auri-El,
 time_dragon,CW01A,160,Joining the Legion,"serve_empire_order,keep_oath",Akatosh(+S/small) Alkosh(+m/small),Auri-El,waived
 time_dragon,CW01A,1,Joining the Legion,kill_honorable_combat,Alkosh(+m/small),Akatosh,waived
 time_dragon,CW01A,1,Joining the Legion,kill_honorable_combat,Alkosh(+m/small),Auri-El,waived
@@ -41,13 +49,68 @@ time_dragon,CW01B,1,Joining the Stormcloaks,prove_by_struggle,Auri-El(+m/small),
 time_dragon,CW01B,1,Joining the Stormcloaks,prove_by_struggle,Auri-El(+m/small),Alkosh,waived
 time_dragon,CW02A,200,The Jagged Crown,serve_empire_order,Akatosh(+S/small) Alkosh(+m/small),Auri-El,waived
 time_dragon,CW03,50,Message to Whiterun,serve_empire_order,Akatosh(+S/small) Alkosh(+m/small),Auri-El,waived
+time_dragon,CW03,100,Message to Whiterun,uphold_law_justice,Alkosh(+m/small),Akatosh,
+time_dragon,CW03,100,Message to Whiterun,uphold_law_justice,Alkosh(+m/small),Auri-El,
+time_dragon,CW03,10,Message to Whiterun,serve_empire_order,Alkosh(+m/small),Akatosh,
+time_dragon,CW03,10,Message to Whiterun,serve_empire_order,Alkosh(+m/small),Auri-El,
+time_dragon,DA02,10,Boethiah's Calling,sow_chaos_madness,Alkosh(-C/small),Akatosh,
+time_dragon,DA02,10,Boethiah's Calling,sow_chaos_madness,Alkosh(-C/small),Auri-El,
+time_dragon,DA02,20,Boethiah's Calling,sow_chaos_madness,Alkosh(-C/small),Akatosh,
+time_dragon,DA02,20,Boethiah's Calling,sow_chaos_madness,Alkosh(-C/small),Auri-El,
 time_dragon,DA06,200,The Cursed Tribe,prove_by_struggle,Auri-El(+m/small) Alkosh(+m/small),Akatosh,waived
+time_dragon,DA06,110,The Cursed Tribe,kill_honorable_combat,Alkosh(+S/small),Akatosh,
+time_dragon,DA06,110,The Cursed Tribe,kill_honorable_combat,Alkosh(+S/small),Auri-El,
+time_dragon,DA06,50,The Cursed Tribe,uphold_law_justice,Alkosh(+m/small),Akatosh,
+time_dragon,DA06,50,The Cursed Tribe,uphold_law_justice,Alkosh(+m/small),Auri-El,
+time_dragon,DA07,80,Pieces of the Past,sow_chaos_madness,Alkosh(-C/milestone),Akatosh,
+time_dragon,DA07,80,Pieces of the Past,sow_chaos_madness,Alkosh(-C/milestone),Auri-El,
 time_dragon,DA15,200,The Mind of Madness,sow_chaos_madness,Akatosh(-S/small) Alkosh(-S/small),Auri-El,waived
+time_dragon,DB06,200,Breaching Security,sow_chaos_madness,Alkosh(-C/small),Akatosh,
+time_dragon,DB06,200,Breaching Security,sow_chaos_madness,Alkosh(-C/small),Auri-El,
 time_dragon,DB10,20,Death Incarnate,kill_honorable_combat,Alkosh(+m/small),Akatosh,waived
 time_dragon,DB10,20,Death Incarnate,kill_honorable_combat,Alkosh(+m/small),Auri-El,waived
 time_dragon,DB11,200,Hail Sithis!,sow_chaos_madness,Akatosh(-S/small) Alkosh(-C/milestone),Auri-El,
+time_dragon,DBDestroy,200,Destroy the Dark Brotherhood!,uphold_law_justice,Alkosh(+m/milestone),Akatosh,
+time_dragon,DBDestroy,200,Destroy the Dark Brotherhood!,uphold_law_justice,Alkosh(+m/milestone),Auri-El,
+time_dragon,DBDestroy,10,Destroy the Dark Brotherhood!,uphold_law_justice,Alkosh(+m/small),Akatosh,
+time_dragon,DBDestroy,10,Destroy the Dark Brotherhood!,uphold_law_justice,Alkosh(+m/small),Auri-El,
+time_dragon,DBDestroy,20,Destroy the Dark Brotherhood!,uphold_law_justice,Alkosh(+m/small),Akatosh,
+time_dragon,DBDestroy,20,Destroy the Dark Brotherhood!,uphold_law_justice,Alkosh(+m/small),Auri-El,
+time_dragon,DBDestroy,40,Destroy the Dark Brotherhood!,uphold_law_justice,Alkosh(+m/milestone),Akatosh,
+time_dragon,DBDestroy,40,Destroy the Dark Brotherhood!,uphold_law_justice,Alkosh(+m/milestone),Auri-El,
+time_dragon,DLC1HunterBaseIntro,200,A New Order,uphold_law_justice,Alkosh(+m/milestone),Akatosh,
+time_dragon,DLC1HunterBaseIntro,200,A New Order,uphold_law_justice,Alkosh(+m/milestone),Auri-El,
+time_dragon,DLC1HunterBaseStage2,200,Bolstering the Ranks,serve_empire_order,Alkosh(+m/small),Akatosh,
+time_dragon,DLC1HunterBaseStage2,200,Bolstering the Ranks,serve_empire_order,Alkosh(+m/small),Auri-El,
+time_dragon,DLC1VampireBaseIntro,200,The Bloodstone Chalice,sow_chaos_madness,Alkosh(-C/small),Akatosh,
+time_dragon,DLC1VampireBaseIntro,200,The Bloodstone Chalice,sow_chaos_madness,Alkosh(-C/small),Auri-El,
+time_dragon,DLC2EbonyWarriorQuest,200,The Ebony Warrior,kill_honorable_combat,Alkosh(+S/milestone),Akatosh,
+time_dragon,DLC2EbonyWarriorQuest,200,The Ebony Warrior,kill_honorable_combat,Alkosh(+S/milestone),Auri-El,
+time_dragon,DLC2KagrumezQST,250,The Kagrumez Gauntlet,kill_honorable_combat,Alkosh(+S/small),Akatosh,
+time_dragon,DLC2KagrumezQST,250,The Kagrumez Gauntlet,kill_honorable_combat,Alkosh(+S/small),Auri-El,
+time_dragon,DLC2MH01,200,Retaking Thirsk,uphold_law_justice,Alkosh(+m/small),Akatosh,
+time_dragon,DLC2MH01,200,Retaking Thirsk,uphold_law_justice,Alkosh(+m/small),Auri-El,
+time_dragon,DLC2MQ01,200,Dragonborn,uphold_law_justice,Alkosh(+m/small),Akatosh,
+time_dragon,DLC2MQ01,200,Dragonborn,uphold_law_justice,Alkosh(+m/small),Auri-El,
+time_dragon,DLC2MQ02,200,The Temple of Miraak,uphold_law_justice,Alkosh(+m/small),Akatosh,
+time_dragon,DLC2MQ02,200,The Temple of Miraak,uphold_law_justice,Alkosh(+m/small),Auri-El,
+time_dragon,DLC2MQ03B,200,Cleansing the Stones,uphold_law_justice,Alkosh(+m/milestone),Akatosh,
+time_dragon,DLC2MQ03B,200,Cleansing the Stones,uphold_law_justice,Alkosh(+m/milestone),Auri-El,
+time_dragon,DLC2MQ06,550,At the Summit of Apocrypha,kill_honorable_combat,Alkosh(+S/milestone),Akatosh,
+time_dragon,DLC2MQ06,550,At the Summit of Apocrypha,kill_honorable_combat,Alkosh(+S/milestone),Auri-El,
+time_dragon,DLC2RR01,200,March of the Dead,uphold_law_justice,Alkosh(+m/milestone),Akatosh,
+time_dragon,DLC2RR01,200,March of the Dead,uphold_law_justice,Alkosh(+m/milestone),Auri-El,
+time_dragon,DLC2RR02,200,Served Cold,uphold_law_justice,Alkosh(+m/milestone),Akatosh,
+time_dragon,DLC2RR02,200,Served Cold,uphold_law_justice,Alkosh(+m/milestone),Auri-El,
+time_dragon,DLC2SV01,200,Lost Legacy,kill_honorable_combat,Alkosh(+S/milestone),Akatosh,
+time_dragon,DLC2SV01,200,Lost Legacy,kill_honorable_combat,Alkosh(+S/milestone),Auri-El,
+time_dragon,DLC2TTF1,300,From the Ashes,uphold_law_justice,Alkosh(+m/small),Akatosh,
+time_dragon,DLC2TTF1,300,From the Ashes,uphold_law_justice,Alkosh(+m/small),Auri-El,
 time_dragon,FreeformSkyhavenTempleA,50,Rebuilding the Blades,keep_oath,Akatosh(+S/small),Auri-El,waived
 time_dragon,FreeformSkyhavenTempleA,50,Rebuilding the Blades,keep_oath,Akatosh(+S/small),Alkosh,waived
+time_dragon,MG08,200,The Eye of Magnus,disciplined_study,Akatosh(+m/small) Alkosh(+m/milestone),Auri-El,
+time_dragon,MS10,100,Rise in the East,uphold_law_justice,Alkosh(+m/small),Akatosh,
+time_dragon,MS10,100,Rise in the East,uphold_law_justice,Alkosh(+m/small),Auri-El,
 time_dragon,t02,200,The Book of Love,uphold_law_justice,Akatosh(+m/small),Auri-El,
 time_dragon,t02,200,The Book of Love,uphold_law_justice,Akatosh(+m/small),Alkosh,
 time_dragon,TG08A,57,Trinity Restored,keep_oath,Akatosh(+S/small),Auri-El,waived
@@ -65,7 +128,7 @@ death_order,DLC1SeranaCureSelfQuest,200,Serana's Cure,cure_undeath,Arkay(+S/smal
 death_order,DLC1VQ03Vampire,200,The Bloodstone Chalice,embrace_vampirism,Arkay(-S/small),Tu'whacca,
 death_order,DLC1VQ03Vampire,200,The Bloodstone Chalice,embrace_vampirism,Arkay(-S/small),Xarxes,
 death_order,DLC1VQ04,200,Chasing Echoes,necromancy,Arkay(-C/milestone) Tu'whacca(-C/milestone),Xarxes,
-death_order,DLC1VQ05,200,Beyond Death,necromancy,Arkay(-S/small) Tu'whacca(-S/small),Xarxes,
+death_order,DLC1VQ05,200,Beyond Death,necromancy,Arkay(-S/small) Tu'whacca(-S/small) Khenarthi(+m/milestone),Xarxes,
 death_order,DLC1VQ08,200,Kindred Judgment,slay_undead,Tu'whacca(+S/small),Arkay,
 death_order,DLC1VQ08,200,Kindred Judgment,slay_undead,Tu'whacca(+S/small),Xarxes,
 death_order,MG07,30,The Staff of Magnus,slay_undead,Arkay(+C/small) Tu'whacca(+S/small),Xarxes,waived
@@ -78,21 +141,45 @@ labor_commerce,TG04,200,Scoundrel's Folly,theft_burglary,Zenithar(-m/small),Z'en
 labor_commerce,TG07,200,The Pursuit,theft_burglary,Zenithar(-m/small),Z'en,waived
 mercy_war,DB08,200,Recipe for Disaster,murder_treacherous,Stendarr(-S/small),Stuhn,
 mercy_war,t02,200,The Book of Love,"mercy_spare,protect_the_weak",Stendarr(+S/small),Stuhn,
-trickster_thief,DB08,200,Recipe for Disaster,theft_burglary,Baan Dar(+m/small),Nocturnal,waived
-trickster_thief,DB08,200,Recipe for Disaster,theft_burglary,Baan Dar(+m/small),Rajhin,waived
+trickster_thief,DA14,200,A Night To Remember,deceit,Baan Dar(+C/small) Rajhin(+S/small),Nocturnal,
+trickster_thief,DB01Misc,40,Delayed Burial,deceit,Rajhin(+S/small) Baan Dar(+C/small),Nocturnal,
+trickster_thief,DB08,200,Recipe for Disaster,theft_burglary,Baan Dar(+m/small) Rajhin(+C/milestone),Nocturnal,waived
+trickster_thief,DLC2RR02,200,Served Cold,deceit,Baan Dar(+C/small),Nocturnal,
+trickster_thief,DLC2RR02,200,Served Cold,deceit,Baan Dar(+C/small),Rajhin,
+trickster_thief,DLC2TT1b,320,A New Debt,deceit,Baan Dar(+C/small) Rajhin(+S/small),Nocturnal,
+trickster_thief,MS02,250,No One Escapes Cidhna Mine,prove_by_struggle,Baan Dar(+m/milestone) Rajhin(+S/small),Nocturnal,
 trickster_thief,TG00,200,A Chance Arrangement,"theft_burglary,deceit",Nocturnal(+C/milestone) Rajhin(+C/milestone),Baan Dar,waived
 trickster_thief,TG01,200,Taking Care of Business,theft_burglary,Nocturnal(+C/milestone) Rajhin(+C/milestone),Baan Dar,waived
+trickster_thief,TG01,20,Taking Care of Business,deceit,Rajhin(+S/small) Baan Dar(+S/small),Nocturnal,
 trickster_thief,TG02,200,Loud and Clear,theft_burglary,Nocturnal(+C/milestone) Rajhin(+C/milestone),Baan Dar,waived
+trickster_thief,TG03,30,Dampened Spirits,deceit,Rajhin(+S/small) Baan Dar(+C/milestone),Nocturnal,
+trickster_thief,TG03,80,Dampened Spirits,deceit,Rajhin(+S/small) Baan Dar(+C/small),Nocturnal,
+trickster_thief,TG03,90,Dampened Spirits,theft_burglary,Rajhin(+C/small),Nocturnal,
+trickster_thief,TG03,90,Dampened Spirits,theft_burglary,Rajhin(+C/small),Baan Dar,
+trickster_thief,TG04,40,Scoundrel's Folly,deceit,Rajhin(+S/small) Baan Dar(+C/small),Nocturnal,
 trickster_thief,TG06,200,Hard Answers,theft_burglary,Nocturnal(+C/milestone) Rajhin(+C/milestone),Baan Dar,waived
+trickster_thief,TG06,40,Hard Answers,theft_burglary,Rajhin(+C/milestone) Baan Dar(+S/small),Nocturnal,
 trickster_thief,TG07,200,The Pursuit,theft_burglary,Nocturnal(+C/milestone) Rajhin(+C/milestone),Baan Dar,waived
+trickster_thief,TG07,40,The Pursuit,theft_burglary,Rajhin(+C/small) Baan Dar(+S/small),Nocturnal,
+trickster_thief,TG07,60,The Pursuit,theft_burglary,Rajhin(+C/small),Nocturnal,
+trickster_thief,TG07,60,The Pursuit,theft_burglary,Rajhin(+C/small),Baan Dar,
+trickster_thief,TG08B,200,Blindsighted,theft_burglary,Rajhin(+C/milestone) Baan Dar(+m/milestone),Nocturnal,
+trickster_thief,TG08B,40,Blindsighted,deceit,Rajhin(+S/small) Baan Dar(+m/small),Nocturnal,
+trickster_thief,TG08B,60,Blindsighted,theft_burglary,Rajhin(+C/small),Nocturnal,
+trickster_thief,TG08B,60,Blindsighted,theft_burglary,Rajhin(+C/small),Baan Dar,
+trickster_thief,TG09,10,Darkness Returns,theft_burglary,Rajhin(+C/small),Nocturnal,
+trickster_thief,TG09,10,Darkness Returns,theft_burglary,Rajhin(+C/small),Baan Dar,
 love_marriage,BYOHRelationshipAdoptableOrphanage,200,Adoption (Honorhall),"charity,marriage_family",Dibella(+m/small),Mara,
 love_marriage,BYOHRelationshipAdoption,10,Adoption,marriage_family,Dibella(+m/small),Mara,
 knowledge_scribe,BardsCollegePoeticEdda,200,Collecting the Edda,disciplined_study,Julianos(+S/small) Xarxes(+m/small),Magnus,waived
+knowledge_scribe,DA04,100,Discerning the Transmundane,forbidden_knowledge,Julianos(+m/small) Magnus(+m/small),Xarxes,
 knowledge_scribe,DLC2MQ04,550,The Path of Knowledge,disciplined_study,Magnus(+S/small),Julianos,
 knowledge_scribe,DLC2MQ04,550,The Path of Knowledge,disciplined_study,Magnus(+S/small),Xarxes,
 knowledge_scribe,FreeformSkyHavenTempleD,100,Dragon Research,disciplined_study,Julianos(+S/small) Magnus(+S/small),Xarxes,waived
 knowledge_scribe,MS14,200,Laid to Rest,"slay_undead,disciplined_study",Magnus(+m/small),Julianos,
 knowledge_scribe,MS14,200,Laid to Rest,"slay_undead,disciplined_study",Magnus(+m/small),Xarxes,
+make_way_war,C00,20,Take Up Arms,honorable_duel,Talos(+m/small),HoonDing,
+make_way_war,C04,200,Blood's Honor,kill_honorable_combat,Talos(+S/small),HoonDing,
 make_way_war,DA02,40,Boethiah's Calling,prove_by_struggle,HoonDing(+S/small),Talos,waived
 make_way_war,TG05,60,Speaking With Silence,prove_by_struggle,HoonDing(+S/small),Talos,waived
 hunt_ethics,C06,200,Glory of the Dead,the_hunt,Y'ffre(+S/small),Hircine,

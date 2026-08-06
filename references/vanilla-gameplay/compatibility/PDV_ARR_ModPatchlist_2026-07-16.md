@@ -281,6 +281,28 @@ Machine proof: 10/10 channels `--check` PASS; core matrix 1982 cells / 173 keys
 (+4 for DB01 s198); patch records read back from disk. Runtime proof pending
 (TODO-7).
 
+### 2026-08-06 T13 extension (machine-clean test candidate)
+
+T13 adds nine data-only channels: Wyrmstooth, CC The Cause, CC Ghosts of the
+Tribunal, CC Divine Crusader, Taste of Death Addon, Siege at Icemoth, Hunt for
+the Spectre, Calling the Watchmaker, and Gift of Saturalia. They contain **95
+cells across 14 keys / 14 watched quests** and require no new ESP. M'rissi is
+excluded and remains assigned exactly once to T14.
+
+The FOMOD now offers 19 channel options. The Authoria lane installs all 19 while
+retaining the original combined hook ESP only for the three mods that need
+dialogue result fragments; every new individual option installs only its
+detected mod's JSON and shared runbook. `pdv_quest_patch_fomod_validate.mjs`
+passes XML parsing, all referenced folders, Authoria/all-individual/subset
+simulation, channel naming, collision checks, and a 67-file hash manifest.
+The structure receipt is
+`references/authoring/PDV_QuestModPatches_FOMOD_Validation.json`.
+
+Proof boundary: these options are machine-verified experimental. The 14-case
+ledger is `PDV_ARR25_T13_RuntimeEvidenceLedger.json`; all cases are OPEN and the
+Divine Crusader pilgrimage must be traversed organically. No T13 option is
+supported yet.
+
 ### 2026-08-06 ARR 2.5 Wave 1 inventory recovery
 
 The recovered Wave 1 compatibility inventory is
@@ -301,10 +323,12 @@ deliberately not hooked.
 
 P0 = blocks the Authoria 1.0 gate package; P1 = next tranche; P2 = nice-to-have.
 
-- [ ] **TODO-1 (P0, S1):** Author the ARR matrix tranche 2 from the
-  high-confidence table in section 2 (CSV -> `pdv_quest_matrix_compile.mjs`;
-  register new FormIDs in `MANUAL_QUEST_FORMIDS`). Runtime-verify flags on
-  every row lacking ShutDownStage proof.
+- [x] **TODO-1 (P0, S1): MACHINE-COMPLETE 2026-08-06.** The current T13
+  high-confidence scope is authored as nine formid-bearing per-mod channels
+  (95 cells / 14 keys), compiled and packaged without changing core
+  `MANUAL_QUEST_FORMIDS`. M'rissi was intentionally moved to T14. Runtime and
+  support proof remain OPEN in the structured T13 evidence ledger; this close
+  marks authoring/package completion only.
   - [x] **Wave 1 inventory-scope prerequisite (2026-08-06):** 657 of 657 mods in
     the original bucket scope have an explicit verdict in
     `PDV_ARR25_ContentInventory_2026-08-06.csv`. This does not complete TODO-1's

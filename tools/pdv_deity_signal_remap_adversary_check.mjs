@@ -210,7 +210,7 @@ for (const manualId of ["DA10", "DA13", "DA06", "dunHunterQST", "MS05", "Freefor
 assert("shrine cap helper exists", manager.includes("Bool Function ConsumeShrinePrayerCredit("), "Missing shared daily shrine cap helper.");
 assert("shrine cap is called", manager.includes("if !ConsumeShrinePrayerCredit(deity, sourceId)"), "AwardShrinePrayerToDeityName does not consume the per-deity daily cap.");
 assert("shrine cap key is deity scoped", manager.includes("\"PDV.Signal.ShrinePrayer.\" + deityKey"), "Shrine cap must key by resolved deity, not only by shrine/source.");
-assert("likes dislikes version bumped", /Int Property LIKES_DISLIKES_VERSION = 16 AutoReadOnly/.test(manager), "LIKES_DISLIKES_VERSION should be 16 for the signal-floor rows.");
+assert("likes dislikes version current", /Int Property LIKES_DISLIKES_VERSION = 20 AutoReadOnly/.test(manager), "LIKES_DISLIKES_VERSION should remain 20; do not lower the live version to satisfy an older signal-floor contract.");
 assert("paarthurnax kill helper exists", playerEvents.includes("Bool Function IsPaarthurnaxActor") && playerEvents.includes("RoutePaarthurnaxKill(akVictim as Form)"), "Paarthurnax kill must be detected before Khajiit-only organic kill routing.");
 assert("paarthurnax kill eventbus route exists", eventBus.includes("Function RoutePaarthurnaxKill(Form sourceForm)") && eventBus.includes("HandlePaarthurnaxKill(sourceForm, \"eventbus_paarthurnax_kill\")"), "EventBus must expose the global Paarthurnax kill route.");
 assert("paarthurnax kill manager route exists", manager.includes("Function HandlePaarthurnaxKill(Form sourceForm, String reason)") && manager.includes("\"PDV.Paarthurnax.KillSeen\""), "Manager must apply the one-shot Paarthurnax kill fork.");

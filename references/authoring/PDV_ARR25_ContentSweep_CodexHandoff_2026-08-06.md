@@ -3,7 +3,7 @@
 Date: 2026-08-06
 Branch: `codex/arr25-content-sweep`
 Author: Claude session (Opus 5). Owner-approved plan folded in below.
-Status: **Phase 0 and the exhaustive QUST-plus-selected-signal discovery contract are complete. Tranche authoring, renewable implementation, package rebuild, and tester proof remain open.**
+Status: **Phase 0, exhaustive QUST-plus-selected-signal discovery, and T13 machine authoring/package gates are complete. T14-T17, renewable implementation, cumulative archive build, and tester proof remain open.**
 
 ---
 
@@ -40,6 +40,11 @@ What landed this session:
   checked-in canonical review ledger; three classify-only/out-of-roster concepts
   deliberately have no current runtime candidate. Reachability reports no malformed
   or unknown canonical names and no pending legacy review.
+- **T13 is machine-complete:** nine data-only channels contain 95 cells across
+  14 outcome keys, the 116-candidate cross-generation slate was primary-reviewed,
+  paired-equity has zero unexplained delta, and the 19-channel FOMOD directory
+  passes deterministic structure/collision/hash validation. All 14 tester cases
+  remain OPEN; this is an experimental test candidate, not supported content.
 
 The single most valuable discovery: **follower personal questlines**, which are the
 only content in 3739 plugins that can reach Devotion's thin-roster races.
@@ -60,6 +65,7 @@ only content in 3739 plugins that can reach Devotion's thin-roster races.
 | Direct-read QUST checkpoints | 48/48 batches complete, 466/466 plugin paths read, zero unresolved errors, zero unreviewed evidence rows; count-equality gate passes |
 | Non-QUST signature universe frozen | 1,356 mods / 3,001 paths scanned; 614 mods / 1,070 paths admitted to direct signal review; 1,931 paths explicitly outside selected signatures; zero scan read errors |
 | Non-quest signal checkpoints | 107/107 complete batches, 1,070/1,070 plugin paths, 23,902 occurrences -> 18,791 defining records, 123 retained, zero unresolved reads/reviews |
+| T13 authoring and package directory | 95 cells / 14 keys / 9 channels; 19-option FOMOD; `PDV_ARR25_T13_Adjudication.md`; package validation PASS; runtime/support OPEN |
 
 Current gate output is **2,130 cells / 154 EditorIDs / 45 deities**; compile output is
 231 runtime keys / 154 watched quests. The former 2,131 result contained one duplicate
@@ -136,7 +142,7 @@ that race can reach, or a Prince. Existing evidence of the trap: Trinimac carrie
 explicit Orc stance in `PDV_StanceMatrix.csv` but is absent from the Orc origin
 roster, so all 36 Trinimac cells are dead for Orcs.
 
-### Phase 1 -- exhaustive discovery (in progress)
+### Phase 1 -- exhaustive discovery (complete 2026-08-06)
 
 Source of truth: `D:\Wabbajack\modlists\ARR 2.5`, profile `KoK R11`.
 
@@ -203,9 +209,11 @@ Do not hand-author the fan-out. `tools/pdv_quest_cross_gen.mjs` crosses every ta
 outcome against every Part B profile and emits a review slate. Then re-measure with
 `pdv_signal_floor_audit.mjs` and `pdv_paired_equity_audit.mjs`.
 
-Caution: `pdv_paired_equity_audit.mjs` **already reports FAIL** (28 open cluster gaps,
-72 waived) before any of this work. Capture its baseline before T13 so tranches are
-judged on the delta.
+Caution: the refreshed post-T12 core baseline is **116 open cluster gaps / 71
+waived**, not the stale 28/72 report committed before the T12 expansion. T13's
+in-memory composite is 116 open / 81 waived after primary review: zero unexplained
+open-gap delta. The audit now supports repeated `--append-matrix` plus `--no-write`
+for channel tranche comparisons.
 
 ### Phase 4 -- non-quest lane
 

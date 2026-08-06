@@ -3,10 +3,10 @@
   "generatedFor": "PDV_SignalFloor_MasterHandoff_2026-07-09.md",
   "proofBoundary": "These scenarios define backend, runtime-route, and manual-display evidence separately. Backend PASS does not prove in-game firing, Book of Days display, Survey/status clarity, duplicate suppression, wrong-origin silence, or save/load stack behavior.",
   "expected": {
-    "likesDislikesVersion": 16,
-    "questCells": 1978,
-    "questKeys": 172,
-    "watchedQuests": 134,
+    "likesDislikesVersion": 20,
+    "questCells": 2130,
+    "questKeys": 231,
+    "watchedQuests": 154,
     "faucetActs": 26
   },
   "scenarios": [
@@ -155,8 +155,8 @@
       "debugMcmScenario": 8
     },
     {
-      "id": "likes_dislikes_v15",
-      "title": "Likes/dislikes v15: vampire feed plus non-combat animal kill",
+      "id": "likes_dislikes_v20",
+      "title": "Likes/dislikes v20: vampire feed plus non-combat animal kill",
       "bucket": "backend-static;runtime-route;manual-display",
       "trigger": { "type": "likes-dislikes", "eventIds": [ 366, 303 ] },
       "expectedRows": [
@@ -166,8 +166,8 @@
         { "actor": "Kynareth", "eventId": 303, "sentiment": "-", "baseDelta": "-0.5" },
         { "actor": "sithis", "eventId": 366, "sentiment": "+", "baseDelta": "0.5" }
       ],
-      "expectedSourceTokens": [ "LIKES_DISLIKES_VERSION = 16", "ldEvents[32] = 303", "ldEvents[33] = 366" ],
-      "manualChecks": [ "new save or unstamped save logs version 16 loaded", "daily caps hold" ],
+      "expectedSourceTokens": [ "LIKES_DISLIKES_VERSION = 20", "ldEvents[32] = 303", "ldEvents[33] = 366" ],
+      "manualChecks": [ "new save or unstamped save logs version 20 loaded", "daily caps hold" ],
       "debugMcmScenario": 9
     },
     {

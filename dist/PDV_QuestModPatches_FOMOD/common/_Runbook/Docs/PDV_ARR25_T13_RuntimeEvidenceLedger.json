@@ -1,0 +1,11 @@
+{
+  "schema": "pdv-arr25-t13-runtime-evidence.v1",
+  "target": "ARR 2.5 KoK R11",
+  "packageLane": "Authoria combined or equivalent individual option",
+  "status": "OPEN",
+  "sourceLedger": "references/authoring/PDV_ARR25_T13_RuntimeEvidenceLedger.json",
+  "instructions": "Record routeMarker, pietyReadback, toastCount, bookOfDaysBeatCount, saveLoad, organicSemantics, failures, and verdict in the source ledger. This package copy is the blank assignment sheet.",
+  "caseIds": ["T13-001","T13-002","T13-003","T13-004","T13-005","T13-006","T13-007","T13-008","T13-009","T13-010","T13-011","T13-012","T13-013","T13-014"],
+  "specialRule": "T13-004 must be traversed organically; setstage cannot clear semantic correctness.",
+  "statusByCase": {"T13-001":"OPEN","T13-002":"OPEN","T13-003":"OPEN","T13-004":"OPEN","T13-005":"OPEN","T13-006":"OPEN","T13-007":"OPEN","T13-008":"OPEN","T13-009":"OPEN","T13-010":"OPEN","T13-011":"OPEN","T13-012":"OPEN","T13-013":"OPEN","T13-014":"OPEN"}
+}
