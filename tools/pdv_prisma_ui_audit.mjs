@@ -1798,6 +1798,50 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
     pass(`All ${substrateProgressCalls.length} substrate progress producers pass actual metric deltas and the shared helper suppresses zero-credit presentation.`, managerPath);
   }
 
+  // Altmer parity is an acknowledgement contract, not a copy rule. Every accepted heritage
+  // producer funnels through AwardAltmerAncestorSpinePulse; that helper resolves one Book line,
+  // reuses it as the toast context, and presents only after the real daily-credit delta is known.
+  // Keep the producer registry explicit so a new Altmer act cannot silently bypass the surface.
+  const expectedAltmerHeritageProducers = new Set([
+    "HandleSubstrateShrinePrayer",
+    "HandleAltmerSleepEvents",
+    "HandleAltmerDawnSteadiness",
+    "HandleAltmerOrthodoxCostlyEnforcement",
+    "HandleAltmerPracticeFocus",
+    "HandleAltmerMagicSkillIncrease",
+    "RunDawnAwardAltmerAuriElDawn",
+  ]);
+  const altmerHeritageCalls = extractCalls(managerForBroadLane, "AwardAltmerAncestorSpinePulse")
+    .filter((call) => enclosingFunctionName(substrateFunctionBlocks, call.index) !== "AwardAltmerAncestorSpinePulse");
+  const actualAltmerHeritageProducers = new Set(
+    altmerHeritageCalls.map((call) => enclosingFunctionName(substrateFunctionBlocks, call.index)),
+  );
+  const missingAltmerHeritageProducers = [...expectedAltmerHeritageProducers]
+    .filter((name) => !actualAltmerHeritageProducers.has(name));
+  const unexpectedAltmerHeritageProducers = [...actualAltmerHeritageProducers]
+    .filter((name) => !expectedAltmerHeritageProducers.has(name));
+  const altmerAwardBody = functionBlock(managerForBroadLane, "AwardAltmerAncestorSpinePulse");
+  const altmerVoiceIndex = altmerAwardBody.indexOf("String voicedLine = AppendAltmerHeritageVoice(grantedMetric, reason)");
+  const altmerSurfaceIndex = altmerAwardBody.indexOf('SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, grantedMetric, voicedLine');
+  const altmerBranchIndex = substrateProgressBody.indexOf('if substrate == "altmer-heritage"');
+  const altmerBranchReturn = substrateProgressBody.indexOf("return", altmerBranchIndex);
+  const altmerBranchBody = altmerBranchIndex >= 0 && altmerBranchReturn > altmerBranchIndex
+    ? substrateProgressBody.slice(altmerBranchIndex, altmerBranchReturn)
+    : "";
+  if (
+    missingAltmerHeritageProducers.length > 0 || unexpectedAltmerHeritageProducers.length > 0 ||
+    altmerVoiceIndex < 0 || altmerSurfaceIndex < altmerVoiceIndex ||
+    !altmerBranchBody.includes('SendPrismaSubstrateToast(substrate, "deepen", context, symbolName, stateLabel)') ||
+    !altmerBranchBody.includes('SendPrismaSubstrateToast(substrate, "act", context, symbolName, stateLabel)') ||
+    !altmerBranchBody.includes("if surfacePresentation") ||
+    !altmerBranchBody.includes("if tierAfter > tierBefore") ||
+    altmerBranchBody.includes("AppendBookOfDaysEntry(entryText")
+  ) {
+    fail(`Altmer heritage notice parity requires one accepted-act funnel for every registered producer; missing=${missingAltmerHeritageProducers.join("|") || "none"}, unexpected=${unexpectedAltmerHeritageProducers.join("|") || "none"}.`, managerPath);
+  } else {
+    pass(`All ${actualAltmerHeritageProducers.size} registered Altmer heritage producers reuse one accepted Book line for one Prisma notice, with a distinct tier Chronicle only on crossing.`, managerPath);
+  }
+
   const renamedFamilyLines = managerForBroadLane.split(/\r?\n/).filter((line) =>
     /SendPrismaSubstrateProgress\("(?:imperial-civic|altmer-heritage|argonian-practice)"/.test(line)
   );
