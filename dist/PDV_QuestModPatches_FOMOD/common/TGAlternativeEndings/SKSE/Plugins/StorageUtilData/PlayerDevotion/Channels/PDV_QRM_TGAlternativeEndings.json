@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-07T02:53:26.813Z",
-    "generatedat": "2026-08-07T02:53:26.813Z",
+    "generatedAt": "2026-08-06T12:15:37.439Z",
+    "generatedat": "2026-08-06T12:15:37.439Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "186947",
-    "questwatchformidscsv": "186947",
-    "questWatchPluginsCsv": "CJ03Elroy.esp",
-    "questwatchpluginscsv": "CJ03Elroy.esp",
+    "questWatchFormIdsCsv": "136533",
+    "questwatchformidscsv": "136533",
+    "questWatchPluginsCsv": "Skyrim.esm",
+    "questwatchpluginscsv": "Skyrim.esm",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1367,26 +1367,26 @@
     "faucet.malacath.serve_a_daedra:malacath.tag": "serve_a_daedra:malacath",
     "faucet.Malacath.serve_a_daedra:malacath.cap": "1/dawn",
     "faucet.malacath.serve_a_daedra:malacath.cap": "1/dawn",
-    "quest.186947|120.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.valencesCsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.valencescsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.intensitiesCsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.intensitiescsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.magnitudescsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|120.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|130.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.valencesCsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.valencescsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.intensitiesCsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.intensitiescsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.magnitudescsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
-    "quest.186947|130.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
+    "quest.136533|201.deitiesCsv": "Nocturnal|Stendarr|Stuhn|Mara|Akatosh|Malacath|Trinimac|Z'en",
+    "quest.136533|201.deitiescsv": "Nocturnal|Stendarr|Stuhn|Mara|Akatosh|Malacath|Trinimac|Z'en",
+    "quest.136533|201.valencesCsv": "-|+|+|+|-|-|-|-",
+    "quest.136533|201.valencescsv": "-|+|+|+|-|-|-|-",
+    "quest.136533|201.intensitiesCsv": "C|S|C|m|m|S|S|m",
+    "quest.136533|201.intensitiescsv": "C|S|C|m|m|S|S|m",
+    "quest.136533|201.magnitudesCsv": "milestone|milestone|milestone|small|small|small|small|small",
+    "quest.136533|201.magnitudescsv": "milestone|milestone|milestone|small|small|small|small|small",
+    "quest.136533|201.tagsCsv": "destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray|destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray|destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray|destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray|destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray|destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray|destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray|destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray",
+    "quest.136533|201.tagscsv": "destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray|destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray|destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray|destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray|destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray|destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray|destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray|destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray",
+    "quest.136533|202.deitiesCsv": "Nocturnal|Rajhin|Baan Dar|Zenithar|Akatosh|Malacath|Trinimac|Z'en|Stuhn",
+    "quest.136533|202.deitiescsv": "Nocturnal|Rajhin|Baan Dar|Zenithar|Akatosh|Malacath|Trinimac|Z'en|Stuhn",
+    "quest.136533|202.valencesCsv": "-|+|+|-|-|-|-|-|-",
+    "quest.136533|202.valencescsv": "-|+|+|-|-|-|-|-|-",
+    "quest.136533|202.intensitiesCsv": "C|C|S|C|S|S|S|S|m",
+    "quest.136533|202.intensitiescsv": "C|C|S|C|S|S|S|S|m",
+    "quest.136533|202.magnitudesCsv": "milestone|milestone|milestone|milestone|small|small|small|small|small",
+    "quest.136533|202.magnitudescsv": "milestone|milestone|milestone|milestone|small|small|small|small|small",
+    "quest.136533|202.tagsCsv": "destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal",
+    "quest.136533|202.tagscsv": "destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal|destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1517,91 +1517,99 @@
     "stancemult.tolerated": 0.4
   },
   "int": {
-    "quest.186947|120.metaSkip.Azura": 1,
-    "quest.186947|120.metaskip.azura": 1,
-    "quest.186947|130.metaSkip.Azura": 1,
-    "quest.186947|130.metaskip.azura": 1,
+    "quest.136533|201.metaSkip.Z'en": 1,
+    "quest.136533|201.metaskip.z'en": 1,
+    "quest.136533|201.metaSkip.Nocturnal": 1,
+    "quest.136533|201.metaskip.nocturnal": 1,
+    "quest.136533|201.metaSkip.Akatosh": 1,
+    "quest.136533|201.metaskip.akatosh": 1,
+    "quest.136533|202.metaSkip.Z'en": 1,
+    "quest.136533|202.metaskip.z'en": 1,
+    "quest.136533|202.metaSkip.Nocturnal": 1,
+    "quest.136533|202.metaskip.nocturnal": 1,
+    "quest.136533|202.metaSkip.Akatosh": 1,
+    "quest.136533|202.metaskip.akatosh": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 2,
-    "metaskipints": 2
+    "metaSkipInts": 6,
+    "metaskipints": 6
   },
   "stringList": {
     "questKeys": [
-      "186947|120",
-      "186947|130"
+      "136533|201",
+      "136533|202"
     ],
     "questkeys": [
-      "186947|120",
-      "186947|130"
+      "136533|201",
+      "136533|202"
     ],
     "questForms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x021555|Skyrim.esm",
+      "0x021555|Skyrim.esm"
     ],
     "questforms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x021555|Skyrim.esm",
+      "0x021555|Skyrim.esm"
     ],
     "questFormIds": [
-      "186947",
-      "186947"
+      "136533",
+      "136533"
     ],
     "questformids": [
-      "186947",
-      "186947"
+      "136533",
+      "136533"
     ],
     "questPlugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "Skyrim.esm",
+      "Skyrim.esm"
     ],
     "questplugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "Skyrim.esm",
+      "Skyrim.esm"
     ],
     "questEditorIds": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "TG09",
+      "TG09"
     ],
     "questeditorids": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "TG09",
+      "TG09"
     ],
     "questWatch.formIds": [
-      "186947"
+      "136533"
     ],
     "questwatch.formids": [
-      "186947"
+      "136533"
     ],
     "questWatch.plugins": [
-      "CJ03Elroy.esp"
+      "Skyrim.esm"
     ],
     "questwatch.plugins": [
-      "CJ03Elroy.esp"
+      "Skyrim.esm"
     ],
     "questWatch.editorIds": [
-      "CJ03RotBelowMQ"
+      "TG09"
     ],
     "questwatch.editorids": [
-      "CJ03RotBelowMQ"
+      "TG09"
     ],
     "questWatchFormIds": [
-      "186947"
+      "136533"
     ],
     "questwatchformids": [
-      "186947"
+      "136533"
     ],
     "questWatchPlugins": [
-      "CJ03Elroy.esp"
+      "Skyrim.esm"
     ],
     "questwatchplugins": [
-      "CJ03Elroy.esp"
+      "Skyrim.esm"
     ],
     "questWatchEditorIds": [
-      "CJ03RotBelowMQ"
+      "TG09"
     ],
     "questwatcheditorids": [
-      "CJ03RotBelowMQ"
+      "TG09"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -1659,110 +1667,110 @@
       "Mephala.serve_a_daedra:mephala",
       "Malacath.serve_a_daedra:malacath"
     ],
-    "quest.186947|120.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
+    "quest.136533|201.deities": [
+      "Nocturnal",
       "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara"
+      "Stuhn",
+      "Mara",
+      "Akatosh",
+      "Malacath",
+      "Trinimac",
+      "Z'en"
     ],
-    "quest.186947|120.valences": [
+    "quest.136533|201.valences": [
       "-",
       "+",
       "+",
       "+",
-      "+",
-      "+",
-      "+",
+      "-",
+      "-",
+      "-",
       "-"
     ],
-    "quest.186947|120.intensities": [
-      "C",
-      "C",
+    "quest.136533|201.intensities": [
       "C",
       "S",
+      "C",
+      "m",
+      "m",
       "S",
-      "m",
-      "m",
+      "S",
       "m"
     ],
-    "quest.186947|120.magnitudes": [
+    "quest.136533|201.magnitudes": [
       "milestone",
       "milestone",
-      "small",
+      "milestone",
       "small",
       "small",
       "small",
       "small",
       "small"
     ],
-    "quest.186947|120.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "deny_a_second_chance"
+    "quest.136533|201.tags": [
+      "destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray",
+      "destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray",
+      "destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray",
+      "destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray",
+      "destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray",
+      "destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray",
+      "destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray",
+      "destroy_reject_daedra:nocturnal,protect_the_weak,break_oath_betray"
     ],
-    "quest.186947|130.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
-      "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara",
-      "Dibella"
+    "quest.136533|202.deities": [
+      "Nocturnal",
+      "Rajhin",
+      "Baan Dar",
+      "Zenithar",
+      "Akatosh",
+      "Malacath",
+      "Trinimac",
+      "Z'en",
+      "Stuhn"
     ],
-    "quest.186947|130.valences": [
+    "quest.136533|202.valences": [
       "-",
       "+",
       "+",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+"
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-"
     ],
-    "quest.186947|130.intensities": [
-      "C",
+    "quest.136533|202.intensities": [
       "C",
       "C",
       "S",
+      "C",
       "S",
-      "m",
-      "m",
-      "m",
-      "S"
+      "S",
+      "S",
+      "S",
+      "m"
     ],
-    "quest.186947|130.magnitudes": [
+    "quest.136533|202.magnitudes": [
       "milestone",
       "milestone",
-      "small",
-      "small",
+      "milestone",
+      "milestone",
       "small",
       "small",
       "small",
       "small",
       "small"
     ],
-    "quest.186947|130.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "show_compassion",
-      "foster_art"
+    "quest.136533|202.tags": [
+      "destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal",
+      "destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal",
+      "destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal",
+      "destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal",
+      "destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal",
+      "destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal",
+      "destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal",
+      "destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal",
+      "destroy_reject_daedra:nocturnal,theft_burglary,break_oath_betray,acquire_daedric_artifact:nocturnal"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

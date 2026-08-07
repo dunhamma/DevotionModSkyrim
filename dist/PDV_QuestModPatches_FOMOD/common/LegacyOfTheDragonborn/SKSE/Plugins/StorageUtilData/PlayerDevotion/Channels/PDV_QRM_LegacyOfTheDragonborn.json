@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-07T02:53:26.813Z",
-    "generatedat": "2026-08-07T02:53:26.813Z",
+    "generatedAt": "2026-08-06T12:44:15.582Z",
+    "generatedat": "2026-08-06T12:44:15.582Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "186947",
-    "questwatchformidscsv": "186947",
-    "questWatchPluginsCsv": "CJ03Elroy.esp",
-    "questwatchpluginscsv": "CJ03Elroy.esp",
+    "questWatchFormIdsCsv": "2556654,5115199,6061685",
+    "questwatchformidscsv": "2556654,5115199,6061685",
+    "questWatchPluginsCsv": "LegacyoftheDragonborn.esm,LegacyoftheDragonborn.esm,LegacyoftheDragonborn.esm",
+    "questwatchpluginscsv": "LegacyoftheDragonborn.esm,LegacyoftheDragonborn.esm,LegacyoftheDragonborn.esm",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1367,26 +1367,36 @@
     "faucet.malacath.serve_a_daedra:malacath.tag": "serve_a_daedra:malacath",
     "faucet.Malacath.serve_a_daedra:malacath.cap": "1/dawn",
     "faucet.malacath.serve_a_daedra:malacath.cap": "1/dawn",
-    "quest.186947|120.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.valencesCsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.valencescsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.intensitiesCsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.intensitiescsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.magnitudescsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|120.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|130.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.valencesCsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.valencescsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.intensitiesCsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.intensitiescsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.magnitudescsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
-    "quest.186947|130.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
+    "quest.2556654|350.deitiesCsv": "Trinimac|Malacath|Stendarr|Syrabane|Tsun|Auri-El",
+    "quest.2556654|350.deitiescsv": "Trinimac|Malacath|Stendarr|Syrabane|Tsun|Auri-El",
+    "quest.2556654|350.valencesCsv": "+|-|+|+|+|+",
+    "quest.2556654|350.valencescsv": "+|-|+|+|+|+",
+    "quest.2556654|350.intensitiesCsv": "C|C|m|m|S|m",
+    "quest.2556654|350.intensitiescsv": "C|C|m|m|S|m",
+    "quest.2556654|350.magnitudesCsv": "milestone|milestone|small|small|small|small",
+    "quest.2556654|350.magnitudescsv": "milestone|milestone|small|small|small|small",
+    "quest.2556654|350.tagsCsv": "destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle|destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle|destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle|destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle|destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle|destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle",
+    "quest.2556654|350.tagscsv": "destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle|destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle|destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle|destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle|destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle|destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle",
+    "quest.5115199|100.deitiesCsv": "Sheogorath|Stendarr|Syrabane",
+    "quest.5115199|100.deitiescsv": "Sheogorath|Stendarr|Syrabane",
+    "quest.5115199|100.valencesCsv": "-|+|+",
+    "quest.5115199|100.valencescsv": "-|+|+",
+    "quest.5115199|100.intensitiesCsv": "C|S|m",
+    "quest.5115199|100.intensitiescsv": "C|S|m",
+    "quest.5115199|100.magnitudesCsv": "milestone|milestone|small",
+    "quest.5115199|100.magnitudescsv": "milestone|milestone|small",
+    "quest.5115199|100.tagsCsv": "destroy_reject_daedra:sheogorath,heal_comfort|destroy_reject_daedra:sheogorath,heal_comfort|destroy_reject_daedra:sheogorath,heal_comfort",
+    "quest.5115199|100.tagscsv": "destroy_reject_daedra:sheogorath,heal_comfort|destroy_reject_daedra:sheogorath,heal_comfort|destroy_reject_daedra:sheogorath,heal_comfort",
+    "quest.6061685|398.deitiesCsv": "Auri-El|Arkay|Xarxes|Mara|Stendarr|Trinimac|Stuhn|Azura|Khenarthi|Tu'whacca",
+    "quest.6061685|398.deitiescsv": "Auri-El|Arkay|Xarxes|Mara|Stendarr|Trinimac|Stuhn|Azura|Khenarthi|Tu'whacca",
+    "quest.6061685|398.valencesCsv": "+|+|+|+|+|+|+|+|+|+",
+    "quest.6061685|398.valencescsv": "+|+|+|+|+|+|+|+|+|+",
+    "quest.6061685|398.intensitiesCsv": "S|S|m|m|m|m|S|m|m|S",
+    "quest.6061685|398.intensitiescsv": "S|S|m|m|m|m|S|m|m|S",
+    "quest.6061685|398.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small|small|small",
+    "quest.6061685|398.magnitudescsv": "milestone|milestone|small|small|small|small|small|small|small|small",
+    "quest.6061685|398.tagsCsv": "honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare",
+    "quest.6061685|398.tagscsv": "honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare|honor_the_dead,mercy_spare",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1517,91 +1527,127 @@
     "stancemult.tolerated": 0.4
   },
   "int": {
-    "quest.186947|120.metaSkip.Azura": 1,
-    "quest.186947|120.metaskip.azura": 1,
-    "quest.186947|130.metaSkip.Azura": 1,
-    "quest.186947|130.metaskip.azura": 1,
+    "quest.6061685|398.metaSkip.Azura": 1,
+    "quest.6061685|398.metaskip.azura": 1,
+    "quest.6061685|398.metaSkip.Xarxes": 1,
+    "quest.6061685|398.metaskip.xarxes": 1,
+    "quest.6061685|398.metaSkip.Khenarthi": 1,
+    "quest.6061685|398.metaskip.khenarthi": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 2,
-    "metaskipints": 2
+    "metaSkipInts": 3,
+    "metaskipints": 3
   },
   "stringList": {
     "questKeys": [
-      "186947|120",
-      "186947|130"
+      "2556654|350",
+      "5115199|100",
+      "6061685|398"
     ],
     "questkeys": [
-      "186947|120",
-      "186947|130"
+      "2556654|350",
+      "5115199|100",
+      "6061685|398"
     ],
     "questForms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x2702EE|LegacyoftheDragonborn.esm",
+      "0x4E0D3F|LegacyoftheDragonborn.esm",
+      "0x5C7E75|LegacyoftheDragonborn.esm"
     ],
     "questforms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x2702EE|LegacyoftheDragonborn.esm",
+      "0x4E0D3F|LegacyoftheDragonborn.esm",
+      "0x5C7E75|LegacyoftheDragonborn.esm"
     ],
     "questFormIds": [
-      "186947",
-      "186947"
+      "2556654",
+      "5115199",
+      "6061685"
     ],
     "questformids": [
-      "186947",
-      "186947"
+      "2556654",
+      "5115199",
+      "6061685"
     ],
     "questPlugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "LegacyoftheDragonborn.esm",
+      "LegacyoftheDragonborn.esm",
+      "LegacyoftheDragonborn.esm"
     ],
     "questplugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "LegacyoftheDragonborn.esm",
+      "LegacyoftheDragonborn.esm",
+      "LegacyoftheDragonborn.esm"
     ],
     "questEditorIds": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "DBM_Excavation03A",
+      "DBM_EchosOfMadness",
+      "DBM_MuchAdoAboutSnowElves"
     ],
     "questeditorids": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "DBM_Excavation03A",
+      "DBM_EchosOfMadness",
+      "DBM_MuchAdoAboutSnowElves"
     ],
     "questWatch.formIds": [
-      "186947"
+      "2556654",
+      "5115199",
+      "6061685"
     ],
     "questwatch.formids": [
-      "186947"
+      "2556654",
+      "5115199",
+      "6061685"
     ],
     "questWatch.plugins": [
-      "CJ03Elroy.esp"
+      "LegacyoftheDragonborn.esm",
+      "LegacyoftheDragonborn.esm",
+      "LegacyoftheDragonborn.esm"
     ],
     "questwatch.plugins": [
-      "CJ03Elroy.esp"
+      "LegacyoftheDragonborn.esm",
+      "LegacyoftheDragonborn.esm",
+      "LegacyoftheDragonborn.esm"
     ],
     "questWatch.editorIds": [
-      "CJ03RotBelowMQ"
+      "DBM_Excavation03A",
+      "DBM_EchosOfMadness",
+      "DBM_MuchAdoAboutSnowElves"
     ],
     "questwatch.editorids": [
-      "CJ03RotBelowMQ"
+      "DBM_Excavation03A",
+      "DBM_EchosOfMadness",
+      "DBM_MuchAdoAboutSnowElves"
     ],
     "questWatchFormIds": [
-      "186947"
+      "2556654",
+      "5115199",
+      "6061685"
     ],
     "questwatchformids": [
-      "186947"
+      "2556654",
+      "5115199",
+      "6061685"
     ],
     "questWatchPlugins": [
-      "CJ03Elroy.esp"
+      "LegacyoftheDragonborn.esm",
+      "LegacyoftheDragonborn.esm",
+      "LegacyoftheDragonborn.esm"
     ],
     "questwatchplugins": [
-      "CJ03Elroy.esp"
+      "LegacyoftheDragonborn.esm",
+      "LegacyoftheDragonborn.esm",
+      "LegacyoftheDragonborn.esm"
     ],
     "questWatchEditorIds": [
-      "CJ03RotBelowMQ"
+      "DBM_Excavation03A",
+      "DBM_EchosOfMadness",
+      "DBM_MuchAdoAboutSnowElves"
     ],
     "questwatcheditorids": [
-      "CJ03RotBelowMQ"
+      "DBM_Excavation03A",
+      "DBM_EchosOfMadness",
+      "DBM_MuchAdoAboutSnowElves"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -1659,69 +1705,86 @@
       "Mephala.serve_a_daedra:mephala",
       "Malacath.serve_a_daedra:malacath"
     ],
-    "quest.186947|120.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
+    "quest.2556654|350.deities": [
+      "Trinimac",
+      "Malacath",
       "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara"
+      "Syrabane",
+      "Tsun",
+      "Auri-El"
     ],
-    "quest.186947|120.valences": [
+    "quest.2556654|350.valences": [
+      "+",
       "-",
       "+",
       "+",
       "+",
-      "+",
-      "+",
-      "+",
-      "-"
+      "+"
     ],
-    "quest.186947|120.intensities": [
+    "quest.2556654|350.intensities": [
       "C",
       "C",
-      "C",
-      "S",
-      "S",
       "m",
       "m",
+      "S",
       "m"
     ],
-    "quest.186947|120.magnitudes": [
+    "quest.2556654|350.magnitudes": [
       "milestone",
       "milestone",
-      "small",
-      "small",
       "small",
       "small",
       "small",
       "small"
     ],
-    "quest.186947|120.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "deny_a_second_chance"
+    "quest.2556654|350.tags": [
+      "destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle",
+      "destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle",
+      "destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle",
+      "destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle",
+      "destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle",
+      "destroy_reject_daedra:malacath,protect_the_weak,defend_kin_home,prove_by_struggle"
     ],
-    "quest.186947|130.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
+    "quest.5115199|100.deities": [
+      "Sheogorath",
       "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara",
-      "Dibella"
+      "Syrabane"
     ],
-    "quest.186947|130.valences": [
+    "quest.5115199|100.valences": [
       "-",
+      "+",
+      "+"
+    ],
+    "quest.5115199|100.intensities": [
+      "C",
+      "S",
+      "m"
+    ],
+    "quest.5115199|100.magnitudes": [
+      "milestone",
+      "milestone",
+      "small"
+    ],
+    "quest.5115199|100.tags": [
+      "destroy_reject_daedra:sheogorath,heal_comfort",
+      "destroy_reject_daedra:sheogorath,heal_comfort",
+      "destroy_reject_daedra:sheogorath,heal_comfort"
+    ],
+    "quest.6061685|398.deities": [
+      "Auri-El",
+      "Arkay",
+      "Xarxes",
+      "Mara",
+      "Stendarr",
+      "Trinimac",
+      "Stuhn",
+      "Azura",
+      "Khenarthi",
+      "Tu'whacca"
+    ],
+    "quest.6061685|398.valences": [
+      "+",
+      "+",
       "+",
       "+",
       "+",
@@ -1731,20 +1794,22 @@
       "+",
       "+"
     ],
-    "quest.186947|130.intensities": [
-      "C",
-      "C",
-      "C",
+    "quest.6061685|398.intensities": [
       "S",
       "S",
       "m",
+      "m",
+      "m",
+      "m",
+      "S",
       "m",
       "m",
       "S"
     ],
-    "quest.186947|130.magnitudes": [
+    "quest.6061685|398.magnitudes": [
       "milestone",
       "milestone",
+      "small",
       "small",
       "small",
       "small",
@@ -1753,16 +1818,17 @@
       "small",
       "small"
     ],
-    "quest.186947|130.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "show_compassion",
-      "foster_art"
+    "quest.6061685|398.tags": [
+      "honor_the_dead,mercy_spare",
+      "honor_the_dead,mercy_spare",
+      "honor_the_dead,mercy_spare",
+      "honor_the_dead,mercy_spare",
+      "honor_the_dead,mercy_spare",
+      "honor_the_dead,mercy_spare",
+      "honor_the_dead,mercy_spare",
+      "honor_the_dead,mercy_spare",
+      "honor_the_dead,mercy_spare",
+      "honor_the_dead,mercy_spare"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

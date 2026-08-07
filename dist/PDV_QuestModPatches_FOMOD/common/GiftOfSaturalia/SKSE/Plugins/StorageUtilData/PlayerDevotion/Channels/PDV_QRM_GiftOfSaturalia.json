@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-07T02:53:26.813Z",
-    "generatedat": "2026-08-07T02:53:26.813Z",
+    "generatedAt": "2026-08-06T10:52:27.122Z",
+    "generatedat": "2026-08-06T10:52:27.122Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "186947",
-    "questwatchformidscsv": "186947",
-    "questWatchPluginsCsv": "CJ03Elroy.esp",
-    "questwatchpluginscsv": "CJ03Elroy.esp",
+    "questWatchFormIdsCsv": "2218,2259,2403,2468,2514",
+    "questwatchformidscsv": "2218,2259,2403,2468,2514",
+    "questWatchPluginsCsv": "TheGiftofSaturalia.esp,TheGiftofSaturalia.esp,TheGiftofSaturalia.esp,TheGiftofSaturalia.esp,TheGiftofSaturalia.esp",
+    "questwatchpluginscsv": "TheGiftofSaturalia.esp,TheGiftofSaturalia.esp,TheGiftofSaturalia.esp,TheGiftofSaturalia.esp,TheGiftofSaturalia.esp",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1367,26 +1367,56 @@
     "faucet.malacath.serve_a_daedra:malacath.tag": "serve_a_daedra:malacath",
     "faucet.Malacath.serve_a_daedra:malacath.cap": "1/dawn",
     "faucet.malacath.serve_a_daedra:malacath.cap": "1/dawn",
-    "quest.186947|120.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.valencesCsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.valencescsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.intensitiesCsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.intensitiescsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.magnitudescsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|120.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|130.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.valencesCsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.valencescsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.intensitiesCsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.intensitiescsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.magnitudescsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
-    "quest.186947|130.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
+    "quest.2218|20.deitiesCsv": "Mara|Stendarr|Dibella|Stuhn|Syrabane",
+    "quest.2218|20.deitiescsv": "Mara|Stendarr|Dibella|Stuhn|Syrabane",
+    "quest.2218|20.valencesCsv": "+|+|+|+|+",
+    "quest.2218|20.valencescsv": "+|+|+|+|+",
+    "quest.2218|20.intensitiesCsv": "C|C|m|m|S",
+    "quest.2218|20.intensitiescsv": "C|C|m|m|S",
+    "quest.2218|20.magnitudesCsv": "milestone|milestone|small|small|small",
+    "quest.2218|20.magnitudescsv": "milestone|milestone|small|small|small",
+    "quest.2218|20.tagsCsv": "charity,protect_the_weak|charity,protect_the_weak|charity,protect_the_weak|charity,protect_the_weak|charity,protect_the_weak",
+    "quest.2218|20.tagscsv": "charity,protect_the_weak|charity,protect_the_weak|charity,protect_the_weak|charity,protect_the_weak|charity,protect_the_weak",
+    "quest.2259|8.deitiesCsv": "Mara|Dibella",
+    "quest.2259|8.deitiescsv": "Mara|Dibella",
+    "quest.2259|8.valencesCsv": "+|+",
+    "quest.2259|8.valencescsv": "+|+",
+    "quest.2259|8.intensitiesCsv": "C|C",
+    "quest.2259|8.intensitiescsv": "C|C",
+    "quest.2259|8.magnitudesCsv": "milestone|milestone",
+    "quest.2259|8.magnitudescsv": "milestone|milestone",
+    "quest.2259|8.tagsCsv": "heal_comfort,aesthetic_devotion|heal_comfort,aesthetic_devotion",
+    "quest.2259|8.tagscsv": "heal_comfort,aesthetic_devotion|heal_comfort,aesthetic_devotion",
+    "quest.2403|10.deitiesCsv": "Mara|Dibella",
+    "quest.2403|10.deitiescsv": "Mara|Dibella",
+    "quest.2403|10.valencesCsv": "+|+",
+    "quest.2403|10.valencescsv": "+|+",
+    "quest.2403|10.intensitiesCsv": "C|m",
+    "quest.2403|10.intensitiescsv": "C|m",
+    "quest.2403|10.magnitudesCsv": "milestone|small",
+    "quest.2403|10.magnitudescsv": "milestone|small",
+    "quest.2403|10.tagsCsv": "marriage_family|marriage_family",
+    "quest.2403|10.tagscsv": "marriage_family|marriage_family",
+    "quest.2468|10.deitiesCsv": "Mara|Stendarr|Dibella|Kynareth",
+    "quest.2468|10.deitiescsv": "Mara|Stendarr|Dibella|Kynareth",
+    "quest.2468|10.valencesCsv": "+|+|+|+",
+    "quest.2468|10.valencescsv": "+|+|+|+",
+    "quest.2468|10.intensitiesCsv": "C|C|m|m",
+    "quest.2468|10.intensitiescsv": "C|C|m|m",
+    "quest.2468|10.magnitudesCsv": "milestone|milestone|small|small",
+    "quest.2468|10.magnitudescsv": "milestone|milestone|small|small",
+    "quest.2468|10.tagsCsv": "heal_comfort,protect_the_weak|heal_comfort,protect_the_weak|heal_comfort,protect_the_weak|heal_comfort,protect_the_weak",
+    "quest.2468|10.tagscsv": "heal_comfort,protect_the_weak|heal_comfort,protect_the_weak|heal_comfort,protect_the_weak|heal_comfort,protect_the_weak",
+    "quest.2514|30.deitiesCsv": "Mara|Stendarr|Dibella|Y'ffre|Stuhn|Syrabane",
+    "quest.2514|30.deitiescsv": "Mara|Stendarr|Dibella|Y'ffre|Stuhn|Syrabane",
+    "quest.2514|30.valencesCsv": "+|+|+|+|+|+",
+    "quest.2514|30.valencescsv": "+|+|+|+|+|+",
+    "quest.2514|30.intensitiesCsv": "C|C|C|S|m|S",
+    "quest.2514|30.intensitiescsv": "C|C|C|S|m|S",
+    "quest.2514|30.magnitudesCsv": "milestone|milestone|milestone|small|small|small",
+    "quest.2514|30.magnitudescsv": "milestone|milestone|milestone|small|small|small",
+    "quest.2514|30.tagsCsv": "charity,protect_the_weak,aesthetic_devotion|charity,protect_the_weak,aesthetic_devotion|charity,protect_the_weak,aesthetic_devotion|charity,protect_the_weak,aesthetic_devotion|charity,protect_the_weak,aesthetic_devotion|charity,protect_the_weak,aesthetic_devotion",
+    "quest.2514|30.tagscsv": "charity,protect_the_weak,aesthetic_devotion|charity,protect_the_weak,aesthetic_devotion|charity,protect_the_weak,aesthetic_devotion|charity,protect_the_weak,aesthetic_devotion|charity,protect_the_weak,aesthetic_devotion|charity,protect_the_weak,aesthetic_devotion",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1517,91 +1547,165 @@
     "stancemult.tolerated": 0.4
   },
   "int": {
-    "quest.186947|120.metaSkip.Azura": 1,
-    "quest.186947|120.metaskip.azura": 1,
-    "quest.186947|130.metaSkip.Azura": 1,
-    "quest.186947|130.metaskip.azura": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 2,
-    "metaskipints": 2
+    "metaSkipInts": 0,
+    "metaskipints": 0
   },
   "stringList": {
     "questKeys": [
-      "186947|120",
-      "186947|130"
+      "2218|20",
+      "2259|8",
+      "2403|10",
+      "2468|10",
+      "2514|30"
     ],
     "questkeys": [
-      "186947|120",
-      "186947|130"
+      "2218|20",
+      "2259|8",
+      "2403|10",
+      "2468|10",
+      "2514|30"
     ],
     "questForms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x0008AA|TheGiftofSaturalia.esp",
+      "0x0008D3|TheGiftofSaturalia.esp",
+      "0x000963|TheGiftofSaturalia.esp",
+      "0x0009A4|TheGiftofSaturalia.esp",
+      "0x0009D2|TheGiftofSaturalia.esp"
     ],
     "questforms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x0008AA|TheGiftofSaturalia.esp",
+      "0x0008D3|TheGiftofSaturalia.esp",
+      "0x000963|TheGiftofSaturalia.esp",
+      "0x0009A4|TheGiftofSaturalia.esp",
+      "0x0009D2|TheGiftofSaturalia.esp"
     ],
     "questFormIds": [
-      "186947",
-      "186947"
+      "2218",
+      "2259",
+      "2403",
+      "2468",
+      "2514"
     ],
     "questformids": [
-      "186947",
-      "186947"
+      "2218",
+      "2259",
+      "2403",
+      "2468",
+      "2514"
     ],
     "questPlugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp"
     ],
     "questplugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp"
     ],
     "questEditorIds": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "Sat_Orphanage",
+      "Sat_Laugh",
+      "Sat_Adoption",
+      "Sat_Dog",
+      "Sat_Music"
     ],
     "questeditorids": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "Sat_Orphanage",
+      "Sat_Laugh",
+      "Sat_Adoption",
+      "Sat_Dog",
+      "Sat_Music"
     ],
     "questWatch.formIds": [
-      "186947"
+      "2218",
+      "2259",
+      "2403",
+      "2468",
+      "2514"
     ],
     "questwatch.formids": [
-      "186947"
+      "2218",
+      "2259",
+      "2403",
+      "2468",
+      "2514"
     ],
     "questWatch.plugins": [
-      "CJ03Elroy.esp"
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp"
     ],
     "questwatch.plugins": [
-      "CJ03Elroy.esp"
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp"
     ],
     "questWatch.editorIds": [
-      "CJ03RotBelowMQ"
+      "Sat_Orphanage",
+      "Sat_Laugh",
+      "Sat_Adoption",
+      "Sat_Dog",
+      "Sat_Music"
     ],
     "questwatch.editorids": [
-      "CJ03RotBelowMQ"
+      "Sat_Orphanage",
+      "Sat_Laugh",
+      "Sat_Adoption",
+      "Sat_Dog",
+      "Sat_Music"
     ],
     "questWatchFormIds": [
-      "186947"
+      "2218",
+      "2259",
+      "2403",
+      "2468",
+      "2514"
     ],
     "questwatchformids": [
-      "186947"
+      "2218",
+      "2259",
+      "2403",
+      "2468",
+      "2514"
     ],
     "questWatchPlugins": [
-      "CJ03Elroy.esp"
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp"
     ],
     "questwatchplugins": [
-      "CJ03Elroy.esp"
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp",
+      "TheGiftofSaturalia.esp"
     ],
     "questWatchEditorIds": [
-      "CJ03RotBelowMQ"
+      "Sat_Orphanage",
+      "Sat_Laugh",
+      "Sat_Adoption",
+      "Sat_Dog",
+      "Sat_Music"
     ],
     "questwatcheditorids": [
-      "CJ03RotBelowMQ"
+      "Sat_Orphanage",
+      "Sat_Laugh",
+      "Sat_Adoption",
+      "Sat_Dog",
+      "Sat_Music"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -1659,71 +1763,120 @@
       "Mephala.serve_a_daedra:mephala",
       "Malacath.serve_a_daedra:malacath"
     ],
-    "quest.186947|120.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
+    "quest.2218|20.deities": [
+      "Mara",
       "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara"
+      "Dibella",
+      "Stuhn",
+      "Syrabane"
     ],
-    "quest.186947|120.valences": [
-      "-",
+    "quest.2218|20.valences": [
       "+",
       "+",
       "+",
       "+",
-      "+",
-      "+",
-      "-"
+      "+"
     ],
-    "quest.186947|120.intensities": [
+    "quest.2218|20.intensities": [
       "C",
       "C",
-      "C",
-      "S",
-      "S",
       "m",
       "m",
-      "m"
+      "S"
     ],
-    "quest.186947|120.magnitudes": [
+    "quest.2218|20.magnitudes": [
       "milestone",
       "milestone",
-      "small",
-      "small",
-      "small",
       "small",
       "small",
       "small"
     ],
-    "quest.186947|120.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "deny_a_second_chance"
+    "quest.2218|20.tags": [
+      "charity,protect_the_weak",
+      "charity,protect_the_weak",
+      "charity,protect_the_weak",
+      "charity,protect_the_weak",
+      "charity,protect_the_weak"
     ],
-    "quest.186947|130.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
-      "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
+    "quest.2259|8.deities": [
       "Mara",
       "Dibella"
     ],
-    "quest.186947|130.valences": [
-      "-",
+    "quest.2259|8.valences": [
+      "+",
+      "+"
+    ],
+    "quest.2259|8.intensities": [
+      "C",
+      "C"
+    ],
+    "quest.2259|8.magnitudes": [
+      "milestone",
+      "milestone"
+    ],
+    "quest.2259|8.tags": [
+      "heal_comfort,aesthetic_devotion",
+      "heal_comfort,aesthetic_devotion"
+    ],
+    "quest.2403|10.deities": [
+      "Mara",
+      "Dibella"
+    ],
+    "quest.2403|10.valences": [
+      "+",
+      "+"
+    ],
+    "quest.2403|10.intensities": [
+      "C",
+      "m"
+    ],
+    "quest.2403|10.magnitudes": [
+      "milestone",
+      "small"
+    ],
+    "quest.2403|10.tags": [
+      "marriage_family",
+      "marriage_family"
+    ],
+    "quest.2468|10.deities": [
+      "Mara",
+      "Stendarr",
+      "Dibella",
+      "Kynareth"
+    ],
+    "quest.2468|10.valences": [
       "+",
       "+",
+      "+",
+      "+"
+    ],
+    "quest.2468|10.intensities": [
+      "C",
+      "C",
+      "m",
+      "m"
+    ],
+    "quest.2468|10.magnitudes": [
+      "milestone",
+      "milestone",
+      "small",
+      "small"
+    ],
+    "quest.2468|10.tags": [
+      "heal_comfort,protect_the_weak",
+      "heal_comfort,protect_the_weak",
+      "heal_comfort,protect_the_weak",
+      "heal_comfort,protect_the_weak"
+    ],
+    "quest.2514|30.deities": [
+      "Mara",
+      "Stendarr",
+      "Dibella",
+      "Y'ffre",
+      "Stuhn",
+      "Syrabane"
+    ],
+    "quest.2514|30.valences": [
       "+",
       "+",
       "+",
@@ -1731,38 +1884,29 @@
       "+",
       "+"
     ],
-    "quest.186947|130.intensities": [
+    "quest.2514|30.intensities": [
       "C",
       "C",
       "C",
       "S",
-      "S",
-      "m",
-      "m",
       "m",
       "S"
     ],
-    "quest.186947|130.magnitudes": [
+    "quest.2514|30.magnitudes": [
       "milestone",
       "milestone",
-      "small",
-      "small",
-      "small",
-      "small",
+      "milestone",
       "small",
       "small",
       "small"
     ],
-    "quest.186947|130.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "show_compassion",
-      "foster_art"
+    "quest.2514|30.tags": [
+      "charity,protect_the_weak,aesthetic_devotion",
+      "charity,protect_the_weak,aesthetic_devotion",
+      "charity,protect_the_weak,aesthetic_devotion",
+      "charity,protect_the_weak,aesthetic_devotion",
+      "charity,protect_the_weak,aesthetic_devotion",
+      "charity,protect_the_weak,aesthetic_devotion"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

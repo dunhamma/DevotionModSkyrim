@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-07T02:53:26.813Z",
-    "generatedat": "2026-08-07T02:53:26.813Z",
+    "generatedAt": "2026-08-06T11:37:00.570Z",
+    "generatedat": "2026-08-06T11:37:00.570Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "186947",
-    "questwatchformidscsv": "186947",
-    "questWatchPluginsCsv": "CJ03Elroy.esp",
-    "questwatchpluginscsv": "CJ03Elroy.esp",
+    "questWatchFormIdsCsv": "2049,2158,2159,2160,2161,2162,2163",
+    "questwatchformidscsv": "2049,2158,2159,2160,2161,2162,2163",
+    "questWatchPluginsCsv": "College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp",
+    "questwatchpluginscsv": "College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1367,26 +1367,76 @@
     "faucet.malacath.serve_a_daedra:malacath.tag": "serve_a_daedra:malacath",
     "faucet.Malacath.serve_a_daedra:malacath.cap": "1/dawn",
     "faucet.malacath.serve_a_daedra:malacath.cap": "1/dawn",
-    "quest.186947|120.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.valencesCsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.valencescsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.intensitiesCsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.intensitiescsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.magnitudescsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|120.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|130.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.valencesCsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.valencescsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.intensitiesCsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.intensitiescsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.magnitudescsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
-    "quest.186947|130.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
+    "quest.2049|50.deitiesCsv": "Julianos|Magnus|Auri-El|Syrabane",
+    "quest.2049|50.deitiescsv": "Julianos|Magnus|Auri-El|Syrabane",
+    "quest.2049|50.valencesCsv": "+|+|+|+",
+    "quest.2049|50.valencescsv": "+|+|+|+",
+    "quest.2049|50.intensitiesCsv": "C|C|m|C",
+    "quest.2049|50.intensitiescsv": "C|C|m|C",
+    "quest.2049|50.magnitudesCsv": "milestone|milestone|small|milestone",
+    "quest.2049|50.magnitudescsv": "milestone|milestone|small|milestone",
+    "quest.2049|50.tagsCsv": "disciplined_study|disciplined_study|disciplined_study|disciplined_study",
+    "quest.2049|50.tagscsv": "disciplined_study|disciplined_study|disciplined_study|disciplined_study",
+    "quest.2158|25.deitiesCsv": "Julianos|Magnus|Arkay|Meridia|Stendarr|Auri-El|Y'ffre|Tu'whacca|Syrabane",
+    "quest.2158|25.deitiescsv": "Julianos|Magnus|Arkay|Meridia|Stendarr|Auri-El|Y'ffre|Tu'whacca|Syrabane",
+    "quest.2158|25.valencesCsv": "+|+|+|+|+|+|+|+|+",
+    "quest.2158|25.valencescsv": "+|+|+|+|+|+|+|+|+",
+    "quest.2158|25.intensitiesCsv": "C|C|C|C|m|m|m|m|C",
+    "quest.2158|25.intensitiescsv": "C|C|C|C|m|m|m|m|C",
+    "quest.2158|25.magnitudesCsv": "milestone|milestone|milestone|milestone|small|small|small|small|milestone",
+    "quest.2158|25.magnitudescsv": "milestone|milestone|milestone|milestone|small|small|small|small|milestone",
+    "quest.2158|25.tagsCsv": "disciplined_study,slay_undead|disciplined_study,slay_undead|disciplined_study,slay_undead|disciplined_study,slay_undead|disciplined_study,slay_undead|disciplined_study,slay_undead|disciplined_study,slay_undead|disciplined_study,slay_undead|disciplined_study,slay_undead",
+    "quest.2158|25.tagscsv": "disciplined_study,slay_undead|disciplined_study,slay_undead|disciplined_study,slay_undead|disciplined_study,slay_undead|disciplined_study,slay_undead|disciplined_study,slay_undead|disciplined_study,slay_undead|disciplined_study,slay_undead|disciplined_study,slay_undead",
+    "quest.2159|25.deitiesCsv": "Julianos|Magnus|Auri-El|Syrabane",
+    "quest.2159|25.deitiescsv": "Julianos|Magnus|Auri-El|Syrabane",
+    "quest.2159|25.valencesCsv": "+|+|+|+",
+    "quest.2159|25.valencescsv": "+|+|+|+",
+    "quest.2159|25.intensitiesCsv": "C|C|m|C",
+    "quest.2159|25.intensitiescsv": "C|C|m|C",
+    "quest.2159|25.magnitudesCsv": "milestone|milestone|small|milestone",
+    "quest.2159|25.magnitudescsv": "milestone|milestone|small|milestone",
+    "quest.2159|25.tagsCsv": "disciplined_study|disciplined_study|disciplined_study|disciplined_study",
+    "quest.2159|25.tagscsv": "disciplined_study|disciplined_study|disciplined_study|disciplined_study",
+    "quest.2160|25.deitiesCsv": "Julianos|Xarxes|Auri-El|Hermaeus Mora|Syrabane",
+    "quest.2160|25.deitiescsv": "Julianos|Xarxes|Auri-El|Hermaeus Mora|Syrabane",
+    "quest.2160|25.valencesCsv": "+|+|+|+|+",
+    "quest.2160|25.valencescsv": "+|+|+|+|+",
+    "quest.2160|25.intensitiesCsv": "C|S|m|m|C",
+    "quest.2160|25.intensitiescsv": "C|S|m|m|C",
+    "quest.2160|25.magnitudesCsv": "milestone|milestone|small|small|milestone",
+    "quest.2160|25.magnitudescsv": "milestone|milestone|small|small|milestone",
+    "quest.2160|25.tagsCsv": "disciplined_study|disciplined_study|disciplined_study|disciplined_study|disciplined_study",
+    "quest.2160|25.tagscsv": "disciplined_study|disciplined_study|disciplined_study|disciplined_study|disciplined_study",
+    "quest.2161|70.deitiesCsv": "Magnus|Julianos|Zenithar|Auri-El|Z'en|Malacath|Syrabane",
+    "quest.2161|70.deitiescsv": "Magnus|Julianos|Zenithar|Auri-El|Z'en|Malacath|Syrabane",
+    "quest.2161|70.valencesCsv": "+|+|+|+|+|+|+",
+    "quest.2161|70.valencescsv": "+|+|+|+|+|+|+",
+    "quest.2161|70.intensitiesCsv": "C|C|S|m|S|m|C",
+    "quest.2161|70.intensitiescsv": "C|C|S|m|S|m|C",
+    "quest.2161|70.magnitudesCsv": "milestone|milestone|milestone|small|small|small|milestone",
+    "quest.2161|70.magnitudescsv": "milestone|milestone|milestone|small|small|small|milestone",
+    "quest.2161|70.tagsCsv": "disciplined_study,master_craft_forge,honest_labor_trade|disciplined_study,master_craft_forge,honest_labor_trade|disciplined_study,master_craft_forge,honest_labor_trade|disciplined_study,master_craft_forge,honest_labor_trade|disciplined_study,master_craft_forge,honest_labor_trade|disciplined_study,master_craft_forge,honest_labor_trade|disciplined_study,master_craft_forge,honest_labor_trade",
+    "quest.2161|70.tagscsv": "disciplined_study,master_craft_forge,honest_labor_trade|disciplined_study,master_craft_forge,honest_labor_trade|disciplined_study,master_craft_forge,honest_labor_trade|disciplined_study,master_craft_forge,honest_labor_trade|disciplined_study,master_craft_forge,honest_labor_trade|disciplined_study,master_craft_forge,honest_labor_trade|disciplined_study,master_craft_forge,honest_labor_trade",
+    "quest.2162|25.deitiesCsv": "Julianos|Magnus|Auri-El|Syrabane",
+    "quest.2162|25.deitiescsv": "Julianos|Magnus|Auri-El|Syrabane",
+    "quest.2162|25.valencesCsv": "+|+|+|+",
+    "quest.2162|25.valencescsv": "+|+|+|+",
+    "quest.2162|25.intensitiesCsv": "C|C|m|C",
+    "quest.2162|25.intensitiescsv": "C|C|m|C",
+    "quest.2162|25.magnitudesCsv": "milestone|milestone|small|milestone",
+    "quest.2162|25.magnitudescsv": "milestone|milestone|small|milestone",
+    "quest.2162|25.tagsCsv": "disciplined_study|disciplined_study|disciplined_study|disciplined_study",
+    "quest.2162|25.tagscsv": "disciplined_study|disciplined_study|disciplined_study|disciplined_study",
+    "quest.2163|20.deitiesCsv": "Julianos|Magnus|Auri-El|Syrabane",
+    "quest.2163|20.deitiescsv": "Julianos|Magnus|Auri-El|Syrabane",
+    "quest.2163|20.valencesCsv": "+|+|+|+",
+    "quest.2163|20.valencescsv": "+|+|+|+",
+    "quest.2163|20.intensitiesCsv": "C|C|m|C",
+    "quest.2163|20.intensitiescsv": "C|C|m|C",
+    "quest.2163|20.magnitudesCsv": "milestone|milestone|small|milestone",
+    "quest.2163|20.magnitudescsv": "milestone|milestone|small|milestone",
+    "quest.2163|20.tagsCsv": "disciplined_study|disciplined_study|disciplined_study|disciplined_study",
+    "quest.2163|20.tagscsv": "disciplined_study|disciplined_study|disciplined_study|disciplined_study",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1517,91 +1567,227 @@
     "stancemult.tolerated": 0.4
   },
   "int": {
-    "quest.186947|120.metaSkip.Azura": 1,
-    "quest.186947|120.metaskip.azura": 1,
-    "quest.186947|130.metaSkip.Azura": 1,
-    "quest.186947|130.metaskip.azura": 1,
+    "quest.2049|50.metaSkip.Julianos": 1,
+    "quest.2049|50.metaskip.julianos": 1,
+    "quest.2158|25.metaSkip.Julianos": 1,
+    "quest.2158|25.metaskip.julianos": 1,
+    "quest.2159|25.metaSkip.Julianos": 1,
+    "quest.2159|25.metaskip.julianos": 1,
+    "quest.2160|25.metaSkip.Julianos": 1,
+    "quest.2160|25.metaskip.julianos": 1,
+    "quest.2160|25.metaSkip.Xarxes": 1,
+    "quest.2160|25.metaskip.xarxes": 1,
+    "quest.2161|70.metaSkip.Z'en": 1,
+    "quest.2161|70.metaskip.z'en": 1,
+    "quest.2161|70.metaSkip.Julianos": 1,
+    "quest.2161|70.metaskip.julianos": 1,
+    "quest.2162|25.metaSkip.Julianos": 1,
+    "quest.2162|25.metaskip.julianos": 1,
+    "quest.2163|20.metaSkip.Julianos": 1,
+    "quest.2163|20.metaskip.julianos": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 2,
-    "metaskipints": 2
+    "metaSkipInts": 9,
+    "metaskipints": 9
   },
   "stringList": {
     "questKeys": [
-      "186947|120",
-      "186947|130"
+      "2049|50",
+      "2158|25",
+      "2159|25",
+      "2160|25",
+      "2161|70",
+      "2162|25",
+      "2163|20"
     ],
     "questkeys": [
-      "186947|120",
-      "186947|130"
+      "2049|50",
+      "2158|25",
+      "2159|25",
+      "2160|25",
+      "2161|70",
+      "2162|25",
+      "2163|20"
     ],
     "questForms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x000801|College Of Winterhold - Quest Expansion.esp",
+      "0x00086E|College Of Winterhold - Quest Expansion.esp",
+      "0x00086F|College Of Winterhold - Quest Expansion.esp",
+      "0x000870|College Of Winterhold - Quest Expansion.esp",
+      "0x000871|College Of Winterhold - Quest Expansion.esp",
+      "0x000872|College Of Winterhold - Quest Expansion.esp",
+      "0x000873|College Of Winterhold - Quest Expansion.esp"
     ],
     "questforms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x000801|College Of Winterhold - Quest Expansion.esp",
+      "0x00086E|College Of Winterhold - Quest Expansion.esp",
+      "0x00086F|College Of Winterhold - Quest Expansion.esp",
+      "0x000870|College Of Winterhold - Quest Expansion.esp",
+      "0x000871|College Of Winterhold - Quest Expansion.esp",
+      "0x000872|College Of Winterhold - Quest Expansion.esp",
+      "0x000873|College Of Winterhold - Quest Expansion.esp"
     ],
     "questFormIds": [
-      "186947",
-      "186947"
+      "2049",
+      "2158",
+      "2159",
+      "2160",
+      "2161",
+      "2162",
+      "2163"
     ],
     "questformids": [
-      "186947",
-      "186947"
+      "2049",
+      "2158",
+      "2159",
+      "2160",
+      "2161",
+      "2162",
+      "2163"
     ],
     "questPlugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp"
     ],
     "questplugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp"
     ],
     "questEditorIds": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "Cow_Breathing",
+      "Cow_restoration",
+      "Cow_Conjuration",
+      "Cow_Reading",
+      "Cow_enchantment",
+      "Cow_illusion",
+      "Cow_Destruction"
     ],
     "questeditorids": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "Cow_Breathing",
+      "Cow_restoration",
+      "Cow_Conjuration",
+      "Cow_Reading",
+      "Cow_enchantment",
+      "Cow_illusion",
+      "Cow_Destruction"
     ],
     "questWatch.formIds": [
-      "186947"
+      "2049",
+      "2158",
+      "2159",
+      "2160",
+      "2161",
+      "2162",
+      "2163"
     ],
     "questwatch.formids": [
-      "186947"
+      "2049",
+      "2158",
+      "2159",
+      "2160",
+      "2161",
+      "2162",
+      "2163"
     ],
     "questWatch.plugins": [
-      "CJ03Elroy.esp"
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp"
     ],
     "questwatch.plugins": [
-      "CJ03Elroy.esp"
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp"
     ],
     "questWatch.editorIds": [
-      "CJ03RotBelowMQ"
+      "Cow_Breathing",
+      "Cow_restoration",
+      "Cow_Conjuration",
+      "Cow_Reading",
+      "Cow_enchantment",
+      "Cow_illusion",
+      "Cow_Destruction"
     ],
     "questwatch.editorids": [
-      "CJ03RotBelowMQ"
+      "Cow_Breathing",
+      "Cow_restoration",
+      "Cow_Conjuration",
+      "Cow_Reading",
+      "Cow_enchantment",
+      "Cow_illusion",
+      "Cow_Destruction"
     ],
     "questWatchFormIds": [
-      "186947"
+      "2049",
+      "2158",
+      "2159",
+      "2160",
+      "2161",
+      "2162",
+      "2163"
     ],
     "questwatchformids": [
-      "186947"
+      "2049",
+      "2158",
+      "2159",
+      "2160",
+      "2161",
+      "2162",
+      "2163"
     ],
     "questWatchPlugins": [
-      "CJ03Elroy.esp"
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp"
     ],
     "questwatchplugins": [
-      "CJ03Elroy.esp"
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp",
+      "College Of Winterhold - Quest Expansion.esp"
     ],
     "questWatchEditorIds": [
-      "CJ03RotBelowMQ"
+      "Cow_Breathing",
+      "Cow_restoration",
+      "Cow_Conjuration",
+      "Cow_Reading",
+      "Cow_enchantment",
+      "Cow_illusion",
+      "Cow_Destruction"
     ],
     "questwatcheditorids": [
-      "CJ03RotBelowMQ"
+      "Cow_Breathing",
+      "Cow_restoration",
+      "Cow_Conjuration",
+      "Cow_Reading",
+      "Cow_enchantment",
+      "Cow_illusion",
+      "Cow_Destruction"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -1659,69 +1845,49 @@
       "Mephala.serve_a_daedra:mephala",
       "Malacath.serve_a_daedra:malacath"
     ],
-    "quest.186947|120.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
-      "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara"
+    "quest.2049|50.deities": [
+      "Julianos",
+      "Magnus",
+      "Auri-El",
+      "Syrabane"
     ],
-    "quest.186947|120.valences": [
-      "-",
+    "quest.2049|50.valences": [
       "+",
       "+",
       "+",
-      "+",
-      "+",
-      "+",
-      "-"
+      "+"
     ],
-    "quest.186947|120.intensities": [
+    "quest.2049|50.intensities": [
       "C",
       "C",
-      "C",
-      "S",
-      "S",
       "m",
-      "m",
-      "m"
+      "C"
     ],
-    "quest.186947|120.magnitudes": [
+    "quest.2049|50.magnitudes": [
       "milestone",
       "milestone",
       "small",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small"
+      "milestone"
     ],
-    "quest.186947|120.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "deny_a_second_chance"
+    "quest.2049|50.tags": [
+      "disciplined_study",
+      "disciplined_study",
+      "disciplined_study",
+      "disciplined_study"
     ],
-    "quest.186947|130.deities": [
-      "Namira",
+    "quest.2158|25.deities": [
+      "Julianos",
+      "Magnus",
       "Arkay",
       "Meridia",
       "Stendarr",
-      "Tu'whacca",
-      "Azura",
+      "Auri-El",
       "Y'ffre",
-      "Mara",
-      "Dibella"
+      "Tu'whacca",
+      "Syrabane"
     ],
-    "quest.186947|130.valences": [
-      "-",
+    "quest.2158|25.valences": [
+      "+",
       "+",
       "+",
       "+",
@@ -1731,38 +1897,208 @@
       "+",
       "+"
     ],
-    "quest.186947|130.intensities": [
+    "quest.2158|25.intensities": [
       "C",
       "C",
       "C",
-      "S",
-      "S",
+      "C",
       "m",
       "m",
       "m",
-      "S"
+      "m",
+      "C"
     ],
-    "quest.186947|130.magnitudes": [
+    "quest.2158|25.magnitudes": [
+      "milestone",
+      "milestone",
       "milestone",
       "milestone",
       "small",
       "small",
       "small",
       "small",
-      "small",
-      "small",
-      "small"
+      "milestone"
     ],
-    "quest.186947|130.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "show_compassion",
-      "foster_art"
+    "quest.2158|25.tags": [
+      "disciplined_study,slay_undead",
+      "disciplined_study,slay_undead",
+      "disciplined_study,slay_undead",
+      "disciplined_study,slay_undead",
+      "disciplined_study,slay_undead",
+      "disciplined_study,slay_undead",
+      "disciplined_study,slay_undead",
+      "disciplined_study,slay_undead",
+      "disciplined_study,slay_undead"
+    ],
+    "quest.2159|25.deities": [
+      "Julianos",
+      "Magnus",
+      "Auri-El",
+      "Syrabane"
+    ],
+    "quest.2159|25.valences": [
+      "+",
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.2159|25.intensities": [
+      "C",
+      "C",
+      "m",
+      "C"
+    ],
+    "quest.2159|25.magnitudes": [
+      "milestone",
+      "milestone",
+      "small",
+      "milestone"
+    ],
+    "quest.2159|25.tags": [
+      "disciplined_study",
+      "disciplined_study",
+      "disciplined_study",
+      "disciplined_study"
+    ],
+    "quest.2160|25.deities": [
+      "Julianos",
+      "Xarxes",
+      "Auri-El",
+      "Hermaeus Mora",
+      "Syrabane"
+    ],
+    "quest.2160|25.valences": [
+      "+",
+      "+",
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.2160|25.intensities": [
+      "C",
+      "S",
+      "m",
+      "m",
+      "C"
+    ],
+    "quest.2160|25.magnitudes": [
+      "milestone",
+      "milestone",
+      "small",
+      "small",
+      "milestone"
+    ],
+    "quest.2160|25.tags": [
+      "disciplined_study",
+      "disciplined_study",
+      "disciplined_study",
+      "disciplined_study",
+      "disciplined_study"
+    ],
+    "quest.2161|70.deities": [
+      "Magnus",
+      "Julianos",
+      "Zenithar",
+      "Auri-El",
+      "Z'en",
+      "Malacath",
+      "Syrabane"
+    ],
+    "quest.2161|70.valences": [
+      "+",
+      "+",
+      "+",
+      "+",
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.2161|70.intensities": [
+      "C",
+      "C",
+      "S",
+      "m",
+      "S",
+      "m",
+      "C"
+    ],
+    "quest.2161|70.magnitudes": [
+      "milestone",
+      "milestone",
+      "milestone",
+      "small",
+      "small",
+      "small",
+      "milestone"
+    ],
+    "quest.2161|70.tags": [
+      "disciplined_study,master_craft_forge,honest_labor_trade",
+      "disciplined_study,master_craft_forge,honest_labor_trade",
+      "disciplined_study,master_craft_forge,honest_labor_trade",
+      "disciplined_study,master_craft_forge,honest_labor_trade",
+      "disciplined_study,master_craft_forge,honest_labor_trade",
+      "disciplined_study,master_craft_forge,honest_labor_trade",
+      "disciplined_study,master_craft_forge,honest_labor_trade"
+    ],
+    "quest.2162|25.deities": [
+      "Julianos",
+      "Magnus",
+      "Auri-El",
+      "Syrabane"
+    ],
+    "quest.2162|25.valences": [
+      "+",
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.2162|25.intensities": [
+      "C",
+      "C",
+      "m",
+      "C"
+    ],
+    "quest.2162|25.magnitudes": [
+      "milestone",
+      "milestone",
+      "small",
+      "milestone"
+    ],
+    "quest.2162|25.tags": [
+      "disciplined_study",
+      "disciplined_study",
+      "disciplined_study",
+      "disciplined_study"
+    ],
+    "quest.2163|20.deities": [
+      "Julianos",
+      "Magnus",
+      "Auri-El",
+      "Syrabane"
+    ],
+    "quest.2163|20.valences": [
+      "+",
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.2163|20.intensities": [
+      "C",
+      "C",
+      "m",
+      "C"
+    ],
+    "quest.2163|20.magnitudes": [
+      "milestone",
+      "milestone",
+      "small",
+      "milestone"
+    ],
+    "quest.2163|20.tags": [
+      "disciplined_study",
+      "disciplined_study",
+      "disciplined_study",
+      "disciplined_study"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

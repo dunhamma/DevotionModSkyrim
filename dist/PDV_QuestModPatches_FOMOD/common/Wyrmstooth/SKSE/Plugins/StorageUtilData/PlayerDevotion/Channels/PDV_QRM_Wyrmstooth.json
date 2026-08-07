@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-07T02:53:26.813Z",
-    "generatedat": "2026-08-07T02:53:26.813Z",
+    "generatedAt": "2026-08-06T12:51:03.313Z",
+    "generatedat": "2026-08-06T12:51:03.313Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "186947",
-    "questwatchformidscsv": "186947",
-    "questWatchPluginsCsv": "CJ03Elroy.esp",
-    "questwatchpluginscsv": "CJ03Elroy.esp",
+    "questWatchFormIdsCsv": "167681,12997082,3086964,11917848,3806313,3752864",
+    "questwatchformidscsv": "167681,12997082,3086964,11917848,3806313,3752864",
+    "questWatchPluginsCsv": "Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp",
+    "questwatchpluginscsv": "Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1367,26 +1367,126 @@
     "faucet.malacath.serve_a_daedra:malacath.tag": "serve_a_daedra:malacath",
     "faucet.Malacath.serve_a_daedra:malacath.cap": "1/dawn",
     "faucet.malacath.serve_a_daedra:malacath.cap": "1/dawn",
-    "quest.186947|120.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.valencesCsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.valencescsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.intensitiesCsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.intensitiescsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.magnitudescsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|120.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|130.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.valencesCsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.valencescsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.intensitiesCsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.intensitiescsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.magnitudescsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
-    "quest.186947|130.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
+    "quest.167681|260.deitiesCsv": "Kyne|Alkosh|Talos|Baan Dar|Boethiah|HoonDing|Khenarthi|Kynareth|Leki|Malacath|Mara|Shor|Stendarr|Stuhn|Syrabane|Trinimac|Tsun",
+    "quest.167681|260.deitiescsv": "Kyne|Alkosh|Talos|Baan Dar|Boethiah|HoonDing|Khenarthi|Kynareth|Leki|Malacath|Mara|Shor|Stendarr|Stuhn|Syrabane|Trinimac|Tsun",
+    "quest.167681|260.valencesCsv": "+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+",
+    "quest.167681|260.valencescsv": "+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+",
+    "quest.167681|260.intensitiesCsv": "S|S|S|m|S|S|m|m|m|m|m|S|S|m|S|m|S",
+    "quest.167681|260.intensitiescsv": "S|S|S|m|S|S|m|m|m|m|m|S|S|m|S|m|S",
+    "quest.167681|260.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.167681|260.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.167681|260.tagsCsv": "kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak",
+    "quest.167681|260.tagscsv": "kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak|kill_honorable_combat,prove_by_struggle,protect_the_weak",
+    "quest.12997082|50.deitiesCsv": "Nocturnal|Rajhin|Zenithar|Z'en",
+    "quest.12997082|50.deitiescsv": "Nocturnal|Rajhin|Zenithar|Z'en",
+    "quest.12997082|50.valencesCsv": "+|+|-|-",
+    "quest.12997082|50.valencescsv": "+|+|-|-",
+    "quest.12997082|50.intensitiesCsv": "S|S|S|S",
+    "quest.12997082|50.intensitiescsv": "S|S|S|S",
+    "quest.12997082|50.magnitudesCsv": "small|small|small|small",
+    "quest.12997082|50.magnitudescsv": "small|small|small|small",
+    "quest.12997082|50.tagsCsv": "theft_burglary,exploit_cheat|theft_burglary,exploit_cheat|theft_burglary,exploit_cheat|theft_burglary,exploit_cheat",
+    "quest.12997082|50.tagscsv": "theft_burglary,exploit_cheat|theft_burglary,exploit_cheat|theft_burglary,exploit_cheat|theft_burglary,exploit_cheat",
+    "quest.12997082|56.deitiesCsv": "Nocturnal|Rajhin|Baan Dar|Mephala|Clavicus Vile|Boethiah|Malacath",
+    "quest.12997082|56.deitiescsv": "Nocturnal|Rajhin|Baan Dar|Mephala|Clavicus Vile|Boethiah|Malacath",
+    "quest.12997082|56.valencesCsv": "+|+|+|+|+|+|-",
+    "quest.12997082|56.valencescsv": "+|+|+|+|+|+|-",
+    "quest.12997082|56.intensitiesCsv": "m|S|S|S|S|m|m",
+    "quest.12997082|56.intensitiescsv": "m|S|S|S|S|m|m",
+    "quest.12997082|56.magnitudesCsv": "small|small|small|small|small|small|small",
+    "quest.12997082|56.magnitudescsv": "small|small|small|small|small|small|small",
+    "quest.12997082|56.tagsCsv": "deceit|deceit|deceit|deceit|deceit|deceit|deceit",
+    "quest.12997082|56.tagscsv": "deceit|deceit|deceit|deceit|deceit|deceit|deceit",
+    "quest.12997082|75.deitiesCsv": "Mara|Dibella|Kynareth|Syrabane",
+    "quest.12997082|75.deitiescsv": "Mara|Dibella|Kynareth|Syrabane",
+    "quest.12997082|75.valencesCsv": "+|+|+|+",
+    "quest.12997082|75.valencescsv": "+|+|+|+",
+    "quest.12997082|75.intensitiesCsv": "C|S|m|m",
+    "quest.12997082|75.intensitiescsv": "C|S|m|m",
+    "quest.12997082|75.magnitudesCsv": "milestone|small|small|small",
+    "quest.12997082|75.magnitudescsv": "milestone|small|small|small",
+    "quest.12997082|75.tagsCsv": "heal_comfort|heal_comfort|heal_comfort|heal_comfort",
+    "quest.12997082|75.tagscsv": "heal_comfort|heal_comfort|heal_comfort|heal_comfort",
+    "quest.12997082|76.deitiesCsv": "Mara|Nocturnal|Rajhin|Baan Dar|Mephala|Zenithar|Z'en|Dibella|Kynareth|Malacath",
+    "quest.12997082|76.deitiescsv": "Mara|Nocturnal|Rajhin|Baan Dar|Mephala|Zenithar|Z'en|Dibella|Kynareth|Malacath",
+    "quest.12997082|76.valencesCsv": "+|+|+|+|+|-|-|+|+|-",
+    "quest.12997082|76.valencescsv": "+|+|+|+|+|-|-|+|+|-",
+    "quest.12997082|76.intensitiesCsv": "S|S|S|S|S|S|S|m|m|m",
+    "quest.12997082|76.intensitiescsv": "S|S|S|S|S|S|S|m|m|m",
+    "quest.12997082|76.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small",
+    "quest.12997082|76.magnitudescsv": "small|small|small|small|small|small|small|small|small|small",
+    "quest.12997082|76.tagsCsv": "heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary",
+    "quest.12997082|76.tagscsv": "heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary|heal_comfort,deceit,theft_burglary",
+    "quest.12997082|77.deitiesCsv": "Mara|Dibella|Kynareth|Syrabane",
+    "quest.12997082|77.deitiescsv": "Mara|Dibella|Kynareth|Syrabane",
+    "quest.12997082|77.valencesCsv": "+|+|+|+",
+    "quest.12997082|77.valencescsv": "+|+|+|+",
+    "quest.12997082|77.intensitiesCsv": "S|S|m|m",
+    "quest.12997082|77.intensitiescsv": "S|S|m|m",
+    "quest.12997082|77.magnitudesCsv": "small|small|small|small",
+    "quest.12997082|77.magnitudescsv": "small|small|small|small",
+    "quest.12997082|77.tagsCsv": "heal_comfort|heal_comfort|heal_comfort|heal_comfort",
+    "quest.12997082|77.tagscsv": "heal_comfort|heal_comfort|heal_comfort|heal_comfort",
+    "quest.12997082|78.deitiesCsv": "Mara|Dibella|Kynareth|Syrabane",
+    "quest.12997082|78.deitiescsv": "Mara|Dibella|Kynareth|Syrabane",
+    "quest.12997082|78.valencesCsv": "+|+|+|+",
+    "quest.12997082|78.valencescsv": "+|+|+|+",
+    "quest.12997082|78.intensitiesCsv": "S|S|m|m",
+    "quest.12997082|78.intensitiescsv": "S|S|m|m",
+    "quest.12997082|78.magnitudesCsv": "small|small|small|small",
+    "quest.12997082|78.magnitudescsv": "small|small|small|small",
+    "quest.12997082|78.tagsCsv": "heal_comfort|heal_comfort|heal_comfort|heal_comfort",
+    "quest.12997082|78.tagscsv": "heal_comfort|heal_comfort|heal_comfort|heal_comfort",
+    "quest.12997082|79.deitiesCsv": "Nocturnal|Rajhin|Baan Dar|Mephala|Zenithar|Z'en|Malacath",
+    "quest.12997082|79.deitiescsv": "Nocturnal|Rajhin|Baan Dar|Mephala|Zenithar|Z'en|Malacath",
+    "quest.12997082|79.valencesCsv": "+|+|+|+|-|-|-",
+    "quest.12997082|79.valencescsv": "+|+|+|+|-|-|-",
+    "quest.12997082|79.intensitiesCsv": "S|S|S|S|S|S|m",
+    "quest.12997082|79.intensitiescsv": "S|S|S|S|S|S|m",
+    "quest.12997082|79.magnitudesCsv": "small|small|small|small|small|small|small",
+    "quest.12997082|79.magnitudescsv": "small|small|small|small|small|small|small",
+    "quest.12997082|79.tagsCsv": "deceit,theft_burglary|deceit,theft_burglary|deceit,theft_burglary|deceit,theft_burglary|deceit,theft_burglary|deceit,theft_burglary|deceit,theft_burglary",
+    "quest.12997082|79.tagscsv": "deceit,theft_burglary|deceit,theft_burglary|deceit,theft_burglary|deceit,theft_burglary|deceit,theft_burglary|deceit,theft_burglary|deceit,theft_burglary",
+    "quest.3086964|50.deitiesCsv": "Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre",
+    "quest.3086964|50.deitiescsv": "Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre",
+    "quest.3086964|50.valencesCsv": "+|+|+|+|+|+",
+    "quest.3086964|50.valencescsv": "+|+|+|+|+|+",
+    "quest.3086964|50.intensitiesCsv": "C|C|S|S|m|m",
+    "quest.3086964|50.intensitiescsv": "C|C|S|S|m|m",
+    "quest.3086964|50.magnitudesCsv": "milestone|milestone|milestone|milestone|small|small",
+    "quest.3086964|50.magnitudescsv": "milestone|milestone|milestone|milestone|small|small",
+    "quest.3086964|50.tagsCsv": "slay_undead|slay_undead|slay_undead|slay_undead|slay_undead|slay_undead",
+    "quest.3086964|50.tagscsv": "slay_undead|slay_undead|slay_undead|slay_undead|slay_undead|slay_undead",
+    "quest.11917848|30.deitiesCsv": "Nocturnal|Rajhin|Mephala|Baan Dar|Zenithar|Z'en",
+    "quest.11917848|30.deitiescsv": "Nocturnal|Rajhin|Mephala|Baan Dar|Zenithar|Z'en",
+    "quest.11917848|30.valencesCsv": "+|+|+|+|-|-",
+    "quest.11917848|30.valencescsv": "+|+|+|+|-|-",
+    "quest.11917848|30.intensitiesCsv": "C|C|S|S|S|S",
+    "quest.11917848|30.intensitiescsv": "C|C|S|S|S|S",
+    "quest.11917848|30.magnitudesCsv": "milestone|milestone|small|small|small|small",
+    "quest.11917848|30.magnitudescsv": "milestone|milestone|small|small|small|small",
+    "quest.11917848|30.tagsCsv": "theft_burglary,keep_secret|theft_burglary,keep_secret|theft_burglary,keep_secret|theft_burglary,keep_secret|theft_burglary,keep_secret|theft_burglary,keep_secret",
+    "quest.11917848|30.tagscsv": "theft_burglary,keep_secret|theft_burglary,keep_secret|theft_burglary,keep_secret|theft_burglary,keep_secret|theft_burglary,keep_secret|theft_burglary,keep_secret",
+    "quest.3806313|30.deitiesCsv": "Nocturnal|Rajhin|Mephala|Baan Dar|Zenithar|Z'en",
+    "quest.3806313|30.deitiescsv": "Nocturnal|Rajhin|Mephala|Baan Dar|Zenithar|Z'en",
+    "quest.3806313|30.valencesCsv": "+|+|+|+|-|-",
+    "quest.3806313|30.valencescsv": "+|+|+|+|-|-",
+    "quest.3806313|30.intensitiesCsv": "C|C|S|S|S|S",
+    "quest.3806313|30.intensitiescsv": "C|C|S|S|S|S",
+    "quest.3806313|30.magnitudesCsv": "milestone|milestone|small|small|small|small",
+    "quest.3806313|30.magnitudescsv": "milestone|milestone|small|small|small|small",
+    "quest.3806313|30.tagsCsv": "theft_burglary|theft_burglary|theft_burglary|theft_burglary|theft_burglary|theft_burglary",
+    "quest.3806313|30.tagscsv": "theft_burglary|theft_burglary|theft_burglary|theft_burglary|theft_burglary|theft_burglary",
+    "quest.3752864|30.deitiesCsv": "Talos",
+    "quest.3752864|30.deitiescsv": "Talos",
+    "quest.3752864|30.valencesCsv": "+",
+    "quest.3752864|30.valencescsv": "+",
+    "quest.3752864|30.intensitiesCsv": "C",
+    "quest.3752864|30.intensitiescsv": "C",
+    "quest.3752864|30.magnitudesCsv": "milestone",
+    "quest.3752864|30.magnitudescsv": "milestone",
+    "quest.3752864|30.tagsCsv": "defy_tyranny_talos",
+    "quest.3752864|30.tagscsv": "defy_tyranny_talos",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1517,91 +1617,287 @@
     "stancemult.tolerated": 0.4
   },
   "int": {
-    "quest.186947|120.metaSkip.Azura": 1,
-    "quest.186947|120.metaskip.azura": 1,
-    "quest.186947|130.metaSkip.Azura": 1,
-    "quest.186947|130.metaskip.azura": 1,
+    "quest.167681|260.metaSkip.Khenarthi": 1,
+    "quest.167681|260.metaskip.khenarthi": 1,
+    "quest.12997082|50.metaSkip.Z'en": 1,
+    "quest.12997082|50.metaskip.z'en": 1,
+    "quest.12997082|50.metaSkip.Nocturnal": 1,
+    "quest.12997082|50.metaskip.nocturnal": 1,
+    "quest.12997082|56.metaSkip.Z'en": 1,
+    "quest.12997082|56.metaskip.z'en": 1,
+    "quest.12997082|56.metaSkip.Nocturnal": 1,
+    "quest.12997082|56.metaskip.nocturnal": 1,
+    "quest.12997082|75.metaSkip.Z'en": 1,
+    "quest.12997082|75.metaskip.z'en": 1,
+    "quest.12997082|75.metaSkip.Nocturnal": 1,
+    "quest.12997082|75.metaskip.nocturnal": 1,
+    "quest.12997082|76.metaSkip.Z'en": 1,
+    "quest.12997082|76.metaskip.z'en": 1,
+    "quest.12997082|76.metaSkip.Nocturnal": 1,
+    "quest.12997082|76.metaskip.nocturnal": 1,
+    "quest.12997082|77.metaSkip.Z'en": 1,
+    "quest.12997082|77.metaskip.z'en": 1,
+    "quest.12997082|77.metaSkip.Nocturnal": 1,
+    "quest.12997082|77.metaskip.nocturnal": 1,
+    "quest.12997082|78.metaSkip.Z'en": 1,
+    "quest.12997082|78.metaskip.z'en": 1,
+    "quest.12997082|78.metaSkip.Nocturnal": 1,
+    "quest.12997082|78.metaskip.nocturnal": 1,
+    "quest.12997082|79.metaSkip.Z'en": 1,
+    "quest.12997082|79.metaskip.z'en": 1,
+    "quest.12997082|79.metaSkip.Nocturnal": 1,
+    "quest.12997082|79.metaskip.nocturnal": 1,
+    "quest.3086964|50.metaSkip.Azura": 1,
+    "quest.3086964|50.metaskip.azura": 1,
+    "quest.11917848|30.metaSkip.Z'en": 1,
+    "quest.11917848|30.metaskip.z'en": 1,
+    "quest.11917848|30.metaSkip.Nocturnal": 1,
+    "quest.11917848|30.metaskip.nocturnal": 1,
+    "quest.3806313|30.metaSkip.Z'en": 1,
+    "quest.3806313|30.metaskip.z'en": 1,
+    "quest.3806313|30.metaSkip.Nocturnal": 1,
+    "quest.3806313|30.metaskip.nocturnal": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 2,
-    "metaskipints": 2
+    "metaSkipInts": 20,
+    "metaskipints": 20
   },
   "stringList": {
     "questKeys": [
-      "186947|120",
-      "186947|130"
+      "167681|260",
+      "12997082|50",
+      "12997082|56",
+      "12997082|75",
+      "12997082|76",
+      "12997082|77",
+      "12997082|78",
+      "12997082|79",
+      "3086964|50",
+      "11917848|30",
+      "3806313|30",
+      "3752864|30"
     ],
     "questkeys": [
-      "186947|120",
-      "186947|130"
+      "167681|260",
+      "12997082|50",
+      "12997082|56",
+      "12997082|75",
+      "12997082|76",
+      "12997082|77",
+      "12997082|78",
+      "12997082|79",
+      "3086964|50",
+      "11917848|30",
+      "3806313|30",
+      "3752864|30"
     ],
     "questForms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x028F01|Wyrmstooth.esp",
+      "0xC651DA|Wyrmstooth.esp",
+      "0xC651DA|Wyrmstooth.esp",
+      "0xC651DA|Wyrmstooth.esp",
+      "0xC651DA|Wyrmstooth.esp",
+      "0xC651DA|Wyrmstooth.esp",
+      "0xC651DA|Wyrmstooth.esp",
+      "0xC651DA|Wyrmstooth.esp",
+      "0x2F1A74|Wyrmstooth.esp",
+      "0xB5DA18|Wyrmstooth.esp",
+      "0x3A1469|Wyrmstooth.esp",
+      "0x3943A0|Wyrmstooth.esp"
     ],
     "questforms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x028F01|Wyrmstooth.esp",
+      "0xC651DA|Wyrmstooth.esp",
+      "0xC651DA|Wyrmstooth.esp",
+      "0xC651DA|Wyrmstooth.esp",
+      "0xC651DA|Wyrmstooth.esp",
+      "0xC651DA|Wyrmstooth.esp",
+      "0xC651DA|Wyrmstooth.esp",
+      "0xC651DA|Wyrmstooth.esp",
+      "0x2F1A74|Wyrmstooth.esp",
+      "0xB5DA18|Wyrmstooth.esp",
+      "0x3A1469|Wyrmstooth.esp",
+      "0x3943A0|Wyrmstooth.esp"
     ],
     "questFormIds": [
-      "186947",
-      "186947"
+      "167681",
+      "12997082",
+      "12997082",
+      "12997082",
+      "12997082",
+      "12997082",
+      "12997082",
+      "12997082",
+      "3086964",
+      "11917848",
+      "3806313",
+      "3752864"
     ],
     "questformids": [
-      "186947",
-      "186947"
+      "167681",
+      "12997082",
+      "12997082",
+      "12997082",
+      "12997082",
+      "12997082",
+      "12997082",
+      "12997082",
+      "3086964",
+      "11917848",
+      "3806313",
+      "3752864"
     ],
     "questPlugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp"
     ],
     "questplugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp"
     ],
     "questEditorIds": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "WTBarrowOfTheWyrm",
+      "WTTheNakedNord",
+      "WTTheNakedNord",
+      "WTTheNakedNord",
+      "WTTheNakedNord",
+      "WTTheNakedNord",
+      "WTTheNakedNord",
+      "WTTheNakedNord",
+      "WTUberEncounter",
+      "WTSignyFavor",
+      "WTDaenlitFavor",
+      "WTKillThalmor"
     ],
     "questeditorids": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "WTBarrowOfTheWyrm",
+      "WTTheNakedNord",
+      "WTTheNakedNord",
+      "WTTheNakedNord",
+      "WTTheNakedNord",
+      "WTTheNakedNord",
+      "WTTheNakedNord",
+      "WTTheNakedNord",
+      "WTUberEncounter",
+      "WTSignyFavor",
+      "WTDaenlitFavor",
+      "WTKillThalmor"
     ],
     "questWatch.formIds": [
-      "186947"
+      "167681",
+      "12997082",
+      "3086964",
+      "11917848",
+      "3806313",
+      "3752864"
     ],
     "questwatch.formids": [
-      "186947"
+      "167681",
+      "12997082",
+      "3086964",
+      "11917848",
+      "3806313",
+      "3752864"
     ],
     "questWatch.plugins": [
-      "CJ03Elroy.esp"
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp"
     ],
     "questwatch.plugins": [
-      "CJ03Elroy.esp"
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp"
     ],
     "questWatch.editorIds": [
-      "CJ03RotBelowMQ"
+      "WTBarrowOfTheWyrm",
+      "WTTheNakedNord",
+      "WTUberEncounter",
+      "WTSignyFavor",
+      "WTDaenlitFavor",
+      "WTKillThalmor"
     ],
     "questwatch.editorids": [
-      "CJ03RotBelowMQ"
+      "WTBarrowOfTheWyrm",
+      "WTTheNakedNord",
+      "WTUberEncounter",
+      "WTSignyFavor",
+      "WTDaenlitFavor",
+      "WTKillThalmor"
     ],
     "questWatchFormIds": [
-      "186947"
+      "167681",
+      "12997082",
+      "3086964",
+      "11917848",
+      "3806313",
+      "3752864"
     ],
     "questwatchformids": [
-      "186947"
+      "167681",
+      "12997082",
+      "3086964",
+      "11917848",
+      "3806313",
+      "3752864"
     ],
     "questWatchPlugins": [
-      "CJ03Elroy.esp"
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp"
     ],
     "questwatchplugins": [
-      "CJ03Elroy.esp"
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp",
+      "Wyrmstooth.esp"
     ],
     "questWatchEditorIds": [
-      "CJ03RotBelowMQ"
+      "WTBarrowOfTheWyrm",
+      "WTTheNakedNord",
+      "WTUberEncounter",
+      "WTSignyFavor",
+      "WTDaenlitFavor",
+      "WTKillThalmor"
     ],
     "questwatcheditorids": [
-      "CJ03RotBelowMQ"
+      "WTBarrowOfTheWyrm",
+      "WTTheNakedNord",
+      "WTUberEncounter",
+      "WTSignyFavor",
+      "WTDaenlitFavor",
+      "WTKillThalmor"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -1659,69 +1955,35 @@
       "Mephala.serve_a_daedra:mephala",
       "Malacath.serve_a_daedra:malacath"
     ],
-    "quest.186947|120.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
-      "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara"
-    ],
-    "quest.186947|120.valences": [
-      "-",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
-      "-"
-    ],
-    "quest.186947|120.intensities": [
-      "C",
-      "C",
-      "C",
-      "S",
-      "S",
-      "m",
-      "m",
-      "m"
-    ],
-    "quest.186947|120.magnitudes": [
-      "milestone",
-      "milestone",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small"
-    ],
-    "quest.186947|120.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "deny_a_second_chance"
-    ],
-    "quest.186947|130.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
-      "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
+    "quest.167681|260.deities": [
+      "Kyne",
+      "Alkosh",
+      "Talos",
+      "Baan Dar",
+      "Boethiah",
+      "HoonDing",
+      "Khenarthi",
+      "Kynareth",
+      "Leki",
+      "Malacath",
       "Mara",
-      "Dibella"
+      "Shor",
+      "Stendarr",
+      "Stuhn",
+      "Syrabane",
+      "Trinimac",
+      "Tsun"
     ],
-    "quest.186947|130.valences": [
-      "-",
+    "quest.167681|260.valences": [
+      "+",
+      "+",
+      "+",
+      "+",
+      "+",
+      "+",
+      "+",
+      "+",
+      "+",
       "+",
       "+",
       "+",
@@ -1731,20 +1993,36 @@
       "+",
       "+"
     ],
-    "quest.186947|130.intensities": [
-      "C",
-      "C",
-      "C",
+    "quest.167681|260.intensities": [
+      "S",
+      "S",
+      "S",
+      "m",
       "S",
       "S",
       "m",
       "m",
+      "m",
+      "m",
+      "m",
+      "S",
+      "S",
+      "m",
+      "S",
       "m",
       "S"
     ],
-    "quest.186947|130.magnitudes": [
-      "milestone",
-      "milestone",
+    "quest.167681|260.magnitudes": [
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
       "small",
       "small",
       "small",
@@ -1753,16 +2031,429 @@
       "small",
       "small"
     ],
-    "quest.186947|130.tags": [
-      "defy_daedra",
+    "quest.167681|260.tags": [
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak",
+      "kill_honorable_combat,prove_by_struggle,protect_the_weak"
+    ],
+    "quest.12997082|50.deities": [
+      "Nocturnal",
+      "Rajhin",
+      "Zenithar",
+      "Z'en"
+    ],
+    "quest.12997082|50.valences": [
+      "+",
+      "+",
+      "-",
+      "-"
+    ],
+    "quest.12997082|50.intensities": [
+      "S",
+      "S",
+      "S",
+      "S"
+    ],
+    "quest.12997082|50.magnitudes": [
+      "small",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.12997082|50.tags": [
+      "theft_burglary,exploit_cheat",
+      "theft_burglary,exploit_cheat",
+      "theft_burglary,exploit_cheat",
+      "theft_burglary,exploit_cheat"
+    ],
+    "quest.12997082|56.deities": [
+      "Nocturnal",
+      "Rajhin",
+      "Baan Dar",
+      "Mephala",
+      "Clavicus Vile",
+      "Boethiah",
+      "Malacath"
+    ],
+    "quest.12997082|56.valences": [
+      "+",
+      "+",
+      "+",
+      "+",
+      "+",
+      "+",
+      "-"
+    ],
+    "quest.12997082|56.intensities": [
+      "m",
+      "S",
+      "S",
+      "S",
+      "S",
+      "m",
+      "m"
+    ],
+    "quest.12997082|56.magnitudes": [
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.12997082|56.tags": [
+      "deceit",
+      "deceit",
+      "deceit",
+      "deceit",
+      "deceit",
+      "deceit",
+      "deceit"
+    ],
+    "quest.12997082|75.deities": [
+      "Mara",
+      "Dibella",
+      "Kynareth",
+      "Syrabane"
+    ],
+    "quest.12997082|75.valences": [
+      "+",
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.12997082|75.intensities": [
+      "C",
+      "S",
+      "m",
+      "m"
+    ],
+    "quest.12997082|75.magnitudes": [
+      "milestone",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.12997082|75.tags": [
+      "heal_comfort",
+      "heal_comfort",
+      "heal_comfort",
+      "heal_comfort"
+    ],
+    "quest.12997082|76.deities": [
+      "Mara",
+      "Nocturnal",
+      "Rajhin",
+      "Baan Dar",
+      "Mephala",
+      "Zenithar",
+      "Z'en",
+      "Dibella",
+      "Kynareth",
+      "Malacath"
+    ],
+    "quest.12997082|76.valences": [
+      "+",
+      "+",
+      "+",
+      "+",
+      "+",
+      "-",
+      "-",
+      "+",
+      "+",
+      "-"
+    ],
+    "quest.12997082|76.intensities": [
+      "S",
+      "S",
+      "S",
+      "S",
+      "S",
+      "S",
+      "S",
+      "m",
+      "m",
+      "m"
+    ],
+    "quest.12997082|76.magnitudes": [
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.12997082|76.tags": [
+      "heal_comfort,deceit,theft_burglary",
+      "heal_comfort,deceit,theft_burglary",
+      "heal_comfort,deceit,theft_burglary",
+      "heal_comfort,deceit,theft_burglary",
+      "heal_comfort,deceit,theft_burglary",
+      "heal_comfort,deceit,theft_burglary",
+      "heal_comfort,deceit,theft_burglary",
+      "heal_comfort,deceit,theft_burglary",
+      "heal_comfort,deceit,theft_burglary",
+      "heal_comfort,deceit,theft_burglary"
+    ],
+    "quest.12997082|77.deities": [
+      "Mara",
+      "Dibella",
+      "Kynareth",
+      "Syrabane"
+    ],
+    "quest.12997082|77.valences": [
+      "+",
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.12997082|77.intensities": [
+      "S",
+      "S",
+      "m",
+      "m"
+    ],
+    "quest.12997082|77.magnitudes": [
+      "small",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.12997082|77.tags": [
+      "heal_comfort",
+      "heal_comfort",
+      "heal_comfort",
+      "heal_comfort"
+    ],
+    "quest.12997082|78.deities": [
+      "Mara",
+      "Dibella",
+      "Kynareth",
+      "Syrabane"
+    ],
+    "quest.12997082|78.valences": [
+      "+",
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.12997082|78.intensities": [
+      "S",
+      "S",
+      "m",
+      "m"
+    ],
+    "quest.12997082|78.magnitudes": [
+      "small",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.12997082|78.tags": [
+      "heal_comfort",
+      "heal_comfort",
+      "heal_comfort",
+      "heal_comfort"
+    ],
+    "quest.12997082|79.deities": [
+      "Nocturnal",
+      "Rajhin",
+      "Baan Dar",
+      "Mephala",
+      "Zenithar",
+      "Z'en",
+      "Malacath"
+    ],
+    "quest.12997082|79.valences": [
+      "+",
+      "+",
+      "+",
+      "+",
+      "-",
+      "-",
+      "-"
+    ],
+    "quest.12997082|79.intensities": [
+      "S",
+      "S",
+      "S",
+      "S",
+      "S",
+      "S",
+      "m"
+    ],
+    "quest.12997082|79.magnitudes": [
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.12997082|79.tags": [
+      "deceit,theft_burglary",
+      "deceit,theft_burglary",
+      "deceit,theft_burglary",
+      "deceit,theft_burglary",
+      "deceit,theft_burglary",
+      "deceit,theft_burglary",
+      "deceit,theft_burglary"
+    ],
+    "quest.3086964|50.deities": [
+      "Arkay",
+      "Meridia",
+      "Stendarr",
+      "Tu'whacca",
+      "Azura",
+      "Y'ffre"
+    ],
+    "quest.3086964|50.valences": [
+      "+",
+      "+",
+      "+",
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.3086964|50.intensities": [
+      "C",
+      "C",
+      "S",
+      "S",
+      "m",
+      "m"
+    ],
+    "quest.3086964|50.magnitudes": [
+      "milestone",
+      "milestone",
+      "milestone",
+      "milestone",
+      "small",
+      "small"
+    ],
+    "quest.3086964|50.tags": [
       "slay_undead",
       "slay_undead",
-      "smite_corruption",
       "slay_undead",
       "slay_undead",
       "slay_undead",
-      "show_compassion",
-      "foster_art"
+      "slay_undead"
+    ],
+    "quest.11917848|30.deities": [
+      "Nocturnal",
+      "Rajhin",
+      "Mephala",
+      "Baan Dar",
+      "Zenithar",
+      "Z'en"
+    ],
+    "quest.11917848|30.valences": [
+      "+",
+      "+",
+      "+",
+      "+",
+      "-",
+      "-"
+    ],
+    "quest.11917848|30.intensities": [
+      "C",
+      "C",
+      "S",
+      "S",
+      "S",
+      "S"
+    ],
+    "quest.11917848|30.magnitudes": [
+      "milestone",
+      "milestone",
+      "small",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.11917848|30.tags": [
+      "theft_burglary,keep_secret",
+      "theft_burglary,keep_secret",
+      "theft_burglary,keep_secret",
+      "theft_burglary,keep_secret",
+      "theft_burglary,keep_secret",
+      "theft_burglary,keep_secret"
+    ],
+    "quest.3806313|30.deities": [
+      "Nocturnal",
+      "Rajhin",
+      "Mephala",
+      "Baan Dar",
+      "Zenithar",
+      "Z'en"
+    ],
+    "quest.3806313|30.valences": [
+      "+",
+      "+",
+      "+",
+      "+",
+      "-",
+      "-"
+    ],
+    "quest.3806313|30.intensities": [
+      "C",
+      "C",
+      "S",
+      "S",
+      "S",
+      "S"
+    ],
+    "quest.3806313|30.magnitudes": [
+      "milestone",
+      "milestone",
+      "small",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.3806313|30.tags": [
+      "theft_burglary",
+      "theft_burglary",
+      "theft_burglary",
+      "theft_burglary",
+      "theft_burglary",
+      "theft_burglary"
+    ],
+    "quest.3752864|30.deities": [
+      "Talos"
+    ],
+    "quest.3752864|30.valences": [
+      "+"
+    ],
+    "quest.3752864|30.intensities": [
+      "C"
+    ],
+    "quest.3752864|30.magnitudes": [
+      "milestone"
+    ],
+    "quest.3752864|30.tags": [
+      "defy_tyranny_talos"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

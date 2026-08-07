@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-07T02:53:26.813Z",
-    "generatedat": "2026-08-07T02:53:26.813Z",
+    "generatedAt": "2026-08-06T11:16:27.972Z",
+    "generatedat": "2026-08-06T11:16:27.972Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "186947",
-    "questwatchformidscsv": "186947",
-    "questWatchPluginsCsv": "CJ03Elroy.esp",
-    "questwatchpluginscsv": "CJ03Elroy.esp",
+    "questWatchFormIdsCsv": "1474526,2035214,2304858",
+    "questwatchformidscsv": "1474526,2035214,2304858",
+    "questWatchPluginsCsv": "DK_Thogra.esp,DK_Thogra.esp,DK_Thogra.esp",
+    "questwatchpluginscsv": "DK_Thogra.esp,DK_Thogra.esp,DK_Thogra.esp",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1367,26 +1367,46 @@
     "faucet.malacath.serve_a_daedra:malacath.tag": "serve_a_daedra:malacath",
     "faucet.Malacath.serve_a_daedra:malacath.cap": "1/dawn",
     "faucet.malacath.serve_a_daedra:malacath.cap": "1/dawn",
-    "quest.186947|120.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.valencesCsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.valencescsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.intensitiesCsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.intensitiescsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.magnitudescsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|120.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|130.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.valencesCsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.valencescsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.intensitiesCsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.intensitiescsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.magnitudescsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
-    "quest.186947|130.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
+    "quest.1474526|150.deitiesCsv": "Malacath|Akatosh|Stuhn|Trinimac|Z'en",
+    "quest.1474526|150.deitiescsv": "Malacath|Akatosh|Stuhn|Trinimac|Z'en",
+    "quest.1474526|150.valencesCsv": "+|+|+|+|+",
+    "quest.1474526|150.valencescsv": "+|+|+|+|+",
+    "quest.1474526|150.intensitiesCsv": "C|m|m|m|m",
+    "quest.1474526|150.intensitiescsv": "C|m|m|m|m",
+    "quest.1474526|150.magnitudesCsv": "milestone|small|small|small|small",
+    "quest.1474526|150.magnitudescsv": "milestone|small|small|small|small",
+    "quest.1474526|150.tagsCsv": "keep_oath|keep_oath|keep_oath|keep_oath|keep_oath",
+    "quest.1474526|150.tagscsv": "keep_oath|keep_oath|keep_oath|keep_oath|keep_oath",
+    "quest.1474526|410.deitiesCsv": "Malacath|Akatosh|Stendarr|Mara|Talos|Shor|Tsun|Stuhn|Trinimac|Z'en|HoonDing|Leki|Sithis|Molag Bal",
+    "quest.1474526|410.deitiescsv": "Malacath|Akatosh|Stendarr|Mara|Talos|Shor|Tsun|Stuhn|Trinimac|Z'en|HoonDing|Leki|Sithis|Molag Bal",
+    "quest.1474526|410.valencesCsv": "-|-|-|-|-|-|-|-|-|-|-|-|+|+",
+    "quest.1474526|410.valencescsv": "-|-|-|-|-|-|-|-|-|-|-|-|+|+",
+    "quest.1474526|410.intensitiesCsv": "C|m|m|m|m|m|m|m|m|m|m|m|S|m",
+    "quest.1474526|410.intensitiescsv": "C|m|m|m|m|m|m|m|m|m|m|m|S|m",
+    "quest.1474526|410.magnitudesCsv": "milestone|small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.1474526|410.magnitudescsv": "milestone|small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.1474526|410.tagsCsv": "break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous",
+    "quest.1474526|410.tagscsv": "break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous|break_oath_betray,murder_treacherous",
+    "quest.2035214|100.deitiesCsv": "Mara|Dibella",
+    "quest.2035214|100.deitiescsv": "Mara|Dibella",
+    "quest.2035214|100.valencesCsv": "+|+",
+    "quest.2035214|100.valencescsv": "+|+",
+    "quest.2035214|100.intensitiesCsv": "C|m",
+    "quest.2035214|100.intensitiescsv": "C|m",
+    "quest.2035214|100.magnitudesCsv": "milestone|small",
+    "quest.2035214|100.magnitudescsv": "milestone|small",
+    "quest.2035214|100.tagsCsv": "marriage_family|marriage_family",
+    "quest.2035214|100.tagscsv": "marriage_family|marriage_family",
+    "quest.2304858|100.deitiesCsv": "Malacath|Mara|Dibella",
+    "quest.2304858|100.deitiescsv": "Malacath|Mara|Dibella",
+    "quest.2304858|100.valencesCsv": "+|+|+",
+    "quest.2304858|100.valencescsv": "+|+|+",
+    "quest.2304858|100.intensitiesCsv": "C|C|m",
+    "quest.2304858|100.intensitiescsv": "C|C|m",
+    "quest.2304858|100.magnitudesCsv": "milestone|milestone|small",
+    "quest.2304858|100.magnitudescsv": "milestone|milestone|small",
+    "quest.2304858|100.tagsCsv": "marriage_family|marriage_family|marriage_family",
+    "quest.2304858|100.tagscsv": "marriage_family|marriage_family|marriage_family",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1517,91 +1537,139 @@
     "stancemult.tolerated": 0.4
   },
   "int": {
-    "quest.186947|120.metaSkip.Azura": 1,
-    "quest.186947|120.metaskip.azura": 1,
-    "quest.186947|130.metaSkip.Azura": 1,
-    "quest.186947|130.metaskip.azura": 1,
+    "quest.1474526|150.metaSkip.Z'en": 1,
+    "quest.1474526|150.metaskip.z'en": 1,
+    "quest.1474526|150.metaSkip.Akatosh": 1,
+    "quest.1474526|150.metaskip.akatosh": 1,
+    "quest.1474526|410.metaSkip.Z'en": 1,
+    "quest.1474526|410.metaskip.z'en": 1,
+    "quest.1474526|410.metaSkip.Akatosh": 1,
+    "quest.1474526|410.metaskip.akatosh": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 2,
-    "metaskipints": 2
+    "metaSkipInts": 4,
+    "metaskipints": 4
   },
   "stringList": {
     "questKeys": [
-      "186947|120",
-      "186947|130"
+      "1474526|150",
+      "1474526|410",
+      "2035214|100",
+      "2304858|100"
     ],
     "questkeys": [
-      "186947|120",
-      "186947|130"
+      "1474526|150",
+      "1474526|410",
+      "2035214|100",
+      "2304858|100"
     ],
     "questForms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x167FDE|DK_Thogra.esp",
+      "0x167FDE|DK_Thogra.esp",
+      "0x1F0E0E|DK_Thogra.esp",
+      "0x232B5A|DK_Thogra.esp"
     ],
     "questforms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x167FDE|DK_Thogra.esp",
+      "0x167FDE|DK_Thogra.esp",
+      "0x1F0E0E|DK_Thogra.esp",
+      "0x232B5A|DK_Thogra.esp"
     ],
     "questFormIds": [
-      "186947",
-      "186947"
+      "1474526",
+      "1474526",
+      "2035214",
+      "2304858"
     ],
     "questformids": [
-      "186947",
-      "186947"
+      "1474526",
+      "1474526",
+      "2035214",
+      "2304858"
     ],
     "questPlugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "DK_Thogra.esp",
+      "DK_Thogra.esp",
+      "DK_Thogra.esp",
+      "DK_Thogra.esp"
     ],
     "questplugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "DK_Thogra.esp",
+      "DK_Thogra.esp",
+      "DK_Thogra.esp",
+      "DK_Thogra.esp"
     ],
     "questEditorIds": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "dk_ThograMain",
+      "dk_ThograMain",
+      "dk_ThograMarriageMara",
+      "dk_ThograMarriageOrc"
     ],
     "questeditorids": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "dk_ThograMain",
+      "dk_ThograMain",
+      "dk_ThograMarriageMara",
+      "dk_ThograMarriageOrc"
     ],
     "questWatch.formIds": [
-      "186947"
+      "1474526",
+      "2035214",
+      "2304858"
     ],
     "questwatch.formids": [
-      "186947"
+      "1474526",
+      "2035214",
+      "2304858"
     ],
     "questWatch.plugins": [
-      "CJ03Elroy.esp"
+      "DK_Thogra.esp",
+      "DK_Thogra.esp",
+      "DK_Thogra.esp"
     ],
     "questwatch.plugins": [
-      "CJ03Elroy.esp"
+      "DK_Thogra.esp",
+      "DK_Thogra.esp",
+      "DK_Thogra.esp"
     ],
     "questWatch.editorIds": [
-      "CJ03RotBelowMQ"
+      "dk_ThograMain",
+      "dk_ThograMarriageMara",
+      "dk_ThograMarriageOrc"
     ],
     "questwatch.editorids": [
-      "CJ03RotBelowMQ"
+      "dk_ThograMain",
+      "dk_ThograMarriageMara",
+      "dk_ThograMarriageOrc"
     ],
     "questWatchFormIds": [
-      "186947"
+      "1474526",
+      "2035214",
+      "2304858"
     ],
     "questwatchformids": [
-      "186947"
+      "1474526",
+      "2035214",
+      "2304858"
     ],
     "questWatchPlugins": [
-      "CJ03Elroy.esp"
+      "DK_Thogra.esp",
+      "DK_Thogra.esp",
+      "DK_Thogra.esp"
     ],
     "questwatchplugins": [
-      "CJ03Elroy.esp"
+      "DK_Thogra.esp",
+      "DK_Thogra.esp",
+      "DK_Thogra.esp"
     ],
     "questWatchEditorIds": [
-      "CJ03RotBelowMQ"
+      "dk_ThograMain",
+      "dk_ThograMarriageMara",
+      "dk_ThograMarriageOrc"
     ],
     "questwatcheditorids": [
-      "CJ03RotBelowMQ"
+      "dk_ThograMain",
+      "dk_ThograMarriageMara",
+      "dk_ThograMarriageOrc"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -1659,92 +1727,97 @@
       "Mephala.serve_a_daedra:mephala",
       "Malacath.serve_a_daedra:malacath"
     ],
-    "quest.186947|120.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
-      "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara"
+    "quest.1474526|150.deities": [
+      "Malacath",
+      "Akatosh",
+      "Stuhn",
+      "Trinimac",
+      "Z'en"
     ],
-    "quest.186947|120.valences": [
-      "-",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
-      "-"
-    ],
-    "quest.186947|120.intensities": [
-      "C",
-      "C",
-      "C",
-      "S",
-      "S",
-      "m",
-      "m",
-      "m"
-    ],
-    "quest.186947|120.magnitudes": [
-      "milestone",
-      "milestone",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small"
-    ],
-    "quest.186947|120.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "deny_a_second_chance"
-    ],
-    "quest.186947|130.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
-      "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara",
-      "Dibella"
-    ],
-    "quest.186947|130.valences": [
-      "-",
-      "+",
-      "+",
-      "+",
+    "quest.1474526|150.valences": [
       "+",
       "+",
       "+",
       "+",
       "+"
     ],
-    "quest.186947|130.intensities": [
+    "quest.1474526|150.intensities": [
       "C",
-      "C",
-      "C",
-      "S",
-      "S",
       "m",
       "m",
       "m",
-      "S"
+      "m"
     ],
-    "quest.186947|130.magnitudes": [
+    "quest.1474526|150.magnitudes": [
       "milestone",
+      "small",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.1474526|150.tags": [
+      "keep_oath",
+      "keep_oath",
+      "keep_oath",
+      "keep_oath",
+      "keep_oath"
+    ],
+    "quest.1474526|410.deities": [
+      "Malacath",
+      "Akatosh",
+      "Stendarr",
+      "Mara",
+      "Talos",
+      "Shor",
+      "Tsun",
+      "Stuhn",
+      "Trinimac",
+      "Z'en",
+      "HoonDing",
+      "Leki",
+      "Sithis",
+      "Molag Bal"
+    ],
+    "quest.1474526|410.valences": [
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "+",
+      "+"
+    ],
+    "quest.1474526|410.intensities": [
+      "C",
+      "m",
+      "m",
+      "m",
+      "m",
+      "m",
+      "m",
+      "m",
+      "m",
+      "m",
+      "m",
+      "m",
+      "S",
+      "m"
+    ],
+    "quest.1474526|410.magnitudes": [
       "milestone",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
+      "small",
       "small",
       "small",
       "small",
@@ -1753,16 +1826,66 @@
       "small",
       "small"
     ],
-    "quest.186947|130.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "show_compassion",
-      "foster_art"
+    "quest.1474526|410.tags": [
+      "break_oath_betray,murder_treacherous",
+      "break_oath_betray,murder_treacherous",
+      "break_oath_betray,murder_treacherous",
+      "break_oath_betray,murder_treacherous",
+      "break_oath_betray,murder_treacherous",
+      "break_oath_betray,murder_treacherous",
+      "break_oath_betray,murder_treacherous",
+      "break_oath_betray,murder_treacherous",
+      "break_oath_betray,murder_treacherous",
+      "break_oath_betray,murder_treacherous",
+      "break_oath_betray,murder_treacherous",
+      "break_oath_betray,murder_treacherous",
+      "break_oath_betray,murder_treacherous",
+      "break_oath_betray,murder_treacherous"
+    ],
+    "quest.2035214|100.deities": [
+      "Mara",
+      "Dibella"
+    ],
+    "quest.2035214|100.valences": [
+      "+",
+      "+"
+    ],
+    "quest.2035214|100.intensities": [
+      "C",
+      "m"
+    ],
+    "quest.2035214|100.magnitudes": [
+      "milestone",
+      "small"
+    ],
+    "quest.2035214|100.tags": [
+      "marriage_family",
+      "marriage_family"
+    ],
+    "quest.2304858|100.deities": [
+      "Malacath",
+      "Mara",
+      "Dibella"
+    ],
+    "quest.2304858|100.valences": [
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.2304858|100.intensities": [
+      "C",
+      "C",
+      "m"
+    ],
+    "quest.2304858|100.magnitudes": [
+      "milestone",
+      "milestone",
+      "small"
+    ],
+    "quest.2304858|100.tags": [
+      "marriage_family",
+      "marriage_family",
+      "marriage_family"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

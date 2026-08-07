@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-07T02:53:26.813Z",
-    "generatedat": "2026-08-07T02:53:26.813Z",
+    "generatedAt": "2026-08-06T11:37:01.064Z",
+    "generatedat": "2026-08-06T11:37:01.064Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "186947",
-    "questwatchformidscsv": "186947",
-    "questWatchPluginsCsv": "CJ03Elroy.esp",
-    "questwatchpluginscsv": "CJ03Elroy.esp",
+    "questWatchFormIdsCsv": "260630",
+    "questwatchformidscsv": "260630",
+    "questWatchPluginsCsv": "Skyrim.esm",
+    "questwatchpluginscsv": "Skyrim.esm",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1367,26 +1367,16 @@
     "faucet.malacath.serve_a_daedra:malacath.tag": "serve_a_daedra:malacath",
     "faucet.Malacath.serve_a_daedra:malacath.cap": "1/dawn",
     "faucet.malacath.serve_a_daedra:malacath.cap": "1/dawn",
-    "quest.186947|120.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.valencesCsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.valencescsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.intensitiesCsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.intensitiescsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.magnitudescsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|120.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|130.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.valencesCsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.valencescsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.intensitiesCsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.intensitiescsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.magnitudescsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
-    "quest.186947|130.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
+    "quest.260630|99.deitiesCsv": "Stendarr|Stuhn|Mara|Kyne|Molag Bal",
+    "quest.260630|99.deitiescsv": "Stendarr|Stuhn|Mara|Kyne|Molag Bal",
+    "quest.260630|99.valencesCsv": "+|+|+|+|-",
+    "quest.260630|99.valencescsv": "+|+|+|+|-",
+    "quest.260630|99.intensitiesCsv": "C|C|S|m|S",
+    "quest.260630|99.intensitiescsv": "C|C|S|m|S",
+    "quest.260630|99.magnitudesCsv": "milestone|milestone|milestone|milestone|milestone",
+    "quest.260630|99.magnitudescsv": "milestone|milestone|milestone|milestone|milestone",
+    "quest.260630|99.tagsCsv": "mercy_spare|mercy_spare|mercy_spare|mercy_spare|mercy_spare",
+    "quest.260630|99.tagscsv": "mercy_spare|mercy_spare|mercy_spare|mercy_spare|mercy_spare",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1517,91 +1507,77 @@
     "stancemult.tolerated": 0.4
   },
   "int": {
-    "quest.186947|120.metaSkip.Azura": 1,
-    "quest.186947|120.metaskip.azura": 1,
-    "quest.186947|130.metaSkip.Azura": 1,
-    "quest.186947|130.metaskip.azura": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 2,
-    "metaskipints": 2
+    "metaSkipInts": 0,
+    "metaskipints": 0
   },
   "stringList": {
     "questKeys": [
-      "186947|120",
-      "186947|130"
+      "260630|99"
     ],
     "questkeys": [
-      "186947|120",
-      "186947|130"
+      "260630|99"
     ],
     "questForms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x03FA16|Skyrim.esm"
     ],
     "questforms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x03FA16|Skyrim.esm"
     ],
     "questFormIds": [
-      "186947",
-      "186947"
+      "260630"
     ],
     "questformids": [
-      "186947",
-      "186947"
+      "260630"
     ],
     "questPlugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "Skyrim.esm"
     ],
     "questplugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "Skyrim.esm"
     ],
     "questEditorIds": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "MQPaarthurnax"
     ],
     "questeditorids": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "MQPaarthurnax"
     ],
     "questWatch.formIds": [
-      "186947"
+      "260630"
     ],
     "questwatch.formids": [
-      "186947"
+      "260630"
     ],
     "questWatch.plugins": [
-      "CJ03Elroy.esp"
+      "Skyrim.esm"
     ],
     "questwatch.plugins": [
-      "CJ03Elroy.esp"
+      "Skyrim.esm"
     ],
     "questWatch.editorIds": [
-      "CJ03RotBelowMQ"
+      "MQPaarthurnax"
     ],
     "questwatch.editorids": [
-      "CJ03RotBelowMQ"
+      "MQPaarthurnax"
     ],
     "questWatchFormIds": [
-      "186947"
+      "260630"
     ],
     "questwatchformids": [
-      "186947"
+      "260630"
     ],
     "questWatchPlugins": [
-      "CJ03Elroy.esp"
+      "Skyrim.esm"
     ],
     "questwatchplugins": [
-      "CJ03Elroy.esp"
+      "Skyrim.esm"
     ],
     "questWatchEditorIds": [
-      "CJ03RotBelowMQ"
+      "MQPaarthurnax"
     ],
     "questwatcheditorids": [
-      "CJ03RotBelowMQ"
+      "MQPaarthurnax"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -1659,110 +1635,40 @@
       "Mephala.serve_a_daedra:mephala",
       "Malacath.serve_a_daedra:malacath"
     ],
-    "quest.186947|120.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
+    "quest.260630|99.deities": [
       "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara"
+      "Stuhn",
+      "Mara",
+      "Kyne",
+      "Molag Bal"
     ],
-    "quest.186947|120.valences": [
-      "-",
-      "+",
-      "+",
+    "quest.260630|99.valences": [
       "+",
       "+",
       "+",
       "+",
       "-"
     ],
-    "quest.186947|120.intensities": [
-      "C",
-      "C",
-      "C",
-      "S",
-      "S",
-      "m",
-      "m",
-      "m"
-    ],
-    "quest.186947|120.magnitudes": [
-      "milestone",
-      "milestone",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small"
-    ],
-    "quest.186947|120.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "deny_a_second_chance"
-    ],
-    "quest.186947|130.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
-      "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara",
-      "Dibella"
-    ],
-    "quest.186947|130.valences": [
-      "-",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+"
-    ],
-    "quest.186947|130.intensities": [
-      "C",
+    "quest.260630|99.intensities": [
       "C",
       "C",
       "S",
-      "S",
-      "m",
-      "m",
       "m",
       "S"
     ],
-    "quest.186947|130.magnitudes": [
+    "quest.260630|99.magnitudes": [
       "milestone",
       "milestone",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small"
+      "milestone",
+      "milestone",
+      "milestone"
     ],
-    "quest.186947|130.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "show_compassion",
-      "foster_art"
+    "quest.260630|99.tags": [
+      "mercy_spare",
+      "mercy_spare",
+      "mercy_spare",
+      "mercy_spare",
+      "mercy_spare"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

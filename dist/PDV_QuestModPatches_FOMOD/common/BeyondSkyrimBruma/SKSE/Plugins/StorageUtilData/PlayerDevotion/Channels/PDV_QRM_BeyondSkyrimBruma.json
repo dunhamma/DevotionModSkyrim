@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-07T02:53:26.813Z",
-    "generatedat": "2026-08-07T02:53:26.813Z",
+    "generatedAt": "2026-08-06T12:44:15.649Z",
+    "generatedat": "2026-08-06T12:44:15.649Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "186947",
-    "questwatchformidscsv": "186947",
-    "questWatchPluginsCsv": "CJ03Elroy.esp",
-    "questwatchpluginscsv": "CJ03Elroy.esp",
+    "questWatchFormIdsCsv": "14936,424001,844017,549383",
+    "questwatchformidscsv": "14936,424001,844017,549383",
+    "questWatchPluginsCsv": "BSHeartland.esm,BSHeartland.esm,BSHeartland.esm,BSHeartland.esm",
+    "questwatchpluginscsv": "BSHeartland.esm,BSHeartland.esm,BSHeartland.esm,BSHeartland.esm",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1367,26 +1367,86 @@
     "faucet.malacath.serve_a_daedra:malacath.tag": "serve_a_daedra:malacath",
     "faucet.Malacath.serve_a_daedra:malacath.cap": "1/dawn",
     "faucet.malacath.serve_a_daedra:malacath.cap": "1/dawn",
-    "quest.186947|120.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.valencesCsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.valencescsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.intensitiesCsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.intensitiescsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.magnitudescsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|120.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|130.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.valencesCsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.valencescsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.intensitiesCsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.intensitiescsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.magnitudescsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
-    "quest.186947|130.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
+    "quest.14936|30.deitiesCsv": "Nocturnal|Rajhin|Baan Dar|Clavicus Vile|Z'en|Zenithar|Mephala",
+    "quest.14936|30.deitiescsv": "Nocturnal|Rajhin|Baan Dar|Clavicus Vile|Z'en|Zenithar|Mephala",
+    "quest.14936|30.valencesCsv": "+|+|+|+|-|-|+",
+    "quest.14936|30.valencescsv": "+|+|+|+|-|-|+",
+    "quest.14936|30.intensitiesCsv": "m|S|S|m|S|S|S",
+    "quest.14936|30.intensitiescsv": "m|S|S|m|S|S|S",
+    "quest.14936|30.magnitudesCsv": "small|milestone|milestone|small|milestone|small|small",
+    "quest.14936|30.magnitudescsv": "small|milestone|milestone|small|milestone|small|small",
+    "quest.14936|30.tagsCsv": "deceit,exploit_cheat|deceit,exploit_cheat|deceit,exploit_cheat|deceit,exploit_cheat|deceit,exploit_cheat|deceit,exploit_cheat|deceit,exploit_cheat",
+    "quest.14936|30.tagscsv": "deceit,exploit_cheat|deceit,exploit_cheat|deceit,exploit_cheat|deceit,exploit_cheat|deceit,exploit_cheat|deceit,exploit_cheat|deceit,exploit_cheat",
+    "quest.14936|50.deitiesCsv": "Stendarr|Akatosh|Zenithar|Z'en|Nocturnal|Julianos|Stuhn|Mephala",
+    "quest.14936|50.deitiescsv": "Stendarr|Akatosh|Zenithar|Z'en|Nocturnal|Julianos|Stuhn|Mephala",
+    "quest.14936|50.valencesCsv": "+|+|+|+|-|+|+|-",
+    "quest.14936|50.valencescsv": "+|+|+|+|-|+|+|-",
+    "quest.14936|50.intensitiesCsv": "S|m|m|S|m|m|m|m",
+    "quest.14936|50.intensitiescsv": "S|m|m|S|m|m|m|m",
+    "quest.14936|50.magnitudesCsv": "milestone|small|small|milestone|small|small|small|small",
+    "quest.14936|50.magnitudescsv": "milestone|small|small|milestone|small|small|small|small",
+    "quest.14936|50.tagsCsv": "uphold_law_justice,expose_betray_secret|uphold_law_justice,expose_betray_secret|uphold_law_justice,expose_betray_secret|uphold_law_justice,expose_betray_secret|uphold_law_justice,expose_betray_secret|uphold_law_justice,expose_betray_secret|uphold_law_justice,expose_betray_secret|uphold_law_justice,expose_betray_secret",
+    "quest.14936|50.tagscsv": "uphold_law_justice,expose_betray_secret|uphold_law_justice,expose_betray_secret|uphold_law_justice,expose_betray_secret|uphold_law_justice,expose_betray_secret|uphold_law_justice,expose_betray_secret|uphold_law_justice,expose_betray_secret|uphold_law_justice,expose_betray_secret|uphold_law_justice,expose_betray_secret",
+    "quest.14936|150.deitiesCsv": "Nocturnal|Rajhin|Zenithar|Z'en|Mephala",
+    "quest.14936|150.deitiescsv": "Nocturnal|Rajhin|Zenithar|Z'en|Mephala",
+    "quest.14936|150.valencesCsv": "+|+|-|-|+",
+    "quest.14936|150.valencescsv": "+|+|-|-|+",
+    "quest.14936|150.intensitiesCsv": "S|S|S|S|m",
+    "quest.14936|150.intensitiescsv": "S|S|S|S|m",
+    "quest.14936|150.magnitudesCsv": "milestone|milestone|milestone|milestone|small",
+    "quest.14936|150.magnitudescsv": "milestone|milestone|milestone|milestone|small",
+    "quest.14936|150.tagsCsv": "theft_burglary,exploit_cheat|theft_burglary,exploit_cheat|theft_burglary,exploit_cheat|theft_burglary,exploit_cheat|theft_burglary,exploit_cheat",
+    "quest.14936|150.tagscsv": "theft_burglary,exploit_cheat|theft_burglary,exploit_cheat|theft_burglary,exploit_cheat|theft_burglary,exploit_cheat|theft_burglary,exploit_cheat",
+    "quest.424001|100.deitiesCsv": "Mephala|Sithis|Boethiah|Stendarr|Mara|Malacath|Stuhn|Talos|Shor|Leki|Khenarthi|HoonDing|Molag Bal",
+    "quest.424001|100.deitiescsv": "Mephala|Sithis|Boethiah|Stendarr|Mara|Malacath|Stuhn|Talos|Shor|Leki|Khenarthi|HoonDing|Molag Bal",
+    "quest.424001|100.valencesCsv": "+|+|+|-|-|-|-|-|-|-|-|-|+",
+    "quest.424001|100.valencescsv": "+|+|+|-|-|-|-|-|-|-|-|-|+",
+    "quest.424001|100.intensitiesCsv": "C|S|m|C|S|C|S|S|S|S|m|m|S",
+    "quest.424001|100.intensitiescsv": "C|S|m|C|S|C|S|S|S|S|m|m|S",
+    "quest.424001|100.magnitudesCsv": "milestone|milestone|small|milestone|milestone|milestone|milestone|milestone|milestone|milestone|small|small|small",
+    "quest.424001|100.magnitudescsv": "milestone|milestone|small|milestone|milestone|milestone|milestone|milestone|milestone|milestone|small|small|small",
+    "quest.424001|100.tagsCsv": "murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless",
+    "quest.424001|100.tagscsv": "murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless|murder_treacherous,break_oath_betray,deceit,kill_the_helpless",
+    "quest.424001|160.deitiesCsv": "Dibella|Y'ffre|Zenithar|Z'en",
+    "quest.424001|160.deitiescsv": "Dibella|Y'ffre|Zenithar|Z'en",
+    "quest.424001|160.valencesCsv": "+|+|+|+",
+    "quest.424001|160.valencescsv": "+|+|+|+",
+    "quest.424001|160.intensitiesCsv": "S|S|S|S",
+    "quest.424001|160.intensitiescsv": "S|S|S|S",
+    "quest.424001|160.magnitudesCsv": "milestone|milestone|milestone|small",
+    "quest.424001|160.magnitudescsv": "milestone|milestone|milestone|small",
+    "quest.424001|160.tagsCsv": "aesthetic_devotion,honest_labor_trade|aesthetic_devotion,honest_labor_trade|aesthetic_devotion,honest_labor_trade|aesthetic_devotion,honest_labor_trade",
+    "quest.424001|160.tagscsv": "aesthetic_devotion,honest_labor_trade|aesthetic_devotion,honest_labor_trade|aesthetic_devotion,honest_labor_trade|aesthetic_devotion,honest_labor_trade",
+    "quest.424001|170.deitiesCsv": "Mara|Dibella|Y'ffre|Stendarr",
+    "quest.424001|170.deitiescsv": "Mara|Dibella|Y'ffre|Stendarr",
+    "quest.424001|170.valencesCsv": "+|+|+|+",
+    "quest.424001|170.valencescsv": "+|+|+|+",
+    "quest.424001|170.intensitiesCsv": "C|S|S|m",
+    "quest.424001|170.intensitiescsv": "C|S|S|m",
+    "quest.424001|170.magnitudesCsv": "milestone|milestone|milestone|small",
+    "quest.424001|170.magnitudescsv": "milestone|milestone|milestone|small",
+    "quest.424001|170.tagsCsv": "aesthetic_devotion,charity|aesthetic_devotion,charity|aesthetic_devotion,charity|aesthetic_devotion,charity",
+    "quest.424001|170.tagscsv": "aesthetic_devotion,charity|aesthetic_devotion,charity|aesthetic_devotion,charity|aesthetic_devotion,charity",
+    "quest.844017|600.deitiesCsv": "Talos|Stuhn|Akatosh|Stendarr|Mara",
+    "quest.844017|600.deitiescsv": "Talos|Stuhn|Akatosh|Stendarr|Mara",
+    "quest.844017|600.valencesCsv": "+|+|-|+|+",
+    "quest.844017|600.valencescsv": "+|+|-|+|+",
+    "quest.844017|600.intensitiesCsv": "C|S|S|S|m",
+    "quest.844017|600.intensitiescsv": "C|S|S|S|m",
+    "quest.844017|600.magnitudesCsv": "milestone|milestone|milestone|small|small",
+    "quest.844017|600.magnitudescsv": "milestone|milestone|milestone|small|small",
+    "quest.844017|600.tagsCsv": "defy_tyranny_talos,mercy_spare|defy_tyranny_talos,mercy_spare|defy_tyranny_talos,mercy_spare|defy_tyranny_talos,mercy_spare|defy_tyranny_talos,mercy_spare",
+    "quest.844017|600.tagscsv": "defy_tyranny_talos,mercy_spare|defy_tyranny_talos,mercy_spare|defy_tyranny_talos,mercy_spare|defy_tyranny_talos,mercy_spare|defy_tyranny_talos,mercy_spare",
+    "quest.549383|120.deitiesCsv": "Stendarr|Akatosh|Zenithar|Z'en|Nocturnal|Alkosh|Julianos|Stuhn",
+    "quest.549383|120.deitiescsv": "Stendarr|Akatosh|Zenithar|Z'en|Nocturnal|Alkosh|Julianos|Stuhn",
+    "quest.549383|120.valencesCsv": "+|+|+|+|-|+|+|+",
+    "quest.549383|120.valencescsv": "+|+|+|+|-|+|+|+",
+    "quest.549383|120.intensitiesCsv": "S|m|m|S|m|m|m|m",
+    "quest.549383|120.intensitiescsv": "S|m|m|S|m|m|m|m",
+    "quest.549383|120.magnitudesCsv": "milestone|small|small|milestone|small|small|small|small",
+    "quest.549383|120.magnitudescsv": "milestone|small|small|milestone|small|small|small|small",
+    "quest.549383|120.tagsCsv": "uphold_law_justice|uphold_law_justice|uphold_law_justice|uphold_law_justice|uphold_law_justice|uphold_law_justice|uphold_law_justice|uphold_law_justice",
+    "quest.549383|120.tagscsv": "uphold_law_justice|uphold_law_justice|uphold_law_justice|uphold_law_justice|uphold_law_justice|uphold_law_justice|uphold_law_justice|uphold_law_justice",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1517,91 +1577,229 @@
     "stancemult.tolerated": 0.4
   },
   "int": {
-    "quest.186947|120.metaSkip.Azura": 1,
-    "quest.186947|120.metaskip.azura": 1,
-    "quest.186947|130.metaSkip.Azura": 1,
-    "quest.186947|130.metaskip.azura": 1,
+    "quest.14936|30.metaSkip.Z'en": 1,
+    "quest.14936|30.metaskip.z'en": 1,
+    "quest.14936|30.metaSkip.Nocturnal": 1,
+    "quest.14936|30.metaskip.nocturnal": 1,
+    "quest.14936|30.metaSkip.Julianos": 1,
+    "quest.14936|30.metaskip.julianos": 1,
+    "quest.14936|30.metaSkip.Akatosh": 1,
+    "quest.14936|30.metaskip.akatosh": 1,
+    "quest.14936|50.metaSkip.Z'en": 1,
+    "quest.14936|50.metaskip.z'en": 1,
+    "quest.14936|50.metaSkip.Nocturnal": 1,
+    "quest.14936|50.metaskip.nocturnal": 1,
+    "quest.14936|50.metaSkip.Julianos": 1,
+    "quest.14936|50.metaskip.julianos": 1,
+    "quest.14936|50.metaSkip.Akatosh": 1,
+    "quest.14936|50.metaskip.akatosh": 1,
+    "quest.14936|150.metaSkip.Z'en": 1,
+    "quest.14936|150.metaskip.z'en": 1,
+    "quest.14936|150.metaSkip.Nocturnal": 1,
+    "quest.14936|150.metaskip.nocturnal": 1,
+    "quest.14936|150.metaSkip.Julianos": 1,
+    "quest.14936|150.metaskip.julianos": 1,
+    "quest.14936|150.metaSkip.Akatosh": 1,
+    "quest.14936|150.metaskip.akatosh": 1,
+    "quest.424001|100.metaSkip.Z'en": 1,
+    "quest.424001|100.metaskip.z'en": 1,
+    "quest.424001|100.metaSkip.Khenarthi": 1,
+    "quest.424001|100.metaskip.khenarthi": 1,
+    "quest.424001|160.metaSkip.Z'en": 1,
+    "quest.424001|160.metaskip.z'en": 1,
+    "quest.424001|160.metaSkip.Khenarthi": 1,
+    "quest.424001|160.metaskip.khenarthi": 1,
+    "quest.424001|170.metaSkip.Z'en": 1,
+    "quest.424001|170.metaskip.z'en": 1,
+    "quest.424001|170.metaSkip.Khenarthi": 1,
+    "quest.424001|170.metaskip.khenarthi": 1,
+    "quest.844017|600.metaSkip.Akatosh": 1,
+    "quest.844017|600.metaskip.akatosh": 1,
+    "quest.549383|120.metaSkip.Z'en": 1,
+    "quest.549383|120.metaskip.z'en": 1,
+    "quest.549383|120.metaSkip.Nocturnal": 1,
+    "quest.549383|120.metaskip.nocturnal": 1,
+    "quest.549383|120.metaSkip.Julianos": 1,
+    "quest.549383|120.metaskip.julianos": 1,
+    "quest.549383|120.metaSkip.Akatosh": 1,
+    "quest.549383|120.metaskip.akatosh": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 2,
-    "metaskipints": 2
+    "metaSkipInts": 23,
+    "metaskipints": 23
   },
   "stringList": {
     "questKeys": [
-      "186947|120",
-      "186947|130"
+      "14936|30",
+      "14936|50",
+      "14936|150",
+      "424001|100",
+      "424001|160",
+      "424001|170",
+      "844017|600",
+      "549383|120"
     ],
     "questkeys": [
-      "186947|120",
-      "186947|130"
+      "14936|30",
+      "14936|50",
+      "14936|150",
+      "424001|100",
+      "424001|160",
+      "424001|170",
+      "844017|600",
+      "549383|120"
     ],
     "questForms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x003A58|BSHeartland.esm",
+      "0x003A58|BSHeartland.esm",
+      "0x003A58|BSHeartland.esm",
+      "0x067841|BSHeartland.esm",
+      "0x067841|BSHeartland.esm",
+      "0x067841|BSHeartland.esm",
+      "0x0CE0F1|BSHeartland.esm",
+      "0x086207|BSHeartland.esm"
     ],
     "questforms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x003A58|BSHeartland.esm",
+      "0x003A58|BSHeartland.esm",
+      "0x003A58|BSHeartland.esm",
+      "0x067841|BSHeartland.esm",
+      "0x067841|BSHeartland.esm",
+      "0x067841|BSHeartland.esm",
+      "0x0CE0F1|BSHeartland.esm",
+      "0x086207|BSHeartland.esm"
     ],
     "questFormIds": [
-      "186947",
-      "186947"
+      "14936",
+      "14936",
+      "14936",
+      "424001",
+      "424001",
+      "424001",
+      "844017",
+      "549383"
     ],
     "questformids": [
-      "186947",
-      "186947"
+      "14936",
+      "14936",
+      "14936",
+      "424001",
+      "424001",
+      "424001",
+      "844017",
+      "549383"
     ],
     "questPlugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm"
     ],
     "questplugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm"
     ],
     "questEditorIds": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "CYRBrumaMS01",
+      "CYRBrumaMS01",
+      "CYRBrumaMS01",
+      "CYRBrumaMS04",
+      "CYRBrumaMS04",
+      "CYRBrumaMS04",
+      "CYRFortPalePassMS01New",
+      "CYRBrumaMS07"
     ],
     "questeditorids": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "CYRBrumaMS01",
+      "CYRBrumaMS01",
+      "CYRBrumaMS01",
+      "CYRBrumaMS04",
+      "CYRBrumaMS04",
+      "CYRBrumaMS04",
+      "CYRFortPalePassMS01New",
+      "CYRBrumaMS07"
     ],
     "questWatch.formIds": [
-      "186947"
+      "14936",
+      "424001",
+      "844017",
+      "549383"
     ],
     "questwatch.formids": [
-      "186947"
+      "14936",
+      "424001",
+      "844017",
+      "549383"
     ],
     "questWatch.plugins": [
-      "CJ03Elroy.esp"
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm"
     ],
     "questwatch.plugins": [
-      "CJ03Elroy.esp"
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm"
     ],
     "questWatch.editorIds": [
-      "CJ03RotBelowMQ"
+      "CYRBrumaMS01",
+      "CYRBrumaMS04",
+      "CYRFortPalePassMS01New",
+      "CYRBrumaMS07"
     ],
     "questwatch.editorids": [
-      "CJ03RotBelowMQ"
+      "CYRBrumaMS01",
+      "CYRBrumaMS04",
+      "CYRFortPalePassMS01New",
+      "CYRBrumaMS07"
     ],
     "questWatchFormIds": [
-      "186947"
+      "14936",
+      "424001",
+      "844017",
+      "549383"
     ],
     "questwatchformids": [
-      "186947"
+      "14936",
+      "424001",
+      "844017",
+      "549383"
     ],
     "questWatchPlugins": [
-      "CJ03Elroy.esp"
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm"
     ],
     "questwatchplugins": [
-      "CJ03Elroy.esp"
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm",
+      "BSHeartland.esm"
     ],
     "questWatchEditorIds": [
-      "CJ03RotBelowMQ"
+      "CYRBrumaMS01",
+      "CYRBrumaMS04",
+      "CYRFortPalePassMS01New",
+      "CYRBrumaMS07"
     ],
     "questwatcheditorids": [
-      "CJ03RotBelowMQ"
+      "CYRBrumaMS01",
+      "CYRBrumaMS04",
+      "CYRFortPalePassMS01New",
+      "CYRBrumaMS07"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -1659,110 +1857,355 @@
       "Mephala.serve_a_daedra:mephala",
       "Malacath.serve_a_daedra:malacath"
     ],
-    "quest.186947|120.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
-      "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara"
+    "quest.14936|30.deities": [
+      "Nocturnal",
+      "Rajhin",
+      "Baan Dar",
+      "Clavicus Vile",
+      "Z'en",
+      "Zenithar",
+      "Mephala"
     ],
-    "quest.186947|120.valences": [
+    "quest.14936|30.valences": [
+      "+",
+      "+",
+      "+",
+      "+",
       "-",
+      "-",
+      "+"
+    ],
+    "quest.14936|30.intensities": [
+      "m",
+      "S",
+      "S",
+      "m",
+      "S",
+      "S",
+      "S"
+    ],
+    "quest.14936|30.magnitudes": [
+      "small",
+      "milestone",
+      "milestone",
+      "small",
+      "milestone",
+      "small",
+      "small"
+    ],
+    "quest.14936|30.tags": [
+      "deceit,exploit_cheat",
+      "deceit,exploit_cheat",
+      "deceit,exploit_cheat",
+      "deceit,exploit_cheat",
+      "deceit,exploit_cheat",
+      "deceit,exploit_cheat",
+      "deceit,exploit_cheat"
+    ],
+    "quest.14936|50.deities": [
+      "Stendarr",
+      "Akatosh",
+      "Zenithar",
+      "Z'en",
+      "Nocturnal",
+      "Julianos",
+      "Stuhn",
+      "Mephala"
+    ],
+    "quest.14936|50.valences": [
       "+",
       "+",
       "+",
       "+",
+      "-",
       "+",
       "+",
       "-"
     ],
-    "quest.186947|120.intensities": [
-      "C",
-      "C",
-      "C",
+    "quest.14936|50.intensities": [
       "S",
+      "m",
+      "m",
       "S",
+      "m",
       "m",
       "m",
       "m"
     ],
-    "quest.186947|120.magnitudes": [
-      "milestone",
+    "quest.14936|50.magnitudes": [
       "milestone",
       "small",
       "small",
+      "milestone",
       "small",
       "small",
       "small",
       "small"
     ],
-    "quest.186947|120.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "deny_a_second_chance"
+    "quest.14936|50.tags": [
+      "uphold_law_justice,expose_betray_secret",
+      "uphold_law_justice,expose_betray_secret",
+      "uphold_law_justice,expose_betray_secret",
+      "uphold_law_justice,expose_betray_secret",
+      "uphold_law_justice,expose_betray_secret",
+      "uphold_law_justice,expose_betray_secret",
+      "uphold_law_justice,expose_betray_secret",
+      "uphold_law_justice,expose_betray_secret"
     ],
-    "quest.186947|130.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
-      "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara",
-      "Dibella"
+    "quest.14936|150.deities": [
+      "Nocturnal",
+      "Rajhin",
+      "Zenithar",
+      "Z'en",
+      "Mephala"
     ],
-    "quest.186947|130.valences": [
+    "quest.14936|150.valences": [
+      "+",
+      "+",
       "-",
+      "-",
+      "+"
+    ],
+    "quest.14936|150.intensities": [
+      "S",
+      "S",
+      "S",
+      "S",
+      "m"
+    ],
+    "quest.14936|150.magnitudes": [
+      "milestone",
+      "milestone",
+      "milestone",
+      "milestone",
+      "small"
+    ],
+    "quest.14936|150.tags": [
+      "theft_burglary,exploit_cheat",
+      "theft_burglary,exploit_cheat",
+      "theft_burglary,exploit_cheat",
+      "theft_burglary,exploit_cheat",
+      "theft_burglary,exploit_cheat"
+    ],
+    "quest.424001|100.deities": [
+      "Mephala",
+      "Sithis",
+      "Boethiah",
+      "Stendarr",
+      "Mara",
+      "Malacath",
+      "Stuhn",
+      "Talos",
+      "Shor",
+      "Leki",
+      "Khenarthi",
+      "HoonDing",
+      "Molag Bal"
+    ],
+    "quest.424001|100.valences": [
       "+",
       "+",
       "+",
-      "+",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "+"
+    ],
+    "quest.424001|100.intensities": [
+      "C",
+      "S",
+      "m",
+      "C",
+      "S",
+      "C",
+      "S",
+      "S",
+      "S",
+      "S",
+      "m",
+      "m",
+      "S"
+    ],
+    "quest.424001|100.magnitudes": [
+      "milestone",
+      "milestone",
+      "small",
+      "milestone",
+      "milestone",
+      "milestone",
+      "milestone",
+      "milestone",
+      "milestone",
+      "milestone",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.424001|100.tags": [
+      "murder_treacherous,break_oath_betray,deceit,kill_the_helpless",
+      "murder_treacherous,break_oath_betray,deceit,kill_the_helpless",
+      "murder_treacherous,break_oath_betray,deceit,kill_the_helpless",
+      "murder_treacherous,break_oath_betray,deceit,kill_the_helpless",
+      "murder_treacherous,break_oath_betray,deceit,kill_the_helpless",
+      "murder_treacherous,break_oath_betray,deceit,kill_the_helpless",
+      "murder_treacherous,break_oath_betray,deceit,kill_the_helpless",
+      "murder_treacherous,break_oath_betray,deceit,kill_the_helpless",
+      "murder_treacherous,break_oath_betray,deceit,kill_the_helpless",
+      "murder_treacherous,break_oath_betray,deceit,kill_the_helpless",
+      "murder_treacherous,break_oath_betray,deceit,kill_the_helpless",
+      "murder_treacherous,break_oath_betray,deceit,kill_the_helpless",
+      "murder_treacherous,break_oath_betray,deceit,kill_the_helpless"
+    ],
+    "quest.424001|160.deities": [
+      "Dibella",
+      "Y'ffre",
+      "Zenithar",
+      "Z'en"
+    ],
+    "quest.424001|160.valences": [
       "+",
       "+",
       "+",
       "+"
     ],
-    "quest.186947|130.intensities": [
-      "C",
-      "C",
-      "C",
+    "quest.424001|160.intensities": [
       "S",
       "S",
-      "m",
-      "m",
-      "m",
+      "S",
       "S"
     ],
-    "quest.186947|130.magnitudes": [
+    "quest.424001|160.magnitudes": [
       "milestone",
       "milestone",
+      "milestone",
+      "small"
+    ],
+    "quest.424001|160.tags": [
+      "aesthetic_devotion,honest_labor_trade",
+      "aesthetic_devotion,honest_labor_trade",
+      "aesthetic_devotion,honest_labor_trade",
+      "aesthetic_devotion,honest_labor_trade"
+    ],
+    "quest.424001|170.deities": [
+      "Mara",
+      "Dibella",
+      "Y'ffre",
+      "Stendarr"
+    ],
+    "quest.424001|170.valences": [
+      "+",
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.424001|170.intensities": [
+      "C",
+      "S",
+      "S",
+      "m"
+    ],
+    "quest.424001|170.magnitudes": [
+      "milestone",
+      "milestone",
+      "milestone",
+      "small"
+    ],
+    "quest.424001|170.tags": [
+      "aesthetic_devotion,charity",
+      "aesthetic_devotion,charity",
+      "aesthetic_devotion,charity",
+      "aesthetic_devotion,charity"
+    ],
+    "quest.844017|600.deities": [
+      "Talos",
+      "Stuhn",
+      "Akatosh",
+      "Stendarr",
+      "Mara"
+    ],
+    "quest.844017|600.valences": [
+      "+",
+      "+",
+      "-",
+      "+",
+      "+"
+    ],
+    "quest.844017|600.intensities": [
+      "C",
+      "S",
+      "S",
+      "S",
+      "m"
+    ],
+    "quest.844017|600.magnitudes": [
+      "milestone",
+      "milestone",
+      "milestone",
+      "small",
+      "small"
+    ],
+    "quest.844017|600.tags": [
+      "defy_tyranny_talos,mercy_spare",
+      "defy_tyranny_talos,mercy_spare",
+      "defy_tyranny_talos,mercy_spare",
+      "defy_tyranny_talos,mercy_spare",
+      "defy_tyranny_talos,mercy_spare"
+    ],
+    "quest.549383|120.deities": [
+      "Stendarr",
+      "Akatosh",
+      "Zenithar",
+      "Z'en",
+      "Nocturnal",
+      "Alkosh",
+      "Julianos",
+      "Stuhn"
+    ],
+    "quest.549383|120.valences": [
+      "+",
+      "+",
+      "+",
+      "+",
+      "-",
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.549383|120.intensities": [
+      "S",
+      "m",
+      "m",
+      "S",
+      "m",
+      "m",
+      "m",
+      "m"
+    ],
+    "quest.549383|120.magnitudes": [
+      "milestone",
       "small",
       "small",
-      "small",
+      "milestone",
       "small",
       "small",
       "small",
       "small"
     ],
-    "quest.186947|130.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "show_compassion",
-      "foster_art"
+    "quest.549383|120.tags": [
+      "uphold_law_justice",
+      "uphold_law_justice",
+      "uphold_law_justice",
+      "uphold_law_justice",
+      "uphold_law_justice",
+      "uphold_law_justice",
+      "uphold_law_justice",
+      "uphold_law_justice"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

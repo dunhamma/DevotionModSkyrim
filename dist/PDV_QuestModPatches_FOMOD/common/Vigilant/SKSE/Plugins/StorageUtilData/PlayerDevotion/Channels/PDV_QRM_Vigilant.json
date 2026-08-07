@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-07T02:53:26.813Z",
-    "generatedat": "2026-08-07T02:53:26.813Z",
+    "generatedAt": "2026-08-07T02:51:38.294Z",
+    "generatedat": "2026-08-07T02:51:38.294Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "186947",
-    "questwatchformidscsv": "186947",
-    "questWatchPluginsCsv": "CJ03Elroy.esp",
-    "questwatchpluginscsv": "CJ03Elroy.esp",
+    "questWatchFormIdsCsv": "60042,5047158,1241678,1270747,1847794,3361935,1210785,1205755,1246970,40552,23779,230694,33514,25201,41982,230692,230693,416050",
+    "questwatchformidscsv": "60042,5047158,1241678,1270747,1847794,3361935,1210785,1205755,1246970,40552,23779,230694,33514,25201,41982,230692,230693,416050",
+    "questWatchPluginsCsv": "Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm",
+    "questwatchpluginscsv": "Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1367,26 +1367,216 @@
     "faucet.malacath.serve_a_daedra:malacath.tag": "serve_a_daedra:malacath",
     "faucet.Malacath.serve_a_daedra:malacath.cap": "1/dawn",
     "faucet.malacath.serve_a_daedra:malacath.cap": "1/dawn",
-    "quest.186947|120.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.valencesCsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.valencescsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.intensitiesCsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.intensitiescsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.magnitudescsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|120.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|130.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.valencesCsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.valencescsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.intensitiesCsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.intensitiescsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.magnitudescsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
-    "quest.186947|130.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
+    "quest.60042|999.deitiesCsv": "Stendarr",
+    "quest.60042|999.deitiescsv": "Stendarr",
+    "quest.60042|999.valencesCsv": "+",
+    "quest.60042|999.valencescsv": "+",
+    "quest.60042|999.intensitiesCsv": "S",
+    "quest.60042|999.intensitiescsv": "S",
+    "quest.60042|999.magnitudesCsv": "milestone",
+    "quest.60042|999.magnitudescsv": "milestone",
+    "quest.60042|999.tagsCsv": "smite_corruption",
+    "quest.60042|999.tagscsv": "smite_corruption",
+    "quest.5047158|255.deitiesCsv": "Stendarr",
+    "quest.5047158|255.deitiescsv": "Stendarr",
+    "quest.5047158|255.valencesCsv": "+",
+    "quest.5047158|255.valencescsv": "+",
+    "quest.5047158|255.intensitiesCsv": "S",
+    "quest.5047158|255.intensitiescsv": "S",
+    "quest.5047158|255.magnitudesCsv": "milestone",
+    "quest.5047158|255.magnitudescsv": "milestone",
+    "quest.5047158|255.tagsCsv": "show_mercy",
+    "quest.5047158|255.tagscsv": "show_mercy",
+    "quest.1241678|999.deitiesCsv": "Molag Bal",
+    "quest.1241678|999.deitiescsv": "Molag Bal",
+    "quest.1241678|999.valencesCsv": "-",
+    "quest.1241678|999.valencescsv": "-",
+    "quest.1241678|999.intensitiesCsv": "C",
+    "quest.1241678|999.intensitiescsv": "C",
+    "quest.1241678|999.magnitudesCsv": "milestone",
+    "quest.1241678|999.magnitudescsv": "milestone",
+    "quest.1241678|999.tagsCsv": "defy_daedra",
+    "quest.1241678|999.tagscsv": "defy_daedra",
+    "quest.1270747|255.deitiesCsv": "Akatosh",
+    "quest.1270747|255.deitiescsv": "Akatosh",
+    "quest.1270747|255.valencesCsv": "+",
+    "quest.1270747|255.valencescsv": "+",
+    "quest.1270747|255.intensitiesCsv": "S",
+    "quest.1270747|255.intensitiescsv": "S",
+    "quest.1270747|255.magnitudesCsv": "milestone",
+    "quest.1270747|255.magnitudescsv": "milestone",
+    "quest.1270747|255.tagsCsv": "honor_divine",
+    "quest.1270747|255.tagscsv": "honor_divine",
+    "quest.1847794|255.deitiesCsv": "Arkay",
+    "quest.1847794|255.deitiescsv": "Arkay",
+    "quest.1847794|255.valencesCsv": "+",
+    "quest.1847794|255.valencescsv": "+",
+    "quest.1847794|255.intensitiesCsv": "m",
+    "quest.1847794|255.intensitiescsv": "m",
+    "quest.1847794|255.magnitudesCsv": "milestone",
+    "quest.1847794|255.magnitudescsv": "milestone",
+    "quest.1847794|255.tagsCsv": "honor_divine",
+    "quest.1847794|255.tagscsv": "honor_divine",
+    "quest.3361935|255.deitiesCsv": "Kynareth",
+    "quest.3361935|255.deitiescsv": "Kynareth",
+    "quest.3361935|255.valencesCsv": "+",
+    "quest.3361935|255.valencescsv": "+",
+    "quest.3361935|255.intensitiesCsv": "m",
+    "quest.3361935|255.intensitiescsv": "m",
+    "quest.3361935|255.magnitudesCsv": "milestone",
+    "quest.3361935|255.magnitudescsv": "milestone",
+    "quest.3361935|255.tagsCsv": "honor_divine",
+    "quest.3361935|255.tagscsv": "honor_divine",
+    "quest.1210785|255.deitiesCsv": "Kyne",
+    "quest.1210785|255.deitiescsv": "Kyne",
+    "quest.1210785|255.valencesCsv": "+",
+    "quest.1210785|255.valencescsv": "+",
+    "quest.1210785|255.intensitiesCsv": "m",
+    "quest.1210785|255.intensitiescsv": "m",
+    "quest.1210785|255.magnitudesCsv": "milestone",
+    "quest.1210785|255.magnitudescsv": "milestone",
+    "quest.1210785|255.tagsCsv": "honor_divine",
+    "quest.1210785|255.tagscsv": "honor_divine",
+    "quest.1205755|999.deitiesCsv": "Julianos",
+    "quest.1205755|999.deitiescsv": "Julianos",
+    "quest.1205755|999.valencesCsv": "+",
+    "quest.1205755|999.valencescsv": "+",
+    "quest.1205755|999.intensitiesCsv": "m",
+    "quest.1205755|999.intensitiescsv": "m",
+    "quest.1205755|999.magnitudesCsv": "milestone",
+    "quest.1205755|999.magnitudescsv": "milestone",
+    "quest.1205755|999.tagsCsv": "honor_divine",
+    "quest.1205755|999.tagscsv": "honor_divine",
+    "quest.1246970|999.deitiesCsv": "Zenithar",
+    "quest.1246970|999.deitiescsv": "Zenithar",
+    "quest.1246970|999.valencesCsv": "+",
+    "quest.1246970|999.valencescsv": "+",
+    "quest.1246970|999.intensitiesCsv": "m",
+    "quest.1246970|999.intensitiescsv": "m",
+    "quest.1246970|999.magnitudesCsv": "milestone",
+    "quest.1246970|999.magnitudescsv": "milestone",
+    "quest.1246970|999.tagsCsv": "honor_divine",
+    "quest.1246970|999.tagscsv": "honor_divine",
+    "quest.40552|80.deitiesCsv": "Khenarthi|Azura",
+    "quest.40552|80.deitiescsv": "Khenarthi|Azura",
+    "quest.40552|80.valencesCsv": "+|+",
+    "quest.40552|80.valencescsv": "+|+",
+    "quest.40552|80.intensitiesCsv": "m|m",
+    "quest.40552|80.intensitiescsv": "m|m",
+    "quest.40552|80.magnitudesCsv": "milestone|small",
+    "quest.40552|80.magnitudescsv": "milestone|small",
+    "quest.40552|80.tagsCsv": "honor_the_dead|honor_the_dead",
+    "quest.40552|80.tagscsv": "honor_the_dead|honor_the_dead",
+    "quest.23779|40.deitiesCsv": "Azura",
+    "quest.23779|40.deitiescsv": "Azura",
+    "quest.23779|40.valencesCsv": "+",
+    "quest.23779|40.valencescsv": "+",
+    "quest.23779|40.intensitiesCsv": "m",
+    "quest.23779|40.intensitiescsv": "m",
+    "quest.23779|40.magnitudesCsv": "small",
+    "quest.23779|40.magnitudescsv": "small",
+    "quest.23779|40.tagsCsv": "slay_undead",
+    "quest.23779|40.tagscsv": "slay_undead",
+    "quest.230694|70.deitiesCsv": "Alkosh|Baan Dar",
+    "quest.230694|70.deitiescsv": "Alkosh|Baan Dar",
+    "quest.230694|70.valencesCsv": "+|+",
+    "quest.230694|70.valencescsv": "+|+",
+    "quest.230694|70.intensitiesCsv": "S|m",
+    "quest.230694|70.intensitiescsv": "S|m",
+    "quest.230694|70.magnitudesCsv": "small|small",
+    "quest.230694|70.magnitudescsv": "small|small",
+    "quest.230694|70.tagsCsv": "kill_honorable_combat|prove_by_struggle",
+    "quest.230694|70.tagscsv": "kill_honorable_combat|prove_by_struggle",
+    "quest.230694|100.deitiesCsv": "Azura|Khenarthi",
+    "quest.230694|100.deitiescsv": "Azura|Khenarthi",
+    "quest.230694|100.valencesCsv": "+|+",
+    "quest.230694|100.valencescsv": "+|+",
+    "quest.230694|100.intensitiesCsv": "S|m",
+    "quest.230694|100.intensitiescsv": "S|m",
+    "quest.230694|100.magnitudesCsv": "milestone|milestone",
+    "quest.230694|100.magnitudescsv": "milestone|milestone",
+    "quest.230694|100.tagsCsv": "destroy_reject_daedra:molagbal|honor_the_dead",
+    "quest.230694|100.tagscsv": "destroy_reject_daedra:molagbal|honor_the_dead",
+    "quest.33514|40.deitiesCsv": "Alkosh|Baan Dar",
+    "quest.33514|40.deitiescsv": "Alkosh|Baan Dar",
+    "quest.33514|40.valencesCsv": "+|+",
+    "quest.33514|40.valencescsv": "+|+",
+    "quest.33514|40.intensitiesCsv": "m|m",
+    "quest.33514|40.intensitiescsv": "m|m",
+    "quest.33514|40.magnitudesCsv": "small|small",
+    "quest.33514|40.magnitudescsv": "small|small",
+    "quest.33514|40.tagsCsv": "uphold_law_justice|prove_by_struggle",
+    "quest.33514|40.tagscsv": "uphold_law_justice|prove_by_struggle",
+    "quest.25201|20.deitiesCsv": "Alkosh|Baan Dar",
+    "quest.25201|20.deitiescsv": "Alkosh|Baan Dar",
+    "quest.25201|20.valencesCsv": "+|+",
+    "quest.25201|20.valencescsv": "+|+",
+    "quest.25201|20.intensitiesCsv": "S|m",
+    "quest.25201|20.intensitiescsv": "S|m",
+    "quest.25201|20.magnitudesCsv": "small|small",
+    "quest.25201|20.magnitudescsv": "small|small",
+    "quest.25201|20.tagsCsv": "kill_honorable_combat|prove_by_struggle",
+    "quest.25201|20.tagscsv": "kill_honorable_combat|prove_by_struggle",
+    "quest.41982|50.deitiesCsv": "Azura|Alkosh",
+    "quest.41982|50.deitiescsv": "Azura|Alkosh",
+    "quest.41982|50.valencesCsv": "+|+",
+    "quest.41982|50.valencescsv": "+|+",
+    "quest.41982|50.intensitiesCsv": "S|S",
+    "quest.41982|50.intensitiescsv": "S|S",
+    "quest.41982|50.magnitudesCsv": "small|small",
+    "quest.41982|50.magnitudescsv": "small|small",
+    "quest.41982|50.tagsCsv": "destroy_reject_daedra:molagbal|kill_honorable_combat",
+    "quest.41982|50.tagscsv": "destroy_reject_daedra:molagbal|kill_honorable_combat",
+    "quest.41982|75.deitiesCsv": "Azura|Alkosh",
+    "quest.41982|75.deitiescsv": "Azura|Alkosh",
+    "quest.41982|75.valencesCsv": "+|+",
+    "quest.41982|75.valencescsv": "+|+",
+    "quest.41982|75.intensitiesCsv": "S|m",
+    "quest.41982|75.intensitiescsv": "S|m",
+    "quest.41982|75.magnitudesCsv": "milestone|small",
+    "quest.41982|75.magnitudescsv": "milestone|small",
+    "quest.41982|75.tagsCsv": "destroy_reject_daedra:molagbal|uphold_law_justice",
+    "quest.41982|75.tagscsv": "destroy_reject_daedra:molagbal|uphold_law_justice",
+    "quest.230692|100.deitiesCsv": "Azura|Khenarthi",
+    "quest.230692|100.deitiescsv": "Azura|Khenarthi",
+    "quest.230692|100.valencesCsv": "+|+",
+    "quest.230692|100.valencescsv": "+|+",
+    "quest.230692|100.intensitiesCsv": "m|S",
+    "quest.230692|100.intensitiescsv": "m|S",
+    "quest.230692|100.magnitudesCsv": "small|small",
+    "quest.230692|100.magnitudescsv": "small|small",
+    "quest.230692|100.tagsCsv": "slay_undead|protect_the_weak",
+    "quest.230692|100.tagscsv": "slay_undead|protect_the_weak",
+    "quest.230693|80.deitiesCsv": "Azura|Khenarthi",
+    "quest.230693|80.deitiescsv": "Azura|Khenarthi",
+    "quest.230693|80.valencesCsv": "+|+",
+    "quest.230693|80.valencescsv": "+|+",
+    "quest.230693|80.intensitiesCsv": "m|m",
+    "quest.230693|80.intensitiescsv": "m|m",
+    "quest.230693|80.magnitudesCsv": "milestone|small",
+    "quest.230693|80.magnitudescsv": "milestone|small",
+    "quest.230693|80.tagsCsv": "cure_undeath|honor_the_dead",
+    "quest.230693|80.tagscsv": "cure_undeath|honor_the_dead",
+    "quest.230693|100.deitiesCsv": "Alkosh|Baan Dar",
+    "quest.230693|100.deitiescsv": "Alkosh|Baan Dar",
+    "quest.230693|100.valencesCsv": "+|+",
+    "quest.230693|100.valencescsv": "+|+",
+    "quest.230693|100.intensitiesCsv": "S|m",
+    "quest.230693|100.intensitiescsv": "S|m",
+    "quest.230693|100.magnitudesCsv": "small|small",
+    "quest.230693|100.magnitudescsv": "small|small",
+    "quest.230693|100.tagsCsv": "kill_honorable_combat|prove_by_struggle",
+    "quest.230693|100.tagscsv": "kill_honorable_combat|prove_by_struggle",
+    "quest.416050|70.deitiesCsv": "Alkosh|Baan Dar",
+    "quest.416050|70.deitiescsv": "Alkosh|Baan Dar",
+    "quest.416050|70.valencesCsv": "+|+",
+    "quest.416050|70.valencescsv": "+|+",
+    "quest.416050|70.intensitiesCsv": "S|m",
+    "quest.416050|70.intensitiescsv": "S|m",
+    "quest.416050|70.magnitudesCsv": "small|small",
+    "quest.416050|70.magnitudescsv": "small|small",
+    "quest.416050|70.tagsCsv": "kill_honorable_combat|prove_by_struggle",
+    "quest.416050|70.tagscsv": "kill_honorable_combat|prove_by_struggle",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1517,91 +1707,515 @@
     "stancemult.tolerated": 0.4
   },
   "int": {
-    "quest.186947|120.metaSkip.Azura": 1,
-    "quest.186947|120.metaskip.azura": 1,
-    "quest.186947|130.metaSkip.Azura": 1,
-    "quest.186947|130.metaskip.azura": 1,
+    "quest.1270747|255.metaSkip.Akatosh": 1,
+    "quest.1270747|255.metaskip.akatosh": 1,
+    "quest.1205755|999.metaSkip.Julianos": 1,
+    "quest.1205755|999.metaskip.julianos": 1,
+    "quest.40552|80.metaSkip.Azura": 1,
+    "quest.40552|80.metaskip.azura": 1,
+    "quest.40552|80.metaSkip.Khenarthi": 1,
+    "quest.40552|80.metaskip.khenarthi": 1,
+    "quest.23779|40.metaSkip.Azura": 1,
+    "quest.23779|40.metaskip.azura": 1,
+    "quest.230694|70.metaSkip.Azura": 1,
+    "quest.230694|70.metaskip.azura": 1,
+    "quest.230694|70.metaSkip.Khenarthi": 1,
+    "quest.230694|70.metaskip.khenarthi": 1,
+    "quest.230694|100.metaSkip.Azura": 1,
+    "quest.230694|100.metaskip.azura": 1,
+    "quest.230694|100.metaSkip.Khenarthi": 1,
+    "quest.230694|100.metaskip.khenarthi": 1,
+    "quest.41982|50.metaSkip.Azura": 1,
+    "quest.41982|50.metaskip.azura": 1,
+    "quest.41982|75.metaSkip.Azura": 1,
+    "quest.41982|75.metaskip.azura": 1,
+    "quest.230692|100.metaSkip.Azura": 1,
+    "quest.230692|100.metaskip.azura": 1,
+    "quest.230692|100.metaSkip.Khenarthi": 1,
+    "quest.230692|100.metaskip.khenarthi": 1,
+    "quest.230693|80.metaSkip.Azura": 1,
+    "quest.230693|80.metaskip.azura": 1,
+    "quest.230693|80.metaSkip.Khenarthi": 1,
+    "quest.230693|80.metaskip.khenarthi": 1,
+    "quest.230693|100.metaSkip.Azura": 1,
+    "quest.230693|100.metaskip.azura": 1,
+    "quest.230693|100.metaSkip.Khenarthi": 1,
+    "quest.230693|100.metaskip.khenarthi": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 2,
-    "metaskipints": 2
+    "metaSkipInts": 17,
+    "metaskipints": 17
   },
   "stringList": {
     "questKeys": [
-      "186947|120",
-      "186947|130"
+      "60042|999",
+      "5047158|255",
+      "1241678|999",
+      "1270747|255",
+      "1847794|255",
+      "3361935|255",
+      "1210785|255",
+      "1205755|999",
+      "1246970|999",
+      "40552|80",
+      "23779|40",
+      "230694|70",
+      "230694|100",
+      "33514|40",
+      "25201|20",
+      "41982|50",
+      "41982|75",
+      "230692|100",
+      "230693|80",
+      "230693|100",
+      "416050|70"
     ],
     "questkeys": [
-      "186947|120",
-      "186947|130"
+      "60042|999",
+      "5047158|255",
+      "1241678|999",
+      "1270747|255",
+      "1847794|255",
+      "3361935|255",
+      "1210785|255",
+      "1205755|999",
+      "1246970|999",
+      "40552|80",
+      "23779|40",
+      "230694|70",
+      "230694|100",
+      "33514|40",
+      "25201|20",
+      "41982|50",
+      "41982|75",
+      "230692|100",
+      "230693|80",
+      "230693|100",
+      "416050|70"
     ],
     "questForms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x00EA8A|Vigilant.esm",
+      "0x4D0376|Vigilant.esm",
+      "0x12F24E|Vigilant.esm",
+      "0x1363DB|Vigilant.esm",
+      "0x1C31F2|Vigilant.esm",
+      "0x334C8F|Vigilant.esm",
+      "0x1279A1|Vigilant.esm",
+      "0x1265FB|Vigilant.esm",
+      "0x1306FA|Vigilant.esm",
+      "0x009E68|Vigilant.esm",
+      "0x005CE3|Vigilant.esm",
+      "0x038526|Vigilant.esm",
+      "0x038526|Vigilant.esm",
+      "0x0082EA|Vigilant.esm",
+      "0x006271|Vigilant.esm",
+      "0x00A3FE|Vigilant.esm",
+      "0x00A3FE|Vigilant.esm",
+      "0x038524|Vigilant.esm",
+      "0x038525|Vigilant.esm",
+      "0x038525|Vigilant.esm",
+      "0x065932|Vigilant.esm"
     ],
     "questforms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x00EA8A|Vigilant.esm",
+      "0x4D0376|Vigilant.esm",
+      "0x12F24E|Vigilant.esm",
+      "0x1363DB|Vigilant.esm",
+      "0x1C31F2|Vigilant.esm",
+      "0x334C8F|Vigilant.esm",
+      "0x1279A1|Vigilant.esm",
+      "0x1265FB|Vigilant.esm",
+      "0x1306FA|Vigilant.esm",
+      "0x009E68|Vigilant.esm",
+      "0x005CE3|Vigilant.esm",
+      "0x038526|Vigilant.esm",
+      "0x038526|Vigilant.esm",
+      "0x0082EA|Vigilant.esm",
+      "0x006271|Vigilant.esm",
+      "0x00A3FE|Vigilant.esm",
+      "0x00A3FE|Vigilant.esm",
+      "0x038524|Vigilant.esm",
+      "0x038525|Vigilant.esm",
+      "0x038525|Vigilant.esm",
+      "0x065932|Vigilant.esm"
     ],
     "questFormIds": [
-      "186947",
-      "186947"
+      "60042",
+      "5047158",
+      "1241678",
+      "1270747",
+      "1847794",
+      "3361935",
+      "1210785",
+      "1205755",
+      "1246970",
+      "40552",
+      "23779",
+      "230694",
+      "230694",
+      "33514",
+      "25201",
+      "41982",
+      "41982",
+      "230692",
+      "230693",
+      "230693",
+      "416050"
     ],
     "questformids": [
-      "186947",
-      "186947"
+      "60042",
+      "5047158",
+      "1241678",
+      "1270747",
+      "1847794",
+      "3361935",
+      "1210785",
+      "1205755",
+      "1246970",
+      "40552",
+      "23779",
+      "230694",
+      "230694",
+      "33514",
+      "25201",
+      "41982",
+      "41982",
+      "230692",
+      "230693",
+      "230693",
+      "416050"
     ],
     "questPlugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm"
     ],
     "questplugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm"
     ],
     "questEditorIds": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "zzzAoMMq08",
+      "zzzAoMMqGoodEnd",
+      "zzzCHMQ00",
+      "zzzCHMQ01",
+      "zzzCHSubQuest10",
+      "zzzCHSubQuest12",
+      "zzzCHSubQuest02",
+      "zzzCHSubQuest07",
+      "zzzCHSubQuest08",
+      "zzzAoMMq06",
+      "zzzAoMMq01",
+      "zzzBMMq03",
+      "zzzBMMq03",
+      "zzzAoMMq04",
+      "zzzAoMMq02",
+      "zzzAoMMq07",
+      "zzzAoMMq07",
+      "zzzBMMq01",
+      "zzzBMMq02",
+      "zzzBMMq02",
+      "zzzCOMq01"
     ],
     "questeditorids": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "zzzAoMMq08",
+      "zzzAoMMqGoodEnd",
+      "zzzCHMQ00",
+      "zzzCHMQ01",
+      "zzzCHSubQuest10",
+      "zzzCHSubQuest12",
+      "zzzCHSubQuest02",
+      "zzzCHSubQuest07",
+      "zzzCHSubQuest08",
+      "zzzAoMMq06",
+      "zzzAoMMq01",
+      "zzzBMMq03",
+      "zzzBMMq03",
+      "zzzAoMMq04",
+      "zzzAoMMq02",
+      "zzzAoMMq07",
+      "zzzAoMMq07",
+      "zzzBMMq01",
+      "zzzBMMq02",
+      "zzzBMMq02",
+      "zzzCOMq01"
     ],
     "questWatch.formIds": [
-      "186947"
+      "60042",
+      "5047158",
+      "1241678",
+      "1270747",
+      "1847794",
+      "3361935",
+      "1210785",
+      "1205755",
+      "1246970",
+      "40552",
+      "23779",
+      "230694",
+      "33514",
+      "25201",
+      "41982",
+      "230692",
+      "230693",
+      "416050"
     ],
     "questwatch.formids": [
-      "186947"
+      "60042",
+      "5047158",
+      "1241678",
+      "1270747",
+      "1847794",
+      "3361935",
+      "1210785",
+      "1205755",
+      "1246970",
+      "40552",
+      "23779",
+      "230694",
+      "33514",
+      "25201",
+      "41982",
+      "230692",
+      "230693",
+      "416050"
     ],
     "questWatch.plugins": [
-      "CJ03Elroy.esp"
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm"
     ],
     "questwatch.plugins": [
-      "CJ03Elroy.esp"
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm"
     ],
     "questWatch.editorIds": [
-      "CJ03RotBelowMQ"
+      "zzzAoMMq08",
+      "zzzAoMMqGoodEnd",
+      "zzzCHMQ00",
+      "zzzCHMQ01",
+      "zzzCHSubQuest10",
+      "zzzCHSubQuest12",
+      "zzzCHSubQuest02",
+      "zzzCHSubQuest07",
+      "zzzCHSubQuest08",
+      "zzzAoMMq06",
+      "zzzAoMMq01",
+      "zzzBMMq03",
+      "zzzAoMMq04",
+      "zzzAoMMq02",
+      "zzzAoMMq07",
+      "zzzBMMq01",
+      "zzzBMMq02",
+      "zzzCOMq01"
     ],
     "questwatch.editorids": [
-      "CJ03RotBelowMQ"
+      "zzzAoMMq08",
+      "zzzAoMMqGoodEnd",
+      "zzzCHMQ00",
+      "zzzCHMQ01",
+      "zzzCHSubQuest10",
+      "zzzCHSubQuest12",
+      "zzzCHSubQuest02",
+      "zzzCHSubQuest07",
+      "zzzCHSubQuest08",
+      "zzzAoMMq06",
+      "zzzAoMMq01",
+      "zzzBMMq03",
+      "zzzAoMMq04",
+      "zzzAoMMq02",
+      "zzzAoMMq07",
+      "zzzBMMq01",
+      "zzzBMMq02",
+      "zzzCOMq01"
     ],
     "questWatchFormIds": [
-      "186947"
+      "60042",
+      "5047158",
+      "1241678",
+      "1270747",
+      "1847794",
+      "3361935",
+      "1210785",
+      "1205755",
+      "1246970",
+      "40552",
+      "23779",
+      "230694",
+      "33514",
+      "25201",
+      "41982",
+      "230692",
+      "230693",
+      "416050"
     ],
     "questwatchformids": [
-      "186947"
+      "60042",
+      "5047158",
+      "1241678",
+      "1270747",
+      "1847794",
+      "3361935",
+      "1210785",
+      "1205755",
+      "1246970",
+      "40552",
+      "23779",
+      "230694",
+      "33514",
+      "25201",
+      "41982",
+      "230692",
+      "230693",
+      "416050"
     ],
     "questWatchPlugins": [
-      "CJ03Elroy.esp"
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm"
     ],
     "questwatchplugins": [
-      "CJ03Elroy.esp"
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm",
+      "Vigilant.esm"
     ],
     "questWatchEditorIds": [
-      "CJ03RotBelowMQ"
+      "zzzAoMMq08",
+      "zzzAoMMqGoodEnd",
+      "zzzCHMQ00",
+      "zzzCHMQ01",
+      "zzzCHSubQuest10",
+      "zzzCHSubQuest12",
+      "zzzCHSubQuest02",
+      "zzzCHSubQuest07",
+      "zzzCHSubQuest08",
+      "zzzAoMMq06",
+      "zzzAoMMq01",
+      "zzzBMMq03",
+      "zzzAoMMq04",
+      "zzzAoMMq02",
+      "zzzAoMMq07",
+      "zzzBMMq01",
+      "zzzBMMq02",
+      "zzzCOMq01"
     ],
     "questwatcheditorids": [
-      "CJ03RotBelowMQ"
+      "zzzAoMMq08",
+      "zzzAoMMqGoodEnd",
+      "zzzCHMQ00",
+      "zzzCHMQ01",
+      "zzzCHSubQuest10",
+      "zzzCHSubQuest12",
+      "zzzCHSubQuest02",
+      "zzzCHSubQuest07",
+      "zzzCHSubQuest08",
+      "zzzAoMMq06",
+      "zzzAoMMq01",
+      "zzzBMMq03",
+      "zzzAoMMq04",
+      "zzzAoMMq02",
+      "zzzAoMMq07",
+      "zzzBMMq01",
+      "zzzBMMq02",
+      "zzzCOMq01"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -1659,110 +2273,375 @@
       "Mephala.serve_a_daedra:mephala",
       "Malacath.serve_a_daedra:malacath"
     ],
-    "quest.186947|120.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
-      "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara"
+    "quest.60042|999.deities": [
+      "Stendarr"
     ],
-    "quest.186947|120.valences": [
-      "-",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
+    "quest.60042|999.valences": [
+      "+"
+    ],
+    "quest.60042|999.intensities": [
+      "S"
+    ],
+    "quest.60042|999.magnitudes": [
+      "milestone"
+    ],
+    "quest.60042|999.tags": [
+      "smite_corruption"
+    ],
+    "quest.5047158|255.deities": [
+      "Stendarr"
+    ],
+    "quest.5047158|255.valences": [
+      "+"
+    ],
+    "quest.5047158|255.intensities": [
+      "S"
+    ],
+    "quest.5047158|255.magnitudes": [
+      "milestone"
+    ],
+    "quest.5047158|255.tags": [
+      "show_mercy"
+    ],
+    "quest.1241678|999.deities": [
+      "Molag Bal"
+    ],
+    "quest.1241678|999.valences": [
       "-"
     ],
-    "quest.186947|120.intensities": [
-      "C",
-      "C",
-      "C",
-      "S",
-      "S",
-      "m",
-      "m",
+    "quest.1241678|999.intensities": [
+      "C"
+    ],
+    "quest.1241678|999.magnitudes": [
+      "milestone"
+    ],
+    "quest.1241678|999.tags": [
+      "defy_daedra"
+    ],
+    "quest.1270747|255.deities": [
+      "Akatosh"
+    ],
+    "quest.1270747|255.valences": [
+      "+"
+    ],
+    "quest.1270747|255.intensities": [
+      "S"
+    ],
+    "quest.1270747|255.magnitudes": [
+      "milestone"
+    ],
+    "quest.1270747|255.tags": [
+      "honor_divine"
+    ],
+    "quest.1847794|255.deities": [
+      "Arkay"
+    ],
+    "quest.1847794|255.valences": [
+      "+"
+    ],
+    "quest.1847794|255.intensities": [
       "m"
     ],
-    "quest.186947|120.magnitudes": [
-      "milestone",
-      "milestone",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small"
+    "quest.1847794|255.magnitudes": [
+      "milestone"
     ],
-    "quest.186947|120.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "deny_a_second_chance"
+    "quest.1847794|255.tags": [
+      "honor_divine"
     ],
-    "quest.186947|130.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
-      "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara",
-      "Dibella"
+    "quest.3361935|255.deities": [
+      "Kynareth"
     ],
-    "quest.186947|130.valences": [
-      "-",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
+    "quest.3361935|255.valences": [
+      "+"
+    ],
+    "quest.3361935|255.intensities": [
+      "m"
+    ],
+    "quest.3361935|255.magnitudes": [
+      "milestone"
+    ],
+    "quest.3361935|255.tags": [
+      "honor_divine"
+    ],
+    "quest.1210785|255.deities": [
+      "Kyne"
+    ],
+    "quest.1210785|255.valences": [
+      "+"
+    ],
+    "quest.1210785|255.intensities": [
+      "m"
+    ],
+    "quest.1210785|255.magnitudes": [
+      "milestone"
+    ],
+    "quest.1210785|255.tags": [
+      "honor_divine"
+    ],
+    "quest.1205755|999.deities": [
+      "Julianos"
+    ],
+    "quest.1205755|999.valences": [
+      "+"
+    ],
+    "quest.1205755|999.intensities": [
+      "m"
+    ],
+    "quest.1205755|999.magnitudes": [
+      "milestone"
+    ],
+    "quest.1205755|999.tags": [
+      "honor_divine"
+    ],
+    "quest.1246970|999.deities": [
+      "Zenithar"
+    ],
+    "quest.1246970|999.valences": [
+      "+"
+    ],
+    "quest.1246970|999.intensities": [
+      "m"
+    ],
+    "quest.1246970|999.magnitudes": [
+      "milestone"
+    ],
+    "quest.1246970|999.tags": [
+      "honor_divine"
+    ],
+    "quest.40552|80.deities": [
+      "Khenarthi",
+      "Azura"
+    ],
+    "quest.40552|80.valences": [
       "+",
       "+"
     ],
-    "quest.186947|130.intensities": [
-      "C",
-      "C",
-      "C",
-      "S",
-      "S",
+    "quest.40552|80.intensities": [
       "m",
-      "m",
-      "m",
-      "S"
+      "m"
     ],
-    "quest.186947|130.magnitudes": [
+    "quest.40552|80.magnitudes": [
       "milestone",
-      "milestone",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small",
+      "small"
+    ],
+    "quest.40552|80.tags": [
+      "honor_the_dead",
+      "honor_the_dead"
+    ],
+    "quest.23779|40.deities": [
+      "Azura"
+    ],
+    "quest.23779|40.valences": [
+      "+"
+    ],
+    "quest.23779|40.intensities": [
+      "m"
+    ],
+    "quest.23779|40.magnitudes": [
+      "small"
+    ],
+    "quest.23779|40.tags": [
+      "slay_undead"
+    ],
+    "quest.230694|70.deities": [
+      "Alkosh",
+      "Baan Dar"
+    ],
+    "quest.230694|70.valences": [
+      "+",
+      "+"
+    ],
+    "quest.230694|70.intensities": [
+      "S",
+      "m"
+    ],
+    "quest.230694|70.magnitudes": [
       "small",
       "small"
     ],
-    "quest.186947|130.tags": [
-      "defy_daedra",
+    "quest.230694|70.tags": [
+      "kill_honorable_combat",
+      "prove_by_struggle"
+    ],
+    "quest.230694|100.deities": [
+      "Azura",
+      "Khenarthi"
+    ],
+    "quest.230694|100.valences": [
+      "+",
+      "+"
+    ],
+    "quest.230694|100.intensities": [
+      "S",
+      "m"
+    ],
+    "quest.230694|100.magnitudes": [
+      "milestone",
+      "milestone"
+    ],
+    "quest.230694|100.tags": [
+      "destroy_reject_daedra:molagbal",
+      "honor_the_dead"
+    ],
+    "quest.33514|40.deities": [
+      "Alkosh",
+      "Baan Dar"
+    ],
+    "quest.33514|40.valences": [
+      "+",
+      "+"
+    ],
+    "quest.33514|40.intensities": [
+      "m",
+      "m"
+    ],
+    "quest.33514|40.magnitudes": [
+      "small",
+      "small"
+    ],
+    "quest.33514|40.tags": [
+      "uphold_law_justice",
+      "prove_by_struggle"
+    ],
+    "quest.25201|20.deities": [
+      "Alkosh",
+      "Baan Dar"
+    ],
+    "quest.25201|20.valences": [
+      "+",
+      "+"
+    ],
+    "quest.25201|20.intensities": [
+      "S",
+      "m"
+    ],
+    "quest.25201|20.magnitudes": [
+      "small",
+      "small"
+    ],
+    "quest.25201|20.tags": [
+      "kill_honorable_combat",
+      "prove_by_struggle"
+    ],
+    "quest.41982|50.deities": [
+      "Azura",
+      "Alkosh"
+    ],
+    "quest.41982|50.valences": [
+      "+",
+      "+"
+    ],
+    "quest.41982|50.intensities": [
+      "S",
+      "S"
+    ],
+    "quest.41982|50.magnitudes": [
+      "small",
+      "small"
+    ],
+    "quest.41982|50.tags": [
+      "destroy_reject_daedra:molagbal",
+      "kill_honorable_combat"
+    ],
+    "quest.41982|75.deities": [
+      "Azura",
+      "Alkosh"
+    ],
+    "quest.41982|75.valences": [
+      "+",
+      "+"
+    ],
+    "quest.41982|75.intensities": [
+      "S",
+      "m"
+    ],
+    "quest.41982|75.magnitudes": [
+      "milestone",
+      "small"
+    ],
+    "quest.41982|75.tags": [
+      "destroy_reject_daedra:molagbal",
+      "uphold_law_justice"
+    ],
+    "quest.230692|100.deities": [
+      "Azura",
+      "Khenarthi"
+    ],
+    "quest.230692|100.valences": [
+      "+",
+      "+"
+    ],
+    "quest.230692|100.intensities": [
+      "m",
+      "S"
+    ],
+    "quest.230692|100.magnitudes": [
+      "small",
+      "small"
+    ],
+    "quest.230692|100.tags": [
       "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "show_compassion",
-      "foster_art"
+      "protect_the_weak"
+    ],
+    "quest.230693|80.deities": [
+      "Azura",
+      "Khenarthi"
+    ],
+    "quest.230693|80.valences": [
+      "+",
+      "+"
+    ],
+    "quest.230693|80.intensities": [
+      "m",
+      "m"
+    ],
+    "quest.230693|80.magnitudes": [
+      "milestone",
+      "small"
+    ],
+    "quest.230693|80.tags": [
+      "cure_undeath",
+      "honor_the_dead"
+    ],
+    "quest.230693|100.deities": [
+      "Alkosh",
+      "Baan Dar"
+    ],
+    "quest.230693|100.valences": [
+      "+",
+      "+"
+    ],
+    "quest.230693|100.intensities": [
+      "S",
+      "m"
+    ],
+    "quest.230693|100.magnitudes": [
+      "small",
+      "small"
+    ],
+    "quest.230693|100.tags": [
+      "kill_honorable_combat",
+      "prove_by_struggle"
+    ],
+    "quest.416050|70.deities": [
+      "Alkosh",
+      "Baan Dar"
+    ],
+    "quest.416050|70.valences": [
+      "+",
+      "+"
+    ],
+    "quest.416050|70.intensities": [
+      "S",
+      "m"
+    ],
+    "quest.416050|70.magnitudes": [
+      "small",
+      "small"
+    ],
+    "quest.416050|70.tags": [
+      "kill_honorable_combat",
+      "prove_by_struggle"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

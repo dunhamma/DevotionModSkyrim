@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-07T02:53:26.813Z",
-    "generatedat": "2026-08-07T02:53:26.813Z",
+    "generatedAt": "2026-08-07T02:51:38.218Z",
+    "generatedat": "2026-08-07T02:51:38.218Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "186947",
-    "questwatchformidscsv": "186947",
-    "questWatchPluginsCsv": "CJ03Elroy.esp",
-    "questwatchpluginscsv": "CJ03Elroy.esp",
+    "questWatchFormIdsCsv": "4694827,3966802,4611775,141725",
+    "questwatchformidscsv": "4694827,3966802,4611775,141725",
+    "questWatchPluginsCsv": "Unslaad.esm,Unslaad.esm,Unslaad.esm,Unslaad.esm",
+    "questwatchpluginscsv": "Unslaad.esm,Unslaad.esm,Unslaad.esm,Unslaad.esm",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1367,26 +1367,46 @@
     "faucet.malacath.serve_a_daedra:malacath.tag": "serve_a_daedra:malacath",
     "faucet.Malacath.serve_a_daedra:malacath.cap": "1/dawn",
     "faucet.malacath.serve_a_daedra:malacath.cap": "1/dawn",
-    "quest.186947|120.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
-    "quest.186947|120.valencesCsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.valencescsv": "-|+|+|+|+|+|+|-",
-    "quest.186947|120.intensitiesCsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.intensitiescsv": "C|C|C|S|S|m|m|m",
-    "quest.186947|120.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.magnitudescsv": "milestone|milestone|small|small|small|small|small|small",
-    "quest.186947|120.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|120.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
-    "quest.186947|130.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
-    "quest.186947|130.valencesCsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.valencescsv": "-|+|+|+|+|+|+|+|+",
-    "quest.186947|130.intensitiesCsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.intensitiescsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|130.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.magnitudescsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|130.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
-    "quest.186947|130.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|show_compassion|foster_art",
+    "quest.4694827|999.deitiesCsv": "Akatosh",
+    "quest.4694827|999.deitiescsv": "Akatosh",
+    "quest.4694827|999.valencesCsv": "+",
+    "quest.4694827|999.valencescsv": "+",
+    "quest.4694827|999.intensitiesCsv": "S",
+    "quest.4694827|999.intensitiescsv": "S",
+    "quest.4694827|999.magnitudesCsv": "milestone",
+    "quest.4694827|999.magnitudescsv": "milestone",
+    "quest.4694827|999.tagsCsv": "accept_fate",
+    "quest.4694827|999.tagscsv": "accept_fate",
+    "quest.3966802|999.deitiesCsv": "Tsun|Stuhn",
+    "quest.3966802|999.deitiescsv": "Tsun|Stuhn",
+    "quest.3966802|999.valencesCsv": "+|+",
+    "quest.3966802|999.valencescsv": "+|+",
+    "quest.3966802|999.intensitiesCsv": "m|m",
+    "quest.3966802|999.intensitiescsv": "m|m",
+    "quest.3966802|999.magnitudesCsv": "milestone|milestone",
+    "quest.3966802|999.magnitudescsv": "milestone|milestone",
+    "quest.3966802|999.tagsCsv": "prove_worth|prove_worth",
+    "quest.3966802|999.tagscsv": "prove_worth|prove_worth",
+    "quest.4611775|140.deitiesCsv": "Alkosh|Baan Dar",
+    "quest.4611775|140.deitiescsv": "Alkosh|Baan Dar",
+    "quest.4611775|140.valencesCsv": "+|+",
+    "quest.4611775|140.valencescsv": "+|+",
+    "quest.4611775|140.intensitiesCsv": "S|m",
+    "quest.4611775|140.intensitiescsv": "S|m",
+    "quest.4611775|140.magnitudesCsv": "milestone|small",
+    "quest.4611775|140.magnitudescsv": "milestone|small",
+    "quest.4611775|140.tagsCsv": "kill_honorable_combat|prove_by_struggle",
+    "quest.4611775|140.tagscsv": "kill_honorable_combat|prove_by_struggle",
+    "quest.141725|50.deitiesCsv": "Alkosh|Baan Dar",
+    "quest.141725|50.deitiescsv": "Alkosh|Baan Dar",
+    "quest.141725|50.valencesCsv": "+|+",
+    "quest.141725|50.valencescsv": "+|+",
+    "quest.141725|50.intensitiesCsv": "S|m",
+    "quest.141725|50.intensitiescsv": "S|m",
+    "quest.141725|50.magnitudesCsv": "small|small",
+    "quest.141725|50.magnitudescsv": "small|small",
+    "quest.141725|50.tagsCsv": "kill_honorable_combat|prove_by_struggle",
+    "quest.141725|50.tagscsv": "kill_honorable_combat|prove_by_struggle",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1517,91 +1537,145 @@
     "stancemult.tolerated": 0.4
   },
   "int": {
-    "quest.186947|120.metaSkip.Azura": 1,
-    "quest.186947|120.metaskip.azura": 1,
-    "quest.186947|130.metaSkip.Azura": 1,
-    "quest.186947|130.metaskip.azura": 1,
+    "quest.4694827|999.metaSkip.Akatosh": 1,
+    "quest.4694827|999.metaskip.akatosh": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 2,
-    "metaskipints": 2
+    "metaSkipInts": 1,
+    "metaskipints": 1
   },
   "stringList": {
     "questKeys": [
-      "186947|120",
-      "186947|130"
+      "4694827|999",
+      "3966802|999",
+      "4611775|140",
+      "141725|50"
     ],
     "questkeys": [
-      "186947|120",
-      "186947|130"
+      "4694827|999",
+      "3966802|999",
+      "4611775|140",
+      "141725|50"
     ],
     "questForms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x47A32B|Unslaad.esm",
+      "0x3C8752|Unslaad.esm",
+      "0x465EBF|Unslaad.esm",
+      "0x02299D|Unslaad.esm"
     ],
     "questforms": [
-      "0x02DA43|CJ03Elroy.esp",
-      "0x02DA43|CJ03Elroy.esp"
+      "0x47A32B|Unslaad.esm",
+      "0x3C8752|Unslaad.esm",
+      "0x465EBF|Unslaad.esm",
+      "0x02299D|Unslaad.esm"
     ],
     "questFormIds": [
-      "186947",
-      "186947"
+      "4694827",
+      "3966802",
+      "4611775",
+      "141725"
     ],
     "questformids": [
-      "186947",
-      "186947"
+      "4694827",
+      "3966802",
+      "4611775",
+      "141725"
     ],
     "questPlugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "Unslaad.esm",
+      "Unslaad.esm",
+      "Unslaad.esm",
+      "Unslaad.esm"
     ],
     "questplugins": [
-      "CJ03Elroy.esp",
-      "CJ03Elroy.esp"
+      "Unslaad.esm",
+      "Unslaad.esm",
+      "Unslaad.esm",
+      "Unslaad.esm"
     ],
     "questEditorIds": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "zzzCrbMq09",
+      "zzzCrbBqStuhnTsun",
+      "zzzCrbMq08",
+      "zzzCrbMq02"
     ],
     "questeditorids": [
-      "CJ03RotBelowMQ",
-      "CJ03RotBelowMQ"
+      "zzzCrbMq09",
+      "zzzCrbBqStuhnTsun",
+      "zzzCrbMq08",
+      "zzzCrbMq02"
     ],
     "questWatch.formIds": [
-      "186947"
+      "4694827",
+      "3966802",
+      "4611775",
+      "141725"
     ],
     "questwatch.formids": [
-      "186947"
+      "4694827",
+      "3966802",
+      "4611775",
+      "141725"
     ],
     "questWatch.plugins": [
-      "CJ03Elroy.esp"
+      "Unslaad.esm",
+      "Unslaad.esm",
+      "Unslaad.esm",
+      "Unslaad.esm"
     ],
     "questwatch.plugins": [
-      "CJ03Elroy.esp"
+      "Unslaad.esm",
+      "Unslaad.esm",
+      "Unslaad.esm",
+      "Unslaad.esm"
     ],
     "questWatch.editorIds": [
-      "CJ03RotBelowMQ"
+      "zzzCrbMq09",
+      "zzzCrbBqStuhnTsun",
+      "zzzCrbMq08",
+      "zzzCrbMq02"
     ],
     "questwatch.editorids": [
-      "CJ03RotBelowMQ"
+      "zzzCrbMq09",
+      "zzzCrbBqStuhnTsun",
+      "zzzCrbMq08",
+      "zzzCrbMq02"
     ],
     "questWatchFormIds": [
-      "186947"
+      "4694827",
+      "3966802",
+      "4611775",
+      "141725"
     ],
     "questwatchformids": [
-      "186947"
+      "4694827",
+      "3966802",
+      "4611775",
+      "141725"
     ],
     "questWatchPlugins": [
-      "CJ03Elroy.esp"
+      "Unslaad.esm",
+      "Unslaad.esm",
+      "Unslaad.esm",
+      "Unslaad.esm"
     ],
     "questwatchplugins": [
-      "CJ03Elroy.esp"
+      "Unslaad.esm",
+      "Unslaad.esm",
+      "Unslaad.esm",
+      "Unslaad.esm"
     ],
     "questWatchEditorIds": [
-      "CJ03RotBelowMQ"
+      "zzzCrbMq09",
+      "zzzCrbBqStuhnTsun",
+      "zzzCrbMq08",
+      "zzzCrbMq02"
     ],
     "questwatcheditorids": [
-      "CJ03RotBelowMQ"
+      "zzzCrbMq09",
+      "zzzCrbBqStuhnTsun",
+      "zzzCrbMq08",
+      "zzzCrbMq02"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -1659,110 +1733,80 @@
       "Mephala.serve_a_daedra:mephala",
       "Malacath.serve_a_daedra:malacath"
     ],
-    "quest.186947|120.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
-      "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara"
+    "quest.4694827|999.deities": [
+      "Akatosh"
     ],
-    "quest.186947|120.valences": [
-      "-",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
-      "-"
+    "quest.4694827|999.valences": [
+      "+"
     ],
-    "quest.186947|120.intensities": [
-      "C",
-      "C",
-      "C",
-      "S",
-      "S",
-      "m",
-      "m",
-      "m"
+    "quest.4694827|999.intensities": [
+      "S"
     ],
-    "quest.186947|120.magnitudes": [
-      "milestone",
-      "milestone",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small"
+    "quest.4694827|999.magnitudes": [
+      "milestone"
     ],
-    "quest.186947|120.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "deny_a_second_chance"
+    "quest.4694827|999.tags": [
+      "accept_fate"
     ],
-    "quest.186947|130.deities": [
-      "Namira",
-      "Arkay",
-      "Meridia",
-      "Stendarr",
-      "Tu'whacca",
-      "Azura",
-      "Y'ffre",
-      "Mara",
-      "Dibella"
+    "quest.3966802|999.deities": [
+      "Tsun",
+      "Stuhn"
     ],
-    "quest.186947|130.valences": [
-      "-",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
-      "+",
+    "quest.3966802|999.valences": [
       "+",
       "+"
     ],
-    "quest.186947|130.intensities": [
-      "C",
-      "C",
-      "C",
-      "S",
-      "S",
+    "quest.3966802|999.intensities": [
       "m",
-      "m",
-      "m",
-      "S"
+      "m"
     ],
-    "quest.186947|130.magnitudes": [
+    "quest.3966802|999.magnitudes": [
       "milestone",
+      "milestone"
+    ],
+    "quest.3966802|999.tags": [
+      "prove_worth",
+      "prove_worth"
+    ],
+    "quest.4611775|140.deities": [
+      "Alkosh",
+      "Baan Dar"
+    ],
+    "quest.4611775|140.valences": [
+      "+",
+      "+"
+    ],
+    "quest.4611775|140.intensities": [
+      "S",
+      "m"
+    ],
+    "quest.4611775|140.magnitudes": [
       "milestone",
-      "small",
-      "small",
-      "small",
-      "small",
-      "small",
+      "small"
+    ],
+    "quest.4611775|140.tags": [
+      "kill_honorable_combat",
+      "prove_by_struggle"
+    ],
+    "quest.141725|50.deities": [
+      "Alkosh",
+      "Baan Dar"
+    ],
+    "quest.141725|50.valences": [
+      "+",
+      "+"
+    ],
+    "quest.141725|50.intensities": [
+      "S",
+      "m"
+    ],
+    "quest.141725|50.magnitudes": [
       "small",
       "small"
     ],
-    "quest.186947|130.tags": [
-      "defy_daedra",
-      "slay_undead",
-      "slay_undead",
-      "smite_corruption",
-      "slay_undead",
-      "slay_undead",
-      "slay_undead",
-      "show_compassion",
-      "foster_art"
+    "quest.141725|50.tags": [
+      "kill_honorable_combat",
+      "prove_by_struggle"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",
