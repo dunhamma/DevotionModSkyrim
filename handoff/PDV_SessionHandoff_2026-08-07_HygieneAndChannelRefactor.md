@@ -2,7 +2,8 @@
 
 ## TL;DR
 
-Six commits on `codex/khajiit-lunar-champion-rebalance`, **ahead 6, not pushed**. All gates green by
+Eight commits since `639b7ab8` on `codex/khajiit-lunar-champion-rebalance`, **all pushed; working
+tree clean** (five more landed earlier the same day -- see below). All gates green by
 exit code: `pdv_verify` 0 FAIL / 4075 PASS, `pdv_signal_e2e_gate`, `pdv_ascii_guard`,
 `pdv_prisma_ui_audit`, `pdv_substrate_pacing_audit`, `pdv_housecarl_p2_readback --check-formlists`.
 
@@ -17,21 +18,33 @@ exit code: `pdv_verify` 0 FAIL / 4075 PASS, `pdv_signal_e2e_gate`, `pdv_ascii_gu
 Earlier same day: `16a7c218` (Khajiit runbook fresh-save precondition), `762cc5b6`, `6f5723cb`,
 `c1302197`, `eae92c52` (calian records, mesh, lore dive, test packet).
 
-## Do these first
+## Repo state -- CLEAN as of session end
 
-1. **Push.** Six commits are local only. The channel refactor was one folder deletion from gone
-   until `eab79c1c`; it is now in git but not on the remote.
-2. **Decide the uncommitted Khajiit-lane files** (list below). They are not mine and I have not
-   touched them all session.
-3. **`references/authoring/PDV_QuestReactionMatrix_Tranche12_KhajiitFiveWealth.csv` was untracked**
-   earlier today. If that tranche is meant to be live it needs committing AND regenerating into
-   source -- a quest-matrix CSV is inert until the codegen runs.
+**Everything is committed and pushed.** Branch `codex/khajiit-lunar-champion-rebalance` is in sync
+with origin; the working tree holds nothing but one untracked file (below). The three
+"do these first" items this handoff originally carried -- push the commits, decide the uncommitted
+lane files, chase an untracked tranche CSV -- were all closed before the session ended.
 
-Uncommitted, not mine: `race-sheets/PDV_RaceDesign_Khajiit.md`, four `*RewardRecords.spec.json`
-(Altmer/Breton/Imperial/Nord), `PDV_PreBetaRaceGateLedger.md`, `PDV_QuestReactionMatrix_Full.csv`,
-`PDV_SubstratePacingContracts.json`, `tools/pdv_felt_registry_gen.mjs`,
-`tools/pdv_quest_tranche_merge.mjs`, `tools/pdv_reward_runtime_order_lint.mjs`, plus two untracked
-ARR25 content-sweep docs.
+Two further commits landed after the ones tabled above:
+
+| Commit | What |
+|---|---|
+| `4fbba85d` | The Khajiit-lane work: `substrateBoons` registry contracts for Altmer/Breton/Imperial/Nord, the matching `analyzeTeardownReferences` pass in `pdv_reward_runtime_order_lint`, race sheet, gate ledger, pacing contracts, 149 `Full.csv` rows, the Tranche12 CSV, and the ARR25 content-sweep pair |
+| `e8a676fa` | `.gitignore` for release zips and root-level stray images |
+
+Two things that rule could not fix, both recorded in `.gitignore` itself rather than left to be
+rediscovered:
+
+- **Two PreBeta .8 zips remain TRACKED.** They were committed before the ignore rule, and a
+  gitignore entry never untracks what is already in the index. `git rm --cached` would drop them
+  from checkouts but reclaim nothing from history.
+- **`dist/Devotion-1.0.2-test1-TESTER-NOTES.txt` is still untracked.** It is tester documentation
+  rather than a build artefact, so it escaped `dist/*.zip` deliberately. It may deserve committing
+  on its own merits.
+
+**Still worth doing on the matrix:** `PDV_QuestReactionMatrix_Tranche12_KhajiitFiveWealth.csv` is
+now committed, but **a quest-matrix CSV is inert until the codegen regenerates it into source.**
+Committed is not the same as live -- confirm the regen ran, or those rows do nothing in game.
 
 ## The standing rule (new, `PDV_STANDARDS.md` 6.7b)
 
