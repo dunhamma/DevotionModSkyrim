@@ -18424,6 +18424,12 @@ Function PrepareForUninstall()
     ; leaves behind is reported by the MCM "Repair stats" button.
     RunAuthoriaActorValueRepair(True, False)
 
+    ; Substrate quests own their boon spells. The generic strip below cannot
+    ; reliably remove records that are bound only on those quest scripts, so
+    ; ask every substrate owner to clear its own tier slots before storage is
+    ; erased and the manager stops.
+    ClearAllSubstrateBoonsForUninstall()
+
     StripAllPdvSpells(playerRef)
 
     if playerRef
@@ -18439,6 +18445,30 @@ Function PrepareForUninstall()
     UnregisterForUpdate()
     Debug.MessageBox("Devotion has repaired its permanent stat damage, then removed its spells, factions, and most of its saved data. The stat repair ran FIRST and zeroed the permanent modifier on every actor value Devotion could touch (magic/damage/disease/frost/fire/poison resistance, carry weight, speed, health, magicka, stamina and the weapon, magic and stealth skills) - note this also clears any permanent modifier another mod had placed on those same values, which is rare but real. You may now exit to the main menu, remove the mod, and load this save. This is BEST EFFORT and not a guaranteed clean save; some inert leftover data can remain. The only fully clean removal is to load a save made before Devotion was installed.")
     Self.Stop()
+EndFunction
+
+Function ClearAllSubstrateBoonsForUninstall()
+    if PDV_ImperialAncestorSubstrate
+        PDV_ImperialAncestorSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_BretonAncestorSubstrate
+        PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_AltmerAncestorSubstrate
+        PDV_AltmerAncestorSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_NordAncestorSubstrate
+        PDV_NordAncestorSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_DunmerAncestorSubstrate
+        PDV_DunmerAncestorSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_KhajiitLunarSubstrate
+        PDV_KhajiitLunarSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_ArgonianHistSubstrate
+        PDV_ArgonianHistSubstrate.ClearSubstrateBoons()
+    endIf
 EndFunction
 
 Function ClearPdvStorageNamespaces()

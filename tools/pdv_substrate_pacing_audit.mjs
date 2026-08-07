@@ -240,6 +240,19 @@ export function evaluate({ contract, baseSource, managerSource, concreteSources,
   }
 
   const productionSource = `${managerSource}\n${playerEventsSource}\n${eventBusSource}\n${actionRouterSource}`;
+  const uninstall = bodyFor(managerSource, "PrepareForUninstall");
+  const uninstallSubstrateCleanup = bodyFor(managerSource, "ClearAllSubstrateBoonsForUninstall");
+  const substrateOwnerProperties = [
+    "PDV_ImperialAncestorSubstrate",
+    "PDV_BretonAncestorSubstrate",
+    "PDV_AltmerAncestorSubstrate",
+    "PDV_NordAncestorSubstrate",
+    "PDV_DunmerAncestorSubstrate",
+    "PDV_KhajiitLunarSubstrate",
+    "PDV_ArgonianHistSubstrate",
+  ];
+  add(/ClearAllSubstrateBoonsForUninstall\s*\(\s*\)/i.test(uninstall), "source.uninstall.substrate-owner-sweep", "PrepareForUninstall must invoke the substrate-owner cleanup sweep");
+  add(substrateOwnerProperties.every((propertyName) => new RegExp(`${propertyName}\\.ClearSubstrateBoons\\s*\\(\\s*\\)`, "i").test(uninstallSubstrateCleanup)), "source.uninstall.substrate-owner-coverage", "the uninstall sweep must ask every wired substrate owner to clear its own boons");
   const reachability = [
     ["crafting", /HandleSubstrateActionEvent/i, /smith|enchant|alchem/i],
     ["cooking", /HandleSubstrateActionEvent/i, /cook/i],

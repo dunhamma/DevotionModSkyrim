@@ -423,6 +423,7 @@ function collectSubstrateOwnedSpells(specDir = REWARD_SPEC_DIR) {
       owners.set(slot.spellEditorId, {
         owner: substrate.wireTo,
         slot: typeof slot.slotProperty === "string" ? slot.slotProperty : "",
+        runtimeOwnership: typeof substrate.runtimeOwnership === "string" ? substrate.runtimeOwnership : "active-substrate-owned",
         specPath: toPosix(path.relative(REPO_ROOT, full)),
       });
     }
@@ -497,10 +498,31 @@ function analyzeOwnerContracts(events, substrateOwners) {
   return findings;
 }
 
+function analyzeTeardownReferences(source, events, substrateOwners) {
+  const runtimeSpells = new Set(events.map((ev) => ev.spell));
+  const { body } = functionLines(source, "StripAllPdvSpells");
+  const references = [];
+  for (const line of body) {
+    const call = callArgsOnLine(line, "SyncRaceRewardSpell");
+    if (!call || call.length < 3 || call[0] !== "playerRef" || call[2].toLowerCase() !== "false") continue;
+    const spell = call[1];
+    const owner = substrateOwners.get(spell);
+    if (!owner) continue;
+    references.push({
+      spell, contractOwner: owner.owner, slot: owner.slot,
+      runtimeOwnership: owner.runtimeOwnership, specPath: owner.specPath,
+      referenceClass: runtimeSpells.has(spell) ? "runtime-and-teardown" : "teardown-only",
+      teardownFunction: "StripAllPdvSpells",
+    });
+  }
+  return references.sort((a, b) => a.spell.localeCompare(b.spell));
+}
+
 function analyzeManagerSource(source, opts = {}) {
   const events = buildEvents(source);
   const substrateOwners = opts.substrateOwners || collectSubstrateOwnedSpells();
   const ownerFindings = analyzeOwnerContracts(events, substrateOwners);
+  const teardownReferences = analyzeTeardownReferences(source, events, substrateOwners);
 
   // Inventory: group events by spell; reuse-collision candidates are managed by >1 call site.
   const bySpell = new Map();
@@ -560,7 +582,7 @@ function analyzeManagerSource(source, opts = {}) {
 
   inventory.sort((a, b) => a.spell.localeCompare(b.spell));
   findings.sort((a, b) => (a.spell + a.origin).localeCompare(b.spell + b.origin));
-  return { events, inventory, findings, ownerFindings };
+  return { events, inventory, findings, ownerFindings, teardownReferences };
 }
 
 // ---------------------------------------------------------------------------
@@ -579,7 +601,7 @@ function displaySourcePath(sourcePath) {
   return !rel.startsWith("..") && !path.isAbsolute(rel) ? toPosix(rel) : toPosix(sourcePath);
 }
 
-function writeLedgers(sourcePath, inventory, findings, ownerFindings) {
+function writeLedgers(sourcePath, inventory, findings, ownerFindings, teardownReferences) {
   const status = findings.length || ownerFindings.length ? "FAIL" : "PASS";
   const md = [
     "# PDV Reward Runtime-Order Lint Ledger",
@@ -601,6 +623,15 @@ function writeLedgers(sourcePath, inventory, findings, ownerFindings) {
       const laneCol = item.events.map((e) => `${e.lane} [${e.origin || "?"}${e.guard ? " guard:" + e.guard : ""}]`).join(" -> ");
       md.push(`| ${item.spell} | ${item.callSites} | ${laneCol} |`);
     }
+    md.push("");
+  }
+
+  md.push("## Classified substrate-owned teardown references", "");
+  if (teardownReferences.length === 0) {
+    md.push("_None._", "");
+  } else {
+    md.push("| Spell | Contract owner | Slot | Runtime ownership | Classification | Spec |", "|---|---|---|---|---|---|");
+    for (const ref of teardownReferences) md.push(`| ${ref.spell} | ${ref.contractOwner} | ${ref.slot || "-"} | ${ref.runtimeOwnership} | ${ref.referenceClass} | ${ref.specPath} |`);
     md.push("");
   }
   md.push("## Findings (grant-then-strip across lanes)", "");
@@ -796,8 +827,8 @@ function main() {
 
   const sourcePath = resolveSourcePath();
   const source = fs.readFileSync(sourcePath, "utf8");
-  const { inventory, findings, ownerFindings } = analyzeManagerSource(source);
-  writeLedgers(sourcePath, inventory, findings, ownerFindings);
+  const { inventory, findings, ownerFindings, teardownReferences } = analyzeManagerSource(source);
+  writeLedgers(sourcePath, inventory, findings, ownerFindings, teardownReferences);
 
   const summary = {
     status: findings.length || ownerFindings.length ? "FAIL" : "PASS",
@@ -805,6 +836,7 @@ function main() {
     reusedSpells: inventory.length,
     collisions: findings.length,
     ownerContractViolations: ownerFindings.length,
+    classifiedTeardownReferences: teardownReferences.length,
     findings: findings.map((f) => ({
       spell: f.spell,
       origin: f.origin,
@@ -818,13 +850,14 @@ function main() {
       managingLane: f.managingLane,
       specPath: f.specPath,
     })),
+    teardownReferences,
     ledger: toPosix(path.relative(REPO_ROOT, OUT_MD)),
   };
 
   if (JSON_MODE) {
     console.log(JSON.stringify(summary, null, 2));
   } else {
-    console.log(`PDV reward runtime-order lint: ${summary.status} (${summary.reusedSpells} reused spells, ${summary.collisions} collisions, ${summary.ownerContractViolations} owner-contract violations)`);
+    console.log(`PDV reward runtime-order lint: ${summary.status} (${summary.reusedSpells} reused spells, ${summary.collisions} collisions, ${summary.ownerContractViolations} owner-contract violations, ${summary.classifiedTeardownReferences} classified teardown references)`);
     console.log(`Source: ${summary.source}`);
     if (findings.length) {
       console.log("Add-then-remove collisions (a later lane strips a spell an earlier lane granted):");

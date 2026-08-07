@@ -10,6 +10,15 @@
     "broadLaneIsState": "R1: Orthodox is PATRON_STATE_BROAD resolved by GetFirstTierRaceRewardSpellForOrigin(); there is NO PDV_Deity_Orthodox / PDV_Deity_Nine record.",
     "originRaceIndex": 3
   },
+  "substrateBoons": {
+    "wireTo": "PDV_Substrate_AltmerAncestor", "runtimeOwnership": "active-substrate-owned", "registryContractOnly": true,
+    "recordFormId": "0715AC:Devotion.esp", "sourceAuthority": "Direct houseCARL readback 2026-08-07",
+    "slots": [
+      { "slotProperty": "Substrate_Always", "spellEditorId": "PDV_Bless_Altmer_Spine_Always", "spellFormId": "0715A7:Devotion.esp", "displayName": "Ordered Heritage" },
+      { "slotProperty": "Substrate_Mid", "spellEditorId": "PDV_Bless_Altmer_Spine_Mid", "spellFormId": "0715A9:Devotion.esp", "displayName": "Disciplined Heritage" },
+      { "slotProperty": "Substrate_High", "spellEditorId": "PDV_Bless_Altmer_Spine_High", "spellFormId": "0715AB:Devotion.esp", "displayName": "Exemplar Heritage" }
+    ]
+  },
   "excludedNativeRoster": [
     {
       "deityName": "Phynaster",

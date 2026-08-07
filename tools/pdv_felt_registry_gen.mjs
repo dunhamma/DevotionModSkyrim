@@ -146,6 +146,7 @@ function buildRegistry() {
     sourceHashes[rel] = sha(rel);
     const spec = loadJson(rel);
     for (const [key, value] of Object.entries(spec)) {
+      if (key === "substrateBoons" && value?.registryContractOnly === true) continue;
       const cls = CLASS_BY_KEY[key];
       const allowMessages = cls === "curse" || cls === "neglect" || cls === "price";
       const candidates = [];

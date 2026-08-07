@@ -73,7 +73,7 @@ Float Function GetLockInUntil()
 EndFunction
 
 String Function GetStateLabelAt(Int stateIndex)
-    if stateIndex >= 0 && stateIndex < ThresholdLabels.Length
+    if ThresholdLabels && stateIndex >= 0 && stateIndex < ThresholdLabels.Length
         return ThresholdLabels[stateIndex]
     endIf
 
@@ -139,7 +139,7 @@ EndFunction
 
 Bool Function IsExtremeStateIndex(Int stateIndex)
     Int i = 0
-    while i < ExtremeStateIndexes.Length
+    while ExtremeStateIndexes && i < ExtremeStateIndexes.Length
         if stateIndex == ExtremeStateIndexes[i]
             return True
         endIf
@@ -160,7 +160,7 @@ Int Function GetLowestExtremeStateIndex()
 
     Int lowestValue = 999
     Int i = 0
-    while i < ExtremeStateIndexes.Length
+    while ExtremeStateIndexes && i < ExtremeStateIndexes.Length
         if ExtremeStateIndexes[i] < lowestValue
             lowestValue = ExtremeStateIndexes[i]
         endIf
@@ -181,7 +181,7 @@ Int Function GetHighestExtremeStateIndex()
 
     Int highestValue = -1
     Int i = 0
-    while i < ExtremeStateIndexes.Length
+    while ExtremeStateIndexes && i < ExtremeStateIndexes.Length
         if ExtremeStateIndexes[i] > highestValue
             highestValue = ExtremeStateIndexes[i]
         endIf
@@ -257,7 +257,7 @@ Int Function ComputeStateIndexForValue(Int currentValue)
     Int currentState = 0
     Int i = 0
 
-    while i < ThresholdValues.Length
+    while ThresholdValues && i < ThresholdValues.Length
         if currentValue > ThresholdValues[i]
             currentState += 1
         endIf
@@ -391,4 +391,3 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] ReputationTrack: " + traceText)
     endIf
 EndFunction
-

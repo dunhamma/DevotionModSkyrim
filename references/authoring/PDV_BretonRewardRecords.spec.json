@@ -2,6 +2,15 @@
   "schema": "pdv-breton-records.v1",
   "status": "UPDATED 2026-07-13 -- Unified Champion authority: tradition practice grants T1/T2 at 25/50 points, while the active Champion patron grants exactly one deity-specific Champion boon. Retired broad and generic Champion records remain force-removed save-compatibility records.",
   "notes": "Authoritative Breton reward spec for the current 25/50 practice model with a four-point daily cap. Knight's Road, Hidden Art, and Green Way each retain their own T1/T2 practice family. Champion is a patron property: the active eligible Aedric, Y'ffre, or integrated Hidden Art Prince grants exactly one mapped Champion boon, with all other Breton Champion spells removed. PDV_Bless_Breton_Tradition_T1, PDV_Bless_Breton_Tradition_T2, the ancestor spine, and PDV_Bless_Breton_PatronChampion remain present only for save compatibility and force-removal. Hidden Art uses WitchcraftExposure as its sole stigma layer; its integrated Prince pact does not add the global Prince price or duplicate stigma. Player-facing text is ASCII-only and no Breton magnitude exceeds the locked budget.",
+  "substrateBoons": {
+    "wireTo": "PDV_Substrate_BretonAncestor", "runtimeOwnership": "retired-teardown-only", "registryContractOnly": true,
+    "recordFormId": "0715BD:Devotion.esp", "sourceAuthority": "Direct houseCARL readback 2026-08-07; runtime retirement authority PDV_SpineStackRegistry.csv",
+    "slots": [
+      { "slotProperty": "Substrate_Always", "spellEditorId": "PDV_Bless_Breton_Spine_Always", "spellFormId": "0715B8:Devotion.esp", "displayName": "Inherited Ward" },
+      { "slotProperty": "Substrate_Mid", "spellEditorId": "PDV_Bless_Breton_Spine_Mid", "spellFormId": "0715BA:Devotion.esp", "displayName": "Warded Blood" },
+      { "slotProperty": "Substrate_High", "spellEditorId": "PDV_Bless_Breton_Spine_High", "spellFormId": "0715BC:Devotion.esp", "displayName": "Awakened Inheritance" }
+    ]
+  },
   "deityQuests": [
     {
       "editorId": "PDV_Deity_Akatosh",

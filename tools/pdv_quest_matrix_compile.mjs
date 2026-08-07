@@ -703,7 +703,17 @@ function compileStance(stanceRows, daedricRows) {
 
 function normalizeDeity(value) {
   const trimmed = (value || "").trim();
-  return DEITY_ALIASES.get(trimmed) ?? trimmed;
+  const mapped = DEITY_ALIASES.get(trimmed);
+  if (mapped) return mapped;
+
+  // Stance authorities sometimes retain a culturally specific slash alias for
+  // presentation (for example "Namira / Namiira"). Runtime reaction cells use
+  // the canonical first name, so never serialize the display label as a lookup
+  // key. Explicit mappings above remain authoritative where the canonical name
+  // is not simply the first slash-delimited component.
+  const slashIndex = trimmed.indexOf("/");
+  if (slashIndex >= 0) return trimmed.slice(0, slashIndex).trim();
+  return trimmed;
 }
 
 function normalizeStance(value) {

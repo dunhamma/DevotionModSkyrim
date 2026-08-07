@@ -7,6 +7,15 @@
     "focusedGrant": "T1 records are compatibility-only; accepting at deity piety 50 begins T2; T3 begins at 85",
     "substrate": "Imperial civic practice is a separate 1/25/75 substrate with first approved act per devotional day granting +4"
   },
+  "substrateBoons": {
+    "wireTo": "PDV_Substrate_ImperialAncestor", "runtimeOwnership": "active-substrate-owned", "registryContractOnly": true,
+    "recordFormId": "0715B6:Devotion.esp", "sourceAuthority": "Direct houseCARL readback 2026-08-07",
+    "slots": [
+      { "slotProperty": "Substrate_Always", "spellEditorId": "PDV_Bless_Imperial_Spine_Always", "spellFormId": "0715AF:Devotion.esp", "displayName": "Civic Steadiness" },
+      { "slotProperty": "Substrate_Mid", "spellEditorId": "PDV_Bless_Imperial_Spine_Mid", "spellFormId": "0715B2:Devotion.esp", "displayName": "Civic Discipline" },
+      { "slotProperty": "Substrate_High", "spellEditorId": "PDV_Bless_Imperial_Spine_High", "spellFormId": "0715B5:Devotion.esp", "displayName": "Civic Exemplar" }
+    ]
+  },
   "notes": "Authoritative record spec for the Imperial active-patron pilot. PROGRESSION CURRENCY = real piety faucet; GATE TYPE = offer / active-patron (IsFirstTierRaceRewardEligible: patron piety Tier >= threshold AND active patron). NO substrate. TARGET PACE: assume ~2 qualifying civic signals/day, each a small piety delta, yielding ~12 days cold-start to Devoted at steady honest civic play (Nord-comparable); Talos faithful-defiance acts are rarer/costlier and do not accelerate the broad faucet. Broad Nine Divines is one always-on family (Layer 1, capped at T2/Devoted-Faithful); the active focused primary patron is the second always-on family (Layer 2, runs T1/T2/T3). ConcordatStanding (PDV_RepTrack_ConcordatStanding) MODIFIES Talos access/offer-priority/pressure, it is NOT a parallel buff track. Talos favor is faithful defiance only; compliance never grants Talos favor. Talos REUSES the existing PDV_Deity_Talos (create:false). T3 NPC recognition is V1-deferred (see PDV_RecognitionDialogueScalePacket.md); V1 T3 ships stat/signature effects with Champion Survey text as the recognition surface. Player-facing text is ASCII-only and uses Skyrim ActorValue names. No magnitude exceeds ~12%.",
   "deityQuests": [
     {

@@ -83,13 +83,33 @@
       ],
       "reason": "Opt-in per-deity hooks, not a per-deity requirement. Each is absent on the overwhelming majority of the 49-member deity/path population and every read is null-guarded: a deity only carries a ReputationTrack, StateTrack or authored rivalry when its design calls for one. Reporting the absent majority inverts signal and noise.",
       "evidence": "Detector A family split at time of waiver: present on 1-3 of 49 members."
-    }
-  ],
-  "deliberatelyNotWaived": [
+    },
+    {
+      "script": "PDV_ReputationTrack",
+      "properties": ["ExtremeStateIndexes", "ThresholdValues", "ThresholdLabels"],
+      "reason": "Optional skeleton-track arrays are now null-guarded at every dereference. Current production race logic uses the manager-owned StorageUtil tracks; unbound skeleton arrays therefore fall through without a Papyrus error and cannot be mistaken for live race-state authority.",
+      "evidence": "PDV_ReputationTrack.psc GetStateLabelAt, IsExtremeStateIndex, GetLowestExtremeStateIndex, GetHighestExtremeStateIndex, and ComputeStateIndexForValue all guard the relevant array before .Length."
+    },
+    {
+      "script": "PDV_StateTrack",
+      "properties": ["StateLabels"],
+      "reason": "StateLabels is optional on dormant skeleton tracks and the only dereference is now null-guarded, returning the established Unset fallback.",
+      "evidence": "PDV_StateTrack.psc GetStateLabelAt guards StateLabels before .Length."
+    },
+    {
+      "script": "PDV_StateTrack",
+      "formids": ["07051C:Devotion.esp", "070FF6:Devotion.esp", "071004:Devotion.esp", "07150D:Devotion.esp"],
+      "properties": ["StateGlobal"],
+      "reason": "These generation-two state quests deliberately use the script's StorageUtil backing. Every StateGlobal read and write is null-guarded; no dedicated mirror global is part of the current manager-owned runtime contract. The older 0499CB Altmer skeleton remains separate and retains PDV_GLO_AltmerCrisis.",
+      "evidence": "PDV_StateTrack.psc GetCurrentState, SetState, ResetState, and EnsureStateStorage all implement the StorageUtil fallback; live readback 2026-08-07 confirms the four records remain unbound by design."
+    },
     {
       "script": "PDV_DaedricPath_Azura",
-      "property": "Msg_Response_Khajiit",
-      "why": "Open design question, owner ruling pending. PDV_Deity_Azura carries Stance_Khajiit=0, so the native-pair rule would waive it -- but PDV_Deity_Boethiah and PDV_Deity_Mephala are ALSO Stance_Khajiit=0 and their paths DO carry Msg_Response_Khajiit. The rule is 100% consistent for Dunmer and Orc and inconsistent only here, so either Azura is the gap or Boethiah/Mephala carry dead records. Azurah is a major Khajiiti deity, which may warrant treatment different from the other two. Leave it reported until that is settled."
+      "formids": ["071280:Devotion.esp"],
+      "properties": ["Msg_Response_Khajiit"],
+      "reason": "Owner ruling 2026-08-07: Azurah is a native Khajiit deity, so the generic Daedric-path race-rejection response is deliberately absent. Boethiah and Mephala having Khajiit response records does not establish a universal native-pair rule; those culturally distinct shadow readings remain separately authored.",
+      "evidence": "PDV_Deity_Azura Stance_Khajiit=0 and the Khajiit roster treats Azurah as native; the deity lane, not the hostile Daedric response lane, owns the relationship."
     }
-  ]
+  ],
+  "deliberatelyNotWaived": []
 }
