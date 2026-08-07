@@ -1116,7 +1116,24 @@ and `--expected-channels` verifies the deployed per-mod folder. Current command:
 Result: `PASS=31 INFO=4 FAIL=0`; no post-deployment Papyrus registration marker
 exists yet, so runtime and support remain open.
 
-**2026-08-06 AEST - ARR 2.5 exhaustive content/package candidate:** The isolated
+**2026-08-07 AEST - modular core/PatchHub replacement candidate:** The combined
+Authoria lane described below is superseded. ARR now installs the ordinary
+Devotion core archive plus a fully modular, dependency-gated PatchHub; no option
+may replace core scripts or matrices. The committed source is `ff7fc4e`. Core is
+`dist\Devotion-1.0.4-20260807.zip` (231 exact members, SHA-256
+`12D5B7EA8B9C695302175E9DCB5FC803EB36E5D0BEF8D3848A2E39324D62FC41`).
+PatchHub is `dist\PDV-QuestModPatchHub-ARR25-Experimental-20260807.zip` (80
+exact members, 41 options, 39 channels, SHA-256
+`DEC5EBC4285F3985D3D8F0BDF1ADBE4F288C20FB09F3D83EA3ECD5457F633949`).
+The Altmer Prisma parity gate passes 124 checks, including one notice per
+accepted daily heritage practice. Machine/package proof passes; runtime-route,
+player-surface, semantic, save/load, and support evidence remain open. The
+living authority and experiment sequence are
+`references\authoring\PDV_ModPackaging_StateAuthority.md` and
+`references\authoring\PDV_ARR25_ModularPatchHub_ExperimentRunbook_2026-08-07.md`.
+
+**2026-08-06 AEST - ARR 2.5 exhaustive content/package candidate (superseded
+package architecture; historical evidence only):** The isolated
 `codex/arr25-content-sweep` worktree closes the finite QUST plus selected non-quest
 inventory, authors T13-T17 as 34 per-mod channels, and packages the safe non-quest
 surface. `PDV_PlayerEvents` now optionally polls AFDI's 30 latched successful-

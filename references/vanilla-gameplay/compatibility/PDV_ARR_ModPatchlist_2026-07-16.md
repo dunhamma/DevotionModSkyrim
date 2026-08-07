@@ -9,6 +9,13 @@ Archon-era `PDV_Phase21_ARR_ConflictDossier.md` and
 Proof boundary: everything here is names-plus-records static evidence. No runtime
 proof is claimed; every to-do that lands a hook carries "runtime-verify pending".
 
+Packaging authority overlay (2026-08-07): current core/PatchHub filenames,
+hashes, exact payloads, proof debt, and support state are owned by
+`references/authoring/PDV_ModPackaging_StateAuthority.md`. The combined Authoria
+lane and 95-member archive described later in this dated review are superseded
+historical evidence; preserve the owner rulings, but do not recreate that
+package architecture.
+
 ## Instance / profile
 
 - Instance: `D:\Wabbajack\modlists\ARR Test` (3,719 mod folders).
@@ -460,13 +467,14 @@ P0 = blocks the Authoria 1.0 gate package; P1 = next tranche; P2 = nice-to-have.
   matching route-202 BOS map. Wyrmstooth placements use different base forms and
   do not inherit the swaps, so no unproved mappings were added. Jyggalag remains
   classify-only. Runtime prayer and negative-control cases remain OPEN.
-- [x] **TODO-7 (P0, package): MACHINE-COMPLETE 2026-08-06.** The cumulative
-  ARR 2.5 test candidate contains 34 channels, one combined ESPFE, current isolated
-  PEX/source, Green Pact KID rules, corrected prayer swaps, full T13-T17 and
-  non-quest ledgers, and refreshed README/runbook. FOMOD XML, referenced folders,
-  collisions, Authoria/all-individual/subset simulations, 95 archive members,
-  filenames, and checksums pass. Runtime preflight and every tester case remain
-  OPEN, so the package is experimental and not supported.
+- [x] **TODO-7 (P0, package): REPLACED AND MACHINE-COMPLETE 2026-08-07.** The
+  combined Authoria lane is retired. The replacement PatchHub has 41 independent
+  dependency-gated options, including 39 reaction channels plus AFDI and neutral
+  Daedric Shrines AIO lanes. XML, every referenced folder, individual/all/subset
+  simulations, collision checks, all 80 archive members, filenames, and
+  per-member checksums pass. It contains no core-script or core-matrix override.
+  Runtime preflight and every tester case remain OPEN, so the package is
+  experimental and not supported.
 - [ ] **TODO-8 (P1, S5):** Verify JS Shrines / CC Survival Disable-Shrine-Menu
   do not reroute shrine activation away from TempleBlessingScript surfaces.
   **Widened 2026-07-27 (1.0.4):** Devotion now SHIPS its own

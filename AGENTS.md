@@ -1073,18 +1073,16 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 
 ## Decisions Log
 
-- **[2026-08-07] - Authoria cumulative lane uses one combined ESPFE:**
-  `PDV_AuthoriaARR_Combined.esp` replaces the two former donor ESPs in the ARR
-  2.5 FOMOD and `KoK R11` deployment. Direct houseCARL file read reports 32
-  records: 21 quest/dialogue overrides plus 11 shrine ACTIs. The updated archive
-  has 95 entries (SHA-256
-  `E11D7B2A90ED0F980DA2394CF63A465167E55730C252EF5FF1EF05A64D0B5C9D`),
-  and the combined simulation installs 84 files. Source quest SEQs remain with
-  their defining masters; no new SGE quest identity was introduced. Static
-  merge/readback and FOMOD proof pass, while runtime, save-compatibility, and
-  support proof remain open. The external-reference scan also left five
-  unrelated malformed load-order records unreadable, so it is not a claim of
-  exhaustive external-reference absence.
+- **[2026-08-07] - Authoria combined packaging is superseded by the modular
+  PatchHub:** `PDV_AuthoriaARR_Combined.esp`, its list-specific tree, and
+  `PDV_QuestReactionMatrix_ARR.json` must not ship. ARR now consumes the same
+  dependency-gated PatchHub as any other load order: 39 per-mod reaction
+  channels plus independent AFDI and Daedric Shrines AIO options. Vanilla,
+  DLC, and Creation Club reactions remain in core; PatchHub options may not
+  replace core scripts or matrices. The 2026-08-06 95-member archive and the
+  earlier combined-lane decision below are historical evidence only. Current
+  filenames, hashes, exact contents, proof debt, and migration instructions are
+  owned by `references/authoring/PDV_ModPackaging_StateAuthority.md`.
 
 - **[2026-08-07] - ARR 2.5 preflight must inspect MO2 winners, not the named
   core-mod folder:** The combined candidate is installed and enabled on `KoK
