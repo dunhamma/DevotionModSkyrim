@@ -108,6 +108,7 @@ function parseArgs(argv) {
     date: null,
     verify: null,
     preflight: false,
+    checkPlugins: [],
   };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -119,6 +120,10 @@ function parseArgs(argv) {
       args.verify = argv[++index];
     } else if (arg === "--preflight") {
       args.preflight = true;
+    } else if (arg === "--check-plugin") {
+      // Repeatable. Gates plugins that live OUTSIDE the release payload -- the compat patch
+      // hubs -- with the same header rule the payload sweep applies to Devotion.esp.
+      args.checkPlugins.push(argv[++index]);
     } else {
       fail(`Unknown argument: ${arg}`);
     }
@@ -408,6 +413,66 @@ function verifyReceiverAnam() {
   pass("ANAM gate: every Story Manager receiver carries ANAM.");
 }
 
+// --- Plugin header gate (2026-08-07) -------------------------------------------------------------
+// A plugin's load-order cost is the ESL flag in its TES4 header, not its file extension. The
+// standing rule (memory `patches-must-be-esl-flagged`) is: every PDV patch plugin ships ESL-flagged
+// (ESPFE -- zero full slots), and the main Devotion.esp must NEVER be flagged (it defines far more
+// records than the light ceiling; an accidentally flagged main plugin is a catastrophic ship).
+// This gate reads the header bytes directly so the claim is measured, not assumed.
+const TES4_FLAG_ESM = 0x1;
+const TES4_FLAG_ESL = 0x200;
+
+function readPluginHeader(filePath) {
+  const fd = fs.openSync(filePath, "r");
+  try {
+    const head = Buffer.alloc(24);
+    const bytesRead = fs.readSync(fd, head, 0, 24, 0);
+    if (bytesRead < 24) fail(`Plugin too short to carry a TES4 header: ${filePath}`);
+    const signature = head.toString("ascii", 0, 4);
+    if (signature !== "TES4") {
+      fail(`Not a plugin (TES4 signature missing, found "${signature}"): ${filePath}`);
+    }
+    const flags = head.readUInt32LE(8);
+    return {
+      flags,
+      esm: (flags & TES4_FLAG_ESM) !== 0,
+      esl: (flags & TES4_FLAG_ESL) !== 0,
+    };
+  } finally {
+    fs.closeSync(fd);
+  }
+}
+
+function checkPluginHeader(filePath) {
+  const baseName = path.basename(filePath);
+  const header = readPluginHeader(filePath);
+  const isMainMod = /^Devotion\.esp$/i.test(baseName);
+  if (isMainMod && header.esl) {
+    fail(
+      `${baseName} carries the ESL flag (0x${header.flags.toString(16)}). The main mod defines far ` +
+        `more records than the light ceiling and must ship as a full plugin.`,
+    );
+  }
+  if (!isMainMod && !header.esl) {
+    fail(
+      `${baseName} is NOT ESL-flagged (0x${header.flags.toString(16)}). Patch plugins ship ` +
+        `ESL-flagged (ESPFE) per the standing rule -- flag the header (housecarl_compact_plugin ` +
+        `handles out-of-range FormIDs), never rename to .esl.`,
+    );
+  }
+  pass(
+    `${baseName}: TES4 header correct (${isMainMod ? "full plugin, no ESL flag" : "ESL-flagged light plugin"}).`,
+  );
+}
+
+function verifyPluginHeaders(manifest) {
+  const pluginEntries = manifest.entries.filter((entry) => /\.es[pml]$/i.test(entry));
+  if (pluginEntries.length === 0) fail("Release payload lists no plugin at all.");
+  for (const entry of pluginEntries) {
+    checkPluginHeader(sourcePathForEntry(entry, manifest));
+  }
+}
+
 function verifySeq() {
   const seqPath = path.join(MOD_ROOT, "Seq", "Devotion.seq");
   if (!fs.existsSync(seqPath) || fs.statSync(seqPath).size === 0) {
@@ -472,6 +537,7 @@ function runPreflight(version, manifest) {
     fail(`Live mod folder not found: ${MOD_ROOT} (set PDV_MOD_PATH to override).`);
   }
   verifyExactLivePayload(manifest);
+  verifyPluginHeaders(manifest);
   const papyrusHashes = verifyAllPapyrusFreshness(manifest);
   verifyBuildVersion(version);
   verifyNativeFreshness();
@@ -500,6 +566,19 @@ function stageExactPayload(stagingDir, manifest) {
 
 const args = parseArgs(process.argv.slice(2));
 const manifest = loadManifest();
+
+if (args.checkPlugins.length > 0) {
+  console.log("PDV plugin header check");
+  console.log("");
+  for (const candidate of args.checkPlugins) {
+    const pluginPath = path.resolve(candidate);
+    if (!fs.existsSync(pluginPath)) fail(`Plugin not found: ${pluginPath}`);
+    checkPluginHeader(pluginPath);
+  }
+  console.log("");
+  console.log(`Plugin header check complete: ${args.checkPlugins.length} plugin(s), all correct.`);
+  process.exit(0);
+}
 
 if (args.verify) {
   const zipPath = path.resolve(args.verify);

@@ -662,6 +662,45 @@ or helper check that fails if the record returns. A one-off xEdit/houseCARL
 cleanup is not enough when the same stale record could be recreated by an
 authoring helper or preserved by a manifest.
 
+### 6.7b Post-coding hygiene pass (STANDING RULE, owner directive 2026-08-07)
+
+After any multi-commit coding cluster -- a race lane, a packet series, a feature -- run three
+hygiene activities before the lane is called done. They are cheap, they are the moments this
+project has historically shipped debt, and they are **report-only**: findings become their own
+packet, never an edit smuggled into the audit that discovered them.
+
+1. **Papyrus performance review of the CHANGED functions.** Load the `housecarl:papyrus-optimization`
+   skill. Establish each function's trigger BEFORE judging its body -- cost is
+   `frequency x work per run`, and the same line is clean in a one-shot and broken in a one-second
+   loop. Verdicts must name the trigger so severity is auditable.
+2. **Dead-code and orphaned-property sweep.** `tools/pdv_hygiene_harvest.mjs` harvests candidates:
+   unreferenced properties, uncalled functions, one-way StorageUtil keys, unreferenced tools, and
+   retired-scaffolding markers.
+3. **Retired-scaffolding verdicts.** For each retired substrate property, inert handler, or
+   obsolete compat surface: can it leave source, VMAD, and records -- with evidence.
+
+**Two rules that decide whether the pass is worth anything.**
+
+**Read the source the COMPILER reads.** `live-source/` is a mirror and goes stale whenever work
+happens in the MO2 tree. On 2026-08-07 it was up to seven weeks behind on 19 files, and a sweep run
+against it described a codebase that did not exist. `pdv_hygiene_harvest.mjs` takes
+`PDV_SOURCE_DIR` and prints which tree it read; check that line before quoting any number. The same
+applies to record evidence: confirm houseCARL's INSTANCE is Anvil first (see 6.3) -- a wrong-instance
+read returns an older record set rather than an error.
+
+**A candidate is not a finding.** Every candidate needs a prior-ruling grep and independent
+verification before it is written down as dead. This repo carries explicit "a future audit that
+flags this is wrong" notes, and historically 4 of 6 such findings were pre-disproven. The
+disqualifying guardrails: reserved signal/event/route ledger entries (deleting an unwired entry is
+itself a gate FAILURE); 2026-07-07 wired-vs-stub tags (stale, they under-report wiring); inert
+handlers kept for save compatibility; properties filled from VMAD; functions whose only callers are
+Story Manager fragments, the EventBus, or MCM handlers; unnamed INFO records (live Nord dialogue).
+
+**Delegation shape.** Bulk grep-and-classify goes to a cheaper model; the main loop keeps
+verification, because an evidence claim nobody re-checked is not evidence. Scripts do the volume so
+the model reads summaries -- never read a 1.2 MB script whole to answer a question about twelve
+functions.
+
 ### 6.8 Strip debug before release
 
 Trace messages and the debug spell are dev tools. Either remove them or gate them behind a `bDebugMode` global in MCM before any public release. A player's `Papyrus.0.log` filling with `[PDV]` traces is a defect, not a feature.

@@ -8,6 +8,10 @@ native/vendor/Creation-Kit-Platform-Extended/
 # Local/generated scratch outputs
 generated/_audit_tmp.json
 generated/live-devotion-backups/
+# Hygiene-harvest candidate dumps. Candidates are not findings, and a stale dump read as a
+# finding list is exactly the failure the pass exists to avoid. Regenerate, never commit.
+generated/pdv_hygiene_candidates*.json
+generated/pdv_hygiene_for_adjudication.json
 fixtures/ckpe/heartbeat-only.tmp.json
 fixtures/ckpe/phase60-*-duplicate-replay.ck-command-packet.json
 fixtures/ckpe/phase62-family-duplicate-saved-readback-proof.json
