@@ -65,6 +65,16 @@ Alkosh milestone, or curated lunar source in each 06:00 devotional day grants
 `+4` toward `1/25/75`; later acts grant zero. Generic inn/house sleep and
 generic theft or stealth do not qualify. The substrate does not decay.
 
+Outdoor status is captured when sleep starts and carried through to a
+completed, non-interrupted sleep stop. The wake cell is not sampled again, so
+an exterior bedroll or tent remains road-home practice even if its sleep flow
+moves the player during wake-up. Missing start context fails closed. The first
+road-home rest in each devotional day receives one toast and one Book of Days
+entry. If another lunar practice already spent the shared `+4`, the entry says
+`The road home was remembered. Today's lunar practice was already marked.`
+Further road-home rests that day create no additional toast or Book entry.
+Vanilla exterior-bedroll and Campfire-tent runtime proof remains open.
+
 `Observe the Moons` is a Khajiit-only lesser power used outdoors from 20:00 to
 05:00. It resolves once after two still, uninterrupted seconds in the shared
 Power slot. Selecting it replaces Survey Devotion in the ordinary Magic-menu

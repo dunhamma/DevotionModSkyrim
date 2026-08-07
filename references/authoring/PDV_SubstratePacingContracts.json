@@ -256,6 +256,13 @@
         "continuous automatic moon polling"
       ],
       "roadHomeRule": "The outdoor road itself is home. No designated anchor, circuit, or repeated-location rejection is part of normal play.",
+      "roadHomeClassification": "Capture exterior or interior status at sleep start and treat it as authoritative at completed, non-interrupted sleep stop. Do not resample the wake cell. Missing sleep-start context fails closed.",
+      "roadHomePresentation": {
+        "cadence": "First completed outdoor rest per 06:00 devotional day.",
+        "credited": "The road home was remembered.",
+        "dailyCreditAlreadySpent": "The road home was remembered. Today's lunar practice was already marked.",
+        "laterSameDay": "No additional road-home toast or Book of Days entry."
+      },
       "observeTheMoons": {
         "form": "Khajiit-only lesser power",
         "validHours": "20:00-05:00",
