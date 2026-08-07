@@ -379,7 +379,9 @@ function checkBookOfDaysSource(filePath, checkName, staleStatus = "FAIL") {
     "PDV.Diegetic.Journal.Titles",
     "\\\"magnitude\\\"",
     "\\\"instrument\\\"",
-    "RefreshOpenBookOfDays",
+    // "RefreshOpenBookOfDays" dropped 2026-08-07 -- retired as a superseded duplicate of the
+    // reconciliation PDV_MCM's journal hotkey does inline. pdv_prisma_ui_audit asserts that
+    // behaviour against PDV_MCM.psc instead of pinning a function name here.
     "GetJournalMagnitudeForTone",
     'AppendBookOfDaysEntry("You offered prayer at the shrine of "',
   ];

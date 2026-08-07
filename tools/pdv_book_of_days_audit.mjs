@@ -246,7 +246,10 @@ requireText(MANAGER, [
   "ShowP2BookNotice",
   'AppendBookOfDaysEntry("You offered prayer at the shrine of "',
   "GetJournalMagnitudeForTone",
-  "RefreshOpenBookOfDays",
+  // "RefreshOpenBookOfDays" dropped 2026-08-07: the standalone function was a superseded
+  // duplicate of the reconciliation PDV_MCM's journal hotkey already does inline, and a needle
+  // that pins a function NAME dies with the function. The behaviour is asserted against
+  // PDV_MCM.psc in pdv_prisma_ui_audit. The key below still pins the state this gate cares about.
   "PDV.Diegetic.Journal.Open",
   "PDV.BookOfDays.LastTierDeity",
   "BuildTierReachJournalLine",

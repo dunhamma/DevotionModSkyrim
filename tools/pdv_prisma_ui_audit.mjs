@@ -1069,7 +1069,6 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     }
 
     const journalBlock = functionBlock(manager, "SendPrismaJournalPayload");
-    const refreshJournalBlock = functionBlock(manager, "RefreshOpenBookOfDays");
     const appendJournalBlock = functionBlock(manager, "AppendBookOfDaysEntry");
     if (!journalBlock) {
       fail("SendPrismaJournalPayload function is missing.", managerPath);
@@ -1115,16 +1114,22 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
       pass("Medallion modal payload has no live callers.", managerPath);
     }
 
+    // The invariant is "stale Papyrus journal-open state gets reconciled against native
+    // visibility", not "a function named RefreshOpenBookOfDays exists". That standalone function
+    // was retired 2026-08-07: PDV_MCM's journal hotkey already did the identical reconciliation
+    // inline, at the only moment it matters, so the function was a superseded duplicate that
+    // nothing called. Assert the behaviour where it actually lives.
+    const mcmJournalSource = read(MCM_SOURCE);
     if (
-      !refreshJournalBlock.includes("PDV_PrismaBridge.IsJournalVisible()") ||
-      !refreshJournalBlock.includes('StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)')
+      !mcmJournalSource.includes("PDV_PrismaBridge.IsJournalVisible()") ||
+      !mcmJournalSource.includes('StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)')
     ) {
-      fail("Book of Days refresh must reconcile stale Papyrus open state against native journal visibility.", managerPath);
+      fail("Journal hotkey must reconcile stale Papyrus open state against native journal visibility.", MCM_SOURCE);
     } else {
-      pass("Book of Days refresh reconciles stale Papyrus open state against native visibility.", managerPath);
+      pass("Journal hotkey reconciles stale Papyrus open state against native visibility.", MCM_SOURCE);
     }
 
-    if (appendJournalBlock.includes("RefreshOpenBookOfDays(") || appendJournalBlock.includes("SendPrismaJournalPayload(")) {
+    if (appendJournalBlock.includes("SendPrismaJournalPayload(")) {
       fail("Book of Days writes must not open or refresh the journal modal during gameplay.", managerPath);
     } else {
       pass("Book of Days writes only store chronicle data and do not open/refresh the modal.", managerPath);

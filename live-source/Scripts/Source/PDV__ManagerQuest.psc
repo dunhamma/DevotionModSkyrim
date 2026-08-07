@@ -24670,16 +24670,12 @@ Int Function GetJournalMagnitudeForTone(String toneKey)
     return 1
 EndFunction
 
-Function RefreshOpenBookOfDays()
-    Int bookOpen = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Open")
-    if bookOpen == 0 || !PDV_PrismaBridge.IsAvailable()
-        return
-    endIf
-
-    if !PDV_PrismaBridge.IsJournalVisible()
-        StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
-    endIf
-EndFunction
+; RefreshOpenBookOfDays was retired 2026-08-07. It reconciled a stale "PDV.Diegetic.Journal.Open"
+; flag against PDV_PrismaBridge.IsJournalVisible(), but PDV_MCM's journal-hotkey OnKeyDown already
+; does exactly that inline, at the only moment the answer is consumed -- so it was a superseded
+; duplicate with no caller, and three gates asserted on its NAME rather than on the behaviour.
+; Those gates now assert the reconciliation against PDV_MCM.psc. Do not re-add a periodic variant:
+; a tick that re-checks state already reconciled for free at the consumption point is pure cost.
 
 ; Short title derived from the tone/event key.
 String Function JournalToneToTitle(String toneKey)
