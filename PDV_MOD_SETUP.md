@@ -1100,6 +1100,14 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 ## Notes / Decisions Log
 
+**2026-08-07 AEST - release-issue reconciliation:** The live `Devotion.esp`
+now includes Hircine and Molag Bal stigma notification triples and the complete
+Shor T3 low-health-save presentation contract. Its current SHA-256 is
+`87B04CDFFC9F0A3064CEA37D37DDAEA10C3AEEB9A4B9D3B1B515C44AE7B395B7`
+(649,917 bytes). The source-side release fixes compile cleanly. This is direct
+readback/static proof only; the substrate uninstall fix still requires an MCM
+uninstall smoke before issue #30 or the release claim can be closed.
+
 **2026-08-07 AEST - ARR 2.5 combined candidate deployment and winner-aware
 preflight:** Installed the 84-file combined FOMOD lane as
 `D:\Wabbajack\modlists\ARR 2.5\mods\Devotion - Authoria ARR Compatibility`,

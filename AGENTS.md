@@ -1074,6 +1074,8 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 
 ## Decisions Log
 
+- **[2026-08-07] - Pre-release GitHub issue reconciliation distinguishes implementation from runtime closure:** Issues #29-#32 were reviewed against current source and direct live ESP readback. Canonical slash aliases are normalized at matrix compile time; uninstall asks all seven substrate owners to clear their own boons; substrate ownership contracts now classify teardown-only manager references without creating a second runtime owner; optional skeleton arrays are null-guarded; Hircine/Molag stigma messages and Shor T3 presentation are wired in the live ESP. Azurah's Khajiit response remains deliberately absent because Azurah is native. Static gates and direct readback are green, but issue #30 remains runtime-open until an MCM uninstall smoke confirms substrate spells are removed. Issue #27 remains a future cross-race Azurah's Portent design review and is not a release defect.
+
 - **[2026-08-07] - Altmer current scoring/display roster is five deities:**
   Auri-El, Magnus, Xarxes, Syrabane, and Trinimac are the current Altmer list.
   Mara, Stendarr, and Y'ffre are `FOREIGN` for Altmer and must not score, appear
