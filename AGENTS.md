@@ -1073,6 +1073,15 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 
 ## Decisions Log
 
+- **[2026-08-07] - Altmer current scoring/display roster is five deities:**
+  Auri-El, Magnus, Xarxes, Syrabane, and Trinimac are the current Altmer list.
+  Mara, Stendarr, and Y'ffre are `FOREIGN` for Altmer and must not score, appear
+  in the Altmer medallion, or enter Altmer Book of Days quest-reaction beats.
+  Their broader-pantheon case is deferred to the future-update backlog and may
+  only be restored deity-by-deity with the stance, runtime roster, medallion,
+  reachability inventory, and Prisma gate updated together. Phynaster remains
+  presentation-only and outside live scoring.
+
 - **[2026-08-07] - Authoria combined packaging is superseded by the modular
   PatchHub:** `PDV_AuthoriaARR_Combined.esp`, its list-specific tree, and
   `PDV_QuestReactionMatrix_ARR.json` must not ship. ARR now consumes the same

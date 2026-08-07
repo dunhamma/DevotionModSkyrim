@@ -1125,7 +1125,9 @@ Authoria lane described below is superseded. ARR now installs the ordinary
 Devotion core archive plus a fully modular, dependency-gated PatchHub; no option
 may replace core scripts or matrices. The committed source is `ff7fc4e`. Core is
 `dist\Devotion-1.0.4-20260807.zip` (231 exact members, SHA-256
-`12D5B7EA8B9C695302175E9DCB5FC803EB36E5D0BEF8D3848A2E39324D62FC41`).
+`CF7CFDBD5FC84D6B7BA5C6B4DFC697745978DA50C3290E1ED89095D41775E4DE`).
+This rebuild includes the Altmer five-deity roster correction and existing-save
+Book of Days repair version 3.
 PatchHub is `dist\PDV-QuestModPatchHub-ARR25-Experimental-20260807.zip` (80
 exact members, 41 options, 39 channels, SHA-256
 `DEC5EBC4285F3985D3D8F0BDF1ADBE4F288C20FB09F3D83EA3ECD5457F633949`).

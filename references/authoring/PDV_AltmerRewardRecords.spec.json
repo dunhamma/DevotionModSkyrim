@@ -18,6 +18,12 @@
       "implementationRule": "Do not create PDV_Deity_Phynaster, a PDV_Phynaster manager property, Altmer Phynaster reward spells, formal-offer messages, or scoring rows in this spec."
     }
   ],
+  "futureRosterReview": {
+    "status": "deferred-post-current-list",
+    "deities": ["Mara", "Stendarr", "Y'ffre"],
+    "currentRule": "Do not score, display in the Altmer medallion, or surface in Altmer Book of Days quest-reaction beats.",
+    "reviewQuestion": "After the current five-deity Altmer list is stable, decide whether any of these broader pantheon associations deserve explicit Altmer access without diluting the focused roster."
+  },
   "deityQuests": [
     {
       "editorId": "PDV_Deity_AuriEl",

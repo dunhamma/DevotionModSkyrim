@@ -4146,7 +4146,7 @@ Bool Function IsDashboardDeityInOriginRoster(PDV_DeityBase deity, Int originRace
     elseIf originRace == ORIGIN_BRETON
         return deity == PDV_Kynareth || deity == PDV_Talos || deity == PDV_Mara || deity == PDV_Akatosh || deity == PDV_Arkay || deity == PDV_Stendarr || deity == PDV_Julianos || deity == PDV_Dibella || deity == PDV_Zenithar || deity == PDV_Magnus || deity == PDV_Yffre
     elseIf originRace == ORIGIN_ALTMER
-        return deity == PDV_Mara || deity == PDV_Stendarr || deity == PDV_Magnus || deity == PDV_Yffre || deity == PDV_AuriEl || deity == PDV_Xarxes || deity == PDV_Trinimac || deity == PDV_Syrabane
+        return deity == PDV_AuriEl || deity == PDV_Magnus || deity == PDV_Xarxes || deity == PDV_Trinimac || deity == PDV_Syrabane
     elseIf originRace == ORIGIN_BOSMER
         return deity == PDV_Yffre || deity == PDV_AuriEl || deity == PDV_Xarxes || deity == PDV_BaanDar || deity == PDV_Zen
     elseIf originRace == ORIGIN_DUNMER
@@ -24349,7 +24349,7 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
 EndFunction
 
 Function RepairBookOfDaysJournalText()
-    Int repairVersion = 2
+    Int repairVersion = 3
     if StorageUtil.GetIntValue(None, "PDV.BookOfDays.TextRepairVersion") >= repairVersion
         return
     endIf
@@ -24367,6 +24367,21 @@ Function RepairBookOfDaysJournalText()
         i += 1
     endWhile
 
+    ; Version 3 removes journal beats produced while the broader Mara / Stendarr /
+    ; Y'ffre packet was incorrectly active for Altmer. Iterate backwards so all
+    ; parallel Book of Days lists remain aligned as entries are removed.
+    if GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
+        Int pruneIndex = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines") - 1
+        while pruneIndex >= 0
+            String journalLine = StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Lines", pruneIndex)
+            if ShouldPruneDeferredAltmerJournalLine(journalLine)
+                RemoveBookOfDaysEntryAt(pruneIndex)
+                repaired += 1
+            endIf
+            pruneIndex -= 1
+        endWhile
+    endIf
+
     ; 12.1 / fix-plan 5.4 -- the journal-TITLE repair loop that used to sit here was
     ; provably dead and has been deleted. It read a title, and if it "==" the literal
     ; "an act of devotion" replaced it with "An act of devotion", then wrote only "if
@@ -24382,8 +24397,15 @@ Function RepairBookOfDaysJournalText()
 
     StorageUtil.SetIntValue(None, "PDV.BookOfDays.TextRepairVersion", repairVersion)
     if repaired > 0 && GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Book of Days display text repaired: " + repaired)
+        Debug.Trace("[PDV] Book of Days entries reconciled: " + repaired)
     endIf
+EndFunction
+
+Bool Function ShouldPruneDeferredAltmerJournalLine(String line)
+    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER
+        return False
+    endIf
+    return StringContainsToken(line, "Mara") || StringContainsToken(line, "Stendarr") || StringContainsToken(line, "Y'ffre")
 EndFunction
 
 String Function GetPublicDeityDisplayName(PDV_DeityBase deity)
@@ -24823,11 +24845,8 @@ String Function GetBretonMedallionEntriesJson()
 EndFunction
 
 String Function GetAltmerMedallionEntriesJson()
-    String entries = RosterMedallionEntry("mara", "Mara", "god", "mara", PDV_Mara, "Kinship, care, and ordered mercy.")
-    entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", PDV_Stendarr, "Mercy and lawful protection.")
-    entries = entries + "," + RosterMedallionEntry("magnus", "Magnus", "god", "magnus", PDV_Magnus, "Light, magic, and origin memory.")
+    String entries = RosterMedallionEntry("magnus", "Magnus", "god", "magnus", PDV_Magnus, "Light, magic, and origin memory.")
     entries = entries + "," + PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Endurance, pilgrimage, and old discipline.")
-    entries = entries + "," + RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, "Story, form, and natural law.")
     entries = entries + "," + RosterMedallionEntry("auri-el", "Auri-El", "god", "auri-el", PDV_AuriEl, "The founding light and ancestral ascent.")
     entries = entries + "," + RosterMedallionEntry("syrabane", "Syrabane", "god", "syrabane", PDV_Syrabane, "Protection, apprentices, and survival through wisdom.")
     entries = entries + "," + RosterMedallionEntry("xarxes", "Xarxes", "god", "xarxes", PDV_Xarxes, "Lineage, record, and ordered memory.")

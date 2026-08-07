@@ -1,6 +1,6 @@
 {
   "schema": "pdv-arr25-modular-deployment.v1",
-  "generatedAt": "2026-08-07T13:46:15.6460371+10:00",
+  "generatedAt": "2026-08-07T14:55:10.8990450+10:00",
   "status": "MACHINE-PREFLIGHT-PASS",
   "proofBoundary": "Deployment, load-order resolution, and asset-winner proof only. Runtime routing, player-facing UI, semantic correctness, save/load behavior, and support remain open.",
   "target": {
@@ -13,8 +13,8 @@
   "archives": [
     {
       "file": "dist/Devotion-1.0.4-20260807.zip",
-      "bytes": 8293932,
-      "sha256": "12D5B7EA8B9C695302175E9DCB5FC803EB36E5D0BEF8D3848A2E39324D62FC41",
+      "bytes": 8294880,
+      "sha256": "CF7CFDBD5FC84D6B7BA5C6B4DFC697745978DA50C3290E1ED89095D41775E4DE",
       "installedMod": "Devotion - ARR25 Experimental Core 20260807",
       "installedFiles": 231
     },
@@ -66,6 +66,13 @@
       "afdiCases": 30,
       "otherNonQuestCases": 19,
       "proofBoundary": "Case assignment only; no runtime case verdict is implied."
+    },
+    "altmerCurrentRoster": {
+      "status": "PASS",
+      "active": ["Auri-El", "Magnus", "Xarxes", "Syrabane", "Trinimac"],
+      "deferred": ["Mara", "Stendarr", "Y'ffre"],
+      "existingSaveRepair": "Book of Days repair version 3 prunes affected deferred-deity entries for Altmer on next journal open.",
+      "prismaAudit": "125 PASS / 0 FAIL"
     },
     "housecarlProfile": {
       "status": "PASS",

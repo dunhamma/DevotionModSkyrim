@@ -54,6 +54,12 @@ node tools\pdv_matrix_runtime_preflight.mjs --mo2 "D:\Wabbajack\modlists\ARR 2.5
 
 For one resolving quest outcome, expect at most one transient Devotion toast and one Book of Days beat, even when several deities react. Piety detail may name multiple deities inside that single surface.
 
+For an Altmer, the current eligible list is Auri-El, Magnus, Xarxes, Syrabane,
+and Trinimac. Mara, Stendarr, and Y'ffre must not enter Altmer quest-reaction
+toasts or Book of Days beats. On an affected existing save, opening Book of
+Days once runs repair version 3 and removes the old leaked entries before the
+journal payload is rendered.
+
 Altmer are not excluded from Prisma UI. Their accepted heritage/practice notices use the same transient-toast policy as other races:
 
 - a credited heritage or practice act may produce one toast and one Book of Days entry;

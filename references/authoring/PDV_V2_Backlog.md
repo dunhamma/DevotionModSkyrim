@@ -412,6 +412,25 @@ semantics touches every race at once.
 
 ---
 
+## 9c. Altmer broader-pantheon roster review
+
+**Decision:** Deferred 2026-08-07 after ARR 2.5 runtime testing showed Mara,
+Stendarr, and Y'ffre entering Altmer Book of Days quest-reaction beats. The
+current Altmer scoring/display list is intentionally limited to Auri-El,
+Magnus, Xarxes, Syrabane, and Trinimac. Phynaster remains presentation-only.
+
+**What exists today:** The three deferred gods remain valid records for other
+races, but their Altmer stance is `FOREIGN`, they are absent from the Altmer
+runtime/medallion roster, and the reachability gate prevents their matrix cells
+from scoring or entering Altmer quest-reaction notices.
+
+**First future step:** Review the theological and gameplay case for each deity
+individually. Any promotion must update the stance matrix, runtime roster,
+medallion manifest, reachability inventory, and Altmer Prisma regression gate
+together; do not restore the old broad packet wholesale.
+
+---
+
 ## 10. Triage note
 
 After 1.0 ships, convert this stub into a real V2 roadmap: group the voiced

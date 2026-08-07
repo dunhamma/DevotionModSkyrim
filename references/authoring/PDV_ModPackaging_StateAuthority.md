@@ -79,7 +79,7 @@ runtime, player-surface, semantic, or support proof.
 
 | Archive | Bytes | SHA-256 | Exact contents |
 |---|---:|---|---|
-| `Devotion-1.0.4-20260807.zip` | 8,293,932 | `12D5B7EA8B9C695302175E9DCB5FC803EB36E5D0BEF8D3848A2E39324D62FC41` | 231 manifest entries; 100 PSC/PEX pairs |
+| `Devotion-1.0.4-20260807.zip` | 8,294,880 | `CF7CFDBD5FC84D6B7BA5C6B4DFC697745978DA50C3290E1ED89095D41775E4DE` | 231 manifest entries; 100 PSC/PEX pairs; Altmer five-deity roster repair |
 | `PDV-QuestModPatchHub-ARR25-Experimental-20260807.zip` | 509,879 | `DEC5EBC4285F3985D3D8F0BDF1ADBE4F288C20FB09F3D83EA3ECD5457F633949` | 80 members; 41 options; 39 channel files |
 
 Core intentionally includes the current Altmer and Khajiit runtime/UI assets,
@@ -147,6 +147,14 @@ coverage, not an in-game result.
 This closes deployment-state and asset-winner proof only. No fresh-process
 matrix registration, gameplay route, player-surface, semantic, save/load, or
 support proof is implied.
+
+The 2026-08-07 Altmer runtime correction limits Altmer scoring, medallion, and
+quest-reaction notices to Auri-El, Magnus, Xarxes, Syrabane, and Trinimac.
+Mara, Stendarr, and Y'ffre are deferred to a future roster review. The rebuilt
+core above is installed in the additive experiment profile; Book of Days repair
+version 3 removes affected historical entries on the next Altmer journal open.
+The Prisma static audit passes 125 checks, but the corrected runtime behavior
+still requires a fresh in-game observation.
 
 ## Open proof and migration contract
 
