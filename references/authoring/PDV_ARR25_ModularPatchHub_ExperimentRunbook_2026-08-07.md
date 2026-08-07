@@ -21,6 +21,35 @@ The core archive contains the shared runtime, Book of Days and Prisma UI contrac
 6. Do not install or retain `PDV_AuthoriaARR_Combined.esp`, `PDV_QuestReactionMatrix_ARR.json`, or an older PatchHub core-script override.
 7. Start from a save made before the outcome under test where practical. Keep a separate fallback save.
 
+After installation, run the deployment preflight from the repository worktree:
+
+```powershell
+node tools\pdv_matrix_runtime_preflight.mjs --mo2 "D:\Wabbajack\modlists\ARR 2.5" --profile "KoK R11" --compat-mod "Devotion - Quest Mod PatchHub" --expected-core 157 --expected-channels 39 --json
+```
+
+The expected deployment result is 157 watched core quests and 39 winning
+reaction-channel files. The gate must also report the retired Authoria mod,
+combined ESP, historical QuestMods ESP, and old compatibility ESP as disabled
+or inactive. Do not continue to runtime cases while any deployment finding
+fails.
+
+Confirm that the runtime case packet still covers the complete authored
+outcome set before distributing it:
+
+```powershell
+node tools\pdv_arr25_runtime_evidence_coverage_audit.mjs
+```
+
+The expected result is `PASS`: 72 of 72 quest outcomes with no missing,
+duplicate, or orphan case, plus 30 AFDI and 19 other non-quest cases. This is a
+case-assignment gate only; it does not prove that any case passed in game.
+
+The additive Codex-prepared profile uses explicit experimental mod names:
+
+```powershell
+node tools\pdv_matrix_runtime_preflight.mjs --mo2 "D:\Wabbajack\modlists\ARR 2.5" --profile "KoK R11 - PDV ARR25 Experiment 20260807" --core-mod "Devotion - ARR25 Experimental Core 20260807" --compat-mod "Devotion - ARR25 Experimental PatchHub 20260807" --expected-core 157 --expected-channels 39 --json
+```
+
 ## Expected UI behavior
 
 For one resolving quest outcome, expect at most one transient Devotion toast and one Book of Days beat, even when several deities react. Piety detail may name multiple deities inside that single surface.

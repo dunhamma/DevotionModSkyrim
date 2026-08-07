@@ -122,6 +122,32 @@ and tester ledgers that are not install payload.
   124-second run window; no PASS is claimed from that command. The targeted
   Prisma gate and compilation passed.
 
+## ARR 2.5 deployment state
+
+The additive experiment profile
+`KoK R11 - PDV ARR25 Experiment 20260807` is installed and selected. The base
+`KoK R11` profile files remain unchanged. It enables the two new mod folders,
+disables the three prior Devotion/compatibility folders, and replaces the
+combined ESP with five narrow ESPFEs.
+
+Deployment preflight passes at 33 PASS / 4 INFO / 0 FAIL: 157 core watches,
+39 valid winning channels, and 3,743 checked plugins present in matching
+`plugins.txt` / `loadorder.txt` order. Direct houseCARL profile readback resolves
+3,803 active plugins to real files. Nine representative core/PatchHub runtime
+assets and all six installed plugin files have the intended sole provider,
+including the core matrix, manager PEX, Altmer practice JSON, Prisma app,
+Vigilant channel, TGAE adapter, AFDI PEX/SEQ, and Daedric shrine BOS map. The structured receipt is
+`PDV_ARR25_ModularDeploymentReceipt_2026-08-07.json`.
+
+The read-only runtime-evidence coverage gate also passes: 72 of 72 quest
+outcomes are assigned exactly once, with no missing or orphan case; the
+non-quest packet contains 30 AFDI and 19 other cases. This proves assignment
+coverage, not an in-game result.
+
+This closes deployment-state and asset-winner proof only. No fresh-process
+matrix registration, gameplay route, player-surface, semantic, save/load, or
+support proof is implied.
+
 ## Open proof and migration contract
 
 Install core first and PatchHub below it on ARR 2.5 `KoK R11`, selecting only

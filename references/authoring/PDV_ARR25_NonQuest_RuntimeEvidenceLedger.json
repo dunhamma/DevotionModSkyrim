@@ -1,7 +1,7 @@
 {
   "schema": "pdv-arr25-nonquest-runtime-evidence.v1",
-  "target": "ARR 2.5 KoK R11",
-  "packageLane": "Authoria combined",
+  "target": "ARR 2.5 / KoK R11 - PDV ARR25 Experiment 20260807",
+  "packageLane": "Modular PatchHub individual option(s): AFDI observer and Daedric Shrines AIO prayer activators are independent options",
   "status": "OPEN",
   "proofBoundary": "Machine proof does not establish runtime routing, player surfaces, semantics, or support. Each positive case requires the expected piety result, exactly one toast, exactly one Book of Days beat, save/load stability, and no repeat award unless the contract says renewable.",
   "afdiCases": [
@@ -58,5 +58,5 @@
     {"id":"NQ-SHRINE-013","surface":"Wyrmstooth shrine placement negative control","expected":"no inherited ARR swap claim; record actual behavior only","verdict":"OPEN"}
   ],
   "evidenceFields": ["routeMarker", "pietyReadback", "toastCount", "bookOfDaysBeatCount", "saveLoad", "organicSemantics", "failures"],
-  "supportRule": "The Authoria combined lane remains experimental until every positive and negative-control case passes. Individual options inherit support only from equivalent evidence."
+  "supportRule": "Each Modular PatchHub option remains experimental until its positive and negative-control cases pass. An option becomes supportable only from equivalent evidence recorded for that option."
 }

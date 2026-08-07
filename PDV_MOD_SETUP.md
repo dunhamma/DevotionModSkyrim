@@ -1111,10 +1111,14 @@ readback caught and corrected the MO2 priority direction: this profile's
 `modlist.txt` lists the higher-priority winner first, so the compatibility mod
 must appear above `Devotion - PatchHub` and `Devotion`. The runtime preflight
 now resolves actual MO2 winners instead of inspecting the named core folder,
-and `--expected-channels` verifies the deployed per-mod folder. Current command:
-`node tools\pdv_matrix_runtime_preflight.mjs --mo2 "D:\Wabbajack\modlists\ARR 2.5" --profile "KoK R11" --compat-mod "Devotion - Authoria ARR Compatibility" --expected-core 154 --expected-arr 62 --expected-channels 34 --json`.
-Result: `PASS=31 INFO=4 FAIL=0`; no post-deployment Papyrus registration marker
-exists yet, so runtime and support remain open.
+and `--expected-channels` verifies the deployed per-mod folder. The historical
+combined-lane command used 154 core watches, 62 ARR watches, 34 channels, and
+the now-retired `--expected-arr` argument. It is superseded by the modular
+deployment command in
+`references\authoring\PDV_ARR25_ModularPatchHub_ExperimentRunbook_2026-08-07.md`:
+157 core watches, 39 winning channels, and no combined compatibility winner.
+No post-deployment Papyrus registration marker exists yet, so runtime and
+support remain open.
 
 **2026-08-07 AEST - modular core/PatchHub replacement candidate:** The combined
 Authoria lane described below is superseded. ARR now installs the ordinary

@@ -13,6 +13,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const args = process.argv.slice(2);
+validateArgs(args);
 const MO2_ROOT = normalizePath(getArg("--mo2") ?? "D:/Wabbajack/modlists/ARR 2.5");
 const PROFILE_NAME = getArg("--profile") ?? readSelectedProfile(MO2_ROOT);
 const PROFILE_DIR = PROFILE_NAME ? path.join(MO2_ROOT, "profiles", PROFILE_NAME) : null;
@@ -26,6 +27,27 @@ const COMPAT_PLUGIN = getArg("--compat-plugin");
 const PAPYRUS_LOG = normalizePath(getArg("--log") ?? "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log");
 
 const findings = [];
+
+function validateArgs(argv) {
+  const valued = new Set([
+    "--mo2", "--profile", "--expected-core", "--expected-channels",
+    "--core-mod", "--compat-mod", "--compat-plugin", "--log",
+  ]);
+  const flags = new Set(["--json", "--core-only", "--name-resolution-only"]);
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+    if (flags.has(arg)) continue;
+    if (!valued.has(arg)) {
+      console.error(`[FAIL] Unknown argument: ${arg}`);
+      process.exit(2);
+    }
+    if (index + 1 >= argv.length || argv[index + 1].startsWith("--")) {
+      console.error(`[FAIL] ${arg} requires a value.`);
+      process.exit(2);
+    }
+    index += 1;
+  }
+}
 
 // --name-resolution-only: pure-static gate (no MO2) -- every deity name in the quest-matrix
 // CSVs must resolve through the manager's runtime name model (RepairDeityRuntimeName
@@ -207,6 +229,8 @@ function checkModlist() {
 
   requireEnabledMod(enabled, CORE_MOD);
   if (!CORE_ONLY) requireEnabledMod(enabled, COMPAT_MOD);
+  requireDisabledMod(lines, "Devotion - Authoria ARR Compatibility");
+  requireDisabledMod(lines, "Devotion - PatchHub");
   requireDisabledMod(lines, "PDV_AuthoriaARR_Compatibility");
   requireDisabledMod(lines, "PDV_Authoria_FirstLook");
   requireDisabledMod(lines, "Devotion - PlayerDevotion Local Test");
@@ -223,12 +247,17 @@ function checkPluginOrder() {
     .filter((line) => line && !line.startsWith("#"))
     .map((line) => line.startsWith("*") ? line.slice(1) : line);
 
+  checkProfilePluginOrderConsistency(activePlugins);
+
   const devotion = activePlugins.indexOf("Devotion.esp");
   const compat = activePlugins.indexOf(COMPAT_PLUGIN);
   const req = activePlugins.indexOf("Requiem for the Indifferent.esp");
 
   if (devotion === -1) fail("Plugin active", "Devotion.esp is not active.", pluginsPath);
   else pass("Plugin active", "Devotion.esp is active.", pluginsPath);
+  requireInactivePlugin(activePlugins, "PDV_AuthoriaARR_Combined.esp", pluginsPath);
+  requireInactivePlugin(activePlugins, "PDV_Patch_Authoria_QuestMods.esp", pluginsPath);
+  requireInactivePlugin(activePlugins, "PDV_AuthoriaARR_Compatibility.esp", pluginsPath);
   if (CORE_ONLY) return;
   if (COMPAT_PLUGIN) {
     if (compat === -1) fail("Plugin active", `${COMPAT_PLUGIN} is not active.`, pluginsPath);
@@ -257,6 +286,28 @@ function checkKnownMatrixFiles(enabledMods) {
       continue;
     }
     checkMatrixJson(winner, true);
+  }
+}
+
+function checkProfilePluginOrderConsistency(activePlugins) {
+  const loadOrderPath = PROFILE_DIR ? path.join(PROFILE_DIR, "loadorder.txt") : "";
+  if (!exists(loadOrderPath)) {
+    fail("MO2 plugin-order consistency", "loadorder.txt is missing.", loadOrderPath);
+    return;
+  }
+  const loadOrder = readLines(loadOrderPath)
+    .filter((line) => line && !line.startsWith("#"));
+  const positions = new Map(loadOrder.map((name, index) => [name, index]));
+  const missing = activePlugins.filter((name) => !positions.has(name));
+  const outOfOrder = activePlugins.some((name, index) =>
+    index > 0 && positions.has(name) && positions.has(activePlugins[index - 1]) &&
+    positions.get(name) <= positions.get(activePlugins[index - 1]));
+  if (missing.length > 0) {
+    fail("MO2 plugin-order consistency", `${missing.length} active plugin(s) are absent from loadorder.txt: ${missing.slice(0, 10).join(", ")}`, loadOrderPath);
+  } else if (outOfOrder) {
+    fail("MO2 plugin-order consistency", "plugins.txt active order does not match loadorder.txt.", loadOrderPath);
+  } else {
+    pass("MO2 plugin-order consistency", `${activePlugins.length} checked plugins are present in matching load order.`, loadOrderPath);
   }
 }
 
@@ -527,6 +578,14 @@ function requireDisabledMod(lines, modName) {
     pass("MO2 stale mod disabled", `${modName} is disabled.`);
   } else {
     fail("MO2 stale mod disabled", `${modName} is enabled; disable stale snapshot.`);
+  }
+}
+
+function requireInactivePlugin(activePlugins, pluginName, pluginsPath) {
+  if (activePlugins.includes(pluginName)) {
+    fail("Stale plugin inactive", `${pluginName} is active; disable the retired compatibility plugin.`, pluginsPath);
+  } else {
+    pass("Stale plugin inactive", `${pluginName} is not active.`, pluginsPath);
   }
 }
 
