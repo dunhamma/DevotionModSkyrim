@@ -148,7 +148,12 @@ Function HandleCurseTransition(Int oldState, Int newState, String reason)
         StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.CurseTouched", 1)
         StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueActive", 0)
         StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Daedric.Hircine.ResidueUntil", 0.0)
-        ShowRaceResponseForPlayer()
+        ; Owner ruling 2026-08-07: the race-response modal no longer fires on curse entry. It is the
+        ; COMMITMENT beat -- every other Prince shows it only when the player commits -- and firing it
+        ; here put a second blocking modal on top of PDV_Msg_Nord_CurseState_WerewolfOnset, which the
+        ; Nord curse handler already shows in the same tick. It also read as nonsense at that moment:
+        ; the body explains what closing the path costs, delivered before the player has taken it.
+        ; Still reachable at the real commitment site (ShowRaceResponseForPlayer at the commit path).
         Trace(1, "Curse entry recorded for Hircine.")
         return
     endIf

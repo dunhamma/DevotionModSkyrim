@@ -881,6 +881,14 @@ Int _optimizationContextProbeRuns = 0
 Bool _panelDirty = False
 Bool _suppressAwardFavorToast = False
 Bool _suppressCurseTransitionOutputs = False
+; Set by any race-voiced curse surface that actually emits, cleared at the top of each curse
+; transition. SendPrismaCurseToast reads it so the generic "<Curse> is lifted / has been driven out"
+; toast stands aside when a race already spoke -- a Nord curing lycanthropy was getting the race line
+; AND the generic one describing the same event in placeholder copy.
+; Deliberately a FLAG rather than a race list: only four races (Nord, Argonian, Khajiit, Redguard)
+; have cure records at all, and the generic toast must keep covering the other five, or curing a
+; curse goes completely silent for them. When a race gains its records the flag picks it up for free.
+Bool _raceCurseSurfaceShown = False
 ; Pooled-line structural-validation cache (2026-08-07). Each validator probed every entry in its
 ; pool on EVERY pick -- ~64 native JsonUtil calls for the 20-entry Altmer pool, ~53 for a 16-entry
 ; Khajiit moon pool. The pools are static shipped content, so the structure cannot change under a
@@ -9091,6 +9099,10 @@ Function ShowKhajiitMessage(Message messageRecord, String fallbackText, Bool sup
         return
     endIf
 
+    ; Past this point the function always emits something (toast, modal, or fallback box),
+    ; so the generic curse toast can stand aside for this transition.
+    _raceCurseSurfaceShown = True
+
     if suppressModal
         SendPrismaToast("lunar", "warning", "", fallbackText)
         return
@@ -12164,6 +12176,13 @@ Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
         ; burned and never cleared by anything. This fixes it for EVERY race, not just Altmer.
         if newTier < oldTier
             StorageUtil.SetIntValue(None, "PDV.TierNoticeShown." + deity.DeityIndex + "." + oldTier, 0)
+            ; P10 parity for the authored Nord/Kyne recognition (2026-08-07). Its own one-shot key
+            ; is NOT the tier notice, so without this a Nord who fell from Champion and climbed back
+            ; got the toast and Book entry again but never the modal -- the exact "total silence on a
+            ; re-climb" bug the block above exists to prevent, reintroduced one surface lower.
+            if oldTier >= TIER_CHAMPION && PDV_Kyne && deity == PDV_Kyne
+                StorageUtil.SetIntValue(None, "PDV.Nord.ChampionEntryShown.Kyne", 0)
+            endIf
         endIf
 
         Bool isFocusedEmphasis = IsKhajiitOrigin() && deity == GetKhajiitEmphasisDeity(GetKhajiitFocusedEmphasis())
@@ -21048,6 +21067,7 @@ Function HandleCurseStateTransition(Int oldState, Int newState, String reason)
     Bool suppressOutputs = IsCurseStateLoadReconciliation(reason)
     Bool previousSuppress = _suppressCurseTransitionOutputs
     _suppressCurseTransitionOutputs = suppressOutputs
+    _raceCurseSurfaceShown = False
     ApplyCurseRaceHandlers(oldState, newState, reason)
     _suppressCurseTransitionOutputs = previousSuppress
 
@@ -21147,6 +21167,16 @@ Function SendPrismaCurseToast(Int oldState, Int newState)
         phase = "cure"
     else
         phase = "shift"
+    endIf
+
+    ; Owner ruling 2026-08-07: on a CURE, stand aside when the race already spoke. A Nord curing
+    ; lycanthropy was getting three surfaces for one event -- the race line, Hircine's residue toast,
+    ; and this generic one, whose copy is marked PLACEHOLDER below and only restates the event flatly.
+    ; Cure only, deliberately: onset has the same duplicate shape but was not part of the ruling.
+    ; Only Nord, Argonian, Khajiit and Redguard have cure records, so for the other five races this
+    ; generic toast is the ONLY cure surface and must keep firing.
+    if phase == "cure" && _raceCurseSurfaceShown
+        return
     endIf
 
     ; Curse type: use the *incoming* state for onset/shift; outgoing state for cure
@@ -22174,6 +22204,10 @@ Function ShowArgonianMessage(Message messageRecord, String fallback, Bool suppre
         return
     endIf
 
+    ; Past this point the function always emits something (toast, modal, or fallback box),
+    ; so the generic curse toast can stand aside for this transition.
+    _raceCurseSurfaceShown = True
+
     if suppressModal || !messageRecord
         SendPrismaToast("hist", "warning", "", fallback)
         return
@@ -22304,7 +22338,7 @@ Function ApplyNordCurseHandlers(Int oldState, Int newState, String reason)
     elseIf newState == 1
         StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfCureFeedbackShown", 0)
         if StorageUtil.GetIntValue(None, "PDV.Nord.WerewolfFeedbackShown") != 1
-            ShowNordMessage(PDV_Msg_Nord_CurseState_WerewolfOnset, "The hunt pulls against Sovngarde. Master the beast, or it will name the road for you.", suppressModal)
+            ShowNordMessage(PDV_Msg_Nord_CurseState_WerewolfOnset, "The hunt pulls against Sovngarde. Master the beast, or it will master you.", suppressModal)
             StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfFeedbackShown", 1)
         endIf
     elseIf newState == 0
@@ -22312,7 +22346,7 @@ Function ApplyNordCurseHandlers(Int oldState, Int newState, String reason)
         ; oldState == 2 is claimed by the vampire-cure branch above, so reaching
         ; here with oldState == 1 is the werewolf cure and nothing else.
         if oldState == 1 && StorageUtil.GetIntValue(None, "PDV.Nord.WerewolfCureFeedbackShown") != 1
-            ShowNordMessage(PDV_Msg_Nord_CurseState_WerewolfCured, "The hunt is set down. Hircine's hold is broken, and your seat on the bridge holds firm once more.", suppressModal)
+            ShowNordMessage(PDV_Msg_Nord_CurseState_WerewolfCured, "The hunt is set down. Hircine's hold is broken, and Sovngarde calls you once more.", suppressModal)
             StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfCureFeedbackShown", 1)
         endIf
         StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfFeedbackShown", 0)
@@ -22335,6 +22369,10 @@ Function ShowNordMessage(Message messageRecord, String fallbackText, Bool suppre
     if _suppressCurseTransitionOutputs
         return
     endIf
+
+    ; Past this point the function always emits something (toast, modal, or fallback box),
+    ; so the generic curse toast can stand aside for this transition.
+    _raceCurseSurfaceShown = True
 
     if suppressModal
         SendPrismaToast("kyne", "warning", "", fallbackText)
@@ -22426,6 +22464,10 @@ Function ShowRedguardMessage(Message messageRecord, String fallbackText, Bool su
     if _suppressCurseTransitionOutputs
         return
     endIf
+
+    ; Past this point the function always emits something (toast, modal, or fallback box),
+    ; so the generic curse toast can stand aside for this transition.
+    _raceCurseSurfaceShown = True
 
     if suppressModal
         SendPrismaToast("tuwhacca", "warning", "", fallbackText)
