@@ -5,6 +5,18 @@ native/vendor/Creation-Kit-Platform-Extended/
 # Local agent/editor settings
 .claude/settings.local.json
 
+# Release build outputs. ~80 MB of zips, reproducible from tools/pdv_package_release.mjs, and this
+# repo is PUBLIC -- binaries in git history are effectively permanent and weigh on every clone.
+# Scoped to the build artefacts so dist/*.txt (the Nexus changelogs) stays tracked.
+# NOTE: two PreBeta .8 zips were committed before this rule and REMAIN tracked -- a gitignore entry
+# never untracks what is already in the index.
+dist/*.zip
+dist/*.xlsx
+
+# Stray images dropped at the repo root. Anchored with a leading slash on purpose: real artwork
+# lives in assets/branding/ and scratch/prisma-art/ and must keep being trackable.
+/*.png
+
 # Local/generated scratch outputs
 generated/_audit_tmp.json
 generated/live-devotion-backups/
