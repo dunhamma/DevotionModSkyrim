@@ -1,4 +1,4 @@
-;/ 
+;/
     PDV_PlayerEvents.psc
     PlayerDevotion - player alias event ingress
     -----------------------------------------------------------------------
@@ -101,8 +101,8 @@ ActorBase Property Paarthurnax Auto
 
 Int Property MQ305_FORM_ID = 0x00046EF2 AutoReadOnly
 String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
-String Property QUEST_REACTION_MATRIX_FILE_ARR = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR" AutoReadOnly
 String Property QUEST_REACTION_CHANNEL_FOLDER = "../StorageUtilData/PlayerDevotion/Channels" AutoReadOnly
+String Property QUEST_REACTION_STAGE_ADAPTER_FOLDER = "../StorageUtilData/PlayerDevotion/QuestStageAdapters" AutoReadOnly
 
 String Property MOD_EVENT_CONCORDAT_COMPLIANCE = "PDV.ConcordatCompliance" AutoReadOnly
 String Property MOD_EVENT_CONCORDAT_DEFIANCE = "PDV.ConcordatDefiance" AutoReadOnly
@@ -1579,10 +1579,8 @@ EndFunction
 
 Function RegisterQuestReactionMatrix()
     RegisterQuestReactionMatrixFile(QUEST_REACTION_MATRIX_FILE, "core")
-    if JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE_ARR)
-        RegisterQuestReactionMatrixFile(QUEST_REACTION_MATRIX_FILE_ARR, "ARR")
-    endIf
     RegisterQuestReactionChannelFolder()
+    RegisterQuestReactionStageAdapterFolder()
 EndFunction
 
 Function RegisterQuestReactionChannelFolder()
@@ -1611,6 +1609,35 @@ Function RegisterQuestReactionChannelFolder()
         channelIndex += 1
     endWhile
     Trace(2, "Quest reaction channels registered: " + StorageUtil.StringListCount(None, "PDV.QR.ChannelFiles") + ".")
+EndFunction
+
+Function RegisterQuestReactionStageAdapterFolder()
+    ; Optional package adapters remap a physical quest stage to a synthetic matrix
+    ; stage. Cache their loaded file paths so quest-stage routing never scans a
+    ; folder while handling an event.
+    StorageUtil.StringListClear(None, "PDV.QR.StageAdapterFiles")
+    String[] adapterNames = JsonUtil.JsonInFolder(QUEST_REACTION_STAGE_ADAPTER_FOLDER)
+    if !adapterNames
+        return
+    endIf
+
+    Int adapterIndex = 0
+    while adapterIndex < adapterNames.Length
+        String adapterName = adapterNames[adapterIndex]
+        if adapterName != ""
+            String adapterFile = QUEST_REACTION_STAGE_ADAPTER_FOLDER + "/" + adapterName
+            if JsonUtil.JsonExists(adapterFile)
+                ReloadQuestReactionMatrixJsonFile(adapterFile)
+                if JsonUtil.IsGood(adapterFile)
+                    StorageUtil.StringListAdd(None, "PDV.QR.StageAdapterFiles", adapterFile, False)
+                endIf
+            else
+                Trace(1, "Quest-stage adapter listed but unreadable: " + adapterFile)
+            endIf
+        endIf
+        adapterIndex += 1
+    endWhile
+    Trace(2, "Quest-stage adapters registered: " + StorageUtil.StringListCount(None, "PDV.QR.StageAdapterFiles") + ".")
 EndFunction
 
 Function RegisterQuestReactionMatrixFile(String matrixFile, String label)
@@ -2169,7 +2196,12 @@ Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage, String pare
         PDV_EventBusService.RouteDaedricPrinceSignal(12, "po3_queststage_daedric_mora_da04")
     endIf
     if ShouldRouteP2QuestStage(PDV_FLST_Daedric_NocturnalLiveSources, sourceQuest, 136533, 200, "daedric_nocturnal_tg09", newStage)
-        PDV_EventBusService.RouteDaedricPrinceSignal(13, "po3_queststage_daedric_nocturnal_tg09")
+        Int resolvedStage = ResolveQuestReactionStageAdapter(sourceQuest, newStage)
+        if resolvedStage == 200
+            PDV_EventBusService.RouteDaedricPrinceSignal(13, "po3_queststage_daedric_nocturnal_tg09")
+        else
+            Trace(2, "Quest-stage adapter suppressed Nocturnal commitment: physical=200 matrixStage=" + resolvedStage)
+        endIf
     endIf
     if ShouldRouteP2QuestStage(PDV_FLST_Daedric_PeryiteLiveSources, sourceQuest, 563597, 100, "daedric_peryite_da13", newStage)
         PDV_EventBusService.RouteDaedricPrinceSignal(14, "po3_queststage_daedric_peryite_da13")
@@ -2237,7 +2269,54 @@ Function RouteQuestReactionStage(Quest sourceQuest, Int newStage, String logical
         return
     endIf
 
-    PDV_EventBusService.RouteQuestReaction(sourceQuest, newStage, logicalEventId)
+    Int resolvedStage = ResolveQuestReactionStageAdapter(sourceQuest, newStage)
+    PDV_EventBusService.RouteQuestReaction(sourceQuest, resolvedStage, logicalEventId)
+EndFunction
+
+Int Function ResolveQuestReactionStageAdapter(Quest sourceQuest, Int newStage)
+    ; Each opt-in JSON adapter identifies a watched quest by its owning plugin and
+    ; local FormID, then maps an installed GlobalVariable value to a synthetic
+    ; matrix stage. Missing, malformed, or non-matching adapters preserve the
+    ; physical stage.
+    if !sourceQuest
+        return newStage
+    endIf
+
+    Int adapterIndex = 0
+    Int adapterCount = StorageUtil.StringListCount(None, "PDV.QR.StageAdapterFiles")
+    while adapterIndex < adapterCount
+        String adapterFile = StorageUtil.StringListGet(None, "PDV.QR.StageAdapterFiles", adapterIndex)
+        String sourcePlugin = JsonUtil.GetStringValue(adapterFile, "sourcePlugin")
+        Int sourceFormId = JsonUtil.GetIntValue(adapterFile, "sourceFormId")
+        Int sourceStage = JsonUtil.GetIntValue(adapterFile, "sourceStage")
+        if sourcePlugin != "" && sourceStage == newStage && Game.GetModByName(sourcePlugin) != 255
+            Quest configuredQuest = Game.GetFormFromFile(sourceFormId, sourcePlugin) as Quest
+            if configuredQuest == sourceQuest
+                String selectorPlugin = JsonUtil.GetStringValue(adapterFile, "selectorPlugin")
+                Int selectorFormId = JsonUtil.GetIntValue(adapterFile, "selectorFormId")
+                if selectorPlugin != "" && Game.GetModByName(selectorPlugin) != 255
+                    GlobalVariable selector = Game.GetFormFromFile(selectorFormId, selectorPlugin) as GlobalVariable
+                    if selector
+                        Int selectorValue = selector.GetValueInt()
+                        Int valueIndex = 0
+                        Int valueCount = JsonUtil.IntListCount(adapterFile, "selectorValues")
+                        while valueIndex < valueCount
+                            if JsonUtil.IntListGet(adapterFile, "selectorValues", valueIndex) == selectorValue
+                                Int targetStage = JsonUtil.IntListGet(adapterFile, "targetStages", valueIndex)
+                                if targetStage > 0
+                                    Trace(2, "Quest-stage adapter route: " + adapterFile + " physical=" + newStage + " selector=" + selectorValue + " matrixStage=" + targetStage)
+                                    return targetStage
+                                endIf
+                            endIf
+                            valueIndex += 1
+                        endWhile
+                    endIf
+                endIf
+            endIf
+        endIf
+        adapterIndex += 1
+    endWhile
+    return newStage
 EndFunction
 
 Function RouteQuestReactionBookFaucet(Form sourceForm, Bool firstRead)

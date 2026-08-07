@@ -89,7 +89,7 @@ Bool Function IsTransitionLockedOut()
 EndFunction
 
 String Function GetStateLabelAt(Int stateIndex)
-    if stateIndex >= 0 && stateIndex < StateLabels.Length
+    if StateLabels && stateIndex >= 0 && stateIndex < StateLabels.Length
         return StateLabels[stateIndex]
     endIf
 

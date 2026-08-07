@@ -1,4 +1,4 @@
-;/ 
+;/
     PDV__ManagerQuest.psc
     Devotion Mod - Phase 4 manager runtime
     -----------------------------------------------------------------------
@@ -43,9 +43,6 @@ FormList Property PDV_FLST_KhajiitMoonContemplations Auto
 Faction Property NecromancerFaction Auto
 Faction Property WarlockFaction Auto
 String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
-; List-patch second channel (e.g. Authoria/ARR). Cells are read from whichever
-; channel owns the (form|stage) key; shared stance/value tables stay on core.
-String Property QUEST_REACTION_MATRIX_FILE_ARR = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR" AutoReadOnly
 PDV_QuestReactionWorker Property PDV_QuestReactionWorkerService Auto
 
 PDV_Deity_Kyne Property PDV_Kyne Auto
@@ -1715,15 +1712,10 @@ Function HandleBardPerformance(Int qualityDelta, Bool receivedOvation, Form cont
 EndFunction
 
 String Function ResolveQuestReactionCellFile(String cellPrefix)
-    ; Return the matrix channel that owns this (form|stage) cell: core first, then
-    ; the legacy ARR channel, then the per-mod patch channels cached at
-    ; registration (PDV.QR.ChannelFiles). First hit wins. Returns "" when no
-    ; channel has the cell.
+    ; Return the matrix channel that owns this (form|stage) cell: core first,
+    ; then opt-in per-mod channels cached at registration. First hit wins.
     if JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, cellPrefix + "deitiesCsv") != ""
         return QUEST_REACTION_MATRIX_FILE
-    endIf
-    if JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE_ARR) && JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE_ARR, cellPrefix + "deitiesCsv") != ""
-        return QUEST_REACTION_MATRIX_FILE_ARR
     endIf
     Int channelIndex = 0
     Int channelCount = StorageUtil.StringListCount(None, "PDV.QR.ChannelFiles")
@@ -2595,6 +2587,21 @@ Function ResetQuestReactionSurface()
     _qrSurfBestPosSymbol = ""
     _qrSurfBestNegSymbol = ""
     _qrSurfMilestone = False
+EndFunction
+
+; Neutral compatibility seam for opt-in patch quests. Third-party observers own
+; their source-mod detection, persistence, and semantic mapping; core only owns
+; the standard piety application and the one-toast/one-Book surface contract.
+Function BeginExternalReactionBatch()
+    ResetQuestReactionSurface()
+EndFunction
+
+Function ApplyExternalReaction(String deityName, String valence, String intensity, String magnitude, String sourceTag, Form sourceForm)
+    ApplyDeityReaction(deityName, valence, intensity, magnitude, sourceTag, False, sourceForm)
+EndFunction
+
+Function EndExternalReactionBatch()
+    FlushQuestReactionSurface()
 EndFunction
 
 Function AccumulateQuestReactionSurface(PDV_DeityBase deity, Float amount, String magnitude)
@@ -4139,7 +4146,7 @@ Bool Function IsDashboardDeityInOriginRoster(PDV_DeityBase deity, Int originRace
     elseIf originRace == ORIGIN_BRETON
         return deity == PDV_Kynareth || deity == PDV_Talos || deity == PDV_Mara || deity == PDV_Akatosh || deity == PDV_Arkay || deity == PDV_Stendarr || deity == PDV_Julianos || deity == PDV_Dibella || deity == PDV_Zenithar || deity == PDV_Magnus || deity == PDV_Yffre
     elseIf originRace == ORIGIN_ALTMER
-        return deity == PDV_Mara || deity == PDV_Stendarr || deity == PDV_Magnus || deity == PDV_Yffre || deity == PDV_AuriEl || deity == PDV_Xarxes || deity == PDV_Trinimac || deity == PDV_Syrabane
+        return deity == PDV_AuriEl || deity == PDV_Magnus || deity == PDV_Xarxes || deity == PDV_Trinimac || deity == PDV_Syrabane
     elseIf originRace == ORIGIN_BOSMER
         return deity == PDV_Yffre || deity == PDV_AuriEl || deity == PDV_Xarxes || deity == PDV_BaanDar || deity == PDV_Zen
     elseIf originRace == ORIGIN_DUNMER
@@ -4959,34 +4966,36 @@ Function HandleDaedricShrinePrayer(Int pathIndex, String sourceId)
     endIf
 EndFunction
 
-; Forces a fresh disk re-read of the quest-reaction matrix channel(s) into the
-; JsonUtil in-memory cache. Use after regenerating PDV_QuestReactionMatrix(_ARR)
+; Forces a fresh disk re-read of the core matrix and discovered opt-in channels
+; into the JsonUtil in-memory cache. Use after regenerating matrix data
 ; mid-session so already-watched quests pick up newly-authored (form|stage) cells
 ; without a full reload. Returns a short summary string for the MCM readout.
 ; NOTE: this refreshes CELL DATA only; brand-new watched quests are (re)registered
 ; for stage events on the next game load via RefreshP2Hooks.
 String Function DebugReloadQuestMatrix()
     Int coreCells = 0
-    Int arrCells = 0
+    Int loadedChannels = 0
 
     JsonUtil.Unload(QUEST_REACTION_MATRIX_FILE, false)
     if JsonUtil.Load(QUEST_REACTION_MATRIX_FILE)
         coreCells = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, "questWatchFormIdsCsv"), ",").Length
     endIf
 
-    String arrState = "absent"
-    if JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE_ARR)
-        JsonUtil.Unload(QUEST_REACTION_MATRIX_FILE_ARR, false)
-        if JsonUtil.Load(QUEST_REACTION_MATRIX_FILE_ARR)
-            arrCells = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE_ARR, "questWatchFormIdsCsv"), ",").Length
-            arrState = arrCells + " watched"
+    Int channelIndex = 0
+    Int channelCount = StorageUtil.StringListCount(None, "PDV.QR.ChannelFiles")
+    while channelIndex < channelCount
+        String channelFile = StorageUtil.StringListGet(None, "PDV.QR.ChannelFiles", channelIndex)
+        JsonUtil.Unload(channelFile, false)
+        if JsonUtil.Load(channelFile)
+            loadedChannels += 1
         endIf
-    endIf
+        channelIndex += 1
+    endWhile
 
     if GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Quest matrix reloaded: core " + coreCells + " watched, ARR " + arrState)
+        Debug.Trace("[PDV] Quest matrix reloaded: core " + coreCells + " watched, channels " + loadedChannels + "/" + channelCount)
     endIf
-    return "Quest matrix reloaded.\nCore: " + coreCells + " watched quests.\nARR channel: " + arrState + "."
+    return "Quest matrix reloaded.\nCore: " + coreCells + " watched quests.\nMod channels: " + loadedChannels + "/" + channelCount + " loaded."
 EndFunction
 
 Int Function DebugGetSignalFloorSmokeScenarioCount()
@@ -6402,6 +6411,9 @@ Function HandleBretonSleepEvents(Actor playerRef, String reason)
     AwardBretonAncestorSpinePulse(multiplier, "sleep_dream_" + reason)
     if GetBretonTraditionValue() != BRETON_TRADITION_HIDDEN_ART
         return
+    endIf
+    if PDV_Julianos
+        AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
     endIf
     if PDV_Mara
         AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
@@ -18412,6 +18424,12 @@ Function PrepareForUninstall()
     ; leaves behind is reported by the MCM "Repair stats" button.
     RunAuthoriaActorValueRepair(True, False)
 
+    ; Substrate quests own their boon spells. The generic strip below cannot
+    ; reliably remove records that are bound only on those quest scripts, so
+    ; ask every substrate owner to clear its own tier slots before storage is
+    ; erased and the manager stops.
+    ClearAllSubstrateBoonsForUninstall()
+
     StripAllPdvSpells(playerRef)
 
     if playerRef
@@ -18427,6 +18445,30 @@ Function PrepareForUninstall()
     UnregisterForUpdate()
     Debug.MessageBox("Devotion has repaired its permanent stat damage, then removed its spells, factions, and most of its saved data. The stat repair ran FIRST and zeroed the permanent modifier on every actor value Devotion could touch (magic/damage/disease/frost/fire/poison resistance, carry weight, speed, health, magicka, stamina and the weapon, magic and stealth skills) - note this also clears any permanent modifier another mod had placed on those same values, which is rare but real. You may now exit to the main menu, remove the mod, and load this save. This is BEST EFFORT and not a guaranteed clean save; some inert leftover data can remain. The only fully clean removal is to load a save made before Devotion was installed.")
     Self.Stop()
+EndFunction
+
+Function ClearAllSubstrateBoonsForUninstall()
+    if PDV_ImperialAncestorSubstrate
+        PDV_ImperialAncestorSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_BretonAncestorSubstrate
+        PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_AltmerAncestorSubstrate
+        PDV_AltmerAncestorSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_NordAncestorSubstrate
+        PDV_NordAncestorSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_DunmerAncestorSubstrate
+        PDV_DunmerAncestorSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_KhajiitLunarSubstrate
+        PDV_KhajiitLunarSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_ArgonianHistSubstrate
+        PDV_ArgonianHistSubstrate.ClearSubstrateBoons()
+    endIf
 EndFunction
 
 Function ClearPdvStorageNamespaces()
@@ -24337,7 +24379,7 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
 EndFunction
 
 Function RepairBookOfDaysJournalText()
-    Int repairVersion = 2
+    Int repairVersion = 3
     if StorageUtil.GetIntValue(None, "PDV.BookOfDays.TextRepairVersion") >= repairVersion
         return
     endIf
@@ -24355,6 +24397,21 @@ Function RepairBookOfDaysJournalText()
         i += 1
     endWhile
 
+    ; Version 3 removes journal beats produced while the broader Mara / Stendarr /
+    ; Y'ffre packet was incorrectly active for Altmer. Iterate backwards so all
+    ; parallel Book of Days lists remain aligned as entries are removed.
+    if GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
+        Int pruneIndex = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines") - 1
+        while pruneIndex >= 0
+            String journalLine = StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Lines", pruneIndex)
+            if ShouldPruneDeferredAltmerJournalLine(journalLine)
+                RemoveBookOfDaysEntryAt(pruneIndex)
+                repaired += 1
+            endIf
+            pruneIndex -= 1
+        endWhile
+    endIf
+
     ; 12.1 / fix-plan 5.4 -- the journal-TITLE repair loop that used to sit here was
     ; provably dead and has been deleted. It read a title, and if it "==" the literal
     ; "an act of devotion" replaced it with "An act of devotion", then wrote only "if
@@ -24370,8 +24427,15 @@ Function RepairBookOfDaysJournalText()
 
     StorageUtil.SetIntValue(None, "PDV.BookOfDays.TextRepairVersion", repairVersion)
     if repaired > 0 && GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Book of Days display text repaired: " + repaired)
+        Debug.Trace("[PDV] Book of Days entries reconciled: " + repaired)
     endIf
+EndFunction
+
+Bool Function ShouldPruneDeferredAltmerJournalLine(String line)
+    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER
+        return False
+    endIf
+    return StringContainsToken(line, "Mara") || StringContainsToken(line, "Stendarr") || StringContainsToken(line, "Y'ffre")
 EndFunction
 
 String Function GetPublicDeityDisplayName(PDV_DeityBase deity)
@@ -24811,11 +24875,8 @@ String Function GetBretonMedallionEntriesJson()
 EndFunction
 
 String Function GetAltmerMedallionEntriesJson()
-    String entries = RosterMedallionEntry("mara", "Mara", "god", "mara", PDV_Mara, "Kinship, care, and ordered mercy.")
-    entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", PDV_Stendarr, "Mercy and lawful protection.")
-    entries = entries + "," + RosterMedallionEntry("magnus", "Magnus", "god", "magnus", PDV_Magnus, "Light, magic, and origin memory.")
+    String entries = RosterMedallionEntry("magnus", "Magnus", "god", "magnus", PDV_Magnus, "Light, magic, and origin memory.")
     entries = entries + "," + PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Endurance, pilgrimage, and old discipline.")
-    entries = entries + "," + RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, "Story, form, and natural law.")
     entries = entries + "," + RosterMedallionEntry("auri-el", "Auri-El", "god", "auri-el", PDV_AuriEl, "The founding light and ancestral ascent.")
     entries = entries + "," + RosterMedallionEntry("syrabane", "Syrabane", "god", "syrabane", PDV_Syrabane, "Protection, apprentices, and survival through wisdom.")
     entries = entries + "," + RosterMedallionEntry("xarxes", "Xarxes", "god", "xarxes", PDV_Xarxes, "Lineage, record, and ordered memory.")
