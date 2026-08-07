@@ -138,6 +138,27 @@ unreferenced tools.
   checked by a *different* mechanism. Asking "is this key read?" of that population produces noise;
   the useful question is narrower and should be posed separately.
 
+## A false-positive class this pass produced, and fixed (2026-08-07)
+
+The first harvest listed **`BeginExternalReactionBatch`, `ApplyExternalReaction` and
+`EndExternalReactionBatch` as uncalled functions.** They are the public API that third-party patch
+scripts call. Nothing inside Devotion calls them and nothing ever will -- removing them on that
+evidence would have broken every patch using the compatibility seam.
+
+`RegisterQuestReactionChannelFolder` is the same shape seen from the other side: it scans
+`../StorageUtilData/PlayerDevotion/Channels`, a folder Devotion deliberately does not ship, because
+MO2 merges it in from whichever patch provides one. That folder is empty on Anvil and holds
+**39 channel JSONs (~4.3 MB) on ARR 2.5** -- so "the folder does not exist, is the function needed?"
+had the opposite answer to the one the evidence first suggested, and only because the first look was
+at one instance.
+
+`tools/pdv_hygiene_harvest.mjs` now separates these into `publicSeamsNoInRepoCaller` by reading the
+seam language in each function's own preceding comment. The limitation is worth stating: **an
+undocumented seam still lands in the dead pile.** If a function exists for callers outside this
+repo, its comment must say so.
+
+Recorded in `PDV_STANDARDS.md` 6.7b so the next sweep does not re-propose deleting the seam.
+
 ## Companion document
 
 Performance verdicts for the same change set:

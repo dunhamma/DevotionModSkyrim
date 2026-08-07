@@ -166,14 +166,32 @@ function harvest(since) {
   }
 
   // --- functions/events with no call site ---------------------------------------------------
+  //
+  // FALSE-POSITIVE CLASS, demonstrated 2026-08-07: a PUBLIC SEAM has no in-repo caller BY DESIGN.
+  // BeginExternalReactionBatch / ApplyExternalReaction are the API third-party patch scripts call;
+  // nothing in Devotion calls them, and deleting them would break every patch that uses the seam.
+  // A call-site count cannot see across the mod boundary, so these are split out rather than mixed
+  // into the dead pile. Detected from the seam language in the function's own preceding comment --
+  // if a seam is not documented as one, it will still land in the plain list and needs the
+  // prior-ruling check to catch it.
+  const SEAM_MARKERS = /(compatibility seam|neutral seam|third-party|third party|external observer|opt-in patch|public api|patch authors?|called by (?:patch|external|other) )/i;
   const functionCandidates = [];
+  const seamCandidates = [];
   for (const [file, text] of raw) {
+    const lines = text.split(/\r?\n/);
     for (const block of functionBlocks(text)) {
       if (block.end === undefined) continue;
       if (/^On[A-Z]/.test(block.name)) continue; // engine callbacks
       const calls = (allCode.match(new RegExp(`\\b${block.name}\\s*\\(`, "g")) || []).length;
-      if (calls <= 1) {
-        functionCandidates.push({ file, name: block.name, kind: block.kind, start: block.start, lines: block.end - block.start + 1 });
+      if (calls > 1) continue;
+
+      const preamble = lines.slice(Math.max(0, block.start - 13), block.start - 1).join("\n");
+      const row = { file, name: block.name, kind: block.kind, start: block.start, lines: block.end - block.start + 1 };
+      if (SEAM_MARKERS.test(preamble)) {
+        row.seamEvidence = preamble.split(/\r?\n/).filter((l) => SEAM_MARKERS.test(l)).map((l) => l.trim()).slice(0, 2);
+        seamCandidates.push(row);
+      } else {
+        functionCandidates.push(row);
       }
     }
   }
@@ -235,6 +253,7 @@ function harvest(since) {
     candidates: {
       unreferencedProperties: propertyCandidates,
       uncalledFunctions: functionCandidates,
+      publicSeamsNoInRepoCaller: seamCandidates,
       storageKeysWrittenNeverRead: writtenNeverRead,
       storageKeysReadNeverWritten: readNeverWritten,
       unreferencedTools,
@@ -257,6 +276,7 @@ if (!args.quiet) {
   console.log(`  changed functions            : ${report.changedFunctions.length}`);
   console.log(`  unreferenced properties      : ${c.unreferencedProperties.length}`);
   console.log(`  uncalled functions/events    : ${c.uncalledFunctions.length}`);
+  console.log(`  public seams (no repo caller): ${c.publicSeamsNoInRepoCaller.length}  <- NOT dead; third-party API`);
   console.log(`  storage keys write-never-read: ${c.storageKeysWrittenNeverRead.length}`);
   console.log(`  storage keys read-never-write: ${c.storageKeysReadNeverWritten.length}`);
   console.log(`  unreferenced tools           : ${c.unreferencedTools.length}`);
