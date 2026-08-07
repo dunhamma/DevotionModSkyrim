@@ -163,3 +163,192 @@ Recorded in `PDV_STANDARDS.md` 6.7b so the next sweep does not re-propose deleti
 
 Performance verdicts for the same change set:
 `references/authoring/PDV_AltmerCalianPapyrusOptimization_2026-08-07.md`.
+
+---
+
+# Completion pass (2026-08-07, later same day)
+
+Report only. Nothing in this section was removed.
+
+Source read: `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source` (harvester printed
+`source is live MO2 tree: YES`). houseCARL instance confirmed **Anvil / Devotion Dev**.
+
+## What this pass fixes about the pass above
+
+The section above records bucket counts and five narrative findings, but **it never wrote down a
+per-function table**. "Still uncovered: 42 of 84 functions" cannot be acted on, because nothing says
+which 42, and a later reader has no way to tell an adjudicated function from an unexamined one. Any
+row-level verdicts the earlier pass produced lived only in agent output and are gone.
+
+This pass adjudicates **all 133** uncalled functions in the current live harvest **by name**, so the
+next session inherits rows rather than counts.
+
+Counts moved between the two harvests because the same-day fix packet (`d6759eab`) changed the code:
+unreferenced properties **44 -> 42** (two Nord messages got wired), uncalled functions
+**136 -> 133**, unreferenced tools **6 -> 5**.
+
+## Main-loop verification changed three delegated verdicts
+
+Bulk classification went to Sonnet subagents in four batches; every `LIKELY-REMOVABLE` and
+`SUPERSEDED` row was then re-checked in the main loop against `tools/*.mjs` for an exact-name gate
+needle. **Three rows flipped, all in the dangerous direction** -- each would have proposed deleting a
+signature a gate requires to be present:
+
+| Function | Agent said | Actually | Gate |
+|---|---|---|---|
+| `GetNordAncestorSummary` | LIKELY-REMOVABLE | **LEDGER-PROTECTED** | `pdv_verify.mjs:6228`, inside a `checkSourceContains` list |
+| `GetImperialCivicLayerLabel` | LIKELY-REMOVABLE | **LEDGER-PROTECTED** | `pdv_verify.mjs:6905`, same shape |
+| `RegisterGenericEffectList` | SUPERSEDED | **LEDGER-PROTECTED** | `pdv_verify.mjs:8847` requires the exact signature |
+
+Two near-misses in the other direction are worth recording, because both are traps a careless
+verification falls into:
+
+- A plain substring grep makes `DebugSeedBosmer` look like it has 5 callers and
+  `GetKhajiitLunarPostureLabel` like it has 3. Both are matches **inside longer names**
+  (`DebugSeedBosmerVariety`, `GetKhajiitLunarPostureLabelAt`). Word-boundary matching is mandatory
+  here, and the longer sibling is the live one in both cases.
+- Every `Record*` wrapper appears to be named in `pdv_verify.mjs` and
+  `pdv_substrate_pacing_audit.mjs`. Those hits are all matches on the `*Scaled` sibling. An
+  exact-name needle check returns **no gate needle** for any of the twelve.
+
+## Buckets, all 133 rows
+
+| Bucket | Count | Meaning |
+|---|---|---|
+| ROOT-NOT-DEAD | 34 | reached via MCM dispatch, the Prisma panel chain, or an in-file summary chain |
+| LIKELY-REMOVABLE | 37 | all checks clean, main-loop verified |
+| SUPERSEDED | 16 | a `*Scaled` or refactored sibling took over; the wrapper is stranded |
+| LEDGER-PROTECTED | 14 | a gate requires the signature present; deleting it FAILS the gate |
+| KEEP-INERT | 9 | deliberately inert for save compat, body or comment says so |
+| PUBLIC-SEAM | 4 | exists for callers outside this repo |
+| NEEDS-RECORD-CHECK | 9 | forward-looking scaffolding named in a design doc; owner call |
+| RETIRED THIS SESSION | 2 | `GetAltmerPracticeLine`, `RefreshOpenBookOfDays` |
+
+### LIKELY-REMOVABLE (37) -- the actionable set
+
+Nothing here is scheduled. A removal packet is its own commit, and each row still wants a
+compile-and-gate run behind it.
+
+**Thin wrappers whose target is called directly instead** (`PDV__ManagerQuest.psc`):
+`GetPietyByIndex`, `GetPietyTodayByIndex`, `GetTierByIndex`, `GetBroadFloorServiceCount`,
+`IsKyneNeglectActive`, `GetReputationDecayMultiplier`, `GetReputationGainMultiplierNoop`,
+`GetKhajiitLunarPostureLabel` (the live one is `...LabelAt`), `EvaluateKyneContextualFavorFamily`,
+`IsBretonNonResonantPatronChampion`, `DebugSeedBosmer` (MCM calls `DebugSeedBosmerVariety`).
+
+**Debug entry points never wired to an MCM button** -- PDV debug is MCM-driven, and these ten have no
+option handler: `DebugRecordArgonianHistMaintenance`, `DebugRecordArgonianPeopleSupport`,
+`DebugRecordArgonianBedOfChoiceReturn`, `DebugRecordArgonianVoidSignal`,
+`DebugRecordAltmerDawnSteadiness`, `DebugRecordAltmerOrthodoxCostlyEnforcement`,
+`DebugRecordAltmerDragonbornCrisis`, `DebugRecordAltmerLorkhanPressure`,
+`DebugSeedBretonDruidicFrayTest`, `DebugCycleKyneFavorMask`.
+
+`DebugSeedBretonDruidicFrayTest` carries a comment claiming MCM wiring. The comment documents
+intent, not a caller -- **a comment is not a call site**, and this is the second time in this pass a
+stale comment nearly protected dead code.
+
+**Orphaned label/summary builders** whose logic the live `Get<Race>SurveyText` duplicates inline:
+`GetArgonianHistLayerText`, `GetImperialCursePostureLabel`, `GetKyneFavorSummary`,
+`GetBretonDruidicForkLabel`, and `CountSetBits` (dies with its only caller, `GetKyneFavorSummary`).
+
+**MCM-local dead code** (`PDV_MCM.psc`): `GetDeveloperPageStateLabel` (the locked page hardcodes the
+literal instead), `GetPatronFormCacheValue`, `GetPatternSummaryString` (superseded by
+`ShowPatternSummaryPaged`), `GetSelectedCommitmentSummary` (transitively dead -- its only caller is
+`GetPatternSummaryString`).
+
+**Unconsumed getters**: `GetAcceptedCreditCount`, `GetRejectedCreditCount` (`PDV_SubstrateBase.psc`),
+`GetRawStateLabel` (`PDV_ReputationTrack.psc`), `GetLastOfferAt`, `GetPendingStartedAt`
+(`PDV_StateTrack.psc` -- both underlying keys ARE written, so the data is live and only the getters
+are unused).
+
+**Two with an explicit prior ruling already on record:**
+
+- `EvaluateQuestMetaFaucets` -- `tools/pdv_qr_direct_fanout.json:36-41` already calls it dead code and
+  says to remove it. **Removal must delete that JSON entry in the same commit**, or the entry becomes
+  a dangling reference.
+- `GetStartupOptionDetailText` -- `handoff/PDV_CleanupDebt_Handoff_2026-06-17.md:17-26` rules it dead
+  and says delete the body, keeping the Summary/Description helpers it calls. `pdv_verify.mjs:4345`
+  requires the old `Debug.MessageBox(GetStartupOptionDetailText` **call pattern to stay absent**,
+  which removal satisfies rather than violates.
+
+### SUPERSEDED (16)
+
+The dominant pattern: a substrate's unscaled `Record*` wrapper self-forwards to its `*Scaled`
+sibling, and the manager calls the Scaled one directly everywhere. Twelve rows:
+`RecordHeritageStanding`, `RecordHistMaintenance`, `RecordPeopleSupport`, `RecordBedOfChoiceReturn`,
+`RecordVoidSignal`, `RecordPortableShrinePrayer`, `RecordPlayerHomeBonus`, `RecordCivicStanding`,
+`RecordAncestorStanding`, `RecordAncestralRest`, `RecordHearthReturn`, `RecordHuntRite`.
+
+Four more from refactors that moved a responsibility: `RouteBookRead` and `RouteHarvestIngredient`
+(routing moved to `PDV_PlayerEvents` -> EventBus), `ReloadQuestReactionMatrixJson` (the MCM button
+calls the manager's own `DebugReloadQuestMatrix` instead), and `InitializeBootstrap` (superseded by
+direct `InitializeOrigin()` calls from the player-load ingress -- its sibling `OnInit` trace already
+says "Origin bootstrap deferred to player load/sleep ingress").
+
+### NEEDS-RECORD-CHECK (9) -- owner call, not cleanup
+
+These are named in forward-looking design docs as material for planned work, so a mechanical sweep
+reads them as debris when they are build-ahead. Two carry doc claims the code now contradicts, which
+is a doc bug either way:
+
+- `handoff/PrismaSubstrateInstruments_DesignDraft.md:75,125,175` claims
+  `GetBretonWitchcraftExposureLabel` is "already wired into Survey". It is not --
+  `GetBretonSurveyText` duplicates the thresholds inline.
+- `references/authoring/PDV_VoiceConformance_RecordCopy.md:322` asserts "the live
+  `GetBretonCursePostureLabel` returns bare enum-ish phrases". It has no caller.
+
+Others in the group: `GetBretonKnightlyVowLabel`, `GetBretonDruidicStandingLabel`,
+`GetAltmerHeritageLayerLabel`, `GetDunmerCursePostureLabel`, `GetMedallionDeityForOptionId`,
+`IsMedallionOptionAvailableForOrigin`, and `EmitPrayerAnim` -- one of seven documented D1 diegetic
+channels the dispatcher never calls, a missing wire in an intentionally partial scaffold.
+
+## StorageUtil keys read but never written (18) -- all resolved
+
+**Four are scanner artifacts**, not findings. A key ending in `.` is a static prefix the code
+concatenates onto at runtime, so the scanner sees the literal and never the write: `PDV.QR.Job.`
+(`PDV__ManagerQuest.psc:1929`), `PDV.Bosmer.Favor.` (`:7822`), `PDV.Orc.FourHolds.` (`:9511`),
+`PDV.LongDevotion.MarkHigh.` (`:12235`).
+
+**Ten are written elsewhere**, through concatenation or a shared helper the scanner cannot trace: the
+`PDV.ArgWaters.Seen.*`, `PDV.BosSongs.Seen.*` and `PDV.Yffre.Seen.*` site guards (the numeric suffix
+is a site LCTN FormID), `PDV.Diegetic.Mark.scar`, and the two Nord counters
+`PDV.Nord.HircineArkayEdgeCount` and `PDV.Nord.KyneTalosContextCount`, both written inside
+`RouteNordFamily(reason, countKey, ...)` where the key arrives as a parameter.
+
+**Three are deliberate console/manual override hooks** with no script writer by design:
+`PDV.Diegetic.Dep.Disable.`, `PDV.Diegetic.Dep.Enable.`, `PDV.Diegetic.Dep.ForceAllAbsent`, plus
+`PDV.Diegetic.Verbosity`. `PDV_DiegeticDeps.psc:34-35` says so in its own comment.
+
+**One is a genuine gap, and it is the only finding in this set:**
+`PDV.Khajiit.LunarSourceCount` is read at `PDV__ManagerQuest.psc:26241` to gate the display line "A
+lunar source has been read and remembered." Its sibling keys `PDV.Khajiit.LastLunarSourceTime` and
+`...LastLunarSourceReason` are actively written, but nothing ever increments the Count -- so that
+line can only ever see 0. Worth its own look.
+
+## Unreferenced tools (5) -- none removable
+
+`pdv_agent_worktree.mjs` (documented in `docs/agents/worktrees.md`) and `pdv_esp_diff_sweep.mjs`
+(documented in two 2026-08-04 handoffs) are REFERENCED. `pdv_daedric_tables_gen.mjs` is a generator
+whose committed output feeds `docs/player-guides/Daedric_Princes_Guide.md`. `pdv_patch.test.mjs` is a
+`node --test` suite discovered by convention, and `pdv_show_daedric_boon.mjs` is a standalone
+operator CLI.
+
+The repo has no `package.json` and no CI config, so "unreferenced by npm/CI" carries no signal for
+any tool -- that framing should be dropped from the harvester's output rather than re-litigated every
+sweep.
+
+## Correction to the section above
+
+Finding 1 in "Three proposed findings that look like live defects" cites `AGENTS.md:1560` for the
+Daedric-Prince Champion offer being "broken for all 16 Princes -- the `..._ChampionEntry` MESGs were
+never bound". **That citation does not support the claim.** `Msg_ChampionEntry` is consumed via
+`ShowIfPresent` in all 13 `PDV_DaedricPath_*.psc`, and `AGENTS.md:1596` records the opposite: the
+MESG record and VMAD wiring were housecarl-verified correct (Boethiah `071270`), and the real defect
+was the MCM `Message.Show()` gotcha, since fixed by deferring the modal.
+
+The genuinely orphaned record was `PDV_Msg_Nord_Kyne_ChampionEntry` (`071526`) -- a different record,
+collapsed into the same row. It was wired in `d6759eab`, along with
+`PDV_Msg_Nord_CurseState_WerewolfCured` (`071523`). Both were confirmed present and already bound on
+`PDV__ManagerQuest` VMAD (`00C325`), so neither needed an ESP write.
+
+This is the `search-for-prior-ruling-before-reporting-a-finding` failure mode reproducing inside the
+document that exists to prevent it.
