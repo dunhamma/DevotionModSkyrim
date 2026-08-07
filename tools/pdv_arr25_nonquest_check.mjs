@@ -33,8 +33,6 @@ const floorRows = floor.trim().split(/\r?\n/).slice(1);
 check("Signal-floor closeout", floorRows.length === 51 && !floor.includes("UNDER-FLOOR"), `${floorRows.length} paths and no under-floor verdict`);
 
 const kidAuthority = read("references", "authoring", "PDV_ARR25_GreenPact_KID.ini");
-const kidPackage = read("dist", "PDV_QuestModPatches_FOMOD", "plugins", "authoria", "SKSE", "Plugins", "KeywordItemDistributor", "PDV_GreenPact_KID.ini");
-check("KID package parity", kidAuthority === kidPackage, "authoring authority and combined-lane bytes match");
 const animalNames = [
   "Fox Roast", "Bear Haunch", "Mammoth Roast", "Sabre Cat Steak", "Troll Steak", "Roasted Dog Meat",
   "Chub Loon Breast", "Grilled Chub Loon Breast", "Cliff Racer Tail", "Cliff Racer Stew",
@@ -56,73 +54,32 @@ for (const token of ["Function BardPerformancePollTick()", "Function MarkBardTav
 check("Bard global decay", manager.includes('ConsumeDailyRepeatMultiplier("PDV.Signal.BardPerformance")'), "manager retains the global devotional repeat budget");
 
 const eventBus = read("live-source", "Scripts", "Source", "PDV_EventBus.psc");
+const afdiObserver = read("dist", "PDV_QuestModPatches_FOMOD", "common", "AFDI", "Scripts", "Source", "PDV_AFDIObserver.psc");
 for (const token of [
-  "Float PDV_AFDI_NEXT_DUE = -1.0",
-  "Function StartAFDIPoll()",
-  "Function AFDIPollTick()",
+  "Scriptname PDV_AFDIObserver extends Quest",
+  "RegisterForUpdate(POLL_INTERVAL)",
+  "Function PollDestroyedArtifacts()",
   'String versionKey = "PDV.AFDI.BaselineVersion"',
-  "Bool baselineOnly = StorageUtil.GetIntValue(None, versionKey, 0) < AFDI_BASELINE_VERSION",
+  "Bool baselineOnly = StorageUtil.GetIntValue(None, versionKey, 0) < BASELINE_VERSION",
   "StorageUtil.SetIntValue(None, seenKey, 1)",
-  "ScheduleAFDIDeadline(AFDI_POLL_INTERVAL)",
 ]) {
-  check(`AFDI observer ${token}`, playerEvents.includes(token), "optional-plugin polling and persistent once-only state are present");
+  check(`AFDI observer ${token}`, afdiObserver.includes(token), "opt-in patch polling and persistent once-only state are present");
 }
 const afdiIds = ["000FD4", "000FD5", "000FD6", "000FD7", "000FD8", "000FD9", "000FDA", "000FDB", "000FDC", "000FDD", "000FE7", "000FE8", "000FE9", "000FEA", "000FEB", "000FEC", "000FED", "000093", "000FDE", "000FDF", "000FE0", "000FE1", "000FE2", "000FE3", "000FD3", "000F56", "000F55", "0000D9", "000F54", "000110"];
-check("AFDI exact global universe", afdiIds.every((id) => playerEvents.includes(`0x${id}`)), `${afdiIds.length} directly read latched globals are resolved`);
-check("AFDI EventBus route", eventBus.includes("Function RouteAFDIArtifactDestroyed(String artifactKey, Form sourceForm)") && eventBus.includes("PDV_Manager.HandleAFDIArtifactDestroyed(artifactKey, sourceForm)"), "observer delegates through EventBus");
-check("AFDI manager route", manager.includes("Function HandleAFDIArtifactDestroyed(String artifactKey, Form sourceForm)"), "manager owns semantic adjudication");
-check("AFDI one surface", manager.includes("ApplyAFDIDestroyRejectApprovals") && manager.includes("FlushQuestReactionSurface()"), "each destruction batches its reactions into one surface flush");
-check("AFDI Black Star exception", manager.includes('artifactKey == "black_star"') && manager.includes('"destroy_profane_artifact:black_star"'), "the profaned star does not use the benign Azura penalty");
-check("AFDI excluded entities", manager.includes('artifactKey == "jyggalag"') && manager.includes('artifactKey == "necromancer_amulet"'), "Jyggalag remains classify-only and Mannimarco is not invented as a roster target");
+check("AFDI exact global universe", afdiIds.every((id) => afdiObserver.includes(`0x${id}`)), `${afdiIds.length} directly read latched globals are resolved in the patch observer`);
+check("AFDI absent from core", !playerEvents.includes("AFDI") && !eventBus.includes("AFDI") && !manager.includes("HandleAFDI") && !manager.includes("Aetherium Forge Destroys Items"), "source-mod polling and semantics are not shipped in core");
+check("External reaction API", ["BeginExternalReactionBatch", "ApplyExternalReaction", "EndExternalReactionBatch"].every((token) => manager.includes(`Function ${token}`)), "core exposes only the neutral one-surface compatibility seam");
+check("AFDI one surface", afdiObserver.includes("PDV_Manager.BeginExternalReactionBatch()") && afdiObserver.includes("PDV_Manager.EndExternalReactionBatch()"), "each destruction batches its reactions into one surface flush");
+check("AFDI Black Star exception", afdiObserver.includes('artifactKey == "black_star"') && afdiObserver.includes('"destroy_profane_artifact:black_star"'), "the profaned star does not use the benign Azura penalty");
+check("AFDI excluded entities", afdiObserver.includes('artifactKey == "jyggalag"') && afdiObserver.includes('artifactKey == "necromancer_amulet"'), "Jyggalag remains classify-only and Mannimarco is not invented as a roster target");
+for (const relative of ["PDV_Patch_AFDI.esp", "SEQ/PDV_Patch_AFDI.seq", "Scripts/PDV_AFDIObserver.pex"]) {
+  check(`AFDI package ${relative}`, fs.statSync(at("dist", "PDV_QuestModPatches_FOMOD", "common", "AFDI", ...relative.split("/"))).size > 0, "conditional patch artifact is present");
+}
 
-const shrine = read("dist", "PDV_QuestModPatches_FOMOD", "plugins", "authoria", "SKSE", "Plugins", "BaseObjectSwapper", "PDV_AuthoriaARR_ShrinePrayer_SWAP.ini");
+const shrine = read("dist", "PDV_QuestModPatches_FOMOD", "common", "DaedricShrinesAIO", "SKSE", "Plugins", "BaseObjectSwapper", "PDV_DaedricShrinesAIO_SWAP.ini");
 const shrineRules = shrine.split(/\r?\n/).map((line) => line.trim()).filter((line) => line && !line.startsWith(";") && line.includes("|"));
-check("ARR shrine swap map", shrineRules.length === 11 && shrineRules.every((line) => line.includes("PDV_AuthoriaARR_Combined.esp")), `${shrineRules.length} exact prayer-activator mappings are packaged; QASmoke and Jyggalag stay absent`);
-check("ARR combined ESP", fs.statSync(at("dist", "PDV_QuestModPatches_FOMOD", "plugins", "authoria", "PDV_AuthoriaARR_Combined.esp")).size > 0, "the 11 route-202 activators and 21 quest/dialogue overrides ship in one ESPFE");
-
-check(
-  "Packaged manager source",
-  hash("live-source", "Scripts", "Source", "PDV__ManagerQuest.psc") === hash("dist", "PDV_QuestModPatches_FOMOD", "plugins", "authoria", "Scripts", "Source", "PDV__ManagerQuest.psc"),
-  "combined-lane source matches the branch authority",
-);
-check("Packaged manager bytecode", fs.statSync(at("dist", "PDV_QuestModPatches_FOMOD", "plugins", "authoria", "Scripts", "PDV__ManagerQuest.pex")).size > 0, "compiled PEX is present");
-for (const script of ["PDV_PlayerEvents", "PDV_EventBus"]) {
-  check(
-    `Packaged ${script} source`,
-    hash("live-source", "Scripts", "Source", `${script}.psc`) === hash("dist", "PDV_QuestModPatches_FOMOD", "plugins", "authoria", "Scripts", "Source", `${script}.psc`),
-    "combined-lane source matches the branch authority",
-  );
-}
-for (const script of ["PDV_PlayerEvents", "PDV_EventBus", "PDV__ManagerQuest"]) {
-  check(
-    `Packaged ${script} bytecode`,
-    hash("generated", "arr25-nonquest-pex", `${script}.pex`) === hash("dist", "PDV_QuestModPatches_FOMOD", "plugins", "authoria", "Scripts", `${script}.pex`),
-    "combined-lane PEX matches the isolated compile output",
-  );
-}
-for (const script of ["PDV_PlayerEvents", "PDV_EventBus", "PDV__ManagerQuest"]) {
-  check(
-    `TGAE ${script} parity`,
-    hash("live-source", "Scripts", "Source", `${script}.psc`) === hash("dist", "PDV_QuestModPatches_FOMOD", "common", "TGAlternativeEndings", "Scripts", "Source", `${script}.psc`) &&
-      hash("generated", "arr25-nonquest-pex", `${script}.pex`) === hash("dist", "PDV_QuestModPatches_FOMOD", "common", "TGAlternativeEndings", "Scripts", `${script}.pex`),
-    "the individual TGAE script override is dependency-complete",
-  );
-}
-for (const tranche of [13, 14, 15, 16, 17]) {
-  const name = `PDV_ARR25_T${tranche}_RuntimeEvidenceLedger.json`;
-  check(
-    `T${tranche} tester-ledger parity`,
-    hash("references", "authoring", name) === hash("dist", "PDV_QuestModPatches_FOMOD", "common", "_Runbook", "Docs", name),
-    "the package carries the full assigned case sheet",
-  );
-}
-for (const name of ["PDV_ARR25_NonQuest_RuntimeEvidenceLedger.json", "PDV_ARR25_NonQuest_Adjudication.md"]) {
-  check(
-    `Non-quest package doc ${name}`,
-    hash("references", "authoring", name) === hash("dist", "PDV_QuestModPatches_FOMOD", "common", "_Runbook", "Docs", name),
-    "the package copy matches the durable authority",
-  );
-}
+check("Shrine swap map", shrineRules.length === 11 && shrineRules.every((line) => line.includes("PDV_Patch_DaedricShrinesAIO.esp")) && !shrine.includes("Authoria"), `${shrineRules.length} neutral prayer-activator mappings are packaged; QASmoke and Jyggalag stay absent`);
+check("Neutral shrine ESP", fs.statSync(at("dist", "PDV_QuestModPatches_FOMOD", "common", "DaedricShrinesAIO", "PDV_Patch_DaedricShrinesAIO.esp")).size > 0, "eleven route-202 activators ship in the opt-in shrine option");
 
 const result = { status: failures.length ? "FAIL" : "PASS", passes: passes.length, failures };
 console.log(JSON.stringify(result, null, 2));

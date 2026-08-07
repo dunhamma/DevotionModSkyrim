@@ -27,6 +27,7 @@ const value = (name) => {
 const packageRoot = path.resolve(ROOT, value("--root") ?? "dist/PDV_QuestModPatches_FOMOD");
 const archivePath = value("--archive") ? path.resolve(ROOT, value("--archive")) : null;
 const receiptPath = path.resolve(ROOT, value("--receipt") ?? "references/authoring/PDV_QuestModPatches_FOMOD_Validation.json");
+const manifestPath = path.resolve(ROOT, value("--manifest") ?? "references/authoring/PDV_QuestPatchHub.manifest.json");
 const xmlPath = path.join(packageRoot, "fomod", "ModuleConfig.xml");
 
 const failures = [];
@@ -63,7 +64,8 @@ function parseOptions(xml) {
     const sources = [];
     const folderRe = /<folder source="([^"]+)" destination="([^"]*)" priority="[^"]+"\s*\/>/g;
     for (const folder of match[2].matchAll(folderRe)) sources.push({ source: folder[1], destination: folder[2] });
-    options.push({ name: match[1], sources });
+    const dependencies = [...match[2].matchAll(/<fileDependency file="([^"]+)" state="Active"\s*\/>/g)].map((item) => item[1]);
+    options.push({ name: match[1], sources, dependencies });
   }
   return options;
 }
@@ -98,26 +100,62 @@ function expandSelection(name, options) {
   return { name, installedFiles: installed.size, identicalCollisions: [...new Set(identicalCollisions)].sort() };
 }
 
-function archiveEntries(file) {
+function archiveManifest(file) {
   const escaped = file.replaceAll("'", "''");
-  const script = `$ErrorActionPreference='Stop'; Add-Type -AssemblyName System.IO.Compression.FileSystem; $z=[IO.Compression.ZipFile]::OpenRead('${escaped}'); try {$z.Entries | Where-Object {-not [string]::IsNullOrEmpty($_.Name)} | ForEach-Object {$_.FullName.Replace('\\','/')}} finally {$z.Dispose()}`;
+  const script = `$ErrorActionPreference='Stop'; Add-Type -AssemblyName System.IO.Compression.FileSystem; $z=[IO.Compression.ZipFile]::OpenRead('${escaped}'); $sha=[Security.Cryptography.SHA256]::Create(); try {$z.Entries | Where-Object {-not [string]::IsNullOrEmpty($_.Name)} | ForEach-Object {$s=$_.Open(); try {$h=([BitConverter]::ToString($sha.ComputeHash($s))).Replace('-',''); $_.FullName.Replace('\\','/') + [char]9 + $h} finally {$s.Dispose()}}} finally {$sha.Dispose(); $z.Dispose()}`;
   return execFileSync("powershell", ["-NoProfile", "-Command", script], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 })
-    .split(/\r?\n/).map((entry) => norm(entry.trim())).filter(Boolean).sort();
+    .split(/\r?\n/).map((line) => line.trim()).filter(Boolean).map((line) => {
+      const [name, hash] = line.split("\t");
+      return { path: norm(name), sha256: hash };
+    }).sort((a, b) => a.path.localeCompare(b.path));
 }
 
 assertXmlParses();
 const xml = fs.existsSync(xmlPath) ? fs.readFileSync(xmlPath, "utf8") : "";
 const options = parseOptions(xml);
-const authoria = options.find((option) => option.name.startsWith("Authoria "));
-const individual = options.filter((option) => option.sources.length && option !== authoria);
-if (!authoria) fail("Authoria combined option not found.");
-if (!individual.length) fail("No individual FOMOD options found.");
+if (!fs.existsSync(manifestPath)) fail(`PatchHub manifest not found: ${path.relative(ROOT, manifestPath)}`);
+const hubManifest = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, "utf8")) : { options: [] };
+if (hubManifest.schema !== "pdv-quest-patch-hub.v1" || !Array.isArray(hubManifest.options)) fail("PatchHub manifest schema/options are invalid.");
+if ((xml.match(/<installStep\b/g) ?? []).length !== 1) fail("PatchHub must expose exactly one install step.");
+if ((xml.match(/<group\b[^>]*type="SelectAny"/g) ?? []).length !== 1) fail("PatchHub must expose exactly one SelectAny group.");
+if ((xml.match(/<group\b[^>]*type="SelectExactlyOne"/g) ?? []).length) fail("PatchHub must not expose a list-specific mode-selection group.");
+if (/authoria|plugins[\\/]authoria|PDV_QuestReactionMatrix_ARR/i.test(xml)) fail("ModuleConfig.xml contains a retired list-specific lane or matrix.");
+if (!options.length) fail("No modular FOMOD options found.");
+if (options.length !== hubManifest.options.length) fail(`XML has ${options.length} options; manifest has ${hubManifest.options.length}.`);
+for (const manifestOption of hubManifest.options) {
+  const option = options.find((candidate) => candidate.name === manifestOption.name);
+  if (!option) {
+    fail(`Manifest option missing from XML: ${manifestOption.name}`);
+    continue;
+  }
+  if (option.dependencies.length !== 1 || option.dependencies[0] !== manifestOption.dependency) {
+    fail(`${option.name}: expected one dependency ${manifestOption.dependency}; found ${option.dependencies.join(", ") || "none"}.`);
+  }
+  const xmlFolders = option.sources.map((source) => source.source).sort();
+  const manifestFolders = [...manifestOption.folders].sort();
+  if (JSON.stringify(xmlFolders) !== JSON.stringify(manifestFolders)) fail(`${option.name}: XML source folders differ from manifest.`);
+
+  // A BOS swap must never point at an ESP supplied by some other option. Build
+  // the exact file set installed by this option and require every replacement
+  // plugin named on the right-hand side to be present beside the BOS config.
+  const optionFiles = option.sources.flatMap((source) => {
+    const sourceRoot = path.join(packageRoot, ...source.source.split(/[\\/]/));
+    return filesUnder(sourceRoot).map((file) => ({ file, destination: norm(path.join(source.destination, path.relative(sourceRoot, file))) }));
+  });
+  const installedPluginNames = new Set(optionFiles.filter((entry) => /\.(?:esp|esm|esl)$/i.test(entry.destination)).map((entry) => path.posix.basename(entry.destination).toLowerCase()));
+  for (const entry of optionFiles.filter((candidate) => /SKSE\/Plugins\/BaseObjectSwapper\/.*\.ini$/i.test(candidate.destination))) {
+    const replacements = [...fs.readFileSync(entry.file, "utf8").matchAll(/\|\s*0x[0-9a-f]+~([^|\r\n;]+)/gi)].map((match) => match[1].trim());
+    for (const pluginName of replacements) {
+      if (!installedPluginNames.has(pluginName.toLowerCase())) fail(`${option.name}: BOS target ${pluginName} is not installed by the same option.`);
+    }
+  }
+}
 
 const simulations = [];
-if (authoria) simulations.push(expandSelection("authoria-combined", [authoria]));
-simulations.push(expandSelection("all-individual", individual));
-const representative = [individual[0], individual[Math.floor(individual.length / 2)], individual.at(-1)].filter(Boolean);
+simulations.push(expandSelection("all-options", options));
+const representative = [options[0], options[Math.floor(options.length / 2)], options.at(-1)].filter(Boolean);
 simulations.push(expandSelection("representative-subset", [...new Set(representative)]));
+const individualSimulations = options.map((option) => expandSelection(`individual:${option.name}`, [option]));
 
 const packageFiles = filesUnder(packageRoot).map((file) => ({
   path: norm(path.relative(packageRoot, file)),
@@ -131,24 +169,33 @@ const treeDigest = crypto.createHash("sha256")
 const channelFiles = packageFiles.filter((entry) => entry.path.includes("/Channels/") && entry.path.endsWith(".json"));
 const badChannelNames = channelFiles.filter((entry) => !/^PDV_QRM_[A-Za-z0-9_]+\.json$/.test(path.posix.basename(entry.path)));
 for (const entry of badChannelNames) fail(`Malformed channel filename: ${entry.path}`);
+for (const entry of packageFiles) {
+  if (/authoria|PDV_QuestReactionMatrix_ARR/i.test(entry.path)) fail(`Retired list-specific package member: ${entry.path}`);
+  if (/^common\/TGAlternativeEndings\/Scripts\//i.test(entry.path)) fail(`TG Alternative Endings must not install core scripts: ${entry.path}`);
+}
+const installedCoreOverrides = simulations[0]?.installedFiles
+  ? filesUnder(packageRoot).filter((file) => /[\\/]Scripts[\\/](?:Source[\\/])?PDV_(?:_ManagerQuest|EventBus|PlayerEvents)\.(?:psc|pex)$/i.test(file))
+  : [];
+for (const file of installedCoreOverrides) fail(`PatchHub contains a core-script override: ${norm(path.relative(packageRoot, file))}`);
 
 let archive = null;
 if (archivePath) {
   if (!fs.existsSync(archivePath)) {
     fail(`Archive not found: ${path.relative(ROOT, archivePath)}`);
   } else {
-    const entries = archiveEntries(archivePath);
+    const archivedFiles = archiveManifest(archivePath);
+    const entries = archivedFiles.map((entry) => entry.path);
     const manifestNames = packageFiles.map((entry) => entry.path).sort();
     const missing = manifestNames.filter((entry) => !entries.includes(entry));
     const extra = entries.filter((entry) => !manifestNames.includes(entry));
+    const expectedHashes = new Map(packageFiles.map((entry) => [entry.path, entry.sha256]));
+    const checksumMismatches = archivedFiles.filter((entry) => expectedHashes.has(entry.path) && expectedHashes.get(entry.path) !== entry.sha256);
     if (missing.length) fail(`Archive is missing ${missing.length} manifest file(s): ${missing.slice(0, 10).join(", ")}`);
     if (extra.length) fail(`Archive has ${extra.length} extra file(s): ${extra.slice(0, 10).join(", ")}`);
-    archive = { path: norm(path.relative(ROOT, archivePath)), entries: entries.length, size: fs.statSync(archivePath).size, sha256: sha256(archivePath), missing, extra };
+    if (checksumMismatches.length) fail(`Archive has ${checksumMismatches.length} checksum mismatch(es): ${checksumMismatches.slice(0, 10).map((entry) => entry.path).join(", ")}`);
+    archive = { path: norm(path.relative(ROOT, archivePath)), entries: entries.length, size: fs.statSync(archivePath).size, sha256: sha256(archivePath), missing, extra, checksumMismatches };
   }
 }
-
-if (options.length !== 36) warnings.push(`Expected 36 total <plugin> nodes (2 mode + 34 content); found ${options.length}.`);
-if (channelFiles.length !== 34) warnings.push(`Expected 34 channel JSON files; found ${channelFiles.length}.`);
 
 const receipt = {
   schema: "pdv-quest-patch-fomod-validation.v1",
@@ -156,8 +203,9 @@ const receipt = {
   status: failures.length ? "FAIL" : "PASS",
   proofBoundary: "Package structure and bytes only. This does not prove runtime routing, player surfaces, semantic correctness, or support status.",
   packageRoot: norm(path.relative(ROOT, packageRoot)),
-  optionCounts: { totalPluginNodes: options.length, individualContentOptions: individual.length, channelFiles: channelFiles.length },
+  optionCounts: { modularOptions: options.length, channelFiles: channelFiles.length },
   simulations,
+  individualSimulations,
   manifest: { fileCount: packageFiles.length, treeSha256: treeDigest, files: packageFiles },
   archive,
   warnings,

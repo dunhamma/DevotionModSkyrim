@@ -1,7 +1,7 @@
 {
   "string": {
-    "generatedAt": "2026-07-16T11:20:57.503Z",
-    "generatedat": "2026-07-16T11:20:57.503Z",
+    "generatedAt": "2026-08-07T02:53:26.813Z",
+    "generatedat": "2026-08-07T02:53:26.813Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "186947",
     "questwatchformidscsv": "186947",
@@ -1367,16 +1367,16 @@
     "faucet.malacath.serve_a_daedra:malacath.tag": "serve_a_daedra:malacath",
     "faucet.Malacath.serve_a_daedra:malacath.cap": "1/dawn",
     "faucet.malacath.serve_a_daedra:malacath.cap": "1/dawn",
-    "quest.186947|120.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Meridia",
-    "quest.186947|120.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Meridia",
-    "quest.186947|120.valencesCsv": "-|+|+|+|+|+|+|-|+",
-    "quest.186947|120.valencescsv": "-|+|+|+|+|+|+|-|+",
-    "quest.186947|120.intensitiesCsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|120.intensitiescsv": "C|C|C|S|S|m|m|m|S",
-    "quest.186947|120.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|120.magnitudescsv": "milestone|milestone|small|small|small|small|small|small|small",
-    "quest.186947|120.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance|slay_undead",
-    "quest.186947|120.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance|slay_undead",
+    "quest.186947|120.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
+    "quest.186947|120.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara",
+    "quest.186947|120.valencesCsv": "-|+|+|+|+|+|+|-",
+    "quest.186947|120.valencescsv": "-|+|+|+|+|+|+|-",
+    "quest.186947|120.intensitiesCsv": "C|C|C|S|S|m|m|m",
+    "quest.186947|120.intensitiescsv": "C|C|C|S|S|m|m|m",
+    "quest.186947|120.magnitudesCsv": "milestone|milestone|small|small|small|small|small|small",
+    "quest.186947|120.magnitudescsv": "milestone|milestone|small|small|small|small|small|small",
+    "quest.186947|120.tagsCsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
+    "quest.186947|120.tagscsv": "defy_daedra|slay_undead|slay_undead|smite_corruption|slay_undead|slay_undead|slay_undead|deny_a_second_chance",
     "quest.186947|130.deitiesCsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
     "quest.186947|130.deitiescsv": "Namira|Arkay|Meridia|Stendarr|Tu'whacca|Azura|Y'ffre|Mara|Dibella",
     "quest.186947|130.valencesCsv": "-|+|+|+|+|+|+|+|+",
@@ -1667,8 +1667,7 @@
       "Tu'whacca",
       "Azura",
       "Y'ffre",
-      "Mara",
-      "Meridia"
+      "Mara"
     ],
     "quest.186947|120.valences": [
       "-",
@@ -1678,8 +1677,7 @@
       "+",
       "+",
       "+",
-      "-",
-      "+"
+      "-"
     ],
     "quest.186947|120.intensities": [
       "C",
@@ -1689,13 +1687,11 @@
       "S",
       "m",
       "m",
-      "m",
-      "S"
+      "m"
     ],
     "quest.186947|120.magnitudes": [
       "milestone",
       "milestone",
-      "small",
       "small",
       "small",
       "small",
@@ -1711,8 +1707,7 @@
       "slay_undead",
       "slay_undead",
       "slay_undead",
-      "deny_a_second_chance",
-      "slay_undead"
+      "deny_a_second_chance"
     ],
     "quest.186947|130.deities": [
       "Namira",

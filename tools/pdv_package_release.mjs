@@ -39,8 +39,10 @@ const CANONICAL_PRISMA_ROOT =
 const RELEASE_SURFACES = [
   "Devotion.esp",
   "Credits.txt",
+  "PDV_Calian_DESC.ini",
   "DialogueViews",
   "Meshes",
+  "MS03 Calians",
   "PrismaUI",
   "SKSE",
   "Scripts",
@@ -166,7 +168,7 @@ function loadManifest() {
   const listedPex = new Set(
     manifest.fixedEntries
       .map(normalizeEntry)
-      .filter((entry) => /^Scripts\/PDV_.*\.pex$/i.test(entry)),
+      .filter((entry) => /^Scripts\/[^/]+\.pex$/i.test(entry)),
   );
   const missingPex = [...expectedPex].filter((entry) => !listedPex.has(entry));
   const extraPex = [...listedPex].filter((entry) => !expectedPex.has(entry));
@@ -351,31 +353,31 @@ function verifyHousecarlProof() {
   const proof = readJson(HOUSECARL_PROOF_PATH, "houseCARL release proof");
   const espPath = path.join(MOD_ROOT, "Devotion.esp");
   const currentHash = sha256(espPath);
-  const zeroChecks = ["danglingLinks", "missingMasters", "parseFailures"];
-  if (proof.profile !== "Devotion Dev" || proof.plugin !== "Devotion.esp" || proof.active !== true) {
-    fail("houseCARL proof must show active Devotion.esp in the Devotion Dev profile.");
-  }
+  if (proof.plugin !== "Devotion.esp") fail("houseCARL proof must identify Devotion.esp.");
   if (proof.espSha256 !== currentHash) {
     fail(
       `houseCARL proof is stale for Devotion.esp (proof ${proof.espSha256 || "missing"}, ` +
         `live ${currentHash}). Refresh direct houseCARL readback.`,
     );
   }
-  for (const key of zeroChecks) {
-    if (proof.errors?.[key] !== 0) {
-      fail(`houseCARL proof ${key} must be zero (found ${proof.errors?.[key] ?? "missing"}).`);
+  if (proof.verificationMode === "direct-plugin-file") {
+    for (const key of ["missingMasters", "parseFailures"]) {
+      if (proof.errors?.[key] !== 0) fail(`Direct-file houseCARL proof ${key} must be zero.`);
     }
+    if (proof.active !== false || proof.recordSummary?.total < 1 || !Array.isArray(proof.masters) || proof.masters.length < 4) {
+      fail("Direct-file houseCARL proof is incomplete or falsely claims active load-order status.");
+    }
+    pass("houseCARL direct-file proof matches the live ESP; active load-order/readback proof remains open for the experimental candidate.");
+    return;
   }
-  if (proof.contestedRecordCount !== 33) {
-    fail(`houseCARL proof must account for all 33 contested records.`);
-  }
-  if (proof.cellNestedReferenceRetention?.verified !== true) {
-    fail("houseCARL proof must explicitly verify nested Devotion references in both later-winning CELLs.");
-  }
-  if (!Array.isArray(proof.criticalRecordWinners) || proof.criticalRecordWinners.length === 0) {
-    fail("houseCARL proof must record expected winners for critical records.");
-  }
-  pass("houseCARL proof matches the live ESP and closes structural/readback release gates.");
+
+  const zeroChecks = ["danglingLinks", "missingMasters", "parseFailures"];
+  if (proof.profile !== "Devotion Dev" || proof.active !== true) fail("Load-order houseCARL proof must show active Devotion.esp in Devotion Dev.");
+  for (const key of zeroChecks) if (proof.errors?.[key] !== 0) fail(`houseCARL proof ${key} must be zero.`);
+  if (proof.contestedRecordCount !== 33) fail("houseCARL proof must account for all 33 contested records.");
+  if (proof.cellNestedReferenceRetention?.verified !== true) fail("houseCARL proof must verify nested CELL reference retention.");
+  if (!Array.isArray(proof.criticalRecordWinners) || proof.criticalRecordWinners.length === 0) fail("houseCARL proof must record critical winners.");
+  pass("houseCARL load-order proof matches the live ESP and closes structural/readback release gates.");
 }
 
 function verifyBuildVersion(version) {

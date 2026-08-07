@@ -1,0 +1,4 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation,formid
+zzzRevSub03Rush,Rite of Cannibalism,255,Performed the cannibal rite,cannibalism,Namira,+,S,milestone,Glenmoril zzzRevSub03Rush s255 ShutDownStage,Glenmoril.esm:3ABF2B
+zzzRevSub03Rush,Rite of Cannibalism,255,Performed the cannibal rite,cannibalism,Arkay,-,m,small,Glenmoril zzzRevSub03Rush s255 ShutDownStage (cannibalism defiles Arkay),Glenmoril.esm:3ABF2B
+zzzRevDAAzura,Azura,10,Honored Azura at her shrine,honor_daedra,Azura,+,m,small,Glenmoril zzzRevDAAzura s10 sole content stage (token quest - RUNTIME-VERIFY),Glenmoril.esm:355287

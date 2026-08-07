@@ -1,86 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://qconsulting.ca/fo3/ModConfig5.0.xsd">
-  <moduleName>Devotion - Quest Mod Patches</moduleName>
+  <moduleName>Devotion - Quest Mod PatchHub</moduleName>
   <installSteps order="Explicit">
-    <installStep name="Installation Mode">
+    <installStep name="Select Devotion Patches">
       <optionalFileGroups order="Explicit">
-        <group name="How do you want to install?" type="SelectExactlyOne">
-          <plugins order="Explicit">
-            <plugin name="Authoria (Requiem Reforged) - All-In-One">
-              <description>One combined ESPFE, all thirty-four data channels, current scripts, AFDI observer, Green Pact KID rules, and eleven shrine-prayer swaps. Machine-verified ARR 2.5 test candidate; runtime evidence remains open.</description>
-              <files>
-                <folder source="common\Sirenroot" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-                <folder source="common\TheRotBelow" destination="" priority="0" />
-                <folder source="common\TheFrozenHeart" destination="" priority="0" />
-                <folder source="common\DepthsOfTheSoul" destination="" priority="0" />
-                <folder source="common\BabaYaga" destination="" priority="0" />
-                <folder source="common\BarkAndBite" destination="" priority="0" />
-                <folder source="common\BeforeTheEnd" destination="" priority="0" />
-                <folder source="common\WarsFolly" destination="" priority="0" />
-                <folder source="common\OnceWeWereHere" destination="" priority="0" />
-                <folder source="common\WhispersOfTheDepths" destination="" priority="0" />
-                <folder source="common\Wyrmstooth" destination="" priority="0" />
-                <folder source="common\CCTheCause" destination="" priority="0" />
-                <folder source="common\CCGhostsTribunal" destination="" priority="0" />
-                <folder source="common\CCDivineCrusader" destination="" priority="0" />
-                <folder source="common\TasteOfDeathAddon" destination="" priority="0" />
-                <folder source="common\SiegeAtIcemoth" destination="" priority="0" />
-                <folder source="common\HuntForSpectre" destination="" priority="0" />
-                <folder source="common\CallingTheWatchmaker" destination="" priority="0" />
-                <folder source="common\GiftOfSaturalia" destination="" priority="0" />
-                <folder source="common\Thogra" destination="" priority="0" />
-                <folder source="common\Auri" destination="" priority="0" />
-                <folder source="common\Mrissi" destination="" priority="0" />
-                <folder source="common\Xelzaz" destination="" priority="0" />
-                <folder source="common\Moonpath" destination="" priority="0" />
-                <folder source="common\CollegeQuestExpansion" destination="" priority="0" />
-                <folder source="common\InfiltrationQE" destination="" priority="0" />
-                <folder source="common\NilheimQE" destination="" priority="0" />
-                <folder source="common\WhisperingDoorQE" destination="" priority="0" />
-                <folder source="common\PaarthurnaxQE" destination="" priority="0" />
-                <folder source="common\ForswornConspiracyQE" destination="" priority="0" />
-                <folder source="common\TGAlternativeEndings" destination="" priority="0" />
-                <folder source="common\SaveTheIcerunner" destination="" priority="0" />
-                <folder source="common\LegacyOfTheDragonborn" destination="" priority="0" />
-                <folder source="common\BeyondSkyrimBruma" destination="" priority="0" />
-                <folder source="common\_Fragments\WarsFolly" destination="" priority="0" />
-                <folder source="common\_Fragments\OnceWeWereHere" destination="" priority="0" />
-                <folder source="common\_Fragments\WhispersOfTheDepths" destination="" priority="0" />
-                <folder source="plugins\authoria" destination="" priority="0" />
-              </files>
-              <conditionFlags>
-                <flag name="mode">authoria</flag>
-              </conditionFlags>
-              <typeDescriptor>
-                <type name="Optional" />
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Individual patches (any other load order)">
-              <description>Pick patches one by one on the next page. Each is self-contained and masters only the mod it patches, so a mod you do not have simply is not patched. Choose this for any load order other than Authoria.</description>
-              <conditionFlags>
-                <flag name="mode">individual</flag>
-              </conditionFlags>
-              <typeDescriptor>
-                <type name="Optional" />
-              </typeDescriptor>
-            </plugin>
-          </plugins>
-        </group>
-      </optionalFileGroups>
-    </installStep>
-    <installStep name="Select Quest Mod Patches">
-      <visible>
-        <flagDependency flag="mode" value="individual" />
-      </visible>
-      <optionalFileGroups order="Explicit">
-        <group name="Devotion Quest Mod Patches" type="SelectAny">
+        <group name="Devotion Mod Patches" type="SelectAny">
           <plugins order="Explicit">
             <plugin name="Sirenroot">
               <description>Lays the haunting Ayleid spirit to rest: Arkay, Meridia, Stendarr, Tu'whacca, Azura, Y'ffre, plus the elven pantheon (Auri-El, Xarxes, Magnus) for the Ayleid dead, and Zenithar for honest salvage work.</description>
               <files>
                 <folder source="common\Sirenroot" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -100,7 +29,6 @@
               <description>Namira is named in the quest itself. Foiling her plan angers her and pleases the death-and-light gods; killing or sparing the freed lich Adabelle splits Mara and Dibella.</description>
               <files>
                 <folder source="common\TheRotBelow" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -120,7 +48,6 @@
               <description>The cursed woman is a Snow Elf, so Auri-El reacts most of all: curing her is a milestone in his eyes, killing her a grave offence. Mara, Stendarr, Trinimac and Molag Bal also weigh in.</description>
               <files>
                 <folder source="common\TheFrozenHeart" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -140,7 +67,6 @@
               <description>Zenithar approves of helping the merchant Pike open his shop.</description>
               <files>
                 <folder source="common\DepthsOfTheSoul" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -160,7 +86,6 @@
               <description>Mara approves of rescuing the witch from the Black Stone Labyrinth.</description>
               <files>
                 <folder source="common\BabaYaga" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -180,7 +105,6 @@
               <description>Freeing the three werewolf spirits pleases Hircine; sparing Frija instead pleases Stendarr and disappoints him. Sheogorath is amused either way.</description>
               <files>
                 <folder source="common\BarkAndBite" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -200,7 +124,6 @@
               <description>Mara and Arkay approve of staying with the condemned man Aradell until the end.</description>
               <files>
                 <folder source="common\BeforeTheEnd" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -220,7 +143,6 @@
               <description>Adds Devotion reactions to all six stances you can take with Sandor the preacher, from pride in slaughter to renouncing the war. Includes an ESL-flagged plugin (also repairs two dialogue endings that never set their quest stage).</description>
               <files>
                 <folder source="common\WarsFolly" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
                 <folder source="common\_Fragments\WarsFolly" destination="" priority="0" />
                 <folder source="plugins\individual\WarsFolly" destination="" priority="0" />
               </files>
@@ -242,7 +164,6 @@
               <description>Hoping the Falmer may yet be redeemed pleases Auri-El, their forebears' god; calling the damage irreparable disappoints him. Includes an ESL-flagged plugin.</description>
               <files>
                 <folder source="common\OnceWeWereHere" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
                 <folder source="common\_Fragments\OnceWeWereHere" destination="" priority="0" />
                 <folder source="plugins\individual\OnceWeWereHere" destination="" priority="0" />
               </files>
@@ -264,7 +185,6 @@
               <description>Mara approves of offering condolences to the old sailor. Includes an ESL-flagged plugin.</description>
               <files>
                 <folder source="common\WhispersOfTheDepths" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
                 <folder source="common\_Fragments\WhispersOfTheDepths" destination="" priority="0" />
                 <folder source="plugins\individual\WhispersOfTheDepths" destination="" priority="0" />
               </files>
@@ -286,51 +206,18 @@
               <description>Data-only channel for defeating Vulthurkrah while defending Stonehollow. Machine-verified; runtime evidence remains open.</description>
               <files>
                 <folder source="common\Wyrmstooth" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
                   <defaultType name="NotUsable" />
-                  <patterns><pattern><dependencies operator="And"><fileDependency file="Wyrmstooth.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Creation Club - The Cause (T13 experimental)">
-              <description>Data-only channel for the directly evidenced Deadlands escape and Vigil victory. Machine-verified; runtime evidence remains open.</description>
-              <files>
-                <folder source="common\CCTheCause" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns><pattern><dependencies operator="And"><fileDependency file="ccbgssse067-daedinv.esm" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Creation Club - Ghosts of the Tribunal (T13 experimental)">
-              <description>Data-only channel for restoring Trueflame at the Dwarven forge. It grants generic craft credit, not invented Tribunal worship.</description>
-              <files>
-                <folder source="common\CCGhostsTribunal" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns><pattern><dependencies operator="And"><fileDependency file="ccasvsse001-almsivi.esm" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Creation Club - Divine Crusader (T13 experimental)">
-              <description>Data-only nine-shrine pilgrimage channel. Objective-derived semantics require an actual quest traversal; setstage cannot clear the proof debt.</description>
-              <files>
-                <folder source="common\CCDivineCrusader" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns><pattern><dependencies operator="And"><fileDependency file="ccmtysse001-knightsofthenine.esl" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns>
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Wyrmstooth.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
                 </dependencyType>
               </typeDescriptor>
             </plugin>
@@ -338,12 +225,18 @@
               <description>Data-only channel for bringing Markarth's Namira cult to justice. Machine-verified; runtime evidence remains open.</description>
               <files>
                 <folder source="common\TasteOfDeathAddon" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
                   <defaultType name="NotUsable" />
-                  <patterns><pattern><dependencies operator="And"><fileDependency file="TasteOfDeath_Addon_Dialogue.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns>
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="TasteOfDeath_Addon_Dialogue.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
                 </dependencyType>
               </typeDescriptor>
             </plugin>
@@ -351,12 +244,18 @@
               <description>Data-only channels for ending the necromancer's undead army and uncovering the Font of Memory. Machine-verified; runtime evidence remains open.</description>
               <files>
                 <folder source="common\SiegeAtIcemoth" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
                   <defaultType name="NotUsable" />
-                  <patterns><pattern><dependencies operator="And"><fileDependency file="Siege at Icemoth.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns>
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Siege at Icemoth.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
                 </dependencyType>
               </typeDescriptor>
             </plugin>
@@ -364,12 +263,18 @@
               <description>Data-only channel for the directly evidenced Spectre defeat. Machine-verified; runtime evidence remains open.</description>
               <files>
                 <folder source="common\HuntForSpectre" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
                   <defaultType name="NotUsable" />
-                  <patterns><pattern><dependencies operator="And"><fileDependency file="Hunt for the Spectre.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns>
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Hunt for the Spectre.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
                 </dependencyType>
               </typeDescriptor>
             </plugin>
@@ -377,12 +282,18 @@
               <description>Data-only channel for the explicit cold-murder branch. Machine-verified; runtime branch evidence remains open.</description>
               <files>
                 <folder source="common\CallingTheWatchmaker" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
                   <defaultType name="NotUsable" />
-                  <patterns><pattern><dependencies operator="And"><fileDependency file="Sithis Mod - Lovecraftian Inspired Quest.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns>
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Sithis Mod - Lovecraftian Inspired Quest.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
                 </dependencyType>
               </typeDescriptor>
             </plugin>
@@ -390,12 +301,18 @@
               <description>Five data-only channels for the separately resolved Saturalia gifts; the umbrella completion is excluded to prevent double credit.</description>
               <files>
                 <folder source="common\GiftOfSaturalia" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
                   <defaultType name="NotUsable" />
-                  <patterns><pattern><dependencies operator="And"><fileDependency file="TheGiftofSaturalia.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns>
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="TheGiftofSaturalia.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
                 </dependencyType>
               </typeDescriptor>
             </plugin>
@@ -403,121 +320,476 @@
               <description>Data-only blood-oath, betrayal, and two marriage-route channels. The objective-derived Largashbur marriage must be traversed organically.</description>
               <files>
                 <folder source="common\Thogra" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
-              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="DK_Thogra.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="DK_Thogra.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
             </plugin>
             <plugin name="Song of the Green - Auri (T14 experimental)">
               <description>Data-only channel for Auri's five-grove pilgrimage through Skyrim's beautiful natural sites.</description>
               <files>
                 <folder source="common\Auri" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
-              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="018Auri.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="018Auri.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
             </plugin>
             <plugin name="M'rissi's Tails of Troubles (T14 experimental)">
               <description>Data-only channels for the proved enslavement, marriage, and kinship outcomes. Unproved chapter routes remain excluded.</description>
               <files>
                 <folder source="common\Mrissi" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
-              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="MrissiTailOfTroubles.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="MrissiTailOfTroubles.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
             </plugin>
             <plugin name="Xelzaz (T14 experimental)">
               <description>Data-only channels for crimson Nirnroot research and the proved recipe/spice theft plus mead tasting. Ambiguous routes remain excluded.</description>
               <files>
                 <folder source="common\Xelzaz" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
-              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="BPUFXelzazFollower.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="BPUFXelzazFollower.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
             </plugin>
             <plugin name="Moonpath to Elsweyr (T14 experimental)">
               <description>Data-only channels for the Tenmar journey, Thalmor rebellion, saved/released plague branches, and completed rebel base.</description>
               <files>
                 <folder source="common\Moonpath" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
-              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="moonpath.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="moonpath.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
             </plugin>
             <plugin name="College of Winterhold - Quest Expansion (T15 experimental)">
               <description>Data-only channels for seven directly resolving College lessons. The umbrella curriculum completion is excluded to prevent double credit.</description>
               <files>
                 <folder source="common\CollegeQuestExpansion" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
-              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="College Of Winterhold - Quest Expansion.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="College Of Winterhold - Quest Expansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
             </plugin>
             <plugin name="Infiltration - Quest Expansion (T15 experimental)">
               <description>Data-only channel for restoring Treva's Watch to Stalleo and his family.</description>
               <files>
                 <folder source="common\InfiltrationQE" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
-              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="Infiltration - Quest Expansion.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Infiltration - Quest Expansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
             </plugin>
             <plugin name="Nilheim - Misc Quest Expansion (T15 experimental)">
               <description>Data-only channels for defeating Telrav's double-cross or explicitly extorting him.</description>
               <files>
                 <folder source="common\NilheimQE" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
-              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="Nilheim_MiscQuestExpansion.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Nilheim_MiscQuestExpansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
             </plugin>
             <plugin name="The Whispering Door - Quest Expansion (T15 experimental)">
               <description>Data-only channel for disposing of Mephala's Ebony Blade so it can cause no further harm.</description>
               <files>
                 <folder source="common\WhisperingDoorQE" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
-              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="The Whispering Door - Quest Expansion.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="The Whispering Door - Quest Expansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
             </plugin>
             <plugin name="Paarthurnax - Quest Expansion (T15 experimental)">
               <description>Data-only objective-derived channel for persuading the Blades and sparing Paarthurnax. Organic traversal is mandatory.</description>
               <files>
                 <folder source="common\PaarthurnaxQE" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
-              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="PaarthurnaxQuestExpansion.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="PaarthurnaxQuestExpansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
             </plugin>
             <plugin name="Forsworn Conspiracy - Quest Expansion (T15 experimental)">
               <description>Data-only channels for the trial-by-combat resolution and the separate Madanach mercy route.</description>
               <files>
                 <folder source="common\ForswornConspiracyQE" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
-              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="Forsworn Conspiracy Quest Expansion.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Forsworn Conspiracy Quest Expansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
             </plugin>
             <plugin name="Thieves Guild Alternative Endings (T16 experimental)">
-              <description>Self-contained soft-dependent script bundle and data channel that separates TG09's three endings. Vanilla return remains stage 200; freeing the Nightingales and keeping the Skeleton Key route to synthetic stages 201/202 and suppress false Nocturnal commitment.</description>
+              <description>Self-contained data channel plus generic quest-stage adapter that separates TG09's three endings without replacing Devotion scripts. Vanilla return remains stage 200; freeing the Nightingales and keeping the Skeleton Key route to synthetic stages 201/202 and suppress false Nocturnal commitment.</description>
               <files>
                 <folder source="common\TGAlternativeEndings" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
-              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="TG Alternative Endings.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="TG Alternative Endings.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
             </plugin>
             <plugin name="Save the Icerunner (T16 experimental)">
               <description>Data-only channels for stopping, persuading, joining, betraying, or lawfully exposing Jaree-Ra's Icerunner wrecking plot.</description>
               <files>
                 <folder source="common\SaveTheIcerunner" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
-              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="SaveTheIcerunner.esp" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="SaveTheIcerunner.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
             </plugin>
             <plugin name="Legacy of the Dragonborn (T17 experimental)">
               <description>Data-only channels for the Trial of Trinimac, ending the Eye of Camlorn's curse, and bringing peace to a Snow Elf ghost. Composite Ezra branches and linear relic fetches are deliberately excluded.</description>
               <files>
                 <folder source="common\LegacyOfTheDragonborn" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
-              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="LegacyoftheDragonborn.esm" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="LegacyoftheDragonborn.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
             </plugin>
             <plugin name="Beyond Skyrim - Bruma (T17 experimental)">
               <description>Data-only channels for eight direct Bruma resolutions: smuggling, treacherous murder or generous song restoration, freeing Bjarni, and recovering stolen antiquities.</description>
               <files>
                 <folder source="common\BeyondSkyrimBruma" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
-              <typeDescriptor><dependencyType><defaultType name="NotUsable" /><patterns><pattern><dependencies operator="And"><fileDependency file="BSHeartland.esm" state="Active" /></dependencies><type name="Recommended" /></pattern></patterns></dependencyType></typeDescriptor>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="BSHeartland.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="DAc0da">
+              <description>Data-only reactions for the two directly evidenced DAc0da resolutions. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\DAc0da" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="DAc0da.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Ebony Blade Curse">
+              <description>Data-only reaction for breaking the Ebony Blade curse. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\EbonyBladeCurse" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="EbonyBladeCurse.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="The Forgotten City">
+              <description>Data-only reactions for the directly evidenced Forgotten City resolutions. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\ForgottenCity" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="ForgottenCity.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Glenmoril">
+              <description>Data-only reactions for the directly evidenced Glenmoril resolutions. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\Glenmoril" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Glenmoril.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Olenveld">
+              <description>Data-only reaction for the directly evidenced Olenveld resolution. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\Olenveld" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Olenveld.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Skyrim Extended Cut - Saints and Seducers">
+              <description>Data-only reaction for the directly evidenced Saints and Seducers resolution. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\SkyrimExtendedCutSaintsAndSeducers" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Skyrim Extended Cut - Saints and Seducers.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Unslaad">
+              <description>Data-only reactions for four directly evidenced Unslaad outcomes. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\Unslaad" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Unslaad.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Vigilant">
+              <description>Data-only reactions for the directly evidenced Vigilant outcomes. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\Vigilant" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Vigilant.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Aetherium Forge Destroys Items (experimental)">
+              <description>Installs an ESL-flagged observer quest for successful artifact destruction. Existing saves are baselined without retroactive awards; runtime and save/load evidence remain open.</description>
+              <files>
+                <folder source="common\AFDI" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Aetherium Forge Destroys Items.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Daedric Shrines AIO prayer activators (experimental)">
+              <description>Installs a neutral ESL-flagged prayer-activator plugin and BOS swaps for eleven supported Daedric Shrines AIO statues. Runtime and placement evidence remain open.</description>
+              <files>
+                <folder source="common\DaedricShrinesAIO" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="man_DaedricShrines.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
             </plugin>
           </plugins>
         </group>

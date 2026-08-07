@@ -43,9 +43,6 @@ FormList Property PDV_FLST_KhajiitMoonContemplations Auto
 Faction Property NecromancerFaction Auto
 Faction Property WarlockFaction Auto
 String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
-; List-patch second channel (e.g. Authoria/ARR). Cells are read from whichever
-; channel owns the (form|stage) key; shared stance/value tables stay on core.
-String Property QUEST_REACTION_MATRIX_FILE_ARR = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR" AutoReadOnly
 PDV_QuestReactionWorker Property PDV_QuestReactionWorkerService Auto
 
 PDV_Deity_Kyne Property PDV_Kyne Auto
@@ -1715,15 +1712,10 @@ Function HandleBardPerformance(Int qualityDelta, Bool receivedOvation, Form cont
 EndFunction
 
 String Function ResolveQuestReactionCellFile(String cellPrefix)
-    ; Return the matrix channel that owns this (form|stage) cell: core first, then
-    ; the legacy ARR channel, then the per-mod patch channels cached at
-    ; registration (PDV.QR.ChannelFiles). First hit wins. Returns "" when no
-    ; channel has the cell.
+    ; Return the matrix channel that owns this (form|stage) cell: core first,
+    ; then opt-in per-mod channels cached at registration. First hit wins.
     if JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, cellPrefix + "deitiesCsv") != ""
         return QUEST_REACTION_MATRIX_FILE
-    endIf
-    if JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE_ARR) && JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE_ARR, cellPrefix + "deitiesCsv") != ""
-        return QUEST_REACTION_MATRIX_FILE_ARR
     endIf
     Int channelIndex = 0
     Int channelCount = StorageUtil.StringListCount(None, "PDV.QR.ChannelFiles")
@@ -2595,6 +2587,21 @@ Function ResetQuestReactionSurface()
     _qrSurfBestPosSymbol = ""
     _qrSurfBestNegSymbol = ""
     _qrSurfMilestone = False
+EndFunction
+
+; Neutral compatibility seam for opt-in patch quests. Third-party observers own
+; their source-mod detection, persistence, and semantic mapping; core only owns
+; the standard piety application and the one-toast/one-Book surface contract.
+Function BeginExternalReactionBatch()
+    ResetQuestReactionSurface()
+EndFunction
+
+Function ApplyExternalReaction(String deityName, String valence, String intensity, String magnitude, String sourceTag, Form sourceForm)
+    ApplyDeityReaction(deityName, valence, intensity, magnitude, sourceTag, False, sourceForm)
+EndFunction
+
+Function EndExternalReactionBatch()
+    FlushQuestReactionSurface()
 EndFunction
 
 Function AccumulateQuestReactionSurface(PDV_DeityBase deity, Float amount, String magnitude)
@@ -4959,34 +4966,36 @@ Function HandleDaedricShrinePrayer(Int pathIndex, String sourceId)
     endIf
 EndFunction
 
-; Forces a fresh disk re-read of the quest-reaction matrix channel(s) into the
-; JsonUtil in-memory cache. Use after regenerating PDV_QuestReactionMatrix(_ARR)
+; Forces a fresh disk re-read of the core matrix and discovered opt-in channels
+; into the JsonUtil in-memory cache. Use after regenerating matrix data
 ; mid-session so already-watched quests pick up newly-authored (form|stage) cells
 ; without a full reload. Returns a short summary string for the MCM readout.
 ; NOTE: this refreshes CELL DATA only; brand-new watched quests are (re)registered
 ; for stage events on the next game load via RefreshP2Hooks.
 String Function DebugReloadQuestMatrix()
     Int coreCells = 0
-    Int arrCells = 0
+    Int loadedChannels = 0
 
     JsonUtil.Unload(QUEST_REACTION_MATRIX_FILE, false)
     if JsonUtil.Load(QUEST_REACTION_MATRIX_FILE)
         coreCells = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, "questWatchFormIdsCsv"), ",").Length
     endIf
 
-    String arrState = "absent"
-    if JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE_ARR)
-        JsonUtil.Unload(QUEST_REACTION_MATRIX_FILE_ARR, false)
-        if JsonUtil.Load(QUEST_REACTION_MATRIX_FILE_ARR)
-            arrCells = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE_ARR, "questWatchFormIdsCsv"), ",").Length
-            arrState = arrCells + " watched"
+    Int channelIndex = 0
+    Int channelCount = StorageUtil.StringListCount(None, "PDV.QR.ChannelFiles")
+    while channelIndex < channelCount
+        String channelFile = StorageUtil.StringListGet(None, "PDV.QR.ChannelFiles", channelIndex)
+        JsonUtil.Unload(channelFile, false)
+        if JsonUtil.Load(channelFile)
+            loadedChannels += 1
         endIf
-    endIf
+        channelIndex += 1
+    endWhile
 
     if GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Quest matrix reloaded: core " + coreCells + " watched, ARR " + arrState)
+        Debug.Trace("[PDV] Quest matrix reloaded: core " + coreCells + " watched, channels " + loadedChannels + "/" + channelCount)
     endIf
-    return "Quest matrix reloaded.\nCore: " + coreCells + " watched quests.\nARR channel: " + arrState + "."
+    return "Quest matrix reloaded.\nCore: " + coreCells + " watched quests.\nMod channels: " + loadedChannels + "/" + channelCount + " loaded."
 EndFunction
 
 Int Function DebugGetSignalFloorSmokeScenarioCount()
@@ -8899,86 +8908,6 @@ EndFunction
 
 Function ApplyPaarthurnaxSpareReaction(String deityName, String intensity, Form sourceForm, String valence = "+")
     ApplyDeityReaction(deityName, valence, intensity, "small", "paarthurnax_spare", False, sourceForm)
-EndFunction
-
-; ARR 2.5 AFDI artifact-destruction adjudication. The caller has already
-; persisted the once-ever transition. Daedric artifacts displease their owner
-; and satisfy the locked Stendarr/Syrabane destroy-reject profiles. The Black
-; Star is the deliberate exception: destroying the profaned variant vindicates
-; Azura. Auri-El and Sithis are roster-gated direct reactions. Jyggalag remains
-; classification-only, and the Necromancer's Amulet has no Mannimarco target in
-; the current roster, so its rejection is credited only to Arkay and Stendarr.
-Function HandleAFDIArtifactDestroyed(String artifactKey, Form sourceForm)
-    ResetQuestReactionSurface()
-
-    if artifactKey == "black_star"
-        ApplyDeityReaction("Azura", "+", "C", "milestone", "destroy_profane_artifact:black_star", False, sourceForm)
-        ApplyAFDIDestroyRejectApprovals("azura", sourceForm)
-    elseIf artifactKey == "auriel_bow" || artifactKey == "auriel_shield"
-        ApplyDeityReaction("Auri-El", "-", "C", "milestone", "destroy_sacred_artifact:auriel", False, sourceForm)
-    elseIf artifactKey == "sithis"
-        ApplyDeityReaction("Sithis", "-", "C", "milestone", "destroy_sacred_artifact:sithis", False, sourceForm)
-    elseIf artifactKey == "necromancer_amulet"
-        ApplyDeityReaction("Arkay", "+", "S", "small", "destroy_reject_necromancy", False, sourceForm)
-        ApplyDeityReaction("Stendarr", "+", "S", "small", "destroy_reject_necromancy", False, sourceForm)
-    elseIf artifactKey == "jyggalag"
-        Trace(2, "AFDI Jyggalag destruction observed; classify-only, no current deity route.")
-        return
-    else
-        String ownerName = GetAFDIDaedricOwnerName(artifactKey)
-        if ownerName == ""
-            Trace(1, "AFDI destruction skipped unknown artifact key: " + artifactKey)
-            return
-        endIf
-        ApplyDeityReaction(ownerName, "-", "C", "milestone", "destroy_reject_daedra:" + artifactKey, False, sourceForm)
-        ApplyAFDIDestroyRejectApprovals(artifactKey, sourceForm)
-    endIf
-
-    FlushQuestReactionSurface()
-    Trace(2, "AFDI artifact destruction routed: " + artifactKey)
-EndFunction
-
-Function ApplyAFDIDestroyRejectApprovals(String ownerKey, Form sourceForm)
-    String sourceTag = "destroy_reject_daedra:" + ownerKey
-    ApplyDeityReaction("Stendarr", "+", "S", "small", sourceTag, False, sourceForm)
-    ApplyDeityReaction("Syrabane", "+", "m", "small", sourceTag, False, sourceForm)
-EndFunction
-
-String Function GetAFDIDaedricOwnerName(String artifactKey)
-    if artifactKey == "azura"
-        return "Azura"
-    elseIf artifactKey == "clavicus_vile"
-        return "Clavicus Vile"
-    elseIf artifactKey == "hircine"
-        return "Hircine"
-    elseIf artifactKey == "mehrunes_dagon"
-        return "Mehrunes Dagon"
-    elseIf artifactKey == "meridia"
-        return "Meridia"
-    elseIf artifactKey == "molag_bal"
-        return "Molag Bal"
-    elseIf artifactKey == "vaermina"
-        return "Vaermina"
-    elseIf artifactKey == "boethiah"
-        return "Boethiah"
-    elseIf artifactKey == "hermaeus_mora"
-        return "Hermaeus Mora"
-    elseIf artifactKey == "malacath"
-        return "Malacath"
-    elseIf artifactKey == "mephala"
-        return "Mephala"
-    elseIf artifactKey == "namira"
-        return "Namira"
-    elseIf artifactKey == "peryite"
-        return "Peryite"
-    elseIf artifactKey == "sanguine"
-        return "Sanguine"
-    elseIf artifactKey == "sheogorath"
-        return "Sheogorath"
-    elseIf artifactKey == "nocturnal"
-        return "Nocturnal"
-    endIf
-    return ""
 EndFunction
 
 Function HandleKhajiitBaanDarBetrayal(String reason)

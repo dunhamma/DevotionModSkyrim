@@ -23,10 +23,10 @@ const P = {
   playerSource: path.join(ROOT, "live-source/Scripts/Source/PDV_PlayerEvents.psc"),
   full: path.join(ROOT, "references/authoring/PDV_QuestReactionMatrix_Full.csv"),
   tgaeCsv: path.join(ROOT, "references/authoring/patches/PDV_QRM_TGAlternativeEndings.csv"),
+  tgaeAdapter: path.join(ROOT, "dist/PDV_QuestModPatches_FOMOD/common/TGAlternativeEndings/SKSE/Plugins/StorageUtilData/PlayerDevotion/QuestStageAdapters/PDV_QSA_TGAlternativeEndings.json"),
   iceCsv: path.join(ROOT, "references/authoring/patches/PDV_QRM_SaveTheIcerunner.csv"),
   moduleXml: path.join(ROOT, "dist/PDV_QuestModPatches_FOMOD/fomod/ModuleConfig.xml"),
   authoriaScripts: path.join(ROOT, "dist/PDV_QuestModPatches_FOMOD/plugins/authoria/Scripts"),
-  tgaeScripts: path.join(ROOT, "dist/PDV_QuestModPatches_FOMOD/common/TGAlternativeEndings/Scripts"),
 };
 
 function read(file) {
@@ -40,6 +40,11 @@ function read(file) {
 function requireText(label, text, token) {
   if (text.includes(token)) passes.push(label);
   else failures.push(`${label}: missing '${token}'`);
+}
+
+function requireAbsent(label, text, token) {
+  if (!text.includes(token)) passes.push(label);
+  else failures.push(`${label}: unexpectedly found '${token}'`);
 }
 
 function requireOrder(label, text, first, second) {
@@ -101,28 +106,47 @@ function requireSame(label, a, b) {
 }
 
 const player = read(P.playerSource);
-const resolver = functionBody(player, "ResolveARR25TGAEQuestReactionStage");
-if (!resolver) failures.push("TGAE resolver function missing");
-requireText("TG09 physical form guard", resolver, "sourceQuest.GetFormID() != 0x00021555");
-requireText("TG09 physical stage guard", resolver, "newStage != 200");
-requireOrder("optional plugin guarded before lookup", resolver, "Game.GetModByName(pluginName) == 255", "Game.GetFormFromFile(0x00081C, pluginName)");
-requireText("TGAE global 1 maps to 201", resolver, "endingValue == 1");
-requireText("TGAE synthetic stage 201", resolver, "return 201");
-requireText("TGAE globals 2/3 share route", resolver, "endingValue == 2 || endingValue == 3");
-requireText("TGAE synthetic stage 202", resolver, "return 202");
-requireText("TGAE fallback preserves physical stage", resolver, "return newStage");
+const resolver = functionBody(player, "ResolveQuestReactionStageAdapter");
+if (!resolver) failures.push("generic quest-stage adapter resolver missing");
+requireText("adapter cache is consulted", resolver, '"PDV.QR.StageAdapterFiles"');
+requireText("adapter resolves configured quest", resolver, "Game.GetFormFromFile(sourceFormId, sourcePlugin)");
+requireText("adapter is plugin-presence guarded", resolver, "Game.GetModByName(selectorPlugin) != 255");
+requireText("adapter reads selector values", resolver, 'JsonUtil.IntListGet(adapterFile, "selectorValues", valueIndex)');
+requireText("adapter maps target stages", resolver, 'JsonUtil.IntListGet(adapterFile, "targetStages", valueIndex)');
+requireText("adapter fallback preserves physical stage", resolver, "return newStage");
+requireAbsent("core no longer names the TGAE resolver", player, "ResolveARR25TGAEQuestReactionStage");
+requireAbsent("core no longer names the optional TGAE plugin", player, "TG Alternative Endings.esp");
 
 const matrixRoute = functionBody(player, "RouteQuestReactionStage");
-requireText("matrix route calls TGAE resolver", matrixRoute, "ResolveARR25TGAEQuestReactionStage(sourceQuest, newStage)");
+requireText("matrix route calls generic adapter resolver", matrixRoute, "ResolveQuestReactionStageAdapter(sourceQuest, newStage)");
 requireText("matrix route forwards resolved stage", matrixRoute, "RouteQuestReaction(sourceQuest, resolvedStage, logicalEventId)");
 
 const nocturnalNeedle = 'ShouldRouteP2QuestStage(PDV_FLST_Daedric_NocturnalLiveSources, sourceQuest, 136533, 200, "daedric_nocturnal_tg09", newStage)';
 const nocturnalAt = player.indexOf(nocturnalNeedle);
 const nocturnalBlock = nocturnalAt >= 0 ? player.slice(nocturnalAt, nocturnalAt + 700) : "";
 requireText("vanilla Nocturnal guard remains physical 200", nocturnalBlock, nocturnalNeedle);
-requireText("Nocturnal route resolves TGAE outcome", nocturnalBlock, "ResolveARR25TGAEQuestReactionStage(sourceQuest, newStage)");
-requireText("Nocturnal commitment only for ending 0", nocturnalBlock, "if resolvedTg09Stage == 200");
-requireText("alternate endings suppress Nocturnal commitment", nocturnalBlock, "ARR25 TGAE suppressed Nocturnal commitment");
+requireText("Nocturnal route resolves adapter outcome", nocturnalBlock, "ResolveQuestReactionStageAdapter(sourceQuest, newStage)");
+requireText("Nocturnal commitment only for physical outcome", nocturnalBlock, "if resolvedStage == 200");
+requireText("adapter suppresses false Nocturnal commitment", nocturnalBlock, "Quest-stage adapter suppressed Nocturnal commitment");
+
+let adapter = null;
+try {
+  adapter = JSON.parse(read(P.tgaeAdapter));
+} catch (error) {
+  failures.push(`TGAE adapter JSON parse failed: ${error.message}`);
+}
+if (adapter) {
+  const strings = adapter.string ?? {};
+  const ints = adapter.int ?? {};
+  if (strings.schema === "pdv-quest-stage-adapter.v1") passes.push("TGAE adapter schema");
+  else failures.push("TGAE adapter: wrong schema");
+  if (strings.sourcePlugin === "Skyrim.esm" && ints.sourceFormId === 136533 && ints.sourceStage === 200) passes.push("TGAE adapter physical TG09 selector");
+  else failures.push("TGAE adapter: wrong physical TG09 selector");
+  if (strings.selectorPlugin === "TG Alternative Endings.esp" && ints.selectorFormId === 2076) passes.push("TGAE adapter optional global selector");
+  else failures.push("TGAE adapter: wrong optional global selector");
+  if (JSON.stringify(ints.selectorValues) === JSON.stringify([1, 2, 3]) && JSON.stringify(ints.targetStages) === JSON.stringify([201, 202, 202])) passes.push("TGAE adapter synthetic stage mapping");
+  else failures.push("TGAE adapter: wrong synthetic stage mapping");
+}
 
 const tgaeRows = validateChannel("TGAE channel", P.tgaeCsv, 17, ["201", "202"], "Skyrim.esm:021555");
 if (tgaeRows.every((row) => row.citation.includes("RUNTIME-VERIFY"))) passes.push("TGAE runtime debt retained");
@@ -134,19 +158,10 @@ if (coreSynthetic.length === 0) passes.push("TGAE content absent from core");
 else failures.push(`core matrix contains ${coreSynthetic.length} TGAE synthetic cell(s)`);
 
 const xml = read(P.moduleXml);
-requireText("combined lane includes TGAE", xml, 'source="common\\TGAlternativeEndings"');
-requireText("combined lane includes Save the Icerunner", xml, 'source="common\\SaveTheIcerunner"');
+requireText("modular TGAE option is present", xml, 'source="common\\TGAlternativeEndings"');
+requireText("modular Save the Icerunner option is present", xml, 'source="common\\SaveTheIcerunner"');
 requireText("individual TGAE dependency", xml, '<fileDependency file="TG Alternative Endings.esp" state="Active" />');
 requireText("individual Save the Icerunner dependency", xml, '<fileDependency file="SaveTheIcerunner.esp" state="Active" />');
-
-for (const script of ["PDV__ManagerQuest", "PDV_EventBus", "PDV_PlayerEvents"]) {
-  requireSame(`Authoria ${script}.psc current`, path.join(ROOT, `live-source/Scripts/Source/${script}.psc`), path.join(P.authoriaScripts, `Source/${script}.psc`));
-  requireSame(`Authoria ${script}.pex current`, path.join(PEX_ROOT, PEX_ROOT === path.resolve(LIVE) ? `Scripts/${script}.pex` : `${script}.pex`), path.join(P.authoriaScripts, `${script}.pex`));
-}
-for (const script of ["PDV__ManagerQuest", "PDV_EventBus", "PDV_PlayerEvents"]) {
-  requireSame(`individual TGAE ${script} source current`, path.join(ROOT, `live-source/Scripts/Source/${script}.psc`), path.join(P.tgaeScripts, `Source/${script}.psc`));
-  requireSame(`individual TGAE ${script} bytecode current`, path.join(PEX_ROOT, PEX_ROOT === path.resolve(LIVE) ? `Scripts/${script}.pex` : `${script}.pex`), path.join(P.tgaeScripts, `${script}.pex`));
-}
 
 const result = {
   status: failures.length ? "FAIL" : "PASS",

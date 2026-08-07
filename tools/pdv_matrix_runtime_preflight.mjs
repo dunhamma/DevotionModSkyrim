@@ -13,17 +13,16 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const args = process.argv.slice(2);
-const MO2_ROOT = normalizePath(getArg("--mo2") ?? "D:/Wabbajack/modlists/ARR");
+const MO2_ROOT = normalizePath(getArg("--mo2") ?? "D:/Wabbajack/modlists/ARR 2.5");
 const PROFILE_NAME = getArg("--profile") ?? readSelectedProfile(MO2_ROOT);
 const PROFILE_DIR = PROFILE_NAME ? path.join(MO2_ROOT, "profiles", PROFILE_NAME) : null;
 const JSON_OUTPUT = args.includes("--json");
 const CORE_ONLY = args.includes("--core-only");
-const EXPECTED_CORE_WATCHED = Number.parseInt(getArg("--expected-core") ?? "134", 10);
-const EXPECTED_ARR_WATCHED = Number.parseInt(getArg("--expected-arr") ?? "20", 10);
+const EXPECTED_CORE_WATCHED = Number.parseInt(getArg("--expected-core") ?? "157", 10);
 const EXPECTED_CHANNELS = Number.parseInt(getArg("--expected-channels") ?? "0", 10);
 const CORE_MOD = getArg("--core-mod") ?? "Devotion";
-const COMPAT_MOD = getArg("--compat-mod") ?? "Devotion - Authoria ARR Compatibility";
-const COMPAT_PLUGIN = getArg("--compat-plugin") ?? "PDV_AuthoriaARR_Combined.esp";
+const COMPAT_MOD = getArg("--compat-mod") ?? "Devotion - Quest Mod PatchHub";
+const COMPAT_PLUGIN = getArg("--compat-plugin");
 const PAPYRUS_LOG = normalizePath(getArg("--log") ?? "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log");
 
 const findings = [];
@@ -231,14 +230,16 @@ function checkPluginOrder() {
   if (devotion === -1) fail("Plugin active", "Devotion.esp is not active.", pluginsPath);
   else pass("Plugin active", "Devotion.esp is active.", pluginsPath);
   if (CORE_ONLY) return;
-  if (compat === -1) fail("Plugin active", `${COMPAT_PLUGIN} is not active.`, pluginsPath);
-  else pass("Plugin active", `${COMPAT_PLUGIN} is active.`, pluginsPath);
+  if (COMPAT_PLUGIN) {
+    if (compat === -1) fail("Plugin active", `${COMPAT_PLUGIN} is not active.`, pluginsPath);
+    else pass("Plugin active", `${COMPAT_PLUGIN} is active.`, pluginsPath);
+  }
 
-  if (devotion !== -1 && compat !== -1) {
+  if (COMPAT_PLUGIN && devotion !== -1 && compat !== -1) {
     if (devotion < compat) pass("Plugin order", `Devotion.esp loads before ${COMPAT_PLUGIN}.`, pluginsPath);
     else fail("Plugin order", `${COMPAT_PLUGIN} must load after Devotion.esp.`, pluginsPath);
   }
-  if (compat !== -1 && req !== -1) {
+  if (COMPAT_PLUGIN && compat !== -1 && req !== -1) {
     if (compat < req) pass("Plugin order", `${COMPAT_PLUGIN} loads before Requiem for the Indifferent.esp.`, pluginsPath);
     else fail("Plugin order", `${COMPAT_PLUGIN} must load before Requiem for the Indifferent.esp.`, pluginsPath);
   }
@@ -248,9 +249,6 @@ function checkKnownMatrixFiles(enabledMods) {
   const relativeFiles = [
     path.join("SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix.json"),
   ];
-  if (!CORE_ONLY) {
-    relativeFiles.push(path.join("SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix_ARR.json"));
-  }
 
   for (const relativeFile of relativeFiles) {
     const winner = resolveWinningModFile(relativeFile, enabledMods);
@@ -299,7 +297,7 @@ function checkMatrixJson(filePath, active) {
     return;
   }
   const name = path.basename(filePath);
-  const expected = name === "PDV_QuestReactionMatrix_ARR.json" ? EXPECTED_ARR_WATCHED : EXPECTED_CORE_WATCHED;
+  const expected = EXPECTED_CORE_WATCHED;
   const count = matrixWatchCount(json);
   const shape = json.string && json.float && json.int && json.stringList ? "typed" : "flat-or-invalid";
   const hash = sha256(filePath).slice(0, 12);
@@ -361,11 +359,9 @@ function checkQuestMatrixSourcePath(filePath, checkName, staleStatus = "FAIL") {
   const text = fs.readFileSync(filePath, "utf8");
   const unsafe = [
     "\"PlayerDevotion/PDV_QuestReactionMatrix\"",
-    "\"PlayerDevotion/PDV_QuestReactionMatrix_ARR\"",
   ].filter((needle) => text.includes(needle));
   const expected = [
     "\"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix\"",
-    "\"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR\"",
   ].filter((needle) => text.includes(needle));
 
   if (unsafe.length > 0) {

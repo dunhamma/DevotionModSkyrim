@@ -10,6 +10,9 @@ const MANUAL_QUEST_FORMIDS = {
   DA13: "Skyrim.esm:08998D",
   DA06: "Skyrim.esm:03B681",
   ccBGSSSE020_Quest: "ccbgssse020-graycowl.esl:00080F",
+  ccASVSSE001_QuestE: "ccasvsse001-almsivi.esm:0990EF",
+  ccBGSSSE067_Quest2: "ccbgssse067-daedinv.esm:19952A",
+  ccMTYSSE001_Quest: "ccmtysse001-knightsofthenine.esl:000865",
   dunHunterQST: "Skyrim.esm:018601",
   FreeformKolskeggrA: "Skyrim.esm:01FD72",
   MQ105U: "Skyrim.esm:0713DC",
@@ -32,6 +35,7 @@ const files = [
   "references/authoring/PDV_QuestReactionMatrix_Tranche10_SignalFloor.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche11_MainQuestFullCoverage.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche12_KhajiitFiveWealth.csv",
+  "references/authoring/PDV_QuestReactionMatrix_CreationClubCore_2026-08-07.csv",
   // Reconciliation source, NOT a content tranche. The Innocence Lost QE s198
   // rows (ARR patchlist TODO-2, owner-ruled 2026-07-16) were authored straight
   // into Full.csv and never landed in a tranche, so the merge could not

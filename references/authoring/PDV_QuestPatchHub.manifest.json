@@ -1,0 +1,342 @@
+{
+  "schema": "pdv-quest-patch-hub.v1",
+  "updated": "2026-08-07",
+  "moduleName": "Devotion - Quest Mod PatchHub",
+  "proofBoundary": "Machine-verified experimental options; runtime, player-surface, semantic, save/load, and support proof remain separate.",
+  "options": [
+    {
+      "name": "Sirenroot",
+      "description": "Lays the haunting Ayleid spirit to rest: Arkay, Meridia, Stendarr, Tu'whacca, Azura, Y'ffre, plus the elven pantheon (Auri-El, Xarxes, Magnus) for the Ayleid dead, and Zenithar for honest salvage work.",
+      "dependency": "evgSIRENROOT.esm",
+      "folders": [
+        "common\\Sirenroot"
+      ]
+    },
+    {
+      "name": "The Rot Below",
+      "description": "Namira is named in the quest itself. Foiling her plan angers her and pleases the death-and-light gods; killing or sparing the freed lich Adabelle splits Mara and Dibella.",
+      "dependency": "CJ03Elroy.esp",
+      "folders": [
+        "common\\TheRotBelow"
+      ]
+    },
+    {
+      "name": "The Frozen Heart",
+      "description": "The cursed woman is a Snow Elf, so Auri-El reacts most of all: curing her is a milestone in his eyes, killing her a grave offence. Mara, Stendarr, Trinimac and Molag Bal also weigh in.",
+      "dependency": "ksws07_quest.esm",
+      "folders": [
+        "common\\TheFrozenHeart"
+      ]
+    },
+    {
+      "name": "Depths of the Soul",
+      "description": "Zenithar approves of helping the merchant Pike open his shop.",
+      "dependency": "Dungeon Delver Mod.esp",
+      "folders": [
+        "common\\DepthsOfTheSoul"
+      ]
+    },
+    {
+      "name": "Baba Yaga and the Labyrinth",
+      "description": "Mara approves of rescuing the witch from the Black Stone Labyrinth.",
+      "dependency": "ksws03_quest.esp",
+      "folders": [
+        "common\\BabaYaga"
+      ]
+    },
+    {
+      "name": "Bark and Bite",
+      "description": "Freeing the three werewolf spirits pleases Hircine; sparing Frija instead pleases Stendarr and disappoints him. Sheogorath is amused either way.",
+      "dependency": "Tree Contract Mod.esp",
+      "folders": [
+        "common\\BarkAndBite"
+      ]
+    },
+    {
+      "name": "Before the End",
+      "description": "Mara and Arkay approve of staying with the condemned man Aradell until the end.",
+      "dependency": "PrisonerMod.esp",
+      "folders": [
+        "common\\BeforeTheEnd"
+      ]
+    },
+    {
+      "name": "War's Folly",
+      "description": "Adds Devotion reactions to all six stances you can take with Sandor the preacher, from pride in slaughter to renouncing the war. Includes an ESL-flagged plugin (also repairs two dialogue endings that never set their quest stage).",
+      "dependency": "War's Folly.esp",
+      "folders": [
+        "common\\WarsFolly",
+        "common\\_Fragments\\WarsFolly",
+        "plugins\\individual\\WarsFolly"
+      ]
+    },
+    {
+      "name": "Once We Were Here",
+      "description": "Hoping the Falmer may yet be redeemed pleases Auri-El, their forebears' god; calling the damage irreparable disappoints him. Includes an ESL-flagged plugin.",
+      "dependency": "Once We Were Here - Quest Mod.esp",
+      "folders": [
+        "common\\OnceWeWereHere",
+        "common\\_Fragments\\OnceWeWereHere",
+        "plugins\\individual\\OnceWeWereHere"
+      ]
+    },
+    {
+      "name": "Whispers of the Depths",
+      "description": "Mara approves of offering condolences to the old sailor. Includes an ESL-flagged plugin.",
+      "dependency": "Slays-Many-Beasts Quest Mod.esp",
+      "folders": [
+        "common\\WhispersOfTheDepths",
+        "common\\_Fragments\\WhispersOfTheDepths",
+        "plugins\\individual\\WhispersOfTheDepths"
+      ]
+    },
+    {
+      "name": "Wyrmstooth (T13 experimental)",
+      "description": "Data-only channel for defeating Vulthurkrah while defending Stonehollow. Machine-verified; runtime evidence remains open.",
+      "dependency": "Wyrmstooth.esp",
+      "folders": [
+        "common\\Wyrmstooth"
+      ]
+    },
+    {
+      "name": "Taste of Death Addon (T13 experimental)",
+      "description": "Data-only channel for bringing Markarth's Namira cult to justice. Machine-verified; runtime evidence remains open.",
+      "dependency": "TasteOfDeath_Addon_Dialogue.esp",
+      "folders": [
+        "common\\TasteOfDeathAddon"
+      ]
+    },
+    {
+      "name": "Siege at Icemoth (T13 experimental)",
+      "description": "Data-only channels for ending the necromancer's undead army and uncovering the Font of Memory. Machine-verified; runtime evidence remains open.",
+      "dependency": "Siege at Icemoth.esp",
+      "folders": [
+        "common\\SiegeAtIcemoth"
+      ]
+    },
+    {
+      "name": "Hunt for the Spectre (T13 experimental)",
+      "description": "Data-only channel for the directly evidenced Spectre defeat. Machine-verified; runtime evidence remains open.",
+      "dependency": "Hunt for the Spectre.esp",
+      "folders": [
+        "common\\HuntForSpectre"
+      ]
+    },
+    {
+      "name": "Calling the Watchmaker (T13 experimental)",
+      "description": "Data-only channel for the explicit cold-murder branch. Machine-verified; runtime branch evidence remains open.",
+      "dependency": "Sithis Mod - Lovecraftian Inspired Quest.esp",
+      "folders": [
+        "common\\CallingTheWatchmaker"
+      ]
+    },
+    {
+      "name": "The Gift of Saturalia (T13 experimental)",
+      "description": "Five data-only channels for the separately resolved Saturalia gifts; the umbrella completion is excluded to prevent double credit.",
+      "dependency": "TheGiftofSaturalia.esp",
+      "folders": [
+        "common\\GiftOfSaturalia"
+      ]
+    },
+    {
+      "name": "Thogra (T14 experimental)",
+      "description": "Data-only blood-oath, betrayal, and two marriage-route channels. The objective-derived Largashbur marriage must be traversed organically.",
+      "dependency": "DK_Thogra.esp",
+      "folders": [
+        "common\\Thogra"
+      ]
+    },
+    {
+      "name": "Song of the Green - Auri (T14 experimental)",
+      "description": "Data-only channel for Auri's five-grove pilgrimage through Skyrim's beautiful natural sites.",
+      "dependency": "018Auri.esp",
+      "folders": [
+        "common\\Auri"
+      ]
+    },
+    {
+      "name": "M'rissi's Tails of Troubles (T14 experimental)",
+      "description": "Data-only channels for the proved enslavement, marriage, and kinship outcomes. Unproved chapter routes remain excluded.",
+      "dependency": "MrissiTailOfTroubles.esp",
+      "folders": [
+        "common\\Mrissi"
+      ]
+    },
+    {
+      "name": "Xelzaz (T14 experimental)",
+      "description": "Data-only channels for crimson Nirnroot research and the proved recipe/spice theft plus mead tasting. Ambiguous routes remain excluded.",
+      "dependency": "BPUFXelzazFollower.esp",
+      "folders": [
+        "common\\Xelzaz"
+      ]
+    },
+    {
+      "name": "Moonpath to Elsweyr (T14 experimental)",
+      "description": "Data-only channels for the Tenmar journey, Thalmor rebellion, saved/released plague branches, and completed rebel base.",
+      "dependency": "moonpath.esp",
+      "folders": [
+        "common\\Moonpath"
+      ]
+    },
+    {
+      "name": "College of Winterhold - Quest Expansion (T15 experimental)",
+      "description": "Data-only channels for seven directly resolving College lessons. The umbrella curriculum completion is excluded to prevent double credit.",
+      "dependency": "College Of Winterhold - Quest Expansion.esp",
+      "folders": [
+        "common\\CollegeQuestExpansion"
+      ]
+    },
+    {
+      "name": "Infiltration - Quest Expansion (T15 experimental)",
+      "description": "Data-only channel for restoring Treva's Watch to Stalleo and his family.",
+      "dependency": "Infiltration - Quest Expansion.esp",
+      "folders": [
+        "common\\InfiltrationQE"
+      ]
+    },
+    {
+      "name": "Nilheim - Misc Quest Expansion (T15 experimental)",
+      "description": "Data-only channels for defeating Telrav's double-cross or explicitly extorting him.",
+      "dependency": "Nilheim_MiscQuestExpansion.esp",
+      "folders": [
+        "common\\NilheimQE"
+      ]
+    },
+    {
+      "name": "The Whispering Door - Quest Expansion (T15 experimental)",
+      "description": "Data-only channel for disposing of Mephala's Ebony Blade so it can cause no further harm.",
+      "dependency": "The Whispering Door - Quest Expansion.esp",
+      "folders": [
+        "common\\WhisperingDoorQE"
+      ]
+    },
+    {
+      "name": "Paarthurnax - Quest Expansion (T15 experimental)",
+      "description": "Data-only objective-derived channel for persuading the Blades and sparing Paarthurnax. Organic traversal is mandatory.",
+      "dependency": "PaarthurnaxQuestExpansion.esp",
+      "folders": [
+        "common\\PaarthurnaxQE"
+      ]
+    },
+    {
+      "name": "Forsworn Conspiracy - Quest Expansion (T15 experimental)",
+      "description": "Data-only channels for the trial-by-combat resolution and the separate Madanach mercy route.",
+      "dependency": "Forsworn Conspiracy Quest Expansion.esp",
+      "folders": [
+        "common\\ForswornConspiracyQE"
+      ]
+    },
+    {
+      "name": "Thieves Guild Alternative Endings (T16 experimental)",
+      "description": "Self-contained data channel plus generic quest-stage adapter that separates TG09's three endings without replacing Devotion scripts. Vanilla return remains stage 200; freeing the Nightingales and keeping the Skeleton Key route to synthetic stages 201/202 and suppress false Nocturnal commitment.",
+      "dependency": "TG Alternative Endings.esp",
+      "folders": [
+        "common\\TGAlternativeEndings"
+      ]
+    },
+    {
+      "name": "Save the Icerunner (T16 experimental)",
+      "description": "Data-only channels for stopping, persuading, joining, betraying, or lawfully exposing Jaree-Ra's Icerunner wrecking plot.",
+      "dependency": "SaveTheIcerunner.esp",
+      "folders": [
+        "common\\SaveTheIcerunner"
+      ]
+    },
+    {
+      "name": "Legacy of the Dragonborn (T17 experimental)",
+      "description": "Data-only channels for the Trial of Trinimac, ending the Eye of Camlorn's curse, and bringing peace to a Snow Elf ghost. Composite Ezra branches and linear relic fetches are deliberately excluded.",
+      "dependency": "LegacyoftheDragonborn.esm",
+      "folders": [
+        "common\\LegacyOfTheDragonborn"
+      ]
+    },
+    {
+      "name": "Beyond Skyrim - Bruma (T17 experimental)",
+      "description": "Data-only channels for eight direct Bruma resolutions: smuggling, treacherous murder or generous song restoration, freeing Bjarni, and recovering stolen antiquities.",
+      "dependency": "BSHeartland.esm",
+      "folders": [
+        "common\\BeyondSkyrimBruma"
+      ]
+    },
+    {
+      "name": "DAc0da",
+      "description": "Data-only reactions for the two directly evidenced DAc0da resolutions. Machine-verified; runtime evidence remains open.",
+      "dependency": "DAc0da.esm",
+      "folders": [
+        "common\\DAc0da"
+      ]
+    },
+    {
+      "name": "Ebony Blade Curse",
+      "description": "Data-only reaction for breaking the Ebony Blade curse. Machine-verified; runtime evidence remains open.",
+      "dependency": "EbonyBladeCurse.esp",
+      "folders": [
+        "common\\EbonyBladeCurse"
+      ]
+    },
+    {
+      "name": "The Forgotten City",
+      "description": "Data-only reactions for the directly evidenced Forgotten City resolutions. Machine-verified; runtime evidence remains open.",
+      "dependency": "ForgottenCity.esp",
+      "folders": [
+        "common\\ForgottenCity"
+      ]
+    },
+    {
+      "name": "Glenmoril",
+      "description": "Data-only reactions for the directly evidenced Glenmoril resolutions. Machine-verified; runtime evidence remains open.",
+      "dependency": "Glenmoril.esm",
+      "folders": [
+        "common\\Glenmoril"
+      ]
+    },
+    {
+      "name": "Olenveld",
+      "description": "Data-only reaction for the directly evidenced Olenveld resolution. Machine-verified; runtime evidence remains open.",
+      "dependency": "Olenveld.esp",
+      "folders": [
+        "common\\Olenveld"
+      ]
+    },
+    {
+      "name": "Skyrim Extended Cut - Saints and Seducers",
+      "description": "Data-only reaction for the directly evidenced Saints and Seducers resolution. Machine-verified; runtime evidence remains open.",
+      "dependency": "Skyrim Extended Cut - Saints and Seducers.esp",
+      "folders": [
+        "common\\SkyrimExtendedCutSaintsAndSeducers"
+      ]
+    },
+    {
+      "name": "Unslaad",
+      "description": "Data-only reactions for four directly evidenced Unslaad outcomes. Machine-verified; runtime evidence remains open.",
+      "dependency": "Unslaad.esm",
+      "folders": [
+        "common\\Unslaad"
+      ]
+    },
+    {
+      "name": "Vigilant",
+      "description": "Data-only reactions for the directly evidenced Vigilant outcomes. Machine-verified; runtime evidence remains open.",
+      "dependency": "Vigilant.esm",
+      "folders": [
+        "common\\Vigilant"
+      ]
+    },
+    {
+      "name": "Aetherium Forge Destroys Items (experimental)",
+      "description": "Installs an ESL-flagged observer quest for successful artifact destruction. Existing saves are baselined without retroactive awards; runtime and save/load evidence remain open.",
+      "dependency": "Aetherium Forge Destroys Items.esp",
+      "folders": [
+        "common\\AFDI"
+      ]
+    },
+    {
+      "name": "Daedric Shrines AIO prayer activators (experimental)",
+      "description": "Installs a neutral ESL-flagged prayer-activator plugin and BOS swaps for eleven supported Daedric Shrines AIO statues. Runtime and placement evidence remain open.",
+      "dependency": "man_DaedricShrines.esp",
+      "folders": [
+        "common\\DaedricShrinesAIO"
+      ]
+    }
+  ]
+}

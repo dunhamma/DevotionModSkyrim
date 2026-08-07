@@ -157,7 +157,7 @@ function existingMatrixFiles() {
   const files = readdirSync(AUTHORING)
     .filter(f => /^PDV_QuestReactionMatrix_Tranche\d/.test(f) && f.endsWith(".csv"))
     .map((file) => path.join(AUTHORING, file));
-  for (const file of ["PDV_QuestReactionMatrix_Full.csv", "PDV_QuestReactionMatrix_ARR.csv"]) {
+  for (const file of ["PDV_QuestReactionMatrix_Full.csv"]) {
     const candidate = path.join(AUTHORING, file);
     if (readdirSync(AUTHORING).includes(file)) files.push(candidate);
   }

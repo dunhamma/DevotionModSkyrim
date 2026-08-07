@@ -9122,25 +9122,19 @@ class Verifier {
 
   checkQuestMatrixPapyrusUtilPaths() {
     const expectedCore = "String Property QUEST_REACTION_MATRIX_FILE = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix\" AutoReadOnly";
-    const expectedArr = "String Property QUEST_REACTION_MATRIX_FILE_ARR = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR\" AutoReadOnly";
     const unsafeCore = "String Property QUEST_REACTION_MATRIX_FILE = \"PlayerDevotion/PDV_QuestReactionMatrix\" AutoReadOnly";
-    const unsafeArr = "String Property QUEST_REACTION_MATRIX_FILE_ARR = \"PlayerDevotion/PDV_QuestReactionMatrix_ARR\" AutoReadOnly";
 
     this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV__ManagerQuest", [
       expectedCore,
-      expectedArr,
     ]);
     this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV_PlayerEvents", [
       expectedCore,
-      expectedArr,
     ]);
     this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV__ManagerQuest", [
       unsafeCore,
-      unsafeArr,
     ]);
     this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV_PlayerEvents", [
       unsafeCore,
-      unsafeArr,
     ]);
   }
 

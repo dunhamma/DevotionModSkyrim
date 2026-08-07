@@ -4,6 +4,7 @@ sky_storm_nature,C02,200,Brotherhood,prove_by_struggle,Kyne(+m/small),Kynareth,w
 sky_storm_nature,C03,200,The Silver Hand,kill_honorable_combat,Kyne(+m/small),Kynareth,waived
 sky_storm_nature,C04,200,Blood's Honor,kill_honorable_combat,Kyne(+m/small) Y'ffre(+m/small) Khenarthi(+m/small),Kynareth,waived
 sky_storm_nature,C05,200,Purity of Revenge,kill_honorable_combat,Kyne(+m/small),Kynareth,waived
+sky_storm_nature,ccMTYSSE001_Quest,100,The Pilgrim's Path,honor_divine,Kynareth(+C/milestone),Kyne,waived
 sky_storm_nature,CW01A,1,Joining the Legion,kill_honorable_combat,Kyne(+m/small),Kynareth,waived
 sky_storm_nature,CW01B,1,Joining the Stormcloaks,"kill_honorable_combat,prove_by_struggle",Kyne(+m/small),Kynareth,waived
 sky_storm_nature,DA01,110,The Black Star,necromancy,Kynareth(-m/small) Y'ffre(-S/small),Kyne,waived
@@ -29,20 +30,6 @@ sky_storm_nature,MS14,200,Laid to Rest,protect_the_weak,Kynareth(+m/small) Khena
 sky_storm_nature,T01,200,The Heart of Dibella,protect_the_weak,Kynareth(+m/small) Khenarthi(+S/small),Kyne,waived
 sky_storm_nature,t02,200,The Book of Love,heal_comfort,Khenarthi(+m/small) Kynareth(+m/small),Kyne,waived
 sky_storm_nature,TG08B,50,Blindsighted,kill_honorable_combat,Kyne(+m/small),Kynareth,waived
-sky_storm_nature,018AuriFriendQuest,80,Song of the Green,honor_the_wild,Y'ffre(+S/milestone) Kynareth(+C/milestone) Kyne(+m/small),Khenarthi,waived
-sky_storm_nature,ccMTYSSE001_Quest,100,The Pilgrim's Path,honor_divine,Kynareth(+C/milestone),Kyne,waived
-sky_storm_nature,Sat_Dog,10,Lending a Paw,"heal_comfort,protect_the_weak",Kynareth(+m/small),Kyne,waived
-sky_storm_nature,AnvilMoonpathQuest,60,By the Light of the Moon,honor_the_wild,Khenarthi(+m/milestone) Kynareth(+S/small),Kyne,waived
-sky_storm_nature,AnvilMoonpathQuest,60,By the Light of the Moon,honor_the_wild,Khenarthi(+m/milestone) Kynareth(+S/small),Y'ffre,waived
-sky_storm_nature,AnvilDenQuest,150,Incursion,"defy_tyranny_talos,protect_the_weak",Khenarthi(+S/milestone) Kynareth(+m/small),Kyne,waived
-sky_storm_nature,MQPaarthurnax,99,Paarthurnax,mercy_spare,Kyne(+m/milestone),Kynareth,waived
-sky_storm_nature,MS07,300,Lights Out!,"protect_the_weak,uphold_law_justice",Kynareth(+m/small) Khenarthi(+S/small),Kyne,waived
-sky_storm_nature,MS07,310,Lights Out!,"mercy_spare,protect_the_weak",Kynareth(+m/small) Khenarthi(+S/small),Kyne,waived
-sky_storm_nature,MS07,350,Lights Out!,"uphold_law_justice,protect_the_weak,expose_betray_secret",Khenarthi(+S/small) Kynareth(+m/small),Kyne,waived
-sky_storm_nature,WTTheNakedNord,75,The Naked Nord,heal_comfort,Kynareth(+m/small),Kyne,waived
-sky_storm_nature,WTTheNakedNord,76,The Naked Nord,"heal_comfort,deceit,theft_burglary",Kynareth(+m/small),Kyne,waived
-sky_storm_nature,WTTheNakedNord,77,The Naked Nord,heal_comfort,Kynareth(+m/small),Kyne,waived
-sky_storm_nature,WTTheNakedNord,78,The Naked Nord,heal_comfort,Kynareth(+m/small),Kyne,waived
 time_dragon,BardsCollegeLute,20,Finn's Lute,uphold_law_justice,Akatosh(+m/small) Alkosh(+m/small),Auri-El,waived
 time_dragon,C00,20,Take Up Arms,kill_honorable_combat,Alkosh(+S/small),Akatosh,
 time_dragon,C00,20,Take Up Arms,kill_honorable_combat,Alkosh(+S/small),Auri-El,
@@ -54,6 +41,8 @@ time_dragon,C04,200,Blood's Honor,kill_honorable_combat,Alkosh(+S/small),Akatosh
 time_dragon,C04,200,Blood's Honor,kill_honorable_combat,Alkosh(+S/small),Auri-El,
 time_dragon,C05,20,Purity of Revenge,kill_honorable_combat,Alkosh(+S/milestone),Akatosh,
 time_dragon,C05,20,Purity of Revenge,kill_honorable_combat,Alkosh(+S/milestone),Auri-El,
+time_dragon,ccBGSSSE067_Quest2,1000,The Consequences,"destroy_reject_daedra:mehrunesdagon,kill_honorable_combat,uphold_law_justice",Akatosh(+m/small),Auri-El,waived
+time_dragon,ccBGSSSE067_Quest2,1000,The Consequences,"destroy_reject_daedra:mehrunesdagon,kill_honorable_combat,uphold_law_justice",Akatosh(+m/small),Alkosh,waived
 time_dragon,CW01A,160,Joining the Legion,"serve_empire_order,keep_oath",Akatosh(+S/small) Alkosh(+m/small),Auri-El,waived
 time_dragon,CW01A,1,Joining the Legion,kill_honorable_combat,Alkosh(+m/small),Akatosh,waived
 time_dragon,CW01A,1,Joining the Legion,kill_honorable_combat,Alkosh(+m/small),Auri-El,waived
@@ -131,21 +120,6 @@ time_dragon,TG08B,50,Blindsighted,kill_honorable_combat,Alkosh(+m/small),Akatosh
 time_dragon,TG08B,50,Blindsighted,kill_honorable_combat,Alkosh(+m/small),Auri-El,waived
 time_dragon,TG09,200,Darkness Returns,keep_oath,Akatosh(+m/small),Auri-El,
 time_dragon,TG09,200,Darkness Returns,keep_oath,Akatosh(+m/small),Alkosh,
-time_dragon,CYRBrumaMS01,50,Alammu's Veil,"uphold_law_justice,expose_betray_secret",Akatosh(+m/small),Auri-El,waived
-time_dragon,CYRBrumaMS01,50,Alammu's Veil,"uphold_law_justice,expose_betray_secret",Akatosh(+m/small),Alkosh,waived
-time_dragon,CYRBrumaMS07,120,Absent Antiquity,uphold_law_justice,Akatosh(+m/small) Alkosh(+m/small),Auri-El,waived
-time_dragon,ccBGSSSE067_Quest2,1000,The Consequences,"destroy_reject_daedra:mehrunesdagon,kill_honorable_combat,uphold_law_justice",Akatosh(+m/small),Auri-El,waived
-time_dragon,ccBGSSSE067_Quest2,1000,The Consequences,"destroy_reject_daedra:mehrunesdagon,kill_honorable_combat,uphold_law_justice",Akatosh(+m/small),Alkosh,waived
-time_dragon,dunTrevasWatchQST,100,Infiltration,"protect_the_weak,uphold_law_justice",Akatosh(+m/milestone),Auri-El,waived
-time_dragon,dunTrevasWatchQST,100,Infiltration,"protect_the_weak,uphold_law_justice",Akatosh(+m/milestone),Alkosh,waived
-time_dragon,MS07,300,Lights Out!,"protect_the_weak,uphold_law_justice",Akatosh(+m/small),Auri-El,waived
-time_dragon,MS07,300,Lights Out!,"protect_the_weak,uphold_law_justice",Akatosh(+m/small),Alkosh,waived
-time_dragon,MS07,350,Lights Out!,"uphold_law_justice,protect_the_weak,expose_betray_secret",Akatosh(+S/milestone),Auri-El,waived
-time_dragon,MS07,350,Lights Out!,"uphold_law_justice,protect_the_weak,expose_betray_secret",Akatosh(+S/milestone),Alkosh,waived
-time_dragon,dk_ThograMain,150,Thogra's Blood Oath,keep_oath,Akatosh(+m/small),Auri-El,waived
-time_dragon,dk_ThograMain,150,Thogra's Blood Oath,keep_oath,Akatosh(+m/small),Alkosh,waived
-time_dragon,WTBarrowOfTheWyrm,260,Barrow of the Wyrm,"kill_honorable_combat,prove_by_struggle,protect_the_weak",Alkosh(+S/small),Akatosh,waived
-time_dragon,WTBarrowOfTheWyrm,260,Barrow of the Wyrm,"kill_honorable_combat,prove_by_struggle,protect_the_weak",Alkosh(+S/small),Auri-El,waived
 death_order,C06,65,Glory of the Dead,cure_undeath,Arkay(+S/small) Tu'whacca(+m/small),Xarxes,waived
 death_order,CW02A,72,The Jagged Crown,slay_undead,Arkay(+C/small) Tu'whacca(+S/small),Xarxes,waived
 death_order,CW02B,72,The Jagged Crown,slay_undead,Arkay(+C/small) Tu'whacca(+S/small),Xarxes,waived
@@ -160,18 +134,13 @@ death_order,DLC1VQ08,200,Kindred Judgment,slay_undead,Tu'whacca(+S/small),Arkay,
 death_order,DLC1VQ08,200,Kindred Judgment,slay_undead,Tu'whacca(+S/small),Xarxes,
 death_order,MG07,30,The Staff of Magnus,slay_undead,Arkay(+C/small) Tu'whacca(+S/small),Xarxes,waived
 death_order,MS14,200,Laid to Rest,slay_undead,Arkay(+C/milestone) Tu'whacca(+S/small) Khenarthi(+m/small),Xarxes,waived
-death_order,Cow_restoration,25,None Escape The Light,"disciplined_study,slay_undead",Arkay(+C/milestone) Tu'whacca(+m/small),Xarxes,waived
-death_order,HSHuntForSpectreQuest,55,Hunt for the Spectre,slay_undead,Arkay(+C/milestone) Tu'whacca(+m/small),Xarxes,waived
-death_order,HYORdunIcemothQST,30,Siege at Icemoth,"slay_undead,kill_honorable_combat,prove_by_struggle",Arkay(+C/milestone) Tu'whacca(+m/small),Xarxes,waived
-death_order,WTUberEncounter,50,Someone with Backbone,slay_undead,Arkay(+C/milestone) Tu'whacca(+S/milestone),Xarxes,waived
+labor_commerce,ccASVSSE001_QuestE,100,Trueflame,master_craft_forge,Zenithar(+S/small),Z'en,waived
 labor_commerce,DLC2RRFavor02,200,Fetch the Netch (Raven Rock favor),honest_labor_trade,Zenithar(+S/small),Z'en,
 labor_commerce,DLC2ThirskFFElmus,200,Thirsk rebuilding favor (Elmus's ashfire mead),honest_labor_trade,Zenithar(+m/small),Z'en,
 labor_commerce,DLC2ThirskFFHalbarn,200,Thirsk rebuilding favor (Halbarn's smithing supplies),"master_craft_forge,honest_labor_trade",Zenithar(+S/small),Z'en,
 labor_commerce,DLC2ThirskFFHilund,200,Thirsk rebuilding favor (Hilund's spears),honest_labor_trade,Zenithar(+m/small),Z'en,
 labor_commerce,TG04,200,Scoundrel's Folly,theft_burglary,Zenithar(-m/small),Z'en,waived
 labor_commerce,TG07,200,The Pursuit,theft_burglary,Zenithar(-m/small),Z'en,waived
-labor_commerce,ccASVSSE001_QuestE,100,Trueflame,master_craft_forge,Zenithar(+S/small),Z'en,waived
-labor_commerce,BPUFXelzazMeadQuest,40,The Good Stuff,"theft_burglary,revel_indulge",Zenithar(-S/milestone),Z'en,waived
 mercy_war,DB08,200,Recipe for Disaster,murder_treacherous,Stendarr(-S/small),Stuhn,
 mercy_war,t02,200,The Book of Love,"mercy_spare,protect_the_weak",Stendarr(+S/small),Stuhn,
 trickster_thief,DA14,200,A Night To Remember,deceit,Baan Dar(+C/small) Rajhin(+S/small),Nocturnal,
@@ -202,8 +171,6 @@ trickster_thief,TG08B,60,Blindsighted,theft_burglary,Rajhin(+C/small),Nocturnal,
 trickster_thief,TG08B,60,Blindsighted,theft_burglary,Rajhin(+C/small),Baan Dar,
 trickster_thief,TG09,10,Darkness Returns,theft_burglary,Rajhin(+C/small),Nocturnal,
 trickster_thief,TG09,10,Darkness Returns,theft_burglary,Rajhin(+C/small),Baan Dar,
-trickster_thief,CYRBrumaMS01,150,Alammu's Veil,"theft_burglary,exploit_cheat",Nocturnal(+S/milestone) Rajhin(+S/milestone),Baan Dar,waived
-trickster_thief,WTTheNakedNord,50,The Naked Nord,"theft_burglary,exploit_cheat",Nocturnal(+S/small) Rajhin(+S/small),Baan Dar,waived
 love_marriage,BYOHRelationshipAdoptableOrphanage,200,Adoption (Honorhall),"charity,marriage_family",Dibella(+m/small),Mara,
 love_marriage,BYOHRelationshipAdoption,10,Adoption,marriage_family,Dibella(+m/small),Mara,
 knowledge_scribe,BardsCollegePoeticEdda,200,Collecting the Edda,disciplined_study,Julianos(+S/small) Xarxes(+m/small),Magnus,waived
@@ -213,18 +180,10 @@ knowledge_scribe,DLC2MQ04,550,The Path of Knowledge,disciplined_study,Magnus(+S/
 knowledge_scribe,FreeformSkyHavenTempleD,100,Dragon Research,disciplined_study,Julianos(+S/small) Magnus(+S/small),Xarxes,waived
 knowledge_scribe,MS14,200,Laid to Rest,"slay_undead,disciplined_study",Magnus(+m/small),Julianos,
 knowledge_scribe,MS14,200,Laid to Rest,"slay_undead,disciplined_study",Magnus(+m/small),Xarxes,
-knowledge_scribe,Cow_Breathing,50,Rapture of the Deep,disciplined_study,Julianos(+C/milestone) Magnus(+C/milestone),Xarxes,waived
-knowledge_scribe,Cow_restoration,25,None Escape The Light,"disciplined_study,slay_undead",Julianos(+C/milestone) Magnus(+C/milestone),Xarxes,waived
-knowledge_scribe,Cow_Conjuration,25,"I Choose You, Familiar",disciplined_study,Julianos(+C/milestone) Magnus(+C/milestone),Xarxes,waived
-knowledge_scribe,Cow_Reading,25,Reading Comprehension 101,disciplined_study,Julianos(+C/milestone) Xarxes(+S/milestone),Magnus,waived
-knowledge_scribe,Cow_enchantment,70,Enchanted To Meet You,"disciplined_study,master_craft_forge,honest_labor_trade",Magnus(+C/milestone) Julianos(+C/milestone),Xarxes,waived
-knowledge_scribe,Cow_illusion,25,Back-Stabbing Rodents,disciplined_study,Julianos(+C/milestone) Magnus(+C/milestone),Xarxes,waived
-knowledge_scribe,Cow_Destruction,20,A Test of Ice and Fire,disciplined_study,Julianos(+C/milestone) Magnus(+C/milestone),Xarxes,waived
 make_way_war,C00,20,Take Up Arms,honorable_duel,Talos(+m/small),HoonDing,
 make_way_war,C04,200,Blood's Honor,kill_honorable_combat,Talos(+S/small),HoonDing,
 make_way_war,DA02,40,Boethiah's Calling,prove_by_struggle,HoonDing(+S/small),Talos,waived
 make_way_war,TG05,60,Speaking With Silence,prove_by_struggle,HoonDing(+S/small),Talos,waived
-make_way_war,HYORdunIcemothQST,30,Siege at Icemoth,"slay_undead,kill_honorable_combat,prove_by_struggle",HoonDing(+S/small),Talos,waived
 hunt_ethics,C06,200,Glory of the Dead,the_hunt,Y'ffre(+S/small),Hircine,
 hunt_ethics,C06,200,Glory of the Dead,the_hunt,Y'ffre(+S/small),Kyne,
 hunt_ethics,CR13,200,Purity,cure_undeath,Hircine(-S/small) Y'ffre(+m/small),Kyne,
