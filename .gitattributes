@@ -36,6 +36,17 @@ dist/PDV_QuestModPatches_FOMOD/**/*.xml text eol=lf
 dist/PDV_QuestModPatches_FOMOD/**/*.psc text eol=lf
 dist/PDV_QuestModPatches_FOMOD/**/*.md text eol=lf
 dist/PDV_QuestModPatches_FOMOD/**/*.ini text eol=lf
+# Quest-reaction channels and stage adapters are GENERATED, and each one carries the
+# full stance table (race x deity) and faucet table verbatim -- so a single channel is
+# ~3,000 lines of which only a handful describe its own quests. Forty-odd of them made
+# one branch read as a 100,000-line diff that was really the same tables repeated.
+# linguist-generated collapses them in review and keeps them out of language stats.
+# Deliberately NOT "-diff": these are the files you read to verify a split or a regen
+# actually carried the right quests, and -diff would blind that locally as well as on
+# GitHub. The eol=lf above is repeated here on purpose -- a later, more specific rule
+# wins per attribute, and dropping LF would change the published zip's SHA256.
+dist/PDV_QuestModPatches_FOMOD/**/Channels/*.json text eol=lf linguist-generated=true
+dist/PDV_QuestModPatches_FOMOD/**/QuestStageAdapters/*.json text eol=lf linguist-generated=true
 # Authoria all-in-one package. Same reasoning as the FOMOD block above: the ESP
 # and compiled scripts are bytes, and the handoff publishes the zip's SHA256.
 dist/PDV_Patch_Authoria_AllInOne/**/*.esp -text
