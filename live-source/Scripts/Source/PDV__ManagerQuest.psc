@@ -7865,6 +7865,10 @@ Function HandleDunmerPortableShrinePrayer(String reason)
             PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(multiplier, reason)
             Int tierAfter = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
             SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, PDV_DunmerAncestorSubstrate.GetMetric() - metricBefore, "Ancestor prayer marked.", "ancestor", GetDunmerAncestorLayerLabel())
+            ; The Ledger driver for the ancestral layer. Sits inside the layerWeight guard on purpose:
+            ; vampirism silences this layer entirely, so a silenced prayer must not record one either.
+            ; Self-caps to the first prayer of the devotional day; patron-independent by ruling.
+            AwardDunmerAncestorSpinePulse(multiplier, reason)
         else
             Trace(2, "Dunmer ancestor layer silenced by curse posture (" + reason + ")")
         endIf
@@ -23372,10 +23376,23 @@ Function AwardActiveDunmerReclamationMemorySignal()
     endIf
 EndFunction
 
+; Owner ruling 2026-08-07: this feeds the ANCESTRAL layer (layer 1), not the Reclamation lane, so it
+; fires on the first ancestor prayer of the devotional day REGARDLESS of patron. Before this was
+; wired, a Dunmer with no active patron -- or on any repeat prayer that day -- recorded NO Ledger
+; driver at all, because AwardActiveDunmerReclamationMemorySignal was the only curated signal on the
+; path and it is patron-gated. PDV_RunSheet_Dunmer_V1.md:184 calls that empty Ledger a FAIL.
+; The anti-farm cap lives HERE rather than at the call site, so a second call site cannot reintroduce
+; farming. It uses the same day-int boundary encoding as the Reclamation-memory pulse above.
 Function AwardDunmerAncestorSpinePulse(Float multiplier, String reason)
     if GetPlayerOriginRaceIndex() != ORIGIN_DUNMER || !PDV_Azura || multiplier <= 0.0
         return
     endIf
+
+    Int pdvAncestorSpineDay = GetDevotionalDay() + 2
+    if StorageUtil.GetIntValue(None, "PDV.Signal.DunmerAncestorSpine.Day") == pdvAncestorSpineDay
+        return
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Signal.DunmerAncestorSpine.Day", pdvAncestorSpineDay)
 
     AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_ANCESTOR_SPINE, None, multiplier)
     StorageUtil.AdjustFloatValue(None, "PDV.Dunmer.AncestorSpine", multiplier)
