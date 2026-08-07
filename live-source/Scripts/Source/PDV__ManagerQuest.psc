@@ -889,6 +889,14 @@ Bool _suppressCurseTransitionOutputs = False
 ; have cure records at all, and the generic toast must keep covering the other five, or curing a
 ; curse goes completely silent for them. When a race gains its records the flag picks it up for free.
 Bool _raceCurseSurfaceShown = False
+; Deferred presentation for the authored Nord/Kyne recognition. A raw Message.Show() CANNOT display
+; over an open config menu -- it returns the default button instantly with no dialog (AGENTS.md,
+; 2026-06-13). The tier crossing that triggers this is reachable from an MCM piety seed, so showing
+; it inline displayed nothing and burned the one-shot key. Same fix pattern as
+; QueueDaedricMilestoneMcmReplay: hold it and present from OnUpdate once menus are closed.
+Message _pendingNordKyneChampionMsg = None
+String _pendingNordKyneChampionFallback = ""
+Int _pendingNordKyneChampionDelayTicks = 0
 ; Pooled-line structural-validation cache (2026-08-07). Each validator probed every entry in its
 ; pool on EVERY pick -- ~64 native JsonUtil calls for the 20-entry Altmer pool, ~53 for a 16-entry
 ; Khajiit moon pool. The pools are static shipped content, so the structure cannot change under a
@@ -1036,6 +1044,7 @@ Event OnUpdate()
         HandleDiegeticLoad("update")
     endIf
     ProcessQueuedDaedricMilestonePresentation()
+    ProcessQueuedNordKyneChampionEntry()
     ProcessPendingDaedricActivation()
     ProcessPendingDaedricLapse()
     ProcessPendingDaedricPrePactNotices()
@@ -10712,9 +10721,42 @@ Function MaybeShowNordKyneChampionEntry(PDV_DeityBase deity, Int newTier)
     if StorageUtil.GetIntValue(None, "PDV.Nord.ChampionEntryShown.Kyne") == 1
         return
     endIf
+    if _pendingNordKyneChampionMsg
+        return
+    endIf
 
-    ShowNordMessage(PDV_Msg_Nord_Kyne_ChampionEntry, "You sleep where the storm sleeps. You walk where the wind walks. Kyne has named her hunter.", False)
+    ; Queued, never shown inline -- see _pendingNordKyneChampionMsg. The one-shot key is set when the
+    ; modal actually PRESENTS, not here, so a recognition that could not display is not silently lost.
+    _pendingNordKyneChampionMsg = PDV_Msg_Nord_Kyne_ChampionEntry
+    _pendingNordKyneChampionFallback = "You sleep where the storm sleeps. You walk where the wind walks. Kyne has named her hunter."
+    _pendingNordKyneChampionDelayTicks = 2
+EndFunction
+
+Function ProcessQueuedNordKyneChampionEntry()
+    if !_pendingNordKyneChampionMsg && _pendingNordKyneChampionFallback == ""
+        return
+    endIf
+
+    if _pendingNordKyneChampionDelayTicks > 0
+        _pendingNordKyneChampionDelayTicks -= 1
+        return
+    endIf
+
+    ; Belt and braces: OnUpdate already early-outs in menu mode, but the hold is cheap and this
+    ; function is the thing that must never fire into an open menu.
+    if Utility.IsInMenuMode()
+        return
+    endIf
+
+    Message pendingRecord = _pendingNordKyneChampionMsg
+    String pendingFallback = _pendingNordKyneChampionFallback
+    _pendingNordKyneChampionMsg = None
+    _pendingNordKyneChampionFallback = ""
+    _pendingNordKyneChampionDelayTicks = 0
+
+    ShowNordMessage(pendingRecord, pendingFallback, False)
     StorageUtil.SetIntValue(None, "PDV.Nord.ChampionEntryShown.Kyne", 1)
+    Trace(1, "Nord/Kyne champion recognition presented.")
 EndFunction
 
 String Function GetRedguardChampionEntryShownKey(Int sectValue)
