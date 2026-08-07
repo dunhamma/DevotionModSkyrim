@@ -9120,27 +9120,44 @@ class Verifier {
     ]);
   }
 
+  // WHAT THIS PROTECTS: JsonUtil resolves paths relative to SKSE/Plugins/StorageUtilData/, so every
+  // matrix path must carry the "../StorageUtilData/..." prefix. Without it the file silently never
+  // loads -- no error, no log line -- and every reaction row inside it quietly stops firing.
+  //
+  // 2026-08-07: this used to pin a single hardcoded second channel, QUEST_REACTION_MATRIX_FILE_ARR.
+  // That channel was replaced by a folder seam: PDV_PlayerEvents scans
+  // QUEST_REACTION_CHANNEL_FOLDER, registers every JSON it finds, and caches the paths in
+  // PDV.QR.ChannelFiles for the manager's resolver. Mod-specific rows now ship WITH their patch
+  // rather than inside core, which is why the ARR names are absent from the core matrix.
+  //
+  // The guard MOVES with the mechanism rather than dying with the constant: 39 channel files
+  // (~4.3 MB) ship in the ARR patch hub today, and all of them depend on that "../" resolving.
+  // Note the asymmetry -- the folder constant lives in PDV_PlayerEvents ONLY (the manager consumes
+  // the cached StringList instead), so asserting it in both scripts would fail immediately.
   checkQuestMatrixPapyrusUtilPaths() {
     const expectedCore = "String Property QUEST_REACTION_MATRIX_FILE = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix\" AutoReadOnly";
-    const expectedArr = "String Property QUEST_REACTION_MATRIX_FILE_ARR = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR\" AutoReadOnly";
     const unsafeCore = "String Property QUEST_REACTION_MATRIX_FILE = \"PlayerDevotion/PDV_QuestReactionMatrix\" AutoReadOnly";
-    const unsafeArr = "String Property QUEST_REACTION_MATRIX_FILE_ARR = \"PlayerDevotion/PDV_QuestReactionMatrix_ARR\" AutoReadOnly";
+    const expectedChannelFolder = "String Property QUEST_REACTION_CHANNEL_FOLDER = \"../StorageUtilData/PlayerDevotion/Channels\" AutoReadOnly";
+    const unsafeChannelFolder = "String Property QUEST_REACTION_CHANNEL_FOLDER = \"PlayerDevotion/Channels\" AutoReadOnly";
 
     this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV__ManagerQuest", [
       expectedCore,
-      expectedArr,
+      // The manager's half of the seam: it must still read the registered channel list, or every
+      // per-mod channel resolves to nothing while core keeps working and the loss stays invisible.
+      "PDV.QR.ChannelFiles",
     ]);
     this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV_PlayerEvents", [
       expectedCore,
-      expectedArr,
+      expectedChannelFolder,
+      "RegisterQuestReactionChannelFolder",
     ]);
     this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV__ManagerQuest", [
       unsafeCore,
-      unsafeArr,
+      unsafeChannelFolder,
     ]);
     this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV_PlayerEvents", [
       unsafeCore,
-      unsafeArr,
+      unsafeChannelFolder,
     ]);
   }
 
