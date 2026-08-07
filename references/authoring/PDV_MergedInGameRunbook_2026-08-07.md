@@ -8,6 +8,36 @@ Source packets, still authoritative for their own detail:
 - `PDV_KhajiitLunarChampionRebalance_InGameRunbook_2026-08-06.md` (Khajiit: outdoor sleep,
   substrate/focus, rewards/resonance, Azurah's Portent, Baan Dar rescue)
 
+## Which MO2 instance: Anvil, all four sessions
+
+**Anvil / Devotion Dev.** Not because it is faster -- because it is the only instance that has the
+code under test. `pdv_compile` deploys `.pex` only to `Anvil\mods\Devotion\Scripts`.
+
+| Instance | `Devotion.esp` | `PDV__ManagerQuest.pex` | Description Framework | Requiem |
+|---|---|---|---|---|
+| **Anvil** | 2026-08-07 | **2026-08-07** | no | no |
+| ARR | 2026-07-23 | 2026-07-23 | yes | -- |
+| ARR 2.5 | 2026-08-02 | 2026-07-26 | yes | yes |
+
+ARR and ARR 2.5 both run a **July** manager script. It contains none of this session's work -- no
+Nord werewolf-cure call, no Kyne champion entry, no Dunmer Ledger driver, no pooled-line cache, and
+`GetAltmerPracticeLine` still present. Every check below would fail there, and fail **falsely**. That
+is the same stale-instance trap that produced a 41-surface RED signal gate and a 39-of-41 readback
+last session, both wrong.
+
+Two things Anvil genuinely cannot cover:
+
+1. **The calian's inventory DESCRIPTION** needs Description Framework, which Anvil does not have.
+   Defer that one read. The calian's behaviour -- click, repeat-use line, drop and re-grant, curse
+   refusal -- all works in Anvil; only the description text is unrenderable.
+2. **Requiem feel.** Anvil is not a Requiem list (351 plugins, no Requiem; ARR 2.5 has 3691 with
+   Requiem active). Nothing in this runbook needs it: the substrate boundary numbers are Devotion's
+   own MGEF magnitudes and the `1.20x` resonance check is a ratio, so both hold on either list. If
+   you later want to judge how an effect *feels* under Requiem, that is ARR 2.5 and it needs a fresh
+   deploy first.
+
+**Before any readback that becomes a claim, confirm the instance reads Anvil / Devotion Dev.**
+
 ## One honest correction before you start
 
 **This cannot be done on one save.** The two packets need different races, and the two surfaces
