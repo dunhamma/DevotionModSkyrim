@@ -1,6 +1,6 @@
 # Session handoff -- 2026-08-07 (wire-or-retire rulings, full adjudication, merged runbook)
 
-Continues `PDV_SessionHandoff_2026-08-07_HygieneAndChannelRefactor.md`. Five commits on
+Continues `PDV_SessionHandoff_2026-08-07_HygieneAndChannelRefactor.md`. Seven commits on
 `codex/khajiit-lunar-champion-rebalance`, **pushed**.
 
 | Commit | What |
@@ -10,6 +10,7 @@ Continues `PDV_SessionHandoff_2026-08-07_HygieneAndChannelRefactor.md`. Five com
 | `39c78cc8` | Retired `RefreshOpenBookOfDays`, moved its three gates onto the invariant |
 | `6d34c92e` | Adjudicated all 133 uncalled functions by name, plus the 18 keys and 5 tools |
 | `67e05b98` | Resolved the OfferResponse fork: supersession, not regression |
+| `29f5243d` | Wired the Dunmer ancestral-layer Ledger driver, patron-independent |
 
 Gates green by exit code throughout: `pdv_verify`, `pdv_prisma_ui_audit`, `pdv_ascii_guard`,
 `pdv_signal_e2e_gate`, `pdv_book_of_days_audit`, `pdv_substrate_pacing_audit`,
@@ -17,33 +18,41 @@ Gates green by exit code throughout: `pdv_verify`, `pdv_prisma_ui_audit`, `pdv_a
 
 houseCARL instance for every readback this session: **Anvil / Devotion Dev**.
 
-## The one thing blocking, and it needs the owner
+## Dunmer ancestral spine -- RULED AND WIRED (`29f5243d`)
 
-**`AwardDunmerAncestorSpinePulse` is unresolved.** It is a real gap, not redundancy -- signal `705`
-is declared on Azura, handled in the manager's curated-signal dispatch, and the Orc (`2209`) and
-Redguard (`2406`) equivalents fire. Dunmer's has no producer.
+`AwardDunmerAncestorSpinePulse` was a real gap, not redundancy. Signal `705` is declared on Azura,
+handled in the manager's curated-signal dispatch, and the Orc (`2209`) and Redguard (`2406`)
+equivalents fire -- Dunmer's had no producer.
 
-The consequence: a Dunmer praying at the portable urn gets substrate progress
-(`RecordPortableShrinePrayerScaled`) but a **Ledger driver only when a patron is ACTIVE and only on
-the first prayer of the day**, because `AwardActiveDunmerReclamationMemorySignal` is the sole curated
-signal on that path and carries both gates. A patronless Dunmer, or a second prayer that day, gets an
-empty Ledger. `PDV_RunSheet_Dunmer_V1.md:184` calls exactly that state a FAIL and names
-`AwardDunmerAncestorSpinePulse` as the fix. The fix was written and never called.
+The defect: a Dunmer praying at the portable urn got substrate progress
+(`RecordPortableShrinePrayerScaled`) but a **Ledger driver only when a patron was ACTIVE and only on
+the first prayer of the day**, because `AwardActiveDunmerReclamationMemorySignal` was the sole
+curated signal on that path and carries both gates. A patronless Dunmer, or any repeat prayer,
+recorded nothing -- the state `PDV_RunSheet_Dunmer_V1.md:184` calls "the key regression" and a FAIL.
 
-The complication: `HandleDunmerPortableShrinePrayer` at `PDV__ManagerQuest.psc:7876` says the prayer
-"already supplied the one deity-piety pulse for this logical act". Curated signals carry piety, so
-calling the spine pulse unconditionally adds a second piety gain to acts that already have one.
+**Owner ruling: the pulse feeds the ANCESTRAL layer, so it fires on the first prayer of the
+devotional day regardless of patron.**
 
-Three options were put to the owner; **the recommendation is the first**:
+That also dissolves the apparent conflict with `PDV__ManagerQuest.psc:7876` ("the portable prayer
+already supplied the one deity-piety pulse for this logical act"). That comment governs the **home
+bonus** not stacking on top of the prayer. The two layers were always designed to answer separately:
+layer 1 (ancestral) is curse-silenced, layer 2 (Reclamation) "still answers, so it routes
+regardless". They are different lanes, not two pulses on one lane.
 
-1. Call it only when neither the twilight signal nor the Reclamation-memory signal fired -- fills
-   exactly the gap, never double-pulses, leaves working cases untouched. Use the existing
-   `ConsumeDailyRepeatMultiplier` for decay.
-2. Wire unconditionally, matching the Altmer shape. Simpler, but a real Dunmer pacing change.
-3. Retire and correct the two docs -- but that strips a registered signal, which is its own gate
-   failure class.
+Implementation notes worth keeping:
 
-Nothing else is blocked on this.
+- The anti-farm cap lives **on the pulse**, not the call site, so a future second call site cannot
+  reintroduce farming. It reuses the `GetDevotionalDay() + 2` day-int encoding the Reclamation-memory
+  pulse already uses, which handles the day-key zero-default trap the same way in both.
+- The call sits **inside the `layerWeight > 0.0` guard** on purpose: vampirism silences the ancestral
+  layer, so a silenced prayer must not record a driver either.
+- Only `HandleDunmerPortableShrinePrayer` calls it. The other three
+  `RecordPortableShrinePrayerScaled` sites (`reclamation_source`, `honorable_victory`,
+  `good_daedra_altar`) are different acts, not prayers, and were deliberately left alone.
+
+**Still needs in-game proof.** Add to the Dunmer packet: pray at the urn with NO patron and confirm a
+Ledger driver appears; pray again the same day and confirm no second one; cross 06:00 and confirm it
+returns. Under vampirism, confirm silence.
 
 ## Rulings made, so they do not get re-litigated
 

@@ -18,6 +18,7 @@ wired today need a third. Three characters:
 | **1** | Nord | the two surfaces wired today (`d6759eab`) | ~10 minutes |
 | **2** | Altmer | P11 Part A-E, P17 sizing | one sitting + ~a week of observed play for P17 |
 | **3** | Khajiit | the whole lunar/Champion rebalance runbook | one long sitting |
+| **4** | Dunmer | the ancestral-layer Ledger driver wired in `29f5243d` | ~10 minutes |
 
 Session 1 first because it is ten minutes and it proves the VMAD binding path on the newest build
 before you invest a long sitting in sessions 2 and 3.
@@ -189,6 +190,31 @@ Run `PDV_KhajiitLunarChampionRebalance_InGameRunbook_2026-08-06.md` as written, 
   another deity's pool would mean the per-key half of the cache is wrong.
 
 ---
+
+## Session 4 -- Dunmer, the ancestral-layer Ledger driver (~10 minutes)
+
+Wired in `29f5243d`. Before it, a Dunmer praying at the portable urn recorded a Ledger driver **only**
+with an active patron and **only** on the first prayer of the day; a patronless Dunmer got substrate
+progress and an empty Ledger. It now fires on the first prayer of the devotional day regardless of
+patron, because it feeds the ancestral layer rather than the Reclamation lane.
+
+Fresh Dunmer, and deliberately **do not commit to a patron** -- the whole point is the patronless case.
+
+1. Pray at the ancestral urn (the reusable MISC token; it must stay in inventory -- if the count
+   drops, that is its own FAIL per the Dunmer run sheet).
+2. **Expect a Ledger driver.** Before this fix, with no patron, there was none. Also expect the
+   substrate toast "Ancestor prayer marked." as before.
+3. Pray again the same day. **Expect no second driver** -- the pulse self-caps to one per devotional
+   day. The substrate side still decays normally by its own repeat multiplier.
+4. Cross 06:00 and pray again. **Expect the driver to return.**
+5. Now commit to a patron (Azura, Boethiah or Mephala) and pray. Expect the Reclamation-memory
+   signal as before **and** the ancestral driver -- they are separate lanes, not a double pulse on
+   one lane.
+6. **Curse check:** MCM `Curse vampire`, then pray. Vampirism silences the ancestral layer entirely,
+   so **expect no driver and no substrate progress**. Restore with `Curse none`.
+
+Under the beast (`Curse werewolf`) the layer is halved rather than silenced, so the driver should
+still appear.
 
 ## Traps that will waste the sitting
 
