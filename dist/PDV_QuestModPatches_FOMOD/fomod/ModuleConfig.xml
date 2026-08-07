@@ -7,7 +7,7 @@
         <group name="How do you want to install?" type="SelectExactlyOne">
           <plugins order="Explicit">
             <plugin name="Authoria (Requiem Reforged) - All-In-One">
-              <description>One combined ESL-flagged plugin covering every supported quest mod in Authoria, plus all ten matrix channels. Authoria ships all the target mods, so the combined plugin is safe here and keeps your plugin list to a single file. Choose this if you are playing Authoria.</description>
+              <description>One combined ESL-flagged plugin covering every supported quest mod in Authoria, plus all 39 quest reaction channels. Authoria ships all the target mods, so the combined plugin is safe here and keeps your plugin list to a single file. Choose this if you are playing Authoria.</description>
               <files>
                 <folder source="common\Sirenroot" destination="" priority="0" />
                 <folder source="common\_Runbook" destination="" priority="0" />
@@ -23,6 +23,35 @@
                 <folder source="common\_Fragments\WarsFolly" destination="" priority="0" />
                 <folder source="common\_Fragments\OnceWeWereHere" destination="" priority="0" />
                 <folder source="common\_Fragments\WhispersOfTheDepths" destination="" priority="0" />
+                <folder source="common\Auri" destination="" priority="0" />
+                <folder source="common\BeyondSkyrimBruma" destination="" priority="0" />
+                <folder source="common\CallingTheWatchmaker" destination="" priority="0" />
+                <folder source="common\CollegeQuestExpansion" destination="" priority="0" />
+                <folder source="common\DAc0da" destination="" priority="0" />
+                <folder source="common\EbonyBladeCurse" destination="" priority="0" />
+                <folder source="common\ForgottenCity" destination="" priority="0" />
+                <folder source="common\ForswornConspiracyQE" destination="" priority="0" />
+                <folder source="common\GiftOfSaturalia" destination="" priority="0" />
+                <folder source="common\Glenmoril" destination="" priority="0" />
+                <folder source="common\HuntForSpectre" destination="" priority="0" />
+                <folder source="common\InfiltrationQE" destination="" priority="0" />
+                <folder source="common\LegacyOfTheDragonborn" destination="" priority="0" />
+                <folder source="common\Moonpath" destination="" priority="0" />
+                <folder source="common\Mrissi" destination="" priority="0" />
+                <folder source="common\NilheimQE" destination="" priority="0" />
+                <folder source="common\Olenveld" destination="" priority="0" />
+                <folder source="common\PaarthurnaxQE" destination="" priority="0" />
+                <folder source="common\SaveTheIcerunner" destination="" priority="0" />
+                <folder source="common\SiegeAtIcemoth" destination="" priority="0" />
+                <folder source="common\SkyrimExtendedCutSaintsAndSeducers" destination="" priority="0" />
+                <folder source="common\TasteOfDeathAddon" destination="" priority="0" />
+                <folder source="common\TGAlternativeEndings" destination="" priority="0" />
+                <folder source="common\Thogra" destination="" priority="0" />
+                <folder source="common\Unslaad" destination="" priority="0" />
+                <folder source="common\Vigilant" destination="" priority="0" />
+                <folder source="common\WhisperingDoorQE" destination="" priority="0" />
+                <folder source="common\Wyrmstooth" destination="" priority="0" />
+                <folder source="common\Xelzaz" destination="" priority="0" />
                 <folder source="plugins\authoria" destination="" priority="0" />
               </files>
               <conditionFlags>
@@ -39,6 +68,223 @@
               </conditionFlags>
               <typeDescriptor>
                 <type name="Optional" />
+              </typeDescriptor>
+            </plugin>
+          </plugins>
+        </group>
+      </optionalFileGroups>
+    </installStep>
+    <installStep name="Select Quest Mod Patches">
+      <visible>
+        <flagDependency flag="mode" value="individual" />
+      </visible>
+      <optionalFileGroups order="Explicit">
+        <group name="Devotion Quest Mod Patches" type="SelectAny">
+          <plugins order="Explicit">
+            <plugin name="Sirenroot">
+              <description>Lays the haunting Ayleid spirit to rest: Arkay, Meridia, Stendarr, Tu'whacca, Azura, Y'ffre, plus the elven pantheon (Auri-El, Xarxes, Magnus) for the Ayleid dead, and Zenithar for honest salvage work.</description>
+              <files>
+                <folder source="common\Sirenroot" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="evgSIRENROOT.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="The Rot Below">
+              <description>Namira is named in the quest itself. Foiling her plan angers her and pleases the death-and-light gods; killing or sparing the freed lich Adabelle splits Mara and Dibella.</description>
+              <files>
+                <folder source="common\TheRotBelow" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="CJ03Elroy.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="The Frozen Heart">
+              <description>The cursed woman is a Snow Elf, so Auri-El reacts most of all: curing her is a milestone in his eyes, killing her a grave offence. Mara, Stendarr, Trinimac and Molag Bal also weigh in.</description>
+              <files>
+                <folder source="common\TheFrozenHeart" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="ksws07_quest.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Depths of the Soul">
+              <description>Zenithar approves of helping the merchant Pike open his shop.</description>
+              <files>
+                <folder source="common\DepthsOfTheSoul" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Dungeon Delver Mod.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Baba Yaga and the Labyrinth">
+              <description>Mara approves of rescuing the witch from the Black Stone Labyrinth.</description>
+              <files>
+                <folder source="common\BabaYaga" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="ksws03_quest.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Bark and Bite">
+              <description>Freeing the three werewolf spirits pleases Hircine; sparing Frija instead pleases Stendarr and disappoints him. Sheogorath is amused either way.</description>
+              <files>
+                <folder source="common\BarkAndBite" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Tree Contract Mod.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Before the End">
+              <description>Mara and Arkay approve of staying with the condemned man Aradell until the end.</description>
+              <files>
+                <folder source="common\BeforeTheEnd" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="PrisonerMod.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="War's Folly">
+              <description>Adds Devotion reactions to all six stances you can take with Sandor the preacher, from pride in slaughter to renouncing the war. Includes an ESL-flagged plugin (also repairs two dialogue endings that never set their quest stage).</description>
+              <files>
+                <folder source="common\WarsFolly" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+                <folder source="common\_Fragments\WarsFolly" destination="" priority="0" />
+                <folder source="plugins\individual\WarsFolly" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="War's Folly.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Once We Were Here">
+              <description>Hoping the Falmer may yet be redeemed pleases Auri-El, their forebears' god; calling the damage irreparable disappoints him. Includes an ESL-flagged plugin.</description>
+              <files>
+                <folder source="common\OnceWeWereHere" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+                <folder source="common\_Fragments\OnceWeWereHere" destination="" priority="0" />
+                <folder source="plugins\individual\OnceWeWereHere" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Once We Were Here - Quest Mod.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Whispers of the Depths">
+              <description>Mara approves of offering condolences to the old sailor. Includes an ESL-flagged plugin.</description>
+              <files>
+                <folder source="common\WhispersOfTheDepths" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+                <folder source="common\_Fragments\WhispersOfTheDepths" destination="" priority="0" />
+                <folder source="plugins\individual\WhispersOfTheDepths" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Slays-Many-Beasts Quest Mod.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
               </typeDescriptor>
             </plugin>
             <plugin name="Auri">
@@ -654,223 +900,6 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="man_DaedricShrines.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-          </plugins>
-        </group>
-      </optionalFileGroups>
-    </installStep>
-    <installStep name="Select Quest Mod Patches">
-      <visible>
-        <flagDependency flag="mode" value="individual" />
-      </visible>
-      <optionalFileGroups order="Explicit">
-        <group name="Devotion Quest Mod Patches" type="SelectAny">
-          <plugins order="Explicit">
-            <plugin name="Sirenroot">
-              <description>Lays the haunting Ayleid spirit to rest: Arkay, Meridia, Stendarr, Tu'whacca, Azura, Y'ffre, plus the elven pantheon (Auri-El, Xarxes, Magnus) for the Ayleid dead, and Zenithar for honest salvage work.</description>
-              <files>
-                <folder source="common\Sirenroot" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="evgSIRENROOT.esm" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="The Rot Below">
-              <description>Namira is named in the quest itself. Foiling her plan angers her and pleases the death-and-light gods; killing or sparing the freed lich Adabelle splits Mara and Dibella.</description>
-              <files>
-                <folder source="common\TheRotBelow" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="CJ03Elroy.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="The Frozen Heart">
-              <description>The cursed woman is a Snow Elf, so Auri-El reacts most of all: curing her is a milestone in his eyes, killing her a grave offence. Mara, Stendarr, Trinimac and Molag Bal also weigh in.</description>
-              <files>
-                <folder source="common\TheFrozenHeart" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="ksws07_quest.esm" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Depths of the Soul">
-              <description>Zenithar approves of helping the merchant Pike open his shop.</description>
-              <files>
-                <folder source="common\DepthsOfTheSoul" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="Dungeon Delver Mod.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Baba Yaga and the Labyrinth">
-              <description>Mara approves of rescuing the witch from the Black Stone Labyrinth.</description>
-              <files>
-                <folder source="common\BabaYaga" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="ksws03_quest.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Bark and Bite">
-              <description>Freeing the three werewolf spirits pleases Hircine; sparing Frija instead pleases Stendarr and disappoints him. Sheogorath is amused either way.</description>
-              <files>
-                <folder source="common\BarkAndBite" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="Tree Contract Mod.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Before the End">
-              <description>Mara and Arkay approve of staying with the condemned man Aradell until the end.</description>
-              <files>
-                <folder source="common\BeforeTheEnd" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="PrisonerMod.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="War's Folly">
-              <description>Adds Devotion reactions to all six stances you can take with Sandor the preacher, from pride in slaughter to renouncing the war. Includes an ESL-flagged plugin (also repairs two dialogue endings that never set their quest stage).</description>
-              <files>
-                <folder source="common\WarsFolly" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-                <folder source="common\_Fragments\WarsFolly" destination="" priority="0" />
-                <folder source="plugins\individual\WarsFolly" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="War's Folly.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Once We Were Here">
-              <description>Hoping the Falmer may yet be redeemed pleases Auri-El, their forebears' god; calling the damage irreparable disappoints him. Includes an ESL-flagged plugin.</description>
-              <files>
-                <folder source="common\OnceWeWereHere" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-                <folder source="common\_Fragments\OnceWeWereHere" destination="" priority="0" />
-                <folder source="plugins\individual\OnceWeWereHere" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="Once We Were Here - Quest Mod.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Whispers of the Depths">
-              <description>Mara approves of offering condolences to the old sailor. Includes an ESL-flagged plugin.</description>
-              <files>
-                <folder source="common\WhispersOfTheDepths" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-                <folder source="common\_Fragments\WhispersOfTheDepths" destination="" priority="0" />
-                <folder source="plugins\individual\WhispersOfTheDepths" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="Slays-Many-Beasts Quest Mod.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
