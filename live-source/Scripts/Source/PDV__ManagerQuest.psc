@@ -881,6 +881,19 @@ Int _optimizationContextProbeRuns = 0
 Bool _panelDirty = False
 Bool _suppressAwardFavorToast = False
 Bool _suppressCurseTransitionOutputs = False
+; Pooled-line structural-validation cache (2026-08-07). Each validator probed every entry in its
+; pool on EVERY pick -- ~64 native JsonUtil calls for the 20-entry Altmer pool, ~53 for a 16-entry
+; Khajiit moon pool. The pools are static shipped content, so the structure cannot change under a
+; running game; only the file's VERSION can, and it does so by contract when the content is
+; regenerated. These stamps hold the VERSION each pool was last fully validated against, so a
+; version bump (or a fresh install) re-validates and steady state costs two calls.
+; JsonUtil.Load still runs on every call and is deliberately NOT cached: PapyrusUtil's parsed-file
+; cache lives in the DLL, so it does not survive a game reload, and skipping Load would make every
+; probe read its "missing" default after a load. The bundled Papyrus reference documents no caching
+; semantics for Load, so nothing here assumes any.
+Int _altmerPracticeLinesValidatedVersion = -1
+Int _khajiitMoonObservationsValidatedVersion = -1
+String _khajiitMoonObservationsValidatedKey = ""
 ; Quest-reaction surface accumulator (2026-07-05): one quest fire = one toast +
 ; one Book of Days beat, no matter how many deities its cells fan to. Reset at
 ; the top of ApplyQuestReaction, filled per landed base cell, flushed after the
@@ -8253,9 +8266,17 @@ Function ShowKhajiitMoonContemplation(Int focusValue, Bool firstRiteToday)
 EndFunction
 
 Bool Function IsKhajiitMoonObservationJsonValid(Int focusValue)
+    ; Load/IsGood run every call -- see _khajiitMoonObservationsValidatedVersion for why they are not
+    ; cached. The cache is keyed on deityKey as well as VERSION: each focus deity has its own 10-entry
+    ; pool, so validating khenarthi says nothing about alkosh.
     String deityKey = GetKhajiitMoonObservationDeityKey(focusValue)
     if deityKey == "" || !JsonUtil.Load(KHAJIIT_MOON_OBSERVATIONS_FILE) || !JsonUtil.IsGood(KHAJIIT_MOON_OBSERVATIONS_FILE)
+        _khajiitMoonObservationsValidatedVersion = -1
+        _khajiitMoonObservationsValidatedKey = ""
         return False
+    endIf
+    if _khajiitMoonObservationsValidatedVersion == KHAJIIT_MOON_OBSERVATIONS_VERSION && _khajiitMoonObservationsValidatedKey == deityKey
+        return True
     endIf
     if JsonUtil.GetPathIntValue(KHAJIIT_MOON_OBSERVATIONS_FILE, ".version", -1) != KHAJIIT_MOON_OBSERVATIONS_VERSION
         return False
@@ -8274,6 +8295,8 @@ Bool Function IsKhajiitMoonObservationJsonValid(Int focusValue)
         endIf
         poolIndex += 1
     endWhile
+    _khajiitMoonObservationsValidatedVersion = KHAJIIT_MOON_OBSERVATIONS_VERSION
+    _khajiitMoonObservationsValidatedKey = deityKey
     return True
 EndFunction
 
@@ -10652,6 +10675,32 @@ Function MaybeShowRedguardChampionEntry(Int sectValue)
     endIf
 EndFunction
 
+; Nord/Kyne counterpart to MaybeShowRedguardChampionEntry. The Redguard beat hangs off a SECT
+; change, so it never collides with a tier surface; Kyne's recognition IS the tier reach, so this
+; is deliberately ADDITIVE rather than a suppression like ShouldSuppressBretonFocusedChampionTierSurface.
+; The universal surface above keeps the toast, the Book of Days entry and the Ledger feed; this
+; only adds the authored modal on top. Suppressing the generic surface would silence all three.
+Function MaybeShowNordKyneChampionEntry(PDV_DeityBase deity, Int newTier)
+    if newTier < TIER_CHAMPION
+        return
+    endIf
+    if GetPlayerOriginRaceIndex() != ORIGIN_NORD
+        return
+    endIf
+    if !PDV_Kyne || deity != PDV_Kyne
+        return
+    endIf
+    if IsRaceSetupQuietPresentationActive()
+        return
+    endIf
+    if StorageUtil.GetIntValue(None, "PDV.Nord.ChampionEntryShown.Kyne") == 1
+        return
+    endIf
+
+    ShowNordMessage(PDV_Msg_Nord_Kyne_ChampionEntry, "You sleep where the storm sleeps. You walk where the wind walks. Kyne has named her hunter.", False)
+    StorageUtil.SetIntValue(None, "PDV.Nord.ChampionEntryShown.Kyne", 1)
+EndFunction
+
 String Function GetRedguardChampionEntryShownKey(Int sectValue)
     if sectValue == REDGUARD_SECT_CROWN
         return "PDV.Redguard.ChampionEntryShown.Crown"
@@ -11715,22 +11764,14 @@ Int Function PickAltmerPracticeIndex()
     return poolIndex
 EndFunction
 
-String Function GetAltmerPracticeLine()
-    Int poolIndex = PickAltmerPracticeIndex()
-    if poolIndex < 0
-        return "You kept the practice where you stood, with no shrine and no witness."
-    endIf
-
-    String bodyText = JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, ".lines[" + poolIndex + "].body", "")
-    if bodyText == ""
-        return "You kept the practice where you stood, with no shrine and no witness."
-    endIf
-    return bodyText
-EndFunction
-
 Bool Function IsAltmerPracticeLineJsonValid()
+    ; Load/IsGood run every call -- see _altmerPracticeLinesValidatedVersion for why they are not cached.
     if !JsonUtil.Load(ALTMER_PRACTICE_LINES_FILE) || !JsonUtil.IsGood(ALTMER_PRACTICE_LINES_FILE)
+        _altmerPracticeLinesValidatedVersion = -1
         return False
+    endIf
+    if _altmerPracticeLinesValidatedVersion == ALTMER_PRACTICE_LINES_VERSION
+        return True
     endIf
     if JsonUtil.GetPathIntValue(ALTMER_PRACTICE_LINES_FILE, ".version", -1) != ALTMER_PRACTICE_LINES_VERSION
         return False
@@ -11747,6 +11788,7 @@ Bool Function IsAltmerPracticeLineJsonValid()
         endIf
         poolIndex += 1
     endWhile
+    _altmerPracticeLinesValidatedVersion = ALTMER_PRACTICE_LINES_VERSION
     return True
 EndFunction
 
@@ -11814,15 +11856,16 @@ String Function GetAltmerHeritageSourceLine(String reason)
         return "You have deepened your magical skills. You are closer to perfection."
     elseIf StringContainsToken(reason, "curated_heritage")
         return "You read an ancestral text closely. What was written is remembered."
-    elseIf StringContainsToken(reason, "practice_focus")
-        ; P14's focus token composes "practice_focus_" + the EventBus reason, which matches none of
-        ; the arms above -- without this branch the mod's one unlimited daily Altmer act fell to the
-        ; orthodoxy default, which asserts the opposite of a Psijic or Heterodox player's theology.
-        ; Every line in the pool is alignment-neutral and names no god, because this act feeds the
-        ; deity-agnostic spine. The old single line is retained as the compiled fallback.
-        return GetAltmerPracticeLine()
     endIf
 
+    ; NOTE on "practice_focus" (P14's focus token composes "practice_focus_" + the EventBus reason,
+    ; so it matches none of the arms above): it must NEVER fall to the orthodoxy default below, which
+    ; asserts the opposite of a Psijic or Heterodox player's theology. It does not, because
+    ; AppendAltmerHeritageVoice intercepts that token first and delegates to AppendAltmerPracticeEntry,
+    ; which draws an alignment-neutral pooled line. An arm here was a SECOND draw site from that pool
+    ; with its own LastId write; removed 2026-08-07 because reaching it would reintroduce the
+    ; toast/Book divergence the single-pick design exists to prevent. If you ever make this function
+    ; reachable for that token, route it back through AppendAltmerPracticeEntry -- not a new draw.
     return "You upheld the orthodoxy at real cost. Doctrine stands on what it costs you."
 EndFunction
 
@@ -12145,6 +12188,7 @@ Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
                 StorageUtil.SetIntValue(None, "PDV.BookOfDays.LastTierValue", newTier)
                 SendPrismaEventToast("tier", deity, "", GetPublicTierBand(newTier), "")
                 SurfaceTransition("tier", deity.DeityName + " " + GetTierStandingLabel(newTier), "reach", deity.DeityIndex, "", false, newTier >= TIER_CHAMPION)
+                MaybeShowNordKyneChampionEntry(deity, newTier)
             endIf
         endIf
 
@@ -22254,12 +22298,19 @@ Function ApplyNordCurseHandlers(Int oldState, Int newState, String reason)
             StorageUtil.SetIntValue(None, "PDV.Nord.VampireCureFeedbackShown", 1)
         endIf
     elseIf newState == 1
+        StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfCureFeedbackShown", 0)
         if StorageUtil.GetIntValue(None, "PDV.Nord.WerewolfFeedbackShown") != 1
             ShowNordMessage(PDV_Msg_Nord_CurseState_WerewolfOnset, "The hunt pulls against Sovngarde. Master the beast, or it will name the road for you.", suppressModal)
             StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfFeedbackShown", 1)
         endIf
     elseIf newState == 0
         StorageUtil.SetIntValue(None, "PDV.Nord.VampireActive", 0)
+        ; oldState == 2 is claimed by the vampire-cure branch above, so reaching
+        ; here with oldState == 1 is the werewolf cure and nothing else.
+        if oldState == 1 && StorageUtil.GetIntValue(None, "PDV.Nord.WerewolfCureFeedbackShown") != 1
+            ShowNordMessage(PDV_Msg_Nord_CurseState_WerewolfCured, "The hunt is set down. Hircine's hold is broken, and your seat on the bridge holds firm once more.", suppressModal)
+            StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfCureFeedbackShown", 1)
+        endIf
         StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfFeedbackShown", 0)
     endIf
 EndFunction
