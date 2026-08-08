@@ -10,6 +10,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--chunk-size", "--editor-id", "--formid", "--limit", "--max-depth", "--out", "--plugin"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_extract_quest_stage_readback" });
+
 const PROJECT_ROOT = process.cwd();
 const INPUT_CSV = path.join(PROJECT_ROOT, "references", "vanilla-gameplay", "extracted", "vanilla-quest-candidates.csv");
 const OUTPUT_CSV = path.join(PROJECT_ROOT, "references", "vanilla-gameplay", "extracted", "vanilla-quest-stage-readback.csv");

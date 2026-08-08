@@ -3,6 +3,14 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--json"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_prisma_ui_audit" });
+
 const DEVOTION_SOURCE = process.env.PDV_PRISMA_AUDIT_SOURCE_ROOT || "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
 const DEVOTION_COMPILED = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts";
 const DEVOTION_PRISMA_VIEW = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PrismaUI\\views\\Devotion\\app.js";

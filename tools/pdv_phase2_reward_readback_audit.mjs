@@ -12,6 +12,14 @@ import path from "node:path";
 import process from "node:process";
 import { normalizeActorValue } from "./lib/pdv_actor_value_aliases.mjs";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--json"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_phase2_reward_readback_audit" });
+
 const ROOT = process.cwd();
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
 const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");

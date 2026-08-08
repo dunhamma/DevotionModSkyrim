@@ -12,6 +12,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--check", "--json"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_main_quest_full_coverage_audit" });
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const AUTHORING = path.join(ROOT, "references", "authoring");
 const CONTRACT_PATH = path.join(AUTHORING, "PDV_MainQuestFullCoverageContract.json");

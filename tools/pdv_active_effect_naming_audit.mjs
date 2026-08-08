@@ -1,6 +1,14 @@
 #!/usr/bin/env node
 import { callHousecarl, extractHousecarlText } from "./lib/pdv_housecarl_stdio.mjs";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--json"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_active_effect_naming_audit" });
+
 const json = process.argv.includes("--json");
 const labels = new Map([["Stamina", "Fortify Stamina"], ["Magicka", "Fortify Magicka"], ["Health", "Maximum Health"], ["ResistMagic", "Magic Resistance"], ["ResistDisease", "Disease Resistance"], ["ResistFrost", "Frost Resistance"], ["ResistFire", "Fire Resistance"], ["PoisonResist", "Poison Resistance"], ["DamageResist", "Armor"], ["StaminaRateMult", "Stamina Regeneration"], ["MagickaRateMult", "Magicka Regeneration"], ["HealRateMult", "Health Regeneration"], ["ShoutRecoveryMult", "Shout Recovery"], ["CarryWeight", "Carry Weight"], ["OneHanded", "One-Handed"], ["TwoHanded", "Two-Handed"], ["Speech", "Speech"], ["Block", "Block"], ["Sneak", "Sneak"], ["Lockpicking", "Lockpicking"], ["Pickpocket", "Pickpocket"], ["Alteration", "Alteration"], ["Restoration", "Restoration"], ["Illusion", "Illusion"], ["Destruction", "Destruction"], ["Conjuration", "Conjuration"], ["Smithing", "Smithing"], ["HeavyArmor", "Heavy Armor"], ["Archery", "Archery"], ["CriticalChance", "Critical Chance"], ["AttackDamageMult", "Weapon Damage"], ["SpeedMult", "Movement Speed"], ["UnarmedDamage", "Unarmed Damage"]]);
 const text = (result) => extractHousecarlText(result);

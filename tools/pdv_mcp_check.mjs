@@ -12,6 +12,14 @@
 
 import http from "node:http";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--json"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_mcp_check" });
+
 const MCP_URL = "http://127.0.0.1:27016/mcp";
 const EXPECTED_PROFILE = "Devotion Dev";
 const TIMEOUT_MS = 5_000;

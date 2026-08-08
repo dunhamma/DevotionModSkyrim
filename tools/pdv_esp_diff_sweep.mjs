@@ -29,6 +29,14 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { openHousecarl, extractHousecarlText } from "./lib/pdv_housecarl_stdio.mjs";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--expect-clean", "--from", "--help", "--json", "--scope", "--to"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_esp_diff_sweep" });
+
 const TOOLS_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(TOOLS_DIR, "..");
 const STORE = path.join(ROOT, "generated", "live-devotion-backups");
