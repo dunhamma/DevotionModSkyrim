@@ -54,7 +54,11 @@ for (const token of ["Function BardPerformancePollTick()", "Function MarkBardTav
 check("Bard global decay", manager.includes('ConsumeDailyRepeatMultiplier("PDV.Signal.BardPerformance")'), "manager retains the global devotional repeat budget");
 
 const eventBus = read("live-source", "Scripts", "Source", "PDV_EventBus.psc");
-const afdiObserver = read("dist", "PDV_QuestModPatches_FOMOD", "common", "AFDI", "Scripts", "Source", "PDV_AFDIObserver.psc");
+// patch-source/, not dist/. This used to read the BUILD OUTPUT as its source of truth, which
+// is exactly the problem issue #41 records: for patch-only scripts the output WAS the source,
+// so a dist/ wipe lost it and nothing regenerated it. The source now lives in patch-source/
+// and dist/ is produced from it by tools/pdv_patch_source_deploy.mjs.
+const afdiObserver = read("patch-source", "AFDI", "Scripts", "Source", "PDV_AFDIObserver.psc");
 for (const token of [
   "Scriptname PDV_AFDIObserver extends Quest",
   "RegisterForUpdate(POLL_INTERVAL)",

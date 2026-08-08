@@ -51,6 +51,18 @@ if (!coreZip) {
 }
 if (!fs.existsSync(path.join(ROOT, coreZip))) throw new Error(`Core zip not found: ${coreZip}`);
 
+// ---- 1b. The patch tree must match its source before any of it is staged ----
+// PATCH_TREE is copied wholesale below, so a stale or hand-edited script in it ships without
+// comment. The patch-only Papyrus now lives in patch-source/ and dist/ is produced from it;
+// this refuses to package a tree that has drifted, or one whose .psc no longer matches the
+// .pex compiled from it. Presence was never the question - correctness is.
+try {
+  execFileSync(process.execPath, [path.join(ROOT, "tools", "pdv_patch_source_deploy.mjs"), "--check"], { cwd: ROOT, stdio: "pipe" });
+} catch (error) {
+  const detail = `${error.stdout ?? ""}${error.stderr ?? ""}`.trim();
+  throw new Error(`Patch tree is out of sync with patch-source/. Run: node tools/pdv_patch_source_deploy.mjs --write\n${detail}`);
+}
+
 // ---- 2. Stage ----
 fs.rmSync(STAGE, { recursive: true, force: true });
 fs.mkdirSync(path.join(STAGE, "core"), { recursive: true });
