@@ -4,7 +4,7 @@
     "race-sheets/PDV_DaedricContent_Manifest.md",
     "references/phase4/PDV_DaedricRacePrinceMatrix.csv"
   ],
-  "generatedAtLocal": "07/08/2026, 15:46:46",
+  "generatedAtLocal": "08/08/2026, 16:13:28",
   "sourceOfTruth": "Manifest row EditorIDs and text win over work-order shorthand.",
   "priceSerialization": {
     "magicEffectFlags": [
@@ -1918,7 +1918,7 @@
             {
               "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Malacath_Seeker",
               "actorValue": "SpeedMult",
-              "magnitude": -10,
+              "magnitude": -4,
               "area": 0,
               "duration": 0
             }
@@ -1934,7 +1934,7 @@
             {
               "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Malacath_Devoted",
               "actorValue": "SpeedMult",
-              "magnitude": -20,
+              "magnitude": -7,
               "area": 0,
               "duration": 0
             }
@@ -1950,7 +1950,7 @@
             {
               "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Malacath_Champion",
               "actorValue": "SpeedMult",
-              "magnitude": -30,
+              "magnitude": -10,
               "area": 0,
               "duration": 0
             }
@@ -3709,15 +3709,15 @@
         },
         {
           "spellEditorId": "PDV_Bless_Daedric_Mora_Champion",
-          "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mora_Champion",
+          "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mora_Champion_Alteration",
           "displayName": "Hermaeus Mora Boon - Champion",
           "playerFacingText": "Mora's archive teaches the shape beneath the spell. Boon: Alteration +20, Fortify Magicka +20.",
           "property": "Boon_Champion",
           "effects": [
             {
-              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mora_Champion",
-              "actorValue": "Magicka",
-              "magnitude": 35,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mora_Champion_Alteration",
+              "actorValue": "Alteration",
+              "magnitude": 20,
               "area": 0,
               "duration": 0
             },
