@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-26T07:41:04.8711172Z",
-  "postChangeVerifiedAt": "2026-07-26T08:05:09.4916973Z",
+  "generatedAt": "2026-08-08T01:32:04.604666Z",
+  "postChangeVerifiedAt": "2026-08-08T01:32:04.604666Z",
   "profile": "Devotion Dev",
   "plugin": "Devotion.esp",
   "active": true,
-  "espSha256": "D82E78A26C4BF2CA89FC124CF3628810AB80C6E6998192CF3389BCB6E38F2DB2",
+  "espSha256": "87B04CDFFC9F0A3064CEA37D37DDAEA10C3AEEB9A4B9D3B1B515C44AE7B395B7",
   "recordSummary": {
-    "total": 1949,
+    "total": 1961,
     "types": 21,
-    "quests": 99,
-    "magicEffects": 666,
-    "spells": 405,
-    "messages": 490,
+    "quests": 97,
+    "magicEffects": 677,
+    "spells": 394,
+    "messages": 500,
     "placedObjects": 51,
     "cells": 2
   },
@@ -29,7 +29,7 @@
       "winner": "Devotion.esp",
       "vmadScripts": 1,
       "vmadScriptName": "PDV__ManagerQuest",
-      "vmadProperties": 499,
+      "vmadProperties": 524,
       "vmadAliases": 1
     },
     {
@@ -58,15 +58,15 @@
     "placedObjectsWinningFromDevotion": 51
   },
   "vmadValidation": {
-    "scriptedRecords": 183,
+    "scriptedRecords": 184,
     "unboundAutoProperties": 552,
     "boundButNullProperties": 0,
     "unverifiableAttachments": 0,
-    "boundary": "Unbound findings include inherited and runtime-filled properties and are an audit queue, not a clean-binding claim. No VMAD record was changed in this tranche."
+    "boundary": "Unbound findings include inherited and runtime-filled properties and are an audit queue, not a clean-binding claim. scriptedRecords was re-derived on 2026-08-08 (184: Quest 97, Activator 54, MagicEffect 29, Book 2, MiscItem 2). unboundAutoProperties / boundButNullProperties / unverifiableAttachments were NOT re-derived this pass and are carried forward from the 2026-07-26 sweep."
   },
   "filesystemScriptPairs": {
-    "psc": 96,
-    "pex": 96,
+    "psc": 100,
+    "pex": 100,
     "pairNamesExact": true
   },
   "assetWinners": {
@@ -93,9 +93,10 @@
     ],
     "open": [
       "intentional-versus-defective review of 552 unbound Auto properties",
-      "runtime behavior",
       "manual UI behavior",
-      "navmesh and terrain spatial integrity"
+      "navmesh and terrain spatial integrity",
+      "property-level VMAD unbound-Auto counts carried forward from 2026-07-26, not re-derived",
+      "runtime behavior"
     ]
   }
 }
