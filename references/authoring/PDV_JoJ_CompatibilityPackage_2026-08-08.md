@@ -196,6 +196,70 @@ is being removed.
 - Lighting spot-checked in at least one cell touched by each Lux/NR patch.
 - houseCARL pointer restored to Anvil.
 
+### 3.8 Phase 0 COMPLETE - 2026-08-08
+
+Applied to `D:\Wabbajack\modlists\JoJ`, profile **`R11 Dev`** only. Backups of all three
+profile files in `profiles\R11 Dev\_PDV_backup_2026-08-08\`.
+
+**Removal**
+- 24 plugins deactivated: 22 Wintersun dependents + `PG_1.esp` and
+  `Lord's Vision - Synthesis Gameplay.esp` (tool outputs, disabled pending regen per the
+  DoD precedent - `PG_1.esp` additionally mastered `DBM_Wintersun_Patch.esp`, which no
+  stub covers).
+- 15 Wintersun-dedicated mod folders disabled, including the translations-only
+  `Wintersun - Faiths of Skyrim - Settings Loader`.
+- Shared patch hubs (`Lux (patch hub)` 146 plugins, `Lux Orbis (patch hub)` 67, etc.)
+  were **plugin-deactivated only, never folder-disabled** - disabling those folders would
+  have removed dozens of unrelated patches.
+
+**Master stubs** — `mods\PDV - Wintersun Master Stubs\`, 83 bytes each, ESL flags matched
+to the originals (Wintersun plain, Hearthfires ESL). Readback: 0 masters, 0 records.
+Proof the approach works: `019B89:Wintersun - Faiths of Skyrim.esp` (`WSN_AltarsCell`)
+now resolves to *not present in the load order* while both `JOJ - *` plugins still load.
+
+**Devotion** — `Devotion-1.0.4-20260808.zip`, packaged from Anvil live source via
+`tools/pdv_package_release.mjs`, all 9 gates PASS, 226 entries,
+sha256 `D289001E24A8C8E1E39B7A8ED32167987319C8BE2ED914D2AFA5052871054730`. Extracted to
+`mods\Devotion\`; version recorded in its `meta.ini`. Placed **by hand in Wintersun's
+exact slot** - plugins.txt line 1768, loadorder.txt line 1848. Never LOOTed.
+All six SKSE dependencies confirmed present in JoJ (PapyrusUtil, po3 Papyrus Extender,
+PrismaUI, JContainers, ConsoleUtilSSE, MCM Helper). Devotion is the **sole** provider of
+`TempleBlessingScript.pex` in this list, so the Requiem-ordering hazard does not apply.
+
+**Exit criterion MET.** Full-order TES4 header scan of all 3,587 active plugins:
+**0 new missing masters**. Two remain and both are pre-existing and unrelated -
+`HalfKhajiit.esp` needs `RaceCompatibility.esm` and `ORomance.esp` needs `OSA.esm`;
+neither master is installed anywhere in JoJ and neither plugin was touched. These are the
+same two the DoD session recorded. houseCARL restored to Anvil / `Devotion Dev`.
+
+**Still open from Phase 0:** the lighting spot-check (needs the game), the Mannaz RaceMap
+entries, the Sacrosanct vampire-halt confirmation, and the user's
+Synthesis / DynDOLOD-Occlusion / ParallaxGen re-run.
+
+### 3.9 Repo findings surfaced by packaging (not JoJ-specific)
+
+Packaging the build required fixing real drift in the repo, all now corrected:
+
+1. **Release manifest was stale in both directions.** 11 files shipped since 1.0.4 were
+   never manifested (Altmer practice focus + lines, Khajiit Azurah portent, Baan Dar
+   rescue, moon observations, the Calian mesh, TempleBlessingScript), and
+   `PDV_QuestReactionMatrix_ARR.json` was still required after `aa95c7e8` deleted it.
+   Manifest now 226 entries (was 216).
+2. **`TempleBlessingScript` cannot be a `sourceScripts` entry.** The packager's pair check
+   filters on `/^Scripts\/PDV_.*\.pex$/i`, so a deliberate vanilla-name override can never
+   satisfy it. Expressed as a fixed pair instead; **the tool was not edited**. Worth
+   knowing before the next non-`PDV_` script ships.
+3. **15 `PDV_DaedricPath_*` scripts had stale bytecode** - sources bulk-touched
+   2026-08-07T05:46, `.pex` still from 03:17. All recompiled, 0 errors / 0 warnings.
+4. **houseCARL release proof refreshed** against the current ESP. Re-derived: hash, record
+   summary (1961/21), 0 dangling / 0 missing / 0 parse, 33 contested records, 51/51 placed
+   objects winning from Devotion, ManagerQuest VMAD 1 script / 524 properties / 1 alias,
+   100 script pairs. **Not re-derived and explicitly marked as carried forward:** the
+   property-level unbound-Auto counts.
+   Note the gate hardcodes `contestedRecordCount === 33` - that is **pinning, not
+   verifying**; it happens to still be 33.
+5. **Devotion defines 1 Faction record.** Corrects the SPID scope doc's claim of zero.
+
 ---
 
 ## 4. Phase 1 - the content audit

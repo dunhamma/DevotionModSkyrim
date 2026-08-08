@@ -42,17 +42,30 @@ is currently a live document making a present-tense design claim that cannot be 
 
 ---
 
-## 2. Verified greenfield cost (2026-08-08, grep of `live-source/Scripts`)
+## 2. Verified greenfield cost
 
-| Fact | Value |
-|---|---|
-| `PDV_FACT*` / faction records referenced in live source | **0** |
-| `SetFactionRank` / `ModFactionRank` / `SetRelationshipRank` / `GetFactionRank` calls | **0** |
-| PDV keywords in existence | 6 (5 Green Pact, 1 inn locator) |
+| Fact | Value | Source |
+|---|---|---|
+| Faction records **defined in `Devotion.esp`** | **1** | houseCARL readback, 2026-08-08 |
+| `SetFactionRank` / `ModFactionRank` / `SetRelationshipRank` / `GetFactionRank` calls | **0** | grep of `live-source/Scripts` |
+| PDV keywords in existence | 6 (5 Green Pact, 1 inn locator) | grep of `live-source/Scripts` |
 
-Devotion has never touched NPC disposition. This packet is not "wire up an existing
-system" - it is a new system with new records, new Papyrus, and a new config lane.
-Estimate accordingly.
+**Correction (2026-08-08).** An earlier draft of this page said zero factions, from a grep
+of `.psc` alone. A houseCARL readback of the ESP shows **one**:
+
+```
+0715C8:Devotion.esp   PDV_Faction_Hunted_Vigilant   Flags = HiddenFromPC
+```
+
+This does not weaken the packet - it strengthens it. Devotion already ships a hidden
+faction expressing "this player is hunted by Vigilants", which is precisely the
+faction-as-stance shape section 3 proposes, and it is a live donor to read before
+authoring `PDV_FACT_Recog_*`. Check how it is applied today (it is referenced from
+records rather than from a faction-rank call, since the API grep is still zero) - that
+mechanism may be directly reusable.
+
+The rest of the estimate stands: no faction-rank or relationship API is called anywhere,
+so the runtime half of section 3 is genuinely new Papyrus.
 
 ---
 
