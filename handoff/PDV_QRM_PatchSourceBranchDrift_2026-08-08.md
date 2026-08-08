@@ -76,7 +76,32 @@ deity is the short `Riddle'Thar`. Channels carrying the long-form key therefore 
 key the manager cannot find. Regenerating fixes it; the 39 are now consistent with the
 core matrix.
 
-## STILL OPEN - 5 channels have no source in ANY branch or history
+## RESOLVED - all 44 channels now regenerate from tracked source (2026-08-08)
+
+Final state: **44 source CSVs, 44 shipped channels, 44/44 regenerate identical, 0 with
+no source.** The five below were reconstructed; award data was compared field-by-field
+against the pre-reconstruction channels and **preserved exactly** (deities, valences,
+intensities, magnitudes, tags, and the quest-key set all unchanged).
+
+Two things worth knowing about the reconstruction:
+
+- **The stale channels used an older channel format.** They carried `quest.<key>.evidence`
+  and `quest.<key>.runtimeverify` keys that the current compiler no longer emits (the
+  other 39 have neither). So the target was not byte-identity with the stale files but
+  the current format with identical award data. Those evidence strings were moved into
+  the CSV `citation` column, which is where provenance belongs.
+- **`outcome` text could not be recovered.** The channel format never encoded it. Each
+  reconstructed row says so in its citation: award data is verbatim, editor_id/formid are
+  houseCARL readbacks, and the outcome sentence is authored.
+
+Both addon quests turned out to be the mods' OWN added quests, not the vanilla ones they
+sit beside - `T01_GiveLetter` is not vanilla `T01` (9 rows in Full.csv) and
+`CH_TotemReturnQuest` is not vanilla `DA05` (15 rows). Core owns the vanilla pair, the
+per-mod patch owns the addition. No gap and no double-award.
+
+### The five, as reconstructed
+
+
 
 These ship in `dist/` but were generated from untracked scratch CSVs that no longer
 exist. `git log --all -S` finds no `patches/PDV_QRM_<name>.csv` for any of them, so
