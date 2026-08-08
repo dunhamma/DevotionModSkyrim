@@ -1,21 +1,33 @@
 #!/usr/bin/env node
 /*
- * ============================ STALE — DO NOT BLIND-RUN ============================
- * The committed `references/authoring/PDV_DaedricPrinceRecordContracts.json` is now
- * HAND-CURATED and diverges from this generator: post-generation it received the
- * Requiem regen audit, the boon/price rebalance, and extra per-prince effects
- * (e.g. Dagon AttackDamageMult, Sheo/Mora flats) that this script does not produce.
+ * =============================== DO NOT BLIND-RUN ===============================
+ * `references/authoring/PDV_DaedricPrinceRecordContracts.json` is HAND-CURATED and is
+ * the source of truth. Post-generation it received the Requiem regen audit, the
+ * boon/price rebalance, and extra per-prince effects (e.g. Dagon AttackDamageMult,
+ * Sheo/Mora flats). It previously carried `HealRateMult` / `MagickaRateMult` /
+ * `StaminaRateMult` boons and prices, which do nothing under Requiem - base regen is
+ * ~0, so a rate-mult multiplies nothing - and those were converted to the flat Fortify
+ * of the same resource.
  *
- * The JSON is the source of truth. Re-running this generator WILL overwrite it and
- * revert those fixes. In particular it previously emitted `HealRateMult` /
- * `MagickaRateMult` / `StaminaRateMult` boons and prices, which do nothing under
- * Requiem (base regen ~0, so a rate-mult multiplies nothing). Those AVs have been
- * converted here to the flat Fortify of the same resource (Health/Magicka/Stamina),
- * but magnitudes and several exact AV choices still will NOT match the curated JSON.
+ * This banner used to say the generator DIVERGED from that curated file and that
+ * re-running would revert the fixes. Measured 2026-08-08: it no longer does. A default
+ * run reports `wouldChangeCuratedContract: false` with no drifted princes, i.e. the
+ * generator and the curated JSON now agree on everything except the `generatedAtLocal`
+ * timestamp, which is excluded from the comparison. The reconciliation the old banner
+ * asked for has happened.
  *
- * Before ever regenerating: reconcile this script with the curated JSON first, then
- * re-apply the Requiem regen audit. See issue for the Namira fix (Fortify Health +
- * Fortify Stamina, replacing the swallowed HealRateMult boon).
+ * That does not make blind-running safe, it makes the guard checkable - so the warning
+ * is now ENFORCED rather than merely written down. A comment guards nothing, and the
+ * default run used to overwrite the curated JSON and 15 live .psc files regardless:
+ *
+ *   (no flags)                          compute and report a diff. Writes NOTHING.
+ *   --write-contract                    write the JSON, but REFUSE if it would change
+ *                                       curated content. --force overrides that refusal.
+ *   --scaffold-scripts --source-dir P   write the .psc files, into P. No default path.
+ *
+ * The two jobs are separated because they have different cadences and different risk:
+ * regenerating a contract must never be able to invalidate a build's bytecode as a
+ * side effect. See issue #35 items 1 and 2.
  * =================================================================================
  */
 import fs from "node:fs";
@@ -27,7 +39,34 @@ const PROJECT_ROOT = path.resolve(__dirname, "..");
 const MANIFEST = path.join(PROJECT_ROOT, "race-sheets", "PDV_DaedricContent_Manifest.md");
 const MATRIX = path.join(PROJECT_ROOT, "references", "phase4", "PDV_DaedricRacePrinceMatrix.csv");
 const OUT = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DaedricPrinceRecordContracts.json");
-const SOURCE_DIR = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source";
+
+const KNOWN_FLAGS = new Set(["--write-contract", "--scaffold-scripts", "--source-dir", "--force"]);
+const ARGS = process.argv.slice(2);
+for (const arg of ARGS) {
+  if (arg.startsWith("--") && !KNOWN_FLAGS.has(arg)) {
+    console.error(`Unknown argument: ${arg}. Known: ${[...KNOWN_FLAGS].join(", ")}`);
+    process.exit(2);
+  }
+}
+const flag = (name) => ARGS.includes(name);
+const argValue = (name) => {
+  const i = ARGS.indexOf(name);
+  if (i < 0) return null;
+  const v = ARGS[i + 1];
+  if (!v || v.startsWith("--")) {
+    console.error(`${name} requires a value`);
+    process.exit(2);
+  }
+  return v;
+};
+
+const WRITE_CONTRACT = flag("--write-contract");
+const SCAFFOLD = flag("--scaffold-scripts");
+const FORCE = flag("--force");
+
+// No default. The old hardcoded "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source"
+// tied the tool to one machine and one MO2 instance, and silently wrote into a live build.
+const SOURCE_DIR = argValue("--source-dir");
 
 const RACE_ORDER_MATRIX = ["Nord", "Imperial", "Breton", "Dunmer", "Altmer", "Khajiit", "Bosmer", "Redguard", "Orc", "Argonian"];
 const RACE_ORDER_PDV = ["Nord", "Imperial", "Breton", "Altmer", "Bosmer", "Dunmer", "Khajiit", "Argonian", "Orc", "Redguard"];
@@ -310,15 +349,78 @@ function main() {
     princeCount: princes.length,
     princes,
   };
-  fs.writeFileSync(OUT, `${JSON.stringify(contract, null, 2)}\n`);
+  // `generatedAtLocal` is a timestamp and moves on every run, so it is excluded from the
+  // comparison. Including it would make every run report drift and the refusal below
+  // would degrade into noise that everyone learns to pass --force through.
+  const comparable = (c) => {
+    const { generatedAtLocal, ...rest } = c;
+    return JSON.stringify(rest, null, 2);
+  };
+  const existing = fs.existsSync(OUT) ? JSON.parse(fs.readFileSync(OUT, "utf8")) : null;
+  const drift = existing ? comparable(existing) !== comparable(contract) : false;
 
-  for (const prince of princes) {
-    const text = scriptText(prince);
-    if (!text) continue;
-    fs.writeFileSync(path.join(SOURCE_DIR, `${prince.scriptName}.psc`), text);
+  const driftedPrinces = [];
+  if (existing) {
+    const byStem = new Map((existing.princes ?? []).map((p) => [p.stem, JSON.stringify(p)]));
+    for (const p of princes) {
+      const before = byStem.get(p.stem);
+      if (before === undefined) driftedPrinces.push(`${p.stem} (absent from the curated file)`);
+      else if (before !== JSON.stringify(p)) driftedPrinces.push(p.stem);
+    }
   }
 
-  console.log(JSON.stringify({ status: "PASS", contract: OUT, scriptsWritten: princes.filter((p) => !p.existingScript).length }, null, 2));
+  const report = {
+    contract: OUT,
+    princes: princes.length,
+    curatedFileExists: Boolean(existing),
+    wouldChangeCuratedContract: drift,
+    driftedPrinces,
+  };
+
+  let contractWritten = false;
+  if (WRITE_CONTRACT) {
+    if (drift && !FORCE) {
+      console.error(JSON.stringify({
+        status: "REFUSED",
+        reason:
+          "Regenerating would change the hand-curated contract. The curated JSON is the source " +
+          "of truth: it carries the Requiem regen audit, the boon/price rebalance and per-prince " +
+          "effects this generator does not produce. Reconcile the generator first, or pass --force " +
+          "if you have decided the generated shape should win.",
+        ...report,
+      }, null, 2));
+      process.exit(1);
+    }
+    fs.writeFileSync(OUT, `${JSON.stringify(contract, null, 2)}\n`);
+    contractWritten = true;
+  }
+
+  let scriptsWritten = 0;
+  if (SCAFFOLD) {
+    if (!SOURCE_DIR) {
+      console.error("--scaffold-scripts requires --source-dir <path to Scripts/Source>. There is no default: the old hardcoded path wrote into one machine's live build.");
+      process.exit(2);
+    }
+    if (!fs.existsSync(SOURCE_DIR)) {
+      console.error(`--source-dir does not exist: ${SOURCE_DIR}`);
+      process.exit(2);
+    }
+    for (const prince of princes) {
+      const text = scriptText(prince);
+      if (!text) continue;
+      fs.writeFileSync(path.join(SOURCE_DIR, `${prince.scriptName}.psc`), text);
+      scriptsWritten += 1;
+    }
+  }
+
+  console.log(JSON.stringify({
+    status: "PASS",
+    mode: !WRITE_CONTRACT && !SCAFFOLD ? "report-only (no files written)" : "write",
+    ...report,
+    contractWritten,
+    scriptsWritten,
+    scriptTarget: SCAFFOLD ? SOURCE_DIR : null,
+  }, null, 2));
 }
 
 main();
