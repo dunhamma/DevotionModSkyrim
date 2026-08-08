@@ -10,6 +10,7 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { normalizeActorValue } from "./lib/pdv_actor_value_aliases.mjs";
 
 const ROOT = process.cwd();
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
@@ -38,12 +39,6 @@ const SPEC_FILES = [
   "PDV_BretonRewardRecords.spec.json",
   "PDV_KhajiitRewardRecords.spec.json",
 ];
-const ACTOR_VALUE_ALIASES = new Map([
-  ["Speechcraft", "Speech"],
-  ["BlockSkill", "Block"],
-  ["Marksman", "Archery"],
-  ["ResistPoison", "PoisonResist"],
-]);
 const CAPSTONE_FALLBACKS = [
   {
     spellEditorId: "PDV_Bless_Imperial_Akatosh_T3",
@@ -206,9 +201,6 @@ function counts() {
   return result;
 }
 
-function normalizeActorValue(actorValue) {
-  return ACTOR_VALUE_ALIASES.get(actorValue) || actorValue;
-}
 
 function generateMgefId(spellEditorId, actorValue) {
   if (spellEditorId.startsWith("PDV_Bless")) {

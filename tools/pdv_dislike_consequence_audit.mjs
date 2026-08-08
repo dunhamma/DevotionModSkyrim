@@ -23,6 +23,7 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { normalizeActorValue } from "./lib/pdv_actor_value_aliases.mjs";
 
 const ROOT = process.cwd();
 const AUTH = path.join(ROOT, "references", "authoring");
@@ -45,16 +46,7 @@ const SECONDS_PER_HOUR = 3600;
 
 // PDV specs carry the Papyrus/CK actor-value vocabulary; Mutagen (and so the ESP
 // readback) uses its own enum names. Same alias table as pdv_phase2_reward_readback_audit.
-const ACTOR_VALUE_ALIASES = new Map([
-  ["Speechcraft", "Speech"],
-  ["BlockSkill", "Block"],
-  ["Marksman", "Archery"],
-  ["ResistPoison", "PoisonResist"],
-]);
 
-function normalizeActorValue(actorValue) {
-  return ACTOR_VALUE_ALIASES.get(actorValue) ?? actorValue;
-}
 
 function toPosix(p) {
   return String(p).replace(/\\/g, "/");

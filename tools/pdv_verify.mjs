@@ -13,6 +13,7 @@ import net from "node:net";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { verifyPhase21RosterCoverage } from "./lib/pdv-roster-coverage.mjs";
+import { recordActorValueFor } from "./lib/pdv_actor_value_aliases.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
@@ -8253,16 +8254,9 @@ class Verifier {
     let priceCount = 0;
     const resourcePools = new Set(["Health", "Magicka", "Stamina"]);
     // The record enum and the runtime/contract name differ for a handful of actor values.
-    // Comparing them raw reports drift that is not drift (Speechcraft vs Speech). Same map
-    // as tools/pdv_phase2_reward_readback_audit.mjs.
-    const priceActorValueAliases = new Map([
-      ["Speechcraft", "Speech"],
-      ["BlockSkill", "Block"],
-      ["Marksman", "Archery"],
-      ["ResistPoison", "PoisonResist"],
-    ]);
-    const recordActorValueFor = (contractActorValue) =>
-      priceActorValueAliases.get(contractActorValue) ?? contractActorValue;
+    // Comparing them raw reports drift that is not drift (Speechcraft vs Speech). The map
+    // is shared -- see tools/lib/pdv_actor_value_aliases.mjs, imported at the top of this
+    // file. It used to be a third byte-identical copy here (GitHub issue #36).
     for (const prince of contracts.princes || []) {
       for (const price of prince.prices || []) {
         priceCount += 1;
