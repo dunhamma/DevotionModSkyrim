@@ -7,7 +7,7 @@
         <group name="New Quests and Lands" type="SelectAny">
           <plugins order="Explicit">
             <plugin name="Above All Else">
-              <description>Darbalag's Lovecraft-inspired descent. Hermaeus Mora answers the pursuit of forbidden knowledge to its end. Machine-verified; runtime evidence remains open.</description>
+              <description>Darbalag's Lovecraft-inspired descent. Hermaeus Mora answers the pursuit of forbidden knowledge to its end.</description>
               <files>
                 <folder source="common\AboveAllElse" destination="" priority="0" />
               </files>
@@ -83,7 +83,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Beyond Skyrim - Bruma">
-              <description>Data-only channels for eight direct Bruma resolutions: smuggling, treacherous murder or generous song restoration, freeing Bjarni, and recovering stolen antiquities. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channels for eight direct Bruma resolutions: smuggling, treacherous murder or generous song restoration, freeing Bjarni, and recovering stolen antiquities.</description>
               <files>
                 <folder source="common\BeyondSkyrimBruma" destination="" priority="0" />
               </files>
@@ -102,7 +102,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Calling the Watchmaker">
-              <description>Data-only channel for the explicit cold-murder branch. Machine-verified; runtime branch evidence remains open. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channel for the explicit cold-murder branch.</description>
               <files>
                 <folder source="common\CallingTheWatchmaker" destination="" priority="0" />
               </files>
@@ -121,7 +121,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="DAc0da">
-              <description>Data-only reactions for the two directly evidenced DAc0da resolutions. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only reactions for the two directly evidenced DAc0da resolutions.</description>
               <files>
                 <folder source="common\DAc0da" destination="" priority="0" />
               </files>
@@ -159,7 +159,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Glenmoril">
-              <description>Data-only reactions for the directly evidenced Glenmoril resolutions. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only reactions for the directly evidenced Glenmoril resolutions.</description>
               <files>
                 <folder source="common\Glenmoril" destination="" priority="0" />
               </files>
@@ -178,7 +178,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Hunt for the Spectre">
-              <description>Data-only channel for the directly evidenced Spectre defeat. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channel for the directly evidenced Spectre defeat.</description>
               <files>
                 <folder source="common\HuntForSpectre" destination="" priority="0" />
               </files>
@@ -197,7 +197,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Moonpath to Elsweyr">
-              <description>Data-only channels for the Tenmar journey, Thalmor rebellion, saved/released plague branches, and completed rebel base. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channels for the Tenmar journey, Thalmor rebellion, saved/released plague branches, and completed rebel base.</description>
               <files>
                 <folder source="common\Moonpath" destination="" priority="0" />
               </files>
@@ -216,7 +216,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Olenveld">
-              <description>Data-only reaction for the directly evidenced Olenveld resolution. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only reaction for the directly evidenced Olenveld resolution.</description>
               <files>
                 <folder source="common\Olenveld" destination="" priority="0" />
               </files>
@@ -256,7 +256,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Siege at Icemoth">
-              <description>Data-only channels for ending the necromancer's undead army and uncovering the Font of Memory. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channels for ending the necromancer's undead army and uncovering the Font of Memory.</description>
               <files>
                 <folder source="common\SiegeAtIcemoth" destination="" priority="0" />
               </files>
@@ -294,7 +294,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Skyrim Extended Cut - Saints and Seducers">
-              <description>Data-only reaction for the directly evidenced Saints and Seducers resolution. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only reaction for the directly evidenced Saints and Seducers resolution.</description>
               <files>
                 <folder source="common\SkyrimExtendedCutSaintsAndSeducers" destination="" priority="0" />
               </files>
@@ -313,7 +313,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Taste of Death Addon">
-              <description>Data-only channel for bringing Markarth's Namira cult to justice. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channel for bringing Markarth's Namira cult to justice.</description>
               <files>
                 <folder source="common\TasteOfDeathAddon" destination="" priority="0" />
               </files>
@@ -332,7 +332,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="The Forgotten City">
-              <description>Data-only reactions for the directly evidenced Forgotten City resolutions. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only reactions for the directly evidenced Forgotten City resolutions.</description>
               <files>
                 <folder source="common\ForgottenCity" destination="" priority="0" />
               </files>
@@ -370,7 +370,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="The Gift of Saturalia">
-              <description>Five data-only channels for the separately resolved Saturalia gifts; the umbrella completion is excluded to prevent double credit. Machine-verified; runtime evidence remains open.</description>
+              <description>Five data-only channels for the separately resolved Saturalia gifts; the umbrella completion is excluded to prevent double credit.</description>
               <files>
                 <folder source="common\GiftOfSaturalia" destination="" priority="0" />
               </files>
@@ -408,7 +408,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Unslaad">
-              <description>Data-only reactions for four directly evidenced Unslaad outcomes. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only reactions for four directly evidenced Unslaad outcomes.</description>
               <files>
                 <folder source="common\Unslaad" destination="" priority="0" />
               </files>
@@ -427,7 +427,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Vigilant">
-              <description>Data-only reactions for the directly evidenced Vigilant outcomes. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only reactions for the directly evidenced Vigilant outcomes.</description>
               <files>
                 <folder source="common\Vigilant" destination="" priority="0" />
               </files>
@@ -488,7 +488,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Wyrmstooth">
-              <description>Data-only channel for defeating Vulthurkrah while defending Stonehollow. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channel for defeating Vulthurkrah while defending Stonehollow.</description>
               <files>
                 <folder source="common\Wyrmstooth" destination="" priority="0" />
               </files>
@@ -511,7 +511,7 @@
         <group name="Quest Expansions" type="SelectAny">
           <plugins order="Explicit">
             <plugin name="College of Winterhold - Quest Expansion">
-              <description>Data-only channels for seven directly resolving College lessons. The umbrella curriculum completion is excluded to prevent double credit. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channels for seven directly resolving College lessons. The umbrella curriculum completion is excluded to prevent double credit.</description>
               <files>
                 <folder source="common\CollegeQuestExpansion" destination="" priority="0" />
               </files>
@@ -530,7 +530,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Ebony Blade Curse">
-              <description>Data-only reaction for breaking the Ebony Blade curse. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only reaction for breaking the Ebony Blade curse.</description>
               <files>
                 <folder source="common\EbonyBladeCurse" destination="" priority="0" />
               </files>
@@ -549,7 +549,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Forsworn Conspiracy - Quest Expansion">
-              <description>Data-only channels for the trial-by-combat resolution and the separate Madanach mercy route. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channels for the trial-by-combat resolution and the separate Madanach mercy route.</description>
               <files>
                 <folder source="common\ForswornConspiracyQE" destination="" priority="0" />
               </files>
@@ -587,7 +587,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Infiltration - Quest Expansion">
-              <description>Data-only channel for restoring Treva's Watch to Stalleo and his family. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channel for restoring Treva's Watch to Stalleo and his family.</description>
               <files>
                 <folder source="common\InfiltrationQE" destination="" priority="0" />
               </files>
@@ -606,7 +606,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Nilheim - Misc Quest Expansion">
-              <description>Data-only channels for defeating Telrav's double-cross or explicitly extorting him. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channels for defeating Telrav's double-cross or explicitly extorting him.</description>
               <files>
                 <folder source="common\NilheimQE" destination="" priority="0" />
               </files>
@@ -625,7 +625,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Paarthurnax - Quest Expansion">
-              <description>Data-only objective-derived channel for persuading the Blades and sparing Paarthurnax. Organic traversal is mandatory. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only objective-derived channel for persuading the Blades and sparing Paarthurnax. Organic traversal is mandatory.</description>
               <files>
                 <folder source="common\PaarthurnaxQE" destination="" priority="0" />
               </files>
@@ -644,7 +644,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Save the Icerunner">
-              <description>Data-only channels for stopping, persuading, joining, betraying, or lawfully exposing Jaree-Ra's Icerunner wrecking plot. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channels for stopping, persuading, joining, betraying, or lawfully exposing Jaree-Ra's Icerunner wrecking plot.</description>
               <files>
                 <folder source="common\SaveTheIcerunner" destination="" priority="0" />
               </files>
@@ -682,7 +682,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="The Whispering Door - Quest Expansion">
-              <description>Data-only channel for disposing of Mephala's Ebony Blade so it can cause no further harm. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channel for disposing of Mephala's Ebony Blade so it can cause no further harm.</description>
               <files>
                 <folder source="common\WhisperingDoorQE" destination="" priority="0" />
               </files>
@@ -701,7 +701,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Thieves Guild Alternative Endings">
-              <description>Self-contained data channel plus generic quest-stage adapter that separates TG09's three endings without replacing Devotion scripts. Vanilla return remains stage 200; freeing the Nightingales and keeping the Skeleton Key route to synthetic stages 201/202 and suppress false Nocturnal commitment. Machine-verified; runtime evidence remains open.</description>
+              <description>Self-contained data channel plus generic quest-stage adapter that separates TG09's three endings without replacing Devotion scripts. Vanilla return remains stage 200; freeing the Nightingales and keeping the Skeleton Key route to synthetic stages 201/202 and suppress false Nocturnal commitment.</description>
               <files>
                 <folder source="common\TGAlternativeEndings" destination="" priority="0" />
               </files>
@@ -728,7 +728,7 @@
         <group name="Followers" type="SelectAny">
           <plugins order="Explicit">
             <plugin name="M'rissi's Tails of Troubles">
-              <description>Data-only channels for the proved enslavement, marriage, and kinship outcomes. Unproved chapter routes remain excluded. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channels for the proved enslavement, marriage, and kinship outcomes. Unproved chapter routes remain excluded.</description>
               <files>
                 <folder source="common\Mrissi" destination="" priority="0" />
               </files>
@@ -747,7 +747,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Song of the Green - Auri">
-              <description>Data-only channel for Auri's five-grove pilgrimage through Skyrim's beautiful natural sites. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channel for Auri's five-grove pilgrimage through Skyrim's beautiful natural sites.</description>
               <files>
                 <folder source="common\Auri" destination="" priority="0" />
               </files>
@@ -766,7 +766,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Thogra">
-              <description>Data-only blood-oath, betrayal, and two marriage-route channels. The objective-derived Largashbur marriage must be traversed organically. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only blood-oath, betrayal, and two marriage-route channels. The objective-derived Largashbur marriage must be traversed organically.</description>
               <files>
                 <folder source="common\Thogra" destination="" priority="0" />
               </files>
@@ -785,7 +785,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Xelzaz">
-              <description>Data-only channels for crimson Nirnroot research and the proved recipe/spice theft plus mead tasting. Ambiguous routes remain excluded. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channels for crimson Nirnroot research and the proved recipe/spice theft plus mead tasting. Ambiguous routes remain excluded.</description>
               <files>
                 <folder source="common\Xelzaz" destination="" priority="0" />
               </files>
@@ -827,7 +827,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Become a Bard">
-              <description>Dibella answers performance itself - playing for a tavern, and playing before a Jarl's court. Machine-verified; runtime evidence remains open.</description>
+              <description>Dibella answers performance itself - playing for a tavern, and playing before a Jarl's court.</description>
               <files>
                 <folder source="common\BecomeABard" destination="" priority="0" />
               </files>
@@ -850,7 +850,7 @@
         <group name="World Systems and Collections" type="SelectAny">
           <plugins order="Explicit">
             <plugin name="Aetherium Forge Destroys Items">
-              <description>Installs an ESL-flagged observer quest for successful artifact destruction. Existing saves are baselined without retroactive awards; runtime and save/load evidence remain open. Machine-verified; runtime evidence remains open.</description>
+              <description>Installs an ESL-flagged observer quest for successful artifact destruction. Existing saves are baselined without retroactive awards.</description>
               <files>
                 <folder source="common\AFDI" destination="" priority="0" />
               </files>
@@ -869,7 +869,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Daedric Shrines AIO prayer activators">
-              <description>Installs a neutral ESL-flagged prayer-activator plugin and BOS swaps for eleven supported Daedric Shrines AIO statues. Runtime and placement evidence remain open. Machine-verified; runtime evidence remains open.</description>
+              <description>Installs a neutral ESL-flagged prayer-activator plugin and BOS swaps for eleven supported Daedric Shrines AIO statues.</description>
               <files>
                 <folder source="common\DaedricShrinesAIO" destination="" priority="0" />
               </files>
@@ -888,7 +888,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Legacy of the Dragonborn">
-              <description>Data-only channels for the Trial of Trinimac, ending the Eye of Camlorn's curse, and bringing peace to a Snow Elf ghost. Composite Ezra branches and linear relic fetches are deliberately excluded. Machine-verified; runtime evidence remains open.</description>
+              <description>Data-only channels for the Trial of Trinimac, ending the Eye of Camlorn's curse, and bringing peace to a Snow Elf ghost. Composite Ezra branches and linear relic fetches are deliberately excluded.</description>
               <files>
                 <folder source="common\LegacyOfTheDragonborn" destination="" priority="0" />
               </files>

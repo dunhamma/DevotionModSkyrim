@@ -76,7 +76,8 @@ function parseOptions(xml) {
     const folderRe = /<folder source="([^"]+)" destination="([^"]*)" priority="[^"]+"\s*\/>/g;
     for (const folder of match[2].matchAll(folderRe)) sources.push({ source: folder[1], destination: folder[2] });
     const dependencies = [...match[2].matchAll(/<fileDependency file="([^"]+)" state="Active"\s*\/>/g)].map((item) => item[1]);
-    options.push({ name: match[1], sources, dependencies });
+    const description = match[2].match(/<description>([\s\S]*?)<\/description>/)?.[1]?.trim() ?? "";
+    options.push({ name: match[1], description, sources, dependencies });
   }
   return options;
 }
@@ -132,6 +133,27 @@ if (hubManifest.schema !== "pdv-quest-patch-hub.v1" || !Array.isArray(hubManifes
 // gone; what still has to hold is that every group is SelectAny (a patch is never mutually
 // exclusive with another patch) and that at least one page exists.
 if (!(xml.match(/<installStep\b/g) ?? []).length) fail("PatchHub must expose at least one install step.");
+
+// The installer is PLAYER-FACING: an option carries the mod name and a short plain
+// description of what it does, and nothing else. Development and proof status must never
+// ship there. Owner ruling 2026-08-08, after 34 of 46 descriptions shipped with
+// "Machine-verified; runtime evidence remains open." appended and reached a real install.
+// The generator refuses to render such text; this gate independently checks the SHIPPED
+// artifact, so a hand-edited ModuleConfig.xml is caught too. Do not weaken either.
+const DEV_STATUS_PATTERN =
+  /machine[- ]verified|runtime evidence|evidence remains? open|evidence remain open|runtime-verify|runtime verify|proof[- ]pending|proof state|proof boundary|readback|read back from disk|compiler check|unverified/i;
+for (const option of options) {
+  for (const [field, value] of [["name", option.name], ["description", option.description]]) {
+    const hit = String(value ?? "").match(DEV_STATUS_PATTERN);
+    if (hit) fail(`Player-facing installer text carries development status ("${hit[0]}") in option ${field}: ${value}`);
+  }
+}
+// Per-patch Docs install into the player's mod folder, so they are player-facing too.
+for (const docPath of filesUnder(path.join(ROOT, "dist/PDV_QuestModPatches_FOMOD/common"))
+  .filter((f) => /[\\/]Docs[\\/].*\.md$/i.test(f))) {
+  const hit = fs.readFileSync(docPath, "utf8").match(DEV_STATUS_PATTERN);
+  if (hit) fail(`Shipped player-facing doc carries development status ("${hit[0]}"): ${path.relative(ROOT, docPath)}`);
+}
 const groupTypes = [...xml.matchAll(/<group\b[^>]*type="([^"]+)"/g)].map((match) => match[1]);
 if (!groupTypes.length) fail("PatchHub must expose at least one option group.");
 for (const type of new Set(groupTypes)) {

@@ -6,7 +6,7 @@
   "options": [
     {
       "name": "Above All Else",
-      "description": "Darbalag's Lovecraft-inspired descent. Hermaeus Mora answers the pursuit of forbidden knowledge to its end. Machine-verified; runtime evidence remains open.",
+      "description": "Darbalag's Lovecraft-inspired descent. Hermaeus Mora answers the pursuit of forbidden knowledge to its end.",
       "dependency": "Darbalag - Quest Mod.esp",
       "folders": [
         "common\\AboveAllElse"
@@ -42,7 +42,7 @@
     },
     {
       "name": "Beyond Skyrim - Bruma",
-      "description": "Data-only channels for eight direct Bruma resolutions: smuggling, treacherous murder or generous song restoration, freeing Bjarni, and recovering stolen antiquities. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channels for eight direct Bruma resolutions: smuggling, treacherous murder or generous song restoration, freeing Bjarni, and recovering stolen antiquities.",
       "dependency": "BSHeartland.esm",
       "folders": [
         "common\\BeyondSkyrimBruma"
@@ -51,7 +51,7 @@
     },
     {
       "name": "Calling the Watchmaker",
-      "description": "Data-only channel for the explicit cold-murder branch. Machine-verified; runtime branch evidence remains open. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channel for the explicit cold-murder branch.",
       "dependency": "Sithis Mod - Lovecraftian Inspired Quest.esp",
       "folders": [
         "common\\CallingTheWatchmaker"
@@ -60,7 +60,7 @@
     },
     {
       "name": "DAc0da",
-      "description": "Data-only reactions for the two directly evidenced DAc0da resolutions. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only reactions for the two directly evidenced DAc0da resolutions.",
       "dependency": "DAc0da.esm",
       "folders": [
         "common\\DAc0da"
@@ -78,7 +78,7 @@
     },
     {
       "name": "Glenmoril",
-      "description": "Data-only reactions for the directly evidenced Glenmoril resolutions. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only reactions for the directly evidenced Glenmoril resolutions.",
       "dependency": "Glenmoril.esm",
       "folders": [
         "common\\Glenmoril"
@@ -87,7 +87,7 @@
     },
     {
       "name": "Hunt for the Spectre",
-      "description": "Data-only channel for the directly evidenced Spectre defeat. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channel for the directly evidenced Spectre defeat.",
       "dependency": "Hunt for the Spectre.esp",
       "folders": [
         "common\\HuntForSpectre"
@@ -96,7 +96,7 @@
     },
     {
       "name": "Moonpath to Elsweyr",
-      "description": "Data-only channels for the Tenmar journey, Thalmor rebellion, saved/released plague branches, and completed rebel base. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channels for the Tenmar journey, Thalmor rebellion, saved/released plague branches, and completed rebel base.",
       "dependency": "moonpath.esp",
       "folders": [
         "common\\Moonpath"
@@ -105,7 +105,7 @@
     },
     {
       "name": "Olenveld",
-      "description": "Data-only reaction for the directly evidenced Olenveld resolution. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only reaction for the directly evidenced Olenveld resolution.",
       "dependency": "Olenveld.esp",
       "folders": [
         "common\\Olenveld"
@@ -125,7 +125,7 @@
     },
     {
       "name": "Siege at Icemoth",
-      "description": "Data-only channels for ending the necromancer's undead army and uncovering the Font of Memory. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channels for ending the necromancer's undead army and uncovering the Font of Memory.",
       "dependency": "Siege at Icemoth.esp",
       "folders": [
         "common\\SiegeAtIcemoth"
@@ -143,7 +143,7 @@
     },
     {
       "name": "Skyrim Extended Cut - Saints and Seducers",
-      "description": "Data-only reaction for the directly evidenced Saints and Seducers resolution. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only reaction for the directly evidenced Saints and Seducers resolution.",
       "dependency": "Skyrim Extended Cut - Saints and Seducers.esp",
       "folders": [
         "common\\SkyrimExtendedCutSaintsAndSeducers"
@@ -152,7 +152,7 @@
     },
     {
       "name": "Taste of Death Addon",
-      "description": "Data-only channel for bringing Markarth's Namira cult to justice. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channel for bringing Markarth's Namira cult to justice.",
       "dependency": "TasteOfDeath_Addon_Dialogue.esp",
       "folders": [
         "common\\TasteOfDeathAddon"
@@ -161,7 +161,7 @@
     },
     {
       "name": "The Forgotten City",
-      "description": "Data-only reactions for the directly evidenced Forgotten City resolutions. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only reactions for the directly evidenced Forgotten City resolutions.",
       "dependency": "ForgottenCity.esp",
       "folders": [
         "common\\ForgottenCity"
@@ -179,7 +179,7 @@
     },
     {
       "name": "The Gift of Saturalia",
-      "description": "Five data-only channels for the separately resolved Saturalia gifts; the umbrella completion is excluded to prevent double credit. Machine-verified; runtime evidence remains open.",
+      "description": "Five data-only channels for the separately resolved Saturalia gifts; the umbrella completion is excluded to prevent double credit.",
       "dependency": "TheGiftofSaturalia.esp",
       "folders": [
         "common\\GiftOfSaturalia"
@@ -197,7 +197,7 @@
     },
     {
       "name": "Unslaad",
-      "description": "Data-only reactions for four directly evidenced Unslaad outcomes. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only reactions for four directly evidenced Unslaad outcomes.",
       "dependency": "Unslaad.esm",
       "folders": [
         "common\\Unslaad"
@@ -206,7 +206,7 @@
     },
     {
       "name": "Vigilant",
-      "description": "Data-only reactions for the directly evidenced Vigilant outcomes. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only reactions for the directly evidenced Vigilant outcomes.",
       "dependency": "Vigilant.esm",
       "folders": [
         "common\\Vigilant"
@@ -237,7 +237,7 @@
     },
     {
       "name": "Wyrmstooth",
-      "description": "Data-only channel for defeating Vulthurkrah while defending Stonehollow. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channel for defeating Vulthurkrah while defending Stonehollow.",
       "dependency": "Wyrmstooth.esp",
       "folders": [
         "common\\Wyrmstooth"
@@ -246,7 +246,7 @@
     },
     {
       "name": "College of Winterhold - Quest Expansion",
-      "description": "Data-only channels for seven directly resolving College lessons. The umbrella curriculum completion is excluded to prevent double credit. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channels for seven directly resolving College lessons. The umbrella curriculum completion is excluded to prevent double credit.",
       "dependency": "College Of Winterhold - Quest Expansion.esp",
       "folders": [
         "common\\CollegeQuestExpansion"
@@ -255,7 +255,7 @@
     },
     {
       "name": "Ebony Blade Curse",
-      "description": "Data-only reaction for breaking the Ebony Blade curse. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only reaction for breaking the Ebony Blade curse.",
       "dependency": "EbonyBladeCurse.esp",
       "folders": [
         "common\\EbonyBladeCurse"
@@ -264,7 +264,7 @@
     },
     {
       "name": "Forsworn Conspiracy - Quest Expansion",
-      "description": "Data-only channels for the trial-by-combat resolution and the separate Madanach mercy route. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channels for the trial-by-combat resolution and the separate Madanach mercy route.",
       "dependency": "Forsworn Conspiracy Quest Expansion.esp",
       "folders": [
         "common\\ForswornConspiracyQE"
@@ -282,7 +282,7 @@
     },
     {
       "name": "Infiltration - Quest Expansion",
-      "description": "Data-only channel for restoring Treva's Watch to Stalleo and his family. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channel for restoring Treva's Watch to Stalleo and his family.",
       "dependency": "Infiltration - Quest Expansion.esp",
       "folders": [
         "common\\InfiltrationQE"
@@ -291,7 +291,7 @@
     },
     {
       "name": "Nilheim - Misc Quest Expansion",
-      "description": "Data-only channels for defeating Telrav's double-cross or explicitly extorting him. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channels for defeating Telrav's double-cross or explicitly extorting him.",
       "dependency": "Nilheim_MiscQuestExpansion.esp",
       "folders": [
         "common\\NilheimQE"
@@ -300,7 +300,7 @@
     },
     {
       "name": "Paarthurnax - Quest Expansion",
-      "description": "Data-only objective-derived channel for persuading the Blades and sparing Paarthurnax. Organic traversal is mandatory. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only objective-derived channel for persuading the Blades and sparing Paarthurnax. Organic traversal is mandatory.",
       "dependency": "PaarthurnaxQuestExpansion.esp",
       "folders": [
         "common\\PaarthurnaxQE"
@@ -309,7 +309,7 @@
     },
     {
       "name": "Save the Icerunner",
-      "description": "Data-only channels for stopping, persuading, joining, betraying, or lawfully exposing Jaree-Ra's Icerunner wrecking plot. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channels for stopping, persuading, joining, betraying, or lawfully exposing Jaree-Ra's Icerunner wrecking plot.",
       "dependency": "SaveTheIcerunner.esp",
       "folders": [
         "common\\SaveTheIcerunner"
@@ -327,7 +327,7 @@
     },
     {
       "name": "The Whispering Door - Quest Expansion",
-      "description": "Data-only channel for disposing of Mephala's Ebony Blade so it can cause no further harm. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channel for disposing of Mephala's Ebony Blade so it can cause no further harm.",
       "dependency": "The Whispering Door - Quest Expansion.esp",
       "folders": [
         "common\\WhisperingDoorQE"
@@ -336,7 +336,7 @@
     },
     {
       "name": "Thieves Guild Alternative Endings",
-      "description": "Self-contained data channel plus generic quest-stage adapter that separates TG09's three endings without replacing Devotion scripts. Vanilla return remains stage 200; freeing the Nightingales and keeping the Skeleton Key route to synthetic stages 201/202 and suppress false Nocturnal commitment. Machine-verified; runtime evidence remains open.",
+      "description": "Self-contained data channel plus generic quest-stage adapter that separates TG09's three endings without replacing Devotion scripts. Vanilla return remains stage 200; freeing the Nightingales and keeping the Skeleton Key route to synthetic stages 201/202 and suppress false Nocturnal commitment.",
       "dependency": "TG Alternative Endings.esp",
       "folders": [
         "common\\TGAlternativeEndings"
@@ -345,7 +345,7 @@
     },
     {
       "name": "M'rissi's Tails of Troubles",
-      "description": "Data-only channels for the proved enslavement, marriage, and kinship outcomes. Unproved chapter routes remain excluded. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channels for the proved enslavement, marriage, and kinship outcomes. Unproved chapter routes remain excluded.",
       "dependency": "MrissiTailOfTroubles.esp",
       "folders": [
         "common\\Mrissi"
@@ -354,7 +354,7 @@
     },
     {
       "name": "Song of the Green - Auri",
-      "description": "Data-only channel for Auri's five-grove pilgrimage through Skyrim's beautiful natural sites. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channel for Auri's five-grove pilgrimage through Skyrim's beautiful natural sites.",
       "dependency": "018Auri.esp",
       "folders": [
         "common\\Auri"
@@ -363,7 +363,7 @@
     },
     {
       "name": "Thogra",
-      "description": "Data-only blood-oath, betrayal, and two marriage-route channels. The objective-derived Largashbur marriage must be traversed organically. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only blood-oath, betrayal, and two marriage-route channels. The objective-derived Largashbur marriage must be traversed organically.",
       "dependency": "DK_Thogra.esp",
       "folders": [
         "common\\Thogra"
@@ -372,7 +372,7 @@
     },
     {
       "name": "Xelzaz",
-      "description": "Data-only channels for crimson Nirnroot research and the proved recipe/spice theft plus mead tasting. Ambiguous routes remain excluded. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channels for crimson Nirnroot research and the proved recipe/spice theft plus mead tasting. Ambiguous routes remain excluded.",
       "dependency": "BPUFXelzazFollower.esp",
       "folders": [
         "common\\Xelzaz"
@@ -390,7 +390,7 @@
     },
     {
       "name": "Become a Bard",
-      "description": "Dibella answers performance itself - playing for a tavern, and playing before a Jarl's court. Machine-verified; runtime evidence remains open.",
+      "description": "Dibella answers performance itself - playing for a tavern, and playing before a Jarl's court.",
       "dependency": "BecomeABard.esp",
       "folders": [
         "common\\BecomeABard"
@@ -399,7 +399,7 @@
     },
     {
       "name": "Aetherium Forge Destroys Items",
-      "description": "Installs an ESL-flagged observer quest for successful artifact destruction. Existing saves are baselined without retroactive awards; runtime and save/load evidence remain open. Machine-verified; runtime evidence remains open.",
+      "description": "Installs an ESL-flagged observer quest for successful artifact destruction. Existing saves are baselined without retroactive awards.",
       "dependency": "Aetherium Forge Destroys Items.esp",
       "folders": [
         "common\\AFDI"
@@ -408,7 +408,7 @@
     },
     {
       "name": "Daedric Shrines AIO prayer activators",
-      "description": "Installs a neutral ESL-flagged prayer-activator plugin and BOS swaps for eleven supported Daedric Shrines AIO statues. Runtime and placement evidence remain open. Machine-verified; runtime evidence remains open.",
+      "description": "Installs a neutral ESL-flagged prayer-activator plugin and BOS swaps for eleven supported Daedric Shrines AIO statues.",
       "dependency": "man_DaedricShrines.esp",
       "folders": [
         "common\\DaedricShrinesAIO"
@@ -417,7 +417,7 @@
     },
     {
       "name": "Legacy of the Dragonborn",
-      "description": "Data-only channels for the Trial of Trinimac, ending the Eye of Camlorn's curse, and bringing peace to a Snow Elf ghost. Composite Ezra branches and linear relic fetches are deliberately excluded. Machine-verified; runtime evidence remains open.",
+      "description": "Data-only channels for the Trial of Trinimac, ending the Eye of Camlorn's curse, and bringing peace to a Snow Elf ghost. Composite Ezra branches and linear relic fetches are deliberately excluded.",
       "dependency": "LegacyoftheDragonborn.esm",
       "folders": [
         "common\\LegacyOfTheDragonborn"
