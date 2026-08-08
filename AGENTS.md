@@ -1067,6 +1067,19 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   `Devotion\` folder plus an INSTALL & NOTES readme; verify completeness + `.pex` freshness and keep
   wording reviewer-safe before cutting. First release: `prebeta-0.8` (2026-06-30). (Tester-bundle
   release convention, 2026-06-30; memory [[tester-bundle-via-github-releases]])
+- **A GitHub Release edit is not done until the repo says the same thing.** Publishing or
+  updating a release -- cutting it, replacing an asset, or editing the notes -- and leaving the
+  repo unchanged puts the public artifact ahead of its own source of truth, and the drift is
+  invisible because nothing gates a release page against the repo. In the SAME session as any
+  release write, land the repo side through a normal PR: the changelog entry for that version
+  (`CHANGELOG.md` and `dist/release-meta/CHANGELOG.txt`), any doc whose text the release notes
+  restate, and any tracked packaging state the build changed. Never leave it as an uncommitted
+  working-tree edit.
+- **Do it at the stage, not at the end.** When release work spans several steps, commit the repo
+  side as each stage completes rather than batching it into a closeout that may not happen. A
+  session that ends with a published release and an unsynced repo has shipped a fact nobody can
+  reproduce from source. (Ratified 2026-08-09, after the 1.5.0 tester build's asset and notes were
+  both updated on GitHub while `CHANGELOG.md` still ended at 1.0.2.)
 
 ---
 
