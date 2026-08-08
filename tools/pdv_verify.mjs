@@ -8252,6 +8252,17 @@ class Verifier {
     const priceSerializationIssues = [];
     let priceCount = 0;
     const resourcePools = new Set(["Health", "Magicka", "Stamina"]);
+    // The record enum and the runtime/contract name differ for a handful of actor values.
+    // Comparing them raw reports drift that is not drift (Speechcraft vs Speech). Same map
+    // as tools/pdv_phase2_reward_readback_audit.mjs.
+    const priceActorValueAliases = new Map([
+      ["Speechcraft", "Speech"],
+      ["BlockSkill", "Block"],
+      ["Marksman", "Archery"],
+      ["ResistPoison", "PoisonResist"],
+    ]);
+    const recordActorValueFor = (contractActorValue) =>
+      priceActorValueAliases.get(contractActorValue) ?? contractActorValue;
     for (const prince of contracts.princes || []) {
       for (const price of prince.prices || []) {
         priceCount += 1;
@@ -8318,6 +8329,30 @@ class Verifier {
             this.fail(
               "Daedric resource-pool price",
               `${price.magicEffectEditorId} must use PeakValueModifier/${effectContract.actorValue} with Recover; found ${archetype.Type || "missing"}/${archetype.ActorValue || "missing"} flags=${flags.join(",") || "none"}.`,
+              PDV_ESP,
+            );
+          }
+        } else {
+          // NON-POOL prices were previously unchecked, so an actor-value retune on a skill
+          // or percentage price landed in the contract and drifted from the ESP silently.
+          // Found 2026-08-08: Nocturnal moved CarryWeight -> Restoration in the contract and
+          // the ESP kept CarryWeight, with the gate green the whole time. Compare against the
+          // RECORD-side name, since Speechcraft/Speech is an alias, not drift.
+          const expectedRecordActorValue = recordActorValueFor(effectContract.actorValue);
+          if (
+            archetype.Type === "ValueModifier" &&
+            archetype.ActorValue === expectedRecordActorValue &&
+            flags.includes("Recover")
+          ) {
+            this.pass(
+              "Daedric non-pool price",
+              `${price.magicEffectEditorId} reversibly modifies ${effectContract.actorValue}.`,
+              PDV_ESP,
+            );
+          } else {
+            this.fail(
+              "Daedric non-pool price",
+              `${price.magicEffectEditorId} must use ValueModifier/${expectedRecordActorValue} with Recover; found ${archetype.Type || "missing"}/${archetype.ActorValue || "missing"} flags=${flags.join(",") || "none"}.`,
               PDV_ESP,
             );
           }
