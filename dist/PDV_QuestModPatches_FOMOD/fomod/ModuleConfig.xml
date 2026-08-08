@@ -7,7 +7,7 @@
         <group name="New Quests and Lands" type="SelectAny">
           <plugins order="Explicit">
             <plugin name="Above All Else">
-              <description>Darbalag's Lovecraft-inspired descent. Hermaeus Mora answers the pursuit of forbidden knowledge to its end.</description>
+              <description>Meet a vampiric Khajiit who claims he can see the ancient dead. Join him in this quest to &quot;become above all else&quot;.</description>
               <files>
                 <folder source="common\AboveAllElse" destination="" priority="0" />
               </files>
@@ -26,7 +26,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Baba Yaga and the Labyrinth">
-              <description>Mara approves of rescuing the witch from the Black Stone Labyrinth.</description>
+              <description>Fully voiced quest to discover the mysteries of a walking hut, a soul cairn maze, weeping angels, and a witch.</description>
               <files>
                 <folder source="common\BabaYaga" destination="" priority="0" />
               </files>
@@ -45,7 +45,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Bark and Bite">
-              <description>Freeing the three werewolf spirits pleases Hircine; sparing Frija instead pleases Stendarr and disappoints him. Sheogorath is amused either way.</description>
+              <description>Uncover the origins of a mysterious tree within the Rift and choose if you wish to meddle in such affairs.</description>
               <files>
                 <folder source="common\BarkAndBite" destination="" priority="0" />
               </files>
@@ -64,7 +64,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Before the End">
-              <description>Mara and Arkay approve of staying with the condemned man Aradell until the end.</description>
+              <description>Speak with a prisoner awaiting execution and learn all about his life's biggest regrets.</description>
               <files>
                 <folder source="common\BeforeTheEnd" destination="" priority="0" />
               </files>
@@ -83,7 +83,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Beyond Skyrim - Bruma">
-              <description>Data-only channels for eight direct Bruma resolutions: smuggling, treacherous murder or generous song restoration, freeing Bjarni, and recovering stolen antiquities.</description>
+              <description>Travel beyond the borders of Skyrim and explore Bruma, the northernmost county in Cyrodiil. Delve into Ayleid ruins, meddle in local affairs or explore the wilds - the journey begins now.</description>
               <files>
                 <folder source="common\BeyondSkyrimBruma" destination="" priority="0" />
               </files>
@@ -102,7 +102,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Calling the Watchmaker">
-              <description>Data-only channel for the explicit cold-murder branch.</description>
+              <description>Calling the Watchmaker is a quest mod featuring high quality voice acting and an extremely unique story that delves into the creation myth of the Elder Scrolls universe.</description>
               <files>
                 <folder source="common\CallingTheWatchmaker" destination="" priority="0" />
               </files>
@@ -140,7 +140,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Depths of the Soul">
-              <description>Zenithar approves of helping the merchant Pike open his shop.</description>
+              <description>Depths of the Soul features a rather helpful merchant who will aid the player by selling various items for dungeons.</description>
               <files>
                 <folder source="common\DepthsOfTheSoul" destination="" priority="0" />
               </files>
@@ -178,7 +178,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Hunt for the Spectre">
-              <description>Data-only channel for the directly evidenced Spectre defeat.</description>
+              <description>The Hunt for the Spectre is an Elden Ring inspired quest mod centred around Ren, a man who is hunting a serial killer known as the Spectre. The mod features multiple endings and incredibly high quality voice acting.</description>
               <files>
                 <folder source="common\HuntForSpectre" destination="" priority="0" />
               </files>
@@ -197,7 +197,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Moonpath to Elsweyr">
-              <description>Data-only channels for the Tenmar journey, Thalmor rebellion, saved/released plague branches, and completed rebel base.</description>
+              <description>Brought to you by An_Old_Sock, the author of the in-development Moonpath Reborn, Moonpath to Elsweyr is enjoying regular updates for the first time in five years. This is the most comprehensive Moonpath experience to date.</description>
               <files>
                 <folder source="common\Moonpath" destination="" priority="0" />
               </files>
@@ -216,7 +216,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Olenveld">
-              <description>Data-only reaction for the directly evidenced Olenveld resolution.</description>
+              <description>Olenveld is a new lands mod, the size of a small DLC, bringing the lore-rich location of Olenveld to Skyrim. It introduces a unique questline and an island recapturing system.</description>
               <files>
                 <folder source="common\Olenveld" destination="" priority="0" />
               </files>
@@ -235,7 +235,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Once We Were Here">
-              <description>Hoping the Falmer may yet be redeemed pleases Auri-El, their forebears' god; calling the damage irreparable disappoints him. Includes an ESL-flagged plugin.</description>
+              <description>Once We Were Here is a short to medium sized quest mod that revolves around Sillas, a Bosmer scholar investigating the Falmer.</description>
               <files>
                 <folder source="common\OnceWeWereHere" destination="" priority="0" />
                 <folder source="common\_Fragments\OnceWeWereHere" destination="" priority="0" />
@@ -256,7 +256,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Siege at Icemoth">
-              <description>Data-only channels for ending the necromancer's undead army and uncovering the Font of Memory.</description>
+              <description>A small scale vanilla-esque new lands mod adding some new islands with new locations and dungeons in the Sea of Ghosts. As well as some unique items from The Elder Scrolls Blades.</description>
               <files>
                 <folder source="common\SiegeAtIcemoth" destination="" priority="0" />
               </files>
@@ -275,7 +275,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Sirenroot">
-              <description>Lays the haunting Ayleid spirit to rest: Arkay, Meridia, Stendarr, Tu'whacca, Azura, Y'ffre, plus the elven pantheon (Auri-El, Xarxes, Magnus) for the Ayleid dead, and Zenithar for honest salvage work.</description>
+              <description>You and a team of divers are hired to scour ruins at the bottom of Lake Honrich. A dialogue-heavy quest with puzzles, platforming, and a focus on water mechanics.</description>
               <files>
                 <folder source="common\Sirenroot" destination="" priority="0" />
               </files>
@@ -294,7 +294,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Skyrim Extended Cut - Saints and Seducers">
-              <description>Data-only reaction for the directly evidenced Saints and Seducers resolution.</description>
+              <description>Return to the Shivering Isles in a fully-voiced overhaul of Skyrim's Saints and Seducers Creation.</description>
               <files>
                 <folder source="common\SkyrimExtendedCutSaintsAndSeducers" destination="" priority="0" />
               </files>
@@ -313,7 +313,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Taste of Death Addon">
-              <description>Data-only channel for bringing Markarth's Namira cult to justice.</description>
+              <description>Adds new dialogue, enemies, and gameplay to the vanilla quest &quot;The Taste of Death&quot;. Confront the cult of Namira and bring them to justice.</description>
               <files>
                 <folder source="common\TasteOfDeathAddon" destination="" priority="0" />
               </files>
@@ -332,7 +332,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="The Forgotten City">
-              <description>Data-only reactions for the directly evidenced Forgotten City resolutions.</description>
+              <description>A critically acclaimed expansion mod offering a unique 6 - 8 hour experience: a murder mystery investigation set in an ancient underground city. You'll need to solve it using your wits, and the ability to travel through time.</description>
               <files>
                 <folder source="common\ForgottenCity" destination="" priority="0" />
               </files>
@@ -351,7 +351,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="The Frozen Heart">
-              <description>The cursed woman is a Snow Elf, so Auri-El reacts most of all: curing her is a milestone in his eyes, killing her a grave offence. Mara, Stendarr, Trinimac and Molag Bal also weigh in.</description>
+              <description>Step through a magical mirror into a cursed frozen realm. Explore labyrinths, solve puzzles, ponder orbs, battle shadows, and help an ancient Snow Elf warrior cure her curse.</description>
               <files>
                 <folder source="common\TheFrozenHeart" destination="" priority="0" />
               </files>
@@ -370,7 +370,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="The Gift of Saturalia">
-              <description>Five data-only channels for the separately resolved Saturalia gifts; the umbrella completion is excluded to prevent double credit.</description>
+              <description>A fully voiced new quest. Help the people of Skyrim and spread the spirit of Saturalia.</description>
               <files>
                 <folder source="common\GiftOfSaturalia" destination="" priority="0" />
               </files>
@@ -389,7 +389,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="The Rot Below">
-              <description>Namira is named in the quest itself. Foiling her plan angers her and pleases the death-and-light gods; killing or sparing the freed lich Adabelle splits Mara and Dibella.</description>
+              <description>Discover the secrets of a mad lich who thought themselves a god. Explore an ancient palace, a subterranean city of the undead, and an insane warlock's research hall. Foil Namira's plans and stop the coming rot.</description>
               <files>
                 <folder source="common\TheRotBelow" destination="" priority="0" />
               </files>
@@ -408,7 +408,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Unslaad">
-              <description>Data-only reactions for four directly evidenced Unslaad outcomes.</description>
+              <description>Quest mod of Half-Dragon. Add fluffy equipment and creatures.</description>
               <files>
                 <folder source="common\Unslaad" destination="" priority="0" />
               </files>
@@ -427,7 +427,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Vigilant">
-              <description>Data-only reactions for the directly evidenced Vigilant outcomes.</description>
+              <description>Vigilant of Stendarr Quest.</description>
               <files>
                 <folder source="common\Vigilant" destination="" priority="0" />
               </files>
@@ -446,7 +446,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="War's Folly">
-              <description>Adds Devotion reactions to all six stances you can take with Sandor the preacher, from pride in slaughter to renouncing the war. Includes an ESL-flagged plugin (also repairs two dialogue endings that never set their quest stage).</description>
+              <description>Stumble across Sandor, a zealous preacher who seeks to convince Solitude's residents that the Civil War is one of folly. Hear his sermons and converse with the man, perhaps even you will begin to question your ideals.</description>
               <files>
                 <folder source="common\WarsFolly" destination="" priority="0" />
                 <folder source="common\_Fragments\WarsFolly" destination="" priority="0" />
@@ -467,7 +467,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Whispers of the Depths">
-              <description>Mara approves of offering condolences to the old sailor. Includes an ESL-flagged plugin.</description>
+              <description>Whispers of the Depths centres around an Argonian fisherman, Slays-Many-Beasts. Through the four encounters of this mod, he will tell tales of his time at sea, and the various monsters he encountered.</description>
               <files>
                 <folder source="common\WhispersOfTheDepths" destination="" priority="0" />
                 <folder source="common\_Fragments\WhispersOfTheDepths" destination="" priority="0" />
@@ -488,7 +488,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Wyrmstooth">
-              <description>Data-only channel for defeating Vulthurkrah while defending Stonehollow.</description>
+              <description>A large DLC-sized quest expansion for Skyrim featuring a new island to explore, fully voice acted NPCs, new dungeons, new music, and a player home.</description>
               <files>
                 <folder source="common\Wyrmstooth" destination="" priority="0" />
               </files>
@@ -511,7 +511,7 @@
         <group name="Quest Expansions" type="SelectAny">
           <plugins order="Explicit">
             <plugin name="College of Winterhold - Quest Expansion">
-              <description>Data-only channels for seven directly resolving College lessons. The umbrella curriculum completion is excluded to prevent double credit.</description>
+              <description>This mod provides 7 new starter magic lessons/quests to make your College of Winterhold feel like an actual school of magic.</description>
               <files>
                 <folder source="common\CollegeQuestExpansion" destination="" priority="0" />
               </files>
@@ -549,7 +549,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Forsworn Conspiracy - Quest Expansion">
-              <description>Data-only channels for the trial-by-combat resolution and the separate Madanach mercy route.</description>
+              <description>Greatly expanded the Forsworn Conspiracy questline to give new choices, new roleplaying opportunities, new epic stories. Over 200 new lines.</description>
               <files>
                 <folder source="common\ForswornConspiracyQE" destination="" priority="0" />
               </files>
@@ -568,7 +568,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Ill Met by Moonlight - Dialogue Expansion">
-              <description>Hircine answers returning the totem to the hunt. This is the addon's own added quest; vanilla DA05 stays owned by core Devotion.</description>
+              <description>Defy the will of Hircine while still serving justice to Sinding. A fully voiced mini-expansion of the namesake quest using voice actors or spliced lines.</description>
               <files>
                 <folder source="common\IllMetByMoonlightDialogue" destination="" priority="0" />
               </files>
@@ -587,7 +587,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Infiltration - Quest Expansion">
-              <description>Data-only channel for restoring Treva's Watch to Stalleo and his family.</description>
+              <description>One of the most underwhelming vanilla quests... turned into an epic quest full of player choice.</description>
               <files>
                 <folder source="common\InfiltrationQE" destination="" priority="0" />
               </files>
@@ -606,7 +606,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Nilheim - Misc Quest Expansion">
-              <description>Data-only channels for defeating Telrav's double-cross or explicitly extorting him.</description>
+              <description>Fixes some issues with the misc quest at Nilheim and gives a bit more flexibility to your encounter with good old Telrav, adding a couple of additional dialogue choices and options for roleplaying.</description>
               <files>
                 <folder source="common\NilheimQE" destination="" priority="0" />
               </files>
@@ -625,7 +625,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Paarthurnax - Quest Expansion">
-              <description>Data-only objective-derived channel for persuading the Blades and sparing Paarthurnax. Organic traversal is mandatory.</description>
+              <description>A fully voiced, quite expanded new take on the quest Paarthurnax, giving both the Blades and Paarthurnax good reasons for their stances, and you, Dragonborn, the final choice.</description>
               <files>
                 <folder source="common\PaarthurnaxQE" destination="" priority="0" />
               </files>
@@ -644,7 +644,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Save the Icerunner">
-              <description>Data-only channels for stopping, persuading, joining, betraying, or lawfully exposing Jaree-Ra's Icerunner wrecking plot.</description>
+              <description>Jaree-Ra in Solitude has a plan to set up a shipwreck. The ship is said to be full of weapons and riches, ripe for the taking. What will you do?</description>
               <files>
                 <folder source="common\SaveTheIcerunner" destination="" priority="0" />
               </files>
@@ -663,7 +663,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="The Heart of Dibella - Quest Expansion">
-              <description>Dibella and Mara answer carrying the temple's letter for the sisters. This is the expansion's own added quest; vanilla T01 stays owned by core Devotion.</description>
+              <description>Tired of having to break into a ladies-only religious building just to start this quest? This mod has you covered with new roleplaying opportunities, more dialogue and more choices.</description>
               <files>
                 <folder source="common\HeartOfDibellaQE" destination="" priority="0" />
               </files>
@@ -682,7 +682,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="The Whispering Door - Quest Expansion">
-              <description>Data-only channel for disposing of Mephala's Ebony Blade so it can cause no further harm.</description>
+              <description>Experience a longer version of Mephala's Daedric quest, now with more dialogue, more decisions and a general darker approach to the original quest.</description>
               <files>
                 <folder source="common\WhisperingDoorQE" destination="" priority="0" />
               </files>
@@ -701,7 +701,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Thieves Guild Alternative Endings">
-              <description>Self-contained data channel plus generic quest-stage adapter that separates TG09's three endings without replacing Devotion scripts. Vanilla return remains stage 200; freeing the Nightingales and keeping the Skeleton Key route to synthetic stages 201/202 and suppress false Nocturnal commitment.</description>
+              <description>Defy Nocturnal and unlock yourself from eternal servitude. Adds 4 new voice-acted endings to the Thieves Guild questline, including new story, new rewards, new boss fights.</description>
               <files>
                 <folder source="common\TGAlternativeEndings" destination="" priority="0" />
               </files>
@@ -728,7 +728,7 @@
         <group name="Followers" type="SelectAny">
           <plugins order="Explicit">
             <plugin name="M'rissi's Tails of Troubles">
-              <description>Data-only channels for the proved enslavement, marriage, and kinship outcomes. Unproved chapter routes remain excluded.</description>
+              <description>Fully immersive and lore-friendly story with 8 hours of quests, more than 2000 voiced lines and 3 different endings. Choose your path and decide her fate.</description>
               <files>
                 <folder source="common\Mrissi" destination="" priority="0" />
               </files>
@@ -747,7 +747,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Song of the Green - Auri">
-              <description>Data-only channel for Auri's five-grove pilgrimage through Skyrim's beautiful natural sites.</description>
+              <description>A standalone, custom-voiced follower and quest mod.</description>
               <files>
                 <folder source="common\Auri" destination="" priority="0" />
               </files>
@@ -766,7 +766,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Thogra">
-              <description>Data-only blood-oath, betrayal, and two marriage-route channels. The objective-derived Largashbur marriage must be traversed organically.</description>
+              <description>Help an Orc widow get revenge on the one who wronged her. The same Thogra gra-Mugur, now with a new voice!</description>
               <files>
                 <folder source="common\Thogra" destination="" priority="0" />
               </files>
@@ -785,7 +785,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Xelzaz">
-              <description>Data-only channels for crimson Nirnroot research and the proved recipe/spice theft plus mead tasting. Ambiguous routes remain excluded.</description>
+              <description>Xelzaz is a Custom Fully Voiced Argonian Lawman of House Telvanni with ~8500 lines. He has just arrived in Skyrim and is looking for a traveling companion. In return he will keep you company, cook you warm meals and brew powerful potions.</description>
               <files>
                 <folder source="common\Xelzaz" destination="" priority="0" />
               </files>
@@ -808,7 +808,7 @@
         <group name="Bardic Life" type="SelectAny">
           <plugins order="Explicit">
             <plugin name="Bards Reborn - Student of Song">
-              <description>Dibella answers the discipline of the Bards College: completing the course of study, and taking up the bard's road after induction.</description>
+              <description>This mod gives the Bards College a massive makeover, adds a new study quest, new bardic powers, and new characters to flesh out your experience as a student in the Bards College.</description>
               <files>
                 <folder source="common\BardsRebornStudentOfSong" destination="" priority="0" />
               </files>
@@ -827,7 +827,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Become a Bard">
-              <description>Dibella answers performance itself - playing for a tavern, and playing before a Jarl's court.</description>
+              <description>Tired of being a warrior or mage? Become a Bard!</description>
               <files>
                 <folder source="common\BecomeABard" destination="" priority="0" />
               </files>
@@ -850,7 +850,7 @@
         <group name="World Systems and Collections" type="SelectAny">
           <plugins order="Explicit">
             <plugin name="Aetherium Forge Destroys Items">
-              <description>Installs an ESL-flagged observer quest for successful artifact destruction. Existing saves are baselined without retroactive awards.</description>
+              <description>This mod allows you to destroy items by dropping them in the lava at the Aetherium Forge.</description>
               <files>
                 <folder source="common\AFDI" destination="" priority="0" />
               </files>
@@ -869,7 +869,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Daedric Shrines AIO prayer activators">
-              <description>Installs a neutral ESL-flagged prayer-activator plugin and BOS swaps for eleven supported Daedric Shrines AIO statues.</description>
+              <description>Statues of Daedric Lords.</description>
               <files>
                 <folder source="common\DaedricShrinesAIO" destination="" priority="0" />
               </files>
@@ -888,7 +888,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Legacy of the Dragonborn">
-              <description>Data-only channels for the Trial of Trinimac, ending the Eye of Camlorn's curse, and bringing peace to a Snow Elf ghost. Composite Ezra branches and linear relic fetches are deliberately excluded.</description>
+              <description>Not just a display mod, not just a quest mod, not just a new guild mod, but a complete foundational flagship mod to build an entire load order around. This DLC expansion sized mod adds hundreds of new items, dozens of new quests and hundreds of extra hours of play.</description>
               <files>
                 <folder source="common\LegacyOfTheDragonborn" destination="" priority="0" />
               </files>
