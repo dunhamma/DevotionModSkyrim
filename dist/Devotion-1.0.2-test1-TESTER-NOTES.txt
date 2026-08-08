@@ -1,0 +1,70 @@
+Devotion 1.0.2-test1 (2026-07-18) - tempering CTD test build
+=============================================================
+
+WHAT THIS BUILD CHANGES
+The crash some of you hit while tempering/crafting on 1.0.1 has been traced
+to the game engine's own "Craft Item" story event delivery. This build stops
+using that path entirely: crafting detection now comes through powerofthree's
+Papyrus Extender (already a requirement), which delivers the same information
+without the crash-prone engine path.
+
+INSTALL
+1. Replace your current Devotion install with this zip (same as any update).
+   Safe to install mid-save. Do NOT start a new game unless you want to.
+2. Load your save. If you use the same save that crashed before, even better.
+3. Open the console (~ key) and type:
+
+       set PDV_GLO_DebugLevel to 1
+
+   then press ~ again to close. This turns on the one log line we need. You
+   can check it took with:  GetGlobalValue PDV_GLO_DebugLevel
+   When you are done testing, set it back to 0 the same way.
+
+   You also need Papyrus logging enabled. In your Skyrim.ini (or
+   SkyrimCustom.ini), under [Papyrus]:
+
+       bEnableLogging=1
+       bEnableTrace=1
+
+   The log then appears at:
+   Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log
+
+WHAT TO TEST (in rough priority order)
+1. TEMPER: stand at a grindstone with several weapons and temper them
+   back-to-back, as fast as the menu allows. This was the crash trigger.
+   Do the same at an armor workbench.
+2. COOK: cook a few things at a cookpot.
+3. SMITH: forge a new item at a forge. If you play an Orc, check you still
+   get Malacath forge credit.
+4. ENCHANT + ALCHEMY: make one of each.
+5. Keep playing normally for a session.
+
+WHAT TO REPORT BACK
+- Whether tempering still crashes (and if so, attach the new crash log from
+  Documents\My Games\Skyrim Special Edition\SKSE or your crash logger's
+  output folder, plus Papyrus.0.log).
+- IMPORTANT - "no crash" is only half the test. Please also confirm crafting
+  still EARNS piety, and check tempering separately from creating:
+    a) note your piety in the Book of Days,
+    b) TEMPER a few items, check whether it moved,
+    c) then CREATE something new (forge an item, cook a meal) and check again.
+  Tempering and creating are detected by the same new hook, but only creating
+  is guaranteed to have been exercised in testing. If tempering stops earning
+  piety while creating still works, that is a real bug worth reporting even
+  though nothing crashed.
+- Your MCM should now show version "1.0.2-test1" (System/About page). If it
+  still says 1.0.0 or 1.0.1, the install did not take.
+- Please send Papyrus.0.log from the test session. Search it for the word
+  "Item crafted" - those lines are the ones we need. They look like:
+
+      [PDV] PlayerEvents: Item crafted: bench=12345, createdItem=0
+
+  A line with createdItem=0 after you TEMPER something is the result we are
+  hoping for. No line at all after tempering is the problem case.
+- The exact size in bytes of your installed Devotion.esp
+  (right-click > Properties). It should be 646,823 bytes for this build.
+
+THANK YOU
+Your crash logs from 1.0.1 are what proved the first fix wasn't enough and
+pointed at the real cause. This one removes the crashing code path outright
+rather than patching around it.

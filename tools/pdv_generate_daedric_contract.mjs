@@ -154,6 +154,36 @@ const SKILL_AVS = new Set([
   "Conjuration", "Destruction", "Illusion", "Restoration", "Enchanting",
 ]);
 
+// Per-actor-value price bands. The isSkill/else split below has only two buckets, and
+// the "else" bucket lumps flat resource pools (Health/Magicka/Stamina) together with
+// PERCENTAGE multipliers. That is a category error: -30 off a pool is modest, but -30
+// SpeedMult is a permanent 30% movement-speed cut. Any AV named here uses its own band
+// instead of the generic one.
+//
+// SpeedMult was -3/-5/-8 before the high-stakes retune, which raised it ~4x by side
+// effect rather than by intent (Malacath is the only price on it). -4/-7/-10 keeps the
+// price felt on every step without crippling travel or combat.
+// The general fix - real per-AV bands for boons AND prices - is the Daedric rebalance,
+// not this override.
+const PRICE_MAGNITUDES_BY_AV = {
+  SpeedMult: [-4, -7, -10],
+};
+
+// Mora's Champion boon is a documented TWO-EFFECT exception: "+20 Alteration; +20 Magicka"
+// (AGENTS.md ruling, runtime-confirmed with the price waiver). The generic derivation below
+// would name the primary MGEF `PDV_MGEF_Bless_Daedric_Mora_Champion` and put it on
+// Magicka 35 — matching neither the authored records (which use the `_Alteration` suffix,
+// because this is the one boon with two same-tier effects) nor the ruling. Without this the
+// contract disagrees with a shipped, proven design and the gate chases a record that does
+// not exist. Override the primary effect explicitly.
+const BOON_PRIMARY_BY_SPELL = {
+  PDV_Bless_Daedric_Mora_Champion: {
+    magicEffectEditorId: "PDV_MGEF_Bless_Daedric_Mora_Champion_Alteration",
+    actorValue: "Alteration",
+    magnitude: 20,
+  },
+};
+
 const EXTRA_EFFECTS_BY_SPELL = {
   PDV_Bless_Daedric_Mora_Champion: [
     {
@@ -176,10 +206,16 @@ function spellPacket(id, text, kind, meta, tierIndex) {
   if (kind === "boon") {
     magnitudes = isSkill ? [10, 18, 25] : [15, 25, 35];
   } else {
-    magnitudes = isSkill ? [-10, -18, -25] : [-10, -20, -30];
+    magnitudes = PRICE_MAGNITUDES_BY_AV[actorValue] ?? (isSkill ? [-10, -18, -25] : [-10, -20, -30]);
   }
-  const magicEffectEditorId = id.replace("PDV_Bless_", "PDV_MGEF_Bless_").replace("PDV_Price_", "PDV_MGEF_Price_");
-  const effects = [{ magicEffectEditorId, actorValue, magnitude: magnitudes[tierIndex], area: 0, duration: 0 }];
+  const derivedMagicEffectEditorId = id.replace("PDV_Bless_", "PDV_MGEF_Bless_").replace("PDV_Price_", "PDV_MGEF_Price_");
+  const primaryOverride = kind === "boon" ? BOON_PRIMARY_BY_SPELL[id] : undefined;
+  const magicEffectEditorId = primaryOverride?.magicEffectEditorId ?? derivedMagicEffectEditorId;
+  const effects = [
+    primaryOverride
+      ? { ...primaryOverride, area: 0, duration: 0 }
+      : { magicEffectEditorId, actorValue, magnitude: magnitudes[tierIndex], area: 0, duration: 0 },
+  ];
   effects.push(...(EXTRA_EFFECTS_BY_SPELL[id] || []));
   return {
     spellEditorId: id,

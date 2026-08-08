@@ -1,0 +1,14 @@
+{
+  "string": {
+    "schema": "pdv-quest-stage-adapter.v1",
+    "sourcePlugin": "Skyrim.esm",
+    "selectorPlugin": "TG Alternative Endings.esp"
+  },
+  "int": {
+    "sourceFormId": 136533,
+    "sourceStage": 200,
+    "selectorFormId": 2076,
+    "selectorValues": [1, 2, 3],
+    "targetStages": [201, 202, 202]
+  }
+}

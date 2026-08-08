@@ -6,7 +6,7 @@
   "id": "phase20-khajiit-implementation-costing",
   "title": "PDV Phase 20 Khajiit lunar, focus, and road-home implementation costing",
   "race": "Khajiit",
-  "implementationStatus": "record-wired",
+  "implementationStatus": "rebalance-implemented-static-readback-runtime-manual-proof-open",
   "decisionSources": [
     "race-sheets/PDV_RaceDesign_Khajiit.md",
     "race-sheets/PDV_RaceContent_Manifest.md#14-khajiit",
@@ -16,10 +16,10 @@
     "references/authoring/PDV_RacePlaystyleCoverageLedger.md"
   ],
   "designRules": [
-    "Moon phases add texture and small amplification; they must not become required scheduling chores.",
-    "Focused emphasis emerges from play and remains silent by default, not a formal patron-pick menu.",
+    "God-strength slots add texture and Lattice Resonance; they must not become required scheduling chores.",
+    "Focused emphasis emerges automatically from play at 25 weight, 15 lead, and Seeker piety; only the first emergence receives a ceremonial MessageBox.",
     "Khenarthi and Azurah are naturally easy hooks, so Baan Dar, Rajhin, and Alkosh need sharper proof.",
-    "Road homes should reward a circuit and belonging, not repeated camping at one bed.",
+    "Any completed uninterrupted outdoor rest is road-home practice; sleep-start exterior context is authoritative.",
     "ShadowDrift is a priced boundary state, not a free stealth reward."
   ],
   "stateSurfaces": [

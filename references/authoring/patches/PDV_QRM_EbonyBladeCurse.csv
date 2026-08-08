@@ -1,0 +1,3 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation,formid
+DA08MephalaHunt,The Fate of the Ebony Blade (keep),20,Kept the Ebony Blade and vowed to restore its power by feeding it,serve_daedra,Mephala,+,S,milestone,EbonyBladeCurse DA08MephalaHunt s20 CompleteQuest (keep path; embrace Mephala's betrayal-tool; text-confirmed),EbonyBladeCurse.esp:000807
+DA08MephalaHunt,The Fate of the Ebony Blade (destroy),30,Destroyed the Ebony Blade at the Aetherium Forge,defy_daedra,Mephala,-,S,milestone,EbonyBladeCurse DA08MephalaHunt s30 CompleteQuest (destroy path; sever Mephala's web; text-confirmed),EbonyBladeCurse.esp:000807

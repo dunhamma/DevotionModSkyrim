@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-08T07:05:22.013856Z",
+  "postChangeVerifiedAt": "2026-08-08T07:05:22.013856Z",
+  "profile": "Devotion Dev",
+  "plugin": "Devotion.esp",
+  "active": true,
+  "espSha256": "A09270329F50CB2D169F7AA41D463CF96C614EFC84D8CD84F5572761DAAFE08A",
+  "recordSummary": {
+    "total": 1961,
+    "types": 21,
+    "quests": 97,
+    "magicEffects": 677,
+    "spells": 394,
+    "messages": 500,
+    "placedObjects": 51,
+    "cells": 2
+  },
+  "errors": {
+    "danglingLinks": 0,
+    "missingMasters": 0,
+    "parseFailures": 0
+  },
+  "contestedRecordCount": 33,
+  "criticalRecordWinners": [
+    {
+      "formid": "00C325:Devotion.esp",
+      "editorid": "PDV__ManagerQuest",
+      "winner": "Devotion.esp",
+      "vmadScripts": 1,
+      "vmadScriptName": "PDV__ManagerQuest",
+      "vmadProperties": 524,
+      "vmadAliases": 1
+    },
+    {
+      "formid": "03AFBE:Devotion.esp",
+      "editorid": "PDV_MCM",
+      "winner": "Devotion.esp"
+    },
+    {
+      "formid": "016785:Skyrim.esm",
+      "editorid": "WindhelmTempleofTalos",
+      "winner": "Lux.esp"
+    },
+    {
+      "formid": "032AE7:Skyrim.esm",
+      "editorid": "QASmoke",
+      "winner": "ANV_SynW4ENBPatcher.esp"
+    }
+  ],
+  "cellNestedReferenceRetention": {
+    "verified": true,
+    "details": [
+      "Devotion.esp carries zero nested placed references under its WindhelmTempleofTalos override, so the later Lux parent winner has no Devotion child set to suppress.",
+      "Devotion.esp carries 51 placed-object records under its QASmoke authoring group; direct load-order enumeration resolves all 51 records to Devotion.esp despite the later QASmoke parent winner."
+    ],
+    "placedObjectsEnumerated": 51,
+    "placedObjectsWinningFromDevotion": 51
+  },
+  "vmadValidation": {
+    "scriptedRecords": 184,
+    "unboundAutoProperties": 552,
+    "boundButNullProperties": 0,
+    "unverifiableAttachments": 0,
+    "boundary": "Unbound findings include inherited and runtime-filled properties and are an audit queue, not a clean-binding claim. scriptedRecords re-derived 2026-08-08 post-Daedric-conversion (184: Quest 97, Activator 54, MagicEffect 29, Book 2, MiscItem 2). unboundAutoProperties / boundButNullProperties / unverifiableAttachments were NOT re-derived and are carried forward from the 2026-07-26 sweep."
+  },
+  "filesystemScriptPairs": {
+    "psc": 100,
+    "pex": 100,
+    "pairNamesExact": true
+  },
+  "assetWinners": {
+    "fontFiles": {
+      "queried": 4,
+      "soleProvider": "Devotion",
+      "winner": "Devotion"
+    },
+    "urnTextures": {
+      "queried": 2,
+      "soleProvider": "Devotion",
+      "winner": "Devotion"
+    }
+  },
+  "proofBoundary": {
+    "closed": [
+      "active load-order presence",
+      "FormLink integrity",
+      "master presence",
+      "record parsing",
+      "contested-record enumeration",
+      "placed-reference winner retention",
+      "VMAD attachment resolvability"
+    ],
+    "open": [
+      "intentional-versus-defective review of 552 unbound Auto properties",
+      "manual UI behavior",
+      "navmesh and terrain spatial integrity",
+      "property-level VMAD unbound-Auto counts carried forward from 2026-07-26, not re-derived",
+      "runtime behavior"
+    ]
+  }
+}

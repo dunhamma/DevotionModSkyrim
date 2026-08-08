@@ -34,12 +34,12 @@ status, package shape, smoke, and public claims live in
 
 Phase 21 priority: P0.
 
-Posture: first full package lane. Current evidence basis is the updated
-`D:\Wabbajack\modlists\ARR Test` instance (reviewed 2026-07-16); the June
-2026 `D:\Wabbajack\modlists\ARR` pass and its Archon-era conflict dossier
-are superseded and deleted. See
-`PDV_Phase21_ARRTest_ModReview_2026-07-16.md` for the current review and
-to-do list.
+Posture: modular experimental deployment. The current machine target is
+`D:\Wabbajack\modlists\ARR 2.5`, profile
+`KoK R11 - PDV ARR25 Experiment 20260807`. The July ARR Test review remains
+historical source evidence, while current package/deployment state is owned by
+`references/authoring/PDV_ModPackaging_StateAuthority.md` and the structured
+deployment receipt.
 
 Known overlap families from the 2026-07-16 pass:
 
@@ -54,11 +54,12 @@ Known overlap families from the 2026-07-16 pass:
   quests, new-land quest content, bard/performance activity mods, and major
   shrine/statue/worldspace additions.
 
-Likely PDV route:
+Current PDV route:
 
-- Ship one Authoria-specific compat patch with minimal masters.
-- Include a reference-only RFTI output for the exact snapshot if useful, but
-  require the author to regenerate final RFTI.
+- Ship ordinary Devotion core plus the dependency-gated modular PatchHub; do
+  not restore an Authoria combined lane or list-wide core-script override.
+- Keep source-specific hooks narrow and minimally mastered; all five installed
+  patch plugins are independent ESPFEs.
 - Keep Authoria priority as proof order only; do not fork PDV theology or
   create Authoria-special mechanics.
 

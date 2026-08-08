@@ -4,7 +4,7 @@
     "race-sheets/PDV_DaedricContent_Manifest.md",
     "references/phase4/PDV_DaedricRacePrinceMatrix.csv"
   ],
-  "generatedAtLocal": "12/06/2026, 17:18:25",
+  "generatedAtLocal": "08/08/2026, 16:13:28",
   "sourceOfTruth": "Manifest row EditorIDs and text win over work-order shorthand.",
   "priceSerialization": {
     "magicEffectFlags": [
@@ -87,10 +87,11 @@
           "spellEditorId": "PDV_Bless_Daedric_Boethiah_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Boethiah_Seeker",
           "displayName": "Boethiah Boon - Seeker",
-          "playerFacingText": "Boethiah rewards open challenge. Boon: One-Handed +10.",
+          "playerFacingText": "Boethiah marks the seeker of trials. A kill against a worthy foe sharpens your hand: a brief weapon-damage edge after a hard-won fight.",
           "property": "Boon_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Boethiah_Seeker",
               "actorValue": "OneHanded",
               "magnitude": 10,
               "area": 0,
@@ -102,12 +103,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Boethiah_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Boethiah_Devoted",
           "displayName": "Boethiah Boon - Devoted",
-          "playerFacingText": "Boethiah rewards open challenge. Boon: One-Handed +15.",
+          "playerFacingText": "Boethiah's trial momentum is yours. Felling a significant enemy grants a day of heavier carry weight and stronger power attacks.",
           "property": "Boon_Devoted",
           "effects": [
             {
-              "actorValue": "OneHanded",
-              "magnitude": 15,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Boethiah_Devoted",
+              "actorValue": "DamageResist",
+              "magnitude": 25,
               "area": 0,
               "duration": 0
             }
@@ -117,12 +119,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Boethiah_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Boethiah_Champion",
           "displayName": "Boethiah Boon - Champion",
-          "playerFacingText": "Boethiah rewards open challenge. Boon: One-Handed +20.",
+          "playerFacingText": "Boethiah names you proven. In sustained combat a winning edge builds and holds; overthrowing the strong returns the Prince's full favor.",
           "property": "Boon_Champion",
           "effects": [
             {
-              "actorValue": "OneHanded",
-              "magnitude": 20,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Boethiah_Champion",
+              "actorValue": "DamageResist",
+              "magnitude": 35,
               "area": 0,
               "duration": 0
             }
@@ -134,12 +137,13 @@
           "spellEditorId": "PDV_Price_Daedric_Boethiah_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Boethiah_Seeker",
           "displayName": "Boethiah Price - Seeker",
-          "playerFacingText": "Boethiah's trials make trust brittle. Price: Speech -8.",
+          "playerFacingText": "The price of the pact: conflict gathers around you. Hostile encounters escalate more readily while Boethiah's edge is held.",
           "property": "Price_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Boethiah_Seeker",
               "actorValue": "Speechcraft",
-              "magnitude": -8,
+              "magnitude": -10,
               "area": 0,
               "duration": 0
             }
@@ -149,12 +153,13 @@
           "spellEditorId": "PDV_Price_Daedric_Boethiah_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Boethiah_Devoted",
           "displayName": "Boethiah Price - Devoted",
-          "playerFacingText": "Boethiah's trials make trust brittle. Price: Speech -12.",
+          "playerFacingText": "The price deepens: trust frays. Followers and allies are harder to keep, and the world meets your strength with sharper resistance.",
           "property": "Price_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Boethiah_Devoted",
               "actorValue": "Speechcraft",
-              "magnitude": -12,
+              "magnitude": -18,
               "area": 0,
               "duration": 0
             }
@@ -164,12 +169,13 @@
           "spellEditorId": "PDV_Price_Daedric_Boethiah_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Boethiah_Champion",
           "displayName": "Boethiah Price - Champion",
-          "playerFacingText": "Boethiah's trials make trust brittle. Price: Speech -15.",
+          "playerFacingText": "The full price: you are a standing trial. Bonds of loyalty strain hardest now, and few alliances outlast the proving Boethiah demands of all who stand near you.",
           "property": "Price_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Boethiah_Champion",
               "actorValue": "Speechcraft",
-              "magnitude": -15,
+              "magnitude": -25,
               "area": 0,
               "duration": 0
             }
@@ -203,11 +209,7 @@
           "title": "Boethiah's Champion",
           "body": "You did not survive the trials. You won them, and went looking for more. That is the whole of my creed. You are proven, Champion -- and proven things are never left in peace. Good.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Boethiah_Commitment",
@@ -382,12 +384,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Azura_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Azura_Seeker",
           "displayName": "Azura Boon - Seeker",
-          "playerFacingText": "Azura's twilight wards your steps. Boon: Magic resistance +10%.",
+          "playerFacingText": "Azura opens the threshold a little. At dawn and dusk your sight sharpens -- a brief foresight that reads danger before it strikes.",
           "property": "Boon_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Azura_Seeker",
               "actorValue": "ResistMagic",
-              "magnitude": 10,
+              "magnitude": 15,
               "area": 0,
               "duration": 0
             }
@@ -397,12 +400,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Azura_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Azura_Devoted",
           "displayName": "Azura Boon - Devoted",
-          "playerFacingText": "Azura's twilight wards your steps. Boon: Magic resistance +15%.",
+          "playerFacingText": "Azura's twilight is yours. Crossing thresholds -- doorways, dawns, deaths narrowly escaped -- grants a span of clearer sight and warded steps.",
           "property": "Boon_Devoted",
           "effects": [
             {
-              "actorValue": "ResistMagic",
-              "magnitude": 15,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Azura_Devoted",
+              "actorValue": "Magicka",
+              "magnitude": 25,
               "area": 0,
               "duration": 0
             }
@@ -412,12 +416,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Azura_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Azura_Champion",
           "displayName": "Azura Boon - Champion",
-          "playerFacingText": "Azura's twilight wards your steps. Boon: Magic resistance +20%.",
+          "playerFacingText": "Azura names you her seer. Foresight holds through the dim hours; what is fated to harm you announces itself, and her star shelters your passage.",
           "property": "Boon_Champion",
           "effects": [
             {
-              "actorValue": "ResistMagic",
-              "magnitude": 20,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Azura_Champion",
+              "actorValue": "Magicka",
+              "magnitude": 35,
               "area": 0,
               "duration": 0
             }
@@ -429,15 +434,15 @@
           "spellEditorId": "PDV_Price_Daedric_Azura_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Azura_Seeker",
           "displayName": "Azura Price - Seeker",
-          "playerFacingText": "Azura's foresight leaves the body tired. Price: Fortify Stamina -10.",
+          "playerFacingText": "The price of foresight: the burden of knowing. Visions intrude unbidden, and what you have seen cannot be unseen.",
           "property": "Price_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Azura_Seeker",
               "actorValue": "Stamina",
               "magnitude": -10,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Stamina"
+              "duration": 0
             }
           ]
         },
@@ -445,15 +450,15 @@
           "spellEditorId": "PDV_Price_Daedric_Azura_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Azura_Devoted",
           "displayName": "Azura Price - Devoted",
-          "playerFacingText": "Azura's foresight leaves the body tired. Price: Fortify Stamina -20.",
+          "playerFacingText": "The price deepens: fate obligates. Azura's sight comes with her demands, and the path she shows is not always the one you would choose.",
           "property": "Price_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Azura_Devoted",
               "actorValue": "Stamina",
               "magnitude": -20,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Stamina"
+              "duration": 0
             }
           ]
         },
@@ -461,15 +466,15 @@
           "spellEditorId": "PDV_Price_Daedric_Azura_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Azura_Champion",
           "displayName": "Azura Price - Champion",
-          "playerFacingText": "Azura's foresight leaves the body tired. Price: Fortify Stamina -30.",
+          "playerFacingText": "The full price: you are bound to the prophecy. The sight that protects you also commits you; you serve the pattern Azura reveals, whether or not it serves you.",
           "property": "Price_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Azura_Champion",
               "actorValue": "Stamina",
               "magnitude": -30,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Stamina"
+              "duration": 0
             }
           ]
         }
@@ -501,11 +506,7 @@
           "title": "Azura's Seer",
           "body": "You watched the thresholds and trusted what you saw there. Few outside my children do. I name you seer, Champion -- and a seer belongs to the fate they witness. Walk the pattern. It was always going to be you.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Azura_Commitment",
@@ -673,10 +674,11 @@
           "spellEditorId": "PDV_Bless_Daedric_Vaermina_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Vaermina_Seeker",
           "displayName": "Vaermina Boon - Seeker",
-          "playerFacingText": "Vaermina opens the dream-path. Boon: Illusion +10.",
+          "playerFacingText": "Vaermina's touch opens the dream-path. Sleep reveals more than it hides; you read fear in others before they know you are reading it.",
           "property": "Boon_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Vaermina_Seeker",
               "actorValue": "Illusion",
               "magnitude": 10,
               "area": 0,
@@ -688,12 +690,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Vaermina_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Vaermina_Devoted",
           "displayName": "Vaermina Boon - Devoted",
-          "playerFacingText": "Vaermina opens the dream-path. Boon: Illusion +15.",
+          "playerFacingText": "Vaermina's nightmare deepens. Dream insight comes readily; the fear of others is legible, and you press it where it matters.",
           "property": "Boon_Devoted",
           "effects": [
             {
-              "actorValue": "Illusion",
-              "magnitude": 15,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Vaermina_Devoted",
+              "actorValue": "Sneak",
+              "magnitude": 18,
               "area": 0,
               "duration": 0
             }
@@ -703,12 +706,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Vaermina_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Vaermina_Champion",
           "displayName": "Vaermina Boon - Champion",
-          "playerFacingText": "Vaermina opens the dream-path. Boon: Illusion +20.",
+          "playerFacingText": "Vaermina names you her nightmare-walker. Sleep is your domain; you read fear with precision, and what haunts others gives you advantage.",
           "property": "Boon_Champion",
           "effects": [
             {
-              "actorValue": "Illusion",
-              "magnitude": 20,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Vaermina_Champion",
+              "actorValue": "Sneak",
+              "magnitude": 25,
               "area": 0,
               "duration": 0
             }
@@ -720,15 +724,15 @@
           "spellEditorId": "PDV_Price_Daedric_Vaermina_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vaermina_Seeker",
           "displayName": "Vaermina Price - Seeker",
-          "playerFacingText": "Vaermina leaves unrest inside sleep. Price: Fortify Health -8.",
+          "playerFacingText": "The price of the dream-path: sleep corrupts. Vaermina does not only give you the dream; she leaves herself in it when you sleep.",
           "property": "Price_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vaermina_Seeker",
               "actorValue": "Health",
-              "magnitude": -8,
+              "magnitude": -10,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Health"
+              "duration": 0
             }
           ]
         },
@@ -736,15 +740,15 @@
           "spellEditorId": "PDV_Price_Daedric_Vaermina_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vaermina_Devoted",
           "displayName": "Vaermina Price - Devoted",
-          "playerFacingText": "Vaermina leaves unrest inside sleep. Price: Fortify Health -15.",
+          "playerFacingText": "The price deepens: memory instability. Time in Vaermina's nightmare blurs the boundary between what happened and what was shown.",
           "property": "Price_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vaermina_Devoted",
               "actorValue": "Health",
-              "magnitude": -15,
+              "magnitude": -20,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Health"
+              "duration": 0
             }
           ]
         },
@@ -752,15 +756,15 @@
           "spellEditorId": "PDV_Price_Daedric_Vaermina_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vaermina_Champion",
           "displayName": "Vaermina Price - Champion",
-          "playerFacingText": "Vaermina leaves unrest inside sleep. Price: Fortify Health -20.",
+          "playerFacingText": "The full price: fear and memory are hers. You wield fear outward, but Vaermina's access to yours is absolute; nothing you dream is private.",
           "property": "Price_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vaermina_Champion",
               "actorValue": "Health",
-              "magnitude": -20,
+              "magnitude": -30,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Health"
+              "duration": 0
             }
           ]
         }
@@ -792,11 +796,7 @@
           "title": "Vaermina's Nightmare-Walker",
           "body": "You walked into the nightmare and did not wake from it. That is what Champion means in my keeping. I know your fears -- all of them, named and unnamed. Use that knowledge. It cuts better than anything you carry. I have made certain it also cuts both ways.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Vaermina_Commitment",
@@ -978,10 +978,11 @@
           "spellEditorId": "PDV_Bless_Daedric_Meridia_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Meridia_Seeker",
           "displayName": "Meridia Boon - Seeker",
-          "playerFacingText": "Meridia's light steadies your hand against corruption. Boon: Restoration +10.",
+          "playerFacingText": "Meridia's light stirs in you. Undead recoil a little more sharply, and corruption finds you harder to take.",
           "property": "Boon_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Meridia_Seeker",
               "actorValue": "Restoration",
               "magnitude": 10,
               "area": 0,
@@ -993,12 +994,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Meridia_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Meridia_Devoted",
           "displayName": "Meridia Boon - Devoted",
-          "playerFacingText": "Meridia's light steadies your hand against corruption. Boon: Restoration +15.",
+          "playerFacingText": "Meridia's radiance is yours in full. The undead burn before you, and the creeping rot of enchanted corruption struggles against your skin.",
           "property": "Boon_Devoted",
           "effects": [
             {
-              "actorValue": "Restoration",
-              "magnitude": 15,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Meridia_Devoted",
+              "actorValue": "ResistDisease",
+              "magnitude": 25,
               "area": 0,
               "duration": 0
             }
@@ -1008,12 +1010,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Meridia_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Meridia_Champion",
           "displayName": "Meridia Boon - Champion",
-          "playerFacingText": "Meridia's light steadies your hand against corruption. Boon: Restoration +20.",
+          "playerFacingText": "Meridia names you her cleansing blade. You scourge the undead, and the radiance turns corruption aside before it can take hold.",
           "property": "Boon_Champion",
           "effects": [
             {
-              "actorValue": "Restoration",
-              "magnitude": 20,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Meridia_Champion",
+              "actorValue": "ResistDisease",
+              "magnitude": 35,
               "area": 0,
               "duration": 0
             }
@@ -1025,12 +1028,13 @@
           "spellEditorId": "PDV_Price_Daedric_Meridia_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Meridia_Seeker",
           "displayName": "Meridia Price - Seeker",
-          "playerFacingText": "Meridia's radiance rejects concealment and compromise. Price: Illusion -8.",
+          "playerFacingText": "The price of the radiance: purity demanded. Meridia will not tolerate compromise, and her follower acts before rot spreads.",
           "property": "Price_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Meridia_Seeker",
               "actorValue": "Illusion",
-              "magnitude": -8,
+              "magnitude": -10,
               "area": 0,
               "duration": 0
             }
@@ -1040,12 +1044,13 @@
           "spellEditorId": "PDV_Price_Daedric_Meridia_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Meridia_Devoted",
           "displayName": "Meridia Price - Devoted",
-          "playerFacingText": "Meridia's radiance rejects concealment and compromise. Price: Illusion -12.",
+          "playerFacingText": "The price deepens: intolerance is yours. Meridia presses the war outward; hesitation against the risen finds her regard cooling.",
           "property": "Price_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Meridia_Devoted",
               "actorValue": "Illusion",
-              "magnitude": -12,
+              "magnitude": -18,
               "area": 0,
               "duration": 0
             }
@@ -1055,12 +1060,13 @@
           "spellEditorId": "PDV_Price_Daedric_Meridia_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Meridia_Champion",
           "displayName": "Meridia Price - Champion",
-          "playerFacingText": "Meridia's radiance rejects concealment and compromise. Price: Illusion -15.",
+          "playerFacingText": "The full price: the mandate is absolute. The undead are enemy, corruption is enemy. Meridia does not negotiate with what must be burned.",
           "property": "Price_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Meridia_Champion",
               "actorValue": "Illusion",
-              "magnitude": -15,
+              "magnitude": -25,
               "area": 0,
               "duration": 0
             }
@@ -1094,11 +1100,7 @@
           "title": "Meridia's Cleansing Agent",
           "body": "You have proven you understand the work. The undead are an affront to the living world, and corruption is the rot they spread. You are my instrument. Not a weapon I hold -- you act of your own will, in my name. Carry the light forward.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Meridia_Commitment",
@@ -1280,11 +1282,12 @@
           "spellEditorId": "PDV_Bless_Daedric_Molag_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Molag_Seeker",
           "displayName": "Molag Bal Boon - Seeker",
-          "playerFacingText": "Molag Bal's domination settles into your will. Boon: Illusion +10.",
+          "playerFacingText": "Molag Bal's domination-edge settles in you. Coercive leverage comes more easily; hierarchy bends in your direction.",
           "property": "Boon_Seeker",
           "effects": [
             {
-              "actorValue": "Illusion",
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Molag_Seeker",
+              "actorValue": "Speechcraft",
               "magnitude": 10,
               "area": 0,
               "duration": 0
@@ -1295,12 +1298,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Molag_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Molag_Devoted",
           "displayName": "Molag Bal Boon - Devoted",
-          "playerFacingText": "Molag Bal's domination settles into your will. Boon: Illusion +15.",
+          "playerFacingText": "The grip deepens. Molag Bal's vampiric authority extends your reach -- the dominated stay dominated.",
           "property": "Boon_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Molag_Devoted",
               "actorValue": "Illusion",
-              "magnitude": 15,
+              "magnitude": 18,
               "area": 0,
               "duration": 0
             }
@@ -1310,12 +1314,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Molag_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Molag_Champion",
           "displayName": "Molag Bal Boon - Champion",
-          "playerFacingText": "Molag Bal's domination settles into your will. Boon: Illusion +20.",
+          "playerFacingText": "You carry the full weight of Molag Bal's domination. The hierarchy bends; resistance buckles; the leverage is yours.",
           "property": "Boon_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Molag_Champion",
               "actorValue": "Illusion",
-              "magnitude": 20,
+              "magnitude": 25,
               "area": 0,
               "duration": 0
             }
@@ -1327,12 +1332,13 @@
           "spellEditorId": "PDV_Price_Daedric_Molag_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Molag_Seeker",
           "displayName": "Molag Bal Price - Seeker",
-          "playerFacingText": "Molag Bal's domination leaves mercy and restoration behind. Price: Restoration -8.",
+          "playerFacingText": "The price of the domination-path: the cruelty it asks of you will return. Those you bend do not forget.",
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "Restoration",
-              "magnitude": -8,
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Molag_Seeker",
+              "actorValue": "Health",
+              "magnitude": -10,
               "area": 0,
               "duration": 0
             }
@@ -1342,12 +1348,13 @@
           "spellEditorId": "PDV_Price_Daedric_Molag_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Molag_Devoted",
           "displayName": "Molag Bal Price - Devoted",
-          "playerFacingText": "Molag Bal's domination leaves mercy and restoration behind. Price: Restoration -12.",
+          "playerFacingText": "The price deepens: isolation of the predator. Those who sense Molag Bal's claim keep their distance or their silence.",
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "Restoration",
-              "magnitude": -12,
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Molag_Devoted",
+              "actorValue": "Health",
+              "magnitude": -20,
               "area": 0,
               "duration": 0
             }
@@ -1357,12 +1364,13 @@
           "spellEditorId": "PDV_Price_Daedric_Molag_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Molag_Champion",
           "displayName": "Molag Bal Price - Champion",
-          "playerFacingText": "Molag Bal's domination leaves mercy and restoration behind. Price: Restoration -15.",
+          "playerFacingText": "The full price: everything mediated through dominance. Molag Bal's Champion relates to others through leverage, and leverage corrodes.",
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "Restoration",
-              "magnitude": -15,
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Molag_Champion",
+              "actorValue": "Health",
+              "magnitude": -30,
               "area": 0,
               "duration": 0
             }
@@ -1396,11 +1404,7 @@
           "title": "Molag Bal's Instrument",
           "body": "You have done it three times -- bent the will, taken the leverage, made the hierarchy work in your favor. That is the commitment. You are useful to me; in my terms, that is the closest thing to honor I extend. Use the domination well. Do not mistake it for permission to stop.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Molag_Commitment",
@@ -1561,10 +1565,11 @@
           "spellEditorId": "PDV_Bless_Daedric_Mephala_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mephala_Seeker",
           "displayName": "Mephala Boon - Seeker",
-          "playerFacingText": "Mephala spins hidden paths through the web. Boon: Sneak +10.",
+          "playerFacingText": "Mephala spins you a first thread. Secrets find their way to you, and a hidden path opens where others see only wall.",
           "property": "Boon_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mephala_Seeker",
               "actorValue": "Sneak",
               "magnitude": 10,
               "area": 0,
@@ -1576,12 +1581,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Mephala_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mephala_Devoted",
           "displayName": "Mephala Boon - Devoted",
-          "playerFacingText": "Mephala spins hidden paths through the web. Boon: Sneak +15.",
+          "playerFacingText": "Mephala's web is yours to read. Hidden loyalties and unseen routes reveal themselves; what is whispered in one room reaches you in another.",
           "property": "Boon_Devoted",
           "effects": [
             {
-              "actorValue": "Sneak",
-              "magnitude": 15,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mephala_Devoted",
+              "actorValue": "Pickpocket",
+              "magnitude": 18,
               "area": 0,
               "duration": 0
             }
@@ -1591,12 +1597,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Mephala_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mephala_Champion",
           "displayName": "Mephala Boon - Champion",
-          "playerFacingText": "Mephala spins hidden paths through the web. Boon: Sneak +20.",
+          "playerFacingText": "Mephala names you of the web. The network is yours -- leverage over the connected, passage through the closed, and the quiet knowledge of who owes whom.",
           "property": "Boon_Champion",
           "effects": [
             {
-              "actorValue": "Sneak",
-              "magnitude": 20,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mephala_Champion",
+              "actorValue": "Pickpocket",
+              "magnitude": 25,
               "area": 0,
               "duration": 0
             }
@@ -1608,12 +1615,13 @@
           "spellEditorId": "PDV_Price_Daedric_Mephala_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Mephala_Seeker",
           "displayName": "Mephala Price - Seeker",
-          "playerFacingText": "Mephala's web stains every honest bond. Price: Speech -8.",
+          "playerFacingText": "The price of the web: corruption seeps in. The secrets you gather stain the gathering; trust given to you frays a little for the knowing.",
           "property": "Price_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Mephala_Seeker",
               "actorValue": "Speechcraft",
-              "magnitude": -8,
+              "magnitude": -10,
               "area": 0,
               "duration": 0
             }
@@ -1623,12 +1631,13 @@
           "spellEditorId": "PDV_Price_Daedric_Mephala_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Mephala_Devoted",
           "displayName": "Mephala Price - Devoted",
-          "playerFacingText": "Mephala's web stains every honest bond. Price: Speech -12.",
+          "playerFacingText": "The price deepens: the web demands feeding. Hidden violence and quiet betrayal are its currency, and Mephala's advantage dims if the threads go slack.",
           "property": "Price_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Mephala_Devoted",
               "actorValue": "Speechcraft",
-              "magnitude": -12,
+              "magnitude": -18,
               "area": 0,
               "duration": 0
             }
@@ -1638,12 +1647,13 @@
           "spellEditorId": "PDV_Price_Daedric_Mephala_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Mephala_Champion",
           "displayName": "Mephala Price - Champion",
-          "playerFacingText": "Mephala's web stains every honest bond. Price: Speech -15.",
+          "playerFacingText": "The full price: you are a knot in the web, not its master. Every bond you hold holds you; the corruption you spread runs back along the threads to you.",
           "property": "Price_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Mephala_Champion",
               "actorValue": "Speechcraft",
-              "magnitude": -15,
+              "magnitude": -25,
               "area": 0,
               "duration": 0
             }
@@ -1677,11 +1687,7 @@
           "title": "Mephala's Web",
           "body": "You learned that everything is connected, and that the one who holds the threads holds the room. I do not shout; neither should you. You are of the web now, Champion -- and the web is never set down cleanly. Pull, and see who moves.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Mephala_Commitment",
@@ -1856,12 +1862,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Malacath_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Malacath_Seeker",
           "displayName": "Malacath Boon - Seeker",
-          "playerFacingText": "Malacath hardens the outcast against the blow. Boon: Armor rating +10.",
+          "playerFacingText": "Malacath hardens the outcast. You endure a little more before you break, and a blow struck against you is answered the harder.",
           "property": "Boon_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Malacath_Seeker",
               "actorValue": "DamageResist",
-              "magnitude": 10,
+              "magnitude": 15,
               "area": 0,
               "duration": 0
             }
@@ -1871,12 +1878,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Malacath_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Malacath_Devoted",
           "displayName": "Malacath Boon - Devoted",
-          "playerFacingText": "Malacath hardens the outcast against the blow. Boon: Armor rating +15.",
+          "playerFacingText": "Malacath's endurance is yours. Pain moves you less, and those who break their oath to you, or strike you first, take the cost back doubled.",
           "property": "Boon_Devoted",
           "effects": [
             {
-              "actorValue": "DamageResist",
-              "magnitude": 15,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Malacath_Devoted",
+              "actorValue": "TwoHanded",
+              "magnitude": 18,
               "area": 0,
               "duration": 0
             }
@@ -1886,12 +1894,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Malacath_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Malacath_Champion",
           "displayName": "Malacath Boon - Champion",
-          "playerFacingText": "Malacath hardens the outcast against the blow. Boon: Armor rating +20.",
+          "playerFacingText": "Malacath names you of the spurned-and-strong. You stand where others fall, your oath is iron, and vengeance for a broken word comes due through your hand.",
           "property": "Boon_Champion",
           "effects": [
             {
-              "actorValue": "DamageResist",
-              "magnitude": 20,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Malacath_Champion",
+              "actorValue": "TwoHanded",
+              "magnitude": 25,
               "area": 0,
               "duration": 0
             }
@@ -1903,12 +1912,13 @@
           "spellEditorId": "PDV_Price_Daedric_Malacath_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Malacath_Seeker",
           "displayName": "Malacath Price - Seeker",
-          "playerFacingText": "Malacath's code is heavy and absolute. Price: Movement Speed -3%.",
+          "playerFacingText": "The price of the code: harsh judgment. Malacath holds you to the oath as hard as your enemies, and weakness in yourself is not forgiven.",
           "property": "Price_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Malacath_Seeker",
               "actorValue": "SpeedMult",
-              "magnitude": -3,
+              "magnitude": -4,
               "area": 0,
               "duration": 0
             }
@@ -1918,12 +1928,13 @@
           "spellEditorId": "PDV_Price_Daedric_Malacath_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Malacath_Devoted",
           "displayName": "Malacath Price - Devoted",
-          "playerFacingText": "Malacath's code is heavy and absolute. Price: Movement Speed -5%.",
+          "playerFacingText": "The price deepens: the code burdens. You cannot bend a sworn word without loss, and the world treats the pariah-god's follower as the outsider he is.",
           "property": "Price_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Malacath_Devoted",
               "actorValue": "SpeedMult",
-              "magnitude": -5,
+              "magnitude": -7,
               "area": 0,
               "duration": 0
             }
@@ -1933,12 +1944,13 @@
           "spellEditorId": "PDV_Price_Daedric_Malacath_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Malacath_Champion",
           "displayName": "Malacath Price - Champion",
-          "playerFacingText": "Malacath's code is heavy and absolute. Price: Movement Speed -8%.",
+          "playerFacingText": "The full price: you are the code, and it is merciless. Every oath binds you absolutely; every mercy you would give, Malacath counts as weakness, and the exile he grants is permanent.",
           "property": "Price_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Malacath_Champion",
               "actorValue": "SpeedMult",
-              "magnitude": -8,
+              "magnitude": -10,
               "area": 0,
               "duration": 0
             }
@@ -1972,11 +1984,7 @@
           "title": "Malacath's Sworn",
           "body": "You are not mine by blood, and still you kept the oath when keeping it cost you everything. That is the code. The spurned do not get comfort, Champion -- they get strength, and the right to endure. Stand. That is all I have ever asked of anyone.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Malacath_Commitment",
@@ -2151,12 +2159,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Dagon_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Dagon_Seeker",
           "displayName": "Mehrunes Dagon Boon - Seeker",
-          "playerFacingText": "Dagon's ruin makes every strike hit harder. Boon: Attack damage +5%.",
+          "playerFacingText": "Dagon's edge settles in you. Your blow against what is entrenched carries extra weight; the wall that should hold breaks first.",
           "property": "Boon_Seeker",
           "effects": [
             {
-              "actorValue": "AttackDamageMult",
-              "magnitude": 5,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Dagon_Seeker",
+              "actorValue": "Destruction",
+              "magnitude": 10,
               "area": 0,
               "duration": 0
             }
@@ -2166,12 +2175,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Dagon_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Dagon_Devoted",
           "displayName": "Mehrunes Dagon Boon - Devoted",
-          "playerFacingText": "Dagon's ruin makes every strike hit harder. Boon: Attack damage +8%.",
+          "playerFacingText": "Dagon's ruin deepens in you. Barriers fall faster, fortifications yield, and the things built to last crack first.",
           "property": "Boon_Devoted",
           "effects": [
             {
-              "actorValue": "AttackDamageMult",
-              "magnitude": 8,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Dagon_Devoted",
+              "actorValue": "OneHanded",
+              "magnitude": 18,
               "area": 0,
               "duration": 0
             }
@@ -2181,12 +2191,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Dagon_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Dagon_Champion",
           "displayName": "Mehrunes Dagon Boon - Champion",
-          "playerFacingText": "Dagon's ruin makes every strike hit harder. Boon: Attack damage +12%.",
+          "playerFacingText": "Dagon names you his ruin made walking. What stands is enemy; what is entrenched is target. You are the end that cannot be stopped.",
           "property": "Boon_Champion",
           "effects": [
             {
-              "actorValue": "AttackDamageMult",
-              "magnitude": 12,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Dagon_Champion",
+              "actorValue": "OneHanded",
+              "magnitude": 25,
               "area": 0,
               "duration": 0
             }
@@ -2198,12 +2209,13 @@
           "spellEditorId": "PDV_Price_Daedric_Dagon_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Dagon_Seeker",
           "displayName": "Mehrunes Dagon Price - Seeker",
-          "playerFacingText": "Dagon's ruin does not spare your defenses. Price: Armor rating -5.",
+          "playerFacingText": "The price of the ruin path: escalation. Dagon does not distinguish your order from the enemy's; the destruction begins to include you.",
           "property": "Price_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Dagon_Seeker",
               "actorValue": "DamageResist",
-              "magnitude": -5,
+              "magnitude": -10,
               "area": 0,
               "duration": 0
             }
@@ -2213,12 +2225,13 @@
           "spellEditorId": "PDV_Price_Daedric_Dagon_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Dagon_Devoted",
           "displayName": "Mehrunes Dagon Price - Devoted",
-          "playerFacingText": "Dagon's ruin does not spare your defenses. Price: Armor rating -10.",
+          "playerFacingText": "The price deepens: civic rupture. The communities that held you are part of the order Dagon destroys; the world around you empties.",
           "property": "Price_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Dagon_Devoted",
               "actorValue": "DamageResist",
-              "magnitude": -10,
+              "magnitude": -20,
               "area": 0,
               "duration": 0
             }
@@ -2228,12 +2241,13 @@
           "spellEditorId": "PDV_Price_Daedric_Dagon_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Dagon_Champion",
           "displayName": "Mehrunes Dagon Price - Champion",
-          "playerFacingText": "Dagon's ruin does not spare your defenses. Price: Armor rating -15.",
+          "playerFacingText": "The full price: you are the principle. Dagon's ruin does not stop when you stop pointing it; you have become the revolution, no off state.",
           "property": "Price_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Dagon_Champion",
               "actorValue": "DamageResist",
-              "magnitude": -15,
+              "magnitude": -30,
               "area": 0,
               "duration": 0
             }
@@ -2267,11 +2281,7 @@
           "title": "Dagon's Ruin-Walker",
           "body": "Three times you brought the walls down without flinching. I do not congratulate instruments -- I deploy them. You are my Walker. The Razor is yours in spirit if not in hand, and the order standing before you is already ending. Do not stop. I do not tolerate hesitation in what I name mine.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Dagon_Commitment",
@@ -2453,15 +2463,15 @@
           "spellEditorId": "PDV_Bless_Daedric_Sheo_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Sheo_Seeker",
           "displayName": "Sheogorath Boon - Seeker",
-          "playerFacingText": "Sheogorath's wrong angle feeds the impossible. Boon: Fortify Magicka +25.",
+          "playerFacingText": "Sheogorath's absurdity opens a crack. Where the direct approach fails, something sideways succeeds; solutions arrive from the wrong angle.",
           "property": "Boon_Seeker",
           "effects": [
             {
-              "actorValue": "Magicka",
-              "magnitude": 25,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Sheo_Seeker",
+              "actorValue": "Illusion",
+              "magnitude": 10,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Magicka"
+              "duration": 0
             }
           ]
         },
@@ -2469,15 +2479,15 @@
           "spellEditorId": "PDV_Bless_Daedric_Sheo_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Sheo_Devoted",
           "displayName": "Sheogorath Boon - Devoted",
-          "playerFacingText": "Sheogorath's wrong angle feeds the impossible. Boon: Fortify Magicka +40.",
+          "playerFacingText": "Sheogorath's disruption deepens. Chaotic outcomes bend your way; the problem that should not break breaks, the wall that should hold falls.",
           "property": "Boon_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Sheo_Devoted",
               "actorValue": "Magicka",
-              "magnitude": 40,
+              "magnitude": 25,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Magicka"
+              "duration": 0
             }
           ]
         },
@@ -2485,15 +2495,15 @@
           "spellEditorId": "PDV_Bless_Daedric_Sheo_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Sheo_Champion",
           "displayName": "Sheogorath Boon - Champion",
-          "playerFacingText": "Sheogorath's wrong angle feeds the impossible. Boon: Fortify Magicka +50.",
+          "playerFacingText": "Sheogorath names you the Madgod's own. Unpredictability is your ally; the stable is always about to become otherwise.",
           "property": "Boon_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Sheo_Champion",
               "actorValue": "Magicka",
-              "magnitude": 50,
+              "magnitude": 35,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Magicka"
+              "duration": 0
             }
           ]
         }
@@ -2503,12 +2513,13 @@
           "spellEditorId": "PDV_Price_Daedric_Sheo_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Sheo_Seeker",
           "displayName": "Sheogorath Price - Seeker",
-          "playerFacingText": "Sheogorath's disruption makes restoration unreliable. Price: Restoration -8.",
+          "playerFacingText": "The price of the madness path: unpredictability cuts both ways. The disruption does not promise to hit only the targets you choose.",
           "property": "Price_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Sheo_Seeker",
               "actorValue": "Restoration",
-              "magnitude": -8,
+              "magnitude": -10,
               "area": 0,
               "duration": 0
             }
@@ -2518,12 +2529,13 @@
           "spellEditorId": "PDV_Price_Daedric_Sheo_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Sheo_Devoted",
           "displayName": "Sheogorath Price - Devoted",
-          "playerFacingText": "Sheogorath's disruption makes restoration unreliable. Price: Restoration -12.",
+          "playerFacingText": "The price deepens: control erodes. The Madgod's touch does not stop at useful chaos; the devotee's own certainties grow unreliable.",
           "property": "Price_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Sheo_Devoted",
               "actorValue": "Restoration",
-              "magnitude": -12,
+              "magnitude": -18,
               "area": 0,
               "duration": 0
             }
@@ -2533,12 +2545,13 @@
           "spellEditorId": "PDV_Price_Daedric_Sheo_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Sheo_Champion",
           "displayName": "Sheogorath Price - Champion",
-          "playerFacingText": "Sheogorath's disruption makes restoration unreliable. Price: Restoration -15.",
+          "playerFacingText": "The full price: you cannot put it down. Sheogorath does not give back stability; the one who carries his full mark has become the disruption they chose, and it moves with them now.",
           "property": "Price_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Sheo_Champion",
               "actorValue": "Restoration",
-              "magnitude": -15,
+              "magnitude": -25,
               "area": 0,
               "duration": 0
             }
@@ -2572,11 +2585,7 @@
           "title": "The Madgod's Own",
           "body": "Champion! Oh, how I love that word. You have broken three things that were perfectly good and intact, and you did it in the most interesting ways possible. Do you know what that tells me? Nothing at all! Which is exactly right. The disruption is yours. Do not drop it; it bites.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Sheo_Commitment",
@@ -2758,24 +2767,15 @@
           "spellEditorId": "PDV_Bless_Daedric_Namira_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Seeker",
           "displayName": "Namira Boon - Seeker",
-          "playerFacingText": "Namira's reviled hunger hardens the body against want. Boon: Fortify Health +25, Fortify Stamina +25.",
+          "playerFacingText": "Namira's darkness settles around you. Revulsion that breaks others steels you; you endure the forgotten places without flinching.",
           "property": "Boon_Seeker",
           "effects": [
             {
               "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Seeker",
-              "actorValue": "Health",
-              "magnitude": 25,
+              "actorValue": "Sneak",
+              "magnitude": 10,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Health"
-            },
-            {
-              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Seeker_Stamina",
-              "actorValue": "Stamina",
-              "magnitude": 25,
-              "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Stamina"
+              "duration": 0
             }
           ]
         },
@@ -2783,24 +2783,15 @@
           "spellEditorId": "PDV_Bless_Daedric_Namira_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Devoted",
           "displayName": "Namira Boon - Devoted",
-          "playerFacingText": "Namira's reviled hunger hardens the body against want. Boon: Fortify Health +40, Fortify Stamina +40.",
+          "playerFacingText": "Namira's outcast fellowship deepens. The resilience of one who has nothing to lose is yours; the places that repel others are your domain.",
           "property": "Boon_Devoted",
           "effects": [
             {
               "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Devoted",
               "actorValue": "Health",
-              "magnitude": 40,
+              "magnitude": 25,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Health"
-            },
-            {
-              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Devoted_Stamina",
-              "actorValue": "Stamina",
-              "magnitude": 40,
-              "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Stamina"
+              "duration": 0
             }
           ]
         },
@@ -2808,24 +2799,15 @@
           "spellEditorId": "PDV_Bless_Daedric_Namira_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Champion",
           "displayName": "Namira Boon - Champion",
-          "playerFacingText": "Namira's reviled hunger hardens the body against want. Boon: Fortify Health +50, Fortify Stamina +50.",
+          "playerFacingText": "Namira names you of the outcast faithful. You are the hunger the respectable pretend does not exist; what they revile sustains you.",
           "property": "Boon_Champion",
           "effects": [
             {
               "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Champion",
               "actorValue": "Health",
-              "magnitude": 50,
+              "magnitude": 35,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Health"
-            },
-            {
-              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Namira_Champion_Stamina",
-              "actorValue": "Stamina",
-              "magnitude": 50,
-              "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Stamina"
+              "duration": 0
             }
           ]
         }
@@ -2835,12 +2817,13 @@
           "spellEditorId": "PDV_Price_Daedric_Namira_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Namira_Seeker",
           "displayName": "Namira Price - Seeker",
-          "playerFacingText": "Namira's fellowship marks you as repellent to the respectable. Price: Speech -8.",
+          "playerFacingText": "The price of the outcast path: social revulsion. Those who accept Namira's follower are few, and they are not the respectable.",
           "property": "Price_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Namira_Seeker",
               "actorValue": "Speechcraft",
-              "magnitude": -8,
+              "magnitude": -10,
               "area": 0,
               "duration": 0
             }
@@ -2850,12 +2833,13 @@
           "spellEditorId": "PDV_Price_Daedric_Namira_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Namira_Devoted",
           "displayName": "Namira Price - Devoted",
-          "playerFacingText": "Namira's fellowship marks you as repellent to the respectable. Price: Speech -12.",
+          "playerFacingText": "The price deepens: consumption taboo. The hunger Namira feeds takes a shape others find unacceptable, and hiding it grows harder.",
           "property": "Price_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Namira_Devoted",
               "actorValue": "Speechcraft",
-              "magnitude": -12,
+              "magnitude": -18,
               "area": 0,
               "duration": 0
             }
@@ -2865,12 +2849,13 @@
           "spellEditorId": "PDV_Price_Daedric_Namira_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Namira_Champion",
           "displayName": "Namira Price - Champion",
-          "playerFacingText": "Namira's fellowship marks you as repellent to the respectable. Price: Speech -15.",
+          "playerFacingText": "The full price: revulsion is your medium. The respectable do not welcome Namira's Champion, and she does not ask them to.",
           "property": "Price_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Namira_Champion",
               "actorValue": "Speechcraft",
-              "magnitude": -15,
+              "magnitude": -25,
               "area": 0,
               "duration": 0
             }
@@ -2904,11 +2889,7 @@
           "title": "Namira's Outcast Faithful",
           "body": "The respectable have their clean altars. You found your way here instead, and three times you chose the path that brought you lower in their eyes and deeper in mine. That is enough. The hunger is real. The fellowship is real. The revulsion is their problem.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Namira_Commitment",
@@ -3090,12 +3071,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Sanguine_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Sanguine_Seeker",
           "displayName": "Sanguine Boon - Seeker",
-          "playerFacingText": "Sanguine makes excess easy to carry into the room. Boon: Speech +10.",
+          "playerFacingText": "Sanguine's ease settles in you. Revelry lands lighter; you navigate excess with more grace than before.",
           "property": "Boon_Seeker",
           "effects": [
             {
-              "actorValue": "Speechcraft",
-              "magnitude": 10,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Sanguine_Seeker",
+              "actorValue": "Stamina",
+              "magnitude": 15,
               "area": 0,
               "duration": 0
             }
@@ -3105,12 +3087,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Sanguine_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Sanguine_Devoted",
           "displayName": "Sanguine Boon - Devoted",
-          "playerFacingText": "Sanguine makes excess easy to carry into the room. Boon: Speech +15.",
+          "playerFacingText": "Sanguine's indulgence deepens. You endure revelry where others wilt; temptation has a familiar, comfortable face.",
           "property": "Boon_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Sanguine_Devoted",
               "actorValue": "Speechcraft",
-              "magnitude": 15,
+              "magnitude": 18,
               "area": 0,
               "duration": 0
             }
@@ -3120,12 +3103,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Sanguine_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Sanguine_Champion",
           "displayName": "Sanguine Boon - Champion",
-          "playerFacingText": "Sanguine makes excess easy to carry into the room. Boon: Speech +20.",
+          "playerFacingText": "Sanguine names you his own. Excess is your element; the revelry that should end simply continues.",
           "property": "Boon_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Sanguine_Champion",
               "actorValue": "Speechcraft",
-              "magnitude": 20,
+              "magnitude": 25,
               "area": 0,
               "duration": 0
             }
@@ -3137,15 +3121,15 @@
           "spellEditorId": "PDV_Price_Daedric_Sanguine_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Sanguine_Seeker",
           "displayName": "Sanguine Price - Seeker",
-          "playerFacingText": "Sanguine's revelry dulls disciplined focus. Price: Fortify Magicka -10.",
+          "playerFacingText": "The price of the indulgence path: overindulgence. Sanguine does not enforce the limit, and without the limit the morning arrives harder.",
           "property": "Price_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Sanguine_Seeker",
               "actorValue": "Magicka",
               "magnitude": -10,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Magicka"
+              "duration": 0
             }
           ]
         },
@@ -3153,15 +3137,15 @@
           "spellEditorId": "PDV_Price_Daedric_Sanguine_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Sanguine_Devoted",
           "displayName": "Sanguine Price - Devoted",
-          "playerFacingText": "Sanguine's revelry dulls disciplined focus. Price: Fortify Magicka -20.",
+          "playerFacingText": "The price deepens: unreliability. The devotee's word runs alongside the evening's plans; sober commitments dissolve.",
           "property": "Price_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Sanguine_Devoted",
               "actorValue": "Magicka",
               "magnitude": -20,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Magicka"
+              "duration": 0
             }
           ]
         },
@@ -3169,15 +3153,15 @@
           "spellEditorId": "PDV_Price_Daedric_Sanguine_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Sanguine_Champion",
           "displayName": "Sanguine Price - Champion",
-          "playerFacingText": "Sanguine's revelry dulls disciplined focus. Price: Fortify Magicka -30.",
+          "playerFacingText": "The full price: restraint is gone. Sanguine does not ask for it back; indulgence is always the more pressing call now.",
           "property": "Price_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Sanguine_Champion",
               "actorValue": "Magicka",
               "magnitude": -30,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Magicka"
+              "duration": 0
             }
           ]
         }
@@ -3209,11 +3193,7 @@
           "title": "Sanguine's Own",
           "body": "Well done. You have arrived at the end of the road that begins with one more. I am delighted. The ease is yours permanently -- the revelry, the comfort, the wonderful inability to stop when the evening is still young. That is the gift. You already know what it costs. Welcome.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Sanguine_Commitment",
@@ -3395,12 +3375,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Vile_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Vile_Seeker",
           "displayName": "Clavicus Vile Boon - Seeker",
-          "playerFacingText": "Vile's bargains leave you with more than you should carry. Boon: Carry Weight +25.",
+          "playerFacingText": "Vile's transactional edge is yours. Favorable terms come a little more often; the deal that should fall through somehow does not.",
           "property": "Boon_Seeker",
           "effects": [
             {
-              "actorValue": "CarryWeight",
-              "magnitude": 25,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Vile_Seeker",
+              "actorValue": "Speechcraft",
+              "magnitude": 10,
               "area": 0,
               "duration": 0
             }
@@ -3410,12 +3391,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Vile_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Vile_Devoted",
           "displayName": "Clavicus Vile Boon - Devoted",
-          "playerFacingText": "Vile's bargains leave you with more than you should carry. Boon: Carry Weight +50.",
+          "playerFacingText": "Vile's contract deepens. Favorable turns come more reliably; the bargain you should not win goes your way.",
           "property": "Boon_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Vile_Devoted",
               "actorValue": "CarryWeight",
-              "magnitude": 50,
+              "magnitude": 25,
               "area": 0,
               "duration": 0
             }
@@ -3425,12 +3407,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Vile_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Vile_Champion",
           "displayName": "Clavicus Vile Boon - Champion",
-          "playerFacingText": "Vile's bargains leave you with more than you should carry. Boon: Carry Weight +75.",
+          "playerFacingText": "Vile names you his preferred client. Favorable terms become your default; loopholes open before you, and the deals bend your direction.",
           "property": "Boon_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Vile_Champion",
               "actorValue": "CarryWeight",
-              "magnitude": 75,
+              "magnitude": 35,
               "area": 0,
               "duration": 0
             }
@@ -3442,15 +3425,15 @@
           "spellEditorId": "PDV_Price_Daedric_Vile_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vile_Seeker",
           "displayName": "Clavicus Vile Price - Seeker",
-          "playerFacingText": "Vile's fine print taxes your reserves. Price: Fortify Magicka -10.",
+          "playerFacingText": "The price of the bargain: Vile's terms have fine print. What you get is real; what it costs is also real, and the invoice arrives later.",
           "property": "Price_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vile_Seeker",
               "actorValue": "Magicka",
               "magnitude": -10,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Magicka"
+              "duration": 0
             }
           ]
         },
@@ -3458,15 +3441,15 @@
           "spellEditorId": "PDV_Price_Daedric_Vile_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vile_Devoted",
           "displayName": "Clavicus Vile Price - Devoted",
-          "playerFacingText": "Vile's fine print taxes your reserves. Price: Fortify Magicka -20.",
+          "playerFacingText": "The price deepens: exploitative terms. Vile's contracts tighten; the backlash when a deal turns arrives harder than it should.",
           "property": "Price_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vile_Devoted",
               "actorValue": "Magicka",
               "magnitude": -20,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Magicka"
+              "duration": 0
             }
           ]
         },
@@ -3474,15 +3457,15 @@
           "spellEditorId": "PDV_Price_Daedric_Vile_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vile_Champion",
           "displayName": "Clavicus Vile Price - Champion",
-          "playerFacingText": "Vile's fine print taxes your reserves. Price: Fortify Magicka -30.",
+          "playerFacingText": "The full price: you are the preferred client, which means Vile takes interest in what you do with the terms. The favors are real. The dependencies they create are also real.",
           "property": "Price_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Vile_Champion",
               "actorValue": "Magicka",
               "magnitude": -30,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Magicka"
+              "duration": 0
             }
           ]
         }
@@ -3514,11 +3497,7 @@
           "title": "Vile's Preferred Client",
           "body": "You have done this three times -- asked for something, accepted the terms, and not complained about the fine print afterward. That is rare. Most patrons I prefer have the good sense not to re-read what they agreed to. You are my preferred client. Enjoy the terms. They are very good.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Vile_Commitment",
@@ -3700,10 +3679,11 @@
           "spellEditorId": "PDV_Bless_Daedric_Mora_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mora_Seeker",
           "displayName": "Hermaeus Mora Boon - Seeker",
-          "playerFacingText": "Mora's archive teaches the shape beneath the spell. Boon: Alteration +10.",
+          "playerFacingText": "Mora's archive opens a corner. You retain more of what you study; knowledge surfaces from texts that should give less.",
           "property": "Boon_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mora_Seeker",
               "actorValue": "Alteration",
               "magnitude": 10,
               "area": 0,
@@ -3715,12 +3695,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Mora_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mora_Devoted",
           "displayName": "Hermaeus Mora Boon - Devoted",
-          "playerFacingText": "Mora's archive teaches the shape beneath the spell. Boon: Alteration +15.",
+          "playerFacingText": "Mora's collection deepens in you. Spell insight comes faster, and dangerous texts open their secrets to your study without the usual cost.",
           "property": "Boon_Devoted",
           "effects": [
             {
-              "actorValue": "Alteration",
-              "magnitude": 15,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mora_Devoted",
+              "actorValue": "Magicka",
+              "magnitude": 25,
               "area": 0,
               "duration": 0
             }
@@ -3728,13 +3709,13 @@
         },
         {
           "spellEditorId": "PDV_Bless_Daedric_Mora_Champion",
-          "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mora_Champion",
+          "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mora_Champion_Alteration",
           "displayName": "Hermaeus Mora Boon - Champion",
           "playerFacingText": "Mora's archive teaches the shape beneath the spell. Boon: Alteration +20, Fortify Magicka +20.",
           "property": "Boon_Champion",
           "effects": [
             {
-              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mora_Champion",
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Mora_Champion_Alteration",
               "actorValue": "Alteration",
               "magnitude": 20,
               "area": 0,
@@ -3756,15 +3737,15 @@
           "spellEditorId": "PDV_Price_Daedric_Mora_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Mora_Seeker",
           "displayName": "Hermaeus Mora Price - Seeker",
-          "playerFacingText": "Mora's archive pulls thought away from the body. Price: Fortify Stamina -10.",
+          "playerFacingText": "The price of the archive: knowledge corrupts. What you learn through Mora changes how you think, and some cannot be unlearned.",
           "property": "Price_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Mora_Seeker",
               "actorValue": "Stamina",
               "magnitude": -10,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Stamina"
+              "duration": 0
             }
           ]
         },
@@ -3772,15 +3753,15 @@
           "spellEditorId": "PDV_Price_Daedric_Mora_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Mora_Devoted",
           "displayName": "Hermaeus Mora Price - Devoted",
-          "playerFacingText": "Mora's archive pulls thought away from the body. Price: Fortify Stamina -20.",
+          "playerFacingText": "The price deepens: agency erodes. Mora's archive pulls; curiosity becomes compulsion, and the questions grow larger than the questioner.",
           "property": "Price_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Mora_Devoted",
               "actorValue": "Stamina",
               "magnitude": -20,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Stamina"
+              "duration": 0
             }
           ]
         },
@@ -3788,15 +3769,15 @@
           "spellEditorId": "PDV_Price_Daedric_Mora_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Mora_Champion",
           "displayName": "Hermaeus Mora Price - Champion",
-          "playerFacingText": "Mora's archive pulls thought away from the body. Price: Fortify Stamina -30.",
+          "playerFacingText": "The full price: the archive owns you. Mora holds what you have learned, and you are catalogued alongside the things you studied. Agency is a recorded entry, not a living condition.",
           "property": "Price_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Mora_Champion",
               "actorValue": "Stamina",
               "magnitude": -30,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Stamina"
+              "duration": 0
             }
           ]
         }
@@ -3828,11 +3809,7 @@
           "title": "Mora's Archivist",
           "body": "You have given me three things: your curiosity, your willingness to pay for it, and your silence on what you found. The archive is open. The Black Books the other scholars refused are yours to handle, if you desire it. You are catalogued now, beside all of it.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Mora_Commitment",
@@ -4014,11 +3991,12 @@
           "spellEditorId": "PDV_Bless_Daedric_Nocturnal_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Nocturnal_Seeker",
           "displayName": "Nocturnal Boon - Seeker",
-          "playerFacingText": "Nocturnal's shadow opens what should stay closed. Boon: Lockpicking +10.",
+          "playerFacingText": "Shadow luck covers you. Small fortunate turns come more often; the unseen paths open a little wider.",
           "property": "Boon_Seeker",
           "effects": [
             {
-              "actorValue": "Lockpicking",
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Nocturnal_Seeker",
+              "actorValue": "Sneak",
               "magnitude": 10,
               "area": 0,
               "duration": 0
@@ -4029,12 +4007,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Nocturnal_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Nocturnal_Devoted",
           "displayName": "Nocturnal Boon - Devoted",
-          "playerFacingText": "Nocturnal's shadow opens what should stay closed. Boon: Lockpicking +15.",
+          "playerFacingText": "Nocturnal's shade deepens. Luck favors you more reliably, and in shadows you move as though they expect you.",
           "property": "Boon_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Nocturnal_Devoted",
               "actorValue": "Lockpicking",
-              "magnitude": 15,
+              "magnitude": 18,
               "area": 0,
               "duration": 0
             }
@@ -4044,12 +4023,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Nocturnal_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Nocturnal_Champion",
           "displayName": "Nocturnal Boon - Champion",
-          "playerFacingText": "Nocturnal's shadow opens what should stay closed. Boon: Lockpicking +20.",
+          "playerFacingText": "Nocturnal's debt runs in your favor. Fortune tilts for you in the dark; shadows are allies, and your concealment in them is absolute.",
           "property": "Boon_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Nocturnal_Champion",
               "actorValue": "Lockpicking",
-              "magnitude": 20,
+              "magnitude": 25,
               "area": 0,
               "duration": 0
             }
@@ -4061,12 +4041,13 @@
           "spellEditorId": "PDV_Price_Daedric_Nocturnal_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Nocturnal_Seeker",
           "displayName": "Nocturnal Price - Seeker",
-          "playerFacingText": "Nocturnal's oath keeps its own shadowed debt. Price: Carry Weight -15.",
+          "playerFacingText": "The price of the shadow: the oath binds. What you owe Nocturnal has no stated invoice, only the certainty that it comes due eventually.",
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "CarryWeight",
-              "magnitude": -15,
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Nocturnal_Seeker",
+              "actorValue": "Restoration",
+              "magnitude": -10,
               "area": 0,
               "duration": 0
             }
@@ -4076,12 +4057,13 @@
           "spellEditorId": "PDV_Price_Daedric_Nocturnal_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Nocturnal_Devoted",
           "displayName": "Nocturnal Price - Devoted",
-          "playerFacingText": "Nocturnal's oath keeps its own shadowed debt. Price: Carry Weight -25.",
+          "playerFacingText": "The price deepens: the debt has weight. Luck does not withdraw, but the oath tightens; Nocturnal does not forget, and the shadow does not either.",
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "CarryWeight",
-              "magnitude": -25,
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Nocturnal_Devoted",
+              "actorValue": "Restoration",
+              "magnitude": -18,
               "area": 0,
               "duration": 0
             }
@@ -4091,12 +4073,13 @@
           "spellEditorId": "PDV_Price_Daedric_Nocturnal_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Nocturnal_Champion",
           "displayName": "Nocturnal Price - Champion",
-          "playerFacingText": "Nocturnal's oath keeps its own shadowed debt. Price: Carry Weight -35.",
+          "playerFacingText": "The full price: the oath is you now. Nocturnal is patient. She takes her due when the circumstances are right, and the sworn servant always finds it was implied in the terms they accepted.",
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "CarryWeight",
-              "magnitude": -35,
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Nocturnal_Champion",
+              "actorValue": "Restoration",
+              "magnitude": -25,
               "area": 0,
               "duration": 0
             }
@@ -4130,11 +4113,7 @@
           "title": "Nocturnal's Nightingale",
           "body": "Every oath to me echoes through the Evergloam eventually. You found yours through choice, which is unusual. The luck stays, the shadow stays, and the debt is recorded as it always was. You are mine -- which means the dark is yours, and the terms were always clear.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Nocturnal_Commitment",
@@ -4316,12 +4295,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Peryite_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Peryite_Seeker",
           "displayName": "Peryite Boon - Seeker",
-          "playerFacingText": "Peryite's low order makes affliction easier to endure. Boon: Disease resistance +25%.",
+          "playerFacingText": "Peryite's resilience settles in you. Affliction finds you harder to bring down, and the unpleasant tasks others refuse are simply tasks.",
           "property": "Boon_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Peryite_Seeker",
               "actorValue": "ResistDisease",
-              "magnitude": 25,
+              "magnitude": 15,
               "area": 0,
               "duration": 0
             }
@@ -4331,12 +4311,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Peryite_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Peryite_Devoted",
           "displayName": "Peryite Boon - Devoted",
-          "playerFacingText": "Peryite's low order makes affliction easier to endure. Boon: Disease resistance +50%.",
+          "playerFacingText": "Peryite's imposed order deepens. Disease weakens you less; the tasks you are assigned, however low, run efficiently.",
           "property": "Boon_Devoted",
           "effects": [
             {
-              "actorValue": "ResistDisease",
-              "magnitude": 50,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Peryite_Devoted",
+              "actorValue": "Health",
+              "magnitude": 25,
               "area": 0,
               "duration": 0
             }
@@ -4346,12 +4327,13 @@
           "spellEditorId": "PDV_Bless_Daedric_Peryite_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Peryite_Champion",
           "displayName": "Peryite Boon - Champion",
-          "playerFacingText": "Peryite's low order makes affliction easier to endure. Boon: Disease resistance +75%.",
+          "playerFacingText": "Peryite names you keeper of the lowest order. Affliction barely touches you; the unwanted tasks run efficiently through your hands.",
           "property": "Boon_Champion",
           "effects": [
             {
-              "actorValue": "ResistDisease",
-              "magnitude": 75,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Peryite_Champion",
+              "actorValue": "Health",
+              "magnitude": 35,
               "area": 0,
               "duration": 0
             }
@@ -4363,15 +4345,15 @@
           "spellEditorId": "PDV_Price_Daedric_Peryite_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Peryite_Seeker",
           "displayName": "Peryite Price - Seeker",
-          "playerFacingText": "Peryite's tasks grind down the body's urgency. Price: Fortify Stamina -10.",
+          "playerFacingText": "The price of the affliction path: you carry what Peryite assigns, and some assignments are diseases.",
           "property": "Price_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Peryite_Seeker",
               "actorValue": "Stamina",
               "magnitude": -10,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Stamina"
+              "duration": 0
             }
           ]
         },
@@ -4379,15 +4361,15 @@
           "spellEditorId": "PDV_Price_Daedric_Peryite_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Peryite_Devoted",
           "displayName": "Peryite Price - Devoted",
-          "playerFacingText": "Peryite's tasks grind down the body's urgency. Price: Fortify Stamina -20.",
+          "playerFacingText": "The price deepens: task-order submission. Peryite assigns; the devotee's judgment yields to it, not ahead of it.",
           "property": "Price_Devoted",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Peryite_Devoted",
               "actorValue": "Stamina",
               "magnitude": -20,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Stamina"
+              "duration": 0
             }
           ]
         },
@@ -4395,15 +4377,15 @@
           "spellEditorId": "PDV_Price_Daedric_Peryite_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Peryite_Champion",
           "displayName": "Peryite Price - Champion",
-          "playerFacingText": "Peryite's tasks grind down the body's urgency. Price: Fortify Stamina -30.",
+          "playerFacingText": "The full price: you are the lowest-order mechanism. Peryite assigns; you execute; the nature of the assignment is not yours to question.",
           "property": "Price_Champion",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Peryite_Champion",
               "actorValue": "Stamina",
               "magnitude": -30,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Stamina"
+              "duration": 0
             }
           ]
         }
@@ -4435,11 +4417,7 @@
           "title": "Peryite's Task-Keeper",
           "body": "You have completed three tasks no one else would take. That is the gate. I do not offer meaning; I offer efficiency. The lowest order must run, and it runs best through those who accept it without complaint. You are that now. The assignment list continues.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Peryite_Commitment",
@@ -4621,15 +4599,15 @@
           "spellEditorId": "PDV_Bless_Daedric_Hircine_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Hircine_Seeker",
           "displayName": "Hircine Boon - Seeker",
-          "playerFacingText": "Hircine's hunt-sense drives the chase. Boon: Fortify Stamina +25.",
+          "playerFacingText": "Hircine's hunt-sense is in you. Prey announces itself; the predator reads the terrain with new clarity.",
           "property": "Boon_Seeker",
           "effects": [
             {
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Hircine_Seeker",
               "actorValue": "Stamina",
-              "magnitude": 25,
+              "magnitude": 15,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Stamina"
+              "duration": 0
             }
           ]
         },
@@ -4637,15 +4615,15 @@
           "spellEditorId": "PDV_Bless_Daedric_Hircine_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Hircine_Devoted",
           "displayName": "Hircine Boon - Devoted",
-          "playerFacingText": "Hircine's hunt-sense drives the chase. Boon: Fortify Stamina +40.",
+          "playerFacingText": "The hunt runs deeper now. Hircine's predator-edge extends into stamina, and the prey does not slip away.",
           "property": "Boon_Devoted",
           "effects": [
             {
-              "actorValue": "Stamina",
-              "magnitude": 40,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Hircine_Devoted",
+              "actorValue": "Sneak",
+              "magnitude": 18,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Stamina"
+              "duration": 0
             }
           ]
         },
@@ -4653,15 +4631,15 @@
           "spellEditorId": "PDV_Bless_Daedric_Hircine_Champion",
           "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Hircine_Champion",
           "displayName": "Hircine Boon - Champion",
-          "playerFacingText": "Hircine's hunt-sense drives the chase. Boon: Fortify Stamina +50.",
+          "playerFacingText": "You see the whole arc of the hunt -- target, approach, kill, clean territory. Hircine's Champion reads it without effort.",
           "property": "Boon_Champion",
           "effects": [
             {
-              "actorValue": "Stamina",
-              "magnitude": 50,
+              "magicEffectEditorId": "PDV_MGEF_Bless_Daedric_Hircine_Champion",
+              "actorValue": "Sneak",
+              "magnitude": 25,
               "area": 0,
-              "duration": 0,
-              "effectName": "Fortify Stamina"
+              "duration": 0
             }
           ]
         }
@@ -4671,12 +4649,13 @@
           "spellEditorId": "PDV_Price_Daedric_Hircine_Seeker",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Hircine_Seeker",
           "displayName": "Hircine Price - Seeker",
-          "playerFacingText": "Hircine's predator mark unsettles civilized company. Price: Speech -8.",
+          "playerFacingText": "The price of the hunt-path: the predator register. The civilized world senses the beast in you and keeps its distance.",
           "property": "Price_Seeker",
           "effects": [
             {
-              "actorValue": "Speechcraft",
-              "magnitude": -8,
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Hircine_Seeker",
+              "actorValue": "Health",
+              "magnitude": -10,
               "area": 0,
               "duration": 0
             }
@@ -4686,12 +4665,13 @@
           "spellEditorId": "PDV_Price_Daedric_Hircine_Devoted",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Hircine_Devoted",
           "displayName": "Hircine Price - Devoted",
-          "playerFacingText": "Hircine's predator mark unsettles civilized company. Price: Speech -12.",
+          "playerFacingText": "The price deepens: the beast shapes the social register. Others read Hircine's claim and do not find it comfortable.",
           "property": "Price_Devoted",
           "effects": [
             {
-              "actorValue": "Speechcraft",
-              "magnitude": -12,
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Hircine_Devoted",
+              "actorValue": "Health",
+              "magnitude": -20,
               "area": 0,
               "duration": 0
             }
@@ -4701,12 +4681,13 @@
           "spellEditorId": "PDV_Price_Daedric_Hircine_Champion",
           "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Hircine_Champion",
           "displayName": "Hircine Price - Champion",
-          "playerFacingText": "Hircine's predator mark unsettles civilized company. Price: Speech -15.",
+          "playerFacingText": "The full price: the Huntsman's isolation. The civilian world is an afterthought to the hunt, and the hunt does not make friends.",
           "property": "Price_Champion",
           "effects": [
             {
-              "actorValue": "Speechcraft",
-              "magnitude": -15,
+              "magicEffectEditorId": "PDV_MGEF_Price_Daedric_Hircine_Champion",
+              "actorValue": "Health",
+              "magnitude": -30,
               "area": 0,
               "duration": 0
             }
@@ -4740,11 +4721,7 @@
           "title": "Hircine's Huntsman",
           "body": "You have run with the wolf when you could have cured it, hunted when the prey was inconvenient, and taken three kills that satisfied no one but the beast and you. That is the standard. You are my Huntsman now. The forest is yours, and the forest asks only one thing: that you run.",
           "property": "Msg_ChampionEntry",
-          "messageBox": true,
-          "buttons": [
-            "Accept",
-            "Decline"
-          ]
+          "messageBox": true
         },
         {
           "editorId": "PDV_Msg_Daedric_Hircine_Commitment",

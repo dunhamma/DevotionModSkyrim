@@ -1,0 +1,4 @@
+editor_id,quest_name,outcome_stage,outcome,deity,approve_tag,approve_intensity,disapprove_tag,disapprove_intensity
+DA03,A Daedra's Best Friend,200,Reunite Barbas + Vile; Masque,Akatosh,keep_oath,S,serve_a_daedra:clavicus,m
+DA04,Discerning the Transmundane,100,Open the lockbox; claim the Oghma Infinium,Akatosh,disciplined_study,m,serve_a_daedra:hermaeusmora,m
+DA04,Discerning the Transmundane,100,Open the lockbox; claim the Oghma Infinium,Auri-El,disciplined_study,S,serve_a_daedra:hermaeusmora,S

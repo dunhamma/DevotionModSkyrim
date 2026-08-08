@@ -323,6 +323,10 @@ Anything the player will read at any point is a description-engineering surface.
 
 These rules apply to all player-facing surfaces listed in § 3.1. They are the baseline before any writer-review pass. The verifier enforces the two automatable rules (terminal punctuation, contractions); the rest are manual review targets.
 
+> **Section order.** 3.5 is placed before 3.4 in this file. Cite "§ 3.5" for grammar and style; "§ 3.4" is Papyrus trace messages.
+>
+> **Coverage limit.** `tools/pdv_content_verify.mjs` runs these checks over `race-sheets/PDV_RaceContent_Manifest.md` and `PDV_DaedricContent_Manifest.md` only. It does not read the `.psc` sources or the ESP, where most shipped player copy actually lives. A green content-verify is not evidence that shipped copy conforms.
+
 **Name capitalisation.** Always capitalise:
 - Deity and divine names: Kyne, Talos, Mara, Auri-El, Malacath, Hircine, Riddle'Thar.
 - Race names: Nord, Khajiit, Dunmer, Argonian, Orsimer (and Orc as a shorthand).
@@ -335,9 +339,9 @@ Do not capitalise generic nouns: "the hall," "a shrine," "the temple," "a blessi
 
 **Stat notation format.** Mechanical stat changes use numeral + symbol with an explicit sign: "+10%", "-5%", "+15 stamina." Never spell out a stat change: write "+10%" not "ten percent more." Descriptive percentages inside a prose sentence that are not direct stat changes spell out: "five percent of your health." Do not mix conventions in a single string — if the string has a stat line, that line uses the numeral form.
 
-**Terminal punctuation.** Every player-facing string ends with a full stop, exclamation mark, or question mark. No trailing space after the terminal character. The verifier flags missing terminal punctuation as a warning.
+**Terminal punctuation.** Every player-facing *sentence* ends with a full stop, exclamation mark, or question mark. No trailing space after the terminal character. The verifier flags missing terminal punctuation as a warning. **Titles, labels, and MessageBox title fields are exempt** — this rule governs the body, not the heading. `tools/pdv_content_verify.mjs` implements the exemption in code (`checkTerminalPunctuation` is only ever called on body text) and no shipped title in the mod carries a terminal character. Do not "fix" them.
 
-**Tense.** Present tense for active effect descriptions: "Kyne shelters the hunter." Timeless narrative for deity acknowledgment: "Kyne has noticed your steps." Do not switch tenses within a single string.
+**Tense.** Present tense for active effect descriptions: "Kyne shelters the hunter." Timeless narrative for deity acknowledgment: "Kyne has noticed your steps." Do not switch tenses within a single string. **Journal and Book of Days entries are the documented exception:** they may pair a past-tense report of a completed act with a present-tense consequence — "You took up a discipline in the Trial of Iron. The Code is held in iron." That is one narrative frame, not a tense switch. The no-switching rule guards the choice between the two modes above; it does not forbid this shape.
 
 **Contractions.** Do not use modern contractions in any player-facing text. Write "do not" not "don't," "you are" not "you're," "it is" not "it's." The verifier flags known contractions as a warning.
 
@@ -367,6 +371,19 @@ Strip or gate behind a `bDebugMode` global before any release.
 ## 4. Investigation Discipline
 
 Before claiming a script behaves a certain way, claiming a record is configured a certain way, or recommending a fix:
+
+**Source precedence (governs all of section 4).** Not every source that *sounds* authoritative *is*, and the confident-but-stale ones cause more damage than the obviously-missing ones. In order:
+
+1. **A live readback or a re-run gate.** The only thing that counts as evidence for a claim. Re-running `pdv_verify` takes seconds; a houseCARL readback takes one call.
+2. **The current canonical docs** -- `AGENTS.md`, the architecture docs, the active contracts. Authoritative for rules, decisions, and design constants.
+3. **Session notes, handoffs, dated ledgers, and agent memory.** These are *pointers to where to look*, never evidence. They are timestamped observations that were true once.
+
+Rules that follow from it:
+
+- **Never state a count, version, gate result, or completion status from a remembered or dated source.** Numbers are the most perishable thing in this project -- they move with every ESP edit and every commit. Re-run the gate or read the current doc. If you find yourself about to write "N remain" or "X of Y", stop and go get the number.
+- **A dated doc that contradicts a current doc is stale until proven otherwise**, not a discovery. Check the canonical doc before reporting a regression.
+- **Confirm the houseCARL MO2 instance before any readback that will become a claim.** `housecarl_load_order_status` reports it. houseCARL persists its instance across restarts, so it can silently still be pointed at a compatibility list (ARR, DoD) whose installed `Devotion.esp` is a genuinely different, older file. The failure mode is a plausible, internally consistent, *wrong* answer -- not an error. See section 4.6.
+- **Report findings at the altitude they deserve.** A scare you chased down and disproved is a footnote or nothing; giving it equal billing with a real finding manufactures alarm and buries the thing that actually matters.
 
 ### 4.1 Verify with tools, not with assumptions
 
@@ -644,6 +661,56 @@ If the retired surface was visible in a live worldspace or cell, add a verifier
 or helper check that fails if the record returns. A one-off xEdit/houseCARL
 cleanup is not enough when the same stale record could be recreated by an
 authoring helper or preserved by a manifest.
+
+### 6.7b Post-coding hygiene pass (STANDING RULE, owner directive 2026-08-07)
+
+After any multi-commit coding cluster -- a race lane, a packet series, a feature -- run three
+hygiene activities before the lane is called done. They are cheap, they are the moments this
+project has historically shipped debt, and they are **report-only**: findings become their own
+packet, never an edit smuggled into the audit that discovered them.
+
+1. **Papyrus performance review of the CHANGED functions.** Load the `housecarl:papyrus-optimization`
+   skill. Establish each function's trigger BEFORE judging its body -- cost is
+   `frequency x work per run`, and the same line is clean in a one-shot and broken in a one-second
+   loop. Verdicts must name the trigger so severity is auditable.
+2. **Dead-code and orphaned-property sweep.** `tools/pdv_hygiene_harvest.mjs` harvests candidates:
+   unreferenced properties, uncalled functions, one-way StorageUtil keys, unreferenced tools, and
+   retired-scaffolding markers.
+3. **Retired-scaffolding verdicts.** For each retired substrate property, inert handler, or
+   obsolete compat surface: can it leave source, VMAD, and records -- with evidence.
+
+**Two rules that decide whether the pass is worth anything.**
+
+**Read the source the COMPILER reads.** `live-source/` is a mirror and goes stale whenever work
+happens in the MO2 tree. On 2026-08-07 it was up to seven weeks behind on 19 files, and a sweep run
+against it described a codebase that did not exist. `pdv_hygiene_harvest.mjs` takes
+`PDV_SOURCE_DIR` and prints which tree it read; check that line before quoting any number. The same
+applies to record evidence: confirm houseCARL's INSTANCE is Anvil first (see 6.3) -- a wrong-instance
+read returns an older record set rather than an error.
+
+**A public seam has no in-repo caller BY DESIGN, and a call-site count cannot see that.** This is a
+distinct class from dead code and the sweep must not merge them. `BeginExternalReactionBatch` /
+`ApplyExternalReaction` / `EndExternalReactionBatch` are the API third-party patch scripts call;
+nothing in Devotion calls them, and removing them would break every patch using the seam.
+`RegisterQuestReactionChannelFolder` is the same shape from the other side -- it scans a folder
+Devotion never ships, because MO2 merges the directory in from whichever patch provides it. That
+folder was empty on Anvil and carried **39 channel files on ARR 2.5**, which is also the reminder
+that checking one instance and generalising is how this project gets false verdicts. The harvester
+splits documented seams into `publicSeamsNoInRepoCaller`; an UNdocumented seam still lands in the
+dead pile, so say in the comment when a function exists for callers outside this repo.
+
+**A candidate is not a finding.** Every candidate needs a prior-ruling grep and independent
+verification before it is written down as dead. This repo carries explicit "a future audit that
+flags this is wrong" notes, and historically 4 of 6 such findings were pre-disproven. The
+disqualifying guardrails: reserved signal/event/route ledger entries (deleting an unwired entry is
+itself a gate FAILURE); 2026-07-07 wired-vs-stub tags (stale, they under-report wiring); inert
+handlers kept for save compatibility; properties filled from VMAD; functions whose only callers are
+Story Manager fragments, the EventBus, or MCM handlers; unnamed INFO records (live Nord dialogue).
+
+**Delegation shape.** Bulk grep-and-classify goes to a cheaper model; the main loop keeps
+verification, because an evidence claim nobody re-checked is not evidence. Scripts do the volume so
+the model reads summaries -- never read a 1.2 MB script whole to answer a question about twelve
+functions.
 
 ### 6.8 Strip debug before release
 

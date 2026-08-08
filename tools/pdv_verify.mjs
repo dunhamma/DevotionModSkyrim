@@ -154,8 +154,23 @@ const PHASE20_RACE_IMPLEMENTATION_MANIFESTS = [
 ];
 const DEITY_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes.csv");
 const PRINCE_LIKES_DISLIKES_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DeityLikesDislikes_Princes_V2.csv");
-const EXPECTED_LIKES_DISLIKES_VERSION = 17;
-const EXPECTED_PRINCE_LD_VERSION = 4;
+// LIKES_DISLIKES_VERSION and PRINCE_LD_VERSION are deliberately NOT pinned here.
+//
+// They used to be hardcoded expectations (EXPECTED_LIKES_DISLIKES_VERSION /
+// EXPECTED_PRINCE_LD_VERSION). Every legitimate bump -- and a bump is REQUIRED whenever the
+// likes/dislikes CSV or the stance matrix changes, or the edit is inert on existing saves --
+// turned this gate red until someone remembered to edit this file too. That is a false
+// failure: it reports "the version is not 17" when the version being 18 is the correct and
+// intended state. Found 2026-08-03 during Altmer packet P1 (Syrabane stance repair).
+//
+// checkSmallSignalTables() now READS both values out of the manager source and asserts the
+// invariant that actually matters: the properties exist, are well-formed, and are positive.
+// The save-migration gate in PDV__ManagerQuest reads these properties, so a missing or
+// malformed one is a real defect -- a *changed* one is not.
+//
+// CSV <-> codegen drift is caught separately, by checkGeneratedFunction() below and by
+// tools/pdv_signal_e2e_gate.mjs, which already reads the version this same way
+// (its csvCodegenFreshness check). This makes the two gates consistent.
 const PHASE20_NO_IN_GAME_PROOF_GATES = path.join(
   PROJECT_ROOT,
   "references",
@@ -1433,6 +1448,7 @@ class Verifier {
       ["Pantheon and substrate record readback", "pdv_pantheon_record_readback.mjs"],
       ["Pantheon presentation record readback", "pdv_pantheon_presentation_readback.mjs"],
       ["Active-effect naming convention", "pdv_active_effect_naming_audit.mjs"],
+      ["Khajiit lunar and Champion rebalance contract", "pdv_khajiit_rebalance_audit.mjs"],
       // Bounded quest-reaction delivery, including the direct-fan-out registry
       // (tools/pdv_qr_direct_fanout.json). Default-on with no opt-in flag, per the
       // 2026-07-07 declaration-gate ruling: an opt-in flag nobody passes is how a
@@ -8236,6 +8252,17 @@ class Verifier {
     const priceSerializationIssues = [];
     let priceCount = 0;
     const resourcePools = new Set(["Health", "Magicka", "Stamina"]);
+    // The record enum and the runtime/contract name differ for a handful of actor values.
+    // Comparing them raw reports drift that is not drift (Speechcraft vs Speech). Same map
+    // as tools/pdv_phase2_reward_readback_audit.mjs.
+    const priceActorValueAliases = new Map([
+      ["Speechcraft", "Speech"],
+      ["BlockSkill", "Block"],
+      ["Marksman", "Archery"],
+      ["ResistPoison", "PoisonResist"],
+    ]);
+    const recordActorValueFor = (contractActorValue) =>
+      priceActorValueAliases.get(contractActorValue) ?? contractActorValue;
     for (const prince of contracts.princes || []) {
       for (const price of prince.prices || []) {
         priceCount += 1;
@@ -8302,6 +8329,30 @@ class Verifier {
             this.fail(
               "Daedric resource-pool price",
               `${price.magicEffectEditorId} must use PeakValueModifier/${effectContract.actorValue} with Recover; found ${archetype.Type || "missing"}/${archetype.ActorValue || "missing"} flags=${flags.join(",") || "none"}.`,
+              PDV_ESP,
+            );
+          }
+        } else {
+          // NON-POOL prices were previously unchecked, so an actor-value retune on a skill
+          // or percentage price landed in the contract and drifted from the ESP silently.
+          // Found 2026-08-08: Nocturnal moved CarryWeight -> Restoration in the contract and
+          // the ESP kept CarryWeight, with the gate green the whole time. Compare against the
+          // RECORD-side name, since Speechcraft/Speech is an alias, not drift.
+          const expectedRecordActorValue = recordActorValueFor(effectContract.actorValue);
+          if (
+            archetype.Type === "ValueModifier" &&
+            archetype.ActorValue === expectedRecordActorValue &&
+            flags.includes("Recover")
+          ) {
+            this.pass(
+              "Daedric non-pool price",
+              `${price.magicEffectEditorId} reversibly modifies ${effectContract.actorValue}.`,
+              PDV_ESP,
+            );
+          } else {
+            this.fail(
+              "Daedric non-pool price",
+              `${price.magicEffectEditorId} must use ValueModifier/${expectedRecordActorValue} with Recover; found ${archetype.Type || "missing"}/${archetype.ActorValue || "missing"} flags=${flags.join(",") || "none"}.`,
               PDV_ESP,
             );
           }
@@ -9104,27 +9155,44 @@ class Verifier {
     ]);
   }
 
+  // WHAT THIS PROTECTS: JsonUtil resolves paths relative to SKSE/Plugins/StorageUtilData/, so every
+  // matrix path must carry the "../StorageUtilData/..." prefix. Without it the file silently never
+  // loads -- no error, no log line -- and every reaction row inside it quietly stops firing.
+  //
+  // 2026-08-07: this used to pin a single hardcoded second channel, QUEST_REACTION_MATRIX_FILE_ARR.
+  // That channel was replaced by a folder seam: PDV_PlayerEvents scans
+  // QUEST_REACTION_CHANNEL_FOLDER, registers every JSON it finds, and caches the paths in
+  // PDV.QR.ChannelFiles for the manager's resolver. Mod-specific rows now ship WITH their patch
+  // rather than inside core, which is why the ARR names are absent from the core matrix.
+  //
+  // The guard MOVES with the mechanism rather than dying with the constant: 39 channel files
+  // (~4.3 MB) ship in the ARR patch hub today, and all of them depend on that "../" resolving.
+  // Note the asymmetry -- the folder constant lives in PDV_PlayerEvents ONLY (the manager consumes
+  // the cached StringList instead), so asserting it in both scripts would fail immediately.
   checkQuestMatrixPapyrusUtilPaths() {
     const expectedCore = "String Property QUEST_REACTION_MATRIX_FILE = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix\" AutoReadOnly";
-    const expectedArr = "String Property QUEST_REACTION_MATRIX_FILE_ARR = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR\" AutoReadOnly";
     const unsafeCore = "String Property QUEST_REACTION_MATRIX_FILE = \"PlayerDevotion/PDV_QuestReactionMatrix\" AutoReadOnly";
-    const unsafeArr = "String Property QUEST_REACTION_MATRIX_FILE_ARR = \"PlayerDevotion/PDV_QuestReactionMatrix_ARR\" AutoReadOnly";
+    const expectedChannelFolder = "String Property QUEST_REACTION_CHANNEL_FOLDER = \"../StorageUtilData/PlayerDevotion/Channels\" AutoReadOnly";
+    const unsafeChannelFolder = "String Property QUEST_REACTION_CHANNEL_FOLDER = \"PlayerDevotion/Channels\" AutoReadOnly";
 
     this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV__ManagerQuest", [
       expectedCore,
-      expectedArr,
+      // The manager's half of the seam: it must still read the registered channel list, or every
+      // per-mod channel resolves to nothing while core keeps working and the loss stays invisible.
+      "PDV.QR.ChannelFiles",
     ]);
     this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV_PlayerEvents", [
       expectedCore,
-      expectedArr,
+      expectedChannelFolder,
+      "RegisterQuestReactionChannelFolder",
     ]);
     this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV__ManagerQuest", [
       unsafeCore,
-      unsafeArr,
+      unsafeChannelFolder,
     ]);
     this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV_PlayerEvents", [
       unsafeCore,
-      unsafeArr,
+      unsafeChannelFolder,
     ]);
   }
 
@@ -9885,10 +9953,37 @@ class Verifier {
       stripPrefix: "Daedric:",
     });
 
-    this.checkSourceContains("Small-signal table versions", "PDV__ManagerQuest", [
-      `Int Property LIKES_DISLIKES_VERSION = ${EXPECTED_LIKES_DISLIKES_VERSION} AutoReadOnly`,
-      `Int Property PRINCE_LD_VERSION = ${EXPECTED_PRINCE_LD_VERSION} AutoReadOnly`,
-    ]);
+    // Read, do not pin -- see the note at the top of this file next to the removed
+    // EXPECTED_*_VERSION constants.
+    for (const propName of ["LIKES_DISLIKES_VERSION", "PRINCE_LD_VERSION"]) {
+      const match = sourceText.match(
+        new RegExp(`Int Property\\s+${propName}\\s*=\\s*(\\d+)\\s+AutoReadOnly`),
+      );
+      if (!match) {
+        this.fail(
+          "Small-signal table versions",
+          `PDV__ManagerQuest.psc has no well-formed "Int Property ${propName} = <int> AutoReadOnly". `
+            + "The save-migration gate reads this property; without it, existing saves never reload "
+            + "the table and every CSV edit stays inert in game.",
+          managerSource,
+        );
+        continue;
+      }
+      const value = Number(match[1]);
+      if (!Number.isInteger(value) || value < 1) {
+        this.fail(
+          "Small-signal table versions",
+          `PDV__ManagerQuest.psc ${propName} = ${match[1]}, which is not a positive integer.`,
+          managerSource,
+        );
+        continue;
+      }
+      this.pass(
+        "Small-signal table versions",
+        `PDV__ManagerQuest.psc ${propName} = ${value} (read from source; intentionally not pinned).`,
+        managerSource,
+      );
+    }
     this.checkGeneratedFunction(
       "Small-signal deity table",
       sourceText,
@@ -10078,9 +10173,9 @@ class Verifier {
     const checks = [
       [playerEvents, "PlayerEvents defines inn event 315", "Int Property EVT_SLEEP_IN_INN = 315 AutoReadOnly"],
       [playerEvents, "PlayerEvents captures inn state at sleep start", "PDV_LastSleptInInn = IsPlayerInInn(playerActor)"],
-      [playerEvents, "PlayerEvents always routes normal bed sleep as event 314", "RouteGenericAction(EVT_SLEEP_IN_BED, GetActorRef() as Form, None)"],
-      [playerEvents, "PlayerEvents gates inn-only event 315 on the inn flag", "if PDV_LastSleptInInn"],
-      [playerEvents, "PlayerEvents routes inn sleep as event 315", "RouteGenericAction(EVT_SLEEP_IN_INN, GetActorRef() as Form, None)"],
+      [playerEvents, "PlayerEvents always routes normal bed sleep as event 314", "RouteGenericAction(EVT_SLEEP_IN_BED, playerActor as Form, None)"],
+      [playerEvents, "PlayerEvents gates inn-only event 315 on the captured inn flag", "if sleptInInn"],
+      [playerEvents, "PlayerEvents routes inn sleep as event 315", "RouteGenericAction(EVT_SLEEP_IN_INN, playerActor as Form, None)"],
       [playerEvents, "PlayerEvents resolves vanilla LocTypeInn", 'Game.GetFormFromFile(0x0001CB87, "Skyrim.esm") as Keyword'],
       [playerEvents, "PlayerEvents checks the current location keyword", "return currentLoc.HasKeyword(PDV_KW_LocTypeInn)"],
       [eventBus, "EventBus fans generic events to Prince paths", "PDV_Manager.RouteActionToOpenPaths(eventType, actorRef, targetRef)"],

@@ -13,6 +13,60 @@
     "releaseGate": "1.0 gate requires accepted Authoria integration/test package.",
     "handoff": "references/authoring/PDV_Phase21_ARR_AuthorHandoff.md"
   },
+  "arr25ContentSweep": {
+    "date": "2026-08-06",
+    "target": "ARR 2.5 KoK R11",
+    "status": "installed-static-preflight-pass-runtime-open",
+    "worktree": "C:\\Users\\Admin\\Documents\\Devotion Mod Project-arr25-content-sweep",
+    "branch": "codex/arr25-content-sweep",
+    "channels": 34,
+    "fomodPluginNodes": 36,
+    "packageFiles": 95,
+    "treeSha256": "7A1930E7FDC9231AE5AF70955AC79B49D9DE537464847F118ED7589B9D9E58EB",
+    "archive": {
+      "path": "dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip",
+      "entries": 95,
+      "size": 1896568,
+      "sha256": "E11D7B2A90ED0F980DA2394CF63A465167E55730C252EF5FF1EF05A64D0B5C9D"
+    },
+    "receipt": "references/authoring/PDV_QuestModPatches_FOMOD_Validation.json",
+    "testerRunbook": "dist/PDV_QuestModPatches_FOMOD/common/_Runbook/Docs/PDV_QuestModPatches_TesterRunbook_2026-07-17.md",
+    "runtimeLedgers": [
+      "references/authoring/PDV_ARR25_T13_RuntimeEvidenceLedger.json",
+      "references/authoring/PDV_ARR25_T14_RuntimeEvidenceLedger.json",
+      "references/authoring/PDV_ARR25_T15_RuntimeEvidenceLedger.json",
+      "references/authoring/PDV_ARR25_T16_RuntimeEvidenceLedger.json",
+      "references/authoring/PDV_ARR25_T17_RuntimeEvidenceLedger.json",
+      "references/authoring/PDV_ARR25_NonQuest_RuntimeEvidenceLedger.json"
+    ],
+    "deployment": {
+      "date": "2026-08-07",
+      "mo2Root": "D:\\Wabbajack\\modlists\\ARR 2.5",
+      "profile": "KoK R11",
+      "mod": "Devotion - Authoria ARR Compatibility",
+      "installedFiles": 84,
+      "identicalFomodCollisions": 6,
+      "profileBackup": "D:\\Wabbajack\\modlists\\ARR 2.5\\profiles\\KoK R11\\pdv-arr25-backups\\20260807-070513",
+      "pluginsActive": [
+        "PDV_AuthoriaARR_Combined.esp"
+      ],
+      "housecarlWinnerReadback": "PASS: candidate wins Manager/EventBus/PlayerEvents PEX, core and ARR matrices, all channel paths checked, KID, BOS, and the combined packaged ESPFE. Direct file read reports 32 records: 21 quest/dialogue overrides plus 11 ACTIs.",
+      "mergeBoundary": "The donor ESPs are absent from the active profile and retained only in an unlisted backup mod. Source quest SEQs remain supplied by their defining plugins because the combined plugin does not introduce or change SGE quest identities. The external-reference scan could not inspect five unrelated malformed load-order records; runtime and save compatibility remain unproved.",
+      "preflight": {
+        "command": "node tools/pdv_matrix_runtime_preflight.mjs --mo2 \"D:\\Wabbajack\\modlists\\ARR 2.5\" --profile \"KoK R11\" --compat-mod \"Devotion - Authoria ARR Compatibility\" --expected-core 154 --expected-arr 62 --expected-channels 34 --json",
+        "status": "PASS",
+        "pass": 31,
+        "info": 4,
+        "fail": 0,
+        "coreWatched": 154,
+        "arrWatched": 62,
+        "channels": 34
+      },
+      "papyrusRegistration": "OPEN: no post-deployment matrix reload markers exist because Skyrim has not been launched for this build."
+    },
+    "supportClaim": false,
+    "nextGate": "Launch Skyrim on KoK R11, enable debug level 2, reload matrices, capture registration markers, then return equivalent evidence for every OPEN case."
+  },
   "profileState": {
     "backupDir": "D:\\Wabbajack\\modlists\\ARR\\profiles\\Authoria - Requiem Reforged - Main Profile\\pdv-authoria-backups",
     "backupStamp": "20260614-224145",
@@ -71,11 +125,11 @@
     }
   },
   "compatPatchPlugin": {
-    "plannedName": "PDV_AuthoriaARR_Compatibility.esp",
+    "plannedName": "PDV_AuthoriaARR_Combined.esp",
     "emitted": true,
-    "reason": "No additional ARR-specific record override is required for the proven cure-only shrine replacement slice after Archon removal and PDV framework activation. The current trusted-tester add-on separately emits PDV_AuthoriaARR_Compatibility.esp for 11 shrine-prayer ACTIs plus a BOS swap file, loaded after Devotion.esp.",
-    "packagePath": "dist/PDV_AuthoriaARR_Compatibility/PDV_AuthoriaARR_Compatibility.esp",
-    "bosSwapPath": "dist/PDV_AuthoriaARR_Compatibility/PDV_AuthoriaARR_ShrinePrayer_SWAP.ini"
+    "reason": "The cumulative ARR 2.5 Authoria lane merges the former 21-record quest/dialogue hook donor and 11-record shrine-prayer donor into one ESPFE, loaded after Devotion.esp. The June standalone donor remains historical evidence only.",
+    "packagePath": "dist/PDV_QuestModPatches_FOMOD/plugins/authoria/PDV_AuthoriaARR_Combined.esp",
+    "bosSwapPath": "dist/PDV_QuestModPatches_FOMOD/plugins/authoria/SKSE/Plugins/BaseObjectSwapper/PDV_AuthoriaARR_ShrinePrayer_SWAP.ini"
   },
   "shrinePrayerRuntimeProof": {
     "status": "route-and-book-pass-prisma-toast-deferred",

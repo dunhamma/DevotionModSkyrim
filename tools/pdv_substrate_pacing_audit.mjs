@@ -240,6 +240,19 @@ export function evaluate({ contract, baseSource, managerSource, concreteSources,
   }
 
   const productionSource = `${managerSource}\n${playerEventsSource}\n${eventBusSource}\n${actionRouterSource}`;
+  const uninstall = bodyFor(managerSource, "PrepareForUninstall");
+  const uninstallSubstrateCleanup = bodyFor(managerSource, "ClearAllSubstrateBoonsForUninstall");
+  const substrateOwnerProperties = [
+    "PDV_ImperialAncestorSubstrate",
+    "PDV_BretonAncestorSubstrate",
+    "PDV_AltmerAncestorSubstrate",
+    "PDV_NordAncestorSubstrate",
+    "PDV_DunmerAncestorSubstrate",
+    "PDV_KhajiitLunarSubstrate",
+    "PDV_ArgonianHistSubstrate",
+  ];
+  add(/ClearAllSubstrateBoonsForUninstall\s*\(\s*\)/i.test(uninstall), "source.uninstall.substrate-owner-sweep", "PrepareForUninstall must invoke the substrate-owner cleanup sweep");
+  add(substrateOwnerProperties.every((propertyName) => new RegExp(`${propertyName}\\.ClearSubstrateBoons\\s*\\(\\s*\\)`, "i").test(uninstallSubstrateCleanup)), "source.uninstall.substrate-owner-coverage", "the uninstall sweep must ask every wired substrate owner to clear its own boons");
   const reachability = [
     ["crafting", /HandleSubstrateActionEvent/i, /smith|enchant|alchem/i],
     ["cooking", /HandleSubstrateActionEvent/i, /cook/i],
@@ -258,11 +271,31 @@ export function evaluate({ contract, baseSource, managerSource, concreteSources,
   const lunarSubstitute = bodyFor(managerSource, "HandleKhajiitLunarSubstrate");
   const lunarRoute = bodyFor(eventBusSource, "RouteKhajiitLunarSubstrate");
   const roadAnchor = bodyFor(managerSource, "HandleKhajiitRoadHomeAnchor");
+  const playerSleepStart = playerEventsSource.match(/Event\s+OnSleepStart\b[\s\S]*?EndEvent/i)?.[0] ?? "";
+  const playerSleepStop = playerEventsSource.match(/Event\s+OnSleepStop\b[\s\S]*?EndEvent/i)?.[0] ?? "";
+  const sleepRoute = bodyFor(eventBusSource, "RouteSleepStop");
+  const sleepManager = bodyFor(managerSource, "HandlePlayerSleepStop");
+  const roadHome = bodyFor(managerSource, "HandleKhajiitRoadHome");
   const passiveDawn = bodyFor(managerSource, "HandleAltmerDawnSteadiness");
   add(Boolean(imperialSleep) && !/Award|RecordCivicStanding|TryAward/i.test(imperialSleep), "source.rejected.imperial-sleep", "generic Imperial sleep ingress must remain inert");
   add(Boolean(legacyMoon) && !/ObserveMoonPhase|AwardPiety|TryAward/i.test(legacyMoon), "source.rejected.legacy-moon", "legacy automatic moon ingress must remain inert");
   add(/HandleKhajiitLunarSubstrate\s*\(\s*sourceId\s*\)/i.test(lunarRoute) && /RecordCulturalSubstitute\s*\(\s*"khajiit_lunar_source"/i.test(lunarSubstitute), "source.production-route.khajiit-lunar-curated", "curated Khajiit lunar books/quests must reach the cultural substitute instead of the inert legacy moon ingress");
   add(Boolean(roadAnchor) && !/RecordRoadHomeCadence|AwardPiety|TryAward/i.test(roadAnchor), "source.rejected.road-anchor", "retired Khajiit road anchors must remain inert");
+  add(/PDV_HasSleepStartContext\s*=\s*true/i.test(playerSleepStart)
+    && /sleepStartedOutside\s*=\s*PDV_LastSleepStartedOutside/i.test(playerSleepStop)
+    && /RouteSleepStop\s*\([^\r\n]*hadSleepStartContext[^\r\n]*sleepStartedOutside/i.test(playerSleepStop)
+    && /HandlePlayerSleepStop\s*\([^\r\n]*hadSleepStartContext[^\r\n]*sleepStartedOutside/i.test(sleepRoute), "source.khajiit-sleep-context-route", "the player alias must capture exterior state at sleep start and carry it through the event bus");
+  add(/hadSleepStartContext/i.test(sleepManager)
+    && /sleepStartedOutside/i.test(sleepManager)
+    && /HandleKhajiitRoadHome\s*\(/i.test(sleepManager)
+    && !/GetParentCell|IsInterior/i.test(sleepManager), "source.khajiit-sleep-start-authority", "Khajiit road-home classification must use captured sleep-start context rather than re-sampling the wake cell");
+  add(/PDV\.Khajiit\.RoadHome\.PresentationDay/i.test(roadHome)
+    && /ReadZeroReservedDevotionalDayStamp/i.test(roadHome)
+    && /WriteZeroReservedDevotionalDayStamp/i.test(roadHome)
+    && /grantedMetric\s*>\s*0\.0/i.test(roadHome)
+    && /Today's lunar practice was already marked\./i.test(roadHome)
+    && /SendPrismaSubstrateToast/i.test(roadHome)
+    && /AppendBookOfDaysEntry/i.test(roadHome), "source.khajiit-road-home-presentation", "the first road-home rest each devotional cycle must surface once even when the shared lunar credit was already spent");
   add(Boolean(passiveDawn) && /Passive dawn acknowledgement is piety-only/i.test(passiveDawn) && /StringContainsToken\s*\([^\r\n]*(?:auriel|magnus)/i.test(passiveDawn) && /AwardAltmerAncestorSpinePulse/i.test(passiveDawn), "source.rejected.passive-altmer-dawn", "passive Altmer dawn must remain piety-only while curated finite sources are explicitly token-gated");
 
   const argonianSource = concreteSources.get("PDV_Substrate_ArgonianHist.psc") ?? "";
@@ -350,7 +383,8 @@ export function evaluate({ contract, baseSource, managerSource, concreteSources,
     && /StampHistMaintenance\s*\(\s*"sleeping_tree_sap"\s*\)/i.test(sapVision), "source.argonian-hist-contact-clock", "sacred water and Sleeping Tree Sap must both refresh the shared Hist-maintenance clock without adding the routine +5 relation pulse");
 
   const substrateProgressCalls = managerSource.split(/\r?\n/).filter((line) => /SendPrismaSubstrateProgress\s*\(/i.test(line) && !/Function\s+SendPrismaSubstrateProgress/i.test(line));
-  add(substrateProgressCalls.length >= 19 && substrateProgressCalls.every((line) => /(?:[A-Za-z0-9_]+\.)?GetMetric\(\)\s*-\s*metricBefore|metricAfter\s*-\s*metricBefore/i.test(line)), "source.actual-substrate-delta", "every substrate progress producer must report the actual post-award metric delta, including a same-day zero, rather than its requested multiplier");
+  add(substrateProgressCalls.length >= 19 && substrateProgressCalls.every((line) => /(?:[A-Za-z0-9_]+\.)?GetMetric\(\)\s*-\s*metricBefore|metricAfter\s*-\s*metricBefore|grantedMetric/i.test(line))
+    && /Float\s+grantedMetric\s*=\s*PDV_KhajiitLunarSubstrate\.GetMetric\(\)\s*-\s*metricBefore/i.test(roadHome), "source.actual-substrate-delta", "every substrate progress producer must report the actual post-award metric delta, including a same-day zero, rather than its requested multiplier");
 
   const pacingTrigger = bodyFor(managerSource, "DebugTriggerSubstratePacingSource");
   const genuineHandlers = [

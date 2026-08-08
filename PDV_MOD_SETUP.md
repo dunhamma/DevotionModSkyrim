@@ -88,6 +88,7 @@ Work Rule".
 | `tools/pdv_guide_tables_gen.mjs` | Regenerates race-guide bonus tables from the reward spec JSONs and prints them to STDOUT -- it does NOT edit the guide `.md` files; guide tables are hand-spliced from its output. Its old Observant/Faithful "retired-word" lint was retired 2026-07-15 (those are the ratified broad bands); a per-family vocabulary gate is the tracked follow-up. |
 | `tools/pdv_main_quest_full_coverage_audit.mjs` | Fail-closed static/generated-readback gate for the 2026-07-15 main-quest contract: 45 identities x 25 exact stages, 951 T11 rows, 1978-cell compiled matrix, strict integer stages, no `echo`, exact 17/11 Paarthurnax rosters, and indexed 134-watch registration. A PASS is not in-game route/display proof. |
 | `tools/pdv_guide_bbcode.mjs` | Emits `dist/nexus-articles/*.bb` from the 10 race guides and hard-fails on surviving review tags, HTML comments, or non-ASCII -- the Nexus release gate. Run after ANY guide edit. |
+| `tools/pdv_package_release.mjs` | Builds the `dist/` release zip from the live Anvil Devotion mod folder -- the ONLY sanctioned path to a public bundle (never hand-roll it; rc1 leaked an 876KB `.orig`). Gates on version, ANAM, and archive contents; those gates are NARROWER than `pdv_verify.mjs`, so a green package run is not a green verify run. |
 | `tools/pdv_substrate_pacing_audit.mjs` | Strict source/contract audit for the six paced substrates: one +4 devotional credit per 06:00 day, timing maths, authentic-route ownership, curse exceptions, decay, and player-copy exclusions |
 | `tools/pdv_broad_pantheon_audit.mjs` | Strict source/contract audit for Imperial, Nord Old Ways, and Nord Nine Divines pools: signed logical-event aggregation, active-baseline gating, grace/decay, migration, and T2 patron transition |
 | `tools/pdv_pantheon_substrate_runtime_evidence_check.mjs` | Fail-closed runtime/manual evidence checker for the 12 pantheon/substrate co-test cards; a static pass never closes an evidence bucket, and rotating Papyrus/temporary captures need an exact retained reference in the committed pantheon co-test evidence store |
@@ -563,7 +564,7 @@ Phase 10 Dunmer substrate proof-graduation is closed as of 2026-05-24. The count
 
 Current remap note (main-quest expansion 2026-07-15): source tranches through T11 compile to 1978 cells / 172 quest keys / 134 watched quests / 45 deity names / 26 faucet acts. Use `node .\tools\pdv_quest_tranche_merge.mjs`, then `node .\tools\pdv_main_quest_full_coverage_audit.mjs --json`, then the formal-offer/remap/signal-floor gates before claiming source/readback readiness. For the representative smoke set, run `node .\tools\pdv_signal_floor_smoke_gate.mjs --json`; use `--write-ledger` to regenerate `PDV_SignalFloorSmokeLedger.{md,json}` after source, runtime JSON, or Papyrus log evidence changes. The Debug: State & Rewards MCM page has a `Signal-floor smoke` controlled route selector backed by `PDV__ManagerQuest.DebugRunSignalFloorSmokeScenario`, but those routes remain backend/log convenience only. Green source/readback gates still do not prove runtime-route, Active Effects, Book of Days, Survey/status, Prisma/notification, save/load stack behavior, or the expanded Paarthurnax/main-quest surface; use `references\authoring\PDV_1_0_CoTest_Runbook_2026-07-10.md` for live tester/Codex steps.
 
-Quest-reaction delivery is bounded by the Start-Game-Enabled `PDV_QuestReactionWorker` quest. `ApplyQuestReaction` snapshots and enqueues one logical stage reaction; the worker resumes saved jobs and applies at most two base or meta reaction work items every `0.1` seconds, then performs one aggregate, curse/reward reconciliation, panel refresh, toast, and Book of Days beat. The Papyrus optimisation audit classified the former synchronous fan-out as **broken** (a 45-cell stage could monopolise the VM), repeated per-cell traces/finalisation as **suboptimal**, and the EventBus/PlayerEvents event-driven ingress as **clean**. Run `node .\tools\pdv_quest_reaction_performance_audit.mjs` for the source contract and `node .\tools\pdv_quest_reaction_runtime_check.mjs` after a live sweep. The performance MCM control deliberately queues MQ101/105/106/206 through manager routes only; never use `setstage MQ106 200` on a test save. Runtime proof still requires a fresh Skyrim relaunch, queue lifecycle log, one visible final toast/Book beat per job, and a save/load resume check.
+Quest-reaction delivery is bounded by the Start-Game-Enabled `PDV_QuestReactionWorker` quest. `ApplyQuestReaction` snapshots and enqueues one logical stage reaction. New 1.0.4 jobs compact unreachable/zero-value base cells and inactive meta slots at ingress, persist only runnable rows plus source/skipped/meta counts and ingress-build timing, and then apply at most two reactions every `0.1` seconds. Already-saved jobs without the additive `Compacted` key retain the legacy worker-side cheap-skip path. After the row stream drains, the worker performs one aggregate, curse/reward reconciliation, panel refresh, toast, and Book of Days beat. The Papyrus optimisation audit classified the former synchronous fan-out as **broken** (a 45-cell stage could monopolise the VM), repeated per-cell traces/finalisation as **suboptimal**, and the EventBus/PlayerEvents event-driven ingress as **clean**. Run `node .\tools\pdv_quest_reaction_performance_audit.mjs` for the source contract and `node .\tools\pdv_quest_reaction_runtime_check.mjs --max-job-ms 2000` after a live sweep. The checker treats paired save-load freeze/thaw lifecycle as an observation; explicit stack dumps, frozen-stack markers, broad-scope aborts, incomplete jobs, overflow, and over-limit START-to-COMPLETE timings remain failures. The performance MCM control deliberately queues MQ101/105/106/206 through manager routes only; never use `setstage MQ106 200` on a test save. Runtime proof still requires a fresh Skyrim relaunch, queue lifecycle log, one visible final toast/Book beat per job, and a save/load resume check.
 
 `tools\pdv_skyrim_refs_bridge.mjs` is a read-only lookup bridge into the neutral `dunhamma/SkyrimGamePlayReferences` repo. Set `SKYRIM_GAMEPLAY_REFERENCES_ROOT` when the clone is not under `scratch\SkyrimGamePlayReferences`. Use it to list or search broad reference tables such as reverse keywords, faction relationships, condition-bearing effects, cells, containers/furniture, enchantments, leveled lists, FormLists, shouts, and worldspaces. It does not copy data into PDV or replace local xEdit/CK verification. Bridge rules live in `references\vanilla-gameplay\PDV_SkyrimGamePlayReferences_Bridge.md`.
 
@@ -1098,6 +1099,118 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 ---
 
 ## Notes / Decisions Log
+
+**2026-08-07 AEST - release-issue reconciliation:** The live `Devotion.esp`
+now includes Hircine and Molag Bal stigma notification triples and the complete
+Shor T3 low-health-save presentation contract. Its current SHA-256 is
+`87B04CDFFC9F0A3064CEA37D37DDAEA10C3AEEB9A4B9D3B1B515C44AE7B395B7`
+(649,917 bytes). The source-side release fixes compile cleanly. This is direct
+readback/static proof only; the substrate uninstall fix still requires an MCM
+uninstall smoke before issue #30 or the release claim can be closed.
+
+**2026-08-07 AEST - ARR 2.5 combined candidate deployment and winner-aware
+preflight:** Installed the 84-file combined FOMOD lane as
+`D:\Wabbajack\modlists\ARR 2.5\mods\Devotion - Authoria ARR Compatibility`,
+enabled it on `KoK R11`, and activated `PDV_AuthoriaARR_Combined.esp`
+after `Devotion.esp` / before `Requiem for the Indifferent.esp`. Profile files
+were backed up to
+`profiles\KoK R11\pdv-arr25-backups\20260807-070513`. Direct houseCARL asset
+readback caught and corrected the MO2 priority direction: this profile's
+`modlist.txt` lists the higher-priority winner first, so the compatibility mod
+must appear above `Devotion - PatchHub` and `Devotion`. The runtime preflight
+now resolves actual MO2 winners instead of inspecting the named core folder,
+and `--expected-channels` verifies the deployed per-mod folder. The historical
+combined-lane command used 154 core watches, 62 ARR watches, 34 channels, and
+the now-retired `--expected-arr` argument. It is superseded by the modular
+deployment command in
+`references\authoring\PDV_ARR25_ModularPatchHub_ExperimentRunbook_2026-08-07.md`:
+157 core watches, 39 winning channels, and no combined compatibility winner.
+No post-deployment Papyrus registration marker exists yet, so runtime and
+support remain open.
+
+**2026-08-07 AEST - modular core/PatchHub replacement candidate:** The combined
+Authoria lane described below is superseded. ARR now installs the ordinary
+Devotion core archive plus a fully modular, dependency-gated PatchHub; no option
+may replace core scripts or matrices. The committed source is `ff7fc4e`. Core is
+`dist\Devotion-1.0.4-20260807.zip` (231 exact members, SHA-256
+`CF7CFDBD5FC84D6B7BA5C6B4DFC697745978DA50C3290E1ED89095D41775E4DE`).
+This rebuild includes the Altmer five-deity roster correction and existing-save
+Book of Days repair version 3.
+PatchHub is `dist\PDV-QuestModPatchHub-ARR25-Experimental-20260807.zip` (80
+exact members, 41 options, 39 channels, SHA-256
+`DEC5EBC4285F3985D3D8F0BDF1ADBE4F288C20FB09F3D83EA3ECD5457F633949`).
+The Altmer Prisma parity gate passes 124 checks, including one notice per
+accepted daily heritage practice. Machine/package proof passes; runtime-route,
+player-surface, semantic, save/load, and support evidence remain open. The
+living authority and experiment sequence are
+`references\authoring\PDV_ModPackaging_StateAuthority.md` and
+`references\authoring\PDV_ARR25_ModularPatchHub_ExperimentRunbook_2026-08-07.md`.
+
+**2026-08-06 AEST - ARR 2.5 exhaustive content/package candidate (superseded
+package architecture; historical evidence only):** The isolated
+`codex/arr25-content-sweep` worktree closes the finite QUST plus selected non-quest
+inventory, authors T13-T17 as 34 per-mod channels, and packages the safe non-quest
+surface. `PDV_PlayerEvents` now optionally polls AFDI's 30 latched successful-
+destruction globals every 15 real-time seconds through the unified scheduler;
+version 1 baselines existing saves without retroactive credit and persists each
+transition before routing. The package also carries exact-name ARR Green Pact KID
+rules, the existing bounded bard lane, Breton Hidden Art's second renewable, and
+the read-back 11-ACTI route-202 shrine-prayer ESP/BOS pair. Wyrmstooth placements
+use different base forms and are not covered; Jyggalag remains classify-only;
+hunting is deferred because a truthful route requires a third-party ModEvent after
+the IHA corpse-token write. The validated archive is
+`dist\PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`: 95 members, no missing or
+extra files, SHA-256
+`E11D7B2A90ED0F980DA2394CF63A465167E55730C252EF5FF1EF05A64D0B5C9D`.
+Papyrus compile is 0/0 and strict verification is `PASS=4074, TODO=1, INFO=78,
+WARN=1, FAIL=0`. This moves machine/package proof only; ARR 2.5 runtime preflight,
+every structured tester case, and support remain OPEN.
+
+**2026-07-27 AEST - 1.0.4 shipped; shrine-script boundary amended and a hard MO2
+priority requirement added:** Devotion 1.0.4 is public (tag `v1.0.4`,
+`Devotion-1.0.4-20260727.zip`). Three things below change how this document's earlier
+entries should be read.
+
+1. **Devotion now ships a loose-file `Scripts\TempleBlessingScript.pex`.** The
+   2026-06-14 and 2026-06-21 shrine-neutralization entries further down state that
+   Devotion "does not replace shrine activator scripts". That wording is SUPERSEDED. The
+   ESP-record half of the boundary is unchanged and still enforced - no shrine `ACTI`
+   override, no script-property replacement, `pdv-shrine-blessing-author`'s
+   no-ACTI-replacement check still applies - but Devotion does now ship a corrected
+   compiled override of the vanilla script itself. Reason: Requiem's bugfix packs add a
+   line dispelling ALL of the player's active magic effects on shrine activation, which is
+   invisible under Requiem alone (its blessing lands right after) but is pure loss under
+   Devotion, which grants no shrine blessing by design.
+   **INSTALL REQUIREMENT: Devotion must sit BELOW (higher priority than) any Requiem
+   bugfix pack in MO2.** Requiem's packs ship the same filename; if Devotion loads above
+   them their copy wins and the bug returns. Nothing errors - the returning bug is the
+   only symptom. Verify in MO2's **Data** tab: `Scripts\TempleBlessingScript.pex` must
+   show `Devotion` as its provider. This is the project's first ordering requirement that
+   is about MOD priority rather than PLUGIN load order, and the two are set in different
+   MO2 panes.
+
+2. **`Recover` on value-modifying MGEFs is now a project-wide authoring invariant.** Any
+   new Devotion MGEF whose archetype modifies an actor value must carry `Recover` before
+   it is written, because Devotion applies its effect families as toggled abilities and
+   the engine otherwise bakes the change in permanently (reported in the field as
+   `-22131%` Magic Resistance and `-5000` armour). Shipped-ESP readback on 2026-07-27:
+   ValueModifier `395/395`, PeakValueModifier `232/232`, `627/627` total. Treat a missing
+   flag as a save-corruption defect. The 2026-07-26 entry immediately below still owns the
+   rest of the Daedric price serialization convention.
+
+3. **Release packaging goes through `tools\pdv_package_release.mjs`, never by hand.** It
+   builds the `dist\` zip from the live Anvil Devotion folder and gates on version, ANAM,
+   and archive contents. Its gates are NARROWER than `pdv_verify.mjs`: a green package run
+   is not a green verify run, and a `pdv_verify` FAIL at package time is usually real
+   record drift rather than a stale audit.
+
+Readback discipline reminder that this session paid for: confirm the active MO2 instance
+with `housecarl_load_order_status` before any readback that will become a status claim.
+houseCARL persists its instance across restarts, so it can still be pointed at
+`D:\Wabbajack\modlists\ARR` from earlier compatibility work and will silently answer from
+that list's older `Devotion.esp` - a plausible, internally consistent, completely wrong
+answer rather than an error. Re-point with
+`housecarl_set_mo2_instance D:\Wabbajack\modlists\Anvil`.
 
 **2026-07-26 AEST - Daedric price serialization repair and runtime closeout:**
 Daedric price contract magnitudes remain negative as player-facing semantics,

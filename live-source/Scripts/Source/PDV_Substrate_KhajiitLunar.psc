@@ -4,7 +4,7 @@
     -----------------------------------------------------------------------
     Concrete proving helper attached alongside the structural substrate base.
     Tracks moon observance and road-home cadence as separate dev-readable
-    dimensions while keeping Khajiit patron emergence notification-free.
+    dimensions while the manager owns focus-emergence presentation.
     -----------------------------------------------------------------------
 /;
 
@@ -26,8 +26,9 @@ Function ObserveMoonPhaseScaled(Int phaseIndex, Float multiplier, String reason)
         return
     endIf
 
-    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.KhajiitLunar.LastPhase", phaseIndex)
-    StorageUtil.AdjustIntValue(GetSubstrateForm(), "PDV.Substrate.KhajiitLunar.ObservanceCount", 1)
+    Form substrateForm = GetSubstrateForm()
+    StorageUtil.SetIntValue(substrateForm, "PDV.Substrate.KhajiitLunar.LastPhase", phaseIndex)
+    StorageUtil.AdjustIntValue(substrateForm, "PDV.Substrate.KhajiitLunar.ObservanceCount", 1)
     Float awarded = TryAwardSubstrateDayCredit("khajiit_moon", reason, 1.0)
     Trace(2, "Moon observance recorded for phase " + phaseIndex + " with daily credit " + awarded)
 EndFunction
@@ -71,9 +72,10 @@ EndFunction
 
 Function ResetPilotForDebug()
     ResetForDebug()
-    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.KhajiitLunar.LastPhase", 0)
-    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.KhajiitLunar.ObservanceCount", 0)
-    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.KhajiitLunar.RoadHomeCount", 0)
+    Form substrateForm = GetSubstrateForm()
+    StorageUtil.SetIntValue(substrateForm, "PDV.Substrate.KhajiitLunar.LastPhase", 0)
+    StorageUtil.SetIntValue(substrateForm, "PDV.Substrate.KhajiitLunar.ObservanceCount", 0)
+    StorageUtil.SetIntValue(substrateForm, "PDV.Substrate.KhajiitLunar.RoadHomeCount", 0)
     Trace(2, "ResetPilotForDebug")
 EndFunction
 

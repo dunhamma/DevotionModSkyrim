@@ -2,6 +2,8 @@ property,race,sourceKinds,routeFunctions,handlers,manifest_parse,shell,alias_pro
 PDV_FLST_P2_AltmerAurielSources,Altmer,book;harvest;quest-stage,RouteAltmerAurielFoundation,HandleAltmerDawnSteadiness,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,GREEN,,All proof columns passed.
 PDV_FLST_P2_AltmerLorkhanPenalties,Altmer,book;quest-stage,RouteAltmerLorkhanPenalty,HandleAltmerLorkhanPressure,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,GREEN,,All proof columns passed.
 PDV_FLST_P2_AltmerMagnusSources,Altmer,book;quest-stage;spell-learned,RouteAltmerMagnusScholarship,HandleAltmerDawnSteadiness,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,GREEN,,All proof columns passed.
+PDV_FLST_P2_AltmerSyrabaneSources,Altmer,book,RouteAltmerSyrabaneContainment,HandleAltmerSyrabaneContainment,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,GREEN,,All proof columns passed.
+PDV_FLST_P2_AltmerTrinimacSources,Altmer,book,RouteAltmerTrinimacOrthodoxy,HandleAltmerTrinimacOrthodoxy,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,GREEN,,All proof columns passed.
 PDV_FLST_P2_AltmerXarxesSources,Altmer,book;quest-stage,RouteAltmerXarxesLineage,HandleAltmerOrthodoxCostlyEnforcement,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,GREEN,,All proof columns passed.
 PDV_FLST_P2_ArgonianCommunitySources,Argonian,book;harvest;quest-stage,RouteArgonianCommunity,HandleArgonianPeopleSupport,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,GREEN,,All proof columns passed.
 PDV_FLST_P2_ArgonianHistSources,Argonian,book;harvest;quest-stage,RouteArgonianHistMaintenanceSource,HandleArgonianHistMaintenance,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,GREEN,,All proof columns passed.

@@ -74,6 +74,37 @@ Function TryApplyDailySave(String triggerReason)
         return
     endIf
 
+    ; Baan Dar's rescue can outlive its Champion reward in an old save. Defend
+    ; at the instant of execution, after the health/day gates but before healing.
+    if !HasRuntimeEligibility()
+        Trace(1, "eligibility block key=" + StorageKey + " trigger=" + triggerReason + " reason=not_baandar_champion")
+        return
+    endIf
+
+    Float restoreTargetPercent = GetRestoreTargetPercent()
+    if restoreTargetPercent > 0.0
+        Float currentHealthAtTrigger = watchedActor.GetActorValue("Health")
+        healthPercent = watchedActor.GetActorValuePercentage("Health")
+        Float maximumHealth = 0.0
+        if healthPercent > 0.0
+            maximumHealth = currentHealthAtTrigger / healthPercent
+        endIf
+        Float targetHealth = maximumHealth * restoreTargetPercent
+        Float percentageRestore = targetHealth - currentHealthAtTrigger
+        if percentageRestore <= 0.0
+            return
+        endIf
+        watchedActor.RestoreActorValue("Health", percentageRestore)
+        if !ConfirmSaveLanded()
+            Trace(1, "T3 daily low-health save did NOT hold key=" + StorageKey + " trigger=" + triggerReason + "; charge left unspent.")
+            return
+        endIf
+        StorageUtil.SetIntValue(watchedActor, StorageKey, currentDay)
+        ShowCapstoneNotice(triggerReason)
+        Trace(1, "T3 daily low-health save fired key=" + StorageKey + " trigger=" + triggerReason + " day=" + currentDay + " targetPercent=" + restoreTargetPercent)
+        return
+    endIf
+
     if HealSpell != None
         HealSpell.Cast(watchedActor)
         ; B13 / fix-plan 4.7: OnDying fires when the death is already committed, so the
@@ -115,6 +146,14 @@ Function TryApplyDailySave(String triggerReason)
     StorageUtil.SetIntValue(watchedActor, StorageKey, currentDay)
     ShowCapstoneNotice(triggerReason)
     Trace(1, "T3 daily low-health save fired key=" + StorageKey + " trigger=" + triggerReason + " day=" + currentDay + " current=" + currentHealth + " percent=" + healthPercent + " restore=" + restoreAmount)
+EndFunction
+
+Bool Function HasRuntimeEligibility()
+    return True
+EndFunction
+
+Float Function GetRestoreTargetPercent()
+    return 0.0
 EndFunction
 
 ; fix-plan 4.7. Let the engine settle the heal (and, on the OnDying path, the death)

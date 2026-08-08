@@ -146,6 +146,10 @@ function buildRegistry() {
     sourceHashes[rel] = sha(rel);
     const spec = loadJson(rel);
     for (const [key, value] of Object.entries(spec)) {
+      // Some substrateBoons blocks are ownership/readback contracts derived from
+      // live VMAD bindings, not effect-authoring definitions. Do not manufacture
+      // empty felt-effect rows from those contract-only slot inventories.
+      if (key === "substrateBoons" && value?.registryContractOnly === true) continue;
       const cls = CLASS_BY_KEY[key];
       const allowMessages = cls === "curse" || cls === "neglect" || cls === "price";
       const candidates = [];

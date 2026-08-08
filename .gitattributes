@@ -36,12 +36,37 @@ dist/PDV_QuestModPatches_FOMOD/**/*.xml text eol=lf
 dist/PDV_QuestModPatches_FOMOD/**/*.psc text eol=lf
 dist/PDV_QuestModPatches_FOMOD/**/*.md text eol=lf
 dist/PDV_QuestModPatches_FOMOD/**/*.ini text eol=lf
+# Quest-reaction channels and stage adapters are GENERATED, and each one carries the
+# full stance table (race x deity) and faucet table verbatim -- so a single channel is
+# ~3,000 lines of which only a handful describe its own quests. Forty-odd of them made
+# one branch read as a 100,000-line diff that was really the same tables repeated.
+# linguist-generated collapses them in review and keeps them out of language stats.
+# Deliberately NOT "-diff": these are the files you read to verify a split or a regen
+# actually carried the right quests, and -diff would blind that locally as well as on
+# GitHub. The eol=lf above is repeated here on purpose -- a later, more specific rule
+# wins per attribute, and dropping LF would change the published zip's SHA256.
+dist/PDV_QuestModPatches_FOMOD/**/Channels/*.json text eol=lf linguist-generated=true
+dist/PDV_QuestModPatches_FOMOD/**/QuestStageAdapters/*.json text eol=lf linguist-generated=true
 # Authoria all-in-one package. Same reasoning as the FOMOD block above: the ESP
 # and compiled scripts are bytes, and the handoff publishes the zip's SHA256.
-dist/PDV_Patch_Authoria_AllInOne/**/*.esp -text
-dist/PDV_Patch_Authoria_AllInOne/**/*.pex -text
 dist/Devotion_Authoria_Compatibility*.zip -text
-dist/PDV_Patch_Authoria_AllInOne/**/*.json text eol=lf
-dist/PDV_Patch_Authoria_AllInOne/**/*.psc text eol=lf
-dist/PDV_Patch_Authoria_AllInOne/**/*.md text eol=lf
-dist/PDV_Patch_Authoria_AllInOne/**/*.ini text eol=lf
+
+
+# Quest-reaction matrix sources. pdv_quest_tranche_merge.mjs --check re-derives
+# Full.csv from the tranche sources and BYTE-compares against what is on disk,
+# and the tool writes CRLF. These blobs are stored LF, so on a checkout that
+# does not convert (Linux/CI, or autocrlf=false) the working tree would be LF
+# and the gate would report drift that does not exist. Pin the WORKING TREE to
+# CRLF on every platform -- blob stays LF, so this is not a rewrite -- and the
+# gate then compares like with like everywhere.
+references/authoring/PDV_QuestReactionMatrix_Full.csv text eol=crlf
+references/authoring/PDV_QuestReactionMatrix_Tranche*.csv text eol=crlf
+references/authoring/PDV_QuestReactionMatrix_Reconciliation_*.csv text eol=crlf
+
+# External-mod support inventory. pdv_external_support_inventory.mjs --check parses
+# a JSON counts block out of the doc, and the tool is written ASCII/LF. Nothing here
+# is byte-compared today, so this is a pin against a FUTURE gate change (a hash, a
+# byte diff) silently inheriting whatever autocrlf did on one machine. Both stay LF
+# on every platform.
+references/authoring/PDV_ExternalModSupport_Inventory.md text eol=lf
+tools/pdv_external_support_inventory.mjs text eol=lf

@@ -7,9 +7,15 @@ import { fileURLToPath } from "node:url";
 const TOOLS_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(TOOLS_DIR, "..");
 const REPO_VIEW = path.join(ROOT, "native", "DevotionPrismaBridge", "mod", "PrismaUI", "views", "Devotion");
-const LIVE_VIEW = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PrismaUI\\views\\Devotion";
-const SOURCE = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
-const COMPILED = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts";
+const LIVE_VIEW =
+  process.env.PDV_AUDIT_LIVE_PRISMA ||
+  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PrismaUI\\views\\Devotion";
+const SOURCE =
+  process.env.PDV_AUDIT_LIVE_SOURCE ||
+  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
+const COMPILED =
+  process.env.PDV_AUDIT_COMPILED ||
+  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts";
 const MANAGER = path.join(SOURCE, "PDV__ManagerQuest.psc");
 const DIRECTOR = path.join(SOURCE, "PDV_DiegeticDirector.psc");
 const MCM = path.join(SOURCE, "PDV_MCM.psc");
@@ -240,7 +246,10 @@ requireText(MANAGER, [
   "ShowP2BookNotice",
   'AppendBookOfDaysEntry("You offered prayer at the shrine of "',
   "GetJournalMagnitudeForTone",
-  "RefreshOpenBookOfDays",
+  // "RefreshOpenBookOfDays" dropped 2026-08-07: the standalone function was a superseded
+  // duplicate of the reconciliation PDV_MCM's journal hotkey already does inline, and a needle
+  // that pins a function NAME dies with the function. The behaviour is asserted against
+  // PDV_MCM.psc in pdv_prisma_ui_audit. The key below still pins the state this gate cares about.
   "PDV.Diegetic.Journal.Open",
   "PDV.BookOfDays.LastTierDeity",
   "BuildTierReachJournalLine",

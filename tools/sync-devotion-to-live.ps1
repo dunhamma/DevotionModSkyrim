@@ -42,6 +42,13 @@ if ([string]::IsNullOrWhiteSpace($BackupRoot)) {
 }
 
 $Map = @(
+    @{ Src = "mod-data\CREDITS.md";                                            Dst = "Credits.txt"; Required = $true },
+    @{ Src = "mod-data\PDV_Calian_DESC.ini";                                  Dst = "PDV_Calian_DESC.ini"; Required = $true },
+    @{ Src = "mod-data\meshes\PDV\Clutter\PDV_AltmerCalian.nif";             Dst = "Meshes\PDV\Clutter\PDV_AltmerCalian.nif"; Required = $true },
+    @{ Src = "mod-data\MS03 Calians\textures\calianjewelrybox.dds";          Dst = "MS03 Calians\textures\calianjewelrybox.dds"; Required = $true },
+    @{ Src = "mod-data\MS03 Calians\textures\calianjewelrybox_n.dds";        Dst = "MS03 Calians\textures\calianjewelrybox_n.dds"; Required = $true },
+    @{ Src = "mod-data\MS03 Calians\textures\cubemaps\shinyglass_e.dds";    Dst = "MS03 Calians\textures\cubemaps\shinyglass_e.dds"; Required = $true },
+    @{ Src = "mod-data\MS03 Calians\textures\white\eggshell.dds";           Dst = "MS03 Calians\textures\white\eggshell.dds"; Required = $true },
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\app.js";     Dst = "PrismaUI\views\Devotion\app.js" },
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\index.html"; Dst = "PrismaUI\views\Devotion\index.html" },
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\styles.css"; Dst = "PrismaUI\views\Devotion\styles.css" },
@@ -51,6 +58,11 @@ $Map = @(
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\fonts\IMFellEnglish-Regular.woff2"; Dst = "PrismaUI\views\Devotion\fonts\IMFellEnglish-Regular.woff2" },
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\fonts\OFL-IMFellEnglish.txt"; Dst = "PrismaUI\views\Devotion\fonts\OFL-IMFellEnglish.txt" },
     @{ Src = "live-source\Scripts\Source\PDV__ManagerQuest.psc";             Dst = "Scripts\Source\PDV__ManagerQuest.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_AltmerPracticeFocus.psc";       Dst = "Scripts\Source\PDV_AltmerPracticeFocus.psc"; Required = $true },
+    @{ Src = "live-source\Scripts\Source\PDV_T3DailyLowHealthSaveEffect.psc"; Dst = "Scripts\Source\PDV_T3DailyLowHealthSaveEffect.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_KhajiitAzurahPortentEffect.psc"; Dst = "Scripts\Source\PDV_KhajiitAzurahPortentEffect.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_KhajiitBaanDarRescueEffect.psc"; Dst = "Scripts\Source\PDV_KhajiitBaanDarRescueEffect.psc" },
+    @{ Src = "live-source\Scripts\Source\TempleBlessingScript.psc";          Dst = "Scripts\Source\TempleBlessingScript.psc"; Required = $true },
     @{ Src = "live-source\Scripts\Source\PDV_QuestReactionWorker.psc";       Dst = "Scripts\Source\PDV_QuestReactionWorker.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_Deity_AuriEl.psc";              Dst = "Scripts\Source\PDV_Deity_AuriEl.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_DaedricPathBase.psc";          Dst = "Scripts\Source\PDV_DaedricPathBase.psc" },
@@ -69,7 +81,10 @@ $Map = @(
     @{ Src = "live-source\Scripts\Source\PDV_DeityBase.psc";                 Dst = "Scripts\Source\PDV_DeityBase.psc" },
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap.json";       Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap.json" },
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_TemporaryRaceMap.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_TemporaryRaceMap.json" },
-    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt" }
+    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt" },
+    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionMatrix.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionMatrix.json"; Required = $true },
+    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_AltmerPracticeLines.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_AltmerPracticeLines.json"; Required = $true },
+    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_KhajiitMoonObservations.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_KhajiitMoonObservations.json" }
 )
 
 Write-Host "Repo root   : $RepoRoot"
@@ -110,6 +125,36 @@ function Assert-LiveDevotionRootHealthy {
     }
 
     return $resolvedRoot
+}
+
+function Assert-SyncMap {
+    param(
+        [array]$Entries,
+        [string]$SourceRoot,
+        [string]$DestinationRoot
+    )
+
+    $seenDestinations = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    foreach ($entry in $Entries) {
+        if ([string]::IsNullOrWhiteSpace($entry.Src) -or [string]::IsNullOrWhiteSpace($entry.Dst)) {
+            Fail-Sync "Sync map entries must declare both Src and Dst."
+        }
+
+        $srcPath = [IO.Path]::GetFullPath((Join-Path $SourceRoot $entry.Src))
+        $dstPath = [IO.Path]::GetFullPath((Join-Path $DestinationRoot $entry.Dst))
+        if (-not $srcPath.StartsWith($SourceRoot + [IO.Path]::DirectorySeparatorChar, [System.StringComparison]::OrdinalIgnoreCase)) {
+            Fail-Sync "Sync source escapes the repository root: $($entry.Src)"
+        }
+        if (-not $dstPath.StartsWith($DestinationRoot + [IO.Path]::DirectorySeparatorChar, [System.StringComparison]::OrdinalIgnoreCase)) {
+            Fail-Sync "Sync destination escapes the live Devotion root: $($entry.Dst)"
+        }
+        if (-not $seenDestinations.Add($dstPath)) {
+            Fail-Sync "Sync map has duplicate destination: $($entry.Dst)"
+        }
+        if ($entry.Required -and -not (Test-Path -LiteralPath $srcPath -PathType Leaf)) {
+            Fail-Sync "Required sync source is missing: $($entry.Src)"
+        }
+    }
 }
 
 function Copy-IfPresent {
@@ -158,6 +203,7 @@ function New-LiveDevotionBackup {
 }
 
 $DevotionRoot = Assert-LiveDevotionRootHealthy $DevotionRoot
+Assert-SyncMap $Map $RepoRoot $DevotionRoot
 
 if (-not $DryRun) {
     $backupPath = New-LiveDevotionBackup $DevotionRoot $BackupRoot

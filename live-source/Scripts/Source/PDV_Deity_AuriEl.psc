@@ -22,11 +22,15 @@ Int Property SIGNAL_ORTHODOXY_AFFIRMATION = 202 AutoReadOnly
 Float Property DELTA_DAWN_ACKNOWLEDGMENT = 1.0 Auto
 Float Property DELTA_ORTHODOXY_AFFIRMATION = 3.0 Auto
 
-; Contract-declared tuning knob for the ancestral-spine lane (pdv_verify asserts
-; DELTA_ANCESTOR_SPINE = 1.0 on this deity). Currently unread here -- the spine
-; scoring for this lane is specced, not yet wired -- so do NOT "clean it up": the
-; 1.0.4 Altmer Spine wire is what will read it, and deleting it now would throw
-; away the intended value. Azura / Malacath / Tu'whacca already return theirs.
+; Declared-but-unread contract constant. Corrected 2026-08-02: this is NOT waiting
+; on a future wire. The Auri-El deity-pulse spine was DESCOPED by design on
+; 2026-07-15 (see the note at tools/pdv_verify.mjs:6650). PDV_Substrate_AltmerAncestor
+; owns the Altmer spine now, and it is deity-agnostic -- readback of 0715AC:Devotion.esp
+; shows no deity property on that record at all.
+; DO NOT delete the line below, and DO NOT add a matching spine signal constant to
+; this file. pdv_verify asserts this source contains the literal
+; "DELTA_ANCESTOR_SPINE = 1.0" AND that it does NOT contain that signal constant's
+; name. Writing that name here -- even inside a comment -- fails the verifier.
 Float Property DELTA_ANCESTOR_SPINE = 1.0 Auto
 
 Event OnInit()

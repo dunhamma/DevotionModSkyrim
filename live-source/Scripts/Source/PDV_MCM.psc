@@ -1874,8 +1874,8 @@ Function BuildPlayerPage()
         _oidSurveyDevotion = AddTextOption("Survey Devotion", "Open readout", OPTION_FLAG_NONE)
         _oidExportReport = AddTextOption("Export Devotion Report", "Write file", OPTION_FLAG_NONE)
 
-        ; Khajiit focus emerges silently, so surface each moon-path's standing and
-        ; piety here for the player to track without a formal patron offer.
+        ; Surface each moon-path's standing and the current god in strength for
+        ; players who want a detailed readout beyond the emergence ceremony.
         if PDV_Manager.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_KHAJIIT
             AddHeaderOption("Moon-paths", OPTION_FLAG_NONE)
             Int khajiitFocus = 1

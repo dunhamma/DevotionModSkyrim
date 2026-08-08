@@ -1,0 +1,127 @@
+{
+  "schema": "pdv-arr25-modular-deployment.v1",
+  "generatedAt": "2026-08-07T14:55:10.8990450+10:00",
+  "status": "MACHINE-PREFLIGHT-PASS",
+  "proofBoundary": "Deployment, load-order resolution, and asset-winner proof only. Runtime routing, player-facing UI, semantic correctness, save/load behavior, and support remain open.",
+  "target": {
+    "mo2Root": "D:\\Wabbajack\\modlists\\ARR 2.5",
+    "baseProfile": "KoK R11",
+    "experimentProfile": "KoK R11 - PDV ARR25 Experiment 20260807",
+    "baseProfileModified": false,
+    "activeProfileAfterDeployment": "KoK R11 - PDV ARR25 Experiment 20260807"
+  },
+  "archives": [
+    {
+      "file": "dist/Devotion-1.0.4-20260807.zip",
+      "bytes": 8294880,
+      "sha256": "CF7CFDBD5FC84D6B7BA5C6B4DFC697745978DA50C3290E1ED89095D41775E4DE",
+      "installedMod": "Devotion - ARR25 Experimental Core 20260807",
+      "installedFiles": 231
+    },
+    {
+      "file": "dist/PDV-QuestModPatchHub-ARR25-Experimental-20260807.zip",
+      "bytes": 509879,
+      "sha256": "DEC5EBC4285F3985D3D8F0BDF1ADBE4F288C20FB09F3D83EA3ECD5457F633949",
+      "installedMod": "Devotion - ARR25 Experimental PatchHub 20260807",
+      "selectedOptions": 41,
+      "installedFiles": 77,
+      "reactionChannels": 39
+    }
+  ],
+  "retiredState": {
+    "disabledMods": [
+      "Devotion - Authoria ARR Compatibility",
+      "Devotion - PatchHub",
+      "Devotion"
+    ],
+    "inactivePlugins": [
+      "PDV_AuthoriaARR_Combined.esp",
+      "PDV_Patch_Authoria_QuestMods.esp",
+      "PDV_AuthoriaARR_Compatibility.esp"
+    ]
+  },
+  "activePatchPlugins": [
+    "PDV_Patch_WarsFolly.esp",
+    "PDV_Patch_OnceWeWereHere.esp",
+    "PDV_Patch_SlaysManyBeasts.esp",
+    "PDV_Patch_AFDI.esp",
+    "PDV_Patch_DaedricShrinesAIO.esp"
+  ],
+  "gates": {
+    "runtimePreflight": {
+      "status": "PASS",
+      "pass": 33,
+      "info": 4,
+      "fail": 0,
+      "coreWatches": 157,
+      "winningChannels": 39,
+      "checkedPluginsInMatchingLoadOrder": 3743
+    },
+    "runtimeEvidenceCoverage": {
+      "status": "PASS",
+      "questOutcomes": 72,
+      "missing": 0,
+      "duplicate": 0,
+      "orphan": 0,
+      "afdiCases": 30,
+      "otherNonQuestCases": 19,
+      "proofBoundary": "Case assignment only; no runtime case verdict is implied."
+    },
+    "altmerCurrentRoster": {
+      "status": "PASS",
+      "active": ["Auri-El", "Magnus", "Xarxes", "Syrabane", "Trinimac"],
+      "deferred": ["Mara", "Stendarr", "Y'ffre"],
+      "existingSaveRepair": "Book of Days repair version 3 prunes affected deferred-deity entries for Altmer on next journal open.",
+      "prismaAudit": "125 PASS / 0 FAIL"
+    },
+    "housecarlProfile": {
+      "status": "PASS",
+      "resolvedPlugins": 3803,
+      "activePlugins": 3803,
+      "inactivePlugins": 0
+    },
+    "housecarlAssetWinners": {
+      "core": [
+        "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix.json",
+        "Scripts/PDV__ManagerQuest.pex",
+        "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_AltmerPracticeLines.json",
+        "PrismaUI/views/Devotion/app.js"
+      ],
+      "patchHub": [
+        "SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Vigilant.json",
+        "SKSE/Plugins/StorageUtilData/PlayerDevotion/QuestStageAdapters/PDV_QSA_TGAlternativeEndings.json",
+        "Scripts/PDV_AFDIObserver.pex",
+        "SEQ/PDV_Patch_AFDI.seq",
+        "SKSE/Plugins/BaseObjectSwapper/PDV_DaedricShrinesAIO_SWAP.ini"
+      ],
+      "pluginFiles": {
+        "core": "Devotion.esp",
+        "patchHub": [
+          "PDV_Patch_WarsFolly.esp",
+          "PDV_Patch_OnceWeWereHere.esp",
+          "PDV_Patch_SlaysManyBeasts.esp",
+          "PDV_Patch_AFDI.esp",
+          "PDV_Patch_DaedricShrinesAIO.esp"
+        ]
+      },
+      "contestedPaths": 0
+    }
+  },
+  "rollback": {
+    "originalProfile": "KoK R11",
+    "originalProfileFilesChanged": false,
+    "mo2IniBackup": "profiles/KoK R11 - PDV ARR25 Experiment 20260807/pdv-deployment-backups/ModOrganizer.ini.pre-pdv-arr25-experiment",
+    "instruction": "Select KoK R11 in MO2 to return to the untouched base profile. The two experimental mod folders are additive and may remain disabled."
+  },
+  "openProof": [
+    "fresh-process matrix registration marker",
+    "runtime quest and special-lane routing",
+    "exactly one Prisma toast and one Book of Days beat",
+    "organic semantic correctness for RUNTIME-VERIFY rows",
+    "save/load behavior",
+    "AFDI existing-save baseline",
+    "TGAE branch mapping",
+    "Daedric shrine placement and daily cap",
+    "per-option support promotion"
+  ]
+}

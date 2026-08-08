@@ -1,6 +1,6 @@
 # PDV Target End States - 1.0 Product Tracker
 **Created:** 2026-05-18
-**Last updated:** 2026-07-13 (pantheon parity and six-race substrate pacing are design-locked in the two new authority contracts; prior race packets remain historical evidence but are stale for the changed progression surfaces until the combined co-test is rerun)
+**Last updated:** 2026-07-27 (1.0.4 shipped public; see the 1.0.4 section below. The 2026-07-13 progression rebaseline below is unchanged: pantheon parity and six-race substrate pacing are design-locked in the two new authority contracts, and prior race packets remain historical evidence but are stale for the changed progression surfaces until the combined co-test is rerun)
 **Status:** Living 1.0 product/end-state tracker
 **Purpose:** Track what each race's devotion should feel like at launch, how
 close each race is to implementation-ready acceptance, and where the 1.0
@@ -15,6 +15,40 @@ roadmap still has gaps. This document owns product feel and launch acceptance;
 > These are player-experience targets and acceptance checkpoints, not a second
 > architecture spec. Treat them as the "north star" when making implementation
 > tradeoffs, and defer to v3 when a subsystem contract is in question.
+
+## 2026-07-27 - 1.0.4 Shipped Public
+
+Tag `v1.0.4`, `Devotion-1.0.4-20260727.zip`. First public build since 1.0.2, folding in the
+never-released 1.0.3. No new game required. Player-facing authority is `CHANGELOG.md`.
+
+**What this closes against the end-state targets.** 1.0.4 is a defect-and-cost build, not
+a content build, so no race moves from Conditional to Accepted on its own. What it removes
+are the failure classes that made the *shipped* experience unable to demonstrate any race's
+intended feel:
+
+- **Rewards and penalties now actually revert.** Every value-modifying MGEF carries
+  `Recover` (`627/627` on shipped-ESP readback). Before this, every neglect / disfavor /
+  pact-price / blessing on-off cycle drifted the stat permanently. Any earlier player report
+  about a race feeling wrong at Tier 2/3, or about penalties feeling punitive, is suspect
+  evidence - it may have been drift, not tuning.
+- **Praying at a shrine no longer costs the player their buffs** under Requiem. The shrine
+  is a standing-and-Book-of-Days surface as designed, with no hidden cost attached.
+- **Gods react as contracted.** Daedric pact prices and pool boons do something; Hermaeus
+  Mora's Champion boon matches its contract; 22 penalty effects stopped reading as bonuses;
+  Azura's reaction rows and stance table load at all.
+- **The Bosmer Green Pact reward lane has food attached** for the first time - 22 vanilla
+  and DLC meats plus a Requiem keyword lane. The Bosmer "signature friction" answer was
+  previously half-built: violation worked, keeping did not.
+- **Devotion no longer stops working after one lost script tick,** and equipping an item no
+  longer pays hundreds of engine lookups. Both were feel-destroying in a heavy load order.
+
+**What stays open.** The 2026-07-13 progression rebaseline below is untouched by this
+release; the combined co-test that re-proves the redesigned timing, reward resolver,
+migrations, Active Effects names, and player surfaces is still owed. Manual revert proof of
+the `Recover` sweep covers only the representative Azura / Mephala / Hermaeus Mora tiers -
+the other 600-odd effects are readback-proven. Champion signatures still ship for only 8 of
+10 races. And the shipped build's runtime-optimization source is not on `main` (see
+`AGENTS.md` Current Build Status).
 
 ## 2026-07-13 Progression Rebaseline
 

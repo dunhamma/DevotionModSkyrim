@@ -10,8 +10,18 @@ Prisma:
 - `PDV_PrismaBridge.OpenDevotionPanel()`
 - `PDV_PrismaBridge.CloseDevotionPanel()`
 - `PDV_PrismaBridge.ToggleDevotionPanel()`
+- `PDV_PrismaBridge.IsJournalVisible()`
+- `PDV_PrismaBridge.IsPanelVisible()`
 - `PDV_PrismaBridge.SendJson(payload)`
 - `PDV_PrismaBridge.SendOverlayJson(payload)`
+- `PDV_PrismaBridge.SupportsChoice()`
+- `PDV_PrismaBridge.ShowChoice(payload)`
+- `PDV_PrismaBridge.ConsumePendingChoice()`
+- `PDV_PrismaBridge.CancelChoice()`
+
+These twelve native declarations are the stable 1.0.x Papyrus surface. Ship
+optimization work must preserve their names and the established JSON payload
+schemas; it must not add hooks, co-save state, or a new public API.
 
 The first UI view is loaded from:
 
@@ -105,6 +115,11 @@ The bridge calls those functions through Prisma `InteropCall`.
 `SendJson(payload)` is for focused panel data. `SendOverlayJson(payload)` shows
 the view without focusing or pausing the panel path and sends the payload to the
 overlay receiver, which is currently used for transient devotion toasts.
+
+The bridge remains event-driven: there is no recurring native idle callback.
+The deferred overlay queue is bounded, payload strings are copied before they
+cross the mutex/Prisma boundary, and failure paths preserve the existing
+Papyrus return contract.
 
 ## Surface Ownership Contract
 

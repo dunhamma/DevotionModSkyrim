@@ -21,8 +21,24 @@ Scriptname PDV_Deity_Syrabane extends PDV_DeityBase
 ; honorable duel, 2003 shared pact memory, 2005 reclamation abandoned), so a curated
 ; signal fired for one could score on the other. The highest id otherwise in use is
 ; 3102, and the MCM debug slider's ceiling is 3200, so 3110-3114 is free and reachable.
-; NOTE: these signals still have NO award sites -- authoring them is 1.0.4 work. Until
-; then Syrabane earns through ScoreFromTable / the quest-reaction matrix, as it does now.
+; STATUS (updated 2026-08-03, packet P9). FOUR of the five are now wired and firing:
+;   3110 PROTECTIVE_WARDING     - a ward that BLOCKED hostile magic (OnHitEx, abHitBlocked +
+;                                 akSource as Spell). Not a cast counter: "every ward cast" stays
+;                                 rejected per the design contract.
+;   3112 CURSE_DISEASE_WARDING  - a vanilla cure effect landing on the player
+;                                 (OnMagicEffectApplyEx, PDV_FLST_Altmer_Syrabane_CureEffects).
+;   3113 ANTI_MAGE_SURVIVAL     - survived a mage fight at low health with a kill; weekly stamp.
+;   3114 MAGICAL_CONTAINMENT    - learning a vanilla Ward tome
+;                                 (PDV_FLST_P2_AltmerSyrabaneSources, one-shot per tome).
+;
+; 3111 APPRENTICE_AID is deliberately NOT wired and is marked retired-not-wired in
+; tools/pdv_reserved_signals.json. Every College-aid hook duplicates quest-reaction rows Syrabane
+; already holds on MG01/MG02/MG03/MG05/MG07/MG08, so it would score him twice for one act. The
+; constant stays declared: it costs nothing unwired, and deleting its registry entry while it is
+; unwired would itself fail the signal gate.
+;
+; He also has a full day-to-day likes/dislikes table as of P8 -- until then he had none at all,
+; and before P1 his Stance_Altmer defaulted to FOREIGN so any row would have scored 0.0 anyway.
 Int Property SIGNAL_PROTECTIVE_WARDING = 3110 AutoReadOnly
 Int Property SIGNAL_APPRENTICE_AID = 3111 AutoReadOnly
 Int Property SIGNAL_CURSE_DISEASE_WARDING = 3112 AutoReadOnly

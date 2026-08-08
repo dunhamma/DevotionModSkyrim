@@ -14,9 +14,13 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const REPO_SOURCE = path.join(ROOT, "live-source", "Scripts", "Source");
-const LIVE_SOURCE = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source";
+const LIVE_SOURCE =
+  process.env.PDV_AUDIT_LIVE_SOURCE ||
+  "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source";
 const REPO_VIEW = path.join(ROOT, "native", "DevotionPrismaBridge", "mod", "PrismaUI", "views", "Devotion");
-const LIVE_VIEW = "D:/Wabbajack/modlists/Anvil/mods/Devotion/PrismaUI/views/Devotion";
+const LIVE_VIEW =
+  process.env.PDV_AUDIT_LIVE_PRISMA ||
+  "D:/Wabbajack/modlists/Anvil/mods/Devotion/PrismaUI/views/Devotion";
 
 main(process.argv.slice(2));
 
@@ -124,8 +128,11 @@ function verifyManager(text, filePath, pass, fail) {
     ["Rivalry drain driver", 'AwardPietyInternal(rivalDeity, rivalAmount, False, "rivalry with " + sourceDeity.DeityName)', "Rivalry drain uses a reason-bearing piety path."],
     ["Khajiit corrupted chronicle", "The moonlight scatters from your path. Corruption is upon you.", "Severe Corrupted posture writes a Chronicle line."],
     ["Khajiit shadowdrift chronicle", "You slipped into the moons' shadow. Darkness is upon you.", "Severe ShadowDrift posture writes a Chronicle line."],
-    ["Khajiit emergence helper", "PDV_DeityBase Function GetKhajiitFocusDeity(Int focusValue)", "Khajiit focus resolves to a deity for quiet-emergence surfacing."],
-    ["Khajiit emergence onset", 'SurfaceTransition("emergence", focusDeity.DeityName, "onset", focusDeity.DeityIndex, "revelation")', "Khajiit quiet-emergence emits onset, not reach."],
+    ["Khajiit emergence helper", "PDV_DeityBase Function GetKhajiitFocusDeity(Int focusValue)", "Khajiit focus resolves to a deity for automatic emergence and reorientation."],
+    ["Khajiit first-emergence popup", "emergenceMessage.Show()", "Khajiit's first qualifying focus shows its ceremonial one-button MessageBox."],
+    ["Khajiit emergence toast", 'SendPrismaShiftToast("Your road turns toward "', "Khajiit emergence and reorientation emit the existing Prisma toast."],
+    ["Khajiit pinned emergence entry", '"focus.emergence", GetKhajiitFocusSymbol(focusValue), True', "The first Khajiit emergence writes a pinned Book of Days entry."],
+    ["Khajiit unpinned reorientation entry", '"reorientation", GetKhajiitFocusSymbol(focusValue), False', "Later Khajiit reorientations write an unpinned Book of Days entry without another popup."],
     ["Breton emergence helper", "PDV_DeityBase Function GetBretonTraditionDeity(Int traditionValue)", "Breton tradition resolves to a deity for quiet-emergence surfacing."],
     ["Breton emergence onset", 'SurfaceTransition("emergence", traditionDeity.DeityName, "onset", traditionDeity.DeityIndex, "revelation")', "Breton quiet-emergence emits onset, not reach."],
     ["Neglect recovery producer", 'SurfaceTransition("neglect", _activeDeity.DeityName, "recover", _activeDeity.DeityIndex, "renewal")', "Patron neglect recovery emits the built recover tone."],
@@ -169,6 +176,7 @@ function verifyManager(text, filePath, pass, fail) {
   forbidSnippet(text, '"drift.warn"', "Retired drift tone", "No drift.warn tone entries remain in the manager.", filePath, pass, fail);
   forbidSnippet(text, "SendPrismaShiftToast(BuildCommitmentOffer", "Commitment shift-toast fallback", "Commitment accept/refuse do not reuse the generic shift-toast template.", filePath, pass, fail);
   forbidSnippet(text, 'AwardPiety(pendingDeity, carryAmount, "commitment_carryover")', "Retired commitment carryover loss", "Patron acceptance preserves existing deity piety and applies no lossy carryover award.", filePath, pass, fail);
+  forbidSnippet(text, 'SurfaceTransition("emergence", focusDeity.DeityName', "Retired Khajiit generic emergence route", "Khajiit emergence uses the exact popup/toast/Book contract rather than the generic transition director.", filePath, pass, fail);
 
   if (/SurfaceTransition\("emergence"[\s\S]{0,140}"reach"/.test(text)) {
     fail("Emergence direction", 'A SurfaceTransition("emergence", ..., "reach") call remains; expected "onset".', filePath);
@@ -239,8 +247,8 @@ function runNegativeFixtures(managerText, pass, fail) {
     fail
   );
   expectManagerFailure(
-    "Negative fixture: emergence reach",
-    managerText.replace('SurfaceTransition("emergence", focusDeity.DeityName, "onset", focusDeity.DeityIndex, "revelation")', 'SurfaceTransition("emergence", focusDeity.DeityName, "reach", focusDeity.DeityIndex, "revelation")'),
+    "Negative fixture: Khajiit emergence popup",
+    managerText.replace("emergenceMessage.Show()", ""),
     pass,
     fail
   );

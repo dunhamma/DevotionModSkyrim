@@ -9,8 +9,11 @@ This file owns the
 
 Architecture (locked): **tiered** — vanilla + Creation Club hooks → CORE PDV matrix; third-party
 new-land hooks → a separate ARR-scoped matrix JSON loaded by a generic second-channel loader in
-`PDV_PlayerEvents.psc`, plus the reserved ESL `PDV_AuthoriaARR_Compatibility.esp` for record-level
-adapters. Roster is LOCKED — extension = new SIGNALS to existing deities/Princes, never new gods.
+`PDV_PlayerEvents.psc`, plus the current ESPFE `PDV_AuthoriaARR_Combined.esp` for record-level
+adapters. It replaces the historical quest/dialogue and shrine-prayer donor ESPs
+in the cumulative FOMOD and KoK R11 deployment (32 records: 21 quest/dialogue
+overrides and 11 ACTIs); source quest SEQs remain supplied by their masters.
+Roster is LOCKED — extension = new SIGNALS to existing deities/Princes, never new gods.
 
 Surfaces: **S1** quest-reaction matrix (FormID|stage, data-only) · **S2** Daedric Prince senders
 (vanilla-locked, 16 guards) · **S3** P2 receivers · **S4** location triggers · **S5** shrine
@@ -172,7 +175,8 @@ Core matrix still carries the six promoted Tranche6 compatibility cells. This su
 ## Wave 6 (man_DaedricShrines shrine adapters) — INVESTIGATED, NOT VIABLE as a clean override
 Definitive ACTI scan (2026-06-15): the man_DaedricShrines family is STAT-based (mesh/statue replacers),
 NOT ACTI. Zero of the 16 Princes expose a clean route anchor; the only ACTIs are Nocturnal x2, both
-carrying TempleBlessingScript (PDV must not replace global activator scripts). Jyggalag/Sithis/Kynareth/
+carrying TempleBlessingScript (PDV must not replace global activator scripts [AMENDED 2026-07-27 -
+see the note under this Wave]). Jyggalag/Sithis/Kynareth/
 Mara = STAT only; Mehrunes Dagon = worldspace placement only. Vanilla shrine ACTIs (Azura/Mara/Kynareth/
 Divines) carry TempleBlessingScript and are won by skymojibase.esl, not man_. => A shrine-prayer adapter
 would need EITHER (a) PDV-placed invisible marker ACTIs / trigger volumes at the shrine cell positions
@@ -180,9 +184,21 @@ would need EITHER (a) PDV-placed invisible marker ACTIs / trigger volumes at the
 handler; note coc skips location triggers). Both are ESP/runtime + design decisions — HELD for review.
 No clean data-only adapter exists [SUPERSEDED - see below]. Wave 6 data-only investigation = DONE.
 
+**AMENDMENT (2026-07-27, Devotion 1.0.4):** the parenthetical above ("PDV must not replace global
+activator scripts") no longer states the project rule. Devotion 1.0.4 ships its own compiled
+`Scripts\TempleBlessingScript.pex` to undo the dispel-all-active-effects line Requiem's bugfix packs
+add to shrine activation. The RECORD-level boundary this Wave analysis depends on is unchanged and
+still holds - Devotion writes no shrine `ACTI` override and replaces no script PROPERTY on any
+activator - so the Wave 6 conclusion (no clean data-only adapter) is unaffected. What changed is that
+a loose-file `.pex` override of the vanilla script is now a sanctioned tool, which means: (a) any
+list-author mod shipping its own `TempleBlessingScript.pex` is now a DIRECT file conflict with
+Devotion, resolved by MO2 mod priority, not a plugin-level conflict; and (b) Devotion must sit BELOW
+any such mod in MO2 or the shrine bug returns silently. See the 2026-07-27 entries in `AGENTS.md`
+and `PDV_MOD_SETUP.md`.
+
 SUPERSEDED (2026-06-15): a Base Object Swapper STAT->ACTI base-swap turned out to be the clean
 "PDV-places its own clickable" path the verdict said would be needed. The shrine-prayer feature
-(PDV_Phase21_ARR_ShrinePrayer.manifest.json + dist/PDV_AuthoriaARR_Compatibility/) makes 11 Daedric
+(PDV_Phase21_ARR_ShrinePrayer.manifest.json + the current `PDV_AuthoriaARR_Combined.esp`) makes 11 Daedric
 statues clickable +2/day prayers (Azura, Vaermina, Molag Bal, Mephala, Mehrunes Dagon, Sheogorath,
 Namira, Sanguine, Hermaeus Mora, Hircine, Peryite). So "no clean adapter" is OBSOLETE for the swap
 approach. Still unhooked-by-prayer (with reasons): Jyggalag/Sithis (no PDV deity); Boethiah/Meridia/

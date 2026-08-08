@@ -321,6 +321,13 @@ Next implementation-safe slice:
 
 ## Focused Pass: Khajiit (2026-05-30)
 
+> Superseded 2026-08-06: focus now emerges automatically at `25` weight,
+> `15` lead, and Seeker piety with one ceremonial popup; the road itself is home
+> with no circuit; rotating phase bonuses and the piety multiplier are retired;
+> matching the god in strength instead produces `20%` Lattice Resonance on the
+> focused numeric package. The historical text block below is retained only as
+> decision history.
+
 ```text
 Race: Khajiit
 Budget verdict: Watch

@@ -125,7 +125,8 @@ function verifyManager(text, filePath, pass, fail) {
     ["Bosmer path chronicle", "Y'ffre's song settles within you. Your road through the Green is the ", "Bosmer path-confirm chronicle is present."],
     ["Khajiit corrupted chronicle", "The moonlight scatters from your path. Corruption is upon you.", "Khajiit Corrupted posture chronicle is present."],
     ["Khajiit shadowdrift chronicle", "You slipped into the moons' shadow. Darkness is upon you.", "Khajiit ShadowDrift posture chronicle is present."],
-    ["Altmer crisis toast", "The old line turns: ", "Altmer crisis transition toast is present."]
+    ["Altmer crisis toast", 'SendPrismaShiftToast(crisisHeadline, crisisLine, "auri-el")', "Altmer crisis transition emits an immediate Prisma toast from authored copy."],
+    ["Altmer crisis journal pairing", 'AppendBookOfDaysEntry(crisisLine, Utility.GetCurrentGameTime() as Int, crisisTone, "auri-el", True, 3, crisisHeadline)', "Altmer crisis transition pairs the toast with a Book of Days entry."]
   ];
 
   for (const [check, snippet, detail] of requiredSnippets) {

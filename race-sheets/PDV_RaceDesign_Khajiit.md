@@ -1,10 +1,59 @@
 # PDV Race Design — Khajiit
-**Last updated:** 2026-07-14
+**Last updated:** 2026-08-06
 **Implementation status:** LOCKED (lunar substrate, focused emphasis, outdoor road-home practice, Observe the Moons, curse posture, and launch hook scope)
 **Status:** Implementation locked for 1.0 experience shape; reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.6)
 
 ---
+
+## 2026-08-06 Lunar and Champion Rebalance
+
+This section supersedes every older statement below about silent emergence,
+permanent broad worship, `50 / 15` focus gates, rotating phase-stat blessings,
+the presiding-god piety multiplier, and prior Khajiit reward magnitudes.
+
+- The exclusive substrate tiers are Lunar Hardiness at `1-24` (Disease
+  Resistance `+5%`), Khajiit Lunar Road at `25-74` (Stamina `+10`, Disease
+  Resistance `+10%`), and Lunar Attunement at `75+` (Stamina `+15`, Disease
+  Resistance `+15%`). Lunar Attunement no longer grants Magicka.
+- Broad Lunar Lattice remains valid until one deity has at least `25` focus
+  weight, a `15` lead, and actual piety `25` (Seeker). The first qualifying god
+  emerges automatically with a one-time ceremonial MessageBox, Prisma toast,
+  and pinned Book of Days entry. Later qualifying leaders reorient the focus
+  automatically with toast and Book entry but no second popup. Ties, lost lead,
+  or piety loss never erase an established focus.
+- The eight gods-in-strength slots remain `Alkosh, Azurah, Khenarthi, Rajhin,
+  Rajhin, Baan Dar, Khenarthi, Azurah`. Public copy names only the god currently
+  in strength. The five old rotating stat spells and the `+10%` piety
+  multiplier are retired and reconciled away.
+- Lattice Resonance activates when the focused Seeker-or-higher deity is in
+  strength. It increases only that focused numeric blessing by `20%` and shows
+  a separate Active Effects marker. It never amplifies substrate rewards,
+  Azurah's Portent, Baan Dar's rescue, or scripted capstones.
+- Moon observations load ten lines for the current god plus six shared lines
+  from `PDV_KhajiitMoonObservations.json`, with uniform selection and resolved
+  line-ID immediate-repeat prevention. The compiled four-line sets remain a
+  missing-or-invalid-JSON fallback.
+- Current focused reward totals are: Khenarthi `15`; `25/30 carry`;
+  `40/80 carry/3% speed`. Azurah `15`; `25/5% magic resistance`;
+  `40/15% magic resistance/Portent`. Baan Dar `5 unarmed`;
+  `10 unarmed/20 health`; `20 unarmed/30 health/daily 50% rescue`. Rajhin
+  `5 sneak`; `13 sneak/10 lockpicking`; `25 sneak/25 lockpicking/15
+  pickpocket`. Alkosh `15 armor`; `30 armor/8 block`; `50 armor/15 block/10%
+  faster Shout recovery`.
+- Azurah's Portent is a Champion-only, player-triggered lesser power available
+  once per 06:00 devotional day. For 15 seconds it reveals living actors,
+  undead, corpses, Daedra, and Dwarven automatons through walls within 100 feet
+  indoors or 200 feet outdoors, without crossing loading doors or unloaded
+  cells.
+
+`references/authoring/PDV_KhajiitFiveDeityDailySignalAudit_2026-08-06.md` is the
+signal-coverage authority for the five focused deities: per-deity curated and
+likes/dislikes inventory, the repeatable-parity verdict, and the locked specs for
+the moon-rite split and the quest-row expansion.
+
+Runtime and manual proof for these new surfaces remains open until the Khajiit
+in-game matrix is recorded.
 
 ## 2026-07-13 Lunar-Road Pacing Addendum
 
@@ -15,6 +64,16 @@ rest, moon rite, caravan defense, Baan Dar reversal, notable Rajhin theft,
 Alkosh milestone, or curated lunar source in each 06:00 devotional day grants
 `+4` toward `1/25/75`; later acts grant zero. Generic inn/house sleep and
 generic theft or stealth do not qualify. The substrate does not decay.
+
+Outdoor status is captured when sleep starts and carried through to a
+completed, non-interrupted sleep stop. The wake cell is not sampled again, so
+an exterior bedroll or tent remains road-home practice even if its sleep flow
+moves the player during wake-up. Missing start context fails closed. The first
+road-home rest in each devotional day receives one toast and one Book of Days
+entry. If another lunar practice already spent the shared `+4`, the entry says
+`The road home was remembered. Today's lunar practice was already marked.`
+Further road-home rests that day create no additional toast or Book entry.
+Vanilla exterior-bedroll and Campfire-tent runtime proof remains open.
 
 `Observe the Moons` is a Khajiit-only lesser power used outdoors from 20:00 to
 05:00. It resolves once after two still, uninterrupted seconds in the shared
@@ -32,7 +91,7 @@ Khajiit religion is cosmologically constitutive. The moons — Jone and Jode, Ma
 
 Khajiit in Skyrim carry this with them into a province that doesn't recognize it. They're excluded from most city temples. They're not welcome in holds as anything but merchants. Their religion has no local infrastructure. What they have is the road, each other, and the moons.
 
-**Core design intent:** Khajiit should feel cosmologically held even before focused commitment — the lunar substrate is always running. The deepening toward a focused patron should feel silent and emergent, like a preference becoming clear through lived behavior rather than a formal declaration. Playing a Khajiit should feel like exile life that is still spiritually coherent.
+**Core design intent:** Khajiit should feel cosmologically held even before focused commitment — the lunar substrate is always running. The deepening toward a focused patron should emerge from lived behavior rather than a formal choice, with the first qualifying road revealed ceremonially so the change is never invisible. Playing a Khajiit should feel like exile life that is still spiritually coherent.
 
 ---
 
@@ -45,9 +104,9 @@ Broad lunar worship begins at game start
 Broad lunar worship cap: Tier 2 (Faithful)
 
 The substrate is always active — it does not require maintenance to exist
-Focused deity emphasis emerges silently through behavior
-  (Unlike Nord/Imperial — no formal offer fires; weighting shifts until one god leads)
-Focused commitment confirmed when one deity's piety clearly dominates
+Focused deity emphasis emerges automatically through behavior
+  (Unlike Nord/Imperial, no formal offer fires; weighting shifts until one god qualifies)
+The first focus is announced once; later qualifying leaders reorient automatically
 Tier 3 accessible through focused deity commitment
 ```
 
@@ -63,13 +122,13 @@ Tier 3 accessible through focused deity commitment
 
 **Substrate namespace (LOCKED):** `PDV_Substrate_KhajiitLunar` is the canonical substrate owner. Use the existing StorageUtil prefix `PDV.Substrate.KhajiitLunar.*`, extending from current keys rather than renaming them: `Metric`, `Tier`, `LastEvent`, `LastPhase`, `ObservanceCount`, and `RoadHomeCount`.
 
-**Moon-cycle model (LOCKED, updated 2026-06-10):** 1.0 uses the merged god-aligned Lattice model. The Lattice runs on the real Skyrim moon cycle, and each phase BELONGS to one of the five moon-path gods as Khajiit cosmology (always defined, always shown as flavor). The presiding god grants small bonuses only once the player has cultivated that god to Faithful; full-cycle consistency still determines overall substrate strength. This prevents moon awareness from becoming a wait-for-the-right-night chore while still rewarding players who live across the full cycle.
+**Moon-cycle model (LOCKED, updated 2026-08-06):** 1.0 uses the merged god-aligned Lattice model. The Lattice runs on the real Skyrim moon cycle, and each slot belongs to one of the five moon-path gods. Public presentation names only the god currently **in strength**. When that god matches an established Seeker-or-higher focus, Lattice Resonance increases the focused numeric blessing by 20%; the cycle never changes piety gain and never strengthens the substrate or scripted capstones.
 
 **Moon phase source (LOCKED, updated 2026-06-10):** The Lattice phase is the REAL visible Skyrim moon: an 8-phase, 24-day cycle computed from GameDaysPassed % 24 with the Creation Kit GetCurrentMoonphase boundaries (full moon on the wrap at days 22-23/0, new moon at days 10-12, midday rollover). No Papyrus moon API exists, so the engine formula is replicated deterministically in `GetKhajiitMoonPhaseFromGameDay`; this matches the rendered sky on vanilla phase-length settings. The earlier abstract 28-day fallback cycle is retired.
 
-**Presiding gods (LOCKED, added 2026-06-10):** Phase-to-god alignment, owned in one place in code (`GetLunarPresidingFocus`):
+**God-strength schedule (LOCKED, updated 2026-08-06):** Slot-to-god alignment is owned in one place in code (`GetLunarPresidingFocus`). The visible-moon column is internal implementation context, not player-facing waxing/waning copy:
 
-| Lattice phase | Visible moon | Presiding god |
+| Lattice slot | Visible moon | God in strength |
 |---|---|---|
 | 1 | Full moon | Alkosh (order at its height) |
 | 2 | Waning gibbous | Azurah (twilight descending) |
@@ -82,17 +141,17 @@ Tier 3 accessible through focused deity commitment
 
 Window counts follow the accessibility ordering: Khenarthi/Azurah/Rajhin two phases each, Baan Dar one, Alkosh only the full moon (rare by design).
 
-**Presiding-god bonuses (LOCKED, added 2026-06-10):** While the presiding god is at Faithful (tier 2) or better: (a) +10% piety gain toward that god (`KHAJIIT_LUNAR_ALIGNMENT_BONUS`, applied in the manager gain pipeline), and (b) ONE small phase blessing stat effect capped at +5 or +5% (`PDV_Bless_Khajiit_Phase_*`, granted/removed script-side by `SyncKhajiitPhaseBlessing` at dawn; at most one active at a time; records pending per `references/authoring/PDV_KhajiitPhaseBlessings.spec.json`). Below Faithful the presiding god is pure flavor. Survey always names the presiding god; the MCM moon-paths readout marks `(presiding)` / `(presiding, favored)` and lists each god's standing and piety so silent emergence stays trackable.
+**Lattice Resonance (LOCKED, updated 2026-08-06):** When the god in strength matches the current focused deity and that deity is at least Seeker, one keyword-conditioned perk multiplies the fifteen focused blessing spells' numeric magnitudes by `1.20`. A separate Active Effects marker explains the increase. The five old phase-stat spells and the presiding-deity piety multiplier remain inert and are removed during reconciliation.
 
-**Silent patron emergence (LOCKED):** Khajiit remain the only no-offer race in 1.0. Focused deity emphasis shifts silently at dawn based on weighted behavior. No formal patron offer fires, and the player never "accepts" Azurah, Khenarthi, Baan Dar, Rajhin, or Alkosh through the shared offer UI. The player notices through stronger domain rewards, status readout, and flavor.
+**Automatic patron emergence (LOCKED, updated 2026-08-06):** Khajiit remain a no-offer race in 1.0. Focused deity emphasis is assigned as soon as behavior and piety qualify. The first focus shows one deity-specific ceremonial MessageBox plus Prisma toast and pinned Book entry; later reorientations use toast and Book entry without another popup. No confirmation choice or asynchronous result channel is used.
 
 **Focused-emphasis state (LOCKED):** Do not use `PDV_GLO_PatronState = active primary` to represent Khajiit focus. Add a Khajiit-specific current emphasis state, recommended as `PDV_State_KhajiitFocusedEmphasis`, with a CK-readable mirror only if implementation needs conditions. This tracks the leading deity emphasis without pretending a formal commitment offer occurred.
 
 **Focused-emphasis enum (LOCKED):** `PDV_State_KhajiitFocusedEmphasis` uses `None = 0`, `Khenarthi = 1`, `Azurah = 2`, `BaanDar = 3`, `Rajhin = 4`, and `Alkosh = 5`. `None` means broad lunar worship, not failure.
 
-**Focused-emphasis threshold (LOCKED):** Focus activates only when one focused deity has at least `50` persistent piety and leads the next-highest Khajiit focused deity by at least `15` piety. This is evaluated at dawn. The margin prevents flicker between close deity emphases.
+**Focused-emphasis threshold (LOCKED, updated 2026-08-06):** Focus activates when one deity has at least `25` focus weight, leads the next-highest focus weight by at least `15`, and has actual piety `25` or higher. Evaluation follows both weight and piety updates. Once established, ties, insufficient leads, or piety loss do not reset the focus to broad; only another deity satisfying the complete test replaces it.
 
-**Broad fallback (LOCKED):** If no deity has a clear lead, the Khajiit remains in broad lunar Faithful state. Balanced worship is complete and valid; do not force a focus just because the player has enough total piety across several gods.
+**Broad pre-focus state (LOCKED):** Before any deity first satisfies the complete dominance test, `None` is the valid broad Lunar Lattice state. After focus emerges, broad is not a fallback state.
 
 **Road home (LOCKED, supersedes the 2026-06-10 circuit):** Any completed
 outdoor rest is authentic road-home practice. The road itself is home; 1.0 has
@@ -108,6 +167,12 @@ rejection. Generic inn and house sleep do not qualify.
 **ShadowDrift boundary (LOCKED):** `ShadowDrift` is reserved for dominant shadow-pattern behavior: Nocturnal alignment, active vampire posture plus repeated night-only predation, or other explicitly shadow-coded behavior. Do not enter `ShadowDrift` from ordinary night travel, stealth, or lunar observance.
 
 **Launch focused paths (LOCKED):** All five focused emphases are valid for 1.0: `Khenarthi`, `Azurah`, `Baan Dar`, `Rajhin`, and `Alkosh`. `Khenarthi` and `Azurah` are the most routinely reachable, `Baan Dar` and `Rajhin` are behavior-specific, and `Alkosh` is rare/high-threshold by design.
+
+## Historical pre-2026-08-06 reward notes (superseded)
+
+The reward concepts and numbers below are retained only as design history. They
+must not be used for implementation, UI copy, or balance decisions; the
+2026-08-06 rebalance section and live record specs above are authoritative.
 
 ## Tier Rewards
 
@@ -255,7 +320,7 @@ The lunar substrate weakens when you've been **indoors, urban, and disconnected 
 - Outdoor sleep / rest: Cost Class A (sleep event)
 - Caravan NPC interaction: Cost Class B (dialogue event; NPC schedules add complexity)
 - Moon-phase window: Cost Class B (periodic state check — once per day is sufficient)
-- Silent patron emergence: Cost Class B (dawn pipeline evaluation of piety dominance)
+- Automatic patron emergence: Cost Class B (event-ordered evaluation of focus weight, lead, and actual piety)
 - Road-travel detection (non-fast-travel): Cost Class C (requires location-change time tracking)
 
 ---
