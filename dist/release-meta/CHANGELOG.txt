@@ -3,6 +3,41 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
+## 1.5.0 - 2026-08-08
+
+Folds in everything since 1.0.2, including the never-changelogged 1.0.4.
+
+**One installer.** Devotion and its per-mod patches now ship as a single FOMOD. The
+core mod installs automatically and cannot be deselected; the patches are optional
+tickboxes grouped by kind across two pages. Previously they were separate downloads,
+and installing core alone left every patched mod silently awarding nothing.
+
+**Daedric prices are felt now.** Molag Bal's and Hircine's pact prices moved off skills
+that Requiem barely registers and onto the Health pool. Nocturnal's moved off carry
+weight. Price magnitudes across all sixteen Princes were corrected to their intended
+values - 33 of 48 tiers had been sitting at pre-tuning numbers.
+
+**Malacath's price no longer cripples you.** His Champion tier was a permanent 30%
+movement-speed cut, an accident of how prices were scaled rather than a design choice.
+It is now 10%, and the Seeker and Devoted tiers scale to match.
+
+**Hermaeus Mora's Champion boon is complete.** The Magicka half of the two-effect boon
+was missing from the record; it now grants the documented +20 Alteration and +20
+Magicka together.
+
+**Altmer worship is scoped to its five deities.** Mara, Stendarr and Y'ffre had been
+reading as native to Altmer characters, which the roster never intended. Auri-El,
+Magnus, Trinimac, Xarxes and Syrabane are the Altmer lanes; the other three are
+deferred to a future review. EXISTING SAVES: an Altmer who had been earning through
+Mara, Stendarr or Y'ffre will find those now treated as foreign worship.
+
+**Fixed:** a Hircine tracking value advanced only while debug logging was enabled, so
+the residue clock ran differently with logging on. An artifact-destruction watcher
+polled every fifteen seconds forever with no way to finish; it now stops once there is
+nothing left to watch.
+
+**Save compatibility:** no new game required.
+
 ## 1.0.2 — 2026-07-18
 
 - **Fixed (properly this time): crash to desktop when tempering or crafting.**
