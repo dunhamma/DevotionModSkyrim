@@ -1,16 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://qconsulting.ca/fo3/ModConfig5.0.xsd">
-  <moduleName>Devotion - Quest Mod Patches</moduleName>
+  <moduleName>Devotion - Quest Mod PatchHub</moduleName>
   <installSteps order="Explicit">
-    <installStep name="Select Quest Mod Patches">
+    <installStep name="Quests and Adventures">
       <optionalFileGroups order="Explicit">
-        <group name="Devotion Quest Mod Patches" type="SelectAny">
+        <group name="New Quests and Lands" type="SelectAny">
           <plugins order="Explicit">
-            <plugin name="Sirenroot">
-              <description>Lays the haunting Ayleid spirit to rest: Arkay, Meridia, Stendarr, Tu'whacca, Azura, Y'ffre, plus the elven pantheon (Auri-El, Xarxes, Magnus) for the Ayleid dead, and Zenithar for honest salvage work.</description>
+            <plugin name="Above All Else">
+              <description>Darbalag's Lovecraft-inspired descent. Hermaeus Mora answers the pursuit of forbidden knowledge to its end. Machine-verified; runtime evidence remains open.</description>
               <files>
-                <folder source="common\Sirenroot" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
+                <folder source="common\AboveAllElse" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -18,67 +17,7 @@
                   <patterns>
                     <pattern>
                       <dependencies operator="And">
-                        <fileDependency file="evgSIRENROOT.esm" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="The Rot Below">
-              <description>Namira is named in the quest itself. Foiling her plan angers her and pleases the death-and-light gods; killing or sparing the freed lich Adabelle splits Mara and Dibella.</description>
-              <files>
-                <folder source="common\TheRotBelow" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="CJ03Elroy.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="The Frozen Heart">
-              <description>The cursed woman is a Snow Elf, so Auri-El reacts most of all: curing her is a milestone in his eyes, killing her a grave offence. Mara, Stendarr, Trinimac and Molag Bal also weigh in.</description>
-              <files>
-                <folder source="common\TheFrozenHeart" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="ksws07_quest.esm" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Depths of the Soul">
-              <description>Zenithar approves of helping the merchant Pike open his shop.</description>
-              <files>
-                <folder source="common\DepthsOfTheSoul" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="Dungeon Delver Mod.esp" state="Active" />
+                        <fileDependency file="Darbalag - Quest Mod.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -90,7 +29,6 @@
               <description>Mara approves of rescuing the witch from the Black Stone Labyrinth.</description>
               <files>
                 <folder source="common\BabaYaga" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -110,7 +48,6 @@
               <description>Freeing the three werewolf spirits pleases Hircine; sparing Frija instead pleases Stendarr and disappoints him. Sheogorath is amused either way.</description>
               <files>
                 <folder source="common\BarkAndBite" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -130,7 +67,6 @@
               <description>Mara and Arkay approve of staying with the condemned man Aradell until the end.</description>
               <files>
                 <folder source="common\BeforeTheEnd" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -146,13 +82,10 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
-            <plugin name="War's Folly">
-              <description>Adds Devotion reactions to all six stances you can take with Sandor the preacher, from pride in slaughter to renouncing the war. Includes an ESL-flagged plugin (also repairs two dialogue endings that never set their quest stage).</description>
+            <plugin name="Beyond Skyrim - Bruma">
+              <description>Data-only channels for eight direct Bruma resolutions: smuggling, treacherous murder or generous song restoration, freeing Bjarni, and recovering stolen antiquities. Machine-verified; runtime evidence remains open.</description>
               <files>
-                <folder source="common\WarsFolly" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-                <folder source="common\_Fragments\WarsFolly" destination="" priority="0" />
-                <folder source="plugins\individual\WarsFolly" destination="" priority="0" />
+                <folder source="common\BeyondSkyrimBruma" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -160,7 +93,140 @@
                   <patterns>
                     <pattern>
                       <dependencies operator="And">
-                        <fileDependency file="War's Folly.esp" state="Active" />
+                        <fileDependency file="BSHeartland.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Calling the Watchmaker">
+              <description>Data-only channel for the explicit cold-murder branch. Machine-verified; runtime branch evidence remains open. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\CallingTheWatchmaker" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Sithis Mod - Lovecraftian Inspired Quest.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="DAc0da">
+              <description>Data-only reactions for the two directly evidenced DAc0da resolutions. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\DAc0da" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="DAc0da.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Depths of the Soul">
+              <description>Zenithar approves of helping the merchant Pike open his shop.</description>
+              <files>
+                <folder source="common\DepthsOfTheSoul" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Dungeon Delver Mod.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Glenmoril">
+              <description>Data-only reactions for the directly evidenced Glenmoril resolutions. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\Glenmoril" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Glenmoril.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Hunt for the Spectre">
+              <description>Data-only channel for the directly evidenced Spectre defeat. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\HuntForSpectre" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Hunt for the Spectre.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Moonpath to Elsweyr">
+              <description>Data-only channels for the Tenmar journey, Thalmor rebellion, saved/released plague branches, and completed rebel base. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\Moonpath" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="moonpath.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Olenveld">
+              <description>Data-only reaction for the directly evidenced Olenveld resolution. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\Olenveld" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Olenveld.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -172,7 +238,6 @@
               <description>Hoping the Falmer may yet be redeemed pleases Auri-El, their forebears' god; calling the damage irreparable disappoints him. Includes an ESL-flagged plugin.</description>
               <files>
                 <folder source="common\OnceWeWereHere" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
                 <folder source="common\_Fragments\OnceWeWereHere" destination="" priority="0" />
                 <folder source="plugins\individual\OnceWeWereHere" destination="" priority="0" />
               </files>
@@ -190,11 +255,221 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="Siege at Icemoth">
+              <description>Data-only channels for ending the necromancer's undead army and uncovering the Font of Memory. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\SiegeAtIcemoth" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Siege at Icemoth.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Sirenroot">
+              <description>Lays the haunting Ayleid spirit to rest: Arkay, Meridia, Stendarr, Tu'whacca, Azura, Y'ffre, plus the elven pantheon (Auri-El, Xarxes, Magnus) for the Ayleid dead, and Zenithar for honest salvage work.</description>
+              <files>
+                <folder source="common\Sirenroot" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="evgSIRENROOT.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Skyrim Extended Cut - Saints and Seducers">
+              <description>Data-only reaction for the directly evidenced Saints and Seducers resolution. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\SkyrimExtendedCutSaintsAndSeducers" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Skyrim Extended Cut - Saints and Seducers.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Taste of Death Addon">
+              <description>Data-only channel for bringing Markarth's Namira cult to justice. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\TasteOfDeathAddon" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="TasteOfDeath_Addon_Dialogue.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="The Forgotten City">
+              <description>Data-only reactions for the directly evidenced Forgotten City resolutions. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\ForgottenCity" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="ForgottenCity.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="The Frozen Heart">
+              <description>The cursed woman is a Snow Elf, so Auri-El reacts most of all: curing her is a milestone in his eyes, killing her a grave offence. Mara, Stendarr, Trinimac and Molag Bal also weigh in.</description>
+              <files>
+                <folder source="common\TheFrozenHeart" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="ksws07_quest.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="The Gift of Saturalia">
+              <description>Five data-only channels for the separately resolved Saturalia gifts; the umbrella completion is excluded to prevent double credit. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\GiftOfSaturalia" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="TheGiftofSaturalia.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="The Rot Below">
+              <description>Namira is named in the quest itself. Foiling her plan angers her and pleases the death-and-light gods; killing or sparing the freed lich Adabelle splits Mara and Dibella.</description>
+              <files>
+                <folder source="common\TheRotBelow" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="CJ03Elroy.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Unslaad">
+              <description>Data-only reactions for four directly evidenced Unslaad outcomes. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\Unslaad" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Unslaad.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Vigilant">
+              <description>Data-only reactions for the directly evidenced Vigilant outcomes. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\Vigilant" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Vigilant.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="War's Folly">
+              <description>Adds Devotion reactions to all six stances you can take with Sandor the preacher, from pride in slaughter to renouncing the war. Includes an ESL-flagged plugin (also repairs two dialogue endings that never set their quest stage).</description>
+              <files>
+                <folder source="common\WarsFolly" destination="" priority="0" />
+                <folder source="common\_Fragments\WarsFolly" destination="" priority="0" />
+                <folder source="plugins\individual\WarsFolly" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="War's Folly.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Whispers of the Depths">
               <description>Mara approves of offering condolences to the old sailor. Includes an ESL-flagged plugin.</description>
               <files>
                 <folder source="common\WhispersOfTheDepths" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
                 <folder source="common\_Fragments\WhispersOfTheDepths" destination="" priority="0" />
                 <folder source="plugins\individual\WhispersOfTheDepths" destination="" priority="0" />
               </files>
@@ -212,11 +487,10 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
-            <plugin name="Aetherium Forge Destroys Items (experimental)">
-              <description>Installs an ESL-flagged observer quest for successful artifact destruction. Existing saves are baselined without retroactive awards; runtime and save/load evidence remain open.</description>
+            <plugin name="Wyrmstooth">
+              <description>Data-only channel for defeating Vulthurkrah while defending Stonehollow. Machine-verified; runtime evidence remains open.</description>
               <files>
-                <folder source="common\AFDI" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
+                <folder source="common\Wyrmstooth" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -224,7 +498,7 @@
                   <patterns>
                     <pattern>
                       <dependencies operator="And">
-                        <fileDependency file="Aetherium Forge Destroys Items.esp" state="Active" />
+                        <fileDependency file="Wyrmstooth.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -232,91 +506,14 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
-            <plugin name="Daedric Shrines AIO prayer activators (experimental)">
-              <description>Installs a neutral ESL-flagged prayer-activator plugin and BOS swaps for eleven supported Daedric Shrines AIO statues. Runtime and placement evidence remain open.</description>
-              <files>
-                <folder source="common\DaedricShrinesAIO" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="man_DaedricShrines.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Auri">
-              <description>Y'ffre and Kynareth answer the green road walked at Auri's side, and Kyne marks the hunt kept clean.</description>
-              <files>
-                <folder source="common\Auri" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="018Auri.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Beyond Skyrim: Bruma">
-              <description>Four quest lines across the Bruma heartland draw the widest reaction set in the pack, from Akatosh and the Divines to Sithis, Malacath and the Khajiiti moons.</description>
-              <files>
-                <folder source="common\BeyondSkyrimBruma" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="BSHeartland.esm" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Calling the Watchmaker">
-              <description>A Lovecraftian descent that Sithis and Molag Bal both claim, while Mara, Stendarr and Kyne mark what it costs the living.</description>
-              <files>
-                <folder source="common\CallingTheWatchmaker" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="Sithis Mod - Lovecraftian Inspired Quest.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
+          </plugins>
+        </group>
+        <group name="Quest Expansions" type="SelectAny">
+          <plugins order="Explicit">
             <plugin name="College of Winterhold - Quest Expansion">
-              <description>Seven expanded College quests answer to the scholar gods: Julianos, Magnus, Xarxes and Syrabane, with Arkay and Meridia on the undead work.</description>
+              <description>Data-only channels for seven directly resolving College lessons. The umbrella curriculum completion is excluded to prevent double credit. Machine-verified; runtime evidence remains open.</description>
               <files>
                 <folder source="common\CollegeQuestExpansion" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -332,31 +529,10 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
-            <plugin name="DAc0da">
-              <description>Akatosh and Arkay respond to a journey that treats time and death as things to be walked through.</description>
-              <files>
-                <folder source="common\DAc0da" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="DAc0da.esm" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
             <plugin name="Ebony Blade Curse">
-              <description>Mephala alone answers the blade that feeds on betrayed friends.</description>
+              <description>Data-only reaction for breaking the Ebony Blade curse. Machine-verified; runtime evidence remains open.</description>
               <files>
                 <folder source="common\EbonyBladeCurse" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -372,31 +548,10 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
-            <plugin name="The Forgotten City">
-              <description>Julianos rewards the investigation, Mara and Stendarr the mercy shown in how it ends.</description>
-              <files>
-                <folder source="common\ForgottenCity" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="ForgottenCity.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
             <plugin name="Forsworn Conspiracy - Quest Expansion">
-              <description>Markarth's buried conspiracy: Stendarr and Stuhn on the prisoners, Leki on the duel, Molag Bal on what Cidhna Mine does to people.</description>
+              <description>Data-only channels for the trial-by-combat resolution and the separate Madanach mercy route. Machine-verified; runtime evidence remains open.</description>
               <files>
                 <folder source="common\ForswornConspiracyQE" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -412,11 +567,10 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
-            <plugin name="The Gift of Saturalia">
-              <description>A midwinter gift-giving that Mara, Dibella and Kynareth all bless, with Stendarr and Stuhn on the charity itself.</description>
+            <plugin name="Ill Met by Moonlight - Dialogue Expansion">
+              <description>Hircine answers returning the totem to the hunt. This is the addon's own added quest; vanilla DA05 stays owned by core Devotion.</description>
               <files>
-                <folder source="common\GiftOfSaturalia" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
+                <folder source="common\IllMetByMoonlightDialogue" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -424,47 +578,7 @@
                   <patterns>
                     <pattern>
                       <dependencies operator="And">
-                        <fileDependency file="TheGiftofSaturalia.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Glenmoril">
-              <description>The hagraven road: Namira claims it, Azura contests it, and Arkay marks the dead disturbed along the way.</description>
-              <files>
-                <folder source="common\Glenmoril" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="Glenmoril.esm" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Hunt for the Spectre">
-              <description>Arkay and Tu'whacca on laying a spectre to rest, with Azura, Meridia, Stendarr and Y'ffre on the hunt that gets you there.</description>
-              <files>
-                <folder source="common\HuntForSpectre" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="Hunt for the Spectre.esp" state="Active" />
+                        <fileDependency file="CH_IMBMDialougeAddon.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -473,10 +587,9 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Infiltration - Quest Expansion">
-              <description>Akatosh, Mara and Stendarr weigh how the infiltration is resolved, and whether anyone walks out alive.</description>
+              <description>Data-only channel for restoring Treva's Watch to Stalleo and his family. Machine-verified; runtime evidence remains open.</description>
               <files>
                 <folder source="common\InfiltrationQE" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -492,71 +605,10 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
-            <plugin name="Legacy of the Dragonborn">
-              <description>Three museum quest lines with a broad reaction set: Arkay and Tu'whacca on the relics of the dead, Auri-El, Xarxes and Syrabane on the elven holdings, Malacath and Trinimac on the orcish.</description>
-              <files>
-                <folder source="common\LegacyOfTheDragonborn" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="LegacyoftheDragonborn.esm" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Moonpath to Elsweyr">
-              <description>The road south answers to Khenarthi above all, with Kyne and Kynareth on the crossing, the Hist on the marsh, and Stendarr and Stuhn on the slaving.</description>
-              <files>
-                <folder source="common\Moonpath" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="moonpath.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Mrissi - Tail of Troubles">
-              <description>Akatosh and Julianos on the scholarship, Mara and Dibella on Mrissi herself, Malacath and Trinimac on the debt owed her people.</description>
-              <files>
-                <folder source="common\Mrissi" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="MrissiTailOfTroubles.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Nilheim - Quest Expansion">
-              <description>Zenithar and Z'en on the swindle, Baan Dar on seeing through it, Malacath and Shor on the answer given.</description>
+            <plugin name="Nilheim - Misc Quest Expansion">
+              <description>Data-only channels for defeating Telrav's double-cross or explicitly extorting him. Machine-verified; runtime evidence remains open.</description>
               <files>
                 <folder source="common\NilheimQE" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -572,31 +624,10 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
-            <plugin name="Olenveld">
-              <description>Arkay answers the isle of the dead, and little else does.</description>
-              <files>
-                <folder source="common\Olenveld" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="Olenveld.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
             <plugin name="Paarthurnax - Quest Expansion">
-              <description>Kyne on the dragon himself, Mara and Stendarr on mercy, Stuhn on the surrender offered, Molag Bal on the killing if it comes.</description>
+              <description>Data-only objective-derived channel for persuading the Blades and sparing Paarthurnax. Organic traversal is mandatory. Machine-verified; runtime evidence remains open.</description>
               <files>
                 <folder source="common\PaarthurnaxQE" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -613,10 +644,9 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Save the Icerunner">
-              <description>A wreck and a cargo: Zenithar and Z'en on honest salvage, Nocturnal, Rajhin and Baan Dar if you take the other road.</description>
+              <description>Data-only channels for stopping, persuading, joining, betraying, or lawfully exposing Jaree-Ra's Icerunner wrecking plot. Machine-verified; runtime evidence remains open.</description>
               <files>
                 <folder source="common\SaveTheIcerunner" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -632,11 +662,10 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
-            <plugin name="Siege at Icemoth">
-              <description>A siege answered by Shor, Tsun and Stendarr, with Arkay and Tu'whacca on the dead it leaves and Boethiah and Malacath on how it is won.</description>
+            <plugin name="The Heart of Dibella - Quest Expansion">
+              <description>Dibella and Mara answer carrying the temple's letter for the sisters. This is the expansion's own added quest; vanilla T01 stays owned by core Devotion.</description>
               <files>
-                <folder source="common\SiegeAtIcemoth" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
+                <folder source="common\HeartOfDibellaQE" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -644,127 +673,7 @@
                   <patterns>
                     <pattern>
                       <dependencies operator="And">
-                        <fileDependency file="Siege at Icemoth.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Skyrim Extended Cut - Saints and Seducers">
-              <description>Sheogorath alone, as it should be.</description>
-              <files>
-                <folder source="common\SkyrimExtendedCutSaintsAndSeducers" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="Skyrim Extended Cut - Saints and Seducers.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="A Taste of Death - Addon">
-              <description>Namira claims the feast; Arkay is absent by design, while Akatosh, Julianos, Stendarr and Stuhn mark the refusal.</description>
-              <files>
-                <folder source="common\TasteOfDeathAddon" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="TasteOfDeath_Addon_Dialogue.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Thieves Guild Alternative Endings">
-              <description>How the Guild ends: Nocturnal, Rajhin and Baan Dar on the thief's road, Stendarr, Stuhn and Trinimac if you break it instead. Includes a quest-stage adapter.</description>
-              <files>
-                <folder source="common\TGAlternativeEndings" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="TG Alternative Endings.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Thogra gra-Mugur">
-              <description>Malacath and Trinimac on the orcish road, Leki and HoonDing on the fighting, Mara and Dibella on Thogra herself.</description>
-              <files>
-                <folder source="common\Thogra" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="DK_Thogra.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Unslaad">
-              <description>Alkosh and Akatosh on the dragon-time at the heart of it, Baan Dar, Stuhn and Tsun across four quests.</description>
-              <files>
-                <folder source="common\Unslaad" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="Unslaad.esm" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Vigilant">
-              <description>Eighteen quests, the largest channel in the pack. Stendarr and Akatosh on the Vigil's work, Molag Bal throughout, Arkay and Azura on the dead and the dreaming, Alkosh and Khenarthi in Coldharbour.</description>
-              <files>
-                <folder source="common\Vigilant" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="Vigilant.esm" state="Active" />
+                        <fileDependency file="The Heart Of Dibella - Quest Expansion.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -773,10 +682,9 @@
               </typeDescriptor>
             </plugin>
             <plugin name="The Whispering Door - Quest Expansion">
-              <description>Mephala behind the door, Stendarr on refusing what is offered through it.</description>
+              <description>Data-only channel for disposing of Mephala's Ebony Blade so it can cause no further harm. Machine-verified; runtime evidence remains open.</description>
               <files>
                 <folder source="common\WhisperingDoorQE" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -792,11 +700,10 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
-            <plugin name="Wyrmstooth">
-              <description>Six quests and the broadest pantheon in the pack, from Kyne and Talos on the dragon-hunting to Zenithar and Z'en on the contract that pays for it.</description>
+            <plugin name="Thieves Guild Alternative Endings">
+              <description>Self-contained data channel plus generic quest-stage adapter that separates TG09's three endings without replacing Devotion scripts. Vanilla return remains stage 200; freeing the Nightingales and keeping the Skeleton Key route to synthetic stages 201/202 and suppress false Nocturnal commitment. Machine-verified; runtime evidence remains open.</description>
               <files>
-                <folder source="common\Wyrmstooth" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
+                <folder source="common\TGAlternativeEndings" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -804,7 +711,72 @@
                   <patterns>
                     <pattern>
                       <dependencies operator="And">
-                        <fileDependency file="Wyrmstooth.esp" state="Active" />
+                        <fileDependency file="TG Alternative Endings.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+          </plugins>
+        </group>
+      </optionalFileGroups>
+    </installStep>
+    <installStep name="Followers, Bards and Systems">
+      <optionalFileGroups order="Explicit">
+        <group name="Followers" type="SelectAny">
+          <plugins order="Explicit">
+            <plugin name="M'rissi's Tails of Troubles">
+              <description>Data-only channels for the proved enslavement, marriage, and kinship outcomes. Unproved chapter routes remain excluded. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\Mrissi" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="MrissiTailOfTroubles.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Song of the Green - Auri">
+              <description>Data-only channel for Auri's five-grove pilgrimage through Skyrim's beautiful natural sites. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\Auri" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="018Auri.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Thogra">
+              <description>Data-only blood-oath, betrayal, and two marriage-route channels. The objective-derived Largashbur marriage must be traversed organically. Machine-verified; runtime evidence remains open.</description>
+              <files>
+                <folder source="common\Thogra" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="DK_Thogra.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -813,10 +785,9 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Xelzaz">
-              <description>Xarxes, Magnus and Hermaeus Mora on the alchemy and the archives, Auri-El on Xelzaz's own road, Sanguine and Sheogorath where it goes sideways.</description>
+              <description>Data-only channels for crimson Nirnroot research and the proved recipe/spice theft plus mead tasting. Ambiguous routes remain excluded. Machine-verified; runtime evidence remains open.</description>
               <files>
                 <folder source="common\Xelzaz" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -832,51 +803,14 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
-            <plugin name="Aetherium Forge Destroys Items">
-              <description>Marks the loss at the Aetherium Forge as a devotional act rather than a silent item deletion. Ships an ESL-flagged plugin and an observer script.</description>
-              <files>
-                <folder source="plugins\individual\AFDI" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="Aetherium Forge Destroys Items.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
-            <plugin name="Daedric Shrines AIO">
-              <description>Teaches Devotion the reworked Daedric shrines so praying at them reaches the right Prince. Ships an ESL-flagged plugin and a Base Object Swapper rule.</description>
-              <files>
-                <folder source="plugins\individual\DaedricShrinesAIO" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
-              </files>
-              <typeDescriptor>
-                <dependencyType>
-                  <defaultType name="NotUsable" />
-                  <patterns>
-                    <pattern>
-                      <dependencies operator="And">
-                        <fileDependency file="man_DaedricShrines.esp" state="Active" />
-                      </dependencies>
-                      <type name="Recommended" />
-                    </pattern>
-                  </patterns>
-                </dependencyType>
-              </typeDescriptor>
-            </plugin>
+          </plugins>
+        </group>
+        <group name="Bardic Life" type="SelectAny">
+          <plugins order="Explicit">
             <plugin name="Bards Reborn - Student of Song">
-              <description>Dibella and Mara answer the songs learned and sung; Talos and Shor mark the hero-tales among them.</description>
+              <description>Dibella answers the discipline of the Bards College: completing the course of study, and taking up the bard's road after induction.</description>
               <files>
                 <folder source="common\BardsRebornStudentOfSong" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -893,10 +827,9 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Become a Bard">
-              <description>Dibella on the performance itself, Zenithar and Z'en on earning an honest living by it.</description>
+              <description>Dibella answers performance itself - playing for a tavern, and playing before a Jarl's court. Machine-verified; runtime evidence remains open.</description>
               <files>
                 <folder source="common\BecomeABard" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -912,11 +845,14 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
-            <plugin name="Ill Met by Moonlight - Dialogue Expansion">
-              <description>Hircine claims the hunt; Arkay and Kyne weigh what is owed to Sinding and to the hunted.</description>
+          </plugins>
+        </group>
+        <group name="World Systems and Collections" type="SelectAny">
+          <plugins order="Explicit">
+            <plugin name="Aetherium Forge Destroys Items">
+              <description>Installs an ESL-flagged observer quest for successful artifact destruction. Existing saves are baselined without retroactive awards; runtime and save/load evidence remain open. Machine-verified; runtime evidence remains open.</description>
               <files>
-                <folder source="common\IllMetByMoonlightDialogue" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
+                <folder source="common\AFDI" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -924,7 +860,7 @@
                   <patterns>
                     <pattern>
                       <dependencies operator="And">
-                        <fileDependency file="CH_IMBMDialougeAddon.esp" state="Active" />
+                        <fileDependency file="Aetherium Forge Destroys Items.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -932,11 +868,10 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
-            <plugin name="Above all Else - Lovecraft Inspired Quest">
-              <description>Sithis and Hermaeus Mora answer what is uncovered, and Stendarr marks the cost of looking.</description>
+            <plugin name="Daedric Shrines AIO prayer activators">
+              <description>Installs a neutral ESL-flagged prayer-activator plugin and BOS swaps for eleven supported Daedric Shrines AIO statues. Runtime and placement evidence remain open. Machine-verified; runtime evidence remains open.</description>
               <files>
-                <folder source="common\AboveAllElse" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
+                <folder source="common\DaedricShrinesAIO" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -944,7 +879,7 @@
                   <patterns>
                     <pattern>
                       <dependencies operator="And">
-                        <fileDependency file="Darbalag - Quest Mod.esp" state="Active" />
+                        <fileDependency file="man_DaedricShrines.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -952,11 +887,10 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
-            <plugin name="The Heart of Dibella - Quest Expansion">
-              <description>Dibella throughout, with Mara and Stendarr on how the Sybil and the child are treated.</description>
+            <plugin name="Legacy of the Dragonborn">
+              <description>Data-only channels for the Trial of Trinimac, ending the Eye of Camlorn's curse, and bringing peace to a Snow Elf ghost. Composite Ezra branches and linear relic fetches are deliberately excluded. Machine-verified; runtime evidence remains open.</description>
               <files>
-                <folder source="common\HeartOfDibellaQE" destination="" priority="0" />
-                <folder source="common\_Runbook" destination="" priority="0" />
+                <folder source="common\LegacyOfTheDragonborn" destination="" priority="0" />
               </files>
               <typeDescriptor>
                 <dependencyType>
@@ -964,7 +898,7 @@
                   <patterns>
                     <pattern>
                       <dependencies operator="And">
-                        <fileDependency file="The Heart Of Dibella - Quest Expansion.esp" state="Active" />
+                        <fileDependency file="LegacyoftheDragonborn.esm" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>

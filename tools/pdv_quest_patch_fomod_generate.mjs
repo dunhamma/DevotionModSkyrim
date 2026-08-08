@@ -113,20 +113,48 @@ function render() {
       folderSet.add(folder.toLowerCase());
     }
   }
-  const options = manifest.options.map(renderOption).join("\n");
+  // The tickbox label is `plugin name`, and it is the ONLY text a player sees while
+  // scanning the list - so it carries the mod name and nothing else. Proof-boundary
+  // wording ("machine-verified; runtime evidence remains open") lives in `description`,
+  // which FOMOD shows in the side pane for the highlighted option, in both MO2 and Vortex.
+  //
+  // Options are grouped by category and split across pages so 46 tickboxes are not one
+  // undifferentiated wall. `installStep` = page, `group` = heading within it.
+  const PAGES = [
+    { name: "Quests and Adventures", groups: ["New Quests and Lands", "Quest Expansions"] },
+    { name: "Followers, Bards and Systems", groups: ["Followers", "Bardic Life", "World Systems and Collections"] },
+  ];
+  const known = new Set(PAGES.flatMap((page) => page.groups));
+  for (const option of manifest.options) {
+    if (!option.category) throw new Error(`PatchHub option has no category: ${option.name}`);
+    if (!known.has(option.category)) throw new Error(`Unknown PatchHub category "${option.category}" on: ${option.name}`);
+  }
+
+  const steps = PAGES.map((page) => {
+    const groups = page.groups
+      .map((groupName) => {
+        const inGroup = manifest.options.filter((option) => option.category === groupName);
+        if (!inGroup.length) return null;
+        return `        <group name="${xmlEscape(groupName)}" type="SelectAny">
+          <plugins order="Explicit">
+${inGroup.map(renderOption).join("\n")}
+          </plugins>
+        </group>`;
+      })
+      .filter(Boolean)
+      .join("\n");
+    return `    <installStep name="${xmlEscape(page.name)}">
+      <optionalFileGroups order="Explicit">
+${groups}
+      </optionalFileGroups>
+    </installStep>`;
+  }).join("\n");
+
   const xml = `<?xml version="1.0" encoding="utf-8"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://qconsulting.ca/fo3/ModConfig5.0.xsd">
   <moduleName>${xmlEscape(manifest.moduleName)}</moduleName>
   <installSteps order="Explicit">
-    <installStep name="Select Devotion Patches">
-      <optionalFileGroups order="Explicit">
-        <group name="Devotion Mod Patches" type="SelectAny">
-          <plugins order="Explicit">
-${options}
-          </plugins>
-        </group>
-      </optionalFileGroups>
-    </installStep>
+${steps}
   </installSteps>
 </config>
 `;

@@ -127,8 +127,32 @@ const options = parseOptions(xml);
 if (!fs.existsSync(manifestPath)) fail(`PatchHub manifest not found: ${path.relative(ROOT, manifestPath)}`);
 const hubManifest = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, "utf8")) : { options: [] };
 if (hubManifest.schema !== "pdv-quest-patch-hub.v1" || !Array.isArray(hubManifest.options)) fail("PatchHub manifest schema/options are invalid.");
-if ((xml.match(/<installStep\b/g) ?? []).length !== 1) fail("PatchHub must expose exactly one install step.");
-if ((xml.match(/<group\b[^>]*type="SelectAny"/g) ?? []).length !== 1) fail("PatchHub must expose exactly one SelectAny group.");
+// The hub is grouped by category and paged: 46 tickboxes on one undifferentiated page is
+// not a usable installer. So the old "exactly one install step / one group" assertions are
+// gone; what still has to hold is that every group is SelectAny (a patch is never mutually
+// exclusive with another patch) and that at least one page exists.
+if (!(xml.match(/<installStep\b/g) ?? []).length) fail("PatchHub must expose at least one install step.");
+const groupTypes = [...xml.matchAll(/<group\b[^>]*type="([^"]+)"/g)].map((match) => match[1]);
+if (!groupTypes.length) fail("PatchHub must expose at least one option group.");
+for (const type of new Set(groupTypes)) {
+  if (type !== "SelectAny") fail(`PatchHub groups must be SelectAny; found "${type}".`);
+}
+
+// Coverage guard. A common/<Mod> folder with no installer option ships uninstallable and
+// nothing else notices - that is exactly how AboveAllElse, BardsRebornStudentOfSong,
+// BecomeABard, HeartOfDibellaQE and IllMetByMoonlightDialogue sat unreachable.
+const commonRoot = path.join(packageRoot, "common");
+if (fs.existsSync(commonRoot)) {
+  const claimed = new Set(
+    hubManifest.options.flatMap((option) => option.folders ?? []).map((folder) => folder.replaceAll("\\", "/").toLowerCase()),
+  );
+  for (const entry of fs.readdirSync(commonRoot)) {
+    if (entry.startsWith("_")) continue;
+    if (!claimed.has(`common/${entry}`.toLowerCase())) {
+      fail(`Patch folder has no installer option and would ship unreachable: common/${entry}`);
+    }
+  }
+}
 if ((xml.match(/<group\b[^>]*type="SelectExactlyOne"/g) ?? []).length) fail("PatchHub must not expose a list-specific mode-selection group.");
 if (/authoria|plugins[\\/]authoria|PDV_QuestReactionMatrix_ARR/i.test(xml)) fail("ModuleConfig.xml contains a retired list-specific lane or matrix.");
 if (!options.length) fail("No modular FOMOD options found.");
