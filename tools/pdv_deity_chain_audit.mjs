@@ -27,6 +27,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
+// not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
+// for fixtures that never ran.
+const KNOWN_FLAGS = new Set(["--json", "--self-test"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_deity_chain_audit" });
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
 const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");

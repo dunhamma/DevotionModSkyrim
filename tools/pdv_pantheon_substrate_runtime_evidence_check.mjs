@@ -5,6 +5,14 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
+// not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
+// for fixtures that never ran.
+const KNOWN_FLAGS = new Set(["--help", "--json", "--self-test", "--strict"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_pantheon_substrate_runtime_evidence_check" });
+
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..");
 const LEDGER = path.join(ROOT, "references", "authoring", "PDV_PantheonSubstrateRuntimeEvidenceLedger.json");

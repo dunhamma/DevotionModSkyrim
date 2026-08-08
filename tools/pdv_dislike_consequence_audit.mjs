@@ -25,6 +25,14 @@ import path from "node:path";
 import process from "node:process";
 import { normalizeActorValue } from "./lib/pdv_actor_value_aliases.mjs";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
+// not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
+// for fixtures that never ran.
+const KNOWN_FLAGS = new Set(["--json", "--self-test", "--strict-dislike-consequence"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_dislike_consequence_audit" });
+
 const ROOT = process.cwd();
 const AUTH = path.join(ROOT, "references", "authoring");
 const SPEC = path.join(AUTH, "PDV_DislikeConsequenceRecords.spec.json");
