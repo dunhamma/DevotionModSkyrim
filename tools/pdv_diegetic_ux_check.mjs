@@ -3,6 +3,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--json"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_diegetic_ux_check" });
+
 const projectRoot = process.cwd();
 const manifestPath = path.join(projectRoot, "references", "authoring", "PDV_DiegeticUX.manifest.json");
 const findings = [];

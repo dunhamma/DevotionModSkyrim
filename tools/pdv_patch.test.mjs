@@ -6,6 +6,14 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--allow-candidates", "--dry-run", "--json", "--rules"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_patch.test" });
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
 const patcher = path.join(projectRoot, "tools", "pdv_patch.mjs");

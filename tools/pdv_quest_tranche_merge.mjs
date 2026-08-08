@@ -1,4 +1,12 @@
 import fs from "fs";
+
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--check"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_quest_tranche_merge" });
 const Q = String.fromCharCode(34);
 const QUEST_READBACK_CSV = "references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv";
 const OUTCOME_TAG_NORMALIZATION_CSV = "references/authoring/PDV_QuestReactionMatrix_OutcomeTagNormalization.csv";

@@ -4,6 +4,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--json"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_khajiit_rebalance_audit" });
+
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (relative) => fs.readFileSync(path.join(root, relative), "utf8");
 const manager = read("live-source/Scripts/Source/PDV__ManagerQuest.psc");

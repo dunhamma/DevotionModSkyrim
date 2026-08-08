@@ -17,6 +17,14 @@
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--json", "--skip-slow", "--strict"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_integrity_harness" });
+
 const ROOT = process.cwd().replace(/\\/g, "/");
 const OUT_MD = `${ROOT}/references/authoring/PDV_IntegrityHarnessLedger.md`;
 const SKIP_SLOW = process.argv.includes("--skip-slow");

@@ -16,6 +16,13 @@
 
 import fs from "node:fs";
 import { spawnSync } from "node:child_process";
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--check-alias-properties", "--check-formlists", "--check-source-fill", "--declaration-gates-only", "--dispatch-coverage-only", "--import", "--json", "--skip-esp"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_signal_e2e_gate" });
 
 const ROOT = process.cwd().replace(/\\/g, "/");
 const MANIFEST_PATH = `${ROOT}/references/authoring/PDV_Phase20_P2ImmersiveReceivers.manifest.json`;

@@ -13,6 +13,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--pex-root"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_arr25_t16_route_check" });
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const LIVE = "D:/Wabbajack/modlists/Anvil/mods/Devotion";
 const PEX_ROOT = path.resolve(ROOT, process.argv.includes("--pex-root") ? process.argv[process.argv.indexOf("--pex-root") + 1] : LIVE);

@@ -3,6 +3,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { callHousecarl, extractHousecarlText } from "./lib/pdv_housecarl_stdio.mjs";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--check-alias-properties", "--check-all", "--check-formlists", "--check-source-fill"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_housecarl_p2_readback" });
+
 const ROOT = process.cwd();
 const MANIFEST_PATH = path.join(ROOT, "references", "authoring", "PDV_Phase20_P2ImmersiveReceivers.manifest.json");
 const MANAGER_FORM = "00C325:Devotion.esp";
