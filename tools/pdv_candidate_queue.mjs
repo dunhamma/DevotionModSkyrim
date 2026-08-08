@@ -142,13 +142,21 @@ for (const line of full.slice(1)) {
 
 // Mod-name patterns that are never standalone content.
 const NOISE =
-  /\b(patch|replacer|retexture|bodyslide|3ba|himbo|cbbe|unp|smp|voiced|elevenlabs|xvasynth|revoiced|addon|fix(es|er)?|tweaks|ussep|bugfix|refit|preset|hotfix|update|esl version|eslified|files for|visual)\b/i;
+  /\b(patch(es)?|replacer|retexture|bodyslide|3ba|himbo|cbbe|unp|smp|voiced|elevenlabs|xvasynth|revoiced|addon|fix(es|er)?|tweaks|ussep|bugfix|refit|preset|hotfix|update|esl version|eslified|files for|visual)\b/i;
 
 // Addons that only EXTEND an already-covered mod - delayed-start gates, music
 // fixers, banter/commentary patches, marker helpers. Their quests belong to the
 // parent mod, which is either already patched or already in the queue on its own
 // row, so treating them as separate work would double-count and mislead.
-const ADDON = /\b(delayed start|music fix|map markers|quest markers|banter|commentary|rerun)\b/i;
+//
+// "rerun" was here and was WRONG. It is not a content descriptor - it is a Wabbajack
+// re-upload suffix a list appends to a mod FOLDER name. It excluded
+// "Immersive Kaidan AIO - rerun", a 35-plugin content bundle carried by all three lists,
+// on the strength of the packaging suffix alone. Repackaging notation says nothing about
+// what a mod contains, so it must not decide a content bucket.
+const ADDON = /\b(delayed start|music fix|map markers|quest markers|banter|commentary)\b/i;
+
+const isNoiseName = (n) => NOISE.test(n) || ADDON.test(n);
 
 // Identity joins on PLUGINS; work groups by MOD. Two lists' folders are the same
 // mod iff their plugin sets intersect - so union-find over plugin filenames, and
@@ -179,14 +187,25 @@ const rows = [...groups.values()].map((g) => {
   const covered = plugins.filter((p) => hubPlugins.has(p.toLowerCase())); // exact - definitive
   const mt = toks(mod);
   const hubMatch = hubTokenSets.find((h) => subset(h.t, mt) || subset(mt, h.t));
+  // Judge EVERY folder name in the group, not just the representative one. The same mod
+  // is named differently per list, and `mod` above is merely the SHORTEST of those names -
+  // so testing it alone let one list's unlucky folder name bury the whole group. Immersive
+  // Kaidan AIO lost by a single character: ARR's "- rerun" (28 chars) beat DoD's and JoJ's
+  // "- V5.1.1"/"- V5.1.2" (29) to become the representative, and took 35 plugins with it.
+  //
+  // A group is noise only when NO alias reads as content. The error directions are not
+  // symmetric: a wrong QUEUE row costs one triage read in Phase 1b, while a wrong NOISE
+  // row is invisible and silently drops real content from the work list.
+  const aliases = [...g.names];
+  const cleanAliases = aliases.filter((a) => !isNoiseName(a));
   return {
     plugin: plugins.sort((a, b) => a.length - b.length)[0], plugins, mod,
-    aliases: [...g.names],
+    aliases, cleanAliases,
     lists: [...g.lists].sort(),
     sections: [...g.sections],
     bucket: covered.length ? 'COVERED'
-      : (NOISE.test(mod) || ADDON.test(mod)) ? 'NOISE'
-      : 'QUEUE',
+      : cleanAliases.length ? 'QUEUE'
+      : 'NOISE',
     // Advisory only. A hub folder with a similar name does NOT prove coverage:
     // Caught Red Handed QE overrides vanilla FreeformRiften11b and is absent from
     // Full.csv despite looking covered. Only a Phase 1b editor_id read settles it.
@@ -222,7 +241,15 @@ for (const r of uncovered) {
 }
 out.push('');
 out.push('## NOISE - excluded as not-standalone-content. Listed, not silently dropped.');
-for (const r of noise) out.push(`   [${r.lists.join(',')}]  ${r.plugin}  (${r.mod})`);
+out.push('');
+out.push('Every folder name for the mod is shown, because the exclusion had to hold for all');
+out.push('of them. PLUGINS is the group size - a large bundle called "not standalone" is the');
+out.push('shape of a misclassification and is worth a second look before it is trusted.');
+out.push('');
+for (const r of noise) {
+  out.push(`   [${r.lists.join(',')}]  ${r.plugin}  (${r.plugins.length} plugin${r.plugins.length === 1 ? '' : 's'})`);
+  out.push(`        name${r.aliases.length === 1 ? '' : 's'}: ${r.aliases.join(' | ')}`);
+}
 out.push('');
 out.push('## COVERED by EXACT plugin match (no new work)');
 for (const r of covered.sort((a, b) => a.plugin.localeCompare(b.plugin))) {
