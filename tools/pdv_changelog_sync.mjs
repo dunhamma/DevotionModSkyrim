@@ -22,6 +22,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { findDevStatus } from "./lib/pdv_player_facing_copy.mjs";
+import { readTextNormalised, sameText, writeTextWithEol } from "./lib/pdv_file_compare.mjs";
 
 const KNOWN_FLAGS = new Set(["--check", "--write"]);
 for (const arg of process.argv.slice(2)) {
@@ -58,8 +59,15 @@ if (devHits.length) {
 }
 
 const headings = [...source.matchAll(/^## (.+)$/gm)].map((m) => m[1].trim());
-const packaged = fs.existsSync(PACKAGED) ? fs.readFileSync(PACKAGED, "utf8") : null;
-const inSync = packaged === source;
+const packaged = fs.existsSync(PACKAGED) ? readTextNormalised(PACKAGED) : null;
+
+// Compared as TEXT, not bytes, and the difference is load-bearing here. The two files are
+// treated DIFFERENTLY by git: dist/release-meta/CHANGELOG.txt carries an explicit `-text`
+// rule so it is stored and checked out verbatim (CRLF), while CHANGELOG.md has no rule and
+// follows core.autocrlf. On a machine with autocrlf=true both land CRLF and a raw comparison
+// passes by luck; with autocrlf=false or input the .md checks out LF, the .txt stays CRLF,
+// and a raw comparison fails on a tree nobody has touched.
+const inSync = packaged !== null && sameText(SOURCE, PACKAGED);
 
 if (CHECK) {
   if (inSync) {
@@ -90,10 +98,13 @@ if (!WRITE) {
   process.exit(0);
 }
 
-// Byte-for-byte, including line endings. Both files are CRLF and the ascii/encoding gates
-// care, so copying the source verbatim is the only way they cannot drift on whitespace.
+// Write CRLF explicitly rather than echoing whatever the source happened to check out as.
+// The packaged file is `-text` in .gitattributes, so git stores exactly these bytes and does
+// not normalise them - which means a generator that echoed its input would commit LF from a
+// Linux checkout and CRLF from a Windows one, turning "regenerate" into a diff for the next
+// person on a different OS. CRLF is the committed form and the form that ships to players.
 fs.mkdirSync(path.dirname(PACKAGED), { recursive: true });
-fs.writeFileSync(PACKAGED, source, "utf8");
+writeTextWithEol(PACKAGED, source, "crlf");
 console.log(JSON.stringify({
   status: "PASS",
   wrote: "dist/release-meta/CHANGELOG.txt",
