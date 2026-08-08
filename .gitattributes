@@ -9,6 +9,16 @@ native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/styles.css text eol=lf
 # deterministic; the guard also normalizes line endings as the second layer.
 live-source/Scripts/Source/*.psc text eol=lf
 
+# The patch-only Papyrus source, same reasoning one layer over.
+# tools/pdv_patch_source_deploy.mjs locks the sha256 of each .psc as of its last compile.
+# With autocrlf=true and no pin, the bytes on disk depend on WHEN the file was checked out:
+# the lock was written just after a git mv (still LF) and every fresh clone then read CRLF,
+# so the gate failed on all ten scripts in a tree nobody had touched. Pin LF here; the tool
+# also normalizes line endings before hashing, as the second layer.
+patch-source/**/*.psc text eol=lf
+# Compiled bytecode. Never line-ending translated, or the shipped .pex is corrupt.
+patch-source/**/*.pex binary
+
 # Generated Nexus BBCode. pdv_guide_bbcode.mjs writes LF and its --check gate
 # byte-compares what it would write against what is on disk; with autocrlf=true
 # and no rule here, git rewrites these to CRLF on checkout and every guide then
