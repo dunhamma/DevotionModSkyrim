@@ -3,6 +3,26 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
+## 1.5.0 — 2026-08-08
+
+- **Devotion and its per-mod patches install from one installer.** Core installs
+  automatically and cannot be deselected. Each patch option is locked to its source
+  plugin, so an option for a mod you do not have cannot be selected and installs nothing.
+- **The Altmer roster is Auri-El, Magnus, Trinimac, Xarxes and Syrabane.** Mara, Stendarr
+  and Y'ffre were treated as Altmer worship through 1.0.4 and should not have been. An
+  Altmer character no longer earns piety through those three — shrine prayer, quest
+  reactions and deeds alike. No new game is needed.
+- **Daedric pact prices are felt.** Molag Bal's and Hircine's moved off skills Requiem
+  barely registers and onto the Health pool; Nocturnal's moved off carry weight. 33 of 48
+  price tiers were still at pre-tuning numbers and are corrected.
+- **Malacath's Champion price is 10% movement speed, down from 30%.** The old value was a
+  scaling accident rather than a design choice.
+- **Hermaeus Mora's Champion boon grants both halves** — +20 Alteration and +20 Magicka.
+  The Magicka effect was missing from the record.
+- **Fixed:** a Hircine tracking value advanced only while debug logging was enabled, so the
+  residue clock behaved differently with logging on. An artifact-destruction watcher polled
+  every 15 seconds with no way to finish; it now stops once there is nothing left to watch.
+
 ## 1.0.4 — 2026-07-27
 
 Combines everything from the unreleased 1.0.3 with the fixes below, so this is
