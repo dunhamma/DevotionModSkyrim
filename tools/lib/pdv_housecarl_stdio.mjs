@@ -140,6 +140,14 @@ export function openHousecarl(options = {}) {
     for (const waiter of pending.values()) waiter.reject(new Error(`houseCARL exited (code ${code}). ${stderr.trim()}`));
     pending.clear();
   });
+  // Without this, a spawn failure (bad PDV_HOUSECARL_EXE, missing binary) emits an
+  // UNHANDLED 'error' event and hard-crashes the whole process before any caller's
+  // try/catch can see it. Turn it into a normal rejection so a consumer can degrade.
+  child.on("error", (error) => {
+    closed = true;
+    for (const waiter of pending.values()) waiter.reject(new Error(`houseCARL failed to start: ${error.message}`));
+    pending.clear();
+  });
 
   const request = (method, params = {}, timeoutMs) => new Promise((resolve, reject) => {
     if (closed) { reject(new Error("houseCARL session is closed.")); return; }
