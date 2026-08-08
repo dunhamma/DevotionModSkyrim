@@ -131,7 +131,7 @@ Devotion ships these entries by default:
   0x03322B|HalfKhajiit.esp = HalfKhajiitRace -> 6 Khajiit
   0x05693A|HalfKhajiit.esp = HalfKhajiitRaceVampire -> 6 Khajiit
 
-Current ARR and DoD local readback found no HalfKhajiitWerewolf RACE record.
+No HalfKhajiitWerewolf RACE record exists in the lists checked so far.
 If a future list adds one, do not add it to PDV_RaceMap.json. Add it to
 PDV_TemporaryRaceMap.json instead.
 
@@ -180,5 +180,4 @@ Support boundary
 
 This mapping controls which existing Devotion race profile a custom race uses.
 It does not create new gods, new race writing, or new custom-race reward
-families. Runtime/manual smoke remains separate from static JSON or record
-readback.
+families.

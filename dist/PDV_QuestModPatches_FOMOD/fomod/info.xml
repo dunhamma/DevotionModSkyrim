@@ -11,9 +11,7 @@
 
     Requires: Devotion (PlayerDevotion) with per-mod channel support.
 
-    Proof state: package structure, records, scripts, and matrix channels are
-    machine-verified. In-game runtime and player-surface proof remain pending;
-    every option is experimental, not supported.
+    Every option is experimental, not supported.
   </Description>
   <Groups>
     <element>Patches</element>

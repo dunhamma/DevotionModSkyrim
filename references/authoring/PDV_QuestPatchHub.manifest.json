@@ -6,61 +6,67 @@
   "options": [
     {
       "name": "Above All Else",
-      "description": "Darbalag's Lovecraft-inspired descent. Hermaeus Mora answers the pursuit of forbidden knowledge to its end. Machine-verified; runtime evidence remains open.",
+      "description": "Meet a vampiric Khajiit who claims he can see the ancient dead. Join him in this quest to \"become above all else\".",
       "dependency": "Darbalag - Quest Mod.esp",
       "folders": [
         "common\\AboveAllElse"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 152267
     },
     {
       "name": "Baba Yaga and the Labyrinth",
-      "description": "Mara approves of rescuing the witch from the Black Stone Labyrinth.",
+      "description": "Fully voiced quest to discover the mysteries of a walking hut, a soul cairn maze, weeping angels, and a witch.",
       "dependency": "ksws03_quest.esp",
       "folders": [
         "common\\BabaYaga"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 84492
     },
     {
       "name": "Bark and Bite",
-      "description": "Freeing the three werewolf spirits pleases Hircine; sparing Frija instead pleases Stendarr and disappoints him. Sheogorath is amused either way.",
+      "description": "Uncover the origins of a mysterious tree within the Rift and choose if you wish to meddle in such affairs.",
       "dependency": "Tree Contract Mod.esp",
       "folders": [
         "common\\BarkAndBite"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 135087
     },
     {
       "name": "Before the End",
-      "description": "Mara and Arkay approve of staying with the condemned man Aradell until the end.",
+      "description": "Speak with a prisoner awaiting execution and learn all about his life's biggest regrets.",
       "dependency": "PrisonerMod.esp",
       "folders": [
         "common\\BeforeTheEnd"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 142238
     },
     {
       "name": "Beyond Skyrim - Bruma",
-      "description": "Data-only channels for eight direct Bruma resolutions: smuggling, treacherous murder or generous song restoration, freeing Bjarni, and recovering stolen antiquities. Machine-verified; runtime evidence remains open.",
+      "description": "Travel beyond the borders of Skyrim and explore Bruma, the northernmost county in Cyrodiil. Delve into Ayleid ruins, meddle in local affairs or explore the wilds - the journey begins now.",
       "dependency": "BSHeartland.esm",
       "folders": [
         "common\\BeyondSkyrimBruma"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 10917
     },
     {
       "name": "Calling the Watchmaker",
-      "description": "Data-only channel for the explicit cold-murder branch. Machine-verified; runtime branch evidence remains open. Machine-verified; runtime evidence remains open.",
+      "description": "Calling the Watchmaker is a quest mod featuring high quality voice acting and an extremely unique story that delves into the creation myth of the Elder Scrolls universe.",
       "dependency": "Sithis Mod - Lovecraftian Inspired Quest.esp",
       "folders": [
         "common\\CallingTheWatchmaker"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 96711
     },
     {
       "name": "DAc0da",
-      "description": "Data-only reactions for the two directly evidenced DAc0da resolutions. Machine-verified; runtime evidence remains open.",
+      "description": "",
       "dependency": "DAc0da.esm",
       "folders": [
         "common\\DAc0da"
@@ -69,16 +75,17 @@
     },
     {
       "name": "Depths of the Soul",
-      "description": "Zenithar approves of helping the merchant Pike open his shop.",
+      "description": "Depths of the Soul features a rather helpful merchant who will aid the player by selling various items for dungeons.",
       "dependency": "Dungeon Delver Mod.esp",
       "folders": [
         "common\\DepthsOfTheSoul"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 118261
     },
     {
       "name": "Glenmoril",
-      "description": "Data-only reactions for the directly evidenced Glenmoril resolutions. Machine-verified; runtime evidence remains open.",
+      "description": "",
       "dependency": "Glenmoril.esm",
       "folders": [
         "common\\Glenmoril"
@@ -87,175 +94,193 @@
     },
     {
       "name": "Hunt for the Spectre",
-      "description": "Data-only channel for the directly evidenced Spectre defeat. Machine-verified; runtime evidence remains open.",
+      "description": "The Hunt for the Spectre is an Elden Ring inspired quest mod centred around Ren, a man who is hunting a serial killer known as the Spectre. The mod features multiple endings and incredibly high quality voice acting.",
       "dependency": "Hunt for the Spectre.esp",
       "folders": [
         "common\\HuntForSpectre"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 105044
     },
     {
       "name": "Moonpath to Elsweyr",
-      "description": "Data-only channels for the Tenmar journey, Thalmor rebellion, saved/released plague branches, and completed rebel base. Machine-verified; runtime evidence remains open.",
+      "description": "Brought to you by An_Old_Sock, the author of the in-development Moonpath Reborn, Moonpath to Elsweyr is enjoying regular updates for the first time in five years. This is the most comprehensive Moonpath experience to date.",
       "dependency": "moonpath.esp",
       "folders": [
         "common\\Moonpath"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 4341
     },
     {
       "name": "Olenveld",
-      "description": "Data-only reaction for the directly evidenced Olenveld resolution. Machine-verified; runtime evidence remains open.",
+      "description": "Olenveld is a new lands mod, the size of a small DLC, bringing the lore-rich location of Olenveld to Skyrim. It introduces a unique questline and an island recapturing system.",
       "dependency": "Olenveld.esp",
       "folders": [
         "common\\Olenveld"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 133579
     },
     {
       "name": "Once We Were Here",
-      "description": "Hoping the Falmer may yet be redeemed pleases Auri-El, their forebears' god; calling the damage irreparable disappoints him. Includes an ESL-flagged plugin.",
+      "description": "Once We Were Here is a short to medium sized quest mod that revolves around Sillas, a Bosmer scholar investigating the Falmer.",
       "dependency": "Once We Were Here - Quest Mod.esp",
       "folders": [
         "common\\OnceWeWereHere",
         "common\\_Fragments\\OnceWeWereHere",
         "plugins\\individual\\OnceWeWereHere"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 149820
     },
     {
       "name": "Siege at Icemoth",
-      "description": "Data-only channels for ending the necromancer's undead army and uncovering the Font of Memory. Machine-verified; runtime evidence remains open.",
+      "description": "A small scale vanilla-esque new lands mod adding some new islands with new locations and dungeons in the Sea of Ghosts. As well as some unique items from The Elder Scrolls Blades.",
       "dependency": "Siege at Icemoth.esp",
       "folders": [
         "common\\SiegeAtIcemoth"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 109541
     },
     {
       "name": "Sirenroot",
-      "description": "Lays the haunting Ayleid spirit to rest: Arkay, Meridia, Stendarr, Tu'whacca, Azura, Y'ffre, plus the elven pantheon (Auri-El, Xarxes, Magnus) for the Ayleid dead, and Zenithar for honest salvage work.",
+      "description": "You and a team of divers are hired to scour ruins at the bottom of Lake Honrich. A dialogue-heavy quest with puzzles, platforming, and a focus on water mechanics.",
       "dependency": "evgSIRENROOT.esm",
       "folders": [
         "common\\Sirenroot"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 70917
     },
     {
       "name": "Skyrim Extended Cut - Saints and Seducers",
-      "description": "Data-only reaction for the directly evidenced Saints and Seducers resolution. Machine-verified; runtime evidence remains open.",
+      "description": "Return to the Shivering Isles in a fully-voiced overhaul of Skyrim's Saints and Seducers Creation.",
       "dependency": "Skyrim Extended Cut - Saints and Seducers.esp",
       "folders": [
         "common\\SkyrimExtendedCutSaintsAndSeducers"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 72772
     },
     {
       "name": "Taste of Death Addon",
-      "description": "Data-only channel for bringing Markarth's Namira cult to justice. Machine-verified; runtime evidence remains open.",
+      "description": "Adds new dialogue, enemies, and gameplay to the vanilla quest \"The Taste of Death\". Confront the cult of Namira and bring them to justice.",
       "dependency": "TasteOfDeath_Addon_Dialogue.esp",
       "folders": [
         "common\\TasteOfDeathAddon"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 123173
     },
     {
       "name": "The Forgotten City",
-      "description": "Data-only reactions for the directly evidenced Forgotten City resolutions. Machine-verified; runtime evidence remains open.",
+      "description": "A critically acclaimed expansion mod offering a unique 6 - 8 hour experience: a murder mystery investigation set in an ancient underground city. You'll need to solve it using your wits, and the ability to travel through time.",
       "dependency": "ForgottenCity.esp",
       "folders": [
         "common\\ForgottenCity"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 1179
     },
     {
       "name": "The Frozen Heart",
-      "description": "The cursed woman is a Snow Elf, so Auri-El reacts most of all: curing her is a milestone in his eyes, killing her a grave offence. Mara, Stendarr, Trinimac and Molag Bal also weigh in.",
+      "description": "Step through a magical mirror into a cursed frozen realm. Explore labyrinths, solve puzzles, ponder orbs, battle shadows, and help an ancient Snow Elf warrior cure her curse.",
       "dependency": "ksws07_quest.esm",
       "folders": [
         "common\\TheFrozenHeart"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 159911
     },
     {
       "name": "The Gift of Saturalia",
-      "description": "Five data-only channels for the separately resolved Saturalia gifts; the umbrella completion is excluded to prevent double credit. Machine-verified; runtime evidence remains open.",
+      "description": "A fully voiced new quest. Help the people of Skyrim and spread the spirit of Saturalia.",
       "dependency": "TheGiftofSaturalia.esp",
       "folders": [
         "common\\GiftOfSaturalia"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 105697
     },
     {
       "name": "The Rot Below",
-      "description": "Namira is named in the quest itself. Foiling her plan angers her and pleases the death-and-light gods; killing or sparing the freed lich Adabelle splits Mara and Dibella.",
+      "description": "Discover the secrets of a mad lich who thought themselves a god. Explore an ancient palace, a subterranean city of the undead, and an insane warlock's research hall. Foil Namira's plans and stop the coming rot.",
       "dependency": "CJ03Elroy.esp",
       "folders": [
         "common\\TheRotBelow"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 169298
     },
     {
       "name": "Unslaad",
-      "description": "Data-only reactions for four directly evidenced Unslaad outcomes. Machine-verified; runtime evidence remains open.",
+      "description": "Quest mod of Half-Dragon. Add fluffy equipment and creatures.",
       "dependency": "Unslaad.esm",
       "folders": [
         "common\\Unslaad"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 11789
     },
     {
       "name": "Vigilant",
-      "description": "Data-only reactions for the directly evidenced Vigilant outcomes. Machine-verified; runtime evidence remains open.",
+      "description": "Vigilant of Stendarr Quest.",
       "dependency": "Vigilant.esm",
       "folders": [
         "common\\Vigilant"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 11849
     },
     {
       "name": "War's Folly",
-      "description": "Adds Devotion reactions to all six stances you can take with Sandor the preacher, from pride in slaughter to renouncing the war. Includes an ESL-flagged plugin (also repairs two dialogue endings that never set their quest stage).",
+      "description": "Stumble across Sandor, a zealous preacher who seeks to convince Solitude's residents that the Civil War is one of folly. Hear his sermons and converse with the man, perhaps even you will begin to question your ideals.",
       "dependency": "War's Folly.esp",
       "folders": [
         "common\\WarsFolly",
         "common\\_Fragments\\WarsFolly",
         "plugins\\individual\\WarsFolly"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 165699
     },
     {
       "name": "Whispers of the Depths",
-      "description": "Mara approves of offering condolences to the old sailor. Includes an ESL-flagged plugin.",
+      "description": "Whispers of the Depths centres around an Argonian fisherman, Slays-Many-Beasts. Through the four encounters of this mod, he will tell tales of his time at sea, and the various monsters he encountered.",
       "dependency": "Slays-Many-Beasts Quest Mod.esp",
       "folders": [
         "common\\WhispersOfTheDepths",
         "common\\_Fragments\\WhispersOfTheDepths",
         "plugins\\individual\\WhispersOfTheDepths"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 127087
     },
     {
       "name": "Wyrmstooth",
-      "description": "Data-only channel for defeating Vulthurkrah while defending Stonehollow. Machine-verified; runtime evidence remains open.",
+      "description": "A large DLC-sized quest expansion for Skyrim featuring a new island to explore, fully voice acted NPCs, new dungeons, new music, and a player home.",
       "dependency": "Wyrmstooth.esp",
       "folders": [
         "common\\Wyrmstooth"
       ],
-      "category": "New Quests and Lands"
+      "category": "New Quests and Lands",
+      "nexusModId": 45565
     },
     {
       "name": "College of Winterhold - Quest Expansion",
-      "description": "Data-only channels for seven directly resolving College lessons. The umbrella curriculum completion is excluded to prevent double credit. Machine-verified; runtime evidence remains open.",
+      "description": "This mod provides 7 new starter magic lessons/quests to make your College of Winterhold feel like an actual school of magic.",
       "dependency": "College Of Winterhold - Quest Expansion.esp",
       "folders": [
         "common\\CollegeQuestExpansion"
       ],
-      "category": "Quest Expansions"
+      "category": "Quest Expansions",
+      "nexusModId": 66666
     },
     {
       "name": "Ebony Blade Curse",
-      "description": "Data-only reaction for breaking the Ebony Blade curse. Machine-verified; runtime evidence remains open.",
+      "description": "",
       "dependency": "EbonyBladeCurse.esp",
       "folders": [
         "common\\EbonyBladeCurse"
@@ -264,165 +289,183 @@
     },
     {
       "name": "Forsworn Conspiracy - Quest Expansion",
-      "description": "Data-only channels for the trial-by-combat resolution and the separate Madanach mercy route. Machine-verified; runtime evidence remains open.",
+      "description": "Greatly expanded the Forsworn Conspiracy questline to give new choices, new roleplaying opportunities, new epic stories. Over 200 new lines.",
       "dependency": "Forsworn Conspiracy Quest Expansion.esp",
       "folders": [
         "common\\ForswornConspiracyQE"
       ],
-      "category": "Quest Expansions"
+      "category": "Quest Expansions",
+      "nexusModId": 161913
     },
     {
       "name": "Ill Met by Moonlight - Dialogue Expansion",
-      "description": "Hircine answers returning the totem to the hunt. This is the addon's own added quest; vanilla DA05 stays owned by core Devotion.",
+      "description": "Defy the will of Hircine while still serving justice to Sinding. A fully voiced mini-expansion of the namesake quest using voice actors or spliced lines.",
       "dependency": "CH_IMBMDialougeAddon.esp",
       "folders": [
         "common\\IllMetByMoonlightDialogue"
       ],
-      "category": "Quest Expansions"
+      "category": "Quest Expansions",
+      "nexusModId": 156434
     },
     {
       "name": "Infiltration - Quest Expansion",
-      "description": "Data-only channel for restoring Treva's Watch to Stalleo and his family. Machine-verified; runtime evidence remains open.",
+      "description": "One of the most underwhelming vanilla quests... turned into an epic quest full of player choice.",
       "dependency": "Infiltration - Quest Expansion.esp",
       "folders": [
         "common\\InfiltrationQE"
       ],
-      "category": "Quest Expansions"
+      "category": "Quest Expansions",
+      "nexusModId": 114054
     },
     {
       "name": "Nilheim - Misc Quest Expansion",
-      "description": "Data-only channels for defeating Telrav's double-cross or explicitly extorting him. Machine-verified; runtime evidence remains open.",
+      "description": "Fixes some issues with the misc quest at Nilheim and gives a bit more flexibility to your encounter with good old Telrav, adding a couple of additional dialogue choices and options for roleplaying.",
       "dependency": "Nilheim_MiscQuestExpansion.esp",
       "folders": [
         "common\\NilheimQE"
       ],
-      "category": "Quest Expansions"
+      "category": "Quest Expansions",
+      "nexusModId": 53792
     },
     {
       "name": "Paarthurnax - Quest Expansion",
-      "description": "Data-only objective-derived channel for persuading the Blades and sparing Paarthurnax. Organic traversal is mandatory. Machine-verified; runtime evidence remains open.",
+      "description": "A fully voiced, quite expanded new take on the quest Paarthurnax, giving both the Blades and Paarthurnax good reasons for their stances, and you, Dragonborn, the final choice.",
       "dependency": "PaarthurnaxQuestExpansion.esp",
       "folders": [
         "common\\PaarthurnaxQE"
       ],
-      "category": "Quest Expansions"
+      "category": "Quest Expansions",
+      "nexusModId": 51711
     },
     {
       "name": "Save the Icerunner",
-      "description": "Data-only channels for stopping, persuading, joining, betraying, or lawfully exposing Jaree-Ra's Icerunner wrecking plot. Machine-verified; runtime evidence remains open.",
+      "description": "Jaree-Ra in Solitude has a plan to set up a shipwreck. The ship is said to be full of weapons and riches, ripe for the taking. What will you do?",
       "dependency": "SaveTheIcerunner.esp",
       "folders": [
         "common\\SaveTheIcerunner"
       ],
-      "category": "Quest Expansions"
+      "category": "Quest Expansions",
+      "nexusModId": 34681
     },
     {
       "name": "The Heart of Dibella - Quest Expansion",
-      "description": "Dibella and Mara answer carrying the temple's letter for the sisters. This is the expansion's own added quest; vanilla T01 stays owned by core Devotion.",
+      "description": "Tired of having to break into a ladies-only religious building just to start this quest? This mod has you covered with new roleplaying opportunities, more dialogue and more choices.",
       "dependency": "The Heart Of Dibella - Quest Expansion.esp",
       "folders": [
         "common\\HeartOfDibellaQE"
       ],
-      "category": "Quest Expansions"
+      "category": "Quest Expansions",
+      "nexusModId": 94863
     },
     {
       "name": "The Whispering Door - Quest Expansion",
-      "description": "Data-only channel for disposing of Mephala's Ebony Blade so it can cause no further harm. Machine-verified; runtime evidence remains open.",
+      "description": "Experience a longer version of Mephala's Daedric quest, now with more dialogue, more decisions and a general darker approach to the original quest.",
       "dependency": "The Whispering Door - Quest Expansion.esp",
       "folders": [
         "common\\WhisperingDoorQE"
       ],
-      "category": "Quest Expansions"
+      "category": "Quest Expansions",
+      "nexusModId": 76606
     },
     {
       "name": "Thieves Guild Alternative Endings",
-      "description": "Self-contained data channel plus generic quest-stage adapter that separates TG09's three endings without replacing Devotion scripts. Vanilla return remains stage 200; freeing the Nightingales and keeping the Skeleton Key route to synthetic stages 201/202 and suppress false Nocturnal commitment. Machine-verified; runtime evidence remains open.",
+      "description": "Defy Nocturnal and unlock yourself from eternal servitude. Adds 4 new voice-acted endings to the Thieves Guild questline, including new story, new rewards, new boss fights.",
       "dependency": "TG Alternative Endings.esp",
       "folders": [
         "common\\TGAlternativeEndings"
       ],
-      "category": "Quest Expansions"
+      "category": "Quest Expansions",
+      "nexusModId": 114558
     },
     {
       "name": "M'rissi's Tails of Troubles",
-      "description": "Data-only channels for the proved enslavement, marriage, and kinship outcomes. Unproved chapter routes remain excluded. Machine-verified; runtime evidence remains open.",
+      "description": "Fully immersive and lore-friendly story with 8 hours of quests, more than 2000 voiced lines and 3 different endings. Choose your path and decide her fate.",
       "dependency": "MrissiTailOfTroubles.esp",
       "folders": [
         "common\\Mrissi"
       ],
-      "category": "Followers"
+      "category": "Followers",
+      "nexusModId": 9666
     },
     {
       "name": "Song of the Green - Auri",
-      "description": "Data-only channel for Auri's five-grove pilgrimage through Skyrim's beautiful natural sites. Machine-verified; runtime evidence remains open.",
+      "description": "A standalone, custom-voiced follower and quest mod.",
       "dependency": "018Auri.esp",
       "folders": [
         "common\\Auri"
       ],
-      "category": "Followers"
+      "category": "Followers",
+      "nexusModId": 11278
     },
     {
       "name": "Thogra",
-      "description": "Data-only blood-oath, betrayal, and two marriage-route channels. The objective-derived Largashbur marriage must be traversed organically. Machine-verified; runtime evidence remains open.",
+      "description": "Help an Orc widow get revenge on the one who wronged her. The same Thogra gra-Mugur, now with a new voice!",
       "dependency": "DK_Thogra.esp",
       "folders": [
         "common\\Thogra"
       ],
-      "category": "Followers"
+      "category": "Followers",
+      "nexusModId": 120007
     },
     {
       "name": "Xelzaz",
-      "description": "Data-only channels for crimson Nirnroot research and the proved recipe/spice theft plus mead tasting. Ambiguous routes remain excluded. Machine-verified; runtime evidence remains open.",
+      "description": "Xelzaz is a Custom Fully Voiced Argonian Lawman of House Telvanni with ~8500 lines. He has just arrived in Skyrim and is looking for a traveling companion. In return he will keep you company, cook you warm meals and brew powerful potions.",
       "dependency": "BPUFXelzazFollower.esp",
       "folders": [
         "common\\Xelzaz"
       ],
-      "category": "Followers"
+      "category": "Followers",
+      "nexusModId": 62893
     },
     {
       "name": "Bards Reborn - Student of Song",
-      "description": "Dibella answers the discipline of the Bards College: completing the course of study, and taking up the bard's road after induction.",
+      "description": "This mod gives the Bards College a massive makeover, adds a new study quest, new bardic powers, and new characters to flesh out your experience as a student in the Bards College.",
       "dependency": "BardsRebornStudentofSong.esp",
       "folders": [
         "common\\BardsRebornStudentOfSong"
       ],
-      "category": "Bardic Life"
+      "category": "Bardic Life",
+      "nexusModId": 47994
     },
     {
       "name": "Become a Bard",
-      "description": "Dibella answers performance itself - playing for a tavern, and playing before a Jarl's court. Machine-verified; runtime evidence remains open.",
+      "description": "Tired of being a warrior or mage? Become a Bard!",
       "dependency": "BecomeABard.esp",
       "folders": [
         "common\\BecomeABard"
       ],
-      "category": "Bardic Life"
+      "category": "Bardic Life",
+      "nexusModId": 2303
     },
     {
       "name": "Aetherium Forge Destroys Items",
-      "description": "Installs an ESL-flagged observer quest for successful artifact destruction. Existing saves are baselined without retroactive awards; runtime and save/load evidence remain open. Machine-verified; runtime evidence remains open.",
+      "description": "This mod allows you to destroy items by dropping them in the lava at the Aetherium Forge.",
       "dependency": "Aetherium Forge Destroys Items.esp",
       "folders": [
         "common\\AFDI"
       ],
-      "category": "World Systems and Collections"
+      "category": "World Systems and Collections",
+      "nexusModId": 114021
     },
     {
       "name": "Daedric Shrines AIO prayer activators",
-      "description": "Installs a neutral ESL-flagged prayer-activator plugin and BOS swaps for eleven supported Daedric Shrines AIO statues. Runtime and placement evidence remain open. Machine-verified; runtime evidence remains open.",
+      "description": "Statues of Daedric Lords.",
       "dependency": "man_DaedricShrines.esp",
       "folders": [
         "common\\DaedricShrinesAIO"
       ],
-      "category": "World Systems and Collections"
+      "category": "World Systems and Collections",
+      "nexusModId": 78772
     },
     {
       "name": "Legacy of the Dragonborn",
-      "description": "Data-only channels for the Trial of Trinimac, ending the Eye of Camlorn's curse, and bringing peace to a Snow Elf ghost. Composite Ezra branches and linear relic fetches are deliberately excluded. Machine-verified; runtime evidence remains open.",
+      "description": "Not just a display mod, not just a quest mod, not just a new guild mod, but a complete foundational flagship mod to build an entire load order around. This DLC expansion sized mod adds hundreds of new items, dozens of new quests and hundreds of extra hours of play.",
       "dependency": "LegacyoftheDragonborn.esm",
       "folders": [
         "common\\LegacyOfTheDragonborn"
       ],
-      "category": "World Systems and Collections"
+      "category": "World Systems and Collections",
+      "nexusModId": 11802
     }
   ]
 }

@@ -23,15 +23,34 @@ const RETIRED_OPTIONS = new Set([
   "Creation Club - Divine Crusader (T13 experimental)",
 ]);
 const NEW_OPTIONS = [
-  ["DAc0da", "DAc0da", "DAc0da.esm", "Data-only reactions for the two directly evidenced DAc0da resolutions. Machine-verified; runtime evidence remains open."],
-  ["Ebony Blade Curse", "EbonyBladeCurse", "EbonyBladeCurse.esp", "Data-only reaction for breaking the Ebony Blade curse. Machine-verified; runtime evidence remains open."],
-  ["The Forgotten City", "ForgottenCity", "ForgottenCity.esp", "Data-only reactions for the directly evidenced Forgotten City resolutions. Machine-verified; runtime evidence remains open."],
-  ["Glenmoril", "Glenmoril", "Glenmoril.esm", "Data-only reactions for the directly evidenced Glenmoril resolutions. Machine-verified; runtime evidence remains open."],
-  ["Olenveld", "Olenveld", "Olenveld.esp", "Data-only reaction for the directly evidenced Olenveld resolution. Machine-verified; runtime evidence remains open."],
-  ["Skyrim Extended Cut - Saints and Seducers", "SkyrimExtendedCutSaintsAndSeducers", "Skyrim Extended Cut - Saints and Seducers.esp", "Data-only reaction for the directly evidenced Saints and Seducers resolution. Machine-verified; runtime evidence remains open."],
-  ["Unslaad", "Unslaad", "Unslaad.esm", "Data-only reactions for four directly evidenced Unslaad outcomes. Machine-verified; runtime evidence remains open."],
-  ["Vigilant", "Vigilant", "Vigilant.esm", "Data-only reactions for the directly evidenced Vigilant outcomes. Machine-verified; runtime evidence remains open."],
+  ["DAc0da", "DAc0da", "DAc0da.esm", "Data-only reactions for the two directly evidenced DAc0da resolutions."],
+  ["Ebony Blade Curse", "EbonyBladeCurse", "EbonyBladeCurse.esp", "Data-only reaction for breaking the Ebony Blade curse."],
+  ["The Forgotten City", "ForgottenCity", "ForgottenCity.esp", "Data-only reactions for the directly evidenced Forgotten City resolutions."],
+  ["Glenmoril", "Glenmoril", "Glenmoril.esm", "Data-only reactions for the directly evidenced Glenmoril resolutions."],
+  ["Olenveld", "Olenveld", "Olenveld.esp", "Data-only reaction for the directly evidenced Olenveld resolution."],
+  ["Skyrim Extended Cut - Saints and Seducers", "SkyrimExtendedCutSaintsAndSeducers", "Skyrim Extended Cut - Saints and Seducers.esp", "Data-only reaction for the directly evidenced Saints and Seducers resolution."],
+  ["Unslaad", "Unslaad", "Unslaad.esm", "Data-only reactions for four directly evidenced Unslaad outcomes."],
+  ["Vigilant", "Vigilant", "Vigilant.esm", "Data-only reactions for the directly evidenced Vigilant outcomes."],
 ];
+
+// Player-facing installer text must never carry development or proof status. This fires at
+// BUILD time, so a description like "... Machine-verified; runtime evidence remains open."
+// cannot be rendered into ModuleConfig.xml at all. Owner ruling 2026-08-08, after 34 of 46
+// option descriptions shipped with that sentence appended and reached a real install.
+const DEV_STATUS_PATTERN =
+  /machine[- ]verified|runtime evidence|evidence remains? open|evidence remain open|runtime-verify|runtime verify|proof[- ]pending|proof state|proof boundary|readback|read back from disk|compiler check|gate(?:s|d)? (?:pass|fail)|unverified/i;
+
+function assertNoDevStatus(label, value) {
+  const hit = String(value).match(DEV_STATUS_PATTERN);
+  if (hit) {
+    throw new Error(
+      `Player-facing installer text carries development status: ${label} contains "${hit[0]}".\n` +
+      `  The FOMOD is player-facing - mod name plus a short plain description of what the\n` +
+      `  option does, nothing else. Proof state belongs in AGENTS.md and the gates.\n` +
+      `  Offending text: ${value}`
+    );
+  }
+}
 
 function xmlEscape(value) {
   return value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
@@ -100,9 +119,16 @@ function render() {
   const dependencySet = new Set();
   const folderSet = new Set();
   for (const option of manifest.options) {
-    if (!option.name || !option.description || !option.dependency || !Array.isArray(option.folders) || !option.folders.length) {
+    // description may be "" ON PURPOSE. Owner ruling 2026-08-08: an option's description is
+    // the mod's own Nexus summary, never authored copy. DAc0da, Glenmoril and Ebony Blade
+    // Curse are not on Nexus SE, so there is no summary to use and nothing is shown for
+    // them. The key must still be present -- an absent one is a mistake, an empty one is a
+    // decision. Do not "fix" this by writing a description.
+    if (!option.name || typeof option.description !== "string" || !option.dependency || !Array.isArray(option.folders) || !option.folders.length) {
       throw new Error(`Incomplete PatchHub option: ${option.name ?? "<unnamed>"}`);
     }
+    assertNoDevStatus(`option "${option.name}" name`, option.name);
+    assertNoDevStatus(`option "${option.name}" description`, option.description);
     const dependency = option.dependency.toLowerCase();
     if (dependencySet.has(dependency)) throw new Error(`Duplicate PatchHub dependency: ${option.dependency}`);
     dependencySet.add(dependency);
@@ -114,9 +140,15 @@ function render() {
     }
   }
   // The tickbox label is `plugin name`, and it is the ONLY text a player sees while
-  // scanning the list - so it carries the mod name and nothing else. Proof-boundary
-  // wording ("machine-verified; runtime evidence remains open") lives in `description`,
-  // which FOMOD shows in the side pane for the highlighted option, in both MO2 and Vortex.
+  // scanning the list - so it carries the mod name and nothing else. `description` is
+  // shown in the side pane for the highlighted option, in both MO2 and Vortex.
+  //
+  // OWNER RULING 2026-08-08: NO development or proof status in either. The installer is
+  // player-facing: it carries the mod name and a short plain description of what the
+  // option does, and nothing else. Proof-boundary wording ("machine-verified; runtime
+  // evidence remains open") used to be appended to every description and shipped to
+  // players. It does not go here, ever. Proof state belongs in AGENTS.md and the gates.
+  // assertNoDevStatus() below enforces this - do not weaken it to let a build through.
   //
   // Options are grouped by category and split across pages so 46 tickboxes are not one
   // undifferentiated wall. `installStep` = page, `group` = heading within it.

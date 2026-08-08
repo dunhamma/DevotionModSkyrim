@@ -28,6 +28,13 @@ INSTALLING
     Install this archive with your mod manager as normal, then
     enable the mod and Devotion.esp.
 
+    The installer fits core plus optional per-mod patches into one
+    pass. Devotion itself always installs. The patch options teach
+    Devotion how the gods react to the outcomes of specific quest
+    mods, and each is locked to its source plugin -- if you do not
+    have that mod active, the option cannot be selected and nothing
+    for it is installed.
+
   Manual:
     Extract the contents into your Skyrim Special Edition\Data
     folder, then enable Devotion.esp.
