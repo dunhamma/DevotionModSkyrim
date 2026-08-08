@@ -500,8 +500,7 @@ Two findings, both verified live on the ARR instance:
 
 1. **ARR rows are conditional content.** The ARR matrix compiles to a separate
    `PDV_QuestReactionMatrix_ARR.json` that ships only inside
-   `dist/PDV_AuthoriaARR_Compatibility`, `dist/PDV_Patch_Authoria_AllInOne`, and
-   the FOMOD's `plugins/authoria`. It is **not** in the base Devotion release, so
+   `dist/PDV_AuthoriaARR_Compatibility`. It is **not** in the base Devotion release, so
    rows there raise coverage only for players running Vigilant/Glenmoril/Unslaad
    *and* the patch. Base-player coverage stays at 61-83 regardless.
 2. **ARR quests carry no journal text.** Read live on

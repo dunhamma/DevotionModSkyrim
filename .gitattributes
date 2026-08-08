@@ -49,13 +49,7 @@ dist/PDV_QuestModPatches_FOMOD/**/Channels/*.json text eol=lf linguist-generated
 dist/PDV_QuestModPatches_FOMOD/**/QuestStageAdapters/*.json text eol=lf linguist-generated=true
 # Authoria all-in-one package. Same reasoning as the FOMOD block above: the ESP
 # and compiled scripts are bytes, and the handoff publishes the zip's SHA256.
-dist/PDV_Patch_Authoria_AllInOne/**/*.esp -text
-dist/PDV_Patch_Authoria_AllInOne/**/*.pex -text
 dist/Devotion_Authoria_Compatibility*.zip -text
-dist/PDV_Patch_Authoria_AllInOne/**/*.json text eol=lf
-dist/PDV_Patch_Authoria_AllInOne/**/*.psc text eol=lf
-dist/PDV_Patch_Authoria_AllInOne/**/*.md text eol=lf
-dist/PDV_Patch_Authoria_AllInOne/**/*.ini text eol=lf
 
 
 # Quest-reaction matrix sources. pdv_quest_tranche_merge.mjs --check re-derives
