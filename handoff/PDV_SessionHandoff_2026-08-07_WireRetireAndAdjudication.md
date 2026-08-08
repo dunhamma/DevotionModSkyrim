@@ -223,3 +223,35 @@ ESL-flagged, no FormID shifts), but it belongs in the release notes.
 
 Deleting that lane also removed an active regression: its core payload had gone stale and would have
 **downgraded** users (`ManagerQuest.pex` 909,685 vs 961,450 live; core matrix 614,651 vs 714,030).
+
+## PR #34 relationship -- resolved, and it is not what it looks like
+
+`claude/awesome-proskuriakova-8991c7` (PR #34) is titled "land the unpushed 1.0.4 work". **That work
+is already on this branch.** Verified rather than assumed:
+
+| Symbol #34 adds to the manager | live MO2 | this branch | main |
+|---|---|---|---|
+| `AppendQuestReactionSnapshotToken` | 46 | 46 | 0 |
+| `MaybeEmitManagerOptimizationProfile` | 3 | 3 | 0 |
+| `_optimizationTimerFires` | 5 | 5 | 0 |
+
+This branch's `live-source` mirror is byte-identical to the live MO2 tree (28,219 lines, identical
+once CRLF/LF is normalised), and the live tree is what shipped 1.0.4 -- so the mirror already carries
+the optimization source. A `git merge-tree` of the two branches resolves the manager to exactly the
+live file with **no duplicated function definitions**, and `PDV_PlayerEvents.psc` likewise.
+
+So the feared failure -- #34 dragging an older manager over this session's work -- **does not
+happen**. Git resolves it correctly. Recorded because the branch names and PR titles suggest
+otherwise, and the next person will have the same worry.
+
+**Taken from #34 (owner ruling: Claude and skill changes only), in `946bae95`:** the four dead skill
+copies deleted, `.claude/settings.json` tracked, `Claude.md` renamed to `CLAUDE.md` and cut 101 lines
+to 28, and the AGENTS.md file-map rows for the deleted skills dropped.
+
+**NOT taken, still an open decision:** #34's AGENTS.md archive roll (367 deletions, the 425KB ->
+165KB shrink). That is the **only** file where the two branches genuinely conflict -- all 25 other
+shared files auto-merge cleanly. Whoever resolves it should know this branch added ~94 lines to the
+Decisions Log head today, and #34 keeps that head while deleting older entries below it.
+
+`CLAUDE.md` is now 28 lines and is strictly an entrypoint -- it carries no build status. Every Claude
+session in this repo loads it, so that change takes effect immediately for the next session.
