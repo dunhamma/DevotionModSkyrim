@@ -77,6 +77,15 @@ dist/Rynfri_JoJ_Package.zip
 dist/Devotion.PreBeta.*.zip
 dist/Devotion-[0-9]*.zip
 dist/Devotion-[0-9]*.zip.proof.json
+# The shipping FOMOD (core + patches) from tools/pdv_fomod_release_package.mjs. Its name
+# starts "Devotion-FOMOD-", so the dist/Devotion-[0-9]* patterns above do NOT catch it.
+dist/Devotion-FOMOD-*.zip
+# Staging tree for that packager. Deleted on success, so it only survives a failed run.
+dist/.fomod-stage/
+# Receipts left by the superseded tools/pdv_combined_fomod_package.mjs. The current
+# packager prints its receipt to stdout and writes no file, so nothing regenerates these
+# - but a build receipt is a report of one build moment and is never committed.
+dist/Devotion-FOMOD-*.zip.proof.json
 
 # Untracked scratch output folders (tracked scratch/ files are unaffected)
 scratch/mcm-anomaly-bsa/
