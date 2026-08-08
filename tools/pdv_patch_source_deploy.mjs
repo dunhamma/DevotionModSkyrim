@@ -24,8 +24,8 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { hashText, hashBytes, sameText, sameBytes } from "./lib/pdv_file_compare.mjs";
 
 // Inline so this change stays independent of the shared tools/lib/pdv_cli.mjs guard landing;
 // it should be migrated to that helper once both are on main.
@@ -84,24 +84,11 @@ const walk = (root) => {
 // replacement.
 const LOCK = path.join(SRC, "PDV_PatchSource.lock.json");
 
-// Hash TEXT with line endings normalised, BINARY raw.
-//
-// The first version hashed raw bytes for everything and shipped broken: with autocrlf=true
-// the bytes of a .psc depend on when it was checked out. The lock was written just after a
-// git mv (still LF), every fresh clone then read CRLF, and the gate failed on all ten scripts
-// in a tree nobody had touched - the same false-alarm-on-a-clean-clone failure the mtime
-// approach had, one layer down.
-//
-// So: .psc is normalised to LF before hashing, which makes the lock independent of checkout
-// config entirely. .pex is compiled bytecode and is hashed raw - translating line endings in
-// it would corrupt the shipped file, which is why .gitattributes marks it binary. That file
-// also pins the .psc to LF, matching the two-layer pattern already used for
-// live-source/Scripts/Source/*.psc: pin the checkout AND normalise in the tool.
-const sha = (p, { text = false } = {}) => {
-  const raw = fs.readFileSync(p);
-  const bytes = text ? Buffer.from(raw.toString("utf8").replaceAll("\r\n", "\n"), "utf8") : raw;
-  return crypto.createHash("sha256").update(bytes).digest("hex");
-};
+// Hash TEXT by content and BINARY by bytes - see tools/lib/pdv_file_compare.mjs for why the
+// distinction is the whole point. A .psc is normalised, so the lock is independent of how it
+// was checked out; a .pex is bytecode where every byte is the claim, and .gitattributes marks
+// it binary so git never translates it.
+const sha = (p, { text = false } = {}) => (text ? hashText(p) : hashBytes(p));
 
 function currentHashes() {
   const out = {};
@@ -159,16 +146,9 @@ for (const { from, to } of DEPLOY) {
 }
 const errors = planned.filter((p) => p.error).map((p) => p.error);
 const jobs = planned.filter((p) => !p.error);
-// Compare .psc by CONTENT, not raw bytes, for the same reason the hash is normalised: a
-// working copy whose line endings came out CRLF is not drift, it is a checkout. .pex is
-// compared raw - it is bytecode and every byte matters.
-const sameContent = (a, b, isText) => {
-  const x = fs.readFileSync(a);
-  const y = fs.readFileSync(b);
-  if (!isText) return x.equals(y);
-  return x.toString("utf8").replaceAll("\r\n", "\n") === y.toString("utf8").replaceAll("\r\n", "\n");
-};
-const drift = jobs.filter((j) => !fs.existsSync(j.dst) || !sameContent(j.src, j.dst, j.src.endsWith(".psc")));
+// .psc by content, .pex by bytes. A working copy whose line endings came out CRLF is not
+// drift, it is a checkout.
+const drift = jobs.filter((j) => (j.src.endsWith(".psc") ? !sameText(j.src, j.dst) : !sameBytes(j.src, j.dst)));
 
 if (CHECK) {
   const ok = !errors.length && !stale.length && !drift.length;
