@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "description": "Exact Data-relative PlayerDevotion release payload. Packaging fails if a required entry is missing or any unlisted entry is present.",
-  "expectedEntryCount": 226,
-  "scriptPairCount": 99,
+  "expectedEntryCount": 231,
+  "scriptPairCount": 100,
   "releaseMetadata": [
     "CHANGELOG.txt",
     "README.txt"
@@ -11,8 +11,13 @@
     "Credits.txt",
     "Devotion.esp",
     "DialogueViews/01000D62.xml",
+    "MS03 Calians/textures/calianjewelrybox.dds",
+    "MS03 Calians/textures/calianjewelrybox_n.dds",
+    "MS03 Calians/textures/cubemaps/shinyglass_e.dds",
+    "MS03 Calians/textures/white/eggshell.dds",
     "Meshes/PDV/Clutter/PDV_AltmerCalian.nif",
     "Meshes/PDV/Clutter/PDV_DunmerAncestralUrn.nif",
+    "PDV_Calian_DESC.ini",
     "PrismaUI/views/Devotion/app.js",
     "PrismaUI/views/Devotion/fonts/IMFellEnglish-Italic.ttf",
     "PrismaUI/views/Devotion/fonts/IMFellEnglish-Italic.woff2",
@@ -128,7 +133,6 @@
     "Scripts/PDV__SM_NewVoicePower.pex",
     "Scripts/PDV__SM_PickLock.pex",
     "Scripts/PDV__SM_Trespass.pex",
-    "Scripts/Source/TempleBlessingScript.psc",
     "Scripts/TempleBlessingScript.pex",
     "Seq/Devotion.seq",
     "Textures/DLC02/Clutter/RemDunmerUrn01.dds",
@@ -233,6 +237,7 @@
     "PDV__SM_KillActor",
     "PDV__SM_NewVoicePower",
     "PDV__SM_PickLock",
-    "PDV__SM_Trespass"
+    "PDV__SM_Trespass",
+    "TempleBlessingScript"
   ]
 }

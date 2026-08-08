@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-08T01:32:04.604666Z",
-  "postChangeVerifiedAt": "2026-08-08T01:32:04.604666Z",
+  "generatedAt": "2026-08-08T07:05:22.013856Z",
+  "postChangeVerifiedAt": "2026-08-08T07:05:22.013856Z",
   "profile": "Devotion Dev",
   "plugin": "Devotion.esp",
   "active": true,
-  "espSha256": "87B04CDFFC9F0A3064CEA37D37DDAEA10C3AEEB9A4B9D3B1B515C44AE7B395B7",
+  "espSha256": "A09270329F50CB2D169F7AA41D463CF96C614EFC84D8CD84F5572761DAAFE08A",
   "recordSummary": {
     "total": 1961,
     "types": 21,
@@ -62,7 +62,7 @@
     "unboundAutoProperties": 552,
     "boundButNullProperties": 0,
     "unverifiableAttachments": 0,
-    "boundary": "Unbound findings include inherited and runtime-filled properties and are an audit queue, not a clean-binding claim. scriptedRecords was re-derived on 2026-08-08 (184: Quest 97, Activator 54, MagicEffect 29, Book 2, MiscItem 2). unboundAutoProperties / boundButNullProperties / unverifiableAttachments were NOT re-derived this pass and are carried forward from the 2026-07-26 sweep."
+    "boundary": "Unbound findings include inherited and runtime-filled properties and are an audit queue, not a clean-binding claim. scriptedRecords re-derived 2026-08-08 post-Daedric-conversion (184: Quest 97, Activator 54, MagicEffect 29, Book 2, MiscItem 2). unboundAutoProperties / boundButNullProperties / unverifiableAttachments were NOT re-derived and are carried forward from the 2026-07-26 sweep."
   },
   "filesystemScriptPairs": {
     "psc": 100,
