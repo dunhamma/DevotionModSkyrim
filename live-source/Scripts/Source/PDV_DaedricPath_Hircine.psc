@@ -55,7 +55,14 @@ Function RecordHuntRiteScaled(Float multiplier, String reason)
         AdjustStoredPiety(HuntRitePietyDelta * appliedMultiplier, "hunt_rite_" + reason)
     endIf
 
-    Trace(2, "Hunt rite recorded: " + GetPilotSummary())
+    ; A hunt rite is a real state event, so advance the residue clock explicitly.
+    ; This used to happen as a side effect of GetPilotSummary() building the trace
+    ; string below, which meant the recovery timer only moved when someone was
+    ; logging. See the guard comment on GetPilotSummary().
+    UpdateResidueRecovery()
+    if GetDebugLevel() >= 2
+        Trace(2, "Hunt rite recorded: " + GetPilotSummary())
+    endIf
 EndFunction
 
 Function RecordControlledSignal(String reason)
@@ -66,7 +73,10 @@ Function RecordControlledSignal(String reason)
         AdjustStoredPiety(ControlledSignalPietyDelta, "controlled_" + reason)
     endIf
 
-    TraceControlled(1, "Controlled signal recorded: " + GetControlledSummary())
+    UpdateResidueRecovery()
+    if GetDebugLevel() >= 1
+        TraceControlled(1, "Controlled signal recorded: " + GetControlledSummary())
+    endIf
 EndFunction
 
 Function DebugRunControlledProof(Int targetTier)
@@ -124,8 +134,15 @@ Function RenouncePath(String reason)
     Trace(1, "Hircine renunciation recorded.")
 EndFunction
 
+; PURE READ -- do not reintroduce UpdateResidueRecovery() here. This is a summary
+; builder, and Papyrus evaluates call arguments eagerly, so it runs inside every
+; Trace(...) argument whether or not the trace is ever emitted. Hanging the residue
+; state transition off it meant the recovery clock advanced only as a side effect of
+; logging: gating those traces (the obvious optimization) silently froze residue for
+; anyone not running at the matching debug level. The clock is now driven explicitly
+; from the real state events -- RecordHuntRiteScaled, RecordControlledSignal, and the
+; manager's curse-refresh path (HandleCurseStateRefresh / ApplyCurseRaceHandlers).
 String Function GetPilotSummary()
-    UpdateResidueRecovery()
     return GetContractSummary() + "; " + GetDaedricSpellSummary() + "; exit=" + GetExitDifficultyForPlayer() + "; residue=" + GetResidueSummary()
 EndFunction
 
