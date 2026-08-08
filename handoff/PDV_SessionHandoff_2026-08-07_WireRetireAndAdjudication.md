@@ -50,9 +50,16 @@ Implementation notes worth keeping:
   `RecordPortableShrinePrayerScaled` sites (`reclamation_source`, `honorable_victory`,
   `good_daedra_altar`) are different acts, not prayers, and were deliberately left alone.
 
-**Still needs in-game proof.** Add to the Dunmer packet: pray at the urn with NO patron and confirm a
-Ledger driver appears; pray again the same day and confirm no second one; cross 06:00 and confirm it
-returns. Under vampirism, confirm silence.
+**PROVEN IN GAME 2026-08-08.** Papyrus log, patronless Dunmer:
+
+- first prayer, `day=0` -> `AwardCuratedSignal: Azura signal 705 delta 1.000000` (705 is
+  `SIGNAL_ANCESTOR_SPINE`), alongside the pre-existing twilight rite 704
+- second prayer same day -> `Daily credit rejected: duplicate_event`, no 705, no 704
+- after the 06:00 boundary, `day=1` -> 705 fires again
+
+Steps 1, 3 and 4 of the packet pass: the driver fires, self-caps within the devotional day, and
+returns after the boundary. Still unrun: the vampirism guard (expect complete silence -- no standing,
+no driver) and the off-window case that would isolate the original gap (705 with no 704).
 
 ## Rulings made, so they do not get re-litigated
 
@@ -160,3 +167,59 @@ containing them. Owner action; an agent cannot post it.
 7. **The compiler enforces the live-tree/mirror sync and will refuse.** `pdv_compile` fails with
    "Tracked/deployed source drift" until `live-source/` is synced from the MO2 tree. Copy first, then
    compile.
+
+---
+
+# Addendum -- 2026-08-08 session close
+
+## Proven in game since this handoff was written
+
+| Surface | Result |
+|---|---|
+| Nord werewolf cure | PASS |
+| Nord/Kyne champion recognition | PASS (after the deferred-queue fix below) |
+| Dunmer ancestral-layer Ledger driver | PASS -- signal 705, self-caps, returns after 06:00 |
+| Khajiit long test | PASS (owner) |
+
+## Defects live testing found, all introduced by this branch
+
+1. **`Message.Show()` cannot display over an open MCM.** The Kyne recognition fired into an open
+   menu, displayed nothing, **and set its one-shot key** -- burning the beat permanently while the
+   record and its VMAD binding were both correct. Fixed by queueing and presenting from `OnUpdate`,
+   stamping the key on PRESENT rather than on queue. `AGENTS.md` (2026-06-13) already documented this
+   trap and it was re-broken the same day it was read. Memory:
+   `message-show-cannot-fire-over-an-open-mcm`.
+2. **A one-shot guard with no reset path** recreated the P10 "total silence on a re-climb" bug one
+   surface lower. The Kyne key now clears on demotion alongside the tier notice.
+3. **FOMOD entries spliced into the wrong install step** -- the anchor string occurs in both steps and
+   a plain string replace takes the first. Caught only by simulating the install, not by XML
+   validation.
+4. **All-In-One left behind** -- would have shipped Authoria users none of the 29 new channels.
+
+## Still open, unresolved
+
+**The MCM `Evaluate commitment` button did not fire.** No `Commitment evaluate debug` trace appeared
+though a level-1 trace from `Seed commitment signals` on the same page did, and the wiring
+(`OnOptionSelect` -> `RunPatternAction(..., 12)` -> `DebugEvaluateCommitmentOffer`) reads correct.
+The offer eventually arrived through the dawn path. Worth a look if it recurs.
+
+**`ShowFormalCommitmentOffer` has the un-deferred `Message.Show()` problem too** --
+`Int choice = offerMessage.Show()` with no menu-mode hold, so run from the MCM it returns 0 and
+silently auto-accepts. The Daedric champion path got the deferred fix; this one never did.
+
+## New scope docs opened
+
+- `references/authoring/PDV_PatronOfferDeityNaming_Scope_2026-08-08.md` -- patron-commitment boxes
+  must name their deity; plus a player-copy lint for that rule and for `--` in player-facing text
+- Three owner-authored scope docs captured into git unmodified: JoJ compatibility, KID distribution,
+  SPID recognition
+
+## Packaging
+
+The quest-mod patch hub is now a **pure per-mod patcher** -- one page, 46 tickable options, each
+gated on its own mod's plugin, no Authoria lane and no combined plugin. This is **breaking for
+existing hub users**: anyone who installed via All-In-One must re-run the installer. Save-safe (all
+ESL-flagged, no FormID shifts), but it belongs in the release notes.
+
+Deleting that lane also removed an active regression: its core payload had gone stale and would have
+**downgraded** users (`ManagerQuest.pex` 909,685 vs 961,450 live; core matrix 614,651 vs 714,030).
