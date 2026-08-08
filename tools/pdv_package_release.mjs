@@ -249,6 +249,17 @@ function verifyExactLivePayload(manifest) {
       fail(`Required release metadata is missing: ${path.join(RELEASE_META_DIR, entry)}`);
     }
   }
+
+  // The packaged changelog is GENERATED from CHANGELOG.md. Existing on disk is not enough -
+  // it was present and two releases stale when 1.5.0 shipped, because nothing compared the
+  // two. Gate on content, not presence.
+  try {
+    execFileSync(process.execPath, [path.join(REPO_ROOT, "tools", "pdv_changelog_sync.mjs"), "--check"], { cwd: REPO_ROOT, stdio: "pipe" });
+  } catch (error) {
+    const detail = `${error.stdout ?? ""}${error.stderr ?? ""}`.trim();
+    fail(`Packaged changelog is out of sync with CHANGELOG.md. Run: node tools/pdv_changelog_sync.mjs --write\n${detail}`);
+  }
+
   pass(`Live payload exactly matches the ${manifest.expectedEntryCount}-entry manifest.`);
 }
 
