@@ -466,10 +466,23 @@ Others carrying quests: Deadlands Expanded (Mehrunes Dagon), Kaidan 2, Lucien
 (Julianos/Xarxes), Remiel (Julianos/Magnus), Heart of Ice Astrid (Sithis), Ashe,
 Yoana.
 
-Verified negatives, recorded so they are not re-checked: **Val Serano** has no QUST
-despite "Quest Adventure" in the title; **Inigo** and **Fluffy Thistlefoot** ship no
-plugin in their own folder (Inigo's ESP lives in `Inigo - cleaned esp File`), so
-resolve by plugin, never by mod folder.
+**CORRECTED 2026-08-09 -- the Val Serano negative below was WRONG.** This paragraph read
+"Verified negatives, recorded so they are not re-checked: **Val Serano** has no QUST
+despite 'Quest Adventure' in the title". A structural QUST probe of
+`AX ValSerano.esp` (`mods\Val Serano - Pirate Follower and Quest Adventure`) reads
+**62 quests defined by the plugin itself**, plus 4 vanilla overrides -- among them
+`Val000` through `Val006`, `ValS01` through `ValS05`, `ValEnd`, and three addon
+questlines (`ValAddon01/02/03`). The title was accurate and the negative was not.
+
+Worth stating plainly because of how the error was framed: "recorded so they are not
+re-checked" is what made it expensive. A wrong negative written specifically to stop
+anyone looking again survives exactly as long as nobody disobeys it. Record a negative
+with the evidence that produced it, so the next reader can re-derive rather than trust.
+
+The rest of the paragraph stands and was re-verified on 2026-08-09: **Inigo** and
+**Fluffy Thistlefoot** ship no plugin in their own folder (Inigo's ESP is in
+`Inigo - cleaned esp File`; the `Fluffy Thistlefoot` folder carries none), so resolve by
+plugin, never by mod folder.
 
 ### Aetherium Forge Destroys Items (AFDI) -- a ready-made Prince signal
 

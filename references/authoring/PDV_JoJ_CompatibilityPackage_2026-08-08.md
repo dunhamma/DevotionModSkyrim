@@ -302,6 +302,36 @@ Corgi, Jesper the Guard, the ColdSun's Visions set, the Reaper864 / Daedric Desc
 set. Mechanism is identical to the shipped Auri patch - a follower's personal quest
 (`018AuriFriendQuest` s80) is just a quest with stages.
 
+#### Class C record verdicts (structural QUST probe, 2026-08-09)
+
+Six were read directly off disk rather than judged by name. All six define content
+quests, so none is a dead end:
+
+| Follower | Plugin | QUST defined | Content quests among them |
+|---|---|---:|---|
+| Lucien | `Lucien.esp` | 48 | `JRLucienOctavius`, `JRLucienDelphine`, `JRLucienVilja`, `JRLucienBardsCollege`, `JRLucienHoth` |
+| Remiel | `HLIORemi.esp` | 55 | `HLIORemiMainQuest02`, `HLIOMQ1RewardManager`, `HLIOChaurusPieQuest`, `HLIOVampirism` |
+| Astrid (Heart of Ice) | `SM_Astrid.esp` | 55 | `SM_AstridStart`, `SM_AstridWedding`, `SM_AstridEnding`, `SM_AstridDrinkQuest` |
+| Sa'chil | `SU04SachilFollower.esp` | 45 | `..._Q1_MainQuest`, `..._Q2_DragonbornQuest`, `..._Q3_DawnguardQuest` |
+| Val Serano | `AX ValSerano.esp` | 62 (+4 overrides) | `Val000`-`Val006`, `ValS01`-`ValS05`, `ValEnd`, `ValAddon01/02/03` |
+| Taliesin | `00Taliesin.esp` | 17 | `0TallyMQ`, `VV_TallyConfession`, `00TallyBerwhale`, `0TallySleepingTreeSap` |
+
+**A count is not a work estimate.** Every one of these also carries framework quests that
+are not player-facing - Lucien's 48 include `JRLucienMapMarker`, `JRLucienRiding`,
+`JRLucienCatchUp` and `JRLucienGetHorseQuest`. The ARR discovery waves already adjudicated
+that family as non-content. Authoring rows still needs a per-quest stage read; this only
+settles that there is something there to read.
+
+**Val Serano is the correction that matters.** `PDV_ARR25_ContentSweep_CodexHandoff_2026-08-06.md`
+recorded it as a verified negative with no QUST, *"recorded so they are not re-checked"*.
+It has 62. That doc is corrected.
+
+Five of these six had been silently dropped from the work list entirely: the candidate
+queue's name filter read "Voiced" in `Lucien - Immersive Fully Voiced Male Follower` the
+same way it read it in `VIGILANT - ElevenLabs Voiced`, and discarded the followers while
+queueing their cosmetic replacers. Fixed in `tools/pdv_candidate_queue.mjs`, which now
+carries a structural QUST probe alongside the names.
+
 **Class D - dialogue and reaction expansions.** NPCs React To Necromancy, NPCs React To
 Frenzy, NPCs React To Invisibility, Vampire / Bandit / Dremora / Civil War / Forsworn and
 Thalmor Lines Expansion, Guard Dialogue Overhaul, Immersive Rejections, the ~30-mod FDE
