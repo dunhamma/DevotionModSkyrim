@@ -39,6 +39,14 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
+// not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
+// for fixtures that never ran.
+const KNOWN_FLAGS = new Set(["--json", "--mo2", "--self-test", "--source"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_reward_runtime_order_lint" });
+
 const REPO_ROOT = process.cwd();
 const LIVE_SOURCE = path.join(REPO_ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
 const ANVIL_SOURCE = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source/PDV__ManagerQuest.psc";

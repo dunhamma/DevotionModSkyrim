@@ -23,6 +23,14 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
+// not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
+// for fixtures that never ran.
+const KNOWN_FLAGS = new Set(["--inventory", "--outcome-key-file", "--output-prefix", "--self-test", "--source"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_quest_cross_gen" });
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const AUTHORING = path.join(ROOT, "references", "authoring");
 const MATRIX_MD = path.join(AUTHORING, "PDV_QuestReactionMatrix.md");
