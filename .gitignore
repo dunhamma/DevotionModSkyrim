@@ -77,6 +77,13 @@ dist/Rynfri_JoJ_Package.zip
 dist/Devotion.PreBeta.*.zip
 dist/Devotion-[0-9]*.zip
 dist/Devotion-[0-9]*.zip.proof.json
+# Combined shipping FOMOD (core + patches) from tools/pdv_combined_fomod_package.mjs.
+# The zip is already caught by dist/*.zip; its proof receipt is not, and a receipt is a
+# regenerated report of one build moment - never commit one.
+dist/Devotion-FOMOD-*.zip
+dist/Devotion-FOMOD-*.zip.proof.json
+# Staging tree for the combined FOMOD. Removed on success; only survives a failed run.
+dist/_staging_combined_fomod/
 
 # Untracked scratch output folders (tracked scratch/ files are unaffected)
 scratch/mcm-anomaly-bsa/
