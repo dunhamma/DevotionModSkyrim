@@ -3,6 +3,17 @@
 import fs from "node:fs";
 import path from "node:path";
 
+// Refuse unrecognised flags. These tools read argv with includes()/indexOf(), so an
+// unknown or mistyped flag would otherwise fall through to a default and the run would
+// SUCCEED against something the caller never asked for. Matches the pdv_arr25_* convention.
+const KNOWN_FLAGS = new Set(["--channels-root", "--core"]);
+for (const arg of process.argv.slice(2)) {
+  if (arg.startsWith("--") && !KNOWN_FLAGS.has(arg)) {
+    throw new Error(`Unknown argument: ${arg}. Known: ${[...KNOWN_FLAGS].join(", ")}`);
+  }
+}
+
+
 function arg(name, fallback) {
   const index = process.argv.indexOf(name);
   return index >= 0 ? process.argv[index + 1] : fallback;

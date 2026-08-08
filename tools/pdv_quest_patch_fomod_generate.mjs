@@ -3,6 +3,17 @@
 import fs from "node:fs";
 import path from "node:path";
 
+// Refuse unrecognised flags. These tools read argv with includes()/indexOf(), so an
+// unknown or mistyped flag would otherwise fall through to a default and the run would
+// SUCCEED against something the caller never asked for. Matches the pdv_arr25_* convention.
+const KNOWN_FLAGS = new Set(["--write", "--import-legacy", "--normalize-manifest"]);
+for (const arg of process.argv.slice(2)) {
+  if (arg.startsWith("--") && !KNOWN_FLAGS.has(arg)) {
+    throw new Error(`Unknown argument: ${arg}. Known: ${[...KNOWN_FLAGS].join(", ")}`);
+  }
+}
+
+
 const ROOT = "dist/PDV_QuestModPatches_FOMOD";
 const XML = path.join(ROOT, "fomod/ModuleConfig.xml");
 const MANIFEST = "references/authoring/PDV_QuestPatchHub.manifest.json";

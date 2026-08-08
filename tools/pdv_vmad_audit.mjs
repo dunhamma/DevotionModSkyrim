@@ -46,6 +46,17 @@ import fs from "node:fs";
 import path from "node:path";
 import { callHousecarl, extractHousecarlText } from "./lib/pdv_housecarl_stdio.mjs";
 
+// Refuse unrecognised flags. These tools read argv with includes()/indexOf(), so an
+// unknown or mistyped flag would otherwise fall through to a default and the run would
+// SUCCEED against something the caller never asked for. Matches the pdv_arr25_* convention.
+const KNOWN_FLAGS = new Set(["--json"]);
+for (const arg of process.argv.slice(2)) {
+  if (arg.startsWith("--") && !KNOWN_FLAGS.has(arg)) {
+    throw new Error(`Unknown argument: ${arg}. Known: ${[...KNOWN_FLAGS].join(", ")}`);
+  }
+}
+
+
 const ROOT = process.cwd();
 const DEFAULT_SOURCE_DIR = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source";
 const SOURCE_DIR = process.env.PDV_DEVOTION_SOURCE_DIR || DEFAULT_SOURCE_DIR;
