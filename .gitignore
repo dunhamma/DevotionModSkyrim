@@ -23,6 +23,12 @@ generated/live-devotion-backups/
 # Hygiene-harvest candidate dumps. Candidates are not findings, and a stale dump read as a
 # finding list is exactly the failure the pass exists to avoid. Regenerate, never commit.
 generated/pdv_hygiene_*.json
+# Cross-instance candidate queue (tools/pdv_candidate_queue.mjs). It is a WORK-ORDERING
+# view derived from whatever modlists happen to be installed on this machine, not a
+# coverage claim -- its LIKELY-COVERED bucket is a name heuristic that only Phase 1b
+# editor_id reads can settle. Committing it would freeze one machine's install set as
+# though it were project truth. Regenerate, never commit.
+generated/PDV_CandidateQueue.md
 fixtures/ckpe/heartbeat-only.tmp.json
 fixtures/ckpe/phase60-*-duplicate-replay.ck-command-packet.json
 fixtures/ckpe/phase62-family-duplicate-saved-readback-proof.json
