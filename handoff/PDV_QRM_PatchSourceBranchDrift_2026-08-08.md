@@ -51,12 +51,54 @@ patches directory was found.
 tracked source tree are out of step. Treat `dist/` as evidence of what was built, never as
 evidence of what can be rebuilt.
 
-## Recommended fix
+## RESOLVED for 39 of 44 - merged 2026-08-08 (`c1c47357`)
 
-Merge or cherry-pick the 29 missing `PDV_QRM_*.csv` files from
-`codex/arr25-content-sweep` onto the mainline, then regenerate and diff the channels
-against the shipped ones. A clean diff proves the sources are complete; any channel that
-comes back empty names a source still missing.
+`codex/arr25-content-sweep` was merged into `codex/khajiit-lunar-champion-rebalance`.
+`references/authoring/patches/*.csv` went 10 -> 39, and **all 39 now regenerate
+byte-identical to the shipped channels** (verified by compiling each source and diffing
+against `dist/`, ignoring timestamps).
+
+### What regeneration changed, and why it was needed anyway
+
+The first regeneration pass came back **39 differ / 0 identical**, which looked alarming
+and was not. The award rows were identical in every case (`stringList` value-diff = 0);
+every difference sat in the **shared stance matrix** baked into each channel:
+
+- The merge brought `7e9fd58e fix(altmer): scope current roster to five deities`, which
+  deliberately moves **Mara, Stendarr and Y'ffre from NATIVE to FOREIGN for Altmer**
+  ("Altmer access deferred for a future roster review"). The shipped channels predated
+  that theology decision.
+- A deity key renamed from `Riddle'Thar / ja-Kha'jay` to `Riddle'Thar`.
+
+**The rename was a live defect, not cosmetic.** `PDV__ManagerQuest.psc:3455` builds the
+lookup as `"stance." + raceLabel + "." + deityName`, and the manager's own name for that
+deity is the short `Riddle'Thar`. Channels carrying the long-form key therefore hold a
+key the manager cannot find. Regenerating fixes it; the 39 are now consistent with the
+core matrix.
+
+## STILL OPEN - 5 channels have no source in ANY branch or history
+
+These ship in `dist/` but were generated from untracked scratch CSVs that no longer
+exist. `git log --all -S` finds no `patches/PDV_QRM_<name>.csv` for any of them, so
+unlike the 29 this is not branch drift - the source was never tracked at all.
+
+| Channel | Target plugin | Award rows (FormID\|stage -> deities) |
+|---|---|---|
+| `AboveAllElse` | `Darbalag - Quest Mod.esp` | `2\|40` -> Hermaeus Mora |
+| `BardsRebornStudentOfSong` | `BardsRebornStudentofSong.esp` | `419643\|140`, `1581715\|20` -> Dibella |
+| `BecomeABard` | `BecomeABard.esp` | `162848\|100`, `162847\|100` -> Dibella |
+| `HeartOfDibellaQE` | `The Heart Of Dibella - Quest Expansion.esp` | `2070\|0` -> Dibella, Mara |
+| `IllMetByMoonlightDialogue` | `CH_IMBMDialougeAddon.esp` | `38\|10` -> Hircine |
+
+**Consequence right now:** these five still carry the stale long-form `Riddle'Thar` key
+and the pre-`7e9fd58e` Altmer stances, so they are inconsistent with the core matrix and
+the other 39. Seven award rows in total are affected.
+
+**Reconstruction is mechanical but needs record reads.** Every channel reports
+`questEditorIds: [None]` - the editor IDs were never resolved, and the CSV schema is
+keyed on `editor_id`. Rebuilding them requires resolving each FormID against a load order
+that carries the plugin (none are in Anvil; check ARR). Do NOT invent editor_ids to make
+the file parse - an unprovable row is exactly what the ARR method refuses to author.
 
 ## Suggested gate
 
