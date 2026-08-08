@@ -62,3 +62,11 @@ dist/Devotion_Authoria_Compatibility*.zip -text
 references/authoring/PDV_QuestReactionMatrix_Full.csv text eol=crlf
 references/authoring/PDV_QuestReactionMatrix_Tranche*.csv text eol=crlf
 references/authoring/PDV_QuestReactionMatrix_Reconciliation_*.csv text eol=crlf
+
+# External-mod support inventory. pdv_external_support_inventory.mjs --check parses
+# a JSON counts block out of the doc, and the tool is written ASCII/LF. Nothing here
+# is byte-compared today, so this is a pin against a FUTURE gate change (a hash, a
+# byte diff) silently inheriting whatever autocrlf did on one machine. Both stay LF
+# on every platform.
+references/authoring/PDV_ExternalModSupport_Inventory.md text eol=lf
+tools/pdv_external_support_inventory.mjs text eol=lf

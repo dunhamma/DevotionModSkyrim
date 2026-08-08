@@ -29,6 +29,14 @@ generated/pdv_hygiene_*.json
 # editor_id reads can settle. Committing it would freeze one machine's install set as
 # though it were project truth. Regenerate, never commit.
 generated/PDV_CandidateQueue.md
+# External-mod support dump (tools/pdv_external_support_inventory.mjs). A full machine
+# re-derivation of the FOMOD manifest, every shipped channel, the core matrix, the KID
+# and BOS inis, and the Papyrus plugin hooks. Committing it would freeze one moment's
+# packaging as though it were project truth, and the reasoning lives in the curated
+# LIVING doc (references/authoring/PDV_ExternalModSupport_Inventory.md) instead.
+# Regenerate, never commit -- `--check` gates that doc against this dump by exit code.
+generated/PDV_ExternalModSupport_Inventory.json
+generated/PDV_ExternalModSupport_Inventory.md
 fixtures/ckpe/heartbeat-only.tmp.json
 fixtures/ckpe/phase60-*-duplicate-replay.ck-command-packet.json
 fixtures/ckpe/phase62-family-duplicate-saved-readback-proof.json
