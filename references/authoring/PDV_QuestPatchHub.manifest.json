@@ -66,7 +66,7 @@
     },
     {
       "name": "DAc0da",
-      "description": "Data-only reactions for the two directly evidenced DAc0da resolutions.",
+      "description": "",
       "dependency": "DAc0da.esm",
       "folders": [
         "common\\DAc0da"
@@ -85,7 +85,7 @@
     },
     {
       "name": "Glenmoril",
-      "description": "Data-only reactions for the directly evidenced Glenmoril resolutions.",
+      "description": "",
       "dependency": "Glenmoril.esm",
       "folders": [
         "common\\Glenmoril"
@@ -280,7 +280,7 @@
     },
     {
       "name": "Ebony Blade Curse",
-      "description": "Data-only reaction for breaking the Ebony Blade curse.",
+      "description": "",
       "dependency": "EbonyBladeCurse.esp",
       "folders": [
         "common\\EbonyBladeCurse"

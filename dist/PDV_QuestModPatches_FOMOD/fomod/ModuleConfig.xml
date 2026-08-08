@@ -121,7 +121,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="DAc0da">
-              <description>Data-only reactions for the two directly evidenced DAc0da resolutions.</description>
+              <description></description>
               <files>
                 <folder source="common\DAc0da" destination="" priority="0" />
               </files>
@@ -159,7 +159,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Glenmoril">
-              <description>Data-only reactions for the directly evidenced Glenmoril resolutions.</description>
+              <description></description>
               <files>
                 <folder source="common\Glenmoril" destination="" priority="0" />
               </files>
@@ -530,7 +530,7 @@
               </typeDescriptor>
             </plugin>
             <plugin name="Ebony Blade Curse">
-              <description>Data-only reaction for breaking the Ebony Blade curse.</description>
+              <description></description>
               <files>
                 <folder source="common\EbonyBladeCurse" destination="" priority="0" />
               </files>

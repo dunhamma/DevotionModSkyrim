@@ -119,7 +119,12 @@ function render() {
   const dependencySet = new Set();
   const folderSet = new Set();
   for (const option of manifest.options) {
-    if (!option.name || !option.description || !option.dependency || !Array.isArray(option.folders) || !option.folders.length) {
+    // description may be "" ON PURPOSE. Owner ruling 2026-08-08: an option's description is
+    // the mod's own Nexus summary, never authored copy. DAc0da, Glenmoril and Ebony Blade
+    // Curse are not on Nexus SE, so there is no summary to use and nothing is shown for
+    // them. The key must still be present -- an absent one is a mistake, an empty one is a
+    // decision. Do not "fix" this by writing a description.
+    if (!option.name || typeof option.description !== "string" || !option.dependency || !Array.isArray(option.folders) || !option.folders.length) {
       throw new Error(`Incomplete PatchHub option: ${option.name ?? "<unnamed>"}`);
     }
     assertNoDevStatus(`option "${option.name}" name`, option.name);
