@@ -294,6 +294,28 @@ should show **Devotion** as its provider.
   the ancestors' protection returns when you take up the death-duty again — it is
   intentionally withheld until then, not a bug.
 
+## 1.0.2 — 2026-07-18
+
+- **Fixed (properly this time): crash to desktop when tempering or crafting.**
+  The 1.0.1 fix repaired a real problem but not this one — the crash was
+  reproduced on 1.0.1 with that repair in place. The actual cause is in the
+  game engine's own delivery of the built-in "Craft Item" event: it can fault
+  while handing the event to a listening script, most reliably when tempering
+  repeatedly at a grindstone. Devotion no longer uses that path at all.
+  Crafting is now detected through powerofthree's Papyrus Extender (already a
+  requirement), which reports the same information without touching the
+  crash-prone engine path. Confirmed fixed by the original reporter on the save
+  that was crashing. No new game required.
+- All crafting still earns piety exactly as before — tempering, smithing,
+  cooking, enchanting, and alchemy are unchanged in what they award and which
+  gods notice.
+- **Fixed: a harvest could silently go uncredited.** If the game reported a
+  harvested plant with no item attached, the handler stopped early and the
+  harvest earned nothing. It now fails cleanly instead.
+- Internal: the in-game version readout was stuck at "1.0.0" through the 1.0.1
+  release, so the MCM could not tell builds apart. It now tracks the real
+  version, and the release tooling refuses to build a mismatched package.
+
 ## 1.0.1 — 2026-07-18
 
 - **Fixed: crash to desktop when cooking or tempering.** Devotion's "Craft Item"
@@ -303,11 +325,19 @@ should show **Devotion** as its provider.
   desktop — most reliably when cooking at a pot or tempering at a grindstone or
   workbench. All receiver quests now carry `ANAM`. No new game required.
 - **Fixed: Namira's boon did nothing under Requiem.** Namira's Seeker/Devoted/
-  Champion boon granted a health-regeneration *rate* multiplier (`HealRateMult`),
-  which Requiem effectively disables — base regen is ~0, so a rate multiplier
-  multiplies nothing. It is now a flat **Fortify Health + Fortify Stamina**
-  (+25/+40/+50 per tier, provisional) that Requiem honors. Namira was the last
-  regen-rate holdout among the Daedric boons.
+  Champion boon granted a health-regeneration *rate* multiplier, which Requiem
+  effectively disables — base regen is ~0, so a rate multiplier multiplies
+  nothing. It is now a flat **Fortify Health + Fortify Stamina** (+25/+40/+50 per
+  tier, provisional) that Requiem honors.
+
+## 2026-07-17
+
+- **Fixed: Bosmer path name showed an internal code label.** Book of Days, the
+  devotion toast, and the Survey displayed the raw path token (`OldContract`,
+  `LivingStory`, `BanditRoad`) instead of the proper name — **Old Contract**,
+  **Living Story**, **Bandit Road**, or **Exchange**. The correct name now shows
+  everywhere the Bosmer path is surfaced. (The fix is included in the 1.0.0
+  build; this note was added afterward.)
 
 ## 2026-07-16
 
