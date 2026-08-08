@@ -1,0 +1,4 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation,formid
+000FCQuest02,The Forgotten City - Forget-me-not,1500,Refused to murder the suspect for self-interest,show_mercy,Stendarr,+,S,milestone,FC Quest02 s1500 (refused unjust killing; embedded text-confirmed),ForgottenCity.esp:05965B
+000FCQuest01,The Forgotten City,4000,Persuaded the Arbiter to wind back the Dwarves' Law,seek_truth,Julianos,+,S,milestone,FC Quest01 s4000 good ending (truth over blind obedience; embedded text-confirmed),ForgottenCity.esp:012BB9
+000FCQuest01,The Forgotten City,4050,Reunited Altrius with Cassia,show_compassion,Mara,+,m,small,FC Quest01 s4050 CompleteQuest (reunion; embedded text-confirmed),ForgottenCity.esp:012BB9

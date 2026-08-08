@@ -17,11 +17,14 @@ public support claim and not maintainer approval.
 - The shrine-replacement slice itself still lives in `Devotion.esp`: after the
   Archon removal set is disabled, Devotion owns the cure-only shrine spell
   overrides.
-- The current trusted-tester add-on does ship
-  `PDV_AuthoriaARR_Compatibility.esp` for the separate shrine-prayer feature:
-  11 Daedric shrine-prayer ACTIs plus a Base Object Swapper file that makes the
-  decorative `man_DaedricShrines` statues clickable. This plugin is loaded after
-  `Devotion.esp` and is not a replacement for the core shrine spell overrides.
+- The current cumulative FOMOD and KoK R11 add-on ship one ESPFE,
+  `PDV_AuthoriaARR_Combined.esp`, loaded after `Devotion.esp`. It replaces the
+  historical `PDV_Patch_Authoria_QuestMods.esp` and
+  `PDV_AuthoriaARR_Compatibility.esp` donors, combining 21 quest/dialogue
+  overrides with 11 Daedric shrine-prayer ACTIs (32 records total). The BOS file
+  still makes the decorative `man_DaedricShrines` statues clickable; source quest
+  SEQs remain supplied by their masters. An external-reference scan had five
+  unrelated unreadable records. This is not a runtime or support result.
 
 ## Archon Removal Set
 

@@ -212,6 +212,46 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="Aetherium Forge Destroys Items (experimental)">
+              <description>Installs an ESL-flagged observer quest for successful artifact destruction. Existing saves are baselined without retroactive awards; runtime and save/load evidence remain open.</description>
+              <files>
+                <folder source="common\AFDI" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Aetherium Forge Destroys Items.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Daedric Shrines AIO prayer activators (experimental)">
+              <description>Installs a neutral ESL-flagged prayer-activator plugin and BOS swaps for eleven supported Daedric Shrines AIO statues. Runtime and placement evidence remain open.</description>
+              <files>
+                <folder source="common\DaedricShrinesAIO" destination="" priority="0" />
+                <folder source="common\_Runbook" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="man_DaedricShrines.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Auri">
               <description>Y'ffre and Kynareth answer the green road walked at Auri's side, and Kyne marks the hunt kept clean.</description>
               <files>

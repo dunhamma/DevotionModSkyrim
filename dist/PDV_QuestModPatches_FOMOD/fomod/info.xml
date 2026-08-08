@@ -1,23 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <fomod>
-  <Name>Devotion - Quest Mod Patches</Name>
+  <Name>Devotion - Modular Mod PatchHub</Name>
   <Author>Devotion (PDV)</Author>
-  <Version MachineVersion="1.0">1.0-rc1 (2026-07-16)</Version>
+  <Version MachineVersion="1.0.0.20260807">ARR 2.5 experimental candidate (2026-08-07)</Version>
   <Website>https://www.nexusmods.com/skyrimspecialedition/</Website>
   <Description>
-    Per-mod Devotion patches for quest mods. Each patch teaches Devotion how the
-    gods react to a quest mod's outcomes: piety awards keyed to the quest stage
-    the player actually reaches, swept across every deity and Prince whose
-    likes/dislikes profile validly reacts.
-
-    Two lanes: an Authoria all-in-one package (one combined plugin), or
-    individual per-mod patches that auto-select against your load order.
+    Independent Devotion compatibility options for quest mods and selected
+    non-quest integrations. Each option is gated by its own source plugin and
+    installs only that mod's channel, adapter, or narrow ESL-flagged hook.
 
     Requires: Devotion (PlayerDevotion) with per-mod channel support.
 
-    Proof state: records and matrix channels are machine-verified (compiler
-    check + record readback). In-game runtime proof is pending -- see each
-    patch README.
+    Proof state: package structure, records, scripts, and matrix channels are
+    machine-verified. In-game runtime and player-surface proof remain pending;
+    every option is experimental, not supported.
   </Description>
   <Groups>
     <element>Patches</element>

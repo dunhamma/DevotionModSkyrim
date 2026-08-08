@@ -9,6 +9,13 @@ Archon-era `PDV_Phase21_ARR_ConflictDossier.md` and
 Proof boundary: everything here is names-plus-records static evidence. No runtime
 proof is claimed; every to-do that lands a hook carries "runtime-verify pending".
 
+Packaging authority overlay (2026-08-07): current core/PatchHub filenames,
+hashes, exact payloads, proof debt, and support state are owned by
+`references/authoring/PDV_ModPackaging_StateAuthority.md`. The combined Authoria
+lane and 95-member archive described later in this dated review are superseded
+historical evidence; preserve the owner rulings, but do not recreate that
+package architecture.
+
 ## Instance / profile
 
 - Instance: `D:\Wabbajack\modlists\ARR Test` (3,719 mod folders).
@@ -226,10 +233,13 @@ Architecture:
 
 ### Authoria all-in-one lane (added 2026-07-16)
 
-For Authoria specifically, the three dialogue-hook plugins collapse into ONE:
-`PDV_Patch_Authoria_QuestMods.esp` (ESL-flagged, 21 records, masters War's
-Folly + Once We Were Here + Slays-Many-Beasts), shipped with all 9 fragments and
-all 10 channels.
+For Authoria specifically, the current cumulative FOMOD and KoK R11 deployment
+use ONE ESPFE: `PDV_AuthoriaARR_Combined.esp`. It replaces the historical
+`PDV_Patch_Authoria_QuestMods.esp` and `PDV_AuthoriaARR_Compatibility.esp`
+donors and contains 32 records: 21 quest/dialogue overrides plus 11
+shrine-prayer ACTIs. Source quest SEQ files remain supplied by their masters.
+The combined-plugin external-reference scan reported five unrelated unreadable
+records; runtime and support evidence remain open.
 
 Why the individual lane still exists: a patch plugin masters every mod it
 touches, and a missing master stops the game loading -- so a combined plugin is
@@ -250,10 +260,11 @@ multi-`<folder>` entries:
 common/<Mod>/                SKSE/.../Channels/PDV_QRM_<Mod>.json + Docs/PDV Patch - <Mod>.md
 common/_Fragments/<Mod>/     Scripts/*.pex + Scripts/Source/*.psc   (the 3 dialogue-hook mods)
 plugins/individual/<Mod>/    PDV_Patch_<Mod>.esp                    (the 3 dialogue-hook mods)
-plugins/authoria/            PDV_Patch_Authoria_QuestMods.esp + its Docs entry
+plugins/authoria/            PDV_AuthoriaARR_Combined.esp + its Docs entry
 ```
 
-- Authoria option = all 10 `common/<Mod>` + 3 `common/_Fragments/*` + `plugins/authoria`.
+- Authoria option = all 10 `common/<Mod>` + 3 `common/_Fragments/*` + `plugins/authoria`;
+  its single ESPFE is `PDV_AuthoriaARR_Combined.esp`.
 - Individual data-only option = its `common/<Mod>` only.
 - Individual dialogue-hook option = `common/<Mod>` + `common/_Fragments/<Mod>` +
   `plugins/individual/<Mod>`.
@@ -281,6 +292,138 @@ Machine proof: 10/10 channels `--check` PASS; core matrix 1982 cells / 173 keys
 (+4 for DB01 s198); patch records read back from disk. Runtime proof pending
 (TODO-7).
 
+### 2026-08-06 T13 extension (machine-clean test candidate)
+
+T13 adds nine data-only channels: Wyrmstooth, CC The Cause, CC Ghosts of the
+Tribunal, CC Divine Crusader, Taste of Death Addon, Siege at Icemoth, Hunt for
+the Spectre, Calling the Watchmaker, and Gift of Saturalia. They contain **95
+cells across 14 keys / 14 watched quests** and require no new ESP. M'rissi is
+excluded and remains assigned exactly once to T14.
+
+The FOMOD now offers 19 channel options. The Authoria lane installs all 19 while
+retaining the original combined hook ESP only for the three mods that need
+dialogue result fragments; every new individual option installs only its
+detected mod's JSON and shared runbook. `pdv_quest_patch_fomod_validate.mjs`
+passes XML parsing, all referenced folders, Authoria/all-individual/subset
+simulation, channel naming, collision checks, and a 67-file hash manifest.
+The structure receipt is
+`references/authoring/PDV_QuestModPatches_FOMOD_Validation.json`.
+
+Proof boundary: these options are machine-verified experimental. The 14-case
+ledger is `PDV_ARR25_T13_RuntimeEvidenceLedger.json`; all cases are OPEN and the
+Divine Crusader pilgrimage must be traversed organically. No T13 option is
+supported yet.
+
+### 2026-08-06 T14 extension (machine-clean test candidate)
+
+T14 adds five data-only channels: Thogra, Song of the Green (Auri), M'rissi,
+Xelzaz, and Moonpath to Elsweyr. They contain **78 cells across 15 keys / 12
+watched quests** and require no new ESP. M'rissi is present exactly once here.
+
+The cumulative FOMOD now carries 24 data channels. The Authoria combined lane
+installs all guaranteed targets; each new individual option installs only the
+detected mod's channel plus shared runbook. The direct factual dossier is
+`PDV_ARR25_T14_EvidenceDossier.md`, primary rulings are in
+`PDV_ARR25_T14_Adjudication.md`, and all 15 OPEN cases are in
+`PDV_ARR25_T14_RuntimeEvidenceLedger.json`.
+
+Proof boundary: these five options are machine-verified experimental. The
+Largashbur Orc-marriage cells are objective-derived and must be traversed
+organically; controlled `setstage` proves routing only. No T14 option is
+supported yet.
+
+### 2026-08-06 T15 extension (machine-clean test candidate)
+
+T15 adds six data-only channels for College of Winterhold Quest Expansion,
+Infiltration, Nilheim, The Whispering Door, Paarthurnax, and Forsworn
+Conspiracy. They contain **58 cells across 14 keys / 13 watched quests** and
+require no hook ESP.
+
+The cumulative FOMOD now carries 30 data channels. The combined Authoria lane
+installs all six guaranteed targets; each individual option installs only its
+detected mod's channel and the shared runbook. The direct factual dossier is
+`PDV_ARR25_T15_EvidenceDossier.md`, primary rulings are in
+`PDV_ARR25_T15_Adjudication.md`, and all 14 OPEN cases are in
+`PDV_ARR25_T15_RuntimeEvidenceLedger.json`.
+
+Proof boundary: these options are machine-verified experimental. Paarthurnax
+stage 99 is objective-derived and must be reached organically through the
+persuasion route; controlled `setstage` proves routing only. No T15 option is
+supported yet.
+
+### 2026-08-06 existing-matrix multi-tag normalization
+
+Fifteen existing core outcome keys had accumulated different truthful act-tag
+subsets across their deity cells. The canonical normalization interface is
+`PDV_QuestReactionMatrix_OutcomeTagNormalization.csv`; the merge gate applies it
+after duplicate resolution and fails on an unknown key. Core remains **2,130
+cells / 231 runtime keys**: no deity reaction, score, or routing key changed.
+
+The bounded cross-generation pass produced 45 candidates and three conflicts.
+Primary review retained no new cells, applying the standing theology-stretch
+and double-credit rules rather than using wider tags to farm coverage. Exact
+rulings are in `PDV_ARR25_ExistingMatrixMultiTag_Adjudication.md`. Correcting
+DB06's stray chaos gloss removes two false paired-equity gaps: the T13-T15
+composite is now 114 open / 99 waived across 2,361 cells. This is machine/source
+consistency proof only and makes no new runtime or support claim.
+
+### 2026-08-06 T16 extension (machine-clean test candidate)
+
+T16 adds two channels for TG Alternative Endings and Save the Icerunner. They
+contain **58 cells across seven keys / two watched quests**. Save the Icerunner
+is data-only. TG Alternative Endings requires a soft-dependency script payload
+because all three endings complete physical `TG09|200`, which core already owns.
+The resolver preserves vanilla at 200, maps freeing all Nightingales to 201,
+and maps wresting away and keeping the Skeleton Key to 202. It also suppresses
+the separate Nocturnal +10 commitment route for those two alternate endings.
+
+The cumulative FOMOD now carries 32 data channels. The combined Authoria lane
+installs both channels and the current script set; the individual TGAE option
+installs its channel and the dependency-complete PlayerEvents/EventBus/Manager
+source+PEX set, while Save the Icerunner remains channel-only. The direct factual dossier is
+`PDV_ARR25_T16_EvidenceDossier.md`, primary rulings are in
+`PDV_ARR25_T16_Adjudication.md`, the static seam gate is
+`tools/pdv_arr25_t16_route_check.mjs`, and all seven OPEN cases are in
+`PDV_ARR25_T16_RuntimeEvidenceLedger.json`.
+
+Proof boundary: both options are machine-verified experimental. The TG09
+branches must be traversed organically because `setstage TG09 200` cannot set
+or prove the ending global; testing must also confirm that no false Nocturnal
+commitment award fires. No T16 option is supported yet.
+
+### 2026-08-06 T17 extension (machine-clean test candidate)
+
+T17 adds data-only channels for Legacy of the Dragonborn and Beyond Skyrim -
+Bruma and extends the existing Wyrmstooth channel. It contributes **132 cells
+across 22 keys / 12 watched quests**: 19/3 from LOTD, 54/8 from Bruma, and 59/11
+new Wyrmstooth cells. Composite/ambiguous branches, linear fetches, generic
+bandit tasks, and textless controller stages remain excluded.
+
+The cumulative FOMOD now carries 34 channels. The combined Authoria lane
+installs all three T17 targets; Legacy and Bruma each receive a new detected
+individual option, while Wyrmstooth remains one option with one expanded JSON.
+No new ESP or hard master is introduced. Direct factual evidence is in
+`PDV_ARR25_T17_EvidenceDossier.md`, primary rulings are in
+`PDV_ARR25_T17_Adjudication.md`, and all 22 OPEN cases are in
+`PDV_ARR25_T17_RuntimeEvidenceLedger.json`.
+
+Proof boundary: these are machine-verified experimental channels. LOTD's Snow
+Elf ghost stage must prove resolving/single-fire behavior, and Wyrmstooth's
+Thalmor task must prove it is not a generic repeatable kill surface. No T17
+option is supported yet.
+
+### 2026-08-06 ARR 2.5 Wave 1 inventory recovery
+
+The recovered Wave 1 compatibility inventory is
+`PDV_ARR25_ContentInventory_2026-08-06.csv`: 1,220 retained rows covering 657 of 657
+mods in its original scope, after excluding one literal scratch `placeholder` row.
+Scope equality, natural-record uniqueness, and triage values were reconciled. The
+later 328-mod QUST universe and the selected non-quest signature universe were then
+closed through deterministic checkpoint shards, primary semantic review, and T13-T17
+authoring. This is still machine evidence: runtime and support proof remain OPEN.
+The discovery contract, exact inventory interface, and proof boundary are recorded in
+`references/authoring/PDV_ARR25_ContentSweep_CodexHandoff_2026-08-06.md`.
+
 Follow-up logged: Sirenroot's Tilael/ghost-encounter beat (FormID range
 03B421-089999) was NOT scanned -- if it holds a spare/banish choice, it is a
 second hook worth adding. The Frissa report branches are tone, not morality --
@@ -290,10 +433,17 @@ deliberately not hooked.
 
 P0 = blocks the Authoria 1.0 gate package; P1 = next tranche; P2 = nice-to-have.
 
-- [ ] **TODO-1 (P0, S1):** Author the ARR matrix tranche 2 from the
-  high-confidence table in section 2 (CSV -> `pdv_quest_matrix_compile.mjs`;
-  register new FormIDs in `MANUAL_QUEST_FORMIDS`). Runtime-verify flags on
-  every row lacking ShutDownStage proof.
+- [x] **TODO-1 (P0, S1): MACHINE-COMPLETE 2026-08-06.** The current T13
+  high-confidence scope is authored as nine formid-bearing per-mod channels
+  (95 cells / 14 keys), compiled and packaged without changing core
+  `MANUAL_QUEST_FORMIDS`. M'rissi was intentionally moved to T14. Runtime and
+  support proof remain OPEN in the structured T13 evidence ledger; this close
+  marks authoring/package completion only.
+  - [x] **Wave 1 inventory-scope prerequisite (2026-08-06):** 657 of 657 mods in
+    the original bucket scope have an explicit verdict in
+    `PDV_ARR25_ContentInventory_2026-08-06.csv`. This does not complete TODO-1's
+    authoring work or the separate exhaustive discovery of the 328 QUST-bearing mods
+    outside that original scope.
 - [x] **TODO-2 (P0, S1): DONE 2026-07-16.** Innocence Lost QE 198/199/201
   text-verified on the winner; s198 (Grelod imprisoned, not murdered) rowed to
   CORE with the Stendarr/Mara/Stuhn/Molag Bal sweep. 199/201 are her later
@@ -301,23 +451,30 @@ P0 = blocks the Authoria 1.0 gate package; P1 = next tranche; P2 = nice-to-have.
 - [ ] **TODO-3 (P1, S1):** Row VC01 vampirism-cure completion under Seeking The
   Cure (cure_undeath: +Arkay/Meridia/Mara, -Molag Bal), mirroring the C06
   cure-lane pattern; enumerate the overhaul's stage set first.
-- [ ] **TODO-4 (P0, S3/scripted):** Build the bard performance hook: BSP-style
-  alias poll on SGT expertise deltas + `_LP_BardIsPlaying` edge, per-tavern
-  anti-farm via `_LP_BardTavernCounts`, milestones on BaB tavern/Jarl s100 and
-  the two Bards Reborn college quests. Soft-dependency guards
-  (GetFormFromFile) so it no-ops without the mods. Dibella primary lane.
+- [x] **TODO-4 (P0, S3/scripted): MACHINE-COMPLETE 2026-08-06.** The existing
+  implementation already contains the optional SGT expertise and Become a Bard
+  playing-edge observers, 5/15-second bounded cadence, 12-second double-route
+  guard, per-tavern devotional-day cap, global daily decay, and milestone rows.
+  It is packaged unchanged and statically gated. Bard runtime cases remain OPEN;
+  this check does not claim support.
 - [x] **TODO-5 (P1, S1): DONE 2026-07-16.** All 11 verify-theme-first targets
   verified (mostly Tier A stage text), owner-ruled, and shipped as per-mod
   patches. Superseded text below kept for the original scope note only.
 - [ ] **TODO-5-OLD (superseded):** Run the verify-theme-first list (section 2) --
   stage/log-text readback per quest, then author or drop each.
-- [ ] **TODO-6 (P0, S5):** Re-verify the BOS shrine-prayer swap INI against ARR
-  Test statue records; extend to the Wyrmstooth Daedric-shrine placements and
-  decide Jyggalag (currently no PDV deity -- likely classify-only).
-- [ ] **TODO-7 (P0, package):** Refresh `PDV_AuthoriaARR_Compatibility` package
-  against this instance (masters check, matrix JSON regen, README instance
-  path), then local smoke per the updated
-  `PDV_Phase21_ARR_SmokeRunbook.md` (no Archon step anymore).
+- [x] **TODO-6 (P0, S5): MACHINE-COMPLETE 2026-08-06.** The stale QASmoke-sender
+  swap was removed. The package now carries the read-back 11-ACTI prayer ESP and
+  matching route-202 BOS map. Wyrmstooth placements use different base forms and
+  do not inherit the swaps, so no unproved mappings were added. Jyggalag remains
+  classify-only. Runtime prayer and negative-control cases remain OPEN.
+- [x] **TODO-7 (P0, package): REPLACED AND MACHINE-COMPLETE 2026-08-07.** The
+  combined Authoria lane is retired. The replacement PatchHub has 41 independent
+  dependency-gated options, including 39 reaction channels plus AFDI and neutral
+  Daedric Shrines AIO lanes. XML, every referenced folder, individual/all/subset
+  simulations, collision checks, all 80 archive members, filenames, and
+  per-member checksums pass. It contains no core-script or core-matrix override.
+  Runtime preflight and every tester case remain OPEN, so the package is
+  experimental and not supported.
 - [ ] **TODO-8 (P1, S5):** Verify JS Shrines / CC Survival Disable-Shrine-Menu
   do not reroute shrine activation away from TempleBlessingScript surfaces.
   **Widened 2026-07-27 (1.0.4):** Devotion now SHIPS its own

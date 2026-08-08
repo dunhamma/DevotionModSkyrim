@@ -9,8 +9,11 @@ This file owns the
 
 Architecture (locked): **tiered** — vanilla + Creation Club hooks → CORE PDV matrix; third-party
 new-land hooks → a separate ARR-scoped matrix JSON loaded by a generic second-channel loader in
-`PDV_PlayerEvents.psc`, plus the reserved ESL `PDV_AuthoriaARR_Compatibility.esp` for record-level
-adapters. Roster is LOCKED — extension = new SIGNALS to existing deities/Princes, never new gods.
+`PDV_PlayerEvents.psc`, plus the current ESPFE `PDV_AuthoriaARR_Combined.esp` for record-level
+adapters. It replaces the historical quest/dialogue and shrine-prayer donor ESPs
+in the cumulative FOMOD and KoK R11 deployment (32 records: 21 quest/dialogue
+overrides and 11 ACTIs); source quest SEQs remain supplied by their masters.
+Roster is LOCKED — extension = new SIGNALS to existing deities/Princes, never new gods.
 
 Surfaces: **S1** quest-reaction matrix (FormID|stage, data-only) · **S2** Daedric Prince senders
 (vanilla-locked, 16 guards) · **S3** P2 receivers · **S4** location triggers · **S5** shrine
@@ -195,7 +198,7 @@ and `PDV_MOD_SETUP.md`.
 
 SUPERSEDED (2026-06-15): a Base Object Swapper STAT->ACTI base-swap turned out to be the clean
 "PDV-places its own clickable" path the verdict said would be needed. The shrine-prayer feature
-(PDV_Phase21_ARR_ShrinePrayer.manifest.json + dist/PDV_AuthoriaARR_Compatibility/) makes 11 Daedric
+(PDV_Phase21_ARR_ShrinePrayer.manifest.json + the current `PDV_AuthoriaARR_Combined.esp`) makes 11 Daedric
 statues clickable +2/day prayers (Azura, Vaermina, Molag Bal, Mephala, Mehrunes Dagon, Sheogorath,
 Namira, Sanguine, Hermaeus Mora, Hircine, Peryite). So "no clean adapter" is OBSOLETE for the swap
 approach. Still unhooked-by-prayer (with reasons): Jyggalag/Sithis (no PDV deity); Boethiah/Meridia/

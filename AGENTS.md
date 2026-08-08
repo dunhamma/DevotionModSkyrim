@@ -97,6 +97,7 @@ If a task appears blocked by a houseCARL limitation, **first reproduce it with a
 | `tools/pdv_breton_architecture_audit.mjs` | Read-only Breton architecture contract audit | Checking all three traditions, 25/50 pacing and daily cap, Survey/Book layered identity, all Champion mappings, Hidden Art integrated-Prince price/stigma rules, Notorious behavior, debug/startup reconciliation, retired reward cleanup, and live-sync coverage |
 | `tools/pdv_requiem_penalty_audit.mjs` | Read-only Requiem felt-penalty audit | Checking the Argonian/Breton converted negative Health penalties, old regen-MGEF orphaning, and Imperial `ResistDisease -5` preservation against specs plus live `Devotion.esp` |
 | `tools/pdv_eligibility_reward_coverage_audit.mjs` | Read-only live-code-to-ESP reward coverage audit | Checking every focusable/offer-eligible reward row derived from live Papyrus against live SPEL existence and filled `PDV__ManagerQuest` VMAD properties |
+| `tools/pdv_vmad_audit.mjs` | Read-only plugin-wide VMAD script-property audit | Sweeping EVERY scripted record in `Devotion.esp` for missing or unfilled script properties: sibling outliers against an immediate-parent family (the Syrabane shape), declared-but-absent object properties, and present-but-null bindings. Parses declarations from the MO2 LIVE tree, never the lagging `live-source/` mirror, and warns when they diverge. Architecturally-correct absences live in `references/authoring/PDV_VMAD_AuditWaivers.json`; the verdict is the exit code |
 | `tools/pdv_phase20_runtime_check.mjs` | Read-only Papyrus log checker for Phase 20 QASmoke runtime proof | Checking Altmer, Argonian, Orc, Redguard, Khajiit, and Bosmer route markers after in-game proof activation; route proof only, not a replacement for Survey/status immersion checks |
 | `tools/pdv_daedric_runtime_check.mjs` | Read-only Papyrus log checker for Daedric sender runtime proof | Checking Daedric route-200 sender markers from QASmoke, MCM, or exact organic quest-stage sources plus the route-201 generic silence marker after in-game proof activation; route proof only, not a replacement for Active Effects/display/curse/stack checks |
 | `tools/pdv_daedric_queststage_check.mjs` | Read-only static guard checker for the 16 Daedric organic quest-stage route guards | Verifying every `(questFormID, stage)` guard in `PDV_PlayerEvents.psc` resolves to a real vanilla quest stage (vs `vanilla-quest-stage-readback.csv`) and that its `RouteDaedricPrinceSignal` index matches the contract manifest order; catches silent-miss + index-drift that MCM/QASmoke route proof cannot see, with no game needed |
@@ -231,6 +232,8 @@ If a task appears blocked by a houseCARL limitation, **first reproduce it with a
 | `race-sheets/*.md` | Race-by-race player-facing design sheets plus the overview | Keeping readable race gameplay/design summaries in sync with the locked architecture reference |
 | `references/vanilla-gameplay/` | Living gameplay mechanics and immersive UX reference backbone | Looking up vanilla Skyrim mechanics, CK signal surfaces, source-backed gameplay tables, or player-experience lessons for PDV design |
 | `references/vanilla-gameplay/compatibility/phase20-targets.csv`, `references/vanilla-gameplay/compatibility/PDV_Phase20_CompatibilityNotes.md` | Phase 21 compatibility matrix and operating notes | Tracking Authoria-first list-author package status, target-list evidence, religion-removal assumptions, patch shape, and smoke gates |
+| `references/authoring/PDV_ModPackaging_StateAuthority.md` | Living core/PatchHub packaging authority | Read before changing a package or reporting package state; update after every build, archive replacement, or support-status change |
+| `references/authoring/PDV_QuestModPatches_ARR_Review_2026-08-06.md` | Preserved ARR packaging review | Source evidence for the modular-hub transition; the living packaging authority owns current state |
 | `references/vanilla-gameplay/PDV_SkyrimGamePlayReferences_Bridge.md` | Bridge rules for using `dunhamma/SkyrimGamePlayReferences` from PDV | Pulling neutral reference data into PDV planning without making it design authority |
 | `references/phase4/PDV_Phase4_MatrixScaffold.md` | Working conventions and normalization rules for the Phase 4 matrix pass | Understanding matrix scope, crosswalk rules, and output structure |
 | `references/phase4/PDV_RaceSignalMatrix.csv` | First-release race/path/layer signal matrix | Planning Phase 4 implementation signals and anti-farm rules |
@@ -1161,6 +1164,58 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   sibling. Also corrected: the `AGENTS.md:1560` citation used to claim the Daedric Champion offer is
   "broken for all 16 Princes" does **not** support that -- see the 2026-06-13 entry below, which
   records the MESG + VMAD wiring as housecarl-verified correct.
+- **[2026-08-07] - Pre-release GitHub issue reconciliation distinguishes implementation from runtime closure:** Issues #29-#32 were reviewed against current source and direct live ESP readback. Canonical slash aliases are normalized at matrix compile time; uninstall asks all seven substrate owners to clear their own boons; substrate ownership contracts now classify teardown-only manager references without creating a second runtime owner; optional skeleton arrays are null-guarded; Hircine/Molag stigma messages and Shor T3 presentation are wired in the live ESP. Azurah's Khajiit response remains deliberately absent because Azurah is native. Static gates and direct readback are green, but issue #30 remains runtime-open until an MCM uninstall smoke confirms substrate spells are removed. Issue #27 remains a future cross-race Azurah's Portent design review and is not a release defect.
+
+- **[2026-08-07] - Altmer current scoring/display roster is five deities:**
+  Auri-El, Magnus, Xarxes, Syrabane, and Trinimac are the current Altmer list.
+  Mara, Stendarr, and Y'ffre are `FOREIGN` for Altmer and must not score, appear
+  in the Altmer medallion, or enter Altmer Book of Days quest-reaction beats.
+  Their broader-pantheon case is deferred to the future-update backlog and may
+  only be restored deity-by-deity with the stance, runtime roster, medallion,
+  reachability inventory, and Prisma gate updated together. Phynaster remains
+  presentation-only and outside live scoring.
+
+- **[2026-08-07] - Authoria combined packaging is superseded by the modular
+  PatchHub:** `PDV_AuthoriaARR_Combined.esp`, its list-specific tree, and
+  `PDV_QuestReactionMatrix_ARR.json` must not ship. ARR now consumes the same
+  dependency-gated PatchHub as any other load order: 39 per-mod reaction
+  channels plus independent AFDI and Daedric Shrines AIO options. Vanilla,
+  DLC, and Creation Club reactions remain in core; PatchHub options may not
+  replace core scripts or matrices. The 2026-08-06 95-member archive and the
+  earlier combined-lane decision below are historical evidence only. Current
+  filenames, hashes, exact contents, proof debt, and migration instructions are
+  owned by `references/authoring/PDV_ModPackaging_StateAuthority.md`.
+
+- **[2026-08-07] - ARR 2.5 preflight must inspect MO2 winners, not the named
+  core-mod folder:** The combined candidate is installed and enabled on `KoK
+  R11` as `Devotion - Authoria ARR Compatibility`, with reversible profile
+  backups under `profiles\KoK R11\pdv-arr25-backups\20260807-070513`.
+  houseCARL readback proved that ARR's `modlist.txt` serializes the
+  higher-priority winner first: the compatibility mod must appear above both
+  `Devotion - PatchHub` and `Devotion` for its scripts, matrices, KID, and ESP
+  to win. `pdv_matrix_runtime_preflight.mjs` now resolves the winning provider
+  through enabled-mod priority (plus overwrite), checks the optional channel
+  count, and passes the deployed `154` core / `62` ARR / `34` channel contract
+  at `31 PASS / 4 INFO / 0 FAIL`. This advances deployment/readback proof only;
+  the current Papyrus log has no post-deployment registration markers, and all
+  runtime-route, player-surface, semantic, and support proof remains open.
+
+- **[2026-08-06] - ARR 2.5 content sweep is machine-complete but remains an
+  experimental test candidate:** The finite scope is every enabled ARR 2.5 mod
+  containing QUST plus the selected non-quest signature universe. Direct plugin
+  enumeration, canonical inventory/reachability, T13-T17 channels, and package
+  simulation are complete on `codex/arr25-content-sweep`; the cumulative archive
+  is `dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip` (95 entries, SHA-256
+  `E11D7B2A90ED0F980DA2394CF63A465167E55730C252EF5FF1EF05A64D0B5C9D`).
+  Non-quest rules locked by the pass: Potion KID classification uses exact item
+  names because ALCH form filters target effects; AFDI is observed through its 30
+  post-success latched globals with an existing-save no-credit baseline and
+  once-ever persistence; Jyggalag stays classify-only; Wyrmstooth shrine refs do
+  not inherit the ARR statue swaps because their base forms differ; and hunting
+  remains deferred until the third-party animation script emits a truthful
+  per-corpse-action event. Machine, readback, runtime-route, player-surface, and
+  support proof remain separate. No ARR 2.5 option is supported until its full
+  structured tester ledger passes.
 
 - **[2026-08-03] - Khajiit road-home sleep uses sleep-start context and one presentation per devotional day:**
   `PDV_PlayerEvents` captures exterior status at `OnSleepStart` and carries it through

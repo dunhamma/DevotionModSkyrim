@@ -39,7 +39,21 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
-const MATRIX_CSV = path.join(ROOT, "references", "authoring", "PDV_QuestReactionMatrix_Full.csv");
+const ARGS = process.argv.slice(2);
+function argValue(name) {
+  const index = ARGS.indexOf(name);
+  return index >= 0 ? ARGS[index + 1] : null;
+}
+function argValues(name) {
+  const values = [];
+  for (let index = 0; index < ARGS.length; index += 1) {
+    if (ARGS[index] === name) values.push(ARGS[index + 1]);
+  }
+  return values;
+}
+const MATRIX_CSV = path.resolve(ROOT, argValue("--matrix") ?? "references/authoring/PDV_QuestReactionMatrix_Full.csv");
+const APPEND_MATRIX_CSVS = argValues("--append-matrix").map((file) => path.resolve(ROOT, file));
+const NO_WRITE = ARGS.includes("--no-write");
 const FAUCET_CSV = path.join(ROOT, "references", "authoring", "PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv");
 const STANCE_CSV = path.join(ROOT, "references", "phase4", "PDV_StanceMatrix.csv");
 const DAEDRIC_STANCE_CSV = path.join(ROOT, "references", "phase4", "PDV_DaedricRacePrinceMatrix.csv");
@@ -284,6 +298,11 @@ function readCsvObjects(file) {
 function main() {
   const matrix = readCsvObjects(MATRIX_CSV);
   if (!matrix) throw new Error(`Missing ${MATRIX_CSV}`);
+  for (const appendFile of APPEND_MATRIX_CSVS) {
+    const rows = readCsvObjects(appendFile);
+    if (!rows) throw new Error(`Missing ${appendFile}`);
+    matrix.push(...rows);
+  }
   const faucets = readCsvObjects(FAUCET_CSV) ?? [];
   const stanceRows = readCsvObjects(STANCE_CSV) ?? [];
   const daedricRows = readCsvObjects(DAEDRIC_STANCE_CSV) ?? [];
@@ -443,8 +462,10 @@ function main() {
   }
 
   // ---- Emit ---------------------------------------------------------------
-  writeMd({ counts, nameRows, stanceGaps, profileGaps, gapRows, openGaps, channelRows, errors, warnings, waivers });
-  writeCsv(gapRows);
+  if (!NO_WRITE) {
+    writeMd({ counts, nameRows, stanceGaps, profileGaps, gapRows, openGaps, channelRows, errors, warnings, waivers });
+    writeCsv(gapRows);
+  }
 
   const summary = {
     status: errors.length || openGaps.length ? "FAIL" : "PASS",
@@ -454,8 +475,10 @@ function main() {
     nameErrors: errors.filter((e) => e.includes("silently dropped")).length,
     clusterGapsOpen: openGaps.length,
     clusterGapsWaived: gapRows.length - openGaps.length,
+    openGapDetails: ARGS.includes("--gap-details") ? openGaps : undefined,
     warnings: warnings.length,
-    report: path.relative(ROOT, OUT_MD),
+    matrixSources: [MATRIX_CSV, ...APPEND_MATRIX_CSVS].map((file) => path.relative(ROOT, file)),
+    report: NO_WRITE ? null : path.relative(ROOT, OUT_MD),
   };
   console.log(JSON.stringify(summary, null, 2));
   if (errors.length) {

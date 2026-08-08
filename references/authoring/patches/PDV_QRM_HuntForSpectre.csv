@@ -1,0 +1,7 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation,formid
+HSHuntForSpectreQuest,Hunt for the Spectre,55,Destroyed the Spectre,slay_undead,Arkay,+,C,milestone,"T13 direct raw-file read: s55 CompleteQuest explicitly says the Spectre is dead.",Hunt for the Spectre.esp:000800
+HSHuntForSpectreQuest,Hunt for the Spectre,55,Destroyed the Spectre,slay_undead,Meridia,+,C,milestone,"T13 direct raw-file read: s55 CompleteQuest explicitly says the Spectre is dead.",Hunt for the Spectre.esp:000800
+HSHuntForSpectreQuest,Hunt for the Spectre,55,Destroyed the Spectre,slay_undead,Azura,+,m,small,"T13 cross-gen KEEP: an explicitly dead Spectre is an undead threshold-spirit; Azura slay-undead profile match, stepped down.",Hunt for the Spectre.esp:000800
+HSHuntForSpectreQuest,Hunt for the Spectre,55,Destroyed the Spectre,slay_undead,Stendarr,+,m,small,"T13 cross-gen KEEP: explicit undead destruction; Stendarr slay-undead profile match, stepped down.",Hunt for the Spectre.esp:000800
+HSHuntForSpectreQuest,Hunt for the Spectre,55,Destroyed the Spectre,slay_undead,Tu'whacca,+,m,small,"T13 cross-gen KEEP: explicit undead destruction preserves the death-duty; Tu'whacca profile match, stepped down.",Hunt for the Spectre.esp:000800
+HSHuntForSpectreQuest,Hunt for the Spectre,55,Destroyed the Spectre,slay_undead,Y'ffre,+,m,small,"T13 cross-gen KEEP: the Spectre is dead matter persisting outside the fixed story; Y'ffre's explicit slay-undead bone-law profile match, stepped down.",Hunt for the Spectre.esp:000800

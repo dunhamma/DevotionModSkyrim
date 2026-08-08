@@ -1,9 +1,9 @@
 # ARR 2.5 Exhaustive Content Sweep -- Codex Handoff
 
 Date: 2026-08-06
-Branch: `codex/khajiit-lunar-champion-rebalance`
+Branch: `codex/arr25-content-sweep`
 Author: Claude session (Opus 5). Owner-approved plan folded in below.
-Status: **Phase 0 complete. Phase 1 partially complete and PAUSED by API errors.**
+Status: **The exhaustive QUST-plus-selected-signal sweep, T13-T17 authoring, existing-matrix normalization, safe non-quest renewables, cumulative package gates, and ARR 2.5 deployment/readback preflight are complete. The combined test candidate is installed and enabled on `KoK R11`. In-game registration, runtime-route, player-surface, semantic, and support proof remain open.**
 
 ---
 
@@ -18,13 +18,93 @@ deity.
 What landed this session:
 
 - **Phase 0 is done.** The stranded tranche-merge `--check` gate is on the branch.
-- **Phase 1 is ~92% done by mod count** -- an inventory of 900 rows covering 602 of
-  657 in-scope mods, committed as a real artifact.
-- **Four of six reader agents hit API 529.** Two had already written complete files;
-  two (LOTD, Vanilla Expansions) did not finish. 55 mods lack a verdict.
-- **A scope gap was found late and is NOT yet covered: 328 QUST-bearing mods sit
-  outside the in-scope bucket set, including all 55 Creation Club mods** -- which
-  are the highest-priority targets in the existing backlog. See item C-3.
+- **Wave 1 is complete** -- the recovered inventory contains 1,220 retained rows
+  covering **657 of 657** in-scope mods. The literal `placeholder` scratch row was
+  excluded; scope equality, natural-record uniqueness, and triage vocabulary were
+  rechecked during reconciliation.
+- **The API 529 recovery is complete for this wave.** The surviving LOTD and Vanilla
+  Expansions shards were recovered and merged; representative `NO-ROWS` results from
+  the two post-write-529 shards were re-read directly from absolute ARR plugin paths.
+- **The former 328-mod QUST scope gap is closed.** All 466 queued plugin paths were
+  read directly in 48 deterministic checkpoints. Every declared QUST count has a
+  matching per-record evidence row; all direct evidence and plugin rollups have a
+  primary verdict, with no unresolved read failure or unreviewed checkpoint row.
+- **The reconciled inventory now contains 20,342 rows across 1,284 distinct mods.**
+  The QUST interface remains exact equality against Wave 1's 657 mods plus the 328
+  previously uncovered mods. The selected non-quest pass directly read all 1,070
+  plugin paths, reduced 23,902 reviewed occurrences to 18,791 defining natural
+  records, and retained 123 candidates while recording 18,668 explicit rejections.
+- **The selected non-quest universe is closed:** 614 mods / 1,070 plugin paths in
+  107 complete batches, zero read failures, zero unresolved primary reviews, and
+  exact natural-record equality. The 332 older free-form candidate rows now have a
+  checked-in canonical review ledger; three classify-only/out-of-roster concepts
+  deliberately have no current runtime candidate. Reachability reports no malformed
+  or unknown canonical names and no pending legacy review.
+- **T13 is machine-complete:** nine data-only channels contain 95 cells across
+  14 outcome keys, the 116-candidate cross-generation slate was primary-reviewed,
+  paired-equity has zero unexplained delta, and the 19-channel FOMOD directory
+  passes deterministic structure/collision/hash validation. All 14 tester cases
+  remain OPEN; this is an experimental test candidate, not supported content.
+- **T14 is machine-complete:** five data-only channels contain 78 cells across
+  15 outcome keys / 12 watched quests. The initial 87-candidate plus one-conflict
+  cross-generation pass was primary-adjudicated to 46 kept suggestions and 22
+  explicit final rejections after three over-broad act aliases were removed.
+  Paired-equity adds zero unexplained open gaps (116 open / 88 waived composite),
+  and the cumulative FOMOD now carries 24 channels. All 15 T14 tester cases remain
+  OPEN; the Largashbur marriage must be traversed organically.
+- **T15 is machine-complete:** six data-only channels contain 58 cells across
+  14 outcome keys / 13 watched quests. The full final cross-generation slate
+  contains 68 reviewed rejections and zero conflicts. Paired-equity adds zero
+  unexplained open gaps (116 open / 99 waived composite across 2,361 cells),
+  and the cumulative FOMOD now carries 30 channels. All 14 T15 tester cases
+  remain OPEN; the Paarthurnax persuasion route must be traversed organically.
+- **Existing-matrix multi-tag normalization is machine-complete:** 15 core
+  outcome keys now carry one truthful canonical act set across every existing
+  deity cell. The bounded 45-candidate/three-conflict cross-generation slate
+  was primary-reviewed with zero new cells retained; this consistency pass did
+  not farm coverage. Core remains 2,130 cells / 231 runtime keys. Correcting
+  DB06's stray chaos gloss removes two false paired-equity gaps, taking the
+  T13-T15 composite from 116 to 114 open gaps without adding a cell.
+- **T16 is machine-complete:** TG Alternative Endings and Save the Icerunner add
+  58 cells across seven outcome keys in two channels. TG09's three physical
+  stage-200 endings are resolved through a soft-dependency script seam: vanilla
+  keeps 200, freeing the Nightingales maps to 201, and keeping the Skeleton Key
+  maps to 202. The alternate routes also suppress TG09's otherwise false +10
+  Nocturnal commitment pulse. Paired-equity adds zero unexplained gaps (114 open /
+  106 waived across 2,419 cells), and the cumulative FOMOD carries 32 channels.
+  All seven tester cases remain OPEN, so both options are experimental.
+- **T17 is machine-complete:** Legacy of the Dragonborn and Bruma add two new
+  data-only channels, while Wyrmstooth's existing T13 channel gains its remaining
+  direct resolving outcomes. T17 contributes 132 cells across 22 keys / 12
+  watched quests. The 80-candidate/two-conflict cross-generation slate was
+  primary-reviewed to 25 keeps and 55 final rejections. Paired-equity adds zero
+  unexplained gaps (114 open / 116 waived across 2,551 cells), and the cumulative
+  FOMOD now carries 34 channels. All 22 tester cases remain OPEN.
+- **The safe non-quest tranche is machine-complete:** 17 ARR foods are classified
+  through exact-name KID rules; Breton Hidden Art now has its second direct
+  renewable while preserving Mara; AFDI observes 30 successful-destruction
+  globals through a 15-second optional poll with existing-save baseline and
+  once-ever persistence; the existing bard anti-farm lane was verified; and the
+  stale QASmoke shrine swap was replaced by the read-back 11-ACTI prayer package.
+  Hunting remains explicitly deferred because the truthful seam requires a
+  third-party script event. All non-quest runtime cases remain OPEN.
+- **The cumulative test archive is machine-complete:** 36 FOMOD nodes / 34
+  individual content options / 34 channels / 95 files. Combined Authoria,
+  all-individual, and representative-subset simulations pass. Archive membership
+  is exactly 95 entries with no missing/extra files; SHA-256 is
+  `E11D7B2A90ED0F980DA2394CF63A465167E55730C252EF5FF1EF05A64D0B5C9D`.
+- **The combined lane is deployed on ARR 2.5 `KoK R11`:** the enabled mod is
+  `Devotion - Authoria ARR Compatibility`; 84 installed files reproduce the
+  combined FOMOD simulation. houseCARL confirms it wins all three script PEX
+  overrides, both aggregate matrices, the KID/BOS files, and the single
+  `PDV_AuthoriaARR_Combined.esp` ESPFE. Its 32 records preserve 21 quest/dialogue
+  overrides and add the 11 shrine ACTIs formerly carried by the second donor.
+  The corrected winner-aware preflight passes `31 PASS / 4 INFO / 0 FAIL` with
+  `154` core watched quests, `62` ARR watched quests, and `34/34` per-mod
+  channels. Profile backups are under
+  `profiles\KoK R11\pdv-arr25-backups\20260807-070513`. The current Papyrus log
+  contains no post-deployment registration markers because Skyrim has not yet
+  been launched for this build.
 
 The single most valuable discovery: **follower personal questlines**, which are the
 only content in 3739 plugins that can reach Devotion's thin-roster races.
@@ -39,25 +119,37 @@ only content in 3739 plugins that can reach Devotion's thin-roster races.
 |---|---|
 | Cherry-picked the stranded `--check` gate | commit `639b7ab8` (cherry-pick of `9591d7dd`) |
 | Tranche-merge gate green | `node tools/pdv_quest_tranche_merge.mjs --check` -> **PASS, exit 0** |
-| Content inventory (partial) | `references/vanilla-gameplay/compatibility/PDV_ARR25_ContentInventory_2026-08-06.csv` -- 900 rows, 602 of 657 in-scope mods |
+| T12 canonical merge repaired | commit `e5c6999`; resolved FormID duplicate gate; 2,130 cells; matrix self-test PASS |
+| Consolidated content inventory (machine inventory only) | `references/vanilla-gameplay/compatibility/PDV_ARR25_ContentInventory_2026-08-06.csv` -- 20,342 rows / 1,284 mods; exact QUST equality plus 18,791 deduplicated selected-signal records; not tester support proof |
+| Exhaustive QUST worklist frozen | `PDV_ARR25_DiscoveryWorklist_2026-08-06.csv` + batch manifest -- 328 mods / 466 plugin paths in 8-10 path batches |
+| Direct-read QUST checkpoints | 48/48 batches complete, 466/466 plugin paths read, zero unresolved errors, zero unreviewed evidence rows; count-equality gate passes |
+| Non-QUST signature universe frozen | 1,356 mods / 3,001 paths scanned; 614 mods / 1,070 paths admitted to direct signal review; 1,931 paths explicitly outside selected signatures; zero scan read errors |
+| Non-quest signal checkpoints | 107/107 complete batches, 1,070/1,070 plugin paths, 23,902 occurrences -> 18,791 defining records, 123 retained, zero unresolved reads/reviews |
+| T13 authoring and package directory | 95 cells / 14 keys / 9 channels; 19-option FOMOD; `PDV_ARR25_T13_Adjudication.md`; package validation PASS; runtime/support OPEN |
+| T14 thin-roster authoring and package directory | 78 cells / 15 keys / 5 channels; cumulative 24-channel FOMOD; `PDV_ARR25_T14_Adjudication.md`; runtime/support OPEN |
+| T15 vanilla quest-expansion authoring and package directory | 58 cells / 14 keys / 6 channels; cumulative 30-channel FOMOD; `PDV_ARR25_T15_Adjudication.md`; runtime/support OPEN |
+| Existing-matrix multi-tag normalization | 15 outcome keys normalized; 45 candidates + 3 conflicts primary-reviewed; 0 new cells; paired-equity 114 open / 99 waived (delta -2); `PDV_ARR25_ExistingMatrixMultiTag_Adjudication.md` |
+| T16 alternate-route authoring and package directory | 58 cells / 7 keys / 2 channels; cumulative 32-channel FOMOD; soft-dependency TG09 201/202 resolver and false-commitment suppression; `PDV_ARR25_T16_Adjudication.md`; runtime/support OPEN |
+| T17 large-content authoring and package directory | 132 new cells / 22 keys / 12 watched quests across LOTD, Bruma, and the expanded Wyrmstooth channel; cumulative 34-channel FOMOD; `PDV_ARR25_T17_Adjudication.md`; runtime/support OPEN |
+| Non-quest renewable closeout | 17 food records applied; Hidden Art 2/2; 30 AFDI globals; bard contract retained; 11 correct prayer swaps; 108 records explicitly deferred; `PDV_ARR25_NonQuest_Adjudication.md`; runtime/support OPEN |
+| Cumulative ARR 2.5 test archive | `dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`; 95 entries; exact tree/archive validation PASS; support remains closed |
 
-Gate output at handoff time is **2131 cells / 155 quests / 45 deities**. Note this
-moved during the session: it read 1982 cells before Codex merged Tranche 12
-(149 rows) in the working tree. Any doc quoting 1978 / 1982 is stale.
+Current gate output is **2,130 cells / 154 EditorIDs / 45 deities**; compile output is
+231 runtime keys / 154 watched quests. The former 2,131 result contained one duplicate
+runtime cell under two EditorID aliases. Any doc quoting 1,978 / 1,982 / 2,131 as the
+current count is stale.
 
 ### Deliberately NOT done (owner's or Codex's call, not mine)
 
-- **Wiring Tranche 12 into the merge file list.** Codex did this in the working tree
-  mid-session. Left alone deliberately: Authoria work ships as *channels*, which
-  never enter `Full.csv`, so it was never a prerequisite for this workstream.
 - **The stale 1978/172 counts** in `AGENTS.md:216`, `PDV_MOD_SETUP.md:565`,
   `PDV_Architecture_v3.md:139/185`. `Claude.md` rule 3 puts `AGENTS.md` off limits,
-  and the numbers move again with every tranche. Now 2131 / 173+.
+  and the numbers move again with every tranche. Use fresh gate output.
 
-### Errored / incomplete -- this is the Codex work list in section 4
+### Recovery provenance -- Wave 1 complete
 
 Four of six reader subagents terminated on `API Error: 529 Overloaded`. Two of them
-had already written complete output; two had not.
+had already written complete output; the two surviving late shards were subsequently
+recovered from the scratchpad and reconciled into the durable inventory.
 
 | Slice | Work list | Result |
 |---|---|---|
@@ -65,16 +157,17 @@ had already written complete output; two had not.
 | `inv_namedmods.csv` | 61 plugins | **COMPLETE**, 190 rows |
 | `inv_lines.csv` | 57 plugins | **COMPLETE** 57/57, 69 rows (529 fired after the write) |
 | `inv_systems.csv` | 58 plugins | **COMPLETE** 58/58, 96 rows (529 fired after the write) |
-| `inv_lotd.csv` | 92 plugins | **MISSING** -- 529 mid-enumeration; resumed once, unconfirmed |
-| `inv_vanillaexp.csv` | 50 plugins | **MISSING** -- still running at handoff time |
+| `inv_lotd.csv` | 92 plugins | **RECOVERED** -- merged into the Wave 1 inventory |
+| `inv_vanillaexp.csv` | 50 plugins | **RECOVERED** -- merged into the Wave 1 inventory |
 
 Scratchpad (slices + work lists + the derived maps):
 `C:\Users\Admin\AppData\Local\Temp\claude\C--Users-Admin-Documents-Devotion-Mod-Project\2f6eb23b-9aa6-4e14-a04e-513af87204df\scratchpad\`
 
-That directory is session-scoped and **will not survive indefinitely** -- if the two
-missing slices are not recovered soon, re-run them from the bucket TSVs, which are
-also in there (`bucket_lotd.tsv`, `bucket_vanillaexp.tsv`). Regenerating the bucket
-TSVs from scratch is cheap; see section 5.
+The scratchpad is recovery provenance, not a remaining execution dependency. The
+consolidated inventory is the durable result, and the minimal source maps needed to
+reproduce the remaining discovery contract are preserved under
+`references/vanilla-gameplay/compatibility/arr25-discovery-source/` with hashes in
+`PDV_ARR25_DiscoveryBatches_2026-08-06.json`.
 
 ---
 
@@ -116,7 +209,7 @@ that race can reach, or a Prince. Existing evidence of the trap: Trinimac carrie
 explicit Orc stance in `PDV_StanceMatrix.csv` but is absent from the Orc origin
 roster, so all 36 Trinimac cells are dead for Orcs.
 
-### Phase 1 -- exhaustive discovery (in progress)
+### Phase 1 -- exhaustive discovery (complete 2026-08-06)
 
 Source of truth: `D:\Wabbajack\modlists\ARR 2.5`, profile `KoK R11`.
 
@@ -150,7 +243,7 @@ Tranche order:
 | T13 | July high-confidence backlog (`PDV_ARR_ModPatchlist_2026-07-16.md:79-96`) | Namira, Sithis, Hermaeus Mora, Hircine -- Princes, so all 10 races |
 | T14 | **Thin-roster races: follower questlines + Elsweyr** | Orc, Argonian, Bosmer, Khajiit |
 | T15 | Vanilla expansions (CoW QE, Caught Red Handed, Infiltration, Nilheim ...) | Magnus, Julianos, Zenithar, Dibella |
-| T16 | nimwraith alternate routes | Nocturnal, Clavicus Vile, Vaermina, Meridia |
+| T16 | nimwraith alternate routes | Nocturnal, Rajhin, Baan Dar, Clavicus Vile, Stendarr, Stuhn, and truthful paired reactions |
 | T17 | New lands + LOTD | Auri-El, Xarxes, Trinimac, Peryite, Sheogorath |
 
 T14 is promoted ahead of the vanilla expansions because it is the only tranche that
@@ -183,9 +276,11 @@ Do not hand-author the fan-out. `tools/pdv_quest_cross_gen.mjs` crosses every ta
 outcome against every Part B profile and emits a review slate. Then re-measure with
 `pdv_signal_floor_audit.mjs` and `pdv_paired_equity_audit.mjs`.
 
-Caution: `pdv_paired_equity_audit.mjs` **already reports FAIL** (28 open cluster gaps,
-72 waived) before any of this work. Capture its baseline before T13 so tranches are
-judged on the delta.
+Caution: the refreshed post-T12 core baseline is **116 open cluster gaps / 71
+waived**, not the stale 28/72 report committed before the T12 expansion. T13's
+in-memory composite is 116 open / 81 waived; T13+T14 is 116 open / 88 waived after
+primary review. Both have zero unexplained open-gap delta. The audit supports
+repeated `--append-matrix` plus `--no-write` for channel tranche comparisons.
 
 ### Phase 4 -- non-quest lane
 
@@ -206,48 +301,40 @@ stale.
 
 ## 4. Codex work items
 
-### C-1 (P0) -- Finish the two missing inventory slices
+### C-1 (complete 2026-08-06) -- Recover and reconcile the two missing inventory slices
 
-`inv_lotd.csv` (92 plugins) and `inv_vanillaexp.csv` (50 plugins) were not written.
-55 in-scope mods currently have no verdict, listed by:
+`inv_lotd.csv` and `inv_vanillaexp.csv` were recovered from the session scratchpad
+and merged with the existing 900-row artifact. The literal `placeholder` row was
+discarded. The resulting 1,220 rows cover all 657 Wave 1 scope mods; no scoped mod
+is missing and no out-of-scope mod was introduced. The later authoring pass must still
+record the (a)/(b)/(c) Quest Expansion distinction before deciding channel versus core.
 
-```
-python -c "import csv;scope={l.split(chr(9))[1].strip() for l in open(r'<scratchpad>\scope.tsv',encoding='utf-8')};got={r['mod'] for r in csv.DictReader(open('references/vanilla-gameplay/compatibility/PDV_ARR25_ContentInventory_2026-08-06.csv',encoding='utf-8',newline=''))};print(sorted(scope-got))"
-```
+### C-2 (complete 2026-08-06) -- Re-verify the post-write-529 inventory shards
 
-Read each plugin with `housecarl_read_plugin_file` on its absolute path. For each:
-QUST records the plugin DEFINES (FormID master = itself) vs merely OVERRIDES, plus
-DEFINED counts of BOOK/SPEL/ACTI/MISC/FACT/LCTN/NPC_.
+Direct `housecarl_read_plugin_file` spot checks were performed without switching from
+the Anvil instance: an override-only patch (`AP - USSEP patch.esp`) contains only the
+vanilla `MQ101` QUST override; `Civil War Lines Expansion.esp` defines a dialogue
+holder with empty objectives/stages; and `C.O.I.N.esp` defines three no-journal system
+quests alongside its coin-record surface. The asset-only `Alternate Perspective - No
+Start Room Markers` folder was also confirmed to contain only scripts and `meta.ini`,
+with no plugin file. These checks support the recorded `NO-ROWS` strata; they are not
+runtime or semantic proof for a later authoring tranche.
 
-Two targets in the Vanilla Expansions slice matter most and were never reached:
-
-- **College of Winterhold - Quest Expansion** -- the owner's original example. Known
-  from a spot read to define 10 QUST (8 player-facing), 3 BOOK, 1 SPEL
-  (`Cow_ApprenticesBoon` 0009E8), 2 NPC_, 1 MISC. Appears nowhere in this repo. Feeds
-  Magnus (9 quests) and Julianos (15), both thin.
-- **At Your Own Pace** (+ College of Winterhold / Misc / Thane Overhaul) -- reworks
-  pacing and adds player choice across several vanilla questlines. Likely the richest
-  untapped source of branching outcome stages in the modlist. Determine precisely
-  whether it defines new QUST or adds stages to vanilla FormIDs.
-
-**Record the (a)/(b)/(c) distinction for every Quest Expansion mod**: (a) defines new
-QUST, (b) overrides a vanilla QUST and adds stages beyond the vanilla maximum (list
-the added stage numbers), (c) only edits existing stages. That decides channel vs core.
-
-### C-2 (P0) -- Re-verify the two slices whose agents 529'd after writing
-
-`inv_lines.csv` and `inv_systems.csv` were validated at 57/57 and 58/58 plugin
-coverage, so they are believed complete. Spot-check a handful of `NO-ROWS` verdicts
-against the plugins before trusting them wholesale -- the agents died immediately
-after writing and their self-reports were never delivered.
-
-### C-3 (P0) -- Close the scope gap. THIS IS THE BIGGEST OUTSTANDING ITEM.
+### C-3 (complete 2026-08-06) -- Close the QUST scope gap
 
 The in-scope bucket set was drawn too narrowly. Measured totals:
 
 - **583 mods across the modlist carry QUST records.**
 - **255 were in scope** and read this session.
-- **328 are OUT of scope and have never been looked at.**
+- **328 were outside Wave 1.** The frozen queue covered them all.
+
+The direct-read contract is now frozen in
+`PDV_ARR25_DiscoveryWorklist_2026-08-06.csv`: Wave A 97 mods / 156 paths, Wave B
+23 / 26, and Wave C 208 / 284. All 48 batches are now complete: 466/466 absolute
+plugin paths direct-read, every declared QUST count reconciled to per-record evidence,
+zero unresolved errors, and zero unreviewed checkpoint rows. The consolidated
+inventory is 1,551 rows / 985 distinct mods, with an empty set difference against the
+657 Wave 1 mods plus the 328-mod gap queue.
 
 Excluded buckets holding real content, by QUST-bearing mod count:
 
@@ -264,23 +351,35 @@ Excluded buckets holding real content, by QUST-bearing mod count:
 | Gameplay - Ostim Standalone | 24 | probably NO-ROWS, still needs a verdict |
 | Gameplay - Wet and Cold, Essential-*, Interface-*, Animations-*, Visuals-* | ~185 | mostly NO-ROWS, cheap to rule |
 
-Also confirmed out of scope and unread: **Shadow of Skyrim - Nemesis and Alternative
-Death System** (separator `Gameplay - Death Alternative`). Player death is a strong
-devotion signal and this mod owns it.
+Shadow of Skyrim, Creation Club, vampire/werewolf, magic, missives, city/worldspace,
+OStim, framework, interface, visual, and low-yield buckets all now carry an explicit
+primary verdict. This closes factual QUST discovery only; approved `DEFER` rows still
+belong to their T13-T17 or renewable authoring tranche.
 
-Recommendation: run a second discovery wave over `Base Game & Creation Club Files`,
-`Gameplay - Vampire and Werewolf Overhaul`, `Gameplay - Death Alternative`,
-`Gameplay - Magic Mods`, `Gameplay - Missives` and the `City Stuff - *` buckets first
-(~110 mods, high yield), then sweep the remaining ~218 for cheap `NO-ROWS` verdicts.
+### C-4 (complete 2026-08-06) -- Scope-equality reconciliation
 
-### C-4 (P1) -- Completeness check before the inventory is called done
+The 657 distinct `mod` values in the consolidated inventory equal the 657 entries in
+the preserved `arr25-discovery-source/wave1_scope.tsv`; the Wave 1 set differences are
+empty. The appended 328-mod queue is also an exact subset of the consolidated inventory,
+so the combined 985-mod discovery interface has no missing mod verdict.
 
-The set of distinct `mod` values in the inventory CSV must equal the set of enabled
-mods in every content bucket. A straight set-difference against `modlist.txt`,
-expected empty. Record the count in a ledger header (`N of N verdicted`) so a later
-reader can tell coverage from silence. **Do not** rewrite
-`PDV_ARR_ModPatchlist_2026-07-16.md` -- it holds owner rulings that must survive;
-extend it with a pointer instead, and close its TODO-1 scope question.
+### C-4b (complete 2026-08-06) -- Selected non-quest closure and canonical interface
+
+All 107 non-quest checkpoints are complete. The closure gate validates checkpoint
+manifests, direct-read status, and primary verdicts, then resolves patch/update
+occurrences to `record-signature|defining-plugin|local-FormID`. The result is 23,902
+occurrences, 18,791 unique natural records, 5,111 duplicate occurrences removed,
+123 retained candidates, and 18,668 explicit `NO-ROWS` records. There are no
+unresolved reads or reviewer states.
+
+The legacy candidate migration is independently frozen in
+`PDV_ARR25_LegacyCandidateCanonicalReview_2026-08-06.csv`: 332 rows / 145 distinct
+phrases reviewed. Current-roster aliases are explicit (for example Azurah -> Azura,
+S'rendarr -> Stendarr, Mauloch -> Malacath); concepts outside the current runtime
+roster remain in the evidence prose but are not invented as reachable deities.
+Jyggalag remains classify-only. The report-only reachability audit passes with
+20,342 rows, 458 rows carrying canonical candidates, zero pending legacy reviews,
+zero unknown names, and zero warnings.
 
 ### C-5 (P1) -- Re-tagging pass over the existing matrix
 
@@ -318,18 +417,17 @@ what the player did, not just the one that motivated the row.** The honest limit
 truth -- the ledger's two standing drop reasons are "theology stretch" and
 "double-credit", so widening tags to farm coverage is what gets rows dropped.
 
-A re-tagging pass over the existing 2131 rows would widen deity coverage with no new
+A re-tagging pass over the existing 2,130 rows would widen deity coverage with no new
 content. Worth its own tranche.
 
-### C-6 (P2) -- Open questions carried forward
+### C-6 -- Resolved controls and remaining source check
 
-- **No gate checks reachability.** Nothing fails when a cell names a deity no race can
-  reach (the Trinimac/Orc case). Worth a lint once the inventory shows how common it
-  is. `Claude.md:17` means asking before touching the toolchain.
-- Whether the combined Authoria all-in-one lane or the per-mod FOMOD lane absorbs each
-  new tranche. July rule of thumb: Authoria-guaranteed targets go in the combined ESP;
-  anything an arbitrary load order might lack ships per-mod, because a missing master
-  stops the game loading.
+- `tools/pdv_arr25_inventory_reachability_audit.mjs` is the report-only roster gate.
+  Canonical candidates now come from explicit primary review rather than parsing
+  legacy prose as authority. The gate parses the live roster function and locks
+  Altmer-reachable / Orc-pressure-only Trinimac.
+- Packaging is settled: Authoria-guaranteed targets enter the combined lane, while
+  arbitrary-load-order support stays per-mod so missing masters cannot block startup.
 - Whether `live-source/Scripts/Source/` is in sync with
   `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\Source\` before Phase 4 touches
   any `.psc`. Audits read the repo mirror; the compiler reads MO2.
@@ -391,9 +489,11 @@ since Princes bypass the origin-roster gate.
 
 ### Other non-quest candidates
 
-- **Simple Hunting Overhaul** -- `000D90` KYWD marks a carcass **ruined by overkill**.
-  A directly detectable disrespectful-hunt event: Kyne approves `the_hunt`(C) and
-  disapproves `defile_nature`(C).
+- **Hunter Loot / hunting internals were not promoted as faucets.** Direct record
+  evidence showed the tempting skin/butcher spells are constant-effect self
+  monitoring abilities rather than player-cast actions. Keyword and internal-system
+  records remain useful implementation evidence, but are explicit `NO-ROWS` inputs
+  until an actual routed action surface is proven.
 - **Become a Bard** / **Skyrim's Got Talent** -- confirmed present with the records
   the July spec (TODO-4) already designed against.
 - **Why I Came to Skyrim - Origin Stories** (`The Book of Origins.esp`) -- the player
@@ -441,7 +541,9 @@ node tools/pdv_quest_tranche_merge.mjs --check
 node tools/pdv_quest_matrix_compile.mjs --check --json
 node tools/pdv_quest_matrix_compile.mjs --papyrusutil-check --json
 node tools/pdv_quest_matrix_selftest.mjs
-node tools/pdv_matrix_runtime_preflight.mjs --json
+node tools/pdv_arr25_nonquest_check.mjs
+node tools/pdv_arr25_t16_route_check.mjs --pex-root generated/arr25-nonquest-pex
+node tools/pdv_quest_patch_fomod_validate.mjs --archive dist/PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip
 ```
 
 Then: `pdv_signal_floor_audit.mjs`, `pdv_paired_equity_audit.mjs`,
@@ -453,3 +555,16 @@ objective-derived row ships `RUNTIME-VERIFY` in its citation and stays that way 
 observed in game. The July per-mod patches are still machine-verified only (TODO-7).
 Per `pdv-proof-boundary`, do not describe any of this as tested, supported, or
 beta-ready on green gates alone.
+
+ARR deployment/readback preflight passed on 2026-08-07 with:
+
+```
+node tools/pdv_matrix_runtime_preflight.mjs --mo2 "D:\Wabbajack\modlists\ARR 2.5" --profile "KoK R11" --compat-mod "Devotion - Authoria ARR Compatibility" --expected-core 154 --expected-arr 62 --expected-channels 34
+```
+
+This is not in-game registration proof. Launch Skyrim, set Devotion debug level
+2, reload the matrices, and confirm the expected registration markers. Then work
+through the six bundled T13-T17/non-quest ledgers and return
+the route marker, piety readback, exactly-one-toast, exactly-one-Book-beat,
+save/load, organic-semantics, and failure fields. Only equivalent passed cases may
+move an individual option or the combined lane toward support.

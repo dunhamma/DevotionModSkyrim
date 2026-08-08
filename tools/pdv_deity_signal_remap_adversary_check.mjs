@@ -210,7 +210,7 @@ for (const manualId of ["DA10", "DA13", "DA06", "dunHunterQST", "MS05", "Freefor
 assert("shrine cap helper exists", manager.includes("Bool Function ConsumeShrinePrayerCredit("), "Missing shared daily shrine cap helper.");
 assert("shrine cap is called", manager.includes("if !ConsumeShrinePrayerCredit(deity, sourceId)"), "AwardShrinePrayerToDeityName does not consume the per-deity daily cap.");
 assert("shrine cap key is deity scoped", manager.includes("\"PDV.Signal.ShrinePrayer.\" + deityKey"), "Shrine cap must key by resolved deity, not only by shrine/source.");
-assert("likes dislikes version bumped", /Int Property LIKES_DISLIKES_VERSION = 16 AutoReadOnly/.test(manager), "LIKES_DISLIKES_VERSION should be 16 for the signal-floor rows.");
+assert("likes dislikes version current", /Int Property LIKES_DISLIKES_VERSION = 20 AutoReadOnly/.test(manager), "LIKES_DISLIKES_VERSION should remain 20; do not lower the live version to satisfy an older signal-floor contract.");
 assert("paarthurnax kill helper exists", playerEvents.includes("Bool Function IsPaarthurnaxActor") && playerEvents.includes("RoutePaarthurnaxKill(akVictim as Form)"), "Paarthurnax kill must be detected before Khajiit-only organic kill routing.");
 assert("paarthurnax kill eventbus route exists", eventBus.includes("Function RoutePaarthurnaxKill(Form sourceForm)") && eventBus.includes("HandlePaarthurnaxKill(sourceForm, \"eventbus_paarthurnax_kill\")"), "EventBus must expose the global Paarthurnax kill route.");
 assert("paarthurnax kill manager route exists", manager.includes("Function HandlePaarthurnaxKill(Form sourceForm, String reason)") && manager.includes("\"PDV.Paarthurnax.KillSeen\""), "Manager must apply the one-shot Paarthurnax kill fork.");
@@ -277,7 +277,7 @@ assert("breton knights road resonance set", /BRETON_TRADITION_KNIGHTS_ROAD[\s\S]
 assert("breton green way resonance set", /BRETON_TRADITION_GREEN_WAY[\s\S]{0,180}PDV_Yffre[\s\S]{0,80}PDV_Mara[\s\S]{0,80}PDV_Kynareth[\s\S]{0,80}PDV_Dibella/.test(bretonTraditionBody), "Green Way resonance set must include Y'ffre, Mara, Kynareth, and Dibella.");
 assert("breton hidden art resonance set", /BRETON_TRADITION_HIDDEN_ART[\s\S]{0,260}PDV_Magnus[\s\S]{0,80}PDV_Mara[\s\S]{0,80}PDV_Julianos[\s\S]{0,80}PDV_Dibella/.test(bretonTraditionBody) && bretonTraditionBody.includes("PDV_DaedricPathBase"), "Hidden Art resonance set must include Magnus, Mara, Julianos, Dibella, and Daedric paths.");
 const bretonSleepBody = functionBody(manager, "HandleBretonSleepEvents");
-assert("breton hidden art sleep uses mara", bretonSleepBody.includes("PDV_Mara") && !bretonSleepBody.includes("PDV_Julianos"), "Hidden Art sleep reflection must award Mara, not Julianos.");
+assert("breton hidden art sleep uses mara and julianos", bretonSleepBody.includes("PDV_Mara") && bretonSleepBody.includes("PDV_Julianos"), "Hidden Art sleep reflection must preserve Mara and add Julianos as its second direct renewable sink.");
 
 assert("breton offers included", manager.includes("IsBretonOfferEligibleDeity(deity)"), "Formal offer gate does not include Breton eligibility.");
 assert("altmer trinimac offer included", /IsAltmerOfferEligibleDeity[\s\S]*PDV_Trinimac/.test(manager), "Altmer offer eligibility does not include Trinimac.");

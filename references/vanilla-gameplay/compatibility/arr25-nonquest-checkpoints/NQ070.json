@@ -1,0 +1,33 @@
+{
+  "schema": "pdv-arr25-discovery-checkpoint.v1",
+  "batchId": "NQ070",
+  "wave": "NQ",
+  "inputHash": "e42c55dc5207579bff3b5273a83a1e1518b34a3e6b9171e372721cf6e9b030da",
+  "inputIds": [
+    "3f95c2bbae1e9dda",
+    "7c66b0b2214d9b9f",
+    "5f4480e66616b93d",
+    "39c762ecdb434138",
+    "a6b0457d61ede508",
+    "a62d13865f10d1eb",
+    "3a49977115c6fc8c",
+    "a5cc5f9d21e2b138",
+    "aacf7b87fc2f17d4",
+    "1a6f1382af9a0840"
+  ],
+  "status": "complete",
+  "attempts": 1,
+  "completedInputIds": [
+    "3f95c2bbae1e9dda",
+    "7c66b0b2214d9b9f",
+    "5f4480e66616b93d",
+    "39c762ecdb434138",
+    "a6b0457d61ede508",
+    "a62d13865f10d1eb",
+    "3a49977115c6fc8c",
+    "a5cc5f9d21e2b138",
+    "aacf7b87fc2f17d4",
+    "1a6f1382af9a0840"
+  ],
+  "lastError": null
+}

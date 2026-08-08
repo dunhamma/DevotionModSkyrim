@@ -14,6 +14,7 @@ const MCM_SOURCE = path.join(DEVOTION_SOURCE, "PDV_MCM.psc");
 const MANAGER_PEX = path.join(DEVOTION_COMPILED, "PDV__ManagerQuest.pex");
 const MCM_PEX = path.join(DEVOTION_COMPILED, "PDV_MCM.pex");
 const DAEDRIC_CONTRACT = path.join(REPO_ROOT, "references", "authoring", "PDV_DaedricPrinceRecordContracts.json");
+const MEDALLION_ROSTER_MANIFEST = path.join(REPO_ROOT, "references", "authoring", "PDV_MedallionRoster.manifest.json");
 const REPO_PRISMA_VIEW_DIR = path.join(REPO_ROOT, "native", "DevotionPrismaBridge", "mod", "PrismaUI", "views", "Devotion");
 const REPO_PRISMA_APP = path.join(REPO_PRISMA_VIEW_DIR, "app.js");
 const REPO_PRISMA_STYLE = path.join(REPO_PRISMA_VIEW_DIR, "styles.css");
@@ -736,6 +737,43 @@ function verifySyrabaneDisplayContract(manager, app, managerPath, appPath) {
   }
 }
 
+function verifyAltmerCurrentRosterContract(manager, managerPath) {
+  const rosterBlock = functionBlock(manager, "IsDashboardDeityInOriginRoster");
+  const rosterMatch = rosterBlock.match(/elseIf originRace == ORIGIN_ALTMER[\s\S]*?(?=elseIf originRace == ORIGIN_BOSMER)/);
+  const medallionBlock = functionBlock(manager, "GetAltmerMedallionEntriesJson");
+  const requiredDeities = ["PDV_AuriEl", "PDV_Magnus", "PDV_Xarxes", "PDV_Syrabane", "PDV_Trinimac"];
+  const deferredDeities = ["PDV_Mara", "PDV_Stendarr", "PDV_Yffre"];
+  const requiredOptions = ["auri-el", "magnus", "xarxes", "syrabane", "trinimac"];
+  const deferredOptions = ["mara", "stendarr", "yffre"];
+  const rosterText = rosterMatch?.[0] ?? "";
+  const repairBlock = functionBlock(manager, "RepairBookOfDaysJournalText");
+  const pruneBlock = functionBlock(manager, "ShouldPruneDeferredAltmerJournalLine");
+
+  let manifestOptions = [];
+  if (exists(MEDALLION_ROSTER_MANIFEST)) {
+    const manifest = JSON.parse(read(MEDALLION_ROSTER_MANIFEST));
+    const altmer = (manifest.races ?? []).find((race) => race.raceId === "altmer");
+    manifestOptions = (altmer?.sections ?? []).flatMap((section) => section.entries ?? []).map((entry) => entry.optionId);
+  }
+
+  const missing = requiredDeities.filter((name) => !rosterText.includes(name));
+  const runtimeLeak = deferredDeities.filter((name) => rosterText.includes(name));
+  const medallionMissing = requiredOptions.filter((id) => !medallionBlock.includes(`RosterMedallionEntry("${id}"`));
+  const medallionLeak = deferredOptions.filter((id) => medallionBlock.includes(`RosterMedallionEntry("${id}"`));
+  const manifestMissing = requiredOptions.filter((id) => !manifestOptions.includes(id));
+  const manifestLeak = deferredOptions.filter((id) => manifestOptions.includes(id));
+  const migrationMissing = !repairBlock.includes("Int repairVersion = 3") ||
+    !repairBlock.includes("ShouldPruneDeferredAltmerJournalLine") ||
+    !pruneBlock.includes("GetPlayerOriginRaceIndex() != ORIGIN_ALTMER") ||
+    !["Mara", "Stendarr", "Y'ffre"].every((name) => pruneBlock.includes(`StringContainsToken(line, "${name}")`));
+
+  if (!rosterText || missing.length || runtimeLeak.length || medallionMissing.length || medallionLeak.length || manifestMissing.length || manifestLeak.length || migrationMissing) {
+    fail(`Altmer current-roster contract drift: missing=${missing.join("|") || "none"}, runtime-deferred=${runtimeLeak.join("|") || "none"}, medallion-missing=${medallionMissing.join("|") || "none"}, medallion-deferred=${medallionLeak.join("|") || "none"}, manifest-missing=${manifestMissing.join("|") || "none"}, manifest-deferred=${manifestLeak.join("|") || "none"}, migration-missing=${migrationMissing}.`, managerPath);
+  } else {
+    pass("Altmer current roster is limited to Auri-El, Magnus, Xarxes, Syrabane, and Trinimac; Mara, Stendarr, and Y'ffre remain deferred and are pruned from affected existing journals.", managerPath);
+  }
+}
+
 function verifyBookOfDaysChronicleActionContract({ manager, eventBus, actionRouter, eventTypes, app, index, managerPath, eventBusPath, actionRouterPath, eventTypesPath, appPath, indexPath }) {
   const journalPayloadBlock = functionBlock(manager, "BuildJournalPayloadJson");
   const dashboardBlock = functionBlock(manager, "GetDashboardJson");
@@ -1207,6 +1245,7 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
       const liveApp = read(appPath);
       verifyKynarethMedallionContract(manager, liveApp, managerPath, appPath);
       verifySyrabaneDisplayContract(manager, liveApp, managerPath, appPath);
+      verifyAltmerCurrentRosterContract(manager, managerPath);
     } else {
       fail("Live Prisma app.js is missing for medallion symbol contract audit.", appPath);
     }
@@ -1801,6 +1840,50 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
     fail(`Substrate presentation must be gated by actual grantedMetric with zero-credit suppression; ${staleMetricCalls.length} producer(s) do not pass a metric delta.`, managerPath);
   } else {
     pass(`All ${substrateProgressCalls.length} substrate progress producers pass actual metric deltas and the shared helper suppresses zero-credit presentation.`, managerPath);
+  }
+
+  // Altmer parity is an acknowledgement contract, not a copy rule. Every accepted heritage
+  // producer funnels through AwardAltmerAncestorSpinePulse; that helper resolves one Book line,
+  // reuses it as the toast context, and presents only after the real daily-credit delta is known.
+  // Keep the producer registry explicit so a new Altmer act cannot silently bypass the surface.
+  const expectedAltmerHeritageProducers = new Set([
+    "HandleSubstrateShrinePrayer",
+    "HandleAltmerSleepEvents",
+    "HandleAltmerDawnSteadiness",
+    "HandleAltmerOrthodoxCostlyEnforcement",
+    "HandleAltmerPracticeFocus",
+    "HandleAltmerMagicSkillIncrease",
+    "RunDawnAwardAltmerAuriElDawn",
+  ]);
+  const altmerHeritageCalls = extractCalls(managerForBroadLane, "AwardAltmerAncestorSpinePulse")
+    .filter((call) => enclosingFunctionName(substrateFunctionBlocks, call.index) !== "AwardAltmerAncestorSpinePulse");
+  const actualAltmerHeritageProducers = new Set(
+    altmerHeritageCalls.map((call) => enclosingFunctionName(substrateFunctionBlocks, call.index)),
+  );
+  const missingAltmerHeritageProducers = [...expectedAltmerHeritageProducers]
+    .filter((name) => !actualAltmerHeritageProducers.has(name));
+  const unexpectedAltmerHeritageProducers = [...actualAltmerHeritageProducers]
+    .filter((name) => !expectedAltmerHeritageProducers.has(name));
+  const altmerAwardBody = functionBlock(managerForBroadLane, "AwardAltmerAncestorSpinePulse");
+  const altmerVoiceIndex = altmerAwardBody.indexOf("String voicedLine = AppendAltmerHeritageVoice(grantedMetric, reason)");
+  const altmerSurfaceIndex = altmerAwardBody.indexOf('SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, grantedMetric, voicedLine');
+  const altmerBranchIndex = substrateProgressBody.indexOf('if substrate == "altmer-heritage"');
+  const altmerBranchReturn = substrateProgressBody.indexOf("return", altmerBranchIndex);
+  const altmerBranchBody = altmerBranchIndex >= 0 && altmerBranchReturn > altmerBranchIndex
+    ? substrateProgressBody.slice(altmerBranchIndex, altmerBranchReturn)
+    : "";
+  if (
+    missingAltmerHeritageProducers.length > 0 || unexpectedAltmerHeritageProducers.length > 0 ||
+    altmerVoiceIndex < 0 || altmerSurfaceIndex < altmerVoiceIndex ||
+    !altmerBranchBody.includes('SendPrismaSubstrateToast(substrate, "deepen", context, symbolName, stateLabel)') ||
+    !altmerBranchBody.includes('SendPrismaSubstrateToast(substrate, "act", context, symbolName, stateLabel)') ||
+    !altmerBranchBody.includes("if surfacePresentation") ||
+    !altmerBranchBody.includes("if tierAfter > tierBefore") ||
+    altmerBranchBody.includes("AppendBookOfDaysEntry(entryText")
+  ) {
+    fail(`Altmer heritage notice parity requires one accepted-act funnel for every registered producer; missing=${missingAltmerHeritageProducers.join("|") || "none"}, unexpected=${unexpectedAltmerHeritageProducers.join("|") || "none"}.`, managerPath);
+  } else {
+    pass(`All ${actualAltmerHeritageProducers.size} registered Altmer heritage producers reuse one accepted Book line for one Prisma notice, with a distinct tier Chronicle only on crossing.`, managerPath);
   }
 
   const renamedFamilyLines = managerForBroadLane.split(/\r?\n/).filter((line) =>

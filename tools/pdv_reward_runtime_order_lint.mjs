@@ -632,6 +632,15 @@ function writeLedgers(sourcePath, inventory, findings, ownerFindings, teardownRe
     }
     md.push("");
   }
+
+  md.push("## Classified substrate-owned teardown references", "");
+  if (teardownReferences.length === 0) {
+    md.push("_None._", "");
+  } else {
+    md.push("| Spell | Contract owner | Slot | Runtime ownership | Classification | Spec |", "|---|---|---|---|---|---|");
+    for (const ref of teardownReferences) md.push(`| ${ref.spell} | ${ref.contractOwner} | ${ref.slot || "-"} | ${ref.runtimeOwnership} | ${ref.referenceClass} | ${ref.specPath} |`);
+    md.push("");
+  }
   md.push("## Findings (grant-then-strip across lanes)", "");
   if (findings.length === 0) {
     md.push("_None: no later-running lane strips a reused spell an earlier lane granted._", "");
