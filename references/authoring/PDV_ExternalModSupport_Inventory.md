@@ -59,6 +59,47 @@ That compares the `pdv-inventory-counts` block at the top of this file against
 live content and **exits non-zero on drift**. The verdict is the exit code; do
 not grep its output.
 
+Since 2026-08-09 it also checks the **prose**. Landing one mod left the old
+option count and award-row total sitting in the body while the counts block had
+correctly moved on -- a green gate on a document that had started lying, which is
+worse than a red one because nobody goes looking.
+
+Two limits, both real, both stated here rather than left to be discovered:
+
+- The scan covers the phrasings that carry numbers **today**. A new sentence with
+  a figure in it is unchecked until its pattern is added to `PROSE` in the script.
+- It cannot tell a live claim from a **quoted example**. The first draft of this
+  very section quoted the two stale figures to explain the bug, and the checker
+  correctly failed on them. Do not write historical counts as bare numerals in
+  this file; describe them instead.
+
+### Coverage -- who benefits, not what ships
+
+Everything above counts **mechanisms**. It cannot answer "is the Hist getting as
+many opportunities as the others", which is what decides whether a race lane
+feels alive:
+
+```bash
+node tools/pdv_external_support_inventory.mjs --coverage
+```
+
+Per-deity and per-race-lane row counts against a **relative** floor -- 60% of the
+median, so it keeps asking the same question as the matrix grows instead of
+needing a constant retuned. Exits non-zero on an unwaived breach. Deliberately
+thin gods are waived with a reason in
+`references/authoring/PDV_CoverageFloorWaivers.csv`; Sanguine, Peryite and Namira
+are waived there because their Part B profiles carry 1, 2 and 3 approve tags by
+design, and widening them would mean inventing a domain they do not have.
+
+It is a **separate exit** from `--check` on purpose: a coverage breach is a
+content gap someone has to decide about, not a documentation error, and one red
+standing for two unrelated problems teaches people to ignore it.
+
+Worship objects with no matrix rows at all (Phynaster, Satakal, Ruptga, Tava,
+Onsi, Riddle'Thar, Jone/Jode) are **reported, never silently dropped** -- they are
+substrate and state deities rather than quest-reaction targets, and a lane can
+only be judged thin once you know what is in it.
+
 ### Evidence buckets used below
 
 | Bucket | What it means |
