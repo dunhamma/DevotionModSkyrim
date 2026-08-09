@@ -1,12 +1,18 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-08T07:05:22.013856Z",
-  "postChangeVerifiedAt": "2026-08-08T07:05:22.013856Z",
+  "generatedAt": "2026-08-09T01:07:08.910510Z",
+  "postChangeVerifiedAt": "2026-08-09T01:07:08.910510Z",
   "profile": "Devotion Dev",
   "plugin": "Devotion.esp",
   "active": true,
-  "espSha256": "A09270329F50CB2D169F7AA41D463CF96C614EFC84D8CD84F5572761DAAFE08A",
+  "espSha256": "0DE7DB29A48C11722A80B7FE949E93393F3424572330C66D1D779FBE94A7DC9F",
+  "espSizeBytes": 649917,
+  "espModifiedUtc": "2026-08-09T00:40:05.8559730Z",
+  "refreshNote": "Refreshed after the 2026-08-09 stance-parity write (five VMAD Stance_* Int properties on Mara, Stendarr, Y'ffre and Boethiah). Size is unchanged from the 2026-08-08 proof at 649,917 bytes, which is the expected shape for in-place Int edits; a size change would have been the silent-revert tell.",
+  "masters": ["Skyrim.esm", "Dawnguard.esm", "HearthFires.esm", "Dragonborn.esm"],
   "recordSummary": {
+    "frame": "definedIn",
+    "frameNote": "Records Devotion.esp DEFINES (origin FormID), as counted by housecarl_cross_plugin_query with plugins=[Devotion.esp] defined_in=true. This is the frame the 2026-08-08 proof used.",
     "total": 1961,
     "types": 21,
     "quests": 97,
@@ -14,7 +20,13 @@
     "spells": 394,
     "messages": 500,
     "placedObjects": 51,
-    "cells": 2
+    "cellsTouched": 2
+  },
+  "fileRecordSummary": {
+    "frame": "rawFile",
+    "frameNote": "Every record the FILE contains, definitions plus overrides, as counted by housecarl_read_plugin_file on the absolute path. The 33-record gap against the definedIn frame is exactly the contested override set below (14 Spell + 15 Message + 2 Quest + 2 Cell), and the 22nd type is Cell, which Devotion.esp only ever overrides. The two frames are both correct; do not re-derive this as drift.",
+    "total": 1994,
+    "types": 22
   },
   "errors": {
     "danglingLinks": 0,
@@ -22,6 +34,13 @@
     "parseFailures": 0
   },
   "contestedRecordCount": 33,
+  "contestedRecordBreakdown": {
+    "note": "Enumerated live via housecarl_cross_plugin_query plugins=[Devotion.esp] conflicts_only=true. Devotion.esp is the load-order winner for 31 of the 33; the two CELL records are won by other mods and are covered by cellNestedReferenceRetention below.",
+    "Spell": 14,
+    "Message": 15,
+    "Quest": 2,
+    "Cell": 2
+  },
   "criticalRecordWinners": [
     {
       "formid": "00C325:Devotion.esp",
@@ -59,10 +78,19 @@
   },
   "vmadValidation": {
     "scriptedRecords": 184,
-    "unboundAutoProperties": 552,
-    "boundButNullProperties": 0,
-    "unverifiableAttachments": 0,
-    "boundary": "Unbound findings include inherited and runtime-filled properties and are an audit queue, not a clean-binding claim. scriptedRecords re-derived 2026-08-08 post-Daedric-conversion (184: Quest 97, Activator 54, MagicEffect 29, Book 2, MiscItem 2). unboundAutoProperties / boundButNullProperties / unverifiableAttachments were NOT re-derived and are carried forward from the 2026-07-26 sweep."
+    "scriptedRecordsByType": {
+      "Quest": 97,
+      "Activator": 54,
+      "MagicEffect": 29,
+      "Book": 2,
+      "MiscItem": 2
+    },
+    "scriptAttachments": 191,
+    "aliasAttachments": 1,
+    "auditTool": "tools/pdv_vmad_audit.mjs",
+    "auditExitCode": 0,
+    "auditFindingsUnwaived": 0,
+    "boundary": "Re-derived 2026-08-09 against the live MO2 source tree (100 .psc / 100 classes). The verdict recorded here is the audit's EXIT CODE, not a grepped field. The 2026-07-26 unboundAutoProperties / boundButNullProperties / unverifiableAttachments counts have been RETIRED rather than carried forward a third time: pdv_vmad_audit.mjs now owns that question and reports the unbound set as waived hypotheses, so the old raw counts no longer describe anything this proof checks."
   },
   "filesystemScriptPairs": {
     "psc": 100,
@@ -70,13 +98,24 @@
     "pairNamesExact": true
   },
   "assetWinners": {
+    "note": "Re-derived via housecarl_asset_status against the Devotion Dev profile; every path resolves loose with Devotion as the sole provider.",
     "fontFiles": {
       "queried": 4,
+      "paths": [
+        "PrismaUI/views/Devotion/fonts/IMFellEnglish-Italic.ttf",
+        "PrismaUI/views/Devotion/fonts/IMFellEnglish-Italic.woff2",
+        "PrismaUI/views/Devotion/fonts/IMFellEnglish-Regular.ttf",
+        "PrismaUI/views/Devotion/fonts/IMFellEnglish-Regular.woff2"
+      ],
       "soleProvider": "Devotion",
       "winner": "Devotion"
     },
     "urnTextures": {
       "queried": 2,
+      "paths": [
+        "textures/DLC02/Clutter/RemDunmerUrn01.dds",
+        "textures/DLC02/Clutter/RemDunmerUrn01_n.dds"
+      ],
       "soleProvider": "Devotion",
       "winner": "Devotion"
     }
@@ -89,14 +128,30 @@
       "record parsing",
       "contested-record enumeration",
       "placed-reference winner retention",
-      "VMAD attachment resolvability"
+      "VMAD attachment resolvability",
+      "loose-asset provider resolution"
     ],
     "open": [
-      "intentional-versus-defective review of 552 unbound Auto properties",
+      "intentional-versus-defective review of the waived unbound Auto properties",
       "manual UI behavior",
       "navmesh and terrain spatial integrity",
-      "property-level VMAD unbound-Auto counts carried forward from 2026-07-26, not re-derived",
       "runtime behavior"
     ]
+  },
+  "refreshProcedure": {
+    "note": "There is no refresh tool. pdv_package_release.mjs only READS this file; it never writes it. Refresh by hand with these calls, in this order, against the Devotion Dev profile.",
+    "steps": [
+      "housecarl_load_order_status lookup='Devotion.esp' -- confirm the Anvil instance and the Devotion Dev profile before anything below becomes a claim",
+      "Get-FileHash on the live ESP -> espSha256, espSizeBytes, espModifiedUtc",
+      "housecarl_read_plugin_file on the absolute ESP path -> fileRecordSummary and masters",
+      "housecarl_cross_plugin_query plugins=[Devotion.esp] defined_in=true group_by=type -> recordSummary",
+      "housecarl_check_errors plugins=['Devotion.esp'] -> errors",
+      "housecarl_cross_plugin_query plugins=[Devotion.esp] conflicts_only=true -> contestedRecordCount and its breakdown",
+      "housecarl_read_record 00C325:Devotion.esp fields=VirtualMachineAdapter.* -> the ManagerQuest critical-winner block",
+      "housecarl_cross_plugin_query plugins=[Devotion.esp] defined_in=true type=PlacedObject group_by=winner -> cellNestedReferenceRetention",
+      "node tools/pdv_vmad_audit.mjs -> vmadValidation (record the exit code)",
+      "housecarl_asset_status on the font and urn paths -> assetWinners"
+    ],
+    "gateCaveat": "pdv_package_release.mjs hardcodes contestedRecordCount === 33. That is PINNING, not verifying: it cannot tell a correct 33 from a coincidental one, and any legitimate future override would fail the gate rather than be re-proved. Tracked separately; do not treat a green run as evidence the contested set was re-derived."
   }
 }
