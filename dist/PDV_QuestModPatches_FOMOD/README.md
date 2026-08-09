@@ -1,4 +1,4 @@
-# Devotion - experimental build with per-mod quest patches
+# Devotion - the mod, plus optional per-mod quest patches
 
 This archive is the whole distribution. Install it with your mod manager and run the
 installer; there is no separate core download.
@@ -33,4 +33,4 @@ you took, expected and observed piety, toast count, Book count, save/load result
 logs. `setstage` can show that routing fired, but it cannot tell you the reaction was the
 right one.
 
-This package is experimental and not supported.
+Report anything that looks wrong on the mod page rather than assuming it is your load order.

@@ -82,6 +82,41 @@ if (!/<requiredInstallFiles>/.test(config)) {
 if (!/source="core"/.test(config)) throw new Error("core was not registered as a required install");
 fs.writeFileSync(configPath, config, "utf8");
 
+// info.xml is GENERATED, not inherited. This header claimed to produce it and did not: the
+// file was copied verbatim out of the patch tree, so every build shipped the ARR-era
+// PatchHub's copy. The 1.5.0 installer told users its name was "Devotion - Modular Mod
+// PatchHub", its version was "ARR 2.5 experimental candidate (2026-08-07)", and that it
+// REQUIRED Devotion to be installed separately - which is the opposite of true now that core
+// is inside this package. None of it errored, because nothing regenerated the file and
+// nothing compared it to the build.
+//
+// Deriving it from --version is the point: a version string that is typed by hand somewhere
+// is a version string that goes stale, and this one went stale by a whole release line.
+const infoPath = path.join(STAGE, "fomod", "info.xml");
+const machineVersion = `${/^\d+\.\d+\.\d+$/.test(version) ? version : "1.0.0"}.0`;
+fs.writeFileSync(infoPath, `<?xml version="1.0" encoding="utf-8"?>
+<fomod>
+  <Name>Devotion</Name>
+  <Author>Devotion (PDV)</Author>
+  <Version MachineVersion="${machineVersion}">${version}</Version>
+  <Website>https://www.nexusmods.com/skyrimspecialedition/</Website>
+  <Description>
+    Devotion tracks your character's religious devotion through the traditions their race
+    actually holds, and adjusts each god's standing from what you do.
+
+    This installer contains the whole mod. Devotion itself installs automatically and cannot
+    be deselected. The optional per-mod patches below teach it how the gods react to other
+    mods' content; each one is locked to its own source plugin, so an option you cannot use
+    is not offered, and a patch for a mod you later remove goes quiet rather than breaking.
+  </Description>
+  <Groups>
+    <element>Gameplay</element>
+    <element>Quests and Adventures</element>
+    <element>Patches</element>
+  </Groups>
+</fomod>
+`, "utf8");
+
 // ---- 4. Gate the staged tree BEFORE it becomes a package ----
 const failures = [];
 for (const file of filesUnder(STAGE, (f) => /\.(xml|md|txt|json|html?|js|css)$/i.test(f))) {
