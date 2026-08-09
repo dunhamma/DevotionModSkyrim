@@ -317,8 +317,23 @@ function verifyRows() {
       failures.push(`${r.editor_id} s${r.outcome_stage}: no such stage (has ${d.stages.map((s) => s.index).join(",")})`);
       continue;
     }
-    if (r.formid && d.formid && r.formid.toLowerCase() !== d.formid.toLowerCase()) {
-      failures.push(`${r.editor_id} s${stage}: formid ${r.formid} != digest ${d.formid}`);
+    // The SAME FormID is written two ways in this project and comparing them literally is a
+    // false alarm: houseCARL enumerates `HEX:Plugin.esp`, while the matrix CSVs and
+    // pdv_quest_matrix_compile use `Plugin.esp:HEX`. Normalise to {hex, plugin} and compare
+    // that. Caught on the first real row this gate ever saw, which is the argument for
+    // running a new gate against real data before trusting a green.
+    const norm = (t) => {
+      const parts = String(t).split(":");
+      const hex = parts.find((p) => /^[0-9A-Fa-f]{6}$/.test(p.trim()));
+      const plugin = parts.find((p) => /\.es[pml]$/i.test(p.trim()));
+      return { hex: (hex ?? "").trim().toLowerCase(), plugin: (plugin ?? "").trim().toLowerCase() };
+    };
+    if (r.formid && d.formid) {
+      const a = norm(r.formid);
+      const b = norm(d.formid);
+      if (a.hex !== b.hex || a.plugin !== b.plugin) {
+        failures.push(`${r.editor_id} s${stage}: formid ${r.formid} != digest ${d.formid}`);
+      }
     }
     if (hit.evidenceTier !== "A" && !/RUNTIME-VERIFY/i.test(r.citation ?? "")) {
       failures.push(`${r.editor_id} s${stage}: tier ${hit.evidenceTier} (no journal text) but citation lacks RUNTIME-VERIFY`);

@@ -88,6 +88,23 @@ folder-name diff would have queued both as uncovered work, and it would have bee
 Neither needs a channel. A channel keyed on their FormIDs would double-claim cells the core
 matrix already owns, which `pdv_quest_channel_reconcile.mjs` would reject anyway.
 
+## Judged and ruled SILENT
+
+### Ascend - Hidden Peaks of Skyrim -- SILENT (no quest content)
+
+| | |
+|---|---|
+| Plugin | `Ascend - Hidden Peaks of Skyrim.esp` |
+| Defines | 1 QUST: `Haiku_HiddenPeaks` |
+| Stages | **0** |
+| Objectives | **0** |
+
+Sat in JoJ's **New Quests & Adventures** separator, which is why it was a candidate. It is a
+climbing and exploration mod: the single quest record is a controller with nothing to fire.
+Batch B01, 2026-08-09.
+
+---
+
 ## No quest surface at all -- SILENT
 
 Read 2026-08-09; each touches **zero** QUST records, defined or overridden. Nothing in the

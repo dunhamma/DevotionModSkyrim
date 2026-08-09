@@ -1,6 +1,6 @@
 mod_key,mod_name,class,batch_id,plugin,stage_digested,rows_judged,crossgen_run,review_verdict,promoted,channel_compiled,manifest_entry,docs_page,lint,notes
-AscendHiddenPeaks,Ascend - Hidden Peaks of Skyrim,A,B01,Ascend - Hidden Peaks of Skyrim.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
-ToolsOfKagrenac,The Tools of Kagrenac,A,B01,Tools of Kagrenac.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
+AscendHiddenPeaks,Ascend - Hidden Peaks of Skyrim,A,B01,Ascend - Hidden Peaks of Skyrim.esp,ok,ok,-,SILENT,-,-,-,-,-,Haiku_HiddenPeaks is the only QUST and has 0 stages / 0 objectives - see silence ledger
+ToolsOfKagrenac,The Tools of Kagrenac,A,B01,Tools of Kagrenac.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
 MoonAndStar,Moon and Star,A,B02,MoonAndStar_MAS.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
 SinisterSeven,The Sinister Seven,A,B02,The_Sinister_Seven.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
 LegendsOfAetherium,Legends of Aetherium,A,B02,LegendsOfAetherium.esp,-,-,-,UNREVIEWED,-,-,-,-,-,

@@ -407,6 +407,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="The Tools of Kagrenac">
+              <description>Go on a quest to recover the legendary Tools of Kagrenac. Encounter new allies and enemies, explore sprawling dungeons, and add powerful new artifacts and spells to your arsenal in this fully-voiced quest mod!</description>
+              <files>
+                <folder source="common\ToolsOfKagrenac" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Tools of Kagrenac.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Unslaad">
               <description>Quest mod of Half-Dragon. Add fluffy equipment and creatures.</description>
               <files>

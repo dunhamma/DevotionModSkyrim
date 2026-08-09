@@ -15,6 +15,16 @@
       "nexusModId": 152267
     },
     {
+      "name": "Aetherium Forge Destroys Items",
+      "description": "This mod allows you to destroy items by dropping them in the lava at the Aetherium Forge.",
+      "dependency": "Aetherium Forge Destroys Items.esp",
+      "folders": [
+        "common\\AFDI"
+      ],
+      "category": "World Systems and Collections",
+      "nexusModId": 114021
+    },
+    {
       "name": "Baba Yaga and the Labyrinth",
       "description": "Fully voiced quest to discover the mysteries of a walking hut, a soul cairn maze, weeping angels, and a witch.",
       "dependency": "ksws03_quest.esp",
@@ -25,6 +35,16 @@
       "nexusModId": 84492
     },
     {
+      "name": "Bards Reborn - Student of Song",
+      "description": "This mod gives the Bards College a massive makeover, adds a new study quest, new bardic powers, and new characters to flesh out your experience as a student in the Bards College.",
+      "dependency": "BardsRebornStudentofSong.esp",
+      "folders": [
+        "common\\BardsRebornStudentOfSong"
+      ],
+      "category": "Bardic Life",
+      "nexusModId": 47994
+    },
+    {
       "name": "Bark and Bite",
       "description": "Uncover the origins of a mysterious tree within the Rift and choose if you wish to meddle in such affairs.",
       "dependency": "Tree Contract Mod.esp",
@@ -33,6 +53,16 @@
       ],
       "category": "New Quests and Lands",
       "nexusModId": 135087
+    },
+    {
+      "name": "Become a Bard",
+      "description": "Tired of being a warrior or mage? Become a Bard!",
+      "dependency": "BecomeABard.esp",
+      "folders": [
+        "common\\BecomeABard"
+      ],
+      "category": "Bardic Life",
+      "nexusModId": 2303
     },
     {
       "name": "Before the End",
@@ -65,6 +95,16 @@
       "nexusModId": 96711
     },
     {
+      "name": "College of Winterhold - Quest Expansion",
+      "description": "This mod provides 7 new starter magic lessons/quests to make your College of Winterhold feel like an actual school of magic.",
+      "dependency": "College Of Winterhold - Quest Expansion.esp",
+      "folders": [
+        "common\\CollegeQuestExpansion"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 66666
+    },
+    {
       "name": "DAc0da",
       "description": "",
       "dependency": "DAc0da.esm",
@@ -72,6 +112,16 @@
         "common\\DAc0da"
       ],
       "category": "New Quests and Lands"
+    },
+    {
+      "name": "Daedric Shrines AIO prayer activators",
+      "description": "Statues of Daedric Lords.",
+      "dependency": "man_DaedricShrines.esp",
+      "folders": [
+        "common\\DaedricShrinesAIO"
+      ],
+      "category": "World Systems and Collections",
+      "nexusModId": 78772
     },
     {
       "name": "Depths of the Soul",
@@ -82,6 +132,25 @@
       ],
       "category": "New Quests and Lands",
       "nexusModId": 118261
+    },
+    {
+      "name": "Ebony Blade Curse",
+      "description": "",
+      "dependency": "EbonyBladeCurse.esp",
+      "folders": [
+        "common\\EbonyBladeCurse"
+      ],
+      "category": "Quest Expansions"
+    },
+    {
+      "name": "Forsworn Conspiracy - Quest Expansion",
+      "description": "Greatly expanded the Forsworn Conspiracy questline to give new choices, new roleplaying opportunities, new epic stories. Over 200 new lines.",
+      "dependency": "Forsworn Conspiracy Quest Expansion.esp",
+      "folders": [
+        "common\\ForswornConspiracyQE"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 161913
     },
     {
       "name": "Glenmoril",
@@ -103,6 +172,46 @@
       "nexusModId": 105044
     },
     {
+      "name": "Ill Met by Moonlight - Dialogue Expansion",
+      "description": "Defy the will of Hircine while still serving justice to Sinding. A fully voiced mini-expansion of the namesake quest using voice actors or spliced lines.",
+      "dependency": "CH_IMBMDialougeAddon.esp",
+      "folders": [
+        "common\\IllMetByMoonlightDialogue"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 156434
+    },
+    {
+      "name": "Infiltration - Quest Expansion",
+      "description": "One of the most underwhelming vanilla quests... turned into an epic quest full of player choice.",
+      "dependency": "Infiltration - Quest Expansion.esp",
+      "folders": [
+        "common\\InfiltrationQE"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 114054
+    },
+    {
+      "name": "Legacy of the Dragonborn",
+      "description": "Not just a display mod, not just a quest mod, not just a new guild mod, but a complete foundational flagship mod to build an entire load order around. This DLC expansion sized mod adds hundreds of new items, dozens of new quests and hundreds of extra hours of play.",
+      "dependency": "LegacyoftheDragonborn.esm",
+      "folders": [
+        "common\\LegacyOfTheDragonborn"
+      ],
+      "category": "World Systems and Collections",
+      "nexusModId": 11802
+    },
+    {
+      "name": "M'rissi's Tails of Troubles",
+      "description": "Fully immersive and lore-friendly story with 8 hours of quests, more than 2000 voiced lines and 3 different endings. Choose your path and decide her fate.",
+      "dependency": "MrissiTailOfTroubles.esp",
+      "folders": [
+        "common\\Mrissi"
+      ],
+      "category": "Followers",
+      "nexusModId": 9666
+    },
+    {
       "name": "Moonpath to Elsweyr",
       "description": "Brought to you by An_Old_Sock, the author of the in-development Moonpath Reborn, Moonpath to Elsweyr is enjoying regular updates for the first time in five years. This is the most comprehensive Moonpath experience to date.",
       "dependency": "moonpath.esp",
@@ -111,6 +220,16 @@
       ],
       "category": "New Quests and Lands",
       "nexusModId": 4341
+    },
+    {
+      "name": "Nilheim - Misc Quest Expansion",
+      "description": "Fixes some issues with the misc quest at Nilheim and gives a bit more flexibility to your encounter with good old Telrav, adding a couple of additional dialogue choices and options for roleplaying.",
+      "dependency": "Nilheim_MiscQuestExpansion.esp",
+      "folders": [
+        "common\\NilheimQE"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 53792
     },
     {
       "name": "Olenveld",
@@ -133,6 +252,26 @@
       ],
       "category": "New Quests and Lands",
       "nexusModId": 149820
+    },
+    {
+      "name": "Paarthurnax - Quest Expansion",
+      "description": "A fully voiced, quite expanded new take on the quest Paarthurnax, giving both the Blades and Paarthurnax good reasons for their stances, and you, Dragonborn, the final choice.",
+      "dependency": "PaarthurnaxQuestExpansion.esp",
+      "folders": [
+        "common\\PaarthurnaxQE"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 51711
+    },
+    {
+      "name": "Save the Icerunner",
+      "description": "Jaree-Ra in Solitude has a plan to set up a shipwreck. The ship is said to be full of weapons and riches, ripe for the taking. What will you do?",
+      "dependency": "SaveTheIcerunner.esp",
+      "folders": [
+        "common\\SaveTheIcerunner"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 34681
     },
     {
       "name": "Siege at Icemoth",
@@ -163,6 +302,16 @@
       ],
       "category": "New Quests and Lands",
       "nexusModId": 72772
+    },
+    {
+      "name": "Song of the Green - Auri",
+      "description": "A standalone, custom-voiced follower and quest mod.",
+      "dependency": "018Auri.esp",
+      "folders": [
+        "common\\Auri"
+      ],
+      "category": "Followers",
+      "nexusModId": 11278
     },
     {
       "name": "Taste of Death Addon",
@@ -205,6 +354,16 @@
       "nexusModId": 105697
     },
     {
+      "name": "The Heart of Dibella - Quest Expansion",
+      "description": "Tired of having to break into a ladies-only religious building just to start this quest? This mod has you covered with new roleplaying opportunities, more dialogue and more choices.",
+      "dependency": "The Heart Of Dibella - Quest Expansion.esp",
+      "folders": [
+        "common\\HeartOfDibellaQE"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 94863
+    },
+    {
       "name": "The Rot Below",
       "description": "Discover the secrets of a mad lich who thought themselves a god. Explore an ancient palace, a subterranean city of the undead, and an insane warlock's research hall. Foil Namira's plans and stop the coming rot.",
       "dependency": "CJ03Elroy.esp",
@@ -213,6 +372,46 @@
       ],
       "category": "New Quests and Lands",
       "nexusModId": 169298
+    },
+    {
+      "name": "The Tools of Kagrenac",
+      "description": "Go on a quest to recover the legendary Tools of Kagrenac. Encounter new allies and enemies, explore sprawling dungeons, and add powerful new artifacts and spells to your arsenal in this fully-voiced quest mod!",
+      "dependency": "Tools of Kagrenac.esp",
+      "folders": [
+        "common\\ToolsOfKagrenac"
+      ],
+      "category": "New Quests and Lands",
+      "nexusModId": 14168
+    },
+    {
+      "name": "The Whispering Door - Quest Expansion",
+      "description": "Experience a longer version of Mephala's Daedric quest, now with more dialogue, more decisions and a general darker approach to the original quest.",
+      "dependency": "The Whispering Door - Quest Expansion.esp",
+      "folders": [
+        "common\\WhisperingDoorQE"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 76606
+    },
+    {
+      "name": "Thieves Guild Alternative Endings",
+      "description": "Defy Nocturnal and unlock yourself from eternal servitude. Adds 4 new voice-acted endings to the Thieves Guild questline, including new story, new rewards, new boss fights.",
+      "dependency": "TG Alternative Endings.esp",
+      "folders": [
+        "common\\TGAlternativeEndings"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 114558
+    },
+    {
+      "name": "Thogra",
+      "description": "Help an Orc widow get revenge on the one who wronged her. The same Thogra gra-Mugur, now with a new voice!",
+      "dependency": "DK_Thogra.esp",
+      "folders": [
+        "common\\Thogra"
+      ],
+      "category": "Followers",
+      "nexusModId": 120007
     },
     {
       "name": "Unslaad",
@@ -269,145 +468,6 @@
       "nexusModId": 45565
     },
     {
-      "name": "College of Winterhold - Quest Expansion",
-      "description": "This mod provides 7 new starter magic lessons/quests to make your College of Winterhold feel like an actual school of magic.",
-      "dependency": "College Of Winterhold - Quest Expansion.esp",
-      "folders": [
-        "common\\CollegeQuestExpansion"
-      ],
-      "category": "Quest Expansions",
-      "nexusModId": 66666
-    },
-    {
-      "name": "Ebony Blade Curse",
-      "description": "",
-      "dependency": "EbonyBladeCurse.esp",
-      "folders": [
-        "common\\EbonyBladeCurse"
-      ],
-      "category": "Quest Expansions"
-    },
-    {
-      "name": "Forsworn Conspiracy - Quest Expansion",
-      "description": "Greatly expanded the Forsworn Conspiracy questline to give new choices, new roleplaying opportunities, new epic stories. Over 200 new lines.",
-      "dependency": "Forsworn Conspiracy Quest Expansion.esp",
-      "folders": [
-        "common\\ForswornConspiracyQE"
-      ],
-      "category": "Quest Expansions",
-      "nexusModId": 161913
-    },
-    {
-      "name": "Ill Met by Moonlight - Dialogue Expansion",
-      "description": "Defy the will of Hircine while still serving justice to Sinding. A fully voiced mini-expansion of the namesake quest using voice actors or spliced lines.",
-      "dependency": "CH_IMBMDialougeAddon.esp",
-      "folders": [
-        "common\\IllMetByMoonlightDialogue"
-      ],
-      "category": "Quest Expansions",
-      "nexusModId": 156434
-    },
-    {
-      "name": "Infiltration - Quest Expansion",
-      "description": "One of the most underwhelming vanilla quests... turned into an epic quest full of player choice.",
-      "dependency": "Infiltration - Quest Expansion.esp",
-      "folders": [
-        "common\\InfiltrationQE"
-      ],
-      "category": "Quest Expansions",
-      "nexusModId": 114054
-    },
-    {
-      "name": "Nilheim - Misc Quest Expansion",
-      "description": "Fixes some issues with the misc quest at Nilheim and gives a bit more flexibility to your encounter with good old Telrav, adding a couple of additional dialogue choices and options for roleplaying.",
-      "dependency": "Nilheim_MiscQuestExpansion.esp",
-      "folders": [
-        "common\\NilheimQE"
-      ],
-      "category": "Quest Expansions",
-      "nexusModId": 53792
-    },
-    {
-      "name": "Paarthurnax - Quest Expansion",
-      "description": "A fully voiced, quite expanded new take on the quest Paarthurnax, giving both the Blades and Paarthurnax good reasons for their stances, and you, Dragonborn, the final choice.",
-      "dependency": "PaarthurnaxQuestExpansion.esp",
-      "folders": [
-        "common\\PaarthurnaxQE"
-      ],
-      "category": "Quest Expansions",
-      "nexusModId": 51711
-    },
-    {
-      "name": "Save the Icerunner",
-      "description": "Jaree-Ra in Solitude has a plan to set up a shipwreck. The ship is said to be full of weapons and riches, ripe for the taking. What will you do?",
-      "dependency": "SaveTheIcerunner.esp",
-      "folders": [
-        "common\\SaveTheIcerunner"
-      ],
-      "category": "Quest Expansions",
-      "nexusModId": 34681
-    },
-    {
-      "name": "The Heart of Dibella - Quest Expansion",
-      "description": "Tired of having to break into a ladies-only religious building just to start this quest? This mod has you covered with new roleplaying opportunities, more dialogue and more choices.",
-      "dependency": "The Heart Of Dibella - Quest Expansion.esp",
-      "folders": [
-        "common\\HeartOfDibellaQE"
-      ],
-      "category": "Quest Expansions",
-      "nexusModId": 94863
-    },
-    {
-      "name": "The Whispering Door - Quest Expansion",
-      "description": "Experience a longer version of Mephala's Daedric quest, now with more dialogue, more decisions and a general darker approach to the original quest.",
-      "dependency": "The Whispering Door - Quest Expansion.esp",
-      "folders": [
-        "common\\WhisperingDoorQE"
-      ],
-      "category": "Quest Expansions",
-      "nexusModId": 76606
-    },
-    {
-      "name": "Thieves Guild Alternative Endings",
-      "description": "Defy Nocturnal and unlock yourself from eternal servitude. Adds 4 new voice-acted endings to the Thieves Guild questline, including new story, new rewards, new boss fights.",
-      "dependency": "TG Alternative Endings.esp",
-      "folders": [
-        "common\\TGAlternativeEndings"
-      ],
-      "category": "Quest Expansions",
-      "nexusModId": 114558
-    },
-    {
-      "name": "M'rissi's Tails of Troubles",
-      "description": "Fully immersive and lore-friendly story with 8 hours of quests, more than 2000 voiced lines and 3 different endings. Choose your path and decide her fate.",
-      "dependency": "MrissiTailOfTroubles.esp",
-      "folders": [
-        "common\\Mrissi"
-      ],
-      "category": "Followers",
-      "nexusModId": 9666
-    },
-    {
-      "name": "Song of the Green - Auri",
-      "description": "A standalone, custom-voiced follower and quest mod.",
-      "dependency": "018Auri.esp",
-      "folders": [
-        "common\\Auri"
-      ],
-      "category": "Followers",
-      "nexusModId": 11278
-    },
-    {
-      "name": "Thogra",
-      "description": "Help an Orc widow get revenge on the one who wronged her. The same Thogra gra-Mugur, now with a new voice!",
-      "dependency": "DK_Thogra.esp",
-      "folders": [
-        "common\\Thogra"
-      ],
-      "category": "Followers",
-      "nexusModId": 120007
-    },
-    {
       "name": "Xelzaz",
       "description": "Xelzaz is a Custom Fully Voiced Argonian Lawman of House Telvanni with ~8500 lines. He has just arrived in Skyrim and is looking for a traveling companion. In return he will keep you company, cook you warm meals and brew powerful potions.",
       "dependency": "BPUFXelzazFollower.esp",
@@ -416,56 +476,6 @@
       ],
       "category": "Followers",
       "nexusModId": 62893
-    },
-    {
-      "name": "Bards Reborn - Student of Song",
-      "description": "This mod gives the Bards College a massive makeover, adds a new study quest, new bardic powers, and new characters to flesh out your experience as a student in the Bards College.",
-      "dependency": "BardsRebornStudentofSong.esp",
-      "folders": [
-        "common\\BardsRebornStudentOfSong"
-      ],
-      "category": "Bardic Life",
-      "nexusModId": 47994
-    },
-    {
-      "name": "Become a Bard",
-      "description": "Tired of being a warrior or mage? Become a Bard!",
-      "dependency": "BecomeABard.esp",
-      "folders": [
-        "common\\BecomeABard"
-      ],
-      "category": "Bardic Life",
-      "nexusModId": 2303
-    },
-    {
-      "name": "Aetherium Forge Destroys Items",
-      "description": "This mod allows you to destroy items by dropping them in the lava at the Aetherium Forge.",
-      "dependency": "Aetherium Forge Destroys Items.esp",
-      "folders": [
-        "common\\AFDI"
-      ],
-      "category": "World Systems and Collections",
-      "nexusModId": 114021
-    },
-    {
-      "name": "Daedric Shrines AIO prayer activators",
-      "description": "Statues of Daedric Lords.",
-      "dependency": "man_DaedricShrines.esp",
-      "folders": [
-        "common\\DaedricShrinesAIO"
-      ],
-      "category": "World Systems and Collections",
-      "nexusModId": 78772
-    },
-    {
-      "name": "Legacy of the Dragonborn",
-      "description": "Not just a display mod, not just a quest mod, not just a new guild mod, but a complete foundational flagship mod to build an entire load order around. This DLC expansion sized mod adds hundreds of new items, dozens of new quests and hundreds of extra hours of play.",
-      "dependency": "LegacyoftheDragonborn.esm",
-      "folders": [
-        "common\\LegacyOfTheDragonborn"
-      ],
-      "category": "World Systems and Collections",
-      "nexusModId": 11802
     }
   ]
 }
