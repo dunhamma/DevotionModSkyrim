@@ -202,6 +202,15 @@
       "nexusModId": 11802
     },
     {
+      "name": "Legends of Aetherium",
+      "description": "",
+      "dependency": "LegendsOfAetherium.esp",
+      "folders": [
+        "common\\LegendsOfAetherium"
+      ],
+      "category": "New Quests and Lands"
+    },
+    {
       "name": "M'rissi's Tails of Troubles",
       "description": "Fully immersive and lore-friendly story with 8 hours of quests, more than 2000 voiced lines and 3 different endings. Choose your path and decide her fate.",
       "dependency": "MrissiTailOfTroubles.esp",
@@ -210,6 +219,16 @@
       ],
       "category": "Followers",
       "nexusModId": 9666
+    },
+    {
+      "name": "Moon and Star",
+      "description": "A mysterious and powerful criminal has been spotted in Skyrim, his trail dogged by hunters from Morrowind. However, there may be more at stake than it seems, and this criminal may be familiar...",
+      "dependency": "MoonAndStar_MAS.esp",
+      "folders": [
+        "common\\MoonAndStar"
+      ],
+      "category": "New Quests and Lands",
+      "nexusModId": 4301
     },
     {
       "name": "Moonpath to Elsweyr",
@@ -262,6 +281,16 @@
       ],
       "category": "Quest Expansions",
       "nexusModId": 51711
+    },
+    {
+      "name": "Project AHO",
+      "description": "Project AHO is a large quest modification, comparable in size to a medium-sized DLC. Designed in the best traditions of Bethesda Game Studios, this mod adds to Skyrim a hidden settlement of Great House Telvanni. Determine its fate for yourself!",
+      "dependency": "Dwarfsphere.esp",
+      "folders": [
+        "common\\ProjectAHO"
+      ],
+      "category": "New Quests and Lands",
+      "nexusModId": 15996
     },
     {
       "name": "Save the Icerunner",
@@ -354,6 +383,16 @@
       "nexusModId": 105697
     },
     {
+      "name": "The Gray Cowl of Nocturnal",
+      "description": "Will you be worthy for the Gray Cowl of Nocturnal? We'll see!",
+      "dependency": "Gray Fox Cowl.esm",
+      "folders": [
+        "common\\GrayCowlOfNocturnal"
+      ],
+      "category": "New Quests and Lands",
+      "nexusModId": 4509
+    },
+    {
       "name": "The Heart of Dibella - Quest Expansion",
       "description": "Tired of having to break into a ladies-only religious building just to start this quest? This mod has you covered with new roleplaying opportunities, more dialogue and more choices.",
       "dependency": "The Heart Of Dibella - Quest Expansion.esp",
@@ -372,6 +411,16 @@
       ],
       "category": "New Quests and Lands",
       "nexusModId": 169298
+    },
+    {
+      "name": "The Sinister Seven",
+      "description": "The Sinister Seven is a backstory quest line. Seven Assassins are dispatched to kill the player, taking place across several levels.",
+      "dependency": "The_Sinister_Seven.esp",
+      "folders": [
+        "common\\SinisterSeven"
+      ],
+      "category": "New Quests and Lands",
+      "nexusModId": 19178
     },
     {
       "name": "The Tools of Kagrenac",

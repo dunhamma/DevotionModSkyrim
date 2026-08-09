@@ -248,11 +248,18 @@ function renderDigestMd(modKey, list) {
       continue;
     }
     const term = d.terminalStages.join(",") + (d.terminalInferred ? " inferred" : " flagged");
-    // Print the formid token VERBATIM. It names the DEFINING master, which for an override is
-    // not the plugin we read it out of: TG00 lives in Skyrim.esm and is merely carried by
-    // TCBM.esp. Rendering `${plugin}:${hex}` produced `TCBM.esp:021556`, a token that resolves
-    // to nothing -- and a judge copying the digest heading into a CSV would author it.
-    out.push(`## ${d.editorId} ${d.name ? `"${d.name}"` : ""}  ${d.formid}  [${d.role ?? "defined"}]`);
+    // The heading prints the token in the AUTHORING form, PLUGIN:HEX, because that is what a
+    // judge copies into a channel CSV and what pdv_quest_matrix_compile parses. houseCARL
+    // enumerates the other way round, HEX:PLUGIN, and printing its form here cost a whole
+    // batch: every row a judging pass produced carried a reversed token that resolves to
+    // nothing.
+    //
+    // The plugin half must come from the FORMID, never from the file we read: for an override
+    // they differ. TG00 is defined by Skyrim.esm and merely carried by TCBM.esp, and an
+    // earlier version of this line built `${d.plugin}:${hex}` and emitted `TCBM.esp:021556`.
+    const [fHex, fPlugin] = String(d.formid).split(":");
+    const authoringToken = fPlugin ? `${fPlugin}:${fHex}` : d.formid;
+    out.push(`## ${d.editorId} ${d.name ? `"${d.name}"` : ""}  ${authoringToken}  [${d.role ?? "defined"}]`);
     if (d.role === "override") {
       out.push(`   OVERRIDE carried by ${d.plugin}. Stages this mod adds to a vanilla quest belong on a`);
       out.push(`   CORE tranche row keyed by editor_id with NO formid column, not on a per-mod channel.`);

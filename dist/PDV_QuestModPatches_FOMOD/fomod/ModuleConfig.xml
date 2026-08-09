@@ -196,6 +196,44 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="Legends of Aetherium">
+              <description></description>
+              <files>
+                <folder source="common\LegendsOfAetherium" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="LegendsOfAetherium.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Moon and Star">
+              <description>A mysterious and powerful criminal has been spotted in Skyrim, his trail dogged by hunters from Morrowind. However, there may be more at stake than it seems, and this criminal may be familiar...</description>
+              <files>
+                <folder source="common\MoonAndStar" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="MoonAndStar_MAS.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Moonpath to Elsweyr">
               <description>Brought to you by An_Old_Sock, the author of the in-development Moonpath Reborn, Moonpath to Elsweyr is enjoying regular updates for the first time in five years. This is the most comprehensive Moonpath experience to date.</description>
               <files>
@@ -248,6 +286,25 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="Once We Were Here - Quest Mod.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Project AHO">
+              <description>Project AHO is a large quest modification, comparable in size to a medium-sized DLC. Designed in the best traditions of Bethesda Game Studios, this mod adds to Skyrim a hidden settlement of Great House Telvanni. Determine its fate for yourself!</description>
+              <files>
+                <folder source="common\ProjectAHO" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Dwarfsphere.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -388,6 +445,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="The Gray Cowl of Nocturnal">
+              <description>Will you be worthy for the Gray Cowl of Nocturnal? We'll see!</description>
+              <files>
+                <folder source="common\GrayCowlOfNocturnal" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Gray Fox Cowl.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="The Rot Below">
               <description>Discover the secrets of a mad lich who thought themselves a god. Explore an ancient palace, a subterranean city of the undead, and an insane warlock's research hall. Foil Namira's plans and stop the coming rot.</description>
               <files>
@@ -400,6 +476,25 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="CJ03Elroy.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="The Sinister Seven">
+              <description>The Sinister Seven is a backstory quest line. Seven Assassins are dispatched to kill the player, taking place across several levels.</description>
+              <files>
+                <folder source="common\SinisterSeven" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="The_Sinister_Seven.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
