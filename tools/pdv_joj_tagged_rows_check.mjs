@@ -24,7 +24,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
-import { actTagVocabulary, isKnownActTag } from "./lib/pdv_matrix_vocab.mjs";
+import { actTagVocabulary, isKnownActTag, daedricSlugs, badDaedricSlug } from "./lib/pdv_matrix_vocab.mjs";
 
 const KNOWN_FLAGS = new Set(["--json"]);
 assertKnownFlags(process.argv.slice(2).filter((a) => a.startsWith("--")), KNOWN_FLAGS, {
@@ -66,7 +66,8 @@ if (!files.length) {
 }
 
 const vocab = actTagVocabulary(REPO);
-const failures = [...vocab.issues];
+const daedric = daedricSlugs(REPO);
+const failures = [...vocab.issues, ...daedric.issues];
 let rows = 0;
 
 for (const file of files) {
@@ -90,7 +91,15 @@ for (const file of files) {
     // An empty tag is LEGAL, but only as the declared escape hatch. Silence with no note is
     // a dropped row; silence with NEEDS-TAG is a question for a human.
     if (!tags.length && !/NEEDS-TAG/.test(note)) failures.push(`${at}: empty act_tags with no NEEDS-TAG note`);
-    for (const t of tags) if (!isKnownActTag(t, vocab)) failures.push(`${at}: act_tag "${t}" is not in Part A`);
+    for (const t of tags) {
+      if (!isKnownActTag(t, vocab)) { failures.push(`${at}: act_tag "${t}" is not in Part A`); continue; }
+      // The prefix being legal is not enough. `serve_a_daedra:<prince>` accepts any suffix as
+      // far as Part A is concerned, and a wrong one is the worst failure available: it matches
+      // no profile, so it fans out to nobody, silently. Caught in the wild twice on the same
+      // file -- `clavicus_vile` for the slug `clavicus`, and `umbra`, which is not a Prince.
+      const bad = badDaedricSlug(t, daedric.slugs);
+      if (bad) failures.push(`${at}: act_tag "${t}" -- ${bad}`);
+    }
     if (!/^\d+$/.test(c[g("outcome_stage")] || "")) failures.push(`${at}: outcome_stage must be exactly one integer`);
     if (!FORMID.test(c[g("formid")] || "")) failures.push(`${at}: formid "${c[g("formid")]}" must be PLUGIN.esp:HHHHHH`);
     if (!["A", "B", "C"].includes(tier)) failures.push(`${at}: evidence_tier "${tier}" must be A, B or C`);

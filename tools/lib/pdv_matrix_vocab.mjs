@@ -79,8 +79,53 @@ export function actTagVocabulary(repoRoot) {
   return { literals, prefixes, issues };
 }
 
+// The Daedric slugs a namespaced tag may actually carry, harvested from every profile and
+// every shipped row rather than declared.
+//
+// WHY THIS IS NEEDED SEPARATELY FROM isKnownActTag. Part A defines the tag as
+// `serve_a_daedra:<prince>`, so any suffix at all satisfies the PREFIX check -- and a wrong
+// suffix is the worst possible failure, because it matches no Part B profile and therefore
+// produces no fan-out, no reaction and no error. A judging pass emitted
+// `serve_a_daedra:clavicus_vile` (the slug is `clavicus`) and `serve_a_daedra:umbra` (not a
+// Prince at all) and both sailed through a green lint on 2026-08-09.
+//
+// Harvested, not hardcoded, so a genuinely new Prince slug becomes legal the moment a profile
+// or a shipped row uses it -- and so this cannot rot into a list that disagrees with the data.
+export function daedricSlugs(repoRoot) {
+  const slugs = new Set();
+  const NS = /(?:serve_a_daedra|destroy_reject_daedra|acquire_daedric_artifact):([a-z_]+)/g;
+  const eat = (text) => { for (const m of text.matchAll(NS)) if (m[1] !== "*") slugs.add(m[1]); };
+
+  const docPath = path.join(repoRoot, "references", "authoring", "PDV_QuestReactionMatrix.md");
+  if (fs.existsSync(docPath)) eat(fs.readFileSync(docPath, "utf8"));
+
+  const authoring = path.join(repoRoot, "references", "authoring");
+  for (const f of fs.existsSync(authoring) ? fs.readdirSync(authoring) : []) {
+    if (/^PDV_QuestReactionMatrix.*\.csv$/i.test(f)) eat(fs.readFileSync(path.join(authoring, f), "utf8"));
+  }
+  const patches = path.join(authoring, "patches");
+  for (const f of fs.existsSync(patches) ? fs.readdirSync(patches) : []) {
+    if (/^PDV_QRM_.*\.csv$/i.test(f)) eat(fs.readFileSync(path.join(patches, f), "utf8"));
+  }
+
+  const issues = [];
+  if (slugs.size < 10) issues.push(`Daedric slug harvest suspiciously small (${slugs.size}) -- the scan may have broken`);
+  return { slugs, issues };
+}
+
 export function isKnownActTag(tag, vocab) {
   if (vocab.literals.has(tag)) return true;
   const colon = tag.indexOf(":");
   return colon > 0 && vocab.prefixes.has(tag.slice(0, colon));
+}
+
+// Returns null when fine, or a reason string. Separate from isKnownActTag so a caller can
+// report "not a tag" and "not a Prince" as the different problems they are.
+export function badDaedricSlug(tag, known) {
+  const colon = tag.indexOf(":");
+  if (colon < 0) return null;
+  const suffix = tag.slice(colon + 1);
+  if (suffix === "*" || suffix.startsWith("<")) return null;
+  if (known.has(suffix)) return null;
+  return `"${suffix}" is not a known Daedric slug (${[...known].sort().join(", ")})`;
 }

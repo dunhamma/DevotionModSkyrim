@@ -29,7 +29,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
-import { acceptedDeityNames, actTagVocabulary, isKnownActTag } from "./lib/pdv_matrix_vocab.mjs";
+import { acceptedDeityNames, actTagVocabulary, isKnownActTag, daedricSlugs, badDaedricSlug } from "./lib/pdv_matrix_vocab.mjs";
 
 const KNOWN_FLAGS = new Set(["--csv", "--json", "--list-unknown-tags"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_qrm_lint" });
@@ -96,9 +96,10 @@ function loadWaivedTags() {
 
 const vocab = actTagVocabulary(REPO);
 const deities = acceptedDeityNames(REPO);
+const daedric = daedricSlugs(REPO);
 const waived = loadWaivedTags();
 const failures = [];
-const issues = [...vocab.issues, ...deities.issues];
+const issues = [...vocab.issues, ...deities.issues, ...daedric.issues];
 
 const MAGNITUDES = new Set(["small", "milestone"]);
 const VALENCES = new Set(["+", "-"]);
@@ -127,9 +128,15 @@ for (const file of targetFiles()) {
     const at = `${rel}:${r._line} ${r.editor_id ?? "?"} s${r.outcome_stage ?? "?"}`;
 
     for (const tag of (r.act_tags ?? "").split(",").map((t) => t.trim()).filter(Boolean)) {
-      if (isKnownActTag(tag, vocab)) continue;
-      unknownTagHits.set(tag, (unknownTagHits.get(tag) ?? 0) + 1);
-      if (!waived.has(tag)) failures.push(`${at}: act_tag "${tag}" is not in Part A and is not waived`);
+      if (!isKnownActTag(tag, vocab)) {
+        unknownTagHits.set(tag, (unknownTagHits.get(tag) ?? 0) + 1);
+        if (!waived.has(tag)) failures.push(`${at}: act_tag "${tag}" is not in Part A and is not waived`);
+        continue;
+      }
+      // A legal prefix with an illegal Prince slug passes every other check and then matches
+      // no profile at all -- no fan-out, no reaction, no error. See pdv_matrix_vocab.
+      const bad = badDaedricSlug(tag, daedric.slugs);
+      if (bad && !waived.has(tag)) failures.push(`${at}: act_tag "${tag}" -- ${bad}`);
     }
 
     if (r.deity && !deities.names.has(r.deity)) {
