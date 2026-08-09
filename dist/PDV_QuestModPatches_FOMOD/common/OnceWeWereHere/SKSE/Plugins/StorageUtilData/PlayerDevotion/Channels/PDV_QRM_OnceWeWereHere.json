@@ -1,7 +1,7 @@
 {
   "string": {
-    "generatedAt": "2026-08-08T04:02:25.356Z",
-    "generatedat": "2026-08-08T04:02:25.356Z",
+    "generatedAt": "2026-08-09T03:46:31.136Z",
+    "generatedat": "2026-08-09T03:46:31.136Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "2",
     "questwatchformidscsv": "2",
@@ -1375,8 +1375,8 @@
     "quest.2|50.intensitiescsv": "m",
     "quest.2|50.magnitudesCsv": "small",
     "quest.2|50.magnitudescsv": "small",
-    "quest.2|50.tagsCsv": "lay_spirit_to_rest",
-    "quest.2|50.tagscsv": "lay_spirit_to_rest",
+    "quest.2|50.tagsCsv": "honor_the_dead",
+    "quest.2|50.tagscsv": "honor_the_dead",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1708,7 +1708,7 @@
       "small"
     ],
     "quest.2|50.tags": [
-      "lay_spirit_to_rest"
+      "honor_the_dead"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",
