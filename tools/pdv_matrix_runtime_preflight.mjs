@@ -7,6 +7,7 @@
  * file set is wrong.
  */
 
+import { acceptedDeityNames } from "./lib/pdv_matrix_vocab.mjs";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
@@ -70,24 +71,12 @@ function checkMatrixNameResolution() {
   if (!exists(managerPath)) {
     return { check: "matrixNameResolution", status: "FAIL", issues: [`manager source missing: ${managerPath}`] };
   }
-  const managerText = fs.readFileSync(managerPath, "utf8");
-
-  // Accepted requested-names, all parsed from the manager source (never hand-copied).
-  const accepted = new Set();
-  for (const m of managerText.matchAll(/RepairDeityRuntimeName\(\s*PDV_[A-Za-z0-9_]+\s*,\s*"([^"]+)"\s*\)/g)) {
-    accepted.add(m[1]);
-  }
-  const daedricFn = managerText.match(/String Function CanonicalDaedricPathName[\s\S]*?EndFunction/);
-  for (const m of (daedricFn ? daedricFn[0] : "").matchAll(/return "([^"]+)"/g)) {
-    accepted.add(m[1]);
-  }
-  const aliasFn = managerText.match(/Bool Function IsQuestReactionNameMatch[\s\S]*?EndFunction/);
-  for (const m of (aliasFn ? aliasFn[0] : "").matchAll(/requestedName == "([^"]+)"/g)) {
-    accepted.add(m[1]);
-  }
-  if (accepted.size < 30) {
-    issues.push(`accepted-name extraction suspiciously small (${accepted.size}) -- manager name-model parse may have broken`);
-  }
+  // Parsed from the manager source (never hand-copied), and shared with pdv_qrm_lint via
+  // tools/lib/pdv_matrix_vocab.mjs. It was inline here first; the linter needed the identical
+  // model, and a second copy of this parser is exactly the one-value-in-two-places drift that
+  // would let the two gates disagree about which deities exist.
+  const { names: accepted, issues: nameIssues } = acceptedDeityNames(repoRoot);
+  issues.push(...nameIssues);
 
   // Minimal quoted-field CSV parser: enough for the matrix files (quotes around citation).
   const parseCsvLine = (line) => {
