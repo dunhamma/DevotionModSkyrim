@@ -90,6 +90,7 @@ assigned separately (see Part C), not encoded in the tag.
 | `heal_comfort` | Healed/cured the sick; comforted grief. |
 | `marriage_family` | Wed, adopted, reconciled, kept the hearth. |
 | `aesthetic_devotion` | Created/performed/adorned beauty; honored art, music, the sublime. *(added 2026-06-08 for Dibella; previously no primitive for her domain)* |
+| `honor_divine` | Venerated the gods as gods: pilgrimage, shrine rites, penance, an act of piety owed to them rather than to any one domain. *(added 2026-08-09. It had already been in use on 16 authored cells for a year -- The Pilgrim's Path nine-shrine pilgrimage, six VIGILANT endings, DAc0da -- with no Part A entry and no Part B profile, so it matched nothing and fanned out to no one. Part A is the vocabulary; a word this heavily used belonged in it. NOT a substitute for a domain tag: a quest is `honor_divine` only when the act honors the god AS a god, which is why the pilgrimage row pays all nine and a shrine-adjacent favor quest does not.)* |
 
 ### Work, craft, trade
 | Tag | Meaning |
@@ -140,36 +141,36 @@ to most gods).
 ### Aedric / Divines (shared: Imperial owns; Nord & Breton reuse)
 
 **Akatosh** — time, covenant, lawful order, dragons.
-- approve: `serve_empire_order`(S), `keep_oath`(S), `uphold_law_justice`(m), `disciplined_study`(m)
+- approve: `serve_empire_order`(S), `keep_oath`(S), `uphold_law_justice`(m), `disciplined_study`(m), `honor_divine`(C)
 - disapprove: `break_oath_betray`(S), `sow_chaos_madness`(S), `serve_a_daedra:*`(m)
 - indifferent: theft, the hunt, craft, romance.
 - anchor: Chief of the Nine; the Covenant; Dragon of Time. (UESP: Akatosh)
 
 **Stendarr** — mercy, righteous justice, the weak, vigil vs Daedra/undead.
-- approve: `mercy_spare`(C), `protect_the_weak`(C), `slay_undead`(S), `destroy_reject_daedra:*`(S), `uphold_law_justice`(S), `charity`(m)
+- approve: `mercy_spare`(C), `protect_the_weak`(C), `slay_undead`(S), `destroy_reject_daedra:*`(S), `uphold_law_justice`(S), `charity`(m), `honor_divine`(C)
 - disapprove: `kill_the_helpless`(C), `murder_treacherous`(S), `serve_a_daedra:*`(S), `ritual_sacrifice`(S)
 - anchor: God of Mercy; the Vigilants. (UESP: Stendarr)
 
 **Mara** — love, compassion, charity, the hearth, mercy.
-- approve: `heal_comfort`(C), `charity`(C), `marriage_family`(C), `mercy_spare`(S), `protect_the_weak`(m)
+- approve: `heal_comfort`(C), `charity`(C), `marriage_family`(C), `mercy_spare`(S), `protect_the_weak`(m), `honor_divine`(C)
 - disapprove: `murder_treacherous`(m), `ritual_sacrifice`(S), `kill_the_helpless`(m)
 - indifferent: theft, law, craft, the hunt.
 - anchor: Mother-Goddess; Amulet of Mara. (UESP: Mara)
 
 **Arkay** — life/death cycle, burial, the vigil against undeath.
-- approve: `honor_the_dead`(C), `slay_undead`(C), `cure_undeath`(S)
+- approve: `honor_the_dead`(C), `slay_undead`(C), `cure_undeath`(S), `honor_divine`(C)
 - disapprove: `necromancy`(C), `desecrate_the_dead`(C), `embrace_vampirism`(S), `ritual_sacrifice`(m)
 - indifferent: trade, romance, law, the hunt.
 - anchor: Keeper of the cycle; Halls of the Dead. (UESP: Arkay)
 
 **Zenithar** — honest work, commerce, craft, fair dealing.
-- approve: `honest_labor_trade`(C), `master_craft_forge`(S), `uphold_law_justice`(m)
+- approve: `honest_labor_trade`(C), `master_craft_forge`(S), `uphold_law_justice`(m), `honor_divine`(C)
 - disapprove: `theft_burglary`(S), `exploit_cheat`(C)
 - indifferent: killing, the dead, magic, the wild.
 - anchor: God of Work and Commerce. (UESP: Zenithar)
 
 **Dibella** — beauty, love, art, the sublime.
-- approve: `aesthetic_devotion`(C), `heal_comfort`(S), `charity`(m), `marriage_family`(m)
+- approve: `aesthetic_devotion`(C), `heal_comfort`(S), `charity`(m), `marriage_family`(m), `honor_divine`(C)
 - disapprove: `kill_the_helpless`(m)  *(she recoils from cruelty to the innocent, not from war)*
 - indifferent: MOST killing, theft, law, the dead, craft.
 - anchor: Goddess of Beauty and Love. (UESP: Dibella). NOTE: thin on QUESTS by design
@@ -177,19 +178,19 @@ to most gods).
   the faucet/adornment + shrine + Agent-of-Dibella layers (Part D), not the quest table.
 
 **Julianos** — wisdom, logic, law, lore, disciplined magic.
-- approve: `disciplined_study`(C), `uphold_law_justice`(S), `forbidden_knowledge`(m, *pursuit of truth, double-edged*)
+- approve: `disciplined_study`(C), `uphold_law_justice`(S), `forbidden_knowledge`(m, *pursuit of truth, double-edged*), `honor_divine`(C)
 - disapprove: `sow_chaos_madness`(S), `reckless_magic`(S)
 - indifferent: the hunt, romance, trade, the dead.
 - anchor: God of Wisdom and Logic. (UESP: Julianos)
 
 **Kynareth** — sky, wind, nature, the traveler, life.
-- approve: `honor_the_wild`(C), `protect_the_weak`(m), `heal_comfort`(m)
+- approve: `honor_the_wild`(C), `protect_the_weak`(m), `heal_comfort`(m), `honor_divine`(C)
 - disapprove: `defile_nature`(C), `necromancy`(m)
 - indifferent: trade, law, theft, the dead.
 - anchor: Goddess of the Heavens/Nature; the Gildergreen. (UESP: Kynareth)
 
 **Talos** — heroism, defiance of the Thalmor, the Nord/Imperial cause, the Voice.
-- approve: `defy_tyranny_talos`(C), `kill_honorable_combat`(S), `prove_by_struggle`(S), `protect_the_weak`(m), `honorable_duel`(m)
+- approve: `defy_tyranny_talos`(C), `kill_honorable_combat`(S), `prove_by_struggle`(S), `protect_the_weak`(m), `honorable_duel`(m), `honor_divine`(C)
 - disapprove: `cowardice`(S), `murder_treacherous`(S), `kill_the_helpless`(m), `assassination_contract`(m) *(compliance/submission to the Concordat scores nothing; never a gain. Treachery/assassination added 2026-07-09 — the Hero-god of Man reviles cold-blood murder and regicide, mirroring Shor's disapprove.)*
 - indifferent: theft, the dead, craft, romance.
 - anchor: Hero-god of Man; the Talos ban. (UESP: Talos). FILTERED for Imperials by
