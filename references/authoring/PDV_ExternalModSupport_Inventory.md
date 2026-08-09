@@ -15,8 +15,8 @@ Status: complete inventory of shipped support; runtime proof is open on most of 
   "manifestOptions": 64,
   "sourceCsvs": 62,
   "reconstructedCsvs": 5,
-  "coreRows": 2144,
-  "coreEditorIds": 157,
+  "coreRows": 2148,
+  "coreEditorIds": 158,
   "coreQuestExpansionEditorIds": 3,
   "coreCreationClubEditorIds": 4,
   "splitCoverageMods": 5,
@@ -119,7 +119,7 @@ game, that proof lives in a runbook, not here.
 |---|---|---|---:|---|---|
 | **G1** | Per-mod quest-reaction patches, data-only | `common/<Mod>/` StorageUtil channel JSON | **59** | No | Yes -- PatchHub option |
 | **G2** | Per-mod patches that ship a plugin | ESP (+ TIF fragments / SEQ / BOS ini) | **5** | Yes | Yes -- PatchHub option |
-| **G3** | Covered by the CORE mod, no separate patch | rows in `PDV_QuestReactionMatrix_Full.csv` | **157** editor ids (2144 rows) | n/a -- in `Devotion.esp` | **No** |
+| **G3** | Covered by the CORE mod, no separate patch | rows in `PDV_QuestReactionMatrix_Full.csv` | **158** editor ids (2148 rows) | n/a -- in `Devotion.esp` | **No** |
 | **G4** | Item-keyword support (KID) | `PDV_GreenPact_KID.ini` | **1** live rule (9 item names), 4 empty lanes | No | No -- in core |
 | **G5** | Shrine / world-object support (BaseObjectSwapper) | `PDV_DaedricShrinesAIO_SWAP.ini` | **1** ini, 11 swaps | Yes -- inside the G2 patch | Yes -- PatchHub option |
 | **G6** | Papyrus activity hooks, no quest stage | plugin literals in `PDV_PlayerEvents` / `PDV__ManagerQuest` / `PDV_Origin` | **7** plugins | No | **No** |
@@ -129,7 +129,7 @@ G1 + G2 = the 64 PatchHub options, 1:1 with the 64 manifest entries and the 64
 
 **Read this next to the installer:** a user who installs zero PatchHub options
 still gets G3, G4 and G6. That is the majority of the reaction surface by row
-count -- 2144 core rows against 1790 in the whole hub.
+count -- 2148 core rows against 1790 in the whole hub.
 
 ---
 
@@ -325,7 +325,7 @@ so a player who already destroyed artifacts gets no retroactive award.
 
 ## G3 -- Covered by the CORE mod, no separate patch
 
-`references/authoring/PDV_QuestReactionMatrix_Full.csv` -- **2144 rows across 157
+`references/authoring/PDV_QuestReactionMatrix_Full.csv` -- **2148 rows across 158
 distinct quest editor ids** -- ships inside base `Devotion.esp`. It is generated
 by `tools/pdv_quest_tranche_merge.mjs` from the `PDV_QuestReactionMatrix_Tranche*`
 files; edit a tranche, never `Full.csv`.

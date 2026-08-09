@@ -43,6 +43,7 @@ const files = [
   "references/authoring/PDV_QuestReactionMatrix_Tranche10_SignalFloor.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche11_MainQuestFullCoverage.csv",
   "references/authoring/PDV_QuestReactionMatrix_Tranche12_KhajiitFiveWealth.csv",
+  "references/authoring/PDV_QuestReactionMatrix_Tranche13_HircineBeastBlood.csv",
   "references/authoring/PDV_QuestReactionMatrix_CreationClubCore_2026-08-07.csv",
   // Reconciliation source, NOT a content tranche. The Innocence Lost QE s198
   // rows (ARR patchlist TODO-2, owner-ruled 2026-07-16) were authored straight
