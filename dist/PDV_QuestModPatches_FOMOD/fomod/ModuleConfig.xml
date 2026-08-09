@@ -177,6 +177,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="Heart of the Reach">
+              <description>Delve into the depths of an underground swamp in the aid of a priest in order to heal the Heart of the Reach. Including a new quest, weapons, ring, spell and more.</description>
+              <files>
+                <folder source="common\HeartOfTheReach" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="HeartOfTheReach.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Hunt for the Spectre">
               <description>The Hunt for the Spectre is an Elden Ring inspired quest mod centred around Ren, a man who is hunting a serial killer known as the Spectre. The mod features multiple endings and incredibly high quality voice acting.</description>
               <files>
@@ -362,6 +381,25 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="Skyrim Extended Cut - Saints and Seducers.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Sleepwalking Into A Nightmare">
+              <description>Adds a new Daedric prince quest where you track down a missing woman, delving into her nightmares and overcoming her fears. Includes, new weapons, equipment and spells.</description>
+              <files>
+                <folder source="common\SleepwalkingNightmare" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="NightmarePlane.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>

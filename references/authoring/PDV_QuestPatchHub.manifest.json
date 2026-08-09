@@ -162,6 +162,16 @@
       "category": "New Quests and Lands"
     },
     {
+      "name": "Heart of the Reach",
+      "description": "Delve into the depths of an underground swamp in the aid of a priest in order to heal the Heart of the Reach. Including a new quest, weapons, ring, spell and more.",
+      "dependency": "HeartOfTheReach.esp",
+      "folders": [
+        "common\\HeartOfTheReach"
+      ],
+      "category": "New Quests and Lands",
+      "nexusModId": 76494
+    },
+    {
       "name": "Hunt for the Spectre",
       "description": "The Hunt for the Spectre is an Elden Ring inspired quest mod centred around Ren, a man who is hunting a serial killer known as the Spectre. The mod features multiple endings and incredibly high quality voice acting.",
       "dependency": "Hunt for the Spectre.esp",
@@ -331,6 +341,16 @@
       ],
       "category": "New Quests and Lands",
       "nexusModId": 72772
+    },
+    {
+      "name": "Sleepwalking Into A Nightmare",
+      "description": "Adds a new Daedric prince quest where you track down a missing woman, delving into her nightmares and overcoming her fears. Includes, new weapons, equipment and spells.",
+      "dependency": "NightmarePlane.esp",
+      "folders": [
+        "common\\SleepwalkingNightmare"
+      ],
+      "category": "New Quests and Lands",
+      "nexusModId": 141047
     },
     {
       "name": "Song of the Green - Auri",

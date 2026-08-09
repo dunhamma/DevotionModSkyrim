@@ -90,6 +90,22 @@ matrix already owns, which `pdv_quest_channel_reconcile.mjs` would reject anyway
 
 ## Judged and ruled SILENT
 
+### Leaps of Faith -- SILENT (no judgeable act)
+
+| | |
+|---|---|
+| Plugin | `LeapsOfFaith.esp` |
+| Defines | 1 QUST: `Leap_MiscQuest` "Leaps Of Faith" |
+| Stages | 13, twelve of them evidence-bearing |
+| Evidence tier | **every stage is B** -- objectives only, no journal text anywhere |
+
+The twelve objectives are one sentence counting down: *"Find and complete the remaining 11
+Leaps of Faith"*, then 10, then 9. It is a parkour collectathon. There is no branch, no
+victim, no promise kept or broken, and no Part A primitive for daring -- `prove_by_struggle`
+is winning against hardship or a stronger foe, not a jumping puzzle.
+
+Revisit only if a feat-of-daring tag is ever added to Part A. Batch B03, 2026-08-09.
+
 ### Ascend - Hidden Peaks of Skyrim -- SILENT (no quest content)
 
 | | |
