@@ -1,7 +1,7 @@
 {
   "string": {
-    "generatedAt": "2026-08-09T04:33:27.055Z",
-    "generatedat": "2026-08-09T04:33:27.055Z",
+    "generatedAt": "2026-08-09T06:33:14.830Z",
+    "generatedat": "2026-08-09T06:33:14.830Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "2224673",
     "questwatchformidscsv": "2224673",
@@ -1347,16 +1347,16 @@
     "faucet.malacath.serve_a_daedra:malacath.tag": "serve_a_daedra:malacath",
     "faucet.Malacath.serve_a_daedra:malacath.cap": "1/dawn",
     "faucet.malacath.serve_a_daedra:malacath.cap": "1/dawn",
-    "quest.2224673|85.deitiesCsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Shor|Tsun|Stuhn|Auri-El|Trinimac|Syrabane|Khenarthi|Alkosh|Malacath|HoonDing|Leki|Hircine|Molag Bal|Mehrunes Dagon",
-    "quest.2224673|85.deitiescsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Shor|Tsun|Stuhn|Auri-El|Trinimac|Syrabane|Khenarthi|Alkosh|Malacath|HoonDing|Leki|Hircine|Molag Bal|Mehrunes Dagon",
-    "quest.2224673|85.valencesCsv": "+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|-|+",
-    "quest.2224673|85.valencescsv": "+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|-|+",
-    "quest.2224673|85.intensitiesCsv": "S|m|m|m|m|S|m|m|m|m|S|m|m|m|m|m|m|m|m",
-    "quest.2224673|85.intensitiescsv": "S|m|m|m|m|S|m|m|m|m|S|m|m|m|m|m|m|m|m",
-    "quest.2224673|85.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
-    "quest.2224673|85.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
-    "quest.2224673|85.tagsCsv": "protect_the_weak|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|kill_honorable_combat|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat",
-    "quest.2224673|85.tagscsv": "protect_the_weak|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|kill_honorable_combat|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat",
+    "quest.2224673|85.deitiesCsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Shor|Tsun|Stuhn|Auri-El|Trinimac|Syrabane|Khenarthi|Alkosh|Malacath|HoonDing|Leki|Hircine|Molag Bal|Mehrunes Dagon|The Hist",
+    "quest.2224673|85.deitiescsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Shor|Tsun|Stuhn|Auri-El|Trinimac|Syrabane|Khenarthi|Alkosh|Malacath|HoonDing|Leki|Hircine|Molag Bal|Mehrunes Dagon|The Hist",
+    "quest.2224673|85.valencesCsv": "+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|-|+|+",
+    "quest.2224673|85.valencescsv": "+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|-|+|+",
+    "quest.2224673|85.intensitiesCsv": "S|m|m|m|m|S|m|m|m|m|S|m|m|m|m|m|m|m|m|m",
+    "quest.2224673|85.intensitiescsv": "S|m|m|m|m|S|m|m|m|m|S|m|m|m|m|m|m|m|m|m",
+    "quest.2224673|85.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.2224673|85.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.2224673|85.tagsCsv": "protect_the_weak|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|kill_honorable_combat|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|protect_the_weak",
+    "quest.2224673|85.tagscsv": "protect_the_weak|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|kill_honorable_combat|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|protect_the_weak",
     "quest.2224673|100.deitiesCsv": "Zenithar|Julianos|Magnus|Malacath|Hermaeus Mora|Vaermina",
     "quest.2224673|100.deitiescsv": "Zenithar|Julianos|Magnus|Malacath|Hermaeus Mora|Vaermina",
     "quest.2224673|100.valencesCsv": "+|+|+|+|+|+",
@@ -1662,7 +1662,8 @@
       "Leki",
       "Hircine",
       "Molag Bal",
-      "Mehrunes Dagon"
+      "Mehrunes Dagon",
+      "The Hist"
     ],
     "quest.2224673|85.valences": [
       "+",
@@ -1683,6 +1684,7 @@
       "+",
       "+",
       "-",
+      "+",
       "+"
     ],
     "quest.2224673|85.intensities": [
@@ -1704,9 +1706,11 @@
       "m",
       "m",
       "m",
+      "m",
       "m"
     ],
     "quest.2224673|85.magnitudes": [
+      "small",
       "small",
       "small",
       "small",
@@ -1746,7 +1750,8 @@
       "kill_honorable_combat",
       "kill_honorable_combat",
       "protect_the_weak",
-      "kill_honorable_combat"
+      "kill_honorable_combat",
+      "protect_the_weak"
     ],
     "quest.2224673|100.deities": [
       "Zenithar",

@@ -1,7 +1,7 @@
 {
   "string": {
-    "generatedAt": "2026-08-09T06:07:13.966Z",
-    "generatedat": "2026-08-09T06:07:13.966Z",
+    "generatedAt": "2026-08-09T06:33:14.986Z",
+    "generatedat": "2026-08-09T06:33:14.986Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "8082695,8207208,8477174,9124829,9145604,9207883,9290895,9355193,9958068,9978976,11521051",
     "questwatchformidscsv": "8082695,8207208,8477174,9124829,9145604,9207883,9290895,9355193,9958068,9978976,11521051",
@@ -1357,16 +1357,16 @@
     "quest.8082695|20.magnitudescsv": "small|small|small|small|small|small",
     "quest.8082695|20.tagsCsv": "desecrate_the_dead|desecrate_the_dead|desecrate_the_dead|desecrate_the_dead|desecrate_the_dead|desecrate_the_dead",
     "quest.8082695|20.tagscsv": "desecrate_the_dead|desecrate_the_dead|desecrate_the_dead|desecrate_the_dead|desecrate_the_dead|desecrate_the_dead",
-    "quest.8207208|230.deitiesCsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Shor|Tsun|Stuhn|Trinimac|Syrabane|Y'ffre|Khenarthi|Malacath|HoonDing|Molag Bal",
-    "quest.8207208|230.deitiescsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Shor|Tsun|Stuhn|Trinimac|Syrabane|Y'ffre|Khenarthi|Malacath|HoonDing|Molag Bal",
-    "quest.8207208|230.valencesCsv": "+|+|+|+|+|+|+|+|+|+|+|+|+|+|-",
-    "quest.8207208|230.valencescsv": "+|+|+|+|+|+|+|+|+|+|+|+|+|+|-",
-    "quest.8207208|230.intensitiesCsv": "S|m|m|m|m|m|m|m|m|S|m|m|m|m|m",
-    "quest.8207208|230.intensitiescsv": "S|m|m|m|m|m|m|m|m|S|m|m|m|m|m",
-    "quest.8207208|230.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
-    "quest.8207208|230.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
-    "quest.8207208|230.tagsCsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|defend_kin_home|defend_kin_home|protect_the_weak|protect_the_weak|defend_kin_home|protect_the_weak|defend_kin_home|protect_the_weak|defend_kin_home|defend_kin_home|protect_the_weak",
-    "quest.8207208|230.tagscsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|defend_kin_home|defend_kin_home|protect_the_weak|protect_the_weak|defend_kin_home|protect_the_weak|defend_kin_home|protect_the_weak|defend_kin_home|defend_kin_home|protect_the_weak",
+    "quest.8207208|230.deitiesCsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Shor|Tsun|Stuhn|Trinimac|Syrabane|Y'ffre|Khenarthi|Malacath|HoonDing|Molag Bal|The Hist",
+    "quest.8207208|230.deitiescsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Shor|Tsun|Stuhn|Trinimac|Syrabane|Y'ffre|Khenarthi|Malacath|HoonDing|Molag Bal|The Hist",
+    "quest.8207208|230.valencesCsv": "+|+|+|+|+|+|+|+|+|+|+|+|+|+|-|+",
+    "quest.8207208|230.valencescsv": "+|+|+|+|+|+|+|+|+|+|+|+|+|+|-|+",
+    "quest.8207208|230.intensitiesCsv": "S|m|m|m|m|m|m|m|m|S|m|m|m|m|m|S",
+    "quest.8207208|230.intensitiescsv": "S|m|m|m|m|m|m|m|m|S|m|m|m|m|m|S",
+    "quest.8207208|230.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.8207208|230.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.8207208|230.tagsCsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|defend_kin_home|defend_kin_home|protect_the_weak|protect_the_weak|defend_kin_home|protect_the_weak|defend_kin_home|protect_the_weak|defend_kin_home|defend_kin_home|protect_the_weak|defend_kin_home",
+    "quest.8207208|230.tagscsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|defend_kin_home|defend_kin_home|protect_the_weak|protect_the_weak|defend_kin_home|protect_the_weak|defend_kin_home|protect_the_weak|defend_kin_home|defend_kin_home|protect_the_weak|defend_kin_home",
     "quest.8207208|280.deitiesCsv": "Julianos|Magnus|Hermaeus Mora|Vaermina",
     "quest.8207208|280.deitiescsv": "Julianos|Magnus|Hermaeus Mora|Vaermina",
     "quest.8207208|280.valencesCsv": "+|+|+|+",
@@ -1377,36 +1377,36 @@
     "quest.8207208|280.magnitudescsv": "small|small|small|small",
     "quest.8207208|280.tagsCsv": "forbidden_knowledge|forbidden_knowledge|forbidden_knowledge|forbidden_knowledge",
     "quest.8207208|280.tagscsv": "forbidden_knowledge|forbidden_knowledge|forbidden_knowledge|forbidden_knowledge",
-    "quest.8477174|260.deitiesCsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Shor|Tsun|Stuhn|Auri-El|Trinimac|Syrabane|Khenarthi|Alkosh|Malacath|HoonDing|Leki|Hircine|Molag Bal|Mehrunes Dagon",
-    "quest.8477174|260.deitiescsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Shor|Tsun|Stuhn|Auri-El|Trinimac|Syrabane|Khenarthi|Alkosh|Malacath|HoonDing|Leki|Hircine|Molag Bal|Mehrunes Dagon",
-    "quest.8477174|260.valencesCsv": "+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|-|+",
-    "quest.8477174|260.valencescsv": "+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|-|+",
-    "quest.8477174|260.intensitiesCsv": "S|m|m|m|m|S|m|m|m|m|S|m|m|m|m|m|m|m|m",
-    "quest.8477174|260.intensitiescsv": "S|m|m|m|m|S|m|m|m|m|S|m|m|m|m|m|m|m|m",
-    "quest.8477174|260.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
-    "quest.8477174|260.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
-    "quest.8477174|260.tagsCsv": "protect_the_weak|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|kill_honorable_combat|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat",
-    "quest.8477174|260.tagscsv": "protect_the_weak|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|kill_honorable_combat|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat",
-    "quest.8477174|666.deitiesCsv": "Akatosh|Stendarr|Mara|Dibella|Talos|Kyne|Shor|Tsun|Stuhn|Trinimac|Z'en|Baan Dar|Khenarthi|Rajhin|Malacath|HoonDing|Sithis|Boethiah|Molag Bal",
-    "quest.8477174|666.deitiescsv": "Akatosh|Stendarr|Mara|Dibella|Talos|Kyne|Shor|Tsun|Stuhn|Trinimac|Z'en|Baan Dar|Khenarthi|Rajhin|Malacath|HoonDing|Sithis|Boethiah|Molag Bal",
-    "quest.8477174|666.valencesCsv": "-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|+|+",
-    "quest.8477174|666.valencescsv": "-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|+|+",
-    "quest.8477174|666.intensitiesCsv": "m|S|m|m|m|m|m|m|S|m|m|m|m|m|S|m|S|m|S",
-    "quest.8477174|666.intensitiescsv": "m|S|m|m|m|m|m|m|S|m|m|m|m|m|S|m|S|m|S",
-    "quest.8477174|666.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
-    "quest.8477174|666.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
-    "quest.8477174|666.tagsCsv": "break_oath_betray|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|break_oath_betray|break_oath_betray|kill_the_helpless|kill_the_helpless|kill_the_helpless|break_oath_betray|kill_the_helpless|break_oath_betray|break_oath_betray|kill_the_helpless",
-    "quest.8477174|666.tagscsv": "break_oath_betray|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|break_oath_betray|break_oath_betray|kill_the_helpless|kill_the_helpless|kill_the_helpless|break_oath_betray|kill_the_helpless|break_oath_betray|break_oath_betray|kill_the_helpless",
-    "quest.8477174|1000.deitiesCsv": "Akatosh|Stendarr|Mara|Kynareth|Talos|Tsun|Stuhn|Trinimac|Syrabane|Z'en|Khenarthi|Malacath|Molag Bal|Mehrunes Dagon",
-    "quest.8477174|1000.deitiescsv": "Akatosh|Stendarr|Mara|Kynareth|Talos|Tsun|Stuhn|Trinimac|Syrabane|Z'en|Khenarthi|Malacath|Molag Bal|Mehrunes Dagon",
-    "quest.8477174|1000.valencesCsv": "+|+|+|+|+|+|+|+|+|+|+|+|-|-",
-    "quest.8477174|1000.valencescsv": "+|+|+|+|+|+|+|+|+|+|+|+|-|-",
-    "quest.8477174|1000.intensitiesCsv": "m|S|m|m|m|m|m|m|S|m|m|S|m|m",
-    "quest.8477174|1000.intensitiescsv": "m|S|m|m|m|m|m|m|S|m|m|S|m|m",
-    "quest.8477174|1000.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small",
-    "quest.8477174|1000.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small",
-    "quest.8477174|1000.tagsCsv": "keep_oath|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|keep_oath|protect_the_weak|keep_oath|protect_the_weak|keep_oath|protect_the_weak|keep_oath",
-    "quest.8477174|1000.tagscsv": "keep_oath|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|keep_oath|protect_the_weak|keep_oath|protect_the_weak|keep_oath|protect_the_weak|keep_oath",
+    "quest.8477174|260.deitiesCsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Shor|Tsun|Stuhn|Auri-El|Trinimac|Syrabane|Khenarthi|Alkosh|Malacath|HoonDing|Leki|Hircine|Molag Bal|Mehrunes Dagon|The Hist",
+    "quest.8477174|260.deitiescsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Shor|Tsun|Stuhn|Auri-El|Trinimac|Syrabane|Khenarthi|Alkosh|Malacath|HoonDing|Leki|Hircine|Molag Bal|Mehrunes Dagon|The Hist",
+    "quest.8477174|260.valencesCsv": "+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|-|+|+",
+    "quest.8477174|260.valencescsv": "+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|+|-|+|+",
+    "quest.8477174|260.intensitiesCsv": "S|m|m|m|m|S|m|m|m|m|S|m|m|m|m|m|m|m|m|m",
+    "quest.8477174|260.intensitiescsv": "S|m|m|m|m|S|m|m|m|m|S|m|m|m|m|m|m|m|m|m",
+    "quest.8477174|260.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.8477174|260.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.8477174|260.tagsCsv": "protect_the_weak|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|kill_honorable_combat|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|protect_the_weak",
+    "quest.8477174|260.tagscsv": "protect_the_weak|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|kill_honorable_combat|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|protect_the_weak",
+    "quest.8477174|666.deitiesCsv": "Akatosh|Stendarr|Mara|Dibella|Talos|Kyne|Shor|Tsun|Stuhn|Trinimac|Z'en|Baan Dar|Khenarthi|Rajhin|Malacath|HoonDing|Sithis|Boethiah|Molag Bal|The Hist",
+    "quest.8477174|666.deitiescsv": "Akatosh|Stendarr|Mara|Dibella|Talos|Kyne|Shor|Tsun|Stuhn|Trinimac|Z'en|Baan Dar|Khenarthi|Rajhin|Malacath|HoonDing|Sithis|Boethiah|Molag Bal|The Hist",
+    "quest.8477174|666.valencesCsv": "-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|+|+|-",
+    "quest.8477174|666.valencescsv": "-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|+|+|-",
+    "quest.8477174|666.intensitiesCsv": "m|S|m|m|m|m|m|m|S|m|m|m|m|m|S|m|S|m|S|m",
+    "quest.8477174|666.intensitiescsv": "m|S|m|m|m|m|m|m|S|m|m|m|m|m|S|m|S|m|S|m",
+    "quest.8477174|666.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.8477174|666.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.8477174|666.tagsCsv": "break_oath_betray|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|break_oath_betray|break_oath_betray|kill_the_helpless|kill_the_helpless|kill_the_helpless|break_oath_betray|kill_the_helpless|break_oath_betray|break_oath_betray|kill_the_helpless|break_oath_betray",
+    "quest.8477174|666.tagscsv": "break_oath_betray|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|kill_the_helpless|break_oath_betray|break_oath_betray|kill_the_helpless|kill_the_helpless|kill_the_helpless|break_oath_betray|kill_the_helpless|break_oath_betray|break_oath_betray|kill_the_helpless|break_oath_betray",
+    "quest.8477174|1000.deitiesCsv": "Akatosh|Stendarr|Mara|Kynareth|Talos|Tsun|Stuhn|Trinimac|Syrabane|Z'en|Khenarthi|Malacath|Molag Bal|Mehrunes Dagon|The Hist",
+    "quest.8477174|1000.deitiescsv": "Akatosh|Stendarr|Mara|Kynareth|Talos|Tsun|Stuhn|Trinimac|Syrabane|Z'en|Khenarthi|Malacath|Molag Bal|Mehrunes Dagon|The Hist",
+    "quest.8477174|1000.valencesCsv": "+|+|+|+|+|+|+|+|+|+|+|+|-|-|+",
+    "quest.8477174|1000.valencescsv": "+|+|+|+|+|+|+|+|+|+|+|+|-|-|+",
+    "quest.8477174|1000.intensitiesCsv": "m|S|m|m|m|m|m|m|S|m|m|S|m|m|m",
+    "quest.8477174|1000.intensitiescsv": "m|S|m|m|m|m|m|m|S|m|m|S|m|m|m",
+    "quest.8477174|1000.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.8477174|1000.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.8477174|1000.tagsCsv": "keep_oath|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|keep_oath|protect_the_weak|keep_oath|protect_the_weak|keep_oath|protect_the_weak|keep_oath|protect_the_weak",
+    "quest.8477174|1000.tagscsv": "keep_oath|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|keep_oath|protect_the_weak|keep_oath|protect_the_weak|keep_oath|protect_the_weak|keep_oath|protect_the_weak",
     "quest.9124829|100.deitiesCsv": "Akatosh|Mara|Dibella|Stuhn|Trinimac|Z'en|Malacath|Mehrunes Dagon",
     "quest.9124829|100.deitiescsv": "Akatosh|Mara|Dibella|Stuhn|Trinimac|Z'en|Malacath|Mehrunes Dagon",
     "quest.9124829|100.valencesCsv": "+|+|+|+|+|+|+|-",
@@ -1417,16 +1417,16 @@
     "quest.9124829|100.magnitudescsv": "small|small|small|small|small|small|small|small",
     "quest.9124829|100.tagsCsv": "keep_oath|marriage_family|marriage_family|keep_oath|keep_oath|keep_oath|keep_oath|keep_oath",
     "quest.9124829|100.tagscsv": "keep_oath|marriage_family|marriage_family|keep_oath|keep_oath|keep_oath|keep_oath|keep_oath",
-    "quest.9124829|101.deitiesCsv": "Akatosh|Zenithar|Stuhn|Trinimac|Z'en|Baan Dar|Rajhin|Malacath|Sithis|Boethiah|Mephala|Nocturnal",
-    "quest.9124829|101.deitiescsv": "Akatosh|Zenithar|Stuhn|Trinimac|Z'en|Baan Dar|Rajhin|Malacath|Sithis|Boethiah|Mephala|Nocturnal",
-    "quest.9124829|101.valencesCsv": "-|-|-|-|-|+|+|-|-|+|+|+",
-    "quest.9124829|101.valencescsv": "-|-|-|-|-|+|+|-|-|+|+|+",
-    "quest.9124829|101.intensitiesCsv": "m|m|m|m|m|m|S|S|S|m|m|S",
-    "quest.9124829|101.intensitiescsv": "m|m|m|m|m|m|S|S|S|m|m|S",
-    "quest.9124829|101.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small|small",
-    "quest.9124829|101.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small",
-    "quest.9124829|101.tagsCsv": "break_oath_betray|theft_burglary|break_oath_betray|break_oath_betray|break_oath_betray|theft_burglary|theft_burglary|break_oath_betray|break_oath_betray|break_oath_betray|theft_burglary|theft_burglary",
-    "quest.9124829|101.tagscsv": "break_oath_betray|theft_burglary|break_oath_betray|break_oath_betray|break_oath_betray|theft_burglary|theft_burglary|break_oath_betray|break_oath_betray|break_oath_betray|theft_burglary|theft_burglary",
+    "quest.9124829|101.deitiesCsv": "Akatosh|Zenithar|Stuhn|Trinimac|Z'en|Baan Dar|Rajhin|Malacath|Sithis|Boethiah|Mephala|Nocturnal|The Hist",
+    "quest.9124829|101.deitiescsv": "Akatosh|Zenithar|Stuhn|Trinimac|Z'en|Baan Dar|Rajhin|Malacath|Sithis|Boethiah|Mephala|Nocturnal|The Hist",
+    "quest.9124829|101.valencesCsv": "-|-|-|-|-|+|+|-|-|+|+|+|-",
+    "quest.9124829|101.valencescsv": "-|-|-|-|-|+|+|-|-|+|+|+|-",
+    "quest.9124829|101.intensitiesCsv": "m|m|m|m|m|m|S|S|S|m|m|S|m",
+    "quest.9124829|101.intensitiescsv": "m|m|m|m|m|m|S|S|S|m|m|S|m",
+    "quest.9124829|101.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.9124829|101.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.9124829|101.tagsCsv": "break_oath_betray|theft_burglary|break_oath_betray|break_oath_betray|break_oath_betray|theft_burglary|theft_burglary|break_oath_betray|break_oath_betray|break_oath_betray|theft_burglary|theft_burglary|break_oath_betray",
+    "quest.9124829|101.tagscsv": "break_oath_betray|theft_burglary|break_oath_betray|break_oath_betray|break_oath_betray|theft_burglary|theft_burglary|break_oath_betray|break_oath_betray|break_oath_betray|theft_burglary|theft_burglary|break_oath_betray",
     "quest.9145604|250.deitiesCsv": "Talos|Tsun|Sithis|Mephala",
     "quest.9145604|250.deitiescsv": "Talos|Tsun|Sithis|Mephala",
     "quest.9145604|250.valencesCsv": "-|-|+|+",
@@ -1477,26 +1477,26 @@
     "quest.9290895|40.magnitudescsv": "small|small|small|small|small|small|small|small",
     "quest.9290895|40.tagsCsv": "disciplined_study|disciplined_study|disciplined_study|disciplined_study|disciplined_study|disciplined_study|forbidden_knowledge|forbidden_knowledge",
     "quest.9290895|40.tagscsv": "disciplined_study|disciplined_study|disciplined_study|disciplined_study|disciplined_study|disciplined_study|forbidden_knowledge|forbidden_knowledge",
-    "quest.9355193|50.deitiesCsv": "Mara|Dibella|Kynareth",
-    "quest.9355193|50.deitiescsv": "Mara|Dibella|Kynareth",
-    "quest.9355193|50.valencesCsv": "+|+|+",
-    "quest.9355193|50.valencescsv": "+|+|+",
-    "quest.9355193|50.intensitiesCsv": "S|m|m",
-    "quest.9355193|50.intensitiescsv": "S|m|m",
-    "quest.9355193|50.magnitudesCsv": "small|small|small",
-    "quest.9355193|50.magnitudescsv": "small|small|small",
-    "quest.9355193|50.tagsCsv": "heal_comfort|heal_comfort|heal_comfort",
-    "quest.9355193|50.tagscsv": "heal_comfort|heal_comfort|heal_comfort",
-    "quest.9958068|15.deitiesCsv": "Kynareth|Kyne|Y'ffre",
-    "quest.9958068|15.deitiescsv": "Kynareth|Kyne|Y'ffre",
-    "quest.9958068|15.valencesCsv": "-|-|-",
-    "quest.9958068|15.valencescsv": "-|-|-",
-    "quest.9958068|15.intensitiesCsv": "S|S|S",
-    "quest.9958068|15.intensitiescsv": "S|S|S",
-    "quest.9958068|15.magnitudesCsv": "small|small|small",
-    "quest.9958068|15.magnitudescsv": "small|small|small",
-    "quest.9958068|15.tagsCsv": "defile_nature|defile_nature|defile_nature",
-    "quest.9958068|15.tagscsv": "defile_nature|defile_nature|defile_nature",
+    "quest.9355193|50.deitiesCsv": "Mara|Dibella|Kynareth|The Hist",
+    "quest.9355193|50.deitiescsv": "Mara|Dibella|Kynareth|The Hist",
+    "quest.9355193|50.valencesCsv": "+|+|+|+",
+    "quest.9355193|50.valencescsv": "+|+|+|+",
+    "quest.9355193|50.intensitiesCsv": "S|m|m|m",
+    "quest.9355193|50.intensitiescsv": "S|m|m|m",
+    "quest.9355193|50.magnitudesCsv": "small|small|small|small",
+    "quest.9355193|50.magnitudescsv": "small|small|small|small",
+    "quest.9355193|50.tagsCsv": "heal_comfort|heal_comfort|heal_comfort|heal_comfort",
+    "quest.9355193|50.tagscsv": "heal_comfort|heal_comfort|heal_comfort|heal_comfort",
+    "quest.9958068|15.deitiesCsv": "Kynareth|Kyne|Y'ffre|The Hist",
+    "quest.9958068|15.deitiescsv": "Kynareth|Kyne|Y'ffre|The Hist",
+    "quest.9958068|15.valencesCsv": "-|-|-|-",
+    "quest.9958068|15.valencescsv": "-|-|-|-",
+    "quest.9958068|15.intensitiesCsv": "S|S|S|m",
+    "quest.9958068|15.intensitiescsv": "S|S|S|m",
+    "quest.9958068|15.magnitudesCsv": "small|small|small|small",
+    "quest.9958068|15.magnitudescsv": "small|small|small|small",
+    "quest.9958068|15.tagsCsv": "defile_nature|defile_nature|defile_nature|defile_nature",
+    "quest.9958068|15.tagscsv": "defile_nature|defile_nature|defile_nature|defile_nature",
     "quest.9958068|30.deitiesCsv": "Zenithar|Malacath",
     "quest.9958068|30.deitiescsv": "Zenithar|Malacath",
     "quest.9958068|30.valencesCsv": "+|+",
@@ -1507,16 +1507,16 @@
     "quest.9958068|30.magnitudescsv": "small|small",
     "quest.9958068|30.tagsCsv": "master_craft_forge|master_craft_forge",
     "quest.9958068|30.tagscsv": "master_craft_forge|master_craft_forge",
-    "quest.9978976|13.deitiesCsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Tsun|Stuhn|Syrabane|Y'ffre|Khenarthi|Hircine|Molag Bal",
-    "quest.9978976|13.deitiescsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Tsun|Stuhn|Syrabane|Y'ffre|Khenarthi|Hircine|Molag Bal",
-    "quest.9978976|13.valencesCsv": "+|+|+|+|+|+|+|+|+|+|+|-",
-    "quest.9978976|13.valencescsv": "+|+|+|+|+|+|+|+|+|+|+|-",
-    "quest.9978976|13.intensitiesCsv": "S|m|m|m|S|m|m|S|m|m|S|m",
-    "quest.9978976|13.intensitiescsv": "S|m|m|m|S|m|m|S|m|m|S|m",
-    "quest.9978976|13.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small|small",
-    "quest.9978976|13.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small",
-    "quest.9978976|13.tagsCsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|the_hunt|protect_the_weak|protect_the_weak|protect_the_weak|the_hunt|protect_the_weak|the_hunt|protect_the_weak",
-    "quest.9978976|13.tagscsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|the_hunt|protect_the_weak|protect_the_weak|protect_the_weak|the_hunt|protect_the_weak|the_hunt|protect_the_weak",
+    "quest.9978976|13.deitiesCsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Tsun|Stuhn|Syrabane|Y'ffre|Khenarthi|Hircine|Molag Bal|The Hist",
+    "quest.9978976|13.deitiescsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Tsun|Stuhn|Syrabane|Y'ffre|Khenarthi|Hircine|Molag Bal|The Hist",
+    "quest.9978976|13.valencesCsv": "+|+|+|+|+|+|+|+|+|+|+|-|+",
+    "quest.9978976|13.valencescsv": "+|+|+|+|+|+|+|+|+|+|+|-|+",
+    "quest.9978976|13.intensitiesCsv": "S|m|m|m|S|m|m|S|m|m|S|m|m",
+    "quest.9978976|13.intensitiescsv": "S|m|m|m|S|m|m|S|m|m|S|m|m",
+    "quest.9978976|13.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.9978976|13.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small",
+    "quest.9978976|13.tagsCsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|the_hunt|protect_the_weak|protect_the_weak|protect_the_weak|the_hunt|protect_the_weak|the_hunt|protect_the_weak|protect_the_weak",
+    "quest.9978976|13.tagscsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|the_hunt|protect_the_weak|protect_the_weak|protect_the_weak|the_hunt|protect_the_weak|the_hunt|protect_the_weak|protect_the_weak",
     "quest.9978976|15.deitiesCsv": "Stendarr|Mara|Kyne|Stuhn|Molag Bal",
     "quest.9978976|15.deitiescsv": "Stendarr|Mara|Kyne|Stuhn|Molag Bal",
     "quest.9978976|15.valencesCsv": "+|+|+|+|-",
@@ -1527,16 +1527,16 @@
     "quest.9978976|15.magnitudescsv": "small|small|small|small|small",
     "quest.9978976|15.tagsCsv": "mercy_spare|mercy_spare|mercy_spare|mercy_spare|mercy_spare",
     "quest.9978976|15.tagscsv": "mercy_spare|mercy_spare|mercy_spare|mercy_spare|mercy_spare",
-    "quest.11521051|50.deitiesCsv": "Arkay|Shor|Auri-El|Xarxes|Azura|Khenarthi|Tu'whacca|Mephala|Nocturnal|Hermaeus Mora",
-    "quest.11521051|50.deitiescsv": "Arkay|Shor|Auri-El|Xarxes|Azura|Khenarthi|Tu'whacca|Mephala|Nocturnal|Hermaeus Mora",
-    "quest.11521051|50.valencesCsv": "+|+|+|+|+|+|+|+|+|+",
-    "quest.11521051|50.valencescsv": "+|+|+|+|+|+|+|+|+|+",
-    "quest.11521051|50.intensitiesCsv": "S|m|m|S|m|m|S|S|m|m",
-    "quest.11521051|50.intensitiescsv": "S|m|m|S|m|m|S|S|m|m",
-    "quest.11521051|50.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small",
-    "quest.11521051|50.magnitudescsv": "small|small|small|small|small|small|small|small|small|small",
-    "quest.11521051|50.tagsCsv": "honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|keep_secret|keep_secret|keep_secret",
-    "quest.11521051|50.tagscsv": "honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|keep_secret|keep_secret|keep_secret",
+    "quest.11521051|50.deitiesCsv": "Arkay|Shor|Auri-El|Xarxes|Azura|Khenarthi|Tu'whacca|Mephala|Nocturnal|Hermaeus Mora|The Hist",
+    "quest.11521051|50.deitiescsv": "Arkay|Shor|Auri-El|Xarxes|Azura|Khenarthi|Tu'whacca|Mephala|Nocturnal|Hermaeus Mora|The Hist",
+    "quest.11521051|50.valencesCsv": "+|+|+|+|+|+|+|+|+|+|+",
+    "quest.11521051|50.valencescsv": "+|+|+|+|+|+|+|+|+|+|+",
+    "quest.11521051|50.intensitiesCsv": "S|m|m|S|m|m|S|S|m|m|m",
+    "quest.11521051|50.intensitiescsv": "S|m|m|S|m|m|S|S|m|m|m",
+    "quest.11521051|50.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small",
+    "quest.11521051|50.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small",
+    "quest.11521051|50.tagsCsv": "honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|keep_secret|keep_secret|keep_secret|honor_the_dead",
+    "quest.11521051|50.tagscsv": "honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|keep_secret|keep_secret|keep_secret|honor_the_dead",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -2224,7 +2224,8 @@
       "Khenarthi",
       "Malacath",
       "HoonDing",
-      "Molag Bal"
+      "Molag Bal",
+      "The Hist"
     ],
     "quest.8207208|230.valences": [
       "+",
@@ -2241,7 +2242,8 @@
       "+",
       "+",
       "+",
-      "-"
+      "-",
+      "+"
     ],
     "quest.8207208|230.intensities": [
       "S",
@@ -2258,9 +2260,11 @@
       "m",
       "m",
       "m",
-      "m"
+      "m",
+      "S"
     ],
     "quest.8207208|230.magnitudes": [
+      "small",
       "small",
       "small",
       "small",
@@ -2292,7 +2296,8 @@
       "protect_the_weak",
       "defend_kin_home",
       "defend_kin_home",
-      "protect_the_weak"
+      "protect_the_weak",
+      "defend_kin_home"
     ],
     "quest.8207208|280.deities": [
       "Julianos",
@@ -2343,7 +2348,8 @@
       "Leki",
       "Hircine",
       "Molag Bal",
-      "Mehrunes Dagon"
+      "Mehrunes Dagon",
+      "The Hist"
     ],
     "quest.8477174|260.valences": [
       "+",
@@ -2364,6 +2370,7 @@
       "+",
       "+",
       "-",
+      "+",
       "+"
     ],
     "quest.8477174|260.intensities": [
@@ -2385,9 +2392,11 @@
       "m",
       "m",
       "m",
+      "m",
       "m"
     ],
     "quest.8477174|260.magnitudes": [
+      "small",
       "small",
       "small",
       "small",
@@ -2427,7 +2436,8 @@
       "kill_honorable_combat",
       "kill_honorable_combat",
       "protect_the_weak",
-      "kill_honorable_combat"
+      "kill_honorable_combat",
+      "protect_the_weak"
     ],
     "quest.8477174|666.deities": [
       "Akatosh",
@@ -2448,7 +2458,8 @@
       "HoonDing",
       "Sithis",
       "Boethiah",
-      "Molag Bal"
+      "Molag Bal",
+      "The Hist"
     ],
     "quest.8477174|666.valences": [
       "-",
@@ -2469,7 +2480,8 @@
       "-",
       "-",
       "+",
-      "+"
+      "+",
+      "-"
     ],
     "quest.8477174|666.intensities": [
       "m",
@@ -2490,9 +2502,11 @@
       "m",
       "S",
       "m",
-      "S"
+      "S",
+      "m"
     ],
     "quest.8477174|666.magnitudes": [
+      "small",
       "small",
       "small",
       "small",
@@ -2532,7 +2546,8 @@
       "kill_the_helpless",
       "break_oath_betray",
       "break_oath_betray",
-      "kill_the_helpless"
+      "kill_the_helpless",
+      "break_oath_betray"
     ],
     "quest.8477174|1000.deities": [
       "Akatosh",
@@ -2548,7 +2563,8 @@
       "Khenarthi",
       "Malacath",
       "Molag Bal",
-      "Mehrunes Dagon"
+      "Mehrunes Dagon",
+      "The Hist"
     ],
     "quest.8477174|1000.valences": [
       "+",
@@ -2564,7 +2580,8 @@
       "+",
       "+",
       "-",
-      "-"
+      "-",
+      "+"
     ],
     "quest.8477174|1000.intensities": [
       "m",
@@ -2580,9 +2597,11 @@
       "m",
       "S",
       "m",
+      "m",
       "m"
     ],
     "quest.8477174|1000.magnitudes": [
+      "small",
       "small",
       "small",
       "small",
@@ -2612,7 +2631,8 @@
       "protect_the_weak",
       "keep_oath",
       "protect_the_weak",
-      "keep_oath"
+      "keep_oath",
+      "protect_the_weak"
     ],
     "quest.9124829|100.deities": [
       "Akatosh",
@@ -2676,7 +2696,8 @@
       "Sithis",
       "Boethiah",
       "Mephala",
-      "Nocturnal"
+      "Nocturnal",
+      "The Hist"
     ],
     "quest.9124829|101.valences": [
       "-",
@@ -2690,7 +2711,8 @@
       "-",
       "+",
       "+",
-      "+"
+      "+",
+      "-"
     ],
     "quest.9124829|101.intensities": [
       "m",
@@ -2704,9 +2726,11 @@
       "S",
       "m",
       "m",
-      "S"
+      "S",
+      "m"
     ],
     "quest.9124829|101.magnitudes": [
+      "small",
       "small",
       "small",
       "small",
@@ -2732,7 +2756,8 @@
       "break_oath_betray",
       "break_oath_betray",
       "theft_burglary",
-      "theft_burglary"
+      "theft_burglary",
+      "break_oath_betray"
     ],
     "quest.9145604|250.deities": [
       "Talos",
@@ -2937,9 +2962,11 @@
     "quest.9355193|50.deities": [
       "Mara",
       "Dibella",
-      "Kynareth"
+      "Kynareth",
+      "The Hist"
     ],
     "quest.9355193|50.valences": [
+      "+",
       "+",
       "+",
       "+"
@@ -2947,9 +2974,11 @@
     "quest.9355193|50.intensities": [
       "S",
       "m",
+      "m",
       "m"
     ],
     "quest.9355193|50.magnitudes": [
+      "small",
       "small",
       "small",
       "small"
@@ -2957,14 +2986,17 @@
     "quest.9355193|50.tags": [
       "heal_comfort",
       "heal_comfort",
+      "heal_comfort",
       "heal_comfort"
     ],
     "quest.9958068|15.deities": [
       "Kynareth",
       "Kyne",
-      "Y'ffre"
+      "Y'ffre",
+      "The Hist"
     ],
     "quest.9958068|15.valences": [
+      "-",
       "-",
       "-",
       "-"
@@ -2972,14 +3004,17 @@
     "quest.9958068|15.intensities": [
       "S",
       "S",
-      "S"
+      "S",
+      "m"
     ],
     "quest.9958068|15.magnitudes": [
+      "small",
       "small",
       "small",
       "small"
     ],
     "quest.9958068|15.tags": [
+      "defile_nature",
       "defile_nature",
       "defile_nature",
       "defile_nature"
@@ -3016,7 +3051,8 @@
       "Y'ffre",
       "Khenarthi",
       "Hircine",
-      "Molag Bal"
+      "Molag Bal",
+      "The Hist"
     ],
     "quest.9978976|13.valences": [
       "+",
@@ -3030,7 +3066,8 @@
       "+",
       "+",
       "+",
-      "-"
+      "-",
+      "+"
     ],
     "quest.9978976|13.intensities": [
       "S",
@@ -3044,9 +3081,11 @@
       "m",
       "m",
       "S",
+      "m",
       "m"
     ],
     "quest.9978976|13.magnitudes": [
+      "small",
       "small",
       "small",
       "small",
@@ -3072,6 +3111,7 @@
       "the_hunt",
       "protect_the_weak",
       "the_hunt",
+      "protect_the_weak",
       "protect_the_weak"
     ],
     "quest.9978976|15.deities": [
@@ -3119,9 +3159,11 @@
       "Tu'whacca",
       "Mephala",
       "Nocturnal",
-      "Hermaeus Mora"
+      "Hermaeus Mora",
+      "The Hist"
     ],
     "quest.11521051|50.valences": [
+      "+",
       "+",
       "+",
       "+",
@@ -3143,9 +3185,11 @@
       "S",
       "S",
       "m",
+      "m",
       "m"
     ],
     "quest.11521051|50.magnitudes": [
+      "small",
       "small",
       "small",
       "small",
@@ -3167,7 +3211,8 @@
       "honor_the_dead",
       "keep_secret",
       "keep_secret",
-      "keep_secret"
+      "keep_secret",
+      "honor_the_dead"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

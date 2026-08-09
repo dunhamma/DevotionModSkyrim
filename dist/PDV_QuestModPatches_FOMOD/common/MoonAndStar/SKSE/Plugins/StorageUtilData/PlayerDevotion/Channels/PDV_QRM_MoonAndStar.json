@@ -1,7 +1,7 @@
 {
   "string": {
-    "generatedAt": "2026-08-09T06:07:13.740Z",
-    "generatedat": "2026-08-09T06:07:13.740Z",
+    "generatedAt": "2026-08-09T06:33:14.909Z",
+    "generatedat": "2026-08-09T06:33:14.909Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "26987,50749,49179,31132",
     "questwatchformidscsv": "26987,50749,49179,31132",
@@ -1427,16 +1427,16 @@
     "quest.26987|65.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small",
     "quest.26987|65.tagsCsv": "murder_treacherous|murder_treacherous|murder_treacherous|murder_treacherous|murder_treacherous|murder_treacherous|murder_treacherous|assassination_contract|murder_treacherous|assassination_contract|murder_treacherous|murder_treacherous|murder_treacherous",
     "quest.26987|65.tagscsv": "murder_treacherous|murder_treacherous|murder_treacherous|murder_treacherous|murder_treacherous|murder_treacherous|murder_treacherous|assassination_contract|murder_treacherous|assassination_contract|murder_treacherous|murder_treacherous|murder_treacherous",
-    "quest.26987|92.deitiesCsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Tsun|Stuhn|Syrabane|Khenarthi|Molag Bal",
-    "quest.26987|92.deitiescsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Tsun|Stuhn|Syrabane|Khenarthi|Molag Bal",
-    "quest.26987|92.valencesCsv": "+|+|+|+|+|+|+|+|+|-",
-    "quest.26987|92.valencescsv": "+|+|+|+|+|+|+|+|+|-",
-    "quest.26987|92.intensitiesCsv": "S|m|m|m|m|m|S|S|m|m",
-    "quest.26987|92.intensitiescsv": "S|m|m|m|m|m|S|S|m|m",
-    "quest.26987|92.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small",
-    "quest.26987|92.magnitudescsv": "small|small|small|small|small|small|small|small|small|small",
-    "quest.26987|92.tagsCsv": "mercy_spare|mercy_spare|protect_the_weak|protect_the_weak|mercy_spare|protect_the_weak|mercy_spare|protect_the_weak|protect_the_weak|mercy_spare",
-    "quest.26987|92.tagscsv": "mercy_spare|mercy_spare|protect_the_weak|protect_the_weak|mercy_spare|protect_the_weak|mercy_spare|protect_the_weak|protect_the_weak|mercy_spare",
+    "quest.26987|92.deitiesCsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Tsun|Stuhn|Syrabane|Khenarthi|Molag Bal|The Hist",
+    "quest.26987|92.deitiescsv": "Stendarr|Mara|Kynareth|Talos|Kyne|Tsun|Stuhn|Syrabane|Khenarthi|Molag Bal|The Hist",
+    "quest.26987|92.valencesCsv": "+|+|+|+|+|+|+|+|+|-|+",
+    "quest.26987|92.valencescsv": "+|+|+|+|+|+|+|+|+|-|+",
+    "quest.26987|92.intensitiesCsv": "S|m|m|m|m|m|S|S|m|m|m",
+    "quest.26987|92.intensitiescsv": "S|m|m|m|m|m|S|S|m|m|m",
+    "quest.26987|92.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small",
+    "quest.26987|92.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small",
+    "quest.26987|92.tagsCsv": "mercy_spare|mercy_spare|protect_the_weak|protect_the_weak|mercy_spare|protect_the_weak|mercy_spare|protect_the_weak|protect_the_weak|mercy_spare|protect_the_weak",
+    "quest.26987|92.tagscsv": "mercy_spare|mercy_spare|protect_the_weak|protect_the_weak|mercy_spare|protect_the_weak|mercy_spare|protect_the_weak|protect_the_weak|mercy_spare|protect_the_weak",
     "quest.26987|90.deitiesCsv": "Stendarr|Mara|Talos|Kyne|Shor|Tsun|Stuhn|Auri-El|Trinimac|Alkosh|Malacath|HoonDing|Leki|Hircine|Molag Bal|Mehrunes Dagon",
     "quest.26987|90.deitiescsv": "Stendarr|Mara|Talos|Kyne|Shor|Tsun|Stuhn|Auri-El|Trinimac|Alkosh|Malacath|HoonDing|Leki|Hircine|Molag Bal|Mehrunes Dagon",
     "quest.26987|90.valencesCsv": "+|+|+|+|+|+|+|+|+|+|+|+|+|+|-|+",
@@ -2488,7 +2488,8 @@
       "Stuhn",
       "Syrabane",
       "Khenarthi",
-      "Molag Bal"
+      "Molag Bal",
+      "The Hist"
     ],
     "quest.26987|92.valences": [
       "+",
@@ -2500,7 +2501,8 @@
       "+",
       "+",
       "+",
-      "-"
+      "-",
+      "+"
     ],
     "quest.26987|92.intensities": [
       "S",
@@ -2512,9 +2514,11 @@
       "S",
       "S",
       "m",
+      "m",
       "m"
     ],
     "quest.26987|92.magnitudes": [
+      "small",
       "small",
       "small",
       "small",
@@ -2536,7 +2540,8 @@
       "mercy_spare",
       "protect_the_weak",
       "protect_the_weak",
-      "mercy_spare"
+      "mercy_spare",
+      "protect_the_weak"
     ],
     "quest.26987|90.deities": [
       "Stendarr",

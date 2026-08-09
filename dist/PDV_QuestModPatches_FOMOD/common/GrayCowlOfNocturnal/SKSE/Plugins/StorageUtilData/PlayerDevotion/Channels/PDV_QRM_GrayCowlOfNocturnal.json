@@ -1,7 +1,7 @@
 {
   "string": {
-    "generatedAt": "2026-08-09T06:07:14.044Z",
-    "generatedat": "2026-08-09T06:07:14.044Z",
+    "generatedAt": "2026-08-09T06:33:15.065Z",
+    "generatedat": "2026-08-09T06:33:15.065Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "9972,122994,128363,118695,197535,328025,158440",
     "questwatchformidscsv": "9972,122994,128363,118695,197535,328025,158440",
@@ -1377,16 +1377,16 @@
     "quest.9972|50.magnitudescsv": "small|small|small|small|small",
     "quest.9972|50.tagsCsv": "theft_burglary|theft_burglary|theft_burglary|theft_burglary|theft_burglary",
     "quest.9972|50.tagscsv": "theft_burglary|theft_burglary|theft_burglary|theft_burglary|theft_burglary",
-    "quest.122994|10.deitiesCsv": "Arkay|Shor|Auri-El|Xarxes|Azura|Khenarthi|Tu'whacca",
-    "quest.122994|10.deitiescsv": "Arkay|Shor|Auri-El|Xarxes|Azura|Khenarthi|Tu'whacca",
-    "quest.122994|10.valencesCsv": "+|+|+|+|+|+|+",
-    "quest.122994|10.valencescsv": "+|+|+|+|+|+|+",
-    "quest.122994|10.intensitiesCsv": "S|m|m|S|m|m|S",
-    "quest.122994|10.intensitiescsv": "S|m|m|S|m|m|S",
-    "quest.122994|10.magnitudesCsv": "small|small|small|small|small|small|small",
-    "quest.122994|10.magnitudescsv": "small|small|small|small|small|small|small",
-    "quest.122994|10.tagsCsv": "honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead",
-    "quest.122994|10.tagscsv": "honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead",
+    "quest.122994|10.deitiesCsv": "Arkay|Shor|Auri-El|Xarxes|Azura|Khenarthi|Tu'whacca|The Hist",
+    "quest.122994|10.deitiescsv": "Arkay|Shor|Auri-El|Xarxes|Azura|Khenarthi|Tu'whacca|The Hist",
+    "quest.122994|10.valencesCsv": "+|+|+|+|+|+|+|+",
+    "quest.122994|10.valencescsv": "+|+|+|+|+|+|+|+",
+    "quest.122994|10.intensitiesCsv": "S|m|m|S|m|m|S|m",
+    "quest.122994|10.intensitiescsv": "S|m|m|S|m|m|S|m",
+    "quest.122994|10.magnitudesCsv": "small|small|small|small|small|small|small|small",
+    "quest.122994|10.magnitudescsv": "small|small|small|small|small|small|small|small",
+    "quest.122994|10.tagsCsv": "honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead",
+    "quest.122994|10.tagscsv": "honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead|honor_the_dead",
     "quest.128363|10.deitiesCsv": "Stendarr|Mara|Kyne|Stuhn|Molag Bal",
     "quest.128363|10.deitiescsv": "Stendarr|Mara|Kyne|Stuhn|Molag Bal",
     "quest.128363|10.valencesCsv": "+|+|+|+|-",
@@ -1407,16 +1407,16 @@
     "quest.128363|255.magnitudescsv": "small|small|small|small|small|small|small|small|small",
     "quest.128363|255.tagsCsv": "prove_by_struggle|prove_by_struggle|prove_by_struggle|prove_by_struggle|prove_by_struggle|prove_by_struggle|prove_by_struggle|prove_by_struggle|prove_by_struggle",
     "quest.128363|255.tagscsv": "prove_by_struggle|prove_by_struggle|prove_by_struggle|prove_by_struggle|prove_by_struggle|prove_by_struggle|prove_by_struggle|prove_by_struggle|prove_by_struggle",
-    "quest.118695|20.deitiesCsv": "Stendarr|Mara|Kynareth|Talos|Tsun|Stuhn|Syrabane|Khenarthi|Molag Bal",
-    "quest.118695|20.deitiescsv": "Stendarr|Mara|Kynareth|Talos|Tsun|Stuhn|Syrabane|Khenarthi|Molag Bal",
-    "quest.118695|20.valencesCsv": "+|+|+|+|+|+|+|+|-",
-    "quest.118695|20.valencescsv": "+|+|+|+|+|+|+|+|-",
-    "quest.118695|20.intensitiesCsv": "S|m|m|m|m|m|S|m|m",
-    "quest.118695|20.intensitiescsv": "S|m|m|m|m|m|S|m|m",
-    "quest.118695|20.magnitudesCsv": "small|small|small|small|small|small|small|small|small",
-    "quest.118695|20.magnitudescsv": "small|small|small|small|small|small|small|small|small",
-    "quest.118695|20.tagsCsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak",
-    "quest.118695|20.tagscsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak",
+    "quest.118695|20.deitiesCsv": "Stendarr|Mara|Kynareth|Talos|Tsun|Stuhn|Syrabane|Khenarthi|Molag Bal|The Hist",
+    "quest.118695|20.deitiescsv": "Stendarr|Mara|Kynareth|Talos|Tsun|Stuhn|Syrabane|Khenarthi|Molag Bal|The Hist",
+    "quest.118695|20.valencesCsv": "+|+|+|+|+|+|+|+|-|+",
+    "quest.118695|20.valencescsv": "+|+|+|+|+|+|+|+|-|+",
+    "quest.118695|20.intensitiesCsv": "S|m|m|m|m|m|S|m|m|m",
+    "quest.118695|20.intensitiescsv": "S|m|m|m|m|m|S|m|m|m",
+    "quest.118695|20.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small",
+    "quest.118695|20.magnitudescsv": "small|small|small|small|small|small|small|small|small|small",
+    "quest.118695|20.tagsCsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak",
+    "quest.118695|20.tagscsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak",
     "quest.197535|100.deitiesCsv": "Julianos|Magnus|Syrabane|Sheogorath",
     "quest.197535|100.deitiescsv": "Julianos|Magnus|Syrabane|Sheogorath",
     "quest.197535|100.valencesCsv": "-|-|-|+",
@@ -1437,16 +1437,16 @@
     "quest.328025|50.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
     "quest.328025|50.tagsCsv": "uphold_law_justice|uphold_law_justice|uphold_law_justice|uphold_law_justice|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|uphold_law_justice|kill_honorable_combat|kill_honorable_combat|uphold_law_justice|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|uphold_law_justice|kill_honorable_combat|kill_honorable_combat|uphold_law_justice|uphold_law_justice|uphold_law_justice",
     "quest.328025|50.tagscsv": "uphold_law_justice|uphold_law_justice|uphold_law_justice|uphold_law_justice|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|uphold_law_justice|kill_honorable_combat|kill_honorable_combat|uphold_law_justice|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|uphold_law_justice|kill_honorable_combat|kill_honorable_combat|uphold_law_justice|uphold_law_justice|uphold_law_justice",
-    "quest.158440|30.deitiesCsv": "Stendarr|Arkay|Shor|Auri-El|Xarxes|Y'ffre|Azura|Khenarthi|Tu'whacca|Meridia",
-    "quest.158440|30.deitiescsv": "Stendarr|Arkay|Shor|Auri-El|Xarxes|Y'ffre|Azura|Khenarthi|Tu'whacca|Meridia",
-    "quest.158440|30.valencesCsv": "+|+|+|+|+|+|+|+|+|+",
-    "quest.158440|30.valencescsv": "+|+|+|+|+|+|+|+|+|+",
-    "quest.158440|30.intensitiesCsv": "m|S|m|m|S|m|m|m|S|S",
-    "quest.158440|30.intensitiescsv": "m|S|m|m|S|m|m|m|S|S",
-    "quest.158440|30.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small",
-    "quest.158440|30.magnitudescsv": "small|small|small|small|small|small|small|small|small|small",
-    "quest.158440|30.tagsCsv": "slay_undead|slay_undead|honor_the_dead|honor_the_dead|honor_the_dead|slay_undead|slay_undead|honor_the_dead|honor_the_dead|slay_undead",
-    "quest.158440|30.tagscsv": "slay_undead|slay_undead|honor_the_dead|honor_the_dead|honor_the_dead|slay_undead|slay_undead|honor_the_dead|honor_the_dead|slay_undead",
+    "quest.158440|30.deitiesCsv": "Stendarr|Arkay|Shor|Auri-El|Xarxes|Y'ffre|Azura|Khenarthi|Tu'whacca|Meridia|The Hist",
+    "quest.158440|30.deitiescsv": "Stendarr|Arkay|Shor|Auri-El|Xarxes|Y'ffre|Azura|Khenarthi|Tu'whacca|Meridia|The Hist",
+    "quest.158440|30.valencesCsv": "+|+|+|+|+|+|+|+|+|+|+",
+    "quest.158440|30.valencescsv": "+|+|+|+|+|+|+|+|+|+|+",
+    "quest.158440|30.intensitiesCsv": "m|S|m|m|S|m|m|m|S|S|m",
+    "quest.158440|30.intensitiescsv": "m|S|m|m|S|m|m|m|S|S|m",
+    "quest.158440|30.magnitudesCsv": "small|small|small|small|small|small|small|small|small|small|small",
+    "quest.158440|30.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small",
+    "quest.158440|30.tagsCsv": "slay_undead|slay_undead|honor_the_dead|honor_the_dead|honor_the_dead|slay_undead|slay_undead|honor_the_dead|honor_the_dead|slay_undead|slay_undead",
+    "quest.158440|30.tagscsv": "slay_undead|slay_undead|honor_the_dead|honor_the_dead|honor_the_dead|slay_undead|slay_undead|honor_the_dead|honor_the_dead|slay_undead|slay_undead",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1983,9 +1983,11 @@
       "Xarxes",
       "Azura",
       "Khenarthi",
-      "Tu'whacca"
+      "Tu'whacca",
+      "The Hist"
     ],
     "quest.122994|10.valences": [
+      "+",
       "+",
       "+",
       "+",
@@ -2001,9 +2003,11 @@
       "S",
       "m",
       "m",
-      "S"
+      "S",
+      "m"
     ],
     "quest.122994|10.magnitudes": [
+      "small",
       "small",
       "small",
       "small",
@@ -2013,6 +2017,7 @@
       "small"
     ],
     "quest.122994|10.tags": [
+      "honor_the_dead",
       "honor_the_dead",
       "honor_the_dead",
       "honor_the_dead",
@@ -2120,7 +2125,8 @@
       "Stuhn",
       "Syrabane",
       "Khenarthi",
-      "Molag Bal"
+      "Molag Bal",
+      "The Hist"
     ],
     "quest.118695|20.valences": [
       "+",
@@ -2131,7 +2137,8 @@
       "+",
       "+",
       "+",
-      "-"
+      "-",
+      "+"
     ],
     "quest.118695|20.intensities": [
       "S",
@@ -2141,6 +2148,7 @@
       "m",
       "m",
       "S",
+      "m",
       "m",
       "m"
     ],
@@ -2153,9 +2161,11 @@
       "small",
       "small",
       "small",
+      "small",
       "small"
     ],
     "quest.118695|20.tags": [
+      "protect_the_weak",
       "protect_the_weak",
       "protect_the_weak",
       "protect_the_weak",
@@ -2326,9 +2336,11 @@
       "Azura",
       "Khenarthi",
       "Tu'whacca",
-      "Meridia"
+      "Meridia",
+      "The Hist"
     ],
     "quest.158440|30.valences": [
+      "+",
       "+",
       "+",
       "+",
@@ -2350,9 +2362,11 @@
       "m",
       "m",
       "S",
-      "S"
+      "S",
+      "m"
     ],
     "quest.158440|30.magnitudes": [
+      "small",
       "small",
       "small",
       "small",
@@ -2374,6 +2388,7 @@
       "slay_undead",
       "honor_the_dead",
       "honor_the_dead",
+      "slay_undead",
       "slay_undead"
     ],
     "faucetForms.Namira.cannibalism": [

@@ -10,7 +10,7 @@ Status: complete inventory of shipped support; runtime proof is open on most of 
   "g1WithAwardRows": 47,
   "g2WithAwardRows": 3,
   "totalReactionCells": 183,
-  "totalAwardRows": 954,
+  "totalAwardRows": 968,
   "hubFoldersTotal": 52,
   "manifestOptions": 52,
   "sourceCsvs": 50,
@@ -125,11 +125,11 @@ game, that proof lives in a runbook, not here.
 | **G6** | Papyrus activity hooks, no quest stage | plugin literals in `PDV_PlayerEvents` / `PDV__ManagerQuest` / `PDV_Origin` | **7** plugins | No | **No** |
 
 G1 + G2 = the 52 PatchHub options, 1:1 with the 52 manifest entries and the 52
-`common/` folders. 183 quest-reaction cells, 954 deity award rows.
+`common/` folders. 183 quest-reaction cells, 968 deity award rows.
 
 **Read this next to the installer:** a user who installs zero PatchHub options
 still gets G3, G4 and G6. That is the majority of the reaction surface by row
-count -- 2144 core rows against 954 in the whole hub.
+count -- 2144 core rows against 968 in the whole hub.
 
 ---
 
