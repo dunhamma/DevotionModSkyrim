@@ -8,7 +8,7 @@ ProjectAHO,Project AHO,A,B02,Dwarfsphere.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,
 GrayCowlOfNocturnal,The Gray Cowl of Nocturnal,A,B02,Gray Fox Cowl.esm,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
 SleepwalkingNightmare,Sleepwalking Into A Nightmare,A,B03,NightmarePlane.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
 HeartOfTheReach,Heart of the Reach,A,B03,HeartOfTheReach.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
-ThereIsNoUmbra3,There Is No Umbra - Chapter III,A,B03,FloatingSwordFollower.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
+ThereIsNoUmbra3,There Is No Umbra - Chapter III,A,B03,FloatingSwordFollower.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,"49 tagged rows; judge corrected clavicus_vile->clavicus and 6 :umbra tags; 5 cross-gen conflicts hand-resolved; 1 NEEDS-TAG (s300, renounce_dangerous_power)"
 LeapsOfFaith,Leaps of Faith,A,B03,LeapsOfFaith.esp,ok,ok,-,SILENT,-,-,-,-,-,"13 stages, every one tier B - a parkour collectathon with no branch and no judgeable act. See silence ledger."
 CaughtRedHandedQE,Caught Red Handed - Quest Expansion,B,B04,Caught Red Handed - Quest Expansion.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
 InnocenceLostQE,The Innocence Lost - Quest Expansion,B,B04,Innocence Lost - Quest Expansion.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,

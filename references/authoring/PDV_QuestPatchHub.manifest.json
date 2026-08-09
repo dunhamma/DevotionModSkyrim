@@ -463,6 +463,16 @@
       "nexusModId": 76606
     },
     {
+      "name": "There Is No Umbra - Chapter III",
+      "description": "Includes Chapters I and II. Continue Daumbra's story, and obtain new gameplay mechanics (sword throwing, sword riding, mind control, teleportation, etc.) through a DLC-sized questline, professionally voiced. The story has many possible endings -your choices really do matter.",
+      "dependency": "FloatingSwordFollower.esp",
+      "folders": [
+        "common\\ThereIsNoUmbra3"
+      ],
+      "category": "New Quests and Lands",
+      "nexusModId": 89089
+    },
+    {
       "name": "Thieves Guild Alternative Endings",
       "description": "Defy Nocturnal and unlock yourself from eternal servitude. Adds 4 new voice-acted endings to the Thieves Guild questline, including new story, new rewards, new boss fights.",
       "dependency": "TG Alternative Endings.esp",

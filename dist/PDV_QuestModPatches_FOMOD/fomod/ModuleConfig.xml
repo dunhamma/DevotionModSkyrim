@@ -559,6 +559,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="There Is No Umbra - Chapter III">
+              <description>Includes Chapters I and II. Continue Daumbra's story, and obtain new gameplay mechanics (sword throwing, sword riding, mind control, teleportation, etc.) through a DLC-sized questline, professionally voiced. The story has many possible endings -your choices really do matter.</description>
+              <files>
+                <folder source="common\ThereIsNoUmbra3" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="FloatingSwordFollower.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Unslaad">
               <description>Quest mod of Half-Dragon. Add fluffy equipment and creatures.</description>
               <files>
