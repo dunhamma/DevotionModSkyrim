@@ -95,6 +95,16 @@
       "nexusModId": 96711
     },
     {
+      "name": "Caught Red Handed - Quest Expansion",
+      "description": "Mind your own business, Svana. Everyone should be allowed to practice the \"Dibellan\" arts free of shame! Expands this misc quest with some new... interesting outcomes.",
+      "dependency": "Caught Red Handed - Quest Expansion.esp",
+      "folders": [
+        "common\\CaughtRedHandedQE"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 65708
+    },
+    {
       "name": "College of Winterhold - Quest Expansion",
       "description": "This mod provides 7 new starter magic lessons/quests to make your College of Winterhold feel like an actual school of magic.",
       "dependency": "College Of Winterhold - Quest Expansion.esp",
@@ -124,6 +134,16 @@
       "nexusModId": 78772
     },
     {
+      "name": "Defeat the Dragon Cult",
+      "description": "This mod aims the expand the later half of the main quest by giving the Dragonborn a reason to fight and kill all of the Dragon Priests in Skyrim before facing Alduin at the Throat of the World.",
+      "dependency": "Defeat the Dragon Cult.esp",
+      "folders": [
+        "common\\DefeatTheDragonCult"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 86625
+    },
+    {
       "name": "Depths of the Soul",
       "description": "Depths of the Soul features a rather helpful merchant who will aid the player by selling various items for dungeons.",
       "dependency": "Dungeon Delver Mod.esp",
@@ -132,6 +152,26 @@
       ],
       "category": "New Quests and Lands",
       "nexusModId": 118261
+    },
+    {
+      "name": "Destroy the Acolyte Priests",
+      "description": "A quest to hunt down and destroy the three Dragon Priests on Solstheim who were Acolytes of Miraak (not including Vahlok the Jailor).",
+      "dependency": "Destroy the Acolyte Priests.esp",
+      "folders": [
+        "common\\DestroyAcolytePriests"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 145580
+    },
+    {
+      "name": "Destroy The Dark Brotherhood - Quest Expansion",
+      "description": "This mod introduces new lore-friendly ways to get kidnapped by Astrid (allowing you to Destroy the Dark Brotherhood even after sparing Grelod) while also expanding the actual quest to destroy the DB with new dialogue, choices, more memorable fights and a more cohesive quest. Enjoy!",
+      "dependency": "Destroy the Dark Brotherhood - Quest Expansion.esp",
+      "folders": [
+        "common\\DestroyDarkBrotherhoodQE"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 118229
     },
     {
       "name": "Ebony Blade Curse",
@@ -200,6 +240,16 @@
       ],
       "category": "Quest Expansions",
       "nexusModId": 114054
+    },
+    {
+      "name": "Innocence Lost - Quest Expansion",
+      "description": "This mod provides new paths (both good and evil) to complete the first Dark Brotherhood quest. Grelod the Kind, you'd better watch out. Fully voiced as usual.",
+      "dependency": "Innocence Lost - Quest Expansion.esp",
+      "folders": [
+        "common\\InnocenceLostQE"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 80974
     },
     {
       "name": "Legacy of the Dragonborn",
@@ -293,6 +343,16 @@
       "nexusModId": 51711
     },
     {
+      "name": "Penitus Oculatus",
+      "description": "A quest where you can join the Penitus Oculatus after the vanilla \"destroy the dark brotherhood\" quest and get all the rewards.",
+      "dependency": "Penitus_Oculatus.esp",
+      "folders": [
+        "common\\PenitusOculatus"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 21061
+    },
+    {
       "name": "Project AHO",
       "description": "Project AHO is a large quest modification, comparable in size to a medium-sized DLC. Designed in the best traditions of Bethesda Game Studios, this mod adds to Skyrim a hidden settlement of Great House Telvanni. Determine its fate for yourself!",
       "dependency": "Dwarfsphere.esp",
@@ -301,6 +361,26 @@
       ],
       "category": "New Quests and Lands",
       "nexusModId": 15996
+    },
+    {
+      "name": "Return Aegisbane",
+      "description": "Who needs an old Iron Warhammer anyway? Adds the option to return Aegisbane to it's rightful owners... Or tell them that you're claiming it as your own.",
+      "dependency": "ReturnAegisbane.esp",
+      "folders": [
+        "common\\ReturnAegisbane"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 108242
+    },
+    {
+      "name": "Revealing Rune",
+      "description": "Rune of the Thieves Guild has always felt like he was meant to have some sort of story or quest. But alas, hours of searching along the coast of Solitude will yield no results. Well, that is until now! Help Rune search for information on his past and discover what happened to his parents.",
+      "dependency": "Revealing Rune.esp",
+      "folders": [
+        "common\\RevealingRune"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 120935
     },
     {
       "name": "Save the Icerunner",
@@ -481,6 +561,16 @@
       ],
       "category": "Quest Expansions",
       "nexusModId": 114558
+    },
+    {
+      "name": "Thieves Guild For Good Guys",
+      "description": "Ever wanted to join the Thieves Guild without sending people to jail or bullying people for money? Want to tell Maven off? Want Mjoll to like you without having to lie to her about the Thieves Guild? Want to be a Robin Hood type thief?",
+      "dependency": "TCBM.esp",
+      "folders": [
+        "common\\ThievesGuildForGoodGuys"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 10745
     },
     {
       "name": "Thogra",

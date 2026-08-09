@@ -261,8 +261,20 @@ function renderDigestMd(modKey, list) {
     const authoringToken = fPlugin ? `${fPlugin}:${fHex}` : d.formid;
     out.push(`## ${d.editorId} ${d.name ? `"${d.name}"` : ""}  ${authoringToken}  [${d.role ?? "defined"}]`);
     if (d.role === "override") {
-      out.push(`   OVERRIDE carried by ${d.plugin}. Stages this mod adds to a vanilla quest belong on a`);
-      out.push(`   CORE tranche row keyed by editor_id with NO formid column, not on a per-mod channel.`);
+      // CORRECTED 2026-08-09. This block used to say added stages belong on a core tranche
+      // row. That was wrong, and the manager settles it: ResolveQuestReactionCellFile matches
+      // per CELL (`quest.<formid>|<stage>.`), core first then each channel, so core owning
+      // DB01 s200 does not shadow a channel owning DB01 s21 -- they are different cells.
+      //
+      // So the question is never "is this an override", it is "does this mod ADD the stage":
+      //   stage vanilla ALREADY has  -> core owns it. A channel row is shadowed by core's
+      //                                 first-hit and is dead weight.
+      //   stage the MOD ADDS         -> the mod's CHANNEL, keyed on the vanilla FormID. It
+      //                                 only exists when the mod is installed, so gating it
+      //                                 on the mod's plugin is exactly right.
+      out.push(`   OVERRIDE carried by ${d.plugin}. Row ONLY the stages this mod ADDS to the vanilla`);
+      out.push(`   quest -- those go in this mod's channel on the vanilla FormID. Stages vanilla already`);
+      out.push(`   has belong to the core matrix and a channel row for them is shadowed by it.`);
     }
     out.push(`   ${d.stageCount} stages, ${d.loggedStageCount} with evidence, terminal ${term}${d.truncated ? "  **TRUNCATED**" : ""}`);
     for (const s of d.stages) {

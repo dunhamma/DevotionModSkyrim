@@ -90,6 +90,47 @@ matrix already owns, which `pdv_quest_channel_reconcile.mjs` would reject anyway
 
 ## Judged and ruled SILENT
 
+### Cult of the True Dragonborn -- SILENT (no quest content)
+
+| | |
+|---|---|
+| Plugin | `ImmersiveMiraakDifficulty.esp` |
+| Defines | 1 QUST: `aaa_MiraakBuff_Quest` |
+| Stages | **0** |
+
+A difficulty tweak that buffs Miraak, shipped through a controller quest with nothing in it.
+It sat in JoJ's **Quest Expansions** separator, which is why it was a candidate. Batch B04,
+2026-08-09.
+
+### The Choice Is Yours -- SILENT (overrides vanilla, adds nothing)
+
+| | |
+|---|---|
+| Plugin | `TheChoiceIsYours.esp` |
+| Overrides | **16** vanilla quests: `DA01Intro`, `DA02`, `DB01Misc`, `MS09`, `MS10`, `MS14`, `DLC2RR03Intro`, `FreeformRiften01`, `FreeformRiften20`, `FreeformRiverwood01`, `FreeformSoljundsSinkholeA`, `WIChangeLocation03`, `WIAddItem07`, `MS01IntroWorldScene`, `DLC1VQ00ChangeLocation`, `DBEntranceQuest` |
+| Defines | nothing content-bearing |
+
+The mod changes **when a quest starts**, not what happens in it -- quests stop auto-starting
+and must be opted into through dialogue. Its overrides carry vanilla's stages unchanged:
+`DA02` "Boethiah's Calling" comes through with the same 30 stages and 13 evidence-bearing
+entries the base game has.
+
+Rowing them would do one of two wrong things. Four of the sixteen are **already in the core
+matrix**, so a channel would double-claim cells the core owns -- which
+`pdv_quest_channel_reconcile` rejects outright. The other twelve are plain vanilla quests: if
+they deserve coverage it belongs in the CORE matrix where every player gets it, not gated
+behind an unrelated mod's plugin so that only Choice-Is-Yours users see Skyrim react to
+`MS09`.
+
+**The general rule this batch established:** for an `[override]` quest, "does the mod touch
+it" is the wrong question. The question is *does it ADD a stage or an outcome*. A mod that
+carries vanilla's stages unchanged contributes nothing, however many records it overrides.
+Contrast Thieves Guild For Good Guys, whose overrides exist precisely to add alternate
+non-evil resolutions.
+
+Those twelve uncovered vanilla quests are a **core-matrix** observation, not a JoJ patch item.
+Batch B04, 2026-08-09.
+
 ### Leaps of Faith -- SILENT (no judgeable act)
 
 | | |

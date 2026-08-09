@@ -681,6 +681,25 @@
         </group>
         <group name="Quest Expansions" type="SelectAny">
           <plugins order="Explicit">
+            <plugin name="Caught Red Handed - Quest Expansion">
+              <description>Mind your own business, Svana. Everyone should be allowed to practice the &quot;Dibellan&quot; arts free of shame! Expands this misc quest with some new... interesting outcomes.</description>
+              <files>
+                <folder source="common\CaughtRedHandedQE" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Caught Red Handed - Quest Expansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="College of Winterhold - Quest Expansion">
               <description>This mod provides 7 new starter magic lessons/quests to make your College of Winterhold feel like an actual school of magic.</description>
               <files>
@@ -693,6 +712,63 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="College Of Winterhold - Quest Expansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Defeat the Dragon Cult">
+              <description>This mod aims the expand the later half of the main quest by giving the Dragonborn a reason to fight and kill all of the Dragon Priests in Skyrim before facing Alduin at the Throat of the World.</description>
+              <files>
+                <folder source="common\DefeatTheDragonCult" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Defeat the Dragon Cult.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Destroy the Acolyte Priests">
+              <description>A quest to hunt down and destroy the three Dragon Priests on Solstheim who were Acolytes of Miraak (not including Vahlok the Jailor).</description>
+              <files>
+                <folder source="common\DestroyAcolytePriests" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Destroy the Acolyte Priests.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Destroy The Dark Brotherhood - Quest Expansion">
+              <description>This mod introduces new lore-friendly ways to get kidnapped by Astrid (allowing you to Destroy the Dark Brotherhood even after sparing Grelod) while also expanding the actual quest to destroy the DB with new dialogue, choices, more memorable fights and a more cohesive quest. Enjoy!</description>
+              <files>
+                <folder source="common\DestroyDarkBrotherhoodQE" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Destroy the Dark Brotherhood - Quest Expansion.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -776,6 +852,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="Innocence Lost - Quest Expansion">
+              <description>This mod provides new paths (both good and evil) to complete the first Dark Brotherhood quest. Grelod the Kind, you'd better watch out. Fully voiced as usual.</description>
+              <files>
+                <folder source="common\InnocenceLostQE" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Innocence Lost - Quest Expansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Nilheim - Misc Quest Expansion">
               <description>Fixes some issues with the misc quest at Nilheim and gives a bit more flexibility to your encounter with good old Telrav, adding a couple of additional dialogue choices and options for roleplaying.</description>
               <files>
@@ -807,6 +902,63 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="PaarthurnaxQuestExpansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Penitus Oculatus">
+              <description>A quest where you can join the Penitus Oculatus after the vanilla &quot;destroy the dark brotherhood&quot; quest and get all the rewards.</description>
+              <files>
+                <folder source="common\PenitusOculatus" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Penitus_Oculatus.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Return Aegisbane">
+              <description>Who needs an old Iron Warhammer anyway? Adds the option to return Aegisbane to it's rightful owners... Or tell them that you're claiming it as your own.</description>
+              <files>
+                <folder source="common\ReturnAegisbane" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="ReturnAegisbane.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Revealing Rune">
+              <description>Rune of the Thieves Guild has always felt like he was meant to have some sort of story or quest. But alas, hours of searching along the coast of Solitude will yield no results. Well, that is until now! Help Rune search for information on his past and discover what happened to his parents.</description>
+              <files>
+                <folder source="common\RevealingRune" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Revealing Rune.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -883,6 +1035,25 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="TG Alternative Endings.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Thieves Guild For Good Guys">
+              <description>Ever wanted to join the Thieves Guild without sending people to jail or bullying people for money? Want to tell Maven off? Want Mjoll to like you without having to lie to her about the Thieves Guild? Want to be a Robin Hood type thief?</description>
+              <files>
+                <folder source="common\ThievesGuildForGoodGuys" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="TCBM.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>

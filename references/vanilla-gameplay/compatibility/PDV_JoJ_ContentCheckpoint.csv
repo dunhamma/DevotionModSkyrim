@@ -10,17 +10,17 @@ SleepwalkingNightmare,Sleepwalking Into A Nightmare,A,B03,NightmarePlane.esp,ok,
 HeartOfTheReach,Heart of the Reach,A,B03,HeartOfTheReach.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
 ThereIsNoUmbra3,There Is No Umbra - Chapter III,A,B03,FloatingSwordFollower.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,"49 tagged rows; judge corrected clavicus_vile->clavicus and 6 :umbra tags; 5 cross-gen conflicts hand-resolved; 1 NEEDS-TAG (s300, renounce_dangerous_power)"
 LeapsOfFaith,Leaps of Faith,A,B03,LeapsOfFaith.esp,ok,ok,-,SILENT,-,-,-,-,-,"13 stages, every one tier B - a parkour collectathon with no branch and no judgeable act. See silence ledger."
-CaughtRedHandedQE,Caught Red Handed - Quest Expansion,B,B04,Caught Red Handed - Quest Expansion.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
-InnocenceLostQE,The Innocence Lost - Quest Expansion,B,B04,Innocence Lost - Quest Expansion.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
-DestroyDarkBrotherhoodQE,Destroy The Dark Brotherhood - Quest Expansion,B,B04,Destroy the Dark Brotherhood - Quest Expansion.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
-PenitusOculatus,Penitus Oculatus,B,B04,Penitus_Oculatus.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
-ThievesGuildForGoodGuys,Thieves Guild For Good Guys,B,B04,TCBM.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
-TheChoiceIsYours,The Choice is Yours,B,B04,TheChoiceIsYours.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
-DestroyAcolytePriests,Destroy the Acolyte Priests,B,B04,Destroy the Acolyte Priests.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
-DefeatTheDragonCult,Defeat the Dragon Cult,B,B04,Defeat the Dragon Cult.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
-ReturnAegisbane,Return Aegisbane,B,B04,ReturnAegisbane.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
-RevealingRune,Revealing Rune,B,B04,Revealing Rune.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
-CultOfTheTrueDragonborn,Cult of the True Dragonborn,B,B04,ImmersiveMiraakDifficulty.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
+CaughtRedHandedQE,Caught Red Handed - Quest Expansion,B,B04,Caught Red Handed - Quest Expansion.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+InnocenceLostQE,The Innocence Lost - Quest Expansion,B,B04,Innocence Lost - Quest Expansion.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+DestroyDarkBrotherhoodQE,Destroy The Dark Brotherhood - Quest Expansion,B,B04,Destroy the Dark Brotherhood - Quest Expansion.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+PenitusOculatus,Penitus Oculatus,B,B04,Penitus_Oculatus.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+ThievesGuildForGoodGuys,Thieves Guild For Good Guys,B,B04,TCBM.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+TheChoiceIsYours,The Choice is Yours,B,B04,TheChoiceIsYours.esp,ok,ok,-,SILENT,-,-,-,-,-,"16 overrides carry vanilla stages UNCHANGED - changes when quests start, not what happens. See silence ledger."
+DestroyAcolytePriests,Destroy the Acolyte Priests,B,B04,Destroy the Acolyte Priests.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+DefeatTheDragonCult,Defeat the Dragon Cult,B,B04,Defeat the Dragon Cult.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+ReturnAegisbane,Return Aegisbane,B,B04,ReturnAegisbane.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+RevealingRune,Revealing Rune,B,B04,Revealing Rune.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+CultOfTheTrueDragonborn,Cult of the True Dragonborn,B,B04,ImmersiveMiraakDifficulty.esp,ok,ok,-,SILENT,-,-,-,-,-,only quest is aaa_MiraakBuff_Quest with 0 stages - a difficulty tweak
 Kaidan2,Kaidan 2,C,B05,0Kaidan.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
 ImmersiveKaidanAIO,Immersive Kaidan AIO,C,B05,Kaidan - Immersive Features.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,K03/K04 all tier C; NSFW quest 0 stages - see silence ledger
 DeadlandsExpanded,Deadlands Expanded - A Kaidan Quest Overhaul,C,B05,KR2_Deadlands.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
