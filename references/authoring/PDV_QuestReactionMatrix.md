@@ -329,9 +329,17 @@ to most gods).
 ### Argonian
 
 **Hist** — the trees, the People, memory, the marsh, communion. (substrate)
-- approve: `defend_kin_home`(C, *the People*), `honor_the_wild`(S), `honor_the_dead`(m)
-- disapprove: `defile_nature`(S), `break_oath_betray`(m, *abandon the People*)
+- approve: `defend_kin_home`(C, *the People*), `protect_the_weak`(S, *community solidarity IS the exile's primary religious practice: "helping Argonians anywhere in Skyrim matters religiously because community partially buffers Hist absence". Added 2026-08-09.*), `honor_the_wild`(S), `cure_undeath`(S, *a soul withheld from the cycle, restored to it. Undeath is the precise inverse of Hist soul-return, so curing one is the sharpest positive act available in Skyrim. Added 2026-08-09.*), `honor_the_dead`(m), `heal_comfort`(m, *tending the People. Added 2026-08-09.*), `slay_undead`(m, *ends a soul's imprisonment in undeath -- deliberately (m) and not (S): the Hist is not a vigil-against-undeath deity like Arkay or Tu'whacca, and draugr-clearing must not read as Argonian devotion. Added 2026-08-09.*)
+- disapprove: `defile_nature`(S), `necromancy`(S, *binding a soul that belongs to the Hist and owes it a return. The one act that directly steals from the trees. Added 2026-08-09.*), `break_oath_betray`(m, *abandon the People*)
 - anchor: The Hist; Argonian collective. (UESP: Hist)
+- exile note: Argonians in Skyrim are cut off from the trees, so the profile deliberately
+  weights COMMUNITY and the SOUL-CYCLE above the marsh. Both are lore-load-bearing and
+  neither was reachable before: the profile encoded only the wild and a sliver of kinship,
+  and drew from 55 quest-stages against a 44-deity median of ~58 rows. Widened 2026-08-09
+  after a per-race coverage pass put Argonian last of ten at 36 rows/god. NOT widened into a
+  generic benevolent god -- `charity` and `marriage_family` were considered and refused,
+  because the locked architecture is explicit that this is "Hist/community/Sithis exile
+  architecture, not pantheon worship".
 
 **Sithis** — the Void, the original night, death-as-change, the Brotherhood.
 - approve: `assassination_contract`(C), `murder_treacherous`(S), `embrace... void`(m)
