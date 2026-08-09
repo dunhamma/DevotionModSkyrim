@@ -4,9 +4,12 @@
 // WHY. Four of the five things checked here are enforced NOWHERE ELSE, and each fails the
 // same way -- quietly.
 //
-//   act_tags   Read by cross_gen, compile and the equity audit; validated by none of them.
-//              An off-vocabulary tag matches no deity profile, so it produces no fan-out and
-//              no error. The row exists, compiles, ships, and awards nothing.
+//   act_tags   Read by cross_gen, the equity audit and the signal-floor audits; validated by
+//              none of them. An off-vocabulary tag matches no deity profile, so it yields no
+//              fan-out candidates and no error. The ROW still awards -- its deity, valence
+//              and magnitude are hand-authored and the runtime treats the tag as an opaque
+//              string it copies into a snapshot. What is lost is the ability to ask "which
+//              other gods care about this act", and visibility to the equity audit.
 //   deity      Gated only since 2026-08-09 for channels, and only by name resolution.
 //   magnitude  `echo` was retired 2026-07-09. Nothing rejects it.
 //   formid     A malformed token throws at compile, but with a less specific message.
