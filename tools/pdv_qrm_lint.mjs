@@ -19,6 +19,12 @@
 // The vocabularies are PARSED, never hardcoded -- see tools/lib/pdv_matrix_vocab.mjs. A lint
 // that pins the list it checks against is pinning, not verifying.
 //
+// Act tags come from Part A; Daedric Prince SLUGS come from the "Canonical Prince slugs"
+// roster in Part B-2. The slug roster is read from the doc and not harvested from the rows:
+// until 2026-08-09 it was harvested, which meant a committed typo taught the vocabulary its
+// own spelling and then passed. Verified both ways -- with the old harvest a planted
+// `serve_a_daedra:clavicus_vile` exits 0; against the roster it exits 1.
+//
 // WAIVERS. Off-vocabulary act tags predate this tool: rows authored through the ARR
 // reconciliation lane carry tags Part A never had. They are waived by name in
 // references/authoring/PDV_QRMLintWaivers.csv so today's content passes, and so that every
@@ -29,7 +35,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
-import { acceptedDeityNames, actTagVocabulary, isKnownActTag, daedricSlugs, badDaedricSlug } from "./lib/pdv_matrix_vocab.mjs";
+import { acceptedDeityNames, actTagVocabulary, isKnownActTag, daedricSlugs, badDaedricSlug, badFaucetDaedricSlug } from "./lib/pdv_matrix_vocab.mjs";
 
 const KNOWN_FLAGS = new Set(["--csv", "--json", "--list-unknown-tags"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_qrm_lint" });
@@ -109,6 +115,8 @@ const FORMID = /^[^:]+\.(esp|esm|esl):[0-9A-Fa-f]{6}$/i;
 const unknownTagHits = new Map();
 let rowsChecked = 0;
 let filesChecked = 0;
+let faucetRowsChecked = 0;
+let faucetFilesChecked = 0;
 
 const skipped = [];
 for (const file of targetFiles()) {
@@ -119,6 +127,25 @@ for (const file of targetFiles()) {
   // ACTIVITY table with no outcome_stage at all, and testing `deity` alone reported all 27 of
   // its rows as malformed quest rows. A schema mismatch is not a finding.
   if (!header.includes("deity") || !header.includes("outcome_stage")) {
+    // An activity table (Part D faucets): no quest outcome, so none of the quest-row rules
+    // apply -- but its act_tag carries a Prince slug into the SAME anti-farm cap key the
+    // quest rows use, `PDV.QuestReaction.Faucet.<deity>.<tag>`. Skipping the file wholesale
+    // is how `serve_a_daedra:molag_bal` sat next to the matrix's `serve_a_daedra:molagbal`
+    // as two buckets for one act. Slugs are checked here; everything else stays skipped.
+    if (header.includes("deity") && header.includes("act_tag")) {
+      faucetFilesChecked += 1;
+      for (const r of rows) {
+        faucetRowsChecked += 1;
+        const tag = (r.act_tag ?? "").trim();
+        if (!tag) continue;
+        const bad = badFaucetDaedricSlug(tag, daedric.slugs);
+        if (bad && !waived.has(tag)) {
+          failures.push(`${rel}:${r._line} ${r.deity ?? "?"} faucet act_tag "${tag}" -- ${bad}`);
+        }
+      }
+      skipped.push(`${rel} (activity table -- Daedric slugs checked, quest-row rules skipped)`);
+      continue;
+    }
     if (header.includes("deity")) skipped.push(`${rel} (no outcome_stage column -- not a quest-outcome table)`);
     continue;
   }
@@ -167,12 +194,12 @@ if (argv.includes("--list-unknown-tags")) {
 const status = failures.length === 0 && issues.length === 0 ? "PASS" : "FAIL";
 if (argv.includes("--json")) {
   console.log(JSON.stringify({
-    check: "qrmLint", status, filesChecked, rowsChecked, skipped,
+    check: "qrmLint", status, filesChecked, rowsChecked, faucetFilesChecked, faucetRowsChecked, skipped,
     actTagLiterals: vocab.literals.size, acceptedDeities: deities.names.size,
-    waivedTags: waived.size, failures, issues,
+    daedricSlugs: daedric.slugs.size, waivedTags: waived.size, failures, issues,
   }, null, 2));
 } else {
-  console.log(`${status} files=${filesChecked} rows=${rowsChecked} tags=${vocab.literals.size}+${vocab.prefixes.size} deities=${deities.names.size} waived=${waived.size} failures=${failures.length}`);
+  console.log(`${status} files=${filesChecked} rows=${rowsChecked} faucet=${faucetFilesChecked}/${faucetRowsChecked} tags=${vocab.literals.size}+${vocab.prefixes.size} deities=${deities.names.size} slugs=${daedric.slugs.size} waived=${waived.size} failures=${failures.length}`);
   for (const s of skipped) console.log(`  skipped ${s}`);
   for (const i of issues) console.error(`  ISSUE ${i}`);
   for (const f of failures.slice(0, 60)) console.error(`  ${f}`);

@@ -79,8 +79,8 @@ export function actTagVocabulary(repoRoot) {
   return { literals, prefixes, issues };
 }
 
-// The Daedric slugs a namespaced tag may actually carry, harvested from every profile and
-// every shipped row rather than declared.
+// The Daedric slugs a namespaced tag may actually carry, read from the "Canonical Prince
+// slugs" roster in Part B-2 of PDV_QuestReactionMatrix.md.
 //
 // WHY THIS IS NEEDED SEPARATELY FROM isKnownActTag. Part A defines the tag as
 // `serve_a_daedra:<prince>`, so any suffix at all satisfies the PREFIX check -- and a wrong
@@ -89,27 +89,48 @@ export function actTagVocabulary(repoRoot) {
 // `serve_a_daedra:clavicus_vile` (the slug is `clavicus`) and `serve_a_daedra:umbra` (not a
 // Prince at all) and both sailed through a green lint on 2026-08-09.
 //
-// Harvested, not hardcoded, so a genuinely new Prince slug becomes legal the moment a profile
-// or a shipped row uses it -- and so this cannot rot into a list that disagrees with the data.
+// WHY IT NO LONGER HARVESTS THE DATA. This function used to scrape slugs out of the shipped
+// CSVs as well as the doc, on the reasoning that a harvest cannot rot into a list that
+// disagrees with the data. It cannot -- but it also cannot DISAGREE with the data, which is
+// the entire job. A typo became "known" the moment it was committed: the harvest learned it,
+// then validated it, and the row it came from silently fanned out to nobody. That is how
+// `serve_a_daedra:dagon` and `serve_a_daedra:mehrunesdagon` both passed a green lint while
+// naming the same Prince. The roster is now DECLARED in Part B and this reads only that, so
+// a new slug costs one deliberate table row -- which is the review the harvest skipped.
+//
+// Still parsed, never hardcoded here: a hardcoded copy would be pinning, not verifying.
+//
+// Scoped to the table's own rows on purpose. The prose around it names the slugs this pass
+// REJECTED (`dagon`, `molag_bal`, `sheogorath_fire`, `clavicus_vile`), and a doc-wide scrape
+// would re-legalise every one of them.
 export function daedricSlugs(repoRoot) {
   const slugs = new Set();
-  const NS = /(?:serve_a_daedra|destroy_reject_daedra|acquire_daedric_artifact):([a-z_]+)/g;
-  const eat = (text) => { for (const m of text.matchAll(NS)) if (m[1] !== "*") slugs.add(m[1]); };
+  const issues = [];
 
   const docPath = path.join(repoRoot, "references", "authoring", "PDV_QuestReactionMatrix.md");
-  if (fs.existsSync(docPath)) eat(fs.readFileSync(docPath, "utf8"));
+  if (!fs.existsSync(docPath)) return { slugs, issues: [`matrix doc missing: ${docPath}`] };
+  const text = fs.readFileSync(docPath, "utf8");
 
-  const authoring = path.join(repoRoot, "references", "authoring");
-  for (const f of fs.existsSync(authoring) ? fs.readdirSync(authoring) : []) {
-    if (/^PDV_QuestReactionMatrix.*\.csv$/i.test(f)) eat(fs.readFileSync(path.join(authoring, f), "utf8"));
+  const start = text.search(/^####\s+Canonical Prince slugs\b/m);
+  if (start < 0) {
+    return { slugs, issues: ['Part B-2 "Canonical Prince slugs" roster not found -- the slug check cannot run'] };
   }
-  const patches = path.join(authoring, "patches");
-  for (const f of fs.existsSync(patches) ? fs.readdirSync(patches) : []) {
-    if (/^PDV_QRM_.*\.csv$/i.test(f)) eat(fs.readFileSync(path.join(patches, f), "utf8"));
-  }
+  // Ends at the next heading of any level, so adding a section after the table cannot widen
+  // the vocabulary to whatever that section happens to mention. Slicing past the END of the
+  // heading line, not past its first character: the Part A/Part B parsers get away with
+  // `start + 1` because they look for `^##` and leave `# ...` behind, but this looks for any
+  // `^#{2,6}` and would match the remainder of its own heading, yielding an empty roster.
+  const afterHeading = text.indexOf("\n", start);
+  const rest = afterHeading < 0 ? "" : text.slice(afterHeading + 1);
+  const end = rest.search(/^#{2,6}\s/m);
+  const roster = end < 0 ? rest : rest.slice(0, end);
 
-  const issues = [];
-  if (slugs.size < 10) issues.push(`Daedric slug harvest suspiciously small (${slugs.size}) -- the scan may have broken`);
+  // `| Mehrunes Dagon | `mehrunesdagon` |` -- the second column only.
+  for (const m of roster.matchAll(/^\|[^|\n]+\|\s*`([a-z0-9_]+)`\s*\|/gm)) slugs.add(m[1]);
+
+  if (slugs.size < 10) {
+    issues.push(`Prince slug roster suspiciously small (${slugs.size}) -- the Part B-2 table parse may have broken`);
+  }
   return { slugs, issues };
 }
 
@@ -128,4 +149,27 @@ export function badDaedricSlug(tag, known) {
   if (suffix === "*" || suffix.startsWith("<")) return null;
   if (known.has(suffix)) return null;
   return `"${suffix}" is not a known Daedric slug (${[...known].sort().join(", ")})`;
+}
+
+// The same check for the Part D faucet lane, which is allowed one thing quest rows are not:
+// a COMPOUND act, `<rosterslug>_<qualifier>`. Sheogorath has two distinct faucets -- bearing
+// the Wabbajack (`serve_a_daedra:sheogorath`) and firing it (`serve_a_daedra:sheogorath_fire`)
+// -- and the second shares the first's anti-farm bucket through FAUCET_CAP_TAG_ALIASES in
+// pdv_quest_matrix_compile.mjs while keeping its own valence and intensity.
+//
+// The rule still catches the drift it was written for, because the base has to be a real
+// Prince: `molag_bal` bases to "molag" and `mehrunes_dagon` to "mehrunes", and neither is in
+// the roster. Both were live faucet slugs until 2026-08-09, when they were normalised to
+// `molagbal` / `mehrunesdagon` so the faucet and the quest matrix would stop keeping two
+// separate daily cap buckets for the same act on the same god.
+export function badFaucetDaedricSlug(tag, known) {
+  const colon = tag.indexOf(":");
+  if (colon < 0) return null;
+  const suffix = tag.slice(colon + 1);
+  if (suffix === "*" || suffix.startsWith("<")) return null;
+  if (known.has(suffix)) return null;
+  const under = suffix.indexOf("_");
+  if (under > 0 && known.has(suffix.slice(0, under))) return null;
+  return `"${suffix}" is not a known Daedric slug, nor <slug>_<qualifier> over one `
+    + `(${[...known].sort().join(", ")})`;
 }

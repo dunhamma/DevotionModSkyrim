@@ -1,7 +1,7 @@
 {
   "string": {
-    "generatedAt": "2026-08-09T06:07:13.894Z",
-    "generatedat": "2026-08-09T06:07:13.894Z",
+    "generatedAt": "2026-08-10T00:15:57.903Z",
+    "generatedat": "2026-08-10T00:15:57.903Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "676829",
     "questwatchformidscsv": "676829",
@@ -1215,18 +1215,18 @@
     "faucet.dibella.aesthetic_devotion.tag": "aesthetic_devotion",
     "faucet.Dibella.aesthetic_devotion.cap": "1/dawn",
     "faucet.dibella.aesthetic_devotion.cap": "1/dawn",
-    "faucet.Molag Bal.serve_a_daedra:molag_bal.deity": "Molag Bal",
-    "faucet.molag bal.serve_a_daedra:molag_bal.deity": "Molag Bal",
-    "faucet.Molag Bal.serve_a_daedra:molag_bal.valence": "+",
-    "faucet.molag bal.serve_a_daedra:molag_bal.valence": "+",
-    "faucet.Molag Bal.serve_a_daedra:molag_bal.intensity": "C",
-    "faucet.molag bal.serve_a_daedra:molag_bal.intensity": "C",
-    "faucet.Molag Bal.serve_a_daedra:molag_bal.magnitude": "small",
-    "faucet.molag bal.serve_a_daedra:molag_bal.magnitude": "small",
-    "faucet.Molag Bal.serve_a_daedra:molag_bal.tag": "serve_a_daedra:molag_bal",
-    "faucet.molag bal.serve_a_daedra:molag_bal.tag": "serve_a_daedra:molag_bal",
-    "faucet.Molag Bal.serve_a_daedra:molag_bal.cap": "1/dawn",
-    "faucet.molag bal.serve_a_daedra:molag_bal.cap": "1/dawn",
+    "faucet.Molag Bal.serve_a_daedra:molagbal.deity": "Molag Bal",
+    "faucet.molag bal.serve_a_daedra:molagbal.deity": "Molag Bal",
+    "faucet.Molag Bal.serve_a_daedra:molagbal.valence": "+",
+    "faucet.molag bal.serve_a_daedra:molagbal.valence": "+",
+    "faucet.Molag Bal.serve_a_daedra:molagbal.intensity": "C",
+    "faucet.molag bal.serve_a_daedra:molagbal.intensity": "C",
+    "faucet.Molag Bal.serve_a_daedra:molagbal.magnitude": "small",
+    "faucet.molag bal.serve_a_daedra:molagbal.magnitude": "small",
+    "faucet.Molag Bal.serve_a_daedra:molagbal.tag": "serve_a_daedra:molagbal",
+    "faucet.molag bal.serve_a_daedra:molagbal.tag": "serve_a_daedra:molagbal",
+    "faucet.Molag Bal.serve_a_daedra:molagbal.cap": "1/dawn",
+    "faucet.molag bal.serve_a_daedra:molagbal.cap": "1/dawn",
     "faucet.Hircine.serve_a_daedra:hircine.deity": "Hircine",
     "faucet.hircine.serve_a_daedra:hircine.deity": "Hircine",
     "faucet.Hircine.serve_a_daedra:hircine.valence": "+",
@@ -1275,18 +1275,18 @@
     "faucet.sheogorath.serve_a_daedra:sheogorath_fire.tag": "serve_a_daedra:sheogorath",
     "faucet.Sheogorath.serve_a_daedra:sheogorath_fire.cap": "1/dawn",
     "faucet.sheogorath.serve_a_daedra:sheogorath_fire.cap": "1/dawn",
-    "faucet.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon.deity": "Mehrunes Dagon",
-    "faucet.mehrunes dagon.serve_a_daedra:mehrunes_dagon.deity": "Mehrunes Dagon",
-    "faucet.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon.valence": "+",
-    "faucet.mehrunes dagon.serve_a_daedra:mehrunes_dagon.valence": "+",
-    "faucet.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon.intensity": "C",
-    "faucet.mehrunes dagon.serve_a_daedra:mehrunes_dagon.intensity": "C",
-    "faucet.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon.magnitude": "small",
-    "faucet.mehrunes dagon.serve_a_daedra:mehrunes_dagon.magnitude": "small",
-    "faucet.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon.tag": "serve_a_daedra:mehrunes_dagon",
-    "faucet.mehrunes dagon.serve_a_daedra:mehrunes_dagon.tag": "serve_a_daedra:mehrunes_dagon",
-    "faucet.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon.cap": "1/dawn",
-    "faucet.mehrunes dagon.serve_a_daedra:mehrunes_dagon.cap": "1/dawn",
+    "faucet.Mehrunes Dagon.serve_a_daedra:mehrunesdagon.deity": "Mehrunes Dagon",
+    "faucet.mehrunes dagon.serve_a_daedra:mehrunesdagon.deity": "Mehrunes Dagon",
+    "faucet.Mehrunes Dagon.serve_a_daedra:mehrunesdagon.valence": "+",
+    "faucet.mehrunes dagon.serve_a_daedra:mehrunesdagon.valence": "+",
+    "faucet.Mehrunes Dagon.serve_a_daedra:mehrunesdagon.intensity": "C",
+    "faucet.mehrunes dagon.serve_a_daedra:mehrunesdagon.intensity": "C",
+    "faucet.Mehrunes Dagon.serve_a_daedra:mehrunesdagon.magnitude": "small",
+    "faucet.mehrunes dagon.serve_a_daedra:mehrunesdagon.magnitude": "small",
+    "faucet.Mehrunes Dagon.serve_a_daedra:mehrunesdagon.tag": "serve_a_daedra:mehrunesdagon",
+    "faucet.mehrunes dagon.serve_a_daedra:mehrunesdagon.tag": "serve_a_daedra:mehrunesdagon",
+    "faucet.Mehrunes Dagon.serve_a_daedra:mehrunesdagon.cap": "1/dawn",
+    "faucet.mehrunes dagon.serve_a_daedra:mehrunesdagon.cap": "1/dawn",
     "faucet.Nocturnal.serve_a_daedra:nocturnal.deity": "Nocturnal",
     "faucet.nocturnal.serve_a_daedra:nocturnal.deity": "Nocturnal",
     "faucet.Nocturnal.serve_a_daedra:nocturnal.valence": "+",
@@ -1409,9 +1409,9 @@
     "faucetformsmalacathserveadaedramalacathformidscsv": "175314",
     "faucetFormsMalacathServeADaedraMalacathPluginsCsv": "Skyrim.esm",
     "faucetformsmalacathserveadaedramalacathpluginscsv": "Skyrim.esm",
-    "faucetFormsMolagBalServeADaedraMolagBalFormIdsCsv": "144355",
+    "faucetFormsMolagBalServeADaedraMolagbalFormIdsCsv": "144355",
     "faucetformsmolagbalserveadaedramolagbalformidscsv": "144355",
-    "faucetFormsMolagBalServeADaedraMolagBalPluginsCsv": "Skyrim.esm",
+    "faucetFormsMolagBalServeADaedraMolagbalPluginsCsv": "Skyrim.esm",
     "faucetformsmolagbalserveadaedramolagbalpluginscsv": "Skyrim.esm",
     "faucetFormsHircineServeADaedraHircineFormIdsCsv": "175201,175200",
     "faucetformshircineserveadaedrahircineformidscsv": "175201,175200",
@@ -1425,9 +1425,9 @@
     "faucetformssheogorathserveadaedrasheogorathformidscsv": "175215",
     "faucetFormsSheogorathServeADaedraSheogorathPluginsCsv": "Skyrim.esm",
     "faucetformssheogorathserveadaedrasheogorathpluginscsv": "Skyrim.esm",
-    "faucetFormsMehrunesDagonServeADaedraMehrunesDagonFormIdsCsv": "147666",
+    "faucetFormsMehrunesDagonServeADaedraMehrunesdagonFormIdsCsv": "147666",
     "faucetformsmehrunesdagonserveadaedramehrunesdagonformidscsv": "147666",
-    "faucetFormsMehrunesDagonServeADaedraMehrunesDagonPluginsCsv": "Skyrim.esm",
+    "faucetFormsMehrunesDagonServeADaedraMehrunesdagonPluginsCsv": "Skyrim.esm",
     "faucetformsmehrunesdagonserveadaedramehrunesdagonpluginscsv": "Skyrim.esm",
     "faucetFormsNocturnalServeADaedraNocturnalFormIdsCsv": "502039,1008932,1008933,1008934,1008935,517571,1008937,1008938,1008939,1008940,383878,1035278,1035279,1035276,383877,1035277,383879,1035280,1035281,383880,1035283,1035282",
     "faucetformsnocturnalserveadaedranocturnalformidscsv": "502039,1008932,1008933,1008934,1008935,517571,1008937,1008938,1008939,1008940,383878,1035278,1035279,1035276,383877,1035277,383879,1035280,1035281,383880,1035283,1035282",
@@ -1575,12 +1575,12 @@
       "Dibella.marriage_family",
       "Dibella.charity",
       "Dibella.aesthetic_devotion",
-      "Molag Bal.serve_a_daedra:molag_bal",
+      "Molag Bal.serve_a_daedra:molagbal",
       "Hircine.serve_a_daedra:hircine",
       "Meridia.serve_a_daedra:meridia",
       "Sheogorath.serve_a_daedra:sheogorath",
       "Sheogorath.serve_a_daedra:sheogorath_fire",
-      "Mehrunes Dagon.serve_a_daedra:mehrunes_dagon",
+      "Mehrunes Dagon.serve_a_daedra:mehrunesdagon",
       "Nocturnal.serve_a_daedra:nocturnal",
       "Azura.fate_threshold",
       "Boethiah.serve_a_daedra:boethiah",
@@ -1603,12 +1603,12 @@
       "Dibella.marriage_family",
       "Dibella.charity",
       "Dibella.aesthetic_devotion",
-      "Molag Bal.serve_a_daedra:molag_bal",
+      "Molag Bal.serve_a_daedra:molagbal",
       "Hircine.serve_a_daedra:hircine",
       "Meridia.serve_a_daedra:meridia",
       "Sheogorath.serve_a_daedra:sheogorath",
       "Sheogorath.serve_a_daedra:sheogorath_fire",
-      "Mehrunes Dagon.serve_a_daedra:mehrunes_dagon",
+      "Mehrunes Dagon.serve_a_daedra:mehrunesdagon",
       "Nocturnal.serve_a_daedra:nocturnal",
       "Azura.fate_threshold",
       "Boethiah.serve_a_daedra:boethiah",
@@ -2310,31 +2310,31 @@
     "faucetformsmalacathserveadaedramalacathplugins": [
       "Skyrim.esm"
     ],
-    "faucetForms.Molag Bal.serve_a_daedra:molag_bal": [
+    "faucetForms.Molag Bal.serve_a_daedra:molagbal": [
       "0x0233E3|Skyrim.esm"
     ],
-    "faucetforms.molag bal.serve_a_daedra:molag_bal": [
+    "faucetforms.molag bal.serve_a_daedra:molagbal": [
       "0x0233E3|Skyrim.esm"
     ],
-    "faucetForms.Molag Bal.serve_a_daedra:molag_bal.formIds": [
+    "faucetForms.Molag Bal.serve_a_daedra:molagbal.formIds": [
       "144355"
     ],
-    "faucetforms.molag bal.serve_a_daedra:molag_bal.formids": [
+    "faucetforms.molag bal.serve_a_daedra:molagbal.formids": [
       "144355"
     ],
-    "faucetForms.Molag Bal.serve_a_daedra:molag_bal.plugins": [
+    "faucetForms.Molag Bal.serve_a_daedra:molagbal.plugins": [
       "Skyrim.esm"
     ],
-    "faucetforms.molag bal.serve_a_daedra:molag_bal.plugins": [
+    "faucetforms.molag bal.serve_a_daedra:molagbal.plugins": [
       "Skyrim.esm"
     ],
-    "faucetFormsMolagBalServeADaedraMolagBalFormIds": [
+    "faucetFormsMolagBalServeADaedraMolagbalFormIds": [
       "144355"
     ],
     "faucetformsmolagbalserveadaedramolagbalformids": [
       "144355"
     ],
-    "faucetFormsMolagBalServeADaedraMolagBalPlugins": [
+    "faucetFormsMolagBalServeADaedraMolagbalPlugins": [
       "Skyrim.esm"
     ],
     "faucetformsmolagbalserveadaedramolagbalplugins": [
@@ -2440,31 +2440,31 @@
     "faucetformssheogorathserveadaedrasheogorathplugins": [
       "Skyrim.esm"
     ],
-    "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon": [
+    "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunesdagon": [
       "0x0240D2|Skyrim.esm"
     ],
-    "faucetforms.mehrunes dagon.serve_a_daedra:mehrunes_dagon": [
+    "faucetforms.mehrunes dagon.serve_a_daedra:mehrunesdagon": [
       "0x0240D2|Skyrim.esm"
     ],
-    "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon.formIds": [
+    "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunesdagon.formIds": [
       "147666"
     ],
-    "faucetforms.mehrunes dagon.serve_a_daedra:mehrunes_dagon.formids": [
+    "faucetforms.mehrunes dagon.serve_a_daedra:mehrunesdagon.formids": [
       "147666"
     ],
-    "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon.plugins": [
+    "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunesdagon.plugins": [
       "Skyrim.esm"
     ],
-    "faucetforms.mehrunes dagon.serve_a_daedra:mehrunes_dagon.plugins": [
+    "faucetforms.mehrunes dagon.serve_a_daedra:mehrunesdagon.plugins": [
       "Skyrim.esm"
     ],
-    "faucetFormsMehrunesDagonServeADaedraMehrunesDagonFormIds": [
+    "faucetFormsMehrunesDagonServeADaedraMehrunesdagonFormIds": [
       "147666"
     ],
     "faucetformsmehrunesdagonserveadaedramehrunesdagonformids": [
       "147666"
     ],
-    "faucetFormsMehrunesDagonServeADaedraMehrunesDagonPlugins": [
+    "faucetFormsMehrunesDagonServeADaedraMehrunesdagonPlugins": [
       "Skyrim.esm"
     ],
     "faucetformsmehrunesdagonserveadaedramehrunesdagonplugins": [
