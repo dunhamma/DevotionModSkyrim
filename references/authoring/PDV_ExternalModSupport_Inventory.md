@@ -1,19 +1,19 @@
 # PDV External-Mod Support Inventory
 
-Updated: 2026-08-08 AEST
+Updated: 2026-08-09 AEST
 Class: LIVING -- hand-authored authority (`PDV_STANDARDS.md` section 5.3 class 1)
 Status: complete inventory of shipped support; runtime proof is open on most of it, and this doc says which
 
 <!-- pdv-inventory-counts {
-  "g1DataOnlyPatches": 41,
+  "g1DataOnlyPatches": 42,
   "g2PluginPatches": 5,
-  "g1WithAwardRows": 41,
+  "g1WithAwardRows": 42,
   "g2WithAwardRows": 3,
-  "totalReactionCells": 133,
-  "totalAwardRows": 534,
-  "hubFoldersTotal": 46,
-  "manifestOptions": 46,
-  "sourceCsvs": 44,
+  "totalReactionCells": 135,
+  "totalAwardRows": 559,
+  "hubFoldersTotal": 47,
+  "manifestOptions": 47,
+  "sourceCsvs": 45,
   "reconstructedCsvs": 5,
   "coreRows": 2144,
   "coreEditorIds": 157,
@@ -33,7 +33,7 @@ Status: complete inventory of shipped support; runtime proof is open on most of 
 
 One place to answer "what external-mod content does Devotion actually support?".
 
-Before this doc the answer was spread across the FOMOD manifest, 44 per-mod
+Before this doc the answer was spread across the FOMOD manifest, 45 per-mod
 source CSVs, the core matrix, a KID ini, a BaseObjectSwapper ini and a handful
 of Papyrus hooks, and nothing tied them together. The grouping below is by
 **attach mechanism** -- *how* the support reaches the game -- because that is
@@ -76,19 +76,19 @@ game, that proof lives in a runbook, not here.
 
 | # | Group | Attach mechanism | Entries | Ships a plugin? | User installs anything? |
 |---|---|---|---:|---|---|
-| **G1** | Per-mod quest-reaction patches, data-only | `common/<Mod>/` StorageUtil channel JSON | **41** | No | Yes -- PatchHub option |
+| **G1** | Per-mod quest-reaction patches, data-only | `common/<Mod>/` StorageUtil channel JSON | **42** | No | Yes -- PatchHub option |
 | **G2** | Per-mod patches that ship a plugin | ESP (+ TIF fragments / SEQ / BOS ini) | **5** | Yes | Yes -- PatchHub option |
 | **G3** | Covered by the CORE mod, no separate patch | rows in `PDV_QuestReactionMatrix_Full.csv` | **157** editor ids (2144 rows) | n/a -- in `Devotion.esp` | **No** |
 | **G4** | Item-keyword support (KID) | `PDV_GreenPact_KID.ini` | **1** live rule (9 item names), 4 empty lanes | No | No -- in core |
 | **G5** | Shrine / world-object support (BaseObjectSwapper) | `PDV_DaedricShrinesAIO_SWAP.ini` | **1** ini, 11 swaps | Yes -- inside the G2 patch | Yes -- PatchHub option |
 | **G6** | Papyrus activity hooks, no quest stage | plugin literals in `PDV_PlayerEvents` / `PDV__ManagerQuest` / `PDV_Origin` | **7** plugins | No | **No** |
 
-G1 + G2 = the 46 PatchHub options, 1:1 with the 46 manifest entries and the 46
-`common/` folders. 133 quest-reaction cells, 534 deity award rows.
+G1 + G2 = the 47 PatchHub options, 1:1 with the 47 manifest entries and the 47
+`common/` folders. 135 quest-reaction cells, 559 deity award rows.
 
 **Read this next to the installer:** a user who installs zero PatchHub options
 still gets G3, G4 and G6. That is the majority of the reaction surface by row
-count -- 2144 core rows against 534 in the whole hub.
+count -- 2144 core rows against 559 in the whole hub.
 
 ---
 
@@ -131,6 +131,7 @@ shipped channels, not by the folder existing.
 | The Frozen Heart | `ksws07_quest.esm` | 1 | 3 | 11 | Auri-El, Mara, Molag Bal, Stendarr, Trinimac | `PDV_QRM_FrozenHeart.csv` | machine-verified |
 | The Gift of Saturalia | `TheGiftofSaturalia.esp` | 5 | 5 | 19 | Dibella, Kynareth, Mara, Stendarr, Stuhn, Syrabane, Y'ffre | `PDV_QRM_GiftOfSaturalia.csv` | runtime open |
 | The Rot Below | `CJ03Elroy.esp` | 1 | 2 | 17 | Arkay, Azura, Dibella, Mara, Meridia, Namira, Stendarr, Tu'whacca, Y'ffre | `PDV_QRM_RotBelow.csv` | machine-verified |
+| The Tools of Kagrenac | `Tools of Kagrenac.esp` | 1 | 2 | 25 | Alkosh, Auri-El, Hermaeus Mora, Hircine, HoonDing, Julianos, Khenarthi, Kynareth, Kyne, Leki, Magnus, Malacath, Mara, Mehrunes Dagon, Molag Bal, Shor, Stendarr, Stuhn, Syrabane, Talos, Trinimac, Tsun, Vaermina, Zenithar | `PDV_QRM_ToolsOfKagrenac.csv` | machine-verified |
 | Unslaad | `Unslaad.esm` | 4 | 4 | 7 | Akatosh, Alkosh, Baan Dar, Stuhn, Tsun | `PDV_QRM_Unslaad.csv` | runtime open |
 | Vigilant | `Vigilant.esm` | 18 | 21 | 32 | Akatosh, Alkosh, Arkay, Azura, Baan Dar, Julianos, Khenarthi, Kynareth, Kyne, Molag Bal, Stendarr, Zenithar | `PDV_QRM_Vigilant.csv` | runtime open |
 | Wyrmstooth | `Wyrmstooth.esp` | 6 | 12 | 76 | Alkosh, Arkay, Azura, Baan Dar, Boethiah, Clavicus Vile, Dibella, HoonDing, Khenarthi, Kynareth, Kyne, Leki, Malacath, Mara, Mephala, Meridia, Nocturnal, Rajhin, Shor, Stendarr, Stuhn, Syrabane, Talos, Trinimac, Tsun, Tu'whacca, Y'ffre, Z'en, Zenithar | `PDV_QRM_Wyrmstooth.csv` | runtime open |
