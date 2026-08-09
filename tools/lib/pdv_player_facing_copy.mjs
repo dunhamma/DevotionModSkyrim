@@ -14,8 +14,22 @@
 import fs from "node:fs";
 import path from "node:path";
 
+// Two vocabularies, both of which are development status leaking into shipped text.
+//
+// PROOF vocabulary - how we know something works. Never the player's business.
+//
+// STATUS vocabulary - "experimental", "candidate", "tester build". Added 2026-08-09 after
+// the 1.5.0 installer shipped `ARR 2.5 experimental candidate (2026-08-07)` as its version
+// string and "Every option is experimental, not supported." as its description. The scan DID
+// run over that file - fomod/info.xml is a registered surface right below - but no term
+// matched. The comment further down records the previous escape from the same file, and that
+// one was only caught because it happened to also say "machine-verified".
+//
+// `not supported` is deliberately NOT a term on its own: core/README.txt legitimately says
+// "Adding it mid-playthrough is not supported", which is a save-compatibility instruction to
+// the player, not a status claim about the build.
 export const DEV_STATUS_PATTERN =
-  /machine[- ]verified|runtime evidence|evidence remains? open|evidence remain open|runtime[- ]verify|proof[- ]pending|proof state|proof boundary|readback|read back from disk|compiler check|unverified|smoke gate|gate exit|exit code/i;
+  /machine[- ]verified|runtime evidence|evidence remains? open|evidence remain open|runtime[- ]verify|proof[- ]pending|proof state|proof boundary|readback|read back from disk|compiler check|unverified|smoke gate|gate exit|exit code|experimental|tester build|release candidate/i;
 
 export function findDevStatus(value) {
   return String(value ?? "").match(DEV_STATUS_PATTERN)?.[0] ?? null;
