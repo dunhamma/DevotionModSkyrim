@@ -33,7 +33,11 @@ const ENUMERATE_LIMIT = 2000;
 // entry written under the old shape must MISS rather than be served back missing its new
 // fields -- a half-populated cache hit is a silent wrong answer, and nobody remembers to
 // delete a cache file by hand. Bump it whenever parseQustEnumeration's return changes.
-const ENUM_SCHEMA = "e2";
+// e3: added overriddenRecords. Bumped because the first run after adding that field served
+// cached e2 entries straight back, and every quest expansion reported zero overrides -- a
+// clean-looking result that was entirely an artifact of the cache. The token is only useful
+// if it is actually bumped; forgetting is the failure it is meant to prevent.
+const ENUM_SCHEMA = "e3";
 
 export function cacheKeyFor(absPath) {
   const st = fs.statSync(absPath);
@@ -85,6 +89,16 @@ export function parseQustEnumeration(text, pluginBasename) {
     // wrong quest forever.
     definedRecords: defined
       .filter((r) => r.editorId && r.editorId !== "<none>")
+      .map((r) => ({ formid: `${r.formid}:${r.definedIn}`, editorId: r.editorId })),
+    // The OVERRIDES matter as much as the definitions, and only for quest expansions is that
+    // obvious in hindsight. A QE's whole mechanism is usually adding stages to a VANILLA
+    // quest -- The Only Cure QE touches exactly one record, `DA13`, and defines nothing at
+    // all. A work list built from definitions alone cannot see that mod's entire contribution.
+    // Caught Red Handed QE is the case that proves both halves: it DEFINES FreeformRiften11b
+    // and OVERRIDES FreeformRiften11, so it needs a channel row and possibly a core-tranche
+    // row, and reading only one list would have silently delivered half the coverage.
+    overriddenRecords: rows
+      .filter((r) => r.definedIn.toLowerCase() !== target && r.editorId && r.editorId !== "<none>")
       .map((r) => ({ formid: `${r.formid}:${r.definedIn}`, editorId: r.editorId })),
     truncated,
   };

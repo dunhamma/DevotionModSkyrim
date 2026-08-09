@@ -72,6 +72,40 @@ class -- the quest itself is content-bearing and would be rowable.
 
 ---
 
+## Already covered -- do NOT queue these as work
+
+Both were caught by the first worklist build reporting them as defining no QUST of their own,
+then confirmed by a record read. This is the trap `PDV_JoJ_CompatibilityPackage_2026-08-08.md`
+section 2 names in advance: **a quest expansion typically adds stages to the VANILLA editor
+id**, so coverage must be computed against `Full.csv`, never against hub folder names. A
+folder-name diff would have queued both as uncovered work, and it would have been wrong.
+
+| Mod | Plugin | Overrides | Already in `Full.csv` |
+|---|---|---|---|
+| The Only Cure - Quest Expansion | `TheOnlyCureQuestExpansion.esp` | `08998D:Skyrim.esm` `DA13`, and nothing else | `DA13` s101 *(QE - refuse)* and s102 *(QE - destroy altar)*, Peryite |
+| House of Horrors - Quest Expansion | `HouseOfHorrorsQuestExpansion.esp` | `022F08:Skyrim.esm` `DA10`, and nothing else | `DA10` s210 *(QE - destroy altar)*, Molag Bal and Stendarr |
+
+Neither needs a channel. A channel keyed on their FormIDs would double-claim cells the core
+matrix already owns, which `pdv_quest_channel_reconcile.mjs` would reject anyway.
+
+## No quest surface at all -- SILENT
+
+Read 2026-08-09; each touches **zero** QUST records, defined or overridden. Nothing in the
+quest-reaction lane can see them.
+
+| Mod | Plugin | QUST records |
+|---|---|---:|
+| Respectful Ravyn | `Respectful Ravyn.esp` | 0 |
+| Cult of the World Eater - Dragon Priests Buff Alduin | `World Eater's Influence.esp` | 0 |
+| Unique Vampire Dens SSE | `gonkishvampdens.esp` | 0 |
+
+The first two sat in JoJ's **Quest Expansions** separator and the third in **New Quests &
+Adventures**, so all three read as quest content by section membership. They are a difficulty
+tweak, an NPC behaviour tweak, and a dungeon overhaul. Section membership is a candidate
+filter, not evidence -- which is the same lesson the folder-name misclassifications taught.
+
+---
+
 ## Pruned as framework by the structural digest
 
 `tools/pdv_joj_stage_digest.mjs` classifies a quest `framework` when it carries no journal

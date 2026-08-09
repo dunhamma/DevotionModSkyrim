@@ -96,7 +96,8 @@ const writeCsv = (file, header, rows) => {
 };
 
 // ---------------------------------------------------------------------------------------
-// --build-worklist: candidates (one row per MOD) -> worklist (one row per QUST it DEFINES).
+// --build-worklist: candidates (one row per MOD) -> worklist (one row per QUST), each tagged
+// `defined` or `override`.
 //
 // Generated, never hand-written: a hand-typed FormID is a silent wrong answer, and
 // probePlugins already returns the defining-vs-override split that a hand list gets wrong.
@@ -124,29 +125,39 @@ async function buildWorklist() {
   const noQuests = [];
   for (const r of resolved) {
     const res = results.get(r.abs);
-    if (!res || res.error || !res.definedRecords?.length) {
+    const defined = res?.definedRecords ?? [];
+    // Overrides are carried for quest expansions ONLY. For a new quest mod or a follower they
+    // are almost always incidental (a dialogue scene, an alias holder), and queueing them
+    // would bury the real content. For a QE they frequently ARE the content -- see the
+    // overriddenRecords comment in pdv_qust_probe.mjs.
+    const overridden = r.class === "B" ? (res?.overriddenRecords ?? []) : [];
+    if (!res || res.error || (!defined.length && !overridden.length)) {
       noQuests.push(`${r.mod_key}: ${res?.error ?? "defines no QUST"}`);
       continue;
     }
-    // definedRecords carries the FormID and EditorID paired as the enumeration printed them.
-    // DEFINED records only -- an override this plugin merely carries belongs to whoever
-    // defines it, and rowing it here would double-claim a cell another channel owns.
-    res.definedRecords.forEach((rec, i) => {
-      rows.push({
-        work_id: `JOJ-${r.class}-${r.mod_key}-${String(i + 1).padStart(3, "0")}`,
-        batch_id: r.batch_id,
-        class: r.class,
-        mod_key: r.mod_key,
-        mod_name: r.mod_name,
-        plugin: r.plugin,
-        plugin_path: r.abs,
-        formid: rec.formid,
-        editor_id: rec.editorId,
+    // The FormID and EditorID paired as the enumeration printed them. `role` decides the
+    // LANE downstream: a defined quest becomes a per-mod channel row carrying formid, while
+    // an override's added stages belong on a core-tranche row keyed by the vanilla editor_id
+    // -- and a channel that claimed the vanilla FormID would double-claim a cell the core
+    // matrix already owns, which pdv_quest_channel_reconcile rejects.
+    [...defined.map((rec) => ({ rec, role: "defined" })), ...overridden.map((rec) => ({ rec, role: "override" }))]
+      .forEach(({ rec, role }, i) => {
+        rows.push({
+          work_id: `JOJ-${r.class}-${r.mod_key}-${String(i + 1).padStart(3, "0")}`,
+          batch_id: r.batch_id,
+          class: r.class,
+          mod_key: r.mod_key,
+          mod_name: r.mod_name,
+          plugin: r.plugin,
+          plugin_path: r.abs,
+          formid: rec.formid,
+          editor_id: rec.editorId,
+          role,
+        });
       });
-    });
   }
 
-  writeCsv(WORKLIST, ["work_id", "batch_id", "class", "mod_key", "mod_name", "plugin", "plugin_path", "formid", "editor_id"], rows);
+  writeCsv(WORKLIST, ["work_id", "batch_id", "class", "mod_key", "mod_name", "plugin", "plugin_path", "formid", "editor_id", "role"], rows);
   console.log(`worklist=${path.relative(REPO, WORKLIST)} mods=${resolved.length} quests=${rows.length} missingPlugins=${missing.length} noQuests=${noQuests.length}`);
   for (const m of missing) console.error(`  MISSING ${m}`);
   for (const m of noQuests) console.error(`  NO-QUST ${m}`);
@@ -179,6 +190,7 @@ async function runDigest() {
     pluginPath: w.plugin_path,
     formid: w.formid,
     editorId: w.editor_id,
+    role: w.role,
   }));
 
   const { digests, read, cached, failed, failures, degraded, reason } = await digestQuests(items, {
@@ -236,7 +248,15 @@ function renderDigestMd(modKey, list) {
       continue;
     }
     const term = d.terminalStages.join(",") + (d.terminalInferred ? " inferred" : " flagged");
-    out.push(`## ${d.editorId} ${d.name ? `"${d.name}"` : ""}  ${d.plugin}:${String(d.formid).split(":")[0]}`);
+    // Print the formid token VERBATIM. It names the DEFINING master, which for an override is
+    // not the plugin we read it out of: TG00 lives in Skyrim.esm and is merely carried by
+    // TCBM.esp. Rendering `${plugin}:${hex}` produced `TCBM.esp:021556`, a token that resolves
+    // to nothing -- and a judge copying the digest heading into a CSV would author it.
+    out.push(`## ${d.editorId} ${d.name ? `"${d.name}"` : ""}  ${d.formid}  [${d.role ?? "defined"}]`);
+    if (d.role === "override") {
+      out.push(`   OVERRIDE carried by ${d.plugin}. Stages this mod adds to a vanilla quest belong on a`);
+      out.push(`   CORE tranche row keyed by editor_id with NO formid column, not on a per-mod channel.`);
+    }
     out.push(`   ${d.stageCount} stages, ${d.loggedStageCount} with evidence, terminal ${term}${d.truncated ? "  **TRUNCATED**" : ""}`);
     for (const s of d.stages) {
       const marks = [s.isStartUp ? "START" : null, s.isComplete ? "COMPLETE" : null, s.hasFragment ? "frag" : null].filter(Boolean);

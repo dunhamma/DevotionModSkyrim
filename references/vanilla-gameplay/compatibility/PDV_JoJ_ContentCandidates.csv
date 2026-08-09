@@ -1,13 +1,32 @@
 mod_key,mod_name,class,batch_id,instance_root,mod_folder,plugin
+AscendHiddenPeaks,Ascend - Hidden Peaks of Skyrim,A,B01,D:/Wabbajack/modlists/JoJ,Ascend - Hidden Peaks of Skyrim,Ascend - Hidden Peaks of Skyrim.esp
+ToolsOfKagrenac,The Tools of Kagrenac,A,B01,D:/Wabbajack/modlists/JoJ,The Tools of Kagrenac,Tools of Kagrenac.esp
 MoonAndStar,Moon and Star,A,B02,D:/Wabbajack/modlists/JoJ,Moon and Star - Cleaned Fixed and ESMed,MoonAndStar_MAS.esp
 SinisterSeven,The Sinister Seven,A,B02,D:/Wabbajack/modlists/JoJ,The Sinister Seven SSE,The_Sinister_Seven.esp
 LegendsOfAetherium,Legends of Aetherium,A,B02,D:/Wabbajack/modlists/JoJ,Legends of Aetherium - New Dungeon - Quest - Armour - Weapons,LegendsOfAetherium.esp
-AscendHiddenPeaks,Ascend - Hidden Peaks of Skyrim,A,B01,D:/Wabbajack/modlists/JoJ,Ascend - Hidden Peaks of Skyrim,Ascend - Hidden Peaks of Skyrim.esp
-ToolsOfKagrenac,The Tools of Kagrenac,A,B01,D:/Wabbajack/modlists/JoJ,The Tools of Kagrenac,Tools of Kagrenac.esp
+ProjectAHO,Project AHO,A,B02,D:/Wabbajack/modlists/JoJ,Project AHO - ESM,Dwarfsphere.esp
+GrayCowlOfNocturnal,The Gray Cowl of Nocturnal,A,B02,D:/Wabbajack/modlists/JoJ,The Gray Cowl of Nocturnal - 10th anniversary,Gray Fox Cowl.esm
+SleepwalkingNightmare,Sleepwalking Into A Nightmare,A,B03,D:/Wabbajack/modlists/JoJ,Sleepwalking Into A Nightmare - New Daedric Prince Quest,NightmarePlane.esp
+HeartOfTheReach,Heart of the Reach,A,B03,D:/Wabbajack/modlists/JoJ,Heart of the Reach - New Quest - Dungeon - Weapons - 3 Creature Variants - Ring - Spell,HeartOfTheReach.esp
+ThereIsNoUmbra3,There Is No Umbra - Chapter III,A,B03,D:/Wabbajack/modlists/JoJ,There Is No Umbra - Chapter III,FloatingSwordFollower.esp
+LeapsOfFaith,Leaps of Faith,A,B03,D:/Wabbajack/modlists/JoJ,Leaps of Faith - A Misc Quest,LeapsOfFaith.esp
+CaughtRedHandedQE,Caught Red Handed - Quest Expansion,B,B04,D:/Wabbajack/modlists/JoJ,Caught Red Handed - Quest Expansion,Caught Red Handed - Quest Expansion.esp
+InnocenceLostQE,The Innocence Lost - Quest Expansion,B,B04,D:/Wabbajack/modlists/JoJ,The Innocence Lost - Quest Expansion,Innocence Lost - Quest Expansion.esp
+DestroyDarkBrotherhoodQE,Destroy The Dark Brotherhood - Quest Expansion,B,B04,D:/Wabbajack/modlists/JoJ,Destroy The Dark Brotherhood - Quest Expansion,Destroy the Dark Brotherhood - Quest Expansion.esp
+PenitusOculatus,Penitus Oculatus,B,B04,D:/Wabbajack/modlists/JoJ,Penitus Oculatus,Penitus_Oculatus.esp
+ThievesGuildForGoodGuys,Thieves Guild For Good Guys,B,B04,D:/Wabbajack/modlists/JoJ,Thieves Guild For Good Guys - Taking Care of Business Redux,TCBM.esp
+TheChoiceIsYours,The Choice is Yours,B,B04,D:/Wabbajack/modlists/JoJ,The Choice is Yours,TheChoiceIsYours.esp
+DestroyAcolytePriests,Destroy the Acolyte Priests,B,B04,D:/Wabbajack/modlists/JoJ,Destroy the Acolyte Priests,Destroy the Acolyte Priests.esp
+DefeatTheDragonCult,Defeat the Dragon Cult,B,B04,D:/Wabbajack/modlists/JoJ,Defeat the Dragon Cult,Defeat the Dragon Cult.esp
+ReturnAegisbane,Return Aegisbane,B,B04,D:/Wabbajack/modlists/JoJ,Return Aegisbane,ReturnAegisbane.esp
+RevealingRune,Revealing Rune,B,B04,D:/Wabbajack/modlists/JoJ,Revealing Rune,Revealing Rune.esp
+CultOfTheTrueDragonborn,Cult of the True Dragonborn,B,B04,D:/Wabbajack/modlists/JoJ,Cult of the True Dragonborn - Immersive Miraak Difficulty,ImmersiveMiraakDifficulty.esp
 Kaidan2,Kaidan 2,C,B05,D:/Wabbajack/modlists/JoJ,Kaidan 2,0Kaidan.esp
 ImmersiveKaidanAIO,Immersive Kaidan AIO,C,B05,D:/Wabbajack/modlists/JoJ,Immersive Kaidan AIO - V5.1.2,Kaidan - Immersive Features.esp
+DeadlandsExpanded,Deadlands Expanded - A Kaidan Quest Overhaul,C,B05,D:/Wabbajack/modlists/JoJ,Deadlands Expanded - A Kaidan Quest Overhaul,KR2_Deadlands.esp
 Lucien,Lucien,C,B05,D:/Wabbajack/modlists/JoJ,Lucien - Immersive Fully Voiced Male Follower,Lucien.esp
 Remiel,Remiel,C,B05,D:/Wabbajack/modlists/JoJ,Remiel-Custom Voiced Follower,HLIORemi.esp
+Inigo,Inigo,C,B05,D:/Wabbajack/modlists/JoJ,INIGO 2.4C UPDATE ESP FILE,Inigo.esp
 Sachil,Sa'chil,C,B06,D:/Wabbajack/modlists/JoJ,Sa'chil - Custom Voiced Khajiit Follower,SU04SachilFollower.esp
 ValSerano,Val Serano,C,B06,D:/Wabbajack/modlists/JoJ,Val Serano,AX ValSerano.esp
 Taliesin,Taliesin,C,B06,D:/Wabbajack/modlists/JoJ,The Thalmor's Shadow - Taliesin (Custom Voiced Follower),00Taliesin.esp
@@ -16,5 +35,4 @@ Gore,Gore,C,B06,D:/Wabbajack/modlists/JoJ,Gore - A Companion Mod,GORE.esp
 KhajiitWillFollow,Khajiit Will Follow,C,B06,D:/Wabbajack/modlists/JoJ,Khajiit Will Follow,KhajiitWillFollow.esp
 MerlinTheCorgi,Merlin the Corgi,C,B06,D:/Wabbajack/modlists/JoJ,Merlin the Corgi,Merlin.esp
 RedcapTheRiekling,Redcap the Riekling,C,B06,D:/Wabbajack/modlists/JoJ,Redcap the Riekling - A Fully Voice-Acted Immersive Follower and Quest,FA01RedcapFollower.esp
-Inigo,Inigo,C,B05,D:/Wabbajack/modlists/JoJ,INIGO 2.4C UPDATE ESP FILE,Inigo.esp
 InterestingNPCs,Interesting NPCs (3DNPC),C,B07,D:/Wabbajack/modlists/JoJ,Interesting NPCs - 4.5 to 4.54 Update,3DNPC.esp
