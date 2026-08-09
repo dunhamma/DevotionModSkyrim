@@ -21,12 +21,12 @@ DefeatTheDragonCult,Defeat the Dragon Cult,B,B04,Defeat the Dragon Cult.esp,ok,o
 ReturnAegisbane,Return Aegisbane,B,B04,ReturnAegisbane.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
 RevealingRune,Revealing Rune,B,B04,Revealing Rune.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
 CultOfTheTrueDragonborn,Cult of the True Dragonborn,B,B04,ImmersiveMiraakDifficulty.esp,ok,ok,-,SILENT,-,-,-,-,-,only quest is aaa_MiraakBuff_Quest with 0 stages - a difficulty tweak
-Kaidan2,Kaidan 2,C,B05,0Kaidan.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,
-ImmersiveKaidanAIO,Immersive Kaidan AIO,C,B05,Kaidan - Immersive Features.esp,ok,-,-,UNREVIEWED,-,-,-,-,-,K03/K04 all tier C; NSFW quest 0 stages - see silence ledger
-DeadlandsExpanded,Deadlands Expanded - A Kaidan Quest Overhaul,C,B05,KR2_Deadlands.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
-Lucien,Lucien,C,B05,Lucien.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
-Remiel,Remiel,C,B05,HLIORemi.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
-Inigo,Inigo,C,B05,Inigo.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
+Kaidan2,Kaidan 2,C,B05,0Kaidan.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,"K04 romance = 2 POSITIONAL rows (s50/s100) per owner ruling; all 26 stages tier C, RUNTIME-VERIFY"
+ImmersiveKaidanAIO,Immersive Kaidan AIO,C,B05,Kaidan - Immersive Features.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,K03/K04 all tier C; NSFW quest 0 stages - see silence ledger
+DeadlandsExpanded,Deadlands Expanded - A Kaidan Quest Overhaul,C,B05,KR2_Deadlands.esp,ok,ok,-,SILENT,-,-,-,-,-,"reclassified C->B to check; KMDQuest override has identical 8 stages, only cosmetic wording. Nothing to row."
+Lucien,Lucien,C,B05,Lucien.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+Remiel,Remiel,C,B05,HLIORemi.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+Inigo,Inigo,C,B05,Inigo.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
 Sachil,Sa'chil,C,B06,SU04SachilFollower.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
 ValSerano,Val Serano,C,B06,AX ValSerano.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
 Taliesin,Taliesin,C,B06,00Taliesin.esp,-,-,-,UNREVIEWED,-,-,-,-,-,

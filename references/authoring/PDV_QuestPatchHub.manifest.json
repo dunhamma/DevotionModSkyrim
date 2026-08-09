@@ -232,6 +232,15 @@
       "nexusModId": 156434
     },
     {
+      "name": "Immersive Kaidan AIO",
+      "description": "",
+      "dependency": "Kaidan - Immersive Features.esp",
+      "folders": [
+        "common\\ImmersiveKaidanAIO"
+      ],
+      "category": "Followers"
+    },
+    {
       "name": "Infiltration - Quest Expansion",
       "description": "One of the most underwhelming vanilla quests... turned into an epic quest full of player choice.",
       "dependency": "Infiltration - Quest Expansion.esp",
@@ -242,6 +251,16 @@
       "nexusModId": 114054
     },
     {
+      "name": "Inigo",
+      "description": "Inigo is a fully voiced khajiit adventuring companion with over 7000 lines of unique dialogue - much of it about you. He'll level alongside you and avoid most traps.",
+      "dependency": "Inigo.esp",
+      "folders": [
+        "common\\Inigo"
+      ],
+      "category": "Followers",
+      "nexusModId": 1461
+    },
+    {
       "name": "Innocence Lost - Quest Expansion",
       "description": "This mod provides new paths (both good and evil) to complete the first Dark Brotherhood quest. Grelod the Kind, you'd better watch out. Fully voiced as usual.",
       "dependency": "Innocence Lost - Quest Expansion.esp",
@@ -250,6 +269,16 @@
       ],
       "category": "Quest Expansions",
       "nexusModId": 80974
+    },
+    {
+      "name": "Kaidan 2",
+      "description": "Rebuilt and expanded, this romantic follower features over 1200 lines of dialogue, custom home, and mini quests.",
+      "dependency": "0Kaidan.esp",
+      "folders": [
+        "common\\Kaidan2"
+      ],
+      "category": "Followers",
+      "nexusModId": 19075
     },
     {
       "name": "Legacy of the Dragonborn",
@@ -269,6 +298,16 @@
         "common\\LegendsOfAetherium"
       ],
       "category": "New Quests and Lands"
+    },
+    {
+      "name": "Lucien",
+      "description": "Lucien is a fully voiced Imperial follower with over 6000 lines of immersive, lore-friendly dialogue. Though he arrives in Skyrim as a cowardly scholar, he'll gradually gain strength and confidence by your side until he grows into a hero in his own right.",
+      "dependency": "Lucien.esp",
+      "folders": [
+        "common\\Lucien"
+      ],
+      "category": "Followers",
+      "nexusModId": 20035
     },
     {
       "name": "M'rissi's Tails of Troubles",
@@ -361,6 +400,16 @@
       ],
       "category": "New Quests and Lands",
       "nexusModId": 15996
+    },
+    {
+      "name": "Remiel",
+      "description": "Adds Remiel to your game, custom voiced with ~5,000 lines of dialogue, a Breton engineer who will accompany you in your travels. She's travelled from Wayrest to explore dwemer ruins in Skyrim, but she needs your help.",
+      "dependency": "HLIORemi.esp",
+      "folders": [
+        "common\\Remiel"
+      ],
+      "category": "Followers",
+      "nexusModId": 51874
     },
     {
       "name": "Return Aegisbane",

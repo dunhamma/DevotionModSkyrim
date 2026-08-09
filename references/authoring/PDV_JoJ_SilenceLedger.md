@@ -90,6 +90,33 @@ matrix already owns, which `pdv_quest_channel_reconcile.mjs` would reject anyway
 
 ## Judged and ruled SILENT
 
+### Deadlands Expanded -- SILENT (reclassified to check, and there was nothing to row)
+
+| | |
+|---|---|
+| Plugin | `KR2_Deadlands.esp` |
+| Defines | 3 QUST -- `KR2BloodedDawnCultDialogue`, `KR2BDAttack`, `KR2KMDDeathQuest` -- **all framework or empty** |
+| Overrides | `KMDQuest` "Blood and Fire" and `KMDRosalindScene` (both defined by `0Kaidan.esp`) |
+
+This mod was seeded as class C, which means `pdv_joj_stage_digest` drops its overrides
+entirely. Given its title -- *"A Kaidan Quest Overhaul"* -- that looked like a real blind spot,
+so it was **reclassified to class B** and the worklist rebuilt specifically to look. The answer
+is that there is nothing to row, and it is worth having established rather than assumed.
+
+Its `KMDQuest` override carries **exactly the same eight stage indices** as `0Kaidan.esp`
+(1, 10, 15, 20, 30, 40, 50, 200) -- none added, none removed. Comparing stage by stage, the
+only differences are cosmetic wording: *"Investigate the tunnel under the Shrine"* becomes
+*"...the cave under the Shrine"*, *"Return to Deadland Temple"* becomes *"Return to the cave."*,
+and *"Kill Rosalind"* gains a full stop. Nothing changes what any stage means.
+
+**Two consequences worth recording.** There is nothing for a Deadlands channel to own, since
+every stage belongs to `KMDQuest` and Kaidan 2's channel already rows it. And the worry that
+prompted the reclassification -- that Kaidan 2's rows might describe an ending Deadlands had
+replaced -- is disproved: the arc resolves identically. Kaidan 2's `KMDQuest` rows are correct
+whether or not Deadlands is installed.
+
+Batch B05, 2026-08-09.
+
 ### Cult of the True Dragonborn -- SILENT (no quest content)
 
 | | |

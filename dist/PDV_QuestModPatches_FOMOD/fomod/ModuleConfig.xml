@@ -1069,6 +1069,82 @@
       <optionalFileGroups order="Explicit">
         <group name="Followers" type="SelectAny">
           <plugins order="Explicit">
+            <plugin name="Immersive Kaidan AIO">
+              <description></description>
+              <files>
+                <folder source="common\ImmersiveKaidanAIO" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Kaidan - Immersive Features.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Inigo">
+              <description>Inigo is a fully voiced khajiit adventuring companion with over 7000 lines of unique dialogue - much of it about you. He'll level alongside you and avoid most traps.</description>
+              <files>
+                <folder source="common\Inigo" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Inigo.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Kaidan 2">
+              <description>Rebuilt and expanded, this romantic follower features over 1200 lines of dialogue, custom home, and mini quests.</description>
+              <files>
+                <folder source="common\Kaidan2" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="0Kaidan.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Lucien">
+              <description>Lucien is a fully voiced Imperial follower with over 6000 lines of immersive, lore-friendly dialogue. Though he arrives in Skyrim as a cowardly scholar, he'll gradually gain strength and confidence by your side until he grows into a hero in his own right.</description>
+              <files>
+                <folder source="common\Lucien" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Lucien.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="M'rissi's Tails of Troubles">
               <description>Fully immersive and lore-friendly story with 8 hours of quests, more than 2000 voiced lines and 3 different endings. Choose your path and decide her fate.</description>
               <files>
@@ -1081,6 +1157,25 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="MrissiTailOfTroubles.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Remiel">
+              <description>Adds Remiel to your game, custom voiced with ~5,000 lines of dialogue, a Breton engineer who will accompany you in your travels. She's travelled from Wayrest to explore dwemer ruins in Skyrim, but she needs your help.</description>
+              <files>
+                <folder source="common\Remiel" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="HLIORemi.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
