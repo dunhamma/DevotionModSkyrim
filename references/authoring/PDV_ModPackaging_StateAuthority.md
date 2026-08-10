@@ -1,7 +1,7 @@
 # PDV Mod Packaging State Authority
 
-Updated: 2026-08-07 AEST
-Status: replacement archives machine-verified as experimental candidates; tester support remains open
+Updated: 2026-08-11 AEST
+Status: complete PatchHub tester-release archive machine-verified; runtime and player-observation evidence continues post-release
 
 ## Purpose
 
@@ -41,7 +41,28 @@ earned Prisma notice exists. Every accepted daily practice must receive the same
 notice opportunity as equivalent race-substrate acts, and the toast and source
 Book entry must reuse the same resolved practice line.
 
-## Current candidate state
+## Current PatchHub tester-release state
+
+- Build date: 2026-08-11; source state: the consolidated
+  `feat(joj): complete B07 and close B-series content audit` commit.
+- Archive: `PDV-QuestModPatchHub-20260811.zip`, 984,357 bytes, SHA-256
+  `5548314D06F28FF9CF577F76650C63FED35AEB3A85C28557338F0B2D56BFB0B1`.
+- The PatchHub has 77 dependency-gated options: 72 data-only quest-reaction
+  options and five plugin-bearing options. Seventy-five channel JSON files are
+  present. The validated installer tree has 122 files and tree SHA-256
+  `14C0A6B2F3F12271F3868D837D820664A00687B9BBC398FDABF3C3A996ADECA0`.
+- The JoJ B-series is closed at 37/37 candidates: 31 APPROVED and six SILENT.
+  Interesting NPCs contributes 27 cells / 269 deity rows behind `3DNPC.esp`.
+- `PDV_QuestModPatches_FOMOD_Validation.json` is the exact membership and
+  checksum receipt: 122 archive members, zero missing, extra, or mismatched.
+- This is a complete tester release, not an experimental partial hub. The
+  package is save-safe reaction data and narrow patch support; runtime routing,
+  presentation, balance, and save/load observations are post-release tester
+  evidence and are not release gates.
+- Core was not rebuilt in this tranche. The 2026-08-07 core artifact and its
+  separate proof boundary remain unchanged.
+
+## Superseded 2026-08-07 candidate state
 
 - Integration branch: `codex/arr25-content-sweep`.
 - Packaging source commit: `ff7fc4e`.
@@ -56,9 +77,8 @@ Book entry must reuse the same resolved practice line.
   options: 39 reaction channels, the AFDI observer, and the Daedric Shrines AIO
   prayer activators. It contains five narrow ESL-flagged plugins in total: the
   three pre-existing dialogue/result hooks plus the two special-lane plugins.
-- Machine verification, runtime-route proof, player-surface proof, semantic
-  proof, save/load proof, and support promotion remain separate. Both archives
-  are experimental candidates, not supported releases.
+- This section records the older ARR25 experimental state. Its PatchHub archive
+  is superseded by the complete 2026-08-11 tester release above.
 
 ## Required state update
 
@@ -81,6 +101,7 @@ runtime, player-surface, semantic, or support proof.
 |---|---:|---|---|
 | `Devotion-1.0.4-20260807.zip` | 8,294,880 | `CF7CFDBD5FC84D6B7BA5C6B4DFC697745978DA50C3290E1ED89095D41775E4DE` | 231 manifest entries; 100 PSC/PEX pairs; Altmer five-deity roster repair |
 | `PDV-QuestModPatchHub-ARR25-Experimental-20260807.zip` | 509,879 | `DEC5EBC4285F3985D3D8F0BDF1ADBE4F288C20FB09F3D83EA3ECD5457F633949` | 80 members; 41 options; 39 channel files |
+| `PDV-QuestModPatchHub-20260811.zip` | 984,357 | `5548314D06F28FF9CF577F76650C63FED35AEB3A85C28557338F0B2D56BFB0B1` | 122 members; 77 options; 75 channel files; complete B01-B07 JoJ tester release |
 
 Core intentionally includes the current Altmer and Khajiit runtime/UI assets,
 the canonical core quest matrix, the Calian assets, the native Prisma bridge,

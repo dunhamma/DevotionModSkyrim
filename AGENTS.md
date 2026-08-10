@@ -1085,10 +1085,21 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 
 ## Decisions Log
 
+- **[2026-08-11] - JoJ B-series closes at 37/37; save-safe PatchHub testing follows release:**
+  B07 Interesting NPCs closes the JoJ candidate set with 31 APPROVED and six SILENT
+  verdicts. The complete PatchHub is released to testers as one dependency-gated FOMOD;
+  runtime routing, player presentation, balance, and save/load observations are
+  post-release evidence, not release gates, because these reaction-data patches do not
+  interfere with current saves. Do not hold future complete PatchHub packages for
+  per-option playthrough proof. Package bytes still require the exact installer-tree,
+  archive-membership, and checksum receipt. Lighting, Mannaz, Sacrosanct, Wintersun
+  removal, and generated world outputs are unrelated to the B-series content audit and
+  must not be introduced as closeout spot checks.
+
 - **[2026-08-10] - Follower friendship is not marriage, and Sheogorath's whimsy is not generic chaos:**
   B06 review removed `marriage_family` from Gore's Drunken Huntsman friendship milestone; ordinary
-  growing closeness remains inert as `NEEDS-TAG: friendship` until a project-wide friendship profile
-  is designed. Do not stretch `marriage_family` beyond its wed/adopt/reconcile/hearth contract.
+  growing closeness uses the owner-approved `friendship` profile (Mara close, Hist strong). Do not
+  stretch `marriage_family` beyond its wed/adopt/reconcile/hearth contract.
   Owner-supplied gameplay context established that Merlin is recruited inside Sheogorath's domain,
   so the canonical vocabulary now includes narrow `embrace_whimsy`: freely welcoming an improbable
   or playfully impossible turn. Only Sheogorath currently reacts. Do not substitute

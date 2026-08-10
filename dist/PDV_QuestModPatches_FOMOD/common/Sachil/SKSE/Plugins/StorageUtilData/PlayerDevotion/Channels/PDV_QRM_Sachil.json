@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T02:27:18.000Z",
-    "generatedat": "2026-08-10T02:27:18.000Z",
+    "generatedAt": "2026-08-10T21:30:19.450Z",
+    "generatedat": "2026-08-10T21:30:19.450Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "3330837,13437140,11859779,8724574,6441914,11277713,11547746,13686869",
-    "questwatchformidscsv": "3330837,13437140,11859779,8724574,6441914,11277713,11547746,13686869",
-    "questWatchPluginsCsv": "SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp",
-    "questwatchpluginscsv": "SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp",
+    "questWatchFormIdsCsv": "3330837,13437140,11859779,8724574,6441914,11277713,11547746,13686869,4098182,14933805",
+    "questwatchformidscsv": "3330837,13437140,11859779,8724574,6441914,11277713,11547746,13686869,4098182,14933805",
+    "questWatchPluginsCsv": "SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp",
+    "questwatchpluginscsv": "SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1427,6 +1427,26 @@
     "quest.13686869|70.magnitudescsv": "small|small|small|small|small|small|small|small|small|small",
     "quest.13686869|70.tagsCsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak",
     "quest.13686869|70.tagscsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak",
+    "quest.4098182|50.deitiesCsv": "Stendarr|Mara|The Hist|Molag Bal",
+    "quest.4098182|50.deitiescsv": "Stendarr|Mara|The Hist|Molag Bal",
+    "quest.4098182|50.valencesCsv": "-|-|-|+",
+    "quest.4098182|50.valencescsv": "-|-|-|+",
+    "quest.4098182|50.intensitiesCsv": "S|S|m|m",
+    "quest.4098182|50.intensitiescsv": "S|S|m|m",
+    "quest.4098182|50.magnitudesCsv": "small|small|small|small",
+    "quest.4098182|50.magnitudescsv": "small|small|small|small",
+    "quest.4098182|50.tagsCsv": "abuse_companion|abuse_companion|abuse_companion|abuse_companion",
+    "quest.4098182|50.tagscsv": "abuse_companion|abuse_companion|abuse_companion|abuse_companion",
+    "quest.14933805|7.deitiesCsv": "Akatosh|Stendarr|Zenithar|Z'en",
+    "quest.14933805|7.deitiescsv": "Akatosh|Stendarr|Zenithar|Z'en",
+    "quest.14933805|7.valencesCsv": "+|+|+|+",
+    "quest.14933805|7.valencescsv": "+|+|+|+",
+    "quest.14933805|7.intensitiesCsv": "m|m|m|m",
+    "quest.14933805|7.intensitiescsv": "m|m|m|m",
+    "quest.14933805|7.magnitudesCsv": "small|small|small|small",
+    "quest.14933805|7.magnitudescsv": "small|small|small|small",
+    "quest.14933805|7.tagsCsv": "reject_criminality|reject_criminality|reject_criminality|reject_criminality",
+    "quest.14933805|7.tagscsv": "reject_criminality|reject_criminality|reject_criminality|reject_criminality",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1565,10 +1585,14 @@
     "quest.11277713|70.metaskip.khenarthi": 1,
     "quest.13686869|70.metaSkip.Khenarthi": 1,
     "quest.13686869|70.metaskip.khenarthi": 1,
+    "quest.14933805|7.metaSkip.Z'en": 1,
+    "quest.14933805|7.metaskip.z'en": 1,
+    "quest.14933805|7.metaSkip.Akatosh": 1,
+    "quest.14933805|7.metaskip.akatosh": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 4,
-    "metaskipints": 4
+    "metaSkipInts": 6,
+    "metaskipints": 6
   },
   "stringList": {
     "questKeys": [
@@ -1579,7 +1603,9 @@
       "6441914|60",
       "11277713|70",
       "11547746|30",
-      "13686869|70"
+      "13686869|70",
+      "4098182|50",
+      "14933805|7"
     ],
     "questkeys": [
       "3330837|20",
@@ -1589,7 +1615,9 @@
       "6441914|60",
       "11277713|70",
       "11547746|30",
-      "13686869|70"
+      "13686869|70",
+      "4098182|50",
+      "14933805|7"
     ],
     "questForms": [
       "0x32D315|SU04SachilFollower.esp",
@@ -1599,7 +1627,9 @@
       "0x624BBA|SU04SachilFollower.esp",
       "0xAC1591|SU04SachilFollower.esp",
       "0xB03462|SU04SachilFollower.esp",
-      "0xD0D855|SU04SachilFollower.esp"
+      "0xD0D855|SU04SachilFollower.esp",
+      "0x3E8886|SU04SachilFollower.esp",
+      "0xE3DF2D|SU04SachilFollower.esp"
     ],
     "questforms": [
       "0x32D315|SU04SachilFollower.esp",
@@ -1609,7 +1639,9 @@
       "0x624BBA|SU04SachilFollower.esp",
       "0xAC1591|SU04SachilFollower.esp",
       "0xB03462|SU04SachilFollower.esp",
-      "0xD0D855|SU04SachilFollower.esp"
+      "0xD0D855|SU04SachilFollower.esp",
+      "0x3E8886|SU04SachilFollower.esp",
+      "0xE3DF2D|SU04SachilFollower.esp"
     ],
     "questFormIds": [
       "3330837",
@@ -1619,7 +1651,9 @@
       "6441914",
       "11277713",
       "11547746",
-      "13686869"
+      "13686869",
+      "4098182",
+      "14933805"
     ],
     "questformids": [
       "3330837",
@@ -1629,9 +1663,13 @@
       "6441914",
       "11277713",
       "11547746",
-      "13686869"
+      "13686869",
+      "4098182",
+      "14933805"
     ],
     "questPlugins": [
+      "SU04SachilFollower.esp",
+      "SU04SachilFollower.esp",
       "SU04SachilFollower.esp",
       "SU04SachilFollower.esp",
       "SU04SachilFollower.esp",
@@ -1649,6 +1687,8 @@
       "SU04SachilFollower.esp",
       "SU04SachilFollower.esp",
       "SU04SachilFollower.esp",
+      "SU04SachilFollower.esp",
+      "SU04SachilFollower.esp",
       "SU04SachilFollower.esp"
     ],
     "questEditorIds": [
@@ -1659,7 +1699,9 @@
       "SU04SachilFollower_E1_Ketud",
       "SU04SachilFollower_E3_Ambushes",
       "SU04SachilFollower_E4_ReturnFromHammerfell",
-      "SU04SachilFollower_E5_Aydith"
+      "SU04SachilFollower_E5_Aydith",
+      "SU04SachilFollower_A7_PlayerHurtSachil",
+      "SU04SachilFollower_Q6_ThievesGuild"
     ],
     "questeditorids": [
       "SU04SachilFollower_A6_ScaredDungeon",
@@ -1669,7 +1711,9 @@
       "SU04SachilFollower_E1_Ketud",
       "SU04SachilFollower_E3_Ambushes",
       "SU04SachilFollower_E4_ReturnFromHammerfell",
-      "SU04SachilFollower_E5_Aydith"
+      "SU04SachilFollower_E5_Aydith",
+      "SU04SachilFollower_A7_PlayerHurtSachil",
+      "SU04SachilFollower_Q6_ThievesGuild"
     ],
     "questWatch.formIds": [
       "3330837",
@@ -1679,7 +1723,9 @@
       "6441914",
       "11277713",
       "11547746",
-      "13686869"
+      "13686869",
+      "4098182",
+      "14933805"
     ],
     "questwatch.formids": [
       "3330837",
@@ -1689,9 +1735,13 @@
       "6441914",
       "11277713",
       "11547746",
-      "13686869"
+      "13686869",
+      "4098182",
+      "14933805"
     ],
     "questWatch.plugins": [
+      "SU04SachilFollower.esp",
+      "SU04SachilFollower.esp",
       "SU04SachilFollower.esp",
       "SU04SachilFollower.esp",
       "SU04SachilFollower.esp",
@@ -1709,6 +1759,8 @@
       "SU04SachilFollower.esp",
       "SU04SachilFollower.esp",
       "SU04SachilFollower.esp",
+      "SU04SachilFollower.esp",
+      "SU04SachilFollower.esp",
       "SU04SachilFollower.esp"
     ],
     "questWatch.editorIds": [
@@ -1719,7 +1771,9 @@
       "SU04SachilFollower_E1_Ketud",
       "SU04SachilFollower_E3_Ambushes",
       "SU04SachilFollower_E4_ReturnFromHammerfell",
-      "SU04SachilFollower_E5_Aydith"
+      "SU04SachilFollower_E5_Aydith",
+      "SU04SachilFollower_A7_PlayerHurtSachil",
+      "SU04SachilFollower_Q6_ThievesGuild"
     ],
     "questwatch.editorids": [
       "SU04SachilFollower_A6_ScaredDungeon",
@@ -1729,7 +1783,9 @@
       "SU04SachilFollower_E1_Ketud",
       "SU04SachilFollower_E3_Ambushes",
       "SU04SachilFollower_E4_ReturnFromHammerfell",
-      "SU04SachilFollower_E5_Aydith"
+      "SU04SachilFollower_E5_Aydith",
+      "SU04SachilFollower_A7_PlayerHurtSachil",
+      "SU04SachilFollower_Q6_ThievesGuild"
     ],
     "questWatchFormIds": [
       "3330837",
@@ -1739,7 +1795,9 @@
       "6441914",
       "11277713",
       "11547746",
-      "13686869"
+      "13686869",
+      "4098182",
+      "14933805"
     ],
     "questwatchformids": [
       "3330837",
@@ -1749,9 +1807,13 @@
       "6441914",
       "11277713",
       "11547746",
-      "13686869"
+      "13686869",
+      "4098182",
+      "14933805"
     ],
     "questWatchPlugins": [
+      "SU04SachilFollower.esp",
+      "SU04SachilFollower.esp",
       "SU04SachilFollower.esp",
       "SU04SachilFollower.esp",
       "SU04SachilFollower.esp",
@@ -1769,6 +1831,8 @@
       "SU04SachilFollower.esp",
       "SU04SachilFollower.esp",
       "SU04SachilFollower.esp",
+      "SU04SachilFollower.esp",
+      "SU04SachilFollower.esp",
       "SU04SachilFollower.esp"
     ],
     "questWatchEditorIds": [
@@ -1779,7 +1843,9 @@
       "SU04SachilFollower_E1_Ketud",
       "SU04SachilFollower_E3_Ambushes",
       "SU04SachilFollower_E4_ReturnFromHammerfell",
-      "SU04SachilFollower_E5_Aydith"
+      "SU04SachilFollower_E5_Aydith",
+      "SU04SachilFollower_A7_PlayerHurtSachil",
+      "SU04SachilFollower_Q6_ThievesGuild"
     ],
     "questwatcheditorids": [
       "SU04SachilFollower_A6_ScaredDungeon",
@@ -1789,7 +1855,9 @@
       "SU04SachilFollower_E1_Ketud",
       "SU04SachilFollower_E3_Ambushes",
       "SU04SachilFollower_E4_ReturnFromHammerfell",
-      "SU04SachilFollower_E5_Aydith"
+      "SU04SachilFollower_E5_Aydith",
+      "SU04SachilFollower_A7_PlayerHurtSachil",
+      "SU04SachilFollower_Q6_ThievesGuild"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -2161,6 +2229,66 @@
       "protect_the_weak",
       "protect_the_weak",
       "protect_the_weak"
+    ],
+    "quest.4098182|50.deities": [
+      "Stendarr",
+      "Mara",
+      "The Hist",
+      "Molag Bal"
+    ],
+    "quest.4098182|50.valences": [
+      "-",
+      "-",
+      "-",
+      "+"
+    ],
+    "quest.4098182|50.intensities": [
+      "S",
+      "S",
+      "m",
+      "m"
+    ],
+    "quest.4098182|50.magnitudes": [
+      "small",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.4098182|50.tags": [
+      "abuse_companion",
+      "abuse_companion",
+      "abuse_companion",
+      "abuse_companion"
+    ],
+    "quest.14933805|7.deities": [
+      "Akatosh",
+      "Stendarr",
+      "Zenithar",
+      "Z'en"
+    ],
+    "quest.14933805|7.valences": [
+      "+",
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.14933805|7.intensities": [
+      "m",
+      "m",
+      "m",
+      "m"
+    ],
+    "quest.14933805|7.magnitudes": [
+      "small",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.14933805|7.tags": [
+      "reject_criminality",
+      "reject_criminality",
+      "reject_criminality",
+      "reject_criminality"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

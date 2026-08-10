@@ -1,7 +1,7 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T02:34:47.705Z",
-    "generatedat": "2026-08-10T02:34:47.705Z",
+    "generatedAt": "2026-08-10T21:30:19.520Z",
+    "generatedat": "2026-08-10T21:30:19.520Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "2334853,2688886,3074470,3386100,3501345,3843237,3843239,4840497,4840499,4840500,5063344,6718178,10167364,11206549,11926092,12039893,14103624",
     "questwatchformidscsv": "2334853,2688886,3074470,3386100,3501345,3843237,3843239,4840497,4840499,4840500,5063344,6718178,10167364,11206549,11926092,12039893,14103624",
@@ -1647,6 +1647,16 @@
     "quest.14103624|200.magnitudescsv": "small|small",
     "quest.14103624|200.tagsCsv": "marriage_family|marriage_family",
     "quest.14103624|200.tagscsv": "marriage_family|marriage_family",
+    "quest.6718178|199.deitiesCsv": "Julianos|Magnus|Sheogorath",
+    "quest.6718178|199.deitiescsv": "Julianos|Magnus|Sheogorath",
+    "quest.6718178|199.valencesCsv": "+|+|-",
+    "quest.6718178|199.valencescsv": "+|+|-",
+    "quest.6718178|199.intensitiesCsv": "m|S|m",
+    "quest.6718178|199.intensitiescsv": "m|S|m",
+    "quest.6718178|199.magnitudesCsv": "small|small|small",
+    "quest.6718178|199.magnitudescsv": "small|small|small",
+    "quest.6718178|199.tagsCsv": "arcane_restraint|arcane_restraint|arcane_restraint",
+    "quest.6718178|199.tagscsv": "arcane_restraint|arcane_restraint|arcane_restraint",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1829,6 +1839,16 @@
     "quest.6718178|165.metaskip.akatosh": 1,
     "quest.6718178|165.metaSkip.Xarxes": 1,
     "quest.6718178|165.metaskip.xarxes": 1,
+    "quest.6718178|199.metaSkip.Nocturnal": 1,
+    "quest.6718178|199.metaskip.nocturnal": 1,
+    "quest.6718178|199.metaSkip.Azura": 1,
+    "quest.6718178|199.metaskip.azura": 1,
+    "quest.6718178|199.metaSkip.Julianos": 1,
+    "quest.6718178|199.metaskip.julianos": 1,
+    "quest.6718178|199.metaSkip.Akatosh": 1,
+    "quest.6718178|199.metaskip.akatosh": 1,
+    "quest.6718178|199.metaSkip.Xarxes": 1,
+    "quest.6718178|199.metaskip.xarxes": 1,
     "quest.11206549|22.metaSkip.Julianos": 1,
     "quest.11206549|22.metaskip.julianos": 1,
     "quest.11206549|22.metaSkip.Akatosh": 1,
@@ -1855,8 +1875,8 @@
     "quest.11926092|201.metaskip.akatosh": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 38,
-    "metaskipints": 38
+    "metaSkipInts": 43,
+    "metaskipints": 43
   },
   "stringList": {
     "questKeys": [
@@ -1889,7 +1909,8 @@
       "11926092|10",
       "11926092|201",
       "12039893|200",
-      "14103624|200"
+      "14103624|200",
+      "6718178|199"
     ],
     "questkeys": [
       "2334853|200",
@@ -1921,7 +1942,8 @@
       "11926092|10",
       "11926092|201",
       "12039893|200",
-      "14103624|200"
+      "14103624|200",
+      "6718178|199"
     ],
     "questForms": [
       "0x23A085|AX ValSerano.esp",
@@ -1953,7 +1975,8 @@
       "0xB5FA4C|AX ValSerano.esp",
       "0xB5FA4C|AX ValSerano.esp",
       "0xB7B6D5|AX ValSerano.esp",
-      "0xD73448|AX ValSerano.esp"
+      "0xD73448|AX ValSerano.esp",
+      "0x6682E2|AX ValSerano.esp"
     ],
     "questforms": [
       "0x23A085|AX ValSerano.esp",
@@ -1985,7 +2008,8 @@
       "0xB5FA4C|AX ValSerano.esp",
       "0xB5FA4C|AX ValSerano.esp",
       "0xB7B6D5|AX ValSerano.esp",
-      "0xD73448|AX ValSerano.esp"
+      "0xD73448|AX ValSerano.esp",
+      "0x6682E2|AX ValSerano.esp"
     ],
     "questFormIds": [
       "2334853",
@@ -2017,7 +2041,8 @@
       "11926092",
       "11926092",
       "12039893",
-      "14103624"
+      "14103624",
+      "6718178"
     ],
     "questformids": [
       "2334853",
@@ -2049,9 +2074,11 @@
       "11926092",
       "11926092",
       "12039893",
-      "14103624"
+      "14103624",
+      "6718178"
     ],
     "questPlugins": [
+      "AX ValSerano.esp",
       "AX ValSerano.esp",
       "AX ValSerano.esp",
       "AX ValSerano.esp",
@@ -2113,6 +2140,7 @@
       "AX ValSerano.esp",
       "AX ValSerano.esp",
       "AX ValSerano.esp",
+      "AX ValSerano.esp",
       "AX ValSerano.esp"
     ],
     "questEditorIds": [
@@ -2145,7 +2173,8 @@
       "ValEnd",
       "ValEnd",
       "Val00AViewDate",
-      "Val00ALakeDate"
+      "Val00ALakeDate",
+      "ValCOLGrad"
     ],
     "questeditorids": [
       "ValTGAgent",
@@ -2177,7 +2206,8 @@
       "ValEnd",
       "ValEnd",
       "Val00AViewDate",
-      "Val00ALakeDate"
+      "Val00ALakeDate",
+      "ValCOLGrad"
     ],
     "questWatch.formIds": [
       "2334853",
@@ -3482,6 +3512,31 @@
     "quest.14103624|200.tags": [
       "marriage_family",
       "marriage_family"
+    ],
+    "quest.6718178|199.deities": [
+      "Julianos",
+      "Magnus",
+      "Sheogorath"
+    ],
+    "quest.6718178|199.valences": [
+      "+",
+      "+",
+      "-"
+    ],
+    "quest.6718178|199.intensities": [
+      "m",
+      "S",
+      "m"
+    ],
+    "quest.6718178|199.magnitudes": [
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.6718178|199.tags": [
+      "arcane_restraint",
+      "arcane_restraint",
+      "arcane_restraint"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

@@ -1126,6 +1126,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="Interesting NPCs SE (3DNPC)">
+              <description>NPCs with more extensive dialogue and role play choices. Over 250 fully voiced NPCs, 25 followers, 15 marriage NPCs, and 50 quests. This is a fan-port of the LE mod, ported to Skyrim SE from scratch and maintained with fixes.</description>
+              <files>
+                <folder source="common\InterestingNPCs" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="3DNPC.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Kaidan 2">
               <description>Rebuilt and expanded, this romantic follower features over 1200 lines of dialogue, custom home, and mini quests.</description>
               <files>

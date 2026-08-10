@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:58.031Z",
-    "generatedat": "2026-08-10T00:15:58.031Z",
+    "generatedAt": "2026-08-10T21:30:19.248Z",
+    "generatedat": "2026-08-10T21:30:19.248Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "26987,50749,49179,31132",
-    "questwatchformidscsv": "26987,50749,49179,31132",
-    "questWatchPluginsCsv": "MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp",
-    "questwatchpluginscsv": "MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp",
+    "questWatchFormIdsCsv": "26987,50749,49179,31132,39486",
+    "questwatchformidscsv": "26987,50749,49179,31132,39486",
+    "questWatchPluginsCsv": "MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp",
+    "questwatchpluginscsv": "MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1507,6 +1507,16 @@
     "quest.31132|36.magnitudescsv": "small|small",
     "quest.31132|36.tagsCsv": "honest_labor_trade|honest_labor_trade",
     "quest.31132|36.tagscsv": "honest_labor_trade|honest_labor_trade",
+    "quest.39486|30.deitiesCsv": "Stendarr|Mara|The Hist",
+    "quest.39486|30.deitiescsv": "Stendarr|Mara|The Hist",
+    "quest.39486|30.valencesCsv": "+|+|+",
+    "quest.39486|30.valencescsv": "+|+|+",
+    "quest.39486|30.intensitiesCsv": "m|S|m",
+    "quest.39486|30.intensitiescsv": "m|S|m",
+    "quest.39486|30.magnitudesCsv": "small|small|small",
+    "quest.39486|30.magnitudescsv": "small|small|small",
+    "quest.39486|30.tagsCsv": "kindness_to_child|kindness_to_child|kindness_to_child",
+    "quest.39486|30.tagscsv": "kindness_to_child|kindness_to_child|kindness_to_child",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1691,7 +1701,8 @@
       "49179|30",
       "31132|30",
       "31132|33",
-      "31132|36"
+      "31132|36",
+      "39486|30"
     ],
     "questkeys": [
       "26987|48",
@@ -1709,7 +1720,8 @@
       "49179|30",
       "31132|30",
       "31132|33",
-      "31132|36"
+      "31132|36",
+      "39486|30"
     ],
     "questForms": [
       "0x00696B|MoonAndStar_MAS.esp",
@@ -1727,7 +1739,8 @@
       "0x00C01B|MoonAndStar_MAS.esp",
       "0x00799C|MoonAndStar_MAS.esp",
       "0x00799C|MoonAndStar_MAS.esp",
-      "0x00799C|MoonAndStar_MAS.esp"
+      "0x00799C|MoonAndStar_MAS.esp",
+      "0x009A3E|MoonAndStar_MAS.esp"
     ],
     "questforms": [
       "0x00696B|MoonAndStar_MAS.esp",
@@ -1745,7 +1758,8 @@
       "0x00C01B|MoonAndStar_MAS.esp",
       "0x00799C|MoonAndStar_MAS.esp",
       "0x00799C|MoonAndStar_MAS.esp",
-      "0x00799C|MoonAndStar_MAS.esp"
+      "0x00799C|MoonAndStar_MAS.esp",
+      "0x009A3E|MoonAndStar_MAS.esp"
     ],
     "questFormIds": [
       "26987",
@@ -1763,7 +1777,8 @@
       "49179",
       "31132",
       "31132",
-      "31132"
+      "31132",
+      "39486"
     ],
     "questformids": [
       "26987",
@@ -1781,9 +1796,11 @@
       "49179",
       "31132",
       "31132",
-      "31132"
+      "31132",
+      "39486"
     ],
     "questPlugins": [
+      "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp",
@@ -1817,6 +1834,7 @@
       "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp",
+      "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp"
     ],
     "questEditorIds": [
@@ -1835,7 +1853,8 @@
       "MASSelyseDialog",
       "MASTorenDialog",
       "MASTorenDialog",
-      "MASTorenDialog"
+      "MASTorenDialog",
+      "MASAlbertDialog"
     ],
     "questeditorids": [
       "MASMainQuest",
@@ -1853,21 +1872,25 @@
       "MASSelyseDialog",
       "MASTorenDialog",
       "MASTorenDialog",
-      "MASTorenDialog"
+      "MASTorenDialog",
+      "MASAlbertDialog"
     ],
     "questWatch.formIds": [
       "26987",
       "50749",
       "49179",
-      "31132"
+      "31132",
+      "39486"
     ],
     "questwatch.formids": [
       "26987",
       "50749",
       "49179",
-      "31132"
+      "31132",
+      "39486"
     ],
     "questWatch.plugins": [
+      "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp",
@@ -1877,33 +1900,39 @@
       "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp",
+      "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp"
     ],
     "questWatch.editorIds": [
       "MASMainQuest",
       "MASBelvadyrFavor",
       "MASSelyseDialog",
-      "MASTorenDialog"
+      "MASTorenDialog",
+      "MASAlbertDialog"
     ],
     "questwatch.editorids": [
       "MASMainQuest",
       "MASBelvadyrFavor",
       "MASSelyseDialog",
-      "MASTorenDialog"
+      "MASTorenDialog",
+      "MASAlbertDialog"
     ],
     "questWatchFormIds": [
       "26987",
       "50749",
       "49179",
-      "31132"
+      "31132",
+      "39486"
     ],
     "questwatchformids": [
       "26987",
       "50749",
       "49179",
-      "31132"
+      "31132",
+      "39486"
     ],
     "questWatchPlugins": [
+      "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp",
@@ -1913,19 +1942,22 @@
       "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp",
+      "MoonAndStar_MAS.esp",
       "MoonAndStar_MAS.esp"
     ],
     "questWatchEditorIds": [
       "MASMainQuest",
       "MASBelvadyrFavor",
       "MASSelyseDialog",
-      "MASTorenDialog"
+      "MASTorenDialog",
+      "MASAlbertDialog"
     ],
     "questwatcheditorids": [
       "MASMainQuest",
       "MASBelvadyrFavor",
       "MASSelyseDialog",
-      "MASTorenDialog"
+      "MASTorenDialog",
+      "MASAlbertDialog"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -2752,6 +2784,31 @@
     "quest.31132|36.tags": [
       "honest_labor_trade",
       "honest_labor_trade"
+    ],
+    "quest.39486|30.deities": [
+      "Stendarr",
+      "Mara",
+      "The Hist"
+    ],
+    "quest.39486|30.valences": [
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.39486|30.intensities": [
+      "m",
+      "S",
+      "m"
+    ],
+    "quest.39486|30.magnitudes": [
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.39486|30.tags": [
+      "kindness_to_child",
+      "kindness_to_child",
+      "kindness_to_child"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

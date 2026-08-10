@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:57.965Z",
-    "generatedat": "2026-08-10T00:15:57.965Z",
+    "generatedAt": "2026-08-10T21:30:19.180Z",
+    "generatedat": "2026-08-10T21:30:19.180Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "852869,624545,915095,6439500,43578,1143273",
-    "questwatchformidscsv": "852869,624545,915095,6439500,43578,1143273",
-    "questWatchPluginsCsv": "Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp",
-    "questwatchpluginscsv": "Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp",
+    "questWatchFormIdsCsv": "852869,624545,915095,6439500,43578,1143273,2823149",
+    "questwatchformidscsv": "852869,624545,915095,6439500,43578,1143273,2823149",
+    "questWatchPluginsCsv": "Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp",
+    "questwatchpluginscsv": "Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1527,6 +1527,26 @@
     "quest.1143273|7.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small",
     "quest.1143273|7.tagsCsv": "break_oath_betray|break_oath_betray|break_oath_betray|break_oath_betray|deceit|deceit|break_oath_betray|break_oath_betray|break_oath_betray|deceit|deceit|deceit|deceit",
     "quest.1143273|7.tagscsv": "break_oath_betray|break_oath_betray|break_oath_betray|break_oath_betray|deceit|deceit|break_oath_betray|break_oath_betray|break_oath_betray|deceit|deceit|deceit|deceit",
+    "quest.915095|20.deitiesCsv": "Julianos|Magnus|Sheogorath",
+    "quest.915095|20.deitiescsv": "Julianos|Magnus|Sheogorath",
+    "quest.915095|20.valencesCsv": "+|+|-",
+    "quest.915095|20.valencescsv": "+|+|-",
+    "quest.915095|20.intensitiesCsv": "m|S|m",
+    "quest.915095|20.intensitiescsv": "m|S|m",
+    "quest.915095|20.magnitudesCsv": "small|small|small",
+    "quest.915095|20.magnitudescsv": "small|small|small",
+    "quest.915095|20.tagsCsv": "arcane_restraint|arcane_restraint|arcane_restraint",
+    "quest.915095|20.tagscsv": "arcane_restraint|arcane_restraint|arcane_restraint",
+    "quest.2823149|800.deitiesCsv": "Stendarr",
+    "quest.2823149|800.deitiescsv": "Stendarr",
+    "quest.2823149|800.valencesCsv": "+",
+    "quest.2823149|800.valencescsv": "+",
+    "quest.2823149|800.intensitiesCsv": "S",
+    "quest.2823149|800.intensitiescsv": "S",
+    "quest.2823149|800.magnitudesCsv": "small",
+    "quest.2823149|800.magnitudescsv": "small",
+    "quest.2823149|800.tagsCsv": "destroy_daedric_threat",
+    "quest.2823149|800.tagscsv": "destroy_daedric_threat",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1663,6 +1683,8 @@
     "quest.852869|480.metaskip.julianos": 1,
     "quest.915095|10.metaSkip.Julianos": 1,
     "quest.915095|10.metaskip.julianos": 1,
+    "quest.915095|20.metaSkip.Julianos": 1,
+    "quest.915095|20.metaskip.julianos": 1,
     "quest.43578|35.metaSkip.Nocturnal": 1,
     "quest.43578|35.metaskip.nocturnal": 1,
     "quest.43578|35.metaSkip.Azura": 1,
@@ -1757,8 +1779,8 @@
     "quest.1143273|7.metaskip.akatosh": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 49,
-    "metaskipints": 49
+    "metaSkipInts": 50,
+    "metaskipints": 50
   },
   "stringList": {
     "questKeys": [
@@ -1779,7 +1801,9 @@
       "43578|187",
       "43578|188",
       "1143273|5",
-      "1143273|7"
+      "1143273|7",
+      "915095|20",
+      "2823149|800"
     ],
     "questkeys": [
       "852869|470",
@@ -1799,7 +1823,9 @@
       "43578|187",
       "43578|188",
       "1143273|5",
-      "1143273|7"
+      "1143273|7",
+      "915095|20",
+      "2823149|800"
     ],
     "questForms": [
       "0x0D0385|Lucien.esp",
@@ -1819,7 +1845,9 @@
       "0x00AA3A|Lucien.esp",
       "0x00AA3A|Lucien.esp",
       "0x1171E9|Lucien.esp",
-      "0x1171E9|Lucien.esp"
+      "0x1171E9|Lucien.esp",
+      "0x0DF697|Lucien.esp",
+      "0x2B13ED|Lucien.esp"
     ],
     "questforms": [
       "0x0D0385|Lucien.esp",
@@ -1839,7 +1867,9 @@
       "0x00AA3A|Lucien.esp",
       "0x00AA3A|Lucien.esp",
       "0x1171E9|Lucien.esp",
-      "0x1171E9|Lucien.esp"
+      "0x1171E9|Lucien.esp",
+      "0x0DF697|Lucien.esp",
+      "0x2B13ED|Lucien.esp"
     ],
     "questFormIds": [
       "852869",
@@ -1859,7 +1889,9 @@
       "43578",
       "43578",
       "1143273",
-      "1143273"
+      "1143273",
+      "915095",
+      "2823149"
     ],
     "questformids": [
       "852869",
@@ -1879,9 +1911,13 @@
       "43578",
       "43578",
       "1143273",
-      "1143273"
+      "1143273",
+      "915095",
+      "2823149"
     ],
     "questPlugins": [
+      "Lucien.esp",
+      "Lucien.esp",
       "Lucien.esp",
       "Lucien.esp",
       "Lucien.esp",
@@ -1919,6 +1955,8 @@
       "Lucien.esp",
       "Lucien.esp",
       "Lucien.esp",
+      "Lucien.esp",
+      "Lucien.esp",
       "Lucien.esp"
     ],
     "questEditorIds": [
@@ -1939,7 +1977,9 @@
       "JRLucienMQ",
       "JRLucienMQ",
       "JRLucienPaarthurnax",
-      "JRLucienPaarthurnax"
+      "JRLucienPaarthurnax",
+      "JRLucienElderScroll",
+      "JRLucienPersonal1"
     ],
     "questeditorids": [
       "JRLucienDaedric",
@@ -1959,7 +1999,9 @@
       "JRLucienMQ",
       "JRLucienMQ",
       "JRLucienPaarthurnax",
-      "JRLucienPaarthurnax"
+      "JRLucienPaarthurnax",
+      "JRLucienElderScroll",
+      "JRLucienPersonal1"
     ],
     "questWatch.formIds": [
       "852869",
@@ -1967,7 +2009,8 @@
       "915095",
       "6439500",
       "43578",
-      "1143273"
+      "1143273",
+      "2823149"
     ],
     "questwatch.formids": [
       "852869",
@@ -1975,9 +2018,11 @@
       "915095",
       "6439500",
       "43578",
-      "1143273"
+      "1143273",
+      "2823149"
     ],
     "questWatch.plugins": [
+      "Lucien.esp",
       "Lucien.esp",
       "Lucien.esp",
       "Lucien.esp",
@@ -1991,6 +2036,7 @@
       "Lucien.esp",
       "Lucien.esp",
       "Lucien.esp",
+      "Lucien.esp",
       "Lucien.esp"
     ],
     "questWatch.editorIds": [
@@ -1999,7 +2045,8 @@
       "JRLucienElderScroll",
       "JRLucienGetHorseQuest",
       "JRLucienMQ",
-      "JRLucienPaarthurnax"
+      "JRLucienPaarthurnax",
+      "JRLucienPersonal1"
     ],
     "questwatch.editorids": [
       "JRLucienDaedric",
@@ -2007,7 +2054,8 @@
       "JRLucienElderScroll",
       "JRLucienGetHorseQuest",
       "JRLucienMQ",
-      "JRLucienPaarthurnax"
+      "JRLucienPaarthurnax",
+      "JRLucienPersonal1"
     ],
     "questWatchFormIds": [
       "852869",
@@ -2015,7 +2063,8 @@
       "915095",
       "6439500",
       "43578",
-      "1143273"
+      "1143273",
+      "2823149"
     ],
     "questwatchformids": [
       "852869",
@@ -2023,9 +2072,11 @@
       "915095",
       "6439500",
       "43578",
-      "1143273"
+      "1143273",
+      "2823149"
     ],
     "questWatchPlugins": [
+      "Lucien.esp",
       "Lucien.esp",
       "Lucien.esp",
       "Lucien.esp",
@@ -2039,6 +2090,7 @@
       "Lucien.esp",
       "Lucien.esp",
       "Lucien.esp",
+      "Lucien.esp",
       "Lucien.esp"
     ],
     "questWatchEditorIds": [
@@ -2047,7 +2099,8 @@
       "JRLucienElderScroll",
       "JRLucienGetHorseQuest",
       "JRLucienMQ",
-      "JRLucienPaarthurnax"
+      "JRLucienPaarthurnax",
+      "JRLucienPersonal1"
     ],
     "questwatcheditorids": [
       "JRLucienDaedric",
@@ -2055,7 +2108,8 @@
       "JRLucienElderScroll",
       "JRLucienGetHorseQuest",
       "JRLucienMQ",
-      "JRLucienPaarthurnax"
+      "JRLucienPaarthurnax",
+      "JRLucienPersonal1"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -3037,6 +3091,46 @@
       "deceit",
       "deceit",
       "deceit"
+    ],
+    "quest.915095|20.deities": [
+      "Julianos",
+      "Magnus",
+      "Sheogorath"
+    ],
+    "quest.915095|20.valences": [
+      "+",
+      "+",
+      "-"
+    ],
+    "quest.915095|20.intensities": [
+      "m",
+      "S",
+      "m"
+    ],
+    "quest.915095|20.magnitudes": [
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.915095|20.tags": [
+      "arcane_restraint",
+      "arcane_restraint",
+      "arcane_restraint"
+    ],
+    "quest.2823149|800.deities": [
+      "Stendarr"
+    ],
+    "quest.2823149|800.valences": [
+      "+"
+    ],
+    "quest.2823149|800.intensities": [
+      "S"
+    ],
+    "quest.2823149|800.magnitudes": [
+      "small"
+    ],
+    "quest.2823149|800.tags": [
+      "destroy_daedric_threat"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

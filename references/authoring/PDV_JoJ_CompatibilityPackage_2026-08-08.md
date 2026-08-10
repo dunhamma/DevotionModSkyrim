@@ -1,6 +1,6 @@
 # PDV Compatibility Package - Journals of Jyggalag (JoJ)
 
-Status: LIVING -- B01-B06 authored and machine-gated (36/37 candidates); B07 Interesting NPCs deferred, pending survey
+Status: LIVING -- B01-B07 complete (37/37 candidates); full PatchHub tester-release archive built and machine-verified, runtime evidence post-release
 Opened: 2026-08-08
 Precedent: `PDV_DoD_CompatibilityPackage_2026-06-30.md`. JoJ is the second of the two
 real build-targets tracked by `C-COMPAT-BORDELLO` (DoD-base and JOJ-base).
@@ -48,9 +48,9 @@ active in JoJ**:
 `The Heart of Dibella - Quest Expansion.esp`, `TheGiftofSaturalia.esp`, `Unslaad.esm`,
 `Vigilant.esm`, `Wyrmstooth.esp`, `evgSIRENROOT.esm`.
 
-The repository manifest now carries **75** PatchHub options. B06 adds six JoJ follower
-options, but this audit read the absolute plugin files and did not re-prove Lord's Vision
-profile activation. The new options are therefore authored support, not a renewed
+The repository manifest now carries **77** PatchHub options. B06-B07 added eight JoJ
+follower options, but the content audit read absolute plugin files and did not re-prove
+Lord's Vision profile activation. These are authored, packaged options, not a renewed
 "active in JoJ" count.
 
 **Coverage must be computed against `Full.csv`, not against hub folder names.** Quest
@@ -237,9 +237,9 @@ PrismaUI, JContainers, ConsoleUtilSSE, MCM Helper). Devotion is the **sole** pro
 neither master is installed anywhere in JoJ and neither plugin was touched. These are the
 same two the DoD session recorded. houseCARL restored to Anvil / `Devotion Dev`.
 
-**Still open from Phase 0:** the lighting spot-check (needs the game), the Mannaz RaceMap
-entries, the Sacrosanct vampire-halt confirmation, and the user's
-Synthesis / DynDOLOD-Occlusion / ParallaxGen re-run.
+**Outside the B-series content audit:** Mannaz RaceMap work, Sacrosanct confirmation,
+and any Synthesis / DynDOLOD-Occlusion / ParallaxGen rerun remain separate projects.
+Devotion does not alter lighting, so there is no lighting spot-check requirement.
 
 ### 3.9 Repo findings surfaced by packaging (not JoJ-specific)
 
@@ -351,16 +351,17 @@ were actually read:
 
 | Follower | Worklist QUST | Tagged outcomes | Promoted rows | Post-promotion quest re-reads | Verdict |
 |---|---:|---:|---:|---:|---|
-| Sa'chil | 45 | 10 | 47 | 8 | APPROVED |
-| Val Serano | 62 | 32 | 144 | 17 | APPROVED |
+| Sa'chil | 45 | 10 | 55 | 10 | APPROVED |
+| Val Serano | 62 | 32 | 147 | 17 | APPROVED |
 | Taliesin | 17 | 1 | 4 | 1 | APPROVED |
 | Hoth | 1 | 0 | 0 | 0 | SILENT |
-| Gore | 25 | 4 | 37 | 3 | APPROVED |
-| Khajiit Will Follow | 36 | 9 | 38 | 4 | APPROVED |
+| Gore | 25 | 4 | 39 | 3 | APPROVED |
+| Khajiit Will Follow | 36 | 8 | 46 | 6 | APPROVED |
 | Merlin the Corgi | 2 | 1 | 1 | 1 | APPROVED |
-| Redcap the Riekling | 40 | 6 | 58 | 5 | APPROVED |
+| Redcap the Riekling | 40 | 6 | 62 | 6 | APPROVED |
 
-The seven approved mods contribute **53 quest-stage cells and 329 deity award rows**.
+After the B07 vocabulary/retrospective pass, the seven approved mods contribute
+**61 quest-stage cells and 354 deity award rows**.
 Every unique row-bearing quest was then re-read directly, and every promoted stage was
 found. Hoth has a reasoned entry in `PDV_JoJ_SilenceLedger.md` and no channel or
 installer option. Merlin's owner-adjudicated Sheogorath-domain encounter is promoted
@@ -385,9 +386,33 @@ the latter adds Y'ffre while the former produces no additional reactor.
 
 Seven canonical per-mod CSVs and seven runtime channel JSONs are present, and seven
 Followers-category manifest options use the host plugin dependencies and Nexus
-summaries. `ModuleConfig.xml` regenerates idempotently; installer validation passes at
-76 options / 74 channels. No archive was built. This is authored and machine-gated,
-not released or runtime-proven.
+summaries. `ModuleConfig.xml` regenerates idempotently. These options now ship in the
+2026-08-11 tester-release archive; runtime observations remain post-release evidence.
+
+#### B07 Interesting NPCs closeout (direct MCP, 2026-08-11)
+
+B07 resumed the completed 488-record direct survey and read one additional Skyrim
+override, without rerunning the survey and without `pdv_joj_stage_digest`. Ambiguous
+routes were resolved from direct QUST VMAD, INFO/SCEN references, aliases, and
+decompiled quest fragments. The owner approved 27 outcomes across 19 quests.
+
+Cross-generation produced seven collisions; each was manually adjudicated before
+promotion. Generic Auri-El/Alkosh honorable-combat fan-out and an out-of-scope Sithis
+betrayal were removed. The approved source compiles to **27 quest-stage cells and 269
+deity award rows**, and all 19 unique row-bearing quests plus all 27 promoted stages
+were directly re-read from `3DNPC.esp` after promotion.
+
+The same review approved eleven vocabulary gaps -- `friendship`,
+`recover_stolen_keepsake`, `free_wrongfully_imprisoned`, `arcane_restraint`,
+`destroy_daedric_threat`, `kindness_to_child`, `contraband_trade`,
+`reject_criminality`, `tactical_distraction`, `abuse_companion`, and
+`self_sacrifice` -- with explicit deity profiles. A targeted B01-B06 retrospective
+regenerated every affected source and channel. Two Lucien declarations still lack an
+evidenced act and remain inert with empty tags.
+
+Interesting NPCs is dependency-gated on `3DNPC.esp` in the Followers step. B07 is
+APPROVED, so no B07 silence entry was added. The checkpoint is now **37/37**, with 31
+APPROVED candidates and six SILENT candidates.
 
 **Class D - dialogue and reaction expansions.** NPCs React To Necromancy, NPCs React To
 Frenzy, NPCs React To Invisibility, Vampire / Bandit / Dremora / Civil War / Forsworn and
@@ -470,14 +495,14 @@ walk in through a load door.
 
 | Phase | Content | Gate |
 |---|---|---|
-| 0 | Religion swap, load order, RaceMap, Lux/NR forwarding | 0 new missing masters; lighting spot check |
+| 0 | Religion swap, load order, RaceMap, Lux/NR forwarding | 0 new missing masters; lighting is unrelated and has no spot-check gate here |
 | 1a | Coverage subtraction script; candidate shortlist | shortlist reproducible from a script |
 | 1b | Class A + B stage reads and rows | preflight green |
 | 1c | Class C follower rows | preflight green |
 | 1d | Class D routing verdicts | verdict table, no rows promised |
 | 2 | Channel compile, FOMOD packaging | merge `--check`, compile, preflight |
 | 3 | Plugin-lane patches, if any | houseCARL readback + VMAD |
-| 4 | Tester bundle | GitHub pre-release, not a `dist/` commit |
+| 4 | Tester release archive | exact tree/archive membership and checksum receipt; runtime testing follows release |
 
 Phases 1b/1c/1d are independently shippable. Do not hold the tranche for Class D.
 
@@ -486,14 +511,19 @@ Phases 1b/1c/1d are independently shippable. Do not hold the tranche for Class D
 ## 7. Proof boundary
 
 The 2026-08-08 instance and religion-removal facts retain their original evidence
-boundaries. The B01-B06 checkpoint is current repository authority: 36 of 37 candidates
-are complete and B06 is 8/8. B06 record evidence is direct absolute-path houseCARL
-readback, independent of active load order; it proves the records and cited stages in
-those plugin files, not that Lord's Vision currently activates every dependency.
+boundaries. The B01-B07 checkpoint is current repository authority: all 37 candidates
+are complete, including B06 at 8/8 and B07 at 1/1. B06-B07 record evidence is direct
+absolute-path houseCARL readback, independent of active load order; it proves the
+records and cited stages in those plugin files, not that Lord's Vision currently
+activates every dependency.
 
 Tagged-row gates, per-mod lint, channel compilation, name-resolution preflight, manifest
 generation, idempotence, and installer-tree validation are machine proof. They do not
 prove in-game routing, piety deltas, notifications, Book of Days display, balance feel,
-or release contents. No B06 archive, release, support promotion, or runtime claim exists.
-
-Interesting NPCs remains `UNREVIEWED`: **deferred, pending survey**.
+or save/load behavior. Package bytes are separately proven by
+`PDV_QuestModPatches_FOMOD_Validation.json`: the complete tester-release archive is
+`dist/PDV-QuestModPatchHub-20260811.zip`, 122 members, 984,357 bytes, SHA-256
+`5548314D06F28FF9CF577F76650C63FED35AEB3A85C28557338F0B2D56BFB0B1`, with zero
+missing, extra, or checksum-mismatched members. Runtime routing, player presentation,
+balance, and save/load observations are post-release tester evidence and do not block
+this save-safe data package.

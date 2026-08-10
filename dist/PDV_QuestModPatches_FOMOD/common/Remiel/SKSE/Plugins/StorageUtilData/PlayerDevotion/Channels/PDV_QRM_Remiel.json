@@ -1,7 +1,7 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:58.599Z",
-    "generatedat": "2026-08-10T00:15:58.599Z",
+    "generatedAt": "2026-08-10T21:30:19.381Z",
+    "generatedat": "2026-08-10T21:30:19.381Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "6480473,4651605,3281381,2326247,936018",
     "questwatchformidscsv": "6480473,4651605,3281381,2326247,936018",
@@ -1437,6 +1437,26 @@
     "quest.936018|90.magnitudescsv": "small|small|small|small|small|small|small|small|small|small",
     "quest.936018|90.tagsCsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak",
     "quest.936018|90.tagscsv": "protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak",
+    "quest.4651605|110.deitiesCsv": "Stendarr|Zenithar|Z'en|Baan Dar|Nocturnal",
+    "quest.4651605|110.deitiescsv": "Stendarr|Zenithar|Z'en|Baan Dar|Nocturnal",
+    "quest.4651605|110.valencesCsv": "-|-|-|+|+",
+    "quest.4651605|110.valencescsv": "-|-|-|+|+",
+    "quest.4651605|110.intensitiesCsv": "m|S|m|m|m",
+    "quest.4651605|110.intensitiescsv": "m|S|m|m|m",
+    "quest.4651605|110.magnitudesCsv": "small|small|small|small|small",
+    "quest.4651605|110.magnitudescsv": "small|small|small|small|small",
+    "quest.4651605|110.tagsCsv": "contraband_trade|contraband_trade|contraband_trade|contraband_trade|contraband_trade",
+    "quest.4651605|110.tagscsv": "contraband_trade|contraband_trade|contraband_trade|contraband_trade|contraband_trade",
+    "quest.2326247|80.deitiesCsv": "Akatosh|Stendarr|Zenithar|Z'en",
+    "quest.2326247|80.deitiescsv": "Akatosh|Stendarr|Zenithar|Z'en",
+    "quest.2326247|80.valencesCsv": "+|+|+|+",
+    "quest.2326247|80.valencescsv": "+|+|+|+",
+    "quest.2326247|80.intensitiesCsv": "m|m|m|m",
+    "quest.2326247|80.intensitiescsv": "m|m|m|m",
+    "quest.2326247|80.magnitudesCsv": "small|small|small|small",
+    "quest.2326247|80.magnitudescsv": "small|small|small|small",
+    "quest.2326247|80.tagsCsv": "reject_criminality|reject_criminality|reject_criminality|reject_criminality",
+    "quest.2326247|80.tagscsv": "reject_criminality|reject_criminality|reject_criminality|reject_criminality",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1575,32 +1595,56 @@
     "quest.6480473|70.metaskip.akatosh": 1,
     "quest.6480473|70.metaSkip.Xarxes": 1,
     "quest.6480473|70.metaskip.xarxes": 1,
+    "quest.4651605|100.metaSkip.Z'en": 1,
+    "quest.4651605|100.metaskip.z'en": 1,
     "quest.4651605|100.metaSkip.Nocturnal": 1,
     "quest.4651605|100.metaskip.nocturnal": 1,
     "quest.4651605|100.metaSkip.Khenarthi": 1,
     "quest.4651605|100.metaskip.khenarthi": 1,
+    "quest.4651605|125.metaSkip.Z'en": 1,
+    "quest.4651605|125.metaskip.z'en": 1,
     "quest.4651605|125.metaSkip.Nocturnal": 1,
     "quest.4651605|125.metaskip.nocturnal": 1,
     "quest.4651605|125.metaSkip.Khenarthi": 1,
     "quest.4651605|125.metaskip.khenarthi": 1,
+    "quest.4651605|190.metaSkip.Z'en": 1,
+    "quest.4651605|190.metaskip.z'en": 1,
     "quest.4651605|190.metaSkip.Nocturnal": 1,
     "quest.4651605|190.metaskip.nocturnal": 1,
     "quest.4651605|190.metaSkip.Khenarthi": 1,
     "quest.4651605|190.metaskip.khenarthi": 1,
+    "quest.4651605|230.metaSkip.Z'en": 1,
+    "quest.4651605|230.metaskip.z'en": 1,
     "quest.4651605|230.metaSkip.Nocturnal": 1,
     "quest.4651605|230.metaskip.nocturnal": 1,
     "quest.4651605|230.metaSkip.Khenarthi": 1,
     "quest.4651605|230.metaskip.khenarthi": 1,
+    "quest.4651605|110.metaSkip.Z'en": 1,
+    "quest.4651605|110.metaskip.z'en": 1,
+    "quest.4651605|110.metaSkip.Nocturnal": 1,
+    "quest.4651605|110.metaskip.nocturnal": 1,
+    "quest.4651605|110.metaSkip.Khenarthi": 1,
+    "quest.4651605|110.metaskip.khenarthi": 1,
+    "quest.2326247|70.metaSkip.Z'en": 1,
+    "quest.2326247|70.metaskip.z'en": 1,
     "quest.2326247|70.metaSkip.Nocturnal": 1,
     "quest.2326247|70.metaskip.nocturnal": 1,
+    "quest.2326247|70.metaSkip.Akatosh": 1,
+    "quest.2326247|70.metaskip.akatosh": 1,
+    "quest.2326247|80.metaSkip.Z'en": 1,
+    "quest.2326247|80.metaskip.z'en": 1,
+    "quest.2326247|80.metaSkip.Nocturnal": 1,
+    "quest.2326247|80.metaskip.nocturnal": 1,
+    "quest.2326247|80.metaSkip.Akatosh": 1,
+    "quest.2326247|80.metaskip.akatosh": 1,
     "quest.936018|30.metaSkip.Khenarthi": 1,
     "quest.936018|30.metaskip.khenarthi": 1,
     "quest.936018|90.metaSkip.Khenarthi": 1,
     "quest.936018|90.metaskip.khenarthi": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 15,
-    "metaskipints": 15
+    "metaSkipInts": 27,
+    "metaskipints": 27
   },
   "stringList": {
     "questKeys": [
@@ -1612,7 +1656,9 @@
       "3281381|15",
       "2326247|70",
       "936018|30",
-      "936018|90"
+      "936018|90",
+      "4651605|110",
+      "2326247|80"
     ],
     "questkeys": [
       "6480473|70",
@@ -1623,7 +1669,9 @@
       "3281381|15",
       "2326247|70",
       "936018|30",
-      "936018|90"
+      "936018|90",
+      "4651605|110",
+      "2326247|80"
     ],
     "questForms": [
       "0x62E259|HLIORemi.esp",
@@ -1634,7 +1682,9 @@
       "0x3211E5|HLIORemi.esp",
       "0x237EE7|HLIORemi.esp",
       "0x0E4852|HLIORemi.esp",
-      "0x0E4852|HLIORemi.esp"
+      "0x0E4852|HLIORemi.esp",
+      "0x46FA55|HLIORemi.esp",
+      "0x237EE7|HLIORemi.esp"
     ],
     "questforms": [
       "0x62E259|HLIORemi.esp",
@@ -1645,7 +1695,9 @@
       "0x3211E5|HLIORemi.esp",
       "0x237EE7|HLIORemi.esp",
       "0x0E4852|HLIORemi.esp",
-      "0x0E4852|HLIORemi.esp"
+      "0x0E4852|HLIORemi.esp",
+      "0x46FA55|HLIORemi.esp",
+      "0x237EE7|HLIORemi.esp"
     ],
     "questFormIds": [
       "6480473",
@@ -1656,7 +1708,9 @@
       "3281381",
       "2326247",
       "936018",
-      "936018"
+      "936018",
+      "4651605",
+      "2326247"
     ],
     "questformids": [
       "6480473",
@@ -1667,9 +1721,13 @@
       "3281381",
       "2326247",
       "936018",
-      "936018"
+      "936018",
+      "4651605",
+      "2326247"
     ],
     "questPlugins": [
+      "HLIORemi.esp",
+      "HLIORemi.esp",
       "HLIORemi.esp",
       "HLIORemi.esp",
       "HLIORemi.esp",
@@ -1689,6 +1747,8 @@
       "HLIORemi.esp",
       "HLIORemi.esp",
       "HLIORemi.esp",
+      "HLIORemi.esp",
+      "HLIORemi.esp",
       "HLIORemi.esp"
     ],
     "questEditorIds": [
@@ -1700,7 +1760,9 @@
       "HLIORemiMarriage",
       "HLIORPLock",
       "HLIOStartingQuest",
-      "HLIOStartingQuest"
+      "HLIOStartingQuest",
+      "HLIOMQ1",
+      "HLIORPLock"
     ],
     "questeditorids": [
       "HLIOADQuest",
@@ -1711,7 +1773,9 @@
       "HLIORemiMarriage",
       "HLIORPLock",
       "HLIOStartingQuest",
-      "HLIOStartingQuest"
+      "HLIOStartingQuest",
+      "HLIOMQ1",
+      "HLIORPLock"
     ],
     "questWatch.formIds": [
       "6480473",
@@ -2317,6 +2381,71 @@
       "protect_the_weak",
       "protect_the_weak",
       "protect_the_weak"
+    ],
+    "quest.4651605|110.deities": [
+      "Stendarr",
+      "Zenithar",
+      "Z'en",
+      "Baan Dar",
+      "Nocturnal"
+    ],
+    "quest.4651605|110.valences": [
+      "-",
+      "-",
+      "-",
+      "+",
+      "+"
+    ],
+    "quest.4651605|110.intensities": [
+      "m",
+      "S",
+      "m",
+      "m",
+      "m"
+    ],
+    "quest.4651605|110.magnitudes": [
+      "small",
+      "small",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.4651605|110.tags": [
+      "contraband_trade",
+      "contraband_trade",
+      "contraband_trade",
+      "contraband_trade",
+      "contraband_trade"
+    ],
+    "quest.2326247|80.deities": [
+      "Akatosh",
+      "Stendarr",
+      "Zenithar",
+      "Z'en"
+    ],
+    "quest.2326247|80.valences": [
+      "+",
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.2326247|80.intensities": [
+      "m",
+      "m",
+      "m",
+      "m"
+    ],
+    "quest.2326247|80.magnitudes": [
+      "small",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.2326247|80.tags": [
+      "reject_criminality",
+      "reject_criminality",
+      "reject_criminality",
+      "reject_criminality"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

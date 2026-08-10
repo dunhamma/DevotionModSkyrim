@@ -1,8 +1,8 @@
 {
   "schema": "pdv-quest-patch-hub.v1",
-  "updated": "2026-08-08",
+  "updated": "2026-08-11",
   "moduleName": "Devotion - Quest Mod PatchHub",
-  "proofBoundary": "Machine-verified experimental options; runtime, player-surface, semantic, save/load, and support proof remain separate.",
+  "proofBoundary": "Authored and machine-gated save-safe data options are packaged for tester release; runtime routing, player presentation, balance, and save/load observations are post-release evidence and do not block the PatchHub archive.",
   "options": [
     {
       "name": "Above All Else",
@@ -279,6 +279,16 @@
       ],
       "category": "Quest Expansions",
       "nexusModId": 80974
+    },
+    {
+      "name": "Interesting NPCs SE (3DNPC)",
+      "description": "NPCs with more extensive dialogue and role play choices. Over 250 fully voiced NPCs, 25 followers, 15 marriage NPCs, and 50 quests. This is a fan-port of the LE mod, ported to Skyrim SE from scratch and maintained with fixes.",
+      "dependency": "3DNPC.esp",
+      "folders": [
+        "common\\InterestingNPCs"
+      ],
+      "category": "Followers",
+      "nexusModId": 29194
     },
     {
       "name": "Kaidan 2",

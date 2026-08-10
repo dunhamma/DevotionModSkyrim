@@ -1,7 +1,7 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:59.404Z",
-    "generatedat": "2026-08-10T00:15:59.404Z",
+    "generatedAt": "2026-08-10T21:30:19.591Z",
+    "generatedat": "2026-08-10T21:30:19.591Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "94702,257011,775706,1630430,1742417,2850730,2850731,2850732,2850734,3412454,1383312",
     "questwatchformidscsv": "94702,257011,775706,1630430,1742417,2850730,2850731,2850732,2850734,3412454,1383312",
@@ -1827,6 +1827,16 @@
     "quest.1383312|230.magnitudescsv": "small|small|small|small|small",
     "quest.1383312|230.tagsCsv": "mercy_spare|mercy_spare|mercy_spare|mercy_spare|mercy_spare",
     "quest.1383312|230.tagscsv": "mercy_spare|mercy_spare|mercy_spare|mercy_spare|mercy_spare",
+    "quest.775706|300.deitiesCsv": "Julianos|Magnus|Sheogorath",
+    "quest.775706|300.deitiescsv": "Julianos|Magnus|Sheogorath",
+    "quest.775706|300.valencesCsv": "+|+|-",
+    "quest.775706|300.valencescsv": "+|+|-",
+    "quest.775706|300.intensitiesCsv": "m|S|m",
+    "quest.775706|300.intensitiescsv": "m|S|m",
+    "quest.775706|300.magnitudesCsv": "small|small|small",
+    "quest.775706|300.magnitudescsv": "small|small|small",
+    "quest.775706|300.tagsCsv": "arcane_restraint|arcane_restraint|arcane_restraint",
+    "quest.775706|300.tagscsv": "arcane_restraint|arcane_restraint|arcane_restraint",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -2105,6 +2115,18 @@
     "quest.775706|330.metaskip.xarxes": 1,
     "quest.775706|330.metaSkip.Khenarthi": 1,
     "quest.775706|330.metaskip.khenarthi": 1,
+    "quest.775706|300.metaSkip.Z'en": 1,
+    "quest.775706|300.metaskip.z'en": 1,
+    "quest.775706|300.metaSkip.Azura": 1,
+    "quest.775706|300.metaskip.azura": 1,
+    "quest.775706|300.metaSkip.Julianos": 1,
+    "quest.775706|300.metaskip.julianos": 1,
+    "quest.775706|300.metaSkip.Akatosh": 1,
+    "quest.775706|300.metaskip.akatosh": 1,
+    "quest.775706|300.metaSkip.Xarxes": 1,
+    "quest.775706|300.metaskip.xarxes": 1,
+    "quest.775706|300.metaSkip.Khenarthi": 1,
+    "quest.775706|300.metaskip.khenarthi": 1,
     "quest.1742417|92.metaSkip.Julianos": 1,
     "quest.1742417|92.metaskip.julianos": 1,
     "quest.2850730|15.metaSkip.Z'en": 1,
@@ -2223,8 +2245,8 @@
     "quest.1383312|230.metaskip.xarxes": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 132,
-    "metaskipints": 132
+    "metaSkipInts": 138,
+    "metaskipints": 138
   },
   "stringList": {
     "questKeys": [
@@ -2275,7 +2297,8 @@
       "1383312|150",
       "1383312|200",
       "1383312|210",
-      "1383312|230"
+      "1383312|230",
+      "775706|300"
     ],
     "questkeys": [
       "94702|60",
@@ -2325,7 +2348,8 @@
       "1383312|150",
       "1383312|200",
       "1383312|210",
-      "1383312|230"
+      "1383312|230",
+      "775706|300"
     ],
     "questForms": [
       "0x0171EE|FloatingSwordFollower.esp",
@@ -2375,7 +2399,8 @@
       "0x151B90|FloatingSwordFollower.esp",
       "0x151B90|FloatingSwordFollower.esp",
       "0x151B90|FloatingSwordFollower.esp",
-      "0x151B90|FloatingSwordFollower.esp"
+      "0x151B90|FloatingSwordFollower.esp",
+      "0x0BD61A|FloatingSwordFollower.esp"
     ],
     "questforms": [
       "0x0171EE|FloatingSwordFollower.esp",
@@ -2425,7 +2450,8 @@
       "0x151B90|FloatingSwordFollower.esp",
       "0x151B90|FloatingSwordFollower.esp",
       "0x151B90|FloatingSwordFollower.esp",
-      "0x151B90|FloatingSwordFollower.esp"
+      "0x151B90|FloatingSwordFollower.esp",
+      "0x0BD61A|FloatingSwordFollower.esp"
     ],
     "questFormIds": [
       "94702",
@@ -2475,7 +2501,8 @@
       "1383312",
       "1383312",
       "1383312",
-      "1383312"
+      "1383312",
+      "775706"
     ],
     "questformids": [
       "94702",
@@ -2525,9 +2552,11 @@
       "1383312",
       "1383312",
       "1383312",
-      "1383312"
+      "1383312",
+      "775706"
     ],
     "questPlugins": [
+      "FloatingSwordFollower.esp",
       "FloatingSwordFollower.esp",
       "FloatingSwordFollower.esp",
       "FloatingSwordFollower.esp",
@@ -2625,6 +2654,7 @@
       "FloatingSwordFollower.esp",
       "FloatingSwordFollower.esp",
       "FloatingSwordFollower.esp",
+      "FloatingSwordFollower.esp",
       "FloatingSwordFollower.esp"
     ],
     "questEditorIds": [
@@ -2675,7 +2705,8 @@
       "0_FloatingSwordQuest11",
       "0_FloatingSwordQuest11",
       "0_FloatingSwordQuest11",
-      "0_FloatingSwordQuest11"
+      "0_FloatingSwordQuest11",
+      "0_FloatingSwordQuest03"
     ],
     "questeditorids": [
       "0_FloatingSwordQuest01",
@@ -2725,7 +2756,8 @@
       "0_FloatingSwordQuest11",
       "0_FloatingSwordQuest11",
       "0_FloatingSwordQuest11",
-      "0_FloatingSwordQuest11"
+      "0_FloatingSwordQuest11",
+      "0_FloatingSwordQuest03"
     ],
     "questWatch.formIds": [
       "94702",
@@ -5503,6 +5535,31 @@
       "mercy_spare",
       "mercy_spare",
       "mercy_spare"
+    ],
+    "quest.775706|300.deities": [
+      "Julianos",
+      "Magnus",
+      "Sheogorath"
+    ],
+    "quest.775706|300.valences": [
+      "+",
+      "+",
+      "-"
+    ],
+    "quest.775706|300.intensities": [
+      "m",
+      "S",
+      "m"
+    ],
+    "quest.775706|300.magnitudes": [
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.775706|300.tags": [
+      "arcane_restraint",
+      "arcane_restraint",
+      "arcane_restraint"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

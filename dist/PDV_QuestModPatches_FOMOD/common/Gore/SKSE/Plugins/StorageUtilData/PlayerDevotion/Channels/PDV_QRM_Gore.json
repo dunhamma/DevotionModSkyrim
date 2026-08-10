@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T03:46:56.013Z",
-    "generatedat": "2026-08-10T03:46:56.013Z",
+    "generatedAt": "2026-08-10T21:30:19.028Z",
+    "generatedat": "2026-08-10T21:30:19.028Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "6764791,419616",
-    "questwatchformidscsv": "6764791,419616",
-    "questWatchPluginsCsv": "GORE.esp,GORE.esp",
-    "questwatchpluginscsv": "GORE.esp,GORE.esp",
+    "questWatchFormIdsCsv": "6764791,419616,4099529",
+    "questwatchformidscsv": "6764791,419616,4099529",
+    "questWatchPluginsCsv": "GORE.esp,GORE.esp,GORE.esp",
+    "questwatchpluginscsv": "GORE.esp,GORE.esp,GORE.esp",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1377,6 +1377,16 @@
     "quest.419616|50.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small",
     "quest.419616|50.tagsCsv": "protect_the_weak|heal_comfort|heal_comfort|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak",
     "quest.419616|50.tagscsv": "protect_the_weak|heal_comfort|heal_comfort|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak|protect_the_weak",
+    "quest.4099529|30.deitiesCsv": "Mara|The Hist",
+    "quest.4099529|30.deitiescsv": "Mara|The Hist",
+    "quest.4099529|30.valencesCsv": "+|+",
+    "quest.4099529|30.valencescsv": "+|+",
+    "quest.4099529|30.intensitiesCsv": "S|m",
+    "quest.4099529|30.intensitiescsv": "S|m",
+    "quest.4099529|30.magnitudesCsv": "small|small",
+    "quest.4099529|30.magnitudescsv": "small|small",
+    "quest.4099529|30.tagsCsv": "friendship|friendship",
+    "quest.4099529|30.tagscsv": "friendship|friendship",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1520,34 +1530,41 @@
     "questKeys": [
       "6764791|30",
       "419616|15",
-      "419616|50"
+      "419616|50",
+      "4099529|30"
     ],
     "questkeys": [
       "6764791|30",
       "419616|15",
-      "419616|50"
+      "419616|50",
+      "4099529|30"
     ],
     "questForms": [
       "0x6738F7|GORE.esp",
       "0x066720|GORE.esp",
-      "0x066720|GORE.esp"
+      "0x066720|GORE.esp",
+      "0x3E8DC9|GORE.esp"
     ],
     "questforms": [
       "0x6738F7|GORE.esp",
       "0x066720|GORE.esp",
-      "0x066720|GORE.esp"
+      "0x066720|GORE.esp",
+      "0x3E8DC9|GORE.esp"
     ],
     "questFormIds": [
       "6764791",
       "419616",
-      "419616"
+      "419616",
+      "4099529"
     ],
     "questformids": [
       "6764791",
       "419616",
-      "419616"
+      "419616",
+      "4099529"
     ],
     "questPlugins": [
+      "GORE.esp",
       "GORE.esp",
       "GORE.esp",
       "GORE.esp"
@@ -1555,65 +1572,80 @@
     "questplugins": [
       "GORE.esp",
       "GORE.esp",
+      "GORE.esp",
       "GORE.esp"
     ],
     "questEditorIds": [
       "HD1GoreMurderer",
       "HD1GoreMeet",
-      "HD1GoreMeet"
+      "HD1GoreMeet",
+      "HD1GoreDH"
     ],
     "questeditorids": [
       "HD1GoreMurderer",
       "HD1GoreMeet",
-      "HD1GoreMeet"
+      "HD1GoreMeet",
+      "HD1GoreDH"
     ],
     "questWatch.formIds": [
       "6764791",
-      "419616"
+      "419616",
+      "4099529"
     ],
     "questwatch.formids": [
       "6764791",
-      "419616"
+      "419616",
+      "4099529"
     ],
     "questWatch.plugins": [
+      "GORE.esp",
       "GORE.esp",
       "GORE.esp"
     ],
     "questwatch.plugins": [
       "GORE.esp",
+      "GORE.esp",
       "GORE.esp"
     ],
     "questWatch.editorIds": [
       "HD1GoreMurderer",
-      "HD1GoreMeet"
+      "HD1GoreMeet",
+      "HD1GoreDH"
     ],
     "questwatch.editorids": [
       "HD1GoreMurderer",
-      "HD1GoreMeet"
+      "HD1GoreMeet",
+      "HD1GoreDH"
     ],
     "questWatchFormIds": [
       "6764791",
-      "419616"
+      "419616",
+      "4099529"
     ],
     "questwatchformids": [
       "6764791",
-      "419616"
+      "419616",
+      "4099529"
     ],
     "questWatchPlugins": [
+      "GORE.esp",
       "GORE.esp",
       "GORE.esp"
     ],
     "questwatchplugins": [
       "GORE.esp",
+      "GORE.esp",
       "GORE.esp"
     ],
     "questWatchEditorIds": [
       "HD1GoreMurderer",
-      "HD1GoreMeet"
+      "HD1GoreMeet",
+      "HD1GoreDH"
     ],
     "questwatcheditorids": [
       "HD1GoreMurderer",
-      "HD1GoreMeet"
+      "HD1GoreMeet",
+      "HD1GoreDH"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -1885,6 +1917,26 @@
       "protect_the_weak",
       "protect_the_weak",
       "protect_the_weak"
+    ],
+    "quest.4099529|30.deities": [
+      "Mara",
+      "The Hist"
+    ],
+    "quest.4099529|30.valences": [
+      "+",
+      "+"
+    ],
+    "quest.4099529|30.intensities": [
+      "S",
+      "m"
+    ],
+    "quest.4099529|30.magnitudes": [
+      "small",
+      "small"
+    ],
+    "quest.4099529|30.tags": [
+      "friendship",
+      "friendship"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

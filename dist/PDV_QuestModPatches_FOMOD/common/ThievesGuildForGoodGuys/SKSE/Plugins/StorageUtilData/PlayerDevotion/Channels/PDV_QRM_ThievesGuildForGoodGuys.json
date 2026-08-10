@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:59.471Z",
-    "generatedat": "2026-08-10T00:15:59.471Z",
+    "generatedAt": "2026-08-10T21:30:19.663Z",
+    "generatedat": "2026-08-10T21:30:19.663Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "758303,2147834,571648,405732,136527",
-    "questwatchformidscsv": "758303,2147834,571648,405732,136527",
-    "questWatchPluginsCsv": "TCBM.esp,TCBM.esp,TCBM.esp,TCBM.esp,Skyrim.esm",
-    "questwatchpluginscsv": "TCBM.esp,TCBM.esp,TCBM.esp,TCBM.esp,Skyrim.esm",
+    "questWatchFormIdsCsv": "758303,2147834,571648,405732,136527,136534",
+    "questwatchformidscsv": "758303,2147834,571648,405732,136527,136534",
+    "questWatchPluginsCsv": "TCBM.esp,TCBM.esp,TCBM.esp,TCBM.esp,Skyrim.esm,Skyrim.esm",
+    "questwatchpluginscsv": "TCBM.esp,TCBM.esp,TCBM.esp,TCBM.esp,Skyrim.esm,Skyrim.esm",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1507,6 +1507,16 @@
     "quest.136527|95.magnitudescsv": "small|small|small|small|small",
     "quest.136527|95.tagsCsv": "mercy_spare|mercy_spare|mercy_spare|mercy_spare|mercy_spare",
     "quest.136527|95.tagscsv": "mercy_spare|mercy_spare|mercy_spare|mercy_spare|mercy_spare",
+    "quest.136534|210.deitiesCsv": "Akatosh|Stendarr|Zenithar|Z'en",
+    "quest.136534|210.deitiescsv": "Akatosh|Stendarr|Zenithar|Z'en",
+    "quest.136534|210.valencesCsv": "+|+|+|+",
+    "quest.136534|210.valencescsv": "+|+|+|+",
+    "quest.136534|210.intensitiesCsv": "m|m|m|m",
+    "quest.136534|210.intensitiescsv": "m|m|m|m",
+    "quest.136534|210.magnitudesCsv": "small|small|small|small",
+    "quest.136534|210.magnitudescsv": "small|small|small|small",
+    "quest.136534|210.tagsCsv": "reject_criminality|reject_criminality|reject_criminality|reject_criminality",
+    "quest.136534|210.tagscsv": "reject_criminality|reject_criminality|reject_criminality|reject_criminality",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1685,10 +1695,14 @@
     "quest.571648|220.metaskip.khenarthi": 1,
     "quest.405732|10.metaSkip.Z'en": 1,
     "quest.405732|10.metaskip.z'en": 1,
+    "quest.136534|210.metaSkip.Z'en": 1,
+    "quest.136534|210.metaskip.z'en": 1,
+    "quest.136534|210.metaSkip.Akatosh": 1,
+    "quest.136534|210.metaskip.akatosh": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 24,
-    "metaskipints": 24
+    "metaSkipInts": 26,
+    "metaskipints": 26
   },
   "stringList": {
     "questKeys": [
@@ -1707,7 +1721,8 @@
       "571648|220",
       "405732|10",
       "136527|31",
-      "136527|95"
+      "136527|95",
+      "136534|210"
     ],
     "questkeys": [
       "758303|10",
@@ -1725,7 +1740,8 @@
       "571648|220",
       "405732|10",
       "136527|31",
-      "136527|95"
+      "136527|95",
+      "136534|210"
     ],
     "questForms": [
       "0x0B921F|TCBM.esp",
@@ -1743,7 +1759,8 @@
       "0x08B900|TCBM.esp",
       "0x0630E4|TCBM.esp",
       "0x02154F|Skyrim.esm",
-      "0x02154F|Skyrim.esm"
+      "0x02154F|Skyrim.esm",
+      "0x021556|Skyrim.esm"
     ],
     "questforms": [
       "0x0B921F|TCBM.esp",
@@ -1761,7 +1778,8 @@
       "0x08B900|TCBM.esp",
       "0x0630E4|TCBM.esp",
       "0x02154F|Skyrim.esm",
-      "0x02154F|Skyrim.esm"
+      "0x02154F|Skyrim.esm",
+      "0x021556|Skyrim.esm"
     ],
     "questFormIds": [
       "758303",
@@ -1779,7 +1797,8 @@
       "571648",
       "405732",
       "136527",
-      "136527"
+      "136527",
+      "136534"
     ],
     "questformids": [
       "758303",
@@ -1797,7 +1816,8 @@
       "571648",
       "405732",
       "136527",
-      "136527"
+      "136527",
+      "136534"
     ],
     "questPlugins": [
       "TCBM.esp",
@@ -1814,6 +1834,7 @@
       "TCBM.esp",
       "TCBM.esp",
       "TCBM.esp",
+      "Skyrim.esm",
       "Skyrim.esm",
       "Skyrim.esm"
     ],
@@ -1833,6 +1854,7 @@
       "TCBM.esp",
       "TCBM.esp",
       "Skyrim.esm",
+      "Skyrim.esm",
       "Skyrim.esm"
     ],
     "questEditorIds": [
@@ -1851,7 +1873,8 @@
       "MordQuestGoodThief",
       "TCBM_TG02",
       "TG03",
-      "TG03"
+      "TG03",
+      "TG00"
     ],
     "questeditorids": [
       "MordGiveGold",
@@ -1869,27 +1892,31 @@
       "MordQuestGoodThief",
       "TCBM_TG02",
       "TG03",
-      "TG03"
+      "TG03",
+      "TG00"
     ],
     "questWatch.formIds": [
       "758303",
       "2147834",
       "571648",
       "405732",
-      "136527"
+      "136527",
+      "136534"
     ],
     "questwatch.formids": [
       "758303",
       "2147834",
       "571648",
       "405732",
-      "136527"
+      "136527",
+      "136534"
     ],
     "questWatch.plugins": [
       "TCBM.esp",
       "TCBM.esp",
       "TCBM.esp",
       "TCBM.esp",
+      "Skyrim.esm",
       "Skyrim.esm"
     ],
     "questwatch.plugins": [
@@ -1897,6 +1924,7 @@
       "TCBM.esp",
       "TCBM.esp",
       "TCBM.esp",
+      "Skyrim.esm",
       "Skyrim.esm"
     ],
     "questWatch.editorIds": [
@@ -1904,34 +1932,39 @@
       "MordQuestGM",
       "MordQuestGoodThief",
       "TCBM_TG02",
-      "TG03"
+      "TG03",
+      "TG00"
     ],
     "questwatch.editorids": [
       "MordGiveGold",
       "MordQuestGM",
       "MordQuestGoodThief",
       "TCBM_TG02",
-      "TG03"
+      "TG03",
+      "TG00"
     ],
     "questWatchFormIds": [
       "758303",
       "2147834",
       "571648",
       "405732",
-      "136527"
+      "136527",
+      "136534"
     ],
     "questwatchformids": [
       "758303",
       "2147834",
       "571648",
       "405732",
-      "136527"
+      "136527",
+      "136534"
     ],
     "questWatchPlugins": [
       "TCBM.esp",
       "TCBM.esp",
       "TCBM.esp",
       "TCBM.esp",
+      "Skyrim.esm",
       "Skyrim.esm"
     ],
     "questwatchplugins": [
@@ -1939,6 +1972,7 @@
       "TCBM.esp",
       "TCBM.esp",
       "TCBM.esp",
+      "Skyrim.esm",
       "Skyrim.esm"
     ],
     "questWatchEditorIds": [
@@ -1946,14 +1980,16 @@
       "MordQuestGM",
       "MordQuestGoodThief",
       "TCBM_TG02",
-      "TG03"
+      "TG03",
+      "TG00"
     ],
     "questwatcheditorids": [
       "MordGiveGold",
       "MordQuestGM",
       "MordQuestGoodThief",
       "TCBM_TG02",
-      "TG03"
+      "TG03",
+      "TG00"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -2680,6 +2716,36 @@
       "mercy_spare",
       "mercy_spare",
       "mercy_spare"
+    ],
+    "quest.136534|210.deities": [
+      "Akatosh",
+      "Stendarr",
+      "Zenithar",
+      "Z'en"
+    ],
+    "quest.136534|210.valences": [
+      "+",
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.136534|210.intensities": [
+      "m",
+      "m",
+      "m",
+      "m"
+    ],
+    "quest.136534|210.magnitudes": [
+      "small",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.136534|210.tags": [
+      "reject_criminality",
+      "reject_criminality",
+      "reject_criminality",
+      "reject_criminality"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

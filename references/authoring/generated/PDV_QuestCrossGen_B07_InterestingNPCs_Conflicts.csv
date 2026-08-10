@@ -1,0 +1,8 @@
+editor_id,quest_name,outcome_stage,outcome,deity,approve_tag,approve_intensity,disapprove_tag,disapprove_intensity
+hagquest,Birds of a Feather,250,Used harmless substitutes to stop Misha's family-organ rite and killed the witch through the poisoned stew,Stendarr,protect_the_weak,C,murder_treacherous,S
+hagquest,Birds of a Feather,250,Used harmless substitutes to stop Misha's family-organ rite and killed the witch through the poisoned stew,Mara,protect_the_weak,m,murder_treacherous,m
+hagquest,Birds of a Feather,250,Used harmless substitutes to stop Misha's family-organ rite and killed the witch through the poisoned stew,Talos,protect_the_weak,m,murder_treacherous,S
+hagquest,Birds of a Feather,250,Used harmless substitutes to stop Misha's family-organ rite and killed the witch through the poisoned stew,Tsun,protect_the_weak,m,murder_treacherous,S
+hagquest,Birds of a Feather,250,Used harmless substitutes to stop Misha's family-organ rite and killed the witch through the poisoned stew,Molag Bal,murder_treacherous,S,protect_the_weak,m
+RDQuest,The Radiant Dark,100,Lured Olivia into a lethal trap and took control of the Radiant Dark,Sithis,murder_treacherous,S,break_oath_betray,C
+warrensquest,Stolen Property,530,Sided with the slavers and killed the abolitionists before accepting payment,Sithis,murder_treacherous,S,break_oath_betray,C

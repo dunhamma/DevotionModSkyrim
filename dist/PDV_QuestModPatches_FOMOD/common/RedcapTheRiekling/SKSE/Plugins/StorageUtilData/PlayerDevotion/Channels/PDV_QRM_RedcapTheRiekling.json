@@ -1,12 +1,12 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T04:00:54.546Z",
-    "generatedat": "2026-08-10T04:00:54.546Z",
+    "generatedAt": "2026-08-10T21:30:19.315Z",
+    "generatedat": "2026-08-10T21:30:19.315Z",
     "schema": "pdv-quest-reaction-matrix.v1",
-    "questWatchFormIdsCsv": "916314,1622118,1269229,1912693,874723",
-    "questwatchformidscsv": "916314,1622118,1269229,1912693,874723",
-    "questWatchPluginsCsv": "FA01RedcapFollower.esp,FA01RedcapFollower.esp,FA01RedcapFollower.esp,FA01RedcapFollower.esp,FA01RedcapFollower.esp",
-    "questwatchpluginscsv": "FA01RedcapFollower.esp,FA01RedcapFollower.esp,FA01RedcapFollower.esp,FA01RedcapFollower.esp,FA01RedcapFollower.esp",
+    "questWatchFormIdsCsv": "916314,1622118,1269229,1912693,874723,417321",
+    "questwatchformidscsv": "916314,1622118,1269229,1912693,874723,417321",
+    "questWatchPluginsCsv": "FA01RedcapFollower.esp,FA01RedcapFollower.esp,FA01RedcapFollower.esp,FA01RedcapFollower.esp,FA01RedcapFollower.esp,FA01RedcapFollower.esp",
+    "questwatchpluginscsv": "FA01RedcapFollower.esp,FA01RedcapFollower.esp,FA01RedcapFollower.esp,FA01RedcapFollower.esp,FA01RedcapFollower.esp,FA01RedcapFollower.esp",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
@@ -1397,6 +1397,16 @@
     "quest.874723|100.magnitudescsv": "small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small|small",
     "quest.874723|100.tagsCsv": "protect_the_weak|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|kill_honorable_combat|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|protect_the_weak|kill_honorable_combat|defend_kin_home",
     "quest.874723|100.tagscsv": "protect_the_weak|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|kill_honorable_combat|protect_the_weak|protect_the_weak|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|kill_honorable_combat|protect_the_weak|kill_honorable_combat|protect_the_weak|kill_honorable_combat|defend_kin_home",
+    "quest.417321|20.deitiesCsv": "Baan Dar|Boethiah|Mephala|Nocturnal",
+    "quest.417321|20.deitiescsv": "Baan Dar|Boethiah|Mephala|Nocturnal",
+    "quest.417321|20.valencesCsv": "+|+|+|+",
+    "quest.417321|20.valencescsv": "+|+|+|+",
+    "quest.417321|20.intensitiesCsv": "S|m|m|m",
+    "quest.417321|20.intensitiescsv": "S|m|m|m",
+    "quest.417321|20.magnitudesCsv": "small|small|small|small",
+    "quest.417321|20.magnitudescsv": "small|small|small|small",
+    "quest.417321|20.tagsCsv": "tactical_distraction|tactical_distraction|tactical_distraction|tactical_distraction",
+    "quest.417321|20.tagscsv": "tactical_distraction|tactical_distraction|tactical_distraction|tactical_distraction",
     "faucetFormsNamiraCannibalismFormIdsCsv": "1054387,727245",
     "faucetformsnamiracannibalismformidscsv": "1054387,727245",
     "faucetFormsNamiraCannibalismPluginsCsv": "Skyrim.esm,Skyrim.esm",
@@ -1543,10 +1553,12 @@
     "quest.1912693|120.metaskip.khenarthi": 1,
     "quest.874723|100.metaSkip.Khenarthi": 1,
     "quest.874723|100.metaskip.khenarthi": 1,
+    "quest.417321|20.metaSkip.Nocturnal": 1,
+    "quest.417321|20.metaskip.nocturnal": 1,
     "metaClassInts": 0,
     "metaclassints": 0,
-    "metaSkipInts": 8,
-    "metaskipints": 8
+    "metaSkipInts": 9,
+    "metaskipints": 9
   },
   "stringList": {
     "questKeys": [
@@ -1554,44 +1566,51 @@
       "1622118|130",
       "1269229|100",
       "1912693|120",
-      "874723|100"
+      "874723|100",
+      "417321|20"
     ],
     "questkeys": [
       "916314|60",
       "1622118|130",
       "1269229|100",
       "1912693|120",
-      "874723|100"
+      "874723|100",
+      "417321|20"
     ],
     "questForms": [
       "0x0DFB5A|FA01RedcapFollower.esp",
       "0x18C066|FA01RedcapFollower.esp",
       "0x135DED|FA01RedcapFollower.esp",
       "0x1D2F75|FA01RedcapFollower.esp",
-      "0x0D58E3|FA01RedcapFollower.esp"
+      "0x0D58E3|FA01RedcapFollower.esp",
+      "0x065E29|FA01RedcapFollower.esp"
     ],
     "questforms": [
       "0x0DFB5A|FA01RedcapFollower.esp",
       "0x18C066|FA01RedcapFollower.esp",
       "0x135DED|FA01RedcapFollower.esp",
       "0x1D2F75|FA01RedcapFollower.esp",
-      "0x0D58E3|FA01RedcapFollower.esp"
+      "0x0D58E3|FA01RedcapFollower.esp",
+      "0x065E29|FA01RedcapFollower.esp"
     ],
     "questFormIds": [
       "916314",
       "1622118",
       "1269229",
       "1912693",
-      "874723"
+      "874723",
+      "417321"
     ],
     "questformids": [
       "916314",
       "1622118",
       "1269229",
       "1912693",
-      "874723"
+      "874723",
+      "417321"
     ],
     "questPlugins": [
+      "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp",
@@ -1603,6 +1622,7 @@
       "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp",
+      "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp"
     ],
     "questEditorIds": [
@@ -1610,30 +1630,35 @@
       "FA01RedcapWereboarQ",
       "FA01RedcapRedGodQ",
       "FA01RedcapSkaalQ",
-      "FA01RedcapSolstheimManosQ"
+      "FA01RedcapSolstheimManosQ",
+      "FA01RedcapMQParty"
     ],
     "questeditorids": [
       "FA01RedcapAniseQ",
       "FA01RedcapWereboarQ",
       "FA01RedcapRedGodQ",
       "FA01RedcapSkaalQ",
-      "FA01RedcapSolstheimManosQ"
+      "FA01RedcapSolstheimManosQ",
+      "FA01RedcapMQParty"
     ],
     "questWatch.formIds": [
       "916314",
       "1622118",
       "1269229",
       "1912693",
-      "874723"
+      "874723",
+      "417321"
     ],
     "questwatch.formids": [
       "916314",
       "1622118",
       "1269229",
       "1912693",
-      "874723"
+      "874723",
+      "417321"
     ],
     "questWatch.plugins": [
+      "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp",
@@ -1645,6 +1670,7 @@
       "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp",
+      "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp"
     ],
     "questWatch.editorIds": [
@@ -1652,30 +1678,35 @@
       "FA01RedcapWereboarQ",
       "FA01RedcapRedGodQ",
       "FA01RedcapSkaalQ",
-      "FA01RedcapSolstheimManosQ"
+      "FA01RedcapSolstheimManosQ",
+      "FA01RedcapMQParty"
     ],
     "questwatch.editorids": [
       "FA01RedcapAniseQ",
       "FA01RedcapWereboarQ",
       "FA01RedcapRedGodQ",
       "FA01RedcapSkaalQ",
-      "FA01RedcapSolstheimManosQ"
+      "FA01RedcapSolstheimManosQ",
+      "FA01RedcapMQParty"
     ],
     "questWatchFormIds": [
       "916314",
       "1622118",
       "1269229",
       "1912693",
-      "874723"
+      "874723",
+      "417321"
     ],
     "questwatchformids": [
       "916314",
       "1622118",
       "1269229",
       "1912693",
-      "874723"
+      "874723",
+      "417321"
     ],
     "questWatchPlugins": [
+      "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp",
@@ -1687,6 +1718,7 @@
       "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp",
+      "FA01RedcapFollower.esp",
       "FA01RedcapFollower.esp"
     ],
     "questWatchEditorIds": [
@@ -1694,14 +1726,16 @@
       "FA01RedcapWereboarQ",
       "FA01RedcapRedGodQ",
       "FA01RedcapSkaalQ",
-      "FA01RedcapSolstheimManosQ"
+      "FA01RedcapSolstheimManosQ",
+      "FA01RedcapMQParty"
     ],
     "questwatcheditorids": [
       "FA01RedcapAniseQ",
       "FA01RedcapWereboarQ",
       "FA01RedcapRedGodQ",
       "FA01RedcapSkaalQ",
-      "FA01RedcapSolstheimManosQ"
+      "FA01RedcapSolstheimManosQ",
+      "FA01RedcapMQParty"
     ],
     "faucetKeys": [
       "Namira.cannibalism",
@@ -2098,6 +2132,36 @@
       "protect_the_weak",
       "kill_honorable_combat",
       "defend_kin_home"
+    ],
+    "quest.417321|20.deities": [
+      "Baan Dar",
+      "Boethiah",
+      "Mephala",
+      "Nocturnal"
+    ],
+    "quest.417321|20.valences": [
+      "+",
+      "+",
+      "+",
+      "+"
+    ],
+    "quest.417321|20.intensities": [
+      "S",
+      "m",
+      "m",
+      "m"
+    ],
+    "quest.417321|20.magnitudes": [
+      "small",
+      "small",
+      "small",
+      "small"
+    ],
+    "quest.417321|20.tags": [
+      "tactical_distraction",
+      "tactical_distraction",
+      "tactical_distraction",
+      "tactical_distraction"
     ],
     "faucetForms.Namira.cannibalism": [
       "0x1016B3|Skyrim.esm",

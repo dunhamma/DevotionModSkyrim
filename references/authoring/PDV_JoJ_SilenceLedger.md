@@ -1,6 +1,6 @@
 # JoJ silence ledger
 
-Class: LIVING (opened 2026-08-09, grows as the content audit proceeds)
+Class: LIVING (opened 2026-08-09; B01-B07 audit closed 2026-08-11)
 
 Every JoJ candidate ruled SILENT, **with the evidence that produced the ruling**.
 
@@ -12,6 +12,10 @@ the record read, and a later reader is expected to re-derive rather than trust.
 
 A SILENT ruling means Devotion awards nothing for that content. It does not mean the mod is
 unsupported, and it never means the mod is bad.
+
+The completed B01-B07 checkpoint contains six SILENT candidates and 31 APPROVED candidates.
+B07 Interesting NPCs was approved with 27 outcomes and therefore adds no silence entry. There
+is no B08+: the JoJ candidate audit is complete at 37/37.
 
 ---
 
