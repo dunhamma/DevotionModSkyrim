@@ -116,6 +116,7 @@ assigned separately (see Part C), not encoded in the tag.
 | Tag | Meaning |
 |---|---|
 | `revel_indulge` | Feasted, drank, gave in to pleasure/excess. |
+| `embrace_whimsy` | Freely welcomed an improbable or playfully impossible turn of events. |
 | `embrace_lycanthropy` | Took the beast-blood (Hircine's gift / curse). |
 | `embrace_vampirism` | Took the blood (Molag Bal's gift / curse). |
 | `spread_order_pestilence` | Served plague/decay-as-order (Peryite). |
@@ -470,7 +471,7 @@ has to resolve to a real Prince, which is what rejects `molag_bal` (base "molag"
 - anchor: Prince of Destruction; the Razor. (UESP: Mehrunes Dagon)
 
 **Sheogorath** — madness, whimsy, chaos, the unpredictable.
-- approve: `sow_chaos_madness`(C), `reckless_magic`(m), `revel_indulge`(m)
+- approve: `sow_chaos_madness`(C), `embrace_whimsy`(C), `reckless_magic`(m), `revel_indulge`(m)
 - disapprove: `serve_empire_order`(m), `uphold_law_justice`(m)
 - anchor: Madgod; the Wabbajack; the Mind of Madness. (UESP: Sheogorath)
 

@@ -1,6 +1,6 @@
 # PDV Compatibility Package - Journals of Jyggalag (JoJ)
 
-Status: LIVING (plan, pre-implementation)
+Status: LIVING -- B01-B06 authored and machine-gated (36/37 candidates); B07 Interesting NPCs deferred, pending survey
 Opened: 2026-08-08
 Precedent: `PDV_DoD_CompatibilityPackage_2026-06-30.md`. JoJ is the second of the two
 real build-targets tracked by `C-COMPAT-BORDELLO` (DoD-base and JOJ-base).
@@ -38,8 +38,8 @@ The failure mode is a confident wrong answer, not an error.
 
 ## 2. Free coverage already in place
 
-The per-mod patch hub currently targets 38 plugins. **18 of them are already active in
-JoJ** and are patched the moment the FOMOD installs:
+At the 2026-08-08 baseline, the per-mod patch hub targeted 38 plugins and **18 were
+active in JoJ**:
 
 `018Auri.esp`, `BPUFXelzazFollower.esp`, `College Of Winterhold - Quest Expansion.esp`,
 `DAc0da.esm`, `DK_Thogra.esp`, `ForgottenCity.esp`, `Glenmoril.esm`,
@@ -47,6 +47,11 @@ JoJ** and are patched the moment the FOMOD installs:
 `Siege at Icemoth.esp`, `Skyrim Extended Cut - Saints and Seducers.esp`,
 `The Heart of Dibella - Quest Expansion.esp`, `TheGiftofSaturalia.esp`, `Unslaad.esm`,
 `Vigilant.esm`, `Wyrmstooth.esp`, `evgSIRENROOT.esm`.
+
+The repository manifest now carries **75** PatchHub options. B06 adds six JoJ follower
+options, but this audit read the absolute plugin files and did not re-prove Lord's Vision
+profile activation. The new options are therefore authored support, not a renewed
+"active in JoJ" count.
 
 **Coverage must be computed against `Full.csv`, not against hub folder names.** Quest
 expansions typically add stages to the **vanilla** editor ID, so they need rows without
@@ -332,6 +337,58 @@ same way it read it in `VIGILANT - ElevenLabs Voiced`, and discarded the followe
 queueing their cosmetic replacers. Fixed in `tools/pdv_candidate_queue.mjs`, which now
 carries a structural QUST probe alongside the names.
 
+#### B06 follower closeout (direct MCP, 2026-08-10)
+
+`stage_digested=ok` in the checkpoint means **completed direct-MCP review** for this
+batch. No `pdv_joj_stage_digest` command was run and no local digest artifact is the
+authority. Every worklist QUST was read from its absolute plugin path with
+`housecarl_read_plugin_file`, depth 5, limited to names, stages, journal entries,
+completion flags, and objectives.
+
+The batch contained **228 worklist quests**. Direct enumeration also exposed four
+Val Serano overrides and one Redcap Skyrim override, so 233 plugin-carried QUST records
+were actually read:
+
+| Follower | Worklist QUST | Tagged outcomes | Promoted rows | Post-promotion quest re-reads | Verdict |
+|---|---:|---:|---:|---:|---|
+| Sa'chil | 45 | 10 | 47 | 8 | APPROVED |
+| Val Serano | 62 | 32 | 144 | 17 | APPROVED |
+| Taliesin | 17 | 1 | 4 | 1 | APPROVED |
+| Hoth | 1 | 0 | 0 | 0 | SILENT |
+| Gore | 25 | 4 | 37 | 3 | APPROVED |
+| Khajiit Will Follow | 36 | 9 | 38 | 4 | APPROVED |
+| Merlin the Corgi | 2 | 1 | 1 | 1 | APPROVED |
+| Redcap the Riekling | 40 | 6 | 58 | 5 | APPROVED |
+
+The seven approved mods contribute **53 quest-stage cells and 329 deity award rows**.
+Every unique row-bearing quest was then re-read directly, and every promoted stage was
+found. Hoth has a reasoned entry in `PDV_JoJ_SilenceLedger.md` and no channel or
+installer option. Merlin's owner-adjudicated Sheogorath-domain encounter is promoted
+as a single `embrace_whimsy` row with `RUNTIME-VERIFY`.
+
+The locked content rulings held throughout:
+
+- marriage is eligible; romance appears only at evidenced positional milestones;
+  sexually explicit content remains excluded;
+- The Hist's reactions are not victim-filtered because the Hist profile is reachable
+  only by an Argonian player;
+- fan-out is never capped; broad results trigger tag review, not deity trimming;
+- unsupported concepts remain inert with empty `act_tags` and `NEEDS-TAG` notes.
+
+Redcap produced the batch's sole approve/disapprove collision. The Bloodmoon hunt rows
+Stendarr as a disapproval: rescuing Bigpig is real, but the player explicitly completes
+Hircine's bargain and presents the Prince's trophy. The zero-candidate
+`civic_service` tag on the Skaal memorial work was inspected and retained beside
+reacting tags. The Hands of Fate also carries `civic_service` and `defend_kin_home`
+for freeing Redcap's captive Riekling people and returning the villagers safely;
+the latter adds Y'ffre while the former produces no additional reactor.
+
+Seven canonical per-mod CSVs and seven runtime channel JSONs are present, and seven
+Followers-category manifest options use the host plugin dependencies and Nexus
+summaries. `ModuleConfig.xml` regenerates idempotently; installer validation passes at
+76 options / 74 channels. No archive was built. This is authored and machine-gated,
+not released or runtime-proven.
+
 **Class D - dialogue and reaction expansions.** NPCs React To Necromancy, NPCs React To
 Frenzy, NPCs React To Invisibility, Vampire / Bandit / Dremora / Civil War / Forsworn and
 Thalmor Lines Expansion, Guard Dialogue Overhaul, Immersive Rejections, the ~30-mod FDE
@@ -359,12 +416,11 @@ table rather than matrix rows.** Do not promise Class D coverage in matrix terms
 
 ### 4.4 Deliverables
 
-- `PDV_QuestReactionMatrix_Tranche13_JoJ_QuestMods.csv` (Class A)
-- `PDV_QuestReactionMatrix_Tranche14_JoJ_QuestExpansions.csv` (Class B)
-- `PDV_QuestReactionMatrix_Tranche15_JoJ_Followers.csv` (Class C)
+- Canonical per-mod `PDV_QRM_<Mod>.csv` sources (Classes A-C)
+- Matching per-mod StorageUtil channel JSONs (Classes A-C)
 - `PDV_JoJ_ClassD_RoutingVerdicts.md` (Class D - verdicts, not rows)
 - `PDV_JoJ_SilenceLedger.md` - every candidate ruled SILENT, with its reason
-- New `dist/PDV_QuestModPatches_FOMOD/common/<Mod>/` folders + Docs per covered mod
+- New `dist/PDV_QuestModPatches_FOMOD/common/<Mod>/` folders per covered mod
 - FOMOD `ModuleConfig.xml` updated with the new options
 
 ---
@@ -429,7 +485,15 @@ Phases 1b/1c/1d are independently shippable. Do not hold the tranche for Class D
 
 ## 7. Proof boundary
 
-Section 1, 2, 3.1 and 4.2 are live reads of the JoJ profile files and the repo on
-2026-08-08. Section 3.1 is **name-matched, not master-read**. Everything from section 3.2
-onward is plan, not evidence. No record in JoJ has been read via houseCARL yet, and the
-houseCARL instance pointer has not been moved.
+The 2026-08-08 instance and religion-removal facts retain their original evidence
+boundaries. The B01-B06 checkpoint is current repository authority: 36 of 37 candidates
+are complete and B06 is 8/8. B06 record evidence is direct absolute-path houseCARL
+readback, independent of active load order; it proves the records and cited stages in
+those plugin files, not that Lord's Vision currently activates every dependency.
+
+Tagged-row gates, per-mod lint, channel compilation, name-resolution preflight, manifest
+generation, idempotence, and installer-tree validation are machine proof. They do not
+prove in-game routing, piety deltas, notifications, Book of Days display, balance feel,
+or release contents. No B06 archive, release, support promotion, or runtime claim exists.
+
+Interesting NPCs remains `UNREVIEWED`: **deferred, pending survey**.

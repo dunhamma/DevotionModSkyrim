@@ -1,19 +1,19 @@
 # PDV External-Mod Support Inventory
 
-Updated: 2026-08-09 AEST
+Updated: 2026-08-10 AEST
 Class: LIVING -- hand-authored authority (`PDV_STANDARDS.md` section 5.3 class 1)
-Status: complete inventory of shipped support; runtime proof is open on most of it, and this doc says which
+Status: complete inventory of current repository support; the seven B06 follower options are authored and machine-gated but unreleased, and runtime proof is open
 
 <!-- pdv-inventory-counts {
-  "g1DataOnlyPatches": 64,
+  "g1DataOnlyPatches": 71,
   "g2PluginPatches": 5,
-  "g1WithAwardRows": 64,
+  "g1WithAwardRows": 71,
   "g2WithAwardRows": 3,
-  "totalReactionCells": 324,
-  "totalAwardRows": 2183,
-  "hubFoldersTotal": 69,
-  "manifestOptions": 69,
-  "sourceCsvs": 67,
+  "totalReactionCells": 377,
+  "totalAwardRows": 2512,
+  "hubFoldersTotal": 76,
+  "manifestOptions": 76,
+  "sourceCsvs": 74,
   "reconstructedCsvs": 5,
   "coreRows": 2148,
   "coreEditorIds": 158,
@@ -33,7 +33,7 @@ Status: complete inventory of shipped support; runtime proof is open on most of 
 
 One place to answer "what external-mod content does Devotion actually support?".
 
-Before this doc the answer was spread across the FOMOD manifest, 67 per-mod
+Before this doc the answer was spread across the FOMOD manifest, 74 per-mod
 source CSVs, the core matrix, a KID ini, a BaseObjectSwapper ini and a handful
 of Papyrus hooks, and nothing tied them together. The grouping below is by
 **attach mechanism** -- *how* the support reaches the game -- because that is
@@ -106,6 +106,7 @@ only be judged thin once you know what is in it.
 |---|---|
 | **machine-verified** | The channel/ini/plugin was read off disk and contains what this doc says. Everything in the tables is at least this. |
 | **runtime open** | No in-game evidence that the hook fires. The hub manifest's own option description says so. Most of the hub sits here. |
+| **authored, unreleased** | Present in the repository and passing static/package-tree gates, but no release archive containing it has been built or claimed. |
 | **reconstructed source** | The shipped channel is authoritative; the per-mod source CSV was rebuilt from it on 2026-08-08. Award data is verbatim, `outcome` prose is authored. Recorded in each row's `citation`. |
 
 Nothing below is claimed as runtime-proven. Where a mod's support is proven in
@@ -117,19 +118,19 @@ game, that proof lives in a runbook, not here.
 
 | # | Group | Attach mechanism | Entries | Ships a plugin? | User installs anything? |
 |---|---|---|---:|---|---|
-| **G1** | Per-mod quest-reaction patches, data-only | `common/<Mod>/` StorageUtil channel JSON | **64** | No | Yes -- PatchHub option |
+| **G1** | Per-mod quest-reaction patches, data-only | `common/<Mod>/` StorageUtil channel JSON | **71** | No | Yes -- PatchHub option |
 | **G2** | Per-mod patches that ship a plugin | ESP (+ TIF fragments / SEQ / BOS ini) | **5** | Yes | Yes -- PatchHub option |
 | **G3** | Covered by the CORE mod, no separate patch | rows in `PDV_QuestReactionMatrix_Full.csv` | **158** editor ids (2148 rows) | n/a -- in `Devotion.esp` | **No** |
 | **G4** | Item-keyword support (KID) | `PDV_GreenPact_KID.ini` | **1** live rule (9 item names), 4 empty lanes | No | No -- in core |
 | **G5** | Shrine / world-object support (BaseObjectSwapper) | `PDV_DaedricShrinesAIO_SWAP.ini` | **1** ini, 11 swaps | Yes -- inside the G2 patch | Yes -- PatchHub option |
 | **G6** | Papyrus activity hooks, no quest stage | plugin literals in `PDV_PlayerEvents` / `PDV__ManagerQuest` / `PDV_Origin` | **7** plugins | No | **No** |
 
-G1 + G2 = the 69 PatchHub options, 1:1 with the 69 manifest entries and the 69
-`common/` folders. 324 quest-reaction cells, 2183 deity award rows.
+G1 + G2 = the 76 PatchHub options, 1:1 with the 76 manifest entries and the 76
+`common/` folders. 377 quest-reaction cells, 2512 deity award rows.
 
 **Read this next to the installer:** a user who installs zero PatchHub options
 still gets G3, G4 and G6. That is the majority of the reaction surface by row
-count -- 2148 core rows against 2183 in the whole hub.
+count -- 2148 core rows against 2512 in the whole hub.
 
 ---
 
@@ -225,10 +226,23 @@ Four of these eleven are split with the core matrix -- see
 
 | Mod | Depends on | Quests | Cells | Rows | Deities | Source CSV | Proof state |
 |---|---|---:|---:|---:|---|---|---|
+| Gore - A Companion Mod | `GORE.esp` | 2 | 3 | 37 | Baan Dar, Boethiah, Dibella, HoonDing, Khenarthi, Kynareth, Kyne, Leki, Mara, Mehrunes Dagon, Mephala, Molag Bal, Rajhin, Shor, Sithis, Stendarr, Stuhn, Syrabane, Talos, The Hist, Tsun, Vaermina | `PDV_QRM_Gore.csv` | machine-verified; runtime open; **authored, unreleased** |
+| Khajiit Will Follow | `KhajiitWillFollow.esp` | 4 | 5 | 38 | Alkosh, Arkay, Auri-El, Azura, Dibella, Hermaeus Mora, Hircine, HoonDing, Julianos, Khenarthi, Kynareth, Kyne, Leki, Magnus, Malacath, Mara, Mehrunes Dagon, Molag Bal, Shor, Stendarr, Stuhn, Syrabane, Talos, The Hist, Trinimac, Tsun, Tu'whacca, Vaermina, Xarxes, Z'en, Zenithar | `PDV_QRM_KhajiitWillFollow.csv` | machine-verified; runtime open; **authored, unreleased** |
 | M'rissi's Tails of Troubles | `MrissiTailOfTroubles.esp` | 2 | 3 | 10 | Akatosh, Dibella, Malacath, Mara, Stuhn, Trinimac, Z'en, Zenithar | `PDV_QRM_Mrissi.csv` | runtime open |
+| Merlin the Corgi | `Merlin.esp` | 1 | 1 | 1 | Sheogorath | `PDV_QRM_MerlinTheCorgi.csv` | machine-verified; runtime open; **authored, unreleased** |
+| Redcap the Riekling | `FA01RedcapFollower.esp` | 5 | 5 | 58 | Akatosh, Alkosh, Arkay, Auri-El, Azura, Hircine, HoonDing, Khenarthi, Kynareth, Kyne, Leki, Malacath, Mara, Mehrunes Dagon, Molag Bal, Sanguine, Sheogorath, Shor, Stendarr, Stuhn, Syrabane, Talos, The Hist, Trinimac, Tsun, Tu'whacca, Xarxes, Y'ffre, Z'en, Zenithar | `PDV_QRM_RedcapTheRiekling.csv` | machine-verified; runtime open; **authored, unreleased** |
+| Sa'chil - Custom Voiced Khajiit Follower | `SU04SachilFollower.esp` | 8 | 8 | 47 | Baan Dar, Boethiah, Clavicus Vile, Dibella, Khenarthi, Kynareth, Malacath, Mara, Mephala, Molag Bal, Nocturnal, Rajhin, Stendarr, Stuhn, Syrabane, Talos, The Hist, Tsun | `PDV_QRM_Sachil.csv` | machine-verified; runtime open; **authored, unreleased** |
 | Song of the Green - Auri | `018Auri.esp` | 1 | 1 | 3 | Kynareth, Kyne, Y'ffre | `PDV_QRM_Auri.csv` | runtime open |
+| The Thalmor's Shadow - Taliesin | `00Taliesin.esp` | 1 | 1 | 4 | Dibella, Kynareth, Mara, The Hist | `PDV_QRM_Taliesin.csv` | machine-verified; runtime open; **authored, unreleased** |
 | Thogra | `DK_Thogra.esp` | 3 | 4 | 24 | Akatosh, Dibella, HoonDing, Leki, Malacath, Mara, Molag Bal, Shor, Sithis, Stendarr, Stuhn, Talos, Trinimac, Tsun, Z'en | `PDV_QRM_Thogra.csv` | runtime open |
+| Val Serano - Pirate Follower and Quest Adventure | `AX ValSerano.esp` | 17 | 30 | 144 | Akatosh, Auri-El, Azura, Baan Dar, Boethiah, Clavicus Vile, Dibella, Hermaeus Mora, HoonDing, Julianos, Khenarthi, Kynareth, Kyne, Magnus, Malacath, Mara, Mephala, Meridia, Molag Bal, Namira, Nocturnal, Rajhin, Shor, Sithis, Stendarr, Stuhn, Syrabane, Talos, The Hist, Trinimac, Tsun, Vaermina, Xarxes, Z'en, Zenithar | `PDV_QRM_ValSerano.csv` | machine-verified; runtime open; **authored, unreleased** |
 | Xelzaz | `BPUFXelzazFollower.esp` | 2 | 2 | 12 | Auri-El, Baan Dar, Hermaeus Mora, Julianos, Magnus, Mephala, Nocturnal, Rajhin, Sanguine, Sheogorath, Xarxes, Zenithar | `PDV_QRM_Xelzaz.csv` | runtime open |
+
+B06 audited eight JoJ followers. Seven authored-unreleased rows above were approved and added;
+Hoth was directly read and ruled SILENT, so it correctly has no channel or manifest option.
+Merlin was promoted after owner-supplied context established that the untexted intro completes
+the corgi encounter in Sheogorath's domain. The Hist rows remain visible but are reachable only
+by an Argonian player through the existing native/foreign profile rule.
 
 #### Bardic Life
 

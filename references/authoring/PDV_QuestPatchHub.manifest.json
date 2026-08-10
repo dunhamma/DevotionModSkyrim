@@ -202,6 +202,16 @@
       "category": "New Quests and Lands"
     },
     {
+      "name": "Gore - A Companion Mod",
+      "description": "Gore is a fully voiced, lore-friendly, standalone follower I have been writing, voicing and implementing since 2023. This mod is dedicated to my sister, Eden \"Solaria\" Knight. You will always be loved. 5,000 lines including the Vigilant add-on voiced using high-quality studio equipment. Coverage for all factions, main quest and DLC.",
+      "dependency": "GORE.esp",
+      "folders": [
+        "common\\Gore"
+      ],
+      "category": "Followers",
+      "nexusModId": 85298
+    },
+    {
       "name": "Heart of the Reach",
       "description": "Delve into the depths of an underground swamp in the aid of a priest in order to heal the Heart of the Reach. Including a new quest, weapons, ring, spell and more.",
       "dependency": "HeartOfTheReach.esp",
@@ -281,6 +291,16 @@
       "nexusModId": 19075
     },
     {
+      "name": "Khajiit Will Follow",
+      "description": "Adds 4 custom-voiced, marriageable khajiit followers (3 male, 1 female + 1 minifollower) to the world, each with their own unique quests, backstories, personalities, and play styles. Includes 16,000 lines of dialogue and massive content patches for both The Forgotten City and Vigilant quest mods.",
+      "dependency": "KhajiitWillFollow.esp",
+      "folders": [
+        "common\\KhajiitWillFollow"
+      ],
+      "category": "Followers",
+      "nexusModId": 2227
+    },
+    {
       "name": "Legacy of the Dragonborn",
       "description": "Not just a display mod, not just a quest mod, not just a new guild mod, but a complete foundational flagship mod to build an entire load order around. This DLC expansion sized mod adds hundreds of new items, dozens of new quests and hundreds of extra hours of play.",
       "dependency": "LegacyoftheDragonborn.esm",
@@ -318,6 +338,16 @@
       ],
       "category": "Followers",
       "nexusModId": 9666
+    },
+    {
+      "name": "Merlin the Corgi",
+      "description": "Adds a magical corgi companion to join you on your adventures.",
+      "dependency": "Merlin.esp",
+      "folders": [
+        "common\\MerlinTheCorgi"
+      ],
+      "category": "Followers",
+      "nexusModId": 56433
     },
     {
       "name": "Moon and Star",
@@ -402,6 +432,16 @@
       "nexusModId": 15996
     },
     {
+      "name": "Redcap the Riekling",
+      "description": "Redcap is a unique, voice-acted, immersive follower mod with over 2650 lines of dialogue, a ton of fun and useful features, several new quests, new locations, interactive commentary on many quests, and a pet boar named Bigpig to summon in battle! Redcap has a big personality and a lot to offer!",
+      "dependency": "FA01RedcapFollower.esp",
+      "folders": [
+        "common\\RedcapTheRiekling"
+      ],
+      "category": "Followers",
+      "nexusModId": 73441
+    },
+    {
       "name": "Remiel",
       "description": "Adds Remiel to your game, custom voiced with ~5,000 lines of dialogue, a Breton engineer who will accompany you in your travels. She's travelled from Wayrest to explore dwemer ruins in Skyrim, but she needs your help.",
       "dependency": "HLIORemi.esp",
@@ -430,6 +470,16 @@
       ],
       "category": "Quest Expansions",
       "nexusModId": 120935
+    },
+    {
+      "name": "Sa'chil - Custom Voiced Khajiit Follower",
+      "description": "Sa'chil is a Khajiit spellsword from Hammerfell, She has ~6K lines and is marriageable with 5 quests!",
+      "dependency": "SU04SachilFollower.esp",
+      "folders": [
+        "common\\Sachil"
+      ],
+      "category": "Followers",
+      "nexusModId": 106892
     },
     {
       "name": "Save the Icerunner",
@@ -490,6 +540,16 @@
       ],
       "category": "Followers",
       "nexusModId": 11278
+    },
+    {
+      "name": "The Thalmor's Shadow - Taliesin",
+      "description": "Adds a custom voiced (VA - Pat Mahoney) Thalmor follower to your Skyrim.A former Thalmor soldier seeks purpose and a chance to atone.Feed him pellets and he'll feed you information.",
+      "dependency": "00Taliesin.esp",
+      "folders": [
+        "common\\Taliesin"
+      ],
+      "category": "Followers",
+      "nexusModId": 93413
     },
     {
       "name": "Taste of Death Addon",
@@ -640,6 +700,16 @@
       ],
       "category": "New Quests and Lands",
       "nexusModId": 11789
+    },
+    {
+      "name": "Val Serano - Pirate Follower and Quest Adventure",
+      "description": "Pirate. Thief. Liar. Your new best friend and optionally your lover. Whether you both survive the experience remains to be seen. (voiced by Krimson Graey)",
+      "dependency": "AX ValSerano.esp",
+      "folders": [
+        "common\\ValSerano"
+      ],
+      "category": "Followers",
+      "nexusModId": 103669
     },
     {
       "name": "Vigilant",

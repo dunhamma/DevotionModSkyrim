@@ -1069,6 +1069,25 @@
       <optionalFileGroups order="Explicit">
         <group name="Followers" type="SelectAny">
           <plugins order="Explicit">
+            <plugin name="Gore - A Companion Mod">
+              <description>Gore is a fully voiced, lore-friendly, standalone follower I have been writing, voicing and implementing since 2023. This mod is dedicated to my sister, Eden &quot;Solaria&quot; Knight. You will always be loved. 5,000 lines including the Vigilant add-on voiced using high-quality studio equipment. Coverage for all factions, main quest and DLC.</description>
+              <files>
+                <folder source="common\Gore" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="GORE.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Immersive Kaidan AIO">
               <description></description>
               <files>
@@ -1126,6 +1145,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="Khajiit Will Follow">
+              <description>Adds 4 custom-voiced, marriageable khajiit followers (3 male, 1 female + 1 minifollower) to the world, each with their own unique quests, backstories, personalities, and play styles. Includes 16,000 lines of dialogue and massive content patches for both The Forgotten City and Vigilant quest mods.</description>
+              <files>
+                <folder source="common\KhajiitWillFollow" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="KhajiitWillFollow.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Lucien">
               <description>Lucien is a fully voiced Imperial follower with over 6000 lines of immersive, lore-friendly dialogue. Though he arrives in Skyrim as a cowardly scholar, he'll gradually gain strength and confidence by your side until he grows into a hero in his own right.</description>
               <files>
@@ -1164,6 +1202,44 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="Merlin the Corgi">
+              <description>Adds a magical corgi companion to join you on your adventures.</description>
+              <files>
+                <folder source="common\MerlinTheCorgi" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Merlin.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Redcap the Riekling">
+              <description>Redcap is a unique, voice-acted, immersive follower mod with over 2650 lines of dialogue, a ton of fun and useful features, several new quests, new locations, interactive commentary on many quests, and a pet boar named Bigpig to summon in battle! Redcap has a big personality and a lot to offer!</description>
+              <files>
+                <folder source="common\RedcapTheRiekling" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="FA01RedcapFollower.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Remiel">
               <description>Adds Remiel to your game, custom voiced with ~5,000 lines of dialogue, a Breton engineer who will accompany you in your travels. She's travelled from Wayrest to explore dwemer ruins in Skyrim, but she needs your help.</description>
               <files>
@@ -1176,6 +1252,25 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="HLIORemi.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Sa'chil - Custom Voiced Khajiit Follower">
+              <description>Sa'chil is a Khajiit spellsword from Hammerfell, She has ~6K lines and is marriageable with 5 quests!</description>
+              <files>
+                <folder source="common\Sachil" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="SU04SachilFollower.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -1202,6 +1297,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="The Thalmor's Shadow - Taliesin">
+              <description>Adds a custom voiced (VA - Pat Mahoney) Thalmor follower to your Skyrim.A former Thalmor soldier seeks purpose and a chance to atone.Feed him pellets and he'll feed you information.</description>
+              <files>
+                <folder source="common\Taliesin" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="00Taliesin.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Thogra">
               <description>Help an Orc widow get revenge on the one who wronged her. The same Thogra gra-Mugur, now with a new voice!</description>
               <files>
@@ -1214,6 +1328,25 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="DK_Thogra.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Val Serano - Pirate Follower and Quest Adventure">
+              <description>Pirate. Thief. Liar. Your new best friend and optionally your lover. Whether you both survive the experience remains to be seen. (voiced by Krimson Graey)</description>
+              <files>
+                <folder source="common\ValSerano" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="AX ValSerano.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>

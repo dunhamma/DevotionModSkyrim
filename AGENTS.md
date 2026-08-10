@@ -1085,6 +1085,19 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 
 ## Decisions Log
 
+- **[2026-08-10] - Follower friendship is not marriage, and Sheogorath's whimsy is not generic chaos:**
+  B06 review removed `marriage_family` from Gore's Drunken Huntsman friendship milestone; ordinary
+  growing closeness remains inert as `NEEDS-TAG: friendship` until a project-wide friendship profile
+  is designed. Do not stretch `marriage_family` beyond its wed/adopt/reconcile/hearth contract.
+  Owner-supplied gameplay context established that Merlin is recruited inside Sheogorath's domain,
+  so the canonical vocabulary now includes narrow `embrace_whimsy`: freely welcoming an improbable
+  or playfully impossible turn. Only Sheogorath currently reacts. Do not substitute
+  `sow_chaos_madness` (which means spreading disorder/ruin and fans out broadly), and do not call the
+  Merlin encounter `serve_a_daedra:sheogorath` because no bargain or task is evidenced. Merlin's
+  untexted stage 255 remains a positional `RUNTIME-VERIFY` row; this is authored/machine-gated, not
+  runtime proof. The same review ruled Redcap's captive-villager rescue as both `civic_service` and
+  `defend_kin_home`: the player returns Redcap's Riekling people safely home.
+
 - **[2026-08-07] - Daedric race-response family: destination ruled, wiring BACKLOGGED, do not re-wire:**
   `ShowRaceResponseForPlayer()` has **no organic call site anywhere in the mod** -- only
   `DebugRunControlledProof` -> `ShowControlledProofMessages` reaches it, in all 16

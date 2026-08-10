@@ -27,12 +27,12 @@ DeadlandsExpanded,Deadlands Expanded - A Kaidan Quest Overhaul,C,B05,KR2_Deadlan
 Lucien,Lucien,C,B05,Lucien.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
 Remiel,Remiel,C,B05,HLIORemi.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
 Inigo,Inigo,C,B05,Inigo.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
-Sachil,Sa'chil,C,B06,SU04SachilFollower.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
-ValSerano,Val Serano,C,B06,AX ValSerano.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
-Taliesin,Taliesin,C,B06,00Taliesin.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
-Hoth,Hoth,C,B06,HothFollower.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
-Gore,Gore,C,B06,GORE.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
-KhajiitWillFollow,Khajiit Will Follow,C,B06,KhajiitWillFollow.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
-MerlinTheCorgi,Merlin the Corgi,C,B06,Merlin.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
-RedcapTheRiekling,Redcap the Riekling,C,B06,FA01RedcapFollower.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
-InterestingNPCs,Interesting NPCs (3DNPC),C,B07,3DNPC.esp,-,-,-,UNREVIEWED,-,-,-,-,-,
+Sachil,Sa'chil,C,B06,SU04SachilFollower.esp,ok,needs-tag,ok,APPROVED,ok,ok,ok,ok,PASS,Direct MCP only: 45 QUST read at depth 5; 8 row-bearing quests re-read after promotion; 47 rows pass. NEEDS-TAG: abuse_companion and refuse_criminal_faction.
+ValSerano,Val Serano,C,B06,AX ValSerano.esp,ok,needs-tag,ok,APPROVED,ok,ok,ok,ok,PASS,Direct MCP only: 66 QUST read at depth 5 (62 worklist records plus 4 overrides); 17 row-bearing quests re-read after promotion; 144 rows pass. NEEDS-TAG: refuse_reckless_magic.
+Taliesin,Taliesin,C,B06,00Taliesin.esp,ok,ok,ok,APPROVED,ok,ok,ok,ok,PASS,Direct MCP only: 17 QUST read at depth 5; 1 row-bearing quest re-read after promotion; 4 rows pass.
+Hoth,Hoth,C,B06,HothFollower.esp,ok,ok,-,SILENT,-,-,-,ok,PASS,Direct MCP only: the sole QUST has one stage with no journal text and no objectives; no eligible outcome rows.
+Gore,Gore,C,B06,GORE.esp,ok,needs-tag,ok,APPROVED,ok,ok,ok,ok,PASS,Direct MCP only: 25 QUST read at depth 5; 3 candidate row-bearing quests re-read after promotion; 2 remain promoted with 37 rows after the friendship ruling. NEEDS-TAG: friendship. The untexted alternate terminal in The Apple from the Tree remains inert.
+KhajiitWillFollow,Khajiit Will Follow,C,B06,KhajiitWillFollow.esp,ok,needs-tag,ok,APPROVED,ok,ok,ok,ok,PASS,Direct MCP only: 36 QUST read at depth 5; 4 row-bearing quests re-read after promotion; 38 rows pass. NEEDS-TAG: sponsor_companion_induction; recover_stolen_keepsake; free_wrongfully_imprisoned.
+MerlinTheCorgi,Merlin the Corgi,C,B06,Merlin.esp,ok,ok,ok,APPROVED,ok,ok,ok,ok,PASS,Direct MCP only: 2 QUST read at depth 5; 1 row-bearing quest re-read after promotion; 1 row passes. Owner context establishes that the untexted s255 terminal completes Merlin's recruitment in Sheogorath's domain; embrace_whimsy is a positional RUNTIME-VERIFY ruling.
+RedcapTheRiekling,Redcap the Riekling,C,B06,FA01RedcapFollower.esp,ok,needs-tag,ok,APPROVED,ok,ok,ok,ok,PASS,Direct MCP only: 41 QUST read at depth 5 (40 worklist records plus 1 Skyrim override); 5 row-bearing quests re-read after promotion; 58 rows pass. Stendarr collision adjudicated to disapproval for completing Hircine's bargain. NEEDS-TAG: tactical_distraction. civic_service and defend_kin_home retained for freeing and returning the captive Riekling villagers; the latter adds Y'ffre.
+InterestingNPCs,Interesting NPCs (3DNPC),C,B07,3DNPC.esp,-,-,-,UNREVIEWED,-,-,-,-,-,"deferred, pending survey"

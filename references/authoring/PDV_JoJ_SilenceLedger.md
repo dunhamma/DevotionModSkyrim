@@ -90,6 +90,20 @@ matrix already owns, which `pdv_quest_channel_reconcile.mjs` would reject anyway
 
 ## Judged and ruled SILENT
 
+### Hoth -- SILENT (no player-facing quest outcome)
+
+| | |
+|---|---|
+| Plugin | `HothFollower.esp` |
+| Direct read | `housecarl_read_plugin_file`, absolute plugin path, depth 5, 2026-08-10 |
+| Defines | 1 QUST: `00332E:HothFollower.esp` `HirelingHothDialogue` |
+| Stages | one stage, index 10, with no journal text |
+| Objectives | 0 |
+
+The only quest is follower-dialogue infrastructure. It exposes no named quest, journal
+outcome, objective, or completion flag that the quest-reaction matrix can truthfully score.
+No channel or PatchHub option is authored. Batch B06, 2026-08-10.
+
 ### Deadlands Expanded -- SILENT (reclassified to check, and there was nothing to row)
 
 | | |
