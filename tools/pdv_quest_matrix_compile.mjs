@@ -158,7 +158,7 @@ const FAUCET_FORM_LISTS = {
   "faucetForms.Malacath.serve_a_daedra:malacath": [
     "0x02ACD2|Skyrim.esm", // Volendrung
   ],
-  "faucetForms.Molag Bal.serve_a_daedra:molag_bal": [
+  "faucetForms.Molag Bal.serve_a_daedra:molagbal": [
     "0x0233E3|Skyrim.esm", // Mace of Molag Bal
   ],
   "faucetForms.Hircine.serve_a_daedra:hircine": [
@@ -171,7 +171,7 @@ const FAUCET_FORM_LISTS = {
   "faucetForms.Sheogorath.serve_a_daedra:sheogorath": [
     "0x02AC6F|Skyrim.esm", // Wabbajack
   ],
-  "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon": [
+  "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunesdagon": [
     "0x0240D2|Skyrim.esm", // Mehrunes' Razor
   ],
   "faucetForms.Nocturnal.serve_a_daedra:nocturnal": [

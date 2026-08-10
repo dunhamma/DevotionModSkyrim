@@ -353,6 +353,78 @@ Each Prince also implicitly approves its **own** `serve_a_daedra:<self>` and
 Azura, Boethiah, Mephala, Malacath share their record with the race-deity profiles
 above (cross-referenced, not duplicated).
 
+#### Canonical Prince slugs
+
+The suffix every `serve_a_daedra:`, `destroy_reject_daedra:` and
+`acquire_daedric_artifact:` tag must carry, one row per Prince. **This table is the
+authority** — `tools/lib/pdv_matrix_vocab.mjs` parses it, and `tools/pdv_qrm_lint.mjs`
+fails any row whose slug is not in it.
+
+WHY IT IS DECLARED HERE AND NOT DERIVED. There is no rule that maps a Prince's display
+name to its slug: `Hermaeus Mora` concatenates to `hermaeusmora` and `Molag Bal` to
+`molagbal`, but `Clavicus Vile` is `clavicus`, not `clavicusvile`. Any generator would
+have to special-case the exception, so the set is written down instead.
+
+WHY IT IS NOT HARVESTED FROM THE ROWS. Until 2026-08-09 the slug vocabulary was
+harvested from the shipped data as well as from Part B, which made a typo self-legalising
+the moment it was committed — the harvest learned the typo, then validated it. A wrong
+slug matches no profile, so the row fans out to nobody and is invisible to the
+paired-equity and signal-floor audits, silently and with no error. The vocabulary now
+comes from this table only.
+
+| Prince | slug |
+| --- | --- |
+| Azura | `azura` |
+| Boethiah | `boethiah` |
+| Clavicus Vile | `clavicus` |
+| Hermaeus Mora | `hermaeusmora` |
+| Hircine | `hircine` |
+| Malacath | `malacath` |
+| Mehrunes Dagon | `mehrunesdagon` |
+| Mephala | `mephala` |
+| Meridia | `meridia` |
+| Molag Bal | `molagbal` |
+| Namira | `namira` |
+| Nocturnal | `nocturnal` |
+| Peryite | `peryite` |
+| Sanguine | `sanguine` |
+| Sheogorath | `sheogorath` |
+| Vaermina | `vaermina` |
+
+*(Table added 2026-08-09 by the slug-normalisation pass. `Mehrunes Dagon` shipped as
+BOTH `dagon` — Tranche1/Tranche5, the older and more numerous form — and
+`mehrunesdagon` — the CreationClub tranche of 2026-08-07. Normalised to
+`mehrunesdagon`, following the two-word precedent `molagbal`/`hermaeusmora` that Part B
+already declares. `clavicus` is kept as the one first-word short form because Part B has
+always declared it that way and `clavicus_vile` was a logged authoring bug.)*
+
+#### The faucet lane uses these same slugs
+
+The Part D faucet table (`PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv`) is a
+repeatable-activity table, not a quest-outcome table, and it carried
+`serve_a_daedra:molag_bal` / `serve_a_daedra:mehrunes_dagon` against the matrix's
+`molagbal` / `mehrunesdagon` until 2026-08-09. Both were normalised to the roster
+spelling across the CSV, the `FAUCET_FORM_LISTS` keys in
+`pdv_quest_matrix_compile.mjs`, and the exact-match string literals in
+`PDV_PlayerEvents.psc`, then recompiled.
+
+THE REASON IS CONSISTENCY, NOT A BUG. It is tempting to read
+`MarkQuestReactionFaucet`'s `PDV.QuestReaction.Faucet.<deity>.<tag>` cap key and conclude
+that the two spellings competed for one daily bucket. They did not: that function is
+reached only via `ApplyDeityReaction(..., isFaucet = True, ...)`, which is `True` at
+exactly one call site, and every quest-row path passes `False`. The cap key space is
+faucet-only. The rename was behaviour-neutral; what it bought is a single roster the lint
+can enforce. See `PDV_FaucetSlugNormalisation_2026-08-09.md`, which records the wrong
+reading too so it is not rediscovered as a bug.
+
+ONE THING THE FAUCET LANE MAY DO THAT QUEST ROWS MAY NOT: compound an act as
+`<slug>_<qualifier>`. `serve_a_daedra:sheogorath_fire` — firing the Wabbajack, as against
+`serve_a_daedra:sheogorath` for merely bearing it — is a distinct act that deliberately
+shares Sheogorath's bucket through `FAUCET_CAP_TAG_ALIASES`. `pdv_qrm_lint.mjs` checks
+faucet slugs under that looser rule and quest rows under exact match; the compound still
+has to resolve to a real Prince, which is what rejects `molag_bal` (base "molag") and
+`mehrunes_dagon` (base "mehrunes").
+
 **Azura** — (see Azurah/Azura above). Prince context: dawn/dusk, prophecy, foe of Molag Bal.
 
 **Boethiah** — deceit, proving by struggle, murder of the unworthy, overthrow.

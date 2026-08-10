@@ -1,6 +1,6 @@
 editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation
 DA01,The Black Star,100,Cleanse Azura's Star (give to Aranea/Azura),"serve_a_daedra:azura,destroy_reject_daedra:molagbal",Azura,+,C,milestone,DA01 s100 "cleansed Azura's Star ... mine to do with as I see fit"
-DA01,The Black Star,110,Complete the Black Star (give to Nelacar; traps mortal souls),"serve_a_daedra:azura(defied),necromancy",Azura,-,S,milestone,DA01 s110 "completed the Black Star, an infinite Black Soul Gem" (defied Azura's wish to cleanse)
+DA01,The Black Star,110,Complete the Black Star (give to Nelacar; traps mortal souls),"serve_a_daedra:azura,necromancy",Azura,-,S,milestone,DA01 s110 "completed the Black Star, an infinite Black Soul Gem" (defied Azura's wish to cleanse)
 DA01,The Black Star,110,Black Soul Gem traps mortal souls,necromancy,Arkay,-,m,small,DA01 s110 (black soul gem = trapped mortal souls)
 DA01,The Black Star,110,Black Soul Gem (undeath/soul-binding),necromancy,Meridia,-,m,small,DA01 s110
 DA02,Boethiah's Calling,40,Sacrifice the trusting + defeat champion + don Ebony Mail,"ritual_sacrifice,murder_treacherous,prove_by_struggle,serve_a_daedra:boethiah",Boethiah,+,C,milestone,DA02 s10/s20/s40 "lead someone to the Pillar ... slay them"; "slay her champion ... don the Ebony Mail"
@@ -23,10 +23,10 @@ DA05,Ill Met By Moonlight,100,Kill Sinding for Hircine (the hunt); Savior's Hide
 DA05,Ill Met By Moonlight,105,Defend Sinding; spare the hunted (Ring of Hircine),"the_hunt,mercy_spare,protect_the_weak",Hircine,+,S,small,DA05 s105 "defended him against the hunters ... earned his friendship" (alt Hircine path)
 DA05,Ill Met By Moonlight,105,Spare/defend a tormented soul,mercy_spare,Mara,+,m,small,DA05 s105
 DA06,The Cursed Tribe,200,Defend Largashbur; prove worthier than Yamarz; lift the curse,"defend_kin_home,prove_by_struggle,kill_honorable_combat,serve_a_daedra:malacath,keep_oath",Malacath,+,C,milestone,DA06 s200 "redeemed his actions by defeating the giant ... named me his new Champion"
-DA07,Pieces of the Past,100,Kill Silus for Dagon; reforge Mehrunes' Razor,"murder_treacherous,serve_a_daedra:dagon,acquire_daedric_artifact:dagon,sow_chaos_madness",Mehrunes Dagon,+,C,milestone,DA07 s80/s100 "killed Silus Vesuius for Mehrunes Dagon ... Razor is mine"
+DA07,Pieces of the Past,100,Kill Silus for Dagon; reforge Mehrunes' Razor,"murder_treacherous,serve_a_daedra:mehrunesdagon,acquire_daedric_artifact:mehrunesdagon,sow_chaos_madness",Mehrunes Dagon,+,C,milestone,DA07 s80/s100 "killed Silus Vesuius for Mehrunes Dagon ... Razor is mine"
 DA07,Pieces of the Past,100,Murder the unarmed man who hired you,murder_treacherous,Stendarr,-,S,small,DA07 s80
-DA07,Pieces of the Past,100,Serve the Prince of Destruction,serve_a_daedra:dagon,Akatosh,-,m,small,DA07 s90 (Dagon razes the lawful order)
-DA07,Pieces of the Past,150,Refuse to kill Silus; reject Dagon,"mercy_spare,destroy_reject_daedra:dagon",Mehrunes Dagon,-,S,small,DA07 s150 "I refused to kill Silus ... the Razor is forever out of my grasp"
+DA07,Pieces of the Past,100,Serve the Prince of Destruction,serve_a_daedra:mehrunesdagon,Akatosh,-,m,small,DA07 s90 (Dagon razes the lawful order)
+DA07,Pieces of the Past,150,Refuse to kill Silus; reject Dagon,"mercy_spare,destroy_reject_daedra:mehrunesdagon",Mehrunes Dagon,-,S,small,DA07 s150 "I refused to kill Silus ... the Razor is forever out of my grasp"
 DA07,Pieces of the Past,150,Spare Silus; reject the bargain,mercy_spare,Stendarr,+,S,small,DA07 s150
 DA08,The Whispering Door,60,Take Mephala's Ebony Blade (fed by slaying those close),"serve_a_daedra:mephala,acquire_daedric_artifact:mephala,keep_secret",Mephala,+,C,milestone,DA08 s60 "received Mephala's Ebony Blade ... slay those who are close to me"
 DA08,The Whispering Door,25,Manipulate the Jarl's child to open the door,deceit,Stendarr,-,m,small,DA08 s10/s25 (corrupt a troubled child)
