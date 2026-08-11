@@ -24,6 +24,8 @@ const PROJECT_ROOT = path.resolve(__dirname, "..");
 const DEFAULT_OUTPUT = "D:/Wabbajack/modlists/Anvil/mods/Devotion/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix.json";
 
 const DEFAULT_MATRIX_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestReactionMatrix_Full.csv");
+const PATCH_HUB_ROOT = path.join(PROJECT_ROOT, "dist", "PDV_QuestModPatches_FOMOD");
+const PATCH_HUB_MANIFEST = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestPatchHub.manifest.json");
 const FAUCET_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv");
 const QUEST_READBACK_CSV = path.join(PROJECT_ROOT, "references", "vanilla-gameplay", "extracted", "vanilla-quest-stage-readback.csv");
 const STANCE_CSV = path.join(PROJECT_ROOT, "references", "phase4", "PDV_StanceMatrix.csv");
@@ -158,7 +160,7 @@ const FAUCET_FORM_LISTS = {
   "faucetForms.Malacath.serve_a_daedra:malacath": [
     "0x02ACD2|Skyrim.esm", // Volendrung
   ],
-  "faucetForms.Molag Bal.serve_a_daedra:molag_bal": [
+  "faucetForms.Molag Bal.serve_a_daedra:molagbal": [
     "0x0233E3|Skyrim.esm", // Mace of Molag Bal
   ],
   "faucetForms.Hircine.serve_a_daedra:hircine": [
@@ -171,7 +173,7 @@ const FAUCET_FORM_LISTS = {
   "faucetForms.Sheogorath.serve_a_daedra:sheogorath": [
     "0x02AC6F|Skyrim.esm", // Wabbajack
   ],
-  "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon": [
+  "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunesdagon": [
     "0x0240D2|Skyrim.esm", // Mehrunes' Razor
   ],
   "faucetForms.Nocturnal.serve_a_daedra:nocturnal": [
@@ -269,6 +271,11 @@ function main() {
     faucetKeys: [],
     ...VALUE_TABLE,
   };
+
+  const sourceMod = resolvePatchSourceMod(outputPath);
+  if (sourceMod) {
+    out.sourceMod = sourceMod;
+  }
 
   for (const [key, value] of Object.entries(compileStance(stanceRows, daedricRows))) {
     out[key] = value;
@@ -459,6 +466,37 @@ function main() {
     watchedQuests: new Set(out.questFormIds).size,
     faucetActs: out.faucetKeys.length,
   }, null, 2));
+}
+
+function resolvePatchSourceMod(targetPath) {
+  const target = path.resolve(targetPath);
+  const relativeToHub = path.relative(PATCH_HUB_ROOT, target);
+  const isPatchChannel =
+    relativeToHub !== "" &&
+    !relativeToHub.startsWith(`..${path.sep}`) &&
+    !path.isAbsolute(relativeToHub) &&
+    target.split(path.sep).some((segment) => segment.toLowerCase() === "channels") &&
+    /^PDV_QRM_[A-Za-z0-9_]+\.json$/i.test(path.basename(target));
+  if (!isPatchChannel) return "";
+
+  const manifest = readJson(PATCH_HUB_MANIFEST);
+  for (const option of manifest.options ?? []) {
+    for (const folder of option.folders ?? []) {
+      const optionRoot = path.resolve(PATCH_HUB_ROOT, folder.replaceAll("\\", path.sep));
+      const relativeToOption = path.relative(optionRoot, target);
+      if (
+        relativeToOption !== "" &&
+        !relativeToOption.startsWith(`..${path.sep}`) &&
+        !path.isAbsolute(relativeToOption)
+      ) {
+        if (!option.name || typeof option.name !== "string") {
+          throw new Error(`Patch channel option has no player-facing name: ${folder}`);
+        }
+        return option.name;
+      }
+    }
+  }
+  throw new Error(`Patch channel output is not owned by a PatchHub manifest option: ${target}`);
 }
 
 function validate(out) {

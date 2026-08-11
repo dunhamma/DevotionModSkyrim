@@ -1790,6 +1790,7 @@ Function QueueQuestReactionJob(Quest sourceQuest, Int stageValue, String parentL
     if matrixFile == ""
         return
     endIf
+    String sourceModName = JsonUtil.GetStringValue(matrixFile, "sourceMod")
 
     String sourceDeitiesCsv = JsonUtil.GetStringValue(matrixFile, cellPrefix + "deitiesCsv")
     String[] deityNames = StringUtil.Split(sourceDeitiesCsv, "|")
@@ -1954,6 +1955,7 @@ Function QueueQuestReactionJob(Quest sourceQuest, Int stageValue, String parentL
     StorageUtil.SetStringValue(None, prefix + "MagnitudesCsv", magnitudesCsv)
     StorageUtil.SetStringValue(None, prefix + "TagsCsv", tagsCsv)
     StorageUtil.SetStringValue(None, prefix + "MatrixFile", matrixFile)
+    StorageUtil.SetStringValue(None, prefix + "SourceModName", sourceModName)
     StorageUtil.SetStringValue(None, prefix + "CellPrefix", cellPrefix)
     StorageUtil.SetIntValue(None, prefix + "CellCount", cellCount)
     StorageUtil.SetIntValue(None, prefix + "SourceCellCount", sourceCellCount)
@@ -2141,7 +2143,7 @@ Bool Function ProcessQuestReactionQueueSlice()
     if compactedJob && StorageUtil.GetIntValue(None, prefix + "MetaEligible") == 1
         StorageUtil.SetFloatValue(None, "PDV.Meta.LastFulfillTime", StorageUtil.GetFloatValue(None, prefix + "QueuedGameTime"))
     endIf
-    FlushQueuedQuestReactionSurface()
+    FlushQueuedQuestReactionSurface(StorageUtil.GetStringValue(None, prefix + "SourceModName"))
     CommitQueuedQuestReactionBroad(StorageUtil.GetStringValue(None, prefix + "ReactionKey"))
     if _qrQueueNeedsCurseRefresh
         HandleCurseStateRefresh("quest_reaction_queue")
@@ -2800,7 +2802,7 @@ Function AccumulateQueuedQuestReactionSurface(PDV_DeityBase deity, Float amount,
     endIf
 EndFunction
 
-Function FlushQueuedQuestReactionSurface()
+Function FlushQueuedQuestReactionSurface(String sourceModName = "")
     if _qrQueueSurfPosCount == 0 && _qrQueueSurfNegCount == 0
         return
     endIf
@@ -2816,8 +2818,8 @@ Function FlushQueuedQuestReactionSurface()
         elseIf _qrQueueSurfPosCount > 2
             posMsg = _qrQueueSurfBestPosName + " and " + (_qrQueueSurfPosCount - 1) + " others mark your deed."
         endIf
-        SendPrismaToast(_qrQueueSurfBestPosSymbol, "good", "A deed marked", posMsg)
-        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed.", nowDay, "favor.act", _qrQueueSurfBestPosSymbol, False, bodMagnitude, "A deed marked")
+        SendPrismaToastWithSource(_qrQueueSurfBestPosSymbol, "good", "A deed marked", posMsg, sourceModName)
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed.", nowDay, "favor.act", _qrQueueSurfBestPosSymbol, False, bodMagnitude, "A deed marked", False, sourceModName)
     elseIf _qrQueueSurfPosCount == 0
         String negMsg = _qrQueueSurfBestNegName + " takes offense at your deed."
         if _qrQueueSurfNegCount == 2
@@ -2825,8 +2827,8 @@ Function FlushQueuedQuestReactionSurface()
         elseIf _qrQueueSurfNegCount > 2
             negMsg = _qrQueueSurfBestNegName + " and " + (_qrQueueSurfNegCount - 1) + " others take offense at your deed."
         endIf
-        SendPrismaToast(_qrQueueSurfBestNegSymbol, "warning", "A deed ill-received", negMsg)
-        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense at your deed.", nowDay, "favor.loss", _qrQueueSurfBestNegSymbol, False, bodMagnitude, "A deed ill-received")
+        SendPrismaToastWithSource(_qrQueueSurfBestNegSymbol, "warning", "A deed ill-received", negMsg, sourceModName)
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense at your deed.", nowDay, "favor.loss", _qrQueueSurfBestNegSymbol, False, bodMagnitude, "A deed ill-received", False, sourceModName)
     else
         Bool positiveLeads = _qrQueueSurfBestPosAmount >= (_qrQueueSurfBestNegAmount * -1.0)
         String mixedTone = "good"
@@ -2837,8 +2839,8 @@ Function FlushQueuedQuestReactionSurface()
             mixedSymbol = _qrQueueSurfBestNegSymbol
             mixedBodTone = "favor.loss"
         endIf
-        SendPrismaToast(mixedSymbol, mixedTone, "A deed weighed", _qrQueueSurfBestPosName + " marks your deed; " + _qrQueueSurfBestNegName + " takes offense.")
-        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed; " + JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, bodMagnitude, "A deed weighed")
+        SendPrismaToastWithSource(mixedSymbol, mixedTone, "A deed weighed", _qrQueueSurfBestPosName + " marks your deed; " + _qrQueueSurfBestNegName + " takes offense.", sourceModName)
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed; " + JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, bodMagnitude, "A deed weighed", False, sourceModName)
     endIf
     ResetQueuedQuestReactionSurface()
 EndFunction
@@ -3596,6 +3598,15 @@ EndFunction
 Bool Function SendPrismaToast(String symbolName, String tone, String titleText, String messageText, Bool allowFallback = True, Bool allowDuringRaceSetup = False)
     String payload = "{\"mode\":\"toast\",\"toast\":{\"symbol\":\"" + JsonSafeString(symbolName) + "\",\"tone\":\"" + JsonSafeString(tone) + "\",\"title\":\"" + JsonSafeString(titleText) + "\",\"message\":\"" + JsonSafeString(messageText) + "\"}}"
     return SendPrismaToastPayloadOrFallback(payload, titleText, messageText, allowFallback, allowDuringRaceSetup)
+EndFunction
+
+Bool Function SendPrismaToastWithSource(String symbolName, String tone, String titleText, String messageText, String sourceModName, Bool allowFallback = True)
+    if sourceModName == ""
+        return SendPrismaToast(symbolName, tone, titleText, messageText, allowFallback)
+    endIf
+    sourceModName = NormalizePublicDeityDisplayText(sourceModName)
+    String payload = "{\"mode\":\"toast\",\"toast\":{\"symbol\":\"" + JsonSafeString(symbolName) + "\",\"tone\":\"" + JsonSafeString(tone) + "\",\"title\":\"" + JsonSafeString(titleText) + "\",\"message\":\"" + JsonSafeString(messageText) + "\",\"source\":\"" + JsonSafeString(sourceModName) + "\"}}"
+    return SendPrismaToastPayloadOrFallback(payload, titleText + " - " + sourceModName, messageText, allowFallback)
 EndFunction
 
 Bool Function SendPrismaEventToast(String eventName, PDV_DeityBase deity, String context, String tierLabel, String rival, Bool allowFallback = True)
@@ -21965,11 +21976,11 @@ EndFunction
 
 String Function GetDaedricPriceMechanicText(String princeName, Int tierValue)
     if (princeName == "Boethiah") && tierValue == TIER_SEEKER
-        return "-8 Speech"
+        return "-10 Speech"
     elseIf (princeName == "Boethiah") && tierValue == TIER_DEVOTED
-        return "-12 Speech"
+        return "-18 Speech"
     elseIf (princeName == "Boethiah") && tierValue == TIER_CHAMPION
-        return "-15 Speech"
+        return "-25 Speech"
     elseIf (princeName == "Azura") && tierValue == TIER_SEEKER
         return "-10 Stamina"
     elseIf (princeName == "Azura") && tierValue == TIER_DEVOTED
@@ -24435,6 +24446,7 @@ String Function BuildJournalPayloadJson()
     Int count = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines")
     Int titleCount = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Titles")
     Int magnitudeCount = StorageUtil.IntListCount(None, "PDV.Diegetic.Journal.Magnitudes")
+    Int sourceCount = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Sources")
     String entries = ""
     Int i = 0
     while i < count
@@ -24463,6 +24475,12 @@ String Function BuildJournalPayloadJson()
         entry = entry + ",\"valence\":\"" + valence + "\""
         entry = entry + ",\"magnitude\":" + magnitude
         entry = entry + ",\"title\":\"" + entryTitle + "\""
+        if i < sourceCount
+            String sourceText = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Sources", i))
+            if sourceText != ""
+                entry = entry + ",\"source\":\"" + sourceText + "\""
+            endIf
+        endIf
         entry = entry + ",\"text\":\"" + line + "\"}"
         if i > 0
             entries = entries + ","
@@ -24489,7 +24507,7 @@ EndFunction
 ; (oldest-first). Tone MUST be a key JournalToneToTitle/JournalToneToValence
 ; recognize, or the entry renders without a title/valence. headlinePinned entries
 ; are exempt from the day-window prune so curse/Champion/major-switch beats persist.
-Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String symbol, Bool headlinePinned, Int magnitude = 1, String titleText = "", Bool allowDuringRaceSetup = False)
+Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String symbol, Bool headlinePinned, Int magnitude = 1, String titleText = "", Bool allowDuringRaceSetup = False, String sourceText = "")
     if IsRaceSetupQuietPresentationActive() && !allowDuringRaceSetup
         return
     endIf
@@ -24503,6 +24521,7 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
     if symbol == ""
         symbol = "journal"
     endIf
+    sourceText = NormalizePublicDeityDisplayText(sourceText)
 
     ; De-dupe: skip when the newest entry is the same day + tone + line, so an
     ; immediate event and the dawn digest cannot restate the same beat, and a
@@ -24515,6 +24534,12 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
         endIf
     endIf
 
+    ; Existing saves predate the optional source list. Pad it before adding a new
+    ; entry so a patch label can never attach to an older journal line.
+    while StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Sources") < count
+        StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Sources", "", True)
+    endWhile
+
     StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Lines", line, True)
     StorageUtil.IntListAdd(None, "PDV.Diegetic.Journal.Days", gameDay, True)
     StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Tones", tone, True)
@@ -24525,6 +24550,7 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
         titleText = BuildJournalEventTitle(tone, "")
     endIf
     StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Titles", titleText, True)
+    StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Sources", sourceText, True)
 
     PruneBookOfDays()
 
@@ -24717,6 +24743,9 @@ Function RemoveBookOfDaysEntryAt(Int index)
     endIf
     if index < StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Titles")
         StorageUtil.StringListRemoveAt(None, "PDV.Diegetic.Journal.Titles", index)
+    endIf
+    if index < StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Sources")
+        StorageUtil.StringListRemoveAt(None, "PDV.Diegetic.Journal.Sources", index)
     endIf
 EndFunction
 

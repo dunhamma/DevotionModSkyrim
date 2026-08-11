@@ -6,7 +6,7 @@ DA03,200,"serve_a_daedra:clavicus,acquire_daedric_artifact:clavicus,keep_oath,me
 DA04,100,"forbidden_knowledge,serve_a_daedra:hermaeusmora,acquire_daedric_artifact:hermaeusmora,disciplined_study",The same outcome completes Septimus's study opens Mora's lockbox and claims the Oghma Infinium.
 DA05,100,"the_hunt,serve_a_daedra:hircine,acquire_daedric_artifact:hircine",The same outcome completes Hircine's hunt and receives Savior's Hide.
 DA05,105,"the_hunt,mercy_spare,protect_the_weak",The same outcome turns the hunt against the hunters and spares and protects Sinding.
-DA07,150,"mercy_spare,destroy_reject_daedra:dagon",The same outcome spares Silus and refuses Dagon's demanded murder and Razor.
+DA07,150,"mercy_spare,destroy_reject_daedra:mehrunesdagon",The same outcome spares Silus and refuses Dagon's demanded murder and Razor.
 DA08,60,"serve_a_daedra:mephala,acquire_daedric_artifact:mephala,keep_secret",The same outcome accepts Mephala's secret and receives the Ebony Blade.
 DA09,500,"slay_undead,cure_undeath,serve_a_daedra:meridia,acquire_daedric_artifact:meridia",The same outcome destroys Malkoran and his shades serves Meridia and receives Dawnbreaker.
 DA11,250,"destroy_reject_daedra:namira,mercy_spare,protect_the_weak",The same outcome rejects Namira's feast kills Eola and saves Verulus.

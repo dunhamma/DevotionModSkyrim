@@ -7,6 +7,7 @@
  * file set is wrong.
  */
 
+import { acceptedDeityNames } from "./lib/pdv_matrix_vocab.mjs";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
@@ -70,24 +71,12 @@ function checkMatrixNameResolution() {
   if (!exists(managerPath)) {
     return { check: "matrixNameResolution", status: "FAIL", issues: [`manager source missing: ${managerPath}`] };
   }
-  const managerText = fs.readFileSync(managerPath, "utf8");
-
-  // Accepted requested-names, all parsed from the manager source (never hand-copied).
-  const accepted = new Set();
-  for (const m of managerText.matchAll(/RepairDeityRuntimeName\(\s*PDV_[A-Za-z0-9_]+\s*,\s*"([^"]+)"\s*\)/g)) {
-    accepted.add(m[1]);
-  }
-  const daedricFn = managerText.match(/String Function CanonicalDaedricPathName[\s\S]*?EndFunction/);
-  for (const m of (daedricFn ? daedricFn[0] : "").matchAll(/return "([^"]+)"/g)) {
-    accepted.add(m[1]);
-  }
-  const aliasFn = managerText.match(/Bool Function IsQuestReactionNameMatch[\s\S]*?EndFunction/);
-  for (const m of (aliasFn ? aliasFn[0] : "").matchAll(/requestedName == "([^"]+)"/g)) {
-    accepted.add(m[1]);
-  }
-  if (accepted.size < 30) {
-    issues.push(`accepted-name extraction suspiciously small (${accepted.size}) -- manager name-model parse may have broken`);
-  }
+  // Parsed from the manager source (never hand-copied), and shared with pdv_qrm_lint via
+  // tools/lib/pdv_matrix_vocab.mjs. It was inline here first; the linter needed the identical
+  // model, and a second copy of this parser is exactly the one-value-in-two-places drift that
+  // would let the two gates disagree about which deities exist.
+  const { names: accepted, issues: nameIssues } = acceptedDeityNames(repoRoot);
+  issues.push(...nameIssues);
 
   // Minimal quoted-field CSV parser: enough for the matrix files (quotes around citation).
   const parseCsvLine = (line) => {
@@ -108,15 +97,39 @@ function checkMatrixNameResolution() {
     return cells;
   };
 
-  const files = fs.readdirSync(authoringDir).filter((f) => /^PDV_QuestReactionMatrix.*\.csv$/i.test(f));
+  // TWO families carry deity cells, and for a long time only the first was checked:
+  //   references/authoring/PDV_QuestReactionMatrix*.csv  -- core tranches + Full.csv
+  //   references/authoring/patches/PDV_QRM_*.csv         -- the per-mod FOMOD channels
+  // The channels matched on NEITHER count -- wrong directory AND wrong prefix -- so all 44
+  // shipped ones went unchecked by the gate whose own header names the "Clavicus" failure.
+  // A bad name there compiles clean and ApplyDeityReaction drops the cell in silence, which
+  // is indistinguishable from the mod simply not reacting. Found 2026-08-09 while scoping the
+  // JoJ tranche; the channels are the lane ALL third-party quest coverage ships through, so
+  // this was the larger half of the surface, not an edge.
+  const matrixFiles = [];
+  for (const f of fs.readdirSync(authoringDir)) {
+    if (/^PDV_QuestReactionMatrix.*\.csv$/i.test(f)) {
+      matrixFiles.push({ label: f, fullPath: path.join(authoringDir, f) });
+    }
+  }
+  const patchesDir = path.join(authoringDir, "patches");
+  let patchChannelsChecked = 0;
+  if (exists(patchesDir)) {
+    for (const f of fs.readdirSync(patchesDir)) {
+      if (/^PDV_QRM_.*\.csv$/i.test(f)) {
+        matrixFiles.push({ label: `patches/${f}`, fullPath: path.join(patchesDir, f) });
+        patchChannelsChecked += 1;
+      }
+    }
+  }
   const auxiliarySchemas = new Map([
     ["PDV_QuestReactionMatrix_OutcomeTagNormalization.csv", ["editor_id", "outcome_stage", "act_tags", "reason"]],
   ]);
   const unknown = [];
   let cellsChecked = 0;
   let auxiliaryFilesChecked = 0;
-  for (const file of files) {
-    const lines = fs.readFileSync(path.join(authoringDir, file), "utf8").split(/\r?\n/).filter((l) => l.trim() !== "");
+  for (const { label: file, fullPath } of matrixFiles) {
+    const lines = fs.readFileSync(fullPath, "utf8").split(/\r?\n/).filter((l) => l.trim() !== "");
     const header = parseCsvLine(lines[0] || "").map((h) => h.trim().toLowerCase());
     const auxiliarySchema = auxiliarySchemas.get(file);
     if (auxiliarySchema) {
@@ -150,7 +163,8 @@ function checkMatrixNameResolution() {
     check: "matrixNameResolution",
     status: ok ? "PASS" : "FAIL",
     acceptedNames: accepted.size,
-    files: files.length,
+    files: matrixFiles.length,
+    patchChannelsChecked,
     auxiliaryFilesChecked,
     cellsChecked,
     unknownNames: distinctUnknown,

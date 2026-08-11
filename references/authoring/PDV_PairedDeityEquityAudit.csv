@@ -184,6 +184,7 @@ make_way_war,C00,20,Take Up Arms,honorable_duel,Talos(+m/small),HoonDing,
 make_way_war,C04,200,Blood's Honor,kill_honorable_combat,Talos(+S/small),HoonDing,
 make_way_war,DA02,40,Boethiah's Calling,prove_by_struggle,HoonDing(+S/small),Talos,waived
 make_way_war,TG05,60,Speaking With Silence,prove_by_struggle,HoonDing(+S/small),Talos,waived
+hunt_ethics,C03,25,The Silver Hand,embrace_lycanthropy,Hircine(+C/milestone) Y'ffre(-S/small),Kyne,
 hunt_ethics,C06,200,Glory of the Dead,the_hunt,Y'ffre(+S/small),Hircine,
 hunt_ethics,C06,200,Glory of the Dead,the_hunt,Y'ffre(+S/small),Kyne,
 hunt_ethics,CR13,200,Purity,cure_undeath,Hircine(-S/small) Y'ffre(+m/small),Kyne,

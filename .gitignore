@@ -32,6 +32,14 @@ generated/PDV_CandidateQueue.md
 # Its structural-probe cache: QUST counts keyed by plugin path+size+mtime. A derived read of
 # whichever modlists this machine happens to have installed, regenerated on demand.
 generated/PDV_CandidateQueue.probe-cache.json
+# JoJ Phase 1b stage digests (tools/pdv_joj_stage_digest.mjs): the journal text and objectives
+# of every quest a candidate mod defines, read off THIS machine's JoJ install. Third-party mod
+# content, regenerable in minutes, and the .md view is a reading aid for a judging pass rather
+# than an artifact anyone should cite. The CANDIDATES and WORKLIST csvs under
+# references/vanilla-gameplay/compatibility/ ARE tracked -- those are the reviewable inputs
+# that decide what gets read; this is the bulk output that comes back.
+generated/joj-stage-digests/
+generated/PDV_JoJ_StageDigest.cache.json
 # External-mod support dump (tools/pdv_external_support_inventory.mjs). A full machine
 # re-derivation of the FOMOD manifest, every shipped channel, the core matrix, the KID
 # and BOS inis, and the Papyrus plugin hooks. Committing it would freeze one moment's

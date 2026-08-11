@@ -199,6 +199,19 @@ for (const manifestOption of hubManifest.options) {
     const sourceRoot = path.join(packageRoot, ...source.source.split(/[\\/]/));
     return filesUnder(sourceRoot).map((file) => ({ file, destination: norm(path.join(source.destination, path.relative(sourceRoot, file))) }));
   });
+  for (const entry of optionFiles.filter((candidate) => /SKSE\/Plugins\/StorageUtilData\/PlayerDevotion\/Channels\/PDV_QRM_.*\.json$/i.test(candidate.destination))) {
+    let channel;
+    try {
+      channel = JSON.parse(fs.readFileSync(entry.file, "utf8"));
+    } catch (error) {
+      fail(`${option.name}: channel JSON is unreadable: ${entry.destination} (${error.message})`);
+      continue;
+    }
+    const sourceMod = channel?.string?.sourceMod ?? channel?.string?.sourcemod ?? "";
+    if (sourceMod !== option.name) {
+      fail(`${option.name}: channel ${path.posix.basename(entry.destination)} sourceMod is "${sourceMod || "missing"}"; expected "${option.name}".`);
+    }
+  }
   const installedPluginNames = new Set(optionFiles.filter((entry) => /\.(?:esp|esm|esl)$/i.test(entry.destination)).map((entry) => path.posix.basename(entry.destination).toLowerCase()));
   for (const entry of optionFiles.filter((candidate) => /SKSE\/Plugins\/BaseObjectSwapper\/.*\.ini$/i.test(candidate.destination))) {
     const replacements = [...fs.readFileSync(entry.file, "utf8").matchAll(/\|\s*0x[0-9a-f]+~([^|\r\n;]+)/gi)].map((match) => match[1].trim());

@@ -1539,11 +1539,11 @@ Function CacheQuestReactionFaucetForms()
     CacheQuestReactionFaucetList("faucetForms.Boethiah.serve_a_daedra:boethiah")
     CacheQuestReactionFaucetList("faucetForms.Mephala.serve_a_daedra:mephala")
     CacheQuestReactionFaucetList("faucetForms.Malacath.serve_a_daedra:malacath")
-    CacheQuestReactionFaucetList("faucetForms.Molag Bal.serve_a_daedra:molag_bal")
+    CacheQuestReactionFaucetList("faucetForms.Molag Bal.serve_a_daedra:molagbal")
     CacheQuestReactionFaucetList("faucetForms.Hircine.serve_a_daedra:hircine")
     CacheQuestReactionFaucetList("faucetForms.Meridia.serve_a_daedra:meridia")
     CacheQuestReactionFaucetList("faucetForms.Sheogorath.serve_a_daedra:sheogorath")
-    CacheQuestReactionFaucetList("faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon")
+    CacheQuestReactionFaucetList("faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunesdagon")
     CacheQuestReactionFaucetList("faucetForms.Nocturnal.serve_a_daedra:nocturnal")
     CacheQuestReactionFaucetList("faucetForms.Peryite.serve_a_daedra:peryite")
     CacheQuestReactionFaucetList("faucetForms.Dibella.aesthetic_devotion")
@@ -2376,8 +2376,8 @@ Function RouteQuestReactionObjectFaucet(Form sourceForm)
     if ShouldRouteQuestReactionFaucet("Malacath.serve_a_daedra:malacath", "faucetForms.Malacath.serve_a_daedra:malacath", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Malacath.serve_a_daedra:malacath", sourceForm)
     endIf
-    if ShouldRouteQuestReactionFaucet("Molag Bal.serve_a_daedra:molag_bal", "faucetForms.Molag Bal.serve_a_daedra:molag_bal", sourceForm)
-        PDV_EventBusService.RouteQuestReactionFaucet("Molag Bal.serve_a_daedra:molag_bal", sourceForm)
+    if ShouldRouteQuestReactionFaucet("Molag Bal.serve_a_daedra:molagbal", "faucetForms.Molag Bal.serve_a_daedra:molagbal", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Molag Bal.serve_a_daedra:molagbal", sourceForm)
     endIf
     if ShouldRouteQuestReactionFaucet("Hircine.serve_a_daedra:hircine", "faucetForms.Hircine.serve_a_daedra:hircine", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Hircine.serve_a_daedra:hircine", sourceForm)
@@ -2388,8 +2388,8 @@ Function RouteQuestReactionObjectFaucet(Form sourceForm)
     if ShouldRouteQuestReactionFaucet("Sheogorath.serve_a_daedra:sheogorath", "faucetForms.Sheogorath.serve_a_daedra:sheogorath", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Sheogorath.serve_a_daedra:sheogorath", sourceForm)
     endIf
-    if ShouldRouteQuestReactionFaucet("Mehrunes Dagon.serve_a_daedra:mehrunes_dagon", "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon", sourceForm)
-        PDV_EventBusService.RouteQuestReactionFaucet("Mehrunes Dagon.serve_a_daedra:mehrunes_dagon", sourceForm)
+    if ShouldRouteQuestReactionFaucet("Mehrunes Dagon.serve_a_daedra:mehrunesdagon", "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunesdagon", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Mehrunes Dagon.serve_a_daedra:mehrunesdagon", sourceForm)
     endIf
     if ShouldRouteQuestReactionFaucet("Nocturnal.serve_a_daedra:nocturnal", "faucetForms.Nocturnal.serve_a_daedra:nocturnal", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Nocturnal.serve_a_daedra:nocturnal", sourceForm)
@@ -2596,7 +2596,7 @@ String Function GetQuestReactionFormIdKey(String listKey)
         return "faucetFormsMephalaServeADaedraMephalaFormIds"
     elseIf listKey == "faucetForms.Malacath.serve_a_daedra:malacath"
         return "faucetFormsMalacathServeADaedraMalacathFormIds"
-    elseIf listKey == "faucetForms.Molag Bal.serve_a_daedra:molag_bal"
+    elseIf listKey == "faucetForms.Molag Bal.serve_a_daedra:molagbal"
         return "faucetFormsMolagBalServeADaedraMolagBalFormIds"
     elseIf listKey == "faucetForms.Hircine.serve_a_daedra:hircine"
         return "faucetFormsHircineServeADaedraHircineFormIds"
@@ -2604,7 +2604,7 @@ String Function GetQuestReactionFormIdKey(String listKey)
         return "faucetFormsMeridiaServeADaedraMeridiaFormIds"
     elseIf listKey == "faucetForms.Sheogorath.serve_a_daedra:sheogorath"
         return "faucetFormsSheogorathServeADaedraSheogorathFormIds"
-    elseIf listKey == "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon"
+    elseIf listKey == "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunesdagon"
         return "faucetFormsMehrunesDagonServeADaedraMehrunesDagonFormIds"
     elseIf listKey == "faucetForms.Nocturnal.serve_a_daedra:nocturnal"
         return "faucetFormsNocturnalServeADaedraNocturnalFormIds"
@@ -2652,7 +2652,7 @@ String Function GetQuestReactionPluginKey(String listKey)
         return "faucetFormsMephalaServeADaedraMephalaPlugins"
     elseIf listKey == "faucetForms.Malacath.serve_a_daedra:malacath"
         return "faucetFormsMalacathServeADaedraMalacathPlugins"
-    elseIf listKey == "faucetForms.Molag Bal.serve_a_daedra:molag_bal"
+    elseIf listKey == "faucetForms.Molag Bal.serve_a_daedra:molagbal"
         return "faucetFormsMolagBalServeADaedraMolagBalPlugins"
     elseIf listKey == "faucetForms.Hircine.serve_a_daedra:hircine"
         return "faucetFormsHircineServeADaedraHircinePlugins"
@@ -2660,7 +2660,7 @@ String Function GetQuestReactionPluginKey(String listKey)
         return "faucetFormsMeridiaServeADaedraMeridiaPlugins"
     elseIf listKey == "faucetForms.Sheogorath.serve_a_daedra:sheogorath"
         return "faucetFormsSheogorathServeADaedraSheogorathPlugins"
-    elseIf listKey == "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon"
+    elseIf listKey == "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunesdagon"
         return "faucetFormsMehrunesDagonServeADaedraMehrunesDagonPlugins"
     elseIf listKey == "faucetForms.Nocturnal.serve_a_daedra:nocturnal"
         return "faucetFormsNocturnalServeADaedraNocturnalPlugins"

@@ -1327,6 +1327,14 @@ h1 {
   line-height: 1.25;
 }
 
+.toast__source {
+  margin: 0 0 2px;
+  color: rgba(216, 179, 90, 0.9);
+  font-size: 10px;
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+}
+
 .toast__text {
   margin: 0;
   color: var(--muted);
@@ -2042,6 +2050,13 @@ h1 {
   margin: 0 0 2px;
   font-size: 19px;
   color: #2a1f12;
+}
+#pdv-journal-modal .bod-leaf__source {
+  margin: 0 0 1px;
+  color: var(--bod-accent);
+  font-size: 12px;
+  font-variant: small-caps;
+  letter-spacing: 0.045em;
 }
 #pdv-journal-modal .bod-leaf__text {
   margin: 0;

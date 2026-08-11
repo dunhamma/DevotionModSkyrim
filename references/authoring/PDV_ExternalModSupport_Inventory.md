@@ -1,26 +1,26 @@
 # PDV External-Mod Support Inventory
 
-Updated: 2026-08-08 AEST
+Updated: 2026-08-11 AEST
 Class: LIVING -- hand-authored authority (`PDV_STANDARDS.md` section 5.3 class 1)
-Status: complete inventory of shipped support; runtime proof is open on most of it, and this doc says which
+Status: complete inventory of current repository support; the full B01-B07 JoJ set is authored, machine-gated, and packaged for tester release, while runtime proof remains post-release evidence
 
 <!-- pdv-inventory-counts {
-  "g1DataOnlyPatches": 41,
+  "g1DataOnlyPatches": 72,
   "g2PluginPatches": 5,
-  "g1WithAwardRows": 41,
+  "g1WithAwardRows": 72,
   "g2WithAwardRows": 3,
-  "totalReactionCells": 133,
-  "totalAwardRows": 534,
-  "hubFoldersTotal": 46,
-  "manifestOptions": 46,
-  "sourceCsvs": 44,
+  "totalReactionCells": 419,
+  "totalAwardRows": 2829,
+  "hubFoldersTotal": 77,
+  "manifestOptions": 77,
+  "sourceCsvs": 75,
   "reconstructedCsvs": 5,
-  "coreRows": 2144,
-  "coreEditorIds": 157,
+  "coreRows": 2148,
+  "coreEditorIds": 158,
   "coreQuestExpansionEditorIds": 3,
   "coreCreationClubEditorIds": 4,
-  "splitCoverageMods": 2,
-  "splitCoverageCollisions": 0,
+  "splitCoverageMods": 5,
+  "splitCoverageCollisions": 1,
   "kidLiveRules": 1,
   "kidLiveRuleNames": 9,
   "kidDeclaredEmptyLanes": 4,
@@ -33,7 +33,7 @@ Status: complete inventory of shipped support; runtime proof is open on most of 
 
 One place to answer "what external-mod content does Devotion actually support?".
 
-Before this doc the answer was spread across the FOMOD manifest, 44 per-mod
+Before this doc the answer was spread across the FOMOD manifest, 75 per-mod
 source CSVs, the core matrix, a KID ini, a BaseObjectSwapper ini and a handful
 of Papyrus hooks, and nothing tied them together. The grouping below is by
 **attach mechanism** -- *how* the support reaches the game -- because that is
@@ -59,12 +59,54 @@ That compares the `pdv-inventory-counts` block at the top of this file against
 live content and **exits non-zero on drift**. The verdict is the exit code; do
 not grep its output.
 
+Since 2026-08-09 it also checks the **prose**. Landing one mod left the old
+option count and award-row total sitting in the body while the counts block had
+correctly moved on -- a green gate on a document that had started lying, which is
+worse than a red one because nobody goes looking.
+
+Two limits, both real, both stated here rather than left to be discovered:
+
+- The scan covers the phrasings that carry numbers **today**. A new sentence with
+  a figure in it is unchecked until its pattern is added to `PROSE` in the script.
+- It cannot tell a live claim from a **quoted example**. The first draft of this
+  very section quoted the two stale figures to explain the bug, and the checker
+  correctly failed on them. Do not write historical counts as bare numerals in
+  this file; describe them instead.
+
+### Coverage -- who benefits, not what ships
+
+Everything above counts **mechanisms**. It cannot answer "is the Hist getting as
+many opportunities as the others", which is what decides whether a race lane
+feels alive:
+
+```bash
+node tools/pdv_external_support_inventory.mjs --coverage
+```
+
+Per-deity and per-race-lane row counts against a **relative** floor -- 60% of the
+median, so it keeps asking the same question as the matrix grows instead of
+needing a constant retuned. Exits non-zero on an unwaived breach. Deliberately
+thin gods are waived with a reason in
+`references/authoring/PDV_CoverageFloorWaivers.csv`; Sanguine, Peryite and Namira
+are waived there because their Part B profiles carry 1, 2 and 3 approve tags by
+design, and widening them would mean inventing a domain they do not have.
+
+It is a **separate exit** from `--check` on purpose: a coverage breach is a
+content gap someone has to decide about, not a documentation error, and one red
+standing for two unrelated problems teaches people to ignore it.
+
+Worship objects with no matrix rows at all (Phynaster, Satakal, Ruptga, Tava,
+Onsi, Riddle'Thar, Jone/Jode) are **reported, never silently dropped** -- they are
+substrate and state deities rather than quest-reaction targets, and a lane can
+only be judged thin once you know what is in it.
+
 ### Evidence buckets used below
 
 | Bucket | What it means |
 |---|---|
 | **machine-verified** | The channel/ini/plugin was read off disk and contains what this doc says. Everything in the tables is at least this. |
 | **runtime open** | No in-game evidence that the hook fires. The hub manifest's own option description says so. Most of the hub sits here. |
+| **tester-release packaged** | Present in the verified `PDV-QuestModPatchHub-20260811.zip` tester archive; this is package-byte evidence, not runtime proof. |
 | **reconstructed source** | The shipped channel is authoritative; the per-mod source CSV was rebuilt from it on 2026-08-08. Award data is verbatim, `outcome` prose is authored. Recorded in each row's `citation`. |
 
 Nothing below is claimed as runtime-proven. Where a mod's support is proven in
@@ -76,19 +118,19 @@ game, that proof lives in a runbook, not here.
 
 | # | Group | Attach mechanism | Entries | Ships a plugin? | User installs anything? |
 |---|---|---|---:|---|---|
-| **G1** | Per-mod quest-reaction patches, data-only | `common/<Mod>/` StorageUtil channel JSON | **41** | No | Yes -- PatchHub option |
+| **G1** | Per-mod quest-reaction patches, data-only | `common/<Mod>/` StorageUtil channel JSON | **72** | No | Yes -- PatchHub option |
 | **G2** | Per-mod patches that ship a plugin | ESP (+ TIF fragments / SEQ / BOS ini) | **5** | Yes | Yes -- PatchHub option |
-| **G3** | Covered by the CORE mod, no separate patch | rows in `PDV_QuestReactionMatrix_Full.csv` | **157** editor ids (2144 rows) | n/a -- in `Devotion.esp` | **No** |
+| **G3** | Covered by the CORE mod, no separate patch | rows in `PDV_QuestReactionMatrix_Full.csv` | **158** editor ids (2148 rows) | n/a -- in `Devotion.esp` | **No** |
 | **G4** | Item-keyword support (KID) | `PDV_GreenPact_KID.ini` | **1** live rule (9 item names), 4 empty lanes | No | No -- in core |
 | **G5** | Shrine / world-object support (BaseObjectSwapper) | `PDV_DaedricShrinesAIO_SWAP.ini` | **1** ini, 11 swaps | Yes -- inside the G2 patch | Yes -- PatchHub option |
 | **G6** | Papyrus activity hooks, no quest stage | plugin literals in `PDV_PlayerEvents` / `PDV__ManagerQuest` / `PDV_Origin` | **7** plugins | No | **No** |
 
-G1 + G2 = the 46 PatchHub options, 1:1 with the 46 manifest entries and the 46
-`common/` folders. 133 quest-reaction cells, 534 deity award rows.
+G1 + G2 = the 77 PatchHub options, 1:1 with the 77 manifest entries and the 77
+`common/` folders. 419 quest-reaction cells, 2829 deity award rows.
 
 **Read this next to the installer:** a user who installs zero PatchHub options
 still gets G3, G4 and G6. That is the majority of the reaction surface by row
-count -- 2144 core rows against 534 in the whole hub.
+count -- 2148 core rows against 2829 in the whole hub.
 
 ---
 
@@ -131,6 +173,29 @@ shipped channels, not by the folder existing.
 | The Frozen Heart | `ksws07_quest.esm` | 1 | 3 | 11 | Auri-El, Mara, Molag Bal, Stendarr, Trinimac | `PDV_QRM_FrozenHeart.csv` | machine-verified |
 | The Gift of Saturalia | `TheGiftofSaturalia.esp` | 5 | 5 | 19 | Dibella, Kynareth, Mara, Stendarr, Stuhn, Syrabane, Y'ffre | `PDV_QRM_GiftOfSaturalia.csv` | runtime open |
 | The Rot Below | `CJ03Elroy.esp` | 1 | 2 | 17 | Arkay, Azura, Dibella, Mara, Meridia, Namira, Stendarr, Tu'whacca, Y'ffre | `PDV_QRM_RotBelow.csv` | machine-verified |
+| The Tools of Kagrenac | `Tools of Kagrenac.esp` | 1 | 2 | 25 | Alkosh, Auri-El, Hermaeus Mora, Hircine, HoonDing, Julianos, Khenarthi, Kynareth, Kyne, Leki, Magnus, Malacath, Mara, Mehrunes Dagon, Molag Bal, Shor, Stendarr, Stuhn, Syrabane, Talos, Trinimac, Tsun, Vaermina, Zenithar | `PDV_QRM_ToolsOfKagrenac.csv` | machine-verified |
+| Immersive Kaidan AIO | `Kaidan - Immersive Features.esp` | 9 | 15 | 112 | Akatosh, Alkosh, Arkay, Auri-El, Azura, Dibella, Hircine, HoonDing, Khenarthi, Kynareth, Kyne, Leki, Malacath, Mara, Mehrunes Dagon, Mephala, Molag Bal, Shor, Sithis, Stendarr, Stuhn, Syrabane, Talos, The Hist, Trinimac, Tsun, Tu'whacca, Xarxes, Y'ffre, Z'en | `PDV_QRM_ImmersiveKaidanAIO.csv` | machine-verified |
+| Inigo | `Inigo.esp` | 1 | 2 | 8 | Dibella, Kynareth, Mara, The Hist | `PDV_QRM_Inigo.csv` | machine-verified |
+| Kaidan 2 | `0Kaidan.esp` | 6 | 7 | 49 | Alkosh, Arkay, Auri-El, Azura, Dibella, Hircine, HoonDing, Khenarthi, Kynareth, Kyne, Leki, Malacath, Mara, Mehrunes Dagon, Molag Bal, Shor, Stendarr, Stuhn, Syrabane, Talos, The Hist, Trinimac, Tsun, Tu'whacca, Xarxes | `PDV_QRM_Kaidan2.csv` | machine-verified |
+| Lucien | `Lucien.esp` | 7 | 20 | 153 | Akatosh, Alkosh, Auri-El, Azura, Baan Dar, Boethiah, Clavicus Vile, Dibella, Hermaeus Mora, Hircine, HoonDing, Julianos, Kynareth, Kyne, Leki, Magnus, Malacath, Mara, Mehrunes Dagon, Mephala, Molag Bal, Nocturnal, Rajhin, Sheogorath, Shor, Sithis, Stendarr, Stuhn, Talos, The Hist, Trinimac, Tsun, Vaermina, Xarxes, Y'ffre, Z'en | `PDV_QRM_Lucien.csv` | machine-verified; runtime open; **tester-release packaged** |
+| Remiel | `HLIORemi.esp` | 5 | 11 | 84 | Akatosh, Alkosh, Auri-El, Azura, Baan Dar, Boethiah, Clavicus Vile, Dibella, Hermaeus Mora, Hircine, HoonDing, Julianos, Khenarthi, Kynareth, Kyne, Leki, Magnus, Malacath, Mara, Mehrunes Dagon, Mephala, Molag Bal, Nocturnal, Rajhin, Shor, Stendarr, Stuhn, Syrabane, Talos, The Hist, Trinimac, Tsun, Vaermina, Xarxes, Y'ffre, Z'en, Zenithar | `PDV_QRM_Remiel.csv` | machine-verified; runtime open; **tester-release packaged** |
+| Caught Red Handed - Quest Expansion | `Caught Red Handed - Quest Expansion.esp` | 1 | 1 | 12 | Boethiah, Khenarthi, Kynareth, Leki, Mara, Molag Bal, Stendarr, Stuhn, Syrabane, Talos, The Hist, Tsun | `PDV_QRM_CaughtRedHandedQE.csv` | machine-verified |
+| Defeat the Dragon Cult | `Defeat the Dragon Cult.esp` | 1 | 1 | 7 | Arkay, Azura, Meridia, Stendarr, The Hist, Tu'whacca, Y'ffre | `PDV_QRM_DefeatTheDragonCult.csv` | machine-verified |
+| Destroy The Dark Brotherhood - Quest Expansion | `Destroy the Dark Brotherhood - Quest Expansion.esp` | 1 | 1 | 5 | Kyne, Mara, Molag Bal, Stendarr, Stuhn | `PDV_QRM_DestroyDarkBrotherhoodQE.csv` | machine-verified |
+| Destroy the Acolyte Priests | `Destroy the Acolyte Priests.esp` | 1 | 1 | 7 | Arkay, Azura, Meridia, Stendarr, The Hist, Tu'whacca, Y'ffre | `PDV_QRM_DestroyAcolytePriests.csv` | machine-verified |
+| Innocence Lost - Quest Expansion | `Innocence Lost - Quest Expansion.esp` | 1 | 4 | 74 | Akatosh, Alkosh, Auri-El, Baan Dar, Boethiah, Clavicus Vile, HoonDing, Julianos, Khenarthi, Kynareth, Leki, Malacath, Mara, Mehrunes Dagon, Mephala, Molag Bal, Namira, Nocturnal, Rajhin, Sheogorath, Shor, Sithis, Stendarr, Stuhn, Syrabane, Talos, The Hist, Tsun, Vaermina, Z'en, Zenithar | `PDV_QRM_InnocenceLostQE.csv` | machine-verified |
+| Penitus Oculatus | `Penitus_Oculatus.esp` | 10 | 11 | 136 | Akatosh, Alkosh, Auri-El, Baan Dar, Julianos, Kyne, Mara, Mehrunes Dagon, Mephala, Molag Bal, Namira, Nocturnal, Peryite, Rajhin, Sheogorath, Sithis, Stendarr, Stuhn, Talos, Tsun, Vaermina, Z'en, Zenithar | `PDV_QRM_PenitusOculatus.csv` | machine-verified |
+| Return Aegisbane | `ReturnAegisbane.esp` | 1 | 2 | 17 | Arkay, Auri-El, Azura, Baan Dar, Dibella, Khenarthi, Kynareth, Mara, Mephala, Nocturnal, Rajhin, Shor, The Hist, Tu'whacca, Xarxes, Z'en, Zenithar | `PDV_QRM_ReturnAegisbane.csv` | machine-verified |
+| Revealing Rune | `Revealing Rune.esp` | 1 | 1 | 4 | Dibella, Kynareth, Mara, The Hist | `PDV_QRM_RevealingRune.csv` | machine-verified |
+| Thieves Guild For Good Guys | `TCBM.esp` | 6 | 17 | 106 | Akatosh, Baan Dar, Dibella, Khenarthi, Kynareth, Kyne, Mara, Mephala, Molag Bal, Nocturnal, Rajhin, Stendarr, Stuhn, Syrabane, Talos, The Hist, Tsun, Z'en, Zenithar | `PDV_QRM_ThievesGuildForGoodGuys.csv` | machine-verified; runtime open; **tester-release packaged** |
+| There Is No Umbra - Chapter III | `FloatingSwordFollower.esp` | 11 | 49 | 420 | Akatosh, Alkosh, Arkay, Auri-El, Azura, Baan Dar, Boethiah, Clavicus Vile, Dibella, Hermaeus Mora, Hircine, HoonDing, Julianos, Khenarthi, Kynareth, Kyne, Leki, Magnus, Malacath, Mara, Mehrunes Dagon, Mephala, Meridia, Molag Bal, Namira, Nocturnal, Peryite, Rajhin, Sheogorath, Shor, Sithis, Stendarr, Stuhn, Syrabane, Talos, The Hist, Trinimac, Tsun, Tu'whacca, Vaermina, Xarxes, Y'ffre, Z'en, Zenithar | `PDV_QRM_ThereIsNoUmbra3.csv` | machine-verified; runtime open; **tester-release packaged** |
+| Heart of the Reach | `HeartOfTheReach.esp` | 1 | 2 | 12 | Dibella, Hircine, Khenarthi, Kynareth, Kyne, Mara, The Hist, Y'ffre | `PDV_QRM_HeartOfTheReach.csv` | machine-verified |
+| Sleepwalking Into A Nightmare | `NightmarePlane.esp` | 1 | 2 | 29 | Akatosh, Arkay, Auri-El, Baan Dar, Boethiah, Dibella, HoonDing, Khenarthi, Kynareth, Kyne, Mara, Molag Bal, Rajhin, Shor, Stendarr, Stuhn, Syrabane, Talos, The Hist, Tsun, Vaermina | `PDV_QRM_SleepwalkingNightmare.csv` | machine-verified |
+| Legends of Aetherium | `LegendsOfAetherium.esp` | 1 | 1 | 9 | Auri-El, Baan Dar, Boethiah, HoonDing, Kyne, Malacath, Shor, Talos, Tsun | `PDV_QRM_LegendsOfAetherium.csv` | machine-verified |
+| Moon and Star | `MoonAndStar_MAS.esp` | 5 | 17 | 125 | Alkosh, Auri-El, Baan Dar, Boethiah, Dibella, Hircine, HoonDing, Khenarthi, Kynareth, Kyne, Leki, Malacath, Mara, Mehrunes Dagon, Mephala, Molag Bal, Rajhin, Shor, Sithis, Stendarr, Stuhn, Syrabane, Talos, The Hist, Trinimac, Tsun, Vaermina, Z'en, Zenithar | `PDV_QRM_MoonAndStar.csv` | machine-verified; runtime open; **tester-release packaged** |
+| Project AHO | `Dwarfsphere.esp` | 11 | 19 | 162 | Akatosh, Alkosh, Arkay, Auri-El, Azura, Baan Dar, Boethiah, Clavicus Vile, Dibella, Hermaeus Mora, Hircine, HoonDing, Julianos, Khenarthi, Kynareth, Kyne, Leki, Magnus, Malacath, Mara, Mehrunes Dagon, Mephala, Meridia, Molag Bal, Namira, Nocturnal, Rajhin, Sanguine, Sheogorath, Shor, Sithis, Stendarr, Stuhn, Syrabane, Talos, Trinimac, Tsun, Tu'whacca, Vaermina, Xarxes, Y'ffre, Z'en, Zenithar | `PDV_QRM_ProjectAHO.csv` | machine-verified |
+| The Gray Cowl of Nocturnal | `Gray Fox Cowl.esm` | 7 | 10 | 75 | Akatosh, Alkosh, Arkay, Auri-El, Azura, Baan Dar, Boethiah, Hircine, HoonDing, Julianos, Khenarthi, Kynareth, Kyne, Leki, Magnus, Malacath, Mara, Mehrunes Dagon, Mephala, Meridia, Molag Bal, Namira, Nocturnal, Rajhin, Sheogorath, Shor, Sithis, Stendarr, Stuhn, Syrabane, Talos, Trinimac, Tsun, Tu'whacca, Vaermina, Xarxes, Y'ffre, Z'en, Zenithar | `PDV_QRM_GrayCowlOfNocturnal.csv` | machine-verified |
+| The Sinister Seven | `The_Sinister_Seven.esp` | 1 | 2 | 28 | Alkosh, Auri-El, Baan Dar, Boethiah, Hircine, HoonDing, Kyne, Leki, Malacath, Mehrunes Dagon, Shor, Talos, Trinimac, Tsun | `PDV_QRM_SinisterSeven.csv` | machine-verified |
 | Unslaad | `Unslaad.esm` | 4 | 4 | 7 | Akatosh, Alkosh, Baan Dar, Stuhn, Tsun | `PDV_QRM_Unslaad.csv` | runtime open |
 | Vigilant | `Vigilant.esm` | 18 | 21 | 32 | Akatosh, Alkosh, Arkay, Azura, Baan Dar, Julianos, Khenarthi, Kynareth, Kyne, Molag Bal, Stendarr, Zenithar | `PDV_QRM_Vigilant.csv` | runtime open |
 | Wyrmstooth | `Wyrmstooth.esp` | 6 | 12 | 76 | Alkosh, Arkay, Azura, Baan Dar, Boethiah, Clavicus Vile, Dibella, HoonDing, Khenarthi, Kynareth, Kyne, Leki, Malacath, Mara, Mephala, Meridia, Nocturnal, Rajhin, Shor, Stendarr, Stuhn, Syrabane, Talos, Trinimac, Tsun, Tu'whacca, Y'ffre, Z'en, Zenithar | `PDV_QRM_Wyrmstooth.csv` | runtime open |
@@ -161,10 +226,25 @@ Four of these eleven are split with the core matrix -- see
 
 | Mod | Depends on | Quests | Cells | Rows | Deities | Source CSV | Proof state |
 |---|---|---:|---:|---:|---|---|---|
+| Gore - A Companion Mod | `GORE.esp` | 3 | 4 | 39 | Baan Dar, Boethiah, Dibella, HoonDing, Khenarthi, Kynareth, Kyne, Leki, Mara, Mehrunes Dagon, Mephala, Molag Bal, Rajhin, Shor, Sithis, Stendarr, Stuhn, Syrabane, Talos, The Hist, Tsun, Vaermina | `PDV_QRM_Gore.csv` | machine-verified; runtime open; **tester-release packaged** |
+| Interesting NPCs SE (3DNPC) | `3DNPC.esp` | 19 | 27 | 269 | Akatosh, Arkay, Auri-El, Azura, Baan Dar, Boethiah, Clavicus Vile, Dibella, Hermaeus Mora, Hircine, HoonDing, Julianos, Khenarthi, Kynareth, Kyne, Leki, Magnus, Malacath, Mara, Mehrunes Dagon, Mephala, Meridia, Molag Bal, Nocturnal, Rajhin, Sheogorath, Shor, Sithis, Stendarr, Stuhn, Syrabane, Talos, The Hist, Trinimac, Tsun, Tu'whacca, Vaermina, Xarxes, Y'ffre, Z'en, Zenithar | `PDV_QRM_InterestingNPCs.csv` | machine-verified; runtime open; **tester-release packaged** |
+| Khajiit Will Follow | `KhajiitWillFollow.esp` | 6 | 8 | 46 | Alkosh, Arkay, Auri-El, Azura, Baan Dar, Dibella, Hermaeus Mora, Hircine, HoonDing, Julianos, Khenarthi, Kynareth, Kyne, Leki, Magnus, Malacath, Mara, Mehrunes Dagon, Molag Bal, Shor, Stendarr, Stuhn, Syrabane, Talos, The Hist, Trinimac, Tsun, Tu'whacca, Vaermina, Xarxes, Z'en, Zenithar | `PDV_QRM_KhajiitWillFollow.csv` | machine-verified; runtime open; **tester-release packaged** |
 | M'rissi's Tails of Troubles | `MrissiTailOfTroubles.esp` | 2 | 3 | 10 | Akatosh, Dibella, Malacath, Mara, Stuhn, Trinimac, Z'en, Zenithar | `PDV_QRM_Mrissi.csv` | runtime open |
+| Merlin the Corgi | `Merlin.esp` | 1 | 1 | 1 | Sheogorath | `PDV_QRM_MerlinTheCorgi.csv` | machine-verified; runtime open; **tester-release packaged** |
+| Redcap the Riekling | `FA01RedcapFollower.esp` | 6 | 6 | 62 | Akatosh, Alkosh, Arkay, Auri-El, Azura, Baan Dar, Boethiah, Hircine, HoonDing, Khenarthi, Kynareth, Kyne, Leki, Malacath, Mara, Mehrunes Dagon, Mephala, Molag Bal, Nocturnal, Sanguine, Sheogorath, Shor, Stendarr, Stuhn, Syrabane, Talos, The Hist, Trinimac, Tsun, Tu'whacca, Xarxes, Y'ffre, Z'en, Zenithar | `PDV_QRM_RedcapTheRiekling.csv` | machine-verified; runtime open; **tester-release packaged** |
+| Sa'chil - Custom Voiced Khajiit Follower | `SU04SachilFollower.esp` | 10 | 10 | 55 | Akatosh, Baan Dar, Boethiah, Clavicus Vile, Dibella, Khenarthi, Kynareth, Malacath, Mara, Mephala, Molag Bal, Nocturnal, Rajhin, Stendarr, Stuhn, Syrabane, Talos, The Hist, Tsun, Z'en, Zenithar | `PDV_QRM_Sachil.csv` | machine-verified; runtime open; **tester-release packaged** |
 | Song of the Green - Auri | `018Auri.esp` | 1 | 1 | 3 | Kynareth, Kyne, Y'ffre | `PDV_QRM_Auri.csv` | runtime open |
+| The Thalmor's Shadow - Taliesin | `00Taliesin.esp` | 1 | 1 | 4 | Dibella, Kynareth, Mara, The Hist | `PDV_QRM_Taliesin.csv` | machine-verified; runtime open; **tester-release packaged** |
 | Thogra | `DK_Thogra.esp` | 3 | 4 | 24 | Akatosh, Dibella, HoonDing, Leki, Malacath, Mara, Molag Bal, Shor, Sithis, Stendarr, Stuhn, Talos, Trinimac, Tsun, Z'en | `PDV_QRM_Thogra.csv` | runtime open |
+| Val Serano - Pirate Follower and Quest Adventure | `AX ValSerano.esp` | 17 | 31 | 147 | Akatosh, Auri-El, Azura, Baan Dar, Boethiah, Clavicus Vile, Dibella, Hermaeus Mora, HoonDing, Julianos, Khenarthi, Kynareth, Kyne, Magnus, Malacath, Mara, Mephala, Meridia, Molag Bal, Namira, Nocturnal, Rajhin, Sheogorath, Shor, Sithis, Stendarr, Stuhn, Syrabane, Talos, The Hist, Trinimac, Tsun, Vaermina, Xarxes, Z'en, Zenithar | `PDV_QRM_ValSerano.csv` | machine-verified; runtime open; **tester-release packaged** |
 | Xelzaz | `BPUFXelzazFollower.esp` | 2 | 2 | 12 | Auri-El, Baan Dar, Hermaeus Mora, Julianos, Magnus, Mephala, Nocturnal, Rajhin, Sanguine, Sheogorath, Xarxes, Zenithar | `PDV_QRM_Xelzaz.csv` | runtime open |
+
+B06 audited eight JoJ followers. Seven options were approved; Hoth was directly read and ruled
+SILENT, so it correctly has no channel or manifest option. B07 then approved Interesting NPCs,
+closing the JoJ worklist at 37/37. All eight approved follower options from B06-B07 are present
+in the 2026-08-11 tester-release archive. Runtime routing and presentation remain post-release
+tester evidence. The Hist rows remain reachable only by an Argonian player through the existing
+native/foreign profile rule.
 
 #### Bardic Life
 
@@ -266,7 +346,7 @@ so a player who already destroyed artifacts gets no retroactive award.
 
 ## G3 -- Covered by the CORE mod, no separate patch
 
-`references/authoring/PDV_QuestReactionMatrix_Full.csv` -- **2144 rows across 157
+`references/authoring/PDV_QuestReactionMatrix_Full.csv` -- **2148 rows across 158
 distinct quest editor ids** -- ships inside base `Devotion.esp`. It is generated
 by `tools/pdv_quest_tranche_merge.mjs` from the `PDV_QuestReactionMatrix_Tranche*`
 files; edit a tranche, never `Full.csv`.
@@ -529,12 +609,12 @@ detected.
 
 | Source | Path | Authority for |
 |---|---|---|
-| PatchHub manifest | `references/authoring/PDV_QuestPatchHub.manifest.json` | The 46 options: name, dependency, description, folders, category |
+| PatchHub manifest | `references/authoring/PDV_QuestPatchHub.manifest.json` | The 77 options: name, dependency, description, folders, category |
 | FOMOD installer | `dist/PDV_QuestModPatches_FOMOD/fomod/ModuleConfig.xml` | What each option actually installs, and its dependency gate |
 | Shipped channels | `dist/PDV_QuestModPatches_FOMOD/common/<Mod>/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/*.json` | What a patch really reacts to and awards |
-| Per-mod source CSVs | `references/authoring/patches/PDV_QRM_*.csv` | Authoring intent and citations (44 files; slug does not always match the hub folder) |
+| Per-mod source CSVs | `references/authoring/patches/PDV_QRM_*.csv` | Authoring intent and citations (75 files; slug does not always match the hub folder) |
 | Core matrix | `references/authoring/PDV_QuestReactionMatrix_Full.csv` | G3. **Generated** -- edit the `Tranche*` files |
 | KID | `mod-data/SKSE/Plugins/KeywordItemDistributor/PDV_GreenPact_KID.ini` | G4 |
 | BOS swap | `dist/PDV_QuestModPatches_FOMOD/common/DaedricShrinesAIO/SKSE/Plugins/BaseObjectSwapper/PDV_DaedricShrinesAIO_SWAP.ini` | G5 |
 | Papyrus | `live-source/Scripts/Source/{PDV_PlayerEvents,PDV__ManagerQuest,PDV_Origin}.psc` | G6 |
-| Packaging decisions | `references/authoring/PDV_ModPackaging_StateAuthority.md` | Which options are experimental vs supported |
+| Packaging decisions | `references/authoring/PDV_ModPackaging_StateAuthority.md` | Current tester-release package state and its proof boundary |

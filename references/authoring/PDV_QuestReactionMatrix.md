@@ -48,6 +48,7 @@ assigned separately (see Part C), not encoded in the tag.
 | `honorable_duel` | Met a challenge one-on-one; trial of arms. |
 | `protect_the_weak` | Defended/rescued the vulnerable; shielded the innocent. |
 | `defend_kin_home` | Defended your people, stronghold, or homeland. |
+| `self_sacrifice` | Freely accepted grave personal loss or death so others would be spared. |
 | `cowardice` | Fled a duty, abandoned a charge, took the craven path. |
 
 ### Law, order, defiance, chaos
@@ -55,6 +56,8 @@ assigned separately (see Part C), not encoded in the tag.
 |---|---|
 | `uphold_law_justice` | Brought a wrongdoer to lawful justice; upheld order. |
 | `civic_service` | Served the community/empire/hold concretely. |
+| `free_wrongfully_imprisoned` | Freed someone held through framing, tyranny, or manifest injustice. |
+| `reject_criminality` | Refused recruitment into, or material assistance for, a criminal enterprise. |
 | `defy_tyranny_talos` | Defied the Thalmor/Concordat; bore the Talos/Nord cause. |
 | `serve_empire_order` | Upheld Imperial/lawful authority and its institutions. |
 | `sow_chaos_madness` | Spread madness, disorder, or wanton ruin. |
@@ -73,6 +76,7 @@ assigned separately (see Part C), not encoded in the tag.
 | `serve_a_daedra:<prince>` | Did a Prince's bidding / took its bargain (named). |
 | `acquire_daedric_artifact:<prince>` | Claimed a Prince's artifact. |
 | `destroy_reject_daedra:<prince>` | Refused/destroyed a Daedric bargain or artifact. |
+| `destroy_daedric_threat` | Destroyed or shut down a demonstrably Daedric threat whose Prince was not established. |
 | `forbidden_knowledge` | Sought proscribed lore (Black Books, Apocrypha). |
 
 ### Theft, secrecy, cunning
@@ -80,8 +84,11 @@ assigned separately (see Part C), not encoded in the tag.
 |---|---|
 | `theft_burglary` | Stole, robbed, picked locks/pockets for gain. |
 | `deceit` | Lied, tricked, framed, blackmailed, manipulated. |
+| `tactical_distraction` | Deliberately diverted attention so an ally or plan could proceed. |
 | `keep_secret` | Guarded a secret/conspiracy; wove hidden influence. |
 | `expose_betray_secret` | Clumsily exposed or sold out a kept secret. |
+| `recover_stolen_keepsake` | Recovered and returned personal property stolen from another. |
+| `contraband_trade` | Carried or exchanged illegal goods as payment or commerce. |
 
 ### Mercy, love, the hearth
 | Tag | Meaning |
@@ -89,7 +96,11 @@ assigned separately (see Part C), not encoded in the tag.
 | `charity` | Gave to the poor, the orphaned, the begging. |
 | `heal_comfort` | Healed/cured the sick; comforted grief. |
 | `marriage_family` | Wed, adopted, reconciled, kept the hearth. |
+| `friendship` | Formed, deepened, or restored a meaningful bond of friendship or comradeship. |
+| `kindness_to_child` | Gave a child care, time, or joy for the child's own sake. |
+| `abuse_companion` | Repeatedly harmed or cruelly dominated a trusted companion. |
 | `aesthetic_devotion` | Created/performed/adorned beauty; honored art, music, the sublime. *(added 2026-06-08 for Dibella; previously no primitive for her domain)* |
+| `honor_divine` | Venerated the gods as gods: pilgrimage, shrine rites, penance, an act of piety owed to them rather than to any one domain. *(added 2026-08-09. It had already been in use on 16 authored cells for a year -- The Pilgrim's Path nine-shrine pilgrimage, six VIGILANT endings, DAc0da -- with no Part A entry and no Part B profile, so it matched nothing and fanned out to no one. Part A is the vocabulary; a word this heavily used belonged in it. NOT a substitute for a domain tag: a quest is `honor_divine` only when the act honors the god AS a god, which is why the pilgrimage row pays all nine and a shrine-adjacent favor quest does not.)* |
 
 ### Work, craft, trade
 | Tag | Meaning |
@@ -110,11 +121,13 @@ assigned separately (see Part C), not encoded in the tag.
 |---|---|
 | `disciplined_study` | Pursued lore/magic with restraint and rigor. |
 | `reckless_magic` | Used the arts for spectacle, ruin, or careless harm. |
+| `arcane_restraint` | Refused or renounced dangerous supernatural knowledge, power, or uncontrolled magic. |
 
 ### Indulgence, excess, disease
 | Tag | Meaning |
 |---|---|
 | `revel_indulge` | Feasted, drank, gave in to pleasure/excess. |
+| `embrace_whimsy` | Freely welcomed an improbable or playfully impossible turn of events. |
 | `embrace_lycanthropy` | Took the beast-blood (Hircine's gift / curse). |
 | `embrace_vampirism` | Took the blood (Molag Bal's gift / curse). |
 | `spread_order_pestilence` | Served plague/decay-as-order (Peryite). |
@@ -140,36 +153,36 @@ to most gods).
 ### Aedric / Divines (shared: Imperial owns; Nord & Breton reuse)
 
 **Akatosh** — time, covenant, lawful order, dragons.
-- approve: `serve_empire_order`(S), `keep_oath`(S), `uphold_law_justice`(m), `disciplined_study`(m)
+- approve: `serve_empire_order`(S), `keep_oath`(S), `uphold_law_justice`(m), `reject_criminality`(m), `disciplined_study`(m), `honor_divine`(C)
 - disapprove: `break_oath_betray`(S), `sow_chaos_madness`(S), `serve_a_daedra:*`(m)
 - indifferent: theft, the hunt, craft, romance.
 - anchor: Chief of the Nine; the Covenant; Dragon of Time. (UESP: Akatosh)
 
 **Stendarr** — mercy, righteous justice, the weak, vigil vs Daedra/undead.
-- approve: `mercy_spare`(C), `protect_the_weak`(C), `slay_undead`(S), `destroy_reject_daedra:*`(S), `uphold_law_justice`(S), `charity`(m)
-- disapprove: `kill_the_helpless`(C), `murder_treacherous`(S), `serve_a_daedra:*`(S), `ritual_sacrifice`(S)
+- approve: `mercy_spare`(C), `protect_the_weak`(C), `free_wrongfully_imprisoned`(C), `self_sacrifice`(C), `slay_undead`(S), `destroy_reject_daedra:*`(S), `destroy_daedric_threat`(C), `uphold_law_justice`(S), `reject_criminality`(S), `charity`(m), `kindness_to_child`(m), `honor_divine`(C)
+- disapprove: `kill_the_helpless`(C), `murder_treacherous`(S), `serve_a_daedra:*`(S), `ritual_sacrifice`(S), `contraband_trade`(m), `abuse_companion`(C)
 - anchor: God of Mercy; the Vigilants. (UESP: Stendarr)
 
 **Mara** — love, compassion, charity, the hearth, mercy.
-- approve: `heal_comfort`(C), `charity`(C), `marriage_family`(C), `mercy_spare`(S), `protect_the_weak`(m)
-- disapprove: `murder_treacherous`(m), `ritual_sacrifice`(S), `kill_the_helpless`(m)
+- approve: `heal_comfort`(C), `charity`(C), `marriage_family`(C), `friendship`(C), `kindness_to_child`(C), `self_sacrifice`(C), `mercy_spare`(S), `protect_the_weak`(m), `honor_divine`(C)
+- disapprove: `murder_treacherous`(m), `ritual_sacrifice`(S), `kill_the_helpless`(m), `abuse_companion`(C)
 - indifferent: theft, law, craft, the hunt.
 - anchor: Mother-Goddess; Amulet of Mara. (UESP: Mara)
 
 **Arkay** — life/death cycle, burial, the vigil against undeath.
-- approve: `honor_the_dead`(C), `slay_undead`(C), `cure_undeath`(S)
+- approve: `honor_the_dead`(C), `slay_undead`(C), `cure_undeath`(S), `honor_divine`(C)
 - disapprove: `necromancy`(C), `desecrate_the_dead`(C), `embrace_vampirism`(S), `ritual_sacrifice`(m)
 - indifferent: trade, romance, law, the hunt.
 - anchor: Keeper of the cycle; Halls of the Dead. (UESP: Arkay)
 
 **Zenithar** — honest work, commerce, craft, fair dealing.
-- approve: `honest_labor_trade`(C), `master_craft_forge`(S), `uphold_law_justice`(m)
-- disapprove: `theft_burglary`(S), `exploit_cheat`(C)
+- approve: `honest_labor_trade`(C), `master_craft_forge`(S), `recover_stolen_keepsake`(m), `uphold_law_justice`(m), `reject_criminality`(S), `honor_divine`(C)
+- disapprove: `theft_burglary`(S), `exploit_cheat`(C), `contraband_trade`(C)
 - indifferent: killing, the dead, magic, the wild.
 - anchor: God of Work and Commerce. (UESP: Zenithar)
 
 **Dibella** — beauty, love, art, the sublime.
-- approve: `aesthetic_devotion`(C), `heal_comfort`(S), `charity`(m), `marriage_family`(m)
+- approve: `aesthetic_devotion`(C), `heal_comfort`(S), `charity`(m), `marriage_family`(m), `honor_divine`(C)
 - disapprove: `kill_the_helpless`(m)  *(she recoils from cruelty to the innocent, not from war)*
 - indifferent: MOST killing, theft, law, the dead, craft.
 - anchor: Goddess of Beauty and Love. (UESP: Dibella). NOTE: thin on QUESTS by design
@@ -177,19 +190,19 @@ to most gods).
   the faucet/adornment + shrine + Agent-of-Dibella layers (Part D), not the quest table.
 
 **Julianos** — wisdom, logic, law, lore, disciplined magic.
-- approve: `disciplined_study`(C), `uphold_law_justice`(S), `forbidden_knowledge`(m, *pursuit of truth, double-edged*)
+- approve: `disciplined_study`(C), `arcane_restraint`(S), `uphold_law_justice`(S), `forbidden_knowledge`(m, *pursuit of truth, double-edged*), `honor_divine`(C)
 - disapprove: `sow_chaos_madness`(S), `reckless_magic`(S)
 - indifferent: the hunt, romance, trade, the dead.
 - anchor: God of Wisdom and Logic. (UESP: Julianos)
 
 **Kynareth** — sky, wind, nature, the traveler, life.
-- approve: `honor_the_wild`(C), `protect_the_weak`(m), `heal_comfort`(m)
+- approve: `honor_the_wild`(C), `protect_the_weak`(m), `heal_comfort`(m), `honor_divine`(C)
 - disapprove: `defile_nature`(C), `necromancy`(m)
 - indifferent: trade, law, theft, the dead.
 - anchor: Goddess of the Heavens/Nature; the Gildergreen. (UESP: Kynareth)
 
 **Talos** — heroism, defiance of the Thalmor, the Nord/Imperial cause, the Voice.
-- approve: `defy_tyranny_talos`(C), `kill_honorable_combat`(S), `prove_by_struggle`(S), `protect_the_weak`(m), `honorable_duel`(m)
+- approve: `defy_tyranny_talos`(C), `kill_honorable_combat`(S), `prove_by_struggle`(S), `self_sacrifice`(S), `protect_the_weak`(m), `honorable_duel`(m), `honor_divine`(C)
 - disapprove: `cowardice`(S), `murder_treacherous`(S), `kill_the_helpless`(m), `assassination_contract`(m) *(compliance/submission to the Concordat scores nothing; never a gain. Treachery/assassination added 2026-07-09 — the Hero-god of Man reviles cold-blood murder and regicide, mirroring Shor's disapprove.)*
 - indifferent: theft, the dead, craft, romance.
 - anchor: Hero-god of Man; the Talos ban. (UESP: Talos). FILTERED for Imperials by
@@ -215,12 +228,12 @@ to most gods).
 - anchor: Hero-god/King of Sovngarde. (UESP/Imperial Library: Shor/Lorkhan)
 
 **Tsun** — trials, endurance, the shield-thane at the whalebone bridge.
-- approve: `prove_by_struggle`(C), `kill_honorable_combat`(S), `protect_the_weak`(m, *shield the weaker*)
+- approve: `prove_by_struggle`(C), `kill_honorable_combat`(S), `self_sacrifice`(S), `protect_the_weak`(m, *shield the weaker*)
 - disapprove: `cowardice`(C), `murder_treacherous`(S), `kill_the_helpless`(m), `assassination_contract`(m)
 - anchor: Shield-Thane of Shor; god of trials. (Imperial Library: Tsun) *(Treachery/assassination added 2026-07-09 — the shield-gate keeper judges assassination the antithesis of honorable combat, matching his king Shor.)*
 
 **Stuhn** — mercy to the yielding, ransom, just spoils, the honored bond.
-- approve: `mercy_spare`(C), `keep_oath`(S), `protect_the_weak`(S), `uphold_law_justice`(m)
+- approve: `mercy_spare`(C), `keep_oath`(S), `protect_the_weak`(S), `free_wrongfully_imprisoned`(S), `uphold_law_justice`(m)
 - disapprove: `kill_the_helpless`(C), `break_oath_betray`(S)
 - anchor: Shield-Thane; god of ransom/justice. (Imperial Library: Stuhn)
 
@@ -232,7 +245,7 @@ to most gods).
 - anchor: Elven Akatosh; the Chantry of Auri-El. (UESP: Auriel)
 
 **Magnus** — the architect of magic, disciplined arcane mastery.
-- approve: `disciplined_study`(C), `forbidden_knowledge`(m, *recovered, not abused*)
+- approve: `disciplined_study`(C), `arcane_restraint`(C), `forbidden_knowledge`(m, *recovered, not abused*)
 - disapprove: `reckless_magic`(C), `sow_chaos_madness`(m)
 - indifferent: killing, the dead, trade, romance.
 - anchor: God of magic/sky; the Eye of Magnus. (UESP: Magnus)
@@ -253,8 +266,8 @@ to most gods).
   authored row-by-row without a Part B profile, which made him invisible to
   cross-gen.)
 - approve: `protect_the_weak`(C, *the warding god: shields raised over the
-  defenseless*), `disciplined_study`(C), `heal_comfort`(m),
-  `destroy_reject_daedra:*`(m, *wards against the invaders*)
+  defenseless*), `disciplined_study`(C), `arcane_restraint`(S), `heal_comfort`(m),
+  `destroy_reject_daedra:*`(m, *wards against the invaders*), `destroy_daedric_threat`(m)
 - disapprove: `necromancy`(S), `reckless_magic`(S)
 - indifferent: trade, romance, the hunt.
 - anchor: Apprentices' God, ally-god of the mages; his ring warded the faithful
@@ -268,12 +281,12 @@ to most gods).
 - anchor: Bosmeri forest-god; the Green Pact. (UESP: Y'ffre)
 
 **Z'en** — the trader-god, debt, balance, proportionate redress.
-- approve: `honest_labor_trade`(C), `uphold_law_justice`(S, *proportionate redress*), `keep_oath`(m)
-- disapprove: `exploit_cheat`(S), `break_oath_betray`(m)
+- approve: `honest_labor_trade`(C), `recover_stolen_keepsake`(S), `uphold_law_justice`(S, *proportionate redress*), `reject_criminality`(m), `keep_oath`(m)
+- disapprove: `exploit_cheat`(S), `break_oath_betray`(m), `contraband_trade`(S)
 - anchor: God of toil/payment. (Imperial Library: Z'en)
 
 **Baan Dar** — the Bandit God, trickster, the road, reversal of fortune.
-- approve: `deceit`(C, *clever, not cruel*), `theft_burglary`(S, *from the strong/unjust*), `prove_by_struggle`(m, *survival/reversal*)
+- approve: `deceit`(C, *clever, not cruel*), `tactical_distraction`(C), `theft_burglary`(S, *from the strong/unjust*), `free_wrongfully_imprisoned`(m, *reversal of unjust power*), `contraband_trade`(m), `prove_by_struggle`(m, *survival/reversal*)
 - disapprove: `kill_the_helpless`(m)
 - anchor: Pariah/Bandit God (Khajiit + Bosmer). (UESP: Baan Dar)
 
@@ -285,7 +298,7 @@ to most gods).
 - anchor: Good Daedra / Mother of the Rose. (UESP: Azura)
 
 **Khenarthi** — the wind, the road, the traveler, mercy on the road, the soul-ferry.
-- approve: `protect_the_weak`(S, *aid the stranded*), `honor_the_wild`(m), `honor_the_dead`(m, *bears worthy dead on the winds to the Sands Behind the Stars*)
+- approve: `protect_the_weak`(S, *aid the stranded*), `self_sacrifice`(m), `honor_the_wild`(m), `honor_the_dead`(m, *bears worthy dead on the winds to the Sands Behind the Stars*)
 - disapprove: `kill_the_helpless`(m)
 - anchor: Khajiit wind/sky goddess and death-guide (Kynareth-adjacent; ferries
   the worthy dead). (Imperial Library). *(honor_the_dead added 2026-06-10 —
@@ -328,9 +341,17 @@ to most gods).
 ### Argonian
 
 **Hist** — the trees, the People, memory, the marsh, communion. (substrate)
-- approve: `defend_kin_home`(C, *the People*), `honor_the_wild`(S), `honor_the_dead`(m)
-- disapprove: `defile_nature`(S), `break_oath_betray`(m, *abandon the People*)
+- approve: `defend_kin_home`(C, *the People*), `protect_the_weak`(S, *community solidarity IS the exile's primary religious practice: "helping Argonians anywhere in Skyrim matters religiously because community partially buffers Hist absence". Added 2026-08-09. SCOPE, ruled 2026-08-09 after 14 rows were cut or held on a misreading: this is NOT filtered to Argonian victims. The Hist is NATIVE to Argonian and FOREIGN to every other race, so it is only ever read by an Argonian player -- and the Hist is constitutive of what an Argonian IS rather than a patron they chose, so their conduct anywhere is legible to it. The parenthetical above names the EMPHASIS, not a filter, and cross_gen cannot see a parenthetical either way.*), `friendship`(S), `self_sacrifice`(S), `kindness_to_child`(m), `honor_the_wild`(S), `cure_undeath`(S, *a soul withheld from the cycle, restored to it. Undeath is the precise inverse of Hist soul-return, so curing one is the sharpest positive act available in Skyrim. Added 2026-08-09.*), `honor_the_dead`(m), `heal_comfort`(m, *tending the People. Added 2026-08-09.*), `slay_undead`(m, *ends a soul's imprisonment in undeath -- deliberately (m) and not (S): the Hist is not a vigil-against-undeath deity like Arkay or Tu'whacca, and draugr-clearing must not read as Argonian devotion. Added 2026-08-09.*)
+- disapprove: `defile_nature`(S), `necromancy`(S, *binding a soul that belongs to the Hist and owes it a return. The one act that directly steals from the trees. Added 2026-08-09.*), `break_oath_betray`(m, *abandon the People*), `abuse_companion`(m)
 - anchor: The Hist; Argonian collective. (UESP: Hist)
+- exile note: Argonians in Skyrim are cut off from the trees, so the profile deliberately
+  weights COMMUNITY and the SOUL-CYCLE above the marsh. Both are lore-load-bearing and
+  neither was reachable before: the profile encoded only the wild and a sliver of kinship,
+  and drew from 55 quest-stages against a 44-deity median of ~58 rows. Widened 2026-08-09
+  after a per-race coverage pass put Argonian last of ten at 36 rows/god. NOT widened into a
+  generic benevolent god -- `charity` and `marriage_family` were considered and refused,
+  because the locked architecture is explicit that this is "Hist/community/Sithis exile
+  architecture, not pantheon worship".
 
 **Sithis** — the Void, the original night, death-as-change, the Brotherhood.
 - approve: `assassination_contract`(C), `murder_treacherous`(S), `embrace... void`(m)
@@ -344,15 +365,87 @@ Each Prince also implicitly approves its **own** `serve_a_daedra:<self>` and
 Azura, Boethiah, Mephala, Malacath share their record with the race-deity profiles
 above (cross-referenced, not duplicated).
 
+#### Canonical Prince slugs
+
+The suffix every `serve_a_daedra:`, `destroy_reject_daedra:` and
+`acquire_daedric_artifact:` tag must carry, one row per Prince. **This table is the
+authority** — `tools/lib/pdv_matrix_vocab.mjs` parses it, and `tools/pdv_qrm_lint.mjs`
+fails any row whose slug is not in it.
+
+WHY IT IS DECLARED HERE AND NOT DERIVED. There is no rule that maps a Prince's display
+name to its slug: `Hermaeus Mora` concatenates to `hermaeusmora` and `Molag Bal` to
+`molagbal`, but `Clavicus Vile` is `clavicus`, not `clavicusvile`. Any generator would
+have to special-case the exception, so the set is written down instead.
+
+WHY IT IS NOT HARVESTED FROM THE ROWS. Until 2026-08-09 the slug vocabulary was
+harvested from the shipped data as well as from Part B, which made a typo self-legalising
+the moment it was committed — the harvest learned the typo, then validated it. A wrong
+slug matches no profile, so the row fans out to nobody and is invisible to the
+paired-equity and signal-floor audits, silently and with no error. The vocabulary now
+comes from this table only.
+
+| Prince | slug |
+| --- | --- |
+| Azura | `azura` |
+| Boethiah | `boethiah` |
+| Clavicus Vile | `clavicus` |
+| Hermaeus Mora | `hermaeusmora` |
+| Hircine | `hircine` |
+| Malacath | `malacath` |
+| Mehrunes Dagon | `mehrunesdagon` |
+| Mephala | `mephala` |
+| Meridia | `meridia` |
+| Molag Bal | `molagbal` |
+| Namira | `namira` |
+| Nocturnal | `nocturnal` |
+| Peryite | `peryite` |
+| Sanguine | `sanguine` |
+| Sheogorath | `sheogorath` |
+| Vaermina | `vaermina` |
+
+*(Table added 2026-08-09 by the slug-normalisation pass. `Mehrunes Dagon` shipped as
+BOTH `dagon` — Tranche1/Tranche5, the older and more numerous form — and
+`mehrunesdagon` — the CreationClub tranche of 2026-08-07. Normalised to
+`mehrunesdagon`, following the two-word precedent `molagbal`/`hermaeusmora` that Part B
+already declares. `clavicus` is kept as the one first-word short form because Part B has
+always declared it that way and `clavicus_vile` was a logged authoring bug.)*
+
+#### The faucet lane uses these same slugs
+
+The Part D faucet table (`PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv`) is a
+repeatable-activity table, not a quest-outcome table, and it carried
+`serve_a_daedra:molag_bal` / `serve_a_daedra:mehrunes_dagon` against the matrix's
+`molagbal` / `mehrunesdagon` until 2026-08-09. Both were normalised to the roster
+spelling across the CSV, the `FAUCET_FORM_LISTS` keys in
+`pdv_quest_matrix_compile.mjs`, and the exact-match string literals in
+`PDV_PlayerEvents.psc`, then recompiled.
+
+THE REASON IS CONSISTENCY, NOT A BUG. It is tempting to read
+`MarkQuestReactionFaucet`'s `PDV.QuestReaction.Faucet.<deity>.<tag>` cap key and conclude
+that the two spellings competed for one daily bucket. They did not: that function is
+reached only via `ApplyDeityReaction(..., isFaucet = True, ...)`, which is `True` at
+exactly one call site, and every quest-row path passes `False`. The cap key space is
+faucet-only. The rename was behaviour-neutral; what it bought is a single roster the lint
+can enforce. See `PDV_FaucetSlugNormalisation_2026-08-09.md`, which records the wrong
+reading too so it is not rediscovered as a bug.
+
+ONE THING THE FAUCET LANE MAY DO THAT QUEST ROWS MAY NOT: compound an act as
+`<slug>_<qualifier>`. `serve_a_daedra:sheogorath_fire` — firing the Wabbajack, as against
+`serve_a_daedra:sheogorath` for merely bearing it — is a distinct act that deliberately
+shares Sheogorath's bucket through `FAUCET_CAP_TAG_ALIASES`. `pdv_qrm_lint.mjs` checks
+faucet slugs under that looser rule and quest rows under exact match; the compound still
+has to resolve to a real Prince, which is what rejects `molag_bal` (base "molag") and
+`mehrunes_dagon` (base "mehrunes").
+
 **Azura** — (see Azurah/Azura above). Prince context: dawn/dusk, prophecy, foe of Molag Bal.
 
 **Boethiah** — deceit, proving by struggle, murder of the unworthy, overthrow.
-- approve: `prove_by_struggle`(C), `murder_treacherous`(S, *of the unworthy, by cunning*), `deceit`(S), `honorable_duel`(S), `ritual_sacrifice`(S), `break_oath_betray`(m, *of false authority*)
+- approve: `prove_by_struggle`(C), `murder_treacherous`(S, *of the unworthy, by cunning*), `deceit`(S), `tactical_distraction`(m), `honorable_duel`(S), `ritual_sacrifice`(S), `break_oath_betray`(m, *of false authority*)
 - disapprove: `cowardice`(C)
 - anchor: Prince of Plots/Deceit; Boethiah's Calling. (UESP: Boethiah)
 
 **Mephala** — secrets, webs, assassination, manipulation, the hidden hand.
-- approve: `deceit`(C), `keep_secret`(C), `assassination_contract`(S), `theft_burglary`(S), `murder_treacherous`(S, *by stealth*)
+- approve: `deceit`(C), `tactical_distraction`(S), `keep_secret`(C), `assassination_contract`(S), `theft_burglary`(S), `murder_treacherous`(S, *by stealth*)
 - disapprove: `expose_betray_secret`(S)
 - anchor: Webspinner; the Ebony Blade. (UESP: Mephala)
 
@@ -369,12 +462,12 @@ above (cross-referenced, not duplicated).
 - anchor: Huntsman of the Princes; Ill Met By Moonlight. (UESP: Hircine)
 
 **Molag Bal** — domination, cruelty, vampirism, breaking the proud. (curse-access)
-- approve: `embrace_vampirism`(C), `kill_the_helpless`(C), `murder_treacherous`(S), `ritual_sacrifice`(S)
-- disapprove: `mercy_spare`(S), `protect_the_weak`(m)
+- approve: `embrace_vampirism`(C), `kill_the_helpless`(C), `murder_treacherous`(S), `ritual_sacrifice`(S), `abuse_companion`(S)
+- disapprove: `mercy_spare`(S), `protect_the_weak`(m), `free_wrongfully_imprisoned`(m), `self_sacrifice`(m)
 - anchor: King of Rape/Domination; The House of Horrors. (UESP: Molag Bal)
 
 **Nocturnal** — shadow, luck, theft, the unseen, the Nightingale debt.
-- approve: `theft_burglary`(C), `keep_secret`(S), `deceit`(m)
+- approve: `theft_burglary`(C), `contraband_trade`(S), `keep_secret`(S), `deceit`(m), `tactical_distraction`(m)
 - disapprove: `expose_betray_secret`(m)
 - anchor: Mistress of Shadow; the Nightingales. (UESP: Nocturnal)
 
@@ -389,8 +482,8 @@ above (cross-referenced, not duplicated).
 - anchor: Prince of Destruction; the Razor. (UESP: Mehrunes Dagon)
 
 **Sheogorath** — madness, whimsy, chaos, the unpredictable.
-- approve: `sow_chaos_madness`(C), `reckless_magic`(m), `revel_indulge`(m)
-- disapprove: `serve_empire_order`(m), `uphold_law_justice`(m)
+- approve: `sow_chaos_madness`(C), `embrace_whimsy`(C), `reckless_magic`(m), `revel_indulge`(m)
+- disapprove: `serve_empire_order`(m), `uphold_law_justice`(m), `arcane_restraint`(m)
 - anchor: Madgod; the Wabbajack; the Mind of Madness. (UESP: Sheogorath)
 
 **Namira** — cannibalism, the repulsive, the spurned, decay. (very narrow)

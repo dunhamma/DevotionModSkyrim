@@ -1085,6 +1085,39 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 
 ## Decisions Log
 
+- **[2026-08-11] - PatchHub reactions must identify their source on both player-visible surfaces:**
+  Each compiled `PDV_QRM_*` PatchHub channel carries the exact player-facing name of its
+  manifest option as optional `sourceMod` metadata. The core queue carries that value to
+  one Prisma toast and the matching persistent Book-of-Days entry; core reactions omit it.
+  Existing saves pad the parallel journal source list before adding a new entry. For
+  compatibility testing, the labelled toast and Book entry are how a player confirms a
+  patch fired; under-the-hood piety and logs alone are not an adequate tester surface.
+  Public tester delivery is one all-in-one FOMOD with required core plus all 77 optional,
+  dependency-gated patches. Internal core/PatchHub manifests remain separate proof inputs.
+- **[2026-08-11] - JoJ B-series closes at 37/37; save-safe PatchHub testing follows release:**
+  B07 Interesting NPCs closes the JoJ candidate set with 31 APPROVED and six SILENT
+  verdicts. The complete PatchHub is released to testers as one dependency-gated FOMOD;
+  runtime routing, player presentation, balance, and save/load observations are
+  post-release evidence, not release gates, because these reaction-data patches do not
+  interfere with current saves. Do not hold future complete PatchHub packages for
+  per-option playthrough proof. Package bytes still require the exact installer-tree,
+  archive-membership, and checksum receipt. Lighting, Mannaz, Sacrosanct, Wintersun
+  removal, and generated world outputs are unrelated to the B-series content audit and
+  must not be introduced as closeout spot checks.
+
+- **[2026-08-10] - Follower friendship is not marriage, and Sheogorath's whimsy is not generic chaos:**
+  B06 review removed `marriage_family` from Gore's Drunken Huntsman friendship milestone; ordinary
+  growing closeness uses the owner-approved `friendship` profile (Mara close, Hist strong). Do not
+  stretch `marriage_family` beyond its wed/adopt/reconcile/hearth contract.
+  Owner-supplied gameplay context established that Merlin is recruited inside Sheogorath's domain,
+  so the canonical vocabulary now includes narrow `embrace_whimsy`: freely welcoming an improbable
+  or playfully impossible turn. Only Sheogorath currently reacts. Do not substitute
+  `sow_chaos_madness` (which means spreading disorder/ruin and fans out broadly), and do not call the
+  Merlin encounter `serve_a_daedra:sheogorath` because no bargain or task is evidenced. Merlin's
+  untexted stage 255 remains a positional `RUNTIME-VERIFY` row; this is authored/machine-gated, not
+  runtime proof. The same review ruled Redcap's captive-villager rescue as both `civic_service` and
+  `defend_kin_home`: the player returns Redcap's Riekling people safely home.
+
 - **[2026-08-07] - Daedric race-response family: destination ruled, wiring BACKLOGGED, do not re-wire:**
   `ShowRaceResponseForPlayer()` has **no organic call site anywhere in the mod** -- only
   `DebugRunControlledProof` -> `ShowControlledProofMessages` reaches it, in all 16

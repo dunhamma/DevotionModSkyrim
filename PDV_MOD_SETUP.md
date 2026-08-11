@@ -1102,6 +1102,17 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 ## Notes / Decisions Log
 
+**2026-08-11 AEST - source-labelled PatchHub tester surfaces:** Every generated
+PatchHub reaction channel now receives its FOMOD option name as optional
+`sourceMod` metadata. `PDV__ManagerQuest` carries it through the reaction queue,
+the Prisma toast, and the matching persistent Book-of-Days entry. Existing saves
+pad the new journal source list before the first labelled append. The installer
+validator fails when a channel label differs from its owning option. Core
+reactions omit the field. The public tester artifact is one all-in-one FOMOD
+with required core and all dependency-gated patch options; runtime observations
+follow release, and the labelled toast plus Book entry are the tester-visible
+proof that a patch fired.
+
 **2026-08-07 AEST - release-issue reconciliation:** The live `Devotion.esp`
 now includes Hircine and Molag Bal stigma notification triples and the complete
 Shor T3 low-health-save presentation contract. Its current SHA-256 is

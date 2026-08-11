@@ -177,6 +177,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="Heart of the Reach">
+              <description>Delve into the depths of an underground swamp in the aid of a priest in order to heal the Heart of the Reach. Including a new quest, weapons, ring, spell and more.</description>
+              <files>
+                <folder source="common\HeartOfTheReach" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="HeartOfTheReach.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Hunt for the Spectre">
               <description>The Hunt for the Spectre is an Elden Ring inspired quest mod centred around Ren, a man who is hunting a serial killer known as the Spectre. The mod features multiple endings and incredibly high quality voice acting.</description>
               <files>
@@ -189,6 +208,44 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="Hunt for the Spectre.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Legends of Aetherium">
+              <description></description>
+              <files>
+                <folder source="common\LegendsOfAetherium" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="LegendsOfAetherium.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Moon and Star">
+              <description>A mysterious and powerful criminal has been spotted in Skyrim, his trail dogged by hunters from Morrowind. However, there may be more at stake than it seems, and this criminal may be familiar...</description>
+              <files>
+                <folder source="common\MoonAndStar" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="MoonAndStar_MAS.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -255,6 +312,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="Project AHO">
+              <description>Project AHO is a large quest modification, comparable in size to a medium-sized DLC. Designed in the best traditions of Bethesda Game Studios, this mod adds to Skyrim a hidden settlement of Great House Telvanni. Determine its fate for yourself!</description>
+              <files>
+                <folder source="common\ProjectAHO" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Dwarfsphere.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Siege at Icemoth">
               <description>A small scale vanilla-esque new lands mod adding some new islands with new locations and dungeons in the Sea of Ghosts. As well as some unique items from The Elder Scrolls Blades.</description>
               <files>
@@ -305,6 +381,25 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="Skyrim Extended Cut - Saints and Seducers.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Sleepwalking Into A Nightmare">
+              <description>Adds a new Daedric prince quest where you track down a missing woman, delving into her nightmares and overcoming her fears. Includes, new weapons, equipment and spells.</description>
+              <files>
+                <folder source="common\SleepwalkingNightmare" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="NightmarePlane.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -388,6 +483,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="The Gray Cowl of Nocturnal">
+              <description>Will you be worthy for the Gray Cowl of Nocturnal? We'll see!</description>
+              <files>
+                <folder source="common\GrayCowlOfNocturnal" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Gray Fox Cowl.esm" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="The Rot Below">
               <description>Discover the secrets of a mad lich who thought themselves a god. Explore an ancient palace, a subterranean city of the undead, and an insane warlock's research hall. Foil Namira's plans and stop the coming rot.</description>
               <files>
@@ -400,6 +514,63 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="CJ03Elroy.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="The Sinister Seven">
+              <description>The Sinister Seven is a backstory quest line. Seven Assassins are dispatched to kill the player, taking place across several levels.</description>
+              <files>
+                <folder source="common\SinisterSeven" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="The_Sinister_Seven.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="The Tools of Kagrenac">
+              <description>Go on a quest to recover the legendary Tools of Kagrenac. Encounter new allies and enemies, explore sprawling dungeons, and add powerful new artifacts and spells to your arsenal in this fully-voiced quest mod!</description>
+              <files>
+                <folder source="common\ToolsOfKagrenac" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Tools of Kagrenac.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="There Is No Umbra - Chapter III">
+              <description>Includes Chapters I and II. Continue Daumbra's story, and obtain new gameplay mechanics (sword throwing, sword riding, mind control, teleportation, etc.) through a DLC-sized questline, professionally voiced. The story has many possible endings -your choices really do matter.</description>
+              <files>
+                <folder source="common\ThereIsNoUmbra3" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="FloatingSwordFollower.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -510,6 +681,25 @@
         </group>
         <group name="Quest Expansions" type="SelectAny">
           <plugins order="Explicit">
+            <plugin name="Caught Red Handed - Quest Expansion">
+              <description>Mind your own business, Svana. Everyone should be allowed to practice the &quot;Dibellan&quot; arts free of shame! Expands this misc quest with some new... interesting outcomes.</description>
+              <files>
+                <folder source="common\CaughtRedHandedQE" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Caught Red Handed - Quest Expansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="College of Winterhold - Quest Expansion">
               <description>This mod provides 7 new starter magic lessons/quests to make your College of Winterhold feel like an actual school of magic.</description>
               <files>
@@ -522,6 +712,63 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="College Of Winterhold - Quest Expansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Defeat the Dragon Cult">
+              <description>This mod aims the expand the later half of the main quest by giving the Dragonborn a reason to fight and kill all of the Dragon Priests in Skyrim before facing Alduin at the Throat of the World.</description>
+              <files>
+                <folder source="common\DefeatTheDragonCult" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Defeat the Dragon Cult.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Destroy the Acolyte Priests">
+              <description>A quest to hunt down and destroy the three Dragon Priests on Solstheim who were Acolytes of Miraak (not including Vahlok the Jailor).</description>
+              <files>
+                <folder source="common\DestroyAcolytePriests" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Destroy the Acolyte Priests.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Destroy The Dark Brotherhood - Quest Expansion">
+              <description>This mod introduces new lore-friendly ways to get kidnapped by Astrid (allowing you to Destroy the Dark Brotherhood even after sparing Grelod) while also expanding the actual quest to destroy the DB with new dialogue, choices, more memorable fights and a more cohesive quest. Enjoy!</description>
+              <files>
+                <folder source="common\DestroyDarkBrotherhoodQE" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Destroy the Dark Brotherhood - Quest Expansion.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -605,6 +852,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="Innocence Lost - Quest Expansion">
+              <description>This mod provides new paths (both good and evil) to complete the first Dark Brotherhood quest. Grelod the Kind, you'd better watch out. Fully voiced as usual.</description>
+              <files>
+                <folder source="common\InnocenceLostQE" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Innocence Lost - Quest Expansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Nilheim - Misc Quest Expansion">
               <description>Fixes some issues with the misc quest at Nilheim and gives a bit more flexibility to your encounter with good old Telrav, adding a couple of additional dialogue choices and options for roleplaying.</description>
               <files>
@@ -636,6 +902,63 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="PaarthurnaxQuestExpansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Penitus Oculatus">
+              <description>A quest where you can join the Penitus Oculatus after the vanilla &quot;destroy the dark brotherhood&quot; quest and get all the rewards.</description>
+              <files>
+                <folder source="common\PenitusOculatus" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Penitus_Oculatus.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Return Aegisbane">
+              <description>Who needs an old Iron Warhammer anyway? Adds the option to return Aegisbane to it's rightful owners... Or tell them that you're claiming it as your own.</description>
+              <files>
+                <folder source="common\ReturnAegisbane" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="ReturnAegisbane.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Revealing Rune">
+              <description>Rune of the Thieves Guild has always felt like he was meant to have some sort of story or quest. But alas, hours of searching along the coast of Solitude will yield no results. Well, that is until now! Help Rune search for information on his past and discover what happened to his parents.</description>
+              <files>
+                <folder source="common\RevealingRune" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Revealing Rune.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -719,6 +1042,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="Thieves Guild For Good Guys">
+              <description>Ever wanted to join the Thieves Guild without sending people to jail or bullying people for money? Want to tell Maven off? Want Mjoll to like you without having to lie to her about the Thieves Guild? Want to be a Robin Hood type thief?</description>
+              <files>
+                <folder source="common\ThievesGuildForGoodGuys" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="TCBM.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
           </plugins>
         </group>
       </optionalFileGroups>
@@ -727,6 +1069,139 @@
       <optionalFileGroups order="Explicit">
         <group name="Followers" type="SelectAny">
           <plugins order="Explicit">
+            <plugin name="Gore - A Companion Mod">
+              <description>Gore is a fully voiced, lore-friendly, standalone follower I have been writing, voicing and implementing since 2023. This mod is dedicated to my sister, Eden &quot;Solaria&quot; Knight. You will always be loved. 5,000 lines including the Vigilant add-on voiced using high-quality studio equipment. Coverage for all factions, main quest and DLC.</description>
+              <files>
+                <folder source="common\Gore" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="GORE.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Immersive Kaidan AIO">
+              <description></description>
+              <files>
+                <folder source="common\ImmersiveKaidanAIO" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Kaidan - Immersive Features.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Inigo">
+              <description>Inigo is a fully voiced khajiit adventuring companion with over 7000 lines of unique dialogue - much of it about you. He'll level alongside you and avoid most traps.</description>
+              <files>
+                <folder source="common\Inigo" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Inigo.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Interesting NPCs SE (3DNPC)">
+              <description>NPCs with more extensive dialogue and role play choices. Over 250 fully voiced NPCs, 25 followers, 15 marriage NPCs, and 50 quests. This is a fan-port of the LE mod, ported to Skyrim SE from scratch and maintained with fixes.</description>
+              <files>
+                <folder source="common\InterestingNPCs" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="3DNPC.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Kaidan 2">
+              <description>Rebuilt and expanded, this romantic follower features over 1200 lines of dialogue, custom home, and mini quests.</description>
+              <files>
+                <folder source="common\Kaidan2" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="0Kaidan.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Khajiit Will Follow">
+              <description>Adds 4 custom-voiced, marriageable khajiit followers (3 male, 1 female + 1 minifollower) to the world, each with their own unique quests, backstories, personalities, and play styles. Includes 16,000 lines of dialogue and massive content patches for both The Forgotten City and Vigilant quest mods.</description>
+              <files>
+                <folder source="common\KhajiitWillFollow" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="KhajiitWillFollow.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Lucien">
+              <description>Lucien is a fully voiced Imperial follower with over 6000 lines of immersive, lore-friendly dialogue. Though he arrives in Skyrim as a cowardly scholar, he'll gradually gain strength and confidence by your side until he grows into a hero in his own right.</description>
+              <files>
+                <folder source="common\Lucien" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Lucien.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="M'rissi's Tails of Troubles">
               <description>Fully immersive and lore-friendly story with 8 hours of quests, more than 2000 voiced lines and 3 different endings. Choose your path and decide her fate.</description>
               <files>
@@ -739,6 +1214,82 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="MrissiTailOfTroubles.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Merlin the Corgi">
+              <description>Adds a magical corgi companion to join you on your adventures.</description>
+              <files>
+                <folder source="common\MerlinTheCorgi" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="Merlin.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Redcap the Riekling">
+              <description>Redcap is a unique, voice-acted, immersive follower mod with over 2650 lines of dialogue, a ton of fun and useful features, several new quests, new locations, interactive commentary on many quests, and a pet boar named Bigpig to summon in battle! Redcap has a big personality and a lot to offer!</description>
+              <files>
+                <folder source="common\RedcapTheRiekling" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="FA01RedcapFollower.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Remiel">
+              <description>Adds Remiel to your game, custom voiced with ~5,000 lines of dialogue, a Breton engineer who will accompany you in your travels. She's travelled from Wayrest to explore dwemer ruins in Skyrim, but she needs your help.</description>
+              <files>
+                <folder source="common\Remiel" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="HLIORemi.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Sa'chil - Custom Voiced Khajiit Follower">
+              <description>Sa'chil is a Khajiit spellsword from Hammerfell, She has ~6K lines and is marriageable with 5 quests!</description>
+              <files>
+                <folder source="common\Sachil" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="SU04SachilFollower.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>
@@ -765,6 +1316,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="The Thalmor's Shadow - Taliesin">
+              <description>Adds a custom voiced (VA - Pat Mahoney) Thalmor follower to your Skyrim.A former Thalmor soldier seeks purpose and a chance to atone.Feed him pellets and he'll feed you information.</description>
+              <files>
+                <folder source="common\Taliesin" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="00Taliesin.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Thogra">
               <description>Help an Orc widow get revenge on the one who wronged her. The same Thogra gra-Mugur, now with a new voice!</description>
               <files>
@@ -777,6 +1347,25 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="DK_Thogra.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Val Serano - Pirate Follower and Quest Adventure">
+              <description>Pirate. Thief. Liar. Your new best friend and optionally your lover. Whether you both survive the experience remains to be seen. (voiced by Krimson Graey)</description>
+              <files>
+                <folder source="common\ValSerano" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="AX ValSerano.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>

@@ -38,7 +38,7 @@ import { assertKnownFlags } from './lib/pdv_cli.mjs';
 // The flags this file reads, plus any the repo documents for it. Documented-but-unread
 // flags are included deliberately: rejecting one would break a published command, and a
 // guard is the wrong place to discover that the doc and the code disagree.
-const KNOWN_FLAGS = new Set(['--check', '--print']);
+const KNOWN_FLAGS = new Set(['--check', '--print', '--coverage']);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: 'pdv_external_support_inventory' });
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -52,6 +52,7 @@ const CORE_CSV = R('references', 'authoring', 'PDV_QuestReactionMatrix_Full.csv'
 const KID_INI = R('mod-data', 'SKSE', 'Plugins', 'KeywordItemDistributor', 'PDV_GreenPact_KID.ini');
 const PSC_DIR = R('live-source', 'Scripts', 'Source');
 const CURATED_DOC = R('references', 'authoring', 'PDV_ExternalModSupport_Inventory.md');
+const STANCE_MATRIX = R('references', 'phase4', 'PDV_StanceMatrix.csv');
 const OUT_DIR = R('generated');
 
 /* ---------------------------------------------------------------- helpers */
@@ -108,6 +109,11 @@ function readChannel(modDir) {
     watchPlugins: [],
     awardRows: 0,
     deities: [],
+    // Per-deity ROW COUNT, not the deduped name list below. `deities` answers "who
+    // reacts to this mod at all"; this answers "how much of the reaction surface does
+    // each god actually get", which is the question a coverage floor asks and which
+    // uniq() destroys.
+    deityTally: {},
     tags: [],
     cells: [],
   };
@@ -128,6 +134,7 @@ function readChannel(modDir) {
       const stage = String(key).split('|')[1] ?? '';
       merged.awardRows += deities.length;
       merged.deities.push(...deities);
+      for (const d of deities) merged.deityTally[d] = (merged.deityTally[d] || 0) + 1;
       merged.tags.push(...tags);
       merged.cells.push({ key, stage, deities, valences, magnitudes, tags });
     }
@@ -298,7 +305,9 @@ function classifyCoreEditorId(id) {
 function loadCore() {
   const { records } = parseCsv(fs.readFileSync(CORE_CSV, 'utf8'));
   const byEditorId = new Map();
+  const deityTally = {};
   for (const r of records) {
+    if (r.deity) deityTally[r.deity] = (deityTally[r.deity] || 0) + 1;
     const id = r.editor_id;
     if (!id) continue;
     if (!byEditorId.has(id)) {
@@ -323,7 +332,7 @@ function loadCore() {
     stages: [...e.stages].sort((a, b) => Number(a) - Number(b)),
     deities: [...e.deities].sort(),
   })).sort((a, b) => a.editorId.localeCompare(b.editorId));
-  return { rows: records.length, editorIds: entries.length, entries };
+  return { rows: records.length, editorIds: entries.length, entries, deityTally };
 }
 
 // Quest-expansion mods that extend a VANILLA quest reach the player through the
@@ -518,6 +527,7 @@ function build() {
       questKeys: channel?.questKeys ?? [],
       awardRows: channel?.awardRows ?? 0,
       deities: channel?.deities ?? [],
+      deityTally: channel?.deityTally ?? {},
       cells: channel?.cells ?? [],
       sourceCsv: csv ? csv.file : null,
       sourceCsvRows: csv ? csv.rows : 0,
@@ -586,11 +596,133 @@ function build() {
     mods,
     splitCoverage: split,
     relatedCoreCoverage: related,
-    core: { rows: core.rows, editorIds: core.editorIds, questExpansions: qe, entries: core.entries },
+    core: { rows: core.rows, editorIds: core.editorIds, questExpansions: qe, entries: core.entries, deityTally: core.deityTally },
     kid,
     swaps,
     papyrus,
   };
+}
+
+// ---------------------------------------------------------------------------------------
+// COVERAGE -- who actually benefits, not just what ships.
+//
+// Everything above this line counts MECHANISMS: options, folders, channels, inis. None of
+// it can answer "is the Hist getting as many opportunities as the others", which is the
+// question that actually decides whether a race lane feels alive. That went unasked until
+// 2026-08-09, when a hand-rolled script found Argonian last of ten lanes at 36 rows per god
+// against a median of ~70, and the Hist itself 43rd of 44 deities. A number nobody has to
+// remember to go and compute is the only kind that gets computed.
+//
+// The floor is RELATIVE (a fraction of the median), not a constant. A fixed floor needs
+// retuning every time the matrix grows and silently stops meaning anything in between; a
+// relative one keeps asking the same question -- "is this god far behind its peers" --
+// at any scale.
+const FLOOR_FRACTION = 0.6;
+const COVERAGE_WAIVERS = R('references', 'authoring', 'PDV_CoverageFloorWaivers.csv');
+
+function loadCoverageWaivers() {
+  if (!fs.existsSync(COVERAGE_WAIVERS)) return new Map();
+  const { records } = parseCsv(fs.readFileSync(COVERAGE_WAIVERS, 'utf8'));
+  return new Map(records.filter((r) => r.subject).map((r) => [`${r.kind}:${r.subject}`, r.reason]));
+}
+
+const median = (ns) => {
+  if (!ns.length) return 0;
+  const s = [...ns].sort((a, b) => a - b);
+  const m = Math.floor(s.length / 2);
+  return s.length % 2 ? s[m] : Math.round((s[m - 1] + s[m]) / 2);
+};
+
+function buildCoverage(inv) {
+  // Deity totals: core matrix rows plus every channel's rows.
+  const total = { ...inv.core.deityTally };
+  for (const m of inv.mods) {
+    for (const [d, n] of Object.entries(m.deityTally || {})) total[d] = (total[d] || 0) + n;
+  }
+
+  // Race rosters come from the stance matrix's NATIVE cells. A worship object whose name
+  // differs from the matrix deity name (slash aliases like "Azura / Azurah") is resolved by
+  // trying each slash-part; one that resolves to nothing is REPORTED, never silently
+  // dropped -- a lane can only be judged thin if we know what is in it.
+  const races = {};
+  const unresolved = [];
+  if (fs.existsSync(STANCE_MATRIX)) {
+    const { header, records } = parseCsv(fs.readFileSync(STANCE_MATRIX, 'utf8'));
+    const raceCols = header.slice(2, 12);
+    for (const rc of raceCols) races[rc] = { gods: [], rows: 0 };
+    for (const rec of records) {
+      const god = (rec.WorshipObject || '').trim();
+      if (!god) continue;
+      for (const rc of raceCols) {
+        if ((rec[rc] || '').trim() !== 'NATIVE') continue;
+        // Three name shapes have to reconcile: the stance matrix's worship-object name, the
+        // matrix deity name, and the slash-alias form. "Hist" vs "The Hist" is the one that
+        // bites -- without the article variant the Argonian lane silently reports Sithis
+        // alone, which is both wrong AND flattering, since it hides the thinnest god in the
+        // pantheon behind a smaller divisor.
+        const variants = god.split('/').flatMap((p) => {
+          const t = p.trim();
+          return [t, `The ${t}`, t.replace(/^The\s+/i, '')];
+        });
+        const name = variants.find((v) => total[v] != null);
+        if (!name) { unresolved.push(`${rc}: ${god}`); continue; }
+        races[rc].gods.push(name);
+        races[rc].rows += total[name];
+      }
+    }
+  }
+
+  const deityRows = Object.entries(total).map(([deity, rows]) => ({ deity, rows })).sort((a, b) => a.rows - b.rows);
+  const deityFloor = Math.round(median(deityRows.map((d) => d.rows)) * FLOOR_FRACTION);
+
+  const raceRows = Object.entries(races)
+    .filter(([, v]) => v.gods.length)
+    .map(([race, v]) => ({ race, gods: v.gods.length, rows: v.rows, perGod: Math.round(v.rows / v.gods.length) }))
+    .sort((a, b) => a.perGod - b.perGod);
+  const raceFloor = Math.round(median(raceRows.map((r) => r.perGod)) * FLOOR_FRACTION);
+
+  const waivers = loadCoverageWaivers();
+  const under = [
+    ...deityRows.filter((d) => d.rows < deityFloor)
+      .map((d) => ({ kind: 'deity', subject: d.deity, value: d.rows, floor: deityFloor })),
+    ...raceRows.filter((r) => r.perGod < raceFloor)
+      .map((r) => ({ kind: 'race', subject: r.race, value: r.perGod, floor: raceFloor })),
+  ].map((u) => ({ ...u, waiver: waivers.get(`${u.kind}:${u.subject}`) || null }));
+
+  return {
+    deityFloor, raceFloor, floorFraction: FLOOR_FRACTION,
+    deityMedian: median(deityRows.map((d) => d.rows)),
+    raceMedian: median(raceRows.map((r) => r.perGod)),
+    deityRows, raceRows, unresolvedWorshipObjects: uniq(unresolved), under,
+    breaches: under.filter((u) => !u.waiver),
+  };
+}
+
+function reportCoverage(inv) {
+  const c = buildCoverage(inv);
+  console.log(`deity rows: median ${c.deityMedian}, floor ${c.deityFloor} (${Math.round(c.floorFraction * 100)}% of median)`);
+  for (const d of c.deityRows.slice(0, 8)) {
+    const w = c.under.find((u) => u.kind === 'deity' && u.subject === d.deity);
+    console.log(`  ${String(d.rows).padStart(4)}  ${d.deity.padEnd(16)}${d.rows < c.deityFloor ? (w?.waiver ? 'UNDER-FLOOR (waived)' : 'UNDER-FLOOR') : ''}`);
+  }
+  console.log(`  ... ${c.deityRows.length} deities total, highest ${c.deityRows[c.deityRows.length - 1].rows}`);
+  console.log(`\nrace lanes: median ${c.raceMedian} rows/god, floor ${c.raceFloor}`);
+  for (const r of c.raceRows) {
+    const w = c.under.find((u) => u.kind === 'race' && u.subject === r.race);
+    console.log(`  ${String(r.perGod).padStart(4)}/god  ${r.race.padEnd(10)} ${String(r.gods).padStart(2)} gods, ${String(r.rows).padStart(4)} rows${r.perGod < c.raceFloor ? (w?.waiver ? '  UNDER-FLOOR (waived)' : '  UNDER-FLOOR') : ''}`);
+  }
+  if (c.unresolvedWorshipObjects.length) {
+    console.log(`\nworship objects with no matrix rows (reported, not dropped): ${c.unresolvedWorshipObjects.length}`);
+    for (const u of c.unresolvedWorshipObjects) console.log(`  ${u}`);
+  }
+  if (c.breaches.length) {
+    console.log(`\nFAIL: ${c.breaches.length} unwaived under-floor entr${c.breaches.length === 1 ? 'y' : 'ies'}`);
+    for (const b of c.breaches) console.error(`  ${b.kind} ${b.subject}: ${b.value} < ${b.floor}`);
+    console.log(`Waive deliberately-thin entries in ${path.relative(ROOT, COVERAGE_WAIVERS)} with a reason.`);
+  } else {
+    console.log(`\nPASS: every deity and race lane is at or above its floor (${c.under.length} waived).`);
+  }
+  return c.breaches.length === 0;
 }
 
 function countBy(items, keyFn) {
@@ -715,13 +847,48 @@ function check(inv) {
     if (inv.counts[k] !== v) drift.push(`${k}: doc says ${v}, live is ${inv.counts[k]}`);
   }
   const missing = Object.keys(inv.counts).filter((k) => !(k in declared));
+  // Deliberately NO early return here. Counts drift and prose drift are collected together
+  // so one run shows everything that is wrong; returning on the first would hide the prose
+  // failures behind the block failures and take two runs to find them all.
+
+  // PROSE. The block above is machine-readable; the body of the doc restates the same
+  // numbers in sentences and tables, and until 2026-08-09 nothing looked at those. Landing
+  // one mod left "the 46 PatchHub options" and "534 deity award rows" in the text while the
+  // block said 47 and 559 -- a GREEN gate on a lying document, which is worse than a red one
+  // because nobody goes looking. Each pattern below names the metric its captured number
+  // must equal.
+  //
+  // BOUNDARY, stated rather than implied: this checks the phrasings listed here. A NEW
+  // sentence carrying a number is not covered until someone adds its pattern. That is a real
+  // limit; it is still strictly better than checking no prose at all.
+  const PROSE = [
+    [/the (\d+) PatchHub options/g, 'manifestOptions'],
+    [/1:1 with the (\d+) manifest entries/g, 'manifestOptions'],
+    [/and the (\d+)\s*\n?`common\/` folders/g, 'hubFoldersTotal'],
+    [/(\d+) quest-reaction cells/g, 'totalReactionCells'],
+    [/(\d+) deity award rows/g, 'totalAwardRows'],
+    [/against (\d+) in the whole hub/g, 'totalAwardRows'],
+    [/spread across the FOMOD manifest, (\d+) per-mod/g, 'sourceCsvs'],
+    [/\|\s*\*\*G1\*\*\s*\|[^|]*\|[^|]*\|\s*\*\*(\d+)\*\*\s*\|/g, 'g1DataOnlyPatches'],
+    [/\|\s*\*\*G2\*\*\s*\|[^|]*\|[^|]*\|\s*\*\*(\d+)\*\*\s*\|/g, 'g2PluginPatches'],
+  ];
+  let proseChecked = 0;
+  for (const [re, key] of PROSE) {
+    for (const m of text.matchAll(re)) {
+      proseChecked += 1;
+      const found = Number(m[1]);
+      if (found !== inv.counts[key]) {
+        drift.push(`prose "${m[0].replace(/\s+/g, ' ').trim()}": says ${found}, ${key} is ${inv.counts[key]}`);
+      }
+    }
+  }
   if (drift.length) {
     console.error('FAIL: curated doc has drifted from the shipped content.');
     for (const d of drift) console.error(`  - ${d}`);
     if (missing.length) console.error(`  (metrics not declared in the doc: ${missing.join(', ')})`);
     return 1;
   }
-  console.log(`PASS: ${Object.keys(declared).length} declared counts match the shipped content.`);
+  console.log(`PASS: ${Object.keys(declared).length} declared counts and ${proseChecked} prose figure(s) match the shipped content.`);
   if (missing.length) console.log(`note: ${missing.length} measured metric(s) not declared in the doc: ${missing.join(', ')}`);
   return 0;
 }
@@ -730,6 +897,14 @@ function check(inv) {
 
 const argv = process.argv.slice(2);
 const inv = build();
+
+// --coverage answers "who benefits", --check answers "does the doc still describe what
+// ships". Separate exits on purpose: a coverage floor breach is a CONTENT gap someone has to
+// decide about, not a documentation error, and folding it into --check would make one red
+// stand for two unrelated problems.
+if (argv.includes('--coverage')) {
+  process.exit(reportCoverage(inv) ? 0 : 1);
+}
 
 if (argv.includes('--check')) {
   process.exit(check(inv));

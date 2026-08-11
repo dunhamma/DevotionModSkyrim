@@ -1,0 +1,55 @@
+# Part A act-tag vocabulary, GENERATED from PDV_QuestReactionMatrix.md.
+# Do not hand-edit and do not paste this list into a prompt: regenerate it. A pasted
+# vocabulary drifts the moment Part A gains a tag, which is how honor_divine went a year
+# without an entry.
+
+aesthetic_devotion
+assassination_contract
+break_oath_betray
+cannibalism
+charity
+civic_service
+cowardice
+cure_undeath
+deceit
+defend_kin_home
+defile_nature
+defy_tyranny_talos
+desecrate_the_dead
+disciplined_study
+embrace_lycanthropy
+embrace_vampirism
+exploit_cheat
+expose_betray_secret
+forbidden_knowledge
+green_pact
+heal_comfort
+honest_labor_trade
+honor_divine
+honor_the_dead
+honor_the_wild
+honorable_duel
+keep_oath
+keep_secret
+kill_honorable_combat
+kill_the_helpless
+marriage_family
+master_craft_forge
+mercy_spare
+murder_treacherous
+necromancy
+protect_the_weak
+prove_by_struggle
+reckless_magic
+revel_indulge
+ritual_sacrifice
+serve_empire_order
+slay_undead
+sow_chaos_madness
+spread_order_pestilence
+the_hunt
+theft_burglary
+uphold_law_justice
+acquire_daedric_artifact:<name>   (namespaced: any suffix, e.g. acquire_daedric_artifact:hircine)
+destroy_reject_daedra:<name>   (namespaced: any suffix, e.g. destroy_reject_daedra:hircine)
+serve_a_daedra:<name>   (namespaced: any suffix, e.g. serve_a_daedra:hircine)

@@ -73,6 +73,16 @@ references/authoring/PDV_QuestReactionMatrix_Full.csv text eol=crlf
 references/authoring/PDV_QuestReactionMatrix_Tranche*.csv text eol=crlf
 references/authoring/PDV_QuestReactionMatrix_Reconciliation_*.csv text eol=crlf
 
+# JoJ Phase 1 inputs. Pinned LF, deliberately the OPPOSITE of the tranche CSVs above, and
+# the difference is not an inconsistency: those are CRLF because pdv_quest_tranche_merge
+# CRLF-joins Full.csv and byte-compares it, whereas pdv_joj_stage_digest WRITES LF and reads
+# with /\r?\n/. Pinning each file to what its own tool produces is what keeps a diff showing
+# real edits instead of a whole-file ending flip. Two files in this repo were once pinned
+# DIFFERENTLY from each other and a comparison across the pair silently disagreed; the rule
+# that came out of it is to say which ending a file has and why, never to let autocrlf decide.
+references/vanilla-gameplay/compatibility/PDV_JoJ_ContentCandidates.csv text eol=lf
+references/vanilla-gameplay/compatibility/PDV_JoJ_StageWorklist.csv text eol=lf
+
 # External-mod support inventory. pdv_external_support_inventory.mjs --check parses
 # a JSON counts block out of the doc, and the tool is written ASCII/LF. Nothing here
 # is byte-compared today, so this is a pin against a FUTURE gate change (a hash, a

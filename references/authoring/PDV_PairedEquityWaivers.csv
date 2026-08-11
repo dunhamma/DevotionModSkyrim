@@ -14,7 +14,7 @@ time_dragon,CW01B,160,Alkosh,keep_oath is not in Alkosh's profile (cosmic order/
 time_dragon,CW02A,200,Auri-El,serve_empire_order is not in Auri-El's profile; mortal politics below his ascendant-order concern
 time_dragon,CW03,50,Auri-El,serve_empire_order is not in Auri-El's profile
 time_dragon,CW03,50,Alkosh,serve_empire_order present in profile but at m for COSMIC order; mortal Skyrim civil-war escalation is below his threshold and his two existing Imperial-side civic cells already cover the rare surface (avoid diluting the dragon-king into a war-politics god)
-time_dragon,DA07,100,Alkosh,serve_a_daedra:dagon is not in Alkosh's profile (only sow_chaos_madness C); Akatosh's serve_a_daedra:* line carries the anti-Dagon reading
+time_dragon,DA07,100,Alkosh,serve_a_daedra:mehrunesdagon is not in Alkosh's profile (only sow_chaos_madness C); Akatosh's serve_a_daedra:* line carries the anti-Dagon reading
 time_dragon,MQ104,160,Auri-El,Auri-El reacts to the time-order CLIMAX (Alduin unmade, authored MQ206/MQ305), not to every wild dragon; Mirmulnir at the Watchtower is mortal dragon-war, peripheral to his ascendant path
 time_dragon,MQ106,200,Auri-El,see MQ104; Sahloknir is a raised wild dragon, not the cosmic time-climax Auri-El answers to
 death_order,C06,65,Xarxes,cure_undeath is not in Xarxes's profile (scribe/ancestry/record, not the vigil against undeath); Arkay/Tu'whacca own the lycanthropy-cure beat

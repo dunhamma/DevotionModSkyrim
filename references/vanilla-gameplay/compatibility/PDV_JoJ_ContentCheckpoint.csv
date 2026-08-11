@@ -1,0 +1,38 @@
+mod_key,mod_name,class,batch_id,plugin,stage_digested,rows_judged,crossgen_run,review_verdict,promoted,channel_compiled,manifest_entry,docs_page,lint,notes
+AscendHiddenPeaks,Ascend - Hidden Peaks of Skyrim,A,B01,Ascend - Hidden Peaks of Skyrim.esp,ok,ok,-,SILENT,-,-,-,-,-,Haiku_HiddenPeaks is the only QUST and has 0 stages / 0 objectives - see silence ledger
+ToolsOfKagrenac,The Tools of Kagrenac,A,B01,Tools of Kagrenac.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+MoonAndStar,Moon and Star,A,B02,MoonAndStar_MAS.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+SinisterSeven,The Sinister Seven,A,B02,The_Sinister_Seven.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+LegendsOfAetherium,Legends of Aetherium,A,B02,LegendsOfAetherium.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+ProjectAHO,Project AHO,A,B02,Dwarfsphere.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+GrayCowlOfNocturnal,The Gray Cowl of Nocturnal,A,B02,Gray Fox Cowl.esm,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+SleepwalkingNightmare,Sleepwalking Into A Nightmare,A,B03,NightmarePlane.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+HeartOfTheReach,Heart of the Reach,A,B03,HeartOfTheReach.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+ThereIsNoUmbra3,There Is No Umbra - Chapter III,A,B03,FloatingSwordFollower.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,"49 tagged rows; judge corrected clavicus_vile->clavicus and 6 :umbra tags; 5 cross-gen conflicts hand-resolved; 1 NEEDS-TAG (s300, renounce_dangerous_power)"
+LeapsOfFaith,Leaps of Faith,A,B03,LeapsOfFaith.esp,ok,ok,-,SILENT,-,-,-,-,-,"13 stages, every one tier B - a parkour collectathon with no branch and no judgeable act. See silence ledger."
+CaughtRedHandedQE,Caught Red Handed - Quest Expansion,B,B04,Caught Red Handed - Quest Expansion.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+InnocenceLostQE,The Innocence Lost - Quest Expansion,B,B04,Innocence Lost - Quest Expansion.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+DestroyDarkBrotherhoodQE,Destroy The Dark Brotherhood - Quest Expansion,B,B04,Destroy the Dark Brotherhood - Quest Expansion.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+PenitusOculatus,Penitus Oculatus,B,B04,Penitus_Oculatus.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+ThievesGuildForGoodGuys,Thieves Guild For Good Guys,B,B04,TCBM.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+TheChoiceIsYours,The Choice is Yours,B,B04,TheChoiceIsYours.esp,ok,ok,-,SILENT,-,-,-,-,-,"16 overrides carry vanilla stages UNCHANGED - changes when quests start, not what happens. See silence ledger."
+DestroyAcolytePriests,Destroy the Acolyte Priests,B,B04,Destroy the Acolyte Priests.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+DefeatTheDragonCult,Defeat the Dragon Cult,B,B04,Defeat the Dragon Cult.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+ReturnAegisbane,Return Aegisbane,B,B04,ReturnAegisbane.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+RevealingRune,Revealing Rune,B,B04,Revealing Rune.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+CultOfTheTrueDragonborn,Cult of the True Dragonborn,B,B04,ImmersiveMiraakDifficulty.esp,ok,ok,-,SILENT,-,-,-,-,-,only quest is aaa_MiraakBuff_Quest with 0 stages - a difficulty tweak
+Kaidan2,Kaidan 2,C,B05,0Kaidan.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,"K04 romance = 2 POSITIONAL rows (s50/s100) per owner ruling; all 26 stages tier C, RUNTIME-VERIFY"
+ImmersiveKaidanAIO,Immersive Kaidan AIO,C,B05,Kaidan - Immersive Features.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,K03/K04 all tier C; NSFW quest 0 stages - see silence ledger
+DeadlandsExpanded,Deadlands Expanded - A Kaidan Quest Overhaul,C,B05,KR2_Deadlands.esp,ok,ok,-,SILENT,-,-,-,-,-,"reclassified C->B to check; KMDQuest override has identical 8 stages, only cosmetic wording. Nothing to row."
+Lucien,Lucien,C,B05,Lucien.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+Remiel,Remiel,C,B05,HLIORemi.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+Inigo,Inigo,C,B05,Inigo.esp,ok,ok,ok,APPROVED,ok,ok,ok,skipped,PASS,
+Sachil,Sa'chil,C,B06,SU04SachilFollower.esp,ok,ok,ok,APPROVED,ok,ok,ok,ok,PASS,Direct MCP only: 45 QUST read at depth 5; abuse_companion and reject_criminality were owner-approved in the B07 vocabulary sweep; 55 rows pass.
+ValSerano,Val Serano,C,B06,AX ValSerano.esp,ok,ok,ok,APPROVED,ok,ok,ok,ok,PASS,Direct MCP only: 66 QUST read at depth 5 (62 worklist records plus 4 overrides); arcane_restraint was owner-approved in the B07 vocabulary sweep; 147 rows pass.
+Taliesin,Taliesin,C,B06,00Taliesin.esp,ok,ok,ok,APPROVED,ok,ok,ok,ok,PASS,Direct MCP only: 17 QUST read at depth 5; 1 row-bearing quest re-read after promotion; 4 rows pass.
+Hoth,Hoth,C,B06,HothFollower.esp,ok,ok,-,SILENT,-,-,-,ok,PASS,Direct MCP only: the sole QUST has one stage with no journal text and no objectives; no eligible outcome rows.
+Gore,Gore,C,B06,GORE.esp,ok,ok,ok,APPROVED,ok,ok,ok,ok,PASS,Direct MCP only: 25 QUST read at depth 5; friendship was owner-approved in the B07 vocabulary sweep; 39 rows pass. The untexted alternate terminal in The Apple from the Tree remains inert.
+KhajiitWillFollow,Khajiit Will Follow,C,B06,KhajiitWillFollow.esp,ok,ok,ok,APPROVED,ok,ok,ok,ok,PASS,Direct MCP only: 36 QUST read at depth 5; friendship / recover_stolen_keepsake / free_wrongfully_imprisoned were owner-approved in the B07 vocabulary sweep; direct VMAD/QF proves induction at s40 and s200 as outfit cleanup; 46 rows pass.
+MerlinTheCorgi,Merlin the Corgi,C,B06,Merlin.esp,ok,ok,ok,APPROVED,ok,ok,ok,ok,PASS,Direct MCP only: 2 QUST read at depth 5; 1 row-bearing quest re-read after promotion; 1 row passes. Owner context establishes that the untexted s255 terminal completes Merlin's recruitment in Sheogorath's domain; embrace_whimsy is a positional RUNTIME-VERIFY ruling.
+RedcapTheRiekling,Redcap the Riekling,C,B06,FA01RedcapFollower.esp,ok,ok,ok,APPROVED,ok,ok,ok,ok,PASS,Direct MCP only: 41 QUST read at depth 5 (40 worklist records plus 1 Skyrim override); tactical_distraction was owner-approved in the B07 vocabulary sweep; 62 rows pass. civic_service and defend_kin_home remain on the captive-villager outcome.
+InterestingNPCs,Interesting NPCs (3DNPC),C,B07,3DNPC.esp,ok,ok,ok,APPROVED,ok,ok,ok,ok,PASS,Direct MCP only: 488 worklist QUST plus 1 Skyrim override read at depth 5; 101 evidence-bearing records; VMAD / INFO / SCEN / alias / decompiled-fragment route review; 27 tagged outcomes; 269 promoted rows; all 19 unique row-bearing quests and 27 promoted stages directly re-read after promotion. Seven collisions adjudicated; generic Auri-El/Alkosh combat fan-out and out-of-scope Sithis betrayal were removed. No local digest artifact used.

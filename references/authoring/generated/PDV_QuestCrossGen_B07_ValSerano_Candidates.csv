@@ -1,0 +1,4 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation,formid
+ValCOLGrad,The Daedra to Pay,199,Refused to help Val summon a Dremora for a dangerous master-level spell.,arcane_restraint,Julianos,+,m,small,"cross-gen candidate: arcane_restraint(S) from the Julianos Part B profile, stepped down; REVIEW before promotion",AX ValSerano.esp:6682E2
+ValCOLGrad,The Daedra to Pay,199,Refused to help Val summon a Dremora for a dangerous master-level spell.,arcane_restraint,Magnus,+,S,small,"cross-gen candidate: arcane_restraint(C) from the Magnus Part B profile, stepped down; REVIEW before promotion",AX ValSerano.esp:6682E2
+ValCOLGrad,The Daedra to Pay,199,Refused to help Val summon a Dremora for a dangerous master-level spell.,arcane_restraint,Sheogorath,-,m,small,"cross-gen candidate: arcane_restraint(m) from the Sheogorath Part B profile, stepped down; REVIEW before promotion",AX ValSerano.esp:6682E2

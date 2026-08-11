@@ -3,6 +3,20 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
+## 1.5.0 (prerelease a) -- 2026-08-11
+
+- **Per-mod quest reactions are now visible and attributable.** When an optional
+  PatchHub quest reaction fires, its Prisma toast names the source mod and the
+  same source name is retained on the Book of Days entry. Existing saves are
+  upgraded safely; older journal entries remain unlabeled.
+- **The complete quest-mod audit is included.** The B01-B07 review covers all
+  37 planned mods. The installer exposes 77 dependency-gated patch options and
+  75 reaction channels; options remain unavailable when their source plugin is
+  absent.
+- **One download contains Devotion and every optional patch.** Devotion core is
+  required by the installer, while each detected compatibility option remains
+  individually selectable.
+
 ## 1.5.0 — 2026-08-08
 
 - **Devotion and its per-mod patches install from one installer.** Core installs
