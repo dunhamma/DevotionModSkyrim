@@ -108,6 +108,7 @@ fs.writeFileSync(infoPath, `<?xml version="1.0" encoding="utf-8"?>
     be deselected. The optional per-mod patches below teach it how the gods react to other
     mods' content; each one is locked to its own source plugin, so an option you cannot use
     is not offered, and a patch for a mod you later remove goes quiet rather than breaking.
+    The included README lists every quest patch plus the KID and SPID integration scope.
   </Description>
   <Groups>
     <element>Gameplay</element>
