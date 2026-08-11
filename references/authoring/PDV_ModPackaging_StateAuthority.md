@@ -28,6 +28,18 @@ this file owns the current decision and state.
    plus every dependency-gated optional patch. A PatchHub-only archive may be
    retained as an internal proof artifact, not as the player download.
 
+## Public-copy boundary
+
+Player-facing package files and GitHub release notes describe only shipped capabilities,
+installation behavior, and the complete integration inventory. They do not expose internal
+audit labels, proof states, gate results, human-versus-machine verification distinctions, or
+unfinished evidence bookkeeping. Those details remain in internal authorities and receipts.
+
+Every public release note and packaged README lists all shipped quest-patch integrations,
+all shipped KID integrations, and all shipped SPID integrations. A category with no shipped
+integration is stated plainly as `None in this build`; planned or speculative coverage is
+never presented as shipped support.
+
 ## UI delivery contract
 
 All accepted devotional acts, including modular quest, shrine, and observer
