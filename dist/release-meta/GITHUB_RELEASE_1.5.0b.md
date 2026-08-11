@@ -4,8 +4,8 @@ This all-in-one installer contains Devotion plus every optional integration
 listed below. Devotion installs automatically. Patch options appear only when
 their source plugin is present.
 
-With SPID installed, evidenced religious and cultural NPC cohorts recognize a
-Faithful or Devoted character. With KID installed, reviewed item actions such
+With SPID installed, religious and cultural NPC cohorts recognize a Faithful
+or Devoted character. With KID installed, item actions such
 as trade, offerings, hunt trophies, Orcish craft, revelry, taboo food, and
 Divine amulets can feed devotion. Both are strongly recommended soft
 dependencies; Devotion remains playable without them.
@@ -95,13 +95,13 @@ toast and retained on the matching Book of Days entry.
 
 ## KID-enabled content
 
-- Skyrim and Dragonborn: reviewed food, drink, trade goods, trophies,
+- Skyrim and Dragonborn: food, drink, trade goods, trophies,
   offerings, Orcish equipment, and Divine amulets
 - Requiem
 - Requiem - Food and Beverages Redone
 
 KID identifies additional Green Pact meats from the Requiem food stack and
-applies the seven item-action families wherever reviewed names match.
+applies the seven item-action families wherever configured names match.
 
 ## SPID-enabled content
 
