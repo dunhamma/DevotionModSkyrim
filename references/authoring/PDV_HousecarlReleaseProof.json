@@ -1,19 +1,19 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-09T01:07:08.910510Z",
-  "postChangeVerifiedAt": "2026-08-09T01:07:08.910510Z",
+  "generatedAt": "2026-08-11T06:42:22.5143711Z",
+  "postChangeVerifiedAt": "2026-08-11T06:42:22.5143711Z",
   "profile": "Devotion Dev",
   "plugin": "Devotion.esp",
   "active": true,
-  "espSha256": "0DE7DB29A48C11722A80B7FE949E93393F3424572330C66D1D779FBE94A7DC9F",
-  "espSizeBytes": 649917,
-  "espModifiedUtc": "2026-08-09T00:40:05.8559730Z",
-  "refreshNote": "Refreshed after the 2026-08-09 stance-parity write (five VMAD Stance_* Int properties on Mara, Stendarr, Y'ffre and Boethiah). Size is unchanged from the 2026-08-08 proof at 649,917 bytes, which is the expected shape for in-place Int edits; a size change would have been the silent-revert tell.",
+  "espSha256": "7FDDB609B92AF7E25681994A647224AA73FB348FCFE0877DD4D123281E2C753E",
+  "espSizeBytes": 657998,
+  "espModifiedUtc": "2026-08-11T06:17:17.1211388Z",
+  "refreshNote": "Refreshed after the v1.5.0b SPID/KID record tranche. Direct houseCARL readback covered all 130 new records: 72 keywords, one player faction, and 57 hidden cohort factions. A scoped integrity sweep found zero dangling links, missing masters, or parse failures.",
   "masters": ["Skyrim.esm", "Dawnguard.esm", "HearthFires.esm", "Dragonborn.esm"],
   "recordSummary": {
     "frame": "definedIn",
     "frameNote": "Records Devotion.esp DEFINES (origin FormID), as counted by housecarl_cross_plugin_query with plugins=[Devotion.esp] defined_in=true. This is the frame the 2026-08-08 proof used.",
-    "total": 1961,
+    "total": 2091,
     "types": 21,
     "quests": 97,
     "magicEffects": 677,
@@ -25,7 +25,7 @@
   "fileRecordSummary": {
     "frame": "rawFile",
     "frameNote": "Every record the FILE contains, definitions plus overrides, as counted by housecarl_read_plugin_file on the absolute path. The 33-record gap against the definedIn frame is exactly the contested override set below (14 Spell + 15 Message + 2 Quest + 2 Cell), and the 22nd type is Cell, which Devotion.esp only ever overrides. The two frames are both correct; do not re-derive this as drift.",
-    "total": 1994,
+    "total": 2124,
     "types": 22
   },
   "errors": {

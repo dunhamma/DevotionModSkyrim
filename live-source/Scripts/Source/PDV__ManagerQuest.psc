@@ -996,6 +996,7 @@ Event OnInit()
     EnsurePrinceLikesDislikesTable()
     MigrateDaedricPactsIfNeeded()
     MigrateBroadPantheonPools()
+    EnsureRecognitionModEvents()
     RefreshPatronMirrors()
     UpdateContextualFavorRuntime()
     UpdateDisfavorStingRuntime()
@@ -1103,6 +1104,7 @@ Event OnUpdate()
         MigrateDaedricPactsIfNeeded()
         MigrateBroadPantheonPools()
         EnsureKhajiitObserveMoonsPower()
+        SyncNpcReligiousRecognition()
         _shoutRefreshTicks = 0
     endIf
 
@@ -12378,6 +12380,7 @@ Function RefreshPatronMirrors()
         PDV_GLO_ActivePiety.SetValue(0.0)
         PDV_GLO_ActiveTier.SetValue(TIER_NONE as Float)
         PDV_GLO_ActiveDeityIndex.SetValue(-1.0)
+        SyncNpcReligiousRecognition()
         return
     endIf
 
@@ -12387,6 +12390,7 @@ Function RefreshPatronMirrors()
     PDV_GLO_ActivePiety.SetValue(StorageUtil.GetFloatValue(deityForm, "PDV.Piety"))
     PDV_GLO_ActiveTier.SetValue(StorageUtil.GetFloatValue(deityForm, "PDV.Tier"))
     PDV_GLO_ActiveDeityIndex.SetValue(_activeDeity.DeityIndex as Float)
+    SyncNpcReligiousRecognition()
 EndFunction
 
 Function InitializePreflightState()
@@ -27924,6 +27928,588 @@ Int Function ClampInt(Int value, Int minValue, Int maxValue)
 EndFunction
 
 ; ===========================================================================
+; SPID religious recognition and KID item-action routing
+; ===========================================================================
+
+Int Property RECOGNITION_REACTION_NEUTRAL = 0 AutoReadOnly
+Int Property RECOGNITION_REACTION_ENEMY = 1 AutoReadOnly
+Int Property RECOGNITION_REACTION_ALLY = 2 AutoReadOnly
+Int Property RECOGNITION_REACTION_FRIEND = 3 AutoReadOnly
+Int Property RECOGNITION_IDENTITY_COUNT = 57 AutoReadOnly
+
+Bool Function NpcReligiousRecognitionEnabled()
+    return StorageUtil.GetIntValue(None, "PDV.Recognition.Disabled") != 1
+EndFunction
+
+Bool Function NpcHostileRecognitionEnabled()
+    return StorageUtil.GetIntValue(None, "PDV.Recognition.HostilesDisabled") != 1
+EndFunction
+
+Function SetNpcReligiousRecognitionEnabled(Bool enabled)
+    StorageUtil.SetIntValue(None, "PDV.Recognition.Disabled", BoolToInt(!enabled))
+    InvalidateNpcReligiousRecognition()
+    SyncNpcReligiousRecognition()
+EndFunction
+
+Function SetNpcHostileRecognitionEnabled(Bool enabled)
+    StorageUtil.SetIntValue(None, "PDV.Recognition.HostilesDisabled", BoolToInt(!enabled))
+    InvalidateNpcReligiousRecognition()
+    SyncNpcReligiousRecognition()
+EndFunction
+
+String Function GetNpcRecognitionStatusLine()
+    if !NpcReligiousRecognitionEnabled()
+        return "Off"
+    endIf
+    String owner = StorageUtil.GetStringValue(None, "PDV.Recognition.Owner")
+    if owner != ""
+        return "Managed by " + owner
+    endIf
+    Int identityIndex = ResolveNpcRecognitionIdentity()
+    Int band = ResolveNpcRecognitionBand(identityIndex)
+    if identityIndex < 0 || band <= TIER_NONE
+        return "On - no public standing"
+    endIf
+    return "On - " + GetRecognitionIdentityKey(identityIndex) + " " + GetPublicTierBand(band)
+EndFunction
+
+Function EnsureRecognitionModEvents()
+    UnregisterForModEvent("PDV.Recognition.Claim")
+    UnregisterForModEvent("PDV.Recognition.Release")
+    RegisterForModEvent("PDV.Recognition.Claim", "OnRecognitionClaim")
+    RegisterForModEvent("PDV.Recognition.Release", "OnRecognitionRelease")
+EndFunction
+
+Event OnRecognitionClaim(String eventName, String strArg, Float numArg, Form sender)
+    if strArg == ""
+        return
+    endIf
+    StorageUtil.SetStringValue(None, "PDV.Recognition.Owner", strArg)
+    InvalidateNpcReligiousRecognition()
+    SyncNpcReligiousRecognition()
+    Trace(1, "NPC religious recognition claimed by " + strArg + ".")
+EndEvent
+
+Event OnRecognitionRelease(String eventName, String strArg, Float numArg, Form sender)
+    String owner = StorageUtil.GetStringValue(None, "PDV.Recognition.Owner")
+    if owner == "" || !RecognitionOwnersMatch(owner, strArg)
+        return
+    endIf
+    StorageUtil.SetStringValue(None, "PDV.Recognition.Owner", "")
+    InvalidateNpcReligiousRecognition()
+    SyncNpcReligiousRecognition()
+    Trace(1, "NPC religious recognition released by " + strArg + ".")
+EndEvent
+
+Bool Function RecognitionOwnersMatch(String firstOwner, String secondOwner)
+    Int ownerLength = StringUtil.GetLength(firstOwner)
+    if ownerLength != StringUtil.GetLength(secondOwner)
+        return false
+    endIf
+    Int index = 0
+    while index < ownerLength
+        Int firstOrd = StringUtil.AsOrd(StringUtil.GetNthChar(firstOwner, index))
+        Int secondOrd = StringUtil.AsOrd(StringUtil.GetNthChar(secondOwner, index))
+        if firstOrd >= 65 && firstOrd <= 90
+            firstOrd += 32
+        endIf
+        if secondOrd >= 65 && secondOrd <= 90
+            secondOrd += 32
+        endIf
+        if firstOrd != secondOrd
+            return false
+        endIf
+        index += 1
+    endWhile
+    return true
+EndFunction
+
+Function InvalidateNpcReligiousRecognition()
+    StorageUtil.SetIntValue(None, "PDV.Recognition.LastSignature", -9999)
+EndFunction
+
+Faction Function GetRecognitionPlayerFaction()
+    return Game.GetFormFromFile(0x00071756, "Devotion.esp") as Faction
+EndFunction
+
+Faction Function GetRecognitionCohortFaction(Int identityIndex)
+    if identityIndex < 0 || identityIndex >= RECOGNITION_IDENTITY_COUNT
+        return None
+    endIf
+    return Game.GetFormFromFile(0x00071757 + identityIndex, "Devotion.esp") as Faction
+EndFunction
+
+Function SetRecognitionPair(Faction cohort, Faction playerFaction, Int reaction)
+    if !cohort || !playerFaction
+        return
+    endIf
+    cohort.SetReaction(playerFaction, reaction)
+    playerFaction.SetReaction(cohort, reaction)
+EndFunction
+
+Function ResetNpcRecognitionRelations(Faction playerFaction)
+    Int i = 0
+    while i < RECOGNITION_IDENTITY_COUNT
+        SetRecognitionPair(GetRecognitionCohortFaction(i), playerFaction, RECOGNITION_REACTION_NEUTRAL)
+        i += 1
+    endWhile
+EndFunction
+
+Function SyncNpcReligiousRecognition()
+    Faction playerFaction = GetRecognitionPlayerFaction()
+    Actor playerRef = Game.GetPlayer()
+    if !playerFaction || !playerRef
+        return
+    endIf
+    if !playerRef.IsInFaction(playerFaction)
+        playerRef.AddToFaction(playerFaction)
+    endIf
+
+    Int identityIndex = ResolveNpcRecognitionIdentity()
+    Int band = ResolveNpcRecognitionBand(identityIndex)
+    Bool owned = StorageUtil.GetStringValue(None, "PDV.Recognition.Owner") != ""
+    Int signature = identityIndex * 100 + band * 10 + BoolToInt(NpcReligiousRecognitionEnabled()) + (BoolToInt(NpcHostileRecognitionEnabled()) * 2) + (BoolToInt(owned) * 4)
+    if StorageUtil.GetIntValue(None, "PDV.Recognition.LastSignature", -9999) == signature
+        return
+    endIf
+
+    ResetNpcRecognitionRelations(playerFaction)
+    if NpcReligiousRecognitionEnabled() && !owned && identityIndex >= 0
+        if band >= TIER_CHAMPION
+            SetRecognitionPair(GetRecognitionCohortFaction(identityIndex), playerFaction, RECOGNITION_REACTION_ALLY)
+            if NpcHostileRecognitionEnabled()
+                ApplyNpcRecognitionHardRivals(identityIndex, playerFaction)
+            endIf
+        elseIf band >= TIER_DEVOTED
+            SetRecognitionPair(GetRecognitionCohortFaction(identityIndex), playerFaction, RECOGNITION_REACTION_FRIEND)
+        endIf
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.Recognition.LastSignature", signature)
+    EmitNpcRecognitionState(identityIndex, band, owned)
+EndFunction
+
+Function ApplyNpcRecognitionHardRivals(Int identityIndex, Faction playerFaction)
+    ; Explicit hard rivalries only. Enemy is a disposition relation, not an
+    ; aggression package, so this never creates attack-on-sight behaviour.
+    if identityIndex == 35 ; Molag Bal
+        SetRecognitionPair(GetRecognitionCohortFaction(33), playerFaction, RECOGNITION_REACTION_ENEMY)
+    elseIf identityIndex == 33 ; Meridia
+        SetRecognitionPair(GetRecognitionCohortFaction(35), playerFaction, RECOGNITION_REACTION_ENEMY)
+    elseIf identityIndex == 20 ; Malacath
+        SetRecognitionPair(GetRecognitionCohortFaction(21), playerFaction, RECOGNITION_REACTION_ENEMY)
+    elseIf identityIndex == 21 ; Trinimac
+        SetRecognitionPair(GetRecognitionCohortFaction(20), playerFaction, RECOGNITION_REACTION_ENEMY)
+    endIf
+
+    if GetActiveDaedricPactPath()
+        SetRecognitionPair(GetRecognitionCohortFaction(13), playerFaction, RECOGNITION_REACTION_ENEMY)
+    endIf
+EndFunction
+
+Function EmitNpcRecognitionState(Int identityIndex, Int band, Bool owned)
+    Int handle = ModEvent.Create("PDV.Recognition.State")
+    if handle == 0
+        return
+    endIf
+    ModEvent.PushString(handle, GetRecognitionIdentityKey(identityIndex))
+    ModEvent.PushString(handle, GetPublicTierBand(band))
+    ModEvent.PushFloat(handle, BoolToInt(NpcHostileRecognitionEnabled()) as Float)
+    ModEvent.PushString(handle, StorageUtil.GetStringValue(None, "PDV.Recognition.Owner"))
+    ModEvent.Send(handle)
+EndFunction
+
+Int Function ResolveNpcRecognitionIdentity()
+    PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
+    if activePact
+        return GetRecognitionDaedricIndex(activePact.DeityName)
+    endIf
+    if _activeDeity
+        return GetRecognitionFocusedIndex(_activeDeity)
+    endIf
+    if GetPatronState() == PATRON_STATE_BROAD
+        return GetRecognitionBroadIndex(GetPlayerOriginRaceIndex())
+    endIf
+    return -1
+EndFunction
+
+Int Function ResolveNpcRecognitionBand(Int identityIndex)
+    if identityIndex < 0
+        return TIER_NONE
+    endIf
+    PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
+    if activePact
+        return activePact.GetStoredTier()
+    endIf
+    if _activeDeity
+        return GetTier(_activeDeity)
+    endIf
+    return GetRecognitionBroadTier(GetPlayerOriginRaceIndex())
+EndFunction
+
+Int Function GetRecognitionFocusedIndex(PDV_DeityBase deity)
+    if deity == PDV_Talos
+        return 0
+    elseIf deity == PDV_AuriEl
+        return 1
+    elseIf deity == PDV_Yffre
+        return 2
+    elseIf deity == PDV_Zen
+        return 3
+    elseIf deity == PDV_BaanDar
+        return 4
+    elseIf deity == PDV_Kyne
+        return 5
+    elseIf deity == PDV_Azura
+        return 6
+    elseIf deity == PDV_Khenarthi
+        return 7
+    elseIf deity == PDV_Rajhin
+        return 8
+    elseIf deity == PDV_Alkosh
+        return 9
+    elseIf deity == PDV_Akatosh
+        return 10
+    elseIf deity == PDV_Mara
+        return 11
+    elseIf deity == PDV_Arkay
+        return 12
+    elseIf deity == PDV_Stendarr
+        return 13
+    elseIf deity == PDV_Zenithar
+        return 14
+    elseIf deity == PDV_Dibella
+        return 15
+    elseIf deity == PDV_Julianos
+        return 16
+    elseIf deity == PDV_Kynareth
+        return 17
+    elseIf deity == PDV_Hist
+        return 18
+    elseIf deity == PDV_Sithis
+        return 19
+    elseIf deity == PDV_Malacath
+        return 20
+    elseIf deity == PDV_Trinimac
+        return 21
+    elseIf deity == PDV_Boethiah
+        return 22
+    elseIf deity == PDV_Mephala
+        return 23
+    elseIf deity == PDV_Magnus
+        return 24
+    elseIf deity == PDV_Xarxes
+        return 25
+    elseIf deity == PDV_Tuwhacca
+        return 26
+    elseIf deity == PDV_HoonDing
+        return 27
+    elseIf deity == PDV_Leki
+        return 28
+    elseIf deity == PDV_Shor
+        return 29
+    elseIf deity == PDV_Tsun
+        return 30
+    elseIf deity == PDV_Stuhn
+        return 31
+    elseIf deity == PDV_Syrabane
+        return 32
+    endIf
+    return -1
+EndFunction
+
+Int Function GetRecognitionDaedricIndex(String deityName)
+    if deityName == "Azura" || deityName == "Azurah"
+        return 6
+    elseIf deityName == "Malacath"
+        return 20
+    elseIf deityName == "Boethiah"
+        return 22
+    elseIf deityName == "Mephala"
+        return 23
+    elseIf deityName == "Meridia"
+        return 33
+    elseIf deityName == "Hircine"
+        return 34
+    elseIf deityName == "Molag Bal" || deityName == "Molag"
+        return 35
+    elseIf deityName == "Nocturnal"
+        return 36
+    elseIf deityName == "Hermaeus Mora" || deityName == "Mora"
+        return 37
+    elseIf deityName == "Mehrunes Dagon" || deityName == "Dagon"
+        return 38
+    elseIf deityName == "Sheogorath" || deityName == "Sheo"
+        return 39
+    elseIf deityName == "Namira"
+        return 40
+    elseIf deityName == "Sanguine"
+        return 41
+    elseIf deityName == "Clavicus Vile" || deityName == "Vile"
+        return 42
+    elseIf deityName == "Peryite"
+        return 43
+    elseIf deityName == "Vaermina"
+        return 44
+    endIf
+    return -1
+EndFunction
+
+Int Function GetRecognitionBroadIndex(Int origin)
+    if origin == ORIGIN_NORD
+        if GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
+            return 46
+        endIf
+        return 45
+    elseIf origin == ORIGIN_IMPERIAL
+        return 47
+    elseIf origin == ORIGIN_BRETON
+        if GetBretonTraditionValue() == BRETON_TRADITION_GREEN_WAY
+            return 49
+        endIf
+        return 48
+    elseIf origin == ORIGIN_ALTMER
+        return 50
+    elseIf origin == ORIGIN_BOSMER
+        return 51
+    elseIf origin == ORIGIN_DUNMER
+        return 52
+    elseIf origin == ORIGIN_KHAJIIT
+        return 53
+    elseIf origin == ORIGIN_ARGONIAN
+        return 54
+    elseIf origin == ORIGIN_ORC
+        return 55
+    elseIf origin == ORIGIN_REDGUARD
+        return 56
+    endIf
+    return -1
+EndFunction
+
+Int Function GetRecognitionBroadTier(Int origin)
+    Int tierValue = GetBroadLaneTierForOrigin(origin)
+    if origin == ORIGIN_IMPERIAL && PDV_ImperialAncestorSubstrate
+        tierValue = RecognitionMaxInt(tierValue, PDV_ImperialAncestorSubstrate.GetSubstrateTier())
+    elseIf origin == ORIGIN_BRETON
+        tierValue = RecognitionMaxInt(tierValue, GetBretonPracticeTier(GetBretonTraditionValue()))
+    elseIf origin == ORIGIN_ALTMER && PDV_AltmerAncestorSubstrate
+        tierValue = RecognitionMaxInt(tierValue, PDV_AltmerAncestorSubstrate.GetSubstrateTier())
+    elseIf origin == ORIGIN_NORD && PDV_NordAncestorSubstrate
+        tierValue = RecognitionMaxInt(tierValue, PDV_NordAncestorSubstrate.GetSubstrateTier())
+    elseIf origin == ORIGIN_DUNMER && PDV_DunmerAncestorSubstrate
+        tierValue = RecognitionMaxInt(tierValue, PDV_DunmerAncestorSubstrate.GetSubstrateTier())
+    elseIf origin == ORIGIN_KHAJIIT && PDV_KhajiitLunarSubstrate
+        tierValue = RecognitionMaxInt(tierValue, PDV_KhajiitLunarSubstrate.GetSubstrateTier())
+    elseIf origin == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
+        tierValue = RecognitionMaxInt(tierValue, PDV_ArgonianHistSubstrate.GetSubstrateTier())
+    endIf
+    return tierValue
+EndFunction
+
+Int Function RecognitionMaxInt(Int firstValue, Int secondValue)
+    if secondValue > firstValue
+        return secondValue
+    endIf
+    return firstValue
+EndFunction
+
+String Function GetRecognitionIdentityKey(Int identityIndex)
+    if identityIndex < 0
+        return "None"
+    endIf
+    String[] keys = new String[57]
+    keys[0] = "Talos"
+    keys[1] = "AuriEl"
+    keys[2] = "Yffre"
+    keys[3] = "Zen"
+    keys[4] = "BaanDar"
+    keys[5] = "Kyne"
+    keys[6] = "Azura"
+    keys[7] = "Khenarthi"
+    keys[8] = "Rajhin"
+    keys[9] = "Alkosh"
+    keys[10] = "Akatosh"
+    keys[11] = "Mara"
+    keys[12] = "Arkay"
+    keys[13] = "Stendarr"
+    keys[14] = "Zenithar"
+    keys[15] = "Dibella"
+    keys[16] = "Julianos"
+    keys[17] = "Kynareth"
+    keys[18] = "Hist"
+    keys[19] = "Sithis"
+    keys[20] = "Malacath"
+    keys[21] = "Trinimac"
+    keys[22] = "Boethiah"
+    keys[23] = "Mephala"
+    keys[24] = "Magnus"
+    keys[25] = "Xarxes"
+    keys[26] = "Tuwhacca"
+    keys[27] = "HoonDing"
+    keys[28] = "Leki"
+    keys[29] = "Shor"
+    keys[30] = "Tsun"
+    keys[31] = "Stuhn"
+    keys[32] = "Syrabane"
+    keys[33] = "Meridia"
+    keys[34] = "Hircine"
+    keys[35] = "MolagBal"
+    keys[36] = "Nocturnal"
+    keys[37] = "HermaeusMora"
+    keys[38] = "MehrunesDagon"
+    keys[39] = "Sheogorath"
+    keys[40] = "Namira"
+    keys[41] = "Sanguine"
+    keys[42] = "ClavicusVile"
+    keys[43] = "Peryite"
+    keys[44] = "Vaermina"
+    keys[45] = "NordOldWays"
+    keys[46] = "NordNineDivines"
+    keys[47] = "ImperialDivines"
+    keys[48] = "BretonEightDivines"
+    keys[49] = "BretonOldGods"
+    keys[50] = "AltmerOrthodox"
+    keys[51] = "BosmerGreenPact"
+    keys[52] = "DunmerReclamations"
+    keys[53] = "KhajiitLunarLattice"
+    keys[54] = "ArgonianHistPeople"
+    keys[55] = "OrcCode"
+    keys[56] = "RedguardAncestorSpine"
+    return keys[identityIndex]
+EndFunction
+
+PDV_DaedricPathBase Function GetDaedricPathByName(String deityName)
+    Int i = 0
+    Int count = GetDaedricPathCount()
+    while i < count
+        PDV_DaedricPathBase path = GetDaedricPathAtListIndex(i)
+        if path && path.DeityName == deityName
+            return path
+        endIf
+        i += 1
+    endWhile
+    return None
+EndFunction
+
+Function HandleKIDAction(String actionKey, Form sourceForm)
+    if actionKey == ""
+        return
+    endIf
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.KID." + actionKey)
+    if multiplier <= 0.0
+        return
+    endIf
+    String sourceName = "the offering"
+    if sourceForm && sourceForm.GetName() != ""
+        sourceName = sourceForm.GetName()
+    endIf
+    String titleText = "An act is marked"
+    String bodyText = sourceName + " carried devotional meaning."
+    String symbolName = "journal"
+
+    if actionKey == "namira_taboo_food"
+        PDV_DaedricPathBase namiraPath = GetDaedricPathByName("Namira")
+        if namiraPath
+            Int tierBefore = namiraPath.GetStoredTier()
+            namiraPath.AdjustStoredPiety(1.0 * multiplier, "kid_taboo_food")
+            ShowDaedricMilestonePresentation(namiraPath, tierBefore, namiraPath.GetStoredTier(), False)
+        endIf
+        titleText = "Namira's table"
+        bodyText = "You consumed " + sourceName + "; Namira marks the taboo embraced."
+        symbolName = "namira"
+    elseIf actionKey == "sanguine_alcohol"
+        PDV_DaedricPathBase sanguinePath = GetDaedricPathByName("Sanguine")
+        if sanguinePath
+            Int tierBefore = sanguinePath.GetStoredTier()
+            sanguinePath.AdjustStoredPiety(1.0 * multiplier, "kid_revel")
+            ShowDaedricMilestonePresentation(sanguinePath, tierBefore, sanguinePath.GetStoredTier(), False)
+        endIf
+        titleText = "Sanguine's revel"
+        bodyText = "You drank " + sourceName + "; Sanguine marks the revel."
+        symbolName = "sanguine"
+    elseIf actionKey == "zenithar_trade"
+        AwardCuratedSignalScaled(PDV_Zenithar, PDV_Zenithar.SIGNAL_HONEST_WORK, sourceForm, multiplier)
+        titleText = "Honest trade"
+        bodyText = "You brought " + sourceName + " to market; Zenithar marks the exchange."
+        symbolName = "zenithar"
+    elseIf actionKey == "hunt_trophy"
+        if PDV_HircinePath
+            Int tierBefore = PDV_HircinePath.GetStoredTier()
+            Float stigmaBefore = PDV_HircinePath.GetStigma()
+            PDV_HircinePath.RecordHuntRiteScaled(multiplier, "kid_trophy")
+            ShowDaedricMilestonePresentation(PDV_HircinePath, tierBefore, PDV_HircinePath.GetStoredTier(), False)
+            MaybeEmitHircineStigmaPrice(stigmaBefore, PDV_HircinePath.GetStigma())
+        endIf
+        AwardCuratedSignalScaled(PDV_Kyne, PDV_Kyne.SIGNAL_SKY_ROAD, sourceForm, multiplier)
+        titleText = "Trophy of the hunt"
+        bodyText = "You claimed " + sourceName + " from your quarry; Hircine and Kyne mark the hunt."
+        symbolName = "hircine"
+    elseIf actionKey == "funerary_offering"
+        AwardCuratedSignalScaled(PDV_Arkay, PDV_Arkay.SIGNAL_DEATH_DUTY, sourceForm, multiplier)
+        AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY, sourceForm, multiplier)
+        titleText = "Gift to the dead"
+        bodyText = "You left " + sourceName + " with the dead; Arkay and Tu'whacca mark the duty."
+        symbolName = "arkay"
+    elseIf actionKey == "orcish_craft"
+        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_STRONGHOLD_FORGE, sourceForm, multiplier)
+        titleText = "Orcish craft"
+        bodyText = "You forged " + sourceName + "; Malacath weighs the work."
+        symbolName = "malacath"
+    elseIf actionKey == "amulet_akatosh"
+        AwardPiety(PDV_Akatosh, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Akatosh honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "akatosh"
+    elseIf actionKey == "amulet_arkay"
+        AwardPiety(PDV_Arkay, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Arkay honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "arkay"
+    elseIf actionKey == "amulet_dibella"
+        AwardPiety(PDV_Dibella, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Dibella honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "dibella"
+    elseIf actionKey == "amulet_julianos"
+        AwardPiety(PDV_Julianos, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Julianos honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "julianos"
+    elseIf actionKey == "amulet_kynareth"
+        AwardPiety(PDV_Kynareth, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Kynareth honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "kynareth"
+    elseIf actionKey == "amulet_mara"
+        AwardPiety(PDV_Mara, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Mara honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "mara"
+    elseIf actionKey == "amulet_stendarr"
+        AwardPiety(PDV_Stendarr, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Stendarr honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "stendarr"
+    elseIf actionKey == "amulet_talos"
+        AwardPiety(PDV_Talos, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Talos honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "talos"
+    elseIf actionKey == "amulet_zenithar"
+        AwardPiety(PDV_Zenithar, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Zenithar honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "zenithar"
+    else
+        return
+    endIf
+
+    SendPrismaToast(symbolName, "good", titleText, bodyText, True)
+    AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "favor.act", symbolName, False, 1, titleText)
+    RequestPanelRefresh()
+EndFunction
+
+; ===========================================================================
 ; Authoria - Devotions Tweaks and Fixes (Pass 2)
 ; B3 / fix-plan Group 2    -- lifecycle watchdog
 ; A1 / fix-plan Group 11.2 -- one-shot actor-value repair
@@ -27945,6 +28531,9 @@ Function KickstartIfStalled()
     endIf
     RegisterForSingleUpdate(1.0)
     EnsureQuestReactionQueueRunning()
+    EnsureRecognitionModEvents()
+    InvalidateNpcReligiousRecognition()
+    SyncNpcReligiousRecognition()
     ReconcileRedguardSpineRewardAfterLoad()
     SyncKhajiitRuntimeState()
     Trace(2, "Lifecycle watchdog: master poll and quest-reaction worker re-armed on load.")

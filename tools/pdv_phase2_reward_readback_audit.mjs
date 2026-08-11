@@ -128,7 +128,7 @@ const GREEN_PACT_KEYWORDS = [
   "PDV_KW_GreenPact_Egg",
   "PDV_KW_GreenPact_Insect",
 ];
-const GREEN_PACT_KID = path.join(DEVOTION_MOD, "SKSE", "Plugins", "KeywordItemDistributor", "PDV_GreenPact_KID.ini");
+const GREEN_PACT_KID = path.join(DEVOTION_MOD, "PDV_GreenPact_KID.ini");
 const GREEN_PACT_PLANT_FOODS = [
   { formKey: "HearthFires.esm:003533", label: "Apple Dumpling" },
   { formKey: "HearthFires.esm:0009DC", label: "Garlic Bread" },

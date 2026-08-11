@@ -20,6 +20,7 @@ dist/*.xlsx
 # Local/generated scratch outputs
 generated/_audit_tmp.json
 generated/live-devotion-backups/
+generated/spid-kid-compile/
 # Hygiene-harvest candidate dumps. Candidates are not findings, and a stale dump read as a
 # finding list is exactly the failure the pass exists to avoid. Regenerate, never commit.
 generated/pdv_hygiene_*.json
@@ -93,6 +94,7 @@ dist/Devotion-[0-9]*.zip.proof.json
 dist/Devotion-FOMOD-*.zip
 # Staging tree for that packager. Deleted on success, so it only survives a failed run.
 dist/.fomod-stage/
+dist/.fomod-verify/
 # Receipts left by the superseded tools/pdv_combined_fomod_package.mjs. The current
 # packager prints its receipt to stdout and writes no file, so nothing regenerates these
 # - but a build receipt is a report of one build moment and is never committed.

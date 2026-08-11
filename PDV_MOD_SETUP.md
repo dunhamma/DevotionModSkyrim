@@ -1102,6 +1102,17 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 ## Notes / Decisions Log
 
+**2026-08-11 AEST - KID/SPID optional recognition layer:** KID and SPID are now
+strongly recommended soft dependencies rather than deferred frameworks. Three flat Data-root
+distributor files ship with Devotion: `PDV_GreenPact_KID.ini`,
+`PDV_ItemRecognition_KID.ini`, and `PDV_ReligiousRecognition_DISTR.ini`. KID supplies the
+Green Pact and seven semantic item-action lanes; SPID supplies faith keywords plus paired
+cohort factions for non-voiced NPC recognition. Faithful/Devoted map to Friend/Ally, while
+Enemy is reserved for explicit hard rivals and does not create attack-on-sight behavior. The
+manager owns relationship reconciliation and exposes a ModEvent ownership handshake for
+Repute or another reputation system. Absence of either framework simply removes that optional
+reach; core devotion and PatchHub quest reactions remain available.
+
 **2026-08-11 AEST - source-labelled PatchHub tester surfaces:** Every generated
 PatchHub reaction channel now receives its FOMOD option name as optional
 `sourceMod` metadata. `PDV__ManagerQuest` carries it through the reaction queue,

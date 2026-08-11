@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "description": "Exact Data-relative PlayerDevotion release payload. Packaging fails if a required entry is missing or any unlisted entry is present.",
-  "expectedEntryCount": 231,
+  "expectedEntryCount": 233,
   "scriptPairCount": 100,
   "releaseMetadata": [
     "CHANGELOG.txt",
@@ -27,7 +27,9 @@
     "PrismaUI/views/Devotion/index.html",
     "PrismaUI/views/Devotion/styles.css",
     "SKSE/Plugins/DevotionPrismaBridge.dll",
-    "SKSE/Plugins/KeywordItemDistributor/PDV_GreenPact_KID.ini",
+    "PDV_GreenPact_KID.ini",
+    "PDV_ItemRecognition_KID.ini",
+    "PDV_ReligiousRecognition_DISTR.ini",
     "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_AltmerPracticeLines.json",
     "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_KhajiitMoonObservations.json",
     "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix.json",

@@ -3,6 +3,27 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
+## 1.5.0 (prerelease b) -- 2026-08-11
+
+- **NPCs can recognize your public faith.** With SPID installed, named
+  adherents and coherent religious or cultural cohorts react to your standing:
+  Observant remains neutral, Faithful becomes friendly, and Devoted becomes an
+  ally. Explicit hard rivals can react as enemies at Devoted standing without
+  gaining attack-on-sight behaviour. Both recognition controls are available
+  in the MCM and default on.
+- **Seven new item-action families can feed devotion.** With KID installed,
+  taboo food, revelry, honest trade, hunt trophies, funerary offerings, Orcish
+  craft, and wearing a Divine amulet reach the same Prisma and Book of Days
+  surfaces as other devotional acts.
+- **KID and SPID are soft dependencies.** Devotion remains playable without
+  either framework; the corresponding item actions or NPC reactions are simply
+  absent.
+- **Green Pact food handling is clearer.** Meat remains pact-compatible, plants
+  remain violations, and fungi, eggs, and insects are neutral.
+- **The complete PatchHub remains included.** All 77 dependency-gated quest,
+  follower, shrine, and observer integrations continue to ship in the single
+  installer.
+
 ## 1.5.0 (prerelease a) -- 2026-08-11
 
 - **Per-mod quest reactions are now visible and attributable.** When an optional

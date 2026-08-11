@@ -44,6 +44,9 @@ if ([string]::IsNullOrWhiteSpace($BackupRoot)) {
 $Map = @(
     @{ Src = "mod-data\CREDITS.md";                                            Dst = "Credits.txt"; Required = $true },
     @{ Src = "mod-data\PDV_Calian_DESC.ini";                                  Dst = "PDV_Calian_DESC.ini"; Required = $true },
+    @{ Src = "mod-data\PDV_GreenPact_KID.ini";                               Dst = "PDV_GreenPact_KID.ini"; Required = $true },
+    @{ Src = "mod-data\PDV_ItemRecognition_KID.ini";                          Dst = "PDV_ItemRecognition_KID.ini"; Required = $true },
+    @{ Src = "mod-data\PDV_ReligiousRecognition_DISTR.ini";                   Dst = "PDV_ReligiousRecognition_DISTR.ini"; Required = $true },
     @{ Src = "mod-data\meshes\PDV\Clutter\PDV_AltmerCalian.nif";             Dst = "Meshes\PDV\Clutter\PDV_AltmerCalian.nif"; Required = $true },
     @{ Src = "mod-data\MS03 Calians\textures\calianjewelrybox.dds";          Dst = "MS03 Calians\textures\calianjewelrybox.dds"; Required = $true },
     @{ Src = "mod-data\MS03 Calians\textures\calianjewelrybox_n.dds";        Dst = "MS03 Calians\textures\calianjewelrybox_n.dds"; Required = $true },

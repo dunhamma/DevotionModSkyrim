@@ -21,9 +21,12 @@ Status: complete inventory of current repository support; the full B01-B07 JoJ s
   "coreCreationClubEditorIds": 4,
   "splitCoverageMods": 5,
   "splitCoverageCollisions": 1,
-  "kidLiveRules": 1,
-  "kidLiveRuleNames": 9,
-  "kidDeclaredEmptyLanes": 4,
+  "kidLiveRules": 31,
+  "kidLiveRuleNames": 45,
+  "kidDeclaredEmptyLanes": 0,
+  "spidLiveRules": 58,
+  "spidKeywordRules": 29,
+  "spidFactionRules": 29,
   "swapInisDistinct": 1,
   "swapEntries": 11,
   "papyrusHookPlugins": 7
@@ -121,9 +124,10 @@ game, that proof lives in a runbook, not here.
 | **G1** | Per-mod quest-reaction patches, data-only | `common/<Mod>/` StorageUtil channel JSON | **72** | No | Yes -- PatchHub option |
 | **G2** | Per-mod patches that ship a plugin | ESP (+ TIF fragments / SEQ / BOS ini) | **5** | Yes | Yes -- PatchHub option |
 | **G3** | Covered by the CORE mod, no separate patch | rows in `PDV_QuestReactionMatrix_Full.csv` | **158** editor ids (2148 rows) | n/a -- in `Devotion.esp` | **No** |
-| **G4** | Item-keyword support (KID) | `PDV_GreenPact_KID.ini` | **1** live rule (9 item names), 4 empty lanes | No | No -- in core |
+| **G4** | Item-keyword support (KID) | flat `PDV_*_KID.ini` files | **31** live rules (45 filters), no empty lanes | No | No -- in core |
 | **G5** | Shrine / world-object support (BaseObjectSwapper) | `PDV_DaedricShrinesAIO_SWAP.ini` | **1** ini, 11 swaps | Yes -- inside the G2 patch | Yes -- PatchHub option |
 | **G6** | Papyrus activity hooks, no quest stage | plugin literals in `PDV_PlayerEvents` / `PDV__ManagerQuest` / `PDV_Origin` | **7** plugins | No | **No** |
+| **G7** | NPC religious recognition (SPID) | `PDV_ReligiousRecognition_DISTR.ini` | **58** rules: 29 classifiers + 29 cohort assignments | No | No -- in core |
 
 G1 + G2 = the 77 PatchHub options, 1:1 with the 77 manifest entries and the 77
 `common/` folders. 419 quest-reaction cells, 2829 deity award rows.
@@ -418,8 +422,10 @@ s45 or `TG09` s201 to core turns the gate red instead of silently killing a patc
 
 ## G4 -- Item-keyword support (KID)
 
-`mod-data/SKSE/Plugins/KeywordItemDistributor/PDV_GreenPact_KID.ini`, shipped in
-base Devotion. No patch, no user action.
+`mod-data/PDV_GreenPact_KID.ini` and `mod-data/PDV_ItemRecognition_KID.ini`,
+shipped flat at Data root in base Devotion. KID is a strongly recommended soft
+dependency: without it Devotion remains playable, but these item actions are not
+classified and therefore do not reach piety.
 
 Mod-added food is tagged here rather than added to `PDV_FLST_GreenPact_*` because
 a FormList entry pointing at another plugin's record makes that plugin a **master
@@ -428,7 +434,7 @@ re-applies at every startup with no master dependency and no save footprint. The
 routing code accepts either path (`FormMatchesListOrKeyword`); vanilla and DLC
 food stays in the FormLists.
 
-**One live rule:**
+The Green Pact file retains one live Requiem-facing meat rule:
 
 | Keyword | Form type | Filter | Items | Aimed at |
 |---|---|---|---:|---|
@@ -450,12 +456,15 @@ Two facts worth not re-deriving:
   also self-correcting: if another mod adds its own "Bear Meat", tagging it as
   meat is still right.
 
-Safe when Requiem is absent -- KID matches nothing.
+Safe when Requiem is absent -- KID matches nothing. Fungi, eggs and insects are
+explicitly neutral and route no Green Pact piety.
 
-**Four declared-but-empty lanes:** `PDV_KW_GreenPact_Plant`,
-`PDV_KW_GreenPact_Fungi`, `PDV_KW_GreenPact_Egg`, `PDV_KW_GreenPact_Insect`.
-They exist as commented templates only. Nothing is distributed for them; a mod
-whose food falls in one of those families is **not** currently supported.
+The second file carries seven piety-bearing semantic lanes: Namira taboo food,
+Sanguine alcohol, Zenithar trade goods, Hircine/Kyne hunt trophies,
+Arkay/Tu'whacca funerary offerings, Malacath Orcish craft, and amulets of the
+Nine Divines. Across both files there are 31 live rules and 45 reviewed filters.
+Every accepted item act uses the shared same-day repeat decay and the normal
+daily piety clamp, then names the act on Prisma and in the Book of Days.
 
 The ini's comment block is load-bearing -- the 2026-08-06 packaging archive
 shipped a rule superset with the reasoning stripped and nothing flagged it. If
@@ -572,6 +581,31 @@ detected.
 
 ---
 
+## G7 -- NPC religious recognition (SPID)
+
+`mod-data/PDV_ReligiousRecognition_DISTR.ini` ships in base Devotion. SPID is a
+strongly recommended soft dependency: without it, no recognition cohorts are
+assigned and the rest of Devotion is unchanged.
+
+The file contains 58 live rules: 29 evidence rules assign a Devotion faith
+keyword to named adherents or coherent vanilla/DLC factions, then 29 faction
+rules assign the corresponding hidden recognition cohort. It distributes no
+AI packages, aggression data, spells, perks, outfits or inventory.
+
+PDV owns a separate hidden player faction and adjusts only its relationship to
+those cohorts. Observant remains neutral, Faithful becomes Friend, and Devoted
+becomes Ally. At Devoted only, explicit hard rivals may become Enemy when the
+separate MCM toggle is enabled; that relationship does not create
+attack-on-sight behaviour. Both recognition controls default on.
+
+The full focused and cultural identity roster exists in `Devotion.esp`; SPID
+targets only cohorts with an evidenced faction or named adherent. The external
+ownership events `PDV.Recognition.Claim`, `PDV.Recognition.Release`, and
+`PDV.Recognition.State` allow Repute or another reputation framework to assume
+the reaction layer without double-applying it.
+
+---
+
 ## Known gaps and honest caveats
 
 1. **Runtime proof is open across most of the hub.** 33 of the 46 options carry
@@ -596,8 +630,8 @@ detected.
 6. **This doc is derived from the git work tree.** The compile toolchain reads
    the MO2 tree. If the two have drifted, G6 (which reads `live-source/`) is the
    section most likely to lag; sync before treating it as current.
-7. **Four Green Pact KID lanes are declared and empty.** Plant, Fungi, Egg and
-   Insect distribute nothing today.
+7. **Green Pact fungi, eggs and insects are deliberately neutral.** They
+   distribute no positive or negative piety; this is policy, not an empty lane.
 8. **Five Daedric Princes have no shrine swap:** Boethiah, Clavicus Vile,
    Malacath, Meridia, Nocturnal. Nocturnal's are the two `TempleBlessingScript`
    activators Devotion must not replace; the others are STAT-only or
@@ -614,7 +648,8 @@ detected.
 | Shipped channels | `dist/PDV_QuestModPatches_FOMOD/common/<Mod>/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/*.json` | What a patch really reacts to and awards |
 | Per-mod source CSVs | `references/authoring/patches/PDV_QRM_*.csv` | Authoring intent and citations (75 files; slug does not always match the hub folder) |
 | Core matrix | `references/authoring/PDV_QuestReactionMatrix_Full.csv` | G3. **Generated** -- edit the `Tranche*` files |
-| KID | `mod-data/SKSE/Plugins/KeywordItemDistributor/PDV_GreenPact_KID.ini` | G4 |
+| KID | `mod-data/PDV_GreenPact_KID.ini`, `mod-data/PDV_ItemRecognition_KID.ini` | G4 |
 | BOS swap | `dist/PDV_QuestModPatches_FOMOD/common/DaedricShrinesAIO/SKSE/Plugins/BaseObjectSwapper/PDV_DaedricShrinesAIO_SWAP.ini` | G5 |
 | Papyrus | `live-source/Scripts/Source/{PDV_PlayerEvents,PDV__ManagerQuest,PDV_Origin}.psc` | G6 |
+| SPID | `mod-data/PDV_ReligiousRecognition_DISTR.ini` | G7 |
 | Packaging decisions | `references/authoring/PDV_ModPackaging_StateAuthority.md` | Current tester-release package state and its proof boundary |
