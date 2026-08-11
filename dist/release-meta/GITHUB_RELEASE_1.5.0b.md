@@ -93,6 +93,15 @@ toast and retained on the matching Book of Days entry.
 - Wyrmstooth
 - Xelzaz
 
+## Core-integrated quest expansions
+
+These integrations are included in Devotion itself, so they do not appear as
+separate PatchHub choices:
+
+- The Cursed Tribe - Quest Expansion
+- House of Horrors - Quest Expansion
+- The Only Cure - Quest Expansion
+
 ## KID-enabled content
 
 - Skyrim and Dragonborn: food, drink, trade goods, trophies,
