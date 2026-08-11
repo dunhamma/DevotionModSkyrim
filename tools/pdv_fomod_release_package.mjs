@@ -17,6 +17,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { findDevStatus, filesUnder } from "./lib/pdv_player_facing_copy.mjs";
@@ -24,6 +25,23 @@ import { findDevStatus, filesUnder } from "./lib/pdv_player_facing_copy.mjs";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PATCH_TREE = path.join(ROOT, "dist", "PDV_QuestModPatches_FOMOD");
 const STAGE = path.join(ROOT, "dist", ".fomod-stage");
+const VERIFY_STAGE = path.join(ROOT, "dist", ".fomod-verify");
+
+const sha256 = (file) => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex").toUpperCase();
+const collectFiles = (root) => {
+  const files = [];
+  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+    const full = path.join(root, entry.name);
+    if (entry.isDirectory()) files.push(...collectFiles(full));
+    else if (entry.isFile()) files.push(full);
+  }
+  return files;
+};
+const manifestFor = (root) => collectFiles(root).map((file) => ({
+  path: path.relative(root, file).replaceAll("\\", "/"),
+  size: fs.statSync(file).size,
+  sha256: sha256(file),
+})).sort((a, b) => a.path.localeCompare(b.path));
 
 const KNOWN_FLAGS = new Set(["--version", "--output", "--reuse-core"]);
 const argv = process.argv.slice(2);
@@ -139,7 +157,60 @@ fs.rmSync(outAbs, { force: true });
 ps(`$ErrorActionPreference='Stop'; Compress-Archive -LiteralPath (Get-ChildItem -LiteralPath '${STAGE.replaceAll("'", "''")}' | ForEach-Object {$_.FullName}) -DestinationPath '${outAbs.replaceAll("'", "''")}' -CompressionLevel Optimal`);
 
 const entries = Number(ps(`Add-Type -A System.IO.Compression.FileSystem; $z=[IO.Compression.ZipFile]::OpenRead('${outAbs.replaceAll("'", "''")}'); $z.Entries.Count; $z.Dispose()`).trim());
+const duplicateEntries = Number(ps(`Add-Type -A System.IO.Compression.FileSystem; $z=[IO.Compression.ZipFile]::OpenRead('${outAbs.replaceAll("'", "''")}'); ($z.Entries | Group-Object FullName | Where-Object Count -gt 1 | Measure-Object).Count; $z.Dispose()`).trim());
+
+// Prove the archive's file membership and bytes by extracting it and comparing every
+// member to the staged tree. This catches omissions, extra files, duplicates, and any
+// corruption introduced by the archive layer itself.
+const stagedManifest = manifestFor(STAGE);
+fs.rmSync(VERIFY_STAGE, { recursive: true, force: true });
+fs.mkdirSync(VERIFY_STAGE, { recursive: true });
+ps(`$ErrorActionPreference='Stop'; Expand-Archive -LiteralPath '${outAbs.replaceAll("'", "''")}' -DestinationPath '${VERIFY_STAGE.replaceAll("'", "''")}' -Force`);
+const archivedManifest = manifestFor(VERIFY_STAGE);
+if (duplicateEntries !== 0 || JSON.stringify(archivedManifest) !== JSON.stringify(stagedManifest)) {
+  throw new Error(`Assembled archive failed exact member verification (duplicates=${duplicateEntries}).`);
+}
+
+const sourceCommit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: ROOT, encoding: "utf8" }).trim();
+const sourceDirty = execFileSync("git", ["status", "--porcelain"], { cwd: ROOT, encoding: "utf8" }).trim() !== "";
+const patchFiles = collectFiles(PATCH_TREE);
+const moduleConfig = fs.readFileSync(path.join(STAGE, "fomod", "ModuleConfig.xml"), "utf8");
+const receipt = {
+  schemaVersion: 1,
+  generatedAt: new Date().toISOString(),
+  archive: path.basename(outAbs),
+  sha256: sha256(outAbs),
+  sizeBytes: fs.statSync(outAbs).size,
+  entryCount: entries,
+  fileEntryCount: archivedManifest.length,
+  sourceCommit,
+  sourceDirty,
+  core: {
+    archive: path.basename(coreZip),
+    sha256: sha256(path.join(ROOT, coreZip)),
+    fileCount: stagedManifest.filter((entry) => entry.path.startsWith("core/")).length,
+    installedVia: "requiredInstallFiles",
+  },
+  patchHub: {
+    fileCount: patchFiles.length,
+    patchOptions: [...moduleConfig.matchAll(/<plugin name=/g)].length,
+    channelFiles: stagedManifest.filter((entry) => /\/Channels\/[^/]+\.json$/i.test(entry.path)).length,
+  },
+  verification: {
+    archiveMembership: "exact",
+    archiveMemberHashes: "exact",
+    duplicateFileEntries: duplicateEntries,
+    playerFacingScan: "clean",
+  },
+  proofBoundary: {
+    staticAndPackaging: "passed",
+    runtimeAndManual: "post-release-tester-evidence",
+  },
+};
+fs.writeFileSync(`${outAbs}.proof.json`, `${JSON.stringify(receipt, null, 2)}\n`, "utf8");
+
 fs.rmSync(STAGE, { recursive: true, force: true });
+fs.rmSync(VERIFY_STAGE, { recursive: true, force: true });
 
 console.log(JSON.stringify({
   status: "PASS",
@@ -147,5 +218,7 @@ console.log(JSON.stringify({
   coreZip: coreZip.replaceAll("\\", "/"),
   entries,
   bytes: fs.statSync(outAbs).size,
+  sha256: receipt.sha256,
+  proof: path.relative(ROOT, `${outAbs}.proof.json`).replaceAll("\\", "/"),
   playerFacingScan: "clean",
 }, null, 2));

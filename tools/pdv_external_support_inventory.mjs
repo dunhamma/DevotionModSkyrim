@@ -10,9 +10,10 @@
  *   G1  per-mod quest-reaction patch, data-only  (common/<Mod>/ channel JSON, no plugin)
  *   G2  per-mod patch that ships a plugin        (plugins/individual/<Mod>/)
  *   G3  covered by the CORE mod, no patch        (rows in PDV_QuestReactionMatrix_Full.csv)
- *   G4  item-keyword support (KID)               (mod-data/.../PDV_GreenPact_KID.ini)
+ *   G4  item-keyword support (KID)               (mod-data/PDV_*_KID.ini)
  *   G5  shrine / world-object support (BOS)      (SWAP ini inside a G2 patch)
  *   G6  Papyrus activity hooks, no quest stage   (plugin literals in live-source .psc)
+ *   G7  NPC religious recognition (SPID)         (mod-data/PDV_*_DISTR.ini)
  *
  * Output goes to generated/ and is GITIGNORED. Per PDV_STANDARDS, a report a
  * tool regenerates is never committed. The curated LIVING doc that cites these
@@ -49,7 +50,8 @@ const COMMON = R('dist', 'PDV_QuestModPatches_FOMOD', 'common');
 const PLUGINS = R('dist', 'PDV_QuestModPatches_FOMOD', 'plugins', 'individual');
 const PATCH_CSV_DIR = R('references', 'authoring', 'patches');
 const CORE_CSV = R('references', 'authoring', 'PDV_QuestReactionMatrix_Full.csv');
-const KID_INI = R('mod-data', 'SKSE', 'Plugins', 'KeywordItemDistributor', 'PDV_GreenPact_KID.ini');
+const DISTRIBUTOR_DIR = R('mod-data');
+const SPID_INI = R('mod-data', 'PDV_ReligiousRecognition_DISTR.ini');
 const PSC_DIR = R('live-source', 'Scripts', 'Source');
 const CURATED_DOC = R('references', 'authoring', 'PDV_ExternalModSupport_Inventory.md');
 const STANCE_MATRIX = R('references', 'phase4', 'PDV_StanceMatrix.csv');
@@ -185,23 +187,28 @@ function loadPatchCsvs() {
 /* ------------------------------------------------------------ KID parsing */
 
 function readKid() {
-  if (!fs.existsSync(KID_INI)) return { path: null, rules: [], declaredLanes: [] };
-  const text = fs.readFileSync(KID_INI, 'utf8');
   const rules = [];
   const templates = [];
-  for (const raw of text.split(/\r?\n/)) {
-    const line = raw.trim();
-    const body = line.replace(/^;\s*/, '');
-    const m = /^Keyword\s*=\s*(.+)$/i.exec(body);
-    if (!m) continue;
-    const parts = m[1].split('|');
-    const entry = {
-      keyword: (parts[0] || '').trim(),
-      formType: (parts[1] || '').trim(),
-      filters: (parts[2] || '').trim(),
-      names: (parts[2] || '').split(',').map((s) => s.trim()).filter(Boolean),
-    };
-    if (line.startsWith(';')) templates.push(entry); else rules.push(entry);
+  const files = fs.existsSync(DISTRIBUTOR_DIR)
+    ? fs.readdirSync(DISTRIBUTOR_DIR).filter((f) => /_KID.*\.ini$/i.test(f)).sort()
+    : [];
+  for (const file of files) {
+    const text = fs.readFileSync(path.join(DISTRIBUTOR_DIR, file), 'utf8');
+    for (const raw of text.split(/\r?\n/)) {
+      const line = raw.trim();
+      const body = line.replace(/^;\s*/, '');
+      const m = /^Keyword\s*=\s*(.+)$/i.exec(body);
+      if (!m) continue;
+      const parts = m[1].split('|');
+      const entry = {
+        file,
+        keyword: (parts[0] || '').trim(),
+        formType: (parts[1] || '').trim(),
+        filters: (parts[2] || '').trim(),
+        names: (parts[2] || '').split(',').map((s) => s.trim()).filter(Boolean),
+      };
+      if (line.startsWith(';')) templates.push(entry); else rules.push(entry);
+    }
   }
   // The commented block declares one template line per Green Pact food family.
   // A family with a live rule below is NOT an empty lane -- only the families
@@ -209,13 +216,31 @@ function readKid() {
   const liveKeywords = new Set(rules.map((r) => r.keyword.toLowerCase()));
   const declaredLanes = templates.filter((t) => !liveKeywords.has(t.keyword.toLowerCase()));
   return {
-    path: path.relative(ROOT, KID_INI).replace(/\\/g, '/'),
+    paths: files.map((file) => path.relative(ROOT, path.join(DISTRIBUTOR_DIR, file)).replace(/\\/g, '/')),
     rules,
     declaredLanes,
     templates,
     // Which external plugins the live rules are aimed at is a comment fact, not
     // a grammar fact: these rules match by item NAME, so they name no plugin.
     targetedByName: true,
+  };
+}
+
+function readSpid() {
+  if (!fs.existsSync(SPID_INI)) return { path: null, rules: [], keywords: [], factions: [] };
+  const rules = fs.readFileSync(SPID_INI, 'utf8').split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith(';'))
+    .map((line) => {
+      const [typeRaw, valueRaw = ''] = line.split(/\s*=\s*/, 2);
+      const parts = valueRaw.split('|');
+      return { type: typeRaw, form: parts[0] || '', stringFilters: parts[1] || '', formFilters: parts[2] || '' };
+    });
+  return {
+    path: path.relative(ROOT, SPID_INI).replace(/\\/g, '/'),
+    rules,
+    keywords: rules.filter((r) => r.type === 'Keyword'),
+    factions: rules.filter((r) => r.type === 'Faction'),
   };
 }
 
@@ -545,6 +570,7 @@ function build() {
     (o.folders || []).every((f) => !commonDirs.includes(f.replace(/^common[\\/]/i, ''))));
 
   const kid = readKid();
+  const spid = readSpid();
   const swaps = findSwapInis();
   const papyrus = scanPapyrusHooks();
   const qe = findQuestExpansionCoverage(core);
@@ -579,6 +605,9 @@ function build() {
       kidLiveRules: kid.rules.length,
       kidLiveRuleNames: kid.rules.reduce((n, r) => n + r.names.length, 0),
       kidDeclaredEmptyLanes: kid.declaredLanes.length,
+      spidLiveRules: spid.rules.length,
+      spidKeywordRules: spid.keywords.length,
+      spidFactionRules: spid.factions.length,
       swapInisDistinct: swaps.filter((s) => s.ships).length,
       swapEntries: swaps.filter((s) => s.ships).reduce((n, s) => n + s.entries.length, 0),
       papyrusHookPlugins: papyrus.hooks.length,
@@ -598,6 +627,7 @@ function build() {
     relatedCoreCoverage: related,
     core: { rows: core.rows, editorIds: core.editorIds, questExpansions: qe, entries: core.entries, deityTally: core.deityTally },
     kid,
+    spid,
     swaps,
     papyrus,
   };
@@ -799,6 +829,10 @@ function renderMarkdown(inv) {
   L.push('');
   for (const r of inv.kid.rules) L.push(`- LIVE \`${r.keyword}\` | ${r.formType} | ${r.names.length} names: ${r.names.join(', ')}`);
   for (const r of inv.kid.declaredLanes) L.push(`- DECLARED-EMPTY \`${r.keyword}\` | ${r.formType}`);
+  L.push('');
+  L.push('## G7 -- SPID religious recognition');
+  L.push('');
+  L.push(`- ${inv.spid.rules.length} live rules: ${inv.spid.keywords.length} cohort classifiers and ${inv.spid.factions.length} cohort-faction assignments.`);
   L.push('');
   L.push('## G5 -- BaseObjectSwapper');
   L.push('');

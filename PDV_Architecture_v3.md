@@ -2291,8 +2291,8 @@ Use Mutagen rather than xEdit Pascal for the long-term tool because Mutagen expo
 
 Runtime distribution frameworks are valuable, but PDV should not inherit them casually:
 
-- **KID:** good model for semantic keyword distribution, but current KID depends on SKSE, Address Library, and powerofthree's Tweaks. PDV core should prefer the offline patcher for keyword classification.
-- **SPID:** deferred. It may become worth the cost if PDV later needs runtime actor-load distribution, outfit lifecycle behavior, or wide NPC spell/perk/item injection that cannot be represented cleanly in a generated patch. Until then, the offline patcher owns NPC/base-actor distribution.
+- **KID:** adopted as a strongly recommended soft dependency for optional semantic item classification. Devotion ships flat Data-root KID files for Green Pact food and seven bounded item-action families; absence of KID removes those optional signals without disabling core devotion.
+- **SPID:** adopted as a strongly recommended soft dependency for bounded, non-voiced religious recognition. It distributes only PDV faith keywords and cohort factions; the manager owns Friend/Ally/explicit-rival Enemy reconciliation. It does not distribute AI packages, spells, perks, outfits, or inventory, and absence of SPID removes only NPC recognition.
 - **SkyPatcher:** excellent conceptually for declarative patching, but current public docs/snippets show a powerofthree's Tweaks dependency. PDV should copy the design idea into its own offline patcher before making it a runtime requirement.
 - **PO3 Papyrus Extender:** accepted as a hard runtime dependency for event hooks that cannot be baked into an ESP. This also brings Address Library and powerofthree's Tweaks into the runtime dependency chain. Treat PO3 as separate from classification/distribution: it is for runtime events, not keyword/NPC distribution.
 - **JContainers:** keep out of 1.0 core unless a later rule format genuinely needs nested runtime data. Build-time JSON manifests do not require JContainers.
@@ -2593,7 +2593,7 @@ Enhancement custom content (improves experience, not required for core function)
 - **No voiced content in 1.0 (voiced NPC dialogue deferred to V2).** V1 ships no NPC spoken dialogue, because credible NPC lines need voice files and voice work is explicitly held for V2. Deferred to V2: the Phase 11 privilege dialogue/restoration/recognition families and the Arngeir/Kynareth recognition pilot; the Phase 18 Nord recognition quartet (Froki, Heimskr, Andurs, Aela); and the 39 `PDV_Dlog_*_Recognition` stubs drafted across the roster. V1 delivers every player-facing beat through non-voiced surfaces only: MessageBoxes, corner notifications, Survey Devotion readouts, shrine-activator menus, and mechanical faction/disposition/stance effects. **Scope-mapping rule:** where a race sheet or this document describes a "dialogue privilege" or NPC "recognition" payoff, V1 delivers the non-voiced equivalent (notification, MessageBox, Survey readout, or disposition/stance effect) and the spoken-dialogue version lands in V2; metaphorical "feels like recognition" design language is unaffected. **Build action (pending, CK-side):** the already-live Phase 18 Nord dialogue records (`DLBR`/`DIAL`/`INFO`) must be disabled or removed from the V1 release ESP, and their Phase 18 verifier assertions move to V2 scope.
 - No hard Survival/Requiem dependency.
 - No DLL plugins authored by PDV.
-- No hard KID, SPID, or SkyPatcher dependency solely for keyword/classification/NPC distribution. powerofthree's Tweaks is accepted only as part of the PO3 Papyrus Extender runtime-event dependency chain, not as a reason to adopt KID/SkyPatcher distribution. Prefer the offline patcher unless a runtime-only feature proves the need.
+- No hard KID, SPID, or SkyPatcher dependency solely for keyword/classification/NPC distribution. KID and SPID are strongly recommended soft dependencies for the shipped semantic-item and non-voiced NPC-recognition extensions; Devotion remains functional without them. powerofthree's Tweaks remains accepted through the PO3 Papyrus Extender runtime-event dependency chain.
 - No replacement of vanilla shrine activator scripts. Prefer per-reference co-attachment or overlay receiver patterns instead of global base-script overrides.
 
 ### 21.4 Implementation-plan review after race-sheet cleanup
@@ -2891,7 +2891,7 @@ post-1.0 work, including the deferred voiced-dialogue lane (Section 21.3), is
 
 - **Per-race ESP split.** Stays monolithic through 1.0; revisit only on need (Section 18.2).
 - **JContainers escalation.** StorageUtil is enough through 1.0. If post-1.0 features require nested structures (e.g. a complex stigma history per Daedric path with timestamp arrays), revisit. JContainers stays out of the v1.0 dependency tree.
-- **SPID adoption.** Deferred. Revisit if future NPC distribution needs runtime actor-load behavior, outfit lifecycle handling, or broad dynamic injection that cannot be safely represented by the offline patcher.
+- **SPID adoption.** Adopted for the bounded faith-keyword/cohort-faction recognition layer as a soft dependency. Broader spell, perk, outfit, inventory, AI-package, or generic actor injection remains out of scope and requires a separate design decision.
 - **Multi-character cross-save patron memory.** Each save is independent; cross-save persistence is not architecturally interesting.
 - **Localization.** All player-facing strings are ASCII English. A second-pass localization effort post-1.0 is in scope; the architecture supports it via string-table externalization, which would be a minor refactor.
 

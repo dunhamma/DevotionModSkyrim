@@ -89,6 +89,26 @@ Keyword Property PDV_KW_GreenPact_Fungi Auto
 Keyword Property PDV_KW_GreenPact_Egg Auto
 Keyword Property PDV_KW_GreenPact_Insect Auto
 
+; KID semantic keywords are resolved by FormID for existing-save safety. They
+; are not VMAD properties: old saves retain their original alias binding table.
+Keyword PDV_KID_NamiraTabooFood = None
+Keyword PDV_KID_SanguineAlcohol = None
+Keyword PDV_KID_ZenitharTradeGood = None
+Keyword PDV_KID_HircineHuntTrophy = None
+Keyword PDV_KID_FuneraryOffering = None
+Keyword PDV_KID_OrcishCraft = None
+Keyword PDV_KID_AmuletAkatosh = None
+Keyword PDV_KID_AmuletArkay = None
+Keyword PDV_KID_AmuletDibella = None
+Keyword PDV_KID_AmuletJulianos = None
+Keyword PDV_KID_AmuletKynareth = None
+Keyword PDV_KID_AmuletMara = None
+Keyword PDV_KID_AmuletStendarr = None
+Keyword PDV_KID_AmuletTalos = None
+Keyword PDV_KID_AmuletZenithar = None
+Bool PDV_KID_BarterOpen = false
+Int PDV_KID_TradeValuePending = 0
+
 FormList Property PDV_FLST_FaucetSkillBooks Auto
 FormList Property PDV_FLST_FaucetSpellTomes Auto
 FormList Property PDV_FLST_FaucetDaedricArtifacts Auto
@@ -223,6 +243,7 @@ Event OnInit()
     ResetUpdateScheduler()
     PDV_OriginQueuedThisLoad = false
     PDV_BardFormsResolved = false
+    ResolveKIDKeywords()
     RegisterForPlayerEvents()
     StartBardPerformancePoll()
     QueueOriginInitialization()
@@ -234,6 +255,7 @@ Event OnPlayerLoadGame()
     ResetUpdateScheduler()
     PDV_OriginQueuedThisLoad = false
     PDV_BardFormsResolved = false
+    ResolveKIDKeywords()
     RegisterForPlayerEvents()
     StartBardPerformancePoll()
     QueueOriginInitialization()
@@ -593,6 +615,9 @@ Event OnItemCrafted(ObjectReference akBench, Location akLocation, Form akCreated
     Trace(1, "Item crafted: bench=" + benchId + ", createdItem=" + createdId + ".")
 
     PDV_RouterService.HandleStoryCraftItem(akBench, akLocation, akCreatedItem)
+    if akCreatedItem && PDV_KID_OrcishCraft && akCreatedItem.HasKeyword(PDV_KID_OrcishCraft)
+        RouteKIDAction("orcish_craft", akCreatedItem)
+    endIf
 EndEvent
 
 Event OnQuestStageChange(Quest akQuest, Int aiNewStage)
@@ -634,6 +659,7 @@ EndEvent
 
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
     RouteBosmerGreenPactFood(akBaseObject)
+    RouteKIDEquippedAction(akBaseObject)
     ; Sleeping Tree Sap (dunSleepingTreeCampSap, Skyrim.esm) is a one-shot
     ; Argonian vision source; the manager enforces origin and the one-shot.
     if akBaseObject && akBaseObject.GetFormID() == 0x000AED90 && PDV_EventBusService
@@ -787,8 +813,7 @@ Function RouteBosmerGreenPactFood(Form baseObject)
     elseIf FormMatchesListOrKeyword(baseObject, PDV_FLST_GreenPact_EggFoods, PDV_KW_GreenPact_Egg)
         Trace(3, "Green Pact egg food ignored.")
     elseIf FormMatchesListOrKeyword(baseObject, PDV_FLST_GreenPact_InsectFoods, PDV_KW_GreenPact_Insect)
-        PDV_EventBusService.RouteBosmerPactPositive()
-        Trace(2, "Green Pact insect food positive routed.")
+        Trace(3, "Green Pact insect food ignored.")
     endIf
 EndFunction
 
@@ -817,6 +842,9 @@ Event OnMenuOpen(String menuName)
     if menuName == "Lockpicking Menu"
         PDV_LockpickMenuTargetRef = Game.GetCurrentCrosshairRef()
         PDV_LockpickMenuTargetWasLocked = PDV_LockpickMenuTargetRef && PDV_LockpickMenuTargetRef.IsLocked()
+    elseIf menuName == "BarterMenu"
+        PDV_KID_BarterOpen = true
+        PDV_KID_TradeValuePending = 0
     endIf
 EndEvent
 
@@ -826,6 +854,9 @@ Event OnMenuClose(String menuName)
         Trace(2, "RaceSex menu closed; origin retry queued.")
     elseIf menuName == "Lockpicking Menu"
         ResolveLockpickMenuClose()
+    elseIf menuName == "BarterMenu"
+        PDV_KID_BarterOpen = false
+        PDV_KID_TradeValuePending = 0
     endIf
 EndEvent
 
@@ -1037,6 +1068,8 @@ Event OnActorKilled(Actor akVictim, Actor akKiller)
         return
     endIf
 
+    StorageUtil.SetIntValue(akVictim, "PDV.KID.KilledByPlayerDay", GetDevotionalDayStamp())
+
     Int originRace = GetOriginRaceValue()
 
     if IsPaarthurnaxActor(akVictim)
@@ -1212,6 +1245,7 @@ Bool Function IsCombatSessionOrigin(Int originRace)
 EndFunction
 
 Event OnItemAdded(Form akBaseItem, Int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
+    RouteKIDTrophyPickup(akBaseItem, akSourceContainer)
     Actor sourceActor = akSourceContainer as Actor
     if !sourceActor
         return
@@ -1279,6 +1313,7 @@ Event OnItemAdded(Form akBaseItem, Int aiItemCount, ObjectReference akItemRefere
 EndEvent
 
 Event OnItemRemoved(Form akBaseItem, Int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
+    RouteKIDRemovedAction(akBaseItem, aiItemCount, akDestContainer)
     ; Spell-tome learning ingress (Mega Packet Sitting 1 E1, 2026-07-05).
     ; Reading a spell tome learns the spell and destroys the book, but that path
     ; does NOT raise OnBookRead, so EVT_READ_SPELL_TOME (341) never fired through
@@ -1310,10 +1345,118 @@ Event OnItemRemoved(Form akBaseItem, Int aiItemCount, ObjectReference akItemRefe
     Trace(1, "Spell tome learned: routed EVT_READ_SPELL_TOME.")
 EndEvent
 
+Function ResolveKIDKeywords()
+    PDV_KID_NamiraTabooFood = Game.GetFormFromFile(0x00071747, "Devotion.esp") as Keyword
+    PDV_KID_SanguineAlcohol = Game.GetFormFromFile(0x00071748, "Devotion.esp") as Keyword
+    PDV_KID_ZenitharTradeGood = Game.GetFormFromFile(0x00071749, "Devotion.esp") as Keyword
+    PDV_KID_HircineHuntTrophy = Game.GetFormFromFile(0x0007174A, "Devotion.esp") as Keyword
+    PDV_KID_FuneraryOffering = Game.GetFormFromFile(0x0007174B, "Devotion.esp") as Keyword
+    PDV_KID_OrcishCraft = Game.GetFormFromFile(0x0007174C, "Devotion.esp") as Keyword
+    PDV_KID_AmuletAkatosh = Game.GetFormFromFile(0x0007174D, "Devotion.esp") as Keyword
+    PDV_KID_AmuletArkay = Game.GetFormFromFile(0x0007174E, "Devotion.esp") as Keyword
+    PDV_KID_AmuletDibella = Game.GetFormFromFile(0x0007174F, "Devotion.esp") as Keyword
+    PDV_KID_AmuletJulianos = Game.GetFormFromFile(0x00071750, "Devotion.esp") as Keyword
+    PDV_KID_AmuletKynareth = Game.GetFormFromFile(0x00071751, "Devotion.esp") as Keyword
+    PDV_KID_AmuletMara = Game.GetFormFromFile(0x00071752, "Devotion.esp") as Keyword
+    PDV_KID_AmuletStendarr = Game.GetFormFromFile(0x00071753, "Devotion.esp") as Keyword
+    PDV_KID_AmuletTalos = Game.GetFormFromFile(0x00071754, "Devotion.esp") as Keyword
+    PDV_KID_AmuletZenithar = Game.GetFormFromFile(0x00071755, "Devotion.esp") as Keyword
+EndFunction
+
+Function RouteKIDAction(String actionKey, Form sourceForm)
+    if !PDV_EventBusService || !PDV_EventBusService.PDV_Manager
+        Trace(1, "KID action skipped: PDV manager unavailable.")
+        return
+    endIf
+    PDV_EventBusService.PDV_Manager.HandleKIDAction(actionKey, sourceForm)
+EndFunction
+
+Function RouteKIDEquippedAction(Form baseObject)
+    if !baseObject
+        return
+    endIf
+    if !PDV_KID_NamiraTabooFood
+        ResolveKIDKeywords()
+    endIf
+
+    if PDV_KID_NamiraTabooFood && baseObject.HasKeyword(PDV_KID_NamiraTabooFood)
+        RouteKIDAction("namira_taboo_food", baseObject)
+    elseIf PDV_KID_SanguineAlcohol && baseObject.HasKeyword(PDV_KID_SanguineAlcohol)
+        RouteKIDAction("sanguine_alcohol", baseObject)
+    elseIf PDV_KID_AmuletAkatosh && baseObject.HasKeyword(PDV_KID_AmuletAkatosh)
+        RouteKIDAction("amulet_akatosh", baseObject)
+    elseIf PDV_KID_AmuletArkay && baseObject.HasKeyword(PDV_KID_AmuletArkay)
+        RouteKIDAction("amulet_arkay", baseObject)
+    elseIf PDV_KID_AmuletDibella && baseObject.HasKeyword(PDV_KID_AmuletDibella)
+        RouteKIDAction("amulet_dibella", baseObject)
+    elseIf PDV_KID_AmuletJulianos && baseObject.HasKeyword(PDV_KID_AmuletJulianos)
+        RouteKIDAction("amulet_julianos", baseObject)
+    elseIf PDV_KID_AmuletKynareth && baseObject.HasKeyword(PDV_KID_AmuletKynareth)
+        RouteKIDAction("amulet_kynareth", baseObject)
+    elseIf PDV_KID_AmuletMara && baseObject.HasKeyword(PDV_KID_AmuletMara)
+        RouteKIDAction("amulet_mara", baseObject)
+    elseIf PDV_KID_AmuletStendarr && baseObject.HasKeyword(PDV_KID_AmuletStendarr)
+        RouteKIDAction("amulet_stendarr", baseObject)
+    elseIf PDV_KID_AmuletTalos && baseObject.HasKeyword(PDV_KID_AmuletTalos)
+        RouteKIDAction("amulet_talos", baseObject)
+    elseIf PDV_KID_AmuletZenithar && baseObject.HasKeyword(PDV_KID_AmuletZenithar)
+        RouteKIDAction("amulet_zenithar", baseObject)
+    endIf
+EndFunction
+
+Function RouteKIDTrophyPickup(Form baseItem, ObjectReference sourceContainer)
+    Actor sourceActor = sourceContainer as Actor
+    if !baseItem || !sourceActor || !sourceActor.IsDead()
+        return
+    endIf
+    if !PDV_KID_HircineHuntTrophy
+        ResolveKIDKeywords()
+    endIf
+    if !PDV_KID_HircineHuntTrophy || !baseItem.HasKeyword(PDV_KID_HircineHuntTrophy)
+        return
+    endIf
+    Int dayStamp = GetDevotionalDayStamp()
+    if StorageUtil.GetIntValue(sourceActor, "PDV.KID.KilledByPlayerDay") != dayStamp
+        return
+    endIf
+    if StorageUtil.GetIntValue(sourceActor, "PDV.KID.TrophyClaimedDay") == dayStamp
+        return
+    endIf
+    StorageUtil.SetIntValue(sourceActor, "PDV.KID.TrophyClaimedDay", dayStamp)
+    RouteKIDAction("hunt_trophy", baseItem)
+EndFunction
+
+Function RouteKIDRemovedAction(Form baseItem, Int itemCount, ObjectReference destination)
+    if !baseItem || itemCount <= 0
+        return
+    endIf
+    if !PDV_KID_ZenitharTradeGood
+        ResolveKIDKeywords()
+    endIf
+
+    if PDV_KID_BarterOpen && PDV_KID_ZenitharTradeGood && baseItem.HasKeyword(PDV_KID_ZenitharTradeGood)
+        PDV_KID_TradeValuePending += baseItem.GetGoldValue() * itemCount
+        if PDV_KID_TradeValuePending >= 250
+            PDV_KID_TradeValuePending -= 250
+            RouteKIDAction("zenithar_trade", baseItem)
+        endIf
+    endIf
+
+    Actor destinationActor = destination as Actor
+    if destinationActor && destinationActor.IsDead() && PDV_KID_FuneraryOffering && baseItem.HasKeyword(PDV_KID_FuneraryOffering)
+        Int dayStamp = GetDevotionalDayStamp()
+        if StorageUtil.GetIntValue(destinationActor, "PDV.KID.FuneraryOfferingDay") != dayStamp
+            StorageUtil.SetIntValue(destinationActor, "PDV.KID.FuneraryOfferingDay", dayStamp)
+            RouteKIDAction("funerary_offering", baseItem)
+        endIf
+    endIf
+EndFunction
+
 Function RegisterForPlayerEvents()
     RegisterForSleep()
     RegisterForMenu("RaceSex Menu")
     RegisterForMenu("Lockpicking Menu")
+    RegisterForMenu("BarterMenu")
     RegisterForShoutSignals()
     RegisterForLevelSignals()
     RegisterForCivilWarSignals()

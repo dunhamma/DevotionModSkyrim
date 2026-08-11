@@ -85,7 +85,7 @@ If a task appears blocked by a houseCARL limitation, **first reproduce it with a
 | `tools/sync-devotion-to-live.ps1` | Guarded live-file sync helper | Copying repo-tracked Prisma assets, StorageUtil assets, and selected live-source Papyrus files, including `PDV_MCM.psc`, into the existing Anvil Devotion mod only after backing up the live ESP/SEQ/Scripts/SKSE/Prisma artifacts; refuses empty or damaged live mod folders |
 | `tools/pdv_package_release.mjs` | Release zip builder -- the ONLY sanctioned path to a `dist/` bundle | Packaging a public build from the live Anvil Devotion mod folder. Never hand-roll the zip (rc1 leaked an 876KB `.orig`); the script gates on version, ANAM, and archive contents. Note its gates are narrower than `pdv_verify.mjs` -- a green package run is not a green verify run |
 | `D:\...\Devotion\Scripts\TempleBlessingScript.pex` (+ `Source\*.psc`) | Shipped loose-file override of the vanilla shrine activation script | Reasoning about shrine behavior or install order. Ships from 1.0.4 to undo Requiem's bugfix-pack dispel-all line. **Devotion must sit BELOW any Requiem bugfix pack in MO2** or their copy wins silently -- see the 2026-07-27 Decisions Log entry |
-| `D:\...\Devotion\SKSE\Plugins\KeywordItemDistributor\PDV_GreenPact_KID.ini` | Green Pact mod-added food distribution | Adding mod-added meats to the Bosmer Green Pact reward lane. Rules match by item NAME, not FormID/EditorID; vanilla and DLC meats are the static record set, not KID |
+| `D:\...\Devotion\PDV_GreenPact_KID.ini` | Green Pact mod-added food distribution | Adding mod-added meats to the Bosmer Green Pact reward lane. KID distributor files live at the Data root. Rules match by item NAME, not FormID/EditorID; vanilla and DLC meats are the static record set, not KID |
 | `references/authoring/PDV_BosmerVariety_PapyrusHandoff.md` | Bosmer variety `PDV__ManagerQuest.psc` runtime layer | Authoring/applying the Bosmer dream/hearth/Songs/signature/Naming Papyrus (property decls, exact call-site insertions, full functions) modeled on the shipped Argonian variety code; closes the manifest's `scriptLayerPending` |
 | `tools/pdv_cumulative_rebalance.mjs` | Highest-tier-only cumulative rebalancer | ONE-SHOT rewrite of focused 3-tier families to per-ActorValue cumulative totals (+ per-effect `effectName`). NOT idempotent (a re-run would double magnitudes); specs are stamped `cumulativeRebalanceApplied` on `--write` and refused thereafter. Already applied 2026-06-11 to all 9 non-Argonian specs -- future magnitude tuning edits the cumulative values in the spec by hand |
 | `tools/pdv_reward_desc_regen.mjs` | Reward description regenerator | Text-only pass that rewrites `playerFacingText` from the CURRENT spec effects (keeps the no-digit flavor lead, appends an accurate named effect summary); safe to re-run after any magnitude change, never re-sums |
@@ -1084,6 +1084,17 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 ---
 
 ## Decisions Log
+
+- **[2026-08-11] - KID and SPID are strongly recommended soft dependencies for optional devotional reach:**
+  Devotion remains functional without either framework. `PDV_GreenPact_KID.ini` and
+  `PDV_ItemRecognition_KID.ini` distribute fifteen PDV semantic keywords for Green Pact and
+  seven item-action families; `PDV_ReligiousRecognition_DISTR.ini` distributes twenty-nine
+  faith keywords and twenty-nine matching cohort factions. Faithful standing maps cohorts to
+  Friend, Devoted maps them to Ally, and only explicit hard rivals can map to Enemy; none of
+  these rules add AI packages, attack-on-sight flags, spells, perks, or inventory. The MCM
+  controls default on, all files install at the Data root, and external reputation systems may
+  claim the recognition lane through `PDV.Recognition.Claim` / `.Release` / `.State` so the
+  two systems do not apply competing relationship changes. Spoken recognition remains V2.
 
 - **[2026-08-11] - PatchHub reactions must identify their source on both player-visible surfaces:**
   Each compiled `PDV_QRM_*` PatchHub channel carries the exact player-facing name of its

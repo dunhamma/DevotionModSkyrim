@@ -19,7 +19,15 @@ REQUIREMENTS
   SkyUI                     (MCM configuration menu)
   PapyrusUtil SE            (data storage)
   PrismaUI                  (in-game Survey / Book of Days)
-  Keyword Item Distributor  (powerofthree's KID)
+
+STRONGLY RECOMMENDED
+--------------------------------------------------------------
+  Keyword Item Distributor  (item-based devotional actions)
+  Spell Perk Item Distributor (NPC religious recognition)
+
+  Devotion remains playable without either distributor. Without
+  KID, classified item actions do not register. Without SPID,
+  NPCs do not react to your public religious standing.
 
 
 INSTALLING
@@ -73,7 +81,7 @@ FIRST STEPS
 
 SOURCE CODE
 --------------------------------------------------------------
-  Full Papyrus source ships in Scripts\Source\ (96 .psc files).
+  Full Papyrus source ships in Scripts\Source\ (100 .psc files).
   It is not needed at runtime -- it is there so you can read it,
   learn from it, or rebuild the scripts yourself.
 

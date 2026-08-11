@@ -60,6 +60,8 @@ String Property PAGE_PACING = "Debug: Pacing & Pantheons" AutoReadOnly
 Int _oidSurveyDevotion = -1
 Int _oidExportReport = -1
 Int _oidModeToggle = -1
+Int _oidNpcRecognition = -1
+Int _oidNpcHostileRecognition = -1
 Int _oidSelectedDeity = -1
 Int _oidDebugPatronOverride = -1
 Int _oidDebugClearPatron = -1
@@ -367,6 +369,10 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("On-screen devotion cues: screen effects, sounds, and music stingers when your standing shifts. Turn off for a quieter, effects-free experience. The Book of Days journal still records everything.")
     elseIf a_option == _oidNotifications
         SetInfoText("Corner toast messages when your devotion changes. Turn off to play with no pop-up notifications. The Book of Days journal still records everything.")
+    elseIf a_option == _oidNpcRecognition
+        SetInfoText("Allows SPID-tagged NPCs to regard a Faithful character as a friend and a Devoted character as an ally. SPID is recommended but not required.")
+    elseIf a_option == _oidNpcHostileRecognition
+        SetInfoText("At Devoted standing, explicit hard rivals may regard you as an enemy. This changes disposition only and never adds attack-on-sight behaviour.")
     elseIf a_option == _oidModeToggle
         SetInfoText("Switches between the authored Pilgrim's Path and the gentler Wayfarer's Path for non-survival players.")
     elseIf a_option == _oidPacingSubstrateOrigin
@@ -911,6 +917,22 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidNotifications
         if EnsureManagerBinding("toggle_notifications")
             PDV_Manager.SetNotificationsEnabled(!PDV_Manager.NotificationsEnabled())
+        endIf
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidNpcRecognition
+        if EnsureManagerBinding("toggle_npc_recognition")
+            PDV_Manager.SetNpcReligiousRecognitionEnabled(!PDV_Manager.NpcReligiousRecognitionEnabled())
+        endIf
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidNpcHostileRecognition
+        if EnsureManagerBinding("toggle_npc_hostile_recognition")
+            PDV_Manager.SetNpcHostileRecognitionEnabled(!PDV_Manager.NpcHostileRecognitionEnabled())
         endIf
         ForcePageReset()
         return
@@ -1988,6 +2010,18 @@ Function BuildCompatPage()
         _oidNotifications = -1
         AddTextOption("In-Game Effects", "Unavailable", OPTION_FLAG_DISABLED)
         AddTextOption("Notifications", "Unavailable", OPTION_FLAG_DISABLED)
+    endIf
+
+    AddHeaderOption("NPC Recognition", OPTION_FLAG_NONE)
+    if PDV_Manager
+        _oidNpcRecognition = AddTextOption("Religious recognition", OnOffLabel(PDV_Manager.NpcReligiousRecognitionEnabled()), OPTION_FLAG_NONE)
+        _oidNpcHostileRecognition = AddTextOption("Hard-rival reactions", OnOffLabel(PDV_Manager.NpcHostileRecognitionEnabled()), OPTION_FLAG_NONE)
+        if devMode
+            AddTextOption("Current", PDV_Manager.GetNpcRecognitionStatusLine(), OPTION_FLAG_DISABLED)
+        endIf
+    else
+        AddTextOption("Religious recognition", "Unavailable", OPTION_FLAG_DISABLED)
+        AddTextOption("Hard-rival reactions", "Unavailable", OPTION_FLAG_DISABLED)
     endIf
 
     AddHeaderOption("Custom Race", OPTION_FLAG_NONE)
@@ -3962,7 +3996,7 @@ EndFunction
 ;/ =====================================================================
     B5 / fix-plan 9.1 -- stale option IDs, the dangerous one
     ---------------------------------------------------------------------
-    PDV_MCM holds 169 _oid* variables and OnPageReset used to clear exactly
+    PDV_MCM holds 171 _oid* variables and OnPageReset used to clear exactly
     two of them. SkyUI hands out option IDs SEQUENTIALLY PER PAGE, so an oid
     left over from a page visited earlier can numerically equal a live option
     on the page you are looking at now -- and OnOptionSelect / OnOptionSliderAccept
@@ -3977,7 +4011,7 @@ EndFunction
     rebuilt, so a comparison can only match a control the current page actually
     registered.
 
-    Generated from this file's own declaration list -- all 169, in name order.
+    Generated from this file's own declaration list -- all 171, in name order.
     If a control is added, add its reset here too.
    ===================================================================== /;
 Function ResetAllOptionIds()
@@ -4078,6 +4112,8 @@ Function ResetAllOptionIds()
     _oidKhajiitRoadHome = -1
     _oidMephalaWebWoven = -1
     _oidModeToggle = -1
+    _oidNpcRecognition = -1
+    _oidNpcHostileRecognition = -1
     _oidNeglectRunPass = -1
     _oidNordNineDivines = -1
     _oidNordOldWays = -1
