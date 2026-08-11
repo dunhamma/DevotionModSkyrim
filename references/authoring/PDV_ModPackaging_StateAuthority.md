@@ -66,22 +66,22 @@ Book entry must reuse the same resolved practice line.
 ## Current all-in-one tester-release state
 
 - Build date: 2026-08-11; internal version `1.5.0`; prerelease label `a`;
-  source commit `6dba420ba70249c6a1759a4a62c7a1acb071e7ba`.
-- Public archive: `Devotion-FOMOD-1.5.0a-20260811.zip`, 9,299,029 bytes,
-  SHA-256 `BEB577F0F032D9646AAE4612BF255048535D0561AFD06A71E1FF8015D7392C58`.
+  source commit `a8ea17d15eba16e3221782423a837aef305452dd`.
+- Public archive: `Devotion-FOMOD-1.5.0a-20260811.zip`, 9,299,883 bytes,
+  SHA-256 `56470A12F71FD2BBB47D0B3FAD9B5F75CCD3D2E9C5A8A9D6DD38FFC2778B5208`.
   It contains 746 ZIP entries / 353 files: 231 required core files plus the
   122-file PatchHub tree. Exact membership, every core-member hash, and every
   non-generated PatchHub-member hash were checked after packaging; there are no
   missing, extra, duplicate, or mismatched file entries.
 - The core input is `Devotion-1.5.0-20260811.zip`, SHA-256
-  `53F6C2A2026FF292F5CF6BB555463018A9984294DB1FDBCCBEBBF2A43BD63A2F`.
+  `7739AB264B357935AD6FFEB85B50CCF54026FAC535CDCF6AEF2AD56E43D98890`.
   Its 231-entry manifest, 100 fresh PSC/PEX pairs, native DLL freshness and
   exports, Prisma asset/cache parity, ANAM, SEQ, version, and direct ESP-hash
   readback gates pass.
 - The PatchHub has 77 dependency-gated options: 72 data-only quest-reaction
   options and five plugin-bearing options. Seventy-five channel JSON files are
   present. The validated installer tree has 122 files and tree SHA-256
-  `ABEA97F8012C83F0D47936097A68B6A4B2AE5924624B1D0C4CD47D5733794D9C`.
+  `281C99C260BAE9C066B397721C5A5CBE561F2D2357F0F8D0FE1276BAC7B9CAFD`.
 - The JoJ B-series is closed at 37/37 candidates: 31 APPROVED and six SILENT.
   Interesting NPCs contributes 27 cells / 269 deity rows behind `3DNPC.esp`.
 - `PDV_QuestModPatches_FOMOD_Validation.json` is the exact membership and
@@ -138,7 +138,7 @@ runtime, player-surface, semantic, or support proof.
 | `Devotion-1.0.4-20260807.zip` | 8,294,880 | `CF7CFDBD5FC84D6B7BA5C6B4DFC697745978DA50C3290E1ED89095D41775E4DE` | 231 manifest entries; 100 PSC/PEX pairs; Altmer five-deity roster repair |
 | `PDV-QuestModPatchHub-ARR25-Experimental-20260807.zip` | 509,879 | `DEC5EBC4285F3985D3D8F0BDF1ADBE4F288C20FB09F3D83EA3ECD5457F633949` | 80 members; 41 options; 39 channel files |
 | `PDV-QuestModPatchHub-20260811.zip` | 984,357 | `5548314D06F28FF9CF577F76650C63FED35AEB3A85C28557338F0B2D56BFB0B1` | 122 members; 77 options; 75 channel files; complete B01-B07 JoJ tester release |
-| `Devotion-FOMOD-1.5.0a-20260811.zip` | 9,299,029 | `BEB577F0F032D9646AAE4612BF255048535D0561AFD06A71E1FF8015D7392C58` | 746 ZIP entries / 353 files; required 1.5.0 core; 77 optional patches; 75 source-labelled channels |
+| `Devotion-FOMOD-1.5.0a-20260811.zip` | 9,299,883 | `56470A12F71FD2BBB47D0B3FAD9B5F75CCD3D2E9C5A8A9D6DD38FFC2778B5208` | 746 ZIP entries / 353 files; required 1.5.0 core; 77 optional patches; 75 source-labelled channels; public patch/KID/SPID inventory |
 
 Core intentionally includes the current Altmer and Khajiit runtime/UI assets,
 the canonical core quest matrix, the Calian assets, the native Prisma bridge,
