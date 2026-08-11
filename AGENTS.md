@@ -1085,6 +1085,16 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 
 ## Decisions Log
 
+- **[2026-08-11] - Mechanical multi-file tool edits require exhaustive syntax and command verification:**
+  A repeated text match is not evidence that every insertion point has the same syntactic shape.
+  Before a transform touches multiple files under `tools/`, enumerate the exact targets, inspect
+  each anchor around imports, strings, template literals, embedded scripts, nested structures, and
+  generated regions, then apply the complete `PDV_STANDARDS.md` section 6.7c closeout sweep. That
+  sweep runs `node --check` on every edited tool, reviews every insertion structurally, exercises
+  accepted and rejected CLI paths when flags change, reruns affected documented commands, and
+  confirms final file/edit counts. Rationale: PR #62 placed one insertion inside a multi-line import
+  and another inside an embedded preload template; only exhaustive verification caught both.
+
 - **[2026-08-11] - KID and SPID are strongly recommended soft dependencies for optional devotional reach:**
   Devotion remains functional without either framework. `PDV_GreenPact_KID.ini` and
   `PDV_ItemRecognition_KID.ini` distribute fifteen PDV semantic keywords for Green Pact and

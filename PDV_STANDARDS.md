@@ -712,6 +712,40 @@ verification, because an evidence claim nobody re-checked is not evidence. Scrip
 the model reads summaries -- never read a 1.2 MB script whole to answer a question about twelve
 functions.
 
+### 6.7c Syntax-sensitive bulk-edit safety
+
+A repeated text pattern does not prove that every match is the same syntactic
+context. Before a mechanical edit touches more than one file under `tools/`:
+
+1. Enumerate the exact target files and expected edit count. Abort if either
+   count changes during the transform.
+2. Inspect each anchor in its surrounding syntax. Classify multi-line import or
+   export blocks, strings, template literals, embedded scripts, nested
+   structures, and generated regions before choosing the edit method.
+3. Use unique, structure-bounded anchors. If the targets have different shapes,
+   split the transform or edit the outliers separately; do not insert at the
+   first matching line merely because the text is uniform.
+4. Identify the authority for generated blocks. Edit the generator rather than
+   its output unless the tracked output is intentionally the authoring surface.
+5. Record the documented invocations affected by the change before editing so
+   the same commands can be rerun afterward.
+
+The minimum closeout sweep is exhaustive, not sampled:
+
+1. Run `node --check` on every edited `.js` and `.mjs` tool.
+2. Inspect every insertion in the final diff and prove it landed at the intended
+   structural level, not inside an import, string, template literal, embedded
+   script, or nested block. A successful text replacement is not this proof.
+3. When CLI handling changes, run an accepted invocation and a bogus-flag
+   rejection for every edited tool; verify the rejection exits nonzero.
+4. Rerun every documented command the edit could reject or corrupt, plus the
+   affected tool-specific gates.
+5. Run `git diff --check` and confirm the final changed-file and edit counts
+   match the preconditions.
+
+If one transform produces mixed syntactic cases, stop and split it into smaller
+edits. Mechanical does not mean context-free.
+
 ### 6.8 Strip debug before release
 
 Trace messages and the debug spell are dev tools. Either remove them or gate them behind a `bDebugMode` global in MCM before any public release. A player's `Papyrus.0.log` filling with `[PDV]` traces is a defect, not a feature.
