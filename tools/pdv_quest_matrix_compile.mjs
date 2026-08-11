@@ -34,6 +34,7 @@ const DAEDRIC_STANCE_CSV = path.join(PROJECT_ROOT, "references", "phase4", "PDV_
 const args = process.argv.slice(2);
 const outputPath = getArg("--output") ?? DEFAULT_OUTPUT;
 const checkOnly = args.includes("--check");
+const jsonOutput = args.includes("--json");
 const emitStdout = args.includes("--stdout");
 const papyrusUtilCheck = args.includes("--papyrusutil-check");
 // Resolved after `args` exists (getArg reads it). Defaults to the core Full.csv;
@@ -456,7 +457,7 @@ function main() {
     }
   }
 
-  console.log(JSON.stringify({
+  const report = {
     status: "PASS",
     outputPath: checkOnly ? null : path.resolve(outputPath),
     papyrusUtilContract: "PASS",
@@ -465,7 +466,18 @@ function main() {
     questKeys: out.questKeys.length,
     watchedQuests: new Set(out.questFormIds).size,
     faucetActs: out.faucetKeys.length,
-  }, null, 2));
+  };
+  if (jsonOutput) {
+    console.log(JSON.stringify(report, null, 2));
+  } else {
+    console.log(`Quest matrix compile: ${report.status}`);
+    console.log(`  quest cells: ${report.questCells}`);
+    console.log(`  quest keys: ${report.questKeys}`);
+    console.log(`  watched quests: ${report.watchedQuests}`);
+    console.log(`  faucet acts: ${report.faucetActs}`);
+    console.log(`  PapyrusUtil contract: ${report.papyrusUtilContract} (${report.papyrusUtilFileCheck})`);
+    if (report.outputPath) console.log(`  output: ${report.outputPath}`);
+  }
 }
 
 function resolvePatchSourceMod(targetPath) {

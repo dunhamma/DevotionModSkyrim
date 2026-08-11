@@ -22,8 +22,8 @@ small pass-rule vocabulary, so contract edits never require tool edits).
 | C-AUDIT-BETA-STRICT | Strict beta-readiness audit clean | machine | pdv_beta_readiness_audit.mjs --strict |
 | C-AUDIT-SUBSTRATE-PACING | Shared substrate 7/19-day pacing contract passes | machine | pdv_substrate_pacing_audit.mjs --json |
 | C-AUDIT-BROAD-PANTHEON | Imperial and Nord broad-pantheon parity contract passes | machine | pdv_broad_pantheon_audit.mjs --json |
-| C-AUDIT-VERIFY | Framework verifier FAIL=0 | machine | pdv_verify.mjs (via --run stamp) |
-| C-AUDIT-CONTENT | Content verifier clean | machine | pdv_content_verify.mjs (via --run stamp) |
+| C-AUDIT-VERIFY | Framework verifier FAIL=0 | machine | pdv_verify.mjs (stamped by the parent pdv_1_0_endstate_gate.mjs --run command) |
+| C-AUDIT-CONTENT | Content verifier clean | machine | pdv_content_verify.mjs (stamped by the parent pdv_1_0_endstate_gate.mjs --run command) |
 | C-AUDIT-INTEGRITY | Integrity harness gates pass | machine | PDV_IntegrityHarnessLedger.md |
 | C-EXPMODE-BUILD | Experience Mode built | machine | not-built placeholder; closes via --strict-experience-mode |
 | C-EXPMODE-SMOKE | Two-mode runtime smoke | human | PDV_1_0_ManualSignoffLedger.json |

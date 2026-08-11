@@ -5,11 +5,9 @@ import crypto from "node:crypto";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
 
-// The flags this file reads, plus any the repo documents for it. Documented-but-unread
-// flags are included deliberately: rejecting one would break a published command, and a
-// guard is the wrong place to discover that the doc and the code disagree.
 const KNOWN_FLAGS = new Set(["--json"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_prisma_ui_audit" });
+const JSON_OUTPUT = process.argv.includes("--json");
 
 const DEVOTION_SOURCE = process.env.PDV_PRISMA_AUDIT_SOURCE_ROOT || "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
 const DEVOTION_COMPILED = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts";
@@ -2076,15 +2074,21 @@ requireBridgeSourceParity();
 requireBridgeNativesDeclared();
 verifyParityRegistryContracts(path.join(REPO_ROOT, "references", "authoring", "PDV_PrismaParityRegistry.csv"));
 
-for (const item of passes) {
-  console.log(`[PASS] ${item.message}${item.source ? ` [${item.source}]` : ""}`);
-}
-for (const item of failures) {
-  console.error(`[FAIL] ${item.message}${item.source ? ` [${item.source}]` : ""}`);
+if (JSON_OUTPUT) {
+  console.log(JSON.stringify({
+    status: failures.length ? "FAIL" : "PASS",
+    counts: { pass: passes.length, fail: failures.length },
+    passes,
+    failures,
+  }, null, 2));
+} else {
+  for (const item of passes) {
+    console.log(`[PASS] ${item.message}${item.source ? ` [${item.source}]` : ""}`);
+  }
+  for (const item of failures) {
+    console.error(`[FAIL] ${item.message}${item.source ? ` [${item.source}]` : ""}`);
+  }
+  if (failures.length === 0) console.log(`Prisma UI audit passed: ${passes.length} checks.`);
 }
 
-if (failures.length > 0) {
-  process.exit(1);
-}
-
-console.log(`Prisma UI audit passed: ${passes.length} checks.`);
+if (failures.length > 0) process.exitCode = 1;

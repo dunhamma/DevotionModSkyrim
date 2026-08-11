@@ -572,7 +572,7 @@ beta-ready on green gates alone.
 ARR deployment/readback preflight passed on 2026-08-07 with:
 
 ```
-node tools/pdv_matrix_runtime_preflight.mjs --mo2 "D:\Wabbajack\modlists\ARR 2.5" --profile "KoK R11" --compat-mod "Devotion - Authoria ARR Compatibility" --expected-core 154 --expected-arr 62 --expected-channels 34
+node tools/pdv_matrix_runtime_preflight.mjs --mo2 "D:\Wabbajack\modlists\ARR 2.5" --profile "KoK R11" --compat-mod "Devotion - Authoria ARR Compatibility" --expected-core 154 --expected-channels 34
 ```
 
 This is not in-game registration proof. Launch Skyrim, set Devotion debug level

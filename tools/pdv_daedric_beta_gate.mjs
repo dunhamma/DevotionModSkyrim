@@ -14,9 +14,6 @@ import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
 
-// The flags this file reads, plus any the repo documents for it. Documented-but-unread
-// flags are included deliberately: rejecting one would break a published command, and a
-// guard is the wrong place to discover that the doc and the code disagree.
 const KNOWN_FLAGS = new Set(["--help", "--json", "--strict"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_daedric_beta_gate" });
 
@@ -47,17 +44,20 @@ function usage() {
     "",
     "Options:",
     "  --json      Emit JSON.",
+    "  --strict    Explicitly select the fail-closed gate (already the default).",
     "  --help      Show this help.",
   ].join(os.EOL);
 }
 
 function parseArgs(argv) {
-  const options = { json: false, help: false };
+  const options = { json: false, help: false, strict: false };
   for (const arg of argv) {
     if (arg === "--json") {
       options.json = true;
     } else if (arg === "--help" || arg === "-h") {
       options.help = true;
+    } else if (arg === "--strict") {
+      options.strict = true;
     } else {
       throw new Error(`Unknown option: ${arg}`);
     }

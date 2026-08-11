@@ -32,11 +32,9 @@ import fs from "node:fs";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
 
-// The flags this file reads, plus any the repo documents for it. Documented-but-unread
-// flags are included deliberately: rejecting one would break a published command, and a
-// guard is the wrong place to discover that the doc and the code disagree.
 const KNOWN_FLAGS = new Set(["--json"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_antifarm_sweep_audit" });
+const JSON_OUTPUT = process.argv.includes("--json");
 
 const ROOT = process.cwd().replace(/\\/g, "/");
 const SOURCE_DIR = `${ROOT}/live-source/Scripts/Source`;
@@ -209,7 +207,15 @@ function main() {
     selftest,
     ledger: "references/authoring/PDV_AntiFarmSweepLedger.md",
   };
-  console.log(JSON.stringify(summary, null, 2));
+  if (JSON_OUTPUT) {
+    console.log(JSON.stringify(summary, null, 2));
+  } else {
+    console.log(`Anti-farm sweep: ${summary.status}`);
+    console.log(`  handlers awarding piety: ${summary.handlersAwardingPiety}`);
+    console.log(`  capped: ${summary.capped}; allowlisted one-shots: ${summary.allowlistedOneShots}`);
+    console.log(`  uncapped gains: ${summary.uncappedGain.length}; penalty-only: ${summary.uncappedPenaltyOnly.length}`);
+    console.log(`  ledger: ${summary.ledger}`);
+  }
   process.exit(uncappedGain.length ? 1 : 0);
 }
 

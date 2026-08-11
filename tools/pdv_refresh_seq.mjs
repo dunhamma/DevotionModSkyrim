@@ -36,7 +36,11 @@ const START_GAME_ENABLED_FLAG = 0x10;
 
 const args = new Set(process.argv.slice(2));
 const write = args.has("--write");
+const check = args.has("--check");
 const json = args.has("--json");
+if (check && write) {
+  throw new Error("--check and --write are mutually exclusive.");
+}
 
 function bridge(request, timeoutMs = 60_000) {
   const result = spawnSync(MUTAGEN_BRIDGE, {
@@ -139,6 +143,7 @@ function main() {
   const changed = !currentBytes.equals(seqBytes);
   const report = {
     status: "PASS",
+    mode: write ? "write" : "check",
     write,
     seqPath: DEVOTION_SEQ,
     changed,
@@ -165,7 +170,7 @@ function main() {
   if (json) {
     console.log(JSON.stringify(report, null, 2));
   } else {
-    console.log(`PDV SEQ refresh: ${write ? "wrote" : "dry-run"} ${startEnabled.length} quest FormIDs`);
+    console.log(`PDV SEQ refresh: ${write ? "wrote" : "checked"} ${startEnabled.length} quest FormIDs`);
     for (const quest of startEnabled) {
       console.log(`- ${quest.formid} ${quest.editorId} flags=${quest.rawFlags}`);
     }

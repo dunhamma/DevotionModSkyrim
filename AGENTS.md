@@ -84,6 +84,7 @@ If a task appears blocked by a houseCARL limitation, **first reproduce it with a
 | `tools/pdv-authoring-trees-retired-2026-07-13.zip` | **Retired** Mutagen/CKPE record-author helper trees (`pdv_author.mjs`, `pdv_writer_review.mjs`, `creation-authoring`, `creation-merge-runner`, all `pdv-*-author`) | Forensics only. All plugin record reads/writes/verification now go through the `housecarl_*` MCP tools directly -- see the houseCARL Direct Plugin Work Rule above. Do not restore, extend, or copy the dry-run/backup/proof-ledger pattern. |
 | `tools/sync-devotion-to-live.ps1` | Guarded live-file sync helper | Copying repo-tracked Prisma assets, StorageUtil assets, and selected live-source Papyrus files, including `PDV_MCM.psc`, into the existing Anvil Devotion mod only after backing up the live ESP/SEQ/Scripts/SKSE/Prisma artifacts; refuses empty or damaged live mod folders |
 | `tools/pdv_package_release.mjs` | Release zip builder -- the ONLY sanctioned path to a `dist/` bundle | Packaging a public build from the live Anvil Devotion mod folder. Never hand-roll the zip (rc1 leaked an 876KB `.orig`); the script gates on version, ANAM, and archive contents. Note its gates are narrower than `pdv_verify.mjs` -- a green package run is not a green verify run |
+| `tools/pdv_cli_flag_contract_audit.mjs` | Read-only contract gate for the fourteen issue #61 CLI flags | Checking that each retained flag is semantically consumed and retired aliases are absent from active tool contracts |
 | `D:\...\Devotion\Scripts\TempleBlessingScript.pex` (+ `Source\*.psc`) | Shipped loose-file override of the vanilla shrine activation script | Reasoning about shrine behavior or install order. Ships from 1.0.4 to undo Requiem's bugfix-pack dispel-all line. **Devotion must sit BELOW any Requiem bugfix pack in MO2** or their copy wins silently -- see the 2026-07-27 Decisions Log entry |
 | `D:\...\Devotion\PDV_GreenPact_KID.ini` | Green Pact mod-added food distribution | Adding mod-added meats to the Bosmer Green Pact reward lane. KID distributor files live at the Data root. Rules match by item NAME, not FormID/EditorID; vanilla and DLC meats are the static record set, not KID |
 | `references/authoring/PDV_BosmerVariety_PapyrusHandoff.md` | Bosmer variety `PDV__ManagerQuest.psc` runtime layer | Authoring/applying the Bosmer dream/hearth/Songs/signature/Naming Papyrus (property decls, exact call-site insertions, full functions) modeled on the shipped Argonian variety code; closes the manifest's `scriptLayerPending` |
@@ -1085,6 +1086,15 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 ---
 
 ## Decisions Log
+
+- **[2026-08-11] - Documented CLI flags must select a real mode or leave the active contract:**
+  The fourteen issue #61 flags now resolve explicitly: `--check`, `--dry`, and `--strict`
+  select documented safe/default modes; `--json` selects structured output; the child-tool
+  `--run` wording and retired combined-ARR `--expected-arr` option are removed. The
+  `pdv_cli_flag_contract_audit.mjs` regression gate fails if a retained flag is only accepted by
+  `KNOWN_FLAGS` without a semantic read. Rationale: a command that succeeds because its safety or
+  output flag was silently ignored is a false interface, even when its accidental default happens
+  to be safe.
 
 - **[2026-08-11] - Drift gates must name competing authorities and distinguish verification from pinning:**
   Every new competing-source gate declares `authorityA`, `authorityB`, `runtimeWinner`,

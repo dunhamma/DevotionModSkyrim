@@ -53,7 +53,7 @@
       "housecarlWinnerReadback": "PASS: candidate wins Manager/EventBus/PlayerEvents PEX, core and ARR matrices, all channel paths checked, KID, BOS, and the combined packaged ESPFE. Direct file read reports 32 records: 21 quest/dialogue overrides plus 11 ACTIs.",
       "mergeBoundary": "The donor ESPs are absent from the active profile and retained only in an unlisted backup mod. Source quest SEQs remain supplied by their defining plugins because the combined plugin does not introduce or change SGE quest identities. The external-reference scan could not inspect five unrelated malformed load-order records; runtime and save compatibility remain unproved.",
       "preflight": {
-        "command": "node tools/pdv_matrix_runtime_preflight.mjs --mo2 \"D:\\Wabbajack\\modlists\\ARR 2.5\" --profile \"KoK R11\" --compat-mod \"Devotion - Authoria ARR Compatibility\" --expected-core 154 --expected-arr 62 --expected-channels 34 --json",
+        "command": "node tools/pdv_matrix_runtime_preflight.mjs --mo2 \"D:\\Wabbajack\\modlists\\ARR 2.5\" --profile \"KoK R11\" --compat-mod \"Devotion - Authoria ARR Compatibility\" --expected-core 154 --expected-channels 34 --json",
         "status": "PASS",
         "pass": 31,
         "info": 4,
