@@ -29,6 +29,7 @@ const HOUSECARL_PROOF_PATH = path.join(
   "authoring",
   "PDV_HousecarlReleaseProof.json",
 );
+const HOUSECARL_CONTESTED_RECORD_COUNT_PIN = 33;
 const NATIVE_ROOT = path.join(REPO_ROOT, "native", "DevotionPrismaBridge");
 const CANONICAL_PRISMA_ROOT =
   process.env.PDV_CANONICAL_PRISMA_ROOT || path.join(NATIVE_ROOT, "mod");
@@ -72,6 +73,10 @@ function fail(message) {
 
 function pass(message) {
   console.log(`[PASS] ${message}`);
+}
+
+function pin(message) {
+  console.log(`[PIN] ${message}`);
 }
 
 function normalizeEntry(value) {
@@ -393,10 +398,20 @@ function verifyHousecarlProof() {
   const zeroChecks = ["danglingLinks", "missingMasters", "parseFailures"];
   if (proof.profile !== "Devotion Dev" || proof.active !== true) fail("Load-order houseCARL proof must show active Devotion.esp in Devotion Dev.");
   for (const key of zeroChecks) if (proof.errors?.[key] !== 0) fail(`houseCARL proof ${key} must be zero.`);
-  if (proof.contestedRecordCount !== 33) fail("houseCARL proof must account for all 33 contested records.");
+  if (proof.contestedRecordCount !== HOUSECARL_CONTESTED_RECORD_COUNT_PIN) {
+    fail(
+      `Contract pin mismatch for contestedRecordCount: expected ${HOUSECARL_CONTESTED_RECORD_COUNT_PIN}, ` +
+        `proof records ${proof.contestedRecordCount ?? "missing"}. Refresh direct houseCARL readback ` +
+        "and review the contract; do not edit the count merely to make this gate green.",
+    );
+  }
+  pin(
+    `contestedRecordCount matches the stored contract value ${HOUSECARL_CONTESTED_RECORD_COUNT_PIN}. ` +
+      "This gate compares a snapshot pin; it does not re-derive the live contested set.",
+  );
   if (proof.cellNestedReferenceRetention?.verified !== true) fail("houseCARL proof must verify nested CELL reference retention.");
   if (!Array.isArray(proof.criticalRecordWinners) || proof.criticalRecordWinners.length === 0) fail("houseCARL proof must record critical winners.");
-  pass("houseCARL load-order proof matches the live ESP and closes structural/readback release gates.");
+  pass("houseCARL proof hash, profile, error, retention, and critical-winner checks match the live ESP.");
 }
 
 function verifyBuildVersion(version) {

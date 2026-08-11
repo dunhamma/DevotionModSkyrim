@@ -233,6 +233,7 @@ If a task appears blocked by a houseCARL limitation, **first reproduce it with a
 | `references/vanilla-gameplay/` | Living gameplay mechanics and immersive UX reference backbone | Looking up vanilla Skyrim mechanics, CK signal surfaces, source-backed gameplay tables, or player-experience lessons for PDV design |
 | `references/vanilla-gameplay/compatibility/phase20-targets.csv`, `references/vanilla-gameplay/compatibility/PDV_Phase20_CompatibilityNotes.md` | Phase 21 compatibility matrix and operating notes | Tracking Authoria-first list-author package status, target-list evidence, religion-removal assumptions, patch shape, and smoke gates |
 | `references/authoring/PDV_ModPackaging_StateAuthority.md` | Living core/PatchHub packaging authority | Read before changing a package or reporting package state; update after every build, archive replacement, or support-status change |
+| `references/authoring/PDV_DriftGatePattern.md` | Living authority-declaration and drift-class pattern for competing-source gates | Designing or reviewing a gate that compares authored, generated, staged, live, fallback, or registry sources |
 | `references/authoring/PDV_QuestModPatches_ARR_Review_2026-08-06.md` | Preserved ARR packaging review | Source evidence for the modular-hub transition; the living packaging authority owns current state |
 | `references/vanilla-gameplay/PDV_SkyrimGamePlayReferences_Bridge.md` | Bridge rules for using `dunhamma/SkyrimGamePlayReferences` from PDV | Pulling neutral reference data into PDV planning without making it design authority |
 | `references/phase4/PDV_Phase4_MatrixScaffold.md` | Working conventions and normalization rules for the Phase 4 matrix pass | Understanding matrix scope, crosswalk rules, and output structure |
@@ -1084,6 +1085,15 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 ---
 
 ## Decisions Log
+
+- **[2026-08-11] - Drift gates must name competing authorities and distinguish verification from pinning:**
+  Every new competing-source gate declares `authorityA`, `authorityB`, `runtimeWinner`,
+  `allowedFallback`, `proofClass`, `driftClass`, and `skipRule` using
+  `references/authoring/PDV_DriftGatePattern.md`. Legal values cannot be learned from the payload
+  being validated, backend absence cannot become a silent pass, and stored literal expectations
+  report as `PIN` unless the same run independently re-derives them. Rationale: stance, FOMOD,
+  release-proof, and Prince-slug drift each survived a green check because the gate compared the
+  wrong authorities or carried its own copy of the answer.
 
 - **[2026-08-11] - Mechanical multi-file tool edits require exhaustive syntax and command verification:**
   A repeated text match is not evidence that every insertion point has the same syntactic shape.
