@@ -110,6 +110,8 @@ If a task appears blocked by a houseCARL limitation, **first reproduce it with a
 | `tools/pdv_daedric_test_readiness.mjs` | Read-only Daedric in-game preflight | Checking contract, packet, live PEX freshness, Devotion profile activation, ESP/SEQ, Papyrus log path, process state, and optional deep Daedric readback/self-test before Skyrim smoke |
 | `tools/pdv_daedric_evidence_intake.mjs` | Structured Daedric runtime/manual evidence intake helper | Initializing and updating `PDV_DaedricRuntimeEvidenceLedger.json` after in-game proof; can auto-record MCM/QASmoke/organic route slots from `pdv_daedric_runtime_check` pass results without treating readback as beta-display evidence |
 | `tools/pdv_daedric_beta_gate.mjs` | Read-only Daedric beta-display gate | Failing closed until all sixteen Princes have passed runtime/display evidence slots in `PDV_DaedricRuntimeEvidenceLedger.json`, including Molag/Hircine curse no-double-fire |
+| `tools/lib/pdv_daedric_effect_model.mjs` | Explicit Daedric boon/price effect model | Reviewing or changing Prince effect axes, exceptional multi-effect packets, or independently tunable ActorValue-family magnitude bands before regenerating the record contract |
+| `tools/pdv_generate_daedric_contract.mjs` | Report-first Daedric contract compiler and opt-in script scaffolder | Running `--self-test`, detecting reviewed-contract drift, explicitly regenerating `PDV_DaedricPrinceRecordContracts.json`, or scaffolding path scripts to a caller-supplied directory |
 | `tools/pdv_patch.mjs` | Offline classification/distribution patcher helper | Validating patch-rule manifests, resolving winning records and payload references from the Devotion Dev load order, and building the generated `PDV_ClassificationPatch.esp` review/live artifact without mutating source plugins |
 | `tools/pdv_extract_vanilla_gameplay_refs.mjs` | Read-only Mutagen extraction helper for vanilla/DLC gameplay reference tables | Refreshing generated `references/vanilla-gameplay/extracted/` CSVs before building signal matrices, patcher rules, or compatibility dossiers |
 | `tools/pdv_extract_quest_stage_readback.mjs` | Read-only Mutagen quest-stage readback helper for vanilla/DLC quest candidates | Refreshing `references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv` before Phase 20 exact-source dossier review; does not write ESP data or authorize source fill |
@@ -1090,6 +1092,22 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 ---
 
 ## Decisions Log
+
+- **[2026-08-11] - Daedric effect composition is a deep module; balance remains a separate proof lane:**
+  `tools/lib/pdv_daedric_effect_model.mjs` now owns every Prince's three boon and
+  price declarations, the Mora Champion two-effect exception, and six independently
+  tunable ActorValue unit families. The contract compiler crosses one
+  `buildPrinceSpellPackets(...)` interface instead of combining a skill/not-skill
+  fork with editor-ID override maps. The structural move is output-preserving: the
+  compiler reports zero drift against all sixteen reviewed contracts and changes no
+  ESP record or shipped magnitude. `pdv_verify` now resolves all 96 contracted spells
+  and 97 effect references and links so a phantom generated MGEF cannot be misreported
+  as an ESP defect again; the pre-existing 48-price gate continues to enforce price
+  magnitudes. The first exhaustive comparison also surfaced 40 pre-existing boon
+  magnitude differences, which remain #37 evidence rather than permission to rewrite
+  the ESP or contract during this structural pass. Magnitude suitability, the
+  one-live-pact premise, and Malacath's provisional movement price remain the separate
+  #37 balance and felt-check lane.
 
 - **[2026-08-11] - Release proof is re-derived live and fingerprints exact contested membership:**
   `pdv_release_proof_refresh.mjs` is the single script-backed workflow for checking,

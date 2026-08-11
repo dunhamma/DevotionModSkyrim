@@ -8249,6 +8249,60 @@ class Verifier {
     }
     const contractsByQuest = new Map((contracts.princes || []).map((prince) => [prince.questEditorId, prince]));
 
+    const effectReferenceIssues = [];
+    let contractedSpellCount = 0;
+    let contractedEffectCount = 0;
+    for (const prince of contracts.princes || []) {
+      for (const spells of [prince.boons || [], prince.prices || []]) {
+        for (const spell of spells) {
+          contractedSpellCount += 1;
+          const spellDetail = this.recordDetails.get(spell.spellEditorId);
+          if (!spellDetail) {
+            effectReferenceIssues.push(`${spell.spellEditorId}: missing SPEL readback`);
+            continue;
+          }
+          const effects = spell.effects || [];
+          if (!effects.length) {
+            effectReferenceIssues.push(`${spell.spellEditorId}: contract has no effects`);
+            continue;
+          }
+          if (spell.magicEffectEditorId !== effects[0].magicEffectEditorId) {
+            effectReferenceIssues.push(
+              `${spell.spellEditorId}: primary MGEF ${spell.magicEffectEditorId || "missing"} does not match first effect ${effects[0].magicEffectEditorId || "missing"}`,
+            );
+          }
+          for (const effectContract of effects) {
+            contractedEffectCount += 1;
+            const effectDetail = this.recordDetails.get(effectContract.magicEffectEditorId);
+            if (!effectDetail) {
+              effectReferenceIssues.push(`${effectContract.magicEffectEditorId}: missing MGEF readback`);
+              continue;
+            }
+            const linkedEffect = (spellDetail.fields?.Effects || []).find(
+              (effect) => formidToEdid(effect.BaseEffect, this.recordsByEdid) === effectContract.magicEffectEditorId,
+            );
+            if (!linkedEffect) {
+              effectReferenceIssues.push(`${spell.spellEditorId}: does not link ${effectContract.magicEffectEditorId}`);
+              continue;
+            }
+          }
+        }
+      }
+    }
+    if (contractedSpellCount === 96 && contractedEffectCount === 97 && effectReferenceIssues.length === 0) {
+      this.pass(
+        "Daedric contract record references",
+        "All 96 contracted spells and 97 effects resolve and link in the live ESP.",
+        PDV_ESP,
+      );
+    } else {
+      this.fail(
+        "Daedric contract record references",
+        `Checked ${contractedSpellCount}/96 spells and ${contractedEffectCount}/97 effects; ${effectReferenceIssues.length} issue(s): ${effectReferenceIssues.join("; ") || "count mismatch"}.`,
+        PDV_ESP,
+      );
+    }
+
     const expectedPriceFlags = contracts.priceSerialization?.magicEffectFlags || [];
     const priceSerializationIssues = [];
     let priceCount = 0;

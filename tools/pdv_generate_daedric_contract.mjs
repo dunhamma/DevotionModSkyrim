@@ -1,13 +1,10 @@
 #!/usr/bin/env node
 /*
  * =============================== DO NOT BLIND-RUN ===============================
- * `references/authoring/PDV_DaedricPrinceRecordContracts.json` is HAND-CURATED and is
- * the source of truth. Post-generation it received the Requiem regen audit, the
- * boon/price rebalance, and extra per-prince effects (e.g. Dagon AttackDamageMult,
- * Sheo/Mora flats). It previously carried `HealRateMult` / `MagickaRateMult` /
- * `StaminaRateMult` boons and prices, which do nothing under Requiem - base regen is
- * ~0, so a rate-mult multiplies nothing - and those were converted to the flat Fortify
- * of the same resource.
+ * `references/authoring/PDV_DaedricPrinceRecordContracts.json` is generated from the
+ * content manifest, race/Prince matrix, and the explicit effect model in
+ * `tools/lib/pdv_daedric_effect_model.mjs`. The JSON remains the record-authoring
+ * contract, while the effect model owns effect axes, bands, and exceptional packets.
  *
  * This banner used to say the generator DIVERGED from that curated file and that
  * re-running would revert the fixes. Measured 2026-08-08: it no longer does. A default
@@ -33,6 +30,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  buildPrinceSpellPackets,
+  validateDaedricEffectModel,
+} from "./lib/pdv_daedric_effect_model.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
@@ -40,7 +41,7 @@ const MANIFEST = path.join(PROJECT_ROOT, "race-sheets", "PDV_DaedricContent_Mani
 const MATRIX = path.join(PROJECT_ROOT, "references", "phase4", "PDV_DaedricRacePrinceMatrix.csv");
 const OUT = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DaedricPrinceRecordContracts.json");
 
-const KNOWN_FLAGS = new Set(["--write-contract", "--scaffold-scripts", "--source-dir", "--force"]);
+const KNOWN_FLAGS = new Set(["--write-contract", "--scaffold-scripts", "--source-dir", "--force", "--self-test"]);
 const ARGS = process.argv.slice(2);
 for (const arg of ARGS) {
   if (arg.startsWith("--") && !KNOWN_FLAGS.has(arg)) {
@@ -63,6 +64,11 @@ const argValue = (name) => {
 const WRITE_CONTRACT = flag("--write-contract");
 const SCAFFOLD = flag("--scaffold-scripts");
 const FORCE = flag("--force");
+const SELF_TEST = flag("--self-test");
+if (SELF_TEST && (WRITE_CONTRACT || SCAFFOLD || FORCE)) {
+  console.error("--self-test cannot be combined with write or force flags.");
+  process.exit(2);
+}
 
 // No default. The old hardcoded "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source"
 // tied the tool to one machine and one MO2 instance, and silently wrote into a live build.
@@ -72,22 +78,22 @@ const RACE_ORDER_MATRIX = ["Nord", "Imperial", "Breton", "Dunmer", "Altmer", "Kh
 const RACE_ORDER_PDV = ["Nord", "Imperial", "Breton", "Altmer", "Bosmer", "Dunmer", "Khajiit", "Argonian", "Orc", "Redguard"];
 
 const PRINCE_META = {
-  Azura: { displayName: "Azura", aliases: ["Azura / Azurah"], batch: 0, mechanics: ["ResistMagic", "Magicka"], price: ["Stamina"], stigmaClass: "Standard" },
-  Boethiah: { displayName: "Boethiah", aliases: ["Boethiah / Boethra"], batch: "pilot", mechanics: ["OneHanded", "DamageResist"], price: ["Speechcraft"], stigmaClass: "Standard" },
-  Mephala: { displayName: "Mephala", aliases: ["Mephala / Mafala"], batch: 1, mechanics: ["Sneak", "Pickpocket"], price: ["Speechcraft"], stigmaClass: "Standard" },
-  Malacath: { displayName: "Malacath", aliases: ["Malacath / Mauloch"], batch: 1, mechanics: ["DamageResist", "TwoHanded"], price: ["SpeedMult"], stigmaClass: "Standard" },
-  Meridia: { displayName: "Meridia", aliases: ["Meridia"], batch: 0, mechanics: ["Restoration", "ResistDisease"], price: ["Illusion"], stigmaClass: "Tolerated" },
-  Nocturnal: { displayName: "Nocturnal", aliases: ["Nocturnal"], batch: 2, mechanics: ["Sneak", "Lockpicking"], price: ["Restoration"], stigmaClass: "Standard" },
-  Mora: { displayName: "Hermaeus Mora", aliases: ["Hermaeus Mora"], batch: 2, mechanics: ["Alteration", "Magicka"], price: ["Stamina"], stigmaClass: "Standard" },
-  Dagon: { displayName: "Mehrunes Dagon", aliases: ["Mehrunes Dagon"], batch: 2, mechanics: ["Destruction", "OneHanded"], price: ["DamageResist"], stigmaClass: "High-rupture" },
-  Sheo: { displayName: "Sheogorath", aliases: ["Sheogorath"], batch: 2, mechanics: ["Illusion", "Magicka"], price: ["Restoration"], stigmaClass: "Standard" },
-  Vile: { displayName: "Clavicus Vile", aliases: ["Clavicus Vile"], batch: 2, mechanics: ["Speechcraft", "CarryWeight"], price: ["Magicka"], stigmaClass: "Standard" },
-  Vaermina: { displayName: "Vaermina", aliases: ["Vaermina"], batch: 0, mechanics: ["Illusion", "Sneak"], price: ["Health"], stigmaClass: "Standard" },
-  Sanguine: { displayName: "Sanguine", aliases: ["Sanguine / Sangiin"], batch: 2, mechanics: ["Stamina", "Speechcraft"], price: ["Magicka"], stigmaClass: "Standard" },
-  Namira: { displayName: "Namira", aliases: ["Namira / Namiira"], batch: 2, mechanics: ["Sneak", "Health"], price: ["Speechcraft"], stigmaClass: "Standard" },
-  Peryite: { displayName: "Peryite", aliases: ["Peryite"], batch: 3, mechanics: ["ResistDisease", "Health"], price: ["Stamina"], stigmaClass: "Tolerated" },
-  Hircine: { displayName: "Hircine", aliases: ["Hircine"], batch: 3, mechanics: ["Stamina", "Sneak"], price: ["Health"], stigmaClass: "Curse-access", existingScript: true },
-  Molag: { displayName: "Molag Bal", aliases: ["Molag Bal"], batch: 0, mechanics: ["Speechcraft", "Illusion"], price: ["Health"], stigmaClass: "Curse-access" },
+  Azura: { displayName: "Azura", aliases: ["Azura / Azurah"], batch: 0, stigmaClass: "Standard" },
+  Boethiah: { displayName: "Boethiah", aliases: ["Boethiah / Boethra"], batch: "pilot", stigmaClass: "Standard" },
+  Mephala: { displayName: "Mephala", aliases: ["Mephala / Mafala"], batch: 1, stigmaClass: "Standard" },
+  Malacath: { displayName: "Malacath", aliases: ["Malacath / Mauloch"], batch: 1, stigmaClass: "Standard" },
+  Meridia: { displayName: "Meridia", aliases: ["Meridia"], batch: 0, stigmaClass: "Tolerated" },
+  Nocturnal: { displayName: "Nocturnal", aliases: ["Nocturnal"], batch: 2, stigmaClass: "Standard" },
+  Mora: { displayName: "Hermaeus Mora", aliases: ["Hermaeus Mora"], batch: 2, stigmaClass: "Standard" },
+  Dagon: { displayName: "Mehrunes Dagon", aliases: ["Mehrunes Dagon"], batch: 2, stigmaClass: "High-rupture" },
+  Sheo: { displayName: "Sheogorath", aliases: ["Sheogorath"], batch: 2, stigmaClass: "Standard" },
+  Vile: { displayName: "Clavicus Vile", aliases: ["Clavicus Vile"], batch: 2, stigmaClass: "Standard" },
+  Vaermina: { displayName: "Vaermina", aliases: ["Vaermina"], batch: 0, stigmaClass: "Standard" },
+  Sanguine: { displayName: "Sanguine", aliases: ["Sanguine / Sangiin"], batch: 2, stigmaClass: "Standard" },
+  Namira: { displayName: "Namira", aliases: ["Namira / Namiira"], batch: 2, stigmaClass: "Standard" },
+  Peryite: { displayName: "Peryite", aliases: ["Peryite"], batch: 3, stigmaClass: "Tolerated" },
+  Hircine: { displayName: "Hircine", aliases: ["Hircine"], batch: 3, stigmaClass: "Curse-access", existingScript: true },
+  Molag: { displayName: "Molag Bal", aliases: ["Molag Bal"], batch: 0, stigmaClass: "Curse-access" },
 };
 
 const STATE_VALUE = { Native: 0, Legible: 1, Foreign: 2, Tolerated: 3, Taboo: 4, Hostile: 5, Curse: 6 };
@@ -183,89 +189,8 @@ function stateArrays(row) {
   };
 }
 
-// Skyrim's 18 skills carry point-based magnitudes; everything else here is a
-// rate/resist/percent (or flat) actor value. Daedric pacts run a HIGH-STAKES band
-// (~2x the Aedra god tiers) because only ONE pact is live at a time (hard switch),
-// so a player ever feels exactly one boon + one price. Boon and price both bite.
-const SKILL_AVS = new Set([
-  "OneHanded", "TwoHanded", "Marksman", "Block", "Smithing", "HeavyArmor", "LightArmor",
-  "Pickpocket", "Lockpicking", "Sneak", "Alchemy", "Speechcraft", "Alteration",
-  "Conjuration", "Destruction", "Illusion", "Restoration", "Enchanting",
-]);
-
-// Per-actor-value price bands. The isSkill/else split below has only two buckets, and
-// the "else" bucket lumps flat resource pools (Health/Magicka/Stamina) together with
-// PERCENTAGE multipliers. That is a category error: -30 off a pool is modest, but -30
-// SpeedMult is a permanent 30% movement-speed cut. Any AV named here uses its own band
-// instead of the generic one.
-//
-// SpeedMult was -3/-5/-8 before the high-stakes retune, which raised it ~4x by side
-// effect rather than by intent (Malacath is the only price on it). -4/-7/-10 keeps the
-// price felt on every step without crippling travel or combat.
-// The general fix - real per-AV bands for boons AND prices - is the Daedric rebalance,
-// not this override.
-const PRICE_MAGNITUDES_BY_AV = {
-  SpeedMult: [-4, -7, -10],
-};
-
-// Mora's Champion boon is a documented TWO-EFFECT exception: "+20 Alteration; +20 Magicka"
-// (AGENTS.md ruling, runtime-confirmed with the price waiver). The generic derivation below
-// would name the primary MGEF `PDV_MGEF_Bless_Daedric_Mora_Champion` and put it on
-// Magicka 35 — matching neither the authored records (which use the `_Alteration` suffix,
-// because this is the one boon with two same-tier effects) nor the ruling. Without this the
-// contract disagrees with a shipped, proven design and the gate chases a record that does
-// not exist. Override the primary effect explicitly.
-const BOON_PRIMARY_BY_SPELL = {
-  PDV_Bless_Daedric_Mora_Champion: {
-    magicEffectEditorId: "PDV_MGEF_Bless_Daedric_Mora_Champion_Alteration",
-    actorValue: "Alteration",
-    magnitude: 20,
-  },
-};
-
-const EXTRA_EFFECTS_BY_SPELL = {
-  PDV_Bless_Daedric_Mora_Champion: [
-    {
-      magicEffectEditorId: "PDV_MGEF_Bless_Daedric_Mora_Champion_Magicka",
-      actorValue: "Magicka",
-      magnitude: 20,
-      area: 0,
-      duration: 0,
-      effectName: "Fortify Magicka",
-    },
-  ],
-};
-
-function spellPacket(id, text, kind, meta, tierIndex) {
-  const tierName = ["Seeker", "Devoted", "Champion"][tierIndex];
-  const actorValues = kind === "boon" ? meta.mechanics : meta.price;
-  const actorValue = actorValues[Math.min(tierIndex, actorValues.length - 1)];
-  const isSkill = SKILL_AVS.has(actorValue);
-  let magnitudes;
-  if (kind === "boon") {
-    magnitudes = isSkill ? [10, 18, 25] : [15, 25, 35];
-  } else {
-    magnitudes = PRICE_MAGNITUDES_BY_AV[actorValue] ?? (isSkill ? [-10, -18, -25] : [-10, -20, -30]);
-  }
-  const derivedMagicEffectEditorId = id.replace("PDV_Bless_", "PDV_MGEF_Bless_").replace("PDV_Price_", "PDV_MGEF_Price_");
-  const primaryOverride = kind === "boon" ? BOON_PRIMARY_BY_SPELL[id] : undefined;
-  const magicEffectEditorId = primaryOverride?.magicEffectEditorId ?? derivedMagicEffectEditorId;
-  const effects = [
-    primaryOverride
-      ? { ...primaryOverride, area: 0, duration: 0 }
-      : { magicEffectEditorId, actorValue, magnitude: magnitudes[tierIndex], area: 0, duration: 0 },
-  ];
-  effects.push(...(EXTRA_EFFECTS_BY_SPELL[id] || []));
-  return {
-    spellEditorId: id,
-    magicEffectEditorId,
-    displayName: `${meta.displayName} ${kind === "boon" ? "Boon" : "Price"} - ${tierName}`,
-    playerFacingText: text,
-    property: `${kind === "boon" ? "Boon" : "Price"}_${tierName}`,
-    effects,
-  };
-}
-
+// Effect axes, magnitude bands, and exceptional multi-effect packets live behind the
+// effect-model module's small buildPrinceSpellPackets interface.
 function buildPrince(stem, rows, matrixRows) {
   const meta = PRINCE_META[stem];
   if (!meta) throw new Error(`Missing PRINCE_META for ${stem}`);
@@ -291,6 +216,11 @@ function buildPrince(stem, rows, matrixRows) {
   });
   const missing = [...boonIds, ...priceIds].filter((id) => !byId.has(id));
   if (missing.length) throw new Error(`${stem} missing required spell rows: ${missing.join(", ")}`);
+  const spellPackets = buildPrinceSpellPackets({
+    stem,
+    displayName: meta.displayName,
+    finalTextById: byId,
+  });
   return {
     stem,
     displayName: meta.displayName,
@@ -305,8 +235,8 @@ function buildPrince(stem, rows, matrixRows) {
     temptationPressure: matrixRow.TemptationPressure,
     commitmentSignal: matrixRow.CommitmentSignal,
     ...arrays,
-    boons: boonIds.map((id, i) => spellPacket(id, byId.get(id), "boon", meta, i)),
-    prices: priceIds.map((id, i) => spellPacket(id, byId.get(id), "price", meta, i)),
+    boons: spellPackets.boons,
+    prices: spellPackets.prices,
     messages,
   };
 }
@@ -324,6 +254,11 @@ function main() {
   const chapter7 = sectionFor(manifest, /^## 7\./m, /^## 8\./m);
   const rows = [...tableRows(boethiah), ...tableRows(chapter7)];
   const stems = ["Boethiah", "Azura", "Vaermina", "Meridia", "Molag", "Mephala", "Malacath", "Dagon", "Sheo", "Namira", "Sanguine", "Vile", "Mora", "Nocturnal", "Peryite", "Hircine"];
+  const modelIssues = validateDaedricEffectModel(stems);
+  if (modelIssues.length) {
+    console.error(JSON.stringify({ status: "FAIL", check: "effect-model", issues: modelIssues }, null, 2));
+    process.exit(1);
+  }
   const princes = stems.map((stem) => buildPrince(stem, rows, matrixRows));
   const contract = {
     schema: "pdv.daedric-prince-record-contracts.v1",
@@ -383,10 +318,8 @@ function main() {
       console.error(JSON.stringify({
         status: "REFUSED",
         reason:
-          "Regenerating would change the hand-curated contract. The curated JSON is the source " +
-          "of truth: it carries the Requiem regen audit, the boon/price rebalance and per-prince " +
-          "effects this generator does not produce. Reconcile the generator first, or pass --force " +
-          "if you have decided the generated shape should win.",
+          "Regenerating would change the reviewed record contract. Inspect the generated diff and " +
+          "its effect-model source before using --force to accept a deliberate contract change.",
         ...report,
       }, null, 2));
       process.exit(1);
@@ -415,7 +348,10 @@ function main() {
 
   console.log(JSON.stringify({
     status: "PASS",
-    mode: !WRITE_CONTRACT && !SCAFFOLD ? "report-only (no files written)" : "write",
+    mode: SELF_TEST
+      ? "self-test (no files written)"
+      : (!WRITE_CONTRACT && !SCAFFOLD ? "report-only (no files written)" : "write"),
+    effectModel: "PASS",
     ...report,
     contractWritten,
     scriptsWritten,
