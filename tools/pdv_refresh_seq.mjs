@@ -12,6 +12,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { sameBytesToBuffer } from "./lib/pdv_file_compare.mjs";
 
 // The flags this file reads, plus any the repo documents for it. Documented-but-unread
 // flags are included deliberately: rejecting one would break a published command, and a
@@ -139,8 +140,7 @@ function main() {
     .filter((quest) => (quest.flags & START_GAME_ENABLED_FLAG) !== 0)
     .sort((left, right) => left.localId - right.localId);
   const seqBytes = makeSeqBytes(startEnabled);
-  const currentBytes = fs.existsSync(DEVOTION_SEQ) ? fs.readFileSync(DEVOTION_SEQ) : Buffer.alloc(0);
-  const changed = !currentBytes.equals(seqBytes);
+  const changed = !sameBytesToBuffer(DEVOTION_SEQ, seqBytes);
   const report = {
     status: "PASS",
     mode: write ? "write" : "check",

@@ -1,6 +1,7 @@
 import fs from "fs";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { sameTextToString, writeTextWithEol } from "./lib/pdv_file_compare.mjs";
 
 // The flags this file reads, plus any the repo documents for it. Documented-but-unread
 // flags are included deliberately: rejecting one would break a published command, and a
@@ -179,7 +180,7 @@ idx.sort((a, b) => { const ea = eid(a[0]).toLowerCase(), eb = eid(b[0]).toLowerC
 const rendered = [hdr, ...idx.map((x) => x[0])].join("\r\n") + "\r\n";
 if (checkOnly) {
   const onDisk = fs.existsSync(FULL_CSV) ? fs.readFileSync(FULL_CSV, "utf8") : null;
-  if (onDisk === rendered) {
+  if (sameTextToString(FULL_CSV, rendered)) {
     console.log("PASS: Full.csv reproduces from the tranche sources:", body.length, "cells");
   } else {
     // Report the differing KEYS, not a byte offset -- a single reordered row
@@ -210,7 +211,7 @@ if (checkOnly) {
     process.exit(1);
   }
 } else {
-  fs.writeFileSync(FULL_CSV, rendered);
+  writeTextWithEol(FULL_CSV, rendered, "crlf");
   console.log("Wrote Full.csv:", body.length, `cells (${duplicateRowsRemoved} duplicate rows resolved by canonical merge)`);
 }
 function parse(f) { const t = fs.readFileSync(f, "utf8").split(/\r?\n/).filter((x) => x.trim()); t.shift(); return t.map((line) => { const c = []; let cur = "", q = false; for (const ch of line) { if (ch === Q) q = !q; else if (ch === "," && !q) { c.push(cur); cur = ""; } else cur += ch; } c.push(cur); return c; }); }

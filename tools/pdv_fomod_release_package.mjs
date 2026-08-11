@@ -17,17 +17,17 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import crypto from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { findDevStatus, filesUnder } from "./lib/pdv_player_facing_copy.mjs";
+import { hashBytes, writeTextWithEol } from "./lib/pdv_file_compare.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PATCH_TREE = path.join(ROOT, "dist", "PDV_QuestModPatches_FOMOD");
 const STAGE = path.join(ROOT, "dist", ".fomod-stage");
 const VERIFY_STAGE = path.join(ROOT, "dist", ".fomod-verify");
 
-const sha256 = (file) => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex").toUpperCase();
+const sha256 = (file) => hashBytes(file).toUpperCase();
 const collectFiles = (root) => {
   const files = [];
   for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
@@ -98,7 +98,7 @@ if (!/<requiredInstallFiles>/.test(config)) {
     `$1\n  <requiredInstallFiles>\n    <folder source="core" destination="" priority="0" />\n  </requiredInstallFiles>`);
 }
 if (!/source="core"/.test(config)) throw new Error("core was not registered as a required install");
-fs.writeFileSync(configPath, config, "utf8");
+writeTextWithEol(configPath, config, "lf");
 
 // info.xml is GENERATED, not inherited. This header claimed to produce it and did not: the
 // file was copied verbatim out of the patch tree, so every build shipped the ARR-era
@@ -112,7 +112,7 @@ fs.writeFileSync(configPath, config, "utf8");
 // is a version string that goes stale, and this one went stale by a whole release line.
 const infoPath = path.join(STAGE, "fomod", "info.xml");
 const machineVersion = `${/^\d+\.\d+\.\d+$/.test(version) ? version : "1.0.0"}.0`;
-fs.writeFileSync(infoPath, `<?xml version="1.0" encoding="utf-8"?>
+writeTextWithEol(infoPath, `<?xml version="1.0" encoding="utf-8"?>
 <fomod>
   <Name>Devotion</Name>
   <Author>Devotion (PDV)</Author>
@@ -134,7 +134,7 @@ fs.writeFileSync(infoPath, `<?xml version="1.0" encoding="utf-8"?>
     <element>Patches</element>
   </Groups>
 </fomod>
-`, "utf8");
+`, "lf");
 
 // ---- 4. Gate the staged tree BEFORE it becomes a package ----
 const failures = [];
@@ -207,7 +207,7 @@ const receipt = {
     runtimeAndManual: "post-release-tester-evidence",
   },
 };
-fs.writeFileSync(`${outAbs}.proof.json`, `${JSON.stringify(receipt, null, 2)}\n`, "utf8");
+writeTextWithEol(`${outAbs}.proof.json`, `${JSON.stringify(receipt, null, 2)}\n`, "lf");
 
 fs.rmSync(STAGE, { recursive: true, force: true });
 fs.rmSync(VERIFY_STAGE, { recursive: true, force: true });

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import fs from "node:fs";
 import path from "node:path";
-import crypto from "node:crypto";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { hashByteFiles, hashText } from "./lib/pdv_file_compare.mjs";
 
 const KNOWN_FLAGS = new Set(["--json"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_prisma_ui_audit" });
@@ -54,8 +54,7 @@ function mtime(filePath) {
 // files that are textually identical -- a false FAIL on exactly the check that is
 // supposed to catch real drift. Compare what the compiler sees: the text.
 function normalizedHash(filePath) {
-  const text = read(filePath).replace(/\r\n/g, "\n");
-  return crypto.createHash("sha256").update(text, "utf8").digest("hex");
+  return hashText(filePath);
 }
 
 // The repo bridge mirror is what anyone building the DLL compiles against, but
@@ -177,9 +176,7 @@ function verifyPrismaAssetCacheContract() {
     }
   }
 
-  const appBytes = fs.readFileSync(REPO_PRISMA_APP);
-  const styleBytes = fs.readFileSync(REPO_PRISMA_STYLE);
-  const expectedKey = `pdv-${crypto.createHash("sha256").update(appBytes).update(styleBytes).digest("hex").slice(0, 16)}`;
+  const expectedKey = `pdv-${hashByteFiles([REPO_PRISMA_APP, REPO_PRISMA_STYLE]).slice(0, 16)}`;
   const index = read(REPO_PRISMA_INDEX);
   const styleMatch = index.match(/styles\.css\?v=([A-Za-z0-9_-]+)/);
   const appMatch = index.match(/app\.js\?v=([A-Za-z0-9_-]+)/);
@@ -192,7 +189,7 @@ function verifyPrismaAssetCacheContract() {
     pass(`Prisma app.js and styles.css share current content-derived cache key ${expectedKey}.`, REPO_PRISMA_INDEX);
   }
 
-  const app = appBytes.toString("utf8");
+  const app = read(REPO_PRISMA_APP);
   if (
     !app.includes('state.instrument.primary !== undefined') ||
     !app.includes('clamp01(numberOrZero(state.instrument.primary))') ||

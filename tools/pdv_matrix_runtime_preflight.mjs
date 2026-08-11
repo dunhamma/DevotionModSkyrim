@@ -8,10 +8,10 @@
  */
 
 import { acceptedDeityNames } from "./lib/pdv_matrix_vocab.mjs";
-import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { hashBytes, hashText } from "./lib/pdv_file_compare.mjs";
 
 const args = process.argv.slice(2);
 validateArgs(args);
@@ -365,7 +365,7 @@ function checkMatrixJson(filePath, active) {
   const expected = EXPECTED_CORE_WATCHED;
   const count = matrixWatchCount(json);
   const shape = json.string && json.float && json.int && json.stringList ? "typed" : "flat-or-invalid";
-  const hash = sha256(filePath).slice(0, 12);
+  const hash = hashText(filePath).slice(0, 12);
   const detail = `${name} ${shape}, watched=${count}, sha256=${hash}`;
 
   if (!active && count > 0) {
@@ -528,7 +528,7 @@ function checkPexFiles(enabledMods) {
       fail("PEX present", `${script} is missing.`, filePath);
       continue;
     }
-    pass("PEX present", `${script} sha256=${sha256(filePath).slice(0, 16)}.`, filePath);
+    pass("PEX present", `${script} sha256=${hashBytes(filePath).slice(0, 16)}.`, filePath);
   }
 }
 
@@ -652,10 +652,6 @@ function readJson(filePath) {
 
 function readLines(filePath) {
   return fs.readFileSync(filePath, "utf8").split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
-}
-
-function sha256(filePath) {
-  return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
 }
 
 function add(status, check, detail, file = null) {

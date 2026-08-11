@@ -2,9 +2,11 @@
 /** Build the checkpointed ARR 2.5 out-of-scope QUST discovery worklist. */
 
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { hashText, sameTextToString, writeTextWithEol } from "./lib/pdv_file_compare.mjs";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const COMPAT = join(REPO, "references", "vanilla-gameplay", "compatibility");
@@ -92,7 +94,7 @@ function tsvMods(path) {
 }
 
 function sha256(path) {
-  return createHash("sha256").update(readFileSync(path)).digest("hex");
+  return hashText(path);
 }
 
 function sourceLabel(path) {
@@ -285,14 +287,14 @@ function main() {
   const manifestText = JSON.stringify(manifest, null, 2) + "\n";
 
   if (args.check) {
-    const worklistMatches = existsSync(args.output) && readFileSync(args.output, "utf8") === worklist;
-    const manifestMatches = existsSync(args.manifest) && readFileSync(args.manifest, "utf8") === manifestText;
+    const worklistMatches = sameTextToString(args.output, worklist);
+    const manifestMatches = sameTextToString(args.manifest, manifestText);
     if (!worklistMatches || !manifestMatches) throw new Error("Discovery worklist or manifest is stale");
   } else {
     mkdirSync(dirname(args.output), { recursive: true });
     mkdirSync(dirname(args.manifest), { recursive: true });
-    writeFileSync(args.output, worklist, "utf8");
-    writeFileSync(args.manifest, manifestText, "utf8");
+    writeTextWithEol(args.output, worklist, "lf");
+    writeTextWithEol(args.manifest, manifestText, "lf");
   }
   console.log(`PASS: ${distinctMods.size} uncovered QUST mods / ${records.length} plugin paths.`);
   for (const wave of ["A", "B", "C"]) {

@@ -3,6 +3,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { sameTextToString, writeTextWithEol } from "./lib/pdv_file_compare.mjs";
+
 // Refuse unrecognised flags. These tools read argv with includes()/indexOf(), so an
 // unknown or mistyped flag would otherwise fall through to a default and the run would
 // SUCCEED against something the caller never asked for. Matches the pdv_arr25_* convention.
@@ -85,7 +87,7 @@ function importLegacy() {
     proofBoundary: "Machine-verified experimental options; runtime, player-surface, semantic, save/load, and support proof remain separate.",
     options,
   };
-  fs.writeFileSync(MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+  writeTextWithEol(MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`, "lf");
 }
 
 function renderOption(option) {
@@ -199,14 +201,13 @@ if (process.argv.includes("--normalize-manifest")) {
   for (const option of manifest.options) {
     option.folders = option.folders.filter((folder) => !/^common\\_Runbook$/i.test(folder));
   }
-  fs.writeFileSync(MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+  writeTextWithEol(MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`, "lf");
 }
 const rendered = render();
 if (process.argv.includes("--write") || process.argv.includes("--import-legacy") || process.argv.includes("--normalize-manifest")) {
-  fs.writeFileSync(XML, rendered, "utf8");
+  writeTextWithEol(XML, rendered, "lf");
 } else {
-  const before = fs.readFileSync(XML, "utf8").replace(/\r\n/g, "\n");
-  if (before !== rendered) throw new Error("ModuleConfig.xml drifted from the PatchHub manifest; run with --write");
+  if (!sameTextToString(XML, rendered)) throw new Error("ModuleConfig.xml drifted from the PatchHub manifest; run with --write");
 }
 
 console.log(JSON.stringify({ status: "PASS", mode: process.argv.includes("--import-legacy") ? "import" : process.argv.includes("--normalize-manifest") ? "normalize" : process.argv.includes("--write") ? "write" : "check" }, null, 2));

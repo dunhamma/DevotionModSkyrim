@@ -2,13 +2,11 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const at = (...parts) => path.join(ROOT, ...parts);
 const read = (...parts) => fs.readFileSync(at(...parts), "utf8");
-const hash = (...parts) => crypto.createHash("sha256").update(fs.readFileSync(at(...parts))).digest("hex");
 const failures = [];
 const passes = [];
 const check = (name, ok, detail) => (ok ? passes : failures).push(`${name}: ${detail}`);

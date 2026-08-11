@@ -8,9 +8,10 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import crypto from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+
+import { hashByteFiles, hashBytes, writeTextWithEol } from "./lib/pdv_file_compare.mjs";
 
 const TOOL_DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(TOOL_DIR, "..");
@@ -90,7 +91,7 @@ function isExcludedEntry(relativePath) {
 }
 
 function sha256(filePath) {
-  return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex").toUpperCase();
+  return hashBytes(filePath).toUpperCase();
 }
 
 function mtime(filePath) {
@@ -351,14 +352,10 @@ function verifyPrismaParity(manifest) {
   }
 
   const canonicalView = path.join(CANONICAL_PRISMA_ROOT, "PrismaUI", "views", "Devotion");
-  const appBytes = fs.readFileSync(path.join(canonicalView, "app.js"));
-  const stylesBytes = fs.readFileSync(path.join(canonicalView, "styles.css"));
-  const expectedKey = `pdv-${crypto
-    .createHash("sha256")
-    .update(appBytes)
-    .update(stylesBytes)
-    .digest("hex")
-    .slice(0, 16)}`;
+  const expectedKey = `pdv-${hashByteFiles([
+    path.join(canonicalView, "app.js"),
+    path.join(canonicalView, "styles.css"),
+  ]).slice(0, 16)}`;
   const index = fs.readFileSync(path.join(canonicalView, "index.html"), "utf8");
   const actualKeys = [
     index.match(/styles\.css\?v=([A-Za-z0-9_-]+)/)?.[1],
@@ -656,7 +653,7 @@ fs.rmSync(stagingRoot, { recursive: true, force: true });
 console.log("");
 const archive = verifyArchive(zipPath, manifest);
 const receiptPath = `${zipPath}.proof.json`;
-fs.writeFileSync(
+writeTextWithEol(
   receiptPath,
   `${JSON.stringify(
     {
@@ -678,7 +675,7 @@ fs.writeFileSync(
     null,
     2,
   )}\n`,
-  "utf8",
+  "lf",
 );
 console.log("");
 console.log(`Built ${zipName}`);

@@ -29,12 +29,12 @@
  *   --json          JSON summary to stdout
  */
 
-import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { hashText, writeTextWithEol } from "./lib/pdv_file_compare.mjs";
 
 // Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
 // not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
@@ -103,7 +103,7 @@ const flags = new Set(process.argv.slice(2));
 
 function loadJson(rel) { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), "utf8")); }
 function sha(rel) {
-  try { return crypto.createHash("sha256").update(fs.readFileSync(path.join(ROOT, rel))).digest("hex").slice(0, 16); }
+  try { return hashText(path.join(ROOT, rel)).slice(0, 16); }
   catch { return "absent"; }
 }
 
@@ -400,7 +400,7 @@ function syncLedger(registry) {
   dropped = Object.keys(ledger.families).filter((id) => !(id in next)).length;
   ledger.families = next;
   ledger.updated = new Date().toISOString().slice(0, 10);
-  fs.writeFileSync(ledgerPath, JSON.stringify(ledger, null, 2) + "\n", "utf8");
+  writeTextWithEol(ledgerPath, JSON.stringify(ledger, null, 2) + "\n", "lf");
   return { added, dropped, total: Object.keys(next).length, ledger };
 }
 
@@ -455,7 +455,7 @@ function retroCredit(registry) {
   }
 
   ledger.updated = new Date().toISOString().slice(0, 10);
-  fs.writeFileSync(ledgerPath, JSON.stringify(ledger, null, 2) + "\n", "utf8");
+  writeTextWithEol(ledgerPath, JSON.stringify(ledger, null, 2) + "\n", "lf");
   const open = Object.values(ledger.families).filter((s) => s.status === "pending").length;
   return { credited, open, total: Object.keys(ledger.families).length };
 }
@@ -553,7 +553,7 @@ if (flags.has("--self-test")) {
     }
   } else {
     registry.updated = new Date().toISOString().slice(0, 10);
-    fs.writeFileSync(path.join(ROOT, REGISTRY_REL), JSON.stringify(registry, null, 2) + "\n", "utf8");
+    writeTextWithEol(path.join(ROOT, REGISTRY_REL), JSON.stringify(registry, null, 2) + "\n", "lf");
     const [lo, hi] = FAMILY_BAND;
     const bandNote = registry.counts.families < lo || registry.counts.families > hi
       ? ` (WARN: outside sanity band ${lo}-${hi})` : ` (in sanity band ${lo}-${hi})`;

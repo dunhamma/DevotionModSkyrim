@@ -46,16 +46,35 @@ export function hashBytes(filePath) {
   return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
 }
 
+/** sha256 of several files' exact bytes, in the supplied order. */
+export function hashByteFiles(filePaths) {
+  const hash = crypto.createHash("sha256");
+  for (const filePath of filePaths) hash.update(fs.readFileSync(filePath));
+  return hash.digest("hex");
+}
+
 /** Same content, ignoring line endings. Missing file counts as different, never as equal. */
 export function sameText(a, b) {
   if (!fs.existsSync(a) || !fs.existsSync(b)) return false;
   return readTextNormalised(a) === readTextNormalised(b);
 }
 
+/** Same normalized text as an expected in-memory generated payload. */
+export function sameTextToString(filePath, expected) {
+  if (!fs.existsSync(filePath) || typeof expected !== "string") return false;
+  return readTextNormalised(filePath) === expected.replaceAll("\r\n", "\n");
+}
+
 /** Same exact bytes. Missing file counts as different. */
 export function sameBytes(a, b) {
   if (!fs.existsSync(a) || !fs.existsSync(b)) return false;
   return fs.readFileSync(a).equals(fs.readFileSync(b));
+}
+
+/** Same exact bytes as an expected in-memory binary payload. */
+export function sameBytesToBuffer(filePath, expected) {
+  if (!fs.existsSync(filePath) || !Buffer.isBuffer(expected)) return false;
+  return fs.readFileSync(filePath).equals(expected);
 }
 
 /**

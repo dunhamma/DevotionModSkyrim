@@ -8,12 +8,12 @@
  * Runtime and semantic proof remain tester-owned.
  */
 
-import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { sameText } from "./lib/pdv_file_compare.mjs";
 
 // The flags this file reads, plus any the repo documents for it. Documented-but-unread
 // flags are included deliberately: rejecting one would break a published command, and a
@@ -99,17 +99,13 @@ function validateChannel(label, file, expectedRows, expectedStages, expectedForm
   return rows;
 }
 
-function sha(file) {
-  return crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
-}
-
 function requireSame(label, a, b) {
   if (!fs.existsSync(a) || !fs.existsSync(b)) {
     failures.push(`${label}: comparison file missing`);
-  } else if (sha(a) === sha(b)) {
+  } else if (sameText(a, b)) {
     passes.push(label);
   } else {
-    failures.push(`${label}: SHA-256 mismatch`);
+    failures.push(`${label}: normalized text mismatch`);
   }
 }
 

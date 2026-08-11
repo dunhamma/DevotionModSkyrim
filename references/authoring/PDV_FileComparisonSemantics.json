@@ -1,0 +1,167 @@
+{
+  "schema": "pdv.file-comparison-semantics.v1",
+  "rule": "Tracked text is compared and hashed after CRLF-to-LF normalization; binary artifacts, archives, receipts, and bytecode use exact bytes; tracked generated text declares its output EOL.",
+  "tools": [
+    {
+      "tool": "pdv_1_0_endstate_gate.mjs",
+      "question": "Are freshness sources unchanged in meaning, while deployed ESP evidence remains byte-exact?",
+      "semantics": "mixed",
+      "requiredHelpers": ["hashText", "hashBytes", "writeTextWithEol"],
+      "writerEol": "lf"
+    },
+    {
+      "tool": "pdv_arr25_discovery_batches.mjs",
+      "question": "Do text inputs and regenerated worklist/manifest content match across checkout shapes?",
+      "semantics": "normalized-text",
+      "requiredHelpers": ["hashText", "sameTextToString", "writeTextWithEol"],
+      "writerEol": "lf"
+    },
+    {
+      "tool": "pdv_arr25_nonquest_check.mjs",
+      "question": "The inventoried raw-hash helper had no call sites and was removed.",
+      "semantics": "removed-dead-code",
+      "requiredHelpers": [],
+      "writerEol": "none"
+    },
+    {
+      "tool": "pdv_arr25_nonquest_signature_scan.mjs",
+      "question": "Do text inputs and regenerated scan/worklist/manifest content match across checkout shapes?",
+      "semantics": "normalized-text",
+      "requiredHelpers": ["hashText", "sameTextToString", "writeTextWithEol"],
+      "writerEol": "lf"
+    },
+    {
+      "tool": "pdv_arr25_t16_route_check.mjs",
+      "question": "Do packaged and authoritative script sources have the same text content?",
+      "semantics": "normalized-text",
+      "requiredHelpers": ["sameText"],
+      "writerEol": "none"
+    },
+    {
+      "tool": "pdv_book_of_days_audit.mjs",
+      "question": "Do repo/live UI text assets match in content and font files match in bytes?",
+      "semantics": "mixed",
+      "requiredHelpers": ["hashText", "hashBytes"],
+      "writerEol": "none"
+    },
+    {
+      "tool": "pdv_compile.mjs",
+      "question": "Does deployed Papyrus source match tracked source content regardless of EOL?",
+      "semantics": "normalized-text",
+      "requiredHelpers": ["sameText"],
+      "writerEol": "none"
+    },
+    {
+      "tool": "pdv_felt_registry_gen.mjs",
+      "question": "Do source hashes identify normalized tracked text and generated ledgers use stable LF?",
+      "semantics": "normalized-text",
+      "requiredHelpers": ["hashText", "writeTextWithEol"],
+      "writerEol": "lf"
+    },
+    {
+      "tool": "pdv_matrix_runtime_preflight.mjs",
+      "question": "Do matrix diagnostics identify text content while PEX diagnostics identify exact bytecode?",
+      "semantics": "mixed",
+      "requiredHelpers": ["hashText", "hashBytes"],
+      "writerEol": "none"
+    },
+    {
+      "tool": "pdv_package_release.mjs",
+      "question": "Do shipped assets, ESP/PEX files, archives, and receipts reproduce exact bytes?",
+      "semantics": "exact-bytes",
+      "requiredHelpers": ["hashBytes", "hashByteFiles", "writeTextWithEol"],
+      "writerEol": "lf"
+    },
+    {
+      "tool": "pdv_prisma_to_oneoh_audit.mjs",
+      "question": "Do repo/live Prisma and source mirrors have the same text content?",
+      "semantics": "normalized-text",
+      "requiredHelpers": ["hashText"],
+      "writerEol": "none"
+    },
+    {
+      "tool": "pdv_prisma_ui_audit.mjs",
+      "question": "Do source mirrors match as text while the cache-bust key represents exact shipped UI bytes?",
+      "semantics": "mixed",
+      "requiredHelpers": ["hashText", "hashByteFiles"],
+      "writerEol": "none"
+    },
+    {
+      "tool": "pdv_quest_patch_fomod_validate.mjs",
+      "question": "Do installer collisions, archive membership, and release receipts match exact shipped bytes?",
+      "semantics": "exact-bytes",
+      "requiredHelpers": ["hashBytes", "writeTextWithEol"],
+      "writerEol": "lf"
+    },
+    {
+      "tool": "pdv_refresh_seq.mjs",
+      "question": "Does the generated SEQ binary match the deployed SEQ bytes exactly?",
+      "semantics": "exact-bytes",
+      "requiredHelpers": ["sameBytesToBuffer"],
+      "writerEol": "binary"
+    },
+    {
+      "tool": "pdv_ship_optimization_audit.mjs",
+      "question": "Do source candidates match normalized text while evidence artifacts retain exact byte hashes?",
+      "semantics": "mixed",
+      "requiredHelpers": ["hashText", "hashBytes", "writeTextWithEol"],
+      "writerEol": "lf"
+    },
+    {
+      "tool": "pdv_snapshot_live.mjs",
+      "question": "Do backup, verify, and restore operations preserve every live file byte-for-byte?",
+      "semantics": "exact-bytes",
+      "requiredHelpers": ["hashBytes", "writeTextWithEol"],
+      "writerEol": "lf"
+    },
+    {
+      "tool": "pdv_fomod_release_package.mjs",
+      "question": "Does the unified installer and its proof receipt preserve exact staged and archive bytes?",
+      "semantics": "exact-bytes",
+      "requiredHelpers": ["hashBytes", "writeTextWithEol"],
+      "writerEol": "lf"
+    },
+    {
+      "tool": "pdv_guide_bbcode.mjs",
+      "question": "Does generated Nexus BBCode match its Markdown-derived text regardless of checkout EOL?",
+      "semantics": "normalized-text",
+      "requiredHelpers": ["sameTextToString", "writeTextWithEol"],
+      "writerEol": "lf"
+    },
+    {
+      "tool": "pdv_arr_matrix_decompose.mjs",
+      "question": "Do decomposed ARR channel CSVs reproduce the same normalized text content?",
+      "semantics": "normalized-text",
+      "requiredHelpers": ["sameTextToString", "writeTextWithEol"],
+      "writerEol": "lf"
+    },
+    {
+      "tool": "pdv_quest_tranche_merge.mjs",
+      "question": "Does Full.csv reproduce the same cells and text while the writer preserves canonical CRLF?",
+      "semantics": "normalized-text",
+      "requiredHelpers": ["sameTextToString", "writeTextWithEol"],
+      "writerEol": "crlf"
+    },
+    {
+      "tool": "pdv_quest_patch_fomod_generate.mjs",
+      "question": "Does generated PatchHub XML and manifest content match independently of checkout EOL?",
+      "semantics": "normalized-text",
+      "requiredHelpers": ["sameTextToString", "writeTextWithEol"],
+      "writerEol": "lf"
+    }
+  ],
+  "requiredAttributes": [
+    "references/authoring/PDV_1_0_FreshnessStamps.json text eol=lf",
+    "references/authoring/PDV_FeltEffectRegistry.json text eol=lf",
+    "references/authoring/PDV_FeltFamilyEvidenceLedger.json text eol=lf",
+    "references/vanilla-gameplay/compatibility/PDV_ARR25_DiscoveryWorklist_2026-08-06.csv text eol=lf",
+    "references/vanilla-gameplay/compatibility/PDV_ARR25_DiscoveryBatches_2026-08-06.json text eol=lf",
+    "references/vanilla-gameplay/compatibility/PDV_ARR25_NonQuestSignatureScan_2026-08-06.csv text eol=lf",
+    "references/vanilla-gameplay/compatibility/PDV_ARR25_NonQuestSignalWorklist_2026-08-06.csv text eol=lf",
+    "references/vanilla-gameplay/compatibility/PDV_ARR25_NonQuestSignalBatches_2026-08-06.json text eol=lf",
+    "references/authoring/PDV_FileComparisonSemantics.json text eol=lf",
+    "references/authoring/patches/PDV_QRM_*.csv text eol=lf",
+    "references/authoring/PDV_QuestReactionMatrix_CreationClubCore_2026-08-07.csv text eol=lf",
+    "references/authoring/PDV_QuestPatchHub.manifest.json text eol=lf"
+  ]
+}

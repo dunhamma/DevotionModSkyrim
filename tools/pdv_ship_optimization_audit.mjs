@@ -5,8 +5,9 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
+
+import { hashBytes, hashText, writeTextWithEol } from "./lib/pdv_file_compare.mjs";
 
 const TOOL_DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(TOOL_DIR, "..");
@@ -37,15 +38,11 @@ function fail(message) {
 }
 
 function sha256(filePath) {
-  return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex").toUpperCase();
+  return hashBytes(filePath).toUpperCase();
 }
 
 function normalizedTextSha256(filePath) {
-  return crypto
-    .createHash("sha256")
-    .update(fs.readFileSync(filePath, "utf8").replace(/\r\n/g, "\n"), "utf8")
-    .digest("hex")
-    .toUpperCase();
+  return hashText(filePath).toUpperCase();
 }
 
 function count(source, expression) {
@@ -590,8 +587,8 @@ const ledger = {
 };
 
 if (args.write) {
-  fs.writeFileSync(LEDGER_JSON, `${JSON.stringify(ledger, null, 2)}\n`, "utf8");
-  fs.writeFileSync(LEDGER_MD, markdown(ledger), "utf8");
+  writeTextWithEol(LEDGER_JSON, `${JSON.stringify(ledger, null, 2)}\n`, "lf");
+  writeTextWithEol(LEDGER_MD, markdown(ledger), "lf");
   console.log(`[PASS] Wrote ${LEDGER_JSON}`);
   console.log(`[PASS] Wrote ${LEDGER_MD}`);
 }

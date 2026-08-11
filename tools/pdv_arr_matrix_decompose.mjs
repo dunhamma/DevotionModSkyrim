@@ -3,6 +3,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { sameTextToString, writeTextWithEol } from "./lib/pdv_file_compare.mjs";
+
 // Refuse unrecognised flags. These tools read argv with includes()/indexOf(), so an
 // unknown or mistyped flag would otherwise fall through to a default and the run would
 // SUCCEED against something the caller never asked for. Matches the pdv_arr25_* convention.
@@ -83,12 +85,11 @@ function expectedText(header, rows) {
 function reconcileFile(file, expected, label) {
   if (write) {
     fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, expected, "utf8");
+    writeTextWithEol(file, expected, "lf");
     return;
   }
   if (!fs.existsSync(file)) throw new Error(`${label} missing: ${file}`);
-  const actual = fs.readFileSync(file, "utf8").replace(/\r\n/g, "\n");
-  if (actual !== expected) throw new Error(`${label} drift: ${file}`);
+  if (!sameTextToString(file, expected)) throw new Error(`${label} drift: ${file}`);
 }
 
 const arr = readCsv(ARR_SOURCE);

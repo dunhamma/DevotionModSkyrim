@@ -45,13 +45,13 @@
   So: diff snapshots to answer "what was RETUNED", never "what was ADDED". For additions the
   authority is the write-time verified readback, or a fresh read against the live load order.
 */
-import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { hashBytes, writeTextWithEol } from "./lib/pdv_file_compare.mjs";
 
 // The flags this file reads, plus any the repo documents for it. Documented-but-unread
 // flags are included deliberately: rejecting one would break a published command, and a
@@ -93,7 +93,7 @@ const die = (msg) => {
   process.exit(1);
 };
 
-const sha256 = (p) => crypto.createHash("sha256").update(fs.readFileSync(p)).digest("hex");
+const sha256 = (p) => hashBytes(p);
 const exists = (p) => fs.existsSync(p);
 
 function stamp() {
@@ -187,7 +187,7 @@ function createSnapshot(label, { auto = false } = {}) {
     totalBytes: bytes,
     files: entries,
   };
-  fs.writeFileSync(path.join(dest, MANIFEST), `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+  writeTextWithEol(path.join(dest, MANIFEST), `${JSON.stringify(manifest, null, 2)}\n`, "lf");
 
   say(`snapshot created: ${name}`);
   say(`  ${entries.length} file(s), ${(bytes / 1024 / 1024).toFixed(2)} MB, all hashes verified`);

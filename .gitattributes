@@ -90,3 +90,19 @@ references/vanilla-gameplay/compatibility/PDV_JoJ_StageWorklist.csv text eol=lf
 # on every platform.
 references/authoring/PDV_ExternalModSupport_Inventory.md text eol=lf
 tools/pdv_external_support_inventory.mjs text eol=lf
+
+# File-semantics audit authority and tracked outputs. These generators write LF
+# deliberately and their checks compare normalized text, so checkout shape must
+# be stable as the first layer while the comparison helper is the second.
+references/authoring/PDV_1_0_FreshnessStamps.json text eol=lf
+references/authoring/PDV_FeltEffectRegistry.json text eol=lf
+references/authoring/PDV_FeltFamilyEvidenceLedger.json text eol=lf
+references/vanilla-gameplay/compatibility/PDV_ARR25_DiscoveryWorklist_2026-08-06.csv text eol=lf
+references/vanilla-gameplay/compatibility/PDV_ARR25_DiscoveryBatches_2026-08-06.json text eol=lf
+references/vanilla-gameplay/compatibility/PDV_ARR25_NonQuestSignatureScan_2026-08-06.csv text eol=lf
+references/vanilla-gameplay/compatibility/PDV_ARR25_NonQuestSignalWorklist_2026-08-06.csv text eol=lf
+references/vanilla-gameplay/compatibility/PDV_ARR25_NonQuestSignalBatches_2026-08-06.json text eol=lf
+references/authoring/PDV_FileComparisonSemantics.json text eol=lf
+references/authoring/patches/PDV_QRM_*.csv text eol=lf
+references/authoring/PDV_QuestReactionMatrix_CreationClubCore_2026-08-07.csv text eol=lf
+references/authoring/PDV_QuestPatchHub.manifest.json text eol=lf

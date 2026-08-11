@@ -2,9 +2,11 @@
 /** Freeze the ARR 2.5 non-QUST record-signature universe. */
 
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { hashText, sameTextToString, writeTextWithEol } from "./lib/pdv_file_compare.mjs";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const COMPAT = join(REPO, "references", "vanilla-gameplay", "compatibility");
@@ -50,7 +52,7 @@ function parseArgs(argv) {
 }
 
 function sha256File(path) {
-  return createHash("sha256").update(readFileSync(path)).digest("hex");
+  return hashText(path);
 }
 
 function sourceLabel(path) {
@@ -239,13 +241,13 @@ function main() {
   };
   const manifestText = JSON.stringify(manifest, null, 2) + "\n";
   if (args.check) {
-    if (!existsSync(args.scan) || readFileSync(args.scan, "utf8") !== scanText) throw new Error("Non-quest signature scan is stale");
-    if (!existsSync(args.worklist) || readFileSync(args.worklist, "utf8") !== workText) throw new Error("Non-quest signal worklist is stale");
-    if (!existsSync(args.manifest) || readFileSync(args.manifest, "utf8") !== manifestText) throw new Error("Non-quest signal manifest is stale");
+    if (!sameTextToString(args.scan, scanText)) throw new Error("Non-quest signature scan is stale");
+    if (!sameTextToString(args.worklist, workText)) throw new Error("Non-quest signal worklist is stale");
+    if (!sameTextToString(args.manifest, manifestText)) throw new Error("Non-quest signal manifest is stale");
   } else {
-    writeFileSync(args.scan, scanText, "utf8");
-    writeFileSync(args.worklist, workText, "utf8");
-    writeFileSync(args.manifest, manifestText, "utf8");
+    writeTextWithEol(args.scan, scanText, "lf");
+    writeTextWithEol(args.worklist, workText, "lf");
+    writeTextWithEol(args.manifest, manifestText, "lf");
   }
   console.log(`PASS: scanned ${manifest.scannedMods} non-QUST mods / ${manifest.scannedPluginPaths} paths.`);
   console.log(`  candidates: ${manifest.candidateMods} mods / ${manifest.candidatePluginPaths} paths / ${batches.length} batches`);

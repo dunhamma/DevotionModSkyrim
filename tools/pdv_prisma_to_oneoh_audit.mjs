@@ -6,10 +6,11 @@
  * display, Book of Days close-path smoke, route logs, or manual feel evidence.
  */
 
-import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { hashText } from "./lib/pdv_file_compare.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -289,7 +290,7 @@ function forbidSnippet(text, snippet, check, detail, filePath, pass, fail) {
 }
 
 function hash(filePath) {
-  return crypto.createHash("sha256").update(normalizedText(filePath), "utf8").digest("hex");
+  return hashText(filePath);
 }
 
 function normalizedText(filePath) {

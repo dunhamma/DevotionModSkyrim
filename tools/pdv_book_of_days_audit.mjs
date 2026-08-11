@@ -1,8 +1,9 @@
 #!/usr/bin/env node
-import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { hashBytes, hashText } from "./lib/pdv_file_compare.mjs";
 
 const TOOLS_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(TOOLS_DIR, "..");
@@ -26,7 +27,8 @@ const NATIVE_MAIN = path.join(ROOT, "native", "DevotionPrismaBridge", "src", "ma
 const results = [];
 const add = (level, message, source = "") => results.push({ level, message, source });
 const read = (filePath) => fs.readFileSync(filePath, "utf8");
-const hash = (filePath) => crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
+const BYTE_EXTENSIONS = new Set([".ttf", ".woff", ".woff2"]);
+const hash = (filePath) => BYTE_EXTENSIONS.has(path.extname(filePath).toLowerCase()) ? hashBytes(filePath) : hashText(filePath);
 
 function mustExist(filePath) {
   if (!fs.existsSync(filePath)) {

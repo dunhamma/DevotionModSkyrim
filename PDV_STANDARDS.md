@@ -746,6 +746,24 @@ The minimum closeout sweep is exhaustive, not sampled:
 If one transform produces mixed syntactic cases, stop and split it into smaller
 edits. Mechanical does not mean context-free.
 
+### 6.7d File comparison and generated-text EOL semantics
+
+Every gate that compares or hashes files must name the question it asks:
+
+1. Use normalized text semantics when line endings are a checkout artifact.
+2. Use exact-byte semantics for plugins, bytecode, archives, fonts, snapshots,
+   checksums, cache keys derived from shipped bytes, and release receipts.
+3. A tool that handles both kinds must select the helper at each call site; a
+   generic raw `sha256(file)` helper is not an adequate mixed-mode contract.
+4. Every tracked generated text writer must select `lf` or `crlf` explicitly.
+5. Pin canonical tracked output EOLs in `.gitattributes` as the first layer, and
+   use `tools/lib/pdv_file_compare.mjs` as the second. Neither replaces the
+   other.
+
+`references/authoring/PDV_FileComparisonSemantics.json` records the audited
+question and mode for each file-comparison tool. Run
+`node tools/pdv_file_semantics_audit.mjs` after adding or changing one.
+
 ### 6.8 Strip debug before release
 
 Trace messages and the debug spell are dev tools. Either remove them or gate them behind a `bDebugMode` global in MCM before any public release. A player's `Papyrus.0.log` filling with `[PDV]` traces is a defect, not a feature.

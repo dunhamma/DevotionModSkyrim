@@ -18,6 +18,8 @@ import crypto from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
+import { hashBytes, writeTextWithEol } from "./lib/pdv_file_compare.mjs";
+
 // Refuse unrecognised flags. These tools read argv with includes()/indexOf(), so an
 // unknown or mistyped flag would otherwise fall through to a default and the run would
 // SUCCEED against something the caller never asked for. Matches the pdv_arr25_* convention.
@@ -44,7 +46,7 @@ const xmlPath = path.join(packageRoot, "fomod", "ModuleConfig.xml");
 const failures = [];
 const warnings = [];
 const fail = (message) => failures.push(message);
-const sha256 = (file) => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex").toUpperCase();
+const sha256 = (file) => hashBytes(file).toUpperCase();
 const norm = (file) => file.replaceAll("\\", "/").replace(/^\.\//, "");
 
 function filesUnder(root) {
@@ -284,7 +286,7 @@ const receipt = {
 
 if (args.includes("--write-receipt")) {
   fs.mkdirSync(path.dirname(receiptPath), { recursive: true });
-  fs.writeFileSync(receiptPath, JSON.stringify(receipt, null, 2) + "\n", "utf8");
+  writeTextWithEol(receiptPath, JSON.stringify(receipt, null, 2) + "\n", "lf");
 }
 console.log(JSON.stringify(receipt, null, 2));
 process.exitCode = failures.length ? 1 : 0;
