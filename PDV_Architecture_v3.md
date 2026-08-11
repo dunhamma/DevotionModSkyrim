@@ -846,6 +846,12 @@ ESP-FormList-baked - scales to the current 1978 cells without FormList sprawl, k
 CSVs authoritative, and puts the tune-later values in one place. (Detection still uses a
 watch set of 134 quests. Since that exceeds Papyrus's 128-element declared-array ceiling,
 registration reads the PapyrusUtil string lists by indexed `StringListCount` / `StringListGet`.)
+Optional PatchHub channel JSON also carries `sourceMod`, derived from the owning FOMOD
+option name rather than hand-authored per channel. The queue stores that value with the
+reaction job and emits it on both player-visible confirmation surfaces: the Prisma toast
+and the matching persistent Book-of-Days entry. Core matrix reactions omit the field.
+Existing saves keep a parallel StorageUtil source list that is padded before the first new
+append, so new labels cannot drift onto historical journal entries.
 
 **Status.** Design FROZEN. Core source/readback wiring is live through
 `PDV_PlayerEvents`, `PDV__ManagerQuest.ApplyDeityReaction`, StorageUtil JSON, and the
