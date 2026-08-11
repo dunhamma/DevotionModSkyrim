@@ -1089,6 +1089,18 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 
 ## Decisions Log
 
+- **[2026-08-11] - Off-roster worship is blocked for new commitments while reduced-rate legacy patrons remain playable:**
+  `SetActiveDeity` is the central selection boundary: normal commitments must belong to the
+  origin roster or an active formal-offer lane, while the MCM's explicit debug route may override
+  that rule. A stored patron restored from an older save may remain active only as a
+  FOREIGN/TOLERATED grandfathered relationship; quest reactions and shrine prayer preserve that
+  relationship at the canonical 0.4 matrix rate, while generic deed gains remain NATIVE-only.
+  Quest-matrix amounts are stance-pre-scaled and therefore enter the gain pipeline without a
+  second record-stance multiplier. `LIKES_DISLIKES_VERSION` 21 reprojects all 33 record stances on
+  existing saves, and `pdv_deity_stance_parity.mjs` now gates JSON, ESP, and the runtime migration
+  source together. Rationale: the stale migration table could silently restore several off-roster
+  gods to NATIVE and the former quest path applied reduced stance twice.
+
 - **[2026-08-11] - File gates must distinguish normalized text from exact bytes:**
   The current 21-tool compare/hash inventory is explicit: text freshness and generated-text
   checks normalize CRLF to LF; plugins, PEX/SEQ, fonts, archives, snapshots, cache keys, and

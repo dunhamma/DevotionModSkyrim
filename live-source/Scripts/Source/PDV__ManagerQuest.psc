@@ -623,7 +623,7 @@ Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; seals every deity's participating-event cache (12.4 / C4 in PDV_DeityBase) -- without
 ; it the caches stay unsealed forever on old saves (correct, they fail open, but the
 ; broadcast fan-out keeps paying the full per-deity probe the cache exists to remove).
-Int Property LIKES_DISLIKES_VERSION = 20 AutoReadOnly
+Int Property LIKES_DISLIKES_VERSION = 21 AutoReadOnly
 Int Property PRINCE_LD_VERSION = 4 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_NONE = 0 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_SKY_STORM_HUNT = 1 AutoReadOnly
@@ -2558,12 +2558,7 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
         endIf
     endIf
 
-    Float multiplier = 1.0
-    if stance == "FOREIGN"
-        multiplier = JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.FOREIGN", 0.4)
-    elseIf stance == "TOLERATED"
-        multiplier = JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.TOLERATED", 0.4)
-    endIf
+    Float multiplier = GetQuestReactionStanceMultiplier(stance)
 
     Float appliedReactionAmount = amount * multiplier
     ; Milestone surfacing (below) owns the top-left toast for a landed base-cell
@@ -3477,15 +3472,40 @@ Float Function GetQuestReactionBaseValue(String magnitude, String intensity)
     return JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "value." + magnitude + "." + intensity, 0.0)
 EndFunction
 
+Float Function GetQuestReactionStanceMultiplier(String stance)
+    if stance == "FOREIGN"
+        return JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.FOREIGN", 0.4)
+    elseIf stance == "TOLERATED"
+        return JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.TOLERATED", 0.4)
+    endIf
+    return 1.0
+EndFunction
+
 ; A quest-reaction target is "reachable" when some surface can show its piety:
 ; Daedric paths always (pre-pact paths render as "watching"; pacts as patron),
-; deity faces only when the player's origin roster lists them. Mirrors the
-; dashboard's IsDashboardDeityInOriginRoster filter so scoring and display agree.
+; deity faces when the player's origin roster lists them, plus an active
+; off-roster patron restored from an older save. New commitments still reject
+; off-roster gods, but an existing relationship remains visible and can progress
+; at the reduced foreign rate instead of becoming a stranded save state.
 Bool Function IsQuestReactionDeityReachable(PDV_DeityBase deity)
     if deity as PDV_DaedricPathBase
         return True
     endIf
+    if IsGrandfatheredOffRosterPatron(deity)
+        return True
+    endIf
     return IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
+EndFunction
+
+Bool Function IsGrandfatheredOffRosterPatron(PDV_DeityBase deity)
+    if !deity || deity as PDV_DaedricPathBase
+        return False
+    endIf
+    if GetPatronState() != PATRON_STATE_ACTIVE || deity != _activeDeity || IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
+        return False
+    endIf
+    String stance = GetQuestReactionStance(GetPublicDeityDisplayName(deity), deity)
+    return stance == "FOREIGN" || stance == "TOLERATED"
 EndFunction
 
 Function ApplyQuestReactionPiety(PDV_DeityBase deity, Float amount, String reason)
@@ -3494,7 +3514,10 @@ Function ApplyQuestReactionPiety(PDV_DeityBase deity, Float amount, String reaso
         return
     endIf
 
-    AwardPiety(deity, amount, reason)
+    ; The caller already applied the matrix stance multiplier. Preserve track,
+    ; eligibility, curse, survival, and mode modifiers without double-scaling
+    ; FOREIGN/TOLERATED through the record stance again.
+    AwardPietyInternal(deity, amount, True, reason, False)
     StorageUtil.SetStringValue(deityForm, "PDV.QuestReaction.LastReason", reason)
     if !_qrQueueTransactionActive
         RequestPanelRefresh()
@@ -5628,8 +5651,11 @@ Bool Function AwardShrinePrayerToDeityName(String deityName, String shrineLabel,
     endIf
 
     ; Divine shrine prayers are ambient world clicks; only emit PDV piety/journal
-    ; movement when that deity belongs to the player's cultural roster.
-    if !IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
+    ; movement when that deity belongs to the player's cultural roster. An
+    ; off-roster patron restored from an older save remains eligible at the
+    ; reduced foreign rate so the relationship is not stranded.
+    Bool grandfatheredPatron = IsGrandfatheredOffRosterPatron(deity)
+    if !IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex()) && !grandfatheredPatron
         if GetDebugLevel() >= 2
             Debug.Trace("[PDV] Shrine prayer skipped outside origin roster: " + deity.DeityName + " from " + shrineLabel + " source " + sourceId)
         endIf
@@ -5640,7 +5666,11 @@ Bool Function AwardShrinePrayerToDeityName(String deityName, String shrineLabel,
         return False
     endIf
 
-    AwardPiety(deity, 2.0, "shrine_prayer_" + sourceId)
+    Float shrineAmount = 2.0
+    if grandfatheredPatron
+        shrineAmount = shrineAmount * GetQuestReactionStanceMultiplier(GetQuestReactionStance(GetPublicDeityDisplayName(deity), deity))
+    endIf
+    AwardPietyInternal(deity, shrineAmount, True, "shrine_prayer_" + sourceId, !grandfatheredPatron)
     if GetDebugLevel() >= 2
         Debug.Trace("[PDV] Shrine prayer awarded " + deity.DeityName + " from " + shrineLabel + " source " + sourceId)
     endIf
@@ -5661,8 +5691,18 @@ Function SetDebugLevel(Int levelValue)
     endIf
 EndFunction
 
-Function SetActiveDeity(PDV_DeityBase newDeity)
+Function SetActiveDeity(PDV_DeityBase newDeity, Bool allowOffRosterDebug = False)
     if newDeity == _activeDeity
+        return
+    endIf
+
+    ; Selection boundary: ordinary deity commitments must belong to the
+    ; cultural roster or a currently valid formal-offer lane. This retains
+    ; Imperial Talos and Breton Hidden Art's dynamic eligibility while blocking
+    ; accidental off-roster assignment. RestoreActiveDeityFromStoredPatron
+    ; deliberately bypasses this setter for save-safe grandfathering.
+    if newDeity && !allowOffRosterDebug && !IsDashboardDeityInOriginRoster(newDeity, GetPlayerOriginRaceIndex()) && !UsesFormalCommitmentOffersForDeity(newDeity)
+        Trace(1, "SetActiveDeity blocked off-roster commitment to " + newDeity.DeityName)
         return
     endIf
 
@@ -10186,12 +10226,7 @@ Function ApplyUndeadCryptClearReaction(String deityName, String intensity, Locat
         endIf
     endIf
 
-    Float stanceMultiplier = 1.0
-    if stance == "FOREIGN"
-        stanceMultiplier = JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.FOREIGN", 0.4)
-    elseIf stance == "TOLERATED"
-        stanceMultiplier = JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.TOLERATED", 0.4)
-    endIf
+    Float stanceMultiplier = GetQuestReactionStanceMultiplier(stance)
 
     Float appliedReactionAmount = amount * stanceMultiplier
     _suppressAwardFavorToast = True
@@ -13348,10 +13383,12 @@ Function ApplyStances(PDV_DeityBase deity, Int sNord, Int sImperial, Int sBreton
     deity.Stance_Redguard = sRedguard
 EndFunction
 
-; Runtime stance migration from references/phase4/PDV_StanceMatrix.csv. Existing saves bake VMAD
-; property values at first quest init and never re-read them, so the ESP stance write only reaches
-; new games; this re-applies the correct stances on every save via the version gate. Mirror of
-; tools/pdv-stance-author. NATIVE=0 FOREIGN=1 TABOO=2 HOSTILE=3; order Nord,Imp,Bret,Alt,Bos,Dun,Kha,Arg,Orc,Red.
+; Runtime record-compatible projection of the canonical matrix. Existing saves bake VMAD
+; property values at first quest init and never re-read them, so ESP changes only reach new
+; games; this re-applies the current values through the likes/dislikes version gate.
+; TOLERATED/CURSE cannot be represented by PDV_DeityBase's four integer values and project
+; to FOREIGN here: generic deeds stay closed while quest reactions read the richer JSON label.
+; NATIVE=0 FOREIGN=1 TABOO=2 HOSTILE=3; order Nord,Imp,Bret,Alt,Bos,Dun,Kha,Arg,Orc,Red.
 Function ApplyStancesForDeity(PDV_DeityBase deity)
     String sName = deity.DeityName
     if sName == "kyne"
@@ -13367,13 +13404,13 @@ Function ApplyStancesForDeity(PDV_DeityBase deity)
     elseIf sName == "Kynareth"
         ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
     elseIf sName == "Mara"
-        ApplyStances(deity, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)
+        ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
     elseIf sName == "akatosh"
         ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
     elseIf sName == "Arkay"
         ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
     elseIf sName == "Stendarr"
-        ApplyStances(deity, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)
+        ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
     elseIf sName == "Julianos"
         ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
     elseIf sName == "Dibella"
@@ -13383,7 +13420,7 @@ Function ApplyStancesForDeity(PDV_DeityBase deity)
     elseIf sName == "magnus"
         ApplyStances(deity, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1)
     elseIf sName == "Y'ffre"
-        ApplyStances(deity, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1)
+        ApplyStances(deity, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1)
     elseIf sName == "auri-el"
         ApplyStances(deity, 1, 1, 1, 0, 0, 1, 1, 1, 3, 1)
     elseIf sName == "xarxes"
@@ -13394,9 +13431,9 @@ Function ApplyStancesForDeity(PDV_DeityBase deity)
     elseIf sName == "Azura" || sName == "Azurah"
         ApplyStances(deity, 2, 2, 1, 2, 1, 0, 0, 1, 2, 1)
     elseIf sName == "Boethiah"
-        ApplyStances(deity, 2, 2, 1, 3, 1, 0, 0, 1, 3, 1)
+        ApplyStances(deity, 2, 2, 2, 3, 2, 0, 1, 1, 3, 1)
     elseIf sName == "Mephala"
-        ApplyStances(deity, 2, 2, 1, 2, 1, 0, 0, 1, 2, 1)
+        ApplyStances(deity, 2, 2, 1, 2, 1, 0, 1, 1, 2, 1)
     elseIf sName == "Baan Dar"
         ApplyStances(deity, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1)
     elseIf sName == "rajhin"
@@ -14237,7 +14274,7 @@ Function ForceSetActiveDeityByIndex(Int deityIndex)
         return
     endIf
 
-    SetActiveDeity(deity)
+    SetActiveDeity(deity, True)
     ; Resync the race reward families immediately (mirrors DebugForceSetPietyByIndex):
     ; without this a debug patron override surfaces every toast/panel/Survey cue but
     ; grants no reward spells until the next dawn pass -- reads as "rewards not wired".
@@ -15056,7 +15093,7 @@ Bool Function IsImperialVampireStateActive()
     return StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHalt") == 1
 EndFunction
 
-Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry, String reason = "")
+Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry, String reason = "", Bool applyStanceMultiplier = True)
     Bool queuedQuestReaction = _qrQueueTransactionActive
     Bool ownsBroadEvent = !queuedQuestReaction && _broadPantheonEventDepth == 0
     if ownsBroadEvent
@@ -15084,7 +15121,7 @@ Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowR
     EnsureDeityState(deity)
 
     Int stance = deity.GetStanceForPlayer()
-    Float appliedAmount = RunGainPipeline(deity, amount, stance)
+    Float appliedAmount = RunGainPipeline(deity, amount, stance, applyStanceMultiplier)
     if queuedQuestReaction
         AccumulateQueuedQuestReactionBroadDelta(deity, appliedAmount)
     else
@@ -16214,10 +16251,14 @@ Function HandleWayfarerAkatoshLevel()
     endIf
 EndFunction
 
-Float Function RunGainPipeline(PDV_DeityBase deity, Float amount, Int stance)
+Float Function RunGainPipeline(PDV_DeityBase deity, Float amount, Int stance, Bool applyStanceMultiplier = True)
     Float appliedAmount = amount
     if amount > 0.0
-        appliedAmount = appliedAmount * deity.GetEffectiveGainMultiplier()
+        if applyStanceMultiplier
+            appliedAmount = appliedAmount * deity.GetEffectiveGainMultiplier()
+        else
+            appliedAmount = appliedAmount * deity.GetEffectiveGainMultiplierWithoutStance()
+        endIf
         appliedAmount = appliedAmount * GetCurseGainMultiplierNoop(deity)
         appliedAmount = appliedAmount * GetDaedricStigmaGainMultiplierNoop(deity)
         appliedAmount = appliedAmount * GetSurvivalContextGainMultiplier(deity)

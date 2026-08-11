@@ -1103,6 +1103,16 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 ## Notes / Decisions Log
 
+**2026-08-11 AEST - off-roster worship boundary and save migration:** New patron
+selection is centrally limited to the player's origin roster or a currently valid
+formal-offer lane. Explicit MCM debug selection remains an override. Existing saves
+retain an already-active FOREIGN/TOLERATED off-roster patron, and that relationship can
+still receive shrine and quest reactions at the canonical 0.4 rate; generic deeds remain
+NATIVE-only. Quest-matrix awards bypass the record stance multiplier because the compiled
+matrix has already applied stance. Likes/dislikes version 21 reprojects every deity's
+record stance, and the stance parity gate now checks the runtime migration table as a
+fourth authority.
+
 **2026-08-11 AEST - KID/SPID optional recognition layer:** KID and SPID are now
 strongly recommended soft dependencies rather than deferred frameworks. Three flat Data-root
 distributor files ship with Devotion: `PDV_GreenPact_KID.ini`,

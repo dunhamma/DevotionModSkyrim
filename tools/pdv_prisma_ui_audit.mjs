@@ -849,16 +849,21 @@ function verifyBookOfDaysChronicleActionContract({ manager, eventBus, actionRout
   }
 
   const shrinePrayerAwardBlock = functionBlock(manager, "AwardShrinePrayerToDeityName");
-  const shrineRosterGateIndex = shrinePrayerAwardBlock.indexOf("IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())");
-  const shrineAwardIndex = shrinePrayerAwardBlock.indexOf('AwardPiety(deity, 2.0, "shrine_prayer_" + sourceId)');
+  const shrineGrandfatherIndex = shrinePrayerAwardBlock.indexOf("Bool grandfatheredPatron = IsGrandfatheredOffRosterPatron(deity)");
+  const shrineRosterGateIndex = shrinePrayerAwardBlock.indexOf("!IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex()) && !grandfatheredPatron");
+  const shrineReducedRateIndex = shrinePrayerAwardBlock.indexOf("shrineAmount = shrineAmount * GetQuestReactionStanceMultiplier(");
+  const shrineAwardIndex = shrinePrayerAwardBlock.indexOf('AwardPietyInternal(deity, shrineAmount, True, "shrine_prayer_" + sourceId, !grandfatheredPatron)');
   if (
+    shrineGrandfatherIndex < 0 ||
     shrineRosterGateIndex < 0 ||
+    shrineReducedRateIndex < 0 ||
     shrineAwardIndex < 0 ||
+    shrineGrandfatherIndex > shrineRosterGateIndex ||
     shrineRosterGateIndex > shrineAwardIndex
   ) {
-    fail("Divine shrine prayer awards must be gated by the player's origin roster before piety or Book of Days movement.", managerPath);
+    fail("Divine shrine prayer awards must be roster-gated, with only a reduced-rate grandfathered active patron exception, before piety or Book of Days movement.", managerPath);
   } else {
-    pass("Divine shrine prayer awards are gated by the player's origin roster before piety or Book of Days movement.", managerPath);
+    pass("Divine shrine prayer awards are roster-gated, with only a reduced-rate grandfathered active patron exception, before piety or Book of Days movement.", managerPath);
   }
 
   if (

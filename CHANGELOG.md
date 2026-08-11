@@ -5,6 +5,9 @@ folder; this file records what changed, not the full source.
 
 ## 1.5.0 (prerelease b) -- 2026-08-11
 
+- **Off-roster gods are no longer available as new patrons.** Existing saves
+  that already follow a foreign or tolerated patron keep that relationship,
+  with shrine and quest devotion continuing at the intended reduced rate.
 - **NPCs can recognize your public faith.** With SPID installed, named
   adherents and coherent religious or cultural cohorts react to your standing:
   Observant remains neutral, Faithful becomes friendly, and Devoted becomes an

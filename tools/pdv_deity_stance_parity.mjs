@@ -4,11 +4,13 @@
 //
 // WHY THIS EXISTS, and why the existing check did not catch it.
 //
-// A player's stance toward a god has THREE sources, and only one wins at runtime:
+// A player's stance toward a god has FOUR sources, with JSON providing the
+// richest runtime label:
 //
 //   1. JSON  stance.<Race>.<Deity>  in PDV_QuestReactionMatrix.json   <- WINS
 //   2. ESP   Stance_<Race>  VMAD property on the PDV_Deity_* quest    <- fallback only
 //   3. IsDashboardDeityInOriginRoster (PDV__ManagerQuest.psc)         <- gates reachability
+//   4. ApplyStancesForDeity (PDV__ManagerQuest.psc)                   <- existing-save VMAD projection
 //
 // GetQuestReactionStance (PDV__ManagerQuest.psc) reads the JSON first and falls back to the
 // record. So the two can drift with no symptom until something reads the losing copy.
@@ -40,6 +42,7 @@ const AS_JSON = process.argv.includes("--json");
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const MANAGER = path.join(ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
+const MCM = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_MCM.psc");
 const matrixArg = process.argv[process.argv.indexOf("--matrix") + 1];
 const MATRIX = process.argv.includes("--matrix") && matrixArg
   ? path.resolve(ROOT, matrixArg)
@@ -82,13 +85,79 @@ function parseCanonicalNames(src) {
   return out;
 }
 
+const normaliseName = (value) => String(value ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+// Existing saves do not re-read VMAD properties, so ApplyStancesForDeity is a
+// fourth stance source. Parse its branches instead of carrying another copy of
+// the matrix in this gate. TOLERATED/CURSE project to FOREIGN because the
+// record script has only four integer states; that projection must still keep
+// generic NATIVE-only scoring closed.
+function parseRuntimeMigration(src) {
+  const start = src.indexOf("Function ApplyStancesForDeity");
+  if (start < 0) return {};
+  const tail = src.slice(start);
+  const body = tail.slice(0, tail.indexOf("\nEndFunction"));
+  const branches = [...body.matchAll(/^\s*(?:if|elseIf)\s+sName\s+==([^\n]+)$/gm)];
+  const out = {};
+  for (let index = 0; index < branches.length; index += 1) {
+    const branch = branches[index];
+    const branchStart = branch.index + branch[0].length;
+    const branchEnd = index + 1 < branches.length ? branches[index + 1].index : body.length;
+    const branchBody = body.slice(branchStart, branchEnd);
+    const apply = branchBody.match(/ApplyStances\(deity,\s*([^)]+)\)/);
+    if (!apply) continue;
+    const values = apply[1].split(",").map((value) => Number(value.trim()));
+    if (values.length !== RACES.length || values.some((value) => !Number.isInteger(value))) continue;
+    const stances = Object.fromEntries(RACES.map((race, raceIndex) => [race, values[raceIndex]]));
+    for (const alias of [...branch[1].matchAll(/"([^"]+)"/g)].map((match) => match[1])) {
+      out[normaliseName(alias)] = stances;
+    }
+  }
+  return out;
+}
+
+function functionBlock(src, functionName) {
+  const start = src.indexOf(`Function ${functionName}`);
+  if (start < 0) return "";
+  const tail = src.slice(start);
+  const end = tail.indexOf("\nEndFunction");
+  return end < 0 ? tail : tail.slice(0, end);
+}
+
 const managerSrc = fs.readFileSync(MANAGER, "utf8");
+const mcmSrc = fs.readFileSync(MCM, "utf8");
 const ROSTER = parseRosters(managerSrc);
 const CANON = parseCanonicalNames(managerSrc);
+const RUNTIME_MIGRATION = parseRuntimeMigration(managerSrc);
+const runtimeMigrationDeityCount = new Set(Object.values(RUNTIME_MIGRATION)).size;
 if (Object.keys(ROSTER).length !== RACES.length) {
   fail("parse", `parsed ${Object.keys(ROSTER).length} rosters from IsDashboardDeityInOriginRoster, expected ${RACES.length}`);
 }
 if (Object.keys(CANON).length === 0) fail("parse", "parsed no canonical deity names from RepairDeityRuntimeName");
+
+const selectionBlock = functionBlock(managerSrc, "SetActiveDeity");
+if (!selectionBlock.includes("IsDashboardDeityInOriginRoster(newDeity") || !selectionBlock.includes("UsesFormalCommitmentOffersForDeity(newDeity")) {
+  fail("source-contract", "SetActiveDeity lacks the central roster/formal-offer selection guard");
+}
+if (!mcmSrc.includes("forcePatronManager.SetActiveDeity(forcePatronDeity, True)") || !mcmSrc.includes("primeNeglectManager.SetActiveDeity(primeNeglectDeity, True)")) {
+  fail("source-contract", "MCM patron/neglect test controls do not use the explicit off-roster debug override");
+}
+const grandfatherBlock = functionBlock(managerSrc, "IsGrandfatheredOffRosterPatron");
+if (!grandfatherBlock.includes("PATRON_STATE_ACTIVE") || !grandfatherBlock.includes('stance == "FOREIGN" || stance == "TOLERATED"')) {
+  fail("source-contract", "grandfathered patrons are not limited to an existing active FOREIGN/TOLERATED relationship");
+}
+const questAwardBlock = functionBlock(managerSrc, "ApplyQuestReactionPiety");
+if (!questAwardBlock.includes("AwardPietyInternal(deity, amount, True, reason, False)")) {
+  fail("source-contract", "quest reactions do not bypass the second VMAD stance multiplier");
+}
+const gainPipelineBlock = functionBlock(managerSrc, "RunGainPipeline");
+if (!gainPipelineBlock.includes("GetEffectiveGainMultiplierWithoutStance")) {
+  fail("source-contract", "gain pipeline lacks the no-second-stance path");
+}
+const shrineAwardBlock = functionBlock(managerSrc, "AwardShrinePrayerToDeityName");
+if (!shrineAwardBlock.includes("IsGrandfatheredOffRosterPatron") || !shrineAwardBlock.includes("GetQuestReactionStanceMultiplier")) {
+  fail("source-contract", "shrine prayer does not preserve a grandfathered patron at the reduced matrix rate");
+}
 
 // ---- 3. JSON stance table --------------------------------------------------------
 if (!fs.existsSync(MATRIX)) {
@@ -167,9 +236,32 @@ for (const [stem, rec] of Object.entries(esp)) {
   }
 }
 
-// 5c. Roster coherence. A deity the roster excludes must not read NATIVE for that race -
+// 5c. Existing-save migration parity. Unlike the ESP, this source runs again
+// after a version bump and therefore wins for generic likes/dislikes scoring.
+// It must match exact four-state labels and use FOREIGN as the safe projection
+// for richer JSON-only TOLERATED/CURSE labels.
+for (const [stem, rec] of Object.entries(esp)) {
+  const canon = CANON[stem] ?? rec.recordName;
+  const migration = RUNTIME_MIGRATION[normaliseName(canon)] ?? RUNTIME_MIGRATION[normaliseName(rec.recordName)];
+  if (!migration) {
+    fail("runtime-migration-missing", `${stem}: no ApplyStancesForDeity branch for ${canon ?? rec.recordName ?? "unknown"}`);
+    continue;
+  }
+  for (const race of RACES) {
+    const effective = jsonStance(race, canon) ?? ESP_STANCE_NAME[rec.stances[race]] ?? null;
+    if (effective === null) continue;
+    const projected = effective === "TOLERATED" || effective === "CURSE" ? "FOREIGN" : effective;
+    const migrated = ESP_STANCE_NAME[migration[race]] ?? `UNKNOWN(${migration[race]})`;
+    if (migrated !== projected) {
+      fail("runtime-migration-drift", `${race}/${stem}: effective=${effective} projected=${projected} migration=${migrated}`);
+    }
+  }
+}
+
+// 5d. Roster coherence. A deity the roster excludes must not read NATIVE for that race -
 // that is the "off-roster god still looks like yours" state, and it is what made the 1.5.0
 // Altmer change look done when the records still disagreed.
+const reducedRatePairs = [];
 for (const race of RACES) {
   const roster = ROSTER[race] ?? [];
   for (const [stem, rec] of Object.entries(esp)) {
@@ -178,8 +270,12 @@ for (const race of RACES) {
     if (effective === null) continue;
     const inRoster = roster.includes(stem);
     if (!inRoster && effective === "NATIVE") fail("off-roster-native", `${race}/${stem}: not in the ${race} roster but reads NATIVE`);
+    if (inRoster && (effective === "FOREIGN" || effective === "TOLERATED")) {
+      reducedRatePairs.push(`${race}/${stem}:${effective}`);
+    }
   }
 }
+if (!reducedRatePairs.length) fail("dead-reduced-rate-config", "no roster-visible FOREIGN/TOLERATED pair can consume stanceMult.FOREIGN/TOLERATED");
 
 // ---- 6. Report -------------------------------------------------------------------
 const group = (list) => {
@@ -193,7 +289,9 @@ const result = {
   status: failures.length ? "FAIL" : "PASS",
   deities: Object.keys(esp).length,
   races: RACES.length,
+  runtimeMigrationDeities: runtimeMigrationDeityCount,
   jsonStanceEntries: Object.keys(strings).filter((k) => k.startsWith("stance.")).length,
+  reducedRatePairs,
   failures: failures.length,
   warnings: warnings.length,
   ...(failures.length ? { failureDetail: byKind } : {}),

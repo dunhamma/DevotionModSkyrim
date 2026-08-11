@@ -1579,7 +1579,7 @@ Function OnOptionSelect(Int a_option)
         PDV__ManagerQuest forcePatronManager = GetManagerService()
         PDV_DeityBase forcePatronDeity = GetSelectedDeity()
         if forcePatronManager && forcePatronDeity
-            forcePatronManager.SetActiveDeity(forcePatronDeity)
+            forcePatronManager.SetActiveDeity(forcePatronDeity, True)
             Debug.Notification("PDV: active patron forced.")
             ForcePageReset()
         else
@@ -1596,7 +1596,7 @@ Function OnOptionSelect(Int a_option)
             ; active patron, then drop its piety to 0 so ApplyGenericNeglectFlags selects it (piety
             ; <= NEGLECT_ACTIVE_PIETY_MAX). Sidesteps Prime-decay-eligible, which sets piety 20 and
             ; a lapse stamp of exactly the grace boundary -- neither flags neglect.
-            primeNeglectManager.SetActiveDeity(primeNeglectDeity)
+            primeNeglectManager.SetActiveDeity(primeNeglectDeity, True)
             primeNeglectManager.DebugForceSetPietyByIndex(primeNeglectDeity.DeityIndex, 0.0)
             Debug.Notification("PDV: neglect eligible primed (active + piety 0).")
             ForcePageReset()
