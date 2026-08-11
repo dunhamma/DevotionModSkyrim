@@ -3,6 +3,21 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
+## 1.5.0 (prerelease c) -- 2026-08-12
+
+- **Religious-recognition processing is lighter.** Optional SPID faction forms
+  are resolved once per script instance, and recognition settings and actor
+  names are reused within each update instead of being looked up repeatedly.
+- **Item-action processing avoids repeated lookups.** Namira and Sanguine path
+  forms are cached after their first use, and an item's name is resolved once
+  per handled action.
+- **The Prisma presentation path remains complete.** PatchHub reactions still
+  name their source mod in both the Prisma toast and Book of Days, while the UI
+  remains payload-driven with bounded toast queues and no polling loop.
+- **The all-in-one inventory is unchanged and complete.** The installer still
+  contains all 77 dependency-gated patch options, the seven KID item-action
+  families, and SPID religious-recognition support.
+
 ## 1.5.0 (prerelease b) -- 2026-08-11
 
 - **Off-roster gods are no longer available as new patrons.** Existing saves

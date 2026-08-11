@@ -66,6 +66,21 @@ for (const token of [
   "RECOGNITION_REACTION_ALLY = 2", "RECOGNITION_REACTION_FRIEND = 3",
   "Function HandleKIDAction", "ConsumeDailyRepeatMultiplier(\"PDV.Signal.KID.\"",
 ]) requireTrue(manager.includes(token), `manager contains ${token}`);
+for (const token of [
+  "Faction _recognitionPlayerFaction = None",
+  "Faction[] _recognitionCohortFactions",
+  "Bool _recognitionFormsResolved = False",
+  "Function EnsureRecognitionForms()",
+  "_recognitionCohortFactions[identityIndex] = Game.GetFormFromFile",
+  "Bool recognitionEnabled = NpcReligiousRecognitionEnabled()",
+  "Bool hostileRecognitionEnabled = NpcHostileRecognitionEnabled()",
+]) requireTrue(manager.includes(token), `manager recognition cache contains ${token}`);
+requireTrue(
+  !manager.includes('return Game.GetFormFromFile(0x00071756, "Devotion.esp") as Faction') &&
+    !manager.includes('return Game.GetFormFromFile(0x00071757 + identityIndex, "Devotion.esp") as Faction'),
+  "recognition getters do not repeat owned-form lookups",
+);
+requireTrue((manager.match(/sourceForm\.GetName\(\)/g) ?? []).length === 1, "KID source name resolves once per action");
 for (const token of ["RouteKIDEquippedAction", "RouteKIDTrophyPickup", "RouteKIDRemovedAction", "RegisterForMenu(\"BarterMenu\")"])
   requireTrue(playerEvents.includes(token), `player ingress contains ${token}`);
 for (const token of ["Religious recognition", "Hard-rival reactions", "SetNpcReligiousRecognitionEnabled", "SetNpcHostileRecognitionEnabled"])

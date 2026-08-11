@@ -973,6 +973,14 @@ Cell _khajiitMoonObservationCell = None
 Float _khajiitMoonObservationX = 0.0
 Float _khajiitMoonObservationY = 0.0
 Float _khajiitMoonObservationZ = 0.0
+; Recognition forms are owned by Devotion and never change at runtime. Resolve
+; them once per saved script instance instead of repeating GetFormFromFile in
+; the minute reconciliation and its 57-faction reset loop.
+Faction _recognitionPlayerFaction = None
+Faction[] _recognitionCohortFactions
+Bool _recognitionFormsResolved = False
+PDV_DaedricPathBase _kidNamiraPath = None
+PDV_DaedricPathBase _kidSanguinePath = None
 Bool Property AutoPushPrismaPanel = False Auto
 Bool Property AllowPrismaBlockingSurfaces = False Auto
 PDV_DaedricPathBase _pendingDaedricMilestonePath = None
@@ -5679,10 +5687,6 @@ EndFunction
 
 Float Function GetPietyTodayByIndex(Int deityIndex)
     return GetPietyToday(GetDeityByIndex(deityIndex))
-EndFunction
-
-Int Function GetTierByIndex(Int deityIndex)
-    return GetTier(GetDeityByIndex(deityIndex))
 EndFunction
 
 Function SetDebugLevel(Int levelValue)
@@ -28070,14 +28074,38 @@ Function InvalidateNpcReligiousRecognition()
 EndFunction
 
 Faction Function GetRecognitionPlayerFaction()
-    return Game.GetFormFromFile(0x00071756, "Devotion.esp") as Faction
+    EnsureRecognitionForms()
+    return _recognitionPlayerFaction
 EndFunction
 
 Faction Function GetRecognitionCohortFaction(Int identityIndex)
     if identityIndex < 0 || identityIndex >= RECOGNITION_IDENTITY_COUNT
         return None
     endIf
-    return Game.GetFormFromFile(0x00071757 + identityIndex, "Devotion.esp") as Faction
+    EnsureRecognitionForms()
+    return _recognitionCohortFactions[identityIndex]
+EndFunction
+
+Function EnsureRecognitionForms()
+    if _recognitionFormsResolved && _recognitionPlayerFaction && _recognitionCohortFactions.Length == RECOGNITION_IDENTITY_COUNT
+        return
+    endIf
+    if _recognitionCohortFactions.Length != RECOGNITION_IDENTITY_COUNT
+        _recognitionCohortFactions = new Faction[57]
+    endIf
+    _recognitionPlayerFaction = Game.GetFormFromFile(0x00071756, "Devotion.esp") as Faction
+    Int identityIndex = 0
+    Bool allResolved = _recognitionPlayerFaction != None
+    while identityIndex < RECOGNITION_IDENTITY_COUNT
+        if !_recognitionCohortFactions[identityIndex]
+            _recognitionCohortFactions[identityIndex] = Game.GetFormFromFile(0x00071757 + identityIndex, "Devotion.esp") as Faction
+        endIf
+        if !_recognitionCohortFactions[identityIndex]
+            allResolved = False
+        endIf
+        identityIndex += 1
+    endWhile
+    _recognitionFormsResolved = allResolved
 EndFunction
 
 Function SetRecognitionPair(Faction cohort, Faction playerFaction, Int reaction)
@@ -28108,17 +28136,20 @@ Function SyncNpcReligiousRecognition()
 
     Int identityIndex = ResolveNpcRecognitionIdentity()
     Int band = ResolveNpcRecognitionBand(identityIndex)
-    Bool owned = StorageUtil.GetStringValue(None, "PDV.Recognition.Owner") != ""
-    Int signature = identityIndex * 100 + band * 10 + BoolToInt(NpcReligiousRecognitionEnabled()) + (BoolToInt(NpcHostileRecognitionEnabled()) * 2) + (BoolToInt(owned) * 4)
+    String ownerName = StorageUtil.GetStringValue(None, "PDV.Recognition.Owner")
+    Bool owned = ownerName != ""
+    Bool recognitionEnabled = NpcReligiousRecognitionEnabled()
+    Bool hostileRecognitionEnabled = NpcHostileRecognitionEnabled()
+    Int signature = identityIndex * 100 + band * 10 + BoolToInt(recognitionEnabled) + (BoolToInt(hostileRecognitionEnabled) * 2) + (BoolToInt(owned) * 4)
     if StorageUtil.GetIntValue(None, "PDV.Recognition.LastSignature", -9999) == signature
         return
     endIf
 
     ResetNpcRecognitionRelations(playerFaction)
-    if NpcReligiousRecognitionEnabled() && !owned && identityIndex >= 0
+    if recognitionEnabled && !owned && identityIndex >= 0
         if band >= TIER_CHAMPION
             SetRecognitionPair(GetRecognitionCohortFaction(identityIndex), playerFaction, RECOGNITION_REACTION_ALLY)
-            if NpcHostileRecognitionEnabled()
+            if hostileRecognitionEnabled
                 ApplyNpcRecognitionHardRivals(identityIndex, playerFaction)
             endIf
         elseIf band >= TIER_DEVOTED
@@ -28127,7 +28158,7 @@ Function SyncNpcReligiousRecognition()
     endIf
 
     StorageUtil.SetIntValue(None, "PDV.Recognition.LastSignature", signature)
-    EmitNpcRecognitionState(identityIndex, band, owned)
+    EmitNpcRecognitionState(identityIndex, band, hostileRecognitionEnabled, ownerName)
 EndFunction
 
 Function ApplyNpcRecognitionHardRivals(Int identityIndex, Faction playerFaction)
@@ -28148,15 +28179,15 @@ Function ApplyNpcRecognitionHardRivals(Int identityIndex, Faction playerFaction)
     endIf
 EndFunction
 
-Function EmitNpcRecognitionState(Int identityIndex, Int band, Bool owned)
+Function EmitNpcRecognitionState(Int identityIndex, Int band, Bool hostileRecognitionEnabled, String ownerName)
     Int handle = ModEvent.Create("PDV.Recognition.State")
     if handle == 0
         return
     endIf
     ModEvent.PushString(handle, GetRecognitionIdentityKey(identityIndex))
     ModEvent.PushString(handle, GetPublicTierBand(band))
-    ModEvent.PushFloat(handle, BoolToInt(NpcHostileRecognitionEnabled()) as Float)
-    ModEvent.PushString(handle, StorageUtil.GetStringValue(None, "PDV.Recognition.Owner"))
+    ModEvent.PushFloat(handle, BoolToInt(hostileRecognitionEnabled) as Float)
+    ModEvent.PushString(handle, ownerName)
     ModEvent.Send(handle)
 EndFunction
 
@@ -28420,11 +28451,21 @@ String Function GetRecognitionIdentityKey(Int identityIndex)
 EndFunction
 
 PDV_DaedricPathBase Function GetDaedricPathByName(String deityName)
+    if deityName == "Namira" && _kidNamiraPath
+        return _kidNamiraPath
+    elseIf deityName == "Sanguine" && _kidSanguinePath
+        return _kidSanguinePath
+    endIf
     Int i = 0
     Int count = GetDaedricPathCount()
     while i < count
         PDV_DaedricPathBase path = GetDaedricPathAtListIndex(i)
         if path && path.DeityName == deityName
+            if deityName == "Namira"
+                _kidNamiraPath = path
+            elseIf deityName == "Sanguine"
+                _kidSanguinePath = path
+            endIf
             return path
         endIf
         i += 1
@@ -28441,8 +28482,11 @@ Function HandleKIDAction(String actionKey, Form sourceForm)
         return
     endIf
     String sourceName = "the offering"
-    if sourceForm && sourceForm.GetName() != ""
-        sourceName = sourceForm.GetName()
+    if sourceForm
+        String resolvedSourceName = sourceForm.GetName()
+        if resolvedSourceName != ""
+            sourceName = resolvedSourceName
+        endIf
     endIf
     String titleText = "An act is marked"
     String bodyText = sourceName + " carried devotional meaning."

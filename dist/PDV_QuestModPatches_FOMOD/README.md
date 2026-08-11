@@ -109,15 +109,22 @@ Endings remains data-only: its quest-stage adapter is JSON, not an ESP.
 
 ## KID integrations
 
+- Skyrim and Dragonborn food, drink, trade goods, hunt trophies, funerary
+  offerings, Orcish equipment, and Divine amulets
 - Requiem
 - Requiem - Food and Beverages Redone
 
-These integrations identify Torn Flesh, Strange Meat, Skeever Meat, Wrothgar Tartare,
-Fox Meat, Bear Meat, Mammoth Meat, Sabrecat Meat, and Troll Meat as Green Pact meat.
+KID identifies additional Green Pact meats from the Requiem food stack and applies
+Devotion's seven item-action families wherever configured names match.
 
 ## SPID integrations
 
-None are included in this build.
+- Skyrim religious orders, temples, named adherents, cultural institutions, and
+  explicit Daedric cult cohorts
+- Dragonborn Reclamation temple cohorts
+
+SPID adds only Devotion faith keywords and hidden recognition factions. It does not
+distribute AI packages, aggression, spells, perks, outfits, or inventory.
 
 ## In game
 

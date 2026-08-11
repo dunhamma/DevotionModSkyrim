@@ -233,11 +233,19 @@ function verifyApp(text, filePath, pass, fail) {
     ["Substrate thin renderer", 'if (phase === "thin")', "Prisma UI renders the substrate thin phase."],
     ["Substrate thin fixture", "substrate_thin", "Prisma UI keeps a substrate thin fixture."],
     ["Daedric boon renderer", 'if (phase === "boon")', "Prisma UI renders the Daedric boon phase."],
-    ["Daedric residue renderer", 'if (phase === "residue")', "Prisma UI renders the Hircine residue phase."]
+    ["Daedric residue renderer", 'if (phase === "residue")', "Prisma UI renders the Hircine residue phase."],
+    ["Cached DOM registry", "const nodes = {", "Prisma UI resolves its stable DOM nodes once rather than querying them on every payload."],
+    ["Bounded active toasts", "const MAX_ACTIVE_TOASTS = 8;", "Prisma UI caps simultaneously active toast nodes."],
+    ["Bounded toast payload fan-out", "const MAX_TOASTS_PER_PAYLOAD = 8;", "Prisma UI caps per-payload toast fan-out."],
+    ["Bounded toast dedupe history", "const MAX_RECENT_TOAST_KEYS = 32;", "Prisma UI caps its in-memory toast dedupe history."],
+    ["One-time panel close binding", "let panelCloseButtonWired = false;", "Prisma UI guards the persistent panel close button against duplicate listener registration."],
+    ["Visibility-gated journal resize", "if (nodes.journalModal && !nodes.journalModal.hidden) fitJournalBook();", "Prisma UI skips journal layout work while the journal is hidden."]
   ];
   for (const [check, snippet, detail] of requiredSnippets) {
     requireSnippet(text, snippet, check, detail, filePath, pass, fail);
   }
+
+  forbidSnippet(text, "setInterval(", "No persistent UI polling", "Prisma UI remains payload-driven and has no persistent polling timer.", filePath, pass, fail);
 }
 
 function runNegativeFixtures(managerText, pass, fail) {
