@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:56.161Z",
-    "generatedat": "2026-08-10T00:15:56.161Z",
+    "generatedAt": "2026-08-11T01:36:42.125Z",
+    "generatedat": "2026-08-11T01:36:42.125Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "9",
     "questwatchformidscsv": "9",
     "questWatchPluginsCsv": "Tree Contract Mod.esp",
     "questwatchpluginscsv": "Tree Contract Mod.esp",
+    "sourceMod": "Bark and Bite",
+    "sourcemod": "Bark and Bite",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

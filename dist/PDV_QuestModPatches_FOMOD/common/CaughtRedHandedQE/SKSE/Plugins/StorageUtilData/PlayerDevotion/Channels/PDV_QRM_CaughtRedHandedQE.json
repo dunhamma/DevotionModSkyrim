@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:56.466Z",
-    "generatedat": "2026-08-10T00:15:56.466Z",
+    "generatedAt": "2026-08-11T01:36:42.426Z",
+    "generatedat": "2026-08-11T01:36:42.426Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "2050",
     "questwatchformidscsv": "2050",
     "questWatchPluginsCsv": "Caught Red Handed - Quest Expansion.esp",
     "questwatchpluginscsv": "Caught Red Handed - Quest Expansion.esp",
+    "sourceMod": "Caught Red Handed - Quest Expansion",
+    "sourcemod": "Caught Red Handed - Quest Expansion",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

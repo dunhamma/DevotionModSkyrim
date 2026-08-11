@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T21:30:19.381Z",
-    "generatedat": "2026-08-10T21:30:19.381Z",
+    "generatedAt": "2026-08-11T01:36:44.971Z",
+    "generatedat": "2026-08-11T01:36:44.971Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "6480473,4651605,3281381,2326247,936018",
     "questwatchformidscsv": "6480473,4651605,3281381,2326247,936018",
     "questWatchPluginsCsv": "HLIORemi.esp,HLIORemi.esp,HLIORemi.esp,HLIORemi.esp,HLIORemi.esp",
     "questwatchpluginscsv": "HLIORemi.esp,HLIORemi.esp,HLIORemi.esp,HLIORemi.esp,HLIORemi.esp",
+    "sourceMod": "Remiel",
+    "sourcemod": "Remiel",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

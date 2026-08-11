@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:56.102Z",
-    "generatedat": "2026-08-10T00:15:56.102Z",
+    "generatedAt": "2026-08-11T01:36:42.062Z",
+    "generatedat": "2026-08-11T01:36:42.062Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "419643,1581715",
     "questwatchformidscsv": "419643,1581715",
     "questWatchPluginsCsv": "BardsRebornStudentofSong.esp,BardsRebornStudentofSong.esp",
     "questwatchpluginscsv": "BardsRebornStudentofSong.esp,BardsRebornStudentofSong.esp",
+    "sourceMod": "Bards Reborn - Student of Song",
+    "sourcemod": "Bards Reborn - Student of Song",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

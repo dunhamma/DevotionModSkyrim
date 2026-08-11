@@ -100,7 +100,7 @@ function readRequired(filePath, label, pass, fail) {
     fail(label, "File is missing.", filePath);
     return "";
   }
-  const text = fs.readFileSync(filePath, "utf8").replace(/^\uFEFF/, "");
+  const text = normalizedText(filePath);
   pass(label, `Read ${text.length} characters.`, filePath);
   return text;
 }
@@ -289,5 +289,9 @@ function forbidSnippet(text, snippet, check, detail, filePath, pass, fail) {
 }
 
 function hash(filePath) {
-  return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
+  return crypto.createHash("sha256").update(normalizedText(filePath), "utf8").digest("hex");
+}
+
+function normalizedText(filePath) {
+  return fs.readFileSync(filePath, "utf8").replace(/^\uFEFF/, "").replaceAll("\r\n", "\n");
 }

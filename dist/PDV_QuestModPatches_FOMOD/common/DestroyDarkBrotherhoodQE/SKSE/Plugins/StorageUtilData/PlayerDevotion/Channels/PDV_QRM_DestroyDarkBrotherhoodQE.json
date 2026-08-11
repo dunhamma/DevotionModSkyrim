@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:56.831Z",
-    "generatedat": "2026-08-10T00:15:56.831Z",
+    "generatedAt": "2026-08-11T01:36:42.812Z",
+    "generatedat": "2026-08-11T01:36:42.812Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "603387",
     "questwatchformidscsv": "603387",
     "questWatchPluginsCsv": "Skyrim.esm",
     "questwatchpluginscsv": "Skyrim.esm",
+    "sourceMod": "Destroy The Dark Brotherhood - Quest Expansion",
+    "sourcemod": "Destroy The Dark Brotherhood - Quest Expansion",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

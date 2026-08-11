@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T02:37:18.668Z",
-    "generatedat": "2026-08-10T02:37:18.668Z",
+    "generatedAt": "2026-08-11T01:36:45.636Z",
+    "generatedat": "2026-08-11T01:36:45.636Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "5539746",
     "questwatchformidscsv": "5539746",
     "questWatchPluginsCsv": "00Taliesin.esp",
     "questwatchpluginscsv": "00Taliesin.esp",
+    "sourceMod": "The Thalmor's Shadow - Taliesin",
+    "sourcemod": "The Thalmor's Shadow - Taliesin",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

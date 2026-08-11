@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:57.840Z",
-    "generatedat": "2026-08-10T00:15:57.840Z",
+    "generatedAt": "2026-08-11T01:36:44.044Z",
+    "generatedat": "2026-08-11T01:36:44.044Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "2556654,5115199,6061685",
     "questwatchformidscsv": "2556654,5115199,6061685",
     "questWatchPluginsCsv": "LegacyoftheDragonborn.esm,LegacyoftheDragonborn.esm,LegacyoftheDragonborn.esm",
     "questwatchpluginscsv": "LegacyoftheDragonborn.esm,LegacyoftheDragonborn.esm,LegacyoftheDragonborn.esm",
+    "sourceMod": "Legacy of the Dragonborn",
+    "sourcemod": "Legacy of the Dragonborn",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

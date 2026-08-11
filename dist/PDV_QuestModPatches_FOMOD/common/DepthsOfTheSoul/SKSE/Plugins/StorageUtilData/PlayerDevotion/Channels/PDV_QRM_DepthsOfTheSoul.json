@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:56.704Z",
-    "generatedat": "2026-08-10T00:15:56.704Z",
+    "generatedAt": "2026-08-11T01:36:42.689Z",
+    "generatedat": "2026-08-11T01:36:42.689Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "0",
     "questwatchformidscsv": "0",
     "questWatchPluginsCsv": "Dungeon Delver Mod.esp",
     "questwatchpluginscsv": "Dungeon Delver Mod.esp",
+    "sourceMod": "Depths of the Soul",
+    "sourcemod": "Depths of the Soul",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

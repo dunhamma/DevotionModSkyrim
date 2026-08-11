@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:56.221Z",
-    "generatedat": "2026-08-10T00:15:56.221Z",
+    "generatedAt": "2026-08-11T01:36:42.182Z",
+    "generatedat": "2026-08-11T01:36:42.182Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "162848,162847",
     "questwatchformidscsv": "162848,162847",
     "questWatchPluginsCsv": "BecomeABard.esp,BecomeABard.esp",
     "questwatchpluginscsv": "BecomeABard.esp,BecomeABard.esp",
+    "sourceMod": "Become a Bard",
+    "sourcemod": "Become a Bard",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

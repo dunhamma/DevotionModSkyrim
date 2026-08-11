@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:58.722Z",
-    "generatedat": "2026-08-10T00:15:58.722Z",
+    "generatedAt": "2026-08-11T01:36:45.099Z",
+    "generatedat": "2026-08-11T01:36:45.099Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "3426",
     "questwatchformidscsv": "3426",
     "questWatchPluginsCsv": "Revealing Rune.esp",
     "questwatchpluginscsv": "Revealing Rune.esp",
+    "sourceMod": "Revealing Rune",
+    "sourcemod": "Revealing Rune",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:59.907Z",
-    "generatedat": "2026-08-10T00:15:59.907Z",
+    "generatedAt": "2026-08-11T01:36:46.561Z",
+    "generatedat": "2026-08-11T01:36:46.561Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "1",
     "questwatchformidscsv": "1",
     "questWatchPluginsCsv": "Slays-Many-Beasts Quest Mod.esp",
     "questwatchpluginscsv": "Slays-Many-Beasts Quest Mod.esp",
+    "sourceMod": "Whispers of the Depths",
+    "sourcemod": "Whispers of the Depths",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

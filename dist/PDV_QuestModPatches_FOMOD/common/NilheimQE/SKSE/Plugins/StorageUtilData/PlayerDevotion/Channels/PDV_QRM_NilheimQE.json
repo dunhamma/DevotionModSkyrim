@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:58.218Z",
-    "generatedat": "2026-08-10T00:15:58.218Z",
+    "generatedAt": "2026-08-11T01:36:44.516Z",
+    "generatedat": "2026-08-11T01:36:44.516Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "113388",
     "questwatchformidscsv": "113388",
     "questWatchPluginsCsv": "Skyrim.esm",
     "questwatchpluginscsv": "Skyrim.esm",
+    "sourceMod": "Nilheim - Misc Quest Expansion",
+    "sourcemod": "Nilheim - Misc Quest Expansion",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

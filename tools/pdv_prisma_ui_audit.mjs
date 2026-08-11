@@ -219,11 +219,36 @@ function verifyPrismaAssetCacheContract() {
     pass("Prisma renders the 75-point Argonian cultural instrument and hides internal instrument-kind tokens from player captions.", REPO_PRISMA_APP);
   }
 
+  const patchSourceUiTokens = [
+    'const sourceName = text(copy.source, "");',
+    'source.className = "toast__source";',
+    'text(copy.source, ""),',
+    'const sourceName = text(entry.source, "");',
+    'sourceEl.className = "bod-leaf__source";',
+  ];
+  if (patchSourceUiTokens.some((token) => !app.includes(token))) {
+    fail("Prisma must render the optional source-mod label on quest-reaction toasts and Book of Days entries.", REPO_PRISMA_APP);
+  } else {
+    pass("Prisma renders optional source-mod labels on both quest-reaction player surfaces.", REPO_PRISMA_APP);
+  }
+
   if (!exists(REPO_MANAGER_SOURCE)) {
     fail("Repository manager source is missing for the Argonian panel payload contract.", REPO_MANAGER_SOURCE);
     return;
   }
   const manager = read(REPO_MANAGER_SOURCE);
+  const patchSourceManagerTokens = [
+    'JsonUtil.GetStringValue(matrixFile, "sourceMod")',
+    'prefix + "SourceModName"',
+    'SendPrismaToastWithSource(',
+    '"PDV.Diegetic.Journal.Sources"',
+    'JsonSafeString(sourceModName)',
+  ];
+  if (patchSourceManagerTokens.some((token) => !manager.includes(token))) {
+    fail("Manager must carry PatchHub sourceMod metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
+  } else {
+    pass("Manager carries PatchHub sourceMod metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
+  }
   const culturalManagerTokens = [
     'return "cultural"',
     'return "Root Memory at 1"',

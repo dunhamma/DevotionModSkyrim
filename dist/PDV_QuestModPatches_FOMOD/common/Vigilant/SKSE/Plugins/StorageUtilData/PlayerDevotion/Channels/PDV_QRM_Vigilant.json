@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:59.722Z",
-    "generatedat": "2026-08-10T00:15:59.722Z",
+    "generatedAt": "2026-08-11T01:36:46.359Z",
+    "generatedat": "2026-08-11T01:36:46.359Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "60042,5047158,1241678,1270747,1847794,3361935,1210785,1205755,1246970,40552,23779,230694,33514,25201,41982,230692,230693,416050",
     "questwatchformidscsv": "60042,5047158,1241678,1270747,1847794,3361935,1210785,1205755,1246970,40552,23779,230694,33514,25201,41982,230692,230693,416050",
     "questWatchPluginsCsv": "Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm",
     "questwatchpluginscsv": "Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm,Vigilant.esm",
+    "sourceMod": "Vigilant",
+    "sourcemod": "Vigilant",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

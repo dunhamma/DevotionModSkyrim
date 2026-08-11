@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:59.846Z",
-    "generatedat": "2026-08-10T00:15:59.846Z",
+    "generatedAt": "2026-08-11T01:36:46.491Z",
+    "generatedat": "2026-08-11T01:36:46.491Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "303995",
     "questwatchformidscsv": "303995",
     "questWatchPluginsCsv": "Skyrim.esm",
     "questwatchpluginscsv": "Skyrim.esm",
+    "sourceMod": "The Whispering Door - Quest Expansion",
+    "sourcemod": "The Whispering Door - Quest Expansion",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

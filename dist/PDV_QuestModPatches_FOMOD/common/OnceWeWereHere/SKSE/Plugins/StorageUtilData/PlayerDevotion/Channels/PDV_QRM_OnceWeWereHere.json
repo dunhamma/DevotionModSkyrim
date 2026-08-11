@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:58.344Z",
-    "generatedat": "2026-08-10T00:15:58.344Z",
+    "generatedAt": "2026-08-11T01:36:44.647Z",
+    "generatedat": "2026-08-11T01:36:44.647Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "2",
     "questwatchformidscsv": "2",
     "questWatchPluginsCsv": "Once We Were Here - Quest Mod.esp",
     "questwatchpluginscsv": "Once We Were Here - Quest Mod.esp",
+    "sourceMod": "Once We Were Here",
+    "sourcemod": "Once We Were Here",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

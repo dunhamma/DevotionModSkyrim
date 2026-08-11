@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:58.467Z",
-    "generatedat": "2026-08-10T00:15:58.467Z",
+    "generatedAt": "2026-08-11T01:36:44.777Z",
+    "generatedat": "2026-08-11T01:36:44.777Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "43460,19993,35176,51787,57321,14468,111298,111307,114079,118225",
     "questwatchformidscsv": "43460,19993,35176,51787,57321,14468,111298,111307,114079,118225",
     "questWatchPluginsCsv": "Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp",
     "questwatchpluginscsv": "Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp,Penitus_Oculatus.esp",
+    "sourceMod": "Penitus Oculatus",
+    "sourcemod": "Penitus Oculatus",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

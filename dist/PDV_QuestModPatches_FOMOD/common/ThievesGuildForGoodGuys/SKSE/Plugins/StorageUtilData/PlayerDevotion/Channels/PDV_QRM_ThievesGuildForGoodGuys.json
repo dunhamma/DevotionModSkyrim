@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T21:30:19.663Z",
-    "generatedat": "2026-08-10T21:30:19.663Z",
+    "generatedAt": "2026-08-11T01:36:46.033Z",
+    "generatedat": "2026-08-11T01:36:46.033Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "758303,2147834,571648,405732,136527,136534",
     "questwatchformidscsv": "758303,2147834,571648,405732,136527,136534",
     "questWatchPluginsCsv": "TCBM.esp,TCBM.esp,TCBM.esp,TCBM.esp,Skyrim.esm,Skyrim.esm",
     "questwatchpluginscsv": "TCBM.esp,TCBM.esp,TCBM.esp,TCBM.esp,Skyrim.esm,Skyrim.esm",
+    "sourceMod": "Thieves Guild For Good Guys",
+    "sourcemod": "Thieves Guild For Good Guys",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:56.044Z",
-    "generatedat": "2026-08-10T00:15:56.044Z",
+    "generatedAt": "2026-08-11T01:36:41.997Z",
+    "generatedat": "2026-08-11T01:36:41.997Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "2722",
     "questwatchformidscsv": "2722",
     "questWatchPluginsCsv": "ksws03_quest.esp",
     "questwatchpluginscsv": "ksws03_quest.esp",
+    "sourceMod": "Baba Yaga and the Labyrinth",
+    "sourcemod": "Baba Yaga and the Labyrinth",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

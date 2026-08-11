@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T21:30:19.180Z",
-    "generatedat": "2026-08-10T21:30:19.180Z",
+    "generatedAt": "2026-08-11T01:36:44.177Z",
+    "generatedat": "2026-08-11T01:36:44.177Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "852869,624545,915095,6439500,43578,1143273,2823149",
     "questwatchformidscsv": "852869,624545,915095,6439500,43578,1143273,2823149",
     "questWatchPluginsCsv": "Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp",
     "questwatchpluginscsv": "Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp,Lucien.esp",
+    "sourceMod": "Lucien",
+    "sourcemod": "Lucien",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:59.784Z",
-    "generatedat": "2026-08-10T00:15:59.784Z",
+    "generatedAt": "2026-08-11T01:36:46.425Z",
+    "generatedat": "2026-08-11T01:36:46.425Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "1",
     "questwatchformidscsv": "1",
     "questWatchPluginsCsv": "War's Folly.esp",
     "questwatchpluginscsv": "War's Folly.esp",
+    "sourceMod": "War's Folly",
+    "sourcemod": "War's Folly",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

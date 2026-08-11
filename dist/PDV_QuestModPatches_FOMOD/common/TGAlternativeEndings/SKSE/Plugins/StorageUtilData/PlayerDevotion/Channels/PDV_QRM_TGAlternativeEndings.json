@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:59.158Z",
-    "generatedat": "2026-08-10T00:15:59.158Z",
+    "generatedAt": "2026-08-11T01:36:45.769Z",
+    "generatedat": "2026-08-11T01:36:45.769Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "136533",
     "questwatchformidscsv": "136533",
     "questWatchPluginsCsv": "Skyrim.esm",
     "questwatchpluginscsv": "Skyrim.esm",
+    "sourceMod": "Thieves Guild Alternative Endings",
+    "sourcemod": "Thieves Guild Alternative Endings",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

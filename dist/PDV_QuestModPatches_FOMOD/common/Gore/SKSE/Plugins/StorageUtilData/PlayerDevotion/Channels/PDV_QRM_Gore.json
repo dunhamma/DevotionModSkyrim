@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T21:30:19.028Z",
-    "generatedat": "2026-08-10T21:30:19.028Z",
+    "generatedAt": "2026-08-11T01:36:43.201Z",
+    "generatedat": "2026-08-11T01:36:43.201Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "6764791,419616,4099529",
     "questwatchformidscsv": "6764791,419616,4099529",
     "questWatchPluginsCsv": "GORE.esp,GORE.esp,GORE.esp",
     "questwatchpluginscsv": "GORE.esp,GORE.esp,GORE.esp",
+    "sourceMod": "Gore - A Companion Mod",
+    "sourcemod": "Gore - A Companion Mod",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

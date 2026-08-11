@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T21:30:19.450Z",
-    "generatedat": "2026-08-10T21:30:19.450Z",
+    "generatedAt": "2026-08-11T01:36:45.165Z",
+    "generatedat": "2026-08-11T01:36:45.165Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "3330837,13437140,11859779,8724574,6441914,11277713,11547746,13686869,4098182,14933805",
     "questwatchformidscsv": "3330837,13437140,11859779,8724574,6441914,11277713,11547746,13686869,4098182,14933805",
     "questWatchPluginsCsv": "SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp",
     "questwatchpluginscsv": "SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp,SU04SachilFollower.esp",
+    "sourceMod": "Sa'chil - Custom Voiced Khajiit Follower",
+    "sourcemod": "Sa'chil - Custom Voiced Khajiit Follower",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

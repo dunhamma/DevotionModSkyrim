@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:59.968Z",
-    "generatedat": "2026-08-10T00:15:59.968Z",
+    "generatedAt": "2026-08-11T01:36:46.627Z",
+    "generatedat": "2026-08-11T01:36:46.627Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "167681,12997082,3086964,11917848,3806313,3752864",
     "questwatchformidscsv": "167681,12997082,3086964,11917848,3806313,3752864",
     "questWatchPluginsCsv": "Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp",
     "questwatchpluginscsv": "Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp,Wyrmstooth.esp",
+    "sourceMod": "Wyrmstooth",
+    "sourcemod": "Wyrmstooth",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T21:30:19.520Z",
-    "generatedat": "2026-08-10T21:30:19.520Z",
+    "generatedAt": "2026-08-11T01:36:46.291Z",
+    "generatedat": "2026-08-11T01:36:46.291Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "2334853,2688886,3074470,3386100,3501345,3843237,3843239,4840497,4840499,4840500,5063344,6718178,10167364,11206549,11926092,12039893,14103624",
     "questwatchformidscsv": "2334853,2688886,3074470,3386100,3501345,3843237,3843239,4840497,4840499,4840500,5063344,6718178,10167364,11206549,11926092,12039893,14103624",
     "questWatchPluginsCsv": "AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp",
     "questwatchpluginscsv": "AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp,AX ValSerano.esp",
+    "sourceMod": "Val Serano - Pirate Follower and Quest Adventure",
+    "sourcemod": "Val Serano - Pirate Follower and Quest Adventure",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

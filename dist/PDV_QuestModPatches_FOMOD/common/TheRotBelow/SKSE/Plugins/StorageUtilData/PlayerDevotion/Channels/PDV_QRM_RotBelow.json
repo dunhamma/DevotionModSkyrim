@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:59.338Z",
-    "generatedat": "2026-08-10T00:15:59.338Z",
+    "generatedAt": "2026-08-11T01:36:45.968Z",
+    "generatedat": "2026-08-11T01:36:45.968Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "186947",
     "questwatchformidscsv": "186947",
     "questWatchPluginsCsv": "CJ03Elroy.esp",
     "questwatchpluginscsv": "CJ03Elroy.esp",
+    "sourceMod": "The Rot Below",
+    "sourcemod": "The Rot Below",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

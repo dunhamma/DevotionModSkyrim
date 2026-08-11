@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:55.984Z",
-    "generatedat": "2026-08-10T00:15:55.984Z",
+    "generatedAt": "2026-08-11T01:36:41.935Z",
+    "generatedat": "2026-08-11T01:36:41.935Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "255153",
     "questwatchformidscsv": "255153",
     "questWatchPluginsCsv": "018Auri.esp",
     "questwatchpluginscsv": "018Auri.esp",
+    "sourceMod": "Song of the Green - Auri",
+    "sourcemod": "Song of the Green - Auri",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

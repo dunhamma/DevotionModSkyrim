@@ -23,9 +23,10 @@ this file owns the current decision and state.
 3. The former Authoria all-in-one lane and combined plugin are superseded. ARR
    consumes the same modular hub as any other load order.
 4. A PatchHub option cannot replace Devotion core scripts or matrices.
-5. Core and PatchHub are separate archives, manifests, checksums, and support
-   claims. An outer tester handoff may distribute both without merging their
-   install trees.
+5. Core and PatchHub retain separate source manifests and validation receipts,
+   but the public tester distribution is one all-in-one FOMOD: required core
+   plus every dependency-gated optional patch. A PatchHub-only archive may be
+   retained as an internal proof artifact, not as the player download.
 
 ## UI delivery contract
 
@@ -35,6 +36,15 @@ exactly one Prisma toast and one source Book-of-Days entry. A distinct tier or
 milestone Chronicle entry may accompany the act, but it does not create a
 second toast. Capped, duplicate, zero-credit, and classify-only events create no
 false player-facing acknowledgement.
+
+Every PatchHub channel carries the player-facing name of its owning FOMOD
+option. The core queue preserves that name through finalisation: the transient
+Prisma toast displays it and the persistent Book-of-Days entry stores and
+displays it. Core reactions omit the optional field. Existing saves pad the new
+journal source list before appending, so a new label cannot attach to an older
+entry. For patch testing, these two labelled surfaces are the player-visible
+confirmation that routing fired; logs remain diagnostic evidence, not the
+player acceptance surface.
 
 For Altmer heritage practice, `quiet` controls tone and cadence, not whether an
 earned Prisma notice exists. Every accepted daily practice must receive the same

@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:56.645Z",
-    "generatedat": "2026-08-10T00:15:56.645Z",
+    "generatedAt": "2026-08-11T01:36:42.627Z",
+    "generatedat": "2026-08-11T01:36:42.627Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "2048",
     "questwatchformidscsv": "2048",
     "questWatchPluginsCsv": "Defeat the Dragon Cult.esp",
     "questwatchpluginscsv": "Defeat the Dragon Cult.esp",
+    "sourceMod": "Defeat the Dragon Cult",
+    "sourcemod": "Defeat the Dragon Cult",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

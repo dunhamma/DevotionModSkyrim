@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T21:30:19.248Z",
-    "generatedat": "2026-08-10T21:30:19.248Z",
+    "generatedAt": "2026-08-11T01:36:44.310Z",
+    "generatedat": "2026-08-11T01:36:44.310Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "26987,50749,49179,31132,39486",
     "questwatchformidscsv": "26987,50749,49179,31132,39486",
     "questWatchPluginsCsv": "MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp",
     "questwatchpluginscsv": "MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp,MoonAndStar_MAS.esp",
+    "sourceMod": "Moon and Star",
+    "sourcemod": "Moon and Star",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

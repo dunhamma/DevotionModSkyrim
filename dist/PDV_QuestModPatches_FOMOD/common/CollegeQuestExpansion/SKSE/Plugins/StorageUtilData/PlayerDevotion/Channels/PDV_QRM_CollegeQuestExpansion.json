@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:56.526Z",
-    "generatedat": "2026-08-10T00:15:56.526Z",
+    "generatedAt": "2026-08-11T01:36:42.490Z",
+    "generatedat": "2026-08-11T01:36:42.490Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "2049,2158,2159,2160,2161,2162,2163",
     "questwatchformidscsv": "2049,2158,2159,2160,2161,2162,2163",
     "questWatchPluginsCsv": "College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp",
     "questwatchpluginscsv": "College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp,College Of Winterhold - Quest Expansion.esp",
+    "sourceMod": "College of Winterhold - Quest Expansion",
+    "sourcemod": "College of Winterhold - Quest Expansion",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

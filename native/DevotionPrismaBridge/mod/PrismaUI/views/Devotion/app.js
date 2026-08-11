@@ -1436,13 +1436,18 @@
     mark.append(symbolMark, signal, label);
     const body = document.createElement("div");
     body.className = "bod-leaf__body";
+    const sourceName = text(entry.source, "");
+    const sourceEl = document.createElement("p");
+    sourceEl.className = "bod-leaf__source";
+    sourceEl.textContent = sourceName;
+    sourceEl.hidden = !sourceName;
     const titleEl = document.createElement("p");
     titleEl.className = "bod-leaf__title";
     titleEl.textContent = text(entry.title, "A moment noted");
     const textEl = document.createElement("p");
     textEl.className = "bod-leaf__text";
     textEl.textContent = text(entry.text, "");
-    body.append(titleEl, textEl);
+    body.append(sourceEl, titleEl, textEl);
     li.append(mark, body);
     return li;
   };
@@ -2231,6 +2236,7 @@
       text(copy.symbol || copy.mark, ""),
       text(copy.title, ""),
       text(copy.message || copy.text, ""),
+      text(copy.source, ""),
     ].join("|");
     const now = Date.now();
     if (toastKey && recentToastKeys.has(toastKey) && now - recentToastKeys.get(toastKey) < 2200) {
@@ -2260,6 +2266,11 @@
     renderSymbol(mark, copy.symbol || copy.mark || state.symbol || state.mark || state.patron || "journal");
 
     const body = document.createElement("div");
+    const sourceName = text(copy.source, "");
+    const source = document.createElement("p");
+    source.className = "toast__source";
+    source.textContent = sourceName;
+    source.hidden = !sourceName;
     const title = document.createElement("p");
     title.className = "toast__title";
     title.textContent = text(copy.title, "Devotion");
@@ -2268,7 +2279,7 @@
     message.className = "toast__text";
     message.textContent = text(copy.message || copy.text, "Your path is remembered.");
 
-    body.append(title, message);
+    body.append(source, title, message);
     toast.append(mark, body);
     nodes.toasts.prepend(toast);
     while (nodes.toasts.childElementCount > MAX_ACTIVE_TOASTS) {

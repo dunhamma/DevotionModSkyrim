@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:59.099Z",
-    "generatedat": "2026-08-10T00:15:59.099Z",
+    "generatedAt": "2026-08-11T01:36:45.569Z",
+    "generatedat": "2026-08-11T01:36:45.569Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "215258",
     "questwatchformidscsv": "215258",
     "questWatchPluginsCsv": "NightmarePlane.esp",
     "questwatchpluginscsv": "NightmarePlane.esp",
+    "sourceMod": "Sleepwalking Into A Nightmare",
+    "sourcemod": "Sleepwalking Into A Nightmare",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

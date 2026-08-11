@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:59.038Z",
-    "generatedat": "2026-08-10T00:15:59.038Z",
+    "generatedAt": "2026-08-11T01:36:45.502Z",
+    "generatedat": "2026-08-11T01:36:45.502Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "651103",
     "questwatchformidscsv": "651103",
     "questWatchPluginsCsv": "Skyrim Extended Cut - Saints and Seducers.esp",
     "questwatchpluginscsv": "Skyrim Extended Cut - Saints and Seducers.esp",
+    "sourceMod": "Skyrim Extended Cut - Saints and Seducers",
+    "sourcemod": "Skyrim Extended Cut - Saints and Seducers",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:59.663Z",
-    "generatedat": "2026-08-10T00:15:59.663Z",
+    "generatedAt": "2026-08-11T01:36:46.225Z",
+    "generatedat": "2026-08-11T01:36:46.225Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "4694827,3966802,4611775,141725",
     "questwatchformidscsv": "4694827,3966802,4611775,141725",
     "questWatchPluginsCsv": "Unslaad.esm,Unslaad.esm,Unslaad.esm,Unslaad.esm",
     "questwatchpluginscsv": "Unslaad.esm,Unslaad.esm,Unslaad.esm,Unslaad.esm",
+    "sourceMod": "Unslaad",
+    "sourcemod": "Unslaad",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

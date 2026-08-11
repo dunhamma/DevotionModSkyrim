@@ -1085,6 +1085,15 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 
 ## Decisions Log
 
+- **[2026-08-11] - PatchHub reactions must identify their source on both player-visible surfaces:**
+  Each compiled `PDV_QRM_*` PatchHub channel carries the exact player-facing name of its
+  manifest option as optional `sourceMod` metadata. The core queue carries that value to
+  one Prisma toast and the matching persistent Book-of-Days entry; core reactions omit it.
+  Existing saves pad the parallel journal source list before adding a new entry. For
+  compatibility testing, the labelled toast and Book entry are how a player confirms a
+  patch fired; under-the-hood piety and logs alone are not an adequate tester surface.
+  Public tester delivery is one all-in-one FOMOD with required core plus all 77 optional,
+  dependency-gated patches. Internal core/PatchHub manifests remain separate proof inputs.
 - **[2026-08-11] - JoJ B-series closes at 37/37; save-safe PatchHub testing follows release:**
   B07 Interesting NPCs closes the JoJ candidate set with 31 APPROVED and six SILENT
   verdicts. The complete PatchHub is released to testers as one dependency-gated FOMOD;

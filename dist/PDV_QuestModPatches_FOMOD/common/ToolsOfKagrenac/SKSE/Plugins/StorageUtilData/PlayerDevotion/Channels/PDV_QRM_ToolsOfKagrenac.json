@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:59.598Z",
-    "generatedat": "2026-08-10T00:15:59.598Z",
+    "generatedAt": "2026-08-11T01:36:46.161Z",
+    "generatedat": "2026-08-11T01:36:46.161Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "2224673",
     "questwatchformidscsv": "2224673",
     "questWatchPluginsCsv": "Tools of Kagrenac.esp",
     "questwatchpluginscsv": "Tools of Kagrenac.esp",
+    "sourceMod": "The Tools of Kagrenac",
+    "sourcemod": "The Tools of Kagrenac",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

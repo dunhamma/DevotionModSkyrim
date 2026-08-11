@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:58.917Z",
-    "generatedat": "2026-08-10T00:15:58.917Z",
+    "generatedAt": "2026-08-11T01:36:45.364Z",
+    "generatedat": "2026-08-11T01:36:45.364Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "78036",
     "questwatchformidscsv": "78036",
     "questWatchPluginsCsv": "The_Sinister_Seven.esp",
     "questwatchpluginscsv": "The_Sinister_Seven.esp",
+    "sourceMod": "The Sinister Seven",
+    "sourcemod": "The Sinister Seven",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",

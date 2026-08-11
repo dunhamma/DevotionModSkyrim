@@ -1,12 +1,14 @@
 {
   "string": {
-    "generatedAt": "2026-08-10T00:15:56.953Z",
-    "generatedat": "2026-08-10T00:15:56.953Z",
+    "generatedAt": "2026-08-11T01:36:42.936Z",
+    "generatedat": "2026-08-11T01:36:42.936Z",
     "schema": "pdv-quest-reaction-matrix.v1",
     "questWatchFormIdsCsv": "366171,76729",
     "questwatchformidscsv": "366171,76729",
     "questWatchPluginsCsv": "ForgottenCity.esp,ForgottenCity.esp",
     "questwatchpluginscsv": "ForgottenCity.esp,ForgottenCity.esp",
+    "sourceMod": "The Forgotten City",
+    "sourcemod": "The Forgotten City",
     "stance.Nord.Kyne": "NATIVE",
     "stance.nord.kyne": "NATIVE",
     "stance.Imperial.Kyne": "FOREIGN",
