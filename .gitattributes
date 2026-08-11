@@ -103,6 +103,7 @@ references/vanilla-gameplay/compatibility/PDV_ARR25_NonQuestSignatureScan_2026-0
 references/vanilla-gameplay/compatibility/PDV_ARR25_NonQuestSignalWorklist_2026-08-06.csv text eol=lf
 references/vanilla-gameplay/compatibility/PDV_ARR25_NonQuestSignalBatches_2026-08-06.json text eol=lf
 references/authoring/PDV_FileComparisonSemantics.json text eol=lf
+references/authoring/PDV_HousecarlReleaseProof.json text eol=lf
 references/authoring/patches/PDV_QRM_*.csv text eol=lf
 references/authoring/PDV_QuestReactionMatrix_CreationClubCore_2026-08-07.csv text eol=lf
 references/authoring/PDV_QuestPatchHub.manifest.json text eol=lf

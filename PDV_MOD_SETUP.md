@@ -89,6 +89,7 @@ Work Rule".
 | `tools/pdv_main_quest_full_coverage_audit.mjs` | Fail-closed static/generated-readback gate for the 2026-07-15 main-quest contract: 45 identities x 25 exact stages, 951 T11 rows, 1978-cell compiled matrix, strict integer stages, no `echo`, exact 17/11 Paarthurnax rosters, and indexed 134-watch registration. A PASS is not in-game route/display proof. |
 | `tools/pdv_guide_bbcode.mjs` | Emits `dist/nexus-articles/*.bb` from the 10 race guides and hard-fails on surviving review tags, HTML comments, or non-ASCII -- the Nexus release gate. Run after ANY guide edit. |
 | `tools/pdv_package_release.mjs` | Builds the `dist/` release zip from the live Anvil Devotion mod folder -- the ONLY sanctioned path to a public bundle (never hand-roll it; rc1 leaked an 876KB `.orig`). Gates on version, ANAM, and archive contents; those gates are NARROWER than `pdv_verify.mjs`, so a green package run is not a green verify run. |
+| `tools/pdv_release_proof_refresh.mjs` | Re-derives and gates the committed houseCARL release proof against the active Anvil profile. `--capture` writes a gitignored review candidate; confirmed `--refresh` promotes it; release preflight runs `--check` and fails closed if the backend is unavailable or proof drifted. |
 | `tools/pdv_file_semantics_audit.mjs` | Enforces the current file compare/hash inventory: normalized text versus exact bytes, fixed LF/CRLF writers, and paired `.gitattributes` pins. Run after changing any file freshness, generated-text, checksum, cache-key, snapshot, or packaging comparison. |
 | `tools/pdv_substrate_pacing_audit.mjs` | Strict source/contract audit for the six paced substrates: one +4 devotional credit per 06:00 day, timing maths, authentic-route ownership, curse exceptions, decay, and player-copy exclusions |
 | `tools/pdv_broad_pantheon_audit.mjs` | Strict source/contract audit for Imperial, Nord Old Ways, and Nord Nine Divines pools: signed logical-event aggregation, active-baseline gating, grace/decay, migration, and T2 patron transition |
@@ -1103,6 +1104,15 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 ## Notes / Decisions Log
 
+**2026-08-11 AEST - standard release-proof refresh:**
+`tools/pdv_release_proof_refresh.mjs` and
+`references/authoring/PDV_ReleaseProofRefresh_Runbook.md` now own the complete refresh
+sequence. Machine checks re-derive ESP bytes, masters, both record frames, exact contested
+membership, critical winners, VMAD, PSC/PEX pairs, and claimed asset providers. Promotion
+requires explicit review of critical-target scope, CELL retention, and the open proof
+boundary. `pdv_package_release.mjs` calls the live check and no longer pins the number 33.
+The proof remains static/package evidence only; runtime and manual behaviour stay open.
+
 **2026-08-11 AEST - off-roster worship boundary and save migration:** New patron
 selection is centrally limited to the player's origin roster or a currently valid
 formal-offer lane. Explicit MCM debug selection remains an override. Existing saves
@@ -1235,9 +1245,12 @@ entries should be read.
 
 3. **Release packaging goes through `tools\pdv_package_release.mjs`, never by hand.** It
    builds the `dist\` zip from the live Anvil Devotion folder and gates on version, ANAM,
-   and archive contents. Its gates are NARROWER than `pdv_verify.mjs`: a green package run
-   is not a green verify run, and a `pdv_verify` FAIL at package time is usually real
-   record drift rather than a stale audit.
+   archive contents, and a fresh live run of `pdv_release_proof_refresh.mjs --check`.
+   Use the release-proof runbook and its `--capture`/confirmed `--refresh` path after any
+   ESP or claimed-winner/provider change; never edit the proof snapshot just to satisfy a
+   count. These gates are still NARROWER than `pdv_verify.mjs`: a green package run is not
+   runtime/manual proof, and a `pdv_verify` FAIL at package time is usually real record
+   drift rather than a stale audit.
 
 Readback discipline reminder that this session paid for: confirm the active MO2 instance
 with `housecarl_load_order_status` before any readback that will become a status claim.

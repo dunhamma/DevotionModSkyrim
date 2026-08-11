@@ -24,13 +24,6 @@ const MANIFEST_PATH = path.join(
   "authoring",
   "PDV_ReleasePayload.manifest.json",
 );
-const HOUSECARL_PROOF_PATH = path.join(
-  REPO_ROOT,
-  "references",
-  "authoring",
-  "PDV_HousecarlReleaseProof.json",
-);
-const HOUSECARL_CONTESTED_RECORD_COUNT_PIN = 33;
 const NATIVE_ROOT = path.join(REPO_ROOT, "native", "DevotionPrismaBridge");
 const CANONICAL_PRISMA_ROOT =
   process.env.PDV_CANONICAL_PRISMA_ROOT || path.join(NATIVE_ROOT, "mod");
@@ -74,10 +67,6 @@ function fail(message) {
 
 function pass(message) {
   console.log(`[PASS] ${message}`);
-}
-
-function pin(message) {
-  console.log(`[PIN] ${message}`);
 }
 
 function normalizeEntry(value) {
@@ -371,44 +360,21 @@ function verifyPrismaParity(manifest) {
 }
 
 function verifyHousecarlProof() {
-  const proof = readJson(HOUSECARL_PROOF_PATH, "houseCARL release proof");
-  const espPath = path.join(MOD_ROOT, "Devotion.esp");
-  const currentHash = sha256(espPath);
-  if (proof.plugin !== "Devotion.esp") fail("houseCARL proof must identify Devotion.esp.");
-  if (proof.espSha256 !== currentHash) {
-    fail(
-      `houseCARL proof is stale for Devotion.esp (proof ${proof.espSha256 || "missing"}, ` +
-        `live ${currentHash}). Refresh direct houseCARL readback.`,
-    );
+  const checker = path.join(REPO_ROOT, "tools", "pdv_release_proof_refresh.mjs");
+  let output = "";
+  try {
+    output = execFileSync(process.execPath, [checker, "--check"], {
+      cwd: REPO_ROOT,
+      encoding: "utf8",
+      maxBuffer: 32 * 1024 * 1024,
+      timeout: 300_000,
+    });
+  } catch (error) {
+    const detail = [error.stdout, error.stderr].filter(Boolean).join("\n").trim();
+    fail(`live houseCARL release-proof check failed.\n${detail || error.message}`);
   }
-  if (proof.verificationMode === "direct-plugin-file") {
-    for (const key of ["missingMasters", "parseFailures"]) {
-      if (proof.errors?.[key] !== 0) fail(`Direct-file houseCARL proof ${key} must be zero.`);
-    }
-    if (proof.active !== false || proof.recordSummary?.total < 1 || !Array.isArray(proof.masters) || proof.masters.length < 4) {
-      fail("Direct-file houseCARL proof is incomplete or falsely claims active load-order status.");
-    }
-    pass("houseCARL direct-file proof matches the live ESP; active load-order/readback proof remains open for the experimental candidate.");
-    return;
-  }
-
-  const zeroChecks = ["danglingLinks", "missingMasters", "parseFailures"];
-  if (proof.profile !== "Devotion Dev" || proof.active !== true) fail("Load-order houseCARL proof must show active Devotion.esp in Devotion Dev.");
-  for (const key of zeroChecks) if (proof.errors?.[key] !== 0) fail(`houseCARL proof ${key} must be zero.`);
-  if (proof.contestedRecordCount !== HOUSECARL_CONTESTED_RECORD_COUNT_PIN) {
-    fail(
-      `Contract pin mismatch for contestedRecordCount: expected ${HOUSECARL_CONTESTED_RECORD_COUNT_PIN}, ` +
-        `proof records ${proof.contestedRecordCount ?? "missing"}. Refresh direct houseCARL readback ` +
-        "and review the contract; do not edit the count merely to make this gate green.",
-    );
-  }
-  pin(
-    `contestedRecordCount matches the stored contract value ${HOUSECARL_CONTESTED_RECORD_COUNT_PIN}. ` +
-      "This gate compares a snapshot pin; it does not re-derive the live contested set.",
-  );
-  if (proof.cellNestedReferenceRetention?.verified !== true) fail("houseCARL proof must verify nested CELL reference retention.");
-  if (!Array.isArray(proof.criticalRecordWinners) || proof.criticalRecordWinners.length === 0) fail("houseCARL proof must record critical winners.");
-  pass("houseCARL proof hash, profile, error, retention, and critical-winner checks match the live ESP.");
+  for (const line of output.trim().split(/\r?\n/)) console.log(`  ${line}`);
+  pass("houseCARL release proof was independently re-derived against the live profile.");
 }
 
 function verifyBuildVersion(version) {

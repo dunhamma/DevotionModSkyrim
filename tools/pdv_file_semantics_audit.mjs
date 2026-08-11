@@ -22,8 +22,8 @@ const fail = (message) => failures.push(message);
 
 const contract = JSON.parse(fs.readFileSync(CONTRACT, "utf8"));
 const expectedTools = new Set(contract.tools.map((entry) => entry.tool));
-if (contract.tools.length === 21 && expectedTools.size === 21) pass("inventory contains twenty-one unique tools");
-else fail(`inventory must contain twenty-one unique tools; got ${contract.tools.length}/${expectedTools.size}`);
+if (contract.tools.length === 22 && expectedTools.size === 22) pass("inventory contains twenty-two unique tools");
+else fail(`inventory must contain twenty-two unique tools; got ${contract.tools.length}/${expectedTools.size}`);
 
 for (const entry of contract.tools) {
   const toolPath = path.join(ROOT, "tools", entry.tool);

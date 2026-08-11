@@ -84,8 +84,10 @@ If a task appears blocked by a houseCARL limitation, **first reproduce it with a
 | `tools/pdv-authoring-trees-retired-2026-07-13.zip` | **Retired** Mutagen/CKPE record-author helper trees (`pdv_author.mjs`, `pdv_writer_review.mjs`, `creation-authoring`, `creation-merge-runner`, all `pdv-*-author`) | Forensics only. All plugin record reads/writes/verification now go through the `housecarl_*` MCP tools directly -- see the houseCARL Direct Plugin Work Rule above. Do not restore, extend, or copy the dry-run/backup/proof-ledger pattern. |
 | `tools/sync-devotion-to-live.ps1` | Guarded live-file sync helper | Copying repo-tracked Prisma assets, StorageUtil assets, and selected live-source Papyrus files, including `PDV_MCM.psc`, into the existing Anvil Devotion mod only after backing up the live ESP/SEQ/Scripts/SKSE/Prisma artifacts; refuses empty or damaged live mod folders |
 | `tools/pdv_package_release.mjs` | Release zip builder -- the ONLY sanctioned path to a `dist/` bundle | Packaging a public build from the live Anvil Devotion mod folder. Never hand-roll the zip (rc1 leaked an 876KB `.orig`); the script gates on version, ANAM, and archive contents. Note its gates are narrower than `pdv_verify.mjs` -- a green package run is not a green verify run |
+| `tools/pdv_release_proof_refresh.mjs` | Script-backed live release-proof refresh and gate | Re-deriving the active profile, ESP identity, both record-count frames, exact contested set, critical winners, VMAD verdict, script pairs, and claimed asset providers; use `--capture` for review and the confirmed `--refresh` path to update `PDV_HousecarlReleaseProof.json` |
+| `references/authoring/PDV_ReleaseProofRefresh_Runbook.md` | Release-proof refresh authority and operator checklist | Deciding when proof refresh is required, which fields gate packaging, which require manual confirmation, and which runtime/manual claims remain open after a green package build |
 | `tools/pdv_cli_flag_contract_audit.mjs` | Read-only contract gate for the fourteen issue #61 CLI flags | Checking that each retained flag is semantically consumed and retired aliases are absent from active tool contracts |
-| `tools/pdv_file_semantics_audit.mjs` | Read-only EOL/file-comparison contract gate | Checking the current 21-tool inventory, helper selection, `.gitattributes` pins, and LF/CRLF behavior fixtures |
+| `tools/pdv_file_semantics_audit.mjs` | Read-only EOL/file-comparison contract gate | Checking the current 22-tool inventory, helper selection, `.gitattributes` pins, and LF/CRLF behavior fixtures |
 | `references/authoring/PDV_FileComparisonSemantics.json` | File comparison and generated-text EOL authority | Recording whether each audited tool asks a normalized-text, exact-byte, mixed, or removed-dead-code question |
 | `D:\...\Devotion\Scripts\TempleBlessingScript.pex` (+ `Source\*.psc`) | Shipped loose-file override of the vanilla shrine activation script | Reasoning about shrine behavior or install order. Ships from 1.0.4 to undo Requiem's bugfix-pack dispel-all line. **Devotion must sit BELOW any Requiem bugfix pack in MO2** or their copy wins silently -- see the 2026-07-27 Decisions Log entry |
 | `D:\...\Devotion\PDV_GreenPact_KID.ini` | Green Pact mod-added food distribution | Adding mod-added meats to the Bosmer Green Pact reward lane. KID distributor files live at the Data root. Rules match by item NAME, not FormID/EditorID; vanilla and DLC meats are the static record set, not KID |
@@ -1089,6 +1091,17 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 
 ## Decisions Log
 
+- **[2026-08-11] - Release proof is re-derived live and fingerprints exact contested membership:**
+  `pdv_release_proof_refresh.mjs` is the single script-backed workflow for checking,
+  capturing, and promoting `PDV_HousecarlReleaseProof.json`. It fails closed outside Anvil's
+  `Devotion Dev` profile or when houseCARL is unavailable, re-runs the VMAD audit, and hashes the
+  sorted `formid|type|editorid|winner` contested set. The release packager invokes `--check`, so
+  its former `contestedRecordCount === 33` literal is retired: a coincidental different set of 33
+  now fails. Critical-target scope, contested CELL retention, and the open runtime/manual boundary
+  remain explicit human confirmations during `--refresh`; timestamps and mtime are provenance,
+  not substitute gates for byte identity. Rationale: PRs #64-#66 showed that manual proof refresh
+  was both a release bottleneck and easy to reconstruct incorrectly from prose.
+
 - **[2026-08-11] - Off-roster worship is blocked for new commitments while reduced-rate legacy patrons remain playable:**
   `SetActiveDeity` is the central selection boundary: normal commitments must belong to the
   origin roster or an active formal-offer lane, while the MCM's explicit debug route may override
@@ -1102,7 +1115,7 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   gods to NATIVE and the former quest path applied reduced stance twice.
 
 - **[2026-08-11] - File gates must distinguish normalized text from exact bytes:**
-  The current 21-tool compare/hash inventory is explicit: text freshness and generated-text
+  The current 22-tool compare/hash inventory is explicit: text freshness and generated-text
   checks normalize CRLF to LF; plugins, PEX/SEQ, fonts, archives, snapshots, cache keys, and
   receipts remain byte-exact; tracked writers select LF or CRLF deliberately. The first layer
   is a canonical `.gitattributes` rule and the second is `pdv_file_compare.mjs`, enforced by

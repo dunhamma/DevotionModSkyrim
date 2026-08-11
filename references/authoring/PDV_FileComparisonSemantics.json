@@ -73,6 +73,13 @@
       "writerEol": "lf"
     },
     {
+      "tool": "pdv_release_proof_refresh.mjs",
+      "question": "Does the committed release proof identify the exact live ESP bytes and emit deterministic LF review/canonical JSON?",
+      "semantics": "exact-bytes",
+      "requiredHelpers": ["hashBytes", "writeTextWithEol"],
+      "writerEol": "lf"
+    },
+    {
       "tool": "pdv_prisma_to_oneoh_audit.mjs",
       "question": "Do repo/live Prisma and source mirrors have the same text content?",
       "semantics": "normalized-text",
@@ -160,6 +167,7 @@
     "references/vanilla-gameplay/compatibility/PDV_ARR25_NonQuestSignalWorklist_2026-08-06.csv text eol=lf",
     "references/vanilla-gameplay/compatibility/PDV_ARR25_NonQuestSignalBatches_2026-08-06.json text eol=lf",
     "references/authoring/PDV_FileComparisonSemantics.json text eol=lf",
+    "references/authoring/PDV_HousecarlReleaseProof.json text eol=lf",
     "references/authoring/patches/PDV_QRM_*.csv text eol=lf",
     "references/authoring/PDV_QuestReactionMatrix_CreationClubCore_2026-08-07.csv text eol=lf",
     "references/authoring/PDV_QuestPatchHub.manifest.json text eol=lf"

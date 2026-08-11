@@ -1,20 +1,48 @@
 {
-  "schemaVersion": 1,
-  "generatedAt": "2026-08-11T06:42:22.5143711Z",
-  "postChangeVerifiedAt": "2026-08-11T06:42:22.5143711Z",
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-11T09:43:41.468Z",
+  "postChangeVerifiedAt": "2026-08-11T09:43:41.468Z",
   "profile": "Devotion Dev",
   "plugin": "Devotion.esp",
   "active": true,
   "espSha256": "7FDDB609B92AF7E25681994A647224AA73FB348FCFE0877DD4D123281E2C753E",
   "espSizeBytes": 657998,
-  "espModifiedUtc": "2026-08-11T06:17:17.1211388Z",
-  "refreshNote": "Refreshed after the v1.5.0b SPID/KID record tranche. Direct houseCARL readback covered all 130 new records: 72 keywords, one player faction, and 57 hidden cohort factions. A scoped integrity sweep found zero dangling links, missing masters, or parse failures.",
-  "masters": ["Skyrim.esm", "Dawnguard.esm", "HearthFires.esm", "Dragonborn.esm"],
+  "espModifiedUtc": "2026-08-11T06:17:17.121Z",
+  "refreshNote": "Issue #71 baseline refresh: ESP bytes are unchanged; exact contested membership, live winners, VMAD, script pairs, and claimed asset providers were re-derived.",
+  "masters": [
+    "Skyrim.esm",
+    "Dawnguard.esm",
+    "HearthFires.esm",
+    "Dragonborn.esm"
+  ],
   "recordSummary": {
     "frame": "definedIn",
-    "frameNote": "Records Devotion.esp DEFINES (origin FormID), as counted by housecarl_cross_plugin_query with plugins=[Devotion.esp] defined_in=true. This is the frame the 2026-08-08 proof used.",
+    "frameNote": "Records Devotion.esp defines, re-derived by housecarl_cross_plugin_query with defined_in=true and group_by=type.",
     "total": 2091,
     "types": 21,
+    "typeCounts": {
+      "MagicEffect": 677,
+      "Message": 500,
+      "Spell": 394,
+      "FormList": 97,
+      "Quest": 97,
+      "Keyword": 91,
+      "Faction": 59,
+      "Activator": 54,
+      "PlacedObject": 51,
+      "GlobalFloat": 37,
+      "StoryManagerQuestNode": 9,
+      "ImageSpaceAdapter": 5,
+      "SoundMarker": 5,
+      "Book": 3,
+      "MiscItem": 3,
+      "GlobalInt": 2,
+      "Ingestible": 2,
+      "StoryManagerEventNode": 2,
+      "GlobalShort": 1,
+      "MusicType": 1,
+      "Perk": 1
+    },
     "quests": 97,
     "magicEffects": 677,
     "spells": 394,
@@ -24,9 +52,33 @@
   },
   "fileRecordSummary": {
     "frame": "rawFile",
-    "frameNote": "Every record the FILE contains, definitions plus overrides, as counted by housecarl_read_plugin_file on the absolute path. The 33-record gap against the definedIn frame is exactly the contested override set below (14 Spell + 15 Message + 2 Quest + 2 Cell), and the 22nd type is Cell, which Devotion.esp only ever overrides. The two frames are both correct; do not re-derive this as drift.",
+    "frameNote": "Every record the file contains, definitions plus overrides, re-derived by housecarl_read_plugin_file on the absolute ESP path.",
     "total": 2124,
-    "types": 22
+    "types": 22,
+    "typeCounts": {
+      "MagicEffect": 677,
+      "Message": 515,
+      "Spell": 408,
+      "Quest": 99,
+      "FormList": 97,
+      "Keyword": 91,
+      "Faction": 59,
+      "Activator": 54,
+      "PlacedObject": 51,
+      "GlobalFloat": 37,
+      "StoryManagerQuestNode": 9,
+      "ImageSpaceAdapter": 5,
+      "SoundMarker": 5,
+      "Book": 3,
+      "MiscItem": 3,
+      "Cell": 2,
+      "GlobalInt": 2,
+      "Ingestible": 2,
+      "StoryManagerEventNode": 2,
+      "GlobalShort": 1,
+      "MusicType": 1,
+      "Perk": 1
+    }
   },
   "errors": {
     "danglingLinks": 0,
@@ -35,11 +87,216 @@
   },
   "contestedRecordCount": 33,
   "contestedRecordBreakdown": {
-    "note": "Enumerated live via housecarl_cross_plugin_query plugins=[Devotion.esp] conflicts_only=true. Devotion.esp is the load-order winner for 31 of the 33; the two CELL records are won by other mods and are covered by cellNestedReferenceRetention below.",
-    "Spell": 14,
+    "note": "Re-derived live by housecarl_cross_plugin_query with conflicts_only=true; exact membership is gated by contestedRecordSet.sha256.",
     "Message": 15,
-    "Quest": 2,
-    "Cell": 2
+    "Spell": 14,
+    "Cell": 2,
+    "Quest": 2
+  },
+  "contestedRecordSet": {
+    "algorithm": "SHA-256 of sorted formid|type|editorid|winner lines",
+    "count": 33,
+    "sha256": "57F58D5F955B2815741FF59CAEF7AE26D41B1FDBA8F9255B1F7D8FFAECA897BB",
+    "records": [
+      {
+        "formid": "011360:Dawnguard.esm",
+        "type": "Spell",
+        "editorid": "DLC1AltarAurielSpell",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "01139D:Dawnguard.esm",
+        "type": "Message",
+        "editorid": "DLC1AltarAurielMsg",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "016785:Skyrim.esm",
+        "type": "Cell",
+        "editorid": "WindhelmTempleofTalos",
+        "winner": "Lux.esp"
+      },
+      {
+        "formid": "032AE7:Skyrim.esm",
+        "type": "Cell",
+        "editorid": "QASmoke",
+        "winner": "ANV_SynW4ENBPatcher.esp"
+      },
+      {
+        "formid": "03BCFB:Dragonborn.esm",
+        "type": "Spell",
+        "editorid": "DLC2AltarAzuraSpell",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "03BCFC:Dragonborn.esm",
+        "type": "Spell",
+        "editorid": "DLC2AltarBoethiahSpell",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "03BCFD:Dragonborn.esm",
+        "type": "Spell",
+        "editorid": "DLC2AltarMephalaSpell",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "03BCFE:Dragonborn.esm",
+        "type": "Message",
+        "editorid": "DLC2AltarAzuraMessage",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "03BCFF:Dragonborn.esm",
+        "type": "Message",
+        "editorid": "DLC2AltarBoethiahMessage",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "03BD00:Dragonborn.esm",
+        "type": "Message",
+        "editorid": "DLC2AltarMephalaMessage",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "0D517A:Skyrim.esm",
+        "type": "Quest",
+        "editorid": "CW01A",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "0E2D29:Skyrim.esm",
+        "type": "Quest",
+        "editorid": "CW01B",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "0FB988:Skyrim.esm",
+        "type": "Spell",
+        "editorid": "AltarAkatoshSpell",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "0FB994:Skyrim.esm",
+        "type": "Spell",
+        "editorid": "AltarArkaySpell",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "0FB995:Skyrim.esm",
+        "type": "Spell",
+        "editorid": "AltarDibellaSpell",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "0FB996:Skyrim.esm",
+        "type": "Spell",
+        "editorid": "AltarJulianosSpell",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "0FB997:Skyrim.esm",
+        "type": "Spell",
+        "editorid": "AltarKynarethSpell",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "0FB998:Skyrim.esm",
+        "type": "Spell",
+        "editorid": "AltarMaraSpell",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "0FB999:Skyrim.esm",
+        "type": "Spell",
+        "editorid": "AltarStendarrSpell",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "0FB99A:Skyrim.esm",
+        "type": "Spell",
+        "editorid": "AltarTalosSpell",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "0FB99B:Skyrim.esm",
+        "type": "Spell",
+        "editorid": "AltarZenitharSpell",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "10A287:Skyrim.esm",
+        "type": "Message",
+        "editorid": "AltarAkatoshMsg",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "10A288:Skyrim.esm",
+        "type": "Message",
+        "editorid": "AltarArkayMsg",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "10A289:Skyrim.esm",
+        "type": "Message",
+        "editorid": "AltarDibellaMsg",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "10A28A:Skyrim.esm",
+        "type": "Message",
+        "editorid": "AltarJulianosMsg",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "10A28B:Skyrim.esm",
+        "type": "Message",
+        "editorid": "AltarKynarethMsg",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "10A28C:Skyrim.esm",
+        "type": "Message",
+        "editorid": "AltarMaraMsg",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "10A28D:Skyrim.esm",
+        "type": "Message",
+        "editorid": "AltarStendarrMsg",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "10A28E:Skyrim.esm",
+        "type": "Message",
+        "editorid": "AltarTalosMsg",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "10A28F:Skyrim.esm",
+        "type": "Message",
+        "editorid": "AltarZenitharMsg",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "10E4F9:Skyrim.esm",
+        "type": "Message",
+        "editorid": "AltarRemoveMsg",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "10E8AE:Skyrim.esm",
+        "type": "Spell",
+        "editorid": "AltarNocturnalSpell",
+        "winner": "Devotion.esp"
+      },
+      {
+        "formid": "10E8B1:Skyrim.esm",
+        "type": "Message",
+        "editorid": "AltarNocturnalMsg",
+        "winner": "Devotion.esp"
+      }
+    ]
   },
   "criticalRecordWinners": [
     {
@@ -87,18 +344,22 @@
     },
     "scriptAttachments": 191,
     "aliasAttachments": 1,
+    "sourceFileCount": 100,
+    "scriptClasses": 100,
     "auditTool": "tools/pdv_vmad_audit.mjs",
     "auditExitCode": 0,
     "auditFindingsUnwaived": 0,
-    "boundary": "Re-derived 2026-08-09 against the live MO2 source tree (100 .psc / 100 classes). The verdict recorded here is the audit's EXIT CODE, not a grepped field. The 2026-07-26 unboundAutoProperties / boundButNullProperties / unverifiableAttachments counts have been RETIRED rather than carried forward a third time: pdv_vmad_audit.mjs now owns that question and reports the unbound set as waived hypotheses, so the old raw counts no longer describe anything this proof checks."
+    "boundary": "The gate input is the current audit exit code and unwaived finding count; waived hypotheses and manual intent review remain outside this snapshot."
   },
   "filesystemScriptPairs": {
     "psc": 100,
     "pex": 100,
-    "pairNamesExact": true
+    "pairNamesExact": true,
+    "onlyPsc": [],
+    "onlyPex": []
   },
   "assetWinners": {
-    "note": "Re-derived via housecarl_asset_status against the Devotion Dev profile; every path resolves loose with Devotion as the sole provider.",
+    "note": "Re-derived by pdv_release_proof_refresh via housecarl_asset_status against Devotion Dev.",
     "fontFiles": {
       "queried": 4,
       "paths": [
@@ -123,13 +384,15 @@
   "proofBoundary": {
     "closed": [
       "active load-order presence",
+      "live ESP byte identity",
       "FormLink integrity",
       "master presence",
       "record parsing",
-      "contested-record enumeration",
+      "exact contested-record membership",
+      "critical record winners",
       "placed-reference winner retention",
-      "VMAD attachment resolvability",
-      "loose-asset provider resolution"
+      "VMAD audit verdict",
+      "claimed loose-asset provider resolution"
     ],
     "open": [
       "intentional-versus-defective review of the waived unbound Auto properties",
@@ -139,19 +402,11 @@
     ]
   },
   "refreshProcedure": {
-    "note": "There is no refresh tool. pdv_package_release.mjs only READS this file; it never writes it. Refresh by hand with these calls, in this order, against the Devotion Dev profile.",
-    "steps": [
-      "housecarl_load_order_status lookup='Devotion.esp' -- confirm the Anvil instance and the Devotion Dev profile before anything below becomes a claim",
-      "Get-FileHash on the live ESP -> espSha256, espSizeBytes, espModifiedUtc",
-      "housecarl_read_plugin_file on the absolute ESP path -> fileRecordSummary and masters",
-      "housecarl_cross_plugin_query plugins=[Devotion.esp] defined_in=true group_by=type -> recordSummary",
-      "housecarl_check_errors plugins=['Devotion.esp'] -> errors",
-      "housecarl_cross_plugin_query plugins=[Devotion.esp] conflicts_only=true -> contestedRecordCount and its breakdown",
-      "housecarl_read_record 00C325:Devotion.esp fields=VirtualMachineAdapter.* -> the ManagerQuest critical-winner block",
-      "housecarl_cross_plugin_query plugins=[Devotion.esp] defined_in=true type=PlacedObject group_by=winner -> cellNestedReferenceRetention",
-      "node tools/pdv_vmad_audit.mjs -> vmadValidation (record the exit code)",
-      "housecarl_asset_status on the font and urn paths -> assetWinners"
-    ],
-    "gateCaveat": "pdv_package_release.mjs hardcodes contestedRecordCount === 33. That is PINNING, not verifying: it cannot tell a correct 33 from a coincidental one, and any legitimate future override would fail the gate rather than be re-proved. Tracked separately; do not treat a green run as evidence the contested set was re-derived."
+    "tool": "tools/pdv_release_proof_refresh.mjs",
+    "runbook": "references/authoring/PDV_ReleaseProofRefresh_Runbook.md",
+    "check": "node tools/pdv_release_proof_refresh.mjs --check",
+    "capture": "node tools/pdv_release_proof_refresh.mjs --capture",
+    "refresh": "Use --refresh with --note and all three --confirm-* flags after reviewing the candidate; accept changed contested membership or critical winners only with the matching --accept-* flag.",
+    "packageGate": "pdv_package_release.mjs runs --check and fails when houseCARL is unavailable or the committed proof is stale."
   }
 }

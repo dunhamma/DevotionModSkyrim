@@ -49,6 +49,10 @@ generated/PDV_JoJ_StageDigest.cache.json
 # Regenerate, never commit -- `--check` gates that doc against this dump by exit code.
 generated/PDV_ExternalModSupport_Inventory.json
 generated/PDV_ExternalModSupport_Inventory.md
+# Regenerable review packet for the committed release-proof pipeline state.
+# `pdv_release_proof_refresh --capture` rewrites it; only the reviewed canonical
+# proof under references/authoring is package authority.
+generated/PDV_HousecarlReleaseProof.candidate.json
 fixtures/ckpe/heartbeat-only.tmp.json
 fixtures/ckpe/phase60-*-duplicate-replay.ck-command-packet.json
 fixtures/ckpe/phase62-family-duplicate-saved-readback-proof.json
