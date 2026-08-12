@@ -137,6 +137,7 @@ Int Property EVT_READ_LORE_BOOK = 342 AutoReadOnly
 Int Property EVT_PICK_OWNED_LOCK = 360 AutoReadOnly
 Int Property EVT_RAISE_UNDEAD = 365 AutoReadOnly
 Int Property EVT_ACCEPT_DAEDRIC_ARTIFACT = 368 AutoReadOnly
+Int Property EVT_SNEAK_ATTACK_KILL = 305 AutoReadOnly
 
 ; 12.2 / audit C2 -- the resolved faucet-form cache.
 ;
@@ -1084,6 +1085,15 @@ Event OnActorKilled(Actor akVictim, Actor akKiller)
         endIf
         Trace(1, "Paarthurnax slain; global kill fork routed.")
         return
+    endIf
+
+    ; 2026-08-12: sneak-attack-kill (305). Papyrus exposes no sneak-multiplier flag on
+    ; OnActorKilled, so IsSneaking() at the kill is the pragmatic stealth-kill signal -- the
+    ; same test the honorable-victory gates below invert. Routes to open Daedric paths
+    ; (Mephala/Nocturnal like, Malacath dislike) and the Dunmer Boethiah patron dislike;
+    ; the per-event dailyCap/cooldown rows carry anti-farm.
+    if playerRef.IsSneaking()
+        RouteGenericAction(EVT_SNEAK_ATTACK_KILL, playerRef as Form, akVictim as Form)
     endIf
 
     if originRace == 5 && PDV_EventBusService && PDV_CombatSessionActive && !PDV_CombatStartedSneaking && !PDV_CombatObservedSneaking && !playerRef.IsSneaking() && akVictim.IsHostileToActor(playerRef) && akVictim.GetLevel() >= playerRef.GetLevel()

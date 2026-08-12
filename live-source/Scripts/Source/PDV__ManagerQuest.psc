@@ -623,8 +623,8 @@ Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; seals every deity's participating-event cache (12.4 / C4 in PDV_DeityBase) -- without
 ; it the caches stay unsealed forever on old saves (correct, they fail open, but the
 ; broadcast fan-out keeps paying the full per-deity probe the cache exists to remove).
-Int Property LIKES_DISLIKES_VERSION = 22 AutoReadOnly
-Int Property PRINCE_LD_VERSION = 4 AutoReadOnly
+Int Property LIKES_DISLIKES_VERSION = 23 AutoReadOnly
+Int Property PRINCE_LD_VERSION = 5 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_NONE = 0 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_SKY_STORM_HUNT = 1 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_DEATH_ANCESTORS = 2 AutoReadOnly
@@ -12581,7 +12581,7 @@ Function ClearRowsForDeity(PDV_DeityBase deity)
 EndFunction
 
 Int[] Function GetLikesDislikesEventTypes()
-    Int[] ldEvents = new Int[34]
+    Int[] ldEvents = new Int[35]
     ldEvents[0] = 1
     ldEvents[1] = 2
     ldEvents[2] = 3
@@ -12616,6 +12616,7 @@ Int[] Function GetLikesDislikesEventTypes()
     ldEvents[31] = 315
     ldEvents[32] = 303
     ldEvents[33] = 366
+    ldEvents[34] = 305
     return ldEvents
 EndFunction
 
@@ -12736,7 +12737,7 @@ Function ClearPrinceRowsForPath(PDV_DaedricPathBase path)
 EndFunction
 
 Int[] Function GetPrinceEventTypes()
-    Int[] pldEvents = new Int[31]
+    Int[] pldEvents = new Int[32]
     pldEvents[0] = 1
     pldEvents[1] = 2
     pldEvents[2] = 300
@@ -12768,6 +12769,7 @@ Int[] Function GetPrinceEventTypes()
     pldEvents[28] = 366
     pldEvents[29] = 367
     pldEvents[30] = 368
+    pldEvents[31] = 305
     return pldEvents
 EndFunction
 
@@ -12879,6 +12881,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 368, 1.0, 1, 1.0)
         WritePLD(path, 345, 0.25, 3, 0.0)
         WritePLD(path, 304, -0.25, 3, 0.0)
+        WritePLD(path, 305, 0.5, 3, 0.0)
         WritePLD(path, 331, 0.5, 3, 0.0)
         WritePLD(path, 342, 0.25, 3, 0.0)
         WritePLD(path, 2, -0.25, 3, 0.0)
@@ -12959,6 +12962,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 360, 0.5, 3, 0.0)
         WritePLD(path, 362, 0.5, 3, 0.0)
         WritePLD(path, 304, 1.0, 2, 0.5)
+        WritePLD(path, 305, 0.5, 2, 0.5)
         WritePLD(path, 361, 0.25, 3, 0.0)
         WritePLD(path, 342, 0.25, 3, 0.0)
         WritePLD(path, 368, 1.5, 1, 1.0)
@@ -12974,6 +12978,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 313, 0.25, 3, 0.0)
         WritePLD(path, 362, -0.25, 3, 0.0)
         WritePLD(path, 364, -0.75, 2, 0.5)
+        WritePLD(path, 305, -0.25, 3, 0.0)
         WritePLD(path, 368, 1.0, 1, 1.0)
         WritePLD(path, 302, 1.0, 2, 0.5)
         WritePLD(path, 344, 0.25, 3, 0.0)
@@ -13301,6 +13306,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 315, -0.25, 3, 0.0, -1)
         WriteLD(deity, 333, -0.25, 3, 0.0, -1)
         WriteLD(deity, 351, -0.25, 2, 0.5, -1)
+        WriteLD(deity, 305, -0.25, 2, 0.5, -1)
     elseIf ldName == "Mephala"
         WriteLD(deity, 360, 0.5, 3, 0.0, -1)
         WriteLD(deity, 362, 0.5, 3, 0.0, -1)

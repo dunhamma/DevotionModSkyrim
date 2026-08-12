@@ -63,6 +63,7 @@ Daedric:Namira,361,trespass,+,small,0.25,3,0,PathOpen,,the forgotten and forbidd
 Daedric:Namira,313,rest-under-open-sky,-,small,-0.25,3,0,PathOpen,,she dwells in the dark beneath, not the open sky
 Daedric:Nocturnal,345,discover-location,+,small,0.25,3,0,PathOpen,,the unseen ways open to her servants
 Daedric:Nocturnal,304,murder-defenseless,-,small,-0.25,3,0,PathOpen,,the shadow takes quietly; blood draws the eye
+Daedric:Nocturnal,305,sneak-attack-kill,+,small,0.5,3,0,PathOpen,,the shadow kills quietly and is gone
 Daedric:Peryite,314,sleep-in-bed,+,small,0.25,3,0,PathOpen,,the ordered, lowly routine kept in its place
 Daedric:Peryite,364,assault-innocent,-,small,-0.25,3,0,PathOpen,,wanton chaos breaks the order he imposes
 Daedric:Sanguine,332,brew-potion,+,small,0.25,3,0,PathOpen,,a draught distilled for the night's pleasure
@@ -88,6 +89,7 @@ Daedric:Boethiah,350,heal-or-cure-npc,-,small,-0.25,3,0,PathOpen,,coddling the w
 Daedric:Mephala,360,pick-owned-lock,+,small,0.5,3,0,PathOpen,owned,intrusion into the hidden; secrets prised open
 Daedric:Mephala,362,steal-item,+,small,0.5,3,0,PathOpen,owned,the taking by stealth pleases the Webspinner
 Daedric:Mephala,304,murder-defenseless,+,medium,1.0,2,0.5,PathOpen,,murder by stealth woven into her web
+Daedric:Mephala,305,sneak-attack-kill,+,small,0.5,2,0.5,PathOpen,,the unseen blade takes a life -- her favored kill
 Daedric:Mephala,361,trespass,+,small,0.25,3,0,PathOpen,,crossing into the forbidden pleases the Webspinner
 Daedric:Mephala,342,read-lore-book,+,small,0.25,3,0,PathOpen,,secret lore gathered into the threads
 Daedric:Mephala,368,accept-daedric-artifact,+,large,1.5,1,1.0,PathOpen,ActorTypeDaedra,the Ebony Blade claimed
@@ -97,6 +99,7 @@ Daedric:Malacath,1,kill-hostile-beast,+,small,0.25,3,0,PathOpen,,a strong arm ag
 Daedric:Malacath,313,rest-under-open-sky,+,small,0.25,3,0,PathOpen,,the exile endures hardship under open sky
 Daedric:Malacath,362,steal-item,-,small,-0.25,3,0,PathOpen,,thieving is the coward's path the honest outcast scorns
 Daedric:Malacath,364,assault-innocent,-,medium,-0.75,2,0.5,PathOpen,,striking the defenseless is the weakness he despises
+Daedric:Malacath,305,sneak-attack-kill,-,small,-0.25,3,0,PathOpen,,the backstab is the coward's kill the honest outcast scorns
 Daedric:Malacath,368,accept-daedric-artifact,+,medium,1.0,1,1.0,PathOpen,ActorTypeDaedra,Volendrung taken up
 Daedric:Mehrunes Dagon,300,kill-undead,+,small,0.5,3,0,PathOpen,ActorTypeUndead,what clings past its ending is dragged into the ruin it earned
 Daedric:Mehrunes Dagon,344,increase-skill,+,small,0.25,3,0,PathOpen,,the Prince of ambition rewards the drive to seize ever greater power

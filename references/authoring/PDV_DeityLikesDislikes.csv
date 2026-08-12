@@ -281,6 +281,7 @@ Boethiah,362,steal-item,+,small,0.25,3,0,,owned,,the plot rewarded; taking by cu
 Boethiah,315,sleep-in-inn,-,small,-0.25,3,0,,,,paid inn comfort denies the test; the worthy do not slumber easy
 Boethiah,333,cook-meal,-,small,-0.25,3,0,,,,domestic ease is the solace of the unworthy; not of strength
 Boethiah,351,clear-bounty-serve-time,-,small,-0.25,2,0.5,,,,submitting to another's law betrays the worthy tyrant who makes her own
+Boethiah,305,sneak-attack-kill,-,small,-0.25,2,0.5,,,,the stealth opener shames the honorable victory her ancestors witness
 Mephala,2,kill-hostile-humanoid,-,small,-0.25,3,0,,,,the open charge declared -- beneath the web; she keeps no count of it
 Mephala,350,heal-or-cure-npc,-,small,-0.5,2,0,,,,open mending repairs the trust her corruption is meant to fray
 Mephala,313,rest-under-open-sky,-,small,-0.25,3,0,,,,a life lived in the open keeps nothing hidden -- the web needs cover
