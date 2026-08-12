@@ -62,6 +62,7 @@ Int _oidExportReport = -1
 Int _oidModeToggle = -1
 Int _oidNpcRecognition = -1
 Int _oidNpcHostileRecognition = -1
+Int _oidToastSize = -1
 Int _oidSelectedDeity = -1
 Int _oidDebugPatronOverride = -1
 Int _oidDebugClearPatron = -1
@@ -369,6 +370,8 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("On-screen devotion cues: screen effects, sounds, and music stingers when your standing shifts. Turn off for a quieter, effects-free experience. The Book of Days journal still records everything.")
     elseIf a_option == _oidNotifications
         SetInfoText("Corner toast messages when your devotion changes. Turn off to play with no pop-up notifications. The Book of Days journal still records everything.")
+    elseIf a_option == _oidToastSize
+        SetInfoText("Size of the corner toast pop-ups. Large is intended for 4K displays where the normal toast reads small. Does not affect the Book of Days journal.")
     elseIf a_option == _oidNpcRecognition
         SetInfoText("Allows SPID-tagged NPCs to regard a Faithful character as a friend and a Devoted character as an ally. SPID is recommended but not required.")
     elseIf a_option == _oidNpcHostileRecognition
@@ -917,6 +920,14 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidNotifications
         if EnsureManagerBinding("toggle_notifications")
             PDV_Manager.SetNotificationsEnabled(!PDV_Manager.NotificationsEnabled())
+        endIf
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidToastSize
+        if EnsureManagerBinding("toggle_toast_size")
+            PDV_Manager.SetPrismaToastLargeEnabled(!PDV_Manager.PrismaToastLargeEnabled())
         endIf
         ForcePageReset()
         return
@@ -2005,11 +2016,14 @@ Function BuildCompatPage()
     if PDV_Manager
         _oidInGameEffects = AddTextOption("In-Game Effects", OnOffLabel(PDV_Manager.InGameEffectsEnabled()), OPTION_FLAG_NONE)
         _oidNotifications = AddTextOption("Notifications", OnOffLabel(PDV_Manager.NotificationsEnabled()), OPTION_FLAG_NONE)
+        _oidToastSize = AddTextOption("Toast size", ToastSizeLabel(), OPTION_FLAG_NONE)
     else
         _oidInGameEffects = -1
         _oidNotifications = -1
+        _oidToastSize = -1
         AddTextOption("In-Game Effects", "Unavailable", OPTION_FLAG_DISABLED)
         AddTextOption("Notifications", "Unavailable", OPTION_FLAG_DISABLED)
+        AddTextOption("Toast size", "Unavailable", OPTION_FLAG_DISABLED)
     endIf
 
     AddHeaderOption("NPC Recognition", OPTION_FLAG_NONE)
@@ -2083,6 +2097,13 @@ String Function OnOffLabel(Bool isOn)
         return "On"
     endIf
     return "Off"
+EndFunction
+
+String Function ToastSizeLabel()
+    if PDV_Manager && PDV_Manager.PrismaToastLargeEnabled()
+        return "Large"
+    endIf
+    return "Normal"
 EndFunction
 
 Bool Function CustomRaceMappingEnabled()
@@ -4116,6 +4137,7 @@ Function ResetAllOptionIds()
     _oidNordNineDivines = -1
     _oidNordOldWays = -1
     _oidNotifications = -1
+    _oidToastSize = -1
     _oidOpenJournalNow = -1
     _oidOrcCity = -1
     _oidOrcLegionExile = -1

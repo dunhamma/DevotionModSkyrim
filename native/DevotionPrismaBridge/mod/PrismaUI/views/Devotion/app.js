@@ -2265,6 +2265,8 @@
       recentToastKeys.delete(recentToastKeys.keys().next().value);
     }
 
+    nodes.toasts.classList.toggle("is-large", text(copy.size, "") === "large");
+
     const toast = document.createElement("section");
     const tone = text(copy.tone, "neutral");
     const duration = Math.max(MIN_TOAST_DURATION_MS, numberOrZero(copy.duration) || DEFAULT_TOAST_DURATION_MS);
