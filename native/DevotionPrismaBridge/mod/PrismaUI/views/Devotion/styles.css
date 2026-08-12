@@ -476,10 +476,32 @@ h1 {
 .meter-block,
 .today-grid article,
 .debug-item,
+.recognition-block,
 .relation-strip {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(9, 9, 8, 0.28);
+}
+
+.recognition-block {
+  margin-top: 18px;
+  padding: 16px 18px;
+}
+
+.recognition-block strong {
+  display: block;
+  margin-top: 6px;
+  color: #fff8e8;
+  font-family: var(--serif-display);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.recognition-block p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
 }
 
 .deity-block,

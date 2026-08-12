@@ -2016,9 +2016,7 @@ Function BuildCompatPage()
     if PDV_Manager
         _oidNpcRecognition = AddTextOption("Religious recognition", OnOffLabel(PDV_Manager.NpcReligiousRecognitionEnabled()), OPTION_FLAG_NONE)
         _oidNpcHostileRecognition = AddTextOption("Hard-rival reactions", OnOffLabel(PDV_Manager.NpcHostileRecognitionEnabled()), OPTION_FLAG_NONE)
-        if devMode
-            AddTextOption("Current", PDV_Manager.GetNpcRecognitionStatusLine(), OPTION_FLAG_DISABLED)
-        endIf
+        AddTextOption("Current", PDV_Manager.GetNpcRecognitionStatusLine(), OPTION_FLAG_DISABLED)
     else
         AddTextOption("Religious recognition", "Unavailable", OPTION_FLAG_DISABLED)
         AddTextOption("Hard-rival reactions", "Unavailable", OPTION_FLAG_DISABLED)

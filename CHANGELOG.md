@@ -3,6 +3,28 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
+## 1.5.0 (prerelease d) -- 2026-08-12
+
+- **Official Skyrim quest recognition is substantially broader.** Devotion now
+  responds to many more choices and completions across the base game,
+  Dawnguard, Hearthfire, Dragonborn, Fishing, and Saints & Seducers, including
+  one-shot favors and repeatable work that remains protected by the daily cap.
+- **Older quest reactions are more precise.** Premature, missing, shared, and
+  NPC-owned stages were moved, narrowed, or removed so reactions follow the
+  player's evidenced act instead of nearby quest activity.
+- **Public religious recognition is now visible.** When your effective public
+  identity or standing changes, Devotion shows a concise Prisma-first notice
+  and records it in the Book of Days. The player-opened Devotion panel and MCM
+  also show the current recognition state. Copy remains honest when SPID is
+  absent because it describes what adherents may do, not a specific NPC event.
+- **SPID recognition no longer runs in the periodic maintenance sweep.** It
+  updates from devotional state changes, settings, ownership, and save-load
+  reconciliation, with a separate presentation guard preventing repeat notices.
+- **The complete installer now has 80 optional integrations.** The Cursed
+  Tribe, House of Horrors, and The Only Cure quest expansions receive their own
+  dependency-gated channels alongside all previously shipped patches. KID and
+  SPID remain strongly recommended soft dependencies.
+
 ## 1.5.0 (prerelease c) -- 2026-08-12
 
 - **Religious-recognition processing is lighter.** Optional SPID faction forms

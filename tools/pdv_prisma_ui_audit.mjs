@@ -259,6 +259,81 @@ function verifyPrismaAssetCacheContract() {
   }
 }
 
+function verifyNpcRecognitionVisibilityContract() {
+  for (const sourcePath of [MANAGER_SOURCE, MCM_SOURCE, DEVOTION_PRISMA_VIEW]) {
+    if (!exists(sourcePath)) {
+      fail("NPC recognition visibility dependency is missing.", sourcePath);
+      return;
+    }
+  }
+
+  const manager = read(MANAGER_SOURCE);
+  const mcm = read(MCM_SOURCE);
+  const app = read(DEVOTION_PRISMA_VIEW);
+  const payloadBuilder = functionBlock(manager, "GetNpcRecognitionPanelJson");
+  const advisoryBuilder = functionBlock(manager, "GetNpcRecognitionAdvisory");
+  const panelSender = functionBlock(manager, "PushDevotionPanel");
+  const transitionSurface = functionBlock(manager, "SurfaceNpcRecognitionTransition");
+  const compatPage = functionBlock(mcm, "BuildCompatPage");
+
+  const payloadFields = ["enabled", "managed", "status", "identity", "band", "advisory"];
+  const missingFields = payloadFields.filter((field) => !payloadBuilder.includes(`\\\"${field}\\\"`));
+  if (
+    !payloadBuilder ||
+    missingFields.length > 0 ||
+    !payloadBuilder.includes("NpcReligiousRecognitionEnabled()") ||
+    !payloadBuilder.includes('StorageUtil.GetStringValue(None, "PDV.Recognition.Owner")') ||
+    !advisoryBuilder.includes("if !recognitionEnabled") ||
+    !advisoryBuilder.includes('elseIf ownerName != ""') ||
+    !advisoryBuilder.includes("band >= TIER_DEVOTED")
+  ) {
+    fail(`Focused-panel recognition payload must distinguish enabled, externally managed, and below-Faithful states${missingFields.length ? `; missing fields: ${missingFields.join(", ")}` : ""}.`, MANAGER_SOURCE);
+  } else {
+    pass("Focused-panel recognition payload distinguishes enabled, externally managed, and below-Faithful states.", MANAGER_SOURCE);
+  }
+
+  if (
+    panelSender.includes(',\\"recognition\\":') &&
+    panelSender.includes("GetNpcRecognitionPanelJson()") &&
+    panelSender.includes("if !playerRequested") &&
+    panelSender.includes("return False")
+  ) {
+    pass("Player-requested focused-panel payload carries persistent recognition state.", MANAGER_SOURCE);
+  } else {
+    fail("Player-requested focused-panel payload must carry recognition state and remain player-requested only.", MANAGER_SOURCE);
+  }
+
+  if (
+    transitionSurface &&
+    !transitionSurface.includes("PushDevotionPanel(") &&
+    !transitionSurface.includes("SendJson(") &&
+    !transitionSurface.includes("SendOverlayJson(")
+  ) {
+    pass("Recognition transition presentation does not auto-open focused Prisma UI.", MANAGER_SOURCE);
+  } else {
+    fail("Recognition transition presentation must not auto-open focused Prisma UI.", MANAGER_SOURCE);
+  }
+
+  if (
+    compatPage.includes('AddTextOption("Current", PDV_Manager.GetNpcRecognitionStatusLine(), OPTION_FLAG_DISABLED)') &&
+    !/if\s+devMode\s+AddTextOption\("Current",\s*PDV_Manager\.GetNpcRecognitionStatusLine\(\)/i.test(compatPage)
+  ) {
+    pass("MCM exposes the current recognition state outside developer mode.", MCM_SOURCE);
+  } else {
+    fail("MCM must expose the current recognition state outside developer mode.", MCM_SOURCE);
+  }
+
+  if (
+    app.includes("state.recognition") &&
+    app.includes("recognition.status") &&
+    app.includes("recognition.advisory")
+  ) {
+    pass("Focused Prisma panel renders recognition status and advisory copy.", DEVOTION_PRISMA_VIEW);
+  } else {
+    fail("Focused Prisma panel must render recognition status and advisory copy.", DEVOTION_PRISMA_VIEW);
+  }
+}
+
 function functionBlock(source, functionName) {
   const pattern = new RegExp(`(?:[A-Za-z_][\\w]*\\s+)?Function\\s+${functionName}\\b[\\s\\S]*?EndFunction`, "i");
   const match = source.match(pattern);
@@ -2072,6 +2147,7 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
 
 verifyJournalBytecodeFreshness();
 verifyPrismaAssetCacheContract();
+verifyNpcRecognitionVisibilityContract();
 requireBridgeSourceParity();
 requireBridgeNativesDeclared();
 verifyParityRegistryContracts(path.join(REPO_ROOT, "references", "authoring", "PDV_PrismaParityRegistry.csv"));

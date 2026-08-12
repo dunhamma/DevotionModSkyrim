@@ -392,6 +392,8 @@
     summary: document.getElementById("pdv-summary"),
     patron: document.getElementById("pdv-patron"),
     patronNote: document.getElementById("pdv-patron-note"),
+    recognitionStatus: document.getElementById("pdv-recognition-status"),
+    recognitionAdvisory: document.getElementById("pdv-recognition-advisory"),
     instrument: document.getElementById("pdv-instrument"),
     instrumentArt: document.getElementById("pdv-instrument-art"),
     tierLabel: document.getElementById("pdv-tier-label"),
@@ -439,6 +441,14 @@
     patron: "None",
     patronNote: "Choose a path through play, prayer, and consequence.",
     summary: "No patron has answered yet.",
+    recognition: {
+      enabled: true,
+      managed: false,
+      status: "On - no public standing",
+      identity: "None",
+      band: "Distant",
+      advisory: "Adherents remain neutral until your standing is Faithful.",
+    },
     tier: 0,
     tierLabel: "None",
     piety: 0,
@@ -2198,6 +2208,9 @@
     nodes.summary.textContent = text(state.summary, "No patron has answered yet.");
     nodes.patron.textContent = patronName;
     nodes.patronNote.textContent = text(state.patronNote, "Choose a path through play, prayer, and consequence.");
+    const recognition = state.recognition && typeof state.recognition === "object" ? state.recognition : fallbackState.recognition;
+    if (nodes.recognitionStatus) nodes.recognitionStatus.textContent = text(recognition.status, fallbackState.recognition.status);
+    if (nodes.recognitionAdvisory) nodes.recognitionAdvisory.textContent = text(recognition.advisory, fallbackState.recognition.advisory);
     nodes.tierLabel.textContent = text(state.tierLabel, tierName(state.tier));
     nodes.pietyBar.style.width = `${pietyPercent}%`;
     nodes.pietyText.textContent = text(state.pietyLabel, `${piety} piety`);

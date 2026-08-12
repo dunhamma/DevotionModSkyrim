@@ -1,6 +1,6 @@
 editor_id,outcome_stage,act_tags,reason
-CW01A,160,"serve_empire_order,keep_oath",The same outcome explicitly joins the Imperial Legion and takes its oath.
-CW01B,1,"kill_honorable_combat,prove_by_struggle",The same outcome kills an Ice Wraith as the stated proof of worth.
+CW01A,200,"serve_empire_order,keep_oath,prove_by_struggle,kill_honorable_combat",V02-04 direct audit collapses the proving task and Imperial oath into the stage-200 completion.
+CW01B,200,"defy_tyranny_talos,keep_oath,prove_by_struggle,kill_honorable_combat",V02-04 direct audit collapses the proving task and Stormcloak oath into the stage-200 completion.
 DA01,100,"serve_a_daedra:azura,destroy_reject_daedra:molagbal",The same outcome gives the cleansed Star to Azura and rejects its soul-binding corruption.
 DA03,200,"serve_a_daedra:clavicus,acquire_daedric_artifact:clavicus,keep_oath,mercy_spare",The same outcome reunites and spares Barbas then receives Vile's Masque under the fulfilled bargain.
 DA04,100,"forbidden_knowledge,serve_a_daedra:hermaeusmora,acquire_daedric_artifact:hermaeusmora,disciplined_study",The same outcome completes Septimus's study opens Mora's lockbox and claims the Oghma Infinium.

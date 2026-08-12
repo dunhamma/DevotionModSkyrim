@@ -28,6 +28,7 @@ const PATCH_HUB_ROOT = path.join(PROJECT_ROOT, "dist", "PDV_QuestModPatches_FOMO
 const PATCH_HUB_MANIFEST = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestPatchHub.manifest.json");
 const FAUCET_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv");
 const QUEST_READBACK_CSV = path.join(PROJECT_ROOT, "references", "vanilla-gameplay", "extracted", "vanilla-quest-stage-readback.csv");
+const CORE_QUEST_WORKLIST_CSV = path.join(PROJECT_ROOT, "references", "vanilla-gameplay", "compatibility", "PDV_CoreQuestAuditWorklist.csv");
 const STANCE_CSV = path.join(PROJECT_ROOT, "references", "phase4", "PDV_StanceMatrix.csv");
 const DAEDRIC_STANCE_CSV = path.join(PROJECT_ROOT, "references", "phase4", "PDV_DaedricRacePrinceMatrix.csv");
 
@@ -247,7 +248,15 @@ const MANUAL_QUEST_FORMIDS = {
 };
 
 function main() {
-  const questIndex = buildQuestIndex(readCsv(QUEST_READBACK_CSV));
+  // The historical readback is a narrow candidate set. The exhaustive audit
+  // worklist supplies canonical FormIDs for newly approved official-content
+  // quests without growing MANUAL_QUEST_FORMIDS one quest at a time.
+  const canonicalWorklistRows = readCsv(CORE_QUEST_WORKLIST_CSV)
+    .filter((row) => row.is_canonical?.trim().toLowerCase() === "yes");
+  const questIndex = buildQuestIndex([
+    ...readCsv(QUEST_READBACK_CSV),
+    ...canonicalWorklistRows,
+  ]);
   const matrixRows = readCsv(MATRIX_CSV);
   const faucetRows = readCsv(FAUCET_CSV);
   const stanceRows = readCsv(STANCE_CSV);

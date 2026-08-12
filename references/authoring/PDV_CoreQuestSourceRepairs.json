@@ -1,0 +1,217 @@
+{
+  "schema": "pdv-core-quest-source-repairs-v1",
+  "files": [
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche11_MainQuestFullCoverage.csv",
+      "remove": [
+        {
+          "selector": { "editor_id": "MQ105U", "outcome_stage": "60" },
+          "expected_before": 36,
+          "reason": "V02-03 direct audit proved only the final Greybeard trial and oath; the former all-deity fan-out attributed unrelated acts to the quest. Owner-approved 2026-08-12."
+        }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche1.csv",
+      "remove": [
+        { "selector": { "editor_id": "DA16", "outcome_stage": "190" }, "expected_before": 3, "reason": "V03B remapped the kill branch to s170 and artifact acquisition to s190." },
+        { "selector": { "editor_id": "DA16", "outcome_stage": "200" }, "expected_before": 3, "reason": "V03B remapped the mercy branch to s180." },
+        { "selector": { "editor_id": "TG08B", "outcome_stage": "50" }, "expected_before": 1, "reason": "V03B proved s50 is relic recovery, not kill or generic theft." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche5_AspectParity.csv",
+      "remove": [
+        { "selector": { "editor_id": "DA16", "outcome_stage": "200" }, "expected_before": 1, "reason": "V03B remapped the mercy branch to s180." },
+        { "selector": { "editor_id": "TG08B", "outcome_stage": "50" }, "expected_before": 2, "reason": "V03B proved s50 is relic recovery." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche7_CrossEcho.csv",
+      "remove": [
+        { "selector": { "editor_id": "DA16", "outcome_stage": "190" }, "expected_before": 7, "reason": "V03B remapped the kill branch to s170." },
+        { "selector": { "editor_id": "DA16", "outcome_stage": "200" }, "expected_before": 4, "reason": "V03B remapped the mercy branch to s180." },
+        { "selector": { "editor_id": "TG08B", "outcome_stage": "50" }, "expected_before": 10, "reason": "V03B proved s50 is relic recovery." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche8_PoolExpansion.csv",
+      "remove": [
+        { "selector": { "editor_id": "TG05", "outcome_stage": "60" }, "expected_before": 2, "reason": "V03B found no player-act evidence for the survival fan-out." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche9_DeitySignalRemap.csv",
+      "remove": [
+        { "selector": { "editor_id": "DA16", "outcome_stage": "190" }, "expected_before": 1, "reason": "V03B remapped the kill branch to s170." },
+        { "selector": { "editor_id": "DA16", "outcome_stage": "200" }, "expected_before": 2, "reason": "V03B remapped the mercy branch to s180." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche10_SignalFloor.csv",
+      "remove": [
+        { "selector": { "editor_id": "DLC1VQ01", "outcome_stage": "200" }, "expected_before": 1, "reason": "Awakening's terminal does not prove the attributed player act." },
+        { "selector": { "editor_id": "DLC1VQ03Hunter", "outcome_stage": "200" }, "expected_before": 1, "reason": "V03B remapped the rescue outcome to s80." },
+        { "selector": { "editor_id": "DLC1VQ03Vampire", "outcome_stage": "200" }, "expected_before": 5, "reason": "V03B remapped Dexion's enthrallment to s70." },
+        { "selector": { "editor_id": "DLC1VQ04", "outcome_stage": "200" }, "expected_before": 5, "reason": "V03B remapped the common portal rite to s90." },
+        { "selector": { "editor_id": "DLC1VQ05", "outcome_stage": "200" }, "expected_before": 4, "reason": "V03B remapped supported acts to s50 and s80." },
+        { "selector": { "editor_id": "TG08B", "outcome_stage": "200" }, "expected_before": 2, "reason": "V03B remapped combat to s45 and found no terminal theft." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche12_KhajiitFiveWealth.csv",
+      "remove": [
+        { "selector": { "editor_id": "DA04", "outcome_stage": "10" }, "expected_before": 1, "reason": "V03B found s10 instruction-only." },
+        { "selector": { "editor_id": "DA04", "outcome_stage": "105" }, "expected_before": 2, "reason": "V03B found s105 does not prove helpless killing or desecration." },
+        { "selector": { "editor_id": "DLC1HunterBaseIntro", "outcome_stage": "200" }, "expected_before": 3, "reason": "V03B supports alliance-building civic service only." },
+        { "selector": { "editor_id": "DLC1HunterBaseStage2", "outcome_stage": "200", "deity": "Alkosh" }, "expected_before": 1, "reason": "V03B found no Empire-order act." },
+        { "selector": { "editor_id": "DLC1VampireBaseIntro", "outcome_stage": "200" }, "expected_before": 2, "reason": "V03B remapped the ambusher fight to s40." },
+        { "selector": { "editor_id": "DLC1VQ01", "outcome_stage": "200" }, "expected_before": 2, "reason": "Awakening's terminal does not prove the attributed acts." },
+        { "selector": { "editor_id": "DLC1VQ03Hunter", "outcome_stage": "200" }, "expected_before": 1, "reason": "V03B remapped the rescue to s80." },
+        { "selector": { "editor_id": "DLC1VQ04", "outcome_stage": "200" }, "expected_before": 2, "reason": "V03B remapped the portal rite to s90." },
+        { "selector": { "editor_id": "DLC1VQ05", "outcome_stage": "200" }, "expected_before": 3, "reason": "V03B remapped supported acts to s50 and s80." },
+        { "selector": { "editor_id": "DLC1VQElder", "outcome_stage": "200" }, "expected_before": 1, "reason": "Dexion or Urag performs the Elder Scroll reading." },
+        { "selector": { "editor_id": "DLC1VQElderHandler", "outcome_stage": "200" }, "expected_before": 1, "reason": "Handler terminals collide and do not prove player study." },
+        { "selector": { "editor_id": "TG05", "outcome_stage": "200" }, "expected_before": 1, "reason": "V03B found no player-act evidence." },
+        { "selector": { "editor_id": "TG08B", "outcome_stage": "40" }, "expected_before": 2, "reason": "V03B found NPC deceit, not the player's act." },
+        { "selector": { "editor_id": "TG08B", "outcome_stage": "60" }, "expected_before": 1, "reason": "V03B found a duplicate stage." },
+        { "selector": { "editor_id": "TG08B", "outcome_stage": "200" }, "expected_before": 2, "reason": "V03B found no terminal theft and remapped combat to s45." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche13_HircineBeastBlood.csv",
+      "remove": [
+        { "selector": { "editor_id": "C03", "outcome_stage": "25", "deity": "Y'ffre" }, "expected_before": 1, "reason": "V03B confirmed s25 is taking beast-blood; the Y'ffre cure-shaped reaction is premature." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche2.csv",
+      "remove": [
+        { "selector": { "editor_id": "CW01A" }, "expected_before": 8, "reason": "V02-04 collapsed assignment/oath stages into the directly evidenced s200 completion." },
+        { "selector": { "editor_id": "CW01B" }, "expected_before": 8, "reason": "V02-04 collapsed assignment/oath stages into the directly evidenced s200 completion." },
+        { "selector": { "editor_id": "CW03" }, "expected_before": 9, "reason": "V02-04 found three unlabelled completion terminals; existing intermediate rows are branch-unsafe pending later review." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche5_AspectParity.csv",
+      "remove": [
+        { "selector": { "editor_id": "CW03" }, "expected_before": 1, "reason": "V02-04 found branch-unsafe intermediate routing." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche7_CrossEcho.csv",
+      "remove": [
+        { "selector": { "editor_id": "CW01A" }, "expected_before": 8, "reason": "V02-04 collapsed the outcome to s200." },
+        { "selector": { "editor_id": "CW01B" }, "expected_before": 10, "reason": "V02-04 collapsed the outcome to s200." },
+        { "selector": { "editor_id": "CW03" }, "expected_before": 7, "reason": "V02-04 found branch-unsafe intermediate routing." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche8_PoolExpansion.csv",
+      "remove": [
+        { "selector": { "editor_id": "BardsCollegeLute" }, "expected_before": 9, "reason": "V02-04 moved instrument restoration from assignment stage to CompleteQuest s200." },
+        { "selector": { "editor_id": "BardsCollegeFlute" }, "expected_before": 1, "reason": "V02-04 moved instrument restoration to CompleteQuest s200." },
+        { "selector": { "editor_id": "BardsCollegeDrum" }, "expected_before": 1, "reason": "V02-04 moved instrument restoration to CompleteQuest s200." },
+        { "selector": { "editor_id": "FreeformSkyhavenTempleA" }, "expected_before": 3, "reason": "The recruits take the oath; the player's act is rebuilding the Blades." },
+        { "selector": { "editor_id": "MQ103" }, "expected_before": 11, "reason": "V02-04 narrowed terminal evidence to returning the Dragonstone for research and service." },
+        { "selector": { "editor_id": "FreeformSkyHavenTempleD", "deity": "Trinimac" }, "expected_before": 1, "reason": "Dragon-parts research does not prove protection." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche9_DeitySignalRemap.csv",
+      "remove": [
+        { "selector": { "editor_id": "FreeformSkyhavenTempleA" }, "expected_before": 1, "reason": "The recruits, not the player, take the oath." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche10_SignalFloor.csv",
+      "remove": [
+        { "selector": { "editor_id": "BardsCollegeLute" }, "expected_before": 1, "reason": "V02-04 moved the result to CompleteQuest s200." },
+        { "selector": { "editor_id": "BardsCollegeFlute" }, "expected_before": 1, "reason": "V02-04 moved the result to CompleteQuest s200." },
+        { "selector": { "editor_id": "BardsCollegeDrum" }, "expected_before": 1, "reason": "V02-04 moved the result to CompleteQuest s200." },
+        { "selector": { "editor_id": "FreeformShorsStone01" }, "expected_before": 2, "reason": "V02-04 replaced invented ownership/trade readings with town defense and civic service." },
+        { "selector": { "editor_id": "MQ103" }, "expected_before": 2, "reason": "V02-04 rebuilds the directly evidenced research/service result." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche11_MainQuestFullCoverage.csv",
+      "remove": [
+        { "selector": { "editor_id": "MQ103" }, "expected_before": 32, "reason": "V02-04 direct audit proved only returning the Dragonstone for research and civic service at the terminal." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche12_KhajiitFiveWealth.csv",
+      "remove": [
+        { "selector": { "editor_id": "CW03" }, "expected_before": 3, "reason": "V02-04 found three unlabelled completion terminals; branch remains pending." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche10_SignalFloor.csv",
+      "remove": [
+        { "selector": { "editor_id": "DLC2BlackBook03Quest" }, "expected_before": 3, "reason": "V03C retained knowledge and study but removed unsupported service to Mora." },
+        { "selector": { "editor_id": "DLC2BlackBook04Quest" }, "expected_before": 3, "reason": "V03C retained knowledge and study but removed unsupported service to Mora." },
+        { "selector": { "editor_id": "DLC2BlackBook05Quest" }, "expected_before": 3, "reason": "V03C retained knowledge and study but removed unsupported service to Mora." },
+        { "selector": { "editor_id": "DLC2BlackBook06Quest" }, "expected_before": 3, "reason": "V03C retained knowledge and study but removed unsupported service to Mora." },
+        { "selector": { "editor_id": "DLC2BlackBook07Quest" }, "expected_before": 3, "reason": "V03C retained knowledge and study but removed unsupported service to Mora." },
+        { "selector": { "editor_id": "DLC2MQ02" }, "expected_before": 1, "reason": "V03C narrowed the outcome to forbidden knowledge and disciplined study." },
+        { "selector": { "editor_id": "DLC2MQ05" }, "expected_before": 4, "reason": "V03C removed NPC-act sacrifice and memorial readings while retaining player-facilitated Mora service and knowledge." },
+        { "selector": { "editor_id": "DLC2MQ06" }, "expected_before": 4, "reason": "V03C removed unsupported Mora service and retained combat, struggle, and protection." },
+        { "selector": { "editor_id": "DLC2RR02" }, "expected_before": 3, "reason": "V03C rebuilt the terminal from direct justice, protection, and civic-service evidence." },
+        { "selector": { "editor_id": "DLC2RR03" }, "expected_before": 2, "reason": "V03C narrowed the terminal to honoring Gratian's memory." },
+        { "selector": { "editor_id": "DLC2SV01" }, "expected_before": 3, "reason": "V03C removed unsupported wild and kin readings and retained protection and undead destruction." },
+        { "selector": { "editor_id": "DLC2SV02" }, "expected_before": 3, "reason": "V03C replaced generic wild and struggle fan-out with exact rescue, defiance, and civic service." },
+        { "selector": { "editor_id": "DLC2ThirskFFHalbarn" }, "expected_before": 1, "reason": "Halbarn, not the player, performs the future smithing." },
+        { "selector": { "editor_id": "DLC2TT2" }, "expected_before": 1, "reason": "V03C regrounded the terminal in the directly proven confrontation and VMAD completion route." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche12_KhajiitFiveWealth.csv",
+      "remove": [
+        { "selector": { "editor_id": "DLC2BlackBook03Quest" }, "expected_before": 1, "reason": "V03C removed unsupported service to Mora." },
+        { "selector": { "editor_id": "DLC2BlackBook04Quest" }, "expected_before": 1, "reason": "V03C removed unsupported service to Mora." },
+        { "selector": { "editor_id": "DLC2BlackBook05Quest" }, "expected_before": 1, "reason": "V03C removed unsupported service to Mora." },
+        { "selector": { "editor_id": "DLC2BlackBook06Quest" }, "expected_before": 1, "reason": "V03C removed unsupported service to Mora." },
+        { "selector": { "editor_id": "DLC2BlackBook07Quest" }, "expected_before": 1, "reason": "V03C removed unsupported service to Mora." },
+        { "selector": { "editor_id": "DLC2KagrumezQST" }, "expected_before": 2, "reason": "V03C retained struggle but removed honorable-combat attribution against constructs." },
+        { "selector": { "editor_id": "DLC2MH01" }, "expected_before": 3, "reason": "V03C replaced branch-colliding s200 with exact s25 reclamation and s40 rejection routes." },
+        { "selector": { "editor_id": "DLC2MQ01" }, "expected_before": 2, "reason": "V03C found no discrete moral player act at this terminal." },
+        { "selector": { "editor_id": "DLC2MQ02" }, "expected_before": 3, "reason": "V03C narrowed the outcome to forbidden knowledge and disciplined study." },
+        { "selector": { "editor_id": "DLC2MQ03B" }, "expected_before": 2, "reason": "V03C retained wild reverence and added protection/service while removing unsupported law." },
+        { "selector": { "editor_id": "DLC2MQ05" }, "expected_before": 2, "reason": "V03C removed NPC-act sacrifice and memorial readings." },
+        { "selector": { "editor_id": "DLC2MQ06" }, "expected_before": 3, "reason": "V03C removed unsupported service to Mora." },
+        { "selector": { "editor_id": "DLC2RR01" }, "expected_before": 3, "reason": "V03C rebuilt the Raven Rock defense outcome without overbroad law." },
+        { "selector": { "editor_id": "DLC2RR02" }, "expected_before": 3, "reason": "V03C removed false undead, labor, and deceit readings." },
+        { "selector": { "editor_id": "DLC2RR03" }, "expected_before": 3, "reason": "V03C narrowed the outcome to honoring Gratian's memory." },
+        { "selector": { "editor_id": "DLC2SV01" }, "expected_before": 2, "reason": "V03C removed unsupported wild and kin readings." },
+        { "selector": { "editor_id": "DLC2SV02" }, "expected_before": 2, "reason": "V03C replaced generic wild and struggle fan-out." },
+        { "selector": { "editor_id": "DLC2TT1b" }, "expected_before": 3, "reason": "V03C replaced unsupported deceit/protection with exact debt and extortion routes." },
+        { "selector": { "editor_id": "DLC2TTF1" }, "expected_before": 2, "reason": "V03C retained protection but removed unsupported law." },
+        { "selector": { "editor_id": "DLC2TTR1" }, "expected_before": 1, "reason": "Neloth performs the study; the player's radiant retrieval remains silent." },
+        { "selector": { "editor_id": "DLC2TTR3a" }, "expected_before": 1, "reason": "Neloth performs the study; the player's radiant retrieval remains silent." },
+        { "selector": { "editor_id": "DLC2TTR3b" }, "expected_before": 1, "reason": "Neloth performs the study; the player's radiant retrieval remains silent." },
+        { "selector": { "editor_id": "DLC2TTR7" }, "expected_before": 1, "reason": "Neloth performs the study; the player's radiant retrieval remains silent." },
+        { "selector": { "editor_id": "DLC2WB01" }, "expected_before": 3, "reason": "V03C replaced generic struggle with memorial and comfort evidence." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche7_CrossEcho.csv",
+      "remove": [
+        { "selector": { "editor_id": "MQ206" }, "expected_before": 1, "reason": "Gap-shard direct review rebuilds the two evidenced Alduin's Bane milestones." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche10_SignalFloor.csv",
+      "remove": [
+        { "selector": { "editor_id": "MQ203" }, "expected_before": 5, "reason": "Gap-shard direct review narrows Alduin's Wall to study and civic service." },
+        { "selector": { "editor_id": "MQ206" }, "expected_before": 4, "reason": "Gap-shard direct review rebuilds the two evidenced Alduin's Bane milestones." }
+      ]
+    },
+    {
+      "path": "references/authoring/PDV_QuestReactionMatrix_Tranche11_MainQuestFullCoverage.csv",
+      "remove": [
+        { "selector": { "editor_id": "MQ203" }, "expected_before": 40, "reason": "Gap-shard direct review removes unsupported all-deity fan-out from Alduin's Wall." },
+        { "selector": { "editor_id": "MQ206" }, "expected_before": 85, "reason": "Gap-shard direct review removes unsupported all-deity fan-out from Alduin's Bane." }
+      ]
+    }
+  ]
+}

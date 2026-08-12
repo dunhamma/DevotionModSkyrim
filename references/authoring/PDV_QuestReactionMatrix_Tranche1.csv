@@ -43,17 +43,10 @@ DA11,The Taste of Death,100,Murder + cannibalize the priest,"murder_treacherous,
 DA11,The Taste of Death,250,Kill Eola; save Verulus from the cannibals,"mercy_spare,protect_the_weak",Stendarr,+,S,small,DA11 s250 "I killed Eola" (Verulus lives - UESP)
 DA11,The Taste of Death,250,Spare the priest; break the ritual,protect_the_weak,Mara,+,S,small,DA11 s250
 DA11,The Taste of Death,250,Ritual to gain Namira's blessing failed,destroy_reject_daedra:namira,Namira,-,C,small,DA11 s500 "the cannibalistic ritual to gain Namira's blessing has failed"
-DA13,The Only Cure,100,Commune with Peryite; kill Orchendor; Spellbreaker,"serve_a_daedra:peryite,acquire_daedric_artifact:peryite,spread_order_pestilence",Peryite,+,C,milestone,DA13 s40/s75/s100 "Peryite has solicited me to kill ... Orchendor ... killed Orchendor, as instructed by Peryite"
+DA13,The Only Cure,100,Commune with Peryite; kill Orchendor; Spellbreaker,"serve_a_daedra:peryite,acquire_daedric_artifact:peryite",Peryite,+,C,milestone,"V02-03 direct QUST audit: s100 completes Peryite's commission and awards Spellbreaker; the outcome proves service and artifact acquisition, not spreading pestilence. Owner-approved 2026-08-12."
 DA14,A Night To Remember,200,Drunken revelry across Skyrim; Sanguine Rose,"revel_indulge,serve_a_daedra:sanguine,acquire_daedric_artifact:sanguine",Sanguine,+,C,milestone,DA14 s200 "'Sam' turned out to be ... Sanguine ... I've acquired the Sanguine Rose"
 DA14,A Night To Remember,10,Trashed the Temple of Dibella in a drunken stupor,"revel_indulge,defile_nature",Dibella,-,m,small,DA14 s10 "a priestess has told me I trashed the Temple"
 DA14,A Night To Remember,30,Clean the Temple + apologize to the priestesses of Dibella,"charity,heal_comfort",Dibella,+,S,small,DA14 s20/s30 "I have cleaned up the Temple ... apologize to the priestess"
 DA15,The Mind of Madness,200,Help Sheogorath return; the Wabbajack,"sow_chaos_madness,serve_a_daedra:sheogorath,acquire_daedric_artifact:sheogorath",Sheogorath,+,C,milestone,DA15 s200 "convincing his master Sheogorath to return ... rewarded ... the Wabbajack"
-DA16,Waking Nightmare,190,Murder Erandur (priest of Mara) + take the Skull of Corruption,"serve_a_daedra:vaermina,acquire_daedric_artifact:vaermina,murder_treacherous",Vaermina,+,C,milestone,DA16 obj170 "Murder Erandur"; s190 "Take the Skull of Corruption"
-DA16,Waking Nightmare,190,Murder the trusting priest of Mara,murder_treacherous,Mara,-,C,milestone,DA16 s197 "kill Erandur ... wield the Skull" (Erandur is a priest of Mara)
-DA16,Waking Nightmare,190,Betray + murder a trusting companion,murder_treacherous,Stendarr,-,S,small,DA16 s197
-DA16,Waking Nightmare,200,Allow Erandur to destroy the Skull; spare him,"destroy_reject_daedra:vaermina,mercy_spare,protect_the_weak",Vaermina,-,S,small,DA16 s200 "allowed Erandur to live. The Skull ... destroyed"
-DA16,Waking Nightmare,200,Spare Mara's priest; destroy the dark artifact,protect_the_weak,Mara,+,S,small,DA16 s200
-DA16,Waking Nightmare,200,Spare the trusting; reject the dark bargain,mercy_spare,Stendarr,+,m,small,DA16 s200
 TG08A,Trinity Restored,57,Take the Nightingale Oath to Nocturnal,"serve_a_daedra:nocturnal,keep_oath",Nocturnal,+,S,small,TG08A s57 "I've undertaken the Oath ... a dedicated sentinel of the goddess Nocturnal"
-TG08B,Blindsighted,50,Slay the traitor Mercer Frey; recover the Skeleton Key,"theft_burglary,kill_honorable_combat",Nocturnal,+,S,small,TG08B s45/s50 "Mercer Frey ... is finally dead ... recovered the Skeleton Key of Nocturnal"
 TG09,Darkness Returns,200,Return the Skeleton Key to the Ebonmere; become Nightingale Agent,"serve_a_daedra:nocturnal,keep_oath",Nocturnal,+,C,milestone,TG09 s200 "returned the Skeleton Key ... encountered Nocturnal ... a true Nightingale Agent"

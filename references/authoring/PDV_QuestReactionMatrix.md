@@ -8,15 +8,27 @@ it with **act-tags** (from its journal text) and matching against each deity's
 the same god -> consistent, auditable, balanceable.
 
 **Data foundation (locked):**
-- Candidate universe: `references/vanilla-gameplay/extracted/vanilla-quest-stage-readback.csv`
-  (real stage/journal data; ~147 named player quests, ~108 morally salient).
+- Candidate universe: `references/vanilla-gameplay/compatibility/PDV_CoreQuestAuditWorklist.csv`
+  and `PDV_CoreQuestAuditCheckpoint.csv` (exhaustive canonical official-content
+  QUST inventory with direct stage/journal review). The older filtered
+  `vanilla-quest-stage-readback.csv` remains a compiler input, not the audit ceiling.
 - Coverage proof: `tools/pdv_quest_reaction_pilot.mjs` (deterministic; confirmed
   the method widens each deity's pool from ~1-2 flagship quests to ~18-46).
 - Scope: vanilla + DLC only. Mod quests -> optional patches later.
 
-**Model discipline:** authored on Opus 4.8 / high reasoning. Valence calls are
-lore-judgments, not keyword hits; every cell cites the journal line (+ UESP when a
-branch's meaning is ambiguous).
+**2026-08-12 exhaustive retrospective closeout:** all 2,367 official-content
+QUST occurrences were canonicalized to 2,274 base-game/DLC records plus 60
+Creation Club records and reviewed from their absolute plugin paths through
+direct houseCARL reads. The promoted core now contains 3,878 deity-reaction
+cells across 324 quests. Eighteen records remain explicitly inert and
+`UNREVIEWED` because their opposed routes share a stage, player attribution is
+not provable, or an already-owned ceremony would double-score; they are a
+later route-design backlog, not silent guessed mappings. The checkpoint and
+isolated evidence/tagged shards preserve those exact boundaries.
+
+**Judgment discipline:** valence calls are lore judgments, not keyword hits.
+Every promoted cell descends from a directly reviewed tagged outcome and cites
+its route evidence; contextual sources are used only to deepen terse branches.
 
 ---
 
@@ -48,6 +60,7 @@ assigned separately (see Part C), not encoded in the tag.
 | `honorable_duel` | Met a challenge one-on-one; trial of arms. |
 | `protect_the_weak` | Defended/rescued the vulnerable; shielded the innocent. |
 | `defend_kin_home` | Defended your people, stronghold, or homeland. |
+| `restore_faction_home` | Rebuilt or restored a faction's damaged refuge or headquarters. |
 | `self_sacrifice` | Freely accepted grave personal loss or death so others would be spared. |
 | `cowardice` | Fled a duty, abandoned a charge, took the craven path. |
 
@@ -55,6 +68,9 @@ assigned separately (see Part C), not encoded in the tag.
 | Tag | Meaning |
 |---|---|
 | `uphold_law_justice` | Brought a wrongdoer to lawful justice; upheld order. |
+| `wrongful_accusation` | Knowingly or recklessly condemned an innocent person through a false accusation. |
+| `persecute_religious_worship` | Reported, punished, or materially enabled the persecution of another's worship. |
+| `atonement_restitution` | Made concrete restitution for a serious wrong the player had committed. |
 | `civic_service` | Served the community/empire/hold concretely. |
 | `free_wrongfully_imprisoned` | Freed someone held through framing, tyranny, or manifest injustice. |
 | `reject_criminality` | Refused recruitment into, or material assistance for, a criminal enterprise. |
@@ -66,6 +82,7 @@ assigned separately (see Part C), not encoded in the tag.
 | Tag | Meaning |
 |---|---|
 | `honor_the_dead` | Tended graves, gave rites, respected tombs and the fallen. |
+| `restore_cultural_relic` | Recovered or restored a relic carrying a people or faction's shared heritage. |
 | `desecrate_the_dead` | Robbed/defiled the dead or sacred tombs. |
 | `necromancy` | Raised/bound the dead; trafficked in undeath. |
 | `cure_undeath` | Cured/restored one from lycanthropy/vampirism/undeath. |
@@ -88,7 +105,12 @@ assigned separately (see Part C), not encoded in the tag.
 | `keep_secret` | Guarded a secret/conspiracy; wove hidden influence. |
 | `expose_betray_secret` | Clumsily exposed or sold out a kept secret. |
 | `recover_stolen_keepsake` | Recovered and returned personal property stolen from another. |
+| `recover_lost_keepsake` | Recovered and returned personal property that had been lost rather than stolen. |
+| `recover_stolen_divine_relic` | Recovered a sacred relic stolen from a deity or its sworn custodians. |
 | `contraband_trade` | Carried or exchanged illegal goods as payment or commerce. |
+| `settle_anothers_debt` | Paid or resolved a debt owed by another person. |
+| `resist_extortion` | Refused or defeated a coercive demand for money, goods, or service. |
+| `coercion_extortion` | Used threats or violence to force payment, goods, or service from another. |
 
 ### Mercy, love, the hearth
 | Tag | Meaning |
@@ -107,6 +129,7 @@ assigned separately (see Part C), not encoded in the tag.
 |---|---|
 | `honest_labor_trade` | Did honest work/commerce; fair dealing. |
 | `master_craft_forge` | Forged/crafted worthy work; mastery of the craft. |
+| `build_homestead` | Established and materially built a household home. |
 | `exploit_cheat` | Cheated, extorted, or profited by exploitation. |
 
 ### Nature, wild, sky
@@ -127,6 +150,8 @@ assigned separately (see Part C), not encoded in the tag.
 | Tag | Meaning |
 |---|---|
 | `revel_indulge` | Feasted, drank, gave in to pleasure/excess. |
+| `enable_addiction` | Supplied or encouraged another person's destructive dependency. |
+| `enthrall_enslave` | Coerced another person into magical or supernatural bondage. |
 | `embrace_whimsy` | Freely welcomed an improbable or playfully impossible turn of events. |
 | `embrace_lycanthropy` | Took the beast-blood (Hircine's gift / curse). |
 | `embrace_vampirism` | Took the blood (Molag Bal's gift / curse). |
@@ -135,6 +160,11 @@ assigned separately (see Part C), not encoded in the tag.
 > Magnitude is NOT a tag. A `completion`/terminal stage = candidate **milestone**;
 > an intermediate meaningful stage = **small**; scaled by how central the tag is to
 > the deity (Part C).
+
+> Repeatability is not a silence criterion. A repeatable quest outcome is eligible
+> whenever its player act and completion stage are directly evidenced. The runtime's
+> hard daily devotion cap owns repetition control; audit rows are withheld only when
+> their semantics or stage routing are unsafe.
 
 ---
 
@@ -154,18 +184,18 @@ to most gods).
 
 **Akatosh** — time, covenant, lawful order, dragons.
 - approve: `serve_empire_order`(S), `keep_oath`(S), `uphold_law_justice`(m), `reject_criminality`(m), `disciplined_study`(m), `honor_divine`(C)
-- disapprove: `break_oath_betray`(S), `sow_chaos_madness`(S), `serve_a_daedra:*`(m)
+- disapprove: `break_oath_betray`(S), `wrongful_accusation`(S), `sow_chaos_madness`(S), `serve_a_daedra:*`(m)
 - indifferent: theft, the hunt, craft, romance.
 - anchor: Chief of the Nine; the Covenant; Dragon of Time. (UESP: Akatosh)
 
 **Stendarr** — mercy, righteous justice, the weak, vigil vs Daedra/undead.
-- approve: `mercy_spare`(C), `protect_the_weak`(C), `free_wrongfully_imprisoned`(C), `self_sacrifice`(C), `slay_undead`(S), `destroy_reject_daedra:*`(S), `destroy_daedric_threat`(C), `uphold_law_justice`(S), `reject_criminality`(S), `charity`(m), `kindness_to_child`(m), `honor_divine`(C)
-- disapprove: `kill_the_helpless`(C), `murder_treacherous`(S), `serve_a_daedra:*`(S), `ritual_sacrifice`(S), `contraband_trade`(m), `abuse_companion`(C)
+- approve: `mercy_spare`(C), `protect_the_weak`(C), `free_wrongfully_imprisoned`(C), `self_sacrifice`(C), `slay_undead`(S), `destroy_reject_daedra:*`(S), `destroy_daedric_threat`(C), `uphold_law_justice`(S), `reject_criminality`(S), `resist_extortion`(S), `charity`(m), `kindness_to_child`(m), `honor_divine`(C)
+- disapprove: `kill_the_helpless`(C), `murder_treacherous`(S), `wrongful_accusation`(C), `coercion_extortion`(C), `serve_a_daedra:*`(S), `ritual_sacrifice`(S), `contraband_trade`(m), `enable_addiction`(S), `abuse_companion`(C)
 - anchor: God of Mercy; the Vigilants. (UESP: Stendarr)
 
 **Mara** — love, compassion, charity, the hearth, mercy.
-- approve: `heal_comfort`(C), `charity`(C), `marriage_family`(C), `friendship`(C), `kindness_to_child`(C), `self_sacrifice`(C), `mercy_spare`(S), `protect_the_weak`(m), `honor_divine`(C)
-- disapprove: `murder_treacherous`(m), `ritual_sacrifice`(S), `kill_the_helpless`(m), `abuse_companion`(C)
+- approve: `heal_comfort`(C), `charity`(C), `marriage_family`(C), `build_homestead`(C), `friendship`(C), `recover_lost_keepsake`(m), `kindness_to_child`(C), `self_sacrifice`(C), `mercy_spare`(S), `protect_the_weak`(m), `honor_divine`(C)
+- disapprove: `murder_treacherous`(m), `ritual_sacrifice`(S), `kill_the_helpless`(m), `enable_addiction`(S), `abuse_companion`(C)
 - indifferent: theft, law, craft, the hunt.
 - anchor: Mother-Goddess; Amulet of Mara. (UESP: Mara)
 
@@ -176,8 +206,8 @@ to most gods).
 - anchor: Keeper of the cycle; Halls of the Dead. (UESP: Arkay)
 
 **Zenithar** — honest work, commerce, craft, fair dealing.
-- approve: `honest_labor_trade`(C), `master_craft_forge`(S), `recover_stolen_keepsake`(m), `uphold_law_justice`(m), `reject_criminality`(S), `honor_divine`(C)
-- disapprove: `theft_burglary`(S), `exploit_cheat`(C), `contraband_trade`(C)
+- approve: `honest_labor_trade`(C), `master_craft_forge`(S), `build_homestead`(C), `recover_stolen_keepsake`(m), `recover_lost_keepsake`(m), `settle_anothers_debt`(m), `uphold_law_justice`(m), `reject_criminality`(S), `honor_divine`(C)
+- disapprove: `theft_burglary`(S), `exploit_cheat`(C), `coercion_extortion`(C), `contraband_trade`(C), `enable_addiction`(m)
 - indifferent: killing, the dead, magic, the wild.
 - anchor: God of Work and Commerce. (UESP: Zenithar)
 
@@ -191,7 +221,7 @@ to most gods).
 
 **Julianos** — wisdom, logic, law, lore, disciplined magic.
 - approve: `disciplined_study`(C), `arcane_restraint`(S), `uphold_law_justice`(S), `forbidden_knowledge`(m, *pursuit of truth, double-edged*), `honor_divine`(C)
-- disapprove: `sow_chaos_madness`(S), `reckless_magic`(S)
+- disapprove: `sow_chaos_madness`(S), `reckless_magic`(S), `wrongful_accusation`(S)
 - indifferent: the hunt, romance, trade, the dead.
 - anchor: God of Wisdom and Logic. (UESP: Julianos)
 
@@ -234,14 +264,14 @@ to most gods).
 
 **Stuhn** — mercy to the yielding, ransom, just spoils, the honored bond.
 - approve: `mercy_spare`(C), `keep_oath`(S), `protect_the_weak`(S), `free_wrongfully_imprisoned`(S), `uphold_law_justice`(m)
-- disapprove: `kill_the_helpless`(C), `break_oath_betray`(S)
+- disapprove: `kill_the_helpless`(C), `break_oath_betray`(S), `wrongful_accusation`(S)
 - anchor: Shield-Thane; god of ransom/justice. (Imperial Library: Stuhn)
 
 ### Altmer
 
 **Auri-El** — the soul-god, Elven ancestry, the ascendant order.
 - approve: `disciplined_study`(S), `honor_the_dead`(m, *ancestry*), `prove_by_struggle`(m), `uphold_law_justice`(m), `kill_honorable_combat`(m, *ONLY vs the World-Eater and its dragon-heralds — the ascendant order against un-time; NOT generic battle. Recorded 2026-07-09 to back the MQ104/106/206/305 rows a tag-consistency check surfaced.*)
-- disapprove: `serve_a_daedra:*`(S), `sow_chaos_madness`(m)
+- disapprove: `serve_a_daedra:*`(S), `sow_chaos_madness`(m), `wrongful_accusation`(m)
 - anchor: Elven Akatosh; the Chantry of Auri-El. (UESP: Auriel)
 
 **Magnus** — the architect of magic, disciplined arcane mastery.
@@ -281,12 +311,12 @@ to most gods).
 - anchor: Bosmeri forest-god; the Green Pact. (UESP: Y'ffre)
 
 **Z'en** — the trader-god, debt, balance, proportionate redress.
-- approve: `honest_labor_trade`(C), `recover_stolen_keepsake`(S), `uphold_law_justice`(S, *proportionate redress*), `reject_criminality`(m), `keep_oath`(m)
-- disapprove: `exploit_cheat`(S), `break_oath_betray`(m), `contraband_trade`(S)
+- approve: `honest_labor_trade`(C), `build_homestead`(S), `recover_stolen_keepsake`(S), `recover_lost_keepsake`(S), `settle_anothers_debt`(C), `resist_extortion`(S), `uphold_law_justice`(S, *proportionate redress*), `reject_criminality`(m), `keep_oath`(m)
+- disapprove: `coercion_extortion`(C), `exploit_cheat`(S), `break_oath_betray`(m), `contraband_trade`(S), `wrongful_accusation`(S)
 - anchor: God of toil/payment. (Imperial Library: Z'en)
 
 **Baan Dar** — the Bandit God, trickster, the road, reversal of fortune.
-- approve: `deceit`(C, *clever, not cruel*), `tactical_distraction`(C), `theft_burglary`(S, *from the strong/unjust*), `free_wrongfully_imprisoned`(m, *reversal of unjust power*), `contraband_trade`(m), `prove_by_struggle`(m, *survival/reversal*)
+- approve: `deceit`(C, *clever, not cruel*), `tactical_distraction`(C), `theft_burglary`(S, *from the strong/unjust*), `free_wrongfully_imprisoned`(m, *reversal of unjust power*), `resist_extortion`(m), `contraband_trade`(m), `prove_by_struggle`(m, *survival/reversal*)
 - disapprove: `kill_the_helpless`(m)
 - anchor: Pariah/Bandit God (Khajiit + Bosmer). (UESP: Baan Dar)
 
@@ -311,7 +341,7 @@ to most gods).
 
 **Alkosh** — the Dragon King of Cats, cosmic order, time, named dragons.
 - approve: `kill_honorable_combat`(S, *named dragons / order-keeping*), `serve_empire_order`(m, *cosmic order*), `uphold_law_justice`(m)
-- disapprove: `sow_chaos_madness`(C)
+- disapprove: `sow_chaos_madness`(C), `wrongful_accusation`(m)
 - anchor: Khajiit Akatosh-aspect; First Cat. (UESP: Alkosh)
 
 ### Orc
@@ -462,12 +492,12 @@ has to resolve to a real Prince, which is what rejects `molag_bal` (base "molag"
 - anchor: Huntsman of the Princes; Ill Met By Moonlight. (UESP: Hircine)
 
 **Molag Bal** — domination, cruelty, vampirism, breaking the proud. (curse-access)
-- approve: `embrace_vampirism`(C), `kill_the_helpless`(C), `murder_treacherous`(S), `ritual_sacrifice`(S), `abuse_companion`(S)
+- approve: `embrace_vampirism`(C), `enthrall_enslave`(C), `kill_the_helpless`(C), `murder_treacherous`(S), `ritual_sacrifice`(S), `abuse_companion`(S)
 - disapprove: `mercy_spare`(S), `protect_the_weak`(m), `free_wrongfully_imprisoned`(m), `self_sacrifice`(m)
 - anchor: King of Rape/Domination; The House of Horrors. (UESP: Molag Bal)
 
 **Nocturnal** — shadow, luck, theft, the unseen, the Nightingale debt.
-- approve: `theft_burglary`(C), `contraband_trade`(S), `keep_secret`(S), `deceit`(m), `tactical_distraction`(m)
+- approve: `theft_burglary`(C), `recover_stolen_divine_relic`(C), `contraband_trade`(S), `keep_secret`(S), `deceit`(m), `tactical_distraction`(m)
 - disapprove: `expose_betray_secret`(m)
 - anchor: Mistress of Shadow; the Nightingales. (UESP: Nocturnal)
 
@@ -495,7 +525,7 @@ has to resolve to a real Prince, which is what rejects `molag_bal` (base "molag"
 - anchor: Lady of Decay; The Taste of Death. (UESP: Namira). THIN -> Part D.
 
 **Sanguine** — indulgence, revelry, debauchery, temptation.
-- approve: `revel_indulge`(C)
+- approve: `revel_indulge`(C), `enable_addiction`(S)
 - disapprove: (asceticism — rare)
 - anchor: Prince of Debauchery; A Night To Remember. (UESP: Sanguine). THIN -> Part D.
 
@@ -652,13 +682,17 @@ Books) per [[anti-farm-cap-requirement]].
   (even peripheral), so the reaction pool is never zero. Applied at wiring time.
 
 ## Part E — Per-quest classification pass (read-and-judge; validated method)
-**Primary source = the CSV `stage_log_summary`** (it already carries branch-resolved
-journal text, both outcomes per cell). houseCARL = record/editorId/load-order-winner
-confirmation only (it collapses stages to counts). UESP via **WebSearch** (WebFetch is
-403-blocked) only to disambiguate a terse branch.
+**Primary source = direct houseCARL QUST reads from the absolute plugin path.**
+Read names, stages, journal entries, completion flags, and objectives at depth
+5. Deepen ambiguous routes through direct VMAD, alias, INFO/SCEN, and
+decompiled-fragment evidence. Generated evidence/tagged CSVs are durable review
+artifacts, not substitutes for the plugin read. The older filtered
+`stage_log_summary` table remains useful as a disagreement detector and
+compiler input, but it is not the audit ceiling or evidence authority.
 
-**Procedure (per quest):** (1) pull the CSV row by `editor_id`; read
-`stage_log_summary`+`objective_summary`+`completion_stages`/`fail_stages`. (2) identify
+**Procedure (per quest):** (1) read the canonical QUST directly and record its
+FormKey, winning source plugin, stages, journal text, objectives, and
+completion/failure flags. (2) identify
 the meaningful moral outcome(s) — terminal/branch stages where the player DID something
 judgeable (spare/kill, cleanse/corrupt, feast/refuse, bargain/reject). Only pure
 travel/fetch/monitor stages with no player act are ignored. **A questline's

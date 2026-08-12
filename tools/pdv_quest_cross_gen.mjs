@@ -11,6 +11,7 @@
 // Usage:
 //   node tools/pdv_quest_cross_gen.mjs            # generate candidates + summary
 //   node tools/pdv_quest_cross_gen.mjs --source <channel.csv> [--source ...] --output-prefix T13
+//   node tools/pdv_quest_cross_gen.mjs --source <channel.csv> --ignore-existing <generated-tranche.csv> --output-prefix Refresh
 //   node tools/pdv_quest_cross_gen.mjs --source <matrix.csv> --outcome-key-file <editor_stage.csv> --output-prefix Review
 //   node tools/pdv_quest_cross_gen.mjs --self-test
 //
@@ -28,7 +29,7 @@ import { assertKnownFlags } from "./lib/pdv_cli.mjs";
 // Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
 // not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
 // for fixtures that never ran.
-const KNOWN_FLAGS = new Set(["--inventory", "--outcome-key-file", "--output-prefix", "--self-test", "--source"]);
+const KNOWN_FLAGS = new Set(["--ignore-existing", "--inventory", "--outcome-key-file", "--output-prefix", "--self-test", "--source"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_quest_cross_gen" });
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -178,7 +179,7 @@ function existingMatrixFiles() {
   return files;
 }
 
-function loadTranches(sourceArgs = []) {
+function loadTranches(sourceArgs = [], ignoredExistingArgs = []) {
   const defaultFiles = readdirSync(AUTHORING)
     .filter(f => /^PDV_QuestReactionMatrix_Tranche\d/.test(f) && f.endsWith(".csv"))
     .map((file) => path.join(AUTHORING, file));
@@ -186,7 +187,9 @@ function loadTranches(sourceArgs = []) {
   // (no deity column -- pure outcome rows that only feed the cross product).
   if (process.argv.includes("--inventory")) defaultFiles.push(path.join(AUTHORING, "PDV_QuestOutcomeInventory.csv"));
   const outcomeFiles = sourceArgs.length ? sourceArgs.map((file) => path.resolve(ROOT, file)) : defaultFiles;
-  const existingFiles = [...new Set([...existingMatrixFiles(), ...outcomeFiles])];
+  const ignoredExisting = new Set(ignoredExistingArgs.map((file) => path.resolve(ROOT, file)));
+  const existingFiles = [...new Set([...existingMatrixFiles(), ...outcomeFiles])]
+    .filter((file) => !ignoredExisting.has(path.resolve(file)));
   const outcomes = new Map(); // key editor|stage|outcome-> {editorId, questName, stage, outcome, tags:Set}
   const existingPairs = new Set(); // deity|editor|stage
   function readRows(file, collectOutcomes) {
@@ -275,11 +278,12 @@ function selfTest() {
 function main() {
   if (process.argv.includes("--self-test")) { selfTest(); return; }
   const sourceArgs = argValues("--source");
+  const ignoredExistingArgs = argValues("--ignore-existing");
   const outputPrefix = argValue("--output-prefix", "");
   const outcomeKeyFile = argValue("--outcome-key-file", "");
   if (outputPrefix && !/^[A-Za-z0-9_-]+$/.test(outputPrefix)) throw new Error("--output-prefix must be a simple filename token");
   const profiles = parsePartB(readFileSync(MATRIX_MD, "utf8"));
-  const { outcomes, existingPairs } = loadTranches(sourceArgs);
+  const { outcomes, existingPairs } = loadTranches(sourceArgs, ignoredExistingArgs);
   if (outcomeKeyFile) {
     const keyRows = parseCsv(readFileSync(path.resolve(ROOT, outcomeKeyFile), "utf8"));
     const header = keyRows[0].map((value) => value.trim());

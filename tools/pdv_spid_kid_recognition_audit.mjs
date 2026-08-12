@@ -13,6 +13,16 @@ const requireTrue = (condition, label, detail = "") => {
   else failures.push(`${label}${detail ? `: ${detail}` : ""}`);
 };
 
+const functionBlock = (source, functionName) => {
+  const pattern = new RegExp(`(?:[A-Za-z_][\\w]*\\s+)?Function\\s+${functionName}\\b[\\s\\S]*?EndFunction`, "i");
+  return source.match(pattern)?.[0] ?? "";
+};
+
+const eventBlock = (source, eventName) => {
+  const pattern = new RegExp(`Event\\s+${eventName}\\b[\\s\\S]*?EndEvent`, "i");
+  return source.match(pattern)?.[0] ?? "";
+};
+
 const spidPath = ["mod-data", "PDV_ReligiousRecognition_DISTR.ini"];
 const kidPaths = [
   ["mod-data", "PDV_GreenPact_KID.ini"],
@@ -81,6 +91,89 @@ requireTrue(
   "recognition getters do not repeat owned-form lookups",
 );
 requireTrue((manager.match(/sourceForm\.GetName\(\)/g) ?? []).length === 1, "KID source name resolves once per action");
+
+const syncRecognition = functionBlock(manager, "SyncNpcReligiousRecognition");
+const surfaceRecognition = functionBlock(manager, "SurfaceNpcRecognitionTransition");
+const recognitionPayload = functionBlock(manager, "GetNpcRecognitionPanelJson");
+const recognitionAdvisory = functionBlock(manager, "GetNpcRecognitionAdvisory");
+const focusedPanel = functionBlock(manager, "PushDevotionPanel");
+const updateEvent = eventBlock(manager, "OnUpdate");
+const compatPage = functionBlock(mcm, "BuildCompatPage");
+
+requireTrue(syncRecognition.length > 0, "recognition sync function is present");
+requireTrue(surfaceRecognition.length > 0, "recognition transition presentation function is present");
+requireTrue(recognitionPayload.length > 0, "focused-panel recognition payload builder is present");
+requireTrue(
+  manager.includes('"PDV.Recognition.LastPresentedSignature"') &&
+    manager.includes('"PDV.Recognition.LastSignature"'),
+  "presentation dedupe is stored separately from relation-sync dedupe",
+);
+requireTrue(
+  syncRecognition.includes("SurfaceNpcRecognitionTransition(") &&
+    syncRecognition.indexOf('StorageUtil.SetIntValue(None, "PDV.Recognition.LastSignature", signature)') <
+      syncRecognition.indexOf("SurfaceNpcRecognitionTransition("),
+  "recognition presentation follows the effective relation-state write",
+);
+requireTrue(
+  surfaceRecognition.includes('StorageUtil.GetIntValue(None, "PDV.Recognition.LastPresentedSignature"') &&
+    surfaceRecognition.includes('StorageUtil.SetIntValue(None, "PDV.Recognition.LastPresentedSignature"'),
+  "recognition transition presentation is signature-deduped",
+);
+requireTrue(
+  surfaceRecognition.includes("SendPrismaToast(") &&
+    surfaceRecognition.includes("AppendBookOfDaysEntry(") &&
+    surfaceRecognition.indexOf("SendPrismaToast(") < surfaceRecognition.indexOf("AppendBookOfDaysEntry("),
+  "one recognition transition route pairs Prisma-first toast with Book of Days entry",
+);
+requireTrue(
+  !surfaceRecognition.includes("PushDevotionPanel(") &&
+    !surfaceRecognition.includes("SendJson(") &&
+    !surfaceRecognition.includes("SendOverlayJson("),
+  "recognition transitions never auto-open the focused panel",
+);
+requireTrue(
+  !updateEvent.includes("SyncNpcReligiousRecognition(") &&
+    !updateEvent.includes("SurfaceNpcRecognitionTransition("),
+  "recognition sync and presentation are not polled from OnUpdate",
+);
+const npcScanTokens = [
+  "FindClosestActor",
+  "FindRandomActor",
+  "GetHighActors",
+  "GetNumRefs",
+  "GetNthRef",
+  "GetNumReferenceAliases",
+];
+const recognitionSection = manager.slice(manager.indexOf("; SPID religious recognition"));
+requireTrue(
+  npcScanTokens.every((token) => !recognitionSection.includes(token)),
+  "recognition state changes do not scan nearby or loaded NPCs",
+);
+
+for (const field of ["enabled", "managed", "status", "identity", "band", "advisory"]) {
+  requireTrue(recognitionPayload.includes(`\\\"${field}\\\"`), `focused-panel recognition payload contains ${field}`);
+}
+requireTrue(
+  focusedPanel.includes(',\\"recognition\\":') && focusedPanel.includes("GetNpcRecognitionPanelJson()"),
+  "player-requested focused panel carries persistent recognition state",
+);
+requireTrue(
+  focusedPanel.includes("if !playerRequested") && focusedPanel.includes("return False"),
+  "focused panel remains player-requested only",
+);
+requireTrue(
+  recognitionPayload.includes("NpcReligiousRecognitionEnabled()") &&
+    recognitionPayload.includes('StorageUtil.GetStringValue(None, "PDV.Recognition.Owner")') &&
+    recognitionAdvisory.includes("if !recognitionEnabled") &&
+    recognitionAdvisory.includes('elseIf ownerName != ""') &&
+    recognitionAdvisory.includes("band >= TIER_DEVOTED"),
+  "focused-panel recognition state distinguishes disabled, external-owner, and below-Faithful states",
+);
+requireTrue(
+  compatPage.includes('AddTextOption("Current", PDV_Manager.GetNpcRecognitionStatusLine(), OPTION_FLAG_DISABLED)') &&
+    !/if\s+devMode\s+AddTextOption\("Current",\s*PDV_Manager\.GetNpcRecognitionStatusLine\(\)/i.test(compatPage),
+  "MCM Current recognition line is visible outside developer mode",
+);
 for (const token of ["RouteKIDEquippedAction", "RouteKIDTrophyPickup", "RouteKIDRemovedAction", "RegisterForMenu(\"BarterMenu\")"])
   requireTrue(playerEvents.includes(token), `player ingress contains ${token}`);
 for (const token of ["Religious recognition", "Hard-rival reactions", "SetNpcReligiousRecognitionEnabled", "SetNpcHostileRecognitionEnabled"])

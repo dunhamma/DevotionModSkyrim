@@ -1186,8 +1186,23 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   Existing saves pad the parallel journal source list before adding a new entry. For
   compatibility testing, the labelled toast and Book entry are how a player confirms a
   patch fired; under-the-hood piety and logs alone are not an adequate tester surface.
-  Public tester delivery is one all-in-one FOMOD with required core plus all 77 optional,
+  Public tester delivery is one all-in-one FOMOD with required core plus every optional,
   dependency-gated patches. Internal core/PatchHub manifests remain separate proof inputs.
+
+- **[2026-08-12] - Official quest audit is exhaustive; ambiguous routes remain inert, and recognition presentation is event-driven:**
+  The official-content audit universe is the frozen 2,367-occurrence worklist,
+  canonicalized to 2,274 base-game/DLC QUST records plus 60 Creation Club
+  records. Direct houseCARL plugin reads, not the older filtered quest table,
+  own semantic evidence. The promoted core contains 3,878 cells across 324
+  quests; 18 opposed/shared/unattributed routes remain explicitly inert for a
+  later routing pass. Do not guess a stage merely to make the checkpoint read
+  complete. SPID relationship state now reconciles from devotional state,
+  settings, external ownership, and load events rather than the manager's
+  periodic maintenance sweep. Effective identity/band transitions receive one
+  Prisma-first notice plus one Book-of-Days entry, guarded by
+  `PDV.Recognition.LastPresentedSignature`; the focused panel and normal MCM
+  page expose current capability. Copy says adherents *may* react and never
+  claims that SPID or a particular NPC fired.
 - **[2026-08-11] - JoJ B-series closes at 37/37; save-safe PatchHub testing follows release:**
   B07 Interesting NPCs closes the JoJ candidate set with 31 APPROVED and six SILENT
   verdicts. The complete PatchHub is released to testers as one dependency-gated FOMOD;

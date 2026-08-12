@@ -1112,7 +1112,6 @@ Event OnUpdate()
         MigrateDaedricPactsIfNeeded()
         MigrateBroadPantheonPools()
         EnsureKhajiitObserveMoonsPower()
-        SyncNpcReligiousRecognition()
         _shoutRefreshTicks = 0
     endIf
 
@@ -4143,6 +4142,7 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
     j = j + ",\"acts\":[" + GetPanelActsJson() + "]"
     j = j + ",\"rites\":[" + GetPanelRitesJson() + "]"
     j = j + ",\"relations\":[" + GetPanelRelationsJson() + "]"
+    j = j + ",\"recognition\":" + GetNpcRecognitionPanelJson()
     j = j + ",\"instrument\":" + GetPanelInstrumentJson(originRace, panelCommitment != None, tierValue, tierLabel, piety, championThreshold)
     j = j + ",\"dashboard\":" + GetDashboardJson()
     j = j + ",\"debug\":" + GetPanelDebugJson()
@@ -28015,7 +28015,49 @@ String Function GetNpcRecognitionStatusLine()
     if identityIndex < 0 || band <= TIER_NONE
         return "On - no public standing"
     endIf
-    return "On - " + GetRecognitionIdentityKey(identityIndex) + " " + GetPublicTierBand(band)
+    return GetRecognitionIdentityDisplayName(identityIndex) + " - " + GetPublicTierBand(band) + " (" + GetNpcRecognitionRelationLabel(band) + ")"
+EndFunction
+
+String Function GetNpcRecognitionRelationLabel(Int band)
+    if band >= TIER_CHAMPION
+        return "ally"
+    elseIf band >= TIER_DEVOTED
+        return "friend"
+    endIf
+    return "neutral"
+EndFunction
+
+String Function GetNpcRecognitionAdvisory(Int identityIndex, Int band, Bool recognitionEnabled, String ownerName)
+    if !recognitionEnabled
+        return "Public religious recognition is off."
+    elseIf ownerName != ""
+        return "Religious recognition is managed by " + ownerName + "."
+    elseIf identityIndex < 0
+        return "No public religious identity is active."
+    elseIf band >= TIER_CHAMPION
+        return "Adherents may regard you as an ally."
+    elseIf band >= TIER_DEVOTED
+        return "Adherents may regard you as a friend."
+    endIf
+    return "Adherents remain neutral until your standing is Faithful."
+EndFunction
+
+String Function GetNpcRecognitionPanelJson()
+    Bool recognitionEnabled = NpcReligiousRecognitionEnabled()
+    String ownerName = StorageUtil.GetStringValue(None, "PDV.Recognition.Owner")
+    Int identityIndex = ResolveNpcRecognitionIdentity()
+    Int band = ResolveNpcRecognitionBand(identityIndex)
+    String identityName = GetRecognitionIdentityDisplayName(identityIndex)
+    String bandName = GetPublicTierBand(band)
+    String statusText = GetNpcRecognitionStatusLine()
+    String advisory = GetNpcRecognitionAdvisory(identityIndex, band, recognitionEnabled, ownerName)
+    String j = "{\"enabled\":" + BoolToJson(recognitionEnabled)
+    j = j + ",\"managed\":" + BoolToJson(ownerName != "")
+    j = j + ",\"status\":\"" + JsonSafeString(statusText) + "\""
+    j = j + ",\"identity\":\"" + JsonSafeString(identityName) + "\""
+    j = j + ",\"band\":\"" + JsonSafeString(bandName) + "\""
+    j = j + ",\"advisory\":\"" + JsonSafeString(advisory) + "\"}"
+    return j
 EndFunction
 
 Function EnsureRecognitionModEvents()
@@ -28159,6 +28201,34 @@ Function SyncNpcReligiousRecognition()
 
     StorageUtil.SetIntValue(None, "PDV.Recognition.LastSignature", signature)
     EmitNpcRecognitionState(identityIndex, band, hostileRecognitionEnabled, ownerName)
+    SurfaceNpcRecognitionTransition(identityIndex, band, recognitionEnabled, hostileRecognitionEnabled, ownerName)
+    RequestPanelRefresh()
+EndFunction
+
+Function SurfaceNpcRecognitionTransition(Int identityIndex, Int band, Bool recognitionEnabled, Bool hostileRecognitionEnabled, String ownerName)
+    Bool owned = ownerName != ""
+    Int presentationSignature = identityIndex * 1000 + band * 100 + BoolToInt(recognitionEnabled) * 10 + BoolToInt(owned) * 20 + BoolToInt(hostileRecognitionEnabled) * 40
+    if StorageUtil.GetIntValue(None, "PDV.Recognition.PresentationInitialized") != 1
+        StorageUtil.SetIntValue(None, "PDV.Recognition.PresentationInitialized", 1)
+        StorageUtil.SetIntValue(None, "PDV.Recognition.LastPresentedSignature", presentationSignature)
+        return
+    endIf
+    if StorageUtil.GetIntValue(None, "PDV.Recognition.LastPresentedSignature", -9999) == presentationSignature
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.Recognition.LastPresentedSignature", presentationSignature)
+    String identityName = GetRecognitionIdentityDisplayName(identityIndex)
+    String bandName = GetPublicTierBand(band)
+    String bodyText = GetNpcRecognitionAdvisory(identityIndex, band, recognitionEnabled, ownerName)
+    if recognitionEnabled && ownerName == "" && identityIndex >= 0
+        bodyText = identityName + " - " + bandName + ". " + bodyText
+        if hostileRecognitionEnabled && band >= TIER_CHAMPION
+            bodyText = bodyText + " Explicit rival adherents may regard you as an enemy."
+        endIf
+    endIf
+    SendPrismaToast("journal", "neutral", "Public recognition changed", bodyText)
+    AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "reorientation", "journal", False, 1, "Public recognition changed")
 EndFunction
 
 Function ApplyNpcRecognitionHardRivals(Int identityIndex, Faction playerFaction)
@@ -28448,6 +28518,55 @@ String Function GetRecognitionIdentityKey(Int identityIndex)
     keys[55] = "OrcCode"
     keys[56] = "RedguardAncestorSpine"
     return keys[identityIndex]
+EndFunction
+
+String Function GetRecognitionIdentityDisplayName(Int identityIndex)
+    if identityIndex < 0
+        return "None"
+    elseIf identityIndex == 1
+        return "Auri-El"
+    elseIf identityIndex == 2
+        return "Y'ffre"
+    elseIf identityIndex == 3
+        return "Z'en"
+    elseIf identityIndex == 4
+        return "Baan Dar"
+    elseIf identityIndex == 27
+        return "HoonDing"
+    elseIf identityIndex == 35
+        return "Molag Bal"
+    elseIf identityIndex == 37
+        return "Hermaeus Mora"
+    elseIf identityIndex == 38
+        return "Mehrunes Dagon"
+    elseIf identityIndex == 42
+        return "Clavicus Vile"
+    elseIf identityIndex == 45
+        return "Nord Old Ways"
+    elseIf identityIndex == 46
+        return "Nord Nine Divines"
+    elseIf identityIndex == 47
+        return "Imperial Divines"
+    elseIf identityIndex == 48
+        return "Breton Eight Divines"
+    elseIf identityIndex == 49
+        return "Breton Old Gods"
+    elseIf identityIndex == 50
+        return "Altmer Orthodoxy"
+    elseIf identityIndex == 51
+        return "Bosmer Green Pact"
+    elseIf identityIndex == 52
+        return "Dunmer Reclamations"
+    elseIf identityIndex == 53
+        return "Khajiit Lunar Lattice"
+    elseIf identityIndex == 54
+        return "Argonian Hist and People"
+    elseIf identityIndex == 55
+        return "Orc Code"
+    elseIf identityIndex == 56
+        return "Redguard Ancestor Spine"
+    endIf
+    return GetRecognitionIdentityKey(identityIndex)
 EndFunction
 
 PDV_DaedricPathBase Function GetDaedricPathByName(String deityName)

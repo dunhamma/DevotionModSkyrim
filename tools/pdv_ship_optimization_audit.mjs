@@ -287,7 +287,7 @@ function knownFindings(scripts) {
       trigger: "release preflight/package/verify",
       frequency: "every release candidate",
       externalCallCost: "filesystem hashes, timestamps, archive reopen, ANAM checker, and hash-bound houseCARL proof",
-      evidence: "Exact 216-entry manifest and 96 PSC/PEX pair gate are implemented.",
+      evidence: "Exact 233-entry manifest and 100 PSC/PEX pair gate are implemented.",
       fix: "Fail on missing or unexpected payload entries and any stale compiled/native/UI dependency.",
       releaseLane: "1.0.3 tooling",
       requiredProof: "Preflight passes, archive reopens, exact manifest comparison passes, checksum published.",
@@ -553,7 +553,7 @@ function markdown(ledger) {
 
 const args = parseArgs(process.argv.slice(2));
 const scripts = scriptNames().map(scanScript);
-if (scripts.length !== 96) fail(`Expected 96 live PDV scripts, found ${scripts.length}.`);
+if (scripts.length !== 99) fail(`Expected 99 live PDV-prefixed scripts, found ${scripts.length}.`);
 const stale = scripts.filter((script) => !script.artifact.pex.fresh);
 const ledger = {
   schemaVersion: 1,
@@ -566,7 +566,7 @@ const ledger = {
   summary: {
     scriptCount: scripts.length,
     staleScriptPairCount: stale.length,
-    sourceAvailabilityPromise: "all 96 PSC files remain in the player archive",
+    sourceAvailabilityPromise: "all 100 PSC files (99 PDV-prefixed plus TempleBlessingScript) remain in the player archive",
   },
   archive: archiveEvidence(args.archive),
   candidate: candidateSourceEvidence(scripts.map((script) => script.script)),
