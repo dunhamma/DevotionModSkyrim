@@ -3582,6 +3582,32 @@ Function ShowToastFallbackNotification(String titleText, String messageText)
     endIf
 EndFunction
 
+; --- Prisma toast size preference (Normal/Large). Large targets 4K displays, where
+; even the high-res auto-scaling reads small. Persisted, defaults to Normal. The size
+; is injected into every toast payload at the single send choke point below (plus the
+; one curse toast that sends directly), so all toast surfaces honour it without each
+; builder having to carry the field. ---
+Bool Function PrismaToastLargeEnabled()
+    return StorageUtil.GetIntValue(None, "PDV.Prisma.ToastLarge", 0) == 1
+EndFunction
+
+Function SetPrismaToastLargeEnabled(Bool enabled)
+    StorageUtil.SetIntValue(None, "PDV.Prisma.ToastLarge", BoolToInt(enabled))
+EndFunction
+
+String Function WithPrismaToastSize(String payload)
+    if !PrismaToastLargeEnabled()
+        return payload
+    endIf
+    String marker = "\"toast\":{"
+    Int idx = StringUtil.Find(payload, marker)
+    if idx < 0
+        return payload
+    endIf
+    Int insertAt = idx + StringUtil.GetLength(marker)
+    return StringUtil.Substring(payload, 0, insertAt) + "\"size\":\"large\"," + StringUtil.Substring(payload, insertAt)
+EndFunction
+
 Bool Function SendPrismaToastPayloadOrFallback(String payload, String fallbackTitle, String fallbackMessage, Bool allowFallback = True, Bool allowDuringRaceSetup = False)
     if IsRaceSetupQuietPresentationActive() && !allowDuringRaceSetup
         return False
@@ -3595,7 +3621,7 @@ Bool Function SendPrismaToastPayloadOrFallback(String payload, String fallbackTi
 
     Bool sent = False
     if PDV_PrismaBridge.IsAvailable()
-        sent = PDV_PrismaBridge.SendOverlayJson(payload)
+        sent = PDV_PrismaBridge.SendOverlayJson(WithPrismaToastSize(payload))
     endIf
 
     if !sent && allowFallback
@@ -21335,7 +21361,7 @@ Function SendPrismaCurseToast(Int oldState, Int newState)
         j = j + ",\"deity\":\"" + JsonSafeString(GetPublicDeityDisplayName(_activeDeity)) + "\""
     endIf
     j = j + "}}"
-    PDV_PrismaBridge.SendOverlayJson(j)
+    PDV_PrismaBridge.SendOverlayJson(WithPrismaToastSize(j))
 EndFunction
 
 ; Short race-specific context phrase feeds the UI's listText fallback and any
@@ -27982,12 +28008,15 @@ Int Property RECOGNITION_REACTION_ALLY = 2 AutoReadOnly
 Int Property RECOGNITION_REACTION_FRIEND = 3 AutoReadOnly
 Int Property RECOGNITION_IDENTITY_COUNT = 57 AutoReadOnly
 
+; NPC religious recognition defaults OFF (missing key -> disabled). The feature is
+; unadvertised in 1.5.0 and opt-in from the MCM while its in-game reactions are
+; validated further; an explicit MCM toggle still persists via the same keys.
 Bool Function NpcReligiousRecognitionEnabled()
-    return StorageUtil.GetIntValue(None, "PDV.Recognition.Disabled") != 1
+    return StorageUtil.GetIntValue(None, "PDV.Recognition.Disabled", 1) != 1
 EndFunction
 
 Bool Function NpcHostileRecognitionEnabled()
-    return StorageUtil.GetIntValue(None, "PDV.Recognition.HostilesDisabled") != 1
+    return StorageUtil.GetIntValue(None, "PDV.Recognition.HostilesDisabled", 1) != 1
 EndFunction
 
 Function SetNpcReligiousRecognitionEnabled(Bool enabled)

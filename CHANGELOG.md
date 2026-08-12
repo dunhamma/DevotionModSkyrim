@@ -3,118 +3,79 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
-## Unreleased
+## 1.5.0 — 2026-08-12
 
-- **The final official quest review decisions are now recognized.** Devotion
-  distinguishes the truth and protective-lie endings of The Lover's Requital,
-  the two Message to Whiterun faction terminals, torture-confession and cache
-  theft milestones, Ragnvald, Moss Mother Cavern, and all four Hearthfire
-  homestead defenses.
-- **Long faction chains keep meaningful late-game devotion opportunities.** The
-  two Message to Whiterun terminals intentionally repeat oath recognition at
-  their evidenced milestones, while ordinary attributed kills continue to use
-  the existing combat reaction instead of being counted again by quest stages.
-- **Newly reviewed acts now reach the intended gods.** Devotion distinguishes
-  rebuilding the Blades from restoring the Dark Brotherhood, treats reporting
-  Talos worship as religious persecution, routes Nocturnal's stolen relic back
-  to Nocturnal, recognizes restitution and cultural-relic recovery, and
-  correctly treats Vald's quest as settling another person's debt.
+Devotion 1.5.0 opens with a round of per-race and Daedric corrections, then adds
+by far the broadest quest and cross-mod recognition Devotion has shipped.
 
-## 1.5.0 (prerelease d) -- 2026-08-12
+### Race and Daedric corrections
 
-- **Official Skyrim quest recognition is substantially broader.** Devotion now
-  responds to many more choices and completions across the base game,
-  Dawnguard, Hearthfire, Dragonborn, Fishing, and Saints & Seducers, including
-  one-shot favors and repeatable work that remains protected by the daily cap.
-- **Older quest reactions are more precise.** Premature, missing, shared, and
-  NPC-owned stages were moved, narrowed, or removed so reactions follow the
-  player's evidenced act instead of nearby quest activity.
-- **Public religious recognition is now visible.** When your effective public
-  identity or standing changes, Devotion shows a concise Prisma-first notice
-  and records it in the Book of Days. The player-opened Devotion panel and MCM
-  also show the current recognition state. Copy remains honest when SPID is
-  absent because it describes what adherents may do, not a specific NPC event.
-- **SPID recognition no longer runs in the periodic maintenance sweep.** It
-  updates from devotional state changes, settings, ownership, and save-load
-  reconciliation, with a separate presentation guard preventing repeat notices.
-- **The complete installer now has 80 optional integrations.** The Cursed
-  Tribe, House of Horrors, and The Only Cure quest expansions receive their own
-  dependency-gated channels alongside all previously shipped patches. KID and
-  SPID remain strongly recommended soft dependencies.
+- **Khajiit: lunar focus and Champion rewards rebalanced.** The lunar-focus lane
+  and its Champion-tier rewards were retuned so the payoff matches the effort, and
+  the five-deity daily signal set was corrected so each of the five actually
+  reaches its intended god, with added quest coverage. A fresh save is recommended
+  to pick up the rebalanced rewards.
+- **Altmer: the roster is Auri-El, Magnus, Trinimac, Xarxes and Syrabane.** Mara,
+  Stendarr and Y'ffre were treated as Altmer worship through 1.0.4 and should not
+  have been. An Altmer character no longer earns piety through those three — shrine
+  prayer, quest reactions and deeds alike. No new game is needed; older Book of
+  Days entries for the removed three clean themselves up on your next Altmer
+  journal open. This release also adds a recurring Altmer heritage-practice ambient
+  layer with rotating observance lines.
+- **Daedric pact prices are felt.** Molag Bal's and Hircine's moved off skills
+  Requiem barely registers and onto the Health pool; Nocturnal's moved off carry
+  weight. 33 of 48 price tiers were still at pre-tuning numbers and are corrected.
+- **Malacath's Champion price is 10% movement speed, down from 30%.** The old value
+  was a scaling accident rather than a design choice.
+- **Hermaeus Mora's Champion boon grants both halves** — +20 Alteration and +20
+  Magicka. The Magicka effect was missing from the record.
+- **Fixed:** a Hircine tracking value advanced only while debug logging was
+  enabled, so the residue clock behaved differently with logging on; and an
+  artifact-destruction watcher polled every 15 seconds with no way to finish. It
+  now stops once there is nothing left to watch.
+- **Off-roster gods are no longer offered as new patrons.** Existing saves that
+  already follow a foreign or tolerated patron keep that relationship, with shrine
+  and quest devotion continuing at the intended reduced rate.
 
-## 1.5.0 (prerelease c) -- 2026-08-12
+### Broader quest recognition
 
-- **Religious-recognition processing is lighter.** Optional SPID faction forms
-  are resolved once per script instance, and recognition settings and actor
-  names are reused within each update instead of being looked up repeatedly.
-- **Item-action processing avoids repeated lookups.** Namira and Sanguine path
-  forms are cached after their first use, and an item's name is resolved once
-  per handled action.
-- **The Prisma presentation path remains complete.** PatchHub reactions still
-  name their source mod in both the Prisma toast and Book of Days, while the UI
-  remains payload-driven with bounded toast queues and no polling loop.
-- **The all-in-one inventory is unchanged and complete.** The installer still
-  contains all 77 dependency-gated patch options, the seven KID item-action
-  families, and SPID religious-recognition support.
+- **Official Skyrim quest recognition is dramatically broader.** Devotion now
+  responds to far more choices and completions across the base game, Dawnguard,
+  Hearthfire, Dragonborn, Fishing, and Saints & Seducers — one-shot favors and
+  repeatable work alike, all still protected by the daily cap.
+- **The finer decisions are recognized.** Devotion distinguishes the truth and
+  protective-lie endings of The Lover's Requital, the two Message to Whiterun
+  faction terminals, torture-confession and cache-theft milestones, Ragnvald, Moss
+  Mother Cavern, and all four Hearthfire homestead defenses. It tells rebuilding
+  the Blades from restoring the Dark Brotherhood, treats reporting Talos worship as
+  religious persecution, routes Nocturnal's stolen relic back to Nocturnal, and
+  recognizes restitution and cultural-relic recovery.
+- **Older reactions are more precise.** Premature, missing, shared, and NPC-owned
+  quest stages were moved, narrowed, or removed so a reaction follows the player's
+  evidenced act instead of nearby quest activity.
 
-## 1.5.0 (prerelease b) -- 2026-08-11
+### Cross-mod support
 
-- **Off-roster gods are no longer available as new patrons.** Existing saves
-  that already follow a foreign or tolerated patron keep that relationship,
-  with shrine and quest devotion continuing at the intended reduced rate.
-- **NPCs can recognize your public faith.** With SPID installed, named
-  adherents and coherent religious or cultural cohorts react to your standing:
-  Observant remains neutral, Faithful becomes friendly, and Devoted becomes an
-  ally. Explicit hard rivals can react as enemies at Devoted standing without
-  gaining attack-on-sight behaviour. Both recognition controls are available
-  in the MCM and default on.
-- **Seven new item-action families can feed devotion.** With KID installed,
-  taboo food, revelry, honest trade, hunt trophies, funerary offerings, Orcish
-  craft, and wearing a Divine amulet reach the same Prisma and Book of Days
-  surfaces as other devotional acts.
-- **KID and SPID are soft dependencies.** Devotion remains playable without
-  either framework; the corresponding item actions or NPC reactions are simply
-  absent.
-- **Green Pact food handling is clearer.** Meat remains pact-compatible, plants
-  remain violations, and fungi, eggs, and insects are neutral.
-- **The complete PatchHub remains included.** All 77 dependency-gated quest,
-  follower, shrine, and observer integrations continue to ship in the single
-  installer.
+- **One installer carries Devotion plus 80 optional per-mod patches.** Devotion
+  core installs automatically and cannot be deselected. Each optional patch teaches
+  the gods how to react to another mod's quests, followers, shrines, or
+  observances, and is locked to its own source plugin — an option for a mod you do
+  not have is not offered, and a patch for a mod you later remove goes quiet
+  instead of breaking. When an optional patch reaction fires, its Prisma toast
+  names the source mod and the Book of Days keeps that name on the entry.
+- **Item actions can feed devotion (with KID).** Seven item-action families — taboo
+  food, revelry, honest trade, hunt trophies, funerary offerings, Orcish craft, and
+  wearing a Divine amulet — reach the same Prisma and Book of Days surfaces as other
+  devotional acts. Green Pact food support now also covers Requiem and Food and
+  Beverages Redone meats. KID is a soft dependency; without it these actions are
+  simply absent.
 
-## 1.5.0 (prerelease a) -- 2026-08-11
+### Under the hood
 
-- **Per-mod quest reactions are now visible and attributable.** When an optional
-  PatchHub quest reaction fires, its Prisma toast names the source mod and the
-  same source name is retained on the Book of Days entry. Existing saves are
-  upgraded safely; older journal entries remain unlabeled.
-- **Broad quest-mod support is included.** The installer offers optional,
-  dependency-gated integrations for 77 quest and follower mods. Options remain
-  unavailable when their source plugin is absent.
-- **One download contains Devotion and every optional patch.** Devotion core is
-  required by the installer, while each detected compatibility option remains
-  individually selectable.
-- **Green Pact food support includes Requiem and Food and Beverages Redone.**
-  These KID integrations recognize the supported mods' additional meat items.
+- **Lighter runtime.** Equipping items, scoring actions, item-action handling, and
+  religious-recognition updates all do far less repeated work, and recognition
+  updates on devotional-state and setting changes rather than in a periodic sweep.
 
-## 1.5.0 — 2026-08-08
-
-- **Devotion and its per-mod patches install from one installer.** Core installs
-  automatically and cannot be deselected. Each patch option is locked to its source
-  plugin, so an option for a mod you do not have cannot be selected and installs nothing.
-- **The Altmer roster is Auri-El, Magnus, Trinimac, Xarxes and Syrabane.** Mara, Stendarr
-  and Y'ffre were treated as Altmer worship through 1.0.4 and should not have been. An
-  Altmer character no longer earns piety through those three — shrine prayer, quest
-  reactions and deeds alike. No new game is needed.
-- **Daedric pact prices are felt.** Molag Bal's and Hircine's moved off skills Requiem
-  barely registers and onto the Health pool; Nocturnal's moved off carry weight. 33 of 48
-  price tiers were still at pre-tuning numbers and are corrected.
-- **Malacath's Champion price is 10% movement speed, down from 30%.** The old value was a
-  scaling accident rather than a design choice.
-- **Hermaeus Mora's Champion boon grants both halves** — +20 Alteration and +20 Magicka.
-  The Magicka effect was missing from the record.
-- **Fixed:** a Hircine tracking value advanced only while debug logging was enabled, so the
-  residue clock behaved differently with logging on. An artifact-destruction watcher polled
-  every 15 seconds with no way to finish; it now stops once there is nothing left to watch.
 
 ## 1.0.4 — 2026-07-27
 
