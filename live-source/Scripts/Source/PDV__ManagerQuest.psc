@@ -624,7 +624,7 @@ Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; it the caches stay unsealed forever on old saves (correct, they fail open, but the
 ; broadcast fan-out keeps paying the full per-deity probe the cache exists to remove).
 Int Property LIKES_DISLIKES_VERSION = 23 AutoReadOnly
-Int Property PRINCE_LD_VERSION = 5 AutoReadOnly
+Int Property PRINCE_LD_VERSION = 6 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_NONE = 0 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_SKY_STORM_HUNT = 1 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_DEATH_ANCESTORS = 2 AutoReadOnly
@@ -12737,7 +12737,7 @@ Function ClearPrinceRowsForPath(PDV_DaedricPathBase path)
 EndFunction
 
 Int[] Function GetPrinceEventTypes()
-    Int[] pldEvents = new Int[32]
+    Int[] pldEvents = new Int[33]
     pldEvents[0] = 1
     pldEvents[1] = 2
     pldEvents[2] = 300
@@ -12770,6 +12770,7 @@ Int[] Function GetPrinceEventTypes()
     pldEvents[29] = 367
     pldEvents[30] = 368
     pldEvents[31] = 305
+    pldEvents[32] = 306
     return pldEvents
 EndFunction
 
@@ -12968,6 +12969,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 368, 1.5, 1, 1.0)
         WritePLD(path, 364, 0.5, 3, 0.0)
         WritePLD(path, 332, 0.25, 3, 0.0)
+        WritePLD(path, 306, 0.5, 3, 0.0)
         WritePLD(path, 2, -0.25, 3, 0.0)
         WritePLD(path, 350, -0.25, 3, 0.0)
         WritePLD(path, 313, -0.25, 3, 0.0)

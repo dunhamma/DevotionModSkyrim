@@ -153,6 +153,7 @@ Daedric:Boethiah,362,steal-item,+,small,0.25,3,0,PathOpen,owned,theft is cunning
 Daedric:Boethiah,351,clear-bounty-serve-time,-,medium,-0.75,1,0.5,PathOpen,,bowing to another's law betrays the worthy tyrant who makes her own
 Daedric:Mephala,364,assault-innocent,+,small,0.5,3,0,PathOpen,,discord struck into the unsuspecting feeds the web of intrigue
 Daedric:Mephala,332,brew-potion,+,small,0.25,3,0,PathOpen,,the poison brewed is the unseen blade in a cup
+Daedric:Mephala,306,apply-poison,+,small,0.5,3,0,PathOpen,,the poison laid to the blade -- the unseen kill readied
 Daedric:Mephala,2,kill-hostile-humanoid,-,small,-0.25,3,0,PathOpen,,the open charge is honest war; she keeps the unseen blade
 Daedric:Mephala,350,heal-or-cure-npc,-,small,-0.25,3,0,PathOpen,,the open hand of trust unweaves the web of manipulation
 Daedric:Mephala,313,rest-under-open-sky,-,small,-0.25,3,0,PathOpen,,the open sky is exposure; the Webspinner keeps to the unseen
