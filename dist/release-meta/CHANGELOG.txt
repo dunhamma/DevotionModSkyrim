@@ -69,17 +69,6 @@ by far the broadest quest and cross-mod recognition Devotion has shipped.
   devotional acts. Green Pact food support now also covers Requiem and Food and
   Beverages Redone meats. KID is a soft dependency; without it these actions are
   simply absent.
-- **NPCs can recognize your public faith (with SPID).** Named adherents and
-  coherent religious or cultural cohorts react to your standing: Observant stays
-  neutral, Faithful becomes friendly, and Devoted becomes an ally; explicit hard
-  rivals can turn hostile at Devoted standing without gaining attack-on-sight
-  behaviour. Both recognition controls live in the MCM and default on. SPID is a
-  soft dependency; without it these reactions are simply absent.
-- **Your public religious standing is surfaced.** When your effective public
-  identity or standing changes, Devotion shows a concise Prisma-first notice and
-  records it in the Book of Days; the player-opened Devotion panel and MCM show the
-  current recognition state. The copy stays honest when SPID is absent, describing
-  what adherents may do rather than a specific NPC event.
 
 ### Under the hood
 

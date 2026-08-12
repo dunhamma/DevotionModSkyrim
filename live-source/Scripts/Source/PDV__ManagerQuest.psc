@@ -27982,12 +27982,15 @@ Int Property RECOGNITION_REACTION_ALLY = 2 AutoReadOnly
 Int Property RECOGNITION_REACTION_FRIEND = 3 AutoReadOnly
 Int Property RECOGNITION_IDENTITY_COUNT = 57 AutoReadOnly
 
+; NPC religious recognition defaults OFF (missing key -> disabled). The feature is
+; unadvertised in 1.5.0 and opt-in from the MCM while its in-game reactions are
+; validated further; an explicit MCM toggle still persists via the same keys.
 Bool Function NpcReligiousRecognitionEnabled()
-    return StorageUtil.GetIntValue(None, "PDV.Recognition.Disabled") != 1
+    return StorageUtil.GetIntValue(None, "PDV.Recognition.Disabled", 1) != 1
 EndFunction
 
 Bool Function NpcHostileRecognitionEnabled()
-    return StorageUtil.GetIntValue(None, "PDV.Recognition.HostilesDisabled") != 1
+    return StorageUtil.GetIntValue(None, "PDV.Recognition.HostilesDisabled", 1) != 1
 EndFunction
 
 Function SetNpcReligiousRecognitionEnabled(Bool enabled)
