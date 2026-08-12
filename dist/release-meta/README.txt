@@ -14,11 +14,17 @@ mechanically -- not a shrine-touch buff.
 
 REQUIREMENTS
 --------------------------------------------------------------
-  Skyrim Special Edition
+  Skyrim Special Edition    (SE 1.5.97 or AE 1.6.x)
   SKSE64
+  Address Library for SKSE Plugins
   SkyUI                     (MCM configuration menu)
   PapyrusUtil SE            (data storage)
+  powerofthree's Tweaks
+  powerofthree's Papyrus Extender   (crafting + event hooks)
   PrismaUI                  (in-game Survey / Book of Days)
+
+  Use the SKSE, Address Library, and powerofthree builds that match
+  your Skyrim runtime -- both SE and AE are supported.
 
 STRONGLY RECOMMENDED
 --------------------------------------------------------------
