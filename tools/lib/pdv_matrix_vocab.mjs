@@ -145,8 +145,24 @@ export function isKnownActTag(tag, vocab) {
 export function badDaedricSlug(tag, known) {
   const colon = tag.indexOf(":");
   if (colon < 0) return null;
+  const prefix = tag.slice(0, colon);
   const suffix = tag.slice(colon + 1);
   if (suffix === "*" || suffix.startsWith("<")) return null;
+  const reviewedScopedSlugs = new Map([
+    ["restore_faction_home", new Set(["blades", "dark_brotherhood"])],
+    ["persecute_religious_worship", new Set(["talos"])],
+    ["recover_stolen_divine_relic", new Set(["nocturnal"])],
+  ]);
+  const scoped = reviewedScopedSlugs.get(prefix);
+  if (scoped) {
+    if (scoped.has(suffix)) return null;
+    return `"${suffix}" is not an approved ${prefix} slug (${[...scoped].sort().join(", ")})`;
+  }
+  // Only the three Prince-owned namespaces use the canonical Prince-slug
+  // roster. Other reviewed namespaces deliberately carry non-Prince values,
+  // e.g. persecute_religious_worship:talos and
+  // restore_faction_home:dark_brotherhood.
+  if (!["serve_a_daedra", "acquire_daedric_artifact", "destroy_reject_daedra"].includes(prefix)) return null;
   if (known.has(suffix)) return null;
   return `"${suffix}" is not a known Daedric slug (${[...known].sort().join(", ")})`;
 }

@@ -1,0 +1,15 @@
+{
+  "string": {
+    "schema": "pdv-quest-stage-adapter.v1",
+    "sourcePlugin": "Skyrim.esm",
+    "selectorKind": "global",
+    "selectorPlugin": "Skyrim.esm"
+  },
+  "int": {
+    "sourceFormId": 340742,
+    "sourceStage": 200,
+    "selectorFormId": 1113756,
+    "selectorValues": [0, 1],
+    "targetStages": [201, 202]
+  }
+}

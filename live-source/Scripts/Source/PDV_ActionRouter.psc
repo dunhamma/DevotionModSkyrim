@@ -129,6 +129,11 @@ Function HandleStoryKillActor(ObjectReference akVictim, ObjectReference akKiller
         return
     endIf
 
+    ; A few authored quest outcomes have no safe semantic completion stage. Their
+    ; unique actor bases let the direct-player Kill Actor event supply the missing
+    ; route without modifying the vanilla quests or duplicating generic combat tags.
+    RouteQuestSpecificPlayerKill(victimActor)
+
     ; Unprovoked Thalmor kill -> heterodox/defiant act (Altmer ThalmorAlignment / Imperial
     ; Concordat). "Unprovoked" = the victim was NOT a pre-set enemy (relationship rank > -2):
     ; the player chose to kill them. Routed here, BEFORE the hostile/non-hostile split, because
@@ -197,6 +202,42 @@ Function HandleStoryKillActor(ObjectReference akVictim, ObjectReference akKiller
         ; HandleStoryChangeLocation also checks the old location when the player leaves.
         PDV_Manager.HandleRedguardAshAbahUndeadSiteClear(akLocation)
         PDV_Manager.HandleUndeadCryptSiteClear(akLocation)
+    endIf
+EndFunction
+
+Function RouteQuestSpecificPlayerKill(Actor victimActor)
+    if !victimActor || !PDV_EventBusService
+        return
+    endIf
+
+    ActorBase victimBase = victimActor.GetLeveledActorBase()
+    if !victimBase
+        victimBase = victimActor.GetActorBase()
+    endIf
+    if !victimBase
+        return
+    endIf
+
+    Int victimBaseId = victimBase.GetFormID()
+    Quest sourceQuest = None
+    Int matrixStage = 0
+    if victimBaseId == 0x00075C7F
+        ; Forgotten Names: refusing Velehk Sain's bargain leads to this unique
+        ; Dremora's death. The physical s100 exists but vanilla does not reliably
+        ; set it from the kill route, so the direct kill supplies that outcome.
+        sourceQuest = Game.GetFormFromFile(0x00055977, "Skyrim.esm") as Quest
+        matrixStage = 100
+    elseIf victimBaseId == 0x00062128
+        ; A Good Death: WE24 exposes only startup and cleanup stages. Synthetic
+        ; s100 represents the player's direct honorable-duel victory over WE24Orc.
+        sourceQuest = Game.GetFormFromFile(0x00062119, "Skyrim.esm") as Quest
+        matrixStage = 100
+    endIf
+
+    if sourceQuest && matrixStage > 0
+        String logicalEventId = "quest_kill_" + victimActor.GetFormID()
+        PDV_EventBusService.RouteQuestReaction(sourceQuest, matrixStage, logicalEventId)
+        Trace(2, "Quest-specific direct-player kill routed: quest=" + sourceQuest.GetFormID() + ", stage=" + matrixStage)
     endIf
 EndFunction
 

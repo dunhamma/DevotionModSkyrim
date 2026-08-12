@@ -170,3 +170,5 @@ references/authoring/PDV_FinalPlacementLedger.md
 # Regenerable official-content quest cross-generation review reports.
 references/authoring/generated/PDV_QuestCrossGen_V*_CoreRetrospective_*.csv
 references/authoring/generated/PDV_QuestCrossGen_V*_CoreRetrospective_*.md
+references/authoring/generated/PDV_QuestCrossGen_V*_CoreAmbiguityResolution_*.csv
+references/authoring/generated/PDV_QuestCrossGen_V*_CoreAmbiguityResolution_*.md

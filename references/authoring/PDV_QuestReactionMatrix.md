@@ -19,12 +19,24 @@ the same god -> consistent, auditable, balanceable.
 **2026-08-12 exhaustive retrospective closeout:** all 2,367 official-content
 QUST occurrences were canonicalized to 2,274 base-game/DLC records plus 60
 Creation Club records and reviewed from their absolute plugin paths through
-direct houseCARL reads. The promoted core now contains 3,878 deity-reaction
-cells across 324 quests. Eighteen records remain explicitly inert and
-`UNREVIEWED` because their opposed routes share a stage, player attribution is
-not provable, or an already-owned ceremony would double-score; they are a
-later route-design backlog, not silent guessed mappings. The checkpoint and
-isolated evidence/tagged shards preserve those exact boundaries.
+direct houseCARL reads. The promoted core now contains 4,108 deity-reaction
+cells across 354 quest EditorIDs. All 18 formerly ambiguous records have final
+owner verdicts: 28 approved outcomes generate 184 cells, while the parent
+marriage controller is duplicate-owned by `RelationshipMarriageWedding` and
+intentionally adds no row. Three global/item selectors, two quest-specific
+direct-player-kill routes, and exact evidenced stages preserve opposed routes
+without collapsing their meaning. The checkpoint is 2,334/2,334 with zero
+`UNREVIEWED` records. The isolated tagged slate and focused route gate preserve
+the exact decisions.
+
+The same closeout corrected every owner-approved vocabulary/profile gap:
+faction-home and religious-persecution tags are now parameterized, Nocturnal's
+stolen-relic recovery is patron-specific, atonement and cultural-relic recovery
+have explicit consumers, Zenithar and Stuhn recognize resistance to extortion,
+Molag Bal recognizes coercion, Stendarr and Mara reject enthrallment, and
+`FreeformValdDebt` now describes settling another person's debt rather than
+player atonement. The exact assignments are recorded in
+`PDV_CoreQuestAmbiguityResolutions_2026-08-12.md`.
 
 **Judgment discipline:** valence calls are lore judgments, not keyword hits.
 Every promoted cell descends from a directly reviewed tagged outcome and cites
@@ -60,7 +72,7 @@ assigned separately (see Part C), not encoded in the tag.
 | `honorable_duel` | Met a challenge one-on-one; trial of arms. |
 | `protect_the_weak` | Defended/rescued the vulnerable; shielded the innocent. |
 | `defend_kin_home` | Defended your people, stronghold, or homeland. |
-| `restore_faction_home` | Rebuilt or restored a faction's damaged refuge or headquarters. |
+| `restore_faction_home:<faction>` | Rebuilt or restored a named faction's damaged refuge or headquarters. |
 | `self_sacrifice` | Freely accepted grave personal loss or death so others would be spared. |
 | `cowardice` | Fled a duty, abandoned a charge, took the craven path. |
 
@@ -69,7 +81,7 @@ assigned separately (see Part C), not encoded in the tag.
 |---|---|
 | `uphold_law_justice` | Brought a wrongdoer to lawful justice; upheld order. |
 | `wrongful_accusation` | Knowingly or recklessly condemned an innocent person through a false accusation. |
-| `persecute_religious_worship` | Reported, punished, or materially enabled the persecution of another's worship. |
+| `persecute_religious_worship:<deity>` | Reported, punished, or materially enabled persecution of the named deity's worship. |
 | `atonement_restitution` | Made concrete restitution for a serious wrong the player had committed. |
 | `civic_service` | Served the community/empire/hold concretely. |
 | `free_wrongfully_imprisoned` | Freed someone held through framing, tyranny, or manifest injustice. |
@@ -106,11 +118,13 @@ assigned separately (see Part C), not encoded in the tag.
 | `expose_betray_secret` | Clumsily exposed or sold out a kept secret. |
 | `recover_stolen_keepsake` | Recovered and returned personal property stolen from another. |
 | `recover_lost_keepsake` | Recovered and returned personal property that had been lost rather than stolen. |
-| `recover_stolen_divine_relic` | Recovered a sacred relic stolen from a deity or its sworn custodians. |
+| `recover_stolen_divine_relic:<deity>` | Recovered a sacred relic stolen from the named deity or its sworn custodians. |
 | `contraband_trade` | Carried or exchanged illegal goods as payment or commerce. |
 | `settle_anothers_debt` | Paid or resolved a debt owed by another person. |
 | `resist_extortion` | Refused or defeated a coercive demand for money, goods, or service. |
 | `coercion_extortion` | Used threats or violence to force payment, goods, or service from another. |
+| `bargain_with_daedric_threat` | Freely bargained with a hostile or dangerous Daedric being for material advantage. |
+| `aid_daedric_servant` | Materially aided a Daedric servant whose specific Prince-service outcome was not otherwise safe to assert. |
 
 ### Mercy, love, the hearth
 | Tag | Meaning |
@@ -183,19 +197,19 @@ to most gods).
 ### Aedric / Divines (shared: Imperial owns; Nord & Breton reuse)
 
 **Akatosh** — time, covenant, lawful order, dragons.
-- approve: `serve_empire_order`(S), `keep_oath`(S), `uphold_law_justice`(m), `reject_criminality`(m), `disciplined_study`(m), `honor_divine`(C)
+- approve: `serve_empire_order`(S), `keep_oath`(S), `restore_faction_home:blades`(m), `uphold_law_justice`(m), `reject_criminality`(m), `disciplined_study`(m), `honor_divine`(C)
 - disapprove: `break_oath_betray`(S), `wrongful_accusation`(S), `sow_chaos_madness`(S), `serve_a_daedra:*`(m)
 - indifferent: theft, the hunt, craft, romance.
 - anchor: Chief of the Nine; the Covenant; Dragon of Time. (UESP: Akatosh)
 
 **Stendarr** — mercy, righteous justice, the weak, vigil vs Daedra/undead.
-- approve: `mercy_spare`(C), `protect_the_weak`(C), `free_wrongfully_imprisoned`(C), `self_sacrifice`(C), `slay_undead`(S), `destroy_reject_daedra:*`(S), `destroy_daedric_threat`(C), `uphold_law_justice`(S), `reject_criminality`(S), `resist_extortion`(S), `charity`(m), `kindness_to_child`(m), `honor_divine`(C)
-- disapprove: `kill_the_helpless`(C), `murder_treacherous`(S), `wrongful_accusation`(C), `coercion_extortion`(C), `serve_a_daedra:*`(S), `ritual_sacrifice`(S), `contraband_trade`(m), `enable_addiction`(S), `abuse_companion`(C)
+- approve: `mercy_spare`(C), `protect_the_weak`(C), `free_wrongfully_imprisoned`(C), `self_sacrifice`(C), `slay_undead`(S), `destroy_reject_daedra:*`(S), `destroy_daedric_threat`(C), `uphold_law_justice`(S), `reject_criminality`(S), `atonement_restitution`(S), `resist_extortion`(S), `charity`(m), `kindness_to_child`(m), `honor_divine`(C)
+- disapprove: `kill_the_helpless`(C), `murder_treacherous`(S), `wrongful_accusation`(C), `persecute_religious_worship:*`(C), `coercion_extortion`(C), `serve_a_daedra:*`(S), `bargain_with_daedric_threat`(S), `aid_daedric_servant`(S), `enthrall_enslave`(C), `ritual_sacrifice`(S), `contraband_trade`(m), `enable_addiction`(S), `abuse_companion`(C)
 - anchor: God of Mercy; the Vigilants. (UESP: Stendarr)
 
 **Mara** — love, compassion, charity, the hearth, mercy.
-- approve: `heal_comfort`(C), `charity`(C), `marriage_family`(C), `build_homestead`(C), `friendship`(C), `recover_lost_keepsake`(m), `kindness_to_child`(C), `self_sacrifice`(C), `mercy_spare`(S), `protect_the_weak`(m), `honor_divine`(C)
-- disapprove: `murder_treacherous`(m), `ritual_sacrifice`(S), `kill_the_helpless`(m), `enable_addiction`(S), `abuse_companion`(C)
+- approve: `heal_comfort`(C), `charity`(C), `marriage_family`(C), `build_homestead`(C), `friendship`(C), `recover_lost_keepsake`(m), `atonement_restitution`(S), `kindness_to_child`(C), `self_sacrifice`(C), `mercy_spare`(S), `protect_the_weak`(m), `honor_divine`(C)
+- disapprove: `murder_treacherous`(m), `ritual_sacrifice`(S), `kill_the_helpless`(m), `persecute_religious_worship:*`(S), `enthrall_enslave`(S), `enable_addiction`(S), `abuse_companion`(C)
 - indifferent: theft, law, craft, the hunt.
 - anchor: Mother-Goddess; Amulet of Mara. (UESP: Mara)
 
@@ -206,7 +220,7 @@ to most gods).
 - anchor: Keeper of the cycle; Halls of the Dead. (UESP: Arkay)
 
 **Zenithar** — honest work, commerce, craft, fair dealing.
-- approve: `honest_labor_trade`(C), `master_craft_forge`(S), `build_homestead`(C), `recover_stolen_keepsake`(m), `recover_lost_keepsake`(m), `settle_anothers_debt`(m), `uphold_law_justice`(m), `reject_criminality`(S), `honor_divine`(C)
+- approve: `honest_labor_trade`(C), `master_craft_forge`(S), `build_homestead`(C), `recover_stolen_keepsake`(m), `recover_lost_keepsake`(m), `settle_anothers_debt`(m), `atonement_restitution`(S), `resist_extortion`(S), `uphold_law_justice`(m), `reject_criminality`(S), `honor_divine`(C)
 - disapprove: `theft_burglary`(S), `exploit_cheat`(C), `coercion_extortion`(C), `contraband_trade`(C), `enable_addiction`(m)
 - indifferent: killing, the dead, magic, the wild.
 - anchor: God of Work and Commerce. (UESP: Zenithar)
@@ -232,8 +246,8 @@ to most gods).
 - anchor: Goddess of the Heavens/Nature; the Gildergreen. (UESP: Kynareth)
 
 **Talos** — heroism, defiance of the Thalmor, the Nord/Imperial cause, the Voice.
-- approve: `defy_tyranny_talos`(C), `kill_honorable_combat`(S), `prove_by_struggle`(S), `self_sacrifice`(S), `protect_the_weak`(m), `honorable_duel`(m), `honor_divine`(C)
-- disapprove: `cowardice`(S), `murder_treacherous`(S), `kill_the_helpless`(m), `assassination_contract`(m) *(compliance/submission to the Concordat scores nothing; never a gain. Treachery/assassination added 2026-07-09 — the Hero-god of Man reviles cold-blood murder and regicide, mirroring Shor's disapprove.)*
+- approve: `defy_tyranny_talos`(C), `restore_faction_home:blades`(S), `kill_honorable_combat`(S), `prove_by_struggle`(S), `self_sacrifice`(S), `protect_the_weak`(m), `honorable_duel`(m), `honor_divine`(C)
+- disapprove: `persecute_religious_worship:talos`(C), `cowardice`(S), `murder_treacherous`(S), `kill_the_helpless`(m), `assassination_contract`(m) *(compliance/submission to the Concordat scores nothing; never a gain. Treachery/assassination added 2026-07-09 — the Hero-god of Man reviles cold-blood murder and regicide, mirroring Shor's disapprove.)*
 - indifferent: theft, the dead, craft, romance.
 - anchor: Hero-god of Man; the Talos ban. (UESP: Talos). FILTERED for Imperials by
   ConcordatStanding; faithful defiance only.
@@ -263,8 +277,8 @@ to most gods).
 - anchor: Shield-Thane of Shor; god of trials. (Imperial Library: Tsun) *(Treachery/assassination added 2026-07-09 — the shield-gate keeper judges assassination the antithesis of honorable combat, matching his king Shor.)*
 
 **Stuhn** — mercy to the yielding, ransom, just spoils, the honored bond.
-- approve: `mercy_spare`(C), `keep_oath`(S), `protect_the_weak`(S), `free_wrongfully_imprisoned`(S), `uphold_law_justice`(m)
-- disapprove: `kill_the_helpless`(C), `break_oath_betray`(S), `wrongful_accusation`(S)
+- approve: `mercy_spare`(C), `keep_oath`(S), `protect_the_weak`(S), `free_wrongfully_imprisoned`(S), `resist_extortion`(S), `uphold_law_justice`(m)
+- disapprove: `kill_the_helpless`(C), `break_oath_betray`(S), `wrongful_accusation`(S), `persecute_religious_worship:*`(S)
 - anchor: Shield-Thane; god of ransom/justice. (Imperial Library: Stuhn)
 
 ### Altmer
@@ -281,7 +295,7 @@ to most gods).
 - anchor: God of magic/sky; the Eye of Magnus. (UESP: Magnus)
 
 **Xarxes** — the scribe, ancestry, the long ledger of deeds.
-- approve: `disciplined_study`(S), `honor_the_dead`(C, *ancestry/record*), `keep_secret`(m, *preserved knowledge*)
+- approve: `disciplined_study`(S), `honor_the_dead`(C, *ancestry/record*), `restore_cultural_relic`(C), `keep_secret`(m, *preserved knowledge*)
 - disapprove: `desecrate_the_dead`(S), `sow_chaos_madness`(m)
 - anchor: Aedric scribe of Auri-El. (Imperial Library: Xarxes)
 
@@ -311,7 +325,7 @@ to most gods).
 - anchor: Bosmeri forest-god; the Green Pact. (UESP: Y'ffre)
 
 **Z'en** — the trader-god, debt, balance, proportionate redress.
-- approve: `honest_labor_trade`(C), `build_homestead`(S), `recover_stolen_keepsake`(S), `recover_lost_keepsake`(S), `settle_anothers_debt`(C), `resist_extortion`(S), `uphold_law_justice`(S, *proportionate redress*), `reject_criminality`(m), `keep_oath`(m)
+- approve: `honest_labor_trade`(C), `build_homestead`(S), `recover_stolen_keepsake`(S), `recover_lost_keepsake`(S), `settle_anothers_debt`(C), `atonement_restitution`(C), `resist_extortion`(S), `uphold_law_justice`(S, *proportionate redress*), `reject_criminality`(m), `keep_oath`(m)
 - disapprove: `coercion_extortion`(C), `exploit_cheat`(S), `break_oath_betray`(m), `contraband_trade`(S), `wrongful_accusation`(S)
 - anchor: God of toil/payment. (Imperial Library: Z'en)
 
@@ -384,7 +398,7 @@ to most gods).
   architecture, not pantheon worship".
 
 **Sithis** — the Void, the original night, death-as-change, the Brotherhood.
-- approve: `assassination_contract`(C), `murder_treacherous`(S), `embrace... void`(m)
+- approve: `assassination_contract`(C), `murder_treacherous`(S), `restore_faction_home:dark_brotherhood`(C), `embrace... void`(m)
 - disapprove: (Sithis judges little; emptiness) -- `cowardice`(m, *failed the contract*), `break_oath_betray`(C, *destroying/betraying the Night Mother's family is the one act the Void does not forgive. Added 2026-07-09.*), `uphold_law_justice`(m, *owner ruling 2026-07-15: Alduin IS unmaking incarnate -- the world's unmaking denied at Dragonslayer is a small offense to the Void. Backs the T11 MQ305 flip.*)
 - anchor: The Void; Sithis/Padomay. (UESP: Sithis). High-threshold tertiary.
 
@@ -492,12 +506,12 @@ has to resolve to a real Prince, which is what rejects `molag_bal` (base "molag"
 - anchor: Huntsman of the Princes; Ill Met By Moonlight. (UESP: Hircine)
 
 **Molag Bal** — domination, cruelty, vampirism, breaking the proud. (curse-access)
-- approve: `embrace_vampirism`(C), `enthrall_enslave`(C), `kill_the_helpless`(C), `murder_treacherous`(S), `ritual_sacrifice`(S), `abuse_companion`(S)
+- approve: `embrace_vampirism`(C), `enthrall_enslave`(C), `coercion_extortion`(S), `kill_the_helpless`(C), `murder_treacherous`(S), `ritual_sacrifice`(S), `abuse_companion`(S)
 - disapprove: `mercy_spare`(S), `protect_the_weak`(m), `free_wrongfully_imprisoned`(m), `self_sacrifice`(m)
 - anchor: King of Rape/Domination; The House of Horrors. (UESP: Molag Bal)
 
 **Nocturnal** — shadow, luck, theft, the unseen, the Nightingale debt.
-- approve: `theft_burglary`(C), `recover_stolen_divine_relic`(C), `contraband_trade`(S), `keep_secret`(S), `deceit`(m), `tactical_distraction`(m)
+- approve: `theft_burglary`(C), `recover_stolen_divine_relic:nocturnal`(C), `contraband_trade`(S), `keep_secret`(S), `deceit`(m), `tactical_distraction`(m)
 - disapprove: `expose_betray_secret`(m)
 - anchor: Mistress of Shadow; the Nightingales. (UESP: Nocturnal)
 
@@ -512,7 +526,7 @@ has to resolve to a real Prince, which is what rejects `molag_bal` (base "molag"
 - anchor: Prince of Destruction; the Razor. (UESP: Mehrunes Dagon)
 
 **Sheogorath** — madness, whimsy, chaos, the unpredictable.
-- approve: `sow_chaos_madness`(C), `embrace_whimsy`(C), `reckless_magic`(m), `revel_indulge`(m)
+- approve: `sow_chaos_madness`(C), `embrace_whimsy`(C), `serve_a_daedra:sheogorath`(C), `aid_daedric_servant`(S), `reckless_magic`(m), `revel_indulge`(m)
 - disapprove: `serve_empire_order`(m), `uphold_law_justice`(m), `arcane_restraint`(m)
 - anchor: Madgod; the Wabbajack; the Mind of Madness. (UESP: Sheogorath)
 
@@ -530,7 +544,7 @@ has to resolve to a real Prince, which is what rejects `molag_bal` (base "molag"
 - anchor: Prince of Debauchery; A Night To Remember. (UESP: Sanguine). THIN -> Part D.
 
 **Clavicus Vile** — bargains, wishes, the price of desire.
-- approve: `serve_a_daedra:clavicus`(C, *striking the bargain*), `deceit`(S, *clever deals*)
+- approve: `serve_a_daedra:clavicus`(C, *striking the bargain*), `bargain_with_daedric_threat`(C), `deceit`(S, *clever deals*)
 - disapprove: (none meaningful)
 - anchor: Prince of Bargains; the Rueful Axe / Masque. (UESP: Clavicus Vile)
 

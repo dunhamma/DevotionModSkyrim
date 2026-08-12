@@ -1,7 +1,15 @@
 # PDV Mod Packaging State Authority
 
 Updated: 2026-08-12 AEST
-Status: v1.5.0d all-in-one prerelease packaged; runtime and player-observation evidence continues post-release
+Status: v1.5.0d all-in-one prerelease packaged; post-v1.5.0d official-quest ambiguity resolutions are authored but not yet repackaged
+
+The v1.5.0d receipt below remains immutable evidence of that published archive.
+Current source has since closed all 18 official-quest ambiguity decisions,
+added the `FreeformRiften02` selector adapter, completed the owner-approved
+tag/profile correction slate, and expanded core to 4,108 cells across 354
+quest EditorIDs.
+Those changes must not be described as shipped until a new all-in-one package is
+built, byte-verified, committed, tagged, and published.
 
 ## Purpose
 

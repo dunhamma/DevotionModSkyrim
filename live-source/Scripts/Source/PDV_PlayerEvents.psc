@@ -2435,19 +2435,40 @@ Int Function ResolveQuestReactionStageAdapter(Quest sourceQuest, Int newStage)
         if sourcePlugin != "" && sourceStage == newStage && Game.GetModByName(sourcePlugin) != 255
             Quest configuredQuest = Game.GetFormFromFile(sourceFormId, sourcePlugin) as Quest
             if configuredQuest == sourceQuest
+                String selectorKind = JsonUtil.GetStringValue(adapterFile, "selectorKind")
+                if selectorKind == ""
+                    selectorKind = "global"
+                endIf
                 String selectorPlugin = JsonUtil.GetStringValue(adapterFile, "selectorPlugin")
                 Int selectorFormId = JsonUtil.GetIntValue(adapterFile, "selectorFormId")
                 if selectorPlugin != "" && Game.GetModByName(selectorPlugin) != 255
-                    GlobalVariable selector = Game.GetFormFromFile(selectorFormId, selectorPlugin) as GlobalVariable
-                    if selector
-                        Int selectorValue = selector.GetValueInt()
+                    Int selectorValue = 0
+                    Bool selectorResolved = false
+                    if selectorKind == "global"
+                        GlobalVariable selectorGlobal = Game.GetFormFromFile(selectorFormId, selectorPlugin) as GlobalVariable
+                        if selectorGlobal
+                            selectorValue = selectorGlobal.GetValueInt()
+                            selectorResolved = true
+                        endIf
+                    elseIf selectorKind == "player_item_count"
+                        Form selectorItem = Game.GetFormFromFile(selectorFormId, selectorPlugin)
+                        Actor selectorPlayer = Game.GetPlayer()
+                        if selectorItem && selectorPlayer
+                            selectorValue = selectorPlayer.GetItemCount(selectorItem)
+                            if selectorValue > 0
+                                selectorValue = 1
+                            endIf
+                            selectorResolved = true
+                        endIf
+                    endIf
+                    if selectorResolved
                         Int valueIndex = 0
                         Int valueCount = JsonUtil.IntListCount(adapterFile, "selectorValues")
                         while valueIndex < valueCount
                             if JsonUtil.IntListGet(adapterFile, "selectorValues", valueIndex) == selectorValue
                                 Int targetStage = JsonUtil.IntListGet(adapterFile, "targetStages", valueIndex)
                                 if targetStage > 0
-                                    Trace(2, "Quest-stage adapter route: " + adapterFile + " physical=" + newStage + " selector=" + selectorValue + " matrixStage=" + targetStage)
+                                    Trace(2, "Quest-stage adapter route: " + adapterFile + " physical=" + newStage + " selectorKind=" + selectorKind + " selector=" + selectorValue + " matrixStage=" + targetStage)
                                     return targetStage
                                 endIf
                             endIf

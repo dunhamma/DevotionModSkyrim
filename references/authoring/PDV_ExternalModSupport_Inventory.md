@@ -2,7 +2,7 @@
 
 Updated: 2026-08-12 AEST
 Class: LIVING -- hand-authored authority (`PDV_STANDARDS.md` section 5.3 class 1)
-Status: complete inventory of current repository support; the full B01-B07 JoJ set is authored, machine-gated, and packaged for tester release, while runtime proof remains post-release evidence
+Status: complete inventory of current repository support; the full B01-B07 JoJ set is packaged in v1.5.0d, and the final official-content ambiguity resolutions are authored in the repository for the next package
 
 <!-- pdv-inventory-counts {
   "g1DataOnlyPatches": 75,
@@ -12,13 +12,14 @@ Status: complete inventory of current repository support; the full B01-B07 JoJ s
   "totalReactionCells": 423,
   "totalAwardRows": 2836,
   "hubFoldersTotal": 80,
+  "hubSupportFolders": 1,
   "manifestOptions": 80,
   "sourceCsvs": 78,
   "reconstructedCsvs": 5,
-  "coreRows": 3878,
-  "coreEditorIds": 324,
+  "coreRows": 4108,
+  "coreEditorIds": 354,
   "coreQuestExpansionEditorIds": 0,
-  "coreCreationClubEditorIds": 30,
+  "coreCreationClubEditorIds": 31,
   "splitCoverageMods": 9,
   "splitCoverageCollisions": 1,
   "kidLiveRules": 31,

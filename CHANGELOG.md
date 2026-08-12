@@ -3,6 +3,23 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
+## Unreleased
+
+- **The final official quest review decisions are now recognized.** Devotion
+  distinguishes the truth and protective-lie endings of The Lover's Requital,
+  the two Message to Whiterun faction terminals, torture-confession and cache
+  theft milestones, Ragnvald, Moss Mother Cavern, and all four Hearthfire
+  homestead defenses.
+- **Long faction chains keep meaningful late-game devotion opportunities.** The
+  two Message to Whiterun terminals intentionally repeat oath recognition at
+  their evidenced milestones, while ordinary attributed kills continue to use
+  the existing combat reaction instead of being counted again by quest stages.
+- **Newly reviewed acts now reach the intended gods.** Devotion distinguishes
+  rebuilding the Blades from restoring the Dark Brotherhood, treats reporting
+  Talos worship as religious persecution, routes Nocturnal's stolen relic back
+  to Nocturnal, recognizes restitution and cultural-relic recovery, and
+  correctly treats Vald's quest as settling another person's debt.
+
 ## 1.5.0 (prerelease d) -- 2026-08-12
 
 - **Official Skyrim quest recognition is substantially broader.** Devotion now

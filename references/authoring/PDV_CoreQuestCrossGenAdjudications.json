@@ -27,7 +27,7 @@
     },
     {
       "path": "references/authoring/generated/PDV_QuestCrossGen_V02_02_CoreRetrospective_Candidates.csv",
-      "expected_candidates": 285,
+      "expected_candidates": 286,
       "exclusions": [
         { "key": "dunBlindCliffQST|100|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
         { "key": "dunDarklightQST|40|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
@@ -55,7 +55,7 @@
     },
     {
       "path": "references/authoring/generated/PDV_QuestCrossGen_V02_03_CoreRetrospective_Candidates.csv",
-      "expected_candidates": 294,
+      "expected_candidates": 305,
       "exclusions": [
         { "key": "dunVolunruudQST|100|The Hist", "reason": "The Hist profile explicitly excludes ordinary draugr-clearing." },
         { "key": "FreeformShipsWindhelm|20|Alkosh", "reason": "Alkosh's combat profile is limited to named dragons and dragon-order acts." },
@@ -73,7 +73,7 @@
     },
     {
       "path": "references/authoring/generated/PDV_QuestCrossGen_V03B_CoreRetrospective_Candidates.csv",
-      "expected_candidates": 169,
+      "expected_candidates": 171,
       "exclusions": [
         { "key": "C03|200|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
         { "key": "DLC1VampireBaseIntro|40|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
@@ -86,7 +86,7 @@
     },
     {
       "path": "references/authoring/generated/PDV_QuestCrossGen_V02_04_CoreRetrospective_Candidates.csv",
-      "expected_candidates": 313,
+      "expected_candidates": 340,
       "exclusions": [
         { "key": "BQ02|200|Alkosh", "reason": "Alkosh's combat profile is limited to named dragons and dragon-order acts." },
         { "key": "BQ03|200|Alkosh", "reason": "Alkosh's combat profile is limited to named dragons and dragon-order acts." },
@@ -100,7 +100,7 @@
     },
     {
       "path": "references/authoring/generated/PDV_QuestCrossGen_V03C_CoreRetrospective_Candidates.csv",
-      "expected_candidates": 386,
+      "expected_candidates": 390,
       "exclusions": [
         { "key": "DLC2dunKarstaagQST|250|Alkosh", "reason": "Karstaag is not a named dragon or dragon-order act." },
         { "key": "DLC2MH01|25|Alkosh", "reason": "The Thirsk reclamation is not a named-dragon or dragon-order act." },
@@ -123,7 +123,7 @@
     },
     {
       "path": "references/authoring/generated/PDV_QuestCrossGen_V03A_CoreRetrospective_Candidates.csv",
-      "expected_candidates": 149,
+      "expected_candidates": 150,
       "exclusions": [
         { "key": "CR07|20|Auri-El", "reason": "The escaped criminal is outside Auri-El's scoped dragon-combat domain." },
         { "key": "CR07|20|Alkosh", "reason": "The escaped criminal is not a named dragon or dragon-order act." }
@@ -151,6 +151,11 @@
     {
       "path": "references/authoring/generated/PDV_QuestCrossGen_V02_Gap_CoreRetrospective_Candidates.csv",
       "expected_candidates": 37,
+      "exclusions": []
+    },
+    {
+      "path": "references/authoring/generated/PDV_QuestCrossGen_V05_CoreAmbiguityResolution_Candidates.csv",
+      "expected_candidates": 184,
       "exclusions": []
     }
   ],

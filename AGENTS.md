@@ -1189,20 +1189,39 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
   Public tester delivery is one all-in-one FOMOD with required core plus every optional,
   dependency-gated patches. Internal core/PatchHub manifests remain separate proof inputs.
 
-- **[2026-08-12] - Official quest audit is exhaustive; ambiguous routes remain inert, and recognition presentation is event-driven:**
+- **[2026-08-12] - Official quest audit is exhaustive and owner-resolved; recognition presentation is event-driven:**
   The official-content audit universe is the frozen 2,367-occurrence worklist,
   canonicalized to 2,274 base-game/DLC QUST records plus 60 Creation Club
   records. Direct houseCARL plugin reads, not the older filtered quest table,
-  own semantic evidence. The promoted core contains 3,878 cells across 324
-  quests; 18 opposed/shared/unattributed routes remain explicitly inert for a
-  later routing pass. Do not guess a stage merely to make the checkpoint read
-  complete. SPID relationship state now reconciles from devotional state,
+  own semantic evidence. The promoted core contains 4,108 cells across 354
+  quest EditorIDs, and the checkpoint is 2,334/2,334 with zero `UNREVIEWED`
+  records. SPID relationship state now reconciles from devotional state,
   settings, external ownership, and load events rather than the manager's
   periodic maintenance sweep. Effective identity/band transitions receive one
   Prisma-first notice plus one Book-of-Days entry, guarded by
   `PDV.Recognition.LastPresentedSignature`; the focused panel and normal MCM
   page expose current capability. Copy says adherents *may* react and never
   claims that SPID or a particular NPC fired.
+- **[2026-08-12] - Official quest ambiguity decisions must be promoted immediately and route meaning must be preserved:**
+  All 18 reviewed exceptions now have durable final verdicts: 28 approved
+  outcomes add 184 deity cells, while `RelationshipMarriage` is duplicate-owned
+  by `RelationshipMarriageWedding` and intentionally rowless. Shared physical
+  terminals may be adapted only from directly evidenced stable state:
+  `FreeformRiften02` uses its vanilla Lynly-friend global,
+  `FreeformRiften03` uses its arrested global, and Staada uses possession of the
+  unique Sheogorath-Shaped Amber. `Forgotten Names` and `A Good Death` use
+  direct-player kills of unique actor bases; generic combat continues to own
+  their ordinary kill semantics. Hearthfire home attacks credit
+  `defend_kin_home`, not unproven or duplicate player kills. CW03 terminal
+  milestones intentionally repeat `keep_oath` so long faction chains continue
+  offering late-game piety. The same closeout parameterizes Blades/Brotherhood
+  home restoration, Talos-worship persecution, and Nocturnal's stolen relic;
+  assigns restitution, cultural-relic recovery, resistance to extortion,
+  coercion, and enthrallment to explicit deity profiles; and corrects Vald's
+  Debt to `settle_anothers_debt,recover_lost_keepsake,civic_service`. The focused
+  `pdv_core_quest_ambiguity_route_check.mjs` gate owns these contracts. An owner
+  approval must update the tagged slate and checkpoint in the same closeout;
+  conversation-approved work must never remain documented as `UNREVIEWED`.
 - **[2026-08-11] - JoJ B-series closes at 37/37; save-safe PatchHub testing follows release:**
   B07 Interesting NPCs closes the JoJ candidate set with 31 APPROVED and six SILENT
   verdicts. The complete PatchHub is released to testers as one dependency-gated FOMOD;
