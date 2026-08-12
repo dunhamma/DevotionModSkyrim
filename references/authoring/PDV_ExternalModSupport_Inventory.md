@@ -351,7 +351,7 @@ so a player who already destroyed artifacts gets no retroactive award.
 
 ## G3 -- Covered by the CORE mod, no separate patch
 
-`references/authoring/PDV_QuestReactionMatrix_Full.csv` -- **2137 rows across 158
+`references/authoring/PDV_QuestReactionMatrix_Full.csv` -- **4108 rows across 354
 distinct quest editor ids** -- ships inside base `Devotion.esp`. It is generated
 by `tools/pdv_quest_tranche_merge.mjs` from the `PDV_QuestReactionMatrix_Tranche*`
 files; edit a tranche, never `Full.csv`.
@@ -361,9 +361,9 @@ of the support picture and not the whole of it.
 
 | Kind | Editor ids | How identified |
 |---|---:|---|
-| Vanilla Skyrim | 101 | no `cc*` / `DLC*` prefix |
-| Dawnguard / Dragonborn (`DLC1*`, `DLC2*`) | 52 | prefix |
-| Creation Club | 4 | `cc<studio>SSE<nnn>` prefix |
+| Vanilla Skyrim | 265 | no `cc*` / `DLC*` prefix |
+| Dawnguard / Dragonborn (`DLC1*`, `DLC2*`) | 58 | prefix |
+| Creation Club | 31 | `cc<studio>SSE<nnn>` prefix |
 
 Prefix is a **classification, not a readback**: an editor id names the quest, not
 the file that defines it. It is reliable here because Bethesda's own prefixes are
@@ -371,12 +371,23 @@ consistent, but do not cite it as plugin provenance.
 
 ### Creation Club quests in core
 
-| Editor id | Quest | Stage | Rows | Deities |
-|---|---|---:|---:|---|
-| `ccASVSSE001_QuestE` | Trueflame | 100 | 2 | Malacath, Zenithar |
-| `ccBGSSSE020_Quest` | The Gray Cowl of Nocturnal | 100 | 1 | Nocturnal |
-| `ccBGSSSE067_Quest2` | The Consequences | 1000 | 3 | Akatosh, Mehrunes Dagon, Stendarr |
-| `ccMTYSSE001_Quest` | The Pilgrim's Path | 100 | 9 | Akatosh, Arkay, Dibella, Julianos, Kynareth, Mara, Stendarr, Talos, Zenithar |
+Recognition is soft: the matrix reacts to a CC quest by FormID when its plugin is
+present, and `Devotion.esp` does NOT master any CC file, so the same build works on
+SE (no CC) and AE (all CC). The audit reviewed every CC entry; everything with a
+reactable player act is wired below, and the cosmetic/gear/home/pet creations carry
+no quest to react to. Survival Mode integrates through the separate
+`PDV.Compat.CCContentEnabled` toggle, not the quest matrix. Per-quest detail lives
+in `PDV_QuestReactionMatrix_Full.csv` (the authority); this is the per-creation roll-up.
+
+| Creation | Plugin | Quests | Rows |
+|---|---|---:|---:|
+| Fishing | `ccbgssse001-fish.esm` | 19 | 185 |
+| Saints & Seducers | `ccbgssse025-advdsgs.esm` | 8 | 102 |
+| Divine Crusader (The Pilgrim's Path) | `ccmtysse001-knightsofthenine.esl` | 1 | 9 |
+| The Cause (The Consequences) | `ccbgssse067-daedinv.esm` | 1 | 3 |
+| Ghosts of the Tribunal (Trueflame) | `ccasvsse001-almsivi.esm` | 1 | 2 |
+| The Gray Cowl of Nocturnal | `ccbgssse020-graycowl.esl` | 1 | 1 |
+| **Total** | | **31** | **302** |
 
 Two more CC integrations are Papyrus hooks rather than matrix rows -- see G6.
 
