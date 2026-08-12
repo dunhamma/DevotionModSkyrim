@@ -1,7 +1,7 @@
 # PDV Mod Packaging State Authority
 
 Updated: 2026-08-12 AEST
-Status: v1.5.0c all-in-one prerelease packaged; runtime and player-observation evidence continues post-release
+Status: v1.5.0d all-in-one prerelease packaged; runtime and player-observation evidence continues post-release
 
 ## Purpose
 
@@ -65,23 +65,23 @@ Book entry must reuse the same resolved practice line.
 
 ## Current all-in-one tester-release state
 
-- Build date: 2026-08-12; internal version `1.5.0`; prerelease label `c`;
-  source commit `bbed179b1529ce332dd9963da76b588449ab165e`.
-- Public archive: `Devotion-FOMOD-1.5.0c-20260812.zip`, 9,320,236 bytes,
-  SHA-256 `89D2010A56FB4DCECBD0DDC2096B0281E2F949259F0933F833BA55783F2FB9CF`.
-  It contains 748 ZIP entries / 355 files: 233 required core files plus the
-  122-file PatchHub tree. Exact membership, every core-member hash, and every
+- Build date: 2026-08-12; internal version `1.5.0`; prerelease label `d`;
+  source commit `add677167467ecfef0f6e4e0caccbc148a439000`.
+- Public archive: `Devotion-FOMOD-1.5.0d-20260812.zip`, 9,389,668 bytes,
+  SHA-256 `B53FBA4879E33557ECE967E51A5D683A364C7566D953B801A3243CE5C94AE62F`.
+  It contains 766 ZIP entries / 358 files: 233 required core files plus the
+  125-file PatchHub tree. Exact membership, every core-member hash, and every
   assembled archive-member hash were checked after packaging; there are no
   missing, extra, duplicate, or mismatched file entries.
 - The core input is `Devotion-1.5.0-20260812.zip`, SHA-256
-  `6B4A15B9B00A9E3847B7B1F93C97CBA3CFD2EEC4F41075CBB0F083FD988F18EA`.
+  `F43C4B8EEA627D1CEE8109518FAAAB2611A1195427CA5243E7D96D12E690F385`.
   Its 233-entry manifest, 100 fresh PSC/PEX pairs, native DLL freshness and
   exports, Prisma asset/cache parity, ANAM, SEQ, version, and direct ESP-hash
   readback gates pass.
-- The PatchHub has 77 dependency-gated options: 72 data-only quest-reaction
-  options and five plugin-bearing options. Seventy-five channel JSON files are
-  present. The validated installer tree has 122 files and tree SHA-256
-  `96E229EED4506358442CBC11B26F4D651EB8432AEE021BBEC2CEA43AA8C04CEC`.
+- The PatchHub has 80 dependency-gated options: 75 data-only quest-reaction
+  options and five plugin-bearing options. Seventy-eight channel JSON files are
+  present. The validated installer tree has 125 files and tree SHA-256
+  `CB4AADDB12EB04C6E56903909A0CF774EB1F82146510A4A35887515D3660D193`.
 - The JoJ B-series is closed at 37/37 candidates: 31 APPROVED and six SILENT.
   Interesting NPCs contributes 27 cells / 269 deity rows behind `3DNPC.esp`.
 - KID contributes 31 live rules across Green Pact food and seven semantic
@@ -89,17 +89,15 @@ Book entry must reuse the same resolved practice line.
   and 29 cohort-faction rules. Both remain soft dependencies; the underlying
   plugin adds 57 faith keywords, 15 semantic keywords, one player faction, and
   57 cohort factions without adding AI packages or inventory distribution.
-- The 2026-08-12 maintenance pass caches Devotion-owned recognition factions,
-  recognition settings, actor names, and the two KID Daedric paths used by the
-  item-action layer. All 100 shipped Papyrus pairs compile with zero errors and
-  zero warnings. The changed-function hygiene intersection is empty after
-  removing `GetTierByIndex`; the three external reaction-batch functions remain
-  intentional third-party API seams.
-- Prisma-to-1.0 passes 87 checks across producer, deployed assets, typed
-  rendering, PatchHub `sourceMod` labels, cached DOM use, bounded toast state,
-  listener discipline, visibility-gated resizing, and absence of a polling
-  loop. No Prisma asset bytes changed, so the existing content-derived cache
-  key remains current.
+- The 2026-08-12 maintenance pass keeps religious recognition event-driven and
+  presents effective identity/band transitions through one Prisma-first notice
+  plus one Book-of-Days entry. The focused panel and normal MCM surface retain
+  the current state without per-NPC or periodic polling. All 100 shipped
+  Papyrus pairs are fresh, with zero broken optimization findings.
+- Prisma recognition payload, renderer, cache, dedupe, fallback, and journal
+  contracts pass. The broad Prisma audit has one preserved failure for the
+  deferred issue #37 Daedric mechanic-copy table; no Prince gameplay records or
+  copy were retuned in this release.
 - `PDV_QuestModPatches_FOMOD_Validation.json` is the exact membership and
   checksum receipt for the PatchHub input. The ignored local
   `Devotion-FOMOD-1.5.0c-20260812.zip.proof.json` records the assembled archive.
@@ -158,6 +156,7 @@ runtime, player-surface, semantic, or support proof.
 | `Devotion-FOMOD-1.5.0b-20260811.zip` | 9,317,126 | `A60E742FA43DD75FDCA03ACA01597A61DFB4E45D14AE46EA78D92C2D14304722` | 748 ZIP entries / 355 files; 233-file required core; 77 optional patches; 75 source-labelled channels; 31 KID and 58 SPID rules |
 | `PDV-QuestModPatchHub-20260812.zip` | 987,283 | `C9D39F9321BC3045C48A9C771CC318F8CB768C6ED557F15124C99B90D15D6D5F` | 122 members; 77 options; 75 channel files; corrected complete patch/KID/SPID root inventory |
 | `Devotion-FOMOD-1.5.0c-20260812.zip` | 9,320,236 | `89D2010A56FB4DCECBD0DDC2096B0281E2F949259F0933F833BA55783F2FB9CF` | 748 ZIP entries / 355 files; 233-file required core; 77 optional patches; 75 source-labelled channels; 31 KID and 58 SPID rules |
+| `Devotion-FOMOD-1.5.0d-20260812.zip` | 9,389,668 | `B53FBA4879E33557ECE967E51A5D683A364C7566D953B801A3243CE5C94AE62F` | 766 ZIP entries / 358 files; 233-file required core; 80 optional patches; 78 source-labelled channels; expanded official quest recognition; visible event-driven SPID recognition |
 
 Core intentionally includes the current Altmer and Khajiit runtime/UI assets,
 the canonical core quest matrix, the Calian assets, the native Prisma bridge,
