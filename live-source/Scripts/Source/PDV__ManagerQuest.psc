@@ -22660,7 +22660,12 @@ Function EnsureUnifiedStartupChoice()
     Int startupMode = GetStartupModeForOrigin(originRace)
     if startupMode == STARTUP_MODE_EXPLICIT_CHOICE
         if HasExplicitStartupState(originRace)
-            ShowStartupMigrationInfo(originRace)
+            ; 2026-08-13: the one-time "keeps your existing startup state" migration MessageBox
+            ; was removed (owner: obsolete, was re-appearing on load of pre-unified saves). An
+            ; existing startup state is now honored SILENTLY -- mark the unified choice complete
+            ; and never prompt or re-prompt. GetStartupCanonicalSummary/STARTUP_ADVISORY_TEXT stay
+            ; (used by the Prisma startup payload and the info-only path).
+            RecordStartupEvent("startup_migration_silent")
             StorageUtil.SetIntValue(None, "PDV.Startup.UnifiedChoiceComplete", 1)
             StorageUtil.SetIntValue(None, "PDV.Startup.OriginHandled", originRace)
             return
@@ -22805,11 +22810,6 @@ Function EnsureInfoOnlyStartup(Int originRace)
     RecordStartupEvent("startup_info_acknowledged")
     StorageUtil.SetIntValue(None, "PDV.Startup.UnifiedChoiceComplete", 1)
     StorageUtil.SetIntValue(None, "PDV.Startup.OriginHandled", originRace)
-EndFunction
-
-Function ShowStartupMigrationInfo(Int originRace)
-    Debug.MessageBox("Devotion keeps your existing startup state on this save.\n\n" + GetStartupCanonicalSummary(originRace) + "\n\n" + STARTUP_ADVISORY_TEXT)
-    RecordStartupEvent("startup_info_acknowledged")
 EndFunction
 
 Function RecordStartupEvent(String eventName)
