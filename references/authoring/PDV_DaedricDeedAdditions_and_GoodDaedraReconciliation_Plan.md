@@ -1,11 +1,35 @@
 # Daedric deed additions + Good-Daedra vs generic reconciliation — PLAN
 
-**Status:** LIVING plan (design-approved, not yet implemented) · **Opened:** 2026-08-12 ·
+**Status:** LIVING plan (implementation in progress) · **Opened:** 2026-08-12 ·
 **Branch:** `feat/daedric-deed-additions-and-good-daedra-reconciliation`
 
-> This is a work-tracking design plan, not a status claim about shipped code. Nothing in
-> Parts A-D is wired yet. Precedence for any "is it done" question stays: live readback / a
-> re-run gate > `AGENTS.md` > this doc.
+> This is a work-tracking design plan. Precedence for any "is it done" question stays: live
+> readback / a re-run gate > `AGENTS.md` > this doc. See Build progress for what has landed.
+
+## Build progress (2026-08-12)
+
+Static-verifiable (compile 0/0 + E2E declaration gate PASS) unless noted. In-game (MCM)
+validation is still owed for everything that fires a new hook.
+
+| Item | State | Commit |
+|---|---|---|
+| **Part D reconciliation** — Mephala `364` removed from patron, `313` cap fix, Boethiah `351` dislike | ✅ landed (LD v23) | `906330b7` |
+| **Sneak-attack-kill (305)** — `OnActorKilled` + `IsSneaking()`; Mephala/Nocturnal path +, Malacath path −, Boethiah patron − | ✅ landed (LD v23, PLD v5). In-game validation owed | `3243a834` |
+| **Apply-poison (306)** — `OnItemRemoved` + `IsPoison()`; Mephala path + | ✅ landed (PLD v6). **VALIDATION-PENDING**: confirm apply-poison raises `OnItemRemoved` | `25d9eac4` |
+| **Heal-or-cure (350) revival** | ❌ **NOT BUILDABLE** — reserved spec invalid (see below) | ledger corrected |
+| **Vampire-feed (366) revival** | ⏳ viable but needs ESP FormList + fresh save + validation | ledger updated |
+
+**Key correction to the plan.** Two detection assumptions in Parts A/B were wrong:
+- `OnHitEx` on the player alias is **incoming-only** (`akAggressor` is never the player), so
+  the sneak-kill detector moved to `OnActorKilled` + `IsSneaking()` (a proxy — Papyrus exposes
+  no sneak-multiplier flag there).
+- `OnMagicEffectApplyEx` is **target-side** (the alias only hears effects applied *to* the
+  player). That invalidates the reserved-ledger `350` spec ("player-cast restore/cure on a
+  friendly NPC"): the mod can't see the player healing *others*, and `OnSpellCast` carries no
+  target. `350` therefore stays reserved pending a redesign (e.g. a scripted restore/cure MGEF
+  that reports its own caster+target). The `tools/pdv_reserved_events.json` `350` entry was
+  corrected on 2026-08-12. `366` is unblocked by the same fact (the feed effect lands *on the
+  player*, so target-side works) but still needs the ESP + validation work above.
 
 ## Context
 
