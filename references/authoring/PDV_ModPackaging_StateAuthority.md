@@ -1,7 +1,7 @@
 # PDV Mod Packaging State Authority
 
 Updated: 2026-08-12 AEST
-Status: v1.5.0 final all-in-one release packaged and byte-verified from clean commit `aa871785`; pending owner review, tag, and publish. The v1.5.0d prerelease receipt below is retained as historical evidence.
+Status: v1.5.0 final all-in-one release packaged and byte-verified from clean commit `afe22574`; pending owner review, tag, and publish. The v1.5.0d prerelease receipt below is retained as historical evidence.
 
 The v1.5.0 package incorporates the closed official-quest work: all 18 ambiguity
 decisions, the `FreeformRiften02` selector adapter, the owner-approved tag/profile
@@ -76,15 +76,15 @@ Book entry must reuse the same resolved practice line.
 ## v1.5.0 final release state
 
 - Build date: 2026-08-12; version `1.5.0` (final); source commit
-  `aa871785` (clean tree, `sourceDirty:false`).
-- Public archive: `Devotion-FOMOD-1.5.0-20260812.zip`, 9,402,876 bytes,
-  SHA-256 `3B88BB0F3B320A4267AF5765D75BCDFC2B69A9615E5538E92076DA0E8D43862D`.
+  `afe22574` (clean tree, `sourceDirty:false`).
+- Public archive: `Devotion-FOMOD-1.5.0-20260812.zip`, 9,402,914 bytes,
+  SHA-256 `573F5F55DB9F4501477DA719DD1D2A80B39F4F8718BE64EB9DB5FCA09E0DE768`.
   It contains 769 ZIP entries / 361 files: 236 required core files plus the
   125-file PatchHub tree. Exact membership and every core- and archive-member
   hash were checked after packaging; zero missing, extra, duplicate, or
   mismatched entries. The player-facing dev-status scan is clean.
 - The core input is `Devotion-1.5.0-20260812.zip`, SHA-256
-  `A13AC5F55051787958B4E3A5957B35071527F108278C0D722972BD887859CF7B`, 236 files.
+  `6DD926E35EEFB870244A00986A63E1A1F034534A80DCB22362F29D5E16A8E1AA`, 236 files.
   Its manifest, fresh PSC/PEX pairs, native DLL freshness/exports, Prisma
   asset/cache parity, ANAM, SEQ, version, and direct ESP-hash readback gates pass.
 - Delta from v1.5.0d: core grew 233 -> 236 files as the closed official-quest
@@ -192,7 +192,7 @@ runtime, player-surface, semantic, or support proof.
 | `PDV-QuestModPatchHub-20260812.zip` | 987,283 | `C9D39F9321BC3045C48A9C771CC318F8CB768C6ED557F15124C99B90D15D6D5F` | 122 members; 77 options; 75 channel files; corrected complete patch/KID/SPID root inventory |
 | `Devotion-FOMOD-1.5.0c-20260812.zip` | 9,320,236 | `89D2010A56FB4DCECBD0DDC2096B0281E2F949259F0933F833BA55783F2FB9CF` | 748 ZIP entries / 355 files; 233-file required core; 77 optional patches; 75 source-labelled channels; 31 KID and 58 SPID rules |
 | `Devotion-FOMOD-1.5.0d-20260812.zip` | 9,389,668 | `B53FBA4879E33557ECE967E51A5D683A364C7566D953B801A3243CE5C94AE62F` | 766 ZIP entries / 358 files; 233-file required core; 80 optional patches; 78 source-labelled channels; expanded official quest recognition; visible event-driven SPID recognition |
-| `Devotion-FOMOD-1.5.0-20260812.zip` | 9,402,876 | `3B88BB0F3B320A4267AF5765D75BCDFC2B69A9615E5538E92076DA0E8D43862D` | 769 ZIP entries / 361 files; 236-file required core; 80 optional patches; 78 source-labelled channels; ships the reconciled 4,108-cell official-quest matrix; SPID NPC recognition defaults OFF / unadvertised; adds Normal/Large toast size toggle; final v1.5.0 built from clean commit aa871785 |
+| `Devotion-FOMOD-1.5.0-20260812.zip` | 9,402,914 | `573F5F55DB9F4501477DA719DD1D2A80B39F4F8718BE64EB9DB5FCA09E0DE768` | 769 ZIP entries / 361 files; 236-file required core; 80 optional patches; 78 source-labelled channels; ships the reconciled 4,108-cell official-quest matrix; SPID NPC recognition defaults OFF / unadvertised / (experimental) MCM copy; adds Normal/Large toast size toggle; final v1.5.0 built from clean commit afe22574 |
 
 Core intentionally includes the current Altmer and Khajiit runtime/UI assets,
 the canonical core quest matrix, the Calian assets, the native Prisma bridge,
