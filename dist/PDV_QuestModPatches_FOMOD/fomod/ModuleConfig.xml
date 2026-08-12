@@ -814,6 +814,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="House of Horrors - Quest Expansion">
+              <description>This mod expands Molag Bal's daedric quest, giving you the option of choosing an alternative &quot;good guy&quot; route to finish the vanilla quest. Fully voiced, with new scenes and a custom reward: a new follower!</description>
+              <files>
+                <folder source="common\HouseOfHorrorsQE" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="HouseOfHorrorsQuestExpansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="Ill Met by Moonlight - Dialogue Expansion">
               <description>Defy the will of Hircine while still serving justice to Sinding. A fully voiced mini-expansion of the namesake quest using voice actors or spliced lines.</description>
               <files>
@@ -985,6 +1004,25 @@
                 </dependencyType>
               </typeDescriptor>
             </plugin>
+            <plugin name="The Cursed Tribe - Quest Expansion">
+              <description>This is my attempt at restoring cut content, as well as expanding the Cursed Tribe quest.</description>
+              <files>
+                <folder source="common\CursedTribeQE" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="The Cursed Tribe - Quest Expansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
             <plugin name="The Heart of Dibella - Quest Expansion">
               <description>Tired of having to break into a ladies-only religious building just to start this quest? This mod has you covered with new roleplaying opportunities, more dialogue and more choices.</description>
               <files>
@@ -997,6 +1035,25 @@
                     <pattern>
                       <dependencies operator="And">
                         <fileDependency file="The Heart Of Dibella - Quest Expansion.esp" state="Active" />
+                      </dependencies>
+                      <type name="Recommended" />
+                    </pattern>
+                  </patterns>
+                </dependencyType>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="The Only Cure - Quest Expansion">
+              <description>This mod enhances Peryite's daedric quest, expanding the vanilla quest with new conversations, scenes and paths to complete the quest with or without cavorting with daedra. Fully voiced.</description>
+              <files>
+                <folder source="common\OnlyCureQE" destination="" priority="0" />
+              </files>
+              <typeDescriptor>
+                <dependencyType>
+                  <defaultType name="NotUsable" />
+                  <patterns>
+                    <pattern>
+                      <dependencies operator="And">
+                        <fileDependency file="TheOnlyCureQuestExpansion.esp" state="Active" />
                       </dependencies>
                       <type name="Recommended" />
                     </pattern>

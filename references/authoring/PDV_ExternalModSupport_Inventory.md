@@ -1,25 +1,25 @@
 # PDV External-Mod Support Inventory
 
-Updated: 2026-08-11 AEST
+Updated: 2026-08-12 AEST
 Class: LIVING -- hand-authored authority (`PDV_STANDARDS.md` section 5.3 class 1)
 Status: complete inventory of current repository support; the full B01-B07 JoJ set is authored, machine-gated, and packaged for tester release, while runtime proof remains post-release evidence
 
 <!-- pdv-inventory-counts {
-  "g1DataOnlyPatches": 72,
+  "g1DataOnlyPatches": 75,
   "g2PluginPatches": 5,
-  "g1WithAwardRows": 72,
+  "g1WithAwardRows": 75,
   "g2WithAwardRows": 3,
-  "totalReactionCells": 419,
-  "totalAwardRows": 2829,
-  "hubFoldersTotal": 77,
-  "manifestOptions": 77,
-  "sourceCsvs": 75,
+  "totalReactionCells": 423,
+  "totalAwardRows": 2836,
+  "hubFoldersTotal": 80,
+  "manifestOptions": 80,
+  "sourceCsvs": 78,
   "reconstructedCsvs": 5,
-  "coreRows": 2148,
+  "coreRows": 2137,
   "coreEditorIds": 158,
-  "coreQuestExpansionEditorIds": 3,
+  "coreQuestExpansionEditorIds": 0,
   "coreCreationClubEditorIds": 4,
-  "splitCoverageMods": 5,
+  "splitCoverageMods": 8,
   "splitCoverageCollisions": 1,
   "kidLiveRules": 31,
   "kidLiveRuleNames": 45,
@@ -36,7 +36,7 @@ Status: complete inventory of current repository support; the full B01-B07 JoJ s
 
 One place to answer "what external-mod content does Devotion actually support?".
 
-Before this doc the answer was spread across the FOMOD manifest, 75 per-mod
+Before this doc the answer was spread across the FOMOD manifest, 78 per-mod
 source CSVs, the core matrix, a KID ini, a BaseObjectSwapper ini and a handful
 of Papyrus hooks, and nothing tied them together. The grouping below is by
 **attach mechanism** -- *how* the support reaches the game -- because that is
@@ -121,20 +121,20 @@ game, that proof lives in a runbook, not here.
 
 | # | Group | Attach mechanism | Entries | Ships a plugin? | User installs anything? |
 |---|---|---|---:|---|---|
-| **G1** | Per-mod quest-reaction patches, data-only | `common/<Mod>/` StorageUtil channel JSON | **72** | No | Yes -- PatchHub option |
+| **G1** | Per-mod quest-reaction patches, data-only | `common/<Mod>/` StorageUtil channel JSON | **75** | No | Yes -- PatchHub option |
 | **G2** | Per-mod patches that ship a plugin | ESP (+ TIF fragments / SEQ / BOS ini) | **5** | Yes | Yes -- PatchHub option |
-| **G3** | Covered by the CORE mod, no separate patch | rows in `PDV_QuestReactionMatrix_Full.csv` | **158** editor ids (2148 rows) | n/a -- in `Devotion.esp` | **No** |
+| **G3** | Covered by the CORE mod, no separate patch | rows in `PDV_QuestReactionMatrix_Full.csv` | **158** editor ids (2137 rows) | n/a -- in `Devotion.esp` | **No** |
 | **G4** | Item-keyword support (KID) | flat `PDV_*_KID.ini` files | **31** live rules (45 filters), no empty lanes | No | No -- in core |
 | **G5** | Shrine / world-object support (BaseObjectSwapper) | `PDV_DaedricShrinesAIO_SWAP.ini` | **1** ini, 11 swaps | Yes -- inside the G2 patch | Yes -- PatchHub option |
 | **G6** | Papyrus activity hooks, no quest stage | plugin literals in `PDV_PlayerEvents` / `PDV__ManagerQuest` / `PDV_Origin` | **7** plugins | No | **No** |
 | **G7** | NPC religious recognition (SPID) | `PDV_ReligiousRecognition_DISTR.ini` | **58** rules: 29 classifiers + 29 cohort assignments | No | No -- in core |
 
-G1 + G2 = the 77 PatchHub options, 1:1 with the 77 manifest entries and the 77
-`common/` folders. 419 quest-reaction cells, 2829 deity award rows.
+G1 + G2 = the 80 PatchHub options, 1:1 with the 80 manifest entries and the 80
+`common/` folders. 423 quest-reaction cells, 2836 deity award rows.
 
 **Read this next to the installer:** a user who installs zero PatchHub options
 still gets G3, G4 and G6. That is the majority of the reaction surface by row
-count -- 2148 core rows against 2829 in the whole hub.
+count -- 2137 core rows against 2836 in the whole hub.
 
 ---
 
@@ -350,7 +350,7 @@ so a player who already destroyed artifacts gets no retroactive award.
 
 ## G3 -- Covered by the CORE mod, no separate patch
 
-`references/authoring/PDV_QuestReactionMatrix_Full.csv` -- **2148 rows across 158
+`references/authoring/PDV_QuestReactionMatrix_Full.csv` -- **2137 rows across 158
 distinct quest editor ids** -- ships inside base `Devotion.esp`. It is generated
 by `tools/pdv_quest_tranche_merge.mjs` from the `PDV_QuestReactionMatrix_Tranche*`
 files; edit a tranche, never `Full.csv`.
@@ -379,27 +379,10 @@ consistent, but do not cite it as plugin provenance.
 
 Two more CC integrations are Papyrus hooks rather than matrix rows -- see G6.
 
-### Quest-expansion mods covered by core alone
-
-The important case. These mods extend a **vanilla** quest, so core already
-reacts to the vanilla editor id and the expansion's own new stages were authored
-straight into the core matrix (via `PDV_QuestReactionMatrix_Tranche6_CompatCore.csv`).
-**There is no hub option for any of them and none is needed.**
-
-| Editor id | Quest | Stages in core | Rows | What the QE stage is |
-|---|---|---|---:|---|
-| `DA06` | The Cursed Tribe (+ QE ghost variant) | 50, 110, 200, 210 | 19 | s210 lifts the Largashbur ghost-curse by magic; +Malacath indirect. Vanilla s200 Champion stays Daedric-sender-owned. (s50/s110 are vanilla beats core already covered.) |
-| `DA10` | The House of Horrors (+ QE destroy altar) | 200, 210 | 17 | s210 helps Tyranus destroy Molag Bal's altar: -Molag Bal milestone, +Stendarr small. Vanilla s200 (serve Molag Bal) stays sender-owned. |
-| `DA13` | The Only Cure (+ QE refuse / destroy altar) | 100, 101, 102 | 5 | s101 refuses Peryite's bargain; s102 destroys the altar. Vanilla s100 stays sender-owned. |
-
-The pattern in all three: **the vanilla stage keeps its original owner, and the
-QE stage is a separate row.** A player without the expansion installed simply
-never reaches the QE stage; nothing misfires.
-
 ### Split coverage (part core, part patch)
 
 The most confusing case in the inventory, and the reason the G1/G3 boundary is
-not a clean per-mod line. For these four mods **some of the support ships in core
+not a clean per-mod line. For these eight mods **some of the support ships in core
 and some ships in a hub patch**, and reading either source alone gives a wrong
 answer about what is covered.
 
@@ -409,6 +392,10 @@ answer about what is covered.
 | **Ill Met by Moonlight - Dialogue Expansion** (`CH_IMBMDialougeAddon.esp`) | vanilla `DA05` *Ill Met By Moonlight* s10/s100/s105, 15 rows | its own new quest `CH_TotemReturnQuest` s10, 1 row (Hircine) | none -- different quest record |
 | **The Whispering Door - QE** (`The Whispering Door - Quest Expansion.esp`) | vanilla `DA08` *The Whispering Door* s25, s60, 12 rows | the **same** editor id `DA08` at s45, 2 rows (Mephala, Stendarr) | **checked, none** -- s45 is disjoint from s25/s60 |
 | **Thieves Guild Alternative Endings** (`TG Alternative Endings.esp`) | vanilla `TG09` *Darkness Returns* s10/s30/s200, 7 rows | the **same** editor id `TG09` at s201 and s202, 17 rows | **checked, none** -- 201/202 disjoint from 10/30/200 |
+| **Innocence Lost - QE** (`Innocence Lost - Quest Expansion.esp`) | vanilla `DB01` s20/s200, 19 rows | expansion-added s22/s198/s199/s201, 74 rows | **checked, none** -- expansion stages are channel-owned |
+| **The Cursed Tribe - QE** (`The Cursed Tribe - Quest Expansion.esp`) | vanilla `DA06` s50/s110/s200, 18 rows | expansion-added s210, 1 row (Malacath) | **checked, none** -- s210 is channel-owned |
+| **House of Horrors - QE** (`HouseOfHorrorsQuestExpansion.esp`) | vanilla `DA10` s200, 15 rows | expansion-added s210, 2 rows (Molag Bal, Stendarr) | **checked, none** -- s210 is channel-owned |
+| **The Only Cure - QE** (`TheOnlyCureQuestExpansion.esp`) | vanilla `DA13` s100, 1 row | expansion-added s101/s102, 4 rows (Peryite, Stendarr, Syrabane) | **checked, none** -- 101/102 are channel-owned |
 
 **Why the collision check matters.** `ResolveQuestReactionCellFile` checks the
 core matrix **first** and takes the first hit. A hub cell that duplicates a
@@ -643,10 +630,10 @@ the reaction layer without double-applying it.
 
 | Source | Path | Authority for |
 |---|---|---|
-| PatchHub manifest | `references/authoring/PDV_QuestPatchHub.manifest.json` | The 77 options: name, dependency, description, folders, category |
+| PatchHub manifest | `references/authoring/PDV_QuestPatchHub.manifest.json` | The 80 options: name, dependency, description, folders, category |
 | FOMOD installer | `dist/PDV_QuestModPatches_FOMOD/fomod/ModuleConfig.xml` | What each option actually installs, and its dependency gate |
 | Shipped channels | `dist/PDV_QuestModPatches_FOMOD/common/<Mod>/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/*.json` | What a patch really reacts to and awards |
-| Per-mod source CSVs | `references/authoring/patches/PDV_QRM_*.csv` | Authoring intent and citations (75 files; slug does not always match the hub folder) |
+| Per-mod source CSVs | `references/authoring/patches/PDV_QRM_*.csv` | Authoring intent and citations (78 files; slug does not always match the hub folder) |
 | Core matrix | `references/authoring/PDV_QuestReactionMatrix_Full.csv` | G3. **Generated** -- edit the `Tranche*` files |
 | KID | `mod-data/PDV_GreenPact_KID.ini`, `mod-data/PDV_ItemRecognition_KID.ini` | G4 |
 | BOS swap | `dist/PDV_QuestModPatches_FOMOD/common/DaedricShrinesAIO/SKSE/Plugins/BaseObjectSwapper/PDV_DaedricShrinesAIO_SWAP.ini` | G5 |

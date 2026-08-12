@@ -1,0 +1,2 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,citation,formid,evidence_tier,branch_note
+DA10,The House of Horrors (QE - destroy altar),210,Helped Tyranus destroy Molag Bal's altar,"destroy_reject_daedra:molagbal,destroy_daedric_threat","Direct houseCARL read of HouseOfHorrorsQuestExpansion.esp: s210 [CompleteQuest] 'I helped Tyranus destroy Molag Bal's altar. The house is now safe.'",Skyrim.esm:022F08,A,Expansion-added anti-Molag-Bal branch; vanilla s200 remains core/Daedric-sender owned.

@@ -1,0 +1,2 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,citation,formid,evidence_tier,branch_note
+DA06,The Cursed Tribe (QE - ghost variant),210,Lifted the ghost-curse on Largashbur by magic,defend_kin_home,"Direct houseCARL read of The Cursed Tribe - Quest Expansion.esp: s210 [CompleteQuest] 'Using magic, I've helped the Orc Stronghold of Largashbur get rid of the ghosts that were haunting their chief.'",Skyrim.esm:03B681,A,Expansion-added complete branch; vanilla s200 remains core/Daedric-sender owned.

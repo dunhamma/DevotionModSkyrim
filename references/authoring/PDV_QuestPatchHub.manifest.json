@@ -232,6 +232,16 @@
       "nexusModId": 105044
     },
     {
+      "name": "House of Horrors - Quest Expansion",
+      "description": "This mod expands Molag Bal's daedric quest, giving you the option of choosing an alternative \"good guy\" route to finish the vanilla quest. Fully voiced, with new scenes and a custom reward: a new follower!",
+      "dependency": "HouseOfHorrorsQuestExpansion.esp",
+      "folders": [
+        "common\\HouseOfHorrorsQE"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 57285
+    },
+    {
       "name": "Ill Met by Moonlight - Dialogue Expansion",
       "description": "Defy the will of Hircine while still serving justice to Sinding. A fully voiced mini-expansion of the namesake quest using voice actors or spliced lines.",
       "dependency": "CH_IMBMDialougeAddon.esp",
@@ -582,6 +592,16 @@
       "nexusModId": 1179
     },
     {
+      "name": "The Cursed Tribe - Quest Expansion",
+      "description": "This is my attempt at restoring cut content, as well as expanding the Cursed Tribe quest.",
+      "dependency": "The Cursed Tribe - Quest Expansion.esp",
+      "folders": [
+        "common\\CursedTribeQE"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 171220
+    },
+    {
       "name": "The Frozen Heart",
       "description": "Step through a magical mirror into a cursed frozen realm. Explore labyrinths, solve puzzles, ponder orbs, battle shadows, and help an ancient Snow Elf warrior cure her curse.",
       "dependency": "ksws07_quest.esm",
@@ -630,6 +650,16 @@
       ],
       "category": "New Quests and Lands",
       "nexusModId": 169298
+    },
+    {
+      "name": "The Only Cure - Quest Expansion",
+      "description": "This mod enhances Peryite's daedric quest, expanding the vanilla quest with new conversations, scenes and paths to complete the quest with or without cavorting with daedra. Fully voiced.",
+      "dependency": "TheOnlyCureQuestExpansion.esp",
+      "folders": [
+        "common\\OnlyCureQE"
+      ],
+      "category": "Quest Expansions",
+      "nexusModId": 57683
     },
     {
       "name": "The Sinister Seven",

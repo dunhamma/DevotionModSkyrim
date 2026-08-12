@@ -76,22 +76,6 @@ class -- the quest itself is content-bearing and would be rowable.
 
 ---
 
-## Already covered -- do NOT queue these as work
-
-Both were caught by the first worklist build reporting them as defining no QUST of their own,
-then confirmed by a record read. This is the trap `PDV_JoJ_CompatibilityPackage_2026-08-08.md`
-section 2 names in advance: **a quest expansion typically adds stages to the VANILLA editor
-id**, so coverage must be computed against `Full.csv`, never against hub folder names. A
-folder-name diff would have queued both as uncovered work, and it would have been wrong.
-
-| Mod | Plugin | Overrides | Already in `Full.csv` |
-|---|---|---|---|
-| The Only Cure - Quest Expansion | `TheOnlyCureQuestExpansion.esp` | `08998D:Skyrim.esm` `DA13`, and nothing else | `DA13` s101 *(QE - refuse)* and s102 *(QE - destroy altar)*, Peryite |
-| House of Horrors - Quest Expansion | `HouseOfHorrorsQuestExpansion.esp` | `022F08:Skyrim.esm` `DA10`, and nothing else | `DA10` s210 *(QE - destroy altar)*, Molag Bal and Stendarr |
-
-Neither needs a channel. A channel keyed on their FormIDs would double-claim cells the core
-matrix already owns, which `pdv_quest_channel_reconcile.mjs` would reject anyway.
-
 ## Judged and ruled SILENT
 
 ### Hoth -- SILENT (no player-facing quest outcome)
