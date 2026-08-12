@@ -22659,18 +22659,10 @@ Function EnsureUnifiedStartupChoice()
 
     Int startupMode = GetStartupModeForOrigin(originRace)
     if startupMode == STARTUP_MODE_EXPLICIT_CHOICE
-        if HasExplicitStartupState(originRace)
-            ; 2026-08-13: the one-time "keeps your existing startup state" migration MessageBox
-            ; was removed (owner: obsolete, was re-appearing on load of pre-unified saves). An
-            ; existing startup state is now honored SILENTLY -- mark the unified choice complete
-            ; and never prompt or re-prompt. GetStartupCanonicalSummary/STARTUP_ADVISORY_TEXT stay
-            ; (used by the Prisma startup payload and the info-only path).
-            RecordStartupEvent("startup_migration_silent")
-            StorageUtil.SetIntValue(None, "PDV.Startup.UnifiedChoiceComplete", 1)
-            StorageUtil.SetIntValue(None, "PDV.Startup.OriginHandled", originRace)
-            return
-        endIf
-
+        ; 2026-08-13: not-save-safe update -- the pre-unified migration branch (the removed
+        ; "keeps your existing startup state" notice, then its silent-complete successor) is
+        ; gone. A fresh save never hit it; a pre-unified save now just runs the normal choice
+        ; flow once. No backward-compat startup state is preserved.
         EnsureExplicitStartupChoice(originRace)
         return
     endIf
@@ -22684,34 +22676,6 @@ Int Function GetStartupModeForOrigin(Int originRace)
     endIf
 
     return STARTUP_MODE_INFO_ONLY
-EndFunction
-
-Bool Function HasExplicitStartupState(Int originRace)
-    if originRace == ORIGIN_BOSMER
-        return HasBosmerSetupCompleted()
-    elseIf originRace == ORIGIN_BRETON
-        return StorageUtil.GetIntValue(None, "PDV.Breton.SetupComplete") == 1 || StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) >= 0
-    elseIf originRace == ORIGIN_REDGUARD
-        if StorageUtil.GetIntValue(None, "PDV.Redguard.SetupComplete") == 1
-            return True
-        endIf
-        if PDV_RedguardSectTrack
-            return PDV_RedguardSectTrack.GetCurrentState() >= REDGUARD_SECT_CROWN
-        endIf
-        return False
-    elseIf originRace == ORIGIN_ORC
-        if StorageUtil.GetIntValue(None, "PDV.Orc.SetupComplete") == 1
-            return True
-        endIf
-        if PDV_OrcLifeModeTrack
-            return PDV_OrcLifeModeTrack.GetCurrentState() >= ORC_LIFE_MODE_CITY
-        endIf
-        return False
-    elseIf originRace == ORIGIN_NORD
-        return StorageUtil.GetIntValue(None, "PDV.Nord.SetupComplete") == 1
-    endIf
-
-    return False
 EndFunction
 
 Function EnsureExplicitStartupChoice(Int originRace)
