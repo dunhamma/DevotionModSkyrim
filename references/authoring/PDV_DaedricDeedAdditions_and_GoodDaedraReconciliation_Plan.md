@@ -17,7 +17,7 @@ validation is still owed for everything that fires a new hook.
 | **Sneak-attack-kill (305)** — `OnActorKilled` + `IsSneaking()`; Mephala/Nocturnal path +, Malacath path −, Boethiah patron − | ✅ landed (LD v23, PLD v5). In-game validation owed | `3243a834` |
 | **Apply-poison (306)** — `OnItemRemoved` + `IsPoison()`; Mephala path + | ✅ landed (PLD v6). **VALIDATION-PENDING**: confirm apply-poison raises `OnItemRemoved` | `25d9eac4` |
 | **Heal-or-cure (350) revival** | ❌ **NOT BUILDABLE** — reserved spec invalid (see below) | ledger corrected |
-| **Vampire-feed (366) revival** | ⏳ viable but needs ESP FormList + fresh save + validation | ledger updated |
+| **Vampire-feed (366) revival** | ❌ **NOT BUILDABLE now** — no clean hook (see below) | ledger corrected |
 
 **Key correction to the plan.** Two detection assumptions in Parts A/B were wrong:
 - `OnHitEx` on the player alias is **incoming-only** (`akAggressor` is never the player), so
@@ -28,8 +28,16 @@ validation is still owed for everything that fires a new hook.
   friendly NPC"): the mod can't see the player healing *others*, and `OnSpellCast` carries no
   target. `350` therefore stays reserved pending a redesign (e.g. a scripted restore/cure MGEF
   that reports its own caster+target). The `tools/pdv_reserved_events.json` `350` entry was
-  corrected on 2026-08-12. `366` is unblocked by the same fact (the feed effect lands *on the
-  player*, so target-side works) but still needs the ESP + validation work above.
+  corrected on 2026-08-12.
+
+**`366` vampire-feed is also not cleanly buildable.** A 2026-08-12 load-order search found no
+vampire-feed MagicEffect and no vampire-feed cast Spell/power (only werewolf feed has either).
+Vanilla feeding is Perk + activator + idle-animation + quest driven with no public MGEF on the
+player, and this is a Requiem load order (Requiem overhauls vampirism), so neither the
+target-side `OnMagicEffectApplyEx` route nor an `OnSpellCast` match applies. A working `366`
+needs Requiem-specific feed-detection research (animation-event or script/mod-event hook) plus
+in-game validation — the same class as `350`. Both stay reserved; the `366` ledger entry was
+corrected on 2026-08-12. No speculative ESP records were written.
 
 ## Context
 

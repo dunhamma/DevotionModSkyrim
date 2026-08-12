@@ -8,7 +8,7 @@
     "revised": "2026-08-12"
   },
   "PDV_EventTypes.EVT_VAMPIRE_FEED": {
-    "reason": "WIRE post-mega-packet (owner 2026-07-07): Molag Bal signature row (+0.5), plus Mephala patron +0.35 and Azura -1.0. VIABLE APPROACH (2026-08-12): the feed effect lands ON the player, so PO3 OnMagicEffectApplyEx (TARGET-side) can catch it -- register the vanilla/Dawnguard feed MGEF(s) in a new FormList (mirror PDV_FLST_Altmer_Syrabane_CureEffects wiring) and HasListedForm-match in the handler. Needs: identify the feed MGEF(s), an ESP FormList + filled alias property (fresh save to bind), and in-game validation. Blocked only on that ESP+validation work, not on a missing hook.",
+    "reason": "NO CLEAN HOOK, needs research (2026-08-12): rows are Molag Bal path +0.5, Mephala patron +0.35, Azura -1.0. A 2026-08-12 load-order search found NO vampire-feed MagicEffect and NO vampire-feed cast Spell/power (only werewolf feed has both). Vanilla vampire feeding is Perk (VampireFeed 0CF02C) + activator + idle-animation + quest driven, applying no public MGEF to the player, so the target-side OnMagicEffectApplyEx approach cannot see it and OnSpellCast has nothing to match. This is a REQUIEM load order (Requiem overhauls vampirism), so the real feed path is Requiem-specific. A working 366 detector needs feed-detection research (RegisterForAnimationEvent on the feed idle, or a Requiem vampirism script/mod-event hook) plus in-game validation -- same 'needs redesign' class as 350, not a quick wire. Remains RESERVED.",
     "deferredBy": "dead-wiring burndown plan",
     "date": "2026-07-07",
     "revised": "2026-08-12"
