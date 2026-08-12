@@ -1,15 +1,13 @@
 # PDV Mod Packaging State Authority
 
 Updated: 2026-08-12 AEST
-Status: v1.5.0d all-in-one prerelease packaged; post-v1.5.0d official-quest ambiguity resolutions are authored but not yet repackaged
+Status: v1.5.0 final all-in-one release packaged and byte-verified from clean commit `7f279d31`; pending owner review, tag, and publish. The v1.5.0d prerelease receipt below is retained as historical evidence.
 
-The v1.5.0d receipt below remains immutable evidence of that published archive.
-Current source has since closed all 18 official-quest ambiguity decisions,
-added the `FreeformRiften02` selector adapter, completed the owner-approved
-tag/profile correction slate, and expanded core to 4,108 cells across 354
-quest EditorIDs.
-Those changes must not be described as shipped until a new all-in-one package is
-built, byte-verified, committed, tagged, and published.
+The v1.5.0 package incorporates the closed official-quest work: all 18 ambiguity
+decisions, the `FreeformRiften02` selector adapter, the owner-approved tag/profile
+correction slate, and the core matrix expanded to 4,108 cells across 354 quest
+EditorIDs (main-quest coverage reconciled, PR #76). The build is byte-verified but
+NOT yet tagged or published; do not describe it as publicly shipped until it is.
 
 ## Purpose
 
@@ -71,7 +69,27 @@ earned Prisma notice exists. Every accepted daily practice must receive the same
 notice opportunity as equivalent race-substrate acts, and the toast and source
 Book entry must reuse the same resolved practice line.
 
-## Current all-in-one tester-release state
+## v1.5.0 final release state
+
+- Build date: 2026-08-12; version `1.5.0` (final); source commit
+  `7f279d31de399a8c2a25fcf974d8c7eab17bd1d7` (clean tree, `sourceDirty:false`).
+- Public archive: `Devotion-FOMOD-1.5.0-20260812.zip`, 9,401,877 bytes,
+  SHA-256 `42201F02DF6BA3B3064A4DCC9FA0C4F52EDF57882F187EC4D578ED146DE04883`.
+  It contains 769 ZIP entries / 361 files: 236 required core files plus the
+  125-file PatchHub tree. Exact membership and every core- and archive-member
+  hash were checked after packaging; zero missing, extra, duplicate, or
+  mismatched entries. The player-facing dev-status scan is clean.
+- The core input is `Devotion-1.5.0-20260812.zip`, SHA-256
+  `5702E1CD138071BC39CBAD7FBFFF22BE637F80084D83D43F5CCBB97EDF979B04`, 236 files.
+  Its manifest, fresh PSC/PEX pairs, native DLL freshness/exports, Prisma
+  asset/cache parity, ANAM, SEQ, version, and direct ESP-hash readback gates pass.
+- Delta from v1.5.0d: core grew 233 -> 236 files as the closed official-quest
+  matrix (4,108 cells / 354 quest EditorIDs, main-quest coverage reconciled in
+  PR #76) is now shipped; PatchHub inventory unchanged at 80 options / 78 channels.
+- NOT yet tagged or published. Runtime, presentation, balance, and save/load
+  observations remain post-release tester evidence, not release gates.
+
+## v1.5.0d prerelease state (historical)
 
 - Build date: 2026-08-12; internal version `1.5.0`; prerelease label `d`;
   source commit `add677167467ecfef0f6e4e0caccbc148a439000`.
@@ -165,6 +183,7 @@ runtime, player-surface, semantic, or support proof.
 | `PDV-QuestModPatchHub-20260812.zip` | 987,283 | `C9D39F9321BC3045C48A9C771CC318F8CB768C6ED557F15124C99B90D15D6D5F` | 122 members; 77 options; 75 channel files; corrected complete patch/KID/SPID root inventory |
 | `Devotion-FOMOD-1.5.0c-20260812.zip` | 9,320,236 | `89D2010A56FB4DCECBD0DDC2096B0281E2F949259F0933F833BA55783F2FB9CF` | 748 ZIP entries / 355 files; 233-file required core; 77 optional patches; 75 source-labelled channels; 31 KID and 58 SPID rules |
 | `Devotion-FOMOD-1.5.0d-20260812.zip` | 9,389,668 | `B53FBA4879E33557ECE967E51A5D683A364C7566D953B801A3243CE5C94AE62F` | 766 ZIP entries / 358 files; 233-file required core; 80 optional patches; 78 source-labelled channels; expanded official quest recognition; visible event-driven SPID recognition |
+| `Devotion-FOMOD-1.5.0-20260812.zip` | 9,401,877 | `42201F02DF6BA3B3064A4DCC9FA0C4F52EDF57882F187EC4D578ED146DE04883` | 769 ZIP entries / 361 files; 236-file required core; 80 optional patches; 78 source-labelled channels; ships the reconciled 4,108-cell official-quest matrix; final v1.5.0 built from clean commit 7f279d31 |
 
 Core intentionally includes the current Altmer and Khajiit runtime/UI assets,
 the canonical core quest matrix, the Calian assets, the native Prisma bridge,
