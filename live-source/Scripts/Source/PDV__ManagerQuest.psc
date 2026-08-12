@@ -623,7 +623,7 @@ Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; seals every deity's participating-event cache (12.4 / C4 in PDV_DeityBase) -- without
 ; it the caches stay unsealed forever on old saves (correct, they fail open, but the
 ; broadcast fan-out keeps paying the full per-deity probe the cache exists to remove).
-Int Property LIKES_DISLIKES_VERSION = 21 AutoReadOnly
+Int Property LIKES_DISLIKES_VERSION = 22 AutoReadOnly
 Int Property PRINCE_LD_VERSION = 4 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_NONE = 0 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_SKY_STORM_HUNT = 1 AutoReadOnly
@@ -13300,6 +13300,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 362, 0.25, 3, 0.0, -1)
         WriteLD(deity, 315, -0.25, 3, 0.0, -1)
         WriteLD(deity, 333, -0.25, 3, 0.0, -1)
+        WriteLD(deity, 351, -0.25, 2, 0.5, -1)
     elseIf ldName == "Mephala"
         WriteLD(deity, 360, 0.5, 3, 0.0, -1)
         WriteLD(deity, 362, 0.5, 3, 0.0, -1)
@@ -13307,10 +13308,9 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 342, 0.25, 3, 0.0, -1)
         WriteLD(deity, 368, 1.5, 1, 1.0, -1)
         WriteLD(deity, 361, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 364, 1.0, 2, 0.5, -1)
         WriteLD(deity, 2, -0.25, 3, 0.0, -1)
         WriteLD(deity, 350, -0.5, 2, 0.0, -1)
-        WriteLD(deity, 313, -0.25, 2, 0.0, -1)
+        WriteLD(deity, 313, -0.25, 3, 0.0, -1)
         WriteLD(deity, 366, 0.35, 3, 0.0, -1)
     elseIf ldName == "The Hist"
         WriteLD(deity, 313, 0.5, 3, 0.0, -1)
