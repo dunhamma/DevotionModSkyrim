@@ -373,9 +373,9 @@ Function OnOptionHighlight(Int a_option)
     elseIf a_option == _oidToastSize
         SetInfoText("Size of the corner toast pop-ups. Large is intended for 4K displays where the normal toast reads small. Does not affect the Book of Days journal.")
     elseIf a_option == _oidNpcRecognition
-        SetInfoText("Allows SPID-tagged NPCs to regard a Faithful character as a friend and a Devoted character as an ally. SPID is recommended but not required.")
+        SetInfoText("Faith-aware NPCs treat you as a friend at Faithful standing and an ally at Devoted. Requires SPID. (experimental)")
     elseIf a_option == _oidNpcHostileRecognition
-        SetInfoText("At Devoted standing, explicit hard rivals may regard you as an enemy. This changes disposition only and never adds attack-on-sight behaviour.")
+        SetInfoText("At Devoted standing, your god's sworn rivals may treat you as an enemy. (experimental)")
     elseIf a_option == _oidModeToggle
         SetInfoText("Switches between the authored Pilgrim's Path and the gentler Wayfarer's Path for non-survival players.")
     elseIf a_option == _oidPacingSubstrateOrigin
