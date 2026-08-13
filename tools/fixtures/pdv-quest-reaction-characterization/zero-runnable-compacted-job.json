@@ -1,0 +1,46 @@
+{
+  "schema": "pdv.quest-reaction.characterization.v1",
+  "id": "zero-runnable-compacted-job",
+  "config": {
+    "maxPending": 128,
+    "workItemsPerTick": 2,
+    "duplicateWindowDays": 0.02
+  },
+  "steps": [
+    {
+      "type": "submit-quest-stage",
+      "key": "Skyrim.esm|000DEF|50",
+      "logicalEventId": "case.zero",
+      "gameDay": 40.0,
+      "sourceRowCount": 3,
+      "rows": [],
+      "metaRows": []
+    },
+    { "type": "drain" }
+  ],
+  "expected": {
+    "submissions": [
+      {
+        "key": "Skyrim.esm|000DEF|50",
+        "status": "accepted",
+        "jobId": "v3qr_1",
+        "sourceRows": 3,
+        "runnableRows": 0,
+        "skippedRows": 3,
+        "metaRows": 0
+      }
+    ],
+    "applied": [],
+    "startedJobIds": ["v3qr_1"],
+    "finalizations": [
+      { "key": "Skyrim.esm|000DEF|50", "logicalEventId": "case.zero", "appliedRows": 0, "positiveRows": 0, "negativeRows": 0, "surfaceKind": "none", "lead": "none", "prismaToasts": 0, "bookOfDaysEntries": 0 }
+    ],
+    "slices": [
+      { "jobId": "v3qr_1", "applied": [], "finalized": true }
+    ],
+    "rejections": [],
+    "cleanedJobIds": ["v3qr_1"],
+    "resumeCount": 0,
+    "queueDepth": 0
+  }
+}

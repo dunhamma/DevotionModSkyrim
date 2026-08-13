@@ -1,0 +1,66 @@
+{
+  "schema": "pdv.quest-reaction.characterization.v1",
+  "id": "multi-tick-base-plus-meta-fifo",
+  "config": {
+    "maxPending": 128,
+    "workItemsPerTick": 2,
+    "duplicateWindowDays": 0.02
+  },
+  "steps": [
+    {
+      "type": "submit-quest-stage",
+      "key": "Skyrim.esm|000456|20",
+      "logicalEventId": "case.fifo.first",
+      "gameDay": 20.0,
+      "rows": [
+        { "deityId": "Mara", "valence": "+", "intensity": "small", "magnitude": "small", "tag": "base_1", "appliedAmount": 0.4 },
+        { "deityId": "Stendarr", "valence": "+", "intensity": "medium", "magnitude": "medium", "tag": "base_2", "appliedAmount": 0.8 },
+        { "deityId": "Namira", "valence": "-", "intensity": "small", "magnitude": "small", "tag": "base_3", "appliedAmount": -0.4 }
+      ],
+      "metaRows": [
+        { "deityId": "Xarxes", "valence": "+", "intensity": "wheel", "magnitude": "meta", "tag": "meta_record", "appliedAmount": 0.2 }
+      ]
+    },
+    {
+      "type": "submit-quest-stage",
+      "key": "Skyrim.esm|000789|30",
+      "logicalEventId": "case.fifo.second",
+      "gameDay": 20.1,
+      "rows": [
+        { "deityId": "Arkay", "valence": "+", "intensity": "small", "magnitude": "small", "tag": "second_job", "appliedAmount": 0.4 }
+      ],
+      "metaRows": []
+    },
+    { "type": "drain" }
+  ],
+  "expected": {
+    "submissions": [
+      { "key": "Skyrim.esm|000456|20", "status": "accepted", "jobId": "v3qr_1" },
+      { "key": "Skyrim.esm|000789|30", "status": "accepted", "jobId": "v3qr_2" }
+    ],
+    "applied": [
+      "Mara|+|small|small|base_1",
+      "Stendarr|+|medium|medium|base_2",
+      "Namira|-|small|small|base_3",
+      "Xarxes|+|wheel|meta|meta_record",
+      "Arkay|+|small|small|second_job"
+    ],
+    "startedJobIds": [
+      "v3qr_1",
+      "v3qr_2"
+    ],
+    "finalizations": [
+      { "key": "Skyrim.esm|000456|20", "logicalEventId": "case.fifo.first", "appliedRows": 4, "positiveRows": 3, "negativeRows": 1, "surfaceKind": "mixed", "lead": "positive", "prismaToasts": 1, "bookOfDaysEntries": 1 },
+      { "key": "Skyrim.esm|000789|30", "logicalEventId": "case.fifo.second", "appliedRows": 1, "positiveRows": 1, "negativeRows": 0, "surfaceKind": "positive", "lead": "positive", "prismaToasts": 1, "bookOfDaysEntries": 1 }
+    ],
+    "slices": [
+      { "jobId": "v3qr_1", "applied": ["Mara|+|small|small|base_1", "Stendarr|+|medium|medium|base_2"], "finalized": false },
+      { "jobId": "v3qr_1", "applied": ["Namira|-|small|small|base_3", "Xarxes|+|wheel|meta|meta_record"], "finalized": true },
+      { "jobId": "v3qr_2", "applied": ["Arkay|+|small|small|second_job"], "finalized": true }
+    ],
+    "rejections": [],
+    "cleanedJobIds": ["v3qr_1", "v3qr_2"],
+    "resumeCount": 0,
+    "queueDepth": 0
+  }
+}

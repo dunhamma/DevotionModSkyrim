@@ -1,9 +1,9 @@
 {
   "_comment": [
-    "Registry of functions that apply quest reactions SYNCHRONOUSLY, outside the bounded worker queue.",
+    "Registry of functions that apply quest reactions SYNCHRONOUSLY, outside the bounded Quest Reaction runtime queue.",
     "",
     "The 2026-07-15 performance pass made reaction delivery bounded: ApplyQuestReaction is ingress-only",
-    "(snapshot -> FIFO -> return) and PDV_QuestReactionWorker drains QUEST_REACTION_QUEUE_CELLS_PER_TICK",
+    "(snapshot -> FIFO -> return) and PDV_QuestReactionRuntime drains QUEST_REACTION_QUEUE_CELLS_PER_TICK",
     "applied cells per 0.1s slice. Every check in pdv_quest_reaction_performance_audit.mjs anchored on that",
     "queue and reasoned forward, so a function calling ApplyDeityReaction directly in a straight line was",
     "structurally invisible to the gate -- the same 'audit anchored on one side' shape as the curated-signal",
@@ -19,7 +19,7 @@
     "Burn entries down by routing the work through the queue or trimming the roster."
   ],
   "budget": 2,
-  "budgetSource": "QUEST_REACTION_QUEUE_CELLS_PER_TICK in PDV__ManagerQuest.psc",
+  "budgetSource": "QUEST_REACTION_QUEUE_CELLS_PER_TICK in PDV_QuestReactionRuntime.psc",
   "fanouts": {
     "HandlePaarthurnaxKill": {
       "maxApplications": 16,
@@ -32,12 +32,6 @@
       "date": "2026-07-16",
       "reason": "Same fork as HandlePaarthurnaxKill; the spare branch is latched via PDV.Paarthurnax.SpareSeen and fires from the main-quest closeout with Paarthurnax alive.",
       "whyAccepted": "Owner decision 2026-07-16. Same reachability argument as the kill fork."
-    },
-    "EvaluateQuestMetaFaucets": {
-      "maxApplications": 8,
-      "date": "2026-07-16",
-      "reason": "DEAD CODE: zero callers anywhere in live-source. Superseded by ProcessQueuedQuestReactionMetaSlice, which does the same meta-faucet work inside the bounded queue slice.",
-      "whyAccepted": "Not accepted -- registered only so the gate is honest about what exists. It cannot cost runtime today (nothing calls it), but it is a landmine: a future caller would reintroduce an 8-application synchronous burst. Remove the function and delete this entry; the anti-rot check will confirm."
     }
   }
 }

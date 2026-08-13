@@ -11,6 +11,7 @@
 Scriptname PDV_EventBus extends Quest
 
 PDV__ManagerQuest Property PDV_Manager Auto
+PDV_QuestReactionRuntime Property PDV_QuestReactionRuntimeService Auto
 PDV_EventTypes Property PDV_EventTypesService Auto
 FormList Property PDV_FLST_AllDeities Auto
 GlobalVariable Property PDV_GLO_DebugLevel Auto
@@ -130,12 +131,12 @@ Function RouteCurseStateRefresh(String reason)
 EndFunction
 
 Function RouteQuestReaction(Quest sourceQuest, Int stageValue, String logicalEventId = "")
-    if !PDV_Manager
-        Trace(1, "RouteQuestReaction skipped: PDV_Manager not assigned.")
+    if !PDV_QuestReactionRuntimeService
+        Trace(1, "RouteQuestReaction skipped: Quest Reaction runtime not assigned.")
         return
     endIf
 
-    PDV_Manager.ApplyQuestReaction(sourceQuest, stageValue, logicalEventId)
+    PDV_QuestReactionRuntimeService.SubmitQuestStage(sourceQuest, stageValue, logicalEventId)
     Trace(2, "RouteQuestReaction complete: stage " + stageValue)
 EndFunction
 

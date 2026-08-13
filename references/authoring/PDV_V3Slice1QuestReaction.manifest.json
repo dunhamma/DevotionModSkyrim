@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "pdv-v3-slice1-quest-reaction",
-  "status": "foundation",
+  "status": "slice1b-runtime-extracted-compiled-vmad-readback-runtime-proof-open",
   "northStar": "Replace the current quest-reaction cluster with one deep, event-driven module built from current main without preserving V1 save state.",
   "delivery": {
     "integrationBranch": "feature/v3-big-update",
@@ -140,6 +140,7 @@
     "queueMaxPending": 128,
     "workItemsPerTick": 2,
     "tickSeconds": 0.1,
+    "duplicateWindowDays": 0.02,
     "oneSchedulerOwner": true,
     "persistBeforeReturn": true,
     "fifo": true,
@@ -154,8 +155,8 @@
     "timingValueAndCopyChangesAllowed": false
   },
   "currentBehaviorCharacterization": {
-    "status": "contract-recorded-static-structure-checked",
-    "proofBoundary": "named case contract plus static source structure only; executable case fixtures, fresh-game runtime, save-load, and player surfaces remain Slice 1B proof",
+    "status": "executable-deterministic-fixtures-pass",
+    "proofBoundary": "literal scenario fixtures execute against the interface-level reference model; Papyrus scheduling, actual StorageUtil serialization, VMAD, fresh-game save-load, and player surfaces remain runtime proof",
     "cases": [
     "single-runnable-cell",
     "multi-tick-base-plus-meta-fifo",
@@ -167,11 +168,27 @@
     "corrupt-snapshot-reject-and-cleanup"
     ]
   },
+  "slice1BRuntimeExtraction": {
+    "status": "source-compiled-and-vmad-readback-pass",
+    "sourceOwnership": "runtime-owns-catalog-queue-dedup-scheduler-status; manager-owns-scoring-and-presentation-callbacks",
+    "loadOrderReadback": "housecarl_load_order_status confirmed Anvil profile Devotion Dev and active Devotion.esp before record claims",
+    "hostReadback": "0716DF:Devotion.esp is StartGameEnabled, attaches PDV_QuestReactionRuntime, and binds PDV_Manager to 00C325:Devotion.esp",
+    "consumerReadback": "manager, EventBus, and MCM bind PDV_QuestReactionRuntimeService to 0716DF:Devotion.esp",
+    "compile": "PDV_QuestReactionRuntime, PDV__ManagerQuest, PDV_EventBus, PDV_PlayerEvents, and PDV_MCM compile with zero errors and zero warnings",
+    "transitionalCatalogBoundary": "Runtime owns V1 folder discovery and binds each runtime quest to one exact catalog; it prefers pluginName|localFormId|stage v2 cells but may read localFormId|stage only from that bound V1 catalog. Cross-plugin collision acceptance remains open until the consolidated v2 catalog replaces the fallback.",
+    "proofBoundary": "fresh-game queue lifecycle, real co-save resume, exact scoring state, Prisma, and Book of Days remain runtime proof",
+    "deferredWithinSlice1": [
+      "deterministic consolidated catalog v2 build",
+      "semantic-event adapter migration",
+      "fresh-game Skyrim acceptance"
+    ]
+  },
   "targetAcceptanceCases": [
     "same-local-form-id-in-two-plugins",
     "one-bad-extension-does-not-disable-other-sources",
     "deterministic-clean-checkout-catalog-rebuild"
   ],
+  "targetAcceptanceStatus": "open-until-catalog-v2-and-fresh-game-proof",
   "retirementAfterReplacement": [
     {
       "surface": "PDV_QuestReactionWorker script identity",
@@ -201,6 +218,12 @@
     "node tools/pdv_quest_matrix_selftest.mjs",
     "node tools/pdv_quest_matrix_compile.mjs --check",
     "git diff --check"
+  ],
+  "slice1BInProgressGates": [
+    "node tools/pdv_quest_reaction_characterization.mjs",
+    "node tools/pdv_quest_reaction_performance_audit.mjs",
+    "node tools/pdv_quest_reaction_runtime_check.mjs --self-test",
+    "node tools/pdv_compile_inventory_audit.mjs"
   ],
   "legacyBaselineRegressionGates": [
     {

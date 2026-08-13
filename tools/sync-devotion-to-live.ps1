@@ -21,9 +21,14 @@
     Directory where non-dry-run syncs create a timestamped copy of the live
     Devotion artifacts before writing. Defaults to generated/live-devotion-backups.
 
+.PARAMETER Only
+    Optional exact source or destination paths from the sync map. Limits a sync
+    to the named files while retaining the normal health check and full backup.
+
 .EXAMPLE
     .\tools\sync-devotion-to-live.ps1
     .\tools\sync-devotion-to-live.ps1 -DryRun
+    .\tools\sync-devotion-to-live.ps1 -Only "Scripts\Source\PDV_MCM.psc"
     .\tools\sync-devotion-to-live.ps1 -DevotionRoot "E:\Games\Devotion"
 #>
 
@@ -31,6 +36,7 @@
 param(
     [string]$DevotionRoot = "D:\Wabbajack\modlists\Anvil\mods\Devotion",
     [string]$BackupRoot = "",
+    [string[]]$Only = @(),
     [switch]$DryRun
 )
 
@@ -66,7 +72,7 @@ $Map = @(
     @{ Src = "live-source\Scripts\Source\PDV_KhajiitAzurahPortentEffect.psc"; Dst = "Scripts\Source\PDV_KhajiitAzurahPortentEffect.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_KhajiitBaanDarRescueEffect.psc"; Dst = "Scripts\Source\PDV_KhajiitBaanDarRescueEffect.psc" },
     @{ Src = "live-source\Scripts\Source\TempleBlessingScript.psc";          Dst = "Scripts\Source\TempleBlessingScript.psc"; Required = $true },
-    @{ Src = "live-source\Scripts\Source\PDV_QuestReactionWorker.psc";       Dst = "Scripts\Source\PDV_QuestReactionWorker.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_QuestReactionRuntime.psc";      Dst = "Scripts\Source\PDV_QuestReactionRuntime.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_Deity_AuriEl.psc";              Dst = "Scripts\Source\PDV_Deity_AuriEl.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_DaedricPathBase.psc";          Dst = "Scripts\Source\PDV_DaedricPathBase.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_MCM.psc";                       Dst = "Scripts\Source\PDV_MCM.psc" },
@@ -210,6 +216,23 @@ function New-LiveDevotionBackup {
 
 $DevotionRoot = Assert-LiveDevotionRootHealthy $DevotionRoot
 Assert-SyncMap $Map $RepoRoot $DevotionRoot
+
+if ($Only.Count -gt 0) {
+    $requested = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    foreach ($path in $Only) {
+        [void]$requested.Add($path)
+    }
+    $Map = @($Map | Where-Object { $requested.Contains($_.Src) -or $requested.Contains($_.Dst) })
+    if ($Map.Count -ne $requested.Count) {
+        $matched = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+        foreach ($entry in $Map) {
+            if ($requested.Contains($entry.Src)) { [void]$matched.Add($entry.Src) }
+            if ($requested.Contains($entry.Dst)) { [void]$matched.Add($entry.Dst) }
+        }
+        $unknown = @($requested | Where-Object { -not $matched.Contains($_) })
+        Fail-Sync ("Unknown -Only sync-map path(s): " + ($unknown -join ", "))
+    }
+}
 
 if (-not $DryRun) {
     $backupPath = New-LiveDevotionBackup $DevotionRoot $BackupRoot
