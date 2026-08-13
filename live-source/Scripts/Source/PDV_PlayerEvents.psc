@@ -116,6 +116,11 @@ Int PDV_KID_TradeValuePending = 0
 ; overrides these vanilla effect FormIDs in place, so its versions are covered for free.
 FormList PDV_HealCureOtherEffectsList = None
 
+; Foreign (non-Devotion-master) other-directed heal effects, resolved by FormID at load
+; so Devotion never masters the source plugin. A None slot (plugin absent, or spare) is
+; skipped. Fixed-size so adding a future mod's ally-heal is a one-line resolver edit.
+Form[] PDV_HealCureForeignEffects
+
 FormList Property PDV_FLST_FaucetSkillBooks Auto
 FormList Property PDV_FLST_FaucetSpellTomes Auto
 FormList Property PDV_FLST_FaucetDaedricArtifacts Auto
@@ -749,7 +754,7 @@ Bool Function SpellHasRaiseUndeadEffect(Spell castSpell)
 EndFunction
 
 Bool Function SpellHasHealOrCureOtherEffect(Spell castSpell)
-    if !castSpell || !PDV_HealCureOtherEffectsList
+    if !castSpell
         return false
     endIf
 
@@ -757,10 +762,32 @@ Bool Function SpellHasHealOrCureOtherEffect(Spell castSpell)
     Int count = castSpell.GetNumEffects()
     while index < count
         MagicEffect effectRef = castSpell.GetNthEffectMagicEffect(index)
-        if effectRef && HasListedForm(PDV_HealCureOtherEffectsList, effectRef as Form)
-            return true
+        if effectRef
+            Form effectForm = effectRef as Form
+            if PDV_HealCureOtherEffectsList && HasListedForm(PDV_HealCureOtherEffectsList, effectForm)
+                return true
+            endIf
+            if IsForeignHealEffect(effectForm)
+                return true
+            endIf
         endIf
         index += 1
+    endWhile
+    return false
+EndFunction
+
+Bool Function IsForeignHealEffect(Form effectForm)
+    if !effectForm || !PDV_HealCureForeignEffects
+        return false
+    endIf
+
+    Int i = 0
+    Int n = PDV_HealCureForeignEffects.Length
+    while i < n
+        if PDV_HealCureForeignEffects[i] == effectForm
+            return true
+        endIf
+        i += 1
     endWhile
     return false
 EndFunction
@@ -1398,6 +1425,14 @@ Function ResolveKIDKeywords()
     PDV_KID_AmuletTalos = Game.GetFormFromFile(0x00071754, "Devotion.esp") as Keyword
     PDV_KID_AmuletZenithar = Game.GetFormFromFile(0x00071755, "Devotion.esp") as Keyword
     PDV_HealCureOtherEffectsList = Game.GetFormFromFile(0x00071790, "Devotion.esp") as FormList
+
+    ; Foreign ally-heal effects (skipped when the plugin is absent -> None). Triumvirate
+    ; cleric auras: Aura of Vigor (1F675A) and Aura of Thorns restore-health (1FB86C),
+    ; both ValueModifier/Health non-detrimental. Mysticism needs no entries: it overrides
+    ; the vanilla FormIDs in place, so the FormList above already covers it.
+    PDV_HealCureForeignEffects = new Form[8]
+    PDV_HealCureForeignEffects[0] = Game.GetFormFromFile(0x001F675A, "Triumvirate - Mage Archetypes.esp")
+    PDV_HealCureForeignEffects[1] = Game.GetFormFromFile(0x001FB86C, "Triumvirate - Mage Archetypes.esp")
 EndFunction
 
 Function RouteKIDAction(String actionKey, Form sourceForm)

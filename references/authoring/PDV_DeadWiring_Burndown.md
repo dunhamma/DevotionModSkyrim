@@ -70,7 +70,11 @@ Sequencing: bugs + tooling landed now; WIRE items build AFTER the mega packet.
 > **other-delivery** heal effects — `01CEA7` (Healing Hands, target-actor) and `0B62ED`
 > (Grand Healing, self-area ally heal) — so Self-cast combat heals never score. Because
 > Mysticism overrides those vanilla effect FormIDs in place, Mysticism's heals are covered
-> for free; Triumvirate's Cleric Aid (a new FormID) is added via a runtime foreign-form pass.
+> for free. Triumvirate's cleric ally-heals — Aura of Vigor (`1F675A`) and Aura of Thorns
+> (`1FB86C`), both ValueModifier/Health non-detrimental — are added via a runtime foreign-form
+> array (resolved by FormID, so Devotion never masters Triumvirate; skipped when absent).
+> (Note: Triumvirate's "Aid" is a skill-buff, not a heal, and Mass Immortality is regen-fortify,
+> not a restore — both correctly excluded.)
 >
 > **Fidelity trade vs the original spec:** cannot confirm the actual target was a friendly
 > NPC (an other-directed heal cast is the proxy), and anti-farm is the per-deity CSV
