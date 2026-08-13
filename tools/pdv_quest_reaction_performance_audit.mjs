@@ -27,9 +27,25 @@ const EVENT_BUS_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_
 const PLAYER_EVENTS_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_PlayerEvents.psc");
 const MCM_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_MCM.psc");
 const FANOUT_LEDGER_PATH = path.join(ROOT, "tools", "pdv_qr_direct_fanout.json");
+const V3_CONTRACT_PATH = path.join(
+  ROOT,
+  "references",
+  "authoring",
+  "PDV_V3Slice1QuestReaction.manifest.json",
+);
 
 const args = new Set(process.argv.slice(2));
 const JSON_OUTPUT = args.has("--json");
+const REQUIRED_V3_CHARACTERIZATION_CASES = [
+  "single-runnable-cell",
+  "multi-tick-base-plus-meta-fifo",
+  "mixed-polarity-one-final-surface",
+  "zero-runnable-compacted-job",
+  "queued-and-recent-duplicate-coalescing",
+  "queue-ceiling-overflow",
+  "save-load-mid-job-resume",
+  "corrupt-snapshot-reject-and-cleanup",
+];
 
 function bodyFor(source, functionName) {
   const start = source.search(new RegExp(`(?:[A-Za-z]+\\s+)?Function\\s+${functionName}\\s*\\(`, "i"));
@@ -154,8 +170,24 @@ export function evaluateDirectFanout(managerSource, ledger) {
   return findings;
 }
 
-export function evaluate({ managerSource, workerSource, daedricPathBaseSource = "", eventBusSource = "", playerEventsSource = "", mcmSource = "", fanoutLedger = null }) {
+export function evaluate({
+  managerSource,
+  workerSource,
+  daedricPathBaseSource = "",
+  eventBusSource = "",
+  playerEventsSource = "",
+  mcmSource = "",
+  fanoutLedger = null,
+  v3Contract = null,
+}) {
   const findings = [];
+  const parity = v3Contract?.parityInvariants ?? {};
+  const characterizationCases = Array.isArray(v3Contract?.currentBehaviorCharacterization?.cases)
+    ? v3Contract.currentBehaviorCharacterization.cases
+    : [];
+  const missingCharacterizationCases = REQUIRED_V3_CHARACTERIZATION_CASES.filter(
+    (caseId) => !characterizationCases.includes(caseId),
+  );
   const queue = bodyFor(managerSource, "QueueQuestReactionJob");
   const slice = bodyFor(managerSource, "ProcessQuestReactionQueueSlice");
   const status = bodyFor(managerSource, "GetQuestReactionQueueStatus");
@@ -171,11 +203,59 @@ export function evaluate({ managerSource, workerSource, daedricPathBaseSource = 
   const queueTrace = bodyFor(managerSource, "TraceQuestReactionQueue");
   const sources = [eventBusSource, playerEventsSource, mcmSource].join("\n");
 
+  add(
+    findings,
+    v3Contract?.id === "pdv-v3-slice1-quest-reaction",
+    "v3.contract",
+    "V3 Slice 1 Quest Reaction contract is loaded.",
+  );
+  add(
+    findings,
+    v3Contract?.delivery?.saveContract === "new-game-only",
+    "v3.clean-break",
+    "V3 Slice 1 is explicitly new-game-only.",
+  );
+  add(
+    findings,
+    v3Contract?.delivery?.behaviorPolicy === "strict-parity-during-extraction",
+    "v3.strict-parity",
+    "V3 extraction forbids behavior changes while ownership moves.",
+  );
+  add(
+    findings,
+    v3Contract?.module?.host?.newScriptInstances === 0 &&
+      v3Contract?.module?.host?.schedulerOwners === 1,
+    "v3.no-new-runtime-host",
+    "V3 repurposes the current host and retains one scheduler owner.",
+  );
+  add(
+    findings,
+    missingCharacterizationCases.length === 0,
+    "v3.characterization-contract-cases",
+    missingCharacterizationCases.length
+      ? `V3 contract is missing named behavior cases: ${missingCharacterizationCases.join(", ")}.`
+      : "V3 contract records every required behavior case; this static audit does not execute them.",
+  );
   add(findings, /Scriptname\s+PDV_QuestReactionWorker\b/i.test(workerSource), "worker.identity", "Worker source declares PDV_QuestReactionWorker.");
   add(findings, /PDV__ManagerQuest\s+Property\s+PDV_Manager\s+Auto/i.test(workerSource), "worker.manager-property", "Worker has the CK-wired PDV_Manager property.");
-  add(findings, hasConstant(managerSource, "QUEST_REACTION_QUEUE_MAX_PENDING", 128), "manager.max-pending", "Queue ceiling is exactly 128 pending jobs.");
-  add(findings, hasConstant(managerSource, "QUEST_REACTION_QUEUE_CELLS_PER_TICK", 2), "manager.cells-per-tick", "Worker slice budget is exactly two cells.");
-  add(findings, hasConstant(managerSource, "QUEST_REACTION_QUEUE_TICK_SECONDS", 0.1), "manager.tick-seconds", "Worker rearm cadence is exactly 0.1 seconds while work exists.");
+  add(
+    findings,
+    hasConstant(managerSource, "QUEST_REACTION_QUEUE_MAX_PENDING", parity.queueMaxPending),
+    "manager.max-pending",
+    `Queue ceiling matches the V3 parity contract (${parity.queueMaxPending}).`,
+  );
+  add(
+    findings,
+    hasConstant(managerSource, "QUEST_REACTION_QUEUE_CELLS_PER_TICK", parity.workItemsPerTick),
+    "manager.cells-per-tick",
+    `Worker slice budget matches the V3 parity contract (${parity.workItemsPerTick}).`,
+  );
+  add(
+    findings,
+    hasConstant(managerSource, "QUEST_REACTION_QUEUE_TICK_SECONDS", parity.tickSeconds),
+    "manager.tick-seconds",
+    `Worker cadence matches the V3 parity contract (${parity.tickSeconds} seconds).`,
+  );
 
   add(findings, Boolean(queue), "manager.enqueue-api", "Manager exposes QueueQuestReactionJob.");
   add(findings, Boolean(slice), "manager.slice-api", "Manager exposes ProcessQuestReactionQueueSlice.");
@@ -439,13 +519,74 @@ EndFunction`;
 function main() {
   if (args.has("--self-test")) {
     const sample = syntheticSources();
-    const report = evaluate({ managerSource: sample.manager, workerSource: sample.worker, daedricPathBaseSource: sample.daedricPathBase, eventBusSource: sample.routes, playerEventsSource: sample.routes, mcmSource: sample.routes, fanoutLedger: { budget: 2, fanouts: {} } });
+    const fixtureContract = {
+      id: "pdv-v3-slice1-quest-reaction",
+      delivery: {
+        saveContract: "new-game-only",
+        behaviorPolicy: "strict-parity-during-extraction",
+      },
+      module: { host: { newScriptInstances: 0, schedulerOwners: 1 } },
+      parityInvariants: {
+        queueMaxPending: 128,
+        workItemsPerTick: 2,
+        tickSeconds: 0.1,
+      },
+      currentBehaviorCharacterization: {
+        cases: REQUIRED_V3_CHARACTERIZATION_CASES,
+      },
+    };
+    const fixtureInputs = {
+      managerSource: sample.manager,
+      workerSource: sample.worker,
+      daedricPathBaseSource: sample.daedricPathBase,
+      eventBusSource: sample.routes,
+      playerEventsSource: sample.routes,
+      mcmSource: sample.routes,
+      fanoutLedger: { budget: 2, fanouts: {} },
+    };
+    const report = evaluate({ ...fixtureInputs, v3Contract: fixtureContract });
+    const wrongCasesReport = evaluate({
+      ...fixtureInputs,
+      v3Contract: {
+        ...fixtureContract,
+        currentBehaviorCharacterization: {
+          cases: Array.from({ length: 10 }, (_, index) => `wrong-${index}`),
+        },
+      },
+    });
+    const wrongCasesRejected =
+      wrongCasesReport.findings.find(
+        (finding) => finding.id === "v3.characterization-contract-cases",
+      )?.status === "FAIL";
     const fanoutCases = fanoutSelfTest();
     const fanoutOk = fanoutCases.every(([, ok]) => ok);
-    const status = report.status === "PASS" && fanoutOk ? "PASS" : "FAIL";
-    if (JSON_OUTPUT) console.log(JSON.stringify({ ...report, status, fanoutSelfTest: fanoutCases.map(([name, ok]) => ({ name, status: ok ? "PASS" : "FAIL" })) }, null, 2));
+    const status =
+      report.status === "PASS" && fanoutOk && wrongCasesRejected ? "PASS" : "FAIL";
+    if (JSON_OUTPUT) {
+      console.log(
+        JSON.stringify(
+          {
+            ...report,
+            status,
+            characterizationSelfTest: {
+              name: "arbitrary ten-case contract fails",
+              status: wrongCasesRejected ? "PASS" : "FAIL",
+            },
+            fanoutSelfTest: fanoutCases.map(([name, ok]) => ({
+              name,
+              status: ok ? "PASS" : "FAIL",
+            })),
+          },
+          null,
+          2,
+        ),
+      );
+    }
     else {
       console.log(`PDV quest-reaction performance audit self-test: ${status}`);
+      console.log(
+        `  [${wrongCasesRejected ? "PASS" : "FAIL"}] characterization self-test: arbitrary ten-case contract fails`,
+      );
       for (const [name, ok] of fanoutCases) console.log(`  [${ok ? "PASS" : "FAIL"}] fanout self-test: ${name}`);
     }
     return status === "PASS" ? 0 : 1;
@@ -459,6 +600,7 @@ function main() {
     playerEventsSource: fs.readFileSync(PLAYER_EVENTS_PATH, "utf8"),
     mcmSource: fs.readFileSync(MCM_PATH, "utf8"),
     fanoutLedger: JSON.parse(fs.readFileSync(FANOUT_LEDGER_PATH, "utf8")),
+    v3Contract: JSON.parse(fs.readFileSync(V3_CONTRACT_PATH, "utf8")),
   });
   if (JSON_OUTPUT) console.log(JSON.stringify(report, null, 2));
   else {

@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "id": "pdv-v3-slice1-quest-reaction",
+  "status": "foundation",
+  "northStar": "Replace the current quest-reaction cluster with one deep, event-driven module built from current main without preserving V1 save state.",
+  "delivery": {
+    "integrationBranch": "feature/v3-big-update",
+    "foundationBranch": "codex/v3-s1a-foundation",
+    "saveContract": "new-game-only",
+    "releaseBoundary": "internal-v3-alpha",
+    "behaviorPolicy": "strict-parity-during-extraction"
+  },
+  "module": {
+    "name": "PDV_QuestReactionRuntime",
+    "host": {
+      "strategy": "repurpose-existing-worker-quest",
+      "housecarlRecordId": "0716DF:Devotion.esp",
+      "newScriptInstances": 0,
+      "schedulerOwners": 1
+    },
+    "interfaceVersion": 1,
+    "interface": [
+      {
+        "name": "Configure",
+        "returns": "Bool",
+        "parameters": ["Alias questStageReceiver", "Bool fromLoad = False"]
+      },
+      {
+        "name": "SubmitQuestStage",
+        "returns": "Bool",
+        "parameters": ["Quest sourceQuest", "Int stageValue", "String logicalEventId = empty"]
+      },
+      {
+        "name": "SubmitSemanticEvent",
+        "returns": "Bool",
+        "parameters": ["String sourceId", "String eventId", "Form sourceForm = None"]
+      },
+      {
+        "name": "GetStatusLine",
+        "returns": "String",
+        "parameters": []
+      },
+      {
+        "name": "GetCompatibilityDetail",
+        "returns": "String",
+        "parameters": []
+      }
+    ],
+    "callerResponsibilities": [
+      "PlayerEvents adapts engine events and supplies logical act identity.",
+      "Optional adapters submit semantic event IDs and never submit deity outcomes.",
+      "Callers do not load catalogs, inspect queue state, schedule work, or finalize presentation."
+    ],
+    "ownedResponsibilities": [
+      "catalog loading and source activation",
+      "fully-qualified quest-stage and semantic-event resolution",
+      "duplicate suppression",
+      "persisted FIFO snapshots",
+      "bounded processing and resume",
+      "aggregated result delivery",
+      "read-only compatibility status"
+    ]
+  },
+  "catalog": {
+    "schemaId": "pdv.quest-reaction.catalog.v2",
+    "schemaVersion": 2,
+    "loadOrder": ["core", "official-third-party", "external-extension"],
+    "files": {
+      "core": "PDV_QuestReactionCore.v2.json",
+      "officialThirdParty": "PDV_QuestReactionPatches.v2.json"
+    },
+    "identity": "pluginName|localFormId|stage",
+    "authoring": {
+      "sourceOfTruth": [
+        "references/authoring/PDV_QuestReactionMatrix_*.csv",
+        "references/authoring/patches/*.csv",
+        "one compatibility catalog manifest"
+      ],
+      "distPolicy": "generated-only",
+      "checkMode": "regenerate in memory and normalized-text compare every generated JSON/XML file",
+      "writeMode": "write deterministic LF text and exact-byte receipts"
+    },
+    "sourceFields": [
+      "sourceId",
+      "displayName",
+      "pluginName",
+      "sentinelForms",
+      "questStages",
+      "semanticEvents"
+    ],
+    "cellFields": [
+      "pluginName",
+      "localFormId",
+      "stage",
+      "deityId",
+      "valence",
+      "intensity",
+      "magnitude",
+      "tags"
+    ],
+    "activation": {
+      "requires": ["plugin-active", "all-sentinel-forms-resolve", "source-not-disabled"],
+      "failureMode": "reject-source-only",
+      "disabledSourcesConfig": "optional-empty-by-default"
+    },
+    "collisionPolicy": {
+      "sameFullyQualifiedKey": "core-wins-then-official-third-party-then-lexically-sorted-external-extension",
+      "sameLocalFormAcrossDifferentPlugins": "independent",
+      "duplicateWithinOneSource": "reject-source-only"
+    },
+    "extension": {
+      "publicFromSlice1": true,
+      "versioned": true,
+      "externalFoldersSorted": true,
+      "unknownSchema": "reject-source-only"
+    },
+    "sharedPolicy": {
+      "owner": "core-only",
+      "thirdPartyCatalog": "delta-only"
+    }
+  },
+  "packaging": {
+    "coreAddsThirdPartyMasters": false,
+    "dataOnlySources": {
+      "countAtFoundation": 75,
+      "install": "automatic-single-catalog",
+      "runtimeGate": "plugin-and-sentinels"
+    },
+    "pluginAdapters": {
+      "countAtFoundation": 5,
+      "install": "dependency-detected-fomod-options",
+      "mayRetainNarrowSourceMasters": true
+    },
+    "mcm": {
+      "perSourceToggles": false,
+      "readOnlyStatus": true
+    }
+  },
+  "parityInvariants": {
+    "queueMaxPending": 128,
+    "workItemsPerTick": 2,
+    "tickSeconds": 0.1,
+    "oneSchedulerOwner": true,
+    "persistBeforeReturn": true,
+    "fifo": true,
+    "snapshotEventTimeSemantics": true,
+    "coalesceDuplicates": true,
+    "sourceAtomicFailure": true,
+    "finalizeAfterLastWorkItem": true,
+    "acceptedLogicalAct": {
+      "prismaToasts": 1,
+      "bookOfDaysSourceEntries": 1
+    },
+    "timingValueAndCopyChangesAllowed": false
+  },
+  "currentBehaviorCharacterization": {
+    "status": "contract-recorded-static-structure-checked",
+    "proofBoundary": "named case contract plus static source structure only; executable case fixtures, fresh-game runtime, save-load, and player surfaces remain Slice 1B proof",
+    "cases": [
+    "single-runnable-cell",
+    "multi-tick-base-plus-meta-fifo",
+    "mixed-polarity-one-final-surface",
+    "zero-runnable-compacted-job",
+    "queued-and-recent-duplicate-coalescing",
+    "queue-ceiling-overflow",
+    "save-load-mid-job-resume",
+    "corrupt-snapshot-reject-and-cleanup"
+    ]
+  },
+  "targetAcceptanceCases": [
+    "same-local-form-id-in-two-plugins",
+    "one-bad-extension-does-not-disable-other-sources",
+    "deterministic-clean-checkout-catalog-rebuild"
+  ],
+  "retirementAfterReplacement": [
+    {
+      "surface": "PDV_QuestReactionWorker script identity",
+      "replacement": "PDV_QuestReactionRuntime on the existing quest FormKey",
+      "proof": ["direct houseCARL VMAD readback", "clean compile inventory", "fresh-game runtime"]
+    },
+    {
+      "surface": "PDV__ManagerQuest quest catalog, queue, and scheduler-facing functions",
+      "replacement": "PDV_QuestReactionRuntime owned implementation",
+      "proof": ["symbol and StorageUtil-key sweep", "characterization parity", "save-load runtime"]
+    },
+    {
+      "surface": "BeginExternalReactionBatch/ApplyExternalReaction/EndExternalReactionBatch",
+      "replacement": "SubmitSemanticEvent plus catalog-owned outcomes",
+      "proof": ["PatchHub adapter migration inventory", "no external batch callers in shipped package"]
+    },
+    {
+      "surface": "per-channel shared stance, value, and faucet tables",
+      "replacement": "core-owned shared policy plus delta-only third-party catalog",
+      "proof": ["exact source-to-runtime coverage", "deterministic output comparison"]
+    }
+  ],
+  "foundationExitGates": [
+    "node tools/pdv_compile_inventory_audit.mjs",
+    "node tools/pdv_quest_reaction_performance_audit.mjs",
+    "node tools/pdv_quest_reaction_runtime_check.mjs --self-test",
+    "node tools/pdv_quest_matrix_selftest.mjs",
+    "node tools/pdv_quest_matrix_compile.mjs --check",
+    "git diff --check"
+  ],
+  "legacyBaselineRegressionGates": [
+    {
+      "command": "node tools/pdv_quest_patch_fomod_validate.mjs --root dist/PDV_QuestModPatches_FOMOD",
+      "purpose": "Prove Slice 1A did not damage the published v1.5 80-option package; this does not validate the future V3 five-adapter installer."
+    }
+  ],
+  "deferred": [
+    "manager ledger extraction",
+    "Prisma presenter extraction",
+    "race and origin adapter extraction",
+    "EventBus-wide redesign",
+    "native implementation without a measured Papyrus breach"
+  ]
+}

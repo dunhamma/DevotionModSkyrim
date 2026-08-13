@@ -35,6 +35,12 @@ const COMPILER_EXE = path.join(STOCK_GAME, "Papyrus Compiler", "PapyrusCompiler.
 const ASSEMBLER_EXE = path.join(STOCK_GAME, "Papyrus Compiler", "PapyrusAssembler.exe");
 const FLAGS_FILE = path.join(STOCK_GAME, "Data", "Source", "Scripts", "TESV_Papyrus_Flags.flg");
 const VERIFIER = path.join(PROJECT_ROOT, "tools", "pdv_verify.mjs");
+const RELEASE_MANIFEST = path.join(
+  PROJECT_ROOT,
+  "references",
+  "authoring",
+  "PDV_ReleasePayload.manifest.json",
+);
 
 const IMPORT_ROOTS = [
   DEVOTION_SOURCE,
@@ -45,97 +51,35 @@ const IMPORT_ROOTS = [
   SKYUI_HEADERS_SOURCE,
 ];
 
-const ACTIVE_SCRIPTS = [
-  "PDV__MainQuest",
-  "PDV_Origin",
-  "PDV__ManagerQuest",
-  "PDV_DeityBase",
-  "PDV_Deity_Kyne",
-  "PDV_Deity_Talos",
-  "PDV_Deity_AuriEl",
-  "PDV_Deity_Yffre",
-  "PDV_Deity_Zen",
-  "PDV_Deity_BaanDar",
-  "PDV_EventTypes",
-  "PDV_EventBus",
-  "PDV_FragmentBridge",
-  "PDV_EventSignalActivator",
-  "PDV_EventSignalEffect",
-  "PDV_PlayerEvents",
-  "PDV_ActionRouter",
-  "PDV__SM_KillActor",
-  "PDV__SM_CraftItem",
-  "PDV__SM_NewVoicePower",
-  "PDV__SM_IncreaseSkill",
-  "PDV__SM_ChangeLocation",
-  "PDV__SM_PickLock",
-  "PDV__SM_Trespass",
-  "PDV__SM_AssaultActor",
-  "PDV__SM_AddToPlayer",
-  "PDV_SurveyDevotionEffect",
-  "PDV_MCM",
-  "PDV_Substrate_DunmerAncestor",
-  "PDV_Substrate_KhajiitLunar",
-  "PDV_Substrate_ArgonianHist",
-  "PDV_Substrate_NordAncestor",
-  "PDV_DaedricPath_Boethiah",
-  "PDV_DaedricPath_Azura",
-  "PDV_DaedricPath_Vaermina",
-  "PDV_DaedricPath_Meridia",
-  "PDV_DaedricPath_Molag",
-  "PDV_DaedricPath_Mephala",
-  "PDV_DaedricPath_Malacath",
-  "PDV_DaedricPath_Dagon",
-  "PDV_DaedricPath_Sheo",
-  "PDV_DaedricPath_Namira",
-  "PDV_DaedricPath_Sanguine",
-  "PDV_DaedricPath_Vile",
-  "PDV_DaedricPath_Mora",
-  "PDV_DaedricPath_Nocturnal",
-  "PDV_DaedricPath_Peryite",
-  "PDV_DaedricPath_Hircine",
-  "PDV_DiegeticDeps",
-  "PDV_DiegeticDirector",
-];
-
-const OPTIONAL_SCRIPTS = [
-  "PDV_ReputationTrack",
-  "PDV_StateTrack",
-  "PDV_SubstrateBase",
-  "PDV_SacredPlace",
-  "PDV_DaedricPathBase",
-  "PDV_CurseState",
-];
-
-// Auto-discover every concrete god script (PDV_Deity_* and PDV_DaedricPath_*) from the
-// source folder so newly-added gods are always compiled by --all/default and never go
-// stale. Prevents the class of bug where a god's .psc is edited but its .pex is never
-// recompiled because the name was missing from ACTIVE_SCRIPTS.
-function discoverGodScripts() {
-  if (!exists(DEVOTION_SOURCE)) {
-    return [];
-  }
-  return fs
-    .readdirSync(DEVOTION_SOURCE)
-    .filter((name) => /^PDV_(Deity|DaedricPath)_.*\.psc$/i.test(name))
-    .map((name) => path.basename(name, ".psc"))
-    .sort();
-}
-
 function knownScripts() {
-  return [...new Set([...ACTIVE_SCRIPTS, ...discoverGodScripts(), ...OPTIONAL_SCRIPTS])];
+  const manifest = JSON.parse(fs.readFileSync(RELEASE_MANIFEST, "utf8"));
+  if (!Array.isArray(manifest.sourceScripts) || !Number.isInteger(manifest.scriptPairCount)) {
+    throw new Error(
+      `Release payload manifest must define sourceScripts and scriptPairCount: ${RELEASE_MANIFEST}`,
+    );
+  }
+  if (manifest.sourceScripts.length !== manifest.scriptPairCount) {
+    throw new Error(
+      `Release payload manifest lists ${manifest.sourceScripts.length} scripts but declares ${manifest.scriptPairCount} pairs.`,
+    );
+  }
+  const uniqueScripts = [...new Set(manifest.sourceScripts)];
+  if (uniqueScripts.length !== manifest.sourceScripts.length) {
+    throw new Error("Release payload manifest sourceScripts contains duplicate names.");
+  }
+  return uniqueScripts;
 }
 
 function main() {
   const args = parseArgs(process.argv.slice(2));
-  const environment = checkEnvironment();
 
   if (args.list) {
     printScriptList(args);
-    process.exitCode = environment.ok ? 0 : 1;
+    process.exitCode = 0;
     return;
   }
 
+  const environment = checkEnvironment();
   if (!environment.ok) {
     printEnvironmentFailures(environment.failures, args.json);
     process.exitCode = 1;
@@ -349,6 +293,7 @@ function checkEnvironment() {
     "Devotion source": DEVOTION_SOURCE,
     "Devotion output": DEVOTION_PEX,
     "PDV verifier": VERIFIER,
+    "Release payload manifest": RELEASE_MANIFEST,
   };
   for (const [label, filePath] of IMPORT_ROOTS.map((root, index) => [`Import root ${index + 1}`, root])) {
     required[label] = filePath;
@@ -400,8 +345,20 @@ function selectTargets(args) {
     return { ok: true, scripts };
   }
 
+  const missingManifestSource = known.filter(
+    (scriptName) => !exists(scriptPath(scriptName)),
+  );
+  if (missingManifestSource.length) {
+    return {
+      ok: false,
+      message:
+        "Release manifest source script(s) are missing from the configured compile root: " +
+        missingManifestSource.map((name) => `${name}.psc`).join(", "),
+    };
+  }
+
   if (args.all) {
-    return { ok: true, scripts: known.filter((scriptName) => exists(scriptPath(scriptName))) };
+    return { ok: true, scripts: known };
   }
 
   return {

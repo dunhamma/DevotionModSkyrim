@@ -1,17 +1,17 @@
 # PDV Mod Packaging State Authority
 
-Updated: 2026-08-12 AEST
+Updated: 2026-08-13 AEST
 Status: v1.5.0 final all-in-one release packaged and byte-verified from clean commit `e63de5f5` (README requirements repackage of the published v1.5.0); tagged and published. The v1.5.0d prerelease receipt below is retained as historical evidence.
 
-The v1.5.0 package incorporates the closed official-quest work: all 18 ambiguity
+The published v1.5.0 package incorporates the closed official-quest work: all 18 ambiguity
 decisions, the `FreeformRiften02` selector adapter, the owner-approved tag/profile
 correction slate, and the core matrix expanded to 4,108 cells across 354 quest
 EditorIDs (main-quest coverage reconciled, PR #76). The optional SPID NPC
 religious-recognition feature is deliberately unadvertised in 1.5.0 and now defaults
 OFF (owner decision 2026-08-12): it is wired but not yet in-game validated, and its
 hard-rival path sets a faction ENEMY reaction that needs an attack-on-sight check
-before it is advertised. The build is byte-verified but NOT yet tagged or published;
-do not describe it as publicly shipped until it is.
+before it is advertised. The archive is tagged and published; this does not promote
+the unadvertised SPID feature or close its runtime evidence.
 
 ## Purpose
 
@@ -23,7 +23,7 @@ The dated ARR review is preserved in
 `PDV_QuestModPatches_ARR_Review_2026-08-06.md`. That review is source evidence;
 this file owns the current decision and state.
 
-## Locked package boundary
+## Locked v1.5 package boundary
 
 1. Devotion core carries vanilla, DLC, Creation Club, and generic runtime
    capabilities. It does not carry named modlist or third-party reaction data.
@@ -37,6 +37,25 @@ this file owns the current decision and state.
    but the public tester distribution is one all-in-one FOMOD: required core
    plus every dependency-gated optional patch. A PatchHub-only archive may be
    retained as an internal proof artifact, not as the player download.
+
+## Locked ground-up V3 package boundary
+
+1. Core retains the same no-third-party-master boundary.
+2. The 75 data-only compatibility sources compile into one deterministic,
+   delta-only third-party catalog and install automatically in the all-in-one
+   package. Runtime plugin and sentinel checks keep absent sources inert.
+3. Only the five integrations that ship an ESPFE or patch-owned script remain
+   dependency-detected FOMOD choices. Their narrow source masters remain
+   conditional and never become core masters.
+4. Per-source CSVs remain local authoring inputs. `dist` is generated output,
+   never the semantic source of `sourceMod`, option ownership, or catalog data.
+5. Core, official third-party, and external-extension catalogs load in that
+   order using fully-qualified `pluginName|localFormId|stage` identity. A bad
+   source rejects only itself.
+
+The full Slice 1 interface, schema, activation, collision, and proof contract is
+`PDV_V3Slice1QuestReaction.manifest.json`. This V3 boundary does not retroactively
+change the published v1.5 installer.
 
 ## Public-copy boundary
 
@@ -94,9 +113,9 @@ Book entry must reuse the same resolved practice line.
   (manager getters recompiled, PDV_MCM recompiled to satisfy the dependency gate).
   Adds a user-selectable Normal/Large Prisma toast size (MCM: Presentation -> Toast
   size) for 4K legibility; the Prisma view cache key was bumped to match. The Large
-  sizing awaits a 4K in-game confirmation before publish.
-- NOT yet tagged or published. Runtime, presentation, balance, and save/load
-  observations remain post-release tester evidence, not release gates.
+  sizing still awaits a 4K in-game confirmation.
+- Tagged and published. Runtime, presentation, balance, and save/load observations
+  remain post-release tester evidence, not release gates.
 
 ## v1.5.0d prerelease state (historical)
 
