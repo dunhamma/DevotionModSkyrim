@@ -672,7 +672,6 @@ Float Property BROAD_PANTHEON_FAITHFUL_THRESHOLD = 50.0 AutoReadOnly
 Float Property BROAD_PANTHEON_POOL_MAX = 50.0 AutoReadOnly
 Float Property BROAD_PANTHEON_DECAY_GRACE_DAYS = 2.0 AutoReadOnly
 Float Property BROAD_PANTHEON_DECAY_PER_DAWN = 0.1 AutoReadOnly
-Int Property BROAD_PANTHEON_SCHEMA_VERSION = 1 AutoReadOnly
 String Property BROAD_PANTHEON_IMPERIAL = "ImperialDivines" AutoReadOnly
 String Property BROAD_PANTHEON_NORD_OLD = "NordOldWays" AutoReadOnly
 String Property BROAD_PANTHEON_NORD_NINE = "NordNineDivines" AutoReadOnly
@@ -1002,7 +1001,6 @@ Event OnInit()
     RegisterManagerShoutSignals()
     EnsureLikesDislikesTable()
     EnsurePrinceLikesDislikesTable()
-    MigrateBroadPantheonPools()
     EnsureRecognitionModEvents()
     RefreshPatronMirrors()
     UpdateContextualFavorRuntime()
@@ -1108,7 +1106,6 @@ Event OnUpdate()
         RegisterManagerShoutSignals()
         EnsureLikesDislikesTable()
         EnsurePrinceLikesDislikesTable()
-        MigrateBroadPantheonPools()
         EnsureKhajiitObserveMoonsPower()
         _shoutRefreshTicks = 0
     endIf
@@ -14958,43 +14955,6 @@ Function CatchUpBroadPantheonDecayBeforeCurrentDay(String poolId)
     ProcessBroadPantheonThroughDay(poolId, targetDay, signedCap, "pre_event_catchup")
 EndFunction
 
-Function MigrateBroadPantheonPools()
-    if StorageUtil.GetIntValue(None, "PDV.BroadPantheon.Version") >= BROAD_PANTHEON_SCHEMA_VERSION
-        return
-    endIf
-
-    Float imperialSeed = (StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount") as Float) * 50.0 / 6.0
-    Float oldWaysSeed = (StorageUtil.GetIntValue(None, "PDV.Nord.OldWaysContextCount") as Float) * 50.0 / 6.0
-    SetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL, imperialSeed, "migration_v1")
-    SetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD, oldWaysSeed, "migration_v1")
-
-    Float highestNineDivines = 0.0
-    if GetPlayerOriginRaceIndex() == ORIGIN_NORD && GetPatronState() == PATRON_STATE_BROAD && GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
-        highestNineDivines = GetPiety(PDV_Akatosh)
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Arkay))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Dibella))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Julianos))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Kynareth))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Mara))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Stendarr))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Zenithar))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Talos))
-        SetBroadPantheonStanding(BROAD_PANTHEON_NORD_NINE, highestNineDivines, "migration_v1_highest")
-    endIf
-
-    if imperialSeed > 0.0
-        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(BROAD_PANTHEON_IMPERIAL))
-    endIf
-    if oldWaysSeed > 0.0
-        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(BROAD_PANTHEON_NORD_OLD))
-    endIf
-    if highestNineDivines > 0.0
-        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(BROAD_PANTHEON_NORD_NINE))
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.BroadPantheon.Version", BROAD_PANTHEON_SCHEMA_VERSION)
-    SyncBroadPantheonRewards(Game.GetPlayer())
-EndFunction
-
 String Function GetBroadPantheonStandingKey(String poolId)
     return "PDV.BroadPantheon." + poolId + ".Standing"
 EndFunction
@@ -19941,33 +19901,6 @@ String Function DebugRunBroadPantheonCatchupForPacing(Int poolIndex)
     SyncBroadPantheonRewards(Game.GetPlayer())
     Trace(1, "[PDV][PS-A11] forced catch-up pool=" + poolId + " lastGainDay=" + lastGainDay + " through=" + targetDay + " standing=" + GetBroadPantheonStanding(poolId))
     return DebugGetBroadPantheonSummary(poolIndex) + " | PS-A11 processed through gain day +5; expected two grace days then 0.1/day."
-EndFunction
-
-String Function DebugRunBroadPantheonMigrationFixture()
-    ; This deliberately exercises the real migration and is confined to the
-    ; clearly-labelled throwaway-save MCM control.
-    StorageUtil.SetIntValue(None, "PDV.Imperial.CivicServiceCount", 3)
-    StorageUtil.SetIntValue(None, "PDV.Nord.OldWaysContextCount", 6)
-    ResetBroadPantheonPool(BROAD_PANTHEON_IMPERIAL)
-    ResetBroadPantheonPool(BROAD_PANTHEON_NORD_OLD)
-    ResetBroadPantheonPool(BROAD_PANTHEON_NORD_NINE)
-    StorageUtil.SetIntValue(None, "PDV.BroadPantheon.Version", 0)
-
-    Bool nineEligible = GetPlayerOriginRaceIndex() == ORIGIN_NORD && GetPatronState() == PATRON_STATE_BROAD && GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
-    if nineEligible
-        StorageUtil.SetFloatValue(PDV_Akatosh as Form, "PDV.Piety", 37.0)
-        StorageUtil.SetFloatValue(PDV_Mara as Form, "PDV.Piety", 42.0)
-        StorageUtil.SetFloatValue(PDV_Zenithar as Form, "PDV.Piety", 11.0)
-    endIf
-
-    MigrateBroadPantheonPools()
-    Float imperialOnce = GetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL)
-    Float oldWaysOnce = GetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD)
-    Float nineOnce = GetBroadPantheonStanding(BROAD_PANTHEON_NORD_NINE)
-    MigrateBroadPantheonPools()
-    Bool idempotent = imperialOnce == GetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL) && oldWaysOnce == GetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD) && nineOnce == GetBroadPantheonStanding(BROAD_PANTHEON_NORD_NINE)
-    Trace(1, "[PDV][PS-A12] migration imperial=" + imperialOnce + " oldWays=" + oldWaysOnce + " nine=" + nineOnce + " nineEligible=" + nineEligible + " idempotent=" + idempotent)
-    return "Migration fixture: Imperial=" + imperialOnce + " (expected 25); Old Ways=" + oldWaysOnce + " (expected 50); Nine=" + nineOnce + " (expected 42 when eligible); second run unchanged=" + idempotent + ". Reload the clean QASmoke save now."
 EndFunction
 
 String Function DebugSetNordBaselineForPacing(Int baselineValue)

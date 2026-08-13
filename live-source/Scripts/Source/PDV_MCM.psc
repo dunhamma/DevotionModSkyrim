@@ -209,7 +209,6 @@ Int _oidPacingBroadSeed50 = -1
 Int _oidPacingBroadFanout = -1
 Int _oidPacingBroadScratchPositive = -1
 Int _oidPacingBroadScratchNegative = -1
-Int _oidPacingBroadMigration = -1
 Int _oidPacingBroadCatchup = -1
 Int _oidPacingNordBaseline = -1
 Int _oidPacingNordBaselineApply = -1
@@ -402,8 +401,6 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Runs the signed mixed-god fan-out fixture. One logical event must contribute only its strongest eligible positive, or its strongest negative when no positive applies.")
     elseIf a_option == _oidPacingBroadScratchPositive || a_option == _oidPacingBroadScratchNegative
         SetInfoText("Stages deliberately excessive signed scratch. Wait through a real 06:00 dawn and confirm the selected pool folds no more than +4.3 or -4.3. This control does not advance time.")
-    elseIf a_option == _oidPacingBroadMigration
-        SetInfoText("Destructive throwaway-save fixture. Runs the real migration twice: Imperial count 3 to 25, Old Ways count 6 to 50, and eligible Nine Divines from the highest god only. Reload the clean QASmoke save afterward.")
     elseIf a_option == _oidPacingBroadCatchup
         SetInfoText("PS-A11 throwaway-save control. After one real positive act has folded and this pool is suppressed, runs the real catch-up routine through five days after its recorded gain. It does not change Skyrim time.")
     elseIf a_option == _oidPacingNordBaseline
@@ -808,11 +805,6 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidPacingBroadScratchNegative
         DebugPrimeBroadPantheonScratch(-100.0)
-        return
-    endIf
-
-    if a_option == _oidPacingBroadMigration
-        DebugRunBroadPantheonMigrationFixture()
         return
     endIf
 
@@ -2476,7 +2468,6 @@ Function BuildPacingPantheonsPage()
     _oidPacingBroadFanout = AddTextOption("Signed fan-out test", "Strongest delta only", OPTION_FLAG_NONE)
     _oidPacingBroadScratchPositive = AddTextOption("Prime +100 scratch", "Real dawn caps +4.3", OPTION_FLAG_NONE)
     _oidPacingBroadScratchNegative = AddTextOption("Prime -100 scratch", "Real dawn caps -4.3", OPTION_FLAG_NONE)
-    _oidPacingBroadMigration = AddTextOption("Run migration fixture", "Destructive: throwaway save", OPTION_FLAG_NONE)
     _oidPacingBroadCatchup = AddTextOption("PS-A11 catch-up", "Suppressed pool: gain day +5", OPTION_FLAG_NONE)
 
     AddEmptyOption()
@@ -2652,13 +2643,6 @@ EndFunction
 Function DebugPrimeBroadPantheonScratch(Float scratchValue)
     if EnsureManagerBinding("pacing_broad_scratch")
         ShowMessage(PDV_Manager.DebugPrimeBroadPantheonScratch(_selectedBroadPantheonPool, scratchValue), False, "$OK", "")
-        ForcePageReset()
-    endIf
-EndFunction
-
-Function DebugRunBroadPantheonMigrationFixture()
-    if EnsureManagerBinding("pacing_broad_migration")
-        ShowMessage(PDV_Manager.DebugRunBroadPantheonMigrationFixture(), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
@@ -4144,7 +4128,6 @@ Function ResetAllOptionIds()
     _oidOrcStronghold = -1
     _oidPacingBroadCatchup = -1
     _oidPacingBroadFanout = -1
-    _oidPacingBroadMigration = -1
     _oidPacingBroadPool = -1
     _oidPacingBroadReset = -1
     _oidPacingBroadScratchNegative = -1
