@@ -1002,7 +1002,6 @@ Event OnInit()
     RegisterManagerShoutSignals()
     EnsureLikesDislikesTable()
     EnsurePrinceLikesDislikesTable()
-    MigrateDaedricPactsIfNeeded()
     MigrateBroadPantheonPools()
     EnsureRecognitionModEvents()
     RefreshPatronMirrors()
@@ -1109,7 +1108,6 @@ Event OnUpdate()
         RegisterManagerShoutSignals()
         EnsureLikesDislikesTable()
         EnsurePrinceLikesDislikesTable()
-        MigrateDaedricPactsIfNeeded()
         MigrateBroadPantheonPools()
         EnsureKhajiitObserveMoonsPower()
         _shoutRefreshTicks = 0
@@ -12638,64 +12636,6 @@ EndFunction
 ; pact spells, then re-establish a single active pact = the most-advanced committed
 ; Prince. Version-gated so it runs once per save. Curse spells are not pact spells
 ; and are untouched.
-Function MigrateDaedricPactsIfNeeded()
-    if StorageUtil.GetIntValue(None, "PDV.Daedric.PactVersion") >= DAEDRIC_PACT_VERSION
-        return
-    endIf
-
-    Int i = 0
-    Int count = GetDaedricPathCount()
-    PDV_DaedricPathBase topPath = None
-    Int topTier = 0
-    while i < count
-        PDV_DaedricPathBase path = GetDaedricPathAtListIndex(i)
-        if path
-            path.StripPactSpells()
-            if path.GetStoredTier() > topTier
-                topTier = path.GetStoredTier()
-                topPath = path
-            endIf
-        endIf
-        i += 1
-    endWhile
-
-    StorageUtil.FormListClear(None, "PDV.Daedric.LivePactSpells")
-    StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
-    if topPath && topTier > 0
-        topPath.MakeActiveDaedricPact()
-    endIf
-
-    ; v3: enforce patron<->Prince exclusivity on legacy saves holding BOTH. Keep the
-    ; higher tier (tie -> Prince, matching the live Prince-wins surface), sever the
-    ; loser, and surface a one-time resolution note. The StripPactSpells loop above
-    ; already cleaned stacked spells, so the sever fights nothing. SetActiveDeity(None)
-    ; has newDeity==None, so it does not re-enter the patron-commit Prince-sever.
-    Bool hasPatron = (GetPatronState() == PATRON_STATE_ACTIVE) && _activeDeity
-    if hasPatron && topPath && topTier > 0
-        Int patronTier = GetTier(_activeDeity)
-        String resolvedName = ""
-        if topTier >= patronTier
-            resolvedName = topPath.DeityName
-            SetActiveDeity(None)
-        else
-            resolvedName = _activeDeity.DeityName
-            topPath.ClearLiveDaedricPactSpells()
-            StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
-        endIf
-        SendPrismaEventToast("shift", None, "Your devotion has resolved to " + resolvedName + ".", "", "")
-        AppendBookOfDaysEntry("Your devotion has resolved to " + resolvedName + ".", Utility.GetCurrentGameTime() as Int, "reorientation", "journal", true)
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Daedric.PactVersion", DAEDRIC_PACT_VERSION)
-    if GetDebugLevel() >= 1
-        if topPath
-            Debug.Trace("[PDV] Daedric pact migration: stripped stacks, active pact = " + topPath.DeityName)
-        else
-            Debug.Trace("[PDV] Daedric pact migration: stripped stacks, no committed pact")
-        endIf
-    endIf
-EndFunction
-
 Function LoadPrinceLikesDislikesTable()
     if !PDV_FLST_DaedricPaths_All
         return
