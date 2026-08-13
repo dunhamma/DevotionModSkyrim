@@ -21792,57 +21792,57 @@ String Function GetDaedricBoonMechanicText(String princeName, Int tierValue)
     if (princeName == "Boethiah") && tierValue == TIER_SEEKER
         return "+10 One-handed"
     elseIf (princeName == "Boethiah") && tierValue == TIER_DEVOTED
-        return "+15 One-handed"
+        return "+25 Armor rating"
     elseIf (princeName == "Boethiah") && tierValue == TIER_CHAMPION
-        return "+20 One-handed"
+        return "+35 Armor rating"
     elseIf (princeName == "Azura") && tierValue == TIER_SEEKER
-        return "+10% Magic resistance"
-    elseIf (princeName == "Azura") && tierValue == TIER_DEVOTED
         return "+15% Magic resistance"
+    elseIf (princeName == "Azura") && tierValue == TIER_DEVOTED
+        return "+25 Magicka"
     elseIf (princeName == "Azura") && tierValue == TIER_CHAMPION
-        return "+20% Magic resistance"
+        return "+35 Magicka"
     elseIf (princeName == "Vaermina") && tierValue == TIER_SEEKER
         return "+10 Illusion"
     elseIf (princeName == "Vaermina") && tierValue == TIER_DEVOTED
-        return "+15 Illusion"
+        return "+18 Sneak"
     elseIf (princeName == "Vaermina") && tierValue == TIER_CHAMPION
-        return "+20 Illusion"
+        return "+25 Sneak"
     elseIf (princeName == "Meridia") && tierValue == TIER_SEEKER
         return "+10 Restoration"
     elseIf (princeName == "Meridia") && tierValue == TIER_DEVOTED
-        return "+15 Restoration"
+        return "+25% Disease resistance"
     elseIf (princeName == "Meridia") && tierValue == TIER_CHAMPION
-        return "+20 Restoration"
+        return "+35% Disease resistance"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_SEEKER
-        return "+10 Illusion"
+        return "+10 Speech"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_DEVOTED
-        return "+15 Illusion"
+        return "+18 Illusion"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_CHAMPION
-        return "+20 Illusion"
+        return "+25 Illusion"
     elseIf (princeName == "Mephala") && tierValue == TIER_SEEKER
         return "+10 Sneak"
     elseIf (princeName == "Mephala") && tierValue == TIER_DEVOTED
-        return "+15 Sneak"
+        return "+18 Pickpocket"
     elseIf (princeName == "Mephala") && tierValue == TIER_CHAMPION
-        return "+20 Sneak"
+        return "+25 Pickpocket"
     elseIf (princeName == "Malacath") && tierValue == TIER_SEEKER
-        return "+10 Armor rating"
-    elseIf (princeName == "Malacath") && tierValue == TIER_DEVOTED
         return "+15 Armor rating"
+    elseIf (princeName == "Malacath") && tierValue == TIER_DEVOTED
+        return "+18 Two-handed"
     elseIf (princeName == "Malacath") && tierValue == TIER_CHAMPION
-        return "+20 Armor rating"
+        return "+25 Two-handed"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_SEEKER
-        return "+5% Attack damage"
+        return "+10 Destruction"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_DEVOTED
-        return "+8% Attack damage"
+        return "+18 One-handed"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_CHAMPION
-        return "+12% Attack damage"
+        return "+25 One-handed"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_SEEKER
-        return "+25 Magicka"
+        return "+10 Illusion"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_DEVOTED
-        return "+40 Magicka"
+        return "+25 Magicka"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_CHAMPION
-        return "+50 Magicka"
+        return "+35 Magicka"
     elseIf (princeName == "Namira") && tierValue == TIER_SEEKER
         return "Feeding restores Health and Stamina"
     elseIf (princeName == "Namira") && tierValue == TIER_DEVOTED
@@ -21850,41 +21850,41 @@ String Function GetDaedricBoonMechanicText(String princeName, Int tierValue)
     elseIf (princeName == "Namira") && tierValue == TIER_CHAMPION
         return "Feeding restores Health and Stamina"
     elseIf (princeName == "Sanguine") && tierValue == TIER_SEEKER
-        return "+10 Speech"
+        return "+15 Stamina"
     elseIf (princeName == "Sanguine") && tierValue == TIER_DEVOTED
-        return "+15 Speech"
+        return "+18 Speech"
     elseIf (princeName == "Sanguine") && tierValue == TIER_CHAMPION
-        return "+20 Speech"
+        return "+25 Speech"
     elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_SEEKER
-        return "+25 Carry weight"
+        return "+10 Speech"
     elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_DEVOTED
-        return "+50 Carry weight"
+        return "+25 Carry weight"
     elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_CHAMPION
-        return "+75 Carry weight"
+        return "+35 Carry weight"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_SEEKER
         return "+10 Alteration"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_DEVOTED
-        return "+15 Alteration"
+        return "+25 Magicka"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_CHAMPION
         return "+20 Alteration; +20 Magicka"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_SEEKER
-        return "+10 Lockpicking"
+        return "+10 Sneak"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_DEVOTED
-        return "+15 Lockpicking"
+        return "+18 Lockpicking"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_CHAMPION
-        return "+20 Lockpicking"
+        return "+25 Lockpicking"
     elseIf (princeName == "Peryite") && tierValue == TIER_SEEKER
-        return "+25% Disease resistance"
+        return "+15% Disease resistance"
     elseIf (princeName == "Peryite") && tierValue == TIER_DEVOTED
-        return "+50% Disease resistance"
+        return "+25 Health"
     elseIf (princeName == "Peryite") && tierValue == TIER_CHAMPION
-        return "+75% Disease resistance"
+        return "+35 Health"
     elseIf (princeName == "Hircine") && tierValue == TIER_SEEKER
-        return "+25 Stamina"
+        return "+15 Stamina"
     elseIf (princeName == "Hircine") && tierValue == TIER_DEVOTED
-        return "+40 Stamina"
+        return "+18 Sneak"
     elseIf (princeName == "Hircine") && tierValue == TIER_CHAMPION
-        return "+50 Stamina"
+        return "+25 Sneak"
     endIf
 
     return "pact boon active"
@@ -21904,53 +21904,53 @@ String Function GetDaedricPriceMechanicText(String princeName, Int tierValue)
     elseIf (princeName == "Azura") && tierValue == TIER_CHAMPION
         return "-30 Stamina"
     elseIf (princeName == "Vaermina") && tierValue == TIER_SEEKER
-        return "-8 Health"
+        return "-10 Health"
     elseIf (princeName == "Vaermina") && tierValue == TIER_DEVOTED
-        return "-15 Health"
-    elseIf (princeName == "Vaermina") && tierValue == TIER_CHAMPION
         return "-20 Health"
+    elseIf (princeName == "Vaermina") && tierValue == TIER_CHAMPION
+        return "-30 Health"
     elseIf (princeName == "Meridia") && tierValue == TIER_SEEKER
-        return "-8 Illusion"
+        return "-10 Illusion"
     elseIf (princeName == "Meridia") && tierValue == TIER_DEVOTED
-        return "-12 Illusion"
+        return "-18 Illusion"
     elseIf (princeName == "Meridia") && tierValue == TIER_CHAMPION
-        return "-15 Illusion"
+        return "-25 Illusion"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_SEEKER
-        return "-8 Restoration"
+        return "-10 Health"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_DEVOTED
-        return "-12 Restoration"
+        return "-20 Health"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_CHAMPION
-        return "-15 Restoration"
+        return "-30 Health"
     elseIf (princeName == "Mephala") && tierValue == TIER_SEEKER
-        return "-8 Speech"
+        return "-10 Speech"
     elseIf (princeName == "Mephala") && tierValue == TIER_DEVOTED
-        return "-12 Speech"
+        return "-18 Speech"
     elseIf (princeName == "Mephala") && tierValue == TIER_CHAMPION
-        return "-15 Speech"
+        return "-25 Speech"
     elseIf (princeName == "Malacath") && tierValue == TIER_SEEKER
-        return "-3% Movement speed"
+        return "-4% Movement speed"
     elseIf (princeName == "Malacath") && tierValue == TIER_DEVOTED
-        return "-5% Movement speed"
+        return "-7% Movement speed"
     elseIf (princeName == "Malacath") && tierValue == TIER_CHAMPION
-        return "-8% Movement speed"
+        return "-10% Movement speed"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_SEEKER
-        return "-5 Armor rating"
-    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_DEVOTED
         return "-10 Armor rating"
+    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_DEVOTED
+        return "-20 Armor rating"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_CHAMPION
-        return "-15 Armor rating"
+        return "-30 Armor rating"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_SEEKER
-        return "-8 Restoration"
+        return "-10 Restoration"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_DEVOTED
-        return "-12 Restoration"
+        return "-18 Restoration"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_CHAMPION
-        return "-15 Restoration"
+        return "-25 Restoration"
     elseIf (princeName == "Namira") && tierValue == TIER_SEEKER
-        return "-8 Speech"
+        return "-10 Speech"
     elseIf (princeName == "Namira") && tierValue == TIER_DEVOTED
-        return "-12 Speech"
+        return "-18 Speech"
     elseIf (princeName == "Namira") && tierValue == TIER_CHAMPION
-        return "-15 Speech"
+        return "-25 Speech"
     elseIf (princeName == "Sanguine") && tierValue == TIER_SEEKER
         return "-10 Magicka"
     elseIf (princeName == "Sanguine") && tierValue == TIER_DEVOTED
@@ -21970,11 +21970,11 @@ String Function GetDaedricPriceMechanicText(String princeName, Int tierValue)
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_CHAMPION
         return "-30 Stamina"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_SEEKER
-        return "-15 Carry weight"
+        return "-10 Restoration"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_DEVOTED
-        return "-25 Carry weight"
+        return "-18 Restoration"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_CHAMPION
-        return "-35 Carry weight"
+        return "-25 Restoration"
     elseIf (princeName == "Peryite") && tierValue == TIER_SEEKER
         return "-10 Stamina"
     elseIf (princeName == "Peryite") && tierValue == TIER_DEVOTED
@@ -21982,11 +21982,11 @@ String Function GetDaedricPriceMechanicText(String princeName, Int tierValue)
     elseIf (princeName == "Peryite") && tierValue == TIER_CHAMPION
         return "-30 Stamina"
     elseIf (princeName == "Hircine") && tierValue == TIER_SEEKER
-        return "-8 Speech"
+        return "-10 Health"
     elseIf (princeName == "Hircine") && tierValue == TIER_DEVOTED
-        return "-12 Speech"
+        return "-20 Health"
     elseIf (princeName == "Hircine") && tierValue == TIER_CHAMPION
-        return "-15 Speech"
+        return "-30 Health"
     endIf
 
     return "pact price active"
