@@ -19,6 +19,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { assertKnownFlags } from './lib/pdv_cli.mjs';
+import { sameTextToString, writeTextWithEol } from './lib/pdv_file_compare.mjs';
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(['--check']);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: 'pdv_guide_bbcode' });
+
 const ROOT = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const GUIDES_DIR = path.join(ROOT, 'docs', 'player-guides');
 const SRC_DIR = path.join(GUIDES_DIR, 'races');
@@ -41,8 +50,6 @@ const TARGETS = [
   ...RACES.map((race) => ({ name: race, src: path.join(SRC_DIR, `${race}.md`) })),
   ...DOCS,
 ];
-
-const normalizeEol = (s) => s.replace(/\r\n/g, '\n');
 
 /** Inline Markdown -> BBCode. Order matters: bold before italic so ** is not eaten by *. */
 function inline(text) {
@@ -170,12 +177,12 @@ for (const { name: race, src } of TARGETS) {
       console.error(`FAIL ${race}: generated BBCode is missing (${path.relative(ROOT, outPath)})`);
       // Compare on content, not bytes: a checkout under core.autocrlf can hand us
       // CRLF while we always write LF, and that must not read as a stale artifact.
-    } else if (normalizeEol(fs.readFileSync(outPath, 'utf8')) !== normalizeEol(text)) {
+    } else if (!sameTextToString(outPath, text)) {
       failed++;
       console.error(`FAIL ${race}: generated BBCode is stale (${path.relative(ROOT, outPath)})`);
     }
   } else {
-    fs.writeFileSync(outPath, text, 'utf8');
+    writeTextWithEol(outPath, text, 'lf');
   }
 }
 

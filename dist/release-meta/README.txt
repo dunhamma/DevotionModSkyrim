@@ -14,12 +14,26 @@ mechanically -- not a shrine-touch buff.
 
 REQUIREMENTS
 --------------------------------------------------------------
-  Skyrim Special Edition
+  Skyrim Special Edition    (SE 1.5.97 or AE 1.6.x)
   SKSE64
+  Address Library for SKSE Plugins
   SkyUI                     (MCM configuration menu)
   PapyrusUtil SE            (data storage)
+  powerofthree's Tweaks
+  powerofthree's Papyrus Extender   (crafting + event hooks)
   PrismaUI                  (in-game Survey / Book of Days)
-  Keyword Item Distributor  (powerofthree's KID)
+
+  Use the SKSE, Address Library, and powerofthree builds that match
+  your Skyrim runtime -- both SE and AE are supported.
+
+STRONGLY RECOMMENDED
+--------------------------------------------------------------
+  Keyword Item Distributor  (item-based devotional actions)
+  Spell Perk Item Distributor (NPC religious recognition)
+
+  Devotion remains playable without either distributor. Without
+  KID, classified item actions do not register. Without SPID,
+  NPCs do not react to your public religious standing.
 
 
 INSTALLING
@@ -27,6 +41,13 @@ INSTALLING
   Mod Organizer 2 / Vortex:
     Install this archive with your mod manager as normal, then
     enable the mod and Devotion.esp.
+
+    The installer fits core plus optional per-mod patches into one
+    pass. Devotion itself always installs. The patch options teach
+    Devotion how the gods react to the outcomes of specific quest
+    mods, and each is locked to its source plugin -- if you do not
+    have that mod active, the option cannot be selected and nothing
+    for it is installed.
 
   Manual:
     Extract the contents into your Skyrim Special Edition\Data
@@ -66,7 +87,7 @@ FIRST STEPS
 
 SOURCE CODE
 --------------------------------------------------------------
-  Full Papyrus source ships in Scripts\Source\ (96 .psc files).
+  Full Papyrus source ships in Scripts\Source\ (100 .psc files).
   It is not needed at runtime -- it is there so you can read it,
   learn from it, or rebuild the scripts yourself.
 

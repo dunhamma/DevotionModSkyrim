@@ -12,6 +12,11 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+const KNOWN_FLAGS = new Set(["--help", "--json", "--strict"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_daedric_beta_gate" });
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const CONTRACT_PATH = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DaedricPrinceRecordContracts.json");
@@ -39,17 +44,20 @@ function usage() {
     "",
     "Options:",
     "  --json      Emit JSON.",
+    "  --strict    Explicitly select the fail-closed gate (already the default).",
     "  --help      Show this help.",
   ].join(os.EOL);
 }
 
 function parseArgs(argv) {
-  const options = { json: false, help: false };
+  const options = { json: false, help: false, strict: false };
   for (const arg of argv) {
     if (arg === "--json") {
       options.json = true;
     } else if (arg === "--help" || arg === "-h") {
       options.help = true;
+    } else if (arg === "--strict") {
+      options.strict = true;
     } else {
       throw new Error(`Unknown option: ${arg}`);
     }

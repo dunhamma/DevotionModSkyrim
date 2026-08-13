@@ -476,10 +476,32 @@ h1 {
 .meter-block,
 .today-grid article,
 .debug-item,
+.recognition-block,
 .relation-strip {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(9, 9, 8, 0.28);
+}
+
+.recognition-block {
+  margin-top: 18px;
+  padding: 16px 18px;
+}
+
+.recognition-block strong {
+  display: block;
+  margin-top: 6px;
+  color: #fff8e8;
+  font-family: var(--serif-display);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.recognition-block p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
 }
 
 .deity-block,
@@ -1327,6 +1349,14 @@ h1 {
   line-height: 1.25;
 }
 
+.toast__source {
+  margin: 0 0 2px;
+  color: rgba(216, 179, 90, 0.9);
+  font-size: 10px;
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+}
+
 .toast__text {
   margin: 0;
   color: var(--muted);
@@ -1394,6 +1424,39 @@ h1 {
   .toast__text {
     font-size: 23px;
   }
+}
+
+/* User-selectable "Large" toast size (MCM: Presentation -> Toast size -> Large).
+   Independent of the resolution auto-scaling above and larger than the 4K
+   breakpoint, for players on high-DPI 4K displays where even the auto-scaled toast
+   reads small. app.js toggles .is-large on the stack from the toast payload's "size"
+   field; class specificity keeps it winning over the min-width blocks at any
+   resolution. */
+.toast-stack.is-large {
+  right: 64px;
+  bottom: 72px;
+  gap: 24px;
+  max-width: min(920px, calc(100vw - 128px));
+}
+.toast-stack.is-large .toast {
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 28px;
+  padding: 30px 36px;
+  border-radius: 14px;
+}
+.toast-stack.is-large .toast__mark {
+  width: 84px;
+  height: 84px;
+}
+.toast-stack.is-large .toast__source {
+  font-size: 18px;
+}
+.toast-stack.is-large .toast__title {
+  font-size: 34px;
+  margin: 0 0 6px;
+}
+.toast-stack.is-large .toast__text {
+  font-size: 32px;
 }
 
 .demo-controls {
@@ -2042,6 +2105,13 @@ h1 {
   margin: 0 0 2px;
   font-size: 19px;
   color: #2a1f12;
+}
+#pdv-journal-modal .bod-leaf__source {
+  margin: 0 0 1px;
+  color: var(--bod-accent);
+  font-size: 12px;
+  font-variant: small-caps;
+  letter-spacing: 0.045em;
 }
 #pdv-journal-modal .bod-leaf__text {
   margin: 0;

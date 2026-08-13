@@ -313,6 +313,26 @@
       "rejectedUse": "Ordinary mortal life, generic friendship, generic anti-Thalmor play, generic Daedric contact, or repeated Dragonborn identity."
     },
     {
+      "property": "PDV_FLST_P2_AltmerTrinimacSources",
+      "race": "Altmer",
+      "sourceKinds": [
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteAltmerTrinimacOrthodoxy(sourceId)",
+      "acceptedUse": "Curated Trinimac, martial orthodoxy, fallen-champion, and civilization-defense sources.",
+      "rejectedUse": "Generic combat, generic anti-Thalmor violence, generic Orc/Malacath material, or cruelty framed as order."
+    },
+    {
+      "property": "PDV_FLST_P2_AltmerSyrabaneSources",
+      "race": "Altmer",
+      "sourceKinds": [
+        "book"
+      ],
+      "route": "PDV_EventBus.RouteAltmerSyrabaneContainment(sourceId)",
+      "acceptedUse": "The vanilla Ward spell tomes only. Learning a Ward is the containment art itself.",
+      "rejectedUse": "Generic Restoration tomes, healing or turn-undead magic, every ward CAST, generic College membership, or raw magic-resistance stacking."
+    },
+    {
       "property": "PDV_FLST_P2_ArgonianHistSources",
       "race": "Argonian",
       "sourceKinds": [
@@ -1392,6 +1412,58 @@
           "sourceKind": "spell-learned",
           "status": "approved-for-fill",
           "rationale": "Master-tier daedra-binding -- an occult/forbidden art whose mastery is meaningful Hidden Art exposure; rejects generic spell learning. (Forbidden-arts approximation of the Reach-witch Hidden Art; vanilla has no player-learnable hagraven spells.)"
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_AltmerTrinimacSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:01AD16",
+          "editorId": "Book4RareTrueNatureofOrcs",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "Names Trinimac as the Altmeri champion and frames Malacath as his defilement; the fallen-champion memory, read as Altmeri commentary rather than Orsimer apologia."
+        },
+        {
+          "formKey": "Skyrim.esm:01ACF7",
+          "editorId": "Book3ValuableSnowPrince",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "An elven leader rallying a collapsing force in a final defensive battle; bounded martial-defence example, not a generic kill trigger."
+        },
+        {
+          "formKey": "Skyrim.esm:01AD18",
+          "editorId": "Book4RareWildElves",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "Preserves Ayleid cultural identity against outsider simplification; the civilisation/heritage side of the orthodox-martial route."
+        }
+      ]
+    },
+    {
+      "property": "PDV_FLST_P2_AltmerSyrabaneSources",
+      "sources": [
+        {
+          "formKey": "Skyrim.esm:09E2AE",
+          "editorId": "SpellTomeLesserWard",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "Learning a Ward is magical containment itself -- the most on-theme source in Syrabane's lane. Vanilla record; the load-order winner shows Requiem's renamed label."
+        },
+        {
+          "formKey": "Skyrim.esm:0A2720",
+          "editorId": "SpellTomeSteadfastWard",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "Second of the three vanilla ward tomes; one-shot per tome via MarkP2SourceRoute."
+        },
+        {
+          "formKey": "Skyrim.esm:0A2722",
+          "editorId": "SpellTomeGreaterWard",
+          "sourceKind": "book",
+          "status": "approved-for-fill",
+          "rationale": "Third of the three vanilla ward tomes; completes the containment progression."
         }
       ]
     }

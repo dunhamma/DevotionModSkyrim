@@ -14,7 +14,7 @@ time_dragon,CW01B,160,Alkosh,keep_oath is not in Alkosh's profile (cosmic order/
 time_dragon,CW02A,200,Auri-El,serve_empire_order is not in Auri-El's profile; mortal politics below his ascendant-order concern
 time_dragon,CW03,50,Auri-El,serve_empire_order is not in Auri-El's profile
 time_dragon,CW03,50,Alkosh,serve_empire_order present in profile but at m for COSMIC order; mortal Skyrim civil-war escalation is below his threshold and his two existing Imperial-side civic cells already cover the rare surface (avoid diluting the dragon-king into a war-politics god)
-time_dragon,DA07,100,Alkosh,serve_a_daedra:dagon is not in Alkosh's profile (only sow_chaos_madness C); Akatosh's serve_a_daedra:* line carries the anti-Dagon reading
+time_dragon,DA07,100,Alkosh,serve_a_daedra:mehrunesdagon is not in Alkosh's profile (only sow_chaos_madness C); Akatosh's serve_a_daedra:* line carries the anti-Dagon reading
 time_dragon,MQ104,160,Auri-El,Auri-El reacts to the time-order CLIMAX (Alduin unmade, authored MQ206/MQ305), not to every wild dragon; Mirmulnir at the Watchtower is mortal dragon-war, peripheral to his ascendant path
 time_dragon,MQ106,200,Auri-El,see MQ104; Sahloknir is a raised wild dragon, not the cosmic time-climax Auri-El answers to
 death_order,C06,65,Xarxes,cure_undeath is not in Xarxes's profile (scribe/ancestry/record, not the vigil against undeath); Arkay/Tu'whacca own the lycanthropy-cure beat
@@ -130,3 +130,48 @@ make_way_war,DA02,40,Talos,review-dropped 2026-07-04: theology stretch: Boethiah
 make_way_war,TG05,60,Talos,review-dropped 2026-07-04: theology stretch: passively surviving an ambush during a Thieves Guild internal betrayal is not heroic struggle or defiance of tyranny; orthogonal to Talos's anchor
 hunt_ethics,DA05,100,Kyne,review-dropped 2026-07-04: the_hunt stretch -- this is Hircine's vengeful hunt not Kyne's respectful/sacred hunt
 hunt_ethics,DA05,100,Y'ffre,review-dropped 2026-07-04: theology stretch -- killing Sinding for Hircine (a rival hunt-god) violates the Pact's ethic of restraint; opposite branch s105 kept instead
+sky_storm_nature,ccMTYSSE001_Quest,100,Kyne,T13 reviewed 2026-08-06: the pilgrimage explicitly visits the Nine Divines shrines and therefore names Kynareth's Imperial face; it is not a Kyne rite
+sky_storm_nature,Sat_Dog,10,Kyne,T13 reviewed 2026-08-06: low-stakes animal companionship fits Kynareth's nature/comfort profile; extending it to Kyne was rejected as coverage farming
+time_dragon,WTBarrowOfTheWyrm,260,Akatosh,T13 reviewed 2026-08-06: Alkosh's named-dragon/order-keeping exception is culturally specific; a generic Akatosh battle reaction was rejected
+time_dragon,WTBarrowOfTheWyrm,260,Auri-El,T13 reviewed 2026-08-06: Auri-El's locked dragon exception is Alduin/herald-specific and does not cover Vulthurkrah
+time_dragon,ccBGSSSE067_Quest2,1000,Auri-El,T13 reviewed 2026-08-06: the retained Akatosh cell is an order-restored response to a Dagon incursion; no Auri-El-specific act is evidenced
+time_dragon,ccBGSSSE067_Quest2,1000,Alkosh,T13 reviewed 2026-08-06: the Deadlands escape has no named-dragon or Khajiiti order context; Alkosh parity would be coverage farming
+death_order,HYORdunIcemothQST,30,Xarxes,T13 reviewed 2026-08-06: defeating a necromancer and undead army fits death-cycle gods; it does not evidence Xarxes's ancestry or record-keeping domain
+death_order,HSHuntForSpectreQuest,55,Xarxes,T13 reviewed 2026-08-06: destroying the Spectre fits death-cycle gods; it does not evidence Xarxes's ancestry or record-keeping domain
+labor_commerce,ccASVSSE001_QuestE,100,Z'en,T13 reviewed 2026-08-06: Trueflame's Dwarven-forge restoration is master craft/forge work; no toil bargain or lawful-trade act supports Z'en
+make_way_war,HYORdunIcemothQST,30,Talos,T13 reviewed 2026-08-06: HoonDing's make-way victory applies to ending the undead siege; generic Talos credit for any large battle was rejected
+sky_storm_nature,018AuriFriendQuest,80,Khenarthi,T14 reviewed 2026-08-06: Auri's five-grove pilgrimage is explicitly Bosmeri and rooted in Skyrim's sacred natural sites; it is not a Khajiit road or aid-the-stranded beat
+sky_storm_nature,AnvilMoonpathQuest,60,Kyne,T14 reviewed 2026-08-06: the Khajiit caravan's moon-timed road to Tenmar is Khenarthi travel; it does not evidence Kyne's Nordic hunt Voice or sacred-trial domain
+sky_storm_nature,AnvilMoonpathQuest,60,Y'ffre,T14 reviewed 2026-08-06: arriving in Tenmar Forest is a Khajiit road milestone but does not itself enact the Green Pact or Storyteller domain
+sky_storm_nature,AnvilDenQuest,150,Kyne,T14 reviewed 2026-08-06: Khenarthi carries the Khajiit-den protection and Kynareth the broad traveler-protection echo; the Thalmor fight has no Nordic hunt Voice or sky rite for Kyne
+time_dragon,dk_ThograMain,150,Auri-El,T14 reviewed 2026-08-06: Akatosh reacts to the explicitly fulfilled oath; Auri-El's profile has no generic keep-oath rule and the Orc blood oath has no elven ancestry context
+time_dragon,dk_ThograMain,150,Alkosh,T14 reviewed 2026-08-06: Alkosh is restricted to cosmic order time and named dragons; an Orc blood oath is not Khajiiti order evidence
+labor_commerce,BPUFXelzazMeadQuest,40,Z'en,T14 reviewed 2026-08-06: Zenithar directly rejects the proved recipe and spice thefts; Z'en has no theft rejection and this is not a debt proportionate-redress or exploitation outcome
+sky_storm_nature,MQPaarthurnax,99,Kynareth,T15 reviewed 2026-08-06: Kyne is specific to the hunted Greybeard dragon and Voice context; Kynareth's broad nature aspect does not make this an equivalent rite
+time_dragon,dunTrevasWatchQST,100,Auri-El,T15 reviewed 2026-08-06: Akatosh carries the lawful restoration of a dispossessed family and fort; no elven ancestry or Auri-El-specific order act is present
+time_dragon,dunTrevasWatchQST,100,Alkosh,T15 reviewed 2026-08-06: the fort restoration has no Khajiiti order time or named-dragon context
+death_order,Cow_restoration,25,Xarxes,T15 reviewed 2026-08-06: the lesson demonstrates Restoration against Draugr; it does not evidence Xarxes's ancestry funerary-record or scribe domain
+knowledge_scribe,Cow_Breathing,50,Xarxes,T15 reviewed 2026-08-06: the practical Waterbreathing exercise is magical study but contains no book record or scribe act
+knowledge_scribe,Cow_restoration,25,Xarxes,T15 reviewed 2026-08-06: the practical anti-undead Restoration exercise contains no book record or scribe act
+knowledge_scribe,Cow_Conjuration,25,Xarxes,T15 reviewed 2026-08-06: the practical familiar exercise contains no book record or scribe act
+knowledge_scribe,Cow_Reading,25,Magnus,T15 reviewed 2026-08-06: the source-credibility lesson directly fits Julianos and Xarxes; it does not itself manipulate or study magic under Magnus
+knowledge_scribe,Cow_enchantment,70,Xarxes,T15 reviewed 2026-08-06: the enchanting commission is practical magic craft and trade; it contains no book record or scribe act
+knowledge_scribe,Cow_illusion,25,Xarxes,T15 reviewed 2026-08-06: the practical Illusion exercise contains no book record or scribe act
+knowledge_scribe,Cow_Destruction,20,Xarxes,T15 reviewed 2026-08-06: the practical elemental exercise contains no book record or scribe act
+sky_storm_nature,MS07,300,Kyne,T16 reviewed 2026-08-06: Kynareth and Khenarthi carry the explicit ship and traveller safety result; stopping a pirate wreck has no Nordic hunt Voice storm or sacred-trial context for Kyne
+sky_storm_nature,MS07,310,Kyne,T16 reviewed 2026-08-06: persuading Jaree-Ra protects travellers without enacting Kyne's Nordic hunt Voice storm or sacred-trial domain
+sky_storm_nature,MS07,350,Kyne,T16 reviewed 2026-08-06: lawful arrest restores the Icerunner's safe passage; Kynareth and Khenarthi are the direct travel aspects and no Kyne-specific rite occurs
+time_dragon,MS07,300,Auri-El,T16 reviewed 2026-08-06: Akatosh carries public order against the wrecking plot; the route has no elven ancestry or Auri-El-specific order act
+time_dragon,MS07,300,Alkosh,T16 reviewed 2026-08-06: stopping a pirate wreck has no Khajiiti cosmic-order time or named-dragon context
+time_dragon,MS07,350,Auri-El,T16 reviewed 2026-08-06: Jaree-Ra's arrest is civic justice under Akatosh rather than elven ancestry or Auri-El-specific order
+time_dragon,MS07,350,Alkosh,T16 reviewed 2026-08-06: Jaree-Ra's arrest has no Khajiiti cosmic-order time or named-dragon context
+time_dragon,CYRBrumaMS01,50,Auri-El,T17 reviewed 2026-08-06: reporting a Cyrodiilic smuggler is civic justice under Akatosh and has no elven ancestry or Auri-El-specific order context
+time_dragon,CYRBrumaMS01,50,Alkosh,T17 reviewed 2026-08-06: ending a contraband ring has no Khajiiti cosmic-order time or named-dragon context
+time_dragon,CYRBrumaMS07,120,Auri-El,T17 reviewed 2026-08-06: recovery of Akaviri artifacts through a Cyrodiilic arrest has no elven ancestry or Auri-El-specific order context
+trickster_thief,CYRBrumaMS01,150,Baan Dar,T17 reviewed 2026-08-06: privately keeping a smuggler's skooma is self-serving theft without a pariah road survival or reversal-of-fortune context
+sky_storm_nature,WTTheNakedNord,75,Kyne,T17 reviewed 2026-08-06: Kynareth recognizes the antidote cure; the scene has no Nordic hunt Voice storm or sacred-trial context for Kyne
+sky_storm_nature,WTTheNakedNord,76,Kyne,T17 reviewed 2026-08-06: curing Gjalrunn is Kynareth's healing aspect and the mixed theft branch has no Kyne-specific domain
+sky_storm_nature,WTTheNakedNord,77,Kyne,T17 reviewed 2026-08-06: the antidote cure has no Nordic hunt Voice storm or sacred-trial context for Kyne
+sky_storm_nature,WTTheNakedNord,78,Kyne,T17 reviewed 2026-08-06: the antidote cure has no Nordic hunt Voice storm or sacred-trial context for Kyne
+death_order,WTUberEncounter,50,Xarxes,T17 reviewed 2026-08-06: destroying the lich fits Arkay and Tu'whacca but contains no elven ancestry archive or scribe context for Xarxes
+trickster_thief,WTTheNakedNord,50,Baan Dar,T17 reviewed 2026-08-06: selling Gjalrunn's found pants is self-serving exploitation without a pariah road survival or reversal-of-fortune context

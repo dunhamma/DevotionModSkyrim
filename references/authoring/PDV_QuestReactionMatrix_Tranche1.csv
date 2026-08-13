@@ -1,6 +1,6 @@
 editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation
 DA01,The Black Star,100,Cleanse Azura's Star (give to Aranea/Azura),"serve_a_daedra:azura,destroy_reject_daedra:molagbal",Azura,+,C,milestone,DA01 s100 "cleansed Azura's Star ... mine to do with as I see fit"
-DA01,The Black Star,110,Complete the Black Star (give to Nelacar; traps mortal souls),"serve_a_daedra:azura(defied),necromancy",Azura,-,S,milestone,DA01 s110 "completed the Black Star, an infinite Black Soul Gem" (defied Azura's wish to cleanse)
+DA01,The Black Star,110,Complete the Black Star (give to Nelacar; traps mortal souls),"serve_a_daedra:azura,necromancy",Azura,-,S,milestone,DA01 s110 "completed the Black Star, an infinite Black Soul Gem" (defied Azura's wish to cleanse)
 DA01,The Black Star,110,Black Soul Gem traps mortal souls,necromancy,Arkay,-,m,small,DA01 s110 (black soul gem = trapped mortal souls)
 DA01,The Black Star,110,Black Soul Gem (undeath/soul-binding),necromancy,Meridia,-,m,small,DA01 s110
 DA02,Boethiah's Calling,40,Sacrifice the trusting + defeat champion + don Ebony Mail,"ritual_sacrifice,murder_treacherous,prove_by_struggle,serve_a_daedra:boethiah",Boethiah,+,C,milestone,DA02 s10/s20/s40 "lead someone to the Pillar ... slay them"; "slay her champion ... don the Ebony Mail"
@@ -23,10 +23,10 @@ DA05,Ill Met By Moonlight,100,Kill Sinding for Hircine (the hunt); Savior's Hide
 DA05,Ill Met By Moonlight,105,Defend Sinding; spare the hunted (Ring of Hircine),"the_hunt,mercy_spare,protect_the_weak",Hircine,+,S,small,DA05 s105 "defended him against the hunters ... earned his friendship" (alt Hircine path)
 DA05,Ill Met By Moonlight,105,Spare/defend a tormented soul,mercy_spare,Mara,+,m,small,DA05 s105
 DA06,The Cursed Tribe,200,Defend Largashbur; prove worthier than Yamarz; lift the curse,"defend_kin_home,prove_by_struggle,kill_honorable_combat,serve_a_daedra:malacath,keep_oath",Malacath,+,C,milestone,DA06 s200 "redeemed his actions by defeating the giant ... named me his new Champion"
-DA07,Pieces of the Past,100,Kill Silus for Dagon; reforge Mehrunes' Razor,"murder_treacherous,serve_a_daedra:dagon,acquire_daedric_artifact:dagon,sow_chaos_madness",Mehrunes Dagon,+,C,milestone,DA07 s80/s100 "killed Silus Vesuius for Mehrunes Dagon ... Razor is mine"
+DA07,Pieces of the Past,100,Kill Silus for Dagon; reforge Mehrunes' Razor,"murder_treacherous,serve_a_daedra:mehrunesdagon,acquire_daedric_artifact:mehrunesdagon,sow_chaos_madness",Mehrunes Dagon,+,C,milestone,DA07 s80/s100 "killed Silus Vesuius for Mehrunes Dagon ... Razor is mine"
 DA07,Pieces of the Past,100,Murder the unarmed man who hired you,murder_treacherous,Stendarr,-,S,small,DA07 s80
-DA07,Pieces of the Past,100,Serve the Prince of Destruction,serve_a_daedra:dagon,Akatosh,-,m,small,DA07 s90 (Dagon razes the lawful order)
-DA07,Pieces of the Past,150,Refuse to kill Silus; reject Dagon,"mercy_spare,destroy_reject_daedra:dagon",Mehrunes Dagon,-,S,small,DA07 s150 "I refused to kill Silus ... the Razor is forever out of my grasp"
+DA07,Pieces of the Past,100,Serve the Prince of Destruction,serve_a_daedra:mehrunesdagon,Akatosh,-,m,small,DA07 s90 (Dagon razes the lawful order)
+DA07,Pieces of the Past,150,Refuse to kill Silus; reject Dagon,"mercy_spare,destroy_reject_daedra:mehrunesdagon",Mehrunes Dagon,-,S,small,DA07 s150 "I refused to kill Silus ... the Razor is forever out of my grasp"
 DA07,Pieces of the Past,150,Spare Silus; reject the bargain,mercy_spare,Stendarr,+,S,small,DA07 s150
 DA08,The Whispering Door,60,Take Mephala's Ebony Blade (fed by slaying those close),"serve_a_daedra:mephala,acquire_daedric_artifact:mephala,keep_secret",Mephala,+,C,milestone,DA08 s60 "received Mephala's Ebony Blade ... slay those who are close to me"
 DA08,The Whispering Door,25,Manipulate the Jarl's child to open the door,deceit,Stendarr,-,m,small,DA08 s10/s25 (corrupt a troubled child)
@@ -43,17 +43,10 @@ DA11,The Taste of Death,100,Murder + cannibalize the priest,"murder_treacherous,
 DA11,The Taste of Death,250,Kill Eola; save Verulus from the cannibals,"mercy_spare,protect_the_weak",Stendarr,+,S,small,DA11 s250 "I killed Eola" (Verulus lives - UESP)
 DA11,The Taste of Death,250,Spare the priest; break the ritual,protect_the_weak,Mara,+,S,small,DA11 s250
 DA11,The Taste of Death,250,Ritual to gain Namira's blessing failed,destroy_reject_daedra:namira,Namira,-,C,small,DA11 s500 "the cannibalistic ritual to gain Namira's blessing has failed"
-DA13,The Only Cure,100,Commune with Peryite; kill Orchendor; Spellbreaker,"serve_a_daedra:peryite,acquire_daedric_artifact:peryite,spread_order_pestilence",Peryite,+,C,milestone,DA13 s40/s75/s100 "Peryite has solicited me to kill ... Orchendor ... killed Orchendor, as instructed by Peryite"
+DA13,The Only Cure,100,Commune with Peryite; kill Orchendor; Spellbreaker,"serve_a_daedra:peryite,acquire_daedric_artifact:peryite",Peryite,+,C,milestone,"V02-03 direct QUST audit: s100 completes Peryite's commission and awards Spellbreaker; the outcome proves service and artifact acquisition, not spreading pestilence. Owner-approved 2026-08-12."
 DA14,A Night To Remember,200,Drunken revelry across Skyrim; Sanguine Rose,"revel_indulge,serve_a_daedra:sanguine,acquire_daedric_artifact:sanguine",Sanguine,+,C,milestone,DA14 s200 "'Sam' turned out to be ... Sanguine ... I've acquired the Sanguine Rose"
 DA14,A Night To Remember,10,Trashed the Temple of Dibella in a drunken stupor,"revel_indulge,defile_nature",Dibella,-,m,small,DA14 s10 "a priestess has told me I trashed the Temple"
 DA14,A Night To Remember,30,Clean the Temple + apologize to the priestesses of Dibella,"charity,heal_comfort",Dibella,+,S,small,DA14 s20/s30 "I have cleaned up the Temple ... apologize to the priestess"
 DA15,The Mind of Madness,200,Help Sheogorath return; the Wabbajack,"sow_chaos_madness,serve_a_daedra:sheogorath,acquire_daedric_artifact:sheogorath",Sheogorath,+,C,milestone,DA15 s200 "convincing his master Sheogorath to return ... rewarded ... the Wabbajack"
-DA16,Waking Nightmare,190,Murder Erandur (priest of Mara) + take the Skull of Corruption,"serve_a_daedra:vaermina,acquire_daedric_artifact:vaermina,murder_treacherous",Vaermina,+,C,milestone,DA16 obj170 "Murder Erandur"; s190 "Take the Skull of Corruption"
-DA16,Waking Nightmare,190,Murder the trusting priest of Mara,murder_treacherous,Mara,-,C,milestone,DA16 s197 "kill Erandur ... wield the Skull" (Erandur is a priest of Mara)
-DA16,Waking Nightmare,190,Betray + murder a trusting companion,murder_treacherous,Stendarr,-,S,small,DA16 s197
-DA16,Waking Nightmare,200,Allow Erandur to destroy the Skull; spare him,"destroy_reject_daedra:vaermina,mercy_spare,protect_the_weak",Vaermina,-,S,small,DA16 s200 "allowed Erandur to live. The Skull ... destroyed"
-DA16,Waking Nightmare,200,Spare Mara's priest; destroy the dark artifact,protect_the_weak,Mara,+,S,small,DA16 s200
-DA16,Waking Nightmare,200,Spare the trusting; reject the dark bargain,mercy_spare,Stendarr,+,m,small,DA16 s200
 TG08A,Trinity Restored,57,Take the Nightingale Oath to Nocturnal,"serve_a_daedra:nocturnal,keep_oath",Nocturnal,+,S,small,TG08A s57 "I've undertaken the Oath ... a dedicated sentinel of the goddess Nocturnal"
-TG08B,Blindsighted,50,Slay the traitor Mercer Frey; recover the Skeleton Key,"theft_burglary,kill_honorable_combat",Nocturnal,+,S,small,TG08B s45/s50 "Mercer Frey ... is finally dead ... recovered the Skeleton Key of Nocturnal"
 TG09,Darkness Returns,200,Return the Skeleton Key to the Ebonmere; become Nightingale Agent,"serve_a_daedra:nocturnal,keep_oath",Nocturnal,+,C,milestone,TG09 s200 "returned the Skeleton Key ... encountered Nocturnal ... a true Nightingale Agent"

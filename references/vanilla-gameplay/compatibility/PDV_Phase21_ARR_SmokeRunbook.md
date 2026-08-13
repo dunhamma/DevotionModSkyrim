@@ -1,89 +1,127 @@
-# PDV Phase 21 -- ARR Channel Deploy + Smoke Runbook
+# Devotion ARR 2.5 Experimental Test Guide
 
-Turnkey steps to deploy and runtime-prove the ARR devotion extension (quest-reaction channel + the
-Daedric shrine-prayer feature) built on branch `feature/arr-extension-and-compat-closeout`. Runtime gate
-only -- machine proof is green (`--matrix --check` PASS, 24 ARR cells / 22 keys / 20 quests /
-24 faucet acts + 6 core; all scripts compile 0/0; core `--check` unchanged; 11 shrine-prayer
-Activators readback-verified).
+Use this guide to try the current Devotion compatibility candidate on Authoria -
+Requiem Reforged 2.5. The package is machine-verified but is not yet supported.
+Your results are the runtime evidence needed to find failures and decide what can
+be supported later.
 
-## What's being proven
-The generic second-channel loader (core matrix + `PDV_QuestReactionMatrix_ARR`) loads, registers the
-ARR new-land quests, and applies the right per-deity piety when a hooked stage fires. Separately, Base
-Object Swapper turns the man_DaedricShrines statues into clickable PDV prayer activators that grant +2
-to the Prince once per day.
+## Before installing
 
-## Prereqs
-- ARR instance: the June pass used `D:\Wabbajack\modlists\ARR`, profile **PDV Test** (Archon family
-  disabled, Devotion active before Requiem). SUPERSEDED 2026-07-16: the current target is
-  `D:\Wabbajack\modlists\ARR Test`, which no longer ships Archon at all (no removal needed) — see
-  `PDV_Phase21_ARRTest_ModReview_2026-07-16.md`. Devotion still loads before Requiem's winners
-  it must override (verify with houseCARL before smoking).
-- PDV debug level **2** (MCM -> Devotion dev page) so both traces emit.
-- Papyrus logging on; log at `...\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log`.
+- Use ARR 2.5 and a copied test profile.
+- Use a new or disposable save.
+- Do not update a valuable save that used
+  `PDV_Patch_Authoria_QuestMods.esp` or
+  `PDV_AuthoriaARR_Compatibility.esp`. Save-update compatibility has not been
+  established.
+- Keep the Papyrus log from the test session. It is normally at
+  `Documents\My Games\Skyrim Special Edition\Logs\Script\Papyrus.0.log`.
 
-## Deploy (into the ARR PDV test mod)
-The ARR PDV test mod is `D:\Wabbajack\modlists\ARR\mods\Devotion - PlayerDevotion Local Test`
-(confirm it is the Devotion the PDV Test profile loads).
-1. **Recompiled scripts** -- copy these freshly built `.pex` (all under
-   `D:\Wabbajack\modlists\Anvil\mods\Devotion\Scripts\`) into `...\Devotion - PlayerDevotion Local Test\Scripts\`.
-   All four changed -- two for the matrix loader, two for the shrine-prayer route:
-   - `PDV_PlayerEvents.pex`, `PDV__ManagerQuest.pex` (second-channel matrix loader)
-   - `PDV_EventSignalActivator.pex`, `PDV_EventBus.pex` (shrine-prayer route 202)
-2. **ARR matrix JSON** -- compile straight into the test mod (run from the worktree):
-   ```
-   node tools/pdv_quest_matrix_compile.mjs --matrix references/authoring/PDV_QuestReactionMatrix_ARR.csv --output "D:/Wabbajack/modlists/ARR/mods/Devotion - PlayerDevotion Local Test/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR.json"
-   ```
-   (Omit `--check` so it writes. Core `PDV_QuestReactionMatrix.json` must already be present -- it is.)
-3. **Shrine-prayer compat ESP + BOS swap** -- copy both from `dist/PDV_AuthoriaARR_Compatibility/`:
-   - `PDV_AuthoriaARR_Compatibility.esp` -> the test mod root, and ENABLE it in the PDV Test plugins
-     (load after `Devotion.esp`; it masters `Skyrim.esm` + `Devotion.esp`).
-   - `PDV_AuthoriaARR_ShrinePrayer_SWAP.ini` -> the mod's `Data` root (Base Object Swapper auto-loads
-     any `*_SWAP.ini`).
+## Install in MO2
 
-## Smoke
-1. **Channel loads** -- load a save; in Papyrus.0.log expect BOTH:
-   - `Quest reaction matrix hooks refreshed (PlayerDevotion/PDV_QuestReactionMatrix): <N core>`
-   - `Quest reaction matrix hooks refreshed (PlayerDevotion/PDV_QuestReactionMatrix_ARR): ~19 quest entries`
-   The second line is the proof the new channel registered. If it's missing -> JSON not deployed or
-   `.pex` not updated.
-2. **A hook fires** -- pick a high-confidence cell and drive its quest to the hooked stage (play it, or
-   `setstage <runtimeFormID> <stage>` -- runtime FormID = the plugin's load-index byte + the local id
-   below; get the byte from `help` on a named record from that plugin, per the signal-prefix method).
-   Expect in log: `[PDV] QuestReaction: <decimalForm>|<stage> applied <n> cells`, and the deity's piety
-   move (MCM Survey / Export Devotion Report).
-   - Easiest single check: **Olenveld** `OlenveldBOTE` (local `50FC4D`) stage **80** -> +Arkay.
-   - Or **Gray Cowl** `ccBGSSSE020_Quest` (local `00080F`) stage **100** -> +Nocturnal.
-3. **RUNTIME-VERIFY list** (no ShutDownStage flag -- confirm each actually fires; if one does not,
-   it's a one-line CSV stage fix + recompile, no script change):
-   - Vigilant Aetherius `1363DB` s255 -> Akatosh
-   - Vigilant Archer of Kyne `1279A1` s255 -> Kyne
-   - Vigilant Knight of Julianos `1265FB` s999 -> Julianos
-   - Vigilant Knight of Zenithar `1306FA` s999 -> Zenithar
-   - Glenmoril Azura `355287` s10 -> Azura
-4. **Negative check** -- a non-hooked quest stage applies nothing (no false `[PDV] QuestReaction` line).
-5. **Shrine prayer (BOS + once/day +2)** -- travel (load-door/fast-travel, NOT `coc`) to a man_ Daedric
-   shrine -- e.g. the Molag Bal or Mehrunes Dagon shrine. Confirm the statue now shows an activate prompt
-   ("Pray"); if it doesn't, the `_SWAP.ini` didn't load (check it's in the Data root + BOS is active).
-   Activate it -> expect `[PDV] Daedric shrine prayer: +2 <Prince>` in the log and that Prince's piety
-   +2 (MCM Survey). Activate again the same day -> NO second award (once/day gate). Wait a day -> +2 again.
-   The 11 covered Princes: Azura, Vaermina, Molag Bal, Mephala, Mehrunes Dagon, Sheogorath,
-   Namira, Sanguine, Hermaeus Mora, Hircine, and Peryite. (Mehrunes Dagon rides the vanilla
-   `ShrineMehrunes01` base -- confirm only the intended shrine swapped, no unwanted bleed.)
+1. Install the current `PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`.
+2. Name the installed mod `Devotion - Authoria ARR Compatibility`.
+3. In the installer, choose **Authoria (Requiem Reforged) - All-In-One**.
+4. Do not select or install the individual-patch lane as well. That lane is for
+   non-Authoria load orders.
+5. Put the compatibility mod below Devotion in MO2's left pane so its scripts,
+   matrices, and configuration files win conflicts.
+6. In MO2's plugin pane, enable `PDV_AuthoriaARR_Combined.esp`.
+7. Disable the retired `PDV_Patch_Authoria_QuestMods.esp` and
+   `PDV_AuthoriaARR_Compatibility.esp` if they remain from an older test.
+8. Sort the plugins in this order:
+   - `Devotion.esp`
+   - `PDV_AuthoriaARR_Combined.esp`
+   - `Requiem for the Indifferent.esp`
+9. Run Authoria's normal Reqtificator procedure after changing the plugin list.
 
-2026-06-25 ARR `PDV Test` result: shrine click produced the top-left prayer
-line and Book of Days Chronicle entry. The Prisma overlay toast did not appear;
-this is deferred to the Prisma parity backlog and is not a blocker for the ARR
-shrine-prayer route/backend smoke slice.
+Do not copy compatibility files into Reqtificator, Synthesis, DynDOLOD,
+ParallaxGen, TexGen, xLODGen, or NPC Plugin Chooser output mods. Keep the
+compatibility package as its own enabled MO2 mod.
 
-## Report back
-- Did the `_ARR` "hooks refreshed" line appear, and with how many entries?
-- Which hooks fired correct piety; which RUNTIME-VERIFY stages did NOT fire (-> CSV stage adjust).
-- Any Papyrus errors referencing the matrix/loader.
+## First launch and registration
 
-## Authored reference
-- **ARR matrix channel:** 24 cells / 22 keys / 20 quests / 24 faucet acts across Vigilant,
-  Glenmoril, Unslaad, Olenveld, ForgottenCity, SEC Saints&Seducers, DAc0da, and the Ebony
-  Blade curse -- full list/valences in `PDV_QuestReactionMatrix_ARR.csv`
-  + the cell table in `PDV_Phase21_ARR_ExtensionMap.md`.
-- **Core matrix (promoted):** Gray Cowl + the QE stages (6 cells, Tranche6_CompatCore).
-- **Shrine prayer:** 11 Activators + BOS swaps -- `PDV_Phase21_ARR_ShrinePrayer.manifest.json`.
+1. Launch ARR through MO2 and load the disposable save.
+2. Open **Devotion MCM -> Debug: State & Rewards**.
+3. Set **Debug level** to `2`.
+4. Choose **Reload quest matrix -> Re-read JSON**.
+5. Wait until Devotion notifications stop before reading the results.
+6. Check `Papyrus.0.log` for:
+   - 154 core watched quests;
+   - 62 ARR watched quests;
+   - 34 registered per-mod channels;
+   - one channel-refresh line for each installed Authoria channel.
+
+Stop here and report a failure if there is no channel-registration line, the
+channel folder is empty, or a channel is unreadable. Those results normally mean
+the compatibility mod lost a file conflict or the package did not install
+completely.
+
+## Quick shrine experiment
+
+Travel normally by road, load door, or fast travel. Do not use `coc`, because
+it can skip location setup.
+
+1. Visit a Daedric shrine statue for Azura, Vaermina, Molag Bal, Mephala,
+   Mehrunes Dagon, Sheogorath, Namira, Sanguine, Hermaeus Mora, Hircine, or
+   Peryite.
+2. Confirm the statue offers a **Pray** prompt.
+3. Record the Prince's piety in Survey, then pray.
+4. Expect one piety change, one notification, and one Book of Days entry.
+5. Pray again on the same day. Expect no second award.
+6. Pass one in-game day and pray again. Expect one new award.
+7. Save, reload, and confirm the earlier prayer does not repeat by itself.
+
+Jyggalag must award nothing. Wyrmstooth shrine placements use different base
+objects and are not covered by this experiment.
+
+## Quick quest experiment
+
+Choose one quest you were already going to play and reach a patched outcome
+organically. The bundled tester runbook and evidence ledgers list the exact
+outcomes and expected deity reactions.
+
+For the outcome you test, record:
+
+- the quest and choice you completed;
+- piety before and after;
+- exactly one notification;
+- exactly one Book of Days entry;
+- the matching `[PDV][QR_QUEUE]` start and completion lines;
+- whether saving and reloading repeats anything;
+- whether the reaction made sense for the choice you actually made.
+
+A controlled `setstage` test can show that a route exists, but it cannot prove
+that normal quest progression reaches the right outcome. Organic play is the
+evidence needed for support.
+
+## Optional experiments
+
+If they fit your playthrough, the packet also needs observations for:
+
+- bard performances with Skyrim's Got Talent or Become a Bard;
+- Aetherium Forge Destroys Items;
+- Green Pact food classification;
+- Breton Hidden Art reflection;
+- Thieves Guild Alternative Endings;
+- Legacy of the Dragonborn, Beyond Skyrim - Bruma, and Wyrmstooth outcomes;
+- vampire and werewolf state changes.
+
+Use the structured JSON evidence ledgers installed under `Docs` when you want
+to test a full tranche. You do not need to complete every case for a report to
+be useful.
+
+## What to send back
+
+Send:
+
+1. ARR version and profile name.
+2. Confirmation that the Authoria All-In-One lane was selected.
+3. Active plugin order around Devotion, the combined plugin, and Requiem for the
+   Indifferent.
+4. The 154 / 62 / 34 registration counts.
+5. For each experiment: route marker, before/after piety, notification count,
+   Book of Days count, save/load result, and what failed.
+6. `Papyrus.0.log` when anything is missing, duplicated, or unexpected.
+
+Please report missing reactions as well as successful ones. A silent failure is
+useful evidence and is usually easier to fix than a false or duplicated award.

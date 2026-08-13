@@ -44,6 +44,14 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
+// not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
+// for fixtures that never ran.
+const KNOWN_FLAGS = new Set(["--anvil-root", "--bridge", "--esp", "--json", "--self-test", "--selftest", "--strict-undeclared"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_p2_formlist_esp_audit" });
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const AUTH = path.join(ROOT, "references", "authoring");
@@ -333,7 +341,10 @@ function runSelftest() {
 
 // ===========================================================================
 function main() {
-  if (args.includes("--selftest")) return runSelftest();
+  // `--self-test` is the canonical spelling across the other 18 self-testing tools; this
+  // file was the lone `--selftest`, which made the wrong spelling elsewhere into a real flag
+  // here and a silently-ignored one there. Both work now, canonical first.
+  if (args.includes("--self-test") || args.includes("--selftest")) return runSelftest();
   const manifest = readJson(PATHS.manifest);
   const properties = (manifest.sourceProperties ?? [])
     .map((sp) => String(sp.property ?? "").trim())

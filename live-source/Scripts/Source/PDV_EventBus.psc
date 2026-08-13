@@ -108,13 +108,13 @@ Function RouteShrinePrayer(String primaryDeityName, String secondaryDeityName, S
     Trace(2, "RouteShrinePrayer complete: " + primaryDeityName + " / " + secondaryDeityName + " / " + tertiaryDeityName)
 EndFunction
 
-Function RouteSleepStop(Actor playerRef, Bool wasInterrupted)
+Function RouteSleepStop(Actor playerRef, Bool wasInterrupted, Bool hadSleepStartContext, Bool sleepStartedOutside)
     if !PDV_Manager
         Trace(1, "RouteSleepStop skipped: PDV_Manager not assigned.")
         return
     endIf
 
-    PDV_Manager.HandlePlayerSleepStop(playerRef, wasInterrupted, "eventbus_sleep")
+    PDV_Manager.HandlePlayerSleepStop(playerRef, wasInterrupted, hadSleepStartContext, sleepStartedOutside, "eventbus_sleep")
     PDV_Manager.HandleCurseStateRefresh("eventbus_sleep")
     Trace(2, "RouteSleepStop complete.")
 EndFunction
@@ -650,6 +650,64 @@ Function RouteAltmerXarxesLineage(String sourceId)
 
     PDV_Manager.HandleAltmerOrthodoxCostlyEnforcement("eventbus_p2_altmer_xarxes_" + sourceId)
     Trace(2, "RouteAltmerXarxesLineage complete: " + sourceId)
+EndFunction
+
+; P7 (2026-08-03). The reason prefix carries "trinimac" and deliberately NOT "xarxes" -- the manager's
+; AwardAltmerOrthodoxSignal branches on that token, so a "xarxes" substring here would silently
+; misroute the whole award to the wrong god.
+Function RouteAltmerTrinimacOrthodoxy(String sourceId)
+    if !PDV_Manager
+        Trace(1, "RouteAltmerTrinimacOrthodoxy skipped: PDV_Manager not assigned.")
+        return
+    endIf
+
+    PDV_Manager.HandleAltmerTrinimacOrthodoxy("eventbus_p2_altmer_trinimac_" + sourceId)
+    Trace(2, "RouteAltmerTrinimacOrthodoxy complete: " + sourceId)
+EndFunction
+
+; --- P9 (2026-08-03): Syrabane's four wired signals ------------------------------------------
+; The bus only forwards; the manager owns every origin, curse, band and cap gate.
+Function RouteAltmerSyrabaneCureWard(String sourceId)
+    if !PDV_Manager
+        Trace(1, "RouteAltmerSyrabaneCureWard skipped: PDV_Manager not assigned.")
+        return
+    endIf
+    PDV_Manager.HandleAltmerSyrabaneCureWard("eventbus_syrabane_cure_" + sourceId)
+EndFunction
+
+Function RouteAltmerSyrabaneProtectiveWard(String sourceId)
+    if !PDV_Manager
+        Trace(1, "RouteAltmerSyrabaneProtectiveWard skipped: PDV_Manager not assigned.")
+        return
+    endIf
+    PDV_Manager.HandleAltmerSyrabaneProtectiveWard("eventbus_syrabane_ward_" + sourceId)
+EndFunction
+
+Function RouteAltmerSyrabaneAntiMageSurvival(String sourceId)
+    if !PDV_Manager
+        Trace(1, "RouteAltmerSyrabaneAntiMageSurvival skipped: PDV_Manager not assigned.")
+        return
+    endIf
+    PDV_Manager.HandleAltmerSyrabaneAntiMageSurvival("eventbus_syrabane_antimage_" + sourceId)
+EndFunction
+
+; P14 (2026-08-04). Returns the idle KIND for the token to play (0 = pray, 1 = study) so the gesture
+; matches the active patron's lane. Returns 0 if the manager is unavailable -- a prayer pose is the
+; safe default. This is the one bus route that returns a value; the token needs the answer inline.
+Int Function RouteAltmerPracticeFocus()
+    if !PDV_Manager
+        Trace(1, "RouteAltmerPracticeFocus skipped: PDV_Manager not assigned.")
+        return 0
+    endIf
+    return PDV_Manager.HandleAltmerPracticeFocus("eventbus_altmer_practice_focus")
+EndFunction
+
+Function RouteAltmerSyrabaneContainment(String sourceId)
+    if !PDV_Manager
+        Trace(1, "RouteAltmerSyrabaneContainment skipped: PDV_Manager not assigned.")
+        return
+    endIf
+    PDV_Manager.HandleAltmerSyrabaneContainment("eventbus_p2_altmer_syrabane_" + sourceId)
 EndFunction
 
 Function RouteAltmerLorkhanPenalty(Int pressureTier, String sourceId)
@@ -1566,6 +1624,12 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     ; Khajiit-origin gate and the daily cap; this is only the value gate.
     if eventType == 362 && targetRef && (targetRef.GetGoldValue() >= 500)
         PDV_Manager.HandleKhajiitRajhinLegendMade("eventbus_362_grand_theft")
+    endIf
+
+    ; P7 (2026-08-03): Trinimac's renewable civilization-defence beat. The bus only forwards -- the
+    ; manager owns the Altmer-origin gate, the ThalmorAlignment >= 70 band gate, and the daily cap.
+    if eventType == 2
+        PDV_Manager.HandleAltmerTrinimacCivilizationDefense("eventbus_2_civilization_defense")
     endIf
 
     Int i = 0

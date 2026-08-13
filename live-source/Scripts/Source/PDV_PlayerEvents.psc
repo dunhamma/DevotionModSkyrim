@@ -1,4 +1,4 @@
-;/ 
+;/
     PDV_PlayerEvents.psc
     PlayerDevotion - player alias event ingress
     -----------------------------------------------------------------------
@@ -41,6 +41,13 @@ FormList Property PDV_FLST_P2_NordHircineArkaySources Auto
 FormList Property PDV_FLST_P2_AltmerAurielSources Auto
 FormList Property PDV_FLST_P2_AltmerMagnusSources Auto
 FormList Property PDV_FLST_P2_AltmerXarxesSources Auto
+; P7 (2026-08-03). MUST be bound in the CK/ESP to 0716E1:Devotion.esp. An unbound property is None,
+; HasListedForm returns false, and the whole Trinimac book route no-ops SILENTLY -- no error, no trace.
+FormList Property PDV_FLST_P2_AltmerTrinimacSources Auto
+; P9 (2026-08-03). Both MUST be bound in the ESP or their routes no-op silently.
+; Bound: CureEffects -> 0716E2:Devotion.esp, SyrabaneSources -> 0716E3:Devotion.esp.
+FormList Property PDV_FLST_Altmer_Syrabane_CureEffects Auto
+FormList Property PDV_FLST_P2_AltmerSyrabaneSources Auto
 FormList Property PDV_FLST_P2_AltmerLorkhanPenalties Auto
 FormList Property PDV_FLST_P2_ArgonianHistSources Auto
 FormList Property PDV_FLST_P2_ArgonianCommunitySources Auto
@@ -82,6 +89,38 @@ Keyword Property PDV_KW_GreenPact_Fungi Auto
 Keyword Property PDV_KW_GreenPact_Egg Auto
 Keyword Property PDV_KW_GreenPact_Insect Auto
 
+; KID semantic keywords are resolved by FormID for existing-save safety. They
+; are not VMAD properties: old saves retain their original alias binding table.
+Keyword PDV_KID_NamiraTabooFood = None
+Keyword PDV_KID_SanguineAlcohol = None
+Keyword PDV_KID_ZenitharTradeGood = None
+Keyword PDV_KID_HircineHuntTrophy = None
+Keyword PDV_KID_FuneraryOffering = None
+Keyword PDV_KID_OrcishCraft = None
+Keyword PDV_KID_AmuletAkatosh = None
+Keyword PDV_KID_AmuletArkay = None
+Keyword PDV_KID_AmuletDibella = None
+Keyword PDV_KID_AmuletJulianos = None
+Keyword PDV_KID_AmuletKynareth = None
+Keyword PDV_KID_AmuletMara = None
+Keyword PDV_KID_AmuletStendarr = None
+Keyword PDV_KID_AmuletTalos = None
+Keyword PDV_KID_AmuletZenithar = None
+Bool PDV_KID_BarterOpen = false
+Int PDV_KID_TradeValuePending = 0
+
+; Other-directed heal/cure effects for EVT_HEAL_OR_CURE_NPC (350). Resolved by FormID
+; like the KID keywords above, not a VMAD property, so old saves need no re-bind. The
+; list holds only heal effects whose delivery targets someone else (Healing Hands,
+; Grand Healing), never Self-cast heals, so combat self-sustain does not score. Mysticism
+; overrides these vanilla effect FormIDs in place, so its versions are covered for free.
+FormList PDV_HealCureOtherEffectsList = None
+
+; Foreign (non-Devotion-master) other-directed heal effects, resolved by FormID at load
+; so Devotion never masters the source plugin. A None slot (plugin absent, or spare) is
+; skipped. Fixed-size so adding a future mod's ally-heal is a one-line resolver edit.
+Form[] PDV_HealCureForeignEffects
+
 FormList Property PDV_FLST_FaucetSkillBooks Auto
 FormList Property PDV_FLST_FaucetSpellTomes Auto
 FormList Property PDV_FLST_FaucetDaedricArtifacts Auto
@@ -94,8 +133,8 @@ ActorBase Property Paarthurnax Auto
 
 Int Property MQ305_FORM_ID = 0x00046EF2 AutoReadOnly
 String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
-String Property QUEST_REACTION_MATRIX_FILE_ARR = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR" AutoReadOnly
 String Property QUEST_REACTION_CHANNEL_FOLDER = "../StorageUtilData/PlayerDevotion/Channels" AutoReadOnly
+String Property QUEST_REACTION_STAGE_ADAPTER_FOLDER = "../StorageUtilData/PlayerDevotion/QuestStageAdapters" AutoReadOnly
 
 String Property MOD_EVENT_CONCORDAT_COMPLIANCE = "PDV.ConcordatCompliance" AutoReadOnly
 String Property MOD_EVENT_CONCORDAT_DEFIANCE = "PDV.ConcordatDefiance" AutoReadOnly
@@ -107,9 +146,12 @@ Int Property EVT_HARVEST_INGREDIENT = 334 AutoReadOnly
 Int Property EVT_READ_SKILL_BOOK = 340 AutoReadOnly
 Int Property EVT_READ_SPELL_TOME = 341 AutoReadOnly
 Int Property EVT_READ_LORE_BOOK = 342 AutoReadOnly
+Int Property EVT_HEAL_OR_CURE_NPC = 350 AutoReadOnly
 Int Property EVT_PICK_OWNED_LOCK = 360 AutoReadOnly
 Int Property EVT_RAISE_UNDEAD = 365 AutoReadOnly
 Int Property EVT_ACCEPT_DAEDRIC_ARTIFACT = 368 AutoReadOnly
+Int Property EVT_SNEAK_ATTACK_KILL = 305 AutoReadOnly
+Int Property EVT_APPLY_POISON = 306 AutoReadOnly
 
 ; 12.2 / audit C2 -- the resolved faucet-form cache.
 ;
@@ -145,9 +187,12 @@ Form PDV_QRSpellVaermina0 = None
 Form PDV_QRSpellVaermina1 = None
 Form PDV_QRSpellSheogorathFire0 = None
 Form PDV_QRSpellSheogorathFire1 = None
+Form PDV_QRSpellHircine0 = None
+Form PDV_QRSpellHircine1 = None
 
 Bool PDV_LastSleepStartedOutside = false
 Bool PDV_LastSleptInInn = false
+Bool PDV_HasSleepStartContext = false
 Keyword PDV_KW_LocTypeInn
 ObjectReference PDV_LockpickMenuTargetRef = None
 Bool PDV_LockpickMenuTargetWasLocked = false
@@ -162,6 +207,8 @@ Int PDV_CombatSessionKills = 0
 Int PDV_CombatMaxLevelDelta = 0
 Bool PDV_CombatLowHealthFlag = false
 Bool PDV_CombatNearFatalFlag = false
+; P9 (2026-08-03): set when any spell hits the player during a session (Syrabane 3113).
+Bool PDV_CombatMageThreatFlag = false
 Bool PDV_CombatBelowHealthRouted = false
 Bool PDV_OriginQueuedThisLoad = false
 
@@ -213,6 +260,7 @@ Event OnInit()
     ResetUpdateScheduler()
     PDV_OriginQueuedThisLoad = false
     PDV_BardFormsResolved = false
+    ResolveKIDKeywords()
     RegisterForPlayerEvents()
     StartBardPerformancePoll()
     QueueOriginInitialization()
@@ -224,6 +272,7 @@ Event OnPlayerLoadGame()
     ResetUpdateScheduler()
     PDV_OriginQueuedThisLoad = false
     PDV_BardFormsResolved = false
+    ResolveKIDKeywords()
     RegisterForPlayerEvents()
     StartBardPerformancePoll()
     QueueOriginInitialization()
@@ -395,9 +444,11 @@ EndFunction
 
 Event OnSleepStart(Float afSleepStartTime, Float afDesiredSleepEndTime)
     Actor playerActor = GetActorRef()
+    PDV_HasSleepStartContext = false
     if playerActor
         PDV_LastSleepStartedOutside = !playerActor.IsInInterior()
         PDV_LastSleptInInn = IsPlayerInInn(playerActor)
+        PDV_HasSleepStartContext = true
     else
         PDV_LastSleepStartedOutside = false
         PDV_LastSleptInInn = false
@@ -407,6 +458,17 @@ Event OnSleepStart(Float afSleepStartTime, Float afDesiredSleepEndTime)
 EndEvent
 
 Event OnSleepStop(Bool abInterrupted)
+    ; Snapshot and clear the start context before any cross-script call can yield.
+    ; A stop event without a matching start must fail closed instead of reusing an
+    ; exterior flag left behind by an earlier sleep.
+    Actor playerActor = GetActorRef()
+    Bool hadSleepStartContext = PDV_HasSleepStartContext
+    Bool sleepStartedOutside = PDV_LastSleepStartedOutside
+    Bool sleptInInn = PDV_LastSleptInInn
+    PDV_HasSleepStartContext = false
+    PDV_LastSleepStartedOutside = false
+    PDV_LastSleptInInn = false
+
     if GetOriginRaceValue() < 0
         EnsureOriginInitialized()
     endIf
@@ -416,20 +478,22 @@ Event OnSleepStop(Bool abInterrupted)
         return
     endIf
 
-    PDV_EventBusService.RouteSleepStop(GetActorRef(), abInterrupted)
+    PDV_EventBusService.RouteSleepStop(playerActor, abInterrupted, hadSleepStartContext, sleepStartedOutside)
 
-    if !abInterrupted
-        if PDV_LastSleepStartedOutside
-            RouteGenericAction(EVT_REST_UNDER_OPEN_SKY, GetActorRef() as Form, None)
+    if !abInterrupted && hadSleepStartContext
+        if sleepStartedOutside
+            RouteGenericAction(EVT_REST_UNDER_OPEN_SKY, playerActor as Form, None)
         else
-            RouteGenericAction(EVT_SLEEP_IN_BED, GetActorRef() as Form, None)
+            RouteGenericAction(EVT_SLEEP_IN_BED, playerActor as Form, None)
             ; The ascetic-creed sleep penalty bites only on paid inn comfort ("slumbering
             ; easy"), not your own bed or a bedroll. Inn sleep also fires EVT_SLEEP_IN_INN so
             ; only the inn-keyed dislike rows score; positive sleep credit stays on EVT_SLEEP_IN_BED.
-            if PDV_LastSleptInInn
-                RouteGenericAction(EVT_SLEEP_IN_INN, GetActorRef() as Form, None)
+            if sleptInInn
+                RouteGenericAction(EVT_SLEEP_IN_INN, playerActor as Form, None)
             endIf
         endIf
+    elseIf !abInterrupted
+        Trace(1, "Player sleep stop had no captured start context; sleep classification skipped.")
     endIf
 EndEvent
 
@@ -568,6 +632,9 @@ Event OnItemCrafted(ObjectReference akBench, Location akLocation, Form akCreated
     Trace(1, "Item crafted: bench=" + benchId + ", createdItem=" + createdId + ".")
 
     PDV_RouterService.HandleStoryCraftItem(akBench, akLocation, akCreatedItem)
+    if akCreatedItem && PDV_KID_OrcishCraft && akCreatedItem.HasKeyword(PDV_KID_OrcishCraft)
+        RouteKIDAction("orcish_craft", akCreatedItem)
+    endIf
 EndEvent
 
 Event OnQuestStageChange(Quest akQuest, Int aiNewStage)
@@ -609,6 +676,7 @@ EndEvent
 
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
     RouteBosmerGreenPactFood(akBaseObject)
+    RouteKIDEquippedAction(akBaseObject)
     ; Sleeping Tree Sap (dunSleepingTreeCampSap, Skyrim.esm) is a one-shot
     ; Argonian vision source; the manager enforces origin and the one-shot.
     if akBaseObject && akBaseObject.GetFormID() == 0x000AED90 && PDV_EventBusService
@@ -637,6 +705,14 @@ Event OnMagicEffectApplyEx(ObjectReference akCaster, MagicEffect akEffect, Form 
     ; OnSpellCast, a caster-side vanilla event - same reliable-direct-hook approach as the
     ; spell-tome OnItemRemoved and lockpick-menu fixes.
     RouteQuestReactionMagicEffectFaucet(akEffect as Form)
+
+    ; P9 (2026-08-03): Syrabane's curse/disease warding (3112). Target-side is exactly right here --
+    ; the note above explains this event only hears effects applied TO the player, which is precisely
+    ; "a cure landed on me". All four listed vanilla effects are TargetType=Self, so they fire on the
+    ; actor being cured. The manager owns the origin, curse and daily gates.
+    if PDV_EventBusService && HasListedForm(PDV_FLST_Altmer_Syrabane_CureEffects, akEffect as Form)
+        PDV_EventBusService.RouteAltmerSyrabaneCureWard("magiceffect")
+    endIf
 EndEvent
 
 Event OnSpellCast(Form akSpell)
@@ -650,6 +726,17 @@ Event OnSpellCast(Form akSpell)
     if castSpell && SpellHasRaiseUndeadEffect(castSpell)
         Trace(2, "Raise-undead cast detected: " + castSpell.GetName())
         RouteGenericAction(EVT_RAISE_UNDEAD, GetActorRef() as Form, akSpell)
+    endIf
+
+    ; EVT_HEAL_OR_CURE_NPC (350): caster-side, same approach as raise-undead. The spec's
+    ; original OnMagicEffectApplyEx trigger is unbuildable here -- that hook is target-side
+    ; (the player alias only hears effects applied TO the player), so a heal landing on an
+    ; NPC never reaches it. Casting an other-directed heal is the reliable caster-side proxy.
+    ; The effect list is other-delivery only, so self-heals do not score; per-deity dailyCap
+    ; on the data rows governs anti-farm, exactly as the raise-undead path does.
+    if castSpell && SpellHasHealOrCureOtherEffect(castSpell)
+        Trace(2, "Heal/cure-other cast detected: " + castSpell.GetName())
+        RouteGenericAction(EVT_HEAL_OR_CURE_NPC, GetActorRef() as Form, akSpell)
     endIf
 EndEvent
 
@@ -670,6 +757,45 @@ Bool Function SpellHasRaiseUndeadEffect(Spell castSpell)
     return false
 EndFunction
 
+Bool Function SpellHasHealOrCureOtherEffect(Spell castSpell)
+    if !castSpell
+        return false
+    endIf
+
+    Int index = 0
+    Int count = castSpell.GetNumEffects()
+    while index < count
+        MagicEffect effectRef = castSpell.GetNthEffectMagicEffect(index)
+        if effectRef
+            Form effectForm = effectRef as Form
+            if PDV_HealCureOtherEffectsList && HasListedForm(PDV_HealCureOtherEffectsList, effectForm)
+                return true
+            endIf
+            if IsForeignHealEffect(effectForm)
+                return true
+            endIf
+        endIf
+        index += 1
+    endWhile
+    return false
+EndFunction
+
+Bool Function IsForeignHealEffect(Form effectForm)
+    if !effectForm || !PDV_HealCureForeignEffects
+        return false
+    endIf
+
+    Int i = 0
+    Int n = PDV_HealCureForeignEffects.Length
+    while i < n
+        if PDV_HealCureForeignEffects[i] == effectForm
+            return true
+        endIf
+        i += 1
+    endWhile
+    return false
+EndFunction
+
 Event OnHitEx(ObjectReference akAggressor, Form akSource, Projectile akProjectile, Bool abPowerAttack, Bool abSneakAttack, Bool abBashAttack, Bool abHitBlocked)
     Actor playerRef = GetActorRef()
     if playerRef && playerRef.IsInCombat()
@@ -681,11 +807,24 @@ Event OnHitEx(ObjectReference akAggressor, Form akSource, Projectile akProjectil
         endIf
     endIf
 
+    ; P9: mage-threat flag for Syrabane's anti-mage survival (3113). Set on ANY spell hit, blocked
+    ; or not -- surviving a mage is the beat, not blocking one. Reset per session in BeginCombatSession.
+    if akSource as Spell
+        PDV_CombatMageThreatFlag = true
+    endIf
+
     if !abHitBlocked
         return
     endIf
 
     RouteQuestReactionBlockedHitFaucet()
+
+    ; P9: Syrabane's protective warding (3110). Deliberately NOT a cast counter -- his design
+    ; contract rejects "every ward cast". This requires a block that actually stopped MAGIC, so
+    ; akSource must be a Spell; a blocked sword swing is not warding. Zero new records.
+    if PDV_EventBusService && (akSource as Spell)
+        PDV_EventBusService.RouteAltmerSyrabaneProtectiveWard("blocked_spell")
+    endIf
 EndEvent
 
 Function RouteGenericBookRead(Book akBook, Bool firstRead, String logicalEventId = "")
@@ -741,8 +880,7 @@ Function RouteBosmerGreenPactFood(Form baseObject)
     elseIf FormMatchesListOrKeyword(baseObject, PDV_FLST_GreenPact_EggFoods, PDV_KW_GreenPact_Egg)
         Trace(3, "Green Pact egg food ignored.")
     elseIf FormMatchesListOrKeyword(baseObject, PDV_FLST_GreenPact_InsectFoods, PDV_KW_GreenPact_Insect)
-        PDV_EventBusService.RouteBosmerPactPositive()
-        Trace(2, "Green Pact insect food positive routed.")
+        Trace(3, "Green Pact insect food ignored.")
     endIf
 EndFunction
 
@@ -771,6 +909,9 @@ Event OnMenuOpen(String menuName)
     if menuName == "Lockpicking Menu"
         PDV_LockpickMenuTargetRef = Game.GetCurrentCrosshairRef()
         PDV_LockpickMenuTargetWasLocked = PDV_LockpickMenuTargetRef && PDV_LockpickMenuTargetRef.IsLocked()
+    elseIf menuName == "BarterMenu"
+        PDV_KID_BarterOpen = true
+        PDV_KID_TradeValuePending = 0
     endIf
 EndEvent
 
@@ -780,6 +921,9 @@ Event OnMenuClose(String menuName)
         Trace(2, "RaceSex menu closed; origin retry queued.")
     elseIf menuName == "Lockpicking Menu"
         ResolveLockpickMenuClose()
+    elseIf menuName == "BarterMenu"
+        PDV_KID_BarterOpen = false
+        PDV_KID_TradeValuePending = 0
     endIf
 EndEvent
 
@@ -842,6 +986,7 @@ Function BeginCombatSession()
     PDV_CombatMaxLevelDelta = 0
     PDV_CombatLowHealthFlag = false
     PDV_CombatNearFatalFlag = false
+    PDV_CombatMageThreatFlag = false
     PDV_CombatBelowHealthRouted = false
     ScheduleCombatDeadline(4.0)
     Trace(2, "PDV combat session opened for origin " + originRace + ".")
@@ -870,7 +1015,10 @@ Function SampleCombatHealth(Actor playerRef, String reason)
     Float healthPct = playerRef.GetActorValuePercentage("Health")
     if originRace == 4
         TryRoutePlayerBelowHealthGate(playerRef, healthPct, reason)
-    elseIf originRace == 0 || originRace == 6
+    elseIf originRace == 0 || originRace == 3 || originRace == 6
+        ; P9: Altmer uses the FLAG-PAIR shape deliberately. Origins 4/7/8 use
+        ; TryRoutePlayerBelowHealthGate instead; the two are NOT interchangeable, and picking the
+        ; wrong one yields a signal that compiles and never fires.
         if healthPct <= 0.10
             PDV_CombatNearFatalFlag = true
             PDV_CombatLowHealthFlag = true
@@ -919,6 +1067,21 @@ Function ResolveCombatSession(String reason)
     ; Nord: Tsun's adversity beat rides the same rare near-fatal reversal shape as
     ; the Khajiit beat below, weekly-capped at the detector per the 2026-07-15
     ; pool-feeding ruling (rarity is the guard, pool feeding is intended).
+    ; P9 (2026-08-03): Syrabane's anti-mage survival (3113), mirroring the Nord/Tsun shape below --
+    ; same weekly-stamp idiom, same near-fatal + kill gate, plus the mage-threat flag so this is
+    ; specifically "survived a mage", not any desperate fight.
+    if originRace == 3
+        if PDV_CombatMageThreatFlag && PDV_CombatLowHealthFlag && PDV_CombatSessionKills >= 1 && PDV_EventBusService
+            Int altmerWeekStamp = ((Utility.GetCurrentGameTime() as Int) / 7) + 1
+            if StorageUtil.GetIntValue(None, "PDV.Altmer.Syrabane.AntiMageWeek") != altmerWeekStamp
+                StorageUtil.SetIntValue(None, "PDV.Altmer.Syrabane.AntiMageWeek", altmerWeekStamp)
+                PDV_EventBusService.RouteAltmerSyrabaneAntiMageSurvival("organic_anti_mage_survival")
+                Trace(1, "Altmer anti-mage survival detected (" + reason + ")")
+            endIf
+        endIf
+        return
+    endIf
+
     if originRace == 0
         if PDV_CombatNearFatalFlag && PDV_CombatSessionKills >= 1 && PDV_EventBusService
             Int nordWeekStamp = ((Utility.GetCurrentGameTime() as Int) / 7) + 1
@@ -972,6 +1135,8 @@ Event OnActorKilled(Actor akVictim, Actor akKiller)
         return
     endIf
 
+    StorageUtil.SetIntValue(akVictim, "PDV.KID.KilledByPlayerDay", GetDevotionalDayStamp())
+
     Int originRace = GetOriginRaceValue()
 
     if IsPaarthurnaxActor(akVictim)
@@ -986,6 +1151,15 @@ Event OnActorKilled(Actor akVictim, Actor akKiller)
         endIf
         Trace(1, "Paarthurnax slain; global kill fork routed.")
         return
+    endIf
+
+    ; 2026-08-12: sneak-attack-kill (305). Papyrus exposes no sneak-multiplier flag on
+    ; OnActorKilled, so IsSneaking() at the kill is the pragmatic stealth-kill signal -- the
+    ; same test the honorable-victory gates below invert. Routes to open Daedric paths
+    ; (Mephala/Nocturnal like, Malacath dislike) and the Dunmer Boethiah patron dislike;
+    ; the per-event dailyCap/cooldown rows carry anti-farm.
+    if playerRef.IsSneaking()
+        RouteGenericAction(EVT_SNEAK_ATTACK_KILL, playerRef as Form, akVictim as Form)
     endIf
 
     if originRace == 5 && PDV_EventBusService && PDV_CombatSessionActive && !PDV_CombatStartedSneaking && !PDV_CombatObservedSneaking && !playerRef.IsSneaking() && akVictim.IsHostileToActor(playerRef) && akVictim.GetLevel() >= playerRef.GetLevel()
@@ -1142,10 +1316,12 @@ Bool Function ActorHasInheritedKeyword(Actor actorRef, Keyword keywordRef)
 EndFunction
 
 Bool Function IsCombatSessionOrigin(Int originRace)
-    return originRace == 0 || originRace == 4 || originRace == 5 || originRace == 6 || originRace == 7 || originRace == 8 || originRace == 9
+    ; P9 (2026-08-03): origin 3 (Altmer) added for Syrabane's anti-mage survival beat.
+    return originRace == 0 || originRace == 3 || originRace == 4 || originRace == 5 || originRace == 6 || originRace == 7 || originRace == 8 || originRace == 9
 EndFunction
 
 Event OnItemAdded(Form akBaseItem, Int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
+    RouteKIDTrophyPickup(akBaseItem, akSourceContainer)
     Actor sourceActor = akSourceContainer as Actor
     if !sourceActor
         return
@@ -1213,6 +1389,21 @@ Event OnItemAdded(Form akBaseItem, Int aiItemCount, ObjectReference akItemRefere
 EndEvent
 
 Event OnItemRemoved(Form akBaseItem, Int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
+    RouteKIDRemovedAction(akBaseItem, aiItemCount, akDestContainer)
+
+    ; 2026-08-12: apply-poison (306). Applying a poison to a weapon consumes it with no
+    ; persistent ref and no destination (akItemReference == None && akDestContainer == None) --
+    ; the same consumed-signature the spell-tome path below relies on; selling sets a dest and
+    ; dropping sets a world ref, so both are excluded. Caster-side is the only angle: the poison
+    ; effect lands on the ENEMY (target-side), which the player alias never hears. Per-event caps
+    ; anti-farm it. VALIDATION-PENDING: confirm apply-poison raises OnItemRemoved in game.
+    if !akItemReference && !akDestContainer
+        Potion poisonItem = akBaseItem as Potion
+        if poisonItem && poisonItem.IsPoison()
+            RouteGenericAction(EVT_APPLY_POISON, GetActorRef() as Form, akBaseItem)
+        endIf
+    endIf
+
     ; Spell-tome learning ingress (Mega Packet Sitting 1 E1, 2026-07-05).
     ; Reading a spell tome learns the spell and destroys the book, but that path
     ; does NOT raise OnBookRead, so EVT_READ_SPELL_TOME (341) never fired through
@@ -1244,10 +1435,127 @@ Event OnItemRemoved(Form akBaseItem, Int aiItemCount, ObjectReference akItemRefe
     Trace(1, "Spell tome learned: routed EVT_READ_SPELL_TOME.")
 EndEvent
 
+Function ResolveKIDKeywords()
+    PDV_KID_NamiraTabooFood = Game.GetFormFromFile(0x00071747, "Devotion.esp") as Keyword
+    PDV_KID_SanguineAlcohol = Game.GetFormFromFile(0x00071748, "Devotion.esp") as Keyword
+    PDV_KID_ZenitharTradeGood = Game.GetFormFromFile(0x00071749, "Devotion.esp") as Keyword
+    PDV_KID_HircineHuntTrophy = Game.GetFormFromFile(0x0007174A, "Devotion.esp") as Keyword
+    PDV_KID_FuneraryOffering = Game.GetFormFromFile(0x0007174B, "Devotion.esp") as Keyword
+    PDV_KID_OrcishCraft = Game.GetFormFromFile(0x0007174C, "Devotion.esp") as Keyword
+    PDV_KID_AmuletAkatosh = Game.GetFormFromFile(0x0007174D, "Devotion.esp") as Keyword
+    PDV_KID_AmuletArkay = Game.GetFormFromFile(0x0007174E, "Devotion.esp") as Keyword
+    PDV_KID_AmuletDibella = Game.GetFormFromFile(0x0007174F, "Devotion.esp") as Keyword
+    PDV_KID_AmuletJulianos = Game.GetFormFromFile(0x00071750, "Devotion.esp") as Keyword
+    PDV_KID_AmuletKynareth = Game.GetFormFromFile(0x00071751, "Devotion.esp") as Keyword
+    PDV_KID_AmuletMara = Game.GetFormFromFile(0x00071752, "Devotion.esp") as Keyword
+    PDV_KID_AmuletStendarr = Game.GetFormFromFile(0x00071753, "Devotion.esp") as Keyword
+    PDV_KID_AmuletTalos = Game.GetFormFromFile(0x00071754, "Devotion.esp") as Keyword
+    PDV_KID_AmuletZenithar = Game.GetFormFromFile(0x00071755, "Devotion.esp") as Keyword
+    PDV_HealCureOtherEffectsList = Game.GetFormFromFile(0x00071790, "Devotion.esp") as FormList
+
+    ; Foreign ally-heal effects (skipped when the plugin is absent -> None). Triumvirate
+    ; cleric auras: Aura of Vigor (1F675A) and Aura of Thorns restore-health (1FB86C),
+    ; both ValueModifier/Health non-detrimental. Mysticism needs no entries: it overrides
+    ; the vanilla FormIDs in place, so the FormList above already covers it.
+    PDV_HealCureForeignEffects = new Form[8]
+    PDV_HealCureForeignEffects[0] = Game.GetFormFromFile(0x001F675A, "Triumvirate - Mage Archetypes.esp")
+    PDV_HealCureForeignEffects[1] = Game.GetFormFromFile(0x001FB86C, "Triumvirate - Mage Archetypes.esp")
+EndFunction
+
+Function RouteKIDAction(String actionKey, Form sourceForm)
+    if !PDV_EventBusService || !PDV_EventBusService.PDV_Manager
+        Trace(1, "KID action skipped: PDV manager unavailable.")
+        return
+    endIf
+    PDV_EventBusService.PDV_Manager.HandleKIDAction(actionKey, sourceForm)
+EndFunction
+
+Function RouteKIDEquippedAction(Form baseObject)
+    if !baseObject
+        return
+    endIf
+    if !PDV_KID_NamiraTabooFood
+        ResolveKIDKeywords()
+    endIf
+
+    if PDV_KID_NamiraTabooFood && baseObject.HasKeyword(PDV_KID_NamiraTabooFood)
+        RouteKIDAction("namira_taboo_food", baseObject)
+    elseIf PDV_KID_SanguineAlcohol && baseObject.HasKeyword(PDV_KID_SanguineAlcohol)
+        RouteKIDAction("sanguine_alcohol", baseObject)
+    elseIf PDV_KID_AmuletAkatosh && baseObject.HasKeyword(PDV_KID_AmuletAkatosh)
+        RouteKIDAction("amulet_akatosh", baseObject)
+    elseIf PDV_KID_AmuletArkay && baseObject.HasKeyword(PDV_KID_AmuletArkay)
+        RouteKIDAction("amulet_arkay", baseObject)
+    elseIf PDV_KID_AmuletDibella && baseObject.HasKeyword(PDV_KID_AmuletDibella)
+        RouteKIDAction("amulet_dibella", baseObject)
+    elseIf PDV_KID_AmuletJulianos && baseObject.HasKeyword(PDV_KID_AmuletJulianos)
+        RouteKIDAction("amulet_julianos", baseObject)
+    elseIf PDV_KID_AmuletKynareth && baseObject.HasKeyword(PDV_KID_AmuletKynareth)
+        RouteKIDAction("amulet_kynareth", baseObject)
+    elseIf PDV_KID_AmuletMara && baseObject.HasKeyword(PDV_KID_AmuletMara)
+        RouteKIDAction("amulet_mara", baseObject)
+    elseIf PDV_KID_AmuletStendarr && baseObject.HasKeyword(PDV_KID_AmuletStendarr)
+        RouteKIDAction("amulet_stendarr", baseObject)
+    elseIf PDV_KID_AmuletTalos && baseObject.HasKeyword(PDV_KID_AmuletTalos)
+        RouteKIDAction("amulet_talos", baseObject)
+    elseIf PDV_KID_AmuletZenithar && baseObject.HasKeyword(PDV_KID_AmuletZenithar)
+        RouteKIDAction("amulet_zenithar", baseObject)
+    endIf
+EndFunction
+
+Function RouteKIDTrophyPickup(Form baseItem, ObjectReference sourceContainer)
+    Actor sourceActor = sourceContainer as Actor
+    if !baseItem || !sourceActor || !sourceActor.IsDead()
+        return
+    endIf
+    if !PDV_KID_HircineHuntTrophy
+        ResolveKIDKeywords()
+    endIf
+    if !PDV_KID_HircineHuntTrophy || !baseItem.HasKeyword(PDV_KID_HircineHuntTrophy)
+        return
+    endIf
+    Int dayStamp = GetDevotionalDayStamp()
+    if StorageUtil.GetIntValue(sourceActor, "PDV.KID.KilledByPlayerDay") != dayStamp
+        return
+    endIf
+    if StorageUtil.GetIntValue(sourceActor, "PDV.KID.TrophyClaimedDay") == dayStamp
+        return
+    endIf
+    StorageUtil.SetIntValue(sourceActor, "PDV.KID.TrophyClaimedDay", dayStamp)
+    RouteKIDAction("hunt_trophy", baseItem)
+EndFunction
+
+Function RouteKIDRemovedAction(Form baseItem, Int itemCount, ObjectReference destination)
+    if !baseItem || itemCount <= 0
+        return
+    endIf
+    if !PDV_KID_ZenitharTradeGood
+        ResolveKIDKeywords()
+    endIf
+
+    if PDV_KID_BarterOpen && PDV_KID_ZenitharTradeGood && baseItem.HasKeyword(PDV_KID_ZenitharTradeGood)
+        PDV_KID_TradeValuePending += baseItem.GetGoldValue() * itemCount
+        if PDV_KID_TradeValuePending >= 250
+            PDV_KID_TradeValuePending -= 250
+            RouteKIDAction("zenithar_trade", baseItem)
+        endIf
+    endIf
+
+    Actor destinationActor = destination as Actor
+    if destinationActor && destinationActor.IsDead() && PDV_KID_FuneraryOffering && baseItem.HasKeyword(PDV_KID_FuneraryOffering)
+        Int dayStamp = GetDevotionalDayStamp()
+        if StorageUtil.GetIntValue(destinationActor, "PDV.KID.FuneraryOfferingDay") != dayStamp
+            StorageUtil.SetIntValue(destinationActor, "PDV.KID.FuneraryOfferingDay", dayStamp)
+            RouteKIDAction("funerary_offering", baseItem)
+        endIf
+    endIf
+EndFunction
+
 Function RegisterForPlayerEvents()
     RegisterForSleep()
     RegisterForMenu("RaceSex Menu")
     RegisterForMenu("Lockpicking Menu")
+    RegisterForMenu("BarterMenu")
     RegisterForShoutSignals()
     RegisterForLevelSignals()
     RegisterForCivilWarSignals()
@@ -1434,6 +1742,8 @@ Function CacheQuestReactionSpellFaucetForms()
         PDV_QRSpellVaermina1 = None
         PDV_QRSpellSheogorathFire0 = None
         PDV_QRSpellSheogorathFire1 = None
+        PDV_QRSpellHircine0 = None
+        PDV_QRSpellHircine1 = None
         return
     endIf
 
@@ -1443,6 +1753,8 @@ Function CacheQuestReactionSpellFaucetForms()
     PDV_QRSpellVaermina1 = GetQuestReactionRuntimeForm("faucetSpellForms.Vaermina.serve_a_daedra:vaermina", 1)
     PDV_QRSpellSheogorathFire0 = GetQuestReactionRuntimeForm("faucetSpellForms.Sheogorath.serve_a_daedra:sheogorath_fire", 0)
     PDV_QRSpellSheogorathFire1 = GetQuestReactionRuntimeForm("faucetSpellForms.Sheogorath.serve_a_daedra:sheogorath_fire", 1)
+    PDV_QRSpellHircine0 = GetQuestReactionRuntimeForm("faucetSpellForms.Hircine.serve_a_daedra:hircine", 0)
+    PDV_QRSpellHircine1 = GetQuestReactionRuntimeForm("faucetSpellForms.Hircine.serve_a_daedra:hircine", 1)
 EndFunction
 
 ; 12.2 / audit C2. Resolve every list ShouldRouteQuestReactionFaucet can be asked about
@@ -1473,11 +1785,11 @@ Function CacheQuestReactionFaucetForms()
     CacheQuestReactionFaucetList("faucetForms.Boethiah.serve_a_daedra:boethiah")
     CacheQuestReactionFaucetList("faucetForms.Mephala.serve_a_daedra:mephala")
     CacheQuestReactionFaucetList("faucetForms.Malacath.serve_a_daedra:malacath")
-    CacheQuestReactionFaucetList("faucetForms.Molag Bal.serve_a_daedra:molag_bal")
+    CacheQuestReactionFaucetList("faucetForms.Molag Bal.serve_a_daedra:molagbal")
     CacheQuestReactionFaucetList("faucetForms.Hircine.serve_a_daedra:hircine")
     CacheQuestReactionFaucetList("faucetForms.Meridia.serve_a_daedra:meridia")
     CacheQuestReactionFaucetList("faucetForms.Sheogorath.serve_a_daedra:sheogorath")
-    CacheQuestReactionFaucetList("faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon")
+    CacheQuestReactionFaucetList("faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunesdagon")
     CacheQuestReactionFaucetList("faucetForms.Nocturnal.serve_a_daedra:nocturnal")
     CacheQuestReactionFaucetList("faucetForms.Peryite.serve_a_daedra:peryite")
     CacheQuestReactionFaucetList("faucetForms.Dibella.aesthetic_devotion")
@@ -1513,10 +1825,8 @@ EndFunction
 
 Function RegisterQuestReactionMatrix()
     RegisterQuestReactionMatrixFile(QUEST_REACTION_MATRIX_FILE, "core")
-    if JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE_ARR)
-        RegisterQuestReactionMatrixFile(QUEST_REACTION_MATRIX_FILE_ARR, "ARR")
-    endIf
     RegisterQuestReactionChannelFolder()
+    RegisterQuestReactionStageAdapterFolder()
 EndFunction
 
 Function RegisterQuestReactionChannelFolder()
@@ -1545,6 +1855,35 @@ Function RegisterQuestReactionChannelFolder()
         channelIndex += 1
     endWhile
     Trace(2, "Quest reaction channels registered: " + StorageUtil.StringListCount(None, "PDV.QR.ChannelFiles") + ".")
+EndFunction
+
+Function RegisterQuestReactionStageAdapterFolder()
+    ; Optional package adapters remap a physical quest stage to a synthetic matrix
+    ; stage. Cache their loaded file paths so quest-stage routing never scans a
+    ; folder while handling an event.
+    StorageUtil.StringListClear(None, "PDV.QR.StageAdapterFiles")
+    String[] adapterNames = JsonUtil.JsonInFolder(QUEST_REACTION_STAGE_ADAPTER_FOLDER)
+    if !adapterNames
+        return
+    endIf
+
+    Int adapterIndex = 0
+    while adapterIndex < adapterNames.Length
+        String adapterName = adapterNames[adapterIndex]
+        if adapterName != ""
+            String adapterFile = QUEST_REACTION_STAGE_ADAPTER_FOLDER + "/" + adapterName
+            if JsonUtil.JsonExists(adapterFile)
+                ReloadQuestReactionMatrixJsonFile(adapterFile)
+                if JsonUtil.IsGood(adapterFile)
+                    StorageUtil.StringListAdd(None, "PDV.QR.StageAdapterFiles", adapterFile, False)
+                endIf
+            else
+                Trace(1, "Quest-stage adapter listed but unreadable: " + adapterFile)
+            endIf
+        endIf
+        adapterIndex += 1
+    endWhile
+    Trace(2, "Quest-stage adapters registered: " + StorageUtil.StringListCount(None, "PDV.QR.StageAdapterFiles") + ".")
 EndFunction
 
 Function RegisterQuestReactionMatrixFile(String matrixFile, String label)
@@ -1819,6 +2158,12 @@ Function RouteP2ImmersiveSource(Form sourceForm, String sourceKind, String paren
     endIf
     if ShouldRouteP2Source(PDV_FLST_P2_AltmerXarxesSources, sourceForm, "altmer_xarxes", sourceKind)
         PDV_EventBusService.RouteAltmerXarxesLineage(sourceKind + "_altmer_xarxes")
+    endIf
+    if ShouldRouteP2Source(PDV_FLST_P2_AltmerTrinimacSources, sourceForm, "altmer_trinimac", sourceKind)
+        PDV_EventBusService.RouteAltmerTrinimacOrthodoxy(sourceKind + "_altmer_trinimac")
+    endIf
+    if ShouldRouteP2Source(PDV_FLST_P2_AltmerSyrabaneSources, sourceForm, "altmer_syrabane", sourceKind)
+        PDV_EventBusService.RouteAltmerSyrabaneContainment(sourceKind + "_altmer_syrabane")
     endIf
     if ShouldRouteP2Source(PDV_FLST_P2_AltmerLorkhanPenalties, sourceForm, "altmer_lorkhan_penalty", sourceKind)
         PDV_EventBusService.RouteAltmerLorkhanPenalty(4, sourceKind + "_altmer_lorkhan_penalty")
@@ -2097,7 +2442,12 @@ Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage, String pare
         PDV_EventBusService.RouteDaedricPrinceSignal(12, "po3_queststage_daedric_mora_da04")
     endIf
     if ShouldRouteP2QuestStage(PDV_FLST_Daedric_NocturnalLiveSources, sourceQuest, 136533, 200, "daedric_nocturnal_tg09", newStage)
-        PDV_EventBusService.RouteDaedricPrinceSignal(13, "po3_queststage_daedric_nocturnal_tg09")
+        Int resolvedStage = ResolveQuestReactionStageAdapter(sourceQuest, newStage)
+        if resolvedStage == 200
+            PDV_EventBusService.RouteDaedricPrinceSignal(13, "po3_queststage_daedric_nocturnal_tg09")
+        else
+            Trace(2, "Quest-stage adapter suppressed Nocturnal commitment: physical=200 matrixStage=" + resolvedStage)
+        endIf
     endIf
     if ShouldRouteP2QuestStage(PDV_FLST_Daedric_PeryiteLiveSources, sourceQuest, 563597, 100, "daedric_peryite_da13", newStage)
         PDV_EventBusService.RouteDaedricPrinceSignal(14, "po3_queststage_daedric_peryite_da13")
@@ -2165,7 +2515,75 @@ Function RouteQuestReactionStage(Quest sourceQuest, Int newStage, String logical
         return
     endIf
 
-    PDV_EventBusService.RouteQuestReaction(sourceQuest, newStage, logicalEventId)
+    Int resolvedStage = ResolveQuestReactionStageAdapter(sourceQuest, newStage)
+    PDV_EventBusService.RouteQuestReaction(sourceQuest, resolvedStage, logicalEventId)
+EndFunction
+
+Int Function ResolveQuestReactionStageAdapter(Quest sourceQuest, Int newStage)
+    ; Each opt-in JSON adapter identifies a watched quest by its owning plugin and
+    ; local FormID, then maps an installed GlobalVariable value to a synthetic
+    ; matrix stage. Missing, malformed, or non-matching adapters preserve the
+    ; physical stage.
+    if !sourceQuest
+        return newStage
+    endIf
+
+    Int adapterIndex = 0
+    Int adapterCount = StorageUtil.StringListCount(None, "PDV.QR.StageAdapterFiles")
+    while adapterIndex < adapterCount
+        String adapterFile = StorageUtil.StringListGet(None, "PDV.QR.StageAdapterFiles", adapterIndex)
+        String sourcePlugin = JsonUtil.GetStringValue(adapterFile, "sourcePlugin")
+        Int sourceFormId = JsonUtil.GetIntValue(adapterFile, "sourceFormId")
+        Int sourceStage = JsonUtil.GetIntValue(adapterFile, "sourceStage")
+        if sourcePlugin != "" && sourceStage == newStage && Game.GetModByName(sourcePlugin) != 255
+            Quest configuredQuest = Game.GetFormFromFile(sourceFormId, sourcePlugin) as Quest
+            if configuredQuest == sourceQuest
+                String selectorKind = JsonUtil.GetStringValue(adapterFile, "selectorKind")
+                if selectorKind == ""
+                    selectorKind = "global"
+                endIf
+                String selectorPlugin = JsonUtil.GetStringValue(adapterFile, "selectorPlugin")
+                Int selectorFormId = JsonUtil.GetIntValue(adapterFile, "selectorFormId")
+                if selectorPlugin != "" && Game.GetModByName(selectorPlugin) != 255
+                    Int selectorValue = 0
+                    Bool selectorResolved = false
+                    if selectorKind == "global"
+                        GlobalVariable selectorGlobal = Game.GetFormFromFile(selectorFormId, selectorPlugin) as GlobalVariable
+                        if selectorGlobal
+                            selectorValue = selectorGlobal.GetValueInt()
+                            selectorResolved = true
+                        endIf
+                    elseIf selectorKind == "player_item_count"
+                        Form selectorItem = Game.GetFormFromFile(selectorFormId, selectorPlugin)
+                        Actor selectorPlayer = Game.GetPlayer()
+                        if selectorItem && selectorPlayer
+                            selectorValue = selectorPlayer.GetItemCount(selectorItem)
+                            if selectorValue > 0
+                                selectorValue = 1
+                            endIf
+                            selectorResolved = true
+                        endIf
+                    endIf
+                    if selectorResolved
+                        Int valueIndex = 0
+                        Int valueCount = JsonUtil.IntListCount(adapterFile, "selectorValues")
+                        while valueIndex < valueCount
+                            if JsonUtil.IntListGet(adapterFile, "selectorValues", valueIndex) == selectorValue
+                                Int targetStage = JsonUtil.IntListGet(adapterFile, "targetStages", valueIndex)
+                                if targetStage > 0
+                                    Trace(2, "Quest-stage adapter route: " + adapterFile + " physical=" + newStage + " selectorKind=" + selectorKind + " selector=" + selectorValue + " matrixStage=" + targetStage)
+                                    return targetStage
+                                endIf
+                            endIf
+                            valueIndex += 1
+                        endWhile
+                    endIf
+                endIf
+            endIf
+        endIf
+        adapterIndex += 1
+    endWhile
+    return newStage
 EndFunction
 
 Function RouteQuestReactionBookFaucet(Form sourceForm, Bool firstRead)
@@ -2225,8 +2643,8 @@ Function RouteQuestReactionObjectFaucet(Form sourceForm)
     if ShouldRouteQuestReactionFaucet("Malacath.serve_a_daedra:malacath", "faucetForms.Malacath.serve_a_daedra:malacath", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Malacath.serve_a_daedra:malacath", sourceForm)
     endIf
-    if ShouldRouteQuestReactionFaucet("Molag Bal.serve_a_daedra:molag_bal", "faucetForms.Molag Bal.serve_a_daedra:molag_bal", sourceForm)
-        PDV_EventBusService.RouteQuestReactionFaucet("Molag Bal.serve_a_daedra:molag_bal", sourceForm)
+    if ShouldRouteQuestReactionFaucet("Molag Bal.serve_a_daedra:molagbal", "faucetForms.Molag Bal.serve_a_daedra:molagbal", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Molag Bal.serve_a_daedra:molagbal", sourceForm)
     endIf
     if ShouldRouteQuestReactionFaucet("Hircine.serve_a_daedra:hircine", "faucetForms.Hircine.serve_a_daedra:hircine", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Hircine.serve_a_daedra:hircine", sourceForm)
@@ -2237,8 +2655,8 @@ Function RouteQuestReactionObjectFaucet(Form sourceForm)
     if ShouldRouteQuestReactionFaucet("Sheogorath.serve_a_daedra:sheogorath", "faucetForms.Sheogorath.serve_a_daedra:sheogorath", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Sheogorath.serve_a_daedra:sheogorath", sourceForm)
     endIf
-    if ShouldRouteQuestReactionFaucet("Mehrunes Dagon.serve_a_daedra:mehrunes_dagon", "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon", sourceForm)
-        PDV_EventBusService.RouteQuestReactionFaucet("Mehrunes Dagon.serve_a_daedra:mehrunes_dagon", sourceForm)
+    if ShouldRouteQuestReactionFaucet("Mehrunes Dagon.serve_a_daedra:mehrunesdagon", "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunesdagon", sourceForm)
+        PDV_EventBusService.RouteQuestReactionFaucet("Mehrunes Dagon.serve_a_daedra:mehrunesdagon", sourceForm)
     endIf
     if ShouldRouteQuestReactionFaucet("Nocturnal.serve_a_daedra:nocturnal", "faucetForms.Nocturnal.serve_a_daedra:nocturnal", sourceForm)
         PDV_EventBusService.RouteQuestReactionFaucet("Nocturnal.serve_a_daedra:nocturnal", sourceForm)
@@ -2265,6 +2683,12 @@ Function RouteQuestReactionSpellFaucet(Form sourceForm)
     endIf
     if MatchesCachedQuestReactionSpellFaucet(sourceForm, PDV_QRSpellSheogorathFire0, PDV_QRSpellSheogorathFire1)
         PDV_EventBusService.RouteQuestReactionFaucet("Sheogorath.serve_a_daedra:sheogorath_fire", sourceForm)
+    endIf
+    ; Triumvirate Hircine-worship spells (Force of Nature, Call Hound of Hircine). Routes
+    ; the same Hircine.serve_a_daedra:hircine scoring + daily cap as the Savior's Hide equip
+    ; faucet, so casting and wearing share one Hircine service cap per dawn.
+    if MatchesCachedQuestReactionSpellFaucet(sourceForm, PDV_QRSpellHircine0, PDV_QRSpellHircine1)
+        PDV_EventBusService.RouteQuestReactionFaucet("Hircine.serve_a_daedra:hircine", sourceForm)
     endIf
 EndFunction
 
@@ -2445,7 +2869,7 @@ String Function GetQuestReactionFormIdKey(String listKey)
         return "faucetFormsMephalaServeADaedraMephalaFormIds"
     elseIf listKey == "faucetForms.Malacath.serve_a_daedra:malacath"
         return "faucetFormsMalacathServeADaedraMalacathFormIds"
-    elseIf listKey == "faucetForms.Molag Bal.serve_a_daedra:molag_bal"
+    elseIf listKey == "faucetForms.Molag Bal.serve_a_daedra:molagbal"
         return "faucetFormsMolagBalServeADaedraMolagBalFormIds"
     elseIf listKey == "faucetForms.Hircine.serve_a_daedra:hircine"
         return "faucetFormsHircineServeADaedraHircineFormIds"
@@ -2453,7 +2877,7 @@ String Function GetQuestReactionFormIdKey(String listKey)
         return "faucetFormsMeridiaServeADaedraMeridiaFormIds"
     elseIf listKey == "faucetForms.Sheogorath.serve_a_daedra:sheogorath"
         return "faucetFormsSheogorathServeADaedraSheogorathFormIds"
-    elseIf listKey == "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon"
+    elseIf listKey == "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunesdagon"
         return "faucetFormsMehrunesDagonServeADaedraMehrunesDagonFormIds"
     elseIf listKey == "faucetForms.Nocturnal.serve_a_daedra:nocturnal"
         return "faucetFormsNocturnalServeADaedraNocturnalFormIds"
@@ -2463,6 +2887,8 @@ String Function GetQuestReactionFormIdKey(String listKey)
         return "faucetSpellFormsVaerminaServeADaedraVaerminaFormIds"
     elseIf listKey == "faucetSpellForms.Sheogorath.serve_a_daedra:sheogorath_fire"
         return "faucetSpellFormsSheogorathServeADaedraSheogorathFireFormIds"
+    elseIf listKey == "faucetSpellForms.Hircine.serve_a_daedra:hircine"
+        return "faucetSpellFormsHircineServeADaedraHircineFormIds"
     elseIf listKey == "faucetEffectForms.Namira.cannibalism"
         return "faucetEffectFormsNamiraCannibalismFormIds"
     elseIf listKey == "faucetEffectForms.Dibella.charity"
@@ -2501,7 +2927,7 @@ String Function GetQuestReactionPluginKey(String listKey)
         return "faucetFormsMephalaServeADaedraMephalaPlugins"
     elseIf listKey == "faucetForms.Malacath.serve_a_daedra:malacath"
         return "faucetFormsMalacathServeADaedraMalacathPlugins"
-    elseIf listKey == "faucetForms.Molag Bal.serve_a_daedra:molag_bal"
+    elseIf listKey == "faucetForms.Molag Bal.serve_a_daedra:molagbal"
         return "faucetFormsMolagBalServeADaedraMolagBalPlugins"
     elseIf listKey == "faucetForms.Hircine.serve_a_daedra:hircine"
         return "faucetFormsHircineServeADaedraHircinePlugins"
@@ -2509,7 +2935,7 @@ String Function GetQuestReactionPluginKey(String listKey)
         return "faucetFormsMeridiaServeADaedraMeridiaPlugins"
     elseIf listKey == "faucetForms.Sheogorath.serve_a_daedra:sheogorath"
         return "faucetFormsSheogorathServeADaedraSheogorathPlugins"
-    elseIf listKey == "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon"
+    elseIf listKey == "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunesdagon"
         return "faucetFormsMehrunesDagonServeADaedraMehrunesDagonPlugins"
     elseIf listKey == "faucetForms.Nocturnal.serve_a_daedra:nocturnal"
         return "faucetFormsNocturnalServeADaedraNocturnalPlugins"
@@ -2519,6 +2945,8 @@ String Function GetQuestReactionPluginKey(String listKey)
         return "faucetSpellFormsVaerminaServeADaedraVaerminaPlugins"
     elseIf listKey == "faucetSpellForms.Sheogorath.serve_a_daedra:sheogorath_fire"
         return "faucetSpellFormsSheogorathServeADaedraSheogorathFirePlugins"
+    elseIf listKey == "faucetSpellForms.Hircine.serve_a_daedra:hircine"
+        return "faucetSpellFormsHircineServeADaedraHircinePlugins"
     elseIf listKey == "faucetEffectForms.Namira.cannibalism"
         return "faucetEffectFormsNamiraCannibalismPlugins"
     elseIf listKey == "faucetEffectForms.Dibella.charity"
@@ -2613,17 +3041,53 @@ Bool Function MarkP2SourceRoute(Form sourceForm, String routeKey, String sourceK
     return true
 EndFunction
 
+; P15 (2026-08-03). In-game days before an already-read book can credit again.
+Float Property BOOK_REREAD_COOLDOWN_DAYS = 30.0 AutoReadOnly
+
+; P15 (2026-08-03): books used to be a ONE-SHOT HARVEST. The `.Seen` flag was set once and never
+; cleared, so a library was consumed rather than practised -- `dailyCap: 3` on read-lore-book
+; actually meant "three different UNREAD books today", a finite world pool masquerading as a
+; faucet. Once a player had read everything, the whole reading lane paid zero forever, which hit
+; the scholar deities (Xarxes, Magnus, Auri-El) hardest and inverted the theology.
+;
+; DEVIATION FROM THE APPROVED SPEC, deliberate and flagged: the plan called for re-reads to credit
+; at 25%. The `firstRead` return here is a pure GATE -- `RouteGenericBookRead` drops the event
+; entirely when it is false, and the actual delta comes from ScoreFromTable much further
+; downstream. Scaling a re-read would mean threading a multiplier through RouteGenericAction, the
+; SHARED router for every event type in the mod. That is far outside this packet's blast radius,
+; so re-reads credit at FULL value and the existing per-row dailyCap plus the global
+; PIETY_DAILY_MAX_DELTA do the balancing: the daily ceiling does not move, only the lane's
+; lifespan. Revisit if playtest shows it is too soft.
+;
+; MarkP2SourceRoute is deliberately untouched -- curated P2 heritage books stay once-ever. Those
+; are authored beats, not practice.
 Bool Function MarkGenericBookRead(Form bookForm)
     if !bookForm
         return false
     endIf
 
-    String seenKey = "PDV.BookRead." + bookForm.GetFormID() + ".Seen"
-    if StorageUtil.GetIntValue(None, seenKey) == 1
+    Float nowTime = Utility.GetCurrentGameTime()
+    String dayKey = "PDV.BookRead." + bookForm.GetFormID() + ".SeenDay"
+    Float seenDay = StorageUtil.GetFloatValue(None, dayKey)
+
+    if seenDay <= 0.0
+        ; Migration: a pre-P15 save carries the old `.Seen` int with no timestamp. Treat that as
+        ; "read just now", NOT as never-read -- otherwise an existing library would all become
+        ; re-creditable at once on the first load after the update.
+        String legacyKey = "PDV.BookRead." + bookForm.GetFormID() + ".Seen"
+        if StorageUtil.GetIntValue(None, legacyKey) == 1
+            StorageUtil.SetFloatValue(None, dayKey, nowTime)
+            return false
+        endIf
+        StorageUtil.SetFloatValue(None, dayKey, nowTime)
+        return true
+    endIf
+
+    if (nowTime - seenDay) < BOOK_REREAD_COOLDOWN_DAYS
         return false
     endIf
 
-    StorageUtil.SetIntValue(None, seenKey, 1)
+    StorageUtil.SetFloatValue(None, dayKey, nowTime)
     return true
 EndFunction
 

@@ -1,6 +1,6 @@
 {
-  "schema": "pdv.1-0.freshness-stamps.v1",
-  "updated": "2026-07-16T11:42:53.334Z",
+  "schema": "pdv.1-0.freshness-stamps.v2",
+  "updated": "2026-08-11T08:54:26.670Z",
   "stamps": {
     "C-RACE-RUBRIC": {
       "observedAt": "2026-07-07T09:22:07.856Z",
@@ -11,10 +11,11 @@
       }
     },
     "C-PRINCE-GATE": {
-      "observedAt": "2026-07-16T11:37:45.727Z",
+      "observedAt": "2026-08-11T08:54:26.518Z",
       "result": "PASS",
+      "hashMode": "text-lf-bytes-binary-v1",
       "sourceHashes": {
-        "references/authoring/PDV_DaedricPrinceRecordContracts.json": "8da722675e3a257d06d90c3d34cf32f961838055b57363b6824aad5d7cf1d62a"
+        "references/authoring/PDV_DaedricPrinceRecordContracts.json": "fb3421668875dd06919228a9af91a37eb95a3cae91c5ee6783fe62a26a76da81"
       }
     },
     "C-AUDIT-BETA-STRICT": {
@@ -85,8 +86,9 @@
       }
     },
     "C-EXPMODE-SMOKE": {
-      "observedAt": "2026-07-16T11:42:50.192Z",
+      "observedAt": "2026-08-11T08:54:26.578Z",
       "result": "PASS",
+      "hashMode": "text-lf-bytes-binary-v1",
       "sourceHashes": {}
     },
     "C-AUDIT-SUBSTRATE-PACING": {

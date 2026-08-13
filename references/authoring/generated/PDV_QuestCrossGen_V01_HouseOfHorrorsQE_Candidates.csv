@@ -1,0 +1,3 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation,formid
+DA10,The House of Horrors (QE - destroy altar),210,Helped Tyranus destroy Molag Bal's altar,destroy_reject_daedra:molagbal,Azura,+,m,small,"cross-gen candidate: destroy_reject_daedra:molagbal(S) from the Azura Part B profile, stepped down; REVIEW before promotion",Skyrim.esm:022F08
+DA10,The House of Horrors (QE - destroy altar),210,Helped Tyranus destroy Molag Bal's altar,destroy_reject_daedra:molagbal,Meridia,+,m,small,"cross-gen candidate: destroy_reject_daedra:molagbal(m) from the Meridia Part B profile, stepped down; REVIEW before promotion",Skyrim.esm:022F08

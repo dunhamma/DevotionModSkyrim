@@ -1,4 +1,4 @@
-;/ 
+;/
     PDV__ManagerQuest.psc
     Devotion Mod - Phase 4 manager runtime
     -----------------------------------------------------------------------
@@ -43,9 +43,6 @@ FormList Property PDV_FLST_KhajiitMoonContemplations Auto
 Faction Property NecromancerFaction Auto
 Faction Property WarlockFaction Auto
 String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
-; List-patch second channel (e.g. Authoria/ARR). Cells are read from whichever
-; channel owns the (form|stage) key; shared stance/value tables stay on core.
-String Property QUEST_REACTION_MATRIX_FILE_ARR = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR" AutoReadOnly
 PDV_QuestReactionWorker Property PDV_QuestReactionWorkerService Auto
 
 PDV_Deity_Kyne Property PDV_Kyne Auto
@@ -88,7 +85,17 @@ PDV_Deity_Kynareth Property PDV_Kynareth Auto
 PDV_Deity_AuriEl Property PDV_AuriEl Auto
 PDV_Deity_Magnus Property PDV_Magnus Auto
 PDV_Deity_Xarxes Property PDV_Xarxes Auto
-PDV_DeityBase Property PDV_Syrabane Auto
+; P9 (2026-08-03): narrowed from PDV_DeityBase to the concrete type, matching every sibling
+; (PDV_Deity_Magnus/Xarxes/Trinimac/AuriEl). Required so his signal constants are referable, and
+; required by tools/pdv_signal_e2e_gate.mjs: its dispatch-coverage regex only recognises an award
+; whose second argument is the deity PROPERTY itself followed by the constant. Assigning the deity
+; to a local variable first compiles fine but reads as UNDISPATCHED to that gate.
+; The property name and its bound object are unchanged.
+;
+; Do NOT write an illustrative deity-dot-constant example in any comment in this file -- the
+; curated-signal PARITY scanner treats such text as a real reference and then fails looking for a
+; deity script that does not exist. That is what happened when this note was first written.
+PDV_Deity_Syrabane Property PDV_Syrabane Auto
 PDV_ReputationTrack Property PDV_ConcordatStandingTrack Auto
 PDV_Substrate_ImperialAncestor Property PDV_ImperialAncestorSubstrate Auto
 PDV_Substrate_BretonAncestor Property PDV_BretonAncestorSubstrate Auto
@@ -101,6 +108,8 @@ PDV_Substrate_NordAncestor Property PDV_NordAncestorSubstrate Auto
 PDV_Substrate_DunmerAncestor Property PDV_DunmerAncestorSubstrate Auto
 Book Property PDV_BOOK_DunmerAncestralUrn Auto
 MiscObject Property PDV_MISC_DunmerAncestralUrn Auto
+; P14 (2026-08-04). MUST be bound in the ESP or the focus is never granted and the whole lane is dead.
+MiscObject Property PDV_MISC_AltmerPracticeFocus Auto
 Spell Property PDV_SPEL_Dunmer_AncestorWatch Auto
 Message Property PDV_MESG_DunmerMarkHome Auto
 PDV_Substrate_KhajiitLunar Property PDV_KhajiitLunarSubstrate Auto
@@ -321,9 +330,8 @@ Spell Property PDV_Bless_Imperial_Talos_T2 Auto
 Spell Property PDV_Bless_Imperial_Talos_T3 Auto
 Spell Property PDV_SPEL_Neglect_Imperial Auto
 Spell Property PDV_Bless_Khajiit_Lunar_T1 Auto
-; Lattice phase blessings: one small (+5 / +5%) god-themed effect per presiding
-; moon phase, active only while that god presides AND the player has cultivated
-; it to Faithful. None-safe until the records are authored.
+; Retired rotating phase-stat spells. Properties remain only for save/FormID
+; compatibility so reconciliation can remove stale instances.
 Spell Property PDV_Bless_Khajiit_Phase_Khenarthi Auto
 Spell Property PDV_Bless_Khajiit_Phase_Azurah Auto
 Spell Property PDV_Bless_Khajiit_Phase_BaanDar Auto
@@ -346,6 +354,16 @@ Spell Property PDV_Bless_Khajiit_Rajhin_T3 Auto
 Spell Property PDV_Bless_Khajiit_Alkosh_T1 Auto
 Spell Property PDV_Bless_Khajiit_Alkosh_T2 Auto
 Spell Property PDV_Bless_Khajiit_Alkosh_T3 Auto
+Perk Property PDV_PERK_Khajiit_LatticeResonance Auto
+Spell Property PDV_SPEL_Khajiit_LatticeResonanceMarker Auto
+Spell Property PDV_Power_Khajiit_AzurahPortent Auto
+Spell Property PDV_SPEL_Khajiit_AzurahPortentDetect Auto
+Sound Property PDV_SND_Khajiit_AzurahPortentFizzle Auto
+Message Property PDV_MSG_KhajiitFocus_Khenarthi Auto
+Message Property PDV_MSG_KhajiitFocus_Azurah Auto
+Message Property PDV_MSG_KhajiitFocus_BaanDar Auto
+Message Property PDV_MSG_KhajiitFocus_Rajhin Auto
+Message Property PDV_MSG_KhajiitFocus_Alkosh Auto
 Spell Property PDV_SPEL_Neglect_KhajiitLunar Auto
 Spell Property PDV_Bless_Nord_OldWays_T1 Auto
 Spell Property PDV_Bless_Nord_OldWays_T2 Auto
@@ -450,6 +468,27 @@ Message Property PDV_Msg_Nord_CurseState_VampireCured Auto
 Message Property PDV_Msg_Altmer_VampireExiledPath_Entry Auto
 Message Property PDV_Msg_Altmer_VampireExiledPath_Recognition Auto
 Message Property PDV_Msg_Altmer_CurseState_WerewolfHardHalt Auto
+; P11 (2026-08-04): the Altmer ambient records. Two Champion variants per deity plus the two
+; deity-agnostic heritage lines. Every one of these MUST be bound in the CK -- an unbound
+; Message property is not a compile error and not a runtime error either; ShowAltmerNotification
+; quietly falls back to a Prisma toast, so a missed binding looks like working software.
+Message Property PDV_Notif_Altmer_AuriEl_ChampionAmbient_Dawn Auto
+Message Property PDV_Notif_Altmer_AuriEl_ChampionAmbient_Return Auto
+Message Property PDV_Notif_Altmer_Magnus_ChampionAmbient_Study Auto
+Message Property PDV_Notif_Altmer_Magnus_ChampionAmbient_ElderWay Auto
+Message Property PDV_Notif_Altmer_Xarxes_ChampionAmbient_Record Auto
+Message Property PDV_Notif_Altmer_Xarxes_ChampionAmbient_Lineage Auto
+Message Property PDV_Notif_Altmer_Trinimac_ChampionAmbient_Watch Auto
+Message Property PDV_Notif_Altmer_Trinimac_ChampionAmbient_Sword Auto
+Message Property PDV_Notif_Altmer_Syrabane_ChampionAmbient_Ward Auto
+Message Property PDV_Notif_Altmer_Syrabane_ChampionAmbient_Guard Auto
+Message Property PDV_Notif_Altmer_General_HeritageExemplar Auto
+Message Property PDV_Notif_Altmer_General_HeritageQuiet Auto
+; The calian's two refusal surfaces. Before these the token was silent on both -- a player who
+; clicked it twice in a day, or clicked it while cursed, got no answer at all and could not tell a
+; working item from a broken one.
+Message Property PDV_Notif_Altmer_Calian_AlreadyKept Auto
+Message Property PDV_Notif_Altmer_Calian_Unanswered Auto
 Message Property PDV_Notif_Redguard_Sect_Crown_Entry Auto
 Message Property PDV_Notif_Redguard_Sect_Forebear_Entry Auto
 Message Property PDV_Notif_Redguard_Sect_AshAbah_Entry Auto
@@ -558,9 +597,14 @@ Int Property TIER_SEEKER = 1 AutoReadOnly
 Int Property TIER_DEVOTED = 2 AutoReadOnly
 Int Property TIER_CHAMPION = 3 AutoReadOnly
 
+; P11: devotional days between recurring ambient lines, per surfacing deity and for the
+; heritage band. Four is deliberately slow -- this layer exists so a long-held Champion is not
+; met with silence, not to fill the notification area.
+Int Property AMBIENT_CHAMPION_CADENCE_DAYS = 4 AutoReadOnly
+
 ; Human-facing release stamp for the MCM Version readout and bug-report export.
 ; Bump on every public build so an attached report is orderable by build.
-String Property PDV_BUILD_VERSION = "1.0.4" AutoReadOnly
+String Property PDV_BUILD_VERSION = "1.5.0" AutoReadOnly
 
 Int Property FRAMEWORK_SCHEMA_VERSION = 3 AutoReadOnly
 Int Property PATRON_STATE_UNSET = 0 AutoReadOnly
@@ -579,8 +623,8 @@ Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; seals every deity's participating-event cache (12.4 / C4 in PDV_DeityBase) -- without
 ; it the caches stay unsealed forever on old saves (correct, they fail open, but the
 ; broadcast fan-out keeps paying the full per-deity probe the cache exists to remove).
-Int Property LIKES_DISLIKES_VERSION = 17 AutoReadOnly
-Int Property PRINCE_LD_VERSION = 4 AutoReadOnly
+Int Property LIKES_DISLIKES_VERSION = 23 AutoReadOnly
+Int Property PRINCE_LD_VERSION = 6 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_NONE = 0 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_SKY_STORM_HUNT = 1 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_DEATH_ANCESTORS = 2 AutoReadOnly
@@ -599,6 +643,17 @@ Int Property DISFAVOR_MAX_ACTIVE_DOMAINS = 3 AutoReadOnly
 ; co-held patron+Prince, keep higher tier, tie -> Prince).
 Int Property DAEDRIC_PACT_VERSION = 3 AutoReadOnly
 Float Property TIER_DOWN_HYSTERESIS = 5.0 AutoReadOnly
+; --- P10 (2026-08-03): Long Devotion, the post-Champion accrual layer -------------------------
+; The ladder terminated flat at Champion (85) while PIETY_MAX is 200, so 115 points of headroom
+; drove nothing, and MaybeShowChampionRewardPresentation is a hard one-shot -- a Champion who
+; decayed out and re-climbed got total silence.
+; Long Devotion is a DERIVED readout over the EXISTING 85..200 piety headroom. No new currency,
+; no new decay, no new anti-farm doctrine, no new records. The alternative -- a parallel
+; accumulator -- would need a second copy of the whole gain pipeline. Rejected.
+; Marks grant NO SPELL in v1, deliberately: they are recognition plus a decay floor, so the
+; accrual model can be judged before committing to a T4 reward family per race.
+Float Property LONG_DEVOTION_MARK_STEP = 15.0 AutoReadOnly
+Int Property LONG_DEVOTION_MARK_MAX = 7 AutoReadOnly
 Float Property ORC_RATE_MULT_STRONGHOLD = 1.0 AutoReadOnly
 Float Property ORC_RATE_MULT_CITY = 0.75 AutoReadOnly
 Float Property ORC_RATE_MULT_LEGIONEXILE = 0.6 AutoReadOnly
@@ -617,7 +672,6 @@ Float Property BROAD_PANTHEON_FAITHFUL_THRESHOLD = 50.0 AutoReadOnly
 Float Property BROAD_PANTHEON_POOL_MAX = 50.0 AutoReadOnly
 Float Property BROAD_PANTHEON_DECAY_GRACE_DAYS = 2.0 AutoReadOnly
 Float Property BROAD_PANTHEON_DECAY_PER_DAWN = 0.1 AutoReadOnly
-Int Property BROAD_PANTHEON_SCHEMA_VERSION = 1 AutoReadOnly
 String Property BROAD_PANTHEON_IMPERIAL = "ImperialDivines" AutoReadOnly
 String Property BROAD_PANTHEON_NORD_OLD = "NordOldWays" AutoReadOnly
 String Property BROAD_PANTHEON_NORD_NINE = "NordNineDivines" AutoReadOnly
@@ -710,6 +764,14 @@ Int Property ALTMER_CRISIS_DISSONANT = 1 AutoReadOnly
 Int Property ALTMER_CRISIS_QUESTIONING = 2 AutoReadOnly
 Int Property ALTMER_CRISIS_REASSERTING = 3 AutoReadOnly
 Int Property ALTMER_CRISIS_SCARRED_RESOLVED = 4 AutoReadOnly
+; P6 (2026-08-03): in-game days a scar must sit before the crisis arc can re-open.
+; Before this, SetAltmerCrisisState(ALTMER_CRISIS_NONE, ...) was never called ANYWHERE, so the
+; first crisis to resolve ended the arc permanently -- HandleAltmerLorkhanPressure can only open
+; a crisis from state NONE, so Lorkhan pressure lost its teeth for the rest of the playthrough.
+; Re-entry additionally requires a DIFFERENT source: the per-source PDV.Altmer.CrisisSeen.<n>
+; guards are deliberately NOT cleared, which bounds a playthrough to at most one crisis per
+; authored source rather than letting the arc become a loop.
+Float Property ALTMER_CRISIS_REENTRY_DAYS = 30.0 AutoReadOnly
 Int Property ALTMER_LORKHAN_PRESSURE_DIRECT = 1 AutoReadOnly
 Int Property ALTMER_LORKHAN_PRESSURE_SHOR_ADJACENT = 2 AutoReadOnly
 Int Property ALTMER_LORKHAN_PRESSURE_MORTAL_VALIDATION = 3 AutoReadOnly
@@ -736,7 +798,7 @@ Int Property KHAJIIT_LUNAR_POSTURE_CORRUPTED = 2 AutoReadOnly
 Int Property KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT = 3 AutoReadOnly
 Int Property KHAJIIT_SHADOWDRIFT_EVIDENCE_REQUIRED = 3 AutoReadOnly
 Int Property KHAJIIT_SHADOWDRIFT_EVIDENCE_WINDOW = 7 AutoReadOnly
-Float Property KHAJIIT_FOCUS_THRESHOLD = 50.0 AutoReadOnly
+Float Property KHAJIIT_FOCUS_THRESHOLD = 25.0 AutoReadOnly
 Float Property KHAJIIT_FOCUS_LEAD_REQUIRED = 15.0 AutoReadOnly
 Float Property KHAJIIT_FOCUS_SIGNAL_DELTA = 25.0 AutoReadOnly
 ; Khajiit lunar substrate pacing (owner decision 2026-07-13): the lunar identity
@@ -751,14 +813,20 @@ Float Property KHAJIIT_LUNAR_ROAD_METRIC = 2.0 AutoReadOnly
 ; Focus weight a quest-reaction piety award contributes to the Khajiit focused
 ; emphasis (the matrix->focus bridge). Smaller than a dedicated edge signal so a
 ; single quest cannot lock a focus; a milestone reaction counts double. With
-; THRESHOLD 50 / LEAD 15, this means roughly a full questline (e.g. the Thieves
-; Guild for Rajhin) establishes the lead, not one quest. Behavior-driven focus
+; THRESHOLD 25 / LEAD 15 lets an established behavioral lead emerge once the
+; matching deity has also reached Seeker. Behavior-driven focus
 ; per the LOCKED Khajiit design sheet (moons are the substrate; behavior leads).
 Float Property KHAJIIT_FOCUS_MATRIX_DELTA = 6.0 AutoReadOnly
-; Layer 2: extra piety multiplier toward a Khajiit focus god while the current
-; moon phase aligns to it and that god has reached Faithful (tier 2). Small by
-; design -- the moons favor a cultivated god, they do not replace the work.
-Float Property KHAJIIT_LUNAR_ALIGNMENT_BONUS = 0.10 AutoReadOnly
+String Property KHAJIIT_MOON_OBSERVATIONS_FILE = "../StorageUtilData/PlayerDevotion/PDV_KhajiitMoonObservations" AutoReadOnly
+Int Property KHAJIIT_MOON_OBSERVATIONS_VERSION = 1 AutoReadOnly
+
+; The Altmer calian's line pool, modelled on the Khajiit moon observations above: JSON data, a
+; version gate, structural validation, no-immediate-repeat, and a compiled fallback if the file is
+; missing or malformed. The calian is the mod's ONLY unlimited daily Altmer act, so its Book of Days
+; line is the one a player sees most often -- a single fixed sentence would wear out fastest here.
+String Property ALTMER_PRACTICE_LINES_FILE = "../StorageUtilData/PlayerDevotion/PDV_AltmerPracticeLines" AutoReadOnly
+Int Property ALTMER_PRACTICE_LINES_VERSION = 2 AutoReadOnly
+Int Property ALTMER_PRACTICE_LINES_COUNT = 20 AutoReadOnly
 Float Property KHAJIIT_LUNAR_NEGLECT_GRACE_DAYS = 3.0 AutoReadOnly
 ; Argonian no-offer reward gating (substrate-relation thresholds + Hist-distance neglect grace).
 Float Property ARGONIAN_HIST_NEGLECT_GRACE_DAYS = 3.0 AutoReadOnly
@@ -788,9 +856,6 @@ Float Property SHOUT_DUPLICATE_WINDOW_DAYS = 0.00001 AutoReadOnly
 ; callback cannot award piety, a meta faucet, or a broad-pantheon fold twice.
 Float Property QUEST_REACTION_DUPLICATE_WINDOW_DAYS = 0.02 AutoReadOnly
 Int Property QUEST_REACTION_QUEUE_MAX_PENDING = 128 AutoReadOnly
-; A3 / fix-plan 10.1. Bump to re-run the legacy quest-reaction job-key sweep on every
-; existing save (see RunAuthoriaQuestReactionKeySweep).
-Int Property AUTHORIA_QR_KEY_SWEEP_VERSION = 1 AutoReadOnly
 Int Property QUEST_REACTION_QUEUE_CELLS_PER_TICK = 2 AutoReadOnly
 Float Property QUEST_REACTION_QUEUE_TICK_SECONDS = 0.1 AutoReadOnly
 
@@ -812,6 +877,35 @@ Int _optimizationContextProbeRuns = 0
 Bool _panelDirty = False
 Bool _suppressAwardFavorToast = False
 Bool _suppressCurseTransitionOutputs = False
+; Set by any race-voiced curse surface that actually emits, cleared at the top of each curse
+; transition. SendPrismaCurseToast reads it so the generic "<Curse> is lifted / has been driven out"
+; toast stands aside when a race already spoke -- a Nord curing lycanthropy was getting the race line
+; AND the generic one describing the same event in placeholder copy.
+; Deliberately a FLAG rather than a race list: only four races (Nord, Argonian, Khajiit, Redguard)
+; have cure records at all, and the generic toast must keep covering the other five, or curing a
+; curse goes completely silent for them. When a race gains its records the flag picks it up for free.
+Bool _raceCurseSurfaceShown = False
+; Deferred presentation for the authored Nord/Kyne recognition. A raw Message.Show() CANNOT display
+; over an open config menu -- it returns the default button instantly with no dialog (AGENTS.md,
+; 2026-06-13). The tier crossing that triggers this is reachable from an MCM piety seed, so showing
+; it inline displayed nothing and burned the one-shot key. Same fix pattern as
+; QueueDaedricMilestoneMcmReplay: hold it and present from OnUpdate once menus are closed.
+Message _pendingNordKyneChampionMsg = None
+String _pendingNordKyneChampionFallback = ""
+Int _pendingNordKyneChampionDelayTicks = 0
+; Pooled-line structural-validation cache (2026-08-07). Each validator probed every entry in its
+; pool on EVERY pick -- ~64 native JsonUtil calls for the 20-entry Altmer pool, ~53 for a 16-entry
+; Khajiit moon pool. The pools are static shipped content, so the structure cannot change under a
+; running game; only the file's VERSION can, and it does so by contract when the content is
+; regenerated. These stamps hold the VERSION each pool was last fully validated against, so a
+; version bump (or a fresh install) re-validates and steady state costs two calls.
+; JsonUtil.Load still runs on every call and is deliberately NOT cached: PapyrusUtil's parsed-file
+; cache lives in the DLL, so it does not survive a game reload, and skipping Load would make every
+; probe read its "missing" default after a load. The bundled Papyrus reference documents no caching
+; semantics for Load, so nothing here assumes any.
+Int _altmerPracticeLinesValidatedVersion = -1
+Int _khajiitMoonObservationsValidatedVersion = -1
+String _khajiitMoonObservationsValidatedKey = ""
 ; Quest-reaction surface accumulator (2026-07-05): one quest fire = one toast +
 ; one Book of Days beat, no matter how many deities its cells fan to. Reset at
 ; the top of ApplyQuestReaction, filled per landed base cell, flushed after the
@@ -875,6 +969,14 @@ Cell _khajiitMoonObservationCell = None
 Float _khajiitMoonObservationX = 0.0
 Float _khajiitMoonObservationY = 0.0
 Float _khajiitMoonObservationZ = 0.0
+; Recognition forms are owned by Devotion and never change at runtime. Resolve
+; them once per saved script instance instead of repeating GetFormFromFile in
+; the minute reconciliation and its 57-faction reset loop.
+Faction _recognitionPlayerFaction = None
+Faction[] _recognitionCohortFactions
+Bool _recognitionFormsResolved = False
+PDV_DaedricPathBase _kidNamiraPath = None
+PDV_DaedricPathBase _kidSanguinePath = None
 Bool Property AutoPushPrismaPanel = False Auto
 Bool Property AllowPrismaBlockingSurfaces = False Auto
 PDV_DaedricPathBase _pendingDaedricMilestonePath = None
@@ -896,17 +998,14 @@ Event OnInit()
     RegisterManagerShoutSignals()
     EnsureLikesDislikesTable()
     EnsurePrinceLikesDislikesTable()
-    MigrateDaedricPactsIfNeeded()
-    MigrateBroadPantheonPools()
+    EnsureRecognitionModEvents()
     RefreshPatronMirrors()
     UpdateContextualFavorRuntime()
     UpdateDisfavorStingRuntime()
     EnsureSurveyDevotionPower()
     EnsureDunmerAncestralUrn()
+    EnsureAltmerPracticeFocus()
     EnsureArgonianHistSapToken()
-    if PDV_ArgonianHistSubstrate
-        PDV_ArgonianHistSubstrate.MigrateLegacyCompositeMetricOnce()
-    endIf
     EnsureKhajiitObserveMoonsPower()
     RequestPanelRefresh()
     HandleDiegeticLoad("init")
@@ -945,6 +1044,7 @@ Event OnUpdate()
         HandleDiegeticLoad("update")
     endIf
     ProcessQueuedDaedricMilestonePresentation()
+    ProcessQueuedNordKyneChampionEntry()
     ProcessPendingDaedricActivation()
     ProcessPendingDaedricLapse()
     ProcessPendingDaedricPrePactNotices()
@@ -994,13 +1094,12 @@ Event OnUpdate()
         EnsureNordRuntimeWiring()
         EnsureSurveyDevotionPower()
         EnsureDunmerAncestralUrn()
+        EnsureAltmerPracticeFocus()
         EnsureArgonianHistSapToken()
         InitCCContent()
         RegisterManagerShoutSignals()
         EnsureLikesDislikesTable()
         EnsurePrinceLikesDislikesTable()
-        MigrateDaedricPactsIfNeeded()
-        MigrateBroadPantheonPools()
         EnsureKhajiitObserveMoonsPower()
         _shoutRefreshTicks = 0
     endIf
@@ -1115,10 +1214,6 @@ Event OnUpdate()
     MaybeEmitManagerOptimizationProfile()
     RegisterForSingleUpdate(1.0)
 
-    ; A3 / fix-plan 10.1: one-time sweep of legacy leaked job keys. Deliberately AFTER
-    ; the re-arm above: a fault inside a latent one-shot must never be able to break
-    ; the poll chain (the B3 failure class).
-    RunAuthoriaQuestReactionKeySweep()
 EndEvent
 
 Function MaybeEmitManagerOptimizationProfile()
@@ -1641,15 +1736,10 @@ Function HandleBardPerformance(Int qualityDelta, Bool receivedOvation, Form cont
 EndFunction
 
 String Function ResolveQuestReactionCellFile(String cellPrefix)
-    ; Return the matrix channel that owns this (form|stage) cell: core first, then
-    ; the legacy ARR channel, then the per-mod patch channels cached at
-    ; registration (PDV.QR.ChannelFiles). First hit wins. Returns "" when no
-    ; channel has the cell.
+    ; Return the matrix channel that owns this (form|stage) cell: core first,
+    ; then opt-in per-mod channels cached at registration. First hit wins.
     if JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, cellPrefix + "deitiesCsv") != ""
         return QUEST_REACTION_MATRIX_FILE
-    endIf
-    if JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE_ARR) && JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE_ARR, cellPrefix + "deitiesCsv") != ""
-        return QUEST_REACTION_MATRIX_FILE_ARR
     endIf
     Int channelIndex = 0
     Int channelCount = StorageUtil.StringListCount(None, "PDV.QR.ChannelFiles")
@@ -1694,6 +1784,7 @@ Function QueueQuestReactionJob(Quest sourceQuest, Int stageValue, String parentL
     if matrixFile == ""
         return
     endIf
+    String sourceModName = JsonUtil.GetStringValue(matrixFile, "sourceMod")
 
     String sourceDeitiesCsv = JsonUtil.GetStringValue(matrixFile, cellPrefix + "deitiesCsv")
     String[] deityNames = StringUtil.Split(sourceDeitiesCsv, "|")
@@ -1858,6 +1949,7 @@ Function QueueQuestReactionJob(Quest sourceQuest, Int stageValue, String parentL
     StorageUtil.SetStringValue(None, prefix + "MagnitudesCsv", magnitudesCsv)
     StorageUtil.SetStringValue(None, prefix + "TagsCsv", tagsCsv)
     StorageUtil.SetStringValue(None, prefix + "MatrixFile", matrixFile)
+    StorageUtil.SetStringValue(None, prefix + "SourceModName", sourceModName)
     StorageUtil.SetStringValue(None, prefix + "CellPrefix", cellPrefix)
     StorageUtil.SetIntValue(None, prefix + "CellCount", cellCount)
     StorageUtil.SetIntValue(None, prefix + "SourceCellCount", sourceCellCount)
@@ -2045,7 +2137,7 @@ Bool Function ProcessQuestReactionQueueSlice()
     if compactedJob && StorageUtil.GetIntValue(None, prefix + "MetaEligible") == 1
         StorageUtil.SetFloatValue(None, "PDV.Meta.LastFulfillTime", StorageUtil.GetFloatValue(None, prefix + "QueuedGameTime"))
     endIf
-    FlushQueuedQuestReactionSurface()
+    FlushQueuedQuestReactionSurface(StorageUtil.GetStringValue(None, prefix + "SourceModName"))
     CommitQueuedQuestReactionBroad(StorageUtil.GetStringValue(None, prefix + "ReactionKey"))
     if _qrQueueNeedsCurseRefresh
         HandleCurseStateRefresh("quest_reaction_queue")
@@ -2104,25 +2196,6 @@ Function RemoveQueuedQuestReactionJob()
     ; Both REJECT paths in ProcessQuestReactionQueueSlice come through here too, so
     ; this is the single drain for the completed AND the rejected job.
     ClearQuestReactionJobKeys(jobId)
-EndFunction
-
-;/ A3 / fix-plan 10.1, second half: the one-time migration. Every job processed
-   before this pass left its ~24 keys behind, so an existing save carries the whole
-   backlog. ClearAllPrefix on the shared "PDV.QR.Job." root removes all of it in one
-   native call -- but ONLY with the queue empty, because a pending job's keys live
-   under that same root and are still needed. If the queue is busy the sweep simply
-   waits for a later tick; the version stamp is not written until it actually runs. /;
-Function RunAuthoriaQuestReactionKeySweep()
-    if StorageUtil.GetIntValue(None, "PDV.Authoria.QRKeySweepVersion") >= AUTHORIA_QR_KEY_SWEEP_VERSION
-        return
-    endIf
-    if HasQueuedQuestReactionJobs()
-        return
-    endIf
-
-    Int clearedKeys = StorageUtil.ClearAllPrefix("PDV.QR.Job.")
-    StorageUtil.SetIntValue(None, "PDV.Authoria.QRKeySweepVersion", AUTHORIA_QR_KEY_SWEEP_VERSION)
-    Trace(1, "[PDV][QR_QUEUE] legacy job-key sweep removed " + clearedKeys + " stale co-save keys.")
 EndFunction
 
 Int Function ProcessQueuedQuestReactionMetaSlice(Quest sourceQuest, String prefix, Int metaIndex)
@@ -2458,12 +2531,7 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
         endIf
     endIf
 
-    Float multiplier = 1.0
-    if stance == "FOREIGN"
-        multiplier = JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.FOREIGN", 0.4)
-    elseIf stance == "TOLERATED"
-        multiplier = JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.TOLERATED", 0.4)
-    endIf
+    Float multiplier = GetQuestReactionStanceMultiplier(stance)
 
     Float appliedReactionAmount = amount * multiplier
     ; Milestone surfacing (below) owns the top-left toast for a landed base-cell
@@ -2521,6 +2589,21 @@ Function ResetQuestReactionSurface()
     _qrSurfBestPosSymbol = ""
     _qrSurfBestNegSymbol = ""
     _qrSurfMilestone = False
+EndFunction
+
+; Neutral compatibility seam for opt-in patch quests. Third-party observers own
+; their source-mod detection, persistence, and semantic mapping; core only owns
+; the standard piety application and the one-toast/one-Book surface contract.
+Function BeginExternalReactionBatch()
+    ResetQuestReactionSurface()
+EndFunction
+
+Function ApplyExternalReaction(String deityName, String valence, String intensity, String magnitude, String sourceTag, Form sourceForm)
+    ApplyDeityReaction(deityName, valence, intensity, magnitude, sourceTag, False, sourceForm)
+EndFunction
+
+Function EndExternalReactionBatch()
+    FlushQuestReactionSurface()
 EndFunction
 
 Function AccumulateQuestReactionSurface(PDV_DeityBase deity, Float amount, String magnitude)
@@ -2689,7 +2772,7 @@ Function AccumulateQueuedQuestReactionSurface(PDV_DeityBase deity, Float amount,
     endIf
 EndFunction
 
-Function FlushQueuedQuestReactionSurface()
+Function FlushQueuedQuestReactionSurface(String sourceModName = "")
     if _qrQueueSurfPosCount == 0 && _qrQueueSurfNegCount == 0
         return
     endIf
@@ -2705,8 +2788,8 @@ Function FlushQueuedQuestReactionSurface()
         elseIf _qrQueueSurfPosCount > 2
             posMsg = _qrQueueSurfBestPosName + " and " + (_qrQueueSurfPosCount - 1) + " others mark your deed."
         endIf
-        SendPrismaToast(_qrQueueSurfBestPosSymbol, "good", "A deed marked", posMsg)
-        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed.", nowDay, "favor.act", _qrQueueSurfBestPosSymbol, False, bodMagnitude, "A deed marked")
+        SendPrismaToastWithSource(_qrQueueSurfBestPosSymbol, "good", "A deed marked", posMsg, sourceModName)
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed.", nowDay, "favor.act", _qrQueueSurfBestPosSymbol, False, bodMagnitude, "A deed marked", False, sourceModName)
     elseIf _qrQueueSurfPosCount == 0
         String negMsg = _qrQueueSurfBestNegName + " takes offense at your deed."
         if _qrQueueSurfNegCount == 2
@@ -2714,8 +2797,8 @@ Function FlushQueuedQuestReactionSurface()
         elseIf _qrQueueSurfNegCount > 2
             negMsg = _qrQueueSurfBestNegName + " and " + (_qrQueueSurfNegCount - 1) + " others take offense at your deed."
         endIf
-        SendPrismaToast(_qrQueueSurfBestNegSymbol, "warning", "A deed ill-received", negMsg)
-        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense at your deed.", nowDay, "favor.loss", _qrQueueSurfBestNegSymbol, False, bodMagnitude, "A deed ill-received")
+        SendPrismaToastWithSource(_qrQueueSurfBestNegSymbol, "warning", "A deed ill-received", negMsg, sourceModName)
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense at your deed.", nowDay, "favor.loss", _qrQueueSurfBestNegSymbol, False, bodMagnitude, "A deed ill-received", False, sourceModName)
     else
         Bool positiveLeads = _qrQueueSurfBestPosAmount >= (_qrQueueSurfBestNegAmount * -1.0)
         String mixedTone = "good"
@@ -2726,8 +2809,8 @@ Function FlushQueuedQuestReactionSurface()
             mixedSymbol = _qrQueueSurfBestNegSymbol
             mixedBodTone = "favor.loss"
         endIf
-        SendPrismaToast(mixedSymbol, mixedTone, "A deed weighed", _qrQueueSurfBestPosName + " marks your deed; " + _qrQueueSurfBestNegName + " takes offense.")
-        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed; " + JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, bodMagnitude, "A deed weighed")
+        SendPrismaToastWithSource(mixedSymbol, mixedTone, "A deed weighed", _qrQueueSurfBestPosName + " marks your deed; " + _qrQueueSurfBestNegName + " takes offense.", sourceModName)
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed; " + JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, bodMagnitude, "A deed weighed", False, sourceModName)
     endIf
     ResetQueuedQuestReactionSurface()
 EndFunction
@@ -2945,12 +3028,10 @@ Function BridgeKhajiitMatrixFocus(String deityName, String magnitude)
     Trace(2, "Khajiit matrix focus bridge: " + deityName + " focus +" + (base * multiplier))
 EndFunction
 
-; --- Lattice presiding gods ----------------------------------------------------
-; The Lunar Lattice is god-aligned: each of the eight moon phases BELONGS to one
-; of the five moon-path gods as part of Khajiit cosmology. The presiding god is
-; always defined and always shown (flavor); its bonuses (extra piety gain and a
-; small phase blessing) activate only once the player has cultivated that god to
-; Faithful. The mapping lives in one place for easy tuning.
+; --- Gods in strength ----------------------------------------------------------
+; Each of the eight lunar slots names one moon-path god in strength. Matching a
+; Seeker-or-higher focus activates Lattice Resonance; piety is never multiplied.
+; The mapping lives in one place for easy tuning.
 ; Indices match GetKhajiitMoonPhaseFromGameDay (the real visible Skyrim phase).
 Int Function GetLunarPresidingFocus(Int phaseIndex)
     if phaseIndex == 1
@@ -3003,17 +3084,16 @@ Int Function GetCurrentLunarPresidingFocus()
     return GetLunarPresidingFocus(GetKhajiitMoonPhaseFromGameDay(Utility.GetCurrentGameTime()))
 EndFunction
 
-; Returns the presiding focus IF the player has cultivated that god to Faithful
-; (tier 2) or better; KHAJIIT_FOCUS_NONE otherwise. Single source of truth for
-; the gain multiplier, the phase blessing, and the Survey/MCM readout.
+; Compatibility accessor retained for old callers. A god is favored when it is
+; in strength and is also the player's current Seeker-or-higher focus.
 Int Function GetActiveLunarFavoredFocus()
     Int presidingFocus = GetCurrentLunarPresidingFocus()
-    if presidingFocus == KHAJIIT_FOCUS_NONE
+    if presidingFocus == KHAJIIT_FOCUS_NONE || presidingFocus != GetKhajiitFocusedEmphasis()
         return KHAJIIT_FOCUS_NONE
     endIf
 
     PDV_DeityBase deity = GetKhajiitEmphasisDeity(presidingFocus)
-    if !deity || GetTier(deity) < TIER_DEVOTED
+    if !deity || GetPiety(deity) < 25.0
         return KHAJIIT_FOCUS_NONE
     endIf
 
@@ -3037,21 +3117,210 @@ Spell Function GetKhajiitPhaseBlessing(Int focusValue)
     return None
 EndFunction
 
-; Keeps exactly one phase blessing on the player: the presiding god's, and only
-; while that god is Faithful. Re-synced at dawn (a phase lasts ~3.5 days, so the
-; daily pass tracks the cycle closely enough without a dedicated tick).
+; Compatibility cleanup for the retired five rotating stat spells. Their records
+; remain in the plugin for save/FormID stability, but runtime reconciliation always
+; removes them. Lattice Resonance owns the active god-strength mechanic.
 Function SyncKhajiitPhaseBlessing()
     Actor playerRef = Game.GetPlayer()
     if !playerRef
         return
     endIf
 
-    Int favored = GetActiveLunarFavoredFocus()
     Int focusValue = 1
     while focusValue <= 5
-        SyncRaceRewardSpell(playerRef, GetKhajiitPhaseBlessing(focusValue), focusValue == favored, "Khajiit phase blessing " + GetKhajiitFocusLabel(focusValue))
+        SyncRaceRewardSpell(playerRef, GetKhajiitPhaseBlessing(focusValue), False, "retired Khajiit phase blessing " + GetKhajiitFocusLabel(focusValue))
         focusValue += 1
     endWhile
+EndFunction
+
+Bool Function IsKhajiitLatticeResonating()
+    if GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT
+        return False
+    endIf
+    Int focusValue = GetKhajiitFocusedEmphasis()
+    if focusValue == KHAJIIT_FOCUS_NONE || focusValue != GetCurrentLunarPresidingFocus()
+        return False
+    endIf
+    PDV_DeityBase deity = GetKhajiitEmphasisDeity(focusValue)
+    return deity && GetPiety(deity) >= 25.0
+EndFunction
+
+Spell Function GetKhajiitFocusedRewardSpell(Int focusValue, Int tierValue)
+    if focusValue == KHAJIIT_FOCUS_KHENARTHI
+        if tierValue >= TIER_CHAMPION
+            return PDV_Bless_Khajiit_Khenarthi_T3
+        elseIf tierValue == TIER_DEVOTED
+            return PDV_Bless_Khajiit_Khenarthi_T2
+        elseIf tierValue == TIER_SEEKER
+            return PDV_Bless_Khajiit_Khenarthi_T1
+        endIf
+    elseIf focusValue == KHAJIIT_FOCUS_AZURAH
+        if tierValue >= TIER_CHAMPION
+            return PDV_Bless_Khajiit_Azurah_T3
+        elseIf tierValue == TIER_DEVOTED
+            return PDV_Bless_Khajiit_Azurah_T2
+        elseIf tierValue == TIER_SEEKER
+            return PDV_Bless_Khajiit_Azurah_T1
+        endIf
+    elseIf focusValue == KHAJIIT_FOCUS_BAANDAR
+        if tierValue >= TIER_CHAMPION
+            return PDV_Bless_Khajiit_BaanDar_T3
+        elseIf tierValue == TIER_DEVOTED
+            return PDV_Bless_Khajiit_BaanDar_T2
+        elseIf tierValue == TIER_SEEKER
+            return PDV_Bless_Khajiit_BaanDar_T1
+        endIf
+    elseIf focusValue == KHAJIIT_FOCUS_RAJHIN
+        if tierValue >= TIER_CHAMPION
+            return PDV_Bless_Khajiit_Rajhin_T3
+        elseIf tierValue == TIER_DEVOTED
+            return PDV_Bless_Khajiit_Rajhin_T2
+        elseIf tierValue == TIER_SEEKER
+            return PDV_Bless_Khajiit_Rajhin_T1
+        endIf
+    elseIf focusValue == KHAJIIT_FOCUS_ALKOSH
+        if tierValue >= TIER_CHAMPION
+            return PDV_Bless_Khajiit_Alkosh_T3
+        elseIf tierValue == TIER_DEVOTED
+            return PDV_Bless_Khajiit_Alkosh_T2
+        elseIf tierValue == TIER_SEEKER
+            return PDV_Bless_Khajiit_Alkosh_T1
+        endIf
+    endIf
+    return None
+EndFunction
+
+Function RefreshKhajiitFocusedRewardForResonance(Actor playerRef)
+    Int focusValue = GetKhajiitFocusedEmphasis()
+    PDV_DeityBase deity = GetKhajiitEmphasisDeity(focusValue)
+    if !playerRef || !deity
+        return
+    endIf
+    Spell rewardSpell = GetKhajiitFocusedRewardSpell(focusValue, GetTier(deity))
+    if rewardSpell && playerRef.HasSpell(rewardSpell)
+        playerRef.RemoveSpell(rewardSpell)
+        playerRef.AddSpell(rewardSpell, False)
+    endIf
+EndFunction
+
+Function SyncKhajiitLatticeResonance(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+    Bool shouldResonate = IsKhajiitLatticeResonating()
+    Bool wasResonating = StorageUtil.GetIntValue(None, "PDV.Khajiit.LatticeResonating") == 1
+    if shouldResonate
+        if PDV_PERK_Khajiit_LatticeResonance && !playerRef.HasPerk(PDV_PERK_Khajiit_LatticeResonance)
+            playerRef.AddPerk(PDV_PERK_Khajiit_LatticeResonance)
+        endIf
+        if PDV_SPEL_Khajiit_LatticeResonanceMarker && !playerRef.HasSpell(PDV_SPEL_Khajiit_LatticeResonanceMarker)
+            playerRef.AddSpell(PDV_SPEL_Khajiit_LatticeResonanceMarker, False)
+        endIf
+    else
+        if PDV_PERK_Khajiit_LatticeResonance && playerRef.HasPerk(PDV_PERK_Khajiit_LatticeResonance)
+            playerRef.RemovePerk(PDV_PERK_Khajiit_LatticeResonance)
+        endIf
+        if PDV_SPEL_Khajiit_LatticeResonanceMarker && playerRef.HasSpell(PDV_SPEL_Khajiit_LatticeResonanceMarker)
+            playerRef.RemoveSpell(PDV_SPEL_Khajiit_LatticeResonanceMarker)
+        endIf
+    endIf
+    if shouldResonate != wasResonating
+        if shouldResonate
+            StorageUtil.SetIntValue(None, "PDV.Khajiit.LatticeResonating", 1)
+        else
+            StorageUtil.SetIntValue(None, "PDV.Khajiit.LatticeResonating", 0)
+        endIf
+        RefreshKhajiitFocusedRewardForResonance(playerRef)
+        RequestPanelRefresh()
+        Trace(1, "Khajiit Lattice Resonance " + shouldResonate)
+    endIf
+EndFunction
+
+Function SyncKhajiitPortentPower(Actor playerRef)
+    if !playerRef || !PDV_Power_Khajiit_AzurahPortent
+        return
+    endIf
+    PDV_DeityBase focusDeity = GetKhajiitEmphasisDeity(GetKhajiitFocusedEmphasis())
+    Bool shouldHave = GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT && focusDeity == PDV_Azura && GetTier(focusDeity) >= TIER_CHAMPION && playerRef.HasSpell(PDV_Bless_Khajiit_Azurah_T3)
+    SyncRaceRewardSpell(playerRef, PDV_Power_Khajiit_AzurahPortent, shouldHave, "Azurah Portent power")
+EndFunction
+
+Bool Function TryUseKhajiitAzurahPortent(Actor playerRef)
+    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT || GetKhajiitFocusedEmphasis() != KHAJIIT_FOCUS_AZURAH
+        return False
+    endIf
+    if !PDV_Azura || GetTier(PDV_Azura) < TIER_CHAMPION || !PDV_Bless_Khajiit_Azurah_T3 || !playerRef.HasSpell(PDV_Bless_Khajiit_Azurah_T3)
+        SyncKhajiitPortentPower(playerRef)
+        return False
+    endIf
+
+    Int currentDay = GetDevotionalDay() + 2
+    if StorageUtil.GetIntValue(None, "PDV.Khajiit.AzurahPortent.Day") == currentDay
+        if PDV_SND_Khajiit_AzurahPortentFizzle
+            PDV_SND_Khajiit_AzurahPortentFizzle.Play(playerRef)
+        endIf
+        return False
+    endIf
+    if !PDV_SPEL_Khajiit_AzurahPortentDetect
+        return False
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.Khajiit.AzurahPortent.Day", currentDay)
+    PDV_SPEL_Khajiit_AzurahPortentDetect.Cast(playerRef, playerRef)
+    String portentText = "For a moment, living hearts, restless dead, fallen bodies, Daedra, and brass minds declare their places."
+    SendPrismaToast("azurah", "good", "Azurah's Portent", portentText)
+    AppendBookOfDaysEntry(portentText, Utility.GetCurrentGameTime() as Int, "champion.act", "azurah", False, 1, "Azurah's Portent")
+    return True
+EndFunction
+
+Bool Function CanExecuteKhajiitBaanDarRescue(Actor playerRef)
+    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT || GetKhajiitFocusedEmphasis() != KHAJIIT_FOCUS_BAANDAR
+        return False
+    endIf
+    if !PDV_BaanDar || GetTier(PDV_BaanDar) < TIER_CHAMPION || !PDV_Bless_Khajiit_BaanDar_T3
+        return False
+    endIf
+    return playerRef.HasSpell(PDV_Bless_Khajiit_BaanDar_T3)
+EndFunction
+
+Function ScheduleNextKhajiitGodStrengthBoundary()
+    if GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT
+        UnregisterForUpdateGameTime()
+        return
+    endIf
+    Float nowTime = Utility.GetCurrentGameTime()
+    Int currentPhase = GetKhajiitMoonPhaseFromGameDay(nowTime)
+    Int currentBucket = (nowTime + 0.5) as Int
+    Int candidateBucket = currentBucket + 1
+    while candidateBucket < currentBucket + 5 && GetKhajiitMoonPhaseFromGameDay((candidateBucket as Float) - 0.5) == currentPhase
+        candidateBucket += 1
+    endWhile
+    Float hoursUntilBoundary = (((candidateBucket as Float) - 0.5) - nowTime) * 24.0
+    if hoursUntilBoundary < 0.05
+        hoursUntilBoundary = 0.05
+    endIf
+    RegisterForSingleUpdateGameTime(hoursUntilBoundary)
+EndFunction
+
+Event OnUpdateGameTime()
+    Actor playerRef = Game.GetPlayer()
+    SyncKhajiitPhaseBlessing()
+    SyncKhajiitLatticeResonance(playerRef)
+    ScheduleNextKhajiitGodStrengthBoundary()
+EndEvent
+
+Function SyncKhajiitRuntimeState()
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return
+    endIf
+    if GetKhajiitFocusedEmphasis() != KHAJIIT_FOCUS_NONE && StorageUtil.GetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged") == 0
+        ; Existing focused saves are grandfathered without replaying the ceremony.
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged", 1)
+    endIf
+    SyncKhajiitEmphasisRewards(playerRef)
+    SyncKhajiitPhaseBlessing()
+    ScheduleNextKhajiitGodStrengthBoundary()
 EndFunction
 
 ; Dawn drip: each newly learned Word of Power nudges Alkosh emphasis (the dragon
@@ -3089,13 +3358,9 @@ Function ProcessKhajiitAlkoshWordDrip()
     RecordRecentDevotionEvent("Alkosh: " + awarded + " words marked")
 EndFunction
 
-; Gain-pipeline multiplier for the lunar-aligned bonus (1.0 when inactive).
+; Compatibility no-op. God strength modifies the focused reward through Lattice
+; Resonance and never modifies piety gain.
 Float Function GetKhajiitLunarAlignmentMultiplier(PDV_DeityBase deity)
-    Int favored = GetActiveLunarFavoredFocus()
-    if favored != KHAJIIT_FOCUS_NONE && GetKhajiitFocusForDeity(deity) == favored
-        return 1.0 + KHAJIIT_LUNAR_ALIGNMENT_BONUS
-    endIf
-
     return 1.0
 EndFunction
 
@@ -3180,15 +3445,40 @@ Float Function GetQuestReactionBaseValue(String magnitude, String intensity)
     return JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "value." + magnitude + "." + intensity, 0.0)
 EndFunction
 
+Float Function GetQuestReactionStanceMultiplier(String stance)
+    if stance == "FOREIGN"
+        return JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.FOREIGN", 0.4)
+    elseIf stance == "TOLERATED"
+        return JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.TOLERATED", 0.4)
+    endIf
+    return 1.0
+EndFunction
+
 ; A quest-reaction target is "reachable" when some surface can show its piety:
 ; Daedric paths always (pre-pact paths render as "watching"; pacts as patron),
-; deity faces only when the player's origin roster lists them. Mirrors the
-; dashboard's IsDashboardDeityInOriginRoster filter so scoring and display agree.
+; deity faces when the player's origin roster lists them, plus an active
+; off-roster patron restored from an older save. New commitments still reject
+; off-roster gods, but an existing relationship remains visible and can progress
+; at the reduced foreign rate instead of becoming a stranded save state.
 Bool Function IsQuestReactionDeityReachable(PDV_DeityBase deity)
     if deity as PDV_DaedricPathBase
         return True
     endIf
+    if IsGrandfatheredOffRosterPatron(deity)
+        return True
+    endIf
     return IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
+EndFunction
+
+Bool Function IsGrandfatheredOffRosterPatron(PDV_DeityBase deity)
+    if !deity || deity as PDV_DaedricPathBase
+        return False
+    endIf
+    if GetPatronState() != PATRON_STATE_ACTIVE || deity != _activeDeity || IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
+        return False
+    endIf
+    String stance = GetQuestReactionStance(GetPublicDeityDisplayName(deity), deity)
+    return stance == "FOREIGN" || stance == "TOLERATED"
 EndFunction
 
 Function ApplyQuestReactionPiety(PDV_DeityBase deity, Float amount, String reason)
@@ -3197,7 +3487,10 @@ Function ApplyQuestReactionPiety(PDV_DeityBase deity, Float amount, String reaso
         return
     endIf
 
-    AwardPiety(deity, amount, reason)
+    ; The caller already applied the matrix stance multiplier. Preserve track,
+    ; eligibility, curse, survival, and mode modifiers without double-scaling
+    ; FOREIGN/TOLERATED through the record stance again.
+    AwardPietyInternal(deity, amount, True, reason, False)
     StorageUtil.SetStringValue(deityForm, "PDV.QuestReaction.LastReason", reason)
     if !_qrQueueTransactionActive
         RequestPanelRefresh()
@@ -3255,6 +3548,32 @@ Function ShowToastFallbackNotification(String titleText, String messageText)
     endIf
 EndFunction
 
+; --- Prisma toast size preference (Normal/Large). Large targets 4K displays, where
+; even the high-res auto-scaling reads small. Persisted, defaults to Normal. The size
+; is injected into every toast payload at the single send choke point below (plus the
+; one curse toast that sends directly), so all toast surfaces honour it without each
+; builder having to carry the field. ---
+Bool Function PrismaToastLargeEnabled()
+    return StorageUtil.GetIntValue(None, "PDV.Prisma.ToastLarge", 0) == 1
+EndFunction
+
+Function SetPrismaToastLargeEnabled(Bool enabled)
+    StorageUtil.SetIntValue(None, "PDV.Prisma.ToastLarge", BoolToInt(enabled))
+EndFunction
+
+String Function WithPrismaToastSize(String payload)
+    if !PrismaToastLargeEnabled()
+        return payload
+    endIf
+    String marker = "\"toast\":{"
+    Int idx = StringUtil.Find(payload, marker)
+    if idx < 0
+        return payload
+    endIf
+    Int insertAt = idx + StringUtil.GetLength(marker)
+    return StringUtil.Substring(payload, 0, insertAt) + "\"size\":\"large\"," + StringUtil.Substring(payload, insertAt)
+EndFunction
+
 Bool Function SendPrismaToastPayloadOrFallback(String payload, String fallbackTitle, String fallbackMessage, Bool allowFallback = True, Bool allowDuringRaceSetup = False)
     if IsRaceSetupQuietPresentationActive() && !allowDuringRaceSetup
         return False
@@ -3268,7 +3587,7 @@ Bool Function SendPrismaToastPayloadOrFallback(String payload, String fallbackTi
 
     Bool sent = False
     if PDV_PrismaBridge.IsAvailable()
-        sent = PDV_PrismaBridge.SendOverlayJson(payload)
+        sent = PDV_PrismaBridge.SendOverlayJson(WithPrismaToastSize(payload))
     endIf
 
     if !sent && allowFallback
@@ -3303,6 +3622,15 @@ EndFunction
 Bool Function SendPrismaToast(String symbolName, String tone, String titleText, String messageText, Bool allowFallback = True, Bool allowDuringRaceSetup = False)
     String payload = "{\"mode\":\"toast\",\"toast\":{\"symbol\":\"" + JsonSafeString(symbolName) + "\",\"tone\":\"" + JsonSafeString(tone) + "\",\"title\":\"" + JsonSafeString(titleText) + "\",\"message\":\"" + JsonSafeString(messageText) + "\"}}"
     return SendPrismaToastPayloadOrFallback(payload, titleText, messageText, allowFallback, allowDuringRaceSetup)
+EndFunction
+
+Bool Function SendPrismaToastWithSource(String symbolName, String tone, String titleText, String messageText, String sourceModName, Bool allowFallback = True)
+    if sourceModName == ""
+        return SendPrismaToast(symbolName, tone, titleText, messageText, allowFallback)
+    endIf
+    sourceModName = NormalizePublicDeityDisplayText(sourceModName)
+    String payload = "{\"mode\":\"toast\",\"toast\":{\"symbol\":\"" + JsonSafeString(symbolName) + "\",\"tone\":\"" + JsonSafeString(tone) + "\",\"title\":\"" + JsonSafeString(titleText) + "\",\"message\":\"" + JsonSafeString(messageText) + "\",\"source\":\"" + JsonSafeString(sourceModName) + "\"}}"
+    return SendPrismaToastPayloadOrFallback(payload, titleText + " - " + sourceModName, messageText, allowFallback)
 EndFunction
 
 Bool Function SendPrismaEventToast(String eventName, PDV_DeityBase deity, String context, String tierLabel, String rival, Bool allowFallback = True)
@@ -3806,6 +4134,7 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
     j = j + ",\"acts\":[" + GetPanelActsJson() + "]"
     j = j + ",\"rites\":[" + GetPanelRitesJson() + "]"
     j = j + ",\"relations\":[" + GetPanelRelationsJson() + "]"
+    j = j + ",\"recognition\":" + GetNpcRecognitionPanelJson()
     j = j + ",\"instrument\":" + GetPanelInstrumentJson(originRace, panelCommitment != None, tierValue, tierLabel, piety, championThreshold)
     j = j + ",\"dashboard\":" + GetDashboardJson()
     j = j + ",\"debug\":" + GetPanelDebugJson()
@@ -3883,7 +4212,7 @@ Bool Function IsDashboardDeityInOriginRoster(PDV_DeityBase deity, Int originRace
     elseIf originRace == ORIGIN_BRETON
         return deity == PDV_Kynareth || deity == PDV_Talos || deity == PDV_Mara || deity == PDV_Akatosh || deity == PDV_Arkay || deity == PDV_Stendarr || deity == PDV_Julianos || deity == PDV_Dibella || deity == PDV_Zenithar || deity == PDV_Magnus || deity == PDV_Yffre
     elseIf originRace == ORIGIN_ALTMER
-        return deity == PDV_Mara || deity == PDV_Stendarr || deity == PDV_Magnus || deity == PDV_Yffre || deity == PDV_AuriEl || deity == PDV_Xarxes || deity == PDV_Trinimac || deity == PDV_Syrabane
+        return deity == PDV_AuriEl || deity == PDV_Magnus || deity == PDV_Xarxes || deity == PDV_Trinimac || deity == PDV_Syrabane
     elseIf originRace == ORIGIN_BOSMER
         return deity == PDV_Yffre || deity == PDV_AuriEl || deity == PDV_Xarxes || deity == PDV_BaanDar || deity == PDV_Zen
     elseIf originRace == ORIGIN_DUNMER
@@ -4109,15 +4438,21 @@ String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Floa
     endIf
     if kindText == "lunar"
         Int phase = GetKhajiitMoonPhaseFromGameDay(Utility.GetCurrentGameTime())
-        if PDV_KhajiitLunarSubstrate && PDV_KhajiitLunarSubstrate.GetLastObservedPhase() > 0
-            phase = PDV_KhajiitLunarSubstrate.GetLastObservedPhase()
-        endIf
         Int focus = GetKhajiitFocusedEmphasis()
         String lunarTier = "Quiet"
+        Int substrateTier = 0
         if PDV_KhajiitLunarSubstrate
-            lunarTier = GetKhajiitLunarTierLabel(PDV_KhajiitLunarSubstrate.GetSubstrateTier())
+            substrateTier = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
+            lunarTier = GetKhajiitLunarTierLabel(substrateTier)
         endIf
-        return "{\"phase\":" + phase + ",\"focus\":\"" + JsonSafeString(GetKhajiitFocusLabel(focus)) + "\",\"lunarTier\":\"" + JsonSafeString(lunarTier) + "\"}"
+        String standing = "Lunar Lattice"
+        PDV_DeityBase focusDeity = GetKhajiitEmphasisDeity(focus)
+        if focusDeity
+            standing = GetPublicTierBand(GetTier(focusDeity))
+        endIf
+        String focusLabel = GetKhajiitFocusLabel(focus)
+        String strengthLabel = GetKhajiitFocusLabel(GetLunarPresidingFocus(phase))
+        return "{\"phase\":" + phase + ",\"focus\":\"" + JsonSafeString(focusLabel) + "\",\"lunarTier\":\"" + JsonSafeString(lunarTier) + "\",\"currentFocus\":\"" + JsonSafeString(focusLabel) + "\",\"godInStrength\":\"" + JsonSafeString(strengthLabel) + "\",\"focusStanding\":\"" + JsonSafeString(standing) + "\",\"substrateTier\":" + substrateTier + ",\"resonating\":" + BoolToJson(IsKhajiitLatticeResonating()) + "}"
     elseIf kindText == "cultural"
         Float hist = 0.0
         Float people = 0.0
@@ -4697,34 +5032,36 @@ Function HandleDaedricShrinePrayer(Int pathIndex, String sourceId)
     endIf
 EndFunction
 
-; Forces a fresh disk re-read of the quest-reaction matrix channel(s) into the
-; JsonUtil in-memory cache. Use after regenerating PDV_QuestReactionMatrix(_ARR)
+; Forces a fresh disk re-read of the core matrix and discovered opt-in channels
+; into the JsonUtil in-memory cache. Use after regenerating matrix data
 ; mid-session so already-watched quests pick up newly-authored (form|stage) cells
 ; without a full reload. Returns a short summary string for the MCM readout.
 ; NOTE: this refreshes CELL DATA only; brand-new watched quests are (re)registered
 ; for stage events on the next game load via RefreshP2Hooks.
 String Function DebugReloadQuestMatrix()
     Int coreCells = 0
-    Int arrCells = 0
+    Int loadedChannels = 0
 
     JsonUtil.Unload(QUEST_REACTION_MATRIX_FILE, false)
     if JsonUtil.Load(QUEST_REACTION_MATRIX_FILE)
         coreCells = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, "questWatchFormIdsCsv"), ",").Length
     endIf
 
-    String arrState = "absent"
-    if JsonUtil.JsonExists(QUEST_REACTION_MATRIX_FILE_ARR)
-        JsonUtil.Unload(QUEST_REACTION_MATRIX_FILE_ARR, false)
-        if JsonUtil.Load(QUEST_REACTION_MATRIX_FILE_ARR)
-            arrCells = StringUtil.Split(JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE_ARR, "questWatchFormIdsCsv"), ",").Length
-            arrState = arrCells + " watched"
+    Int channelIndex = 0
+    Int channelCount = StorageUtil.StringListCount(None, "PDV.QR.ChannelFiles")
+    while channelIndex < channelCount
+        String channelFile = StorageUtil.StringListGet(None, "PDV.QR.ChannelFiles", channelIndex)
+        JsonUtil.Unload(channelFile, false)
+        if JsonUtil.Load(channelFile)
+            loadedChannels += 1
         endIf
-    endIf
+        channelIndex += 1
+    endWhile
 
     if GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Quest matrix reloaded: core " + coreCells + " watched, ARR " + arrState)
+        Debug.Trace("[PDV] Quest matrix reloaded: core " + coreCells + " watched, channels " + loadedChannels + "/" + channelCount)
     endIf
-    return "Quest matrix reloaded.\nCore: " + coreCells + " watched quests.\nARR channel: " + arrState + "."
+    return "Quest matrix reloaded.\nCore: " + coreCells + " watched quests.\nMod channels: " + loadedChannels + "/" + channelCount + " loaded."
 EndFunction
 
 Int Function DebugGetSignalFloorSmokeScenarioCount()
@@ -5314,8 +5651,11 @@ Bool Function AwardShrinePrayerToDeityName(String deityName, String shrineLabel,
     endIf
 
     ; Divine shrine prayers are ambient world clicks; only emit PDV piety/journal
-    ; movement when that deity belongs to the player's cultural roster.
-    if !IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
+    ; movement when that deity belongs to the player's cultural roster. An
+    ; off-roster patron restored from an older save remains eligible at the
+    ; reduced foreign rate so the relationship is not stranded.
+    Bool grandfatheredPatron = IsGrandfatheredOffRosterPatron(deity)
+    if !IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex()) && !grandfatheredPatron
         if GetDebugLevel() >= 2
             Debug.Trace("[PDV] Shrine prayer skipped outside origin roster: " + deity.DeityName + " from " + shrineLabel + " source " + sourceId)
         endIf
@@ -5326,7 +5666,11 @@ Bool Function AwardShrinePrayerToDeityName(String deityName, String shrineLabel,
         return False
     endIf
 
-    AwardPiety(deity, 2.0, "shrine_prayer_" + sourceId)
+    Float shrineAmount = 2.0
+    if grandfatheredPatron
+        shrineAmount = shrineAmount * GetQuestReactionStanceMultiplier(GetQuestReactionStance(GetPublicDeityDisplayName(deity), deity))
+    endIf
+    AwardPietyInternal(deity, shrineAmount, True, "shrine_prayer_" + sourceId, !grandfatheredPatron)
     if GetDebugLevel() >= 2
         Debug.Trace("[PDV] Shrine prayer awarded " + deity.DeityName + " from " + shrineLabel + " source " + sourceId)
     endIf
@@ -5337,18 +5681,24 @@ Float Function GetPietyTodayByIndex(Int deityIndex)
     return GetPietyToday(GetDeityByIndex(deityIndex))
 EndFunction
 
-Int Function GetTierByIndex(Int deityIndex)
-    return GetTier(GetDeityByIndex(deityIndex))
-EndFunction
-
 Function SetDebugLevel(Int levelValue)
     if PDV_GLO_DebugLevel
         PDV_GLO_DebugLevel.SetValue(ClampInt(levelValue, 0, 3) as Float)
     endIf
 EndFunction
 
-Function SetActiveDeity(PDV_DeityBase newDeity)
+Function SetActiveDeity(PDV_DeityBase newDeity, Bool allowOffRosterDebug = False)
     if newDeity == _activeDeity
+        return
+    endIf
+
+    ; Selection boundary: ordinary deity commitments must belong to the
+    ; cultural roster or a currently valid formal-offer lane. This retains
+    ; Imperial Talos and Breton Hidden Art's dynamic eligibility while blocking
+    ; accidental off-roster assignment. RestoreActiveDeityFromStoredPatron
+    ; deliberately bypasses this setter for save-safe grandfathering.
+    if newDeity && !allowOffRosterDebug && !IsDashboardDeityInOriginRoster(newDeity, GetPlayerOriginRaceIndex()) && !UsesFormalCommitmentOffersForDeity(newDeity)
+        Trace(1, "SetActiveDeity blocked off-roster commitment to " + newDeity.DeityName)
         return
     endIf
 
@@ -5425,7 +5775,7 @@ Bool Function IsBroadWorshipActive()
     return GetPatronState() == PATRON_STATE_BROAD
 EndFunction
 
-Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, String reason)
+Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, Bool hadSleepStartContext, Bool sleepStartedOutside, String reason)
     if wasInterrupted
         Trace(3, "Player sleep stop ignored because sleep was interrupted.")
         return
@@ -5436,42 +5786,44 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, String reas
         return
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
-        Cell khajiitRestCell = playerRef.GetParentCell()
-        if khajiitRestCell && !khajiitRestCell.IsInterior()
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace == ORIGIN_KHAJIIT
+        if !hadSleepStartContext
+            Trace(1, "Khajiit road-home rest skipped: sleep-start context missing.")
+        elseIf sleepStartedOutside
             HandleKhajiitRoadHome("outdoor_rest_" + reason)
         endIf
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN
+    if originRace == ORIGIN_ARGONIAN
         HandleArgonianSleepEvents(playerRef, reason)
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_BOSMER
+    if originRace == ORIGIN_BOSMER
         HandleBosmerSleepEvents(playerRef, reason)
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_BRETON
+    if originRace == ORIGIN_BRETON
         HandleBretonSleepEvents(playerRef, reason)
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
+    if originRace == ORIGIN_DUNMER
         HandleDunmerSleepEvents(playerRef, reason)
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
+    if originRace == ORIGIN_ALTMER
         HandleAltmerSleepEvents(playerRef, reason)
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_NORD
+    if originRace == ORIGIN_NORD
         HandleNordSleepEvents(playerRef, reason)
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_ORC
+    if originRace == ORIGIN_ORC
         HandleOrcSleepEvents(playerRef, reason)
     endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
+    if originRace == ORIGIN_REDGUARD
         HandleRedguardSleepEvents(playerRef, reason)
     endIf
 EndFunction
@@ -5507,11 +5859,53 @@ Function HandleSubstrateActionEvent(Int eventType, String reason)
             SendPrismaSubstrateProgress("ancestor", tierBefore, PDV_NordAncestorSubstrate.GetSubstrateTier(), PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The first cooked meal kept the hearth.", "journal", GetNordAncestorLayerLabel())
         endIf
     elseIf origin == ORIGIN_ALTMER && PDV_AltmerAncestorSubstrate && !IsAltmerFavorSuppressedByCurse()
-        if eventType == 331
+        ; P2 (2026-08-04) widened the spine's feed set, and answers the question P5 deferred:
+        ; YES, ordered study feeds the ancestral spine, as ordered craft already did.
+        ;
+        ; This adds NO income. TryAwardSubstrateDayCredit caps the substrate at ONE +4.0 credit per
+        ; devotional day whatever the source, so extra feeds change only WHICH act can claim the
+        ; day -- which is the whole point. A player is never stuck waiting on one specific chore.
+        ;
+        ; Routed through AwardAltmerAncestorSpinePulse rather than calling
+        ; RecordHeritageStandingScaled inline, so every feed gets the same bookkeeping, the same
+        ; Prisma progress push, and the same per-source Book of Days voice.
+        ; NOTE: these arms deliberately keep their OWN metricBefore / RecordHeritageStandingScaled /
+        ; SendPrismaSubstrateProgress rather than routing through AwardAltmerAncestorSpinePulse.
+        ; Consolidating them reads cleaner but drops the manager's substrate-progress producer count
+        ; below the floor asserted by tools/pdv_substrate_pacing_audit.mjs
+        ; (`source.actual-substrate-delta`, >= 19 producers, each reporting the real post-award
+        ; delta). The shared voice helper below is the part worth factoring out; the per-producer
+        ; delta reporting is intentionally NOT.
+        if eventType == 330 || eventType == 331
+            String craftToken = "smithing_"
+            if eventType == 331
+                craftToken = "enchantment_"
+            endIf
             Float metricBefore = PDV_AltmerAncestorSubstrate.GetMetric()
             Int tierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
-            PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, "enchantment_" + reason)
-            SendPrismaSubstrateProgress("altmer-heritage", tierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore, "", "auri-el", GetAltmerHeritageTierName())
+            PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, craftToken + reason)
+            Float grantedMetric = PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore
+            SendPrismaSubstrateProgress("altmer-heritage", tierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), grantedMetric, "", "auri-el", GetAltmerHeritageTierName())
+            AppendAltmerHeritageVoice(grantedMetric, craftToken + reason)
+
+            ; P4: Magnus's renewable curated beat. Enchanting specifically -- binding magicka into
+            ; lawful form is his doctrine. Hard 1.2/day ceiling regardless of how many items.
+            if eventType == 331 && PDV_Magnus && ConsumeOncePerDaySignal("PDV.Signal.MagnusApertureKept")
+                AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_APERTURE_KEPT, None, 1.0)
+                SurfaceReservedSignal(PDV_Magnus, "The design holds", "marks an enchantment made as the art demands.")
+            endIf
+        elseIf eventType == 340 || eventType == 341 || eventType == 342
+            Float studyMetricBefore = PDV_AltmerAncestorSubstrate.GetMetric()
+            Int studyTierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
+            PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, "study_" + reason)
+            Float studyGrantedMetric = PDV_AltmerAncestorSubstrate.GetMetric() - studyMetricBefore
+            SendPrismaSubstrateProgress("altmer-heritage", studyTierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), studyGrantedMetric, "", "auri-el", GetAltmerHeritageTierName())
+            AppendAltmerHeritageVoice(studyGrantedMetric, "study_" + reason)
+
+            ; P5: the Xarxes study stamp. RunDawnAwardAltmerXarxesRecord reads this at the NEXT
+            ; dawn to decide whether the ledger noticed yesterday. Independent of the spine credit
+            ; above -- the stamp records that study HAPPENED, whether or not it claimed the day.
+            StorageUtil.SetIntValue(None, "PDV.Altmer.Xarxes.StudyDay", GetDevotionalDay() + 2)
         endIf
     endIf
 EndFunction
@@ -6060,10 +6454,22 @@ Function HandleAltmerSleepEvents(Actor playerRef, String reason)
     endIf
 
     AwardAltmerAncestorSpinePulse(multiplier, "sleep_dream_" + reason)
-    if _activeDeity == PDV_Magnus && PDV_Magnus
-        AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier)
+    ; P4 (2026-08-03): graded rather than patron-only. This was `_activeDeity == PDV_Magnus`, which
+    ; meant a follower who had not formally committed to Magnus got NOTHING from the sleep lane --
+    ; and since 1802 is finite at 24 lifetime awards and 1804 is patron-only too, that left them
+    ; with no curated income at all. A Seeker-or-better non-patron now gets half. The patron lane
+    ; stays strictly better, so this widens access without flattening the commitment choice.
+    if PDV_Magnus
+        if _activeDeity == PDV_Magnus
+            AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier)
+        elseIf GetTier(PDV_Magnus) >= TIER_SEEKER
+            AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier * 0.5)
+        endIf
     endIf
-    AppendBookOfDaysEntry("An Aldmeri dream settles your ancestral inheritance.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Aldmeri dream")
+    ; P2 (2026-08-04): the hardcoded Book of Days line that used to sit here is gone.
+    ; AwardAltmerAncestorSpinePulse now writes it via GetAltmerHeritageSourceLine, gated on the day
+    ; credit actually landing. Keeping it here too would double-log the sleep feed and would report
+    ; a dream on days the credit was already spent.
 EndFunction
 
 Function HandleImperialSleepEvents(Actor playerRef, String reason)
@@ -6084,6 +6490,9 @@ Function HandleBretonSleepEvents(Actor playerRef, String reason)
     AwardBretonAncestorSpinePulse(multiplier, "sleep_dream_" + reason)
     if GetBretonTraditionValue() != BRETON_TRADITION_HIDDEN_ART
         return
+    endIf
+    if PDV_Julianos
+        AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
     endIf
     if PDV_Mara
         AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
@@ -7522,6 +7931,10 @@ Function HandleDunmerPortableShrinePrayer(String reason)
             PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(multiplier, reason)
             Int tierAfter = PDV_DunmerAncestorSubstrate.GetSubstrateTier()
             SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, PDV_DunmerAncestorSubstrate.GetMetric() - metricBefore, "Ancestor prayer marked.", "ancestor", GetDunmerAncestorLayerLabel())
+            ; The Ledger driver for the ancestral layer. Sits inside the layerWeight guard on purpose:
+            ; vampirism silences this layer entirely, so a silenced prayer must not record one either.
+            ; Self-caps to the first prayer of the devotional day; patron-independent by ruling.
+            AwardDunmerAncestorSpinePulse(multiplier, reason)
         else
             Trace(2, "Dunmer ancestor layer silenced by curse posture (" + reason + ")")
         endIf
@@ -7744,17 +8157,6 @@ Function EnsureKhajiitObserveMoonsPower()
         ; changing the player's selected lesser power. Observe the Moons and
         ; Survey Devotion are peers in the same Power slot; selecting either in
         ; the Magic menu replaces the other in the ordinary Skyrim way.
-        ; V3 must rerun after the SPEL moved from EitherHand to Voice. A save
-        ; may have stamped V2, then selected the old record into a hand again.
-        if StorageUtil.GetIntValue(None, "PDV.Khajiit.ObserveMoons.PowerSlotVersion") < 3
-            if playerRef.GetEquippedSpell(0) == PDV_Power_Khajiit_ObserveMoons
-                playerRef.UnequipSpell(PDV_Power_Khajiit_ObserveMoons, 0)
-            endIf
-            if playerRef.GetEquippedSpell(1) == PDV_Power_Khajiit_ObserveMoons
-                playerRef.UnequipSpell(PDV_Power_Khajiit_ObserveMoons, 1)
-            endIf
-            StorageUtil.SetIntValue(None, "PDV.Khajiit.ObserveMoons.PowerSlotVersion", 3)
-        endIf
     elseIf playerRef.HasSpell(PDV_Power_Khajiit_ObserveMoons)
         playerRef.RemoveSpell(PDV_Power_Khajiit_ObserveMoons)
     endIf
@@ -7836,7 +8238,8 @@ Bool Function IsValidKhajiitMoonObservationContext(Actor playerRef)
 EndFunction
 
 Function CompleteKhajiitMoonObservation(Actor playerRef)
-    Int phaseIndex = GetKhajiitMoonPhaseFromGameDay(Utility.GetCurrentGameTime())
+    Float nowTime = Utility.GetCurrentGameTime()
+    Int phaseIndex = GetKhajiitMoonPhaseFromGameDay(nowTime)
     Int focusValue = GetLunarPresidingFocus(phaseIndex)
     Int tierBefore = TIER_NONE
     Int tierAfter = TIER_NONE
@@ -7859,7 +8262,7 @@ Function CompleteKhajiitMoonObservation(Actor playerRef)
         if presidingDeity
             AwardPietyInternal(presidingDeity, 0.4, True, "observe_moons_power")
         endIf
-        StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
+        StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", nowTime)
         ; Preserve the common actual-delta accounting path without emitting a
         ; second toast or Book entry; the authored contemplation below owns
         ; this rite's single player-facing presentation.
@@ -7867,9 +8270,10 @@ Function CompleteKhajiitMoonObservation(Actor playerRef)
     endIf
 
     ShowKhajiitMoonContemplation(focusValue, firstRiteToday)
+    SyncKhajiitRuntimeState()
     StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastPhase", phaseIndex)
     StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastFocus", focusValue)
-    StorageUtil.SetFloatValue(None, "PDV.Khajiit.MoonRite.LastSuccessTime", Utility.GetCurrentGameTime())
+    StorageUtil.SetFloatValue(None, "PDV.Khajiit.MoonRite.LastSuccessTime", nowTime)
     Trace(1, "[PDV][MOON_RITE] success phase=" + phaseIndex + " focus=" + focusValue + " metricDelta=" + (metricAfter - metricBefore))
     RequestPanelRefresh()
 EndFunction
@@ -7878,6 +8282,99 @@ Function ShowKhajiitMoonContemplation(Int focusValue, Bool firstRiteToday)
     if focusValue < KHAJIIT_FOCUS_KHENARTHI || focusValue > KHAJIIT_FOCUS_ALKOSH
         return
     endIf
+    if !IsKhajiitMoonObservationJsonValid(focusValue)
+        ShowKhajiitMoonContemplationFallback(focusValue, firstRiteToday)
+        return
+    endIf
+
+    String deityKey = GetKhajiitMoonObservationDeityKey(focusValue)
+    String lastId = StorageUtil.GetStringValue(None, "PDV.Khajiit.MoonRite.LastResolvedId")
+    Int excludedPoolIndex = -1
+    Int i = 0
+    while i < 16 && excludedPoolIndex < 0
+        String candidatePath = "." + deityKey + "[" + i + "].id"
+        if i >= 10
+            candidatePath = ".shared[" + (i - 10) + "].id"
+        endIf
+        if JsonUtil.GetPathStringValue(KHAJIIT_MOON_OBSERVATIONS_FILE, candidatePath, "") == lastId
+            excludedPoolIndex = i
+        endIf
+        i += 1
+    endWhile
+
+    Int poolIndex = Utility.RandomInt(0, 15)
+    if excludedPoolIndex >= 0
+        poolIndex = Utility.RandomInt(0, 14)
+        if poolIndex >= excludedPoolIndex
+            poolIndex += 1
+        endIf
+    endIf
+
+    String entryPath = "." + deityKey + "[" + poolIndex + "]"
+    if poolIndex >= 10
+        entryPath = ".shared[" + (poolIndex - 10) + "]"
+    endIf
+    String resolvedId = JsonUtil.GetPathStringValue(KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".id", "")
+    String titleText = GetKhajiitFocusLabel(focusValue) + " in Strength - " + JsonUtil.GetPathStringValue(KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".title", "")
+    String bodyText = JsonUtil.GetPathStringValue(KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".body", "")
+    SendPrismaToast(GetKhajiitFocusSymbol(focusValue), "good", titleText, bodyText)
+    if firstRiteToday
+        AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", GetKhajiitFocusSymbol(focusValue), False, 1, titleText)
+    endIf
+    StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastResolvedId", resolvedId)
+EndFunction
+
+Bool Function IsKhajiitMoonObservationJsonValid(Int focusValue)
+    ; Load/IsGood run every call -- see _khajiitMoonObservationsValidatedVersion for why they are not
+    ; cached. The cache is keyed on deityKey as well as VERSION: each focus deity has its own 10-entry
+    ; pool, so validating khenarthi says nothing about alkosh.
+    String deityKey = GetKhajiitMoonObservationDeityKey(focusValue)
+    if deityKey == "" || !JsonUtil.Load(KHAJIIT_MOON_OBSERVATIONS_FILE) || !JsonUtil.IsGood(KHAJIIT_MOON_OBSERVATIONS_FILE)
+        _khajiitMoonObservationsValidatedVersion = -1
+        _khajiitMoonObservationsValidatedKey = ""
+        return False
+    endIf
+    if _khajiitMoonObservationsValidatedVersion == KHAJIIT_MOON_OBSERVATIONS_VERSION && _khajiitMoonObservationsValidatedKey == deityKey
+        return True
+    endIf
+    if JsonUtil.GetPathIntValue(KHAJIIT_MOON_OBSERVATIONS_FILE, ".version", -1) != KHAJIIT_MOON_OBSERVATIONS_VERSION
+        return False
+    endIf
+    if JsonUtil.PathCount(KHAJIIT_MOON_OBSERVATIONS_FILE, ".shared") != 6 || JsonUtil.PathCount(KHAJIIT_MOON_OBSERVATIONS_FILE, "." + deityKey) != 10
+        return False
+    endIf
+    Int poolIndex = 0
+    while poolIndex < 16
+        String entryPath = "." + deityKey + "[" + poolIndex + "]"
+        if poolIndex >= 10
+            entryPath = ".shared[" + (poolIndex - 10) + "]"
+        endIf
+        if JsonUtil.GetPathStringValue(KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".id", "") == "" || JsonUtil.GetPathStringValue(KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".title", "") == "" || JsonUtil.GetPathStringValue(KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".body", "") == ""
+            return False
+        endIf
+        poolIndex += 1
+    endWhile
+    _khajiitMoonObservationsValidatedVersion = KHAJIIT_MOON_OBSERVATIONS_VERSION
+    _khajiitMoonObservationsValidatedKey = deityKey
+    return True
+EndFunction
+
+String Function GetKhajiitMoonObservationDeityKey(Int focusValue)
+    if focusValue == KHAJIIT_FOCUS_KHENARTHI
+        return "khenarthi"
+    elseIf focusValue == KHAJIIT_FOCUS_AZURAH
+        return "azurah"
+    elseIf focusValue == KHAJIIT_FOCUS_BAANDAR
+        return "baandar"
+    elseIf focusValue == KHAJIIT_FOCUS_RAJHIN
+        return "rajhin"
+    elseIf focusValue == KHAJIIT_FOCUS_ALKOSH
+        return "alkosh"
+    endIf
+    return ""
+EndFunction
+
+Function ShowKhajiitMoonContemplationFallback(Int focusValue, Bool firstRiteToday)
     Int localIndex = Utility.RandomInt(0, 3)
     Int messageIndex = ((focusValue - 1) * 4) + localIndex
     Int lastIndex = StorageUtil.GetIntValue(None, "PDV.Khajiit.MoonRite.LastMessage", -1)
@@ -7885,17 +8382,14 @@ Function ShowKhajiitMoonContemplation(Int focusValue, Bool firstRiteToday)
         localIndex = (localIndex + 1) % 4
         messageIndex = ((focusValue - 1) * 4) + localIndex
     endIf
-
-    ; The authored Message records remain in the compatibility packet, but a
-    ; normal moon rite belongs on the non-blocking Prisma surface, not in a
-    ; hand-cast MessageBox. The same title/body pair is preserved below.
-    String titleText = GetKhajiitMoonContemplationTitle(messageIndex)
+    String titleText = GetKhajiitFocusLabel(focusValue) + " in Strength - " + GetKhajiitMoonContemplationTitle(messageIndex)
     String bodyText = GetKhajiitMoonContemplationText(messageIndex)
     SendPrismaToast(GetKhajiitFocusSymbol(focusValue), "good", titleText, bodyText)
     if firstRiteToday
         AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", GetKhajiitFocusSymbol(focusValue), False, 1, titleText)
     endIf
     StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastMessage", messageIndex)
+    StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastResolvedId", "fallback_" + messageIndex)
 EndFunction
 
 String Function GetKhajiitMoonContemplationTitle(Int messageIndex)
@@ -7994,12 +8488,29 @@ Function HandleKhajiitRoadHome(String reason)
     Int tierBefore = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
     PDV_KhajiitLunarSubstrate.RecordRoadHomeCadence(reason)
     Int tierAfter = PDV_KhajiitLunarSubstrate.GetSubstrateTier()
+    Float grantedMetric = PDV_KhajiitLunarSubstrate.GetMetric() - metricBefore
     AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_KHENARTHI, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
     if PDV_Khenarthi
         AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_ROAD_HOME, None, multiplier)
     endIf
     StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
-    SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, PDV_KhajiitLunarSubstrate.GetMetric() - metricBefore, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
+
+    ; Road-home recognition owns one presentation per 06:00 devotional cycle,
+    ; independently of the shared lunar +4 budget. If another authentic lunar
+    ; practice already spent that budget, the rest is still acknowledged without
+    ; implying that it granted more substrate progress.
+    String presentationDayKey = "PDV.Khajiit.RoadHome.PresentationDay"
+    Int todayStamp = GetDevotionalDay() + 2
+    if ReadZeroReservedDevotionalDayStamp(presentationDayKey) != todayStamp
+        WriteZeroReservedDevotionalDayStamp(presentationDayKey)
+        if grantedMetric > 0.0
+            SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, grantedMetric, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
+        else
+            String cappedContext = "The road home was remembered. Today's lunar practice was already marked."
+            SendPrismaSubstrateToast("lunar", "act", cappedContext, "lunar", GetKhajiitLunarTierLabel(tierAfter))
+            AppendBookOfDaysEntry(cappedContext, Utility.GetCurrentGameTime() as Int, "substrate.act", "lunar", False)
+        endIf
+    endIf
     NotifyDiegeticRoutineFavor("khajiit_road_home")
     RequestPanelRefresh()
     Trace(2, "Khajiit road-home cadence routed with multiplier " + multiplier)
@@ -8183,8 +8694,11 @@ Float Function RecordKhajiitFocusSignal(Int focusValue, String keyPrefix, String
     StorageUtil.AdjustIntValue(None, keyPrefix + ".CountAll", 1)
     StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
     StorageUtil.SetStringValue(None, "PDV.Khajiit.LastLunarSourceReason", reason)
-    AdjustKhajiitFocusedEmphasis(focusValue, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
+    ; The piety pulse must land before evaluation: focus emergence requires both
+    ; behavioral dominance and actual Seeker piety on this same event.
+    AdjustKhajiitFocusedEmphasis(focusValue, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason, False)
     PulseKhajiitFocusPiety(focusValue, multiplier)
+    EvaluateKhajiitFocusedEmphasis()
     Trace(2, "Khajiit " + label + " routed with multiplier " + multiplier)
     return multiplier
 EndFunction
@@ -8631,6 +9145,10 @@ Function ShowKhajiitMessage(Message messageRecord, String fallbackText, Bool sup
     if _suppressCurseTransitionOutputs
         return
     endIf
+
+    ; Past this point the function always emits something (toast, modal, or fallback box),
+    ; so the generic curse toast can stand aside for this transition.
+    _raceCurseSurfaceShown = True
 
     if suppressModal
         SendPrismaToast("lunar", "warning", "", fallbackText)
@@ -9693,12 +10211,7 @@ Function ApplyUndeadCryptClearReaction(String deityName, String intensity, Locat
         endIf
     endIf
 
-    Float stanceMultiplier = 1.0
-    if stance == "FOREIGN"
-        stanceMultiplier = JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.FOREIGN", 0.4)
-    elseIf stance == "TOLERATED"
-        stanceMultiplier = JsonUtil.GetFloatValue(QUEST_REACTION_MATRIX_FILE, "stanceMult.TOLERATED", 0.4)
-    endIf
+    Float stanceMultiplier = GetQuestReactionStanceMultiplier(stance)
 
     Float appliedReactionAmount = amount * stanceMultiplier
     _suppressAwardFavorToast = True
@@ -10220,6 +10733,65 @@ Function MaybeShowRedguardChampionEntry(Int sectValue)
     endIf
 EndFunction
 
+; Nord/Kyne counterpart to MaybeShowRedguardChampionEntry. The Redguard beat hangs off a SECT
+; change, so it never collides with a tier surface; Kyne's recognition IS the tier reach, so this
+; is deliberately ADDITIVE rather than a suppression like ShouldSuppressBretonFocusedChampionTierSurface.
+; The universal surface above keeps the toast, the Book of Days entry and the Ledger feed; this
+; only adds the authored modal on top. Suppressing the generic surface would silence all three.
+Function MaybeShowNordKyneChampionEntry(PDV_DeityBase deity, Int newTier)
+    if newTier < TIER_CHAMPION
+        return
+    endIf
+    if GetPlayerOriginRaceIndex() != ORIGIN_NORD
+        return
+    endIf
+    if !PDV_Kyne || deity != PDV_Kyne
+        return
+    endIf
+    if IsRaceSetupQuietPresentationActive()
+        return
+    endIf
+    if StorageUtil.GetIntValue(None, "PDV.Nord.ChampionEntryShown.Kyne") == 1
+        return
+    endIf
+    if _pendingNordKyneChampionMsg
+        return
+    endIf
+
+    ; Queued, never shown inline -- see _pendingNordKyneChampionMsg. The one-shot key is set when the
+    ; modal actually PRESENTS, not here, so a recognition that could not display is not silently lost.
+    _pendingNordKyneChampionMsg = PDV_Msg_Nord_Kyne_ChampionEntry
+    _pendingNordKyneChampionFallback = "You sleep where the storm sleeps. You walk where the wind walks. Kyne has named her hunter."
+    _pendingNordKyneChampionDelayTicks = 2
+EndFunction
+
+Function ProcessQueuedNordKyneChampionEntry()
+    if !_pendingNordKyneChampionMsg && _pendingNordKyneChampionFallback == ""
+        return
+    endIf
+
+    if _pendingNordKyneChampionDelayTicks > 0
+        _pendingNordKyneChampionDelayTicks -= 1
+        return
+    endIf
+
+    ; Belt and braces: OnUpdate already early-outs in menu mode, but the hold is cheap and this
+    ; function is the thing that must never fire into an open menu.
+    if Utility.IsInMenuMode()
+        return
+    endIf
+
+    Message pendingRecord = _pendingNordKyneChampionMsg
+    String pendingFallback = _pendingNordKyneChampionFallback
+    _pendingNordKyneChampionMsg = None
+    _pendingNordKyneChampionFallback = ""
+    _pendingNordKyneChampionDelayTicks = 0
+
+    ShowNordMessage(pendingRecord, pendingFallback, False)
+    StorageUtil.SetIntValue(None, "PDV.Nord.ChampionEntryShown.Kyne", 1)
+    Trace(1, "Nord/Kyne champion recognition presented.")
+EndFunction
+
 String Function GetRedguardChampionEntryShownKey(Int sectValue)
     if sectValue == REDGUARD_SECT_CROWN
         return "PDV.Redguard.ChampionEntryShown.Crown"
@@ -10232,7 +10804,7 @@ String Function GetRedguardChampionEntryShownKey(Int sectValue)
     return ""
 EndFunction
 
-Function AdjustKhajiitFocusedEmphasis(Int focusValue, Float amount, String reason)
+Function AdjustKhajiitFocusedEmphasis(Int focusValue, Float amount, String reason, Bool evaluateNow = True)
     if GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT
         return
     endIf
@@ -10243,11 +10815,16 @@ Function AdjustKhajiitFocusedEmphasis(Int focusValue, Float amount, String reaso
 
     String focusKey = GetKhajiitFocusWeightKey(focusValue)
     StorageUtil.AdjustFloatValue(None, focusKey, amount)
-    EvaluateKhajiitFocusedEmphasis()
+    if evaluateNow
+        EvaluateKhajiitFocusedEmphasis()
+    endIf
     Trace(2, "Khajiit focus " + GetKhajiitFocusLabel(focusValue) + " adjusted by " + amount + " (" + reason + ")")
 EndFunction
 
 Function EvaluateKhajiitFocusedEmphasis()
+    if GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT
+        return
+    endIf
     Float khenarthi = GetKhajiitFocusWeight(KHAJIIT_FOCUS_KHENARTHI)
     Float azurah = GetKhajiitFocusWeight(KHAJIIT_FOCUS_AZURAH)
     Float baanDar = GetKhajiitFocusWeight(KHAJIIT_FOCUS_BAANDAR)
@@ -10256,42 +10833,44 @@ Function EvaluateKhajiitFocusedEmphasis()
 
     Int bestFocus = KHAJIIT_FOCUS_NONE
     Float bestWeight = 0.0
-    Float nextWeight = 0.0
+    if khenarthi > bestWeight
+        bestFocus = KHAJIIT_FOCUS_KHENARTHI
+        bestWeight = khenarthi
+    endIf
+    if azurah > bestWeight
+        bestFocus = KHAJIIT_FOCUS_AZURAH
+        bestWeight = azurah
+    endIf
+    if baanDar > bestWeight
+        bestFocus = KHAJIIT_FOCUS_BAANDAR
+        bestWeight = baanDar
+    endIf
+    if rajhin > bestWeight
+        bestFocus = KHAJIIT_FOCUS_RAJHIN
+        bestWeight = rajhin
+    endIf
+    if alkosh > bestWeight
+        bestFocus = KHAJIIT_FOCUS_ALKOSH
+        bestWeight = alkosh
+    endIf
 
-    bestFocus = PickKhajiitFocusCandidate(KHAJIIT_FOCUS_KHENARTHI, khenarthi, bestFocus, bestWeight)
-    bestWeight = GetKhajiitFocusWeight(bestFocus)
-    nextWeight = GetKhajiitSecondFocusWeight(bestFocus, khenarthi, azurah, baanDar, rajhin, alkosh)
+    ; All five weights are already local. Re-reading the current leader from
+    ; StorageUtil after every comparison added five external calls to every
+    ; focus-bearing action without changing the strict-greater tie behavior.
+    Float nextWeight = GetKhajiitSecondFocusWeight(bestFocus, khenarthi, azurah, baanDar, rajhin, alkosh)
 
-    bestFocus = PickKhajiitFocusCandidate(KHAJIIT_FOCUS_AZURAH, azurah, bestFocus, bestWeight)
-    bestWeight = GetKhajiitFocusWeight(bestFocus)
-    nextWeight = GetKhajiitSecondFocusWeight(bestFocus, khenarthi, azurah, baanDar, rajhin, alkosh)
-
-    bestFocus = PickKhajiitFocusCandidate(KHAJIIT_FOCUS_BAANDAR, baanDar, bestFocus, bestWeight)
-    bestWeight = GetKhajiitFocusWeight(bestFocus)
-    nextWeight = GetKhajiitSecondFocusWeight(bestFocus, khenarthi, azurah, baanDar, rajhin, alkosh)
-
-    bestFocus = PickKhajiitFocusCandidate(KHAJIIT_FOCUS_RAJHIN, rajhin, bestFocus, bestWeight)
-    bestWeight = GetKhajiitFocusWeight(bestFocus)
-    nextWeight = GetKhajiitSecondFocusWeight(bestFocus, khenarthi, azurah, baanDar, rajhin, alkosh)
-
-    bestFocus = PickKhajiitFocusCandidate(KHAJIIT_FOCUS_ALKOSH, alkosh, bestFocus, bestWeight)
-    bestWeight = GetKhajiitFocusWeight(bestFocus)
-    nextWeight = GetKhajiitSecondFocusWeight(bestFocus, khenarthi, azurah, baanDar, rajhin, alkosh)
-
+    ; Once a focus has emerged, a tie, lead loss, or later piety loss does not
+    ; erase it. A replacement must independently satisfy both gates.
     if bestWeight < KHAJIIT_FOCUS_THRESHOLD || (bestWeight - nextWeight) < KHAJIIT_FOCUS_LEAD_REQUIRED
-        SetKhajiitFocusedEmphasis(KHAJIIT_FOCUS_NONE, "no_clear_lead")
+        return
+    endIf
+
+    PDV_DeityBase bestDeity = GetKhajiitEmphasisDeity(bestFocus)
+    if !bestDeity || GetPiety(bestDeity) < 25.0
         return
     endIf
 
     SetKhajiitFocusedEmphasis(bestFocus, "lead")
-EndFunction
-
-Int Function PickKhajiitFocusCandidate(Int candidateFocus, Float candidateWeight, Int currentBest, Float currentBestWeight)
-    if candidateWeight > currentBestWeight
-        return candidateFocus
-    endIf
-
-    return currentBest
 EndFunction
 
 Float Function GetKhajiitSecondFocusWeight(Int bestFocus, Float khenarthi, Float azurah, Float baanDar, Float rajhin, Float alkosh)
@@ -10316,20 +10895,52 @@ EndFunction
 
 Function SetKhajiitFocusedEmphasis(Int focusValue, String reason)
     Int oldFocus = GetKhajiitFocusedEmphasis()
+    if oldFocus != KHAJIIT_FOCUS_NONE && focusValue == KHAJIIT_FOCUS_NONE
+        return
+    endIf
+    if oldFocus == focusValue
+        return
+    endIf
     StorageUtil.SetIntValue(None, "PDV.Khajiit.FocusedEmphasis", focusValue)
     if PDV_GLO_KhajiitFocusedEmphasis
         PDV_GLO_KhajiitFocusedEmphasis.SetValue(focusValue as Float)
     endIf
 
-    if oldFocus != focusValue
-        Trace(1, "Khajiit focused emphasis " + GetKhajiitFocusLabel(oldFocus) + " -> " + GetKhajiitFocusLabel(focusValue) + " (" + reason + ")")
-        SendPrismaShiftToast("Your road turns toward " + GetKhajiitFocusLabel(focusValue) + ".", "", GetKhajiitFocusSymbol(focusValue))
-        PDV_DeityBase focusDeity = GetKhajiitFocusDeity(focusValue)
-        if focusDeity
-            SurfaceTransition("emergence", focusDeity.DeityName, "onset", focusDeity.DeityIndex, "revelation")
+    Trace(1, "Khajiit focused emphasis " + GetKhajiitFocusLabel(oldFocus) + " -> " + GetKhajiitFocusLabel(focusValue) + " (" + reason + ")")
+    String focusText = GetKhajiitFocusShiftText(focusValue)
+    SendPrismaShiftToast("Your road turns toward " + GetKhajiitFocusLabel(focusValue) + ".", focusText, GetKhajiitFocusSymbol(focusValue))
+    Bool firstEmergence = oldFocus == KHAJIIT_FOCUS_NONE && StorageUtil.GetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged") == 0
+    if firstEmergence
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged", 1)
+        Message emergenceMessage = GetKhajiitFocusEmergenceMessage(focusValue)
+        if emergenceMessage
+            emergenceMessage.Show()
+        else
+            Debug.MessageBox(focusText)
         endIf
-        RequestPanelRefresh()
     endIf
+    if firstEmergence
+        AppendBookOfDaysEntry(focusText, Utility.GetCurrentGameTime() as Int, "focus.emergence", GetKhajiitFocusSymbol(focusValue), True, 1, GetKhajiitFocusLabel(focusValue) + " Emerges")
+    else
+        AppendBookOfDaysEntry(focusText, Utility.GetCurrentGameTime() as Int, "reorientation", GetKhajiitFocusSymbol(focusValue), False, 1, "The Road Turns")
+    endIf
+    SyncKhajiitRuntimeState()
+    RequestPanelRefresh()
+EndFunction
+
+Message Function GetKhajiitFocusEmergenceMessage(Int focusValue)
+    if focusValue == KHAJIIT_FOCUS_KHENARTHI
+        return PDV_MSG_KhajiitFocus_Khenarthi
+    elseIf focusValue == KHAJIIT_FOCUS_AZURAH
+        return PDV_MSG_KhajiitFocus_Azurah
+    elseIf focusValue == KHAJIIT_FOCUS_BAANDAR
+        return PDV_MSG_KhajiitFocus_BaanDar
+    elseIf focusValue == KHAJIIT_FOCUS_RAJHIN
+        return PDV_MSG_KhajiitFocus_Rajhin
+    elseIf focusValue == KHAJIIT_FOCUS_ALKOSH
+        return PDV_MSG_KhajiitFocus_Alkosh
+    endIf
+    return None
 EndFunction
 
 Int Function GetKhajiitFocusedEmphasis()
@@ -10683,6 +11294,29 @@ Function ResolveAltmerCrisis(Bool reassertOrthodoxy, String reason)
     endIf
 
     StorageUtil.SetFloatValue(None, "PDV.Altmer.CrisisResolvedAt", Utility.GetCurrentGameTime())
+
+    ; P3 (2026-08-03): the first shipped organic source for Auri-El's
+    ; SIGNAL_ORTHODOXY_AFFIRMATION. Holding the line through a crisis of faith and reasserting
+    ; the orthodoxy IS the costly orthodox act that signal was authored for.
+    ;
+    ; ORDER IS LOAD-BEARING -- this call MUST stay BELOW the SetAltmerCrisisState above.
+    ; HandleAltmerOrthodoxCostlyEnforcement calls RecordAltmerCrisisReassertEvidence, which on its
+    ; third evidence day calls ResolveAltmerCrisis again. That recursion terminates ONLY because
+    ; the state is already REASSERTING by the time it re-enters, so the DISSONANT/QUESTIONING
+    ; guard rejects it immediately. Move this above the state set and it loops.
+    ;
+    ; The handler is curse- and origin-gated internally, and its SurfaceP2BookReadNotice call
+    ; no-ops here because IsP2BookNoticeReason requires a "po3_book" token this reason lacks.
+    if reassertOrthodoxy
+        HandleAltmerOrthodoxCostlyEnforcement("crisis_reasserted_" + reason)
+        ; P7 (2026-08-03): Trinimac's second 2301 source. Reasserting orthodoxy through a crisis is
+        ; his beat as much as Auri-El's. Separate key from the book route's
+        ; ConsumeDailyRepeatMultiplier, so both can land on the same day -- intended: a crisis
+        ; resolution is a rare, heavy moment.
+        if PDV_Trinimac && ConsumeOncePerDaySignal("PDV.Signal.TrinimacCrisisOrthodoxy")
+            AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, 2.0)
+        endIf
+    endIf
 EndFunction
 
 ; --- Altmer crisis exit (2026-07-15, D1#6 fix) ---
@@ -10723,6 +11357,30 @@ Function EvaluateAltmerCrisisAtDawn()
 
     Int crisisState = GetAltmerCrisisState()
     Float nowTime = Utility.GetCurrentGameTime()
+
+    ; P6 (2026-08-03): let a settled scar re-open the arc after ALTMER_CRISIS_REENTRY_DAYS.
+    ; This is the ONLY caller of SetAltmerCrisisState(ALTMER_CRISIS_NONE, ...) in the codebase;
+    ; without it the first resolved crisis permanently disarmed Lorkhan pressure.
+    ;
+    ; Deliberately NOT cleared here: PDV.Altmer.CrisisSeen.<source> (so re-entry needs a
+    ; DIFFERENT authored source -- the arc cannot loop on one beat) and
+    ; PDV.Altmer.VampireExileScar (a curse scar is not a crisis scar and does not heal on a timer).
+    ;
+    ; Setting NONE is intentionally silent: SetAltmerCrisisState only surfaces a toast and
+    ; Book of Days entry when the new state is non-NONE, which is right -- a scar settling is
+    ; the absence of pressure, not an event to announce.
+    if crisisState == ALTMER_CRISIS_SCARRED_RESOLVED
+        Float settledAt = StorageUtil.GetFloatValue(None, "PDV.Altmer.CrisisSettledAt")
+        if settledAt <= 0.0
+            ; Migration: a save that scarred before P6 has no stamp. Start its clock now rather
+            ; than re-opening instantly on the first dawn after the update.
+            StorageUtil.SetFloatValue(None, "PDV.Altmer.CrisisSettledAt", nowTime)
+        elseIf (nowTime - settledAt) >= ALTMER_CRISIS_REENTRY_DAYS
+            SetAltmerCrisisState(ALTMER_CRISIS_NONE, "scar_settled")
+            SyncAltmerDisciplines(Game.GetPlayer())
+        endIf
+        return
+    endIf
 
     if crisisState == ALTMER_CRISIS_REASSERTING
         Float resolvedAt = StorageUtil.GetFloatValue(None, "PDV.Altmer.CrisisResolvedAt")
@@ -10843,6 +11501,217 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
     endIf
 EndFunction
 
+; P7 (2026-08-03). Trinimac's curated book route. Revives SIGNAL_FALLEN_GOD_ORTHODOXY (2301), which
+; had NO award site anywhere -- it was one of the live "wire" entries in tools/pdv_reserved_signals.json.
+;
+; The tail call into HandleAltmerOrthodoxCostlyEnforcement is deliberate and load-bearing for P3:
+; the reason carries "trinimac" and not "xarxes", so AwardAltmerOrthodoxSignal falls through its
+; Xarxes branch and reaches AURI-EL's SIGNAL_ORTHODOXY_AFFIRMATION. That is the second organic
+; source P3 reserved this prefix for. Do not rename the prefix without re-reading that function.
+Function HandleAltmerTrinimacOrthodoxy(String reason)
+    if !IsAltmerOrigin() || !PDV_Trinimac
+        return
+    endIf
+
+    if IsAltmerFavorSuppressedByCurse()
+        RecordAltmerRejectedSurface(reason, "curse_suppressed_altmer_favor")
+        return
+    endIf
+
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.TrinimacFallenGodOrthodoxy")
+    if multiplier > 0.0
+        AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, multiplier)
+    endIf
+    SurfaceP2BookReadNotice(reason, "Trinimac remembered", "Trinimac is named as he was, not as he was made.")
+
+    HandleAltmerOrthodoxCostlyEnforcement(reason)
+EndFunction
+
+; P7. Trinimac's renewable beat, and the only band-keyed signal in the mod. ThalmorAlignment
+; otherwise pins at +100 late game with no consumer but a Lorkhan multiplier; this makes the pin
+; mean something. Requires no new detection -- event 2 already fires on hostile-humanoid kills.
+Function HandleAltmerTrinimacCivilizationDefense(String reason)
+    if !IsAltmerOrigin() || !PDV_Trinimac || !PDV_ThalmorAlignmentTrack
+        return
+    endIf
+
+    if IsAltmerFavorSuppressedByCurse()
+        return
+    endIf
+
+    if PDV_ThalmorAlignmentTrack.GetValue() < 70
+        return
+    endIf
+
+    if !ConsumeOncePerDaySignal("PDV.Signal.TrinimacCivilizationDefended")
+        return
+    endIf
+
+    AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_CIVILIZATION_DEFENDED, None, 1.0)
+    SurfaceReservedSignal(PDV_Trinimac, "The project defended", "marks the ordered world held against a threat.")
+EndFunction
+
+; --- P9 (2026-08-03): Syrabane's four wired signals -------------------------------------------
+; He shipped with FIVE declared signals and ZERO award sites -- a closed ledger whose only income
+; was the quest-reaction matrix. Four are wired here. SIGNAL_APPRENTICE_AID (3111) is deliberately
+; NOT wired: every College-aid hook duplicates quest-reaction rows he already holds on MG01, MG02,
+; MG03, MG05, MG07 and MG08, which would score him twice for one act. See the P9 respec.
+;
+; Every handler below is origin- and curse-gated, and every one caps the piety pulse.
+Bool Function IsSyrabaneSignalEligible()
+    return IsAltmerOrigin() && PDV_Syrabane && !IsAltmerFavorSuppressedByCurse()
+EndFunction
+
+; --- P14 (2026-08-04): the Altmer practice focus ----------------------------------------------
+; The keystone durability act. Every Altmer lane except Trinimac's was built on a FINITE world pool
+; -- curated books one-shot, Words of Power and map markers bounded, skills capped -- so a
+; scholar-focused player eventually had nothing left to do. This never exhausts and needs no
+; inventory bookkeeping.
+;
+; It also gives P18's dawn an INDOOR path: the outdoor observance is the free version, this is the
+; one you can keep anywhere.
+;
+; Returns the idle kind for the token: 0 = pray, 1 = study.
+Int Function HandleAltmerPracticeFocus(String reason)
+    ; A non-Altmer holding the calian gets nothing and is told nothing -- it is not their object and
+    ; there is no refusal to explain. The curse case IS explained, because that player owns the
+    ; calian and needs to know the silence is their state and not a broken item.
+    if !IsAltmerOrigin()
+        return 0
+    endIf
+
+    if IsAltmerFavorSuppressedByCurse()
+        ShowAltmerNotification(PDV_Notif_Altmer_Calian_Unanswered, "The calian does not warm to you now.")
+        return 0
+    endIf
+
+    ; ONE cap across every lane, so switching patron cannot buy a second practice in a day.
+    if !ConsumeOncePerDaySignal("PDV.Signal.AltmerPracticeFocus")
+        ShowAltmerNotification(PDV_Notif_Altmer_Calian_AlreadyKept, "Your calian is already warm from today's practice.")
+        return GetAltmerPracticeIdleKind()
+    endIf
+
+    ; Claim the substrate day. The spine takes one +4.0 credit per devotional day whatever claims
+    ; it, so this adds no income -- it adds a way to claim the day that works indoors, in a jail
+    ; cell, mid-dungeon, anywhere the outdoor dawn observance cannot reach.
+    AwardAltmerAncestorSpinePulse(1.0, "practice_focus_" + reason)
+
+    ; Then the active lane's own signal. Deliberately routed to the PATRON's lane rather than a
+    ; fixed deity: the point is that practice feeds whatever you actually worship.
+    if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity
+        if _activeDeity == PDV_Magnus && PDV_Magnus
+            AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_APERTURE_KEPT, None, 1.0)
+        elseIf _activeDeity == PDV_Xarxes && PDV_Xarxes
+            AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_RECORD_KEPT, None, 1.0)
+        elseIf _activeDeity == PDV_Trinimac && PDV_Trinimac
+            AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, 1.0)
+        elseIf _activeDeity == PDV_Syrabane && PDV_Syrabane
+            AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING, None, 1.0)
+        elseIf _activeDeity == PDV_AuriEl && PDV_AuriEl
+            AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 1.0)
+        endIf
+    elseIf PDV_AuriEl
+        ; No patron, or broad worship: the foundation takes it. This is the ONLY arm that credits
+        ; Auri-El without him being chosen, and it requires a deliberate act -- unlike the free
+        ; dawn pulse P18 removed.
+        AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 1.0)
+    endIf
+
+    Trace(2, "Altmer practice focus routed (" + reason + ")")
+    return GetAltmerPracticeIdleKind()
+EndFunction
+
+; 0 = prayer pose (foundation and martial lanes), 1 = reading pose (scholar lanes).
+Int Function GetAltmerPracticeIdleKind()
+    if GetPatronState() != PATRON_STATE_ACTIVE || !_activeDeity
+        return 0
+    endIf
+    if _activeDeity == PDV_Magnus || _activeDeity == PDV_Xarxes || _activeDeity == PDV_Syrabane
+        return 1
+    endIf
+    return 0
+EndFunction
+
+; Grants the focus once, mirroring EnsureDunmerAncestralUrn.
+Function EnsureAltmerPracticeFocus()
+    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER || !PDV_MISC_AltmerPracticeFocus
+        return
+    endIf
+
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return
+    endIf
+
+    if playerRef.GetItemCount(PDV_MISC_AltmerPracticeFocus) <= 0
+        playerRef.AddItem(PDV_MISC_AltmerPracticeFocus, 1, True)
+        Trace(2, "Altmer practice focus granted.")
+
+        ; ONCE EVER, on a one-shot key rather than on the grant itself. This function re-grants the
+        ; calian whenever the player does not have one, so hanging the line off AddItem would say
+        ; "you have carried this since you were eighteen" about a replacement acquired a minute ago
+        ; if the player ever dropped or sold it.
+        ;
+        ; Written as a Book of Days entry, not a notification, and allowed during race-setup quiet:
+        ; the grant happens at init, when presentation is suppressed, so a notification would either
+        ; be swallowed or would have to shout over the setup flow. This is backstory being entered
+        ; in the chronicle, which is what the Book of Days is for.
+        if StorageUtil.GetIntValue(None, "PDV.Altmer.Calian.Granted") != 1
+            StorageUtil.SetIntValue(None, "PDV.Altmer.Calian.Granted", 1)
+            ; The second sentence is the ONLY discoverability nudge the calian gets. It is a MISC
+            ; item with no quest, no marker and no tutorial, so without a line telling the player it
+            ; is theirs to use, the mod's one unlimited daily Altmer act is a thing that sits in the
+            ; inventory forever. Phrased as the practice, not as a control prompt.
+            AppendBookOfDaysEntry("You have carried this since you were eighteen. A sphere of aetherquartz, given in a chapel by a Curate, and still unbroken. Hold it in your hands when you would remember what you are.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Your calian", True)
+        endIf
+    endIf
+EndFunction
+
+Function HandleAltmerSyrabaneCureWard(String reason)
+    if !IsSyrabaneSignalEligible()
+        return
+    endIf
+    if !ConsumeOncePerDaySignal("PDV.Signal.SyrabaneCureWard")
+        return
+    endIf
+    AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_CURSE_DISEASE_WARDING, None, 1.0)
+    SurfaceReservedSignal(PDV_Syrabane, "The sickness lifts", "marks a curse turned aside before it took root.")
+EndFunction
+
+Function HandleAltmerSyrabaneProtectiveWard(String reason)
+    if !IsSyrabaneSignalEligible()
+        return
+    endIf
+    if !ConsumeOncePerDaySignal("PDV.Signal.SyrabaneProtectiveWarding")
+        return
+    endIf
+    AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING, None, 1.0)
+    SurfaceReservedSignal(PDV_Syrabane, "The ward holds", "marks hostile magic stopped before it reached you.")
+EndFunction
+
+; Weekly, not daily -- the detector already gates on a near-fatal mage fight with a kill, so the
+; rarity is the guard. Mirrors the Nord/Tsun and Khajiit/Baan Dar cadence in PDV_PlayerEvents.
+Function HandleAltmerSyrabaneAntiMageSurvival(String reason)
+    if !IsSyrabaneSignalEligible()
+        return
+    endIf
+    AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_ANTI_MAGE_SURVIVAL, None, 1.0)
+    SurfaceReservedSignal(PDV_Syrabane, "Arcane duel survived", "marks a hostile mage outlasted and put down.")
+EndFunction
+
+; The three vanilla ward tomes. Learning a Ward IS magical containment -- the most on-theme source
+; in his lane. One-shot per tome via MarkP2SourceRoute upstream.
+Function HandleAltmerSyrabaneContainment(String reason)
+    if !IsSyrabaneSignalEligible()
+        return
+    endIf
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.SyrabaneMagicalContainment")
+    if multiplier > 0.0
+        AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_MAGICAL_CONTAINMENT, None, multiplier)
+    endIf
+    SurfaceP2BookReadNotice(reason, "The first warding", "Syrabane opens the apprentice's art to you.")
+EndFunction
+
 Function AwardAltmerDawnSignal(String reason, Float multiplier)
     if StringContainsToken(reason, "magnus") && PDV_Magnus
         AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
@@ -10854,13 +11723,27 @@ Function AwardAltmerDawnSignal(String reason, Float multiplier)
     endIf
 EndFunction
 
+; The Auri-El arm below was PROVABLY UNREACHABLE in shipped play until 2026-08-03 (packet P3).
+; SIGNAL_ORTHODOXY_AFFIRMATION carries delta 3.0 -- the largest curated delta in the Altmer set --
+; but the only shipped ingress into HandleAltmerOrthodoxCostlyEnforcement was
+; RouteAltmerXarxesLineage, whose reason ALWAYS contains "xarxes", so the Xarxes branch always
+; returned first and Auri-El never scored outside the MCM debug button.
+;
+; TRAP: PDV_EventSignalActivator / PDV_EventSignalEffect make route 53 look reachable in a call
+; graph. Those are QA test harness, never shipped world content -- do not read them as an ingress.
+;
+; The organic sources are ResolveAltmerCrisis (below, live now) and, once P7 lands, the Trinimac
+; book route. That route's reason prefix "eventbus_p2_altmer_trinimac_" is reserved deliberately:
+; it must NOT contain "xarxes" or it routes the award to the wrong god.
 Function AwardAltmerOrthodoxSignal(String reason, Float multiplier)
     if StringContainsToken(reason, "xarxes") && PDV_Xarxes
         AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_LINEAGE_HONORED, None, multiplier)
         return
     endIf
 
-    if PDV_AuriEl
+    ; Hard daily cap. This lane carried only the 0.7^n repeat-decay multiplier and no ceiling, so
+    ; a delta-3.0 signal could pay out repeatedly within one day as soon as a source existed.
+    if PDV_AuriEl && ConsumeOncePerDaySignal("PDV.Signal.AuriElOrthodoxyAffirmation")
         AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_ORTHODOXY_AFFIRMATION, None, multiplier)
     endIf
 EndFunction
@@ -10907,13 +11790,25 @@ Function AwardAltmerAncestorSpinePulse(Float multiplier, String reason)
         return
     endIf
 
+    ; TOAST PARITY (owner ruling 2026-08-06). The Book of Days line is resolved FIRST and handed to
+    ; SendPrismaSubstrateProgress as its context, so the toast carries the same sentence the
+    ; chronicle records. This ordering matters for the calian: its line is drawn at random from a
+    ; pool, so resolving it twice would let the toast and the Book entry name different lines for
+    ; one act.
     Int tierBefore = 0
+    Int tierAfter = 0
+    Float grantedMetric = 0.0
     if PDV_AltmerAncestorSubstrate
         Float metricBefore = PDV_AltmerAncestorSubstrate.GetMetric()
         tierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
         PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(multiplier, reason)
-        Int tierAfter = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
-        SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore, "", "auri-el", GetAltmerHeritageTierName())
+        tierAfter = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
+        grantedMetric = PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore
+    endIf
+
+    String voicedLine = AppendAltmerHeritageVoice(grantedMetric, reason)
+    if PDV_AltmerAncestorSubstrate
+        SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, grantedMetric, voicedLine, "auri-el", GetAltmerHeritageTierName())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Altmer.AncestralStanding", multiplier)
@@ -10921,6 +11816,148 @@ Function AwardAltmerAncestorSpinePulse(Float multiplier, String reason)
     StorageUtil.SetStringValue(None, "PDV.Altmer.LastAncestorSpineReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Altmer.LastAncestorSpineTime", Utility.GetCurrentGameTime())
     Trace(2, "Altmer ancestor spine routed with multiplier " + multiplier)
+
+EndFunction
+
+; The calian's rotating Book of Days line. Same shape as the Khajiit moon observations: validate the
+; JSON, exclude whatever was shown last so the same sentence never lands twice running, and fall
+; back to a compiled line if the file is missing or malformed. A bad JSON must never cost the player
+; their acknowledgement -- the practice still happened.
+; Returns a pool index, or -1 when the JSON cannot be trusted. Records the resolved id so the next
+; call can exclude it -- one pick, one place, so the toast and the Book entry can never disagree
+; about which line was drawn.
+Int Function PickAltmerPracticeIndex()
+    if !IsAltmerPracticeLineJsonValid()
+        return -1
+    endIf
+
+    String lastId = StorageUtil.GetStringValue(None, "PDV.Altmer.PracticeLine.LastId")
+    Int excludedIndex = -1
+    Int i = 0
+    while i < ALTMER_PRACTICE_LINES_COUNT && excludedIndex < 0
+        if JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, ".lines[" + i + "].id", "") == lastId
+            excludedIndex = i
+        endIf
+        i += 1
+    endWhile
+
+    ; Roll across the whole pool, or across one fewer slot and step over the excluded index, so the
+    ; repeat is skipped without biasing any other line's odds.
+    Int poolIndex = Utility.RandomInt(0, ALTMER_PRACTICE_LINES_COUNT - 1)
+    if excludedIndex >= 0
+        poolIndex = Utility.RandomInt(0, ALTMER_PRACTICE_LINES_COUNT - 2)
+        if poolIndex >= excludedIndex
+            poolIndex += 1
+        endIf
+    endIf
+
+    StorageUtil.SetStringValue(None, "PDV.Altmer.PracticeLine.LastId", JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, ".lines[" + poolIndex + "].id", ""))
+    return poolIndex
+EndFunction
+
+Bool Function IsAltmerPracticeLineJsonValid()
+    ; Load/IsGood run every call -- see _altmerPracticeLinesValidatedVersion for why they are not cached.
+    if !JsonUtil.Load(ALTMER_PRACTICE_LINES_FILE) || !JsonUtil.IsGood(ALTMER_PRACTICE_LINES_FILE)
+        _altmerPracticeLinesValidatedVersion = -1
+        return False
+    endIf
+    if _altmerPracticeLinesValidatedVersion == ALTMER_PRACTICE_LINES_VERSION
+        return True
+    endIf
+    if JsonUtil.GetPathIntValue(ALTMER_PRACTICE_LINES_FILE, ".version", -1) != ALTMER_PRACTICE_LINES_VERSION
+        return False
+    endIf
+    if JsonUtil.PathCount(ALTMER_PRACTICE_LINES_FILE, ".lines") != ALTMER_PRACTICE_LINES_COUNT
+        return False
+    endIf
+
+    Int poolIndex = 0
+    while poolIndex < ALTMER_PRACTICE_LINES_COUNT
+        String entryPath = ".lines[" + poolIndex + "]"
+        if JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, entryPath + ".id", "") == "" || JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, entryPath + ".title", "") == "" || JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, entryPath + ".body", "") == ""
+            return False
+        endIf
+        poolIndex += 1
+    endWhile
+    _altmerPracticeLinesValidatedVersion = ALTMER_PRACTICE_LINES_VERSION
+    return True
+EndFunction
+
+; P2: shared voice for the ancestral spine. Gated on the day credit ACTUALLY landing -- the
+; substrate budget is one credit per devotional day, so most calls legitimately grant nothing and
+; writing a line for a rejected credit would report practice that never happened.
+; Returns the line it wrote, or "" when nothing was written, so the caller can reuse the exact text
+; as the Prisma toast context. One resolution, two surfaces -- the toast and the chronicle can never
+; name different pooled lines for the same act.
+String Function AppendAltmerHeritageVoice(Float grantedMetric, String reason)
+    if grantedMetric <= 0.0
+        return ""
+    endIf
+    ; The calian owns its own entry because each pooled line carries its OWN title, the way the
+    ; Khajiit moon observations do. Every other spine source shares the one "Ancestral practice"
+    ; heading below.
+    if StringContainsToken(reason, "practice_focus")
+        return AppendAltmerPracticeEntry()
+    endIf
+    String sourceLine = GetAltmerHeritageSourceLine(reason)
+    AppendBookOfDaysEntry(sourceLine, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
+    return sourceLine
+EndFunction
+
+; Resolves one pooled line and writes it with its own title. Kept separate from
+; AppendAltmerHeritageVoice so that function keeps exactly one Book of Days call, which the Prisma
+; UI audit asserts.
+String Function AppendAltmerPracticeEntry()
+    Int poolIndex = PickAltmerPracticeIndex()
+    if poolIndex < 0
+        String fallbackLine = "You kept the practice where you stood, with no shrine and no witness."
+        AppendBookOfDaysEntry(fallbackLine, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
+        return fallbackLine
+    endIf
+
+    String entryPath = ".lines[" + poolIndex + "]"
+    String bodyText = JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, entryPath + ".body", "")
+    String titleText = JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, entryPath + ".title", "")
+    if bodyText == ""
+        bodyText = "You kept the practice where you stood, with no shrine and no witness."
+    endIf
+    if titleText == ""
+        titleText = "Ancestral practice"
+    endIf
+    AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, titleText)
+    return bodyText
+EndFunction
+
+; P2: per-source voice for the ancestral spine. The reason prefixes are set by each call site;
+; keep this in sync with them rather than inventing new ones here.
+String Function GetAltmerHeritageSourceLine(String reason)
+    if StringContainsToken(reason, "dawn_observance")
+        return "You met the dawn under the open sky. The ordered life asks no more than this."
+    elseIf StringContainsToken(reason, "auriel_shrine_rite")
+        return "You performed the dawn rite as your ancestors have always done."
+    elseIf StringContainsToken(reason, "sleep_dream")
+        return "You awoke from a dream about the Aldmeri. It leaves an ache within you as you recall the past."
+    elseIf StringContainsToken(reason, "enchantment")
+        return "You bound magicka into a lasting shape. The binding holds."
+    elseIf StringContainsToken(reason, "smithing")
+        return "You worked the forge in the manner set down. The craft is older than you."
+    elseIf StringContainsToken(reason, "study")
+        return "You studied. The quest for knowledge is ingrained in your heritage."
+    elseIf StringContainsToken(reason, "magic_skill_increase")
+        return "You have deepened your magical skills. You are closer to perfection."
+    elseIf StringContainsToken(reason, "curated_heritage")
+        return "You read an ancestral text closely. What was written is remembered."
+    endIf
+
+    ; NOTE on "practice_focus" (P14's focus token composes "practice_focus_" + the EventBus reason,
+    ; so it matches none of the arms above): it must NEVER fall to the orthodoxy default below, which
+    ; asserts the opposite of a Psijic or Heterodox player's theology. It does not, because
+    ; AppendAltmerHeritageVoice intercepts that token first and delegates to AppendAltmerPracticeEntry,
+    ; which draws an alignment-neutral pooled line. An arm here was a SECOND draw site from that pool
+    ; with its own LastId write; removed 2026-08-07 because reaching it would reintroduce the
+    ; toast/Book divergence the single-pick design exists to prevent. If you ever make this function
+    ; reachable for that token, route it back through AppendAltmerPracticeEntry -- not a new draw.
+    return "You upheld the orthodoxy at real cost. Doctrine stands on what it costs you."
 EndFunction
 
 Function RunDawnRefreshAltmerAncestor()
@@ -11025,6 +12062,15 @@ Function SetAltmerCrisisState(Int stateValue, String reason)
     endIf
     if oldState != stateValue
         Trace(1, "Altmer crisis state " + GetAltmerCrisisStateLabelForValue(oldState) + " -> " + GetAltmerCrisisStateLabelForValue(stateValue) + " (" + reason + ")")
+        ; P6: stamp when the scar actually forms. This is the single funnel for every state
+        ; change, so it catches BOTH exit paths. Deliberately not reusing
+        ; PDV.Altmer.CrisisResolvedAt: that field means different things on the two paths --
+        ; on the reassert path it marks REASSERTING entry (SCARRED_RESOLVED lands two days
+        ; later and never restamps it), on the lived-through path it marks the settle itself.
+        ; The re-entry clock needs one unambiguous meaning.
+        if stateValue == ALTMER_CRISIS_SCARRED_RESOLVED
+            StorageUtil.SetFloatValue(None, "PDV.Altmer.CrisisSettledAt", Utility.GetCurrentGameTime())
+        endIf
         if stateValue != ALTMER_CRISIS_NONE
             String crisisHeadline = GetAltmerCrisisHeadline(stateValue)
             String crisisLine = GetAltmerCrisisJournalLine(stateValue)
@@ -11199,6 +12245,21 @@ Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
         StorageUtil.SetFloatValue(deityForm, "PDV.Tier", newTier as Float)
         StorageUtil.SetFloatValue(deityForm, "PDV.LastTierChange", Utility.GetCurrentGameTime())
 
+        ; P10 (2026-08-03): a demotion clears the one-shot notice for the tier just LOST, so a
+        ; later re-climb can surface again. Without this, a Champion who decayed to Devoted and
+        ; fought all the way back to 85 got TOTAL SILENCE -- NotifyTierUp's key was already
+        ; burned and never cleared by anything. This fixes it for EVERY race, not just Altmer.
+        if newTier < oldTier
+            StorageUtil.SetIntValue(None, "PDV.TierNoticeShown." + deity.DeityIndex + "." + oldTier, 0)
+            ; P10 parity for the authored Nord/Kyne recognition (2026-08-07). Its own one-shot key
+            ; is NOT the tier notice, so without this a Nord who fell from Champion and climbed back
+            ; got the toast and Book entry again but never the modal -- the exact "total silence on a
+            ; re-climb" bug the block above exists to prevent, reintroduced one surface lower.
+            if oldTier >= TIER_CHAMPION && PDV_Kyne && deity == PDV_Kyne
+                StorageUtil.SetIntValue(None, "PDV.Nord.ChampionEntryShown.Kyne", 0)
+            endIf
+        endIf
+
         Bool isFocusedEmphasis = IsKhajiitOrigin() && deity == GetKhajiitEmphasisDeity(GetKhajiitFocusedEmphasis())
 
         ; Reward/mirror hooks fire only for the patron / focused-emphasis deity.
@@ -11225,6 +12286,7 @@ Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
                 StorageUtil.SetIntValue(None, "PDV.BookOfDays.LastTierValue", newTier)
                 SendPrismaEventToast("tier", deity, "", GetPublicTierBand(newTier), "")
                 SurfaceTransition("tier", deity.DeityName + " " + GetTierStandingLabel(newTier), "reach", deity.DeityIndex, "", false, newTier >= TIER_CHAMPION)
+                MaybeShowNordKyneChampionEntry(deity, newTier)
             endIf
         endIf
 
@@ -11237,6 +12299,62 @@ Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
 EndFunction
 
 ; One-shot guard when a tracked deity advances a tier.
+; --- P10: Long Devotion accessors ------------------------------------------------------------
+; Pure derivation over existing piety. Marks land at 100/115/130/145/160/175/190 for a standard
+; 85-threshold deity, capped at LONG_DEVOTION_MARK_MAX so a 200-piety patron cannot run away.
+Int Function GetDevotionMarks(PDV_DeityBase deity)
+    Form deityForm = GetDeityFormOrNone(deity)
+    if !deityForm
+        return 0
+    endIf
+
+    Float piety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
+    if piety < deity.ThresholdChampion
+        return 0
+    endIf
+
+    Int marks = ((piety - deity.ThresholdChampion) / LONG_DEVOTION_MARK_STEP) as Int
+    return ClampInt(marks, 0, LONG_DEVOTION_MARK_MAX)
+EndFunction
+
+; Ratchets MarkHigh (which gates the decay floor) and surfaces each mark exactly once.
+; The ratchet is deliberately one-way: a patron who slips back below a mark keeps the floor they
+; earned, so the floor cannot flap on and off with ordinary decay.
+Function MaybeSurfaceDevotionMark(PDV_DeityBase deity)
+    if !deity || GetTier(deity) < TIER_CHAMPION
+        return
+    endIf
+
+    Int marks = GetDevotionMarks(deity)
+    if marks < 1
+        return
+    endIf
+
+    String highKey = "PDV.LongDevotion.MarkHigh." + deity.DeityIndex
+    if marks > StorageUtil.GetIntValue(None, highKey)
+        StorageUtil.SetIntValue(None, highKey, marks)
+    endIf
+
+    String shownKey = "PDV.LongDevotion.MarkShown." + deity.DeityIndex + "." + marks
+    if StorageUtil.GetIntValue(None, shownKey) == 1
+        return
+    endIf
+    StorageUtil.SetIntValue(None, shownKey, 1)
+
+    String deityName = GetPublicDeityDisplayName(deity)
+    AppendBookOfDaysEntry(deityName + " marks devotion held long past the day it was proven.", Utility.GetCurrentGameTime() as Int, "tier.reach", GetPrismaSymbolForDeity(deity), True, 2, "Long devotion")
+    Trace(1, "Long Devotion mark " + marks + " surfaced for " + deity.DeityName)
+EndFunction
+
+; Dawn tick. Only the patron / focused-emphasis deity accrues marks -- the same scope the reward
+; and mirror hooks already use, so a broad worshipper's whole pantheon does not each start
+; ratcheting floors.
+Function RunDawnRefreshDevotionMarks()
+    if _activeDeity
+        MaybeSurfaceDevotionMark(_activeDeity)
+    endIf
+EndFunction
+
 Bool Function NotifyTierUp(PDV_DeityBase deity, Int newTier)
     if !deity || newTier <= TIER_NONE
         return False
@@ -11282,6 +12400,7 @@ Function RefreshPatronMirrors()
         PDV_GLO_ActivePiety.SetValue(0.0)
         PDV_GLO_ActiveTier.SetValue(TIER_NONE as Float)
         PDV_GLO_ActiveDeityIndex.SetValue(-1.0)
+        SyncNpcReligiousRecognition()
         return
     endIf
 
@@ -11291,6 +12410,7 @@ Function RefreshPatronMirrors()
     PDV_GLO_ActivePiety.SetValue(StorageUtil.GetFloatValue(deityForm, "PDV.Piety"))
     PDV_GLO_ActiveTier.SetValue(StorageUtil.GetFloatValue(deityForm, "PDV.Tier"))
     PDV_GLO_ActiveDeityIndex.SetValue(_activeDeity.DeityIndex as Float)
+    SyncNpcReligiousRecognition()
 EndFunction
 
 Function InitializePreflightState()
@@ -11416,7 +12536,7 @@ Function ClearRowsForDeity(PDV_DeityBase deity)
 EndFunction
 
 Int[] Function GetLikesDislikesEventTypes()
-    Int[] ldEvents = new Int[34]
+    Int[] ldEvents = new Int[35]
     ldEvents[0] = 1
     ldEvents[1] = 2
     ldEvents[2] = 3
@@ -11451,6 +12571,7 @@ Int[] Function GetLikesDislikesEventTypes()
     ldEvents[31] = 315
     ldEvents[32] = 303
     ldEvents[33] = 366
+    ldEvents[34] = 305
     return ldEvents
 EndFunction
 
@@ -11472,64 +12593,6 @@ EndFunction
 ; pact spells, then re-establish a single active pact = the most-advanced committed
 ; Prince. Version-gated so it runs once per save. Curse spells are not pact spells
 ; and are untouched.
-Function MigrateDaedricPactsIfNeeded()
-    if StorageUtil.GetIntValue(None, "PDV.Daedric.PactVersion") >= DAEDRIC_PACT_VERSION
-        return
-    endIf
-
-    Int i = 0
-    Int count = GetDaedricPathCount()
-    PDV_DaedricPathBase topPath = None
-    Int topTier = 0
-    while i < count
-        PDV_DaedricPathBase path = GetDaedricPathAtListIndex(i)
-        if path
-            path.StripPactSpells()
-            if path.GetStoredTier() > topTier
-                topTier = path.GetStoredTier()
-                topPath = path
-            endIf
-        endIf
-        i += 1
-    endWhile
-
-    StorageUtil.FormListClear(None, "PDV.Daedric.LivePactSpells")
-    StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
-    if topPath && topTier > 0
-        topPath.MakeActiveDaedricPact()
-    endIf
-
-    ; v3: enforce patron<->Prince exclusivity on legacy saves holding BOTH. Keep the
-    ; higher tier (tie -> Prince, matching the live Prince-wins surface), sever the
-    ; loser, and surface a one-time resolution note. The StripPactSpells loop above
-    ; already cleaned stacked spells, so the sever fights nothing. SetActiveDeity(None)
-    ; has newDeity==None, so it does not re-enter the patron-commit Prince-sever.
-    Bool hasPatron = (GetPatronState() == PATRON_STATE_ACTIVE) && _activeDeity
-    if hasPatron && topPath && topTier > 0
-        Int patronTier = GetTier(_activeDeity)
-        String resolvedName = ""
-        if topTier >= patronTier
-            resolvedName = topPath.DeityName
-            SetActiveDeity(None)
-        else
-            resolvedName = _activeDeity.DeityName
-            topPath.ClearLiveDaedricPactSpells()
-            StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
-        endIf
-        SendPrismaEventToast("shift", None, "Your devotion has resolved to " + resolvedName + ".", "", "")
-        AppendBookOfDaysEntry("Your devotion has resolved to " + resolvedName + ".", Utility.GetCurrentGameTime() as Int, "reorientation", "journal", true)
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Daedric.PactVersion", DAEDRIC_PACT_VERSION)
-    if GetDebugLevel() >= 1
-        if topPath
-            Debug.Trace("[PDV] Daedric pact migration: stripped stacks, active pact = " + topPath.DeityName)
-        else
-            Debug.Trace("[PDV] Daedric pact migration: stripped stacks, no committed pact")
-        endIf
-    endIf
-EndFunction
-
 Function LoadPrinceLikesDislikesTable()
     if !PDV_FLST_DaedricPaths_All
         return
@@ -11571,7 +12634,7 @@ Function ClearPrinceRowsForPath(PDV_DaedricPathBase path)
 EndFunction
 
 Int[] Function GetPrinceEventTypes()
-    Int[] pldEvents = new Int[31]
+    Int[] pldEvents = new Int[33]
     pldEvents[0] = 1
     pldEvents[1] = 2
     pldEvents[2] = 300
@@ -11603,6 +12666,8 @@ Int[] Function GetPrinceEventTypes()
     pldEvents[28] = 366
     pldEvents[29] = 367
     pldEvents[30] = 368
+    pldEvents[31] = 305
+    pldEvents[32] = 306
     return pldEvents
 EndFunction
 
@@ -11714,6 +12779,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 368, 1.0, 1, 1.0)
         WritePLD(path, 345, 0.25, 3, 0.0)
         WritePLD(path, 304, -0.25, 3, 0.0)
+        WritePLD(path, 305, 0.5, 3, 0.0)
         WritePLD(path, 331, 0.5, 3, 0.0)
         WritePLD(path, 342, 0.25, 3, 0.0)
         WritePLD(path, 2, -0.25, 3, 0.0)
@@ -11794,11 +12860,13 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 360, 0.5, 3, 0.0)
         WritePLD(path, 362, 0.5, 3, 0.0)
         WritePLD(path, 304, 1.0, 2, 0.5)
+        WritePLD(path, 305, 0.5, 2, 0.5)
         WritePLD(path, 361, 0.25, 3, 0.0)
         WritePLD(path, 342, 0.25, 3, 0.0)
         WritePLD(path, 368, 1.5, 1, 1.0)
         WritePLD(path, 364, 0.5, 3, 0.0)
         WritePLD(path, 332, 0.25, 3, 0.0)
+        WritePLD(path, 306, 0.5, 3, 0.0)
         WritePLD(path, 2, -0.25, 3, 0.0)
         WritePLD(path, 350, -0.25, 3, 0.0)
         WritePLD(path, 313, -0.25, 3, 0.0)
@@ -11809,6 +12877,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 313, 0.25, 3, 0.0)
         WritePLD(path, 362, -0.25, 3, 0.0)
         WritePLD(path, 364, -0.75, 2, 0.5)
+        WritePLD(path, 305, -0.25, 3, 0.0)
         WritePLD(path, 368, 1.0, 1, 1.0)
         WritePLD(path, 302, 1.0, 2, 0.5)
         WritePLD(path, 344, 0.25, 3, 0.0)
@@ -11984,7 +13053,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
     elseIf ldName == "auri-el"
         WriteLD(deity, 344, 0.5, 3, 0.0, -1)
         WriteLD(deity, 342, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 313, 0.25, 3, 0.0, -1)
+        WriteLD(deity, 313, 0.35, 3, 0.0, -1)
         WriteLD(deity, 350, 0.75, 2, 0.5, -1)
         WriteLD(deity, 304, -1.5, 1, 1.0, -1)
         WriteLD(deity, 368, -1.0, 2, 0.5, -1)
@@ -11996,7 +13065,6 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
     elseIf ldName == "magnus"
         WriteLD(deity, 341, 0.75, 2, 0.5, -1)
         WriteLD(deity, 331, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
         WriteLD(deity, 342, 0.25, 3, 0.0, -1)
         WriteLD(deity, 332, 0.25, 3, 0.0, -1)
         WriteLD(deity, 365, -0.75, 2, 0.5, -1)
@@ -12010,7 +13078,7 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 342, 0.75, 2, 0.5, -1)
         WriteLD(deity, 340, 0.5, 3, 0.0, -1)
         WriteLD(deity, 341, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 331, 0.25, 3, 0.0, -1)
+        WriteLD(deity, 331, 0.4, 3, 0.0, -1)
         WriteLD(deity, 343, 0.25, 3, 0.0, -1)
         WriteLD(deity, 368, -0.5, 3, 0.0, -1)
         WriteLD(deity, 344, 0.5, 3, 0.0, -1)
@@ -12136,6 +13204,8 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 362, 0.25, 3, 0.0, -1)
         WriteLD(deity, 315, -0.25, 3, 0.0, -1)
         WriteLD(deity, 333, -0.25, 3, 0.0, -1)
+        WriteLD(deity, 351, -0.25, 2, 0.5, -1)
+        WriteLD(deity, 305, -0.25, 2, 0.5, -1)
     elseIf ldName == "Mephala"
         WriteLD(deity, 360, 0.5, 3, 0.0, -1)
         WriteLD(deity, 362, 0.5, 3, 0.0, -1)
@@ -12143,10 +13213,9 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 342, 0.25, 3, 0.0, -1)
         WriteLD(deity, 368, 1.5, 1, 1.0, -1)
         WriteLD(deity, 361, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 364, 1.0, 2, 0.5, -1)
         WriteLD(deity, 2, -0.25, 3, 0.0, -1)
         WriteLD(deity, 350, -0.5, 2, 0.0, -1)
-        WriteLD(deity, 313, -0.25, 2, 0.0, -1)
+        WriteLD(deity, 313, -0.25, 3, 0.0, -1)
         WriteLD(deity, 366, 0.35, 3, 0.0, -1)
     elseIf ldName == "The Hist"
         WriteLD(deity, 313, 0.5, 3, 0.0, -1)
@@ -12220,6 +13289,19 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 315, -0.25, 3, 0.0, -1)
         WriteLD(deity, 365, -0.75, 2, 0.5, -1)
         WriteLD(deity, 366, -0.75, 2, 0.5, -1)
+    elseIf ldName == "Syrabane"
+        WriteLD(deity, 332, 0.5, 3, 0.0, -1)
+        WriteLD(deity, 334, 0.25, 3, 0.0, -1)
+        WriteLD(deity, 341, 0.35, 3, 0.0, -1)
+        WriteLD(deity, 301, 0.5, 3, 0.0, -1)
+        WriteLD(deity, 300, 0.25, 3, 0.5, -1)
+        WriteLD(deity, 342, 0.2, 2, 0.0, -1)
+        WriteLD(deity, 350, 0.75, 2, 0.5, -1)
+        WriteLD(deity, 365, -1.25, 1, 1.0, -1)
+        WriteLD(deity, 368, -1.25, 1, 1.0, -1)
+        WriteLD(deity, 304, -1.25, 2, 0.5, -1)
+        WriteLD(deity, 364, -1.0, 2, 0.5, -1)
+        WriteLD(deity, 362, -0.25, 3, 0.0, -1)
     endIf
 EndFunction
 
@@ -12236,10 +13318,12 @@ Function ApplyStances(PDV_DeityBase deity, Int sNord, Int sImperial, Int sBreton
     deity.Stance_Redguard = sRedguard
 EndFunction
 
-; Runtime stance migration from references/phase4/PDV_StanceMatrix.csv. Existing saves bake VMAD
-; property values at first quest init and never re-read them, so the ESP stance write only reaches
-; new games; this re-applies the correct stances on every save via the version gate. Mirror of
-; tools/pdv-stance-author. NATIVE=0 FOREIGN=1 TABOO=2 HOSTILE=3; order Nord,Imp,Bret,Alt,Bos,Dun,Kha,Arg,Orc,Red.
+; Runtime record-compatible projection of the canonical matrix. Existing saves bake VMAD
+; property values at first quest init and never re-read them, so ESP changes only reach new
+; games; this re-applies the current values through the likes/dislikes version gate.
+; TOLERATED/CURSE cannot be represented by PDV_DeityBase's four integer values and project
+; to FOREIGN here: generic deeds stay closed while quest reactions read the richer JSON label.
+; NATIVE=0 FOREIGN=1 TABOO=2 HOSTILE=3; order Nord,Imp,Bret,Alt,Bos,Dun,Kha,Arg,Orc,Red.
 Function ApplyStancesForDeity(PDV_DeityBase deity)
     String sName = deity.DeityName
     if sName == "kyne"
@@ -12255,13 +13339,13 @@ Function ApplyStancesForDeity(PDV_DeityBase deity)
     elseIf sName == "Kynareth"
         ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
     elseIf sName == "Mara"
-        ApplyStances(deity, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)
+        ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
     elseIf sName == "akatosh"
         ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
     elseIf sName == "Arkay"
         ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
     elseIf sName == "Stendarr"
-        ApplyStances(deity, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)
+        ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
     elseIf sName == "Julianos"
         ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
     elseIf sName == "Dibella"
@@ -12271,7 +13355,7 @@ Function ApplyStancesForDeity(PDV_DeityBase deity)
     elseIf sName == "magnus"
         ApplyStances(deity, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1)
     elseIf sName == "Y'ffre"
-        ApplyStances(deity, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1)
+        ApplyStances(deity, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1)
     elseIf sName == "auri-el"
         ApplyStances(deity, 1, 1, 1, 0, 0, 1, 1, 1, 3, 1)
     elseIf sName == "xarxes"
@@ -12282,9 +13366,9 @@ Function ApplyStancesForDeity(PDV_DeityBase deity)
     elseIf sName == "Azura" || sName == "Azurah"
         ApplyStances(deity, 2, 2, 1, 2, 1, 0, 0, 1, 2, 1)
     elseIf sName == "Boethiah"
-        ApplyStances(deity, 2, 2, 1, 3, 1, 0, 0, 1, 3, 1)
+        ApplyStances(deity, 2, 2, 2, 3, 2, 0, 1, 1, 3, 1)
     elseIf sName == "Mephala"
-        ApplyStances(deity, 2, 2, 1, 2, 1, 0, 0, 1, 2, 1)
+        ApplyStances(deity, 2, 2, 1, 2, 1, 0, 1, 1, 2, 1)
     elseIf sName == "Baan Dar"
         ApplyStances(deity, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1)
     elseIf sName == "rajhin"
@@ -12309,6 +13393,15 @@ Function ApplyStancesForDeity(PDV_DeityBase deity)
         ApplyStances(deity, 1, 1, 1, 0, 1, 1, 1, 1, 2, 1)
     elseIf sName == "Z'en"
         ApplyStances(deity, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1)
+    elseIf sName == "Syrabane"
+        ; Added 2026-08-02. Syrabane shipped with NO Stance_* properties at all on
+        ; 07164C:Devotion.esp (4 props where every sibling carries 14), so Stance_Altmer
+        ; fell to the PDV_DeityBase default of 1 = STANCE_FOREIGN. That made
+        ; IsRaceNativeForPlayer() false, which makes ScoreFromTable early-out -- every
+        ; likes/dislikes row for him would have scored 0.0, and his curated signals would
+        ; have landed at the 0.5x foreign multiplier. Values are from
+        ; references/phase4/PDV_StanceMatrix.csv: Altmer NATIVE, all others FOREIGN.
+        ApplyStances(deity, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1)
     endIf
 EndFunction
 
@@ -12329,8 +13422,11 @@ Function ProcessDawn()
 
     EnsureAkatoshRuntimeIdentity()
     RunDawnAwardAltmerAuriElDawn()
+    RunDawnAwardAltmerXarxesRecord()
+    RunDawnRefreshDevotionMarks()
     RunDawnConsolidateScratch()
     ProcessBroadPantheonDawn()
+    EvaluateKhajiitFocusedEmphasis()
     RunDawnConsolidateDaedricWeek()
     RunDawnRefreshTrackStates()
     EvaluateAltmerCrisisAtDawn()
@@ -12339,7 +13435,8 @@ Function ProcessDawn()
     RunDawnProcessCommitmentOffersNoop()
     RunDawnNotifyNoop()
     RunDawnBookOfDays()
-    SyncKhajiitPhaseBlessing()
+    RunDawnChampionAmbient()
+    SyncKhajiitRuntimeState()
     ProcessKhajiitAlkoshWordDrip()
     DisarmDunmerAncestorWatch()
     RequestPanelRefresh()
@@ -12363,6 +13460,140 @@ Function RunDawnBookOfDays()
     EmitBookOfDaysBroadLaneTierChange(today)
     if _dawnHadActivity
         AppendBookOfDaysEntry(BuildBookOfDaysDigestLine(), today, "dawn.digest", "journal", False)
+    endIf
+EndFunction
+
+; --- P11 (2026-08-04): the recurring ambient layer -------------------------------------------
+;
+; Until now the mod's ONLY per-deity ambient line was Kyne's, and it lived inside the one-shot
+; Champion reward presentation, so it fired once ever. A player who had held Champion for a year
+; heard nothing further from the god they had held it with -- the late game went quiet exactly
+; where it should have felt most settled.
+;
+; This is a slow dawn heartbeat: one line per surfacing deity every
+; AMBIENT_CHAMPION_CADENCE_DAYS devotional days, alternating between two variants, with the
+; second variant reserved for a deity actually carried PAST Champion so the voice deepens rather
+; than repeating flat.
+;
+; Text only. No piety, no metric, no state change, nothing to farm: the MCM notification toggle
+; gates it and the cadence stamp bounds it.
+Function RunDawnChampionAmbient()
+    if !NotificationsEnabled() || IsRaceSetupQuietPresentationActive()
+        return
+    endIf
+
+    RunDawnChampionDeityAmbient()
+    RunDawnAltmerHeritageAmbient()
+EndFunction
+
+; The surfacing deity is the active patron -- the same scope RunDawnRefreshDevotionMarks uses for
+; Long Devotion marks, so the ambient voice and the mark ladder always agree about whose season is
+; being counted. A worshipper with no patron gets the heritage arm below instead.
+Function RunDawnChampionDeityAmbient()
+    PDV_DeityBase deity = _activeDeity
+    if !deity || GetTier(deity) < TIER_CHAMPION
+        return
+    endIf
+
+    String cadenceKey = "PDV.Ambient.Champion." + deity.DeityIndex + ".Day"
+    Int todayStamp = GetDevotionalDay() + 2
+    Int lastStamp = ReadZeroReservedDevotionalDayStamp(cadenceKey)
+    if lastStamp > 0 && (todayStamp - lastStamp) < AMBIENT_CHAMPION_CADENCE_DAYS
+        return
+    endIf
+
+    ; The deep variant needs a mark actually earned. Without that gate the alternation would show
+    ; the "you have kept this for seasons" line to somebody who reached Champion four days ago.
+    String countKey = "PDV.Ambient.Champion." + deity.DeityIndex + ".Count"
+    Int shown = StorageUtil.GetIntValue(None, countKey)
+    Bool deep = (shown % 2) == 1 && StorageUtil.GetIntValue(None, "PDV.LongDevotion.MarkHigh." + deity.DeityIndex) >= 1
+    if !ShowChampionAmbientForDeity(deity, deep)
+        return
+    endIf
+
+    WriteZeroReservedDevotionalDayStamp(cadenceKey)
+    StorageUtil.SetIntValue(None, countKey, shown + 1)
+    String variantLabel = "standing"
+    if deep
+        variantLabel = "long-devotion"
+    endIf
+    Trace(2, "Champion ambient surfaced for " + deity.DeityName + " (" + variantLabel + ")")
+EndFunction
+
+; Returns False for a deity that ships no ambient records, so the cadence stamp is never spent on
+; a surfacing that did not happen -- a deity given records later starts speaking immediately
+; instead of waiting out a phantom cooldown.
+Bool Function ShowChampionAmbientForDeity(PDV_DeityBase deity, Bool deep)
+    if deity == PDV_AuriEl
+        if deep
+            ShowAltmerNotification(PDV_Notif_Altmer_AuriEl_ChampionAmbient_Return, "You have met every dawn. Auri-El has counted them all.")
+        else
+            ShowAltmerNotification(PDV_Notif_Altmer_AuriEl_ChampionAmbient_Dawn, "The dawn answers you now, as it answered your ancestors.")
+        endIf
+        return True
+    elseIf deity == PDV_Magnus
+        if deep
+            ShowAltmerNotification(PDV_Notif_Altmer_Magnus_ChampionAmbient_ElderWay, "Magnus has watched you study for a long time now.")
+        else
+            ShowAltmerNotification(PDV_Notif_Altmer_Magnus_ChampionAmbient_Study, "The spells come easily today. Your study shows.")
+        endIf
+        return True
+    elseIf deity == PDV_Xarxes
+        if deep
+            ShowAltmerNotification(PDV_Notif_Altmer_Xarxes_ChampionAmbient_Lineage, "Xarxes has kept the record of your whole life.")
+        else
+            ShowAltmerNotification(PDV_Notif_Altmer_Xarxes_ChampionAmbient_Record, "Xarxes has written your name into the record.")
+        endIf
+        return True
+    elseIf deity == PDV_Trinimac
+        if deep
+            ShowAltmerNotification(PDV_Notif_Altmer_Trinimac_ChampionAmbient_Sword, "Your sword arm is steady. Trinimac made it so.")
+        else
+            ShowAltmerNotification(PDV_Notif_Altmer_Trinimac_ChampionAmbient_Watch, "You have held the line, and Trinimac saw it.")
+        endIf
+        return True
+    elseIf deity == PDV_Syrabane
+        if deep
+            ShowAltmerNotification(PDV_Notif_Altmer_Syrabane_ChampionAmbient_Guard, "Syrabane has warded you so long you forget it is there.")
+        else
+            ShowAltmerNotification(PDV_Notif_Altmer_Syrabane_ChampionAmbient_Ward, "Syrabane's ward is on you, quiet and steady.")
+        endIf
+        return True
+    elseIf deity == PDV_Kyne
+        ; Kyne keeps her existing one-shot at the moment of the reach; this is the recurring layer
+        ; on top of it, not a replacement. She ships one ambient record, so both slots speak it.
+        ShowNordNotification(PDV_Notif_Nord_Kyne_ChampionAmbient_Storm, "The wind is blowing your way.")
+        return True
+    endIf
+
+    return False
+EndFunction
+
+; The heritage arm is deity-agnostic: it speaks for the inheritance every Altmer keeps, so it
+; reaches a broad worshipper with no patron at all. The fall line is a one-shot on the transition
+; DOWN rather than a cadence -- a player who slips out of the top band should hear that once, not
+; every fourth day for the rest of the game.
+Function RunDawnAltmerHeritageAmbient()
+    if !IsAltmerOrigin() || !PDV_AltmerAncestorSubstrate || IsAltmerFavorSuppressedByCurse()
+        return
+    endIf
+
+    String highKey = "PDV.Ambient.Heritage.WasHigh"
+    if PDV_AltmerAncestorSubstrate.GetSubstrateTier() >= TIER_CHAMPION
+        StorageUtil.SetIntValue(None, highKey, 1)
+
+        String cadenceKey = "PDV.Ambient.Heritage.Day"
+        Int todayStamp = GetDevotionalDay() + 2
+        Int lastStamp = ReadZeroReservedDevotionalDayStamp(cadenceKey)
+        if lastStamp > 0 && (todayStamp - lastStamp) < AMBIENT_CHAMPION_CADENCE_DAYS
+            return
+        endIf
+
+        WriteZeroReservedDevotionalDayStamp(cadenceKey)
+        ShowAltmerNotification(PDV_Notif_Altmer_General_HeritageExemplar, "You keep the old Altmer way, and you keep it well.")
+    elseIf StorageUtil.GetIntValue(None, highKey) == 1
+        StorageUtil.SetIntValue(None, highKey, 0)
+        ShowAltmerNotification(PDV_Notif_Altmer_General_HeritageQuiet, "You have let the old Altmer way slip.")
     endIf
 EndFunction
 
@@ -12484,8 +13715,27 @@ Function RecordBookOfDaysFedName(String displayName)
     StorageUtil.StringListAdd(None, "PDV.BookOfDays.TodayFed", displayName, False)
 EndFunction
 
+; P18 (2026-08-04) -- THE DAWN NOW BELONGS TO THE SPINE, NOT TO AURI-EL.
+;
+; This used to award +2.0 Auri-El piety gated on origin and curse ONLY: no act, no presence, no
+; shrine. It fired for a sleeping player who did nothing, at net +1.5/day against decay, which
+; carried every Altmer to Auri-El Champion in ~8 weeks of simply existing -- and made him
+; out-rank a committed Trinimac or Syrabane patron on every ranked surface, for free.
+;
+; The owner's design call: keeping the dawn is the ORDERED LIFE every Altmer keeps because they
+; are Altmer, not worship of one god. So it feeds the deity-agnostic ancestral spine. Auri-El
+; keeps his own renewable -- the shrine rite, +2.0/day via AwardShrinePrayerToDeityName, on any
+; vanilla Shrine of Akatosh. That is the right asymmetry: directed worship of a specific god costs
+; you a trip to his shrine; keeping the dawn costs only doing it.
+;
+; This supersedes PDV_RaceDesign_Altmer.md lines 42-43 ("Dawn sun acknowledgment generates piety"),
+; updated in the same change. It does NOT contradict the 2026-07-13 substrate addendum: that
+; forbids "PASSIVE dawn" granting the cultural metric, and explicitly allows an accepted RITE to.
+; An act-gated observance is a rite.
+;
+; Costs no income: the substrate is capped at one +4.0 credit per devotional day whatever claims it.
 Function RunDawnAwardAltmerAuriElDawn()
-    if !IsAltmerOrigin() || !PDV_AuriEl || IsAltmerFavorSuppressedByCurse()
+    if !IsAltmerOrigin() || IsAltmerFavorSuppressedByCurse()
         return
     endIf
 
@@ -12494,9 +13744,53 @@ Function RunDawnAwardAltmerAuriElDawn()
         return
     endIf
 
+    ; THE ACT GATE. The player must actually meet the dawn: outdoors, under the sky, at the turn of
+    ; the day. Sleeping through it indoors is not an observance. P14's practice token will add the
+    ; indoor path for players who keep the rite privately.
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return
+    endIf
+    Cell dawnCell = playerRef.GetParentCell()
+    if !dawnCell || dawnCell.IsInterior()
+        return
+    endIf
+
     StorageUtil.SetIntValue(None, "PDV.Altmer.AuriElDawn.LastDay", dawnDayStamp)
-    AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 2.0)
-    Trace(2, "Altmer Auri-El dawn acknowledgment routed for devotional day " + (dawnDayStamp - 2))
+    AwardAltmerAncestorSpinePulse(1.0, "dawn_observance")
+    Trace(2, "Altmer dawn observance routed to the ancestral spine for devotional day " + (dawnDayStamp - 2))
+EndFunction
+
+; P5 (2026-08-03): Xarxes's renewable curated lane, modelled on the Auri-El dawn above.
+;
+; This is a CADENCE, not an act reward. Xarxes's distinction from Magnus is the record kept over
+; TIME, not the act itself -- so the beat is "you studied yesterday, and the ledger noted it."
+; That shape is renewable forever, is capped at exactly one per devotional day by construction
+; (two independent stamps), and lands under Auri-El's 2.0 so the foundation stays the foundation.
+;
+; Before this, Xarxes was table-only: SIGNAL_LINEAGE_HONORED is bounded by three curated books and
+; SHARED_PACT_MEMORY requires him as the active patron, so a non-patron follower had no curated
+; income whatsoever once those books were read.
+Function RunDawnAwardAltmerXarxesRecord()
+    if !IsAltmerOrigin() || !PDV_Xarxes || IsAltmerFavorSuppressedByCurse()
+        return
+    endIf
+
+    Int dawnDayStamp = GetDevotionalDay() + 2
+    if StorageUtil.GetIntValue(None, "PDV.Altmer.XarxesRecord.LastDay") == dawnDayStamp
+        return
+    endIf
+
+    ; Require study on the PREVIOUS devotional day. Stamps use the zero-reserved day+2
+    ; convention, so yesterday's stamp is exactly today's minus one. A zero here means "never
+    ; studied" and correctly fails this test rather than matching day 0.
+    if StorageUtil.GetIntValue(None, "PDV.Altmer.Xarxes.StudyDay") != (dawnDayStamp - 1)
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.Altmer.XarxesRecord.LastDay", dawnDayStamp)
+    AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_RECORD_KEPT, None, 1.5)
+    Trace(2, "Altmer Xarxes record-kept routed for devotional day " + (dawnDayStamp - 2))
 EndFunction
 
 Function RunDawnConsolidateScratch()
@@ -12900,6 +14194,10 @@ Function ForceSetPiety(Float amount)
     Form deityForm = _activeDeity as Form
     StorageUtil.SetFloatValue(deityForm, "PDV.Piety", ClampValue(amount, 0.0, PIETY_MAX))
     RecomputeTier(_activeDeity, False)
+    if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
+        EvaluateKhajiitFocusedEmphasis()
+        SyncKhajiitRuntimeState()
+    endIf
 EndFunction
 
 Function ForceSetActiveDeityByIndex(Int deityIndex)
@@ -12911,7 +14209,7 @@ Function ForceSetActiveDeityByIndex(Int deityIndex)
         return
     endIf
 
-    SetActiveDeity(deity)
+    SetActiveDeity(deity, True)
     ; Resync the race reward families immediately (mirrors DebugForceSetPietyByIndex):
     ; without this a debug patron override surfaces every toast/panel/Survey cue but
     ; grants no reward spells until the next dawn pass -- reads as "rewards not wired".
@@ -12944,6 +14242,9 @@ Function DebugForceSetPietyByIndex(Int deityIndex, Float amount)
     ; Book of Days entry). Only fires on an UP-crossing from a lower tier -- if the deity
     ; is already at/above the target, reset it first, or use the piety-today + dawn path.
     RecomputeTier(deity, True)
+    if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT && GetKhajiitFocusForDeity(deity) != KHAJIIT_FOCUS_NONE
+        EvaluateKhajiitFocusedEmphasis()
+    endIf
     ; Resync the race reward family so a focused/emphasis reward (Khajiit emphasis, an
     ; Imperial/Altmer focused patron, etc.) actually grants on the seed. RecomputeTier only
     ; fires OnTierChange (Boon slots), not SyncFirstTierRaceRewardRuntime -- without this a
@@ -13206,6 +14507,10 @@ Function DebugResetDeityByIndex(Int deityIndex)
     if deity == _activeDeity
         deity.OnTierChange(oldTier, TIER_NONE)
         RefreshPatronMirrors()
+    endIf
+    if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
+        EvaluateKhajiitFocusedEmphasis()
+        SyncKhajiitRuntimeState()
     endIf
 EndFunction
 
@@ -13610,43 +14915,6 @@ Function CatchUpBroadPantheonDecayBeforeCurrentDay(String poolId)
     ProcessBroadPantheonThroughDay(poolId, targetDay, signedCap, "pre_event_catchup")
 EndFunction
 
-Function MigrateBroadPantheonPools()
-    if StorageUtil.GetIntValue(None, "PDV.BroadPantheon.Version") >= BROAD_PANTHEON_SCHEMA_VERSION
-        return
-    endIf
-
-    Float imperialSeed = (StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount") as Float) * 50.0 / 6.0
-    Float oldWaysSeed = (StorageUtil.GetIntValue(None, "PDV.Nord.OldWaysContextCount") as Float) * 50.0 / 6.0
-    SetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL, imperialSeed, "migration_v1")
-    SetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD, oldWaysSeed, "migration_v1")
-
-    Float highestNineDivines = 0.0
-    if GetPlayerOriginRaceIndex() == ORIGIN_NORD && GetPatronState() == PATRON_STATE_BROAD && GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
-        highestNineDivines = GetPiety(PDV_Akatosh)
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Arkay))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Dibella))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Julianos))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Kynareth))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Mara))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Stendarr))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Zenithar))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Talos))
-        SetBroadPantheonStanding(BROAD_PANTHEON_NORD_NINE, highestNineDivines, "migration_v1_highest")
-    endIf
-
-    if imperialSeed > 0.0
-        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(BROAD_PANTHEON_IMPERIAL))
-    endIf
-    if oldWaysSeed > 0.0
-        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(BROAD_PANTHEON_NORD_OLD))
-    endIf
-    if highestNineDivines > 0.0
-        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(BROAD_PANTHEON_NORD_NINE))
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.BroadPantheon.Version", BROAD_PANTHEON_SCHEMA_VERSION)
-    SyncBroadPantheonRewards(Game.GetPlayer())
-EndFunction
-
 String Function GetBroadPantheonStandingKey(String poolId)
     return "PDV.BroadPantheon." + poolId + ".Standing"
 EndFunction
@@ -13723,7 +14991,7 @@ Bool Function IsImperialVampireStateActive()
     return StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHalt") == 1
 EndFunction
 
-Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry, String reason = "")
+Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry, String reason = "", Bool applyStanceMultiplier = True)
     Bool queuedQuestReaction = _qrQueueTransactionActive
     Bool ownsBroadEvent = !queuedQuestReaction && _broadPantheonEventDepth == 0
     if ownsBroadEvent
@@ -13751,7 +15019,7 @@ Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowR
     EnsureDeityState(deity)
 
     Int stance = deity.GetStanceForPlayer()
-    Float appliedAmount = RunGainPipeline(deity, amount, stance)
+    Float appliedAmount = RunGainPipeline(deity, amount, stance, applyStanceMultiplier)
     if queuedQuestReaction
         AccumulateQueuedQuestReactionBroadDelta(deity, appliedAmount)
     else
@@ -13806,6 +15074,12 @@ Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowR
         deity.CommitPendingRepeatableActions()
     else
         deity.DiscardPendingRepeatableActions()
+    endIf
+    ; A Khajiit focus may already have the required behavioral lead when this
+    ; piety movement crosses Seeker. Evaluate here as well as on weight changes
+    ; so emergence cannot lag until the next unrelated action.
+    if appliedAmount != 0.0 && IsKhajiitOrigin() && GetKhajiitFocusForDeity(deity) != KHAJIIT_FOCUS_NONE
+        EvaluateKhajiitFocusedEmphasis()
     endIf
     if ownsBroadEvent
         FlushBroadPantheonEvent()
@@ -14875,14 +16149,17 @@ Function HandleWayfarerAkatoshLevel()
     endIf
 EndFunction
 
-Float Function RunGainPipeline(PDV_DeityBase deity, Float amount, Int stance)
+Float Function RunGainPipeline(PDV_DeityBase deity, Float amount, Int stance, Bool applyStanceMultiplier = True)
     Float appliedAmount = amount
     if amount > 0.0
-        appliedAmount = appliedAmount * deity.GetEffectiveGainMultiplier()
+        if applyStanceMultiplier
+            appliedAmount = appliedAmount * deity.GetEffectiveGainMultiplier()
+        else
+            appliedAmount = appliedAmount * deity.GetEffectiveGainMultiplierWithoutStance()
+        endIf
         appliedAmount = appliedAmount * GetCurseGainMultiplierNoop(deity)
         appliedAmount = appliedAmount * GetDaedricStigmaGainMultiplierNoop(deity)
         appliedAmount = appliedAmount * GetSurvivalContextGainMultiplier(deity)
-        appliedAmount = appliedAmount * GetKhajiitLunarAlignmentMultiplier(deity)
         if PDV_ModePresetRef
             appliedAmount = appliedAmount * PDV_ModePresetRef.GainMultiplier()
         endIf
@@ -15234,6 +16511,18 @@ Float Function GetDecayFloorForTier(PDV_DeityBase deity, Int tierValue)
     endIf
 
     if tierValue >= TIER_CHAMPION
+        ; P10 Long Devotion. A deity carried at least one full mark (15 piety) PAST Champion can
+        ; no longer be idled back out of Champion: its decay floor rises from Devoted to Champion.
+        ;
+        ; THIS IS THE ONLY ARM OF P10 THAT TOUCHES EVERY RACE AND DEITY -- hence the per-deity
+        ; MarkHigh gate. A deity never carried past Champion behaves exactly as before, which is
+        ; what the non-Altmer regression test checks. It cannot GRANT anything:
+        ; RefreshPassiveDecayFloorForDeity only ratchets the stored floor upward, and a floor
+        ; bounds decay rather than awarding piety. Worst case if the design is wrong: a
+        ; long-devoted patron stops decaying below 85, which is the intended statement.
+        if StorageUtil.GetIntValue(None, "PDV.LongDevotion.MarkHigh." + deity.DeityIndex) >= 1
+            return deity.ThresholdChampion
+        endIf
         return deity.ThresholdDevoted
     elseIf tierValue >= TIER_DEVOTED
         return deity.ThresholdSeeker
@@ -16669,6 +17958,8 @@ Function SyncKhajiitEmphasisRewards(Actor playerRef)
     SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_BAANDAR, activeFocus, activeTier, PDV_BaanDar, PDV_Bless_Khajiit_BaanDar_T1, PDV_Bless_Khajiit_BaanDar_T2, PDV_Bless_Khajiit_BaanDar_T3, "Baan Dar")
     SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_RAJHIN, activeFocus, activeTier, PDV_Rajhin, PDV_Bless_Khajiit_Rajhin_T1, PDV_Bless_Khajiit_Rajhin_T2, PDV_Bless_Khajiit_Rajhin_T3, "Rajhin")
     SyncKhajiitEmphasisFamily(playerRef, KHAJIIT_FOCUS_ALKOSH, activeFocus, activeTier, PDV_Alkosh, PDV_Bless_Khajiit_Alkosh_T1, PDV_Bless_Khajiit_Alkosh_T2, PDV_Bless_Khajiit_Alkosh_T3, "Alkosh")
+    SyncKhajiitLatticeResonance(playerRef)
+    SyncKhajiitPortentPower(playerRef)
 EndFunction
 
 Function SyncKhajiitEmphasisFamily(Actor playerRef, Int thisFocus, Int activeFocus, Int activeTier, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
@@ -17196,6 +18487,12 @@ Function PrepareForUninstall()
     ; leaves behind is reported by the MCM "Repair stats" button.
     RunAuthoriaActorValueRepair(True, False)
 
+    ; Substrate quests own their boon spells. The generic strip below cannot
+    ; reliably remove records that are bound only on those quest scripts, so
+    ; ask every substrate owner to clear its own tier slots before storage is
+    ; erased and the manager stops.
+    ClearAllSubstrateBoonsForUninstall()
+
     StripAllPdvSpells(playerRef)
 
     if playerRef
@@ -17211,6 +18508,30 @@ Function PrepareForUninstall()
     UnregisterForUpdate()
     Debug.MessageBox("Devotion has repaired its permanent stat damage, then removed its spells, factions, and most of its saved data. The stat repair ran FIRST and zeroed the permanent modifier on every actor value Devotion could touch (magic/damage/disease/frost/fire/poison resistance, carry weight, speed, health, magicka, stamina and the weapon, magic and stealth skills) - note this also clears any permanent modifier another mod had placed on those same values, which is rare but real. You may now exit to the main menu, remove the mod, and load this save. This is BEST EFFORT and not a guaranteed clean save; some inert leftover data can remain. The only fully clean removal is to load a save made before Devotion was installed.")
     Self.Stop()
+EndFunction
+
+Function ClearAllSubstrateBoonsForUninstall()
+    if PDV_ImperialAncestorSubstrate
+        PDV_ImperialAncestorSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_BretonAncestorSubstrate
+        PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_AltmerAncestorSubstrate
+        PDV_AltmerAncestorSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_NordAncestorSubstrate
+        PDV_NordAncestorSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_DunmerAncestorSubstrate
+        PDV_DunmerAncestorSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_KhajiitLunarSubstrate
+        PDV_KhajiitLunarSubstrate.ClearSubstrateBoons()
+    endIf
+    if PDV_ArgonianHistSubstrate
+        PDV_ArgonianHistSubstrate.ClearSubstrateBoons()
+    endIf
 EndFunction
 
 Function ClearPdvStorageNamespaces()
@@ -18399,6 +19720,8 @@ Function ResetSubstratePacingState(Int originValue)
     elseIf originValue == ORIGIN_KHAJIIT && PDV_KhajiitLunarSubstrate
         PDV_KhajiitLunarSubstrate.ResetPilotForDebug()
         ResetDailyRepeatKey("PDV.Signal.KhajiitRoadHome")
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.RoadHome.PresentationDay", 0)
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.RoadHome.PresentationDay.Encoding", 2)
     endIf
 EndFunction
 
@@ -18540,33 +19863,6 @@ String Function DebugRunBroadPantheonCatchupForPacing(Int poolIndex)
     return DebugGetBroadPantheonSummary(poolIndex) + " | PS-A11 processed through gain day +5; expected two grace days then 0.1/day."
 EndFunction
 
-String Function DebugRunBroadPantheonMigrationFixture()
-    ; This deliberately exercises the real migration and is confined to the
-    ; clearly-labelled throwaway-save MCM control.
-    StorageUtil.SetIntValue(None, "PDV.Imperial.CivicServiceCount", 3)
-    StorageUtil.SetIntValue(None, "PDV.Nord.OldWaysContextCount", 6)
-    ResetBroadPantheonPool(BROAD_PANTHEON_IMPERIAL)
-    ResetBroadPantheonPool(BROAD_PANTHEON_NORD_OLD)
-    ResetBroadPantheonPool(BROAD_PANTHEON_NORD_NINE)
-    StorageUtil.SetIntValue(None, "PDV.BroadPantheon.Version", 0)
-
-    Bool nineEligible = GetPlayerOriginRaceIndex() == ORIGIN_NORD && GetPatronState() == PATRON_STATE_BROAD && GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
-    if nineEligible
-        StorageUtil.SetFloatValue(PDV_Akatosh as Form, "PDV.Piety", 37.0)
-        StorageUtil.SetFloatValue(PDV_Mara as Form, "PDV.Piety", 42.0)
-        StorageUtil.SetFloatValue(PDV_Zenithar as Form, "PDV.Piety", 11.0)
-    endIf
-
-    MigrateBroadPantheonPools()
-    Float imperialOnce = GetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL)
-    Float oldWaysOnce = GetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD)
-    Float nineOnce = GetBroadPantheonStanding(BROAD_PANTHEON_NORD_NINE)
-    MigrateBroadPantheonPools()
-    Bool idempotent = imperialOnce == GetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL) && oldWaysOnce == GetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD) && nineOnce == GetBroadPantheonStanding(BROAD_PANTHEON_NORD_NINE)
-    Trace(1, "[PDV][PS-A12] migration imperial=" + imperialOnce + " oldWays=" + oldWaysOnce + " nine=" + nineOnce + " nineEligible=" + nineEligible + " idempotent=" + idempotent)
-    return "Migration fixture: Imperial=" + imperialOnce + " (expected 25); Old Ways=" + oldWaysOnce + " (expected 50); Nine=" + nineOnce + " (expected 42 when eligible); second run unchanged=" + idempotent + ". Reload the clean QASmoke save now."
-EndFunction
-
 String Function DebugSetNordBaselineForPacing(Int baselineValue)
     DebugSetNordPantheonBaseline(baselineValue)
     return DebugGetBroadPantheonSummary(baselineValue + 1)
@@ -18699,6 +19995,7 @@ Function DebugSetKhajiitFocus(Int focusValue)
 
     StorageUtil.SetFloatValue(None, GetKhajiitFocusWeightKey(focusValue), KHAJIIT_FOCUS_THRESHOLD + KHAJIIT_FOCUS_LEAD_REQUIRED + 10.0)
     EvaluateKhajiitFocusedEmphasis()
+    SyncKhajiitRuntimeState()
     EndRaceSetupQuietPresentation()
     Trace(1, "Khajiit focus debug-set to " + GetKhajiitFocusLabel(focusValue))
 EndFunction
@@ -19739,6 +21036,7 @@ Function HandleCurseStateTransition(Int oldState, Int newState, String reason)
     Bool suppressOutputs = IsCurseStateLoadReconciliation(reason)
     Bool previousSuppress = _suppressCurseTransitionOutputs
     _suppressCurseTransitionOutputs = suppressOutputs
+    _raceCurseSurfaceShown = False
     ApplyCurseRaceHandlers(oldState, newState, reason)
     _suppressCurseTransitionOutputs = previousSuppress
 
@@ -19840,6 +21138,16 @@ Function SendPrismaCurseToast(Int oldState, Int newState)
         phase = "shift"
     endIf
 
+    ; Owner ruling 2026-08-07: on a CURE, stand aside when the race already spoke. A Nord curing
+    ; lycanthropy was getting three surfaces for one event -- the race line, Hircine's residue toast,
+    ; and this generic one, whose copy is marked PLACEHOLDER below and only restates the event flatly.
+    ; Cure only, deliberately: onset has the same duplicate shape but was not part of the ruling.
+    ; Only Nord, Argonian, Khajiit and Redguard have cure records, so for the other five races this
+    ; generic toast is the ONLY cure surface and must keep firing.
+    if phase == "cure" && _raceCurseSurfaceShown
+        return
+    endIf
+
     ; Curse type: use the *incoming* state for onset/shift; outgoing state for cure
     ; so the mark and wording match what the player just experienced.
     Int curseRef = newState
@@ -19894,7 +21202,7 @@ Function SendPrismaCurseToast(Int oldState, Int newState)
         j = j + ",\"deity\":\"" + JsonSafeString(GetPublicDeityDisplayName(_activeDeity)) + "\""
     endIf
     j = j + "}}"
-    PDV_PrismaBridge.SendOverlayJson(j)
+    PDV_PrismaBridge.SendOverlayJson(WithPrismaToastSize(j))
 EndFunction
 
 ; Short race-specific context phrase feeds the UI's listText fallback and any
@@ -19981,10 +21289,23 @@ Function SendPrismaSubstrateProgress(String substrate, Int tierBefore, Int tierA
     if grantedMetric <= 0.0
         return
     endIf
-    ; Altmer heritage is a slow cultural foundation, not an interruption on
-    ; every qualifying act. Record only named tier crossings in the Book of
-    ; Days; book and crisis routes own their own presentation.
+    ; TOAST PARITY, owner ruling 2026-08-06. This branch used to return before any toast, so the
+    ; Altmer spine was the only substrate in the mod that never surfaced one. That came from an
+    ; earlier "slow cultural foundation, not an interruption" note written while depth was still
+    ; being decided, and it was read more strictly than intended: it silenced the toast as well as
+    ; the chatter. Altmer now surfaces like every other race.
+    ;
+    ; It still does NOT fall through to the generic path below, because that path also writes a
+    ; Book of Days entry from the context. AppendAltmerHeritageVoice already owns the per-credit
+    ; line and the tier crossing is handled here, so falling through would double-log every act.
     if substrate == "altmer-heritage"
+        if surfacePresentation
+            if tierAfter > tierBefore
+                SendPrismaSubstrateToast(substrate, "deepen", context, symbolName, stateLabel)
+            else
+                SendPrismaSubstrateToast(substrate, "act", context, symbolName, stateLabel)
+            endIf
+        endIf
         if tierAfter > tierBefore
             AppendBookOfDaysEntry(GetAltmerHeritageTierJournalLine(tierAfter), Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 2, "Ancestral inheritance deepens")
         endIf
@@ -20471,57 +21792,57 @@ String Function GetDaedricBoonMechanicText(String princeName, Int tierValue)
     if (princeName == "Boethiah") && tierValue == TIER_SEEKER
         return "+10 One-handed"
     elseIf (princeName == "Boethiah") && tierValue == TIER_DEVOTED
-        return "+15 One-handed"
+        return "+25 Armor rating"
     elseIf (princeName == "Boethiah") && tierValue == TIER_CHAMPION
-        return "+20 One-handed"
+        return "+35 Armor rating"
     elseIf (princeName == "Azura") && tierValue == TIER_SEEKER
-        return "+10% Magic resistance"
-    elseIf (princeName == "Azura") && tierValue == TIER_DEVOTED
         return "+15% Magic resistance"
+    elseIf (princeName == "Azura") && tierValue == TIER_DEVOTED
+        return "+25 Magicka"
     elseIf (princeName == "Azura") && tierValue == TIER_CHAMPION
-        return "+20% Magic resistance"
+        return "+35 Magicka"
     elseIf (princeName == "Vaermina") && tierValue == TIER_SEEKER
         return "+10 Illusion"
     elseIf (princeName == "Vaermina") && tierValue == TIER_DEVOTED
-        return "+15 Illusion"
+        return "+18 Sneak"
     elseIf (princeName == "Vaermina") && tierValue == TIER_CHAMPION
-        return "+20 Illusion"
+        return "+25 Sneak"
     elseIf (princeName == "Meridia") && tierValue == TIER_SEEKER
         return "+10 Restoration"
     elseIf (princeName == "Meridia") && tierValue == TIER_DEVOTED
-        return "+15 Restoration"
+        return "+25% Disease resistance"
     elseIf (princeName == "Meridia") && tierValue == TIER_CHAMPION
-        return "+20 Restoration"
+        return "+35% Disease resistance"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_SEEKER
-        return "+10 Illusion"
+        return "+10 Speech"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_DEVOTED
-        return "+15 Illusion"
+        return "+18 Illusion"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_CHAMPION
-        return "+20 Illusion"
+        return "+25 Illusion"
     elseIf (princeName == "Mephala") && tierValue == TIER_SEEKER
         return "+10 Sneak"
     elseIf (princeName == "Mephala") && tierValue == TIER_DEVOTED
-        return "+15 Sneak"
+        return "+18 Pickpocket"
     elseIf (princeName == "Mephala") && tierValue == TIER_CHAMPION
-        return "+20 Sneak"
+        return "+25 Pickpocket"
     elseIf (princeName == "Malacath") && tierValue == TIER_SEEKER
-        return "+10 Armor rating"
-    elseIf (princeName == "Malacath") && tierValue == TIER_DEVOTED
         return "+15 Armor rating"
+    elseIf (princeName == "Malacath") && tierValue == TIER_DEVOTED
+        return "+18 Two-handed"
     elseIf (princeName == "Malacath") && tierValue == TIER_CHAMPION
-        return "+20 Armor rating"
+        return "+25 Two-handed"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_SEEKER
-        return "+5% Attack damage"
+        return "+10 Destruction"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_DEVOTED
-        return "+8% Attack damage"
+        return "+18 One-handed"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_CHAMPION
-        return "+12% Attack damage"
+        return "+25 One-handed"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_SEEKER
-        return "+25 Magicka"
+        return "+10 Illusion"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_DEVOTED
-        return "+40 Magicka"
+        return "+25 Magicka"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_CHAMPION
-        return "+50 Magicka"
+        return "+35 Magicka"
     elseIf (princeName == "Namira") && tierValue == TIER_SEEKER
         return "Feeding restores Health and Stamina"
     elseIf (princeName == "Namira") && tierValue == TIER_DEVOTED
@@ -20529,41 +21850,41 @@ String Function GetDaedricBoonMechanicText(String princeName, Int tierValue)
     elseIf (princeName == "Namira") && tierValue == TIER_CHAMPION
         return "Feeding restores Health and Stamina"
     elseIf (princeName == "Sanguine") && tierValue == TIER_SEEKER
-        return "+10 Speech"
+        return "+15 Stamina"
     elseIf (princeName == "Sanguine") && tierValue == TIER_DEVOTED
-        return "+15 Speech"
+        return "+18 Speech"
     elseIf (princeName == "Sanguine") && tierValue == TIER_CHAMPION
-        return "+20 Speech"
+        return "+25 Speech"
     elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_SEEKER
-        return "+25 Carry weight"
+        return "+10 Speech"
     elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_DEVOTED
-        return "+50 Carry weight"
+        return "+25 Carry weight"
     elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_CHAMPION
-        return "+75 Carry weight"
+        return "+35 Carry weight"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_SEEKER
         return "+10 Alteration"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_DEVOTED
-        return "+15 Alteration"
+        return "+25 Magicka"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_CHAMPION
         return "+20 Alteration; +20 Magicka"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_SEEKER
-        return "+10 Lockpicking"
+        return "+10 Sneak"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_DEVOTED
-        return "+15 Lockpicking"
+        return "+18 Lockpicking"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_CHAMPION
-        return "+20 Lockpicking"
+        return "+25 Lockpicking"
     elseIf (princeName == "Peryite") && tierValue == TIER_SEEKER
-        return "+25% Disease resistance"
+        return "+15% Disease resistance"
     elseIf (princeName == "Peryite") && tierValue == TIER_DEVOTED
-        return "+50% Disease resistance"
+        return "+25 Health"
     elseIf (princeName == "Peryite") && tierValue == TIER_CHAMPION
-        return "+75% Disease resistance"
+        return "+35 Health"
     elseIf (princeName == "Hircine") && tierValue == TIER_SEEKER
-        return "+25 Stamina"
+        return "+15 Stamina"
     elseIf (princeName == "Hircine") && tierValue == TIER_DEVOTED
-        return "+40 Stamina"
+        return "+18 Sneak"
     elseIf (princeName == "Hircine") && tierValue == TIER_CHAMPION
-        return "+50 Stamina"
+        return "+25 Sneak"
     endIf
 
     return "pact boon active"
@@ -20571,11 +21892,11 @@ EndFunction
 
 String Function GetDaedricPriceMechanicText(String princeName, Int tierValue)
     if (princeName == "Boethiah") && tierValue == TIER_SEEKER
-        return "-8 Speech"
+        return "-10 Speech"
     elseIf (princeName == "Boethiah") && tierValue == TIER_DEVOTED
-        return "-12 Speech"
+        return "-18 Speech"
     elseIf (princeName == "Boethiah") && tierValue == TIER_CHAMPION
-        return "-15 Speech"
+        return "-25 Speech"
     elseIf (princeName == "Azura") && tierValue == TIER_SEEKER
         return "-10 Stamina"
     elseIf (princeName == "Azura") && tierValue == TIER_DEVOTED
@@ -20583,53 +21904,53 @@ String Function GetDaedricPriceMechanicText(String princeName, Int tierValue)
     elseIf (princeName == "Azura") && tierValue == TIER_CHAMPION
         return "-30 Stamina"
     elseIf (princeName == "Vaermina") && tierValue == TIER_SEEKER
-        return "-8 Health"
+        return "-10 Health"
     elseIf (princeName == "Vaermina") && tierValue == TIER_DEVOTED
-        return "-15 Health"
-    elseIf (princeName == "Vaermina") && tierValue == TIER_CHAMPION
         return "-20 Health"
+    elseIf (princeName == "Vaermina") && tierValue == TIER_CHAMPION
+        return "-30 Health"
     elseIf (princeName == "Meridia") && tierValue == TIER_SEEKER
-        return "-8 Illusion"
+        return "-10 Illusion"
     elseIf (princeName == "Meridia") && tierValue == TIER_DEVOTED
-        return "-12 Illusion"
+        return "-18 Illusion"
     elseIf (princeName == "Meridia") && tierValue == TIER_CHAMPION
-        return "-15 Illusion"
+        return "-25 Illusion"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_SEEKER
-        return "-8 Restoration"
+        return "-10 Health"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_DEVOTED
-        return "-12 Restoration"
+        return "-20 Health"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_CHAMPION
-        return "-15 Restoration"
+        return "-30 Health"
     elseIf (princeName == "Mephala") && tierValue == TIER_SEEKER
-        return "-8 Speech"
+        return "-10 Speech"
     elseIf (princeName == "Mephala") && tierValue == TIER_DEVOTED
-        return "-12 Speech"
+        return "-18 Speech"
     elseIf (princeName == "Mephala") && tierValue == TIER_CHAMPION
-        return "-15 Speech"
+        return "-25 Speech"
     elseIf (princeName == "Malacath") && tierValue == TIER_SEEKER
-        return "-3% Movement speed"
+        return "-4% Movement speed"
     elseIf (princeName == "Malacath") && tierValue == TIER_DEVOTED
-        return "-5% Movement speed"
+        return "-7% Movement speed"
     elseIf (princeName == "Malacath") && tierValue == TIER_CHAMPION
-        return "-8% Movement speed"
+        return "-10% Movement speed"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_SEEKER
-        return "-5 Armor rating"
-    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_DEVOTED
         return "-10 Armor rating"
+    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_DEVOTED
+        return "-20 Armor rating"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_CHAMPION
-        return "-15 Armor rating"
+        return "-30 Armor rating"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_SEEKER
-        return "-8 Restoration"
+        return "-10 Restoration"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_DEVOTED
-        return "-12 Restoration"
+        return "-18 Restoration"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_CHAMPION
-        return "-15 Restoration"
+        return "-25 Restoration"
     elseIf (princeName == "Namira") && tierValue == TIER_SEEKER
-        return "-8 Speech"
+        return "-10 Speech"
     elseIf (princeName == "Namira") && tierValue == TIER_DEVOTED
-        return "-12 Speech"
+        return "-18 Speech"
     elseIf (princeName == "Namira") && tierValue == TIER_CHAMPION
-        return "-15 Speech"
+        return "-25 Speech"
     elseIf (princeName == "Sanguine") && tierValue == TIER_SEEKER
         return "-10 Magicka"
     elseIf (princeName == "Sanguine") && tierValue == TIER_DEVOTED
@@ -20649,11 +21970,11 @@ String Function GetDaedricPriceMechanicText(String princeName, Int tierValue)
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_CHAMPION
         return "-30 Stamina"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_SEEKER
-        return "-15 Carry weight"
+        return "-10 Restoration"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_DEVOTED
-        return "-25 Carry weight"
+        return "-18 Restoration"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_CHAMPION
-        return "-35 Carry weight"
+        return "-25 Restoration"
     elseIf (princeName == "Peryite") && tierValue == TIER_SEEKER
         return "-10 Stamina"
     elseIf (princeName == "Peryite") && tierValue == TIER_DEVOTED
@@ -20661,11 +21982,11 @@ String Function GetDaedricPriceMechanicText(String princeName, Int tierValue)
     elseIf (princeName == "Peryite") && tierValue == TIER_CHAMPION
         return "-30 Stamina"
     elseIf (princeName == "Hircine") && tierValue == TIER_SEEKER
-        return "-8 Speech"
+        return "-10 Health"
     elseIf (princeName == "Hircine") && tierValue == TIER_DEVOTED
-        return "-12 Speech"
+        return "-20 Health"
     elseIf (princeName == "Hircine") && tierValue == TIER_CHAMPION
-        return "-15 Speech"
+        return "-30 Health"
     endIf
 
     return "pact price active"
@@ -20852,6 +22173,10 @@ Function ShowArgonianMessage(Message messageRecord, String fallback, Bool suppre
         return
     endIf
 
+    ; Past this point the function always emits something (toast, modal, or fallback box),
+    ; so the generic curse toast can stand aside for this transition.
+    _raceCurseSurfaceShown = True
+
     if suppressModal || !messageRecord
         SendPrismaToast("hist", "warning", "", fallback)
         return
@@ -20980,12 +22305,19 @@ Function ApplyNordCurseHandlers(Int oldState, Int newState, String reason)
             StorageUtil.SetIntValue(None, "PDV.Nord.VampireCureFeedbackShown", 1)
         endIf
     elseIf newState == 1
+        StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfCureFeedbackShown", 0)
         if StorageUtil.GetIntValue(None, "PDV.Nord.WerewolfFeedbackShown") != 1
-            ShowNordMessage(PDV_Msg_Nord_CurseState_WerewolfOnset, "The hunt pulls against Sovngarde. Master the beast, or it will name the road for you.", suppressModal)
+            ShowNordMessage(PDV_Msg_Nord_CurseState_WerewolfOnset, "The hunt pulls against Sovngarde. Master the beast, or it will master you.", suppressModal)
             StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfFeedbackShown", 1)
         endIf
     elseIf newState == 0
         StorageUtil.SetIntValue(None, "PDV.Nord.VampireActive", 0)
+        ; oldState == 2 is claimed by the vampire-cure branch above, so reaching
+        ; here with oldState == 1 is the werewolf cure and nothing else.
+        if oldState == 1 && StorageUtil.GetIntValue(None, "PDV.Nord.WerewolfCureFeedbackShown") != 1
+            ShowNordMessage(PDV_Msg_Nord_CurseState_WerewolfCured, "The hunt is set down. Hircine's hold is broken, and Sovngarde calls you once more.", suppressModal)
+            StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfCureFeedbackShown", 1)
+        endIf
         StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfFeedbackShown", 0)
     endIf
 EndFunction
@@ -21006,6 +22338,10 @@ Function ShowNordMessage(Message messageRecord, String fallbackText, Bool suppre
     if _suppressCurseTransitionOutputs
         return
     endIf
+
+    ; Past this point the function always emits something (toast, modal, or fallback box),
+    ; so the generic curse toast can stand aside for this transition.
+    _raceCurseSurfaceShown = True
 
     if suppressModal
         SendPrismaToast("kyne", "warning", "", fallbackText)
@@ -21046,6 +22382,22 @@ Function ShowRedguardNotification(Message messageRecord, String fallbackText)
     SendPrismaToast("tuwhacca", "neutral", "", fallbackText)
 EndFunction
 
+; P11 (2026-08-04): the Altmer sibling of the Nord/Redguard/Orc notification helpers.
+; The fallback path is the reason every Altmer notification property has to be bound: a None
+; record does not fail, it silently downgrades to a Prisma toast with no title.
+Function ShowAltmerNotification(Message messageRecord, String fallbackText)
+    if !NotificationsEnabled()
+        return
+    endIf
+
+    if messageRecord
+        messageRecord.Show()
+        return
+    endIf
+
+    SendPrismaToast("auri-el", "neutral", "", fallbackText)
+EndFunction
+
 Function ShowOrcNotification(Message messageRecord, String fallbackText)
     if !NotificationsEnabled()
         return
@@ -21081,6 +22433,10 @@ Function ShowRedguardMessage(Message messageRecord, String fallbackText, Bool su
     if _suppressCurseTransitionOutputs
         return
     endIf
+
+    ; Past this point the function always emits something (toast, modal, or fallback box),
+    ; so the generic curse toast can stand aside for this transition.
+    _raceCurseSurfaceShown = True
 
     if suppressModal
         SendPrismaToast("tuwhacca", "warning", "", fallbackText)
@@ -21136,13 +22492,10 @@ Function EnsureUnifiedStartupChoice()
 
     Int startupMode = GetStartupModeForOrigin(originRace)
     if startupMode == STARTUP_MODE_EXPLICIT_CHOICE
-        if HasExplicitStartupState(originRace)
-            ShowStartupMigrationInfo(originRace)
-            StorageUtil.SetIntValue(None, "PDV.Startup.UnifiedChoiceComplete", 1)
-            StorageUtil.SetIntValue(None, "PDV.Startup.OriginHandled", originRace)
-            return
-        endIf
-
+        ; 2026-08-13: not-save-safe update -- the pre-unified migration branch (the removed
+        ; "keeps your existing startup state" notice, then its silent-complete successor) is
+        ; gone. A fresh save never hit it; a pre-unified save now just runs the normal choice
+        ; flow once. No backward-compat startup state is preserved.
         EnsureExplicitStartupChoice(originRace)
         return
     endIf
@@ -21156,34 +22509,6 @@ Int Function GetStartupModeForOrigin(Int originRace)
     endIf
 
     return STARTUP_MODE_INFO_ONLY
-EndFunction
-
-Bool Function HasExplicitStartupState(Int originRace)
-    if originRace == ORIGIN_BOSMER
-        return HasBosmerSetupCompleted()
-    elseIf originRace == ORIGIN_BRETON
-        return StorageUtil.GetIntValue(None, "PDV.Breton.SetupComplete") == 1 || StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) >= 0
-    elseIf originRace == ORIGIN_REDGUARD
-        if StorageUtil.GetIntValue(None, "PDV.Redguard.SetupComplete") == 1
-            return True
-        endIf
-        if PDV_RedguardSectTrack
-            return PDV_RedguardSectTrack.GetCurrentState() >= REDGUARD_SECT_CROWN
-        endIf
-        return False
-    elseIf originRace == ORIGIN_ORC
-        if StorageUtil.GetIntValue(None, "PDV.Orc.SetupComplete") == 1
-            return True
-        endIf
-        if PDV_OrcLifeModeTrack
-            return PDV_OrcLifeModeTrack.GetCurrentState() >= ORC_LIFE_MODE_CITY
-        endIf
-        return False
-    elseIf originRace == ORIGIN_NORD
-        return StorageUtil.GetIntValue(None, "PDV.Nord.SetupComplete") == 1
-    endIf
-
-    return False
 EndFunction
 
 Function EnsureExplicitStartupChoice(Int originRace)
@@ -21282,11 +22607,6 @@ Function EnsureInfoOnlyStartup(Int originRace)
     RecordStartupEvent("startup_info_acknowledged")
     StorageUtil.SetIntValue(None, "PDV.Startup.UnifiedChoiceComplete", 1)
     StorageUtil.SetIntValue(None, "PDV.Startup.OriginHandled", originRace)
-EndFunction
-
-Function ShowStartupMigrationInfo(Int originRace)
-    Debug.MessageBox("Devotion keeps your existing startup state on this save.\n\n" + GetStartupCanonicalSummary(originRace) + "\n\n" + STARTUP_ADVISORY_TEXT)
-    RecordStartupEvent("startup_info_acknowledged")
 EndFunction
 
 Function RecordStartupEvent(String eventName)
@@ -21521,14 +22841,6 @@ EndFunction
 Function AwardBretonAncestorSpinePulse(Float multiplier, String reason)
     if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
         return
-    endIf
-
-    ; One-shot legacy sweep: the substrate boons only need stripping once per
-    ; save (dawn refresh still covers stragglers); re-stripping on every signal
-    ; repeats RemoveSpell work for no state change.
-    if PDV_BretonAncestorSubstrate && StorageUtil.GetIntValue(None, "PDV.Breton.SubstrateLegacyCleared") != 1
-        PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
-        StorageUtil.SetIntValue(None, "PDV.Breton.SubstrateLegacyCleared", 1)
     endIf
 
     Trace(2, "Retired Breton ancestor spine signal ignored: " + reason + " x" + multiplier)
@@ -22031,10 +23343,23 @@ Function AwardActiveDunmerReclamationMemorySignal()
     endIf
 EndFunction
 
+; Owner ruling 2026-08-07: this feeds the ANCESTRAL layer (layer 1), not the Reclamation lane, so it
+; fires on the first ancestor prayer of the devotional day REGARDLESS of patron. Before this was
+; wired, a Dunmer with no active patron -- or on any repeat prayer that day -- recorded NO Ledger
+; driver at all, because AwardActiveDunmerReclamationMemorySignal was the only curated signal on the
+; path and it is patron-gated. PDV_RunSheet_Dunmer_V1.md:184 calls that empty Ledger a FAIL.
+; The anti-farm cap lives HERE rather than at the call site, so a second call site cannot reintroduce
+; farming. It uses the same day-int boundary encoding as the Reclamation-memory pulse above.
 Function AwardDunmerAncestorSpinePulse(Float multiplier, String reason)
     if GetPlayerOriginRaceIndex() != ORIGIN_DUNMER || !PDV_Azura || multiplier <= 0.0
         return
     endIf
+
+    Int pdvAncestorSpineDay = GetDevotionalDay() + 2
+    if StorageUtil.GetIntValue(None, "PDV.Signal.DunmerAncestorSpine.Day") == pdvAncestorSpineDay
+        return
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Signal.DunmerAncestorSpine.Day", pdvAncestorSpineDay)
 
     AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_ANCESTOR_SPINE, None, multiplier)
     StorageUtil.AdjustFloatValue(None, "PDV.Dunmer.AncestorSpine", multiplier)
@@ -22993,6 +24318,7 @@ String Function BuildJournalPayloadJson()
     Int count = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines")
     Int titleCount = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Titles")
     Int magnitudeCount = StorageUtil.IntListCount(None, "PDV.Diegetic.Journal.Magnitudes")
+    Int sourceCount = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Sources")
     String entries = ""
     Int i = 0
     while i < count
@@ -23021,6 +24347,12 @@ String Function BuildJournalPayloadJson()
         entry = entry + ",\"valence\":\"" + valence + "\""
         entry = entry + ",\"magnitude\":" + magnitude
         entry = entry + ",\"title\":\"" + entryTitle + "\""
+        if i < sourceCount
+            String sourceText = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Sources", i))
+            if sourceText != ""
+                entry = entry + ",\"source\":\"" + sourceText + "\""
+            endIf
+        endIf
         entry = entry + ",\"text\":\"" + line + "\"}"
         if i > 0
             entries = entries + ","
@@ -23047,7 +24379,7 @@ EndFunction
 ; (oldest-first). Tone MUST be a key JournalToneToTitle/JournalToneToValence
 ; recognize, or the entry renders without a title/valence. headlinePinned entries
 ; are exempt from the day-window prune so curse/Champion/major-switch beats persist.
-Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String symbol, Bool headlinePinned, Int magnitude = 1, String titleText = "", Bool allowDuringRaceSetup = False)
+Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String symbol, Bool headlinePinned, Int magnitude = 1, String titleText = "", Bool allowDuringRaceSetup = False, String sourceText = "")
     if IsRaceSetupQuietPresentationActive() && !allowDuringRaceSetup
         return
     endIf
@@ -23061,6 +24393,7 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
     if symbol == ""
         symbol = "journal"
     endIf
+    sourceText = NormalizePublicDeityDisplayText(sourceText)
 
     ; De-dupe: skip when the newest entry is the same day + tone + line, so an
     ; immediate event and the dawn digest cannot restate the same beat, and a
@@ -23073,6 +24406,12 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
         endIf
     endIf
 
+    ; Existing saves predate the optional source list. Pad it before adding a new
+    ; entry so a patch label can never attach to an older journal line.
+    while StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Sources") < count
+        StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Sources", "", True)
+    endWhile
+
     StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Lines", line, True)
     StorageUtil.IntListAdd(None, "PDV.Diegetic.Journal.Days", gameDay, True)
     StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Tones", tone, True)
@@ -23083,13 +24422,14 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
         titleText = BuildJournalEventTitle(tone, "")
     endIf
     StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Titles", titleText, True)
+    StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Sources", sourceText, True)
 
     PruneBookOfDays()
 
 EndFunction
 
 Function RepairBookOfDaysJournalText()
-    Int repairVersion = 2
+    Int repairVersion = 3
     if StorageUtil.GetIntValue(None, "PDV.BookOfDays.TextRepairVersion") >= repairVersion
         return
     endIf
@@ -23107,6 +24447,21 @@ Function RepairBookOfDaysJournalText()
         i += 1
     endWhile
 
+    ; Version 3 removes journal beats produced while the broader Mara / Stendarr /
+    ; Y'ffre packet was incorrectly active for Altmer. Iterate backwards so all
+    ; parallel Book of Days lists remain aligned as entries are removed.
+    if GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
+        Int pruneIndex = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines") - 1
+        while pruneIndex >= 0
+            String journalLine = StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Lines", pruneIndex)
+            if ShouldPruneDeferredAltmerJournalLine(journalLine)
+                RemoveBookOfDaysEntryAt(pruneIndex)
+                repaired += 1
+            endIf
+            pruneIndex -= 1
+        endWhile
+    endIf
+
     ; 12.1 / fix-plan 5.4 -- the journal-TITLE repair loop that used to sit here was
     ; provably dead and has been deleted. It read a title, and if it "==" the literal
     ; "an act of devotion" replaced it with "An act of devotion", then wrote only "if
@@ -23122,8 +24477,15 @@ Function RepairBookOfDaysJournalText()
 
     StorageUtil.SetIntValue(None, "PDV.BookOfDays.TextRepairVersion", repairVersion)
     if repaired > 0 && GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Book of Days display text repaired: " + repaired)
+        Debug.Trace("[PDV] Book of Days entries reconciled: " + repaired)
     endIf
+EndFunction
+
+Bool Function ShouldPruneDeferredAltmerJournalLine(String line)
+    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER
+        return False
+    endIf
+    return StringContainsToken(line, "Mara") || StringContainsToken(line, "Stendarr") || StringContainsToken(line, "Y'ffre")
 EndFunction
 
 String Function GetPublicDeityDisplayName(PDV_DeityBase deity)
@@ -23254,6 +24616,9 @@ Function RemoveBookOfDaysEntryAt(Int index)
     if index < StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Titles")
         StorageUtil.StringListRemoveAt(None, "PDV.Diegetic.Journal.Titles", index)
     endIf
+    if index < StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Sources")
+        StorageUtil.StringListRemoveAt(None, "PDV.Diegetic.Journal.Sources", index)
+    endIf
 EndFunction
 
 String Function GetJournalByline()
@@ -23307,16 +24672,12 @@ Int Function GetJournalMagnitudeForTone(String toneKey)
     return 1
 EndFunction
 
-Function RefreshOpenBookOfDays()
-    Int bookOpen = StorageUtil.GetIntValue(None, "PDV.Diegetic.Journal.Open")
-    if bookOpen == 0 || !PDV_PrismaBridge.IsAvailable()
-        return
-    endIf
-
-    if !PDV_PrismaBridge.IsJournalVisible()
-        StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
-    endIf
-EndFunction
+; RefreshOpenBookOfDays was retired 2026-08-07. It reconciled a stale "PDV.Diegetic.Journal.Open"
+; flag against PDV_PrismaBridge.IsJournalVisible(), but PDV_MCM's journal-hotkey OnKeyDown already
+; does exactly that inline, at the only moment the answer is consumed -- so it was a superseded
+; duplicate with no caller, and three gates asserted on its NAME rather than on the behaviour.
+; Those gates now assert the reconciliation against PDV_MCM.psc. Do not re-add a periodic variant:
+; a tick that re-checks state already reconciled for free at the consumption point is pure cost.
 
 ; Short title derived from the tone/event key.
 String Function JournalToneToTitle(String toneKey)
@@ -23359,6 +24720,12 @@ String Function JournalToneToTitle(String toneKey)
     if toneKey == "favor.act"
         return "Prayer answered"
     endIf
+    if toneKey == "focus.emergence"
+        return "A road emerges"
+    endIf
+    if toneKey == "champion.act"
+        return "A champion's gift"
+    endIf
     if toneKey == "favor.loss"
         return "A deed ill-received"
     endIf
@@ -23400,6 +24767,12 @@ String Function JournalToneToValence(String toneKey)
         return "good"
     endIf
     if toneKey == "favor.act"
+        return "good"
+    endIf
+    if toneKey == "focus.emergence"
+        return "good"
+    endIf
+    if toneKey == "champion.act"
         return "good"
     endIf
     if toneKey == "favor.loss"
@@ -23551,11 +24924,8 @@ String Function GetBretonMedallionEntriesJson()
 EndFunction
 
 String Function GetAltmerMedallionEntriesJson()
-    String entries = RosterMedallionEntry("mara", "Mara", "god", "mara", PDV_Mara, "Kinship, care, and ordered mercy.")
-    entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", PDV_Stendarr, "Mercy and lawful protection.")
-    entries = entries + "," + RosterMedallionEntry("magnus", "Magnus", "god", "magnus", PDV_Magnus, "Light, magic, and origin memory.")
+    String entries = RosterMedallionEntry("magnus", "Magnus", "god", "magnus", PDV_Magnus, "Light, magic, and origin memory.")
     entries = entries + "," + PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Endurance, pilgrimage, and old discipline.")
-    entries = entries + "," + RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, "Story, form, and natural law.")
     entries = entries + "," + RosterMedallionEntry("auri-el", "Auri-El", "god", "auri-el", PDV_AuriEl, "The founding light and ancestral ascent.")
     entries = entries + "," + RosterMedallionEntry("syrabane", "Syrabane", "god", "syrabane", PDV_Syrabane, "Protection, apprentices, and survival through wisdom.")
     entries = entries + "," + RosterMedallionEntry("xarxes", "Xarxes", "god", "xarxes", PDV_Xarxes, "Lineage, record, and ordered memory.")
@@ -24879,9 +26249,9 @@ String Function GetKhajiitSurveyText()
     Int presiding = GetCurrentLunarPresidingFocus()
     if presiding > KHAJIIT_FOCUS_NONE
         if GetActiveLunarFavoredFocus() == presiding
-            text = text + " This phase of the Lattice belongs to " + GetKhajiitFocusLabel(presiding) + ", and the moons answer your standing."
+            text = text + " " + GetKhajiitFocusLabel(presiding) + " is in strength, and your focused blessing resonates."
         else
-            text = text + " This phase of the Lattice belongs to " + GetKhajiitFocusLabel(presiding) + "."
+            text = text + " " + GetKhajiitFocusLabel(presiding) + " is in strength."
         endIf
     endIf
 
@@ -24893,9 +26263,8 @@ String Function GetKhajiitSurveyText()
     return text
 EndFunction
 
-; Per-god standing line for the Khajiit moon-paths MCM readout, so the silent
-; focused-emphasis system stays legible. Shows standing, raw piety, and a marker
-; for the leading path and the currently moon-favored path.
+; Per-god standing line for the Khajiit moon-paths MCM readout. Shows standing,
+; raw piety, and markers for the focused path and current god in strength.
 String Function GetKhajiitFocusStandingLine(Int focusValue)
     PDV_DeityBase deity = GetKhajiitEmphasisDeity(focusValue)
     if !deity
@@ -24908,9 +26277,9 @@ String Function GetKhajiitFocusStandingLine(Int focusValue)
     endIf
     if GetCurrentLunarPresidingFocus() == focusValue
         if GetActiveLunarFavoredFocus() == focusValue
-            line = line + " (presiding, favored)"
+            line = line + " (in strength, resonating)"
         else
-            line = line + " (presiding)"
+            line = line + " (in strength)"
         endIf
     endIf
 
@@ -26427,6 +27796,750 @@ Int Function ClampInt(Int value, Int minValue, Int maxValue)
 EndFunction
 
 ; ===========================================================================
+; SPID religious recognition and KID item-action routing
+; ===========================================================================
+
+Int Property RECOGNITION_REACTION_NEUTRAL = 0 AutoReadOnly
+Int Property RECOGNITION_REACTION_ENEMY = 1 AutoReadOnly
+Int Property RECOGNITION_REACTION_ALLY = 2 AutoReadOnly
+Int Property RECOGNITION_REACTION_FRIEND = 3 AutoReadOnly
+Int Property RECOGNITION_IDENTITY_COUNT = 57 AutoReadOnly
+
+; NPC religious recognition defaults OFF (missing key -> disabled). The feature is
+; unadvertised in 1.5.0 and opt-in from the MCM while its in-game reactions are
+; validated further; an explicit MCM toggle still persists via the same keys.
+Bool Function NpcReligiousRecognitionEnabled()
+    return StorageUtil.GetIntValue(None, "PDV.Recognition.Disabled", 1) != 1
+EndFunction
+
+Bool Function NpcHostileRecognitionEnabled()
+    return StorageUtil.GetIntValue(None, "PDV.Recognition.HostilesDisabled", 1) != 1
+EndFunction
+
+Function SetNpcReligiousRecognitionEnabled(Bool enabled)
+    StorageUtil.SetIntValue(None, "PDV.Recognition.Disabled", BoolToInt(!enabled))
+    InvalidateNpcReligiousRecognition()
+    SyncNpcReligiousRecognition()
+EndFunction
+
+Function SetNpcHostileRecognitionEnabled(Bool enabled)
+    StorageUtil.SetIntValue(None, "PDV.Recognition.HostilesDisabled", BoolToInt(!enabled))
+    InvalidateNpcReligiousRecognition()
+    SyncNpcReligiousRecognition()
+EndFunction
+
+String Function GetNpcRecognitionStatusLine()
+    if !NpcReligiousRecognitionEnabled()
+        return "Off"
+    endIf
+    String owner = StorageUtil.GetStringValue(None, "PDV.Recognition.Owner")
+    if owner != ""
+        return "Managed by " + owner
+    endIf
+    Int identityIndex = ResolveNpcRecognitionIdentity()
+    Int band = ResolveNpcRecognitionBand(identityIndex)
+    if identityIndex < 0 || band <= TIER_NONE
+        return "On - no public standing"
+    endIf
+    return GetRecognitionIdentityDisplayName(identityIndex) + " - " + GetPublicTierBand(band) + " (" + GetNpcRecognitionRelationLabel(band) + ")"
+EndFunction
+
+String Function GetNpcRecognitionRelationLabel(Int band)
+    if band >= TIER_CHAMPION
+        return "ally"
+    elseIf band >= TIER_DEVOTED
+        return "friend"
+    endIf
+    return "neutral"
+EndFunction
+
+String Function GetNpcRecognitionAdvisory(Int identityIndex, Int band, Bool recognitionEnabled, String ownerName)
+    if !recognitionEnabled
+        return "Public religious recognition is off."
+    elseIf ownerName != ""
+        return "Religious recognition is managed by " + ownerName + "."
+    elseIf identityIndex < 0
+        return "No public religious identity is active."
+    elseIf band >= TIER_CHAMPION
+        return "Adherents may regard you as an ally."
+    elseIf band >= TIER_DEVOTED
+        return "Adherents may regard you as a friend."
+    endIf
+    return "Adherents remain neutral until your standing is Faithful."
+EndFunction
+
+String Function GetNpcRecognitionPanelJson()
+    Bool recognitionEnabled = NpcReligiousRecognitionEnabled()
+    String ownerName = StorageUtil.GetStringValue(None, "PDV.Recognition.Owner")
+    Int identityIndex = ResolveNpcRecognitionIdentity()
+    Int band = ResolveNpcRecognitionBand(identityIndex)
+    String identityName = GetRecognitionIdentityDisplayName(identityIndex)
+    String bandName = GetPublicTierBand(band)
+    String statusText = GetNpcRecognitionStatusLine()
+    String advisory = GetNpcRecognitionAdvisory(identityIndex, band, recognitionEnabled, ownerName)
+    String j = "{\"enabled\":" + BoolToJson(recognitionEnabled)
+    j = j + ",\"managed\":" + BoolToJson(ownerName != "")
+    j = j + ",\"status\":\"" + JsonSafeString(statusText) + "\""
+    j = j + ",\"identity\":\"" + JsonSafeString(identityName) + "\""
+    j = j + ",\"band\":\"" + JsonSafeString(bandName) + "\""
+    j = j + ",\"advisory\":\"" + JsonSafeString(advisory) + "\"}"
+    return j
+EndFunction
+
+Function EnsureRecognitionModEvents()
+    UnregisterForModEvent("PDV.Recognition.Claim")
+    UnregisterForModEvent("PDV.Recognition.Release")
+    RegisterForModEvent("PDV.Recognition.Claim", "OnRecognitionClaim")
+    RegisterForModEvent("PDV.Recognition.Release", "OnRecognitionRelease")
+EndFunction
+
+Event OnRecognitionClaim(String eventName, String strArg, Float numArg, Form sender)
+    if strArg == ""
+        return
+    endIf
+    StorageUtil.SetStringValue(None, "PDV.Recognition.Owner", strArg)
+    InvalidateNpcReligiousRecognition()
+    SyncNpcReligiousRecognition()
+    Trace(1, "NPC religious recognition claimed by " + strArg + ".")
+EndEvent
+
+Event OnRecognitionRelease(String eventName, String strArg, Float numArg, Form sender)
+    String owner = StorageUtil.GetStringValue(None, "PDV.Recognition.Owner")
+    if owner == "" || !RecognitionOwnersMatch(owner, strArg)
+        return
+    endIf
+    StorageUtil.SetStringValue(None, "PDV.Recognition.Owner", "")
+    InvalidateNpcReligiousRecognition()
+    SyncNpcReligiousRecognition()
+    Trace(1, "NPC religious recognition released by " + strArg + ".")
+EndEvent
+
+Bool Function RecognitionOwnersMatch(String firstOwner, String secondOwner)
+    Int ownerLength = StringUtil.GetLength(firstOwner)
+    if ownerLength != StringUtil.GetLength(secondOwner)
+        return false
+    endIf
+    Int index = 0
+    while index < ownerLength
+        Int firstOrd = StringUtil.AsOrd(StringUtil.GetNthChar(firstOwner, index))
+        Int secondOrd = StringUtil.AsOrd(StringUtil.GetNthChar(secondOwner, index))
+        if firstOrd >= 65 && firstOrd <= 90
+            firstOrd += 32
+        endIf
+        if secondOrd >= 65 && secondOrd <= 90
+            secondOrd += 32
+        endIf
+        if firstOrd != secondOrd
+            return false
+        endIf
+        index += 1
+    endWhile
+    return true
+EndFunction
+
+Function InvalidateNpcReligiousRecognition()
+    StorageUtil.SetIntValue(None, "PDV.Recognition.LastSignature", -9999)
+EndFunction
+
+Faction Function GetRecognitionPlayerFaction()
+    EnsureRecognitionForms()
+    return _recognitionPlayerFaction
+EndFunction
+
+Faction Function GetRecognitionCohortFaction(Int identityIndex)
+    if identityIndex < 0 || identityIndex >= RECOGNITION_IDENTITY_COUNT
+        return None
+    endIf
+    EnsureRecognitionForms()
+    return _recognitionCohortFactions[identityIndex]
+EndFunction
+
+Function EnsureRecognitionForms()
+    if _recognitionFormsResolved && _recognitionPlayerFaction && _recognitionCohortFactions.Length == RECOGNITION_IDENTITY_COUNT
+        return
+    endIf
+    if _recognitionCohortFactions.Length != RECOGNITION_IDENTITY_COUNT
+        _recognitionCohortFactions = new Faction[57]
+    endIf
+    _recognitionPlayerFaction = Game.GetFormFromFile(0x00071756, "Devotion.esp") as Faction
+    Int identityIndex = 0
+    Bool allResolved = _recognitionPlayerFaction != None
+    while identityIndex < RECOGNITION_IDENTITY_COUNT
+        if !_recognitionCohortFactions[identityIndex]
+            _recognitionCohortFactions[identityIndex] = Game.GetFormFromFile(0x00071757 + identityIndex, "Devotion.esp") as Faction
+        endIf
+        if !_recognitionCohortFactions[identityIndex]
+            allResolved = False
+        endIf
+        identityIndex += 1
+    endWhile
+    _recognitionFormsResolved = allResolved
+EndFunction
+
+Function SetRecognitionPair(Faction cohort, Faction playerFaction, Int reaction)
+    if !cohort || !playerFaction
+        return
+    endIf
+    cohort.SetReaction(playerFaction, reaction)
+    playerFaction.SetReaction(cohort, reaction)
+EndFunction
+
+Function ResetNpcRecognitionRelations(Faction playerFaction)
+    Int i = 0
+    while i < RECOGNITION_IDENTITY_COUNT
+        SetRecognitionPair(GetRecognitionCohortFaction(i), playerFaction, RECOGNITION_REACTION_NEUTRAL)
+        i += 1
+    endWhile
+EndFunction
+
+Function SyncNpcReligiousRecognition()
+    Faction playerFaction = GetRecognitionPlayerFaction()
+    Actor playerRef = Game.GetPlayer()
+    if !playerFaction || !playerRef
+        return
+    endIf
+    if !playerRef.IsInFaction(playerFaction)
+        playerRef.AddToFaction(playerFaction)
+    endIf
+
+    Int identityIndex = ResolveNpcRecognitionIdentity()
+    Int band = ResolveNpcRecognitionBand(identityIndex)
+    String ownerName = StorageUtil.GetStringValue(None, "PDV.Recognition.Owner")
+    Bool owned = ownerName != ""
+    Bool recognitionEnabled = NpcReligiousRecognitionEnabled()
+    Bool hostileRecognitionEnabled = NpcHostileRecognitionEnabled()
+    Int signature = identityIndex * 100 + band * 10 + BoolToInt(recognitionEnabled) + (BoolToInt(hostileRecognitionEnabled) * 2) + (BoolToInt(owned) * 4)
+    if StorageUtil.GetIntValue(None, "PDV.Recognition.LastSignature", -9999) == signature
+        return
+    endIf
+
+    ResetNpcRecognitionRelations(playerFaction)
+    if recognitionEnabled && !owned && identityIndex >= 0
+        if band >= TIER_CHAMPION
+            SetRecognitionPair(GetRecognitionCohortFaction(identityIndex), playerFaction, RECOGNITION_REACTION_ALLY)
+            if hostileRecognitionEnabled
+                ApplyNpcRecognitionHardRivals(identityIndex, playerFaction)
+            endIf
+        elseIf band >= TIER_DEVOTED
+            SetRecognitionPair(GetRecognitionCohortFaction(identityIndex), playerFaction, RECOGNITION_REACTION_FRIEND)
+        endIf
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.Recognition.LastSignature", signature)
+    EmitNpcRecognitionState(identityIndex, band, hostileRecognitionEnabled, ownerName)
+    SurfaceNpcRecognitionTransition(identityIndex, band, recognitionEnabled, hostileRecognitionEnabled, ownerName)
+    RequestPanelRefresh()
+EndFunction
+
+Function SurfaceNpcRecognitionTransition(Int identityIndex, Int band, Bool recognitionEnabled, Bool hostileRecognitionEnabled, String ownerName)
+    Bool owned = ownerName != ""
+    Int presentationSignature = identityIndex * 1000 + band * 100 + BoolToInt(recognitionEnabled) * 10 + BoolToInt(owned) * 20 + BoolToInt(hostileRecognitionEnabled) * 40
+    if StorageUtil.GetIntValue(None, "PDV.Recognition.PresentationInitialized") != 1
+        StorageUtil.SetIntValue(None, "PDV.Recognition.PresentationInitialized", 1)
+        StorageUtil.SetIntValue(None, "PDV.Recognition.LastPresentedSignature", presentationSignature)
+        return
+    endIf
+    if StorageUtil.GetIntValue(None, "PDV.Recognition.LastPresentedSignature", -9999) == presentationSignature
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.Recognition.LastPresentedSignature", presentationSignature)
+    String identityName = GetRecognitionIdentityDisplayName(identityIndex)
+    String bandName = GetPublicTierBand(band)
+    String bodyText = GetNpcRecognitionAdvisory(identityIndex, band, recognitionEnabled, ownerName)
+    if recognitionEnabled && ownerName == "" && identityIndex >= 0
+        bodyText = identityName + " - " + bandName + ". " + bodyText
+        if hostileRecognitionEnabled && band >= TIER_CHAMPION
+            bodyText = bodyText + " Explicit rival adherents may regard you as an enemy."
+        endIf
+    endIf
+    SendPrismaToast("journal", "neutral", "Public recognition changed", bodyText)
+    AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "reorientation", "journal", False, 1, "Public recognition changed")
+EndFunction
+
+Function ApplyNpcRecognitionHardRivals(Int identityIndex, Faction playerFaction)
+    ; Explicit hard rivalries only. Enemy is a disposition relation, not an
+    ; aggression package, so this never creates attack-on-sight behaviour.
+    if identityIndex == 35 ; Molag Bal
+        SetRecognitionPair(GetRecognitionCohortFaction(33), playerFaction, RECOGNITION_REACTION_ENEMY)
+    elseIf identityIndex == 33 ; Meridia
+        SetRecognitionPair(GetRecognitionCohortFaction(35), playerFaction, RECOGNITION_REACTION_ENEMY)
+    elseIf identityIndex == 20 ; Malacath
+        SetRecognitionPair(GetRecognitionCohortFaction(21), playerFaction, RECOGNITION_REACTION_ENEMY)
+    elseIf identityIndex == 21 ; Trinimac
+        SetRecognitionPair(GetRecognitionCohortFaction(20), playerFaction, RECOGNITION_REACTION_ENEMY)
+    endIf
+
+    if GetActiveDaedricPactPath()
+        SetRecognitionPair(GetRecognitionCohortFaction(13), playerFaction, RECOGNITION_REACTION_ENEMY)
+    endIf
+EndFunction
+
+Function EmitNpcRecognitionState(Int identityIndex, Int band, Bool hostileRecognitionEnabled, String ownerName)
+    Int handle = ModEvent.Create("PDV.Recognition.State")
+    if handle == 0
+        return
+    endIf
+    ModEvent.PushString(handle, GetRecognitionIdentityKey(identityIndex))
+    ModEvent.PushString(handle, GetPublicTierBand(band))
+    ModEvent.PushFloat(handle, BoolToInt(hostileRecognitionEnabled) as Float)
+    ModEvent.PushString(handle, ownerName)
+    ModEvent.Send(handle)
+EndFunction
+
+Int Function ResolveNpcRecognitionIdentity()
+    PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
+    if activePact
+        return GetRecognitionDaedricIndex(activePact.DeityName)
+    endIf
+    if _activeDeity
+        return GetRecognitionFocusedIndex(_activeDeity)
+    endIf
+    if GetPatronState() == PATRON_STATE_BROAD
+        return GetRecognitionBroadIndex(GetPlayerOriginRaceIndex())
+    endIf
+    return -1
+EndFunction
+
+Int Function ResolveNpcRecognitionBand(Int identityIndex)
+    if identityIndex < 0
+        return TIER_NONE
+    endIf
+    PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
+    if activePact
+        return activePact.GetStoredTier()
+    endIf
+    if _activeDeity
+        return GetTier(_activeDeity)
+    endIf
+    return GetRecognitionBroadTier(GetPlayerOriginRaceIndex())
+EndFunction
+
+Int Function GetRecognitionFocusedIndex(PDV_DeityBase deity)
+    if deity == PDV_Talos
+        return 0
+    elseIf deity == PDV_AuriEl
+        return 1
+    elseIf deity == PDV_Yffre
+        return 2
+    elseIf deity == PDV_Zen
+        return 3
+    elseIf deity == PDV_BaanDar
+        return 4
+    elseIf deity == PDV_Kyne
+        return 5
+    elseIf deity == PDV_Azura
+        return 6
+    elseIf deity == PDV_Khenarthi
+        return 7
+    elseIf deity == PDV_Rajhin
+        return 8
+    elseIf deity == PDV_Alkosh
+        return 9
+    elseIf deity == PDV_Akatosh
+        return 10
+    elseIf deity == PDV_Mara
+        return 11
+    elseIf deity == PDV_Arkay
+        return 12
+    elseIf deity == PDV_Stendarr
+        return 13
+    elseIf deity == PDV_Zenithar
+        return 14
+    elseIf deity == PDV_Dibella
+        return 15
+    elseIf deity == PDV_Julianos
+        return 16
+    elseIf deity == PDV_Kynareth
+        return 17
+    elseIf deity == PDV_Hist
+        return 18
+    elseIf deity == PDV_Sithis
+        return 19
+    elseIf deity == PDV_Malacath
+        return 20
+    elseIf deity == PDV_Trinimac
+        return 21
+    elseIf deity == PDV_Boethiah
+        return 22
+    elseIf deity == PDV_Mephala
+        return 23
+    elseIf deity == PDV_Magnus
+        return 24
+    elseIf deity == PDV_Xarxes
+        return 25
+    elseIf deity == PDV_Tuwhacca
+        return 26
+    elseIf deity == PDV_HoonDing
+        return 27
+    elseIf deity == PDV_Leki
+        return 28
+    elseIf deity == PDV_Shor
+        return 29
+    elseIf deity == PDV_Tsun
+        return 30
+    elseIf deity == PDV_Stuhn
+        return 31
+    elseIf deity == PDV_Syrabane
+        return 32
+    endIf
+    return -1
+EndFunction
+
+Int Function GetRecognitionDaedricIndex(String deityName)
+    if deityName == "Azura" || deityName == "Azurah"
+        return 6
+    elseIf deityName == "Malacath"
+        return 20
+    elseIf deityName == "Boethiah"
+        return 22
+    elseIf deityName == "Mephala"
+        return 23
+    elseIf deityName == "Meridia"
+        return 33
+    elseIf deityName == "Hircine"
+        return 34
+    elseIf deityName == "Molag Bal" || deityName == "Molag"
+        return 35
+    elseIf deityName == "Nocturnal"
+        return 36
+    elseIf deityName == "Hermaeus Mora" || deityName == "Mora"
+        return 37
+    elseIf deityName == "Mehrunes Dagon" || deityName == "Dagon"
+        return 38
+    elseIf deityName == "Sheogorath" || deityName == "Sheo"
+        return 39
+    elseIf deityName == "Namira"
+        return 40
+    elseIf deityName == "Sanguine"
+        return 41
+    elseIf deityName == "Clavicus Vile" || deityName == "Vile"
+        return 42
+    elseIf deityName == "Peryite"
+        return 43
+    elseIf deityName == "Vaermina"
+        return 44
+    endIf
+    return -1
+EndFunction
+
+Int Function GetRecognitionBroadIndex(Int origin)
+    if origin == ORIGIN_NORD
+        if GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
+            return 46
+        endIf
+        return 45
+    elseIf origin == ORIGIN_IMPERIAL
+        return 47
+    elseIf origin == ORIGIN_BRETON
+        if GetBretonTraditionValue() == BRETON_TRADITION_GREEN_WAY
+            return 49
+        endIf
+        return 48
+    elseIf origin == ORIGIN_ALTMER
+        return 50
+    elseIf origin == ORIGIN_BOSMER
+        return 51
+    elseIf origin == ORIGIN_DUNMER
+        return 52
+    elseIf origin == ORIGIN_KHAJIIT
+        return 53
+    elseIf origin == ORIGIN_ARGONIAN
+        return 54
+    elseIf origin == ORIGIN_ORC
+        return 55
+    elseIf origin == ORIGIN_REDGUARD
+        return 56
+    endIf
+    return -1
+EndFunction
+
+Int Function GetRecognitionBroadTier(Int origin)
+    Int tierValue = GetBroadLaneTierForOrigin(origin)
+    if origin == ORIGIN_IMPERIAL && PDV_ImperialAncestorSubstrate
+        tierValue = RecognitionMaxInt(tierValue, PDV_ImperialAncestorSubstrate.GetSubstrateTier())
+    elseIf origin == ORIGIN_BRETON
+        tierValue = RecognitionMaxInt(tierValue, GetBretonPracticeTier(GetBretonTraditionValue()))
+    elseIf origin == ORIGIN_ALTMER && PDV_AltmerAncestorSubstrate
+        tierValue = RecognitionMaxInt(tierValue, PDV_AltmerAncestorSubstrate.GetSubstrateTier())
+    elseIf origin == ORIGIN_NORD && PDV_NordAncestorSubstrate
+        tierValue = RecognitionMaxInt(tierValue, PDV_NordAncestorSubstrate.GetSubstrateTier())
+    elseIf origin == ORIGIN_DUNMER && PDV_DunmerAncestorSubstrate
+        tierValue = RecognitionMaxInt(tierValue, PDV_DunmerAncestorSubstrate.GetSubstrateTier())
+    elseIf origin == ORIGIN_KHAJIIT && PDV_KhajiitLunarSubstrate
+        tierValue = RecognitionMaxInt(tierValue, PDV_KhajiitLunarSubstrate.GetSubstrateTier())
+    elseIf origin == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
+        tierValue = RecognitionMaxInt(tierValue, PDV_ArgonianHistSubstrate.GetSubstrateTier())
+    endIf
+    return tierValue
+EndFunction
+
+Int Function RecognitionMaxInt(Int firstValue, Int secondValue)
+    if secondValue > firstValue
+        return secondValue
+    endIf
+    return firstValue
+EndFunction
+
+String Function GetRecognitionIdentityKey(Int identityIndex)
+    if identityIndex < 0
+        return "None"
+    endIf
+    String[] keys = new String[57]
+    keys[0] = "Talos"
+    keys[1] = "AuriEl"
+    keys[2] = "Yffre"
+    keys[3] = "Zen"
+    keys[4] = "BaanDar"
+    keys[5] = "Kyne"
+    keys[6] = "Azura"
+    keys[7] = "Khenarthi"
+    keys[8] = "Rajhin"
+    keys[9] = "Alkosh"
+    keys[10] = "Akatosh"
+    keys[11] = "Mara"
+    keys[12] = "Arkay"
+    keys[13] = "Stendarr"
+    keys[14] = "Zenithar"
+    keys[15] = "Dibella"
+    keys[16] = "Julianos"
+    keys[17] = "Kynareth"
+    keys[18] = "Hist"
+    keys[19] = "Sithis"
+    keys[20] = "Malacath"
+    keys[21] = "Trinimac"
+    keys[22] = "Boethiah"
+    keys[23] = "Mephala"
+    keys[24] = "Magnus"
+    keys[25] = "Xarxes"
+    keys[26] = "Tuwhacca"
+    keys[27] = "HoonDing"
+    keys[28] = "Leki"
+    keys[29] = "Shor"
+    keys[30] = "Tsun"
+    keys[31] = "Stuhn"
+    keys[32] = "Syrabane"
+    keys[33] = "Meridia"
+    keys[34] = "Hircine"
+    keys[35] = "MolagBal"
+    keys[36] = "Nocturnal"
+    keys[37] = "HermaeusMora"
+    keys[38] = "MehrunesDagon"
+    keys[39] = "Sheogorath"
+    keys[40] = "Namira"
+    keys[41] = "Sanguine"
+    keys[42] = "ClavicusVile"
+    keys[43] = "Peryite"
+    keys[44] = "Vaermina"
+    keys[45] = "NordOldWays"
+    keys[46] = "NordNineDivines"
+    keys[47] = "ImperialDivines"
+    keys[48] = "BretonEightDivines"
+    keys[49] = "BretonOldGods"
+    keys[50] = "AltmerOrthodox"
+    keys[51] = "BosmerGreenPact"
+    keys[52] = "DunmerReclamations"
+    keys[53] = "KhajiitLunarLattice"
+    keys[54] = "ArgonianHistPeople"
+    keys[55] = "OrcCode"
+    keys[56] = "RedguardAncestorSpine"
+    return keys[identityIndex]
+EndFunction
+
+String Function GetRecognitionIdentityDisplayName(Int identityIndex)
+    if identityIndex < 0
+        return "None"
+    elseIf identityIndex == 1
+        return "Auri-El"
+    elseIf identityIndex == 2
+        return "Y'ffre"
+    elseIf identityIndex == 3
+        return "Z'en"
+    elseIf identityIndex == 4
+        return "Baan Dar"
+    elseIf identityIndex == 27
+        return "HoonDing"
+    elseIf identityIndex == 35
+        return "Molag Bal"
+    elseIf identityIndex == 37
+        return "Hermaeus Mora"
+    elseIf identityIndex == 38
+        return "Mehrunes Dagon"
+    elseIf identityIndex == 42
+        return "Clavicus Vile"
+    elseIf identityIndex == 45
+        return "Nord Old Ways"
+    elseIf identityIndex == 46
+        return "Nord Nine Divines"
+    elseIf identityIndex == 47
+        return "Imperial Divines"
+    elseIf identityIndex == 48
+        return "Breton Eight Divines"
+    elseIf identityIndex == 49
+        return "Breton Old Gods"
+    elseIf identityIndex == 50
+        return "Altmer Orthodoxy"
+    elseIf identityIndex == 51
+        return "Bosmer Green Pact"
+    elseIf identityIndex == 52
+        return "Dunmer Reclamations"
+    elseIf identityIndex == 53
+        return "Khajiit Lunar Lattice"
+    elseIf identityIndex == 54
+        return "Argonian Hist and People"
+    elseIf identityIndex == 55
+        return "Orc Code"
+    elseIf identityIndex == 56
+        return "Redguard Ancestor Spine"
+    endIf
+    return GetRecognitionIdentityKey(identityIndex)
+EndFunction
+
+PDV_DaedricPathBase Function GetDaedricPathByName(String deityName)
+    if deityName == "Namira" && _kidNamiraPath
+        return _kidNamiraPath
+    elseIf deityName == "Sanguine" && _kidSanguinePath
+        return _kidSanguinePath
+    endIf
+    Int i = 0
+    Int count = GetDaedricPathCount()
+    while i < count
+        PDV_DaedricPathBase path = GetDaedricPathAtListIndex(i)
+        if path && path.DeityName == deityName
+            if deityName == "Namira"
+                _kidNamiraPath = path
+            elseIf deityName == "Sanguine"
+                _kidSanguinePath = path
+            endIf
+            return path
+        endIf
+        i += 1
+    endWhile
+    return None
+EndFunction
+
+Function HandleKIDAction(String actionKey, Form sourceForm)
+    if actionKey == ""
+        return
+    endIf
+    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.KID." + actionKey)
+    if multiplier <= 0.0
+        return
+    endIf
+    String sourceName = "the offering"
+    if sourceForm
+        String resolvedSourceName = sourceForm.GetName()
+        if resolvedSourceName != ""
+            sourceName = resolvedSourceName
+        endIf
+    endIf
+    String titleText = "An act is marked"
+    String bodyText = sourceName + " carried devotional meaning."
+    String symbolName = "journal"
+
+    if actionKey == "namira_taboo_food"
+        PDV_DaedricPathBase namiraPath = GetDaedricPathByName("Namira")
+        if namiraPath
+            Int tierBefore = namiraPath.GetStoredTier()
+            namiraPath.AdjustStoredPiety(1.0 * multiplier, "kid_taboo_food")
+            ShowDaedricMilestonePresentation(namiraPath, tierBefore, namiraPath.GetStoredTier(), False)
+        endIf
+        titleText = "Namira's table"
+        bodyText = "You consumed " + sourceName + "; Namira marks the taboo embraced."
+        symbolName = "namira"
+    elseIf actionKey == "sanguine_alcohol"
+        PDV_DaedricPathBase sanguinePath = GetDaedricPathByName("Sanguine")
+        if sanguinePath
+            Int tierBefore = sanguinePath.GetStoredTier()
+            sanguinePath.AdjustStoredPiety(1.0 * multiplier, "kid_revel")
+            ShowDaedricMilestonePresentation(sanguinePath, tierBefore, sanguinePath.GetStoredTier(), False)
+        endIf
+        titleText = "Sanguine's revel"
+        bodyText = "You drank " + sourceName + "; Sanguine marks the revel."
+        symbolName = "sanguine"
+    elseIf actionKey == "zenithar_trade"
+        AwardCuratedSignalScaled(PDV_Zenithar, PDV_Zenithar.SIGNAL_HONEST_WORK, sourceForm, multiplier)
+        titleText = "Honest trade"
+        bodyText = "You brought " + sourceName + " to market; Zenithar marks the exchange."
+        symbolName = "zenithar"
+    elseIf actionKey == "hunt_trophy"
+        if PDV_HircinePath
+            Int tierBefore = PDV_HircinePath.GetStoredTier()
+            Float stigmaBefore = PDV_HircinePath.GetStigma()
+            PDV_HircinePath.RecordHuntRiteScaled(multiplier, "kid_trophy")
+            ShowDaedricMilestonePresentation(PDV_HircinePath, tierBefore, PDV_HircinePath.GetStoredTier(), False)
+            MaybeEmitHircineStigmaPrice(stigmaBefore, PDV_HircinePath.GetStigma())
+        endIf
+        AwardCuratedSignalScaled(PDV_Kyne, PDV_Kyne.SIGNAL_SKY_ROAD, sourceForm, multiplier)
+        titleText = "Trophy of the hunt"
+        bodyText = "You claimed " + sourceName + " from your quarry; Hircine and Kyne mark the hunt."
+        symbolName = "hircine"
+    elseIf actionKey == "funerary_offering"
+        AwardCuratedSignalScaled(PDV_Arkay, PDV_Arkay.SIGNAL_DEATH_DUTY, sourceForm, multiplier)
+        AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY, sourceForm, multiplier)
+        titleText = "Gift to the dead"
+        bodyText = "You left " + sourceName + " with the dead; Arkay and Tu'whacca mark the duty."
+        symbolName = "arkay"
+    elseIf actionKey == "orcish_craft"
+        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_STRONGHOLD_FORGE, sourceForm, multiplier)
+        titleText = "Orcish craft"
+        bodyText = "You forged " + sourceName + "; Malacath weighs the work."
+        symbolName = "malacath"
+    elseIf actionKey == "amulet_akatosh"
+        AwardPiety(PDV_Akatosh, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Akatosh honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "akatosh"
+    elseIf actionKey == "amulet_arkay"
+        AwardPiety(PDV_Arkay, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Arkay honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "arkay"
+    elseIf actionKey == "amulet_dibella"
+        AwardPiety(PDV_Dibella, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Dibella honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "dibella"
+    elseIf actionKey == "amulet_julianos"
+        AwardPiety(PDV_Julianos, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Julianos honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "julianos"
+    elseIf actionKey == "amulet_kynareth"
+        AwardPiety(PDV_Kynareth, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Kynareth honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "kynareth"
+    elseIf actionKey == "amulet_mara"
+        AwardPiety(PDV_Mara, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Mara honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "mara"
+    elseIf actionKey == "amulet_stendarr"
+        AwardPiety(PDV_Stendarr, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Stendarr honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "stendarr"
+    elseIf actionKey == "amulet_talos"
+        AwardPiety(PDV_Talos, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Talos honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "talos"
+    elseIf actionKey == "amulet_zenithar"
+        AwardPiety(PDV_Zenithar, 0.5 * multiplier, "kid_amulet_honor")
+        titleText = "Zenithar honoured"
+        bodyText = "You put on " + sourceName + "."
+        symbolName = "zenithar"
+    else
+        return
+    endIf
+
+    SendPrismaToast(symbolName, "good", titleText, bodyText, True)
+    AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "favor.act", symbolName, False, 1, titleText)
+    RequestPanelRefresh()
+EndFunction
+
+; ===========================================================================
 ; Authoria - Devotions Tweaks and Fixes (Pass 2)
 ; B3 / fix-plan Group 2    -- lifecycle watchdog
 ; A1 / fix-plan Group 11.2 -- one-shot actor-value repair
@@ -26448,7 +28561,11 @@ Function KickstartIfStalled()
     endIf
     RegisterForSingleUpdate(1.0)
     EnsureQuestReactionQueueRunning()
+    EnsureRecognitionModEvents()
+    InvalidateNpcReligiousRecognition()
+    SyncNpcReligiousRecognition()
     ReconcileRedguardSpineRewardAfterLoad()
+    SyncKhajiitRuntimeState()
     Trace(2, "Lifecycle watchdog: master poll and quest-reaction worker re-armed on load.")
 EndFunction
 

@@ -1,8 +1,9 @@
 #!/usr/bin/env node
-import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { hashBytes, hashText } from "./lib/pdv_file_compare.mjs";
 
 const TOOLS_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(TOOLS_DIR, "..");
@@ -26,7 +27,8 @@ const NATIVE_MAIN = path.join(ROOT, "native", "DevotionPrismaBridge", "src", "ma
 const results = [];
 const add = (level, message, source = "") => results.push({ level, message, source });
 const read = (filePath) => fs.readFileSync(filePath, "utf8");
-const hash = (filePath) => crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
+const BYTE_EXTENSIONS = new Set([".ttf", ".woff", ".woff2"]);
+const hash = (filePath) => BYTE_EXTENSIONS.has(path.extname(filePath).toLowerCase()) ? hashBytes(filePath) : hashText(filePath);
 
 function mustExist(filePath) {
   if (!fs.existsSync(filePath)) {
@@ -246,7 +248,10 @@ requireText(MANAGER, [
   "ShowP2BookNotice",
   'AppendBookOfDaysEntry("You offered prayer at the shrine of "',
   "GetJournalMagnitudeForTone",
-  "RefreshOpenBookOfDays",
+  // "RefreshOpenBookOfDays" dropped 2026-08-07: the standalone function was a superseded
+  // duplicate of the reconciliation PDV_MCM's journal hotkey already does inline, and a needle
+  // that pins a function NAME dies with the function. The behaviour is asserted against
+  // PDV_MCM.psc in pdv_prisma_ui_audit. The key below still pins the state this gate cares about.
   "PDV.Diegetic.Journal.Open",
   "PDV.BookOfDays.LastTierDeity",
   "BuildTierReachJournalLine",
@@ -297,6 +302,29 @@ if (mustExist(MANAGER)) {
     add("PASS", "Book of Days uses Breton practice points and the 25/50 tier contract when no patron or pact owns the standing gauge.", MANAGER);
   } else {
     add("FAIL", "Book of Days must use Breton practice points and the 25/50 tier contract when no patron or pact owns the standing gauge.", MANAGER);
+  }
+
+  const recognitionSurface = functionBlock(manager, "SurfaceNpcRecognitionTransition");
+  const hasSeparatePresentationDedupe =
+    manager.includes('"PDV.Recognition.LastSignature"') &&
+    recognitionSurface.includes('StorageUtil.GetIntValue(None, "PDV.Recognition.LastPresentedSignature"') &&
+    recognitionSurface.includes('StorageUtil.SetIntValue(None, "PDV.Recognition.LastPresentedSignature"');
+  if (hasSeparatePresentationDedupe) {
+    add("PASS", "NPC recognition Chronicle presentation has its own transition dedupe state.", MANAGER);
+  } else {
+    add("FAIL", "NPC recognition Chronicle presentation must dedupe separately from relation synchronization.", MANAGER);
+  }
+
+  if (
+    recognitionSurface.includes("SendPrismaToast(") &&
+    recognitionSurface.includes("AppendBookOfDaysEntry(") &&
+    recognitionSurface.indexOf("SendPrismaToast(") < recognitionSurface.indexOf("AppendBookOfDaysEntry(") &&
+    !recognitionSurface.includes("PushDevotionPanel(") &&
+    !recognitionSurface.includes("SendOverlayJson(")
+  ) {
+    add("PASS", "NPC recognition transitions pair one Prisma toast with one Book of Days entry without opening focused UI.", MANAGER);
+  } else {
+    add("FAIL", "NPC recognition transitions must pair one Prisma toast with one Book of Days entry and must not open focused UI.", MANAGER);
   }
 }
 

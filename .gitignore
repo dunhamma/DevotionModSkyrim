@@ -5,9 +5,54 @@ native/vendor/Creation-Kit-Platform-Extended/
 # Local agent/editor settings
 .claude/settings.local.json
 
+# Release build outputs. ~80 MB of zips, reproducible from tools/pdv_package_release.mjs, and this
+# repo is PUBLIC -- binaries in git history are effectively permanent and weigh on every clone.
+# Scoped to the build artefacts so dist/*.txt (the Nexus changelogs) stays tracked.
+# NOTE: two PreBeta .8 zips were committed before this rule and REMAIN tracked -- a gitignore entry
+# never untracks what is already in the index.
+dist/*.zip
+dist/*.xlsx
+
+# Stray images dropped at the repo root. Anchored with a leading slash on purpose: real artwork
+# lives in assets/branding/ and scratch/prisma-art/ and must keep being trackable.
+/*.png
+
 # Local/generated scratch outputs
 generated/_audit_tmp.json
 generated/live-devotion-backups/
+generated/spid-kid-compile/
+# Hygiene-harvest candidate dumps. Candidates are not findings, and a stale dump read as a
+# finding list is exactly the failure the pass exists to avoid. Regenerate, never commit.
+generated/pdv_hygiene_*.json
+# Cross-instance candidate queue (tools/pdv_candidate_queue.mjs). It is a WORK-ORDERING
+# view derived from whatever modlists happen to be installed on this machine, not a
+# coverage claim -- its LIKELY-COVERED bucket is a name heuristic that only Phase 1b
+# editor_id reads can settle. Committing it would freeze one machine's install set as
+# though it were project truth. Regenerate, never commit.
+generated/PDV_CandidateQueue.md
+# Its structural-probe cache: QUST counts keyed by plugin path+size+mtime. A derived read of
+# whichever modlists this machine happens to have installed, regenerated on demand.
+generated/PDV_CandidateQueue.probe-cache.json
+# JoJ Phase 1b stage digests (tools/pdv_joj_stage_digest.mjs): the journal text and objectives
+# of every quest a candidate mod defines, read off THIS machine's JoJ install. Third-party mod
+# content, regenerable in minutes, and the .md view is a reading aid for a judging pass rather
+# than an artifact anyone should cite. The CANDIDATES and WORKLIST csvs under
+# references/vanilla-gameplay/compatibility/ ARE tracked -- those are the reviewable inputs
+# that decide what gets read; this is the bulk output that comes back.
+generated/joj-stage-digests/
+generated/PDV_JoJ_StageDigest.cache.json
+# External-mod support dump (tools/pdv_external_support_inventory.mjs). A full machine
+# re-derivation of the FOMOD manifest, every shipped channel, the core matrix, the KID
+# and BOS inis, and the Papyrus plugin hooks. Committing it would freeze one moment's
+# packaging as though it were project truth, and the reasoning lives in the curated
+# LIVING doc (references/authoring/PDV_ExternalModSupport_Inventory.md) instead.
+# Regenerate, never commit -- `--check` gates that doc against this dump by exit code.
+generated/PDV_ExternalModSupport_Inventory.json
+generated/PDV_ExternalModSupport_Inventory.md
+# Regenerable review packet for the committed release-proof pipeline state.
+# `pdv_release_proof_refresh --capture` rewrites it; only the reviewed canonical
+# proof under references/authoring is package authority.
+generated/PDV_HousecarlReleaseProof.candidate.json
 fixtures/ckpe/heartbeat-only.tmp.json
 fixtures/ckpe/phase60-*-duplicate-replay.ck-command-packet.json
 fixtures/ckpe/phase62-family-duplicate-saved-readback-proof.json
@@ -48,6 +93,16 @@ dist/Rynfri_JoJ_Package.zip
 dist/Devotion.PreBeta.*.zip
 dist/Devotion-[0-9]*.zip
 dist/Devotion-[0-9]*.zip.proof.json
+# The shipping FOMOD (core + patches) from tools/pdv_fomod_release_package.mjs. Its name
+# starts "Devotion-FOMOD-", so the dist/Devotion-[0-9]* patterns above do NOT catch it.
+dist/Devotion-FOMOD-*.zip
+# Staging tree for that packager. Deleted on success, so it only survives a failed run.
+dist/.fomod-stage/
+dist/.fomod-verify/
+# Receipts left by the superseded tools/pdv_combined_fomod_package.mjs. The current
+# packager prints its receipt to stdout and writes no file, so nothing regenerates these
+# - but a build receipt is a report of one build moment and is never committed.
+dist/Devotion-FOMOD-*.zip.proof.json
 
 # Untracked scratch output folders (tracked scratch/ files are unaffected)
 scratch/mcm-anomaly-bsa/
@@ -112,3 +167,8 @@ references/authoring/PDV_FeltTraceLedger.md
 references/authoring/PDV_FeltTraceLedger.csv
 references/authoring/PDV_PacingSimLedger.md
 references/authoring/PDV_FinalPlacementLedger.md
+# Regenerable official-content quest cross-generation review reports.
+references/authoring/generated/PDV_QuestCrossGen_V*_CoreRetrospective_*.csv
+references/authoring/generated/PDV_QuestCrossGen_V*_CoreRetrospective_*.md
+references/authoring/generated/PDV_QuestCrossGen_V*_CoreAmbiguityResolution_*.csv
+references/authoring/generated/PDV_QuestCrossGen_V*_CoreAmbiguityResolution_*.md

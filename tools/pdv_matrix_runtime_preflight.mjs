@@ -7,24 +7,48 @@
  * file set is wrong.
  */
 
-import crypto from "node:crypto";
+import { acceptedDeityNames } from "./lib/pdv_matrix_vocab.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { hashBytes, hashText } from "./lib/pdv_file_compare.mjs";
 
 const args = process.argv.slice(2);
-const MO2_ROOT = normalizePath(getArg("--mo2") ?? "D:/Wabbajack/modlists/ARR");
+validateArgs(args);
+const MO2_ROOT = normalizePath(getArg("--mo2") ?? "D:/Wabbajack/modlists/ARR 2.5");
 const PROFILE_NAME = getArg("--profile") ?? readSelectedProfile(MO2_ROOT);
 const PROFILE_DIR = PROFILE_NAME ? path.join(MO2_ROOT, "profiles", PROFILE_NAME) : null;
 const JSON_OUTPUT = args.includes("--json");
 const CORE_ONLY = args.includes("--core-only");
-const EXPECTED_CORE_WATCHED = Number.parseInt(getArg("--expected-core") ?? "134", 10);
-const EXPECTED_ARR_WATCHED = Number.parseInt(getArg("--expected-arr") ?? "20", 10);
+const EXPECTED_CORE_WATCHED = Number.parseInt(getArg("--expected-core") ?? "157", 10);
+const EXPECTED_CHANNELS = Number.parseInt(getArg("--expected-channels") ?? "0", 10);
 const CORE_MOD = getArg("--core-mod") ?? "Devotion";
-const COMPAT_MOD = getArg("--compat-mod") ?? "Devotion - Authoria ARR Compatibility";
+const COMPAT_MOD = getArg("--compat-mod") ?? "Devotion - Quest Mod PatchHub";
+const COMPAT_PLUGIN = getArg("--compat-plugin");
 const PAPYRUS_LOG = normalizePath(getArg("--log") ?? "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log");
 
 const findings = [];
+
+function validateArgs(argv) {
+  const valued = new Set([
+    "--mo2", "--profile", "--expected-core", "--expected-channels",
+    "--core-mod", "--compat-mod", "--compat-plugin", "--log",
+  ]);
+  const flags = new Set(["--json", "--core-only", "--name-resolution-only"]);
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+    if (flags.has(arg)) continue;
+    if (!valued.has(arg)) {
+      console.error(`[FAIL] Unknown argument: ${arg}`);
+      process.exit(2);
+    }
+    if (index + 1 >= argv.length || argv[index + 1].startsWith("--")) {
+      console.error(`[FAIL] ${arg} requires a value.`);
+      process.exit(2);
+    }
+    index += 1;
+  }
+}
 
 // --name-resolution-only: pure-static gate (no MO2) -- every deity name in the quest-matrix
 // CSVs must resolve through the manager's runtime name model (RepairDeityRuntimeName
@@ -47,24 +71,12 @@ function checkMatrixNameResolution() {
   if (!exists(managerPath)) {
     return { check: "matrixNameResolution", status: "FAIL", issues: [`manager source missing: ${managerPath}`] };
   }
-  const managerText = fs.readFileSync(managerPath, "utf8");
-
-  // Accepted requested-names, all parsed from the manager source (never hand-copied).
-  const accepted = new Set();
-  for (const m of managerText.matchAll(/RepairDeityRuntimeName\(\s*PDV_[A-Za-z0-9_]+\s*,\s*"([^"]+)"\s*\)/g)) {
-    accepted.add(m[1]);
-  }
-  const daedricFn = managerText.match(/String Function CanonicalDaedricPathName[\s\S]*?EndFunction/);
-  for (const m of (daedricFn ? daedricFn[0] : "").matchAll(/return "([^"]+)"/g)) {
-    accepted.add(m[1]);
-  }
-  const aliasFn = managerText.match(/Bool Function IsQuestReactionNameMatch[\s\S]*?EndFunction/);
-  for (const m of (aliasFn ? aliasFn[0] : "").matchAll(/requestedName == "([^"]+)"/g)) {
-    accepted.add(m[1]);
-  }
-  if (accepted.size < 30) {
-    issues.push(`accepted-name extraction suspiciously small (${accepted.size}) -- manager name-model parse may have broken`);
-  }
+  // Parsed from the manager source (never hand-copied), and shared with pdv_qrm_lint via
+  // tools/lib/pdv_matrix_vocab.mjs. It was inline here first; the linter needed the identical
+  // model, and a second copy of this parser is exactly the one-value-in-two-places drift that
+  // would let the two gates disagree about which deities exist.
+  const { names: accepted, issues: nameIssues } = acceptedDeityNames(repoRoot);
+  issues.push(...nameIssues);
 
   // Minimal quoted-field CSV parser: enough for the matrix files (quotes around citation).
   const parseCsvLine = (line) => {
@@ -85,12 +97,49 @@ function checkMatrixNameResolution() {
     return cells;
   };
 
-  const files = fs.readdirSync(authoringDir).filter((f) => /^PDV_QuestReactionMatrix.*\.csv$/i.test(f));
+  // TWO families carry deity cells, and for a long time only the first was checked:
+  //   references/authoring/PDV_QuestReactionMatrix*.csv  -- core tranches + Full.csv
+  //   references/authoring/patches/PDV_QRM_*.csv         -- the per-mod FOMOD channels
+  // The channels matched on NEITHER count -- wrong directory AND wrong prefix -- so all 44
+  // shipped ones went unchecked by the gate whose own header names the "Clavicus" failure.
+  // A bad name there compiles clean and ApplyDeityReaction drops the cell in silence, which
+  // is indistinguishable from the mod simply not reacting. Found 2026-08-09 while scoping the
+  // JoJ tranche; the channels are the lane ALL third-party quest coverage ships through, so
+  // this was the larger half of the surface, not an edge.
+  const matrixFiles = [];
+  for (const f of fs.readdirSync(authoringDir)) {
+    if (/^PDV_QuestReactionMatrix.*\.csv$/i.test(f)) {
+      matrixFiles.push({ label: f, fullPath: path.join(authoringDir, f) });
+    }
+  }
+  const patchesDir = path.join(authoringDir, "patches");
+  let patchChannelsChecked = 0;
+  if (exists(patchesDir)) {
+    for (const f of fs.readdirSync(patchesDir)) {
+      if (/^PDV_QRM_.*\.csv$/i.test(f)) {
+        matrixFiles.push({ label: `patches/${f}`, fullPath: path.join(patchesDir, f) });
+        patchChannelsChecked += 1;
+      }
+    }
+  }
+  const auxiliarySchemas = new Map([
+    ["PDV_QuestReactionMatrix_OutcomeTagNormalization.csv", ["editor_id", "outcome_stage", "act_tags", "reason"]],
+  ]);
   const unknown = [];
   let cellsChecked = 0;
-  for (const file of files) {
-    const lines = fs.readFileSync(path.join(authoringDir, file), "utf8").split(/\r?\n/).filter((l) => l.trim() !== "");
+  let auxiliaryFilesChecked = 0;
+  for (const { label: file, fullPath } of matrixFiles) {
+    const lines = fs.readFileSync(fullPath, "utf8").split(/\r?\n/).filter((l) => l.trim() !== "");
     const header = parseCsvLine(lines[0] || "").map((h) => h.trim().toLowerCase());
+    const auxiliarySchema = auxiliarySchemas.get(file);
+    if (auxiliarySchema) {
+      if (header.length !== auxiliarySchema.length || header.some((name, index) => name !== auxiliarySchema[index])) {
+        issues.push(`${file}: expected auxiliary header '${auxiliarySchema.join(",")}', got '${header.join(",")}'`);
+      } else {
+        auxiliaryFilesChecked += 1;
+      }
+      continue;
+    }
     const deityCol = header.indexOf("deity");
     if (deityCol < 0) {
       issues.push(`${file}: no 'deity' column found -- header drift`);
@@ -114,7 +163,9 @@ function checkMatrixNameResolution() {
     check: "matrixNameResolution",
     status: ok ? "PASS" : "FAIL",
     acceptedNames: accepted.size,
-    files: files.length,
+    files: matrixFiles.length,
+    patchChannelsChecked,
+    auxiliaryFilesChecked,
     cellsChecked,
     unknownNames: distinctUnknown,
     issues,
@@ -126,6 +177,7 @@ function main() {
   const enabledMods = checkModlist();
   checkPluginOrder();
   checkKnownMatrixFiles(enabledMods);
+  checkChannelFiles(enabledMods);
   checkSourceConstants(enabledMods);
   checkPexFiles(enabledMods);
   checkPapyrusLog();
@@ -191,6 +243,8 @@ function checkModlist() {
 
   requireEnabledMod(enabled, CORE_MOD);
   if (!CORE_ONLY) requireEnabledMod(enabled, COMPAT_MOD);
+  requireDisabledMod(lines, "Devotion - Authoria ARR Compatibility");
+  requireDisabledMod(lines, "Devotion - PatchHub");
   requireDisabledMod(lines, "PDV_AuthoriaARR_Compatibility");
   requireDisabledMod(lines, "PDV_Authoria_FirstLook");
   requireDisabledMod(lines, "Devotion - PlayerDevotion Local Test");
@@ -207,47 +261,95 @@ function checkPluginOrder() {
     .filter((line) => line && !line.startsWith("#"))
     .map((line) => line.startsWith("*") ? line.slice(1) : line);
 
+  checkProfilePluginOrderConsistency(activePlugins);
+
   const devotion = activePlugins.indexOf("Devotion.esp");
-  const compat = activePlugins.indexOf("PDV_AuthoriaARR_Compatibility.esp");
+  const compat = activePlugins.indexOf(COMPAT_PLUGIN);
   const req = activePlugins.indexOf("Requiem for the Indifferent.esp");
 
   if (devotion === -1) fail("Plugin active", "Devotion.esp is not active.", pluginsPath);
   else pass("Plugin active", "Devotion.esp is active.", pluginsPath);
+  requireInactivePlugin(activePlugins, "PDV_AuthoriaARR_Combined.esp", pluginsPath);
+  requireInactivePlugin(activePlugins, "PDV_Patch_Authoria_QuestMods.esp", pluginsPath);
+  requireInactivePlugin(activePlugins, "PDV_AuthoriaARR_Compatibility.esp", pluginsPath);
   if (CORE_ONLY) return;
-  if (compat === -1) fail("Plugin active", "PDV_AuthoriaARR_Compatibility.esp is not active.", pluginsPath);
-  else pass("Plugin active", "PDV_AuthoriaARR_Compatibility.esp is active.", pluginsPath);
-
-  if (devotion !== -1 && compat !== -1) {
-    if (devotion < compat) pass("Plugin order", "Devotion.esp loads before PDV_AuthoriaARR_Compatibility.esp.", pluginsPath);
-    else fail("Plugin order", "PDV_AuthoriaARR_Compatibility.esp must load after Devotion.esp.", pluginsPath);
+  if (COMPAT_PLUGIN) {
+    if (compat === -1) fail("Plugin active", `${COMPAT_PLUGIN} is not active.`, pluginsPath);
+    else pass("Plugin active", `${COMPAT_PLUGIN} is active.`, pluginsPath);
   }
-  if (compat !== -1 && req !== -1) {
-    if (compat < req) pass("Plugin order", "PDV_AuthoriaARR_Compatibility.esp loads before Requiem for the Indifferent.esp.", pluginsPath);
-    else fail("Plugin order", "PDV_AuthoriaARR_Compatibility.esp must load before Requiem for the Indifferent.esp.", pluginsPath);
+
+  if (COMPAT_PLUGIN && devotion !== -1 && compat !== -1) {
+    if (devotion < compat) pass("Plugin order", `Devotion.esp loads before ${COMPAT_PLUGIN}.`, pluginsPath);
+    else fail("Plugin order", `${COMPAT_PLUGIN} must load after Devotion.esp.`, pluginsPath);
+  }
+  if (COMPAT_PLUGIN && compat !== -1 && req !== -1) {
+    if (compat < req) pass("Plugin order", `${COMPAT_PLUGIN} loads before Requiem for the Indifferent.esp.`, pluginsPath);
+    else fail("Plugin order", `${COMPAT_PLUGIN} must load before Requiem for the Indifferent.esp.`, pluginsPath);
   }
 }
 
 function checkKnownMatrixFiles(enabledMods) {
-  const candidates = [
-    path.join(MO2_ROOT, "mods", CORE_MOD, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix.json"),
-    path.join(MO2_ROOT, "overwrite", "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix.json"),
+  const relativeFiles = [
+    path.join("SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix.json"),
   ];
 
-  if (!CORE_ONLY) {
-    candidates.push(path.join(MO2_ROOT, "mods", COMPAT_MOD, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix_ARR.json"));
-    candidates.push(path.join(MO2_ROOT, "overwrite", "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix_ARR.json"));
+  for (const relativeFile of relativeFiles) {
+    const winner = resolveWinningModFile(relativeFile, enabledMods);
+    if (!winner) {
+      fail("Matrix JSON winner", `${relativeFile} has no active MO2 provider.`, path.join(MO2_ROOT, "mods"));
+      continue;
+    }
+    checkMatrixJson(winner, true);
   }
+}
 
-  for (const staleMod of ["PDV_AuthoriaARR_Compatibility", "PDV_Authoria_FirstLook", "Devotion - PlayerDevotion Local Test"]) {
-    candidates.push(path.join(MO2_ROOT, "mods", staleMod, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix.json"));
-    candidates.push(path.join(MO2_ROOT, "mods", staleMod, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix_ARR.json"));
+function checkProfilePluginOrderConsistency(activePlugins) {
+  const loadOrderPath = PROFILE_DIR ? path.join(PROFILE_DIR, "loadorder.txt") : "";
+  if (!exists(loadOrderPath)) {
+    fail("MO2 plugin-order consistency", "loadorder.txt is missing.", loadOrderPath);
+    return;
   }
+  const loadOrder = readLines(loadOrderPath)
+    .filter((line) => line && !line.startsWith("#"));
+  const positions = new Map(loadOrder.map((name, index) => [name, index]));
+  const missing = activePlugins.filter((name) => !positions.has(name));
+  const outOfOrder = activePlugins.some((name, index) =>
+    index > 0 && positions.has(name) && positions.has(activePlugins[index - 1]) &&
+    positions.get(name) <= positions.get(activePlugins[index - 1]));
+  if (missing.length > 0) {
+    fail("MO2 plugin-order consistency", `${missing.length} active plugin(s) are absent from loadorder.txt: ${missing.slice(0, 10).join(", ")}`, loadOrderPath);
+  } else if (outOfOrder) {
+    fail("MO2 plugin-order consistency", "plugins.txt active order does not match loadorder.txt.", loadOrderPath);
+  } else {
+    pass("MO2 plugin-order consistency", `${activePlugins.length} checked plugins are present in matching load order.`, loadOrderPath);
+  }
+}
 
-  for (const filePath of candidates) {
-    if (!exists(filePath)) continue;
-    const modName = getMo2ModName(filePath);
-    const active = modName ? enabledMods.has(modName) : filePath.includes(`${path.sep}overwrite${path.sep}`);
-    checkMatrixJson(filePath, active);
+function checkChannelFiles(enabledMods) {
+  if (CORE_ONLY || EXPECTED_CHANNELS <= 0) return;
+  const relativeDir = path.join("SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "Channels");
+  const compatDir = path.join(MO2_ROOT, "mods", COMPAT_MOD, relativeDir);
+  if (!exists(compatDir)) {
+    fail("Quest reaction channels", `Channels directory is missing from ${COMPAT_MOD}.`, compatDir);
+    return;
+  }
+  const files = fs.readdirSync(compatDir).filter((name) => /^PDV_QRM_.*\.json$/i.test(name)).sort();
+  const invalid = [];
+  const losing = [];
+  for (const name of files) {
+    const packaged = path.join(compatDir, name);
+    try { readJson(packaged); } catch (error) { invalid.push(`${name}: ${error.message}`); }
+    const winner = resolveWinningModFile(path.join(relativeDir, name), enabledMods);
+    if (!winner || path.resolve(winner) !== path.resolve(packaged)) losing.push(name);
+  }
+  if (files.length !== EXPECTED_CHANNELS) {
+    fail("Quest reaction channels", `${files.length} packaged channel(s); expected ${EXPECTED_CHANNELS}.`, compatDir);
+  } else if (invalid.length > 0) {
+    fail("Quest reaction channels", `${invalid.length} invalid JSON channel(s): ${invalid.join("; ")}`, compatDir);
+  } else if (losing.length > 0) {
+    fail("Quest reaction channels", `${losing.length} channel(s) lose MO2 precedence: ${losing.join(", ")}`, compatDir);
+  } else {
+    pass("Quest reaction channels", `${files.length} valid channel(s) are present and win MO2 precedence.`, compatDir);
   }
 }
 
@@ -260,10 +362,10 @@ function checkMatrixJson(filePath, active) {
     return;
   }
   const name = path.basename(filePath);
-  const expected = name === "PDV_QuestReactionMatrix_ARR.json" ? EXPECTED_ARR_WATCHED : EXPECTED_CORE_WATCHED;
+  const expected = EXPECTED_CORE_WATCHED;
   const count = matrixWatchCount(json);
   const shape = json.string && json.float && json.int && json.stringList ? "typed" : "flat-or-invalid";
-  const hash = sha256(filePath).slice(0, 12);
+  const hash = hashText(filePath).slice(0, 12);
   const detail = `${name} ${shape}, watched=${count}, sha256=${hash}`;
 
   if (!active && count > 0) {
@@ -282,15 +384,14 @@ function checkMatrixJson(filePath, active) {
 }
 
 function checkSourceConstants(enabledMods) {
-  const activeSourceDir = path.join(MO2_ROOT, "mods", CORE_MOD, "Scripts", "Source");
   for (const script of ["PDV__ManagerQuest.psc", "PDV_PlayerEvents.psc"]) {
-    checkQuestMatrixSourcePath(path.join(activeSourceDir, script), "Active source path");
+    checkQuestMatrixSourcePath(resolveWinningModFile(path.join("Scripts", "Source", script), enabledMods), "Active source path");
   }
-  checkShrinePrayerRouteSource(path.join(activeSourceDir, "PDV_EventSignalActivator.psc"), "Active shrine route source");
-  checkShrinePrayerRouteSource(path.join(activeSourceDir, "PDV_EventBus.psc"), "Active shrine route source");
-  checkShrinePrayerRouteSource(path.join(activeSourceDir, "PDV__ManagerQuest.psc"), "Active shrine route source");
-  checkBookOfDaysSource(path.join(activeSourceDir, "PDV__ManagerQuest.psc"), "Active Book of Days source");
-  checkBookOfDaysMcmSource(path.join(activeSourceDir, "PDV_MCM.psc"), "Active Book of Days MCM source");
+  checkShrinePrayerRouteSource(resolveWinningModFile(path.join("Scripts", "Source", "PDV_EventSignalActivator.psc"), enabledMods), "Active shrine route source");
+  checkShrinePrayerRouteSource(resolveWinningModFile(path.join("Scripts", "Source", "PDV_EventBus.psc"), enabledMods), "Active shrine route source");
+  checkShrinePrayerRouteSource(resolveWinningModFile(path.join("Scripts", "Source", "PDV__ManagerQuest.psc"), enabledMods), "Active shrine route source");
+  checkBookOfDaysSource(resolveWinningModFile(path.join("Scripts", "Source", "PDV__ManagerQuest.psc"), enabledMods), "Active Book of Days source");
+  checkBookOfDaysMcmSource(resolveWinningModFile(path.join("Scripts", "Source", "PDV_MCM.psc"), enabledMods), "Active Book of Days MCM source");
 
   const repoSourceDir = path.join(process.cwd(), "live-source", "Scripts", "Source");
   for (const script of ["PDV__ManagerQuest.psc", "PDV_PlayerEvents.psc"]) {
@@ -311,7 +412,7 @@ function checkSourceConstants(enabledMods) {
   }
 
   if (!enabledMods.has(CORE_MOD)) {
-    fail("Source constants", `Cannot trust source constants because ${CORE_MOD} is disabled.`, activeSourceDir);
+    fail("Source constants", `Cannot trust source constants because ${CORE_MOD} is disabled.`, path.join(MO2_ROOT, "mods", CORE_MOD, "Scripts", "Source"));
   }
 }
 
@@ -323,11 +424,9 @@ function checkQuestMatrixSourcePath(filePath, checkName, staleStatus = "FAIL") {
   const text = fs.readFileSync(filePath, "utf8");
   const unsafe = [
     "\"PlayerDevotion/PDV_QuestReactionMatrix\"",
-    "\"PlayerDevotion/PDV_QuestReactionMatrix_ARR\"",
   ].filter((needle) => text.includes(needle));
   const expected = [
     "\"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix\"",
-    "\"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix_ARR\"",
   ].filter((needle) => text.includes(needle));
 
   if (unsafe.length > 0) {
@@ -379,7 +478,9 @@ function checkBookOfDaysSource(filePath, checkName, staleStatus = "FAIL") {
     "PDV.Diegetic.Journal.Titles",
     "\\\"magnitude\\\"",
     "\\\"instrument\\\"",
-    "RefreshOpenBookOfDays",
+    // "RefreshOpenBookOfDays" dropped 2026-08-07 -- retired as a superseded duplicate of the
+    // reconciliation PDV_MCM's journal hotkey does inline. pdv_prisma_ui_audit asserts that
+    // behaviour against PDV_MCM.psc instead of pinning a function name here.
     "GetJournalMagnitudeForTone",
     'AppendBookOfDaysEntry("You offered prayer at the shrine of "',
   ];
@@ -420,15 +521,31 @@ function checkBookOfDaysMcmSource(filePath, checkName, staleStatus = "FAIL") {
   pass(checkName, `${path.basename(filePath)} opens Chronicle and does not cycle to Ledger.`, filePath);
 }
 
-function checkPexFiles() {
+function checkPexFiles(enabledMods) {
   for (const script of ["PDV__ManagerQuest.pex", "PDV_MCM.pex", "PDV_PlayerEvents.pex", "PDV_EventSignalActivator.pex", "PDV_EventBus.pex"]) {
-    const filePath = path.join(MO2_ROOT, "mods", CORE_MOD, "Scripts", script);
+    const filePath = resolveWinningModFile(path.join("Scripts", script), enabledMods);
     if (!exists(filePath)) {
       fail("PEX present", `${script} is missing.`, filePath);
       continue;
     }
-    pass("PEX present", `${script} sha256=${sha256(filePath).slice(0, 16)}.`, filePath);
+    pass("PEX present", `${script} sha256=${hashBytes(filePath).slice(0, 16)}.`, filePath);
   }
+}
+
+function resolveWinningModFile(relativePath, enabledMods) {
+  const overwrite = path.join(MO2_ROOT, "overwrite", relativePath);
+  if (exists(overwrite)) return overwrite;
+  const modlistPath = PROFILE_DIR ? path.join(PROFILE_DIR, "modlist.txt") : "";
+  if (!exists(modlistPath)) return null;
+  // MO2 serializes the highest-priority enabled mod first in this profile file.
+  for (const line of readLines(modlistPath)) {
+    if (!line.startsWith("+")) continue;
+    const modName = line.slice(1);
+    if (!enabledMods.has(modName)) continue;
+    const candidate = path.join(MO2_ROOT, "mods", modName, relativePath);
+    if (exists(candidate)) return candidate;
+  }
+  return null;
 }
 
 function checkPapyrusLog() {
@@ -480,6 +597,14 @@ function requireDisabledMod(lines, modName) {
   }
 }
 
+function requireInactivePlugin(activePlugins, pluginName, pluginsPath) {
+  if (activePlugins.includes(pluginName)) {
+    fail("Stale plugin inactive", `${pluginName} is active; disable the retired compatibility plugin.`, pluginsPath);
+  } else {
+    pass("Stale plugin inactive", `${pluginName} is not active.`, pluginsPath);
+  }
+}
+
 function matrixWatchCount(json) {
   if (Array.isArray(json?.stringList?.questWatchFormIds)) return json.stringList.questWatchFormIds.length;
   if (Array.isArray(json?.stringList?.questwatchformids)) return json.stringList.questwatchformids.length;
@@ -527,10 +652,6 @@ function readJson(filePath) {
 
 function readLines(filePath) {
   return fs.readFileSync(filePath, "utf8").split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
-}
-
-function sha256(filePath) {
-  return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
 }
 
 function add(status, check, detail, file = null) {

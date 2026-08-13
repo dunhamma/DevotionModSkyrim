@@ -1,0 +1,1033 @@
+{
+  "schema": "pdv-arr25-discovery-batches.v1",
+  "target": {
+    "mo2Root": "D:\\Wabbajack\\modlists\\ARR 2.5",
+    "profile": "KoK R11"
+  },
+  "source": {
+    "profileModlist": "D:\\Wabbajack\\modlists\\ARR 2.5\\profiles\\KoK R11\\modlist.txt",
+    "profileModlistSha256": "bf0d9b544d8e5856244dc965ae0ab45ab0eee2e99cfe0dfcd1c7e76ace0d345d",
+    "wave1Scope": "references/vanilla-gameplay/compatibility/arr25-discovery-source/wave1_scope.tsv",
+    "wave1ScopeSha256": "857d530a2943fb7adad02d1dd7102b72445fef0c686df962c767f860ade4865e",
+    "qustMods": "references/vanilla-gameplay/compatibility/arr25-discovery-source/qust_mods.tsv",
+    "qustModsSha256": "ec984a10a6df912fafbb30e0fa3b1d7242fad360db065dbc30cd6beb30bb319d",
+    "modPlugins": "references/vanilla-gameplay/compatibility/arr25-discovery-source/mod_plugins.tsv",
+    "modPluginsSha256": "29950da50a98ce8872494f98097ae8a8a3761428b0e71fc718d90aaa0ebe69a3"
+  },
+  "batchSize": 10,
+  "uncoveredMods": 328,
+  "pluginPaths": 466,
+  "byWave": {
+    "A": {
+      "mods": 97,
+      "pluginPaths": 156,
+      "batches": 16
+    },
+    "B": {
+      "mods": 23,
+      "pluginPaths": 26,
+      "batches": 3
+    },
+    "C": {
+      "mods": 208,
+      "pluginPaths": 284,
+      "batches": 29
+    }
+  },
+  "batches": [
+    {
+      "id": "A001",
+      "wave": "A",
+      "inputIds": [
+        "ddbc565b1f549271",
+        "691ca7441e87f613",
+        "17a53e498cecaf79",
+        "a96d2d5a79e4450c",
+        "cba070a2e45dfe77",
+        "dedc3e0968f7448b",
+        "c1183e4bc12fe1a8",
+        "d6e149d5a09110e6",
+        "fe7c644d438e17bd",
+        "c09c95298df70e72"
+      ],
+      "inputHash": "a041801ac68c9c7c400dd640534a49feb9d78e417f3f4877b2ed78ea7351931e",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "A002",
+      "wave": "A",
+      "inputIds": [
+        "d3f2f6993a72194d",
+        "93090dd7948e2cec",
+        "33e88e1a179deaad",
+        "798d58334795ef5f",
+        "d092c2d74494946b",
+        "8d55fee38a3b9763",
+        "3f7ab371544daeb7",
+        "67fce49b8d31354c",
+        "a402c2d84831eb9f",
+        "b08bf4dc72743889"
+      ],
+      "inputHash": "00cda1349f805ee3cdb4d921e8bdb6c162dd14529b2379b32fd6a9ecc3b38d0f",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "A003",
+      "wave": "A",
+      "inputIds": [
+        "519292c8573a8afc",
+        "7b7072a38a7d919a",
+        "9638c61b63f9dd6d",
+        "546e7c62dd5e55e2",
+        "c0a4cabde62bb70a",
+        "84feedbc7a704bca",
+        "4600f764215c95c2",
+        "9a29801fc9a3e7b1",
+        "8d0bb5237c770dca",
+        "73dcae7365fedc3b"
+      ],
+      "inputHash": "033b1605c031d2cbab581f85e89606c5fc11ff909150026c77edd515d3c9f4a1",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "A004",
+      "wave": "A",
+      "inputIds": [
+        "3fd10846ece9fe3f",
+        "367ac867ba28f413",
+        "a0d486fc114b6495",
+        "643f9f010b7cbb06",
+        "4e9edc053bc06b95",
+        "d136a0a6c122d334",
+        "5930e90ba100f5d1",
+        "74ae1a8a25e5aaca",
+        "f999adc3b61e28b7",
+        "303eb8c28cbbd78a"
+      ],
+      "inputHash": "ea8017f0dbb50b0a38e09f8844410dafba84db577ce3287cc186c06350889911",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "A005",
+      "wave": "A",
+      "inputIds": [
+        "ec9b54b93256259d",
+        "761c9cd65f8c2c76",
+        "213dd089f88dac40",
+        "b7409b89365b75f3",
+        "e8bc74b4dc682e55",
+        "c10fe9635f383eab",
+        "fa0c21fac8e78261",
+        "53fd57302ab06d55",
+        "f372917fe4a8507e",
+        "840109f11c843969"
+      ],
+      "inputHash": "bc99400ecd9f94509efb706fb10b1b69d4808031ffbd5da9243ddac8751c3612",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "A006",
+      "wave": "A",
+      "inputIds": [
+        "127e3638eeea5928",
+        "3028984d78dad431",
+        "056b91e7bc962a87",
+        "46a16c0726539c7f",
+        "04317b3a58883f96",
+        "07964d72aa59143a",
+        "f465fadf65d93a18",
+        "25dbb6768b5d7a8b",
+        "56caa1ca5a506237",
+        "f4306e45ef522726"
+      ],
+      "inputHash": "b48f6618fab102a9e8a5ae78ea4116063463872bc84e95da40328100b6a70c32",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "A007",
+      "wave": "A",
+      "inputIds": [
+        "71b50843f4333357",
+        "dce5922a151a3d82",
+        "592774a8535d99b0",
+        "6cd7ba0cac2da609",
+        "843bfc59d2ec80b2",
+        "06bb808e464f8fd1",
+        "90ea0a1dfb16b73b",
+        "076ba3d13a5c39c1",
+        "5b0f862bb818ee37",
+        "7eda209a8a834eb8"
+      ],
+      "inputHash": "527abffeeb9cb76df894e035f43c7abc991b604aadcd0ffdfbd45e1e6949c73e",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "A008",
+      "wave": "A",
+      "inputIds": [
+        "1a681b0601072fd0",
+        "1afe703b991e6cd8",
+        "9d03b972a46c4190",
+        "9cd1603bb24b19f7",
+        "882719e9bfb9afa3",
+        "d7d199fba18ece9f",
+        "343661fe11697fed",
+        "8158de107493acf6",
+        "cbc5742daaf7345c",
+        "75a69a2d0b0c5076"
+      ],
+      "inputHash": "b1a8ea1f0794ffca4472bbc8b4a6a5b9ded0914da5934a8f77407894d88d689f",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "A009",
+      "wave": "A",
+      "inputIds": [
+        "c936fbd07888c627",
+        "d3a37bc2fca9dfad",
+        "d892a55dfbc4c3db",
+        "98a83fb58ea1ebe1",
+        "e37ed4518b551b22",
+        "d60330430969e284",
+        "058e4c36fb755938",
+        "90e5c49bfe6dfc2b",
+        "e1f2a339b96879ff",
+        "90c0a0b9c82f4cac"
+      ],
+      "inputHash": "31fb91936c20907665ddd539d41fa2b2d5f0443d4cf93fd89c2da41596256669",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "A010",
+      "wave": "A",
+      "inputIds": [
+        "fa73a32309c1fe6e",
+        "fb71c27e1cb63617",
+        "a5d76f149ebfa032",
+        "dc7fcb2c5fd07444",
+        "1425eb5219777f54",
+        "c8f09988c0755585",
+        "24849ca9212ca381",
+        "c626a99fffb0da7a",
+        "8bbfafe575f331e8",
+        "3d80ab8b39a8f4bd"
+      ],
+      "inputHash": "f94d957dbcbc54d611bf78f487dfbc11b3a686fed0066682cc458bbeeb79f967",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "A011",
+      "wave": "A",
+      "inputIds": [
+        "0967180acddc7687",
+        "3e9c51d7c8a4aee8",
+        "f00343c28c889712",
+        "1cd11be3b96b0e4a",
+        "c43409bcde7a228d",
+        "836abfc44570eb95",
+        "164d50367f3685f2",
+        "ecc85716db555456",
+        "f30ae3a3b603357f",
+        "a32f63e3f4afbf5b"
+      ],
+      "inputHash": "5971b3bae4b2ec552db15173a5c2ba6aad74648847c81a017772b3ba4183ea05",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "A012",
+      "wave": "A",
+      "inputIds": [
+        "5aa0c9df39a11e13",
+        "9afbedbc31dc1be7",
+        "10a0ccabc0364641",
+        "2a6fbc5ae3f7c5ea",
+        "199419784139b9bb",
+        "93c206fb4c1c44a7",
+        "be66f7a6a1c6289f",
+        "4f323a4cf0c14f66",
+        "06b46c4960823974",
+        "8894d6f9e52e6e3e"
+      ],
+      "inputHash": "14614707da989a404e1753e6d841b125fb321fab0ce813a02b2aae6d8213364f",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "A013",
+      "wave": "A",
+      "inputIds": [
+        "f25d7223a559e34a",
+        "2cb2b5bcd8a4e469",
+        "de986c15b2fd3dac",
+        "fb6457861309b817",
+        "4d753ef5e8acf1fc",
+        "c5cb2cc7d75b4629",
+        "2a0cd321f81ea529",
+        "29603b6da4bdcede",
+        "df33d6656152bfa7"
+      ],
+      "inputHash": "9b378a44aa92c65ea747bbf8c2569682893a12c0dd452ebf7148d68c926a7a15",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "A014",
+      "wave": "A",
+      "inputIds": [
+        "008c34d87373c64a",
+        "2270ad9a6c946ca8",
+        "4b160a71d481b2e0",
+        "34d312795ae6e4e0",
+        "7a5c1a1809626502",
+        "f021d79a18df86d6",
+        "cee548190c4eaf95",
+        "01f0f8b4c86f2522",
+        "593e126bed676ea9"
+      ],
+      "inputHash": "1eec5a9e109ab94d752d50f7a0ae1c9d2a7086d2f6499ea72e5f9383d586944d",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "A015",
+      "wave": "A",
+      "inputIds": [
+        "674545dfab9123bf",
+        "b4171dcdeff95e6d",
+        "91dfa60a2dffa0c7",
+        "6a86437e0523af5c",
+        "2ba10dfcd610aa61",
+        "c505e59dc391227b",
+        "62120a9ef23347b4",
+        "c170bb2eb15b1188",
+        "2f7b9aa15f3c6001"
+      ],
+      "inputHash": "8af5e70f484732cd77b3b9539965c9d68df2290ff73de1257983c2a2e8c23c8e",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "A016",
+      "wave": "A",
+      "inputIds": [
+        "5948f1930cdcadf8",
+        "c7c5ad3cd5120a36",
+        "404926bcbf22014a",
+        "dd17442a39d358ad",
+        "2a1b4e8602a18087",
+        "2773f0240ea65a23",
+        "25ec7cefb3f474fe",
+        "95cf29fcc1a8fcfa",
+        "cc8f4816d6ccd67b"
+      ],
+      "inputHash": "156a1aebe12328b80900d0bebb3832437c11d9b2afad02c6feffb02e14bf5893",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "B001",
+      "wave": "B",
+      "inputIds": [
+        "c383af71bfeb3155",
+        "a411680385cbd53c",
+        "da7ed2f0e18a5aa7",
+        "02ccb4f94630aef2",
+        "ca2dcf85eebdf888",
+        "04ce38bf4b6c3c80",
+        "7dcc90041f5a13c4",
+        "547f80362e2fed7b",
+        "746578e37d5d61a9"
+      ],
+      "inputHash": "38742244b3b3423b77b9f31e11eb108f078501d9c5b04349f0b9957654146dcf",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "B002",
+      "wave": "B",
+      "inputIds": [
+        "4e7a54fba270b0ea",
+        "9db4f1e3287dce3e",
+        "12a00d151c9ffde6",
+        "38d11497b958e6a7",
+        "95bc2335ad718fc2",
+        "06947ad5fb2a65fa",
+        "e48d7d27037f1cd0",
+        "1ad840598f17935b",
+        "2764597029fe2ec8"
+      ],
+      "inputHash": "0884629a6b832476af6c7da9b8dd846a93bb53b1394d23531f7c17e83deebc58",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "B003",
+      "wave": "B",
+      "inputIds": [
+        "ab16d82252177b19",
+        "813f0fdabdc72b04",
+        "e0a14a78bbdf61e6",
+        "3abd0b1b3fd4b217",
+        "00fc90c1230a7b6e",
+        "52ce1a1e0b9ec981",
+        "938c703b51fe3403",
+        "6fa9e509b9b679de"
+      ],
+      "inputHash": "b1dcaf76f0b7f1600ed117f8d4c1aa7f0ed6cd5e5e71e29135dbac666fb4b942",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C001",
+      "wave": "C",
+      "inputIds": [
+        "cdcb2092478390a2",
+        "81ce4e770f66d90f",
+        "54dfdcd9757279eb",
+        "280923d2c1bb63a8",
+        "a32a7f4bc13cf4ae",
+        "672607433eb3df47",
+        "0a5fbf4b1d0600cd",
+        "c05007e4bc90497a",
+        "2a1a488265810273",
+        "9e6c2234ce81fe61"
+      ],
+      "inputHash": "62e2a482ff3e856b01119b705e02f0d7873136c96c6199e5665ceb60017f7090",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C002",
+      "wave": "C",
+      "inputIds": [
+        "4c01646a9564f1a6",
+        "e9d18efe159347dd",
+        "4727e8fc9c19612c",
+        "559357223248d6af",
+        "425946776a03c435",
+        "48e694c94bb44d67",
+        "9fc86501d941246b",
+        "a82f89136d1e5ca3",
+        "374ad0f11f22e785",
+        "7e81bd0e790e013e"
+      ],
+      "inputHash": "cd6ce9cc7d81251c7fd8cd19f03353791d02f82b9bc0885f78cf816acba68bc4",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C003",
+      "wave": "C",
+      "inputIds": [
+        "5cde5aeb82d23970",
+        "9ad178c7b5b4523a",
+        "8bc79c18d1c79a0d",
+        "42c89d557644bf16",
+        "2bf2fa992ea7ee51",
+        "5c226aea77f4682f",
+        "a308c70d37f9a087",
+        "1ce1e187eff5b379",
+        "91d0ded593a217c5",
+        "47b21cd545cc2cb4"
+      ],
+      "inputHash": "68c8ba04911f2f0eca03d345d61891c86ea06091789adcbe03494a211b79c0c2",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C004",
+      "wave": "C",
+      "inputIds": [
+        "8000a99b0aeba853",
+        "5c7d64f3cd2067dd",
+        "fd315646e31b548b",
+        "e980f786274c11a4",
+        "5d79f50a6b2d1706",
+        "7fee896cb150d681",
+        "58a008cd05f3bc53",
+        "eb47cb0545a93ecb",
+        "4b79b8a2c19c9ecf",
+        "de3b1e172a4848d9"
+      ],
+      "inputHash": "f40de8149fc8b15f60064f3647a5d0c420ff8b511a2bb346e3d56c6dc5c40315",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C005",
+      "wave": "C",
+      "inputIds": [
+        "7c659403d0682092",
+        "7062dc7b051dd821",
+        "545c41bddca81976",
+        "b2419652127a543e",
+        "9c574c9ae3ca9507",
+        "12f1e6d6fe4ef6bd",
+        "644ee67f3eabcfaa",
+        "9f39596f74ab74a7",
+        "58de0b22d7595ba7",
+        "7713e38bd4e93560"
+      ],
+      "inputHash": "40548d8ffb8c75e405fce17333ad650bbe3be2d1c04880b6681caf648f4627d2",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C006",
+      "wave": "C",
+      "inputIds": [
+        "22c528ee46ec936d",
+        "7d8100355120062e",
+        "4f8b34c6890d27e1",
+        "0332aeccf5871206",
+        "e44b22d0ee756f79",
+        "56ce43583e3d0975",
+        "3b4096bf61521a1b",
+        "c61b2c5696512fb7",
+        "0c3b371bc2160381",
+        "594ca6589f655be0"
+      ],
+      "inputHash": "43daf9de92fdd5c13c7920079506008e90147b49db4c41d987f664cd73b9ea09",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C007",
+      "wave": "C",
+      "inputIds": [
+        "4a01423f343677f7",
+        "db55367b2f151133",
+        "f9bcc9da5d2ad53b",
+        "9f37a3950571dd90",
+        "1c44b3148f1ad17f",
+        "53dbbde46e587dc7",
+        "a13e1ad5e787cdd6",
+        "dee9a614df15dd8b",
+        "9725f903bb3c6836",
+        "f4e06e19f995dd53"
+      ],
+      "inputHash": "97907ae3d9362b6a00f9f42d0475af57b6bb86d4c0f6f0497a25473b3b4345ed",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C008",
+      "wave": "C",
+      "inputIds": [
+        "265378248086640a",
+        "d0406a5515f1421b",
+        "9f841c2e778601ce",
+        "387af58dc5e321dd",
+        "353cdb040ddcae3d",
+        "4e4d5b9416fd7317",
+        "9f0c22fdcad2119e",
+        "548ad45ce5871c4c",
+        "763ceeb0e63105fd",
+        "1ebd4eafe3b19815"
+      ],
+      "inputHash": "73d70f8d1c08776e5fcd0aa2c89db1c5db3943f3d8afe505fb9c12a2011b0c6f",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C009",
+      "wave": "C",
+      "inputIds": [
+        "dda1487bcff72907",
+        "9e4fa4208908747c",
+        "f9d302a0575aa8a3",
+        "0f125f7baecae249",
+        "a66e70562f7926d6",
+        "5c62ccc81d90cc71",
+        "f1345e5402013586",
+        "813849525cba3b40",
+        "a40ec86bb85e5ee6",
+        "ec592b19e31ca02f"
+      ],
+      "inputHash": "9ded0b91d7e1e79e7b16155d1698e1bbc7cb492d95ea4e7b54e6ef55c19adf98",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C010",
+      "wave": "C",
+      "inputIds": [
+        "1e625109651a7215",
+        "a0aea20e0518072c",
+        "29c11471a03d454e",
+        "be1a499baadb3a36",
+        "0b0d7a3198af2a2a",
+        "91470e21a4e4e3a9",
+        "6b6501e8b64aba7c",
+        "cdb180d7858e04c9",
+        "537c36b56b609553",
+        "9350708ec137b528"
+      ],
+      "inputHash": "0e92137da6d5070564f6015fdc5639904452788a3fc15f5c493c2f793888986f",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C011",
+      "wave": "C",
+      "inputIds": [
+        "c5f58b1aa4aaaf10",
+        "51d4e3fe94f28526",
+        "f6f50cdcc5ebe403",
+        "549d6db7a48075b5",
+        "890c2ef159a89385",
+        "ce4fd3b530d6cbc4",
+        "317a38e03981ff96",
+        "abcbe8bb61c8874f",
+        "5d391b9bee36b22b",
+        "6d1da9bdf830f201"
+      ],
+      "inputHash": "9be9018c8d2dc3c2d23e0ca3bebc832fb6b83b21e96a292de692e5dd7c9b2cc3",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C012",
+      "wave": "C",
+      "inputIds": [
+        "6452c5db81feff8a",
+        "f2797e83860c7e32",
+        "627e762f0a4be22d",
+        "0da78fef181ae7f9",
+        "bd3275d4735e4014",
+        "6b93f77f3399fd6a",
+        "72ead143c5437ce9",
+        "6729cff9cd7be2b5",
+        "7abff370df82c5c1",
+        "0e72edc59e912691"
+      ],
+      "inputHash": "f40fc0e1c800ae49262a0b6e3cc9d20703a20c8835dad1200939f12a889e7e0a",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C013",
+      "wave": "C",
+      "inputIds": [
+        "4eb32f8a179ec687",
+        "a121a4cadc846358",
+        "a1afafbc615cb1a1",
+        "03173b108026f6b1",
+        "e425a08eab9e3f37",
+        "142ae0089e396f89",
+        "bc6faff7626a851a",
+        "0817e767a475a0f0",
+        "8cce07314a8fdce7",
+        "23749f1941846fe4"
+      ],
+      "inputHash": "3e8780d57cb4292d0534477b8f9b7aae4d38d1fbe2837e946f807120204a0b76",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C014",
+      "wave": "C",
+      "inputIds": [
+        "5d1cac0975dec2b7",
+        "6efc7e74354041f3",
+        "f9f354c103c10d33",
+        "750694ab7508cc6a",
+        "c84e3a9b1bc38525",
+        "5f016702134e140d",
+        "01d864aa7bfbc910",
+        "0dabcc26fa096504",
+        "aa89a0d244d3dc00",
+        "56154b6ab2b42a6d"
+      ],
+      "inputHash": "b74445c0e3f77daa8a9716ab751b7691103b50c108b8ef2dc19a0a03226fdd25",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C015",
+      "wave": "C",
+      "inputIds": [
+        "39bd6d4f1d3285e8",
+        "09ff2489083ed3fb",
+        "86cb76cba1c95c09",
+        "34766670dcf699ef",
+        "b4808575b7223c7e",
+        "e1976f038df13297",
+        "8c3b1265f20a78d5",
+        "a878e50de06ddcc5",
+        "3bcee2a48686978a",
+        "ce2bd08abbd08a00"
+      ],
+      "inputHash": "52199c4f8b90b0efba6865a4dc0baa32e7c4879998224b884c0aab9d797a4349",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C016",
+      "wave": "C",
+      "inputIds": [
+        "3acf0a39f85eef59",
+        "ffe4d18a387e4353",
+        "f01f8503901e8af8",
+        "4f556fddbae15992",
+        "384608b1af491ca1",
+        "a57af141f6ddac0f",
+        "ec4cb86116ae786d",
+        "f1baef597b36580c",
+        "ab05dd1ec01b626c",
+        "b414e4b53a07f192"
+      ],
+      "inputHash": "04a948c680bf6c92b84a20de6b885dc17e5092c1274a2c534d769749962a4f1e",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C017",
+      "wave": "C",
+      "inputIds": [
+        "90dd44f5e39d7c2c",
+        "d25cffb9120e695c",
+        "d6ef55ec5d14e52a",
+        "ae4068c8a3d2a3a2",
+        "a564051b0a3c2c06",
+        "2538cf235418bde9",
+        "7f3c756d02e250ce",
+        "1a9d465e9e8b76fe",
+        "e41906892d0b35d9",
+        "2318081d630f9b3e"
+      ],
+      "inputHash": "784b1e0058ef8716afb4759234851e113a243b6587391439029980b6c2be9ea0",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C018",
+      "wave": "C",
+      "inputIds": [
+        "0e93591eb7035c50",
+        "059821334e107a61",
+        "29c6ef7eaf42eb9a",
+        "ce878d4e0d206f63",
+        "87ca59df873ad9e2",
+        "1786707b92d470b0",
+        "c4dfc65a066ee408",
+        "0714205f130fd754",
+        "5e7ca61f11ef836e",
+        "e195f13439d59547"
+      ],
+      "inputHash": "76ed95559f919fbb5ca82f01b8a44ac6dfa5f9bbef1312793d4397b709964e2a",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C019",
+      "wave": "C",
+      "inputIds": [
+        "9b98ac81a14ed16b",
+        "5fc59031ad9f35d3",
+        "3d31a64ed1e06d47",
+        "4657fdb87386bf05",
+        "b93816be1b8775dc",
+        "782455b9b26b5639",
+        "0c02324fec9e32af",
+        "d914f5457a590e37",
+        "1f916dc17564a2a2",
+        "5203ed28808e10bc"
+      ],
+      "inputHash": "2de25d2625b9fa51661842d946af48ad2dc5246730d187990541a5d8a7b316c5",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C020",
+      "wave": "C",
+      "inputIds": [
+        "7073a04be6d97493",
+        "17c548c30726e036",
+        "235077e7eba4159a",
+        "b76c4a28e5eb0dab",
+        "0a0c51fc00a337ca",
+        "802e258ac0ce1816",
+        "b1cbc510f3b75668",
+        "7d495b80baab6018",
+        "e70726b54370fbaa",
+        "2fe6c47673713591"
+      ],
+      "inputHash": "b961c2ab33c719ec8a5ac1dc6aa5568c34aea67984511fa7d1d3acc01556b39d",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C021",
+      "wave": "C",
+      "inputIds": [
+        "c1c8aaef728d995f",
+        "af815630f5699e22",
+        "97a1f1e23767a37f",
+        "ae70ac06a254ff03",
+        "c51fda5cbbc535db",
+        "a43e369cce113c3a",
+        "b7f1c57dd45c654c",
+        "bde39a22454cd477",
+        "5fd5df8e64a18789",
+        "bc39dfa461c2176b"
+      ],
+      "inputHash": "8711ab0dda0e22d1a1570573bcbac51e7ca5197c115ae37fe2fe48a1e65bef80",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C022",
+      "wave": "C",
+      "inputIds": [
+        "cce7dd7884689aca",
+        "d9a0e88b51a3c7f2",
+        "82252c3e384288eb",
+        "b2423570922e1aac",
+        "27ab451f973de684",
+        "73ac1a472efca49e",
+        "c03f8a4a0b30c961",
+        "83a4a6434daefc87",
+        "0f9557eca95823ff",
+        "fcd1128b58a0fda7"
+      ],
+      "inputHash": "99918e24ba86c084c8a5e972082f625ebb09c5d48d90a5d0338839f0611fdd70",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C023",
+      "wave": "C",
+      "inputIds": [
+        "8a7210503b7f50ad",
+        "40e4b524a7813815",
+        "9bb689f2bfa2372f",
+        "9551b685d1319a0b",
+        "99779878a197e2dc",
+        "c85649515d049ddb",
+        "9c70a1ddbf927aac",
+        "549728a2b599acae",
+        "3ac083d00320788d",
+        "a06c2b3e93880a1c"
+      ],
+      "inputHash": "605b9b980bd9970759bb969833e4c284956085bab9e54ce7ac00a02e989a0cd4",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C024",
+      "wave": "C",
+      "inputIds": [
+        "230bb1d4da1434a7",
+        "3e62f96d1c4bf601",
+        "6d2e583e66a88f52",
+        "226d8997621883d5",
+        "3827f0b06cfeb776",
+        "7621985306bc063e",
+        "9f60431b1b3c7648",
+        "e8b5a8a8773fcf7d",
+        "c1638c3d7bc83e0d"
+      ],
+      "inputHash": "1fbc0ac488c043ac5baf820fe711c64ed8719daabf0124535408c7f0421e59c5",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C025",
+      "wave": "C",
+      "inputIds": [
+        "1f1c8b171d4508f1",
+        "d8938ed5a8e9aab3",
+        "5a92e589241a6f3b",
+        "93b42b8411e83294",
+        "4f69067cfdb70cd6",
+        "220bbaa5e98ec7d0",
+        "0c42f3f747038e2f",
+        "b4c548f3826ea3be",
+        "d954069ce5e176ee"
+      ],
+      "inputHash": "291d6a1396da5bd5cf82b2fcd8f01b8d4f6e0c0a9f7004b6ab8aa237451fa1db",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C026",
+      "wave": "C",
+      "inputIds": [
+        "1b8db56e3c396ddd",
+        "f01d5b52ec495673",
+        "a9a7c980e5f6cc9f",
+        "4547bdd315837428",
+        "786f1d26a3e15056",
+        "51ba7f617eec502c",
+        "881cd2a4c60b6a5f",
+        "2ecfff703835ad69",
+        "ecf6d4edfe486991"
+      ],
+      "inputHash": "23a626ef718d2cbb936768c18f6490aa0ef0b207002d276a2aca2348ca1394c8",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C027",
+      "wave": "C",
+      "inputIds": [
+        "f856e5178ac2bf13",
+        "ed371aa2472ece44",
+        "127649d8cc2152e0",
+        "e0d2a38a4ba606e8",
+        "b060ef5c5ef93d27",
+        "dc252c0a3112b387",
+        "e6f4b99d1d029c5e",
+        "509b0738e5ce94ba",
+        "e99f710145b6137e"
+      ],
+      "inputHash": "08a35dd22efb07c0a1ff216838d4ee0f0f15ff2ac02dd7f33768cd49b5afe286",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C028",
+      "wave": "C",
+      "inputIds": [
+        "906c17adf716968c",
+        "360d13542a3ebcc8",
+        "8bc9e650a82d8584",
+        "79dfe3b9233457f6",
+        "e3630e1718c3de37",
+        "85fae33de7fcd575",
+        "f9e99e5c29484fa1",
+        "d1d4fe5a018d1fe0",
+        "756c63b4f7794e53"
+      ],
+      "inputHash": "f257f8f98a38f976a98574eefee5fb7fc9b40e5798c892f68daa5b64f7e952dc",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    },
+    {
+      "id": "C029",
+      "wave": "C",
+      "inputIds": [
+        "9e5e09ca9a72d26b",
+        "f5c1b7c3c5006577",
+        "d3a958bd7de5e534",
+        "d1ffc5db0d2d6936",
+        "79501cbefdef030d",
+        "064dcc1312feac2f",
+        "e6f9061aa6ca9d83",
+        "298083480a418f38",
+        "82e23ed934c7db5a"
+      ],
+      "inputHash": "a62c978fa8b31db8c7c98a3823951ab43acc11981f53cfc75586de61e8c3ce99",
+      "status": "pending",
+      "attempts": 0,
+      "completedInputIds": [],
+      "lastError": null
+    }
+  ]
+}

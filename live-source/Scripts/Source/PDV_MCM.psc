@@ -60,6 +60,9 @@ String Property PAGE_PACING = "Debug: Pacing & Pantheons" AutoReadOnly
 Int _oidSurveyDevotion = -1
 Int _oidExportReport = -1
 Int _oidModeToggle = -1
+Int _oidNpcRecognition = -1
+Int _oidNpcHostileRecognition = -1
+Int _oidToastSize = -1
 Int _oidSelectedDeity = -1
 Int _oidDebugPatronOverride = -1
 Int _oidDebugClearPatron = -1
@@ -206,7 +209,6 @@ Int _oidPacingBroadSeed50 = -1
 Int _oidPacingBroadFanout = -1
 Int _oidPacingBroadScratchPositive = -1
 Int _oidPacingBroadScratchNegative = -1
-Int _oidPacingBroadMigration = -1
 Int _oidPacingBroadCatchup = -1
 Int _oidPacingNordBaseline = -1
 Int _oidPacingNordBaselineApply = -1
@@ -367,6 +369,12 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("On-screen devotion cues: screen effects, sounds, and music stingers when your standing shifts. Turn off for a quieter, effects-free experience. The Book of Days journal still records everything.")
     elseIf a_option == _oidNotifications
         SetInfoText("Corner toast messages when your devotion changes. Turn off to play with no pop-up notifications. The Book of Days journal still records everything.")
+    elseIf a_option == _oidToastSize
+        SetInfoText("Size of the corner toast pop-ups. Large is intended for 4K displays where the normal toast reads small. Does not affect the Book of Days journal.")
+    elseIf a_option == _oidNpcRecognition
+        SetInfoText("Faith-aware NPCs treat you as a friend at Faithful standing and an ally at Devoted. Requires SPID. (experimental)")
+    elseIf a_option == _oidNpcHostileRecognition
+        SetInfoText("At Devoted standing, your god's sworn rivals may treat you as an enemy. (experimental)")
     elseIf a_option == _oidModeToggle
         SetInfoText("Switches between the authored Pilgrim's Path and the gentler Wayfarer's Path for non-survival players.")
     elseIf a_option == _oidPacingSubstrateOrigin
@@ -393,8 +401,6 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Runs the signed mixed-god fan-out fixture. One logical event must contribute only its strongest eligible positive, or its strongest negative when no positive applies.")
     elseIf a_option == _oidPacingBroadScratchPositive || a_option == _oidPacingBroadScratchNegative
         SetInfoText("Stages deliberately excessive signed scratch. Wait through a real 06:00 dawn and confirm the selected pool folds no more than +4.3 or -4.3. This control does not advance time.")
-    elseIf a_option == _oidPacingBroadMigration
-        SetInfoText("Destructive throwaway-save fixture. Runs the real migration twice: Imperial count 3 to 25, Old Ways count 6 to 50, and eligible Nine Divines from the highest god only. Reload the clean QASmoke save afterward.")
     elseIf a_option == _oidPacingBroadCatchup
         SetInfoText("PS-A11 throwaway-save control. After one real positive act has folded and this pool is suppressed, runs the real catch-up routine through five days after its recorded gain. It does not change Skyrim time.")
     elseIf a_option == _oidPacingNordBaseline
@@ -802,11 +808,6 @@ Function OnOptionSelect(Int a_option)
         return
     endIf
 
-    if a_option == _oidPacingBroadMigration
-        DebugRunBroadPantheonMigrationFixture()
-        return
-    endIf
-
     if a_option == _oidPacingBroadCatchup
         DebugRunBroadPantheonCatchupForPacing()
         return
@@ -911,6 +912,30 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidNotifications
         if EnsureManagerBinding("toggle_notifications")
             PDV_Manager.SetNotificationsEnabled(!PDV_Manager.NotificationsEnabled())
+        endIf
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidToastSize
+        if EnsureManagerBinding("toggle_toast_size")
+            PDV_Manager.SetPrismaToastLargeEnabled(!PDV_Manager.PrismaToastLargeEnabled())
+        endIf
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidNpcRecognition
+        if EnsureManagerBinding("toggle_npc_recognition")
+            PDV_Manager.SetNpcReligiousRecognitionEnabled(!PDV_Manager.NpcReligiousRecognitionEnabled())
+        endIf
+        ForcePageReset()
+        return
+    endIf
+
+    if a_option == _oidNpcHostileRecognition
+        if EnsureManagerBinding("toggle_npc_hostile_recognition")
+            PDV_Manager.SetNpcHostileRecognitionEnabled(!PDV_Manager.NpcHostileRecognitionEnabled())
         endIf
         ForcePageReset()
         return
@@ -1557,7 +1582,7 @@ Function OnOptionSelect(Int a_option)
         PDV__ManagerQuest forcePatronManager = GetManagerService()
         PDV_DeityBase forcePatronDeity = GetSelectedDeity()
         if forcePatronManager && forcePatronDeity
-            forcePatronManager.SetActiveDeity(forcePatronDeity)
+            forcePatronManager.SetActiveDeity(forcePatronDeity, True)
             Debug.Notification("PDV: active patron forced.")
             ForcePageReset()
         else
@@ -1574,7 +1599,7 @@ Function OnOptionSelect(Int a_option)
             ; active patron, then drop its piety to 0 so ApplyGenericNeglectFlags selects it (piety
             ; <= NEGLECT_ACTIVE_PIETY_MAX). Sidesteps Prime-decay-eligible, which sets piety 20 and
             ; a lapse stamp of exactly the grace boundary -- neither flags neglect.
-            primeNeglectManager.SetActiveDeity(primeNeglectDeity)
+            primeNeglectManager.SetActiveDeity(primeNeglectDeity, True)
             primeNeglectManager.DebugForceSetPietyByIndex(primeNeglectDeity.DeityIndex, 0.0)
             Debug.Notification("PDV: neglect eligible primed (active + piety 0).")
             ForcePageReset()
@@ -1874,8 +1899,8 @@ Function BuildPlayerPage()
         _oidSurveyDevotion = AddTextOption("Survey Devotion", "Open readout", OPTION_FLAG_NONE)
         _oidExportReport = AddTextOption("Export Devotion Report", "Write file", OPTION_FLAG_NONE)
 
-        ; Khajiit focus emerges silently, so surface each moon-path's standing and
-        ; piety here for the player to track without a formal patron offer.
+        ; Surface each moon-path's standing and the current god in strength for
+        ; players who want a detailed readout beyond the emergence ceremony.
         if PDV_Manager.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_KHAJIIT
             AddHeaderOption("Moon-paths", OPTION_FLAG_NONE)
             Int khajiitFocus = 1
@@ -1983,11 +2008,24 @@ Function BuildCompatPage()
     if PDV_Manager
         _oidInGameEffects = AddTextOption("In-Game Effects", OnOffLabel(PDV_Manager.InGameEffectsEnabled()), OPTION_FLAG_NONE)
         _oidNotifications = AddTextOption("Notifications", OnOffLabel(PDV_Manager.NotificationsEnabled()), OPTION_FLAG_NONE)
+        _oidToastSize = AddTextOption("Toast size", ToastSizeLabel(), OPTION_FLAG_NONE)
     else
         _oidInGameEffects = -1
         _oidNotifications = -1
+        _oidToastSize = -1
         AddTextOption("In-Game Effects", "Unavailable", OPTION_FLAG_DISABLED)
         AddTextOption("Notifications", "Unavailable", OPTION_FLAG_DISABLED)
+        AddTextOption("Toast size", "Unavailable", OPTION_FLAG_DISABLED)
+    endIf
+
+    AddHeaderOption("NPC Recognition", OPTION_FLAG_NONE)
+    if PDV_Manager
+        _oidNpcRecognition = AddTextOption("Religious recognition", OnOffLabel(PDV_Manager.NpcReligiousRecognitionEnabled()), OPTION_FLAG_NONE)
+        _oidNpcHostileRecognition = AddTextOption("Hard-rival reactions", OnOffLabel(PDV_Manager.NpcHostileRecognitionEnabled()), OPTION_FLAG_NONE)
+        AddTextOption("Current", PDV_Manager.GetNpcRecognitionStatusLine(), OPTION_FLAG_DISABLED)
+    else
+        AddTextOption("Religious recognition", "Unavailable", OPTION_FLAG_DISABLED)
+        AddTextOption("Hard-rival reactions", "Unavailable", OPTION_FLAG_DISABLED)
     endIf
 
     AddHeaderOption("Custom Race", OPTION_FLAG_NONE)
@@ -2051,6 +2089,13 @@ String Function OnOffLabel(Bool isOn)
         return "On"
     endIf
     return "Off"
+EndFunction
+
+String Function ToastSizeLabel()
+    if PDV_Manager && PDV_Manager.PrismaToastLargeEnabled()
+        return "Large"
+    endIf
+    return "Normal"
 EndFunction
 
 Bool Function CustomRaceMappingEnabled()
@@ -2423,7 +2468,6 @@ Function BuildPacingPantheonsPage()
     _oidPacingBroadFanout = AddTextOption("Signed fan-out test", "Strongest delta only", OPTION_FLAG_NONE)
     _oidPacingBroadScratchPositive = AddTextOption("Prime +100 scratch", "Real dawn caps +4.3", OPTION_FLAG_NONE)
     _oidPacingBroadScratchNegative = AddTextOption("Prime -100 scratch", "Real dawn caps -4.3", OPTION_FLAG_NONE)
-    _oidPacingBroadMigration = AddTextOption("Run migration fixture", "Destructive: throwaway save", OPTION_FLAG_NONE)
     _oidPacingBroadCatchup = AddTextOption("PS-A11 catch-up", "Suppressed pool: gain day +5", OPTION_FLAG_NONE)
 
     AddEmptyOption()
@@ -2599,13 +2643,6 @@ EndFunction
 Function DebugPrimeBroadPantheonScratch(Float scratchValue)
     if EnsureManagerBinding("pacing_broad_scratch")
         ShowMessage(PDV_Manager.DebugPrimeBroadPantheonScratch(_selectedBroadPantheonPool, scratchValue), False, "$OK", "")
-        ForcePageReset()
-    endIf
-EndFunction
-
-Function DebugRunBroadPantheonMigrationFixture()
-    if EnsureManagerBinding("pacing_broad_migration")
-        ShowMessage(PDV_Manager.DebugRunBroadPantheonMigrationFixture(), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
@@ -3962,7 +3999,7 @@ EndFunction
 ;/ =====================================================================
     B5 / fix-plan 9.1 -- stale option IDs, the dangerous one
     ---------------------------------------------------------------------
-    PDV_MCM holds 169 _oid* variables and OnPageReset used to clear exactly
+    PDV_MCM holds 171 _oid* variables and OnPageReset used to clear exactly
     two of them. SkyUI hands out option IDs SEQUENTIALLY PER PAGE, so an oid
     left over from a page visited earlier can numerically equal a live option
     on the page you are looking at now -- and OnOptionSelect / OnOptionSliderAccept
@@ -3977,7 +4014,7 @@ EndFunction
     rebuilt, so a comparison can only match a control the current page actually
     registered.
 
-    Generated from this file's own declaration list -- all 169, in name order.
+    Generated from this file's own declaration list -- all 171, in name order.
     If a control is added, add its reset here too.
    ===================================================================== /;
 Function ResetAllOptionIds()
@@ -4078,17 +4115,19 @@ Function ResetAllOptionIds()
     _oidKhajiitRoadHome = -1
     _oidMephalaWebWoven = -1
     _oidModeToggle = -1
+    _oidNpcRecognition = -1
+    _oidNpcHostileRecognition = -1
     _oidNeglectRunPass = -1
     _oidNordNineDivines = -1
     _oidNordOldWays = -1
     _oidNotifications = -1
+    _oidToastSize = -1
     _oidOpenJournalNow = -1
     _oidOrcCity = -1
     _oidOrcLegionExile = -1
     _oidOrcStronghold = -1
     _oidPacingBroadCatchup = -1
     _oidPacingBroadFanout = -1
-    _oidPacingBroadMigration = -1
     _oidPacingBroadPool = -1
     _oidPacingBroadReset = -1
     _oidPacingBroadScratchNegative = -1

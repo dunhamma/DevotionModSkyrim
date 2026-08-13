@@ -6,9 +6,13 @@ log marker)**. It is the organic-play companion to the MCM-seeding runbooks
 (`PDV_BetaTestPacket_Khajiit.md`, `PDV_Khajiit_BetaFeelPacket.md`) -- use those to force-seed states,
 use this to understand and verify the natural experience.
 
-**Status (2026-06-13):** all five focus paths, organic edge hooks, the lunar cycle, phase blessings,
-and the curse-posture surface are wired. Final beta-feel sign-off is the in-game proof this guide
-walks you through.
+**Status (2026-08-06):** the lunar and Champion rebalance is implemented and
+machine-gated; runtime/manual proof is open. Older steps below that expect silent
+emergence, a rotating phase-stat blessing, the old rewards, or no ceremonial
+MessageBox are superseded. Test the one-time emergence popup, Lattice Resonance,
+the 56-line observation JSON with compiled fallback, Azurah's Portent, the
+guarded Baan Dar rescue, and the exclusive `5`, `10/10`, `15/15` substrate
+packages described in `PDV_RaceDesign_Khajiit.md`.
 
 **Setup before testing**
 - Character must be **Khajiit origin** (the system reads origin race, not current race form).
@@ -26,10 +30,11 @@ Khajiit devotion is **two layers at once**:
 1. **The lunar substrate (always on).** Moon observance and the road-home cadence feed a broad
    "Lunar Lattice" standing that every Khajiit carries. This is the Riddle'Thar / ja-Kha'jay layer --
    it is never chosen; it is simply lived.
-2. **A focused moon-path (emerges silently).** As your behavior favors one of the five moon-gods, that
-   god quietly becomes your **focus**. There is **no menu, no offer, no commitment prompt** -- this is
-   the LOCKED "silent emergence" design. You learn your focus by reading the Survey, not by being
-   asked.
+2. **A focused moon-path (emerges automatically).** As your behavior favors one of the five moon-gods,
+   a god becomes your **focus** after reaching `25` focus weight, a `15` lead, and actual Seeker piety
+   (`25`). There is no menu, offer, or confirmation choice. The first focus is revealed by one
+   deity-specific ceremonial MessageBox, the existing Prisma toast, and a pinned Book of Days entry;
+   later qualifying replacements use toast and an unpinned Book entry without another popup.
 
 **The five moon-paths:** Khenarthi (wind, road, travel) - Azurah (twilight, threshold, fate) -
 Baan Dar (the pariah; survival, reversal, clever theft) - Rajhin (the Purring Liar; elegant theft,
@@ -42,30 +47,22 @@ You should never see an act feed only one layer.
 
 ## 2. The Lunar Lattice cycle
 
-The Lattice runs on the **real 24-day / 8-phase moon cycle** (it matches the moon you see in the sky).
-Each phase **belongs to** one moon-god (always shown in the Survey, cosmetic by itself):
+The Lattice runs on the real 24-day, eight-slot moon cycle. Public surfaces name
+only the current god **in strength**. The slot sequence is `Alkosh, Azurah,
+Khenarthi, Rajhin, Rajhin, Baan Dar, Khenarthi, Azurah`.
 
-| Moon phase | Presiding god |
-|---|---|
-| Full moon | Alkosh |
-| Waning gibbous | Azurah |
-| Last quarter | Khenarthi |
-| Waning crescent | Rajhin |
-| New moon | Rajhin |
-| Waxing crescent | Baan Dar |
-| First quarter | Khenarthi |
-| Waxing gibbous | Azurah |
+If the god in strength matches the current focused deity and that focus is at
+least Seeker, **Lattice Resonance** multiplies the focused blessing spell's
+numeric magnitudes by exactly `1.20`. The Active Effects marker explains the
+increase. It does not affect substrate rewards, Azurah's Portent, Baan Dar's
+rescue, or any scripted capstone. The old five rotating abilities and `+10%`
+piety multiplier must remain absent.
 
-**What the presiding god grants (only once that god is Faithful, tier 2):**
-- **+10% piety gain** toward that god while it presides (script-side, always on).
-- **One small phase blessing** -- a +5 / +5% stat ability that swaps in at dawn for the presiding
-  god: Khenarthi/Baan Dar = Stamina regen, Azurah = Magicka regen, Rajhin = Sneak +5, Alkosh =
-  Health +5. **Only one phase blessing is ever active at a time**, and only for a Faithful presiding
-  god. It never requires you to schedule play around the moon -- it is amplification, not a chore.
-
-**To test:** open Survey on different days and confirm the "This phase of the Lattice belongs to
-\<god\>" line tracks the real moon. Reach Faithful with that god and confirm at the next dawn you gain
-the small phase ability (check Active Effects) and the "+10% aligned" note in Survey.
+**To test:** open Survey on successive strength slots and confirm the named god
+tracks the eight-slot sequence. Seed each matching focus at Seeker or higher;
+confirm the Resonance marker appears and the focused numeric values rise by
+20%, then disappears and restores the ordinary reward at the next non-matching
+slot. Confirm piety gains do not change with the god in strength.
 
 ---
 

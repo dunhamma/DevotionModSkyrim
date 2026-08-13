@@ -1,0 +1,146 @@
+legacy_phrase,affected_rows,candidate_deities_canonical,excluded_tokens,primary_ruling
+Akatosh,2,Akatosh,,names already match current matrix authority
+Akatosh;Arkay,1,Akatosh|Arkay,,names already match current matrix authority
+Akatosh;Talos,2,Akatosh|Talos,,names already match current matrix authority
+Akatosh;Talos;Kynareth,9,Akatosh|Talos|Kynareth,,names already match current matrix authority
+Akatosh;Talos;Stendarr;Kynareth,1,Akatosh|Talos|Stendarr|Kynareth,,names already match current matrix authority
+Alkosh;Khenarthi;Riddle'Thar,1,Alkosh|Khenarthi,Riddle'Thar,Riddle'Thar: Khajiiti doctrine concept is outside the current runtime roster
+all,3,Akatosh|Alkosh|Arkay|Auri-El|Azura|Baan Dar|Boethiah|Clavicus Vile|Dibella|Hermaeus Mora|Hircine|HoonDing|Julianos|Khenarthi|Kynareth|Kyne|Leki|Magnus|Malacath|Mara|Mehrunes Dagon|Mephala|Meridia|Molag Bal|Namira|Nocturnal|Peryite|Rajhin|Sanguine|Sheogorath|Shor|Sithis|Stendarr|Stuhn|Syrabane|Talos|The Hist|Trinimac|Tsun|Tu'whacca|Vaermina|Xarxes|Y'ffre|Z'en|Zenithar,,explicit all-deity integration surface; expanded to current matrix authority
+Arkay,5,Arkay,,names already match current matrix authority
+Arkay;Kynareth,2,Arkay|Kynareth,,names already match current matrix authority
+Arkay;Mephala;Namira,1,Arkay|Mephala|Namira,,names already match current matrix authority
+Arkay;Meridia,1,Arkay|Meridia,,names already match current matrix authority
+Arkay;Stendarr,4,Arkay|Stendarr,,names already match current matrix authority
+Arkay;Stendarr;Molag Bal,10,Arkay|Stendarr|Molag Bal,,names already match current matrix authority
+Arkay;Stendarr;Molag Bal;Meridia,1,Arkay|Stendarr|Molag Bal|Meridia,,names already match current matrix authority
+Arkay;Stendarr;Namira,1,Arkay|Stendarr|Namira,,names already match current matrix authority
+Auri-El,2,Auri-El,,names already match current matrix authority
+Auriel,1,Auri-El,,Auriel reviewed as cultural alias of Auri-El
+Azura,3,Azura,,names already match current matrix authority
+Azura;Arkay,1,Azura|Arkay,,names already match current matrix authority
+Azura;Vivec;Almalexia;Sotha Sil,1,Azura,Vivec|Almalexia|Sotha Sil,Vivec: Tribunal concept is outside the current runtime roster; Almalexia: Tribunal concept is outside the current runtime roster; Sotha Sil: Tribunal concept is outside the current runtime roster
+Azurah;Jone and Jode;Baan Dar,1,Azura|Baan Dar,Jone and Jode,Azurah reviewed as cultural alias of Azura; Jone and Jode: lunar concept is outside the current runtime roster
+Boethiah,1,Boethiah,,names already match current matrix authority
+Boethiah;Mephala,1,Boethiah|Mephala,,names already match current matrix authority
+Clavicus Vile,1,Clavicus Vile,,names already match current matrix authority
+Dibella,6,Dibella,,names already match current matrix authority
+Dibella;Mara,3,Dibella|Mara,,names already match current matrix authority
+Dibella;Mara;Mephala,1,Dibella|Mara|Mephala,,names already match current matrix authority
+Dibella;Mara;Zenithar,1,Dibella|Mara|Zenithar,,names already match current matrix authority
+Dibella;Sanguine,5,Dibella|Sanguine,,names already match current matrix authority
+Hermaeus Mora,2,Hermaeus Mora,,names already match current matrix authority
+Hermaeus Mora;Namira,1,Hermaeus Mora|Namira,,names already match current matrix authority
+Hermaeus Mora;Sithis;Julianos,1,Hermaeus Mora|Sithis|Julianos,,names already match current matrix authority
+Hircine,4,Hircine,,names already match current matrix authority
+"Hircine,Kyne",3,Hircine|Kyne,,names already match current matrix authority
+Hircine;Kynareth,3,Hircine|Kynareth,,names already match current matrix authority
+Hircine;Nocturnal,1,Hircine|Nocturnal,,names already match current matrix authority
+Hircine;Zenithar,1,Hircine|Zenithar,,names already match current matrix authority
+Jone and Jode;Azurah,1,Azura,Jone and Jode,Jone and Jode: lunar concept is outside the current runtime roster; Azurah reviewed as cultural alias of Azura
+Julianos,7,Julianos,,names already match current matrix authority
+Julianos;Kynareth,1,Julianos|Kynareth,,names already match current matrix authority
+Julianos;Magnus,4,Julianos|Magnus,,names already match current matrix authority
+Julianos;Magnus;Kynareth,1,Julianos|Magnus|Kynareth,,names already match current matrix authority
+Julianos;Mephala;Magnus,1,Julianos|Mephala|Magnus,,names already match current matrix authority
+Julianos;Stendarr;Magnus,1,Julianos|Stendarr|Magnus,,names already match current matrix authority
+Julianos;Zenithar,1,Julianos|Zenithar,,names already match current matrix authority
+Julianos;Zenithar;Magnus,1,Julianos|Zenithar|Magnus,,names already match current matrix authority
+Jyggalag,1,,Jyggalag,Jyggalag: locked classify-only; not a reaction-matrix deity
+Khajiit lane;Azurah,12,Azura,Khajiit lane,"Khajiit lane: cultural lane label, not a deity; Azurah reviewed as cultural alias of Azura"
+Khajiit lane;Azurah;Riddle'Thar,1,Azura,Khajiit lane|Riddle'Thar,"Khajiit lane: cultural lane label, not a deity; Azurah reviewed as cultural alias of Azura; Riddle'Thar: Khajiiti doctrine concept is outside the current runtime roster"
+Khenarthi;Jone and Jode;Alkosh;Riddle'Thar,1,Khenarthi|Alkosh,Jone and Jode|Riddle'Thar,Jone and Jode: lunar concept is outside the current runtime roster; Riddle'Thar: Khajiiti doctrine concept is outside the current runtime roster
+Kynareth,7,Kynareth,,names already match current matrix authority
+Kynareth;Hircine;Stendarr,9,Kynareth|Hircine|Stendarr,,names already match current matrix authority
+Kynareth;Mara,1,Kynareth|Mara,,names already match current matrix authority
+Kyne,1,Kyne,,names already match current matrix authority
+Malacath,5,Malacath,,names already match current matrix authority
+Malacath;Boethiah;Mauloch,1,Malacath|Boethiah,,Mauloch reviewed as cultural alias of Malacath
+Mannimarco,1,,Mannimarco,Mannimarco: entity classification is outside the current runtime roster
+Mara,7,Mara,,names already match current matrix authority
+Mara;Dibella;Mephala,1,Mara|Dibella|Mephala,,names already match current matrix authority
+Mara;Kynareth,1,Mara|Kynareth,,names already match current matrix authority
+Mara;Malacath,1,Mara|Malacath,,names already match current matrix authority
+Mara;Stendarr,1,Mara|Stendarr,,names already match current matrix authority
+Mara;Zenithar;Stendarr,6,Mara|Zenithar|Stendarr,,names already match current matrix authority
+Mehrunes Dagon,3,Mehrunes Dagon,,names already match current matrix authority
+Mephala,4,Mephala,,names already match current matrix authority
+Mephala;Arkay;Stendarr,1,Mephala|Arkay|Stendarr,,names already match current matrix authority
+Meridia,2,Meridia,,names already match current matrix authority
+"Meridia,Stendarr",2,Meridia|Stendarr,,names already match current matrix authority
+Meridia;Nocturnal,1,Meridia|Nocturnal,,names already match current matrix authority
+Meridia;Stendarr;Nocturnal,1,Meridia|Stendarr|Nocturnal,,names already match current matrix authority
+Molag Bal,4,Molag Bal,,names already match current matrix authority
+Molag Bal; Hircine; Namira,1,Molag Bal|Hircine|Namira,,names already match current matrix authority
+Molag Bal;Boethiah;Stendarr,1,Molag Bal|Boethiah|Stendarr,,names already match current matrix authority
+Namira,1,Namira,,names already match current matrix authority
+Namira;Arkay,1,Namira|Arkay,,names already match current matrix authority
+Namira;Arkay;Stendarr,1,Namira|Arkay|Stendarr,,names already match current matrix authority
+Namira;Boethiah;Stendarr;Talos,1,Namira|Boethiah|Stendarr|Talos,,names already match current matrix authority
+Namira;Boethiah;Talos,1,Namira|Boethiah|Talos,,names already match current matrix authority
+Namira;Boethiah;Talos;Stendarr,1,Namira|Boethiah|Talos|Stendarr,,names already match current matrix authority
+Nocturnal,5,Nocturnal,,names already match current matrix authority
+"Nocturnal,Mephala",1,Nocturnal|Mephala,,names already match current matrix authority
+Nocturnal;Dibella,1,Nocturnal|Dibella,,names already match current matrix authority
+Nocturnal;Meridia,1,Nocturnal|Meridia,,names already match current matrix authority
+Nocturnal;Meridia;Stendarr,1,Nocturnal|Meridia|Stendarr,,names already match current matrix authority
+Nocturnal;Zenithar,3,Nocturnal|Zenithar,,names already match current matrix authority
+Nocturnal;Zenithar;Mephala,3,Nocturnal|Zenithar|Mephala,,names already match current matrix authority
+Peryite,2,Peryite,,names already match current matrix authority
+Peryite;Arkay;Stendarr,1,Peryite|Arkay|Stendarr,,names already match current matrix authority
+Phynaster,1,,Phynaster,Phynaster: Altmeri ancestor concept is outside the current runtime roster
+S'rendarr;Riddle'Thar;Zenithar,1,Stendarr|Zenithar,Riddle'Thar,S'rendarr reviewed as cultural alias of Stendarr; Riddle'Thar: Khajiiti doctrine concept is outside the current runtime roster
+Sanguine,1,Sanguine,,names already match current matrix authority
+Sanguine;Dibella,1,Sanguine|Dibella,,names already match current matrix authority
+Sanguine;Sangiin,1,Sanguine,,Sangiin reviewed as cultural alias of Sanguine
+Sanguine;Zenithar;Mara,1,Sanguine|Zenithar|Mara,,names already match current matrix authority
+Sheogorath,2,Sheogorath,,names already match current matrix authority
+Sithis,2,Sithis,,names already match current matrix authority
+Sithis;Arkay,1,Sithis|Arkay,,names already match current matrix authority
+Sithis;Arkay;Stendarr;Mara,1,Sithis|Arkay|Stendarr|Mara,,names already match current matrix authority
+Sotha Sil;Julianos,1,Julianos,Sotha Sil,Sotha Sil: Tribunal concept is outside the current runtime roster
+Stendarr,13,Stendarr,,names already match current matrix authority
+"Stendarr,Mara",1,Stendarr|Mara,,names already match current matrix authority
+Stendarr;Arkay,1,Stendarr|Arkay,,names already match current matrix authority
+Stendarr;Arkay;Molag Bal,1,Stendarr|Arkay|Molag Bal,,names already match current matrix authority
+Stendarr;Kynareth,2,Stendarr|Kynareth,,names already match current matrix authority
+Stendarr;Kynareth;Zenithar,1,Stendarr|Kynareth|Zenithar,,names already match current matrix authority
+Stendarr;Mephala;Kynareth,1,Stendarr|Mephala|Kynareth,,names already match current matrix authority
+Stendarr;Sithis;Arkay,1,Stendarr|Sithis|Arkay,,names already match current matrix authority
+Stendarr;Sithis;Talos,1,Stendarr|Sithis|Talos,,names already match current matrix authority
+Stendarr;Talos,25,Stendarr|Talos,,names already match current matrix authority
+Stendarr;Talos;Arkay,1,Stendarr|Talos|Arkay,,names already match current matrix authority
+Stendarr;Talos;Julianos,2,Stendarr|Talos|Julianos,,names already match current matrix authority
+Stendarr;Talos;Sithis,1,Stendarr|Talos|Sithis,,names already match current matrix authority
+Stendarr;Zenithar,1,Stendarr|Zenithar,,names already match current matrix authority
+Stendarr;Zenithar;Kynareth,1,Stendarr|Zenithar|Kynareth,,names already match current matrix authority
+Stendarr;Zenithar;Talos,1,Stendarr|Zenithar|Talos,,names already match current matrix authority
+Syrabane,1,Syrabane,,names already match current matrix authority
+Talos,2,Talos,,names already match current matrix authority
+Talos;Akatosh,1,Talos|Akatosh,,names already match current matrix authority
+Talos;Stendarr,3,Talos|Stendarr,,names already match current matrix authority
+Talos;Zenithar,1,Talos|Zenithar,,names already match current matrix authority
+The Hist;Azura,1,The Hist|Azura,,names already match current matrix authority
+The Hist;Sithis,1,The Hist|Sithis,,names already match current matrix authority
+The Hist;Sithis;Boethiah;Azura;Mephala,1,The Hist|Sithis|Boethiah|Azura|Mephala,,names already match current matrix authority
+The Hist;Y'ffre;Kynareth,1,The Hist|Y'ffre|Kynareth,,names already match current matrix authority
+Trinimac,1,Trinimac,,names already match current matrix authority
+Trinimac;Malacath,1,Trinimac|Malacath,,names already match current matrix authority
+Vaermina,1,Vaermina,,names already match current matrix authority
+Vivec;Julianos,1,Julianos,Vivec,Vivec: Tribunal concept is outside the current runtime roster
+Y'ffre;Z'en;Baan Dar,1,Y'ffre|Z'en|Baan Dar,,names already match current matrix authority
+Y'ffre;Z'en;Kynareth,1,Y'ffre|Z'en|Kynareth,,names already match current matrix authority
+Zenithar,12,Zenithar,,names already match current matrix authority
+Zenithar;Dibella,6,Zenithar|Dibella,,names already match current matrix authority
+Zenithar;Kynareth,1,Zenithar|Kynareth,,names already match current matrix authority
+Zenithar;Mara,9,Zenithar|Mara,,names already match current matrix authority
+Zenithar;Mephala,1,Zenithar|Mephala,,names already match current matrix authority
+Zenithar;Mephala;Nocturnal,1,Zenithar|Mephala|Nocturnal,,names already match current matrix authority
+Zenithar;Nocturnal,1,Zenithar|Nocturnal,,names already match current matrix authority
+Zenithar;Nocturnal;Sanguine,1,Zenithar|Nocturnal|Sanguine,,names already match current matrix authority
+Zenithar;Nocturnal;Stendarr,1,Zenithar|Nocturnal|Stendarr,,names already match current matrix authority
+Zenithar;Rajhin,1,Zenithar|Rajhin,,names already match current matrix authority
+Zenithar;S'rendarr,1,Zenithar|Stendarr,,S'rendarr reviewed as cultural alias of Stendarr
+Zenithar;Sanguine,2,Zenithar|Sanguine,,names already match current matrix authority
+Zenithar;Stendarr,1,Zenithar|Stendarr,,names already match current matrix authority
+Zenithar;Stendarr;Mephala,1,Zenithar|Stendarr|Mephala,,names already match current matrix authority
+Zenithar;Talos,1,Zenithar|Talos,,names already match current matrix authority

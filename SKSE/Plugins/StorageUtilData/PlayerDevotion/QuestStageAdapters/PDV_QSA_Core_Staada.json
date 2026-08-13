@@ -1,0 +1,15 @@
+{
+  "string": {
+    "schema": "pdv-quest-stage-adapter.v1",
+    "sourcePlugin": "ccbgssse025-advdsgs.esm",
+    "selectorKind": "player_item_count",
+    "selectorPlugin": "ccbgssse025-advdsgs.esm"
+  },
+  "int": {
+    "sourceFormId": 1671799,
+    "sourceStage": 300,
+    "selectorFormId": 1588833,
+    "selectorValues": [0, 1],
+    "targetStages": [301, 302]
+  }
+}

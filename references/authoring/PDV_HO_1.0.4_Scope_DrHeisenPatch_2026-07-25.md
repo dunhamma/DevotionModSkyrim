@@ -189,9 +189,11 @@ VMAD before concluding anything is unwired.
 
 **Optional tidy (not required):** the manager's dead
 `PDV_Bless_Altmer_Spine_Always/Mid/High` properties are unbound and referenced
-only by `StripAllPdvSpells`. Harmless — uninstall strips the spine via the
-substrate's own `ClearSubstrateBoons` regardless — but they are what caused this
-misreading. Also worth noting the naming trap: the spell named "Ordered
+only by `StripAllPdvSpells`. They are harmless at runtime, but the earlier claim
+that uninstall already reached the substrate's own `ClearSubstrateBoons` was
+incorrect. The uninstall path now performs an explicit owner-respecting sweep
+across every wired substrate quest before clearing storage and stopping the
+manager. Also worth noting the naming trap: the spell named "Ordered
 Heritage" sits on the `Always` slot, while the substrate's own posture ladder
 calls its MIDDLE state `POSTURE_ORDERED`.
 

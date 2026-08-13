@@ -30,6 +30,12 @@
  */
 import fs from "node:fs";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+const KNOWN_FLAGS = new Set(["--json"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_antifarm_sweep_audit" });
+const JSON_OUTPUT = process.argv.includes("--json");
+
 const ROOT = process.cwd().replace(/\\/g, "/");
 const SOURCE_DIR = `${ROOT}/live-source/Scripts/Source`;
 const MANAGER_PATH = `${SOURCE_DIR}/PDV__ManagerQuest.psc`;
@@ -201,7 +207,15 @@ function main() {
     selftest,
     ledger: "references/authoring/PDV_AntiFarmSweepLedger.md",
   };
-  console.log(JSON.stringify(summary, null, 2));
+  if (JSON_OUTPUT) {
+    console.log(JSON.stringify(summary, null, 2));
+  } else {
+    console.log(`Anti-farm sweep: ${summary.status}`);
+    console.log(`  handlers awarding piety: ${summary.handlersAwardingPiety}`);
+    console.log(`  capped: ${summary.capped}; allowlisted one-shots: ${summary.allowlistedOneShots}`);
+    console.log(`  uncapped gains: ${summary.uncappedGain.length}; penalty-only: ${summary.uncappedPenaltyOnly.length}`);
+    console.log(`  ledger: ${summary.ledger}`);
+  }
   process.exit(uncappedGain.length ? 1 : 0);
 }
 

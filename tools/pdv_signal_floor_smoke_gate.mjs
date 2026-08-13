@@ -14,15 +14,22 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+const KNOWN_FLAGS = new Set(["--check", "--faucets", "--json", "--likes", "--log", "--manual-ledger", "--matrix", "--runtime-json", "--scenarios", "--strict-runtime", "--write-ledger"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_signal_floor_smoke_gate" });
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const AUTH = path.join(ROOT, "references", "authoring");
 const SOURCE = path.join(ROOT, "live-source", "Scripts", "Source");
 
 const args = process.argv.slice(2);
+const CHECK_ONLY = args.includes("--check");
 const JSON_OUT = args.includes("--json");
 const WRITE_LEDGER = args.includes("--write-ledger");
 const STRICT_RUNTIME = args.includes("--strict-runtime");
+if (CHECK_ONLY && WRITE_LEDGER) throw new Error("--check and --write-ledger are mutually exclusive.");
 const SCENARIO_PATH = getArg("--scenarios") ?? path.join(AUTH, "PDV_SignalFloorSmokeScenarios_2026-07-09.json");
 const MATRIX_CSV = getArg("--matrix") ?? path.join(AUTH, "PDV_QuestReactionMatrix_Full.csv");
 const LIKES_CSV = getArg("--likes") ?? path.join(AUTH, "PDV_DeityLikesDislikes.csv");
@@ -67,6 +74,7 @@ function main() {
   const status = backendStatus === "FAIL" ? "FAIL" : (STRICT_RUNTIME && runtimeOpen > 0 ? "FAIL" : "PASS");
   const report = {
     generatedAt: new Date().toISOString(),
+    mode: WRITE_LEDGER ? "write-ledger" : "check",
     status,
     backendStatus,
     strictRuntime: STRICT_RUNTIME,

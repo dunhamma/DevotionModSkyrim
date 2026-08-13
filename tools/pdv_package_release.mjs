@@ -8,9 +8,10 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import crypto from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+
+import { hashByteFiles, hashBytes, writeTextWithEol } from "./lib/pdv_file_compare.mjs";
 
 const TOOL_DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(TOOL_DIR, "..");
@@ -23,12 +24,6 @@ const MANIFEST_PATH = path.join(
   "authoring",
   "PDV_ReleasePayload.manifest.json",
 );
-const HOUSECARL_PROOF_PATH = path.join(
-  REPO_ROOT,
-  "references",
-  "authoring",
-  "PDV_HousecarlReleaseProof.json",
-);
 const NATIVE_ROOT = path.join(REPO_ROOT, "native", "DevotionPrismaBridge");
 const CANONICAL_PRISMA_ROOT =
   process.env.PDV_CANONICAL_PRISMA_ROOT || path.join(NATIVE_ROOT, "mod");
@@ -39,8 +34,13 @@ const CANONICAL_PRISMA_ROOT =
 const RELEASE_SURFACES = [
   "Devotion.esp",
   "Credits.txt",
+  "PDV_Calian_DESC.ini",
+  "PDV_GreenPact_KID.ini",
+  "PDV_ItemRecognition_KID.ini",
+  "PDV_ReligiousRecognition_DISTR.ini",
   "DialogueViews",
   "Meshes",
+  "MS03 Calians",
   "PrismaUI",
   "SKSE",
   "Scripts",
@@ -80,7 +80,7 @@ function isExcludedEntry(relativePath) {
 }
 
 function sha256(filePath) {
-  return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex").toUpperCase();
+  return hashBytes(filePath).toUpperCase();
 }
 
 function mtime(filePath) {
@@ -108,6 +108,7 @@ function parseArgs(argv) {
     date: null,
     verify: null,
     preflight: false,
+    checkPlugins: [],
   };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -119,6 +120,10 @@ function parseArgs(argv) {
       args.verify = argv[++index];
     } else if (arg === "--preflight") {
       args.preflight = true;
+    } else if (arg === "--check-plugin") {
+      // Repeatable. Gates plugins that live OUTSIDE the release payload -- the compat patch
+      // hubs -- with the same header rule the payload sweep applies to Devotion.esp.
+      args.checkPlugins.push(argv[++index]);
     } else {
       fail(`Unknown argument: ${arg}`);
     }
@@ -166,7 +171,7 @@ function loadManifest() {
   const listedPex = new Set(
     manifest.fixedEntries
       .map(normalizeEntry)
-      .filter((entry) => /^Scripts\/PDV_.*\.pex$/i.test(entry)),
+      .filter((entry) => /^Scripts\/[^/]+\.pex$/i.test(entry)),
   );
   const missingPex = [...expectedPex].filter((entry) => !listedPex.has(entry));
   const extraPex = [...listedPex].filter((entry) => !expectedPex.has(entry));
@@ -242,6 +247,17 @@ function verifyExactLivePayload(manifest) {
       fail(`Required release metadata is missing: ${path.join(RELEASE_META_DIR, entry)}`);
     }
   }
+
+  // The packaged changelog is GENERATED from CHANGELOG.md. Existing on disk is not enough -
+  // it was present and two releases stale when 1.5.0 shipped, because nothing compared the
+  // two. Gate on content, not presence.
+  try {
+    execFileSync(process.execPath, [path.join(REPO_ROOT, "tools", "pdv_changelog_sync.mjs"), "--check"], { cwd: REPO_ROOT, stdio: "pipe" });
+  } catch (error) {
+    const detail = `${error.stdout ?? ""}${error.stderr ?? ""}`.trim();
+    fail(`Packaged changelog is out of sync with CHANGELOG.md. Run: node tools/pdv_changelog_sync.mjs --write\n${detail}`);
+  }
+
   pass(`Live payload exactly matches the ${manifest.expectedEntryCount}-entry manifest.`);
 }
 
@@ -325,14 +341,10 @@ function verifyPrismaParity(manifest) {
   }
 
   const canonicalView = path.join(CANONICAL_PRISMA_ROOT, "PrismaUI", "views", "Devotion");
-  const appBytes = fs.readFileSync(path.join(canonicalView, "app.js"));
-  const stylesBytes = fs.readFileSync(path.join(canonicalView, "styles.css"));
-  const expectedKey = `pdv-${crypto
-    .createHash("sha256")
-    .update(appBytes)
-    .update(stylesBytes)
-    .digest("hex")
-    .slice(0, 16)}`;
+  const expectedKey = `pdv-${hashByteFiles([
+    path.join(canonicalView, "app.js"),
+    path.join(canonicalView, "styles.css"),
+  ]).slice(0, 16)}`;
   const index = fs.readFileSync(path.join(canonicalView, "index.html"), "utf8");
   const actualKeys = [
     index.match(/styles\.css\?v=([A-Za-z0-9_-]+)/)?.[1],
@@ -348,34 +360,21 @@ function verifyPrismaParity(manifest) {
 }
 
 function verifyHousecarlProof() {
-  const proof = readJson(HOUSECARL_PROOF_PATH, "houseCARL release proof");
-  const espPath = path.join(MOD_ROOT, "Devotion.esp");
-  const currentHash = sha256(espPath);
-  const zeroChecks = ["danglingLinks", "missingMasters", "parseFailures"];
-  if (proof.profile !== "Devotion Dev" || proof.plugin !== "Devotion.esp" || proof.active !== true) {
-    fail("houseCARL proof must show active Devotion.esp in the Devotion Dev profile.");
+  const checker = path.join(REPO_ROOT, "tools", "pdv_release_proof_refresh.mjs");
+  let output = "";
+  try {
+    output = execFileSync(process.execPath, [checker, "--check"], {
+      cwd: REPO_ROOT,
+      encoding: "utf8",
+      maxBuffer: 32 * 1024 * 1024,
+      timeout: 300_000,
+    });
+  } catch (error) {
+    const detail = [error.stdout, error.stderr].filter(Boolean).join("\n").trim();
+    fail(`live houseCARL release-proof check failed.\n${detail || error.message}`);
   }
-  if (proof.espSha256 !== currentHash) {
-    fail(
-      `houseCARL proof is stale for Devotion.esp (proof ${proof.espSha256 || "missing"}, ` +
-        `live ${currentHash}). Refresh direct houseCARL readback.`,
-    );
-  }
-  for (const key of zeroChecks) {
-    if (proof.errors?.[key] !== 0) {
-      fail(`houseCARL proof ${key} must be zero (found ${proof.errors?.[key] ?? "missing"}).`);
-    }
-  }
-  if (proof.contestedRecordCount !== 33) {
-    fail(`houseCARL proof must account for all 33 contested records.`);
-  }
-  if (proof.cellNestedReferenceRetention?.verified !== true) {
-    fail("houseCARL proof must explicitly verify nested Devotion references in both later-winning CELLs.");
-  }
-  if (!Array.isArray(proof.criticalRecordWinners) || proof.criticalRecordWinners.length === 0) {
-    fail("houseCARL proof must record expected winners for critical records.");
-  }
-  pass("houseCARL proof matches the live ESP and closes structural/readback release gates.");
+  for (const line of output.trim().split(/\r?\n/)) console.log(`  ${line}`);
+  pass("houseCARL release proof was independently re-derived against the live profile.");
 }
 
 function verifyBuildVersion(version) {
@@ -406,6 +405,66 @@ function verifyReceiverAnam() {
     fail("ANAM gate: one or more Story Manager receivers lack ANAM.");
   }
   pass("ANAM gate: every Story Manager receiver carries ANAM.");
+}
+
+// --- Plugin header gate (2026-08-07) -------------------------------------------------------------
+// A plugin's load-order cost is the ESL flag in its TES4 header, not its file extension. The
+// standing rule (memory `patches-must-be-esl-flagged`) is: every PDV patch plugin ships ESL-flagged
+// (ESPFE -- zero full slots), and the main Devotion.esp must NEVER be flagged (it defines far more
+// records than the light ceiling; an accidentally flagged main plugin is a catastrophic ship).
+// This gate reads the header bytes directly so the claim is measured, not assumed.
+const TES4_FLAG_ESM = 0x1;
+const TES4_FLAG_ESL = 0x200;
+
+function readPluginHeader(filePath) {
+  const fd = fs.openSync(filePath, "r");
+  try {
+    const head = Buffer.alloc(24);
+    const bytesRead = fs.readSync(fd, head, 0, 24, 0);
+    if (bytesRead < 24) fail(`Plugin too short to carry a TES4 header: ${filePath}`);
+    const signature = head.toString("ascii", 0, 4);
+    if (signature !== "TES4") {
+      fail(`Not a plugin (TES4 signature missing, found "${signature}"): ${filePath}`);
+    }
+    const flags = head.readUInt32LE(8);
+    return {
+      flags,
+      esm: (flags & TES4_FLAG_ESM) !== 0,
+      esl: (flags & TES4_FLAG_ESL) !== 0,
+    };
+  } finally {
+    fs.closeSync(fd);
+  }
+}
+
+function checkPluginHeader(filePath) {
+  const baseName = path.basename(filePath);
+  const header = readPluginHeader(filePath);
+  const isMainMod = /^Devotion\.esp$/i.test(baseName);
+  if (isMainMod && header.esl) {
+    fail(
+      `${baseName} carries the ESL flag (0x${header.flags.toString(16)}). The main mod defines far ` +
+        `more records than the light ceiling and must ship as a full plugin.`,
+    );
+  }
+  if (!isMainMod && !header.esl) {
+    fail(
+      `${baseName} is NOT ESL-flagged (0x${header.flags.toString(16)}). Patch plugins ship ` +
+        `ESL-flagged (ESPFE) per the standing rule -- flag the header (housecarl_compact_plugin ` +
+        `handles out-of-range FormIDs), never rename to .esl.`,
+    );
+  }
+  pass(
+    `${baseName}: TES4 header correct (${isMainMod ? "full plugin, no ESL flag" : "ESL-flagged light plugin"}).`,
+  );
+}
+
+function verifyPluginHeaders(manifest) {
+  const pluginEntries = manifest.entries.filter((entry) => /\.es[pml]$/i.test(entry));
+  if (pluginEntries.length === 0) fail("Release payload lists no plugin at all.");
+  for (const entry of pluginEntries) {
+    checkPluginHeader(sourcePathForEntry(entry, manifest));
+  }
 }
 
 function verifySeq() {
@@ -472,6 +531,7 @@ function runPreflight(version, manifest) {
     fail(`Live mod folder not found: ${MOD_ROOT} (set PDV_MOD_PATH to override).`);
   }
   verifyExactLivePayload(manifest);
+  verifyPluginHeaders(manifest);
   const papyrusHashes = verifyAllPapyrusFreshness(manifest);
   verifyBuildVersion(version);
   verifyNativeFreshness();
@@ -500,6 +560,19 @@ function stageExactPayload(stagingDir, manifest) {
 
 const args = parseArgs(process.argv.slice(2));
 const manifest = loadManifest();
+
+if (args.checkPlugins.length > 0) {
+  console.log("PDV plugin header check");
+  console.log("");
+  for (const candidate of args.checkPlugins) {
+    const pluginPath = path.resolve(candidate);
+    if (!fs.existsSync(pluginPath)) fail(`Plugin not found: ${pluginPath}`);
+    checkPluginHeader(pluginPath);
+  }
+  console.log("");
+  console.log(`Plugin header check complete: ${args.checkPlugins.length} plugin(s), all correct.`);
+  process.exit(0);
+}
 
 if (args.verify) {
   const zipPath = path.resolve(args.verify);
@@ -546,7 +619,7 @@ fs.rmSync(stagingRoot, { recursive: true, force: true });
 console.log("");
 const archive = verifyArchive(zipPath, manifest);
 const receiptPath = `${zipPath}.proof.json`;
-fs.writeFileSync(
+writeTextWithEol(
   receiptPath,
   `${JSON.stringify(
     {
@@ -568,7 +641,7 @@ fs.writeFileSync(
     null,
     2,
   )}\n`,
-  "utf8",
+  "lf",
 );
 console.log("");
 console.log(`Built ${zipName}`);

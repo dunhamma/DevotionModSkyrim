@@ -1,7 +1,13 @@
 #!/usr/bin/env node
 import fs from "node:fs";
 import path from "node:path";
-import crypto from "node:crypto";
+
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { hashByteFiles, hashText } from "./lib/pdv_file_compare.mjs";
+
+const KNOWN_FLAGS = new Set(["--json"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_prisma_ui_audit" });
+const JSON_OUTPUT = process.argv.includes("--json");
 
 const DEVOTION_SOURCE = process.env.PDV_PRISMA_AUDIT_SOURCE_ROOT || "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
 const DEVOTION_COMPILED = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts";
@@ -14,6 +20,7 @@ const MCM_SOURCE = path.join(DEVOTION_SOURCE, "PDV_MCM.psc");
 const MANAGER_PEX = path.join(DEVOTION_COMPILED, "PDV__ManagerQuest.pex");
 const MCM_PEX = path.join(DEVOTION_COMPILED, "PDV_MCM.pex");
 const DAEDRIC_CONTRACT = path.join(REPO_ROOT, "references", "authoring", "PDV_DaedricPrinceRecordContracts.json");
+const MEDALLION_ROSTER_MANIFEST = path.join(REPO_ROOT, "references", "authoring", "PDV_MedallionRoster.manifest.json");
 const REPO_PRISMA_VIEW_DIR = path.join(REPO_ROOT, "native", "DevotionPrismaBridge", "mod", "PrismaUI", "views", "Devotion");
 const REPO_PRISMA_APP = path.join(REPO_PRISMA_VIEW_DIR, "app.js");
 const REPO_PRISMA_STYLE = path.join(REPO_PRISMA_VIEW_DIR, "styles.css");
@@ -47,8 +54,7 @@ function mtime(filePath) {
 // files that are textually identical -- a false FAIL on exactly the check that is
 // supposed to catch real drift. Compare what the compiler sees: the text.
 function normalizedHash(filePath) {
-  const text = read(filePath).replace(/\r\n/g, "\n");
-  return crypto.createHash("sha256").update(text, "utf8").digest("hex");
+  return hashText(filePath);
 }
 
 // The repo bridge mirror is what anyone building the DLL compiles against, but
@@ -170,9 +176,7 @@ function verifyPrismaAssetCacheContract() {
     }
   }
 
-  const appBytes = fs.readFileSync(REPO_PRISMA_APP);
-  const styleBytes = fs.readFileSync(REPO_PRISMA_STYLE);
-  const expectedKey = `pdv-${crypto.createHash("sha256").update(appBytes).update(styleBytes).digest("hex").slice(0, 16)}`;
+  const expectedKey = `pdv-${hashByteFiles([REPO_PRISMA_APP, REPO_PRISMA_STYLE]).slice(0, 16)}`;
   const index = read(REPO_PRISMA_INDEX);
   const styleMatch = index.match(/styles\.css\?v=([A-Za-z0-9_-]+)/);
   const appMatch = index.match(/app\.js\?v=([A-Za-z0-9_-]+)/);
@@ -185,7 +189,7 @@ function verifyPrismaAssetCacheContract() {
     pass(`Prisma app.js and styles.css share current content-derived cache key ${expectedKey}.`, REPO_PRISMA_INDEX);
   }
 
-  const app = appBytes.toString("utf8");
+  const app = read(REPO_PRISMA_APP);
   if (
     !app.includes('state.instrument.primary !== undefined') ||
     !app.includes('clamp01(numberOrZero(state.instrument.primary))') ||
@@ -210,11 +214,36 @@ function verifyPrismaAssetCacheContract() {
     pass("Prisma renders the 75-point Argonian cultural instrument and hides internal instrument-kind tokens from player captions.", REPO_PRISMA_APP);
   }
 
+  const patchSourceUiTokens = [
+    'const sourceName = text(copy.source, "");',
+    'source.className = "toast__source";',
+    'text(copy.source, ""),',
+    'const sourceName = text(entry.source, "");',
+    'sourceEl.className = "bod-leaf__source";',
+  ];
+  if (patchSourceUiTokens.some((token) => !app.includes(token))) {
+    fail("Prisma must render the optional source-mod label on quest-reaction toasts and Book of Days entries.", REPO_PRISMA_APP);
+  } else {
+    pass("Prisma renders optional source-mod labels on both quest-reaction player surfaces.", REPO_PRISMA_APP);
+  }
+
   if (!exists(REPO_MANAGER_SOURCE)) {
     fail("Repository manager source is missing for the Argonian panel payload contract.", REPO_MANAGER_SOURCE);
     return;
   }
   const manager = read(REPO_MANAGER_SOURCE);
+  const patchSourceManagerTokens = [
+    'JsonUtil.GetStringValue(matrixFile, "sourceMod")',
+    'prefix + "SourceModName"',
+    'SendPrismaToastWithSource(',
+    '"PDV.Diegetic.Journal.Sources"',
+    'JsonSafeString(sourceModName)',
+  ];
+  if (patchSourceManagerTokens.some((token) => !manager.includes(token))) {
+    fail("Manager must carry PatchHub sourceMod metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
+  } else {
+    pass("Manager carries PatchHub sourceMod metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
+  }
   const culturalManagerTokens = [
     'return "cultural"',
     'return "Root Memory at 1"',
@@ -227,6 +256,81 @@ function verifyPrismaAssetCacheContract() {
     fail("Manager focused-panel payload must expose Argonian cultural practice with 1/25/75 thresholds and a 75-point normalized instrument.", REPO_MANAGER_SOURCE);
   } else {
     pass("Manager focused-panel payload exposes Argonian cultural practice with the locked 1/25/75 semantics.", REPO_MANAGER_SOURCE);
+  }
+}
+
+function verifyNpcRecognitionVisibilityContract() {
+  for (const sourcePath of [MANAGER_SOURCE, MCM_SOURCE, DEVOTION_PRISMA_VIEW]) {
+    if (!exists(sourcePath)) {
+      fail("NPC recognition visibility dependency is missing.", sourcePath);
+      return;
+    }
+  }
+
+  const manager = read(MANAGER_SOURCE);
+  const mcm = read(MCM_SOURCE);
+  const app = read(DEVOTION_PRISMA_VIEW);
+  const payloadBuilder = functionBlock(manager, "GetNpcRecognitionPanelJson");
+  const advisoryBuilder = functionBlock(manager, "GetNpcRecognitionAdvisory");
+  const panelSender = functionBlock(manager, "PushDevotionPanel");
+  const transitionSurface = functionBlock(manager, "SurfaceNpcRecognitionTransition");
+  const compatPage = functionBlock(mcm, "BuildCompatPage");
+
+  const payloadFields = ["enabled", "managed", "status", "identity", "band", "advisory"];
+  const missingFields = payloadFields.filter((field) => !payloadBuilder.includes(`\\\"${field}\\\"`));
+  if (
+    !payloadBuilder ||
+    missingFields.length > 0 ||
+    !payloadBuilder.includes("NpcReligiousRecognitionEnabled()") ||
+    !payloadBuilder.includes('StorageUtil.GetStringValue(None, "PDV.Recognition.Owner")') ||
+    !advisoryBuilder.includes("if !recognitionEnabled") ||
+    !advisoryBuilder.includes('elseIf ownerName != ""') ||
+    !advisoryBuilder.includes("band >= TIER_DEVOTED")
+  ) {
+    fail(`Focused-panel recognition payload must distinguish enabled, externally managed, and below-Faithful states${missingFields.length ? `; missing fields: ${missingFields.join(", ")}` : ""}.`, MANAGER_SOURCE);
+  } else {
+    pass("Focused-panel recognition payload distinguishes enabled, externally managed, and below-Faithful states.", MANAGER_SOURCE);
+  }
+
+  if (
+    panelSender.includes(',\\"recognition\\":') &&
+    panelSender.includes("GetNpcRecognitionPanelJson()") &&
+    panelSender.includes("if !playerRequested") &&
+    panelSender.includes("return False")
+  ) {
+    pass("Player-requested focused-panel payload carries persistent recognition state.", MANAGER_SOURCE);
+  } else {
+    fail("Player-requested focused-panel payload must carry recognition state and remain player-requested only.", MANAGER_SOURCE);
+  }
+
+  if (
+    transitionSurface &&
+    !transitionSurface.includes("PushDevotionPanel(") &&
+    !transitionSurface.includes("SendJson(") &&
+    !transitionSurface.includes("SendOverlayJson(")
+  ) {
+    pass("Recognition transition presentation does not auto-open focused Prisma UI.", MANAGER_SOURCE);
+  } else {
+    fail("Recognition transition presentation must not auto-open focused Prisma UI.", MANAGER_SOURCE);
+  }
+
+  if (
+    compatPage.includes('AddTextOption("Current", PDV_Manager.GetNpcRecognitionStatusLine(), OPTION_FLAG_DISABLED)') &&
+    !/if\s+devMode\s+AddTextOption\("Current",\s*PDV_Manager\.GetNpcRecognitionStatusLine\(\)/i.test(compatPage)
+  ) {
+    pass("MCM exposes the current recognition state outside developer mode.", MCM_SOURCE);
+  } else {
+    fail("MCM must expose the current recognition state outside developer mode.", MCM_SOURCE);
+  }
+
+  if (
+    app.includes("state.recognition") &&
+    app.includes("recognition.status") &&
+    app.includes("recognition.advisory")
+  ) {
+    pass("Focused Prisma panel renders recognition status and advisory copy.", DEVOTION_PRISMA_VIEW);
+  } else {
+    fail("Focused Prisma panel must render recognition status and advisory copy.", DEVOTION_PRISMA_VIEW);
   }
 }
 
@@ -635,6 +739,9 @@ function expectedDaedricMechanicText(princeName, effects, kind) {
 
   const labels = {
     OneHanded: "One-handed",
+    TwoHanded: "Two-handed",
+    Destruction: "Destruction",
+    Pickpocket: "Pickpocket",
     Speechcraft: "Speech",
     ResistMagic: "Magic resistance",
     Stamina: "Stamina",
@@ -736,6 +843,43 @@ function verifySyrabaneDisplayContract(manager, app, managerPath, appPath) {
   }
 }
 
+function verifyAltmerCurrentRosterContract(manager, managerPath) {
+  const rosterBlock = functionBlock(manager, "IsDashboardDeityInOriginRoster");
+  const rosterMatch = rosterBlock.match(/elseIf originRace == ORIGIN_ALTMER[\s\S]*?(?=elseIf originRace == ORIGIN_BOSMER)/);
+  const medallionBlock = functionBlock(manager, "GetAltmerMedallionEntriesJson");
+  const requiredDeities = ["PDV_AuriEl", "PDV_Magnus", "PDV_Xarxes", "PDV_Syrabane", "PDV_Trinimac"];
+  const deferredDeities = ["PDV_Mara", "PDV_Stendarr", "PDV_Yffre"];
+  const requiredOptions = ["auri-el", "magnus", "xarxes", "syrabane", "trinimac"];
+  const deferredOptions = ["mara", "stendarr", "yffre"];
+  const rosterText = rosterMatch?.[0] ?? "";
+  const repairBlock = functionBlock(manager, "RepairBookOfDaysJournalText");
+  const pruneBlock = functionBlock(manager, "ShouldPruneDeferredAltmerJournalLine");
+
+  let manifestOptions = [];
+  if (exists(MEDALLION_ROSTER_MANIFEST)) {
+    const manifest = JSON.parse(read(MEDALLION_ROSTER_MANIFEST));
+    const altmer = (manifest.races ?? []).find((race) => race.raceId === "altmer");
+    manifestOptions = (altmer?.sections ?? []).flatMap((section) => section.entries ?? []).map((entry) => entry.optionId);
+  }
+
+  const missing = requiredDeities.filter((name) => !rosterText.includes(name));
+  const runtimeLeak = deferredDeities.filter((name) => rosterText.includes(name));
+  const medallionMissing = requiredOptions.filter((id) => !medallionBlock.includes(`RosterMedallionEntry("${id}"`));
+  const medallionLeak = deferredOptions.filter((id) => medallionBlock.includes(`RosterMedallionEntry("${id}"`));
+  const manifestMissing = requiredOptions.filter((id) => !manifestOptions.includes(id));
+  const manifestLeak = deferredOptions.filter((id) => manifestOptions.includes(id));
+  const migrationMissing = !repairBlock.includes("Int repairVersion = 3") ||
+    !repairBlock.includes("ShouldPruneDeferredAltmerJournalLine") ||
+    !pruneBlock.includes("GetPlayerOriginRaceIndex() != ORIGIN_ALTMER") ||
+    !["Mara", "Stendarr", "Y'ffre"].every((name) => pruneBlock.includes(`StringContainsToken(line, "${name}")`));
+
+  if (!rosterText || missing.length || runtimeLeak.length || medallionMissing.length || medallionLeak.length || manifestMissing.length || manifestLeak.length || migrationMissing) {
+    fail(`Altmer current-roster contract drift: missing=${missing.join("|") || "none"}, runtime-deferred=${runtimeLeak.join("|") || "none"}, medallion-missing=${medallionMissing.join("|") || "none"}, medallion-deferred=${medallionLeak.join("|") || "none"}, manifest-missing=${manifestMissing.join("|") || "none"}, manifest-deferred=${manifestLeak.join("|") || "none"}, migration-missing=${migrationMissing}.`, managerPath);
+  } else {
+    pass("Altmer current roster is limited to Auri-El, Magnus, Xarxes, Syrabane, and Trinimac; Mara, Stendarr, and Y'ffre remain deferred and are pruned from affected existing journals.", managerPath);
+  }
+}
+
 function verifyBookOfDaysChronicleActionContract({ manager, eventBus, actionRouter, eventTypes, app, index, managerPath, eventBusPath, actionRouterPath, eventTypesPath, appPath, indexPath }) {
   const journalPayloadBlock = functionBlock(manager, "BuildJournalPayloadJson");
   const dashboardBlock = functionBlock(manager, "GetDashboardJson");
@@ -783,16 +927,21 @@ function verifyBookOfDaysChronicleActionContract({ manager, eventBus, actionRout
   }
 
   const shrinePrayerAwardBlock = functionBlock(manager, "AwardShrinePrayerToDeityName");
-  const shrineRosterGateIndex = shrinePrayerAwardBlock.indexOf("IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())");
-  const shrineAwardIndex = shrinePrayerAwardBlock.indexOf('AwardPiety(deity, 2.0, "shrine_prayer_" + sourceId)');
+  const shrineGrandfatherIndex = shrinePrayerAwardBlock.indexOf("Bool grandfatheredPatron = IsGrandfatheredOffRosterPatron(deity)");
+  const shrineRosterGateIndex = shrinePrayerAwardBlock.indexOf("!IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex()) && !grandfatheredPatron");
+  const shrineReducedRateIndex = shrinePrayerAwardBlock.indexOf("shrineAmount = shrineAmount * GetQuestReactionStanceMultiplier(");
+  const shrineAwardIndex = shrinePrayerAwardBlock.indexOf('AwardPietyInternal(deity, shrineAmount, True, "shrine_prayer_" + sourceId, !grandfatheredPatron)');
   if (
+    shrineGrandfatherIndex < 0 ||
     shrineRosterGateIndex < 0 ||
+    shrineReducedRateIndex < 0 ||
     shrineAwardIndex < 0 ||
+    shrineGrandfatherIndex > shrineRosterGateIndex ||
     shrineRosterGateIndex > shrineAwardIndex
   ) {
-    fail("Divine shrine prayer awards must be gated by the player's origin roster before piety or Book of Days movement.", managerPath);
+    fail("Divine shrine prayer awards must be roster-gated, with only a reduced-rate grandfathered active patron exception, before piety or Book of Days movement.", managerPath);
   } else {
-    pass("Divine shrine prayer awards are gated by the player's origin roster before piety or Book of Days movement.", managerPath);
+    pass("Divine shrine prayer awards are roster-gated, with only a reduced-rate grandfathered active patron exception, before piety or Book of Days movement.", managerPath);
   }
 
   if (
@@ -991,6 +1140,8 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     const p2AmbientNoticeBlock = functionBlock(manager, "SurfaceP2AmbientProgressNotice");
     const p2DeliveryBlock = functionBlock(manager, "SurfaceP2Acknowledgement");
     const altmerSleepBlock = functionBlock(manager, "HandleAltmerSleepEvents");
+    const altmerHeritageVoiceBlock = functionBlock(manager, "AppendAltmerHeritageVoice");
+    const altmerHeritageSourceLineBlock = functionBlock(manager, "GetAltmerHeritageSourceLine");
     const bretonSleepBlock = functionBlock(manager, "HandleBretonSleepEvents");
     const bretonHiddenArtBlock = functionBlock(manager, "HandleBretonHiddenArtExposure");
     const overlaySenderFunctions = functionNamesContaining(manager, "PDV_PrismaBridge.SendOverlayJson(");
@@ -1067,7 +1218,6 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     }
 
     const journalBlock = functionBlock(manager, "SendPrismaJournalPayload");
-    const refreshJournalBlock = functionBlock(manager, "RefreshOpenBookOfDays");
     const appendJournalBlock = functionBlock(manager, "AppendBookOfDaysEntry");
     if (!journalBlock) {
       fail("SendPrismaJournalPayload function is missing.", managerPath);
@@ -1113,16 +1263,22 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
       pass("Medallion modal payload has no live callers.", managerPath);
     }
 
+    // The invariant is "stale Papyrus journal-open state gets reconciled against native
+    // visibility", not "a function named RefreshOpenBookOfDays exists". That standalone function
+    // was retired 2026-08-07: PDV_MCM's journal hotkey already did the identical reconciliation
+    // inline, at the only moment it matters, so the function was a superseded duplicate that
+    // nothing called. Assert the behaviour where it actually lives.
+    const mcmJournalSource = read(MCM_SOURCE);
     if (
-      !refreshJournalBlock.includes("PDV_PrismaBridge.IsJournalVisible()") ||
-      !refreshJournalBlock.includes('StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)')
+      !mcmJournalSource.includes("PDV_PrismaBridge.IsJournalVisible()") ||
+      !mcmJournalSource.includes('StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)')
     ) {
-      fail("Book of Days refresh must reconcile stale Papyrus open state against native journal visibility.", managerPath);
+      fail("Journal hotkey must reconcile stale Papyrus open state against native journal visibility.", MCM_SOURCE);
     } else {
-      pass("Book of Days refresh reconciles stale Papyrus open state against native visibility.", managerPath);
+      pass("Journal hotkey reconciles stale Papyrus open state against native visibility.", MCM_SOURCE);
     }
 
-    if (appendJournalBlock.includes("RefreshOpenBookOfDays(") || appendJournalBlock.includes("SendPrismaJournalPayload(")) {
+    if (appendJournalBlock.includes("SendPrismaJournalPayload(")) {
       fail("Book of Days writes must not open or refresh the journal modal during gameplay.", managerPath);
     } else {
       pass("Book of Days writes only store chronicle data and do not open/refresh the modal.", managerPath);
@@ -1139,16 +1295,40 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
       pass("Accepted P2 book notices validate provenance and feed both Prisma toast and Book of Days chronicle.", managerPath);
     }
 
+    // P2 (2026-08-04) moved the Altmer dream line out of HandleAltmerSleepEvents: every ancestral
+    // spine feed now voices through AppendAltmerHeritageVoice, gated on the day credit actually
+    // landing. The invariant is unchanged and still asserted here -- Altmer sleep produces exactly
+    // ONE quiet (unpinned, setup-quiet-respecting) Book of Days dream and never borrows the P2
+    // book/ambient notice paths -- but it is now proven across the sleep block, the shared voice
+    // helper, and the per-source line map rather than against one inline literal.
+    const altmerDreamVoiced =
+      /AwardAltmerAncestorSpinePulse\(\s*multiplier\s*,\s*"sleep_dream_/.test(altmerSleepBlock) &&
+      !altmerSleepBlock.includes("AppendBookOfDaysEntry(") &&
+      /if\s+grantedMetric\s*<=\s*0\.0[\s\S]*?return/.test(altmerHeritageVoiceBlock) &&
+      // Accepts the source line inline OR via a local, because the helper now RETURNS the line it
+      // wrote so the caller can reuse it as the Prisma toast context (toast parity, 2026-08-06).
+      // The invariant asserted is unchanged: the entry is built from GetAltmerHeritageSourceLine,
+      // carries the auri-el symbol, and is unpinned.
+      /String\s+\w+\s*=\s*GetAltmerHeritageSourceLine\(reason\)[\s\S]*?AppendBookOfDaysEntry\(\w+,[^\r\n]*"auri-el",\s*False\s*,/.test(altmerHeritageVoiceBlock) &&
+      countMatches(altmerHeritageVoiceBlock, /AppendBookOfDaysEntry\(/g) === 1 &&
+      // Assert that the sleep feed HAS its own voiced arm, never what that arm SAYS. The wording
+      // here is owner-editable player copy: an earlier revision of this check pinned the exact
+      // sentence, and a legitimate voice pass on the line turned the gate red while the behaviour
+      // was untouched. A gate that goes red on a copy edit teaches people to ignore it.
+      /StringContainsToken\(reason,\s*"sleep_dream"\)\s*\r?\n\s*return\s+"[^"]+"/.test(altmerHeritageSourceLineBlock);
+
     if (
       !p2BookNoticeBlock.includes('True, "P2 book notice surfaced: "') ||
       !p2AmbientNoticeBlock.includes('False, "P2 ambient notice surfaced: "') ||
-      !altmerSleepBlock.includes('AppendBookOfDaysEntry("An Aldmeri dream settles your ancestral inheritance."') ||
+      !altmerDreamVoiced ||
       !bretonSleepBlock.includes("SurfaceP2AmbientProgressNotice(") ||
       altmerSleepBlock.includes("SurfaceP2AmbientProgressNotice(") ||
       altmerSleepBlock.includes("SurfaceP2BookReadNotice(") ||
+      altmerHeritageVoiceBlock.includes("SurfaceP2AmbientProgressNotice(") ||
+      altmerHeritageVoiceBlock.includes("SurfaceP2BookReadNotice(") ||
       bretonSleepBlock.includes("SurfaceP2BookReadNotice(")
     ) {
-      fail("P2 book reads must bypass setup quiet presentation; Altmer sleep logs one quiet Book of Days dream while Breton sleep keeps the quiet-respecting ambient notice.", managerPath);
+      fail("P2 book reads must bypass setup quiet presentation; Altmer sleep logs one quiet Book of Days dream through the shared heritage voice while Breton sleep keeps the quiet-respecting ambient notice.", managerPath);
     } else {
       pass("P2 book reads, quiet Altmer dreams, and Breton ambient sleep progress use their intended distinct presentation paths.", managerPath);
     }
@@ -1176,6 +1356,7 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
       const liveApp = read(appPath);
       verifyKynarethMedallionContract(manager, liveApp, managerPath, appPath);
       verifySyrabaneDisplayContract(manager, liveApp, managerPath, appPath);
+      verifyAltmerCurrentRosterContract(manager, managerPath);
     } else {
       fail("Live Prisma app.js is missing for medallion symbol contract audit.", appPath);
     }
@@ -1732,10 +1913,29 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
 
   const substrateProgressBody = functionBlock(managerForBroadLane, "SendPrismaSubstrateProgress");
   const substrateProgressCalls = extractCalls(managerForBroadLane, "SendPrismaSubstrateProgress");
-  const staleMetricCalls = substrateProgressCalls.filter((call) =>
-    call.args[3]?.trim() === "multiplier" ||
-    (!call.args[3]?.includes("GetMetric() - metricBefore") && !call.args[3]?.includes("metricAfter - metricBefore"))
-  );
+  const substrateFunctionBlocks = extractFunctionBlocks(managerForBroadLane);
+  const staleMetricCalls = substrateProgressCalls.filter((call) => {
+    const metricArgument = call.args[3]?.trim() ?? "";
+    if (metricArgument.includes("GetMetric() - metricBefore") || metricArgument.includes("metricAfter - metricBefore")) {
+      return false;
+    }
+    // A bare local is acceptable ONLY if the enclosing function actually assigns it the real
+    // post-award delta. This must stay general rather than matching one blessed variable name:
+    // producers legitimately use their own pair (studyGrantedMetric/studyMetricBefore), and
+    // AwardAltmerAncestorSpinePulse pre-declares `Float grantedMetric = 0.0` then assigns it
+    // inside the substrate guard, so the declaration and the assignment are separate lines.
+    // Anything else -- notably a requested `multiplier` -- is still a stale-metric failure.
+    if (/^[A-Za-z_]\w*$/.test(metricArgument)) {
+      const functionName = enclosingFunctionName(substrateFunctionBlocks, call.index);
+      const functionBody = substrateFunctionBlocks.find((item) => item.name === functionName)?.body ?? "";
+      const realDelta = new RegExp(
+        `(?:Float\\s+)?${metricArgument}\\s*=\\s*[A-Za-z0-9_]+\\.GetMetric\\(\\)\\s*-\\s*[A-Za-z0-9_]*metricBefore\\b`,
+        "i",
+      );
+      return !realDelta.test(functionBody);
+    }
+    return true;
+  });
   const creditGuard = substrateProgressBody.indexOf("if grantedMetric <= 0.0");
   const creditReturn = substrateProgressBody.indexOf("return", creditGuard);
   const firstPresentation = Math.min(
@@ -1750,7 +1950,51 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   ) {
     fail(`Substrate presentation must be gated by actual grantedMetric with zero-credit suppression; ${staleMetricCalls.length} producer(s) do not pass a metric delta.`, managerPath);
   } else {
-    pass(`All ${substrateProgressCalls.length} substrate progress producers pass actual metric deltas and zero-credit acts stay silent.`, managerPath);
+    pass(`All ${substrateProgressCalls.length} substrate progress producers pass actual metric deltas and the shared helper suppresses zero-credit presentation.`, managerPath);
+  }
+
+  // Altmer parity is an acknowledgement contract, not a copy rule. Every accepted heritage
+  // producer funnels through AwardAltmerAncestorSpinePulse; that helper resolves one Book line,
+  // reuses it as the toast context, and presents only after the real daily-credit delta is known.
+  // Keep the producer registry explicit so a new Altmer act cannot silently bypass the surface.
+  const expectedAltmerHeritageProducers = new Set([
+    "HandleSubstrateShrinePrayer",
+    "HandleAltmerSleepEvents",
+    "HandleAltmerDawnSteadiness",
+    "HandleAltmerOrthodoxCostlyEnforcement",
+    "HandleAltmerPracticeFocus",
+    "HandleAltmerMagicSkillIncrease",
+    "RunDawnAwardAltmerAuriElDawn",
+  ]);
+  const altmerHeritageCalls = extractCalls(managerForBroadLane, "AwardAltmerAncestorSpinePulse")
+    .filter((call) => enclosingFunctionName(substrateFunctionBlocks, call.index) !== "AwardAltmerAncestorSpinePulse");
+  const actualAltmerHeritageProducers = new Set(
+    altmerHeritageCalls.map((call) => enclosingFunctionName(substrateFunctionBlocks, call.index)),
+  );
+  const missingAltmerHeritageProducers = [...expectedAltmerHeritageProducers]
+    .filter((name) => !actualAltmerHeritageProducers.has(name));
+  const unexpectedAltmerHeritageProducers = [...actualAltmerHeritageProducers]
+    .filter((name) => !expectedAltmerHeritageProducers.has(name));
+  const altmerAwardBody = functionBlock(managerForBroadLane, "AwardAltmerAncestorSpinePulse");
+  const altmerVoiceIndex = altmerAwardBody.indexOf("String voicedLine = AppendAltmerHeritageVoice(grantedMetric, reason)");
+  const altmerSurfaceIndex = altmerAwardBody.indexOf('SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, grantedMetric, voicedLine');
+  const altmerBranchIndex = substrateProgressBody.indexOf('if substrate == "altmer-heritage"');
+  const altmerBranchReturn = substrateProgressBody.indexOf("return", altmerBranchIndex);
+  const altmerBranchBody = altmerBranchIndex >= 0 && altmerBranchReturn > altmerBranchIndex
+    ? substrateProgressBody.slice(altmerBranchIndex, altmerBranchReturn)
+    : "";
+  if (
+    missingAltmerHeritageProducers.length > 0 || unexpectedAltmerHeritageProducers.length > 0 ||
+    altmerVoiceIndex < 0 || altmerSurfaceIndex < altmerVoiceIndex ||
+    !altmerBranchBody.includes('SendPrismaSubstrateToast(substrate, "deepen", context, symbolName, stateLabel)') ||
+    !altmerBranchBody.includes('SendPrismaSubstrateToast(substrate, "act", context, symbolName, stateLabel)') ||
+    !altmerBranchBody.includes("if surfacePresentation") ||
+    !altmerBranchBody.includes("if tierAfter > tierBefore") ||
+    altmerBranchBody.includes("AppendBookOfDaysEntry(entryText")
+  ) {
+    fail(`Altmer heritage notice parity requires one accepted-act funnel for every registered producer; missing=${missingAltmerHeritageProducers.join("|") || "none"}, unexpected=${unexpectedAltmerHeritageProducers.join("|") || "none"}.`, managerPath);
+  } else {
+    pass(`All ${actualAltmerHeritageProducers.size} registered Altmer heritage producers reuse one accepted Book line for one Prisma notice, with a distinct tier Chronicle only on crossing.`, managerPath);
   }
 
   const renamedFamilyLines = managerForBroadLane.split(/\r?\n/).filter((line) =>
@@ -1906,19 +2150,26 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
 
 verifyJournalBytecodeFreshness();
 verifyPrismaAssetCacheContract();
+verifyNpcRecognitionVisibilityContract();
 requireBridgeSourceParity();
 requireBridgeNativesDeclared();
 verifyParityRegistryContracts(path.join(REPO_ROOT, "references", "authoring", "PDV_PrismaParityRegistry.csv"));
 
-for (const item of passes) {
-  console.log(`[PASS] ${item.message}${item.source ? ` [${item.source}]` : ""}`);
-}
-for (const item of failures) {
-  console.error(`[FAIL] ${item.message}${item.source ? ` [${item.source}]` : ""}`);
+if (JSON_OUTPUT) {
+  console.log(JSON.stringify({
+    status: failures.length ? "FAIL" : "PASS",
+    counts: { pass: passes.length, fail: failures.length },
+    passes,
+    failures,
+  }, null, 2));
+} else {
+  for (const item of passes) {
+    console.log(`[PASS] ${item.message}${item.source ? ` [${item.source}]` : ""}`);
+  }
+  for (const item of failures) {
+    console.error(`[FAIL] ${item.message}${item.source ? ` [${item.source}]` : ""}`);
+  }
+  if (failures.length === 0) console.log(`Prisma UI audit passed: ${passes.length} checks.`);
 }
 
-if (failures.length > 0) {
-  process.exit(1);
-}
-
-console.log(`Prisma UI audit passed: ${passes.length} checks.`);
+if (failures.length > 0) process.exitCode = 1;

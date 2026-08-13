@@ -232,6 +232,11 @@ Stable common toast fields:
 - `title`
 - `message`
 - `duration`
+- `source` (optional; player-facing source-mod name for modular quest reactions)
+
+Quest-reaction Book of Days entries may also carry the same optional `source`
+field. The Prisma view renders it as a compact source line on both surfaces;
+core Skyrim reactions omit it.
 
 Stable event-specific fields:
 

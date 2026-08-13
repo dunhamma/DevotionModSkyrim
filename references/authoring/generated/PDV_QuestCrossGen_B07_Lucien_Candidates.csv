@@ -1,0 +1,5 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation,formid
+JRLucienElderScroll,JRLucienElderScroll,20,Refused to let Lucien read the Elder Scroll.,arcane_restraint,Julianos,+,m,small,"cross-gen candidate: arcane_restraint(S) from the Julianos Part B profile, stepped down; REVIEW before promotion",Lucien.esp:0DF697
+JRLucienElderScroll,JRLucienElderScroll,20,Refused to let Lucien read the Elder Scroll.,arcane_restraint,Magnus,+,S,small,"cross-gen candidate: arcane_restraint(C) from the Magnus Part B profile, stepped down; REVIEW before promotion",Lucien.esp:0DF697
+JRLucienElderScroll,JRLucienElderScroll,20,Refused to let Lucien read the Elder Scroll.,arcane_restraint,Sheogorath,-,m,small,"cross-gen candidate: arcane_restraint(m) from the Sheogorath Part B profile, stepped down; REVIEW before promotion",Lucien.esp:0DF697
+JRLucienPersonal1,The Oblivion Engine,800,Shut down the Daedric intelligence governing Dumzbthar.,destroy_daedric_threat,Stendarr,+,S,small,"cross-gen candidate: destroy_daedric_threat(C) from the Stendarr Part B profile, stepped down; REVIEW before promotion",Lucien.esp:2B13ED

@@ -1,6 +1,14 @@
 #!/usr/bin/env node
 import process from "node:process";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--function", "--game", "--help", "--json", "--max-scripts", "--query", "--scan-concurrency", "--script"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_papyrus_lookup" });
+
 const DEFAULT_GAME = "skyrimse";
 const DEFAULT_MAX_SCRIPTS = 8;
 const DEFAULT_SCAN_CONCURRENCY = 12;

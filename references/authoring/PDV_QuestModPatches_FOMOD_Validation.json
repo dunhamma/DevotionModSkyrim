@@ -1,0 +1,1037 @@
+{
+  "schema": "pdv-quest-patch-fomod-validation.v1",
+  "generatedAt": "2026-08-11T23:38:48.300Z",
+  "status": "PASS",
+  "proofBoundary": "Package structure and bytes only. This does not prove runtime routing, player surfaces, semantic correctness, or support status.",
+  "packageRoot": "dist/PDV_QuestModPatches_FOMOD",
+  "optionCounts": {
+    "modularOptions": 77,
+    "channelFiles": 75
+  },
+  "simulations": [
+    {
+      "name": "all-options",
+      "installedFiles": 113,
+      "identicalCollisions": []
+    },
+    {
+      "name": "representative-subset",
+      "installedFiles": 3,
+      "identicalCollisions": []
+    }
+  ],
+  "individualSimulations": [
+    {
+      "name": "individual:Above All Else",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Baba Yaga and the Labyrinth",
+      "installedFiles": 2,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Bark and Bite",
+      "installedFiles": 2,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Before the End",
+      "installedFiles": 2,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Beyond Skyrim - Bruma",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Calling the Watchmaker",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:DAc0da",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Depths of the Soul",
+      "installedFiles": 2,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Glenmoril",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Heart of the Reach",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Hunt for the Spectre",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Legends of Aetherium",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Moon and Star",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Moonpath to Elsweyr",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Olenveld",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Once We Were Here",
+      "installedFiles": 7,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Project AHO",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Siege at Icemoth",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Sirenroot",
+      "installedFiles": 2,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Skyrim Extended Cut - Saints and Seducers",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Sleepwalking Into A Nightmare",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Taste of Death Addon",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:The Forgotten City",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:The Frozen Heart",
+      "installedFiles": 2,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:The Gift of Saturalia",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:The Gray Cowl of Nocturnal",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:The Rot Below",
+      "installedFiles": 2,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:The Sinister Seven",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:The Tools of Kagrenac",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:There Is No Umbra - Chapter III",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Unslaad",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Vigilant",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:War's Folly",
+      "installedFiles": 15,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Whispers of the Depths",
+      "installedFiles": 5,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Wyrmstooth",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Caught Red Handed - Quest Expansion",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:College of Winterhold - Quest Expansion",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Defeat the Dragon Cult",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Destroy the Acolyte Priests",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Destroy The Dark Brotherhood - Quest Expansion",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Ebony Blade Curse",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Forsworn Conspiracy - Quest Expansion",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Ill Met by Moonlight - Dialogue Expansion",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Infiltration - Quest Expansion",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Innocence Lost - Quest Expansion",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Nilheim - Misc Quest Expansion",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Paarthurnax - Quest Expansion",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Penitus Oculatus",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Return Aegisbane",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Revealing Rune",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Save the Icerunner",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:The Heart of Dibella - Quest Expansion",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:The Whispering Door - Quest Expansion",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Thieves Guild Alternative Endings",
+      "installedFiles": 2,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Thieves Guild For Good Guys",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Gore - A Companion Mod",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Immersive Kaidan AIO",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Inigo",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Interesting NPCs SE (3DNPC)",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Kaidan 2",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Khajiit Will Follow",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Lucien",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:M'rissi's Tails of Troubles",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Merlin the Corgi",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Redcap the Riekling",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Remiel",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Sa'chil - Custom Voiced Khajiit Follower",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Song of the Green - Auri",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:The Thalmor's Shadow - Taliesin",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Thogra",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Val Serano - Pirate Follower and Quest Adventure",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Xelzaz",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Bards Reborn - Student of Song",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Become a Bard",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Aetherium Forge Destroys Items",
+      "installedFiles": 4,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Daedric Shrines AIO prayer activators",
+      "installedFiles": 2,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:Legacy of the Dragonborn",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    }
+  ],
+  "manifest": {
+    "fileCount": 122,
+    "treeSha256": "96E229EED4506358442CBC11B26F4D651EB8432AEE021BBEC2CEA43AA8C04CEC",
+    "files": [
+      {
+        "path": "common/_Fragments/OnceWeWereHere/Scripts/PDV_TIF_OWWH_S60.pex",
+        "size": 724,
+        "sha256": "82DC17DEF58F76C30F8FA70A4D38C2A543B29CE418E98A1F4D190ED8BC527B65"
+      },
+      {
+        "path": "common/_Fragments/OnceWeWereHere/Scripts/PDV_TIF_OWWH_S61.pex",
+        "size": 724,
+        "sha256": "4702D0B952B1A67E4BE977238A4793D43E683D86A9A3980022880F919C278F7B"
+      },
+      {
+        "path": "common/_Fragments/OnceWeWereHere/Scripts/Source/PDV_TIF_OWWH_S60.psc",
+        "size": 242,
+        "sha256": "F4EFA94D7CD5282B37B31F2EC4D4669F43E8D9B1817854955EED01C4C5E3547A"
+      },
+      {
+        "path": "common/_Fragments/OnceWeWereHere/Scripts/Source/PDV_TIF_OWWH_S61.psc",
+        "size": 242,
+        "sha256": "AC0AE0848E79181A3D0AFA53AA6D02CDF0AD3206EA0CB446A371485ED1F62C33"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/PDV_TIF_WF_S20.pex",
+        "size": 720,
+        "sha256": "2490F09852F9348F1D23DDC172B34567A9C2EC28B53A87A04A2EF1AA64EC37F0"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/PDV_TIF_WF_S21.pex",
+        "size": 720,
+        "sha256": "1F2FE7C0913C4F80EAA808A6EC00BBA4F335E29CA3A743A7587B45708AB35513"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/PDV_TIF_WF_S22.pex",
+        "size": 720,
+        "sha256": "BB7262243FF7B32F8ED62A4B7EFC7E783695CECE8EFDE6D2B4119AEBD9A8C636"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/PDV_TIF_WF_S23.pex",
+        "size": 759,
+        "sha256": "B4FE6120C330919DF8484178150973A6E3626D8AA8DBCD5CFF78A9B92817A40D"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/PDV_TIF_WF_S24.pex",
+        "size": 759,
+        "sha256": "DEF7424848CF105046F6CF74D502DBF67451BBB02DCD9D6B49685FED5B49DDED"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/PDV_TIF_WF_S25.pex",
+        "size": 759,
+        "sha256": "A6A313EAB8A29DBF34A6EB576E71B63794890AE579AD80B06D6437BB337D8E15"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/Source/PDV_TIF_WF_S20.psc",
+        "size": 240,
+        "sha256": "F572BA89770B3ED4C0EC48078C070912182AA3B69811185A3C73C79244A47945"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/Source/PDV_TIF_WF_S21.psc",
+        "size": 240,
+        "sha256": "2DF1E39EFB7D1C7291E51CEACB814CF79D8316DBC68B852F8AFB082D89BAE859"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/Source/PDV_TIF_WF_S22.psc",
+        "size": 240,
+        "sha256": "DE6329277C1E8F8F95A7F8630C526678C56F7A430156FD226A2AB0226A66BEDD"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/Source/PDV_TIF_WF_S23.psc",
+        "size": 274,
+        "sha256": "4318A8BC8A0E1D5056A51DE149471B1EC6B244F6A5F27D761417FAB912E47ABE"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/Source/PDV_TIF_WF_S24.psc",
+        "size": 274,
+        "sha256": "5A5261B3253CA6A685DA1DD649F57FB2C30D8A5A2380394080FFE38C9FD3B2F3"
+      },
+      {
+        "path": "common/_Fragments/WarsFolly/Scripts/Source/PDV_TIF_WF_S25.psc",
+        "size": 274,
+        "sha256": "4B4F5115955C5FC679E68EF03CE2D2D9682585061F6166D62068122FA0439CE3"
+      },
+      {
+        "path": "common/_Fragments/WhispersOfTheDepths/Scripts/PDV_TIF_SMB_S45.pex",
+        "size": 761,
+        "sha256": "92E2DDF17965B1E98A9806E70F38C374E1C99B212CAD9B2F04D5427EA182B13B"
+      },
+      {
+        "path": "common/_Fragments/WhispersOfTheDepths/Scripts/Source/PDV_TIF_SMB_S45.psc",
+        "size": 275,
+        "sha256": "9F7F712491C0DADB866FC35073D4CC847C44529D985992E57ACCE798DF810841"
+      },
+      {
+        "path": "common/AboveAllElse/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_AboveAllElse.json",
+        "size": 104442,
+        "sha256": "86EF7EDF1CBB4DB67275001F08525218AFBEA928526DF092CDA78E3F7B37A93A"
+      },
+      {
+        "path": "common/AFDI/PDV_Patch_AFDI.esp",
+        "size": 502,
+        "sha256": "84EC8E38576C91D6992E1E6880F0245190DE7D9BE391D85414D79E8F07FCA3AA"
+      },
+      {
+        "path": "common/AFDI/Scripts/PDV_AFDIObserver.pex",
+        "size": 8035,
+        "sha256": "4837560F8ABC1EB71B71D629F7BB40E170B08934720DF74802AD23EFE23D8A7F"
+      },
+      {
+        "path": "common/AFDI/Scripts/Source/PDV_AFDIObserver.psc",
+        "size": 9325,
+        "sha256": "BBE9D952077116C13D7441F28B90FD6CF7C59249A4DCF825684C5301CABFCF69"
+      },
+      {
+        "path": "common/AFDI/SEQ/PDV_Patch_AFDI.seq",
+        "size": 4,
+        "sha256": "A65506671BE0E271A8F77D65DB6EAB028951BA54BE9569EBC128824CB1DC2EBF"
+      },
+      {
+        "path": "common/Auri/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Auri.json",
+        "size": 104727,
+        "sha256": "1449B0C0F78E2038943CA6ADF07355EB60F29367F060729ED93221FE0A09E936"
+      },
+      {
+        "path": "common/BabaYaga/Docs/PDV Patch - Baba Yaga and the Labyrinth.md",
+        "size": 825,
+        "sha256": "FFF542848B1132C42B7064ACD9115DB86A3CB21679965098D86CD5151D36BD66"
+      },
+      {
+        "path": "common/BabaYaga/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_BabaYaga.json",
+        "size": 104438,
+        "sha256": "5DC8B42F2C6AB8D7215EF3BC7A9CED81070C9C129DCE87D354C7B3A74C3034D9"
+      },
+      {
+        "path": "common/BardsRebornStudentOfSong/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_BardsRebornStudentOfSong.json",
+        "size": 106212,
+        "sha256": "889AE5F81E4D3A46601473B54B7F53AC1A3F9970578B38C4484367EF48580ED8"
+      },
+      {
+        "path": "common/BarkAndBite/Docs/PDV Patch - Bark and Bite.md",
+        "size": 811,
+        "sha256": "DA533867C7D8812A58A17061A30CC517089D379570CE843EB0063E2523D8D4B7"
+      },
+      {
+        "path": "common/BarkAndBite/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_BarkAndBite.json",
+        "size": 105801,
+        "sha256": "9D940DCC84A9C6EAF211434FF4B756C8B8BE0957930F355EE1BE35EF5D8B850D"
+      },
+      {
+        "path": "common/BecomeABard/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_BecomeABard.json",
+        "size": 105814,
+        "sha256": "543EFDA5C44676F06CFABB43F2BB518A1C9AC47F9A75D4AD02C311150E02C5CE"
+      },
+      {
+        "path": "common/BeforeTheEnd/Docs/PDV Patch - Before the End.md",
+        "size": 801,
+        "sha256": "F1F7A899685806DA94BB7CD69C31DDDAEFC2C66C2738F64E72B2DE3B24986F8C"
+      },
+      {
+        "path": "common/BeforeTheEnd/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_BeforeTheEnd.json",
+        "size": 104422,
+        "sha256": "6B532CEB5A3792D1CBA6865F5B5C5B0063EC94E663F7B19FC1D4786C4BF677D0"
+      },
+      {
+        "path": "common/BeyondSkyrimBruma/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_BeyondSkyrimBruma.json",
+        "size": 124542,
+        "sha256": "A42DA5D2720329660BFD3D8264CFBA387F6C07D6CFD9CA0406E41CC6F5D6656E"
+      },
+      {
+        "path": "common/CallingTheWatchmaker/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_CallingTheWatchmaker.json",
+        "size": 107897,
+        "sha256": "EDFD902F6B915AC221CDA1C03925A87CDE2877AB7534D5BA3B71962D3F9451A7"
+      },
+      {
+        "path": "common/CaughtRedHandedQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_CaughtRedHandedQE.json",
+        "size": 106407,
+        "sha256": "90D6E9B3ADB388CADF3D52A9D44BEB3AFF719A307286B9FCA98040D49C475D08"
+      },
+      {
+        "path": "common/CollegeQuestExpansion/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_CollegeQuestExpansion.json",
+        "size": 120507,
+        "sha256": "96EC5A1EC68BE0854F116693185584A0C02C95D29D3F10A3BCF5F85428B56760"
+      },
+      {
+        "path": "common/DAc0da/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_DAc0da.json",
+        "size": 105612,
+        "sha256": "87D128BF466679A87194A721766469DB2DE1525CCCF7023B98D64864BEEB9EB9"
+      },
+      {
+        "path": "common/DaedricShrinesAIO/PDV_Patch_DaedricShrinesAIO.esp",
+        "size": 5866,
+        "sha256": "BB9196EE83E4276AF76361D2BF3482E3D0CD870B6975ACD99C39B8587FA1AA93"
+      },
+      {
+        "path": "common/DaedricShrinesAIO/SKSE/Plugins/BaseObjectSwapper/PDV_DaedricShrinesAIO_SWAP.ini",
+        "size": 926,
+        "sha256": "16ACAF8F50940F34C010D12D2DED9F998C79C4B81961A2D4B15AD5590A610119"
+      },
+      {
+        "path": "common/DefeatTheDragonCult/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_DefeatTheDragonCult.json",
+        "size": 105330,
+        "sha256": "E0D6588341B4983E16C8E0D4592C51942F92970003122A328480526EA0E5D84D"
+      },
+      {
+        "path": "common/DepthsOfTheSoul/Docs/PDV Patch - Depths of the Soul.md",
+        "size": 819,
+        "sha256": "71140964F49CC90C6CE6AECE7C46F948394EE644D4748C079CBAD3B88C9F0323"
+      },
+      {
+        "path": "common/DepthsOfTheSoul/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_DepthsOfTheSoul.json",
+        "size": 104361,
+        "sha256": "E3B21556650F354A2B38590E9A3EF1B3E458051EFF2E86F6133C9CBE71DC64AE"
+      },
+      {
+        "path": "common/DestroyAcolytePriests/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_DestroyAcolytePriests.json",
+        "size": 105438,
+        "sha256": "ADDA8EF2282923664899C52F3016134F1AD1E0D42314AE67EE41648B0CF90DE9"
+      },
+      {
+        "path": "common/DestroyDarkBrotherhoodQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_DestroyDarkBrotherhoodQE.json",
+        "size": 104937,
+        "sha256": "7B85205C536400008F64B802BF96038C1650F06001DD35E296C94BB98A81FFE2"
+      },
+      {
+        "path": "common/EbonyBladeCurse/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_EbonyBladeCurse.json",
+        "size": 105371,
+        "sha256": "3D3F69FDDCFB7388F8243CC43400E2658E7EB70888E5262FB916C4EEE7E00A12"
+      },
+      {
+        "path": "common/ForgottenCity/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_ForgottenCity.json",
+        "size": 106912,
+        "sha256": "82701A14E512E1B729C946F8C8BDA366917F55025AE82D79DE2AFC51C63BACB6"
+      },
+      {
+        "path": "common/ForswornConspiracyQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_ForswornConspiracyQE.json",
+        "size": 106766,
+        "sha256": "11B95D33269378D2525D44F09CDA87EF8FFD23D007DE0E5F0C429A32DB4C7705"
+      },
+      {
+        "path": "common/GiftOfSaturalia/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_GiftOfSaturalia.json",
+        "size": 112515,
+        "sha256": "11DC97DF587C2C24067BF0D19BE0A4BACF28CCE23CC3799C52C57D5BB9E5F5C7"
+      },
+      {
+        "path": "common/Glenmoril/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Glenmoril.json",
+        "size": 105904,
+        "sha256": "96E4A4B3A0124498411358268975C0B22164DA37A7A6369E433FCCAAA9AB9D8F"
+      },
+      {
+        "path": "common/Gore/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Gore.json",
+        "size": 113155,
+        "sha256": "4EA8FC5C9CBC57F970D49BEC3C5DEE3C6E1A6F133581554CC2DBDC622C7B816C"
+      },
+      {
+        "path": "common/GrayCowlOfNocturnal/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_GrayCowlOfNocturnal.json",
+        "size": 126948,
+        "sha256": "372843D814F0AD4292DB619F6F99F49E2EFD63731D62BC2AF713C98131531628"
+      },
+      {
+        "path": "common/HeartOfDibellaQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_HeartOfDibellaQE.json",
+        "size": 104794,
+        "sha256": "7045EE4382B83BB89A85EC4210A4B42D8D930A981874E555C7915779BDC53683"
+      },
+      {
+        "path": "common/HeartOfTheReach/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_HeartOfTheReach.json",
+        "size": 107047,
+        "sha256": "D47BF20653AED20A19447194668402D87DDA386ED70816B0C81789891E2DFD74"
+      },
+      {
+        "path": "common/HuntForSpectre/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_HuntForSpectre.json",
+        "size": 105276,
+        "sha256": "810970A0AAB2FD7A19837FF5DAABEE6D97803AD2C61DCB1E031B08B08E4E2A68"
+      },
+      {
+        "path": "common/IllMetByMoonlightDialogue/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_IllMetByMoonlightDialogue.json",
+        "size": 104518,
+        "sha256": "DC98E9193ED54B205CE6A8D546F61610BCFA096FE85D9CDA510900933565E3B7"
+      },
+      {
+        "path": "common/ImmersiveKaidanAIO/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_ImmersiveKaidanAIO.json",
+        "size": 138501,
+        "sha256": "80AB1588F47CF55E83CA5B99FFE7E97513C4CF15E1868F17774A13C58DD74967"
+      },
+      {
+        "path": "common/InfiltrationQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_InfiltrationQE.json",
+        "size": 105032,
+        "sha256": "0D8B55F7816932A24E6F51A53FC00A45F1EF334F0F53FE6A1E56F8AA811F3D4E"
+      },
+      {
+        "path": "common/Inigo/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Inigo.json",
+        "size": 106154,
+        "sha256": "DCA9DC0789C650A2F3496CB993AF47DBB1D6BBC03DC3D76A15B987C319996FD0"
+      },
+      {
+        "path": "common/InnocenceLostQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_InnocenceLostQE.json",
+        "size": 119530,
+        "sha256": "3F9A51287F52B4A0A4A16AE387D417D68C3D58E12DA91F39D623D5015D1B7F31"
+      },
+      {
+        "path": "common/InterestingNPCs/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_InterestingNPCs.json",
+        "size": 175556,
+        "sha256": "547E40994DAF53293C5E7EE66FD7A33406EBB5D8C14AA34A63834B57AA4BD622"
+      },
+      {
+        "path": "common/Kaidan2/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Kaidan2.json",
+        "size": 118040,
+        "sha256": "BF4F7EAD17D859942C1FE5D9B9D965643D06976D753B7DF3C1B5343C2A4CCF5C"
+      },
+      {
+        "path": "common/KhajiitWillFollow/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_KhajiitWillFollow.json",
+        "size": 120159,
+        "sha256": "1A635EC4524578C1983A1137400E670131C595FBD9508AE34C2D918C0C2BAB1C"
+      },
+      {
+        "path": "common/LegacyOfTheDragonborn/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_LegacyOfTheDragonborn.json",
+        "size": 112001,
+        "sha256": "2B95C8BED556C6423A9FB95B4AECF34AAC67B79170A15A3307A7BB1BCC26A73C"
+      },
+      {
+        "path": "common/LegendsOfAetherium/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_LegendsOfAetherium.json",
+        "size": 105696,
+        "sha256": "01E564C7EEB5E47824BD5EC21639D089054013DC324F0E0712C127B8FF826737"
+      },
+      {
+        "path": "common/Lucien/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Lucien.json",
+        "size": 149292,
+        "sha256": "E836C29E60CADF4CEB4D86B77A022FF88F6ACA88A881E0281242DFD2DDCEB894"
+      },
+      {
+        "path": "common/MerlinTheCorgi/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_MerlinTheCorgi.json",
+        "size": 104356,
+        "sha256": "738541D4EF1F448328FA5775365951CFB36CF25AD5B799B634E4CE4223F60CAB"
+      },
+      {
+        "path": "common/MoonAndStar/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_MoonAndStar.json",
+        "size": 139345,
+        "sha256": "10F0EC1E132A79A83DF04403CCD3AAA8CD859CDF55A4B7B2DDDC5F8574D17019"
+      },
+      {
+        "path": "common/Moonpath/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Moonpath.json",
+        "size": 114653,
+        "sha256": "7BF42ACE17CFB49F2DB09BC5E75FCD079B355A82C15FAAE5D0B7841EEFB34D72"
+      },
+      {
+        "path": "common/Mrissi/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Mrissi.json",
+        "size": 108492,
+        "sha256": "B5B0F06E279E437D657A3CF39D5E7B50340FF8DE1720B46FE639631EFE32CA49"
+      },
+      {
+        "path": "common/NilheimQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_NilheimQE.json",
+        "size": 106234,
+        "sha256": "01F29C7C0D69E8E6C01441FB08DF7F833B3DBCCB05973D4B1D5827BB55850F1C"
+      },
+      {
+        "path": "common/Olenveld/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Olenveld.json",
+        "size": 104400,
+        "sha256": "DF3B7FCEC5EAE432C416421B5FAB284649B2A0D63C3E9D522A5BC5F22927F085"
+      },
+      {
+        "path": "common/OnceWeWereHere/Docs/PDV Patch - Once We Were Here.md",
+        "size": 884,
+        "sha256": "CC0D4E42CDFEBDA46541354CE421AB95686740870433F3C58F121749771F1243"
+      },
+      {
+        "path": "common/OnceWeWereHere/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_OnceWeWereHere.json",
+        "size": 106831,
+        "sha256": "F236CE3B94288368BB16B381C38D3F04599976BD157A5731A8FD9C769E8D466D"
+      },
+      {
+        "path": "common/PaarthurnaxQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_PaarthurnaxQE.json",
+        "size": 104970,
+        "sha256": "E85465FF8C36A0736F6B649B34055645830EBEED12FC838AE852289C3174D323"
+      },
+      {
+        "path": "common/PenitusOculatus/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_PenitusOculatus.json",
+        "size": 139068,
+        "sha256": "E7D2B4B237D64FA3AB3288A5EB7382C90A6B9138DFCCB9508E6754FE1914F6E2"
+      },
+      {
+        "path": "common/ProjectAHO/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_ProjectAHO.json",
+        "size": 151170,
+        "sha256": "9E74FD6C80E76E4BD0C0451C021B4FDD73BE7A5ED52F7FD17DACE12801693546"
+      },
+      {
+        "path": "common/RedcapTheRiekling/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_RedcapTheRiekling.json",
+        "size": 120930,
+        "sha256": "D5C03AF9BED85F01721184694824F8EF817BC3E9ADD8B3933D780B3C041763AB"
+      },
+      {
+        "path": "common/Remiel/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Remiel.json",
+        "size": 128430,
+        "sha256": "85F5498AE693D3A687F6726B0F4D890066E9E93E4D63803DC3F57D01DB190BEB"
+      },
+      {
+        "path": "common/ReturnAegisbane/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_ReturnAegisbane.json",
+        "size": 108289,
+        "sha256": "F2E2E9301C55619B8EFD90143F3712697363A7DDC1F8E30072BD8773BE95E803"
+      },
+      {
+        "path": "common/RevealingRune/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_RevealingRune.json",
+        "size": 104757,
+        "sha256": "DD24BBDFEC094ADB84851F7053AB34A6FDBC5BD664516D92A6370652233CA0B1"
+      },
+      {
+        "path": "common/Sachil/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Sachil.json",
+        "size": 125224,
+        "sha256": "7FD6BA8A2FEF52FAAF9DA091F2973F574A9E2FA672F062E63A75EE3A026FC84D"
+      },
+      {
+        "path": "common/SaveTheIcerunner/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_SaveTheIcerunner.json",
+        "size": 118276,
+        "sha256": "4E13522F0855A2D7DE5A8DA44D0A3DADD7421F804AC4E4E0BECB3424C4B509A1"
+      },
+      {
+        "path": "common/SiegeAtIcemoth/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_SiegeAtIcemoth.json",
+        "size": 109101,
+        "sha256": "F30CEF786D7A453EAFBBF6E448FC0857D21EA89FA52FAAAF446C91E3287ACFB7"
+      },
+      {
+        "path": "common/SinisterSeven/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_SinisterSeven.json",
+        "size": 109668,
+        "sha256": "87F43391917FE7C70A16CE443EA2FEAFEDA81EA78FBE1E559C04011BBDC4A76E"
+      },
+      {
+        "path": "common/Sirenroot/Docs/PDV Patch - Sirenroot.md",
+        "size": 792,
+        "sha256": "CC11C6BFA499BF80908D2F1B2800910B713D28F8A2B64496595B5450B7A26153"
+      },
+      {
+        "path": "common/Sirenroot/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Sirenroot.json",
+        "size": 106017,
+        "sha256": "A42D074A10166A0736C2847B118A54B5A5DCF993C2E881A93EFDBD2780272886"
+      },
+      {
+        "path": "common/SkyrimExtendedCutSaintsAndSeducers/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_SkyrimExtendedCutSaintsAndSeducers.json",
+        "size": 104788,
+        "sha256": "726BE1DF207AC77228AF9AC19058078250FCB41B71D69A721821E044A29466E4"
+      },
+      {
+        "path": "common/SleepwalkingNightmare/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_SleepwalkingNightmare.json",
+        "size": 109855,
+        "sha256": "3BDC1469C307B4EF46FFF74F09AA0614028DBB72BA9D08983111CB0D19993C85"
+      },
+      {
+        "path": "common/Taliesin/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Taliesin.json",
+        "size": 104856,
+        "sha256": "F904BA1C8A705CE7EBF81EFA12561E02C2F4F803D6D3B5D2E2CC635ECA8B8B55"
+      },
+      {
+        "path": "common/TasteOfDeathAddon/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_TasteOfDeathAddon.json",
+        "size": 106023,
+        "sha256": "3A1D516C95A02539F2395FB4B51CD4C6ABD8E0167941CBD889B81995B0B2DDC5"
+      },
+      {
+        "path": "common/TGAlternativeEndings/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_TGAlternativeEndings.json",
+        "size": 111604,
+        "sha256": "F4F867E960BB4E7895B7F159CF6549D12D57E5A9F0D832FDC4EC8D1AAACF50B3"
+      },
+      {
+        "path": "common/TGAlternativeEndings/SKSE/Plugins/StorageUtilData/PlayerDevotion/QuestStageAdapters/PDV_QSA_TGAlternativeEndings.json",
+        "size": 316,
+        "sha256": "4F4D4BF38AD82A47A73E0A9C60A070C52DE3C5F361AD861B82E79EE36262E717"
+      },
+      {
+        "path": "common/TheFrozenHeart/Docs/PDV Patch - The Frozen Heart.md",
+        "size": 826,
+        "sha256": "B344C8C37027D8C2EAABA56C9C7CD8AD29A37E35DCA614485E7C21C183933865"
+      },
+      {
+        "path": "common/TheFrozenHeart/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_FrozenHeart.json",
+        "size": 107681,
+        "sha256": "4A1086BA60F93FABAC236CE2C19CDE38C62AEE0A4A5C3060DEC3CEBAD7638686"
+      },
+      {
+        "path": "common/ThereIsNoUmbra3/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_ThereIsNoUmbra3.json",
+        "size": 225006,
+        "sha256": "881039F4F5E35DBE3147AB656ADE5F033AD78C0CCD694AEA0D25E2AB13121172"
+      },
+      {
+        "path": "common/TheRotBelow/Docs/PDV Patch - The Rot Below.md",
+        "size": 803,
+        "sha256": "284197115B0363A5F5B7797DDF9735E6DED4CC6D2596A0566C78A3D85592454A"
+      },
+      {
+        "path": "common/TheRotBelow/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_RotBelow.json",
+        "size": 107637,
+        "sha256": "8D139B592A540925D51993BB2EAB870A5960267AB04EB2A6010B020309F698FC"
+      },
+      {
+        "path": "common/ThievesGuildForGoodGuys/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_ThievesGuildForGoodGuys.json",
+        "size": 135981,
+        "sha256": "B242BD333644C3B504DF86CF1387C4651F5397B435BB66D620B05DCE5988D2DD"
+      },
+      {
+        "path": "common/Thogra/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Thogra.json",
+        "size": 112146,
+        "sha256": "FC6303B686EB92FA1BC87FB14696EB86FB8B60B757F6E5EC1FF74B4B82DE673B"
+      },
+      {
+        "path": "common/ToolsOfKagrenac/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_ToolsOfKagrenac.json",
+        "size": 109832,
+        "sha256": "4E4E74F013E557FC7C90460A45F30BE2043E49129454B99D707226AF5C580540"
+      },
+      {
+        "path": "common/Unslaad/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Unslaad.json",
+        "size": 108704,
+        "sha256": "77A4142CAFB6FC20110FE7EA707B2E0358D2EEA5BBDC56177535271553C735A9"
+      },
+      {
+        "path": "common/ValSerano/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_ValSerano.json",
+        "size": 160435,
+        "sha256": "E84F01FF827AC193CB7BF8D72CF881B857779B361DC0F77EC19085D902AF7B10"
+      },
+      {
+        "path": "common/Vigilant/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Vigilant.json",
+        "size": 131600,
+        "sha256": "30CCB135E43DD7D70117F82BD023E6D516399E6AD51E1E7B4573208E9B6B820C"
+      },
+      {
+        "path": "common/WarsFolly/Docs/PDV Patch - War's Folly.md",
+        "size": 839,
+        "sha256": "5684BCBDDC13840DFB7CEF5ED7F0D8E98A26C094AC44568FBEE153F8790A641A"
+      },
+      {
+        "path": "common/WarsFolly/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_WarsFolly.json",
+        "size": 110205,
+        "sha256": "31D4C15FB50FD5B4955299D5E31F6D3D29274CFD5136B083F85A554C34164ECE"
+      },
+      {
+        "path": "common/WhisperingDoorQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_WhisperingDoorQE.json",
+        "size": 104617,
+        "sha256": "D159C6032EDCF22C0F73E0B89F04DFE1AB7EFFCA8F01868DCAD00275DA693FD2"
+      },
+      {
+        "path": "common/WhispersOfTheDepths/Docs/PDV Patch - Whispers of the Depths.md",
+        "size": 882,
+        "sha256": "83575F3A1BB52631196E55C9BB5AF9DEB05B19EF4EB0616A0EB734AE2EC20FC6"
+      },
+      {
+        "path": "common/WhispersOfTheDepths/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_SlaysManyBeasts.json",
+        "size": 104516,
+        "sha256": "7E2B7FEF5D09FAFD65DE47BCD092A9D0FE28DAFB13080C7619A44D52963B545C"
+      },
+      {
+        "path": "common/Wyrmstooth/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Wyrmstooth.json",
+        "size": 130923,
+        "sha256": "EEE15BF87A01543A8062D27DCCE33133A123A93068425B740A1D5CC1500BA468"
+      },
+      {
+        "path": "common/Xelzaz/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Xelzaz.json",
+        "size": 108179,
+        "sha256": "BABB0FA38E467B776A1838412E84C60059487314D66F355ECCBE44677EEB1A4F"
+      },
+      {
+        "path": "fomod/info.xml",
+        "size": 1829,
+        "sha256": "4012663252D95912E9DBAC0F29A16665A260F5C9D96533464DBD75A69223E97D"
+      },
+      {
+        "path": "fomod/ModuleConfig.xml",
+        "size": 73294,
+        "sha256": "43D299074B7577C232C901E7DF2BF890CCE8A68B183F929DF16A92AD493ED381"
+      },
+      {
+        "path": "plugins/individual/AFDI/PDV_Patch_AFDI.esp",
+        "size": 502,
+        "sha256": "84EC8E38576C91D6992E1E6880F0245190DE7D9BE391D85414D79E8F07FCA3AA"
+      },
+      {
+        "path": "plugins/individual/AFDI/Scripts/PDV_AFDIObserver.pex",
+        "size": 8035,
+        "sha256": "4837560F8ABC1EB71B71D629F7BB40E170B08934720DF74802AD23EFE23D8A7F"
+      },
+      {
+        "path": "plugins/individual/AFDI/Scripts/Source/PDV_AFDIObserver.psc",
+        "size": 9325,
+        "sha256": "BBE9D952077116C13D7441F28B90FD6CF7C59249A4DCF825684C5301CABFCF69"
+      },
+      {
+        "path": "plugins/individual/AFDI/Seq/PDV_Patch_AFDI.seq",
+        "size": 4,
+        "sha256": "A65506671BE0E271A8F77D65DB6EAB028951BA54BE9569EBC128824CB1DC2EBF"
+      },
+      {
+        "path": "plugins/individual/DaedricShrinesAIO/PDV_Patch_DaedricShrinesAIO.esp",
+        "size": 5866,
+        "sha256": "BB9196EE83E4276AF76361D2BF3482E3D0CD870B6975ACD99C39B8587FA1AA93"
+      },
+      {
+        "path": "plugins/individual/DaedricShrinesAIO/SKSE/Plugins/BaseObjectSwapper/PDV_DaedricShrinesAIO_SWAP.ini",
+        "size": 926,
+        "sha256": "16ACAF8F50940F34C010D12D2DED9F998C79C4B81961A2D4B15AD5590A610119"
+      },
+      {
+        "path": "plugins/individual/OnceWeWereHere/PDV_Patch_OnceWeWereHere.esp",
+        "size": 4160,
+        "sha256": "236A9D32BFBC72B0B2FF2C9ED4C12883247469D67B9A070A649542FD03CFEBD2"
+      },
+      {
+        "path": "plugins/individual/WarsFolly/PDV_Patch_WarsFolly.esp",
+        "size": 7125,
+        "sha256": "BA3EE89196A146EF754EB28503A6B66362B1528DAEA8DF0ED301181DF523D563"
+      },
+      {
+        "path": "plugins/individual/WhispersOfTheDepths/PDV_Patch_SlaysManyBeasts.esp",
+        "size": 3019,
+        "sha256": "0399D1BE91CA9A4DB96C23CC00D7D27DD34B22952A60355A8F1D2441A0E63C34"
+      },
+      {
+        "path": "README.md",
+        "size": 4644,
+        "sha256": "4B7A928A5B0B5169B90EF038270B9F4221BAF0F354EAF04E04983E8986628F24"
+      }
+    ]
+  },
+  "archive": {
+    "path": "dist/PDV-QuestModPatchHub-20260812.zip",
+    "entries": 122,
+    "size": 987283,
+    "sha256": "C9D39F9321BC3045C48A9C771CC318F8CB768C6ED557F15124C99B90D15D6D5F",
+    "missing": [],
+    "extra": [],
+    "checksumMismatches": []
+  },
+  "warnings": [],
+  "failures": []
+}

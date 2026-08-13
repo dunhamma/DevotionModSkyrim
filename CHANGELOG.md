@@ -3,6 +3,80 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
+## 1.5.0 — 2026-08-12
+
+Devotion 1.5.0 opens with a round of per-race and Daedric corrections, then adds
+by far the broadest quest and cross-mod recognition Devotion has shipped.
+
+### Race and Daedric corrections
+
+- **Khajiit: lunar focus and Champion rewards rebalanced.** The lunar-focus lane
+  and its Champion-tier rewards were retuned so the payoff matches the effort, and
+  the five-deity daily signal set was corrected so each of the five actually
+  reaches its intended god, with added quest coverage. A fresh save is recommended
+  to pick up the rebalanced rewards.
+- **Altmer: the roster is Auri-El, Magnus, Trinimac, Xarxes and Syrabane.** Mara,
+  Stendarr and Y'ffre were treated as Altmer worship through 1.0.4 and should not
+  have been. An Altmer character no longer earns piety through those three — shrine
+  prayer, quest reactions and deeds alike. No new game is needed; older Book of
+  Days entries for the removed three clean themselves up on your next Altmer
+  journal open. This release also adds a recurring Altmer heritage-practice ambient
+  layer with rotating observance lines.
+- **Daedric pact prices are felt.** Molag Bal's and Hircine's moved off skills
+  Requiem barely registers and onto the Health pool; Nocturnal's moved off carry
+  weight. 33 of 48 price tiers were still at pre-tuning numbers and are corrected.
+- **Malacath's Champion price is 10% movement speed, down from 30%.** The old value
+  was a scaling accident rather than a design choice.
+- **Hermaeus Mora's Champion boon grants both halves** — +20 Alteration and +20
+  Magicka. The Magicka effect was missing from the record.
+- **Fixed:** a Hircine tracking value advanced only while debug logging was
+  enabled, so the residue clock behaved differently with logging on; and an
+  artifact-destruction watcher polled every 15 seconds with no way to finish. It
+  now stops once there is nothing left to watch.
+- **Off-roster gods are no longer offered as new patrons.** Existing saves that
+  already follow a foreign or tolerated patron keep that relationship, with shrine
+  and quest devotion continuing at the intended reduced rate.
+
+### Broader quest recognition
+
+- **Official Skyrim quest recognition is dramatically broader.** Devotion now
+  responds to far more choices and completions across the base game, Dawnguard,
+  Hearthfire, Dragonborn, Fishing, and Saints & Seducers — one-shot favors and
+  repeatable work alike, all still protected by the daily cap.
+- **The finer decisions are recognized.** Devotion distinguishes the truth and
+  protective-lie endings of The Lover's Requital, the two Message to Whiterun
+  faction terminals, torture-confession and cache-theft milestones, Ragnvald, Moss
+  Mother Cavern, and all four Hearthfire homestead defenses. It tells rebuilding
+  the Blades from restoring the Dark Brotherhood, treats reporting Talos worship as
+  religious persecution, routes Nocturnal's stolen relic back to Nocturnal, and
+  recognizes restitution and cultural-relic recovery.
+- **Older reactions are more precise.** Premature, missing, shared, and NPC-owned
+  quest stages were moved, narrowed, or removed so a reaction follows the player's
+  evidenced act instead of nearby quest activity.
+
+### Cross-mod support
+
+- **One installer carries Devotion plus 80 optional per-mod patches.** Devotion
+  core installs automatically and cannot be deselected. Each optional patch teaches
+  the gods how to react to another mod's quests, followers, shrines, or
+  observances, and is locked to its own source plugin — an option for a mod you do
+  not have is not offered, and a patch for a mod you later remove goes quiet
+  instead of breaking. When an optional patch reaction fires, its Prisma toast
+  names the source mod and the Book of Days keeps that name on the entry.
+- **Item actions can feed devotion (with KID).** Seven item-action families — taboo
+  food, revelry, honest trade, hunt trophies, funerary offerings, Orcish craft, and
+  wearing a Divine amulet — reach the same Prisma and Book of Days surfaces as other
+  devotional acts. Green Pact food support now also covers Requiem and Food and
+  Beverages Redone meats. KID is a soft dependency; without it these actions are
+  simply absent.
+
+### Under the hood
+
+- **Lighter runtime.** Equipping items, scoring actions, item-action handling, and
+  religious-recognition updates all do far less repeated work, and recognition
+  updates on devotional-state and setting changes rather than in a periodic sweep.
+
+
 ## 1.0.4 — 2026-07-27
 
 Combines everything from the unreleased 1.0.3 with the fixes below, so this is
@@ -274,6 +348,28 @@ should show **Devotion** as its provider.
   the ancestors' protection returns when you take up the death-duty again — it is
   intentionally withheld until then, not a bug.
 
+## 1.0.2 — 2026-07-18
+
+- **Fixed (properly this time): crash to desktop when tempering or crafting.**
+  The 1.0.1 fix repaired a real problem but not this one — the crash was
+  reproduced on 1.0.1 with that repair in place. The actual cause is in the
+  game engine's own delivery of the built-in "Craft Item" event: it can fault
+  while handing the event to a listening script, most reliably when tempering
+  repeatedly at a grindstone. Devotion no longer uses that path at all.
+  Crafting is now detected through powerofthree's Papyrus Extender (already a
+  requirement), which reports the same information without touching the
+  crash-prone engine path. Confirmed fixed by the original reporter on the save
+  that was crashing. No new game required.
+- All crafting still earns piety exactly as before — tempering, smithing,
+  cooking, enchanting, and alchemy are unchanged in what they award and which
+  gods notice.
+- **Fixed: a harvest could silently go uncredited.** If the game reported a
+  harvested plant with no item attached, the handler stopped early and the
+  harvest earned nothing. It now fails cleanly instead.
+- Internal: the in-game version readout was stuck at "1.0.0" through the 1.0.1
+  release, so the MCM could not tell builds apart. It now tracks the real
+  version, and the release tooling refuses to build a mismatched package.
+
 ## 1.0.1 — 2026-07-18
 
 - **Fixed: crash to desktop when cooking or tempering.** Devotion's "Craft Item"
@@ -283,11 +379,19 @@ should show **Devotion** as its provider.
   desktop — most reliably when cooking at a pot or tempering at a grindstone or
   workbench. All receiver quests now carry `ANAM`. No new game required.
 - **Fixed: Namira's boon did nothing under Requiem.** Namira's Seeker/Devoted/
-  Champion boon granted a health-regeneration *rate* multiplier (`HealRateMult`),
-  which Requiem effectively disables — base regen is ~0, so a rate multiplier
-  multiplies nothing. It is now a flat **Fortify Health + Fortify Stamina**
-  (+25/+40/+50 per tier, provisional) that Requiem honors. Namira was the last
-  regen-rate holdout among the Daedric boons.
+  Champion boon granted a health-regeneration *rate* multiplier, which Requiem
+  effectively disables — base regen is ~0, so a rate multiplier multiplies
+  nothing. It is now a flat **Fortify Health + Fortify Stamina** (+25/+40/+50 per
+  tier, provisional) that Requiem honors.
+
+## 2026-07-17
+
+- **Fixed: Bosmer path name showed an internal code label.** Book of Days, the
+  devotion toast, and the Survey displayed the raw path token (`OldContract`,
+  `LivingStory`, `BanditRoad`) instead of the proper name — **Old Contract**,
+  **Living Story**, **Bandit Road**, or **Exchange**. The correct name now shows
+  everywhere the Bosmer path is surfaced. (The fix is included in the 1.0.0
+  build; this note was added afterward.)
 
 ## 2026-07-16
 

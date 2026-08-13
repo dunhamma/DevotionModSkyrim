@@ -392,6 +392,8 @@
     summary: document.getElementById("pdv-summary"),
     patron: document.getElementById("pdv-patron"),
     patronNote: document.getElementById("pdv-patron-note"),
+    recognitionStatus: document.getElementById("pdv-recognition-status"),
+    recognitionAdvisory: document.getElementById("pdv-recognition-advisory"),
     instrument: document.getElementById("pdv-instrument"),
     instrumentArt: document.getElementById("pdv-instrument-art"),
     tierLabel: document.getElementById("pdv-tier-label"),
@@ -439,6 +441,14 @@
     patron: "None",
     patronNote: "Choose a path through play, prayer, and consequence.",
     summary: "No patron has answered yet.",
+    recognition: {
+      enabled: true,
+      managed: false,
+      status: "On - no public standing",
+      identity: "None",
+      band: "Distant",
+      advisory: "Adherents remain neutral until your standing is Faithful.",
+    },
     tier: 0,
     tierLabel: "None",
     piety: 0,
@@ -712,11 +722,20 @@
 
   const renderLunarInstrument = (slot, inst = {}) => {
     const data = inst.data || {};
-    renderInstrumentFrame(slot, inst, text(data.focus, "Lunar Lattice"), (svg) => {
+    const currentFocus = text(data.currentFocus, text(data.focus, "Lunar Lattice"));
+    const strength = text(data.godInStrength, "Unknown");
+    const standing = text(data.focusStanding, "Lunar Lattice");
+    const substrate = text(data.lunarTier, "Quiet");
+    const resonance = data.resonating ? " - Resonating" : "";
+    const caption = `${currentFocus} - ${standing}; ${strength} in strength; ${substrate}${resonance}`;
+    renderInstrumentFrame(slot, inst, caption, (svg) => {
       const phase = clamp(data.phase || 1, 1, 8);
       const fill = fillClass(inst);
       appendMoonPhase(svg, 118, 80, 30, phase, fill);
       appendMoonPhase(svg, 178, 50, 14, phase, fill);
+      if (data.resonating) {
+        appendSvg(svg, "circle", { cx: "118", cy: "80", r: "39", class: "instrument-star" });
+      }
     });
   };
 
@@ -1427,13 +1446,18 @@
     mark.append(symbolMark, signal, label);
     const body = document.createElement("div");
     body.className = "bod-leaf__body";
+    const sourceName = text(entry.source, "");
+    const sourceEl = document.createElement("p");
+    sourceEl.className = "bod-leaf__source";
+    sourceEl.textContent = sourceName;
+    sourceEl.hidden = !sourceName;
     const titleEl = document.createElement("p");
     titleEl.className = "bod-leaf__title";
     titleEl.textContent = text(entry.title, "A moment noted");
     const textEl = document.createElement("p");
     textEl.className = "bod-leaf__text";
     textEl.textContent = text(entry.text, "");
-    body.append(titleEl, textEl);
+    body.append(sourceEl, titleEl, textEl);
     li.append(mark, body);
     return li;
   };
@@ -2184,6 +2208,9 @@
     nodes.summary.textContent = text(state.summary, "No patron has answered yet.");
     nodes.patron.textContent = patronName;
     nodes.patronNote.textContent = text(state.patronNote, "Choose a path through play, prayer, and consequence.");
+    const recognition = state.recognition && typeof state.recognition === "object" ? state.recognition : fallbackState.recognition;
+    if (nodes.recognitionStatus) nodes.recognitionStatus.textContent = text(recognition.status, fallbackState.recognition.status);
+    if (nodes.recognitionAdvisory) nodes.recognitionAdvisory.textContent = text(recognition.advisory, fallbackState.recognition.advisory);
     nodes.tierLabel.textContent = text(state.tierLabel, tierName(state.tier));
     nodes.pietyBar.style.width = `${pietyPercent}%`;
     nodes.pietyText.textContent = text(state.pietyLabel, `${piety} piety`);
@@ -2222,6 +2249,7 @@
       text(copy.symbol || copy.mark, ""),
       text(copy.title, ""),
       text(copy.message || copy.text, ""),
+      text(copy.source, ""),
     ].join("|");
     const now = Date.now();
     if (toastKey && recentToastKeys.has(toastKey) && now - recentToastKeys.get(toastKey) < 2200) {
@@ -2237,6 +2265,8 @@
       recentToastKeys.delete(recentToastKeys.keys().next().value);
     }
 
+    nodes.toasts.classList.toggle("is-large", text(copy.size, "") === "large");
+
     const toast = document.createElement("section");
     const tone = text(copy.tone, "neutral");
     const duration = Math.max(MIN_TOAST_DURATION_MS, numberOrZero(copy.duration) || DEFAULT_TOAST_DURATION_MS);
@@ -2251,6 +2281,11 @@
     renderSymbol(mark, copy.symbol || copy.mark || state.symbol || state.mark || state.patron || "journal");
 
     const body = document.createElement("div");
+    const sourceName = text(copy.source, "");
+    const source = document.createElement("p");
+    source.className = "toast__source";
+    source.textContent = sourceName;
+    source.hidden = !sourceName;
     const title = document.createElement("p");
     title.className = "toast__title";
     title.textContent = text(copy.title, "Devotion");
@@ -2259,7 +2294,7 @@
     message.className = "toast__text";
     message.textContent = text(copy.message || copy.text, "Your path is remembered.");
 
-    body.append(title, message);
+    body.append(source, title, message);
     toast.append(mark, body);
     nodes.toasts.prepend(toast);
     while (nodes.toasts.childElementCount > MAX_ACTIVE_TOASTS) {

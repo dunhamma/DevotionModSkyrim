@@ -1,0 +1,3 @@
+editor_id,quest_name,outcome_stage,outcome,act_tags,deity,valence,intensity,magnitude,citation,formid
+zDcdSqWorm,DAc0da - Episode Mannimarco,9999,Defeated Mannimarco and crushed the Worm Cult,cleanse_undeath,Arkay,+,S,milestone,DAc0da Worm Cult thread s9999 ShutDownStage (defeat Mannimarco; web-research HIGH confidence - no join path),DAc0da.esm:0052C2
+zDcdMq05,DAc0da - Expel the Numidium,999,Expelled the Numidium from the timeline,honor_divine,Akatosh,+,S,milestone,DAc0da main arc s999 ShutDownStage (expel Numidium; web-research HIGH; RUNTIME-VERIFY fires on success not the Mantella bad-ending),DAc0da.esm:00CA1E

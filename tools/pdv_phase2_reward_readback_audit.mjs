@@ -10,6 +10,15 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { normalizeActorValue } from "./lib/pdv_actor_value_aliases.mjs";
+
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--json"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_phase2_reward_readback_audit" });
 
 const ROOT = process.cwd();
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
@@ -38,12 +47,6 @@ const SPEC_FILES = [
   "PDV_BretonRewardRecords.spec.json",
   "PDV_KhajiitRewardRecords.spec.json",
 ];
-const ACTOR_VALUE_ALIASES = new Map([
-  ["Speechcraft", "Speech"],
-  ["BlockSkill", "Block"],
-  ["Marksman", "Archery"],
-  ["ResistPoison", "PoisonResist"],
-]);
 const CAPSTONE_FALLBACKS = [
   {
     spellEditorId: "PDV_Bless_Imperial_Akatosh_T3",
@@ -95,6 +98,7 @@ const CAPSTONE_FALLBACKS = [
   },
   {
     spellEditorId: "PDV_Bless_Khajiit_BaanDar_T3",
+    scriptName: "PDV_KhajiitBaanDarRescueEffect",
     storageKey: "PDV.Capstone.Khajiit.BaanDarSlip",
     notificationText: "Baan Dar slips you out of death's hand.",
     prismaTitle: "Baan Dar's Luck",
@@ -124,7 +128,7 @@ const GREEN_PACT_KEYWORDS = [
   "PDV_KW_GreenPact_Egg",
   "PDV_KW_GreenPact_Insect",
 ];
-const GREEN_PACT_KID = path.join(DEVOTION_MOD, "SKSE", "Plugins", "KeywordItemDistributor", "PDV_GreenPact_KID.ini");
+const GREEN_PACT_KID = path.join(DEVOTION_MOD, "PDV_GreenPact_KID.ini");
 const GREEN_PACT_PLANT_FOODS = [
   { formKey: "HearthFires.esm:003533", label: "Apple Dumpling" },
   { formKey: "HearthFires.esm:0009DC", label: "Garlic Bread" },
@@ -205,9 +209,6 @@ function counts() {
   return result;
 }
 
-function normalizeActorValue(actorValue) {
-  return ACTOR_VALUE_ALIASES.get(actorValue) || actorValue;
-}
 
 function generateMgefId(spellEditorId, actorValue) {
   if (spellEditorId.startsWith("PDV_Bless")) {
@@ -488,6 +489,7 @@ function main() {
 
   for (const capstone of CAPSTONE_FALLBACKS) {
     const { spellEditorId, storageKey } = capstone;
+    const expectedScriptName = capstone.scriptName || "PDV_T3DailyLowHealthSaveEffect";
     const spellDetail = detailsByEdid.get(spellEditorId);
     // The capstone save effect can sit at ANY effect index -- Khajiit BaanDar T3 orders its three
     // stat effects first and carries PDV_T3DailyLowHealthSaveEffect on its last (AvoidDeath) effect.
@@ -496,7 +498,7 @@ function main() {
     let effectEdid = null;
     for (const effect of spellDetail?.fields?.Effects || []) {
       const candidateEdid = effect?.BaseEffect ? formidToEdid(effect.BaseEffect, recordsByEdid) : null;
-      const candidateScript = candidateEdid ? findScript(detailsByEdid.get(candidateEdid)?.fields, "PDV_T3DailyLowHealthSaveEffect") : null;
+      const candidateScript = candidateEdid ? findScript(detailsByEdid.get(candidateEdid)?.fields, expectedScriptName) : null;
       if (candidateScript) {
         capstoneScript = candidateScript;
         effectEdid = candidateEdid;
@@ -505,9 +507,9 @@ function main() {
     }
     const props = propertyMap(capstoneScript);
     if (capstoneScript) {
-      pass("T3 capstone script", `${effectEdid} carries PDV_T3DailyLowHealthSaveEffect.`);
+      pass("T3 capstone script", `${effectEdid} carries ${expectedScriptName}.`);
     } else {
-      fail("T3 capstone script", `${spellEditorId} has no effect carrying PDV_T3DailyLowHealthSaveEffect.`);
+      fail("T3 capstone script", `${spellEditorId} has no effect carrying ${expectedScriptName}.`);
       continue;
     }
 

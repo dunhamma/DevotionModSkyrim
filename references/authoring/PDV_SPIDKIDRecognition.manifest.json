@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "plugin": "Devotion.esp",
+  "softDependencies": {
+    "SPID": "Religious recognition and NPC cohort reactions",
+    "KID": "Mod-added item classification and devotional item actions"
+  },
+  "recognition": {
+    "enabledByDefault": true,
+    "hostileReactionsEnabledByDefault": true,
+    "playerFaction": { "editorId": "PDV_FACT_Recognition_Player", "formId": "071756" },
+    "bands": { "0": "Distant", "1": "Observant", "2": "Faithful", "3": "Devoted" },
+    "reactions": { "Distant": "Neutral", "Observant": "Neutral", "Faithful": "Friend", "Devoted": "Ally" },
+    "hardRivalsAtDevoted": [
+      ["MolagBal", "Meridia"],
+      ["Malacath", "Trinimac"],
+      ["AnyDaedricPact", "Stendarr"]
+    ],
+    "externalOwnership": {
+      "claimEvent": "PDV.Recognition.Claim",
+      "releaseEvent": "PDV.Recognition.Release",
+      "stateEvent": "PDV.Recognition.State",
+      "claimPolicy": "A non-empty owner suspends PDV-authored faction reactions until the same owner releases them."
+    }
+  },
+  "forms": {
+    "faithKeywordFirst": "07170E",
+    "faithKeywordLast": "071746",
+    "kidKeywordFirst": "071747",
+    "kidKeywordLast": "071755",
+    "cohortFactionFirst": "071757",
+    "cohortFactionLast": "07178F"
+  },
+  "kidLanes": [
+    "NamiraTabooFood",
+    "SanguineAlcohol",
+    "ZenitharTradeGood",
+    "HircineHuntTrophy",
+    "FuneraryOffering",
+    "OrcishCraft",
+    "DivineAmulets"
+  ],
+  "greenPactNeutralFamilies": ["Fungi", "Egg", "Insect"],
+  "antiFarm": { "sameDayMultiplier": 0.7, "dailyPietyClamp": 4.3 }
+}

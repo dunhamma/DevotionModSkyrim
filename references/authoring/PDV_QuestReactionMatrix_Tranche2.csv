@@ -28,44 +28,19 @@ C06,Glory of the Dead,200,Honored the fallen Harbinger with funeral rites and pa
 C06,Glory of the Dead,200,"Honored the fallen warrior, sped him to Sovngarde",honor_the_dead,Shor,+,m,small,C06 LOG 200: granted Kodlak the glory of Sovngarde (honored fallen warrior)
 C06,Glory of the Dead,200,Honored the fallen with rites,honor_the_dead,Auri-El,+,m,small,C06 OBJ 10: Attend Kodlak's funeral
 C06,Glory of the Dead,65,Defeated the wolf spirit in single combat at the tomb,kill_honorable_combat,Shor,+,S,small,C06 OBJ 65: Defeat the wolf spirit
-CW01A,Joining the Legion,160,Take the oath to join the Imperial Legion (serve the Empire),"serve_empire_order,keep_oath",Akatosh,+,S,small,s160 Take the oath; completion 200 (joins Imperial Legion to preserve the Empire)
-CW01A,Joining the Legion,160,Swear binding oath to the Imperial Legion,keep_oath,Malacath,+,C,milestone,s160 Take the oath (terminal join 200); keep_oath(C) for Malacath. Dropped invented serve_empire_order (not in Malacath profile).
-CW01A,Joining the Legion,160,Swear oath / serve Imperial order,serve_empire_order,Alkosh,+,m,small,s160/200 join Imperial Legion; Alkosh approves serve_empire_order(m) cosmic-order
-CW01A,Joining the Legion,160,Serve the Empire (standing order),serve_empire_order,Mehrunes Dagon,-,S,small,s160/200 join Imperial Legion; Dagon disapproves serve_empire_order(S)
-CW01A,Joining the Legion,160,Serve lawful Imperial authority,serve_empire_order,Sheogorath,-,m,small,s160/200 join Imperial Legion; Sheogorath disapproves serve_empire_order(m)
-CW01A,Joining the Legion,1,Clear out bandits at Fort Hraggstad (armed foes in battle),kill_honorable_combat,Talos,+,S,small,s1 Clear out the bandits living at Fort Hraggstad
-CW01A,Joining the Legion,1,Clear out Fort Hraggstad bandits in open battle,kill_honorable_combat,Shor,+,C,small,"s1 Clear out the bandits (intermediate stage, not completion)"
-CW01A,Joining the Legion,1,Clear out Fort Hraggstad bandits in open battle,kill_honorable_combat,Malacath,+,S,small,s1 Clear out the bandits living at Fort Hraggstad
-CW01B,Joining the Stormcloaks,160,Take the oath to join the Stormcloaks (Talos/Nord cause vs the Empire),defy_tyranny_talos,Talos,+,C,milestone,"s160 Take the oath; completion 200 (Sons of Skyrim, Talos cause). Dropped keep_oath (not in Talos profile)."
-CW01B,Joining the Stormcloaks,160,Swear binding oath to the Stormcloaks,keep_oath,Malacath,+,C,milestone,s160 Take the oath (terminal join 200); keep_oath(C) for Malacath
-CW01B,Joining the Stormcloaks,160,Swear oath of fealty to the rebellion,keep_oath,Akatosh,+,S,small,s160 Take the oath; Akatosh approves keep_oath(S)
-CW01B,Joining the Stormcloaks,1,Kill the Ice Wraith at Serpentstone Isle to prove worthy,"kill_honorable_combat,prove_by_struggle",Talos,+,S,small,s1 prove myself worthy... kill an Ice Wraith at Serpentstone Isle
-CW01B,Joining the Stormcloaks,1,Kill the Ice Wraith as a proving trial,"kill_honorable_combat,prove_by_struggle",Shor,+,C,small,s1 kill an Ice Wraith to prove worthy (intermediate)
-CW01B,Joining the Stormcloaks,1,Prove worth by slaying the Ice Wraith,"prove_by_struggle,kill_honorable_combat",Tsun,+,C,small,s1 To prove myself worthy... kill an Ice Wraith
-CW01B,Joining the Stormcloaks,1,Slay the Ice Wraith in proving combat,kill_honorable_combat,Malacath,+,S,small,s1 kill an Ice Wraith at Serpentstone Isle
-CW01B,Joining the Stormcloaks,1,Prove worth through a martial trial,prove_by_struggle,Boethiah,+,C,small,s1 prove myself worthy... kill an Ice Wraith; Boethiah approves prove_by_struggle(C) (unqualified)
 CW02A,The Jagged Crown,200,Recover the Jagged Crown for the Imperial Legion to preserve the Empire,serve_empire_order,Akatosh,+,S,small,s30 help Legate Rikke recover the Jagged Crown to preserve the Empire; s80 deliver to General Tullius
 CW02A,The Jagged Crown,200,Serve the Imperial cause recovering the crown,serve_empire_order,Alkosh,+,m,small,s30 Imperial Legion recover the Jagged Crown to preserve the Empire
 CW02A,The Jagged Crown,200,Serve the Empire (standing order),serve_empire_order,Mehrunes Dagon,-,S,small,s30 Imperial Legion to preserve the Empire; Dagon disapproves serve_empire_order(S)
 CW02A,The Jagged Crown,200,Serve lawful Imperial authority,serve_empire_order,Sheogorath,-,m,small,s30 Imperial Legion to preserve the Empire; Sheogorath disapproves serve_empire_order(m)
-CW02A,The Jagged Crown,72,Destroy the draugr defending Korvanjund,slay_undead,Arkay,+,C,small,"s72 Defeat the Draugr (intermediate combat, not completion)"
-CW02A,The Jagged Crown,72,Destroy the risen dead in Korvanjund,slay_undead,Stendarr,+,S,small,s72 Defeat the Draugr
-CW02A,The Jagged Crown,72,Destroy the undead in Korvanjund,slay_undead,Meridia,+,C,small,s72 Defeat the Draugr (intermediate)
-CW02A,The Jagged Crown,72,Destroy the draugr in Korvanjund,slay_undead,Tu'whacca,+,S,small,s72 Defeat the Draugr
+CW02A,The Jagged Crown,160,Destroyed the draugr defending Korvanjund,slay_undead,Arkay,+,C,small,"Direct official QUST VMAD and Papyrus review 2026-08-12: objective 72 is not a quest stage; MQ103QuestScript sets stage 160 only after the tracked draugr death count reaches the total."
+CW02A,The Jagged Crown,160,Destroyed the risen dead in Korvanjund,slay_undead,Stendarr,+,S,small,"Direct official QUST VMAD and Papyrus review 2026-08-12 proves the all-draugr completion hook at stage 160."
+CW02A,The Jagged Crown,160,Destroyed the undead in Korvanjund,slay_undead,Meridia,+,C,small,"Direct official QUST VMAD and Papyrus review 2026-08-12 proves the all-draugr completion hook at stage 160."
+CW02A,The Jagged Crown,160,Destroyed the draugr in Korvanjund,slay_undead,Tu'whacca,+,S,small,"Direct official QUST VMAD and Papyrus review 2026-08-12 proves the all-draugr completion hook at stage 160."
 CW02B,The Jagged Crown,200,Recover the Jagged Crown for the Stormcloaks to drive the Empire out of Skyrim,defy_tyranny_talos,Talos,+,C,milestone,s30 help the Sons of Skyrim drive the Empire out of Skyrim... retrieve the Jagged Crown; completion 200 (deliver to Ulfric)
-CW02B,The Jagged Crown,72,Destroy the draugr defending Korvanjund,slay_undead,Arkay,+,C,small,s72 Defeat the Draugr (intermediate combat)
-CW02B,The Jagged Crown,72,Destroy the risen dead in Korvanjund,slay_undead,Stendarr,+,S,small,s72 Defeat the Draugr
-CW02B,The Jagged Crown,72,Destroy the undead in Korvanjund,slay_undead,Meridia,+,C,small,s72 Defeat the Draugr (intermediate)
-CW02B,The Jagged Crown,72,Destroy the draugr in Korvanjund,slay_undead,Tu'whacca,+,S,small,s72 Defeat the Draugr
-CW03,Message to Whiterun,16,"Assist Jarl Balgruuf with the dragon threat, defending Whiterun",defend_kin_home,Shor,+,S,small,s16 Assist Jarl Balgruuf with the dragon threat (defend Whiterun). Dropped protect_the_weak (not in Shor profile).
-CW03,Message to Whiterun,16,Defend Whiterun from the dragon threat,defend_kin_home,Malacath,+,S,small,s16 Assist Jarl Balgruuf with the dragon threat
-CW03,Message to Whiterun,16,Hold the line at Whiterun against the dragon,defend_kin_home,HoonDing,+,S,small,s16 Assist Jarl Balgruuf with the dragon threat; HoonDing approves defend_kin_home(S). Dropped prove_by_struggle (impossible-odds qualifier not supported by journal line).
-CW03,Message to Whiterun,16,Shield the townsfolk of Whiterun from the dragon,protect_the_weak,Stendarr,+,C,small,"s16 Assist Jarl Balgruuf with the dragon threat (protect_the_weak C, intermediate)"
-CW03,Message to Whiterun,16,Protect Whiterun's people from the dragon,protect_the_weak,Kynareth,+,m,small,s16 Assist Jarl Balgruuf with the dragon threat
-CW03,Message to Whiterun,16,Protect Whiterun's people from the dragon,protect_the_weak,Talos,+,m,small,s16 Assist Jarl Balgruuf with the dragon threat
-CW03,Message to Whiterun,50,Imperial branch: Jarl sides with the Empire; serve Imperial field command,serve_empire_order,Akatosh,+,S,small,s50 The Jarl of Whiterun has sided with the Empire; s150 Report to ImperialFieldCO (completion 210)
-CW03,Message to Whiterun,50,Imperial branch: serve the standing Empire order,serve_empire_order,Mehrunes Dagon,-,S,small,s50 Jarl sided with the Empire; Dagon disapproves serve_empire_order(S)
-CW03,Message to Whiterun,100,Stormcloak branch: aid Ulfric's war on Whiterun against the Empire's ally,defy_tyranny_talos,Talos,+,C,milestone,s100 Ulfric plans to make war on Whiterun (Stormcloak completion 240)
+CW02B,The Jagged Crown,160,Destroyed the draugr defending Korvanjund,slay_undead,Arkay,+,C,small,"Direct official QUST VMAD and Papyrus review 2026-08-12: objective 72 is not a quest stage; MQ103QuestScript sets stage 160 only after the tracked draugr death count reaches the total."
+CW02B,The Jagged Crown,160,Destroyed the risen dead in Korvanjund,slay_undead,Stendarr,+,S,small,"Direct official QUST VMAD and Papyrus review 2026-08-12 proves the all-draugr completion hook at stage 160."
+CW02B,The Jagged Crown,160,Destroyed the undead in Korvanjund,slay_undead,Meridia,+,C,small,"Direct official QUST VMAD and Papyrus review 2026-08-12 proves the all-draugr completion hook at stage 160."
+CW02B,The Jagged Crown,160,Destroyed the draugr in Korvanjund,slay_undead,Tu'whacca,+,S,small,"Direct official QUST VMAD and Papyrus review 2026-08-12 proves the all-draugr completion hook at stage 160."
 DB01,Innocence Lost,200,"Killed Grelod the Kind, the defenseless orphanage headmistress, on a child's Black Sacrament request","kill_the_helpless,murder_treacherous",Stendarr,-,C,milestone,"DB01 s200: 'I killed Grelod the Kind, and Aventus Aretino rewarded me'"
 DB01,Innocence Lost,200,"Killed Grelod the Kind, the defenseless orphanage headmistress","kill_the_helpless,murder_treacherous",Mara,-,m,small,DB01 s200: 'I killed Grelod the Kind'
 DB01,Innocence Lost,200,"Killed Grelod the Kind, the defenseless orphanage headmistress",kill_the_helpless,Dibella,-,m,small,DB01 s200: 'I killed Grelod the Kind'

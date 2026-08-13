@@ -11,6 +11,12 @@
  */
 import fs from "node:fs";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+const KNOWN_FLAGS = new Set(["--json"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_specced_minus_audit" });
+const JSON_OUTPUT = process.argv.includes("--json");
+
 const ROOT = process.cwd().replace(/\\/g, "/");
 const SOURCE_DIR = `${ROOT}/live-source/Scripts/Source`;
 const MANAGER_PATH = `${SOURCE_DIR}/PDV__ManagerQuest.psc`;
@@ -90,7 +96,13 @@ function main() {
       : "off",
     ledger: "references/authoring/PDV_SpeccedMinusLedger.md",
   };
-  console.log(JSON.stringify(summary, null, 2));
+  if (JSON_OUTPUT) {
+    console.log(JSON.stringify(summary, null, 2));
+  } else {
+    console.log(`Specced-minus audit: ${summary.status}`);
+    console.log(`  minus signals: ${summary.minusSignals}; wired: ${summary.wired}; unemitted: ${summary.unemitted.length}`);
+    console.log(`  manual review: ${summary.manualReview.length}; ledger: ${summary.ledger}`);
+  }
 }
 
 function functionBody(text, name) {

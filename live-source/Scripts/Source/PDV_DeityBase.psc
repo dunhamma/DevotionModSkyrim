@@ -383,6 +383,13 @@ Float Function GetEffectiveGainMultiplier()
     return GetGainMultiplier(GetStanceForPlayer()) * GetTrackGainMultiplier() * GetEligibilityGainMultiplier()
 EndFunction
 
+; Quest-reaction JSON already applies its own NATIVE/FOREIGN/TOLERATED rate.
+; Keep the remaining gain pipeline modifiers without applying the VMAD stance
+; a second time.
+Float Function GetEffectiveGainMultiplierWithoutStance()
+    return GetTrackGainMultiplier() * GetEligibilityGainMultiplier()
+EndFunction
+
 Float Function GetEffectiveDecayMultiplier()
     return GetTrackDecayMultiplier()
 EndFunction

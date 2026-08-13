@@ -11,6 +11,15 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { sameBytesToBuffer } from "./lib/pdv_file_compare.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--check", "--json", "--write"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_refresh_seq" });
+
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
 const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");
 const PDV_ESP = path.join(DEVOTION_MOD, "Devotion.esp");
@@ -28,7 +37,11 @@ const START_GAME_ENABLED_FLAG = 0x10;
 
 const args = new Set(process.argv.slice(2));
 const write = args.has("--write");
+const check = args.has("--check");
 const json = args.has("--json");
+if (check && write) {
+  throw new Error("--check and --write are mutually exclusive.");
+}
 
 function bridge(request, timeoutMs = 60_000) {
   const result = spawnSync(MUTAGEN_BRIDGE, {
@@ -127,10 +140,10 @@ function main() {
     .filter((quest) => (quest.flags & START_GAME_ENABLED_FLAG) !== 0)
     .sort((left, right) => left.localId - right.localId);
   const seqBytes = makeSeqBytes(startEnabled);
-  const currentBytes = fs.existsSync(DEVOTION_SEQ) ? fs.readFileSync(DEVOTION_SEQ) : Buffer.alloc(0);
-  const changed = !currentBytes.equals(seqBytes);
+  const changed = !sameBytesToBuffer(DEVOTION_SEQ, seqBytes);
   const report = {
     status: "PASS",
+    mode: write ? "write" : "check",
     write,
     seqPath: DEVOTION_SEQ,
     changed,
@@ -157,7 +170,7 @@ function main() {
   if (json) {
     console.log(JSON.stringify(report, null, 2));
   } else {
-    console.log(`PDV SEQ refresh: ${write ? "wrote" : "dry-run"} ${startEnabled.length} quest FormIDs`);
+    console.log(`PDV SEQ refresh: ${write ? "wrote" : "checked"} ${startEnabled.length} quest FormIDs`);
     for (const quest of startEnabled) {
       console.log(`- ${quest.formid} ${quest.editorId} flags=${quest.rawFlags}`);
     }

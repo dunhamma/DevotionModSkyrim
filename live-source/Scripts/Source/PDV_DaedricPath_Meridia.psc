@@ -69,6 +69,7 @@ EndFunction
 Function DebugRenouncePath()
     ResetDaedricForDebug()
     SetStoredPiety(0.0, "debug_renounce")
+    StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.Meridia.Renounced", 1)
     if Msg_Exit
         Msg_Exit.Show()
     endIf
@@ -92,8 +93,7 @@ Function ShowTierEntryMessage(Int oldTier, Int newTier)
         return
     endIf
     if newTier == TIER_CHAMPION
-        Int championChoice = ShowIfPresent(Msg_ChampionEntry)
-        HandleChampionOfferResult(championChoice, "tier_entry")
+        ShowIfPresent(Msg_ChampionEntry)
     elseIf newTier == TIER_DEVOTED
         ShowIfPresent(Notif_DevotedEntry)
     elseIf newTier == TIER_SEEKER
@@ -130,11 +130,10 @@ Function ShowRaceResponseForPlayer()
     endIf
 EndFunction
 
-Int Function ShowIfPresent(Message messageRecord)
+Function ShowIfPresent(Message messageRecord)
     if messageRecord
-        return messageRecord.Show()
+        messageRecord.Show()
     endIf
-    return -1
 EndFunction
 
 String Function GetControlledSummary()

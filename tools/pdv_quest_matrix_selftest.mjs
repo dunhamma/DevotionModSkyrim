@@ -16,6 +16,14 @@ import { execFileSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--stdout"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_quest_matrix_selftest" });
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const COMPILE = path.join(__dirname, "pdv_quest_matrix_compile.mjs");
 
@@ -105,6 +113,26 @@ function checkTopLevel(out) {
   if (stanceKeys.length === 0) fail("no stanceMult.* keys (stance table absent)");
 }
 
+function checkReactionStanceCoverage(out) {
+  const races = ["Nord", "Imperial", "Breton", "Altmer", "Bosmer", "Dunmer", "Khajiit", "Argonian", "Orc", "Redguard"];
+  const stanceKeys = Object.keys(out).filter((key) => key.startsWith("stance."));
+  for (const key of stanceKeys) {
+    if (key.includes("/")) fail(`runtime stance key retains a display alias (${key})`);
+  }
+
+  // These path-only Prince lookups cannot rely on PDV_DeityBase's fallback
+  // stance. Missing canonical keys therefore silently become FOREIGN at run
+  // time even though their authored rows are TABOO.
+  for (const deity of ["Namira", "Sanguine"]) {
+    for (const race of races) {
+      const key = `stance.${race}.${deity}`;
+      if (typeof out[key] !== "string" || out[key] === "") {
+        fail(`reaction deity "${deity}" has no runtime stance for ${race} (${key})`);
+      }
+    }
+  }
+}
+
 function main() {
   let out;
   try {
@@ -117,6 +145,7 @@ function main() {
   checkTopLevel(out);
   checkParallelArrays(out);
   checkFaucets(out);
+  checkReactionStanceCoverage(out);
 
   const cellCount = out.questKeys.reduce((sum, k) => sum + (out[`quest.${k}.deities`]?.length ?? 0), 0);
   const deitySet = new Set();

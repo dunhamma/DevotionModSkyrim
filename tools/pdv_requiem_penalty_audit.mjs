@@ -11,6 +11,12 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+const KNOWN_FLAGS = new Set(["--json"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_requiem_penalty_audit" });
+const JSON_OUTPUT = process.argv.includes("--json");
+
 const ROOT = process.cwd();
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
 const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");
@@ -375,18 +381,29 @@ function main() {
     checkLivePreserved(target, recordsByEdid, detailsByEdid);
   }
 
+  const findingCounts = counts();
   const summary = {
+    status: (findingCounts.FAIL || 0) > 0 ? "FAIL" : "PASS",
     timestamp_utc: new Date().toISOString(),
-    counts: counts(),
+    counts: findingCounts,
     findings,
   };
-  console.log(JSON.stringify(summary, null, 2));
+  if (JSON_OUTPUT) {
+    console.log(JSON.stringify(summary, null, 2));
+  } else {
+    console.log(`Requiem penalty audit: ${(summary.counts.FAIL || 0) > 0 ? "FAIL" : "PASS"}`);
+    console.log(`  ${Object.entries(summary.counts).map(([key, value]) => `${key}=${value}`).join(" ")}`);
+  }
   process.exit((summary.counts.FAIL || 0) > 0 ? 1 : 0);
 }
 
 try {
   main();
 } catch (error) {
-  console.error(`pdv_requiem_penalty_audit: ${error.message}`);
+  if (JSON_OUTPUT) {
+    console.log(JSON.stringify({ status: "FAIL", error: error.message }, null, 2));
+  } else {
+    console.error(`pdv_requiem_penalty_audit: ${error.message}`);
+  }
   process.exit(1);
 }

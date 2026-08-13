@@ -16,21 +16,29 @@ as the Aedra god tiers (so a pact read no sharper than ordinary worship).
 2. **HIGH-STAKES effects (~2x the god tiers).** A real Faustian bargain: a build-defining
    boon and a price that genuinely bites, because a player only ever feels one pact.
 
-## Magnitude scheme (by effect type)
+## Magnitude scheme (independently tunable actor-value families)
 
 Aedra god tiers are ~`5/8/12` boon and a trivial `−3/−5/−8` price. Daedric pacts run:
 
 | | Seeker | Devoted | Champion |
 |---|---|---|---|
-| Boon — skill (OneHanded, Sneak, Speechcraft, Illusion…) | +10 | +18 | +25 |
-| Boon — %rate/resist (MagickaRate, DamageResist, ResistMagic…) | +15 | +25 | +35 |
-| Price — % (HealRate, StaminaRate, MagickaRate…) | −10 | −20 | −30 |
-| Price — skill (Speechcraft, Illusion, Restoration…) | −10 | −18 | −25 |
+| Skill points | +10 | +18 | +25 |
+| Resource-pool points | +15 | +25 | +35 |
+| Armor points | +15 | +25 | +35 |
+| Carry-weight units | +15 | +25 | +35 |
+| Resistance percentage points | +15 | +25 | +35 |
+| Movement percentage points | +15 | +25 | +35 |
+| Price — skill points | −10 | −18 | −25 |
+| Price — resource, armor, carry, or resistance units | −10 | −20 | −30 |
+| Price — movement percentage points | −4 | −7 | −10 |
 
-Source of truth: `spellPacket()` in `tools/pdv_generate_daedric_contract.mjs`
-(`SKILL_AVS` set decides the band). Regen → `PDV_DaedricPrinceRecordContracts.json`
-→ `pdv-daedric-author` writes the SPELL/MGEF magnitudes to the framework ESP
-(`ConfigureSpell` rewrites magnitudes every run). Verified live: Boethiah Champion
+Source of truth: `tools/lib/pdv_daedric_effect_model.mjs`. It maps every used
+ActorValue to one named unit family and declares all three boon and price tiers for
+each Prince. `tools/pdv_generate_daedric_contract.mjs` consumes the module through
+one `buildPrinceSpellPackets(...)` interface and emits
+`PDV_DaedricPrinceRecordContracts.json`. The 2026-08-11 structural split preserved
+every shipped magnitude; the separate #37 balance pass still owes a reasoned audit
+and felt-check for each family. Verified live before that split: Boethiah Champion
 boon DamageResist = 35.
 
 ## Hard-switch mechanism (self-contained, no path→manager coupling)

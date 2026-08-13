@@ -30,6 +30,12 @@
  */
 import fs from "node:fs";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+const KNOWN_FLAGS = new Set(["--json"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_ledger_coverage_audit" });
+const JSON_OUTPUT = process.argv.includes("--json");
+
 const ROOT = process.cwd().replace(/\\/g, "/");
 const SOURCE_DIR = `${ROOT}/live-source/Scripts/Source`;
 const OUT_MD = `${ROOT}/references/authoring/PDV_LedgerCoverageLedger.md`;
@@ -161,7 +167,14 @@ function main() {
     selfTest,
     ledger: "references/authoring/PDV_LedgerCoverageLedger.md",
   };
-  console.log(JSON.stringify(summary, null, 2));
+  if (JSON_OUTPUT) {
+    console.log(JSON.stringify(summary, null, 2));
+  } else {
+    console.log(`Ledger coverage audit: ${summary.status}`);
+    console.log(`  tracked: ${summary.trackedSites}; untracked: ${summary.untrackedSites}; lifecycle: ${summary.lifecycleSites}`);
+    console.log(`  substrate scaled writers: ${summary.substrateScaledWriters}`);
+    console.log(`  ledger: ${summary.ledger}`);
+  }
 
   if (untracked.filter((u) => u.file !== "(selftest)").length > 0 || !scaledCuratedDriverReason || !dashboardListsAllMovedGods) process.exitCode = 1;
 }

@@ -89,6 +89,8 @@ Work Rule".
 | `tools/pdv_main_quest_full_coverage_audit.mjs` | Fail-closed static/generated-readback gate for the 2026-07-15 main-quest contract: 45 identities x 25 exact stages, 951 T11 rows, 1978-cell compiled matrix, strict integer stages, no `echo`, exact 17/11 Paarthurnax rosters, and indexed 134-watch registration. A PASS is not in-game route/display proof. |
 | `tools/pdv_guide_bbcode.mjs` | Emits `dist/nexus-articles/*.bb` from the 10 race guides and hard-fails on surviving review tags, HTML comments, or non-ASCII -- the Nexus release gate. Run after ANY guide edit. |
 | `tools/pdv_package_release.mjs` | Builds the `dist/` release zip from the live Anvil Devotion mod folder -- the ONLY sanctioned path to a public bundle (never hand-roll it; rc1 leaked an 876KB `.orig`). Gates on version, ANAM, and archive contents; those gates are NARROWER than `pdv_verify.mjs`, so a green package run is not a green verify run. |
+| `tools/pdv_release_proof_refresh.mjs` | Re-derives and gates the committed houseCARL release proof against the active Anvil profile. `--capture` writes a gitignored review candidate; confirmed `--refresh` promotes it; release preflight runs `--check` and fails closed if the backend is unavailable or proof drifted. |
+| `tools/pdv_file_semantics_audit.mjs` | Enforces the current file compare/hash inventory: normalized text versus exact bytes, fixed LF/CRLF writers, and paired `.gitattributes` pins. Run after changing any file freshness, generated-text, checksum, cache-key, snapshot, or packaging comparison. |
 | `tools/pdv_substrate_pacing_audit.mjs` | Strict source/contract audit for the six paced substrates: one +4 devotional credit per 06:00 day, timing maths, authentic-route ownership, curse exceptions, decay, and player-copy exclusions |
 | `tools/pdv_broad_pantheon_audit.mjs` | Strict source/contract audit for Imperial, Nord Old Ways, and Nord Nine Divines pools: signed logical-event aggregation, active-baseline gating, grace/decay, migration, and T2 patron transition |
 | `tools/pdv_pantheon_substrate_runtime_evidence_check.mjs` | Fail-closed runtime/manual evidence checker for the 12 pantheon/substrate co-test cards; a static pass never closes an evidence bucket, and rotating Papyrus/temporary captures need an exact retained reference in the committed pantheon co-test evidence store |
@@ -97,7 +99,10 @@ Work Rule".
 | `tools/pdv_formal_offer_check.mjs` | Read-only verifier for the formal-offer scale-out spec, live manager eligibility/source flow, no-offer race exclusions, quiet-emergence cues, and delegated ESP/property readback |
 | `tools/pdv_prisma_parity_unitd_check.mjs` | Read-only verifier for Prisma parity Unit D journal/toast wiring, carryover award funnel, director resolver preservation, and Daedric commitment-title readback |
 | `tools/pdv_prisma_to_oneoh_audit.mjs` | Read-only roll-up verifier for Prisma-to-1.0 wiring; checks current producer callsites, source/live parity, repo/live Prisma UI parity, and adversarial negative fixtures before runtime smoke |
-| `tools/pdv_generate_daedric_contract.mjs` | Generates the all-Prince Daedric record contract and non-Hircine path scripts from the Daedric content manifest plus race/Prince matrix |
+| `tools/pdv_deity_stance_parity.mjs` | Cross-checks the three sources of a deity stance -- the matrix JSON `stance.<Race>.<Deity>` (wins at runtime), the ESP `Stance_<Race>` VMAD property (fallback), and `IsDashboardDeityInOriginRoster`. Fails on ESP/JSON drift and on an off-roster deity reading NATIVE; warns where the JSON value cannot be expressed in the record at all. Derives rosters and canonical names from source rather than pinning them |
+| `tools/pdv_patch_source_deploy.mjs` | Deploys `patch-source/` (the source of truth for patch-only Papyrus) into the FOMOD tree, producing the AFDI two-path duplication. `--check` gates that `dist/` matches and that no `.psc` has changed since its last compile; `--write` regenerates; `--relock` accepts new bytecode after recompiling |
+| `tools/lib/pdv_daedric_effect_model.mjs` | Explicit all-Prince boon/price model and independently tunable ActorValue-family bands; exceptional packets such as Mora Champion live in the Prince declaration rather than editor-ID override maps |
+| `tools/pdv_generate_daedric_contract.mjs` | Generates the all-Prince Daedric record contract and non-Hircine path scripts from the content manifest, race/Prince matrix, and explicit effect model. **Report-only by default**; `--self-test` proves model invariants and zero reviewed-contract drift, while writes remain explicit through `--write-contract` or `--scaffold-scripts --source-dir <path>` |
 | `tools/pdv_prisma_ui_audit.mjs` | Read-only Prisma UI policy audit; blocks gameplay scripts from opening focused/blocking Prisma UI without default-off/player-owned gating and fails stale Book-of-Days manager/MCM bytecode |
 | `tools/pdv_prisma_toast_fallback_audit.mjs` | Read-only Prisma-first toast fallback audit; fails raw player-facing top-left-only gameplay notices, checks stable toast helpers use shared fallback behavior, and hardens the P2 book route from `OnBookRead` through `ShowP2BookNotice` |
 | `tools/pdv_phase2_reward_readback_audit.mjs` | Read-only Phase 2 static closeout audit for reward records, manager spell/deity properties, FLST/SEQ/SGE state, Green Pact static layer plus the plant-food baseline, capstone records, and real-hook classification |
@@ -459,7 +464,7 @@ result is two grace days then three `-0.1` ticks. Save/reload and invoke the
 same control again to prove idempotence. This controlled route does not fill
 organic-route evidence.
 
-For Daedric Prince CAT-6 work, regenerate `references\authoring\PDV_DaedricPrinceRecordContracts.json` with `tools\pdv_generate_daedric_contract.mjs` before authoring. That contract is the record source of truth; author the ESP packet from it with the `housecarl_*` MCP tools and verify each write with a `housecarl_read_record` readback. The packet covers all sixteen Skyrim-present Princes: per-Prince records, base/concrete `PDV_DaedricPathBase` VMAD wiring, stigma globals, arrays, `PDV_FLST_DaedricPaths_All` membership, manager FormList wiring, the QASmoke proof sender ACTI/REFR packet, and all sixteen exact organic quest-stage source FormLists. This is still a record/readback gate only; controlled in-game display proof and live-source proof are required before calling a Prince beta-display ready.
+For Daedric Prince CAT-6 work, first run `tools\pdv_generate_daedric_contract.mjs --self-test`, then regenerate `references\authoring\PDV_DaedricPrinceRecordContracts.json` with `--write-contract` before authoring. The explicit effect authority is `tools\lib\pdv_daedric_effect_model.mjs`; its small interface supplies all tier packets while the manifest owns player text and the matrix owns race posture. A bare run is report-only and writes nothing; `--write-contract` refuses any change to the reviewed JSON unless `--force` deliberately accepts it. Script scaffolding is a separate opt-in (`--scaffold-scripts --source-dir <path>`) so regenerating a contract can never invalidate a build's bytecode as a side effect. The generated JSON is the record-authoring contract; author the ESP packet from it with the `housecarl_*` MCP tools and verify each write with a `housecarl_read_record` readback. `pdv_verify` additionally fails unless all 96 contracted spells and all 97 effect references resolve and link in the live ESP; its dedicated price gate separately enforces all 48 detrimental stored magnitudes. Boon magnitude reconciliation belongs to the owner-reviewed #37 balance pass, not this structural gate. The packet covers all sixteen Skyrim-present Princes: per-Prince records, base/concrete `PDV_DaedricPathBase` VMAD wiring, stigma globals, arrays, `PDV_FLST_DaedricPaths_All` membership, manager FormList wiring, the QASmoke proof sender ACTI/REFR packet, and all sixteen exact organic quest-stage source FormLists. This is still a record/readback gate only; controlled in-game display proof and live-source proof are required before calling a Prince beta-display ready.
 
 For design-first thin-Prince artifact faucets, keep the scope to low-risk equip events unless a richer artifact-use support path has been designed. The artifact faucet FormLists for Molag Bal, Hircine, Meridia, Sheogorath, Mehrunes Dagon, and Nocturnal are authored and read back with the `housecarl_*` MCP tools; `tools\pdv_quest_matrix_compile.mjs --check` must report the matching Part D faucet count before live JSON write. This is machine/readback proof only until in-game artifact-equip smoke and wrong-origin silence are captured.
 
@@ -1100,6 +1105,124 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 ## Notes / Decisions Log
 
+**2026-08-11 AEST - Daedric effect-model decomposition (balance-neutral):**
+Daedric boon and price composition moved behind
+`tools/lib/pdv_daedric_effect_model.mjs`. The compiler now consumes one
+`buildPrinceSpellPackets(...)` interface; the module explicitly declares every tier,
+maps every used ActorValue to a unit-specific band, and owns Mora Champion's two-effect
+packet in place. Generator self-test proves the resulting sixteen-Prince contract is
+unchanged. The live verifier now resolves all 96 SPELs and 97 effect references and
+links, while the dedicated price gate still checks all price magnitudes. No ESP
+or magnitude changed; #37 retains the boon reconciliation, owner-reviewed tuning, and
+in-game felt-check work.
+
+**2026-08-11 AEST - standard release-proof refresh:**
+`tools/pdv_release_proof_refresh.mjs` and
+`references/authoring/PDV_ReleaseProofRefresh_Runbook.md` now own the complete refresh
+sequence. Machine checks re-derive ESP bytes, masters, both record frames, exact contested
+membership, critical winners, VMAD, PSC/PEX pairs, and claimed asset providers. Promotion
+requires explicit review of critical-target scope, CELL retention, and the open proof
+boundary. `pdv_package_release.mjs` calls the live check and no longer pins the number 33.
+The proof remains static/package evidence only; runtime and manual behaviour stay open.
+
+**2026-08-11 AEST - off-roster worship boundary and save migration:** New patron
+selection is centrally limited to the player's origin roster or a currently valid
+formal-offer lane. Explicit MCM debug selection remains an override. Existing saves
+retain an already-active FOREIGN/TOLERATED off-roster patron, and that relationship can
+still receive shrine and quest reactions at the canonical 0.4 rate; generic deeds remain
+NATIVE-only. Quest-matrix awards bypass the record stance multiplier because the compiled
+matrix has already applied stance. Likes/dislikes version 21 reprojects every deity's
+record stance, and the stance parity gate now checks the runtime migration table as a
+fourth authority.
+
+**2026-08-11 AEST - KID/SPID optional recognition layer:** KID and SPID are now
+strongly recommended soft dependencies rather than deferred frameworks. Three flat Data-root
+distributor files ship with Devotion: `PDV_GreenPact_KID.ini`,
+`PDV_ItemRecognition_KID.ini`, and `PDV_ReligiousRecognition_DISTR.ini`. KID supplies the
+Green Pact and seven semantic item-action lanes; SPID supplies faith keywords plus paired
+cohort factions for non-voiced NPC recognition. Faithful/Devoted map to Friend/Ally, while
+Enemy is reserved for explicit hard rivals and does not create attack-on-sight behavior. The
+manager owns relationship reconciliation and exposes a ModEvent ownership handshake for
+Repute or another reputation system. Absence of either framework simply removes that optional
+reach; core devotion and PatchHub quest reactions remain available.
+
+**2026-08-11 AEST - source-labelled PatchHub tester surfaces:** Every generated
+PatchHub reaction channel now receives its FOMOD option name as optional
+`sourceMod` metadata. `PDV__ManagerQuest` carries it through the reaction queue,
+the Prisma toast, and the matching persistent Book-of-Days entry. Existing saves
+pad the new journal source list before the first labelled append. The installer
+validator fails when a channel label differs from its owning option. Core
+reactions omit the field. The public tester artifact is one all-in-one FOMOD
+with required core and all dependency-gated patch options; runtime observations
+follow release, and the labelled toast plus Book entry are the tester-visible
+proof that a patch fired.
+
+**2026-08-07 AEST - release-issue reconciliation:** The live `Devotion.esp`
+now includes Hircine and Molag Bal stigma notification triples and the complete
+Shor T3 low-health-save presentation contract. Its current SHA-256 is
+`87B04CDFFC9F0A3064CEA37D37DDAEA10C3AEEB9A4B9D3B1B515C44AE7B395B7`
+(649,917 bytes). The source-side release fixes compile cleanly. This is direct
+readback/static proof only; the substrate uninstall fix still requires an MCM
+uninstall smoke before issue #30 or the release claim can be closed.
+
+**2026-08-07 AEST - ARR 2.5 combined candidate deployment and winner-aware
+preflight:** Installed the 84-file combined FOMOD lane as
+`D:\Wabbajack\modlists\ARR 2.5\mods\Devotion - Authoria ARR Compatibility`,
+enabled it on `KoK R11`, and activated `PDV_AuthoriaARR_Combined.esp`
+after `Devotion.esp` / before `Requiem for the Indifferent.esp`. Profile files
+were backed up to
+`profiles\KoK R11\pdv-arr25-backups\20260807-070513`. Direct houseCARL asset
+readback caught and corrected the MO2 priority direction: this profile's
+`modlist.txt` lists the higher-priority winner first, so the compatibility mod
+must appear above `Devotion - PatchHub` and `Devotion`. The runtime preflight
+now resolves actual MO2 winners instead of inspecting the named core folder,
+and `--expected-channels` verifies the deployed per-mod folder. The historical
+combined-lane command used 154 core watches, 62 ARR watches, 34 channels, and
+the now-retired `--expected-arr` argument. It is superseded by the modular
+deployment command in
+`references\authoring\PDV_ARR25_ModularPatchHub_ExperimentRunbook_2026-08-07.md`:
+157 core watches, 39 winning channels, and no combined compatibility winner.
+No post-deployment Papyrus registration marker exists yet, so runtime and
+support remain open.
+
+**2026-08-07 AEST - modular core/PatchHub replacement candidate:** The combined
+Authoria lane described below is superseded. ARR now installs the ordinary
+Devotion core archive plus a fully modular, dependency-gated PatchHub; no option
+may replace core scripts or matrices. The committed source is `ff7fc4e`. Core is
+`dist\Devotion-1.0.4-20260807.zip` (231 exact members, SHA-256
+`CF7CFDBD5FC84D6B7BA5C6B4DFC697745978DA50C3290E1ED89095D41775E4DE`).
+This rebuild includes the Altmer five-deity roster correction and existing-save
+Book of Days repair version 3.
+PatchHub is `dist\PDV-QuestModPatchHub-ARR25-Experimental-20260807.zip` (80
+exact members, 41 options, 39 channels, SHA-256
+`DEC5EBC4285F3985D3D8F0BDF1ADBE4F288C20FB09F3D83EA3ECD5457F633949`).
+The Altmer Prisma parity gate passes 124 checks, including one notice per
+accepted daily heritage practice. Machine/package proof passes; runtime-route,
+player-surface, semantic, save/load, and support evidence remain open. The
+living authority and experiment sequence are
+`references\authoring\PDV_ModPackaging_StateAuthority.md` and
+`references\authoring\PDV_ARR25_ModularPatchHub_ExperimentRunbook_2026-08-07.md`.
+
+**2026-08-06 AEST - ARR 2.5 exhaustive content/package candidate (superseded
+package architecture; historical evidence only):** The isolated
+`codex/arr25-content-sweep` worktree closes the finite QUST plus selected non-quest
+inventory, authors T13-T17 as 34 per-mod channels, and packages the safe non-quest
+surface. `PDV_PlayerEvents` now optionally polls AFDI's 30 latched successful-
+destruction globals every 15 real-time seconds through the unified scheduler;
+version 1 baselines existing saves without retroactive credit and persists each
+transition before routing. The package also carries exact-name ARR Green Pact KID
+rules, the existing bounded bard lane, Breton Hidden Art's second renewable, and
+the read-back 11-ACTI route-202 shrine-prayer ESP/BOS pair. Wyrmstooth placements
+use different base forms and are not covered; Jyggalag remains classify-only;
+hunting is deferred because a truthful route requires a third-party ModEvent after
+the IHA corpse-token write. The validated archive is
+`dist\PDV_QuestModPatches_FOMOD_ARR25_20260806-test.zip`: 95 members, no missing or
+extra files, SHA-256
+`E11D7B2A90ED0F980DA2394CF63A465167E55730C252EF5FF1EF05A64D0B5C9D`.
+Papyrus compile is 0/0 and strict verification is `PASS=4074, TODO=1, INFO=78,
+WARN=1, FAIL=0`. This moves machine/package proof only; ARR 2.5 runtime preflight,
+every structured tester case, and support remain OPEN.
+
 **2026-07-27 AEST - 1.0.4 shipped; shrine-script boundary amended and a hard MO2
 priority requirement added:** Devotion 1.0.4 is public (tag `v1.0.4`,
 `Devotion-1.0.4-20260727.zip`). Three things below change how this document's earlier
@@ -1134,9 +1257,12 @@ entries should be read.
 
 3. **Release packaging goes through `tools\pdv_package_release.mjs`, never by hand.** It
    builds the `dist\` zip from the live Anvil Devotion folder and gates on version, ANAM,
-   and archive contents. Its gates are NARROWER than `pdv_verify.mjs`: a green package run
-   is not a green verify run, and a `pdv_verify` FAIL at package time is usually real
-   record drift rather than a stale audit.
+   archive contents, and a fresh live run of `pdv_release_proof_refresh.mjs --check`.
+   Use the release-proof runbook and its `--capture`/confirmed `--refresh` path after any
+   ESP or claimed-winner/provider change; never edit the proof snapshot just to satisfy a
+   count. These gates are still NARROWER than `pdv_verify.mjs`: a green package run is not
+   runtime/manual proof, and a `pdv_verify` FAIL at package time is usually real record
+   drift rather than a stale audit.
 
 Readback discipline reminder that this session paid for: confirm the active MO2 instance
 with `housecarl_load_order_status` before any readback that will become a status claim.

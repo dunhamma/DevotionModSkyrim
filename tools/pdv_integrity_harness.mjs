@@ -17,6 +17,14 @@
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--json", "--skip-slow", "--strict"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_integrity_harness" });
+
 const ROOT = process.cwd().replace(/\\/g, "/");
 const OUT_MD = `${ROOT}/references/authoring/PDV_IntegrityHarnessLedger.md`;
 const SKIP_SLOW = process.argv.includes("--skip-slow");
@@ -27,7 +35,7 @@ const CHECKS = [
   { id: "signal_floor", role: "findings", cmd: ["tools/pdv_signal_floor_audit.mjs"], read: () => "see PDV_SignalFloorLedger" },
   { id: "p2_formlist_esp", role: "findings", cmd: ["tools/pdv_p2_formlist_esp_audit.mjs", "--json"], read: (j) => j?.summary ? (j.summary.inconclusive ? `INCONCLUSIVE (bridge down: ${j.summary.inconclusiveReason ?? "?"})` : `${j.summary.populated}/${j.summary.surfaces} populated; ${j.summary.empty} empty; drift ${j.summary.driftRows}; fill-missing ${j.summary.fillMissingRows}; fails ${j.summary.fails}`) : null },
   { id: "spine_stack_score", role: "findings", cmd: ["tools/pdv_spine_stack_score.mjs"], read: (j) => j ? `worst ${j.worstFirst?.[0] ?? "?"}; ${j.parityTargets?.length ?? "?"} targets; ${j.diegeticDeadDeclarations?.length ?? 0} dead-decls` : null },
-  { id: "specced_minus", role: "findings", cmd: ["tools/pdv_specced_minus_audit.mjs"], read: (j) => j ? `${j.unemitted?.length ?? "?"} unemitted minuses` : null },
+  { id: "specced_minus", role: "findings", cmd: ["tools/pdv_specced_minus_audit.mjs", "--json"], read: (j) => j ? `${j.unemitted?.length ?? "?"} unemitted minuses` : null },
   { id: "completeness", role: "findings", slow: true, cmd: ["tools/pdv_completeness_audit.mjs", "--json"], read: (j) => j ? `${j.status}; ${j.counts ? Object.entries(j.counts).map(([k, v]) => `${k}=${v}`).join(" ") : ""}` : null },
   { id: "deity_chain", role: "gate", cmd: ["tools/pdv_deity_chain_audit.mjs", "--json"], read: (j) => j ? `${j.blockers} blockers (${j.resolutionGaps} resolution / ${j.reachabilityGaps} reachability)` : null },
   { id: "eligibility_reward_coverage", role: "gate", cmd: ["tools/pdv_eligibility_reward_coverage_audit.mjs", "--json"], read: (j) => j ? `${j.rows ?? "?"} rows; ${j.failures ?? "?"} failures` : null },

@@ -1,0 +1,356 @@
+{
+  "schema": "pdv-core-quest-crossgen-adjudication-v1",
+  "output": "references/authoring/PDV_QuestReactionMatrix_Tranche14_CoreRetrospective.csv",
+  "approval": "owner-approved official-content retrospective 2026-08-12",
+  "sources": [
+    {
+      "path": "references/authoring/generated/PDV_QuestCrossGen_V02_01_CoreRetrospective_Candidates.csv",
+      "expected_candidates": 357,
+      "exclusions": [
+        {
+          "key": "MS08|200|Auri-El",
+          "reason": "Auri-El's profile limits this tag to the World-Eater and dragon heralds."
+        },
+        {
+          "key": "MS08|200|Alkosh",
+          "reason": "Alkosh's profile limits this tag to named dragons and order-keeping dragon acts."
+        },
+        {
+          "key": "CW02A|160|The Hist",
+          "reason": "The Hist profile explicitly excludes ordinary draugr-clearing from devotional recognition."
+        },
+        {
+          "key": "CW02B|160|The Hist",
+          "reason": "The Hist profile explicitly excludes ordinary draugr-clearing from devotional recognition."
+        }
+      ]
+    },
+    {
+      "path": "references/authoring/generated/PDV_QuestCrossGen_V02_02_CoreRetrospective_Candidates.csv",
+      "expected_candidates": 286,
+      "exclusions": [
+        { "key": "dunBlindCliffQST|100|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "dunDarklightQST|40|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "MGRRogue|200|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "dunBlindCliffQST|100|Alkosh", "reason": "Alkosh's combat profile is limited to named dragons and dragon-order acts." },
+        { "key": "dunDarklightQST|40|Alkosh", "reason": "Alkosh's combat profile is limited to named dragons and dragon-order acts." },
+        { "key": "dunHillgrundsTombQST|100|Alkosh", "reason": "Alkosh's combat profile is limited to named dragons and dragon-order acts." },
+        { "key": "dunValthumeQST|60|Alkosh", "reason": "A dragon priest is not a named dragon; Alkosh's scoped combat profile does not apply." },
+        { "key": "MGRRogue|200|Alkosh", "reason": "Alkosh's combat profile is limited to named dragons and dragon-order acts." },
+        { "key": "dunValthumeQST|60|The Hist", "reason": "The Hist profile explicitly excludes ordinary draugr-clearing." },
+        { "key": "FreeformSoljundsSinkholeA|100|The Hist", "reason": "The Hist profile explicitly excludes ordinary draugr-clearing." },
+        { "key": "dunAnsilvundQST|100|Auri-El", "reason": "The honored dead are not part of Auri-El's scoped Elven-ancestry domain." },
+        { "key": "dunFrostflowAbyssQST|100|Auri-El", "reason": "The honored dead are not part of Auri-El's scoped Elven-ancestry domain." },
+        { "key": "dunHillgrundsTombQST|100|Auri-El", "reason": "The Nord ancestral tomb is outside Auri-El's scoped Elven-ancestry domain." },
+        { "key": "dunValthumeQST|60|Auri-El", "reason": "Valdar's vigil is outside Auri-El's scoped Elven-ancestry domain." },
+        { "key": "FreeformRiften13|200|Auri-El", "reason": "The Riften burial rite is outside Auri-El's scoped Elven-ancestry domain." },
+        { "key": "FreeformWinterholdA|30|Auri-El", "reason": "The burial is outside Auri-El's scoped Elven-ancestry domain." },
+        { "key": "Favor018|20|Baan Dar", "reason": "The radiant theft does not prove a strong or unjust target." },
+        { "key": "Favor018|20|Rajhin", "reason": "The radiant theft does not prove an artful or notable target." },
+        { "key": "FreeformDragonBridge01|300|Baan Dar", "reason": "The household theft does not prove a strong or unjust target." },
+        { "key": "FreeformDragonBridge01|300|Rajhin", "reason": "The household theft does not prove an artful or notable target." },
+        { "key": "TGRNT|200|Baan Dar", "reason": "The radiant numbers job does not prove a strong or unjust target." },
+        { "key": "TGRNT|200|Rajhin", "reason": "The radiant numbers job does not prove a notable target." }
+      ]
+    },
+    {
+      "path": "references/authoring/generated/PDV_QuestCrossGen_V02_03_CoreRetrospective_Candidates.csv",
+      "expected_candidates": 305,
+      "exclusions": [
+        { "key": "dunVolunruudQST|100|The Hist", "reason": "The Hist profile explicitly excludes ordinary draugr-clearing." },
+        { "key": "FreeformShipsWindhelm|20|Alkosh", "reason": "Alkosh's combat profile is limited to named dragons and dragon-order acts." },
+        { "key": "TGTQ04|200|Alkosh", "reason": "Alkosh's combat profile is limited to named dragons and dragon-order acts." },
+        { "key": "TGTQ04|200|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "FreeformOldHroldanB|100|Auri-El", "reason": "Hjalti's ghost is outside Auri-El's scoped Elven-ancestry domain." },
+        { "key": "FreeformWhiterunQuest04|200|Auri-El", "reason": "Andurs' amulet is outside Auri-El's scoped Elven-ancestry domain." },
+        { "key": "FreeformWhiterunQuest02|200|Baan Dar", "reason": "Stealing Argonian Ale does not prove a strong or unjust target." },
+        { "key": "FreeformWhiterunQuest02|200|Rajhin", "reason": "Stealing Argonian Ale does not prove an artful or notable target." }
+        ,{ "key": "DA11Intro|20|Auri-El", "reason": "Markarth's Hall of the Dead is outside Auri-El's scoped Elven-ancestry domain." }
+        ,{ "key": "FreeformFalkreathQuest01|255|Auri-El", "reason": "Lod's grave is outside Auri-El's scoped Elven-ancestry domain." }
+        ,{ "key": "FreeformWinterholdC|40|Auri-El", "reason": "Isabelle is outside Auri-El's scoped Elven-ancestry domain." }
+        ,{ "key": "dunAngarvundeQST|20|The Hist", "reason": "The Hist profile excludes ordinary draugr clearing." }
+      ]
+    },
+    {
+      "path": "references/authoring/generated/PDV_QuestCrossGen_V03B_CoreRetrospective_Candidates.csv",
+      "expected_candidates": 171,
+      "exclusions": [
+        { "key": "C03|200|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "DLC1VampireBaseIntro|40|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "DLC1VampireBaseIntro|40|Alkosh", "reason": "Alkosh's combat profile is limited to named dragons and dragon-order acts." },
+        { "key": "TG08B|45|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "TG08B|45|Alkosh", "reason": "Alkosh's combat profile is limited to named dragons and dragon-order acts." },
+        { "key": "DLC01SoulCairnHorseQuest2|150|Auri-El", "reason": "Arvak is outside Auri-El's scoped Elven-ancestry domain." },
+        { "key": "DLC1LD|225|Auri-El", "reason": "Katria's memorial is outside Auri-El's scoped Elven-ancestry domain." }
+      ]
+    },
+    {
+      "path": "references/authoring/generated/PDV_QuestCrossGen_V02_04_CoreRetrospective_Candidates.csv",
+      "expected_candidates": 340,
+      "exclusions": [
+        { "key": "BQ02|200|Alkosh", "reason": "Alkosh's combat profile is limited to named dragons and dragon-order acts." },
+        { "key": "BQ03|200|Alkosh", "reason": "Alkosh's combat profile is limited to named dragons and dragon-order acts." },
+        { "key": "CW01A|200|Alkosh", "reason": "The Legion proving task is not a named-dragon or dragon-order act." },
+        { "key": "CW01B|200|Alkosh", "reason": "The Stormcloak proving task is not a named-dragon or dragon-order act." },
+        { "key": "FreeformHeartwoodMill|200|Auri-El", "reason": "Leifnarr is outside Auri-El's scoped Elven-ancestry domain." },
+        { "key": "FreeformIvarstead02|200|Auri-El", "reason": "Reyda is outside Auri-El's scoped Elven-ancestry domain." },
+        { "key": "SolitudeFreeform03|200|Auri-El", "reason": "This Solitude memorial is outside Auri-El's scoped Elven-ancestry domain." },
+        { "key": "SolitudeFreeform07|200|Auri-El", "reason": "Elisif's Talos tribute is outside Auri-El's scoped Elven-ancestry domain." }
+      ]
+    },
+    {
+      "path": "references/authoring/generated/PDV_QuestCrossGen_V03C_CoreRetrospective_Candidates.csv",
+      "expected_candidates": 390,
+      "exclusions": [
+        { "key": "DLC2dunKarstaagQST|250|Alkosh", "reason": "Karstaag is not a named dragon or dragon-order act." },
+        { "key": "DLC2MH01|25|Alkosh", "reason": "The Thirsk reclamation is not a named-dragon or dragon-order act." },
+        { "key": "DLC2MH02|200|Alkosh", "reason": "The Thirsk leadership duel is not a named-dragon or dragon-order act." },
+        { "key": "DLC2TT2|600|Alkosh", "reason": "Ildari is not a named dragon or dragon-order act." },
+        { "key": "DLC2dunKarstaagQST|250|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "DLC2EbonyWarriorQuest|200|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "DLC2MH01|25|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "DLC2MH02|200|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "DLC2MQ06|550|Auri-El", "reason": "Miraak is Dragonborn, not a dragon herald within Auri-El's scoped combat profile." },
+        { "key": "DLC2TT2|600|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "DLC2RR03|200|Auri-El", "reason": "Gratian is outside Auri-El's scoped Elven-ancestry domain." },
+        { "key": "DLC2RRFavor03|200|Auri-El", "reason": "Raven Rock's ancestral tomb is outside Auri-El's scoped Elven-ancestry domain." },
+        { "key": "DLC2WB01|100|Auri-El", "reason": "Wulf's brother is outside Auri-El's scoped Elven-ancestry domain." },
+        { "key": "DLC2dunHaknirTreasureQST|100|The Hist", "reason": "The Hist profile excludes ordinary undead clearing." },
+        { "key": "DLC2dunKolbjornQST|475|The Hist", "reason": "The Hist profile excludes ordinary undead clearing." },
+        { "key": "DLC2RRFavor03|200|The Hist", "reason": "The Hist profile excludes ordinary undead clearing." },
+        { "key": "DLC2dunHaknirTreasureQST|100|Baan Dar", "reason": "Plundering a dead pirate's tomb does not prove reversal against a strong or unjust target." }
+      ]
+    },
+    {
+      "path": "references/authoring/generated/PDV_QuestCrossGen_V03A_CoreRetrospective_Candidates.csv",
+      "expected_candidates": 150,
+      "exclusions": [
+        { "key": "CR07|20|Auri-El", "reason": "The escaped criminal is outside Auri-El's scoped dragon-combat domain." },
+        { "key": "CR07|20|Alkosh", "reason": "The escaped criminal is not a named dragon or dragon-order act." }
+      ]
+    },
+    {
+      "path": "references/authoring/generated/PDV_QuestCrossGen_V04_CoreRetrospective_Candidates.csv",
+      "expected_candidates": 288,
+      "exclusions": [
+        { "key": "ccBGSSSE001_Crab_MQ4|2000|Alkosh", "reason": "The Guardian Mudcrab is not a named dragon or dragon-order act." },
+        { "key": "ccBGSSSE001_Misc_Morthal|200|Alkosh", "reason": "The fishing challenge's foe is not a named dragon or dragon-order act." },
+        { "key": "ccBGSSSE001_Misc_Windhelm|200|Alkosh", "reason": "The fishing challenge's foe is not a named dragon or dragon-order act." },
+        { "key": "ccBGSSSE025_MiscQuest_AmberMadnessGear|14|Alkosh", "reason": "Evethra is not a named dragon or dragon-order act." },
+        { "key": "ccBGSSSE025_QuestA|2000|Alkosh", "reason": "The Saints and Seducers enemies are not named dragons or dragon-order acts." },
+        { "key": "ccBGSSSE025_QuestB|200|Alkosh", "reason": "The conjurer is not a named dragon or dragon-order act." },
+        { "key": "ccBGSSSE001_Crab_MQ4|2000|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "ccBGSSSE001_Misc_Morthal|200|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "ccBGSSSE001_Misc_Windhelm|200|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "ccBGSSSE025_MiscQuest_AmberMadnessGear|14|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "ccBGSSSE025_QuestA|2000|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "ccBGSSSE025_QuestB|200|Auri-El", "reason": "Auri-El's combat profile is limited to the World-Eater and dragon heralds." },
+        { "key": "ccBGSSSE025_MiscQuest_Nerveshatter|40|Auri-El", "reason": "The memorial is outside Auri-El's scoped Elven-ancestry domain." }
+      ]
+    },
+    {
+      "path": "references/authoring/generated/PDV_QuestCrossGen_V02_Gap_CoreRetrospective_Candidates.csv",
+      "expected_candidates": 37,
+      "exclusions": []
+    },
+    {
+      "path": "references/authoring/generated/PDV_QuestCrossGen_V05_CoreAmbiguityResolution_Candidates.csv",
+      "expected_candidates": 184,
+      "exclusions": []
+    }
+  ],
+  "manual_rows": [
+    {
+      "editor_id": "MGRArniel04",
+      "quest_name": "Arniel's Endeavor",
+      "outcome_stage": "200",
+      "outcome": "Helped Arniel complete the Keening experiment that made him vanish.",
+      "act_tags": "reckless_magic",
+      "deity": "Julianos",
+      "valence": "-",
+      "intensity": "m",
+      "magnitude": "small",
+      "citation": "V02-03 conflict adjudication: the completed experiment's reckless disappearance outweighs its forbidden-knowledge pursuit for Julianos; owner-approved slate 2026-08-12."
+    },
+    {
+      "editor_id": "MGRArniel04",
+      "quest_name": "Arniel's Endeavor",
+      "outcome_stage": "200",
+      "outcome": "Helped Arniel complete the Keening experiment that made him vanish.",
+      "act_tags": "reckless_magic",
+      "deity": "Magnus",
+      "valence": "-",
+      "intensity": "S",
+      "magnitude": "small",
+      "citation": "V02-03 conflict adjudication: Magnus' core rejection of reckless magic controls over peripheral forbidden knowledge; owner-approved slate 2026-08-12."
+    },
+    {
+      "editor_id": "MGRitual03",
+      "quest_name": "Conjuration Ritual Spell",
+      "outcome_stage": "200",
+      "outcome": "Subdued an Unbound Dremora and made it retrieve a sigil stone for master Conjuration work.",
+      "act_tags": "disciplined_study",
+      "deity": "Julianos",
+      "valence": "+",
+      "intensity": "S",
+      "magnitude": "small",
+      "citation": "V02-03 conflict adjudication: completed master-level study controls for Julianos over the contained Dremora risk; owner-approved slate 2026-08-12."
+    },
+    {
+      "editor_id": "MGRitual03",
+      "quest_name": "Conjuration Ritual Spell",
+      "outcome_stage": "200",
+      "outcome": "Subdued an Unbound Dremora and made it retrieve a sigil stone for master Conjuration work.",
+      "act_tags": "reckless_magic",
+      "deity": "Magnus",
+      "valence": "-",
+      "intensity": "S",
+      "magnitude": "small",
+      "citation": "V02-03 conflict adjudication: repeatedly releasing an unbound Dremora is reckless magic even when ultimately mastered; owner-approved slate 2026-08-12."
+    },
+    {
+      "editor_id": "DA04",
+      "quest_name": "Discerning the Transmundane",
+      "outcome_stage": "100",
+      "outcome": "Opened the lockbox for Hermaeus Mora and claimed the Oghma Infinium.",
+      "act_tags": "serve_a_daedra:hermaeusmora",
+      "deity": "Akatosh",
+      "valence": "-",
+      "intensity": "m",
+      "magnitude": "small",
+      "citation": "V03B conflict adjudication: Daedric service controls over incidental study for Akatosh; directly reviewed 2026-08-12."
+    },
+    {
+      "editor_id": "DA04",
+      "quest_name": "Discerning the Transmundane",
+      "outcome_stage": "100",
+      "outcome": "Opened the lockbox for Hermaeus Mora and claimed the Oghma Infinium.",
+      "act_tags": "serve_a_daedra:hermaeusmora",
+      "deity": "Auri-El",
+      "valence": "-",
+      "intensity": "S",
+      "magnitude": "small",
+      "citation": "V03B conflict adjudication: Auri-El's strong rejection of Daedric service controls over disciplined study; directly reviewed 2026-08-12."
+    },
+    {
+      "editor_id": "DA16",
+      "quest_name": "Waking Nightmare",
+      "outcome_stage": "180",
+      "outcome": "Spared Erandur and let him destroy the Skull of Corruption.",
+      "act_tags": "destroy_reject_daedra:vaermina",
+      "deity": "Vaermina",
+      "valence": "-",
+      "intensity": "C",
+      "magnitude": "milestone",
+      "citation": "V03B direct route: s180 is the mercy and Skull-destruction branch; rejecting Vaermina's artifact is a core loss for Vaermina."
+    },
+    {
+      "editor_id": "DA16",
+      "quest_name": "Waking Nightmare",
+      "outcome_stage": "190",
+      "outcome": "Killed Erandur and claimed the Skull of Corruption for Vaermina.",
+      "act_tags": "acquire_daedric_artifact:vaermina",
+      "deity": "Vaermina",
+      "valence": "+",
+      "intensity": "C",
+      "magnitude": "milestone",
+      "citation": "V03B direct route: s190 proves acquisition of Vaermina's artifact after the kill branch."
+    },
+    {
+      "editor_id": "DLC1VQ02",
+      "quest_name": "Bloodline",
+      "outcome_stage": "190",
+      "outcome": "Refused Harkon's blood and rejected Molag Bal's vampire court.",
+      "act_tags": "destroy_reject_daedra:molagbal",
+      "deity": "Molag Bal",
+      "valence": "-",
+      "intensity": "C",
+      "magnitude": "milestone",
+      "citation": "V03B direct route: s190 is the explicit refusal of Harkon's Molag Bal blood bargain."
+    },
+    {
+      "editor_id": "CW01A",
+      "quest_name": "Joining the Legion",
+      "outcome_stage": "200",
+      "outcome": "Completed the Legion's proving task and swore the Imperial oath.",
+      "act_tags": "serve_empire_order",
+      "deity": "Mehrunes Dagon",
+      "valence": "-",
+      "intensity": "S",
+      "magnitude": "small",
+      "citation": "V02-04 conflict adjudication: service to ordered Imperial authority controls over incidental combat for Mehrunes Dagon."
+    },
+    {
+      "editor_id": "CW01B",
+      "quest_name": "Joining the Stormcloaks",
+      "outcome_stage": "200",
+      "outcome": "Completed the Stormcloak proving task and swore the rebel oath.",
+      "act_tags": "keep_oath",
+      "deity": "Mehrunes Dagon",
+      "valence": "-",
+      "intensity": "m",
+      "magnitude": "small",
+      "citation": "V02-04 conflict adjudication: the sworn oath controls over incidental combat for Mehrunes Dagon."
+    },
+    {
+      "editor_id": "DLC2dunHaknirTreasureQST",
+      "quest_name": "Deathbrand",
+      "outcome_stage": "100",
+      "outcome": "Plundered Haknir's tomb, defeated his ghost, and claimed his cursed treasure.",
+      "act_tags": "desecrate_the_dead",
+      "deity": "Arkay",
+      "valence": "-",
+      "intensity": "C",
+      "magnitude": "milestone",
+      "citation": "V03C conflict adjudication: deliberate tomb plunder controls over destroying its undead guardian for Arkay."
+    },
+    {
+      "editor_id": "DLC2dunHaknirTreasureQST",
+      "quest_name": "Deathbrand",
+      "outcome_stage": "100",
+      "outcome": "Plundered Haknir's tomb, defeated his ghost, and claimed his cursed treasure.",
+      "act_tags": "desecrate_the_dead",
+      "deity": "Azura",
+      "valence": "-",
+      "intensity": "m",
+      "magnitude": "small",
+      "citation": "V03C conflict adjudication: deliberate tomb plunder controls over the incidental undead fight for Azura."
+    },
+    {
+      "editor_id": "DLC2dunHaknirTreasureQST",
+      "quest_name": "Deathbrand",
+      "outcome_stage": "100",
+      "outcome": "Plundered Haknir's tomb, defeated his ghost, and claimed his cursed treasure.",
+      "act_tags": "desecrate_the_dead",
+      "deity": "Tu'whacca",
+      "valence": "-",
+      "intensity": "S",
+      "magnitude": "small",
+      "citation": "V03C conflict adjudication: violating Haknir's tomb controls over destroying its undead guardian for Tu'whacca."
+    },
+    {
+      "editor_id": "DLC2dunHaknirTreasureQST",
+      "quest_name": "Deathbrand",
+      "outcome_stage": "100",
+      "outcome": "Plundered Haknir's tomb, defeated his ghost, and claimed his cursed treasure.",
+      "act_tags": "slay_undead",
+      "deity": "Meridia",
+      "valence": "+",
+      "intensity": "S",
+      "magnitude": "small",
+      "citation": "V03C conflict adjudication: Meridia's core hatred of undead controls over her secondary objection to tomb desecration."
+    },
+    {
+      "editor_id": "ccBGSSSE001_Fish_MQ2",
+      "quest_name": "Caught in the Rain",
+      "outcome_stage": "210",
+      "outcome": "Completed the fishing challenge but kept the lucky hat after lying about finding it.",
+      "act_tags": "deceit",
+      "deity": "Malacath",
+      "valence": "-",
+      "intensity": "m",
+      "magnitude": "small",
+      "citation": "V04 conflict adjudication: lying to keep another person's lucky hat controls over completing the incidental fishing challenge for Malacath."
+    }
+  ]
+}

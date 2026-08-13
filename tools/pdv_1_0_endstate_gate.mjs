@@ -28,15 +28,25 @@
  */
 
 import { spawnSync } from "node:child_process";
-import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { hashBytes, hashText, writeTextWithEol } from "./lib/pdv_file_compare.mjs";
+
+// Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
+// not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
+// for fixtures that never ran.
+const KNOWN_FLAGS = new Set(["--error-unmatch", "--help", "--json", "--only", "--restamp", "--run", "--self-test", "--strict-stale"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_1_0_endstate_gate" });
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const CONTRACT_REL = "references/authoring/PDV_1_0_EndStateContract.json";
+const FRESHNESS_HASH_MODE = "text-lf-bytes-binary-v1";
+const BINARY_FRESHNESS_EXTENSIONS = new Set([".ba2", ".bsa", ".dll", ".esl", ".esm", ".esp", ".pex", ".seq", ".zip"]);
 
 function parseArgs(argv) {
   const opts = { run: false, strictStale: false, json: false, selfTest: false, restamp: [], only: [], help: false };
@@ -68,7 +78,7 @@ function loadJson(filePath) {
 
 function sha256File(filePath) {
   try {
-    return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
+    return BINARY_FRESHNESS_EXTENSIONS.has(path.extname(filePath).toLowerCase()) ? hashBytes(filePath) : hashText(filePath);
   } catch {
     return "absent";
   }
@@ -198,28 +208,56 @@ function hashSources(root, sharedSources, sources) {
   return out;
 }
 
-function applyFreshness(criterion, base, detail, currentHashes, stamps, restampIds, freshObservation) {
+function legacyByteHashSources(root, sharedSources, sources) {
+  const out = {};
+  for (const entry of sources ?? []) {
+    const abs = resolveSource(root, sharedSources, entry);
+    try { out[String(entry)] = hashBytes(abs); }
+    catch { out[String(entry)] = "absent"; }
+  }
+  return out;
+}
+
+function applyFreshness(criterion, base, detail, currentHashes, legacyHashes, stamps, restampIds, freshObservation) {
   const stampEntry = stamps.stamps?.[criterion.id];
+  let effectiveStamp = stampEntry;
+  let migratedLegacyHash = false;
   const onDrift = criterion.freshness?.onDrift ?? "FAIL";
   const hasSources = (criterion.freshness?.sources ?? []).length > 0;
+
+  if (stampEntry && !stampEntry.hashMode) {
+    const legacyMatches = Object.entries(legacyHashes).every(([key, value]) => stampEntry.sourceHashes?.[key] === value);
+    if (legacyMatches) {
+      effectiveStamp = { ...stampEntry, hashMode: FRESHNESS_HASH_MODE, sourceHashes: currentHashes };
+      migratedLegacyHash = true;
+    }
+  }
 
   // A live execution (--run or tool-fast) IS new evidence: it supersedes the
   // old stamp, so drift-vs-old-stamp does not apply.
   if (restampIds.includes(criterion.id) || (freshObservation && base === "PASS")) {
-    return { status: base, detail, stamp: { observedAt: new Date().toISOString(), result: base, sourceHashes: currentHashes }, drift: false };
+    return { status: base, detail, stamp: { observedAt: new Date().toISOString(), result: base, hashMode: FRESHNESS_HASH_MODE, sourceHashes: currentHashes }, drift: false };
   }
   if (base !== "PASS" || !hasSources) {
-    const stamp = base === "PASS" ? { observedAt: new Date().toISOString(), result: "PASS", sourceHashes: currentHashes } : stampEntry ?? null;
+    const stamp = base === "PASS" ? { observedAt: new Date().toISOString(), result: "PASS", hashMode: FRESHNESS_HASH_MODE, sourceHashes: currentHashes } : effectiveStamp ?? null;
     return { status: base, detail, stamp, drift: false };
   }
-  if (!stampEntry) {
-    return { status: "PASS", detail: `${detail}; stamped fresh`, stamp: { observedAt: new Date().toISOString(), result: "PASS", sourceHashes: currentHashes }, drift: false };
+  if (!effectiveStamp) {
+    return { status: "PASS", detail: `${detail}; stamped fresh`, stamp: { observedAt: new Date().toISOString(), result: "PASS", hashMode: FRESHNESS_HASH_MODE, sourceHashes: currentHashes }, drift: false };
   }
-  const drifted = Object.entries(currentHashes).filter(([k, v]) => (stampEntry.sourceHashes?.[k] ?? "unknown") !== v).map(([k]) => k);
-  if (!drifted.length) return { status: "PASS", detail, stamp: stampEntry, drift: false };
-  const driftDetail = `${detail}; drift since ${stampEntry.observedAt}: ${drifted.join(", ")}`;
-  if (onDrift === "STALE") return { status: "STALE", detail: driftDetail, stamp: stampEntry, drift: true };
-  return { status: "RED", detail: `evidence voided by source drift - ${driftDetail}`, stamp: stampEntry, drift: true };
+  if (migratedLegacyHash) {
+    return {
+      status: "PASS",
+      detail: `${detail}; migrated freshness hashes from raw checkout bytes to normalized text/exact binary semantics`,
+      stamp: effectiveStamp,
+      drift: false,
+    };
+  }
+  const drifted = Object.entries(currentHashes).filter(([k, v]) => (effectiveStamp.sourceHashes?.[k] ?? "unknown") !== v).map(([k]) => k);
+  if (!drifted.length) return { status: "PASS", detail, stamp: effectiveStamp, drift: false };
+  const driftDetail = `${detail}; drift since ${effectiveStamp.observedAt}: ${drifted.join(", ")}`;
+  if (onDrift === "STALE") return { status: "STALE", detail: driftDetail, stamp: effectiveStamp, drift: true };
+  return { status: "RED", detail: `evidence voided by source drift - ${driftDetail}`, stamp: effectiveStamp, drift: true };
 }
 
 // ---------- main evaluation ----------
@@ -230,7 +268,7 @@ export function evaluateContract(root, contractRel, opts) {
   if (contract.schema !== "pdv.1-0.endstate-contract.v1") throw new Error(`Unexpected contract schema: ${contract.schema}`);
   const shared = contract.sharedSources ?? {};
   const stampPath = path.join(root, contract.stampFile);
-  let stamps = { schema: "pdv.1-0.freshness-stamps.v1", stamps: {} };
+  let stamps = { schema: "pdv.1-0.freshness-stamps.v2", stamps: {} };
   if (fs.existsSync(stampPath)) { try { stamps = loadJson(stampPath); } catch { /* regenerate */ } }
 
   const rows = [];
@@ -252,7 +290,8 @@ export function evaluateContract(root, contractRel, opts) {
     }
 
     const currentHashes = hashSources(root, shared, criterion.freshness?.sources);
-    const fresh = applyFreshness(criterion, base, detail, currentHashes, stamps, opts.restamp ?? [], executedLive);
+    const legacyHashes = legacyByteHashSources(root, shared, criterion.freshness?.sources);
+    const fresh = applyFreshness(criterion, base, detail, currentHashes, legacyHashes, stamps, opts.restamp ?? [], executedLive);
     if (fresh.stamp) stamps.stamps[criterion.id] = fresh.stamp;
 
     rows.push({
@@ -304,7 +343,7 @@ export function evaluateContract(root, contractRel, opts) {
 }
 
 function writeOutputs(root, report) {
-  fs.writeFileSync(report.stampPath, JSON.stringify({ schema: "pdv.1-0.freshness-stamps.v1", updated: new Date().toISOString(), stamps: report.stamps.stamps }, null, 2) + "\n", "utf8");
+  writeTextWithEol(report.stampPath, JSON.stringify({ schema: "pdv.1-0.freshness-stamps.v2", updated: new Date().toISOString(), stamps: report.stamps.stamps }, null, 2) + "\n", "lf");
 
   const md = [
     "# PDV 1.0 End-State Burndown",
@@ -329,10 +368,10 @@ function writeOutputs(root, report) {
   for (const x of report.post10Exclusions) md.push(`- **${x.id}** ${asciiSafe(x.title)} - ${asciiSafe(x.reason)}`);
   md.push("");
 
-  if (report.burndown?.md) fs.writeFileSync(path.join(root, report.burndown.md), md.join("\n") + "\n", "utf8");
+  if (report.burndown?.md) writeTextWithEol(path.join(root, report.burndown.md), md.join("\n") + "\n", "lf");
   if (report.burndown?.json) {
     const { stamps, stampPath, ...pub } = report;
-    fs.writeFileSync(path.join(root, report.burndown.json), JSON.stringify(pub, null, 2) + "\n", "utf8");
+    writeTextWithEol(path.join(root, report.burndown.json), JSON.stringify(pub, null, 2) + "\n", "lf");
   }
 }
 
@@ -395,7 +434,7 @@ function selfTest() {
   expect("burndown md written", fs.existsSync(path.join(tmp, "references/authoring/fixture-burndown.md")), true);
 
   // Pass 2: drift the shared source; FAIL-doctrine goes RED, STALE-doctrine goes STALE.
-  fx("references/authoring/source-a.txt", "v2-drifted");
+  fx("references/authoring/source-a.txt", "v2-drifted\n");
   report = evaluateContract(tmp, "references/authoring/fixture-contract.json", { run: false, strictStale: false, restamp: [] });
   expect("F-JSON RED on drift (onDrift FAIL)", statusOf(report, "F-JSON"), "RED");
   expect("F-STALE STALE on drift (onDrift STALE)", statusOf(report, "F-STALE"), "STALE");
@@ -403,9 +442,10 @@ function selfTest() {
   // Pass 3: restamp clears the drift.
   report = evaluateContract(tmp, "references/authoring/fixture-contract.json", { run: false, strictStale: false, restamp: ["F-JSON", "F-STALE"] });
   writeOutputs(tmp, report);
+  fx("references/authoring/source-a.txt", "v2-drifted\r\n");
   report = evaluateContract(tmp, "references/authoring/fixture-contract.json", { run: false, strictStale: false, restamp: [] });
-  expect("F-JSON PASS after restamp", statusOf(report, "F-JSON"), "PASS");
-  expect("F-STALE PASS after restamp", statusOf(report, "F-STALE"), "PASS");
+  expect("F-JSON PASS after restamp and EOL-only change", statusOf(report, "F-JSON"), "PASS");
+  expect("F-STALE PASS after restamp and EOL-only change", statusOf(report, "F-STALE"), "PASS");
 
   // Pass 4: strict-stale blocks STALE.
   fx("references/authoring/source-a.txt", "v3-drifted-again");

@@ -13,6 +13,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { sameText } from "./lib/pdv_file_compare.mjs";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
@@ -732,21 +734,9 @@ function checkTrackedSourceMirror(scriptName) {
     return { ok: false, error: `Deployed source is missing: ${deployed}` };
   }
 
-  const trackedBytes = fs.readFileSync(tracked);
-  const deployedBytes = fs.readFileSync(deployed);
-  if (trackedBytes.equals(deployedBytes)) {
-    return { ok: true };
-  }
-
-  // Compare line-ending-normalized, not raw bytes. core.autocrlf=true is set
-  // repo-wide and live-source/**/*.psc is not pinned, so a fresh checkout can
-  // resolve to LF while the shared MO2 live tree holds CRLF (or vice versa) for
-  // a file some editor last wrote -- a difference the Papyrus compiler does not
-  // care about. A raw .equals() then reports "drift" on identical source and
-  // blocks the compile. Normalize CRLF->LF so this guard only fires on a REAL
-  // content difference. Pairing pin: `.gitattributes` forces these to eol=lf.
-  const normalize = (bytes) => bytes.toString("latin1").replace(/\r\n/g, "\n");
-  if (normalize(trackedBytes) !== normalize(deployedBytes)) {
+  // Papyrus consumes text; checkout line endings are not source drift. The
+  // tracked mirror is also pinned LF in .gitattributes as the first layer.
+  if (!sameText(tracked, deployed)) {
     return {
       ok: false,
       error: `Tracked/deployed source drift for ${scriptName}. Sync live-source before compiling: ${tracked} -> ${deployed}`,

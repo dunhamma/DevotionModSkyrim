@@ -11,19 +11,31 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+// The flags this file reads, plus any the repo documents for it. Documented-but-unread
+// flags are included deliberately: rejecting one would break a published command, and a
+// guard is the wrong place to discover that the doc and the code disagree.
+const KNOWN_FLAGS = new Set(["--check", "--json", "--matrix", "--output", "--papyrusutil-check", "--stdout"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_quest_matrix_compile" });
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const DEFAULT_OUTPUT = "D:/Wabbajack/modlists/Anvil/mods/Devotion/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix.json";
 
 const DEFAULT_MATRIX_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestReactionMatrix_Full.csv");
+const PATCH_HUB_ROOT = path.join(PROJECT_ROOT, "dist", "PDV_QuestModPatches_FOMOD");
+const PATCH_HUB_MANIFEST = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestPatchHub.manifest.json");
 const FAUCET_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv");
 const QUEST_READBACK_CSV = path.join(PROJECT_ROOT, "references", "vanilla-gameplay", "extracted", "vanilla-quest-stage-readback.csv");
+const CORE_QUEST_WORKLIST_CSV = path.join(PROJECT_ROOT, "references", "vanilla-gameplay", "compatibility", "PDV_CoreQuestAuditWorklist.csv");
 const STANCE_CSV = path.join(PROJECT_ROOT, "references", "phase4", "PDV_StanceMatrix.csv");
 const DAEDRIC_STANCE_CSV = path.join(PROJECT_ROOT, "references", "phase4", "PDV_DaedricRacePrinceMatrix.csv");
 
 const args = process.argv.slice(2);
 const outputPath = getArg("--output") ?? DEFAULT_OUTPUT;
 const checkOnly = args.includes("--check");
+const jsonOutput = args.includes("--json");
 const emitStdout = args.includes("--stdout");
 const papyrusUtilCheck = args.includes("--papyrusutil-check");
 // Resolved after `args` exists (getArg reads it). Defaults to the core Full.csv;
@@ -150,7 +162,7 @@ const FAUCET_FORM_LISTS = {
   "faucetForms.Malacath.serve_a_daedra:malacath": [
     "0x02ACD2|Skyrim.esm", // Volendrung
   ],
-  "faucetForms.Molag Bal.serve_a_daedra:molag_bal": [
+  "faucetForms.Molag Bal.serve_a_daedra:molagbal": [
     "0x0233E3|Skyrim.esm", // Mace of Molag Bal
   ],
   "faucetForms.Hircine.serve_a_daedra:hircine": [
@@ -163,7 +175,7 @@ const FAUCET_FORM_LISTS = {
   "faucetForms.Sheogorath.serve_a_daedra:sheogorath": [
     "0x02AC6F|Skyrim.esm", // Wabbajack
   ],
-  "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunes_dagon": [
+  "faucetForms.Mehrunes Dagon.serve_a_daedra:mehrunesdagon": [
     "0x0240D2|Skyrim.esm", // Mehrunes' Razor
   ],
   "faucetForms.Nocturnal.serve_a_daedra:nocturnal": [
@@ -205,6 +217,13 @@ const FAUCET_SPELL_FORM_LISTS = {
     "0x02AC6F|Skyrim.esm", // Wabbajack
     "0x09B245|Skyrim.esm", // Wabbajack enchantment
   ],
+  // Triumvirate (modded) Hircine-worship spells. Routes the existing
+  // Hircine.serve_a_daedra:hircine scoring/cap (shared with the Savior's Hide equip
+  // faucet), so no new PartD row. Absent-plugin entries no-op via the GetModByName guard.
+  "faucetSpellForms.Hircine.serve_a_daedra:hircine": [
+    "0x28E6EB|Triumvirate - Mage Archetypes.esp", // Force of Nature (assume the Horned Lord, Hircine's beast form)
+    "0x27009A|Triumvirate - Mage Archetypes.esp", // Call Hound of Hircine (summon Hircine's beast)
+  ],
 };
 
 const FAUCET_EFFECT_LISTS = {
@@ -222,6 +241,9 @@ const MANUAL_QUEST_FORMIDS = {
   DA13: "Skyrim.esm:08998D", // The Only Cure (QE adds s101/s102 refuse/destroy outcomes)
   DA06: "Skyrim.esm:03B681", // The Cursed Tribe (QE adds s210 ghost-variant)
   ccBGSSSE020_Quest: "ccbgssse020-graycowl.esl:00080F", // Gray Cowl of Nocturnal (CC)
+  ccASVSSE001_QuestE: "ccasvsse001-almsivi.esm:0990EF", // Ghosts of the Tribunal: Trueflame
+  ccBGSSSE067_Quest2: "ccbgssse067-daedinv.esm:19952A", // The Cause: Deadlands resolution
+  ccMTYSSE001_Quest: "ccmtysse001-knightsofthenine.esl:000865", // Divine Crusader pilgrimage
   dunHunterQST: "Skyrim.esm:018601", // Kyne's Sacred Trials (Froki); s100 terminal blessing. Verified via houseCARL (USSEP-patched record).
   MS05: "Skyrim.esm:053511", // Tending the Flames (Bards College); s300 induction. Absent from the readback extraction; verified via houseCARL 2026-07-05 (USSEP-patched record). Owner Dibella ruling.
   FreeformKolskeggrA: "Skyrim.esm:01FD72",
@@ -233,7 +255,15 @@ const MANUAL_QUEST_FORMIDS = {
 };
 
 function main() {
-  const questIndex = buildQuestIndex(readCsv(QUEST_READBACK_CSV));
+  // The historical readback is a narrow candidate set. The exhaustive audit
+  // worklist supplies canonical FormIDs for newly approved official-content
+  // quests without growing MANUAL_QUEST_FORMIDS one quest at a time.
+  const canonicalWorklistRows = readCsv(CORE_QUEST_WORKLIST_CSV)
+    .filter((row) => row.is_canonical?.trim().toLowerCase() === "yes");
+  const questIndex = buildQuestIndex([
+    ...readCsv(QUEST_READBACK_CSV),
+    ...canonicalWorklistRows,
+  ]);
   const matrixRows = readCsv(MATRIX_CSV);
   const faucetRows = readCsv(FAUCET_CSV);
   const stanceRows = readCsv(STANCE_CSV);
@@ -258,6 +288,11 @@ function main() {
     faucetKeys: [],
     ...VALUE_TABLE,
   };
+
+  const sourceMod = resolvePatchSourceMod(outputPath);
+  if (sourceMod) {
+    out.sourceMod = sourceMod;
+  }
 
   for (const [key, value] of Object.entries(compileStance(stanceRows, daedricRows))) {
     out[key] = value;
@@ -438,7 +473,7 @@ function main() {
     }
   }
 
-  console.log(JSON.stringify({
+  const report = {
     status: "PASS",
     outputPath: checkOnly ? null : path.resolve(outputPath),
     papyrusUtilContract: "PASS",
@@ -447,7 +482,49 @@ function main() {
     questKeys: out.questKeys.length,
     watchedQuests: new Set(out.questFormIds).size,
     faucetActs: out.faucetKeys.length,
-  }, null, 2));
+  };
+  if (jsonOutput) {
+    console.log(JSON.stringify(report, null, 2));
+  } else {
+    console.log(`Quest matrix compile: ${report.status}`);
+    console.log(`  quest cells: ${report.questCells}`);
+    console.log(`  quest keys: ${report.questKeys}`);
+    console.log(`  watched quests: ${report.watchedQuests}`);
+    console.log(`  faucet acts: ${report.faucetActs}`);
+    console.log(`  PapyrusUtil contract: ${report.papyrusUtilContract} (${report.papyrusUtilFileCheck})`);
+    if (report.outputPath) console.log(`  output: ${report.outputPath}`);
+  }
+}
+
+function resolvePatchSourceMod(targetPath) {
+  const target = path.resolve(targetPath);
+  const relativeToHub = path.relative(PATCH_HUB_ROOT, target);
+  const isPatchChannel =
+    relativeToHub !== "" &&
+    !relativeToHub.startsWith(`..${path.sep}`) &&
+    !path.isAbsolute(relativeToHub) &&
+    target.split(path.sep).some((segment) => segment.toLowerCase() === "channels") &&
+    /^PDV_QRM_[A-Za-z0-9_]+\.json$/i.test(path.basename(target));
+  if (!isPatchChannel) return "";
+
+  const manifest = readJson(PATCH_HUB_MANIFEST);
+  for (const option of manifest.options ?? []) {
+    for (const folder of option.folders ?? []) {
+      const optionRoot = path.resolve(PATCH_HUB_ROOT, folder.replaceAll("\\", path.sep));
+      const relativeToOption = path.relative(optionRoot, target);
+      if (
+        relativeToOption !== "" &&
+        !relativeToOption.startsWith(`..${path.sep}`) &&
+        !path.isAbsolute(relativeToOption)
+      ) {
+        if (!option.name || typeof option.name !== "string") {
+          throw new Error(`Patch channel option has no player-facing name: ${folder}`);
+        }
+        return option.name;
+      }
+    }
+  }
+  throw new Error(`Patch channel output is not owned by a PatchHub manifest option: ${target}`);
 }
 
 function validate(out) {
@@ -700,7 +777,17 @@ function compileStance(stanceRows, daedricRows) {
 
 function normalizeDeity(value) {
   const trimmed = (value || "").trim();
-  return DEITY_ALIASES.get(trimmed) ?? trimmed;
+  const mapped = DEITY_ALIASES.get(trimmed);
+  if (mapped) return mapped;
+
+  // Stance authorities sometimes retain a culturally specific slash alias for
+  // presentation (for example "Namira / Namiira"). Runtime reaction cells use
+  // the canonical first name, so never serialize the display label as a lookup
+  // key. Explicit mappings above remain authoritative where the canonical name
+  // is not simply the first slash-delimited component.
+  const slashIndex = trimmed.indexOf("/");
+  if (slashIndex >= 0) return trimmed.slice(0, slashIndex).trim();
+  return trimmed;
 }
 
 function normalizeStance(value) {

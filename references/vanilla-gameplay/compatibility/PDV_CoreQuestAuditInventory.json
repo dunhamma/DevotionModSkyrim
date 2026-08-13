@@ -1,0 +1,115 @@
+{
+  "schema": "pdv-core-quest-audit-inventory.v1",
+  "frozenOn": "2026-08-12",
+  "evidence": "Direct housecarl_read_plugin_file QUST enumeration; no local digest or retired bridge.",
+  "mo2": {
+    "instance": "D:\\Wabbajack\\modlists\\Anvil",
+    "profile": "Devotion Dev"
+  },
+  "officialMasterOrder": [
+    "Skyrim.esm",
+    "Update.esm",
+    "Dawnguard.esm",
+    "HearthFires.esm",
+    "Dragonborn.esm"
+  ],
+  "sources": [
+    {
+      "plugin": "Skyrim.esm",
+      "path": "D:\\Wabbajack\\modlists\\Anvil\\Stock Game\\Data\\Skyrim.esm",
+      "questOccurrences": 1811,
+      "scope": "core"
+    },
+    {
+      "plugin": "Update.esm",
+      "path": "D:\\Wabbajack\\modlists\\Anvil\\Stock Game\\Data\\Update.esm",
+      "questOccurrences": 63,
+      "scope": "core"
+    },
+    {
+      "plugin": "Dawnguard.esm",
+      "path": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Cleaned Base Game Masters\\Dawnguard.esm",
+      "questOccurrences": 198,
+      "scope": "core"
+    },
+    {
+      "plugin": "HearthFires.esm",
+      "path": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Cleaned Base Game Masters\\HearthFires.esm",
+      "questOccurrences": 41,
+      "scope": "core"
+    },
+    {
+      "plugin": "Dragonborn.esm",
+      "path": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Cleaned Base Game Masters\\Dragonborn.esm",
+      "questOccurrences": 254,
+      "scope": "core"
+    },
+    {
+      "plugin": "ccbgssse001-fish.esm",
+      "path": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Creation Club - Fishing\\ccbgssse001-fish.esm",
+      "questOccurrences": 33,
+      "scope": "creation-club"
+    },
+    {
+      "plugin": "ccbgssse025-advdsgs.esm",
+      "path": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Creation Club - Saints & Seducers\\ccbgssse025-advdsgs.esm",
+      "questOccurrences": 17,
+      "scope": "creation-club"
+    },
+    {
+      "plugin": "ccbgssse037-curios.esl",
+      "path": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Creation Club - Rare Curios\\ccbgssse037-curios.esl",
+      "questOccurrences": 1,
+      "scope": "creation-club"
+    },
+    {
+      "plugin": "ccqdrsse001-survivalmode.esl",
+      "path": "D:\\Wabbajack\\modlists\\Anvil\\mods\\Creation Club - Survival Mode\\ccqdrsse001-survivalmode.esl",
+      "questOccurrences": 9,
+      "scope": "creation-club"
+    }
+  ],
+  "questOccurrencesBySource": {
+    "Skyrim.esm": 1811,
+    "Update.esm": 63,
+    "Dawnguard.esm": 198,
+    "HearthFires.esm": 41,
+    "Dragonborn.esm": 254,
+    "ccbgssse001-fish.esm": 33,
+    "ccbgssse025-advdsgs.esm": 17,
+    "ccbgssse037-curios.esl": 1,
+    "ccqdrsse001-survivalmode.esl": 9
+  },
+  "canonicalQuestsByOfficialSource": {
+    "Skyrim.esm": 1721,
+    "HearthFires.esm": 41,
+    "Update.esm": 60,
+    "Dawnguard.esm": 198,
+    "Dragonborn.esm": 254,
+    "ccbgssse001-fish.esm": 33,
+    "ccbgssse025-advdsgs.esm": 17,
+    "ccbgssse037-curios.esl": 1,
+    "ccqdrsse001-survivalmode.esl": 9
+  },
+  "shards": {
+    "V02-01": 431,
+    "V02-02": 431,
+    "V02-03": 431,
+    "V02-04": 428,
+    "V03A-01": 101,
+    "V03B-01": 198,
+    "V03C-01": 254,
+    "V04-01": 60
+  },
+  "totals": {
+    "coreOccurrences": 2367,
+    "coreCanonical": 2274,
+    "ccOccurrences": 60,
+    "ccCanonical": 60,
+    "checkpointRows": 2334
+  },
+  "currentCoreWatchSnapshot": {
+    "uniqueQuests": 157,
+    "matchedInventory": 153
+  }
+}

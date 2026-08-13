@@ -29,10 +29,18 @@
  *   --json          JSON summary to stdout
  */
 
-import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { hashText, writeTextWithEol } from "./lib/pdv_file_compare.mjs";
+
+// Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
+// not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
+// for fixtures that never ran.
+const KNOWN_FLAGS = new Set(["--check", "--json", "--retro-credit", "--self-test", "--sitting", "--sync-ledger"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_felt_registry_gen" });
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -95,7 +103,7 @@ const flags = new Set(process.argv.slice(2));
 
 function loadJson(rel) { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), "utf8")); }
 function sha(rel) {
-  try { return crypto.createHash("sha256").update(fs.readFileSync(path.join(ROOT, rel))).digest("hex").slice(0, 16); }
+  try { return hashText(path.join(ROOT, rel)).slice(0, 16); }
   catch { return "absent"; }
 }
 
@@ -146,6 +154,10 @@ function buildRegistry() {
     sourceHashes[rel] = sha(rel);
     const spec = loadJson(rel);
     for (const [key, value] of Object.entries(spec)) {
+      // Some substrateBoons blocks are ownership/readback contracts derived from
+      // live VMAD bindings, not effect-authoring definitions. Do not manufacture
+      // empty felt-effect rows from those contract-only slot inventories.
+      if (key === "substrateBoons" && value?.registryContractOnly === true) continue;
       const cls = CLASS_BY_KEY[key];
       const allowMessages = cls === "curse" || cls === "neglect" || cls === "price";
       const candidates = [];
@@ -388,7 +400,7 @@ function syncLedger(registry) {
   dropped = Object.keys(ledger.families).filter((id) => !(id in next)).length;
   ledger.families = next;
   ledger.updated = new Date().toISOString().slice(0, 10);
-  fs.writeFileSync(ledgerPath, JSON.stringify(ledger, null, 2) + "\n", "utf8");
+  writeTextWithEol(ledgerPath, JSON.stringify(ledger, null, 2) + "\n", "lf");
   return { added, dropped, total: Object.keys(next).length, ledger };
 }
 
@@ -443,7 +455,7 @@ function retroCredit(registry) {
   }
 
   ledger.updated = new Date().toISOString().slice(0, 10);
-  fs.writeFileSync(ledgerPath, JSON.stringify(ledger, null, 2) + "\n", "utf8");
+  writeTextWithEol(ledgerPath, JSON.stringify(ledger, null, 2) + "\n", "lf");
   const open = Object.values(ledger.families).filter((s) => s.status === "pending").length;
   return { credited, open, total: Object.keys(ledger.families).length };
 }
@@ -541,7 +553,7 @@ if (flags.has("--self-test")) {
     }
   } else {
     registry.updated = new Date().toISOString().slice(0, 10);
-    fs.writeFileSync(path.join(ROOT, REGISTRY_REL), JSON.stringify(registry, null, 2) + "\n", "utf8");
+    writeTextWithEol(path.join(ROOT, REGISTRY_REL), JSON.stringify(registry, null, 2) + "\n", "lf");
     const [lo, hi] = FAMILY_BAND;
     const bandNote = registry.counts.families < lo || registry.counts.families > hi
       ? ` (WARN: outside sanity band ${lo}-${hi})` : ` (in sanity band ${lo}-${hi})`;

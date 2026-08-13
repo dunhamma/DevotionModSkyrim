@@ -6,10 +6,11 @@
  * display, Book of Days close-path smoke, route logs, or manual feel evidence.
  */
 
-import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { hashText } from "./lib/pdv_file_compare.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -100,7 +101,7 @@ function readRequired(filePath, label, pass, fail) {
     fail(label, "File is missing.", filePath);
     return "";
   }
-  const text = fs.readFileSync(filePath, "utf8").replace(/^\uFEFF/, "");
+  const text = normalizedText(filePath);
   pass(label, `Read ${text.length} characters.`, filePath);
   return text;
 }
@@ -128,8 +129,11 @@ function verifyManager(text, filePath, pass, fail) {
     ["Rivalry drain driver", 'AwardPietyInternal(rivalDeity, rivalAmount, False, "rivalry with " + sourceDeity.DeityName)', "Rivalry drain uses a reason-bearing piety path."],
     ["Khajiit corrupted chronicle", "The moonlight scatters from your path. Corruption is upon you.", "Severe Corrupted posture writes a Chronicle line."],
     ["Khajiit shadowdrift chronicle", "You slipped into the moons' shadow. Darkness is upon you.", "Severe ShadowDrift posture writes a Chronicle line."],
-    ["Khajiit emergence helper", "PDV_DeityBase Function GetKhajiitFocusDeity(Int focusValue)", "Khajiit focus resolves to a deity for quiet-emergence surfacing."],
-    ["Khajiit emergence onset", 'SurfaceTransition("emergence", focusDeity.DeityName, "onset", focusDeity.DeityIndex, "revelation")', "Khajiit quiet-emergence emits onset, not reach."],
+    ["Khajiit emergence helper", "PDV_DeityBase Function GetKhajiitFocusDeity(Int focusValue)", "Khajiit focus resolves to a deity for automatic emergence and reorientation."],
+    ["Khajiit first-emergence popup", "emergenceMessage.Show()", "Khajiit's first qualifying focus shows its ceremonial one-button MessageBox."],
+    ["Khajiit emergence toast", 'SendPrismaShiftToast("Your road turns toward "', "Khajiit emergence and reorientation emit the existing Prisma toast."],
+    ["Khajiit pinned emergence entry", '"focus.emergence", GetKhajiitFocusSymbol(focusValue), True', "The first Khajiit emergence writes a pinned Book of Days entry."],
+    ["Khajiit unpinned reorientation entry", '"reorientation", GetKhajiitFocusSymbol(focusValue), False', "Later Khajiit reorientations write an unpinned Book of Days entry without another popup."],
     ["Breton emergence helper", "PDV_DeityBase Function GetBretonTraditionDeity(Int traditionValue)", "Breton tradition resolves to a deity for quiet-emergence surfacing."],
     ["Breton emergence onset", 'SurfaceTransition("emergence", traditionDeity.DeityName, "onset", traditionDeity.DeityIndex, "revelation")', "Breton quiet-emergence emits onset, not reach."],
     ["Neglect recovery producer", 'SurfaceTransition("neglect", _activeDeity.DeityName, "recover", _activeDeity.DeityIndex, "renewal")', "Patron neglect recovery emits the built recover tone."],
@@ -173,6 +177,7 @@ function verifyManager(text, filePath, pass, fail) {
   forbidSnippet(text, '"drift.warn"', "Retired drift tone", "No drift.warn tone entries remain in the manager.", filePath, pass, fail);
   forbidSnippet(text, "SendPrismaShiftToast(BuildCommitmentOffer", "Commitment shift-toast fallback", "Commitment accept/refuse do not reuse the generic shift-toast template.", filePath, pass, fail);
   forbidSnippet(text, 'AwardPiety(pendingDeity, carryAmount, "commitment_carryover")', "Retired commitment carryover loss", "Patron acceptance preserves existing deity piety and applies no lossy carryover award.", filePath, pass, fail);
+  forbidSnippet(text, 'SurfaceTransition("emergence", focusDeity.DeityName', "Retired Khajiit generic emergence route", "Khajiit emergence uses the exact popup/toast/Book contract rather than the generic transition director.", filePath, pass, fail);
 
   if (/SurfaceTransition\("emergence"[\s\S]{0,140}"reach"/.test(text)) {
     fail("Emergence direction", 'A SurfaceTransition("emergence", ..., "reach") call remains; expected "onset".', filePath);
@@ -228,11 +233,19 @@ function verifyApp(text, filePath, pass, fail) {
     ["Substrate thin renderer", 'if (phase === "thin")', "Prisma UI renders the substrate thin phase."],
     ["Substrate thin fixture", "substrate_thin", "Prisma UI keeps a substrate thin fixture."],
     ["Daedric boon renderer", 'if (phase === "boon")', "Prisma UI renders the Daedric boon phase."],
-    ["Daedric residue renderer", 'if (phase === "residue")', "Prisma UI renders the Hircine residue phase."]
+    ["Daedric residue renderer", 'if (phase === "residue")', "Prisma UI renders the Hircine residue phase."],
+    ["Cached DOM registry", "const nodes = {", "Prisma UI resolves its stable DOM nodes once rather than querying them on every payload."],
+    ["Bounded active toasts", "const MAX_ACTIVE_TOASTS = 8;", "Prisma UI caps simultaneously active toast nodes."],
+    ["Bounded toast payload fan-out", "const MAX_TOASTS_PER_PAYLOAD = 8;", "Prisma UI caps per-payload toast fan-out."],
+    ["Bounded toast dedupe history", "const MAX_RECENT_TOAST_KEYS = 32;", "Prisma UI caps its in-memory toast dedupe history."],
+    ["One-time panel close binding", "let panelCloseButtonWired = false;", "Prisma UI guards the persistent panel close button against duplicate listener registration."],
+    ["Visibility-gated journal resize", "if (nodes.journalModal && !nodes.journalModal.hidden) fitJournalBook();", "Prisma UI skips journal layout work while the journal is hidden."]
   ];
   for (const [check, snippet, detail] of requiredSnippets) {
     requireSnippet(text, snippet, check, detail, filePath, pass, fail);
   }
+
+  forbidSnippet(text, "setInterval(", "No persistent UI polling", "Prisma UI remains payload-driven and has no persistent polling timer.", filePath, pass, fail);
 }
 
 function runNegativeFixtures(managerText, pass, fail) {
@@ -243,8 +256,8 @@ function runNegativeFixtures(managerText, pass, fail) {
     fail
   );
   expectManagerFailure(
-    "Negative fixture: emergence reach",
-    managerText.replace('SurfaceTransition("emergence", focusDeity.DeityName, "onset", focusDeity.DeityIndex, "revelation")', 'SurfaceTransition("emergence", focusDeity.DeityName, "reach", focusDeity.DeityIndex, "revelation")'),
+    "Negative fixture: Khajiit emergence popup",
+    managerText.replace("emergenceMessage.Show()", ""),
     pass,
     fail
   );
@@ -285,5 +298,9 @@ function forbidSnippet(text, snippet, check, detail, filePath, pass, fail) {
 }
 
 function hash(filePath) {
-  return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
+  return hashText(filePath);
+}
+
+function normalizedText(filePath) {
+  return fs.readFileSync(filePath, "utf8").replace(/^\uFEFF/, "").replaceAll("\r\n", "\n");
 }

@@ -28,6 +28,12 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+const KNOWN_FLAGS = new Set(["--json"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_signal_floor_audit" });
+const JSON_OUTPUT = process.argv.includes("--json");
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO = join(__dirname, "..");
 const AUTH = join(REPO, "references", "authoring");
@@ -817,12 +823,38 @@ writeFileSync(PATHS.outMd, md.join("\n") + "\n", "utf8");
 // ===========================================================================
 // Console summary
 // ===========================================================================
-console.log(`Signal-floor audit complete: ${total} paths (${pass.length} PASS, ${under.length} UNDER-FLOOR; verdicts use wired_end_to_end).`);
-console.log(`  race-paths under: ${underRace.length}/${racePaths.length} | princes under: ${underPrince.length}/${princes.length}`);
-console.log(`Wrote: ${PATHS.outCsv}`);
-console.log(`Wrote: ${PATHS.outMd}`);
-console.log("");
-console.log("UNDER-FLOOR roster (worst first):");
-for (const r of underRanked) {
-  console.log(`  [${sev(r).padEnd(8)}] ${r.pathId.padEnd(24)} designed ${String(r.designedDistinctTypes).padStart(1)} wired ${r.wiredDistinctTypes}/${r.minTypes} renew ${r.wiredDistinctRenew}/${r.minRenew}  present=[${r.wiredTypesPresent.join(",")}]  missing: ${r.missing.join("; ")}`);
+if (JSON_OUTPUT) {
+  console.log(JSON.stringify({
+    status: under.length ? "FINDINGS" : "PASS",
+    counts: {
+      paths: total,
+      pass: pass.length,
+      underFloor: under.length,
+      racePaths: racePaths.length,
+      racePathsUnder: underRace.length,
+      princes: princes.length,
+      princesUnder: underPrince.length,
+    },
+    underFloor: underRanked.map((r) => ({
+      severity: sev(r),
+      pathId: r.pathId,
+      designed: r.designedDistinctTypes,
+      wired: r.wiredDistinctTypes,
+      minimum: r.minTypes,
+      renewable: r.wiredDistinctRenew,
+      renewableMinimum: r.minRenew,
+      missing: r.missing,
+    })),
+    outputs: { csv: PATHS.outCsv, markdown: PATHS.outMd },
+  }, null, 2));
+} else {
+  console.log(`Signal-floor audit complete: ${total} paths (${pass.length} PASS, ${under.length} UNDER-FLOOR; verdicts use wired_end_to_end).`);
+  console.log(`  race-paths under: ${underRace.length}/${racePaths.length} | princes under: ${underPrince.length}/${princes.length}`);
+  console.log(`Wrote: ${PATHS.outCsv}`);
+  console.log(`Wrote: ${PATHS.outMd}`);
+  console.log("");
+  console.log("UNDER-FLOOR roster (worst first):");
+  for (const r of underRanked) {
+    console.log(`  [${sev(r).padEnd(8)}] ${r.pathId.padEnd(24)} designed ${String(r.designedDistinctTypes).padStart(1)} wired ${r.wiredDistinctTypes}/${r.minTypes} renew ${r.wiredDistinctRenew}/${r.minRenew}  present=[${r.wiredTypesPresent.join(",")}]  missing: ${r.missing.join("; ")}`);
+  }
 }

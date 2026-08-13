@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "shared": [
+    { "id": "shared_two_shadows", "title": "Two Shadows", "body": "Masser and Secunda lay two shadows across the road. Neither shadow asks this one to stand still." },
+    { "id": "shared_lattice_overhead", "title": "The Lattice Overhead", "body": "The moons cross their appointed paths. The lattice is not a cage, but a way to know where each step begins." },
+    { "id": "shared_silver_on_dust", "title": "Silver on Dust", "body": "Moonlight settles on dust, stone, and fur alike. Even the smallest road belongs beneath the same sky." },
+    { "id": "shared_night_has_measure", "title": "The Night Has Measure", "body": "The night is wide, but not without measure. The moons keep their places while mortals choose how to walk beneath them." },
+    { "id": "shared_between_moons", "title": "Between the Moons", "body": "There is room between the moons for doubt, delight, and another honest beginning." },
+    { "id": "shared_road_remembers", "title": "The Road Remembers", "body": "The road remembers no single pawprint forever. It remembers that someone passed beneath the moons and kept going." }
+  ],
+  "khenarthi": [
+    { "id": "khenarthi_road_breathes", "title": "The Road Breathes", "body": "Khenarthi moves through grass and whiskers. The road ahead seems to breathe with this one's own chest." },
+    { "id": "khenarthi_windward_home", "title": "A Windward Home", "body": "A warm wind carries scents from far camps. Khenarthi teaches that home may travel without becoming less true." },
+    { "id": "khenarthi_open_mile", "title": "The Open Mile", "body": "No wall closes the next mile. Under Khenarthi's strength, distance feels less like exile and more like invitation." },
+    { "id": "khenarthi_breath_between_steps", "title": "Breath Between Steps", "body": "Khenarthi is present in the breath between one step and the next, the small freedom from which every journey grows." },
+    { "id": "khenarthi_scent_of_rain", "title": "The Scent of Rain", "body": "Rain has not yet fallen, but Khenarthi sends its scent ahead. The sky keeps promises in its own time." },
+    { "id": "khenarthi_canvas_stirs", "title": "Canvas Stirs", "body": "A tent wall stirs though the camp is quiet. Khenarthi reminds this one that shelter and open sky need not be enemies." },
+    { "id": "khenarthi_feather_on_road", "title": "A Feather on the Road", "body": "A loose feather turns without choosing a destination. Khenarthi makes wandering look less like being lost." },
+    { "id": "khenarthi_far_caravan", "title": "The Far Caravan", "body": "A distant bell reaches farther than the caravan that carries it. Khenarthi joins separated travelers with one moving air." },
+    { "id": "khenarthi_unbarred_sky", "title": "The Unbarred Sky", "body": "No lock can be set upon the sky. Khenarthi's freedom is not escape alone, but the courage to depart well." },
+    { "id": "khenarthi_last_breeze", "title": "The Last Breeze", "body": "The breeze fades, yet leaves the fur changed by its passing. Khenarthi's gifts are often known by what continues after." }
+  ],
+  "azurah": [
+    { "id": "azurah_twilight_mirror", "title": "Twilight's Mirror", "body": "Azurah holds the sky between day and night. In that mirror, this one sees change without mistaking it for loss." },
+    { "id": "azurah_name_at_dusk", "title": "A Name at Dusk", "body": "At dusk the world keeps its shape while every color changes. Azurah knows the true name that survives both." },
+    { "id": "azurah_shadow_with_shape", "title": "Shadow With Shape", "body": "Azurah's shadow is not emptiness. It gives bright things an edge and hidden things a form." },
+    { "id": "azurah_liminal_hour", "title": "The Liminal Hour", "body": "The hour belongs wholly to neither sun nor stars. Azurah makes a sacred country of the threshold." },
+    { "id": "azurah_rose_and_indigo", "title": "Rose and Indigo", "body": "Rose fades into indigo without a seam. Azurah teaches that transformation need not divide the self." },
+    { "id": "azurah_first_star", "title": "The First Star", "body": "One star appears before the others dare. Under Azurah's strength, revelation begins as a single point of light." },
+    { "id": "azurah_last_light", "title": "The Last Light", "body": "The last light does not resist the night. Azurah gives endings the dignity of becoming." },
+    { "id": "azurah_hidden_color", "title": "The Hidden Color", "body": "Moonlight draws a color from stone that daylight overlooked. Azurah's mysteries reveal; they do not merely conceal." },
+    { "id": "azurah_dusk_bright_road", "title": "The Dusk-Bright Road", "body": "The road is clearest where day and night meet. Azurah marks the turn before this one knows it was sought." },
+    { "id": "azurah_moons_in_water", "title": "Moons in Water", "body": "The moons tremble in dark water without breaking. Azurah shows how an image may move and remain true." }
+  ],
+  "baandar": [
+    { "id": "baandar_unlatched_gate", "title": "The Unlatched Gate", "body": "Baan Dar leaves one gate unlatched and lets pride guard the wrong door. Cleverness begins where certainty grows lazy." },
+    { "id": "baandar_luck_sideways", "title": "Luck Turned Sideways", "body": "A poor throw lands well after striking the table's edge. Baan Dar rarely sends luck by the straight road." },
+    { "id": "baandar_laughing_escape", "title": "The Laughing Escape", "body": "The trap closes on an empty cloak. Somewhere beyond it, Baan Dar is already laughing." },
+    { "id": "baandar_clear_debt", "title": "Clever Hands, Clear Debt", "body": "Baan Dar favors the hand that escapes cleanly, not the hand that leaves another pariah to pay its debt." },
+    { "id": "baandar_bent_rule", "title": "The Bent Rule", "body": "A rigid rule snaps; a clever one bends. Baan Dar tests which kind stands between this one and the road." },
+    { "id": "baandar_empty_purse", "title": "The Empty Purse", "body": "An empty purse can hide a full plan. Baan Dar counts resources that jailers and taxmen cannot see." },
+    { "id": "baandar_third_way", "title": "The Third Way", "body": "Two guards watch two exits. Baan Dar points to the roof and calls the argument settled." },
+    { "id": "baandar_pariahs_share", "title": "The Pariah's Share", "body": "The feast denies a place, so Baan Dar makes a table from the road and leaves room for one more exile." },
+    { "id": "baandar_grinning_moon", "title": "The Grinning Moon", "body": "The moon resembles a grin no magistrate can confiscate. Baan Dar's strength makes authority feel briefly smaller." },
+    { "id": "baandar_soft_fall", "title": "The Soft Fall", "body": "A misstep finds loose sand instead of stone. Baan Dar sometimes answers courage by moving the consequence." }
+  ],
+  "rajhin": [
+    { "id": "rajhin_secret_kept", "title": "A Secret Kept", "body": "Rajhin weighs a secret by the grace with which it is carried, not by the noise made in taking it." },
+    { "id": "rajhin_audacious_step", "title": "The Audacious Step", "body": "The impossible step becomes merely difficult once Rajhin has placed one paw beyond the warning line." },
+    { "id": "rajhin_limits_in_silver", "title": "Limits in Silver", "body": "Silver light outlines every lock and ledge. Rajhin sees limits clearly because he intends to cross them beautifully." },
+    { "id": "rajhin_purring_question", "title": "The Purring Question", "body": "A closed chest asks a question in metal and wood. Rajhin answers with patience, nerve, and a very small click." },
+    { "id": "rajhin_shadow_of_key", "title": "The Shadow of a Key", "body": "A key casts a longer shadow than its teeth deserve. Rajhin knows possession is not the same as mastery." },
+    { "id": "rajhin_silent_bell", "title": "The Silent Bell", "body": "A bell can be passed without ringing when every movement has purpose. Rajhin makes precision into its own boast." },
+    { "id": "rajhin_empty_pedestal", "title": "The Empty Pedestal", "body": "Moonlight rests on an empty pedestal. Rajhin leaves absence arranged as carefully as another thief leaves loot." },
+    { "id": "rajhin_velvet_paw", "title": "The Velvet Paw", "body": "Softness is not hesitation. Rajhin's velvet paw reaches exactly where a mailed hand cannot." },
+    { "id": "rajhin_one_open_window", "title": "One Open Window", "body": "A palace closes a hundred doors and forgets one high window. Rajhin calls that forgetfulness an invitation." },
+    { "id": "rajhin_moonlit_dare", "title": "The Moonlit Dare", "body": "The wall looks taller in moonlight, and therefore more worth climbing. Rajhin's strength sharpens appetite into art." }
+  ],
+  "alkosh": [
+    { "id": "alkosh_ordered_sky", "title": "The Ordered Sky", "body": "Alkosh sets the moons in sequence without hurrying them. Order is strongest when it does not need to shout." },
+    { "id": "alkosh_scale_and_second", "title": "Scale and Second", "body": "A heartbeat passes, then another. Alkosh makes time felt as a procession, not a prison." },
+    { "id": "alkosh_word_with_weight", "title": "A Word With Weight", "body": "Some words vanish into air; others change the shape of an age. Alkosh teaches the burden carried by the second kind." },
+    { "id": "alkosh_patience_of_stone", "title": "The Patience of Stone", "body": "Stone waits through seasons without forgetting its place. Alkosh's strength can be still without becoming idle." },
+    { "id": "alkosh_turning_hour", "title": "The Turning Hour", "body": "The hour turns exactly once and cannot be stolen back. Alkosh asks what deserves a place in it." },
+    { "id": "alkosh_dragons_measure", "title": "The Dragon's Measure", "body": "The sky is vast, yet Alkosh gives each flight a before and an after. Even dragons move within consequence." },
+    { "id": "alkosh_unbroken_line", "title": "The Unbroken Line", "body": "Moonlight draws one line along an old wall. Alkosh joins what came before to what must follow." },
+    { "id": "alkosh_breath_and_word", "title": "Breath and Word", "body": "Breath becomes a word, and a word becomes force. Alkosh reminds this one that power begins with form." },
+    { "id": "alkosh_rightful_moment", "title": "The Rightful Moment", "body": "Not every open path should be taken at once. Alkosh's strength makes restraint feel like readiness." },
+    { "id": "alkosh_clock_without_hands", "title": "A Clock Without Hands", "body": "The moons keep time without gears or hands. Alkosh's order is written across distances no mortal could measure." }
+  ]
+}

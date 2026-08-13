@@ -25,6 +25,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+
+const KNOWN_FLAGS = new Set(["--dry", "--write"]);
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_cumulative_rebalance" });
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const AUTHORING = path.resolve(__dirname, "..", "references", "authoring");
 
@@ -51,7 +56,9 @@ function effectName(av) {
   return EFFECT_NAMES[av];
 }
 
+const dry = process.argv.includes("--dry");
 const write = process.argv.includes("--write");
+if (dry && write) throw new Error("--dry and --write are mutually exclusive.");
 let totalFamilies = 0;
 const report = [];
 

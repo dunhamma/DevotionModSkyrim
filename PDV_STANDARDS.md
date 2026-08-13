@@ -323,6 +323,10 @@ Anything the player will read at any point is a description-engineering surface.
 
 These rules apply to all player-facing surfaces listed in § 3.1. They are the baseline before any writer-review pass. The verifier enforces the two automatable rules (terminal punctuation, contractions); the rest are manual review targets.
 
+> **Section order.** 3.5 is placed before 3.4 in this file. Cite "§ 3.5" for grammar and style; "§ 3.4" is Papyrus trace messages.
+>
+> **Coverage limit.** `tools/pdv_content_verify.mjs` runs these checks over `race-sheets/PDV_RaceContent_Manifest.md` and `PDV_DaedricContent_Manifest.md` only. It does not read the `.psc` sources or the ESP, where most shipped player copy actually lives. A green content-verify is not evidence that shipped copy conforms.
+
 **Name capitalisation.** Always capitalise:
 - Deity and divine names: Kyne, Talos, Mara, Auri-El, Malacath, Hircine, Riddle'Thar.
 - Race names: Nord, Khajiit, Dunmer, Argonian, Orsimer (and Orc as a shorthand).
@@ -335,9 +339,9 @@ Do not capitalise generic nouns: "the hall," "a shrine," "the temple," "a blessi
 
 **Stat notation format.** Mechanical stat changes use numeral + symbol with an explicit sign: "+10%", "-5%", "+15 stamina." Never spell out a stat change: write "+10%" not "ten percent more." Descriptive percentages inside a prose sentence that are not direct stat changes spell out: "five percent of your health." Do not mix conventions in a single string — if the string has a stat line, that line uses the numeral form.
 
-**Terminal punctuation.** Every player-facing string ends with a full stop, exclamation mark, or question mark. No trailing space after the terminal character. The verifier flags missing terminal punctuation as a warning.
+**Terminal punctuation.** Every player-facing *sentence* ends with a full stop, exclamation mark, or question mark. No trailing space after the terminal character. The verifier flags missing terminal punctuation as a warning. **Titles, labels, and MessageBox title fields are exempt** — this rule governs the body, not the heading. `tools/pdv_content_verify.mjs` implements the exemption in code (`checkTerminalPunctuation` is only ever called on body text) and no shipped title in the mod carries a terminal character. Do not "fix" them.
 
-**Tense.** Present tense for active effect descriptions: "Kyne shelters the hunter." Timeless narrative for deity acknowledgment: "Kyne has noticed your steps." Do not switch tenses within a single string.
+**Tense.** Present tense for active effect descriptions: "Kyne shelters the hunter." Timeless narrative for deity acknowledgment: "Kyne has noticed your steps." Do not switch tenses within a single string. **Journal and Book of Days entries are the documented exception:** they may pair a past-tense report of a completed act with a present-tense consequence — "You took up a discipline in the Trial of Iron. The Code is held in iron." That is one narrative frame, not a tense switch. The no-switching rule guards the choice between the two modes above; it does not forbid this shape.
 
 **Contractions.** Do not use modern contractions in any player-facing text. Write "do not" not "don't," "you are" not "you're," "it is" not "it's." The verifier flags known contractions as a warning.
 
@@ -657,6 +661,108 @@ If the retired surface was visible in a live worldspace or cell, add a verifier
 or helper check that fails if the record returns. A one-off xEdit/houseCARL
 cleanup is not enough when the same stale record could be recreated by an
 authoring helper or preserved by a manifest.
+
+### 6.7b Post-coding hygiene pass (STANDING RULE, owner directive 2026-08-07)
+
+After any multi-commit coding cluster -- a race lane, a packet series, a feature -- run three
+hygiene activities before the lane is called done. They are cheap, they are the moments this
+project has historically shipped debt, and they are **report-only**: findings become their own
+packet, never an edit smuggled into the audit that discovered them.
+
+1. **Papyrus performance review of the CHANGED functions.** Load the `housecarl:papyrus-optimization`
+   skill. Establish each function's trigger BEFORE judging its body -- cost is
+   `frequency x work per run`, and the same line is clean in a one-shot and broken in a one-second
+   loop. Verdicts must name the trigger so severity is auditable.
+2. **Dead-code and orphaned-property sweep.** `tools/pdv_hygiene_harvest.mjs` harvests candidates:
+   unreferenced properties, uncalled functions, one-way StorageUtil keys, unreferenced tools, and
+   retired-scaffolding markers.
+3. **Retired-scaffolding verdicts.** For each retired substrate property, inert handler, or
+   obsolete compat surface: can it leave source, VMAD, and records -- with evidence.
+
+**Two rules that decide whether the pass is worth anything.**
+
+**Read the source the COMPILER reads.** `live-source/` is a mirror and goes stale whenever work
+happens in the MO2 tree. On 2026-08-07 it was up to seven weeks behind on 19 files, and a sweep run
+against it described a codebase that did not exist. `pdv_hygiene_harvest.mjs` takes
+`PDV_SOURCE_DIR` and prints which tree it read; check that line before quoting any number. The same
+applies to record evidence: confirm houseCARL's INSTANCE is Anvil first (see 6.3) -- a wrong-instance
+read returns an older record set rather than an error.
+
+**A public seam has no in-repo caller BY DESIGN, and a call-site count cannot see that.** This is a
+distinct class from dead code and the sweep must not merge them. `BeginExternalReactionBatch` /
+`ApplyExternalReaction` / `EndExternalReactionBatch` are the API third-party patch scripts call;
+nothing in Devotion calls them, and removing them would break every patch using the seam.
+`RegisterQuestReactionChannelFolder` is the same shape from the other side -- it scans a folder
+Devotion never ships, because MO2 merges the directory in from whichever patch provides it. That
+folder was empty on Anvil and carried **39 channel files on ARR 2.5**, which is also the reminder
+that checking one instance and generalising is how this project gets false verdicts. The harvester
+splits documented seams into `publicSeamsNoInRepoCaller`; an UNdocumented seam still lands in the
+dead pile, so say in the comment when a function exists for callers outside this repo.
+
+**A candidate is not a finding.** Every candidate needs a prior-ruling grep and independent
+verification before it is written down as dead. This repo carries explicit "a future audit that
+flags this is wrong" notes, and historically 4 of 6 such findings were pre-disproven. The
+disqualifying guardrails: reserved signal/event/route ledger entries (deleting an unwired entry is
+itself a gate FAILURE); 2026-07-07 wired-vs-stub tags (stale, they under-report wiring); inert
+handlers kept for save compatibility; properties filled from VMAD; functions whose only callers are
+Story Manager fragments, the EventBus, or MCM handlers; unnamed INFO records (live Nord dialogue).
+
+**Delegation shape.** Bulk grep-and-classify goes to a cheaper model; the main loop keeps
+verification, because an evidence claim nobody re-checked is not evidence. Scripts do the volume so
+the model reads summaries -- never read a 1.2 MB script whole to answer a question about twelve
+functions.
+
+### 6.7c Syntax-sensitive bulk-edit safety
+
+A repeated text pattern does not prove that every match is the same syntactic
+context. Before a mechanical edit touches more than one file under `tools/`:
+
+1. Enumerate the exact target files and expected edit count. Abort if either
+   count changes during the transform.
+2. Inspect each anchor in its surrounding syntax. Classify multi-line import or
+   export blocks, strings, template literals, embedded scripts, nested
+   structures, and generated regions before choosing the edit method.
+3. Use unique, structure-bounded anchors. If the targets have different shapes,
+   split the transform or edit the outliers separately; do not insert at the
+   first matching line merely because the text is uniform.
+4. Identify the authority for generated blocks. Edit the generator rather than
+   its output unless the tracked output is intentionally the authoring surface.
+5. Record the documented invocations affected by the change before editing so
+   the same commands can be rerun afterward.
+
+The minimum closeout sweep is exhaustive, not sampled:
+
+1. Run `node --check` on every edited `.js` and `.mjs` tool.
+2. Inspect every insertion in the final diff and prove it landed at the intended
+   structural level, not inside an import, string, template literal, embedded
+   script, or nested block. A successful text replacement is not this proof.
+3. When CLI handling changes, run an accepted invocation and a bogus-flag
+   rejection for every edited tool; verify the rejection exits nonzero.
+4. Rerun every documented command the edit could reject or corrupt, plus the
+   affected tool-specific gates.
+5. Run `git diff --check` and confirm the final changed-file and edit counts
+   match the preconditions.
+
+If one transform produces mixed syntactic cases, stop and split it into smaller
+edits. Mechanical does not mean context-free.
+
+### 6.7d File comparison and generated-text EOL semantics
+
+Every gate that compares or hashes files must name the question it asks:
+
+1. Use normalized text semantics when line endings are a checkout artifact.
+2. Use exact-byte semantics for plugins, bytecode, archives, fonts, snapshots,
+   checksums, cache keys derived from shipped bytes, and release receipts.
+3. A tool that handles both kinds must select the helper at each call site; a
+   generic raw `sha256(file)` helper is not an adequate mixed-mode contract.
+4. Every tracked generated text writer must select `lf` or `crlf` explicitly.
+5. Pin canonical tracked output EOLs in `.gitattributes` as the first layer, and
+   use `tools/lib/pdv_file_compare.mjs` as the second. Neither replaces the
+   other.
+
+`references/authoring/PDV_FileComparisonSemantics.json` records the audited
+question and mode for each file-comparison tool. Run
+`node tools/pdv_file_semantics_audit.mjs` after adding or changing one.
 
 ### 6.8 Strip debug before release
 

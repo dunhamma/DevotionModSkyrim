@@ -2,6 +2,18 @@
 
 **Status:** Player-facing companion sheet. Implementation authority lives in `PDV_RaceDesign_Khajiit.md`, `PDV_TargetEndStates_1.0.md`, `references/PDV_RaceArchitecture_DesignReference.md`, and `references/phase4/PDV_DaedricRacePrinceMatrix.csv` for Daedric response; reward numbers remain tunable.
 
+> **Current implementation (2026-08-06):** Your first focused god now emerges
+> automatically at Seeker with one ceremonial popup, a toast, and a pinned Book
+> entry; it is not silently permanent-broad worship. The current god in strength
+> does not grant a rotating stat spell or extra piety. If that god matches your
+> focus, Lattice Resonance strengthens the focused numeric blessing by 20%.
+> Azurah Champions gain the once-daily Portent lesser power; Baan Dar Champions
+> gain the guarded once-daily rescue to 50% Health. The road itself is home: any
+> completed, uninterrupted outdoor sleep qualifies, with sleep-start context
+> authoritative. Older phase, road-home-circuit, silent-emergence, and reward
+> descriptions later in this companion sheet are superseded by this notice and
+> `PDV_RaceDesign_Khajiit.md`.
+
 > The moons do not ask to be worshipped. They simply are. And so, beneath them, are you.
 
 ## Who They Worship
