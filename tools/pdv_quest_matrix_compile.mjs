@@ -217,6 +217,13 @@ const FAUCET_SPELL_FORM_LISTS = {
     "0x02AC6F|Skyrim.esm", // Wabbajack
     "0x09B245|Skyrim.esm", // Wabbajack enchantment
   ],
+  // Triumvirate (modded) Hircine-worship spells. Routes the existing
+  // Hircine.serve_a_daedra:hircine scoring/cap (shared with the Savior's Hide equip
+  // faucet), so no new PartD row. Absent-plugin entries no-op via the GetModByName guard.
+  "faucetSpellForms.Hircine.serve_a_daedra:hircine": [
+    "0x28E6EB|Triumvirate - Mage Archetypes.esp", // Force of Nature (assume the Horned Lord, Hircine's beast form)
+    "0x27009A|Triumvirate - Mage Archetypes.esp", // Call Hound of Hircine (summon Hircine's beast)
+  ],
 };
 
 const FAUCET_EFFECT_LISTS = {
