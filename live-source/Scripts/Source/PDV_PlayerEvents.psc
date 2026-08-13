@@ -109,6 +109,13 @@ Keyword PDV_KID_AmuletZenithar = None
 Bool PDV_KID_BarterOpen = false
 Int PDV_KID_TradeValuePending = 0
 
+; Other-directed heal/cure effects for EVT_HEAL_OR_CURE_NPC (350). Resolved by FormID
+; like the KID keywords above, not a VMAD property, so old saves need no re-bind. The
+; list holds only heal effects whose delivery targets someone else (Healing Hands,
+; Grand Healing), never Self-cast heals, so combat self-sustain does not score. Mysticism
+; overrides these vanilla effect FormIDs in place, so its versions are covered for free.
+FormList PDV_HealCureOtherEffectsList = None
+
 FormList Property PDV_FLST_FaucetSkillBooks Auto
 FormList Property PDV_FLST_FaucetSpellTomes Auto
 FormList Property PDV_FLST_FaucetDaedricArtifacts Auto
@@ -134,6 +141,7 @@ Int Property EVT_HARVEST_INGREDIENT = 334 AutoReadOnly
 Int Property EVT_READ_SKILL_BOOK = 340 AutoReadOnly
 Int Property EVT_READ_SPELL_TOME = 341 AutoReadOnly
 Int Property EVT_READ_LORE_BOOK = 342 AutoReadOnly
+Int Property EVT_HEAL_OR_CURE_NPC = 350 AutoReadOnly
 Int Property EVT_PICK_OWNED_LOCK = 360 AutoReadOnly
 Int Property EVT_RAISE_UNDEAD = 365 AutoReadOnly
 Int Property EVT_ACCEPT_DAEDRIC_ARTIFACT = 368 AutoReadOnly
@@ -710,6 +718,17 @@ Event OnSpellCast(Form akSpell)
         Trace(2, "Raise-undead cast detected: " + castSpell.GetName())
         RouteGenericAction(EVT_RAISE_UNDEAD, GetActorRef() as Form, akSpell)
     endIf
+
+    ; EVT_HEAL_OR_CURE_NPC (350): caster-side, same approach as raise-undead. The spec's
+    ; original OnMagicEffectApplyEx trigger is unbuildable here -- that hook is target-side
+    ; (the player alias only hears effects applied TO the player), so a heal landing on an
+    ; NPC never reaches it. Casting an other-directed heal is the reliable caster-side proxy.
+    ; The effect list is other-delivery only, so self-heals do not score; per-deity dailyCap
+    ; on the data rows governs anti-farm, exactly as the raise-undead path does.
+    if castSpell && SpellHasHealOrCureOtherEffect(castSpell)
+        Trace(2, "Heal/cure-other cast detected: " + castSpell.GetName())
+        RouteGenericAction(EVT_HEAL_OR_CURE_NPC, GetActorRef() as Form, akSpell)
+    endIf
 EndEvent
 
 Bool Function SpellHasRaiseUndeadEffect(Spell castSpell)
@@ -722,6 +741,23 @@ Bool Function SpellHasRaiseUndeadEffect(Spell castSpell)
     while index < count
         MagicEffect effectRef = castSpell.GetNthEffectMagicEffect(index)
         if effectRef && HasListedForm(PDV_FLST_FaucetRaiseUndeadEffects, effectRef as Form)
+            return true
+        endIf
+        index += 1
+    endWhile
+    return false
+EndFunction
+
+Bool Function SpellHasHealOrCureOtherEffect(Spell castSpell)
+    if !castSpell || !PDV_HealCureOtherEffectsList
+        return false
+    endIf
+
+    Int index = 0
+    Int count = castSpell.GetNumEffects()
+    while index < count
+        MagicEffect effectRef = castSpell.GetNthEffectMagicEffect(index)
+        if effectRef && HasListedForm(PDV_HealCureOtherEffectsList, effectRef as Form)
             return true
         endIf
         index += 1
@@ -1361,6 +1397,7 @@ Function ResolveKIDKeywords()
     PDV_KID_AmuletStendarr = Game.GetFormFromFile(0x00071753, "Devotion.esp") as Keyword
     PDV_KID_AmuletTalos = Game.GetFormFromFile(0x00071754, "Devotion.esp") as Keyword
     PDV_KID_AmuletZenithar = Game.GetFormFromFile(0x00071755, "Devotion.esp") as Keyword
+    PDV_HealCureOtherEffectsList = Game.GetFormFromFile(0x00071790, "Devotion.esp") as FormList
 EndFunction
 
 Function RouteKIDAction(String actionKey, Form sourceForm)

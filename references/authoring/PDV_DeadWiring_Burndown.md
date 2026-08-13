@@ -41,7 +41,7 @@ Sequencing: bugs + tooling landed now; WIRE items build AFTER the mega packet.
 
 | Event | Verdict | State |
 |---|---|---|
-| 350 heal-or-cure-npc | WIRE post-packet | reserved; spec below |
+| 350 heal-or-cure-npc | WIRE | **BUILT 2026-08-13** (caster-side; reserved entry deleted). See spec note below. |
 | 366 vampire-feed | WIRE post-packet | reserved; spec below |
 | 354 persuade-success (undeclared) | verdict pending | reserved; fold into spec review |
 | 367 cannibalize (undeclared) | verdict pending | reserved; fold into spec review |
@@ -51,7 +51,36 @@ Sequencing: bugs + tooling landed now; WIRE items build AFTER the mega packet.
 | 310/311/312 pray/blessing/sky-shout | REMOVED | superseded dead constants deleted |
 | 363 pickpocket | REMOVED | dead constant deleted; ActionRouter comment updated (type-3 stays deliberately unrouted) |
 
-## Emitter spec: EVT_HEAL_OR_CURE_NPC (id 350) — build post-packet
+## Emitter spec: EVT_HEAL_OR_CURE_NPC (id 350) — BUILT 2026-08-13
+
+> **AS-BUILT (2026-08-13), deviates from the original trigger below — read this first.**
+> The original trigger (`OnMagicEffectApplyEx`, "player heals a friendly NPC") is
+> **unbuildable with the current hook**: that PO3 event is registered on the player alias
+> and is **target-side** — it only hears effects applied *to the player*, so a heal that
+> lands on an NPC never reaches it (the same limitation that forced raise-undead caster-side,
+> documented at `PDV_PlayerEvents.OnMagicEffectApplyEx`). No caster-on-other magic-effect
+> hook exists (PO3 exposes `GetEffectArchetypeAsInt` but no delivery getter, and vanilla heal
+> MGEFs carry no shared keyword), so a spec-faithful build is not available.
+>
+> **Built instead, mirroring the shipped raise-undead detector:** caster-side
+> `PDV_PlayerEvents.OnSpellCast` → `SpellHasHealOrCureOtherEffect(castSpell)` matches the cast
+> spell's effects against a new curated FormList `PDV_FLST_HealCureOtherEffects`
+> (`071790:Devotion.esp`, resolved by FormID per the KID save-safety pattern) → emits
+> `RouteGenericAction(EVT_HEAL_OR_CURE_NPC, player, spell)`. The FormList holds only
+> **other-delivery** heal effects — `01CEA7` (Healing Hands, target-actor) and `0B62ED`
+> (Grand Healing, self-area ally heal) — so Self-cast combat heals never score. Because
+> Mysticism overrides those vanilla effect FormIDs in place, Mysticism's heals are covered
+> for free; Triumvirate's Cleric Aid (a new FormID) is added via a runtime foreign-form pass.
+>
+> **Fidelity trade vs the original spec:** cannot confirm the actual target was a friendly
+> NPC (an other-directed heal cast is the proxy), and anti-farm is the per-deity CSV
+> `dailyCap` (2–3) rather than a per-target day-key — the same governance raise-undead uses.
+> Owner-approved 2026-08-13.
+>
+> **Runtime proof still owed:** cast Healing Hands on a follower in game → the per-origin
+> deities gain in the Ledger; second cast same day is bounded by the per-deity dailyCap.
+
+### Original spec (superseded by the as-built note above)
 
 - **Trigger**: `PDV_PlayerEvents.OnMagicEffectApplyEx` (hook already registered).
   Accept when: caster == player, target is an NPC (ActorTypeNPC keyword), target

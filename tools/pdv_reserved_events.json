@@ -1,11 +1,6 @@
 {
   "_README": "Reserved dead event types: declared (or data-seeded) but never emitted from a real emitter script. Keys are PDV_EventTypes.<EVT_NAME> for declared constants and PDV_EventTypes.ID_<id> for data-seeded ids with no (live) declaration. The EVT emission coverage gate (tools/pdv_signal_e2e_gate.mjs) reports a listed key as a documented KNOWN-GAP; any dead event NOT listed FAILs, and a stale entry (now emitted / no longer present) FAILs. Verdicts per the 2026-07-07 owner grill session. Delete an entry when its verdict lands.",
   "_seededDate": "2026-07-07",
-  "PDV_EventTypes.EVT_HEAL_OR_CURE_NPC": {
-    "reason": "WIRE post-mega-packet (owner 2026-07-07): 19 deity rows incl. a two-sided axis (Boethiah/Sithis/Mephala dislike). Emitter spec = OnMagicEffectApplyEx, player-cast restore/cure on friendly NPC, ConsumeDailyRepeatMultiplier anti-farm. Spec in PDV_DeadWiring_Burndown.md.",
-    "deferredBy": "dead-wiring burndown plan",
-    "date": "2026-07-07"
-  },
   "PDV_EventTypes.EVT_VAMPIRE_FEED": {
     "reason": "WIRE post-mega-packet (owner 2026-07-07): Molag Bal signature row (+0.5). Emitter needs feed-detection research (PO3/animation/quest-stage; curse-state synergy). Spec in PDV_DeadWiring_Burndown.md.",
     "deferredBy": "dead-wiring burndown plan",
