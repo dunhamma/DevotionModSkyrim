@@ -739,6 +739,9 @@ function expectedDaedricMechanicText(princeName, effects, kind) {
 
   const labels = {
     OneHanded: "One-handed",
+    TwoHanded: "Two-handed",
+    Destruction: "Destruction",
+    Pickpocket: "Pickpocket",
     Speechcraft: "Speech",
     ResistMagic: "Magic resistance",
     Stamina: "Stamina",

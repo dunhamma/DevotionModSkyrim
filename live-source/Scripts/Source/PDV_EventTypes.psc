@@ -84,6 +84,9 @@ Int Property EVT_KILL_DAEDRA = 301 AutoReadOnly
 Int Property EVT_KILL_DRAGON = 302 AutoReadOnly
 Int Property EVT_KILL_ANIMAL_NONCOMBAT = 303 AutoReadOnly
 Int Property EVT_MURDER_DEFENSELESS = 304 AutoReadOnly
+; Combat method (2026-08-12): how harm is delivered, not the victim type
+Int Property EVT_SNEAK_ATTACK_KILL = 305 AutoReadOnly
+Int Property EVT_APPLY_POISON = 306 AutoReadOnly
 ; Devotional / observance
 Int Property EVT_REST_UNDER_OPEN_SKY = 313 AutoReadOnly
 Int Property EVT_SLEEP_IN_BED = 314 AutoReadOnly
@@ -272,6 +275,10 @@ String Function EventLabel(Int eventType)
         return "kill-animal-noncombat"
     elseIf eventType == EVT_MURDER_DEFENSELESS
         return "murder-defenseless"
+    elseIf eventType == EVT_SNEAK_ATTACK_KILL
+        return "sneak-attack-kill"
+    elseIf eventType == EVT_APPLY_POISON
+        return "apply-poison"
     elseIf eventType == EVT_REST_UNDER_OPEN_SKY
         return "rest-under-open-sky"
     elseIf eventType == EVT_SLEEP_IN_BED

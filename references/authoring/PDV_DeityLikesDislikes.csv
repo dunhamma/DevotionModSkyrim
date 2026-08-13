@@ -280,10 +280,11 @@ Boethiah,343,learn-word-of-power,+,small,0.5,3,0,,,,power seized through trial; 
 Boethiah,362,steal-item,+,small,0.25,3,0,,owned,,the plot rewarded; taking by cunning pleases the Prince of Plots
 Boethiah,315,sleep-in-inn,-,small,-0.25,3,0,,,,paid inn comfort denies the test; the worthy do not slumber easy
 Boethiah,333,cook-meal,-,small,-0.25,3,0,,,,domestic ease is the solace of the unworthy; not of strength
-Mephala,364,assault-innocent,+,medium,1.0,2,0.5,,,,the unseen blade laid against the trusting -- her favored violence
+Boethiah,351,clear-bounty-serve-time,-,small,-0.25,2,0.5,,,,submitting to another's law betrays the worthy tyrant who makes her own
+Boethiah,305,sneak-attack-kill,-,small,-0.25,2,0.5,,,,the stealth opener shames the honorable victory her ancestors witness
 Mephala,2,kill-hostile-humanoid,-,small,-0.25,3,0,,,,the open charge declared -- beneath the web; she keeps no count of it
 Mephala,350,heal-or-cure-npc,-,small,-0.5,2,0,,,,open mending repairs the trust her corruption is meant to fray
-Mephala,313,rest-under-open-sky,-,small,-0.25,2,0,,,,a life lived in the open keeps nothing hidden -- the web needs cover
+Mephala,313,rest-under-open-sky,-,small,-0.25,3,0,,,,a life lived in the open keeps nothing hidden -- the web needs cover
 The Hist,332,brew-potion,+,small,0.5,3,0,,,,distilling the marsh's living gifts into healing draughts honors the sap
 The Hist,334,harvest-ingredient,+,small,0.5,3,0,,,,gathering the land's living growth honors the sap that gives the People life
 The Hist,364,assault-innocent,-,small,-0.5,3,0,,,,raising a hand to the harmless wounds the shared root of the People

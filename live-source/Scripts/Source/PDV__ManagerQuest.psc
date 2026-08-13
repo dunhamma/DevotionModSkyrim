@@ -623,8 +623,8 @@ Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; seals every deity's participating-event cache (12.4 / C4 in PDV_DeityBase) -- without
 ; it the caches stay unsealed forever on old saves (correct, they fail open, but the
 ; broadcast fan-out keeps paying the full per-deity probe the cache exists to remove).
-Int Property LIKES_DISLIKES_VERSION = 21 AutoReadOnly
-Int Property PRINCE_LD_VERSION = 4 AutoReadOnly
+Int Property LIKES_DISLIKES_VERSION = 23 AutoReadOnly
+Int Property PRINCE_LD_VERSION = 6 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_NONE = 0 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_SKY_STORM_HUNT = 1 AutoReadOnly
 Int Property DISFAVOR_DOMAIN_DEATH_ANCESTORS = 2 AutoReadOnly
@@ -672,7 +672,6 @@ Float Property BROAD_PANTHEON_FAITHFUL_THRESHOLD = 50.0 AutoReadOnly
 Float Property BROAD_PANTHEON_POOL_MAX = 50.0 AutoReadOnly
 Float Property BROAD_PANTHEON_DECAY_GRACE_DAYS = 2.0 AutoReadOnly
 Float Property BROAD_PANTHEON_DECAY_PER_DAWN = 0.1 AutoReadOnly
-Int Property BROAD_PANTHEON_SCHEMA_VERSION = 1 AutoReadOnly
 String Property BROAD_PANTHEON_IMPERIAL = "ImperialDivines" AutoReadOnly
 String Property BROAD_PANTHEON_NORD_OLD = "NordOldWays" AutoReadOnly
 String Property BROAD_PANTHEON_NORD_NINE = "NordNineDivines" AutoReadOnly
@@ -857,9 +856,6 @@ Float Property SHOUT_DUPLICATE_WINDOW_DAYS = 0.00001 AutoReadOnly
 ; callback cannot award piety, a meta faucet, or a broad-pantheon fold twice.
 Float Property QUEST_REACTION_DUPLICATE_WINDOW_DAYS = 0.02 AutoReadOnly
 Int Property QUEST_REACTION_QUEUE_MAX_PENDING = 128 AutoReadOnly
-; A3 / fix-plan 10.1. Bump to re-run the legacy quest-reaction job-key sweep on every
-; existing save (see RunAuthoriaQuestReactionKeySweep).
-Int Property AUTHORIA_QR_KEY_SWEEP_VERSION = 1 AutoReadOnly
 Int Property QUEST_REACTION_QUEUE_CELLS_PER_TICK = 2 AutoReadOnly
 Float Property QUEST_REACTION_QUEUE_TICK_SECONDS = 0.1 AutoReadOnly
 
@@ -1002,8 +998,6 @@ Event OnInit()
     RegisterManagerShoutSignals()
     EnsureLikesDislikesTable()
     EnsurePrinceLikesDislikesTable()
-    MigrateDaedricPactsIfNeeded()
-    MigrateBroadPantheonPools()
     EnsureRecognitionModEvents()
     RefreshPatronMirrors()
     UpdateContextualFavorRuntime()
@@ -1012,9 +1006,6 @@ Event OnInit()
     EnsureDunmerAncestralUrn()
     EnsureAltmerPracticeFocus()
     EnsureArgonianHistSapToken()
-    if PDV_ArgonianHistSubstrate
-        PDV_ArgonianHistSubstrate.MigrateLegacyCompositeMetricOnce()
-    endIf
     EnsureKhajiitObserveMoonsPower()
     RequestPanelRefresh()
     HandleDiegeticLoad("init")
@@ -1109,8 +1100,6 @@ Event OnUpdate()
         RegisterManagerShoutSignals()
         EnsureLikesDislikesTable()
         EnsurePrinceLikesDislikesTable()
-        MigrateDaedricPactsIfNeeded()
-        MigrateBroadPantheonPools()
         EnsureKhajiitObserveMoonsPower()
         _shoutRefreshTicks = 0
     endIf
@@ -1225,10 +1214,6 @@ Event OnUpdate()
     MaybeEmitManagerOptimizationProfile()
     RegisterForSingleUpdate(1.0)
 
-    ; A3 / fix-plan 10.1: one-time sweep of legacy leaked job keys. Deliberately AFTER
-    ; the re-arm above: a fault inside a latent one-shot must never be able to break
-    ; the poll chain (the B3 failure class).
-    RunAuthoriaQuestReactionKeySweep()
 EndEvent
 
 Function MaybeEmitManagerOptimizationProfile()
@@ -2211,25 +2196,6 @@ Function RemoveQueuedQuestReactionJob()
     ; Both REJECT paths in ProcessQuestReactionQueueSlice come through here too, so
     ; this is the single drain for the completed AND the rejected job.
     ClearQuestReactionJobKeys(jobId)
-EndFunction
-
-;/ A3 / fix-plan 10.1, second half: the one-time migration. Every job processed
-   before this pass left its ~24 keys behind, so an existing save carries the whole
-   backlog. ClearAllPrefix on the shared "PDV.QR.Job." root removes all of it in one
-   native call -- but ONLY with the queue empty, because a pending job's keys live
-   under that same root and are still needed. If the queue is busy the sweep simply
-   waits for a later tick; the version stamp is not written until it actually runs. /;
-Function RunAuthoriaQuestReactionKeySweep()
-    if StorageUtil.GetIntValue(None, "PDV.Authoria.QRKeySweepVersion") >= AUTHORIA_QR_KEY_SWEEP_VERSION
-        return
-    endIf
-    if HasQueuedQuestReactionJobs()
-        return
-    endIf
-
-    Int clearedKeys = StorageUtil.ClearAllPrefix("PDV.QR.Job.")
-    StorageUtil.SetIntValue(None, "PDV.Authoria.QRKeySweepVersion", AUTHORIA_QR_KEY_SWEEP_VERSION)
-    Trace(1, "[PDV][QR_QUEUE] legacy job-key sweep removed " + clearedKeys + " stale co-save keys.")
 EndFunction
 
 Int Function ProcessQueuedQuestReactionMetaSlice(Quest sourceQuest, String prefix, Int metaIndex)
@@ -8191,17 +8157,6 @@ Function EnsureKhajiitObserveMoonsPower()
         ; changing the player's selected lesser power. Observe the Moons and
         ; Survey Devotion are peers in the same Power slot; selecting either in
         ; the Magic menu replaces the other in the ordinary Skyrim way.
-        ; V3 must rerun after the SPEL moved from EitherHand to Voice. A save
-        ; may have stamped V2, then selected the old record into a hand again.
-        if StorageUtil.GetIntValue(None, "PDV.Khajiit.ObserveMoons.PowerSlotVersion") < 3
-            if playerRef.GetEquippedSpell(0) == PDV_Power_Khajiit_ObserveMoons
-                playerRef.UnequipSpell(PDV_Power_Khajiit_ObserveMoons, 0)
-            endIf
-            if playerRef.GetEquippedSpell(1) == PDV_Power_Khajiit_ObserveMoons
-                playerRef.UnequipSpell(PDV_Power_Khajiit_ObserveMoons, 1)
-            endIf
-            StorageUtil.SetIntValue(None, "PDV.Khajiit.ObserveMoons.PowerSlotVersion", 3)
-        endIf
     elseIf playerRef.HasSpell(PDV_Power_Khajiit_ObserveMoons)
         playerRef.RemoveSpell(PDV_Power_Khajiit_ObserveMoons)
     endIf
@@ -12581,7 +12536,7 @@ Function ClearRowsForDeity(PDV_DeityBase deity)
 EndFunction
 
 Int[] Function GetLikesDislikesEventTypes()
-    Int[] ldEvents = new Int[34]
+    Int[] ldEvents = new Int[35]
     ldEvents[0] = 1
     ldEvents[1] = 2
     ldEvents[2] = 3
@@ -12616,6 +12571,7 @@ Int[] Function GetLikesDislikesEventTypes()
     ldEvents[31] = 315
     ldEvents[32] = 303
     ldEvents[33] = 366
+    ldEvents[34] = 305
     return ldEvents
 EndFunction
 
@@ -12637,64 +12593,6 @@ EndFunction
 ; pact spells, then re-establish a single active pact = the most-advanced committed
 ; Prince. Version-gated so it runs once per save. Curse spells are not pact spells
 ; and are untouched.
-Function MigrateDaedricPactsIfNeeded()
-    if StorageUtil.GetIntValue(None, "PDV.Daedric.PactVersion") >= DAEDRIC_PACT_VERSION
-        return
-    endIf
-
-    Int i = 0
-    Int count = GetDaedricPathCount()
-    PDV_DaedricPathBase topPath = None
-    Int topTier = 0
-    while i < count
-        PDV_DaedricPathBase path = GetDaedricPathAtListIndex(i)
-        if path
-            path.StripPactSpells()
-            if path.GetStoredTier() > topTier
-                topTier = path.GetStoredTier()
-                topPath = path
-            endIf
-        endIf
-        i += 1
-    endWhile
-
-    StorageUtil.FormListClear(None, "PDV.Daedric.LivePactSpells")
-    StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
-    if topPath && topTier > 0
-        topPath.MakeActiveDaedricPact()
-    endIf
-
-    ; v3: enforce patron<->Prince exclusivity on legacy saves holding BOTH. Keep the
-    ; higher tier (tie -> Prince, matching the live Prince-wins surface), sever the
-    ; loser, and surface a one-time resolution note. The StripPactSpells loop above
-    ; already cleaned stacked spells, so the sever fights nothing. SetActiveDeity(None)
-    ; has newDeity==None, so it does not re-enter the patron-commit Prince-sever.
-    Bool hasPatron = (GetPatronState() == PATRON_STATE_ACTIVE) && _activeDeity
-    if hasPatron && topPath && topTier > 0
-        Int patronTier = GetTier(_activeDeity)
-        String resolvedName = ""
-        if topTier >= patronTier
-            resolvedName = topPath.DeityName
-            SetActiveDeity(None)
-        else
-            resolvedName = _activeDeity.DeityName
-            topPath.ClearLiveDaedricPactSpells()
-            StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
-        endIf
-        SendPrismaEventToast("shift", None, "Your devotion has resolved to " + resolvedName + ".", "", "")
-        AppendBookOfDaysEntry("Your devotion has resolved to " + resolvedName + ".", Utility.GetCurrentGameTime() as Int, "reorientation", "journal", true)
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Daedric.PactVersion", DAEDRIC_PACT_VERSION)
-    if GetDebugLevel() >= 1
-        if topPath
-            Debug.Trace("[PDV] Daedric pact migration: stripped stacks, active pact = " + topPath.DeityName)
-        else
-            Debug.Trace("[PDV] Daedric pact migration: stripped stacks, no committed pact")
-        endIf
-    endIf
-EndFunction
-
 Function LoadPrinceLikesDislikesTable()
     if !PDV_FLST_DaedricPaths_All
         return
@@ -12736,7 +12634,7 @@ Function ClearPrinceRowsForPath(PDV_DaedricPathBase path)
 EndFunction
 
 Int[] Function GetPrinceEventTypes()
-    Int[] pldEvents = new Int[31]
+    Int[] pldEvents = new Int[33]
     pldEvents[0] = 1
     pldEvents[1] = 2
     pldEvents[2] = 300
@@ -12768,6 +12666,8 @@ Int[] Function GetPrinceEventTypes()
     pldEvents[28] = 366
     pldEvents[29] = 367
     pldEvents[30] = 368
+    pldEvents[31] = 305
+    pldEvents[32] = 306
     return pldEvents
 EndFunction
 
@@ -12879,6 +12779,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 368, 1.0, 1, 1.0)
         WritePLD(path, 345, 0.25, 3, 0.0)
         WritePLD(path, 304, -0.25, 3, 0.0)
+        WritePLD(path, 305, 0.5, 3, 0.0)
         WritePLD(path, 331, 0.5, 3, 0.0)
         WritePLD(path, 342, 0.25, 3, 0.0)
         WritePLD(path, 2, -0.25, 3, 0.0)
@@ -12959,11 +12860,13 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 360, 0.5, 3, 0.0)
         WritePLD(path, 362, 0.5, 3, 0.0)
         WritePLD(path, 304, 1.0, 2, 0.5)
+        WritePLD(path, 305, 0.5, 2, 0.5)
         WritePLD(path, 361, 0.25, 3, 0.0)
         WritePLD(path, 342, 0.25, 3, 0.0)
         WritePLD(path, 368, 1.5, 1, 1.0)
         WritePLD(path, 364, 0.5, 3, 0.0)
         WritePLD(path, 332, 0.25, 3, 0.0)
+        WritePLD(path, 306, 0.5, 3, 0.0)
         WritePLD(path, 2, -0.25, 3, 0.0)
         WritePLD(path, 350, -0.25, 3, 0.0)
         WritePLD(path, 313, -0.25, 3, 0.0)
@@ -12974,6 +12877,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
         WritePLD(path, 313, 0.25, 3, 0.0)
         WritePLD(path, 362, -0.25, 3, 0.0)
         WritePLD(path, 364, -0.75, 2, 0.5)
+        WritePLD(path, 305, -0.25, 3, 0.0)
         WritePLD(path, 368, 1.0, 1, 1.0)
         WritePLD(path, 302, 1.0, 2, 0.5)
         WritePLD(path, 344, 0.25, 3, 0.0)
@@ -13300,6 +13204,8 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 362, 0.25, 3, 0.0, -1)
         WriteLD(deity, 315, -0.25, 3, 0.0, -1)
         WriteLD(deity, 333, -0.25, 3, 0.0, -1)
+        WriteLD(deity, 351, -0.25, 2, 0.5, -1)
+        WriteLD(deity, 305, -0.25, 2, 0.5, -1)
     elseIf ldName == "Mephala"
         WriteLD(deity, 360, 0.5, 3, 0.0, -1)
         WriteLD(deity, 362, 0.5, 3, 0.0, -1)
@@ -13307,10 +13213,9 @@ Function LoadRowsForDeity(PDV_DeityBase deity)
         WriteLD(deity, 342, 0.25, 3, 0.0, -1)
         WriteLD(deity, 368, 1.5, 1, 1.0, -1)
         WriteLD(deity, 361, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 364, 1.0, 2, 0.5, -1)
         WriteLD(deity, 2, -0.25, 3, 0.0, -1)
         WriteLD(deity, 350, -0.5, 2, 0.0, -1)
-        WriteLD(deity, 313, -0.25, 2, 0.0, -1)
+        WriteLD(deity, 313, -0.25, 3, 0.0, -1)
         WriteLD(deity, 366, 0.35, 3, 0.0, -1)
     elseIf ldName == "The Hist"
         WriteLD(deity, 313, 0.5, 3, 0.0, -1)
@@ -15008,43 +14913,6 @@ Function CatchUpBroadPantheonDecayBeforeCurrentDay(String poolId)
         signedCap = signedCap * PDV_ModePresetRef.DailyCapScalar()
     endIf
     ProcessBroadPantheonThroughDay(poolId, targetDay, signedCap, "pre_event_catchup")
-EndFunction
-
-Function MigrateBroadPantheonPools()
-    if StorageUtil.GetIntValue(None, "PDV.BroadPantheon.Version") >= BROAD_PANTHEON_SCHEMA_VERSION
-        return
-    endIf
-
-    Float imperialSeed = (StorageUtil.GetIntValue(None, "PDV.Imperial.CivicServiceCount") as Float) * 50.0 / 6.0
-    Float oldWaysSeed = (StorageUtil.GetIntValue(None, "PDV.Nord.OldWaysContextCount") as Float) * 50.0 / 6.0
-    SetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL, imperialSeed, "migration_v1")
-    SetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD, oldWaysSeed, "migration_v1")
-
-    Float highestNineDivines = 0.0
-    if GetPlayerOriginRaceIndex() == ORIGIN_NORD && GetPatronState() == PATRON_STATE_BROAD && GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
-        highestNineDivines = GetPiety(PDV_Akatosh)
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Arkay))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Dibella))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Julianos))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Kynareth))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Mara))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Stendarr))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Zenithar))
-        highestNineDivines = MaxFloat(highestNineDivines, GetPiety(PDV_Talos))
-        SetBroadPantheonStanding(BROAD_PANTHEON_NORD_NINE, highestNineDivines, "migration_v1_highest")
-    endIf
-
-    if imperialSeed > 0.0
-        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(BROAD_PANTHEON_IMPERIAL))
-    endIf
-    if oldWaysSeed > 0.0
-        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(BROAD_PANTHEON_NORD_OLD))
-    endIf
-    if highestNineDivines > 0.0
-        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(BROAD_PANTHEON_NORD_NINE))
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.BroadPantheon.Version", BROAD_PANTHEON_SCHEMA_VERSION)
-    SyncBroadPantheonRewards(Game.GetPlayer())
 EndFunction
 
 String Function GetBroadPantheonStandingKey(String poolId)
@@ -19995,33 +19863,6 @@ String Function DebugRunBroadPantheonCatchupForPacing(Int poolIndex)
     return DebugGetBroadPantheonSummary(poolIndex) + " | PS-A11 processed through gain day +5; expected two grace days then 0.1/day."
 EndFunction
 
-String Function DebugRunBroadPantheonMigrationFixture()
-    ; This deliberately exercises the real migration and is confined to the
-    ; clearly-labelled throwaway-save MCM control.
-    StorageUtil.SetIntValue(None, "PDV.Imperial.CivicServiceCount", 3)
-    StorageUtil.SetIntValue(None, "PDV.Nord.OldWaysContextCount", 6)
-    ResetBroadPantheonPool(BROAD_PANTHEON_IMPERIAL)
-    ResetBroadPantheonPool(BROAD_PANTHEON_NORD_OLD)
-    ResetBroadPantheonPool(BROAD_PANTHEON_NORD_NINE)
-    StorageUtil.SetIntValue(None, "PDV.BroadPantheon.Version", 0)
-
-    Bool nineEligible = GetPlayerOriginRaceIndex() == ORIGIN_NORD && GetPatronState() == PATRON_STATE_BROAD && GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
-    if nineEligible
-        StorageUtil.SetFloatValue(PDV_Akatosh as Form, "PDV.Piety", 37.0)
-        StorageUtil.SetFloatValue(PDV_Mara as Form, "PDV.Piety", 42.0)
-        StorageUtil.SetFloatValue(PDV_Zenithar as Form, "PDV.Piety", 11.0)
-    endIf
-
-    MigrateBroadPantheonPools()
-    Float imperialOnce = GetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL)
-    Float oldWaysOnce = GetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD)
-    Float nineOnce = GetBroadPantheonStanding(BROAD_PANTHEON_NORD_NINE)
-    MigrateBroadPantheonPools()
-    Bool idempotent = imperialOnce == GetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL) && oldWaysOnce == GetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD) && nineOnce == GetBroadPantheonStanding(BROAD_PANTHEON_NORD_NINE)
-    Trace(1, "[PDV][PS-A12] migration imperial=" + imperialOnce + " oldWays=" + oldWaysOnce + " nine=" + nineOnce + " nineEligible=" + nineEligible + " idempotent=" + idempotent)
-    return "Migration fixture: Imperial=" + imperialOnce + " (expected 25); Old Ways=" + oldWaysOnce + " (expected 50); Nine=" + nineOnce + " (expected 42 when eligible); second run unchanged=" + idempotent + ". Reload the clean QASmoke save now."
-EndFunction
-
 String Function DebugSetNordBaselineForPacing(Int baselineValue)
     DebugSetNordPantheonBaseline(baselineValue)
     return DebugGetBroadPantheonSummary(baselineValue + 1)
@@ -21951,57 +21792,57 @@ String Function GetDaedricBoonMechanicText(String princeName, Int tierValue)
     if (princeName == "Boethiah") && tierValue == TIER_SEEKER
         return "+10 One-handed"
     elseIf (princeName == "Boethiah") && tierValue == TIER_DEVOTED
-        return "+15 One-handed"
+        return "+25 Armor rating"
     elseIf (princeName == "Boethiah") && tierValue == TIER_CHAMPION
-        return "+20 One-handed"
+        return "+35 Armor rating"
     elseIf (princeName == "Azura") && tierValue == TIER_SEEKER
-        return "+10% Magic resistance"
-    elseIf (princeName == "Azura") && tierValue == TIER_DEVOTED
         return "+15% Magic resistance"
+    elseIf (princeName == "Azura") && tierValue == TIER_DEVOTED
+        return "+25 Magicka"
     elseIf (princeName == "Azura") && tierValue == TIER_CHAMPION
-        return "+20% Magic resistance"
+        return "+35 Magicka"
     elseIf (princeName == "Vaermina") && tierValue == TIER_SEEKER
         return "+10 Illusion"
     elseIf (princeName == "Vaermina") && tierValue == TIER_DEVOTED
-        return "+15 Illusion"
+        return "+18 Sneak"
     elseIf (princeName == "Vaermina") && tierValue == TIER_CHAMPION
-        return "+20 Illusion"
+        return "+25 Sneak"
     elseIf (princeName == "Meridia") && tierValue == TIER_SEEKER
         return "+10 Restoration"
     elseIf (princeName == "Meridia") && tierValue == TIER_DEVOTED
-        return "+15 Restoration"
+        return "+25% Disease resistance"
     elseIf (princeName == "Meridia") && tierValue == TIER_CHAMPION
-        return "+20 Restoration"
+        return "+35% Disease resistance"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_SEEKER
-        return "+10 Illusion"
+        return "+10 Speech"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_DEVOTED
-        return "+15 Illusion"
+        return "+18 Illusion"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_CHAMPION
-        return "+20 Illusion"
+        return "+25 Illusion"
     elseIf (princeName == "Mephala") && tierValue == TIER_SEEKER
         return "+10 Sneak"
     elseIf (princeName == "Mephala") && tierValue == TIER_DEVOTED
-        return "+15 Sneak"
+        return "+18 Pickpocket"
     elseIf (princeName == "Mephala") && tierValue == TIER_CHAMPION
-        return "+20 Sneak"
+        return "+25 Pickpocket"
     elseIf (princeName == "Malacath") && tierValue == TIER_SEEKER
-        return "+10 Armor rating"
-    elseIf (princeName == "Malacath") && tierValue == TIER_DEVOTED
         return "+15 Armor rating"
+    elseIf (princeName == "Malacath") && tierValue == TIER_DEVOTED
+        return "+18 Two-handed"
     elseIf (princeName == "Malacath") && tierValue == TIER_CHAMPION
-        return "+20 Armor rating"
+        return "+25 Two-handed"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_SEEKER
-        return "+5% Attack damage"
+        return "+10 Destruction"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_DEVOTED
-        return "+8% Attack damage"
+        return "+18 One-handed"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_CHAMPION
-        return "+12% Attack damage"
+        return "+25 One-handed"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_SEEKER
-        return "+25 Magicka"
+        return "+10 Illusion"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_DEVOTED
-        return "+40 Magicka"
+        return "+25 Magicka"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_CHAMPION
-        return "+50 Magicka"
+        return "+35 Magicka"
     elseIf (princeName == "Namira") && tierValue == TIER_SEEKER
         return "Feeding restores Health and Stamina"
     elseIf (princeName == "Namira") && tierValue == TIER_DEVOTED
@@ -22009,41 +21850,41 @@ String Function GetDaedricBoonMechanicText(String princeName, Int tierValue)
     elseIf (princeName == "Namira") && tierValue == TIER_CHAMPION
         return "Feeding restores Health and Stamina"
     elseIf (princeName == "Sanguine") && tierValue == TIER_SEEKER
-        return "+10 Speech"
+        return "+15 Stamina"
     elseIf (princeName == "Sanguine") && tierValue == TIER_DEVOTED
-        return "+15 Speech"
+        return "+18 Speech"
     elseIf (princeName == "Sanguine") && tierValue == TIER_CHAMPION
-        return "+20 Speech"
+        return "+25 Speech"
     elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_SEEKER
-        return "+25 Carry weight"
+        return "+10 Speech"
     elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_DEVOTED
-        return "+50 Carry weight"
+        return "+25 Carry weight"
     elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_CHAMPION
-        return "+75 Carry weight"
+        return "+35 Carry weight"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_SEEKER
         return "+10 Alteration"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_DEVOTED
-        return "+15 Alteration"
+        return "+25 Magicka"
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_CHAMPION
         return "+20 Alteration; +20 Magicka"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_SEEKER
-        return "+10 Lockpicking"
+        return "+10 Sneak"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_DEVOTED
-        return "+15 Lockpicking"
+        return "+18 Lockpicking"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_CHAMPION
-        return "+20 Lockpicking"
+        return "+25 Lockpicking"
     elseIf (princeName == "Peryite") && tierValue == TIER_SEEKER
-        return "+25% Disease resistance"
+        return "+15% Disease resistance"
     elseIf (princeName == "Peryite") && tierValue == TIER_DEVOTED
-        return "+50% Disease resistance"
+        return "+25 Health"
     elseIf (princeName == "Peryite") && tierValue == TIER_CHAMPION
-        return "+75% Disease resistance"
+        return "+35 Health"
     elseIf (princeName == "Hircine") && tierValue == TIER_SEEKER
-        return "+25 Stamina"
+        return "+15 Stamina"
     elseIf (princeName == "Hircine") && tierValue == TIER_DEVOTED
-        return "+40 Stamina"
+        return "+18 Sneak"
     elseIf (princeName == "Hircine") && tierValue == TIER_CHAMPION
-        return "+50 Stamina"
+        return "+25 Sneak"
     endIf
 
     return "pact boon active"
@@ -22063,53 +21904,53 @@ String Function GetDaedricPriceMechanicText(String princeName, Int tierValue)
     elseIf (princeName == "Azura") && tierValue == TIER_CHAMPION
         return "-30 Stamina"
     elseIf (princeName == "Vaermina") && tierValue == TIER_SEEKER
-        return "-8 Health"
+        return "-10 Health"
     elseIf (princeName == "Vaermina") && tierValue == TIER_DEVOTED
-        return "-15 Health"
-    elseIf (princeName == "Vaermina") && tierValue == TIER_CHAMPION
         return "-20 Health"
+    elseIf (princeName == "Vaermina") && tierValue == TIER_CHAMPION
+        return "-30 Health"
     elseIf (princeName == "Meridia") && tierValue == TIER_SEEKER
-        return "-8 Illusion"
+        return "-10 Illusion"
     elseIf (princeName == "Meridia") && tierValue == TIER_DEVOTED
-        return "-12 Illusion"
+        return "-18 Illusion"
     elseIf (princeName == "Meridia") && tierValue == TIER_CHAMPION
-        return "-15 Illusion"
+        return "-25 Illusion"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_SEEKER
-        return "-8 Restoration"
+        return "-10 Health"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_DEVOTED
-        return "-12 Restoration"
+        return "-20 Health"
     elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_CHAMPION
-        return "-15 Restoration"
+        return "-30 Health"
     elseIf (princeName == "Mephala") && tierValue == TIER_SEEKER
-        return "-8 Speech"
+        return "-10 Speech"
     elseIf (princeName == "Mephala") && tierValue == TIER_DEVOTED
-        return "-12 Speech"
+        return "-18 Speech"
     elseIf (princeName == "Mephala") && tierValue == TIER_CHAMPION
-        return "-15 Speech"
+        return "-25 Speech"
     elseIf (princeName == "Malacath") && tierValue == TIER_SEEKER
-        return "-3% Movement speed"
+        return "-4% Movement speed"
     elseIf (princeName == "Malacath") && tierValue == TIER_DEVOTED
-        return "-5% Movement speed"
+        return "-7% Movement speed"
     elseIf (princeName == "Malacath") && tierValue == TIER_CHAMPION
-        return "-8% Movement speed"
+        return "-10% Movement speed"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_SEEKER
-        return "-5 Armor rating"
-    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_DEVOTED
         return "-10 Armor rating"
+    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_DEVOTED
+        return "-20 Armor rating"
     elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_CHAMPION
-        return "-15 Armor rating"
+        return "-30 Armor rating"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_SEEKER
-        return "-8 Restoration"
+        return "-10 Restoration"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_DEVOTED
-        return "-12 Restoration"
+        return "-18 Restoration"
     elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_CHAMPION
-        return "-15 Restoration"
+        return "-25 Restoration"
     elseIf (princeName == "Namira") && tierValue == TIER_SEEKER
-        return "-8 Speech"
+        return "-10 Speech"
     elseIf (princeName == "Namira") && tierValue == TIER_DEVOTED
-        return "-12 Speech"
+        return "-18 Speech"
     elseIf (princeName == "Namira") && tierValue == TIER_CHAMPION
-        return "-15 Speech"
+        return "-25 Speech"
     elseIf (princeName == "Sanguine") && tierValue == TIER_SEEKER
         return "-10 Magicka"
     elseIf (princeName == "Sanguine") && tierValue == TIER_DEVOTED
@@ -22129,11 +21970,11 @@ String Function GetDaedricPriceMechanicText(String princeName, Int tierValue)
     elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_CHAMPION
         return "-30 Stamina"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_SEEKER
-        return "-15 Carry weight"
+        return "-10 Restoration"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_DEVOTED
-        return "-25 Carry weight"
+        return "-18 Restoration"
     elseIf (princeName == "Nocturnal") && tierValue == TIER_CHAMPION
-        return "-35 Carry weight"
+        return "-25 Restoration"
     elseIf (princeName == "Peryite") && tierValue == TIER_SEEKER
         return "-10 Stamina"
     elseIf (princeName == "Peryite") && tierValue == TIER_DEVOTED
@@ -22141,11 +21982,11 @@ String Function GetDaedricPriceMechanicText(String princeName, Int tierValue)
     elseIf (princeName == "Peryite") && tierValue == TIER_CHAMPION
         return "-30 Stamina"
     elseIf (princeName == "Hircine") && tierValue == TIER_SEEKER
-        return "-8 Speech"
+        return "-10 Health"
     elseIf (princeName == "Hircine") && tierValue == TIER_DEVOTED
-        return "-12 Speech"
+        return "-20 Health"
     elseIf (princeName == "Hircine") && tierValue == TIER_CHAMPION
-        return "-15 Speech"
+        return "-30 Health"
     endIf
 
     return "pact price active"
@@ -22651,13 +22492,10 @@ Function EnsureUnifiedStartupChoice()
 
     Int startupMode = GetStartupModeForOrigin(originRace)
     if startupMode == STARTUP_MODE_EXPLICIT_CHOICE
-        if HasExplicitStartupState(originRace)
-            ShowStartupMigrationInfo(originRace)
-            StorageUtil.SetIntValue(None, "PDV.Startup.UnifiedChoiceComplete", 1)
-            StorageUtil.SetIntValue(None, "PDV.Startup.OriginHandled", originRace)
-            return
-        endIf
-
+        ; 2026-08-13: not-save-safe update -- the pre-unified migration branch (the removed
+        ; "keeps your existing startup state" notice, then its silent-complete successor) is
+        ; gone. A fresh save never hit it; a pre-unified save now just runs the normal choice
+        ; flow once. No backward-compat startup state is preserved.
         EnsureExplicitStartupChoice(originRace)
         return
     endIf
@@ -22671,34 +22509,6 @@ Int Function GetStartupModeForOrigin(Int originRace)
     endIf
 
     return STARTUP_MODE_INFO_ONLY
-EndFunction
-
-Bool Function HasExplicitStartupState(Int originRace)
-    if originRace == ORIGIN_BOSMER
-        return HasBosmerSetupCompleted()
-    elseIf originRace == ORIGIN_BRETON
-        return StorageUtil.GetIntValue(None, "PDV.Breton.SetupComplete") == 1 || StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) >= 0
-    elseIf originRace == ORIGIN_REDGUARD
-        if StorageUtil.GetIntValue(None, "PDV.Redguard.SetupComplete") == 1
-            return True
-        endIf
-        if PDV_RedguardSectTrack
-            return PDV_RedguardSectTrack.GetCurrentState() >= REDGUARD_SECT_CROWN
-        endIf
-        return False
-    elseIf originRace == ORIGIN_ORC
-        if StorageUtil.GetIntValue(None, "PDV.Orc.SetupComplete") == 1
-            return True
-        endIf
-        if PDV_OrcLifeModeTrack
-            return PDV_OrcLifeModeTrack.GetCurrentState() >= ORC_LIFE_MODE_CITY
-        endIf
-        return False
-    elseIf originRace == ORIGIN_NORD
-        return StorageUtil.GetIntValue(None, "PDV.Nord.SetupComplete") == 1
-    endIf
-
-    return False
 EndFunction
 
 Function EnsureExplicitStartupChoice(Int originRace)
@@ -22797,11 +22607,6 @@ Function EnsureInfoOnlyStartup(Int originRace)
     RecordStartupEvent("startup_info_acknowledged")
     StorageUtil.SetIntValue(None, "PDV.Startup.UnifiedChoiceComplete", 1)
     StorageUtil.SetIntValue(None, "PDV.Startup.OriginHandled", originRace)
-EndFunction
-
-Function ShowStartupMigrationInfo(Int originRace)
-    Debug.MessageBox("Devotion keeps your existing startup state on this save.\n\n" + GetStartupCanonicalSummary(originRace) + "\n\n" + STARTUP_ADVISORY_TEXT)
-    RecordStartupEvent("startup_info_acknowledged")
 EndFunction
 
 Function RecordStartupEvent(String eventName)
@@ -23036,14 +22841,6 @@ EndFunction
 Function AwardBretonAncestorSpinePulse(Float multiplier, String reason)
     if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
         return
-    endIf
-
-    ; One-shot legacy sweep: the substrate boons only need stripping once per
-    ; save (dawn refresh still covers stragglers); re-stripping on every signal
-    ; repeats RemoveSpell work for no state change.
-    if PDV_BretonAncestorSubstrate && StorageUtil.GetIntValue(None, "PDV.Breton.SubstrateLegacyCleared") != 1
-        PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
-        StorageUtil.SetIntValue(None, "PDV.Breton.SubstrateLegacyCleared", 1)
     endIf
 
     Trace(2, "Retired Breton ancestor spine signal ignored: " + reason + " x" + multiplier)

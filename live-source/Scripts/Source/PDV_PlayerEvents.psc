@@ -150,6 +150,8 @@ Int Property EVT_HEAL_OR_CURE_NPC = 350 AutoReadOnly
 Int Property EVT_PICK_OWNED_LOCK = 360 AutoReadOnly
 Int Property EVT_RAISE_UNDEAD = 365 AutoReadOnly
 Int Property EVT_ACCEPT_DAEDRIC_ARTIFACT = 368 AutoReadOnly
+Int Property EVT_SNEAK_ATTACK_KILL = 305 AutoReadOnly
+Int Property EVT_APPLY_POISON = 306 AutoReadOnly
 
 ; 12.2 / audit C2 -- the resolved faucet-form cache.
 ;
@@ -1151,6 +1153,15 @@ Event OnActorKilled(Actor akVictim, Actor akKiller)
         return
     endIf
 
+    ; 2026-08-12: sneak-attack-kill (305). Papyrus exposes no sneak-multiplier flag on
+    ; OnActorKilled, so IsSneaking() at the kill is the pragmatic stealth-kill signal -- the
+    ; same test the honorable-victory gates below invert. Routes to open Daedric paths
+    ; (Mephala/Nocturnal like, Malacath dislike) and the Dunmer Boethiah patron dislike;
+    ; the per-event dailyCap/cooldown rows carry anti-farm.
+    if playerRef.IsSneaking()
+        RouteGenericAction(EVT_SNEAK_ATTACK_KILL, playerRef as Form, akVictim as Form)
+    endIf
+
     if originRace == 5 && PDV_EventBusService && PDV_CombatSessionActive && !PDV_CombatStartedSneaking && !PDV_CombatObservedSneaking && !playerRef.IsSneaking() && akVictim.IsHostileToActor(playerRef) && akVictim.GetLevel() >= playerRef.GetLevel()
         PDV_EventBusService.RouteDunmerHonorableVictory(akVictim as Form)
     endIf
@@ -1379,6 +1390,20 @@ EndEvent
 
 Event OnItemRemoved(Form akBaseItem, Int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
     RouteKIDRemovedAction(akBaseItem, aiItemCount, akDestContainer)
+
+    ; 2026-08-12: apply-poison (306). Applying a poison to a weapon consumes it with no
+    ; persistent ref and no destination (akItemReference == None && akDestContainer == None) --
+    ; the same consumed-signature the spell-tome path below relies on; selling sets a dest and
+    ; dropping sets a world ref, so both are excluded. Caster-side is the only angle: the poison
+    ; effect lands on the ENEMY (target-side), which the player alias never hears. Per-event caps
+    ; anti-farm it. VALIDATION-PENDING: confirm apply-poison raises OnItemRemoved in game.
+    if !akItemReference && !akDestContainer
+        Potion poisonItem = akBaseItem as Potion
+        if poisonItem && poisonItem.IsPoison()
+            RouteGenericAction(EVT_APPLY_POISON, GetActorRef() as Form, akBaseItem)
+        endIf
+    endIf
+
     ; Spell-tome learning ingress (Mega Packet Sitting 1 E1, 2026-07-05).
     ; Reading a spell tome learns the spell and destroys the book, but that path
     ; does NOT raise OnBookRead, so EVT_READ_SPELL_TOME (341) never fired through
