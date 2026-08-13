@@ -1,12 +1,6 @@
 {
   "_README": "Reserved dead event types: declared (or data-seeded) but never emitted from a real emitter script. Keys are PDV_EventTypes.<EVT_NAME> for declared constants and PDV_EventTypes.ID_<id> for data-seeded ids with no (live) declaration. The EVT emission coverage gate (tools/pdv_signal_e2e_gate.mjs) reports a listed key as a documented KNOWN-GAP; any dead event NOT listed FAILs, and a stale entry (now emitted / no longer present) FAILs. Verdicts per the 2026-07-07 owner grill session. Delete an entry when its verdict lands.",
   "_seededDate": "2026-07-07",
-  "PDV_EventTypes.EVT_HEAL_OR_CURE_NPC": {
-    "reason": "SPEC INVALID, needs redesign (2026-08-12): the 2026-07-07 emitter spec (OnMagicEffectApplyEx, player-cast restore/cure on a friendly NPC) cannot work. PO3 OnMagicEffectApplyEx is TARGET-side -- the player alias only hears effects applied TO the player (see the note at PDV_PlayerEvents.psc OnMagicEffectApplyEx), so a heal the player casts on ANOTHER actor never reaches it. OnSpellCast is caster-side but carries no target, so self-heal cannot be excluded and 'healed an NPC' cannot be confirmed. No clean caster+target hook exists; a real 350 detector needs a new approach (e.g. a scripted restore/cure MGEF that reports its own caster+target). Remains RESERVED. Original 2026-07-07 verdict was WIRE post-mega-packet: 19 deity rows incl. a two-sided Boethiah/Sithis/Mephala-dislike axis.",
-    "deferredBy": "dead-wiring burndown plan",
-    "date": "2026-07-07",
-    "revised": "2026-08-12"
-  },
   "PDV_EventTypes.EVT_VAMPIRE_FEED": {
     "reason": "NO CLEAN HOOK, needs research (2026-08-12): rows are Molag Bal path +0.5, Mephala patron +0.35, Azura -1.0. A 2026-08-12 load-order search found NO vampire-feed MagicEffect and NO vampire-feed cast Spell/power (only werewolf feed has both). Vanilla vampire feeding is Perk (VampireFeed 0CF02C) + activator + idle-animation + quest driven, applying no public MGEF to the player, so the target-side OnMagicEffectApplyEx approach cannot see it and OnSpellCast has nothing to match. This is a REQUIEM load order (Requiem overhauls vampirism), so the real feed path is Requiem-specific. A working 366 detector needs feed-detection research (RegisterForAnimationEvent on the feed idle, or a Requiem vampirism script/mod-event hook) plus in-game validation -- same 'needs redesign' class as 350, not a quick wire. Remains RESERVED.",
     "deferredBy": "dead-wiring burndown plan",

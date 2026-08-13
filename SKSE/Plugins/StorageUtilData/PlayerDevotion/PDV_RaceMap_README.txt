@@ -152,6 +152,32 @@ Rule: Do not put temporary transformation races in PDV_RaceMap.json.
 If Devotion reads a temporary race during startup, it defers origin capture and
 tries again later when the player is back in a normal playable race.
 
+Shipped temporary-race defaults
+-------------------------------
+
+Devotion ships two entries by default, both from Triumvirate - Mage Archetypes:
+
+  0x000837 = TVR_Verdant_Race_ForceOfNature -> Horned Lord (Druid Apprentice)
+  0x29DA06 = TVR_Verdant_Race_Wildshape     -> Deer (Druid Adept)
+
+Both are confirmed player transformations: Triumvirate's TVR_Wildshape_Script
+calls SetRace() plus SetBeastForm() on the player, the same API pairing vanilla
+lycanthropy uses. Without these entries, casting one of these spells before
+Devotion has captured origin could read the transformation race and lock origin
+to the Imperial fallback.
+
+Entries are inert when Triumvirate is not installed: the lookup resolves through
+Game.GetFormFromFile, which returns None for an absent plugin.
+
+Not included, and why:
+
+  - Triumvirate's summon and totem races (TVR_Primal_Race_Call*,
+    TVR_Demon_Race_Conjure*, TVR_Totem_Race_Totem, TVR_Totem_Race_EyesInTheSky,
+    TVR_Warrior_Race_Fylgja*) are applied to summoned actors, never the player,
+    so they do not belong here. TVR_Totem_Race_EyesInTheSky in particular is the
+    scrying eye of the Farsight spell (cast at a target location), not a player
+    form.
+
 How to test
 -----------
 

@@ -109,6 +109,18 @@ Keyword PDV_KID_AmuletZenithar = None
 Bool PDV_KID_BarterOpen = false
 Int PDV_KID_TradeValuePending = 0
 
+; Other-directed heal/cure effects for EVT_HEAL_OR_CURE_NPC (350). Resolved by FormID
+; like the KID keywords above, not a VMAD property, so old saves need no re-bind. The
+; list holds only heal effects whose delivery targets someone else (Healing Hands,
+; Grand Healing), never Self-cast heals, so combat self-sustain does not score. Mysticism
+; overrides these vanilla effect FormIDs in place, so its versions are covered for free.
+FormList PDV_HealCureOtherEffectsList = None
+
+; Foreign (non-Devotion-master) other-directed heal effects, resolved by FormID at load
+; so Devotion never masters the source plugin. A None slot (plugin absent, or spare) is
+; skipped. Fixed-size so adding a future mod's ally-heal is a one-line resolver edit.
+Form[] PDV_HealCureForeignEffects
+
 FormList Property PDV_FLST_FaucetSkillBooks Auto
 FormList Property PDV_FLST_FaucetSpellTomes Auto
 FormList Property PDV_FLST_FaucetDaedricArtifacts Auto
@@ -134,6 +146,7 @@ Int Property EVT_HARVEST_INGREDIENT = 334 AutoReadOnly
 Int Property EVT_READ_SKILL_BOOK = 340 AutoReadOnly
 Int Property EVT_READ_SPELL_TOME = 341 AutoReadOnly
 Int Property EVT_READ_LORE_BOOK = 342 AutoReadOnly
+Int Property EVT_HEAL_OR_CURE_NPC = 350 AutoReadOnly
 Int Property EVT_PICK_OWNED_LOCK = 360 AutoReadOnly
 Int Property EVT_RAISE_UNDEAD = 365 AutoReadOnly
 Int Property EVT_ACCEPT_DAEDRIC_ARTIFACT = 368 AutoReadOnly
@@ -174,6 +187,8 @@ Form PDV_QRSpellVaermina0 = None
 Form PDV_QRSpellVaermina1 = None
 Form PDV_QRSpellSheogorathFire0 = None
 Form PDV_QRSpellSheogorathFire1 = None
+Form PDV_QRSpellHircine0 = None
+Form PDV_QRSpellHircine1 = None
 
 Bool PDV_LastSleepStartedOutside = false
 Bool PDV_LastSleptInInn = false
@@ -712,6 +727,17 @@ Event OnSpellCast(Form akSpell)
         Trace(2, "Raise-undead cast detected: " + castSpell.GetName())
         RouteGenericAction(EVT_RAISE_UNDEAD, GetActorRef() as Form, akSpell)
     endIf
+
+    ; EVT_HEAL_OR_CURE_NPC (350): caster-side, same approach as raise-undead. The spec's
+    ; original OnMagicEffectApplyEx trigger is unbuildable here -- that hook is target-side
+    ; (the player alias only hears effects applied TO the player), so a heal landing on an
+    ; NPC never reaches it. Casting an other-directed heal is the reliable caster-side proxy.
+    ; The effect list is other-delivery only, so self-heals do not score; per-deity dailyCap
+    ; on the data rows governs anti-farm, exactly as the raise-undead path does.
+    if castSpell && SpellHasHealOrCureOtherEffect(castSpell)
+        Trace(2, "Heal/cure-other cast detected: " + castSpell.GetName())
+        RouteGenericAction(EVT_HEAL_OR_CURE_NPC, GetActorRef() as Form, akSpell)
+    endIf
 EndEvent
 
 Bool Function SpellHasRaiseUndeadEffect(Spell castSpell)
@@ -727,6 +753,45 @@ Bool Function SpellHasRaiseUndeadEffect(Spell castSpell)
             return true
         endIf
         index += 1
+    endWhile
+    return false
+EndFunction
+
+Bool Function SpellHasHealOrCureOtherEffect(Spell castSpell)
+    if !castSpell
+        return false
+    endIf
+
+    Int index = 0
+    Int count = castSpell.GetNumEffects()
+    while index < count
+        MagicEffect effectRef = castSpell.GetNthEffectMagicEffect(index)
+        if effectRef
+            Form effectForm = effectRef as Form
+            if PDV_HealCureOtherEffectsList && HasListedForm(PDV_HealCureOtherEffectsList, effectForm)
+                return true
+            endIf
+            if IsForeignHealEffect(effectForm)
+                return true
+            endIf
+        endIf
+        index += 1
+    endWhile
+    return false
+EndFunction
+
+Bool Function IsForeignHealEffect(Form effectForm)
+    if !effectForm || !PDV_HealCureForeignEffects
+        return false
+    endIf
+
+    Int i = 0
+    Int n = PDV_HealCureForeignEffects.Length
+    while i < n
+        if PDV_HealCureForeignEffects[i] == effectForm
+            return true
+        endIf
+        i += 1
     endWhile
     return false
 EndFunction
@@ -1386,6 +1451,15 @@ Function ResolveKIDKeywords()
     PDV_KID_AmuletStendarr = Game.GetFormFromFile(0x00071753, "Devotion.esp") as Keyword
     PDV_KID_AmuletTalos = Game.GetFormFromFile(0x00071754, "Devotion.esp") as Keyword
     PDV_KID_AmuletZenithar = Game.GetFormFromFile(0x00071755, "Devotion.esp") as Keyword
+    PDV_HealCureOtherEffectsList = Game.GetFormFromFile(0x00071790, "Devotion.esp") as FormList
+
+    ; Foreign ally-heal effects (skipped when the plugin is absent -> None). Triumvirate
+    ; cleric auras: Aura of Vigor (1F675A) and Aura of Thorns restore-health (1FB86C),
+    ; both ValueModifier/Health non-detrimental. Mysticism needs no entries: it overrides
+    ; the vanilla FormIDs in place, so the FormList above already covers it.
+    PDV_HealCureForeignEffects = new Form[8]
+    PDV_HealCureForeignEffects[0] = Game.GetFormFromFile(0x001F675A, "Triumvirate - Mage Archetypes.esp")
+    PDV_HealCureForeignEffects[1] = Game.GetFormFromFile(0x001FB86C, "Triumvirate - Mage Archetypes.esp")
 EndFunction
 
 Function RouteKIDAction(String actionKey, Form sourceForm)
@@ -1668,6 +1742,8 @@ Function CacheQuestReactionSpellFaucetForms()
         PDV_QRSpellVaermina1 = None
         PDV_QRSpellSheogorathFire0 = None
         PDV_QRSpellSheogorathFire1 = None
+        PDV_QRSpellHircine0 = None
+        PDV_QRSpellHircine1 = None
         return
     endIf
 
@@ -1677,6 +1753,8 @@ Function CacheQuestReactionSpellFaucetForms()
     PDV_QRSpellVaermina1 = GetQuestReactionRuntimeForm("faucetSpellForms.Vaermina.serve_a_daedra:vaermina", 1)
     PDV_QRSpellSheogorathFire0 = GetQuestReactionRuntimeForm("faucetSpellForms.Sheogorath.serve_a_daedra:sheogorath_fire", 0)
     PDV_QRSpellSheogorathFire1 = GetQuestReactionRuntimeForm("faucetSpellForms.Sheogorath.serve_a_daedra:sheogorath_fire", 1)
+    PDV_QRSpellHircine0 = GetQuestReactionRuntimeForm("faucetSpellForms.Hircine.serve_a_daedra:hircine", 0)
+    PDV_QRSpellHircine1 = GetQuestReactionRuntimeForm("faucetSpellForms.Hircine.serve_a_daedra:hircine", 1)
 EndFunction
 
 ; 12.2 / audit C2. Resolve every list ShouldRouteQuestReactionFaucet can be asked about
@@ -2606,6 +2684,12 @@ Function RouteQuestReactionSpellFaucet(Form sourceForm)
     if MatchesCachedQuestReactionSpellFaucet(sourceForm, PDV_QRSpellSheogorathFire0, PDV_QRSpellSheogorathFire1)
         PDV_EventBusService.RouteQuestReactionFaucet("Sheogorath.serve_a_daedra:sheogorath_fire", sourceForm)
     endIf
+    ; Triumvirate Hircine-worship spells (Force of Nature, Call Hound of Hircine). Routes
+    ; the same Hircine.serve_a_daedra:hircine scoring + daily cap as the Savior's Hide equip
+    ; faucet, so casting and wearing share one Hircine service cap per dawn.
+    if MatchesCachedQuestReactionSpellFaucet(sourceForm, PDV_QRSpellHircine0, PDV_QRSpellHircine1)
+        PDV_EventBusService.RouteQuestReactionFaucet("Hircine.serve_a_daedra:hircine", sourceForm)
+    endIf
 EndFunction
 
 Bool Function MatchesCachedQuestReactionSpellFaucet(Form sourceForm, Form sourceA, Form sourceB)
@@ -2803,6 +2887,8 @@ String Function GetQuestReactionFormIdKey(String listKey)
         return "faucetSpellFormsVaerminaServeADaedraVaerminaFormIds"
     elseIf listKey == "faucetSpellForms.Sheogorath.serve_a_daedra:sheogorath_fire"
         return "faucetSpellFormsSheogorathServeADaedraSheogorathFireFormIds"
+    elseIf listKey == "faucetSpellForms.Hircine.serve_a_daedra:hircine"
+        return "faucetSpellFormsHircineServeADaedraHircineFormIds"
     elseIf listKey == "faucetEffectForms.Namira.cannibalism"
         return "faucetEffectFormsNamiraCannibalismFormIds"
     elseIf listKey == "faucetEffectForms.Dibella.charity"
@@ -2859,6 +2945,8 @@ String Function GetQuestReactionPluginKey(String listKey)
         return "faucetSpellFormsVaerminaServeADaedraVaerminaPlugins"
     elseIf listKey == "faucetSpellForms.Sheogorath.serve_a_daedra:sheogorath_fire"
         return "faucetSpellFormsSheogorathServeADaedraSheogorathFirePlugins"
+    elseIf listKey == "faucetSpellForms.Hircine.serve_a_daedra:hircine"
+        return "faucetSpellFormsHircineServeADaedraHircinePlugins"
     elseIf listKey == "faucetEffectForms.Namira.cannibalism"
         return "faucetEffectFormsNamiraCannibalismPlugins"
     elseIf listKey == "faucetEffectForms.Dibella.charity"
