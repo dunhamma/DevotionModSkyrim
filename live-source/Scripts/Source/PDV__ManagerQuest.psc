@@ -856,9 +856,6 @@ Float Property SHOUT_DUPLICATE_WINDOW_DAYS = 0.00001 AutoReadOnly
 ; callback cannot award piety, a meta faucet, or a broad-pantheon fold twice.
 Float Property QUEST_REACTION_DUPLICATE_WINDOW_DAYS = 0.02 AutoReadOnly
 Int Property QUEST_REACTION_QUEUE_MAX_PENDING = 128 AutoReadOnly
-; A3 / fix-plan 10.1. Bump to re-run the legacy quest-reaction job-key sweep on every
-; existing save (see RunAuthoriaQuestReactionKeySweep).
-Int Property AUTHORIA_QR_KEY_SWEEP_VERSION = 1 AutoReadOnly
 Int Property QUEST_REACTION_QUEUE_CELLS_PER_TICK = 2 AutoReadOnly
 Float Property QUEST_REACTION_QUEUE_TICK_SECONDS = 0.1 AutoReadOnly
 
@@ -1009,9 +1006,6 @@ Event OnInit()
     EnsureDunmerAncestralUrn()
     EnsureAltmerPracticeFocus()
     EnsureArgonianHistSapToken()
-    if PDV_ArgonianHistSubstrate
-        PDV_ArgonianHistSubstrate.MigrateLegacyCompositeMetricOnce()
-    endIf
     EnsureKhajiitObserveMoonsPower()
     RequestPanelRefresh()
     HandleDiegeticLoad("init")
@@ -1220,10 +1214,6 @@ Event OnUpdate()
     MaybeEmitManagerOptimizationProfile()
     RegisterForSingleUpdate(1.0)
 
-    ; A3 / fix-plan 10.1: one-time sweep of legacy leaked job keys. Deliberately AFTER
-    ; the re-arm above: a fault inside a latent one-shot must never be able to break
-    ; the poll chain (the B3 failure class).
-    RunAuthoriaQuestReactionKeySweep()
 EndEvent
 
 Function MaybeEmitManagerOptimizationProfile()
@@ -2206,25 +2196,6 @@ Function RemoveQueuedQuestReactionJob()
     ; Both REJECT paths in ProcessQuestReactionQueueSlice come through here too, so
     ; this is the single drain for the completed AND the rejected job.
     ClearQuestReactionJobKeys(jobId)
-EndFunction
-
-;/ A3 / fix-plan 10.1, second half: the one-time migration. Every job processed
-   before this pass left its ~24 keys behind, so an existing save carries the whole
-   backlog. ClearAllPrefix on the shared "PDV.QR.Job." root removes all of it in one
-   native call -- but ONLY with the queue empty, because a pending job's keys live
-   under that same root and are still needed. If the queue is busy the sweep simply
-   waits for a later tick; the version stamp is not written until it actually runs. /;
-Function RunAuthoriaQuestReactionKeySweep()
-    if StorageUtil.GetIntValue(None, "PDV.Authoria.QRKeySweepVersion") >= AUTHORIA_QR_KEY_SWEEP_VERSION
-        return
-    endIf
-    if HasQueuedQuestReactionJobs()
-        return
-    endIf
-
-    Int clearedKeys = StorageUtil.ClearAllPrefix("PDV.QR.Job.")
-    StorageUtil.SetIntValue(None, "PDV.Authoria.QRKeySweepVersion", AUTHORIA_QR_KEY_SWEEP_VERSION)
-    Trace(1, "[PDV][QR_QUEUE] legacy job-key sweep removed " + clearedKeys + " stale co-save keys.")
 EndFunction
 
 Int Function ProcessQueuedQuestReactionMetaSlice(Quest sourceQuest, String prefix, Int metaIndex)
@@ -8186,17 +8157,6 @@ Function EnsureKhajiitObserveMoonsPower()
         ; changing the player's selected lesser power. Observe the Moons and
         ; Survey Devotion are peers in the same Power slot; selecting either in
         ; the Magic menu replaces the other in the ordinary Skyrim way.
-        ; V3 must rerun after the SPEL moved from EitherHand to Voice. A save
-        ; may have stamped V2, then selected the old record into a hand again.
-        if StorageUtil.GetIntValue(None, "PDV.Khajiit.ObserveMoons.PowerSlotVersion") < 3
-            if playerRef.GetEquippedSpell(0) == PDV_Power_Khajiit_ObserveMoons
-                playerRef.UnequipSpell(PDV_Power_Khajiit_ObserveMoons, 0)
-            endIf
-            if playerRef.GetEquippedSpell(1) == PDV_Power_Khajiit_ObserveMoons
-                playerRef.UnequipSpell(PDV_Power_Khajiit_ObserveMoons, 1)
-            endIf
-            StorageUtil.SetIntValue(None, "PDV.Khajiit.ObserveMoons.PowerSlotVersion", 3)
-        endIf
     elseIf playerRef.HasSpell(PDV_Power_Khajiit_ObserveMoons)
         playerRef.RemoveSpell(PDV_Power_Khajiit_ObserveMoons)
     endIf
@@ -22881,14 +22841,6 @@ EndFunction
 Function AwardBretonAncestorSpinePulse(Float multiplier, String reason)
     if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
         return
-    endIf
-
-    ; One-shot legacy sweep: the substrate boons only need stripping once per
-    ; save (dawn refresh still covers stragglers); re-stripping on every signal
-    ; repeats RemoveSpell work for no state change.
-    if PDV_BretonAncestorSubstrate && StorageUtil.GetIntValue(None, "PDV.Breton.SubstrateLegacyCleared") != 1
-        PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
-        StorageUtil.SetIntValue(None, "PDV.Breton.SubstrateLegacyCleared", 1)
     endIf
 
     Trace(2, "Retired Breton ancestor spine signal ignored: " + reason + " x" + multiplier)

@@ -272,25 +272,6 @@ Function ProcessCulturalPracticeDawn(Bool curseActive, String reason)
     Trace(2, "Cultural practice dawn decay " + oldPractice + " -> " + newPractice)
 EndFunction
 
-Function MigrateLegacyCompositeMetricOnce()
-    Int migratedVersion = StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.CulturalMetricMigrationVersion")
-    if migratedVersion >= CulturalMetricMigrationVersion
-        return
-    endIf
-
-    Float legacyComposite = GetHistRelation() + (GetPeopleRelation() * HistPeopleBufferWeight)
-    if IsVoidFullyActive()
-        legacyComposite = legacyComposite + (GetVoidRelation() * HistVoidStabilizerWeight)
-    endIf
-    if legacyComposite > HighThreshold
-        legacyComposite = HighThreshold
-    endIf
-
-    SetMetric(legacyComposite, "argonian_cultural_migration_v1")
-    StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.CulturalMetricMigrationVersion", CulturalMetricMigrationVersion)
-    Trace(1, "Migrated legacy composite into cultural practice at " + legacyComposite)
-EndFunction
-
 Function RefreshHistPosture(Int curseState, Bool dominationPressure, String reason)
     Int posture = HIST_POSTURE_NORMAL
     if curseState == 1
