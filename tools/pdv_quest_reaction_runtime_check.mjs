@@ -89,9 +89,13 @@ function parseMarker(line, lineNumber) {
   const explicitMs = token(line, ["elapsedMs", "durationMs"]);
   const elapsedSeconds = token(line, ["elapsed"]);
   const markerTail = line.slice((match.index ?? 0) + match[0].length).trim();
-  const firstToken = markerTail.match(/^([A-Za-z][A-Za-z0-9_-]*)\b/)?.[1] ?? "";
   const namedJob = token(line, ["job", "jobId", "id"]);
-  const implicitJob = ["ENQUEUE", "START", "COMPLETE"].includes(action) && !["key", "pending", "rejected"].includes(firstToken.toLowerCase()) ? firstToken : "";
+  // V3 writes a human verb before the persisted job id, e.g. "START started
+  // v3qr_2 ...".  Do not mistake that verb for the job: pair only the explicit
+  // V3/legacy queue identifier, wherever it appears in the marker tail.
+  const implicitJob = ["ENQUEUE", "START", "COMPLETE"].includes(action)
+    ? (markerTail.match(/\b((?:v3)?qr_[0-9]+)\b/i)?.[1] ?? "")
+    : "";
   return {
     action,
     line: lineNumber,
@@ -218,17 +222,18 @@ export function evaluateLog(logText, options = {}) {
 
 function selfTestLog() {
   return [
-    "[07/15/2026 - 11:00:00PM] [PDV][QR_QUEUE] ENQUEUE qr_1 key=207142|200 cells=45 buildMs=10 pending=1",
-    "[07/15/2026 - 11:00:00PM] [PDV][QR_QUEUE] ENQUEUE qr_2 key=219947|150 cells=45 buildMs=12 pending=2",
-    "[07/15/2026 - 11:00:00PM] VM is freezing...",
-    "[07/15/2026 - 11:00:00PM] VM is frozen",
-    "[07/15/2026 - 11:00:00PM] Reverting game...",
-    "[07/15/2026 - 11:00:01PM] Loading game...",
-    "[07/15/2026 - 11:00:01PM] VM is thawing...",
-    "[07/15/2026 - 11:00:01PM] [PDV][QR_QUEUE] START qr_1 key=207142|200 cells=45",
-    "[07/15/2026 - 11:00:03PM] [PDV][QR_QUEUE] COMPLETE qr_1 key=207142|200 cells=45 elapsed=3.0",
-    "[07/15/2026 - 11:00:03PM] [PDV][QR_QUEUE] START qr_2 key=219947|150 cells=45",
-    "[07/15/2026 - 11:00:04PM] [PDV][QR_QUEUE] COMPLETE qr_2 key=219947|150 cells=45 elapsed=4.0",
+    "[08/14/2026 - 05:56:23PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_2 key=Skyrim.esm|210731|150 cells=25 sourceCells=45 skipped=20 meta=0 buildMs=11500.000000 pending=1",
+    "[08/14/2026 - 05:56:23PM] [PDV][QR_QUEUE] START started v3qr_2 key=Skyrim.esm|210731|150 cells=25 sourceCells=45 skipped=20 meta=0",
+    "[08/14/2026 - 05:56:23PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_3 key=Skyrim.esm|148154|160 cells=25 sourceCells=45 skipped=20 meta=0 buildMs=261.962891 pending=2",
+    "[08/14/2026 - 05:56:24PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_4 key=Skyrim.esm|207142|200 cells=25 sourceCells=45 skipped=20 meta=0 buildMs=189.025879 pending=3",
+    "[08/14/2026 - 05:56:25PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_5 key=Skyrim.esm|221587|220 cells=11 sourceCells=22 skipped=11 meta=0 buildMs=613.037109 pending=4",
+    "[08/14/2026 - 05:56:31PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_2 key=Skyrim.esm|210731|150 cells=25 sourceCells=45 skipped=20 meta=0 elapsed=7.729004",
+    "[08/14/2026 - 05:56:31PM] [PDV][QR_QUEUE] START started v3qr_3 key=Skyrim.esm|148154|160 cells=25 sourceCells=45 skipped=20 meta=0",
+    "[08/14/2026 - 05:56:36PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_3 key=Skyrim.esm|148154|160 cells=25 sourceCells=45 skipped=20 meta=0 elapsed=12.684021",
+    "[08/14/2026 - 05:56:36PM] [PDV][QR_QUEUE] START started v3qr_4 key=Skyrim.esm|207142|200 cells=25 sourceCells=45 skipped=20 meta=0",
+    "[08/14/2026 - 05:56:42PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_4 key=Skyrim.esm|207142|200 cells=25 sourceCells=45 skipped=20 meta=0 elapsed=17.491028",
+    "[08/14/2026 - 05:56:42PM] [PDV][QR_QUEUE] START started v3qr_5 key=Skyrim.esm|221587|220 cells=11 sourceCells=22 skipped=11 meta=0",
+    "[08/14/2026 - 05:56:45PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_5 key=Skyrim.esm|221587|220 cells=11 sourceCells=22 skipped=11 meta=0 elapsed=19.790039",
   ].join(os.EOL);
 }
 
@@ -251,6 +256,15 @@ function main() {
   const logText = options.selfTest
     ? selfTestLog()
     : fs.readFileSync(options.logPath, "utf8");
+  if (options.selfTest) {
+    options.expectedSequence = [
+      "Skyrim.esm|210731|150",
+      "Skyrim.esm|148154|160",
+      "Skyrim.esm|207142|200",
+      "Skyrim.esm|221587|220",
+    ];
+    options.maxJobMs = 10000;
+  }
   const report = evaluateLog(logText, options);
   if (options.json) console.log(JSON.stringify(report, null, 2));
   else printReport(report);

@@ -46,6 +46,7 @@ const files = {
   mcm: path.join(SOURCE, "PDV_MCM.psc"),
   eventBus: path.join(SOURCE, "PDV_EventBus.psc"),
   playerEvents: path.join(SOURCE, "PDV_PlayerEvents.psc"),
+  questReactionRuntime: path.join(SOURCE, "PDV_QuestReactionRuntime.psc"),
 };
 
 const findings = [];
@@ -147,12 +148,12 @@ function checkGlobalContracts(scenarios, matrixRows, likesRows, faucetRows, runt
   assert("Debug MCM signal-floor section", sourceText.mcm.includes("Signal-floor smoke") && sourceText.mcm.includes("Run signal-floor smoke"), "Debug MCM exposes the signal-floor smoke section.", "Debug MCM does not expose the signal-floor smoke section.");
   assert("manager debug harness", manager.includes("Function DebugRunSignalFloorSmokeScenario") && manager.includes("Function DebugGetSignalFloorSmokeLabel"), "Manager exposes signal-floor debug harness functions.", "Manager signal-floor debug harness functions are missing.");
 
-  const questReactionBody = functionBody(manager, "QueueQuestReactionJob");
-  const questReactionDuplicateBody = functionBody(manager, "ShouldSuppressDuplicateQuestReaction");
+  const questReactionBody = functionBody(sourceText.questReactionRuntime, "QueueQuestReactionJob");
+  const questReactionDuplicateBody = functionBody(sourceText.questReactionRuntime, "ShouldSuppressDuplicateQuestReaction");
   const guardCall = "ShouldSuppressDuplicateQuestReaction(reactionKey)";
   const guardBeforeApply = questReactionBody.indexOf(guardCall) >= 0
-    && questReactionBody.indexOf(guardCall) < questReactionBody.indexOf("StorageUtil.StringListAdd(None, \"PDV.QR.Queue.JobIds\"");
-  assert("quest-stage duplicate guard", guardBeforeApply && questReactionDuplicateBody.includes("PDV.QuestReaction.LastAppliedTime.") && questReactionDuplicateBody.includes("QUEST_REACTION_DUPLICATE_WINDOW_DAYS"), "Quest-stage reactions debounce duplicate deliveries before queue ingress, piety, or pantheon fold.", "Quest-stage reactions lack a keyed pre-queue duplicate guard.");
+    && questReactionBody.indexOf(guardCall) < questReactionBody.indexOf("StorageUtil.StringListAdd(None, QUEUE_IDS_KEY");
+  assert("quest-stage duplicate guard", guardBeforeApply && questReactionDuplicateBody.includes("PDV.V3.QR.Recent.Time.") && questReactionDuplicateBody.includes("QUEST_REACTION_DUPLICATE_WINDOW_DAYS"), "Quest-stage reactions debounce duplicate deliveries before queue ingress, piety, or pantheon fold.", "Quest-stage reactions lack a keyed pre-queue duplicate guard.");
 }
 
 function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, papyrusLog, manualEvidence, expected) {
@@ -187,7 +188,7 @@ function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, pap
         ok(`runtime deity ${expected.deity}`, runtimeDeities.split("|").includes(expected.deity), `${expected.deity} is in runtime JSON.`, `${expected.deity} is missing from runtime JSON.`);
       }
       const legacyMarker = `QuestReaction: ${runtimeKey} applied`;
-      const queueMarker = new RegExp(`\\[PDV\\]\\[QR_QUEUE\\] COMPLETE[^\\r\\n]*\\bkey=${escapeRegex(runtimeKey)}\\b`, "i");
+      const queueMarker = new RegExp(`\\[PDV\\]\\[QR_QUEUE\\] COMPLETE[^\\r\\n]*\\bkey=(?:[A-Za-z0-9_.-]+\\|)?${escapeRegex(runtimeKey)}\\b`, "i");
       const hasRuntimeMarker = papyrusLog.includes(legacyMarker) || queueMarker.test(papyrusLog);
       add(hasRuntimeMarker ? "PASS" : "OPEN", "runtime marker", hasRuntimeMarker ? `Papyrus log contains a completed reaction marker for ${runtimeKey}.` : `No current Papyrus log marker for ${legacyMarker} or QR_QUEUE COMPLETE key=${runtimeKey}.`);
       for (const expected of scenario.expectedRows ?? []) {
