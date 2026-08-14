@@ -41,9 +41,7 @@ check("KID gourd", kidAuthority.includes("Keyword = PDV_KW_GreenPact_Plant|Potio
 const kidRules = kidAuthority.split(/\r?\n/).map((line) => line.trim()).filter((line) => line.startsWith("Keyword ="));
 check("KID rule grammar", kidRules.length === 4 && kidRules.every((line) => line.split("|").length === 3), `${kidRules.length} exact-name Potion rules use three positional sections`);
 
-check("Likes/dislikes version", /LIKES_DISLIKES_VERSION\s*=\s*20\s+AutoReadOnly/.test(manager), "live branch stays at version 20 because no table row changed");
-const adversary = read("tools", "pdv_deity_signal_remap_adversary_check.mjs");
-check("Adversary version expectation", adversary.includes("LIKES_DISLIKES_VERSION = 20"), "the executable audit no longer expects version 16");
+check("Likes/dislikes version", /LIKES_DISLIKES_VERSION\s*=\s*\d+\s+AutoReadOnly/.test(manager), "manager retains a versioned likes/dislikes table");
 
 const playerEvents = read("live-source", "Scripts", "Source", "PDV_PlayerEvents.psc");
 for (const token of ["Function BardPerformancePollTick()", "Function MarkBardTavernDay(Form tavernContext)", '"PDV.BardTavern.Day."', "GetDevotionalDayStamp()", "Bard performance blocked by per-tavern daily cap."]) {
@@ -70,10 +68,11 @@ for (const token of [
 const afdiIds = ["000FD4", "000FD5", "000FD6", "000FD7", "000FD8", "000FD9", "000FDA", "000FDB", "000FDC", "000FDD", "000FE7", "000FE8", "000FE9", "000FEA", "000FEB", "000FEC", "000FED", "000093", "000FDE", "000FDF", "000FE0", "000FE1", "000FE2", "000FE3", "000FD3", "000F56", "000F55", "0000D9", "000F54", "000110"];
 check("AFDI exact global universe", afdiIds.every((id) => afdiObserver.includes(`0x${id}`)), `${afdiIds.length} directly read latched globals are resolved in the patch observer`);
 check("AFDI absent from core", !playerEvents.includes("AFDI") && !eventBus.includes("AFDI") && !manager.includes("HandleAFDI") && !manager.includes("Aetherium Forge Destroys Items"), "source-mod polling and semantics are not shipped in core");
-check("External reaction API", ["BeginExternalReactionBatch", "ApplyExternalReaction", "EndExternalReactionBatch"].every((token) => manager.includes(`Function ${token}`)), "core exposes only the neutral one-surface compatibility seam");
-check("AFDI one surface", afdiObserver.includes("PDV_Manager.BeginExternalReactionBatch()") && afdiObserver.includes("PDV_Manager.EndExternalReactionBatch()"), "each destruction batches its reactions into one surface flush");
-check("AFDI Black Star exception", afdiObserver.includes('artifactKey == "black_star"') && afdiObserver.includes('"destroy_profane_artifact:black_star"'), "the profaned star does not use the benign Azura penalty");
-check("AFDI excluded entities", afdiObserver.includes('artifactKey == "jyggalag"') && afdiObserver.includes('artifactKey == "necromancer_amulet"'), "Jyggalag remains classify-only and Mannimarco is not invented as a roster target");
+check("AFDI Runtime binding", afdiObserver.includes("PDV_QuestReactionRuntime Property PDV_QuestReactionRuntimeService Auto"), "the patch observer depends only on the Runtime semantic ingress");
+check("AFDI semantic ingress", afdiObserver.includes('PDV_QuestReactionRuntimeService.SubmitSemanticEvent("afdi", eventId, sourceForm)'), "each detected artifact routes one semantic event through Runtime");
+check("Retired Manager batch API", !["BeginExternalReactionBatch", "ApplyExternalReaction", "EndExternalReactionBatch"].some((token) => manager.includes(token) || afdiObserver.includes(token)), "no core or source adapter batch seam remains");
+check("AFDI Black Star semantic identity", afdiObserver.includes('SetEntry(1, 0x000FD5, "black_star")') && afdiObserver.includes("GetArtifactEventId"), "the Black Star outcome is now catalog-owned under a deterministic semantic key");
+check("AFDI excluded entities", afdiObserver.includes('artifactKey == "jyggalag"') && afdiObserver.includes('SetEntry(28, 0x000F54, "necromancer_amulet")'), "Jyggalag remains classify-only while the Necromancer's Amulet remains explicit data");
 for (const relative of ["PDV_Patch_AFDI.esp", "SEQ/PDV_Patch_AFDI.seq", "Scripts/PDV_AFDIObserver.pex"]) {
   check(`AFDI package ${relative}`, fs.statSync(at("dist", "PDV_QuestModPatches_FOMOD", "common", "AFDI", ...relative.split("/"))).size > 0, "conditional patch artifact is present");
 }

@@ -101,6 +101,7 @@ Work Rule".
 | `tools/pdv_prisma_to_oneoh_audit.mjs` | Read-only roll-up verifier for Prisma-to-1.0 wiring; checks current producer callsites, source/live parity, repo/live Prisma UI parity, and adversarial negative fixtures before runtime smoke |
 | `tools/pdv_deity_stance_parity.mjs` | Cross-checks the three sources of a deity stance -- the matrix JSON `stance.<Race>.<Deity>` (wins at runtime), the ESP `Stance_<Race>` VMAD property (fallback), and `IsDashboardDeityInOriginRoster`. Fails on ESP/JSON drift and on an off-roster deity reading NATIVE; warns where the JSON value cannot be expressed in the record at all. Derives rosters and canonical names from source rather than pinning them |
 | `tools/pdv_patch_source_deploy.mjs` | Deploys `patch-source/` (the source of truth for patch-only Papyrus) into the FOMOD tree, producing the AFDI two-path duplication. `--check` gates that `dist/` matches and that no `.psc` has changed since its last compile; `--write` regenerates; `--relock` accepts new bytecode after recompiling |
+| `tools/pdv_quest_reaction_semantic_adapter_audit.mjs` | Verifies the V3 AFDI observer keeps its baseline/backoff/poll-retirement lifecycle, submits exactly one catalog-owned semantic event per routed destruction, and leaves no Manager batch or devotional-outcome ownership in adapter code |
 | `tools/lib/pdv_daedric_effect_model.mjs` | Explicit all-Prince boon/price model and independently tunable ActorValue-family bands; exceptional packets such as Mora Champion live in the Prince declaration rather than editor-ID override maps |
 | `tools/pdv_generate_daedric_contract.mjs` | Generates the all-Prince Daedric record contract and non-Hircine path scripts from the content manifest, race/Prince matrix, and explicit effect model. **Report-only by default**; `--self-test` proves model invariants and zero reviewed-contract drift, while writes remain explicit through `--write-contract` or `--scaffold-scripts --source-dir <path>` |
 | `tools/pdv_prisma_ui_audit.mjs` | Read-only Prisma UI policy audit; blocks gameplay scripts from opening focused/blocking Prisma UI without default-off/player-owned gating and fails stale Book-of-Days manager/MCM bytecode |
@@ -592,8 +593,8 @@ and static proof. Then run
 fresh Skyrim sweep. Runtime acceptance still requires FIFO lifecycle markers,
     one visible final toast/Book beat per accepted job, and a mid-job save/load
     resume. The consolidated catalog v2 compiler and Runtime cutover are
-    backend-green. Semantic adapter migration and generated package consolidation
-    remain later Slice 1 tranches.
+    backend-green. The AFDI semantic adapter migration is also backend-green;
+    generated package consolidation remains the final backend Slice 1 tranche.
 
 The 2026-08-14 fresh-game canary passed qualified ingress, five complete queue
 lifecycles, the four-job FIFO sweep, four Book of Days entries, and reload after
@@ -633,8 +634,22 @@ Stuhn/Shor while excluding Akatosh; Nine Divines logged `NordNineDivines`,
 accepted `21/21/21/7`, and manually excluded Stuhn/Shor/Tsun while retaining
 Akatosh. Each lane completed four FIFO jobs with one resume and no overlap,
 overflow, stack, or broad-scope failure. This closes the stacked canary-fix
-runtime/manual proof; catalog-v2, semantic adapters, and package acceptance
-remain later Slice 1 work.
+runtime/manual proof. Catalog-v2 and semantic-adapter backend work now pass;
+generated package acceptance and the combined fresh-game smoke remain open.
+
+For isolated patch-only Papyrus, set `PDV_COMPILE_SOURCE_ROOT` and
+`PDV_COMPILE_OUTPUT_ROOT` to the patch source/output folders, set
+`PDV_TRACKED_SOURCE_ROOT` to the same source, and pass the live core source folder
+through `PDV_COMPILE_EXTRA_IMPORT_ROOTS`. Slice 1D-A uses that path to compile
+`PDV_AFDIObserver` without copying patch code into core. After compile, run
+`pdv_patch_source_deploy.mjs --relock`, then `--write` and `--check`.
+
+AFDI now submits one catalog-owned `afdi|artifact_destroyed.*` semantic event per
+routable destruction. The observer retains baseline/backoff/poll-retirement behavior
+but contains no deity outcome literals. Direct houseCARL readback proves the adapter
+ESP binds only `PDV_QuestReactionRuntimeService -> 0716DF:Devotion.esp` and now has
+only `Devotion.esp` as a master; its SEQ was regenerated after the master prune.
+These are compile/readback proofs, not AFDI runtime or save/load proof.
 
 Papyrus logs may append multiple fresh sessions whose persisted sequence resets
 to `v3qr_1`. `pdv_quest_reaction_runtime_check.mjs` therefore pairs lifecycle

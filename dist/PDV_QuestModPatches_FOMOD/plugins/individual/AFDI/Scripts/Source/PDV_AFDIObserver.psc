@@ -1,7 +1,6 @@
 Scriptname PDV_AFDIObserver extends Quest
 
-PDV__ManagerQuest Property PDV_Manager Auto
-GlobalVariable Property AFDI_Anchor Auto
+PDV_QuestReactionRuntime Property PDV_QuestReactionRuntimeService Auto
 
 String Property AFDI_PLUGIN = "Aetherium Forge Destroys Items.esp" AutoReadOnly
 Float Property POLL_INTERVAL = 15.0 AutoReadOnly
@@ -100,11 +99,7 @@ Function ResolveForms()
 EndFunction
 
 Function SetEntry(Int index, Int localFormId, String artifactKey)
-    if index == 0 && AFDI_Anchor
-        _destroyedGlobals[index] = AFDI_Anchor
-    else
-        _destroyedGlobals[index] = Game.GetFormFromFile(localFormId, AFDI_PLUGIN) as GlobalVariable
-    endIf
+    _destroyedGlobals[index] = Game.GetFormFromFile(localFormId, AFDI_PLUGIN) as GlobalVariable
     _artifactKeys[index] = artifactKey
 EndFunction
 
@@ -132,7 +127,7 @@ Function PollDestroyedArtifacts()
     if !_formsResolved
         ResolveForms()
     endIf
-    if !_formsResolved || !PDV_Manager
+    if !_formsResolved || !PDV_QuestReactionRuntimeService
         return
     endIf
 
@@ -150,7 +145,7 @@ Function PollDestroyedArtifacts()
             _seen[index] = true
             _unseenRemaining -= 1
             if !baselineOnly
-                RouteArtifactReaction(_artifactKeys[index], _destroyedGlobals[index] as Form)
+                RouteArtifactReaction(index, _artifactKeys[index], _destroyedGlobals[index] as Form)
             endIf
         endIf
         index += 1
@@ -167,76 +162,30 @@ Function PollDestroyedArtifacts()
     endIf
 EndFunction
 
-Function RouteArtifactReaction(String artifactKey, Form sourceForm)
+Function RouteArtifactReaction(Int artifactIndex, String artifactKey, Form sourceForm)
     if artifactKey == "jyggalag"
         Debug.Trace("[PDV AFDI] Jyggalag destruction observed; classify-only.")
         return
     endIf
 
-    String ownerName = GetDaedricOwnerName(artifactKey)
-    if artifactKey != "black_star" && artifactKey != "auriel_bow" && artifactKey != "auriel_shield" && artifactKey != "sithis" && artifactKey != "necromancer_amulet" && ownerName == ""
-        Debug.Trace("[PDV AFDI] unknown artifact key skipped: " + artifactKey)
+    String eventId = GetArtifactEventId(artifactIndex, artifactKey)
+    if eventId == ""
+        Debug.Trace("[PDV AFDI] unknown artifact slot skipped: " + artifactIndex + " " + artifactKey)
         return
     endIf
-
-    PDV_Manager.BeginExternalReactionBatch()
-    if artifactKey == "black_star"
-        PDV_Manager.ApplyExternalReaction("Azura", "+", "C", "milestone", "destroy_profane_artifact:black_star", sourceForm)
-        ApplyDestroyRejectApprovals("azura", sourceForm)
-    elseIf artifactKey == "auriel_bow" || artifactKey == "auriel_shield"
-        PDV_Manager.ApplyExternalReaction("Auri-El", "-", "C", "milestone", "destroy_sacred_artifact:auriel", sourceForm)
-    elseIf artifactKey == "sithis"
-        PDV_Manager.ApplyExternalReaction("Sithis", "-", "C", "milestone", "destroy_sacred_artifact:sithis", sourceForm)
-    elseIf artifactKey == "necromancer_amulet"
-        PDV_Manager.ApplyExternalReaction("Arkay", "+", "S", "small", "destroy_reject_necromancy", sourceForm)
-        PDV_Manager.ApplyExternalReaction("Stendarr", "+", "S", "small", "destroy_reject_necromancy", sourceForm)
+    if PDV_QuestReactionRuntimeService.SubmitSemanticEvent("afdi", eventId, sourceForm)
+        Debug.Trace("[PDV AFDI] artifact destruction submitted: " + eventId)
     else
-        PDV_Manager.ApplyExternalReaction(ownerName, "-", "C", "milestone", "destroy_reject_daedra:" + artifactKey, sourceForm)
-        ApplyDestroyRejectApprovals(artifactKey, sourceForm)
+        Debug.Trace("[PDV AFDI] artifact destruction rejected: " + eventId)
     endIf
-    PDV_Manager.EndExternalReactionBatch()
-    Debug.Trace("[PDV AFDI] artifact destruction routed: " + artifactKey)
 EndFunction
 
-Function ApplyDestroyRejectApprovals(String ownerKey, Form sourceForm)
-    String sourceTag = "destroy_reject_daedra:" + ownerKey
-    PDV_Manager.ApplyExternalReaction("Stendarr", "+", "S", "small", sourceTag, sourceForm)
-    PDV_Manager.ApplyExternalReaction("Syrabane", "+", "m", "small", sourceTag, sourceForm)
-EndFunction
-
-String Function GetDaedricOwnerName(String artifactKey)
-    if artifactKey == "azura"
-        return "Azura"
-    elseIf artifactKey == "clavicus_vile"
-        return "Clavicus Vile"
-    elseIf artifactKey == "hircine"
-        return "Hircine"
-    elseIf artifactKey == "mehrunes_dagon"
-        return "Mehrunes Dagon"
-    elseIf artifactKey == "meridia"
-        return "Meridia"
-    elseIf artifactKey == "molag_bal"
-        return "Molag Bal"
-    elseIf artifactKey == "vaermina"
-        return "Vaermina"
-    elseIf artifactKey == "boethiah"
-        return "Boethiah"
-    elseIf artifactKey == "hermaeus_mora"
-        return "Hermaeus Mora"
-    elseIf artifactKey == "malacath"
-        return "Malacath"
-    elseIf artifactKey == "mephala"
-        return "Mephala"
-    elseIf artifactKey == "namira"
-        return "Namira"
-    elseIf artifactKey == "peryite"
-        return "Peryite"
-    elseIf artifactKey == "sanguine"
-        return "Sanguine"
-    elseIf artifactKey == "sheogorath"
-        return "Sheogorath"
-    elseIf artifactKey == "nocturnal"
-        return "Nocturnal"
+String Function GetArtifactEventId(Int artifactIndex, String artifactKey)
+    if artifactIndex < 0 || artifactIndex > 29 || artifactKey == "" || artifactIndex == 27
+        return ""
     endIf
-    return ""
+    if artifactIndex < 10
+        return "artifact_destroyed.0" + artifactIndex + "." + artifactKey
+    endIf
+    return "artifact_destroyed." + artifactIndex + "." + artifactKey
 EndFunction

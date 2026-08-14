@@ -147,6 +147,10 @@ function validateManifest(manifest) {
   if (manifest.sourceCounts?.total !== 80 || manifest.sourceCounts?.dataOnly !== 75 || manifest.sourceCounts?.pluginAdapters !== 5 || manifest.sourceCounts?.catalogBacked !== 78) {
     fail("Compatibility manifest sourceCounts does not match the locked 80/75/5/78 inventory.");
   }
+  const afdi = manifest.sources.find((source) => source.sourceId === "afdi");
+  if (afdi?.delivery !== "semantic-adapter" || afdi.adapterMasterPolicy !== "devotion-only-dynamic-source-resolution" || afdi.runtimeServiceFormKey !== "0716DF:Devotion.esp") {
+    fail("AFDI semantic adapter master/runtime-service contract is invalid.");
+  }
   if (csvPaths.size !== 78) fail(`Expected 78 explicitly mapped CSVs; found ${csvPaths.size}.`);
   const diskCsv = fs.readdirSync(path.join(ROOT, "references", "authoring", "patches"))
     .filter((name) => /^PDV_QRM_.*\.csv$/i.test(name))
