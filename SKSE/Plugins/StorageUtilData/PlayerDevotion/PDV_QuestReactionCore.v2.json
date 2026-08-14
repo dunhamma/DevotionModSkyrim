@@ -1753,7 +1753,34 @@
     "quest.Skyrim.esm|948244|200.metaSkip.Julianos": 1,
     "quest.Skyrim.esm|948244|200.metaskip.xarxes": 1,
     "quest.Skyrim.esm|948244|200.metaSkip.Xarxes": 1,
-    "schemaVersion": 2
+    "schemaVersion": 2,
+    "stageAdapter.ccbgssse025-advdsgs.esm|1671799|300.selectorFormId": 1588833,
+    "stageAdapter.ccbgssse025-advdsgs.esm|1671799|300.selectorValues": [
+      0,
+      1
+    ],
+    "stageAdapter.ccbgssse025-advdsgs.esm|1671799|300.targetStages": [
+      301,
+      302
+    ],
+    "stageAdapter.Skyrim.esm|340742|200.selectorFormId": 1113756,
+    "stageAdapter.Skyrim.esm|340742|200.selectorValues": [
+      0,
+      1
+    ],
+    "stageAdapter.Skyrim.esm|340742|200.targetStages": [
+      201,
+      202
+    ],
+    "stageAdapter.Skyrim.esm|340743|200.selectorFormId": 270303,
+    "stageAdapter.Skyrim.esm|340743|200.selectorValues": [
+      0,
+      1
+    ],
+    "stageAdapter.Skyrim.esm|340743|200.targetStages": [
+      201,
+      202
+    ]
   },
   "string": {
     "catalogKind": "core",
@@ -6678,6 +6705,12 @@
     "source.core-hearthfires.pluginName": "HearthFires.esm",
     "source.core-skyrim.displayName": "Skyrim.esm",
     "source.core-skyrim.pluginName": "Skyrim.esm",
+    "stageAdapter.ccbgssse025-advdsgs.esm|1671799|300.selectorKind": "player_item_count",
+    "stageAdapter.ccbgssse025-advdsgs.esm|1671799|300.selectorPlugin": "ccbgssse025-advdsgs.esm",
+    "stageAdapter.Skyrim.esm|340742|200.selectorKind": "global",
+    "stageAdapter.Skyrim.esm|340742|200.selectorPlugin": "Skyrim.esm",
+    "stageAdapter.Skyrim.esm|340743|200.selectorKind": "global",
+    "stageAdapter.Skyrim.esm|340743|200.selectorPlugin": "Skyrim.esm",
     "stance.altmer.akatosh": "FOREIGN",
     "stance.Altmer.Akatosh": "FOREIGN",
     "stance.altmer.alkosh": "FOREIGN",
@@ -34536,6 +34569,7 @@
     "source.core-ccasvsse001-almsivi.sentinelForms": [
       "ccasvsse001-almsivi.esm|626927"
     ],
+    "source.core-ccasvsse001-almsivi.stageAdapterKeys": [],
     "source.core-ccbgssse001-fish.questKeys": [
       "ccbgssse001-fish.esm|2515|50",
       "ccbgssse001-fish.esm|2516|200",
@@ -34563,6 +34597,7 @@
     "source.core-ccbgssse001-fish.sentinelForms": [
       "ccbgssse001-fish.esm|2515"
     ],
+    "source.core-ccbgssse001-fish.stageAdapterKeys": [],
     "source.core-ccbgssse020-graycowl.questKeys": [
       "ccbgssse020-graycowl.esl|2063|100"
     ],
@@ -34570,6 +34605,7 @@
     "source.core-ccbgssse020-graycowl.sentinelForms": [
       "ccbgssse020-graycowl.esl|2063"
     ],
+    "source.core-ccbgssse020-graycowl.stageAdapterKeys": [],
     "source.core-ccbgssse025-advdsgs.questKeys": [
       "ccbgssse025-advdsgs.esm|1671799|301",
       "ccbgssse025-advdsgs.esm|1671799|302",
@@ -34587,6 +34623,9 @@
     "source.core-ccbgssse025-advdsgs.sentinelForms": [
       "ccbgssse025-advdsgs.esm|1671799"
     ],
+    "source.core-ccbgssse025-advdsgs.stageAdapterKeys": [
+      "ccbgssse025-advdsgs.esm|1671799|300"
+    ],
     "source.core-ccbgssse067-daedinv.questKeys": [
       "ccbgssse067-daedinv.esm|1676586|1000"
     ],
@@ -34594,6 +34633,7 @@
     "source.core-ccbgssse067-daedinv.sentinelForms": [
       "ccbgssse067-daedinv.esm|1676586"
     ],
+    "source.core-ccbgssse067-daedinv.stageAdapterKeys": [],
     "source.core-ccmtysse001-knightsofthenine.questKeys": [
       "ccmtysse001-knightsofthenine.esl|2149|100"
     ],
@@ -34601,6 +34641,7 @@
     "source.core-ccmtysse001-knightsofthenine.sentinelForms": [
       "ccmtysse001-knightsofthenine.esl|2149"
     ],
+    "source.core-ccmtysse001-knightsofthenine.stageAdapterKeys": [],
     "source.core-dawnguard.questKeys": [
       "Dawnguard.esm|10319|90",
       "Dawnguard.esm|10320|50",
@@ -34624,6 +34665,7 @@
     "source.core-dawnguard.sentinelForms": [
       "Dawnguard.esm|10319"
     ],
+    "source.core-dawnguard.stageAdapterKeys": [],
     "source.core-dragonborn.questKeys": [
       "Dragonborn.esm|101139|200",
       "Dragonborn.esm|101140|200",
@@ -34682,6 +34724,7 @@
     "source.core-dragonborn.sentinelForms": [
       "Dragonborn.esm|101139"
     ],
+    "source.core-dragonborn.stageAdapterKeys": [],
     "source.core-hearthfires.questKeys": [
       "HearthFires.esm|12381|150",
       "HearthFires.esm|12382|130",
@@ -34701,6 +34744,7 @@
     "source.core-hearthfires.sentinelForms": [
       "HearthFires.esm|12381"
     ],
+    "source.core-hearthfires.stageAdapterKeys": [],
     "source.core-skyrim.questKeys": [
       "Skyrim.esm|113563|10",
       "Skyrim.esm|113563|200",
@@ -35039,6 +35083,10 @@
     "source.core-skyrim.sentinelForms": [
       "Skyrim.esm|113563"
     ],
+    "source.core-skyrim.stageAdapterKeys": [
+      "Skyrim.esm|340742|200",
+      "Skyrim.esm|340743|200"
+    ],
     "sourceIds": [
       "core-ccasvsse001-almsivi",
       "core-ccbgssse001-fish",
@@ -35050,6 +35098,11 @@
       "core-dragonborn",
       "core-hearthfires",
       "core-skyrim"
+    ],
+    "stageAdapterKeys": [
+      "ccbgssse025-advdsgs.esm|1671799|300",
+      "Skyrim.esm|340742|200",
+      "Skyrim.esm|340743|200"
     ]
   }
 }

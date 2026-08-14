@@ -54,11 +54,12 @@ export function emptyTypedCatalog(kind) {
       sourceIds: [],
       questKeys: [],
       semanticKeys: [],
+      stageAdapterKeys: [],
     },
   };
 }
 
-export function buildCoreCatalog(compiled) {
+export function buildCoreCatalog(compiled, { stageSelectors = [] } = {}) {
   const catalog = emptyTypedCatalog("core");
   const questIndex = buildQuestIndex(compiled.flat);
   copyCompiledValues(catalog, compiled.runtime, questIndex, { includeShared: true });
@@ -78,19 +79,22 @@ export function buildCoreCatalog(compiled) {
       sentinelForms: questKeys.length ? [questKeyToSentinel(questKeys[0])] : [],
       questKeys,
       semanticKeys: [],
+      stageAdapterKeys: stageSelectors.filter((selector) => selector.key.startsWith(`${pluginName}|`)).map((selector) => selector.key),
     });
   }
+  addStageSelectors(catalog, stageSelectors);
   finalizeCatalog(catalog);
   return catalog;
 }
 
-export function buildOfficialCatalog({ sources, compiledBySource, semanticRowsBySource = new Map() }) {
+export function buildOfficialCatalog({ sources, compiledBySource, semanticRowsBySource = new Map(), stageSelectorsBySource = new Map() }) {
   const catalog = emptyTypedCatalog("official-third-party");
   const keyOwner = new Map();
 
   for (const source of [...sources].sort((a, b) => compareText(a.sourceId, b.sourceId))) {
     const compiled = compiledBySource.get(source.sourceId);
     const semanticRows = semanticRowsBySource.get(source.sourceId) ?? [];
+    const stageSelectors = stageSelectorsBySource.get(source.sourceId) ?? [];
     const questKeys = [];
     const semanticKeys = [];
 
@@ -112,7 +116,9 @@ export function buildOfficialCatalog({ sources, compiledBySource, semanticRowsBy
       }
     }
 
-    if (questKeys.length || semanticKeys.length) {
+    addStageSelectors(catalog, stageSelectors);
+
+    if (questKeys.length || semanticKeys.length || stageSelectors.length) {
       addSource(catalog, {
         sourceId: source.sourceId,
         displayName: source.displayName,
@@ -120,6 +126,7 @@ export function buildOfficialCatalog({ sources, compiledBySource, semanticRowsBy
         sentinelForms: normalizeSentinels(source.sentinelForms),
         questKeys: uniqueSorted(questKeys),
         semanticKeys: uniqueSorted(semanticKeys),
+        stageAdapterKeys: stageSelectors.map((selector) => selector.key),
       });
     }
   }
@@ -170,13 +177,18 @@ export function validateCatalog(catalog, { requirePatchDelta = false } = {}) {
   if (sourceIds.length !== new Set(sourceIds).size) throw new Error("duplicate sourceId in catalog");
   const questKeys = catalog.stringList.questKeys ?? [];
   const semanticKeys = catalog.stringList.semanticKeys ?? [];
+  const stageAdapterKeys = catalog.stringList.stageAdapterKeys ?? [];
   if (questKeys.length !== new Set(questKeys).size) throw new Error("duplicate quest key in catalog");
   if (semanticKeys.length !== new Set(semanticKeys).size) throw new Error("duplicate semantic key in catalog");
+  if (stageAdapterKeys.length !== new Set(stageAdapterKeys).size) throw new Error("duplicate stage-adapter key in catalog");
   for (const sourceId of sourceIds) {
     const pluginName = catalog.string[`source.${sourceId}.pluginName`];
     if (!pluginName) throw new Error(`source ${sourceId} has no pluginName`);
     const sentinels = catalog.stringList[`source.${sourceId}.sentinelForms`] ?? [];
     if (!sentinels.length) throw new Error(`source ${sourceId} has no sentinelForms`);
+    const sourceStageAdapterKeys = catalog.stringList[`source.${sourceId}.stageAdapterKeys`] ?? [];
+    if (sourceStageAdapterKeys.length !== new Set(sourceStageAdapterKeys).size) throw new Error(`source ${sourceId} has duplicate stage-adapter keys`);
+    for (const key of sourceStageAdapterKeys) if (!stageAdapterKeys.includes(key)) throw new Error(`source ${sourceId} references unknown stage-adapter key ${key}`);
   }
   for (const questKey of questKeys) {
     if (!/^.+\|\d+\|\d+$/.test(questKey)) throw new Error(`unqualified quest key: ${questKey}`);
@@ -186,6 +198,7 @@ export function validateCatalog(catalog, { requirePatchDelta = false } = {}) {
     if (!/^[^|]+\|[^|]+$/.test(semanticKey)) throw new Error(`invalid semantic key: ${semanticKey}`);
     validateReactionPayload(catalog, `semantic.${semanticKey}.`);
   }
+  for (const stageAdapterKey of stageAdapterKeys) validateStageSelector(catalog, stageAdapterKey);
   if (requirePatchDelta) assertPatchDeltaOnly(catalog);
   return true;
 }
@@ -264,8 +277,24 @@ function addSource(catalog, source) {
   catalog.stringList[`source.${source.sourceId}.sentinelForms`] = uniqueSorted(source.sentinelForms);
   catalog.stringList[`source.${source.sourceId}.questKeys`] = uniqueSorted(source.questKeys);
   catalog.stringList[`source.${source.sourceId}.semanticKeys`] = uniqueSorted(source.semanticKeys);
+  catalog.stringList[`source.${source.sourceId}.stageAdapterKeys`] = uniqueSorted(source.stageAdapterKeys ?? []);
   catalog.stringList.questKeys.push(...source.questKeys);
   catalog.stringList.semanticKeys.push(...source.semanticKeys);
+}
+
+function addStageSelectors(catalog, selectors) {
+  for (const selector of [...selectors].sort((a, b) => compareText(a.key, b.key))) {
+    if (catalog.stringList.stageAdapterKeys.includes(selector.key)) {
+      throw new Error(`duplicate stage-adapter key ${selector.key}`);
+    }
+    const prefix = `stageAdapter.${selector.key}.`;
+    catalog.stringList.stageAdapterKeys.push(selector.key);
+    catalog.string[`${prefix}selectorKind`] = selector.selectorKind;
+    catalog.string[`${prefix}selectorPlugin`] = selector.selectorPlugin;
+    catalog.int[`${prefix}selectorFormId`] = selector.selectorFormId;
+    catalog.int[`${prefix}selectorValues`] = [...selector.selectorValues];
+    catalog.int[`${prefix}targetStages`] = [...selector.targetStages];
+  }
 }
 
 function compileSemanticRows(sourceId, rows) {
@@ -312,10 +341,30 @@ function validateReactionPayload(catalog, prefix) {
   }
 }
 
+function validateStageSelector(catalog, key) {
+  if (!/^.+\|\d+\|\d+$/.test(key)) throw new Error(`invalid stage-selector key: ${key}`);
+  const prefix = `stageAdapter.${key}.`;
+  const selectorKind = catalog.string[`${prefix}selectorKind`];
+  const selectorPlugin = catalog.string[`${prefix}selectorPlugin`];
+  const selectorFormId = catalog.int[`${prefix}selectorFormId`];
+  const selectorValues = catalog.int[`${prefix}selectorValues`] ?? [];
+  const targetStages = catalog.int[`${prefix}targetStages`] ?? [];
+  if (!selectorKind || !selectorPlugin || !Number.isInteger(selectorFormId) || selectorFormId < 0) {
+    throw new Error(`invalid stage-selector metadata: ${key}`);
+  }
+  if (!selectorValues.length || selectorValues.length !== targetStages.length) {
+    throw new Error(`stage-selector values/stages are empty or misaligned: ${key}`);
+  }
+  if (selectorValues.some((value) => !Number.isInteger(value)) || targetStages.some((value) => !Number.isInteger(value) || value < 0)) {
+    throw new Error(`stage-selector values/stages must be integers: ${key}`);
+  }
+}
+
 function finalizeCatalog(catalog) {
   catalog.stringList.sourceIds = uniqueSorted(catalog.stringList.sourceIds);
   catalog.stringList.questKeys = uniqueSorted(catalog.stringList.questKeys);
   catalog.stringList.semanticKeys = uniqueSorted(catalog.stringList.semanticKeys);
+  catalog.stringList.stageAdapterKeys = uniqueSorted(catalog.stringList.stageAdapterKeys ?? []);
   validateCatalog(catalog, { requirePatchDelta: catalog.string.catalogKind !== "core" });
 }
 
