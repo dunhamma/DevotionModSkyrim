@@ -565,7 +565,7 @@ Phase 10 Dunmer substrate proof-graduation is closed as of 2026-05-24. The count
 
 `tools\pdv_extract_quest_stage_readback.mjs` is the Phase 20 read-only quest-stage follow-up. It reads `references\vanilla-gameplay\extracted\vanilla-quest-candidates.csv`, uses the local Mutagen bridge to read exact QUST stages/objectives/fragments/aliases from vanilla/DLC masters, and writes `references\vanilla-gameplay\extracted\vanilla-quest-stage-readback.csv`. Use it for dossier/review work only; it does not write ESP data or authorize `sourceFillEntries`.
 
-`tools\pdv_quest_matrix_compile.mjs` compiles the frozen quest-reaction matrix, Part D faucet CSV, stance matrices, quest-stage readback, and the narrow manual quest FormID fallback into `D:\Wabbajack\modlists\Anvil\mods\Devotion\SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionMatrix.json`. Run `node .\tools\pdv_quest_matrix_compile.mjs --check` before writing live JSON, then compile `PDV_EventBus`, `PDV_PlayerEvents`, and `PDV__ManagerQuest` after receiver/manager source edits.
+`tools\pdv_quest_matrix_compile.mjs` remains the V1 compiler used by the public 1.5 line. For V3, `tools\pdv_quest_reaction_build.mjs` consumes `references\authoring\PDV_QuestReactionCompatibility.manifest.json` plus the frozen core and 78 compatibility CSVs, then deterministically generates `PDV_QuestReactionCore.v2.json`, `PDV_QuestReactionPatches.v2.json`, and an exact-byte SHA-256 receipt. Use `node .\tools\pdv_quest_reaction_build.mjs --self-test --check --json`; use `--write` only when reviewed authoring inputs intentionally change. Slice 1C-A is backend/compiler proof only: Runtime remains on V1 until the separate 1C-B cutover, and these files alone do not prove in-game activation.
 
 Current remap note (main-quest expansion 2026-07-15): source tranches through T11 compile to 1978 cells / 172 quest keys / 134 watched quests / 45 deity names / 26 faucet acts. Use `node .\tools\pdv_quest_tranche_merge.mjs`, then `node .\tools\pdv_main_quest_full_coverage_audit.mjs --json`, then the formal-offer/remap/signal-floor gates before claiming source/readback readiness. For the representative smoke set, run `node .\tools\pdv_signal_floor_smoke_gate.mjs --json`; use `--write-ledger` to regenerate `PDV_SignalFloorSmokeLedger.{md,json}` after source, runtime JSON, or Papyrus log evidence changes. The Debug: State & Rewards MCM page has a `Signal-floor smoke` controlled route selector backed by `PDV__ManagerQuest.DebugRunSignalFloorSmokeScenario`, but those routes remain backend/log convenience only. Green source/readback gates still do not prove runtime-route, Active Effects, Book of Days, Survey/status, Prisma/notification, save/load stack behavior, or the expanded Paarthurnax/main-quest surface; use `references\authoring\PDV_1_0_CoTest_Runbook_2026-07-10.md` for live tester/Codex steps.
 
@@ -591,8 +591,8 @@ and static proof. Then run
 `node .\tools\pdv_quest_reaction_runtime_check.mjs --max-job-ms 2000` after a
 fresh Skyrim sweep. Runtime acceptance still requires FIFO lifecycle markers,
 one visible final toast/Book beat per accepted job, and a mid-job save/load
-resume. Consolidated catalog v2 and semantic-event adapters are a later Slice 1
-data/build tranche.
+resume. The consolidated catalog v2 compiler is backend-green. Runtime cutover
+and semantic-event adapters remain later Slice 1 tranches.
 
 The 2026-08-14 fresh-game canary passed qualified ingress, five complete queue
 lifecycles, the four-job FIFO sweep, four Book of Days entries, and reload after
