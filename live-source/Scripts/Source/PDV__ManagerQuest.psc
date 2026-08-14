@@ -1850,11 +1850,17 @@ Bool Function IsQueuedQuestReactionCellCheapSkip(String deityName, String valenc
     if stance == "CURSE"
         return False
     endIf
-    if stance == "TABOO" || stance == "HOSTILE" || stance == "FOREIGN" || stance == "TOLERATED"
-        return !IsQuestReactionDeityReachable(deity)
+
+    ; A named taboo/hostile cell is deliberate displeasure, not background
+    ; favor: positive values become stigma and negative values become piety loss.
+    ; Keep either form for a deity the player's origin roster can still show even
+    ; when a Nord chose the other baseline. Every other cell must be reachable
+    ; on the current lane before it enters the persisted worker snapshot.
+    if (stance == "TABOO" || stance == "HOSTILE") && IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
+        return False
     endIf
 
-    return False
+    return !IsQuestReactionDeityReachable(deity)
 EndFunction
 
 Function ApplyDeityReaction(String deityName, String valence, String intensity, String magnitude, String sourceTag, Bool isFaucet, Form sourceForm)
@@ -1897,7 +1903,11 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
     endIf
 
     if stance == "TABOO" || stance == "HOSTILE"
-        if !IsQuestReactionDeityReachable(deity)
+        ; Preserve authored taboo/hostile displeasure for a god whose face
+        ; remains in the origin roster, even when it is outside the Nord's
+        ; selected baseline. Positive values become stigma; background favor
+        ; from ordinary native/foreign cells never crosses that lane.
+        if !IsQuestReactionDeityReachable(deity) && !IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
             if GetDebugLevel() >= 3
                 Debug.Trace("[PDV] QuestReaction skipped unreachable taboo/hostile deity: " + deityName + " " + sourceTag)
             endIf
@@ -1940,6 +1950,19 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
             endIf
             return
         endIf
+    endIf
+
+    ; Native/reachable stances used to fall straight through after the
+    ; FOREIGN/TOLERATED guard above. That let the Nord dashboard union roster
+    ; award Old Ways piety while Nine Divines was selected (and vice versa).
+    ; Keep the final guard beside the award so old snapshots and direct callers
+    ; cannot reintroduce an out-of-lane positive reaction after ingress compacts
+    ; it away.
+    if !IsQuestReactionDeityReachable(deity)
+        if GetDebugLevel() >= 3
+            Debug.Trace("[PDV] QuestReaction skipped inactive lane deity: " + deityName + " " + sourceTag)
+        endIf
+        return
     endIf
 
     Float multiplier = GetQuestReactionStanceMultiplier(stance)
@@ -2865,12 +2888,14 @@ Float Function GetQuestReactionStanceMultiplier(String stance)
     return 1.0
 EndFunction
 
-; A quest-reaction target is "reachable" when some surface can show its piety:
-; Daedric paths always (pre-pact paths render as "watching"; pacts as patron),
-; deity faces when the player's origin roster lists them, plus an active
-; off-roster patron restored from an older save. New commitments still reject
-; off-roster gods, but an existing relationship remains visible and can progress
-; at the reduced foreign rate instead of becoming a stranded save state.
+; A quest-reaction target is "reachable" when automatic piety can land on a
+; player-facing, currently eligible lane. Daedric paths always qualify
+; (pre-pact paths render as "watching"; pacts as patron), and an active
+; off-roster patron restored from an older save remains reachable. Nords are
+; deliberately narrower than their dashboard's union roster: the selected Old
+; Ways or Nine Divines baseline decides which native god can receive an
+; automatic quest reaction. DeityBase state tracks still own their documented
+; reduced-gain/tier-cap behavior and are not duplicated as a binary gate here.
 Bool Function IsQuestReactionDeityReachable(PDV_DeityBase deity)
     if deity as PDV_DaedricPathBase
         return True
@@ -2878,7 +2903,13 @@ Bool Function IsQuestReactionDeityReachable(PDV_DeityBase deity)
     if IsGrandfatheredOffRosterPatron(deity)
         return True
     endIf
-    return IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
+
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace == ORIGIN_NORD
+        return IsNordOfferEligibleDeity(deity)
+    endIf
+
+    return IsDashboardDeityInOriginRoster(deity, originRace)
 EndFunction
 
 Bool Function IsGrandfatheredOffRosterPatron(PDV_DeityBase deity)
