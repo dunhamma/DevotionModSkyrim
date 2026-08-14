@@ -121,9 +121,13 @@ function buildRepositoryCatalogs() {
   validateCatalog(official, { requirePatchDelta: true });
   if (official.stringList.sourceIds.length !== 79) fail(`Official v2 catalog must contain 79 catalog-backed sources; found ${official.stringList.sourceIds.length}.`);
   assertParity({ coreCompiled, core, stageSelectors, compiledBySource, semanticRowsBySource, stageSelectorsBySource, official });
+  const coreWire = toPapyrusUtilCatalogWire(core);
+  const officialWire = toPapyrusUtilCatalogWire(official);
+  validatePapyrusUtilCatalogWire(coreWire);
+  validatePapyrusUtilCatalogWire(officialWire, { requirePatchDelta: true });
   const artifacts = {
-    [normalizePath(manifest.coreCatalogOutput)]: stableJson(core),
-    [normalizePath(manifest.officialPatchCatalogOutput)]: stableJson(official),
+    [normalizePath(manifest.coreCatalogOutput)]: stableJson(coreWire),
+    [normalizePath(manifest.officialPatchCatalogOutput)]: stableJson(officialWire),
   };
   const inputDigest = hashInputs(manifest);
   const receipt = buildReceipt(artifacts, inputDigest);
@@ -140,7 +144,7 @@ function buildRepositoryCatalogs() {
   });
   const packageReceipt = buildPackageReceipt({ manifest, artifacts: packageArtifacts, inputSha256: inputDigest });
   artifacts[normalizePath(manifest.packageContract.receiptOutput)] = stableJson(packageReceipt);
-  return { manifest, core, official, stageSelectors, artifacts, receipt, packageArtifacts, packageReceipt };
+  return { manifest, core, official, coreWire, officialWire, stageSelectors, artifacts, receipt, packageArtifacts, packageReceipt };
 }
 
 function validateManifest(manifest) {

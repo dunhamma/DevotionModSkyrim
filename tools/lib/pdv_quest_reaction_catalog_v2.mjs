@@ -4,6 +4,7 @@ export const CATALOG_SCHEMA = "pdv.quest-reaction.catalog.v2";
 export const CATALOG_VERSION = 2;
 
 const BUCKETS = ["string", "float", "int", "stringList"];
+const PAPYRUSUTIL_WIRE_BUCKETS = ["string", "float", "int", "stringList", "intList"];
 const V1_QUEST_INDEX_KEYS = new Set([
   "questKeys",
   "questkeys",
@@ -205,6 +206,144 @@ export function validateCatalog(catalog, { requirePatchDelta = false } = {}) {
 
 export function stableJson(value) {
   return `${JSON.stringify(sortDeep(value), null, 2)}\n`;
+}
+
+export function toPapyrusUtilCatalogWire(catalog) {
+  validateCatalog(catalog, { requirePatchDelta: catalog?.string?.catalogKind !== "core" });
+  const wire = Object.fromEntries(PAPYRUSUTIL_WIRE_BUCKETS.map((bucket) => [bucket, {}]));
+  for (const bucket of BUCKETS) {
+    for (const [key, value] of Object.entries(catalog[bucket]).sort(([left], [right]) => compareText(left, right))) {
+      let wireBucket = bucket;
+      if (Array.isArray(value)) {
+        if (bucket === "int") wireBucket = "intList";
+        else if (bucket !== "stringList") throw new Error(`unsupported PapyrusUtil list value ${bucket}.${key}`);
+      } else if (bucket === "stringList") {
+        throw new Error(`PapyrusUtil stringList value is not an array: ${key}`);
+      }
+      const wireKey = key.toLowerCase();
+      if (Object.hasOwn(wire[wireBucket], wireKey)) {
+        if (JSON.stringify(wire[wireBucket][wireKey]) !== JSON.stringify(value)) {
+          throw new Error(`conflicting PapyrusUtil case-fold collision ${wireBucket}.${wireKey}`);
+        }
+        continue;
+      }
+      wire[wireBucket][wireKey] = structuredClone(value);
+    }
+  }
+  validatePapyrusUtilCatalogWire(wire, { requirePatchDelta: catalog.string.catalogKind !== "core" });
+  return wire;
+}
+
+export function validatePapyrusUtilCatalogWire(catalog, { requirePatchDelta = false } = {}) {
+  if (!catalog || typeof catalog !== "object" || Array.isArray(catalog)) throw new Error("PapyrusUtil catalog wire must be an object");
+  for (const bucket of PAPYRUSUTIL_WIRE_BUCKETS) {
+    if (!catalog[bucket] || typeof catalog[bucket] !== "object" || Array.isArray(catalog[bucket])) {
+      throw new Error(`PapyrusUtil catalog wire bucket ${bucket} is missing or invalid`);
+    }
+    for (const key of Object.keys(catalog[bucket])) {
+      if (key !== key.toLowerCase()) throw new Error(`PapyrusUtil catalog wire key is not lowercase: ${bucket}.${key}`);
+    }
+  }
+  for (const [key, value] of Object.entries(catalog.string)) if (typeof value !== "string") throw new Error(`PapyrusUtil string value is invalid: ${key}`);
+  for (const [key, value] of Object.entries(catalog.float)) if (typeof value !== "number" || !Number.isFinite(value)) throw new Error(`PapyrusUtil float value is invalid: ${key}`);
+  for (const [key, value] of Object.entries(catalog.int)) if (!Number.isInteger(value)) throw new Error(`PapyrusUtil int value is invalid: ${key}`);
+  for (const [key, value] of Object.entries(catalog.stringList)) {
+    if (!Array.isArray(value) || value.some((item) => typeof item !== "string")) throw new Error(`PapyrusUtil stringList value is invalid: ${key}`);
+  }
+  for (const [key, value] of Object.entries(catalog.intList)) {
+    if (!Array.isArray(value) || value.some((item) => !Number.isInteger(item))) throw new Error(`PapyrusUtil intList value is invalid: ${key}`);
+  }
+  if (catalog.string.schema !== CATALOG_SCHEMA || catalog.int.schemaversion !== CATALOG_VERSION) {
+    throw new Error("PapyrusUtil catalog wire schema/version mismatch");
+  }
+  const sourceIds = catalog.stringList.sourceids ?? [];
+  const questKeys = catalog.stringList.questkeys ?? [];
+  const semanticKeys = catalog.stringList.semantickeys ?? [];
+  const stageAdapterKeys = catalog.stringList.stageadapterkeys ?? [];
+  assertWireUnique(sourceIds, "sourceId");
+  assertWireUnique(questKeys, "quest key");
+  assertWireUnique(semanticKeys, "semantic key");
+  assertWireUnique(stageAdapterKeys, "stage-adapter key");
+  for (const sourceId of sourceIds) {
+    const sourcePrefix = `source.${sourceId}.`.toLowerCase();
+    if (!catalog.string[`${sourcePrefix}pluginname`]) throw new Error(`PapyrusUtil catalog source ${sourceId} has no pluginName`);
+    const sentinels = catalog.stringList[`${sourcePrefix}sentinelforms`] ?? [];
+    if (!sentinels.length) throw new Error(`PapyrusUtil catalog source ${sourceId} has no sentinelForms`);
+    const sourceQuestKeys = catalog.stringList[`${sourcePrefix}questkeys`] ?? [];
+    const sourceSemanticKeys = catalog.stringList[`${sourcePrefix}semantickeys`] ?? [];
+    const sourceStageAdapterKeys = catalog.stringList[`${sourcePrefix}stageadapterkeys`] ?? [];
+    assertWireUnique(sentinels, `${sourceId} sentinel`);
+    assertWireUnique(sourceQuestKeys, `${sourceId} quest key`);
+    assertWireUnique(sourceSemanticKeys, `${sourceId} semantic key`);
+    assertWireUnique(sourceStageAdapterKeys, `${sourceId} stage-adapter key`);
+    for (const key of sourceQuestKeys) if (!questKeys.some((candidate) => candidate.toLowerCase() === key.toLowerCase())) throw new Error(`PapyrusUtil catalog source ${sourceId} references unknown quest key ${key}`);
+    for (const key of sourceSemanticKeys) if (!semanticKeys.some((candidate) => candidate.toLowerCase() === key.toLowerCase())) throw new Error(`PapyrusUtil catalog source ${sourceId} references unknown semantic key ${key}`);
+    for (const key of sourceStageAdapterKeys) if (!stageAdapterKeys.some((candidate) => candidate.toLowerCase() === key.toLowerCase())) throw new Error(`PapyrusUtil catalog source ${sourceId} references unknown stage-adapter key ${key}`);
+  }
+  for (const questKey of questKeys) {
+    if (!/^.+\|\d+\|\d+$/.test(questKey)) throw new Error(`PapyrusUtil catalog has unqualified quest key: ${questKey}`);
+    validateWireReactionPayload(catalog, `quest.${questKey}.`);
+  }
+  for (const semanticKey of semanticKeys) {
+    if (!/^[^|]+\|[^|]+$/.test(semanticKey)) throw new Error(`PapyrusUtil catalog has invalid semantic key: ${semanticKey}`);
+    validateWireReactionPayload(catalog, `semantic.${semanticKey}.`);
+  }
+  for (const stageAdapterKey of stageAdapterKeys) validateWireStageSelector(catalog, stageAdapterKey);
+  if (requirePatchDelta) assertWirePatchDeltaOnly(catalog);
+  return true;
+}
+
+function assertWireUnique(values, label) {
+  const folded = new Set();
+  for (const value of values) {
+    if (typeof value !== "string" || !value) throw new Error(`PapyrusUtil catalog ${label} is empty or invalid`);
+    const key = value.toLowerCase();
+    if (folded.has(key)) throw new Error(`PapyrusUtil catalog has duplicate ${label}: ${value}`);
+    folded.add(key);
+  }
+}
+
+function validateWireReactionPayload(catalog, prefix) {
+  const wirePrefix = prefix.toLowerCase();
+  const names = ["deities", "valences", "intensities", "magnitudes", "tags"];
+  const lists = names.map((name) => catalog.stringList[`${wirePrefix}${name}`] ?? []);
+  const count = lists[0].length;
+  if (!count || lists.some((values) => values.length !== count)) {
+    throw new Error(`PapyrusUtil reaction payload arrays are empty or misaligned: ${wirePrefix}${lists.map((values) => values.length).join("/")}`);
+  }
+  for (let index = 0; index < names.length; index += 1) {
+    const csvKey = `${wirePrefix}${names[index]}csv`;
+    if (catalog.string[csvKey] !== lists[index].join("|")) {
+      throw new Error(`PapyrusUtil reaction payload CSV is missing or misaligned: ${csvKey}`);
+    }
+  }
+}
+
+function validateWireStageSelector(catalog, key) {
+  if (!/^.+\|\d+\|\d+$/.test(key)) throw new Error(`PapyrusUtil catalog has invalid stage-selector key: ${key}`);
+  const prefix = `stageadapter.${key}.`.toLowerCase();
+  const selectorKind = catalog.string[`${prefix}selectorkind`];
+  const selectorPlugin = catalog.string[`${prefix}selectorplugin`];
+  const selectorFormId = catalog.int[`${prefix}selectorformid`];
+  const selectorValues = catalog.intList[`${prefix}selectorvalues`] ?? [];
+  const targetStages = catalog.intList[`${prefix}targetstages`] ?? [];
+  if (!selectorKind || !selectorPlugin || !Number.isInteger(selectorFormId) || selectorFormId < 0) {
+    throw new Error(`PapyrusUtil catalog has invalid stage-selector metadata: ${key}`);
+  }
+  if (!selectorValues.length || selectorValues.length !== targetStages.length) {
+    throw new Error(`PapyrusUtil stage-selector values/stages are empty or misaligned: ${key}`);
+  }
+  if (targetStages.some((value) => value < 0)) throw new Error(`PapyrusUtil target stages must be non-negative: ${key}`);
+}
+
+function assertWirePatchDeltaOnly(catalog) {
+  for (const bucket of PAPYRUSUTIL_WIRE_BUCKETS) {
+    for (const key of Object.keys(catalog[bucket])) {
+      if (/^(stance\.|stancemult\.|value\.|faucet)/i.test(key)) {
+        throw new Error(`third-party PapyrusUtil catalog contains core-owned shared policy: ${key}`);
+      }
+    }
+  }
 }
 
 export function buildReceipt(artifacts, inputDigest) {
