@@ -142,6 +142,8 @@
     "tickSeconds": 0.1,
     "duplicateWindowDays": 0.02,
     "oneSchedulerOwner": true,
+    "singleArmedUpdateChain": true,
+    "cellCheckpoint": "after-each-applied-cell",
     "persistBeforeReturn": true,
     "fifo": true,
     "snapshotEventTimeSemantics": true,
@@ -150,7 +152,9 @@
     "finalizeAfterLastWorkItem": true,
     "acceptedLogicalAct": {
       "prismaToasts": 1,
-      "bookOfDaysSourceEntries": 1
+      "bookOfDaysSourceEntries": 1,
+      "uniqueDeityNamesPerSurface": true,
+      "magnitudePresentation": "book-rune-not-repeated-prose"
     },
     "timingValueAndCopyChangesAllowed": false
   },
@@ -178,11 +182,11 @@
     "transitionalCatalogBoundary": "Runtime owns V1 folder discovery and binds each runtime quest to one exact catalog; it prefers pluginName|localFormId|stage v2 cells but may read localFormId|stage only from that bound V1 catalog. Cross-plugin collision acceptance remains open until the consolidated v2 catalog replaces the fallback.",
     "runtimeCanary": {
       "date": "2026-08-14",
-      "passed": "fresh-game qualified ingress; five enqueue/start/complete lifecycles; four-job FIFO performance sweep; four persistent Book of Days source entries; completed-queue reload sanity; no overflow, stack dump, frozen stack, or broad-scope abort",
-      "open": "mid-job save-load RESUME; four visible toasts for four completed sweep jobs; selected Nord baseline eligibility after Old Ways deities appeared while Nine Divines was selected",
+      "passed": "fresh-game qualified ingress; five enqueue/start/complete lifecycles; four-job FIFO performance sweep; four persistent Book of Days source entries; completed-queue reload sanity; mid-job save-load RESUME from cell 4/21 followed by FIFO drain; four distinct Prisma receipt/render correlations; no overflow, stack dump, frozen stack, or broad-scope abort",
+      "open": "manual confirmation of four simultaneously visible toasts; fresh retest of selected Nord baseline eligibility; unique-name Book surface after a resumed active slice duplicated later-job Divine names",
       "checker": "node tools/pdv_quest_reaction_runtime_check.mjs --log <Papyrus.0.log> --expected-sequence Skyrim.esm|210731|150,Skyrim.esm|148154|160,Skyrim.esm|207142|200,Skyrim.esm|221587|220 --max-job-ms 10000"
     },
-    "proofBoundary": "fresh-game ingress/FIFO/completion and completed-queue reload are runtime-route proof; mid-job co-save resume, corrected lane eligibility, and one visible toast per completed logical job remain open manual/runtime proof",
+    "proofBoundary": "fresh-game ingress/FIFO/completion, completed-queue reload, mid-job RESUME/FIFO drain, and four distinct UI render callbacks are runtime proof; corrected lane eligibility, unique-name Book presentation, and manual four-toast observation remain open",
     "deferredWithinSlice1": [
       "deterministic consolidated catalog v2 build",
       "semantic-event adapter migration",
@@ -190,10 +194,12 @@
     ]
   },
   "canaryFixFollowup": {
-    "status": "implemented-compiled-static-gates-pass-runtime-retest-open",
+    "status": "resume-proof-passed-active-slice-and-unique-surface-fix-implemented-retest-open",
     "selectedLanePolicy": "ordinary automatic quest reactions must be eligible in the currently selected Nord baseline at ingress and again before award; authored taboo/hostile displeasure remains valid for visible origin-roster deities; Daedric paths and grandfathered active patrons retain their existing exceptions",
     "toastIdentity": "each completed logical reaction job carries its qualified reaction key as top-level and toast-local correlation; Prisma deduplicates exact repeated delivery of one correlation but never distinct logical jobs",
     "diagnostics": "debug-gated PDV_TOAST_TRACE markers distinguish Papyrus submission, native receipt/Interop dispatch, and UI receipt/dedupe/render",
+    "resumeOwnership": "one persisted armed update chain owns the FIFO; a saved active slice retains resume ownership, pending registrations are cancelled on load, and the cursor checkpoints after each applied cell",
+    "presentationIdentity": "each deity is listed at most once per logical deed; higher piety intensity is expressed by the existing Book rune rather than repeated names",
     "gates": [
       "node tools/pdv_quest_reaction_eligibility_audit.mjs --self-test",
       "node tools/pdv_prisma_toast_cardinality_audit.mjs --self-test",
@@ -201,7 +207,7 @@
       "targeted PDV__ManagerQuest compile",
       "DevotionPrismaBridge releasedbg build"
     ],
-    "open": "fresh-game Nine Divines/Old Ways scoring and Book retest; four-toast runtime cardinality; mid-job save-load RESUME"
+    "open": "fresh-game Nine Divines/Old Ways scoring and unique-name Book retest; manual four-toast cardinality confirmation; repeat mid-job save-load to prove no active-slice replay"
   },
   "targetAcceptanceCases": [
     "same-local-form-id-in-two-plugins",

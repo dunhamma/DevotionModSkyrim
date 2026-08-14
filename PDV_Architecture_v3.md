@@ -949,7 +949,7 @@ compiler remains the next data/build slice.
 Slice 1B closeout evidence is reproducible through these exact surfaces:
 
 - `node .\tools\pdv_quest_reaction_characterization.mjs` -- all eight fixtures PASS.
-- `node .\tools\pdv_quest_reaction_performance_audit.mjs` and `--self-test` -- 21 live assertions plus nine negative mutations PASS.
+- `node .\tools\pdv_quest_reaction_performance_audit.mjs` and `--self-test` -- 24 live assertions plus thirteen negative mutations PASS, including the armed-update, per-cell checkpoint, and unique-surface contracts.
 - `node .\tools\pdv_compile.mjs --script PDV_QuestReactionRuntime --script PDV__ManagerQuest --script PDV_EventBus --script PDV_PlayerEvents --script PDV_MCM --skip-verify` -- each script compiles with 0 errors and 0 warnings.
 - After the load-order confirmation above, direct `housecarl_read_record` on `0716DF`, `00C325`, `046AF7`, and `03AFBE` in `Devotion.esp` proves the Runtime host and its Manager/EventBus/MCM VMAD bindings. This is readback, not Skyrim execution.
 
@@ -963,11 +963,21 @@ The first fresh-game canary on 2026-08-14 proved qualified quest ingress and
 five complete `ENQUEUE -> START -> COMPLETE` lifecycles. The controlled
 four-job performance sweep preserved FIFO order, wrote four persistent Book of
 Days entries, and produced no overflow, stack-dump, frozen-stack, or
-`BROAD_SCOPE_ABORT` marker. Reloading after the queue had drained was clean.
-This is partial runtime-route proof, not Slice 1B closure: a save made while work
-is still pending must still prove `RESUME`, only one of the four expected toasts
-was visibly observed, and the canary exposed pre-existing Nord baseline leakage
-(Old Ways deities were scored and surfaced while Nine Divines was selected).
+`BROAD_SCOPE_ABORT` marker. Reloading after the queue had drained was clean. A
+second counted run saved after job 1 while job 2 was at cell 4/21; load emitted
+`RESUME pending=3`, then jobs 2-4 drained in FIFO order. Papyrus submitted and
+Prisma received/rendered four distinct toast correlations. Manual observation
+confidently saw two but could not certify all four.
+
+The resumed job exposed a deeper presentation/replay defect: eligible Divine
+names later in the job appeared twice in one newly-created Book entry, while
+the pre-save Talos cell appeared once. The stacked fix now gives a saved active
+slice resume ownership, cancels pending update registrations before load re-arm,
+uses one persisted armed-update key, and checkpoints the cursor after every
+applied cell. Manager also guarantees that one logical deed lists each deity
+once; higher intensity remains the existing Book arrow/rune rather than repeated
+prose. This is implemented and compile-clean, but needs one more counted
+save-mid-sweep run before the replay defect is closed.
 The V3 runtime-log checker now consumes the real qualified key and `v3qr_N`
 marker shape; selected-lane and toast-cardinality corrections belong to the
 stacked canary-fix slice rather than the strict-parity extraction.
@@ -981,8 +991,9 @@ grandfathered active patron keep their explicit exceptions. Each completed
 logical job also carries its qualified reaction key as toast `correlation`;
 Prisma suppresses an exact repeat of one correlation but cannot collapse four
 different jobs. Static policy/cardinality gates, isolated Manager compilation,
-and the native releasedbg build pass. Fresh-game selected-lane, four-toast, and
-mid-job `RESUME` proof remain open.
+and the native releasedbg build pass. Mid-job `RESUME` plus four UI render
+callbacks now pass; fresh-game selected-lane, unique-name resumed presentation,
+and manual four-toast observation remain open.
 
 ---
 
