@@ -42,7 +42,7 @@ FormList Property PDV_FLST_UndeadCryptClearSites Auto
 FormList Property PDV_FLST_KhajiitMoonContemplations Auto
 Faction Property NecromancerFaction Auto
 Faction Property WarlockFaction Auto
-String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
+String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionCore.v2" AutoReadOnly
 PDV_QuestReactionRuntime Property PDV_QuestReactionRuntimeService Auto
 
 PDV_Deity_Kyne Property PDV_Kyne Auto

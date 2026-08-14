@@ -91,10 +91,8 @@ $Map = @(
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap.json";       Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap.json" },
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_TemporaryRaceMap.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_TemporaryRaceMap.json" },
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt" },
-    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionMatrix.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionMatrix.json"; Required = $true },
-    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\QuestStageAdapters\PDV_QSA_Core_FreeformRiften02.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\QuestStageAdapters\PDV_QSA_Core_FreeformRiften02.json"; Required = $true },
-    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\QuestStageAdapters\PDV_QSA_Core_FreeformRiften03.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\QuestStageAdapters\PDV_QSA_Core_FreeformRiften03.json"; Required = $true },
-    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\QuestStageAdapters\PDV_QSA_Core_Staada.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\QuestStageAdapters\PDV_QSA_Core_Staada.json"; Required = $true },
+    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionCore.v2.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionCore.v2.json"; Required = $true },
+    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionPatches.v2.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionPatches.v2.json"; Required = $true },
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_AltmerPracticeLines.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_AltmerPracticeLines.json"; Required = $true },
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_KhajiitMoonObservations.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_KhajiitMoonObservations.json" }
 )
