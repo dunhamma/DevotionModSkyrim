@@ -1,33 +1,8 @@
-# Devotion - the mod, plus optional per-mod quest patches
+# Devotion Quest Reaction Compatibility
 
-This archive is the whole distribution. Install it with your mod manager and run the
-installer; there is no separate core download.
+The official third-party reaction catalog installs automatically. The installer offers five dependency-detected adapter options for integrations that require records or scripts. Data-only integrations need no individual checkbox.
 
-- **Devotion core installs automatically.** It is a required part of the installer, not an
-  option you can miss.
-- **The 77 per-mod patch options are optional.** Each one is locked to its source plugin: if
-  the mod it patches is not active in your load order, the option cannot be selected and
-  nothing for it is installed.
-
-Place `Devotion.esp` late in your load order by hand rather than letting LOOT decide. Do not
-keep `PDV_AuthoriaARR_Combined.esp`, `PDV_QuestReactionMatrix_ARR.json`, or any older Devotion
-compatibility package alongside this one -- those overwrite Devotion's core scripts.
-
-Most options install a single per-mod reaction channel. Five install an ESP:
-
-- Aetherium Forge Destroys Items installs `PDV_Patch_AFDI.esp`, an observer quest, its
-  `.seq`, and its script. Load it after `Aetherium Forge Destroys Items.esp` and
-  `Devotion.esp`.
-- Daedric Shrines AIO installs `PDV_Patch_DaedricShrinesAIO.esp` and matching BOS swaps.
-  Load the patch after `Devotion.esp`.
-- Once We Were Here, War's Folly, and Whispers of the Depths each install an ESL-flagged
-  dialogue-fragment patch. Load each `PDV_Patch_*.esp` after its named source quest plugin.
-
-Keeping all five `PDV_Patch_*.esp` files below `Devotion.esp` and below their source
-plugins satisfies those master and override relationships. Thieves Guild Alternative
-Endings remains data-only: its quest-stage adapter is JSON, not an ESP.
-
-## Included patch integrations
+## Quest-patch integrations (80)
 
 - Above All Else
 - Aetherium Forge Destroys Items
@@ -51,6 +26,7 @@ Endings remains data-only: its quest-stage adapter is JSON, not an ESP.
 - Glenmoril
 - Gore - A Companion Mod
 - Heart of the Reach
+- House of Horrors - Quest Expansion
 - Hunt for the Spectre
 - Ill Met by Moonlight - Dialogue Expansion
 - Immersive Kaidan AIO
@@ -84,15 +60,17 @@ Endings remains data-only: its quest-stage adapter is JSON, not an ESP.
 - Skyrim Extended Cut - Saints and Seducers
 - Sleepwalking Into A Nightmare
 - Song of the Green - Auri
-- The Thalmor's Shadow - Taliesin
 - Taste of Death Addon
+- The Cursed Tribe - Quest Expansion
 - The Forgotten City
 - The Frozen Heart
 - The Gift of Saturalia
 - The Gray Cowl of Nocturnal
 - The Heart of Dibella - Quest Expansion
+- The Only Cure - Quest Expansion
 - The Rot Below
 - The Sinister Seven
+- The Thalmor's Shadow - Taliesin
 - The Tools of Kagrenac
 - The Whispering Door - Quest Expansion
 - There Is No Umbra - Chapter III
@@ -109,28 +87,8 @@ Endings remains data-only: its quest-stage adapter is JSON, not an ESP.
 
 ## KID integrations
 
-- Skyrim and Dragonborn food, drink, trade goods, hunt trophies, funerary
-  offerings, Orcish equipment, and Divine amulets
-- Requiem
-- Requiem - Food and Beverages Redone
-
-KID identifies additional Green Pact meats from the Requiem food stack and applies
-Devotion's seven item-action families wherever configured names match.
+None in this build
 
 ## SPID integrations
 
-- Skyrim religious orders, temples, named adherents, cultural institutions, and
-  explicit Daedric cult cohorts
-- Dragonborn Reclamation temple cohorts
-
-SPID adds only Devotion faith keywords and hidden recognition factions. It does not
-distribute AI packages, aggression, spells, perks, outfits, or inventory.
-
-## In game
-
-When a patched quest reaction fires, its source mod is named in the Prisma toast and retained
-on the matching Book of Days entry. One resolved act produces at most one reaction toast and
-one Book entry, even when several deities respond. A separate Chronicle entry can appear when
-the act also causes a real tier transition.
-
-Report anything that looks wrong on the mod page rather than assuming it is your load order.
+None in this build

@@ -32,7 +32,7 @@ for (const entry of contract.tools) {
     continue;
   }
   const source = fs.readFileSync(toolPath, "utf8");
-  const helperImport = source.match(/import\s*\{([^}]*)\}\s*from\s*["']\.\/lib\/pdv_file_compare\.mjs["']/m);
+  const helperImport = source.match(/import\s*\{([^}]*)\}\s*from\s*["']\.\/(?:lib\/)?pdv_file_compare\.mjs["']/m);
   const importedHelpers = new Set((helperImport?.[1] ?? "").split(",").map((name) => name.trim()).filter(Boolean));
   for (const helper of entry.requiredHelpers) {
     if (importedHelpers.has(helper)) pass(`${entry.tool}: imports ${helper}`);

@@ -1,7 +1,7 @@
 # PDV Mod Packaging State Authority
 
 Updated: 2026-08-14 AEST
-Status: v1.5.0 final all-in-one release packaged and byte-verified from clean commit `e63de5f5` (README requirements repackage of the published v1.5.0); tagged and published. The v1.5.0d prerelease receipt below is retained as historical evidence.
+Status: v1.5.0 final remains the published line from clean commit `e63de5f5`; the ground-up V3 Slice 1 catalog/runtime/semantic/package backend is green and awaits one combined fresh-game plus Authoria smoke before runtime acceptance.
 
 The published v1.5.0 package incorporates the closed official-quest work: all 18 ambiguity
 decisions, the `FreeformRiften02` selector adapter, the owner-approved tag/profile
@@ -61,12 +61,22 @@ Slice 1D-A backend proof is now green for AFDI. Its observer preserves the
 30-global baseline/backoff/poll-retirement mechanism but submits one
 `afdi|artifact_destroyed.*` semantic event into `PDV_QuestReactionRuntime`;
 devotional outcomes live only in the official v2 catalog. Direct houseCARL
-readback of both packaged ESP copies proves one Runtime property binding,
+readback of the canonical/generated-identical ESP proves one Runtime property binding,
 `PDV_QuestReactionRuntimeService -> 0716DF:Devotion.esp`, and a sole
 `Devotion.esp` master after dynamic resolution replaced the typed AFDI anchor.
-The SGE SEQ and PEX were regenerated and the v1.5 FOMOD byte receipt refreshed.
+The SGE SEQ and PEX were regenerated and the adapter source/bytecode lock refreshed.
 This is compile, package-byte, VMAD, and master proof only: AFDI runtime behavior
 remains open for the combined fresh-game smoke.
+
+Slice 1D-B backend proof is green. `PDV_QuestReactionCompatibility.manifest.json`
+now generates the entire compatibility tree: one required official V2 catalog,
+75 data-only integrations with no individual installer option, and exactly five
+dependency-detected adapter folders. The generated tree contains 31 files and no
+V1 channel/stage-adapter payload. `PDV_QuestReactionPackageV3.receipt.json` records
+every path, byte length, SHA-256, and the tree hash. Installer simulation reports
+zero destination collisions; normalized sorted ZIP creation extracts and exact-hash
+verifies every member. This is package/backend proof only. Real mod-manager detection,
+installed source/sentinel behavior, and Skyrim gameplay remain for combined smoke.
 
 ## Public-copy boundary
 
@@ -89,12 +99,12 @@ milestone Chronicle entry may accompany the act, but it does not create a
 second toast. Capped, duplicate, zero-credit, and classify-only events create no
 false player-facing acknowledgement.
 
-Every PatchHub channel carries the player-facing name of its owning FOMOD
-option. The core queue preserves that name through finalisation: the transient
+Every compatibility source carries its player-facing name in the V2 catalog.
+The core queue preserves that name through finalisation: the transient
 Prisma toast displays it and the persistent Book-of-Days entry stores and
 displays it. Core reactions omit the optional field. Existing saves pad the new
 journal source list before appending, so a new label cannot attach to an older
-entry. For patch testing, these two labelled surfaces are the player-visible
+entry. For compatibility testing, these two labelled surfaces are the player-visible
 confirmation that routing fired; logs remain diagnostic evidence, not the
 player acceptance surface.
 
@@ -200,7 +210,7 @@ Book entry must reuse the same resolved practice line.
 Every future package build or packaging status change updates this file with:
 
 - build date, version, source commit, archive filename, byte size, and SHA-256;
-- core payload manifest count and PatchHub option/channel/plugin inventory;
+- core payload manifest count plus V3 required-catalog/adapter inventory;
 - intentionally included and excluded files;
 - machine-gate results and exact unresolved failures;
 - runtime-route, player-surface, semantic, save/load, and support evidence;

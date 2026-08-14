@@ -100,7 +100,8 @@ Work Rule".
 | `tools/pdv_prisma_parity_unitd_check.mjs` | Read-only verifier for Prisma parity Unit D journal/toast wiring, carryover award funnel, director resolver preservation, and Daedric commitment-title readback |
 | `tools/pdv_prisma_to_oneoh_audit.mjs` | Read-only roll-up verifier for Prisma-to-1.0 wiring; checks current producer callsites, source/live parity, repo/live Prisma UI parity, and adversarial negative fixtures before runtime smoke |
 | `tools/pdv_deity_stance_parity.mjs` | Cross-checks the three sources of a deity stance -- the matrix JSON `stance.<Race>.<Deity>` (wins at runtime), the ESP `Stance_<Race>` VMAD property (fallback), and `IsDashboardDeityInOriginRoster`. Fails on ESP/JSON drift and on an off-roster deity reading NATIVE; warns where the JSON value cannot be expressed in the record at all. Derives rosters and canonical names from source rather than pinning them |
-| `tools/pdv_patch_source_deploy.mjs` | Deploys `patch-source/` (the source of truth for patch-only Papyrus) into the FOMOD tree, producing the AFDI two-path duplication. `--check` gates that `dist/` matches and that no `.psc` has changed since its last compile; `--write` regenerates; `--relock` accepts new bytecode after recompiling |
+| `tools/pdv_patch_source_lock.mjs` | Gates canonical optional-adapter PSC/PEX pairs by normalized source hash and exact bytecode hash; `--relock` accepts reviewed bytecode after recompiling |
+| `tools/pdv_quest_reaction_build.mjs` | Single V3 Quest Reaction build entrypoint for deterministic catalogs, the required-catalog/five-adapter FOMOD tree, exact receipts, installer simulation, and verified normalized archives |
 | `tools/pdv_quest_reaction_semantic_adapter_audit.mjs` | Verifies the V3 AFDI observer keeps its baseline/backoff/poll-retirement lifecycle, submits exactly one catalog-owned semantic event per routed destruction, and leaves no Manager batch or devotional-outcome ownership in adapter code |
 | `tools/lib/pdv_daedric_effect_model.mjs` | Explicit all-Prince boon/price model and independently tunable ActorValue-family bands; exceptional packets such as Mora Champion live in the Prince declaration rather than editor-ID override maps |
 | `tools/pdv_generate_daedric_contract.mjs` | Generates the all-Prince Daedric record contract and non-Hircine path scripts from the content manifest, race/Prince matrix, and explicit effect model. **Report-only by default**; `--self-test` proves model invariants and zero reviewed-contract drift, while writes remain explicit through `--write-contract` or `--scaffold-scripts --source-dir <path>` |
@@ -566,7 +567,7 @@ Phase 10 Dunmer substrate proof-graduation is closed as of 2026-05-24. The count
 
 `tools\pdv_extract_quest_stage_readback.mjs` is the Phase 20 read-only quest-stage follow-up. It reads `references\vanilla-gameplay\extracted\vanilla-quest-candidates.csv`, uses the local Mutagen bridge to read exact QUST stages/objectives/fragments/aliases from vanilla/DLC masters, and writes `references\vanilla-gameplay\extracted\vanilla-quest-stage-readback.csv`. Use it for dossier/review work only; it does not write ESP data or authorize `sourceFillEntries`.
 
-`tools\pdv_quest_matrix_compile.mjs` remains the V1 compiler used by the public 1.5 line. For V3, `tools\pdv_quest_reaction_build.mjs` consumes `references\authoring\PDV_QuestReactionCompatibility.manifest.json` plus the frozen core and 78 compatibility CSVs, then deterministically generates `PDV_QuestReactionCore.v2.json`, `PDV_QuestReactionPatches.v2.json`, and an exact-byte SHA-256 receipt. Use `node .\tools\pdv_quest_reaction_build.mjs --self-test --check --json`; use `--write` only when reviewed authoring inputs intentionally change. Slice 1C-B now makes Runtime consume the fixed core/official files plus sorted `QuestReactionExtensions/*.json`, with qualified quest and semantic keys only. The backend/static/compile gate is green; in-game activation remains for the combined fresh-game smoke.
+`tools\pdv_quest_matrix_compile.mjs` remains the V1 compiler used by the public 1.5 line and the pure tuple compiler consumed by the V2 build. For V3, `tools\pdv_quest_reaction_build.mjs` consumes `references\authoring\PDV_QuestReactionCompatibility.manifest.json` plus the frozen core, 78 quest CSVs, AFDI semantic CSV, stage selectors, and locked adapter assets. It deterministically generates `PDV_QuestReactionCore.v2.json`, `PDV_QuestReactionPatches.v2.json`, the 31-file required-catalog/five-adapter FOMOD tree, and exact SHA-256 receipts. Use `node .\tools\pdv_quest_reaction_build.mjs --self-test --check --json`; use `--write` only when reviewed authoring inputs intentionally change. `--package --output <new.zip>` refuses overwrite, writes normalized deterministic ZIP metadata, extracts the archive, and exact-hash verifies all 31 members. For an installed V3 profile, run `node .\tools\pdv_matrix_runtime_preflight.mjs --mo2 <root> --profile <name> --compat-mod "Devotion - Quest Reaction Compatibility" --expected-core 353 --expected-official-sources 79 --json`; it checks the winning core and official v2 catalogs and does not inspect retired V1 channels. Slice 1C-B consumes the fixed core/official files plus sorted `QuestReactionExtensions/*.json`, with qualified quest and semantic keys only. All Slice 1 backend/static/compile/package gates are green; in-game activation remains for the combined fresh-game and Authoria smoke.
 
 Current remap note (main-quest expansion 2026-07-15): source tranches through T11 compile to 1978 cells / 172 quest keys / 134 watched quests / 45 deity names / 26 faucet acts. Use `node .\tools\pdv_quest_tranche_merge.mjs`, then `node .\tools\pdv_main_quest_full_coverage_audit.mjs --json`, then the formal-offer/remap/signal-floor gates before claiming source/readback readiness. For the representative smoke set, run `node .\tools\pdv_signal_floor_smoke_gate.mjs --json`; use `--write-ledger` to regenerate `PDV_SignalFloorSmokeLedger.{md,json}` after source, runtime JSON, or Papyrus log evidence changes. The Debug: State & Rewards MCM page has a `Signal-floor smoke` controlled route selector backed by `PDV__ManagerQuest.DebugRunSignalFloorSmokeScenario`, but those routes remain backend/log convenience only. Green source/readback gates still do not prove runtime-route, Active Effects, Book of Days, Survey/status, Prisma/notification, save/load stack behavior, or the expanded Paarthurnax/main-quest surface; use `references\authoring\PDV_1_0_CoTest_Runbook_2026-07-10.md` for live tester/Codex steps.
 
@@ -593,8 +594,9 @@ and static proof. Then run
 fresh Skyrim sweep. Runtime acceptance still requires FIFO lifecycle markers,
     one visible final toast/Book beat per accepted job, and a mid-job save/load
     resume. The consolidated catalog v2 compiler and Runtime cutover are
-    backend-green. The AFDI semantic adapter migration is also backend-green;
-    generated package consolidation remains the final backend Slice 1 tranche.
+    backend-green. The AFDI semantic adapter migration and generated package
+    consolidation are also backend-green; the combined fresh-game and Authoria smoke
+    is the remaining Slice 1 acceptance gate.
 
 The 2026-08-14 fresh-game canary passed qualified ingress, five complete queue
 lifecycles, the four-job FIFO sweep, four Book of Days entries, and reload after
@@ -634,15 +636,16 @@ Stuhn/Shor while excluding Akatosh; Nine Divines logged `NordNineDivines`,
 accepted `21/21/21/7`, and manually excluded Stuhn/Shor/Tsun while retaining
 Akatosh. Each lane completed four FIFO jobs with one resume and no overlap,
 overflow, stack, or broad-scope failure. This closes the stacked canary-fix
-runtime/manual proof. Catalog-v2 and semantic-adapter backend work now pass;
-generated package acceptance and the combined fresh-game smoke remain open.
+runtime/manual proof. Catalog-v2, semantic-adapter, and generated-package backend
+work now pass; the combined fresh-game and Authoria smoke remains open.
 
 For isolated patch-only Papyrus, set `PDV_COMPILE_SOURCE_ROOT` and
 `PDV_COMPILE_OUTPUT_ROOT` to the patch source/output folders, set
 `PDV_TRACKED_SOURCE_ROOT` to the same source, and pass the live core source folder
 through `PDV_COMPILE_EXTRA_IMPORT_ROOTS`. Slice 1D-A uses that path to compile
 `PDV_AFDIObserver` without copying patch code into core. After compile, run
-`pdv_patch_source_deploy.mjs --relock`, then `--write` and `--check`.
+`node .\tools\pdv_patch_source_lock.mjs --relock`, then regenerate and verify the
+package with `pdv_quest_reaction_build.mjs --write` and `--check`.
 
 AFDI now submits one catalog-owned `afdi|artifact_destroyed.*` semantic event per
 routable destruction. The observer retains baseline/backoff/poll-retirement behavior

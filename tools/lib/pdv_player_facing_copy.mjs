@@ -6,8 +6,8 @@
 // name and a short plain description of what the thing does. Proof state belongs in
 // AGENTS.md, commit messages, PR bodies and the gates -- never in the shipped artifact.
 //
-// This module is the SINGLE definition. tools/pdv_quest_patch_fomod_generate.mjs (build
-// time), tools/pdv_quest_patch_fomod_validate.mjs (shipped artifact) and
+// This module is the SINGLE definition. tools/pdv_quest_reaction_build.mjs (generated
+// installer), tools/pdv_fomod_release_package.mjs (release archive) and
 // tools/pdv_player_facing_copy_gate.mjs (every surface) all import from here, so the
 // pattern cannot drift between them.
 
@@ -75,14 +75,14 @@ export function shippedSurfaces(repoRoot) {
   const pushDir = (label, dir, filter) =>
     filesUnder(dir, filter).forEach((file) => surfaces.push({ label, file }));
 
-  // The quest-patch installer: option list AND the header/description page.
-  pushFile("patchhub installer", at("dist/PDV_QuestModPatches_FOMOD/fomod/ModuleConfig.xml"));
-  pushFile("patchhub installer info", at("dist/PDV_QuestModPatches_FOMOD/fomod/info.xml"));
+  // The generated Quest Reaction installer: five adapter options plus its header page.
+  pushFile("quest reaction installer", at("dist/PDV_QuestModPatches_FOMOD/fomod/ModuleConfig.xml"));
+  pushFile("quest reaction installer info", at("dist/PDV_QuestModPatches_FOMOD/fomod/info.xml"));
   // EVERY .md/.txt anywhere in the FOMOD tree, not just common/*/Docs/. Scoping this to
   // Docs/ once let README-ARR25-EXPERIMENTAL.md at the package root ship with
   // "machine-verified experimental" in it -- the gate passed and the ZIP was still dirty.
   // Anything inside this tree gets installed, so anything inside it is player-facing.
-  pushDir("patchhub shipped text", at("dist/PDV_QuestModPatches_FOMOD"),
+  pushDir("quest reaction shipped text", at("dist/PDV_QuestModPatches_FOMOD"),
     (f) => (md(f) || txt(f)));
   // Core release text.
   pushDir("release meta", at("dist/release-meta"), (f) => txt(f) || md(f));

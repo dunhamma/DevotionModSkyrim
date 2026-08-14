@@ -139,7 +139,7 @@ async function buildWorklist() {
     // LANE downstream: a defined quest becomes a per-mod channel row carrying formid, while
     // an override's added stages belong on a core-tranche row keyed by the vanilla editor_id
     // -- and a channel that claimed the vanilla FormID would double-claim a cell the core
-    // matrix already owns, which pdv_quest_channel_reconcile rejects.
+    // matrix already owns, which pdv_quest_stage_ownership_check rejects.
     [...defined.map((rec) => ({ rec, role: "defined" })), ...overridden.map((rec) => ({ rec, role: "override" }))]
       .forEach(({ rec, role }, i) => {
         rows.push({

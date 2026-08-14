@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "pdv-v3-slice1-quest-reaction",
-  "status": "slice1da-semantic-adapter-backend-green-package-and-skyrim-proof-open",
+  "status": "slice1db-generated-package-backend-green-combined-skyrim-proof-open",
   "northStar": "Replace the current quest-reaction cluster with one deep, event-driven module built from current main without preserving V1 save state.",
   "delivery": {
     "integrationBranch": "feature/v3-big-update",
@@ -222,6 +222,18 @@
     "recordReadback": "direct houseCARL readback proves both AFDI ESP copies are StartGameEnabled, bind only PDV_QuestReactionRuntimeService to 0716DF:Devotion.esp, and retain only Devotion.esp as a master; regenerated SEQ contains the observer quest",
     "proofBoundary": "semantic catalog/source coverage, static isolation, Papyrus compilation, bytecode lock, VMAD, master, and SEQ proof only; AFDI baseline, destruction detection, semantic queueing, player surfaces, and save-load remain combined fresh-game Skyrim smoke"
   },
+  "slice1DBGeneratedPackage": {
+    "status": "backend-generation-installer-simulation-and-archive-proof-pass-skyrim-proof-open",
+    "authority": "references/authoring/PDV_QuestReactionCompatibility.manifest.json",
+    "build": "node tools/pdv_quest_reaction_build.mjs --self-test --check --json",
+    "tree": "dist/PDV_QuestModPatches_FOMOD",
+    "receipt": "references/authoring/PDV_QuestReactionPackageV3.receipt.json",
+    "requiredContent": "one auto-installed PDV_QuestReactionPatches.v2.json official catalog covering 75 data-only sources plus the catalog-backed adapters",
+    "adapterOptions": "exactly five dependency-detected adapter folders; no data-only source option",
+    "retired": "78 V1 channel JSONs, separate V1 stage-selector JSON, duplicated adapter payloads, the PatchHub manifest/generator/validator/package scripts, and the dist deployer",
+    "backendProof": "31-file deterministic package tree, five-option installer simulation with zero collisions, exact path/length/SHA-256 receipt, normalized deterministic archive metadata, exact archive membership/member hashes, repository-contained adapter source/PEX lock validation, complete public 80-integration inventory with explicit empty KID/SPID categories, no Channels/QuestStageAdapters/PDV_QRM/PDV_QSA member, and retargeted ARR/release/inventory/installed-profile preflight gates",
+    "proofBoundary": "generated tree, installer selection model, asset bytes, and archive integrity only; real mod-manager dependency detection, installed-source activation, and gameplay remain combined fresh-game and Authoria smoke"
+  },
   "canaryFixFollowup": {
     "status": "runtime-and-manual-canary-passed",
     "selectedLanePolicy": "ordinary automatic quest reactions must be eligible in the currently selected Nord baseline at ingress and again before award; authored taboo/hostile displeasure remains valid for visible origin-roster deities; Daedric paths and grandfathered active patrons retain their existing exceptions",
@@ -243,7 +255,7 @@
     "one-bad-extension-does-not-disable-other-sources",
     "deterministic-clean-checkout-catalog-rebuild"
   ],
-  "targetAcceptanceStatus": "compiler-runtime-and-semantic-adapter-backend-pass-package-contract-and-combined-fresh-game-proof-open",
+  "targetAcceptanceStatus": "all-slice1-backend-pass-combined-fresh-game-and-authoria-proof-open",
   "retirementAfterReplacement": [
     {
       "surface": "PDV_QuestReactionWorker script identity",
@@ -264,6 +276,11 @@
       "surface": "per-channel shared stance, value, and faucet tables",
       "replacement": "core-owned shared policy plus delta-only third-party catalog",
       "proof": ["exact source-to-runtime coverage", "deterministic output comparison"]
+    },
+    {
+      "surface": "80-option PatchHub tree, per-source channel JSONs, and hand-maintained dist inputs",
+      "replacement": "one manifest-driven generated package with a required official catalog and five adapter options",
+      "proof": ["deterministic generated tree receipt", "installer simulation", "exact archive membership and member hashes"]
     }
   ],
   "foundationExitGates": [
@@ -281,11 +298,15 @@
     "node tools/pdv_quest_reaction_runtime_check.mjs --self-test",
     "node tools/pdv_compile_inventory_audit.mjs"
   ],
-  "legacyBaselineRegressionGates": [
-    {
-      "command": "node tools/pdv_quest_patch_fomod_validate.mjs --root dist/PDV_QuestModPatches_FOMOD",
-      "purpose": "Prove Slice 1A did not damage the published v1.5 80-option package; this does not validate the future V3 five-adapter installer."
-    }
+  "slice1DBPackageGates": [
+    "node tools/pdv_patch_source_lock.mjs --check",
+    "node tools/pdv_quest_reaction_build.mjs --self-test --check --json",
+    "node tools/pdv_arr25_t16_route_check.mjs",
+    "node tools/pdv_arr25_t17_check.mjs",
+    "node tools/pdv_arr25_nonquest_check.mjs",
+    "node tools/pdv_external_support_inventory.mjs --check",
+    "node tools/pdv_player_facing_copy_gate.mjs --json",
+    "git diff --check"
   ],
   "deferred": [
     "manager ledger extraction",

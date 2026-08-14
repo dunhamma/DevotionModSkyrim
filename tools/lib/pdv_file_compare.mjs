@@ -3,7 +3,7 @@
 // WHY THIS EXISTS. The same defect was written twice in one afternoon, both times by someone
 // who knew about the first one:
 //
-//   1. tools/pdv_patch_source_deploy.mjs first gated freshness on mtimes. git does not
+//   1. The former patch-source deployer first gated freshness on mtimes. git does not
 //      preserve mtimes, so a clean clone reported stale bytecode on ten untouched scripts.
 //   2. Its replacement hashed RAW BYTES. With core.autocrlf=true the bytes of a text file
 //      depend on WHEN it was checked out, so the lock (written LF) failed against every

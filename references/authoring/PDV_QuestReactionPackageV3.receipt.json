@@ -1,0 +1,189 @@
+{
+  "adapterOptions": [
+    {
+      "dependency": "Aetherium Forge Destroys Items.esp",
+      "sourceId": "afdi"
+    },
+    {
+      "dependency": "man_DaedricShrines.esp",
+      "sourceId": "daedric-shrines-aio"
+    },
+    {
+      "dependency": "Once We Were Here - Quest Mod.esp",
+      "sourceId": "once-we-were-here"
+    },
+    {
+      "dependency": "War's Folly.esp",
+      "sourceId": "wars-folly"
+    },
+    {
+      "dependency": "Slays-Many-Beasts Quest Mod.esp",
+      "sourceId": "whispers-of-the-depths"
+    }
+  ],
+  "dataOnlySources": 75,
+  "files": [
+    {
+      "bytes": 382,
+      "path": "adapters/afdi/PDV_Patch_AFDI.esp",
+      "sha256": "25ce7e1680a18e623a7576a7bac3a21d6ed3dfb270e4c9f92c61a0fe79f7634a"
+    },
+    {
+      "bytes": 6630,
+      "path": "adapters/afdi/Scripts/PDV_AFDIObserver.pex",
+      "sha256": "dc793f66971d76ec1dfa076dd2cb70ccc70616a8474bdbe879f1b56c66852329"
+    },
+    {
+      "bytes": 7113,
+      "path": "adapters/afdi/Scripts/Source/PDV_AFDIObserver.psc",
+      "sha256": "7b7600dd732c787770e63f3b85952f73eddcb2fe4c3816183c2001b36a303692"
+    },
+    {
+      "bytes": 4,
+      "path": "adapters/afdi/Seq/PDV_Patch_AFDI.seq",
+      "sha256": "a65506671be0e271a8f77d65db6eab028951ba54be9569ebc128824cb1dc2ebf"
+    },
+    {
+      "bytes": 5866,
+      "path": "adapters/daedric-shrines-aio/PDV_Patch_DaedricShrinesAIO.esp",
+      "sha256": "bb9196ee83e4276af76361d2bf3482e3d0cd870b6975acd99c39b8587fa1aa93"
+    },
+    {
+      "bytes": 926,
+      "path": "adapters/daedric-shrines-aio/SKSE/Plugins/BaseObjectSwapper/PDV_DaedricShrinesAIO_SWAP.ini",
+      "sha256": "16acaf8f50940f34c010d12d2ded9f998c79c4b81961a2d4b15ad5590a610119"
+    },
+    {
+      "bytes": 4160,
+      "path": "adapters/once-we-were-here/PDV_Patch_OnceWeWereHere.esp",
+      "sha256": "236a9d32bfbc72b0b2ff2c9ed4c12883247469d67b9a070a649542fd03cfebd2"
+    },
+    {
+      "bytes": 724,
+      "path": "adapters/once-we-were-here/Scripts/PDV_TIF_OWWH_S60.pex",
+      "sha256": "82dc17def58f76c30f8fa70a4d38c2a543b29ce418e98a1f4d190ed8bc527b65"
+    },
+    {
+      "bytes": 724,
+      "path": "adapters/once-we-were-here/Scripts/PDV_TIF_OWWH_S61.pex",
+      "sha256": "4702d0b952b1a67e4be977238a4793d43e683d86a9a3980022880f919c278f7b"
+    },
+    {
+      "bytes": 242,
+      "path": "adapters/once-we-were-here/Scripts/Source/PDV_TIF_OWWH_S60.psc",
+      "sha256": "f4efa94d7cd5282b37b31f2ec4d4669f43e8d9b1817854955eed01c4c5e3547a"
+    },
+    {
+      "bytes": 242,
+      "path": "adapters/once-we-were-here/Scripts/Source/PDV_TIF_OWWH_S61.psc",
+      "sha256": "ac0ae0848e79181a3d0afa53aa6d02cdf0ad3206ea0cb446a371485ed1f62c33"
+    },
+    {
+      "bytes": 7125,
+      "path": "adapters/wars-folly/PDV_Patch_WarsFolly.esp",
+      "sha256": "ba3ee89196a146ef754eb28503a6b66362b1528daea8df0ed301181df523d563"
+    },
+    {
+      "bytes": 720,
+      "path": "adapters/wars-folly/Scripts/PDV_TIF_WF_S20.pex",
+      "sha256": "2490f09852f9348f1d23ddc172b34567a9c2ec28b53a87a04a2ef1aa64ec37f0"
+    },
+    {
+      "bytes": 720,
+      "path": "adapters/wars-folly/Scripts/PDV_TIF_WF_S21.pex",
+      "sha256": "1f2fe7c0913c4f80eaa808a6ec00bba4f335e29ca3a743a7587b45708ab35513"
+    },
+    {
+      "bytes": 720,
+      "path": "adapters/wars-folly/Scripts/PDV_TIF_WF_S22.pex",
+      "sha256": "bb7262243ff7b32f8ed62a4b7efc7e783695cece8efde6d2b4119aebd9a8c636"
+    },
+    {
+      "bytes": 759,
+      "path": "adapters/wars-folly/Scripts/PDV_TIF_WF_S23.pex",
+      "sha256": "b4fe6120c330919df8484178150973a6e3626d8aa8dbcd5cff78a9b92817a40d"
+    },
+    {
+      "bytes": 759,
+      "path": "adapters/wars-folly/Scripts/PDV_TIF_WF_S24.pex",
+      "sha256": "def7424848cf105046f6cf74d502dbf67451bbb02dcd9d6b49685fed5b49dded"
+    },
+    {
+      "bytes": 759,
+      "path": "adapters/wars-folly/Scripts/PDV_TIF_WF_S25.pex",
+      "sha256": "a6a313eab8a29dbf34a6eb576e71b63794890ae579ad80b06d6437bb337d8e15"
+    },
+    {
+      "bytes": 240,
+      "path": "adapters/wars-folly/Scripts/Source/PDV_TIF_WF_S20.psc",
+      "sha256": "f572ba89770b3ed4c0ec48078c070912182aa3b69811185a3c73c79244a47945"
+    },
+    {
+      "bytes": 240,
+      "path": "adapters/wars-folly/Scripts/Source/PDV_TIF_WF_S21.psc",
+      "sha256": "2df1e39efb7d1c7291e51ceacb814cf79d8316dbc68b852f8afb082d89bae859"
+    },
+    {
+      "bytes": 240,
+      "path": "adapters/wars-folly/Scripts/Source/PDV_TIF_WF_S22.psc",
+      "sha256": "de6329277c1e8f8f95a7f8630c526678c56f7a430156fd226a2ab0226a66bedd"
+    },
+    {
+      "bytes": 274,
+      "path": "adapters/wars-folly/Scripts/Source/PDV_TIF_WF_S23.psc",
+      "sha256": "4318a8bc8a0e1d5056a51de149471b1ec6b244f6a5f27d761417fab912e47abe"
+    },
+    {
+      "bytes": 274,
+      "path": "adapters/wars-folly/Scripts/Source/PDV_TIF_WF_S24.psc",
+      "sha256": "5a5261b3253ca6a685da1dd649f57fb2c30d8a5a2380394080ffe38c9fd3b2f3"
+    },
+    {
+      "bytes": 274,
+      "path": "adapters/wars-folly/Scripts/Source/PDV_TIF_WF_S25.psc",
+      "sha256": "4b4f5115955c5fc679e68ef03ce2d2d9682585061f6166d62068122fa0439ce3"
+    },
+    {
+      "bytes": 3019,
+      "path": "adapters/whispers-of-the-depths/PDV_Patch_SlaysManyBeasts.esp",
+      "sha256": "0399d1be91ca9a4db96c23cc00d7d27dd34b22952a60355a8f1d2441a0e63c34"
+    },
+    {
+      "bytes": 761,
+      "path": "adapters/whispers-of-the-depths/Scripts/PDV_TIF_SMB_S45.pex",
+      "sha256": "92e2ddf17965b1e98a9806e70f38c374e1c99b212cad9b2f04d5427ea182b13b"
+    },
+    {
+      "bytes": 275,
+      "path": "adapters/whispers-of-the-depths/Scripts/Source/PDV_TIF_SMB_S45.psc",
+      "sha256": "9f7f712491c0dadb866fc35073d4cc847c44529d985992e57acce798df810841"
+    },
+    {
+      "bytes": 480,
+      "path": "fomod/info.xml",
+      "sha256": "56857edbdcd2a0589c88d3c8f0ce5da94e28835657c6e68ee3b58eed30aab5e5"
+    },
+    {
+      "bytes": 5282,
+      "path": "fomod/ModuleConfig.xml",
+      "sha256": "aab7a42b2384558a94ba05700d5b30136eec1dcefd23a86cdabfbadf188f5d5d"
+    },
+    {
+      "bytes": 2383,
+      "path": "README.md",
+      "sha256": "e04e46a0bbc58b6fb09c98c43bc27bdd891c13d2c6cd6b5ad80a6b609c47f3d8"
+    },
+    {
+      "bytes": 995778,
+      "path": "required/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json",
+      "sha256": "0ea245321bc6af4f49dc1655aef38ba3eab59aa859b2e091fa440739b46da3ec"
+    }
+  ],
+  "inputSha256": "eb32842dfe46af93274e0af44b15ed0bea9d5cae1403e66db577216f111b1722",
+  "packageRoot": "dist/PDV_QuestModPatches_FOMOD",
+  "proofBoundary": "Generated tree, installer simulation, bytes, and hashes only; dependency detection and gameplay require Skyrim proof.",
+  "requiredCatalog": "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json",
+  "schema": "pdv.quest-reaction.package-receipt.v3",
+  "treeSha256": "d729a3c0d18dd89eab1bd6b604f83fb6194a29ceded1cba30692080162080272",
+  "version": 1
+}

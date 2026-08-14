@@ -1005,13 +1005,30 @@ package-wide caller audit proves no definition or call remains.
 
 The adapter now resolves all 30 AFDI globals dynamically, so its typed anchor
 property and AFDI plugin master are gone. Isolated Papyrus compilation passes at
-zero errors/warnings, patch-source bytecode is relocked, and both installer copies
-are regenerated. Direct houseCARL readback proves each ESP binds only
+zero errors/warnings and patch-source bytecode is relocked. Direct houseCARL
+readback of the canonical/generated-identical adapter proves the ESP binds only
 `PDV_QuestReactionRuntimeService -> 0716DF:Devotion.esp`, has only `Devotion.esp`
 as a master, and retains its Start-Game-Enabled observer quest; the SEQ was
 regenerated after master pruning. This is source/build/readback proof. Actual AFDI
 baseline, destruction detection, semantic queue delivery, player surfaces, and
 save-load behavior remain for the combined Skyrim smoke.
+
+Slice 1D-B replaces the 125-file, 80-option PatchHub tree with a deterministic
+31-file package generated from the compatibility manifest. One required
+`PDV_QuestReactionPatches.v2.json` catalog carries the 75 data-only integrations;
+exactly five dependency-detected adapter folders carry the remaining ESP/script/BOS
+mechanisms. The package contains no `Channels`, `QuestStageAdapters`, `PDV_QRM_*`,
+or `PDV_QSA_*` member. Canonical adapter assets live under `patch-source`, their
+PSC/PEX lock is verified before generation, and `dist` is output-only.
+
+`pdv_quest_reaction_build.mjs` now owns catalog generation, package-tree generation,
+installer simulation, the exact path/length/SHA-256 receipt, and normalized ZIP
+creation through one entrypoint. Self-tests cover missing assets/catalogs, a sixth
+option, install collisions, legacy members, stale bytecode, two isolated output
+trees, and catalog collision/isolation rules. The produced archive is written in
+sorted order with forward-slash member paths and fixed timestamps, then extracted
+and exact-hash compared. These are backend/package proofs, not evidence that a real
+mod manager detected the five dependencies or that Skyrim activated any source.
 
 The first fresh-game canary on 2026-08-14 proved qualified quest ingress and
 five complete `ENQUEUE -> START -> COMPLETE` lifecycles. The controlled
@@ -1058,9 +1075,9 @@ mid-job resume, and no queue safety marker in each lane. Old Ways emitted
 and Shor were included while Akatosh was excluded. Nine Divines emitted
 `NordNineDivines` with shape `21/21/21/7`; the tester confirmed Stuhn, Shor, and
 Tsun were excluded while Akatosh remained eligible. The stacked canary-fix
-slice is therefore runtime/manual proven. Catalog-v2 and semantic-adapter backend
-work now pass; generated package acceptance and the combined post-cutover Skyrim
-smoke remain separate later Slice 1 gates.
+slice is therefore runtime/manual proven. Catalog-v2, semantic-adapter, and generated
+package backend work now pass; the combined post-cutover fresh-game and Authoria smoke
+is the remaining Slice 1 acceptance gate.
 
 The appended Papyrus log also exposed a proof-tool defect: fresh sessions reuse
 `v3qr_N` job IDs. The runtime checker now pairs lifecycle occurrences in order,

@@ -1,32 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  REGENERATED AT BUILD TIME by tools/pdv_fomod_release_package.mjs, which overwrites this
-  file in its staging tree with the real version string from --version. This copy exists so
-  the patch tree is a valid FOMOD on its own and so the player-facing copy gate has something
-  to scan; it is NOT what ships.
-
-  It was previously the ARR-era PatchHub's file and nothing regenerated it, so every build
-  shipped a year-old dated version string and told users the package REQUIRED Devotion
-  separately - the opposite of true once core moved inside. Keep this in step with the
-  generator, and do not put a real version number here: a version typed by hand in two places
-  is the thing that went stale. (The exact wording is quoted in the commit, not here - the
-  player-facing copy gate scans this file line by line, comments included, and quoting the
-  old string would trip it.)
--->
 <fomod>
-  <Name>Devotion</Name>
+  <Name>Devotion - Quest Reaction Compatibility</Name>
   <Author>Devotion (PDV)</Author>
-  <Version MachineVersion="0.0.0.0">set at build time</Version>
-  <Website>https://www.nexusmods.com/skyrimspecialedition/</Website>
-  <Description>
-    Devotion tracks your character's religious devotion through the traditions their race
-    actually holds, and adjusts each god's standing from what you do.
-
-    This installer contains the whole mod. Devotion itself installs automatically and cannot
-    be deselected. The optional per-mod patches below teach it how the gods react to other
-    mods' content; each one is locked to its own source plugin, so an option you cannot use
-    is not offered, and a patch for a mod you later remove goes quiet rather than breaking.
-  </Description>
+  <Version>3.0.0-alpha</Version>
+  <Description>The official third-party Quest Reaction catalog installs automatically. Five small adapters appear only when their source plugins are active.</Description>
   <Groups>
     <element>Gameplay</element>
     <element>Quests and Adventures</element>

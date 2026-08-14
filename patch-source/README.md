@@ -5,13 +5,15 @@ Class: LIVING
 Source of truth for **patch-only Papyrus** - scripts that belong to an optional per-mod
 patch rather than to Devotion core.
 
-## Do not edit the copies under `dist/`
+## Do not edit the generated copies under `dist/`
 
-`dist/PDV_QuestModPatches_FOMOD/**` is **produced** from this tree:
+The five adapter payloads under `dist/PDV_QuestModPatches_FOMOD/adapters/` are
+**produced** from this tree and the compatibility manifest:
 
 ```bash
-node tools/pdv_patch_source_deploy.mjs --check   # gate: does dist match this tree?
-node tools/pdv_patch_source_deploy.mjs --write   # regenerate dist from here
+node tools/pdv_patch_source_lock.mjs --check
+node tools/pdv_quest_reaction_build.mjs --self-test --check --json
+node tools/pdv_quest_reaction_build.mjs --write  # intentional regeneration only
 ```
 
 Before this tree existed, those ten `.psc` files lived **only** under `dist/`. For that class
@@ -32,8 +34,9 @@ errored - so nothing here may reintroduce that split.
 
 ## `PDV_PatchSource.lock.json`
 
-The sha256 of each `.psc` as of its last compile, and of the `.pex` built from it. Edit a
-`.psc` without recompiling and the gate goes red.
+The sha256 of each `.psc` as of its last compile, and of the `.pex` built from it. The V3
+build validates this lock before it reads any adapter asset. Edit a `.psc` without
+recompiling and both the lock gate and package build go red.
 
 It is hashes rather than timestamps on purpose: **git does not preserve mtimes**, so an
 "is the .psc newer than the .pex" check reports stale bytecode on a clean clone. A gate that
@@ -42,21 +45,22 @@ cries wolf on a fresh checkout gets ignored, which leaves the real problem ungua
 After recompiling, accept the new bytecode explicitly:
 
 ```bash
-node tools/pdv_patch_source_deploy.mjs --relock
+node tools/pdv_patch_source_lock.mjs --relock
 ```
 
 `--relock` is a claim that you have recompiled. Do not run it to silence a red gate.
 
 ## Layout
 
-Mirrors the destination so the mapping is readable at a glance.
+Keeps canonical sources and locked artifacts together; the compatibility manifest owns
+their generated install destinations.
 
 ```
 patch-source/
-  AFDI/Scripts/{Source/*.psc, *.pex}                -> common/AFDI  AND  plugins/individual/AFDI
-  _Fragments/<Quest>/Scripts/{Source/*.psc, *.pex}  -> common/_Fragments/<Quest>
+  AFDI/Scripts/{Source/*.psc, *.pex}                -> adapters/afdi/Scripts
+  _Fragments/<Quest>/Scripts/{Source/*.psc, *.pex}  -> adapters/<source-id>/Scripts
+  <Adapter>/PDV_Patch_*.esp                         -> adapters/<source-id>/
 ```
 
-`PDV_AFDIObserver` deploys to **two** destinations because the two FOMOD options install
-different folder sets. Those copies were byte-identical and kept so by hand; they are now
-produced from one source, so they cannot drift.
+The V1 common/individual duplication is retired. Every adapter asset has one canonical
+source and one generated option destination.

@@ -1,6 +1,6 @@
 // Phase 1a - cross-instance candidate queue.
 // Bounds each installed modlist to its CONTENT mods using MO2's own separators,
-// subtracts plugins the patch hub already targets, dedupes across lists, and
+// subtracts plugins the compatibility manifest already targets, dedupes across lists, and
 // ranks by how many lists carry the mod.
 //
 // Names are a PRE-FILTER, not the answer. They were the answer once and were wrong in both
@@ -29,7 +29,7 @@ const NO_PROBE = process.argv.includes('--no-probe');
 const NO_CACHE = process.argv.includes('--no-cache');
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const HUB = path.join(REPO, 'dist/PDV_QuestModPatches_FOMOD/common');
+const COMPATIBILITY_MANIFEST = path.join(REPO, 'references/authoring/PDV_QuestReactionCompatibility.manifest.json');
 const PROBE_CACHE = path.join(REPO, 'generated', 'PDV_CandidateQueue.probe-cache.json');
 
 // One profile per real TARGET list. Anvil is the dev environment, not a target.
@@ -46,16 +46,12 @@ const isContentSection = (s) => INCLUDE.test(s) && !EXCLUDE.test(s);
 
 const read = (p) => fs.readFileSync(p, 'latin1').replace(/\r\n/g, '\n').split('\n');
 
-// --- hub coverage: plugins already targeted by a shipped channel ---------------
-const hubPlugins = new Set();
-for (const dir of fs.readdirSync(HUB)) {
-  const ch = path.join(HUB, dir, 'SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels');
-  if (!fs.existsSync(ch)) continue;
-  for (const f of fs.readdirSync(ch)) {
-    const j = JSON.parse(fs.readFileSync(path.join(ch, f), 'utf8'));
-    for (const p of j.stringList?.questWatchPlugins ?? []) hubPlugins.add(p.toLowerCase());
-  }
-}
+// --- compatibility coverage: plugins already owned by the V2 authority --------
+// Coverage is authoring data, not an installer-layout side effect. The 75 data-only
+// integrations no longer have per-source package folders, so scanning dist would silently
+// queue every supported mod again.
+const compatibility = JSON.parse(fs.readFileSync(COMPATIBILITY_MANIFEST, 'utf8'));
+const hubPlugins = new Set((compatibility.sources ?? []).map((source) => source.pluginName?.trim().toLowerCase()).filter(Boolean));
 
 // --- walk each list -----------------------------------------------------------
 const mods = new Map(); // key: plugin filename (lc) -> {plugin, names, lists, sections}

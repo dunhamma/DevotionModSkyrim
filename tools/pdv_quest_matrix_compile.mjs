@@ -27,8 +27,7 @@ if (INVOKED_AS_CLI) {
 const DEFAULT_OUTPUT = "D:/Wabbajack/modlists/Anvil/mods/Devotion/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix.json";
 
 const DEFAULT_MATRIX_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestReactionMatrix_Full.csv");
-const PATCH_HUB_ROOT = path.join(PROJECT_ROOT, "dist", "PDV_QuestModPatches_FOMOD");
-const PATCH_HUB_MANIFEST = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestPatchHub.manifest.json");
+const COMPATIBILITY_MANIFEST = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestReactionCompatibility.manifest.json");
 const FAUCET_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv");
 const QUEST_READBACK_CSV = path.join(PROJECT_ROOT, "references", "vanilla-gameplay", "extracted", "vanilla-quest-stage-readback.csv");
 const CORE_QUEST_WORKLIST_CSV = path.join(PROJECT_ROOT, "references", "vanilla-gameplay", "compatibility", "PDV_CoreQuestAuditWorklist.csv");
@@ -294,7 +293,7 @@ export function compileQuestMatrix(options = {}) {
     ...VALUE_TABLE,
   };
 
-  const sourceMod = options.sourceMod ?? resolvePatchSourceMod(targetOutputPath);
+  const sourceMod = options.sourceMod ?? resolvePatchSourceMod(matrixCsv);
   if (sourceMod) {
     out.sourceMod = sourceMod;
   }
@@ -508,35 +507,20 @@ export function compileQuestMatrix(options = {}) {
   return { flat: out, runtime: papyrusUtilJson, report };
 }
 
-function resolvePatchSourceMod(targetPath) {
-  const target = path.resolve(targetPath);
-  const relativeToHub = path.relative(PATCH_HUB_ROOT, target);
-  const isPatchChannel =
-    relativeToHub !== "" &&
-    !relativeToHub.startsWith(`..${path.sep}`) &&
-    !path.isAbsolute(relativeToHub) &&
-    target.split(path.sep).some((segment) => segment.toLowerCase() === "channels") &&
-    /^PDV_QRM_[A-Za-z0-9_]+\.json$/i.test(path.basename(target));
-  if (!isPatchChannel) return "";
+function resolvePatchSourceMod(matrixPath) {
+  const matrix = path.resolve(matrixPath);
+  const coreMatrix = path.resolve(DEFAULT_MATRIX_CSV);
+  if (matrix === coreMatrix) return "";
 
-  const manifest = readJson(PATCH_HUB_MANIFEST);
-  for (const option of manifest.options ?? []) {
-    for (const folder of option.folders ?? []) {
-      const optionRoot = path.resolve(PATCH_HUB_ROOT, folder.replaceAll("\\", path.sep));
-      const relativeToOption = path.relative(optionRoot, target);
-      if (
-        relativeToOption !== "" &&
-        !relativeToOption.startsWith(`..${path.sep}`) &&
-        !path.isAbsolute(relativeToOption)
-      ) {
-        if (!option.name || typeof option.name !== "string") {
-          throw new Error(`Patch channel option has no player-facing name: ${folder}`);
-        }
-        return option.name;
-      }
-    }
+  const manifest = readJson(COMPATIBILITY_MANIFEST);
+  const source = (manifest.sources ?? []).find((entry) => entry.csv && path.resolve(PROJECT_ROOT, entry.csv) === matrix);
+  if (!source) {
+    throw new Error(`Quest-reaction CSV is not owned by the compatibility manifest: ${matrix}`);
   }
-  throw new Error(`Patch channel output is not owned by a PatchHub manifest option: ${target}`);
+  if (!source.displayName || typeof source.displayName !== "string") {
+    throw new Error(`Compatibility source has no player-facing name: ${source.sourceId ?? matrix}`);
+  }
+  return source.displayName;
 }
 
 function validate(out) {

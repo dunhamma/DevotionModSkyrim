@@ -36,7 +36,8 @@ const P = {
   officialCatalog: path.join(ROOT, "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json"),
   iceCsv: path.join(ROOT, "references/authoring/patches/PDV_QRM_SaveTheIcerunner.csv"),
   moduleXml: path.join(ROOT, "dist/PDV_QuestModPatches_FOMOD/fomod/ModuleConfig.xml"),
-  authoriaScripts: path.join(ROOT, "dist/PDV_QuestModPatches_FOMOD/plugins/authoria/Scripts"),
+  packageRoot: path.join(ROOT, "dist/PDV_QuestModPatches_FOMOD"),
+  packagedCatalog: path.join(ROOT, "dist/PDV_QuestModPatches_FOMOD/required/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json"),
 };
 
 function read(file) {
@@ -171,10 +172,17 @@ if (coreSynthetic.length === 0) passes.push("TGAE content absent from core");
 else failures.push(`core matrix contains ${coreSynthetic.length} TGAE synthetic cell(s)`);
 
 const xml = read(P.moduleXml);
-requireText("modular TGAE option is present", xml, 'source="common\\TGAlternativeEndings"');
-requireText("modular Save the Icerunner option is present", xml, 'source="common\\SaveTheIcerunner"');
-requireText("individual TGAE dependency", xml, '<fileDependency file="TG Alternative Endings.esp" state="Active" />');
-requireText("individual Save the Icerunner dependency", xml, '<fileDependency file="SaveTheIcerunner.esp" state="Active" />');
+requireText("generated FOMOD installs the required catalog tree", xml, 'source="required"');
+requireText("generated FOMOD has the five-option adapter group", xml, "Detected Adapter Plugins");
+requireAbsent("TGAE remains catalog-only", xml, "TG Alternative Endings.esp");
+requireAbsent("Save the Icerunner remains catalog-only", xml, "SaveTheIcerunner.esp");
+requireAbsent("generated FOMOD has no per-source Channels", xml, "Channels");
+requireAbsent("generated FOMOD has no separate stage-adapter payload", xml, "QuestStageAdapters");
+const adapterOptions = [...xml.matchAll(/<plugin name="([^"]+)"/g)].map((match) => match[1]);
+if (adapterOptions.length === 5) passes.push("generated FOMOD has exactly five adapter options");
+else failures.push(`generated FOMOD: expected five adapter options, got ${adapterOptions.length}`);
+if (fs.existsSync(P.packagedCatalog) && fs.readdirSync(P.packageRoot, { recursive: true }).filter((item) => String(item).endsWith("PDV_QuestReactionPatches.v2.json")).length === 1) passes.push("packaged official catalog occurs exactly once");
+else failures.push("packaged official catalog must occur exactly once");
 
 const result = {
   status: failures.length ? "FAIL" : "PASS",
