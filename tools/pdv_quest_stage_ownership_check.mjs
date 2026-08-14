@@ -8,6 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { validatePapyrusUtilCatalogWire } from "./lib/pdv_quest_reaction_catalog_v2.mjs";
 
 const KNOWN_FLAGS = new Set(["--core", "--official", "--extensions-root", "--json"]);
 assertKnownFlags(process.argv.slice(2).filter((arg) => arg.startsWith("--")), KNOWN_FLAGS, {
@@ -27,11 +28,9 @@ const extensionsRoot = path.resolve(valueOf("--extensions-root", path.join(catal
 
 function readCatalog(file) {
   const json = JSON.parse(fs.readFileSync(file, "utf8"));
-  if (json.string?.schema !== "pdv.quest-reaction.catalog.v2" || Number(json.int?.schemaVersion) !== 2) {
-    throw new Error(`${file}: expected pdv.quest-reaction.catalog.v2 schema version 2`);
-  }
-  const keys = json.stringList?.questKeys;
-  if (!Array.isArray(keys)) throw new Error(`${file}: stringList.questKeys is required`);
+  validatePapyrusUtilCatalogWire(json, { requirePatchDelta: json.string?.catalogkind !== "core" });
+  const keys = json.stringList?.questkeys;
+  if (!Array.isArray(keys)) throw new Error(`${file}: stringList.questkeys is required`);
   const seen = new Set();
   for (const rawKey of keys) {
     const key = String(rawKey).trim();

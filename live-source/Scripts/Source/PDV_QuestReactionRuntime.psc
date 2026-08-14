@@ -79,23 +79,24 @@ Function RefreshCatalogSources()
         endWhile
     endIf
     TraceQuestReactionQueue("CATALOG loaded catalogs=" + _loadedCatalogCount + " sources=" + _loadedSourceCount + " active=" + _activeSourceCount + " inactive=" + _inactiveSourceCount + " rejected=" + _rejectedSourceCount)
-EndFunction
-
-Bool Function LoadCatalogFile(String matrixFile)
-    if matrixFile == "" || !JsonUtil.JsonExists(matrixFile)
-        return False
-    endIf
-    JsonUtil.Unload(matrixFile, False)
-    return JsonUtil.Load(matrixFile)
+    TraceQuestReactionQueue("CATALOG loaded questKeys=" + StorageUtil.StringListCount(None, INDEXED_QUEST_KEYS_KEY) + " semanticKeys=" + StorageUtil.StringListCount(None, INDEXED_SEMANTIC_KEYS_KEY) + " active=" + _activeSourceCount + " rejected=" + _rejectedSourceCount)
 EndFunction
 
 Function LoadAndActivateCatalog(String catalogFile)
-    if !LoadCatalogFile(catalogFile)
+    if catalogFile == "" || !JsonUtil.JsonExists(catalogFile)
         _rejectedSourceCount += 1
+        TraceQuestReactionQueue("CATALOG_REJECT file=" + catalogFile + " reason=missing")
+        return
+    endIf
+    JsonUtil.Unload(catalogFile, False)
+    if !JsonUtil.Load(catalogFile) || !JsonUtil.IsGood(catalogFile)
+        _rejectedSourceCount += 1
+        TraceQuestReactionQueue("CATALOG_REJECT file=" + catalogFile + " reason=parse_or_load")
         return
     endIf
     if JsonUtil.GetStringValue(catalogFile, "schema") != "pdv.quest-reaction.catalog.v2" || JsonUtil.GetIntValue(catalogFile, "schemaVersion") != 2
         _rejectedSourceCount += 1
+        TraceQuestReactionQueue("CATALOG_REJECT file=" + catalogFile + " reason=schema")
         return
     endIf
     _loadedCatalogCount += 1
@@ -200,6 +201,7 @@ Function ActivateCatalogSources(String catalogFile)
         String sourceId = JsonUtil.StringListGet(catalogFile, "sourceIds", sourceIndex)
         if !ValidateCatalogSource(catalogFile, sourceId)
             _rejectedSourceCount += 1
+            TraceQuestReactionQueue("CATALOG_REJECT file=" + catalogFile + " source=" + sourceId + " reason=invalid_source")
         elseIf !CanActivateCatalogSource(catalogFile, sourceId)
             _inactiveSourceCount += 1
         else
@@ -215,11 +217,12 @@ Bool Function ValidateCatalogSource(String catalogFile, String sourceId)
         return False
     endIf
     String sentinelKey = "source." + sourceId + ".sentinelForms"
-    if JsonUtil.StringListCount(catalogFile, sentinelKey) <= 0 || HasDuplicateListValue(catalogFile, sentinelKey)
+    Int sentinelCount = JsonUtil.StringListCount(catalogFile, sentinelKey)
+    if sentinelCount <= 0 || HasDuplicateListValue(catalogFile, sentinelKey)
         return False
     endIf
     Int sentinelIndex = 0
-    while sentinelIndex < JsonUtil.StringListCount(catalogFile, sentinelKey)
+    while sentinelIndex < sentinelCount
         if StringUtil.Split(JsonUtil.StringListGet(catalogFile, sentinelKey, sentinelIndex), "|").Length != 2
             return False
         endIf
@@ -230,7 +233,8 @@ Bool Function ValidateCatalogSource(String catalogFile, String sourceId)
         return False
     endIf
     Int questIndex = 0
-    while questIndex < JsonUtil.StringListCount(catalogFile, questKeyList)
+    Int questCount = JsonUtil.StringListCount(catalogFile, questKeyList)
+    while questIndex < questCount
         String questKey = JsonUtil.StringListGet(catalogFile, questKeyList, questIndex)
         if StringUtil.Split(questKey, "|").Length != 3 || !ValidateReactionPayload(catalogFile, "quest." + questKey + ".")
             return False
@@ -242,7 +246,8 @@ Bool Function ValidateCatalogSource(String catalogFile, String sourceId)
         return False
     endIf
     Int semanticIndex = 0
-    while semanticIndex < JsonUtil.StringListCount(catalogFile, semanticKeyList)
+    Int semanticCount = JsonUtil.StringListCount(catalogFile, semanticKeyList)
+    while semanticIndex < semanticCount
         String semanticKey = JsonUtil.StringListGet(catalogFile, semanticKeyList, semanticIndex)
         if StringUtil.Split(semanticKey, "|").Length != 2 || !ValidateReactionPayload(catalogFile, "semantic." + semanticKey + ".")
             return False
@@ -254,7 +259,8 @@ Bool Function ValidateCatalogSource(String catalogFile, String sourceId)
         return False
     endIf
     Int stageAdapterIndex = 0
-    while stageAdapterIndex < JsonUtil.StringListCount(catalogFile, stageAdapterKeyList)
+    Int stageAdapterCount = JsonUtil.StringListCount(catalogFile, stageAdapterKeyList)
+    while stageAdapterIndex < stageAdapterCount
         String stageAdapterKey = JsonUtil.StringListGet(catalogFile, stageAdapterKeyList, stageAdapterIndex)
         if JsonUtil.StringListFind(catalogFile, "stageAdapterKeys", stageAdapterKey) < 0 || !ValidateStageAdapter(catalogFile, stageAdapterKey)
             return False
@@ -301,7 +307,8 @@ Bool Function CanActivateCatalogSource(String catalogFile, String sourceId)
     endIf
     String sentinelKey = "source." + sourceId + ".sentinelForms"
     Int sentinelIndex = 0
-    while sentinelIndex < JsonUtil.StringListCount(catalogFile, sentinelKey)
+    Int sentinelCount = JsonUtil.StringListCount(catalogFile, sentinelKey)
+    while sentinelIndex < sentinelCount
         String[] sentinelParts = StringUtil.Split(JsonUtil.StringListGet(catalogFile, sentinelKey, sentinelIndex), "|")
         if Game.GetModByName(sentinelParts[0]) == 255 || !Game.GetFormFromFile(sentinelParts[1] as Int, sentinelParts[0])
             return False
@@ -310,7 +317,8 @@ Bool Function CanActivateCatalogSource(String catalogFile, String sourceId)
     endWhile
     String questKeyList = "source." + sourceId + ".questKeys"
     Int questIndex = 0
-    while questIndex < JsonUtil.StringListCount(catalogFile, questKeyList)
+    Int questCount = JsonUtil.StringListCount(catalogFile, questKeyList)
+    while questIndex < questCount
         String[] questParts = StringUtil.Split(JsonUtil.StringListGet(catalogFile, questKeyList, questIndex), "|")
         if Game.GetModByName(questParts[0]) == 255 || !(Game.GetFormFromFile(questParts[1] as Int, questParts[0]) as Quest)
             return False
@@ -319,7 +327,8 @@ Bool Function CanActivateCatalogSource(String catalogFile, String sourceId)
     endWhile
     String stageAdapterKeyList = "source." + sourceId + ".stageAdapterKeys"
     Int stageAdapterIndex = 0
-    while stageAdapterIndex < JsonUtil.StringListCount(catalogFile, stageAdapterKeyList)
+    Int stageAdapterCount = JsonUtil.StringListCount(catalogFile, stageAdapterKeyList)
+    while stageAdapterIndex < stageAdapterCount
         String stageAdapterKey = JsonUtil.StringListGet(catalogFile, stageAdapterKeyList, stageAdapterIndex)
         String stageAdapterPrefix = "stageAdapter." + stageAdapterKey + "."
         String selectorPlugin = JsonUtil.GetStringValue(catalogFile, stageAdapterPrefix + "selectorPlugin")
@@ -335,7 +344,8 @@ Function IndexCatalogSource(String catalogFile, String sourceId)
     String displayName = JsonUtil.GetStringValue(catalogFile, "source." + sourceId + ".displayName")
     String questKeyList = "source." + sourceId + ".questKeys"
     Int questIndex = 0
-    while questIndex < JsonUtil.StringListCount(catalogFile, questKeyList)
+    Int questCount = JsonUtil.StringListCount(catalogFile, questKeyList)
+    while questIndex < questCount
         String questKey = JsonUtil.StringListGet(catalogFile, questKeyList, questIndex)
         String[] questParts = StringUtil.Split(questKey, "|")
         Quest sourceQuest = Game.GetFormFromFile(questParts[1] as Int, questParts[0]) as Quest
@@ -357,7 +367,8 @@ Function IndexCatalogSource(String catalogFile, String sourceId)
     endWhile
     String semanticKeyList = "source." + sourceId + ".semanticKeys"
     Int semanticIndex = 0
-    while semanticIndex < JsonUtil.StringListCount(catalogFile, semanticKeyList)
+    Int semanticCount = JsonUtil.StringListCount(catalogFile, semanticKeyList)
+    while semanticIndex < semanticCount
         String semanticKey = JsonUtil.StringListGet(catalogFile, semanticKeyList, semanticIndex)
         if StorageUtil.GetStringValue(None, "PDV.V3.QR.SemanticCatalog." + semanticKey) == ""
             StorageUtil.SetStringValue(None, "PDV.V3.QR.SemanticCatalog." + semanticKey, catalogFile)
@@ -368,7 +379,8 @@ Function IndexCatalogSource(String catalogFile, String sourceId)
     endWhile
     String stageAdapterKeyList = "source." + sourceId + ".stageAdapterKeys"
     Int stageAdapterIndex = 0
-    while stageAdapterIndex < JsonUtil.StringListCount(catalogFile, stageAdapterKeyList)
+    Int stageAdapterCount = JsonUtil.StringListCount(catalogFile, stageAdapterKeyList)
+    while stageAdapterIndex < stageAdapterCount
         String stageAdapterKey = JsonUtil.StringListGet(catalogFile, stageAdapterKeyList, stageAdapterIndex)
         if StorageUtil.GetStringValue(None, "PDV.V3.QR.StageAdapterCatalog." + stageAdapterKey) == ""
             StorageUtil.SetStringValue(None, "PDV.V3.QR.StageAdapterCatalog." + stageAdapterKey, catalogFile)
@@ -466,7 +478,6 @@ String Function DebugReloadCatalog()
     RefreshCatalogSources()
     Int questKeyCount = StorageUtil.StringListCount(None, INDEXED_QUEST_KEYS_KEY)
     Int semanticKeyCount = StorageUtil.StringListCount(None, INDEXED_SEMANTIC_KEYS_KEY)
-    TraceQuestReactionQueue("CATALOG loaded questKeys=" + questKeyCount + " semanticKeys=" + semanticKeyCount + " active=" + _activeSourceCount + " rejected=" + _rejectedSourceCount)
     return "Quest catalogs reloaded.\nQuest keys: " + questKeyCount + ".\nSemantic keys: " + semanticKeyCount + ".\n" + GetCompatibilityDetail()
 EndFunction
 
@@ -816,11 +827,16 @@ Bool Function ProcessQuestReactionQueueSlice()
     if StorageUtil.GetIntValue(None, prefix + "MetaEligible") == 1
         StorageUtil.SetFloatValue(None, "PDV.Meta.LastFulfillTime", StorageUtil.GetFloatValue(None, prefix + "QueuedGameTime"))
     endIf
-    PDV_Manager.FinalizeQueuedQuestReaction(StorageUtil.GetStringValue(None, prefix + "SourceModName"), StorageUtil.GetStringValue(None, prefix + "ReactionKey"))
+    String reactionKey = StorageUtil.GetStringValue(None, prefix + "ReactionKey")
+    String sourceModName = StorageUtil.GetStringValue(None, prefix + "SourceModName")
+    Int sourceCellCount = StorageUtil.GetIntValue(None, prefix + "SourceCellCount")
+    Int skippedCellCount = StorageUtil.GetIntValue(None, prefix + "SkippedCellCount")
+    Int metaRunnableCount = StorageUtil.GetIntValue(None, prefix + "MetaRunnableCount")
+    PDV_Manager.FinalizeQueuedQuestReaction(sourceModName, reactionKey)
     Float elapsed = Utility.GetCurrentRealTime() - StorageUtil.GetFloatValue(None, prefix + "EnqueuedRealTime")
-    StorageUtil.SetStringValue(None, "PDV.V3.QR.LastKey", StorageUtil.GetStringValue(None, prefix + "ReactionKey"))
+    StorageUtil.SetStringValue(None, "PDV.V3.QR.LastKey", reactionKey)
     StorageUtil.SetIntValue(None, "PDV.V3.QR.LastCellCount", cellCount)
-    TraceQuestReactionQueue("COMPLETE completed " + jobId + " key=" + StorageUtil.GetStringValue(None, prefix + "ReactionKey") + " cells=" + cellCount + " sourceCells=" + StorageUtil.GetIntValue(None, prefix + "SourceCellCount") + " skipped=" + StorageUtil.GetIntValue(None, prefix + "SkippedCellCount") + " meta=" + StorageUtil.GetIntValue(None, prefix + "MetaRunnableCount") + " elapsed=" + elapsed)
+    TraceQuestReactionQueue("COMPLETE completed " + jobId + " key=" + reactionKey + " cells=" + cellCount + " sourceCells=" + sourceCellCount + " skipped=" + skippedCellCount + " meta=" + metaRunnableCount + " elapsed=" + elapsed)
     RemoveHeadJob()
     return HasQueuedQuestReactionJobs()
 EndFunction

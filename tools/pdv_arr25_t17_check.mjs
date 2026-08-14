@@ -49,10 +49,10 @@ function validateCsv(label, file, expectedRows, expectedKeys, plugin) {
 }
 
 function validateJson(label, data, plugin, cells, keys) {
-  const questKeys = data.stringList?.questKeys ?? [];
+  const questKeys = data.stringList?.questkeys ?? [];
   const sourceKeys = questKeys.filter((key) => key.startsWith(`${plugin}|`));
   const cellCount = Object.entries(data.stringList ?? {})
-    .filter(([key]) => sourceKeys.some((sourceKey) => key === `quest.${sourceKey}.deities`))
+    .filter(([key]) => sourceKeys.some((sourceKey) => key === `quest.${sourceKey}.deities`.toLowerCase()))
     .reduce((sum, [, values]) => sum + values.length, 0);
   requireEqual(`${label} compiled key count`, sourceKeys.length, keys);
   requireEqual(`${label} compiled cell count`, cellCount, cells);

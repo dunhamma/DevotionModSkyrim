@@ -124,7 +124,10 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
   const submitQuest = bodyFor(runtime, "SubmitQuestStage");
   const submitSemantic = bodyFor(runtime, "SubmitSemanticEvent");
   const refreshCatalog = bodyFor(runtime, "RefreshCatalogSources");
+  const loadCatalog = bodyFor(runtime, "LoadAndActivateCatalog");
   const activateCatalog = bodyFor(runtime, "ActivateCatalogSources");
+  const validateSource = bodyFor(runtime, "ValidateCatalogSource");
+  const canActivateSource = bodyFor(runtime, "CanActivateCatalogSource");
   const indexCatalogSource = bodyFor(runtime, "IndexCatalogSource");
   const eventBusQuest = bodyFor(eventBus, "RouteQuestReaction");
   const managerCallbacks = [
@@ -234,6 +237,26 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
     bodyFor(runtime, "CanActivateCatalogSource").includes("DISABLED_SOURCES_KEY") &&
     !/\b(?:Return|return)\b/.test(activateCatalog.slice(activateCatalog.indexOf("if !ValidateCatalogSource"), activateCatalog.indexOf("elseIf !CanActivateCatalogSource"))),
     "runtime.source-isolation", "A malformed, disabled, absent, or unresolved source is rejected or inactive without aborting other catalog sources.");
+  finding(findings, refreshCatalog.includes('"CATALOG loaded catalogs="') &&
+    refreshCatalog.includes('"CATALOG loaded questKeys="') &&
+    loadCatalog.includes('"CATALOG_REJECT file=" + catalogFile + " reason=missing"') &&
+    loadCatalog.includes('"CATALOG_REJECT file=" + catalogFile + " reason=parse_or_load"') &&
+    loadCatalog.includes('"CATALOG_REJECT file=" + catalogFile + " reason=schema"') &&
+    activateCatalog.includes('"CATALOG_REJECT file=" + catalogFile + " source=" + sourceId + " reason=invalid_source"'),
+    "runtime.catalog-diagnostics", "Configuration and reload paths expose aggregate admission plus source-local rejection reasons.");
+  finding(findings, validateSource.includes("Int sentinelCount = JsonUtil.StringListCount") &&
+    validateSource.includes("Int questCount = JsonUtil.StringListCount") &&
+    validateSource.includes("Int semanticCount = JsonUtil.StringListCount") &&
+    validateSource.includes("Int stageAdapterCount = JsonUtil.StringListCount") &&
+    canActivateSource.includes("Int sentinelCount = JsonUtil.StringListCount") &&
+    canActivateSource.includes("Int questCount = JsonUtil.StringListCount") &&
+    canActivateSource.includes("Int stageAdapterCount = JsonUtil.StringListCount") &&
+    indexCatalogSource.includes("Int questCount = JsonUtil.StringListCount") &&
+    indexCatalogSource.includes("Int semanticCount = JsonUtil.StringListCount") &&
+    indexCatalogSource.includes("Int stageAdapterCount = JsonUtil.StringListCount") &&
+    processBody.includes('String reactionKey = StorageUtil.GetStringValue(None, prefix + "ReactionKey")') &&
+    processBody.includes("PDV_Manager.FinalizeQueuedQuestReaction(sourceModName, reactionKey)"),
+    "runtime.qr-local-caching", "Catalog loops cache list counts and completion reuses terminal job fields without changing queue bounds.");
   finding(findings, !/QUEST_REACTION_CHANNEL|QUEST_REACTION_STAGE_ADAPTER|ChannelFiles|SourceCatalog|ResolveQuestReactionCell(?:File|Prefix)|questWatchFormIdsCsv/.test(runtime),
     "runtime.v1-discovery-retired", "No V1 channels, stage-adapter files, source catalog, or local-key fallback discovery remains.");
 
@@ -310,6 +333,8 @@ function selfTest() {
     ["missing semantic path", { runtime: base.runtime.replace('return QueueResolvedReactionJob(catalogFile, "semantic." + semanticKey + ".", semanticKey, sourceForm, semanticKey, StorageUtil.GetStringValue(None, "PDV.V3.QR.SemanticSourceName." + semanticKey))', "return False") }, "runtime.semantic-ingress"],
     ["local-key fallback", { runtime: base.runtime + '\nString legacyPrefix = "quest." + localFormId + "|" + stageValue + "."\n' }, "runtime.qualified-indexes"],
     ["malformed source aborts catalog", { runtime: base.runtime.replace('if !ValidateCatalogSource(catalogFile, sourceId)\n            _rejectedSourceCount += 1', 'if !ValidateCatalogSource(catalogFile, sourceId)\n            return\n            _rejectedSourceCount += 1') }, "runtime.source-isolation"],
+    ["missing catalog rejection reason", { runtime: base.runtime.replace('"CATALOG_REJECT file=" + catalogFile + " reason=schema"', '"catalog rejected"') }, "runtime.catalog-diagnostics"],
+    ["uncached catalog loop count", { runtime: base.runtime.replace("Int sentinelCount = JsonUtil.StringListCount(catalogFile, sentinelKey)", "Int sentinelCount = 0") }, "runtime.qr-local-caching"],
     ["unregistered direct fan-out", { manager: base.manager + "\nFunction RogueFanout()\n ApplyDeityReaction(\"A\")\n ApplyDeityReaction(\"B\")\n ApplyDeityReaction(\"C\")\nEndFunction\n" }, "fanout.registered"],
   ];
   const results = mutations.map(([name, patch, expectedId]) => {
