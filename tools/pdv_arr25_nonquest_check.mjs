@@ -53,7 +53,7 @@ const eventBus = read("live-source", "Scripts", "Source", "PDV_EventBus.psc");
 // patch-source/, not dist/. This used to read the BUILD OUTPUT as its source of truth, which
 // is exactly the problem issue #41 records: for patch-only scripts the output WAS the source,
 // so a dist/ wipe lost it and nothing regenerated it. The source now lives in patch-source/
-// and dist/ is produced from it by tools/pdv_patch_source_deploy.mjs.
+// and the V3 package builder produces dist/ from the compatibility manifest plus that tree.
 const afdiObserver = read("patch-source", "AFDI", "Scripts", "Source", "PDV_AFDIObserver.psc");
 for (const token of [
   "Scriptname PDV_AFDIObserver extends Quest",
@@ -73,14 +73,21 @@ check("AFDI semantic ingress", afdiObserver.includes('PDV_QuestReactionRuntimeSe
 check("Retired Manager batch API", !["BeginExternalReactionBatch", "ApplyExternalReaction", "EndExternalReactionBatch"].some((token) => manager.includes(token) || afdiObserver.includes(token)), "no core or source adapter batch seam remains");
 check("AFDI Black Star semantic identity", afdiObserver.includes('SetEntry(1, 0x000FD5, "black_star")') && afdiObserver.includes("GetArtifactEventId"), "the Black Star outcome is now catalog-owned under a deterministic semantic key");
 check("AFDI excluded entities", afdiObserver.includes('artifactKey == "jyggalag"') && afdiObserver.includes('SetEntry(28, 0x000F54, "necromancer_amulet")'), "Jyggalag remains classify-only while the Necromancer's Amulet remains explicit data");
-for (const relative of ["PDV_Patch_AFDI.esp", "SEQ/PDV_Patch_AFDI.seq", "Scripts/PDV_AFDIObserver.pex"]) {
-  check(`AFDI package ${relative}`, fs.statSync(at("dist", "PDV_QuestModPatches_FOMOD", "common", "AFDI", ...relative.split("/"))).size > 0, "conditional patch artifact is present");
+for (const relative of ["PDV_Patch_AFDI.esp", "Seq/PDV_Patch_AFDI.seq", "Scripts/PDV_AFDIObserver.pex"]) {
+  check(`AFDI package ${relative}`, fs.statSync(at("dist", "PDV_QuestModPatches_FOMOD", "adapters", "afdi", ...relative.split("/"))).size > 0, "conditional patch artifact is present in the AFDI adapter option");
 }
 
-const shrine = read("dist", "PDV_QuestModPatches_FOMOD", "common", "DaedricShrinesAIO", "SKSE", "Plugins", "BaseObjectSwapper", "PDV_DaedricShrinesAIO_SWAP.ini");
+const packageRoot = at("dist", "PDV_QuestModPatches_FOMOD");
+const moduleXml = read("dist", "PDV_QuestModPatches_FOMOD", "fomod", "ModuleConfig.xml");
+const packageFiles = fs.readdirSync(packageRoot, { recursive: true }).map((item) => String(item).replace(/\\\\/g, "/"));
+check("V3 required catalog once", packageFiles.filter((file) => file.endsWith("PDV_QuestReactionPatches.v2.json")).length === 1, "the consolidated data-only catalog is installed exactly once");
+check("V3 five adapter options", (moduleXml.match(/<plugin name=/g) || []).length === 5, "only the five mechanism adapters are selectable");
+check("V3 no channel payloads", !packageFiles.some((file) => file.includes("Channels") || file.includes("QuestStageAdapters")), "data-only sources do not ship one channel or stage-selector JSON each");
+
+const shrine = read("dist", "PDV_QuestModPatches_FOMOD", "adapters", "daedric-shrines-aio", "SKSE", "Plugins", "BaseObjectSwapper", "PDV_DaedricShrinesAIO_SWAP.ini");
 const shrineRules = shrine.split(/\r?\n/).map((line) => line.trim()).filter((line) => line && !line.startsWith(";") && line.includes("|"));
 check("Shrine swap map", shrineRules.length === 11 && shrineRules.every((line) => line.includes("PDV_Patch_DaedricShrinesAIO.esp")) && !shrine.includes("Authoria"), `${shrineRules.length} neutral prayer-activator mappings are packaged; QASmoke and Jyggalag stay absent`);
-check("Neutral shrine ESP", fs.statSync(at("dist", "PDV_QuestModPatches_FOMOD", "common", "DaedricShrinesAIO", "PDV_Patch_DaedricShrinesAIO.esp")).size > 0, "eleven route-202 activators ship in the opt-in shrine option");
+check("Neutral shrine ESP", fs.statSync(at("dist", "PDV_QuestModPatches_FOMOD", "adapters", "daedric-shrines-aio", "PDV_Patch_DaedricShrinesAIO.esp")).size > 0, "eleven route-202 activators ship in the opt-in shrine option");
 
 const result = { status: failures.length ? "FAIL" : "PASS", passes: passes.length, failures };
 console.log(JSON.stringify(result, null, 2));

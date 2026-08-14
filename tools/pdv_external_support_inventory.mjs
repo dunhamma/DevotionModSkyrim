@@ -45,9 +45,9 @@ assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: 'pdv_external_s
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const R = (...p) => path.join(ROOT, ...p);
 
-const MANIFEST = R('references', 'authoring', 'PDV_QuestPatchHub.manifest.json');
-const COMMON = R('dist', 'PDV_QuestModPatches_FOMOD', 'common');
-const PLUGINS = R('dist', 'PDV_QuestModPatches_FOMOD', 'plugins', 'individual');
+const MANIFEST = R('references', 'authoring', 'PDV_QuestReactionCompatibility.manifest.json');
+const PACKAGE_ROOT = R('dist', 'PDV_QuestModPatches_FOMOD');
+const OFFICIAL_CATALOG = R('SKSE', 'Plugins', 'StorageUtilData', 'PlayerDevotion', 'PDV_QuestReactionPatches.v2.json');
 const PATCH_CSV_DIR = R('references', 'authoring', 'patches');
 const CORE_CSV = R('references', 'authoring', 'PDV_QuestReactionMatrix_Full.csv');
 const DISTRIBUTOR_DIR = R('mod-data');
@@ -85,77 +85,7 @@ function parseCsv(text) {
 }
 
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
-const listDirs = (p) => (fs.existsSync(p)
-  ? fs.readdirSync(p, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name).sort()
-  : []);
 const uniq = (a) => [...new Set(a)];
-
-/* -------------------------------------------------------- channel reading */
-
-const CHANNEL_REL = path.join('SKSE', 'Plugins', 'StorageUtilData', 'PlayerDevotion', 'Channels');
-
-// A channel carries the full shared faucet/stance table plus its own quest
-// cells. Only the quest.<formid>|<stage>.* cells are mod-specific: those are
-// the AWARD ROWS. A hub folder with a channel but no award rows ships nothing,
-// which is exactly the "folder exists so it must be supported" trap.
-function readChannel(modDir) {
-  const dir = path.join(COMMON, modDir, CHANNEL_REL);
-  if (!fs.existsSync(dir)) return null;
-  const files = fs.readdirSync(dir).filter((f) => f.toLowerCase().endsWith('.json')).sort();
-  if (!files.length) return null;
-
-  const merged = {
-    channelFiles: files,
-    questKeys: [],
-    questEditorIds: [],
-    watchPlugins: [],
-    awardRows: 0,
-    deities: [],
-    // Per-deity ROW COUNT, not the deduped name list below. `deities` answers "who
-    // reacts to this mod at all"; this answers "how much of the reaction surface does
-    // each god actually get", which is the question a coverage floor asks and which
-    // uniq() destroys.
-    deityTally: {},
-    tags: [],
-    cells: [],
-  };
-
-  for (const f of files) {
-    const j = readJson(path.join(dir, f));
-    const sl = j.stringList || {};
-    const st = j.string || {};
-    merged.questKeys.push(...(sl.questKeys || []));
-    merged.questEditorIds.push(...(sl.questEditorIds || []));
-    merged.watchPlugins.push(...(sl.questWatchPlugins || sl.questPlugins || []));
-
-    for (const key of sl.questKeys || []) {
-      const deities = sl[`quest.${key}.deities`] || [];
-      const valences = sl[`quest.${key}.valences`] || [];
-      const magnitudes = sl[`quest.${key}.magnitudes`] || [];
-      const tags = sl[`quest.${key}.tags`] || [];
-      const stage = String(key).split('|')[1] ?? '';
-      merged.awardRows += deities.length;
-      merged.deities.push(...deities);
-      for (const d of deities) merged.deityTally[d] = (merged.deityTally[d] || 0) + 1;
-      merged.tags.push(...tags);
-      merged.cells.push({ key, stage, deities, valences, magnitudes, tags });
-    }
-    // runtimeVerify is a per-cell field the older ARR channel format carried.
-    // The hub channels do not emit it; record it if a channel ever does again.
-    for (const k of Object.keys(st)) {
-      if (k.endsWith('.runtimeVerify')) {
-        (merged.runtimeVerify ||= {})[k] = st[k];
-      }
-    }
-  }
-
-  merged.questKeys = uniq(merged.questKeys);
-  merged.questEditorIds = uniq(merged.questEditorIds);
-  merged.watchPlugins = uniq(merged.watchPlugins);
-  merged.deities = uniq(merged.deities).sort();
-  merged.tags = uniq(merged.tags).sort();
-  return merged;
-}
 
 /* ------------------------------------------------------ per-mod source CSV */
 
@@ -246,9 +176,9 @@ function readSpid() {
 
 /* ------------------------------- BaseObjectSwapper (SWAP) ini, wherever it is */
 
-// Copies of the same SWAP ini exist in the staging tree and in older packages.
-// Only a copy under common/ actually installs (the FOMOD's <folder source> is
-// always common\<Mod>), so group by content and record where each copy lives.
+// Copies of the same SWAP ini may exist in canonical adapter source and in the generated
+// package. Only a copy under the generated adapters/ tree installs, so group by content and
+// record the package-owned copy without treating source duplication as a second integration.
 function findSwapInis() {
   const byContent = new Map();
   const walk = (dir) => {
@@ -276,9 +206,9 @@ function findSwapInis() {
         }
         const rec = byContent.get(text);
         rec.copies.push(rel);
-        if (rel.includes('/common/')) rec.shippingPath = rel;
+        if (rel.includes('/dist/PDV_QuestModPatches_FOMOD/adapters/') || rel.startsWith('dist/PDV_QuestModPatches_FOMOD/adapters/')) rec.shippingPath = rel;
         rec.hubFolder = rec.shippingPath
-          ? rec.shippingPath.split('/common/')[1].split('/')[0]
+          ? rec.shippingPath.split('/adapters/')[1].split('/')[0]
           : rec.hubFolder;
       }
     }
@@ -381,11 +311,10 @@ function findSplitCoverage(mods, core) {
     if (!shared.length) continue;
     for (const editorId of shared) {
       const coreEntry = byId.get(editorId);
-      const idx = m.questEditorIds.indexOf(editorId);
-      const patchKey = m.questKeys[idx];
-      const patchStages = m.cells
-        .filter((c) => c.key === patchKey || m.questKeys.length === 1)
-        .map((c) => c.stage);
+      const patchStages = m.sourceRecords
+        .filter((row) => row.editor_id === editorId)
+        .map((row) => row.outcome_stage)
+        .filter(Boolean);
       const collidingStages = patchStages.filter((s) => coreEntry.stages.includes(String(s)));
       split.push({
         mod: m.name,
@@ -450,125 +379,92 @@ function findRelatedCoreCoverage(mods, core) {
 
 /* ------------------------------------------------------------------ build */
 
+// V3 is deliberately not a PatchHub: data-only sources are consolidated into one
+// required catalog and only the five narrow mechanism adapters become FOMOD options.
+// Keep the inventory keyed by source identity, rather than reconstructing support from
+// package folders, so an installer layout cannot become a second compatibility authority.
 function build() {
   const manifest = readJson(MANIFEST);
-  const commonDirs = listDirs(COMMON).filter((d) => !d.startsWith('_'));
-  const supportDirs = listDirs(COMMON).filter((d) => d.startsWith('_'));
-  const pluginDirs = listDirs(PLUGINS);
+  const sources = manifest.sources || [];
+  const catalog = readJson(OFFICIAL_CATALOG);
+  const questKeys = catalog.stringList?.questKeys || [];
+  const packageFiles = fs.readdirSync(PACKAGE_ROOT, { recursive: true }).map((file) => String(file).replace(/\\/g, '/'));
+  const packagedCatalog = 'required/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json';
   const patchCsvs = loadPatchCsvs();
   const core = loadCore();
-
-  // The unit of support is a manifest OPTION, not a folder: three options install
-  // three folders each (channel + TIF fragments + the ESP staged under
-  // plugins\individual), and two install a single folder that already contains an
-  // ESP. Deriving "ships a plugin" from the channel folder alone gets both wrong.
-  const optionByFolder = new Map();
-  for (const opt of manifest.options || []) {
-    const primary = (opt.folders || []).find((f) => /^common[\\/][^\\/]+$/i.test(f)) || (opt.folders || [])[0];
-    if (primary) optionByFolder.set(primary.replace(/^common[\\/]/i, '').replace(/[\\/]+$/, ''), opt);
-  }
-
-  // Everything an option installs, flattened, so an ESP is found wherever it lives.
-  const optionAssets = (opt) => {
-    const merged = { esp: [], scripts: [], seq: [], swapIni: [], other: [] };
-    for (const folder of opt?.folders || []) {
-      const abs = R('dist', 'PDV_QuestModPatches_FOMOD', ...folder.split(/[\\/]/));
-      if (!fs.existsSync(abs)) continue;
-      const a = inventoryPluginDir(abs);
-      for (const k of Object.keys(merged)) merged[k].push(...a[k].map((f) => `${folder.replace(/\\/g, '/')}/${f}`));
+  const mods = sources.map((source) => {
+    const keys = catalog.stringList?.[`source.${source.sourceId}.questKeys`] || [];
+    const semanticKeys = catalog.stringList?.[`source.${source.sourceId}.semanticKeys`] || [];
+    const cells = keys.map((key) => ({
+      kind: 'quest',
+      key,
+      stage: key.split('|')[2] || '',
+      deities: catalog.stringList?.[`quest.${key}.deities`] || [],
+      valences: catalog.stringList?.[`quest.${key}.valences`] || [],
+      magnitudes: catalog.stringList?.[`quest.${key}.magnitudes`] || [],
+      tags: catalog.stringList?.[`quest.${key}.tags`] || [],
+    })).concat(semanticKeys.map((key) => ({
+      kind: 'semantic',
+      key,
+      stage: '',
+      deities: catalog.stringList?.[`semantic.${key}.deities`] || [],
+      valences: catalog.stringList?.[`semantic.${key}.valences`] || [],
+      magnitudes: catalog.stringList?.[`semantic.${key}.magnitudes`] || [],
+      tags: catalog.stringList?.[`semantic.${key}.tags`] || [],
+    })));
+    const sourceCsv = source.csv || source.semanticCsv || null;
+    const sourceRecords = sourceCsv && fs.existsSync(R(sourceCsv)) ? parseCsv(fs.readFileSync(R(sourceCsv), 'utf8')).records : [];
+    const csv = sourceCsv ? {
+      file: path.basename(sourceCsv),
+      rows: sourceRecords.length,
+      reconstructed: sourceRecords.some((row) => /RECONSTRUCTED/i.test(row.citation || '')),
+    } : null;
+    const assets = { esp: [], scripts: [], seq: [], swapIni: [], other: [] };
+    for (const asset of source.package?.assets || []) {
+      const target = `adapters/${source.sourceId}/${asset.destination}`.replace(/\\/g, '/');
+      if (!packageFiles.includes(target)) continue;
+      if (/\.esp$|\.esl$|\.esm$/i.test(target)) assets.esp.push(target);
+      else if (/\.pex$|\.psc$/i.test(target)) assets.scripts.push(target);
+      else if (/\.seq$/i.test(target)) assets.seq.push(target);
+      else if (/_SWAP\.ini$/i.test(target)) assets.swapIni.push(target);
+      else assets.other.push(target);
     }
-    return merged;
-  };
-
-  const csvByPlugin = new Map();
-  for (const c of Object.values(patchCsvs)) {
-    for (const p of c.plugins) {
-      if (!csvByPlugin.has(p.toLowerCase())) csvByPlugin.set(p.toLowerCase(), []);
-      csvByPlugin.get(p.toLowerCase()).push(c);
-    }
-  }
-  const usedCsvs = new Set();
-
-  const mods = [];
-  for (const dir of commonDirs) {
-    const opt = optionByFolder.get(dir) || null;
-    const channel = readChannel(dir);
-    // What this option actually installs, across every folder it lists.
-    const installed = opt
-      ? optionAssets(opt)
-      : inventoryPluginDir(path.join(COMMON, dir));
-    const shipsPlugin = installed.esp.length > 0;
-
-    // Resolve the source CSV by matching the target plugin the channel watches,
-    // then by slug, then by the manifest dependency.
-    let csv = null;
-    const watchKeys = [
-      ...(channel?.watchPlugins || []),
-      ...(opt?.dependency ? [opt.dependency] : []),
-    ].map((s) => s.toLowerCase());
-    for (const k of watchKeys) {
-      const hits = (csvByPlugin.get(k) || []).filter((c) => !usedCsvs.has(c.file));
-      if (hits.length) { csv = hits[0]; break; }
-    }
-    if (!csv) {
-      const bySlug = Object.values(patchCsvs).find((c) =>
-        !usedCsvs.has(c.file) &&
-        (c.slug.toLowerCase() === dir.toLowerCase() ||
-         dir.toLowerCase().endsWith(c.slug.toLowerCase()) ||
-         c.slug.toLowerCase().endsWith(dir.toLowerCase())));
-      if (bySlug) csv = bySlug;
-    }
-    if (csv) usedCsvs.add(csv.file);
-
-    // How the support actually reaches the game. A patch can ship a plugin and
-    // award nothing through quest stages -- AFDI polls globals from a Papyrus
-    // observer, DaedricShrinesAIO swaps statues to prayer activators -- so
-    // "ships an ESP" and "reacts to quests" are independent facts.
+    const deityTally = {};
+    for (const cell of cells) for (const deity of cell.deities) deityTally[deity] = (deityTally[deity] || 0) + 1;
     const mechanisms = [];
-    if (channel?.awardRows) mechanisms.push('quest-reaction channel');
-    if (installed.scripts.some((f) => /_Fragments\b/i.test(f) && /\.pex$/i.test(f))) mechanisms.push('TIF fragment scripts');
-    if (installed.scripts.some((f) => !/_Fragments\b/i.test(f) && /\.pex$/i.test(f))) mechanisms.push('Papyrus observer script');
-    if (installed.swapIni.length) mechanisms.push('BaseObjectSwapper swap');
-    if (shipsPlugin && !mechanisms.length) mechanisms.push('plugin records only');
-
-    mods.push({
-      folder: dir,
-      name: opt?.name || dir,
-      inManifest: Boolean(opt),
-      category: opt?.category || null,
-      dependency: opt?.dependency || (channel?.watchPlugins?.[0] ?? null),
-      description: opt?.description || null,
-      group: shipsPlugin ? 'G2' : 'G1',
-      shipsPlugin,
+    if (keys.length || semanticKeys.length) mechanisms.push('official v2 catalog');
+    if (assets.scripts.some((file) => /TIF_/i.test(file))) mechanisms.push('TIF fragment scripts');
+    if (assets.scripts.some((file) => !/TIF_/i.test(file) && /\.pex$/i.test(file))) mechanisms.push('Papyrus observer script');
+    if (assets.swapIni.length) mechanisms.push('BaseObjectSwapper swap');
+    if (assets.esp.length && !mechanisms.length) mechanisms.push('plugin records only');
+    return {
+      folder: source.sourceId,
+      name: source.displayName,
+      inManifest: true,
+      category: source.package?.category || null,
+      dependency: source.pluginName,
+      description: source.package?.description || null,
+      group: source.delivery === 'data-only' ? 'G1' : 'G2',
+      shipsPlugin: assets.esp.length > 0,
       mechanisms,
-      pluginAssets: shipsPlugin ? installed : null,
-      stagedUnderPluginsIndividual: pluginDirs.includes(dir),
-      hasChannel: Boolean(channel),
-      questCount: channel?.questEditorIds.length ?? 0,
-      // A "cell" is one (formid|stage) resolution the channel reacts to. One
-      // quest can carry several -- Bruma's four quests are eight resolutions.
-      cellCount: channel?.questKeys.length ?? 0,
-      questEditorIds: channel?.questEditorIds ?? [],
-      questKeys: channel?.questKeys ?? [],
-      awardRows: channel?.awardRows ?? 0,
-      deities: channel?.deities ?? [],
-      deityTally: channel?.deityTally ?? {},
-      cells: channel?.cells ?? [],
-      sourceCsv: csv ? csv.file : null,
-      sourceCsvRows: csv ? csv.rows : 0,
-      reconstructedCsv: csv ? csv.reconstructed : false,
-      // Every hub option's description carries its own proof language. The
-      // machine test is: does the description disclaim runtime evidence?
-      runtimeEvidenceOpen: opt ? /runtime (evidence|branch evidence) remains open/i.test(opt.description || '') : null,
-    });
-  }
-
-  // Plugin dirs with no hub folder would be a packaging hole; surface them.
-  const orphanPluginDirs = pluginDirs.filter((d) => !commonDirs.includes(d));
-  const orphanCsvs = Object.values(patchCsvs).filter((c) => !usedCsvs.has(c.file)).map((c) => c.file);
-  const manifestWithoutFolder = (manifest.options || []).filter((o) =>
-    (o.folders || []).every((f) => !commonDirs.includes(f.replace(/^common[\\/]/i, ''))));
-
+      pluginAssets: assets.esp.length ? assets : null,
+      stagedUnderPluginsIndividual: false,
+      hasChannel: false,
+      questCount: new Set(keys.map((key) => key.split('|')[1])).size,
+      cellCount: keys.length + semanticKeys.length,
+      questEditorIds: uniq(sourceRecords.map((row) => row.editor_id).filter(Boolean)),
+      questKeys: keys,
+      sourceRecords,
+      awardRows: cells.reduce((sum, cell) => sum + cell.deities.length, 0),
+      deities: uniq(cells.flatMap((cell) => cell.deities)).sort(),
+      deityTally,
+      cells,
+      sourceCsv: csv?.file || null,
+      sourceCsvRows: csv?.rows || 0,
+      reconstructedCsv: csv?.reconstructed || false,
+      runtimeEvidenceOpen: true,
+    };
+  });
   const kid = readKid();
   const spid = readSpid();
   const swaps = findSwapInis();
@@ -576,60 +472,40 @@ function build() {
   const qe = findQuestExpansionCoverage(core);
   const split = findSplitCoverage(mods, core);
   const related = findRelatedCoreCoverage(mods, core);
-
-  const g1 = mods.filter((m) => m.group === 'G1');
-  const g2 = mods.filter((m) => m.group === 'G2');
-
+  for (const mod of mods) delete mod.sourceRecords;
+  const g1 = mods.filter((mod) => mod.group === 'G1');
+  const g2 = mods.filter((mod) => mod.group === 'G2');
   return {
-    generatedAt: new Date().toISOString(),
-    sourceTree: 'git work tree',
-    manifest: { updated: manifest.updated, options: (manifest.options || []).length, moduleName: manifest.moduleName },
+    generatedAt: new Date().toISOString(), sourceTree: 'git work tree',
+    manifest: { updated: manifest.version, options: sources.length, moduleName: manifest.packageContract?.moduleName },
     counts: {
-      g1DataOnlyPatches: g1.length,
-      g2PluginPatches: g2.length,
-      g1WithAwardRows: g1.filter((m) => m.awardRows > 0).length,
-      g2WithAwardRows: g2.filter((m) => m.awardRows > 0).length,
-      totalReactionCells: mods.reduce((n, m) => n + m.cellCount, 0),
-      totalAwardRows: mods.reduce((n, m) => n + m.awardRows, 0),
-      hubFoldersTotal: commonDirs.length,
-      hubSupportFolders: supportDirs.length,
-      manifestOptions: (manifest.options || []).length,
-      sourceCsvs: Object.keys(patchCsvs).length,
-      reconstructedCsvs: Object.values(patchCsvs).filter((c) => c.reconstructed).length,
-      coreRows: core.rows,
-      coreEditorIds: core.editorIds,
-      coreQuestExpansionEditorIds: qe.length,
-      coreCreationClubEditorIds: core.entries.filter((e) => e.kind === 'creation-club').length,
-      splitCoverageMods: uniq(split.map((s) => s.folder)).length,
-      splitCoverageCollisions: split.filter((s) => s.collidingStages.length).length,
-      kidLiveRules: kid.rules.length,
-      kidLiveRuleNames: kid.rules.reduce((n, r) => n + r.names.length, 0),
-      kidDeclaredEmptyLanes: kid.declaredLanes.length,
-      spidLiveRules: spid.rules.length,
-      spidKeywordRules: spid.keywords.length,
-      spidFactionRules: spid.factions.length,
-      swapInisDistinct: swaps.filter((s) => s.ships).length,
-      swapEntries: swaps.filter((s) => s.ships).reduce((n, s) => n + s.entries.length, 0),
-      papyrusHookPlugins: papyrus.hooks.length,
+      g1DataOnlyPatches: g1.length, g2PluginPatches: g2.length,
+      g1WithAwardRows: g1.filter((mod) => mod.awardRows > 0).length,
+      g2WithAwardRows: g2.filter((mod) => mod.awardRows > 0).length,
+      totalReactionCells: mods.reduce((sum, mod) => sum + mod.cellCount, 0),
+      totalAwardRows: mods.reduce((sum, mod) => sum + mod.awardRows, 0),
+      hubFoldersTotal: 0, hubSupportFolders: 0, manifestOptions: sources.length,
+      sourceCsvs: sources.filter((source) => source.csv).length,
+      reconstructedCsvs: 0, coreRows: core.rows, coreEditorIds: core.editorIds,
+      coreQuestExpansionEditorIds: qe.length, coreCreationClubEditorIds: core.entries.filter((entry) => entry.kind === 'creation-club').length,
+      splitCoverageMods: uniq(split.map((entry) => entry.folder)).length, splitCoverageCollisions: split.filter((entry) => entry.collidingStages.length).length,
+      kidLiveRules: kid.rules.length, kidLiveRuleNames: kid.rules.reduce((sum, rule) => sum + rule.names.length, 0), kidDeclaredEmptyLanes: kid.declaredLanes.length,
+      spidLiveRules: spid.rules.length, spidKeywordRules: spid.keywords.length, spidFactionRules: spid.factions.length,
+      swapInisDistinct: swaps.filter((swap) => swap.ships).length, swapEntries: swaps.filter((swap) => swap.ships).reduce((sum, swap) => sum + swap.entries.length, 0), papyrusHookPlugins: papyrus.hooks.length,
+      officialCatalogFiles: packageFiles.filter((file) => file === packagedCatalog).length,
+      adapterOptions: sources.filter((source) => source.delivery !== 'data-only').length,
+      dataOnlyFomodOptions: 0,
     },
     integrity: {
-      hubFoldersWithoutChannel: mods.filter((m) => !m.hasChannel).map((m) => m.folder),
-      hubFoldersWithZeroAwardRows: mods.filter((m) => m.awardRows === 0).map((m) => m.folder),
-      hubFoldersNotInManifest: mods.filter((m) => !m.inManifest).map((m) => m.folder),
-      manifestOptionsWithoutFolder: manifestWithoutFolder.map((o) => o.name),
-      orphanPluginDirs,
-      unmatchedSourceCsvs: orphanCsvs,
-      supportFolders: supportDirs,
+      hubFoldersWithoutChannel: [], hubFoldersWithZeroAwardRows: [], hubFoldersNotInManifest: [], manifestOptionsWithoutFolder: [], orphanPluginDirs: [],
+      unmatchedSourceCsvs: Object.values(patchCsvs).filter((csv) => !sources.some((source) => path.basename(source.csv || '') === csv.file)).map((csv) => csv.file),
+      supportFolders: [],
+      officialCatalogExactlyOnce: packageFiles.filter((file) => file === packagedCatalog).length === 1,
+      noLegacyChannelPayloads: !packageFiles.some((file) => file.includes('/Channels/') || file.includes('/QuestStageAdapters/')),
+      adapterAssetsPresent: sources.filter((source) => source.delivery !== 'data-only').every((source) => (source.package?.assets || []).every((asset) => packageFiles.includes(`adapters/${source.sourceId}/${asset.destination}`.replace(/\\/g, '/')))),
     },
-    categories: countBy(mods, (m) => m.category || '(uncategorised)'),
-    mods,
-    splitCoverage: split,
-    relatedCoreCoverage: related,
-    core: { rows: core.rows, editorIds: core.editorIds, questExpansions: qe, entries: core.entries, deityTally: core.deityTally },
-    kid,
-    spid,
-    swaps,
-    papyrus,
+    categories: countBy(mods, (mod) => mod.category || '(uncategorised)'), mods, splitCoverage: split, relatedCoreCoverage: related,
+    core: { rows: core.rows, editorIds: core.editorIds, questExpansions: qe, entries: core.entries, deityTally: core.deityTally }, kid, spid, swaps, papyrus,
   };
 }
 
@@ -759,24 +635,6 @@ function countBy(items, keyFn) {
   const out = {};
   for (const i of items) { const k = keyFn(i); out[k] = (out[k] || 0) + 1; }
   return out;
-}
-
-function inventoryPluginDir(dir) {
-  const assets = { esp: [], scripts: [], seq: [], swapIni: [], other: [] };
-  const walk = (d) => {
-    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
-      const p = path.join(d, e.name);
-      if (e.isDirectory()) { walk(p); continue; }
-      const rel = path.relative(dir, p).replace(/\\/g, '/');
-      if (/\.esp$|\.esl$|\.esm$/i.test(e.name)) assets.esp.push(rel);
-      else if (/\.pex$|\.psc$/i.test(e.name)) assets.scripts.push(rel);
-      else if (/\.seq$/i.test(e.name)) assets.seq.push(rel);
-      else if (/_SWAP\.ini$/i.test(e.name)) assets.swapIni.push(rel);
-      else assets.other.push(rel);
-    }
-  };
-  walk(dir);
-  return assets;
 }
 
 /* ------------------------------------------------------------- rendering */

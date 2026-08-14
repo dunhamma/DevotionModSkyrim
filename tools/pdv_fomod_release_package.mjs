@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Build THE distribution: one FOMOD carrying core plus the optional per-mod patches.
+// Build THE distribution: one FOMOD carrying core plus the generated Quest Reaction catalog
+// and the five narrow optional adapter payloads.
 //
 // OWNER RULING 2026-08-08: there is exactly ONE distribution and this builds it. Do not
 // ship a core-only archive and do not ship a patches-only archive -- a core-only package
@@ -8,8 +9,8 @@
 //
 // Layout produced (matching the hand-assembled 1.5.0 package this replaces):
 //   core/     required, always installed  <- the validated core payload
-//   common/   the optional per-mod patch folders
-//   plugins/  the individual patch plugin variants
+//   required/ one auto-installed PDV_QuestReactionPatches.v2.json catalog
+//   adapters/ the five dependency-detected adapter payloads
 //   fomod/    ModuleConfig.xml + info.xml, with core as <requiredInstallFiles>
 //
 // Every player-facing file in the staged tree is scanned before zipping, so development
@@ -69,16 +70,15 @@ if (!coreZip) {
 }
 if (!fs.existsSync(path.join(ROOT, coreZip))) throw new Error(`Core zip not found: ${coreZip}`);
 
-// ---- 1b. The patch tree must match its source before any of it is staged ----
-// PATCH_TREE is copied wholesale below, so a stale or hand-edited script in it ships without
-// comment. The patch-only Papyrus now lives in patch-source/ and dist/ is produced from it;
-// this refuses to package a tree that has drifted, or one whose .psc no longer matches the
-// .pex compiled from it. Presence was never the question - correctness is.
+// ---- 1b. The generated V3 package tree must match its compatibility authority ----
+// PATCH_TREE is copied wholesale below. The single V3 builder owns its catalog, five adapter
+// assets, FOMOD XML, receipt, and exact generated-tree contract; release packaging must not
+// recreate a second deployer or rediscover legacy channel files.
 try {
-  execFileSync(process.execPath, [path.join(ROOT, "tools", "pdv_patch_source_deploy.mjs"), "--check"], { cwd: ROOT, stdio: "pipe" });
+  execFileSync(process.execPath, [path.join(ROOT, "tools", "pdv_quest_reaction_build.mjs"), "--check"], { cwd: ROOT, stdio: "pipe" });
 } catch (error) {
   const detail = `${error.stdout ?? ""}${error.stderr ?? ""}`.trim();
-  throw new Error(`Patch tree is out of sync with patch-source/. Run: node tools/pdv_patch_source_deploy.mjs --write\n${detail}`);
+  throw new Error(`Quest Reaction V3 package tree is stale or invalid. Run: node tools/pdv_quest_reaction_build.mjs --write\n${detail}`);
 }
 
 // ---- 2. Stage ----
@@ -171,10 +171,28 @@ if (duplicateEntries !== 0 || JSON.stringify(archivedManifest) !== JSON.stringif
   throw new Error(`Assembled archive failed exact member verification (duplicates=${duplicateEntries}).`);
 }
 
+// The release builder owns the core wrapper only. The Quest Reaction builder already proved
+// the package tree, but assert the stable installer shape again after staging so a future
+// wrapper edit cannot reintroduce the V1 channel wall into a public archive.
+const REQUIRED_CATALOG = "required/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json";
+const adapterRoot = path.join(STAGE, "adapters");
+const requiredCatalogs = stagedManifest.filter((entry) => entry.path === REQUIRED_CATALOG);
+const adapterDirectories = fs.existsSync(adapterRoot)
+  ? fs.readdirSync(adapterRoot, { withFileTypes: true }).filter((entry) => entry.isDirectory()).map((entry) => entry.name).sort()
+  : [];
+const legacyMembers = stagedManifest.filter((entry) => /(^|\/)(Channels|QuestStageAdapters)(\/|$)|\/(PDV_QRM_|PDV_QSA_)/i.test(entry.path));
+const moduleConfig = fs.readFileSync(path.join(STAGE, "fomod", "ModuleConfig.xml"), "utf8");
+const adapterOptions = [...moduleConfig.matchAll(/<plugin\s+name=/g)].length;
+if (requiredCatalogs.length !== 1 || adapterDirectories.length !== 5 || adapterOptions !== 5 || legacyMembers.length !== 0) {
+  throw new Error(
+    `V3 Quest Reaction package contract failed after staging: requiredCatalogs=${requiredCatalogs.length}; ` +
+    `adapterDirectories=${adapterDirectories.length}; adapterOptions=${adapterOptions}; legacyMembers=${legacyMembers.length}.`
+  );
+}
+
 const sourceCommit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: ROOT, encoding: "utf8" }).trim();
 const sourceDirty = execFileSync("git", ["status", "--porcelain"], { cwd: ROOT, encoding: "utf8" }).trim() !== "";
 const patchFiles = collectFiles(PATCH_TREE);
-const moduleConfig = fs.readFileSync(path.join(STAGE, "fomod", "ModuleConfig.xml"), "utf8");
 const receipt = {
   schemaVersion: 1,
   generatedAt: new Date().toISOString(),
@@ -191,10 +209,13 @@ const receipt = {
     fileCount: stagedManifest.filter((entry) => entry.path.startsWith("core/")).length,
     installedVia: "requiredInstallFiles",
   },
-  patchHub: {
+  questReactionPackage: {
     fileCount: patchFiles.length,
-    patchOptions: [...moduleConfig.matchAll(/<plugin name=/g)].length,
-    channelFiles: stagedManifest.filter((entry) => /\/Channels\/[^/]+\.json$/i.test(entry.path)).length,
+    requiredCatalog: REQUIRED_CATALOG,
+    requiredCatalogCount: requiredCatalogs.length,
+    adapterDirectories,
+    adapterOptionCount: adapterOptions,
+    legacyChannelOrStageAdapterFiles: legacyMembers.length,
   },
   verification: {
     archiveMembership: "exact",
