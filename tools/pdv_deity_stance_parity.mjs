@@ -165,7 +165,7 @@ if (!fs.existsSync(MATRIX)) {
   process.exit(1);
 }
 const strings = JSON.parse(fs.readFileSync(MATRIX, "utf8")).string ?? {};
-const jsonStance = (race, name) => strings[`stance.${race}.${name}`] ?? null;
+const jsonStance = (race, name) => strings[`stance.${race}.${name}`.toLowerCase()] ?? null;
 
 // ---- 4. ESP stances, read live ---------------------------------------------------
 try { resolveHousecarlExe(); } catch (error) {

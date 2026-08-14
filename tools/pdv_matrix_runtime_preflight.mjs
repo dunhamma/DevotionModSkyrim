@@ -8,6 +8,7 @@
  */
 
 import { acceptedDeityNames } from "./lib/pdv_matrix_vocab.mjs";
+import { validatePapyrusUtilCatalogWire } from "./lib/pdv_quest_reaction_catalog_v2.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -341,10 +342,15 @@ function checkOfficialCatalog(enabledMods) {
     return;
   }
   const winner = resolveWinningModFile(relativeFile, enabledMods);
-  const sourceCount = catalog?.stringList?.sourceIds?.length ?? 0;
-  const typed = catalog?.string?.schema === "pdv.quest-reaction.catalog.v2" && catalog?.int?.schemaVersion === 2 && Array.isArray(catalog?.stringList?.questKeys);
-  if (!typed) {
-    fail("Official Quest Reaction catalog", "Catalog schema/version or typed indexes are invalid.", packaged);
+  let wireError = null;
+  try {
+    validatePapyrusUtilCatalogWire(catalog, { requirePatchDelta: true });
+  } catch (error) {
+    wireError = error.message;
+  }
+  const sourceCount = catalog?.stringList?.sourceids?.length ?? 0;
+  if (wireError) {
+    fail("Official Quest Reaction catalog", `Catalog is not Papyrus-addressable: ${wireError}`, packaged);
   } else if (sourceCount !== EXPECTED_OFFICIAL_SOURCES) {
     fail("Official Quest Reaction catalog", `${sourceCount} catalog-backed sources; expected ${EXPECTED_OFFICIAL_SOURCES}.`, packaged);
   } else if (!winner || path.resolve(winner) !== path.resolve(packaged)) {
@@ -368,6 +374,14 @@ function checkMatrixJson(filePath, active) {
   const shape = json.string && json.float && json.int && json.stringList ? "typed" : "flat-or-invalid";
   const hash = hashText(filePath).slice(0, 12);
   const detail = `${name} ${shape}, watched=${count}, sha256=${hash}`;
+  let wireError = null;
+  if (json?.string?.schema === "pdv.quest-reaction.catalog.v2") {
+    try {
+      validatePapyrusUtilCatalogWire(json, { requirePatchDelta: json.string.catalogkind !== "core" });
+    } catch (error) {
+      wireError = error.message;
+    }
+  }
 
   if (!active && count > 0) {
     info("Inactive matrix JSON", detail, filePath);
@@ -375,6 +389,10 @@ function checkMatrixJson(filePath, active) {
   }
   if (shape !== "typed") {
     fail("Matrix JSON shape", `${detail}; expected PapyrusUtil typed buckets.`, filePath);
+    return;
+  }
+  if (wireError) {
+    fail("Matrix JSON Papyrus wire", `${detail}; ${wireError}`, filePath);
     return;
   }
   if (count !== expected) {
@@ -612,6 +630,9 @@ function requireInactivePlugin(activePlugins, pluginName, pluginsPath) {
 }
 
 function matrixWatchCount(json) {
+  if (Array.isArray(json?.stringList?.questkeys)) {
+    return new Set(json.stringList.questkeys.map((key) => String(key).split("|").slice(0, 2).join("|")).filter(Boolean)).size;
+  }
   if (Array.isArray(json?.stringList?.questKeys)) {
     return new Set(json.stringList.questKeys.map((key) => String(key).split("|").slice(0, 2).join("|")).filter(Boolean)).size;
   }

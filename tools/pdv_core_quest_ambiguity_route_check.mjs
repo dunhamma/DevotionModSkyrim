@@ -21,14 +21,15 @@ function requireTrue(condition, label) {
 const coreCatalog = json("SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionCore.v2.json");
 
 function requireAdapter(key, expected) {
-  const prefix = `stageAdapter.${key}.`;
+  const prefix = `stageAdapter.${key}.`.toLowerCase();
   for (const [key, value] of Object.entries(expected.string)) {
-    requireTrue(coreCatalog.string?.[`${prefix}${key}`] === value, `${prefix}${key}=${value}`);
+    requireTrue(coreCatalog.string?.[`${prefix}${key.toLowerCase()}`] === value, `${prefix}${key}=${value}`);
   }
   for (const [key, value] of Object.entries(expected.int)) {
-    requireTrue(JSON.stringify(coreCatalog.int?.[`${prefix}${key}`]) === JSON.stringify(value), `${prefix}${key}=${JSON.stringify(value)}`);
+    const bucket = Array.isArray(value) ? coreCatalog.intList : coreCatalog.int;
+    requireTrue(JSON.stringify(bucket?.[`${prefix}${key.toLowerCase()}`]) === JSON.stringify(value), `${prefix}${key}=${JSON.stringify(value)}`);
   }
-  requireTrue(coreCatalog.stringList?.stageAdapterKeys?.includes(key), `${key} is indexed in core v2`);
+  requireTrue(coreCatalog.stringList?.stageadapterkeys?.includes(key), `${key} is indexed in core v2`);
 }
 
 requireAdapter("Skyrim.esm|340742|200", {

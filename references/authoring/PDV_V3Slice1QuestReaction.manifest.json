@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "pdv-v3-slice1-quest-reaction",
-  "status": "slice1db-generated-package-backend-green-combined-skyrim-proof-open",
+  "status": "catalog-wire-backend-and-installed-preflight-green-combined-skyrim-proof-open",
   "northStar": "Replace the current quest-reaction cluster with one deep, event-driven module built from current main without preserving V1 save state.",
   "delivery": {
     "integrationBranch": "feature/v3-big-update",
@@ -68,6 +68,15 @@
     "files": {
       "core": "PDV_QuestReactionCore.v2.json",
       "officialThirdParty": "PDV_QuestReactionPatches.v2.json"
+    },
+    "papyrusUtilWire": {
+      "topLevelBuckets": ["string", "float", "int", "stringList", "intList"],
+      "memberNames": "lowercase",
+      "storedValues": "case-preserved",
+      "integerArrays": "intList",
+      "identicalCaseFoldCollision": "deduplicate",
+      "conflictingCaseFoldCollision": "fail-generation",
+      "validatorConsumers": ["generation", "external-extension-fixtures", "installed-profile-preflight"]
     },
     "identity": "pluginName|localFormId|stage",
     "authoring": {
@@ -192,7 +201,7 @@
     ]
   },
   "slice1CACatalogCompiler": {
-    "status": "backend-static-pass-runtime-cutover-open",
+    "status": "backend-static-wire-pass-runtime-smoke-open",
     "authority": "references/authoring/PDV_QuestReactionCompatibility.manifest.json",
     "build": "node tools/pdv_quest_reaction_build.mjs --self-test --check --json",
     "outputs": [
@@ -200,18 +209,26 @@
       "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json",
       "references/authoring/PDV_QuestReactionCatalogV2.receipt.json"
     ],
-    "backendProof": "80 unique compatibility sources, exactly 75 data-only and five adapter sources, all 78 quest CSVs mapped once, 450 core qualified quest keys and 4108 cells, 423 official qualified quest keys plus 29 AFDI semantic events and 2916 total official cells, core-only shared policy, full tuple parity, deterministic LF output, exact-byte receipts, and collision/isolation fixtures",
+    "backendProof": "80 unique compatibility sources, exactly 75 data-only and five adapter sources, all 78 quest CSVs mapped once, 450 core qualified quest keys and 4108 cells, 423 official qualified quest keys plus 29 AFDI semantic events and 2916 total official cells, core-only shared policy, full tuple parity, deterministic LF output, exact-byte receipts, lowercase PapyrusUtil member names, intList selector arrays, value-case preservation, identical/conflicting case-fold collision fixtures, and source-isolated mixed-case extension rejection",
     "proofBoundary": "compiler/schema/parity/determinism proof only; Slice 1C-B now consumes these artifacts, but this compiler block does not claim catalog-v2 Skyrim activation or compatibility gameplay"
   },
   "slice1CBRuntimeCutover": {
-    "status": "backend-static-and-targeted-compile-pass-skyrim-proof-open",
+    "status": "backend-static-targeted-compile-and-installed-admission-pass-skyrim-proof-open",
     "catalogOrder": "PDV_QuestReactionCore.v2, then PDV_QuestReactionPatches.v2, then lexically sorted QuestReactionExtensions JSON",
     "identity": "qualified quest pluginName|localFormId|stage and semantic sourceId|eventId only",
     "activation": "Runtime validates and activates each source independently; disabled, absent-plugin, unresolved-sentinel, malformed, and duplicate-source failures cannot disable another source",
     "stageSelectors": "core and official source-owned selector mappings compile into their v2 catalogs; separate V1 stage-adapter discovery is retired",
-    "statusSurface": "GetCompatibilityDetail reports loaded catalogs and loaded, active, inactive, and rejected source counts",
-    "backendProof": "deterministic catalog rebuild/check, qualified ownership gate, sixteen adversarial architecture mutations, eight characterization fixtures, ARR/T16 and ambiguity route checks, and targeted Runtime/PlayerEvents/Manager compilation pass",
+    "statusSurface": "GetCompatibilityDetail reports loaded catalogs and loaded, active, inactive, and rejected source counts; configuration/reload traces aggregate admission and active indexes plus source-local CATALOG_REJECT reasons",
+    "backendProof": "deterministic catalog rebuild/check, shared wire validation in installed-profile preflight, qualified ownership gate, eighteen adversarial architecture mutations, eight characterization fixtures, ARR/T16/T17, ambiguity, ownership, inventory, and stance checks, targeted Runtime compilation with zero errors/warnings, fresh PEX, and Anvil core/official catalog precedence/admission pass",
     "proofBoundary": "source, generated-data, deterministic-model, static-architecture, and Papyrus compile proof only; fresh-game source activation, quest-stage registration, semantic gameplay, extension isolation in Skyrim, FIFO/player surfaces after cutover, and save-load remain combined post-merge smoke work"
+  },
+  "qrPapyrusOptimization": {
+    "status": "backend-static-and-targeted-compile-pass-runtime-proof-open",
+    "runtime": "suboptimal repeated JsonUtil list counts are cached in catalog validation, activation, and indexing loops; terminal job fields are cached for finalization and COMPLETE diagnostics",
+    "playerEvents": "clean event-driven quest-stage ingress; no change",
+    "managerCallbacks": "clean bounded scoring and one-final-surface callbacks; no change",
+    "preserved": ["one scheduler owner", "0.1-second rearm", "two-cell bound", "persisted cursor", "one final surface", "five-method interface", "no new VMAD properties"],
+    "proofBoundary": "static optimization audit and zero-warning Runtime compilation only; corrected in-game timing and player surfaces remain fresh-smoke proof"
   },
   "slice1DASemanticAdapters": {
     "status": "backend-static-compile-vmad-and-master-readback-pass-skyrim-proof-open",

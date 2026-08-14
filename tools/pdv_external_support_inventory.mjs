@@ -387,30 +387,31 @@ function build() {
   const manifest = readJson(MANIFEST);
   const sources = manifest.sources || [];
   const catalog = readJson(OFFICIAL_CATALOG);
-  const questKeys = catalog.stringList?.questKeys || [];
+  const questKeys = catalog.stringList?.questkeys || [];
   const packageFiles = fs.readdirSync(PACKAGE_ROOT, { recursive: true }).map((file) => String(file).replace(/\\/g, '/'));
   const packagedCatalog = 'required/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json';
   const patchCsvs = loadPatchCsvs();
   const core = loadCore();
   const mods = sources.map((source) => {
-    const keys = catalog.stringList?.[`source.${source.sourceId}.questKeys`] || [];
-    const semanticKeys = catalog.stringList?.[`source.${source.sourceId}.semanticKeys`] || [];
+    const sourcePrefix = `source.${source.sourceId}.`.toLowerCase();
+    const keys = catalog.stringList?.[`${sourcePrefix}questkeys`] || [];
+    const semanticKeys = catalog.stringList?.[`${sourcePrefix}semantickeys`] || [];
     const cells = keys.map((key) => ({
       kind: 'quest',
       key,
       stage: key.split('|')[2] || '',
-      deities: catalog.stringList?.[`quest.${key}.deities`] || [],
-      valences: catalog.stringList?.[`quest.${key}.valences`] || [],
-      magnitudes: catalog.stringList?.[`quest.${key}.magnitudes`] || [],
-      tags: catalog.stringList?.[`quest.${key}.tags`] || [],
+      deities: catalog.stringList?.[`quest.${key}.deities`.toLowerCase()] || [],
+      valences: catalog.stringList?.[`quest.${key}.valences`.toLowerCase()] || [],
+      magnitudes: catalog.stringList?.[`quest.${key}.magnitudes`.toLowerCase()] || [],
+      tags: catalog.stringList?.[`quest.${key}.tags`.toLowerCase()] || [],
     })).concat(semanticKeys.map((key) => ({
       kind: 'semantic',
       key,
       stage: '',
-      deities: catalog.stringList?.[`semantic.${key}.deities`] || [],
-      valences: catalog.stringList?.[`semantic.${key}.valences`] || [],
-      magnitudes: catalog.stringList?.[`semantic.${key}.magnitudes`] || [],
-      tags: catalog.stringList?.[`semantic.${key}.tags`] || [],
+      deities: catalog.stringList?.[`semantic.${key}.deities`.toLowerCase()] || [],
+      valences: catalog.stringList?.[`semantic.${key}.valences`.toLowerCase()] || [],
+      magnitudes: catalog.stringList?.[`semantic.${key}.magnitudes`.toLowerCase()] || [],
+      tags: catalog.stringList?.[`semantic.${key}.tags`.toLowerCase()] || [],
     })));
     const sourceCsv = source.csv || source.semanticCsv || null;
     const sourceRecords = sourceCsv && fs.existsSync(R(sourceCsv)) ? parseCsv(fs.readFileSync(R(sourceCsv), 'utf8')).records : [];

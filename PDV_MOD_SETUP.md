@@ -567,7 +567,7 @@ Phase 10 Dunmer substrate proof-graduation is closed as of 2026-05-24. The count
 
 `tools\pdv_extract_quest_stage_readback.mjs` is the Phase 20 read-only quest-stage follow-up. It reads `references\vanilla-gameplay\extracted\vanilla-quest-candidates.csv`, uses the local Mutagen bridge to read exact QUST stages/objectives/fragments/aliases from vanilla/DLC masters, and writes `references\vanilla-gameplay\extracted\vanilla-quest-stage-readback.csv`. Use it for dossier/review work only; it does not write ESP data or authorize `sourceFillEntries`.
 
-`tools\pdv_quest_matrix_compile.mjs` remains the V1 compiler used by the public 1.5 line and the pure tuple compiler consumed by the V2 build. For V3, `tools\pdv_quest_reaction_build.mjs` consumes `references\authoring\PDV_QuestReactionCompatibility.manifest.json` plus the frozen core, 78 quest CSVs, AFDI semantic CSV, stage selectors, and locked adapter assets. It deterministically generates `PDV_QuestReactionCore.v2.json`, `PDV_QuestReactionPatches.v2.json`, the 31-file required-catalog/five-adapter FOMOD tree, and exact SHA-256 receipts. Use `node .\tools\pdv_quest_reaction_build.mjs --self-test --check --json`; use `--write` only when reviewed authoring inputs intentionally change. `--package --output <new.zip>` refuses overwrite, writes normalized deterministic ZIP metadata, extracts the archive, and exact-hash verifies all 31 members. For an installed V3 profile, run `node .\tools\pdv_matrix_runtime_preflight.mjs --mo2 <root> --profile <name> --compat-mod "Devotion - Quest Reaction Compatibility" --expected-core 353 --expected-official-sources 79 --json`; it checks the winning core and official v2 catalogs and does not inspect retired V1 channels. Slice 1C-B consumes the fixed core/official files plus sorted `QuestReactionExtensions/*.json`, with qualified quest and semantic keys only. All Slice 1 backend/static/compile/package gates are green; in-game activation remains for the combined fresh-game and Authoria smoke.
+`tools\pdv_quest_matrix_compile.mjs` remains the V1 compiler used by the public 1.5 line and the pure tuple compiler consumed by the V2 build. For V3, `tools\pdv_quest_reaction_build.mjs` consumes `references\authoring\PDV_QuestReactionCompatibility.manifest.json` plus the frozen core, 78 quest CSVs, AFDI semantic CSV, stage selectors, and locked adapter assets. It deterministically generates `PDV_QuestReactionCore.v2.json`, `PDV_QuestReactionPatches.v2.json`, the 31-file required-catalog/five-adapter FOMOD tree, and exact SHA-256 receipts. Use `node .\tools\pdv_quest_reaction_build.mjs --self-test --check --json`; use `--write` only when reviewed authoring inputs intentionally change. `--package --output <new.zip>` refuses overwrite, writes normalized deterministic ZIP metadata, extracts the archive, and exact-hash verifies all 31 members. The generated PapyrusUtil wire keeps top-level bucket names and values unchanged but lowercases every member name inside typed buckets; integer selector arrays belong in `intList`. Conflicting case-fold collisions fail generation. For an installed V3 profile, run `node .\tools\pdv_matrix_runtime_preflight.mjs --mo2 <root> --profile <name> --compat-mod <installed-compatibility-mod-name> --expected-core 353 --expected-official-sources 79 --json`; it uses the same wire validator as generation, rejects mixed-case/unaddressable catalogs before Skyrim starts, checks the winning core and official v2 catalogs, and does not inspect retired V1 channels. Slice 1C-B consumes the fixed core/official files plus sorted `QuestReactionExtensions/*.json`, with qualified quest and semantic keys only. Backend/static/compile/package and installed-profile admission gates are green; corrected in-game activation remains for the combined fresh-game and Authoria smoke.
 
 Current remap note (main-quest expansion 2026-07-15): source tranches through T11 compile to 1978 cells / 172 quest keys / 134 watched quests / 45 deity names / 26 faucet acts. Use `node .\tools\pdv_quest_tranche_merge.mjs`, then `node .\tools\pdv_main_quest_full_coverage_audit.mjs --json`, then the formal-offer/remap/signal-floor gates before claiming source/readback readiness. For the representative smoke set, run `node .\tools\pdv_signal_floor_smoke_gate.mjs --json`; use `--write-ledger` to regenerate `PDV_SignalFloorSmokeLedger.{md,json}` after source, runtime JSON, or Papyrus log evidence changes. The Debug: State & Rewards MCM page has a `Signal-floor smoke` controlled route selector backed by `PDV__ManagerQuest.DebugRunSignalFloorSmokeScenario`, but those routes remain backend/log convenience only. Green source/readback gates still do not prove runtime-route, Active Effects, Book of Days, Survey/status, Prisma/notification, save/load stack behavior, or the expanded Paarthurnax/main-quest surface; use `references\authoring\PDV_1_0_CoTest_Runbook_2026-07-10.md` for live tester/Codex steps.
 
@@ -660,6 +660,15 @@ occurrences in order rather than mapping the whole file by job ID; it fails a
 completion without its own preceding start and rejects negative latency. Its
 self-test contains two sessions with reused IDs.
 
+The V2 runtime checker also requires the latest configuration/reload summaries
+to report at least two admitted catalogs and nonzero active quest keys. An
+isolated corrupt extension may increase `rejected` without failing valid core and
+official admission. Runtime emits debug-gated `CATALOG_REJECT` markers only on
+configuration/reload paths. The QR-local optimization pass caches repeated
+catalog list counts and completion fields; PlayerEvents ingress and Manager
+callbacks remain clean/event-driven, with no new polling, scheduler, property,
+or VMAD surface.
+
 Slice 1B compile/readback closeout (2026-08-13) used:
 
 ```powershell
@@ -673,9 +682,9 @@ The compile produced 0 errors and 0 warnings for all five scripts; inventory is
 lookup="Devotion.esp")` first confirmed the Anvil instance and active framework.
 Direct `housecarl_read_record` calls for `0716DF`, `00C325`, `046AF7`,
 and `03AFBE` in `Devotion.esp` confirmed the repurposed Runtime host plus its
-Manager/EventBus/MCM bindings. The V1 fallback remains exact-catalog-scoped but
-is not the v2 collision proof: `same-local-form-id-in-two-plugins` stays open
-until the next catalog/build slice and a fresh-game runtime pass.
+Manager/EventBus/MCM bindings. V1 local-key fallback is retired; fully-qualified
+collision behavior is covered by deterministic backend fixtures, while corrected
+installed runtime activation still requires the fresh-game smoke.
 
 `tools\pdv_skyrim_refs_bridge.mjs` is a read-only lookup bridge into the neutral `dunhamma/SkyrimGamePlayReferences` repo. Set `SKYRIM_GAMEPLAY_REFERENCES_ROOT` when the clone is not under `scratch\SkyrimGamePlayReferences`. Use it to list or search broad reference tables such as reverse keywords, faction relationships, condition-bearing effects, cells, containers/furniture, enchantments, leveled lists, FormLists, shouts, and worldspaces. It does not copy data into PDV or replace local xEdit/CK verification. Bridge rules live in `references\vanilla-gameplay\PDV_SkyrimGamePlayReferences_Bridge.md`.
 

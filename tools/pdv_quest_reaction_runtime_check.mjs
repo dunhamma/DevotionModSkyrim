@@ -196,12 +196,39 @@ function findVmLifecycleObservations(lines) {
   return observations;
 }
 
+function parseCatalogSummaries(lines) {
+  const admissions = [];
+  const indexes = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (!/\[PDV\]\[QR_QUEUE\]\s+CATALOG\s+loaded\b/i.test(line)) continue;
+    const entry = { line: index + 1, text: line.trim() };
+    const numericToken = (names) => {
+      const raw = token(line, names);
+      if (raw === "") return null;
+      const value = Number(raw);
+      return Number.isFinite(value) ? value : null;
+    };
+    const catalogs = numericToken(["catalogs"]);
+    const sources = numericToken(["sources"]);
+    const active = numericToken(["active"]);
+    const inactive = numericToken(["inactive"]);
+    const rejected = numericToken(["rejected"]);
+    const questKeys = numericToken(["questKeys"]);
+    const semanticKeys = numericToken(["semanticKeys"]);
+    if (catalogs != null) admissions.push({ ...entry, catalogs, sources, active, inactive, rejected });
+    if (questKeys != null) indexes.push({ ...entry, questKeys, semanticKeys, active, rejected });
+  }
+  return { admissions, indexes, latestAdmission: admissions.at(-1) ?? null, latestIndex: indexes.at(-1) ?? null };
+}
+
 export function evaluateLog(logText, options = {}) {
   const lines = logText.split(/\r?\n/);
   const markers = lines.map(parseMarker).filter(Boolean);
   const byAction = Object.fromEntries(ACTIONS.map((action) => [action, markers.filter((marker) => marker.action === action)]));
   const safetyFailures = findSafetyFailures(lines);
   const vmLifecycleObservations = findVmLifecycleObservations(lines);
+  const catalogSummaries = parseCatalogSummaries(lines);
   const { pairs, incomplete, unmatchedCompletions } = pairLifecycles(markers);
   const durations = pairs.map(({ enqueue, start, complete }) => {
     const jobMs = start?.timestamp != null && complete.timestamp != null ? complete.timestamp - start.timestamp : null;
@@ -215,6 +242,10 @@ export function evaluateLog(logText, options = {}) {
   const completeKeys = byAction.COMPLETE.map((entry) => entry.key).filter(Boolean);
   const checks = [];
   const add = (ok, id, detail) => checks.push({ status: ok ? "PASS" : "FAIL", id, detail });
+  const admission = catalogSummaries.latestAdmission;
+  const catalogIndex = catalogSummaries.latestIndex;
+  add(Boolean(admission) && admission.catalogs >= 2, "catalogs-admitted", admission ? `Latest catalog admission loaded ${admission.catalogs}; require at least 2.` : "No catalog admission summary was found.");
+  add(Boolean(catalogIndex) && catalogIndex.questKeys > 0, "quest-keys-active", catalogIndex ? `Latest catalog index has ${catalogIndex.questKeys} active quest keys.` : "No catalog index summary was found.");
   add(markers.length > 0, "markers-present", "Papyrus log contains [PDV][QR_QUEUE] lifecycle markers.");
   add(byAction.ENQUEUE.length > 0, "enqueue-present", "At least one queue job was enqueued.");
   add(byAction.START.length > 0, "start-present", "At least one queue job began processing.");
@@ -252,6 +283,7 @@ export function evaluateLog(logText, options = {}) {
     markerCounts: Object.fromEntries(ACTIONS.map((action) => [action.toLowerCase(), byAction[action].length])),
     safetyFailures,
     vmLifecycleObservations,
+    catalogSummaries,
     incomplete: incomplete.map((entry) => ({ job: entry.job, key: entry.key, line: entry.line })),
     durations,
     sequence: { expected, enqueue: enqueueKeys, start: startKeys, complete: completeKeys },
@@ -260,6 +292,8 @@ export function evaluateLog(logText, options = {}) {
 
 function selfTestLog() {
   return [
+    "[08/14/2026 - 05:56:20PM] [PDV][QR_QUEUE] CATALOG loaded catalogs=2 sources=83 active=81 inactive=2 rejected=0",
+    "[08/14/2026 - 05:56:20PM] [PDV][QR_QUEUE] CATALOG loaded questKeys=873 semanticKeys=29 active=81 rejected=0",
     "[08/14/2026 - 05:56:23PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_2 key=Skyrim.esm|210731|150 cells=25 sourceCells=45 skipped=20 meta=0 buildMs=11500.000000 pending=1",
     "[08/14/2026 - 05:56:23PM] [PDV][QR_QUEUE] START started v3qr_2 key=Skyrim.esm|210731|150 cells=25 sourceCells=45 skipped=20 meta=0",
     "[08/14/2026 - 05:56:23PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_3 key=Skyrim.esm|148154|160 cells=25 sourceCells=45 skipped=20 meta=0 buildMs=261.962891 pending=2",
@@ -297,6 +331,17 @@ function printReport(report) {
   console.log(`Proof boundary: ${report.proofBoundary}`);
 }
 
+function assertCatalogAdmissionSelfTests(logText, options) {
+  const noCatalogs = evaluateLog(logText.replace("catalogs=2", "catalogs=0"), options);
+  if (noCatalogs.checks.find((check) => check.id === "catalogs-admitted")?.status !== "FAIL") {
+    throw new Error("Self-test mutation: zero admitted catalogs did not fail.");
+  }
+  const noQuestKeys = evaluateLog(logText.replace("questKeys=873", "questKeys=0"), options);
+  if (noQuestKeys.checks.find((check) => check.id === "quest-keys-active")?.status !== "FAIL") {
+    throw new Error("Self-test mutation: zero active quest keys did not fail.");
+  }
+}
+
 function main() {
   const options = parseArgs(process.argv.slice(2));
   if (options.help) {
@@ -314,6 +359,7 @@ function main() {
       "Skyrim.esm|221587|220",
     ];
     options.maxJobMs = 10000;
+    assertCatalogAdmissionSelfTests(logText, options);
   }
   const report = evaluateLog(logText, options);
   if (options.json) console.log(JSON.stringify(report, null, 2));

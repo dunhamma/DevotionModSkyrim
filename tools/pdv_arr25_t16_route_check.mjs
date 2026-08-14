@@ -151,14 +151,15 @@ if (catalog) {
   const ints = catalog.int ?? {};
   const lists = catalog.stringList ?? {};
   const key = "Skyrim.esm|136533|200";
-  const prefix = `stageAdapter.${key}.`;
-  if (strings.schema === "pdv.quest-reaction.catalog.v2" && ints.schemaVersion === 2) passes.push("TGAE v2 catalog schema");
+  const prefix = `stageAdapter.${key}.`.toLowerCase();
+  const intLists = catalog.intList ?? {};
+  if (strings.schema === "pdv.quest-reaction.catalog.v2" && ints.schemaversion === 2) passes.push("TGAE v2 catalog schema");
   else failures.push("TGAE v2 catalog: wrong schema");
-  if ((lists.stageAdapterKeys ?? []).includes(key) && (lists["source.tg-alternative-endings.stageAdapterKeys"] ?? []).includes(key)) passes.push("TGAE selector is source-owned");
+  if ((lists.stageadapterkeys ?? []).includes(key) && (lists["source.tg-alternative-endings.stageadapterkeys"] ?? []).includes(key)) passes.push("TGAE selector is source-owned");
   else failures.push("TGAE selector is not owned by its compatibility source");
-  if (strings[`${prefix}selectorKind`] === "global" && strings[`${prefix}selectorPlugin`] === "TG Alternative Endings.esp" && ints[`${prefix}selectorFormId`] === 2076) passes.push("TGAE adapter optional global selector");
+  if (strings[`${prefix}selectorkind`] === "global" && strings[`${prefix}selectorplugin`] === "TG Alternative Endings.esp" && ints[`${prefix}selectorformid`] === 2076) passes.push("TGAE adapter optional global selector");
   else failures.push("TGAE adapter: wrong optional global selector");
-  if (JSON.stringify(ints[`${prefix}selectorValues`]) === JSON.stringify([1, 2, 3]) && JSON.stringify(ints[`${prefix}targetStages`]) === JSON.stringify([201, 202, 202])) passes.push("TGAE adapter synthetic stage mapping");
+  if (JSON.stringify(intLists[`${prefix}selectorvalues`]) === JSON.stringify([1, 2, 3]) && JSON.stringify(intLists[`${prefix}targetstages`]) === JSON.stringify([201, 202, 202])) passes.push("TGAE adapter synthetic stage mapping");
   else failures.push("TGAE adapter: wrong synthetic stage mapping");
 }
 
