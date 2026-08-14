@@ -621,8 +621,13 @@ Interop dispatch, and UI receipt/dedupe/render. The Runtime now owns one
 persisted armed update chain, defers re-arm when a saved active slice owns the
 resume, and checkpoints `CellIndex` after each applied cell. The queued Manager
 surface lists each deity once; the existing arrow/rune carries higher piety
-magnitude instead of repeated names. Compile and static gates are green; repeat
-the save-mid-sweep test before claiming the replay/presentation fix.
+magnitude instead of repeated names. The corrected counted run on 2026-08-14
+logged four enqueues, four starts, four FIFO completions, one `RESUME pending=3`
+from cell 2/21, four Prisma receipts/renders, zero UI dedupes, and no overlap,
+overflow, stack, or broad-scope failure. The tester confirmed four visible
+toasts and no repeated deity names in any newly-created Book entry. Resume and
+presentation proof therefore pass; the fresh Nine Divines/Old Ways eligibility
+retest remains open.
 
 Slice 1B compile/readback closeout (2026-08-13) used:
 
