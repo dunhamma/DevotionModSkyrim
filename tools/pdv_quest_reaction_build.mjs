@@ -17,7 +17,9 @@ import {
   resolveCatalogPrecedence,
   sha256,
   stableJson,
+  toPapyrusUtilCatalogWire,
   validateCatalog,
+  validatePapyrusUtilCatalogWire,
 } from "./lib/pdv_quest_reaction_catalog_v2.mjs";
 import {
   assertReceiptMatches,
@@ -453,6 +455,42 @@ function runSelfTest(repositoryBuild) {
   if (!official.stringList.questKeys.includes("A.esp|291|200") || !official.stringList.questKeys.includes("B.esp|291|200")) {
     fail("Self-test: same local FormID in different plugins did not remain independent.");
   }
+  const officialWire = toPapyrusUtilCatalogWire(official);
+  validatePapyrusUtilCatalogWire(officialWire, { requirePatchDelta: true });
+  if (officialWire.int.schemaversion !== 2 || Object.hasOwn(officialWire.int, "schemaVersion")) {
+    fail("Self-test: PapyrusUtil wire schema version is not lowercase-only.");
+  }
+  if (!Array.isArray(officialWire.stringList.sourceids) || Object.hasOwn(officialWire.stringList, "sourceIds")) {
+    fail("Self-test: PapyrusUtil wire source index is not lowercase-only.");
+  }
+  if (!officialWire.stringList.questkeys.includes("A.esp|291|200") || officialWire.stringList["quest.a.esp|291|200.deities"][0] !== "Mara") {
+    fail("Self-test: PapyrusUtil wire lowercased a stored value or lost a qualified payload.");
+  }
+  const integerListInput = fakeCatalog("official-third-party", "A.esp|291|200");
+  integerListInput.int.SelectorValues = [0, 1];
+  const integerListWire = toPapyrusUtilCatalogWire(integerListInput);
+  if (integerListWire.int.selectorvalues || integerListWire.intList.selectorvalues?.join("|") !== "0|1") {
+    fail("Self-test: PapyrusUtil wire did not route integer arrays to the intList bucket.");
+  }
+  for (const bucket of ["string", "float", "int", "stringList"]) {
+    const mixedCase = Object.keys(officialWire[bucket]).filter((key) => key !== key.toLowerCase());
+    if (mixedCase.length) fail(`Self-test: PapyrusUtil wire contains mixed-case ${bucket} keys: ${mixedCase.slice(0, 3).join(", ")}.`);
+  }
+  const identicalCollision = fakeCatalog("official-third-party", "A.esp|291|200");
+  identicalCollision.string.DisplayName = "same";
+  identicalCollision.string.displayname = "same";
+  const foldedIdentical = toPapyrusUtilCatalogWire(identicalCollision);
+  if (foldedIdentical.string.displayname !== "same" || Object.keys(foldedIdentical.string).filter((key) => key === "displayname").length !== 1) {
+    fail("Self-test: identical case-fold collision was not deterministically deduplicated.");
+  }
+  const conflictingCollision = structuredClone(identicalCollision);
+  conflictingCollision.string.displayname = "different";
+  expectPackageReject("conflicting PapyrusUtil case-fold collision", () => toPapyrusUtilCatalogWire(conflictingCollision));
+  const mixedCaseWire = structuredClone(officialWire);
+  mixedCaseWire.int.schemaVersion = mixedCaseWire.int.schemaversion;
+  delete mixedCaseWire.int.schemaversion;
+  expectPackageReject("mixed-case PapyrusUtil extension wire", () => validatePapyrusUtilCatalogWire(mixedCaseWire, { requirePatchDelta: true }));
+  validatePapyrusUtilCatalogWire(officialWire, { requirePatchDelta: true });
   const core = fakeCatalog("core", "A.esp|291|200");
   const extB = fakeCatalog("external-extension", "C.esp|10|20");
   const extA = fakeCatalog("external-extension", "A.esp|291|200");
