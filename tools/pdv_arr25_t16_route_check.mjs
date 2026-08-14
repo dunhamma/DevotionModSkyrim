@@ -33,7 +33,7 @@ const P = {
   runtimeSource: path.join(ROOT, "live-source/Scripts/Source/PDV_QuestReactionRuntime.psc"),
   full: path.join(ROOT, "references/authoring/PDV_QuestReactionMatrix_Full.csv"),
   tgaeCsv: path.join(ROOT, "references/authoring/patches/PDV_QRM_TGAlternativeEndings.csv"),
-  tgaeAdapter: path.join(ROOT, "dist/PDV_QuestModPatches_FOMOD/common/TGAlternativeEndings/SKSE/Plugins/StorageUtilData/PlayerDevotion/QuestStageAdapters/PDV_QSA_TGAlternativeEndings.json"),
+  officialCatalog: path.join(ROOT, "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json"),
   iceCsv: path.join(ROOT, "references/authoring/patches/PDV_QRM_SaveTheIcerunner.csv"),
   moduleXml: path.join(ROOT, "dist/PDV_QuestModPatches_FOMOD/fomod/ModuleConfig.xml"),
   authoriaScripts: path.join(ROOT, "dist/PDV_QuestModPatches_FOMOD/plugins/authoria/Scripts"),
@@ -116,12 +116,12 @@ const eventBus = read(P.eventBusSource);
 const runtime = read(P.runtimeSource);
 const resolver = functionBody(runtime, "ResolveQuestStage");
 if (!resolver) failures.push("generic quest-stage adapter resolver missing");
-requireText("adapter cache is consulted", resolver, '"PDV.V3.QR.StageAdapterFiles"');
-requireText("adapter resolves configured quest", resolver, "Game.GetFormFromFile(sourceFormId, sourcePlugin)");
+requireText("adapter index is consulted", resolver, '"PDV.V3.QR.StageAdapterCatalog."');
+requireText("adapter uses the physical qualified key", resolver, 'sourcePlugin + "|" + sourceFormId + "|" + physicalStage');
 const selectorResolver = functionBody(runtime, "ResolveAdapterSelector");
 requireText("adapter is plugin-presence guarded", selectorResolver, "Game.GetModByName(selectorPlugin) == 255");
-requireText("adapter reads selector values", selectorResolver, 'JsonUtil.IntListGet(adapterFile, "selectorValues", valueIndex)');
-requireText("adapter maps target stages", selectorResolver, 'JsonUtil.IntListGet(adapterFile, "targetStages", valueIndex)');
+requireText("adapter reads selector values", selectorResolver, 'JsonUtil.IntListGet(adapterFile, adapterPrefix + "selectorValues", valueIndex)');
+requireText("adapter maps target stages", selectorResolver, 'JsonUtil.IntListGet(adapterFile, adapterPrefix + "targetStages", valueIndex)');
 requireText("adapter fallback preserves physical stage", resolver, "return physicalStage");
 requireAbsent("core no longer names the TGAE resolver", player, "ResolveARR25TGAEQuestReactionStage");
 requireAbsent("runtime does not name the optional TGAE plugin", runtime, "TG Alternative Endings.esp");
@@ -139,22 +139,25 @@ requireText("Nocturnal route resolves Runtime adapter outcome", nocturnalBlock, 
 requireText("Nocturnal commitment only for physical outcome", nocturnalBlock, "if resolvedStage == 200");
 requireText("adapter suppresses false Nocturnal commitment", nocturnalBlock, "Quest-stage adapter suppressed Nocturnal commitment");
 
-let adapter = null;
+let catalog = null;
 try {
-  adapter = JSON.parse(read(P.tgaeAdapter));
+  catalog = JSON.parse(read(P.officialCatalog));
 } catch (error) {
-  failures.push(`TGAE adapter JSON parse failed: ${error.message}`);
+  failures.push(`V2 official catalog parse failed: ${error.message}`);
 }
-if (adapter) {
-  const strings = adapter.string ?? {};
-  const ints = adapter.int ?? {};
-  if (strings.schema === "pdv-quest-stage-adapter.v1") passes.push("TGAE adapter schema");
-  else failures.push("TGAE adapter: wrong schema");
-  if (strings.sourcePlugin === "Skyrim.esm" && ints.sourceFormId === 136533 && ints.sourceStage === 200) passes.push("TGAE adapter physical TG09 selector");
-  else failures.push("TGAE adapter: wrong physical TG09 selector");
-  if (strings.selectorPlugin === "TG Alternative Endings.esp" && ints.selectorFormId === 2076) passes.push("TGAE adapter optional global selector");
+if (catalog) {
+  const strings = catalog.string ?? {};
+  const ints = catalog.int ?? {};
+  const lists = catalog.stringList ?? {};
+  const key = "Skyrim.esm|136533|200";
+  const prefix = `stageAdapter.${key}.`;
+  if (strings.schema === "pdv.quest-reaction.catalog.v2" && ints.schemaVersion === 2) passes.push("TGAE v2 catalog schema");
+  else failures.push("TGAE v2 catalog: wrong schema");
+  if ((lists.stageAdapterKeys ?? []).includes(key) && (lists["source.tg-alternative-endings.stageAdapterKeys"] ?? []).includes(key)) passes.push("TGAE selector is source-owned");
+  else failures.push("TGAE selector is not owned by its compatibility source");
+  if (strings[`${prefix}selectorKind`] === "global" && strings[`${prefix}selectorPlugin`] === "TG Alternative Endings.esp" && ints[`${prefix}selectorFormId`] === 2076) passes.push("TGAE adapter optional global selector");
   else failures.push("TGAE adapter: wrong optional global selector");
-  if (JSON.stringify(ints.selectorValues) === JSON.stringify([1, 2, 3]) && JSON.stringify(ints.targetStages) === JSON.stringify([201, 202, 202])) passes.push("TGAE adapter synthetic stage mapping");
+  if (JSON.stringify(ints[`${prefix}selectorValues`]) === JSON.stringify([1, 2, 3]) && JSON.stringify(ints[`${prefix}targetStages`]) === JSON.stringify([201, 202, 202])) passes.push("TGAE adapter synthetic stage mapping");
   else failures.push("TGAE adapter: wrong synthetic stage mapping");
 }
 

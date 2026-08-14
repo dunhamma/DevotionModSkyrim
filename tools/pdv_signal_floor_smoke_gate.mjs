@@ -34,9 +34,10 @@ const SCENARIO_PATH = getArg("--scenarios") ?? path.join(AUTH, "PDV_SignalFloorS
 const MATRIX_CSV = getArg("--matrix") ?? path.join(AUTH, "PDV_QuestReactionMatrix_Full.csv");
 const LIKES_CSV = getArg("--likes") ?? path.join(AUTH, "PDV_DeityLikesDislikes.csv");
 const FAUCET_CSV = getArg("--faucets") ?? path.join(AUTH, "PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv");
-const RUNTIME_JSON = getArg("--runtime-json") ?? "D:/Wabbajack/modlists/Anvil/mods/Devotion/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix.json";
+const RUNTIME_JSON = getArg("--runtime-json") ?? "D:/Wabbajack/modlists/Anvil/mods/Devotion/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionCore.v2.json";
 const PAPYRUS_LOG = getArg("--log") ?? "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log";
 const MANUAL_LEDGER = getArg("--manual-ledger") ?? path.join(AUTH, "PDV_SignalFloorSmokeManualEvidence.json");
+const QUEST_READBACK = path.join(ROOT, "references", "vanilla-gameplay", "extracted", "vanilla-quest-stage-readback.csv");
 const OUT_MD = path.join(AUTH, "PDV_SignalFloorSmokeLedger.md");
 const OUT_JSON = path.join(AUTH, "PDV_SignalFloorSmokeLedger.json");
 const MAIN_QUEST_CONTRACT = readJson(path.join(AUTH, "PDV_MainQuestFullCoverageContract.json"));
@@ -56,6 +57,7 @@ function main() {
   const matrixRows = readCsv(MATRIX_CSV);
   const likesRows = readCsv(LIKES_CSV);
   const faucetRows = readCsv(FAUCET_CSV);
+  const questReadbackRows = readCsv(QUEST_READBACK);
   const runtime = readJson(RUNTIME_JSON);
   const manualEvidence = readOptionalManualEvidence(MANUAL_LEDGER);
   const sourceText = readSources();
@@ -65,7 +67,7 @@ function main() {
 
   const results = [];
   for (const scenario of scenarios.scenarios ?? []) {
-    results.push(checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, papyrusLog, manualEvidence, scenarios.expected ?? {}));
+    results.push(checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, papyrusLog, manualEvidence, scenarios.expected ?? {}, questReadbackRows));
   }
 
   const counts = countFindings([...findings, ...results.flatMap((result) => result.findings)]);
@@ -123,12 +125,13 @@ function checkGlobalContracts(scenarios, matrixRows, likesRows, faucetRows, runt
   assert("scenario manifest", scenarios.schema === "pdv-signal-floor-smoke-scenarios.v1", "Scenario manifest schema is current.", "Scenario manifest schema is wrong.");
 
   const questKeys = getList(runtime, "questKeys");
-  const watched = getList(runtime, "questWatchFormIds");
+  const watched = new Set(questKeys.map((key) => String(key).split("|").slice(0, 2).join("|").toLowerCase()));
+  const runtimeCells = questKeys.reduce((total, key) => total + getList(runtime, `quest.${key}.deities`).length, 0);
   const faucetKeys = getList(runtime, "faucetKeys");
   assert("runtime JSON shape", runtime?.string && runtime?.float && runtime?.int && runtime?.stringList, "Runtime JSON has PapyrusUtil typed buckets.", "Runtime JSON is missing PapyrusUtil typed buckets.");
-  assert("matrix row count", matrixRows.length === expected.questCells, `Matrix has ${matrixRows.length} rows.`, `Matrix row count ${matrixRows.length}, expected ${expected.questCells}.`);
-  assert("runtime quest key count", questKeys.length === expected.questKeys, `Runtime JSON has ${questKeys.length} quest keys.`, `Runtime quest key count ${questKeys.length}, expected ${expected.questKeys}.`);
-  assert("runtime watched quest count", watched.length === expected.watchedQuests, `Runtime JSON has ${watched.length} watched quests.`, `Runtime watched quest count ${watched.length}, expected ${expected.watchedQuests}.`);
+  assert("runtime source parity", runtimeCells === matrixRows.length, `Runtime JSON has ${runtimeCells} cells for ${matrixRows.length} source rows.`, `Runtime cell count ${runtimeCells}, source row count ${matrixRows.length}.`);
+  assert("runtime qualified quest keys", questKeys.length > 0 && questKeys.every((key) => /^[^|]+\|\d+\|-?\d+$/.test(String(key))), `Runtime JSON has ${questKeys.length} qualified quest keys.`, "Runtime JSON contains an empty or non-qualified quest key.");
+  assert("runtime watched quest count", watched.size > 0, `Runtime JSON has ${watched.size} distinct watched quest forms.`, "Runtime JSON has no watched quest forms.");
   assert("runtime faucet count", faucetKeys.length === expected.faucetActs, `Runtime JSON has ${faucetKeys.length} faucet acts.`, `Runtime faucet count ${faucetKeys.length}, expected ${expected.faucetActs}.`);
 
   const echoRows = matrixRows.filter((row) => row.magnitude === "echo");
@@ -148,7 +151,7 @@ function checkGlobalContracts(scenarios, matrixRows, likesRows, faucetRows, runt
   assert("Debug MCM signal-floor section", sourceText.mcm.includes("Signal-floor smoke") && sourceText.mcm.includes("Run signal-floor smoke"), "Debug MCM exposes the signal-floor smoke section.", "Debug MCM does not expose the signal-floor smoke section.");
   assert("manager debug harness", manager.includes("Function DebugRunSignalFloorSmokeScenario") && manager.includes("Function DebugGetSignalFloorSmokeLabel"), "Manager exposes signal-floor debug harness functions.", "Manager signal-floor debug harness functions are missing.");
 
-  const questReactionBody = functionBody(sourceText.questReactionRuntime, "QueueQuestReactionJob");
+  const questReactionBody = functionBody(sourceText.questReactionRuntime, "QueueResolvedReactionJob");
   const questReactionDuplicateBody = functionBody(sourceText.questReactionRuntime, "ShouldSuppressDuplicateQuestReaction");
   const guardCall = "ShouldSuppressDuplicateQuestReaction(reactionKey)";
   const guardBeforeApply = questReactionBody.indexOf(guardCall) >= 0
@@ -156,7 +159,7 @@ function checkGlobalContracts(scenarios, matrixRows, likesRows, faucetRows, runt
   assert("quest-stage duplicate guard", guardBeforeApply && questReactionDuplicateBody.includes("PDV.V3.QR.Recent.Time.") && questReactionDuplicateBody.includes("QUEST_REACTION_DUPLICATE_WINDOW_DAYS"), "Quest-stage reactions debounce duplicate deliveries before queue ingress, piety, or pantheon fold.", "Quest-stage reactions lack a keyed pre-queue duplicate guard.");
 }
 
-function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, papyrusLog, manualEvidence, expected) {
+function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, papyrusLog, manualEvidence, expected, questReadbackRows) {
   const local = [];
   const add = (status, check, detail) => local.push({ status, check, detail });
   const ok = (check, condition, pass, fail) => add(condition ? "PASS" : "FAIL", check, condition ? pass : fail);
@@ -178,7 +181,7 @@ function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, pap
       ok(`row ${expected.deity}`, Boolean(match), `${expected.deity} ${expected.valence}${expected.intensity}/${expected.magnitude} is present.`, `${expected.deity} ${expected.valence}${expected.intensity}/${expected.magnitude} is missing or drifted.`);
     }
 
-    const runtimeKey = findRuntimeQuestKey(runtime, scenario.trigger.editorId, scenario.trigger.stage);
+    const runtimeKey = findRuntimeQuestKey(runtime, scenario.trigger.editorId, scenario.trigger.stage, questReadbackRows);
     ok("runtime key", Boolean(runtimeKey), `Runtime JSON has key ${runtimeKey}.`, `Runtime JSON lacks ${scenario.trigger.editorId} stage ${scenario.trigger.stage}.`);
     if (runtimeKey) {
       const prefix = `quest.${runtimeKey}.`;
@@ -320,15 +323,19 @@ function readSources() {
   return Object.fromEntries(Object.entries(files).map(([key, file]) => [key, fs.readFileSync(file, "utf8")]));
 }
 
-function findRuntimeQuestKey(runtime, editorId, stage) {
-  const editorIds = getList(runtime, "questEditorIds");
-  const formIds = getList(runtime, "questFormIds");
+function findRuntimeQuestKey(runtime, editorId, stage, questReadbackRows) {
   const keys = getList(runtime, "questKeys");
-  for (let i = 0; i < editorIds.length; i += 1) {
-    if (editorIds[i] === editorId) {
-      const candidate = `${formIds[i]}|${stage}`;
-      if (keys.includes(candidate)) return candidate;
-    }
+  const readback = questReadbackRows.find((row) => row.editor_id === editorId || row.readback_editor_id === editorId);
+  const formKey = String(readback?.formid ?? "").trim();
+  const separator = formKey.lastIndexOf(":");
+  if (separator <= 0) return "";
+  const plugin = formKey.slice(0, separator);
+  const localFormId = Number.parseInt(formKey.slice(separator + 1), 16);
+  if (!Number.isInteger(localFormId)) return "";
+  const candidate = `${plugin}|${localFormId}|${stage}`;
+  const folded = candidate.toLowerCase();
+  for (const key of keys) {
+    if (String(key).toLowerCase() === folded) return String(key);
   }
   return "";
 }

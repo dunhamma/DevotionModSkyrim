@@ -122,9 +122,10 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
   const configure = bodyFor(runtime, "Configure");
   const ensureRunning = bodyFor(runtime, "EnsureQuestReactionQueueRunning");
   const submitQuest = bodyFor(runtime, "SubmitQuestStage");
+  const submitSemantic = bodyFor(runtime, "SubmitSemanticEvent");
   const refreshCatalog = bodyFor(runtime, "RefreshCatalogSources");
   const activateCatalog = bodyFor(runtime, "ActivateCatalogSources");
-  const resolvePrefix = bodyFor(runtime, "ResolveQuestReactionCellPrefix");
+  const indexCatalogSource = bodyFor(runtime, "IndexCatalogSource");
   const eventBusQuest = bodyFor(eventBus, "RouteQuestReaction");
   const managerCallbacks = [
     "ShouldQueueQuestReactionCell",
@@ -196,23 +197,45 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
     runtime.includes("StorageUtil.StringListAdd(None, QUEUE_IDS_KEY") &&
     runtime.includes("StorageUtil.FormListAdd(None, QUEUE_FORMS_KEY"),
     "runtime.persist-before-return", "Accepted quest stages persist parallel FIFO identity and source form state.");
-  finding(findings, ["PDV.V3.QR.Queue.", "PDV.V3.QR.Job.", "PDV.V3.QR.Recent.", "PDV.V3.QR.ChannelFiles"]
+  finding(findings, ["PDV.V3.QR.Queue.", "PDV.V3.QR.Job.", "PDV.V3.QR.Recent.", "PDV.V3.QR.Index."]
     .every((token) => runtime.includes(token)) && !/["']PDV\.QR\./.test(sources),
-    "runtime.v3-namespace", "Owned queue, job, recent, and channel state use only PDV.V3.QR keys.");
-  finding(findings, refreshCatalog.includes("JsonUtil.JsonInFolder(QUEST_REACTION_CHANNEL_FOLDER)") &&
-    refreshCatalog.includes("JsonUtil.JsonInFolder(QUEST_REACTION_STAGE_ADAPTER_FOLDER)") &&
-    activateCatalog.includes("ActivateCatalogSource") &&
+    "runtime.v3-namespace", "Owned queue, job, recent, and index state use only PDV.V3.QR keys.");
+  finding(findings, refreshCatalog.includes("LoadAndActivateCatalog(QUEST_REACTION_CORE_FILE)") &&
+    refreshCatalog.includes("LoadAndActivateCatalog(QUEST_REACTION_PATCH_FILE)") &&
+    refreshCatalog.includes("SortCatalogNames(JsonUtil.JsonInFolder(QUEST_REACTION_EXTENSION_FOLDER))") &&
+    runtime.includes('"pdv.quest-reaction.catalog.v2"') &&
+    runtime.includes("schemaVersion") &&
+    activateCatalog.includes("ValidateCatalogSource") &&
+    activateCatalog.includes("CanActivateCatalogSource") &&
     runtime.includes("PO3_Events_Alias.RegisterForQuestStage(_questStageReceiver, sourceQuest)") &&
     !playerEvents.includes("JsonUtil.JsonInFolder") &&
     !playerEvents.includes("JsonUtil.Load(") &&
     !playerEvents.includes("JsonUtil.Unload(") &&
     !playerEvents.includes("RegisterQuestReactionMatrixFile") &&
-    !playerEvents.includes('"PDV.V3.QR.SourceCatalog."'),
-    "runtime.catalog-owner", "Runtime owns catalog discovery, parsing, source activation, and Quest-stage registration.");
-  finding(findings, runtime.includes('"PDV.V3.QR.SourceCatalog."') &&
-    resolvePrefix.includes('"quest." + sourcePlugin + "|" + localFormId + "|" + stageValue + "."') &&
-    runtime.includes('"PDV.V3.QR.SourceCatalog."'),
-    "runtime.qualified-routing", "Ingress binds each runtime quest to one catalog and prefers the plugin-qualified v2 cell key.");
+    !playerEvents.includes('"PDV.V3.QR.CellCatalog."'),
+    "runtime.catalog-owner", "Runtime alone loads core, official, then sorted extensions; validates and activates each source independently; and owns Quest-stage registration.");
+  finding(findings, indexCatalogSource.includes('"PDV.V3.QR.CellCatalog." + questKey') &&
+    indexCatalogSource.includes('"PDV.V3.QR.SemanticCatalog." + semanticKey') &&
+    indexCatalogSource.includes("if StorageUtil.GetStringValue(None, \"PDV.V3.QR.CellCatalog.\" + questKey) == \"\"") &&
+    indexCatalogSource.includes("if StorageUtil.GetStringValue(None, \"PDV.V3.QR.SemanticCatalog.\" + semanticKey) == \"\"") &&
+    submitQuest.includes("QueueQuestReactionJob(sourceQuest, ResolveQuestStage(sourceQuest, stageValue), logicalEventId)") &&
+    runtime.includes('"quest." + reactionKey + "."') &&
+    !runtime.includes('"quest." + localFormId + "|" + stageValue + "."'),
+    "runtime.qualified-indexes", "Quest and semantic indexes are exact, precedence-preserving, and quest enqueue resolves only plugin-qualified keys.");
+  finding(findings, submitSemantic.includes("String semanticKey = sourceId + \"|\" + eventId") &&
+    submitSemantic.includes('"PDV.V3.QR.SemanticCatalog." + semanticKey') &&
+    submitSemantic.includes('"semantic." + semanticKey + "."') &&
+    submitSemantic.includes("QueueResolvedReactionJob"),
+    "runtime.semantic-ingress", "SubmitSemanticEvent resolves a qualified semantic event through the runtime-owned index and enqueues its catalog payload.");
+  finding(findings, activateCatalog.includes("if !ValidateCatalogSource(catalogFile, sourceId)") &&
+    activateCatalog.includes("_rejectedSourceCount += 1") &&
+    activateCatalog.includes("elseIf !CanActivateCatalogSource(catalogFile, sourceId)") &&
+    activateCatalog.includes("_inactiveSourceCount += 1") &&
+    bodyFor(runtime, "CanActivateCatalogSource").includes("DISABLED_SOURCES_KEY") &&
+    !/\b(?:Return|return)\b/.test(activateCatalog.slice(activateCatalog.indexOf("if !ValidateCatalogSource"), activateCatalog.indexOf("elseIf !CanActivateCatalogSource"))),
+    "runtime.source-isolation", "A malformed, disabled, absent, or unresolved source is rejected or inactive without aborting other catalog sources.");
+  finding(findings, !/QUEST_REACTION_CHANNEL|QUEST_REACTION_STAGE_ADAPTER|ChannelFiles|SourceCatalog|ResolveQuestReactionCell(?:File|Prefix)|questWatchFormIdsCsv/.test(runtime),
+    "runtime.v1-discovery-retired", "No V1 channels, stage-adapter files, source catalog, or local-key fallback discovery remains.");
 
   finding(findings, managerCallbacks.every((name) => bodyFor(manager, name)),
     "manager.callback-seam", "Manager exposes only the scoring/final-presentation callback seam needed by the runtime.");
@@ -229,12 +252,10 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
   finding(findings, eventBusQuest.includes("PDV_QuestReactionRuntimeService.SubmitQuestStage") &&
     !eventBusQuest.includes("PDV_Manager.ApplyQuestReaction"),
     "eventbus.direct-ingress", "EventBus submits quest stages directly to the runtime.");
-  finding(findings, runtime.includes('"PDV.V3.QR.SourceLocalFormId."') &&
-    runtime.includes('"PDV.V3.QR.SourcePlugin."') &&
-    runtime.includes('"PDV.V3.QR.ChannelFiles"') &&
-    runtime.includes('"PDV.V3.QR.SourceCatalog."') &&
-    !playerEvents.includes('"PDV.QuestReaction.LocalFormId."'),
-    "player-events.identity", "Runtime materializes plugin-qualified identity; PlayerEvents remains an engine adapter.");
+  finding(findings, /QUEST_REACTION_MATRIX_FILE\s*=\s*"\.\.\/StorageUtilData\/PlayerDevotion\/PDV_QuestReactionCore\.v2"/i.test(manager) &&
+    /QUEST_REACTION_MATRIX_FILE\s*=\s*"\.\.\/StorageUtilData\/PlayerDevotion\/PDV_QuestReactionCore\.v2"/i.test(playerEvents) &&
+    !/QUEST_REACTION_MATRIX_FILE\s*=\s*"[^"\r\n]*(?:PDV_QuestReactionMatrix(?:\.json)?|PDV_QuestReactionPatches\.v2|QuestReactionExtensions)/i.test(`${manager}\n${playerEvents}`),
+    "core-only-consumers", "Manager and PlayerEvents consume only the shared Core.v2 data surface; patches and extensions stay private to Runtime.");
   finding(findings, mcm.includes("PDV_QuestReactionRuntimeService.GetStatusLine()") &&
     mcm.includes("PDV_QuestReactionRuntimeService.DebugReloadCatalog()") &&
     mcm.includes("PDV_QuestReactionRuntimeService.DebugQueuePerformanceSweep()") &&
@@ -284,8 +305,11 @@ function selfTest() {
     ["missing interface member", { runtime: base.runtime.replace("String Function GetCompatibilityDetail()", "String Function MissingCompatibilityDetail()") }, "runtime.interface"],
     ["EventBus manager ingress", { eventBus: base.eventBus.replace("PDV_QuestReactionRuntimeService.SubmitQuestStage", "PDV_Manager.ApplyQuestReaction") }, "eventbus.direct-ingress"],
     ["Manager V3 storage", { manager: base.manager + '\nString bad = "PDV.V3.QR.Queue.JobIds"\n' }, "manager.ownership-retired"],
-    ["PlayerEvents catalog discovery", { playerEvents: base.playerEvents + "\nString[] bad = JsonUtil.JsonInFolder(\"Channels\")\n" }, "runtime.catalog-owner"],
-    ["unqualified route", { runtime: base.runtime.replace('String qualifiedPrefix = "quest." + sourcePlugin + "|" + localFormId + "|" + stageValue + "."', 'String qualifiedPrefix = "quest." + localFormId + "|" + stageValue + "."') }, "runtime.qualified-routing"],
+    ["legacy V1 discovery", { runtime: base.runtime + '\nString Property QUEST_REACTION_CHANNEL_FOLDER = "Channels" AutoReadOnly\n' }, "runtime.v1-discovery-retired"],
+    ["unsorted extensions", { runtime: base.runtime.replace("SortCatalogNames(JsonUtil.JsonInFolder(QUEST_REACTION_EXTENSION_FOLDER))", "JsonUtil.JsonInFolder(QUEST_REACTION_EXTENSION_FOLDER)") }, "runtime.catalog-owner"],
+    ["missing semantic path", { runtime: base.runtime.replace('return QueueResolvedReactionJob(catalogFile, "semantic." + semanticKey + ".", semanticKey, sourceForm, semanticKey, StorageUtil.GetStringValue(None, "PDV.V3.QR.SemanticSourceName." + semanticKey))', "return False") }, "runtime.semantic-ingress"],
+    ["local-key fallback", { runtime: base.runtime + '\nString legacyPrefix = "quest." + localFormId + "|" + stageValue + "."\n' }, "runtime.qualified-indexes"],
+    ["malformed source aborts catalog", { runtime: base.runtime.replace('if !ValidateCatalogSource(catalogFile, sourceId)\n            _rejectedSourceCount += 1', 'if !ValidateCatalogSource(catalogFile, sourceId)\n            return\n            _rejectedSourceCount += 1') }, "runtime.source-isolation"],
     ["unregistered direct fan-out", { manager: base.manager + "\nFunction RogueFanout()\n ApplyDeityReaction(\"A\")\n ApplyDeityReaction(\"B\")\n ApplyDeityReaction(\"C\")\nEndFunction\n" }, "fanout.registered"],
   ];
   const results = mutations.map(([name, patch, expectedId]) => {

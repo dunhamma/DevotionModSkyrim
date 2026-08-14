@@ -46,7 +46,7 @@ const MCM = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_MCM.psc");
 const matrixArg = process.argv[process.argv.indexOf("--matrix") + 1];
 const MATRIX = process.argv.includes("--matrix") && matrixArg
   ? path.resolve(ROOT, matrixArg)
-  : "D:/Wabbajack/modlists/Anvil/mods/Devotion/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix.json";
+  : "D:/Wabbajack/modlists/Anvil/mods/Devotion/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionCore.v2.json";
 
 const RACES = ["Nord", "Imperial", "Breton", "Altmer", "Bosmer", "Dunmer", "Khajiit", "Argonian", "Orc", "Redguard"];
 const ESP_STANCE_NAME = { 0: "NATIVE", 1: "FOREIGN", 2: "TABOO", 3: "HOSTILE" };
