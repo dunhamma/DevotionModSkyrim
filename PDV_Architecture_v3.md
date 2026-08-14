@@ -9,9 +9,9 @@ all eight named behavior cases, the queue/catalog/scheduler implementation is
 owned by `PDV_QuestReactionRuntime`, and direct houseCARL readback confirms the
 existing `0716DF:Devotion.esp` host was repurposed with no new quest or script
 instance. The five touched scripts compile with zero errors/warnings. The
-fresh-game queue, mid-job save/load, FIFO, duplicate-free Book surface, and
-four-toast canaries pass; fresh selected-lane eligibility, consolidated catalog
-v2, and semantic-event adapters remain open Slice 1 work.**
+fresh-game queue, mid-job save/load, FIFO, duplicate-free Book surface,
+four-toast, and selected-lane eligibility canaries pass; consolidated catalog
+v2 and semantic-event adapters remain open Slice 1 work.**
 
 Current v3.103 addendum: **1.0.4 is shipped and public** (2026-07-27, tag `v1.0.4`,
 `Devotion-1.0.4-20260727.zip`), the first public build since 1.0.2 and the first carrying
@@ -998,9 +998,20 @@ logical job also carries its qualified reaction key as toast `correlation`;
 Prisma suppresses an exact repeat of one correlation but cannot collapse four
 different jobs. Static policy/cardinality gates, isolated Manager compilation,
 and the native releasedbg build pass. Mid-job `RESUME`, four UI render callbacks,
-unique-name resumed Book presentation, and four visible toasts now pass. Only
-the fresh-game selected-lane scoring/Book retest remains open in this canary-fix
-slice.
+unique-name resumed Book presentation, and four visible toasts now pass. Fresh
+selected-lane sweeps then produced four enqueues, starts, completions, one
+mid-job resume, and no queue safety marker in each lane. Old Ways emitted
+`NordOldWays` with accepted-cell shape `20/20/20/9`; the tester confirmed Stuhn
+and Shor were included while Akatosh was excluded. Nine Divines emitted
+`NordNineDivines` with shape `21/21/21/7`; the tester confirmed Stuhn, Shor, and
+Tsun were excluded while Akatosh remained eligible. The stacked canary-fix
+slice is therefore runtime/manual proven. Catalog-v2, semantic adapters, and
+package acceptance remain separate later Slice 1 gates.
+
+The appended Papyrus log also exposed a proof-tool defect: fresh sessions reuse
+`v3qr_N` job IDs. The runtime checker now pairs lifecycle occurrences in order,
+requires every completion to own a preceding unmatched start, rejects negative
+latency, and self-tests two sessions that reuse the same IDs.
 
 ---
 

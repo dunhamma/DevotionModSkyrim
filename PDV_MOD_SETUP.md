@@ -626,8 +626,20 @@ logged four enqueues, four starts, four FIFO completions, one `RESUME pending=3`
 from cell 2/21, four Prisma receipts/renders, zero UI dedupes, and no overlap,
 overflow, stack, or broad-scope failure. The tester confirmed four visible
 toasts and no repeated deity names in any newly-created Book entry. Resume and
-presentation proof therefore pass; the fresh Nine Divines/Old Ways eligibility
-retest remains open.
+presentation proof therefore pass. Two subsequent fresh lane sweeps also pass:
+Old Ways logged `NordOldWays`, accepted `20/20/20/9` cells, and manually included
+Stuhn/Shor while excluding Akatosh; Nine Divines logged `NordNineDivines`,
+accepted `21/21/21/7`, and manually excluded Stuhn/Shor/Tsun while retaining
+Akatosh. Each lane completed four FIFO jobs with one resume and no overlap,
+overflow, stack, or broad-scope failure. This closes the stacked canary-fix
+runtime/manual proof; catalog-v2, semantic adapters, and package acceptance
+remain later Slice 1 work.
+
+Papyrus logs may append multiple fresh sessions whose persisted sequence resets
+to `v3qr_1`. `pdv_quest_reaction_runtime_check.mjs` therefore pairs lifecycle
+occurrences in order rather than mapping the whole file by job ID; it fails a
+completion without its own preceding start and rejects negative latency. Its
+self-test contains two sessions with reused IDs.
 
 Slice 1B compile/readback closeout (2026-08-13) used:
 
