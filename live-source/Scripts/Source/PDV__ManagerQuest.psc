@@ -1760,7 +1760,7 @@ EndFunction
 
 Function FinalizeQueuedQuestReaction(String sourceModName, String reactionKey)
     _qrQueueTransactionActive = False
-    FlushQueuedQuestReactionSurface(sourceModName)
+    FlushQueuedQuestReactionSurface(sourceModName, reactionKey)
     CommitQueuedQuestReactionBroad(reactionKey)
     if _qrQueueNeedsCurseRefresh
         HandleCurseStateRefresh("quest_reaction_queue")
@@ -2206,7 +2206,7 @@ Function AccumulateQueuedQuestReactionSurface(PDV_DeityBase deity, Float amount,
     endIf
 EndFunction
 
-Function FlushQueuedQuestReactionSurface(String sourceModName = "")
+Function FlushQueuedQuestReactionSurface(String sourceModName = "", String reactionKey = "")
     if _qrQueueSurfPosCount == 0 && _qrQueueSurfNegCount == 0
         return
     endIf
@@ -2215,6 +2215,7 @@ Function FlushQueuedQuestReactionSurface(String sourceModName = "")
     if _qrQueueSurfMilestone
         bodMagnitude = 2
     endIf
+    Bool toastSent = False
     if _qrQueueSurfNegCount == 0
         String posMsg = _qrQueueSurfBestPosName + " marks your deed."
         if _qrQueueSurfPosCount == 2
@@ -2222,7 +2223,8 @@ Function FlushQueuedQuestReactionSurface(String sourceModName = "")
         elseIf _qrQueueSurfPosCount > 2
             posMsg = _qrQueueSurfBestPosName + " and " + (_qrQueueSurfPosCount - 1) + " others mark your deed."
         endIf
-        SendPrismaToastWithSource(_qrQueueSurfBestPosSymbol, "good", "A deed marked", posMsg, sourceModName)
+        toastSent = SendPrismaToastWithSource(_qrQueueSurfBestPosSymbol, "good", "A deed marked", posMsg, sourceModName, True, reactionKey)
+        TraceQuestReactionToastResult(reactionKey, toastSent)
         AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed.", nowDay, "favor.act", _qrQueueSurfBestPosSymbol, False, bodMagnitude, "A deed marked", False, sourceModName)
     elseIf _qrQueueSurfPosCount == 0
         String negMsg = _qrQueueSurfBestNegName + " takes offense at your deed."
@@ -2231,7 +2233,8 @@ Function FlushQueuedQuestReactionSurface(String sourceModName = "")
         elseIf _qrQueueSurfNegCount > 2
             negMsg = _qrQueueSurfBestNegName + " and " + (_qrQueueSurfNegCount - 1) + " others take offense at your deed."
         endIf
-        SendPrismaToastWithSource(_qrQueueSurfBestNegSymbol, "warning", "A deed ill-received", negMsg, sourceModName)
+        toastSent = SendPrismaToastWithSource(_qrQueueSurfBestNegSymbol, "warning", "A deed ill-received", negMsg, sourceModName, True, reactionKey)
+        TraceQuestReactionToastResult(reactionKey, toastSent)
         AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense at your deed.", nowDay, "favor.loss", _qrQueueSurfBestNegSymbol, False, bodMagnitude, "A deed ill-received", False, sourceModName)
     else
         Bool positiveLeads = _qrQueueSurfBestPosAmount >= (_qrQueueSurfBestNegAmount * -1.0)
@@ -2243,10 +2246,17 @@ Function FlushQueuedQuestReactionSurface(String sourceModName = "")
             mixedSymbol = _qrQueueSurfBestNegSymbol
             mixedBodTone = "favor.loss"
         endIf
-        SendPrismaToastWithSource(mixedSymbol, mixedTone, "A deed weighed", _qrQueueSurfBestPosName + " marks your deed; " + _qrQueueSurfBestNegName + " takes offense.", sourceModName)
+        toastSent = SendPrismaToastWithSource(mixedSymbol, mixedTone, "A deed weighed", _qrQueueSurfBestPosName + " marks your deed; " + _qrQueueSurfBestNegName + " takes offense.", sourceModName, True, reactionKey)
+        TraceQuestReactionToastResult(reactionKey, toastSent)
         AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed; " + JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, bodMagnitude, "A deed weighed", False, sourceModName)
     endIf
     ResetQueuedQuestReactionSurface()
+EndFunction
+
+Function TraceQuestReactionToastResult(String reactionKey, Bool toastSent)
+    if GetDebugLevel() >= 2
+        Debug.Trace("[PDV][PDV_TOAST_TRACE] questReaction correlation=" + reactionKey + " submitted=" + toastSent)
+    endIf
 EndFunction
 
 Bool Function ShouldSurfaceLikesDislikesEvent(Int eventType)
@@ -3066,13 +3076,28 @@ Bool Function SendPrismaToast(String symbolName, String tone, String titleText, 
     return SendPrismaToastPayloadOrFallback(payload, titleText, messageText, allowFallback, allowDuringRaceSetup)
 EndFunction
 
-Bool Function SendPrismaToastWithSource(String symbolName, String tone, String titleText, String messageText, String sourceModName, Bool allowFallback = True)
-    if sourceModName == ""
+Bool Function SendPrismaToastWithSource(String symbolName, String tone, String titleText, String messageText, String sourceModName, Bool allowFallback = True, String correlation = "")
+    if sourceModName == "" && correlation == ""
         return SendPrismaToast(symbolName, tone, titleText, messageText, allowFallback)
     endIf
     sourceModName = NormalizePublicDeityDisplayText(sourceModName)
-    String payload = "{\"mode\":\"toast\",\"toast\":{\"symbol\":\"" + JsonSafeString(symbolName) + "\",\"tone\":\"" + JsonSafeString(tone) + "\",\"title\":\"" + JsonSafeString(titleText) + "\",\"message\":\"" + JsonSafeString(messageText) + "\",\"source\":\"" + JsonSafeString(sourceModName) + "\"}}"
-    return SendPrismaToastPayloadOrFallback(payload, titleText + " - " + sourceModName, messageText, allowFallback)
+    String correlationPrefix = ""
+    if correlation != ""
+        correlationPrefix = "\"correlation\":\"" + JsonSafeString(correlation) + "\","
+    endIf
+    String payload = "{\"mode\":\"toast\"," + correlationPrefix + "\"toast\":{\"symbol\":\"" + JsonSafeString(symbolName) + "\",\"tone\":\"" + JsonSafeString(tone) + "\",\"title\":\"" + JsonSafeString(titleText) + "\",\"message\":\"" + JsonSafeString(messageText) + "\""
+    if sourceModName != ""
+        payload = payload + ",\"source\":\"" + JsonSafeString(sourceModName) + "\""
+    endIf
+    if correlation != ""
+        payload = payload + ",\"correlation\":\"" + JsonSafeString(correlation) + "\""
+    endIf
+    payload = payload + "}}"
+    String fallbackTitle = titleText
+    if sourceModName != ""
+        fallbackTitle = titleText + " - " + sourceModName
+    endIf
+    return SendPrismaToastPayloadOrFallback(payload, fallbackTitle, messageText, allowFallback)
 EndFunction
 
 Bool Function SendPrismaEventToast(String eventName, PDV_DeityBase deity, String context, String tierLabel, String rival, Bool allowFallback = True)
