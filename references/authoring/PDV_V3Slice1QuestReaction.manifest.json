@@ -189,6 +189,20 @@
       "fresh-game Skyrim acceptance"
     ]
   },
+  "canaryFixFollowup": {
+    "status": "implemented-compiled-static-gates-pass-runtime-retest-open",
+    "selectedLanePolicy": "ordinary automatic quest reactions must be eligible in the currently selected Nord baseline at ingress and again before award; authored taboo/hostile displeasure remains valid for visible origin-roster deities; Daedric paths and grandfathered active patrons retain their existing exceptions",
+    "toastIdentity": "each completed logical reaction job carries its qualified reaction key as top-level and toast-local correlation; Prisma deduplicates exact repeated delivery of one correlation but never distinct logical jobs",
+    "diagnostics": "debug-gated PDV_TOAST_TRACE markers distinguish Papyrus submission, native receipt/Interop dispatch, and UI receipt/dedupe/render",
+    "gates": [
+      "node tools/pdv_quest_reaction_eligibility_audit.mjs --self-test",
+      "node tools/pdv_prisma_toast_cardinality_audit.mjs --self-test",
+      "node tools/pdv_quest_reaction_performance_audit.mjs",
+      "targeted PDV__ManagerQuest compile",
+      "DevotionPrismaBridge releasedbg build"
+    ],
+    "open": "fresh-game Nine Divines/Old Ways scoring and Book retest; four-toast runtime cardinality; mid-job save-load RESUME"
+  },
   "targetAcceptanceCases": [
     "same-local-form-id-in-two-plugins",
     "one-bad-extension-does-not-disable-other-sources",

@@ -605,6 +605,18 @@ canary exposed two separate player-surface defects now owned by the stacked
 canary-fix branch: Old Ways deities leaked through the Nine Divines baseline,
 and four persistent Book entries produced only one visibly observed toast.
 
+The stacked fix is checked with
+`node .\tools\pdv_quest_reaction_eligibility_audit.mjs --self-test` and
+`node .\tools\pdv_prisma_toast_cardinality_audit.mjs --self-test`. The first
+locks selected-baseline scoring plus the deliberate taboo/hostile and Daedric
+exceptions. The second requires four distinct logical correlations to render
+four toasts while preserving exact-duplicate suppression. Build the Manager
+with `pdv_compile.mjs --script PDV__ManagerQuest`, build the native bridge with
+the documented releasedbg xmake command, sync `app.js` and `index.html`, then
+fully restart Skyrim before the counted retest. At debug level 2,
+`PDV_TOAST_TRACE` markers distinguish Manager submission, native receipt and
+Interop dispatch, and UI receipt/dedupe/render.
+
 Slice 1B compile/readback closeout (2026-08-13) used:
 
 ```powershell

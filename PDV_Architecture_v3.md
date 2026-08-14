@@ -972,6 +972,18 @@ The V3 runtime-log checker now consumes the real qualified key and `v3qr_N`
 marker shape; selected-lane and toast-cardinality corrections belong to the
 stacked canary-fix slice rather than the strict-parity extraction.
 
+The stacked canary-fix implementation now makes selected Nord baseline
+eligibility the single automatic quest-reaction policy at both ingress and the
+final pre-award guard. Ordinary Old Ways cells therefore cannot reach piety or
+Book accumulation while Nine Divines is selected, and the inverse is also
+true. Authored `TABOO`/`HOSTILE` displeasure, Daedric watching/commitment, and a
+grandfathered active patron keep their explicit exceptions. Each completed
+logical job also carries its qualified reaction key as toast `correlation`;
+Prisma suppresses an exact repeat of one correlation but cannot collapse four
+different jobs. Static policy/cardinality gates, isolated Manager compilation,
+and the native releasedbg build pass. Fresh-game selected-lane, four-toast, and
+mid-job `RESUME` proof remain open.
+
 ---
 
 ## 6. Reputation track subsystem (Phase 8)

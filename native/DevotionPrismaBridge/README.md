@@ -139,6 +139,10 @@ Required invariants:
 - Gameplay toast payloads use `mode: "toast"` through the overlay channel.
   Overlay payloads must clear any stale `panel-visible` DOM state before
   rendering.
+- Queue-backed quest-reaction toasts carry the qualified logical reaction key
+  as top-level and toast-local `correlation`. Correlation participates in UI
+  deduplication: repeated delivery of one logical job is suppressed, while
+  separate jobs remain separate even when their player-facing copy matches.
 - Cold overlay sends defer until the Prisma DOM is ready. DOM-ready replay of
   focused panel JSON only happens for a real pending panel open.
 - The demo dashboard is explicit preview tooling only. It must not auto-render
@@ -148,6 +152,11 @@ Required invariants:
 enumerates the approved focused-panel and overlay sender functions, so new
 race/deity/Prince presentation work has to reuse the existing helpers or update
 the contract deliberately.
+
+`node .\tools\pdv_prisma_toast_cardinality_audit.mjs --self-test` is the
+focused correlation/cardinality gate. Debug builds log `PDV_TOAST_TRACE` at
+Papyrus submission, native receipt/dispatch, and UI receipt/dedupe/render so a
+runtime loss can be assigned to one boundary without broad logging.
 
 ## Toast Fallback Policy
 
