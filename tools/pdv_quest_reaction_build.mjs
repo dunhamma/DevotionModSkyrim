@@ -7,6 +7,7 @@ import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { hashBytes, hashText, readTextNormalised } from "./lib/pdv_file_compare.mjs";
 import { validatePatchSourceLock, writePatchSourceLock } from "./lib/pdv_patch_source_lock.mjs";
 import { compileQuestMatrix } from "./pdv_quest_matrix_compile.mjs";
 import {
@@ -30,6 +31,7 @@ import {
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const MANIFEST_PATH = path.join(ROOT, "references", "authoring", "PDV_QuestReactionCompatibility.manifest.json");
 const RECEIPT_PATH = path.join(ROOT, "references", "authoring", "PDV_QuestReactionCatalogV2.receipt.json");
+const TEXT_BUILD_INPUT_EXTENSIONS = new Set([".csv", ".ini", ".json", ".md", ".psc", ".xml"]);
 const KNOWN_FLAGS = new Set(["--check", "--write", "--self-test", "--json", "--package", "--output"]);
 const args = process.argv.slice(2);
 assertKnownFlags(args, KNOWN_FLAGS, { toolName: "pdv_quest_reaction_build" });
@@ -129,7 +131,9 @@ function buildRepositoryCatalogs() {
     officialCatalogText: artifacts[normalizePath(manifest.officialPatchCatalogOutput)],
     readAsset: (relativePath) => {
       const absolutePath = path.join(ROOT, relativePath);
-      return fs.existsSync(absolutePath) ? fs.readFileSync(absolutePath) : null;
+      if (!fs.existsSync(absolutePath)) return null;
+      if (isTextBuildInput(relativePath)) return Buffer.from(readTextNormalised(absolutePath), "utf8");
+      return fs.readFileSync(absolutePath);
     },
   });
   const packageReceipt = buildPackageReceipt({ manifest, artifacts: packageArtifacts, inputSha256: inputDigest });
@@ -641,9 +645,14 @@ function hashInputs(manifest) {
   const payload = [...paths].sort().map((relativePath) => {
     const absolutePath = path.join(ROOT, relativePath);
     if (!fs.existsSync(absolutePath)) fail(`Build input missing: ${relativePath}`);
-    return `${relativePath}\0${sha256(fs.readFileSync(absolutePath))}`;
+    const digest = isTextBuildInput(relativePath) ? hashText(absolutePath) : hashBytes(absolutePath);
+    return `${relativePath}\0${digest}`;
   }).join("\n");
   return sha256(payload);
+}
+
+function isTextBuildInput(relativePath) {
+  return TEXT_BUILD_INPUT_EXTENSIONS.has(path.extname(relativePath).toLowerCase());
 }
 
 function listFiles(directory) {

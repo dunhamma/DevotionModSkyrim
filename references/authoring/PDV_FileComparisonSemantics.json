@@ -172,6 +172,10 @@
     "references/authoring/PDV_QuestReactionMatrix_CreationClubCore_2026-08-07.csv text eol=lf",
     "references/authoring/PDV_QuestReactionCompatibility.manifest.json text eol=lf",
     "references/authoring/PDV_QuestReactionCatalogV2.receipt.json text eol=lf",
-    "references/authoring/PDV_QuestReactionPackageV3.receipt.json text eol=lf"
+    "references/authoring/PDV_QuestReactionPackageV3.receipt.json text eol=lf",
+    "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionCore.v2.json text eol=lf",
+    "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json text eol=lf",
+    "patch-source/**/*.psc text eol=lf",
+    "patch-source/**/*.ini text eol=lf"
   ]
 }

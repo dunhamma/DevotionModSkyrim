@@ -179,7 +179,7 @@
       "sha256": "0ea245321bc6af4f49dc1655aef38ba3eab59aa859b2e091fa440739b46da3ec"
     }
   ],
-  "inputSha256": "f4ded1545482b1cd6cb70670980caa537debe1659a4a3e4a41cf006accf7aa48",
+  "inputSha256": "eb32842dfe46af93274e0af44b15ed0bea9d5cae1403e66db577216f111b1722",
   "packageRoot": "dist/PDV_QuestModPatches_FOMOD",
   "proofBoundary": "Generated tree, installer simulation, bytes, and hashes only; dependency detection and gameplay require Skyrim proof.",
   "requiredCatalog": "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json",

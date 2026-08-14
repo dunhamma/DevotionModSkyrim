@@ -53,6 +53,10 @@ dist/PDV_QuestModPatches_FOMOD/required/**/*.json text eol=lf linguist-generated
 references/authoring/PDV_QuestReactionCatalogV2.receipt.json text eol=lf
 references/authoring/PDV_QuestReactionPackageV3.receipt.json text eol=lf
 references/authoring/PDV_QuestReactionCompatibility.manifest.json text eol=lf
+SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionCore.v2.json text eol=lf
+SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json text eol=lf
+patch-source/**/*.psc text eol=lf
+patch-source/**/*.ini text eol=lf
 # Authoria all-in-one package. Same reasoning as the FOMOD block above: the ESP
 # and compiled scripts are bytes, and the handoff publishes the zip's SHA256.
 dist/Devotion_Authoria_Compatibility*.zip -text
