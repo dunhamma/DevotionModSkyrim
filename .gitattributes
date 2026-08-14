@@ -10,7 +10,7 @@ native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/styles.css text eol=lf
 live-source/Scripts/Source/*.psc text eol=lf
 
 # The patch-only Papyrus source, same reasoning one layer over.
-# tools/pdv_patch_source_deploy.mjs locks the sha256 of each .psc as of its last compile.
+# tools/pdv_patch_source_lock.mjs locks the sha256 of each .psc as of its last compile.
 # With autocrlf=true and no pin, the bytes on disk depend on WHEN the file was checked out:
 # the lock was written just after a git mv (still LF) and every fresh clone then read CRLF,
 # so the gate failed on all ten scripts in a tree nobody had touched. Pin LF here; the tool

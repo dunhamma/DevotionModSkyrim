@@ -169,9 +169,9 @@
       "sha256": "aab7a42b2384558a94ba05700d5b30136eec1dcefd23a86cdabfbadf188f5d5d"
     },
     {
-      "bytes": 271,
+      "bytes": 2383,
       "path": "README.md",
-      "sha256": "6f75503a5fde407467557bf42c75bdb202f1e0c5dd8bbf28e62041b2c836bd33"
+      "sha256": "e04e46a0bbc58b6fb09c98c43bc27bdd891c13d2c6cd6b5ad80a6b609c47f3d8"
     },
     {
       "bytes": 995778,
@@ -184,6 +184,6 @@
   "proofBoundary": "Generated tree, installer simulation, bytes, and hashes only; dependency detection and gameplay require Skyrim proof.",
   "requiredCatalog": "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json",
   "schema": "pdv.quest-reaction.package-receipt.v3",
-  "treeSha256": "f7fbf3fbf2ef7fac681f3b49ed09973ad468974a266640961f3b14569ee34d48",
+  "treeSha256": "d729a3c0d18dd89eab1bd6b604f83fb6194a29ceded1cba30692080162080272",
   "version": 1
 }

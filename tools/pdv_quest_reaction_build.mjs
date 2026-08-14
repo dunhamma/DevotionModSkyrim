@@ -130,7 +130,7 @@ function buildRepositoryCatalogs() {
     manifest,
     officialCatalogText: artifacts[normalizePath(manifest.officialPatchCatalogOutput)],
     readAsset: (relativePath) => {
-      const absolutePath = path.join(ROOT, relativePath);
+      const absolutePath = repositoryInputPath(relativePath);
       if (!fs.existsSync(absolutePath)) return null;
       if (isTextBuildInput(relativePath)) return Buffer.from(readTextNormalised(absolutePath), "utf8");
       return fs.readFileSync(absolutePath);
@@ -157,7 +157,7 @@ function validateManifest(manifest) {
   if (manifest.extensionCatalogContract?.schema !== "pdv.quest-reaction.catalog.v2" || manifest.extensionCatalogContract?.version !== 2 || manifest.disabledSourceContract?.storageKey !== "PDV.V3.QR.DisabledSources") {
     fail("Compatibility manifest extension/disabled-source contracts are incomplete.");
   }
-  validatePackageContract(manifest, { assetExists: (relativePath) => fs.existsSync(path.join(ROOT, relativePath)) });
+  validatePackageContract(manifest, { assetExists: (relativePath) => fs.existsSync(repositoryInputPath(relativePath)) });
   validatePatchSourceLock(path.join(ROOT, "patch-source"));
   if (!Array.isArray(manifest.sources) || manifest.sources.length !== 80) {
     fail(`Compatibility manifest must contain exactly 80 sources; found ${manifest.sources?.length ?? 0}.`);
@@ -509,6 +509,12 @@ function runSelfTest(repositoryBuild) {
   collisionAdapters[1].package.assets[0].destination = collisionAdapters[0].package.assets[0].destination;
   expectPackageReject("adapter collision", () => validatePackageContract(collisionManifest));
   expectPackageReject("missing adapter asset", () => validatePackageContract(repositoryBuild.manifest, { assetExists: (relativePath) => !relativePath.endsWith("PDV_Patch_AFDI.esp") }));
+  const escapingManifest = structuredClone(repositoryBuild.manifest);
+  escapingManifest.sources.find((source) => source.delivery !== "data-only").package.assets[0].source = "../outside-repository.bin";
+  expectPackageReject("adapter source traversal", () => validatePackageContract(escapingManifest));
+  const incompleteReadme = new Map(repositoryBuild.packageArtifacts);
+  incompleteReadme.set("README.md", Buffer.from(incompleteReadme.get("README.md").toString("utf8").replace("- Above All Else\n", "")));
+  expectPackageReject("incomplete public integration inventory", () => validatePackageArtifacts({ manifest: repositoryBuild.manifest, artifacts: incompleteReadme }));
   const lockRoot = fs.mkdtempSync(path.join(os.tmpdir(), "pdv-qr-lock-"));
   try {
     fs.mkdirSync(path.join(lockRoot, "Fixture", "Scripts", "Source"), { recursive: true });
@@ -643,7 +649,7 @@ function hashInputs(manifest) {
     }
   }
   const payload = [...paths].sort().map((relativePath) => {
-    const absolutePath = path.join(ROOT, relativePath);
+    const absolutePath = repositoryInputPath(relativePath);
     if (!fs.existsSync(absolutePath)) fail(`Build input missing: ${relativePath}`);
     const digest = isTextBuildInput(relativePath) ? hashText(absolutePath) : hashBytes(absolutePath);
     return `${relativePath}\0${digest}`;
@@ -653,6 +659,15 @@ function hashInputs(manifest) {
 
 function isTextBuildInput(relativePath) {
   return TEXT_BUILD_INPUT_EXTENSIONS.has(path.extname(relativePath).toLowerCase());
+}
+
+function repositoryInputPath(relativePath) {
+  const raw = String(relativePath ?? "");
+  if (!raw || path.posix.isAbsolute(raw) || path.win32.isAbsolute(raw)) fail(`Build input path must be repository-relative: ${raw || "<empty>"}`);
+  const absolutePath = path.resolve(ROOT, raw);
+  const rootPrefix = `${ROOT}${path.sep}`;
+  if (!absolutePath.startsWith(rootPrefix)) fail(`Build input escapes the repository: ${raw}`);
+  return absolutePath;
 }
 
 function listFiles(directory) {

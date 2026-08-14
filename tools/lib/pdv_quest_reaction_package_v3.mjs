@@ -5,6 +5,13 @@ const normalize = (value) => String(value).replaceAll("\\", "/").replace(/^\.\//
 const digest = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
 const bytesOf = (value) => Buffer.isBuffer(value) ? value : Buffer.from(String(value), "utf8");
 
+function isSafeRelativePath(value) {
+  const raw = String(value ?? "");
+  if (!raw || path.posix.isAbsolute(raw) || path.win32.isAbsolute(raw)) return false;
+  const normalized = normalize(raw);
+  return normalized !== ".." && !normalized.startsWith("../") && !normalized.split("/").includes("..");
+}
+
 function xmlEscape(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -51,7 +58,7 @@ export function validatePackageContract(manifest, { assetExists = () => true } =
     for (const asset of source.package.assets) {
       const sourcePath = normalize(asset.source);
       const destination = normalize(asset.destination);
-      if (!sourcePath || !destination || destination.startsWith("../") || path.posix.isAbsolute(destination)) {
+      if (!isSafeRelativePath(asset.source) || !isSafeRelativePath(asset.destination)) {
         throw new Error(`Adapter ${source.sourceId} has an invalid asset mapping.`);
       }
       if (sourcePath.startsWith("dist/")) throw new Error(`Adapter ${source.sourceId} reads generated dist input: ${sourcePath}.`);
@@ -122,6 +129,29 @@ export function renderInfo(manifest) {
 `;
 }
 
+export function renderReadme(manifest) {
+  const integrations = [...manifest.sources]
+    .sort((left, right) => left.displayName.localeCompare(right.displayName, "en"))
+    .map((source) => `- ${source.displayName}`)
+    .join("\n");
+  return `# Devotion Quest Reaction Compatibility
+
+The official third-party reaction catalog installs automatically. The installer offers five dependency-detected adapter options for integrations that require records or scripts. Data-only integrations need no individual checkbox.
+
+## Quest-patch integrations (80)
+
+${integrations}
+
+## KID integrations
+
+None in this build
+
+## SPID integrations
+
+None in this build
+`;
+}
+
 export function buildPackageArtifacts({ manifest, officialCatalogText, readAsset }) {
   validatePackageContract(manifest, { assetExists: (relativePath) => readAsset(relativePath) !== null });
   const contract = manifest.packageContract;
@@ -136,7 +166,7 @@ export function buildPackageArtifacts({ manifest, officialCatalogText, readAsset
   }
   artifacts.set("fomod/ModuleConfig.xml", bytesOf(renderModuleConfig(manifest)));
   artifacts.set("fomod/info.xml", bytesOf(renderInfo(manifest)));
-  artifacts.set("README.md", bytesOf(`# Devotion Quest Reaction Compatibility\n\nThe official third-party reaction catalog installs automatically. The installer offers five dependency-detected adapter options for integrations that require records or scripts. Data-only integrations need no individual checkbox.\n`));
+  artifacts.set("README.md", bytesOf(renderReadme(manifest)));
   validatePackageArtifacts({ manifest, artifacts });
   return artifacts;
 }
@@ -181,6 +211,13 @@ export function validatePackageArtifacts({ manifest, artifacts }) {
   if ((xml.match(/source="required"/g) ?? []).length !== 1) throw new Error("FOMOD must contain one required package source.");
   for (const source of manifest.sources.filter((entry) => entry.delivery === "data-only")) {
     if (optionNames.includes(source.displayName)) throw new Error(`Data-only source leaked into FOMOD options: ${source.sourceId}.`);
+  }
+  const readme = bytesOf(artifacts.get("README.md") ?? "").toString("utf8");
+  for (const source of manifest.sources) {
+    if (!readme.includes(`- ${source.displayName}\n`)) throw new Error(`Packaged README omits integration: ${source.displayName}.`);
+  }
+  if (!readme.includes("## KID integrations\n\nNone in this build") || !readme.includes("## SPID integrations\n\nNone in this build")) {
+    throw new Error("Packaged README must state empty KID and SPID integration categories.");
   }
 
   const installed = new Map([[contract.requiredCatalogDestination.toLowerCase(), requiredPath]]);
