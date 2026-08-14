@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// One logical quest stage has one owner. A dependency-expanded stage belongs in its
-// dependency-gated PatchHub channel, never in the always-loaded core matrix as well.
+// Generated v2 catalogs must have one canonical owner for each qualified quest
+// stage. Public extensions may intentionally shadow canonical keys; the Runtime's
+// fixed core -> official -> lexical-extension precedence handles those overrides.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -8,7 +9,7 @@ import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
 
-const KNOWN_FLAGS = new Set(["--channels-root", "--core", "--json"]);
+const KNOWN_FLAGS = new Set(["--core", "--official", "--extensions-root", "--json"]);
 assertKnownFlags(process.argv.slice(2).filter((arg) => arg.startsWith("--")), KNOWN_FLAGS, {
   toolName: "pdv_quest_stage_ownership_check",
 });
@@ -19,70 +20,67 @@ const valueOf = (name, fallback) => {
   const index = argv.indexOf(name);
   return index >= 0 ? argv[index + 1] : fallback;
 };
-const corePath = path.resolve(valueOf("--core", path.join(repo, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix.json")));
-const channelsRoot = path.resolve(valueOf("--channels-root", path.join(repo, "dist", "PDV_QuestModPatches_FOMOD", "common")));
+const catalogRoot = path.join(repo, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion");
+const corePath = path.resolve(valueOf("--core", path.join(catalogRoot, "PDV_QuestReactionCore.v2.json")));
+const officialPath = path.resolve(valueOf("--official", path.join(catalogRoot, "PDV_QuestReactionPatches.v2.json")));
+const extensionsRoot = path.resolve(valueOf("--extensions-root", path.join(catalogRoot, "QuestReactionExtensions")));
 
-function walk(directory) {
-  if (!fs.existsSync(directory)) return [];
-  const files = [];
-  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-    const target = path.join(directory, entry.name);
-    if (entry.isDirectory()) files.push(...walk(target));
-    else if (/PDV_QRM_.+\.json$/i.test(entry.name) && target.split(path.sep).includes("Channels")) files.push(target);
-  }
-  return files.sort((left, right) => left.localeCompare(right));
-}
-
-function readStages(file) {
+function readCatalog(file) {
   const json = JSON.parse(fs.readFileSync(file, "utf8"));
-  const lists = json.stringList ?? {};
-  const keys = lists.questKeys ?? lists.questkeys ?? [];
-  const plugins = lists.questPlugins ?? lists.questplugins ?? [];
-  const editors = lists.questEditorIds ?? lists.questeditorids ?? [];
-  if (!Array.isArray(keys) || !Array.isArray(plugins) || keys.length !== plugins.length) {
-    throw new Error(`${file}: questKeys and questPlugins must be aligned arrays`);
+  if (json.string?.schema !== "pdv.quest-reaction.catalog.v2" || Number(json.int?.schemaVersion) !== 2) {
+    throw new Error(`${file}: expected pdv.quest-reaction.catalog.v2 schema version 2`);
   }
-  const unique = new Map();
-  for (let index = 0; index < keys.length; index += 1) {
-    const questKey = String(keys[index]).trim();
-    const plugin = String(plugins[index]).trim();
-    if (!questKey || !plugin) throw new Error(`${file}: incomplete quest stage metadata at index ${index}`);
-    const stageKey = `${plugin.toLowerCase()}|${questKey}`;
-    if (!unique.has(stageKey)) unique.set(stageKey, {
-      stageKey,
-      formKeyStage: `${plugin}:${questKey}`,
-      editorId: String(editors[index] ?? ""),
-    });
+  const keys = json.stringList?.questKeys;
+  if (!Array.isArray(keys)) throw new Error(`${file}: stringList.questKeys is required`);
+  const seen = new Set();
+  for (const rawKey of keys) {
+    const key = String(rawKey).trim();
+    if (!/^[^|]+\|\d+\|-?\d+$/.test(key)) throw new Error(`${file}: invalid qualified quest key '${key}'`);
+    const folded = key.toLowerCase();
+    if (seen.has(folded)) throw new Error(`${file}: duplicate quest key '${key}'`);
+    seen.add(folded);
   }
-  return [...unique.values()];
+  return seen;
 }
 
-if (!fs.existsSync(corePath)) throw new Error(`Core matrix missing: ${corePath}`);
-const coreStages = new Map(readStages(corePath).map((stage) => [stage.stageKey, stage]));
-const channelFiles = walk(channelsRoot);
-const collisions = [];
-for (const file of channelFiles) {
-  for (const stage of readStages(file)) {
-    const core = coreStages.get(stage.stageKey);
-    if (core) collisions.push({
-      formKeyStage: stage.formKeyStage,
-      editorId: stage.editorId || core.editorId,
-      core: path.relative(repo, corePath),
-      channel: path.relative(repo, file),
-    });
+function extensionFiles(directory) {
+  if (!fs.existsSync(directory)) return [];
+  return fs.readdirSync(directory, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith(".json"))
+    .map((entry) => path.join(directory, entry.name))
+    .sort((left, right) => path.basename(left).localeCompare(path.basename(right), "en", { sensitivity: "base" }));
+}
+
+for (const file of [corePath, officialPath]) {
+  if (!fs.existsSync(file)) throw new Error(`Catalog missing: ${file}`);
+}
+const core = readCatalog(corePath);
+const official = readCatalog(officialPath);
+const canonicalCollisions = [...official].filter((key) => core.has(key)).sort();
+
+const claimed = new Set([...core, ...official]);
+let extensionStages = 0;
+let extensionOverrides = 0;
+const extensions = extensionFiles(extensionsRoot);
+for (const file of extensions) {
+  const keys = readCatalog(file);
+  extensionStages += keys.size;
+  for (const key of keys) {
+    if (claimed.has(key)) extensionOverrides += 1;
+    claimed.add(key);
   }
 }
 
 const result = {
-  check: "questStageOwnership",
-  status: collisions.length ? "FAIL" : "PASS",
-  coreStages: coreStages.size,
-  channels: channelFiles.length,
-  collisions,
+  check: "questStageOwnershipV2",
+  status: canonicalCollisions.length ? "FAIL" : "PASS",
+  coreStages: core.size,
+  officialStages: official.size,
+  extensions: extensions.length,
+  extensionStages,
+  extensionOverrides,
+  canonicalCollisions,
 };
 if (argv.includes("--json")) console.log(JSON.stringify(result, null, 2));
-else {
-  console.log(`${result.status} coreStages=${result.coreStages} channels=${result.channels} collisions=${collisions.length}`);
-  for (const collision of collisions) console.error(`  ${collision.formKeyStage} ${collision.editorId}: core <-> ${collision.channel}`);
-}
-process.exitCode = collisions.length ? 1 : 0;
+else console.log(`${result.status} coreStages=${result.coreStages} officialStages=${result.officialStages} extensions=${result.extensions} canonicalCollisions=${canonicalCollisions.length}`);
+process.exitCode = canonicalCollisions.length ? 1 : 0;

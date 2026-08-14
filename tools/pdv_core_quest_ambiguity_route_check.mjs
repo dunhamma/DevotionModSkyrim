@@ -18,36 +18,39 @@ function requireTrue(condition, label) {
   } else failures.push(label);
 }
 
-function requireAdapter(file, expected) {
-  const adapter = json("SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "QuestStageAdapters", file);
+const coreCatalog = json("SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionCore.v2.json");
+
+function requireAdapter(key, expected) {
+  const prefix = `stageAdapter.${key}.`;
   for (const [key, value] of Object.entries(expected.string)) {
-    requireTrue(adapter.string?.[key] === value, `${file} ${key}=${value}`);
+    requireTrue(coreCatalog.string?.[`${prefix}${key}`] === value, `${prefix}${key}=${value}`);
   }
   for (const [key, value] of Object.entries(expected.int)) {
-    requireTrue(JSON.stringify(adapter.int?.[key]) === JSON.stringify(value), `${file} ${key}=${JSON.stringify(value)}`);
+    requireTrue(JSON.stringify(coreCatalog.int?.[`${prefix}${key}`]) === JSON.stringify(value), `${prefix}${key}=${JSON.stringify(value)}`);
   }
+  requireTrue(coreCatalog.stringList?.stageAdapterKeys?.includes(key), `${key} is indexed in core v2`);
 }
 
-requireAdapter("PDV_QSA_Core_FreeformRiften02.json", {
-  string: { schema: "pdv-quest-stage-adapter.v1", sourcePlugin: "Skyrim.esm", selectorKind: "global", selectorPlugin: "Skyrim.esm" },
-  int: { sourceFormId: 340742, sourceStage: 200, selectorFormId: 1113756, selectorValues: [0, 1], targetStages: [201, 202] },
+requireAdapter("Skyrim.esm|340742|200", {
+  string: { selectorKind: "global", selectorPlugin: "Skyrim.esm" },
+  int: { selectorFormId: 1113756, selectorValues: [0, 1], targetStages: [201, 202] },
 });
-requireAdapter("PDV_QSA_Core_FreeformRiften03.json", {
-  string: { schema: "pdv-quest-stage-adapter.v1", sourcePlugin: "Skyrim.esm", selectorKind: "global", selectorPlugin: "Skyrim.esm" },
-  int: { sourceFormId: 340743, sourceStage: 200, selectorFormId: 270303, selectorValues: [0, 1], targetStages: [201, 202] },
+requireAdapter("Skyrim.esm|340743|200", {
+  string: { selectorKind: "global", selectorPlugin: "Skyrim.esm" },
+  int: { selectorFormId: 270303, selectorValues: [0, 1], targetStages: [201, 202] },
 });
-requireAdapter("PDV_QSA_Core_Staada.json", {
-  string: { schema: "pdv-quest-stage-adapter.v1", sourcePlugin: "ccbgssse025-advdsgs.esm", selectorKind: "player_item_count", selectorPlugin: "ccbgssse025-advdsgs.esm" },
-  int: { sourceFormId: 1671799, sourceStage: 300, selectorFormId: 1588833, selectorValues: [0, 1], targetStages: [301, 302] },
+requireAdapter("ccbgssse025-advdsgs.esm|1671799|300", {
+  string: { selectorKind: "player_item_count", selectorPlugin: "ccbgssse025-advdsgs.esm" },
+  int: { selectorFormId: 1588833, selectorValues: [0, 1], targetStages: [301, 302] },
 });
 
-const playerEvents = read("live-source", "Scripts", "Source", "PDV_PlayerEvents.psc");
+const runtime = read("live-source", "Scripts", "Source", "PDV_QuestReactionRuntime.psc");
 for (const token of [
   'selectorKind == "player_item_count"',
   "selectorPlayer.GetItemCount(selectorItem)",
-  'selectorKind = "global"',
-  'JsonUtil.IntListGet(adapterFile, "targetStages", valueIndex)',
-]) requireTrue(playerEvents.includes(token), `PlayerEvents retains adapter token ${token}`);
+  'selectorKind == "global"',
+  'JsonUtil.IntListGet(adapterFile, adapterPrefix + "targetStages", valueIndex)',
+]) requireTrue(runtime.includes(token), `Runtime retains adapter token ${token}`);
 
 const router = read("live-source", "Scripts", "Source", "PDV_ActionRouter.psc");
 for (const token of [

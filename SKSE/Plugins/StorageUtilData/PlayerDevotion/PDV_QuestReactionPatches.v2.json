@@ -1321,7 +1321,18 @@
     "quest.Wyrmstooth.esp|3806313|30.metaSkip.Nocturnal": 1,
     "quest.Wyrmstooth.esp|3806313|30.metaskip.z'en": 1,
     "quest.Wyrmstooth.esp|3806313|30.metaSkip.Z'en": 1,
-    "schemaVersion": 2
+    "schemaVersion": 2,
+    "stageAdapter.Skyrim.esm|136533|200.selectorFormId": 2076,
+    "stageAdapter.Skyrim.esm|136533|200.selectorValues": [
+      1,
+      2,
+      3
+    ],
+    "stageAdapter.Skyrim.esm|136533|200.targetStages": [
+      201,
+      202,
+      202
+    ]
   },
   "string": {
     "catalogKind": "official-third-party",
@@ -5858,7 +5869,9 @@
     "source.wyrmstooth.displayName": "Wyrmstooth",
     "source.wyrmstooth.pluginName": "Wyrmstooth.esp",
     "source.xelzaz.displayName": "Xelzaz",
-    "source.xelzaz.pluginName": "BPUFXelzazFollower.esp"
+    "source.xelzaz.pluginName": "BPUFXelzazFollower.esp",
+    "stageAdapter.Skyrim.esm|136533|200.selectorKind": "global",
+    "stageAdapter.Skyrim.esm|136533|200.selectorPlugin": "TG Alternative Endings.esp"
   },
   "stringList": {
     "quest.00Taliesin.esp|5539746|20.deities": [
@@ -25424,6 +25437,7 @@
     "source.above-all-else.sentinelForms": [
       "Darbalag - Quest Mod.esp|2"
     ],
+    "source.above-all-else.stageAdapterKeys": [],
     "source.afdi.questKeys": [],
     "source.afdi.semanticKeys": [
       "afdi|artifact_destroyed.00.azura",
@@ -25459,6 +25473,7 @@
     "source.afdi.sentinelForms": [
       "Aetherium Forge Destroys Items.esp|4052"
     ],
+    "source.afdi.stageAdapterKeys": [],
     "source.auri.questKeys": [
       "018Auri.esp|255153|80"
     ],
@@ -25466,6 +25481,7 @@
     "source.auri.sentinelForms": [
       "018Auri.esp|255153"
     ],
+    "source.auri.stageAdapterKeys": [],
     "source.baba-yaga.questKeys": [
       "ksws03_quest.esp|2722|600"
     ],
@@ -25473,6 +25489,7 @@
     "source.baba-yaga.sentinelForms": [
       "ksws03_quest.esp|2722"
     ],
+    "source.baba-yaga.stageAdapterKeys": [],
     "source.bards-reborn-student-of-song.questKeys": [
       "BardsRebornStudentofSong.esp|1581715|20",
       "BardsRebornStudentofSong.esp|419643|140"
@@ -25481,6 +25498,7 @@
     "source.bards-reborn-student-of-song.sentinelForms": [
       "BardsRebornStudentofSong.esp|419643"
     ],
+    "source.bards-reborn-student-of-song.stageAdapterKeys": [],
     "source.bark-and-bite.questKeys": [
       "Tree Contract Mod.esp|9|25",
       "Tree Contract Mod.esp|9|45"
@@ -25489,6 +25507,7 @@
     "source.bark-and-bite.sentinelForms": [
       "Tree Contract Mod.esp|9"
     ],
+    "source.bark-and-bite.stageAdapterKeys": [],
     "source.become-a-bard.questKeys": [
       "BecomeABard.esp|162847|100",
       "BecomeABard.esp|162848|100"
@@ -25497,6 +25516,7 @@
     "source.become-a-bard.sentinelForms": [
       "BecomeABard.esp|162848"
     ],
+    "source.become-a-bard.stageAdapterKeys": [],
     "source.before-the-end.questKeys": [
       "PrisonerMod.esp|7|5"
     ],
@@ -25504,6 +25524,7 @@
     "source.before-the-end.sentinelForms": [
       "PrisonerMod.esp|7"
     ],
+    "source.before-the-end.stageAdapterKeys": [],
     "source.beyond-skyrim-bruma.questKeys": [
       "BSHeartland.esm|14936|150",
       "BSHeartland.esm|14936|30",
@@ -25518,6 +25539,7 @@
     "source.beyond-skyrim-bruma.sentinelForms": [
       "BSHeartland.esm|14936"
     ],
+    "source.beyond-skyrim-bruma.stageAdapterKeys": [],
     "source.calling-the-watchmaker.questKeys": [
       "Sithis Mod - Lovecraftian Inspired Quest.esp|2194|40"
     ],
@@ -25525,6 +25547,7 @@
     "source.calling-the-watchmaker.sentinelForms": [
       "Sithis Mod - Lovecraftian Inspired Quest.esp|2194"
     ],
+    "source.calling-the-watchmaker.stageAdapterKeys": [],
     "source.caught-red-handed-qe.questKeys": [
       "Caught Red Handed - Quest Expansion.esp|2050|100"
     ],
@@ -25532,6 +25555,7 @@
     "source.caught-red-handed-qe.sentinelForms": [
       "Caught Red Handed - Quest Expansion.esp|2050"
     ],
+    "source.caught-red-handed-qe.stageAdapterKeys": [],
     "source.college-quest-expansion.questKeys": [
       "College Of Winterhold - Quest Expansion.esp|2049|50",
       "College Of Winterhold - Quest Expansion.esp|2158|25",
@@ -25545,6 +25569,7 @@
     "source.college-quest-expansion.sentinelForms": [
       "College Of Winterhold - Quest Expansion.esp|2049"
     ],
+    "source.college-quest-expansion.stageAdapterKeys": [],
     "source.cursed-tribe-qe.questKeys": [
       "Skyrim.esm|243329|210"
     ],
@@ -25552,6 +25577,7 @@
     "source.cursed-tribe-qe.sentinelForms": [
       "Skyrim.esm|243329"
     ],
+    "source.cursed-tribe-qe.stageAdapterKeys": [],
     "source.d-ac0da.questKeys": [
       "DAc0da.esm|21186|9999",
       "DAc0da.esm|51742|999"
@@ -25560,6 +25586,7 @@
     "source.d-ac0da.sentinelForms": [
       "DAc0da.esm|21186"
     ],
+    "source.d-ac0da.stageAdapterKeys": [],
     "source.defeat-the-dragon-cult.questKeys": [
       "Defeat the Dragon Cult.esp|2048|20"
     ],
@@ -25567,6 +25594,7 @@
     "source.defeat-the-dragon-cult.sentinelForms": [
       "Defeat the Dragon Cult.esp|2048"
     ],
+    "source.defeat-the-dragon-cult.stageAdapterKeys": [],
     "source.depths-of-the-soul.questKeys": [
       "Dungeon Delver Mod.esp|0|40"
     ],
@@ -25574,6 +25602,7 @@
     "source.depths-of-the-soul.sentinelForms": [
       "Dungeon Delver Mod.esp|0"
     ],
+    "source.depths-of-the-soul.stageAdapterKeys": [],
     "source.destroy-acolyte-priests.questKeys": [
       "Destroy the Acolyte Priests.esp|2048|50"
     ],
@@ -25581,6 +25610,7 @@
     "source.destroy-acolyte-priests.sentinelForms": [
       "Destroy the Acolyte Priests.esp|2048"
     ],
+    "source.destroy-acolyte-priests.stageAdapterKeys": [],
     "source.destroy-dark-brotherhood-qe.questKeys": [
       "Skyrim.esm|603387|199"
     ],
@@ -25588,6 +25618,7 @@
     "source.destroy-dark-brotherhood-qe.sentinelForms": [
       "Skyrim.esm|603387"
     ],
+    "source.destroy-dark-brotherhood-qe.stageAdapterKeys": [],
     "source.ebony-blade-curse.questKeys": [
       "EbonyBladeCurse.esp|2055|20",
       "EbonyBladeCurse.esp|2055|30"
@@ -25596,6 +25627,7 @@
     "source.ebony-blade-curse.sentinelForms": [
       "EbonyBladeCurse.esp|2055"
     ],
+    "source.ebony-blade-curse.stageAdapterKeys": [],
     "source.forgotten-city.questKeys": [
       "ForgottenCity.esp|366171|1500",
       "ForgottenCity.esp|76729|4000",
@@ -25605,6 +25637,7 @@
     "source.forgotten-city.sentinelForms": [
       "ForgottenCity.esp|366171"
     ],
+    "source.forgotten-city.stageAdapterKeys": [],
     "source.forsworn-conspiracy-qe.questKeys": [
       "Forsworn Conspiracy Quest Expansion.esp|2048|49",
       "Forsworn Conspiracy Quest Expansion.esp|2068|60"
@@ -25613,6 +25646,7 @@
     "source.forsworn-conspiracy-qe.sentinelForms": [
       "Forsworn Conspiracy Quest Expansion.esp|2048"
     ],
+    "source.forsworn-conspiracy-qe.stageAdapterKeys": [],
     "source.gift-of-saturalia.questKeys": [
       "TheGiftofSaturalia.esp|2218|20",
       "TheGiftofSaturalia.esp|2259|8",
@@ -25624,6 +25658,7 @@
     "source.gift-of-saturalia.sentinelForms": [
       "TheGiftofSaturalia.esp|2218"
     ],
+    "source.gift-of-saturalia.stageAdapterKeys": [],
     "source.glenmoril.questKeys": [
       "Glenmoril.esm|3494535|10",
       "Glenmoril.esm|3850027|255"
@@ -25632,6 +25667,7 @@
     "source.glenmoril.sentinelForms": [
       "Glenmoril.esm|3850027"
     ],
+    "source.glenmoril.stageAdapterKeys": [],
     "source.gore.questKeys": [
       "GORE.esp|4099529|30",
       "GORE.esp|419616|15",
@@ -25642,6 +25678,7 @@
     "source.gore.sentinelForms": [
       "GORE.esp|6764791"
     ],
+    "source.gore.stageAdapterKeys": [],
     "source.gray-cowl-of-nocturnal.questKeys": [
       "Gray Fox Cowl.esm|118695|20",
       "Gray Fox Cowl.esm|122994|10",
@@ -25658,6 +25695,7 @@
     "source.gray-cowl-of-nocturnal.sentinelForms": [
       "Gray Fox Cowl.esm|9972"
     ],
+    "source.gray-cowl-of-nocturnal.stageAdapterKeys": [],
     "source.heart-of-dibella-qe.questKeys": [
       "The Heart Of Dibella - Quest Expansion.esp|2070|0"
     ],
@@ -25665,6 +25703,7 @@
     "source.heart-of-dibella-qe.sentinelForms": [
       "The Heart Of Dibella - Quest Expansion.esp|2070"
     ],
+    "source.heart-of-dibella-qe.stageAdapterKeys": [],
     "source.heart-of-the-reach.questKeys": [
       "HeartOfTheReach.esp|761457|100",
       "HeartOfTheReach.esp|761457|110"
@@ -25673,6 +25712,7 @@
     "source.heart-of-the-reach.sentinelForms": [
       "HeartOfTheReach.esp|761457"
     ],
+    "source.heart-of-the-reach.stageAdapterKeys": [],
     "source.house-of-horrors-qe.questKeys": [
       "Skyrim.esm|143112|210"
     ],
@@ -25680,6 +25720,7 @@
     "source.house-of-horrors-qe.sentinelForms": [
       "Skyrim.esm|143112"
     ],
+    "source.house-of-horrors-qe.stageAdapterKeys": [],
     "source.hunt-for-spectre.questKeys": [
       "Hunt for the Spectre.esp|2048|55"
     ],
@@ -25687,6 +25728,7 @@
     "source.hunt-for-spectre.sentinelForms": [
       "Hunt for the Spectre.esp|2048"
     ],
+    "source.hunt-for-spectre.stageAdapterKeys": [],
     "source.ill-met-by-moonlight-dialogue.questKeys": [
       "CH_IMBMDialougeAddon.esp|38|10"
     ],
@@ -25694,6 +25736,7 @@
     "source.ill-met-by-moonlight-dialogue.sentinelForms": [
       "CH_IMBMDialougeAddon.esp|38"
     ],
+    "source.ill-met-by-moonlight-dialogue.stageAdapterKeys": [],
     "source.immersive-kaidan-aio.questKeys": [
       "Kaidan - Immersive Features.esp|10873422|110",
       "Kaidan - Immersive Features.esp|10873429|120",
@@ -25715,6 +25758,7 @@
     "source.immersive-kaidan-aio.sentinelForms": [
       "Kaidan - Immersive Features.esp|968828"
     ],
+    "source.immersive-kaidan-aio.stageAdapterKeys": [],
     "source.infiltration-qe.questKeys": [
       "Skyrim.esm|307873|100"
     ],
@@ -25722,6 +25766,7 @@
     "source.infiltration-qe.sentinelForms": [
       "Skyrim.esm|307873"
     ],
+    "source.infiltration-qe.stageAdapterKeys": [],
     "source.inigo.questKeys": [
       "Inigo.esp|431557|230",
       "Inigo.esp|431557|250"
@@ -25730,6 +25775,7 @@
     "source.inigo.sentinelForms": [
       "Inigo.esp|431557"
     ],
+    "source.inigo.stageAdapterKeys": [],
     "source.innocence-lost-qe.questKeys": [
       "Skyrim.esm|125520|198",
       "Skyrim.esm|125520|199",
@@ -25740,6 +25786,7 @@
     "source.innocence-lost-qe.sentinelForms": [
       "Skyrim.esm|125520"
     ],
+    "source.innocence-lost-qe.stageAdapterKeys": [],
     "source.interesting-np-cs.questKeys": [
       "3DNPC.esp|1220970|100",
       "3DNPC.esp|1220970|200",
@@ -25773,6 +25820,7 @@
     "source.interesting-np-cs.sentinelForms": [
       "3DNPC.esp|1902926"
     ],
+    "source.interesting-np-cs.stageAdapterKeys": [],
     "source.kaidan2.questKeys": [
       "0Kaidan.esp|12189|30",
       "0Kaidan.esp|1890557|50",
@@ -25786,6 +25834,7 @@
     "source.kaidan2.sentinelForms": [
       "0Kaidan.esp|12189"
     ],
+    "source.kaidan2.stageAdapterKeys": [],
     "source.khajiit-will-follow.questKeys": [
       "KhajiitWillFollow.esp|126220|50",
       "KhajiitWillFollow.esp|127607|100",
@@ -25800,6 +25849,7 @@
     "source.khajiit-will-follow.sentinelForms": [
       "KhajiitWillFollow.esp|448769"
     ],
+    "source.khajiit-will-follow.stageAdapterKeys": [],
     "source.legacy-of-the-dragonborn.questKeys": [
       "LegacyoftheDragonborn.esm|2556654|350",
       "LegacyoftheDragonborn.esm|5115199|100",
@@ -25809,6 +25859,7 @@
     "source.legacy-of-the-dragonborn.sentinelForms": [
       "LegacyoftheDragonborn.esm|2556654"
     ],
+    "source.legacy-of-the-dragonborn.stageAdapterKeys": [],
     "source.legends-of-aetherium.questKeys": [
       "LegendsOfAetherium.esp|676829|70"
     ],
@@ -25816,6 +25867,7 @@
     "source.legends-of-aetherium.sentinelForms": [
       "LegendsOfAetherium.esp|676829"
     ],
+    "source.legends-of-aetherium.stageAdapterKeys": [],
     "source.lucien.questKeys": [
       "Lucien.esp|1143273|5",
       "Lucien.esp|1143273|7",
@@ -25842,6 +25894,7 @@
     "source.lucien.sentinelForms": [
       "Lucien.esp|852869"
     ],
+    "source.lucien.stageAdapterKeys": [],
     "source.merlin-the-corgi.questKeys": [
       "Merlin.esp|2170|255"
     ],
@@ -25849,6 +25902,7 @@
     "source.merlin-the-corgi.sentinelForms": [
       "Merlin.esp|2170"
     ],
+    "source.merlin-the-corgi.stageAdapterKeys": [],
     "source.moon-and-star.questKeys": [
       "MoonAndStar_MAS.esp|26987|48",
       "MoonAndStar_MAS.esp|26987|49",
@@ -25872,6 +25926,7 @@
     "source.moon-and-star.sentinelForms": [
       "MoonAndStar_MAS.esp|26987"
     ],
+    "source.moon-and-star.stageAdapterKeys": [],
     "source.moonpath.questKeys": [
       "moonpath.esp|126268|150",
       "moonpath.esp|247521|60",
@@ -25883,6 +25938,7 @@
     "source.moonpath.sentinelForms": [
       "moonpath.esp|436426"
     ],
+    "source.moonpath.stageAdapterKeys": [],
     "source.mrissi.questKeys": [
       "MrissiTailOfTroubles.esp|3202211|125",
       "MrissiTailOfTroubles.esp|3202211|250",
@@ -25892,6 +25948,7 @@
     "source.mrissi.sentinelForms": [
       "MrissiTailOfTroubles.esp|5589717"
     ],
+    "source.mrissi.stageAdapterKeys": [],
     "source.nilheim-qe.questKeys": [
       "Skyrim.esm|113388|100",
       "Skyrim.esm|113388|130"
@@ -25900,6 +25957,7 @@
     "source.nilheim-qe.sentinelForms": [
       "Skyrim.esm|113388"
     ],
+    "source.nilheim-qe.stageAdapterKeys": [],
     "source.olenveld.questKeys": [
       "Olenveld.esp|5307469|80"
     ],
@@ -25907,6 +25965,7 @@
     "source.olenveld.sentinelForms": [
       "Olenveld.esp|5307469"
     ],
+    "source.olenveld.stageAdapterKeys": [],
     "source.once-we-were-here.questKeys": [
       "Once We Were Here - Quest Mod.esp|2|50",
       "Once We Were Here - Quest Mod.esp|2|60",
@@ -25916,6 +25975,7 @@
     "source.once-we-were-here.sentinelForms": [
       "Once We Were Here - Quest Mod.esp|2"
     ],
+    "source.once-we-were-here.stageAdapterKeys": [],
     "source.only-cure-qe.questKeys": [
       "Skyrim.esm|563597|101",
       "Skyrim.esm|563597|102"
@@ -25924,6 +25984,7 @@
     "source.only-cure-qe.sentinelForms": [
       "Skyrim.esm|563597"
     ],
+    "source.only-cure-qe.stageAdapterKeys": [],
     "source.paarthurnax-qe.questKeys": [
       "Skyrim.esm|260630|99"
     ],
@@ -25931,6 +25992,7 @@
     "source.paarthurnax-qe.sentinelForms": [
       "Skyrim.esm|260630"
     ],
+    "source.paarthurnax-qe.stageAdapterKeys": [],
     "source.penitus-oculatus.questKeys": [
       "Penitus_Oculatus.esp|111298|2",
       "Penitus_Oculatus.esp|111307|2",
@@ -25948,6 +26010,7 @@
     "source.penitus-oculatus.sentinelForms": [
       "Penitus_Oculatus.esp|43460"
     ],
+    "source.penitus-oculatus.stageAdapterKeys": [],
     "source.project-aho.questKeys": [
       "Dwarfsphere.esp|11521051|50",
       "Dwarfsphere.esp|8082695|20",
@@ -25973,6 +26036,7 @@
     "source.project-aho.sentinelForms": [
       "Dwarfsphere.esp|8082695"
     ],
+    "source.project-aho.stageAdapterKeys": [],
     "source.redcap-the-riekling.questKeys": [
       "FA01RedcapFollower.esp|1269229|100",
       "FA01RedcapFollower.esp|1622118|130",
@@ -25985,6 +26049,7 @@
     "source.redcap-the-riekling.sentinelForms": [
       "FA01RedcapFollower.esp|916314"
     ],
+    "source.redcap-the-riekling.stageAdapterKeys": [],
     "source.remiel.questKeys": [
       "HLIORemi.esp|2326247|70",
       "HLIORemi.esp|2326247|80",
@@ -26002,6 +26067,7 @@
     "source.remiel.sentinelForms": [
       "HLIORemi.esp|6480473"
     ],
+    "source.remiel.stageAdapterKeys": [],
     "source.return-aegisbane.questKeys": [
       "ReturnAegisbane.esp|3426|10",
       "ReturnAegisbane.esp|3426|20"
@@ -26010,6 +26076,7 @@
     "source.return-aegisbane.sentinelForms": [
       "ReturnAegisbane.esp|3426"
     ],
+    "source.return-aegisbane.stageAdapterKeys": [],
     "source.revealing-rune.questKeys": [
       "Revealing Rune.esp|3426|30"
     ],
@@ -26017,6 +26084,7 @@
     "source.revealing-rune.sentinelForms": [
       "Revealing Rune.esp|3426"
     ],
+    "source.revealing-rune.stageAdapterKeys": [],
     "source.sachil.questKeys": [
       "SU04SachilFollower.esp|11277713|70",
       "SU04SachilFollower.esp|11547746|30",
@@ -26033,6 +26101,7 @@
     "source.sachil.sentinelForms": [
       "SU04SachilFollower.esp|3330837"
     ],
+    "source.sachil.stageAdapterKeys": [],
     "source.save-the-icerunner.questKeys": [
       "Skyrim.esm|146020|300",
       "Skyrim.esm|146020|310",
@@ -26044,6 +26113,7 @@
     "source.save-the-icerunner.sentinelForms": [
       "Skyrim.esm|146020"
     ],
+    "source.save-the-icerunner.stageAdapterKeys": [],
     "source.siege-at-icemoth.questKeys": [
       "Siege at Icemoth.esp|5896574|20",
       "Siege at Icemoth.esp|5900191|30"
@@ -26052,6 +26122,7 @@
     "source.siege-at-icemoth.sentinelForms": [
       "Siege at Icemoth.esp|5900191"
     ],
+    "source.siege-at-icemoth.stageAdapterKeys": [],
     "source.sinister-seven.questKeys": [
       "The_Sinister_Seven.esp|78036|10",
       "The_Sinister_Seven.esp|78036|20"
@@ -26060,6 +26131,7 @@
     "source.sinister-seven.sentinelForms": [
       "The_Sinister_Seven.esp|78036"
     ],
+    "source.sinister-seven.stageAdapterKeys": [],
     "source.sirenroot.questKeys": [
       "evgSIRENROOT.esm|158661|150"
     ],
@@ -26067,6 +26139,7 @@
     "source.sirenroot.sentinelForms": [
       "evgSIRENROOT.esm|158661"
     ],
+    "source.sirenroot.stageAdapterKeys": [],
     "source.skyrim-extended-cut-saints-and-seducers.questKeys": [
       "Skyrim Extended Cut - Saints and Seducers.esp|651103|100"
     ],
@@ -26074,6 +26147,7 @@
     "source.skyrim-extended-cut-saints-and-seducers.sentinelForms": [
       "Skyrim Extended Cut - Saints and Seducers.esp|651103"
     ],
+    "source.skyrim-extended-cut-saints-and-seducers.stageAdapterKeys": [],
     "source.sleepwalking-nightmare.questKeys": [
       "NightmarePlane.esp|215258|250",
       "NightmarePlane.esp|215258|350"
@@ -26082,6 +26156,7 @@
     "source.sleepwalking-nightmare.sentinelForms": [
       "NightmarePlane.esp|215258"
     ],
+    "source.sleepwalking-nightmare.stageAdapterKeys": [],
     "source.taliesin.questKeys": [
       "00Taliesin.esp|5539746|20"
     ],
@@ -26089,6 +26164,7 @@
     "source.taliesin.sentinelForms": [
       "00Taliesin.esp|5539746"
     ],
+    "source.taliesin.stageAdapterKeys": [],
     "source.taste-of-death-addon.questKeys": [
       "TasteOfDeath_Addon_Dialogue.esp|80|100"
     ],
@@ -26096,6 +26172,7 @@
     "source.taste-of-death-addon.sentinelForms": [
       "TasteOfDeath_Addon_Dialogue.esp|80"
     ],
+    "source.taste-of-death-addon.stageAdapterKeys": [],
     "source.tg-alternative-endings.questKeys": [
       "Skyrim.esm|136533|201",
       "Skyrim.esm|136533|202"
@@ -26103,6 +26180,9 @@
     "source.tg-alternative-endings.semanticKeys": [],
     "source.tg-alternative-endings.sentinelForms": [
       "Skyrim.esm|136533"
+    ],
+    "source.tg-alternative-endings.stageAdapterKeys": [
+      "Skyrim.esm|136533|200"
     ],
     "source.the-frozen-heart.questKeys": [
       "ksws07_quest.esm|8326|10000",
@@ -26113,6 +26193,7 @@
     "source.the-frozen-heart.sentinelForms": [
       "ksws07_quest.esm|8326"
     ],
+    "source.the-frozen-heart.stageAdapterKeys": [],
     "source.the-rot-below.questKeys": [
       "CJ03Elroy.esp|186947|120",
       "CJ03Elroy.esp|186947|130"
@@ -26121,6 +26202,7 @@
     "source.the-rot-below.sentinelForms": [
       "CJ03Elroy.esp|186947"
     ],
+    "source.the-rot-below.stageAdapterKeys": [],
     "source.there-is-no-umbra3.questKeys": [
       "FloatingSwordFollower.esp|1383312|100",
       "FloatingSwordFollower.esp|1383312|110",
@@ -26176,6 +26258,7 @@
     "source.there-is-no-umbra3.sentinelForms": [
       "FloatingSwordFollower.esp|94702"
     ],
+    "source.there-is-no-umbra3.stageAdapterKeys": [],
     "source.thieves-guild-for-good-guys.questKeys": [
       "Skyrim.esm|136527|31",
       "Skyrim.esm|136527|95",
@@ -26199,6 +26282,7 @@
     "source.thieves-guild-for-good-guys.sentinelForms": [
       "TCBM.esp|758303"
     ],
+    "source.thieves-guild-for-good-guys.stageAdapterKeys": [],
     "source.thogra.questKeys": [
       "DK_Thogra.esp|1474526|150",
       "DK_Thogra.esp|1474526|410",
@@ -26209,6 +26293,7 @@
     "source.thogra.sentinelForms": [
       "DK_Thogra.esp|1474526"
     ],
+    "source.thogra.stageAdapterKeys": [],
     "source.tools-of-kagrenac.questKeys": [
       "Tools of Kagrenac.esp|2224673|100",
       "Tools of Kagrenac.esp|2224673|85"
@@ -26217,6 +26302,7 @@
     "source.tools-of-kagrenac.sentinelForms": [
       "Tools of Kagrenac.esp|2224673"
     ],
+    "source.tools-of-kagrenac.stageAdapterKeys": [],
     "source.unslaad.questKeys": [
       "Unslaad.esm|141725|50",
       "Unslaad.esm|3966802|999",
@@ -26227,6 +26313,7 @@
     "source.unslaad.sentinelForms": [
       "Unslaad.esm|4694827"
     ],
+    "source.unslaad.stageAdapterKeys": [],
     "source.val-serano.questKeys": [
       "AX ValSerano.esp|10167364|200",
       "AX ValSerano.esp|10167364|201",
@@ -26264,6 +26351,7 @@
     "source.val-serano.sentinelForms": [
       "AX ValSerano.esp|2334853"
     ],
+    "source.val-serano.stageAdapterKeys": [],
     "source.vigilant.questKeys": [
       "Vigilant.esm|1205755|999",
       "Vigilant.esm|1210785|255",
@@ -26291,6 +26379,7 @@
     "source.vigilant.sentinelForms": [
       "Vigilant.esm|60042"
     ],
+    "source.vigilant.stageAdapterKeys": [],
     "source.wars-folly.questKeys": [
       "War's Folly.esp|1|20",
       "War's Folly.esp|1|21",
@@ -26303,6 +26392,7 @@
     "source.wars-folly.sentinelForms": [
       "War's Folly.esp|1"
     ],
+    "source.wars-folly.stageAdapterKeys": [],
     "source.whispering-door-qe.questKeys": [
       "Skyrim.esm|303995|45"
     ],
@@ -26310,6 +26400,7 @@
     "source.whispering-door-qe.sentinelForms": [
       "Skyrim.esm|303995"
     ],
+    "source.whispering-door-qe.stageAdapterKeys": [],
     "source.whispers-of-the-depths.questKeys": [
       "Slays-Many-Beasts Quest Mod.esp|1|45"
     ],
@@ -26317,6 +26408,7 @@
     "source.whispers-of-the-depths.sentinelForms": [
       "Slays-Many-Beasts Quest Mod.esp|1"
     ],
+    "source.whispers-of-the-depths.stageAdapterKeys": [],
     "source.wyrmstooth.questKeys": [
       "Wyrmstooth.esp|11917848|30",
       "Wyrmstooth.esp|12997082|50",
@@ -26335,6 +26427,7 @@
     "source.wyrmstooth.sentinelForms": [
       "Wyrmstooth.esp|167681"
     ],
+    "source.wyrmstooth.stageAdapterKeys": [],
     "source.xelzaz.questKeys": [
       "BPUFXelzazFollower.esp|13035893|23",
       "BPUFXelzazFollower.esp|16023333|40"
@@ -26343,6 +26436,7 @@
     "source.xelzaz.sentinelForms": [
       "BPUFXelzazFollower.esp|13035893"
     ],
+    "source.xelzaz.stageAdapterKeys": [],
     "sourceIds": [
       "above-all-else",
       "afdi",
@@ -26423,6 +26517,9 @@
       "whispers-of-the-depths",
       "wyrmstooth",
       "xelzaz"
+    ],
+    "stageAdapterKeys": [
+      "Skyrim.esm|136533|200"
     ]
   }
 }

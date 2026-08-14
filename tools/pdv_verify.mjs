@@ -9207,41 +9207,34 @@ class Verifier {
   // matrix path must carry the "../StorageUtilData/..." prefix. Without it the file silently never
   // loads -- no error, no log line -- and every reaction row inside it quietly stops firing.
   //
-  // V3 Slice 1B moves discovery and cache ownership into PDV_QuestReactionRuntime. PlayerEvents
-  // consumes the runtime-owned PDV.V3.QR.ChannelFiles list only to register engine hooks; Manager
-  // retains the core path solely for its non-queued faucet/scoring policy.
-  //
-  // The guard MOVES with the mechanism rather than dying with the constant: 39 channel files
-  // (~4.3 MB) ship in the ARR patch hub today, and all of them depend on that "../" resolving.
-  // The folder constant and scan must remain together on Runtime. A scan in PlayerEvents or a
-  // channel-list dependency in Manager is an ownership regression.
+  // V3 Slice 1C-B replaces V1 channel discovery with fixed core/official catalogs and one sorted
+  // extension folder owned by PDV_QuestReactionRuntime. Manager and PlayerEvents retain only the
+  // core path for shared stance/value/faucet policy; patch/extension data stays private to Runtime.
   checkQuestMatrixPapyrusUtilPaths() {
-    const expectedCore = "String Property QUEST_REACTION_MATRIX_FILE = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix\" AutoReadOnly";
-    const unsafeCore = "String Property QUEST_REACTION_MATRIX_FILE = \"PlayerDevotion/PDV_QuestReactionMatrix\" AutoReadOnly";
-    const expectedChannelFolder = "String Property QUEST_REACTION_CHANNEL_FOLDER = \"../StorageUtilData/PlayerDevotion/Channels\" AutoReadOnly";
-    const unsafeChannelFolder = "String Property QUEST_REACTION_CHANNEL_FOLDER = \"PlayerDevotion/Channels\" AutoReadOnly";
+    const expectedCoreConsumer = "String Property QUEST_REACTION_MATRIX_FILE = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionCore.v2\" AutoReadOnly";
+    const expectedRuntimeCore = "String Property QUEST_REACTION_CORE_FILE = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionCore.v2\" AutoReadOnly";
+    const expectedRuntimePatches = "String Property QUEST_REACTION_PATCH_FILE = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2\" AutoReadOnly";
+    const expectedExtensionFolder = "String Property QUEST_REACTION_EXTENSION_FOLDER = \"../StorageUtilData/PlayerDevotion/QuestReactionExtensions\" AutoReadOnly";
+    const retiredV1 = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix";
 
-    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV__ManagerQuest", [expectedCore]);
-    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV_PlayerEvents", [expectedCore]);
+    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV__ManagerQuest", [expectedCoreConsumer]);
+    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV_PlayerEvents", [expectedCoreConsumer]);
     this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV_QuestReactionRuntime", [
-      expectedCore,
-      expectedChannelFolder,
+      expectedRuntimeCore,
+      expectedRuntimePatches,
+      expectedExtensionFolder,
       "Function RefreshCatalogSources()",
-      "JsonUtil.JsonInFolder(QUEST_REACTION_CHANNEL_FOLDER)",
+      "SortCatalogNames(JsonUtil.JsonInFolder(QUEST_REACTION_EXTENSION_FOLDER))",
+      "PDV.V3.QR.CellCatalog.",
+      "PDV.V3.QR.SemanticCatalog.",
       "PO3_Events_Alias.RegisterForQuestStage(_questStageReceiver, sourceQuest)",
-      "PDV.V3.QR.ChannelFiles",
     ]);
-    this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV__ManagerQuest", [
-      unsafeCore,
-      unsafeChannelFolder,
-    ]);
-    this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV_PlayerEvents", [
-      unsafeCore,
-      unsafeChannelFolder,
-    ]);
+    this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV__ManagerQuest", [retiredV1, "QuestReactionPatches.v2", "QuestReactionExtensions"]);
+    this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV_PlayerEvents", [retiredV1, "QuestReactionPatches.v2", "QuestReactionExtensions"]);
     this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV_QuestReactionRuntime", [
-      unsafeCore,
-      unsafeChannelFolder,
+      retiredV1,
+      "QuestReaction/Channels",
+      "QuestStageAdapters",
     ]);
   }
 

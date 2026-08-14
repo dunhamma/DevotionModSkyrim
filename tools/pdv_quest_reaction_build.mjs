@@ -69,6 +69,7 @@ function buildRepositoryCatalogs() {
   });
   const compiledBySource = new Map();
   const semanticRowsBySource = new Map();
+  const stageSelectorsBySource = new Map();
   for (const source of manifest.sources) {
     if (source.csv) {
       compiledBySource.set(source.sourceId, compileQuestMatrix({
@@ -79,13 +80,15 @@ function buildRepositoryCatalogs() {
       }));
     }
     if (source.semanticCsv) semanticRowsBySource.set(source.sourceId, readCsv(path.join(ROOT, source.semanticCsv)));
+    if (source.stageSelectorInputs) stageSelectorsBySource.set(source.sourceId, source.stageSelectorInputs.map((relativePath) => compileStageSelector(relativePath)));
   }
 
-  const core = buildCoreCatalog(coreCompiled);
-  const official = buildOfficialCatalog({ sources: manifest.sources, compiledBySource, semanticRowsBySource });
+  const stageSelectors = manifest.coreStageSelectorInputs.map((relativePath) => compileStageSelector(relativePath));
+  const core = buildCoreCatalog(coreCompiled, { stageSelectors });
+  const official = buildOfficialCatalog({ sources: manifest.sources, compiledBySource, semanticRowsBySource, stageSelectorsBySource });
   validateCatalog(core);
   validateCatalog(official, { requirePatchDelta: true });
-  assertParity({ coreCompiled, core, compiledBySource, semanticRowsBySource, official });
+  assertParity({ coreCompiled, core, stageSelectors, compiledBySource, semanticRowsBySource, stageSelectorsBySource, official });
   const artifacts = {
     [normalizePath(manifest.coreCatalogOutput)]: stableJson(core),
     [normalizePath(manifest.officialPatchCatalogOutput)]: stableJson(official),
@@ -93,15 +96,21 @@ function buildRepositoryCatalogs() {
   const inputDigest = hashInputs(manifest);
   const receipt = buildReceipt(artifacts, inputDigest);
   artifacts[normalizePath(path.relative(ROOT, RECEIPT_PATH))] = stableJson(receipt);
-  return { manifest, core, official, artifacts, receipt };
+  return { manifest, core, official, stageSelectors, artifacts, receipt };
 }
 
 function validateManifest(manifest) {
   if (manifest.schema !== "pdv.quest-reaction.compatibility.v2" || manifest.version !== 2) {
     fail("Compatibility manifest schema/version is invalid.");
   }
-  if (!manifest.coreSourceCsv || !manifest.coreCatalogOutput || !manifest.officialPatchCatalogOutput || !manifest.externalExtensionsDirectory) {
+  if (!manifest.coreSourceCsv || !Array.isArray(manifest.coreStageSelectorInputs) || !manifest.coreCatalogOutput || !manifest.officialPatchCatalogOutput || !manifest.externalExtensionsDirectory) {
     fail("Compatibility manifest core/runtime paths are incomplete.");
+  }
+  if (manifest.coreStageSelectorInputs.length !== 3 || new Set(manifest.coreStageSelectorInputs).size !== 3) {
+    fail("Compatibility manifest must contain exactly three unique core stage-selector inputs.");
+  }
+  for (const relativePath of manifest.coreStageSelectorInputs) {
+    if (!fs.existsSync(path.join(ROOT, relativePath))) fail(`Core stage-selector input is missing: ${relativePath}`);
   }
   if (manifest.extensionCatalogContract?.schema !== "pdv.quest-reaction.catalog.v2" || manifest.extensionCatalogContract?.version !== 2 || manifest.disabledSourceContract?.storageKey !== "PDV.V3.QR.DisabledSources") {
     fail("Compatibility manifest extension/disabled-source contracts are incomplete.");
@@ -127,6 +136,10 @@ function validateManifest(manifest) {
       if (csvPaths.has(normalizePath(source.csv))) fail(`CSV is mapped twice: ${source.csv}`);
       csvPaths.add(normalizePath(source.csv));
     }
+    if (source.stageSelectorInputs) {
+      if (!Array.isArray(source.stageSelectorInputs) || !source.stageSelectorInputs.length) fail(`Source ${source.sourceId} stageSelectorInputs is invalid.`);
+      for (const relativePath of source.stageSelectorInputs) if (!fs.existsSync(path.join(ROOT, relativePath))) fail(`Source ${source.sourceId} stage selector is missing: ${relativePath}`);
+    }
   }
   const dataOnly = manifest.sources.filter((source) => source.delivery === "data-only");
   const adapters = manifest.sources.filter((source) => source.delivery !== "data-only");
@@ -149,13 +162,14 @@ function validateManifest(manifest) {
   }
 }
 
-function assertParity({ coreCompiled, core, compiledBySource, semanticRowsBySource, official }) {
+function assertParity({ coreCompiled, core, stageSelectors, compiledBySource, semanticRowsBySource, stageSelectorsBySource, official }) {
   if (coreCompiled.report.questCells !== countQuestCells(core)) {
     fail(`Core V1/v2 quest-cell parity failed: ${coreCompiled.report.questCells} != ${countQuestCells(core)}.`);
   }
   if (coreCompiled.report.questKeys !== core.stringList.questKeys.length) {
     fail(`Core V1/v2 quest-key parity failed: ${coreCompiled.report.questKeys} != ${core.stringList.questKeys.length}.`);
   }
+  assertStageSelectorParity(stageSelectors, core);
   const expectedPatchQuestCells = [...compiledBySource.values()].reduce((sum, compiled) => sum + compiled.report.questCells, 0);
   const expectedPatchQuestKeys = [...compiledBySource.values()].reduce((sum, compiled) => sum + compiled.report.questKeys, 0);
   const expectedSemanticCells = [...semanticRowsBySource.values()].reduce((sum, rows) => sum + rows.length, 0);
@@ -173,6 +187,45 @@ function assertParity({ coreCompiled, core, compiledBySource, semanticRowsBySour
   const expectedSemanticKeys = new Set([...semanticRowsBySource.entries()].flatMap(([sourceId, rows]) => rows.map((row) => `${sourceId}|${row.event_id.trim()}`)));
   assertSameSet(expectedQuestKeys, new Set(official.stringList.questKeys), "official quest key coverage");
   assertSameSet(expectedSemanticKeys, new Set(official.stringList.semanticKeys), "official semantic key coverage");
+  const expectedOfficialStageKeys = new Set([...stageSelectorsBySource.values()].flatMap((selectors) => selectors.map((selector) => selector.key)));
+  assertSameSet(expectedOfficialStageKeys, new Set(official.stringList.stageAdapterKeys), "official stage-adapter coverage");
+}
+
+function compileStageSelector(relativePath) {
+  const input = readJson(path.join(ROOT, relativePath));
+  const string = input.string ?? {};
+  const int = input.int ?? {};
+  if (string.schema !== "pdv-quest-stage-adapter.v1") fail(`Stage selector ${relativePath} has an unsupported schema.`);
+  const sourcePlugin = String(string.sourcePlugin ?? "");
+  const selectorKind = String(string.selectorKind || "global");
+  const selectorPlugin = String(string.selectorPlugin ?? "");
+  const sourceFormId = int.sourceFormId;
+  const sourceStage = int.sourceStage;
+  const selectorFormId = int.selectorFormId;
+  const selectorValues = int.selectorValues;
+  const targetStages = int.targetStages;
+  if (!sourcePlugin || !selectorKind || !selectorPlugin || !Number.isInteger(sourceFormId) || sourceFormId < 0 || !Number.isInteger(sourceStage) || sourceStage < 0 || !Number.isInteger(selectorFormId) || selectorFormId < 0 || !Array.isArray(selectorValues) || !Array.isArray(targetStages) || !selectorValues.length || selectorValues.length !== targetStages.length || selectorValues.some((value) => !Number.isInteger(value)) || targetStages.some((value) => !Number.isInteger(value) || value < 0)) {
+    fail(`Stage selector ${relativePath} is malformed.`);
+  }
+  return {
+    key: `${sourcePlugin}|${sourceFormId}|${sourceStage}`,
+    selectorKind,
+    selectorPlugin,
+    selectorFormId,
+    selectorValues: [...selectorValues],
+    targetStages: [...targetStages],
+  };
+}
+
+function assertStageSelectorParity(stageSelectors, catalog) {
+  const actualKeys = catalog.stringList.stageAdapterKeys ?? [];
+  assertSameSet(new Set(stageSelectors.map((selector) => selector.key)), new Set(actualKeys), "core stage-adapter coverage");
+  for (const selector of stageSelectors) {
+    const prefix = `stageAdapter.${selector.key}.`;
+    if (catalog.string[`${prefix}selectorKind`] !== selector.selectorKind || catalog.string[`${prefix}selectorPlugin`] !== selector.selectorPlugin || catalog.int[`${prefix}selectorFormId`] !== selector.selectorFormId || JSON.stringify(catalog.int[`${prefix}selectorValues`]) !== JSON.stringify(selector.selectorValues) || JSON.stringify(catalog.int[`${prefix}targetStages`]) !== JSON.stringify(selector.targetStages)) {
+      fail(`Core stage-adapter parity failed for ${selector.key}.`);
+    }
+  }
 }
 
 function assertCompiledPayloadParity(compiled, catalog, label) {
@@ -303,6 +356,13 @@ function runSelfTest(repositoryBuild) {
     fail("Self-test: duplicate-key extension was not rejected in isolation.");
   }
   if (stableJson(official) !== stableJson(structuredClone(official))) fail("Self-test: stable serializer is not deterministic.");
+  const selectorCore = buildCoreCatalog(fakeCompiled("Skyrim.esm", "340742|200", "Mara"), {
+    stageSelectors: [{ key: "Skyrim.esm|340742|200", selectorKind: "global", selectorPlugin: "Skyrim.esm", selectorFormId: 1113756, selectorValues: [0, 1], targetStages: [201, 202] }],
+  });
+  validateCatalog(selectorCore);
+  if (selectorCore.stringList.stageAdapterKeys[0] !== "Skyrim.esm|340742|200" || selectorCore.string[`stageAdapter.Skyrim.esm|340742|200.selectorKind`] !== "global" || selectorCore.int[`stageAdapter.Skyrim.esm|340742|200.selectorValues`].join("|") !== "0|1" || selectorCore.int[`stageAdapter.Skyrim.esm|340742|200.targetStages`].join("|") !== "201|202") {
+    fail("Self-test: stage-adapter compilation lost its physical key or aligned routes.");
+  }
   const firstRoot = fs.mkdtempSync(path.join(os.tmpdir(), "pdv-qr-v2-a-"));
   const secondRoot = fs.mkdtempSync(path.join(os.tmpdir(), "pdv-qr-v2-b-"));
   try {
@@ -392,6 +452,7 @@ function hashInputs(manifest) {
   const paths = new Set([
     normalizePath(path.relative(ROOT, MANIFEST_PATH)),
     normalizePath(manifest.coreSourceCsv),
+    ...manifest.coreStageSelectorInputs.map(normalizePath),
     "references/authoring/PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv",
     "references/phase4/PDV_StanceMatrix.csv",
     "references/phase4/PDV_DaedricRacePrinceMatrix.csv",
@@ -401,6 +462,7 @@ function hashInputs(manifest) {
   for (const source of manifest.sources) {
     if (source.csv) paths.add(normalizePath(source.csv));
     if (source.semanticCsv) paths.add(normalizePath(source.semanticCsv));
+    for (const relativePath of source.stageSelectorInputs ?? []) paths.add(normalizePath(relativePath));
     if (source.delivery !== "data-only") {
       for (const folder of source.package.folders) {
         const relativeFolder = normalizePath(path.join("dist", "PDV_QuestModPatches_FOMOD", folder));
