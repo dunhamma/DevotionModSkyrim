@@ -169,14 +169,20 @@
     ]
   },
   "slice1BRuntimeExtraction": {
-    "status": "source-compiled-and-vmad-readback-pass",
+    "status": "partial-fresh-game-canary-pass-followups-open",
     "sourceOwnership": "runtime-owns-catalog-queue-dedup-scheduler-status; manager-owns-scoring-and-presentation-callbacks",
     "loadOrderReadback": "housecarl_load_order_status confirmed Anvil profile Devotion Dev and active Devotion.esp before record claims",
     "hostReadback": "0716DF:Devotion.esp is StartGameEnabled, attaches PDV_QuestReactionRuntime, and binds PDV_Manager to 00C325:Devotion.esp",
     "consumerReadback": "manager, EventBus, and MCM bind PDV_QuestReactionRuntimeService to 0716DF:Devotion.esp",
     "compile": "PDV_QuestReactionRuntime, PDV__ManagerQuest, PDV_EventBus, PDV_PlayerEvents, and PDV_MCM compile with zero errors and zero warnings",
     "transitionalCatalogBoundary": "Runtime owns V1 folder discovery and binds each runtime quest to one exact catalog; it prefers pluginName|localFormId|stage v2 cells but may read localFormId|stage only from that bound V1 catalog. Cross-plugin collision acceptance remains open until the consolidated v2 catalog replaces the fallback.",
-    "proofBoundary": "fresh-game queue lifecycle, real co-save resume, exact scoring state, Prisma, and Book of Days remain runtime proof",
+    "runtimeCanary": {
+      "date": "2026-08-14",
+      "passed": "fresh-game qualified ingress; five enqueue/start/complete lifecycles; four-job FIFO performance sweep; four persistent Book of Days source entries; completed-queue reload sanity; no overflow, stack dump, frozen stack, or broad-scope abort",
+      "open": "mid-job save-load RESUME; four visible toasts for four completed sweep jobs; selected Nord baseline eligibility after Old Ways deities appeared while Nine Divines was selected",
+      "checker": "node tools/pdv_quest_reaction_runtime_check.mjs --log <Papyrus.0.log> --expected-sequence Skyrim.esm|210731|150,Skyrim.esm|148154|160,Skyrim.esm|207142|200,Skyrim.esm|221587|220 --max-job-ms 10000"
+    },
+    "proofBoundary": "fresh-game ingress/FIFO/completion and completed-queue reload are runtime-route proof; mid-job co-save resume, corrected lane eligibility, and one visible toast per completed logical job remain open manual/runtime proof",
     "deferredWithinSlice1": [
       "deterministic consolidated catalog v2 build",
       "semantic-event adapter migration",

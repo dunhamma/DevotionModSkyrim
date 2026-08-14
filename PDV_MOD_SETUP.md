@@ -594,6 +594,17 @@ one visible final toast/Book beat per accepted job, and a mid-job save/load
 resume. Consolidated catalog v2 and semantic-event adapters are a later Slice 1
 data/build tranche.
 
+The 2026-08-14 fresh-game canary passed qualified ingress, five complete queue
+lifecycles, the four-job FIFO sweep, four Book of Days entries, and reload after
+the queue had already drained. Re-run that captured shape with
+`node .\tools\pdv_quest_reaction_runtime_check.mjs --expected-sequence
+"Skyrim.esm|210731|150,Skyrim.esm|148154|160,Skyrim.esm|207142|200,Skyrim.esm|221587|220"
+--max-job-ms 10000`. Do not treat this as the pending-work reload test: a
+mid-queue save/load must still emit `RESUME` and drain in FIFO order. The same
+canary exposed two separate player-surface defects now owned by the stacked
+canary-fix branch: Old Ways deities leaked through the Nine Divines baseline,
+and four persistent Book entries produced only one visibly observed toast.
+
 Slice 1B compile/readback closeout (2026-08-13) used:
 
 ```powershell

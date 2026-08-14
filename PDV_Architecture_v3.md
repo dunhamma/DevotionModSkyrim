@@ -959,6 +959,19 @@ the fully-qualified v2 prefix, but permits the old `localFormId|stage` prefix on
 inside that bound catalog. The cross-plugin collision acceptance case is still
 open and belongs to the consolidated catalog-v2 slice; Slice 1B does not claim it.
 
+The first fresh-game canary on 2026-08-14 proved qualified quest ingress and
+five complete `ENQUEUE -> START -> COMPLETE` lifecycles. The controlled
+four-job performance sweep preserved FIFO order, wrote four persistent Book of
+Days entries, and produced no overflow, stack-dump, frozen-stack, or
+`BROAD_SCOPE_ABORT` marker. Reloading after the queue had drained was clean.
+This is partial runtime-route proof, not Slice 1B closure: a save made while work
+is still pending must still prove `RESUME`, only one of the four expected toasts
+was visibly observed, and the canary exposed pre-existing Nord baseline leakage
+(Old Ways deities were scored and surfaced while Nine Divines was selected).
+The V3 runtime-log checker now consumes the real qualified key and `v3qr_N`
+marker shape; selected-lane and toast-cardinality corrections belong to the
+stacked canary-fix slice rather than the strict-parity extraction.
+
 ---
 
 ## 6. Reputation track subsystem (Phase 8)
