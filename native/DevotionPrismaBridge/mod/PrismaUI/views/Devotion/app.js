@@ -2242,6 +2242,13 @@
   const MAX_TOASTS_PER_PAYLOAD = 8;
   const MAX_RECENT_TOAST_KEYS = 32;
 
+  const traceToast = (phase, toastPayload = {}) => {
+    const correlation = text(toastPayload && toastPayload.correlation, "");
+    if (correlation && typeof console !== "undefined" && typeof console.debug === "function") {
+      console.debug(`[PDV_TOAST_TRACE] ${phase} correlation=${correlation}`);
+    }
+  };
+
   const showToast = (toastPayload = {}) => {
     const copy = resolveEventPayload(toastPayload);
     const toastKey = [
@@ -2250,9 +2257,11 @@
       text(copy.title, ""),
       text(copy.message || copy.text, ""),
       text(copy.source, ""),
+      text(copy.correlation, ""),
     ].join("|");
     const now = Date.now();
     if (toastKey && recentToastKeys.has(toastKey) && now - recentToastKeys.get(toastKey) < 2200) {
+      traceToast("dedupe", copy);
       return;
     }
     recentToastKeys.set(toastKey, now);
@@ -2297,6 +2306,7 @@
     body.append(source, title, message);
     toast.append(mark, body);
     nodes.toasts.prepend(toast);
+    traceToast("render", copy);
     while (nodes.toasts.childElementCount > MAX_ACTIVE_TOASTS) {
       removeToast(nodes.toasts.lastElementChild);
     }
@@ -2312,6 +2322,7 @@
 
   const handlePayload = (payload) => {
     if (payload.toast) {
+      traceToast("receipt", payload.toast);
       scheduleToast(payload.toast);
     }
 
@@ -2356,6 +2367,7 @@
     }
 
     if (payload.toast) {
+      traceToast("receipt", payload.toast);
       scheduleToast(payload.toast);
     }
 

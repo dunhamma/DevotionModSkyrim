@@ -142,6 +142,8 @@
     "tickSeconds": 0.1,
     "duplicateWindowDays": 0.02,
     "oneSchedulerOwner": true,
+    "singleArmedUpdateChain": true,
+    "cellCheckpoint": "after-each-applied-cell",
     "persistBeforeReturn": true,
     "fifo": true,
     "snapshotEventTimeSemantics": true,
@@ -150,7 +152,9 @@
     "finalizeAfterLastWorkItem": true,
     "acceptedLogicalAct": {
       "prismaToasts": 1,
-      "bookOfDaysSourceEntries": 1
+      "bookOfDaysSourceEntries": 1,
+      "uniqueDeityNamesPerSurface": true,
+      "magnitudePresentation": "book-rune-not-repeated-prose"
     },
     "timingValueAndCopyChangesAllowed": false
   },
@@ -178,16 +182,32 @@
     "transitionalCatalogBoundary": "Runtime owns V1 folder discovery and binds each runtime quest to one exact catalog; it prefers pluginName|localFormId|stage v2 cells but may read localFormId|stage only from that bound V1 catalog. Cross-plugin collision acceptance remains open until the consolidated v2 catalog replaces the fallback.",
     "runtimeCanary": {
       "date": "2026-08-14",
-      "passed": "fresh-game qualified ingress; five enqueue/start/complete lifecycles; four-job FIFO performance sweep; four persistent Book of Days source entries; completed-queue reload sanity; no overflow, stack dump, frozen stack, or broad-scope abort",
-      "open": "mid-job save-load RESUME; four visible toasts for four completed sweep jobs; selected Nord baseline eligibility after Old Ways deities appeared while Nine Divines was selected",
-      "checker": "node tools/pdv_quest_reaction_runtime_check.mjs --log <Papyrus.0.log> --expected-sequence Skyrim.esm|210731|150,Skyrim.esm|148154|160,Skyrim.esm|207142|200,Skyrim.esm|221587|220 --max-job-ms 10000"
+      "passed": "fresh-game qualified ingress; five enqueue/start/complete lifecycles; four-job FIFO performance sweep; four persistent Book of Days source entries; completed-queue reload sanity; corrected mid-job save-load run with four enqueues, four starts, four FIFO completions, one RESUME from cell 2/21, four Prisma receipts/renders, four manually observed toasts, unique deity names in every new Book entry, and no overlap, overflow, stack dump, frozen stack, or broad-scope abort; fresh Old Ways sweep with NordOldWays marker and accepted-cell shape 20/20/20/9 plus manual Stuhn/Shor inclusion and Akatosh exclusion; fresh Nine Divines sweep with NordNineDivines marker and accepted-cell shape 21/21/21/7 plus manual Stuhn/Shor/Tsun exclusion and Akatosh inclusion",
+      "open": "none for the Slice 1B and stacked canary-fix behavior; catalog-v2, semantic-adapter, and package acceptance remain later Slice 1 work",
+      "checker": "node tools/pdv_quest_reaction_runtime_check.mjs --log <Papyrus.0.log> --expected-sequence Skyrim.esm|210731|150,Skyrim.esm|148154|160,Skyrim.esm|207142|200,Skyrim.esm|221587|220 --max-job-ms 180000"
     },
-    "proofBoundary": "fresh-game ingress/FIFO/completion and completed-queue reload are runtime-route proof; mid-job co-save resume, corrected lane eligibility, and one visible toast per completed logical job remain open manual/runtime proof",
+    "proofBoundary": "fresh-game ingress/FIFO/completion, completed-queue reload, corrected mid-job RESUME/FIFO drain, four distinct UI render callbacks, and distinct Old Ways/Nine Divines runtime pool and accepted-cell shapes are runtime proof; the tester's duplicate-free Book entries, four visible toasts, and expected lane-specific deity inclusion/exclusion are manual/player-surface proof; later catalog-v2, semantic-adapter, and package acceptance are not implied",
     "deferredWithinSlice1": [
       "deterministic consolidated catalog v2 build",
       "semantic-event adapter migration",
-      "fresh-game Skyrim acceptance"
+      "catalog-v2 and semantic-adapter Skyrim acceptance"
     ]
+  },
+  "canaryFixFollowup": {
+    "status": "runtime-and-manual-canary-passed",
+    "selectedLanePolicy": "ordinary automatic quest reactions must be eligible in the currently selected Nord baseline at ingress and again before award; authored taboo/hostile displeasure remains valid for visible origin-roster deities; Daedric paths and grandfathered active patrons retain their existing exceptions",
+    "toastIdentity": "each completed logical reaction job carries its qualified reaction key as top-level and toast-local correlation; Prisma deduplicates exact repeated delivery of one correlation but never distinct logical jobs",
+    "diagnostics": "debug-gated PDV_TOAST_TRACE markers distinguish Papyrus submission, native receipt/Interop dispatch, and UI receipt/dedupe/render",
+    "resumeOwnership": "one persisted armed update chain owns the FIFO; a saved active slice retains resume ownership, pending registrations are cancelled on load, and the cursor checkpoints after each applied cell",
+    "presentationIdentity": "each deity is listed at most once per logical deed; higher piety intensity is expressed by the existing Book rune rather than repeated names",
+    "gates": [
+      "node tools/pdv_quest_reaction_eligibility_audit.mjs --self-test",
+      "node tools/pdv_prisma_toast_cardinality_audit.mjs --self-test",
+      "node tools/pdv_quest_reaction_performance_audit.mjs",
+      "targeted PDV__ManagerQuest compile",
+      "DevotionPrismaBridge releasedbg build"
+    ],
+    "open": "none"
   },
   "targetAcceptanceCases": [
     "same-local-form-id-in-two-plugins",

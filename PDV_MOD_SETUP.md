@@ -596,14 +596,50 @@ data/build tranche.
 
 The 2026-08-14 fresh-game canary passed qualified ingress, five complete queue
 lifecycles, the four-job FIFO sweep, four Book of Days entries, and reload after
-the queue had already drained. Re-run that captured shape with
+the queue had already drained. A follow-up save at job 2 cell 4/21 emitted
+`RESUME pending=3` and drained jobs 2-4 in FIFO order; four qualified toast
+correlations reached both Prisma receipt and render. Re-run that captured shape with
 `node .\tools\pdv_quest_reaction_runtime_check.mjs --expected-sequence
 "Skyrim.esm|210731|150,Skyrim.esm|148154|160,Skyrim.esm|207142|200,Skyrim.esm|221587|220"
---max-job-ms 10000`. Do not treat this as the pending-work reload test: a
-mid-queue save/load must still emit `RESUME` and drain in FIFO order. The same
-canary exposed two separate player-surface defects now owned by the stacked
-canary-fix branch: Old Ways deities leaked through the Nine Divines baseline,
-and four persistent Book entries produced only one visibly observed toast.
+--max-job-ms 180000` for the deliberate save/load run. The same canary exposed
+three player-surface defects now owned by the stacked canary-fix branch: Old
+Ways deities leaked through the Nine Divines baseline; four persistent Book
+entries initially produced only one visibly observed toast; and the resumed
+job repeated several later-job Divine names in one new Book entry.
+
+The stacked fix is checked with
+`node .\tools\pdv_quest_reaction_eligibility_audit.mjs --self-test` and
+`node .\tools\pdv_prisma_toast_cardinality_audit.mjs --self-test`. The first
+locks selected-baseline scoring plus the deliberate taboo/hostile and Daedric
+exceptions. The second requires four distinct logical correlations to render
+four toasts while preserving exact-duplicate suppression. Build the Manager
+with `pdv_compile.mjs --script PDV__ManagerQuest`, build the native bridge with
+the documented releasedbg xmake command, sync `app.js` and `index.html`, then
+fully restart Skyrim before the counted retest. At debug level 2,
+`PDV_TOAST_TRACE` markers distinguish Manager submission, native receipt and
+Interop dispatch, and UI receipt/dedupe/render. The Runtime now owns one
+persisted armed update chain, defers re-arm when a saved active slice owns the
+resume, and checkpoints `CellIndex` after each applied cell. The queued Manager
+surface lists each deity once; the existing arrow/rune carries higher piety
+magnitude instead of repeated names. The corrected counted run on 2026-08-14
+logged four enqueues, four starts, four FIFO completions, one `RESUME pending=3`
+from cell 2/21, four Prisma receipts/renders, zero UI dedupes, and no overlap,
+overflow, stack, or broad-scope failure. The tester confirmed four visible
+toasts and no repeated deity names in any newly-created Book entry. Resume and
+presentation proof therefore pass. Two subsequent fresh lane sweeps also pass:
+Old Ways logged `NordOldWays`, accepted `20/20/20/9` cells, and manually included
+Stuhn/Shor while excluding Akatosh; Nine Divines logged `NordNineDivines`,
+accepted `21/21/21/7`, and manually excluded Stuhn/Shor/Tsun while retaining
+Akatosh. Each lane completed four FIFO jobs with one resume and no overlap,
+overflow, stack, or broad-scope failure. This closes the stacked canary-fix
+runtime/manual proof; catalog-v2, semantic adapters, and package acceptance
+remain later Slice 1 work.
+
+Papyrus logs may append multiple fresh sessions whose persisted sequence resets
+to `v3qr_1`. `pdv_quest_reaction_runtime_check.mjs` therefore pairs lifecycle
+occurrences in order rather than mapping the whole file by job ID; it fails a
+completion without its own preceding start and rejects negative latency. Its
+self-test contains two sessions with reused IDs.
 
 Slice 1B compile/readback closeout (2026-08-13) used:
 

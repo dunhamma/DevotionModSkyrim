@@ -388,6 +388,14 @@ namespace
         return false;
     }
 
+    void TraceToastOverlay(std::string_view a_stage, const std::string& a_payload)
+    {
+        std::string correlation;
+        if (FindTopLevelKey(a_payload, "correlation", &correlation) && !correlation.empty()) {
+            logs::debug("[PDV_TOAST_TRACE] {} correlation='{}' domReady={} bytes={}", a_stage, correlation, g_domReady, a_payload.size());
+        }
+    }
+
     bool SendOverlayPayload(const std::string& a_payload)
     {
         if (!g_prisma || !g_view || !g_prisma->IsValid(g_view)) {
@@ -400,6 +408,7 @@ namespace
         }
 
         g_prisma->Show(g_view);
+        TraceToastOverlay("interop_dispatch", a_payload);
         g_prisma->InteropCall(g_view, kReceiveOverlayFunction.data(), a_payload.c_str());
         std::string mode;
         const bool isJournalPayload =
@@ -598,6 +607,7 @@ namespace
 
         const auto* payload = a_payload.data();
         const auto overlayPayload = payload && payload[0] ? std::string(payload) : "{}";
+        TraceToastOverlay("papyrus_receipt", overlayPayload);
 
         if (!EnsureView()) {
             return false;
