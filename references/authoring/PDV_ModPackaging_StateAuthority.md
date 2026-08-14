@@ -1,7 +1,7 @@
 # PDV Mod Packaging State Authority
 
-Updated: 2026-08-14 AEST
-Status: v1.5.0 final remains the published line from clean commit `e63de5f5`; the ground-up V3 Slice 1 catalog/runtime/semantic/package backend is green and awaits one combined fresh-game plus Authoria smoke before runtime acceptance.
+Updated: 2026-08-15 AEST
+Status: v1.5.0 final remains the published line from clean commit `e63de5f5`; the ground-up V3 Slice 1 catalog wire, runtime, semantic, and package backend is green, installed Anvil admission preflight passes, and one combined fresh-game plus Authoria smoke remains before runtime acceptance.
 
 The published v1.5.0 package incorporates the closed official-quest work: all 18 ambiguity
 decisions, the `FreeformRiften02` selector adapter, the owner-approved tag/profile
@@ -52,6 +52,11 @@ this file owns the current decision and state.
 5. Core, official third-party, and external-extension catalogs load in that
    order using fully-qualified `pluginName|localFormId|stage` identity. A bad
    source rejects only itself.
+6. Typed-bucket member names in the serialized PapyrusUtil catalogs are
+   lowercase; top-level bucket names and stored values preserve case. Integer
+   selector arrays serialize under `intList`. Generation fails on conflicting
+   case-fold collisions, and installed-profile preflight uses the same wire
+   validator before Skyrim starts.
 
 The full Slice 1 interface, schema, activation, collision, and proof contract is
 `PDV_V3Slice1QuestReaction.manifest.json`. This V3 boundary does not retroactively
@@ -77,6 +82,16 @@ every path, byte length, SHA-256, and the tree hash. Installer simulation report
 zero destination collisions; normalized sorted ZIP creation extracts and exact-hash
 verifies every member. This is package/backend proof only. Real mod-manager detection,
 installed source/sentinel behavior, and Skyrim gameplay remain for combined smoke.
+
+The first installed V2 attempt exposed a packaging-critical wire defect rather
+than a content or ESP defect: PapyrusUtil folds lookup keys, but the generated
+catalog member names were camel-case. The corrected generator now emits
+Papyrus-addressable lowercase members, regenerates the required catalog copy and
+both receipts, and preserves the locked 450/4,108 core, 423/2,916 official, 29
+semantic-event, and 80/75/5 integration counts. The installed Anvil profile now
+passes core/official wire validation and precedence. This remains backend and
+installed-file proof until the corrected fresh-game smoke confirms runtime
+activation and player surfaces.
 
 ## Public-copy boundary
 
