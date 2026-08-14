@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "pdv-v3-slice1-quest-reaction",
-  "status": "slice1cb-runtime-v2-backend-green-skyrim-proof-open",
+  "status": "slice1da-semantic-adapter-backend-green-package-and-skyrim-proof-open",
   "northStar": "Replace the current quest-reaction cluster with one deep, event-driven module built from current main without preserving V1 save state.",
   "delivery": {
     "integrationBranch": "feature/v3-big-update",
@@ -188,7 +188,6 @@
     },
     "proofBoundary": "fresh-game ingress/FIFO/completion, completed-queue reload, corrected mid-job RESUME/FIFO drain, four distinct UI render callbacks, and distinct Old Ways/Nine Divines runtime pool and accepted-cell shapes are runtime proof; the tester's duplicate-free Book entries, four visible toasts, and expected lane-specific deity inclusion/exclusion are manual/player-surface proof; later catalog-v2, semantic-adapter, and package acceptance are not implied",
     "deferredWithinSlice1": [
-      "semantic-event adapter migration",
       "catalog-v2 and semantic-adapter combined Skyrim acceptance"
     ]
   },
@@ -214,6 +213,15 @@
     "backendProof": "deterministic catalog rebuild/check, qualified ownership gate, sixteen adversarial architecture mutations, eight characterization fixtures, ARR/T16 and ambiguity route checks, and targeted Runtime/PlayerEvents/Manager compilation pass",
     "proofBoundary": "source, generated-data, deterministic-model, static-architecture, and Papyrus compile proof only; fresh-game source activation, quest-stage registration, semantic gameplay, extension isolation in Skyrim, FIFO/player surfaces after cutover, and save-load remain combined post-merge smoke work"
   },
+  "slice1DASemanticAdapters": {
+    "status": "backend-static-compile-vmad-and-master-readback-pass-skyrim-proof-open",
+    "afdiIngress": "PDV_AFDIObserver preserves its 30-slot polling, existing-save baseline, resolve backoff, once-only persistence, and terminal retirement, but submits one afdi|artifact_destroyed.* semantic event and owns no deity outcomes",
+    "outcomeAuthority": "references/authoring/patches/PDV_QRE_AFDI.csv contains the 29 routable artifact events and 80 reaction rows; Jyggalag remains classify-only",
+    "retiredManagerApi": "BeginExternalReactionBatch, ApplyExternalReaction, and EndExternalReactionBatch have no live definition or shipped caller",
+    "adapterCompile": "PDV_AFDIObserver compiles with zero errors and zero warnings through the shared compiler's isolated source/output roots plus an explicit core import root; patch-source bytecode is relocked and both FOMOD copies are regenerated",
+    "recordReadback": "direct houseCARL readback proves both AFDI ESP copies are StartGameEnabled, bind only PDV_QuestReactionRuntimeService to 0716DF:Devotion.esp, and retain only Devotion.esp as a master; regenerated SEQ contains the observer quest",
+    "proofBoundary": "semantic catalog/source coverage, static isolation, Papyrus compilation, bytecode lock, VMAD, master, and SEQ proof only; AFDI baseline, destruction detection, semantic queueing, player surfaces, and save-load remain combined fresh-game Skyrim smoke"
+  },
   "canaryFixFollowup": {
     "status": "runtime-and-manual-canary-passed",
     "selectedLanePolicy": "ordinary automatic quest reactions must be eligible in the currently selected Nord baseline at ingress and again before award; authored taboo/hostile displeasure remains valid for visible origin-roster deities; Daedric paths and grandfathered active patrons retain their existing exceptions",
@@ -235,7 +243,7 @@
     "one-bad-extension-does-not-disable-other-sources",
     "deterministic-clean-checkout-catalog-rebuild"
   ],
-  "targetAcceptanceStatus": "compiler-and-runtime-cutover-backend-pass-combined-fresh-game-proof-open",
+  "targetAcceptanceStatus": "compiler-runtime-and-semantic-adapter-backend-pass-package-contract-and-combined-fresh-game-proof-open",
   "retirementAfterReplacement": [
     {
       "surface": "PDV_QuestReactionWorker script identity",
@@ -250,7 +258,7 @@
     {
       "surface": "BeginExternalReactionBatch/ApplyExternalReaction/EndExternalReactionBatch",
       "replacement": "SubmitSemanticEvent plus catalog-owned outcomes",
-      "proof": ["PatchHub adapter migration inventory", "no external batch callers in shipped package"]
+      "proof": ["semantic adapter coverage audit", "no external batch definitions or callers in shipped package", "AFDI compile and VMAD/master readback"]
     },
     {
       "surface": "per-channel shared stance, value, and faucet tables",

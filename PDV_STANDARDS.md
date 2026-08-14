@@ -688,16 +688,14 @@ against it described a codebase that did not exist. `pdv_hygiene_harvest.mjs` ta
 applies to record evidence: confirm houseCARL's INSTANCE is Anvil first (see 6.3) -- a wrong-instance
 read returns an older record set rather than an error.
 
-**A public seam has no in-repo caller BY DESIGN, and a call-site count cannot see that.** This is a
-distinct class from dead code and the sweep must not merge them. `BeginExternalReactionBatch` /
-`ApplyExternalReaction` / `EndExternalReactionBatch` are the API third-party patch scripts call;
-nothing in Devotion calls them, and removing them would break every patch using the seam.
-`RegisterQuestReactionChannelFolder` is the same shape from the other side -- it scans a folder
-Devotion never ships, because MO2 merges the directory in from whichever patch provides it. That
-folder was empty on Anvil and carried **39 channel files on ARR 2.5**, which is also the reminder
-that checking one instance and generalising is how this project gets false verdicts. The harvester
-splits documented seams into `publicSeamsNoInRepoCaller`; an UNdocumented seam still lands in the
-dead pile, so say in the comment when a function exists for callers outside this repo.
+**A public seam can have no in-repo caller BY DESIGN, and a call-site count cannot see that.** This
+is a distinct class from dead code and the sweep must not merge them. The historical Manager batch
+seam proved the false-positive class in 2026-08, but Slice 1D-A later retired it only after every
+shipped adapter moved to `PDV_QuestReactionRuntime.SubmitSemanticEvent` and a package-wide caller
+gate was empty. That retirement is the model: inventory external callers, provide a replacement,
+compile/relock adapters, and prove VMAD/package wiring before deletion. The harvester still splits
+documented seams into `publicSeamsNoInRepoCaller`; an undocumented seam lands in the dead pile, so
+say in the comment when a function exists for callers outside this repo.
 
 **A candidate is not a finding.** Every candidate needs a prior-ruling grep and independent
 verification before it is written down as dead. This repo carries explicit "a future audit that

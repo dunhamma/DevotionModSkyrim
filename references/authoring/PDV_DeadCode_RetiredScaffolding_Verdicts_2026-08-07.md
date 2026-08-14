@@ -141,9 +141,12 @@ unreferenced tools.
 ## A false-positive class this pass produced, and fixed (2026-08-07)
 
 The first harvest listed **`BeginExternalReactionBatch`, `ApplyExternalReaction` and
-`EndExternalReactionBatch` as uncalled functions.** They are the public API that third-party patch
-scripts call. Nothing inside Devotion calls them and nothing ever will -- removing them on that
-evidence would have broken every patch using the compatibility seam.
+`EndExternalReactionBatch` as uncalled functions.** At that time they were the public API that the
+AFDI patch called, so removing them from call-count evidence alone would have broken the shipped
+adapter. Slice 1D-A later retired them safely: AFDI now submits one catalog-owned semantic event,
+the adapter was compiled/relocked/rewired, and the semantic-adapter audit proves no definition or
+caller survives. The original verdict remains evidence for the public-seam false-positive class,
+not a requirement to preserve a replaced API forever.
 
 `RegisterQuestReactionChannelFolder` is the same shape seen from the other side: it scans
 `../StorageUtilData/PlayerDevotion/Channels`, a folder Devotion deliberately does not ship, because
@@ -157,7 +160,8 @@ seam language in each function's own preceding comment. The limitation is worth 
 undocumented seam still lands in the dead pile.** If a function exists for callers outside this
 repo, its comment must say so.
 
-Recorded in `PDV_STANDARDS.md` 6.7b so the next sweep does not re-propose deleting the seam.
+Recorded in `PDV_STANDARDS.md` 6.7b so future sweeps require external-caller proof and a complete
+replacement path before retiring any similar seam.
 
 ## Companion document
 

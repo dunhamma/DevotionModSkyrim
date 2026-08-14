@@ -1,6 +1,6 @@
 # PDV Mod Packaging State Authority
 
-Updated: 2026-08-13 AEST
+Updated: 2026-08-14 AEST
 Status: v1.5.0 final all-in-one release packaged and byte-verified from clean commit `e63de5f5` (README requirements repackage of the published v1.5.0); tagged and published. The v1.5.0d prerelease receipt below is retained as historical evidence.
 
 The published v1.5.0 package incorporates the closed official-quest work: all 18 ambiguity
@@ -56,6 +56,17 @@ this file owns the current decision and state.
 The full Slice 1 interface, schema, activation, collision, and proof contract is
 `PDV_V3Slice1QuestReaction.manifest.json`. This V3 boundary does not retroactively
 change the published v1.5 installer.
+
+Slice 1D-A backend proof is now green for AFDI. Its observer preserves the
+30-global baseline/backoff/poll-retirement mechanism but submits one
+`afdi|artifact_destroyed.*` semantic event into `PDV_QuestReactionRuntime`;
+devotional outcomes live only in the official v2 catalog. Direct houseCARL
+readback of both packaged ESP copies proves one Runtime property binding,
+`PDV_QuestReactionRuntimeService -> 0716DF:Devotion.esp`, and a sole
+`Devotion.esp` master after dynamic resolution replaced the typed AFDI anchor.
+The SGE SEQ and PEX were regenerated and the v1.5 FOMOD byte receipt refreshed.
+This is compile, package-byte, VMAD, and master proof only: AFDI runtime behavior
+remains open for the combined fresh-game smoke.
 
 ## Public-copy boundary
 

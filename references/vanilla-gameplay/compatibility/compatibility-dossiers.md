@@ -60,6 +60,10 @@ Current PDV route:
   not restore an Authoria combined lane or list-wide core-script override.
 - Keep source-specific hooks narrow and minimally mastered; all five installed
   patch plugins are independent ESPFEs.
+- V3 AFDI is the first migrated semantic adapter: the observer resolves all 30
+  source globals dynamically, submits catalog-owned event IDs, and its ESPFE
+  retains only `Devotion.esp` as a master. Static compile/VMAD/master proof is
+  green; Authoria runtime and sentinel/load-order confirmation remain open.
 - Keep Authoria priority as proof order only; do not fork PDV theology or
   create Authoria-special mechanics.
 

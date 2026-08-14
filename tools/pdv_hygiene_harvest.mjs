@@ -167,9 +167,10 @@ function harvest(since) {
 
   // --- functions/events with no call site ---------------------------------------------------
   //
-  // FALSE-POSITIVE CLASS, demonstrated 2026-08-07: a PUBLIC SEAM has no in-repo caller BY DESIGN.
-  // BeginExternalReactionBatch / ApplyExternalReaction are the API third-party patch scripts call;
-  // nothing in Devotion calls them, and deleting them would break every patch that uses the seam.
+  // FALSE-POSITIVE CLASS, demonstrated 2026-08-07: a PUBLIC SEAM can have no in-repo caller BY DESIGN.
+  // Slice 1D-A later retired the original Manager batch example after every shipped adapter moved
+  // to PDV_QuestReactionRuntime.SubmitSemanticEvent; other documented external seams still require
+  // this separate classification.
   // A call-site count cannot see across the mod boundary, so these are split out rather than mixed
   // into the dead pile. Detected from the seam language in the function's own preceding comment --
   // if a seam is not documented as one, it will still land in the plain list and needs the

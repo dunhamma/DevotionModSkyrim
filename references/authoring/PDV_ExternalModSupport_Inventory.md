@@ -323,10 +323,10 @@ is real but reaches piety by a different route entirely. This is the case where
 
 | Mod | Depends on | Ships | Mechanism | Deities | Proof state |
 |---|---|---|---|---|---|
-| Aetherium Forge Destroys Items | `Aetherium Forge Destroys Items.esp` | ESP (1 QUST, ESL-flagged) + `PDV_AFDIObserver.pex` + `PDV_Patch_AFDI.seq` | Papyrus observer quest polling 30 artifact-destroyed GlobalVariables on a 15s `OnUpdate`; routes via `ApplyExternalReaction` | see below | runtime open; save/load evidence open |
+| Aetherium Forge Destroys Items | `Aetherium Forge Destroys Items.esp` | ESP (1 QUST, ESL-flagged) + `PDV_AFDIObserver.pex` + `PDV_Patch_AFDI.seq` | Papyrus observer polls 30 artifact-destroyed GlobalVariables on a 15s `OnUpdate`, then submits one `afdi|artifact_destroyed.*` semantic event to Quest Reaction Runtime | see below | backend compile/catalog/VMAD proof passes; runtime and save/load evidence open |
 | Daedric Shrines AIO prayer activators | `man_DaedricShrines.esp` | ESP (11 ACTI, ESL-flagged) + `PDV_DaedricShrinesAIO_SWAP.ini` | BaseObjectSwapper -- see [G5](#g5--shrine--world-object-support-baseobjectswapper) | Azura, Hermaeus Mora, Hircine, Mehrunes Dagon, Mephala, Molag Bal, Namira, Peryite, Sanguine, Sheogorath, Vaermina | runtime open; placement evidence open |
 
-**AFDI deity coverage**, read from `PDV_AFDIObserver.psc`:
+**AFDI deity coverage**, read from `PDV_QRE_AFDI.csv` (the observer no longer owns outcomes):
 
 - Destroying a Prince's artifact: `-` milestone to that Prince, plus `+` small to
   Stendarr and Syrabane. Owners recognised: Azura, Boethiah, Clavicus Vile,
@@ -340,6 +340,11 @@ is real but reaches piety by a different route entirely. This is the case where
 
 The observer baselines an existing save on first run (`PDV.AFDI.BaselineVersion`)
 so a player who already destroyed artifacts gets no retroactive award.
+
+Slice 1D-A also removed the adapter's typed `AFDI_Anchor` property. All 30 globals
+resolve by filename and local FormID; direct readback proves the adapter ESP now has
+only `Devotion.esp` as a master and binds `PDV_QuestReactionRuntimeService` to
+`0716DF:Devotion.esp`. This is build/readback proof, not gameplay proof.
 
 > The observer's poll LIFECYCLE was rewritten by a concurrent session on 2026-08-08
 > while this inventory was being compiled (resolve backoff, and retirement of the
