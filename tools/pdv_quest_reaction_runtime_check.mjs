@@ -118,6 +118,49 @@ function suffixMatches(actual, expected) {
   return suffix.every((value, index) => value === expected[index]);
 }
 
+function lifecycleIdentity(marker) {
+  if (marker.job) return `job:${marker.job}`;
+  if (marker.key) return `key:${marker.key}`;
+  return "";
+}
+
+function pushPending(map, identity, value) {
+  if (!identity) return;
+  const pending = map.get(identity) ?? [];
+  pending.push(value);
+  map.set(identity, pending);
+}
+
+function shiftPending(map, identity) {
+  if (!identity) return null;
+  const pending = map.get(identity);
+  if (!pending?.length) return null;
+  const value = pending.shift();
+  if (!pending.length) map.delete(identity);
+  return value;
+}
+
+function pairLifecycles(markers) {
+  const enqueued = new Map();
+  const active = new Map();
+  const pairs = [];
+  const unmatchedCompletions = [];
+  for (const marker of markers) {
+    const identity = lifecycleIdentity(marker);
+    if (marker.action === "ENQUEUE") {
+      pushPending(enqueued, identity, marker);
+    } else if (marker.action === "START") {
+      pushPending(active, identity, { enqueue: shiftPending(enqueued, identity), start: marker });
+    } else if (marker.action === "COMPLETE") {
+      const lifecycle = shiftPending(active, identity);
+      if (!lifecycle) unmatchedCompletions.push(marker);
+      pairs.push({ enqueue: lifecycle?.enqueue ?? null, start: lifecycle?.start ?? null, complete: marker });
+    }
+  }
+  const incomplete = [...active.values()].flat().map((entry) => entry.start);
+  return { pairs, incomplete, unmatchedCompletions };
+}
+
 function findSafetyFailures(lines) {
   const patterns = [
     { id: "stack-dump", pattern: /dumping stack|stack dump|freezing suspended stack/i },
@@ -159,17 +202,8 @@ export function evaluateLog(logText, options = {}) {
   const byAction = Object.fromEntries(ACTIONS.map((action) => [action, markers.filter((marker) => marker.action === action)]));
   const safetyFailures = findSafetyFailures(lines);
   const vmLifecycleObservations = findVmLifecycleObservations(lines);
-  const startsByJob = new Map(byAction.START.filter((entry) => entry.job).map((entry) => [entry.job, entry]));
-  const enqueueByJob = new Map(byAction.ENQUEUE.filter((entry) => entry.job).map((entry) => [entry.job, entry]));
-  const completeByJob = new Map(byAction.COMPLETE.filter((entry) => entry.job).map((entry) => [entry.job, entry]));
-  const incomplete = [];
-  for (const start of byAction.START) {
-    const complete = start.job ? completeByJob.get(start.job) : byAction.COMPLETE.find((entry) => entry.key && entry.key === start.key && entry.line > start.line);
-    if (!complete) incomplete.push(start);
-  }
-  const durations = byAction.COMPLETE.map((complete) => {
-    const start = complete.job ? startsByJob.get(complete.job) : byAction.START.find((entry) => entry.key === complete.key && entry.line < complete.line);
-    const enqueue = complete.job ? enqueueByJob.get(complete.job) : byAction.ENQUEUE.find((entry) => entry.key === complete.key && entry.line < complete.line);
+  const { pairs, incomplete, unmatchedCompletions } = pairLifecycles(markers);
+  const durations = pairs.map(({ enqueue, start, complete }) => {
     const jobMs = start?.timestamp != null && complete.timestamp != null ? complete.timestamp - start.timestamp : null;
     const endToEndMs = complete.durationMs ?? (enqueue?.timestamp != null && complete.timestamp != null ? complete.timestamp - enqueue.timestamp : null);
     const ingressMs = enqueue?.timestamp != null && start?.timestamp != null ? start.timestamp - enqueue.timestamp : null;
@@ -186,19 +220,23 @@ export function evaluateLog(logText, options = {}) {
   add(byAction.START.length > 0, "start-present", "At least one queue job began processing.");
   add(byAction.COMPLETE.length > 0, "complete-present", "At least one queue job completed.");
   add(incomplete.length === 0, "started-jobs-complete", incomplete.length ? `${incomplete.length} started job(s) lack a completion marker.` : "Every started job has a later completion marker.");
+  add(unmatchedCompletions.length === 0, "completed-jobs-started", unmatchedCompletions.length ? `${unmatchedCompletions.length} completed job(s) lack a preceding unmatched START marker.` : "Every completed job has its own preceding START marker.");
   add(safetyFailures.length === 0, "no-critical-safety-failure", safetyFailures.length ? safetyFailures.map((entry) => `${entry.id}@${entry.line}`).join(", ") : "No stack dump, frozen-stack marker, or BROAD_SCOPE_ABORT found.");
   add(options.allowOverflow || byAction.OVERFLOW.length === 0, "no-overflow", byAction.OVERFLOW.length ? `${byAction.OVERFLOW.length} overflow marker(s) found.` : "No queue overflow marker found.");
   if (options.maxJobMs != null) {
     const unavailable = durations.filter((entry) => entry.jobMs == null);
+    const invalid = durations.filter((entry) => entry.jobMs != null && entry.jobMs < 0);
     const slow = durations.filter((entry) => entry.jobMs != null && entry.jobMs > options.maxJobMs);
     add(
-      unavailable.length === 0 && slow.length === 0,
+      unavailable.length === 0 && invalid.length === 0 && slow.length === 0,
       "job-latency-within-limit",
       unavailable.length
         ? `${unavailable.length} completed job(s) lack START-to-COMPLETE timestamps.`
-        : (slow.length
-          ? `${slow.length} job(s) exceeded ${options.maxJobMs} ms: ${slow.map((entry) => `${entry.job || entry.key}=${entry.jobMs}`).join(", ")}.`
-          : `Every completed job finished within ${options.maxJobMs} ms of START.`),
+        : invalid.length
+          ? `${invalid.length} completed job(s) produced negative latency, indicating cross-session lifecycle pairing: ${invalid.map((entry) => `${entry.job || entry.key}=${entry.jobMs}`).join(", ")}.`
+          : (slow.length
+            ? `${slow.length} job(s) exceeded ${options.maxJobMs} ms: ${slow.map((entry) => `${entry.job || entry.key}=${entry.jobMs}`).join(", ")}.`
+            : `Every completed job finished within ${options.maxJobMs} ms of its matched START.`),
     );
   }
   if (expected.length) {
@@ -234,6 +272,18 @@ function selfTestLog() {
     "[08/14/2026 - 05:56:42PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_4 key=Skyrim.esm|207142|200 cells=25 sourceCells=45 skipped=20 meta=0 elapsed=17.491028",
     "[08/14/2026 - 05:56:42PM] [PDV][QR_QUEUE] START started v3qr_5 key=Skyrim.esm|221587|220 cells=11 sourceCells=22 skipped=11 meta=0",
     "[08/14/2026 - 05:56:45PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_5 key=Skyrim.esm|221587|220 cells=11 sourceCells=22 skipped=11 meta=0 elapsed=19.790039",
+    "[08/14/2026 - 06:06:23PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_2 key=Skyrim.esm|210731|150 cells=21 sourceCells=45 skipped=24 meta=0 buildMs=9737.000000 pending=1",
+    "[08/14/2026 - 06:06:23PM] [PDV][QR_QUEUE] START started v3qr_2 key=Skyrim.esm|210731|150 cells=21 sourceCells=45 skipped=24 meta=0",
+    "[08/14/2026 - 06:06:23PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_3 key=Skyrim.esm|148154|160 cells=21 sourceCells=45 skipped=24 meta=0 buildMs=196.960449 pending=2",
+    "[08/14/2026 - 06:06:24PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_4 key=Skyrim.esm|207142|200 cells=21 sourceCells=45 skipped=24 meta=0 buildMs=632.019043 pending=3",
+    "[08/14/2026 - 06:06:25PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_5 key=Skyrim.esm|221587|220 cells=7 sourceCells=22 skipped=15 meta=0 buildMs=153.015137 pending=4",
+    "[08/14/2026 - 06:06:27PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_2 key=Skyrim.esm|210731|150 cells=21 sourceCells=45 skipped=24 meta=0 elapsed=4.120972",
+    "[08/14/2026 - 06:06:27PM] [PDV][QR_QUEUE] START started v3qr_3 key=Skyrim.esm|148154|160 cells=21 sourceCells=45 skipped=24 meta=0",
+    "[08/14/2026 - 06:06:31PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_3 key=Skyrim.esm|148154|160 cells=21 sourceCells=45 skipped=24 meta=0 elapsed=8.432068",
+    "[08/14/2026 - 06:06:31PM] [PDV][QR_QUEUE] START started v3qr_4 key=Skyrim.esm|207142|200 cells=21 sourceCells=45 skipped=24 meta=0",
+    "[08/14/2026 - 06:06:35PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_4 key=Skyrim.esm|207142|200 cells=21 sourceCells=45 skipped=24 meta=0 elapsed=12.873047",
+    "[08/14/2026 - 06:06:35PM] [PDV][QR_QUEUE] START started v3qr_5 key=Skyrim.esm|221587|220 cells=7 sourceCells=22 skipped=15 meta=0",
+    "[08/14/2026 - 06:06:36PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_5 key=Skyrim.esm|221587|220 cells=7 sourceCells=22 skipped=15 meta=0 elapsed=13.445007",
   ].join(os.EOL);
 }
 
