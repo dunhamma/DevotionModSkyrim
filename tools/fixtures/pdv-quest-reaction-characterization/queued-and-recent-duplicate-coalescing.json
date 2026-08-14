@@ -1,0 +1,62 @@
+{
+  "schema": "pdv.quest-reaction.characterization.v1",
+  "id": "queued-and-recent-duplicate-coalescing",
+  "config": {
+    "maxPending": 128,
+    "workItemsPerTick": 2,
+    "duplicateWindowDays": 0.02
+  },
+  "steps": [
+    {
+      "type": "submit-quest-stage",
+      "key": "Skyrim.esm|000AAA|60",
+      "logicalEventId": "case.duplicate.first",
+      "gameDay": 50.0,
+      "rows": [
+        { "deityId": "Mara", "valence": "+", "intensity": "small", "magnitude": "small", "tag": "first", "appliedAmount": 0.4 }
+      ],
+      "metaRows": []
+    },
+    {
+      "type": "submit-quest-stage",
+      "key": "Skyrim.esm|000AAA|60",
+      "logicalEventId": "case.duplicate.queued",
+      "gameDay": 50.00005,
+      "rows": [
+        { "deityId": "Mara", "valence": "+", "intensity": "small", "magnitude": "small", "tag": "queued_duplicate", "appliedAmount": 0.4 }
+      ],
+      "metaRows": []
+    },
+    { "type": "drain" },
+    {
+      "type": "submit-quest-stage",
+      "key": "Skyrim.esm|000AAA|60",
+      "logicalEventId": "case.duplicate.recent",
+      "gameDay": 50.0001,
+      "rows": [
+        { "deityId": "Mara", "valence": "+", "intensity": "small", "magnitude": "small", "tag": "recent_duplicate", "appliedAmount": 0.4 }
+      ],
+      "metaRows": []
+    },
+    { "type": "drain" }
+  ],
+  "expected": {
+    "submissions": [
+      { "key": "Skyrim.esm|000AAA|60", "status": "accepted", "jobId": "v3qr_1" },
+      { "key": "Skyrim.esm|000AAA|60", "status": "coalesced-queued" },
+      { "key": "Skyrim.esm|000AAA|60", "status": "coalesced-recent" }
+    ],
+    "applied": ["Mara|+|small|small|first"],
+    "startedJobIds": ["v3qr_1"],
+    "finalizations": [
+      { "key": "Skyrim.esm|000AAA|60", "logicalEventId": "case.duplicate.first", "appliedRows": 1, "positiveRows": 1, "negativeRows": 0, "surfaceKind": "positive", "lead": "positive", "prismaToasts": 1, "bookOfDaysEntries": 1 }
+    ],
+    "slices": [
+      { "jobId": "v3qr_1", "applied": ["Mara|+|small|small|first"], "finalized": true }
+    ],
+    "rejections": [],
+    "cleanedJobIds": ["v3qr_1"],
+    "resumeCount": 0,
+    "queueDepth": 0
+  }
+}

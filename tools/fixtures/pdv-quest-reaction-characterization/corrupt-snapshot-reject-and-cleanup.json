@@ -1,0 +1,55 @@
+{
+  "schema": "pdv.quest-reaction.characterization.v1",
+  "id": "corrupt-snapshot-reject-and-cleanup",
+  "config": {
+    "maxPending": 128,
+    "workItemsPerTick": 2,
+    "duplicateWindowDays": 0.02
+  },
+  "steps": [
+    {
+      "type": "submit-quest-stage",
+      "key": "Skyrim.esm|00BAD0|80",
+      "logicalEventId": "case.corrupt.bad",
+      "gameDay": 80.0,
+      "rows": [
+        { "deityId": "Mara", "valence": "+", "intensity": "small", "magnitude": "small", "tag": "bad_1", "appliedAmount": 0.4 },
+        { "deityId": "Arkay", "valence": "+", "intensity": "small", "magnitude": "small", "tag": "bad_2", "appliedAmount": 0.4 }
+      ],
+      "metaRows": []
+    },
+    {
+      "type": "submit-quest-stage",
+      "key": "Skyrim.esm|00GOOD|90",
+      "logicalEventId": "case.corrupt.good",
+      "gameDay": 80.1,
+      "rows": [
+        { "deityId": "Stendarr", "valence": "+", "intensity": "small", "magnitude": "small", "tag": "good", "appliedAmount": 0.4 }
+      ],
+      "metaRows": []
+    },
+    { "type": "corrupt-head", "cursor": 3 },
+    { "type": "drain" }
+  ],
+  "expected": {
+    "submissions": [
+      { "key": "Skyrim.esm|00BAD0|80", "status": "accepted", "jobId": "v3qr_1" },
+      { "key": "Skyrim.esm|00GOOD|90", "status": "accepted", "jobId": "v3qr_2" }
+    ],
+    "applied": ["Stendarr|+|small|small|good"],
+    "startedJobIds": ["v3qr_2"],
+    "finalizations": [
+      { "key": "Skyrim.esm|00GOOD|90", "logicalEventId": "case.corrupt.good", "appliedRows": 1, "positiveRows": 1, "negativeRows": 0, "surfaceKind": "positive", "lead": "positive", "prismaToasts": 1, "bookOfDaysEntries": 1 }
+    ],
+    "slices": [
+      { "jobId": "v3qr_1", "applied": [], "finalized": false, "rejected": "corrupt-snapshot" },
+      { "jobId": "v3qr_2", "applied": ["Stendarr|+|small|small|good"], "finalized": true }
+    ],
+    "rejections": [
+      { "key": "Skyrim.esm|00BAD0|80", "jobId": "v3qr_1", "reason": "corrupt-snapshot" }
+    ],
+    "cleanedJobIds": ["v3qr_1", "v3qr_2"],
+    "resumeCount": 0,
+    "queueDepth": 0
+  }
+}

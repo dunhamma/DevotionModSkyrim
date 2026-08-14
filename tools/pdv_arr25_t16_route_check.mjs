@@ -29,6 +29,8 @@ const passes = [];
 
 const P = {
   playerSource: path.join(ROOT, "live-source/Scripts/Source/PDV_PlayerEvents.psc"),
+  eventBusSource: path.join(ROOT, "live-source/Scripts/Source/PDV_EventBus.psc"),
+  runtimeSource: path.join(ROOT, "live-source/Scripts/Source/PDV_QuestReactionRuntime.psc"),
   full: path.join(ROOT, "references/authoring/PDV_QuestReactionMatrix_Full.csv"),
   tgaeCsv: path.join(ROOT, "references/authoring/patches/PDV_QRM_TGAlternativeEndings.csv"),
   tgaeAdapter: path.join(ROOT, "dist/PDV_QuestModPatches_FOMOD/common/TGAlternativeEndings/SKSE/Plugins/StorageUtilData/PlayerDevotion/QuestStageAdapters/PDV_QSA_TGAlternativeEndings.json"),
@@ -110,26 +112,30 @@ function requireSame(label, a, b) {
 }
 
 const player = read(P.playerSource);
-const resolver = functionBody(player, "ResolveQuestReactionStageAdapter");
+const eventBus = read(P.eventBusSource);
+const runtime = read(P.runtimeSource);
+const resolver = functionBody(runtime, "ResolveQuestStage");
 if (!resolver) failures.push("generic quest-stage adapter resolver missing");
-requireText("adapter cache is consulted", resolver, '"PDV.QR.StageAdapterFiles"');
+requireText("adapter cache is consulted", resolver, '"PDV.V3.QR.StageAdapterFiles"');
 requireText("adapter resolves configured quest", resolver, "Game.GetFormFromFile(sourceFormId, sourcePlugin)");
-requireText("adapter is plugin-presence guarded", resolver, "Game.GetModByName(selectorPlugin) != 255");
-requireText("adapter reads selector values", resolver, 'JsonUtil.IntListGet(adapterFile, "selectorValues", valueIndex)');
-requireText("adapter maps target stages", resolver, 'JsonUtil.IntListGet(adapterFile, "targetStages", valueIndex)');
-requireText("adapter fallback preserves physical stage", resolver, "return newStage");
+const selectorResolver = functionBody(runtime, "ResolveAdapterSelector");
+requireText("adapter is plugin-presence guarded", selectorResolver, "Game.GetModByName(selectorPlugin) == 255");
+requireText("adapter reads selector values", selectorResolver, 'JsonUtil.IntListGet(adapterFile, "selectorValues", valueIndex)');
+requireText("adapter maps target stages", selectorResolver, 'JsonUtil.IntListGet(adapterFile, "targetStages", valueIndex)');
+requireText("adapter fallback preserves physical stage", resolver, "return physicalStage");
 requireAbsent("core no longer names the TGAE resolver", player, "ResolveARR25TGAEQuestReactionStage");
-requireAbsent("core no longer names the optional TGAE plugin", player, "TG Alternative Endings.esp");
+requireAbsent("runtime does not name the optional TGAE plugin", runtime, "TG Alternative Endings.esp");
 
 const matrixRoute = functionBody(player, "RouteQuestReactionStage");
-requireText("matrix route calls generic adapter resolver", matrixRoute, "ResolveQuestReactionStageAdapter(sourceQuest, newStage)");
-requireText("matrix route forwards resolved stage", matrixRoute, "RouteQuestReaction(sourceQuest, resolvedStage, logicalEventId)");
+requireText("matrix route forwards physical stage to EventBus", matrixRoute, "RouteQuestReaction(sourceQuest, newStage, logicalEventId)");
+const eventBusRoute = functionBody(eventBus, "RouteQuestReaction");
+requireText("EventBus routes quest reactions to Runtime", eventBusRoute, "PDV_QuestReactionRuntimeService.SubmitQuestStage(sourceQuest, stageValue, logicalEventId)");
 
 const nocturnalNeedle = 'ShouldRouteP2QuestStage(PDV_FLST_Daedric_NocturnalLiveSources, sourceQuest, 136533, 200, "daedric_nocturnal_tg09", newStage)';
 const nocturnalAt = player.indexOf(nocturnalNeedle);
 const nocturnalBlock = nocturnalAt >= 0 ? player.slice(nocturnalAt, nocturnalAt + 700) : "";
 requireText("vanilla Nocturnal guard remains physical 200", nocturnalBlock, nocturnalNeedle);
-requireText("Nocturnal route resolves adapter outcome", nocturnalBlock, "ResolveQuestReactionStageAdapter(sourceQuest, newStage)");
+requireText("Nocturnal route resolves Runtime adapter outcome", nocturnalBlock, "PDV_QuestReactionRuntimeService.ResolveQuestStage(sourceQuest, newStage)");
 requireText("Nocturnal commitment only for physical outcome", nocturnalBlock, "if resolvedStage == 200");
 requireText("adapter suppresses false Nocturnal commitment", nocturnalBlock, "Quest-stage adapter suppressed Nocturnal commitment");
 

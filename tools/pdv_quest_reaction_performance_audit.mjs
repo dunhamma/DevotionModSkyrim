@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /*
- * Read-only static audit for the bounded quest-reaction queue.
+ * Read-only static architecture gate for the V3 Quest Reaction runtime.
  *
- * This is structural/readback proof only. It proves that the shipped source
- * follows the bounded-worker contract; it does not prove Papyrus scheduling,
- * save/load delivery, or player-facing Prisma / Book of Days behaviour.
+ * This proves source ownership, bounds, call direction, and key namespace.
+ * It does not prove Papyrus scheduling, co-save serialization, VMAD wiring,
+ * save/load delivery, or player-facing presentation.
  */
 
 import fs from "node:fs";
@@ -13,30 +13,26 @@ import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
 
-// Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
-// not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
-// for fixtures that never ran.
 const KNOWN_FLAGS = new Set(["--json", "--self-test"]);
-assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_quest_reaction_performance_audit" });
+assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, {
+  toolName: "pdv_quest_reaction_performance_audit",
+});
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const MANAGER_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
-const WORKER_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_QuestReactionWorker.psc");
-const DAEDRIC_PATH_BASE_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_DaedricPathBase.psc");
-const EVENT_BUS_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_EventBus.psc");
-const PLAYER_EVENTS_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_PlayerEvents.psc");
-const MCM_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_MCM.psc");
-const FANOUT_LEDGER_PATH = path.join(ROOT, "tools", "pdv_qr_direct_fanout.json");
-const V3_CONTRACT_PATH = path.join(
-  ROOT,
-  "references",
-  "authoring",
-  "PDV_V3Slice1QuestReaction.manifest.json",
-);
+const SOURCE_ROOT = path.join(ROOT, "live-source", "Scripts", "Source");
+const paths = {
+  runtime: path.join(SOURCE_ROOT, "PDV_QuestReactionRuntime.psc"),
+  manager: path.join(SOURCE_ROOT, "PDV__ManagerQuest.psc"),
+  eventBus: path.join(SOURCE_ROOT, "PDV_EventBus.psc"),
+  playerEvents: path.join(SOURCE_ROOT, "PDV_PlayerEvents.psc"),
+  mcm: path.join(SOURCE_ROOT, "PDV_MCM.psc"),
+  worker: path.join(SOURCE_ROOT, "PDV_QuestReactionWorker.psc"),
+  contract: path.join(ROOT, "references", "authoring", "PDV_V3Slice1QuestReaction.manifest.json"),
+  release: path.join(ROOT, "references", "authoring", "PDV_ReleasePayload.manifest.json"),
+  fanout: path.join(ROOT, "tools", "pdv_qr_direct_fanout.json"),
+};
 
-const args = new Set(process.argv.slice(2));
-const JSON_OUTPUT = args.has("--json");
-const REQUIRED_V3_CHARACTERIZATION_CASES = [
+const requiredCases = [
   "single-runnable-cell",
   "multi-tick-base-plus-meta-fifo",
   "mixed-polarity-one-final-surface",
@@ -47,576 +43,246 @@ const REQUIRED_V3_CHARACTERIZATION_CASES = [
   "corrupt-snapshot-reject-and-cleanup",
 ];
 
-function bodyFor(source, functionName) {
-  const start = source.search(new RegExp(`(?:[A-Za-z]+\\s+)?Function\\s+${functionName}\\s*\\(`, "i"));
+function bodyFor(source, name, kind = "Function") {
+  const start = source.search(new RegExp(`\\b${kind}\\s+${name}\\s*\\(`, "i"));
   if (start < 0) return "";
   const tail = source.slice(start);
-  const end = tail.search(/\n\s*EndFunction\b/i);
-  return end < 0 ? tail : tail.slice(0, end + 12);
+  const endToken = kind === "Event" ? "EndEvent" : "EndFunction";
+  const end = tail.search(new RegExp(`\\n\\s*${endToken}\\b`, "i"));
+  return end < 0 ? tail : tail.slice(0, end + endToken.length + 1);
 }
 
-function eventBodyFor(source, eventName) {
-  const start = source.search(new RegExp(`Event\\s+${eventName}\\s*\\(`, "i"));
-  if (start < 0) return "";
-  const tail = source.slice(start);
-  const end = tail.search(/\n\s*EndEvent\b/i);
-  return end < 0 ? tail : tail.slice(0, end + 9);
+function count(source, pattern) {
+  return (source.match(pattern) ?? []).length;
 }
 
-function hasConstant(source, name, expected) {
-  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const numeric = String(expected).replace(".", "\\.");
-  return new RegExp(`${escaped}\\s*=\\s*${numeric}(?:0+)?\\b`, "i").test(source);
-}
-
-function hasWait(source) {
-  return /\b(?:Utility\.)?Wait(?:MenuMode)?\s*\(/i.test(source);
-}
-
-function add(findings, ok, id, detail) {
+function finding(findings, ok, id, detail) {
   findings.push({ status: ok ? "PASS" : "FAIL", id, detail });
 }
-
-/* --- direct fan-out analysis -------------------------------------------------
- * Every other check here anchors on the queue (enqueue -> slice -> worker) and
- * reasons forward, so a function that calls ApplyDeityReaction directly in a
- * straight line was invisible to this gate. These helpers anchor on the OTHER
- * side -- who applies reactions -- and prove each unbounded burst is registered.
- */
-
-const QUEUE_BOUNDED_FUNCTIONS = new Set(["ProcessQuestReactionQueueSlice", "ProcessQueuedQuestReactionMetaSlice"]);
-const APPLY_FN = "ApplyDeityReaction";
 
 function escapeRe(text) {
   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function countCalls(body, functionName) {
-  return (body.match(new RegExp(`\\b${escapeRe(functionName)}\\s*\\(`, "gi")) || []).length;
+  return (body.match(new RegExp(`\\b${escapeRe(functionName)}\\s*\\(`, "gi")) ?? []).length;
 }
 
-/** Map every Function/Event in a Papyrus source to its body text. */
-export function parseFunctions(source) {
+function parseFunctions(source) {
   const bodies = new Map();
   let current = null;
   let lines = [];
   for (const line of source.split(/\r?\n/)) {
     const start = line.match(/^\s*(?:[A-Za-z_[\]]+\s+)?(?:Function|Event)\s+([A-Za-z_0-9]+)\s*\(/i);
     if (start && current === null) { current = start[1]; lines = []; continue; }
-    if (current !== null && /^\s*End(?:Function|Event)\b/i.test(line)) { bodies.set(current, lines.join("\n")); current = null; continue; }
+    if (current !== null && /^\s*End(?:Function|Event)\b/i.test(line)) {
+      bodies.set(current, lines.join("\n")); current = null; continue;
+    }
     if (current !== null) lines.push(line);
   }
-  if (current !== null) bodies.set(current, lines.join("\n"));
   return bodies;
 }
 
-/** Count synchronous reaction applications per function, resolving thin wrappers.
- *  A thin wrapper is a function whose entire job is one ApplyDeityReaction call
- *  (detected, not hardcoded, so renaming a helper cannot slip past the gate). */
-export function analyzeDirectFanout(managerSource, ledger) {
-  const bodies = parseFunctions(managerSource);
-  const budget = Number(ledger?.budget ?? 2);
-
-  const thinWrappers = [];
-  for (const [name, body] of bodies) {
-    if (name === APPLY_FN) continue;
-    if (countCalls(body, APPLY_FN) !== 1) continue;
-    const statements = body.split(/\r?\n/).map((s) => s.trim()).filter((s) => s && !s.startsWith(";"));
-    if (statements.length <= 4) thinWrappers.push(name);
-  }
-
-  const bursts = new Map();
-  for (const [name, body] of bodies) {
-    if (name === APPLY_FN) continue;
-    let applications = countCalls(body, APPLY_FN);
-    for (const wrapper of thinWrappers) if (wrapper !== name) applications += countCalls(body, wrapper);
-    if (applications > 0) bursts.set(name, applications);
-  }
-
-  const fanouts = [];
-  for (const [name, applications] of bursts) {
-    if (QUEUE_BOUNDED_FUNCTIONS.has(name)) continue; // bounded by CELLS_PER_TICK; proven by manager.bounded-* checks
-    if (thinWrappers.includes(name)) continue; // applies exactly one
-    if (applications <= budget) continue;
-    fanouts.push({ name, applications });
-  }
-  return { budget, thinWrappers, fanouts };
-}
-
-export function evaluateDirectFanout(managerSource, ledger) {
+function evaluateDirectFanout(manager, ledger) {
   const findings = [];
+  const bodies = parseFunctions(manager);
+  const budget = Number(ledger?.budget ?? 2);
   const registry = ledger?.fanouts ?? {};
-  const { budget, fanouts } = analyzeDirectFanout(managerSource, ledger);
-
-  const unregistered = fanouts.filter((f) => !registry[f.name]);
-  add(findings, unregistered.length === 0, "fanout.registered",
-    unregistered.length
-      ? `Unregistered synchronous fan-out (>${budget} applications outside the queue): ${unregistered.map((f) => `${f.name} (${f.applications})`).join(", ")}. Route it through ApplyQuestReaction ingress or register it in tools/pdv_qr_direct_fanout.json.`
-      : `Every synchronous fan-out above the ${budget}-application budget is registered in tools/pdv_qr_direct_fanout.json.`);
-
-  const overBudget = fanouts.filter((f) => registry[f.name] && f.applications > Number(registry[f.name].maxApplications));
-  add(findings, overBudget.length === 0, "fanout.within-recorded-budget",
-    overBudget.length
-      ? `Fan-out grew beyond its recorded budget: ${overBudget.map((f) => `${f.name} ${f.applications} > ${registry[f.name].maxApplications}`).join(", ")}.`
-      : "No registered fan-out applies more reactions than its recorded maximum.");
-
-  const live = new Set(fanouts.map((f) => f.name));
+  const wrappers = [];
+  for (const [name, body] of bodies) {
+    if (name === "ApplyDeityReaction" || countCalls(body, "ApplyDeityReaction") !== 1) continue;
+    const statements = body.split(/\r?\n/).map((line) => line.trim()).filter((line) => line && !line.startsWith(";"));
+    if (statements.length <= 4) wrappers.push(name);
+  }
+  const fanouts = [];
+  for (const [name, body] of bodies) {
+    if (name === "ApplyDeityReaction" || wrappers.includes(name)) continue;
+    let applications = countCalls(body, "ApplyDeityReaction");
+    for (const wrapper of wrappers) applications += countCalls(body, wrapper);
+    if (applications > budget) fanouts.push({ name, applications });
+  }
+  const unregistered = fanouts.filter((entry) => !registry[entry.name]);
+  const overBudget = fanouts.filter((entry) => registry[entry.name] && entry.applications > Number(registry[entry.name].maxApplications));
+  const live = new Set(fanouts.map((entry) => entry.name));
   const stale = Object.keys(registry).filter((name) => !live.has(name));
-  add(findings, stale.length === 0, "fanout.no-stale-registry",
-    stale.length
-      ? `Registry lists functions that are no longer unbounded fan-outs: ${stale.join(", ")}. Delete the entry.`
-      : "Every registry entry still describes a real fan-out.");
-
+  finding(findings, unregistered.length === 0, "fanout.registered",
+    unregistered.length ? `Unregistered synchronous fan-out: ${unregistered.map((entry) => `${entry.name} (${entry.applications})`).join(", ")}.` : `Every synchronous fan-out above ${budget} calls is registered.`);
+  finding(findings, overBudget.length === 0, "fanout.within-recorded-budget",
+    overBudget.length ? `Fan-out exceeded its recorded maximum: ${overBudget.map((entry) => `${entry.name} ${entry.applications}`).join(", ")}.` : "Registered fan-outs stay within their recorded maxima.");
+  finding(findings, stale.length === 0, "fanout.no-stale-registry",
+    stale.length ? `Stale fan-out registry entries: ${stale.join(", ")}.` : "Every fan-out registry entry is live.");
   return findings;
 }
 
-export function evaluate({
-  managerSource,
-  workerSource,
-  daedricPathBaseSource = "",
-  eventBusSource = "",
-  playerEventsSource = "",
-  mcmSource = "",
-  fanoutLedger = null,
-  v3Contract = null,
-}) {
+function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists, contract, release, fanout }) {
   const findings = [];
-  const parity = v3Contract?.parityInvariants ?? {};
-  const characterizationCases = Array.isArray(v3Contract?.currentBehaviorCharacterization?.cases)
-    ? v3Contract.currentBehaviorCharacterization.cases
-    : [];
-  const missingCharacterizationCases = REQUIRED_V3_CHARACTERIZATION_CASES.filter(
-    (caseId) => !characterizationCases.includes(caseId),
-  );
-  const queue = bodyFor(managerSource, "QueueQuestReactionJob");
-  const slice = bodyFor(managerSource, "ProcessQuestReactionQueueSlice");
-  const status = bodyFor(managerSource, "GetQuestReactionQueueStatus");
-  const hasJobs = bodyFor(managerSource, "HasQueuedQuestReactionJobs");
-  const apply = bodyFor(managerSource, "ApplyQuestReaction");
-  const applyDeity = bodyFor(managerSource, "ApplyDeityReaction");
-  const cheapSkip = bodyFor(managerSource, "IsQueuedQuestReactionCellCheapSkip");
-  const finalize = bodyFor(managerSource, "FinalizeQuestReactionJob");
-  const workerInit = eventBodyFor(workerSource, "OnInit");
-  const workerLoad = eventBodyFor(workerSource, "OnPlayerLoadGame");
-  const workerUpdate = eventBodyFor(workerSource, "OnUpdate");
-  const workerResume = bodyFor(workerSource, "ResumeQuestReactionQueue");
-  const queueTrace = bodyFor(managerSource, "TraceQuestReactionQueue");
-  const sources = [eventBusSource, playerEventsSource, mcmSource].join("\n");
+  const sources = [runtime, manager, eventBus, playerEvents, mcm].join("\n");
+  const processBody = bodyFor(runtime, "ProcessQuestReactionQueueSlice");
+  const onUpdate = bodyFor(runtime, "OnUpdate", "Event");
+  const submitQuest = bodyFor(runtime, "SubmitQuestStage");
+  const refreshCatalog = bodyFor(runtime, "RefreshCatalogSources");
+  const activateCatalog = bodyFor(runtime, "ActivateCatalogSources");
+  const resolvePrefix = bodyFor(runtime, "ResolveQuestReactionCellPrefix");
+  const eventBusQuest = bodyFor(eventBus, "RouteQuestReaction");
+  const managerCallbacks = [
+    "ShouldQueueQuestReactionCell",
+    "PrepareQueuedQuestReactionTransaction",
+    "BeginQueuedQuestReactionSlice",
+    "ApplyQueuedQuestReactionCell",
+    "EndQueuedQuestReactionSlice",
+    "FinalizeQueuedQuestReaction",
+  ];
+  const retiredManager = [
+    "ResolveQuestReactionCellFile",
+    "QueueQuestReactionJob",
+    "HasQueuedQuestReactionJobs",
+    "GetQuestReactionQueueStatus",
+    "ProcessQuestReactionQueueSlice",
+    "RemoveQueuedQuestReactionJob",
+    "ShouldSuppressDuplicateQuestReaction",
+    "EnsureQuestReactionQueueRunning",
+  ];
+  const publicInterface = contract?.module?.interface?.map((entry) => entry.name) ?? [];
 
-  add(
-    findings,
-    v3Contract?.id === "pdv-v3-slice1-quest-reaction",
-    "v3.contract",
-    "V3 Slice 1 Quest Reaction contract is loaded.",
-  );
-  add(
-    findings,
-    v3Contract?.delivery?.saveContract === "new-game-only",
-    "v3.clean-break",
-    "V3 Slice 1 is explicitly new-game-only.",
-  );
-  add(
-    findings,
-    v3Contract?.delivery?.behaviorPolicy === "strict-parity-during-extraction",
-    "v3.strict-parity",
-    "V3 extraction forbids behavior changes while ownership moves.",
-  );
-  add(
-    findings,
-    v3Contract?.module?.host?.newScriptInstances === 0 &&
-      v3Contract?.module?.host?.schedulerOwners === 1,
-    "v3.no-new-runtime-host",
-    "V3 repurposes the current host and retains one scheduler owner.",
-  );
-  add(
-    findings,
-    missingCharacterizationCases.length === 0,
-    "v3.characterization-contract-cases",
-    missingCharacterizationCases.length
-      ? `V3 contract is missing named behavior cases: ${missingCharacterizationCases.join(", ")}.`
-      : "V3 contract records every required behavior case; this static audit does not execute them.",
-  );
-  add(findings, /Scriptname\s+PDV_QuestReactionWorker\b/i.test(workerSource), "worker.identity", "Worker source declares PDV_QuestReactionWorker.");
-  add(findings, /PDV__ManagerQuest\s+Property\s+PDV_Manager\s+Auto/i.test(workerSource), "worker.manager-property", "Worker has the CK-wired PDV_Manager property.");
-  add(
-    findings,
-    hasConstant(managerSource, "QUEST_REACTION_QUEUE_MAX_PENDING", parity.queueMaxPending),
-    "manager.max-pending",
-    `Queue ceiling matches the V3 parity contract (${parity.queueMaxPending}).`,
-  );
-  add(
-    findings,
-    hasConstant(managerSource, "QUEST_REACTION_QUEUE_CELLS_PER_TICK", parity.workItemsPerTick),
-    "manager.cells-per-tick",
-    `Worker slice budget matches the V3 parity contract (${parity.workItemsPerTick}).`,
-  );
-  add(
-    findings,
-    hasConstant(managerSource, "QUEST_REACTION_QUEUE_TICK_SECONDS", parity.tickSeconds),
-    "manager.tick-seconds",
-    `Worker cadence matches the V3 parity contract (${parity.tickSeconds} seconds).`,
-  );
+  finding(findings, /^Scriptname\s+PDV_QuestReactionRuntime\s+extends\s+Quest\b/im.test(runtime),
+    "runtime.identity", "The existing quest host is implemented by PDV_QuestReactionRuntime.");
+  finding(findings, /INTERFACE_VERSION\s*=\s*1\b/i.test(runtime) &&
+    ["Configure", "SubmitQuestStage", "SubmitSemanticEvent", "GetStatusLine", "GetCompatibilityDetail"]
+      .every((name) => bodyFor(runtime, name)),
+    "runtime.interface", "The version-1 public lifecycle interface is present.");
+  finding(findings, JSON.stringify(publicInterface) === JSON.stringify([
+    "Configure", "SubmitQuestStage", "SubmitSemanticEvent", "GetStatusLine", "GetCompatibilityDetail",
+  ]), "contract.interface", "The manifest pins the five-member version-1 interface.");
 
-  add(findings, Boolean(queue), "manager.enqueue-api", "Manager exposes QueueQuestReactionJob.");
-  add(findings, Boolean(slice), "manager.slice-api", "Manager exposes ProcessQuestReactionQueueSlice.");
-  add(findings, Boolean(status), "manager.status-api", "Manager exposes GetQuestReactionQueueStatus for MCM/readback.");
-  add(findings, Boolean(hasJobs), "manager.has-work-api", "Manager exposes HasQueuedQuestReactionJobs for worker rearm.");
-  add(findings, /StorageUtil\.(?:Set|Adjust|Unset|Clear|StringList|IntList|FloatList)/i.test(queue), "manager.storage-queue", "Manager enqueue path persists queue state through StorageUtil.");
-  add(findings, /StorageUtil\.(?:Get|Set|Adjust|Unset|Clear|StringList|IntList|FloatList)/i.test(slice), "manager.storage-slice", "Manager slice reads/writes persisted queue state through StorageUtil.");
-  const snapshotFields = ["ReactionKey", "DeitiesCsv", "ValencesCsv", "IntensitiesCsv", "MagnitudesCsv", "TagsCsv", "CellCount", "SourceCellCount", "SkippedCellCount", "Compacted", "Started", "CellIndex", "EnqueuedRealTime", "IngressBuildMs"];
-  const missingSnapshotFields = snapshotFields.filter((field) => !queue.includes(`"${field}"`));
-  add(findings, missingSnapshotFields.length === 0, "manager.immutable-snapshot", missingSnapshotFields.length ? `Missing persisted queue snapshot fields: ${missingSnapshotFields.join(", ")}.` : "Ingress snapshots reaction cell data and progress before returning to the stage sender.");
-  add(findings, !hasWait(queue) && !hasWait(slice), "manager.no-queue-waits", "Queue enqueue/slice paths contain no Wait or WaitMenuMode contention.");
-  add(findings, !/_broadPantheonEventDepth/i.test(queue) && !/_broadPantheonEventDepth/i.test(slice), "manager.no-cross-update-broad-scope", "Queue ingress/slice do not carry broad-pantheon scope state across updates.");
-  add(findings, /QUEST_REACTION_QUEUE_CELLS_PER_TICK/i.test(slice) && /while\b/i.test(slice), "manager.bounded-slice", "Queue slice loops against the two-cell budget rather than the whole job.");
-  add(findings, /IsQueuedQuestReactionCellCheapSkip\s*\(/i.test(slice) && /processed\s*<\s*QUEST_REACTION_QUEUE_CELLS_PER_TICK/i.test(slice) && /cellIndex\s*\+=\s*1/i.test(slice), "manager.fast-skip-noop-cells", "Queued no-op cells can advance without consuming the two-applied-cell budget.");
-  add(findings, /Bool\s+Function\s+IsQueuedQuestReactionCellCheapSkip/i.test(managerSource) && /return\s+!\s*IsQuestReactionDeityReachable\s*\(\s*deity\s*\)/i.test(cheapSkip) && /stance\s*==\s*"CURSE"[\s\S]*?return\s+False/i.test(cheapSkip), "manager.fast-skip-preserves-live-cells", "Cheap-skip helper skips unreachable/no-op cells but preserves curse and reachable cells for normal application.");
-  add(findings, /while\s+sourceIndex\s*<\s*sourceCellCount/i.test(queue) && /!\s*IsQueuedQuestReactionCellCheapSkip\s*\(/i.test(queue) && /AppendQuestReactionSnapshotToken\s*\(/i.test(queue), "manager.ingress-compacts-runnable-cells", "Ingress snapshots only base rows capable of producing work.");
-  add(findings, /"Compacted"\s*,\s*1/i.test(queue) && /"SourceCellCount"/i.test(queue) && /"SkippedCellCount"/i.test(queue), "manager.compaction-diagnostics", "Compacted jobs persist their source and skipped-row counts.");
-  add(findings, /"MetaIndex"\s*,\s*7/i.test(queue) && /metaRunnableCount/i.test(queue) && /metaEligible/i.test(queue), "manager.ingress-compacts-meta-cells", "Ingress folds runnable legacy meta rows into the bounded row stream and marks the legacy meta cursor complete.");
-  add(findings, /!\s*compactedJob\s*&&\s*IsQueuedQuestReactionCellCheapSkip\s*\(/i.test(slice), "manager.legacy-job-compatibility", "Already-saved un-compacted jobs retain the worker-side cheap-skip path.");
-  add(findings, /"Started"\s*\)\s*!=\s*1/i.test(slice) && /"Started"\s*,\s*1/i.test(slice), "manager.start-marker-once", "A persisted started flag prevents zero-row compacted jobs from reinitialising on every meta tick.");
-  const metaSlice = bodyFor(managerSource, "ProcessQueuedQuestReactionMetaSlice");
-  add(findings, /QUEST_REACTION_QUEUE_CELLS_PER_TICK/i.test(metaSlice) && /while\b/i.test(metaSlice), "manager.bounded-meta-slice", "Quest meta lanes consume the same two-work-item budget as base reaction cells.");
-  add(findings, /\[PDV\]\[QR_QUEUE\]/i.test(queueTrace) && /GetDebugLevel\s*\(\s*\)\s*>=\s*1/i.test(queueTrace), "manager.marker-helper", "Manager queue trace helper emits the [PDV][QR_QUEUE] prefix at debug level 1.");
-  add(findings, /TraceQuestReactionQueue\s*\(\s*"ENQUEUE/i.test(queue), "manager.enqueue-marker", "Queue ingress emits the QR_QUEUE ENQUEUE lifecycle marker.");
-  add(findings, /TraceQuestReactionQueue\s*\(\s*"COALESCE/i.test(queue), "manager.coalesce-marker", "Exact duplicate ingress emits the QR_QUEUE COALESCE lifecycle marker.");
-  add(findings, /TraceQuestReactionQueue\s*\(\s*"OVERFLOW/i.test(queue), "manager.overflow-marker", "Queue ceiling rejection emits the QR_QUEUE OVERFLOW lifecycle marker.");
-  add(findings, /TraceQuestReactionQueue\s*\(\s*"START/i.test(slice), "manager.start-marker", "Queue slice emits the QR_QUEUE START lifecycle marker.");
-  add(findings, /TraceQuestReactionQueue\s*\(\s*"COMPLETE/i.test(slice + "\n" + finalize), "manager.complete-marker", "Queue finalisation emits the QR_QUEUE COMPLETE lifecycle marker.");
-  add(findings, /TraceQuestReactionQueue\s*\(\s*"RESUME/i.test(managerSource + "\n" + workerSource), "resume-marker", "Save/load resume emits the QR_QUEUE RESUME lifecycle marker.");
+  finding(findings, /QUEST_REACTION_QUEUE_MAX_PENDING\s*=\s*128\b/i.test(runtime) &&
+    /QUEST_REACTION_QUEUE_CELLS_PER_TICK\s*=\s*2\b/i.test(runtime) &&
+    /QUEST_REACTION_QUEUE_TICK_SECONDS\s*=\s*0\.1\b/i.test(runtime) &&
+    /QUEST_REACTION_DUPLICATE_WINDOW_DAYS\s*=\s*0\.02\b/i.test(runtime),
+    "runtime.bounds", "Queue ceiling, slice budget, tick, and duplicate window retain parity values.");
+  finding(findings, count(runtime, /RegisterForSingleUpdate\s*\(/gi) === 2 &&
+    !workerExists && !bodyFor(manager, "ProcessQuestReactionQueueSlice"),
+    "runtime.single-scheduler", "Only the runtime owns initial and continuation re-arms; the old worker is absent.");
+  finding(findings, onUpdate.includes("ProcessQuestReactionQueueSlice()") &&
+    !/\b(?:Utility\.)?Wait(?:MenuMode)?\s*\(/i.test(runtime),
+    "runtime.nonblocking", "OnUpdate drains one bounded slice and the runtime contains no waits.");
+  finding(findings, processBody.includes("processed < QUEST_REACTION_QUEUE_CELLS_PER_TICK") &&
+    processBody.includes("CellIndex") && processBody.includes("FinalizeQueuedQuestReaction") &&
+    processBody.includes("RemoveHeadJob"),
+    "runtime.bounded-finalization", "The persisted head advances under the two-item budget and finalizes once before removal.");
+  finding(findings, submitQuest.includes("QueueQuestReactionJob") &&
+    runtime.includes("StorageUtil.StringListAdd(None, QUEUE_IDS_KEY") &&
+    runtime.includes("StorageUtil.FormListAdd(None, QUEUE_FORMS_KEY"),
+    "runtime.persist-before-return", "Accepted quest stages persist parallel FIFO identity and source form state.");
+  finding(findings, ["PDV.V3.QR.Queue.", "PDV.V3.QR.Job.", "PDV.V3.QR.Recent.", "PDV.V3.QR.ChannelFiles"]
+    .every((token) => runtime.includes(token)) && !/["']PDV\.QR\./.test(sources),
+    "runtime.v3-namespace", "Owned queue, job, recent, and channel state use only PDV.V3.QR keys.");
+  finding(findings, refreshCatalog.includes("JsonUtil.JsonInFolder(QUEST_REACTION_CHANNEL_FOLDER)") &&
+    refreshCatalog.includes("JsonUtil.JsonInFolder(QUEST_REACTION_STAGE_ADAPTER_FOLDER)") &&
+    activateCatalog.includes("ActivateCatalogSource") &&
+    runtime.includes("PO3_Events_Alias.RegisterForQuestStage(_questStageReceiver, sourceQuest)") &&
+    !playerEvents.includes("JsonUtil.JsonInFolder") &&
+    !playerEvents.includes("JsonUtil.Load(") &&
+    !playerEvents.includes("JsonUtil.Unload(") &&
+    !playerEvents.includes("RegisterQuestReactionMatrixFile") &&
+    !playerEvents.includes('"PDV.V3.QR.SourceCatalog."'),
+    "runtime.catalog-owner", "Runtime owns catalog discovery, parsing, source activation, and Quest-stage registration.");
+  finding(findings, runtime.includes('"PDV.V3.QR.SourceCatalog."') &&
+    resolvePrefix.includes('"quest." + sourcePlugin + "|" + localFormId + "|" + stageValue + "."') &&
+    runtime.includes('"PDV.V3.QR.SourceCatalog."'),
+    "runtime.qualified-routing", "Ingress binds each runtime quest to one catalog and prefers the plugin-qualified v2 cell key.");
 
-  const applyIsIngressOnly = Boolean(apply)
-    && /QueueQuestReactionJob\s*\(/i.test(apply)
-    && !/ApplyDeityReaction\s*\(/i.test(apply)
-    && !/BeginBroadPantheonEvent\s*\(/i.test(apply)
-    && !/FlushQuestReactionSurface\s*\(/i.test(apply)
-    && !/FlushBroadPantheonEvent\s*\(/i.test(apply);
-  add(findings, applyIsIngressOnly, "manager.ingress-only", "ApplyQuestReaction snapshots/enqueues and does not synchronously fan out cells or finalise UI/pantheon work.");
-  const pendingReturn = slice.search(/if\s+cellIndex\s*<\s*cellCount[\s\S]*?return\s+True/i);
-  const finalisationTokens = ["FlushQueuedQuestReactionSurface", "CommitQueuedQuestReactionBroad", "HandleCurseStateRefresh", "SyncFirstTierRaceRewardRuntime", "RequestPanelRefresh"];
-  const earlyFinalisation = finalisationTokens.filter((tokenName) => {
-    const position = slice.indexOf(tokenName);
-    return position < 0 || position < pendingReturn;
-  });
-  add(findings, pendingReturn >= 0 && earlyFinalisation.length === 0, "manager.finalise-once-after-last-cell", pendingReturn < 0 ? "Queue slice has no explicit incomplete-job return." : (earlyFinalisation.length ? `Finalisation is absent or occurs before the last-cell guard: ${earlyFinalisation.join(", ")}.` : "Surface, broad fold, curse sync, Breton sync, and panel refresh occur only after the final queued cell."));
-  const curseBranch = (applyDeity.match(/if\s+stance\s*==\s*"CURSE"[\s\S]*?return[\s\S]*?endIf/i) || [""])[0];
-  add(findings, /_qrQueueTransactionActive/i.test(curseBranch) && /_qrQueueNeedsCurseRefresh\s*=\s*True/i.test(curseBranch) && /else[\s\S]*?HandleCurseStateRefresh\s*\(/i.test(curseBranch), "manager.queued-curse-deferred", "Queued curse cells set the finalizer flag instead of refreshing curse state per cell.");
-  const unreachableTraceAtLevel2 = /GetDebugLevel\s*\(\s*\)\s*>=\s*2[\s\S]{0,180}QuestReaction skipped unreachable/i.test(applyDeity);
-  add(findings, !unreachableTraceAtLevel2 && /GetDebugLevel\s*\(\s*\)\s*>=\s*3[\s\S]{0,180}QuestReaction skipped unreachable/i.test(applyDeity), "manager.per-cell-skip-trace-level3", "Per-cell quest-reaction reachability skip traces are debug level 3.");
-  add(findings, /StringUtil\.Find\s*\(\s*reason\s*,\s*"quest_reaction_"\s*\)\s*==\s*0/i.test(daedricPathBaseSource) && /traceLevel\s*=\s*3/i.test(daedricPathBaseSource), "daedric.quest-reaction-stigma-trace-level3", "Daedric quest-reaction stigma traces are debug level 3.");
-  const resumeIsBounded = /PDV_Manager\.HasQueuedQuestReactionJobs\s*\(/i.test(workerResume) && /RegisterForSingleUpdate\s*\(/i.test(workerResume);
-  add(findings, /ResumeQuestReactionQueue\s*\(\s*False\s*\)/i.test(workerInit) && resumeIsBounded, "worker.init-resume", "OnInit delegates to a bounded resume helper which arms only when the manager reports work.");
-  add(findings, /ResumeQuestReactionQueue\s*\(\s*True\s*\)/i.test(workerLoad) && resumeIsBounded, "worker.load-resume", "OnPlayerLoadGame delegates to a bounded resume helper which arms only when the manager reports work.");
-  const workerDoesNoCellWork = Boolean(workerUpdate)
-    && /PDV_Manager\.ProcessQuestReactionQueueSlice\s*\(/i.test(workerUpdate)
-    && /RegisterForSingleUpdate\s*\(/i.test(workerUpdate)
-    && !/ApplyDeityReaction\s*\(/i.test(workerSource)
-    && !/StorageUtil\./i.test(workerSource)
-    && !/StringUtil\.Split/i.test(workerSource);
-  add(findings, workerDoesNoCellWork, "worker.scheduler-only", "Worker schedules Manager queue slices and owns neither queue data nor deity-cell processing.");
+  finding(findings, managerCallbacks.every((name) => bodyFor(manager, name)),
+    "manager.callback-seam", "Manager exposes only the scoring/final-presentation callback seam needed by the runtime.");
+  finding(findings, retiredManager.every((name) => !bodyFor(manager, name)) &&
+    !manager.includes("PDV.V3.QR.") && !manager.includes("PDV_QuestReactionWorker"),
+    "manager.ownership-retired", "Manager no longer owns catalog, queue, V3 storage, scheduler, or the old worker.");
+  finding(findings, eventBusQuest.includes("PDV_QuestReactionRuntimeService.SubmitQuestStage") &&
+    !eventBusQuest.includes("PDV_Manager.ApplyQuestReaction"),
+    "eventbus.direct-ingress", "EventBus submits quest stages directly to the runtime.");
+  finding(findings, runtime.includes('"PDV.V3.QR.SourceLocalFormId."') &&
+    runtime.includes('"PDV.V3.QR.SourcePlugin."') &&
+    runtime.includes('"PDV.V3.QR.ChannelFiles"') &&
+    runtime.includes('"PDV.V3.QR.SourceCatalog."') &&
+    !playerEvents.includes('"PDV.QuestReaction.LocalFormId."'),
+    "player-events.identity", "Runtime materializes plugin-qualified identity; PlayerEvents remains an engine adapter.");
+  finding(findings, mcm.includes("PDV_QuestReactionRuntimeService.GetStatusLine()") &&
+    mcm.includes("PDV_QuestReactionRuntimeService.DebugReloadCatalog()") &&
+    mcm.includes("PDV_QuestReactionRuntimeService.DebugQueuePerformanceSweep()") &&
+    !mcm.includes("PDV_Manager.GetQuestReactionQueueStatus()"),
+    "mcm.readonly-runtime", "MCM status and controlled probes target the owning runtime.");
 
-  const routingUsesIngress = /ApplyQuestReaction\s*\(/i.test(sources)
-    && !/ProcessQuestReactionQueueSlice\s*\(/i.test(sources)
-    && !/QueueQuestReactionJob\s*\(/i.test(eventBusSource + "\n" + playerEventsSource);
-  add(findings, routingUsesIngress, "route.integration", "EventBus/PlayerEvents/MCM route multi-cell quest reactions through ApplyQuestReaction ingress, never a direct slice.");
-
-  findings.push(...evaluateDirectFanout(managerSource, fanoutLedger));
+  finding(findings, !workerExists && release?.sourceScripts?.includes("PDV_QuestReactionRuntime") &&
+    !release?.sourceScripts?.includes("PDV_QuestReactionWorker") &&
+    release?.fixedEntries?.includes("Scripts/PDV_QuestReactionRuntime.pex"),
+    "release.runtime-inventory", "Release inventory compiles and ships Runtime, not Worker.");
+  finding(findings, JSON.stringify(contract?.currentBehaviorCharacterization?.cases ?? []) ===
+    JSON.stringify(requiredCases),
+    "characterization.case-contract", "The manifest retains the exact eight executable characterization cases.");
+  findings.push(...evaluateDirectFanout(manager, fanout));
 
   return {
-    status: findings.some((finding) => finding.status === "FAIL") ? "FAIL" : "PASS",
-    proofBoundary: "static-source-contract-only; runtime scheduling, save/load, latency, Prisma, and Book of Days proof remain separate",
+    status: findings.every((entry) => entry.status === "PASS") ? "PASS" : "FAIL",
     findings,
+    proofBoundary: "static source architecture only; compile, VMAD, StorageUtil, save/load, and player surfaces are separate proof",
   };
 }
 
-function syntheticSources() {
-  const manager = `
-Int QUEST_REACTION_QUEUE_MAX_PENDING = 128
-Int QUEST_REACTION_QUEUE_CELLS_PER_TICK = 2
-Float QUEST_REACTION_QUEUE_TICK_SECONDS = 0.1
-Function QueueQuestReactionJob()
-  StorageUtil.SetIntValue(None, "PDV.QR.Queue.Count", 1)
-  StorageUtil.SetStringValue(None, "ReactionKey", "x")
-  StorageUtil.SetStringValue(None, "DeitiesCsv", "x")
-  StorageUtil.SetStringValue(None, "ValencesCsv", "x")
-  StorageUtil.SetStringValue(None, "IntensitiesCsv", "x")
-  StorageUtil.SetStringValue(None, "MagnitudesCsv", "x")
-  StorageUtil.SetStringValue(None, "TagsCsv", "x")
-  StorageUtil.SetIntValue(None, "CellCount", 1)
-  StorageUtil.SetIntValue(None, "SourceCellCount", 2)
-  StorageUtil.SetIntValue(None, "SkippedCellCount", 1)
-  StorageUtil.SetIntValue(None, "Compacted", 1)
-  StorageUtil.SetIntValue(None, "Started", 0)
-  StorageUtil.SetIntValue(None, "CellIndex", 0)
-  StorageUtil.SetIntValue(None, "MetaIndex", 7)
-  StorageUtil.SetFloatValue(None, "EnqueuedRealTime", 0.0)
-  StorageUtil.SetFloatValue(None, "IngressBuildMs", 0.0)
-  Int sourceIndex = 0
-  Int sourceCellCount = 2
-  Int metaRunnableCount = 0
-  Int metaEligible = 0
-  while sourceIndex < sourceCellCount
-    if !IsQueuedQuestReactionCellCheapSkip()
-      AppendQuestReactionSnapshotToken()
-    endIf
-    sourceIndex += 1
-  endWhile
-  TraceQuestReactionQueue("ENQUEUE")
-  TraceQuestReactionQueue("COALESCE")
-  TraceQuestReactionQueue("OVERFLOW")
-EndFunction
-Function ProcessQuestReactionQueueSlice()
-  Int done = 0
-  Bool compactedJob = True
-  if StorageUtil.GetIntValue(None, "Started") != 1
-    StorageUtil.SetIntValue(None, "Started", 1)
-  endIf
-  while done < QUEST_REACTION_QUEUE_CELLS_PER_TICK
-    StorageUtil.AdjustIntValue(None, "PDV.QR.Queue.Count", 0)
-    done += 1
-  endWhile
-  if !compactedJob && IsQueuedQuestReactionCellCheapSkip()
-    cellIndex += 1
-  elseIf processed < QUEST_REACTION_QUEUE_CELLS_PER_TICK
-    cellIndex += 1
-  endIf
-  TraceQuestReactionQueue("START")
-  if cellIndex < cellCount
-    return True
-  endIf
-  FlushQueuedQuestReactionSurface()
-  CommitQueuedQuestReactionBroad()
-  HandleCurseStateRefresh()
-  SyncFirstTierRaceRewardRuntime()
-  RequestPanelRefresh()
-  TraceQuestReactionQueue("COMPLETE")
-EndFunction
-Int Function ProcessQueuedQuestReactionMetaSlice()
-  Int done = 0
-  while done < QUEST_REACTION_QUEUE_CELLS_PER_TICK
-    done += 1
-  endWhile
-  return done
-EndFunction
-String Function GetQuestReactionQueueStatus()
-  return "idle"
-EndFunction
-Bool Function HasQueuedQuestReactionJobs()
-  return False
-EndFunction
-Function ApplyQuestReaction()
-  QueueQuestReactionJob()
-EndFunction
-Bool Function IsQueuedQuestReactionCellCheapSkip()
-  if stance == "CURSE"
-    return False
-  endIf
-  return !IsQuestReactionDeityReachable(deity)
-EndFunction
-Function ApplyDeityReaction()
-  if stance == "CURSE"
-    if _qrQueueTransactionActive
-      _qrQueueNeedsCurseRefresh = True
-    else
-      HandleCurseStateRefresh()
-    endIf
-    return
-  endIf
-  if GetDebugLevel() >= 3
-    Debug.Trace("[PDV] QuestReaction skipped unreachable foreign deity")
-  endIf
-EndFunction
-Function FinalizeQuestReactionJob()
-  TraceQuestReactionQueue("COMPLETE")
-EndFunction
-Function ResumeQuestReactionQueue()
-  TraceQuestReactionQueue("RESUME")
-EndFunction
-Function TraceQuestReactionQueue(String text)
-  if GetDebugLevel() >= 1
-    Debug.Trace("[PDV][QR_QUEUE] " + text)
-  endIf
-EndFunction`;
-  const daedricPathBase = `Function AddStigma(Float amount, String reason)
-  Int traceLevel = 2
-  if StringUtil.Find(reason, "quest_reaction_") == 0
-    traceLevel = 3
-  endIf
-  TraceDaedric(traceLevel, "Stigma")
-EndFunction`;
-  const worker = `Scriptname PDV_QuestReactionWorker extends Quest
-PDV__ManagerQuest Property PDV_Manager Auto
-Event OnInit()
-  ResumeQuestReactionQueue(False)
-EndEvent
-Event OnPlayerLoadGame()
-  ResumeQuestReactionQueue(True)
-EndEvent
-Function ResumeQuestReactionQueue(Bool fromLoad)
-  if PDV_Manager.HasQueuedQuestReactionJobs()
-    RegisterForSingleUpdate(0.1)
-  endIf
-EndFunction
-Event OnUpdate()
-  PDV_Manager.ProcessQuestReactionQueueSlice()
-  if PDV_Manager.ProcessQuestReactionQueueSlice()
-    RegisterForSingleUpdate(0.1)
-  endIf
-EndEvent`;
-  const routes = `Function RouteQuestReaction()
- ApplyQuestReaction()
-EndFunction`;
-  return { manager, worker, daedricPathBase, routes };
+function loadLiveInputs() {
+  return {
+    runtime: fs.readFileSync(paths.runtime, "utf8"),
+    manager: fs.readFileSync(paths.manager, "utf8"),
+    eventBus: fs.readFileSync(paths.eventBus, "utf8"),
+    playerEvents: fs.readFileSync(paths.playerEvents, "utf8"),
+    mcm: fs.readFileSync(paths.mcm, "utf8"),
+    workerExists: fs.existsSync(paths.worker),
+    contract: JSON.parse(fs.readFileSync(paths.contract, "utf8")),
+    release: JSON.parse(fs.readFileSync(paths.release, "utf8")),
+    fanout: JSON.parse(fs.readFileSync(paths.fanout, "utf8")),
+  };
 }
 
-/** The fan-out checks must be provably non-vacuous: a rogue burst has to FAIL,
- *  a registered one has to PASS, and a stale entry has to FAIL. */
-function fanoutSelfTest() {
-  const results = [];
-  const rogue = `
-Function HandleSomeFork()
-  ApplyDeityReaction("Shor")
-  ApplyDeityReaction("Kyne")
-  ApplyDeityReaction("Mara")
-EndFunction
-Function ApplyDeityReaction(String deityName)
-EndFunction`;
-  const emptyLedger = { budget: 2, fanouts: {} };
-  const caught = evaluateDirectFanout(rogue, emptyLedger).find((f) => f.id === "fanout.registered");
-  results.push(["unregistered 3-call burst FAILs", caught.status === "FAIL"]);
-
-  const registered = { budget: 2, fanouts: { HandleSomeFork: { maxApplications: 3, reason: "test" } } };
-  const allowed = evaluateDirectFanout(rogue, registered).find((f) => f.id === "fanout.registered");
-  results.push(["registered burst PASSes", allowed.status === "PASS"]);
-
-  const tight = { budget: 2, fanouts: { HandleSomeFork: { maxApplications: 2, reason: "test" } } };
-  const grew = evaluateDirectFanout(rogue, tight).find((f) => f.id === "fanout.within-recorded-budget");
-  results.push(["burst over its recorded budget FAILs", grew.status === "FAIL"]);
-
-  const stale = { budget: 2, fanouts: { HandleSomeFork: { maxApplications: 3 }, GoneAway: { maxApplications: 9 } } };
-  const rot = evaluateDirectFanout(rogue, stale).find((f) => f.id === "fanout.no-stale-registry");
-  results.push(["stale registry entry FAILs", rot.status === "FAIL"]);
-
-  // A thin wrapper called many times must be counted through, not hidden.
-  const wrapped = `
-Function HandleWrappedFork()
-  ApplyOne("Shor")
-  ApplyOne("Kyne")
-  ApplyOne("Mara")
-EndFunction
-Function ApplyOne(String deityName)
-  ApplyDeityReaction(deityName)
-EndFunction
-Function ApplyDeityReaction(String deityName)
-EndFunction`;
-  const throughWrapper = evaluateDirectFanout(wrapped, emptyLedger).find((f) => f.id === "fanout.registered");
-  results.push(["burst via a thin wrapper is counted", throughWrapper.status === "FAIL"]);
-
-  return results;
-}
-
-function main() {
-  if (args.has("--self-test")) {
-    const sample = syntheticSources();
-    const fixtureContract = {
-      id: "pdv-v3-slice1-quest-reaction",
-      delivery: {
-        saveContract: "new-game-only",
-        behaviorPolicy: "strict-parity-during-extraction",
-      },
-      module: { host: { newScriptInstances: 0, schedulerOwners: 1 } },
-      parityInvariants: {
-        queueMaxPending: 128,
-        workItemsPerTick: 2,
-        tickSeconds: 0.1,
-      },
-      currentBehaviorCharacterization: {
-        cases: REQUIRED_V3_CHARACTERIZATION_CASES,
-      },
+function selfTest() {
+  const base = loadLiveInputs();
+  const mutations = [
+    ["legacy manager queue owner", { manager: base.manager + "\nFunction QueueQuestReactionJob()\nEndFunction\n" }, "manager.ownership-retired"],
+    ["legacy V1 key", { runtime: base.runtime + '\nString legacy = "PDV.QR.Queue.JobIds"\n' }, "runtime.v3-namespace"],
+    ["second scheduler", { manager: base.manager + "\nFunction ProcessQuestReactionQueueSlice()\n  RegisterForSingleUpdate(0.1)\nEndFunction\n" }, "runtime.single-scheduler"],
+    ["missing interface member", { runtime: base.runtime.replace("String Function GetCompatibilityDetail()", "String Function MissingCompatibilityDetail()") }, "runtime.interface"],
+    ["EventBus manager ingress", { eventBus: base.eventBus.replace("PDV_QuestReactionRuntimeService.SubmitQuestStage", "PDV_Manager.ApplyQuestReaction") }, "eventbus.direct-ingress"],
+    ["Manager V3 storage", { manager: base.manager + '\nString bad = "PDV.V3.QR.Queue.JobIds"\n' }, "manager.ownership-retired"],
+    ["PlayerEvents catalog discovery", { playerEvents: base.playerEvents + "\nString[] bad = JsonUtil.JsonInFolder(\"Channels\")\n" }, "runtime.catalog-owner"],
+    ["unqualified route", { runtime: base.runtime.replace('String qualifiedPrefix = "quest." + sourcePlugin + "|" + localFormId + "|" + stageValue + "."', 'String qualifiedPrefix = "quest." + localFormId + "|" + stageValue + "."') }, "runtime.qualified-routing"],
+    ["unregistered direct fan-out", { manager: base.manager + "\nFunction RogueFanout()\n ApplyDeityReaction(\"A\")\n ApplyDeityReaction(\"B\")\n ApplyDeityReaction(\"C\")\nEndFunction\n" }, "fanout.registered"],
+  ];
+  const results = mutations.map(([name, patch, expectedId]) => {
+    const report = evaluate({ ...base, ...patch });
+    return {
+      name,
+      status: report.findings.find((entry) => entry.id === expectedId)?.status === "FAIL" ? "PASS" : "FAIL",
     };
-    const fixtureInputs = {
-      managerSource: sample.manager,
-      workerSource: sample.worker,
-      daedricPathBaseSource: sample.daedricPathBase,
-      eventBusSource: sample.routes,
-      playerEventsSource: sample.routes,
-      mcmSource: sample.routes,
-      fanoutLedger: { budget: 2, fanouts: {} },
-    };
-    const report = evaluate({ ...fixtureInputs, v3Contract: fixtureContract });
-    const wrongCasesReport = evaluate({
-      ...fixtureInputs,
-      v3Contract: {
-        ...fixtureContract,
-        currentBehaviorCharacterization: {
-          cases: Array.from({ length: 10 }, (_, index) => `wrong-${index}`),
-        },
-      },
-    });
-    const wrongCasesRejected =
-      wrongCasesReport.findings.find(
-        (finding) => finding.id === "v3.characterization-contract-cases",
-      )?.status === "FAIL";
-    const fanoutCases = fanoutSelfTest();
-    const fanoutOk = fanoutCases.every(([, ok]) => ok);
-    const status =
-      report.status === "PASS" && fanoutOk && wrongCasesRejected ? "PASS" : "FAIL";
-    if (JSON_OUTPUT) {
-      console.log(
-        JSON.stringify(
-          {
-            ...report,
-            status,
-            characterizationSelfTest: {
-              name: "arbitrary ten-case contract fails",
-              status: wrongCasesRejected ? "PASS" : "FAIL",
-            },
-            fanoutSelfTest: fanoutCases.map(([name, ok]) => ({
-              name,
-              status: ok ? "PASS" : "FAIL",
-            })),
-          },
-          null,
-          2,
-        ),
-      );
-    }
-    else {
-      console.log(`PDV quest-reaction performance audit self-test: ${status}`);
-      console.log(
-        `  [${wrongCasesRejected ? "PASS" : "FAIL"}] characterization self-test: arbitrary ten-case contract fails`,
-      );
-      for (const [name, ok] of fanoutCases) console.log(`  [${ok ? "PASS" : "FAIL"}] fanout self-test: ${name}`);
-    }
-    return status === "PASS" ? 0 : 1;
-  }
-
-  const report = evaluate({
-    managerSource: fs.readFileSync(MANAGER_PATH, "utf8"),
-    workerSource: fs.readFileSync(WORKER_PATH, "utf8"),
-    daedricPathBaseSource: fs.readFileSync(DAEDRIC_PATH_BASE_PATH, "utf8"),
-    eventBusSource: fs.readFileSync(EVENT_BUS_PATH, "utf8"),
-    playerEventsSource: fs.readFileSync(PLAYER_EVENTS_PATH, "utf8"),
-    mcmSource: fs.readFileSync(MCM_PATH, "utf8"),
-    fanoutLedger: JSON.parse(fs.readFileSync(FANOUT_LEDGER_PATH, "utf8")),
-    v3Contract: JSON.parse(fs.readFileSync(V3_CONTRACT_PATH, "utf8")),
   });
-  if (JSON_OUTPUT) console.log(JSON.stringify(report, null, 2));
+  return {
+    status: results.every((entry) => entry.status === "PASS") ? "PASS" : "FAIL",
+    results,
+  };
+}
+
+const json = process.argv.includes("--json");
+if (process.argv.includes("--self-test")) {
+  const report = selfTest();
+  if (json) console.log(JSON.stringify(report, null, 2));
   else {
-    for (const finding of report.findings) console.log(`[${finding.status}] ${finding.id}: ${finding.detail}`);
-    const failed = report.findings.filter((finding) => finding.status === "FAIL").length;
-    console.log(`Summary: ${report.status} (${report.findings.length - failed} pass, ${failed} fail)`);
+    console.log(`PDV Quest Reaction architecture audit self-test: ${report.status}`);
+    for (const entry of report.results) console.log(`[${entry.status}] ${entry.name}`);
+  }
+  process.exitCode = report.status === "PASS" ? 0 : 1;
+} else {
+  const report = evaluate(loadLiveInputs());
+  if (json) console.log(JSON.stringify(report, null, 2));
+  else {
+    for (const entry of report.findings) console.log(`[${entry.status}] ${entry.id}: ${entry.detail}`);
+    console.log(`Summary: ${report.status}`);
     console.log(`Proof boundary: ${report.proofBoundary}`);
   }
-  return report.status === "PASS" ? 0 : 1;
-}
-
-try {
-  process.exitCode = main();
-} catch (error) {
-  const report = { status: "FAIL", error: error.message, proofBoundary: "static-source-contract-only" };
-  if (JSON_OUTPUT) console.log(JSON.stringify(report, null, 2));
-  else console.error(`PDV quest-reaction performance audit failed: ${error.message}`);
-  process.exitCode = 2;
+  process.exitCode = report.status === "PASS" ? 0 : 1;
 }

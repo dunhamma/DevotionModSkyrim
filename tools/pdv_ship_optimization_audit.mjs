@@ -200,7 +200,7 @@ function scanScript(name) {
 function knownFindings(scripts) {
   const playerEvents = scripts.find((script) => script.script === "PDV_PlayerEvents");
   const manager = scripts.find((script) => script.script === "PDV__ManagerQuest");
-  const worker = scripts.find((script) => script.script === "PDV_QuestReactionWorker");
+  const questReactionRuntime = scripts.find((script) => script.script === "PDV_QuestReactionRuntime");
   const candidatePlayerEvents = fs.readFileSync(
     path.join(CANDIDATE_SOURCE_ROOT, "PDV_PlayerEvents.psc"),
     "utf8",
@@ -268,17 +268,17 @@ function knownFindings(scripts) {
     {
       id: "PDV-OPT-PAP-004",
       classification: "clean",
-      scope: "PDV_QuestReactionWorker bounded queue",
+      scope: "PDV_QuestReactionRuntime bounded queue",
       trigger: "queued quest-reaction jobs",
       frequency: "0.1-second worker only while runnable work is pending",
-      externalCallCost: `${worker?.externalCallCost.estimatedStaticCallSites ?? 0} static cross/native-style call sites`,
-      evidence: "Static performance audit passes; no current runtime FIFO markers exist in the inspected log.",
+      externalCallCost: `${questReactionRuntime?.externalCallCost.estimatedStaticCallSites ?? 0} static cross/native-style call sites`,
+      evidence: "The V3 static architecture audit and deterministic characterization pass; fresh-game FIFO markers remain open.",
       fix:
-        "Keep the bounded worker. Compact no-op/unreachable cells at ingress only if controlled runtime jobs exceed two seconds or delivery is incomplete.",
-      releaseLane: "retain in 1.0.4; redesign only on runtime failure",
+        "Keep the bounded runtime and its single scheduler. Revisit native implementation only after measured Papyrus failure.",
+      releaseLane: "V3 Slice 1B; fresh-game runtime proof open",
       requiredProof:
         "Four controlled jobs complete FIFO with matching toast/Book entries, no toast later than two seconds, then organic MQ106 routing.",
-      status: "static clean; runtime proof open",
+      status: "V3 runtime extracted; fresh-game proof open",
     },
     {
       id: "PDV-OPT-PKG-001",

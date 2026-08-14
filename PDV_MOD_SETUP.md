@@ -569,9 +569,58 @@ Phase 10 Dunmer substrate proof-graduation is closed as of 2026-05-24. The count
 
 Current remap note (main-quest expansion 2026-07-15): source tranches through T11 compile to 1978 cells / 172 quest keys / 134 watched quests / 45 deity names / 26 faucet acts. Use `node .\tools\pdv_quest_tranche_merge.mjs`, then `node .\tools\pdv_main_quest_full_coverage_audit.mjs --json`, then the formal-offer/remap/signal-floor gates before claiming source/readback readiness. For the representative smoke set, run `node .\tools\pdv_signal_floor_smoke_gate.mjs --json`; use `--write-ledger` to regenerate `PDV_SignalFloorSmokeLedger.{md,json}` after source, runtime JSON, or Papyrus log evidence changes. The Debug: State & Rewards MCM page has a `Signal-floor smoke` controlled route selector backed by `PDV__ManagerQuest.DebugRunSignalFloorSmokeScenario`, but those routes remain backend/log convenience only. Green source/readback gates still do not prove runtime-route, Active Effects, Book of Days, Survey/status, Prisma/notification, save/load stack behavior, or the expanded Paarthurnax/main-quest surface; use `references\authoring\PDV_1_0_CoTest_Runbook_2026-07-10.md` for live tester/Codex steps.
 
-Quest-reaction delivery is bounded by the Start-Game-Enabled `PDV_QuestReactionWorker` quest. `ApplyQuestReaction` snapshots and enqueues one logical stage reaction. New 1.0.4 jobs compact unreachable/zero-value base cells and inactive meta slots at ingress, persist only runnable rows plus source/skipped/meta counts and ingress-build timing, and then apply at most two reactions every `0.1` seconds. Already-saved jobs without the additive `Compacted` key retain the legacy worker-side cheap-skip path. After the row stream drains, the worker performs one aggregate, curse/reward reconciliation, panel refresh, toast, and Book of Days beat. The Papyrus optimisation audit classified the former synchronous fan-out as **broken** (a 45-cell stage could monopolise the VM), repeated per-cell traces/finalisation as **suboptimal**, and the EventBus/PlayerEvents event-driven ingress as **clean**. Run `node .\tools\pdv_quest_reaction_performance_audit.mjs` for the source contract and `node .\tools\pdv_quest_reaction_runtime_check.mjs --max-job-ms 2000` after a live sweep. The checker treats paired save-load freeze/thaw lifecycle as an observation; explicit stack dumps, frozen-stack markers, broad-scope aborts, incomplete jobs, overflow, and over-limit START-to-COMPLETE timings remain failures. The performance MCM control deliberately queues MQ101/105/106/206 through manager routes only; never use `setstage MQ106 200` on a test save. Runtime proof still requires a fresh Skyrim relaunch, queue lifecycle log, one visible final toast/Book beat per job, and a save/load resume check.
+Quest-reaction delivery in the public 1.5 line is bounded by the legacy
+`PDV_QuestReactionWorker` implementation. That line remains the behavior oracle
+for existing saves: it compacts non-runnable rows at ingress, applies at most two
+reactions every `0.1` seconds, and emits one final aggregate surface.
 
-The ground-up V3 Quest Reaction contract lives in `references\authoring\PDV_V3Slice1QuestReaction.manifest.json`. Slice 1A changes authority and records the named characterization contract plus static structural checks; it does not claim executable case or runtime proof. The current worker/manager runtime remains the behavior oracle. Slice 1B adds executable behavior fixtures and repurposes the existing worker quest rather than creating another quest or timer, uses new `PDV.V3.QR.*` persistence keys, and is fresh-game-only. The 1.5 queue keys and script identity are not migrated into V3.
+The ground-up V3 Quest Reaction contract lives in
+`references\authoring\PDV_V3Slice1QuestReaction.manifest.json`. Slice 1B now
+runs all eight deterministic parity cases and replaces--not wraps--the legacy
+implementation. The existing `0716DF:Devotion.esp` quest hosts
+`PDV_QuestReactionRuntime`; Runtime owns qualified catalog resolution,
+duplicate suppression, `PDV.V3.QR.*` FIFO state, bounded processing, resume,
+cleanup, and status. Manager owns scoring/presentation through a narrow callback
+seam. EventBus and MCM target Runtime directly, while PlayerEvents configures it
+on alias init/load. The 1.5 queue keys and Worker identity are intentionally not
+migrated because V3 is new-game-only.
+
+Run `node .\tools\pdv_quest_reaction_characterization.mjs` and
+`node .\tools\pdv_quest_reaction_performance_audit.mjs` for deterministic
+and static proof. Then run
+`node .\tools\pdv_quest_reaction_runtime_check.mjs --max-job-ms 2000` after a
+fresh Skyrim sweep. Runtime acceptance still requires FIFO lifecycle markers,
+one visible final toast/Book beat per accepted job, and a mid-job save/load
+resume. Consolidated catalog v2 and semantic-event adapters are a later Slice 1
+data/build tranche.
+
+The 2026-08-14 fresh-game canary passed qualified ingress, five complete queue
+lifecycles, the four-job FIFO sweep, four Book of Days entries, and reload after
+the queue had already drained. Re-run that captured shape with
+`node .\tools\pdv_quest_reaction_runtime_check.mjs --expected-sequence
+"Skyrim.esm|210731|150,Skyrim.esm|148154|160,Skyrim.esm|207142|200,Skyrim.esm|221587|220"
+--max-job-ms 10000`. Do not treat this as the pending-work reload test: a
+mid-queue save/load must still emit `RESUME` and drain in FIFO order. The same
+canary exposed two separate player-surface defects now owned by the stacked
+canary-fix branch: Old Ways deities leaked through the Nine Divines baseline,
+and four persistent Book entries produced only one visibly observed toast.
+
+Slice 1B compile/readback closeout (2026-08-13) used:
+
+```powershell
+node .\tools\pdv_compile.mjs --script PDV_QuestReactionRuntime --script PDV__ManagerQuest --script PDV_EventBus --script PDV_PlayerEvents --script PDV_MCM --skip-verify
+node .\tools\pdv_compile_inventory_audit.mjs
+node .\tools\pdv_quest_reaction_performance_audit.mjs --self-test
+```
+
+The compile produced 0 errors and 0 warnings for all five scripts; inventory is
+100/100. `housecarl_load_order_status(profile="Devotion Dev",
+lookup="Devotion.esp")` first confirmed the Anvil instance and active framework.
+Direct `housecarl_read_record` calls for `0716DF`, `00C325`, `046AF7`,
+and `03AFBE` in `Devotion.esp` confirmed the repurposed Runtime host plus its
+Manager/EventBus/MCM bindings. The V1 fallback remains exact-catalog-scoped but
+is not the v2 collision proof: `same-local-form-id-in-two-plugins` stays open
+until the next catalog/build slice and a fresh-game runtime pass.
 
 `tools\pdv_skyrim_refs_bridge.mjs` is a read-only lookup bridge into the neutral `dunhamma/SkyrimGamePlayReferences` repo. Set `SKYRIM_GAMEPLAY_REFERENCES_ROOT` when the clone is not under `scratch\SkyrimGamePlayReferences`. Use it to list or search broad reference tables such as reverse keywords, faction relationships, condition-bearing effects, cells, containers/furniture, enchantments, leveled lists, FormLists, shouts, and worldspaces. It does not copy data into PDV or replace local xEdit/CK verification. Bridge rules live in `references\vanilla-gameplay\PDV_SkyrimGamePlayReferences_Bridge.md`.
 

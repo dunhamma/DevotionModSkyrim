@@ -1,0 +1,48 @@
+{
+  "schema": "pdv.quest-reaction.characterization.v1",
+  "id": "save-load-mid-job-resume",
+  "config": {
+    "maxPending": 128,
+    "workItemsPerTick": 2,
+    "duplicateWindowDays": 0.02
+  },
+  "steps": [
+    {
+      "type": "submit-quest-stage",
+      "key": "Skyrim.esm|00SAVE|70",
+      "logicalEventId": "case.save-load",
+      "gameDay": 70.0,
+      "rows": [
+        { "deityId": "Mara", "valence": "+", "intensity": "small", "magnitude": "small", "tag": "row_1", "appliedAmount": 0.4 },
+        { "deityId": "Arkay", "valence": "+", "intensity": "small", "magnitude": "small", "tag": "row_2", "appliedAmount": 0.4 },
+        { "deityId": "Namira", "valence": "-", "intensity": "small", "magnitude": "small", "tag": "row_3", "appliedAmount": -0.4 }
+      ],
+      "metaRows": []
+    },
+    { "type": "tick" },
+    { "type": "save-load" },
+    { "type": "drain" }
+  ],
+  "expected": {
+    "submissions": [
+      { "key": "Skyrim.esm|00SAVE|70", "status": "accepted", "jobId": "v3qr_1" }
+    ],
+    "applied": [
+      "Mara|+|small|small|row_1",
+      "Arkay|+|small|small|row_2",
+      "Namira|-|small|small|row_3"
+    ],
+    "startedJobIds": ["v3qr_1"],
+    "finalizations": [
+      { "key": "Skyrim.esm|00SAVE|70", "logicalEventId": "case.save-load", "appliedRows": 3, "positiveRows": 2, "negativeRows": 1, "surfaceKind": "mixed", "lead": "positive", "prismaToasts": 1, "bookOfDaysEntries": 1 }
+    ],
+    "slices": [
+      { "jobId": "v3qr_1", "applied": ["Mara|+|small|small|row_1", "Arkay|+|small|small|row_2"], "finalized": false },
+      { "jobId": "v3qr_1", "applied": ["Namira|-|small|small|row_3"], "finalized": true }
+    ],
+    "rejections": [],
+    "cleanedJobIds": ["v3qr_1"],
+    "resumeCount": 1,
+    "queueDepth": 0
+  }
+}

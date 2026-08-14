@@ -18,6 +18,7 @@ Scriptname PDV_MCM extends SKI_ConfigBase
 
 PDV__ManagerQuest Property PDV_Manager Auto
 PDV_EventBus Property PDV_EventBusService Auto
+PDV_QuestReactionRuntime Property PDV_QuestReactionRuntimeService Auto
 PDV_ModePreset Property PDV_ModePresetRef Auto
 FormList Property PDV_FLST_AllDeities Auto
 FormList Property PDV_FLST_RepTracks_All Auto
@@ -1143,8 +1144,8 @@ Function OnOptionSelect(Int a_option)
     endIf
 
     if a_option == _oidReloadQuestMatrix
-        if PDV_Manager
-            ShowMessage(PDV_Manager.DebugReloadQuestMatrix(), False, "$OK", "")
+        if PDV_QuestReactionRuntimeService
+            ShowMessage(PDV_QuestReactionRuntimeService.DebugReloadCatalog(), False, "$OK", "")
         endIf
         return
     endIf
@@ -2801,8 +2802,8 @@ Function RunSignalFloorSmokeScenario()
 EndFunction
 
 String Function GetQuestReactionQueueStatusLabel()
-    if PDV_Manager
-        return PDV_Manager.GetQuestReactionQueueStatus()
+    if PDV_QuestReactionRuntimeService
+        return PDV_QuestReactionRuntimeService.GetStatusLine()
     endIf
     return "Unavailable"
 EndFunction
@@ -2812,8 +2813,12 @@ Function RunQuestReactionPerformanceSweep()
         ShowMessage("Devotion is still starting up.", False, "$OK", "")
         return
     endIf
+    if !PDV_QuestReactionRuntimeService
+        ShowMessage("Quest Reaction runtime is unavailable.", False, "$OK", "")
+        return
+    endIf
     if ShowMessage("Queue the controlled Quest Reaction Performance Sweep? It changes piety/state on this save. Capture Prisma and Book of Days separately; reopen Book of Days after completion if it was already open.", True, "$Yes", "$No")
-        ShowMessage(PDV_Manager.DebugQueueQuestReactionPerformanceSweep(), False, "$OK", "")
+        ShowMessage(PDV_QuestReactionRuntimeService.DebugQueuePerformanceSweep(), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction

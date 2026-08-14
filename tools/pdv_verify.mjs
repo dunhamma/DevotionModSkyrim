@@ -1453,7 +1453,7 @@ class Verifier {
       // Bounded quest-reaction delivery, including the direct-fan-out registry
       // (tools/pdv_qr_direct_fanout.json). Default-on with no opt-in flag, per the
       // 2026-07-07 declaration-gate ruling: an opt-in flag nobody passes is how a
-      // whole class hides. This gate is why a synchronous burst outside the worker
+      // whole class hides. This gate is why a synchronous burst outside the Runtime
       // queue can no longer pass review unregistered.
       ["Quest-reaction performance contract", "pdv_quest_reaction_performance_audit.mjs"],
     ];
@@ -9207,38 +9207,39 @@ class Verifier {
   // matrix path must carry the "../StorageUtilData/..." prefix. Without it the file silently never
   // loads -- no error, no log line -- and every reaction row inside it quietly stops firing.
   //
-  // 2026-08-07: this used to pin a single hardcoded second channel, QUEST_REACTION_MATRIX_FILE_ARR.
-  // That channel was replaced by a folder seam: PDV_PlayerEvents scans
-  // QUEST_REACTION_CHANNEL_FOLDER, registers every JSON it finds, and caches the paths in
-  // PDV.QR.ChannelFiles for the manager's resolver. Mod-specific rows now ship WITH their patch
-  // rather than inside core, which is why the ARR names are absent from the core matrix.
+  // V3 Slice 1B moves discovery and cache ownership into PDV_QuestReactionRuntime. PlayerEvents
+  // consumes the runtime-owned PDV.V3.QR.ChannelFiles list only to register engine hooks; Manager
+  // retains the core path solely for its non-queued faucet/scoring policy.
   //
   // The guard MOVES with the mechanism rather than dying with the constant: 39 channel files
   // (~4.3 MB) ship in the ARR patch hub today, and all of them depend on that "../" resolving.
-  // Note the asymmetry -- the folder constant lives in PDV_PlayerEvents ONLY (the manager consumes
-  // the cached StringList instead), so asserting it in both scripts would fail immediately.
+  // The folder constant and scan must remain together on Runtime. A scan in PlayerEvents or a
+  // channel-list dependency in Manager is an ownership regression.
   checkQuestMatrixPapyrusUtilPaths() {
     const expectedCore = "String Property QUEST_REACTION_MATRIX_FILE = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix\" AutoReadOnly";
     const unsafeCore = "String Property QUEST_REACTION_MATRIX_FILE = \"PlayerDevotion/PDV_QuestReactionMatrix\" AutoReadOnly";
     const expectedChannelFolder = "String Property QUEST_REACTION_CHANNEL_FOLDER = \"../StorageUtilData/PlayerDevotion/Channels\" AutoReadOnly";
     const unsafeChannelFolder = "String Property QUEST_REACTION_CHANNEL_FOLDER = \"PlayerDevotion/Channels\" AutoReadOnly";
 
-    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV__ManagerQuest", [
-      expectedCore,
-      // The manager's half of the seam: it must still read the registered channel list, or every
-      // per-mod channel resolves to nothing while core keeps working and the loss stays invisible.
-      "PDV.QR.ChannelFiles",
-    ]);
-    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV_PlayerEvents", [
+    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV__ManagerQuest", [expectedCore]);
+    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV_PlayerEvents", [expectedCore]);
+    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV_QuestReactionRuntime", [
       expectedCore,
       expectedChannelFolder,
-      "RegisterQuestReactionChannelFolder",
+      "Function RefreshCatalogSources()",
+      "JsonUtil.JsonInFolder(QUEST_REACTION_CHANNEL_FOLDER)",
+      "PO3_Events_Alias.RegisterForQuestStage(_questStageReceiver, sourceQuest)",
+      "PDV.V3.QR.ChannelFiles",
     ]);
     this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV__ManagerQuest", [
       unsafeCore,
       unsafeChannelFolder,
     ]);
     this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV_PlayerEvents", [
+      unsafeCore,
+      unsafeChannelFolder,
+    ]);
+    this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV_QuestReactionRuntime", [
       unsafeCore,
       unsafeChannelFolder,
     ]);

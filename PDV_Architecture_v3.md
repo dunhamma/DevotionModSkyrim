@@ -1,13 +1,16 @@
 # PDV Architecture v3 - Forward Plan
 
-Last revised: 2026-08-13 AEST (ground-up V3 Slice 1A foundation)
+Last revised: 2026-08-13 AEST (ground-up V3 Slice 1B runtime extraction)
 Status: **V3 Preflight complete. V3 Structural Skeleton complete. V3 Pattern Proving normal-play ingress closeout complete. Phase 7 is fully closed. Phase 8 Imperial-first reputation track closeout is fully runtime-proven. Phase 9 Bosmer path closeout is fully runtime-proven. Phase 10 Dunmer ancestor substrate proof-graduation is runtime-proven. Phase 13 Hircine/Nord Daedric pilot, Khajiit focused emphasis, Phase 14 formal commitment, Phase 15 shared curse-state handling, Phase 16 generic neglect selection, Phase 17 decay, Phase 18A/B player status/Nord pilot, Phase 19 live generated patch closeout, the Phase 11 Arngeir/Kynareth privilege pilot, and the Phase 12 contextual favor pilot are proven/closed at their required gates. Phase 20 now owns the full-roster 1.0 content target: every locked race-architecture god and all sixteen Skyrim-present Daedric Prince surfaces must be content-ready for every race, with `references/authoring/PDV_DeityCoverageMatrix.json` and `--strict-phase20-roster` as the roster authority gate. The first Altmer Phase 20 runtime lane is source-scaffolded, compile-verified, crisis-record-wired, has the first two Altmer favor spell records wired, has four Altmer ACTI trigger proof base records wired for crisis, Lorkhan pressure, dawn steadiness, and orthodox cost, and now has Altmer Exiled vampire / werewolf halt manager source plus three `MESG` records wired to `PDV__ManagerQuest`; its four QASmoke proof references read back cleanly. Argonian, Orc, Redguard, Bosmer, and Khajiit have also crossed into source/record-wired proof slices, and all 30 Phase 20 proof references are now QASmoke-placed with helper/readback proof. Runtime proof and final immersive world placement remain open; `tools/pdv_phase20_runtime_check.mjs` and `references/authoring/PDV_Phase20_QASmokeRuntimeProof_Runbook.md` define the counted route-log, Survey/status, immersion, negative-hook, and anti-farm proof lane. `references/authoring/PDV_PreBetaRaceScalingSpine.md` and `PDV_PreBetaRaceGateLedger.md` now define the internal pre-beta scaling spine and all-race evidence ledger: Altmer active spine, Khajiit first contrast, Argonian second contrast, Orc / Redguard / Bosmer P1 packets, and Breton / Dunmer / Imperial / Nord P2 audit-only packets. The race gameplay audit now treats immersion as an explicit reward-budget axis, and `--strict-phase20-race-costing` enforces `immersionProof` blocks for all Phase 20 race-costing manifests. The current Phase 20 Altmer/race-costing gate is clean again after content-lock row reconciliation; the remaining warning is the existing unnamed CK-authored INFO record class. Phase 21 is the Authoria-first compatibility package lane because compatibility testing must wait until the mod's full content surface is stable enough to test against modlists.** v2 (Phases 0-6) is closed. Preflight script/tooling, framework record wiring, strict verifier gate, and clean-start smoke are complete. The broad dev-only structural scaffold is now merged, strict-verifier clean, and runtime-smoked. Pattern Proving now has live Imperial/Khajiit proof plus Slice 1 runtime proof for Dunmer portable/private shrine practice, Bosmer Green Pact violation, and Hircine hunt rite through normal-play receiver records. Phase 7 now has counted runtime proof for PO3 shout ingress, manager/EventBus shout routing, deity-side shout anti-farm guards, the hidden Talos shrine reference contract, and the final Civil War compliance/defiance one-shot hooks. Phase 8 now has counted runtime proof for committed-state lock-in, extreme-band gate behavior, committed-state multiplier composition, and save/load persistence on the ConcordatStanding pilot. Phase 9 runtime proof covered setup, all five proof-surface routes, path offers, confirmation-rite switching, Old Contract re-entry, PactBound/compliance separation, forced reckoning `Renounce`, forced reckoning `Recommit`, and save/load persistence, with the full strict gate clean at `PASS=808, WARN=0, FAIL=0, INFO=28`. Phase 10 runtime proof covered a fresh Dunmer baseline, private/home shrine route `31`, portable shrine route `30`, substrate-only movement to `DunmerAncestor=metric=13.000000; tier=1; prayers=1; homes=1`, patron-piety separation, save/load persistence, and a clean strict Phase 10 gate at `PASS=847, WARN=0, FAIL=0, INFO=28`; the next-packet helper later repaired portable/private cooldown-key drift and strict Phase 10 now checks distinct keys. Phase 13 runtime proof now covers the Hircine negative gate before commitment-signal day three, Seeker and Devoted price activation on the multi-day rite cadence, werewolf curse-entry pressure, cure-started residue, renounce reset plus residue, and the vampire negative path. The Khajiit runtime proof still covers Khenarthi then Azurah focus with save/load persistence. Phase 14 runtime proof now also covers Kyne offer seed/evaluate, the historical Not Yet / Refuse / Accept branches, and accepted-patron persistence; current source supersedes the old 7/14-day reoffer cooldown with one offer per qualification, lapse-and-rebuild reoffer, and per-deity terminal refusal. Phase 15 runtime proof now covers the shared werewolf/vampire/none curse seam plus live Hircine curse-entry and werewolf-cure traces. Phase 16 runtime proof now covers active-Kyne low-piety neglect selection, Kyne neglect-spell application, and broad-worship suppression clearing the active neglect set on re-evaluation. Phase 17 runtime proof now covers grace, eligible decay, same-day guard, broad-worship reduced decay, active-patron skip, non-patron drift, and Devoted/Champion floors. Phase 18 runtime proof now covers the Player page, Developer Options persistence, Survey broad/focused states, Hircine/werewolf tension, vampire suppression/cure scar, save/load persistence, and positive/negative dialogue availability for Froki, Heimskr, Andurs, and Aela. The current combined Phase 18/Nord/Phase 19 strict gate is clean at `PASS=1208, INFO=28`, with no `FAIL`, `WARN`, or `TODO`. Authoring infrastructure has one proof-ledger-supported CKPE creation surface, `glob.duplicate_create`, a reusable dialogue-v1 manifest/readback proof lane for CK-authored dialogue scaffolding, and an active generated classification patch for approved core vanilla/DLC rules; this does not broaden generated dialogue or generic gameplay authoring support.
 
 Ground-up rebuild status: **Slice 1A Quest Reaction authority and compile
-inventory are complete, and the named behavior-characterization contract is
-recorded with static structural checks. Slice 1B executable case fixtures,
-runtime extraction, direct houseCARL VMAD repurposing, and fresh-game proof
-remain open.**
+inventory are complete. Slice 1B now has executable deterministic fixtures for
+all eight named behavior cases, the queue/catalog/scheduler implementation is
+owned by `PDV_QuestReactionRuntime`, and direct houseCARL readback confirms the
+existing `0716DF:Devotion.esp` host was repurposed with no new quest or script
+instance. The five touched scripts compile with zero errors/warnings. Fresh-game
+queue, save/load, and player-surface proof remain open; consolidated catalog v2
+and semantic-event adapters remain later Slice 1 work.**
 
 Current v3.103 addendum: **1.0.4 is shipped and public** (2026-07-27, tag `v1.0.4`,
 `Devotion-1.0.4-20260727.zip`), the first public build since 1.0.2 and the first carrying
@@ -921,8 +924,53 @@ interface, schema, retirement, characterization, and exit-gate authority.
 Foundation work must make `PDV_ReleasePayload.manifest.json` the single shipped
 Papyrus compile inventory, record the current behavior cases and static
 invariants before replacement, and keep generated `dist` content output-only.
-Executable behavior fixtures, runtime extraction, and direct houseCARL VMAD
-repurposing belong to Slice 1B, after the foundation gates pass.
+Slice 1B executes the eight behavior cases through
+`tools/pdv_quest_reaction_characterization.mjs` before ownership moves. These
+fixtures are an interface-level deterministic oracle, not Skyrim proof. Runtime
+extraction then replaces the old Worker script rather than wrapping it:
+`PDV_QuestReactionRuntime` owns source-qualified lookup, duplicate suppression,
+`PDV.V3.QR.*` FIFO persistence, bounded slices, cleanup, scheduling, and status.
+`PDV__ManagerQuest` retains scoring and presentation behind six narrow
+callbacks. EventBus submits directly to Runtime; PlayerEvents configures/resumes
+it; MCM reads Runtime status and invokes Runtime-owned controlled probes.
+
+`housecarl_load_order_status(profile="Devotion Dev", lookup="Devotion.esp")`
+first confirmed the Anvil instance, `Devotion Dev` profile, and active
+`Devotion.esp`. Direct houseCARL readback on 2026-08-13 then confirms
+`0716DF:Devotion.esp` remains
+Start-Game-Enabled, now attaches `PDV_QuestReactionRuntime`, and retains its
+`PDV_Manager -> 00C325:Devotion.esp` binding. Manager, EventBus, and MCM bind
+`PDV_QuestReactionRuntimeService -> 0716DF:Devotion.esp`. This is record and
+compile proof, not fresh-game runtime proof. The current V1 file layout remains
+a transitional catalog input; the resolver now validates plugin plus local
+FormID before accepting a cell, while the deterministic two-file catalog v2
+compiler remains the next data/build slice.
+
+Slice 1B closeout evidence is reproducible through these exact surfaces:
+
+- `node .\tools\pdv_quest_reaction_characterization.mjs` -- all eight fixtures PASS.
+- `node .\tools\pdv_quest_reaction_performance_audit.mjs` and `--self-test` -- 21 live assertions plus nine negative mutations PASS.
+- `node .\tools\pdv_compile.mjs --script PDV_QuestReactionRuntime --script PDV__ManagerQuest --script PDV_EventBus --script PDV_PlayerEvents --script PDV_MCM --skip-verify` -- each script compiles with 0 errors and 0 warnings.
+- After the load-order confirmation above, direct `housecarl_read_record` on `0716DF`, `00C325`, `046AF7`, and `03AFBE` in `Devotion.esp` proves the Runtime host and its Manager/EventBus/MCM VMAD bindings. This is readback, not Skyrim execution.
+
+The current V1 JSON cannot encode two plugins sharing the same local FormID in
+one file. Runtime therefore binds a quest to one exact source catalog and prefers
+the fully-qualified v2 prefix, but permits the old `localFormId|stage` prefix only
+inside that bound catalog. The cross-plugin collision acceptance case is still
+open and belongs to the consolidated catalog-v2 slice; Slice 1B does not claim it.
+
+The first fresh-game canary on 2026-08-14 proved qualified quest ingress and
+five complete `ENQUEUE -> START -> COMPLETE` lifecycles. The controlled
+four-job performance sweep preserved FIFO order, wrote four persistent Book of
+Days entries, and produced no overflow, stack-dump, frozen-stack, or
+`BROAD_SCOPE_ABORT` marker. Reloading after the queue had drained was clean.
+This is partial runtime-route proof, not Slice 1B closure: a save made while work
+is still pending must still prove `RESUME`, only one of the four expected toasts
+was visibly observed, and the canary exposed pre-existing Nord baseline leakage
+(Old Ways deities were scored and surfaced while Nine Divines was selected).
+The V3 runtime-log checker now consumes the real qualified key and `v3qr_N`
+marker shape; selected-lane and toast-cardinality corrections belong to the
+stacked canary-fix slice rather than the strict-parity extraction.
 
 ---
 

@@ -1,0 +1,74 @@
+{
+  "schema": "pdv.quest-reaction.characterization.v1",
+  "id": "single-runnable-cell",
+  "config": {
+    "maxPending": 128,
+    "workItemsPerTick": 2,
+    "duplicateWindowDays": 0.02
+  },
+  "steps": [
+    {
+      "type": "submit-quest-stage",
+      "key": "Skyrim.esm|000123|10",
+      "logicalEventId": "case.single",
+      "gameDay": 10.0,
+      "rows": [
+        {
+          "deityId": "Mara",
+          "valence": "+",
+          "intensity": "small",
+          "magnitude": "small",
+          "tag": "aid",
+          "appliedAmount": 0.4
+        }
+      ],
+      "metaRows": []
+    },
+    {
+      "type": "drain"
+    }
+  ],
+  "expected": {
+    "submissions": [
+      {
+        "key": "Skyrim.esm|000123|10",
+        "status": "accepted",
+        "jobId": "v3qr_1"
+      }
+    ],
+    "applied": [
+      "Mara|+|small|small|aid"
+    ],
+    "startedJobIds": [
+      "v3qr_1"
+    ],
+    "finalizations": [
+      {
+        "key": "Skyrim.esm|000123|10",
+        "logicalEventId": "case.single",
+        "appliedRows": 1,
+        "positiveRows": 1,
+        "negativeRows": 0,
+        "surfaceKind": "positive",
+        "lead": "positive",
+        "prismaToasts": 1,
+        "bookOfDaysEntries": 1
+      }
+    ],
+    "slices": [
+      {
+        "jobId": "v3qr_1",
+        "applied": [
+          "Mara|+|small|small|aid"
+        ],
+        "finalized": true
+      }
+    ],
+    "rejections": [],
+    "cleanedJobIds": [
+      "v3qr_1"
+    ],
+    "resumeCount": 0,
+    "queueDepth": 0
+  }
+}

@@ -26,6 +26,7 @@ const REPO_PRISMA_APP = path.join(REPO_PRISMA_VIEW_DIR, "app.js");
 const REPO_PRISMA_STYLE = path.join(REPO_PRISMA_VIEW_DIR, "styles.css");
 const REPO_PRISMA_INDEX = path.join(REPO_PRISMA_VIEW_DIR, "index.html");
 const REPO_MANAGER_SOURCE = path.join(REPO_ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
+const REPO_QUEST_REACTION_RUNTIME_SOURCE = path.join(REPO_ROOT, "live-source", "Scripts", "Source", "PDV_QuestReactionRuntime.psc");
 const BRIDGE_PSC_LIVE = path.join(DEVOTION_SOURCE, "PDV_PrismaBridge.psc");
 const BRIDGE_PSC_REPO = path.join(REPO_ROOT, "native", "DevotionPrismaBridge", "mod", "Scripts", "Source", "PDV_PrismaBridge.psc");
 
@@ -232,17 +233,24 @@ function verifyPrismaAssetCacheContract() {
     return;
   }
   const manager = read(REPO_MANAGER_SOURCE);
-  const patchSourceManagerTokens = [
+  if (!exists(REPO_QUEST_REACTION_RUNTIME_SOURCE)) {
+    fail("Repository Quest Reaction runtime source is missing for the PatchHub source contract.", REPO_QUEST_REACTION_RUNTIME_SOURCE);
+    return;
+  }
+  const runtime = read(REPO_QUEST_REACTION_RUNTIME_SOURCE);
+  const patchSourceRuntimeTokens = [
     'JsonUtil.GetStringValue(matrixFile, "sourceMod")',
     'prefix + "SourceModName"',
+  ];
+  const patchSourceManagerTokens = [
     'SendPrismaToastWithSource(',
     '"PDV.Diegetic.Journal.Sources"',
     'JsonSafeString(sourceModName)',
   ];
-  if (patchSourceManagerTokens.some((token) => !manager.includes(token))) {
-    fail("Manager must carry PatchHub sourceMod metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
+  if (patchSourceRuntimeTokens.some((token) => !runtime.includes(token)) || patchSourceManagerTokens.some((token) => !manager.includes(token))) {
+    fail("Runtime and Manager must carry PatchHub sourceMod metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
   } else {
-    pass("Manager carries PatchHub sourceMod metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
+    pass("Runtime and Manager carry PatchHub sourceMod metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
   }
   const culturalManagerTokens = [
     'return "cultural"',
