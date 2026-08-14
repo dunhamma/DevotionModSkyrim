@@ -18,10 +18,12 @@ Float Property QUEST_REACTION_DUPLICATE_WINDOW_DAYS = 0.02 AutoReadOnly
 String Property QUEUE_IDS_KEY = "PDV.V3.QR.Queue.JobIds" AutoReadOnly
 String Property QUEUE_FORMS_KEY = "PDV.V3.QR.Queue.SourceForms" AutoReadOnly
 String Property QUEUE_SEQUENCE_KEY = "PDV.V3.QR.Queue.Sequence" AutoReadOnly
+String Property QUEUE_UPDATE_ARMED_KEY = "PDV.V3.QR.Queue.UpdateArmed" AutoReadOnly
 String Property JOB_PREFIX = "PDV.V3.QR.Job." AutoReadOnly
 String Property CHANNEL_FILES_KEY = "PDV.V3.QR.ChannelFiles" AutoReadOnly
 
 Alias _questStageReceiver = None
+Bool _sliceActive = False
 
 Event OnInit()
     Configure(None, False)
@@ -31,11 +33,21 @@ Bool Function Configure(Alias questStageReceiver, Bool fromLoad = False)
     if questStageReceiver
         _questStageReceiver = questStageReceiver
     endIf
+    Bool savedSliceOwnsResume = fromLoad && _sliceActive
+    if fromLoad
+        ; Cancel a saved pending registration before replacing it. If the save
+        ; captured an active OnUpdate stack, that stack owns the cursor and will
+        ; re-arm when it finishes; starting a second chain would replay cells.
+        UnregisterForUpdate()
+        StorageUtil.SetIntValue(None, QUEUE_UPDATE_ARMED_KEY, 0)
+    endIf
     RefreshCatalogSources()
     if fromLoad && HasQueuedQuestReactionJobs()
         TraceQuestReactionQueue("RESUME resumed " + GetStatusLine())
     endIf
-    EnsureQuestReactionQueueRunning()
+    if !savedSliceOwnsResume
+        EnsureQuestReactionQueueRunning()
+    endIf
     return PDV_Manager != None
 EndFunction
 
@@ -252,14 +264,23 @@ String Function DebugQueuePerformanceSweep()
 EndFunction
 
 Function EnsureQuestReactionQueueRunning()
-    if HasQueuedQuestReactionJobs()
+    if HasQueuedQuestReactionJobs() && !_sliceActive && StorageUtil.GetIntValue(None, QUEUE_UPDATE_ARMED_KEY) != 1
+        StorageUtil.SetIntValue(None, QUEUE_UPDATE_ARMED_KEY, 1)
         RegisterForSingleUpdate(QUEST_REACTION_QUEUE_TICK_SECONDS)
     endIf
 EndFunction
 
 Event OnUpdate()
-    if ProcessQuestReactionQueueSlice()
-        RegisterForSingleUpdate(QUEST_REACTION_QUEUE_TICK_SECONDS)
+    StorageUtil.SetIntValue(None, QUEUE_UPDATE_ARMED_KEY, 0)
+    if _sliceActive
+        TraceQuestReactionQueue("OVERLAP suppressed; active slice retains queue ownership")
+        return
+    endIf
+    _sliceActive = True
+    Bool hasMore = ProcessQuestReactionQueueSlice()
+    _sliceActive = False
+    if hasMore
+        EnsureQuestReactionQueueRunning()
     endIf
 EndEvent
 
@@ -588,10 +609,12 @@ Bool Function ProcessQuestReactionQueueSlice()
     while processed < QUEST_REACTION_QUEUE_CELLS_PER_TICK && cellIndex < cellCount
         PDV_Manager.ApplyQueuedQuestReactionCell(deities[cellIndex], valences[cellIndex], intensities[cellIndex], magnitudes[cellIndex], tags[cellIndex], sourceForm)
         cellIndex += 1
+        ; Keep the persisted cursor adjacent to the landed cell. A save may
+        ; suspend this stack, so checkpoint each delivery rather than the slice.
+        StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)
         processed += 1
     endWhile
     PDV_Manager.EndQueuedQuestReactionSlice()
-    StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)
     if cellIndex < cellCount
         return True
     endIf

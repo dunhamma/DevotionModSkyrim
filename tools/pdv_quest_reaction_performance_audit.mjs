@@ -119,6 +119,8 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
   const sources = [runtime, manager, eventBus, playerEvents, mcm].join("\n");
   const processBody = bodyFor(runtime, "ProcessQuestReactionQueueSlice");
   const onUpdate = bodyFor(runtime, "OnUpdate", "Event");
+  const configure = bodyFor(runtime, "Configure");
+  const ensureRunning = bodyFor(runtime, "EnsureQuestReactionQueueRunning");
   const submitQuest = bodyFor(runtime, "SubmitQuestStage");
   const refreshCatalog = bodyFor(runtime, "RefreshCatalogSources");
   const activateCatalog = bodyFor(runtime, "ActivateCatalogSources");
@@ -159,9 +161,21 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
     /QUEST_REACTION_QUEUE_TICK_SECONDS\s*=\s*0\.1\b/i.test(runtime) &&
     /QUEST_REACTION_DUPLICATE_WINDOW_DAYS\s*=\s*0\.02\b/i.test(runtime),
     "runtime.bounds", "Queue ceiling, slice budget, tick, and duplicate window retain parity values.");
-  finding(findings, count(runtime, /RegisterForSingleUpdate\s*\(/gi) === 2 &&
+  finding(findings, count(runtime, /RegisterForSingleUpdate\s*\(/gi) === 1 &&
     !workerExists && !bodyFor(manager, "ProcessQuestReactionQueueSlice"),
     "runtime.single-scheduler", "Only the runtime owns initial and continuation re-arms; the old worker is absent.");
+  const onUpdateClear = onUpdate.indexOf("StorageUtil.SetIntValue(None, QUEUE_UPDATE_ARMED_KEY, 0)");
+  const onUpdateProcess = onUpdate.indexOf("ProcessQuestReactionQueueSlice()");
+  finding(findings,
+    ensureRunning.includes("StorageUtil.GetIntValue(None, QUEUE_UPDATE_ARMED_KEY) != 1") &&
+    ensureRunning.indexOf("StorageUtil.SetIntValue(None, QUEUE_UPDATE_ARMED_KEY, 1)") < ensureRunning.indexOf("RegisterForSingleUpdate(") &&
+    onUpdateClear >= 0 && onUpdateClear < onUpdateProcess &&
+    onUpdate.includes("if _sliceActive") && onUpdate.includes("EnsureQuestReactionQueueRunning()") &&
+    configure.includes("savedSliceOwnsResume = fromLoad && _sliceActive") &&
+    configure.includes("UnregisterForUpdate()") &&
+    configure.includes("StorageUtil.SetIntValue(None, QUEUE_UPDATE_ARMED_KEY, 0)") &&
+    configure.includes("if !savedSliceOwnsResume"),
+    "runtime.single-armed-update-chain", "One armed update chain owns the queue, while a saved active slice retains resume ownership.");
   finding(findings, onUpdate.includes("ProcessQuestReactionQueueSlice()") &&
     !/\b(?:Utility\.)?Wait(?:MenuMode)?\s*\(/i.test(runtime),
     "runtime.nonblocking", "OnUpdate drains one bounded slice and the runtime contains no waits.");
@@ -169,6 +183,15 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
     processBody.includes("CellIndex") && processBody.includes("FinalizeQueuedQuestReaction") &&
     processBody.includes("RemoveHeadJob"),
     "runtime.bounded-finalization", "The persisted head advances under the two-item budget and finalizes once before removal.");
+  const applyCell = processBody.indexOf("PDV_Manager.ApplyQueuedQuestReactionCell(");
+  const advanceCell = processBody.indexOf("cellIndex += 1", applyCell);
+  const checkpointCell = processBody.indexOf('StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)', advanceCell);
+  const advanceBudget = processBody.indexOf("processed += 1", checkpointCell);
+  const loopEnd = processBody.indexOf("endWhile", advanceBudget);
+  finding(findings, applyCell >= 0 && applyCell < advanceCell && advanceCell < checkpointCell && checkpointCell < advanceBudget && advanceBudget < loopEnd &&
+    count(processBody, /StorageUtil\.SetIntValue\(None, prefix \+ "CellIndex", cellIndex\)/g) === 1 &&
+    processBody.indexOf("if cellIndex < cellCount", loopEnd) > loopEnd,
+    "runtime.cell-progress-checkpoint", "Every applied cell advances the persisted cursor before the bounded slice continues or finalizes.");
   finding(findings, submitQuest.includes("QueueQuestReactionJob") &&
     runtime.includes("StorageUtil.StringListAdd(None, QUEUE_IDS_KEY") &&
     runtime.includes("StorageUtil.FormListAdd(None, QUEUE_FORMS_KEY"),
@@ -193,6 +216,13 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
 
   finding(findings, managerCallbacks.every((name) => bodyFor(manager, name)),
     "manager.callback-seam", "Manager exposes only the scoring/final-presentation callback seam needed by the runtime.");
+  const queuedSurface = bodyFor(manager, "AccumulateQueuedQuestReactionSurface");
+  const queuedSurfaceUnique = bodyFor(manager, "QueuedQuestReactionSurfaceHasName");
+  finding(findings, queuedSurface.includes("alreadyListed = QueuedQuestReactionSurfaceHasName(deityName)") &&
+    queuedSurface.includes("if !alreadyListed") &&
+    queuedSurfaceUnique.includes("_qrQueueSurfPosNamesCsv") && queuedSurfaceUnique.includes("_qrQueueSurfNegNamesCsv") &&
+    queuedSurfaceUnique.includes("StringUtil.Find"),
+    "manager.unique-final-surface", "A logical deed lists each deity once; magnitude remains a separate Book rune concern.");
   finding(findings, retiredManager.every((name) => !bodyFor(manager, name)) &&
     !manager.includes("PDV.V3.QR.") && !manager.includes("PDV_QuestReactionWorker"),
     "manager.ownership-retired", "Manager no longer owns catalog, queue, V3 storage, scheduler, or the old worker.");
@@ -247,6 +277,10 @@ function selfTest() {
     ["legacy manager queue owner", { manager: base.manager + "\nFunction QueueQuestReactionJob()\nEndFunction\n" }, "manager.ownership-retired"],
     ["legacy V1 key", { runtime: base.runtime + '\nString legacy = "PDV.QR.Queue.JobIds"\n' }, "runtime.v3-namespace"],
     ["second scheduler", { manager: base.manager + "\nFunction ProcessQuestReactionQueueSlice()\n  RegisterForSingleUpdate(0.1)\nEndFunction\n" }, "runtime.single-scheduler"],
+    ["missing armed update guard", { runtime: base.runtime.replace("StorageUtil.GetIntValue(None, QUEUE_UPDATE_ARMED_KEY) != 1", "True") }, "runtime.single-armed-update-chain"],
+    ["load ignores saved active slice", { runtime: base.runtime.replace("savedSliceOwnsResume = fromLoad && _sliceActive", "savedSliceOwnsResume = False") }, "runtime.single-armed-update-chain"],
+    ["cell checkpoint after slice", { runtime: base.runtime.replace('        StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)\n        processed += 1', '        processed += 1\n    endWhile\n    StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)').replace('    endWhile\n    PDV_Manager.EndQueuedQuestReactionSlice()', '    PDV_Manager.EndQueuedQuestReactionSlice()') }, "runtime.cell-progress-checkpoint"],
+    ["surface deity duplication", { manager: base.manager.replace("Bool alreadyListed = QueuedQuestReactionSurfaceHasName(deityName)", "Bool alreadyListed = False") }, "manager.unique-final-surface"],
     ["missing interface member", { runtime: base.runtime.replace("String Function GetCompatibilityDetail()", "String Function MissingCompatibilityDetail()") }, "runtime.interface"],
     ["EventBus manager ingress", { eventBus: base.eventBus.replace("PDV_QuestReactionRuntimeService.SubmitQuestStage", "PDV_Manager.ApplyQuestReaction") }, "eventbus.direct-ingress"],
     ["Manager V3 storage", { manager: base.manager + '\nString bad = "PDV.V3.QR.Queue.JobIds"\n' }, "manager.ownership-retired"],

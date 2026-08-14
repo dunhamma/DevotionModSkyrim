@@ -2181,29 +2181,42 @@ Function AccumulateQueuedQuestReactionSurface(PDV_DeityBase deity, Float amount,
     if magnitude == "milestone"
         _qrQueueSurfMilestone = True
     endIf
+    Bool alreadyListed = QueuedQuestReactionSurfaceHasName(deityName)
     if amount > 0.0
-        if _qrQueueSurfPosNamesCsv != ""
-            _qrQueueSurfPosNamesCsv = _qrQueueSurfPosNamesCsv + "|"
+        if !alreadyListed
+            if _qrQueueSurfPosNamesCsv != ""
+                _qrQueueSurfPosNamesCsv = _qrQueueSurfPosNamesCsv + "|"
+            endIf
+            _qrQueueSurfPosNamesCsv = _qrQueueSurfPosNamesCsv + deityName
+            _qrQueueSurfPosCount += 1
         endIf
-        _qrQueueSurfPosNamesCsv = _qrQueueSurfPosNamesCsv + deityName
-        _qrQueueSurfPosCount += 1
         if amount > _qrQueueSurfBestPosAmount
             _qrQueueSurfBestPosAmount = amount
             _qrQueueSurfBestPosName = deityName
             _qrQueueSurfBestPosSymbol = GetPrismaSymbolForDeity(deity)
         endIf
     else
-        if _qrQueueSurfNegNamesCsv != ""
-            _qrQueueSurfNegNamesCsv = _qrQueueSurfNegNamesCsv + "|"
+        if !alreadyListed
+            if _qrQueueSurfNegNamesCsv != ""
+                _qrQueueSurfNegNamesCsv = _qrQueueSurfNegNamesCsv + "|"
+            endIf
+            _qrQueueSurfNegNamesCsv = _qrQueueSurfNegNamesCsv + deityName
+            _qrQueueSurfNegCount += 1
         endIf
-        _qrQueueSurfNegNamesCsv = _qrQueueSurfNegNamesCsv + deityName
-        _qrQueueSurfNegCount += 1
         if amount < _qrQueueSurfBestNegAmount
             _qrQueueSurfBestNegAmount = amount
             _qrQueueSurfBestNegName = deityName
             _qrQueueSurfBestNegSymbol = GetPrismaSymbolForDeity(deity)
         endIf
     endIf
+EndFunction
+
+Bool Function QueuedQuestReactionSurfaceHasName(String deityName)
+    if deityName == ""
+        return False
+    endIf
+    String token = "|" + deityName + "|"
+    return StringUtil.Find("|" + _qrQueueSurfPosNamesCsv + "|", token) >= 0 || StringUtil.Find("|" + _qrQueueSurfNegNamesCsv + "|", token) >= 0
 EndFunction
 
 Function FlushQueuedQuestReactionSurface(String sourceModName = "", String reactionKey = "")
