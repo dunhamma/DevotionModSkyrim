@@ -2025,21 +2025,6 @@ Function ResetQuestReactionSurface()
     _qrSurfMilestone = False
 EndFunction
 
-; Neutral compatibility seam for opt-in patch quests. Third-party observers own
-; their source-mod detection, persistence, and semantic mapping; core only owns
-; the standard piety application and the one-toast/one-Book surface contract.
-Function BeginExternalReactionBatch()
-    ResetQuestReactionSurface()
-EndFunction
-
-Function ApplyExternalReaction(String deityName, String valence, String intensity, String magnitude, String sourceTag, Form sourceForm)
-    ApplyDeityReaction(deityName, valence, intensity, magnitude, sourceTag, False, sourceForm)
-EndFunction
-
-Function EndExternalReactionBatch()
-    FlushQuestReactionSurface()
-EndFunction
-
 Function AccumulateQuestReactionSurface(PDV_DeityBase deity, Float amount, String magnitude)
     ; A Daedric Prince stays out of Book-of-Days reaction surfaces (and their paired
     ; toast) until it reaches Seeker (25 piety); a still-uncommitted Prince below that

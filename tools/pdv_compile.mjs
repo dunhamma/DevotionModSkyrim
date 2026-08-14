@@ -30,6 +30,10 @@ const DEVOTION_PEX =
 const TRACKED_SOURCE =
   process.env.PDV_TRACKED_SOURCE_ROOT ||
   path.join(PROJECT_ROOT, "live-source", "Scripts", "Source");
+const EXTRA_IMPORT_ROOTS = String(process.env.PDV_COMPILE_EXTRA_IMPORT_ROOTS ?? "")
+  .split(path.delimiter)
+  .map((root) => root.trim())
+  .filter(Boolean);
 const SKYUI_HEADERS_SOURCE = path.join(PROJECT_ROOT, "tools", "skyui_compile_shim");
 const COMPILER_EXE = path.join(STOCK_GAME, "Papyrus Compiler", "PapyrusCompiler.exe");
 const ASSEMBLER_EXE = path.join(STOCK_GAME, "Papyrus Compiler", "PapyrusAssembler.exe");
@@ -44,6 +48,7 @@ const RELEASE_MANIFEST = path.join(
 
 const IMPORT_ROOTS = [
   DEVOTION_SOURCE,
+  ...EXTRA_IMPORT_ROOTS,
   path.join(ANVIL_ROOT, "mods", "SKSE Script Sources - Compile Only", "scripts", "source"),
   path.join(ANVIL_ROOT, "mods", "PapyrusUtil AE - Scripting Utility Functions", "Scripts", "Source"),
   path.join(ANVIL_ROOT, "mods", "powerofthree's Papyrus Extender", "Source", "scripts"),
