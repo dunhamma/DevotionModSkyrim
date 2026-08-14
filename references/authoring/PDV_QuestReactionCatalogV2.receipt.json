@@ -1,0 +1,17 @@
+{
+  "files": [
+    {
+      "bytes": 1224394,
+      "path": "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionCore.v2.json",
+      "sha256": "2447149741947774f4939475e411085d763bb6643a0e21b37d604b0c2816398b"
+    },
+    {
+      "bytes": 991234,
+      "path": "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json",
+      "sha256": "a8065ea9b974682319562f63119ea0efe7b9f9e57c41daf13aab3b7fa1f14018"
+    }
+  ],
+  "inputSha256": "9b34a91010b86a6a17b1ef552ac53c79a9c29e8850daeba864327aedc769211e",
+  "schema": "pdv.quest-reaction.build-receipt.v1",
+  "treeSha256": "122d33e46049890176c63295a3db23ff229d51caeaa76250d7792a09cdb38b9a"
+}

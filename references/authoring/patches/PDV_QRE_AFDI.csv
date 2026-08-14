@@ -1,0 +1,81 @@
+source_id,event_id,outcome,deity,valence,intensity,magnitude,act_tags
+afdi,artifact_destroyed.00.azura,Destroyed Azura's Star,Azura,-,C,milestone,destroy_reject_daedra:azura
+afdi,artifact_destroyed.00.azura,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:azura
+afdi,artifact_destroyed.00.azura,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:azura
+afdi,artifact_destroyed.01.black_star,Destroyed the Black Star,Azura,+,C,milestone,destroy_profane_artifact:black_star
+afdi,artifact_destroyed.01.black_star,Rejected a profaned Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:azura
+afdi,artifact_destroyed.01.black_star,Rejected a profaned Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:azura
+afdi,artifact_destroyed.02.clavicus_vile,Destroyed Clavicus Vile's artifact,Clavicus Vile,-,C,milestone,destroy_reject_daedra:clavicus_vile
+afdi,artifact_destroyed.02.clavicus_vile,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:clavicus_vile
+afdi,artifact_destroyed.02.clavicus_vile,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:clavicus_vile
+afdi,artifact_destroyed.03.hircine,Destroyed Hircine's artifact,Hircine,-,C,milestone,destroy_reject_daedra:hircine
+afdi,artifact_destroyed.03.hircine,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:hircine
+afdi,artifact_destroyed.03.hircine,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:hircine
+afdi,artifact_destroyed.04.mehrunes_dagon,Destroyed Mehrunes Dagon's artifact,Mehrunes Dagon,-,C,milestone,destroy_reject_daedra:mehrunes_dagon
+afdi,artifact_destroyed.04.mehrunes_dagon,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:mehrunes_dagon
+afdi,artifact_destroyed.04.mehrunes_dagon,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:mehrunes_dagon
+afdi,artifact_destroyed.05.meridia,Destroyed Meridia's artifact,Meridia,-,C,milestone,destroy_reject_daedra:meridia
+afdi,artifact_destroyed.05.meridia,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:meridia
+afdi,artifact_destroyed.05.meridia,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:meridia
+afdi,artifact_destroyed.06.molag_bal,Destroyed Molag Bal's artifact,Molag Bal,-,C,milestone,destroy_reject_daedra:molag_bal
+afdi,artifact_destroyed.06.molag_bal,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:molag_bal
+afdi,artifact_destroyed.06.molag_bal,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:molag_bal
+afdi,artifact_destroyed.07.vaermina,Destroyed Vaermina's artifact,Vaermina,-,C,milestone,destroy_reject_daedra:vaermina
+afdi,artifact_destroyed.07.vaermina,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:vaermina
+afdi,artifact_destroyed.07.vaermina,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:vaermina
+afdi,artifact_destroyed.08.boethiah,Destroyed Boethiah's artifact,Boethiah,-,C,milestone,destroy_reject_daedra:boethiah
+afdi,artifact_destroyed.08.boethiah,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:boethiah
+afdi,artifact_destroyed.08.boethiah,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:boethiah
+afdi,artifact_destroyed.09.hermaeus_mora,Destroyed Hermaeus Mora's artifact,Hermaeus Mora,-,C,milestone,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.09.hermaeus_mora,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.09.hermaeus_mora,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.10.hermaeus_mora,Destroyed Hermaeus Mora's artifact,Hermaeus Mora,-,C,milestone,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.10.hermaeus_mora,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.10.hermaeus_mora,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.11.hermaeus_mora,Destroyed Hermaeus Mora's artifact,Hermaeus Mora,-,C,milestone,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.11.hermaeus_mora,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.11.hermaeus_mora,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.12.hermaeus_mora,Destroyed Hermaeus Mora's artifact,Hermaeus Mora,-,C,milestone,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.12.hermaeus_mora,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.12.hermaeus_mora,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.13.hermaeus_mora,Destroyed Hermaeus Mora's artifact,Hermaeus Mora,-,C,milestone,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.13.hermaeus_mora,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.13.hermaeus_mora,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.14.hermaeus_mora,Destroyed Hermaeus Mora's artifact,Hermaeus Mora,-,C,milestone,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.14.hermaeus_mora,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.14.hermaeus_mora,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.15.hermaeus_mora,Destroyed Hermaeus Mora's artifact,Hermaeus Mora,-,C,milestone,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.15.hermaeus_mora,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.15.hermaeus_mora,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.16.hermaeus_mora,Destroyed Hermaeus Mora's artifact,Hermaeus Mora,-,C,milestone,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.16.hermaeus_mora,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.16.hermaeus_mora,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.17.hermaeus_mora,Destroyed Hermaeus Mora's artifact,Hermaeus Mora,-,C,milestone,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.17.hermaeus_mora,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.17.hermaeus_mora,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:hermaeus_mora
+afdi,artifact_destroyed.18.malacath,Destroyed Malacath's artifact,Malacath,-,C,milestone,destroy_reject_daedra:malacath
+afdi,artifact_destroyed.18.malacath,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:malacath
+afdi,artifact_destroyed.18.malacath,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:malacath
+afdi,artifact_destroyed.19.mephala,Destroyed Mephala's artifact,Mephala,-,C,milestone,destroy_reject_daedra:mephala
+afdi,artifact_destroyed.19.mephala,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:mephala
+afdi,artifact_destroyed.19.mephala,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:mephala
+afdi,artifact_destroyed.20.namira,Destroyed Namira's artifact,Namira,-,C,milestone,destroy_reject_daedra:namira
+afdi,artifact_destroyed.20.namira,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:namira
+afdi,artifact_destroyed.20.namira,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:namira
+afdi,artifact_destroyed.21.peryite,Destroyed Peryite's artifact,Peryite,-,C,milestone,destroy_reject_daedra:peryite
+afdi,artifact_destroyed.21.peryite,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:peryite
+afdi,artifact_destroyed.21.peryite,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:peryite
+afdi,artifact_destroyed.22.sanguine,Destroyed Sanguine's artifact,Sanguine,-,C,milestone,destroy_reject_daedra:sanguine
+afdi,artifact_destroyed.22.sanguine,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:sanguine
+afdi,artifact_destroyed.22.sanguine,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:sanguine
+afdi,artifact_destroyed.23.sheogorath,Destroyed Sheogorath's artifact,Sheogorath,-,C,milestone,destroy_reject_daedra:sheogorath
+afdi,artifact_destroyed.23.sheogorath,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:sheogorath
+afdi,artifact_destroyed.23.sheogorath,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:sheogorath
+afdi,artifact_destroyed.24.nocturnal,Destroyed Nocturnal's artifact,Nocturnal,-,C,milestone,destroy_reject_daedra:nocturnal
+afdi,artifact_destroyed.24.nocturnal,Rejected a Daedric artifact,Stendarr,+,S,small,destroy_reject_daedra:nocturnal
+afdi,artifact_destroyed.24.nocturnal,Rejected a Daedric artifact,Syrabane,+,m,small,destroy_reject_daedra:nocturnal
+afdi,artifact_destroyed.25.auriel_bow,Destroyed Auriel's Bow,Auri-El,-,C,milestone,destroy_sacred_artifact:auriel
+afdi,artifact_destroyed.26.auriel_shield,Destroyed Auriel's Shield,Auri-El,-,C,milestone,destroy_sacred_artifact:auriel
+afdi,artifact_destroyed.28.necromancer_amulet,Destroyed the Necromancer's Amulet,Arkay,+,S,small,destroy_reject_necromancy
+afdi,artifact_destroyed.28.necromancer_amulet,Destroyed the Necromancer's Amulet,Stendarr,+,S,small,destroy_reject_necromancy
+afdi,artifact_destroyed.29.sithis,Destroyed an artifact of Sithis,Sithis,-,C,milestone,destroy_sacred_artifact:sithis
