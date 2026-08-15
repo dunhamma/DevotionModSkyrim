@@ -18,8 +18,9 @@ consolidation is backend-green with one required official catalog and five
 dependency-detected adapters. The combined fresh-game and Authoria smoke remains
 open Slice 1 work. The PapyrusUtil wire-admission defect is repaired and the
 installed Anvil profile preflight is green. The separate bounded-ingress fix is
-backend/static/compile green; corrected MQ102-to-MQ103 scope isolation,
-materialization resume, and player-surface proof remain open.**
+backend/static/compile and runtime-route green, including sub-second organic
+admission and build-stage save/load continuation; its counted manual player-
+surface confirmation remains open.**
 
 Current v3.103 addendum: **1.0.4 is shipped and public** (2026-07-27, tag `v1.0.4`,
 `Devotion-1.0.4-20260727.zip`), the first public build since 1.0.2 and the first carrying
@@ -1068,8 +1069,14 @@ build cursors, sharing the same two-work-item tick budget with later application
 `START` is delayed until an application slice can actually begin, so the lifecycle
 is `ENQUEUE -> BUILD -> START -> COMPLETE`. The Manager scoring and one-final-
 surface callbacks remain unchanged. Static audits and zero-warning targeted
-Runtime/PlayerEvents compilation pass; fresh MQ102-to-MQ103 scope isolation,
-sub-second admission, materialization save-load, and player surfaces remain open.
+Runtime/PlayerEvents compilation pass. The 2026-08-15 organic MQ102 stage-160
+run admitted in `45.013428` ms and completed its ordered lifecycle. A clean
+four-job sweep admitted every job in about 45 ms, saved during job 1 at
+`build=8/45`, resumed with `pending=4`, and drained all four BUILD/START/COMPLETE
+chains in FIFO order with no overflow, stack safety failure, or
+`BROAD_SCOPE_ABORT`. This closes the Runtime-route and build-resume proof; four
+visible toasts and four duplicate-free Book entries in that counted run remain
+manual/player-surface proof.
 
 The first fresh-game canary on 2026-08-14 proved qualified quest ingress and
 five complete `ENQUEUE -> START -> COMPLETE` lifecycles. The controlled
@@ -3484,8 +3491,10 @@ catalog-materialization path inside `OnQuestStageChange` and a resulting
 `BROAD_SCOPE_ABORT`. PlayerEvents now flushes the ordinary broad scope before QR
 submission, while Runtime persists a lightweight header and materializes catalog
 cells through its existing scheduler at the shared two-work-item budget. Static
-audits and targeted compilation pass; fresh overlap and build-resume proof remain
-open.
+audits and targeted compilation pass. Organic admission fell to 45 ms, and a
+clean four-job run resumed from `build=8/45` before draining all jobs in FIFO
+order without a safety marker. Runtime-route/build-resume proof passes; counted
+manual toast and Book confirmation remains open.
 
 ### v3.96 - 2026-07-14 AEST - Pantheon/substrate presentation ratification
 

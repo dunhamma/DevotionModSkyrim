@@ -670,10 +670,14 @@ the existing scheduler materializes catalog cells through persisted build cursor
 at the shared two-work-item tick budget before application starts. PlayerEvents
 flushes the ordinary quest broad scope before this independent submission. This
 fix adds no polling, scheduler, property, VMAD surface, or public Runtime method.
-Backend/static and targeted compile proof pass; re-run organic Before the Storm
-into MQ103 and require admission under 1000 ms with no `BROAD_SCOPE_ABORT`. Save
-during a visible `build=X/Y` status and reload to prove the materialization cursor
-continues before FIFO application.
+Backend/static and targeted compile proof pass. The 2026-08-15 smoke then proved
+organic MQ102 stage-160 admission at `45.013428` ms and an ordered complete
+lifecycle. A clean four-job sweep saved during job 1 at `build=8/45`, resumed
+with `pending=4`, and drained four FIFO BUILD/START/COMPLETE chains; every
+admission was about 45 ms and there was no overflow, stack safety failure, or
+`BROAD_SCOPE_ABORT`. Runtime-route and materialization-resume proof therefore
+pass. Manual confirmation of four visible toasts and four duplicate-free Book
+entries from that counted run remains open.
 
 Slice 1B compile/readback closeout (2026-08-13) used:
 
