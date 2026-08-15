@@ -19,6 +19,7 @@ const MANAGER_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV__M
 const MCM_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_MCM.psc");
 const PLAYER_EVENTS_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_PlayerEvents.psc");
 const EVENT_BUS_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_EventBus.psc");
+const QUEST_REACTION_RUNTIME_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_QuestReactionRuntime.psc");
 const ACTION_ROUTER_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_ActionRouter.psc");
 const DEITY_BASE_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_DeityBase.psc");
 const RUNTIME_LEDGER_PATH = path.join(ROOT, "references", "authoring", "PDV_PantheonSubstrateRuntimeEvidenceLedger.json");
@@ -92,7 +93,7 @@ export function settleReturningBroadAct(value, scratch, currentDay, lastProcesse
   return foldSignedScratch(Math.max(0, value - pastDecayDays * 0.1), scratch);
 }
 
-export function evaluate({ contract, managerSource, playerEventsSource, eventBusSource, actionRouterSource, deityBaseSource, mcmSource = "" }) {
+export function evaluate({ contract, managerSource, playerEventsSource, eventBusSource, questReactionRuntimeSource, actionRouterSource, deityBaseSource, mcmSource = "" }) {
   const findings = [];
   const add = (ok, id, detail) => findings.push({ status: ok ? "PASS" : "FAIL", id, detail });
   const shared = contract.shared ?? {};
@@ -203,10 +204,13 @@ export function evaluate({ contract, managerSource, playerEventsSource, eventBus
   const eventBusQuest = bodyFor(eventBusSource, "RouteQuestReaction");
   const routerAction = bodyFor(actionRouterSource, "RouteActionWithAttribution");
   add(/String\s+logicalEventId\s*=\s*"book_"/i.test(onBookRead) && /RouteGenericBookRead\s*\([^\r\n]*logicalEventId/i.test(onBookRead) && /RouteP2ImmersiveSource\s*\([^\r\n]*logicalEventId/i.test(onBookRead), "source.book-parent-identity", "book scoring and P2 source routing must inherit one book logical-event identity");
-  add(/String\s+logicalEventId\s*=\s*"quest_"/i.test(onQuestStageChange) && /RouteP2ImmersiveQuestStage\s*\([^\r\n]*logicalEventId/i.test(onQuestStageChange) && /RouteQuestReactionStage\s*\([^\r\n]*logicalEventId/i.test(onQuestStageChange), "source.quest-parent-identity", "P2 and quest-reaction receivers must inherit one quest-stage logical-event identity");
+  const questBeginIndex = onQuestStageChange.indexOf("BeginLogicalDevotionalAct(logicalEventId)");
+  const questFlushIndex = onQuestStageChange.indexOf("FlushLogicalDevotionalAct()");
+  const questReactionIndex = onQuestStageChange.indexOf("RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)");
+  add(/String\s+logicalEventId\s*=\s*""/i.test(onQuestStageChange) && /logicalEventId\s*=\s*"quest_"/i.test(onQuestStageChange) && /RouteP2ImmersiveQuestStage\s*\([^\r\n]*logicalEventId/i.test(onQuestStageChange) && questBeginIndex >= 0 && questBeginIndex < questFlushIndex && questFlushIndex < questReactionIndex, "source.quest-scope-separation", "ordinary quest/P2/curated broad work must flush before the independently persisted Quest Reaction transaction is admitted");
   add(/JoinLogicalDevotionalAct\s*\(\s*parentLogicalEventId\s*\)/i.test(p2Source) && /JoinLogicalDevotionalAct\s*\(\s*parentLogicalEventId\s*\)/i.test(p2QuestStage) && /if\s*!joinedParentEvent/i.test(p2Source) && /if\s*!joinedParentEvent/i.test(p2QuestStage), "source.p2-nested-join", "P2 source and quest-stage receivers must join a supplied parent identity and create roots only when standalone");
   add(/String\s+logicalEventId\s*=\s*""/i.test(genericAction) && /RouteAction\s*\([^\r\n]*logicalEventId/i.test(genericAction) && /BeginLikesDislikesSurface\s*\(\s*eventType\s*,\s*logicalEventId\s*\)/i.test(eventBusAction), "source.action-parent-identity", "generic action scoring must pass a supplied parent identity into the likes/dislikes surface");
-  add(/String\s+logicalEventId\s*=\s*""/i.test(questReactionStage) && /RouteQuestReaction\s*\([^\r\n]*logicalEventId/i.test(questReactionStage) && /ApplyQuestReaction\s*\([^\r\n]*logicalEventId/i.test(eventBusQuest), "source.quest-reaction-parent-identity", "quest reaction routing must pass a supplied parent identity into the manager");
+  add(/String\s+logicalEventId\s*=\s*""/i.test(questReactionStage) && /RouteQuestReaction\s*\([^\r\n]*logicalEventId/i.test(questReactionStage) && /SubmitQuestStage\s*\([^\r\n]*logicalEventId/i.test(eventBusQuest) && !/BeginBroadPantheonEvent|JoinLogicalDevotionalAct|FlushBroadPantheonEvent/i.test(questReactionRuntimeSource), "source.quest-reaction-independent-transaction", "quest reaction retains event attribution while Runtime owns a separate persisted transaction with no borrowed broad scope");
   add(/String\s+logicalEventId\s*=\s*""/i.test(routerAction) && /RouteActionWithAttribution\s*\([^\r\n]*logicalEventId/i.test(routerAction) && /BeginLikesDislikesSurface\s*\(\s*eventType\s*,\s*logicalEventId\s*\)/i.test(routerAction), "source.router-parent-identity", "fallback action routing must preserve a supplied parent identity");
   const shrinePrayer = bodyFor(managerSource, "HandleShrinePrayer");
   const shoutAttack = bodyFor(managerSource, "HandleShoutAttack");
@@ -328,10 +332,11 @@ function main() {
   const managerSource = fs.existsSync(MANAGER_PATH) ? fs.readFileSync(MANAGER_PATH, "utf8") : "";
   const playerEventsSource = fs.existsSync(PLAYER_EVENTS_PATH) ? fs.readFileSync(PLAYER_EVENTS_PATH, "utf8") : "";
   const eventBusSource = fs.existsSync(EVENT_BUS_PATH) ? fs.readFileSync(EVENT_BUS_PATH, "utf8") : "";
+  const questReactionRuntimeSource = fs.existsSync(QUEST_REACTION_RUNTIME_PATH) ? fs.readFileSync(QUEST_REACTION_RUNTIME_PATH, "utf8") : "";
   const actionRouterSource = fs.existsSync(ACTION_ROUTER_PATH) ? fs.readFileSync(ACTION_ROUTER_PATH, "utf8") : "";
   const deityBaseSource = fs.existsSync(DEITY_BASE_PATH) ? fs.readFileSync(DEITY_BASE_PATH, "utf8") : "";
   const mcmSource = fs.existsSync(MCM_PATH) ? fs.readFileSync(MCM_PATH, "utf8") : "";
-  const result = evaluate({ contract, managerSource, playerEventsSource, eventBusSource, actionRouterSource, deityBaseSource, mcmSource });
+  const result = evaluate({ contract, managerSource, playerEventsSource, eventBusSource, questReactionRuntimeSource, actionRouterSource, deityBaseSource, mcmSource });
   const report = { schema: "pdv.broad-pantheon-audit.v1", contract: path.relative(ROOT, CONTRACT_PATH).replaceAll("\\", "/"), ...result };
   if (flags.has("--json")) console.log(JSON.stringify(report, null, 2));
   else {

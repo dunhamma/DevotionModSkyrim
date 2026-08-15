@@ -466,6 +466,9 @@ String Function GetStatusLine()
     endIf
     String jobId = StorageUtil.StringListGet(None, QUEUE_IDS_KEY, 0)
     String prefix = JOB_PREFIX + jobId + "."
+    if StorageUtil.GetIntValue(None, prefix + "BuildComplete") != 1
+        return "pending=" + pending + " key=" + StorageUtil.GetStringValue(None, prefix + "ReactionKey") + " build=" + StorageUtil.GetIntValue(None, prefix + "BuildIndex") + "/" + StorageUtil.GetIntValue(None, prefix + "SourceCellCount")
+    endIf
     return "pending=" + pending + " key=" + StorageUtil.GetStringValue(None, prefix + "ReactionKey") + " cells=" + StorageUtil.GetIntValue(None, prefix + "CellIndex") + "/" + StorageUtil.GetIntValue(None, prefix + "CellCount")
 EndFunction
 
@@ -564,14 +567,8 @@ Bool Function QueueResolvedReactionJob(String matrixFile, String cellPrefix, Str
     endIf
     Float ingressStartedRealTime = Utility.GetCurrentRealTime()
 
-    String sourceDeitiesCsv = JsonUtil.GetStringValue(matrixFile, cellPrefix + "deitiesCsv")
-    String[] deityNames = StringUtil.Split(sourceDeitiesCsv, "|")
-    String[] valences = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, cellPrefix + "valencesCsv"), "|")
-    String[] intensities = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, cellPrefix + "intensitiesCsv"), "|")
-    String[] magnitudes = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, cellPrefix + "magnitudesCsv"), "|")
-    String[] sourceTags = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, cellPrefix + "tagsCsv"), "|")
-    Int sourceCellCount = deityNames.Length
-    if sourceCellCount <= 0 || sourceCellCount != valences.Length || sourceCellCount != intensities.Length || sourceCellCount != magnitudes.Length || sourceCellCount != sourceTags.Length
+    Int sourceCellCount = JsonUtil.StringListCount(matrixFile, cellPrefix + "deities")
+    if sourceCellCount <= 0 || JsonUtil.StringListCount(matrixFile, cellPrefix + "valences") != sourceCellCount || JsonUtil.StringListCount(matrixFile, cellPrefix + "intensities") != sourceCellCount || JsonUtil.StringListCount(matrixFile, cellPrefix + "magnitudes") != sourceCellCount || JsonUtil.StringListCount(matrixFile, cellPrefix + "tags") != sourceCellCount
         TraceQuestReactionQueue("REJECT rejected malformed reaction " + reactionKey)
         return False
     endIf
@@ -588,123 +585,12 @@ Bool Function QueueResolvedReactionJob(String matrixFile, String cellPrefix, Str
         return False
     endIf
 
-    String deitiesCsv = ""
-    String valencesCsv = ""
-    String intensitiesCsv = ""
-    String magnitudesCsv = ""
-    String tagsCsv = ""
-    Int sourceIndex = 0
-    Int cellCount = 0
-    while sourceIndex < sourceCellCount
-        if PDV_Manager.ShouldQueueQuestReactionCell(deityNames[sourceIndex], valences[sourceIndex], intensities[sourceIndex], magnitudes[sourceIndex])
-            deitiesCsv = AppendSnapshotToken(deitiesCsv, deityNames[sourceIndex])
-            valencesCsv = AppendSnapshotToken(valencesCsv, valences[sourceIndex])
-            intensitiesCsv = AppendSnapshotToken(intensitiesCsv, intensities[sourceIndex])
-            magnitudesCsv = AppendSnapshotToken(magnitudesCsv, magnitudes[sourceIndex])
-            tagsCsv = AppendSnapshotToken(tagsCsv, sourceTags[sourceIndex])
-            cellCount += 1
-        endIf
-        sourceIndex += 1
-    endWhile
-    Int skippedCellCount = sourceCellCount - cellCount
-
-    Int metaRunnableCount = 0
     Int metaEligible = 0
-    Int metaGold = JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.gold")
-    Int metaMageAid = JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.mageAid")
-    Int metaTwilight = BoolToInt(IsTwilightWindow())
-    Int metaNight = BoolToInt(IsNightWindow())
-    Int metaNocturnalTheft = BoolToInt(StorageUtil.GetFloatValue(None, "PDV.Meta.LastTheftTime") > StorageUtil.GetFloatValue(None, "PDV.Meta.LastFulfillTime"))
-    Int metaOutdoors = BoolToInt(IsPlayerOutdoors())
-    Int metaSkipZen = JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Z'en")
-    Int metaSkipJulianos = JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Julianos")
-    Int metaSkipAzura = JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Azura")
-    Int metaSkipNocturnal = JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Nocturnal")
-    Int metaSkipKhenarthi = JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Khenarthi")
-    Int metaSkipAkatosh = JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Akatosh")
-    Int metaSkipXarxes = JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Xarxes")
     if metaPlugin != "" && metaLocalFormId >= 0
         String metaDoneKey = "PDV.V3.QR.Meta.Done." + metaPlugin + "|" + metaLocalFormId
         if StorageUtil.GetIntValue(None, metaDoneKey) != 1
             StorageUtil.SetIntValue(None, metaDoneKey, 1)
             metaEligible = 1
-        endIf
-    endIf
-
-    if metaEligible == 1
-        if metaGold == 1 && metaSkipZen != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Z'en", "+", "zen", "meta")
-            deitiesCsv = AppendSnapshotToken(deitiesCsv, "Z'en")
-            valencesCsv = AppendSnapshotToken(valencesCsv, "+")
-            intensitiesCsv = AppendSnapshotToken(intensitiesCsv, "zen")
-            magnitudesCsv = AppendSnapshotToken(magnitudesCsv, "meta")
-            tagsCsv = AppendSnapshotToken(tagsCsv, "meta_zen_wage")
-            cellCount += 1
-            metaRunnableCount += 1
-        endIf
-        if metaMageAid == 1 && metaSkipJulianos != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Julianos", "+", "julianos", "meta")
-            deitiesCsv = AppendSnapshotToken(deitiesCsv, "Julianos")
-            valencesCsv = AppendSnapshotToken(valencesCsv, "+")
-            intensitiesCsv = AppendSnapshotToken(intensitiesCsv, "julianos")
-            magnitudesCsv = AppendSnapshotToken(magnitudesCsv, "meta")
-            tagsCsv = AppendSnapshotToken(tagsCsv, "meta_julianos_wisdom")
-            cellCount += 1
-            metaRunnableCount += 1
-        endIf
-        if (metaMageAid == 1 || metaTwilight == 1) && metaSkipAzura != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Azura", "+", "azura", "meta")
-            deitiesCsv = AppendSnapshotToken(deitiesCsv, "Azura")
-            valencesCsv = AppendSnapshotToken(valencesCsv, "+")
-            intensitiesCsv = AppendSnapshotToken(intensitiesCsv, "azura")
-            magnitudesCsv = AppendSnapshotToken(magnitudesCsv, "meta")
-            tagsCsv = AppendSnapshotToken(tagsCsv, "meta_azura_threshold")
-            cellCount += 1
-            metaRunnableCount += 1
-        endIf
-        if metaSkipNocturnal != 1 && metaNocturnalTheft == 1 && PDV_Manager.ShouldQueueQuestReactionCell("Nocturnal", "+", "nocturnalTheft", "meta")
-            deitiesCsv = AppendSnapshotToken(deitiesCsv, "Nocturnal")
-            valencesCsv = AppendSnapshotToken(valencesCsv, "+")
-            intensitiesCsv = AppendSnapshotToken(intensitiesCsv, "nocturnalTheft")
-            magnitudesCsv = AppendSnapshotToken(magnitudesCsv, "meta")
-            tagsCsv = AppendSnapshotToken(tagsCsv, "meta_nocturnal_herway")
-            cellCount += 1
-            metaRunnableCount += 1
-        elseIf metaSkipNocturnal != 1 && metaNight == 1 && PDV_Manager.ShouldQueueQuestReactionCell("Nocturnal", "+", "nocturnalNight", "meta")
-            deitiesCsv = AppendSnapshotToken(deitiesCsv, "Nocturnal")
-            valencesCsv = AppendSnapshotToken(valencesCsv, "+")
-            intensitiesCsv = AppendSnapshotToken(intensitiesCsv, "nocturnalNight")
-            magnitudesCsv = AppendSnapshotToken(magnitudesCsv, "meta")
-            tagsCsv = AppendSnapshotToken(tagsCsv, "meta_nocturnal_dark")
-            cellCount += 1
-            metaRunnableCount += 1
-        endIf
-        if metaOutdoors == 1 && metaSkipKhenarthi != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Khenarthi", "+", "khenarthi", "meta")
-            deitiesCsv = AppendSnapshotToken(deitiesCsv, "Khenarthi")
-            valencesCsv = AppendSnapshotToken(valencesCsv, "+")
-            intensitiesCsv = AppendSnapshotToken(intensitiesCsv, "khenarthi")
-            magnitudesCsv = AppendSnapshotToken(magnitudesCsv, "meta")
-            tagsCsv = AppendSnapshotToken(tagsCsv, "meta_khenarthi_road")
-            cellCount += 1
-            metaRunnableCount += 1
-        endIf
-        Int wheelCount = StorageUtil.AdjustIntValue(None, "PDV.V3.QR.Meta.QuestCount", 1)
-        if wheelCount > 0 && wheelCount % 10 == 0
-            if metaSkipAkatosh != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Akatosh", "+", "wheel", "meta")
-                deitiesCsv = AppendSnapshotToken(deitiesCsv, "Akatosh")
-                valencesCsv = AppendSnapshotToken(valencesCsv, "+")
-                intensitiesCsv = AppendSnapshotToken(intensitiesCsv, "wheel")
-                magnitudesCsv = AppendSnapshotToken(magnitudesCsv, "meta")
-                tagsCsv = AppendSnapshotToken(tagsCsv, "meta_akatosh_wheel")
-                cellCount += 1
-                metaRunnableCount += 1
-            endIf
-            if metaSkipXarxes != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Xarxes", "+", "wheel", "meta")
-                deitiesCsv = AppendSnapshotToken(deitiesCsv, "Xarxes")
-                valencesCsv = AppendSnapshotToken(valencesCsv, "+")
-                intensitiesCsv = AppendSnapshotToken(intensitiesCsv, "wheel")
-                magnitudesCsv = AppendSnapshotToken(magnitudesCsv, "meta")
-                tagsCsv = AppendSnapshotToken(tagsCsv, "meta_xarxes_record")
-                cellCount += 1
-                metaRunnableCount += 1
-            endIf
         endIf
     endIf
 
@@ -715,29 +601,162 @@ Bool Function QueueResolvedReactionJob(String matrixFile, String cellPrefix, Str
     StorageUtil.FormListAdd(None, QUEUE_FORMS_KEY, sourceForm, True)
     StorageUtil.SetStringValue(None, prefix + "ReactionKey", reactionKey)
     StorageUtil.SetStringValue(None, prefix + "LogicalEventId", logicalEventId)
-    StorageUtil.SetStringValue(None, prefix + "DeitiesCsv", deitiesCsv)
-    StorageUtil.SetStringValue(None, prefix + "ValencesCsv", valencesCsv)
-    StorageUtil.SetStringValue(None, prefix + "IntensitiesCsv", intensitiesCsv)
-    StorageUtil.SetStringValue(None, prefix + "MagnitudesCsv", magnitudesCsv)
-    StorageUtil.SetStringValue(None, prefix + "TagsCsv", tagsCsv)
+    StorageUtil.SetStringValue(None, prefix + "MatrixFile", matrixFile)
+    StorageUtil.SetStringValue(None, prefix + "CellPrefix", cellPrefix)
+    StorageUtil.SetStringValue(None, prefix + "DeitiesCsv", "")
+    StorageUtil.SetStringValue(None, prefix + "ValencesCsv", "")
+    StorageUtil.SetStringValue(None, prefix + "IntensitiesCsv", "")
+    StorageUtil.SetStringValue(None, prefix + "MagnitudesCsv", "")
+    StorageUtil.SetStringValue(None, prefix + "TagsCsv", "")
     StorageUtil.SetStringValue(None, prefix + "SourceModName", sourceModName)
-    StorageUtil.SetIntValue(None, prefix + "CellCount", cellCount)
+    StorageUtil.SetIntValue(None, prefix + "CellCount", 0)
     StorageUtil.SetIntValue(None, prefix + "CellIndex", 0)
     StorageUtil.SetIntValue(None, prefix + "SourceCellCount", sourceCellCount)
-    StorageUtil.SetIntValue(None, prefix + "SkippedCellCount", skippedCellCount)
-    StorageUtil.SetIntValue(None, prefix + "MetaRunnableCount", metaRunnableCount)
+    StorageUtil.SetIntValue(None, prefix + "SkippedCellCount", 0)
+    StorageUtil.SetIntValue(None, prefix + "MetaRunnableCount", 0)
+    StorageUtil.SetIntValue(None, prefix + "BuildIndex", 0)
+    StorageUtil.SetIntValue(None, prefix + "BuildPhase", 0)
+    StorageUtil.SetIntValue(None, prefix + "BuildComplete", 0)
+    StorageUtil.SetIntValue(None, prefix + "MetaBuildIndex", 0)
+    StorageUtil.SetIntValue(None, prefix + "MetaWheelEligible", 0)
     StorageUtil.SetIntValue(None, prefix + "Started", 0)
     StorageUtil.SetIntValue(None, prefix + "MetaEligible", metaEligible)
+    if metaEligible == 1
+        StorageUtil.SetIntValue(None, prefix + "MetaTwilight", BoolToInt(IsTwilightWindow()))
+        StorageUtil.SetIntValue(None, prefix + "MetaNight", BoolToInt(IsNightWindow()))
+        StorageUtil.SetIntValue(None, prefix + "MetaNocturnalTheft", BoolToInt(StorageUtil.GetFloatValue(None, "PDV.Meta.LastTheftTime") > StorageUtil.GetFloatValue(None, "PDV.Meta.LastFulfillTime")))
+        StorageUtil.SetIntValue(None, prefix + "MetaOutdoors", BoolToInt(IsPlayerOutdoors()))
+    endIf
     StorageUtil.SetFloatValue(None, prefix + "QueuedGameTime", Utility.GetCurrentGameTime())
     StorageUtil.SetFloatValue(None, prefix + "EnqueuedRealTime", Utility.GetCurrentRealTime())
-    Float ingressBuildMs = (Utility.GetCurrentRealTime() - ingressStartedRealTime) * 1000.0
-    StorageUtil.SetFloatValue(None, prefix + "IngressBuildMs", ingressBuildMs)
+    Float admissionMs = (Utility.GetCurrentRealTime() - ingressStartedRealTime) * 1000.0
+    StorageUtil.SetFloatValue(None, prefix + "AdmissionMs", admissionMs)
     StorageUtil.SetStringValue(None, "PDV.V3.QR.LastKey", reactionKey)
-    StorageUtil.SetIntValue(None, "PDV.V3.QR.LastCellCount", cellCount)
+    StorageUtil.SetIntValue(None, "PDV.V3.QR.LastCellCount", 0)
     StorageUtil.SetIntValue(None, "PDV.V3.QR.LastSourceCellCount", sourceCellCount)
-    TraceQuestReactionQueue("ENQUEUE queued " + jobId + " key=" + reactionKey + " cells=" + cellCount + " sourceCells=" + sourceCellCount + " skipped=" + skippedCellCount + " meta=" + metaRunnableCount + " buildMs=" + ingressBuildMs + " pending=" + StorageUtil.StringListCount(None, QUEUE_IDS_KEY))
+    TraceQuestReactionQueue("ENQUEUE queued " + jobId + " key=" + reactionKey + " cells=0 sourceCells=" + sourceCellCount + " materialized=0 admissionMs=" + admissionMs + " pending=" + StorageUtil.StringListCount(None, QUEUE_IDS_KEY))
     EnsureQuestReactionQueueRunning()
     return True
+EndFunction
+
+Function AppendBuiltQuestReactionCell(String prefix, String deityName, String valence, String intensity, String magnitude, String sourceTag, Bool isMeta = False)
+    StorageUtil.SetStringValue(None, prefix + "DeitiesCsv", AppendSnapshotToken(StorageUtil.GetStringValue(None, prefix + "DeitiesCsv"), deityName))
+    StorageUtil.SetStringValue(None, prefix + "ValencesCsv", AppendSnapshotToken(StorageUtil.GetStringValue(None, prefix + "ValencesCsv"), valence))
+    StorageUtil.SetStringValue(None, prefix + "IntensitiesCsv", AppendSnapshotToken(StorageUtil.GetStringValue(None, prefix + "IntensitiesCsv"), intensity))
+    StorageUtil.SetStringValue(None, prefix + "MagnitudesCsv", AppendSnapshotToken(StorageUtil.GetStringValue(None, prefix + "MagnitudesCsv"), magnitude))
+    StorageUtil.SetStringValue(None, prefix + "TagsCsv", AppendSnapshotToken(StorageUtil.GetStringValue(None, prefix + "TagsCsv"), sourceTag))
+    Int cellCount = StorageUtil.GetIntValue(None, prefix + "CellCount")
+    StorageUtil.SetIntValue(None, prefix + "CellCount", cellCount + 1)
+    if isMeta
+        StorageUtil.AdjustIntValue(None, prefix + "MetaRunnableCount", 1)
+    endIf
+EndFunction
+
+Function CompleteQuestReactionBuild(String jobId, String prefix)
+    StorageUtil.SetIntValue(None, prefix + "BuildComplete", 1)
+    Int cellCount = StorageUtil.GetIntValue(None, prefix + "CellCount")
+    Int sourceCellCount = StorageUtil.GetIntValue(None, prefix + "SourceCellCount")
+    Int skippedCellCount = StorageUtil.GetIntValue(None, prefix + "SkippedCellCount")
+    Int metaRunnableCount = StorageUtil.GetIntValue(None, prefix + "MetaRunnableCount")
+    Float materializeMs = (Utility.GetCurrentRealTime() - StorageUtil.GetFloatValue(None, prefix + "EnqueuedRealTime")) * 1000.0
+    StorageUtil.SetFloatValue(None, prefix + "MaterializeMs", materializeMs)
+    StorageUtil.SetIntValue(None, "PDV.V3.QR.LastCellCount", cellCount)
+    TraceQuestReactionQueue("BUILD completed " + jobId + " key=" + StorageUtil.GetStringValue(None, prefix + "ReactionKey") + " cells=" + cellCount + " sourceCells=" + sourceCellCount + " skipped=" + skippedCellCount + " meta=" + metaRunnableCount + " materializeMs=" + materializeMs)
+EndFunction
+
+Bool Function ProcessQuestReactionMetaBuildUnit(String jobId, String prefix, String matrixFile, String cellPrefix)
+    if StorageUtil.GetIntValue(None, prefix + "MetaEligible") != 1
+        CompleteQuestReactionBuild(jobId, prefix)
+        return True
+    endIf
+
+    Int metaIndex = StorageUtil.GetIntValue(None, prefix + "MetaBuildIndex")
+    if metaIndex == 0
+        if JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.gold") == 1 && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Z'en") != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Z'en", "+", "zen", "meta")
+            AppendBuiltQuestReactionCell(prefix, "Z'en", "+", "zen", "meta", "meta_zen_wage", True)
+        endIf
+    elseIf metaIndex == 1
+        if JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.mageAid") == 1 && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Julianos") != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Julianos", "+", "julianos", "meta")
+            AppendBuiltQuestReactionCell(prefix, "Julianos", "+", "julianos", "meta", "meta_julianos_wisdom", True)
+        endIf
+    elseIf metaIndex == 2
+        if (JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.mageAid") == 1 || StorageUtil.GetIntValue(None, prefix + "MetaTwilight") == 1) && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Azura") != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Azura", "+", "azura", "meta")
+            AppendBuiltQuestReactionCell(prefix, "Azura", "+", "azura", "meta", "meta_azura_threshold", True)
+        endIf
+    elseIf metaIndex == 3
+        if JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Nocturnal") != 1
+            if StorageUtil.GetIntValue(None, prefix + "MetaNocturnalTheft") == 1 && PDV_Manager.ShouldQueueQuestReactionCell("Nocturnal", "+", "nocturnalTheft", "meta")
+                AppendBuiltQuestReactionCell(prefix, "Nocturnal", "+", "nocturnalTheft", "meta", "meta_nocturnal_herway", True)
+            elseIf StorageUtil.GetIntValue(None, prefix + "MetaNight") == 1 && PDV_Manager.ShouldQueueQuestReactionCell("Nocturnal", "+", "nocturnalNight", "meta")
+                AppendBuiltQuestReactionCell(prefix, "Nocturnal", "+", "nocturnalNight", "meta", "meta_nocturnal_dark", True)
+            endIf
+        endIf
+    elseIf metaIndex == 4
+        if StorageUtil.GetIntValue(None, prefix + "MetaOutdoors") == 1 && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Khenarthi") != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Khenarthi", "+", "khenarthi", "meta")
+            AppendBuiltQuestReactionCell(prefix, "Khenarthi", "+", "khenarthi", "meta", "meta_khenarthi_road", True)
+        endIf
+    elseIf metaIndex == 5
+        Int wheelCount = StorageUtil.AdjustIntValue(None, "PDV.V3.QR.Meta.QuestCount", 1)
+        if wheelCount > 0 && wheelCount % 10 == 0
+            StorageUtil.SetIntValue(None, prefix + "MetaWheelEligible", 1)
+        endIf
+    elseIf metaIndex == 6
+        if StorageUtil.GetIntValue(None, prefix + "MetaWheelEligible") == 1 && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Akatosh") != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Akatosh", "+", "wheel", "meta")
+            AppendBuiltQuestReactionCell(prefix, "Akatosh", "+", "wheel", "meta", "meta_akatosh_wheel", True)
+        endIf
+    elseIf metaIndex == 7
+        if StorageUtil.GetIntValue(None, prefix + "MetaWheelEligible") == 1 && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Xarxes") != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Xarxes", "+", "wheel", "meta")
+            AppendBuiltQuestReactionCell(prefix, "Xarxes", "+", "wheel", "meta", "meta_xarxes_record", True)
+        endIf
+    endIf
+
+    metaIndex += 1
+    StorageUtil.SetIntValue(None, prefix + "MetaBuildIndex", metaIndex)
+    if metaIndex >= 8
+        CompleteQuestReactionBuild(jobId, prefix)
+    endIf
+    return True
+EndFunction
+
+Bool Function ProcessQuestReactionBuildUnit(String jobId, String prefix)
+    String matrixFile = StorageUtil.GetStringValue(None, prefix + "MatrixFile")
+    String cellPrefix = StorageUtil.GetStringValue(None, prefix + "CellPrefix")
+    if matrixFile == "" || cellPrefix == "" || !JsonUtil.JsonExists(matrixFile) || !JsonUtil.IsGood(matrixFile)
+        RejectHeadJob(jobId, prefix, "catalog unavailable during materialization")
+        return False
+    endIf
+
+    Int buildPhase = StorageUtil.GetIntValue(None, prefix + "BuildPhase")
+    if buildPhase == 0
+        Int buildIndex = StorageUtil.GetIntValue(None, prefix + "BuildIndex")
+        Int sourceCellCount = StorageUtil.GetIntValue(None, prefix + "SourceCellCount")
+        if buildIndex < 0 || buildIndex > sourceCellCount
+            RejectHeadJob(jobId, prefix, "corrupt build cursor")
+            return False
+        endIf
+        if buildIndex < sourceCellCount
+            String deityName = JsonUtil.StringListGet(matrixFile, cellPrefix + "deities", buildIndex)
+            String valence = JsonUtil.StringListGet(matrixFile, cellPrefix + "valences", buildIndex)
+            String intensity = JsonUtil.StringListGet(matrixFile, cellPrefix + "intensities", buildIndex)
+            String magnitude = JsonUtil.StringListGet(matrixFile, cellPrefix + "magnitudes", buildIndex)
+            String sourceTag = JsonUtil.StringListGet(matrixFile, cellPrefix + "tags", buildIndex)
+            if PDV_Manager.ShouldQueueQuestReactionCell(deityName, valence, intensity, magnitude)
+                AppendBuiltQuestReactionCell(prefix, deityName, valence, intensity, magnitude, sourceTag)
+            endIf
+            buildIndex += 1
+            StorageUtil.SetIntValue(None, prefix + "BuildIndex", buildIndex)
+        endIf
+        if buildIndex >= sourceCellCount
+            StorageUtil.SetIntValue(None, prefix + "SkippedCellCount", sourceCellCount - StorageUtil.GetIntValue(None, prefix + "CellCount"))
+            StorageUtil.SetIntValue(None, prefix + "BuildPhase", 1)
+        endIf
+        return True
+    elseIf buildPhase == 1
+        return ProcessQuestReactionMetaBuildUnit(jobId, prefix, matrixFile, cellPrefix)
+    endIf
+
+    RejectHeadJob(jobId, prefix, "corrupt build phase")
+    return False
 EndFunction
 
 Bool Function HasQueuedQuestReactionJobs()
@@ -778,6 +797,17 @@ Bool Function ProcessQuestReactionQueueSlice()
     endIf
     String jobId = StorageUtil.StringListGet(None, QUEUE_IDS_KEY, 0)
     String prefix = JOB_PREFIX + jobId + "."
+    Int processed = 0
+    while processed < QUEST_REACTION_QUEUE_CELLS_PER_TICK && StorageUtil.GetIntValue(None, prefix + "BuildComplete") != 1
+        if !ProcessQuestReactionBuildUnit(jobId, prefix)
+            return HasQueuedQuestReactionJobs()
+        endIf
+        processed += 1
+    endWhile
+    if StorageUtil.GetIntValue(None, prefix + "BuildComplete") != 1
+        return True
+    endIf
+
     Int cellCount = StorageUtil.GetIntValue(None, prefix + "CellCount")
     Int cellIndex = StorageUtil.GetIntValue(None, prefix + "CellIndex")
     if cellCount < 0 || cellIndex < 0 || cellIndex > cellCount
@@ -802,6 +832,12 @@ Bool Function ProcessQuestReactionQueueSlice()
         endIf
     endIf
 
+    ; A tick that spent its full budget materializing cells must not open an
+    ; empty scoring transaction. START means the first apply slice can begin.
+    if processed >= QUEST_REACTION_QUEUE_CELLS_PER_TICK && cellCount > 0
+        return True
+    endIf
+
     if StorageUtil.GetIntValue(None, prefix + "Started") != 1
         StorageUtil.SetIntValue(None, prefix + "Started", 1)
         PDV_Manager.PrepareQueuedQuestReactionTransaction()
@@ -809,7 +845,6 @@ Bool Function ProcessQuestReactionQueueSlice()
     endIf
 
     Form sourceForm = StorageUtil.FormListGet(None, QUEUE_FORMS_KEY, 0)
-    Int processed = 0
     PDV_Manager.BeginQueuedQuestReactionSlice()
     while processed < QUEST_REACTION_QUEUE_CELLS_PER_TICK && cellIndex < cellCount
         PDV_Manager.ApplyQueuedQuestReactionCell(deities[cellIndex], valences[cellIndex], intensities[cellIndex], magnitudes[cellIndex], tags[cellIndex], sourceForm)

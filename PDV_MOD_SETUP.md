@@ -590,7 +590,7 @@ migrated because V3 is new-game-only.
 Run `node .\tools\pdv_quest_reaction_characterization.mjs` and
 `node .\tools\pdv_quest_reaction_performance_audit.mjs` for deterministic
 and static proof. Then run
-`node .\tools\pdv_quest_reaction_runtime_check.mjs --max-job-ms 2000` after a
+`node .\tools\pdv_quest_reaction_runtime_check.mjs --max-admission-ms 1000 --max-job-ms 180000` after a
 fresh Skyrim sweep. Runtime acceptance still requires FIFO lifecycle markers,
     one visible final toast/Book beat per accepted job, and a mid-job save/load
     resume. The consolidated catalog v2 compiler and Runtime cutover are
@@ -664,10 +664,22 @@ The V2 runtime checker also requires the latest configuration/reload summaries
 to report at least two admitted catalogs and nonzero active quest keys. An
 isolated corrupt extension may increase `rejected` without failing valid core and
 official admission. Runtime emits debug-gated `CATALOG_REJECT` markers only on
-configuration/reload paths. The QR-local optimization pass caches repeated
-catalog list counts and completion fields; PlayerEvents ingress and Manager
-callbacks remain clean/event-driven, with no new polling, scheduler, property,
-or VMAD surface.
+configuration/reload paths. Its lifecycle is now `ENQUEUE -> BUILD -> START ->
+COMPLETE`: admission persists a lightweight header and reports `admissionMs`, then
+the existing scheduler materializes catalog cells through persisted build cursors
+at the shared two-work-item tick budget before application starts. PlayerEvents
+flushes the ordinary quest broad scope before this independent submission. This
+fix adds no polling, scheduler, property, VMAD surface, or public Runtime method.
+Backend/static and targeted compile proof pass. The 2026-08-15 smoke then proved
+organic MQ102 stage-160 admission at `45.013428` ms and an ordered complete
+lifecycle. A clean four-job sweep saved during job 1 at `build=8/45`, resumed
+with `pending=4`, and drained four FIFO BUILD/START/COMPLETE chains; every
+admission was about 45 ms and there was no overflow, stack safety failure, or
+`BROAD_SCOPE_ABORT`. Runtime-route and materialization-resume proof therefore
+pass. The tester also confirmed four visible toasts and four correct,
+duplicate-free Book entries from that counted run. The bounded-ingress fix is
+therefore fully smoke-proven; broader Slice 1 compatibility and Authoria
+acceptance remain separate gates.
 
 Slice 1B compile/readback closeout (2026-08-13) used:
 
