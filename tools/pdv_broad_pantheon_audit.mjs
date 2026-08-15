@@ -70,6 +70,19 @@ export function aggregateLogicalEvent(deltas) {
   return negative.length ? Math.min(...negative) : 0;
 }
 
+export function hasDetachedActionShape(body) {
+  return /detachedBroadEvent\s*=\s*!PDV_Manager\.ShouldSurfaceLikesDislikesEvent\s*\(\s*eventType\s*\)/i.test(body)
+    && /GetActiveBroadPantheonPoolId\s*\(\s*\)/i.test(body)
+    && /String\s+eventReason\s*=\s*GetEventReason\s*\(\s*eventType\s*\)/i.test(body)
+    && /AwardPietyFromLikesDislikes\s*\([^\r\n]*detachedBroadEvent[^\r\n]*detachedBroadPool/i.test(body)
+    && /CommitDetachedBroadPantheonEvent\s*\(\s*logicalEventId\s*,\s*detachedBroadPool[^\r\n]*eventType\s*\)/i.test(body);
+}
+
+export function hasDetachedCommitShape(body) {
+  return /ApplyBroadPantheonEventResult\s*\(/i.test(body)
+    && !/BeginBroadPantheonEvent|FlushBroadPantheonEvent|WaitMenuMode/i.test(body);
+}
+
 export function foldSignedScratch(value, scratch, signedCap = 4.3, poolCap = 50) {
   const folded = Math.max(-signedCap, Math.min(signedCap, scratch));
   return Math.max(0, Math.min(poolCap, value + folded));
@@ -212,6 +225,10 @@ export function evaluate({ contract, managerSource, playerEventsSource, eventBus
   add(/String\s+logicalEventId\s*=\s*""/i.test(genericAction) && /RouteAction\s*\([^\r\n]*logicalEventId/i.test(genericAction) && /BeginLikesDislikesSurface\s*\(\s*eventType\s*,\s*logicalEventId\s*\)/i.test(eventBusAction), "source.action-parent-identity", "generic action scoring must pass a supplied parent identity into the likes/dislikes surface");
   add(/String\s+logicalEventId\s*=\s*""/i.test(questReactionStage) && /RouteQuestReaction\s*\([^\r\n]*logicalEventId/i.test(questReactionStage) && /SubmitQuestStage\s*\([^\r\n]*logicalEventId/i.test(eventBusQuest) && !/BeginBroadPantheonEvent|JoinLogicalDevotionalAct|FlushBroadPantheonEvent/i.test(questReactionRuntimeSource), "source.quest-reaction-independent-transaction", "quest reaction retains event attribution while Runtime owns a separate persisted transaction with no borrowed broad scope");
   add(/String\s+logicalEventId\s*=\s*""/i.test(routerAction) && /RouteActionWithAttribution\s*\([^\r\n]*logicalEventId/i.test(routerAction) && /BeginLikesDislikesSurface\s*\(\s*eventType\s*,\s*logicalEventId\s*\)/i.test(routerAction), "source.router-parent-identity", "fallback action routing must preserve a supplied parent identity");
+  const detachedBroadCommit = bodyFor(managerSource, "CommitDetachedBroadPantheonEvent");
+  add(hasDetachedActionShape(eventBusAction) && hasDetachedActionShape(routerAction), "source.nonsurface-action-detached-broad", "non-presented action fan-out must aggregate locally and commit once without holding the shared broad scope");
+  add(hasDetachedCommitShape(detachedBroadCommit), "source.detached-broad-atomic-commit", "detached action results must commit without opening, waiting on, or clearing the shared broad scope");
+  add(/likes_dislikes_"\s*\+\s*eventType\s*\+\s*"_"\s*\+\s*Utility\.GetCurrentGameTime/i.test(detachedBroadCommit), "source.detached-broad-identity", "detached fallback identities must preserve event type plus game time");
   const shrinePrayer = bodyFor(managerSource, "HandleShrinePrayer");
   const shoutAttack = bodyFor(managerSource, "HandleShoutAttack");
   add(/BeginBroadPantheonEvent/i.test(shrinePrayer) && /FlushBroadPantheonEvent/i.test(shrinePrayer), "source.shrine-event-scope", "multi-deity shrine prayer must aggregate inside one logical broad event");
@@ -310,6 +327,16 @@ function selfTest() {
   expect("negative activity preserves later catch-up", elapsedBroadDecayDaysWithActivity(7, 4, 0, 5) === 2);
   expect("positive return preserves past decay", Math.abs(settleReturningBroadAct(10, 2, 5, 0, 0) - 11.8) < 0.0001);
   expect("negative return preserves past decay", Math.abs(settleReturningBroadAct(10, -2, 5, 0, 0) - 7.8) < 0.0001);
+  const detachedActionFixture = `
+    Bool detachedBroadEvent = !PDV_Manager.ShouldSurfaceLikesDislikesEvent(eventType)
+    String detachedBroadPool = PDV_Manager.GetActiveBroadPantheonPoolId()
+    String eventReason = GetEventReason(eventType)
+    Float broadDelta = PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, eventReason, detachedBroadEvent, detachedBroadPool)
+    PDV_Manager.CommitDetachedBroadPantheonEvent(logicalEventId, detachedBroadPool, bestPositive, worstNegative, eventType)`;
+  expect("non-presented action uses detached broad result", hasDetachedActionShape(detachedActionFixture));
+  expect("legacy fan-out fixture is rejected", !hasDetachedActionShape("PDV_Manager.BeginLikesDislikesSurface(eventType, logicalEventId)"));
+  expect("detached commit cannot borrow the shared scope", hasDetachedCommitShape("ApplyBroadPantheonEventResult(poolId, logicalEventId, chosenDelta)"));
+  expect("waiting detached commit is rejected", !hasDetachedCommitShape("BeginBroadPantheonEvent(logicalEventId)\nApplyBroadPantheonEventResult(poolId, logicalEventId, chosenDelta)"));
   const failed = checks.filter((item) => !item.ok).length;
   if (flags.has("--json")) console.log(JSON.stringify({ schema: "pdv.broad-pantheon-audit-self-test.v1", status: failed ? "FAIL" : "PASS", assertions: checks }, null, 2));
   else {
