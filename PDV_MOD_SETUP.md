@@ -588,7 +588,7 @@ on alias init/load. The 1.5 queue keys and Worker identity are intentionally not
 migrated because V3 is new-game-only.
 
 Run `node .\tools\pdv_quest_reaction_characterization.mjs` and
-`node .\tools\pdv_quest_reaction_performance_audit.mjs` for deterministic
+`node .\tools\pdv_quest_reaction_performance_audit.mjs --self-test` for deterministic
 and static proof. Then run
 `node .\tools\pdv_quest_reaction_runtime_check.mjs --max-admission-ms 1000 --max-job-ms 180000` after a
 fresh Skyrim sweep. Runtime acceptance still requires FIFO lifecycle markers,
@@ -597,6 +597,12 @@ fresh Skyrim sweep. Runtime acceptance still requires FIFO lifecycle markers,
     backend-green. The AFDI semantic adapter migration and generated package
     consolidation are also backend-green; the combined fresh-game and Authoria smoke
     is the remaining Slice 1 acceptance gate.
+
+The Quest Reaction architecture self-test also protects the shared public-source
+boundary: every positive, negative, and mixed final toast and Book entry must use
+the sanitized source value. Its negative mutations fail if the sanitizer is
+removed or if Book alone is changed back to raw `sourceModName`; qualified
+Bethesda identities remain available to queue diagnostics.
 
 The 2026-08-14 fresh-game canary passed qualified ingress, five complete queue
 lifecycles, the four-job FIFO sweep, four Book of Days entries, and reload after
