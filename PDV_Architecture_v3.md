@@ -19,8 +19,9 @@ dependency-detected adapters. The combined fresh-game and Authoria smoke remains
 open Slice 1 work. The PapyrusUtil wire-admission defect is repaired and the
 installed Anvil profile preflight is green. The separate bounded-ingress fix is
 backend/static/compile and runtime-route green, including sub-second organic
-admission and build-stage save/load continuation; its counted manual player-
-surface confirmation remains open.**
+admission and build-stage save/load continuation; the counted run's four visible
+toasts and four duplicate-free Book entries are manually confirmed. Broader
+Slice 1 compatibility and Authoria acceptance remain open.**
 
 Current v3.103 addendum: **1.0.4 is shipped and public** (2026-07-27, tag `v1.0.4`,
 `Devotion-1.0.4-20260727.zip`), the first public build since 1.0.2 and the first carrying
@@ -1075,8 +1076,10 @@ four-job sweep admitted every job in about 45 ms, saved during job 1 at
 `build=8/45`, resumed with `pending=4`, and drained all four BUILD/START/COMPLETE
 chains in FIFO order with no overflow, stack safety failure, or
 `BROAD_SCOPE_ABORT`. This closes the Runtime-route and build-resume proof; four
-visible toasts and four duplicate-free Book entries in that counted run remain
-manual/player-surface proof.
+visible toasts and four duplicate-free Book entries in that counted run were
+then manually confirmed. The bounded-ingress fix is therefore closed across
+authority, build/readback, runtime-route, save/load, and player-surface proof.
+This does not close broader Slice 1 compatibility or Authoria acceptance.
 
 The first fresh-game canary on 2026-08-14 proved qualified quest ingress and
 five complete `ENQUEUE -> START -> COMPLETE` lifecycles. The controlled
@@ -3494,7 +3497,9 @@ cells through its existing scheduler at the shared two-work-item budget. Static
 audits and targeted compilation pass. Organic admission fell to 45 ms, and a
 clean four-job run resumed from `build=8/45` before draining all jobs in FIFO
 order without a safety marker. Runtime-route/build-resume proof passes; counted
-manual toast and Book confirmation remains open.
+manual proof also confirms four visible toasts and four duplicate-free Book
+entries. The bounded-ingress fix is closed; broader Slice 1 compatibility and
+Authoria acceptance remain separate.
 
 ### v3.96 - 2026-07-14 AEST - Pantheon/substrate presentation ratification
 

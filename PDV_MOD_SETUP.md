@@ -676,8 +676,10 @@ lifecycle. A clean four-job sweep saved during job 1 at `build=8/45`, resumed
 with `pending=4`, and drained four FIFO BUILD/START/COMPLETE chains; every
 admission was about 45 ms and there was no overflow, stack safety failure, or
 `BROAD_SCOPE_ABORT`. Runtime-route and materialization-resume proof therefore
-pass. Manual confirmation of four visible toasts and four duplicate-free Book
-entries from that counted run remains open.
+pass. The tester also confirmed four visible toasts and four correct,
+duplicate-free Book entries from that counted run. The bounded-ingress fix is
+therefore fully smoke-proven; broader Slice 1 compatibility and Authoria
+acceptance remain separate gates.
 
 Slice 1B compile/readback closeout (2026-08-13) used:
 

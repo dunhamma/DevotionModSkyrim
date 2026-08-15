@@ -226,15 +226,15 @@
     "proofBoundary": "source, generated-data, deterministic-model, static-architecture, and Papyrus compile proof only; fresh-game source activation, quest-stage registration, semantic gameplay, extension isolation in Skyrim, FIFO/player surfaces after cutover, and save-load remain combined post-merge smoke work"
   },
   "qrPapyrusOptimization": {
-    "status": "backend-static-targeted-compile-and-runtime-route-pass-player-surface-proof-open",
+    "status": "backend-static-targeted-compile-runtime-and-manual-smoke-pass",
     "runtime": "catalog loops cache repeated JsonUtil list counts and completion caches terminal fields; the broken synchronous catalog-cell materialization path now persists a lightweight job header and materializes at most two source/meta/apply work items per scheduler tick",
     "playerEvents": "event-driven quest-stage ingress now closes and flushes the ordinary broad devotional scope before submitting the independently persisted Quest Reaction job",
     "managerCallbacks": "clean bounded scoring and one-final-surface callbacks; no change",
     "preserved": ["one scheduler owner", "0.1-second rearm", "two-work-item bound across materialization and apply", "persisted build and apply cursors", "one final surface", "five-method interface", "no new VMAD properties"],
-    "proofBoundary": "static optimization audits, zero-warning Runtime/PlayerEvents compilation, sub-second organic and sweep admission, bounded BUILD delivery, and build-stage RESUME/FIFO completion are proven; four visible toasts and four duplicate-free Book entries in the counted ingress-fix run remain manual/player-surface proof"
+    "proofBoundary": "static optimization audits, zero-warning Runtime/PlayerEvents compilation, sub-second organic and sweep admission, bounded BUILD delivery, build-stage RESUME/FIFO completion, four visible toasts, and four duplicate-free Book entries are proven for the counted ingress-fix smoke; broader Slice 1 compatibility and Authoria acceptance are not implied"
   },
   "boundedIngressFix": {
-    "status": "backend-static-targeted-compile-and-runtime-route-pass-player-surface-proof-open",
+    "status": "backend-static-targeted-compile-runtime-and-manual-smoke-pass",
     "diagnosis": "The fresh Before the Storm stage-160 hook spent 7469.970703 ms synchronously materializing 45 catalog cells inside OnQuestStageChange while the ordinary quest broad scope was open; MQ103 stage 10 then replaced that stalled scope and emitted BROAD_SCOPE_ABORT.",
     "scopeFix": "PlayerEvents flushes the ordinary logical devotional act before RouteQuestReactionStage; Runtime keeps the qualified logicalEventId as attribution without joining that broad scope.",
     "materializationFix": "Queue admission validates list counts, persists a lightweight job header, emits admissionMs, and returns. The existing single scheduler materializes source and meta cells through a persisted BuildIndex/MetaBuildIndex at the shared two-work-item budget before START/application.",
@@ -245,8 +245,9 @@
       "targeted PDV_QuestReactionRuntime and PDV_PlayerEvents compile"
     ],
     "runtimeProof": "On 2026-08-15 organic MQ102 stage 160 admitted in 45.013428 ms and completed ENQUEUE/BUILD/START/COMPLETE. A clean four-job sweep admitted every job in about 45 ms, saved during job 1 at build 8/45, resumed with pending=4, and completed all four BUILD/START/COMPLETE chains in FIFO order with no overflow, stack safety failure, or BROAD_SCOPE_ABORT.",
+    "manualProof": "The tester confirmed that the counted build-resume sweep produced four visible toasts and four correct duplicate-free Book of Days entries.",
     "separateFinding": "An earlier session-wide abort was attributed to a pre-existing likes_dislikes_345 broad fan-out before MQ102 stage 50, 95 seconds before QR admission; it is not evidence against the bounded QR ingress and remains a separate diagnosis surface.",
-    "open": "Manual confirmation of four visible toasts and four duplicate-free Book entries from the counted build-resume sweep."
+    "open": "none for the bounded-ingress fix; broader Slice 1 compatibility and Authoria acceptance remain separate"
   },
   "slice1DASemanticAdapters": {
     "status": "backend-static-compile-vmad-and-master-readback-pass-skyrim-proof-open",
