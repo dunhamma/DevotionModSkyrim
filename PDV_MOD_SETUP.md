@@ -681,6 +681,21 @@ duplicate-free Book entries from that counted run. The bounded-ingress fix is
 therefore fully smoke-proven; broader Slice 1 compatibility and Authoria
 acceptance remain separate gates.
 
+The separate `likes_dislikes_345` discover-location abort is handled on
+`codex/v3-broad-scope-likes-fix`. Non-presented generic action fan-out must not
+call `BeginLikesDislikesSurface` across the all-deity loop. EventBus and the
+ActionRouter fallback capture the active broad pool, collect the strongest
+eligible applied positive (or most severe eligible negative) in local
+variables, and commit once through `CommitDetachedBroadPantheonEvent`. Run
+`node .\tools\pdv_broad_pantheon_audit.mjs --self-test`, the Quest Reaction
+performance/characterization/eligibility gates, and compile
+`PDV__ManagerQuest`, `PDV_EventBus`, and `PDV_ActionRouter` before syncing.
+Backend/static plus isolated and synced live compilation are green; a fresh Anvil overlap run
+must still show the discover-location action plus a nearby quest stage with no
+`BROAD_SCOPE_ABORT`. Full Authoria testing is deferred until the V3 core and
+generated compatibility installer are assembled; Anvil remains the current
+runtime canary lane.
+
 Slice 1B compile/readback closeout (2026-08-13) used:
 
 ```powershell
