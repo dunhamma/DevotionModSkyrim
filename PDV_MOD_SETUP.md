@@ -590,7 +590,7 @@ migrated because V3 is new-game-only.
 Run `node .\tools\pdv_quest_reaction_characterization.mjs` and
 `node .\tools\pdv_quest_reaction_performance_audit.mjs` for deterministic
 and static proof. Then run
-`node .\tools\pdv_quest_reaction_runtime_check.mjs --max-job-ms 2000` after a
+`node .\tools\pdv_quest_reaction_runtime_check.mjs --max-admission-ms 1000 --max-job-ms 180000` after a
 fresh Skyrim sweep. Runtime acceptance still requires FIFO lifecycle markers,
     one visible final toast/Book beat per accepted job, and a mid-job save/load
     resume. The consolidated catalog v2 compiler and Runtime cutover are
@@ -664,10 +664,16 @@ The V2 runtime checker also requires the latest configuration/reload summaries
 to report at least two admitted catalogs and nonzero active quest keys. An
 isolated corrupt extension may increase `rejected` without failing valid core and
 official admission. Runtime emits debug-gated `CATALOG_REJECT` markers only on
-configuration/reload paths. The QR-local optimization pass caches repeated
-catalog list counts and completion fields; PlayerEvents ingress and Manager
-callbacks remain clean/event-driven, with no new polling, scheduler, property,
-or VMAD surface.
+configuration/reload paths. Its lifecycle is now `ENQUEUE -> BUILD -> START ->
+COMPLETE`: admission persists a lightweight header and reports `admissionMs`, then
+the existing scheduler materializes catalog cells through persisted build cursors
+at the shared two-work-item tick budget before application starts. PlayerEvents
+flushes the ordinary quest broad scope before this independent submission. This
+fix adds no polling, scheduler, property, VMAD surface, or public Runtime method.
+Backend/static and targeted compile proof pass; re-run organic Before the Storm
+into MQ103 and require admission under 1000 ms with no `BROAD_SCOPE_ABORT`. Save
+during a visible `build=X/Y` status and reload to prove the materialization cursor
+continues before FIFO application.
 
 Slice 1B compile/readback closeout (2026-08-13) used:
 
