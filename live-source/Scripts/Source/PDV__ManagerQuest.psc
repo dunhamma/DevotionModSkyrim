@@ -1683,7 +1683,7 @@ Function AwardPiety(PDV_DeityBase deity, Float amount, String reason = "")
     AwardPietyInternal(deity, amount, True, reason)
 EndFunction
 
-Function AwardPietyFromLikesDislikes(PDV_DeityBase deity, Float amount, Int eventType, String reason = "")
+Float Function AwardPietyFromLikesDislikes(PDV_DeityBase deity, Float amount, Int eventType, String reason = "", Bool deferBroadPantheon = False, String detachedBroadPool = "")
     Bool ownsSurface = False
     if ShouldSurfaceLikesDislikesEvent(eventType) && _ldSurfEventType != eventType
         BeginLikesDislikesSurface(eventType)
@@ -1692,13 +1692,18 @@ Function AwardPietyFromLikesDislikes(PDV_DeityBase deity, Float amount, Int even
 
     Int previousEventType = _pendingLikesDislikesEventType
     _pendingLikesDislikesEventType = eventType
-    AwardPietyInternal(deity, amount, True, reason)
+    Float appliedAmount = AwardPietyInternal(deity, amount, True, reason, True, !deferBroadPantheon)
     _pendingLikesDislikesEventType = previousEventType
     AccumulateLikesDislikesSurface(deity, amount, eventType)
 
     if ownsSurface
         FlushLikesDislikesSurface(eventType)
     endIf
+
+    if deferBroadPantheon && appliedAmount != 0.0 && detachedBroadPool != "" && IsDeityEligibleForBroadPantheon(deity, detachedBroadPool)
+        return appliedAmount
+    endIf
+    return 0.0
 EndFunction
 
 ; Authoria bard-performance signal. Quality is the SGT expertise delta (1-8);
@@ -14085,25 +14090,49 @@ Function FlushBroadPantheonEvent()
         chosenDelta = _broadPantheonWorstNegative
     endIf
 
-    if _broadPantheonEventPool != "" && chosenDelta != 0.0
-        Float nowTime = Utility.GetCurrentGameTime()
-        Bool duplicateEvent = IsRecentBroadPantheonEventDuplicate(_broadPantheonEventPool, _broadPantheonEventId, nowTime)
-        if !duplicateEvent
-            CatchUpBroadPantheonDecayBeforeCurrentDay(_broadPantheonEventPool)
-            if GetBroadPantheonScratch(_broadPantheonEventPool) == 0.0
-                WriteZeroReservedDevotionalDayStamp(GetBroadPantheonScratchDayKey(_broadPantheonEventPool))
-            endIf
-            StorageUtil.AdjustFloatValue(None, GetBroadPantheonScratchKey(_broadPantheonEventPool), chosenDelta)
-            StorageUtil.SetStringValue(None, GetBroadPantheonLastEventKey(_broadPantheonEventPool), _broadPantheonEventId)
-            StorageUtil.SetFloatValue(None, GetBroadPantheonLastEventTimeKey(_broadPantheonEventPool), nowTime)
-            RememberBroadPantheonEvent(_broadPantheonEventPool, _broadPantheonEventId, nowTime)
-            if chosenDelta > 0.0
-                WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(_broadPantheonEventPool))
-            endIf
-        endIf
-    endIf
+    ApplyBroadPantheonEventResult(_broadPantheonEventPool, _broadPantheonEventId, chosenDelta)
 
     ClearBroadPantheonEventScope()
+EndFunction
+
+; Generic non-presented actions can spend several seconds scoring the full deity
+; roster. Their broad result is carried in caller-local variables so that work
+; never owns the Manager's shared temporary scope across the fan-out.
+Function CommitDetachedBroadPantheonEvent(String logicalEventId, String poolId, Float bestPositive, Float worstNegative, Int eventType)
+    Float chosenDelta = 0.0
+    if bestPositive > 0.0
+        chosenDelta = bestPositive
+    elseIf worstNegative < 0.0
+        chosenDelta = worstNegative
+    endIf
+    if logicalEventId == ""
+        logicalEventId = "likes_dislikes_" + eventType + "_" + Utility.GetCurrentGameTime()
+    endIf
+    ApplyBroadPantheonEventResult(poolId, logicalEventId, chosenDelta)
+EndFunction
+
+Function ApplyBroadPantheonEventResult(String poolId, String logicalEventId, Float chosenDelta)
+    if poolId == "" || logicalEventId == "" || chosenDelta == 0.0
+        return
+    endIf
+
+    Float nowTime = Utility.GetCurrentGameTime()
+    Bool duplicateEvent = IsRecentBroadPantheonEventDuplicate(poolId, logicalEventId, nowTime)
+    if duplicateEvent
+        return
+    endIf
+
+    CatchUpBroadPantheonDecayBeforeCurrentDay(poolId)
+    if GetBroadPantheonScratch(poolId) == 0.0
+        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonScratchDayKey(poolId))
+    endIf
+    StorageUtil.AdjustFloatValue(None, GetBroadPantheonScratchKey(poolId), chosenDelta)
+    StorageUtil.SetStringValue(None, GetBroadPantheonLastEventKey(poolId), logicalEventId)
+    StorageUtil.SetFloatValue(None, GetBroadPantheonLastEventTimeKey(poolId), nowTime)
+    RememberBroadPantheonEvent(poolId, logicalEventId, nowTime)
+    if chosenDelta > 0.0
+        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(poolId))
+    endIf
 EndFunction
 
 Function ClearBroadPantheonEventScope()
@@ -14419,9 +14448,9 @@ Bool Function IsImperialVampireStateActive()
     return StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHalt") == 1
 EndFunction
 
-Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry, String reason = "", Bool applyStanceMultiplier = True)
+Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry, String reason = "", Bool applyStanceMultiplier = True, Bool trackBroadPantheon = True)
     Bool queuedQuestReaction = _qrQueueTransactionActive
-    Bool ownsBroadEvent = !queuedQuestReaction && _broadPantheonEventDepth == 0
+    Bool ownsBroadEvent = trackBroadPantheon && !queuedQuestReaction && _broadPantheonEventDepth == 0
     if ownsBroadEvent
         _broadPantheonSelfEventSequence += 1
         if _broadPantheonSelfEventSequence <= 0
@@ -14450,7 +14479,7 @@ Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowR
     Float appliedAmount = RunGainPipeline(deity, amount, stance, applyStanceMultiplier)
     if queuedQuestReaction
         AccumulateQueuedQuestReactionBroadDelta(deity, appliedAmount)
-    else
+    elseIf trackBroadPantheon
         AccumulateBroadPantheonDelta(deity, appliedAmount)
     endIf
 

@@ -487,15 +487,30 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     Int i = 0
     Int count = PDV_FLST_AllDeities.GetSize()
     Int scoredCount = 0
+    Bool detachedBroadEvent = !PDV_Manager.ShouldSurfaceLikesDislikesEvent(eventType)
+    String detachedBroadPool = ""
+    Float detachedBestPositive = 0.0
+    Float detachedWorstNegative = 0.0
+    String eventReason = GetEventReason(eventType)
+    if detachedBroadEvent
+        detachedBroadPool = PDV_Manager.GetActiveBroadPantheonPoolId()
+    endIf
 
-    PDV_Manager.HandleBretonActionPracticeSignal(eventType, GetEventReason(eventType))
-    PDV_Manager.BeginLikesDislikesSurface(eventType, logicalEventId)
+    PDV_Manager.HandleBretonActionPracticeSignal(eventType, eventReason)
+    if !detachedBroadEvent
+        PDV_Manager.BeginLikesDislikesSurface(eventType, logicalEventId)
+    endIf
     while i < count
         PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
         if deity
             Float delta = deity.ScoreAction(eventType, actorRef, targetRef)
             if delta != 0.0
-                PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, GetEventReason(eventType))
+                Float broadDelta = PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, eventReason, detachedBroadEvent, detachedBroadPool)
+                if broadDelta > detachedBestPositive
+                    detachedBestPositive = broadDelta
+                elseIf broadDelta < detachedWorstNegative
+                    detachedWorstNegative = broadDelta
+                endIf
                 scoredCount += 1
 
                 if GetDebugLevel() >= 2
@@ -508,7 +523,11 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
 
         i += 1
     endWhile
-    PDV_Manager.FlushLikesDislikesSurface(eventType)
+    if detachedBroadEvent
+        PDV_Manager.CommitDetachedBroadPantheonEvent(logicalEventId, detachedBroadPool, detachedBestPositive, detachedWorstNegative, eventType)
+    else
+        PDV_Manager.FlushLikesDislikesSurface(eventType)
+    endIf
 
     ; V2: also deepen any OPEN transgressive-Prince paths (fallback path; EventBus does the same).
     PDV_Manager.RouteActionToOpenPaths(eventType, actorRef, targetRef)
