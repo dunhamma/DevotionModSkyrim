@@ -239,18 +239,20 @@ function verifyPrismaAssetCacheContract() {
   }
   const runtime = read(REPO_QUEST_REACTION_RUNTIME_SOURCE);
   const patchSourceRuntimeTokens = [
-    'JsonUtil.GetStringValue(matrixFile, "sourceMod")',
+    'JsonUtil.GetStringValue(catalogFile, "source." + sourceId + ".displayName")',
+    '"PDV.V3.QR.CellSourceName." + questKey, displayName',
     'prefix + "SourceModName"',
   ];
   const patchSourceManagerTokens = [
     'SendPrismaToastWithSource(',
+    'surfaceSourceModName',
     '"PDV.Diegetic.Journal.Sources"',
     'JsonSafeString(sourceModName)',
   ];
   if (patchSourceRuntimeTokens.some((token) => !runtime.includes(token)) || patchSourceManagerTokens.some((token) => !manager.includes(token))) {
-    fail("Runtime and Manager must carry PatchHub sourceMod metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
+    fail("Runtime and Manager must carry V2 catalog source metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
   } else {
-    pass("Runtime and Manager carry PatchHub sourceMod metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
+    pass("Runtime and Manager carry V2 catalog source metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
   }
   const culturalManagerTokens = [
     'return "cultural"',
