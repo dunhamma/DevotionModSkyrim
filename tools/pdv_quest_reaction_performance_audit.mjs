@@ -123,6 +123,9 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
   const ensureRunning = bodyFor(runtime, "EnsureQuestReactionQueueRunning");
   const submitQuest = bodyFor(runtime, "SubmitQuestStage");
   const submitSemantic = bodyFor(runtime, "SubmitSemanticEvent");
+  const queueResolved = bodyFor(runtime, "QueueResolvedReactionJob");
+  const processBuildUnit = bodyFor(runtime, "ProcessQuestReactionBuildUnit");
+  const appendBuiltCell = bodyFor(runtime, "AppendBuiltQuestReactionCell");
   const refreshCatalog = bodyFor(runtime, "RefreshCatalogSources");
   const loadCatalog = bodyFor(runtime, "LoadAndActivateCatalog");
   const activateCatalog = bodyFor(runtime, "ActivateCatalogSources");
@@ -130,6 +133,7 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
   const canActivateSource = bodyFor(runtime, "CanActivateCatalogSource");
   const indexCatalogSource = bodyFor(runtime, "IndexCatalogSource");
   const eventBusQuest = bodyFor(eventBus, "RouteQuestReaction");
+  const questStageIngress = bodyFor(playerEvents, "OnQuestStageChange", "Event");
   const managerCallbacks = [
     "ShouldQueueQuestReactionCell",
     "PrepareQueuedQuestReactionTransaction",
@@ -183,6 +187,34 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
   finding(findings, onUpdate.includes("ProcessQuestReactionQueueSlice()") &&
     !/\b(?:Utility\.)?Wait(?:MenuMode)?\s*\(/i.test(runtime),
     "runtime.nonblocking", "OnUpdate drains one bounded slice and the runtime contains no waits.");
+  const ingressBegin = questStageIngress.indexOf("BeginLogicalDevotionalAct(logicalEventId)");
+  const ingressCurated = questStageIngress.indexOf("RouteCuratedMilestoneQuestStage(akQuest, aiNewStage)");
+  const ingressFlush = questStageIngress.indexOf("FlushLogicalDevotionalAct()");
+  const ingressQuestReaction = questStageIngress.lastIndexOf("RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)");
+  finding(findings, ingressBegin >= 0 && ingressBegin < ingressCurated && ingressCurated < ingressFlush &&
+    ingressFlush < ingressQuestReaction && count(questStageIngress, /RouteQuestReactionStage\s*\(/g) === 1,
+    "playerevents.scope-closes-before-qr", "Ordinary quest/P2/curated routing flushes its logical broad scope before Quest Reaction admission begins.");
+  finding(findings,
+    queueResolved.includes('StorageUtil.SetStringValue(None, prefix + "MatrixFile", matrixFile)') &&
+    queueResolved.includes('StorageUtil.SetStringValue(None, prefix + "CellPrefix", cellPrefix)') &&
+    queueResolved.includes('StorageUtil.SetIntValue(None, prefix + "BuildComplete", 0)') &&
+    queueResolved.includes('StorageUtil.SetIntValue(None, prefix + "BuildIndex", 0)') &&
+    queueResolved.includes("admissionMs=") &&
+    !queueResolved.includes("PDV_Manager.ShouldQueueQuestReactionCell") &&
+    !queueResolved.includes("StringUtil.Split") &&
+    !/\bwhile\b/i.test(queueResolved),
+    "runtime.lightweight-admission", "Ingress persists only a resumable job header and returns without scanning or filtering catalog cells.");
+  finding(findings,
+    processBody.includes("processed < QUEST_REACTION_QUEUE_CELLS_PER_TICK") &&
+    processBody.includes('StorageUtil.GetIntValue(None, prefix + "BuildComplete") != 1') &&
+    processBody.includes("ProcessQuestReactionBuildUnit(jobId, prefix)") &&
+    processBuildUnit.includes('StorageUtil.GetIntValue(None, prefix + "BuildIndex")') &&
+    processBuildUnit.includes("JsonUtil.StringListGet") &&
+    processBuildUnit.includes("AppendBuiltQuestReactionCell") &&
+    processBuildUnit.indexOf('StorageUtil.SetIntValue(None, prefix + "BuildIndex", buildIndex)') > processBuildUnit.indexOf("buildIndex += 1") &&
+    !/\bwhile\b/i.test(processBuildUnit) &&
+    appendBuiltCell.includes('StorageUtil.SetIntValue(None, prefix + "CellCount", cellCount + 1)'),
+    "runtime.bounded-materialization", "The existing two-item scheduler incrementally materializes and checkpoints catalog cells before apply/finalize work.");
   finding(findings, processBody.includes("processed < QUEST_REACTION_QUEUE_CELLS_PER_TICK") &&
     processBody.includes("CellIndex") && processBody.includes("FinalizeQueuedQuestReaction") &&
     processBody.includes("RemoveHeadJob"),
@@ -322,6 +354,9 @@ function selfTest() {
     ["legacy V1 key", { runtime: base.runtime + '\nString legacy = "PDV.QR.Queue.JobIds"\n' }, "runtime.v3-namespace"],
     ["second scheduler", { manager: base.manager + "\nFunction ProcessQuestReactionQueueSlice()\n  RegisterForSingleUpdate(0.1)\nEndFunction\n" }, "runtime.single-scheduler"],
     ["missing armed update guard", { runtime: base.runtime.replace("StorageUtil.GetIntValue(None, QUEUE_UPDATE_ARMED_KEY) != 1", "True") }, "runtime.single-armed-update-chain"],
+    ["quest reaction inside broad scope", { playerEvents: base.playerEvents.replace("RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)", "RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)\n    RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)") }, "playerevents.scope-closes-before-qr"],
+    ["synchronous catalog materialization", { runtime: base.runtime.replace('StorageUtil.SetIntValue(None, prefix + "BuildComplete", 0)', 'StorageUtil.SetIntValue(None, prefix + "BuildComplete", 0)\n    PDV_Manager.ShouldQueueQuestReactionCell("Akatosh", "+", "native", "major")') }, "runtime.lightweight-admission"],
+    ["uncheckpointed build cursor", { runtime: base.runtime.replace('StorageUtil.SetIntValue(None, prefix + "BuildIndex", buildIndex)', '; cursor checkpoint removed') }, "runtime.bounded-materialization"],
     ["load ignores saved active slice", { runtime: base.runtime.replace("savedSliceOwnsResume = fromLoad && _sliceActive", "savedSliceOwnsResume = False") }, "runtime.single-armed-update-chain"],
     ["cell checkpoint after slice", { runtime: base.runtime.replace('        StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)\n        processed += 1', '        processed += 1\n    endWhile\n    StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)').replace('    endWhile\n    PDV_Manager.EndQueuedQuestReactionSlice()', '    PDV_Manager.EndQueuedQuestReactionSlice()') }, "runtime.cell-progress-checkpoint"],
     ["surface deity duplication", { manager: base.manager.replace("Bool alreadyListed = QueuedQuestReactionSurfaceHasName(deityName)", "Bool alreadyListed = False") }, "manager.unique-final-surface"],

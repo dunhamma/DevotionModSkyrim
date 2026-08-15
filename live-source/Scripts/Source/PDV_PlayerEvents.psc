@@ -646,20 +646,23 @@ Event OnItemCrafted(ObjectReference akBench, Location akLocation, Form akCreated
 EndEvent
 
 Event OnQuestStageChange(Quest akQuest, Int aiNewStage)
+    String logicalEventId = ""
     if PDV_EventBusService && akQuest
-        String logicalEventId = "quest_" + akQuest.GetFormID() + "_" + aiNewStage
+        logicalEventId = "quest_" + akQuest.GetFormID() + "_" + aiNewStage
         PDV_EventBusService.BeginLogicalDevotionalAct(logicalEventId)
         RouteP2ImmersiveQuestStage(akQuest, aiNewStage, logicalEventId)
-        RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)
     else
         RouteP2ImmersiveQuestStage(akQuest, aiNewStage)
-        RouteQuestReactionStage(akQuest, aiNewStage)
     endIf
     RoutePaarthurnaxSpareQuestStage(akQuest, aiNewStage)
     RouteCuratedMilestoneQuestStage(akQuest, aiNewStage)
     if PDV_EventBusService && akQuest
         PDV_EventBusService.FlushLogicalDevotionalAct()
     endIf
+    ; Quest Reaction owns a separate persisted transaction. Keep its catalog
+    ; admission outside the ordinary broad scope so no long-running QR work can
+    ; stall or replace the logical act being flushed above.
+    RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)
 EndEvent
 
 Event OnPDVConcordatCompliance(String eventName, String strArg, Float numArg, Form sender)
