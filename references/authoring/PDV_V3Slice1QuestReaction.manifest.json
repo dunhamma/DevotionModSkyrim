@@ -274,6 +274,7 @@
     "status": "runtime-and-manual-canary-passed",
     "selectedLanePolicy": "ordinary automatic quest reactions must be eligible in the currently selected Nord baseline at ingress and again before award; authored taboo/hostile displeasure remains valid for visible origin-roster deities; Daedric paths and grandfathered active patrons retain their existing exceptions",
     "toastIdentity": "each completed logical reaction job carries its qualified reaction key as top-level and toast-local correlation; Prisma deduplicates exact repeated delivery of one correlation but never distinct logical jobs",
+    "playerFacingSource": "core Bethesda master identities remain available to queue diagnostics but are omitted from Prisma toast and Book of Days source labels; optional integration attribution remains available",
     "diagnostics": "debug-gated PDV_TOAST_TRACE markers distinguish Papyrus submission, native receipt/Interop dispatch, and UI receipt/dedupe/render",
     "resumeOwnership": "one persisted armed update chain owns the FIFO; a saved active slice retains resume ownership, pending registrations are cancelled on load, and the cursor checkpoints after each applied cell",
     "presentationIdentity": "each deity is listed at most once per logical deed; higher piety intensity is expressed by the existing Book rune rather than repeated names",
