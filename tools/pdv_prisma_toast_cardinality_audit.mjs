@@ -43,11 +43,24 @@ function accepts(recent, copy, now) {
   return true;
 }
 
+function visibleToastSource(source) {
+  return new Set(["Skyrim.esm", "Update.esm", "Dawnguard.esm", "HearthFires.esm", "Dragonborn.esm"]).has(source) ? "" : source;
+}
+
 assert(appSource.includes('text(copy.correlation, "")'), "toast correlation is absent from the UI dedupe key");
 assert((appSource.match(/traceToast\("receipt", payload\.toast\)/g) || []).length >= 2, "overlay/UI receipt traces are absent");
 assert(appSource.includes('traceToast("dedupe", copy)'), "toast dedupe trace is absent");
 assert(appSource.includes('traceToast("render", copy)'), "toast render trace is absent");
 assert(managerSource.includes('correlationPrefix = "\\\"correlation\\\":\\\""'), "Papyrus does not expose the logical reaction correlation at the overlay top level");
+const questSurface = managerSource.match(/Function FlushQueuedQuestReactionSurface\([\s\S]*?EndFunction/)?.[0] ?? "";
+assert(questSurface.includes('surfaceSourceModName = NormalizePublicDeityDisplayText(sourceModName)'), "Papyrus quest surface does not normalize its player-facing source");
+for (const officialMaster of ["Skyrim.esm", "Update.esm", "Dawnguard.esm", "HearthFires.esm", "Dragonborn.esm"]) {
+  assert(questSurface.includes(`surfaceSourceModName == "${officialMaster}"`), `Papyrus quest surface still exposes ${officialMaster}`);
+}
+assert(questSurface.includes('surfaceSourceModName = ""'), "Papyrus quest surface does not clear official master labels");
+assert((questSurface.match(/SendPrismaToastWithSource\([^\n]*surfaceSourceModName/g) || []).length === 3, "not every quest toast uses the player-facing source");
+assert((questSurface.match(/AppendBookOfDaysEntry\([^\n]*surfaceSourceModName/g) || []).length === 3, "not every quest journal entry uses the player-facing source");
+assert(!questSurface.includes('StringUtil.Find(surfaceSourceModName, ".es"'), "Papyrus quest surface must not hide third-party source attribution by extension");
 assert(nativeSource.includes('FindTopLevelKey(a_payload, "correlation", &correlation)'), "native top-level correlation reader is absent");
 assert(nativeSource.includes('TraceToastOverlay("papyrus_receipt", overlayPayload)'), "native receipt trace is absent");
 assert(nativeSource.includes('TraceToastOverlay("interop_dispatch", a_payload)'), "native Interop dispatch trace is absent");
@@ -67,5 +80,8 @@ assert(distinctJobs.filter((toast) => accepts(distinctRecent, toast, 0)).length 
 const duplicateRecent = new Map();
 const sameJob = { ...baseToast, correlation: "v3qr_2" };
 assert([0, 100, 200, 300].filter((now) => accepts(duplicateRecent, sameJob, now)).length === 1, "an exact duplicate logical job must remain suppressed");
+assert(visibleToastSource("Skyrim.esm") === "", "official core master labels must remain hidden from toasts");
+assert(visibleToastSource("Dragonborn.esm") === "", "official DLC master labels must remain hidden from toasts");
+assert(visibleToastSource("Aetherium Forge Destroys Items.esp") === "Aetherium Forge Destroys Items.esp", "third-party source attribution must remain available");
 
 console.log("PASS: Prisma toast cardinality correlation and trace contract");

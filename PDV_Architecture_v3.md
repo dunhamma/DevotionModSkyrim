@@ -871,7 +871,8 @@ registration reads the PapyrusUtil string lists by indexed `StringListCount` / `
 Optional PatchHub channel JSON also carries `sourceMod`, derived from the owning FOMOD
 option name rather than hand-authored per channel. The queue stores that value with the
 reaction job and emits it on both player-visible confirmation surfaces: the Prisma toast
-and the matching persistent Book-of-Days entry. Core matrix reactions omit the field.
+and the matching persistent Book-of-Days entry. Core Bethesda master identities remain
+available to queue diagnostics but are omitted from both player-visible surfaces.
 Existing saves keep a parallel StorageUtil source list that is padded before the first new
 append, so new labels cannot drift onto historical journal entries.
 

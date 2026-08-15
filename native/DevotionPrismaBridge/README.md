@@ -245,7 +245,8 @@ Stable common toast fields:
 
 Quest-reaction Book of Days entries may also carry the same optional `source`
 field. The Prisma view renders it as a compact source line on both surfaces;
-core Skyrim reactions omit it.
+core Bethesda master identities remain internal and are omitted from both
+player-visible surfaces.
 
 Stable event-specific fields:
 

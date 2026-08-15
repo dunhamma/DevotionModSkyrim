@@ -2213,6 +2213,10 @@ Function FlushQueuedQuestReactionSurface(String sourceModName = "", String react
     if _qrQueueSurfPosCount == 0 && _qrQueueSurfNegCount == 0
         return
     endIf
+    String surfaceSourceModName = NormalizePublicDeityDisplayText(sourceModName)
+    if surfaceSourceModName == "Skyrim.esm" || surfaceSourceModName == "Update.esm" || surfaceSourceModName == "Dawnguard.esm" || surfaceSourceModName == "HearthFires.esm" || surfaceSourceModName == "Dragonborn.esm"
+        surfaceSourceModName = ""
+    endIf
     Int nowDay = Utility.GetCurrentGameTime() as Int
     Int bodMagnitude = 1
     if _qrQueueSurfMilestone
@@ -2226,9 +2230,9 @@ Function FlushQueuedQuestReactionSurface(String sourceModName = "", String react
         elseIf _qrQueueSurfPosCount > 2
             posMsg = _qrQueueSurfBestPosName + " and " + (_qrQueueSurfPosCount - 1) + " others mark your deed."
         endIf
-        toastSent = SendPrismaToastWithSource(_qrQueueSurfBestPosSymbol, "good", "A deed marked", posMsg, sourceModName, True, reactionKey)
+        toastSent = SendPrismaToastWithSource(_qrQueueSurfBestPosSymbol, "good", "A deed marked", posMsg, surfaceSourceModName, True, reactionKey)
         TraceQuestReactionToastResult(reactionKey, toastSent)
-        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed.", nowDay, "favor.act", _qrQueueSurfBestPosSymbol, False, bodMagnitude, "A deed marked", False, sourceModName)
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed.", nowDay, "favor.act", _qrQueueSurfBestPosSymbol, False, bodMagnitude, "A deed marked", False, surfaceSourceModName)
     elseIf _qrQueueSurfPosCount == 0
         String negMsg = _qrQueueSurfBestNegName + " takes offense at your deed."
         if _qrQueueSurfNegCount == 2
@@ -2236,9 +2240,9 @@ Function FlushQueuedQuestReactionSurface(String sourceModName = "", String react
         elseIf _qrQueueSurfNegCount > 2
             negMsg = _qrQueueSurfBestNegName + " and " + (_qrQueueSurfNegCount - 1) + " others take offense at your deed."
         endIf
-        toastSent = SendPrismaToastWithSource(_qrQueueSurfBestNegSymbol, "warning", "A deed ill-received", negMsg, sourceModName, True, reactionKey)
+        toastSent = SendPrismaToastWithSource(_qrQueueSurfBestNegSymbol, "warning", "A deed ill-received", negMsg, surfaceSourceModName, True, reactionKey)
         TraceQuestReactionToastResult(reactionKey, toastSent)
-        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense at your deed.", nowDay, "favor.loss", _qrQueueSurfBestNegSymbol, False, bodMagnitude, "A deed ill-received", False, sourceModName)
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense at your deed.", nowDay, "favor.loss", _qrQueueSurfBestNegSymbol, False, bodMagnitude, "A deed ill-received", False, surfaceSourceModName)
     else
         Bool positiveLeads = _qrQueueSurfBestPosAmount >= (_qrQueueSurfBestNegAmount * -1.0)
         String mixedTone = "good"
@@ -2249,9 +2253,9 @@ Function FlushQueuedQuestReactionSurface(String sourceModName = "", String react
             mixedSymbol = _qrQueueSurfBestNegSymbol
             mixedBodTone = "favor.loss"
         endIf
-        toastSent = SendPrismaToastWithSource(mixedSymbol, mixedTone, "A deed weighed", _qrQueueSurfBestPosName + " marks your deed; " + _qrQueueSurfBestNegName + " takes offense.", sourceModName, True, reactionKey)
+        toastSent = SendPrismaToastWithSource(mixedSymbol, mixedTone, "A deed weighed", _qrQueueSurfBestPosName + " marks your deed; " + _qrQueueSurfBestNegName + " takes offense.", surfaceSourceModName, True, reactionKey)
         TraceQuestReactionToastResult(reactionKey, toastSent)
-        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed; " + JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, bodMagnitude, "A deed weighed", False, sourceModName)
+        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed; " + JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, bodMagnitude, "A deed weighed", False, surfaceSourceModName)
     endIf
     ResetQueuedQuestReactionSurface()
 EndFunction
