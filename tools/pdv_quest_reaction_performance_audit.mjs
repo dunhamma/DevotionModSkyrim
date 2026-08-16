@@ -2,7 +2,8 @@
 /*
  * Read-only static architecture gate for the V3 Quest Reaction runtime.
  *
- * This proves source ownership, bounds, call direction, and key namespace.
+ * This proves source ownership, bounds, call direction, key namespace, and
+ * the final Quest Reaction player-source boundary shared by toast and Book.
  * It does not prove Papyrus scheduling, co-save serialization, VMAD wiring,
  * save/load delivery, or player-facing presentation.
  */
@@ -296,11 +297,22 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
     "manager.callback-seam", "Manager exposes only the scoring/final-presentation callback seam needed by the runtime.");
   const queuedSurface = bodyFor(manager, "AccumulateQueuedQuestReactionSurface");
   const queuedSurfaceUnique = bodyFor(manager, "QueuedQuestReactionSurfaceHasName");
+  const flushQueuedSurface = bodyFor(manager, "FlushQueuedQuestReactionSurface");
   finding(findings, queuedSurface.includes("alreadyListed = QueuedQuestReactionSurfaceHasName(deityName)") &&
     queuedSurface.includes("if !alreadyListed") &&
     queuedSurfaceUnique.includes("_qrQueueSurfPosNamesCsv") && queuedSurfaceUnique.includes("_qrQueueSurfNegNamesCsv") &&
     queuedSurfaceUnique.includes("StringUtil.Find"),
     "manager.unique-final-surface", "A logical deed lists each deity once; magnitude remains a separate Book rune concern.");
+  finding(findings,
+    flushQueuedSurface.includes("String surfaceSourceModName = NormalizePublicDeityDisplayText(sourceModName)") &&
+    ["Skyrim.esm", "Update.esm", "Dawnguard.esm", "HearthFires.esm", "Dragonborn.esm"]
+      .every((master) => flushQueuedSurface.includes(`surfaceSourceModName == "${master}"`)) &&
+    flushQueuedSurface.includes('surfaceSourceModName = ""') &&
+    count(flushQueuedSurface, /SendPrismaToastWithSource\([^\r\n]*surfaceSourceModName/g) === 3 &&
+    count(flushQueuedSurface, /AppendBookOfDaysEntry\([^\r\n]*surfaceSourceModName/g) === 3 &&
+    !/SendPrismaToastWithSource\([^\r\n]*,\s*sourceModName(?:\s*,|\s*\))/g.test(flushQueuedSurface) &&
+    !/AppendBookOfDaysEntry\([^\r\n]*,\s*sourceModName(?:\s*,|\s*\))/g.test(flushQueuedSurface),
+    "manager.public-source-sanitized", "Quest Reaction toast and Book surfaces hide Bethesda master filenames while retaining optional integration attribution.");
   finding(findings, retiredManager.every((name) => !bodyFor(manager, name)) &&
     !manager.includes("PDV.V3.QR.") && !manager.includes("PDV_QuestReactionWorker"),
     "manager.ownership-retired", "Manager no longer owns catalog, queue, V3 storage, scheduler, or the old worker.");
@@ -360,6 +372,8 @@ function selfTest() {
     ["load ignores saved active slice", { runtime: base.runtime.replace("savedSliceOwnsResume = fromLoad && _sliceActive", "savedSliceOwnsResume = False") }, "runtime.single-armed-update-chain"],
     ["cell checkpoint after slice", { runtime: base.runtime.replace('        StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)\n        processed += 1', '        processed += 1\n    endWhile\n    StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)').replace('    endWhile\n    PDV_Manager.EndQueuedQuestReactionSlice()', '    PDV_Manager.EndQueuedQuestReactionSlice()') }, "runtime.cell-progress-checkpoint"],
     ["surface deity duplication", { manager: base.manager.replace("Bool alreadyListed = QueuedQuestReactionSurfaceHasName(deityName)", "Bool alreadyListed = False") }, "manager.unique-final-surface"],
+    ["raw core source reaches quest surfaces", { manager: base.manager.replace("String surfaceSourceModName = NormalizePublicDeityDisplayText(sourceModName)", "String surfaceSourceModName = sourceModName") }, "manager.public-source-sanitized"],
+    ["Book bypasses sanitized quest source", { manager: base.manager.replace("False, surfaceSourceModName)", "False, sourceModName)") }, "manager.public-source-sanitized"],
     ["missing interface member", { runtime: base.runtime.replace("String Function GetCompatibilityDetail()", "String Function MissingCompatibilityDetail()") }, "runtime.interface"],
     ["EventBus manager ingress", { eventBus: base.eventBus.replace("PDV_QuestReactionRuntimeService.SubmitQuestStage", "PDV_Manager.ApplyQuestReaction") }, "eventbus.direct-ingress"],
     ["Manager V3 storage", { manager: base.manager + '\nString bad = "PDV.V3.QR.Queue.JobIds"\n' }, "manager.ownership-retired"],

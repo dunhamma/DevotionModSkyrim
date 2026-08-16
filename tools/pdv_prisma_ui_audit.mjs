@@ -971,7 +971,9 @@ function verifyBookOfDaysChronicleActionContract({ manager, eventBus, actionRout
   const actionRouterRoute = functionBlock(actionRouter, "RouteActionWithAttribution");
   const eventBusPassesReason =
     eventBusRoute.includes("PDV_Manager.AwardPiety(deity, delta, GetEventReason(eventType))") ||
-    eventBusRoute.includes("PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, GetEventReason(eventType))");
+    eventBusRoute.includes("PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, GetEventReason(eventType))") ||
+    (eventBusRoute.includes("String eventReason = GetEventReason(eventType)") &&
+      eventBusRoute.includes("PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, eventReason,"));
   if (
     !eventBusPassesReason ||
     !functionBlock(eventBus, "GetEventReason").includes("eventTypes.EventLabel(eventType)")
@@ -983,7 +985,9 @@ function verifyBookOfDaysChronicleActionContract({ manager, eventBus, actionRout
 
   const actionRouterPassesReason =
     actionRouterRoute.includes("PDV_Manager.AwardPiety(deity, delta, GetEventReason(eventType))") ||
-    actionRouterRoute.includes("PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, GetEventReason(eventType))");
+    actionRouterRoute.includes("PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, GetEventReason(eventType))") ||
+    (actionRouterRoute.includes("String eventReason = GetEventReason(eventType)") &&
+      actionRouterRoute.includes("PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, eventReason,"));
   if (
     !actionRouterPassesReason ||
     !functionBlock(actionRouter, "GetEventReason").includes("eventTypes.EventLabel(eventType)")

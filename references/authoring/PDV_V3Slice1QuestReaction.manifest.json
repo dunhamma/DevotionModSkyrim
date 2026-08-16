@@ -249,6 +249,18 @@
     "separateFinding": "An earlier session-wide abort was attributed to a pre-existing likes_dislikes_345 broad fan-out before MQ102 stage 50, 95 seconds before QR admission; it is not evidence against the bounded QR ingress and remains a separate diagnosis surface.",
     "open": "none for the bounded-ingress fix; broader Slice 1 compatibility and Authoria acceptance remain separate"
   },
+  "detachedBroadActionFix": {
+    "status": "backend-static-live-targeted-compile-and-anvil-safety-surface-pass",
+    "diagnosis": "Discover-location event 345 is not a native likes/dislikes presentation event, but the generic action router held the Manager's shared broad-pantheon scope across the full deity scoring loop. A concurrent ordinary quest event reached the two-second stale-owner guard and emitted BROAD_SCOPE_ABORT for likes_dislikes_345.",
+    "fix": "EventBus and the ActionRouter fallback keep non-presented action aggregation in caller-local strongest-positive and worst-negative values, then use one direct Manager commit that does not open, wait on, or clear the shared broad scope.",
+    "preserved": ["strongest eligible positive precedence", "most severe eligible negative fallback", "broad-pool catch-up", "logical-event dedupe", "signed scratch", "surface behavior for event 303 and 366", "quest-reaction scheduler and interface"],
+    "optimization": "Generic action fan-out resolves its event reason once per logical act instead of once for every scoring deity.",
+    "backendProof": "new broad-pantheon static assertions pass; Quest Reaction performance, characterization, eligibility, semantic-adapter, ARR/T16, and ARR/T17 gates pass; PDV__ManagerQuest, PDV_EventBus, and PDV_ActionRouter compile in isolated and synced live Anvil output roots with zero errors and zero warnings",
+    "runtimeGate": "node tools/pdv_quest_reaction_runtime_check.mjs --log <Papyrus.0.log> --expected-sequence Skyrim.esm|320781|160 --max-admission-ms 1000 --max-job-ms 180000",
+    "runtimeProof": "The Anvil overlap regression completed discover-location plus nearby quest-stage work without BROAD_SCOPE_ABORT; the runtime gate passed and the tester confirmed both final player surfaces appeared.",
+    "openProof": "No separate numeric broad-standing before/after readout was recorded. Strongest-positive and most-severe-negative selection are covered by the deterministic broad-pantheon model and are not represented here as manually observed numeric runtime proof.",
+    "authoriaBoundary": "Full Authoria acceptance is deferred until the combined V3 core and generated compatibility installer are assembled; later proof must cover real dependency detection, source/sentinel activation, and load-order behavior."
+  },
   "slice1DASemanticAdapters": {
     "status": "backend-static-compile-vmad-and-master-readback-pass-skyrim-proof-open",
     "afdiIngress": "PDV_AFDIObserver preserves its 30-slot polling, existing-save baseline, resolve backoff, once-only persistence, and terminal retirement, but submits one afdi|artifact_destroyed.* semantic event and owns no deity outcomes",
@@ -275,13 +287,14 @@
     "selectedLanePolicy": "ordinary automatic quest reactions must be eligible in the currently selected Nord baseline at ingress and again before award; authored taboo/hostile displeasure remains valid for visible origin-roster deities; Daedric paths and grandfathered active patrons retain their existing exceptions",
     "toastIdentity": "each completed logical reaction job carries its qualified reaction key as top-level and toast-local correlation; Prisma deduplicates exact repeated delivery of one correlation but never distinct logical jobs",
     "playerFacingSource": "core Bethesda master identities remain available to queue diagnostics but are omitted from Prisma toast and Book of Days source labels; optional integration attribution remains available",
+    "playerFacingSourceGate": "the Quest Reaction architecture audit requires all positive, negative, and mixed toast/Book paths to use the shared sanitized source and includes adversarial mutations for a removed sanitizer and a Book-only raw-source bypass",
     "diagnostics": "debug-gated PDV_TOAST_TRACE markers distinguish Papyrus submission, native receipt/Interop dispatch, and UI receipt/dedupe/render",
     "resumeOwnership": "one persisted armed update chain owns the FIFO; a saved active slice retains resume ownership, pending registrations are cancelled on load, and the cursor checkpoints after each applied cell",
     "presentationIdentity": "each deity is listed at most once per logical deed; higher piety intensity is expressed by the existing Book rune rather than repeated names",
     "gates": [
       "node tools/pdv_quest_reaction_eligibility_audit.mjs --self-test",
       "node tools/pdv_prisma_toast_cardinality_audit.mjs --self-test",
-      "node tools/pdv_quest_reaction_performance_audit.mjs",
+      "node tools/pdv_quest_reaction_performance_audit.mjs --self-test",
       "targeted PDV__ManagerQuest compile",
       "DevotionPrismaBridge releasedbg build"
     ],

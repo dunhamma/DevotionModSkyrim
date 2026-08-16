@@ -588,7 +588,7 @@ on alias init/load. The 1.5 queue keys and Worker identity are intentionally not
 migrated because V3 is new-game-only.
 
 Run `node .\tools\pdv_quest_reaction_characterization.mjs` and
-`node .\tools\pdv_quest_reaction_performance_audit.mjs` for deterministic
+`node .\tools\pdv_quest_reaction_performance_audit.mjs --self-test` for deterministic
 and static proof. Then run
 `node .\tools\pdv_quest_reaction_runtime_check.mjs --max-admission-ms 1000 --max-job-ms 180000` after a
 fresh Skyrim sweep. Runtime acceptance still requires FIFO lifecycle markers,
@@ -597,6 +597,12 @@ fresh Skyrim sweep. Runtime acceptance still requires FIFO lifecycle markers,
     backend-green. The AFDI semantic adapter migration and generated package
     consolidation are also backend-green; the combined fresh-game and Authoria smoke
     is the remaining Slice 1 acceptance gate.
+
+The Quest Reaction architecture self-test also protects the shared public-source
+boundary: every positive, negative, and mixed final toast and Book entry must use
+the sanitized source value. Its negative mutations fail if the sanitizer is
+removed or if Book alone is changed back to raw `sourceModName`; qualified
+Bethesda identities remain available to queue diagnostics.
 
 The 2026-08-14 fresh-game canary passed qualified ingress, five complete queue
 lifecycles, the four-job FIFO sweep, four Book of Days entries, and reload after
@@ -680,6 +686,24 @@ pass. The tester also confirmed four visible toasts and four correct,
 duplicate-free Book entries from that counted run. The bounded-ingress fix is
 therefore fully smoke-proven; broader Slice 1 compatibility and Authoria
 acceptance remain separate gates.
+
+The separate `likes_dislikes_345` discover-location abort is handled on
+`codex/v3-broad-scope-likes-fix`. Non-presented generic action fan-out must not
+call `BeginLikesDislikesSurface` across the all-deity loop. EventBus and the
+ActionRouter fallback capture the active broad pool, collect the strongest
+eligible applied positive (or most severe eligible negative) in local
+variables, and commit once through `CommitDetachedBroadPantheonEvent`. Run
+`node .\tools\pdv_broad_pantheon_audit.mjs --self-test`, the Quest Reaction
+performance/characterization/eligibility gates, and compile
+`PDV__ManagerQuest`, `PDV_EventBus`, and `PDV_ActionRouter` before syncing.
+Backend/static plus isolated and synced live compilation are green. The Anvil
+overlap run passed `pdv_quest_reaction_runtime_check.mjs` with the expected
+quest sequence and no `BROAD_SCOPE_ABORT`; the tester also confirmed both final
+player surfaces. That run did not record a separate numeric broad-standing
+before/after readout, so the deterministic model remains the proof for exact
+strongest-positive/most-severe-negative selection. Full Authoria testing is deferred until the V3 core and
+generated compatibility installer are assembled; Anvil remains the current
+runtime canary lane.
 
 Slice 1B compile/readback closeout (2026-08-13) used:
 
