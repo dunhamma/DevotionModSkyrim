@@ -427,7 +427,8 @@ function buildAndVerifyArchive(build, outputPath) {
     if (entries.some((entry) => entry.includes("\\") || entry.startsWith("/") || entry.split("/").includes(".."))) fail("Archive contains non-normalized member metadata.");
     if (new Set(entries.map((entry) => entry.toLowerCase())).size !== entries.length) fail("Archive contains duplicate file entries.");
     const escapedVerify = verifyRoot.replaceAll("'", "''");
-    execFileSync("powershell", ["-NoProfile", "-Command", `$ErrorActionPreference='Stop'; Expand-Archive -LiteralPath '${escapedOutput}' -DestinationPath '${escapedVerify}'`], { cwd: ROOT, stdio: "pipe" });
+    const extractScript = `$ErrorActionPreference='Stop'; Add-Type -AssemblyName System.IO.Compression.FileSystem; [IO.Compression.ZipFile]::ExtractToDirectory('${escapedOutput}','${escapedVerify}')`;
+    execFileSync("powershell", ["-NoProfile", "-Command", extractScript], { cwd: ROOT, stdio: "pipe" });
     const extracted = readBufferTree(verifyRoot);
     if (JSON.stringify(packageSnapshot(extracted)) !== JSON.stringify(packageSnapshot(build.packageArtifacts))) fail("Archive membership or member hashes differ from the generated package tree.");
     return {
