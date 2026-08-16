@@ -250,13 +250,15 @@
     "open": "none for the bounded-ingress fix; broader Slice 1 compatibility and Authoria acceptance remain separate"
   },
   "detachedBroadActionFix": {
-    "status": "backend-static-and-live-targeted-compile-pass-anvil-runtime-open",
+    "status": "backend-static-live-targeted-compile-and-anvil-safety-surface-pass",
     "diagnosis": "Discover-location event 345 is not a native likes/dislikes presentation event, but the generic action router held the Manager's shared broad-pantheon scope across the full deity scoring loop. A concurrent ordinary quest event reached the two-second stale-owner guard and emitted BROAD_SCOPE_ABORT for likes_dislikes_345.",
     "fix": "EventBus and the ActionRouter fallback keep non-presented action aggregation in caller-local strongest-positive and worst-negative values, then use one direct Manager commit that does not open, wait on, or clear the shared broad scope.",
     "preserved": ["strongest eligible positive precedence", "most severe eligible negative fallback", "broad-pool catch-up", "logical-event dedupe", "signed scratch", "surface behavior for event 303 and 366", "quest-reaction scheduler and interface"],
     "optimization": "Generic action fan-out resolves its event reason once per logical act instead of once for every scoring deity.",
     "backendProof": "new broad-pantheon static assertions pass; Quest Reaction performance, characterization, eligibility, semantic-adapter, ARR/T16, and ARR/T17 gates pass; PDV__ManagerQuest, PDV_EventBus, and PDV_ActionRouter compile in isolated and synced live Anvil output roots with zero errors and zero warnings",
-    "runtimeOpen": "Anvil overlap regression must observe discover-location plus a nearby quest-stage act with no BROAD_SCOPE_ABORT and with expected piety/broad standing retained.",
+    "runtimeGate": "node tools/pdv_quest_reaction_runtime_check.mjs --log <Papyrus.0.log> --expected-sequence Skyrim.esm|320781|160 --max-admission-ms 1000 --max-job-ms 180000",
+    "runtimeProof": "The Anvil overlap regression completed discover-location plus nearby quest-stage work without BROAD_SCOPE_ABORT; the runtime gate passed and the tester confirmed both final player surfaces appeared.",
+    "openProof": "No separate numeric broad-standing before/after readout was recorded. Strongest-positive and most-severe-negative selection are covered by the deterministic broad-pantheon model and are not represented here as manually observed numeric runtime proof.",
     "authoriaBoundary": "Full Authoria acceptance is deferred until the combined V3 core and generated compatibility installer are assembled; later proof must cover real dependency detection, source/sentinel activation, and load-order behavior."
   },
   "slice1DASemanticAdapters": {

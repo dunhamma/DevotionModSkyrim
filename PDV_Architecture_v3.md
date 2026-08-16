@@ -1100,8 +1100,12 @@ rules without opening, waiting on, or clearing the shared scope. Surfaced
 likes/dislikes events, shrine/shout fan-outs, ordinary quest acts, and the
 persisted Quest Reaction transaction are unchanged. EventBus and the fallback
 router also cache the event reason once per fan-out. The regression audit and
-all affected scripts compile with zero errors and zero warnings; Anvil overlap
-proof remains open. Authoria is deliberately deferred until the combined V3
+all affected scripts compile with zero errors and zero warnings. The Anvil
+overlap runtime gate passed without `BROAD_SCOPE_ABORT`, and the tester observed
+both final player surfaces. A separate numeric broad-standing before/after
+readout was not recorded; strongest-positive and most-severe-negative selection
+remain deterministic-model proof rather than a manual numeric claim. Authoria
+is deliberately deferred until the combined V3
 core and generated compatibility installer are assembled, when it can prove
 real dependency detection, sentinel resolution, and load-order behavior in one
 coherent pass.

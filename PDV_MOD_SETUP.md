@@ -696,9 +696,12 @@ variables, and commit once through `CommitDetachedBroadPantheonEvent`. Run
 `node .\tools\pdv_broad_pantheon_audit.mjs --self-test`, the Quest Reaction
 performance/characterization/eligibility gates, and compile
 `PDV__ManagerQuest`, `PDV_EventBus`, and `PDV_ActionRouter` before syncing.
-Backend/static plus isolated and synced live compilation are green; a fresh Anvil overlap run
-must still show the discover-location action plus a nearby quest stage with no
-`BROAD_SCOPE_ABORT`. Full Authoria testing is deferred until the V3 core and
+Backend/static plus isolated and synced live compilation are green. The Anvil
+overlap run passed `pdv_quest_reaction_runtime_check.mjs` with the expected
+quest sequence and no `BROAD_SCOPE_ABORT`; the tester also confirmed both final
+player surfaces. That run did not record a separate numeric broad-standing
+before/after readout, so the deterministic model remains the proof for exact
+strongest-positive/most-severe-negative selection. Full Authoria testing is deferred until the V3 core and
 generated compatibility installer are assembled; Anvil remains the current
 runtime canary lane.
 
