@@ -71,9 +71,13 @@ export function aggregateLogicalEvent(deltas) {
 }
 
 export function hasDetachedActionShape(body) {
+  const eventReasonAssignment = body.search(/String\s+eventReason\s*=\s*GetEventReason\s*\(\s*eventType\s*\)/i);
+  const substrateCall = body.search(/HandleSubstrateActionEvent\s*\(\s*eventType\s*,\s*eventReason\s*\)/i);
   return /detachedBroadEvent\s*=\s*!PDV_Manager\.ShouldSurfaceLikesDislikesEvent\s*\(\s*eventType\s*\)/i.test(body)
     && /GetActiveBroadPantheonPoolId\s*\(\s*\)/i.test(body)
-    && /String\s+eventReason\s*=\s*GetEventReason\s*\(\s*eventType\s*\)/i.test(body)
+    && eventReasonAssignment >= 0
+    && substrateCall > eventReasonAssignment
+    && (body.match(/GetEventReason\s*\(\s*eventType\s*\)/gi) ?? []).length === 1
     && /AwardPietyFromLikesDislikes\s*\([^\r\n]*detachedBroadEvent[^\r\n]*detachedBroadPool/i.test(body)
     && /CommitDetachedBroadPantheonEvent\s*\(\s*logicalEventId\s*,\s*detachedBroadPool[^\r\n]*eventType\s*\)/i.test(body);
 }
@@ -328,12 +332,14 @@ function selfTest() {
   expect("positive return preserves past decay", Math.abs(settleReturningBroadAct(10, 2, 5, 0, 0) - 11.8) < 0.0001);
   expect("negative return preserves past decay", Math.abs(settleReturningBroadAct(10, -2, 5, 0, 0) - 7.8) < 0.0001);
   const detachedActionFixture = `
+    String eventReason = GetEventReason(eventType)
+    PDV_Manager.HandleSubstrateActionEvent(eventType, eventReason)
     Bool detachedBroadEvent = !PDV_Manager.ShouldSurfaceLikesDislikesEvent(eventType)
     String detachedBroadPool = PDV_Manager.GetActiveBroadPantheonPoolId()
-    String eventReason = GetEventReason(eventType)
     Float broadDelta = PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, eventReason, detachedBroadEvent, detachedBroadPool)
     PDV_Manager.CommitDetachedBroadPantheonEvent(logicalEventId, detachedBroadPool, bestPositive, worstNegative, eventType)`;
   expect("non-presented action uses detached broad result", hasDetachedActionShape(detachedActionFixture));
+  expect("duplicate event-reason lookup is rejected", !hasDetachedActionShape(detachedActionFixture.replace("PDV_Manager.HandleSubstrateActionEvent(eventType, eventReason)", "PDV_Manager.HandleSubstrateActionEvent(eventType, GetEventReason(eventType))")));
   expect("legacy fan-out fixture is rejected", !hasDetachedActionShape("PDV_Manager.BeginLikesDislikesSurface(eventType, logicalEventId)"));
   expect("detached commit cannot borrow the shared scope", hasDetachedCommitShape("ApplyBroadPantheonEventResult(poolId, logicalEventId, chosenDelta)"));
   expect("waiting detached commit is rejected", !hasDetachedCommitShape("BeginBroadPantheonEvent(logicalEventId)\nApplyBroadPantheonEventResult(poolId, logicalEventId, chosenDelta)"));

@@ -1610,7 +1610,8 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
         return
     endIf
 
-    PDV_Manager.HandleSubstrateActionEvent(eventType, GetEventReason(eventType))
+    String eventReason = GetEventReason(eventType)
+    PDV_Manager.HandleSubstrateActionEvent(eventType, eventReason)
 
     ; Quest-meta-faucet theft stamp (PDV_QuestExpansion_Architecture.md, 2026-07-05):
     ; Nocturnal's "done her way" lane compares this against the last watched-quest
@@ -1640,7 +1641,6 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     String detachedBroadPool = ""
     Float detachedBestPositive = 0.0
     Float detachedWorstNegative = 0.0
-    String eventReason = GetEventReason(eventType)
     if detachedBroadEvent
         detachedBroadPool = PDV_Manager.GetActiveBroadPantheonPoolId()
     endIf

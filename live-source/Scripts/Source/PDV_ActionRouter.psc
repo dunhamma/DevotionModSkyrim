@@ -482,7 +482,8 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
         return
     endIf
 
-    PDV_Manager.HandleSubstrateActionEvent(eventType, GetEventReason(eventType))
+    String eventReason = GetEventReason(eventType)
+    PDV_Manager.HandleSubstrateActionEvent(eventType, eventReason)
 
     Int i = 0
     Int count = PDV_FLST_AllDeities.GetSize()
@@ -491,7 +492,6 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     String detachedBroadPool = ""
     Float detachedBestPositive = 0.0
     Float detachedWorstNegative = 0.0
-    String eventReason = GetEventReason(eventType)
     if detachedBroadEvent
         detachedBroadPool = PDV_Manager.GetActiveBroadPantheonPoolId()
     endIf
