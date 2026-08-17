@@ -3,6 +3,17 @@
 Notable player- and tester-facing changes. Scripts ship from the live MO2 mod
 folder; this file records what changed, not the full source.
 
+## 1.5.0 (prerelease e) -- 2026-08-18
+
+- **Drinking water no longer counts as revelry.** Survival-mod water bottles were
+  being read as alcohol and awarding Sanguine devotion; they are now excluded.
+- **Skinning and looting no longer builds a Hunt.** Pelts, hides, and leather taken
+  from any kill were being read as Hircine trophies; that recognition is retired.
+- **A Daedric Prince now offers a pact rather than claiming you.** Reaching a Prince's
+  threshold presents a formal choice to accept, wait, or refuse, the same courtesy the
+  divine gods extend, and rising toward a Prince no longer overrides an active patron.
+  Daedric devotion also keeps to the daily pace like every other path.
+
 ## 1.5.0 (prerelease d) -- 2026-08-12
 
 - **Official Skyrim quest recognition is substantially broader.** Devotion now

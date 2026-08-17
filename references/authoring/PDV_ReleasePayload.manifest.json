@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "description": "Exact Data-relative PlayerDevotion release payload. Packaging fails if a required entry is missing or any unlisted entry is present.",
-  "expectedEntryCount": 233,
+  "expectedEntryCount": 236,
   "scriptPairCount": 100,
   "releaseMetadata": [
     "CHANGELOG.txt",
@@ -36,6 +36,9 @@
     "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_RaceMap.json",
     "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_RaceMap_README.txt",
     "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_TemporaryRaceMap.json",
+    "SKSE/Plugins/StorageUtilData/PlayerDevotion/QuestStageAdapters/PDV_QSA_Core_FreeformRiften02.json",
+    "SKSE/Plugins/StorageUtilData/PlayerDevotion/QuestStageAdapters/PDV_QSA_Core_FreeformRiften03.json",
+    "SKSE/Plugins/StorageUtilData/PlayerDevotion/QuestStageAdapters/PDV_QSA_Core_Staada.json",
     "Scripts/PDV_ActionRouter.pex",
     "Scripts/PDV_AltmerPracticeFocus.pex",
     "Scripts/PDV_ArgonianHistSapToken.pex",

@@ -1426,6 +1426,39 @@ h1 {
   }
 }
 
+/* User-selectable "Large" toast size (MCM: Presentation -> Toast size -> Large).
+   Independent of the resolution auto-scaling above and larger than the 4K
+   breakpoint, for players on high-DPI 4K displays where even the auto-scaled toast
+   reads small. app.js toggles .is-large on the stack from the toast payload's "size"
+   field; class specificity keeps it winning over the min-width blocks at any
+   resolution. */
+.toast-stack.is-large {
+  right: 64px;
+  bottom: 72px;
+  gap: 24px;
+  max-width: min(920px, calc(100vw - 128px));
+}
+.toast-stack.is-large .toast {
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 28px;
+  padding: 30px 36px;
+  border-radius: 14px;
+}
+.toast-stack.is-large .toast__mark {
+  width: 84px;
+  height: 84px;
+}
+.toast-stack.is-large .toast__source {
+  font-size: 18px;
+}
+.toast-stack.is-large .toast__title {
+  font-size: 34px;
+  margin: 0 0 6px;
+}
+.toast-stack.is-large .toast__text {
+  font-size: 32px;
+}
+
 .demo-controls {
   position: fixed;
   left: 28px;
