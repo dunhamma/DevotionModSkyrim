@@ -642,6 +642,9 @@ Int Property DISFAVOR_MAX_ACTIVE_DOMAINS = 3 AutoReadOnly
 ; (v2: active-pact-only sync + milestone presentation refresh; v3: collapse a
 ; co-held patron+Prince, keep higher tier, tie -> Prince).
 Int Property DAEDRIC_PACT_VERSION = 3 AutoReadOnly
+; Separate schema key from PDV.Daedric.PactVersion (owned by MigrateDaedricPactsIfNeeded).
+; Bump when the consent-gate migration must re-run on existing saves.
+Int Property DAEDRIC_CONSENT_SCHEMA_VERSION = 1 AutoReadOnly
 Float Property TIER_DOWN_HYSTERESIS = 5.0 AutoReadOnly
 ; --- P10 (2026-08-03): Long Devotion, the post-Champion accrual layer -------------------------
 ; The ladder terminated flat at Champion (85) while PIETY_MAX is 200, so 115 points of headroom
@@ -984,6 +987,7 @@ PDV_DaedricPathBase _kidSanguinePath = None
 Bool Property AutoPushPrismaPanel = False Auto
 Bool Property AllowPrismaBlockingSurfaces = False Auto
 PDV_DaedricPathBase _pendingDaedricMilestonePath = None
+PDV_DeityBase _pendingCommitmentOfferDeity = None
 Int _pendingDaedricMilestoneOldTier = 0
 Int _pendingDaedricMilestoneNewTier = 0
 String _pendingDaedricMilestoneReason = ""
@@ -1003,6 +1007,7 @@ Event OnInit()
     EnsureLikesDislikesTable()
     EnsurePrinceLikesDislikesTable()
     MigrateDaedricPactsIfNeeded()
+    MigrateDaedricConsentIfNeeded()
     MigrateBroadPantheonPools()
     EnsureRecognitionModEvents()
     RefreshPatronMirrors()
@@ -1053,6 +1058,7 @@ Event OnUpdate()
         HandleDiegeticLoad("update")
     endIf
     ProcessQueuedDaedricMilestonePresentation()
+    ProcessQueuedCommitmentOffer()
     ProcessQueuedNordKyneChampionEntry()
     ProcessPendingDaedricActivation()
     ProcessPendingDaedricLapse()
@@ -1110,6 +1116,7 @@ Event OnUpdate()
         EnsureLikesDislikesTable()
         EnsurePrinceLikesDislikesTable()
         MigrateDaedricPactsIfNeeded()
+        MigrateDaedricConsentIfNeeded()
         MigrateBroadPantheonPools()
         EnsureKhajiitObserveMoonsPower()
         _shoutRefreshTicks = 0
@@ -3582,6 +3589,32 @@ Function ShowToastFallbackNotification(String titleText, String messageText)
     endIf
 EndFunction
 
+; --- Prisma toast size preference (Normal/Large). Large targets 4K displays, where
+; even the high-res auto-scaling reads small. Persisted, defaults to Normal. The size
+; is injected into every toast payload at the single send choke point below (plus the
+; one curse toast that sends directly), so all toast surfaces honour it without each
+; builder having to carry the field. ---
+Bool Function PrismaToastLargeEnabled()
+    return StorageUtil.GetIntValue(None, "PDV.Prisma.ToastLarge", 0) == 1
+EndFunction
+
+Function SetPrismaToastLargeEnabled(Bool enabled)
+    StorageUtil.SetIntValue(None, "PDV.Prisma.ToastLarge", BoolToInt(enabled))
+EndFunction
+
+String Function WithPrismaToastSize(String payload)
+    if !PrismaToastLargeEnabled()
+        return payload
+    endIf
+    String marker = "\"toast\":{"
+    Int idx = StringUtil.Find(payload, marker)
+    if idx < 0
+        return payload
+    endIf
+    Int insertAt = idx + StringUtil.GetLength(marker)
+    return StringUtil.Substring(payload, 0, insertAt) + "\"size\":\"large\"," + StringUtil.Substring(payload, insertAt)
+EndFunction
+
 Bool Function SendPrismaToastPayloadOrFallback(String payload, String fallbackTitle, String fallbackMessage, Bool allowFallback = True, Bool allowDuringRaceSetup = False)
     if IsRaceSetupQuietPresentationActive() && !allowDuringRaceSetup
         return False
@@ -3595,7 +3628,7 @@ Bool Function SendPrismaToastPayloadOrFallback(String payload, String fallbackTi
 
     Bool sent = False
     if PDV_PrismaBridge.IsAvailable()
-        sent = PDV_PrismaBridge.SendOverlayJson(payload)
+        sent = PDV_PrismaBridge.SendOverlayJson(WithPrismaToastSize(payload))
     endIf
 
     if !sent && allowFallback
@@ -4970,6 +5003,19 @@ Function HandleDaedricPrinceSignal(Int pathIndex, String sourceId)
         return
     endIf
 
+    ; Hard daily cap: one credited live signal per path per source per devotional day.
+    ; Distinct key namespace (PDV.Daedric.Signal.<pathIndex>.<sourceId>) from any soft-cap
+    ; prefix so the .Day book-keeping never collides.
+    if !ConsumeOncePerDaySignal("PDV.Daedric.Signal." + pathIndex + "." + sourceId)
+        if GetDebugLevel() >= 2
+            Debug.Trace("[PDV] Daedric live signal daily-capped for " + path.DeityName + ": " + sourceId)
+        endIf
+        return
+    endIf
+    ; Feed the offer recency gate (HasRecentCommitmentSignalDays) so the formal Prince
+    ; offer can fire once enough distinct signal-days accrue.
+    RecordCommitmentSignalDay(path)
+
     Int tierBefore = path.GetStoredTier()
     path.AddCommitmentSignal(sourceId)
     path.AdjustStoredPiety(10.0, sourceId)
@@ -4979,7 +5025,7 @@ Function HandleDaedricPrinceSignal(Int pathIndex, String sourceId)
     ; single active pact again, even without a tier change. OnTierChange covers
     ; first-commit and tier-ups; this covers switch-back. A sub-threshold (tier 0)
     ; Prince never steals the active pact from a committed one.
-    if tierAfter > 0 && !path.IsActiveDaedricPact()
+    if tierAfter > 0 && !path.IsActiveDaedricPact() && path.HasDaedricPactConsent()
         ; Activation itself is the exclusivity seam (handled in MakeActiveDaedricPact ->
         ; PendingActivation -> ProcessPendingDaedricActivation), so this funnel does not
         ; sever the patron directly: a tier-up already auto-activated via OnTierChange
@@ -5499,12 +5545,10 @@ Function ProcessPendingDaedricActivation()
     if path
         SendPrismaEventToast("shift", path, path.DeityName + " claims your devotion.", "", "")
     endIf
-    if GetPatronState() == PATRON_STATE_ACTIVE
-        SetActiveDeity(None)
-        if path
-            SurfaceSwitchSeverance("patron_to_prince", path.DeityName)
-        endIf
-    elseIf path && !HasRecentDaedricMilestoneJournal(path)
+    ; Patron<->Prince severance is retired: an active divine patron is no longer cut when
+    ; a Prince pact activates (a pact now requires explicit consent, so both can coexist).
+    ; The Prisma shift toast above and this Book-of-Days line still surface the activation.
+    if path && !HasRecentDaedricMilestoneJournal(path)
         AppendBookOfDaysEntry(path.DeityName + " claims your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "daedric", true)
     endIf
 EndFunction
@@ -12667,6 +12711,36 @@ Function MigrateDaedricPactsIfNeeded()
             Debug.Trace("[PDV] Daedric pact migration: stripped stacks, no committed pact")
         endIf
     endIf
+EndFunction
+
+; Consent-gate migration. Legacy saves could hold an active Prince pact committed before
+; the consent latch existed. Such a pact would keep piety capped at 84 forever (ClampPiety
+; parks below Champion without consent), so clear the un-consented pact and let the formal
+; offer re-fire. PDV.Piety is PRESERVED (never touched here). Version-gated on a key that is
+; SEPARATE from PDV.Daedric.PactVersion so it never fights MigrateDaedricPactsIfNeeded.
+Function MigrateDaedricConsentIfNeeded()
+    if StorageUtil.GetIntValue(None, "PDV.Daedric.ConsentSchema") >= DAEDRIC_CONSENT_SCHEMA_VERSION
+        return
+    endIf
+
+    Int i = 0
+    Int count = GetDaedricPathCount()
+    while i < count
+        PDV_DaedricPathBase path = GetDaedricPathAtListIndex(i)
+        if path && path.IsActiveDaedricPact() && !path.HasDaedricPactConsent()
+            ; Same clearing calls migration uses: strip the live pact spells and null the
+            ; active-pact pointer. PDV.Piety is deliberately left intact.
+            path.ClearLiveDaedricPactSpells()
+            StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
+            if GetDebugLevel() >= 1
+                Debug.Trace("[PDV] Daedric consent migration: cleared un-consented pact for " + path.DeityName + " (piety preserved)")
+            endIf
+        endIf
+        i += 1
+    endWhile
+
+    StorageUtil.SetIntValue(None, "PDV.Daedric.ConsentSchema", DAEDRIC_CONSENT_SCHEMA_VERSION)
+    RequestPanelRefresh()
 EndFunction
 
 Function LoadPrinceLikesDislikesTable()
@@ -20527,6 +20601,14 @@ Function ShowFormalCommitmentOffer(PDV_DeityBase deity)
         return
     endIf
 
+    ; A blocking Message.Show cannot display over an open menu (it renders nothing and
+    ; burns the one-shot). Stash the offer and let ProcessQueuedCommitmentOffer replay it
+    ; from the poll once menus close.
+    if Utility.IsInMenuMode()
+        _pendingCommitmentOfferDeity = deity
+        return
+    endIf
+
     DispatchDiegeticCue("offer", deity.DeityName, "present", deity, "revelation")
     StorageUtil.SetIntValue(deity as Form, "PDV.Commitment.Offered", 1)
     Int choice = offerMessage.Show()
@@ -20539,7 +20621,25 @@ Function ShowFormalCommitmentOffer(PDV_DeityBase deity)
     endIf
 EndFunction
 
+Function ProcessQueuedCommitmentOffer()
+    if !_pendingCommitmentOfferDeity
+        return
+    endIf
+
+    PDV_DeityBase deity = _pendingCommitmentOfferDeity
+    _pendingCommitmentOfferDeity = None
+    ; ShowFormalCommitmentOffer re-stashes if a menu is somehow still open, so this drain
+    ; is self-healing.
+    ShowFormalCommitmentOffer(deity)
+EndFunction
+
 Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
+    ; Any Daedric path uses the single shared Prince-pact offer message, ahead of the
+    ; per-race divine dispatch (a path is offer-eligible regardless of origin race).
+    if (deity as PDV_DaedricPathBase)
+        return (deity as PDV_DaedricPathBase).GetCommitmentOfferMessage()
+    endIf
+
     Int originRace = GetPlayerOriginRaceIndex()
     if originRace == ORIGIN_NORD
         return GetNordFormalCommitmentOfferMessage(deity)
@@ -20711,8 +20811,17 @@ Function DebugAcceptPendingCommitment()
 
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Offered", 0)
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 0)
-    SetActiveDeity(pendingDeity)
-    SyncFirstTierRaceRewardRuntime()
+    PDV_DaedricPathBase pendingPath = pendingDeity as PDV_DaedricPathBase
+    if pendingPath
+        ; A Prince pact: record consent (unblocks ClampPiety's Champion park) and make it
+        ; the single active pact. A path is NOT a divine patron, so SetActiveDeity is not
+        ; called for it.
+        pendingPath.SetDaedricPactConsent(True)
+        pendingPath.MakeActiveDaedricPact()
+    else
+        SetActiveDeity(pendingDeity)
+        SyncFirstTierRaceRewardRuntime()
+    endIf
     DispatchDiegeticCue("offer", pendingDeity.DeityName, "accept", pendingDeity, "revelation")
     SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "good", BuildCommitmentOfferAcceptToastLine(pendingDeity), "")
     ClearPendingCommitment()
@@ -20802,7 +20911,14 @@ Bool Function UsesFormalCommitmentOffersForDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    return IsNordOfferEligibleDeity(deity) || IsImperialOfferEligibleDeity(deity) || IsDunmerOfferEligibleDeity(deity) || IsAltmerOfferEligibleDeity(deity) || IsRedguardOfferEligibleDeity(deity) || IsBretonOfferEligibleDeity(deity)
+    return IsNordOfferEligibleDeity(deity) || IsImperialOfferEligibleDeity(deity) || IsDunmerOfferEligibleDeity(deity) || IsAltmerOfferEligibleDeity(deity) || IsRedguardOfferEligibleDeity(deity) || IsBretonOfferEligibleDeity(deity) || IsDaedricPactOfferEligibleDeity(deity)
+EndFunction
+
+; Any Daedric path (a PDV_DaedricPathBase) is formal-offer-eligible regardless of origin
+; race -- the pact is the consent gate for Champion. The Breton Hidden Art branch inside
+; IsBretonOfferEligibleDeity is now a subset of this.
+Bool Function IsDaedricPactOfferEligibleDeity(PDV_DeityBase deity)
+    return (deity as PDV_DaedricPathBase) != None
 EndFunction
 
 ; Nord's defining mechanic: deeds reveal which god noticed you. Any deity in the
@@ -21335,7 +21451,7 @@ Function SendPrismaCurseToast(Int oldState, Int newState)
         j = j + ",\"deity\":\"" + JsonSafeString(GetPublicDeityDisplayName(_activeDeity)) + "\""
     endIf
     j = j + "}}"
-    PDV_PrismaBridge.SendOverlayJson(j)
+    PDV_PrismaBridge.SendOverlayJson(WithPrismaToastSize(j))
 EndFunction
 
 ; Short race-specific context phrase feeds the UI's listText fallback and any
@@ -27982,12 +28098,15 @@ Int Property RECOGNITION_REACTION_ALLY = 2 AutoReadOnly
 Int Property RECOGNITION_REACTION_FRIEND = 3 AutoReadOnly
 Int Property RECOGNITION_IDENTITY_COUNT = 57 AutoReadOnly
 
+; NPC religious recognition defaults OFF (missing key -> disabled). The feature is
+; unadvertised in 1.5.0 and opt-in from the MCM while its in-game reactions are
+; validated further; an explicit MCM toggle still persists via the same keys.
 Bool Function NpcReligiousRecognitionEnabled()
-    return StorageUtil.GetIntValue(None, "PDV.Recognition.Disabled") != 1
+    return StorageUtil.GetIntValue(None, "PDV.Recognition.Disabled", 1) != 1
 EndFunction
 
 Bool Function NpcHostileRecognitionEnabled()
-    return StorageUtil.GetIntValue(None, "PDV.Recognition.HostilesDisabled") != 1
+    return StorageUtil.GetIntValue(None, "PDV.Recognition.HostilesDisabled", 1) != 1
 EndFunction
 
 Function SetNpcReligiousRecognitionEnabled(Bool enabled)
@@ -28622,10 +28741,16 @@ Function HandleKIDAction(String actionKey, Form sourceForm)
         bodyText = "You consumed " + sourceName + "; Namira marks the taboo embraced."
         symbolName = "namira"
     elseIf actionKey == "sanguine_alcohol"
+        ; Hard once-per-day cap (not the soft decaying multiplier): drinking spam credits
+        ; Sanguine at most once per devotional day. Distinct key prefix (PDV.Signal.KIDOnce.*)
+        ; from the soft-cap prefix (PDV.Signal.KID.*) so their .Day keys never collide.
+        if !ConsumeOncePerDaySignal("PDV.Signal.KIDOnce.sanguine_alcohol")
+            return
+        endIf
         PDV_DaedricPathBase sanguinePath = GetDaedricPathByName("Sanguine")
         if sanguinePath
             Int tierBefore = sanguinePath.GetStoredTier()
-            sanguinePath.AdjustStoredPiety(1.0 * multiplier, "kid_revel")
+            sanguinePath.AdjustStoredPiety(1.0, "kid_revel")
             ShowDaedricMilestonePresentation(sanguinePath, tierBefore, sanguinePath.GetStoredTier(), False)
         endIf
         titleText = "Sanguine's revel"

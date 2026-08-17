@@ -105,6 +105,11 @@ Function ShowCommitmentBeat()
     ShowIfPresent(Msg_Commitment)
 EndFunction
 
+; Surface this Prince's Msg_Commitment as the formal 3-button pact-offer message.
+Message Function GetCommitmentOfferMessage()
+    return Msg_Commitment
+EndFunction
+
 Function ShowRaceResponseForPlayer()
     Int originRace = GetPlayerOriginRace()
     if originRace == RACE_NORD
