@@ -20833,7 +20833,13 @@ Function DebugAcceptPendingCommitment()
         ; the single active pact. A path is NOT a divine patron, so SetActiveDeity is not
         ; called for it.
         pendingPath.SetDaedricPactConsent(True)
+        ; Commit PDV.Tier from current piety before activating the pact. The standing readers
+        ; (GetActiveDaedricPactPath) ignore a pact whose tier is still 0, which left the Book
+        ; of Days at Distant. The old auto-commit reached MakeActiveDaedricPact via
+        ; RecomputeStoredTier; the direct consent call must do the same.
+        pendingPath.RecomputeStoredTier("commitment_accept")
         pendingPath.MakeActiveDaedricPact()
+        RequestPanelRefresh()
     else
         SetActiveDeity(pendingDeity)
         SyncFirstTierRaceRewardRuntime()
