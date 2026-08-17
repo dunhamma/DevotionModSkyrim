@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "pdv-v3-slice1-quest-reaction",
-  "status": "catalog-wire-backend-and-installed-preflight-green-combined-skyrim-proof-open",
+  "status": "anvil-combined-fresh-game-runtime-and-player-surface-pass-authoria-open",
   "northStar": "Replace the current quest-reaction cluster with one deep, event-driven module built from current main without preserving V1 save state.",
   "delivery": {
     "integrationBranch": "feature/v3-big-update",
@@ -261,6 +261,18 @@
     "openProof": "No separate numeric broad-standing before/after readout was recorded. Strongest-positive and most-severe-negative selection are covered by the deterministic broad-pantheon model and are not represented here as manually observed numeric runtime proof.",
     "authoriaBoundary": "Full Authoria acceptance is deferred until the combined V3 core and generated compatibility installer are assembled; later proof must cover real dependency detection, source/sentinel activation, and load-order behavior."
   },
+  "combinedAnvilAcceptance": {
+    "date": "2026-08-17",
+    "profile": "Anvil / Devotion Dev",
+    "installed": "Devotion plus PDV_QuestReactionCompatibility_V; Devotion-V3Dev and retired PatchHub/Authoria packages disabled",
+    "preflight": "PASS: two v2 catalogs, 353 core watches, 79 official catalog-backed sources, active Devotion.esp, and current Runtime/Manager/EventBus/PlayerEvents/MCM bytecode",
+    "performanceSweep": "PASS: four qualified jobs completed ENQUEUE/BUILD/START/COMPLETE in FIFO order with four manually confirmed toasts and four duplicate-free Book entries; no overflow, stack dump, frozen stack, or BROAD_SCOPE_ABORT",
+    "saveLoad": "PASS: save with a non-empty sweep produced RESUME=1 and drained the remaining FIFO without a safety failure",
+    "organicQuest": "PASS: MQ102 Before the Storm stage 160 admitted in 44.982910 ms, coalesced two duplicate notifications, materialized 21 eligible cells from 45 source cells, and completed once with the expected Book/toast surfaces",
+    "timingObservation": "The four-job sweep drained in about 31 seconds, with the last job waiting about 35 seconds; organic MQ102 completed in 11.625 seconds. This is accepted bounded throughput and remains a non-blocking tuning observation.",
+    "separateObservation": "Several identical vanilla-style ellipsis dialogue options appeared when speaking to Gerdur. Direct active-load-order inspection found no standalone ellipsis topic added by Devotion, Repute.esp, or ReputeContent.esm; attribution remains unproven and it is not counted as a Quest Reaction failure.",
+    "open": "Authoria FOMOD dependency detection, installed source/sentinel behavior, one data-only integration, AFDI, three dialogue adapters, and Daedric Shrines gameplay remain the final Slice 1 compatibility/support acceptance lane."
+  },
   "slice1DASemanticAdapters": {
     "status": "backend-static-compile-vmad-and-master-readback-pass-skyrim-proof-open",
     "afdiIngress": "PDV_AFDIObserver preserves its 30-slot polling, existing-save baseline, resolve backoff, once-only persistence, and terminal retirement, but submits one afdi|artifact_destroyed.* semantic event and owns no deity outcomes",
@@ -307,7 +319,7 @@
     "mq102-to-mq103-overlap-does-not-abort-broad-scope",
     "save-load-during-bounded-materialization"
   ],
-  "targetAcceptanceStatus": "all-slice1-backend-pass-combined-fresh-game-and-authoria-proof-open",
+  "targetAcceptanceStatus": "all-slice1-backend-and-combined-anvil-pass-authoria-proof-open",
   "retirementAfterReplacement": [
     {
       "surface": "PDV_QuestReactionWorker script identity",

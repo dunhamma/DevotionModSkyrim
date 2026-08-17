@@ -15,8 +15,10 @@ deterministic, exact-byte-checked v2 compiler and one 80-source compatibility
 authority. Runtime now consumes v2, and the AFDI semantic adapter is compiled,
 rewired, and read back without its source-mod master. Slice 1D-B package
 consolidation is backend-green with one required official catalog and five
-dependency-detected adapters. The combined fresh-game and Authoria smoke remains
-open Slice 1 work. The PapyrusUtil wire-admission defect is repaired and the
+dependency-detected adapters. The combined fresh-game Anvil smoke now passes:
+four-job FIFO/player surfaces, non-empty-queue RESUME, and organic MQ102 stage
+160 all completed without a queue safety marker. Authoria installer,
+source/sentinel, adapter, and support acceptance remains open Slice 1 work. The PapyrusUtil wire-admission defect is repaired and the
 installed Anvil profile preflight is green. The separate bounded-ingress fix is
 backend/static/compile and runtime-route green, including sub-second organic
 admission and build-stage save/load continuation; the counted run's four visible
@@ -1156,8 +1158,9 @@ and Shor were included while Akatosh was excluded. Nine Divines emitted
 `NordNineDivines` with shape `21/21/21/7`; the tester confirmed Stuhn, Shor, and
 Tsun were excluded while Akatosh remained eligible. The stacked canary-fix
 slice is therefore runtime/manual proven. Catalog-v2, semantic-adapter, and generated
-package backend work now pass; the combined post-cutover fresh-game and Authoria smoke
-is the remaining Slice 1 acceptance gate.
+package backend work now pass, and the combined post-cutover Anvil lane is green.
+Authoria installer, source/sentinel, adapter, and support acceptance is the
+remaining Slice 1 gate.
 
 The appended Papyrus log also exposed a proof-tool defect: fresh sessions reuse
 `v3qr_N` job IDs. The runtime checker now pairs lifecycle occurrences in order,
@@ -3515,6 +3518,19 @@ Gate coupling:
 ---
 
 ## 26. Revisions
+
+### v3.105 - 2026-08-17 AEST - Quest Reaction combined Anvil acceptance
+
+The assembled V3 core plus generated compatibility catalog passed the combined
+fresh-game Anvil lane on `Devotion Dev`. The four-job sweep completed in FIFO
+order with four visible toasts and four duplicate-free Book entries. Saving
+with queued work and loading that save produced one `RESUME` chain and a clean
+drain. Organic MQ102 stage 160 admitted in about 45 ms, coalesced duplicate
+engine notifications, materialized 21 eligible cells, and completed once with
+the expected player surfaces. The sweep took roughly 31 seconds end to end,
+which is retained as a non-blocking bounded-throughput tuning observation.
+Authoria dependency detection, source/sentinel behavior, adapters, and support
+acceptance remain open; PR #82 stays draft until that lane and final review pass.
 
 ### v3.104 - 2026-08-15 AEST - Quest Reaction bounded ingress repair
 
