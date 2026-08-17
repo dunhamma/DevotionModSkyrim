@@ -20541,6 +20541,21 @@ Function DebugSeedCommitmentSignalDaysByIndex(Int deityIndex)
     Trace(1, "Commitment seed debug: " + deity.DeityName + "[" + deity.DeityIndex + "] days=" + GetRecentCommitmentSignalDayCount(deity, 7))
 EndFunction
 
+; Form-based twin of DebugSeedCommitmentSignalDaysByIndex. Daedric-path indices do not
+; resolve through GetDeityByIndex, so the index seeder misses a Prince; seed by form
+; directly to make a path offer-ready.
+Function DebugSeedCommitmentSignalDaysForDeity(PDV_DeityBase deity)
+    if !deity
+        return
+    endIf
+    Form deityForm = deity as Form
+    Int currentDay = Utility.GetCurrentGameTime() as Int
+    StorageUtil.SetIntValue(deityForm, "PDV.Commitment.SignalLatestDay", currentDay + 1)
+    StorageUtil.SetIntValue(deityForm, "PDV.Commitment.SignalPreviousDay", currentDay)
+    StorageUtil.SetIntValue(deityForm, "PDV.Commitment.DebugSeedActive", 1)
+    StorageUtil.SetIntValue(deityForm, "PDV.Commitment.DebugSeedDay", currentDay)
+EndFunction
+
 Function DebugResetCommitmentStateByIndex(Int deityIndex)
     PDV_DeityBase deity = GetDeityByIndex(deityIndex)
     if deity
@@ -20585,11 +20600,12 @@ Function EvaluateFormalCommitmentOffer()
         return
     endIf
 
-    if GetPendingCommitmentDeityIndex() == candidate.DeityIndex
+    if StorageUtil.GetFormValue(None, "PDV.Commitment.PendingDeityForm") == (candidate as Form)
         return
     endIf
 
     StorageUtil.SetIntValue(None, "PDV.Commitment.PendingDeityIndex", candidate.DeityIndex)
+    StorageUtil.SetFormValue(None, "PDV.Commitment.PendingDeityForm", candidate as Form)
     StorageUtil.SetFloatValue(None, "PDV.Commitment.OfferedAt", Utility.GetCurrentGameTime())
     Trace(1, "Commitment offer pending for " + candidate.DeityName + ".")
     ShowFormalCommitmentOffer(candidate)
@@ -20843,25 +20859,43 @@ Bool Function IsPendingCommitmentStillAcceptable(PDV_DeityBase deity)
 EndFunction
 
 PDV_DeityBase Function GetBestFormalCommitmentOfferCandidate()
-    if !PDV_FLST_AllDeities
-        return None
-    endIf
-
     PDV_DeityBase bestDeity = None
     Float bestWeight = -1.0
-    Int i = 0
-    Int count = PDV_FLST_AllDeities.GetSize()
-    while i < count
-        PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
-        if IsEligibleForFormalCommitmentOffer(deity)
-            Float weight = GetFormalCommitmentOfferWeight(deity)
-            if !bestDeity || weight > bestWeight
-                bestDeity = deity
-                bestWeight = weight
+
+    ; Divine deities live in PDV_FLST_AllDeities; Daedric Princes live in their own list
+    ; (PDV_FLST_DaedricPaths_All) and are NOT members of PDV_FLST_AllDeities. Scan both so a
+    ; Prince pact-consent offer can fire.
+    if PDV_FLST_AllDeities
+        Int i = 0
+        Int count = PDV_FLST_AllDeities.GetSize()
+        while i < count
+            PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
+            if IsEligibleForFormalCommitmentOffer(deity)
+                Float weight = GetFormalCommitmentOfferWeight(deity)
+                if !bestDeity || weight > bestWeight
+                    bestDeity = deity
+                    bestWeight = weight
+                endIf
             endIf
-        endIf
-        i += 1
-    endWhile
+            i += 1
+        endWhile
+    endIf
+
+    if PDV_FLST_DaedricPaths_All
+        Int j = 0
+        Int pathCount = PDV_FLST_DaedricPaths_All.GetSize()
+        while j < pathCount
+            PDV_DeityBase deity = PDV_FLST_DaedricPaths_All.GetAt(j) as PDV_DeityBase
+            if IsEligibleForFormalCommitmentOffer(deity)
+                Float weight = GetFormalCommitmentOfferWeight(deity)
+                if !bestDeity || weight > bestWeight
+                    bestDeity = deity
+                    bestWeight = weight
+                endIf
+            endIf
+            j += 1
+        endWhile
+    endIf
 
     return bestDeity
 EndFunction
@@ -21123,6 +21157,7 @@ EndFunction
 
 Function ClearPendingCommitment()
     StorageUtil.SetIntValue(None, "PDV.Commitment.PendingDeityIndex", -1)
+    StorageUtil.SetFormValue(None, "PDV.Commitment.PendingDeityForm", None)
     StorageUtil.SetFloatValue(None, "PDV.Commitment.OfferedAt", 0.0)
 EndFunction
 
@@ -21149,7 +21184,7 @@ Function DebugSeedSanguineOfferReadyCore()
         return
     endIf
     sanguinePath.SetStoredPiety(COMMITMENT_OFFER_THRESHOLD, "mcm_consent_seed")
-    DebugSeedCommitmentSignalDaysByIndex(sanguinePath.DeityIndex)
+    DebugSeedCommitmentSignalDaysForDeity(sanguinePath)
     Form sanguineForm = sanguinePath as Form
     StorageUtil.SetIntValue(sanguineForm, "PDV.Commitment.Offered", 0)
     StorageUtil.SetIntValue(sanguineForm, "PDV.Commitment.Refused", 0)
@@ -21253,6 +21288,11 @@ Int Function GetPendingCommitmentDeityIndex()
 EndFunction
 
 PDV_DeityBase Function GetPendingCommitmentDeity()
+    Form pendingForm = StorageUtil.GetFormValue(None, "PDV.Commitment.PendingDeityForm")
+    if pendingForm
+        return pendingForm as PDV_DeityBase
+    endIf
+
     Int deityIndex = GetPendingCommitmentDeityIndex()
     if deityIndex < 0
         return None
