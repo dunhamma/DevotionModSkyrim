@@ -21126,6 +21126,128 @@ Function ClearPendingCommitment()
     StorageUtil.SetFloatValue(None, "PDV.Commitment.OfferedAt", 0.0)
 EndFunction
 
+; ===== Daedric pact-consent debug harness (Sanguine test subject) =====
+; Deterministic MCM smoke for the 1.5.0e pact-consent gate. Sanguine is the
+; reported-bug subject. Each helper composes existing surfaces -- SetStoredPiety,
+; DebugSeedCommitmentSignalDaysByIndex, EvaluateFormalCommitmentOffer, the
+; Accept/Decline/Refuse handlers, HandleKIDAction, MigrateDaedricConsentIfNeeded --
+; and returns a one-line readback for the MCM to ShowMessage.
+
+String Function DebugYesNo(Bool flag)
+    if flag
+        return "Y"
+    endIf
+    return "N"
+EndFunction
+
+; Shared setup: leave Sanguine offer-eligible (Devoted-threshold piety + two recent
+; commitment signal-days, offer/refuse flags cleared) with consent withheld and no
+; active pact. Preconditions met; the consent latch is the only thing missing.
+Function DebugSeedSanguineOfferReadyCore()
+    PDV_DaedricPathBase sanguinePath = GetDaedricPathByName("Sanguine")
+    if !sanguinePath
+        return
+    endIf
+    sanguinePath.SetStoredPiety(COMMITMENT_OFFER_THRESHOLD, "mcm_consent_seed")
+    DebugSeedCommitmentSignalDaysByIndex(sanguinePath.DeityIndex)
+    Form sanguineForm = sanguinePath as Form
+    StorageUtil.SetIntValue(sanguineForm, "PDV.Commitment.Offered", 0)
+    StorageUtil.SetIntValue(sanguineForm, "PDV.Commitment.Refused", 0)
+    StorageUtil.SetFloatValue(sanguineForm, "PDV.Commitment.DeclinedAt", 0.0)
+    ClearPendingCommitment()
+    sanguinePath.SetDaedricPactConsent(False)
+    sanguinePath.ClearLiveDaedricPactSpells()
+    StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
+EndFunction
+
+String Function DebugSanguineConsentReadback()
+    PDV_DaedricPathBase sanguinePath = GetDaedricPathByName("Sanguine")
+    if !sanguinePath
+        return "Sanguine path is not available."
+    endIf
+    Int schema = StorageUtil.GetIntValue(None, "PDV.Daedric.ConsentSchema")
+    return "Sanguine piety=" + FormatTwoDecimals(sanguinePath.GetStoredPiety()) + " tier=" + sanguinePath.GetStoredTier() + "; consent=" + DebugYesNo(sanguinePath.HasDaedricPactConsent()) + "; activePact=" + DebugYesNo(sanguinePath.IsActiveDaedricPact()) + "; consentSchema=" + schema + " (target " + DAEDRIC_CONSENT_SCHEMA_VERSION + ")"
+EndFunction
+
+String Function DebugSeedSanguineOfferReady()
+    if !GetDaedricPathByName("Sanguine")
+        return "Sanguine path is not available."
+    endIf
+    DebugSeedSanguineOfferReadyCore()
+    return "Seeded Sanguine offer-ready (no consent). " + DebugSanguineConsentReadback()
+EndFunction
+
+String Function DebugEvaluateConsentOfferReport()
+    Int pendingBefore = GetPendingCommitmentDeityIndex()
+    EvaluateFormalCommitmentOffer()
+    Int pendingAfter = GetPendingCommitmentDeityIndex()
+    if pendingAfter < 0
+        return "Evaluate: no commitment offer fired (pending none). Patron state=" + GetPatronStateLabel() + "."
+    endIf
+    PDV_DeityBase pendingDeity = GetDeityByIndex(pendingAfter)
+    String pendingName = "index " + pendingAfter
+    if pendingDeity
+        pendingName = pendingDeity.DeityName
+    endIf
+    return "Evaluate: offer pending for " + pendingName + " (was index " + pendingBefore + "). It replays as the 3-button pact message once the MCM closes."
+EndFunction
+
+String Function DebugConsentDivinePatronThenRaiseSanguine()
+    if !PDV_Akatosh
+        return "PDV_Akatosh is not wired; cannot set a divine patron."
+    endIf
+    ; A divine patron must suppress the Daedric pact offer and survive the raise.
+    SetActiveDeity(PDV_Akatosh, True)
+    DebugSeedSanguineOfferReadyCore()
+    EvaluateFormalCommitmentOffer()
+    Int pendingAfter = GetPendingCommitmentDeityIndex()
+    String pendingLabel = "none"
+    if pendingAfter >= 0
+        PDV_DeityBase pendingDeity = GetDeityByIndex(pendingAfter)
+        if pendingDeity
+            pendingLabel = pendingDeity.DeityName
+        else
+            pendingLabel = "index " + pendingAfter
+        endIf
+    endIf
+    String patronLabel = "none"
+    if _activeDeity
+        patronLabel = _activeDeity.DeityName
+    endIf
+    return "Divine patron=" + patronLabel + " (state " + GetPatronStateLabel() + "); Sanguine raised to offer-ready; offer pending=" + pendingLabel + " (expect none -> suppressed)."
+EndFunction
+
+String Function DebugFireSanguineAlcoholTwice()
+    PDV_DaedricPathBase sanguinePath = GetDaedricPathByName("Sanguine")
+    if !sanguinePath
+        return "Sanguine path is not available."
+    endIf
+    Float before = sanguinePath.GetStoredPiety()
+    HandleKIDAction("sanguine_alcohol", None)
+    Float afterFirst = sanguinePath.GetStoredPiety()
+    HandleKIDAction("sanguine_alcohol", None)
+    Float afterSecond = sanguinePath.GetStoredPiety()
+    return "sanguine_alcohol x2: piety " + FormatTwoDecimals(before) + " -> " + FormatTwoDecimals(afterFirst) + " -> " + FormatTwoDecimals(afterSecond) + " (2nd hit capped by once-per-day)."
+EndFunction
+
+String Function DebugForceUnconsentedPactThenMigrate()
+    PDV_DaedricPathBase sanguinePath = GetDaedricPathByName("Sanguine")
+    if !sanguinePath
+        return "Sanguine path is not available."
+    endIf
+    ; Reproduce the pre-consent defect: an ACTIVE pact with no recorded consent.
+    sanguinePath.SetStoredPiety(COMMITMENT_OFFER_THRESHOLD, "mcm_consent_unconsented")
+    sanguinePath.SetDaedricPactConsent(False)
+    sanguinePath.MakeActiveDaedricPact()
+    sanguinePath.SetDaedricPactConsent(False)
+    Float pietyBefore = sanguinePath.GetStoredPiety()
+    Bool activeBefore = sanguinePath.IsActiveDaedricPact()
+    ; Bump the consent schema back so the guarded migration re-runs against the state.
+    StorageUtil.SetIntValue(None, "PDV.Daedric.ConsentSchema", 0)
+    MigrateDaedricConsentIfNeeded()
+    return "Un-consented pact forced (active=" + DebugYesNo(activeBefore) + ", piety " + FormatTwoDecimals(pietyBefore) + "). After migrate: activePact=" + DebugYesNo(sanguinePath.IsActiveDaedricPact()) + " (expect N), piety=" + FormatTwoDecimals(sanguinePath.GetStoredPiety()) + " (preserved), consentSchema=" + StorageUtil.GetIntValue(None, "PDV.Daedric.ConsentSchema") + "."
+EndFunction
+
 Int Function GetPendingCommitmentDeityIndex()
     return StorageUtil.GetIntValue(None, "PDV.Commitment.PendingDeityIndex")
 EndFunction
