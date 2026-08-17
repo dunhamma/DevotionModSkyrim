@@ -370,12 +370,9 @@ export function evaluate({ contract, baseSource, managerSource, concreteSources,
     && /observationToken\s*!=\s*_khajiitMoonObservationGeneration/i.test(moonComplete)
     && /_khajiitMoonObservationPending\s*=\s*False/i.test(moonComplete)
     && /<\s*2\.0/i.test(moonComplete), "source.khajiit-moon-token", "Observe the Moons must complete exactly one two-second delayed generation token and reject stale completions");
-  add(/PDV\.Khajiit\.ObserveMoons\.PowerSlotVersion/i.test(moonPower)
-    && /PowerSlotVersion"\)\s*<\s*3/i.test(moonPower)
-    && /PowerSlotVersion"\s*,\s*3\s*\)/i.test(moonPower)
-    && /UnequipSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons\s*,\s*0\s*\)/i.test(moonPower)
-    && /UnequipSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons\s*,\s*1\s*\)/i.test(moonPower)
-    && !/\bEquipSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons\s*,\s*2\s*\)/i.test(moonPower), "source.khajiit-moon-power-slot", "Observe the Moons must clear stale hand equips without changing the player's selected lesser power");
+  add(/AddSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons/i.test(moonPower)
+    && /RemoveSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons/i.test(moonPower)
+    && !/\bEquipSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons/i.test(moonPower), "source.khajiit-moon-power-slot", "Observe the Moons must be granted and removed by origin without ever selecting the player's lesser power through EquipSpell");
   add(/AddSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons/i.test(moonPower)
     && /AddSpell\s*\(\s*PDV_SPEL_SurveyDevotion/i.test(surveyPower)
     && !/\bEquipSpell\s*\(/i.test(moonPower)

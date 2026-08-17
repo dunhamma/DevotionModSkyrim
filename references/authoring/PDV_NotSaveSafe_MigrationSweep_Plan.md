@@ -1,6 +1,12 @@
 # Not-save-safe migration/old-message sweep — PLAN
 
-**Status:** LIVING plan (design, not yet implemented) · **Opened:** 2026-08-13 ·
+**Status:** LIVING · **Opened:** 2026-08-13 · **Part A pure-legacy migrations implemented
+2026-08-13** (shipped in #79; e.g. `39fb7aa4`, `af7e668e`) — `MigrateDaedricPactsIfNeeded`,
+`MigrateBroadPantheonPools`, `RunAuthoriaQuestReactionKeySweep`, and
+`MigrateLegacyCompositeMetricOnce` are verified absent from `live-source`. **Still deferred**
+(entangled with live paths): `RepairBookOfDaysJournalText` and the `AncestorSpine_T1` strip —
+both confirmed still live; see the handoff. Audits/contracts reconciled to the removal on
+`feature/v3-big-update` 2026-08-17 (broad-pantheon + substrate-pacing audits green). ·
 **Prereq:** the owner has committed to a **not-save-safe** next update (fresh saves required).
 
 > Focused follow-up to the startup-message removal (`bec76abc`, `7afd5396`). Precedence for any
