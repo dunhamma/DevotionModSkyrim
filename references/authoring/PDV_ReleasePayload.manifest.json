@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "description": "Exact Data-relative PlayerDevotion release payload. Packaging fails if a required entry is missing or any unlisted entry is present.",
-  "expectedEntryCount": 234,
-  "scriptPairCount": 100,
+  "expectedEntryCount": 236,
+  "scriptPairCount": 101,
   "releaseMetadata": [
     "CHANGELOG.txt",
     "README.txt"
@@ -40,6 +40,7 @@
     "Scripts/PDV_ActionRouter.pex",
     "Scripts/PDV_AltmerPracticeFocus.pex",
     "Scripts/PDV_ArgonianHistSapToken.pex",
+    "Scripts/PDV_ContextualFavorRuntime.pex",
     "Scripts/PDV_CurseState.pex",
     "Scripts/PDV_DaedricPathBase.pex",
     "Scripts/PDV_DaedricPath_Azura.pex",
@@ -145,6 +146,7 @@
     "PDV_ActionRouter",
     "PDV_AltmerPracticeFocus",
     "PDV_ArgonianHistSapToken",
+    "PDV_ContextualFavorRuntime",
     "PDV_CurseState",
     "PDV_DaedricPathBase",
     "PDV_DaedricPath_Azura",
