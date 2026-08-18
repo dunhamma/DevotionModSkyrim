@@ -11765,91 +11765,136 @@
       "symbol": "RunGainPipeline",
       "kind": "function",
       "assignedModule": "LEDGER",
-      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction."
+      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction.",
+      "status": "resolved",
+      "resolvedBy": "references/authoring/PDV_2_0_ADR_GainPipelineContract.md",
+      "resolvedDate": "2026-08-18"
     },
     {
       "symbol": "AwardPietyInternal",
       "kind": "function",
       "assignedModule": "LEDGER",
-      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction."
+      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction.",
+      "status": "resolved",
+      "resolvedBy": "references/authoring/PDV_2_0_ADR_GainPipelineContract.md",
+      "resolvedDate": "2026-08-18"
     },
     {
       "symbol": "AwardPietyFromLikesDislikes",
       "kind": "function",
       "assignedModule": "LEDGER",
-      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction."
+      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction.",
+      "status": "resolved",
+      "resolvedBy": "references/authoring/PDV_2_0_ADR_GainPipelineContract.md",
+      "resolvedDate": "2026-08-18"
     },
     {
       "symbol": "AwardPiety",
       "kind": "function",
       "assignedModule": "LEDGER",
-      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction."
+      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction.",
+      "status": "resolved",
+      "resolvedBy": "references/authoring/PDV_2_0_ADR_GainPipelineContract.md",
+      "resolvedDate": "2026-08-18"
     },
     {
       "symbol": "GetOrcLifeModeGainMultiplier",
       "kind": "function",
       "assignedModule": "ORIGIN",
-      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction."
+      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction.",
+      "status": "resolved",
+      "resolvedBy": "references/authoring/PDV_2_0_ADR_GainPipelineContract.md",
+      "resolvedDate": "2026-08-18"
     },
     {
       "symbol": "GetReputationGainMultiplierNoop",
       "kind": "function",
       "assignedModule": "LEDGER",
-      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction."
+      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction.",
+      "status": "resolved",
+      "resolvedBy": "references/authoring/PDV_2_0_ADR_GainPipelineContract.md",
+      "resolvedDate": "2026-08-18"
     },
     {
       "symbol": "GetCurseGainMultiplierNoop",
       "kind": "function",
       "assignedModule": "LEDGER",
-      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction."
+      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction.",
+      "status": "resolved",
+      "resolvedBy": "references/authoring/PDV_2_0_ADR_GainPipelineContract.md",
+      "resolvedDate": "2026-08-18"
     },
     {
       "symbol": "GetDaedricStigmaGainMultiplierNoop",
       "kind": "function",
       "assignedModule": "DAEDRIC",
-      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction."
+      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction.",
+      "status": "resolved",
+      "resolvedBy": "references/authoring/PDV_2_0_ADR_GainPipelineContract.md",
+      "resolvedDate": "2026-08-18"
     },
     {
       "symbol": "GetSurvivalContextGainMultiplier",
       "kind": "function",
       "assignedModule": "LEDGER",
-      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction."
+      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction.",
+      "status": "resolved",
+      "resolvedBy": "references/authoring/PDV_2_0_ADR_GainPipelineContract.md",
+      "resolvedDate": "2026-08-18"
     },
     {
       "symbol": "GetReputationGainMultiplier",
       "kind": "function",
       "assignedModule": "LEDGER",
-      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction."
+      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction.",
+      "status": "resolved",
+      "resolvedBy": "references/authoring/PDV_2_0_ADR_GainPipelineContract.md",
+      "resolvedDate": "2026-08-18"
     },
     {
       "symbol": "GetCurseGainMultiplier",
       "kind": "function",
       "assignedModule": "LEDGER",
-      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction."
+      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction.",
+      "status": "resolved",
+      "resolvedBy": "references/authoring/PDV_2_0_ADR_GainPipelineContract.md",
+      "resolvedDate": "2026-08-18"
     },
     {
       "symbol": "GetDaedricStigmaGainMultiplier",
       "kind": "function",
       "assignedModule": "DAEDRIC",
-      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction."
+      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction.",
+      "status": "resolved",
+      "resolvedBy": "references/authoring/PDV_2_0_ADR_GainPipelineContract.md",
+      "resolvedDate": "2026-08-18"
     },
     {
       "symbol": "GetImperialCurseGainMultiplier",
       "kind": "function",
       "assignedModule": "ORIGIN",
-      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction."
+      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction.",
+      "status": "resolved",
+      "resolvedBy": "references/authoring/PDV_2_0_ADR_GainPipelineContract.md",
+      "resolvedDate": "2026-08-18"
     },
     {
       "symbol": "GetTalosTrackGainMultiplier",
       "kind": "function",
       "assignedModule": "ORIGIN",
-      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction."
+      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction.",
+      "status": "resolved",
+      "resolvedBy": "references/authoring/PDV_2_0_ADR_GainPipelineContract.md",
+      "resolvedDate": "2026-08-18"
     },
     {
       "symbol": "GetTalosEffectiveGainMultiplier",
       "kind": "function",
       "assignedModule": "ORIGIN",
-      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction."
+      "reason": "Sec 4A gain-pipeline seam: award path couples upward to ORIGIN-curse / DAEDRIC-stigma / Survival / compat gain multipliers; requires a GainModifier registration contract before extraction.",
+      "status": "resolved",
+      "resolvedBy": "references/authoring/PDV_2_0_ADR_GainPipelineContract.md",
+      "resolvedDate": "2026-08-18"
     },
     {
       "symbol": "GetSurveyDevotionText",
