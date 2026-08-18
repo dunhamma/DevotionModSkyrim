@@ -2844,7 +2844,7 @@ class Verifier {
 
     this.checkSourceContains("Phase 14 source", "PDV_MCM", [
       "AddTextOption(\"Evaluate commitment\", \"Dawn-equivalent\", OPTION_FLAG_NONE)",
-      "AddTextOption(\"Accept commitment\", \"Carry-over\", OPTION_FLAG_NONE)",
+      "AddTextOption(\"Accept commitment\", \"Preserve piety\", OPTION_FLAG_NONE)",
       "AddTextOption(\"Decline commitment\", \"Postpone\", OPTION_FLAG_NONE)",
       "AddTextOption(\"Refuse commitment\", \"Cooldown\", OPTION_FLAG_NONE)",
       "manager.DebugEvaluateCommitmentOffer()",
@@ -2991,7 +2991,6 @@ class Verifier {
       "Developer Options",
       "Survey Devotion",
       "Enable Developer Options on the Player page to view this page.",
-      "PDV.UI.DeveloperOptions",
     ], this.phase18Gap.bind(this));
   }
 
@@ -4306,7 +4305,6 @@ class Verifier {
       "Function ConsumeBretonPracticePointBudget(Int requestedPoints)",
       "PDV.Dunmer.ReclamationFocusCount",
       "PDV.Signal.DunmerTwilight.",
-      "PDV.Imperial.CivicServiceCount",
       "PDV.Nord.HircineArkayEdgeCount",
     ], this.phase20RaceCostingGap.bind(this));
 
@@ -4322,8 +4320,8 @@ class Verifier {
       "Event OnItemHarvested(Form akProduce)",
       "Event OnWeatherChange(Weather akOldWeather, Weather akNewWeather)",
       "Event OnQuestStageChange(Quest akQuest, Int aiNewStage)",
-      "Function RouteP2ImmersiveSource(Form sourceForm, String sourceKind)",
-      "Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)",
+      "Function RouteP2ImmersiveSource(Form sourceForm, String sourceKind, String parentLogicalEventId = \"\")",
+      "Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage, String parentLogicalEventId = \"\")",
       "Function ShouldRouteP2Source(FormList sourceList, Form sourceForm, String routeKey, String sourceKind)",
       "Function ShouldRouteP2QuestStage(FormList sourceList, Quest sourceQuest, Int expectedFormId, Int approvedStage, String routeKey, Int newStage)",
       "Function MarkP2SourceRoute(Form sourceForm, String routeKey, String sourceKind)",
@@ -4393,7 +4391,7 @@ class Verifier {
     ], this.phase20RaceCostingGap.bind(this));
 
     this.checkSourceContains("Restore boundary Breton Hidden Art notice source", "PDV__ManagerQuest", [
-      "ShowP2BookNotice(reason, GetBretonHiddenArtNoticeTitle(reason), GetBretonHiddenArtNoticeText(reason))",
+      "SurfaceP2BookReadNotice(reason, GetBretonHiddenArtNoticeTitle(reason), GetBretonHiddenArtNoticeText(reason))",
       "String Function GetBretonHiddenArtNoticeTitle(String reason)",
       "String Function GetBretonHiddenArtNoticeText(String reason)",
     ], this.phase20RaceCostingGap.bind(this));
@@ -4405,16 +4403,15 @@ class Verifier {
     this.checkSourceContains("Restore boundary Argonian move-home source", "PDV__ManagerQuest", [
       "Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, String reason)",
       "StorageUtil.SetIntValue(None, \"PDV.ArgBed.CandidateFormID\", sleepCellId)",
-      "SetArgonianHome(playerRef, sleepCellId, today, reason)",
-      "Function SetArgonianHome(Actor playerRef, Int sleepCellId, Int today, String reason)",
+      "SetArgonianHome(playerRef, sleepCellId, todayStamp, reason)",
+      "Function SetArgonianHome(Actor playerRef, Int sleepCellId, Int devotionalDayStamp, String reason)",
       "Function ClearArgonianAdaptation(Actor playerRef)",
       "StorageUtil.SetIntValue(None, \"PDV.Adapt.DueDay\", today + Utility.RandomInt(10, 14) + 1)",
     ], this.phase20RaceCostingGap.bind(this));
 
     this.checkSourceContains("Restore boundary Book of Days payload source", "PDV__ManagerQuest", [
       "String Function BuildJournalPayloadJson()",
-      "String pathInfo = GetOriginRaceLabel(GetPlayerOriginRaceIndex())",
-      "pathInfo = pathInfo + \" | \" + GetPlayerMcmModeLine()",
+      "String pathInfo = BuildBookOfDaysPathInfo(originRace)",
       "String Function GetPlayerMcmModeLine()",
       "return GetRedguardSectLabel()",
     ], this.phase20RaceCostingGap.bind(this));
@@ -4432,7 +4429,7 @@ class Verifier {
       "StorageUtil.SetIntValue(None, \"PDV.Diegetic.Journal.Open\", 0)",
       "PDV_Manager.ClosePrismaJournal()",
       "PDV_Manager.SendPrismaJournalPayload(True)",
-      "_oidJournalHotkey = AddKeyMapOption(\"Open Book of Days\", currentJournalKey, OPTION_FLAG_NONE)",
+      "_oidJournalHotkey = AddKeyMapOption(\"Book of Days key\", currentJournalKey, OPTION_FLAG_NONE)",
     ], this.phase20RaceCostingGap.bind(this));
   }
 
@@ -8944,7 +8941,7 @@ class Verifier {
     ], this.todo.bind(this));
 
     this.checkSourceContains("Generic faucet PO3 source", "PDV_PlayerEvents", [
-      "RouteGenericBookRead(akBook, firstRead)",
+      "RouteGenericBookRead(akBook, firstRead, logicalEventId)",
       "RouteGenericAction(EVT_HARVEST_INGREDIENT",
       "RouteGenericAction(EVT_ACCEPT_DAEDRIC_ARTIFACT",
       "RouteGenericAction(EVT_RAISE_UNDEAD",
@@ -9657,7 +9654,6 @@ class Verifier {
     ], this.phase9Gap.bind(this));
     this.checkSourceContains("Phase 9 source", "PDV__ManagerQuest", [
       "Function EnsureBosmerRuntimeWiring()",
-      "Function EnsureBosmerSetupChoice()",
       "Function ApplyBosmerInitialChoice(Int pathState, String reason)",
       "Function EnterBosmerOldContract(Bool isStartupChoice, String reason)",
       "Function ExitBosmerOldContract(Bool countLapse, String reason)",
@@ -9780,13 +9776,12 @@ class Verifier {
       "GlobalVariable Property PDV_GLO_KhajiitFocusedEmphasis Auto",
       "KHAJIIT_FOCUS_KHENARTHI = 1",
       "KHAJIIT_FOCUS_AZURAH = 2",
-      "KHAJIIT_FOCUS_THRESHOLD = 50.0",
+      "KHAJIIT_FOCUS_THRESHOLD = 25.0",
       "KHAJIIT_FOCUS_LEAD_REQUIRED = 15.0",
-      "Function AdjustKhajiitFocusedEmphasis(Int focusValue, Float amount, String reason)",
+      "Function AdjustKhajiitFocusedEmphasis(Int focusValue, Float amount, String reason, Bool evaluateNow = True)",
       "Function EvaluateKhajiitFocusedEmphasis()",
       "Function SetKhajiitFocusedEmphasis(Int focusValue, String reason)",
       "PDV_GLO_KhajiitFocusedEmphasis.SetValue(focusValue as Float)",
-      "AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_AZURAH",
       "AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_KHENARTHI",
       "focus=",
     ], this.khajiitGap.bind(this));
@@ -9801,13 +9796,12 @@ class Verifier {
   checkCommitmentSourceContracts() {
     this.checkSourceContains("Commitment source", "PDV__ManagerQuest", [
       "Float Property COMMITMENT_OFFER_THRESHOLD = 50.0 AutoReadOnly",
-      "Float Property COMMITMENT_CARRYOVER_MULTIPLIER = 0.7 AutoReadOnly",
+      "Float Property COMMITMENT_CARRYOVER_MULTIPLIER = 1.0 AutoReadOnly",
       "Function EvaluateKyneCommitmentOffer()",
       "HasRecentCommitmentSignalDays(PDV_Kyne, 2, 7)",
       "Function DebugAcceptPendingCommitment()",
       "Function DebugDeclinePendingCommitment()",
       "Function DebugRefusePendingCommitment()",
-      "StorageUtil.SetFloatValue(None, \"PDV.Commitment.LastCarryover\", carryAmount)",
       "return originRace == ORIGIN_KHAJIIT || originRace == ORIGIN_BOSMER",
     ], this.commitmentGap.bind(this));
     this.checkSourceContains("Commitment source", "PDV_MCM", [
@@ -9989,8 +9983,6 @@ class Verifier {
     ], gap);
     this.checkSourceContains("Experience Mode MCM source", "PDV_MCM", [
       "PDV_ModePreset Property PDV_ModePresetRef Auto",
-      "String Property PAGE_MODE = \"Experience Mode\" AutoReadOnly",
-      "Function BuildModePage()",
       "AddTextOption(\"Path\", GetExperienceModeLabel(), OPTION_FLAG_DISABLED)",
       "Function ToggleExperienceMode()",
     ], gap);
