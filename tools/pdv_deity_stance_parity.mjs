@@ -35,6 +35,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { openHousecarl, extractHousecarlText, resolveHousecarlExe } from "./lib/pdv_housecarl_stdio.mjs";
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { resolveDevotionRoot } from "./lib/pdv_paths.mjs";
 
 const KNOWN_FLAGS = new Set(["--json", "--matrix"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_deity_stance_parity" });
@@ -46,7 +47,7 @@ const MCM = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_MCM.psc");
 const matrixArg = process.argv[process.argv.indexOf("--matrix") + 1];
 const MATRIX = process.argv.includes("--matrix") && matrixArg
   ? path.resolve(ROOT, matrixArg)
-  : "D:/Wabbajack/modlists/Anvil/mods/Devotion/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionCore.v2.json";
+  : path.join(resolveDevotionRoot(), "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionCore.v2.json");
 
 const RACES = ["Nord", "Imperial", "Breton", "Altmer", "Bosmer", "Dunmer", "Khajiit", "Argonian", "Orc", "Redguard"];
 const ESP_STANCE_NAME = { 0: "NATIVE", 1: "FOREIGN", 2: "TABOO", 3: "HOSTILE" };

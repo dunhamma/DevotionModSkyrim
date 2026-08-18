@@ -4,8 +4,10 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 
+import { devotionSource } from "./lib/pdv_paths.mjs";
+
 const ROOT = process.cwd();
-const LIVE_SOURCE = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source";
+const LIVE_SOURCE = devotionSource();
 const EXPECTED_RACES = [
   "Altmer",
   "Argonian",

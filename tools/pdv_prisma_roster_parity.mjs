@@ -22,6 +22,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { devotionSource, devotionPrismaView } from "./lib/pdv_paths.mjs";
 
 // The flags this file reads, plus any the repo documents for it. Documented-but-unread
 // flags are included deliberately: rejecting one would break a published command, and a
@@ -32,10 +33,10 @@ assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_prisma_ros
 const TOOLS_DIR = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(TOOLS_DIR, "..");
 const SPEC_DIR = path.join(PROJECT_ROOT, "references", "authoring");
-const DEVOTION_SOURCE = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
+const DEVOTION_SOURCE = devotionSource();
 const MANAGER_PATH = path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc");
 const DEITYBASE_PATH = path.join(DEVOTION_SOURCE, "PDV_DeityBase.psc");
-const APP_JS_PATH = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PrismaUI\\views\\Devotion\\app.js";
+const APP_JS_PATH = devotionPrismaView();
 
 const JSON_MODE = process.argv.includes("--json");
 const STRICT = process.argv.includes("--strict");

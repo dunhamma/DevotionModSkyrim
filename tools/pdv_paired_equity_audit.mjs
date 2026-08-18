@@ -38,6 +38,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { devotionSource } from "./lib/pdv_paths.mjs";
 
 // The flags this file reads, plus any the repo documents for it. Documented-but-unread
 // flags are included deliberately: rejecting one would break a published command, and a
@@ -69,7 +70,7 @@ const MATRIX_DOC = path.join(ROOT, "references", "authoring", "PDV_QuestReaction
 const WAIVER_CSV = path.join(ROOT, "references", "authoring", "PDV_PairedEquityWaivers.csv");
 const OUT_MD = path.join(ROOT, "references", "authoring", "PDV_PairedDeityEquityAudit.md");
 const OUT_CSV = path.join(ROOT, "references", "authoring", "PDV_PairedDeityEquityAudit.csv");
-const DEITY_SCRIPT_DIR = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source";
+const DEITY_SCRIPT_DIR = devotionSource();
 
 // The 33 record deities (PDV_Deity_*.psc / PDV_FLST_AllDeities). matrixName is
 // the literal the quest-reaction CSVs use; bakedName is the VMAD DeityName the

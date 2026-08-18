@@ -14,19 +14,20 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { verifyPhase21RosterCoverage } from "./lib/pdv-roster-coverage.mjs";
 import { recordActorValueFor } from "./lib/pdv_actor_value_aliases.mjs";
+import { resolveDevotionRoot, devotionSource, devotionPex, devotionEsp } from "./lib/pdv_paths.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
-const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");
-const DEVOTION_SOURCE = path.join(DEVOTION_MOD, "Scripts", "Source");
-const DEVOTION_PEX = path.join(DEVOTION_MOD, "Scripts");
+const DEVOTION_MOD = resolveDevotionRoot();
+const DEVOTION_SOURCE = devotionSource();
+const DEVOTION_PEX = devotionPex();
 const CUSTOM_RACE_DATA_DIR = path.join(DEVOTION_MOD, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion");
 const REPO_CUSTOM_RACE_DATA_DIR = path.join(PROJECT_ROOT, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion");
 const CUSTOM_RACE_MAP = path.join(REPO_CUSTOM_RACE_DATA_DIR, "PDV_RaceMap.json");
 const CUSTOM_TEMPORARY_RACE_MAP = path.join(REPO_CUSTOM_RACE_DATA_DIR, "PDV_TemporaryRaceMap.json");
 const CUSTOM_RACE_README = path.join(REPO_CUSTOM_RACE_DATA_DIR, "PDV_RaceMap_README.txt");
-const PDV_ESP = path.join(DEVOTION_MOD, "Devotion.esp");
+const PDV_ESP = devotionEsp();
 const MUTAGEN_BRIDGE = path.join(
   ANVIL_ROOT,
   "plugins",

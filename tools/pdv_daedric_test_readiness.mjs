@@ -13,6 +13,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { resolveDevotionRoot } from "./lib/pdv_paths.mjs";
 
 // Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
 // not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
@@ -22,7 +23,7 @@ assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_daedric_te
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
-const DEVOTION_MOD = "D:/Wabbajack/modlists/Anvil/mods/Devotion";
+const DEVOTION_MOD = resolveDevotionRoot();
 const PROFILE_DIR = "D:/Wabbajack/modlists/Anvil/profiles/Devotion Dev";
 const PAPYRUS_LOG = "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log";
 

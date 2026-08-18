@@ -11,9 +11,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { devotionSource } from "./lib/pdv_paths.mjs";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
-const LIVE_SOURCE = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source";
+const LIVE_SOURCE = devotionSource();
 const MANIFEST = path.join(ROOT, "references", "authoring", "PDV_Phase20_P2ImmersiveReceivers.manifest.json");
 
 main(process.argv.slice(2));

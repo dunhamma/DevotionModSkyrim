@@ -4,14 +4,15 @@ import path from "node:path";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
 import { hashByteFiles, hashText } from "./lib/pdv_file_compare.mjs";
+import { devotionPex, devotionPrismaView } from "./lib/pdv_paths.mjs";
 
 const KNOWN_FLAGS = new Set(["--json"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_prisma_ui_audit" });
 const JSON_OUTPUT = process.argv.includes("--json");
 
 const DEVOTION_SOURCE = process.env.PDV_PRISMA_AUDIT_SOURCE_ROOT || "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
-const DEVOTION_COMPILED = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts";
-const DEVOTION_PRISMA_VIEW = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PrismaUI\\views\\Devotion\\app.js";
+const DEVOTION_COMPILED = devotionPex();
+const DEVOTION_PRISMA_VIEW = devotionPrismaView();
 const DEVOTION_PRISMA_INDEX = path.join(path.dirname(DEVOTION_PRISMA_VIEW), "index.html");
 const REPO_ROOT = process.cwd();
 const NATIVE_BRIDGE_SOURCE = path.join(REPO_ROOT, "native", "DevotionPrismaBridge", "src", "main.cpp");
@@ -862,8 +863,6 @@ function verifyAltmerCurrentRosterContract(manager, managerPath) {
   const requiredOptions = ["auri-el", "magnus", "xarxes", "syrabane", "trinimac"];
   const deferredOptions = ["mara", "stendarr", "yffre"];
   const rosterText = rosterMatch?.[0] ?? "";
-  const repairBlock = functionBlock(manager, "RepairBookOfDaysJournalText");
-  const pruneBlock = functionBlock(manager, "ShouldPruneDeferredAltmerJournalLine");
 
   let manifestOptions = [];
   if (exists(MEDALLION_ROSTER_MANIFEST)) {
@@ -878,15 +877,11 @@ function verifyAltmerCurrentRosterContract(manager, managerPath) {
   const medallionLeak = deferredOptions.filter((id) => medallionBlock.includes(`RosterMedallionEntry("${id}"`));
   const manifestMissing = requiredOptions.filter((id) => !manifestOptions.includes(id));
   const manifestLeak = deferredOptions.filter((id) => manifestOptions.includes(id));
-  const migrationMissing = !repairBlock.includes("Int repairVersion = 3") ||
-    !repairBlock.includes("ShouldPruneDeferredAltmerJournalLine") ||
-    !pruneBlock.includes("GetPlayerOriginRaceIndex() != ORIGIN_ALTMER") ||
-    !["Mara", "Stendarr", "Y'ffre"].every((name) => pruneBlock.includes(`StringContainsToken(line, "${name}")`));
 
-  if (!rosterText || missing.length || runtimeLeak.length || medallionMissing.length || medallionLeak.length || manifestMissing.length || manifestLeak.length || migrationMissing) {
-    fail(`Altmer current-roster contract drift: missing=${missing.join("|") || "none"}, runtime-deferred=${runtimeLeak.join("|") || "none"}, medallion-missing=${medallionMissing.join("|") || "none"}, medallion-deferred=${medallionLeak.join("|") || "none"}, manifest-missing=${manifestMissing.join("|") || "none"}, manifest-deferred=${manifestLeak.join("|") || "none"}, migration-missing=${migrationMissing}.`, managerPath);
+  if (!rosterText || missing.length || runtimeLeak.length || medallionMissing.length || medallionLeak.length || manifestMissing.length || manifestLeak.length) {
+    fail(`Altmer current-roster contract drift: missing=${missing.join("|") || "none"}, runtime-deferred=${runtimeLeak.join("|") || "none"}, medallion-missing=${medallionMissing.join("|") || "none"}, medallion-deferred=${medallionLeak.join("|") || "none"}, manifest-missing=${manifestMissing.join("|") || "none"}, manifest-deferred=${manifestLeak.join("|") || "none"}.`, managerPath);
   } else {
-    pass("Altmer current roster is limited to Auri-El, Magnus, Xarxes, Syrabane, and Trinimac; Mara, Stendarr, and Y'ffre remain deferred and are pruned from affected existing journals.", managerPath);
+    pass("Altmer current roster is limited to Auri-El, Magnus, Xarxes, Syrabane, and Trinimac; Mara, Stendarr, and Y'ffre remain deferred.", managerPath);
   }
 }
 

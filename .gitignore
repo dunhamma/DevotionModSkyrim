@@ -172,3 +172,6 @@ references/authoring/generated/PDV_QuestCrossGen_V*_CoreRetrospective_*.csv
 references/authoring/generated/PDV_QuestCrossGen_V*_CoreRetrospective_*.md
 references/authoring/generated/PDV_QuestCrossGen_V*_CoreAmbiguityResolution_*.csv
 references/authoring/generated/PDV_QuestCrossGen_V*_CoreAmbiguityResolution_*.md
+
+# 2.0 parity harness working artifacts (regenerable, do not commit)
+_parity_*.json

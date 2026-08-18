@@ -604,7 +604,7 @@ Int Property AMBIENT_CHAMPION_CADENCE_DAYS = 4 AutoReadOnly
 
 ; Human-facing release stamp for the MCM Version readout and bug-report export.
 ; Bump on every public build so an attached report is orderable by build.
-String Property PDV_BUILD_VERSION = "1.5.0" AutoReadOnly
+String Property PDV_BUILD_VERSION = "2.0.0-dev" AutoReadOnly
 
 Int Property FRAMEWORK_SCHEMA_VERSION = 3 AutoReadOnly
 Int Property PATRON_STATE_UNSET = 0 AutoReadOnly
@@ -988,7 +988,6 @@ Event OnInit()
     EnsurePhase8RuntimeWiring()
     EnsureAkatoshRuntimeIdentity()
     EnsureCanonicalDeityDisplayNames()
-    RepairBookOfDaysJournalText()
     EnsureBosmerRuntimeWiring()
     EnsureNordRuntimeWiring()
     RegisterManagerShoutSignals()
@@ -1085,7 +1084,6 @@ Event OnUpdate()
         EnsurePhase8RuntimeWiring()
         EnsureAkatoshRuntimeIdentity()
         EnsureCanonicalDeityDisplayNames()
-        RepairBookOfDaysJournalText()
         EnsureBosmerRuntimeWiring()
         EnsureNordRuntimeWiring()
         EnsureSurveyDevotionPower()
@@ -3017,7 +3015,7 @@ Bool Function PrismaToastLargeEnabled()
 EndFunction
 
 Function SetPrismaToastLargeEnabled(Bool enabled)
-    StorageUtil.SetIntValue(None, "PDV.Prisma.ToastLarge", BoolToInt(enabled))
+    StorageUtil.SetIntValue(None, "PDV.Prisma.ToastLarge", PDV_DevotionRules.BoolToInt(enabled))
 EndFunction
 
 String Function WithPrismaToastSize(String payload)
@@ -3079,7 +3077,7 @@ String Function BuildPrismaEventFallbackText(String eventName, String deityName,
 EndFunction
 
 Bool Function SendPrismaToast(String symbolName, String tone, String titleText, String messageText, Bool allowFallback = True, Bool allowDuringRaceSetup = False)
-    String payload = "{\"mode\":\"toast\",\"toast\":{\"symbol\":\"" + JsonSafeString(symbolName) + "\",\"tone\":\"" + JsonSafeString(tone) + "\",\"title\":\"" + JsonSafeString(titleText) + "\",\"message\":\"" + JsonSafeString(messageText) + "\"}}"
+    String payload = "{\"mode\":\"toast\",\"toast\":{\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\",\"tone\":\"" + PDV_DevotionRules.JsonSafeString(tone) + "\",\"title\":\"" + PDV_DevotionRules.JsonSafeString(titleText) + "\",\"message\":\"" + PDV_DevotionRules.JsonSafeString(messageText) + "\"}}"
     return SendPrismaToastPayloadOrFallback(payload, titleText, messageText, allowFallback, allowDuringRaceSetup)
 EndFunction
 
@@ -3090,14 +3088,14 @@ Bool Function SendPrismaToastWithSource(String symbolName, String tone, String t
     sourceModName = NormalizePublicDeityDisplayText(sourceModName)
     String correlationPrefix = ""
     if correlation != ""
-        correlationPrefix = "\"correlation\":\"" + JsonSafeString(correlation) + "\","
+        correlationPrefix = "\"correlation\":\"" + PDV_DevotionRules.JsonSafeString(correlation) + "\","
     endIf
-    String payload = "{\"mode\":\"toast\"," + correlationPrefix + "\"toast\":{\"symbol\":\"" + JsonSafeString(symbolName) + "\",\"tone\":\"" + JsonSafeString(tone) + "\",\"title\":\"" + JsonSafeString(titleText) + "\",\"message\":\"" + JsonSafeString(messageText) + "\""
+    String payload = "{\"mode\":\"toast\"," + correlationPrefix + "\"toast\":{\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\",\"tone\":\"" + PDV_DevotionRules.JsonSafeString(tone) + "\",\"title\":\"" + PDV_DevotionRules.JsonSafeString(titleText) + "\",\"message\":\"" + PDV_DevotionRules.JsonSafeString(messageText) + "\""
     if sourceModName != ""
-        payload = payload + ",\"source\":\"" + JsonSafeString(sourceModName) + "\""
+        payload = payload + ",\"source\":\"" + PDV_DevotionRules.JsonSafeString(sourceModName) + "\""
     endIf
     if correlation != ""
-        payload = payload + ",\"correlation\":\"" + JsonSafeString(correlation) + "\""
+        payload = payload + ",\"correlation\":\"" + PDV_DevotionRules.JsonSafeString(correlation) + "\""
     endIf
     payload = payload + "}}"
     String fallbackTitle = titleText
@@ -3116,17 +3114,17 @@ Bool Function SendPrismaEventToast(String eventName, PDV_DeityBase deity, String
     endIf
     context = NormalizePublicDeityDisplayText(context)
     rival = NormalizePublicDeityDisplayText(rival)
-    String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"" + JsonSafeString(eventName) + "\""
-    j = j + ",\"deity\":\"" + JsonSafeString(deityName) + "\""
-    j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"" + PDV_DevotionRules.JsonSafeString(eventName) + "\""
+    j = j + ",\"deity\":\"" + PDV_DevotionRules.JsonSafeString(deityName) + "\""
+    j = j + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\""
     if context != ""
-        j = j + ",\"context\":\"" + JsonSafeString(context) + "\""
+        j = j + ",\"context\":\"" + PDV_DevotionRules.JsonSafeString(context) + "\""
     endIf
     if tierLabel != ""
-        j = j + ",\"tierLabel\":\"" + JsonSafeString(tierLabel) + "\""
+        j = j + ",\"tierLabel\":\"" + PDV_DevotionRules.JsonSafeString(tierLabel) + "\""
     endIf
     if rival != ""
-        j = j + ",\"rival\":\"" + JsonSafeString(rival) + "\""
+        j = j + ",\"rival\":\"" + PDV_DevotionRules.JsonSafeString(rival) + "\""
     endIf
     j = j + "}}"
     return SendPrismaToastPayloadOrFallback(j, "", BuildPrismaEventFallbackText(eventName, deityName, context, tierLabel, rival), allowFallback)
@@ -3376,15 +3374,15 @@ String Function BuildTierReachJournalLine(String surfaceKey, Int deityIndex)
 EndFunction
 
 String Function ExtractTierLabelFromSurfaceKey(String surfaceKey)
-    if StringContainsToken(surfaceKey, "Champion")
+    if PDV_DevotionRules.StringContainsToken(surfaceKey, "Champion")
         return "Champion"
-    elseIf StringContainsToken(surfaceKey, "Devoted")
+    elseIf PDV_DevotionRules.StringContainsToken(surfaceKey, "Devoted")
         return "Devoted"
-    elseIf StringContainsToken(surfaceKey, "Seeker")
+    elseIf PDV_DevotionRules.StringContainsToken(surfaceKey, "Seeker")
         return "Seeker"
-    elseIf StringContainsToken(surfaceKey, "Faithful")
+    elseIf PDV_DevotionRules.StringContainsToken(surfaceKey, "Faithful")
         return "Faithful"
-    elseIf StringContainsToken(surfaceKey, "Observant")
+    elseIf PDV_DevotionRules.StringContainsToken(surfaceKey, "Observant")
         return "Observant"
     endIf
     return ""
@@ -3571,14 +3569,14 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
         tierLabel = GetCurrentStandingLabel()
     endIf
 
-    String j = "{\"title\":\"" + JsonSafeString(titleText) + "\""
+    String j = "{\"title\":\"" + PDV_DevotionRules.JsonSafeString(titleText) + "\""
     j = j + ",\"status\":\"Live\""
-    j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
-    j = j + ",\"patron\":\"" + JsonSafeString(GetPlayerMcmPatronLine()) + "\""
-    j = j + ",\"patronNote\":\"" + JsonSafeString(GetPanelPatronNote()) + "\""
-    j = j + ",\"summary\":\"" + JsonSafeString(GetSurveyDevotionText()) + "\""
+    j = j + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\""
+    j = j + ",\"patron\":\"" + PDV_DevotionRules.JsonSafeString(GetPlayerMcmPatronLine()) + "\""
+    j = j + ",\"patronNote\":\"" + PDV_DevotionRules.JsonSafeString(GetPanelPatronNote()) + "\""
+    j = j + ",\"summary\":\"" + PDV_DevotionRules.JsonSafeString(GetSurveyDevotionText()) + "\""
     j = j + ",\"tier\":" + tierValue
-    j = j + ",\"tierLabel\":\"" + JsonSafeString(tierLabel) + "\""
+    j = j + ",\"tierLabel\":\"" + PDV_DevotionRules.JsonSafeString(tierLabel) + "\""
     String nextText = GetPanelNextThresholdText(panelCommitment, piety)
     if IsFocusedPantheonBoonSuspended()
         nextText = "Focused boon returns at 50 piety"
@@ -3587,24 +3585,24 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
     elseIf panelCommitment == None && (pantheonBroadPresentation || GetBroadLaneTierForOrigin(originRace) > TIER_NONE)
         nextText = GetBroadLaneNextThresholdText(originRace)
     endIf
-    j = j + ",\"nextText\":\"" + JsonSafeString(nextText) + "\""
+    j = j + ",\"nextText\":\"" + PDV_DevotionRules.JsonSafeString(nextText) + "\""
     j = j + ",\"piety\":" + piety
     if panelCommitment == None && (pantheonBroadPresentation || GetBroadLaneTierForOrigin(originRace) > TIER_NONE)
         if originRace == ORIGIN_BRETON
-            j = j + ",\"pietyLabel\":\"" + JsonSafeString("" + GetBroadLaneServiceCount(originRace) + " practice points") + "\""
+            j = j + ",\"pietyLabel\":\"" + PDV_DevotionRules.JsonSafeString("" + GetBroadLaneServiceCount(originRace) + " practice points") + "\""
         elseIf originRace == ORIGIN_IMPERIAL || originRace == ORIGIN_NORD
-            j = j + ",\"pietyLabel\":\"" + JsonSafeString(FormatTwoDecimals(GetBroadLaneStandingValue(originRace)) + " pantheon standing") + "\""
+            j = j + ",\"pietyLabel\":\"" + PDV_DevotionRules.JsonSafeString(PDV_DevotionRules.FormatTwoDecimals(GetBroadLaneStandingValue(originRace)) + " pantheon standing") + "\""
         else
-            j = j + ",\"pietyLabel\":\"" + JsonSafeString("" + GetBroadLaneServiceCount(originRace) + " broad acts") + "\""
+            j = j + ",\"pietyLabel\":\"" + PDV_DevotionRules.JsonSafeString("" + GetBroadLaneServiceCount(originRace) + " broad acts") + "\""
         endIf
     elseIf panelCommitment == None && originRace == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
-        j = j + ",\"pietyLabel\":\"" + JsonSafeString(FormatTwoDecimals(piety) + " cultural practice") + "\""
+        j = j + ",\"pietyLabel\":\"" + PDV_DevotionRules.JsonSafeString(PDV_DevotionRules.FormatTwoDecimals(piety) + " cultural practice") + "\""
     endIf
     j = j + ",\"pietyToday\":" + pietyToday
-    j = j + ",\"todayMood\":\"" + JsonSafeString(GetPanelTodayMood(pietyToday)) + "\""
-    j = j + ",\"driftLabel\":\"" + JsonSafeString(GetPanelDriftLabel()) + "\""
-    j = j + ",\"originRace\":\"" + JsonSafeString(originLabel) + "\""
-    j = j + ",\"patronState\":\"" + JsonSafeString(GetPatronStateLabel()) + "\""
+    j = j + ",\"todayMood\":\"" + PDV_DevotionRules.JsonSafeString(GetPanelTodayMood(pietyToday)) + "\""
+    j = j + ",\"driftLabel\":\"" + PDV_DevotionRules.JsonSafeString(GetPanelDriftLabel()) + "\""
+    j = j + ",\"originRace\":\"" + PDV_DevotionRules.JsonSafeString(originLabel) + "\""
+    j = j + ",\"patronState\":\"" + PDV_DevotionRules.JsonSafeString(GetPatronStateLabel()) + "\""
     j = j + ",\"acts\":[" + GetPanelActsJson() + "]"
     j = j + ",\"rites\":[" + GetPanelRitesJson() + "]"
     j = j + ",\"relations\":[" + GetPanelRelationsJson() + "]"
@@ -3710,10 +3708,10 @@ String Function AppendDashboardGod(String acc, PDV_DeityBase deity, String syste
     Float pietyToday = StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday")
     Int tier = StorageUtil.GetFloatValue(deityForm, "PDV.Tier") as Int
 
-    String entry = "{\"god\":\"" + JsonSafeString(GetPublicDeityDisplayName(deity)) + "\""
-    entry = entry + ",\"symbol\":\"" + JsonSafeString(GetPrismaSymbolForDeity(deity)) + "\""
-    entry = entry + ",\"system\":\"" + JsonSafeString(system) + "\""
-    entry = entry + ",\"state\":\"" + JsonSafeString(GetGodRollupState(deity)) + "\""
+    String entry = "{\"god\":\"" + PDV_DevotionRules.JsonSafeString(GetPublicDeityDisplayName(deity)) + "\""
+    entry = entry + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(GetPrismaSymbolForDeity(deity)) + "\""
+    entry = entry + ",\"system\":\"" + PDV_DevotionRules.JsonSafeString(system) + "\""
+    entry = entry + ",\"state\":\"" + PDV_DevotionRules.JsonSafeString(GetGodRollupState(deity)) + "\""
     entry = entry + ",\"pietyToday\":" + pietyToday
     entry = entry + ",\"piety\":" + piety
     entry = entry + ",\"tier\":" + tier
@@ -3740,7 +3738,7 @@ String Function GetDeityDriversJson(PDV_DeityBase deity)
         if delta < 0.0
             dir = "loss"
         endIf
-        String entry = "{\"reason\":\"" + JsonSafeString(reason) + "\",\"count\":1,\"net\":" + delta + ",\"dir\":\"" + dir + "\"}"
+        String entry = "{\"reason\":\"" + PDV_DevotionRules.JsonSafeString(reason) + "\",\"count\":1,\"net\":" + delta + ",\"dir\":\"" + dir + "\"}"
         if out != ""
             out = out + ","
         endIf
@@ -3815,24 +3813,24 @@ String Function GetPanelInstrumentJson(Int originRace, Bool hasActiveDeity, Int 
     String kindText = GetPanelInstrumentKind(originRace, hasActiveDeity)
     Float primary = 0.0
     if kindText == "broad"
-        primary = ClampValue(piety / BROAD_PANTHEON_POOL_MAX, 0.0, 1.0)
+        primary = PDV_DevotionRules.ClampValue(piety / BROAD_PANTHEON_POOL_MAX, 0.0, 1.0)
     elseIf kindText == "cultural"
-        primary = ClampValue(piety / 75.0, 0.0, 1.0)
+        primary = PDV_DevotionRules.ClampValue(piety / 75.0, 0.0, 1.0)
     elseIf kindText == "piety"
         Float pietyDenom = championThreshold
         if pietyDenom <= 0.0
             pietyDenom = 85.0
         endIf
-        primary = ClampValue(piety / pietyDenom, 0.0, 1.0)
+        primary = PDV_DevotionRules.ClampValue(piety / pietyDenom, 0.0, 1.0)
     else
-        primary = ClampValue((tierValue as Float) / 3.0, 0.0, 1.0)
+        primary = PDV_DevotionRules.ClampValue((tierValue as Float) / 3.0, 0.0, 1.0)
     endIf
 
-    String j = "{\"kind\":\"" + JsonSafeString(kindText) + "\""
+    String j = "{\"kind\":\"" + PDV_DevotionRules.JsonSafeString(kindText) + "\""
     j = j + ",\"tier\":" + tierValue
-    j = j + ",\"tierLabel\":\"" + JsonSafeString(tierLabel) + "\""
-    j = j + ",\"primary\":" + FormatTwoDecimals(primary)
-    j = j + ",\"state\":\"" + JsonSafeString(GetPanelInstrumentState(originRace, kindText, tierLabel)) + "\""
+    j = j + ",\"tierLabel\":\"" + PDV_DevotionRules.JsonSafeString(tierLabel) + "\""
+    j = j + ",\"primary\":" + PDV_DevotionRules.FormatTwoDecimals(primary)
+    j = j + ",\"state\":\"" + PDV_DevotionRules.JsonSafeString(GetPanelInstrumentState(originRace, kindText, tierLabel)) + "\""
     j = j + ",\"data\":" + GetPanelInstrumentDataJson(originRace, kindText, piety)
     j = j + "}"
     return j
@@ -3906,7 +3904,7 @@ EndFunction
 String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Float piety)
     if kindText == "broad"
         if originRace == ORIGIN_IMPERIAL || originRace == ORIGIN_NORD
-            return "{\"standing\":" + FormatTwoDecimals(GetBroadLaneStandingValue(originRace)) + ",\"scratch\":" + FormatTwoDecimals(GetBroadLaneScratchValue(originRace)) + ",\"pool\":\"" + JsonSafeString(GetActiveBroadPantheonPoolId()) + "\",\"baseline\":\"" + JsonSafeString(GetBroadLaneDisplayName(originRace)) + "\"}"
+            return "{\"standing\":" + PDV_DevotionRules.FormatTwoDecimals(GetBroadLaneStandingValue(originRace)) + ",\"scratch\":" + PDV_DevotionRules.FormatTwoDecimals(GetBroadLaneScratchValue(originRace)) + ",\"pool\":\"" + PDV_DevotionRules.JsonSafeString(GetActiveBroadPantheonPoolId()) + "\",\"baseline\":\"" + PDV_DevotionRules.JsonSafeString(GetBroadLaneDisplayName(originRace)) + "\"}"
         endIf
         return "{\"acts\":" + GetBroadLaneServiceCount(originRace) + "}"
     endIf
@@ -3926,7 +3924,7 @@ String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Floa
         endIf
         String focusLabel = GetKhajiitFocusLabel(focus)
         String strengthLabel = GetKhajiitFocusLabel(GetLunarPresidingFocus(phase))
-        return "{\"phase\":" + phase + ",\"focus\":\"" + JsonSafeString(focusLabel) + "\",\"lunarTier\":\"" + JsonSafeString(lunarTier) + "\",\"currentFocus\":\"" + JsonSafeString(focusLabel) + "\",\"godInStrength\":\"" + JsonSafeString(strengthLabel) + "\",\"focusStanding\":\"" + JsonSafeString(standing) + "\",\"substrateTier\":" + substrateTier + ",\"resonating\":" + BoolToJson(IsKhajiitLatticeResonating()) + "}"
+        return "{\"phase\":" + phase + ",\"focus\":\"" + PDV_DevotionRules.JsonSafeString(focusLabel) + "\",\"lunarTier\":\"" + PDV_DevotionRules.JsonSafeString(lunarTier) + "\",\"currentFocus\":\"" + PDV_DevotionRules.JsonSafeString(focusLabel) + "\",\"godInStrength\":\"" + PDV_DevotionRules.JsonSafeString(strengthLabel) + "\",\"focusStanding\":\"" + PDV_DevotionRules.JsonSafeString(standing) + "\",\"substrateTier\":" + substrateTier + ",\"resonating\":" + PDV_DevotionRules.BoolToJson(IsKhajiitLatticeResonating()) + "}"
     elseIf kindText == "cultural"
         Float hist = 0.0
         Float people = 0.0
@@ -3944,7 +3942,7 @@ String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Floa
             culturalMetric = PDV_ArgonianHistSubstrate.GetMetric()
             culturalTier = PDV_ArgonianHistSubstrate.GetSubstrateTier()
         endIf
-        return "{\"metric\":" + FormatTwoDecimals(culturalMetric) + ",\"culturalTier\":" + culturalTier + ",\"hist\":" + FormatTwoDecimals(hist) + ",\"people\":" + FormatTwoDecimals(people) + ",\"void\":" + FormatTwoDecimals(voidValue) + ",\"voidActive\":" + BoolToJson(voidActive) + "}"
+        return "{\"metric\":" + PDV_DevotionRules.FormatTwoDecimals(culturalMetric) + ",\"culturalTier\":" + culturalTier + ",\"hist\":" + PDV_DevotionRules.FormatTwoDecimals(hist) + ",\"people\":" + PDV_DevotionRules.FormatTwoDecimals(people) + ",\"void\":" + PDV_DevotionRules.FormatTwoDecimals(voidValue) + ",\"voidActive\":" + PDV_DevotionRules.BoolToJson(voidActive) + "}"
     elseIf kindText == "ancestor"
         Int depth = 0
         Int prayer = 0
@@ -3954,15 +3952,15 @@ String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Floa
             prayer = PDV_DunmerAncestorSubstrate.GetPrayerCount()
             home = PDV_DunmerAncestorSubstrate.GetHomeBonusCount()
         endIf
-        return "{\"depth\":" + depth + ",\"prayer\":" + prayer + ",\"home\":" + home + ",\"reclamation\":\"" + JsonSafeString(GetDunmerAncestorLayerLabel()) + "\"}"
+        return "{\"depth\":" + depth + ",\"prayer\":" + prayer + ",\"home\":" + home + ",\"reclamation\":\"" + PDV_DevotionRules.JsonSafeString(GetDunmerAncestorLayerLabel()) + "\"}"
     elseIf kindText == "forge"
-        return "{\"lifeMode\":\"" + JsonSafeString(GetOrcLifeModeLabel()) + "\"}"
+        return "{\"lifeMode\":\"" + PDV_DevotionRules.JsonSafeString(GetOrcLifeModeLabel()) + "\"}"
     elseIf kindText == "sects"
-        return "{\"sect\":\"" + JsonSafeString(GetRedguardSectLabel()) + "\"}"
+        return "{\"sect\":\"" + PDV_DevotionRules.JsonSafeString(GetRedguardSectLabel()) + "\"}"
     elseIf kindText == "branch"
-        return "{\"path\":\"" + JsonSafeString(GetBosmerPathLabel()) + "\",\"pactBound\":" + BoolToJson(IsBosmerPactBound()) + ",\"evidenceDays\":" + GetBosmerPathEvidenceDays() + "}"
+        return "{\"path\":\"" + PDV_DevotionRules.JsonSafeString(GetBosmerPathLabel()) + "\",\"pactBound\":" + PDV_DevotionRules.BoolToJson(IsBosmerPactBound()) + ",\"evidenceDays\":" + GetBosmerPathEvidenceDays() + "}"
     endIf
-    return "{\"piety\":" + FormatTwoDecimals(piety) + ",\"pietyToday\":0.00}"
+    return "{\"piety\":" + PDV_DevotionRules.FormatTwoDecimals(piety) + ",\"pietyToday\":0.00}"
 EndFunction
 
 Int Function GetBosmerPathEvidenceDays()
@@ -4027,7 +4025,7 @@ String Function GetPanelActsJson()
     String items = ""
     PDV_DaedricPathBase actsPact = GetActiveDaedricPactPath()
     if actsPact
-        items = AppendJsonItem(items, PanelPlainObject("daedric", "neutral", "Keep the pact", "Act in keeping with " + actsPact.DeityName + " to hold this pact."))
+        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("daedric", "neutral", "Keep the pact", "Act in keeping with " + actsPact.DeityName + " to hold this pact."))
     elseIf _activeDeity
         Float today = GetPietyToday(_activeDeity)
         if today != 0.0
@@ -4035,14 +4033,14 @@ String Function GetPanelActsJson()
             if today < 0.0
                 tone = "warning"
             endIf
-            items = AppendJsonItem(items, PanelEventObject("favor", _activeDeity, "", "Today's devotion is being weighed.", "" + today, tone, "", ""))
+            items = PDV_DevotionRules.AppendJsonItem(items, PanelEventObject("favor", _activeDeity, "", "Today's devotion is being weighed.", "" + today, tone, "", ""))
         endIf
     endIf
 
     if IsFavorActive()
         Int lane = GetActiveFavorLane()
         Int fam = GetActiveFavorFamily()
-        items = AppendJsonItem(items, PanelPlainObject("journal", "good", GetContextualFavorLaneLabel(lane), GetContextualFavorFamilyLabel(lane, fam)))
+        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("journal", "good", GetContextualFavorLaneLabel(lane), GetContextualFavorFamilyLabel(lane, fam)))
     endIf
 
     ; Quasi-patron: show current substrate/state-track mode as the headline act
@@ -4051,7 +4049,7 @@ String Function GetPanelActsJson()
         Int originRace = GetPlayerOriginRaceIndex()
         String quasiLabel = GetPanelQuasiPatronTierLabel(originRace)
         if quasiLabel != ""
-            items = AppendJsonItem(items, PanelPlainObject(GetPanelQuasiPatronSymbol(originRace), "neutral", "Current practice", quasiLabel))
+            items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject(GetPanelQuasiPatronSymbol(originRace), "neutral", "Current practice", quasiLabel))
         endIf
     endIf
 
@@ -4063,17 +4061,17 @@ String Function GetPanelRitesJson()
     PDV_DaedricPathBase ritesPact = GetActiveDaedricPactPath()
     if ritesPact
         String pactName = NormalizePublicDeityDisplayText(ritesPact.DeityName)
-        items = AppendJsonItem(items, PanelPlainObject("daedric", "", "Keep " + pactName + "'s pact", "Act in keeping with " + pactName + " to hold this pact."))
+        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("daedric", "", "Keep " + pactName + "'s pact", "Act in keeping with " + pactName + " to hold this pact."))
     elseIf _activeDeity
         String activeName = GetPublicDeityDisplayName(_activeDeity)
-        items = AppendJsonItem(items, PanelPlainObject(GetPrismaSymbolForDeity(_activeDeity), "", "Keep " + activeName + "'s rites", "Act in keeping with " + activeName + " to deepen this bond."))
+        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject(GetPrismaSymbolForDeity(_activeDeity), "", "Keep " + activeName + "'s rites", "Act in keeping with " + activeName + " to deepen this bond."))
     else
         ; Quasi-patron: tell the player what kind of acts build their path.
         Int originRace = GetPlayerOriginRaceIndex()
         String patronName = GetPanelQuasiPatronName(originRace)
         String patronSymbol = GetPanelQuasiPatronSymbol(originRace)
         if patronName != "Devotion"
-            items = AppendJsonItem(items, PanelPlainObject(patronSymbol, "", "Deepen your practice", "Continue acting in keeping with " + patronName + " to build this path."))
+            items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject(patronSymbol, "", "Deepen your practice", "Continue acting in keeping with " + patronName + " to build this path."))
         endIf
     endIf
     return items
@@ -4090,7 +4088,7 @@ String Function GetPanelRelationsJson()
         elseIf dstate >= relsPact.DAEDRIC_STATE_TABOO
             dstateTone = "warning"
         endIf
-        items = AppendJsonItem(items, PanelPlainObject("", dstateTone, "", NormalizePublicDeityDisplayText(relsPact.DeityName) + "'s pact stands " + relsPact.GetDaedricStateLabel(dstate) + " among your people."))
+        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("", dstateTone, "", NormalizePublicDeityDisplayText(relsPact.DeityName) + "'s pact stands " + relsPact.GetDaedricStateLabel(dstate) + " among your people."))
     elseIf _activeDeity
         Int stance = _activeDeity.GetStanceForPlayer()
         String stanceText = ""
@@ -4110,43 +4108,43 @@ String Function GetPanelRelationsJson()
             stanceTone = "warning"
         endIf
         if stanceText != ""
-            items = AppendJsonItem(items, PanelPlainObject("", stanceTone, "", stanceText))
+            items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("", stanceTone, "", stanceText))
         endIf
 
         Quest[] rivals = _activeDeity.RivalDeities
         if rivals && rivals.Length > 0
             PDV_DeityBase rivalDeity = rivals[0] as PDV_DeityBase
             if rivalDeity
-                items = AppendJsonItem(items, PanelEventObject("rivalry", _activeDeity, "", "", "", "", "", rivalDeity.DeityName))
+                items = PDV_DevotionRules.AppendJsonItem(items, PanelEventObject("rivalry", _activeDeity, "", "", "", "", "", rivalDeity.DeityName))
             endIf
         endIf
     endIf
 
     if GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
-        items = AppendJsonItem(items, PanelPlainObject("hist", "neutral", "Hist relation", GetArgonianLayerStrengthLabel(PDV_ArgonianHistSubstrate.GetHistRelation())))
-        items = AppendJsonItem(items, PanelPlainObject("journal", "neutral", "People relation", GetArgonianLayerStrengthLabel(PDV_ArgonianHistSubstrate.GetPeopleRelation())))
+        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("hist", "neutral", "Hist relation", GetArgonianLayerStrengthLabel(PDV_ArgonianHistSubstrate.GetHistRelation())))
+        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("journal", "neutral", "People relation", GetArgonianLayerStrengthLabel(PDV_ArgonianHistSubstrate.GetPeopleRelation())))
         String voidTone = "neutral"
         if PDV_ArgonianHistSubstrate.IsVoidFullyActive()
             voidTone = "warning"
         endIf
-        items = AppendJsonItem(items, PanelPlainObject("sithis", voidTone, "Void relation", GetArgonianVoidStrengthLabel(PDV_ArgonianHistSubstrate.GetVoidRelation())))
+        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("sithis", voidTone, "Void relation", GetArgonianVoidStrengthLabel(PDV_ArgonianHistSubstrate.GetVoidRelation())))
     endIf
 
     if IsBroadWorshipActive()
-        items = AppendJsonItem(items, PanelPlainObject("", "neutral", "", "You keep the broad rites of your people, with no single patron named."))
+        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("", "neutral", "", "You keep the broad rites of your people, with no single patron named."))
     endIf
 
     if StorageUtil.GetIntValue(None, "PDV.Neglect.ActiveCount") > 0
-        items = AppendJsonItem(items, PanelPlainObject("", "warning", "", "Some of your rites have grown quiet and need attention."))
+        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("", "warning", "", "Some of your rites have grown quiet and need attention."))
     endIf
 
     return items
 EndFunction
 
 String Function GetPanelDebugJson()
-    String j = "{\"Favor\":\"" + JsonSafeString(GetPlayerMcmFavorLine()) + "\""
-    j = j + ",\"Neglect\":\"" + JsonSafeString(GetPlayerMcmNeglectLine()) + "\""
-    j = j + ",\"Curse\":\"" + JsonSafeString(GetPlayerCursePublicLabel()) + "\""
+    String j = "{\"Favor\":\"" + PDV_DevotionRules.JsonSafeString(GetPlayerMcmFavorLine()) + "\""
+    j = j + ",\"Neglect\":\"" + PDV_DevotionRules.JsonSafeString(GetPlayerMcmNeglectLine()) + "\""
+    j = j + ",\"Curse\":\"" + PDV_DevotionRules.JsonSafeString(GetPlayerCursePublicLabel()) + "\""
     j = j + "}"
     return j
 EndFunction
@@ -4270,51 +4268,44 @@ String Function PanelEventObject(String eventName, PDV_DeityBase deity, String c
     context = NormalizePublicDeityDisplayText(context)
     itemText = NormalizePublicDeityDisplayText(itemText)
     rival = NormalizePublicDeityDisplayText(rival)
-    String j = "{\"event\":\"" + JsonSafeString(eventName) + "\""
+    String j = "{\"event\":\"" + PDV_DevotionRules.JsonSafeString(eventName) + "\""
     if deityName != ""
-        j = j + ",\"deity\":\"" + JsonSafeString(deityName) + "\""
+        j = j + ",\"deity\":\"" + PDV_DevotionRules.JsonSafeString(deityName) + "\""
     endIf
-    j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    j = j + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\""
     if context != ""
-        j = j + ",\"context\":\"" + JsonSafeString(context) + "\""
+        j = j + ",\"context\":\"" + PDV_DevotionRules.JsonSafeString(context) + "\""
     endIf
     if itemText != ""
-        j = j + ",\"text\":\"" + JsonSafeString(itemText) + "\""
+        j = j + ",\"text\":\"" + PDV_DevotionRules.JsonSafeString(itemText) + "\""
     endIf
     if amountText != ""
         j = j + ",\"amount\":" + amountText
     endIf
     if tone != ""
-        j = j + ",\"tone\":\"" + JsonSafeString(tone) + "\""
+        j = j + ",\"tone\":\"" + PDV_DevotionRules.JsonSafeString(tone) + "\""
     endIf
     if tierLabel != ""
-        j = j + ",\"tierLabel\":\"" + JsonSafeString(tierLabel) + "\""
+        j = j + ",\"tierLabel\":\"" + PDV_DevotionRules.JsonSafeString(tierLabel) + "\""
     endIf
     if rival != ""
-        j = j + ",\"rival\":\"" + JsonSafeString(rival) + "\""
+        j = j + ",\"rival\":\"" + PDV_DevotionRules.JsonSafeString(rival) + "\""
     endIf
     j = j + "}"
     return j
 EndFunction
 
 String Function PanelPlainObject(String symbolName, String tone, String listTitle, String listText)
-    String j = "{\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    String j = "{\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\""
     if tone != ""
-        j = j + ",\"tone\":\"" + JsonSafeString(tone) + "\""
+        j = j + ",\"tone\":\"" + PDV_DevotionRules.JsonSafeString(tone) + "\""
     endIf
     if listTitle != ""
-        j = j + ",\"listTitle\":\"" + JsonSafeString(listTitle) + "\""
+        j = j + ",\"listTitle\":\"" + PDV_DevotionRules.JsonSafeString(listTitle) + "\""
     endIf
-    j = j + ",\"listText\":\"" + JsonSafeString(listText) + "\""
+    j = j + ",\"listText\":\"" + PDV_DevotionRules.JsonSafeString(listText) + "\""
     j = j + "}"
     return j
-EndFunction
-
-String Function AppendJsonItem(String accum, String item)
-    if accum == ""
-        return item
-    endIf
-    return accum + "," + item
 EndFunction
 
 ; Compatibility wrapper for any older compiled caller. New book routes call the
@@ -4347,7 +4338,7 @@ Function SurfaceP2Acknowledgement(String titleText, String messageText, Bool all
 EndFunction
 
 Bool Function IsP2BookNoticeReason(String reason)
-    return StringContainsToken(reason, "po3_book")
+    return PDV_DevotionRules.StringContainsToken(reason, "po3_book")
 EndFunction
 
 Function AwardCuratedSignal(PDV_DeityBase deity, Int signalType, Form contextRef)
@@ -4650,8 +4641,8 @@ String Function DebugRouteSignalFloorGreenWay()
 
     Bool siteRouted = TryAwardBosmerYffreGreenSite("mcm_signal_floor", "mcm_signal_floor_green_site")
     DebugTriggerGreenPactViolation()
-    Trace(1, "SignalFloorSmoke Green Way debug routed; site=" + BoolToInt(siteRouted))
-    return "Green Way backend routes fired. Site=" + BoolToInt(siteRouted) + ". Plant-food organic proof still requires consuming a listed plant food."
+    Trace(1, "SignalFloorSmoke Green Way debug routed; site=" + PDV_DevotionRules.BoolToInt(siteRouted))
+    return "Green Way backend routes fired. Site=" + PDV_DevotionRules.BoolToInt(siteRouted) + ". Plant-food organic proof still requires consuming a listed plant food."
 EndFunction
 
 String Function DebugRouteSignalFloorPaarthurnaxKill()
@@ -5120,7 +5111,7 @@ EndFunction
 
 Function SetDebugLevel(Int levelValue)
     if PDV_GLO_DebugLevel
-        PDV_GLO_DebugLevel.SetValue(ClampInt(levelValue, 0, 3) as Float)
+        PDV_GLO_DebugLevel.SetValue(PDV_DevotionRules.ClampInt(levelValue, 0, 3) as Float)
     endIf
 EndFunction
 
@@ -6745,16 +6736,16 @@ Function HandleBosmerLocationChange(Location loc)
     if loc.GetFormID() == 0x000192AC
         armEldergleam = True
     endIf
-    StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", BoolToInt(armEldergleam))
+    StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", PDV_DevotionRules.BoolToInt(armEldergleam))
 
     Bool armGildergreen = False
     if loc.GetFormID() == 0x00018A56
         armGildergreen = True
     endIf
-    StorageUtil.SetIntValue(None, "PDV.BosSongs.GildergreenActive", BoolToInt(armGildergreen))
+    StorageUtil.SetIntValue(None, "PDV.BosSongs.GildergreenActive", PDV_DevotionRules.BoolToInt(armGildergreen))
 
-    Bool armTreeStone = IsLocationFromFile(loc, 0x000142B6, "Dragonborn.esm")
-    StorageUtil.SetIntValue(None, "PDV.Yffre.TreeStoneActive", BoolToInt(armTreeStone))
+    Bool armTreeStone = PDV_DevotionRules.IsLocationFromFile(loc, 0x000142B6, "Dragonborn.esm")
+    StorageUtil.SetIntValue(None, "PDV.Yffre.TreeStoneActive", PDV_DevotionRules.BoolToInt(armTreeStone))
 
     if armEldergleam || armGildergreen || armTreeStone
         return
@@ -6776,35 +6767,23 @@ Function HandleBosmerLocationChange(Location loc)
 EndFunction
 
 Bool Function TryAwardBosmerYffreLocationSite(Location loc)
-    if IsLocationFromFile(loc, 0x00003583, "Dawnguard.esm")
+    if PDV_DevotionRules.IsLocationFromFile(loc, 0x00003583, "Dawnguard.esm")
         return TryAwardBosmerYffreGreenSite("ancestor_glade", "location_ancestor_glade")
-    elseIf IsLocationFromFile(loc, 0x000142DF, "Dragonborn.esm")
+    elseIf PDV_DevotionRules.IsLocationFromFile(loc, 0x000142DF, "Dragonborn.esm")
         return TryAwardBosmerYffreGreenSite("allmaker_wind", "location_allmaker_wind")
-    elseIf IsLocationFromFile(loc, 0x000142DE, "Dragonborn.esm")
+    elseIf PDV_DevotionRules.IsLocationFromFile(loc, 0x000142DE, "Dragonborn.esm")
         return TryAwardBosmerYffreGreenSite("allmaker_water", "location_allmaker_water")
-    elseIf IsLocationFromFile(loc, 0x000142DC, "Dragonborn.esm")
+    elseIf PDV_DevotionRules.IsLocationFromFile(loc, 0x000142DC, "Dragonborn.esm")
         return TryAwardBosmerYffreGreenSite("allmaker_sun", "location_allmaker_sun")
-    elseIf IsLocationFromFile(loc, 0x000142A4, "Dragonborn.esm")
+    elseIf PDV_DevotionRules.IsLocationFromFile(loc, 0x000142A4, "Dragonborn.esm")
         return TryAwardBosmerYffreGreenSite("allmaker_earth", "location_allmaker_earth")
-    elseIf IsLocationFromFile(loc, 0x00014296, "Dragonborn.esm")
+    elseIf PDV_DevotionRules.IsLocationFromFile(loc, 0x00014296, "Dragonborn.esm")
         return TryAwardBosmerYffreGreenSite("allmaker_beast", "location_allmaker_beast")
     endIf
 
     return False
 EndFunction
 
-Bool Function IsLocationFromFile(Location loc, Int sourceFormId, String pluginName)
-    if !loc
-        return False
-    endIf
-
-    Location expectedLoc = Game.GetFormFromFile(sourceFormId, pluginName) as Location
-    if !expectedLoc
-        return False
-    endIf
-
-    return loc == expectedLoc
-EndFunction
 
 ; Bounded poll (OnUpdate): only while inside the armed Eldergleam sanctuary
 ; LOCATION. Fires the green-song vision when the player reaches an Eldergleam
@@ -7981,7 +7960,7 @@ String Function DebugSetKhajiitLunarMetric(Float metricTarget)
     endIf
     PDV_KhajiitLunarSubstrate.SetMetric(clampedTarget, "mcm_debug_lunar_seed")
     RequestPanelRefresh()
-    return "Lunar metric set to " + FormatTwoDecimals(clampedTarget) + "; tier " + PDV_KhajiitLunarSubstrate.GetSubstrateTier() + ". Direct boundary seed; bypasses the daily metric budget."
+    return "Lunar metric set to " + PDV_DevotionRules.FormatTwoDecimals(clampedTarget) + "; tier " + PDV_KhajiitLunarSubstrate.GetSubstrateTier() + ". Direct boundary seed; bypasses the daily metric budget."
 EndFunction
 
 String Function DebugResetKhajiitLunarSubstrate()
@@ -8010,7 +7989,7 @@ String Function DebugGetKhajiitLunarBudgetSummary()
     if remaining < 0.0
         remaining = 0.0
     endIf
-    return "Lunar metric " + FormatTwoDecimals(PDV_KhajiitLunarSubstrate.GetMetric()) + ", tier " + PDV_KhajiitLunarSubstrate.GetSubstrateTier() + ". Today " + FormatTwoDecimals(spentToday) + " of " + FormatTwoDecimals(KHAJIIT_LUNAR_METRIC_DAILY_MAX) + " metric used, " + FormatTwoDecimals(remaining) + " remaining."
+    return "Lunar metric " + PDV_DevotionRules.FormatTwoDecimals(PDV_KhajiitLunarSubstrate.GetMetric()) + ", tier " + PDV_KhajiitLunarSubstrate.GetSubstrateTier() + ". Today " + PDV_DevotionRules.FormatTwoDecimals(spentToday) + " of " + PDV_DevotionRules.FormatTwoDecimals(KHAJIIT_LUNAR_METRIC_DAILY_MAX) + " metric used, " + PDV_DevotionRules.FormatTwoDecimals(remaining) + " remaining."
 EndFunction
 
 Function HandleKhajiitBaanDarRoadTrick(String reason)
@@ -8799,9 +8778,9 @@ EndFunction
 Function RefreshArgonianDominationPressure(String reason)
     Bool active = IsArgonianMolagBalDominationPressureActive()
     Int oldValue = StorageUtil.GetIntValue(None, "PDV.Curse.Argonian.DominationPressure")
-    StorageUtil.SetIntValue(None, "PDV.Curse.Argonian.DominationPressure", BoolToInt(active))
-    if BoolToInt(active) != oldValue
-        Trace(1, "Argonian domination pressure -> " + BoolToInt(active) + " (" + reason + ")")
+    StorageUtil.SetIntValue(None, "PDV.Curse.Argonian.DominationPressure", PDV_DevotionRules.BoolToInt(active))
+    if PDV_DevotionRules.BoolToInt(active) != oldValue
+        Trace(1, "Argonian domination pressure -> " + PDV_DevotionRules.BoolToInt(active) + " (" + reason + ")")
     endIf
 EndFunction
 
@@ -9089,7 +9068,7 @@ Function ApplyOrcLifeModeSwitch(Int modeValue, String reason)
 EndFunction
 
 Bool Function IsOrcMajorLifeModeGate(String reason)
-    return StringContainsToken(reason, "orc_bloodkin_crisis") || StringContainsToken(reason, "orc_cursed_tribe_resolved") || StringContainsToken(reason, "orc_major_gate")
+    return PDV_DevotionRules.StringContainsToken(reason, "orc_bloodkin_crisis") || PDV_DevotionRules.StringContainsToken(reason, "orc_cursed_tribe_resolved") || PDV_DevotionRules.StringContainsToken(reason, "orc_major_gate")
 EndFunction
 
 String Function GetOrcLifeModeSubstrateToken(Int modeValue)
@@ -9879,7 +9858,7 @@ Bool Function IsRedguardAshAbahBurden(String reason)
     ; suffix (e.g. "redguard_deathduty_major_krosis"), and the exact-match form was the
     ; original silent gap (gate correct, token never produced). Suffix/omission-proof per
     ; the P2 book-notice fix.
-    return StringContainsToken(reason, "redguard_deathduty_major") || StringContainsToken(reason, "redguard_ashabah_burden")
+    return PDV_DevotionRules.StringContainsToken(reason, "redguard_deathduty_major") || PDV_DevotionRules.StringContainsToken(reason, "redguard_ashabah_burden")
 EndFunction
 
 Function AwardRedguardCrownSignal(Float multiplier, String reason)
@@ -10888,7 +10867,7 @@ Function HandleAltmerDawnSteadiness(String reason)
         AwardAltmerDawnSignal(reason, multiplier)
         ; Passive dawn acknowledgement is piety-only. Curated Auri-El/Magnus
         ; books and the exact MG08 source are finite heritage substitutes.
-        if StringContainsToken(reason, "eventbus_p2_altmer_auriel_") || StringContainsToken(reason, "eventbus_p2_altmer_magnus_")
+        if PDV_DevotionRules.StringContainsToken(reason, "eventbus_p2_altmer_auriel_") || PDV_DevotionRules.StringContainsToken(reason, "eventbus_p2_altmer_magnus_")
             AwardAltmerAncestorSpinePulse(1.0, "curated_heritage_" + reason)
         endIf
     endIf
@@ -11150,7 +11129,7 @@ Function HandleAltmerSyrabaneContainment(String reason)
 EndFunction
 
 Function AwardAltmerDawnSignal(String reason, Float multiplier)
-    if StringContainsToken(reason, "magnus") && PDV_Magnus
+    if PDV_DevotionRules.StringContainsToken(reason, "magnus") && PDV_Magnus
         AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
         return
     endIf
@@ -11173,7 +11152,7 @@ EndFunction
 ; book route. That route's reason prefix "eventbus_p2_altmer_trinimac_" is reserved deliberately:
 ; it must NOT contain "xarxes" or it routes the award to the wrong god.
 Function AwardAltmerOrthodoxSignal(String reason, Float multiplier)
-    if StringContainsToken(reason, "xarxes") && PDV_Xarxes
+    if PDV_DevotionRules.StringContainsToken(reason, "xarxes") && PDV_Xarxes
         AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_LINEAGE_HONORED, None, multiplier)
         return
     endIf
@@ -11333,7 +11312,7 @@ String Function AppendAltmerHeritageVoice(Float grantedMetric, String reason)
     ; The calian owns its own entry because each pooled line carries its OWN title, the way the
     ; Khajiit moon observations do. Every other spine source shares the one "Ancestral practice"
     ; heading below.
-    if StringContainsToken(reason, "practice_focus")
+    if PDV_DevotionRules.StringContainsToken(reason, "practice_focus")
         return AppendAltmerPracticeEntry()
     endIf
     String sourceLine = GetAltmerHeritageSourceLine(reason)
@@ -11368,21 +11347,21 @@ EndFunction
 ; P2: per-source voice for the ancestral spine. The reason prefixes are set by each call site;
 ; keep this in sync with them rather than inventing new ones here.
 String Function GetAltmerHeritageSourceLine(String reason)
-    if StringContainsToken(reason, "dawn_observance")
+    if PDV_DevotionRules.StringContainsToken(reason, "dawn_observance")
         return "You met the dawn under the open sky. The ordered life asks no more than this."
-    elseIf StringContainsToken(reason, "auriel_shrine_rite")
+    elseIf PDV_DevotionRules.StringContainsToken(reason, "auriel_shrine_rite")
         return "You performed the dawn rite as your ancestors have always done."
-    elseIf StringContainsToken(reason, "sleep_dream")
+    elseIf PDV_DevotionRules.StringContainsToken(reason, "sleep_dream")
         return "You awoke from a dream about the Aldmeri. It leaves an ache within you as you recall the past."
-    elseIf StringContainsToken(reason, "enchantment")
+    elseIf PDV_DevotionRules.StringContainsToken(reason, "enchantment")
         return "You bound magicka into a lasting shape. The binding holds."
-    elseIf StringContainsToken(reason, "smithing")
+    elseIf PDV_DevotionRules.StringContainsToken(reason, "smithing")
         return "You worked the forge in the manner set down. The craft is older than you."
-    elseIf StringContainsToken(reason, "study")
+    elseIf PDV_DevotionRules.StringContainsToken(reason, "study")
         return "You studied. The quest for knowledge is ingrained in your heritage."
-    elseIf StringContainsToken(reason, "magic_skill_increase")
+    elseIf PDV_DevotionRules.StringContainsToken(reason, "magic_skill_increase")
         return "You have deepened your magical skills. You are closer to perfection."
-    elseIf StringContainsToken(reason, "curated_heritage")
+    elseIf PDV_DevotionRules.StringContainsToken(reason, "curated_heritage")
         return "You read an ancestral text closely. What was written is remembered."
     endIf
 
@@ -11751,7 +11730,7 @@ Int Function GetDevotionMarks(PDV_DeityBase deity)
     endIf
 
     Int marks = ((piety - deity.ThresholdChampion) / LONG_DEVOTION_MARK_STEP) as Int
-    return ClampInt(marks, 0, LONG_DEVOTION_MARK_MAX)
+    return PDV_DevotionRules.ClampInt(marks, 0, LONG_DEVOTION_MARK_MAX)
 EndFunction
 
 ; Ratchets MarkHigh (which gates the decay floor) and surfaces each mark exactly once.
@@ -13261,7 +13240,7 @@ Function RunDawnConsolidateScratch()
             if PDV_ModePresetRef
                 dailyCap = dailyCap * PDV_ModePresetRef.DailyCapScalar()
             endIf
-            Float clampedToday = ClampValue(scaledToday, -dailyCap, dailyCap)
+            Float clampedToday = PDV_DevotionRules.ClampValue(scaledToday, -dailyCap, dailyCap)
             if clampedToday > 0.0
                 clampedToday = clampedToday * GetOrcLifeModeGainMultiplier(deity)
                 clampedToday = clampedToday * GetImperialCurseGainMultiplier(deity)
@@ -13269,7 +13248,7 @@ Function RunDawnConsolidateScratch()
                 RecordBookOfDaysFedName(GetPublicDeityDisplayName(deity))
             endIf
             Float oldPiety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
-            Float newPiety = ClampValue(oldPiety + clampedToday, 0.0, PIETY_MAX)
+            Float newPiety = PDV_DevotionRules.ClampValue(oldPiety + clampedToday, 0.0, PIETY_MAX)
 
             StorageUtil.SetFloatValue(deityForm, "PDV.Piety", newPiety)
             ; Feed the Weekly tab's 7-day ring with this day's net before clearing it.
@@ -13422,7 +13401,7 @@ Function RunDawnApplySpellAndNeglectLayers()
         if nordBroadLapsed && StorageUtil.GetIntValue(None, "PDV.Neglect.PatronToastState") == 0
             SendPrismaToast("journal", "warning", "Devotion quiet", "The gods feel distant as your devotion goes quiet.")
         endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", BoolToInt(nordBroadLapsed))
+        StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", PDV_DevotionRules.BoolToInt(nordBroadLapsed))
         UpdateContextualFavorRuntime()
         SyncFirstTierRaceRewardRuntime()
         return
@@ -13465,7 +13444,7 @@ Function RunDawnApplySpellAndNeglectLayers()
     elseIf !patronNeglected && priorPatronToastState == 1
         SurfaceTransition("neglect", _activeDeity.DeityName, "recover", _activeDeity.DeityIndex, "renewal")
     endIf
-    StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", BoolToInt(patronNeglected))
+    StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", PDV_DevotionRules.BoolToInt(patronNeglected))
     SyncFirstTierRaceRewardRuntime()
 EndFunction
 
@@ -13629,7 +13608,7 @@ Function ForceSetPiety(Float amount)
     endIf
 
     Form deityForm = _activeDeity as Form
-    StorageUtil.SetFloatValue(deityForm, "PDV.Piety", ClampValue(amount, 0.0, PIETY_MAX))
+    StorageUtil.SetFloatValue(deityForm, "PDV.Piety", PDV_DevotionRules.ClampValue(amount, 0.0, PIETY_MAX))
     RecomputeTier(_activeDeity, False)
     if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
         EvaluateKhajiitFocusedEmphasis()
@@ -13674,7 +13653,7 @@ Function DebugForceSetPietyByIndex(Int deityIndex, Float amount)
     endIf
 
     Form deityForm = deity as Form
-    StorageUtil.SetFloatValue(deityForm, "PDV.Piety", ClampValue(amount, 0.0, PIETY_MAX))
+    StorageUtil.SetFloatValue(deityForm, "PDV.Piety", PDV_DevotionRules.ClampValue(amount, 0.0, PIETY_MAX))
     ; Surface the tier change so a debug-forced tier reach is testable (notice + toast +
     ; Book of Days entry). Only fires on an UP-crossing from a lower tier -- if the deity
     ; is already at/above the target, reset it first, or use the piety-today + dawn path.
@@ -13870,7 +13849,7 @@ String Function DebugGetBretonPracticeSummary()
     if pointDay == today
         pointsToday = StorageUtil.GetIntValue(None, "PDV.Breton.PracticePointsToday")
     endIf
-    pointsToday = ClampInt(pointsToday, 0, BRETON_PRACTICE_DAILY_MAX_POINTS)
+    pointsToday = PDV_DevotionRules.ClampInt(pointsToday, 0, BRETON_PRACTICE_DAILY_MAX_POINTS)
     Int remainingToday = BRETON_PRACTICE_DAILY_MAX_POINTS - pointsToday
     return GetBretonTraditionLabel() + ": " + practicePoints + "/" + BRETON_PRACTICE_DEVOTED_POINTS + " practice points (" + GetPublicTierBand(GetBretonPracticeTier(traditionValue)) + "). Today: " + pointsToday + "/" + BRETON_PRACTICE_DAILY_MAX_POINTS + "; remaining " + remainingToday + "."
 EndFunction
@@ -13886,7 +13865,7 @@ String Function DebugSetBretonPracticePoints(Int practicePoints)
     StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointsToday", 0)
     SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
-    Trace(1, "DebugSetBretonPracticePoints: tradition " + traditionValue + " -> " + ClampInt(practicePoints, 0, BRETON_PRACTICE_DEVOTED_POINTS) + ".")
+    Trace(1, "DebugSetBretonPracticePoints: tradition " + traditionValue + " -> " + PDV_DevotionRules.ClampInt(practicePoints, 0, BRETON_PRACTICE_DEVOTED_POINTS) + ".")
     return DebugGetBretonPracticeSummary()
 EndFunction
 
@@ -14232,7 +14211,7 @@ Function SetBroadPantheonStanding(String poolId, Float standing, String reason =
     if poolId == ""
         return
     endIf
-    StorageUtil.SetFloatValue(None, GetBroadPantheonStandingKey(poolId), ClampValue(standing, 0.0, BROAD_PANTHEON_POOL_MAX))
+    StorageUtil.SetFloatValue(None, GetBroadPantheonStandingKey(poolId), PDV_DevotionRules.ClampValue(standing, 0.0, BROAD_PANTHEON_POOL_MAX))
     StorageUtil.SetStringValue(None, GetBroadPantheonLastEventKey(poolId), reason)
 EndFunction
 
@@ -14292,9 +14271,9 @@ Function ProcessBroadPantheonThroughDay(String poolId, Int targetDay, Float sign
     Bool scratchEligible = scratch != 0.0 && scratchDay <= targetDay
     Float applied = 0.0
     if scratchEligible
-        applied = ClampValue(scratch * GAIN_RATE_SCALE, 0.0 - signedCap, signedCap)
+        applied = PDV_DevotionRules.ClampValue(scratch * GAIN_RATE_SCALE, 0.0 - signedCap, signedCap)
         if applied != 0.0
-            standing = ClampValue(standing + applied, 0.0, BROAD_PANTHEON_POOL_MAX)
+            standing = PDV_DevotionRules.ClampValue(standing + applied, 0.0, BROAD_PANTHEON_POOL_MAX)
             SetBroadPantheonStanding(poolId, standing, reason + "_fold")
             if applied > 0.0 && ReadZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(poolId)) <= 0
                 StorageUtil.SetIntValue(None, GetBroadPantheonLastGainDayKey(poolId), scratchDay + 2)
@@ -14360,9 +14339,9 @@ EndFunction
 
 Bool Function SendPrismaBroadPantheonTierToast(String familyName, String tierName, String symbolName)
     String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"pantheon\""
-    j = j + ",\"pantheon\":\"" + JsonSafeString(familyName) + "\""
-    j = j + ",\"tierLabel\":\"" + JsonSafeString(tierName) + "\""
-    j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    j = j + ",\"pantheon\":\"" + PDV_DevotionRules.JsonSafeString(familyName) + "\""
+    j = j + ",\"tierLabel\":\"" + PDV_DevotionRules.JsonSafeString(tierName) + "\""
+    j = j + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\""
     j = j + "}}"
     return SendPrismaToastPayloadOrFallback(j, "", familyName + " has reached " + tierName + ".", True)
 EndFunction
@@ -14441,12 +14420,6 @@ Function WriteZeroReservedDevotionalDayStamp(String keyName)
     StorageUtil.SetIntValue(None, keyName + ".Encoding", 2)
 EndFunction
 
-Float Function MaxFloat(Float firstValue, Float secondValue)
-    if secondValue > firstValue
-        return secondValue
-    endIf
-    return firstValue
-EndFunction
 
 Bool Function IsImperialVampireStateActive()
     return StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHalt") == 1
@@ -15027,231 +15000,231 @@ String Function HumanizeDriverReason(String raw)
     if StringUtil.Find(raw, dispMark) == 0
         return StringUtil.Substring(raw, StringUtil.GetLength(dispMark))
     endIf
-    if StringContainsToken(raw, "meta_zen_wage")
+    if PDV_DevotionRules.StringContainsToken(raw, "meta_zen_wage")
         return "a quest paid in gold"
-    elseIf StringContainsToken(raw, "meta_julianos_wisdom")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "meta_julianos_wisdom")
         return "a mage-aid quest"
-    elseIf StringContainsToken(raw, "meta_azura_threshold")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "meta_azura_threshold")
         return "a quest at twilight or aiding mages"
-    elseIf StringContainsToken(raw, "meta_nocturnal_herway")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "meta_nocturnal_herway")
         return "a quest done after stealing"
-    elseIf StringContainsToken(raw, "meta_nocturnal_dark")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "meta_nocturnal_dark")
         return "a quest done at night"
-    elseIf StringContainsToken(raw, "meta_khenarthi_road")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "meta_khenarthi_road")
         return "a quest finished outdoors"
-    elseIf StringContainsToken(raw, "meta_akatosh_wheel")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "meta_akatosh_wheel")
         return "every tenth quest"
-    elseIf StringContainsToken(raw, "meta_xarxes_record")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "meta_xarxes_record")
         return "every tenth quest"
-    elseIf StringContainsToken(raw, "wayfarer_akatosh_level")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "wayfarer_akatosh_level")
         return "leveling up under Wayfarer's Path"
-    elseIf StringContainsToken(raw, "talos-shrine-defiance")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "talos-shrine-defiance")
         return "defiant prayer at a Talos shrine"
-    elseIf StringContainsToken(raw, "talos_betrayal_major")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "talos_betrayal_major")
         return "turning on Talos openly"
-    elseIf StringContainsToken(raw, "talos_betrayal_compliance")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "talos_betrayal_compliance")
         return "bending to the Talos ban"
-    elseIf StringContainsToken(raw, "imperial-talos-pressure")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "imperial-talos-pressure")
         return "Concordat pressure over Talos"
-    elseIf StringContainsToken(raw, "concordat-compliance")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "concordat-compliance")
         return "complying with the Concordat"
-    elseIf StringContainsToken(raw, "concordat-defiance")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "concordat-defiance")
         return "defying the Concordat"
-    elseIf StringContainsToken(raw, "imperial-patron-civic-favor")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "imperial-patron-civic-favor")
         return "civic service (patron bonus)"
-    elseIf StringContainsToken(raw, "imperial-civic-service")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "imperial-civic-service")
         return "civic service"
-    elseIf StringContainsToken(raw, "nord-old-ways-state")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "nord-old-ways-state")
         return "keeping the Old Ways"
-    elseIf StringContainsToken(raw, "nord-kyne-talos-context")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "nord-kyne-talos-context")
         return "the Old Ways beside Talos"
-    elseIf StringContainsToken(raw, "nord-hircine-arkay-edge")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "nord-hircine-arkay-edge")
         return "the hunt at Arkay's edge"
-    elseIf StringContainsToken(raw, "sleep-moon-observance")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "sleep-moon-observance")
         return "sleeping under aligned moons"
-    elseIf StringContainsToken(raw, "khajiit-road-home")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "khajiit-road-home")
         return "returning by the road home"
-    elseIf StringContainsToken(raw, "khajiit-baandar-road-trick")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "khajiit-baandar-road-trick")
         return "a trick on the road"
-    elseIf StringContainsToken(raw, "khajiit-rajhin-elegant-theft")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "khajiit-rajhin-elegant-theft")
         return "an artful theft"
-    elseIf StringContainsToken(raw, "khajiit-alkosh-dragon-order")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "khajiit-alkosh-dragon-order")
         return "keeping dragon order"
-    elseIf StringContainsToken(raw, "hircine-hunt-rite")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "hircine-hunt-rite")
         return "a ritual hunt"
-    elseIf StringContainsToken(raw, "green-pact-violation")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "green-pact-violation")
         return "breaking the Green Pact"
-    elseIf StringContainsToken(raw, "bosmer-old-contract-proper-hunt")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "bosmer-old-contract-proper-hunt")
         return "a proper hunt"
-    elseIf StringContainsToken(raw, "bosmer-old-contract-forest-kept")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "bosmer-old-contract-forest-kept")
         return "keeping the forest"
-    elseIf StringContainsToken(raw, "bosmer-living-story-community")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "bosmer-living-story-community")
         return "sharing the living story"
-    elseIf StringContainsToken(raw, "bosmer-living-story-nature-site")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "bosmer-living-story-nature-site")
         return "a tale at a wild place"
-    elseIf StringContainsToken(raw, "bosmer-living-story")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "bosmer-living-story")
         return "a Living Story deed"
-    elseIf StringContainsToken(raw, "bosmer-exchange-debt-settled")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "bosmer-exchange-debt-settled")
         return "settling a debt"
-    elseIf StringContainsToken(raw, "bosmer-exchange-proportionate-vengeance")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "bosmer-exchange-proportionate-vengeance")
         return "measured vengeance"
-    elseIf StringContainsToken(raw, "bosmer-exchange")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "bosmer-exchange")
         return "an Exchange deed"
-    elseIf StringContainsToken(raw, "bosmer-bandit-road-road-life")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "bosmer-bandit-road-road-life")
         return "living the road life"
-    elseIf StringContainsToken(raw, "bosmer-bandit-road-reversal")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "bosmer-bandit-road-reversal")
         return "a reversal on the road"
-    elseIf StringContainsToken(raw, "bosmer-bandit-road")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "bosmer-bandit-road")
         return "a Bandit Road deed"
-    elseIf StringContainsToken(raw, "bosmer-pact-positive")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "bosmer-pact-positive")
         return "keeping the Green Pact"
-    elseIf StringContainsToken(raw, "dunmer-portable-shrine")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "dunmer-portable-shrine")
         return "prayer at your portable shrine"
-    elseIf StringContainsToken(raw, "dunmer-home-bonus")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "dunmer-home-bonus")
         return "devotions kept at home"
-    elseIf StringContainsToken(raw, "dunmer-reclamation-focus")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "dunmer-reclamation-focus")
         return "focus on the Reclamations"
-    elseIf StringContainsToken(raw, "dunmer-deviation-price")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "dunmer-deviation-price")
         return "straying from the Reclamations"
-    elseIf StringContainsToken(raw, "altmer-lorkhan-pressure")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "altmer-lorkhan-pressure")
         return "leaning toward Lorkhan"
-    elseIf StringContainsToken(raw, "altmer-crisis-source")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "altmer-crisis-source")
         return "feeding the crisis of faith"
-    elseIf StringContainsToken(raw, "altmer-dawn-steadiness")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "altmer-dawn-steadiness")
         return "steadiness at dawn"
-    elseIf StringContainsToken(raw, "altmer-orthodox-cost")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "altmer-orthodox-cost")
         return "the cost of orthodoxy paid"
-    elseIf StringContainsToken(raw, "argonian-hist-maintenance")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "argonian-hist-maintenance")
         return "tending the Hist bond"
-    elseIf StringContainsToken(raw, "argonian-people-support")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "argonian-people-support")
         return "supporting the People"
-    elseIf StringContainsToken(raw, "argonian-void-signal")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "argonian-void-signal")
         return "a step toward the Void"
-    elseIf StringContainsToken(raw, "argonian-bed-of-choice")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "argonian-bed-of-choice")
         return "rest in your chosen bed"
-    elseIf StringContainsToken(raw, "orc-stronghold-forge")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "orc-stronghold-forge")
         return "forge work in a stronghold"
-    elseIf StringContainsToken(raw, "orc-city-dignity")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "orc-city-dignity")
         return "dignity kept in city life"
-    elseIf StringContainsToken(raw, "orc-legion-service")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "orc-legion-service")
         return "service with the Legion"
-    elseIf StringContainsToken(raw, "orc-self-made-community")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "orc-self-made-community")
         return "building a community"
-    elseIf StringContainsToken(raw, "orc-oath-break")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "orc-oath-break")
         return "breaking an oath"
-    elseIf StringContainsToken(raw, "orc-four-holds-visit")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "orc-four-holds-visit")
         return "visiting the four holds"
-    elseIf StringContainsToken(raw, "redguard-crown-tomb-respect")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "redguard-crown-tomb-respect")
         return "respect at a Crown tomb"
-    elseIf StringContainsToken(raw, "redguard-forebear-road")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "redguard-forebear-road")
         return "walking the Forebear road"
-    elseIf StringContainsToken(raw, "redguard-ashabah-death-duty")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "redguard-ashabah-death-duty")
         return "putting down the risen dead"
-    elseIf StringContainsToken(raw, "redguard-far-shores-token")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "redguard-far-shores-token")
         return "a Far Shores token earned"
-    elseIf StringContainsToken(raw, "breton-tradition-choice")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "breton-tradition-choice")
         return "choosing a tradition"
-    elseIf StringContainsToken(raw, "breton-knightly-vow")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "breton-knightly-vow")
         return "keeping a knightly vow"
-    elseIf StringContainsToken(raw, "breton-hidden-art-exposure")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "breton-hidden-art-exposure")
         return "a hidden art exposed"
-    elseIf StringContainsToken(raw, "breton-green-way-standing")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "breton-green-way-standing")
         return "standing with the Green Way"
-    elseIf StringContainsToken(raw, "state-transition-confirm-rite")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "state-transition-confirm-rite")
         return "a rite confirming your path"
-    elseIf StringContainsToken(raw, "daedric-prince-signal")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "daedric-prince-signal")
         return "a deed the Prince claims"
-    elseIf StringContainsToken(raw, "daedric-generic-silence")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "daedric-generic-silence")
         return "silence from the Princes"
-    elseIf StringContainsToken(raw, "shout-to-open-sky")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "shout-to-open-sky")
         return "a shout to the open sky"
-    elseIf StringContainsToken(raw, "rest-under-open-sky")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "rest-under-open-sky")
         return "resting under the open sky"
-    elseIf StringContainsToken(raw, "sleep-in-bed")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "sleep-in-bed")
         return "sleeping in a bed"
-    elseIf StringContainsToken(raw, "take-blessing")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "take-blessing")
         return "taking a shrine blessing"
-    elseIf StringContainsToken(raw, "Trial of Iron")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "Trial of Iron")
         return "taking up the Trial of Iron"
-    elseIf StringContainsToken(raw, "Remembering of Names")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "Remembering of Names")
         return "taking up the Remembering of Names"
-    elseIf StringContainsToken(raw, "Discipline of Return")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "Discipline of Return")
         return "setting a Discipline of Return"
-    elseIf StringContainsToken(raw, "cc_fishing")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "cc_fishing")
         return "fishing"
-    elseIf StringContainsToken(raw, "commitment_carryover")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "commitment_carryover")
         return "devotion carried into commitment"
-    elseIf StringContainsToken(raw, "rivalry with")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "rivalry with")
         return raw
-    elseIf StringContainsToken(raw, "read-skill-book")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "read-skill-book")
         return "reading instructive texts"
-    elseIf StringContainsToken(raw, "read-spell-tome")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "read-spell-tome")
         return "reading a spell tome"
-    elseIf StringContainsToken(raw, "read-lore-book")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "read-lore-book")
         return "reading a lore book"
-    elseIf StringContainsToken(raw, "po3_book") || StringContainsToken(raw, "book")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "po3_book") || PDV_DevotionRules.StringContainsToken(raw, "book")
         return "reading a book"
-    elseIf StringContainsToken(raw, "increase-skill")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "increase-skill")
         return "honing your skills"
-    elseIf StringContainsToken(raw, "discover-location")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "discover-location")
         return "discovering new roads"
-    elseIf StringContainsToken(raw, "learn-word-of-power")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "learn-word-of-power")
         return "learning a Word of Power"
-    elseIf StringContainsToken(raw, "shout") || StringContainsToken(raw, "voice")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "shout") || PDV_DevotionRules.StringContainsToken(raw, "voice")
         return "using a shout"
-    elseIf StringContainsToken(raw, "shrine") || StringContainsToken(raw, "prayer") || StringContainsToken(raw, "pray")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "shrine") || PDV_DevotionRules.StringContainsToken(raw, "prayer") || PDV_DevotionRules.StringContainsToken(raw, "pray")
         return "prayer at a shrine"
-    elseIf StringContainsToken(raw, "harvest-ingredient")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "harvest-ingredient")
         return "harvesting ingredients"
-    elseIf StringContainsToken(raw, "brew-potion")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "brew-potion")
         return "brewing potions"
-    elseIf StringContainsToken(raw, "smith-item")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "smith-item")
         return "smithing an item"
-    elseIf StringContainsToken(raw, "enchant-item")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "enchant-item")
         return "enchanting an item"
-    elseIf StringContainsToken(raw, "cook-meal")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "cook-meal")
         return "cooking a meal"
-    elseIf StringContainsToken(raw, "mine-or-chop")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "mine-or-chop")
         return "mining or woodcutting"
-    elseIf StringContainsToken(raw, "kill-daedra")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "kill-daedra")
         return "killing Daedra"
-    elseIf StringContainsToken(raw, "kill-undead")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "kill-undead")
         return "killing undead"
-    elseIf StringContainsToken(raw, "kill-dragon")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "kill-dragon")
         return "killing a dragon"
-    elseIf StringContainsToken(raw, "killed-hostile-beast")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "killed-hostile-beast")
         return "killing hostile beasts"
-    elseIf StringContainsToken(raw, "killed-hostile-humanoid")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "killed-hostile-humanoid")
         return "killing hostile people"
-    elseIf StringContainsToken(raw, "kill-animal-noncombat")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "kill-animal-noncombat")
         return "killing harmless animals"
-    elseIf StringContainsToken(raw, "murder-defenseless")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "murder-defenseless")
         return "murdering the defenseless"
-    elseIf StringContainsToken(raw, "assault-innocent")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "assault-innocent")
         return "assaulting an innocent"
-    elseIf StringContainsToken(raw, "kill") || StringContainsToken(raw, "combat") || StringContainsToken(raw, "hunt")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "kill") || PDV_DevotionRules.StringContainsToken(raw, "combat") || PDV_DevotionRules.StringContainsToken(raw, "hunt")
         return "combat or hunting kills"
-    elseIf StringContainsToken(raw, "heal-or-cure-npc")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "heal-or-cure-npc")
         return "healing or curing someone"
-    elseIf StringContainsToken(raw, "clear-bounty")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "clear-bounty")
         return "paying off a bounty"
-    elseIf StringContainsToken(raw, "pick-owned-lock")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "pick-owned-lock")
         return "picking an owned lock"
-    elseIf StringContainsToken(raw, "trespass")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "trespass")
         return "trespassing"
-    elseIf StringContainsToken(raw, "steal-item")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "steal-item")
         return "stealing an item"
-    elseIf StringContainsToken(raw, "pickpocket")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "pickpocket")
         return "pickpocketing"
-    elseIf StringContainsToken(raw, "raise-undead")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "raise-undead")
         return "raising undead"
-    elseIf StringContainsToken(raw, "vampire-feed")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "vampire-feed")
         return "feeding as a vampire"
-    elseIf StringContainsToken(raw, "accept-daedric-artifact")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "accept-daedric-artifact")
         return "accepting a Daedric artifact"
-    elseIf StringContainsToken(raw, "quest")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "quest")
         return "completing a quest"
-    elseIf StringContainsToken(raw, "curated") || StringContainsToken(raw, "rite")
+    elseIf PDV_DevotionRules.StringContainsToken(raw, "curated") || PDV_DevotionRules.StringContainsToken(raw, "rite")
         return "a devotional rite"
     endIf
 
@@ -15706,43 +15679,22 @@ Int Function GetSurvivalContextSeverity()
     Int severity = 0
 
     if _pdvSurvivalModePresent && _pdvSurvModeEnabled && _pdvSurvModeEnabled.GetValueInt() != 0
-        severity = MaxSeverity(severity, NeedToSeverity(_pdvSurvHunger))
-        severity = MaxSeverity(severity, NeedToSeverity(_pdvSurvCold))
-        severity = MaxSeverity(severity, NeedToSeverity(_pdvSurvExhaustion))
+        severity = PDV_DevotionRules.MaxSeverity(severity, PDV_DevotionRules.NeedToSeverity(_pdvSurvHunger))
+        severity = PDV_DevotionRules.MaxSeverity(severity, PDV_DevotionRules.NeedToSeverity(_pdvSurvCold))
+        severity = PDV_DevotionRules.MaxSeverity(severity, PDV_DevotionRules.NeedToSeverity(_pdvSurvExhaustion))
     endIf
 
     if _pdvSunHelmPresent && _pdvSunHelmEnabled && _pdvSunHelmEnabled.GetValueInt() != 0
-        severity = MaxSeverity(severity, NeedToSeverity(_pdvSunHelmHunger))
-        severity = MaxSeverity(severity, NeedToSeverity(_pdvSunHelmThirst))
-        severity = MaxSeverity(severity, NeedToSeverity(_pdvSunHelmCold))
-        severity = MaxSeverity(severity, NeedToSeverity(_pdvSunHelmFatigue))
+        severity = PDV_DevotionRules.MaxSeverity(severity, PDV_DevotionRules.NeedToSeverity(_pdvSunHelmHunger))
+        severity = PDV_DevotionRules.MaxSeverity(severity, PDV_DevotionRules.NeedToSeverity(_pdvSunHelmThirst))
+        severity = PDV_DevotionRules.MaxSeverity(severity, PDV_DevotionRules.NeedToSeverity(_pdvSunHelmCold))
+        severity = PDV_DevotionRules.MaxSeverity(severity, PDV_DevotionRules.NeedToSeverity(_pdvSunHelmFatigue))
     endIf
 
     return severity
 EndFunction
 
-Int Function NeedToSeverity(GlobalVariable needGlobal)
-    if !needGlobal
-        return 0
-    endIf
 
-    Float needValue = needGlobal.GetValue()
-    if needValue >= 75.0
-        return 3
-    elseIf needValue >= 50.0
-        return 2
-    elseIf needValue >= 25.0
-        return 1
-    endIf
-    return 0
-EndFunction
-
-Int Function MaxSeverity(Int leftValue, Int rightValue)
-    if leftValue >= rightValue
-        return leftValue
-    endIf
-    return rightValue
-EndFunction
 
 Float Function GetSurvivalContextGainMultiplier(PDV_DeityBase deity)
     Int severity = GetSurvivalContextSeverity()
@@ -15779,7 +15731,7 @@ String Function GetSurvivalContextStatusLine()
         return detected + " | integration off"
     endIf
 
-    return detected + " | " + SeverityLabel(GetSurvivalContextSeverity())
+    return detected + " | " + PDV_DevotionRules.SeverityLabel(GetSurvivalContextSeverity())
 EndFunction
 
 ;/ =====================================================================
@@ -15888,16 +15840,6 @@ String Function GetCCContentStatusLine()
     return detected + " | integration on"
 EndFunction
 
-String Function SeverityLabel(Int severity)
-    if severity <= 0
-        return "comfortable"
-    elseIf severity == 1
-        return "mild hardship"
-    elseIf severity == 2
-        return "moderate hardship"
-    endIf
-    return "severe hardship"
-EndFunction
 
 Float Function GetReputationGainMultiplier(PDV_DeityBase deity)
     if !deity
@@ -16022,7 +15964,7 @@ Function SetNeglectFlag(PDV_DeityBase deity, Bool isActive)
         return
     endIf
 
-    StorageUtil.SetIntValue(deity as Form, "PDV.Neglect.Active", BoolToInt(isActive))
+    StorageUtil.SetIntValue(deity as Form, "PDV.Neglect.Active", PDV_DevotionRules.BoolToInt(isActive))
 EndFunction
 
 Bool Function IsNeglectFlagActive(PDV_DeityBase deity)
@@ -16714,7 +16656,7 @@ Int Function GetBretonPracticeCount(Int traditionValue)
 EndFunction
 
 Function SetBretonPracticeCount(Int traditionValue, Int practicePoints)
-    Int normalizedPoints = ClampInt(practicePoints, 0, BRETON_PRACTICE_DEVOTED_POINTS)
+    Int normalizedPoints = PDV_DevotionRules.ClampInt(practicePoints, 0, BRETON_PRACTICE_DEVOTED_POINTS)
     if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
         StorageUtil.SetIntValue(None, "PDV.Breton.KnightlyVowCount", normalizedPoints)
     elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
@@ -16801,7 +16743,7 @@ EndFunction
 
 Function SetBretonDruidicFork(Int forkValue, String reason)
     Int oldFork = GetBretonDruidicForkValue()
-    Int normalized = ClampInt(forkValue, BRETON_DRUIDIC_FORK_NONE, BRETON_DRUIDIC_FORK_BETRAYED)
+    Int normalized = PDV_DevotionRules.ClampInt(forkValue, BRETON_DRUIDIC_FORK_NONE, BRETON_DRUIDIC_FORK_BETRAYED)
     StorageUtil.SetIntValue(None, "PDV.Breton.DruidicFork", normalized)
     StorageUtil.SetStringValue(None, "PDV.Breton.LastDruidicForkReason", reason)
     if PDV_GLO_State_BretonDruidicFork
@@ -19021,7 +18963,7 @@ Function DebugRecordAltmerLorkhanPressure()
 EndFunction
 
 Function DebugSetNordPantheonBaseline(Int stateValue)
-    Int normalizedState = ClampInt(stateValue, NORD_BASELINE_OLD_WAYS, NORD_BASELINE_NINE_DIVINES)
+    Int normalizedState = PDV_DevotionRules.ClampInt(stateValue, NORD_BASELINE_OLD_WAYS, NORD_BASELINE_NINE_DIVINES)
     StorageUtil.SetIntValue(None, "PDV.NordPantheonBaseline.DebugState", normalizedState)
     if PDV_NordPantheonBaselineTrack && PDV_NordPantheonBaselineTrack.GetCurrentState() != normalizedState
         PDV_NordPantheonBaselineTrack.SetState(normalizedState, "mcm_pattern")
@@ -19144,7 +19086,7 @@ String Function DebugSeedSubstrateMetric(Int originValue, Float metricValue)
         return "No substrate is wired."
     endIf
     ResetSubstratePacingState(originValue)
-    substrate.DebugSetMetric(ClampValue(metricValue, 0.0, 75.0))
+    substrate.DebugSetMetric(PDV_DevotionRules.ClampValue(metricValue, 0.0, 75.0))
     return DebugGetSubstratePacingSummary(originValue)
 EndFunction
 
@@ -19468,7 +19410,7 @@ Function DebugSetBretonTradition(Int traditionValue)
         return
     endIf
 
-    Int normalized = ClampInt(traditionValue, BRETON_TRADITION_KNIGHTS_ROAD, BRETON_TRADITION_GREEN_WAY)
+    Int normalized = PDV_DevotionRules.ClampInt(traditionValue, BRETON_TRADITION_KNIGHTS_ROAD, BRETON_TRADITION_GREEN_WAY)
     BeginRaceSetupQuietPresentation("mcm_breton_tradition")
     StorageUtil.SetIntValue(None, "PDV.Breton.Tradition", normalized)
     StorageUtil.SetIntValue(None, "PDV.Breton.SetupComplete", 1)
@@ -19502,7 +19444,7 @@ EndFunction
 
 ; Forces the Orc life mode (City / Stronghold / Legion-Exile).
 Function DebugSetOrcLifeMode(Int modeValue)
-    Int normalized = ClampInt(modeValue, ORC_LIFE_MODE_CITY, ORC_LIFE_MODE_LEGION_EXILE)
+    Int normalized = PDV_DevotionRules.ClampInt(modeValue, ORC_LIFE_MODE_CITY, ORC_LIFE_MODE_LEGION_EXILE)
     if PDV_OrcLifeModeTrack && PDV_OrcLifeModeTrack.GetCurrentState() != normalized
         PDV_OrcLifeModeTrack.SetState(normalized, "mcm_pattern")
     endIf
@@ -19531,7 +19473,7 @@ Int Function GetSelectedContextualFavorLane()
 EndFunction
 
 Function SetSelectedContextualFavorLane(Int laneValue)
-    Int normalizedLane = ClampInt(laneValue, FAVOR_LANE_KYNE, FAVOR_LANE_ALTMER)
+    Int normalizedLane = PDV_DevotionRules.ClampInt(laneValue, FAVOR_LANE_KYNE, FAVOR_LANE_ALTMER)
     StorageUtil.SetIntValue(None, "PDV.Favor.DebugLane", normalizedLane)
     if !IsValidFavorFamilyForLane(normalizedLane, GetSelectedContextualFavorFamily())
         StorageUtil.SetIntValue(None, "PDV.Favor.DebugFamily", GetFirstFavorFamilyForLane(normalizedLane))
@@ -19775,7 +19717,7 @@ Function DebugEvaluateCommitmentOffer()
     Int pendingBefore = GetPendingCommitmentDeityIndex()
     EvaluateFormalCommitmentOffer()
     Int pendingAfter = GetPendingCommitmentDeityIndex()
-    Trace(1, "Commitment evaluate debug: pending " + pendingBefore + " -> " + pendingAfter + "; kyneDays=" + GetRecentCommitmentSignalDayCount(PDV_Kyne, 7) + "; kynePiety=" + FormatTwoDecimals(GetPiety(PDV_Kyne)))
+    Trace(1, "Commitment evaluate debug: pending " + pendingBefore + " -> " + pendingAfter + "; kyneDays=" + GetRecentCommitmentSignalDayCount(PDV_Kyne, 7) + "; kynePiety=" + PDV_DevotionRules.FormatTwoDecimals(GetPiety(PDV_Kyne)))
 EndFunction
 
 Function DebugSeedCommitmentSignalDaysByIndex(Int deityIndex)
@@ -20395,10 +20337,10 @@ Function RecordCommitmentSignalDay(PDV_DeityBase deity)
         return
     endIf
 
-    if !IsEncodedDayWithinWindow(latestDay, currentDay, 7)
+    if !PDV_DevotionRules.IsEncodedDayWithinWindow(latestDay, currentDay, 7)
         latestDay = 0
         previousDay = 0
-    elseIf !IsEncodedDayWithinWindow(previousDay, currentDay, 7)
+    elseIf !PDV_DevotionRules.IsEncodedDayWithinWindow(previousDay, currentDay, 7)
         previousDay = 0
     endIf
 
@@ -20425,11 +20367,11 @@ Int Function GetRecentCommitmentSignalDayCount(PDV_DeityBase deity, Int windowDa
     Int previousDay = StorageUtil.GetIntValue(deityForm, "PDV.Commitment.SignalPreviousDay")
     Int count = 0
 
-    if IsEncodedDayWithinWindow(latestDay, currentDay, windowDays)
+    if PDV_DevotionRules.IsEncodedDayWithinWindow(latestDay, currentDay, windowDays)
         count += 1
     endIf
 
-    if previousDay != latestDay && IsEncodedDayWithinWindow(previousDay, currentDay, windowDays)
+    if previousDay != latestDay && PDV_DevotionRules.IsEncodedDayWithinWindow(previousDay, currentDay, windowDays)
         count += 1
     endIf
 
@@ -20444,19 +20386,6 @@ Int Function GetRecentCommitmentSignalDayCount(PDV_DeityBase deity, Int windowDa
     return count
 EndFunction
 
-Bool Function IsEncodedDayWithinWindow(Int encodedDay, Int currentDay, Int windowDays)
-    if encodedDay <= 0
-        return False
-    endIf
-
-    Int dayValue = encodedDay - 1
-    Int dayDelta = currentDay - dayValue
-    if dayDelta < 0
-        return False
-    endIf
-
-    return dayDelta < windowDays
-EndFunction
 
 Bool Function ShouldBypassFormalCommitmentOffers()
     Int originRace = GetPlayerOriginRaceIndex()
@@ -20651,16 +20580,16 @@ Function SendPrismaCurseToast(Int oldState, Int newState)
     endIf
 
     String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"curse\""
-    j = j + ",\"phase\":\"" + JsonSafeString(phase) + "\""
-    j = j + ",\"curse\":\"" + JsonSafeString(curseType) + "\""
-    j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
-    j = j + ",\"title\":\"" + JsonSafeString(curseTitle) + "\""
-    j = j + ",\"message\":\"" + JsonSafeString(curseMessage) + "\""
+    j = j + ",\"phase\":\"" + PDV_DevotionRules.JsonSafeString(phase) + "\""
+    j = j + ",\"curse\":\"" + PDV_DevotionRules.JsonSafeString(curseType) + "\""
+    j = j + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\""
+    j = j + ",\"title\":\"" + PDV_DevotionRules.JsonSafeString(curseTitle) + "\""
+    j = j + ",\"message\":\"" + PDV_DevotionRules.JsonSafeString(curseMessage) + "\""
     if context != ""
-        j = j + ",\"context\":\"" + JsonSafeString(context) + "\""
+        j = j + ",\"context\":\"" + PDV_DevotionRules.JsonSafeString(context) + "\""
     endIf
     if _activeDeity
-        j = j + ",\"deity\":\"" + JsonSafeString(GetPublicDeityDisplayName(_activeDeity)) + "\""
+        j = j + ",\"deity\":\"" + PDV_DevotionRules.JsonSafeString(GetPublicDeityDisplayName(_activeDeity)) + "\""
     endIf
     j = j + "}}"
     PDV_PrismaBridge.SendOverlayJson(WithPrismaToastSize(j))
@@ -20711,13 +20640,13 @@ EndFunction
 ; symbolName = Prisma symbol key; falls back to journal until glyphs land
 Bool Function SendPrismaShiftToast(String shiftMode, String context, String symbolName, Bool allowFallback = True)
     String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"shift\""
-    j = j + ",\"shiftMode\":\"" + JsonSafeString(shiftMode) + "\""
-    j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    j = j + ",\"shiftMode\":\"" + PDV_DevotionRules.JsonSafeString(shiftMode) + "\""
+    j = j + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\""
     if context != ""
-        j = j + ",\"context\":\"" + JsonSafeString(context) + "\""
+        j = j + ",\"context\":\"" + PDV_DevotionRules.JsonSafeString(context) + "\""
     endIf
     if _activeDeity
-        j = j + ",\"deity\":\"" + JsonSafeString(GetPublicDeityDisplayName(_activeDeity)) + "\""
+        j = j + ",\"deity\":\"" + PDV_DevotionRules.JsonSafeString(GetPublicDeityDisplayName(_activeDeity)) + "\""
     endIf
     j = j + "}}"
     return SendPrismaToastPayloadOrFallback(j, shiftMode, context, allowFallback)
@@ -20726,14 +20655,14 @@ EndFunction
 ; Emit a substrate instrument event without making Prisma the gameplay proof lane.
 Bool Function SendPrismaSubstrateToast(String substrate, String phase, String context, String symbolName, String stateLabel, Bool allowFallback = True)
     String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"substrate\""
-    j = j + ",\"substrate\":\"" + JsonSafeString(substrate) + "\""
-    j = j + ",\"phase\":\"" + JsonSafeString(phase) + "\""
-    j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    j = j + ",\"substrate\":\"" + PDV_DevotionRules.JsonSafeString(substrate) + "\""
+    j = j + ",\"phase\":\"" + PDV_DevotionRules.JsonSafeString(phase) + "\""
+    j = j + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\""
     if context != ""
-        j = j + ",\"context\":\"" + JsonSafeString(context) + "\""
+        j = j + ",\"context\":\"" + PDV_DevotionRules.JsonSafeString(context) + "\""
     endIf
     if stateLabel != ""
-        j = j + ",\"state\":\"" + JsonSafeString(stateLabel) + "\""
+        j = j + ",\"state\":\"" + PDV_DevotionRules.JsonSafeString(stateLabel) + "\""
     endIf
     j = j + "}}"
     String fallbackTitle = stateLabel
@@ -20806,14 +20735,14 @@ Bool Function SendPrismaDaedricToast(String princeName, String phase, String con
     endIf
 
     String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"daedric\""
-    j = j + ",\"prince\":\"" + JsonSafeString(princeName) + "\""
-    j = j + ",\"phase\":\"" + JsonSafeString(phase) + "\""
-    j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    j = j + ",\"prince\":\"" + PDV_DevotionRules.JsonSafeString(princeName) + "\""
+    j = j + ",\"phase\":\"" + PDV_DevotionRules.JsonSafeString(phase) + "\""
+    j = j + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\""
     if phase == "boon"
         j = j + ",\"tone\":\"good\""
     endIf
     if context != ""
-        j = j + ",\"context\":\"" + JsonSafeString(context) + "\""
+        j = j + ",\"context\":\"" + PDV_DevotionRules.JsonSafeString(context) + "\""
     endIf
     j = j + "}}"
     return SendPrismaToastPayloadOrFallback(j, princeName, context, allowFallback)
@@ -21131,11 +21060,11 @@ Bool Function SendPrismaDaedricMilestoneToast(String princeName, String tierLabe
     String titleText = princeName + " names you " + tierLabel
     String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"daedric\""
     j = j + ",\"phase\":\"milestone\""
-    j = j + ",\"prince\":\"" + JsonSafeString(princeName) + "\""
-    j = j + ",\"tierLabel\":\"" + JsonSafeString(tierLabel) + "\""
-    j = j + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
-    j = j + ",\"title\":\"" + JsonSafeString(titleText) + "\""
-    j = j + ",\"message\":\"" + JsonSafeString(flavorText) + "\""
+    j = j + ",\"prince\":\"" + PDV_DevotionRules.JsonSafeString(princeName) + "\""
+    j = j + ",\"tierLabel\":\"" + PDV_DevotionRules.JsonSafeString(tierLabel) + "\""
+    j = j + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\""
+    j = j + ",\"title\":\"" + PDV_DevotionRules.JsonSafeString(titleText) + "\""
+    j = j + ",\"message\":\"" + PDV_DevotionRules.JsonSafeString(flavorText) + "\""
     j = j + ",\"duration\":9000"
     j = j + "}}"
     Bool sent = SendPrismaToastPayloadOrFallback(j, titleText, flavorText, allowFallback)
@@ -21475,7 +21404,7 @@ Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
     Bool curseActive = newState != 0
 
     if originRace == ORIGIN_BOSMER
-        StorageUtil.SetIntValue(None, "PDV.Curse.Bosmer.RoutePressure", BoolToInt(curseActive))
+        StorageUtil.SetIntValue(None, "PDV.Curse.Bosmer.RoutePressure", PDV_DevotionRules.BoolToInt(curseActive))
     elseIf originRace == ORIGIN_BRETON
         ApplyBretonCurseHandlers(oldState, newState, reason)
     elseIf originRace == ORIGIN_DUNMER
@@ -21595,7 +21524,7 @@ Function ApplyAltmerCurseHandlers(Int oldState, Int newState, String reason)
             StorageUtil.SetIntValue(None, "PDV.Altmer.VampireRecognitionShown", 1)
         endIf
     else
-        StorageUtil.SetIntValue(None, "PDV.Curse.Altmer.ExilePressure", BoolToInt(newState != 0))
+        StorageUtil.SetIntValue(None, "PDV.Curse.Altmer.ExilePressure", PDV_DevotionRules.BoolToInt(newState != 0))
     endIf
 EndFunction
 
@@ -22140,7 +22069,7 @@ String Function BuildStartupRoadJournalLine(String pathLabel)
 EndFunction
 
 Function ApplyBretonInitialChoice(Int traditionValue, String reason)
-    Int normalized = ClampInt(traditionValue, 0, 2)
+    Int normalized = PDV_DevotionRules.ClampInt(traditionValue, 0, 2)
     BeginRaceSetupQuietPresentation(reason)
     StorageUtil.SetIntValue(None, "PDV.Breton.Tradition", normalized)
     StorageUtil.SetIntValue(None, "PDV.Breton.SetupComplete", 1)
@@ -22172,7 +22101,7 @@ EndFunction
 Function ApplyRedguardInitialChoice(Int sectValue, String reason)
     BeginRaceSetupQuietPresentation(reason)
     if PDV_RedguardSectTrack
-        Int normalized = ClampInt(sectValue, REDGUARD_SECT_CROWN, REDGUARD_SECT_ASHABAH)
+        Int normalized = PDV_DevotionRules.ClampInt(sectValue, REDGUARD_SECT_CROWN, REDGUARD_SECT_ASHABAH)
         PDV_RedguardSectTrack.SetState(normalized, reason)
         AppendBookOfDaysEntry(BuildStartupRoadJournalLine(GetRedguardSectLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", "sect", True, 3, "", True)
         ShowRedguardSectEntry(normalized)
@@ -22186,7 +22115,7 @@ EndFunction
 Function ApplyOrcInitialChoice(Int modeValue, String reason)
     BeginRaceSetupQuietPresentation(reason)
     if PDV_OrcLifeModeTrack
-        PDV_OrcLifeModeTrack.SetState(ClampInt(modeValue, ORC_LIFE_MODE_CITY, ORC_LIFE_MODE_LEGION_EXILE), reason)
+        PDV_OrcLifeModeTrack.SetState(PDV_DevotionRules.ClampInt(modeValue, ORC_LIFE_MODE_CITY, ORC_LIFE_MODE_LEGION_EXILE), reason)
         AppendBookOfDaysEntry(BuildStartupRoadJournalLine(GetOrcLifeModeLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", "malacath", True, 3, "", True)
     endIf
     ; Malacath is the single innate Orc spine (not chosen, not offered) -- activate him as the
@@ -22204,7 +22133,7 @@ EndFunction
 
 Function ApplyNordInitialChoice(Int baselineValue, String reason)
     BeginRaceSetupQuietPresentation(reason)
-    Int normalized = ClampInt(baselineValue, NORD_BASELINE_OLD_WAYS, NORD_BASELINE_NINE_DIVINES)
+    Int normalized = PDV_DevotionRules.ClampInt(baselineValue, NORD_BASELINE_OLD_WAYS, NORD_BASELINE_NINE_DIVINES)
     StorageUtil.SetIntValue(None, "PDV.NordPantheonBaseline.DebugState", normalized)
     if PDV_NordPantheonBaselineTrack
         PDV_NordPantheonBaselineTrack.SetState(normalized, reason)
@@ -22280,7 +22209,7 @@ Function DecayBretonDruidicStandingAtDawn()
     if standingValue <= 0
         return
     endIf
-    standingValue = ClampInt(standingValue - 1, 0, 100)
+    standingValue = PDV_DevotionRules.ClampInt(standingValue - 1, 0, 100)
     StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", standingValue)
     Trace(2, "Breton DruidicStanding neglect decay -> " + standingValue)
 EndFunction
@@ -22422,13 +22351,13 @@ Bool Function AwardBretonPracticePulse(Int traditionValue, Int requestedPoints, 
         StorageUtil.SetStringValue(None, "PDV.Breton.LastKnightlyVowReason", reason)
     elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
         Int exposureValue = StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure")
-        StorageUtil.SetIntValue(None, "PDV.Breton.WitchcraftExposure", ClampInt(exposureValue + appliedPoints, 0, 100))
+        StorageUtil.SetIntValue(None, "PDV.Breton.WitchcraftExposure", PDV_DevotionRules.ClampInt(exposureValue + appliedPoints, 0, 100))
         SetBretonPracticeCount(traditionValue, GetBretonPracticeCount(traditionValue) + appliedPoints)
         StorageUtil.SetStringValue(None, "PDV.Breton.LastHiddenArtReason", reason)
     elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
         EnsureBretonDruidicForkInitialized()
         Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
-        StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", ClampInt(standingValue + appliedPoints, 0, 100))
+        StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", PDV_DevotionRules.ClampInt(standingValue + appliedPoints, 0, 100))
         SetBretonPracticeCount(traditionValue, GetBretonPracticeCount(traditionValue) + appliedPoints)
         StorageUtil.SetStringValue(None, "PDV.Breton.LastGreenWayReason", reason)
     endIf
@@ -22457,16 +22386,16 @@ Bool Function DamageBretonPracticePressure(Int traditionValue, Int damageDelta, 
 
     if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
         Int vowValue = StorageUtil.GetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", 100)
-        StorageUtil.SetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", ClampInt(vowValue - damageDelta, 0, 100))
+        StorageUtil.SetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", PDV_DevotionRules.ClampInt(vowValue - damageDelta, 0, 100))
         StorageUtil.SetStringValue(None, "PDV.Breton.LastKnightlyVowReason", reason)
     elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
         Int exposureValue = StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure")
-        StorageUtil.SetIntValue(None, "PDV.Breton.WitchcraftExposure", ClampInt(exposureValue + damageDelta, 0, 100))
+        StorageUtil.SetIntValue(None, "PDV.Breton.WitchcraftExposure", PDV_DevotionRules.ClampInt(exposureValue + damageDelta, 0, 100))
         StorageUtil.SetStringValue(None, "PDV.Breton.LastHiddenArtReason", reason)
     elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
         EnsureBretonDruidicForkInitialized()
         Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
-        StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", ClampInt(standingValue - damageDelta, 0, 100))
+        StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", PDV_DevotionRules.ClampInt(standingValue - damageDelta, 0, 100))
         StorageUtil.SetStringValue(None, "PDV.Breton.LastGreenWayReason", reason)
     endIf
 
@@ -22533,7 +22462,7 @@ Function HandleBretonHiddenArtExposure(String reason)
     if PDV_Magnus
         AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
     endIf
-    if PDV_Mara && StringContainsToken(reason, "home")
+    if PDV_Mara && PDV_DevotionRules.StringContainsToken(reason, "home")
         AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
     endIf
     Bool practiceAwarded = AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_CURATED_POINTS, "handler_hidden_art_exposure", reason)
@@ -22548,11 +22477,11 @@ Function HandleBretonHiddenArtExposure(String reason)
 EndFunction
 
 String Function GetBretonHiddenArtNoticeTitle(String reason)
-    if StringContainsToken(reason, "hagravens")
+    if PDV_DevotionRules.StringContainsToken(reason, "hagravens")
         return "Hagraven lore"
-    elseIf StringContainsToken(reason, "madmen_reach")
+    elseIf PDV_DevotionRules.StringContainsToken(reason, "madmen_reach")
         return "Reach-mad whispers"
-    elseIf StringContainsToken(reason, "witch_note")
+    elseIf PDV_DevotionRules.StringContainsToken(reason, "witch_note")
         return "A witch's note"
     endIf
 
@@ -22560,11 +22489,11 @@ String Function GetBretonHiddenArtNoticeTitle(String reason)
 EndFunction
 
 String Function GetBretonHiddenArtNoticeText(String reason)
-    if StringContainsToken(reason, "hagravens")
+    if PDV_DevotionRules.StringContainsToken(reason, "hagravens")
         return "Old bargains leave a mark on your cover."
-    elseIf StringContainsToken(reason, "madmen_reach")
+    elseIf PDV_DevotionRules.StringContainsToken(reason, "madmen_reach")
         return "Forbidden Reach lore stirs your hidden practice."
-    elseIf StringContainsToken(reason, "witch_note")
+    elseIf PDV_DevotionRules.StringContainsToken(reason, "witch_note")
         return "A private craft presses closer to the surface."
     endIf
 
@@ -22609,7 +22538,7 @@ Function HandleDunmerReclamationFocus(Int focusValue, String reason)
     if PDV_DunmerAncestorSubstrate && GetDunmerCurseLayerWeight(1) > 0.0
         PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(1.0, "reclamation_source_" + reason)
     endIf
-    StorageUtil.SetIntValue(None, "PDV.Dunmer.ReclamationFocus", ClampInt(focusValue, 0, 2))
+    StorageUtil.SetIntValue(None, "PDV.Dunmer.ReclamationFocus", PDV_DevotionRules.ClampInt(focusValue, 0, 2))
     StorageUtil.SetIntValue(None, "PDV.Dunmer.ReclamationFocusCount", StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount") + 1)
     StorageUtil.SetStringValue(None, "PDV.Dunmer.LastReclamationReason", reason)
     AwardDunmerReclamationFocusSignal(focusValue, layerWeight)
@@ -22849,44 +22778,16 @@ Function AwardDunmerDeviationPriceSignal(Float multiplier)
     endIf
 EndFunction
 
-Bool Function StringContainsToken(String haystackText, String needleText)
-    Int haystackLength = StringUtil.GetLength(haystackText)
-    Int needleLength = StringUtil.GetLength(needleText)
-    if needleLength <= 0 || haystackLength < needleLength
-        return False
-    endIf
-
-    Int startIndex = 0
-    Int lastStart = haystackLength - needleLength
-    while startIndex <= lastStart
-        Int needleIndex = 0
-        Bool matched = True
-        while needleIndex < needleLength && matched
-            if StringUtil.GetNthChar(haystackText, startIndex + needleIndex) != StringUtil.GetNthChar(needleText, needleIndex)
-                matched = False
-            endIf
-            needleIndex = needleIndex + 1
-        endWhile
-
-        if matched
-            return True
-        endIf
-        startIndex = startIndex + 1
-    endWhile
-
-    return False
-EndFunction
-
 Int Function GetImperialCivicFamilyFromSource(String sourceId)
-    if StringContainsToken(sourceId, "public_service") || StringContainsToken(sourceId, "public-service") || StringContainsToken(sourceId, "civic_public")
+    if PDV_DevotionRules.StringContainsToken(sourceId, "public_service") || PDV_DevotionRules.StringContainsToken(sourceId, "public-service") || PDV_DevotionRules.StringContainsToken(sourceId, "civic_public")
         return IMPERIAL_CIVIC_PUBLIC_SERVICE
-    elseIf StringContainsToken(sourceId, "mercy")
+    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "mercy")
         return IMPERIAL_CIVIC_MERCY
-    elseIf StringContainsToken(sourceId, "lawful_order") || StringContainsToken(sourceId, "lawful-order") || StringContainsToken(sourceId, "law")
+    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "lawful_order") || PDV_DevotionRules.StringContainsToken(sourceId, "lawful-order") || PDV_DevotionRules.StringContainsToken(sourceId, "law")
         return IMPERIAL_CIVIC_LAWFUL_ORDER
-    elseIf StringContainsToken(sourceId, "honest_work") || StringContainsToken(sourceId, "honest-work") || StringContainsToken(sourceId, "work")
+    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "honest_work") || PDV_DevotionRules.StringContainsToken(sourceId, "honest-work") || PDV_DevotionRules.StringContainsToken(sourceId, "work")
         return IMPERIAL_CIVIC_HONEST_WORK
-    elseIf StringContainsToken(sourceId, "death_duty") || StringContainsToken(sourceId, "death-duty") || StringContainsToken(sourceId, "arkay")
+    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "death_duty") || PDV_DevotionRules.StringContainsToken(sourceId, "death-duty") || PDV_DevotionRules.StringContainsToken(sourceId, "arkay")
         return IMPERIAL_CIVIC_DEATH_DUTY
     endIf
 
@@ -23083,28 +22984,28 @@ Int Function GetNordRouteFamilyFromSource(String sourceId)
         return NORD_ROUTE_UNKNOWN
     endIf
 
-    if StringContainsToken(sourceId, "sky_road") || StringContainsToken(sourceId, "sky-road") || StringContainsToken(sourceId, "storm_road") || StringContainsToken(sourceId, "road_grace")
-        if StringContainsToken(sourceId, "nine")
+    if PDV_DevotionRules.StringContainsToken(sourceId, "sky_road") || PDV_DevotionRules.StringContainsToken(sourceId, "sky-road") || PDV_DevotionRules.StringContainsToken(sourceId, "storm_road") || PDV_DevotionRules.StringContainsToken(sourceId, "road_grace")
+        if PDV_DevotionRules.StringContainsToken(sourceId, "nine")
             return NORD_ROUTE_NINE_ROAD
         endIf
         return NORD_ROUTE_OLD_SKY_ROAD
-    elseIf StringContainsToken(sourceId, "ordeal") || StringContainsToken(sourceId, "trial") || StringContainsToken(sourceId, "adversity")
+    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "ordeal") || PDV_DevotionRules.StringContainsToken(sourceId, "trial") || PDV_DevotionRules.StringContainsToken(sourceId, "adversity")
         return NORD_ROUTE_OLD_ORDEAL
-    elseIf StringContainsToken(sourceId, "hearth") || StringContainsToken(sourceId, "hold") || StringContainsToken(sourceId, "protect_bond")
+    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "hearth") || PDV_DevotionRules.StringContainsToken(sourceId, "hold") || PDV_DevotionRules.StringContainsToken(sourceId, "protect_bond")
         return NORD_ROUTE_OLD_HEARTH
-    elseIf StringContainsToken(sourceId, "ancestor") || StringContainsToken(sourceId, "honored_dead")
+    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "ancestor") || PDV_DevotionRules.StringContainsToken(sourceId, "honored_dead")
         return NORD_ROUTE_OLD_ANCESTOR
-    elseIf StringContainsToken(sourceId, "hircine") || StringContainsToken(sourceId, "hunt")
+    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "hircine") || PDV_DevotionRules.StringContainsToken(sourceId, "hunt")
         return NORD_ROUTE_OLD_ORDEAL
-    elseIf StringContainsToken(sourceId, "household") || StringContainsToken(sourceId, "mercy")
+    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "household") || PDV_DevotionRules.StringContainsToken(sourceId, "mercy")
         return NORD_ROUTE_NINE_MERCY
-    elseIf StringContainsToken(sourceId, "proper_death") || StringContainsToken(sourceId, "proper-death") || StringContainsToken(sourceId, "anti_necromancy") || StringContainsToken(sourceId, "arkay")
+    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "proper_death") || PDV_DevotionRules.StringContainsToken(sourceId, "proper-death") || PDV_DevotionRules.StringContainsToken(sourceId, "anti_necromancy") || PDV_DevotionRules.StringContainsToken(sourceId, "arkay")
         return NORD_ROUTE_NINE_DEATH
-    elseIf StringContainsToken(sourceId, "honest_work") || StringContainsToken(sourceId, "honest-work") || StringContainsToken(sourceId, "learned_craft") || StringContainsToken(sourceId, "zenithar")
+    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "honest_work") || PDV_DevotionRules.StringContainsToken(sourceId, "honest-work") || PDV_DevotionRules.StringContainsToken(sourceId, "learned_craft") || PDV_DevotionRules.StringContainsToken(sourceId, "zenithar")
         return NORD_ROUTE_NINE_WORK
-    elseIf StringContainsToken(sourceId, "talos_pressure") || StringContainsToken(sourceId, "talos-pressure")
+    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "talos_pressure") || PDV_DevotionRules.StringContainsToken(sourceId, "talos-pressure")
         return NORD_ROUTE_NINE_TALOS
-    elseIf StringContainsToken(sourceId, "talos") || StringContainsToken(sourceId, "defiance")
+    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "talos") || PDV_DevotionRules.StringContainsToken(sourceId, "defiance")
         return NORD_ROUTE_OLD_TALOS
     endIf
 
@@ -23520,7 +23421,7 @@ Function SendPrismaStartupPayload(Int originRace, Int startupMode, Int defaultOp
             optionsJson = optionsJson + ","
         endIf
 
-        optionsJson = optionsJson + "{\"option_id\":\"" + JsonSafeString(GetStartupOptionId(originRace, optionValue)) + "\",\"title\":\"" + JsonSafeString(GetStartupOptionTitle(originRace, optionValue)) + "\",\"summary\":\"" + JsonSafeString(GetStartupOptionSummary(originRace, optionValue)) + "\",\"description\":\"" + JsonSafeString(GetStartupOptionDescription(originRace, optionValue)) + "\"}"
+        optionsJson = optionsJson + "{\"option_id\":\"" + PDV_DevotionRules.JsonSafeString(GetStartupOptionId(originRace, optionValue)) + "\",\"title\":\"" + PDV_DevotionRules.JsonSafeString(GetStartupOptionTitle(originRace, optionValue)) + "\",\"summary\":\"" + PDV_DevotionRules.JsonSafeString(GetStartupOptionSummary(originRace, optionValue)) + "\",\"description\":\"" + PDV_DevotionRules.JsonSafeString(GetStartupOptionDescription(originRace, optionValue)) + "\"}"
         i += 1
     endWhile
 
@@ -23529,7 +23430,7 @@ Function SendPrismaStartupPayload(Int originRace, Int startupMode, Int defaultOp
         modeText = "explicit_choice"
     endIf
 
-    String payload = "{\"mode\":\"startup\",\"startup\":{\"event\":\"" + JsonSafeString(eventName) + "\",\"race_id\":\"" + JsonSafeString(GetStartupRaceId(originRace)) + "\",\"startup_mode\":\"" + modeText + "\",\"options\":[" + optionsJson + "],\"default_option_id\":\"" + JsonSafeString(GetStartupOptionId(originRace, defaultOption)) + "\",\"advisory_line\":\"" + JsonSafeString(STARTUP_ADVISORY_TEXT) + "\",\"confirm_required\":" + BoolToJson(confirmRequired) + ",\"title\":\"" + JsonSafeString(GetOriginRaceLabel(originRace) + " startup") + "\",\"summary\":\"" + JsonSafeString(GetStartupCanonicalSummary(originRace)) + "\"}}"
+    String payload = "{\"mode\":\"startup\",\"startup\":{\"event\":\"" + PDV_DevotionRules.JsonSafeString(eventName) + "\",\"race_id\":\"" + PDV_DevotionRules.JsonSafeString(GetStartupRaceId(originRace)) + "\",\"startup_mode\":\"" + modeText + "\",\"options\":[" + optionsJson + "],\"default_option_id\":\"" + PDV_DevotionRules.JsonSafeString(GetStartupOptionId(originRace, defaultOption)) + "\",\"advisory_line\":\"" + PDV_DevotionRules.JsonSafeString(STARTUP_ADVISORY_TEXT) + "\",\"confirm_required\":" + PDV_DevotionRules.BoolToJson(confirmRequired) + ",\"title\":\"" + PDV_DevotionRules.JsonSafeString(GetOriginRaceLabel(originRace) + " startup") + "\",\"summary\":\"" + PDV_DevotionRules.JsonSafeString(GetStartupCanonicalSummary(originRace)) + "\"}}"
 
     PDV_PrismaBridge.SendOverlayJson(payload)
 EndFunction
@@ -23545,11 +23446,11 @@ Function SendPrismaMedallionPayload(Int originRace)
 
     String sectionsJson = GetMedallionSectionsJson(originRace)
     String raceLabel = GetOriginRaceLabel(originRace)
-    String payload = "{\"mode\":\"medallion\",\"medallion\":{\"race_id\":\"" + JsonSafeString(GetStartupRaceId(originRace)) + "\""
-    payload = payload + ",\"title\":\"" + JsonSafeString(raceLabel + " Medallion") + "\""
-    payload = payload + ",\"summary\":\"" + JsonSafeString("The medallion shows the native roster. Only live, scorable entries can be chosen.") + "\""
-    payload = payload + ",\"active_option_id\":\"" + JsonSafeString(GetActiveMedallionOptionId()) + "\""
-    payload = payload + ",\"advisory_line\":\"" + JsonSafeString("The medallion shows the roster; commitment comes through an offer.") + "\""
+    String payload = "{\"mode\":\"medallion\",\"medallion\":{\"race_id\":\"" + PDV_DevotionRules.JsonSafeString(GetStartupRaceId(originRace)) + "\""
+    payload = payload + ",\"title\":\"" + PDV_DevotionRules.JsonSafeString(raceLabel + " Medallion") + "\""
+    payload = payload + ",\"summary\":\"" + PDV_DevotionRules.JsonSafeString("The medallion shows the native roster. Only live, scorable entries can be chosen.") + "\""
+    payload = payload + ",\"active_option_id\":\"" + PDV_DevotionRules.JsonSafeString(GetActiveMedallionOptionId()) + "\""
+    payload = payload + ",\"advisory_line\":\"" + PDV_DevotionRules.JsonSafeString("The medallion shows the roster; commitment comes through an offer.") + "\""
     payload = payload + ",\"sections\":[" + sectionsJson + "]}}"
 
     PDV_PrismaBridge.SendOverlayJson(payload)
@@ -23561,31 +23462,6 @@ EndFunction
 
 ; Map an in-game day integer to a Tamriel fiction date string.
 ; Tamriel has 12 months of 30 days each.
-String Function JournalDayToFictionDate(Int gameDay)
-    String[] months = new String[12]
-    months[0] = "Morning Star"
-    months[1] = "Sun's Dawn"
-    months[2] = "First Seed"
-    months[3] = "Rain's Hand"
-    months[4] = "Second Seed"
-    months[5] = "Midyear"
-    months[6] = "Sun's Height"
-    months[7] = "Last Seed"
-    months[8] = "Hearthfire"
-    months[9] = "Frostfall"
-    months[10] = "Sun's Dusk"
-    months[11] = "Evening Star"
-    Int dayOfYear = gameDay - ((gameDay / 360) * 360)
-    if dayOfYear < 0
-        dayOfYear = 0
-    endIf
-    Int monthIndex = dayOfYear / 30
-    if monthIndex >= 12
-        monthIndex = 11
-    endIf
-    Int dayOfMonth = dayOfYear - (monthIndex * 30) + 1
-    return months[monthIndex] + " " + dayOfMonth
-EndFunction
 
 String Function BuildBookOfDaysPathInfo(Int originRace)
     return GetOriginRaceLabel(originRace) + " - " + GetBookOfDaysPathStatusLabel(originRace)
@@ -23775,7 +23651,6 @@ EndFunction
 ; Build the Book of Days journal JSON payload.
 ; Entries are ordered oldest-first (index 0 = oldest, last index = newest).
 String Function BuildJournalPayloadJson()
-    RepairBookOfDaysJournalText()
     Int count = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines")
     Int titleCount = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Titles")
     Int magnitudeCount = StorageUtil.IntListCount(None, "PDV.Diegetic.Journal.Magnitudes")
@@ -23783,11 +23658,11 @@ String Function BuildJournalPayloadJson()
     String entries = ""
     Int i = 0
     while i < count
-        String line = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Lines", i))
+        String line = PDV_DevotionRules.JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Lines", i))
         Int gameDay = StorageUtil.IntListGet(None, "PDV.Diegetic.Journal.Days", i)
-        String tone = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Tones", i))
-        String symbol = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Symbols", i))
-        String fictionDate = JsonSafeString(JournalDayToFictionDate(gameDay))
+        String tone = PDV_DevotionRules.JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Tones", i))
+        String symbol = PDV_DevotionRules.JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Symbols", i))
+        String fictionDate = PDV_DevotionRules.JsonSafeString(PDV_DevotionRules.JournalDayToFictionDate(gameDay))
         String entryTitle = ""
         if i < titleCount
             entryTitle = StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Titles", i)
@@ -23795,7 +23670,7 @@ String Function BuildJournalPayloadJson()
         if entryTitle == ""
             entryTitle = JournalToneToTitle(tone)
         endIf
-        entryTitle = JsonSafeString(entryTitle)
+        entryTitle = PDV_DevotionRules.JsonSafeString(entryTitle)
         Int magnitude = GetJournalMagnitudeForTone(tone)
         if i < magnitudeCount
             magnitude = StorageUtil.IntListGet(None, "PDV.Diegetic.Journal.Magnitudes", i)
@@ -23809,7 +23684,7 @@ String Function BuildJournalPayloadJson()
         entry = entry + ",\"magnitude\":" + magnitude
         entry = entry + ",\"title\":\"" + entryTitle + "\""
         if i < sourceCount
-            String sourceText = JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Sources", i))
+            String sourceText = PDV_DevotionRules.JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Sources", i))
             if sourceText != ""
                 entry = entry + ",\"source\":\"" + sourceText + "\""
             endIf
@@ -23825,9 +23700,9 @@ String Function BuildJournalPayloadJson()
     String pathInfo = BuildBookOfDaysPathInfo(originRace)
     String j = "{\"mode\":\"journal\",\"journal\":{"
     j = j + "\"title\":\"Book of Days\""
-    j = j + ",\"by\":\"" + JsonSafeString(GetJournalByline()) + "\""
-    j = j + ",\"summary\":\"" + JsonSafeString(BuildBookOfDaysSummary(originRace)) + "\""
-    j = j + ",\"survey\":\"" + JsonSafeString(pathInfo) + "\""
+    j = j + ",\"by\":\"" + PDV_DevotionRules.JsonSafeString(GetJournalByline()) + "\""
+    j = j + ",\"summary\":\"" + PDV_DevotionRules.JsonSafeString(BuildBookOfDaysSummary(originRace)) + "\""
+    j = j + ",\"survey\":\"" + PDV_DevotionRules.JsonSafeString(pathInfo) + "\""
     j = j + ",\"foot\":\"Press your Book of Days key again to close.\""
     j = j + ",\"instrument\":" + BuildBookOfDaysInstrumentJson(originRace)
     j = j + ",\"entries\":[" + entries + "]"
@@ -23877,8 +23752,8 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
     StorageUtil.IntListAdd(None, "PDV.Diegetic.Journal.Days", gameDay, True)
     StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Tones", tone, True)
     StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Symbols", symbol, True)
-    StorageUtil.IntListAdd(None, "PDV.Diegetic.Journal.Pinned", BoolToInt(headlinePinned), True)
-    StorageUtil.IntListAdd(None, "PDV.Diegetic.Journal.Magnitudes", ClampInt(magnitude, 1, 3), True)
+    StorageUtil.IntListAdd(None, "PDV.Diegetic.Journal.Pinned", PDV_DevotionRules.BoolToInt(headlinePinned), True)
+    StorageUtil.IntListAdd(None, "PDV.Diegetic.Journal.Magnitudes", PDV_DevotionRules.ClampInt(magnitude, 1, 3), True)
     if titleText == ""
         titleText = BuildJournalEventTitle(tone, "")
     endIf
@@ -23887,66 +23762,6 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
 
     PruneBookOfDays()
 
-EndFunction
-
-Function RepairBookOfDaysJournalText()
-    Int repairVersion = 3
-    if StorageUtil.GetIntValue(None, "PDV.BookOfDays.TextRepairVersion") >= repairVersion
-        return
-    endIf
-
-    Int count = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines")
-    Int i = 0
-    Int repaired = 0
-    while i < count
-        String oldLine = StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Lines", i)
-        String newLine = NormalizePublicDeityDisplayText(oldLine)
-        if newLine != oldLine
-            StorageUtil.StringListSet(None, "PDV.Diegetic.Journal.Lines", i, newLine)
-            repaired += 1
-        endIf
-        i += 1
-    endWhile
-
-    ; Version 3 removes journal beats produced while the broader Mara / Stendarr /
-    ; Y'ffre packet was incorrectly active for Altmer. Iterate backwards so all
-    ; parallel Book of Days lists remain aligned as entries are removed.
-    if GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
-        Int pruneIndex = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines") - 1
-        while pruneIndex >= 0
-            String journalLine = StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Lines", pruneIndex)
-            if ShouldPruneDeferredAltmerJournalLine(journalLine)
-                RemoveBookOfDaysEntryAt(pruneIndex)
-                repaired += 1
-            endIf
-            pruneIndex -= 1
-        endWhile
-    endIf
-
-    ; 12.1 / fix-plan 5.4 -- the journal-TITLE repair loop that used to sit here was
-    ; provably dead and has been deleted. It read a title, and if it "==" the literal
-    ; "an act of devotion" replaced it with "An act of devotion", then wrote only "if
-    ; newTitle != oldTitle". Papyrus String comparison is CASE-INSENSITIVE, so both the
-    ; match and the guard were case-blind: any title the first test could match, the
-    ; second test then declared unchanged. The loop could never write a single entry --
-    ; it walked the whole title list on every save's first load to do nothing. (The
-    ; shape says it was once a mojibake repair whose "before" literal was lost to the
-    ; same editing accident that flattened the display-name table above.)
-    ;
-    ; The LINE loop above is kept: it is a genuine one-shot migration and, with the new
-    ; normalizer, still rewrites a Nord Old Ways player's stored "Arkay" lines to "Orkey".
-
-    StorageUtil.SetIntValue(None, "PDV.BookOfDays.TextRepairVersion", repairVersion)
-    if repaired > 0 && GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Book of Days entries reconciled: " + repaired)
-    endIf
-EndFunction
-
-Bool Function ShouldPruneDeferredAltmerJournalLine(String line)
-    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER
-        return False
-    endIf
-    return StringContainsToken(line, "Mara") || StringContainsToken(line, "Stendarr") || StringContainsToken(line, "Y'ffre")
 EndFunction
 
 String Function GetPublicDeityDisplayName(PDV_DeityBase deity)
@@ -23995,49 +23810,10 @@ String Function NormalizePublicDeityDisplayText(String sourceText)
         return sourceText
     endIf
 
-    return ReplaceText(sourceText, "arkay", "Orkey")
+    return PDV_DevotionRules.ReplaceText(sourceText, "arkay", "Orkey")
 EndFunction
 
-String Function ReplaceText(String sourceText, String needleText, String replacementText)
-    Int sourceLength = StringUtil.GetLength(sourceText)
-    Int needleLength = StringUtil.GetLength(needleText)
-    if sourceLength <= 0 || needleLength <= 0 || sourceLength < needleLength
-        return sourceText
-    endIf
 
-    String result = ""
-    Int sourceIndex = 0
-    Int lastStart = sourceLength - needleLength
-    while sourceIndex < sourceLength
-        Bool matched = False
-        if sourceIndex <= lastStart
-            matched = StringMatchesAt(sourceText, needleText, sourceIndex)
-        endIf
-
-        if matched
-            result = result + replacementText
-            sourceIndex = sourceIndex + needleLength
-        else
-            result = result + StringUtil.GetNthChar(sourceText, sourceIndex)
-            sourceIndex = sourceIndex + 1
-        endIf
-    endWhile
-
-    return result
-EndFunction
-
-Bool Function StringMatchesAt(String sourceText, String needleText, Int startIndex)
-    Int needleLength = StringUtil.GetLength(needleText)
-    Int needleIndex = 0
-    while needleIndex < needleLength
-        if StringUtil.GetNthChar(sourceText, startIndex + needleIndex) != StringUtil.GetNthChar(needleText, needleIndex)
-            return False
-        endIf
-        needleIndex += 1
-    endWhile
-
-    return True
-EndFunction
 
 ; Day-window prune: unpinned entries older than the window are removed; pinned
 ; (headline) entries are exempt until the hard ceiling. Iterates backwards so a
@@ -24448,7 +24224,7 @@ String Function GetRedguardMedallionEntriesJson()
 EndFunction
 
 String Function MedallionSection(String sectionId, String titleText, String entriesJson)
-    return "{\"section_id\":\"" + JsonSafeString(sectionId) + "\",\"title\":\"" + JsonSafeString(titleText) + "\",\"entries\":[" + entriesJson + "]}"
+    return "{\"section_id\":\"" + PDV_DevotionRules.JsonSafeString(sectionId) + "\",\"title\":\"" + PDV_DevotionRules.JsonSafeString(titleText) + "\",\"entries\":[" + entriesJson + "]}"
 EndFunction
 
 String Function PendingMedallionEntry(String optionId, String titleText, String kindText, String symbolName, String summaryText)
@@ -24485,16 +24261,16 @@ String Function MedallionEntry(String optionId, String titleText, String kindTex
         disabledText = "Awaiting live deity record and scoring path."
     endIf
 
-    String entry = "{\"option_id\":\"" + JsonSafeString(optionId) + "\""
-    entry = entry + ",\"title\":\"" + JsonSafeString(titleText) + "\""
-    entry = entry + ",\"kind\":\"" + JsonSafeString(kindText) + "\""
-    entry = entry + ",\"symbol\":\"" + JsonSafeString(symbolName) + "\""
+    String entry = "{\"option_id\":\"" + PDV_DevotionRules.JsonSafeString(optionId) + "\""
+    entry = entry + ",\"title\":\"" + PDV_DevotionRules.JsonSafeString(titleText) + "\""
+    entry = entry + ",\"kind\":\"" + PDV_DevotionRules.JsonSafeString(kindText) + "\""
+    entry = entry + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\""
     entry = entry + ",\"visible\":true"
-    entry = entry + ",\"selectable\":" + BoolToJson(selectable)
-    entry = entry + ",\"summary\":\"" + JsonSafeString(summaryText) + "\""
-    entry = entry + ",\"description\":\"" + JsonSafeString(descriptionText) + "\""
+    entry = entry + ",\"selectable\":" + PDV_DevotionRules.BoolToJson(selectable)
+    entry = entry + ",\"summary\":\"" + PDV_DevotionRules.JsonSafeString(summaryText) + "\""
+    entry = entry + ",\"description\":\"" + PDV_DevotionRules.JsonSafeString(descriptionText) + "\""
     if disabledText != ""
-        entry = entry + ",\"disabled_reason\":\"" + JsonSafeString(disabledText) + "\""
+        entry = entry + ",\"disabled_reason\":\"" + PDV_DevotionRules.JsonSafeString(disabledText) + "\""
     endIf
     entry = entry + "}"
     return entry
@@ -24577,13 +24353,6 @@ Bool Function IsMedallionOptionAvailableForOrigin(String optionId, Int originRac
     return False
 EndFunction
 
-String Function BoolToJson(Bool value)
-    if value
-        return "true"
-    endIf
-
-    return "false"
-EndFunction
 
 String Function GetStartupRaceId(Int originRace)
     if originRace == ORIGIN_NORD
@@ -24657,16 +24426,16 @@ Bool Function IsBosmerPactBound()
 EndFunction
 
 Function SetBosmerPactBound(Bool isBound, String reason)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.PactBound", BoolToInt(isBound))
-    Trace(2, "Bosmer PactBound -> " + BoolToInt(isBound) + " (" + reason + ")")
+    StorageUtil.SetIntValue(None, "PDV.Bosmer.PactBound", PDV_DevotionRules.BoolToInt(isBound))
+    Trace(2, "Bosmer PactBound -> " + PDV_DevotionRules.BoolToInt(isBound) + " (" + reason + ")")
 EndFunction
 
 Int Function GetBosmerGreenPactCompliance()
-    return ClampInt(StorageUtil.GetIntValue(None, "PDV.Bosmer.GreenPactCompliance"), 0, 100)
+    return PDV_DevotionRules.ClampInt(StorageUtil.GetIntValue(None, "PDV.Bosmer.GreenPactCompliance"), 0, 100)
 EndFunction
 
 Function SetBosmerGreenPactCompliance(Int value, String reason)
-    Int normalizedValue = ClampInt(value, 0, 100)
+    Int normalizedValue = PDV_DevotionRules.ClampInt(value, 0, 100)
     StorageUtil.SetIntValue(None, "PDV.Bosmer.GreenPactCompliance", normalizedValue)
     Trace(2, "Bosmer GreenPactCompliance -> " + normalizedValue + " (" + reason + ")")
 EndFunction
@@ -25732,7 +25501,7 @@ String Function GetKhajiitFocusStandingLine(Int focusValue)
         return "not yet wired"
     endIf
 
-    String line = GetTierStandingLabel(GetTier(deity)) + ", piety " + FormatTwoDecimals(GetPiety(deity))
+    String line = GetTierStandingLabel(GetTier(deity)) + ", piety " + PDV_DevotionRules.FormatTwoDecimals(GetPiety(deity))
     if GetKhajiitFocusedEmphasis() == focusValue
         line = line + " (leading)"
     endIf
@@ -26485,7 +26254,7 @@ String Function GetConcordatSummary()
         gateState = "unlocked"
     endIf
 
-    return "raw=" + PDV_ConcordatStandingTrack.GetValue() + ";state=" + PDV_ConcordatStandingTrack.GetStateLabel() + ";pending=" + PDV_ConcordatStandingTrack.GetPendingStateLabel() + ";gate=" + gateState + ";track=" + FormatTwoDecimals(GetTalosTrackGainMultiplier()) + ";eff=" + FormatTwoDecimals(GetTalosEffectiveGainMultiplier())
+    return "raw=" + PDV_ConcordatStandingTrack.GetValue() + ";state=" + PDV_ConcordatStandingTrack.GetStateLabel() + ";pending=" + PDV_ConcordatStandingTrack.GetPendingStateLabel() + ";gate=" + gateState + ";track=" + PDV_DevotionRules.FormatTwoDecimals(GetTalosTrackGainMultiplier()) + ";eff=" + PDV_DevotionRules.FormatTwoDecimals(GetTalosEffectiveGainMultiplier())
 EndFunction
 
 Int Function DebugGetConcordatRawValue()
@@ -26540,30 +26309,12 @@ Float Function GetTalosEffectiveGainMultiplier()
     return 1.0
 EndFunction
 
-String Function FormatTwoDecimals(Float value)
-    Int scaledValue = (value * 100.0) as Int
-    Int remainder = AbsInt(scaledValue % 100)
-    if remainder < 10
-        return "" + (scaledValue / 100) + ".0" + remainder
-    endIf
-
-    return "" + (scaledValue / 100) + "." + remainder
-EndFunction
-
-Int Function AbsInt(Int value)
-    if value < 0
-        return 0 - value
-    endIf
-
-    return value
-EndFunction
-
 String Function GetBosmerSummary()
     if !PDV_BosmerPathTrack
         return "missing"
     endIf
 
-    return PDV_BosmerPathTrack.GetStateLabel() + ";offered=" + PDV_BosmerPathTrack.GetOfferedStateLabel() + ";pending=" + PDV_BosmerPathTrack.GetPendingStateLabel() + ";pact=" + BoolToInt(IsBosmerPactBound()) + ";gpc=" + GetBosmerGreenPactCompliance() + ";lapsed=" + GetBosmerLapsedFromPact() + ";gp=" + StorageUtil.GetIntValue(None, "PDV.Bosmer.GreenPactViolationCount") + ";penalty=" + StorageUtil.GetIntValue(None, "PDV.Bosmer.GreenPactPenaltyActive") + ";favor=" + GetBosmerFavorSummary()
+    return PDV_BosmerPathTrack.GetStateLabel() + ";offered=" + PDV_BosmerPathTrack.GetOfferedStateLabel() + ";pending=" + PDV_BosmerPathTrack.GetPendingStateLabel() + ";pact=" + PDV_DevotionRules.BoolToInt(IsBosmerPactBound()) + ";gpc=" + GetBosmerGreenPactCompliance() + ";lapsed=" + GetBosmerLapsedFromPact() + ";gp=" + StorageUtil.GetIntValue(None, "PDV.Bosmer.GreenPactViolationCount") + ";penalty=" + StorageUtil.GetIntValue(None, "PDV.Bosmer.GreenPactPenaltyActive") + ";favor=" + GetBosmerFavorSummary()
 EndFunction
 
 String Function GetBosmerFavorSummary()
@@ -26587,7 +26338,7 @@ String Function GetKhajiitLunarSummary()
         return "missing"
     endIf
 
-    return PDV_KhajiitLunarSubstrate.GetPilotSummary() + "; focus=" + GetKhajiitFocusLabel(GetKhajiitFocusedEmphasis()) + "; kh=" + FormatTwoDecimals(GetKhajiitFocusWeight(KHAJIIT_FOCUS_KHENARTHI)) + "; az=" + FormatTwoDecimals(GetKhajiitFocusWeight(KHAJIIT_FOCUS_AZURAH)) + "; bd=" + FormatTwoDecimals(GetKhajiitFocusWeight(KHAJIIT_FOCUS_BAANDAR)) + "; rj=" + FormatTwoDecimals(GetKhajiitFocusWeight(KHAJIIT_FOCUS_RAJHIN)) + "; ak=" + FormatTwoDecimals(GetKhajiitFocusWeight(KHAJIIT_FOCUS_ALKOSH))
+    return PDV_KhajiitLunarSubstrate.GetPilotSummary() + "; focus=" + GetKhajiitFocusLabel(GetKhajiitFocusedEmphasis()) + "; kh=" + PDV_DevotionRules.FormatTwoDecimals(GetKhajiitFocusWeight(KHAJIIT_FOCUS_KHENARTHI)) + "; az=" + PDV_DevotionRules.FormatTwoDecimals(GetKhajiitFocusWeight(KHAJIIT_FOCUS_AZURAH)) + "; bd=" + PDV_DevotionRules.FormatTwoDecimals(GetKhajiitFocusWeight(KHAJIIT_FOCUS_BAANDAR)) + "; rj=" + PDV_DevotionRules.FormatTwoDecimals(GetKhajiitFocusWeight(KHAJIIT_FOCUS_RAJHIN)) + "; ak=" + PDV_DevotionRules.FormatTwoDecimals(GetKhajiitFocusWeight(KHAJIIT_FOCUS_ALKOSH))
 EndFunction
 
 String Function GetArgonianHistSummary()
@@ -26619,7 +26370,7 @@ String Function GetOrcSummary()
         return "missing"
     endIf
 
-    return "mode=" + GetOrcLifeModeLabel() + ";stronghold=" + FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.Stronghold")) + ";city=" + FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.City")) + ";legion=" + FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.LegionExile")) + ";last=" + StorageUtil.GetStringValue(None, "PDV.Orc.LastLifeModeReason")
+    return "mode=" + GetOrcLifeModeLabel() + ";stronghold=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.Stronghold")) + ";city=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.City")) + ";legion=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.LegionExile")) + ";last=" + StorageUtil.GetStringValue(None, "PDV.Orc.LastLifeModeReason")
 EndFunction
 
 String Function GetRedguardSummary()
@@ -26627,7 +26378,7 @@ String Function GetRedguardSummary()
         return "missing"
     endIf
 
-    return "sect=" + GetRedguardSectLabel() + ";crown=" + FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.Sect.Crown")) + ";forebear=" + FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.Sect.Forebear")) + ";ashabah=" + FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.Sect.AshAbah")) + ";farShores=" + FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.FarShoresToken")) + ";last=" + StorageUtil.GetStringValue(None, "PDV.Redguard.LastSectReason")
+    return "sect=" + GetRedguardSectLabel() + ";crown=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.Sect.Crown")) + ";forebear=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.Sect.Forebear")) + ";ashabah=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.Sect.AshAbah")) + ";farShores=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.FarShoresToken")) + ";last=" + StorageUtil.GetStringValue(None, "PDV.Redguard.LastSectReason")
 EndFunction
 
 String Function GetContextualFavorSummary()
@@ -26640,7 +26391,7 @@ String Function GetContextualFavorSummary()
     String summary = "lane=" + GetContextualFavorLaneLabel(activeLane)
     summary = summary + ";family=" + GetContextualFavorFamilyLabel(activeLane, activeFamily)
     summary = summary + ";spell=" + StorageUtil.GetStringValue(None, "PDV.Favor.ActiveSpell")
-    summary = summary + ";expires=" + FormatTwoDecimals(remainingDays)
+    summary = summary + ";expires=" + PDV_DevotionRules.FormatTwoDecimals(remainingDays)
     summary = summary + ";selected=" + GetSelectedContextualFavorLaneLabel() + "/" + GetSelectedContextualFavorFamilyLabel()
     return summary
 EndFunction
@@ -26648,23 +26399,23 @@ EndFunction
 String Function GetKyneFavorSummary()
     Int maskValue = StorageUtil.GetIntValue(None, "PDV.KyneFavor.ConditionMask")
     Int activeCount = StorageUtil.GetIntValue(None, "PDV.KyneFavor.ActiveCount")
-    return "mask=" + maskValue + ";conds=" + CountSetBits(maskValue) + ";active=" + activeCount + ";generic=" + GetContextualFavorSummary()
+    return "mask=" + maskValue + ";conds=" + PDV_DevotionRules.CountSetBits(maskValue) + ";active=" + activeCount + ";generic=" + GetContextualFavorSummary()
 EndFunction
 
 String Function GetCommitmentSummary()
     PDV_DeityBase pending = GetPendingCommitmentDeity()
     String summary = "state=" + GetPatronStateLabel() + ";active=" + GetDeitySummaryLabel(_activeDeity) + ";pending=" + GetPendingCommitmentDeityIndex() + ";label=" + GetDeitySummaryLabel(pending) + ";carry=" + StorageUtil.GetFloatValue(None, "PDV.Commitment.LastCarryover") + ";rupture=" + StorageUtil.GetIntValue(None, "PDV.Commitment.Rupture")
     if pending
-        summary = summary + ";days=" + GetRecentCommitmentSignalDayCount(pending, 7) + ";offered=" + BoolToInt(IsCommitmentOffered(pending)) + ";refused=" + BoolToInt(IsCommitmentRefused(pending))
+        summary = summary + ";days=" + GetRecentCommitmentSignalDayCount(pending, 7) + ";offered=" + PDV_DevotionRules.BoolToInt(IsCommitmentOffered(pending)) + ";refused=" + PDV_DevotionRules.BoolToInt(IsCommitmentRefused(pending))
     elseIf PDV_Kyne
-        summary = summary + ";days=" + GetRecentCommitmentSignalDayCount(PDV_Kyne, 7) + ";offered=" + BoolToInt(IsCommitmentOffered(PDV_Kyne)) + ";refused=" + BoolToInt(IsCommitmentRefused(PDV_Kyne))
+        summary = summary + ";days=" + GetRecentCommitmentSignalDayCount(PDV_Kyne, 7) + ";offered=" + PDV_DevotionRules.BoolToInt(IsCommitmentOffered(PDV_Kyne)) + ";refused=" + PDV_DevotionRules.BoolToInt(IsCommitmentRefused(PDV_Kyne))
     endIf
 
     return summary
 EndFunction
 
 String Function GetNeglectSummary()
-    return "state=" + GetPatronStateLabel() + ";broad=" + BoolToInt(IsBroadWorshipActive()) + ";activeDeity=" + GetDeitySummaryLabel(_activeDeity) + ";count=" + StorageUtil.GetIntValue(None, "PDV.Neglect.ActiveCount") + ";active=" + GetNeglectActiveSummary() + ";kyneSpell=" + StorageUtil.GetIntValue(None, "PDV.Neglect.KyneSpellActive")
+    return "state=" + GetPatronStateLabel() + ";broad=" + PDV_DevotionRules.BoolToInt(IsBroadWorshipActive()) + ";activeDeity=" + GetDeitySummaryLabel(_activeDeity) + ";count=" + StorageUtil.GetIntValue(None, "PDV.Neglect.ActiveCount") + ";active=" + GetNeglectActiveSummary() + ";kyneSpell=" + StorageUtil.GetIntValue(None, "PDV.Neglect.KyneSpellActive")
 EndFunction
 
 String Function DebugGetDecaySummaryByIndex(Int deityIndex)
@@ -26682,7 +26433,7 @@ String Function DebugGetDecaySummaryByIndex(Int deityIndex)
         multiplier = BROAD_WORSHIP_DECAY_MULTIPLIER
     endIf
 
-    return "deity=" + deity.DeityName + ";state=" + GetPatronStateLabel() + ";active=" + BoolToInt(deity == _activeDeity) + ";broad=" + BoolToInt(IsBroadWorshipActive()) + ";p=" + FormatTwoDecimals(piety) + ";tier=" + GetTier(deity) + ";lastEvent=" + FormatTwoDecimals(lastEvent) + ";lastDecayDay=" + lastDecayDay + ";rate=" + FormatTwoDecimals(DECAY_PER_DAY * multiplier * deity.GetEffectiveDecayMultiplier() * GetCurseGainMultiplier(deity) * GetDaedricStigmaGainMultiplier(deity)) + ";floor=" + FormatTwoDecimals(GetDecayFloorForDeity(deity, piety))
+    return "deity=" + deity.DeityName + ";state=" + GetPatronStateLabel() + ";active=" + PDV_DevotionRules.BoolToInt(deity == _activeDeity) + ";broad=" + PDV_DevotionRules.BoolToInt(IsBroadWorshipActive()) + ";p=" + PDV_DevotionRules.FormatTwoDecimals(piety) + ";tier=" + GetTier(deity) + ";lastEvent=" + PDV_DevotionRules.FormatTwoDecimals(lastEvent) + ";lastDecayDay=" + lastDecayDay + ";rate=" + PDV_DevotionRules.FormatTwoDecimals(DECAY_PER_DAY * multiplier * deity.GetEffectiveDecayMultiplier() * GetCurseGainMultiplier(deity) * GetDaedricStigmaGainMultiplier(deity)) + ";floor=" + PDV_DevotionRules.FormatTwoDecimals(GetDecayFloorForDeity(deity, piety))
 EndFunction
 
 String Function GetHircineSummary()
@@ -26840,29 +26591,6 @@ Bool Function ConsumeOncePerDaySignal(String keyPrefix)
     return True
 EndFunction
 
-Int Function CountSetBits(Int maskValue)
-    Int count = 0
-    Int remaining = maskValue
-    if remaining >= 4
-        count += 1
-        remaining -= 4
-    endIf
-    if remaining >= 2
-        count += 1
-        remaining -= 2
-    endIf
-    if remaining >= 1
-        count += 1
-    endIf
-    return count
-EndFunction
-
-Int Function BoolToInt(Bool value)
-    if value
-        return 1
-    endIf
-    return 0
-EndFunction
 
 Function ApplyRivalryPenalties(PDV_DeityBase sourceDeity, Float sourceAmount)
     Quest[] rivalForms = sourceDeity.RivalDeities
@@ -27214,48 +26942,6 @@ String Function GetPrismaSymbolForDeity(PDV_DeityBase deity)
     return "journal"
 EndFunction
 
-String Function JsonSafeString(String rawText)
-    if rawText == ""
-        return ""
-    endIf
-
-    String safeText = ""
-    Int i = 0
-    Int count = StringUtil.GetLength(rawText)
-    while i < count
-        String currentChar = StringUtil.GetNthChar(rawText, i)
-        Int currentOrd = StringUtil.AsOrd(currentChar)
-        if currentChar == "\"" || currentChar == "\\"
-            safeText = safeText + "'"
-        elseIf currentOrd < 32
-            safeText = safeText + " "
-        else
-            safeText = safeText + currentChar
-        endIf
-        i += 1
-    endWhile
-
-    return safeText
-EndFunction
-
-Float Function ClampValue(Float value, Float minValue, Float maxValue)
-    if value < minValue
-        return minValue
-    elseIf value > maxValue
-        return maxValue
-    endIf
-    return value
-EndFunction
-
-Int Function ClampInt(Int value, Int minValue, Int maxValue)
-    if value < minValue
-        return minValue
-    elseIf value > maxValue
-        return maxValue
-    endIf
-    return value
-EndFunction
-
 ; ===========================================================================
 ; SPID religious recognition and KID item-action routing
 ; ===========================================================================
@@ -27278,13 +26964,13 @@ Bool Function NpcHostileRecognitionEnabled()
 EndFunction
 
 Function SetNpcReligiousRecognitionEnabled(Bool enabled)
-    StorageUtil.SetIntValue(None, "PDV.Recognition.Disabled", BoolToInt(!enabled))
+    StorageUtil.SetIntValue(None, "PDV.Recognition.Disabled", PDV_DevotionRules.BoolToInt(!enabled))
     InvalidateNpcReligiousRecognition()
     SyncNpcReligiousRecognition()
 EndFunction
 
 Function SetNpcHostileRecognitionEnabled(Bool enabled)
-    StorageUtil.SetIntValue(None, "PDV.Recognition.HostilesDisabled", BoolToInt(!enabled))
+    StorageUtil.SetIntValue(None, "PDV.Recognition.HostilesDisabled", PDV_DevotionRules.BoolToInt(!enabled))
     InvalidateNpcReligiousRecognition()
     SyncNpcReligiousRecognition()
 EndFunction
@@ -27338,12 +27024,12 @@ String Function GetNpcRecognitionPanelJson()
     String bandName = GetPublicTierBand(band)
     String statusText = GetNpcRecognitionStatusLine()
     String advisory = GetNpcRecognitionAdvisory(identityIndex, band, recognitionEnabled, ownerName)
-    String j = "{\"enabled\":" + BoolToJson(recognitionEnabled)
-    j = j + ",\"managed\":" + BoolToJson(ownerName != "")
-    j = j + ",\"status\":\"" + JsonSafeString(statusText) + "\""
-    j = j + ",\"identity\":\"" + JsonSafeString(identityName) + "\""
-    j = j + ",\"band\":\"" + JsonSafeString(bandName) + "\""
-    j = j + ",\"advisory\":\"" + JsonSafeString(advisory) + "\"}"
+    String j = "{\"enabled\":" + PDV_DevotionRules.BoolToJson(recognitionEnabled)
+    j = j + ",\"managed\":" + PDV_DevotionRules.BoolToJson(ownerName != "")
+    j = j + ",\"status\":\"" + PDV_DevotionRules.JsonSafeString(statusText) + "\""
+    j = j + ",\"identity\":\"" + PDV_DevotionRules.JsonSafeString(identityName) + "\""
+    j = j + ",\"band\":\"" + PDV_DevotionRules.JsonSafeString(bandName) + "\""
+    j = j + ",\"advisory\":\"" + PDV_DevotionRules.JsonSafeString(advisory) + "\"}"
     return j
 EndFunction
 
@@ -27469,7 +27155,7 @@ Function SyncNpcReligiousRecognition()
     Bool owned = ownerName != ""
     Bool recognitionEnabled = NpcReligiousRecognitionEnabled()
     Bool hostileRecognitionEnabled = NpcHostileRecognitionEnabled()
-    Int signature = identityIndex * 100 + band * 10 + BoolToInt(recognitionEnabled) + (BoolToInt(hostileRecognitionEnabled) * 2) + (BoolToInt(owned) * 4)
+    Int signature = identityIndex * 100 + band * 10 + PDV_DevotionRules.BoolToInt(recognitionEnabled) + (PDV_DevotionRules.BoolToInt(hostileRecognitionEnabled) * 2) + (PDV_DevotionRules.BoolToInt(owned) * 4)
     if StorageUtil.GetIntValue(None, "PDV.Recognition.LastSignature", -9999) == signature
         return
     endIf
@@ -27494,7 +27180,7 @@ EndFunction
 
 Function SurfaceNpcRecognitionTransition(Int identityIndex, Int band, Bool recognitionEnabled, Bool hostileRecognitionEnabled, String ownerName)
     Bool owned = ownerName != ""
-    Int presentationSignature = identityIndex * 1000 + band * 100 + BoolToInt(recognitionEnabled) * 10 + BoolToInt(owned) * 20 + BoolToInt(hostileRecognitionEnabled) * 40
+    Int presentationSignature = identityIndex * 1000 + band * 100 + PDV_DevotionRules.BoolToInt(recognitionEnabled) * 10 + PDV_DevotionRules.BoolToInt(owned) * 20 + PDV_DevotionRules.BoolToInt(hostileRecognitionEnabled) * 40
     if StorageUtil.GetIntValue(None, "PDV.Recognition.PresentationInitialized") != 1
         StorageUtil.SetIntValue(None, "PDV.Recognition.PresentationInitialized", 1)
         StorageUtil.SetIntValue(None, "PDV.Recognition.LastPresentedSignature", presentationSignature)
@@ -27543,7 +27229,7 @@ Function EmitNpcRecognitionState(Int identityIndex, Int band, Bool hostileRecogn
     endIf
     ModEvent.PushString(handle, GetRecognitionIdentityKey(identityIndex))
     ModEvent.PushString(handle, GetPublicTierBand(band))
-    ModEvent.PushFloat(handle, BoolToInt(hostileRecognitionEnabled) as Float)
+    ModEvent.PushFloat(handle, PDV_DevotionRules.BoolToInt(hostileRecognitionEnabled) as Float)
     ModEvent.PushString(handle, ownerName)
     ModEvent.Send(handle)
 EndFunction
