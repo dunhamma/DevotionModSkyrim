@@ -49,3 +49,61 @@ feature/v3-provider-seam-spec (seam design, parallel).
 No push, no live-ESP writes beyond the owner-approved LEDGER wiring, no game-env gates, everything
 reversible + committed. V3Dev deployment currently reflects the LEDGER branch (piety core routed
 through the wired ledger).
+
+---
+
+## UPDATE — 2026-08-19 session 2 (both GATE 0.5 tiers passed; MCM + ORIGIN-adapter queue)
+
+### Gates: PASSED (in-game, owner-run)
+- **LEDGER GATE 0.5 runtime = GREEN.** In-game on a fresh Altmer: liveness (Patron/Standing/Active
+  piety render) → "Apply target piety" → committed to **Mara** as patron → "Apply curated signal"
+  accrued to PietyToday (the Site-A pipeline round-trip through `Manager.LedgerRuntime.AwardPietyFromLikesDislikes`)
+  → dawn consolidated it into committed piety + tier. No None-`LedgerRuntime` errors.
+- **FAVOR GATE 0.5 = GREEN on the wiring proof.** A favor (Dawn Steadiness) activated cleanly through
+  the wired ledger, zero None-ref errors. The visible-toast box is NOT ticked, but that is **blocked by
+  an MCM bug, not FAVOR** (see below) — Dawn Steadiness is also a "Quiet"-by-design family (no toast
+  intended); the Orthodox retry didn't fire because the MCM Debug page was crashing.
+
+### MCM overflow — diagnosed (audit done); premise flipped
+- The in-game `Array index 109-127 out of range` is **column imbalance**, NOT too-many-options.
+  SkyUI 2-col layout: left=even buffer indices, right=odd; the Flash panel crashes when a column
+  exceeds ~54 rows (index ~108). **Culprit: page "Debug: Daedric & Curse"** — 26 rows left / **56 right**
+  → index 111. The 1.5.0e Sanguine-consent block tipped it.
+- **Nothing is stale/dead.** All 278 options are LIVE and already call the decomposed 2.0 API
+  (`LedgerRuntime.*`/`FavorRuntime.*`) — the extraction left no broken cross-module calls. Only real
+  dead code: **5 unreachable `RunPatternAction` arms (IDs 38-42)**. "Experience Mode" control is
+  live-but-renamed ("Current path" on Settings). **Latent 2nd crash:** the Status page deity roster
+  will overflow on its own at ~54 deities.
+- Owner chose **"by module"** reorg for the rebuild (Ledger / Origin / Daedric / Pacing / Status pages,
+  each column-balanced).
+
+### ORIGIN correction (committed this session, 40aea3a7)
+- The 664-fn `PDV_OriginRuntimeBase` monolith is **STAGE 1 only**. Intended shape = base + **10 race
+  adapters** (polymorphic by birth race, no switchboard). ORIGIN spec corrected + `PDV_2_0_ORIGIN_AdapterSplit_Plan.md`
+  added — the adapter split is design-heavy (interface collapse), do it before wiring.
+
+### SUPERVISED QUEUE for the new session (priority order)
+1. **MCM quick unblock** (~15 min): rebalance the Daedric page columns (move ~11 rows left, zero
+   deletions) + delete the 5 dead `RunPatternAction` arms (38-42) + page/cap the Status deity roster.
+   Fixes the live crash + the latent one. Then redeploy to V3Dev so testing is reliable.
+2. **MCM by-module rebuild** (the chosen project): reflow ~201 debug options into module pages,
+   column-balanced. Own focused session.
+3. **ORIGIN adapter split** (base + 10 race adapters) — `PDV_2_0_ORIGIN_AdapterSplit_Plan.md`. Design +
+   refactor; precedes ORIGIN wiring.
+4. **Provider seam** (gain-multipliers) — design the base virtual interface + provider verb together
+   with the adapter split (`PDV_2_0_ProviderSeam_ExtractionSpec.md`).
+5. **ORIGIN ESP wiring** — per-adapter host QUSTs + race-selection fill (lighter than LEDGER: no
+   property fills until the property-consolidation pass).
+6. **Cleanup debt:** strip the ~34 stale moved-property FILLS off the manager QUST (they cause 198
+   `Property … cannot be initialized` warnings in the Papyrus log — harmless but noisy); ORIGIN
+   property-consolidation pass; manifest reconciliation (RegionMap/ReleasePayload).
+7. **Deferred design decision:** FAVOR activation model — should a new favor **replace** (recommended)
+   or **queue** rather than be suppressed while one is active? Owner deferred; ~5-line change if "replace".
+
+### Key state facts for resuming
+- V3Dev deployment = the LEDGER branch (piety core runs through the wired ledger). ORIGIN is NOT
+  deployed to V3Dev (branch only, module inert).
+- Branch chain unchanged (all unpushed): v3-big-update -> v3-ledger-extraction -> v3-origin-extraction;
+  v3-provider-seam-spec parallel.
+- To exercise the FAVOR toast before the MCM fix: trigger a "Noted" family (e.g. Orthodox) after
+  **Clear active favor**, and close the MCM — but the MCM Debug page currently crashes, so fix MCM first.
