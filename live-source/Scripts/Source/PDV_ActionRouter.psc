@@ -274,7 +274,7 @@ Function HandleStoryCraftItem(ObjectReference akBench, Location akLocation, Form
     endIf
 
     if eventType == EVT_SMITH_ITEM && PDV_Manager
-        PDV_Manager.HandleOrcStoryCraftForge(akLocation)
+        PDV_Manager.OriginRuntime.HandleOrcStoryCraftForge(akLocation)
     endIf
 
     RouteActionWithAttribution(eventType, ATTR_DIRECT_PLAYER, GetPlayerActor() as Form, akCreatedItem)
@@ -317,7 +317,7 @@ Function HandleStoryChangeLocation(ObjectReference akActor, Location akOldLocati
         ; change here rather than the one-shot MarkLocationSeen gate below.
         PDV_Manager.OriginRuntime.HandleBosmerLocationChange(akNewLocation)
         PDV_Manager.OriginRuntime.HandleNordLocationChange(akNewLocation)
-        PDV_Manager.HandleOrcLocationChange(akNewLocation)
+        PDV_Manager.OriginRuntime.HandleOrcLocationChange(akNewLocation)
         PDV_Manager.OriginRuntime.TrackRedguardAshAbahUndeadSiteVisit(akNewLocation)
         PDV_Manager.TrackUndeadCryptClearSiteVisit(akNewLocation)
         PDV_Manager.OriginRuntime.HandleRedguardAshAbahUndeadSiteClear(akOldLocation)
@@ -769,6 +769,7 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] ActionRouter: " + traceText)
     endIf
 EndFunction
+
 
 
 

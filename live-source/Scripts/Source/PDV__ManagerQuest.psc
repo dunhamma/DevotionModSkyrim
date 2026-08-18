@@ -2707,7 +2707,7 @@ String Function GetPanelInstrumentState(Int originRace, String kindText, String 
     elseIf kindText == "ancestor"
         return OriginRuntime.GetDunmerAncestorLayerLabel()
     elseIf kindText == "forge"
-        return GetOrcLifeModeLabel()
+        return OriginRuntime.GetOrcLifeModeLabel()
     elseIf kindText == "sects"
         return OriginRuntime.GetRedguardSectLabel()
     elseIf kindText == "branch"
@@ -2769,7 +2769,7 @@ String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Floa
         endIf
         return "{\"depth\":" + depth + ",\"prayer\":" + prayer + ",\"home\":" + home + ",\"reclamation\":\"" + PDV_DevotionRules.JsonSafeString(OriginRuntime.GetDunmerAncestorLayerLabel()) + "\"}"
     elseIf kindText == "forge"
-        return "{\"lifeMode\":\"" + PDV_DevotionRules.JsonSafeString(GetOrcLifeModeLabel()) + "\"}"
+        return "{\"lifeMode\":\"" + PDV_DevotionRules.JsonSafeString(OriginRuntime.GetOrcLifeModeLabel()) + "\"}"
     elseIf kindText == "sects"
         return "{\"sect\":\"" + PDV_DevotionRules.JsonSafeString(OriginRuntime.GetRedguardSectLabel()) + "\"}"
     elseIf kindText == "branch"
@@ -3023,7 +3023,7 @@ String Function GetPanelQuasiPatronTierLabel(Int originRace)
     if originRace == ORIGIN_ARGONIAN
         return OriginRuntime.GetArgonianCulturalPracticeLabel()
     elseIf originRace == ORIGIN_ORC
-        return GetOrcLifeModeLabel()
+        return OriginRuntime.GetOrcLifeModeLabel()
     elseIf originRace == ORIGIN_KHAJIIT
         Int focus = OriginRuntime.GetKhajiitFocusedEmphasis()
         if focus > 0
@@ -3037,7 +3037,7 @@ String Function GetPanelQuasiPatronTierLabel(Int originRace)
     elseIf originRace == ORIGIN_BOSMER
         return OriginRuntime.GetBosmerPathLabel()
     elseIf originRace == ORIGIN_IMPERIAL
-        return GetImperialConcordatLabel()
+        return OriginRuntime.GetImperialConcordatLabel()
     elseIf originRace == ORIGIN_BRETON
         return OriginRuntime.GetBretonTraditionLabel()
     elseIf originRace == ORIGIN_NORD
@@ -3731,7 +3731,7 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, Bool hadSle
     endIf
 
     if originRace == ORIGIN_ORC
-        HandleOrcSleepEvents(playerRef, reason)
+        OriginRuntime.HandleOrcSleepEvents(playerRef, reason)
     endIf
 
     if originRace == ORIGIN_REDGUARD
@@ -3743,12 +3743,12 @@ EndFunction
 ; ingress converge here. Deity scoring remains separate in the event bus.
 Function HandleSubstrateActionEvent(Int eventType, String reason)
     Int origin = GetPlayerOriginRaceIndex()
-    if origin == ORIGIN_IMPERIAL && !IsImperialVampireStateActive() && PDV_ImperialAncestorSubstrate
+    if origin == ORIGIN_IMPERIAL && !OriginRuntime.IsImperialVampireStateActive() && PDV_ImperialAncestorSubstrate
         if eventType == 330 || eventType == 331 || eventType == 332
             Float metricBefore = PDV_ImperialAncestorSubstrate.GetMetric()
             Int tierBefore = PDV_ImperialAncestorSubstrate.GetSubstrateTier()
             PDV_ImperialAncestorSubstrate.RecordCivicStandingScaled(1.0, "craft_" + reason)
-            SendPrismaSubstrateProgress("imperial-civic", tierBefore, PDV_ImperialAncestorSubstrate.GetSubstrateTier(), PDV_ImperialAncestorSubstrate.GetMetric() - metricBefore, "Completed craft strengthened civic practice.", "journal", GetImperialCivicTierName())
+            SendPrismaSubstrateProgress("imperial-civic", tierBefore, PDV_ImperialAncestorSubstrate.GetSubstrateTier(), PDV_ImperialAncestorSubstrate.GetMetric() - metricBefore, "Completed craft strengthened civic practice.", "journal", OriginRuntime.GetImperialCivicTierName())
         endIf
     elseIf origin == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
         if eventType == 333
@@ -3890,158 +3890,22 @@ Bool Function TryDeclareRestCell(String keyPrefix, Int sleepCellId)
 EndFunction
 
 
-Function HandleOrcSleepEvents(Actor playerRef, String reason)
-    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_ORC || !PDV_OrcLifeModeTrack
-        return
-    endIf
-
-    Int sleepCellId = GetInteriorSleepCellId(playerRef)
-    if sleepCellId == 0
-        return
-    endIf
-
-    String declaredKey = "PDV.Orc.HearthRest.DeclaredFormID"
-    if StorageUtil.GetIntValue(None, declaredKey) == 0
-        if TryDeclareRestCell("PDV.Orc.HearthRest", sleepCellId)
-            MaybeShowOrcHearthHeldNotice("sleep_rest_declare_" + reason)
-            Trace(2, "Orc hearth-rest cell declared: " + reason)
-        endIf
-        return
-    endIf
-
-    if !IsPlayerAtDeclaredRestCell(playerRef, declaredKey)
-        return
-    endIf
-
-    if TryOrcTrialOfIron(playerRef, sleepCellId, reason)
-        return                          ; Trial menu shown; suppress the rest-notice this wake
-    endIf
-
-    if !ConsumeOncePerDaySignal("PDV.Signal.OrcAncestralRest")
-        return
-    endIf
-
-    Int modeValue = GetActiveOrcRewardMode()
-    RecordOrcLifeModeSignal(modeValue, 1.0, "sleep_hearth_rest_" + reason)
-    MaybeShowOrcHearthHeldNotice("sleep_hearth_rest_" + reason)
-    Trace(2, "Orc ancestral rest routed: " + reason)
-EndFunction
 
 ; The Trial of Iron: at the declared community place (the Orc hearth-rest cell), with a
 ; 7-day cooldown, the player takes up one discipline of the Code. One-active discipline,
 ; swap via re-rite (clear-before-add). "Not yet" does not spend the cooldown. Returns true
 ; when the menu was shown so the wake-notice is suppressed that night.
-Bool Function TryOrcTrialOfIron(Actor playerRef, Int sleepCellId, String reason)
-    if !playerRef || !PDV_MESG_Orc_TrialOfIron || GetPlayerOriginRaceIndex() != ORIGIN_ORC
-        return false
-    endIf
-
-    Float lastRite = StorageUtil.GetFloatValue(None, "PDV.OrcTrial.LastRiteTime")
-    if lastRite > 0.0 && (Utility.GetCurrentGameTime() - lastRite) < 7.0
-        return false
-    endIf
-
-    Utility.Wait(0.5)
-    Int pressed = PDV_MESG_Orc_TrialOfIron.Show()
-    if pressed < 0 || pressed > 3
-        return true                 ; "Not yet" -- cooldown not spent
-    endIf
-
-    ApplyOrcTrialOfIron(playerRef, pressed)
-    return true
-EndFunction
 
 ; Clear-before-add: never two disciplines at once. Records the life-mode standing the player
 ; swore it under so SyncOrcTrialOfIron can fade/restore on a standing collapse.
-Function ApplyOrcTrialOfIron(Actor playerRef, Int index)
-    RemoveOrcTrialSpells(playerRef)
-    Spell chosen = GetOrcTrialSpell(index)
-    if !chosen
-        return
-    endIf
 
-    Int modeNow = 0
-    if PDV_OrcLifeModeTrack
-        modeNow = PDV_OrcLifeModeTrack.GetCurrentState()
-    endIf
 
-    playerRef.AddSpell(chosen, False)
-    StorageUtil.SetIntValue(None, "PDV.OrcTrial.Active", index + 1)
-    StorageUtil.SetIntValue(None, "PDV.OrcTrial.ModeAtRite", modeNow)
-    StorageUtil.SetFloatValue(None, "PDV.OrcTrial.LastRiteTime", Utility.GetCurrentGameTime())
-    ; Surface in both Prisma spaces: a small Malacath pulse (Ledger driver; the 7-day
-    ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
-    LedgerRuntime.AwardPiety(PDV_Malacath, 0.5, "Took up the Trial of Iron")
-    AppendBookOfDaysEntry("You took up a discipline in the Trial of Iron. The Code is held in iron.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
-    SendPrismaToast("malacath", "good", "Trial of Iron", "You take up a discipline of the Code. The Trial of Iron holds you to it.")
-    Trace(2, "Orc Trial of Iron discipline applied: " + index)
-EndFunction
-
-Function RemoveOrcTrialSpells(Actor playerRef)
-    Int i = 0
-    while i < 4
-        Spell disc = GetOrcTrialSpell(i)
-        if disc && playerRef.HasSpell(disc)
-            playerRef.RemoveSpell(disc)
-        endIf
-        i += 1
-    endWhile
-EndFunction
-
-Spell Function GetOrcTrialSpell(Int index)
-    if index == 0
-        return PDV_SPEL_Orc_TrialOfIron_Tusk
-    elseIf index == 1
-        return PDV_SPEL_Orc_TrialOfIron_Shield
-    elseIf index == 2
-        return PDV_SPEL_Orc_TrialOfIron_Hammer
-    elseIf index == 3
-        return PDV_SPEL_Orc_TrialOfIron_Yoke
-    endIf
-    return None
-EndFunction
 
 ; The discipline holds while the life-mode standing it was sworn under is intact. If that
 ; standing collapses (a confirmed mode change -- exile, or a different hold), the discipline
 ; goes quiet at dawn and returns at dawn when the standing is recovered.
 ; PDV.OrcTrial.Active stays set while quiet so no re-rite is needed.
-Function SyncOrcTrialOfIron(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-    Int active = StorageUtil.GetIntValue(None, "PDV.OrcTrial.Active")
-    if active <= 0
-        return
-    endIf
-    Spell disc = GetOrcTrialSpell(active - 1)
-    if !disc
-        return
-    endIf
 
-    Int modeAtRite = StorageUtil.GetIntValue(None, "PDV.OrcTrial.ModeAtRite")
-    Bool eligible = (GetPlayerOriginRaceIndex() == ORIGIN_ORC) && IsOrcTrialCoherent(modeAtRite)
-    if eligible
-        if !playerRef.HasSpell(disc)
-            playerRef.AddSpell(disc, False)
-            SendPrismaToast("malacath", "good", "The Code holds", "Your discipline returns.")
-        endIf
-    else
-        if playerRef.HasSpell(disc)
-            playerRef.RemoveSpell(disc)
-            SendPrismaToast("malacath", "warning", "The discipline goes quiet", "The standing you swore it under has broken.")
-        endIf
-    endIf
-EndFunction
-
-Bool Function IsOrcTrialCoherent(Int modeAtRite)
-    if !PDV_OrcLifeModeTrack
-        return false
-    endIf
-    if PDV_OrcLifeModeTrack.GetCurrentState() != modeAtRite
-        return false
-    endIf
-    return true
-EndFunction
 
 
 ; The Remembering of Names: an ancestral observance taken at the declared rest cell, with a
@@ -4076,10 +3940,6 @@ EndFunction
 
 
 
-Function HandleImperialSleepEvents(Actor playerRef, String reason)
-    ; Retained for save/script compatibility. Imperial sleep is not a civic or
-    ; pantheon signal under the pacing contract.
-EndFunction
 
 
 ; Mara's Mercy scripted heal-on-rest was retired 2026-07-06. It was the second
@@ -4252,7 +4112,7 @@ EndFunction
 Function HandlePlayerBelowHealthGate(Actor playerRef)
     OriginRuntime.TryBosmerBaanDarGap(playerRef)
     OriginRuntime.TryArgonianSithisNearDeathBurst(playerRef)
-    TryOrcCodeHolds(playerRef)
+    OriginRuntime.TryOrcCodeHolds(playerRef)
 EndFunction
 
 Function HandlePlayerBelowHealthSurvived(Actor playerRef)
@@ -4265,60 +4125,6 @@ EndFunction
 ; shared player below-health gate when player health drops below 20% in combat.
 
 
-Function TryOrcCodeHolds(Actor playerRef)
-    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_ORC
-        return
-    endIf
-    if !playerRef.IsInCombat() || (!PDV_SPEL_OrcCodeHolds && !PDV_SPEL_OrcCodeHolds_Devoted)
-        return
-    endIf
-
-    Int malacathTier = LedgerRuntime.TIER_NONE
-    if PDV_Malacath
-        malacathTier = LedgerRuntime.GetTier(PDV_Malacath)
-    endIf
-    if malacathTier < LedgerRuntime.TIER_SEEKER
-        return
-    endIf
-
-    ; B12 / fix-plan 4.5. The rescue latched once per COMBAT SESSION while both siblings
-    ; -- the Bosmer Baan Dar gap and the Argonian Sithis burst, the two other below-health
-    ; payloads fanned from the same HandlePlayerBelowHealthGate -- are once per DAY. An
-    ; uncapped 40-60 HP (+30 stamina) clutch save every fight is a different power budget
-    ; from what the design says it is. Same LastDay guard, same devotional-day encoding.
-    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Orc.CodeHoldsLastDay") == (LedgerRuntime.GetDevotionalDay() + 2)
-        Trace(2, "Orc Code Holds suppressed: already spent this devotional day.")
-        return
-    endIf
-
-    ; The Code Holds is a near-death clutch save. It fires mid-fight the instant
-    ; health drops past the below-health gate (Baan Dar Opens the Gap model), not on
-    ; combat exit -- so it can actually save the player. Its old
-    ; HealRate spell is not cast because Requiem swallows rate-mult healing on a
-    ; near-zero base; the actual health save is a flat RestoreActorValue. Requiem-proof.
-    if malacathTier >= LedgerRuntime.TIER_DEVOTED && PDV_SPEL_OrcCodeHolds_Devoted
-        playerRef.RestoreActorValue("Stamina", 30.0)
-        playerRef.RestoreActorValue("Health", 60.0)
-    elseIf PDV_SPEL_OrcCodeHolds
-        playerRef.RestoreActorValue("Health", 40.0)
-    endIf
-    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Orc.CodeHoldsLastDay")
-
-    ; B12's second half asked for a Cast() of PDV_SPEL_OrcCodeHolds* "so the rescue has
-    ; feedback". Checked against the records: 071534 and 071536 are both Type=Ability,
-    ; CastType=ConstantEffect, TargetType=Self. A constant-effect ability is applied with
-    ; AddSpell, never cast -- Spell.Cast() on one is an engine no-op, and the author's
-    ; comment above says the HealRate payload is deliberately dead under Requiem anyway.
-    ; So the feedback is delivered the way both siblings deliver theirs: a toast.
-    SendPrismaToast("malacath", "good", "The Code holds", "The Code holds, and so do you.")
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcCodeHolds")
-    if multiplier > 0.0
-        LedgerRuntime.AwardPiety(PDV_Malacath, 0.5 * multiplier)
-    endIf
-    StorageUtil.AdjustIntValue(None, "PDV.Orc.CodeHolds.Count", 1)
-    Trace(2, "Orc Code Holds fired.")
-EndFunction
 
 ; Dawn helper: arm an elevated dream the night after a path change.
 
@@ -4726,492 +4532,49 @@ EndFunction
 
 ; Organic stronghold forge (2026-07-15, D1#11 fix): Story Manager craft events at
 ; a stronghold now reach the forge lane; the dev signal objects stay as debug.
-Function HandleOrcStoryCraftForge(Location craftLocation)
-    if !IsOrcOrigin()
-        return
-    endIf
-    if GetOrcStrongholdHoldId(craftLocation) <= 0
-        return
-    endIf
-    HandleOrcStrongholdForge("story_craft_stronghold")
-EndFunction
-
-Function HandleOrcStrongholdForge(String reason)
-    if !IsOrcOrigin() || !PDV_OrcLifeModeTrack
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcStrongholdForge")
-    RecordOrcLifeModeSignal(ORC_LIFE_MODE_STRONGHOLD, multiplier, reason)
-    AwardOrcStrongholdForgeSignal(multiplier)
-    Trace(2, "Orc Stronghold forge routed with multiplier " + multiplier)
-EndFunction
-
-Function HandleOrcLocationChange(Location newLocation)
-    if !newLocation || !IsOrcOrigin()
-        return
-    endIf
-
-    Int holdId = GetOrcStrongholdHoldId(newLocation)
-    if holdId <= 0
-        return
-    endIf
-
-    if PDV_Malacath && PDV_OrcLifeModeTrack && PDV_OrcLifeModeTrack.GetCurrentState() == ORC_LIFE_MODE_LEGION_EXILE && StorageUtil.GetIntValue(None, "PDV.Signal.MalacathExileReturn.Done") != 1
-        StorageUtil.SetIntValue(None, "PDV.Signal.MalacathExileReturn.Done", 1)
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_EXILE_RETURN, None, 1.0)
-        LedgerRuntime.SurfaceReservedSignal(PDV_Malacath, "Burden carried home", "marks the Exile's return to a stronghold hearth.")
-        Trace(1, "Malacath exile-return banked (location_stronghold)")
-    endIf
-
-    HandleOrcStrongholdPresence(holdId, "location_stronghold")
-EndFunction
 
 
-Function HandleOrcStrongholdPresence(Int holdId, String reason)
-    if !IsOrcOrigin() || !PDV_OrcLifeModeTrack
-        return
-    endIf
 
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcStrongholdPresence")
-    RecordOrcLifeModeSignal(ORC_LIFE_MODE_STRONGHOLD, multiplier, reason)
-    if PDV_SPEL_OrcHearthHeld && PDV_OrcLifeModeTrack.GetCurrentState() == ORC_LIFE_MODE_STRONGHOLD && ConsumeOncePerDaySignal("PDV.Signal.OrcHearthHeld")
-        Actor hearthPlayer = Game.GetPlayer()
-        if hearthPlayer
-            PDV_SPEL_OrcHearthHeld.Cast(hearthPlayer, hearthPlayer)
-            Trace(2, "Orc hearth-held comfort cast (" + reason + ")")
-        endIf
-    endIf
-    if holdId > 0
-        HandleOrcFourHoldsVisit(holdId, reason)
-    endIf
-    Trace(2, "Orc Stronghold presence routed with multiplier " + multiplier)
-EndFunction
 
-Function HandleOrcBloodKinCrisis(String reason)
-    if !IsOrcOrigin() || !PDV_OrcLifeModeTrack
-        return
-    endIf
 
-    RecordOrcLifeModeSignal(ORC_LIFE_MODE_STRONGHOLD, 1.0, reason)
-    ; Curated award (dead-wiring burndown Wave 1, 2026-07-07): this handler recorded
-    ; life-mode progress but -- unlike its CityDignity/LegionService/SelfMadeCommunity
-    ; siblings -- never dispatched the curated signal, so BLOOD_KIN could never bank.
-    ; The crisis is a one-shot quest milestone (The Cursed Tribe resolution); the latch
-    ; keeps a save-reload edge from ever double-banking it.
-    if StorageUtil.GetIntValue(None, "PDV.Signal.OrcBloodKinCrisis.Awarded") != 1
-        StorageUtil.SetIntValue(None, "PDV.Signal.OrcBloodKinCrisis.Awarded", 1)
-        AwardOrcBloodKinSignal(1.0)
-    endIf
-    Trace(2, "Orc Blood-Kin crisis routed: " + reason)
-EndFunction
 
-Function HandleOrcCityDignity(String reason)
-    if !IsOrcOrigin() || !PDV_OrcLifeModeTrack
-        return
-    endIf
 
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcCityDignity")
-    RecordOrcLifeModeSignal(ORC_LIFE_MODE_CITY, multiplier, reason)
-    AwardOrcCityDignitySignal(multiplier)
-    Trace(2, "Orc City dignity routed with multiplier " + multiplier)
-EndFunction
 
-Function HandleOrcLegionService(String reason)
-    if !IsOrcOrigin() || !PDV_OrcLifeModeTrack
-        return
-    endIf
 
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcLegionService")
-    RecordOrcLifeModeSignal(ORC_LIFE_MODE_LEGION_EXILE, multiplier, reason)
-    AwardOrcLegionServiceSignal(multiplier)
-    Trace(2, "Orc Legion or exile service routed with multiplier " + multiplier)
-EndFunction
 
-Function HandleOrcSelfMadeCommunity(String reason)
-    if !IsOrcOrigin() || !PDV_OrcLifeModeTrack
-        return
-    endIf
 
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcSelfMadeCommunity")
-    RecordOrcLifeModeSignal(ORC_LIFE_MODE_CITY, multiplier, reason)
-    AwardOrcSelfMadeCommunitySignal(multiplier)
-    if multiplier > 0.0
-        MaybeShowOrcHearthHeldNotice(reason)
-    endIf
-    Trace(2, "Orc self-made community routed with multiplier " + multiplier)
-EndFunction
 
-Function HandleOrcMalacathConduct(Int modeValue, String reason)
-    if !IsOrcOrigin() || !PDV_OrcLifeModeTrack
-        return
-    endIf
 
-    EnsureOrcLifeModeInitialized()
-    if modeValue < ORC_LIFE_MODE_CITY || modeValue > ORC_LIFE_MODE_LEGION_EXILE
-        modeValue = PDV_OrcLifeModeTrack.GetCurrentState()
-    endIf
 
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcMalacathConduct")
-    RecordOrcLifeModeSignal(modeValue, multiplier, reason)
-    AwardOrcBroadConductSignal(multiplier)
-    StorageUtil.AdjustFloatValue(None, "PDV.Orc.MalacathConduct", multiplier)
-    StorageUtil.AdjustIntValue(None, "PDV.Orc.MalacathSourceCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Orc.LastMalacathSourceReason", reason)
-    SurfaceP2BookReadNotice(reason, "The Code of Malacath", "Malacath weighs your conduct against it.")
-    Trace(2, "Orc Malacath conduct routed with multiplier " + multiplier)
-EndFunction
 
-Function HandleOrcOathBreak(String reason)
-    if !IsOrcOrigin()
-        return
-    endIf
-
-    AwardOrcOathBreakSignal()
-    StorageUtil.AdjustIntValue(None, "PDV.Orc.OathBreakCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Orc.LastOathBreakReason", reason)
-    Trace(2, "Orc oath-break routed: " + reason)
-EndFunction
-
-Function HandleOrcFourHoldsVisit(Int holdId, String reason)
-    if !IsOrcOrigin()
-        return
-    endIf
-
-    if holdId < ORC_FOUR_HOLDS_DUSHNIKH_YAL || holdId > ORC_FOUR_HOLDS_LARGASHBUR
-        Trace(1, "Orc Four Holds skipped: invalid hold id " + holdId)
-        return
-    endIf
-
-    String visitedKey = "PDV.Orc.FourHolds." + holdId
-    if StorageUtil.GetIntValue(None, visitedKey) > 0
-        Trace(2, "Orc Four Holds skipped: already visited hold " + holdId)
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, visitedKey, 1)
-    StorageUtil.SetStringValue(None, "PDV.Orc.LastFourHoldsReason", reason)
-    StorageUtil.SetIntValue(None, "PDV.Orc.LastFourHoldsVisit", holdId)
-    StorageUtil.SetFloatValue(None, "PDV.Orc.LastFourHoldsVisitTime", Utility.GetCurrentGameTime())
-    AwardOrcFourHoldsVisitSignal()
-    AwardOrcAncestorSpineSignal(1.0, reason)
-
-    Int count = GetOrcFourHoldsVisitCount()
-    StorageUtil.SetIntValue(None, "PDV.Orc.FourHolds.Count", count)
-    ShowOrcNotification(GetOrcFourHoldsNotice(holdId), GetOrcFourHoldsFallback(holdId))
-    if count >= 4 && StorageUtil.GetIntValue(None, "PDV.Orc.FourHolds.MilestoneShown") == 0
-        StorageUtil.SetIntValue(None, "PDV.Orc.FourHolds.MilestoneShown", 1)
-        ShowOrcMessage(PDV_Msg_Orc_FourHolds_Milestone, "You have stood at all four strongholds. The code holds across distance.", False)
-    endIf
-
-    Trace(2, "Orc Four Holds routed: hold " + holdId + " count " + count)
-EndFunction
-
-Function RecordOrcLifeModeSignal(Int modeValue, Float multiplier, String reason)
-    if !PDV_OrcLifeModeTrack
-        return
-    endIf
-
-    if modeValue < ORC_LIFE_MODE_CITY || modeValue > ORC_LIFE_MODE_LEGION_EXILE
-        return
-    endIf
-
-    EnsureOrcLifeModeInitialized()
-    PDV_OrcLifeModeTrack.RecordEvidenceDay(modeValue, reason)
-    StorageUtil.AdjustFloatValue(None, GetOrcLifeModeWeightKey(modeValue), multiplier)
-    StorageUtil.SetIntValue(None, "PDV.Orc.LastLifeModeSignal", modeValue)
-    StorageUtil.SetStringValue(None, "PDV.Orc.LastLifeModeReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Orc.LastLifeModeSignalTime", Utility.GetCurrentGameTime())
-
-    if multiplier <= 0.0
-        return
-    endIf
-
-    AwardOrcAncestorSpineSignal(multiplier, reason)
-    MaybeShowOrcWatchersNotice(modeValue, reason)
-
-    if PDV_OrcLifeModeTrack.GetCurrentState() == modeValue
-        SendPrismaSubstrateToast(GetOrcLifeModeSubstrateToken(modeValue), "act", "The code was marked.", "malacath", GetOrcLifeModeLabel())
-        AppendBookOfDaysEntry("The code was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
-        RequestPanelRefresh()
-        return
-    endIf
-
-    ; LOCKED life-mode switch rule: a soft switch needs two evidence days inside
-    ; seven; only a major gate (Blood-Kin, Cursed Tribe resolved) switches at once.
-    ; Other soft switches settle at dawn via EvaluateOrcLifeModeAtDawn. A confirmed
-    ; switch holds for a three-day lock-in. One stray act no longer flips the mode.
-    if IsOrcMajorLifeModeGate(reason)
-        ApplyOrcLifeModeSwitch(modeValue, reason)
-    elseIf PDV_OrcLifeModeTrack.HasRecentEvidenceDays(modeValue, 2, 7) && !PDV_OrcLifeModeTrack.IsTransitionLockedOut()
-        ApplyOrcLifeModeSwitch(modeValue, reason)
-    endIf
-EndFunction
-
-Function ApplyOrcLifeModeSwitch(Int modeValue, String reason)
-    if PDV_OrcLifeModeTrack.GetCurrentState() == ORC_LIFE_MODE_LEGION_EXILE && modeValue != ORC_LIFE_MODE_LEGION_EXILE
-        EmitMalacathBrokenFaithKinMinus("desert_legion_exile_" + reason)
-    endIf
-    PDV_OrcLifeModeTrack.SetState(modeValue, reason)
-    PDV_OrcLifeModeTrack.SetTransitionLockout(3.0, reason)
-    Int deityIndex = -1
-    if PDV_Malacath
-        deityIndex = PDV_Malacath.DeityIndex
-    endIf
-    SurfaceTransition("reorientation", GetOrcLifeModeLabel(), "shift", deityIndex, "turning")
-    SendPrismaShiftToast(GetOrcLifeModeLabel(), "", "malacath")
-    RequestPanelRefresh()
-EndFunction
-
-Bool Function IsOrcMajorLifeModeGate(String reason)
-    return PDV_DevotionRules.StringContainsToken(reason, "orc_bloodkin_crisis") || PDV_DevotionRules.StringContainsToken(reason, "orc_cursed_tribe_resolved") || PDV_DevotionRules.StringContainsToken(reason, "orc_major_gate")
-EndFunction
-
-String Function GetOrcLifeModeSubstrateToken(Int modeValue)
-    if modeValue == ORC_LIFE_MODE_STRONGHOLD
-        return "stronghold"
-    elseIf modeValue == ORC_LIFE_MODE_LEGION_EXILE
-        return "legionexile"
-    endIf
-    return "city"
-EndFunction
 
 ; Soft life-mode switches settle at dawn per the LOCKED design: the non-current
 ; mode with two evidence days inside seven wins (highest accumulated weight on a
 ; tie), honoring the lock-in. A non-City mode with no evidence in fourteen days
 ; lapses back to City, the steady default -- getting Stronghold back is not easy.
-Function EvaluateOrcLifeModeAtDawn()
-    if !PDV_OrcLifeModeTrack || !IsOrcOrigin()
-        return
-    endIf
 
-    EnsureOrcLifeModeInitialized()
-    Int currentMode = PDV_OrcLifeModeTrack.GetCurrentState()
 
-    if !PDV_OrcLifeModeTrack.IsTransitionLockedOut()
-        Int bestMode = -1
-        Float bestWeight = -1.0
-        Int candidate = ORC_LIFE_MODE_CITY
-        while candidate <= ORC_LIFE_MODE_LEGION_EXILE
-            if candidate != currentMode && PDV_OrcLifeModeTrack.HasRecentEvidenceDays(candidate, 2, 7)
-                Float candidateWeight = StorageUtil.GetFloatValue(None, GetOrcLifeModeWeightKey(candidate))
-                if bestMode < 0 || candidateWeight > bestWeight
-                    bestMode = candidate
-                    bestWeight = candidateWeight
-                endIf
-            endIf
-            candidate += 1
-        endWhile
 
-        if bestMode >= 0
-            ApplyOrcLifeModeSwitch(bestMode, "orc_dawn_softswitch")
-            return
-        endIf
-    endIf
 
-    if currentMode > ORC_LIFE_MODE_CITY && !PDV_OrcLifeModeTrack.HasRecentEvidenceDays(currentMode, 1, 14)
-        ApplyOrcLifeModeSwitch(ORC_LIFE_MODE_CITY, "orc_dawn_lapse_to_city")
-        RequestPanelRefresh()
-    endIf
-EndFunction
 
-Function AwardOrcStrongholdForgeSignal(Float multiplier)
-    if PDV_Malacath
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_STRONGHOLD_FORGE, None, multiplier)
-    endIf
-EndFunction
 
-Function AwardOrcBloodKinSignal(Float multiplier)
-    if PDV_Malacath
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BLOOD_KIN, None, multiplier)
-    endIf
-EndFunction
 
-Function AwardOrcCityDignitySignal(Float multiplier)
-    if PDV_Malacath
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_CITY_DIGNITY, None, multiplier)
-    endIf
-EndFunction
 
-Function AwardOrcLegionServiceSignal(Float multiplier)
-    if PDV_Malacath
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_LEGION_SERVICE, None, multiplier)
-    endIf
-EndFunction
 
-Function AwardOrcSelfMadeCommunitySignal(Float multiplier)
-    if PDV_Malacath
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_SELF_MADE_COMMUNITY, None, multiplier)
-    endIf
-EndFunction
 
-Function AwardOrcBroadConductSignal(Float multiplier)
-    if PDV_Malacath
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BROAD_CONDUCT, None, multiplier)
-    endIf
-EndFunction
 
-Function AwardOrcOathBreakSignal()
-    if PDV_Malacath
-        LedgerRuntime.AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_OATH_BREAK, None)
-    endIf
-EndFunction
 
-Function AwardOrcFourHoldsVisitSignal()
-    if PDV_Malacath
-        LedgerRuntime.AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_FOUR_HOLDS_VISIT, None)
-    endIf
-EndFunction
 
-Function AwardOrcAncestorSpineSignal(Float multiplier, String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_ORC || !PDV_Malacath || multiplier <= 0.0
-        return
-    endIf
 
-    LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_ANCESTOR_SPINE, None, multiplier)
-    StorageUtil.AdjustFloatValue(None, "PDV.Orc.AncestorSpine", multiplier)
-    StorageUtil.AdjustIntValue(None, "PDV.Orc.AncestorSpineSourceCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Orc.LastAncestorSpineReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Orc.LastAncestorSpineTime", Utility.GetCurrentGameTime())
-EndFunction
 
-Int Function GetOrcFourHoldsVisitCount()
-    Int count = 0
-    if StorageUtil.GetIntValue(None, "PDV.Orc.FourHolds." + ORC_FOUR_HOLDS_DUSHNIKH_YAL) > 0
-        count += 1
-    endIf
-    if StorageUtil.GetIntValue(None, "PDV.Orc.FourHolds." + ORC_FOUR_HOLDS_MOR_KHAZGUR) > 0
-        count += 1
-    endIf
-    if StorageUtil.GetIntValue(None, "PDV.Orc.FourHolds." + ORC_FOUR_HOLDS_NARZULBUR) > 0
-        count += 1
-    endIf
-    if StorageUtil.GetIntValue(None, "PDV.Orc.FourHolds." + ORC_FOUR_HOLDS_LARGASHBUR) > 0
-        count += 1
-    endIf
-    return count
-EndFunction
 
-Message Function GetOrcFourHoldsNotice(Int holdId)
-    if holdId == ORC_FOUR_HOLDS_DUSHNIKH_YAL
-        return PDV_Notif_Orc_FourHolds_DushnikhYal
-    elseIf holdId == ORC_FOUR_HOLDS_MOR_KHAZGUR
-        return PDV_Notif_Orc_FourHolds_MorKhazgur
-    elseIf holdId == ORC_FOUR_HOLDS_NARZULBUR
-        return PDV_Notif_Orc_FourHolds_Narzulbur
-    elseIf holdId == ORC_FOUR_HOLDS_LARGASHBUR
-        return PDV_Notif_Orc_FourHolds_Largashbur
-    endIf
 
-    return None
-EndFunction
 
-String Function GetOrcFourHoldsFallback(Int holdId)
-    if holdId == ORC_FOUR_HOLDS_DUSHNIKH_YAL
-        return "Dushnikh Yal is counted. The code has a western hold."
-    elseIf holdId == ORC_FOUR_HOLDS_MOR_KHAZGUR
-        return "Mor Khazgur is counted. The code has a northern hold."
-    elseIf holdId == ORC_FOUR_HOLDS_NARZULBUR
-        return "Narzulbur is counted. The code has an eastern hold."
-    elseIf holdId == ORC_FOUR_HOLDS_LARGASHBUR
-        return "Largashbur is counted. Even a troubled hold is still a hold."
-    endIf
 
-    return "The stronghold is counted. The code holds across distance."
-EndFunction
 
-Bool Function ConsumeDailyOrcNotice(String noticeKey)
-    ; fix-plan 4.2: devotional day, so a notice cannot re-fire at raw midnight.
-    Int dayIndex = LedgerRuntime.GetDevotionalDay() + 2
-    String storageKey = "PDV.Orc.Notice." + noticeKey + ".Day"
-    if StorageUtil.GetIntValue(None, storageKey, -1) == dayIndex
-        return False
-    endIf
-
-    StorageUtil.SetIntValue(None, storageKey, dayIndex)
-    return True
-EndFunction
-
-Function MaybeShowOrcWatchersNotice(Int modeValue, String reason)
-    if !ConsumeDailyOrcNotice("Watchers")
-        return
-    endIf
-
-    StorageUtil.SetStringValue(None, "PDV.Orc.LastWatchersNoticeReason", reason)
-    ShowOrcNotification(GetOrcWatchersNotice(modeValue), GetOrcWatchersFallback(modeValue))
-EndFunction
-
-Message Function GetOrcWatchersNotice(Int modeValue)
-    if modeValue == ORC_LIFE_MODE_STRONGHOLD
-        return PDV_Notif_Orc_Witnessed_TheWatchers_Stronghold
-    elseIf modeValue == ORC_LIFE_MODE_LEGION_EXILE
-        return PDV_Notif_Orc_Witnessed_TheWatchers_LegionExile
-    endIf
-
-    return PDV_Notif_Orc_Witnessed_TheWatchers_City
-EndFunction
-
-String Function GetOrcWatchersFallback(Int modeValue)
-    if modeValue == ORC_LIFE_MODE_STRONGHOLD
-        return "The Watchers see the stronghold work. The code has witnesses."
-    elseIf modeValue == ORC_LIFE_MODE_LEGION_EXILE
-        return "The Watchers see the burden carried away from the hold. The code has witnesses."
-    endIf
-
-    return "The Watchers see the code kept under city stone. The code has witnesses."
-EndFunction
-
-Function MaybeShowOrcHearthHeldNotice(String reason)
-    if StorageUtil.GetIntValue(None, "PDV.Orc.HearthHeldDeclared") == 0
-        StorageUtil.SetIntValue(None, "PDV.Orc.HearthHeldDeclared", 1)
-        StorageUtil.SetStringValue(None, "PDV.Orc.LastHearthHeldDeclareReason", reason)
-        ; Declaring a hearth is a once-ever moment (the flag above guards it), so it
-        ; earns a toast plus a permanent Book of Days beat rather than a transient
-        ; corner notice. The toast honours the Notifications preference at the shared
-        ; chokepoint while the Book entry always logs. PDV_Notif_Orc_HearthHeld_Declare
-        ; is deliberately no longer shown here (it would double the surface); the
-        ; record stays in the ESP, orphaned, with its text kept in sync.
-        SendPrismaToast("malacath", "good", "A hearth held", "You claim this hearth as your own, and swear to hold it.")
-        AppendBookOfDaysEntry("You claim this hearth as your own, and swear to hold it.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
-        return
-    endIf
-
-    if !ConsumeDailyOrcNotice("HearthHeldReturn")
-        return
-    endIf
-
-    StorageUtil.SetStringValue(None, "PDV.Orc.LastHearthHeldReturnReason", reason)
-    ShowOrcNotification(PDV_Notif_Orc_HearthHeld_Return, "You return to the hearth you hold. The code remembers the place.")
-EndFunction
-
-Function MaybeShowOrcHearthHeldMissedCadenceNotice()
-    if !ConsumeDailyOrcNotice("HearthHeldMissed")
-        return
-    endIf
-
-    ShowOrcNotification(PDV_Notif_Orc_HearthHeld_MissedCadence, "The held hearth has gone quiet. The code presses for proof.")
-EndFunction
-
-Function EnsureOrcLifeModeInitialized()
-    if !PDV_OrcLifeModeTrack
-        return
-    endIf
-
-    if IsOrcOrigin() && StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1
-        return
-    endIf
-
-    if PDV_OrcLifeModeTrack.GetCurrentState() < ORC_LIFE_MODE_CITY
-        PDV_OrcLifeModeTrack.SetState(ORC_LIFE_MODE_CITY, "orc_default_city")
-    endIf
-EndFunction
-
-Bool Function IsOrcOrigin()
-    return GetPlayerOriginRaceIndex() == ORIGIN_ORC
-EndFunction
 
 Float Function GetOrcLifeModeGainMultiplier(PDV_DeityBase deity)
-    if !deity || !IsOrcOrigin()
+    if !deity || !OriginRuntime.IsOrcOrigin()
         return 1.0
     endIf
 
@@ -5219,7 +4582,7 @@ Float Function GetOrcLifeModeGainMultiplier(PDV_DeityBase deity)
         return 1.0
     endIf
 
-    EnsureOrcLifeModeInitialized()
+    OriginRuntime.EnsureOrcLifeModeInitialized()
     if !PDV_OrcLifeModeTrack
         return 1.0
     endIf
@@ -5234,43 +4597,8 @@ Float Function GetOrcLifeModeGainMultiplier(PDV_DeityBase deity)
     return ORC_RATE_MULT_CITY
 EndFunction
 
-String Function GetOrcLifeModeWeightKey(Int modeValue)
-    if modeValue == ORC_LIFE_MODE_STRONGHOLD
-        return "PDV.Orc.LifeMode.Stronghold"
-    elseIf modeValue == ORC_LIFE_MODE_LEGION_EXILE
-        return "PDV.Orc.LifeMode.LegionExile"
-    endIf
 
-    return "PDV.Orc.LifeMode.City"
-EndFunction
 
-String Function GetOrcLifeModeLabel()
-    if !PDV_OrcLifeModeTrack
-        return "Life mode missing"
-    endIf
-
-    EnsureOrcLifeModeInitialized()
-    return PDV_OrcLifeModeTrack.GetStateLabel()
-EndFunction
-
-Int Function GetOrcStrongholdHoldId(Location newLocation)
-    if !newLocation
-        return 0
-    endIf
-
-    Int locationFormId = newLocation.GetFormID()
-    if locationFormId == 0x00019171
-        return ORC_FOUR_HOLDS_DUSHNIKH_YAL
-    elseIf locationFormId == 0x0001927C
-        return ORC_FOUR_HOLDS_MOR_KHAZGUR
-    elseIf locationFormId == 0x00019282
-        return ORC_FOUR_HOLDS_NARZULBUR
-    elseIf locationFormId == 0x00019263
-        return ORC_FOUR_HOLDS_LARGASHBUR
-    endIf
-
-    return 0
-EndFunction
 
 
 
@@ -5529,7 +4857,7 @@ Function MaybeEmitHircineStigmaPrice(Float stigmaBefore, Float stigmaAfter)
 EndFunction
 
 Function HandleTalosShrineDefiance(String reason)
-    if GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL && !IsImperialVampireStateActive()
+    if GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL && !OriginRuntime.IsImperialVampireStateActive()
         StorageUtil.SetIntValue(None, "PDV.Imperial.TalosBroadUnlocked", 1)
         Trace(1, "Imperial broad Talos roster unlocked by shrine defiance: " + reason)
     endIf
@@ -5542,7 +4870,7 @@ Function HandleTalosShrineDefiance(String reason)
 
     if GetPlayerOriginRaceIndex() == 1
         ; Phase 7 verifier compatibility: ApplyConcordatPressure(-15, "talos_shrine_" + reason)
-        ApplyImperialConcordatAction("hidden_talos_shrine", "talos_shrine_" + reason)
+        OriginRuntime.ApplyImperialConcordatAction("hidden_talos_shrine", "talos_shrine_" + reason)
         Trace(2, "Talos shrine defiance also applied Concordat pressure.")
     else
         Trace(2, "Talos shrine defiance awarded without Concordat pressure for non-Imperial origin.")
@@ -5577,7 +4905,7 @@ Function HandleThalmorUnprovokedKill(Form victimForm)
     if OriginRuntime.IsAltmerOrigin()
         OriginRuntime.HandleAltmerAlignmentSignal("kill_thalmor_agent", victimForm, "thalmor_unprovoked_kill")
     elseIf GetPlayerOriginRaceIndex() == 1
-        ApplyImperialConcordatAction("kill_thalmor_justiciar_unprovoked", "thalmor_unprovoked_kill")
+        OriginRuntime.ApplyImperialConcordatAction("kill_thalmor_justiciar_unprovoked", "thalmor_unprovoked_kill")
     endIf
 EndFunction
 
@@ -6259,20 +5587,13 @@ String Function BuildModeChangeLine(String modeLabel)
     elseIf originRace == ORIGIN_ALTMER
         return "The ancestral record marks a turn in your discipline: " + modeLabel + "."
     elseIf originRace == ORIGIN_IMPERIAL
-        return BuildImperialConcordatBookLine(modeLabel)
+        return OriginRuntime.BuildImperialConcordatBookLine(modeLabel)
     elseIf originRace == ORIGIN_BRETON
         return "Your Breton road turns under the chosen tradition: " + modeLabel + "."
     endIf
     return "Your path turns. You walk now as: " + modeLabel + "."
 EndFunction
 
-String Function BuildImperialConcordatBookLine(String modeLabel)
-    if modeLabel == "Concordat Enforcer"
-        return "Under the White-Gold Concordat, you are a Concordat Enforcer."
-    endIf
-
-    return "Under the White-Gold Concordat, you are " + modeLabel + "."
-EndFunction
 
 ; Named-acts dawn digest: names the gods and open Princes fed today (captured before
 ; piety-today is zeroed). Up to 5 named, then "and others"; falls back to a flavored
@@ -6859,9 +6180,6 @@ EndFunction
 
 
 
-Bool Function IsImperialVampireStateActive()
-    return StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHalt") == 1
-EndFunction
 
 
 
@@ -7766,97 +7084,11 @@ EndFunction
 
 
 
-Function SyncOrcRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
 
-    Bool isOrc = GetPlayerOriginRaceIndex() == ORIGIN_ORC
-    Int activeMode = GetActiveOrcRewardMode()
-    SyncOrcSpineBoon(playerRef, isOrc, activeMode)
 
-    Bool broadFaithful = isOrc && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Orc.MalacathSourceCount") >= 6
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Malacath_T2, broadFaithful, "Orc Malacath T2")
 
-    Bool focusActive = isOrc && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity == PDV_Malacath && PDV_Malacath
-    Int activeTier = LedgerRuntime.TIER_NONE
-    if focusActive
-        activeTier = LedgerRuntime.GetTier(PDV_Malacath)
-    endIf
 
-    SyncOrcRewardFamily(playerRef, ORC_LIFE_MODE_STRONGHOLD, activeMode, activeTier, focusActive, PDV_Bless_Orc_Stronghold_T1, PDV_Bless_Orc_Stronghold_T2, PDV_Bless_Orc_Stronghold_T3, "Stronghold")
-    SyncOrcRewardFamily(playerRef, ORC_LIFE_MODE_CITY, activeMode, activeTier, focusActive, PDV_Bless_Orc_City_T1, PDV_Bless_Orc_City_T2, PDV_Bless_Orc_City_T3, "City")
-    SyncOrcRewardFamily(playerRef, ORC_LIFE_MODE_LEGION_EXILE, activeMode, activeTier, focusActive, PDV_Bless_Orc_LegionExile_T1, PDV_Bless_Orc_LegionExile_T2, PDV_Bless_Orc_LegionExile_T3, "LegionExile")
-EndFunction
 
-Function SyncOrcSpineBoon(Actor playerRef, Bool isOrc, Int activeMode)
-    if !playerRef
-        return
-    endIf
-
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_City, isOrc && activeMode == ORC_LIFE_MODE_CITY, "Orc Spine City")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_Stronghold, isOrc && activeMode == ORC_LIFE_MODE_STRONGHOLD, "Orc Spine Stronghold")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_LegionExile, isOrc && activeMode == ORC_LIFE_MODE_LEGION_EXILE, "Orc Spine LegionExile")
-EndFunction
-
-Int Function GetActiveOrcRewardMode()
-    if PDV_OrcLifeModeTrack
-        Int modeValue = PDV_OrcLifeModeTrack.GetCurrentState()
-        if modeValue >= ORC_LIFE_MODE_CITY && modeValue <= ORC_LIFE_MODE_LEGION_EXILE
-            return modeValue
-        endIf
-    endIf
-
-    return ORC_LIFE_MODE_CITY
-EndFunction
-
-Function SyncOrcRewardFamily(Actor playerRef, Int thisMode, Int activeMode, Int activeTier, Bool focusActive, Spell t1, Spell t2, Spell t3, String label)
-    Bool isActive = focusActive && thisMode == activeMode
-    Bool hadChampionSpell = LedgerRuntime.HasRewardSpell(playerRef, t3)
-    Bool wantsChampionSpell = isActive && activeTier >= LedgerRuntime.TIER_CHAMPION
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == LedgerRuntime.TIER_SEEKER, "Orc " + label + " T1")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == LedgerRuntime.TIER_DEVOTED, "Orc " + label + " T2")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Orc " + label + " T3")
-    LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, PDV_Malacath, "Orc " + label)
-EndFunction
-
-Bool Function IsOrcCodeNeglected()
-    if GetPlayerOriginRaceIndex() != ORIGIN_ORC
-        return False
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.Curse.Orc.CodePressure") == 1
-        return True
-    endIf
-
-    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Orc.LastLifeModeSignalTime")
-    if lastSource <= 0.0
-        return False
-    endIf
-
-    return (Utility.GetCurrentGameTime() - lastSource) > 5.0
-EndFunction
-
-Function SyncOrcNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !PDV_SPEL_Neglect_Orc
-        StorageUtil.SetIntValue(None, "PDV.Neglect.OrcSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        if !playerRef.HasSpell(PDV_SPEL_Neglect_Orc)
-            playerRef.AddSpell(PDV_SPEL_Neglect_Orc, False)
-            MaybeShowOrcHearthHeldMissedCadenceNotice()
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.OrcSpellActive", 1)
-    else
-        if playerRef.HasSpell(PDV_SPEL_Neglect_Orc)
-            playerRef.RemoveSpell(PDV_SPEL_Neglect_Orc)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.OrcSpellActive", 0)
-    endIf
-EndFunction
 
 
 
@@ -7868,43 +7100,11 @@ EndFunction
 ; Malacath creed-violation minus: werewolf onset is a Code rupture (the beast-blood
 ; cools Malacath's regard). Hooked from ApplyOrcCurseHandlers on a transition INTO the
 ; werewolf state; Orc-gated and anti-farmed (curse flicker cannot stack the penalty).
-Function EmitMalacathCurseCodeRuptureMinus(String reason)
-    if !IsOrcOrigin() || !PDV_Malacath
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.MalacathCurseCodeRupture")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_CURSE_CODE_RUPTURE, None, multiplier)
-    StorageUtil.AdjustIntValue(None, "PDV.Orc.CurseCodeRuptureCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Orc.LastCurseCodeRuptureReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Orc.LastCurseCodeRuptureTime", Utility.GetCurrentGameTime())
-    Trace(2, "Malacath curse-code rupture routed: " + reason + " multiplier=" + multiplier)
-EndFunction
 
 ; Malacath creed-violation minus: deserting sworn service. Hooked from
 ; ApplyOrcLifeModeSwitch on a PLAYER-DRIVEN switch away from Legion-Exile (the sworn-
 ; service life mode). The passive 14-day dawn lapse-to-City routes through SetState
 ; directly, NOT this switch path, so neglect-drift does not trip the betrayal penalty.
-Function EmitMalacathBrokenFaithKinMinus(String reason)
-    if !IsOrcOrigin() || !PDV_Malacath
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.MalacathBrokenFaithKin")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BROKEN_FAITH_KIN, None, multiplier)
-    StorageUtil.AdjustIntValue(None, "PDV.Orc.BrokenFaithKinCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Orc.LastBrokenFaithKinReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Orc.LastBrokenFaithKinTime", Utility.GetCurrentGameTime())
-    Trace(2, "Malacath broken-faith-kin routed: " + reason + " multiplier=" + multiplier)
-EndFunction
 
 ; Mephala creed-violation minus: a clumsy crime (caught trespassing / assaulting an
 ; innocent) is the opposite of Mephala's subtlety -- a kept secret carelessly exposed.
@@ -7945,100 +7145,10 @@ EndFunction
 ; this guard keeps the spell from biting outside those postures even past the grace window.
 
 
-Function SyncImperialRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
 
-    Bool isImperial = GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
-    SyncImperialAncestorSubstrate(playerRef, isImperial)
-    ; The Divine reward SPELs below are REUSED by the Nord baseline lanes
-    ; (SyncNordRewardFamily: Mara/Arkay/Dibella + the whole Nine Divines set, owner ruling
-    ; 2026-06-27). SyncNordRewards runs BEFORE this in SyncFirstTierRaceRewardRuntime and
-    ; grants the Nord patron's spell; running the Imperial family here on a non-Imperial save
-    ; (isActive is false because origin != Imperial) would REMOVE that just-granted spell in
-    ; the same pass -- which is why Nord reused-spell rewards never reached Active Effects.
-    ; Only the player's own race lane should manage these records; skip entirely when not
-    ; Imperial. SyncNordRewards runs unconditionally and already owns both grant and cleanup
-    ; for these spells on every non-Imperial save (Civic_T2 above is Imperial-only, so it
-    ; stays before this guard to keep self-clearing).
-    if !isImperial
-        return
-    endIf
 
-    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Akatosh, PDV_Bless_Imperial_Akatosh_T1, PDV_Bless_Imperial_Akatosh_T2, PDV_Bless_Imperial_Akatosh_T3, "Akatosh")
-    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Mara, PDV_Bless_Imperial_Mara_T1, PDV_Bless_Imperial_Mara_T2, PDV_Bless_Imperial_Mara_T3, "Mara")
-    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Arkay, PDV_Bless_Imperial_Arkay_T1, PDV_Bless_Imperial_Arkay_T2, PDV_Bless_Imperial_Arkay_T3, "Arkay")
-    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Stendarr, PDV_Bless_Imperial_Stendarr_T1, PDV_Bless_Imperial_Stendarr_T2, PDV_Bless_Imperial_Stendarr_T3, "Stendarr")
-    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Zenithar, PDV_Bless_Imperial_Zenithar_T1, PDV_Bless_Imperial_Zenithar_T2, PDV_Bless_Imperial_Zenithar_T3, "Zenithar")
-    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Dibella, PDV_Bless_Imperial_Dibella_T1, PDV_Bless_Imperial_Dibella_T2, PDV_Bless_Imperial_Dibella_T3, "Dibella")
-    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Julianos, PDV_Bless_Imperial_Julianos_T1, PDV_Bless_Imperial_Julianos_T2, PDV_Bless_Imperial_Julianos_T3, "Julianos")
-    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Kynareth, PDV_Bless_Imperial_Kynareth_T1, PDV_Bless_Imperial_Kynareth_T2, PDV_Bless_Imperial_Kynareth_T3, "Kynareth")
-    SyncImperialRewardFamily(playerRef, PDV_Talos, PDV_Bless_Imperial_Talos_T1, PDV_Bless_Imperial_Talos_T2, PDV_Bless_Imperial_Talos_T3, "Talos")
-EndFunction
 
-Function SyncImperialAncestorSubstrate(Actor playerRef, Bool isImperial)
-    if !playerRef || !PDV_ImperialAncestorSubstrate
-        return
-    endIf
 
-    if isImperial
-        PDV_ImperialAncestorSubstrate.RecomputeSubstrateTier()
-    else
-        PDV_ImperialAncestorSubstrate.ClearSubstrateBoons()
-    endIf
-EndFunction
-
-Function SyncImperialRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
-    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity == deity && !IsImperialVampireStateActive()
-    Float activePiety = 0.0
-    if isActive && deity
-        activePiety = LedgerRuntime.GetPiety(deity)
-    endIf
-    Bool hadChampionSpell = LedgerRuntime.HasRewardSpell(playerRef, t3)
-    Bool wantsChampionSpell = isActive && activePiety >= 85.0
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, False, "Imperial " + label + " T1 compatibility")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activePiety >= 50.0 && activePiety < 85.0, "Imperial " + label + " T2")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Imperial " + label + " T3")
-    LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Imperial " + label)
-EndFunction
-
-Bool Function IsImperialCivicNeglected()
-    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
-        return False
-    endIf
-
-    if !PDV_ImperialAncestorSubstrate || PDV_ImperialAncestorSubstrate.GetMetric() <= 0.0
-        return False
-    endIf
-
-    Float lastSource = PDV_ImperialAncestorSubstrate.GetLastAcceptedTime()
-    if lastSource <= 0.0
-        return False
-    endIf
-
-    return (Utility.GetCurrentGameTime() - lastSource) > 3.0
-EndFunction
-
-Function SyncImperialNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !PDV_SPEL_Neglect_Imperial
-        StorageUtil.SetIntValue(None, "PDV.Neglect.ImperialSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        if !playerRef.HasSpell(PDV_SPEL_Neglect_Imperial)
-            playerRef.AddSpell(PDV_SPEL_Neglect_Imperial, False)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.ImperialSpellActive", 1)
-    else
-        if playerRef.HasSpell(PDV_SPEL_Neglect_Imperial)
-            playerRef.RemoveSpell(PDV_SPEL_Neglect_Imperial)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.ImperialSpellActive", 0)
-    endIf
-EndFunction
 
 
 ; Broad-worship floor eligibility: the origin's first-tier reward also grants to a BROAD
@@ -8564,51 +7674,8 @@ EndFunction
 
 
 
-Function ApplyConcordatPressure(Int adjustment, String reason)
-    if !PDV_ConcordatStandingTrack
-        Trace(1, "ApplyConcordatPressure skipped: track missing.")
-        return
-    endIf
-    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
-        Trace(2, "ApplyConcordatPressure ignored for non-Imperial origin.")
-        return
-    endIf
 
-    PDV_ConcordatStandingTrack.Adjust(adjustment, reason)
-    Trace(2, "Concordat pressure " + adjustment + " -> " + PDV_ConcordatStandingTrack.GetValue())
-EndFunction
 
-Function ApplyImperialConcordatAction(String actionKey, String reason)
-    Int adjustment = GetImperialConcordatPressureForAction(actionKey)
-    if adjustment == 0
-        Trace(1, "ApplyImperialConcordatAction skipped: unknown action " + actionKey)
-        return
-    endIf
-
-    ApplyConcordatPressure(adjustment, reason)
-EndFunction
-
-Int Function GetImperialConcordatPressureForAction(String actionKey)
-    if actionKey == "hidden_talos_shrine"
-        return -15
-    elseIf actionKey == "help_talos_worshipper_escape"
-        return -15
-    elseIf actionKey == "kill_thalmor_justiciar_unprovoked"
-        return -10
-    elseIf actionKey == "side_with_stormcloaks"
-        return -20
-    elseIf actionKey == "refuse_report_talos_worshipper"
-        return -5
-    elseIf actionKey == "public_observe_talos_ban"
-        return 5
-    elseIf actionKey == "report_talos_worshipper"
-        return 15
-    elseIf actionKey == "attack_talos_worshipper"
-        return 15
-    endIf
-
-    return 0
-EndFunction
 
 Bool Function HandleTalosBetrayal(Int severity, String sourceReason)
     if !PDV_Talos
@@ -8673,7 +7740,7 @@ Bool Function HandleTalosBetrayal(Int severity, String sourceReason)
 
     LedgerRuntime.AwardPiety(PDV_Talos, pietyLoss, reason)
     if originRace == ORIGIN_IMPERIAL
-        ApplyConcordatPressure(concordatPressure, reason)
+        OriginRuntime.ApplyConcordatPressure(concordatPressure, reason)
     endIf
 
     SendPrismaEventToast("creed", PDV_Talos, surfaceText, "", "")
@@ -8884,11 +7951,11 @@ EndFunction
 String Function DebugTriggerSubstratePacingSource(Int originValue, Int sourceIndex = 0)
     if originValue == ORIGIN_IMPERIAL
         if sourceIndex == 0
-            HandleImperialCivicService("mcm_debug_public_service")
+            OriginRuntime.HandleImperialCivicService("mcm_debug_public_service")
         elseIf sourceIndex == 1
             LedgerRuntime.HandleSubstrateShrinePrayer("Mara", "", "", "mcm_debug_divine_prayer")
         else
-            HandleImperialSleepEvents(Game.GetPlayer(), "mcm_debug_rejected_sleep")
+            OriginRuntime.HandleImperialSleepEvents(Game.GetPlayer(), "mcm_debug_rejected_sleep")
             if PDV_ImperialAncestorSubstrate
                 PDV_ImperialAncestorSubstrate.RecordDailyCreditReject("imperial_sleep", "mcm_debug_rejected_sleep", "retired_route")
             endIf
@@ -9559,29 +8626,6 @@ EndFunction
 
 
 
-Message Function GetImperialFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    if deity == LedgerRuntime.PDV_Akatosh
-        return PDV_Msg_Imperial_Akatosh_Offer
-    elseIf deity == PDV_Talos && IsImperialTalosOfferAllowed()
-        return PDV_Msg_Imperial_Talos_Offer
-    elseIf deity == LedgerRuntime.PDV_Kynareth
-        return PDV_Msg_Imperial_Kynareth_Offer
-    elseIf deity == LedgerRuntime.PDV_Mara
-        return PDV_Msg_Imperial_Mara_Offer
-    elseIf deity == LedgerRuntime.PDV_Zenithar
-        return PDV_Msg_Imperial_Zenithar_Offer
-    elseIf deity == LedgerRuntime.PDV_Arkay
-        return PDV_Msg_Imperial_Arkay_Offer
-    elseIf deity == LedgerRuntime.PDV_Stendarr
-        return PDV_Msg_Imperial_Stendarr_Offer
-    elseIf deity == LedgerRuntime.PDV_Julianos
-        return PDV_Msg_Imperial_Julianos_Offer
-    elseIf deity == LedgerRuntime.PDV_Dibella
-        return PDV_Msg_Imperial_Dibella_Offer
-    endIf
-
-    return None
-EndFunction
 
 
 Function DebugAcceptPendingCommitment()
@@ -9658,41 +8702,8 @@ Bool Function IsBretonHiddenArtDaedricOfferDeity(PDV_DeityBase deity)
     return pathName == "Hermaeus Mora" || pathName == "Hircine" || pathName == "Namira" || pathName == "Nocturnal"
 EndFunction
 
-Bool Function IsImperialOfferEligibleDeity(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
 
-    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
-        return False
-    endIf
 
-    if deity == PDV_Talos
-        return IsImperialTalosOfferAllowed()
-    endIf
-
-    return deity == LedgerRuntime.PDV_Akatosh || deity == LedgerRuntime.PDV_Mara || deity == LedgerRuntime.PDV_Arkay || deity == LedgerRuntime.PDV_Stendarr || deity == LedgerRuntime.PDV_Zenithar || deity == LedgerRuntime.PDV_Dibella || deity == LedgerRuntime.PDV_Julianos || deity == LedgerRuntime.PDV_Kynareth
-EndFunction
-
-Bool Function IsImperialTalosOfferAllowed()
-    if !PDV_ConcordatStandingTrack
-        return False
-    endIf
-
-    return PDV_ConcordatStandingTrack.GetValue() <= 50
-EndFunction
-
-Bool Function ShouldSuppressImperialTalosTierSurface(PDV_DeityBase deity)
-    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
-        return False
-    endIf
-
-    if deity != PDV_Talos
-        return False
-    endIf
-
-    return !IsImperialTalosOfferAllowed()
-EndFunction
 
 
 
@@ -10812,31 +9823,6 @@ EndFunction
 
 ; Imperial vampire rupture: the Nine Divines path HALTS while undead (no civic piety
 ; accrues) and leaves a one-way history scar; cure lifts the halt but the scar remains.
-Function ApplyImperialCurseHandlers(Int oldState, Int newState, String reason)
-    if newState == 2
-        StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHalt", 1)
-        StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHistory", 1)
-        if PDV_ImperialAncestorSubstrate
-            PDV_ImperialAncestorSubstrate.SetMetric(0.0, "vampire_onset")
-            PDV_ImperialAncestorSubstrate.ClearSubstrateBoons()
-        endIf
-        StorageUtil.SetFloatValue(None, LedgerRuntime.GetBroadPantheonScratchKey(LedgerRuntime.BROAD_PANTHEON_IMPERIAL), 0.0)
-        FavorRuntime.ClearActiveFavor("imperial_vampire")
-    elseIf newState == 1
-        ; Werewolf strains but does not halt the civic path the way undeath does.
-        StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHalt", 0)
-    elseIf oldState == 2 && newState == 0
-        ; Cured: the halt lifts, but VampireHistory stays set as the scar.
-        StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHalt", 0)
-        if PDV_ImperialAncestorSubstrate
-            PDV_ImperialAncestorSubstrate.SetMetric(20.0, "vampire_cure_seed")
-        endIf
-    else
-        StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHalt", 0)
-    endIf
-    LedgerRuntime.SyncBroadPantheonRewards(Game.GetPlayer())
-    SyncImperialRewards(Game.GetPlayer())
-EndFunction
 
 ; While an Imperial bears the vampire halt, the Nine Divines path stops growing:
 ; positive civic piety accrues at 0x. Losses still apply; the scar persists post-cure.
@@ -10852,21 +9838,6 @@ Float Function GetImperialCurseGainMultiplier(PDV_DeityBase deity)
     return 1.0
 EndFunction
 
-Function ApplyOrcCurseHandlers(Int oldState, Int newState, String reason)
-    if newState == 2
-        StorageUtil.SetIntValue(None, "PDV.Curse.Orc.CodePressure", 2)
-        StorageUtil.SetIntValue(None, "PDV.Curse.Orc.VampireScar", 1)
-    elseIf newState == 1
-        StorageUtil.SetIntValue(None, "PDV.Curse.Orc.CodePressure", 1)
-        if !_suppressCurseTransitionOutputs
-            EmitMalacathCurseCodeRuptureMinus("werewolf_onset_" + reason)
-        endIf
-    elseIf oldState != 0
-        StorageUtil.SetIntValue(None, "PDV.Curse.Orc.CodePressure", 0)
-    else
-        StorageUtil.SetIntValue(None, "PDV.Curse.Orc.CodePressure", 0)
-    endIf
-EndFunction
 
 
 
@@ -10880,36 +9851,7 @@ EndFunction
 ; The fallback path is the reason every Altmer notification property has to be bound: a None
 ; record does not fail, it silently downgrades to a Prisma toast with no title.
 
-Function ShowOrcNotification(Message messageRecord, String fallbackText)
-    if !NotificationsEnabled()
-        return
-    endIf
 
-    if messageRecord
-        messageRecord.Show()
-        return
-    endIf
-
-    SendPrismaToast("malacath", "neutral", "", fallbackText)
-EndFunction
-
-Function ShowOrcMessage(Message messageRecord, String fallbackText, Bool suppressModal)
-    if _suppressCurseTransitionOutputs
-        return
-    endIf
-
-    if suppressModal
-        SendPrismaToast("malacath", "warning", "", fallbackText)
-        return
-    endIf
-
-    if messageRecord
-        messageRecord.Show()
-        return
-    endIf
-
-    Debug.MessageBox(fallbackText)
-EndFunction
 
 
 
@@ -11100,7 +10042,7 @@ Function ApplyStartupChoice(Int originRace, Int optionValue, String reason)
     elseIf originRace == ORIGIN_REDGUARD
         OriginRuntime.ApplyRedguardInitialChoice(optionValue, reason)
     elseIf originRace == ORIGIN_ORC
-        ApplyOrcInitialChoice(optionValue, reason)
+        OriginRuntime.ApplyOrcInitialChoice(optionValue, reason)
     elseIf originRace == ORIGIN_NORD
         OriginRuntime.ApplyNordInitialChoice(optionValue, reason)
     endIf
@@ -11115,23 +10057,6 @@ EndFunction
 
 
 
-Function ApplyOrcInitialChoice(Int modeValue, String reason)
-    BeginRaceSetupQuietPresentation(reason)
-    if PDV_OrcLifeModeTrack
-        PDV_OrcLifeModeTrack.SetState(PDV_DevotionRules.ClampInt(modeValue, ORC_LIFE_MODE_CITY, ORC_LIFE_MODE_LEGION_EXILE), reason)
-        AppendBookOfDaysEntry(BuildStartupRoadJournalLine(GetOrcLifeModeLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", "malacath", True, 3, "", True)
-    endIf
-    ; Malacath is the single innate Orc spine (not chosen, not offered) -- activate him as the
-    ; patron at origin so the life-mode reward ladder (gated on _activeDeity==PDV_Malacath) is
-    ; reachable in normal play; without this the whole Malacath progression was a dead no-op.
-    ; Owner ruling 2026-06-27.
-    if PDV_Malacath
-        LedgerRuntime.SetActiveDeity(PDV_Malacath)
-    endIf
-    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-    RequestPanelRefresh()
-    EndRaceSetupQuietPresentation()
-EndFunction
 
 
 
@@ -11187,206 +10112,14 @@ EndFunction
 
 
 
-Int Function GetImperialCivicFamilyFromSource(String sourceId)
-    if PDV_DevotionRules.StringContainsToken(sourceId, "public_service") || PDV_DevotionRules.StringContainsToken(sourceId, "public-service") || PDV_DevotionRules.StringContainsToken(sourceId, "civic_public")
-        return IMPERIAL_CIVIC_PUBLIC_SERVICE
-    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "mercy")
-        return IMPERIAL_CIVIC_MERCY
-    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "lawful_order") || PDV_DevotionRules.StringContainsToken(sourceId, "lawful-order") || PDV_DevotionRules.StringContainsToken(sourceId, "law")
-        return IMPERIAL_CIVIC_LAWFUL_ORDER
-    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "honest_work") || PDV_DevotionRules.StringContainsToken(sourceId, "honest-work") || PDV_DevotionRules.StringContainsToken(sourceId, "work")
-        return IMPERIAL_CIVIC_HONEST_WORK
-    elseIf PDV_DevotionRules.StringContainsToken(sourceId, "death_duty") || PDV_DevotionRules.StringContainsToken(sourceId, "death-duty") || PDV_DevotionRules.StringContainsToken(sourceId, "arkay")
-        return IMPERIAL_CIVIC_DEATH_DUTY
-    endIf
 
-    return IMPERIAL_CIVIC_UNKNOWN
-EndFunction
 
-String Function GetImperialCivicFamilyLabel(Int familyId)
-    if familyId == IMPERIAL_CIVIC_PUBLIC_SERVICE
-        return "public_service"
-    elseIf familyId == IMPERIAL_CIVIC_MERCY
-        return "mercy"
-    elseIf familyId == IMPERIAL_CIVIC_LAWFUL_ORDER
-        return "lawful_order"
-    elseIf familyId == IMPERIAL_CIVIC_HONEST_WORK
-        return "honest_work"
-    elseIf familyId == IMPERIAL_CIVIC_DEATH_DUTY
-        return "death_duty"
-    endIf
 
-    return "unknown"
-EndFunction
 
-Function AwardImperialCivicFamilySignal(Int familyId, Float multiplier)
-    if familyId == IMPERIAL_CIVIC_PUBLIC_SERVICE
-        if LedgerRuntime.PDV_Akatosh
-            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Akatosh, LedgerRuntime.PDV_Akatosh.SIGNAL_CIVIC_SERVICE, None, multiplier)
-        endIf
-    elseIf familyId == IMPERIAL_CIVIC_MERCY
-        if LedgerRuntime.PDV_Mara
-            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Mara, LedgerRuntime.PDV_Mara.SIGNAL_MERCY, None, multiplier)
-        endIf
-    elseIf familyId == IMPERIAL_CIVIC_LAWFUL_ORDER
-        if LedgerRuntime.PDV_Stendarr
-            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Stendarr, LedgerRuntime.PDV_Stendarr.SIGNAL_LAWFUL_ORDER, None, multiplier)
-        endIf
-    elseIf familyId == IMPERIAL_CIVIC_HONEST_WORK
-        if LedgerRuntime.PDV_Zenithar
-            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Zenithar, LedgerRuntime.PDV_Zenithar.SIGNAL_HONEST_WORK, None, multiplier)
-        endIf
-    elseIf familyId == IMPERIAL_CIVIC_DEATH_DUTY
-        if LedgerRuntime.PDV_Arkay
-            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Arkay, LedgerRuntime.PDV_Arkay.SIGNAL_DEATH_DUTY, None, multiplier)
-        endIf
-    endIf
-EndFunction
 
-Function AwardImperialPatronCivicSignal(Float multiplier)
-    if !_activeDeity
-        return
-    endIf
 
-    if _activeDeity == LedgerRuntime.PDV_Akatosh && LedgerRuntime.PDV_Akatosh
-        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Akatosh, LedgerRuntime.PDV_Akatosh.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    elseIf _activeDeity == LedgerRuntime.PDV_Mara && LedgerRuntime.PDV_Mara
-        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Mara, LedgerRuntime.PDV_Mara.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    elseIf _activeDeity == LedgerRuntime.PDV_Arkay && LedgerRuntime.PDV_Arkay
-        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Arkay, LedgerRuntime.PDV_Arkay.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    elseIf _activeDeity == LedgerRuntime.PDV_Stendarr && LedgerRuntime.PDV_Stendarr
-        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Stendarr, LedgerRuntime.PDV_Stendarr.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    elseIf _activeDeity == LedgerRuntime.PDV_Zenithar && LedgerRuntime.PDV_Zenithar
-        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Zenithar, LedgerRuntime.PDV_Zenithar.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    elseIf _activeDeity == LedgerRuntime.PDV_Dibella && LedgerRuntime.PDV_Dibella
-        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Dibella, LedgerRuntime.PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    elseIf _activeDeity == LedgerRuntime.PDV_Julianos && LedgerRuntime.PDV_Julianos
-        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Julianos, LedgerRuntime.PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    elseIf _activeDeity == LedgerRuntime.PDV_Kynareth && LedgerRuntime.PDV_Kynareth
-        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Kynareth, LedgerRuntime.PDV_Kynareth.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    endIf
-EndFunction
 
-Function AwardImperialAncestorSpinePulse(Float multiplier, String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL || multiplier <= 0.0 || IsImperialVampireStateActive()
-        return
-    endIf
 
-    Int tierBefore = 0
-    if PDV_ImperialAncestorSubstrate
-        Float metricBefore = PDV_ImperialAncestorSubstrate.GetMetric()
-        tierBefore = PDV_ImperialAncestorSubstrate.GetSubstrateTier()
-        PDV_ImperialAncestorSubstrate.RecordCivicStandingScaled(multiplier, reason)
-        Int tierAfter = PDV_ImperialAncestorSubstrate.GetSubstrateTier()
-        SendPrismaSubstrateProgress("imperial-civic", tierBefore, tierAfter, PDV_ImperialAncestorSubstrate.GetMetric() - metricBefore, "Your public service steadies your devotion.", "journal", GetImperialCivicTierName())
-    endIf
-
-    StorageUtil.AdjustFloatValue(None, "PDV.Imperial.AncestralStanding", multiplier)
-    StorageUtil.AdjustIntValue(None, "PDV.Imperial.AncestorSpineSourceCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Imperial.LastAncestorSpineReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Imperial.LastAncestorSpineTime", Utility.GetCurrentGameTime())
-    Trace(2, "Imperial ancestor spine routed with multiplier " + multiplier)
-EndFunction
-
-Function RunDawnRefreshImperialAncestor()
-    if !PDV_ImperialAncestorSubstrate
-        return
-    endIf
-
-    PDV_ImperialAncestorSubstrate.ProcessCivicDawn(IsImperialVampireStateActive(), "dawn")
-EndFunction
-
-Function HandleImperialCivicService(String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
-        Trace(2, "Imperial civic service ignored for non-Imperial origin.")
-        return
-    endIf
-    if IsImperialVampireStateActive()
-        Trace(2, "Imperial civic service blocked by vampirism: " + reason)
-        return
-    endIf
-
-    Int civicFamily = GetImperialCivicFamilyFromSource(reason)
-    if civicFamily == IMPERIAL_CIVIC_UNKNOWN
-        Trace(1, "Imperial civic service ignored: missing civic family token in " + reason)
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ImperialCivicService." + GetImperialCivicFamilyLabel(civicFamily))
-    if multiplier <= 0.0
-        return
-    endIf
-
-    ; Legacy CivicServiceCount is frozen after broad-pool migration.
-    StorageUtil.SetStringValue(None, "PDV.Imperial.LastCivicServiceReason", reason)
-    StorageUtil.SetStringValue(None, "PDV.Imperial.LastCivicFamily", GetImperialCivicFamilyLabel(civicFamily))
-    StorageUtil.SetFloatValue(None, "PDV.Imperial.LastCivicServiceTime", Utility.GetCurrentGameTime())
-    AwardImperialCivicFamilySignal(civicFamily, multiplier)
-    AwardImperialAncestorSpinePulse(multiplier, reason)
-    Trace(2, "Imperial civic service routed: " + reason + " family " + GetImperialCivicFamilyLabel(civicFamily))
-EndFunction
-
-Function HandleImperialTalosPressure(Bool isPrivate, String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
-        Trace(2, "Imperial Talos pressure ignored for non-Imperial origin.")
-        return
-    endIf
-    if IsImperialVampireStateActive()
-        Trace(2, "Imperial Talos pressure blocked by vampirism: " + reason)
-        return
-    endIf
-
-    String repeatKey = "PDV.Signal.ImperialPublicTalosPressure"
-    if isPrivate
-        repeatKey = "PDV.Signal.ImperialPrivateTalosPressure"
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier(repeatKey)
-    if multiplier <= 0.0
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Imperial.TalosBroadUnlocked", 1)
-
-    if isPrivate
-        StorageUtil.SetIntValue(None, "PDV.Imperial.PrivateTalosPressureCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PrivateTalosPressureCount") + 1)
-        if PDV_Talos
-            LedgerRuntime.AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
-        endIf
-    else
-        StorageUtil.SetIntValue(None, "PDV.Imperial.PublicTalosPressureCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PublicTalosPressureCount") + 1)
-        if PDV_Talos
-            LedgerRuntime.AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_DEFIANCE_MILESTONE, None, multiplier)
-        endIf
-    endIf
-
-    StorageUtil.SetStringValue(None, "PDV.Imperial.LastTalosPressureReason", reason)
-    AwardImperialAncestorSpinePulse(multiplier, reason)
-    SurfaceP2BookReadNotice(reason, "The name of Talos", "The question of the Ninth presses harder.")
-    Trace(2, "Imperial Talos pressure routed: " + reason)
-EndFunction
-
-Function HandleImperialPatronCivicFavor(String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
-        Trace(2, "Imperial patron civic favor ignored for non-Imperial origin.")
-        return
-    endIf
-    if IsImperialVampireStateActive()
-        Trace(2, "Imperial patron civic favor blocked by vampirism: " + reason)
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ImperialPatronCivicFavor")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Imperial.PatronCivicFavorCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PatronCivicFavorCount") + 1)
-    StorageUtil.SetStringValue(None, "PDV.Imperial.LastPatronCivicFavorReason", reason)
-    AwardImperialPatronCivicSignal(multiplier)
-    AwardImperialAncestorSpinePulse(multiplier, reason)
-    Trace(2, "Imperial patron civic favor routed: " + reason)
-EndFunction
 
 
 
@@ -11733,11 +10466,11 @@ String Function GetBookOfDaysPathStatusLabel(Int originRace)
     elseIf originRace == ORIGIN_ARGONIAN
         return "Hist " + OriginRuntime.GetArgonianHistPostureLabel()
     elseIf originRace == ORIGIN_ORC
-        return GetOrcLifeModeLabel()
+        return OriginRuntime.GetOrcLifeModeLabel()
     elseIf originRace == ORIGIN_REDGUARD
         return OriginRuntime.GetRedguardSectLabel()
     elseIf originRace == ORIGIN_IMPERIAL
-        return GetImperialConcordatLabel()
+        return OriginRuntime.GetImperialConcordatLabel()
     elseIf originRace == ORIGIN_DUNMER
         Int reclamationFocus = StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocus", -1)
         if reclamationFocus >= 0
@@ -12282,7 +11015,7 @@ String Function GetMedallionSectionsJson(Int originRace)
     if originRace == ORIGIN_NORD
         return MedallionSection("native", "Native worship", OriginRuntime.GetNordMedallionEntriesJson())
     elseIf originRace == ORIGIN_IMPERIAL
-        return MedallionSection("native", "Native worship", GetImperialMedallionEntriesJson())
+        return MedallionSection("native", "Native worship", OriginRuntime.GetImperialMedallionEntriesJson())
     elseIf originRace == ORIGIN_BRETON
         return MedallionSection("native", "Native worship", OriginRuntime.GetBretonMedallionEntriesJson())
     elseIf originRace == ORIGIN_ALTMER
@@ -12296,7 +11029,7 @@ String Function GetMedallionSectionsJson(Int originRace)
     elseIf originRace == ORIGIN_ARGONIAN
         return MedallionSection("native", "Native worship", OriginRuntime.GetArgonianMedallionEntriesJson())
     elseIf originRace == ORIGIN_ORC
-        return MedallionSection("native", "Native worship", GetOrcMedallionEntriesJson())
+        return MedallionSection("native", "Native worship", OriginRuntime.GetOrcMedallionEntriesJson())
     elseIf originRace == ORIGIN_REDGUARD
         return MedallionSection("native", "Native worship", OriginRuntime.GetRedguardMedallionEntriesJson())
     endIf
@@ -12305,17 +11038,6 @@ String Function GetMedallionSectionsJson(Int originRace)
 EndFunction
 
 
-String Function GetImperialMedallionEntriesJson()
-    String entries = RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", LedgerRuntime.PDV_Kynareth, "Road, wind, and natural order.")
-    entries = entries + "," + RosterMedallionEntry("mara", "Mara", "god", "mara", LedgerRuntime.PDV_Mara, "Love, family, and mercy.")
-    entries = entries + "," + RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", LedgerRuntime.PDV_Akatosh, "Time, covenant, and empire.")
-    entries = entries + "," + RosterMedallionEntry("arkay", "Arkay", "god", "arkay", LedgerRuntime.PDV_Arkay, "Life, death, and lawful burial.")
-    entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", LedgerRuntime.PDV_Stendarr, "Mercy, protection, and civic virtue.")
-    entries = entries + "," + RosterMedallionEntry("julianos", "Julianos", "god", "julianos", LedgerRuntime.PDV_Julianos, "Law, learning, and reason.")
-    entries = entries + "," + RosterMedallionEntry("dibella", "Dibella", "god", "dibella", LedgerRuntime.PDV_Dibella, "Art, beauty, and human grace.")
-    entries = entries + "," + RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", LedgerRuntime.PDV_Zenithar, "Work, trade, and prosperity.")
-    return entries
-EndFunction
 
 
 
@@ -12324,9 +11046,6 @@ EndFunction
 
 
 
-String Function GetOrcMedallionEntriesJson()
-    return RosterMedallionEntry("malacath", "Malacath", "prince", "malacath", PDV_Malacath, "Oath, code, exile, and vengeance.")
-EndFunction
 
 
 String Function MedallionSection(String sectionId, String titleText, String entriesJson)
@@ -12679,11 +11398,11 @@ String Function GetSurveyDevotionText()
         elseIf originRace == ORIGIN_ARGONIAN
             return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetArgonianSurveyText())
         elseIf originRace == ORIGIN_ORC
-            return LedgerRuntime.AppendRecentDevotionEvents(GetOrcSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetOrcSurveyText())
         elseIf originRace == ORIGIN_REDGUARD
             return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetRedguardSurveyText())
         elseIf originRace == ORIGIN_IMPERIAL
-            return LedgerRuntime.AppendRecentDevotionEvents(GetImperialSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetImperialSurveyText())
         elseIf originRace == ORIGIN_DUNMER
             return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetDunmerSurveyText())
         endIf
@@ -12726,11 +11445,11 @@ String Function GetPlayerMcmSummaryLine()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN
         return "Argonian | " + OriginRuntime.GetArgonianHistPostureLabel() + " | " + GetCurrentStandingLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_ORC
-        return "Orc | " + GetOrcLifeModeLabel() + " | " + GetCurrentStandingLabel()
+        return "Orc | " + OriginRuntime.GetOrcLifeModeLabel() + " | " + GetCurrentStandingLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
         return "Redguard | " + OriginRuntime.GetRedguardSectLabel() + " | " + GetCurrentStandingLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
-        return "Imperial | " + GetImperialConcordatLabel() + " | " + GetCurrentStandingLabel()
+        return "Imperial | " + OriginRuntime.GetImperialConcordatLabel() + " | " + GetCurrentStandingLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_BRETON
         return "Breton | " + OriginRuntime.GetBretonTraditionLabel() + " | " + GetCurrentStandingLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
@@ -12775,11 +11494,11 @@ String Function GetPlayerMcmModeLine()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN
         return "Hist " + OriginRuntime.GetArgonianHistPostureLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_ORC
-        return GetOrcLifeModeLabel()
+        return OriginRuntime.GetOrcLifeModeLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
         return OriginRuntime.GetRedguardSectLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
-        return GetImperialConcordatLabel()
+        return OriginRuntime.GetImperialConcordatLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_BRETON
         return OriginRuntime.GetBretonTraditionLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
@@ -12930,35 +11649,6 @@ EndFunction
 
 
 
-String Function GetOrcSurveyText()
-    if !PDV_OrcLifeModeTrack
-        return "Malacath watches, but the shape of your life has not settled yet. Carry the code a while, then survey again."
-    endIf
-
-    EnsureOrcLifeModeInitialized()
-    String band = GetCurrentStandingBand()
-    Int mode = PDV_OrcLifeModeTrack.GetCurrentState()
-    String text = ""
-    if mode == ORC_LIFE_MODE_STRONGHOLD
-        text = "You carry Malacath's code inside the stronghold, where forge, kin, and oath hold it with you. Standing: " + band + "."
-    elseIf mode == ORC_LIFE_MODE_LEGION_EXILE
-        text = "You carry Malacath's code under foreign discipline. The contract is the oath; the endurance is the strength. Standing: " + band + "."
-    else
-        text = "You carry Malacath's code in the city, alone, with no stronghold to confirm it. Standing: " + band + ". Malacath watches what no one else does."
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.Orc.MalacathSourceCount") > 0
-        text = text + " You have sought out the old tellings of Malacath, and kept them."
-    endIf
-    Int cursePressure = StorageUtil.GetIntValue(None, "PDV.Curse.Orc.CodePressure")
-    if cursePressure == 2
-        text = text + " The thirst sets you outside the test until it is cured."
-    elseIf cursePressure == 1
-        text = text + " The beast in you is being weighed against the code, not turned away from."
-    endIf
-
-    return text
-EndFunction
 
 
 
@@ -12975,125 +11665,25 @@ EndFunction
 
 
 
-String Function GetImperialSurveyText()
-    String band = GetCurrentStandingBand()
-    String concordat = GetImperialConcordatLabel()
-    String text = ""
-    if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity
-        text = GetPublicDeityDisplayName(_activeDeity) + " holds your focus among the Nine. Standing: " + band + ". " + BuildImperialConcordatSurveySentence(concordat)
-        if IsFocusedPantheonBoonSuspended()
-            text = text + " The commitment remains, but its boon is suspended until 50 piety."
-        endIf
-    else
-        text = "You worship the Nine Divines broadly, and your standing is " + band + ". " + BuildImperialConcordatSurveySentence(concordat)
-    endIf
-    if StorageUtil.GetIntValue(None, "PDV.Imperial.PrivateTalosPressureCount") > 0
-        text = text + " You have kept Talos at hidden shrines, away from watching eyes."
-    endIf
-    if StorageUtil.GetIntValue(None, "PDV.Imperial.PublicTalosPressureCount") > 0
-        text = text + " You have honored Talos in the open, where the Concordat forbids it."
-    endIf
-    if StorageUtil.GetIntValue(None, "PDV.Imperial.PatronCivicFavorCount") > 0
-        text = text + " Your patron has taken note of the civic good you have done in their name."
-    endIf
-    if PDV_ImperialAncestorSubstrate
-        text = text + " Civic practice: " + GetImperialCivicTierName() + "."
-    endIf
 
-    if PDV_ConcordatStandingTrack && PDV_ConcordatStandingTrack.HasExtremeResetGate()
-        text = text + " You have drifted far enough on the Talos question that a deliberate change of course could now bring you back."
-    endIf
 
-    if StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHalt") == 1 || (PDV_CurseStateService && PDV_CurseStateService.GetCurseState() == 2)
-        text = text + " Curse posture: the civic faith is halted while the undeath holds."
-    elseIf PDV_CurseStateService && PDV_CurseStateService.GetCurseState() == 1
-        text = text + " Curse posture: the civic faith runs strained while the beast is in you."
-    elseIf StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHistory") == 1
-        text = text + " Curse posture: the civic faith is whole again, but the community religion remembers the absence."
-    endIf
 
-    return text
-EndFunction
 
-String Function GetImperialConcordatLabel()
-    if PDV_ConcordatStandingTrack
-        return FormatImperialConcordatLabel(PDV_ConcordatStandingTrack.GetStateLabel())
-    endIf
 
-    return "Uncommitted"
-EndFunction
 
-String Function FormatImperialConcordatLabel(String label)
-    if label == "OpenDefiant"
-        return "Openly Defiant"
-    elseIf label == "PrivateDefiant"
-        return "Privately Defiant"
-    elseIf label == "PublicCompliant"
-        return "Publicly Compliant"
-    elseIf label == "ConcordatEnforcer"
-        return "Concordat Enforcer"
-    endIf
-
-    return label
-EndFunction
-
-String Function BuildImperialConcordatSurveySentence(String concordatLabel)
-    if concordatLabel == "Concordat Enforcer"
-        return "Under the Concordat, you are a Concordat Enforcer."
-    endIf
-
-    return "Under the Concordat, you are " + concordatLabel + "."
-EndFunction
-
-String Function GetImperialCivicLayerLabel()
-    if !PDV_ImperialAncestorSubstrate
-        return "quiet"
-    endIf
-
-    return PDV_ImperialAncestorSubstrate.GetCivicPostureLabel()
-EndFunction
-
-String Function GetImperialCivicTierName()
-    if !PDV_ImperialAncestorSubstrate
-        return "Civic practice quiet"
-    endIf
-    Int tierValue = PDV_ImperialAncestorSubstrate.GetSubstrateTier()
-    if tierValue >= LedgerRuntime.TIER_CHAMPION
-        return "Civic Exemplar"
-    elseIf tierValue >= LedgerRuntime.TIER_DEVOTED
-        return "Civic Discipline"
-    elseIf tierValue >= LedgerRuntime.TIER_SEEKER
-        return "Civic Steadiness"
-    endIf
-    return "Civic practice quiet"
-EndFunction
-
-String Function GetImperialCursePostureLabel()
-    if StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHalt") == 1
-        return "civic faith halted"
-    elseIf PDV_CurseStateService && PDV_CurseStateService.GetCurseState() == 2
-        return "civic faith halted"
-    elseIf PDV_CurseStateService && PDV_CurseStateService.GetCurseState() == 1
-        return "civic faith strained"
-    elseIf StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHistory") == 1
-        return "civic faith scarred"
-    endIf
-
-    return ""
-EndFunction
 
 
 
 
 
 String Function DebugGetPatternProvingSummary()
-    String summary = "Concordat=" + GetConcordatSummary()
+    String summary = "Concordat=" + OriginRuntime.GetConcordatSummary()
     summary = summary + "; Bosmer=" + OriginRuntime.GetBosmerSummary()
     summary = summary + "; DunmerAncestor=" + OriginRuntime.GetDunmerAncestorSummary()
     summary = summary + "; KhajiitLunar=" + OriginRuntime.GetKhajiitLunarSummary()
     summary = summary + "; ArgonianHist=" + OriginRuntime.GetArgonianHistSummary()
     summary = summary + "; Altmer=" + OriginRuntime.GetAltmerSummary()
-    summary = summary + "; Orc=" + GetOrcSummary()
+    summary = summary + "; Orc=" + OriginRuntime.GetOrcSummary()
     summary = summary + "; Redguard=" + OriginRuntime.GetRedguardSummary()
     summary = summary + "; Favor=" + FavorRuntime.GetContextualFavorSummary()
     summary = summary + "; Commitment=" + LedgerRuntime.GetCommitmentSummary()
@@ -13108,7 +11698,7 @@ EndFunction
 ; readout instead of dumping all 14 into a single overflowing message box.
 String Function DebugGetPatternSummarySection(Int sectionIndex)
     if sectionIndex == 0
-        return "Concordat: " + GetConcordatSummary()
+        return "Concordat: " + OriginRuntime.GetConcordatSummary()
     elseIf sectionIndex == 1
         return "Bosmer: " + OriginRuntime.GetBosmerSummary()
     elseIf sectionIndex == 2
@@ -13120,7 +11710,7 @@ String Function DebugGetPatternSummarySection(Int sectionIndex)
     elseIf sectionIndex == 5
         return "Altmer: " + OriginRuntime.GetAltmerSummary()
     elseIf sectionIndex == 6
-        return "Orc: " + GetOrcSummary()
+        return "Orc: " + OriginRuntime.GetOrcSummary()
     elseIf sectionIndex == 7
         return "Redguard: " + OriginRuntime.GetRedguardSummary()
     elseIf sectionIndex == 8
@@ -13167,18 +11757,6 @@ Int Function DebugGetPatternSummaryRaceSection(Int originRace)
     return -1
 EndFunction
 
-String Function GetConcordatSummary()
-    if !PDV_ConcordatStandingTrack
-        return "missing"
-    endIf
-
-    String gateState = "locked"
-    if PDV_ConcordatStandingTrack.HasExtremeResetGate()
-        gateState = "unlocked"
-    endIf
-
-    return "raw=" + PDV_ConcordatStandingTrack.GetValue() + ";state=" + PDV_ConcordatStandingTrack.GetStateLabel() + ";pending=" + PDV_ConcordatStandingTrack.GetPendingStateLabel() + ";gate=" + gateState + ";track=" + PDV_DevotionRules.FormatTwoDecimals(GetTalosTrackGainMultiplier()) + ";eff=" + PDV_DevotionRules.FormatTwoDecimals(GetTalosEffectiveGainMultiplier())
-EndFunction
 
 Int Function DebugGetConcordatRawValue()
     if !PDV_ConcordatStandingTrack
@@ -13240,13 +11818,6 @@ EndFunction
 
 
 
-String Function GetOrcSummary()
-    if !PDV_OrcLifeModeTrack
-        return "missing"
-    endIf
-
-    return "mode=" + GetOrcLifeModeLabel() + ";stronghold=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.Stronghold")) + ";city=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.City")) + ";legion=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.LegionExile")) + ";last=" + StorageUtil.GetStringValue(None, "PDV.Orc.LastLifeModeReason")
-EndFunction
 
 
 
@@ -14688,6 +13259,7 @@ EndFunction
 Function SetPdvCCFishingPresent(Bool value)
     _pdvCCFishingPresent = value
 EndFunction
+
 
 
 

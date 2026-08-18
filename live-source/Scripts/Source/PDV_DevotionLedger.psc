@@ -846,7 +846,7 @@ PDV_DeityBase Function GetShrinePrayerDeityByName(String deityName)
 EndFunction
 
 Function HandleShrinePrayer(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String shrineLabel, String sourceId)
-    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_IMPERIAL && !Manager.IsImperialVampireStateActive() && ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Talos")
+    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_IMPERIAL && !Manager.OriginRuntime.IsImperialVampireStateActive() && ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Talos")
         StorageUtil.SetIntValue(None, "PDV.Imperial.TalosBroadUnlocked", 1)
         Manager.Trace(1, "Imperial broad Talos roster unlocked by explicit prayer: " + sourceId)
     endIf
@@ -866,12 +866,12 @@ EndFunction
 
 Function HandleSubstrateShrinePrayer(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String sourceId)
     Int origin = Manager.GetPlayerOriginRaceIndex()
-    if origin == Manager.ORIGIN_IMPERIAL && Manager.PDV_ImperialAncestorSubstrate && !Manager.IsImperialVampireStateActive()
+    if origin == Manager.ORIGIN_IMPERIAL && Manager.PDV_ImperialAncestorSubstrate && !Manager.OriginRuntime.IsImperialVampireStateActive()
         PDV_DeityBase primary = GetShrinePrayerDeityByName(primaryDeityName)
         PDV_DeityBase secondary = GetShrinePrayerDeityByName(secondaryDeityName)
         PDV_DeityBase tertiary = GetShrinePrayerDeityByName(tertiaryDeityName)
         if IsDeityEligibleForBroadPantheon(primary, BROAD_PANTHEON_IMPERIAL) || IsDeityEligibleForBroadPantheon(secondary, BROAD_PANTHEON_IMPERIAL) || IsDeityEligibleForBroadPantheon(tertiary, BROAD_PANTHEON_IMPERIAL)
-            Manager.AwardImperialAncestorSpinePulse(1.0, "divine_prayer_" + sourceId)
+            Manager.OriginRuntime.AwardImperialAncestorSpinePulse(1.0, "divine_prayer_" + sourceId)
         endIf
     elseIf origin == Manager.ORIGIN_ALTMER && Manager.PDV_AltmerAncestorSubstrate && !Manager.OriginRuntime.IsAltmerFavorSuppressedByCurse()
         if GetShrinePrayerDeityByName(primaryDeityName) == Manager.PDV_AuriEl || GetShrinePrayerDeityByName(secondaryDeityName) == Manager.PDV_AuriEl || GetShrinePrayerDeityByName(tertiaryDeityName) == Manager.PDV_AuriEl
@@ -1097,7 +1097,7 @@ Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
         ; per-(deity,tier) guard prevents duplicate notices; the band in surfaceKey scopes
         ; the journal guard so Seeker/Devoted/Champion each log once, Champion pinned.
         if surfaceTierUp && newTier > oldTier
-            if Manager.ShouldSuppressImperialTalosTierSurface(deity)
+            if Manager.OriginRuntime.ShouldSuppressImperialTalosTierSurface(deity)
                 Manager.Trace(2, "Tier reach surface suppressed for Imperial Talos while Concordat blocks offers.")
             elseIf Manager.OriginRuntime.ShouldSuppressBretonFocusedChampionTierSurface(deity, newTier)
                 Manager.Trace(2, "Tier reach surface suppressed for Breton resonant Champion; tradition reward presentation owns it.")
@@ -2066,7 +2066,7 @@ Function RunDawnRefreshTrackStates()
     endIf
 
     if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_IMPERIAL
-        Manager.RunDawnRefreshImperialAncestor()
+        Manager.OriginRuntime.RunDawnRefreshImperialAncestor()
     endIf
 
     if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT
@@ -2092,9 +2092,9 @@ Function RunDawnRefreshTrackStates()
         Manager.OriginRuntime.RunDawnRefreshNordAncestor()
     endIf
 
-    if Manager.IsOrcOrigin()
-        Manager.EvaluateOrcLifeModeAtDawn()
-        Manager.SyncOrcTrialOfIron(Game.GetPlayer())
+    if Manager.OriginRuntime.IsOrcOrigin()
+        Manager.OriginRuntime.EvaluateOrcLifeModeAtDawn()
+        Manager.OriginRuntime.SyncOrcTrialOfIron(Game.GetPlayer())
     endIf
 
     if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_BRETON
@@ -2498,7 +2498,7 @@ String Function GetActiveBroadPantheonPoolId()
     endIf
     Int origin = Manager.GetPlayerOriginRaceIndex()
     if origin == Manager.ORIGIN_IMPERIAL
-        if Manager.IsImperialVampireStateActive()
+        if Manager.OriginRuntime.IsImperialVampireStateActive()
             return ""
         endIf
         return BROAD_PANTHEON_IMPERIAL
@@ -3587,8 +3587,8 @@ Function SyncFirstTierRaceRewardRuntime()
 
     ; Orc is state-enum gated: one life-mode focused family can be active at a time, all under
     ; Malacath as the single religious spine.
-    Manager.SyncOrcRewards(playerRef)
-    Manager.SyncOrcNeglectSpell(Manager.IsOrcCodeNeglected())
+    Manager.OriginRuntime.SyncOrcRewards(playerRef)
+    Manager.OriginRuntime.SyncOrcNeglectSpell(Manager.OriginRuntime.IsOrcCodeNeglected())
 
     ; Redguard is state-enum gated: the sect filters the Yokudan lane, then exactly one focused
     ; patron family can be active at a time.
@@ -3606,8 +3606,8 @@ Function SyncFirstTierRaceRewardRuntime()
 
     ; Imperial is an offer race: broad civic T1 remains on the existing first-tier path while the
     ; focused Divine/Talos families gate on the active patron's tier.
-    Manager.SyncImperialRewards(playerRef)
-    Manager.SyncImperialNeglectSpell(Manager.IsImperialCivicNeglected())
+    Manager.OriginRuntime.SyncImperialRewards(playerRef)
+    Manager.OriginRuntime.SyncImperialNeglectSpell(Manager.OriginRuntime.IsImperialCivicNeglected())
     SyncBroadPantheonRewards(playerRef)
 EndFunction
 
@@ -3911,7 +3911,7 @@ Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
     if originRace == Manager.ORIGIN_NORD
         return Manager.OriginRuntime.GetNordFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_IMPERIAL
-        return Manager.GetImperialFormalCommitmentOfferMessage(deity)
+        return Manager.OriginRuntime.GetImperialFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_DUNMER
         return Manager.OriginRuntime.GetDunmerFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_ALTMER
@@ -4017,7 +4017,7 @@ Bool Function UsesFormalCommitmentOffersForDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    return Manager.OriginRuntime.IsNordOfferEligibleDeity(deity) || Manager.IsImperialOfferEligibleDeity(deity) || Manager.OriginRuntime.IsDunmerOfferEligibleDeity(deity) || Manager.OriginRuntime.IsAltmerOfferEligibleDeity(deity) || Manager.OriginRuntime.IsRedguardOfferEligibleDeity(deity) || Manager.OriginRuntime.IsBretonOfferEligibleDeity(deity) || Manager.IsDaedricPactOfferEligibleDeity(deity)
+    return Manager.OriginRuntime.IsNordOfferEligibleDeity(deity) || Manager.OriginRuntime.IsImperialOfferEligibleDeity(deity) || Manager.OriginRuntime.IsDunmerOfferEligibleDeity(deity) || Manager.OriginRuntime.IsAltmerOfferEligibleDeity(deity) || Manager.OriginRuntime.IsRedguardOfferEligibleDeity(deity) || Manager.OriginRuntime.IsBretonOfferEligibleDeity(deity) || Manager.IsDaedricPactOfferEligibleDeity(deity)
 EndFunction
 
 Bool Function IsGenericLikesDislikesDeityReachable(PDV_DeityBase deity)
@@ -4249,9 +4249,9 @@ Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
     elseIf originRace == Manager.ORIGIN_ARGONIAN
         Manager.OriginRuntime.ApplyArgonianCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_IMPERIAL
-        Manager.ApplyImperialCurseHandlers(oldState, newState, reason)
+        Manager.OriginRuntime.ApplyImperialCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_ORC
-        Manager.ApplyOrcCurseHandlers(oldState, newState, reason)
+        Manager.OriginRuntime.ApplyOrcCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_REDGUARD
         Manager.OriginRuntime.ApplyRedguardCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_KHAJIIT
@@ -4565,6 +4565,7 @@ Function ReapplyOneDisfavorSting(Actor playerRef, Int domainValue)
         playerRef.AddSpell(bandSpell, False)
     endIf
 EndFunction
+
 
 
 

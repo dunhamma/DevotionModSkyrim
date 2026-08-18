@@ -61,7 +61,7 @@ Function RouteConcordatPressure(Bool isCompliance)
         ; Concordat defiance is the canonical "side with the Stormcloaks" act; source its
         ; magnitude from the graduated Imperial point table so spec tuning propagates here
         ; without editing the proven CW quest fragments (default stays -15 if unmapped).
-        Int defianceTableValue = PDV_Manager.GetImperialConcordatPressureForAction("side_with_stormcloaks")
+        Int defianceTableValue = PDV_Manager.OriginRuntime.GetImperialConcordatPressureForAction("side_with_stormcloaks")
         if defianceTableValue != 0
             adjustment = defianceTableValue
         endIf
@@ -75,7 +75,7 @@ Function RouteConcordatPressure(Bool isCompliance)
         endIf
     endIf
 
-    PDV_Manager.ApplyConcordatPressure(adjustment, "eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.ApplyConcordatPressure(adjustment, "eventbus_" + eventType)
     Trace(2, "RouteConcordatPressure complete: " + eventType + " adjustment " + adjustment)
 EndFunction
 
@@ -832,7 +832,7 @@ Function RouteOrcStrongholdForge()
         eventType = eventTypes.EVT_ORC_STRONGHOLD_FORGE
     endIf
 
-    PDV_Manager.HandleOrcStrongholdForge("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleOrcStrongholdForge("eventbus_" + eventType)
     Trace(2, "RouteOrcStrongholdForge complete: " + eventType)
 EndFunction
 
@@ -848,7 +848,7 @@ Function RouteOrcStrongholdPresence(Int holdId, String sourceId = "")
         eventType = eventTypes.EVT_ORC_STRONGHOLD_FORGE
     endIf
 
-    PDV_Manager.HandleOrcStrongholdPresence(holdId, "eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleOrcStrongholdPresence(holdId, "eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteOrcStrongholdPresence complete: " + holdId + " source " + sourceId)
 EndFunction
 
@@ -864,7 +864,7 @@ Function RouteOrcBloodKinCrisis(String sourceId = "orc_cursed_tribe_resolved")
         eventType = eventTypes.EVT_ORC_STRONGHOLD_FORGE
     endIf
 
-    PDV_Manager.HandleOrcBloodKinCrisis("eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleOrcBloodKinCrisis("eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteOrcBloodKinCrisis complete: " + sourceId)
 EndFunction
 
@@ -884,7 +884,7 @@ Function RouteOrcCityDignity(String sourceId = "")
     if sourceId != ""
         reason = reason + "_" + sourceId
     endIf
-    PDV_Manager.HandleOrcCityDignity(reason)
+    PDV_Manager.OriginRuntime.HandleOrcCityDignity(reason)
     Trace(2, "RouteOrcCityDignity complete: " + eventType)
 EndFunction
 
@@ -904,7 +904,7 @@ Function RouteOrcLegionService(String sourceId = "")
     if sourceId != ""
         reason = reason + "_" + sourceId
     endIf
-    PDV_Manager.HandleOrcLegionService(reason)
+    PDV_Manager.OriginRuntime.HandleOrcLegionService(reason)
     Trace(2, "RouteOrcLegionService complete: " + eventType)
 EndFunction
 
@@ -924,7 +924,7 @@ Function RouteOrcSelfMadeCommunity(String sourceId = "")
     if sourceId != ""
         reason = reason + "_" + sourceId
     endIf
-    PDV_Manager.HandleOrcSelfMadeCommunity(reason)
+    PDV_Manager.OriginRuntime.HandleOrcSelfMadeCommunity(reason)
     Trace(2, "RouteOrcSelfMadeCommunity complete: " + eventType)
 EndFunction
 
@@ -940,7 +940,7 @@ Function RouteOrcOathBreak(String sourceId)
         eventType = eventTypes.EVT_ORC_OATH_BREAK
     endIf
 
-    PDV_Manager.HandleOrcOathBreak("eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleOrcOathBreak("eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteOrcOathBreak complete: " + sourceId)
 EndFunction
 
@@ -956,7 +956,7 @@ Function RouteOrcFourHoldsVisit(Int holdId, String sourceId)
         eventType = eventTypes.EVT_ORC_FOUR_HOLDS_VISIT
     endIf
 
-    PDV_Manager.HandleOrcFourHoldsVisit(holdId, "eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleOrcFourHoldsVisit(holdId, "eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteOrcFourHoldsVisit complete: " + holdId + " source " + sourceId)
 EndFunction
 
@@ -966,7 +966,7 @@ Function RouteOrcMalacathConduct(Int modeId, String sourceId)
         return
     endIf
 
-    PDV_Manager.HandleOrcMalacathConduct(modeId, "eventbus_p2_orc_malacath_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleOrcMalacathConduct(modeId, "eventbus_p2_orc_malacath_" + sourceId)
     Trace(2, "RouteOrcMalacathConduct complete: mode " + modeId + " source " + sourceId)
 EndFunction
 
@@ -1464,7 +1464,7 @@ Function RouteImperialCivicService(String sourceId)
         eventType = eventTypes.EVT_IMPERIAL_CIVIC_SERVICE
     endIf
 
-    PDV_Manager.HandleImperialCivicService("eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleImperialCivicService("eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteImperialCivicService complete: " + eventType)
 EndFunction
 
@@ -1480,7 +1480,7 @@ Function RouteImperialTalosPressure(Bool isPrivate, String sourceId)
         eventType = eventTypes.EVT_IMPERIAL_TALOS_PRESSURE
     endIf
 
-    PDV_Manager.HandleImperialTalosPressure(isPrivate, "eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleImperialTalosPressure(isPrivate, "eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteImperialTalosPressure complete: " + eventType)
 EndFunction
 
@@ -1496,7 +1496,7 @@ Function RouteImperialPatronCivicFavor(String sourceId)
         eventType = eventTypes.EVT_IMPERIAL_PATRON_CIVIC_FAVOR
     endIf
 
-    PDV_Manager.HandleImperialPatronCivicFavor("eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleImperialPatronCivicFavor("eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteImperialPatronCivicFavor complete: " + eventType)
 EndFunction
 
@@ -1779,6 +1779,7 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] EventBus: " + traceText)
     endIf
 EndFunction
+
 
 
 
