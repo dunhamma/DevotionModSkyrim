@@ -16,6 +16,16 @@ Property Manager Auto` backref; the manager gains a `PDV_OriginRuntimeBase Prope
 OriginRuntime Auto` forward ref. Done in 6 verified incremental tranches (4x LEDGER scale, so
 tranched rather than one move).
 
+**IMPORTANT -- this flat move is STAGE 1 only.** The decomposition plan
+(PDV_2.0_Branch_Cleanup_and_Decomposition_Plan.md:64) intends ORIGIN as `PDV_OriginRuntimeBase`
+(an ABSTRACT BASE) plus **10 race adapters** (`PDV_OriginRuntime_<Race> extends
+PDV_OriginRuntimeBase`), with the manager selecting one adapter by birth race and holding NO
+race switchboard -- the same polymorphic pattern as `PDV_DeityBase` (34 subclasses) and
+`PDV_DaedricPathBase` (16). The 664-fn monolith produced here is a verified, reversible
+INTERMEDIATE, not the final shape (0 scripts extend it today). The **adapter split**
+(PDV_2_0_ORIGIN_AdapterSplit_Plan.md) is the intended completion and MUST precede ESP wiring --
+otherwise we have merely relocated the race switchboard, which the plan explicitly forbids.
+
 **FUNCTIONS: 664 of 667 moved.** The 3 gain-pipeline-seam multiplier functions are DEFERRED
 (left in the manager, reached via `Manager.`): `GetOrcLifeModeGainMultiplier`,
 `GetImperialCurseGainMultiplier` (ORIGIN-tagged), and `GetCurseGainMultiplier` (LEDGER-tagged
@@ -71,6 +81,10 @@ the 6 tranches). Final full-project compile: **101 PASS / 0 FAIL**. Zero logic c
 
 ## 5. DEFERRED -- supervised next steps (NOT done here; module is INERT)
 
+0. **Adapter split (do FIRST -- this is the real decomposition)** -- carve the 664-fn monolith
+   into `PDV_OriginRuntimeBase` (abstract base) + 10 `PDV_OriginRuntime_<Race>` adapters; the
+   manager dispatches by birth race, no race switchboard. Everything below depends on this.
+   See PDV_2_0_ORIGIN_AdapterSplit_Plan.md.
 1. **Provider-seam construction** (per PDV_2_0_ProviderSeam_ExtractionSpec.md, branch
    feature/v3-provider-seam-spec): build `PDV_GainModifierProvider`; make the ORIGIN runtime host
    a provider; move the 3 deferred multipliers into it (phase-tagged); convert LEDGER's interim
