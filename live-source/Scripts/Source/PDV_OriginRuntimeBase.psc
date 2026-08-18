@@ -343,7 +343,7 @@ Function HandleAltmerSleepEvents(Actor playerRef, String reason)
 EndFunction
 
 Function HandleBosmerSleepEvents(Actor playerRef, String reason)
-    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER
+    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER
         return
     endIf
 
@@ -422,7 +422,7 @@ Bool Function TryBosmerHearthSleep(Actor playerRef, Int sleepCellId, String reas
 EndFunction
 
 Bool Function TryBosmerNaming(Actor playerRef, Int sleepCellId, String reason)
-    if !playerRef || !Manager.PDV_MESG_BosmerNaming || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER
+    if !playerRef || !Manager.PDV_MESG_BosmerNaming || GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER
         return false
     endIf
 
@@ -505,7 +505,7 @@ Function SyncBosmerNaming(Actor playerRef)
     endIf
 
     Int pathAtRite = StorageUtil.GetIntValue(None, "PDV.BosNaming.PathAtRite")
-    Bool eligible = (Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_BOSMER) && IsBosmerNamingCoherent(pathAtRite)
+    Bool eligible = (GetPlayerOriginRaceIndex() == Manager.ORIGIN_BOSMER) && IsBosmerNamingCoherent(pathAtRite)
     if eligible
         if !playerRef.HasSpell(told)
             playerRef.AddSpell(told, False)
@@ -567,7 +567,7 @@ String Function GetBosmerDreamText(Int pathState)
 EndFunction
 
 Function HandleBosmerLocationChange(Location loc)
-    if !loc || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER
+    if !loc || GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER
         return
     endIf
 
@@ -635,7 +635,7 @@ Function TryBosmerEldergleamInterior()
         return
     endIf
 
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER
         StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", 0)
         return
     endIf
@@ -666,7 +666,7 @@ Function TryBosmerGildergreenProximity()
     if StorageUtil.GetIntValue(None, "PDV.BosSongs.GildergreenActive") != 1
         return
     endIf
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER
         StorageUtil.SetIntValue(None, "PDV.BosSongs.GildergreenActive", 0)
         return
     endIf
@@ -698,7 +698,7 @@ Function TryBosmerYffreTreeStoneProximity()
     if StorageUtil.GetIntValue(None, "PDV.Yffre.TreeStoneActive") != 1
         return
     endIf
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER || StorageUtil.GetIntValue(None, "PDV.Yffre.Seen.allmaker_tree") == 1
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER || StorageUtil.GetIntValue(None, "PDV.Yffre.Seen.allmaker_tree") == 1
         StorageUtil.SetIntValue(None, "PDV.Yffre.TreeStoneActive", 0)
         return
     endIf
@@ -767,7 +767,7 @@ Function AwardBosmerSong(Int siteFormId)
 EndFunction
 
 Function TryBosmerScalesAtRest(Actor playerRef)
-    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER || !Manager.PDV_SPEL_BosmerScalesAtRest
+    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER || !Manager.PDV_SPEL_BosmerScalesAtRest
         return
     endIf
     if GetBosmerPathState() != Manager.BOSMER_PATH_EXCHANGE
@@ -786,7 +786,7 @@ Function TryBosmerScalesAtRest(Actor playerRef)
 EndFunction
 
 Function TryBosmerBaanDarGap(Actor playerRef)
-    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER || !Manager.PDV_SPEL_BosmerBaanDarGap
+    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER || !Manager.PDV_SPEL_BosmerBaanDarGap
         return
     endIf
     if GetBosmerPathState() != Manager.BOSMER_PATH_BANDIT_ROAD
@@ -980,7 +980,7 @@ Bool Function CanRecordBosmerMajorFavor(String favorKey, Float cooldownDays, Str
 EndFunction
 
 Bool Function IsAltmerOrigin()
-    return Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ALTMER
+    return GetPlayerOriginRaceIndex() == Manager.ORIGIN_ALTMER
 EndFunction
 
 Bool Function IsAltmerFavorSuppressedByCurse()
@@ -1317,7 +1317,7 @@ Function EvaluateAltmerCrisisAtDawn()
 EndFunction
 
 Function AwardActiveAltmerHeritageMemorySignal()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ALTMER || Manager.LedgerRuntime.GetPatronState() != Manager.LedgerRuntime.PATRON_STATE_ACTIVE
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ALTMER || Manager.LedgerRuntime.GetPatronState() != Manager.LedgerRuntime.PATRON_STATE_ACTIVE
         return
     endIf
 
@@ -1504,7 +1504,7 @@ Int Function GetAltmerPracticeIdleKind()
 EndFunction
 
 Function EnsureAltmerPracticeFocus()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ALTMER || !Manager.PDV_MISC_AltmerPracticeFocus
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ALTMER || !Manager.PDV_MISC_AltmerPracticeFocus
         return
     endIf
 
@@ -1538,7 +1538,7 @@ Function EnsureAltmerPracticeFocus()
 EndFunction
 
 Function HandleAltmerSyrabaneCureWard(String reason)
-    if !Manager.IsSyrabaneSignalEligible()
+    if !IsSyrabaneSignalEligible()
         return
     endIf
     if !Manager.ConsumeOncePerDaySignal("PDV.Signal.SyrabaneCureWard")
@@ -1549,7 +1549,7 @@ Function HandleAltmerSyrabaneCureWard(String reason)
 EndFunction
 
 Function HandleAltmerSyrabaneProtectiveWard(String reason)
-    if !Manager.IsSyrabaneSignalEligible()
+    if !IsSyrabaneSignalEligible()
         return
     endIf
     if !Manager.ConsumeOncePerDaySignal("PDV.Signal.SyrabaneProtectiveWarding")
@@ -1560,7 +1560,7 @@ Function HandleAltmerSyrabaneProtectiveWard(String reason)
 EndFunction
 
 Function HandleAltmerSyrabaneAntiMageSurvival(String reason)
-    if !Manager.IsSyrabaneSignalEligible()
+    if !IsSyrabaneSignalEligible()
         return
     endIf
     Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Syrabane, Manager.PDV_Syrabane.SIGNAL_ANTI_MAGE_SURVIVAL, None, 1.0)
@@ -1568,7 +1568,7 @@ Function HandleAltmerSyrabaneAntiMageSurvival(String reason)
 EndFunction
 
 Function HandleAltmerSyrabaneContainment(String reason)
-    if !Manager.IsSyrabaneSignalEligible()
+    if !IsSyrabaneSignalEligible()
         return
     endIf
     Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.SyrabaneMagicalContainment")
@@ -2074,7 +2074,7 @@ Function SyncAltmerRewards(Actor playerRef)
         return
     endIf
 
-    Bool isAltmer = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ALTMER
+    Bool isAltmer = GetPlayerOriginRaceIndex() == Manager.ORIGIN_ALTMER
     SyncAltmerAncestorSubstrate(playerRef, isAltmer)
     Bool broadOrthodoxFaithful = isAltmer && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count") + StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count") >= 6
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Altmer_Orthodox_T2, broadOrthodoxFaithful, "Altmer Orthodox T2")
@@ -2099,7 +2099,7 @@ Function SyncAltmerAncestorSubstrate(Actor playerRef, Bool isAltmer)
 EndFunction
 
 Function SyncAltmerRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
-    Bool isActive = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ALTMER && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity() == deity
+    Bool isActive = GetPlayerOriginRaceIndex() == Manager.ORIGIN_ALTMER && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity() == deity
     Int activeTier = Manager.LedgerRuntime.TIER_NONE
     if isActive && deity
         activeTier = Manager.LedgerRuntime.GetTier(deity)
@@ -2114,7 +2114,7 @@ Function SyncAltmerRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, 
 EndFunction
 
 Bool Function IsAltmerCoherenceNeglected()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ALTMER
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ALTMER
         return False
     endIf
 
@@ -2155,7 +2155,7 @@ Function SyncBosmerRewards(Actor playerRef)
         return
     endIf
 
-    Bool isBosmer = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_BOSMER
+    Bool isBosmer = GetPlayerOriginRaceIndex() == Manager.ORIGIN_BOSMER
     Int pathState = GetBosmerPathState()
     Bool broadFaithful = isBosmer && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_BROAD && GetBosmerFavorSignalCount() >= 6
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Bosmer_Yffre_T2, broadFaithful, "Bosmer Yffre T2")
@@ -2167,7 +2167,7 @@ Function SyncBosmerRewards(Actor playerRef)
 EndFunction
 
 Function SyncBosmerPathRewardFamily(Actor playerRef, Int thisPath, Int activePath, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
-    Bool isActive = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_BOSMER && thisPath == activePath
+    Bool isActive = GetPlayerOriginRaceIndex() == Manager.ORIGIN_BOSMER && thisPath == activePath
     Int activeTier = Manager.LedgerRuntime.TIER_NONE
     if isActive && deity
         activeTier = Manager.LedgerRuntime.GetTier(deity)
@@ -2197,7 +2197,7 @@ Int Function GetBosmerFavorSignalCount()
 EndFunction
 
 Bool Function IsBosmerPathNeglected()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER
         return False
     endIf
 
@@ -2252,7 +2252,7 @@ Bool Function IsAltmerOfferEligibleDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ALTMER
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ALTMER
         return False
     endIf
 
@@ -2333,7 +2333,7 @@ Function ShowAltmerMessage(Message messageRecord, String fallbackText, Bool supp
 EndFunction
 
 Bool Function IsBosmerOrigin()
-    return Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_BOSMER
+    return GetPlayerOriginRaceIndex() == Manager.ORIGIN_BOSMER
 EndFunction
 
 String Function GetBookOfDaysAltmerCrisisLabel()
@@ -2923,7 +2923,7 @@ String Function GetBosmerComplianceBand()
 EndFunction
 
 Bool Function IsAltmerVampireExiled()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ALTMER
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ALTMER
         return False
     endIf
 
@@ -2935,7 +2935,7 @@ Bool Function IsAltmerVampireExiled()
 EndFunction
 
 Bool Function IsAltmerWerewolfHalted()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ALTMER
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ALTMER
         return False
     endIf
 
@@ -2947,7 +2947,7 @@ Bool Function IsAltmerWerewolfHalted()
 EndFunction
 
 Bool Function HasAltmerVampireExileScar()
-    return Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ALTMER && StorageUtil.GetIntValue(None, "PDV.Altmer.VampireExileScar") == 1
+    return GetPlayerOriginRaceIndex() == Manager.ORIGIN_ALTMER && StorageUtil.GetIntValue(None, "PDV.Altmer.VampireExileScar") == 1
 EndFunction
 
 String Function GetBosmerSummary()
@@ -3102,7 +3102,7 @@ Function SyncKhajiitPhaseBlessing()
 EndFunction
 
 Bool Function IsKhajiitLatticeResonating()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
         return False
     endIf
     Int focusValue = GetKhajiitFocusedEmphasis()
@@ -3209,12 +3209,12 @@ Function SyncKhajiitPortentPower(Actor playerRef)
         return
     endIf
     PDV_DeityBase focusDeity = GetKhajiitEmphasisDeity(GetKhajiitFocusedEmphasis())
-    Bool shouldHave = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT && focusDeity == Manager.PDV_Azura && Manager.LedgerRuntime.GetTier(focusDeity) >= Manager.LedgerRuntime.TIER_CHAMPION && playerRef.HasSpell(Manager.PDV_Bless_Khajiit_Azurah_T3)
+    Bool shouldHave = GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT && focusDeity == Manager.PDV_Azura && Manager.LedgerRuntime.GetTier(focusDeity) >= Manager.LedgerRuntime.TIER_CHAMPION && playerRef.HasSpell(Manager.PDV_Bless_Khajiit_Azurah_T3)
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Power_Khajiit_AzurahPortent, shouldHave, "Azurah Portent power")
 EndFunction
 
 Bool Function TryUseKhajiitAzurahPortent(Actor playerRef)
-    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT || GetKhajiitFocusedEmphasis() != Manager.KHAJIIT_FOCUS_AZURAH
+    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT || GetKhajiitFocusedEmphasis() != Manager.KHAJIIT_FOCUS_AZURAH
         return False
     endIf
     if !Manager.PDV_Azura || Manager.LedgerRuntime.GetTier(Manager.PDV_Azura) < Manager.LedgerRuntime.TIER_CHAMPION || !Manager.PDV_Bless_Khajiit_Azurah_T3 || !playerRef.HasSpell(Manager.PDV_Bless_Khajiit_Azurah_T3)
@@ -3242,7 +3242,7 @@ Bool Function TryUseKhajiitAzurahPortent(Actor playerRef)
 EndFunction
 
 Bool Function CanExecuteKhajiitBaanDarRescue(Actor playerRef)
-    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT || GetKhajiitFocusedEmphasis() != Manager.KHAJIIT_FOCUS_BAANDAR
+    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT || GetKhajiitFocusedEmphasis() != Manager.KHAJIIT_FOCUS_BAANDAR
         return False
     endIf
     if !Manager.PDV_BaanDar || Manager.LedgerRuntime.GetTier(Manager.PDV_BaanDar) < Manager.LedgerRuntime.TIER_CHAMPION || !Manager.PDV_Bless_Khajiit_BaanDar_T3
@@ -3252,7 +3252,7 @@ Bool Function CanExecuteKhajiitBaanDarRescue(Actor playerRef)
 EndFunction
 
 Function ScheduleNextKhajiitGodStrengthBoundary()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
         UnregisterForUpdateGameTime()
         return
     endIf
@@ -3370,7 +3370,7 @@ Function HandleArgonianSleepEvents(Actor playerRef, String reason)
 EndFunction
 
 Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, String reason)
-    if sleepCellId == 0 || !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
+    if sleepCellId == 0 || !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
         return false
     endIf
 
@@ -3479,7 +3479,7 @@ Function ClearArgonianAdaptation(Actor playerRef)
 EndFunction
 
 Bool Function TryArgonianAdaptationRite(Actor playerRef, Int sleepCellId, String reason)
-    if !playerRef || !Manager.PDV_MESG_ArgonianAdaptRite || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
+    if !playerRef || !Manager.PDV_MESG_ArgonianAdaptRite || GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
         return false
     endIf
 
@@ -3589,7 +3589,7 @@ Function SyncArgonianAdaptation(Actor playerRef, Bool isArgonian)
 EndFunction
 
 Function HandleArgonianSacredWaterDiscovery(Location discoveredLocation)
-    if !discoveredLocation || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
+    if !discoveredLocation || GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
         return
     endIf
 
@@ -3629,7 +3629,7 @@ Function AwardArgonianSacredWater(Int siteFormId)
         Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Hist, Manager.PDV_Hist.SIGNAL_HIST_PULSE, None, 1.0)
     endIf
     Debug.MessageBox("The water remembers. For one slow breath you stand in the marsh again, and the root speaks your name.")
-    Manager.SendPrismaSubstrateToast("ArgonianHist", "water", "A water that remembers.", "hist", GetArgonianHistPostureLabel())
+    SendPrismaSubstrateToast("ArgonianHist", "water", "A water that remembers.", "hist", GetArgonianHistPostureLabel())
     Manager.AppendBookOfDaysEntry("A water that remembers.", Utility.GetCurrentGameTime() as Int, "substrate.act", "hist", False)
 
     if seenCount >= Manager.PDV_FLST_ArgonianSacredWaters.GetSize()
@@ -3640,7 +3640,7 @@ Function AwardArgonianSacredWater(Int siteFormId)
 EndFunction
 
 Function UpdateArgonianSanctuaryActive(Location loc)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
         return
     endIf
 
@@ -3656,7 +3656,7 @@ Function TryArgonianEldergleamInterior()
         return
     endIf
 
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || StorageUtil.GetIntValue(None, "PDV.ArgWaters.Seen.103084") == 1
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || StorageUtil.GetIntValue(None, "PDV.ArgWaters.Seen.103084") == 1
         StorageUtil.SetIntValue(None, "PDV.ArgWaters.EldergleamActive", 0)
         return
     endIf
@@ -3675,7 +3675,7 @@ Function TryArgonianEldergleamInterior()
 EndFunction
 
 Function TryArgonianNearWaterMaintenance()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_ArgonianHistSubstrate
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_ArgonianHistSubstrate
         return
     endIf
 
@@ -3720,7 +3720,7 @@ Function TryArgonianNearWaterMaintenance()
 EndFunction
 
 Function HandleArgonianSapVision()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_ArgonianHistSubstrate
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_ArgonianHistSubstrate
         return
     endIf
 
@@ -3740,7 +3740,7 @@ Function HandleArgonianSapVision()
 EndFunction
 
 Function HandleArgonianShadowscaleKill(Actor playerRef)
-    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
+    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
         return
     endIf
 
@@ -3768,7 +3768,7 @@ Function HandleArgonianShadowscaleKill(Actor playerRef)
     endIf
 
     Manager.PDV_SPEL_ArgonianShadowscaleVeil.Cast(playerRef, playerRef)
-    Manager.SendPrismaSubstrateToast("ArgonianHist", "shadowscale", "The shadow closes over you. The Void hides its own.", "void", Manager.PDV_ArgonianHistSubstrate.GetHistPostureLabel())
+    SendPrismaSubstrateToast("ArgonianHist", "shadowscale", "The shadow closes over you. The Void hides its own.", "void", Manager.PDV_ArgonianHistSubstrate.GetHistPostureLabel())
     Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Shadowscale.LastInvisDay")
     Manager.Trace(2, "Shadowscale veil fired on sneak kill.")
 EndFunction
@@ -3795,14 +3795,14 @@ Function TryArgonianPostureDream(String reason)
     endIf
 
     String dreamText = Manager.PDV_ArgonianHistSubstrate.GetDreamTextForPosture(posture)
-    Manager.SendPrismaSubstrateToast("ArgonianHist", "dream", dreamText, "hist", Manager.PDV_ArgonianHistSubstrate.GetHistPostureLabel())
+    SendPrismaSubstrateToast("ArgonianHist", "dream", dreamText, "hist", Manager.PDV_ArgonianHistSubstrate.GetHistPostureLabel())
     StorageUtil.SetIntValue(None, "PDV.ArgDream.Armed", 0)
     Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.ArgDream.LastDay")
     Manager.Trace(2, "Argonian posture dream fired (" + Manager.PDV_ArgonianHistSubstrate.GetHistPostureLabel() + ", " + reason + ")")
 EndFunction
 
 Function TryArgonianSithisNearDeathBurst(Actor playerRef)
-    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_SPEL_ArgonianSithisNearDeathBurst
+    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_SPEL_ArgonianSithisNearDeathBurst
         return
     endIf
     if !playerRef.IsInCombat() || !Manager.PDV_ArgonianHistSubstrate
@@ -3840,7 +3840,7 @@ Function HandleKhajiitMoonObservance(Int phaseIndex, String reason)
 EndFunction
 
 Function HandleKhajiitLunarSubstrate(String sourceId)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT || !Manager.PDV_KhajiitLunarSubstrate
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT || !Manager.PDV_KhajiitLunarSubstrate
         return
     endIf
 
@@ -4214,7 +4214,7 @@ Function HandleKhajiitRoadHome(String reason)
             Manager.SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, grantedMetric, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
         else
             String cappedContext = "The road home was remembered. Today's lunar practice was already marked."
-            Manager.SendPrismaSubstrateToast("lunar", "act", cappedContext, "lunar", GetKhajiitLunarTierLabel(tierAfter))
+            SendPrismaSubstrateToast("lunar", "act", cappedContext, "lunar", GetKhajiitLunarTierLabel(tierAfter))
             Manager.AppendBookOfDaysEntry(cappedContext, Utility.GetCurrentGameTime() as Int, "substrate.act", "lunar", False)
         endIf
     endIf
@@ -4461,7 +4461,7 @@ Function HandleKhajiitBaanDarBetrayal(String reason)
 EndFunction
 
 Bool Function IsKhajiitOrigin()
-    return Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT
+    return GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT
 EndFunction
 
 Int Function GetKhajiitLunarPosture()
@@ -4782,13 +4782,13 @@ Function RefreshArgonianDominationPressureForPath(PDV_DaedricPathBase path, Stri
     if path.DeityName != "Molag Bal" && path.DeityName != "Molag"
         return
     endIf
-    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ARGONIAN
+    if GetPlayerOriginRaceIndex() == Manager.ORIGIN_ARGONIAN
         RefreshArgonianHistPosture(reason)
     endIf
 EndFunction
 
 Bool Function IsArgonianMolagBalDominationPressureActive()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
         return False
     endIf
     if !Manager.PDV_CurseStateService || Manager.PDV_CurseStateService.GetCurseState() != 2
@@ -4805,7 +4805,7 @@ Bool Function IsArgonianMolagBalDominationPressureActive()
 EndFunction
 
 Function AdjustKhajiitFocusedEmphasis(Int focusValue, Float amount, String reason, Bool evaluateNow = True)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
         return
     endIf
 
@@ -4822,7 +4822,7 @@ Function AdjustKhajiitFocusedEmphasis(Int focusValue, Float amount, String reaso
 EndFunction
 
 Function EvaluateKhajiitFocusedEmphasis()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
         return
     endIf
     Float khenarthi = GetKhajiitFocusWeight(Manager.KHAJIIT_FOCUS_KHENARTHI)
@@ -5057,7 +5057,7 @@ Function SyncKhajiitEmphasisRewards(Actor playerRef)
 
     Int activeFocus = Manager.KHAJIIT_FOCUS_NONE
     Int activeTier = Manager.LedgerRuntime.TIER_NONE
-    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT
+    if GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT
         activeFocus = GetKhajiitFocusedEmphasis()
         PDV_DeityBase deity = GetKhajiitEmphasisDeity(activeFocus)
         if deity
@@ -5093,7 +5093,7 @@ Function SyncKhajiitEmphasisFamily(Actor playerRef, Int thisFocus, Int activeFoc
 EndFunction
 
 Bool Function IsKhajiitLunarNeglected()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
         return False
     endIf
 
@@ -5130,7 +5130,7 @@ Function SyncArgonianRewards(Actor playerRef)
         return
     endIf
 
-    Bool isArgonian = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ARGONIAN
+    Bool isArgonian = GetPlayerOriginRaceIndex() == Manager.ORIGIN_ARGONIAN
     Float histRelation = 0.0
     Float peopleRelation = 0.0
     Float voidRelation = 0.0
@@ -5191,7 +5191,7 @@ Int Function GetArgonianActiveFocus(Float peopleRelation, Float voidRelation, Bo
 EndFunction
 
 Bool Function IsArgonianHistNeglected()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_ArgonianHistSubstrate
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_ArgonianHistSubstrate
         return False
     endIf
 
@@ -5291,7 +5291,7 @@ Function ShowArgonianMessage(Message messageRecord, String fallback, Bool suppre
 EndFunction
 
 Bool Function IsArgonianOrigin()
-    return Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ARGONIAN
+    return GetPlayerOriginRaceIndex() == Manager.ORIGIN_ARGONIAN
 EndFunction
 
 String Function GetKhajiitMedallionEntriesJson()
@@ -5317,7 +5317,7 @@ Function EnsureArgonianHistSapToken()
     ; V1: grant the self-replenishing Hist Sap POTION (PDV_ALCH_ArgonianHistSap) rather than the old read
     ; BOOK. Drinking it routes Hist maintenance (see PDV_PotionArgonianHistSapEffect) and re-adds itself, so
     ; the player keeps one ritual vial. The book property stays declared but is no longer granted.
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_ALCH_ArgonianHistSap
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_ALCH_ArgonianHistSap
         return
     endIf
 
@@ -5546,25 +5546,25 @@ EndFunction
 ; ============================================================================
 
 Function HandleRedguardSleepEvents(Actor playerRef, String reason)
-    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_REDGUARD || !Manager.PDV_RedguardSectTrack
+    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_REDGUARD || !Manager.PDV_RedguardSectTrack
         return
     endIf
 
-    Int sleepCellId = Manager.GetInteriorSleepCellId(playerRef)
+    Int sleepCellId = GetInteriorSleepCellId(playerRef)
     if sleepCellId == 0
         return
     endIf
 
     String declaredKey = "PDV.Redguard.AncestralRest.DeclaredFormID"
     if StorageUtil.GetIntValue(None, declaredKey) == 0
-        if Manager.TryDeclareRestCell("PDV.Redguard.AncestralRest", sleepCellId)
+        if TryDeclareRestCell("PDV.Redguard.AncestralRest", sleepCellId)
             ShowRedguardNotification(None, "This resting place remembers the old line.")
             Manager.Trace(2, "Redguard ancestral-rest cell declared: " + reason)
         endIf
         return
     endIf
 
-    if !Manager.IsPlayerAtDeclaredRestCell(playerRef, declaredKey)
+    if !IsPlayerAtDeclaredRestCell(playerRef, declaredKey)
         return
     endIf
 
@@ -5580,7 +5580,7 @@ Function HandleRedguardSleepEvents(Actor playerRef, String reason)
 EndFunction
 
 Bool Function TryRedguardRemembering(Actor playerRef, Int sleepCellId, String reason)
-    if !playerRef || !Manager.PDV_MSG_RedguardRemembering || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_REDGUARD
+    if !playerRef || !Manager.PDV_MSG_RedguardRemembering || GetPlayerOriginRaceIndex() != Manager.ORIGIN_REDGUARD
         return false
     endIf
 
@@ -5661,7 +5661,7 @@ Function SyncRedguardRemembering(Actor playerRef)
     endIf
 
     Int sectAtRite = StorageUtil.GetIntValue(None, "PDV.RedRemember.SectAtRite")
-    Bool eligible = (Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_REDGUARD) && IsRedguardRememberingCoherent(sectAtRite)
+    Bool eligible = (GetPlayerOriginRaceIndex() == Manager.ORIGIN_REDGUARD) && IsRedguardRememberingCoherent(sectAtRite)
     if eligible
         if !playerRef.HasSpell(obs)
             playerRef.AddSpell(obs, False)
@@ -5686,7 +5686,7 @@ Bool Function IsRedguardRememberingCoherent(Int sectAtRite)
 EndFunction
 
 Function HandleBretonSleepEvents(Actor playerRef, String reason)
-    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
+    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
         return
     endIf
 
@@ -6008,7 +6008,7 @@ Function RecordRedguardSectSignal(Int sectValue, Float multiplier, String reason
 
     if Manager.PDV_RedguardSectTrack.GetCurrentState() == sectValue
         MaybeShowRedguardChampionEntry(sectValue)
-        Manager.SendPrismaSubstrateToast("sect", "act", "The Yokudan path was marked.", "sect", GetRedguardSectLabel())
+        SendPrismaSubstrateToast("sect", "act", "The Yokudan path was marked.", "sect", GetRedguardSectLabel())
         Manager.AppendBookOfDaysEntry("The Yokudan path was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "sect", False)
         Manager.RequestPanelRefresh()
         return
@@ -6146,7 +6146,7 @@ Function EnsureRedguardSectInitialized()
 EndFunction
 
 Bool Function IsRedguardOrigin()
-    return Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_REDGUARD
+    return GetPlayerOriginRaceIndex() == Manager.ORIGIN_REDGUARD
 EndFunction
 
 String Function GetRedguardSectWeightKey(Int sectValue)
@@ -6250,7 +6250,7 @@ Function SyncBretonRewards(Actor playerRef)
         return
     endIf
 
-    Bool isBreton = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_BRETON
+    Bool isBreton = GetPlayerOriginRaceIndex() == Manager.ORIGIN_BRETON
     SyncBretonAncestorSubstrate(playerRef, isBreton)
     if isBreton
         EnsureBretonDruidicForkInitialized()
@@ -6290,7 +6290,7 @@ Function SyncBretonAncestorSubstrate(Actor playerRef, Bool isBreton)
 EndFunction
 
 Function SyncBretonTraditionRewardFamily(Actor playerRef, Int thisTradition, Int activeTradition, Spell t1, Spell t2, String label)
-    Bool isActive = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_BRETON && thisTradition == activeTradition
+    Bool isActive = GetPlayerOriginRaceIndex() == Manager.ORIGIN_BRETON && thisTradition == activeTradition
     if thisTradition == Manager.BRETON_TRADITION_GREEN_WAY && !IsBretonGreenWayForkEligible()
         isActive = False
     endIf
@@ -6635,7 +6635,7 @@ Function SetBretonDruidicFork(Int forkValue, String reason)
     if Manager.PDV_GLO_State_BretonDruidicFork
         Manager.PDV_GLO_State_BretonDruidicFork.SetValue(normalized as Float)
     endIf
-    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_BRETON && oldFork != normalized
+    if GetPlayerOriginRaceIndex() == Manager.ORIGIN_BRETON && oldFork != normalized
         SurfaceBretonDruidicForkChange(normalized)
     endIf
 EndFunction
@@ -6651,7 +6651,7 @@ Function SurfaceBretonDruidicForkChange(Int forkValue)
 EndFunction
 
 Function EnsureBretonDruidicForkInitialized()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
         return
     endIf
 
@@ -6690,7 +6690,7 @@ String Function GetBretonDruidicForkLabel()
 EndFunction
 
 Bool Function IsBretonTraditionNeglected()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
         return False
     endIf
 
@@ -6769,7 +6769,7 @@ Function SyncRedguardRewards(Actor playerRef)
         return
     endIf
 
-    Bool isRedguard = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_REDGUARD
+    Bool isRedguard = GetPlayerOriginRaceIndex() == Manager.ORIGIN_REDGUARD
     Int sectValue = GetActiveRedguardSpineSect()
     SyncRedguardSpineBoon(playerRef, isRedguard, sectValue)
     ; Option 2 (2026-07-16): the generic ancestor FLOOR (AncestorSpine_T1, "Ancestors' Regard -
@@ -6813,7 +6813,7 @@ Int Function GetActiveRedguardSpineSect()
 EndFunction
 
 Function SyncRedguardRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
-    Bool isActive = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_REDGUARD && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity() == deity
+    Bool isActive = GetPlayerOriginRaceIndex() == Manager.ORIGIN_REDGUARD && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity() == deity
     Int activeTier = Manager.LedgerRuntime.TIER_NONE
     if isActive && deity
         activeTier = Manager.LedgerRuntime.GetTier(deity)
@@ -6828,7 +6828,7 @@ Function SyncRedguardRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1
 EndFunction
 
 Bool Function IsRedguardAncestorDistanceNeglected()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_REDGUARD
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_REDGUARD
         return False
     endIf
 
@@ -6933,7 +6933,7 @@ Bool Function IsBretonOfferEligibleDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
         return False
     endIf
 
@@ -6944,7 +6944,7 @@ Bool Function ShouldSuppressBretonFocusedChampionTierSurface(PDV_DeityBase deity
     if newTier < Manager.LedgerRuntime.TIER_CHAMPION
         return False
     endIf
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
         return False
     endIf
     if Manager.LedgerRuntime.GetPatronState() != Manager.LedgerRuntime.PATRON_STATE_ACTIVE || !Manager.GetActiveDeity() || deity != Manager.GetActiveDeity()
@@ -6959,7 +6959,7 @@ Bool Function IsRedguardOfferEligibleDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_REDGUARD
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_REDGUARD
         return False
     endIf
 
@@ -7111,7 +7111,7 @@ Function ApplyRedguardInitialChoice(Int sectValue, String reason)
 EndFunction
 
 Function HandleBretonTraditionChoice(Int traditionValue, String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
         Manager.Trace(2, "Breton tradition choice ignored for non-Breton origin.")
         return
     endIf
@@ -7166,7 +7166,7 @@ Function DecayBretonDruidicStandingAtDawn()
 EndFunction
 
 Bool Function ShouldBretonDruidicStandingFray()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
         return False
     endIf
     if GetBretonTraditionValue() != Manager.BRETON_TRADITION_GREEN_WAY
@@ -7176,7 +7176,7 @@ Bool Function ShouldBretonDruidicStandingFray()
 EndFunction
 
 Function AwardBretonAncestorSpinePulse(Float multiplier, String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
         return
     endIf
 
@@ -7192,7 +7192,7 @@ Function RunDawnRefreshBretonAncestor()
 EndFunction
 
 Function HandleBretonActionPracticeSignal(Int eventType, String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
         return
     endIf
 
@@ -7221,7 +7221,7 @@ Function HandleBretonActionPracticeSignal(Int eventType, String reason)
 EndFunction
 
 Function HandleBretonQuestTagPracticeSignal(String sourceTag, Bool positive, String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON || sourceTag == ""
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON || sourceTag == ""
         return
     endIf
 
@@ -7273,7 +7273,7 @@ Int Function ConsumeBretonPracticePointBudget(Int requestedPoints)
 EndFunction
 
 Bool Function AwardBretonPracticePulse(Int traditionValue, Int requestedPoints, String sourceKey, String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
         return False
     endIf
     if GetBretonTraditionValue() != traditionValue
@@ -7321,7 +7321,7 @@ Bool Function AwardBretonPracticePulse(Int traditionValue, Int requestedPoints, 
 EndFunction
 
 Bool Function DamageBretonPracticePressure(Int traditionValue, Int damageDelta, String sourceKey, String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
         return False
     endIf
     if GetBretonTraditionValue() != traditionValue
@@ -7373,7 +7373,7 @@ Function MaybeRecordBretonCrossTraditionPressure(Int sourceTradition, String sou
 EndFunction
 
 Function HandleBretonKnightlyVow(String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
         Manager.Trace(2, "Breton Knightly Vow ignored for non-Breton origin.")
         return
     endIf
@@ -7396,7 +7396,7 @@ Function HandleBretonKnightlyVow(String reason)
 EndFunction
 
 Function HandleBretonHiddenArtExposure(String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
         Manager.Trace(2, "Breton Hidden Art ignored for non-Breton origin.")
         return
     endIf
@@ -7448,7 +7448,7 @@ String Function GetBretonHiddenArtNoticeText(String reason)
 EndFunction
 
 Function HandleBretonGreenWayStanding(String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
         Manager.Trace(2, "Breton Green Way ignored for non-Breton origin.")
         return
     endIf
@@ -7744,7 +7744,7 @@ String Function GetRedguardSummary()
 EndFunction
 
 Function ReconcileRedguardSpineRewardAfterLoad()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_REDGUARD
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_REDGUARD
         return
     endIf
     if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1 && StorageUtil.GetIntValue(None, "PDV.Redguard.SetupComplete") != 1
@@ -7827,25 +7827,25 @@ Function EnsureNordOrkeyRewardRuntimeWiring()
 EndFunction
 
 Function HandleNordSleepEvents(Actor playerRef, String reason)
-    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD || !Manager.PDV_NordAncestorSubstrate
+    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD || !Manager.PDV_NordAncestorSubstrate
         return
     endIf
 
-    Int sleepCellId = Manager.GetInteriorSleepCellId(playerRef)
+    Int sleepCellId = GetInteriorSleepCellId(playerRef)
     if sleepCellId == 0
         return
     endIf
 
     String declaredKey = "PDV.Nord.HearthRest.DeclaredFormID"
     if StorageUtil.GetIntValue(None, declaredKey) == 0
-        if Manager.TryDeclareRestCell("PDV.Nord.HearthRest", sleepCellId)
+        if TryDeclareRestCell("PDV.Nord.HearthRest", sleepCellId)
             ShowNordNotification(None, "This hearth becomes a remembered place of rest.")
             Manager.Trace(2, "Nord hearth-rest cell declared: " + reason)
         endIf
         return
     endIf
 
-    if !Manager.IsPlayerAtDeclaredRestCell(playerRef, declaredKey)
+    if !IsPlayerAtDeclaredRestCell(playerRef, declaredKey)
         return
     endIf
 
@@ -8074,11 +8074,11 @@ Function HandleNordTsunAdversitySurvived(String reason)
 EndFunction
 
 Function HandleNordLocationChange(Location newLocation)
-    if !newLocation || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD || !Manager.PDV_NordAncestorSubstrate
+    if !newLocation || GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD || !Manager.PDV_NordAncestorSubstrate
         return
     endIf
 
-    if !Manager.IsPlayerAtDeclaredRestCell(Game.GetPlayer(), "PDV.Nord.HearthRest.DeclaredFormID")
+    if !IsPlayerAtDeclaredRestCell(Game.GetPlayer(), "PDV.Nord.HearthRest.DeclaredFormID")
         return
     endIf
 
@@ -8090,7 +8090,7 @@ Function HandleNordLocationChange(Location newLocation)
 EndFunction
 
 Function HandleNordAncestorSpine(String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
         Manager.Trace(2, "Nord ancestor spine ignored for non-Nord origin.")
         return
     endIf
@@ -8100,7 +8100,7 @@ Function HandleNordAncestorSpine(String reason)
 EndFunction
 
 Function RecordNordAncestorSpine(String reason, Float multiplier)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
         return
     endIf
 
@@ -8121,7 +8121,7 @@ Function RecordNordAncestorSpine(String reason, Float multiplier)
 EndFunction
 
 Function RecordNordAncestralRest(String reason, Float multiplier)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD || multiplier <= 0.0
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD || multiplier <= 0.0
         return
     endIf
 
@@ -8143,7 +8143,7 @@ Function RecordNordAncestralRest(String reason, Float multiplier)
 EndFunction
 
 Function RecordNordHearthReturn(String reason, Float multiplier)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD || multiplier <= 0.0
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD || multiplier <= 0.0
         return
     endIf
 
@@ -8182,7 +8182,7 @@ Function MaybeShowNordKyneChampionEntry(PDV_DeityBase deity, Int newTier)
     if newTier < Manager.LedgerRuntime.TIER_CHAMPION
         return
     endIf
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
         return
     endIf
     if !Manager.PDV_Kyne || deity != Manager.PDV_Kyne
@@ -8267,7 +8267,7 @@ Function SyncNordPatronNeglectSpells()
     if !playerRef
         return
     endIf
-    Bool isNord = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD
+    Bool isNord = GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD
     Manager.LedgerRuntime.SyncOnePatronNeglectSpell(playerRef, Manager.PDV_SPEL_Neglect_Shor,  isNord && Manager.GetActiveDeity() == Manager.PDV_Shor  && Manager.LedgerRuntime.IsNeglectFlagActive(Manager.PDV_Shor))
     Manager.LedgerRuntime.SyncOnePatronNeglectSpell(playerRef, Manager.PDV_SPEL_Neglect_Tsun,  isNord && Manager.GetActiveDeity() == Manager.PDV_Tsun  && Manager.LedgerRuntime.IsNeglectFlagActive(Manager.PDV_Tsun))
     Manager.LedgerRuntime.SyncOnePatronNeglectSpell(playerRef, Manager.PDV_SPEL_Neglect_Stuhn, isNord && Manager.GetActiveDeity() == Manager.PDV_Stuhn && Manager.LedgerRuntime.IsNeglectFlagActive(Manager.PDV_Stuhn))
@@ -8283,7 +8283,7 @@ Function SyncDunmerRewards(Actor playerRef)
         return
     endIf
 
-    Bool isDunmer = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_DUNMER
+    Bool isDunmer = GetPlayerOriginRaceIndex() == Manager.ORIGIN_DUNMER
     Bool broadReclamationFaithful = isDunmer && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount") >= 6
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Dunmer_Reclamation_T2, broadReclamationFaithful, "Dunmer Reclamation T2")
 
@@ -8293,7 +8293,7 @@ Function SyncDunmerRewards(Actor playerRef)
 EndFunction
 
 Function SyncDunmerRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
-    Bool isActive = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_DUNMER && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity() == deity
+    Bool isActive = GetPlayerOriginRaceIndex() == Manager.ORIGIN_DUNMER && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity() == deity
     Int activeTier = Manager.LedgerRuntime.TIER_NONE
     if isActive && deity
         activeTier = Manager.LedgerRuntime.GetTier(deity)
@@ -8308,7 +8308,7 @@ Function SyncDunmerRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, 
 EndFunction
 
 Bool Function IsDunmerAncestorNeglected()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER
         return False
     endIf
 
@@ -8337,7 +8337,7 @@ Function SyncDunmerNeglectSpell(Bool shouldBeActive)
 EndFunction
 
 Function HandleDunmerClumsyCrime(String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER || !Manager.PDV_Mephala
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER || !Manager.PDV_Mephala
         return
     endIf
 
@@ -8364,7 +8364,7 @@ Function SyncNordRewards(Actor playerRef)
 
     EnsureNordOrkeyRewardRuntimeWiring()
 
-    Bool isNord = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD
+    Bool isNord = GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD
     Int baselineState = GetNordPantheonBaselineState()
     SyncNordAncestorSubstrate(playerRef, isNord)
     SyncNordRewardFamily(playerRef, Manager.NORD_BASELINE_OLD_WAYS, Manager.PDV_Kyne, Manager.PDV_Bless_Nord_Kyne_T1, Manager.PDV_Bless_Nord_Kyne_T2, Manager.PDV_Bless_Nord_Kyne_T3, "Kyne")
@@ -8410,7 +8410,7 @@ EndFunction
 
 Function SyncNordRewardFamily(Actor playerRef, Int requiredBaseline, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
     Bool baselineOk = requiredBaseline < 0 || GetNordPantheonBaselineState() == requiredBaseline
-    Bool isActive = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD && baselineOk && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity() == deity
+    Bool isActive = GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD && baselineOk && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity() == deity
     Float activePiety = 0.0
     if isActive && deity
         activePiety = Manager.LedgerRuntime.GetPiety(deity)
@@ -8497,7 +8497,7 @@ Bool Function IsNordOfferEligibleDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
         return False
     endIf
 
@@ -8520,7 +8520,7 @@ Bool Function IsDunmerOfferEligibleDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER
         return False
     endIf
 
@@ -8651,7 +8651,7 @@ Function ApplyNordInitialChoice(Int baselineValue, String reason)
 EndFunction
 
 Function HandleDunmerReclamationFocus(Int focusValue, String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER
         Manager.Trace(2, "Dunmer Reclamation focus ignored for non-Dunmer origin.")
         return
     endIf
@@ -8687,7 +8687,7 @@ Function HandleDunmerHonorableVictory(Form victimForm)
 EndFunction
 
 Function RecordDunmerCombatVictoryEvidence(Form victimForm)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER || !victimForm
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER || !victimForm
         return
     endIf
     StorageUtil.SetIntValue(None, "PDV.Dunmer.HonorableCombatVictim", victimForm.GetFormID())
@@ -8696,7 +8696,7 @@ Function RecordDunmerCombatVictoryEvidence(Form victimForm)
 EndFunction
 
 Function RecordDunmerStoryVictoryEvidence(Form victimForm, Int relationshipRank)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER || !victimForm || relationshipRank > -2
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER || !victimForm || relationshipRank > -2
         return
     endIf
     StorageUtil.SetIntValue(None, "PDV.Dunmer.HonorableStoryVictim", victimForm.GetFormID())
@@ -8731,7 +8731,7 @@ Function TryResolveDunmerHonorableVictory(Form victimForm)
 EndFunction
 
 Function HandleDunmerDeviationPrice(String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER
         Manager.Trace(2, "Dunmer deviation price ignored for non-Dunmer origin.")
         return
     endIf
@@ -8770,7 +8770,7 @@ Function SurfaceDunmerDeviationPriceNotice()
 EndFunction
 
 Bool Function TryAwardDunmerTwilightWindowSignal(String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER || !Manager.PDV_Azura
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER || !Manager.PDV_Azura
         return False
     endIf
 
@@ -8805,7 +8805,7 @@ Function HandleDunmerOutdoorGoodDaedraShrine(String reason)
             Manager.PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(1.0, "good_daedra_altar_" + reason)
         endIf
         Manager.SendPrismaToast("journal", "good", "Good Daedra", "The Good Daedra hear the ash-prayer.")
-    elseIf Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_DUNMER
+    elseIf GetPlayerOriginRaceIndex() == Manager.ORIGIN_DUNMER
         Manager.SendPrismaToast("journal", "neutral", "Shrine quiet", "The shrine is quiet in this hour.")
     endIf
 EndFunction
@@ -8831,7 +8831,7 @@ String Function GetDunmerTwilightWindowLabel(Int windowValue)
 EndFunction
 
 Function AwardActiveDunmerReclamationMemorySignal()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER || Manager.LedgerRuntime.GetPatronState() != Manager.LedgerRuntime.PATRON_STATE_ACTIVE
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER || Manager.LedgerRuntime.GetPatronState() != Manager.LedgerRuntime.PATRON_STATE_ACTIVE
         return
     endIf
 
@@ -8858,7 +8858,7 @@ Function AwardActiveDunmerReclamationMemorySignal()
 EndFunction
 
 Function AwardDunmerAncestorSpinePulse(Float multiplier, String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER || !Manager.PDV_Azura || multiplier <= 0.0
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER || !Manager.PDV_Azura || multiplier <= 0.0
         return
     endIf
 
@@ -9009,7 +9009,7 @@ Function AwardNordRouteFamilySignal(Int familyValue, Float multiplier)
 EndFunction
 
 Bool Function RouteNordFamily(String reason, String countKey, String lastReasonKey, String lastTimeKey, String traceLabel)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
         Manager.Trace(2, traceLabel + " ignored for non-Nord origin.")
         return False
     endIf
@@ -9049,7 +9049,7 @@ Bool Function RouteNordFamily(String reason, String countKey, String lastReasonK
 EndFunction
 
 Function HandleNordOldWaysState(String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
         Manager.Trace(2, "Nord Old Ways state ignored for non-Nord origin.")
         return
     endIf
@@ -9064,7 +9064,7 @@ Function HandleNordOldWaysState(String reason)
 EndFunction
 
 Function HandleNordKyneTalosContext(String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
         Manager.Trace(2, "Nord Kyne/Talos context ignored for non-Nord origin.")
         return
     endIf
@@ -9073,7 +9073,7 @@ Function HandleNordKyneTalosContext(String reason)
 EndFunction
 
 Function HandleNordHircineArkayEdge(String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
         Manager.Trace(2, "Nord Hircine/Arkay edge ignored for non-Nord origin.")
         return
     endIf
@@ -9101,7 +9101,7 @@ String Function GetBookOfDaysDunmerAncestorLabel()
 EndFunction
 
 Bool Function UsesNordOldWaysDeityNames()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
         return False
     endIf
     return GetNordPantheonBaselineState() == Manager.NORD_BASELINE_OLD_WAYS
@@ -9139,7 +9139,7 @@ Function EnsureDunmerAncestralUrn()
     ; V1: grant the usable MISC urn (PDV_MISC_DunmerAncestralUrn); clicking it in the inventory
     ; fires OnEquipped and routes the ancestor prayer. The retired model-less BOOK token crashed
     ; the book menu on read, so migration removes any copies before granting the MISC urn.
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER || !Manager.PDV_MISC_DunmerAncestralUrn
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER || !Manager.PDV_MISC_DunmerAncestralUrn
         return
     endIf
 
@@ -9163,7 +9163,7 @@ Function EnsureDunmerAncestralUrn()
 EndFunction
 
 Bool Function IsNordVampireSuppressed()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
         return False
     endIf
 
@@ -9175,7 +9175,7 @@ Bool Function IsNordVampireSuppressed()
 EndFunction
 
 Bool Function HasNordVampireScar()
-    return Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD && StorageUtil.GetIntValue(None, "PDV.Nord.VampireScar") == 1
+    return GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD && StorageUtil.GetIntValue(None, "PDV.Nord.VampireScar") == 1
 EndFunction
 
 String Function GetNordSurveyBaseText()
@@ -9187,7 +9187,7 @@ String Function GetNordSurveyBaseText()
     String contextText = GetNordContextSurveyText()
     if Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity()
         String focusedText = "Standing: " + band + ". " + Manager.GetPublicDeityDisplayName(Manager.GetActiveDeity()) + " names you."
-        if Manager.IsFocusedPantheonBoonSuspended()
+        if IsFocusedPantheonBoonSuspended()
             return focusedText + " The commitment remains, but its boon is suspended until 50 piety." + contextText
         endIf
         if StorageUtil.GetIntValue(None, "PDV.Neglect.ActiveCount") > 0
@@ -9375,25 +9375,25 @@ EndFunction
 ; ============================================================================
 
 Function HandleOrcSleepEvents(Actor playerRef, String reason)
-    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ORC || !Manager.PDV_OrcLifeModeTrack
+    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_ORC || !Manager.PDV_OrcLifeModeTrack
         return
     endIf
 
-    Int sleepCellId = Manager.GetInteriorSleepCellId(playerRef)
+    Int sleepCellId = GetInteriorSleepCellId(playerRef)
     if sleepCellId == 0
         return
     endIf
 
     String declaredKey = "PDV.Orc.HearthRest.DeclaredFormID"
     if StorageUtil.GetIntValue(None, declaredKey) == 0
-        if Manager.TryDeclareRestCell("PDV.Orc.HearthRest", sleepCellId)
+        if TryDeclareRestCell("PDV.Orc.HearthRest", sleepCellId)
             MaybeShowOrcHearthHeldNotice("sleep_rest_declare_" + reason)
             Manager.Trace(2, "Orc hearth-rest cell declared: " + reason)
         endIf
         return
     endIf
 
-    if !Manager.IsPlayerAtDeclaredRestCell(playerRef, declaredKey)
+    if !IsPlayerAtDeclaredRestCell(playerRef, declaredKey)
         return
     endIf
 
@@ -9412,7 +9412,7 @@ Function HandleOrcSleepEvents(Actor playerRef, String reason)
 EndFunction
 
 Bool Function TryOrcTrialOfIron(Actor playerRef, Int sleepCellId, String reason)
-    if !playerRef || !Manager.PDV_MESG_Orc_TrialOfIron || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ORC
+    if !playerRef || !Manager.PDV_MESG_Orc_TrialOfIron || GetPlayerOriginRaceIndex() != Manager.ORIGIN_ORC
         return false
     endIf
 
@@ -9493,7 +9493,7 @@ Function SyncOrcTrialOfIron(Actor playerRef)
     endIf
 
     Int modeAtRite = StorageUtil.GetIntValue(None, "PDV.OrcTrial.ModeAtRite")
-    Bool eligible = (Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ORC) && IsOrcTrialCoherent(modeAtRite)
+    Bool eligible = (GetPlayerOriginRaceIndex() == Manager.ORIGIN_ORC) && IsOrcTrialCoherent(modeAtRite)
     if eligible
         if !playerRef.HasSpell(disc)
             playerRef.AddSpell(disc, False)
@@ -9523,7 +9523,7 @@ Function HandleImperialSleepEvents(Actor playerRef, String reason)
 EndFunction
 
 Function TryOrcCodeHolds(Actor playerRef)
-    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ORC
+    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_ORC
         return
     endIf
     if !playerRef.IsInCombat() || (!Manager.PDV_SPEL_OrcCodeHolds && !Manager.PDV_SPEL_OrcCodeHolds_Devoted)
@@ -9781,7 +9781,7 @@ Function RecordOrcLifeModeSignal(Int modeValue, Float multiplier, String reason)
     MaybeShowOrcWatchersNotice(modeValue, reason)
 
     if Manager.PDV_OrcLifeModeTrack.GetCurrentState() == modeValue
-        Manager.SendPrismaSubstrateToast(GetOrcLifeModeSubstrateToken(modeValue), "act", "The code was marked.", "malacath", GetOrcLifeModeLabel())
+        SendPrismaSubstrateToast(GetOrcLifeModeSubstrateToken(modeValue), "act", "The code was marked.", "malacath", GetOrcLifeModeLabel())
         Manager.AppendBookOfDaysEntry("The code was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
         Manager.RequestPanelRefresh()
         return
@@ -9910,7 +9910,7 @@ Function AwardOrcFourHoldsVisitSignal()
 EndFunction
 
 Function AwardOrcAncestorSpineSignal(Float multiplier, String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ORC || !Manager.PDV_Malacath || multiplier <= 0.0
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ORC || !Manager.PDV_Malacath || multiplier <= 0.0
         return
     endIf
 
@@ -10053,7 +10053,7 @@ Function EnsureOrcLifeModeInitialized()
 EndFunction
 
 Bool Function IsOrcOrigin()
-    return Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ORC
+    return GetPlayerOriginRaceIndex() == Manager.ORIGIN_ORC
 EndFunction
 
 String Function GetOrcLifeModeWeightKey(Int modeValue)
@@ -10111,7 +10111,7 @@ Function SyncOrcRewards(Actor playerRef)
         return
     endIf
 
-    Bool isOrc = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ORC
+    Bool isOrc = GetPlayerOriginRaceIndex() == Manager.ORIGIN_ORC
     Int activeMode = GetActiveOrcRewardMode()
     SyncOrcSpineBoon(playerRef, isOrc, activeMode)
 
@@ -10161,7 +10161,7 @@ Function SyncOrcRewardFamily(Actor playerRef, Int thisMode, Int activeMode, Int 
 EndFunction
 
 Bool Function IsOrcCodeNeglected()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ORC
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ORC
         return False
     endIf
 
@@ -10237,7 +10237,7 @@ Function SyncImperialRewards(Actor playerRef)
         return
     endIf
 
-    Bool isImperial = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_IMPERIAL
+    Bool isImperial = GetPlayerOriginRaceIndex() == Manager.ORIGIN_IMPERIAL
     SyncImperialAncestorSubstrate(playerRef, isImperial)
     ; The Divine reward SPELs below are REUSED by the Nord baseline lanes
     ; (SyncNordRewardFamily: Mara/Arkay/Dibella + the whole Nine Divines set, owner ruling
@@ -10277,7 +10277,7 @@ Function SyncImperialAncestorSubstrate(Actor playerRef, Bool isImperial)
 EndFunction
 
 Function SyncImperialRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
-    Bool isActive = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_IMPERIAL && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity() == deity && !IsImperialVampireStateActive()
+    Bool isActive = GetPlayerOriginRaceIndex() == Manager.ORIGIN_IMPERIAL && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity() == deity && !IsImperialVampireStateActive()
     Float activePiety = 0.0
     if isActive && deity
         activePiety = Manager.LedgerRuntime.GetPiety(deity)
@@ -10291,7 +10291,7 @@ Function SyncImperialRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1
 EndFunction
 
 Bool Function IsImperialCivicNeglected()
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
         return False
     endIf
 
@@ -10332,7 +10332,7 @@ Function ApplyConcordatPressure(Int adjustment, String reason)
         Manager.Trace(1, "ApplyConcordatPressure skipped: track missing.")
         return
     endIf
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
         Manager.Trace(2, "ApplyConcordatPressure ignored for non-Imperial origin.")
         return
     endIf
@@ -10402,7 +10402,7 @@ Bool Function IsImperialOfferEligibleDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
         return False
     endIf
 
@@ -10422,7 +10422,7 @@ Bool Function IsImperialTalosOfferAllowed()
 EndFunction
 
 Bool Function ShouldSuppressImperialTalosTierSurface(PDV_DeityBase deity)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
         return False
     endIf
 
@@ -10605,7 +10605,7 @@ Function AwardImperialPatronCivicSignal(Float multiplier)
 EndFunction
 
 Function AwardImperialAncestorSpinePulse(Float multiplier, String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL || multiplier <= 0.0 || IsImperialVampireStateActive()
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL || multiplier <= 0.0 || IsImperialVampireStateActive()
         return
     endIf
 
@@ -10634,7 +10634,7 @@ Function RunDawnRefreshImperialAncestor()
 EndFunction
 
 Function HandleImperialCivicService(String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
         Manager.Trace(2, "Imperial civic service ignored for non-Imperial origin.")
         return
     endIf
@@ -10664,7 +10664,7 @@ Function HandleImperialCivicService(String reason)
 EndFunction
 
 Function HandleImperialTalosPressure(Bool isPrivate, String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
         Manager.Trace(2, "Imperial Talos pressure ignored for non-Imperial origin.")
         return
     endIf
@@ -10704,7 +10704,7 @@ Function HandleImperialTalosPressure(Bool isPrivate, String reason)
 EndFunction
 
 Function HandleImperialPatronCivicFavor(String reason)
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
+    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
         Manager.Trace(2, "Imperial patron civic favor ignored for non-Imperial origin.")
         return
     endIf
@@ -10777,7 +10777,7 @@ String Function GetImperialSurveyText()
     String text = ""
     if Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity()
         text = Manager.GetPublicDeityDisplayName(Manager.GetActiveDeity()) + " holds your focus among the Nine. Standing: " + band + ". " + BuildImperialConcordatSurveySentence(concordat)
-        if Manager.IsFocusedPantheonBoonSuspended()
+        if IsFocusedPantheonBoonSuspended()
             text = text + " The commitment remains, but its boon is suspended until 50 piety."
         endIf
     else
@@ -10888,7 +10888,7 @@ String Function GetConcordatSummary()
         gateState = "unlocked"
     endIf
 
-    return "raw=" + Manager.PDV_ConcordatStandingTrack.GetValue() + ";state=" + Manager.PDV_ConcordatStandingTrack.GetStateLabel() + ";pending=" + Manager.PDV_ConcordatStandingTrack.GetPendingStateLabel() + ";gate=" + gateState + ";track=" + PDV_DevotionRules.FormatTwoDecimals(Manager.GetTalosTrackGainMultiplier()) + ";eff=" + PDV_DevotionRules.FormatTwoDecimals(Manager.GetTalosEffectiveGainMultiplier())
+    return "raw=" + Manager.PDV_ConcordatStandingTrack.GetValue() + ";state=" + Manager.PDV_ConcordatStandingTrack.GetStateLabel() + ";pending=" + Manager.PDV_ConcordatStandingTrack.GetPendingStateLabel() + ";gate=" + gateState + ";track=" + PDV_DevotionRules.FormatTwoDecimals(GetTalosTrackGainMultiplier()) + ";eff=" + PDV_DevotionRules.FormatTwoDecimals(GetTalosEffectiveGainMultiplier())
 EndFunction
 
 String Function GetOrcSummary()
@@ -10898,3 +10898,1210 @@ String Function GetOrcSummary()
 
     return "mode=" + GetOrcLifeModeLabel() + ";stronghold=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.Stronghold")) + ";city=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.City")) + ";legion=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.LegionExile")) + ";last=" + StorageUtil.GetStringValue(None, "PDV.Orc.LastLifeModeReason")
 EndFunction
+
+; ============================================================================
+; ORIGIN tranche 6 (final non-race infra): broad-lane tier/standing/
+; presentation helpers, origin-race index/label/roster, curse summary &
+; context, substrate pacing, Paarthurnax + undead-crypt + Thalmor + shout
+; reactions, medallion assembly, survey/rest-cell helpers, generic Concordat,
+; Talos deity fns (identity/rescue/defiance/betrayal + track/effective gain
+; multipliers). Moved verbatim from PDV__ManagerQuest; bare manager-member
+; references qualified via Manager.; LedgerRuntime.X -> Manager.LedgerRuntime.X;
+; reads of shared manager script vars route through existing manager accessors
+; (GetActiveDeity, GetQrQueueTransactionActive); writes through existing setters
+; (SetSuppressAwardFavorToast, SetQrQueueNeedsCurseRefresh). The 3 gain-
+; multiplier fns GetCurseGainMultiplier / GetOrcLifeModeGainMultiplier /
+; GetImperialCurseGainMultiplier remain DEFERRED in the manager (reached by
+; LEDGER via Manager.Get...); no moved body calls them.
+; ============================================================================
+
+Function EnsureTalosRuntimeIdentity()
+    if !Manager.PDV_Talos
+        return
+    endIf
+
+    Bool repaired = False
+
+    if Manager.PDV_Talos.DeityName != "Talos"
+        Manager.PDV_Talos.DeityName = "Talos"
+        repaired = True
+    endIf
+
+    if Manager.PDV_Talos.DeityDomain == ""
+        Manager.PDV_Talos.DeityDomain = "Empire, War, Human Ascension"
+        repaired = True
+    endIf
+
+    if Manager.PDV_Talos.DeityIndex != 1
+        Manager.PDV_Talos.DeityIndex = 1
+        repaired = True
+    endIf
+
+    if Manager.PDV_Talos.Stance_Nord != Manager.PDV_Talos.STANCE_NATIVE
+        Manager.PDV_Talos.Stance_Nord = Manager.PDV_Talos.STANCE_NATIVE
+        repaired = True
+    endIf
+
+    if Manager.PDV_Talos.Stance_Imperial != Manager.PDV_Talos.STANCE_FOREIGN
+        Manager.PDV_Talos.Stance_Imperial = Manager.PDV_Talos.STANCE_FOREIGN
+        repaired = True
+    endIf
+
+    if Manager.PDV_Talos.Stance_Breton != Manager.PDV_Talos.STANCE_NATIVE
+        Manager.PDV_Talos.Stance_Breton = Manager.PDV_Talos.STANCE_NATIVE
+        repaired = True
+    endIf
+
+    if Manager.PDV_Talos.Stance_Altmer != Manager.PDV_Talos.STANCE_HOSTILE
+        Manager.PDV_Talos.Stance_Altmer = Manager.PDV_Talos.STANCE_HOSTILE
+        repaired = True
+    endIf
+
+    if Manager.PDV_Talos.Stance_Bosmer != Manager.PDV_Talos.STANCE_FOREIGN
+        Manager.PDV_Talos.Stance_Bosmer = Manager.PDV_Talos.STANCE_FOREIGN
+        repaired = True
+    endIf
+
+    if Manager.PDV_Talos.Stance_Dunmer != Manager.PDV_Talos.STANCE_FOREIGN
+        Manager.PDV_Talos.Stance_Dunmer = Manager.PDV_Talos.STANCE_FOREIGN
+        repaired = True
+    endIf
+
+    if Manager.PDV_Talos.Stance_Khajiit != Manager.PDV_Talos.STANCE_FOREIGN
+        Manager.PDV_Talos.Stance_Khajiit = Manager.PDV_Talos.STANCE_FOREIGN
+        repaired = True
+    endIf
+
+    if Manager.PDV_Talos.Stance_Argonian != Manager.PDV_Talos.STANCE_FOREIGN
+        Manager.PDV_Talos.Stance_Argonian = Manager.PDV_Talos.STANCE_FOREIGN
+        repaired = True
+    endIf
+
+    if Manager.PDV_Talos.Stance_Orc != Manager.PDV_Talos.STANCE_FOREIGN
+        Manager.PDV_Talos.Stance_Orc = Manager.PDV_Talos.STANCE_FOREIGN
+        repaired = True
+    endIf
+
+    if Manager.PDV_Talos.Stance_Redguard != Manager.PDV_Talos.STANCE_FOREIGN
+        Manager.PDV_Talos.Stance_Redguard = Manager.PDV_Talos.STANCE_FOREIGN
+        repaired = True
+    endIf
+
+    if Manager.PDV_Talos.PDV_GLO_DebugLevel != Manager.LedgerRuntime.PDV_GLO_DebugLevel
+        Manager.PDV_Talos.PDV_GLO_DebugLevel = Manager.LedgerRuntime.PDV_GLO_DebugLevel
+        repaired = True
+    endIf
+
+    if Manager.PDV_Talos.PDV_GLO_OriginRace != Manager.PDV_GLO_OriginRace
+        Manager.PDV_Talos.PDV_GLO_OriginRace = Manager.PDV_GLO_OriginRace
+        repaired = True
+    endIf
+
+    if repaired
+        Manager.Trace(1, "Talos runtime identity repaired for save compatibility.")
+    endIf
+EndFunction
+
+Bool Function IsDashboardDeityInOriginRoster(PDV_DeityBase deity, Int originRace)
+    if !deity
+        return False
+    endIf
+
+    if originRace == Manager.ORIGIN_NORD
+        return deity == Manager.PDV_Kyne || deity == Manager.LedgerRuntime.PDV_Kynareth || deity == Manager.PDV_Talos || deity == Manager.PDV_Shor || deity == Manager.PDV_Tsun || deity == Manager.PDV_Stuhn || deity == Manager.LedgerRuntime.PDV_Mara || deity == Manager.LedgerRuntime.PDV_Akatosh || deity == Manager.LedgerRuntime.PDV_Arkay || deity == Manager.LedgerRuntime.PDV_Stendarr || deity == Manager.LedgerRuntime.PDV_Julianos || deity == Manager.LedgerRuntime.PDV_Dibella || deity == Manager.LedgerRuntime.PDV_Zenithar
+    elseIf originRace == Manager.ORIGIN_IMPERIAL
+        return deity == Manager.LedgerRuntime.PDV_Kynareth || deity == Manager.LedgerRuntime.PDV_Mara || deity == Manager.LedgerRuntime.PDV_Akatosh || deity == Manager.LedgerRuntime.PDV_Arkay || deity == Manager.LedgerRuntime.PDV_Stendarr || deity == Manager.LedgerRuntime.PDV_Julianos || deity == Manager.LedgerRuntime.PDV_Dibella || deity == Manager.LedgerRuntime.PDV_Zenithar
+    elseIf originRace == Manager.ORIGIN_BRETON
+        return deity == Manager.LedgerRuntime.PDV_Kynareth || deity == Manager.PDV_Talos || deity == Manager.LedgerRuntime.PDV_Mara || deity == Manager.LedgerRuntime.PDV_Akatosh || deity == Manager.LedgerRuntime.PDV_Arkay || deity == Manager.LedgerRuntime.PDV_Stendarr || deity == Manager.LedgerRuntime.PDV_Julianos || deity == Manager.LedgerRuntime.PDV_Dibella || deity == Manager.LedgerRuntime.PDV_Zenithar || deity == Manager.PDV_Magnus || deity == Manager.PDV_Yffre
+    elseIf originRace == Manager.ORIGIN_ALTMER
+        return deity == Manager.PDV_AuriEl || deity == Manager.PDV_Magnus || deity == Manager.PDV_Xarxes || deity == Manager.PDV_Trinimac || deity == Manager.PDV_Syrabane
+    elseIf originRace == Manager.ORIGIN_BOSMER
+        return deity == Manager.PDV_Yffre || deity == Manager.PDV_AuriEl || deity == Manager.PDV_Xarxes || deity == Manager.PDV_BaanDar || deity == Manager.LedgerRuntime.PDV_Zen
+    elseIf originRace == Manager.ORIGIN_DUNMER
+        return deity == Manager.PDV_Azura || deity == Manager.PDV_Boethiah || deity == Manager.PDV_Mephala
+    elseIf originRace == Manager.ORIGIN_KHAJIIT
+        return deity == Manager.PDV_Azura || deity == Manager.PDV_Boethiah || deity == Manager.PDV_Mephala || deity == Manager.PDV_BaanDar || deity == Manager.PDV_Rajhin || deity == Manager.PDV_Alkosh || deity == Manager.PDV_Khenarthi
+    elseIf originRace == Manager.ORIGIN_ARGONIAN
+        return deity == Manager.PDV_Hist || deity == Manager.PDV_Sithis
+    elseIf originRace == Manager.ORIGIN_ORC
+        return deity == Manager.PDV_Malacath
+    elseIf originRace == Manager.ORIGIN_REDGUARD
+        return deity == Manager.PDV_Tuwhacca || deity == Manager.PDV_Leki || deity == Manager.PDV_HoonDing
+    endIf
+
+    return False
+EndFunction
+
+Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, Bool hadSleepStartContext, Bool sleepStartedOutside, String reason)
+    if wasInterrupted
+        Manager.Trace(3, "Player sleep stop ignored because sleep was interrupted.")
+        return
+    endIf
+
+    if !playerRef
+        Manager.Trace(1, "Player sleep stop skipped: player ref missing.")
+        return
+    endIf
+
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace == Manager.ORIGIN_KHAJIIT
+        if !hadSleepStartContext
+            Manager.Trace(1, "Khajiit road-home rest skipped: sleep-start context missing.")
+        elseIf sleepStartedOutside
+            HandleKhajiitRoadHome("outdoor_rest_" + reason)
+        endIf
+    endIf
+
+    if originRace == Manager.ORIGIN_ARGONIAN
+        HandleArgonianSleepEvents(playerRef, reason)
+    endIf
+
+    if originRace == Manager.ORIGIN_BOSMER
+        HandleBosmerSleepEvents(playerRef, reason)
+    endIf
+
+    if originRace == Manager.ORIGIN_BRETON
+        HandleBretonSleepEvents(playerRef, reason)
+    endIf
+
+    if originRace == Manager.ORIGIN_DUNMER
+        HandleDunmerSleepEvents(playerRef, reason)
+    endIf
+
+    if originRace == Manager.ORIGIN_ALTMER
+        HandleAltmerSleepEvents(playerRef, reason)
+    endIf
+
+    if originRace == Manager.ORIGIN_NORD
+        HandleNordSleepEvents(playerRef, reason)
+    endIf
+
+    if originRace == Manager.ORIGIN_ORC
+        HandleOrcSleepEvents(playerRef, reason)
+    endIf
+
+    if originRace == Manager.ORIGIN_REDGUARD
+        HandleRedguardSleepEvents(playerRef, reason)
+    endIf
+EndFunction
+
+Function HandleSubstrateActionEvent(Int eventType, String reason)
+    Int origin = GetPlayerOriginRaceIndex()
+    if origin == Manager.ORIGIN_IMPERIAL && !IsImperialVampireStateActive() && Manager.PDV_ImperialAncestorSubstrate
+        if eventType == 330 || eventType == 331 || eventType == 332
+            Float metricBefore = Manager.PDV_ImperialAncestorSubstrate.GetMetric()
+            Int tierBefore = Manager.PDV_ImperialAncestorSubstrate.GetSubstrateTier()
+            Manager.PDV_ImperialAncestorSubstrate.RecordCivicStandingScaled(1.0, "craft_" + reason)
+            Manager.SendPrismaSubstrateProgress("imperial-civic", tierBefore, Manager.PDV_ImperialAncestorSubstrate.GetSubstrateTier(), Manager.PDV_ImperialAncestorSubstrate.GetMetric() - metricBefore, "Completed craft strengthened civic practice.", "journal", GetImperialCivicTierName())
+        endIf
+    elseIf origin == Manager.ORIGIN_ARGONIAN && Manager.PDV_ArgonianHistSubstrate
+        if eventType == 333
+            Float metricBefore = Manager.PDV_ArgonianHistSubstrate.GetMetric()
+            Int tierBefore = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
+            Manager.PDV_ArgonianHistSubstrate.RecordCulturalPractice("argonian_cooked_meal", reason)
+            Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier(), Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The first cooked meal kept Saxhleel practice.", "journal", GetArgonianCulturalPracticeLabel())
+        endIf
+    elseIf origin == Manager.ORIGIN_NORD && Manager.PDV_NordAncestorSubstrate
+        if eventType == 313
+            Float metricBefore = Manager.PDV_NordAncestorSubstrate.GetMetric()
+            Int tierBefore = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
+            Manager.PDV_NordAncestorSubstrate.RecordAncestralRestScaled(1.0, "open_sky_rest_" + reason)
+            Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, Manager.PDV_NordAncestorSubstrate.GetSubstrateTier(), Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The open sky kept the old practice.", "journal", GetNordAncestorLayerLabel())
+        elseIf eventType == 333
+            Float metricBefore = Manager.PDV_NordAncestorSubstrate.GetMetric()
+            Int tierBefore = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
+            Manager.PDV_NordAncestorSubstrate.RecordHearthReturnScaled(1.0, "cooked_meal_" + reason)
+            Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, Manager.PDV_NordAncestorSubstrate.GetSubstrateTier(), Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The first cooked meal kept the hearth.", "journal", GetNordAncestorLayerLabel())
+        endIf
+    elseIf origin == Manager.ORIGIN_ALTMER && Manager.PDV_AltmerAncestorSubstrate && !IsAltmerFavorSuppressedByCurse()
+        ; P2 (2026-08-04) widened the spine's feed set, and answers the question P5 deferred:
+        ; YES, ordered study feeds the ancestral spine, as ordered craft already did.
+        ;
+        ; This adds NO income. TryAwardSubstrateDayCredit caps the substrate at ONE +4.0 credit per
+        ; devotional day whatever the source, so extra feeds change only WHICH act can claim the
+        ; day -- which is the whole point. A player is never stuck waiting on one specific chore.
+        ;
+        ; Routed through AwardAltmerAncestorSpinePulse rather than calling
+        ; RecordHeritageStandingScaled inline, so every feed gets the same bookkeeping, the same
+        ; Prisma progress push, and the same per-source Book of Days voice.
+        ; NOTE: these arms deliberately keep their OWN metricBefore / RecordHeritageStandingScaled /
+        ; SendPrismaSubstrateProgress rather than routing through AwardAltmerAncestorSpinePulse.
+        ; Consolidating them reads cleaner but drops the manager's substrate-progress producer count
+        ; below the floor asserted by tools/pdv_substrate_pacing_audit.mjs
+        ; (`source.actual-substrate-delta`, >= 19 producers, each reporting the real post-award
+        ; delta). The shared voice helper below is the part worth factoring out; the per-producer
+        ; delta reporting is intentionally NOT.
+        if eventType == 330 || eventType == 331
+            String craftToken = "smithing_"
+            if eventType == 331
+                craftToken = "enchantment_"
+            endIf
+            Float metricBefore = Manager.PDV_AltmerAncestorSubstrate.GetMetric()
+            Int tierBefore = Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier()
+            Manager.PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, craftToken + reason)
+            Float grantedMetric = Manager.PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore
+            Manager.SendPrismaSubstrateProgress("altmer-heritage", tierBefore, Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier(), grantedMetric, "", "auri-el", GetAltmerHeritageTierName())
+            AppendAltmerHeritageVoice(grantedMetric, craftToken + reason)
+
+            ; P4: Magnus's renewable curated beat. Enchanting specifically -- binding magicka into
+            ; lawful form is his doctrine. Hard 1.2/day ceiling regardless of how many items.
+            if eventType == 331 && Manager.PDV_Magnus && Manager.ConsumeOncePerDaySignal("PDV.Signal.MagnusApertureKept")
+                Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Magnus, Manager.PDV_Magnus.SIGNAL_APERTURE_KEPT, None, 1.0)
+                Manager.LedgerRuntime.SurfaceReservedSignal(Manager.PDV_Magnus, "The design holds", "marks an enchantment made as the art demands.")
+            endIf
+        elseIf eventType == 340 || eventType == 341 || eventType == 342
+            Float studyMetricBefore = Manager.PDV_AltmerAncestorSubstrate.GetMetric()
+            Int studyTierBefore = Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier()
+            Manager.PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, "study_" + reason)
+            Float studyGrantedMetric = Manager.PDV_AltmerAncestorSubstrate.GetMetric() - studyMetricBefore
+            Manager.SendPrismaSubstrateProgress("altmer-heritage", studyTierBefore, Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier(), studyGrantedMetric, "", "auri-el", GetAltmerHeritageTierName())
+            AppendAltmerHeritageVoice(studyGrantedMetric, "study_" + reason)
+
+            ; P5: the Xarxes study stamp. RunDawnAwardAltmerXarxesRecord reads this at the NEXT
+            ; dawn to decide whether the ledger noticed yesterday. Independent of the spine credit
+            ; above -- the stamp records that study HAPPENED, whether or not it claimed the day.
+            StorageUtil.SetIntValue(None, "PDV.Altmer.Xarxes.StudyDay", Manager.LedgerRuntime.GetDevotionalDay() + 2)
+        endIf
+    endIf
+EndFunction
+
+Int Function GetInteriorSleepCellId(Actor playerRef)
+    if !playerRef
+        return 0
+    endIf
+
+    Cell sleepCell = playerRef.GetParentCell()
+    if !sleepCell || !sleepCell.IsInterior()
+        return 0
+    endIf
+
+    return sleepCell.GetFormID()
+EndFunction
+
+Bool Function IsPlayerAtDeclaredRestCell(Actor playerRef, String declaredKey)
+    if !playerRef
+        return false
+    endIf
+
+    Int declaredId = StorageUtil.GetIntValue(None, declaredKey)
+    if declaredId == 0
+        return false
+    endIf
+
+    Cell currentCell = playerRef.GetParentCell()
+    if !currentCell
+        return false
+    endIf
+
+    return currentCell.GetFormID() == declaredId
+EndFunction
+
+Bool Function TryDeclareRestCell(String keyPrefix, Int sleepCellId)
+    if sleepCellId == 0 || StorageUtil.GetIntValue(None, keyPrefix + ".DeclaredFormID") != 0
+        return false
+    endIf
+
+    ; fix-plan 4.1 + 4.2. This shared Nord/Orc/Redguard rest-cell declaration compared a
+    ; default-0 CandidateDay against raw game day 0 -- the same day-0 class as B13's shrine
+    ; credit, here silently refusing the first candidacy sleep of a new save. Devotional
+    ; +2 stamp: never 0, and it no longer splits one night's sleep across two days.
+    Int today = Manager.LedgerRuntime.GetDevotionalDay() + 2
+    Int candidateId = StorageUtil.GetIntValue(None, keyPrefix + ".CandidateFormID")
+    Int candidateDay = Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp(keyPrefix + ".CandidateDay")
+    Int candidateCount = StorageUtil.GetIntValue(None, keyPrefix + ".CandidateCount")
+
+    if candidateId != sleepCellId
+        candidateCount = 0
+    elseIf candidateDay == today
+        return false
+    endIf
+
+    candidateCount += 1
+    StorageUtil.SetIntValue(None, keyPrefix + ".CandidateFormID", sleepCellId)
+    Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp(keyPrefix + ".CandidateDay")
+    StorageUtil.SetIntValue(None, keyPrefix + ".CandidateCount", candidateCount)
+
+    if candidateCount < 3
+        return false
+    endIf
+
+    StorageUtil.SetIntValue(None, keyPrefix + ".DeclaredFormID", sleepCellId)
+    StorageUtil.SetIntValue(None, keyPrefix + ".DeclaredDay", today)
+    StorageUtil.SetIntValue(None, keyPrefix + ".CandidateFormID", 0)
+    StorageUtil.SetIntValue(None, keyPrefix + ".CandidateDay", 0)
+    StorageUtil.SetIntValue(None, keyPrefix + ".CandidateCount", 0)
+    return true
+EndFunction
+
+Function HandlePlayerBelowHealthGate(Actor playerRef)
+    TryBosmerBaanDarGap(playerRef)
+    TryArgonianSithisNearDeathBurst(playerRef)
+    TryOrcCodeHolds(playerRef)
+EndFunction
+
+Function HandlePlayerBelowHealthSurvived(Actor playerRef)
+    ; Orc Code Holds now fires mid-fight from HandlePlayerBelowHealthGate (Baan Dar
+    ; model), so the combat-exit survival path is intentionally a no-op. Left routed
+    ; from the player alias for origin 8 without behavior.
+EndFunction
+
+Function HandleGreenPactViolation(String reason)
+    if !IsBosmerOrigin()
+        return
+    endIf
+
+    if !Manager.PDV_BosmerPathTrack
+        Manager.Trace(1, "Green Pact violation skipped: Bosmer path missing.")
+        return
+    endIf
+
+    if Manager.PDV_BosmerPathTrack.GetCurrentState() != Manager.BOSMER_PATH_OLD_CONTRACT
+        Manager.Trace(2, "Green Pact violation ignored outside OldContract.")
+        return
+    endIf
+
+    Float nowTime = Utility.GetCurrentGameTime()
+    Float windowStart = StorageUtil.GetFloatValue(None, "PDV.Bosmer.GreenPactWindowStart")
+    Int violationCount = StorageUtil.GetIntValue(None, "PDV.Bosmer.GreenPactViolationCount")
+    if windowStart <= 0.0 || (nowTime - windowStart) > 2.0
+        windowStart = nowTime
+        violationCount = 0
+    endIf
+
+    violationCount += 1
+    StorageUtil.SetFloatValue(None, "PDV.Bosmer.GreenPactWindowStart", windowStart)
+    StorageUtil.SetIntValue(None, "PDV.Bosmer.GreenPactViolationCount", violationCount)
+
+    if violationCount >= 5
+        StorageUtil.SetIntValue(None, "PDV.Bosmer.GreenPactPenaltyActive", 1)
+    endIf
+
+    AdjustBosmerGreenPactCompliance(-15, reason)
+    if Manager.PDV_Yffre
+        Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_Yffre, Manager.PDV_Yffre.SIGNAL_PACT_VIOLATION, None)
+        Manager.SendPrismaToast(Manager.GetPrismaSymbolForDeity(Manager.PDV_Yffre), "warning", "Green Pact broken", "You crossed Y'ffre's creed, and the path recoils.")
+        Manager.SurfaceTransition("creed", "Green Pact", "drop", Manager.PDV_Yffre.DeityIndex, "absence", True)
+    endIf
+
+    Manager.Trace(2, "Green Pact violation count " + violationCount + " (" + reason + ")")
+EndFunction
+
+Function HandleStateTransitionConfirmationRite(String reason)
+    if IsBosmerOrigin()
+        ConfirmBosmerPendingTransition(reason)
+    endIf
+EndFunction
+
+Function HandleTalosWorshipperRescued(String reason)
+    if !Manager.PDV_Talos || !Manager.IsQuestReactionDeityReachable(Manager.PDV_Talos)
+        return
+    endIf
+    if StorageUtil.GetIntValue(None, "PDV.Signal.TalosWorshipperRescue.Done") == 1
+        Manager.Trace(2, "Talos worshipper-rescue already banked (" + reason + ")")
+        return
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Signal.TalosWorshipperRescue.Done", 1)
+    Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Talos, Manager.PDV_Talos.SIGNAL_PROTECT_WORSHIPPER, None, 1.0)
+    Manager.LedgerRuntime.SurfaceReservedSignal(Manager.PDV_Talos, "A worshipper protected", "marks one of the faithful carried out of Thalmor hands.")
+    Manager.Trace(1, "Talos protect-worshipper routed (" + reason + ")")
+EndFunction
+
+Function HandlePaarthurnaxKill(Form sourceForm, String reason)
+    String killKey = "PDV.Paarthurnax.KillSeen"
+    if StorageUtil.GetIntValue(None, killKey, 0) == 1
+        Manager.Trace(2, "Paarthurnax kill repeat blocked (" + reason + ")")
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, killKey, 1)
+    StorageUtil.SetStringValue(None, "PDV.Paarthurnax.KillReason", reason)
+    Manager.ResetQuestReactionSurface()
+    ApplyPaarthurnaxKillReaction("Shor", "S", sourceForm)
+    ApplyPaarthurnaxKillReaction("Tsun", "S", sourceForm)
+    ApplyPaarthurnaxKillReaction("Kyne", "S", sourceForm)
+    ApplyPaarthurnaxKillReaction("Stendarr", "C", sourceForm)
+    ApplyPaarthurnaxKillReaction("Stuhn", "C", sourceForm)
+    ApplyPaarthurnaxKillReaction("Mara", "S", sourceForm)
+    ; 2026-07-15 full-pantheon expansion: the dragon of the covenant, repentant,
+    ; slain at the Blades' demand -- the time-and-order gods mourn it, the
+    ; treachery-and-dominion Princes savor it.
+    ApplyPaarthurnaxKillReaction("Akatosh", "S", sourceForm)
+    ; Alkosh is deliberately absent here: the kill path already routes
+    ; RouteKhajiitAlkoshChaosAid for Khajiit players (PDV_PlayerEvents), and Alkosh is
+    ; reachable to no one else, so a row here would only double-penalize a Khajiit.
+    ApplyPaarthurnaxKillReaction("Talos", "m", sourceForm)
+    ApplyPaarthurnaxKillReaction("Julianos", "m", sourceForm)
+    ApplyPaarthurnaxKillReaction("Auri-El", "m", sourceForm)
+    ApplyPaarthurnaxKillReaction("Khenarthi", "m", sourceForm)
+    ApplyPaarthurnaxKillReaction("Kynareth", "m", sourceForm)
+    ApplyPaarthurnaxKillReaction("Boethiah", "S", sourceForm, "+")
+    ApplyPaarthurnaxKillReaction("Hircine", "S", sourceForm, "+")
+    ApplyPaarthurnaxKillReaction("Molag Bal", "m", sourceForm, "+")
+    ApplyPaarthurnaxKillReaction("Mehrunes Dagon", "m", sourceForm, "+")
+    Manager.FlushQuestReactionSurface()
+    Manager.Trace(2, "Paarthurnax kill fork routed (" + reason + ")")
+EndFunction
+
+Function ApplyPaarthurnaxKillReaction(String deityName, String intensity, Form sourceForm, String valence = "-")
+    Manager.LedgerRuntime.ApplyDeityReaction(deityName, valence, intensity, "small", "paarthurnax_kill", False, sourceForm)
+EndFunction
+
+Function HandlePaarthurnaxSpare(Form sourceForm, String reason)
+    String spareKey = "PDV.Paarthurnax.SpareSeen"
+    if StorageUtil.GetIntValue(None, spareKey, 0) == 1
+        Manager.Trace(2, "Paarthurnax spare repeat blocked (" + reason + ")")
+        return
+    endIf
+
+    if StorageUtil.GetIntValue(None, "PDV.Paarthurnax.KillSeen", 0) == 1
+        Manager.Trace(2, "Paarthurnax spare blocked because kill fork already fired (" + reason + ")")
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, spareKey, 1)
+    StorageUtil.SetStringValue(None, "PDV.Paarthurnax.SpareReason", reason)
+    Manager.ResetQuestReactionSurface()
+    ApplyPaarthurnaxSpareReaction("Stuhn", "C", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Stendarr", "C", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Mara", "S", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Kyne", "m", sourceForm)
+    ; 2026-07-15 full-pantheon expansion: mercy for the repentant dragon honors
+    ; the time-and-order gods; the treachery-and-dominion Princes read it as
+    ; weakness.
+    ApplyPaarthurnaxSpareReaction("Akatosh", "S", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Talos", "m", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Alkosh", "m", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Auri-El", "m", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Kynareth", "m", sourceForm)
+    ApplyPaarthurnaxSpareReaction("Boethiah", "m", sourceForm, "-")
+    ApplyPaarthurnaxSpareReaction("Molag Bal", "m", sourceForm, "-")
+    Manager.FlushQuestReactionSurface()
+    Manager.Trace(2, "Paarthurnax spare fork routed (" + reason + ")")
+EndFunction
+
+Function ApplyPaarthurnaxSpareReaction(String deityName, String intensity, Form sourceForm, String valence = "+")
+    Manager.LedgerRuntime.ApplyDeityReaction(deityName, valence, intensity, "small", "paarthurnax_spare", False, sourceForm)
+EndFunction
+
+Function TrackUndeadCryptClearSiteVisit(Location currentLocation)
+    if !currentLocation || !Manager.PDV_FLST_UndeadCryptClearSites
+        return
+    endIf
+
+    if !Manager.PDV_FLST_UndeadCryptClearSites.HasForm(currentLocation)
+        return
+    endIf
+
+    if currentLocation.IsCleared()
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.UndeadCryptClear.Armed." + currentLocation.GetFormID(), 1)
+EndFunction
+
+Function HandleUndeadCryptSiteClear(Location clearedLocation)
+    if !clearedLocation || !Manager.PDV_FLST_UndeadCryptClearSites
+        return
+    endIf
+
+    if !Manager.PDV_FLST_UndeadCryptClearSites.HasForm(clearedLocation)
+        return
+    endIf
+
+    if !clearedLocation.IsCleared()
+        return
+    endIf
+
+    String siteKey = "PDV.UndeadCryptClear.Seen." + clearedLocation.GetFormID()
+    if StorageUtil.GetIntValue(None, siteKey, 0) == 1
+        return
+    endIf
+
+    String armKey = "PDV.UndeadCryptClear.Armed." + clearedLocation.GetFormID()
+    if StorageUtil.GetIntValue(None, armKey, 0) != 1
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, siteKey, 1)
+    StorageUtil.SetIntValue(None, armKey, 0)
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.UndeadCryptClear")
+    ApplyUndeadCryptClearReactions(clearedLocation, multiplier)
+    Manager.Trace(2, "Undead crypt clear fired for location " + clearedLocation.GetFormID() + " multiplier=" + multiplier)
+EndFunction
+
+Function ApplyUndeadCryptClearReactions(Location clearedLocation, Float repeatMultiplier)
+    if repeatMultiplier <= 0.0
+        return
+    endIf
+
+    Manager.ResetQuestReactionSurface()
+    ApplyUndeadCryptClearReaction("Arkay", "C", clearedLocation, repeatMultiplier)
+    ApplyUndeadCryptClearReaction("Meridia", "C", clearedLocation, repeatMultiplier)
+    ApplyUndeadCryptClearReaction("Stendarr", "S", clearedLocation, repeatMultiplier)
+    ApplyUndeadCryptClearReaction("Tu'whacca", "S", clearedLocation, repeatMultiplier)
+    ApplyUndeadCryptClearReaction("Azura", "m", clearedLocation, repeatMultiplier)
+    ApplyUndeadCryptClearReaction("Y'ffre", "m", clearedLocation, repeatMultiplier)
+    Manager.FlushQuestReactionSurface()
+EndFunction
+
+Function ApplyUndeadCryptClearReaction(String deityName, String intensity, Location clearedLocation, Float repeatMultiplier)
+    PDV_DeityBase deity = Manager.GetQuestReactionDeity(deityName)
+    if !deity
+        if Manager.GetDebugLevel() >= 1
+            Debug.Trace("[PDV] UndeadCryptClear skipped unknown deity: " + deityName)
+        endIf
+        return
+    endIf
+
+    Float amount = Manager.GetQuestReactionBaseValue("small", intensity) * repeatMultiplier
+    if amount == 0.0
+        return
+    endIf
+
+    String sourceTag = "undead_crypt_clear"
+    String stance = Manager.GetQuestReactionStance(deityName, deity)
+    if stance == "CURSE"
+        StorageUtil.SetStringValue(None, "PDV.QuestReaction.LastCurse", deityName + "." + sourceTag)
+        if Manager.GetQrQueueTransactionActive()
+            Manager.SetQrQueueNeedsCurseRefresh(True)
+        else
+            Manager.LedgerRuntime.HandleCurseStateRefresh("quest_reaction_" + deityName)
+        endIf
+        if Manager.GetDebugLevel() >= 1
+            Debug.Trace("[PDV] UndeadCryptClear curse routed: " + deityName)
+        endIf
+        return
+    endIf
+
+    if stance == "TABOO" || stance == "HOSTILE"
+        Manager.ApplyQuestReactionStigma(deity, amount, sourceTag)
+        if !(deity as PDV_DaedricPathBase)
+            Manager.AccumulateQuestReactionSurface(deity, amount * -1.0, "small")
+        endIf
+        return
+    endIf
+
+    if stance == "FOREIGN" || stance == "TOLERATED"
+        if !Manager.IsQuestReactionDeityReachable(deity)
+            if Manager.GetDebugLevel() >= 2
+                Debug.Trace("[PDV] UndeadCryptClear skipped unreachable foreign deity: " + deityName)
+            endIf
+            return
+        endIf
+    endIf
+
+    Float stanceMultiplier = Manager.GetQuestReactionStanceMultiplier(stance)
+
+    Float appliedReactionAmount = amount * stanceMultiplier
+    Manager.SetSuppressAwardFavorToast(True)
+    Manager.ApplyQuestReactionPiety(deity, appliedReactionAmount, deityName + "." + sourceTag)
+    Manager.SetSuppressAwardFavorToast(False)
+    Manager.AccumulateQuestReactionSurface(deity, appliedReactionAmount, "small")
+
+    if IsKhajiitOrigin()
+        BridgeKhajiitMatrixFocus(deityName, "small")
+    endIf
+EndFunction
+
+Function HandleTalosShrineDefiance(String reason)
+    if GetPlayerOriginRaceIndex() == Manager.ORIGIN_IMPERIAL && !IsImperialVampireStateActive()
+        StorageUtil.SetIntValue(None, "PDV.Imperial.TalosBroadUnlocked", 1)
+        Manager.Trace(1, "Imperial broad Talos roster unlocked by shrine defiance: " + reason)
+    endIf
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.TalosShrineDefiance")
+    if Manager.PDV_Talos
+        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Talos, Manager.PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
+    else
+        Manager.Trace(1, "Talos shrine defiance skipped: PDV_Talos missing.")
+    endIf
+
+    if GetPlayerOriginRaceIndex() == 1
+        ; Phase 7 verifier compatibility: ApplyConcordatPressure(-15, "talos_shrine_" + reason)
+        ApplyImperialConcordatAction("hidden_talos_shrine", "talos_shrine_" + reason)
+        Manager.Trace(2, "Talos shrine defiance also applied Concordat pressure.")
+    else
+        Manager.Trace(2, "Talos shrine defiance awarded without Concordat pressure for non-Imperial origin.")
+    endIf
+EndFunction
+
+Function HandleThalmorUnprovokedKill(Form victimForm)
+    if IsAltmerOrigin()
+        HandleAltmerAlignmentSignal("kill_thalmor_agent", victimForm, "thalmor_unprovoked_kill")
+    elseIf GetPlayerOriginRaceIndex() == 1
+        ApplyImperialConcordatAction("kill_thalmor_justiciar_unprovoked", "thalmor_unprovoked_kill")
+    endIf
+EndFunction
+
+Bool Function IsSyrabaneSignalEligible()
+    return IsAltmerOrigin() && Manager.PDV_Syrabane && !IsAltmerFavorSuppressedByCurse()
+EndFunction
+
+Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, String reason)
+    if !playerRef
+        Manager.Trace(1, "Shout attack skipped: player ref missing.")
+        return
+    endIf
+
+    if Manager.ShouldSuppressDuplicateShoutAttack()
+        Manager.Trace(3, "Shout attack duplicate suppressed (" + reason + ")")
+        return
+    endIf
+
+    if !Manager.LedgerRuntime.PDV_FLST_AllDeities
+        Manager.Trace(1, "Shout attack skipped: deity roster missing.")
+        return
+    endIf
+
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.ShoutAttack")
+    if multiplier <= 0.0
+        Manager.Trace(2, "Shout attack decayed out for today; no piety award.")
+        return
+    endIf
+
+    Int i = 0
+    Int count = Manager.LedgerRuntime.PDV_FLST_AllDeities.GetSize()
+    Int scoredCount = 0
+    Manager.LedgerRuntime.BeginBroadPantheonEvent("shout_attack_" + eventType + "_" + reason)
+
+    while i < count
+        PDV_DeityBase deity = Manager.LedgerRuntime.PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
+        if deity
+            Float delta = deity.ScoreAction(eventType, playerRef as Form, shoutUsed as Form)
+            if delta != 0.0
+                Manager.LedgerRuntime.AwardPietyFromLikesDislikes(deity, delta * multiplier, eventType, reason)
+                scoredCount += 1
+            endIf
+        endIf
+
+        i += 1
+    endWhile
+    Manager.LedgerRuntime.FlushBroadPantheonEvent()
+
+    Manager.Trace(2, "Shout attack routed: event " + eventType + ", scored deities " + scoredCount + " (" + reason + ")")
+EndFunction
+
+Function EmitBookOfDaysBroadLaneTierChange(Int today)
+    Int originRace = GetPlayerOriginRaceIndex()
+    Int broadTier = GetBroadLaneTierForOrigin(originRace)
+    if broadTier <= Manager.LedgerRuntime.TIER_NONE
+        return
+    endIf
+
+    Int tier = Manager.LedgerRuntime.TIER_SEEKER
+    while tier <= broadTier && tier <= Manager.LedgerRuntime.TIER_DEVOTED
+        String guard = "PDV.BookOfDays.BroadLaneTierShown." + originRace + "." + tier
+        if StorageUtil.GetIntValue(None, guard) != 1
+            StorageUtil.SetIntValue(None, guard, 1)
+            Manager.AppendBookOfDaysEntry(BuildBroadLaneTierReachJournalLine(originRace, tier), today, "tier.reach", GetBroadLaneSymbol(originRace), False, tier)
+        endIf
+        tier += 1
+    endWhile
+EndFunction
+
+String Function BuildBroadLaneTierReachJournalLine(Int originRace, Int tier)
+    return GetBroadLaneDisplayName(originRace) + " has reached " + GetBroadLaneStandingLabel(originRace, tier) + "."
+EndFunction
+
+Function HandleWayfarerAkatoshLevel()
+    if !Manager.LedgerRuntime.PDV_ModePresetRef || !Manager.LedgerRuntime.PDV_ModePresetRef.AllowCheapRepeatables()
+        return
+    endIf
+    if !Manager.LedgerRuntime.PDV_Akatosh
+        return
+    endIf
+
+    Float baseAmount = 1.0
+    Float weight = Manager.LedgerRuntime.PDV_ModePresetRef.CheapRepeatableWeight()
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.WayfarerAkatoshLevel")
+    Float amount = baseAmount * weight * multiplier
+    if amount > 0.0
+        Manager.LedgerRuntime.AwardPietyInternal(Manager.LedgerRuntime.PDV_Akatosh, amount, True, "wayfarer_akatosh_level")
+    endIf
+EndFunction
+
+Bool Function IsBroadLaneLapsed()
+    ; Broad-lane recency lapse: a full-pantheon (broad) worshipper who has practiced at least once
+    ; and then goes quiet for NEGLECT_LAPSE_GRACE_DAYS feels gentle neglect too. Generalizes the
+    ; Imperial civic-lapse model to the broad lane, keyed off the global PDV.Devotion.LastActTime.
+    if !Manager.LedgerRuntime.IsBroadWorshipActive()
+        return False
+    endIf
+    Float lastAct = StorageUtil.GetFloatValue(None, "PDV.Devotion.LastActTime")
+    if lastAct <= 0.0
+        return False
+    endIf
+    return (Utility.GetCurrentGameTime() - lastAct) > Manager.LedgerRuntime.NEGLECT_LAPSE_GRACE_DAYS
+EndFunction
+
+Bool Function IsBroadFloorEligible()
+    if Manager.LedgerRuntime.GetPatronState() != Manager.LedgerRuntime.PATRON_STATE_BROAD
+        return False
+    endIf
+    Int origin = GetPlayerOriginRaceIndex()
+    if !HasBroadLanePresentation(origin)
+        return False
+    endIf
+    return GetBroadLaneServiceCount(origin) >= 3
+EndFunction
+
+Int Function GetBroadFloorServiceCount(Int origin)
+    return GetBroadLaneServiceCount(origin)
+EndFunction
+
+Bool Function HasBroadLanePresentation(Int origin)
+    return origin == Manager.ORIGIN_IMPERIAL || origin == Manager.ORIGIN_BRETON || origin == Manager.ORIGIN_ORC || origin == Manager.ORIGIN_ALTMER || origin == Manager.ORIGIN_NORD || origin == Manager.ORIGIN_BOSMER || origin == Manager.ORIGIN_DUNMER || origin == Manager.ORIGIN_REDGUARD
+EndFunction
+
+Float Function GetBroadLaneStandingValue(Int origin)
+    if origin == Manager.ORIGIN_IMPERIAL || origin == Manager.ORIGIN_NORD
+        return Manager.LedgerRuntime.GetBroadPantheonStanding(Manager.LedgerRuntime.GetActiveBroadPantheonPoolId())
+    endIf
+    return GetBroadLaneServiceCount(origin) as Float
+EndFunction
+
+Float Function GetBroadLaneScratchValue(Int origin)
+    if origin == Manager.ORIGIN_IMPERIAL || origin == Manager.ORIGIN_NORD
+        return Manager.LedgerRuntime.GetBroadPantheonScratch(Manager.LedgerRuntime.GetActiveBroadPantheonPoolId())
+    endIf
+    return 0.0
+EndFunction
+
+Int Function GetBroadLaneServiceCount(Int origin)
+    if origin == Manager.ORIGIN_IMPERIAL
+        return Manager.LedgerRuntime.GetBroadPantheonStanding(Manager.LedgerRuntime.BROAD_PANTHEON_IMPERIAL) as Int
+    elseIf origin == Manager.ORIGIN_BRETON
+        return GetBretonPracticeCount(GetBretonTraditionValue())
+    elseIf origin == Manager.ORIGIN_ORC
+        return StorageUtil.GetIntValue(None, "PDV.Orc.MalacathSourceCount")
+    elseIf origin == Manager.ORIGIN_ALTMER
+        return StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count") + StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count")
+    elseIf origin == Manager.ORIGIN_NORD
+        if GetNordPantheonBaselineState() == Manager.NORD_BASELINE_NINE_DIVINES
+            return Manager.LedgerRuntime.GetBroadPantheonStanding(Manager.LedgerRuntime.BROAD_PANTHEON_NORD_NINE) as Int
+        endIf
+        return Manager.LedgerRuntime.GetBroadPantheonStanding(Manager.LedgerRuntime.BROAD_PANTHEON_NORD_OLD) as Int
+    elseIf origin == Manager.ORIGIN_BOSMER
+        return GetBosmerFavorSignalCount()
+    elseIf origin == Manager.ORIGIN_DUNMER
+        return StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount")
+    elseIf origin == Manager.ORIGIN_REDGUARD
+        return StorageUtil.GetIntValue(None, "PDV.Redguard.AncestorSpineSourceCount")
+    endIf
+    return 0
+EndFunction
+
+Int Function GetBroadLaneTierForOrigin(Int origin)
+    if Manager.LedgerRuntime.GetPatronState() != Manager.LedgerRuntime.PATRON_STATE_BROAD || !HasBroadLanePresentation(origin)
+        return Manager.LedgerRuntime.TIER_NONE
+    endIf
+
+    Int count = GetBroadLaneServiceCount(origin)
+    if origin == Manager.ORIGIN_IMPERIAL || origin == Manager.ORIGIN_NORD
+        Float standing = GetBroadLaneStandingValue(origin)
+        if standing >= Manager.LedgerRuntime.BROAD_PANTHEON_FAITHFUL_THRESHOLD
+            return Manager.LedgerRuntime.TIER_DEVOTED
+        elseIf standing >= Manager.LedgerRuntime.BROAD_PANTHEON_SEEKER_THRESHOLD
+            return Manager.LedgerRuntime.TIER_SEEKER
+        endIf
+        return Manager.LedgerRuntime.TIER_NONE
+    elseIf count >= 6
+        return Manager.LedgerRuntime.TIER_DEVOTED
+    elseIf count >= 3
+        return Manager.LedgerRuntime.TIER_SEEKER
+    endIf
+    return Manager.LedgerRuntime.TIER_NONE
+EndFunction
+
+String Function GetBroadLaneDisplayName(Int origin)
+    if origin == Manager.ORIGIN_IMPERIAL
+        return "The Divines' Regard"
+    elseIf origin == Manager.ORIGIN_ALTMER
+        return "Orthodox Faith"
+    elseIf origin == Manager.ORIGIN_BOSMER
+        return "Y'ffre's Broad Faith"
+    elseIf origin == Manager.ORIGIN_BRETON
+        return "Breton Tradition"
+    elseIf origin == Manager.ORIGIN_DUNMER
+        return "Reclamation Communion"
+    elseIf origin == Manager.ORIGIN_NORD
+        if GetNordPantheonBaselineState() == Manager.NORD_BASELINE_NINE_DIVINES
+            return "Faith of the Holds"
+        endIf
+        return "Old Ways"
+    elseIf origin == Manager.ORIGIN_ORC
+        return "Malacath's Code"
+    elseIf origin == Manager.ORIGIN_REDGUARD
+        return "Ancestors' Regard"
+    endIf
+    return "Broad Faith"
+EndFunction
+
+String Function GetBroadLaneSymbol(Int origin)
+    if origin == Manager.ORIGIN_IMPERIAL
+        return "akatosh"
+    elseIf origin == Manager.ORIGIN_ALTMER
+        return "auri-el"
+    elseIf origin == Manager.ORIGIN_BOSMER
+        return "yffre"
+    elseIf origin == Manager.ORIGIN_BRETON
+        return "journal"
+    elseIf origin == Manager.ORIGIN_DUNMER
+        return "ancestor"
+    elseIf origin == Manager.ORIGIN_NORD
+        if GetNordPantheonBaselineState() == Manager.NORD_BASELINE_NINE_DIVINES
+            return "akatosh"
+        endIf
+        return "kyne"
+    elseIf origin == Manager.ORIGIN_ORC
+        return "malacath"
+    elseIf origin == Manager.ORIGIN_REDGUARD
+        return "tu-whacca"
+    endIf
+    return "journal"
+EndFunction
+
+String Function GetBroadLaneStandingLabel(Int origin, Int tier)
+    if tier >= Manager.LedgerRuntime.TIER_DEVOTED
+        return "Faithful"
+    elseIf tier >= Manager.LedgerRuntime.TIER_SEEKER
+        return "Observant"
+    endIf
+    return "Distant"
+EndFunction
+
+String Function GetBroadLaneNextThresholdText(Int origin)
+    Int count = GetBroadLaneServiceCount(origin)
+    if origin == Manager.ORIGIN_IMPERIAL || origin == Manager.ORIGIN_NORD
+        Float standing = GetBroadLaneStandingValue(origin)
+        if standing < Manager.LedgerRuntime.BROAD_PANTHEON_SEEKER_THRESHOLD
+            return "Observant at 25 pantheon standing"
+        elseIf standing < Manager.LedgerRuntime.BROAD_PANTHEON_FAITHFUL_THRESHOLD
+            return "Faithful at 50 pantheon standing"
+        endIf
+        return "Pantheon standing cap reached"
+    endIf
+    if origin == Manager.ORIGIN_BRETON
+        if count < Manager.BRETON_PRACTICE_SEEKER_POINTS
+            return "Observant at 25 practice points"
+        elseIf count < Manager.BRETON_PRACTICE_DEVOTED_POINTS
+            return "Faithful at 50 practice points"
+        endIf
+        return "Practice cap reached"
+    endIf
+    if count < 3
+        return "Observant at 3 broad acts"
+    elseIf count < 6
+        return "Faithful at 6 broad acts"
+    endIf
+    return "Broad lane cap reached"
+EndFunction
+
+Bool Function HandleTalosBetrayal(Int severity, String sourceReason)
+    if !Manager.PDV_Talos
+        Manager.Trace(1, "Talos betrayal skipped: PDV_Talos missing.")
+        return False
+    endIf
+
+    if Manager.LedgerRuntime.GetPatronState() != Manager.LedgerRuntime.PATRON_STATE_ACTIVE || Manager.GetActiveDeity() != Manager.PDV_Talos
+        Manager.Trace(2, "Talos betrayal skipped: active patron is not Talos.")
+        return False
+    endIf
+
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace != Manager.ORIGIN_IMPERIAL && originRace != Manager.ORIGIN_NORD
+        Manager.Trace(2, "Talos betrayal skipped: origin is not Imperial or Nord.")
+        return False
+    endIf
+
+    if originRace == Manager.ORIGIN_IMPERIAL
+        if !Manager.PDV_ConcordatStandingTrack
+            Manager.Trace(1, "Imperial Talos betrayal skipped: ConcordatStanding track missing.")
+            return False
+        endIf
+        if Manager.PDV_ConcordatStandingTrack.GetValue() > 50
+            Manager.Trace(2, "Imperial Talos betrayal skipped: raw ConcordatStanding is already compliant.")
+            return False
+        endIf
+    endIf
+
+    Int normalizedSeverity = 2
+    if severity >= 3
+        normalizedSeverity = 3
+    endIf
+
+    String reason = "talos_betrayal_compliance"
+    String surfaceText = "You bent the knee where you once stood firm. The old faith feels distant."
+    Float pietyLoss = -2.0
+    Int concordatPressure = 15
+    if normalizedSeverity >= 3
+        reason = "talos_betrayal_major"
+        surfaceText = "You turned on the Ninth in the open. The defiance that was faith is gone."
+        pietyLoss = -3.0
+        concordatPressure = 25
+    endIf
+
+    if originRace == Manager.ORIGIN_IMPERIAL
+        reason = "imperial_" + reason
+    else
+        reason = "nord_" + reason
+    endIf
+
+    ; fix-plan 4.2: one betrayal charge per devotional day.
+    String dayKey = "PDV.Creed." + reason + ".Day"
+    if Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp(dayKey) == (Manager.LedgerRuntime.GetDevotionalDay() + 2)
+        Manager.Trace(2, "Talos betrayal suppressed for " + reason + ": already applied today.")
+        return False
+    endIf
+
+    Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp(dayKey)
+    StorageUtil.SetStringValue(None, "PDV.Creed.LastTalosBetrayalReason", reason)
+    StorageUtil.SetStringValue(None, "PDV.Creed.LastTalosBetrayalSource", sourceReason)
+
+    Manager.LedgerRuntime.AwardPiety(Manager.PDV_Talos, pietyLoss, reason)
+    if originRace == Manager.ORIGIN_IMPERIAL
+        ApplyConcordatPressure(concordatPressure, reason)
+    endIf
+
+    Manager.SendPrismaEventToast("creed", Manager.PDV_Talos, surfaceText, "", "")
+    Manager.SurfaceTransition("creed", "Talos betrayal", "drop", Manager.PDV_Talos.DeityIndex, "betrayal")
+    Manager.Trace(2, "Talos betrayal applied: " + reason + " piety=" + pietyLoss + " source=" + sourceReason)
+    return True
+EndFunction
+
+PDV_SubstrateBase Function GetSubstrateForPacingOrigin(Int originValue)
+    if originValue == Manager.ORIGIN_IMPERIAL
+        return Manager.PDV_ImperialAncestorSubstrate as PDV_SubstrateBase
+    elseIf originValue == Manager.ORIGIN_DUNMER
+        return Manager.PDV_DunmerAncestorSubstrate as PDV_SubstrateBase
+    elseIf originValue == Manager.ORIGIN_ARGONIAN
+        return Manager.PDV_ArgonianHistSubstrate as PDV_SubstrateBase
+    elseIf originValue == Manager.ORIGIN_NORD
+        return Manager.PDV_NordAncestorSubstrate as PDV_SubstrateBase
+    elseIf originValue == Manager.ORIGIN_ALTMER
+        return Manager.PDV_AltmerAncestorSubstrate as PDV_SubstrateBase
+    elseIf originValue == Manager.ORIGIN_KHAJIIT
+        return Manager.PDV_KhajiitLunarSubstrate as PDV_SubstrateBase
+    endIf
+    return None
+EndFunction
+
+String Function GetSubstrateDecaySummary(Int originValue)
+    if originValue == Manager.ORIGIN_DUNMER || originValue == Manager.ORIGIN_KHAJIIT
+        return "none"
+    elseIf originValue == Manager.ORIGIN_IMPERIAL || originValue == Manager.ORIGIN_ARGONIAN || originValue == Manager.ORIGIN_NORD || originValue == Manager.ORIGIN_ALTMER
+        return "3-day grace, -1/dawn, floor 20 (curse floor 0)"
+    endIf
+    return "n/a"
+EndFunction
+
+Function ResetSubstratePacingState(Int originValue)
+    if originValue == Manager.ORIGIN_IMPERIAL && Manager.PDV_ImperialAncestorSubstrate
+        Manager.PDV_ImperialAncestorSubstrate.ResetPilotForDebug()
+        Manager.LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.ImperialCivicService")
+    elseIf originValue == Manager.ORIGIN_DUNMER && Manager.PDV_DunmerAncestorSubstrate
+        Manager.PDV_DunmerAncestorSubstrate.ResetPilotForDebug()
+        Manager.LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.DunmerPortableShrinePrayer")
+        Manager.LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.DunmerHomeBonus")
+    elseIf originValue == Manager.ORIGIN_ARGONIAN && Manager.PDV_ArgonianHistSubstrate
+        Manager.PDV_ArgonianHistSubstrate.ResetPilotForDebug()
+        Manager.LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.ArgonianHistMaintenance")
+        Manager.LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.ArgonianPeopleSupport")
+        Manager.LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.ArgonianBedOfChoice")
+        Manager.LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.ArgonianVoidSignal")
+    elseIf originValue == Manager.ORIGIN_NORD && Manager.PDV_NordAncestorSubstrate
+        Manager.PDV_NordAncestorSubstrate.ResetPilotForDebug()
+        Manager.LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.NordAncestorSpine")
+        StorageUtil.SetIntValue(None, "PDV.Signal.NordAncestralRest.Day", -1)
+    elseIf originValue == Manager.ORIGIN_ALTMER && Manager.PDV_AltmerAncestorSubstrate
+        Manager.PDV_AltmerAncestorSubstrate.ResetPilotForDebug()
+        Manager.LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.AltmerAncestorSpine")
+    elseIf originValue == Manager.ORIGIN_KHAJIIT && Manager.PDV_KhajiitLunarSubstrate
+        Manager.PDV_KhajiitLunarSubstrate.ResetPilotForDebug()
+        Manager.LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.KhajiitRoadHome")
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.RoadHome.PresentationDay", 0)
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.RoadHome.PresentationDay.Encoding", 2)
+    endIf
+EndFunction
+
+Bool Function IsCurseStateLoadReconciliation(String reason)
+    return reason == "eventbus_Load" || reason == "eventbus_alias_init"
+EndFunction
+
+String Function GetCurseContextForRace(String phase, String curseType)
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace == Manager.ORIGIN_NORD
+        if phase == "onset" && curseType == "vampire"
+            return "Sovngarde is closed while the thirst remains."
+        elseIf phase == "cure" && curseType == "vampire"
+            return "The road opens again. The scar remains."
+        elseIf phase == "onset" && curseType == "werewolf"
+            return "The hunt pulls against Sovngarde."
+        endIf
+    elseIf originRace == Manager.ORIGIN_ALTMER
+        if phase == "onset" && curseType == "vampire"
+            return "Auri-El's light is closed. Only exile remains."
+        elseIf phase == "cure" && curseType == "vampire"
+            return "Exiled from the dawn, not restored to it."
+        elseIf phase == "onset" && curseType == "werewolf"
+            return "Devotion stops here. You have become a beast."
+        endIf
+    elseIf originRace == Manager.ORIGIN_BOSMER
+        if phase == "onset"
+            return "The Green Pact does not speak to what you have become."
+        endIf
+    elseIf originRace == Manager.ORIGIN_ARGONIAN
+        if phase == "onset" && curseType == "vampire"
+            return "The Hist recoils from what stirs in your blood."
+        elseIf phase == "onset" && curseType == "werewolf"
+            return "The Hist feels the hunt-shape pulling at your form."
+        endIf
+    elseIf originRace == Manager.ORIGIN_ORC
+        if phase == "onset"
+            return "Malacath's code bends under this new shape."
+        endIf
+    endIf
+    return ""
+EndFunction
+
+Bool Function SendPrismaSubstrateToast(String substrate, String phase, String context, String symbolName, String stateLabel, Bool allowFallback = True)
+    String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"substrate\""
+    j = j + ",\"substrate\":\"" + PDV_DevotionRules.JsonSafeString(substrate) + "\""
+    j = j + ",\"phase\":\"" + PDV_DevotionRules.JsonSafeString(phase) + "\""
+    j = j + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\""
+    if context != ""
+        j = j + ",\"context\":\"" + PDV_DevotionRules.JsonSafeString(context) + "\""
+    endIf
+    if stateLabel != ""
+        j = j + ",\"state\":\"" + PDV_DevotionRules.JsonSafeString(stateLabel) + "\""
+    endIf
+    j = j + "}}"
+    String fallbackTitle = stateLabel
+    if fallbackTitle == ""
+        fallbackTitle = substrate
+    endIf
+    return Manager.SendPrismaToastPayloadOrFallback(j, fallbackTitle, context, allowFallback)
+EndFunction
+
+String Function GetMedallionSectionsJson(Int originRace)
+    if originRace == Manager.ORIGIN_NORD
+        return MedallionSection("native", "Native worship", GetNordMedallionEntriesJson())
+    elseIf originRace == Manager.ORIGIN_IMPERIAL
+        return MedallionSection("native", "Native worship", GetImperialMedallionEntriesJson())
+    elseIf originRace == Manager.ORIGIN_BRETON
+        return MedallionSection("native", "Native worship", GetBretonMedallionEntriesJson())
+    elseIf originRace == Manager.ORIGIN_ALTMER
+        return MedallionSection("native", "Native worship", GetAltmerMedallionEntriesJson())
+    elseIf originRace == Manager.ORIGIN_BOSMER
+        return MedallionSection("native", "Native worship", GetBosmerNativeMedallionEntriesJson()) + "," + MedallionSection("substrate_focus", "Path focus", GetBosmerFocusMedallionEntriesJson())
+    elseIf originRace == Manager.ORIGIN_DUNMER
+        return MedallionSection("native", "Native worship", GetDunmerMedallionEntriesJson())
+    elseIf originRace == Manager.ORIGIN_KHAJIIT
+        return MedallionSection("native", "Native worship", GetKhajiitMedallionEntriesJson())
+    elseIf originRace == Manager.ORIGIN_ARGONIAN
+        return MedallionSection("native", "Native worship", GetArgonianMedallionEntriesJson())
+    elseIf originRace == Manager.ORIGIN_ORC
+        return MedallionSection("native", "Native worship", GetOrcMedallionEntriesJson())
+    elseIf originRace == Manager.ORIGIN_REDGUARD
+        return MedallionSection("native", "Native worship", GetRedguardMedallionEntriesJson())
+    endIf
+
+    return MedallionSection("native", "Native worship", Manager.MedallionEntry("unknown", "Devotion", "substrate", "journal", None, False, "Your origin is not settled yet.", "Once your origin is known, the medallion can show the roster your people can name.", "Origin readback is pending."))
+EndFunction
+
+String Function MedallionSection(String sectionId, String titleText, String entriesJson)
+    return "{\"section_id\":\"" + PDV_DevotionRules.JsonSafeString(sectionId) + "\",\"title\":\"" + PDV_DevotionRules.JsonSafeString(titleText) + "\",\"entries\":[" + entriesJson + "]}"
+EndFunction
+
+Int Function GetPlayerOriginRaceIndex()
+    if Manager.PDV_GLO_OriginRace
+        return Manager.PDV_GLO_OriginRace.GetValueInt()
+    endIf
+
+    return -1
+EndFunction
+
+Bool Function IsFocusedPantheonBoonSuspended()
+    Int originRace = GetPlayerOriginRaceIndex()
+    if originRace != Manager.ORIGIN_IMPERIAL && originRace != Manager.ORIGIN_NORD
+        return False
+    endIf
+    return Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity() && Manager.LedgerRuntime.GetPiety(Manager.GetActiveDeity()) < Manager.LedgerRuntime.COMMITMENT_OFFER_THRESHOLD
+EndFunction
+
+String Function GetPlayerCursePublicLabel()
+    if GetPlayerOriginRaceIndex() == Manager.ORIGIN_ALTMER
+        String altmerCurseLabel = GetAltmerCursePublicLabel()
+        if altmerCurseLabel != ""
+            return altmerCurseLabel
+        endIf
+    endIf
+
+    if Manager.PDV_CurseStateService
+        String curseLabel = Manager.PDV_CurseStateService.GetCurseStateLabel()
+        if curseLabel != "None"
+            return curseLabel
+        endIf
+    endIf
+
+    if HasNordVampireScar()
+        return "Cured vampire scar"
+    endIf
+
+    return "None"
+EndFunction
+
+Float Function GetTalosTrackGainMultiplier()
+    if Manager.PDV_Talos
+        return Manager.PDV_Talos.GetTrackGainMultiplier()
+    endIf
+
+    return 1.0
+EndFunction
+
+Float Function GetTalosEffectiveGainMultiplier()
+    if Manager.PDV_Talos
+        return Manager.PDV_Talos.GetEffectiveGainMultiplier()
+    endIf
+
+    return 1.0
+EndFunction
+
+String Function GetCurseStateSummary()
+    if !Manager.PDV_CurseStateService
+        return "missing"
+    endIf
+
+    return Manager.PDV_CurseStateService.GetCurseStateLabel()
+EndFunction
+
+String Function GetCurseHandlerSummary()
+    return "origin=" + GetOriginRaceLabel(GetPlayerOriginRaceIndex()) + ";bosmer=" + StorageUtil.GetIntValue(None, "PDV.Curse.Bosmer.RoutePressure") + ";breton=" + StorageUtil.GetIntValue(None, "PDV.Curse.Breton.RestorationState") + ";dunmer=" + StorageUtil.GetIntValue(None, "PDV.Curse.Dunmer.Posture") + ";argonian=" + StorageUtil.GetIntValue(None, "PDV.Curse.Argonian.HistPosture") + ";orc=" + StorageUtil.GetIntValue(None, "PDV.Curse.Orc.CodePressure") + ";redguard=" + StorageUtil.GetIntValue(None, "PDV.Curse.Redguard.CyclePressure") + ";altmer=" + StorageUtil.GetIntValue(None, "PDV.Curse.Altmer.ExilePressure") + ";altmerVampire=" + StorageUtil.GetIntValue(None, "PDV.Altmer.VampireExileActive") + ";altmerWerewolf=" + StorageUtil.GetIntValue(None, "PDV.Altmer.WerewolfHalt")
+EndFunction
+
+String Function GetOriginRaceLabel(Int originRace)
+    if originRace == Manager.ORIGIN_NORD
+        return "Nord"
+    elseIf originRace == Manager.ORIGIN_IMPERIAL
+        return "Imperial"
+    elseIf originRace == Manager.ORIGIN_BRETON
+        return "Breton"
+    elseIf originRace == Manager.ORIGIN_ALTMER
+        return "Altmer"
+    elseIf originRace == Manager.ORIGIN_BOSMER
+        return "Bosmer"
+    elseIf originRace == Manager.ORIGIN_DUNMER
+        return "Dunmer"
+    elseIf originRace == Manager.ORIGIN_KHAJIIT
+        return "Khajiit"
+    elseIf originRace == Manager.ORIGIN_ARGONIAN
+        return "Argonian"
+    elseIf originRace == Manager.ORIGIN_ORC
+        return "Orc"
+    elseIf originRace == Manager.ORIGIN_REDGUARD
+        return "Redguard"
+    endIf
+
+    return "" + originRace
+EndFunction
+
+

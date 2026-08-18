@@ -197,11 +197,11 @@ Function HandleStoryKillActor(ObjectReference akVictim, ObjectReference akKiller
         ; casual draugr fighting.
         PDV_Manager.OriginRuntime.HandleRedguardAshAbahMajorBurden(victimActor as Form, eventType)
         PDV_Manager.OriginRuntime.TrackRedguardAshAbahUndeadSiteVisit(akLocation)
-        PDV_Manager.TrackUndeadCryptClearSiteVisit(akLocation)
+        PDV_Manager.OriginRuntime.TrackUndeadCryptClearSiteVisit(akLocation)
         ; Final-kill fast path for clearable undead sites. If the clear flag settles later,
         ; HandleStoryChangeLocation also checks the old location when the player leaves.
         PDV_Manager.OriginRuntime.HandleRedguardAshAbahUndeadSiteClear(akLocation)
-        PDV_Manager.HandleUndeadCryptSiteClear(akLocation)
+        PDV_Manager.OriginRuntime.HandleUndeadCryptSiteClear(akLocation)
     endIf
 EndFunction
 
@@ -258,7 +258,7 @@ Function RouteThalmorUnprovokedKill(Actor victimActor)
         return
     endIf
 
-    PDV_Manager.HandleThalmorUnprovokedKill(victimActor as Form)
+    PDV_Manager.OriginRuntime.HandleThalmorUnprovokedKill(victimActor as Form)
 EndFunction
 
 Function HandleStoryCraftItem(ObjectReference akBench, Location akLocation, Form akCreatedItem)
@@ -319,9 +319,9 @@ Function HandleStoryChangeLocation(ObjectReference akActor, Location akOldLocati
         PDV_Manager.OriginRuntime.HandleNordLocationChange(akNewLocation)
         PDV_Manager.OriginRuntime.HandleOrcLocationChange(akNewLocation)
         PDV_Manager.OriginRuntime.TrackRedguardAshAbahUndeadSiteVisit(akNewLocation)
-        PDV_Manager.TrackUndeadCryptClearSiteVisit(akNewLocation)
+        PDV_Manager.OriginRuntime.TrackUndeadCryptClearSiteVisit(akNewLocation)
         PDV_Manager.OriginRuntime.HandleRedguardAshAbahUndeadSiteClear(akOldLocation)
-        PDV_Manager.HandleUndeadCryptSiteClear(akOldLocation)
+        PDV_Manager.OriginRuntime.HandleUndeadCryptSiteClear(akOldLocation)
     endIf
 
     if !MarkLocationSeen(akNewLocation)
@@ -483,7 +483,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     endIf
 
     String eventReason = GetEventReason(eventType)
-    PDV_Manager.HandleSubstrateActionEvent(eventType, eventReason)
+    PDV_Manager.OriginRuntime.HandleSubstrateActionEvent(eventType, eventReason)
 
     Int i = 0
     Int count = PDV_FLST_AllDeities.GetSize()
@@ -769,6 +769,7 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] ActionRouter: " + traceText)
     endIf
 EndFunction
+
 
 
 

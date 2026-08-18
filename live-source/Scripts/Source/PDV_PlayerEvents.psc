@@ -909,7 +909,7 @@ EndFunction
 
 Event OnLevelIncrease(Int aiLevel)
     if PDV_EventBusService && PDV_EventBusService.PDV_Manager
-        PDV_EventBusService.PDV_Manager.HandleWayfarerAkatoshLevel()
+        PDV_EventBusService.PDV_Manager.OriginRuntime.HandleWayfarerAkatoshLevel()
         Trace(2, "Level increase routed to Experience Mode handler at level " + aiLevel + ".")
     else
         Trace(1, "Level increase skipped: PDV_Manager not assigned.")
@@ -3250,3 +3250,4 @@ Int Function GetDevotionalDayStamp()
     endIf
     return truncatedDay + 2
 EndFunction
+

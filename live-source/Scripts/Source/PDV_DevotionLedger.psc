@@ -272,7 +272,7 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
         ; remains in the origin roster, even when it is outside the Nord's
         ; selected baseline. Positive values become stigma; background favor
         ; from ordinary native/foreign cells never crosses that lane.
-        if !Manager.IsQuestReactionDeityReachable(deity) && !Manager.IsDashboardDeityInOriginRoster(deity, Manager.GetPlayerOriginRaceIndex())
+        if !Manager.IsQuestReactionDeityReachable(deity) && !Manager.OriginRuntime.IsDashboardDeityInOriginRoster(deity, Manager.OriginRuntime.GetPlayerOriginRaceIndex())
             if Manager.GetDebugLevel() >= 3
                 Debug.Trace("[PDV] QuestReaction skipped unreachable taboo/hostile deity: " + deityName + " " + sourceTag)
             endIf
@@ -544,7 +544,7 @@ Bool Function IsGrandfatheredOffRosterPatron(PDV_DeityBase deity)
     if !deity || deity as PDV_DaedricPathBase
         return False
     endIf
-    if GetPatronState() != PATRON_STATE_ACTIVE || deity != Manager.GetActiveDeity() || Manager.IsDashboardDeityInOriginRoster(deity, Manager.GetPlayerOriginRaceIndex())
+    if GetPatronState() != PATRON_STATE_ACTIVE || deity != Manager.GetActiveDeity() || Manager.OriginRuntime.IsDashboardDeityInOriginRoster(deity, Manager.OriginRuntime.GetPlayerOriginRaceIndex())
         return False
     endIf
     String stance = Manager.GetQuestReactionStance(Manager.GetPublicDeityDisplayName(deity), deity)
@@ -568,7 +568,7 @@ EndFunction
 
 String Function BuildCommitmentOfferAcceptJournalLine(Int deityIndex)
     String patron = Manager.GetJournalDeityName(deityIndex)
-    Int originRace = Manager.GetPlayerOriginRaceIndex()
+    Int originRace = Manager.OriginRuntime.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_DUNMER
         return "The Reclamation deepens in you. You named " + patron + " as your focus."
     elseIf originRace == Manager.ORIGIN_ALTMER
@@ -581,7 +581,7 @@ EndFunction
 
 String Function BuildCommitmentOfferAcceptToastLine(PDV_DeityBase deity)
     String patron = Manager.GetPublicDeityDisplayName(deity)
-    Int originRace = Manager.GetPlayerOriginRaceIndex()
+    Int originRace = Manager.OriginRuntime.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_DUNMER
         return "The ash-prayer has a name: " + patron + "."
     elseIf originRace == Manager.ORIGIN_ALTMER
@@ -594,7 +594,7 @@ EndFunction
 
 String Function BuildCommitmentOfferRefuseJournalLine(Int deityIndex)
     String patron = Manager.GetJournalDeityName(deityIndex)
-    Int originRace = Manager.GetPlayerOriginRaceIndex()
+    Int originRace = Manager.OriginRuntime.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_DUNMER
         return "The Reclamation holds as it was. You set " + patron + " aside, and " + patron + " will not ask again."
     elseIf originRace == Manager.ORIGIN_ALTMER
@@ -607,7 +607,7 @@ EndFunction
 
 String Function BuildCommitmentOfferRefuseToastLine(PDV_DeityBase deity)
     String patron = Manager.GetPublicDeityDisplayName(deity)
-    Int originRace = Manager.GetPlayerOriginRaceIndex()
+    Int originRace = Manager.OriginRuntime.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_DUNMER
         return "You set " + patron + " aside."
     elseIf originRace == Manager.ORIGIN_ALTMER
@@ -846,7 +846,7 @@ PDV_DeityBase Function GetShrinePrayerDeityByName(String deityName)
 EndFunction
 
 Function HandleShrinePrayer(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String shrineLabel, String sourceId)
-    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_IMPERIAL && !Manager.OriginRuntime.IsImperialVampireStateActive() && ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Talos")
+    if Manager.OriginRuntime.GetPlayerOriginRaceIndex() == Manager.ORIGIN_IMPERIAL && !Manager.OriginRuntime.IsImperialVampireStateActive() && ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Talos")
         StorageUtil.SetIntValue(None, "PDV.Imperial.TalosBroadUnlocked", 1)
         Manager.Trace(1, "Imperial broad Talos roster unlocked by explicit prayer: " + sourceId)
     endIf
@@ -865,7 +865,7 @@ Function HandleShrinePrayer(String primaryDeityName, String secondaryDeityName, 
 EndFunction
 
 Function HandleSubstrateShrinePrayer(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String sourceId)
-    Int origin = Manager.GetPlayerOriginRaceIndex()
+    Int origin = Manager.OriginRuntime.GetPlayerOriginRaceIndex()
     if origin == Manager.ORIGIN_IMPERIAL && Manager.PDV_ImperialAncestorSubstrate && !Manager.OriginRuntime.IsImperialVampireStateActive()
         PDV_DeityBase primary = GetShrinePrayerDeityByName(primaryDeityName)
         PDV_DeityBase secondary = GetShrinePrayerDeityByName(secondaryDeityName)
@@ -898,7 +898,7 @@ Bool Function AwardShrinePrayerToDeityName(String deityName, String shrineLabel,
     ; off-roster patron restored from an older save remains eligible at the
     ; reduced foreign rate so the relationship is not stranded.
     Bool grandfatheredPatron = IsGrandfatheredOffRosterPatron(deity)
-    if !Manager.IsDashboardDeityInOriginRoster(deity, Manager.GetPlayerOriginRaceIndex()) && !grandfatheredPatron
+    if !Manager.OriginRuntime.IsDashboardDeityInOriginRoster(deity, Manager.OriginRuntime.GetPlayerOriginRaceIndex()) && !grandfatheredPatron
         if Manager.GetDebugLevel() >= 2
             Debug.Trace("[PDV] Shrine prayer skipped outside origin roster: " + deity.DeityName + " from " + shrineLabel + " source " + sourceId)
         endIf
@@ -934,7 +934,7 @@ Function SetActiveDeity(PDV_DeityBase newDeity, Bool allowOffRosterDebug = False
     ; Imperial Talos and Breton Hidden Art's dynamic eligibility while blocking
     ; accidental off-roster assignment. RestoreActiveDeityFromStoredPatron
     ; deliberately bypasses this setter for save-safe grandfathering.
-    if newDeity && !allowOffRosterDebug && !Manager.IsDashboardDeityInOriginRoster(newDeity, Manager.GetPlayerOriginRaceIndex()) && !UsesFormalCommitmentOffersForDeity(newDeity)
+    if newDeity && !allowOffRosterDebug && !Manager.OriginRuntime.IsDashboardDeityInOriginRoster(newDeity, Manager.OriginRuntime.GetPlayerOriginRaceIndex()) && !UsesFormalCommitmentOffersForDeity(newDeity)
         Manager.Trace(1, "SetActiveDeity blocked off-roster commitment to " + newDeity.DeityName)
         return
     endIf
@@ -1016,7 +1016,7 @@ String Function GetReservedSignalSurfaceName(PDV_DeityBase deity)
     if !deity
         return ""
     endIf
-    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT
+    if Manager.OriginRuntime.GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT
         if deity == Manager.PDV_Boethiah
             return "Boethra"
         elseIf deity == Manager.PDV_Mephala
@@ -2009,7 +2009,7 @@ Function RunDawnConsolidateScratch()
         ; Old saves with pre-gate foreign piety still consolidate (piety > 0
         ; falls through to the full body).
         Bool dawnSkip = False
-        if deity && !Manager.IsDashboardDeityInOriginRoster(deity, Manager.GetPlayerOriginRaceIndex())
+        if deity && !Manager.OriginRuntime.IsDashboardDeityInOriginRoster(deity, Manager.OriginRuntime.GetPlayerOriginRaceIndex())
             if StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday") == 0.0 && StorageUtil.GetFloatValue(deityForm, "PDV.Piety") == 0.0
                 dawnSkip = True
             endIf
@@ -2065,11 +2065,11 @@ Function RunDawnRefreshTrackStates()
         Manager.PDV_ConcordatStandingTrack.RefreshState()
     endIf
 
-    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_IMPERIAL
+    if Manager.OriginRuntime.GetPlayerOriginRaceIndex() == Manager.ORIGIN_IMPERIAL
         Manager.OriginRuntime.RunDawnRefreshImperialAncestor()
     endIf
 
-    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT
+    if Manager.OriginRuntime.GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT
         Manager.OriginRuntime.EvaluateKhajiitFocusedEmphasis()
         Manager.OriginRuntime.RefreshKhajiitLunarPosture("dawn")
     endIf
@@ -2088,7 +2088,7 @@ Function RunDawnRefreshTrackStates()
         Manager.OriginRuntime.SyncAltmerDisciplines(Game.GetPlayer())
     endIf
 
-    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD
+    if Manager.OriginRuntime.GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD
         Manager.OriginRuntime.RunDawnRefreshNordAncestor()
     endIf
 
@@ -2097,7 +2097,7 @@ Function RunDawnRefreshTrackStates()
         Manager.OriginRuntime.SyncOrcTrialOfIron(Game.GetPlayer())
     endIf
 
-    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_BRETON
+    if Manager.OriginRuntime.GetPlayerOriginRaceIndex() == Manager.ORIGIN_BRETON
         Manager.OriginRuntime.RunDawnRefreshBretonAncestor()
         Manager.OriginRuntime.DecayBretonWitchcraftExposureAtDawn()
         Manager.OriginRuntime.DecayBretonDruidicStandingAtDawn()
@@ -2152,7 +2152,7 @@ Function RunDawnApplySpellAndNeglectLayers()
         ; goes quiet for a few days feels gentle neglect too, not just focused patrons. Nord broad
         ; (Old Ways / Nine Divines) reuses the Kyne weather spell as its broad-lane neglect for now;
         ; per-race broad-lane neglect spells are a follow-on. Other races: no broad spell yet.
-        Bool nordBroadLapsed = Manager.IsBroadLaneLapsed() && Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD
+        Bool nordBroadLapsed = Manager.OriginRuntime.IsBroadLaneLapsed() && Manager.OriginRuntime.GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD
         Manager.OriginRuntime.SyncKyneNeglectSpell(nordBroadLapsed)
         Manager.OriginRuntime.SyncNordPatronNeglectSpells()
         if nordBroadLapsed && StorageUtil.GetIntValue(None, "PDV.Neglect.PatronToastState") == 0
@@ -2310,7 +2310,7 @@ Function ForceSetPiety(Float amount)
     Form deityForm = Manager.GetActiveDeity() as Form
     StorageUtil.SetFloatValue(deityForm, "PDV.Piety", PDV_DevotionRules.ClampValue(amount, 0.0, PIETY_MAX))
     RecomputeTier(Manager.GetActiveDeity(), False)
-    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT
+    if Manager.OriginRuntime.GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT
         Manager.OriginRuntime.EvaluateKhajiitFocusedEmphasis()
         Manager.OriginRuntime.SyncKhajiitRuntimeState()
     endIf
@@ -2496,7 +2496,7 @@ String Function GetActiveBroadPantheonPoolId()
     if GetPatronState() != PATRON_STATE_BROAD
         return ""
     endIf
-    Int origin = Manager.GetPlayerOriginRaceIndex()
+    Int origin = Manager.OriginRuntime.GetPlayerOriginRaceIndex()
     if origin == Manager.ORIGIN_IMPERIAL
         if Manager.OriginRuntime.IsImperialVampireStateActive()
             return ""
@@ -2662,14 +2662,14 @@ Function MaybeSendBroadPantheonTierToast(String poolId, Float previousStanding, 
         return
     endIf
 
-    Int originRace = Manager.GetPlayerOriginRaceIndex()
-    if poolId != GetActiveBroadPantheonPoolId() || !Manager.HasBroadLanePresentation(originRace)
+    Int originRace = Manager.OriginRuntime.GetPlayerOriginRaceIndex()
+    if poolId != GetActiveBroadPantheonPoolId() || !Manager.OriginRuntime.HasBroadLanePresentation(originRace)
         return
     endIf
 
-    String familyName = Manager.GetBroadLaneDisplayName(originRace)
-    String tierName = Manager.GetBroadLaneStandingLabel(originRace, currentTier)
-    SendPrismaBroadPantheonTierToast(familyName, tierName, Manager.GetBroadLaneSymbol(originRace))
+    String familyName = Manager.OriginRuntime.GetBroadLaneDisplayName(originRace)
+    String tierName = Manager.OriginRuntime.GetBroadLaneStandingLabel(originRace, currentTier)
+    SendPrismaBroadPantheonTierToast(familyName, tierName, Manager.OriginRuntime.GetBroadLaneSymbol(originRace))
 EndFunction
 
 Bool Function SendPrismaBroadPantheonTierToast(String familyName, String tierName, String symbolName)
@@ -2919,7 +2919,7 @@ Float Function GetDislikeBaseDeltaForEvent(PDV_DeityBase deity, Int eventType)
         return baseDelta
     endIf
 
-    Int originRace = Manager.GetPlayerOriginRaceIndex()
+    Int originRace = Manager.OriginRuntime.GetPlayerOriginRaceIndex()
     if originRace >= 0
         Float originDelta = StorageUtil.GetFloatValue(deityForm, tableKeyPrefix + ".O" + originRace + ".D")
         if originDelta < 0.0
@@ -3532,7 +3532,7 @@ Function SyncFirstTierRaceRewardRuntime()
     ; The origin's first-tier "+10" Health floor grants to an active patron (>= Seeker) OR a
     ; broad worshipper with accumulated service (IsBroadFloorEligible) -- without the broad arm
     ; a broad worshipper got nothing until the count-gated Faithful (T2) reward, a 0 -> +20 cliff.
-    Bool shouldBeActive = (IsFirstTierRaceRewardEligible() || Manager.IsBroadFloorEligible()) && activeReward
+    Bool shouldBeActive = (IsFirstTierRaceRewardEligible() || Manager.OriginRuntime.IsBroadFloorEligible()) && activeReward
 
     SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Altmer_Orthodox_T1, shouldBeActive && activeReward == Manager.PDV_Bless_Altmer_Orthodox_T1, "Altmer T1")
     ; Argonian Hist_T1 is intentionally absent here: SyncArgonianRewards owns it on the substrate
@@ -3554,7 +3554,7 @@ Function SyncFirstTierRaceRewardRuntime()
 
     if shouldBeActive
         StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Active", 1)
-        StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Origin", Manager.GetPlayerOriginRaceIndex())
+        StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Origin", Manager.OriginRuntime.GetPlayerOriginRaceIndex())
     else
         StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Active", 0)
         StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Origin", -1)
@@ -3654,7 +3654,7 @@ Bool Function IsPantheonBroadPoolPresentationActive(Int origin)
 EndFunction
 
 Spell Function GetFirstTierRaceRewardSpellForOrigin()
-    Int originRace = Manager.GetPlayerOriginRaceIndex()
+    Int originRace = Manager.OriginRuntime.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_ALTMER
         return Manager.PDV_Bless_Altmer_Orthodox_T1
     ; Argonian is a no-offer race: this selector exposes the fixed T1 spell for readback and
@@ -3831,7 +3831,7 @@ String Function GetBroadPantheonRosterForDebug(String poolId)
 EndFunction
 
 PDV_DeityBase Function GetPacingPatronCandidate()
-    Int originRace = Manager.GetPlayerOriginRaceIndex()
+    Int originRace = Manager.OriginRuntime.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_IMPERIAL
         return PDV_Akatosh
     elseIf originRace == Manager.ORIGIN_NORD
@@ -3907,7 +3907,7 @@ Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
         return (deity as PDV_DaedricPathBase).GetCommitmentOfferMessage()
     endIf
 
-    Int originRace = Manager.GetPlayerOriginRaceIndex()
+    Int originRace = Manager.OriginRuntime.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_NORD
         return Manager.OriginRuntime.GetNordFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_IMPERIAL
@@ -4025,7 +4025,7 @@ Bool Function IsGenericLikesDislikesDeityReachable(PDV_DeityBase deity)
         return False
     endIf
 
-    Int originRace = Manager.GetPlayerOriginRaceIndex()
+    Int originRace = Manager.OriginRuntime.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_NORD
         return Manager.OriginRuntime.IsNordOfferEligibleDeity(deity)
     endIf
@@ -4165,7 +4165,7 @@ Int Function GetRecentCommitmentSignalDayCount(PDV_DeityBase deity, Int windowDa
 EndFunction
 
 Bool Function ShouldBypassFormalCommitmentOffers()
-    Int originRace = Manager.GetPlayerOriginRaceIndex()
+    Int originRace = Manager.OriginRuntime.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_NORD && Manager.OriginRuntime.IsNordVampireSuppressed()
         return True
     endIf
@@ -4185,7 +4185,7 @@ Function HandleCurseStateRefresh(String reason)
     if oldState != newState
         HandleCurseStateTransition(oldState, newState, reason)
     else
-        if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ARGONIAN
+        if Manager.OriginRuntime.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ARGONIAN
             Manager.OriginRuntime.RefreshArgonianHistPosture(reason)
         endIf
         if Manager.PDV_HircinePath
@@ -4200,7 +4200,7 @@ Function HandleCurseStateTransition(Int oldState, Int newState, String reason)
     StorageUtil.SetFloatValue(None, "PDV.Curse.LastTransitionAt", Utility.GetCurrentGameTime())
     StorageUtil.SetStringValue(None, "PDV.Curse.LastTransitionReason", reason)
 
-    Bool suppressOutputs = Manager.IsCurseStateLoadReconciliation(reason)
+    Bool suppressOutputs = Manager.OriginRuntime.IsCurseStateLoadReconciliation(reason)
     Bool previousSuppress = Manager.GetSuppressCurseTransitionOutputs()
     Manager.SetSuppressCurseTransitionOutputs(suppressOutputs)
     Manager.SetRaceCurseSurfaceShown(False)
@@ -4235,7 +4235,7 @@ Function ResyncCurseStateMirror(String reason)
 EndFunction
 
 Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
-    Int originRace = Manager.GetPlayerOriginRaceIndex()
+    Int originRace = Manager.OriginRuntime.GetPlayerOriginRaceIndex()
     Bool curseActive = newState != 0
 
     if originRace == Manager.ORIGIN_BOSMER
@@ -4565,6 +4565,7 @@ Function ReapplyOneDisfavorSting(Actor playerRef, Int domainValue)
         playerRef.AddSpell(bandSpell, False)
     endIf
 EndFunction
+
 
 
 

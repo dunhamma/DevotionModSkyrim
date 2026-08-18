@@ -115,7 +115,7 @@ Function RouteSleepStop(Actor playerRef, Bool wasInterrupted, Bool hadSleepStart
         return
     endIf
 
-    PDV_Manager.HandlePlayerSleepStop(playerRef, wasInterrupted, hadSleepStartContext, sleepStartedOutside, "eventbus_sleep")
+    PDV_Manager.OriginRuntime.HandlePlayerSleepStop(playerRef, wasInterrupted, hadSleepStartContext, sleepStartedOutside, "eventbus_sleep")
     PDV_Manager.LedgerRuntime.HandleCurseStateRefresh("eventbus_sleep")
     Trace(2, "RouteSleepStop complete.")
 EndFunction
@@ -172,7 +172,7 @@ Function RouteGreenPactViolation()
         eventType = eventTypes.EVT_GREEN_PACT_VIOLATION
     endIf
 
-    PDV_Manager.HandleGreenPactViolation("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleGreenPactViolation("eventbus_" + eventType)
     Trace(2, "RouteGreenPactViolation complete: " + eventType)
 EndFunction
 
@@ -465,7 +465,7 @@ Function RoutePaarthurnaxKill(Form sourceForm)
         Trace(1, "RoutePaarthurnaxKill skipped: PDV_Manager not assigned.")
         return
     endIf
-    PDV_Manager.HandlePaarthurnaxKill(sourceForm, "eventbus_paarthurnax_kill")
+    PDV_Manager.OriginRuntime.HandlePaarthurnaxKill(sourceForm, "eventbus_paarthurnax_kill")
     Trace(2, "RoutePaarthurnaxKill complete")
 EndFunction
 
@@ -474,7 +474,7 @@ Function RoutePaarthurnaxSpare(Form sourceForm)
         Trace(1, "RoutePaarthurnaxSpare skipped: PDV_Manager not assigned.")
         return
     endIf
-    PDV_Manager.HandlePaarthurnaxSpare(sourceForm, "eventbus_paarthurnax_spare")
+    PDV_Manager.OriginRuntime.HandlePaarthurnaxSpare(sourceForm, "eventbus_paarthurnax_spare")
     Trace(2, "RoutePaarthurnaxSpare complete")
 EndFunction
 
@@ -555,7 +555,7 @@ Function RouteTalosShrineDefiance()
         eventType = eventTypes.EVT_TALOS_SHRINE_DEFIANCE
     endIf
 
-    PDV_Manager.HandleTalosShrineDefiance("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleTalosShrineDefiance("eventbus_" + eventType)
     Trace(2, "RouteTalosShrineDefiance complete: " + eventType)
 EndFunction
 
@@ -1075,7 +1075,7 @@ Function RouteShoutAttack(Actor playerRef, Shout shoutUsed)
         eventType = eventTypes.EVT_SHOUT_ATTACK
     endIf
 
-    PDV_Manager.HandleShoutAttack(eventType, playerRef, shoutUsed, "eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleShoutAttack(eventType, playerRef, shoutUsed, "eventbus_" + eventType)
     Trace(2, "RouteShoutAttack complete: " + eventType)
 EndFunction
 
@@ -1151,7 +1151,7 @@ Function RoutePlayerBelowHealthGate(Actor playerRef)
         return
     endIf
 
-    PDV_Manager.HandlePlayerBelowHealthGate(playerRef)
+    PDV_Manager.OriginRuntime.HandlePlayerBelowHealthGate(playerRef)
     Trace(2, "RoutePlayerBelowHealthGate complete.")
 EndFunction
 
@@ -1161,7 +1161,7 @@ Function RoutePlayerBelowHealthSurvived(Actor playerRef)
         return
     endIf
 
-    PDV_Manager.HandlePlayerBelowHealthSurvived(playerRef)
+    PDV_Manager.OriginRuntime.HandlePlayerBelowHealthSurvived(playerRef)
     Trace(2, "RoutePlayerBelowHealthSurvived complete.")
 EndFunction
 
@@ -1173,7 +1173,7 @@ Function RouteBosmerBaanDarGap(Actor playerRef)
         return
     endIf
 
-    PDV_Manager.HandlePlayerBelowHealthGate(playerRef)
+    PDV_Manager.OriginRuntime.HandlePlayerBelowHealthGate(playerRef)
     Trace(2, "RouteBosmerBaanDarGap complete.")
 EndFunction
 
@@ -1352,7 +1352,7 @@ Function RouteStateTransitionConfirmationRite()
         eventType = eventTypes.EVT_STATE_TRANSITION_CONFIRM_RITE
     endIf
 
-    PDV_Manager.HandleStateTransitionConfirmationRite("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleStateTransitionConfirmationRite("eventbus_" + eventType)
     Trace(2, "RouteStateTransitionConfirmationRite complete: " + eventType)
 EndFunction
 
@@ -1611,7 +1611,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     endIf
 
     String eventReason = GetEventReason(eventType)
-    PDV_Manager.HandleSubstrateActionEvent(eventType, eventReason)
+    PDV_Manager.OriginRuntime.HandleSubstrateActionEvent(eventType, eventReason)
 
     ; Quest-meta-faucet theft stamp (PDV_QuestExpansion_Architecture.md, 2026-07-05):
     ; Nocturnal's "done her way" lane compares this against the last watched-quest
@@ -1770,7 +1770,7 @@ Function RouteTalosWorshipperRescued(String asSourceId = "")
         Trace(1, "RouteTalosWorshipperRescued skipped: PDV_Manager not assigned.")
         return
     endIf
-    PDV_Manager.HandleTalosWorshipperRescued("eventbus_talos_worshipper_rescued_" + asSourceId)
+    PDV_Manager.OriginRuntime.HandleTalosWorshipperRescued("eventbus_talos_worshipper_rescued_" + asSourceId)
     Trace(2, "RouteTalosWorshipperRescued complete: " + asSourceId)
 EndFunction
 
@@ -1779,6 +1779,7 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] EventBus: " + traceText)
     endIf
 EndFunction
+
 
 
 

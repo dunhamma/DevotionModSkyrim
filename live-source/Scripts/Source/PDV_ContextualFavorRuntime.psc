@@ -220,7 +220,7 @@ Int Function ResolveEligibleFavorLane()
         return FAVOR_LANE_KYNE
     endIf
 
-    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ALTMER
+    if Manager.OriginRuntime.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ALTMER
         if Manager.OriginRuntime.IsAltmerFavorSuppressedByCurse()
             return FAVOR_LANE_NONE
         endIf
@@ -232,7 +232,7 @@ Int Function ResolveEligibleFavorLane()
         return FAVOR_LANE_NONE
     endIf
 
-    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
+    if Manager.OriginRuntime.GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
         return FAVOR_LANE_NONE
     endIf
 
@@ -571,5 +571,6 @@ String Function GetContextualFavorSummary()
     summary = summary + ";selected=" + GetSelectedContextualFavorLaneLabel() + "/" + GetSelectedContextualFavorFamilyLabel()
     return summary
 EndFunction
+
 
 
