@@ -60,9 +60,22 @@ check to read the extracted `PDV_DevotionRules` (was silently reading the 1.5 in
 When future modules extract, convert any remaining symbol-pinning gates the same way (use the resolver, don't
 hand-patch). Reclassification (6 fns RULES->MANAGER) also committed; region map RULES=19, MANAGER=190.
 
-Next: sweep step 2 (AncestorSpine — needs the grant-fact decision) + Part B/C/D; then **FAVOR** code extraction
-(instance methods + property decls + `PDV__ManagerQuest` backref; ESP host record + property fills deferred to
-the batched houseCARL/V3-profile session), then GATE 0.5. Everything below is the original groundwork context.
+**FAVOR EXTRACTION SPEC READY** (`references/authoring/PDV_2_0_FAVOR_ExtractionSpec.md`, committed `d6098fb0`) +
+**G2 interface freeze** (`PDV_2_0ModuleContracts.manifest.json`). FAVOR is now a known extraction: 33 fns / 42 props,
+calls 11 manager fns (→ `Manager.X()` backref), externally tiny (3 call sites, all in `PDV_MCM.psc`; 0 external
+prop refs), ~43 manager-internal call sites → `FavorRuntime.X`. **PREREQUISITE (must-do first): add
+`PDV_DeityBase Function GetActiveDeity()` to the manager** — FAVOR reads `_activeDeity`, a bare VARIABLE not a
+property, unreachable by backref. Coupled-fn flags: ResolveEligibleFavorLane (worst), SendContextualFavorToast,
+IsValidAltmerSourceFavorFamily (bidirectional — stays in manager, review the pair). `GetNordPantheonBaselineState`
+sits in FAVOR's line span but is NOT FAVOR — move by name only. 16 `Spell Auto` props need CK fills later; 26
+`AutoReadOnly` consts move verbatim.
+
+Next (single careful manager lane, per the spec): FAVOR code extraction — (1) add `GetActiveDeity()` accessor;
+(2) create `PDV_ContextualFavorRuntime extends Quest` (Manager backref + 42 unfilled prop decls); (3) move 33 fns
+as instance methods with the backref/qualified rewiring; (4) add manager `FavorRuntime` property + rewire the
+~43 internal + 3 MCM call sites; (5) validity-compile 0/0 + parity (compile is the main net — the harness tracks
+functions, not the property migration); ESP host record + fills deferred to the batched session. THEN migration
+sweep step 2 (AncestorSpine — grant-fact decision) + Part B/C/D, then GATE 0.5. Everything below is original context.
 
 ---
 
