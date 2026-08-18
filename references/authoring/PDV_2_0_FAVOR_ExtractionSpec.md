@@ -374,3 +374,25 @@ Until steps 1-4 are done, `Manager` and `FavorRuntime` are None; every FAVOR
 call from retained code no-ops or returns default, and the module's own
 `Manager.X()` calls would fault only if invoked - which nothing does yet. That is
 the intended inert state.
+
+## 10. Extraction outcome + spec corrections (2026-08-18)
+
+Code extraction DONE on `feature/v3-big-update` (post the 1.5.0e merge `65ca5c89`).
+33 fns + 42 props moved to `PDV_ContextualFavorRuntime.psc`; manager + module + MCM
+compile 0 err / 0 warn (isolated); static parity vs a fresh pre-extraction baseline =
+**moved=27, changed=13 FAVOR-side + retained callers, removed=0, added=0**, and an
+independent check confirmed **every changed body differs ONLY by `Manager.` /
+`FavorRuntime.` prefixing** (0 non-prefix diffs). ESP/CK steps in Section 9 still deferred.
+
+Two facts in this spec were wrong and the compiler/parity surfaced them - corrected here,
+both handled:
+
+1. **Section 5 undercounts `Trace` in `TryActivateContextualFavor`.** It says "Manager.Trace
+   x3"; the body has **5** `Trace(` calls (all rewired to `Manager.Trace`). Rewiring is by
+   token, not by the stated count, so this was automatically correct - but the count is wrong.
+2. **Section 6a's ownership claim is wrong.** It states the 16 `PDV_SPEL_Favor_*` props are
+   "read only by `GetFavorSpell`... no other manager-retained code." The manager-retained
+   teardown **`StripAllPdvSpells(Actor)`** also references all 16 (to strip them from the
+   player). Those 16 references were rewired to `FavorRuntime.PDV_SPEL_Favor_*` (reach-through);
+   the props still leave the manager entirely. Any future module extraction must grep the
+   whole manager for a moved property, not trust a single-reader claim.

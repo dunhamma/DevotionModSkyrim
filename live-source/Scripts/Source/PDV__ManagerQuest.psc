@@ -149,22 +149,6 @@ Spell Property PDV_SPEL_Disfavor_MoonLuckShadow_Light Auto
 Spell Property PDV_SPEL_Disfavor_MoonLuckShadow_Sharp Auto
 Spell Property PDV_SPEL_Disfavor_VoidSecrets_Light Auto
 Spell Property PDV_SPEL_Disfavor_VoidSecrets_Sharp Auto
-Spell Property PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery Auto
-Spell Property PDV_SPEL_Favor_Kyne_StormRoadGrace Auto
-Spell Property PDV_SPEL_Favor_Kyne_GuidedHunt Auto
-Spell Property PDV_SPEL_Favor_Kyne_WindMarkedPassage Auto
-Spell Property PDV_SPEL_Favor_NordBroadOldWays_SkyRoadEndurance Auto
-Spell Property PDV_SPEL_Favor_NordBroadOldWays_HonorableOrdeal Auto
-Spell Property PDV_SPEL_Favor_NordBroadOldWays_HearthAndHoldDefense Auto
-Spell Property PDV_SPEL_Favor_NordBroadOldWays_DeathRightAncestorQuiet Auto
-Spell Property PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance Auto
-Spell Property PDV_SPEL_Favor_NordBroadNineDivines_KynarethRoadGrace Auto
-Spell Property PDV_SPEL_Favor_NordBroadNineDivines_HouseholdAndMercyDuty Auto
-Spell Property PDV_SPEL_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy Auto
-Spell Property PDV_SPEL_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft Auto
-Spell Property PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine Auto
-Spell Property PDV_SPEL_Favor_Altmer_Shared_DawnSteadiness Auto
-Spell Property PDV_SPEL_Favor_Altmer_Orthodox_CostlyEnforcement Auto
 Spell Property PDV_Bless_Altmer_Orthodox_T1 Auto
 Spell Property PDV_Bless_Altmer_Orthodox_T2 Auto
 Spell Property PDV_Bless_Altmer_AuriEl_T1 Auto
@@ -741,27 +725,6 @@ Int Property NORD_ROUTE_NINE_MERCY = 7 AutoReadOnly
 Int Property NORD_ROUTE_NINE_DEATH = 8 AutoReadOnly
 Int Property NORD_ROUTE_NINE_WORK = 9 AutoReadOnly
 Int Property NORD_ROUTE_NINE_TALOS = 10 AutoReadOnly
-Int Property FAVOR_LANE_NONE = 0 AutoReadOnly
-Int Property FAVOR_LANE_KYNE = 1 AutoReadOnly
-Int Property FAVOR_LANE_NORD_BROAD_OLD_WAYS = 2 AutoReadOnly
-Int Property FAVOR_LANE_NORD_BROAD_NINE_DIVINES = 3 AutoReadOnly
-Int Property FAVOR_LANE_ALTMER = 4 AutoReadOnly
-Int Property FAVOR_FAMILY_KYNE_OPEN_SKY_REST = 1 AutoReadOnly
-Int Property FAVOR_FAMILY_KYNE_STORM_ROAD = 2 AutoReadOnly
-Int Property FAVOR_FAMILY_KYNE_GUIDED_HUNT = 3 AutoReadOnly
-Int Property FAVOR_FAMILY_KYNE_WIND_MARKED_PASSAGE = 4 AutoReadOnly
-Int Property FAVOR_FAMILY_OLD_WAYS_SKY_ROAD = 11 AutoReadOnly
-Int Property FAVOR_FAMILY_OLD_WAYS_HONORABLE_ORDEAL = 12 AutoReadOnly
-Int Property FAVOR_FAMILY_OLD_WAYS_HEARTH_HOLD = 13 AutoReadOnly
-Int Property FAVOR_FAMILY_OLD_WAYS_ANCESTOR_QUIET = 14 AutoReadOnly
-Int Property FAVOR_FAMILY_OLD_WAYS_TALOS_DEFIANCE = 15 AutoReadOnly
-Int Property FAVOR_FAMILY_NINE_ROAD_GRACE = 21 AutoReadOnly
-Int Property FAVOR_FAMILY_NINE_HOUSEHOLD_MERCY = 22 AutoReadOnly
-Int Property FAVOR_FAMILY_NINE_PROPER_DEATH = 23 AutoReadOnly
-Int Property FAVOR_FAMILY_NINE_HONEST_WORK = 24 AutoReadOnly
-Int Property FAVOR_FAMILY_NINE_TALOS_PRESSURE = 25 AutoReadOnly
-Int Property FAVOR_FAMILY_ALTMER_DAWN_STEADINESS = 31 AutoReadOnly
-Int Property FAVOR_FAMILY_ALTMER_ORTHODOX_COST = 32 AutoReadOnly
 Int Property ALTMER_CRISIS_NONE = 0 AutoReadOnly
 Int Property ALTMER_CRISIS_DISSONANT = 1 AutoReadOnly
 Int Property ALTMER_CRISIS_QUESTIONING = 2 AutoReadOnly
@@ -840,13 +803,10 @@ Float Property ARGONIAN_REWARD_T3_THRESHOLD = 85.0 AutoReadOnly
 Int Property ARGONIAN_FOCUS_NONE = 0 AutoReadOnly
 Int Property ARGONIAN_FOCUS_PEOPLE = 1 AutoReadOnly
 Int Property ARGONIAN_FOCUS_VOID = 2 AutoReadOnly
-Float Property FAVOR_DURATION_MOMENTARY_DAYS = 0.001 AutoReadOnly
-Float Property FAVOR_DURATION_AFTER_ACT_DAYS = 0.125 AutoReadOnly
-Float Property FAVOR_DURATION_ENVIRONMENTAL_DAYS = 0.125 AutoReadOnly
-Float Property FAVOR_FAMILY_MOMENTARY_COOLDOWN_DAYS = 0.02 AutoReadOnly
-Float Property FAVOR_FAMILY_STANDARD_COOLDOWN_DAYS = 0.5 AutoReadOnly
 
 PDV_DeityBase _activeDeity
+
+PDV_ContextualFavorRuntime Property FavorRuntime Auto
 
 Int Property DebugCommand = 0 Auto
 Int Property DebugIndex = -1 Auto
@@ -1002,7 +962,7 @@ Event OnInit()
     MigrateDaedricConsentIfNeeded()
     EnsureRecognitionModEvents()
     RefreshPatronMirrors()
-    UpdateContextualFavorRuntime()
+    FavorRuntime.UpdateContextualFavorRuntime()
     UpdateDisfavorStingRuntime()
     EnsureSurveyDevotionPower()
     EnsureDunmerAncestralUrn()
@@ -1041,7 +1001,7 @@ Event OnUpdate()
     ; Disfavor is NOT here: it only clears on a game-time expiry, so it rides the
     ; 10s cadence below -- see the note on that block.
     EnsureUnifiedStartupChoice()
-    UpdateContextualFavorRuntime()
+    FavorRuntime.UpdateContextualFavorRuntime()
     if !_diegeticLoadHandled
         HandleDiegeticLoad("update")
     endIf
@@ -4046,10 +4006,10 @@ String Function GetPanelActsJson()
         endIf
     endIf
 
-    if IsFavorActive()
-        Int lane = GetActiveFavorLane()
-        Int fam = GetActiveFavorFamily()
-        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("journal", "good", GetContextualFavorLaneLabel(lane), GetContextualFavorFamilyLabel(lane, fam)))
+    if FavorRuntime.IsFavorActive()
+        Int lane = FavorRuntime.GetActiveFavorLane()
+        Int fam = FavorRuntime.GetActiveFavorFamily()
+        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("journal", "good", FavorRuntime.GetContextualFavorLaneLabel(lane), FavorRuntime.GetContextualFavorFamilyLabel(lane, fam)))
     endIf
 
     ; Quasi-patron: show current substrate/state-track mode as the headline act
@@ -4151,7 +4111,7 @@ String Function GetPanelRelationsJson()
 EndFunction
 
 String Function GetPanelDebugJson()
-    String j = "{\"Favor\":\"" + PDV_DevotionRules.JsonSafeString(GetPlayerMcmFavorLine()) + "\""
+    String j = "{\"Favor\":\"" + PDV_DevotionRules.JsonSafeString(FavorRuntime.GetPlayerMcmFavorLine()) + "\""
     j = j + ",\"Neglect\":\"" + PDV_DevotionRules.JsonSafeString(GetPlayerMcmNeglectLine()) + "\""
     j = j + ",\"Curse\":\"" + PDV_DevotionRules.JsonSafeString(GetPlayerCursePublicLabel()) + "\""
     j = j + "}"
@@ -5175,7 +5135,7 @@ Function SetActiveDeity(PDV_DeityBase newDeity, Bool allowOffRosterDebug = False
     endIf
 
     _activeDeity = newDeity
-    ClearActiveFavor("patron_state_change")
+    FavorRuntime.ClearActiveFavor("patron_state_change")
 
     if _activeDeity
         EnsureDeityState(_activeDeity)
@@ -5196,7 +5156,7 @@ Function SetBroadWorship()
     endIf
 
     _activeDeity = None
-    ClearActiveFavor("patron_state_change")
+    FavorRuntime.ClearActiveFavor("patron_state_change")
     SetPatronState(PATRON_STATE_BROAD)
     UpdatePatronDeityGlobal()
     RefreshPatronMirrors()
@@ -10883,14 +10843,14 @@ Function HandleAltmerDawnSteadiness(String reason)
 
     if IsAltmerFavorSuppressedByCurse()
         RecordAltmerRejectedSurface(reason, "curse_suppressed_altmer_favor")
-        ClearActiveFavor("altmer_curse")
+        FavorRuntime.ClearActiveFavor("altmer_curse")
         return
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.AltmerDawnSteadiness")
 
-    RecordAltmerSourceFavor(FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
-    TryActivateContextualFavor(FAVOR_LANE_ALTMER, FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
+    RecordAltmerSourceFavor(FavorRuntime.FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
+    FavorRuntime.TryActivateContextualFavor(FavorRuntime.FAVOR_LANE_ALTMER, FavorRuntime.FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
     if multiplier > 0.0
         AwardAltmerDawnSignal(reason, multiplier)
         ; Passive dawn acknowledgement is piety-only. Curated Auri-El/Magnus
@@ -10918,14 +10878,14 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
 
     if IsAltmerFavorSuppressedByCurse()
         RecordAltmerRejectedSurface(reason, "curse_suppressed_altmer_favor")
-        ClearActiveFavor("altmer_curse")
+        FavorRuntime.ClearActiveFavor("altmer_curse")
         return
     endIf
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.AltmerOrthodoxCostlyEnforcement")
 
-    RecordAltmerSourceFavor(FAVOR_FAMILY_ALTMER_ORTHODOX_COST, reason)
-    TryActivateContextualFavor(FAVOR_LANE_ALTMER, FAVOR_FAMILY_ALTMER_ORTHODOX_COST, reason)
+    RecordAltmerSourceFavor(FavorRuntime.FAVOR_FAMILY_ALTMER_ORTHODOX_COST, reason)
+    FavorRuntime.TryActivateContextualFavor(FavorRuntime.FAVOR_LANE_ALTMER, FavorRuntime.FAVOR_FAMILY_ALTMER_ORTHODOX_COST, reason)
     if multiplier > 0.0
         AwardAltmerOrthodoxSignal(reason, multiplier)
         AwardAltmerAncestorSpinePulse(multiplier, reason)
@@ -11443,20 +11403,20 @@ Function RecordAltmerSourceFavor(Int familyValue, String reason)
     StorageUtil.SetIntValue(None, countKey, StorageUtil.GetIntValue(None, countKey) + 1)
     StorageUtil.SetIntValue(None, "PDV.Altmer.Favor.LastFamily", familyValue)
     StorageUtil.SetStringValue(None, "PDV.Altmer.Favor.LastReason", reason)
-    StorageUtil.SetStringValue(None, "PDV.Altmer.Favor.LastSurfacing", GetFavorSurfacingLabel(FAVOR_LANE_ALTMER, familyValue))
+    StorageUtil.SetStringValue(None, "PDV.Altmer.Favor.LastSurfacing", FavorRuntime.GetFavorSurfacingLabel(FavorRuntime.FAVOR_LANE_ALTMER, familyValue))
     StorageUtil.SetFloatValue(None, "PDV.Altmer.Favor.LastGameTime", Utility.GetCurrentGameTime())
 
-    Trace(2, "Altmer source favor recorded: " + GetContextualFavorFamilyLabel(FAVOR_LANE_ALTMER, familyValue) + " (" + reason + ")")
+    Trace(2, "Altmer source favor recorded: " + FavorRuntime.GetContextualFavorFamilyLabel(FavorRuntime.FAVOR_LANE_ALTMER, familyValue) + " (" + reason + ")")
 EndFunction
 
 Bool Function IsValidAltmerSourceFavorFamily(Int familyValue)
-    return familyValue == FAVOR_FAMILY_ALTMER_DAWN_STEADINESS || familyValue == FAVOR_FAMILY_ALTMER_ORTHODOX_COST
+    return familyValue == FavorRuntime.FAVOR_FAMILY_ALTMER_DAWN_STEADINESS || familyValue == FavorRuntime.FAVOR_FAMILY_ALTMER_ORTHODOX_COST
 EndFunction
 
 String Function GetAltmerFavorFamilyKey(Int familyValue)
-    if familyValue == FAVOR_FAMILY_ALTMER_DAWN_STEADINESS
+    if familyValue == FavorRuntime.FAVOR_FAMILY_ALTMER_DAWN_STEADINESS
         return "DawnSteadiness"
-    elseIf familyValue == FAVOR_FAMILY_ALTMER_ORTHODOX_COST
+    elseIf familyValue == FavorRuntime.FAVOR_FAMILY_ALTMER_ORTHODOX_COST
         return "OrthodoxCost"
     endIf
 
@@ -11605,7 +11565,7 @@ String Function GetAltmerCrisisSourceLabel(Int sourceValue)
 EndFunction
 
 String Function GetAltmerSummary()
-    return "crisis=" + GetAltmerCrisisStateLabel() + ";source=" + GetAltmerCrisisSourceLabel(StorageUtil.GetIntValue(None, "PDV.Altmer.CrisisSource")) + ";pressure=" + StorageUtil.GetIntValue(None, "PDV.Altmer.LorkhanPressureCount") + ";favor=" + GetContextualFavorFamilyLabel(FAVOR_LANE_ALTMER, StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.LastFamily")) + ";rejected=" + StorageUtil.GetIntValue(None, "PDV.Altmer.RejectedSurfaceCount") + ";curse=" + GetAltmerCurseSummary()
+    return "crisis=" + GetAltmerCrisisStateLabel() + ";source=" + GetAltmerCrisisSourceLabel(StorageUtil.GetIntValue(None, "PDV.Altmer.CrisisSource")) + ";pressure=" + StorageUtil.GetIntValue(None, "PDV.Altmer.LorkhanPressureCount") + ";favor=" + FavorRuntime.GetContextualFavorFamilyLabel(FavorRuntime.FAVOR_LANE_ALTMER, StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.LastFamily")) + ";rejected=" + StorageUtil.GetIntValue(None, "PDV.Altmer.RejectedSurfaceCount") + ";curse=" + GetAltmerCurseSummary()
 EndFunction
 
 Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, String reason)
@@ -13455,7 +13415,7 @@ Function RunDawnApplySpellAndNeglectLayers()
             SendPrismaToast("journal", "warning", "Devotion quiet", "The gods feel distant as your devotion goes quiet.")
         endIf
         StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", PDV_DevotionRules.BoolToInt(nordBroadLapsed))
-        UpdateContextualFavorRuntime()
+        FavorRuntime.UpdateContextualFavorRuntime()
         SyncFirstTierRaceRewardRuntime()
         return
     endIf
@@ -13466,7 +13426,7 @@ Function RunDawnApplySpellAndNeglectLayers()
         StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", 0)
         SyncKyneNeglectSpell(False)
         SyncNordPatronNeglectSpells()
-        UpdateContextualFavorRuntime()
+        FavorRuntime.UpdateContextualFavorRuntime()
         SyncFirstTierRaceRewardRuntime()
         return
     endIf
@@ -13487,7 +13447,7 @@ Function RunDawnApplySpellAndNeglectLayers()
     ; non-Kyne focus (any tier) suppresses it. Broad worship already had no Kyne penalty.
     SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne) && _activeDeity == PDV_Kyne)
     SyncNordPatronNeglectSpells()
-    UpdateContextualFavorRuntime()
+    FavorRuntime.UpdateContextualFavorRuntime()
 
     Bool patronNeglected = IsNeglectFlagActive(_activeDeity)
     Int priorPatronToastState = StorageUtil.GetIntValue(None, "PDV.Neglect.PatronToastState")
@@ -18016,22 +17976,22 @@ Function StripAllPdvSpells(Actor playerRef)
     SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_MoonLuckShadow_Sharp, False, "PDV_SPEL_Disfavor_MoonLuckShadow_Sharp")
     SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_VoidSecrets_Light, False, "PDV_SPEL_Disfavor_VoidSecrets_Light")
     SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_VoidSecrets_Sharp, False, "PDV_SPEL_Disfavor_VoidSecrets_Sharp")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery, False, "PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_Kyne_StormRoadGrace, False, "PDV_SPEL_Favor_Kyne_StormRoadGrace")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_Kyne_GuidedHunt, False, "PDV_SPEL_Favor_Kyne_GuidedHunt")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_Kyne_WindMarkedPassage, False, "PDV_SPEL_Favor_Kyne_WindMarkedPassage")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_NordBroadOldWays_SkyRoadEndurance, False, "PDV_SPEL_Favor_NordBroadOldWays_SkyRoadEndurance")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_NordBroadOldWays_HonorableOrdeal, False, "PDV_SPEL_Favor_NordBroadOldWays_HonorableOrdeal")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_NordBroadOldWays_HearthAndHoldDefense, False, "PDV_SPEL_Favor_NordBroadOldWays_HearthAndHoldDefense")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_NordBroadOldWays_DeathRightAncestorQuiet, False, "PDV_SPEL_Favor_NordBroadOldWays_DeathRightAncestorQuiet")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance, False, "PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_NordBroadNineDivines_KynarethRoadGrace, False, "PDV_SPEL_Favor_NordBroadNineDivines_KynarethRoadGrace")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_NordBroadNineDivines_HouseholdAndMercyDuty, False, "PDV_SPEL_Favor_NordBroadNineDivines_HouseholdAndMercyDuty")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy, False, "PDV_SPEL_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft, False, "PDV_SPEL_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine, False, "PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_Altmer_Shared_DawnSteadiness, False, "PDV_SPEL_Favor_Altmer_Shared_DawnSteadiness")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Favor_Altmer_Orthodox_CostlyEnforcement, False, "PDV_SPEL_Favor_Altmer_Orthodox_CostlyEnforcement")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery, False, "PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Kyne_StormRoadGrace, False, "PDV_SPEL_Favor_Kyne_StormRoadGrace")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Kyne_GuidedHunt, False, "PDV_SPEL_Favor_Kyne_GuidedHunt")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Kyne_WindMarkedPassage, False, "PDV_SPEL_Favor_Kyne_WindMarkedPassage")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadOldWays_SkyRoadEndurance, False, "PDV_SPEL_Favor_NordBroadOldWays_SkyRoadEndurance")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadOldWays_HonorableOrdeal, False, "PDV_SPEL_Favor_NordBroadOldWays_HonorableOrdeal")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadOldWays_HearthAndHoldDefense, False, "PDV_SPEL_Favor_NordBroadOldWays_HearthAndHoldDefense")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadOldWays_DeathRightAncestorQuiet, False, "PDV_SPEL_Favor_NordBroadOldWays_DeathRightAncestorQuiet")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance, False, "PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadNineDivines_KynarethRoadGrace, False, "PDV_SPEL_Favor_NordBroadNineDivines_KynarethRoadGrace")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadNineDivines_HouseholdAndMercyDuty, False, "PDV_SPEL_Favor_NordBroadNineDivines_HouseholdAndMercyDuty")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy, False, "PDV_SPEL_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft, False, "PDV_SPEL_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine, False, "PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Altmer_Shared_DawnSteadiness, False, "PDV_SPEL_Favor_Altmer_Shared_DawnSteadiness")
+    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Altmer_Orthodox_CostlyEnforcement, False, "PDV_SPEL_Favor_Altmer_Orthodox_CostlyEnforcement")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Orthodox_T1, False, "PDV_Bless_Altmer_Orthodox_T1")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Orthodox_T2, False, "PDV_Bless_Altmer_Orthodox_T2")
     SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_AuriEl_T1, False, "PDV_Bless_Altmer_AuriEl_T1")
@@ -18336,197 +18296,17 @@ Bool Function IsEligibleForNeglectSelection(PDV_DeityBase deity)
     return deity == _activeDeity
 EndFunction
 
-Function EvaluateKyneContextualFavorFamily()
-    UpdateContextualFavorRuntime()
-EndFunction
 
-Function UpdateContextualFavorRuntime()
-    if IsActiveFavorExpired()
-        ClearActiveFavor("expired")
-    elseIf IsFavorActive()
-        if !IsActiveFavorStillEligible()
-            ClearActiveFavor("no_longer_eligible")
-        else
-            EnsureActiveFavorApplied()
-        endIf
-    endIf
 
-    SyncKyneFavorDebugState()
-EndFunction
 
-Function SyncKyneFavorDebugState()
-    Int activeCount = 0
-    if GetActiveFavorLane() == FAVOR_LANE_KYNE
-        activeCount = 1
-    endIf
 
-    StorageUtil.SetIntValue(None, "PDV.KyneFavor.ActiveCount", activeCount)
-EndFunction
 
-Bool Function TryActivateContextualFavor(Int laneValue, Int familyValue, String reason)
-    UpdateContextualFavorRuntime()
-    if IsFavorActive()
-        Trace(2, "Contextual favor suppressed: another favor is active.")
-        return False
-    endIf
 
-    if !IsEligibleForFavorLane(laneValue)
-        Trace(2, "Contextual favor blocked: lane " + GetContextualFavorLaneLabel(laneValue) + " is not currently eligible.")
-        return False
-    endIf
 
-    if !IsValidFavorFamilyForLane(laneValue, familyValue)
-        Trace(1, "Contextual favor blocked: family " + familyValue + " is not valid for lane " + laneValue)
-        return False
-    endIf
 
-    if IsFavorFamilyOnCooldown(laneValue, familyValue)
-        Trace(2, "Contextual favor blocked: family cooldown still active for " + GetContextualFavorFamilyLabel(laneValue, familyValue))
-        return False
-    endIf
 
-    Spell favorSpell = GetFavorSpell(laneValue, familyValue)
-    Actor playerRef = Game.GetPlayer()
-    if !favorSpell || !playerRef
-        Trace(1, "Contextual favor blocked: missing player or spell for " + GetContextualFavorFamilyLabel(laneValue, familyValue))
-        return False
-    endIf
 
-    playerRef.AddSpell(favorSpell, False)
-    StorageUtil.SetIntValue(None, "PDV.Favor.ActiveLane", laneValue)
-    StorageUtil.SetIntValue(None, "PDV.Favor.ActiveFamily", familyValue)
-    StorageUtil.SetStringValue(None, "PDV.Favor.ActiveSpell", GetFavorSpellEditorId(laneValue, familyValue))
-    StorageUtil.SetFloatValue(None, "PDV.Favor.ActiveStartedAt", Utility.GetCurrentGameTime())
-    StorageUtil.SetFloatValue(None, "PDV.Favor.ActiveExpiresAt", Utility.GetCurrentGameTime() + GetFavorDurationDays(laneValue, familyValue))
-    StorageUtil.SetFloatValue(None, GetFavorLastTriggerKey(laneValue, familyValue), Utility.GetCurrentGameTime())
-    Trace(1, "Contextual favor applied: " + GetContextualFavorFamilyLabel(laneValue, familyValue) + " (" + reason + ")")
-    if !IsP2BookNoticeReason(reason)
-        SendContextualFavorToast(laneValue, familyValue)
-    endIf
-    SyncKyneFavorDebugState()
-    if !IsP2BookNoticeReason(reason)
-        RequestPanelRefresh()
-    endIf
-    return True
-EndFunction
 
-Function SendContextualFavorToast(Int laneValue, Int familyValue)
-    String surfacing = GetFavorSurfacingLabel(laneValue, familyValue)
-    if surfacing == "Quiet"
-        return
-    endIf
-
-    ; Route contextual favors through the UI-owned "favor" voice for continuity.
-    ; The family label is the meaningful act, so it carries as the event context.
-    ; Kyne-lane favors can fire under broad Nord worship (no _activeDeity), so they
-    ; pin to Kyne explicitly; other lanes credit the active patron (e.g. Auri-El for
-    ; the Altmer lane). Deity-less pantheon lanes fall back to the journal mark.
-    String contextText = GetContextualFavorFamilyLabel(laneValue, familyValue)
-    PDV_DeityBase favorDeity = _activeDeity
-    if laneValue == FAVOR_LANE_KYNE && PDV_Kyne
-        favorDeity = PDV_Kyne
-    endIf
-
-    SendPrismaEventToast("favor", favorDeity, contextText, "", "")
-EndFunction
-
-Function EnsureActiveFavorApplied()
-    Int laneValue = GetActiveFavorLane()
-    Int familyValue = GetActiveFavorFamily()
-    if laneValue == FAVOR_LANE_NONE || familyValue <= 0
-        return
-    endIf
-
-    Spell favorSpell = GetFavorSpell(laneValue, familyValue)
-    Actor playerRef = Game.GetPlayer()
-    if !favorSpell || !playerRef
-        return
-    endIf
-
-    if !playerRef.HasSpell(favorSpell)
-        playerRef.AddSpell(favorSpell, False)
-    endIf
-EndFunction
-
-Function ClearActiveFavor(String reason)
-    Int laneValue = GetActiveFavorLane()
-    Int familyValue = GetActiveFavorFamily()
-    Spell favorSpell = GetFavorSpell(laneValue, familyValue)
-    Actor playerRef = Game.GetPlayer()
-
-    if playerRef && favorSpell && playerRef.HasSpell(favorSpell)
-        playerRef.RemoveSpell(favorSpell)
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Favor.ActiveLane", FAVOR_LANE_NONE)
-    StorageUtil.SetIntValue(None, "PDV.Favor.ActiveFamily", 0)
-    StorageUtil.SetStringValue(None, "PDV.Favor.ActiveSpell", "")
-    StorageUtil.SetFloatValue(None, "PDV.Favor.ActiveStartedAt", 0.0)
-    StorageUtil.SetFloatValue(None, "PDV.Favor.ActiveExpiresAt", 0.0)
-    Trace(2, "Contextual favor cleared (" + reason + ")")
-    SyncKyneFavorDebugState()
-    RequestPanelRefresh()
-EndFunction
-
-Bool Function IsFavorActive()
-    return GetActiveFavorLane() != FAVOR_LANE_NONE && GetActiveFavorFamily() > 0
-EndFunction
-
-Bool Function IsActiveFavorExpired()
-    if !IsFavorActive()
-        return False
-    endIf
-
-    Float expiresAt = StorageUtil.GetFloatValue(None, "PDV.Favor.ActiveExpiresAt")
-    return expiresAt > 0.0 && Utility.GetCurrentGameTime() >= expiresAt
-EndFunction
-
-Bool Function IsActiveFavorStillEligible()
-    if !IsFavorActive()
-        return False
-    endIf
-
-    return ResolveEligibleFavorLane() == GetActiveFavorLane()
-EndFunction
-
-Bool Function IsEligibleForFavorLane(Int laneValue)
-    return ResolveEligibleFavorLane() == laneValue
-EndFunction
-
-Int Function ResolveEligibleFavorLane()
-    if IsNordVampireSuppressed()
-        return FAVOR_LANE_NONE
-    endIf
-
-    if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == PDV_Kyne && GetTier(PDV_Kyne) >= TIER_CHAMPION
-        return FAVOR_LANE_KYNE
-    endIf
-
-    if GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
-        if IsAltmerFavorSuppressedByCurse()
-            return FAVOR_LANE_NONE
-        endIf
-
-        return FAVOR_LANE_ALTMER
-    endIf
-
-    if GetPatronState() != PATRON_STATE_BROAD
-        return FAVOR_LANE_NONE
-    endIf
-
-    if GetPlayerOriginRaceIndex() != ORIGIN_NORD
-        return FAVOR_LANE_NONE
-    endIf
-
-    Int baselineState = GetNordPantheonBaselineState()
-    if baselineState == NORD_BASELINE_OLD_WAYS
-        return FAVOR_LANE_NORD_BROAD_OLD_WAYS
-    elseIf baselineState == NORD_BASELINE_NINE_DIVINES
-        return FAVOR_LANE_NORD_BROAD_NINE_DIVINES
-    endIf
-
-    return FAVOR_LANE_NONE
-EndFunction
 
 Int Function GetNordPantheonBaselineState()
     Int stateValue = StorageUtil.GetIntValue(None, "PDV.NordPantheonBaseline.DebugState", NORD_BASELINE_OLD_WAYS)
@@ -18538,220 +18318,17 @@ Int Function GetNordPantheonBaselineState()
     return stateValue
 EndFunction
 
-Bool Function IsFavorFamilyOnCooldown(Int laneValue, Int familyValue)
-    Float lastTriggerAt = StorageUtil.GetFloatValue(None, GetFavorLastTriggerKey(laneValue, familyValue))
-    if lastTriggerAt <= 0.0
-        return False
-    endIf
 
-    return (Utility.GetCurrentGameTime() - lastTriggerAt) < GetFavorCooldownDays(laneValue, familyValue)
-EndFunction
 
-String Function GetFavorLastTriggerKey(Int laneValue, Int familyValue)
-    return "PDV.Favor.LastTrigger." + laneValue + "." + familyValue
-EndFunction
 
-Int Function GetActiveFavorLane()
-    return StorageUtil.GetIntValue(None, "PDV.Favor.ActiveLane")
-EndFunction
 
-Int Function GetActiveFavorFamily()
-    return StorageUtil.GetIntValue(None, "PDV.Favor.ActiveFamily")
-EndFunction
 
-Float Function GetFavorDurationDays(Int laneValue, Int familyValue)
-    if familyValue == FAVOR_FAMILY_KYNE_GUIDED_HUNT || familyValue == FAVOR_FAMILY_OLD_WAYS_HONORABLE_ORDEAL
-        return FAVOR_DURATION_MOMENTARY_DAYS
-    endIf
 
-    if familyValue == FAVOR_FAMILY_KYNE_OPEN_SKY_REST || familyValue == FAVOR_FAMILY_KYNE_STORM_ROAD || familyValue == FAVOR_FAMILY_OLD_WAYS_SKY_ROAD || familyValue == FAVOR_FAMILY_NINE_ROAD_GRACE
-        return FAVOR_DURATION_ENVIRONMENTAL_DAYS
-    endIf
 
-    return FAVOR_DURATION_AFTER_ACT_DAYS
-EndFunction
 
-Float Function GetFavorCooldownDays(Int laneValue, Int familyValue)
-    if familyValue == FAVOR_FAMILY_KYNE_GUIDED_HUNT || familyValue == FAVOR_FAMILY_OLD_WAYS_HONORABLE_ORDEAL
-        return FAVOR_FAMILY_MOMENTARY_COOLDOWN_DAYS
-    endIf
 
-    return FAVOR_FAMILY_STANDARD_COOLDOWN_DAYS
-EndFunction
 
-Bool Function IsValidFavorFamilyForLane(Int laneValue, Int familyValue)
-    if laneValue == FAVOR_LANE_KYNE
-        return familyValue >= FAVOR_FAMILY_KYNE_OPEN_SKY_REST && familyValue <= FAVOR_FAMILY_KYNE_WIND_MARKED_PASSAGE
-    elseIf laneValue == FAVOR_LANE_NORD_BROAD_OLD_WAYS
-        return familyValue >= FAVOR_FAMILY_OLD_WAYS_SKY_ROAD && familyValue <= FAVOR_FAMILY_OLD_WAYS_TALOS_DEFIANCE
-    elseIf laneValue == FAVOR_LANE_NORD_BROAD_NINE_DIVINES
-        return familyValue >= FAVOR_FAMILY_NINE_ROAD_GRACE && familyValue <= FAVOR_FAMILY_NINE_TALOS_PRESSURE
-    elseIf laneValue == FAVOR_LANE_ALTMER
-        return IsValidAltmerSourceFavorFamily(familyValue)
-    endIf
 
-    return False
-EndFunction
-
-Spell Function GetFavorSpell(Int laneValue, Int familyValue)
-    if laneValue == FAVOR_LANE_KYNE
-        if familyValue == FAVOR_FAMILY_KYNE_OPEN_SKY_REST
-            return PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery
-        elseIf familyValue == FAVOR_FAMILY_KYNE_STORM_ROAD
-            return PDV_SPEL_Favor_Kyne_StormRoadGrace
-        elseIf familyValue == FAVOR_FAMILY_KYNE_GUIDED_HUNT
-            return PDV_SPEL_Favor_Kyne_GuidedHunt
-        elseIf familyValue == FAVOR_FAMILY_KYNE_WIND_MARKED_PASSAGE
-            return PDV_SPEL_Favor_Kyne_WindMarkedPassage
-        endIf
-    elseIf laneValue == FAVOR_LANE_NORD_BROAD_OLD_WAYS
-        if familyValue == FAVOR_FAMILY_OLD_WAYS_SKY_ROAD
-            return PDV_SPEL_Favor_NordBroadOldWays_SkyRoadEndurance
-        elseIf familyValue == FAVOR_FAMILY_OLD_WAYS_HONORABLE_ORDEAL
-            return PDV_SPEL_Favor_NordBroadOldWays_HonorableOrdeal
-        elseIf familyValue == FAVOR_FAMILY_OLD_WAYS_HEARTH_HOLD
-            return PDV_SPEL_Favor_NordBroadOldWays_HearthAndHoldDefense
-        elseIf familyValue == FAVOR_FAMILY_OLD_WAYS_ANCESTOR_QUIET
-            return PDV_SPEL_Favor_NordBroadOldWays_DeathRightAncestorQuiet
-        elseIf familyValue == FAVOR_FAMILY_OLD_WAYS_TALOS_DEFIANCE
-            return PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance
-        endIf
-    elseIf laneValue == FAVOR_LANE_NORD_BROAD_NINE_DIVINES
-        if familyValue == FAVOR_FAMILY_NINE_ROAD_GRACE
-            return PDV_SPEL_Favor_NordBroadNineDivines_KynarethRoadGrace
-        elseIf familyValue == FAVOR_FAMILY_NINE_HOUSEHOLD_MERCY
-            return PDV_SPEL_Favor_NordBroadNineDivines_HouseholdAndMercyDuty
-        elseIf familyValue == FAVOR_FAMILY_NINE_PROPER_DEATH
-            return PDV_SPEL_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy
-        elseIf familyValue == FAVOR_FAMILY_NINE_HONEST_WORK
-            return PDV_SPEL_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft
-        elseIf familyValue == FAVOR_FAMILY_NINE_TALOS_PRESSURE
-            return PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine
-        endIf
-    elseIf laneValue == FAVOR_LANE_ALTMER
-        if familyValue == FAVOR_FAMILY_ALTMER_DAWN_STEADINESS
-            return PDV_SPEL_Favor_Altmer_Shared_DawnSteadiness
-        elseIf familyValue == FAVOR_FAMILY_ALTMER_ORTHODOX_COST
-            return PDV_SPEL_Favor_Altmer_Orthodox_CostlyEnforcement
-        endIf
-    endIf
-
-    return None
-EndFunction
-
-String Function GetFavorSpellEditorId(Int laneValue, Int familyValue)
-    if laneValue == FAVOR_LANE_KYNE
-        if familyValue == FAVOR_FAMILY_KYNE_OPEN_SKY_REST
-            return "PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery"
-        elseIf familyValue == FAVOR_FAMILY_KYNE_STORM_ROAD
-            return "PDV_SPEL_Favor_Kyne_StormRoadGrace"
-        elseIf familyValue == FAVOR_FAMILY_KYNE_GUIDED_HUNT
-            return "PDV_SPEL_Favor_Kyne_GuidedHunt"
-        elseIf familyValue == FAVOR_FAMILY_KYNE_WIND_MARKED_PASSAGE
-            return "PDV_SPEL_Favor_Kyne_WindMarkedPassage"
-        endIf
-    elseIf laneValue == FAVOR_LANE_NORD_BROAD_OLD_WAYS
-        if familyValue == FAVOR_FAMILY_OLD_WAYS_SKY_ROAD
-            return "PDV_SPEL_Favor_NordBroadOldWays_SkyRoadEndurance"
-        elseIf familyValue == FAVOR_FAMILY_OLD_WAYS_HONORABLE_ORDEAL
-            return "PDV_SPEL_Favor_NordBroadOldWays_HonorableOrdeal"
-        elseIf familyValue == FAVOR_FAMILY_OLD_WAYS_HEARTH_HOLD
-            return "PDV_SPEL_Favor_NordBroadOldWays_HearthAndHoldDefense"
-        elseIf familyValue == FAVOR_FAMILY_OLD_WAYS_ANCESTOR_QUIET
-            return "PDV_SPEL_Favor_NordBroadOldWays_DeathRightAncestorQuiet"
-        elseIf familyValue == FAVOR_FAMILY_OLD_WAYS_TALOS_DEFIANCE
-            return "PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance"
-        endIf
-    elseIf laneValue == FAVOR_LANE_NORD_BROAD_NINE_DIVINES
-        if familyValue == FAVOR_FAMILY_NINE_ROAD_GRACE
-            return "PDV_SPEL_Favor_NordBroadNineDivines_KynarethRoadGrace"
-        elseIf familyValue == FAVOR_FAMILY_NINE_HOUSEHOLD_MERCY
-            return "PDV_SPEL_Favor_NordBroadNineDivines_HouseholdAndMercyDuty"
-        elseIf familyValue == FAVOR_FAMILY_NINE_PROPER_DEATH
-            return "PDV_SPEL_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy"
-        elseIf familyValue == FAVOR_FAMILY_NINE_HONEST_WORK
-            return "PDV_SPEL_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft"
-        elseIf familyValue == FAVOR_FAMILY_NINE_TALOS_PRESSURE
-            return "PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine"
-        endIf
-    elseIf laneValue == FAVOR_LANE_ALTMER
-        if familyValue == FAVOR_FAMILY_ALTMER_DAWN_STEADINESS
-            return "PDV_SPEL_Favor_Altmer_Shared_DawnSteadiness"
-        elseIf familyValue == FAVOR_FAMILY_ALTMER_ORTHODOX_COST
-            return "PDV_SPEL_Favor_Altmer_Orthodox_CostlyEnforcement"
-        endIf
-    endIf
-
-    return ""
-EndFunction
-
-String Function GetContextualFavorLaneLabel(Int laneValue)
-    if laneValue == FAVOR_LANE_KYNE
-        return "Kyne"
-    elseIf laneValue == FAVOR_LANE_NORD_BROAD_OLD_WAYS
-        return "Nord Broad Old Ways"
-    elseIf laneValue == FAVOR_LANE_NORD_BROAD_NINE_DIVINES
-        return "Nord Broad Nine Divines"
-    elseIf laneValue == FAVOR_LANE_ALTMER
-        return "Altmer Ancestral Order"
-    endIf
-
-    return "None"
-EndFunction
-
-String Function GetContextualFavorFamilyLabel(Int laneValue, Int familyValue)
-    if laneValue == FAVOR_LANE_KYNE
-        if familyValue == FAVOR_FAMILY_KYNE_OPEN_SKY_REST
-            return "Open-sky rest recovery"
-        elseIf familyValue == FAVOR_FAMILY_KYNE_STORM_ROAD
-            return "Storm-road grace"
-        elseIf familyValue == FAVOR_FAMILY_KYNE_GUIDED_HUNT
-            return "Guided hunt"
-        elseIf familyValue == FAVOR_FAMILY_KYNE_WIND_MARKED_PASSAGE
-            return "Wind-marked passage"
-        endIf
-    elseIf laneValue == FAVOR_LANE_NORD_BROAD_OLD_WAYS
-        if familyValue == FAVOR_FAMILY_OLD_WAYS_SKY_ROAD
-            return "Sky-road endurance"
-        elseIf familyValue == FAVOR_FAMILY_OLD_WAYS_HONORABLE_ORDEAL
-            return "Honorable ordeal"
-        elseIf familyValue == FAVOR_FAMILY_OLD_WAYS_HEARTH_HOLD
-            return "Hearth and hold defense"
-        elseIf familyValue == FAVOR_FAMILY_OLD_WAYS_ANCESTOR_QUIET
-            return "Death-right and ancestor quiet"
-        elseIf familyValue == FAVOR_FAMILY_OLD_WAYS_TALOS_DEFIANCE
-            return "Hidden Talos defiance"
-        endIf
-    elseIf laneValue == FAVOR_LANE_NORD_BROAD_NINE_DIVINES
-        if familyValue == FAVOR_FAMILY_NINE_ROAD_GRACE
-            return "Kynareth's road grace"
-        elseIf familyValue == FAVOR_FAMILY_NINE_HOUSEHOLD_MERCY
-            return "Household and mercy duty"
-        elseIf familyValue == FAVOR_FAMILY_NINE_PROPER_DEATH
-            return "Proper death and anti-necromancy"
-        elseIf familyValue == FAVOR_FAMILY_NINE_HONEST_WORK
-            return "Honest work and learned craft"
-        elseIf familyValue == FAVOR_FAMILY_NINE_TALOS_PRESSURE
-            return "Talos pressure inside the Nine"
-        endIf
-    elseIf laneValue == FAVOR_LANE_ALTMER
-        if familyValue == FAVOR_FAMILY_ALTMER_DAWN_STEADINESS
-            return "Dawn steadiness"
-        elseIf familyValue == FAVOR_FAMILY_ALTMER_ORTHODOX_COST
-            return "Orthodox costly enforcement"
-        endIf
-    endIf
-
-    return "Unknown"
-EndFunction
-
-String Function GetFavorSurfacingLabel(Int laneValue, Int familyValue)
-    if familyValue == FAVOR_FAMILY_KYNE_GUIDED_HUNT || familyValue == FAVOR_FAMILY_OLD_WAYS_HONORABLE_ORDEAL || familyValue == FAVOR_FAMILY_NINE_HONEST_WORK || familyValue == FAVOR_FAMILY_ALTMER_DAWN_STEADINESS
-        return "Quiet"
-    endIf
-
-    return "Noted"
-EndFunction
 
 Function ApplyConcordatPressure(Int adjustment, String reason)
     if !PDV_ConcordatStandingTrack
@@ -19515,96 +19092,32 @@ Function DebugSetArgonianFocus(Int focusValue)
     Trace(1, "Argonian focus debug-set to " + focusValue)
 EndFunction
 
-Int Function GetSelectedContextualFavorLane()
-    Int laneValue = StorageUtil.GetIntValue(None, "PDV.Favor.DebugLane")
-    if laneValue < FAVOR_LANE_KYNE || laneValue > FAVOR_LANE_ALTMER
-        laneValue = FAVOR_LANE_KYNE
-        StorageUtil.SetIntValue(None, "PDV.Favor.DebugLane", laneValue)
-    endIf
 
-    return laneValue
-EndFunction
 
-Function SetSelectedContextualFavorLane(Int laneValue)
-    Int normalizedLane = PDV_DevotionRules.ClampInt(laneValue, FAVOR_LANE_KYNE, FAVOR_LANE_ALTMER)
-    StorageUtil.SetIntValue(None, "PDV.Favor.DebugLane", normalizedLane)
-    if !IsValidFavorFamilyForLane(normalizedLane, GetSelectedContextualFavorFamily())
-        StorageUtil.SetIntValue(None, "PDV.Favor.DebugFamily", GetFirstFavorFamilyForLane(normalizedLane))
-    endIf
-EndFunction
 
-Int Function GetSelectedContextualFavorFamily()
-    Int familyValue = StorageUtil.GetIntValue(None, "PDV.Favor.DebugFamily")
-    if !IsValidFavorFamilyForLane(GetSelectedContextualFavorLane(), familyValue)
-        familyValue = GetFirstFavorFamilyForLane(GetSelectedContextualFavorLane())
-        StorageUtil.SetIntValue(None, "PDV.Favor.DebugFamily", familyValue)
-    endIf
 
-    return familyValue
-EndFunction
-
-Int Function GetFirstFavorFamilyForLane(Int laneValue)
-    if laneValue == FAVOR_LANE_KYNE
-        return FAVOR_FAMILY_KYNE_OPEN_SKY_REST
-    elseIf laneValue == FAVOR_LANE_NORD_BROAD_OLD_WAYS
-        return FAVOR_FAMILY_OLD_WAYS_SKY_ROAD
-    elseIf laneValue == FAVOR_LANE_ALTMER
-        return FAVOR_FAMILY_ALTMER_DAWN_STEADINESS
-    endIf
-
-    return FAVOR_FAMILY_NINE_ROAD_GRACE
-EndFunction
-
-Int Function GetNextFavorFamilyForLane(Int laneValue, Int currentFamily)
-    if laneValue == FAVOR_LANE_KYNE
-        currentFamily += 1
-        if currentFamily > FAVOR_FAMILY_KYNE_WIND_MARKED_PASSAGE
-            return FAVOR_FAMILY_KYNE_OPEN_SKY_REST
-        endIf
-        return currentFamily
-    elseIf laneValue == FAVOR_LANE_NORD_BROAD_OLD_WAYS
-        currentFamily += 1
-        if currentFamily > FAVOR_FAMILY_OLD_WAYS_TALOS_DEFIANCE
-            return FAVOR_FAMILY_OLD_WAYS_SKY_ROAD
-        endIf
-        return currentFamily
-    elseIf laneValue == FAVOR_LANE_ALTMER
-        currentFamily += 1
-        if currentFamily > FAVOR_FAMILY_ALTMER_ORTHODOX_COST
-            return FAVOR_FAMILY_ALTMER_DAWN_STEADINESS
-        endIf
-        return currentFamily
-    endIf
-
-    currentFamily += 1
-    if currentFamily > FAVOR_FAMILY_NINE_TALOS_PRESSURE
-        return FAVOR_FAMILY_NINE_ROAD_GRACE
-    endIf
-
-    return currentFamily
-EndFunction
 
 Function DebugCycleContextualFavorLane()
-    Int laneValue = GetSelectedContextualFavorLane() + 1
-    if laneValue > FAVOR_LANE_ALTMER
-        laneValue = FAVOR_LANE_KYNE
+    Int laneValue = FavorRuntime.GetSelectedContextualFavorLane() + 1
+    if laneValue > FavorRuntime.FAVOR_LANE_ALTMER
+        laneValue = FavorRuntime.FAVOR_LANE_KYNE
     endIf
 
-    SetSelectedContextualFavorLane(laneValue)
+    FavorRuntime.SetSelectedContextualFavorLane(laneValue)
 EndFunction
 
 Function DebugCycleContextualFavorFamily()
-    Int laneValue = GetSelectedContextualFavorLane()
-    Int nextFamily = GetNextFavorFamilyForLane(laneValue, GetSelectedContextualFavorFamily())
+    Int laneValue = FavorRuntime.GetSelectedContextualFavorLane()
+    Int nextFamily = FavorRuntime.GetNextFavorFamilyForLane(laneValue, FavorRuntime.GetSelectedContextualFavorFamily())
     StorageUtil.SetIntValue(None, "PDV.Favor.DebugFamily", nextFamily)
 EndFunction
 
 Function DebugTriggerSelectedContextualFavor()
-    TryActivateContextualFavor(GetSelectedContextualFavorLane(), GetSelectedContextualFavorFamily(), "mcm")
+    FavorRuntime.TryActivateContextualFavor(FavorRuntime.GetSelectedContextualFavorLane(), FavorRuntime.GetSelectedContextualFavorFamily(), "mcm")
 EndFunction
 
 Function DebugExpireActiveFavor()
-    ClearActiveFavor("mcm")
+    FavorRuntime.ClearActiveFavor("mcm")
 EndFunction
 
 ; Debug: make the CURRENT origin's race-lane neglect eligible immediately by backdating its
@@ -19650,13 +19163,7 @@ Function DebugPrimeRaceLaneNeglect()
     Trace(1, "DebugPrimeRaceLaneNeglect: backdated " + laneLabel + " source and re-synced.")
 EndFunction
 
-String Function GetSelectedContextualFavorLaneLabel()
-    return GetContextualFavorLaneLabel(GetSelectedContextualFavorLane())
-EndFunction
 
-String Function GetSelectedContextualFavorFamilyLabel()
-    return GetContextualFavorFamilyLabel(GetSelectedContextualFavorLane(), GetSelectedContextualFavorFamily())
-EndFunction
 
 Function DebugCycleKyneFavorMask()
     Int currentMask = StorageUtil.GetIntValue(None, "PDV.KyneFavor.ConditionMask")
@@ -19666,9 +19173,9 @@ Function DebugCycleKyneFavorMask()
     endIf
 
     StorageUtil.SetIntValue(None, "PDV.KyneFavor.ConditionMask", currentMask)
-    SetSelectedContextualFavorLane(FAVOR_LANE_KYNE)
+    FavorRuntime.SetSelectedContextualFavorLane(FavorRuntime.FAVOR_LANE_KYNE)
     DebugCycleContextualFavorFamily()
-    UpdateContextualFavorRuntime()
+    FavorRuntime.UpdateContextualFavorRuntime()
 EndFunction
 
 Function DebugRecordHircineHuntRite()
@@ -19758,7 +19265,7 @@ Bool Function DebugSetCurseProofOriginRace(Int originRace)
         PDV_KhajiitLunarSubstrate.RecomputeSubstrateTier()
     endIf
     RefreshPatronMirrors()
-    UpdateContextualFavorRuntime()
+    FavorRuntime.UpdateContextualFavorRuntime()
     SyncFirstTierRaceRewardRuntime()
     EnsureKhajiitObserveMoonsPower()
     RequestPanelRefresh()
@@ -21760,7 +21267,7 @@ Function ApplyAltmerCurseHandlers(Int oldState, Int newState, String reason)
         StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileActive", 1)
         StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileScar", 1)
         StorageUtil.SetIntValue(None, "PDV.Altmer.WerewolfHalt", 0)
-        ClearActiveFavor("altmer_vampire")
+        FavorRuntime.ClearActiveFavor("altmer_vampire")
         ClearPendingCommitment()
         if StorageUtil.GetIntValue(None, "PDV.Altmer.VampireExileFeedbackShown") != 1
             ShowAltmerMessage(PDV_Msg_Altmer_VampireExiledPath_Entry, "Auri-El is closed while you flee the sun. What remains is exile: a narrow discipline, never a full return.", suppressModal)
@@ -21770,7 +21277,7 @@ Function ApplyAltmerCurseHandlers(Int oldState, Int newState, String reason)
         StorageUtil.SetIntValue(None, "PDV.Curse.Altmer.ExilePressure", 1)
         StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileActive", 0)
         StorageUtil.SetIntValue(None, "PDV.Altmer.WerewolfHalt", 1)
-        ClearActiveFavor("altmer_werewolf")
+        FavorRuntime.ClearActiveFavor("altmer_werewolf")
         ClearPendingCommitment()
         if StorageUtil.GetIntValue(None, "PDV.Altmer.WerewolfHaltFeedbackShown") != 1
             ShowAltmerMessage(PDV_Msg_Altmer_CurseState_WerewolfHardHalt, "The whole of Altmer faith is to become spirit again. You have become a beast. Devotion stops here.", suppressModal)
@@ -21849,7 +21356,7 @@ Function ApplyImperialCurseHandlers(Int oldState, Int newState, String reason)
             PDV_ImperialAncestorSubstrate.ClearSubstrateBoons()
         endIf
         StorageUtil.SetFloatValue(None, GetBroadPantheonScratchKey(BROAD_PANTHEON_IMPERIAL), 0.0)
-        ClearActiveFavor("imperial_vampire")
+        FavorRuntime.ClearActiveFavor("imperial_vampire")
     elseIf newState == 1
         ; Werewolf strains but does not halt the civic path the way undeath does.
         StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHalt", 0)
@@ -21944,7 +21451,7 @@ Function ApplyNordCurseHandlers(Int oldState, Int newState, String reason)
         StorageUtil.SetIntValue(None, "PDV.Nord.VampireActive", 1)
         StorageUtil.SetIntValue(None, "PDV.Nord.VampireScar", 1)
         StorageUtil.SetIntValue(None, "PDV.Nord.VampireCureFeedbackShown", 0)
-        ClearActiveFavor("nord_vampire")
+        FavorRuntime.ClearActiveFavor("nord_vampire")
         ClearPendingCommitment()
         if StorageUtil.GetIntValue(None, "PDV.Nord.VampireFeedbackShown") != 1
             ShowNordMessage(PDV_Msg_Nord_CurseState_VampireOnset, "Sovngarde is closed while the thirst remains. Cure the curse, and the scar will still be remembered.", suppressModal)
@@ -23277,37 +22784,37 @@ EndFunction
 
 Int Function GetNordFavorLaneForRouteFamily(Int familyValue)
     if familyValue >= NORD_ROUTE_NINE_ROAD
-        return FAVOR_LANE_NORD_BROAD_NINE_DIVINES
+        return FavorRuntime.FAVOR_LANE_NORD_BROAD_NINE_DIVINES
     endIf
 
     if familyValue > NORD_ROUTE_UNKNOWN
-        return FAVOR_LANE_NORD_BROAD_OLD_WAYS
+        return FavorRuntime.FAVOR_LANE_NORD_BROAD_OLD_WAYS
     endIf
 
-    return FAVOR_LANE_NONE
+    return FavorRuntime.FAVOR_LANE_NONE
 EndFunction
 
 Int Function GetNordFavorFamilyForRouteFamily(Int familyValue)
     if familyValue == NORD_ROUTE_OLD_SKY_ROAD
-        return FAVOR_FAMILY_OLD_WAYS_SKY_ROAD
+        return FavorRuntime.FAVOR_FAMILY_OLD_WAYS_SKY_ROAD
     elseIf familyValue == NORD_ROUTE_OLD_ORDEAL
-        return FAVOR_FAMILY_OLD_WAYS_HONORABLE_ORDEAL
+        return FavorRuntime.FAVOR_FAMILY_OLD_WAYS_HONORABLE_ORDEAL
     elseIf familyValue == NORD_ROUTE_OLD_HEARTH
-        return FAVOR_FAMILY_OLD_WAYS_HEARTH_HOLD
+        return FavorRuntime.FAVOR_FAMILY_OLD_WAYS_HEARTH_HOLD
     elseIf familyValue == NORD_ROUTE_OLD_ANCESTOR
-        return FAVOR_FAMILY_OLD_WAYS_ANCESTOR_QUIET
+        return FavorRuntime.FAVOR_FAMILY_OLD_WAYS_ANCESTOR_QUIET
     elseIf familyValue == NORD_ROUTE_OLD_TALOS
-        return FAVOR_FAMILY_OLD_WAYS_TALOS_DEFIANCE
+        return FavorRuntime.FAVOR_FAMILY_OLD_WAYS_TALOS_DEFIANCE
     elseIf familyValue == NORD_ROUTE_NINE_ROAD
-        return FAVOR_FAMILY_NINE_ROAD_GRACE
+        return FavorRuntime.FAVOR_FAMILY_NINE_ROAD_GRACE
     elseIf familyValue == NORD_ROUTE_NINE_MERCY
-        return FAVOR_FAMILY_NINE_HOUSEHOLD_MERCY
+        return FavorRuntime.FAVOR_FAMILY_NINE_HOUSEHOLD_MERCY
     elseIf familyValue == NORD_ROUTE_NINE_DEATH
-        return FAVOR_FAMILY_NINE_PROPER_DEATH
+        return FavorRuntime.FAVOR_FAMILY_NINE_PROPER_DEATH
     elseIf familyValue == NORD_ROUTE_NINE_WORK
-        return FAVOR_FAMILY_NINE_HONEST_WORK
+        return FavorRuntime.FAVOR_FAMILY_NINE_HONEST_WORK
     elseIf familyValue == NORD_ROUTE_NINE_TALOS
-        return FAVOR_FAMILY_NINE_TALOS_PRESSURE
+        return FavorRuntime.FAVOR_FAMILY_NINE_TALOS_PRESSURE
     endIf
 
     return 0
@@ -23371,8 +22878,8 @@ Bool Function RouteNordFamily(String reason, String countKey, String lastReasonK
 
     Int laneValue = GetNordFavorLaneForRouteFamily(routeFamily)
     Int favorFamily = GetNordFavorFamilyForRouteFamily(routeFamily)
-    if laneValue != FAVOR_LANE_NONE && favorFamily > 0
-        TryActivateContextualFavor(laneValue, favorFamily, reason)
+    if laneValue != FavorRuntime.FAVOR_LANE_NONE && favorFamily > 0
+        FavorRuntime.TryActivateContextualFavor(laneValue, favorFamily, reason)
     endIf
 
     ; The old OldWaysContextCount is frozen after migration; other route
@@ -25153,7 +24660,7 @@ String Function ExportDevotionReport()
     report = report + nl + "Patron: " + GetPlayerMcmPatronLine() + " | state " + GetPatronState() + " | activeIndex " + GetActiveDeityIndex()
     report = report + nl + "Standing: " + GetPlayerMcmStandingLine()
     report = report + nl + "Curse: " + GetPlayerMcmCurseLine()
-    report = report + nl + "Favor: " + GetPlayerMcmFavorLine()
+    report = report + nl + "Favor: " + FavorRuntime.GetPlayerMcmFavorLine()
     report = report + nl + "Neglect: " + GetPlayerMcmNeglectLine()
     report = report + nl + "Startup: " + GetStartupMcmLine()
     report = report + nl
@@ -25401,24 +24908,6 @@ String Function GetPlayerMcmCurseLine()
     return curseLabel
 EndFunction
 
-String Function GetPlayerMcmFavorLine()
-    if IsNordVampireSuppressed()
-        return "Suppressed by vampire curse"
-    endIf
-
-    Int laneValue = GetActiveFavorLane()
-    Int familyValue = GetActiveFavorFamily()
-    if laneValue != FAVOR_LANE_NONE && familyValue > 0
-        return GetContextualFavorLaneLabel(laneValue)
-    endIf
-
-    Int eligibleLane = ResolveEligibleFavorLane()
-    if eligibleLane != FAVOR_LANE_NONE
-        return GetContextualFavorLaneLabel(eligibleLane)
-    endIf
-
-    return "None active"
-EndFunction
 
 String Function GetPlayerMcmNeglectLine()
     Int activeCount = StorageUtil.GetIntValue(None, "PDV.Neglect.ActiveCount")
@@ -25651,7 +25140,7 @@ String Function GetAltmerSurveyText()
         text = text + " The beast has stopped your devotion."
     endIf
 
-    String favor = GetFavorSurfacingLabel(FAVOR_LANE_ALTMER, StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.LastFamily"))
+    String favor = FavorRuntime.GetFavorSurfacingLabel(FavorRuntime.FAVOR_LANE_ALTMER, StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.LastFamily"))
     if favor != ""
         text = text + " Last favor: " + favor + "."
     endIf
@@ -26435,7 +25924,7 @@ String Function DebugGetPatternProvingSummary()
     summary = summary + "; Altmer=" + GetAltmerSummary()
     summary = summary + "; Orc=" + GetOrcSummary()
     summary = summary + "; Redguard=" + GetRedguardSummary()
-    summary = summary + "; Favor=" + GetContextualFavorSummary()
+    summary = summary + "; Favor=" + FavorRuntime.GetContextualFavorSummary()
     summary = summary + "; Commitment=" + GetCommitmentSummary()
     summary = summary + "; Neglect=" + GetNeglectSummary()
     summary = summary + "; Hircine=" + GetHircineSummary()
@@ -26464,7 +25953,7 @@ String Function DebugGetPatternSummarySection(Int sectionIndex)
     elseIf sectionIndex == 7
         return "Redguard: " + GetRedguardSummary()
     elseIf sectionIndex == 8
-        return "Favor: " + GetContextualFavorSummary()
+        return "Favor: " + FavorRuntime.GetContextualFavorSummary()
     elseIf sectionIndex == 9
         return "Commitment: " + GetCommitmentSummary()
     elseIf sectionIndex == 10
@@ -26644,25 +26133,11 @@ String Function GetRedguardSummary()
     return "sect=" + GetRedguardSectLabel() + ";crown=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.Sect.Crown")) + ";forebear=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.Sect.Forebear")) + ";ashabah=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.Sect.AshAbah")) + ";farShores=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.FarShoresToken")) + ";last=" + StorageUtil.GetStringValue(None, "PDV.Redguard.LastSectReason")
 EndFunction
 
-String Function GetContextualFavorSummary()
-    Int activeLane = GetActiveFavorLane()
-    Int activeFamily = GetActiveFavorFamily()
-    Float remainingDays = StorageUtil.GetFloatValue(None, "PDV.Favor.ActiveExpiresAt") - Utility.GetCurrentGameTime()
-    if remainingDays < 0.0
-        remainingDays = 0.0
-    endIf
-    String summary = "lane=" + GetContextualFavorLaneLabel(activeLane)
-    summary = summary + ";family=" + GetContextualFavorFamilyLabel(activeLane, activeFamily)
-    summary = summary + ";spell=" + StorageUtil.GetStringValue(None, "PDV.Favor.ActiveSpell")
-    summary = summary + ";expires=" + PDV_DevotionRules.FormatTwoDecimals(remainingDays)
-    summary = summary + ";selected=" + GetSelectedContextualFavorLaneLabel() + "/" + GetSelectedContextualFavorFamilyLabel()
-    return summary
-EndFunction
 
 String Function GetKyneFavorSummary()
     Int maskValue = StorageUtil.GetIntValue(None, "PDV.KyneFavor.ConditionMask")
     Int activeCount = StorageUtil.GetIntValue(None, "PDV.KyneFavor.ActiveCount")
-    return "mask=" + maskValue + ";conds=" + PDV_DevotionRules.CountSetBits(maskValue) + ";active=" + activeCount + ";generic=" + GetContextualFavorSummary()
+    return "mask=" + maskValue + ";conds=" + PDV_DevotionRules.CountSetBits(maskValue) + ";active=" + activeCount + ";generic=" + FavorRuntime.GetContextualFavorSummary()
 EndFunction
 
 String Function GetCommitmentSummary()
@@ -28197,7 +27672,7 @@ Function ResyncDevotionSpellsAfterRepair(Actor playerRef)
     ; The normal reward path re-grants every race/patron family and re-applies the
     ; neglect spells from live state.
     SyncFirstTierRaceRewardRuntime()
-    UpdateContextualFavorRuntime()
+    FavorRuntime.UpdateContextualFavorRuntime()
     UpdateDisfavorStingRuntime()
     ReapplyActiveDisfavorStings(playerRef)
     ; The two observance families B16 covers; both self-gate on their stored state.

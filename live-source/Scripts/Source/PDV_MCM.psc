@@ -2004,7 +2004,7 @@ Function BuildPlayerPage()
         AddTextOption("Patron", PDV_Manager.GetPlayerMcmPatronLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Standing", PDV_Manager.GetPlayerMcmStandingLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Curse", PDV_Manager.GetPlayerMcmCurseLine(), OPTION_FLAG_DISABLED)
-        AddTextOption("Favor", PDV_Manager.GetPlayerMcmFavorLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Favor", PDV_Manager.FavorRuntime.GetPlayerMcmFavorLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Neglect", PDV_Manager.GetPlayerMcmNeglectLine(), OPTION_FLAG_DISABLED)
         _oidSurveyDevotion = AddTextOption("Survey Devotion", "Open readout", OPTION_FLAG_NONE)
         _oidExportReport = AddTextOption("Export Devotion Report", "Write file", OPTION_FLAG_NONE)
@@ -3761,7 +3761,7 @@ EndFunction
 String Function GetFavorLaneOptionLabel()
     PDV__ManagerQuest manager = GetManagerService()
     if manager
-        return manager.GetSelectedContextualFavorLaneLabel()
+        return manager.FavorRuntime.GetSelectedContextualFavorLaneLabel()
     endIf
 
     return "Unavailable"
@@ -3770,7 +3770,7 @@ EndFunction
 String Function GetFavorFamilyOptionLabel()
     PDV__ManagerQuest manager = GetManagerService()
     if manager
-        return manager.GetSelectedContextualFavorFamilyLabel()
+        return manager.FavorRuntime.GetSelectedContextualFavorFamilyLabel()
     endIf
 
     return "Unavailable"
